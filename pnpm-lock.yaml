@@ -196,8 +196,8 @@ importers:
         specifier: ^6.9.4
         version: 6.9.4
       openai-edge:
-        specifier: ^1.2.1
-        version: 1.2.1
+        specifier: ^1.2.2
+        version: 1.2.2
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -12961,8 +12961,8 @@ packages:
       is-wsl: 2.2.0
     dev: false
 
-  /openai-edge@1.2.1:
-    resolution: {integrity: sha512-3PycifhW/MR3poGhvthYppbZ5M/q2R/Vkv+JE6AjaeZ5jZvE0RClRLsolte/7TG45lrm/g6RRE1WXQjdK21ZhA==}
+  /openai-edge@1.2.2:
+    resolution: {integrity: sha512-C3/Ao9Hkx5uBPv9YFBpX/x59XMPgPUU4dyGg/0J2sOJ7O9D98kD+lfdOc7v/60oYo5xzMGct80uFkYLH+X2qgw==}
     engines: {node: '>=18'}
     dev: false
 
