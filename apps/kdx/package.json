@@ -13,7 +13,7 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "@headlessui/react": "^1.7.15",
+    "@headlessui/react": "^1.7.16",
     "@heroicons/react": "^2.0.18",
     "@internationalized/date": "^3.3.0",
     "@kdx/api": "^0.1.0",
