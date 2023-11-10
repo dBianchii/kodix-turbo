@@ -162,6 +162,9 @@ importers:
 
   apps/kodix-care:
     dependencies:
+      '@kdx/ui':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/ui
       '@t3-oss/env-nextjs':
         specifier: ^0.6.1
         version: 0.6.1(typescript@5.2.2)(zod@3.22.4)
@@ -205,18 +208,18 @@ importers:
       '@kdx/api':
         specifier: workspace:^0.1.0
         version: link:../../packages/api
-      '@kdx/auth':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/auth
       '@kdx/eslint-config':
         specifier: workspace:^0.2.0
         version: link:../../tooling/eslint
+      '@kdx/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
       '@kdx/tailwind-config':
         specifier: workspace:^0.1.0
         version: link:../../tooling/tailwind
-      '@kdx/ui':
+      '@kdx/tsconfig':
         specifier: workspace:^0.1.0
-        version: link:../../packages/ui
+        version: link:../../tooling/typescript
       '@types/node':
         specifier: ^18.18.9
         version: 18.18.9
@@ -247,6 +250,9 @@ importers:
 
   apps/stays-ai:
     dependencies:
+      '@kdx/ui':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/ui
       '@svgr/webpack':
         specifier: ^8.1.0
         version: 8.1.0(typescript@5.2.2)
@@ -317,12 +323,15 @@ importers:
       '@kdx/eslint-config':
         specifier: workspace:^0.2.0
         version: link:../../tooling/eslint
+      '@kdx/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
       '@kdx/tailwind-config':
         specifier: workspace:^0.1.0
         version: link:../../tooling/tailwind
-      '@kdx/ui':
+      '@kdx/tsconfig':
         specifier: workspace:^0.1.0
-        version: link:../../packages/ui
+        version: link:../../tooling/typescript
       '@types/node':
         specifier: ^18.18.9
         version: 18.18.9

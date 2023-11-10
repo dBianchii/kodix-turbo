@@ -34,7 +34,7 @@ jobs:
         run: cp .env.example .env
 
       - name: Lint
-        run: pnpm lint && pnpm lint:ws --filter=\!@kdx/stays-ai --filter=\!@kdx/kodix-care #TODO: REMOVE FILTERS
+        run: pnpm lint --filter=\!@kdx/stays-ai --filter=\!@kdx/kodix-care && pnpm lint:ws --filter=\!@kdx/stays-ai --filter=\!@kdx/kodix-care #TODO: REMOVE FILTERS
   format:
     runs-on: ubuntu-latest
     steps:

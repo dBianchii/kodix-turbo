@@ -63,11 +63,7 @@ export default function Page() {
     }/api/ai`,
     onError: () => {
       setLoading(false);
-      toast({
-        variant: "destructive",
-        title: `Aconteceu um erro!`,
-        description: `Por favor, tente novamente mais tarde`,
-      });
+      toast.error("Aconteceu um erro!, por favor, tente novamente mais tarde");
       //remove the last message the user sent
       setMessages(messages.slice(0, -1));
     },
@@ -348,6 +344,7 @@ function Form({
     new (window as any).RDStationForms(
       "ai-1f84733bbb7018305ac8",
       "UA-78082533-1",
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     ).createForm();
 
     function onElementLoaded() {

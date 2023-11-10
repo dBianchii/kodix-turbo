@@ -1,11 +1,15 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "@kdx/tsconfig/base.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     },
-    "plugins": [{ "name": "next" }],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "strict": true
   },
   "exclude": [],
