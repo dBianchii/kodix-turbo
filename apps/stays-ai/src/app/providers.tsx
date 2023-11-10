@@ -7,8 +7,8 @@ import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experime
 import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
 import superjson from "superjson";
 
-import { api } from "~/utils/api";
 import { env } from "~/env.mjs";
+import { api } from "~/utils/api";
 
 const getBaseUrl = () => {
   if (env.VERCEL_URL) return `https://www.kodix.com.br`; // SSR in production should use our production url

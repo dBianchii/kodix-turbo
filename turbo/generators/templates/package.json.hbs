@@ -1,35 +1,8 @@
-{
-  "name": "@kdx/{{ name }}",
-  "private": true,
-  "version": "0.1.0",
-  "exports": {
-    ".": "./index.ts"
-  },
-  "typesVersions": {
-    "*": {
-      "*": [
-        "src/*"
-      ]
-    }
-  },
-  "license": "MIT",
-  "scripts": {
-    "clean": "rm -rf .turbo node_modules",
-    "lint": "eslint .",
-    "format": "prettier --check \"**/*.{mjs,ts,md,json}\"",
-    "typecheck": "tsc --noEmit"
-  },
-  "devDependencies": {
-    "@kdx/eslint-config": "workspace:^0.2.0",
-    "@kdx/prettier-config": "workspace:^0.1.0",
-    "@kdx/tsconfig": "workspace:^0.1.0",
-    "eslint": "^8.53.0",
-    "typescript": "^5.2.2"
-  },
-  "eslintConfig": {
-    "extends": [
-      "@kdx/eslint-config/base"
-    ]
-  },
-  "prettier": "@kdx/prettier-config"
-}
+{ "name": "@kdx/{{name}}", "private": true, "version": "0.1.0", "exports": {
+".": "./index.ts" }, "typesVersions": { "*": { "*": [ "src/*" ] } }, "license":
+"MIT", "scripts": { "clean": "rm -rf .turbo node_modules", "lint": "eslint .",
+"format": "prettier --check \"**/*.{mjs,ts,md,json}\"", "typecheck": "tsc
+--noEmit" }, "devDependencies": { "@kdx/eslint-config": "workspace:^0.2.0",
+"@kdx/prettier-config": "workspace:^0.1.0", "@kdx/tsconfig": "workspace:^0.1.0",
+"eslint": "^8.53.0", "typescript": "^5.2.2" }, "eslintConfig": { "extends": [
+"@kdx/eslint-config/base" ] }, "prettier": "@kdx/prettier-config" }

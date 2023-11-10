@@ -344,7 +344,7 @@ function Form({
     new (window as any).RDStationForms(
       "ai-1f84733bbb7018305ac8",
       "UA-78082533-1",
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     ).createForm();
 
     function onElementLoaded() {
