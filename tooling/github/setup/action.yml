@@ -16,5 +16,5 @@ runs:
     - shell: bash
       run: pnpm install
 
-    - name: Generate Prisma Client
+    - shell: bash
       run: pnpm turbo db:generate
