@@ -91,10 +91,11 @@ jobs:
 
       - name: Typecheck
         run: turbo typecheck
-  upload-schema:
+  upload-drift:
     runs-on: ubuntu-latest
     steps:
-      - name: Setup
+      - uses: actions/checkout@v4
+      - name: Upload Drift
         run: cd packages/api && pnpm trpc upload -vv # optional: -vv for verbose output
         env:
           API_KEY: ${{ secrets.DRIFT_API_KEY }}
