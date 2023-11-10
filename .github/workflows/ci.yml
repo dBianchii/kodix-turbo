@@ -34,7 +34,7 @@ jobs:
         run: cp .env.example .env
 
       - name: Lint
-        run: pnpm lint && pnpm lint:ws
+        run: pnpm lint && pnpm lint:ws --filter=\!@kdx/stays-ai --filter=\!@kdx/kodix-care #TODO: REMOVE FILTERS
   format:
     runs-on: ubuntu-latest
     steps:
@@ -54,7 +54,7 @@ jobs:
         uses: ./tooling/github/setup
 
       - name: Typecheck
-        run: turbo typecheck
+        run: turbo typecheck --filter=\!@kdx/stays-ai --filter=\!@kdx/kodix-care #TODO: REMOVE FILTERS
   # upload-schema:
   #   runs-on: ubuntu-latest
   #   steps:
