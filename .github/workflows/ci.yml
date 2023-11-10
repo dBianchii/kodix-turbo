@@ -7,62 +7,58 @@ on:
   push:
     branches: ["main"]
   merge_group:
+  
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 
 # You can leverage Vercel Remote Caching with Turbo to speed up your builds
 # @link https://turborepo.org/docs/core-concepts/remote-caching#remote-caching-on-vercel-builds
 env:
+  FORCE_COLOR: 3
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
   TURBO_TEAM: ${{ vars.TURBO_TEAM }}
 
 jobs:
-  build-lint:
-    env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  lint:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 5 # <--- **IMPORTANT**, has to be >= 3. Give us some history to work with // https://drift.trpc.io/docs/github
+      - uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2.2.4
+      - name: Setup
+        uses: ./tooling/github/setup
 
-      - name: Setup Node 20.9
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20.9
+      - name: Copy env
+        shell: bash
+        run: cp .env.example .env
 
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        run: |
-          echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+      - name: Lint
+        run: pnpm lint && pnpm lint:ws
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-      - name: Setup pnpm cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
+      - name: Setup
+        uses: ./tooling/github/setup
 
-      - name: Install deps (with cache)
-        run: pnpm install
+      - name: Format
+        run: pnpm format
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-        # Normally, this would be done as part of the turbo pipeline - however since the Expo app doesn't depend on `@kdx/db` it doesn't care.
-      # TODO: Free for all to find a better solution here.
-      - name: Generate Prisma Client
-        run: pnpm turbo db:generate
+      - name: Setup
+        uses: ./tooling/github/setup
 
-      - name: Upload schema
+      - name: Typecheck
+        run: turbo typecheck
+  upload-schema:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup
         run: cd packages/api && pnpm trpc upload -vv && cd ../.. # optional: -vv for verbose output
         env:
           API_KEY: ${{ secrets.DRIFT_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build, lint and typecheck
-        run: pnpm turbo build lint typecheck --filter=\!@kdx/stays-ai --filter=\!@kdx/kodix-care #TODO: REMOVE filters!!
-
-      - name: Check workspaces
-        run: pnpm manypkg check
