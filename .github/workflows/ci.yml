@@ -18,7 +18,8 @@ env:
   FORCE_COLOR: 3
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
   TURBO_TEAM: ${{ vars.TURBO_TEAM }}
-
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  
 jobs:
   lint:
     runs-on: ubuntu-latest
