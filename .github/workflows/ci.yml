@@ -95,6 +95,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: List directory contents
+        run: ls -la
       - name: Upload Drift
         run: cd packages/api && pnpm trpc upload -vv # optional: -vv for verbose output
         env:
