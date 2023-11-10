@@ -6,7 +6,7 @@
   "types": "./index.tsx",
   "license": "MIT",
   "scripts": {
-    "lint": "eslint \"**/*.ts*\"",
+    "lint": "eslint .",
     "format": "prettier --check \"**/*.{mjs,ts,md,json}\"",
     "ui:add": "pnpm dlx shadcn-ui@latest add",
     "clean": "rm -rf .turbo node_modules"
