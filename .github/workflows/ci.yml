@@ -25,6 +25,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Generate Prisma Client
+        run: pnpm turbo db:generate
+      
       - name: Setup
         uses: ./tooling/github/setup
 
