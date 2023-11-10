@@ -37,13 +37,9 @@ export const inviteUserSchema = z.object({
     .email()
     .min(1, { message: "At least one email is required in the 'to' field" })
     .or(
-      z
-        .string()
-        .email()
-        .array()
-        .min(1, {
-          message: "At least one email is required in the 'to' field",
-        }),
+      z.string().email().array().min(1, {
+        message: "At least one email is required in the 'to' field",
+      }),
     )
     .transform((value) => {
       if (Array.isArray(value)) return value;
