@@ -13,20 +13,20 @@
   },
   "dependencies": {
     "@auth/core": "0.18.0",
-    "@auth/prisma-adapter": "^1.0.2",
+    "@auth/prisma-adapter": "^1.0.5",
     "@kdx/db": "workspace:^0.1.0",
     "@t3-oss/env-nextjs": "^0.6.1",
-    "next": "^14.0.1",
+    "next": "^14.0.2",
     "next-auth": "5.0.0-beta.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "zod": "^3.22.2"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@kdx/eslint-config": "workspace:^0.2.0",
     "@kdx/prettier-config": "workspace:^0.1.0",
     "@kdx/tsconfig": "workspace:^0.1.0",
-    "eslint": "^8.49.0",
+    "eslint": "^8.53.0",
     "prettier": "^3.0.3",
     "typescript": "^5.2.2"
   },

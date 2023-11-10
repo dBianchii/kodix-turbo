@@ -22,32 +22,32 @@
     "@trpc/next": "next",
     "@trpc/react-query": "next",
     "@trpc/server": "next",
-    "@vercel/analytics": "^1.0.2",
-    "ai": "^2.2.12",
+    "@vercel/analytics": "^1.1.1",
+    "ai": "^2.2.22",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.263.1",
-    "next": "^14.0.1",
+    "next": "^14.0.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.11.0",
     "react-markdown": "^8.0.7",
     "react-svg-pan-zoom": "^3.12.1",
     "superjson": "1.9.1",
-    "zod": "^3.22.2"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@kdx/api": "^0.1.0",
-    "@kdx/eslint-config": "^0.2.0",
-    "@kdx/tailwind-config": "^0.1.0",
-    "@kdx/ui": "^0.1.0",
-    "@types/node": "^18.18.3",
-    "@types/react": "^18.2.33",
-    "@types/react-dom": "^18.2.14",
-    "autoprefixer": "^10.4.15",
+    "@kdx/api": "workspace:^0.1.0",
+    "@kdx/eslint-config": "workspace:^0.2.0",
+    "@kdx/tailwind-config": "workspace:^0.1.0",
+    "@kdx/ui": "workspace:^0.1.0",
+    "@types/node": "^18.18.9",
+    "@types/react": "^18.2.37",
+    "@types/react-dom": "^18.2.15",
+    "autoprefixer": "^10.4.16",
     "dotenv-cli": "^7.3.0",
-    "eslint": "^8.49.0",
-    "postcss": "^8.4.29",
-    "tailwindcss": "^3.3.3",
+    "eslint": "^8.53.0",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.5",
     "typescript": "^5.2.2"
   },
   "eslintConfig": {
@@ -57,5 +57,6 @@
       "@kdx/eslint-config/nextjs",
       "@kdx/eslint-config/react"
     ]
-  }
+  },
+  "prettier": "@acme/prettier-config"
 }

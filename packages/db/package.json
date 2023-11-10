@@ -22,9 +22,9 @@
     "@kdx/eslint-config": "workspace:^0.2.0",
     "@kdx/prettier-config": "workspace:^0.1.0",
     "@kdx/tsconfig": "workspace:^0.1.0",
+    "dotenv-cli": "^7.3.0",
     "eslint": "^8.53.0",
     "prettier": "^3.0.3",
-    "dotenv-cli": "^7.3.0",
     "prisma": "^5.5.2",
     "typescript": "^5.2.2"
   },

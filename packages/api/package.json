@@ -12,33 +12,39 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@kdx/auth": "^0.1.0",
-    "@kdx/db": "^0.1.0",
+    "@kdx/auth": "workspace:^0.1.0",
+    "@kdx/db": "workspace:^0.1.0",
     "@react-email/components": "^0.0.11",
     "@trpc/client": "next",
     "@trpc/server": "next",
     "@upstash/ratelimit": "^0.4.4",
-    "@upstash/redis": "^1.24.3",
+    "@upstash/redis": "^1.25.1",
     "moment": "^2.29.4",
     "resend": "^2.0.0",
-    "rrule": "^2.7.2",
+    "rrule": "^2.8.1",
     "superjson": "1.9.1",
     "trpc-openapi": "^1.2.0",
-    "zod": "^3.22.2"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@kdx/eslint-config": "workspace:^0.2.0",
     "@kdx/prettier-config": "workspace:^0.1.0",
+    "@kdx/tailwind-config": "workspace:^0.1.0",
     "@kdx/tsconfig": "workspace:^0.1.0",
+    "@types/node": "^18.18.9",
+    "@types/react": "^18.2.37",
+    "@types/react-dom": "^18.2.15",
+    "eslint": "^8.53.0",
     "prettier": "^3.0.3",
-    "eslint": "^8.49.0",
     "trpc-tools": "0.12.1-canary.2dfb1delosg",
     "typescript": "^5.2.2"
   },
   "eslintConfig": {
     "root": true,
     "extends": [
-      "@kdx/eslint-config/base"
+      "@kdx/eslint-config/base",
+      "@kdx/eslint-config/nextjs",
+      "@kdx/eslint-config/react"
     ]
   },
   "prettier": "@kdx/prettier-config"

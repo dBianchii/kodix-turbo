@@ -18,9 +18,10 @@
     "format:fix": "turbo format --continue -- --write --cache --cache-location='node_modules/.cache/.prettiercache'",
     "lint": "turbo lint --continue -- --cache --cache-location 'node_modules/.cache/.eslintcache'",
     "lint:fix": "turbo lint --continue -- --fix --cache --cache-location 'node_modules/.cache/.eslintcache'",
+    "lint:ws": "pnpm dlx sherif@latest",
     "typecheck": "turbo typecheck"
   },
-  "dependencies": {
+  "devDependencies": {
     "@kdx/prettier-config": "workspace:^0.1.0",
     "@turbo/gen": "^1.10.16",
     "prettier": "^3.0.3",
@@ -32,5 +33,5 @@
       "@auth/core": "0.18.0"
     }
   },
-  "prettier": "@acme/prettier-config"
+  "prettier": "@kdx/prettier-config"
 }

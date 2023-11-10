@@ -40,7 +40,6 @@
       "inputs": ["prisma/schema.prisma"],
       "cache": false
     },
-    "lint:fix": {},
     "clean": {
       "cache": false
     },
