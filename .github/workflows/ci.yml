@@ -75,6 +75,7 @@ jobs:
       - name: Format
         run: pnpm format
   typecheck:
+    needs: generate-prisma-client
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -98,7 +99,7 @@ jobs:
       - name: List directory contents
         run: ls -la
       - name: Upload Drift
-        run: cd packages/api && pnpm trpc upload -vv # optional: -vv for verbose output
+        run: cd packages/api && pnpx trpc upload -vv # optional: -vv for verbose output
         env:
           API_KEY: ${{ secrets.DRIFT_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
