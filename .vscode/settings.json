@@ -6,11 +6,16 @@
   "eslint.rules.customizations": [{ "rule": "*", "severity": "warn" }],
   "eslint.workingDirectories": [
     { "pattern": "apps/*/" },
-    { "pattern": "packages/*/" }
+    { "pattern": "packages/*/" },
+    { "pattern": "tooling/*/" }
   ],
   "tailwindCSS.experimental.configFile": "./packages/config/tailwind/index.ts",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.preferences.autoImportFileExcludePatterns": [
+    "next/router.d.ts",
+    "next/dist/client/router.d.ts"
+  ],
   /*
    * Note - add the following JSON to your User keybindings.json:
    * { "key": "f5", "command": "workbench.action.debug.selectandstart", "when": "config.workspaceKeybindings.selectAndStartDebugging.enabled && debuggersAvailable && debugState == 'inactive'" }

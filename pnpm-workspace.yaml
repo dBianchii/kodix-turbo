@@ -1,10 +1,5 @@
 packages:
-  - apps/kdx
-  - apps/kodix-care
-  - apps/nextjs
-  - apps/stays-ai
+  - apps/*
   - packages/api
-  - packages/auth
-  - packages/db
-  - packages/ui
-  - packages/config/*
+  - packages/*
+  - tooling/*

@@ -1,8 +1,9 @@
 {
-  "extends": "../../tsconfig.json",
-  "include": ["index.tsx", "**/*.ts"],
+  "extends": "@kdx/tsconfig/base.json",
+  "include": ["."],
   "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
     "baseUrl": ".",
     "paths": {
       "~/*": ["./*"]

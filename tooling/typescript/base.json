@@ -1,12 +1,11 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "target": "ES2022",
     "lib": ["dom", "dom.iterable", "ES2022"],
     "allowJs": true,
-    "checkJs": true,
     "skipLibCheck": true,
     "strict": true,
-    "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
@@ -18,5 +17,5 @@
     "incremental": true,
     "noUncheckedIndexedAccess": true
   },
-  "include": ["prettier.config.mjs"]
+  "exclude": ["node_modules", "build", "dist", ".next", ".expo"]
 }

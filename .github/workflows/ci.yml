@@ -61,8 +61,8 @@ jobs:
           API_KEY: ${{ secrets.DRIFT_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build, lint and type-check
-        run: pnpm turbo build lint type-check --filter=\!@kdx/stays-ai --filter=\!@kdx/nextjs --filter=\!@kdx/kodix-care #TODO: REMOVE filters!!
+      - name: Build, lint and typecheck
+        run: pnpm turbo build lint typecheck --filter=\!@kdx/stays-ai --filter=\!@kdx/nextjs --filter=\!@kdx/kodix-care #TODO: REMOVE filters!!
 
       - name: Check workspaces
         run: pnpm manypkg check

@@ -3,8 +3,8 @@ const config = {
   extends: [
     "turbo",
     "eslint:recommended",
-    "plugin:@typescript-eslint/recommended-type-checked",
-    "plugin:@typescript-eslint/stylistic-type-checked",
+    "plugin:@typescript-eslint/recommended-typechecked",
+    "plugin:@typescript-eslint/stylistic-typechecked",
     "prettier",
   ],
   env: {
@@ -17,6 +17,7 @@ const config = {
   },
   plugins: ["@typescript-eslint", "import"],
   rules: {
+    "turbo/no-undeclared-env-vars": "off",
     "@typescript-eslint/no-unused-vars": [
       "error",
       { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
