@@ -2,6 +2,8 @@ name: "Setup and install"
 description: "Common setup steps for Actions"
 
 runs:
+  env:
+    DATABASE_URL: ${{ secrets.DATABASE_URL }}
   using: composite
   steps:
     - uses: pnpm/action-setup@v2
@@ -17,4 +19,4 @@ runs:
       run: pnpm install
 
     - name: Generate Prisma Client
-     run: pnpm turbo db:generate
+      run: pnpm turbo db:generate
