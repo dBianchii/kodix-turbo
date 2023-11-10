@@ -128,7 +128,7 @@ export function TeamSwitcher({ className }: TeamSwitcherProps) {
                         data.activeWorkspaceUrl,
                         newActiveWorkspace.url,
                       );
-                      router.push(newUrl || "/");
+                      router.push(newUrl ?? "/");
                       router.refresh();
                     }}
                     className="text-sm"

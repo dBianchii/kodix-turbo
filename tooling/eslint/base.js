@@ -3,8 +3,8 @@ const config = {
   extends: [
     "turbo",
     "eslint:recommended",
-    "plugin:@typescript-eslint/recommended-typechecked",
-    "plugin:@typescript-eslint/stylistic-typechecked",
+    "plugin:@typescript-eslint/recommended-type-checked",
+    "plugin:@typescript-eslint/stylistic-type-checked",
     "prettier",
   ],
   env: {

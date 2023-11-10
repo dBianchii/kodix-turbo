@@ -62,7 +62,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build, lint and typecheck
-        run: pnpm turbo build lint typecheck --filter=\!@kdx/stays-ai --filter=\!@kdx/nextjs --filter=\!@kdx/kodix-care #TODO: REMOVE filters!!
+        run: pnpm turbo build lint typecheck --filter=\!@kdx/stays-ai --filter=\!@kdx/kodix-care #TODO: REMOVE filters!!
 
       - name: Check workspaces
         run: pnpm manypkg check
