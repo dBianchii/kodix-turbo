@@ -19,13 +19,14 @@ export function SettingsNavigation({ url }: { url: string }) {
   ];
   const pathname = usePathname();
   const matches = useMediaQuery({ query: "md" });
+
   return (
     <div
       className={cn(
         "flex w-full flex-col items-center space-y-2 self-start md:w-min",
       )}
     >
-      {!pathname.endsWith("/settings") && !matches ? (
+      {!pathname!.endsWith("/settings") && !matches ? (
         <NavigationItem href={`/workspace/${url}/settings`}>
           <ArrowLeft className="mr-2 h-4 w-4" /> Settings
         </NavigationItem>

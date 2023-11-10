@@ -16,5 +16,5 @@ export default async function WorkspaceInviteCard() {
     },
   });
 
-  return <WorkspaceInviteCardClient invites={invites} />;
+  return <WorkspaceInviteCardClient />;
 }
