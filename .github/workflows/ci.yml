@@ -99,9 +99,9 @@ jobs:
 
       - name: Setup
         uses: ./tooling/github/setup
-        
+
       - name: Upload Drift
-        run: cd packages/api && pnpx trpc upload -vv # optional: -vv for verbose output
+        run: cd packages/api && pnpm trpc upload -vv # optional: -vv for verbose output
         env:
           API_KEY: ${{ secrets.DRIFT_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
