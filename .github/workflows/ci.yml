@@ -92,6 +92,18 @@ jobs:
 
       - name: Typecheck
         run: turbo typecheck
+
+  sherif:
+    name: Run Sherif
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: npx sherif@0.4.2
+      
   upload-drift:
     runs-on: ubuntu-latest
     steps:
