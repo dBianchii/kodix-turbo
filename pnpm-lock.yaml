@@ -516,24 +516,6 @@ importers:
         specifier: ^5.2.2
         version: 5.2.2
 
-  packages/sayhara:
-    devDependencies:
-      '@kdx/eslint-config':
-        specifier: workspace:^0.2.0
-        version: link:../../tooling/eslint
-      '@kdx/prettier-config':
-        specifier: workspace:^0.1.0
-        version: link:../../tooling/prettier
-      '@kdx/tsconfig':
-        specifier: workspace:^0.1.0
-        version: link:../../tooling/typescript
-      eslint:
-        specifier: ^8.53.0
-        version: 8.53.0
-      typescript:
-        specifier: ^5.2.2
-        version: 5.2.2
-
   packages/ui:
     dependencies:
       '@radix-ui/react-alert-dialog':
