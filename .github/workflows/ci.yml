@@ -3,17 +3,14 @@ name: CI
 on:
   pull_request:
     branches: ["*"]
-    types: [opened, synchronize, reopened, edited, closed] # <--- **IMPORTANT** to subscribe to these events // https://drift.trpc.io/docs/github
+    types: [opened, synchronize, reopened, edited, closed]
   push:
     branches: ["main"]
-  merge_group:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 
-# You can leverage Vercel Remote Caching with Turbo to speed up your builds
-# @link https://turborepo.org/docs/core-concepts/remote-caching#remote-caching-on-vercel-builds
 env:
   FORCE_COLOR: 3
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
@@ -22,86 +19,83 @@ env:
 jobs:
   generate-prisma-client:
     runs-on: ubuntu-latest
-    outputs:
-      cache-key: ${{ steps.cache-keys.outputs.key }}
     steps:
       - uses: actions/checkout@v4
-      - name: Setup
-        uses: ./tooling/github/setup
-
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
       - name: Generate Prisma Client
         run: pnpm turbo db:generate
-
-      - name: Get Cache Key
-        id: cache-keys
-        run: echo "::set-output name=key::$(date +%s)"
-
-      - name: Cache Prisma Client
+      - name: Generate cache key and set as output
+        run: echo "CACHE_KEY=$(date +%s)" >> $GITHUB_ENV
+      - name: Cache node_modules
         uses: actions/cache@v3
         with:
           path: |
-            node_modules/.prisma/client
-          key: ${{ steps.cache-keys.outputs.key }}
+            node_modules
+          key: ${{ env.CACHE_KEY }}
+
   lint:
     needs: generate-prisma-client
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup
-        uses: ./tooling/github/setup
-
-      - name: Cache Prisma Client
+      - name: Cache node_modules
         uses: actions/cache@v3
         with:
           path: |
-            node_modules/.prisma/client
-          key: ${{ needs.generate-prisma-client.outputs.cache-key }}
-
+            node_modules
+          key: ${{ env.CACHE_KEY }}
       - name: Copy env
-        shell: bash
         run: cp .env.example .env
-
       - name: Lint
         run: pnpm lint && pnpm lint:ws
+
   format:
+    needs: generate-prisma-client
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup
-        uses: ./tooling/github/setup
-
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+          key: ${{ env.CACHE_KEY }}
       - name: Format
         run: pnpm format
+
   typecheck:
     needs: generate-prisma-client
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup
-        uses: ./tooling/github/setup
-
-      - name: Cache Prisma Client
+      - name: Cache node_modules
         uses: actions/cache@v3
         with:
           path: |
-            node_modules/.prisma/client
-          key: ${{ needs.generate-prisma-client.outputs.cache-key }}
-
+            node_modules
+          key: ${{ env.CACHE_KEY }}
       - name: Typecheck
         run: turbo typecheck
+
   upload-drift:
+    needs: generate-prisma-client
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup
-        uses: ./tooling/github/setup
-
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+          key: ${{ env.CACHE_KEY }}
       - name: Upload Drift
-        run: cd packages/api && pnpm trpc upload -vv # optional: -vv for verbose output
+        run: cd packages/api && pnpm trpc upload -vv
         env:
           API_KEY: ${{ secrets.DRIFT_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
