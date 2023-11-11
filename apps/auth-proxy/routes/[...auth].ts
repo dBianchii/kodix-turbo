@@ -1,7 +1,7 @@
 import { Auth } from "@auth/core";
+import EmailProvider from "@auth/core/providers/email";
 import Google from "@auth/core/providers/google";
 import { eventHandler, toWebRequest } from "h3";
-import EmailProvider from "@auth/core/providers/email";
 
 export default eventHandler(async (event) =>
   Auth(toWebRequest(event), {

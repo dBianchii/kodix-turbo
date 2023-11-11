@@ -92,7 +92,7 @@ jobs:
 
       - name: Typecheck
         run: turbo typecheck
-      
+
   upload-drift:
     runs-on: ubuntu-latest
     steps:
