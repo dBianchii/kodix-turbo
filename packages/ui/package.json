@@ -6,10 +6,11 @@
   "types": "./index.tsx",
   "license": "MIT",
   "scripts": {
+    "clean": "rm -rf .turbo node_modules",
     "lint": "eslint .",
     "format": "prettier --check \"**/*.{mjs,ts,md,json}\"",
-    "ui:add": "pnpm dlx shadcn-ui@latest add",
-    "clean": "rm -rf .turbo node_modules"
+    "typecheck": "tsc --noEmit",
+    "ui:add": "pnpm dlx shadcn-ui@latest add"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.0.4",
