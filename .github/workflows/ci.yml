@@ -21,17 +21,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: "pnpm"
+
       - name: Install dependencies
         run: pnpm install
+
       - name: Generate Prisma Client
         run: pnpm turbo db:generate
+
       - name: Generate cache key and set as output
         run: echo "CACHE_KEY=$(date +%s)" >> $GITHUB_ENV
+
       - name: Cache node_modules
         uses: actions/cache@v3
         with:
@@ -44,6 +49,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - name: Cache node_modules
         uses: actions/cache@v3
         with:
@@ -52,6 +58,7 @@ jobs:
           key: ${{ env.CACHE_KEY }}
       - name: Copy env
         run: cp .env.example .env
+        
       - name: Lint
         run: pnpm lint && pnpm lint:ws
 
