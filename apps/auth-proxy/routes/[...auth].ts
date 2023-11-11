@@ -1,6 +1,7 @@
 import { Auth } from "@auth/core";
-import Discord from "@auth/core/providers/discord";
+import Google from "@auth/core/providers/google";
 import { eventHandler, toWebRequest } from "h3";
+import EmailProvider from "@auth/core/providers/email";
 
 export default eventHandler(async (event) =>
   Auth(toWebRequest(event), {
@@ -8,9 +9,26 @@ export default eventHandler(async (event) =>
     trustHost: !!process.env.VERCEL,
     redirectProxyUrl: process.env.AUTH_REDIRECT_PROXY_URL,
     providers: [
-      Discord({
-        clientId: process.env.AUTH_DISCORD_ID,
-        clientSecret: process.env.AUTH_DISCORD_SECRET,
+      Google({
+        clientId: process.env.AUTH_GOOGLE_CLIENT_ID,
+        clientSecret: process.env.AUTH_GOOGLE_CLIENT_SECRET,
+      }),
+      EmailProvider({
+        server: {
+          host: process.env.AUTH_EMAIL_SERVER_HOST,
+          port: process.env.AUTH_EMAIL_SERVER_PORT,
+          auth: {
+            user: process.env.AUTH_EMAIL_SERVER_USER,
+            pass: process.env.AUTH_EMAIL_SERVER_PASSWORD,
+          },
+        },
+        from: process.env.AUTH_EMAIL_FROM,
+        type: "email",
+        sendVerificationRequest: () => {
+          throw new Error("Not implemented");
+        },
+        id: "",
+        name: "",
       }),
     ],
   }),
