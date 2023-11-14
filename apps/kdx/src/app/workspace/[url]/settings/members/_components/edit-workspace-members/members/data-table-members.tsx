@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-table";
 
 import type { RouterOutputs } from "@kdx/api";
+import type { Session } from "@kdx/auth";
 import {
   Table,
   TableBody,
@@ -22,8 +23,10 @@ import { memberColumns } from "./memberColumns";
 
 export function DataTableMembers({
   initialUsers,
+  session,
 }: {
   initialUsers: RouterOutputs["workspace"]["getAllUsers"];
+  session: Session;
 }) {
   const { data } = api.workspace.getAllUsers.useQuery(undefined, {
     initialData: initialUsers,
@@ -45,7 +48,7 @@ export function DataTableMembers({
     },
   });
 
-  const columns = memberColumns({ mutate });
+  const columns = memberColumns({ mutate, session });
   const table = useReactTable({
     data,
     columns,

@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { Loader2, MinusCircle, PlusCircle } from "lucide-react";
-import { useSession } from "next-auth/react";
 
 import { inviteUserSchema } from "@kdx/api/src/shared";
+import type { Session } from "@kdx/auth";
 import {
   Button,
   Card,
@@ -29,7 +29,11 @@ import {
 
 import { api } from "~/trpc/react";
 
-export default function WorkspaceInviteCardClient() {
+export default function WorkspaceInviteCardClient({
+  session,
+}: {
+  session: Session;
+}) {
   const utils = api.useUtils();
   const [loading, setLoading] = useState(false);
   const { mutate } = api.workspace.invitation.invite.useMutation({
@@ -55,10 +59,8 @@ export default function WorkspaceInviteCardClient() {
 
   const [emails, setEmails] = useState([""]);
   const [parent] = useAutoAnimate();
-  const session = useSession();
 
   const [open, setOpen] = useState(false);
-  if (!session.data) return null;
 
   return (
     <form
@@ -190,7 +192,7 @@ export default function WorkspaceInviteCardClient() {
                   onClick={() => {
                     setLoading(true);
                     const values = {
-                      workspaceId: session.data?.user.activeWorkspaceId,
+                      workspaceId: session.user.activeWorkspaceId,
                       to: emails.filter((x) => Boolean(x)),
                     };
                     const parsed = inviteUserSchema.safeParse(values);

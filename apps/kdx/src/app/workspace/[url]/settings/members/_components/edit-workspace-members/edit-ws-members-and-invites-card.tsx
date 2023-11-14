@@ -26,7 +26,7 @@ export async function EditWSMembersAndInvitesCard() {
         <TabsTrigger value="invites">Invites</TabsTrigger>
       </TabsList>
       <TabsContent value="members">
-        <DataTableMembers initialUsers={users} />
+        <DataTableMembers initialUsers={users} session={session} />
       </TabsContent>
       <TabsContent value="invites">
         <InviteDataTable initialInvites={initialInvites} />

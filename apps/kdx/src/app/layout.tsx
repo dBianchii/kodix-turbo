@@ -9,7 +9,7 @@ import { cn, Toaster } from "@kdx/ui";
 
 import { Footer } from "~/components/footer/footer";
 import { Header } from "~/components/header/header";
-import { NextAuthProvider, NextThemeProvider } from "~/components/providers";
+import { NextThemeProvider } from "~/components/providers";
 import { TailwindIndicator } from "~/components/tailwind-indicator";
 import { ThemeSwitcher } from "~/components/theme-switcher";
 import { TRPCReactProvider } from "~/trpc/react";
@@ -40,28 +40,26 @@ export default function Layout(props: { children: React.ReactNode }) {
         )}
       >
         <TRPCReactProvider cookies={cookies().toString()}>
-          <NextAuthProvider>
-            <NextThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <Toaster richColors closeButton />
+          <NextThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Toaster richColors closeButton />
 
-              <Header />
-              <main className="p-8">{props.children}</main>
-              <Footer />
+            <Header />
+            <main className="p-8">{props.children}</main>
+            <Footer />
 
-              {/* UI Design Helpers */}
-              {process.env.NODE_ENV !== "production" && (
-                <div className="fixed bottom-1 z-50 flex flex-row items-center space-x-1">
-                  <ThemeSwitcher />
-                  <TailwindIndicator />
-                </div>
-              )}
-            </NextThemeProvider>
-          </NextAuthProvider>
+            {/* UI Design Helpers */}
+            {process.env.NODE_ENV !== "production" && (
+              <div className="fixed bottom-1 z-50 flex flex-row items-center space-x-1">
+                <ThemeSwitcher />
+                <TailwindIndicator />
+              </div>
+            )}
+          </NextThemeProvider>
         </TRPCReactProvider>
       </body>
     </html>

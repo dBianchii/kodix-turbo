@@ -1,8 +1,8 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
-import { useSession } from "next-auth/react";
 
 import type { RouterInputs, RouterOutputs } from "@kdx/api";
+import type { Session } from "@kdx/auth";
 import {
   AvatarWrapper,
   Button,
@@ -18,8 +18,10 @@ const columnHelper =
 
 export const memberColumns = ({
   mutate,
+  session,
 }: {
   mutate: (input: RouterInputs["workspace"]["removeUser"]) => void;
+  session: Session;
 }) => [
   columnHelper.accessor("name", {
     header: ({ table }) => (
@@ -63,9 +65,6 @@ export const memberColumns = ({
   columnHelper.display({
     id: "actions",
     cell: function Cell(info) {
-      const session = useSession();
-      if (!session.data) return null;
-
       return (
         <div className="flex justify-end">
           <DropdownMenu>
@@ -80,14 +79,12 @@ export const memberColumns = ({
                 className="text-destructive"
                 onSelect={() => {
                   mutate({
-                    workspaceId: session.data.user.activeWorkspaceId,
-                    userId: session.data.user.id,
+                    workspaceId: session.user.activeWorkspaceId,
+                    userId: session.user.id,
                   });
                 }}
               >
-                {info.row.original.id === session.data.user.id
-                  ? "Leave"
-                  : "Remove"}
+                {info.row.original.id === session.user.id ? "Leave" : "Remove"}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
