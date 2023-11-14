@@ -4,8 +4,8 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Check, ChevronsUpDown, Loader2, PlusCircle } from "lucide-react";
-import { useSession } from "next-auth/react";
 
+import type { Session } from "@kdx/auth";
 import {
   AvatarWrapper,
   Button,
@@ -29,14 +29,7 @@ import { api } from "~/trpc/react";
 import { getBaseUrl } from "~/trpc/shared";
 import { AddWorkspaceDialog } from "./add-workspace-dialog";
 
-type PopoverTriggerProps = React.ComponentPropsWithoutRef<
-  typeof PopoverTrigger
->;
-
-type TeamSwitcherProps = PopoverTriggerProps;
-
-export function TeamSwitcher({ className }: TeamSwitcherProps) {
-  const session = useSession();
+export function TeamSwitcher({ session }: { session: Session }) {
   const utils = api.useUtils();
   const router = useRouter();
   const pathName = usePathname();
@@ -48,13 +41,13 @@ export function TeamSwitcher({ className }: TeamSwitcherProps) {
   const [open, setOpen] = React.useState(false);
   const [showNewWorkspaceDialog, setShowNewWorkspaceDialog] =
     React.useState(false);
-  if (!session.data) return null;
   if (!data) return null;
 
   return (
     <AddWorkspaceDialog
       open={showNewWorkspaceDialog}
       onOpenChange={setShowNewWorkspaceDialog}
+      session={session}
     >
       <Popover open={open} onOpenChange={setOpen}>
         <div className="center flex justify-center rounded-lg">
@@ -67,7 +60,6 @@ export function TeamSwitcher({ className }: TeamSwitcherProps) {
             className={cn(
               buttonVariants({ variant: "ghost", size: "sm" }),
               "justify-start hover:bg-inherit",
-              className,
             )}
           >
             {isPending ? (

@@ -19,10 +19,10 @@ import {
   Trash2,
 } from "lucide-react";
 import moment from "moment";
-import { useSession } from "next-auth/react";
 
 import type { RouterOutputs } from "@kdx/api";
 import { authorizedEmails } from "@kdx/api/src/shared";
+import type { Session } from "@kdx/auth";
 import {
   Button,
   Calendar,
@@ -54,10 +54,12 @@ type CalendarTask = RouterOutputs["event"]["getAll"][number];
 export function DataTable({
   columns,
   data,
+  session,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   columns: ColumnDef<CalendarTask, any>[];
   data: CalendarTask[];
+  session: Session;
 }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
@@ -66,8 +68,6 @@ export function DataTable({
 
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
-
-  const session = useSession();
 
   const ctx = api.useUtils();
   const result = api.event.getAll.useQuery(
@@ -175,8 +175,8 @@ export function DataTable({
           </Button>
         </div>
         <div className="flex w-44">
-          {session.data?.user.email &&
-            authorizedEmails.includes(session.data?.user.email) && (
+          {session.user.email &&
+            authorizedEmails.includes(session.user.email) && (
               <Button
                 className="ml-auto mr-2 self-end"
                 onClick={() => nukeEvents()}

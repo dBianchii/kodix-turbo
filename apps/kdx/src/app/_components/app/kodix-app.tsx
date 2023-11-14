@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Loader2, MoreHorizontal, Trash2 } from "lucide-react";
-import { useSession } from "next-auth/react";
 
+import type { Session } from "@kdx/auth";
 import {
   Button,
   buttonVariants,
@@ -35,14 +35,15 @@ export function KodixApp({
   appDescription,
   appUrl,
   installed,
+  session,
 }: {
   id: string;
   appName: string;
   appDescription: string;
   appUrl: string;
   installed: boolean;
+  session: Session | null;
 }) {
-  const { data: session } = useSession();
   const [open, onOpenChange] = useState(false);
   const [loading, setLoading] = useState(false);
 

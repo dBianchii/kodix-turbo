@@ -1,8 +1,8 @@
 import * as React from "react";
 import Router from "next/router";
 import { Loader2 } from "lucide-react";
-import { useSession } from "next-auth/react";
 
+import type { Session } from "@kdx/auth";
 import {
   Button,
   Dialog,
@@ -26,10 +26,12 @@ export function AddWorkspaceDialog({
   children,
   open,
   onOpenChange,
+  session,
 }: {
   children: React.ReactNode;
   open: boolean;
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
+  session: Session;
 }) {
   const [loading, setLoading] = React.useState(false);
   const ctx = api.useUtils();
@@ -52,7 +54,6 @@ export function AddWorkspaceDialog({
     },
   });
   const [workspaceName, changeWorkspaceName] = React.useState("");
-  const { data: session } = useSession();
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -108,7 +109,7 @@ export function AddWorkspaceDialog({
             type="submit"
             onClick={() => {
               void mutateAsync({
-                userId: session?.user.id ?? "",
+                userId: session.user.id,
                 workspaceName: workspaceName,
               });
               setLoading(true);

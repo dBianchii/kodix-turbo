@@ -2,8 +2,9 @@
 
 import React from "react";
 import { CreditCard, LogOut, PlusCircle, Settings, User } from "lucide-react";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 
+import type { Session } from "@kdx/auth";
 import {
   AvatarWrapper,
   Button,
@@ -20,13 +21,13 @@ import {
 
 import { AddWorkspaceDialog } from "./add-workspace-dialog";
 
-export function UserProfileButton() {
-  const { data: session } = useSession();
+export function UserProfileButton({ session }: { session: Session }) {
   const [showNewWorkspaceDialog, setShowNewWorkspaceDialog] =
     React.useState(false);
   if (!session) return null;
   return (
     <AddWorkspaceDialog
+      session={session}
       open={showNewWorkspaceDialog}
       onOpenChange={setShowNewWorkspaceDialog}
     >
