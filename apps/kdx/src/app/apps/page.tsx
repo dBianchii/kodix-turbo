@@ -4,12 +4,12 @@ import { auth } from "@kdx/auth";
 import { prisma } from "@kdx/db";
 import { H1, Lead } from "@kdx/ui";
 
-import { KodixApp } from "~/app/components/app/kodix-app";
-import MaxWidthWrapper from "~/app/components/max-width-wrapper";
+import { KodixApp } from "~/app/_components/app/kodix-app";
+import MaxWidthWrapper from "~/app/_components/max-width-wrapper";
 
 export default async function Apps() {
   const session = await auth();
-  if (!session) return redirect("/api/auth/signin?callbackUrl=/apps");
+  if (!session) return redirect("/api/auth/signin");
   const apps = await prisma.app.findMany({
     include: {
       activeWorkspaces: {
@@ -35,6 +35,7 @@ export default async function Apps() {
               appDescription={app.description}
               appUrl={app.urlApp}
               installed={true}
+              session={session}
             />
           </div>
         ))}

@@ -30,8 +30,8 @@ import {
   Toggle,
 } from "@kdx/ui";
 
-import { DatePicker } from "~/app/components/date-picker";
-import { FrequencyToTxt } from "~/app/components/frequency-picker";
+import { DatePicker } from "~/app/_components/date-picker";
+import { FrequencyToTxt } from "~/app/_components/frequency-picker";
 import { tzOffsetText } from "~/helpers";
 
 const freqs = [RRule.DAILY, RRule.WEEKLY, RRule.MONTHLY, RRule.YEARLY];

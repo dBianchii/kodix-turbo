@@ -3,7 +3,7 @@ import { unstable_cache } from "next/cache";
 import type { RouterOutputs } from "@kdx/api";
 import { auth } from "@kdx/auth";
 
-import { KodixApp } from "~/app/components/app/kodix-app";
+import { KodixApp } from "~/app/_components/app/kodix-app";
 import { api } from "~/trpc/server";
 import { GradientHero } from "./gradient-hero";
 
@@ -37,6 +37,7 @@ export default async function Home() {
               appDescription={app.description}
               appUrl={app.urlApp}
               installed={app.installed}
+              session={session}
             />
           </div>
         ))}

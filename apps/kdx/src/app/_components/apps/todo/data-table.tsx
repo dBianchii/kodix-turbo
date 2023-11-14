@@ -22,7 +22,7 @@ import {
   TableRow,
 } from "@kdx/ui";
 
-import { DataTablePagination } from "~/app/components/pagination";
+import { DataTablePagination } from "~/app/_components/pagination";
 import { api } from "~/trpc/react";
 import { CreateTaskDialogButton } from "./create-task-dialog-button";
 

@@ -25,7 +25,7 @@ import {
   Toggle,
 } from "@kdx/ui";
 
-import { FrequencyToTxt } from "~/app/components/frequency-picker";
+import { FrequencyToTxt } from "~/app/_components/frequency-picker";
 
 const freqs = [RRule.DAILY, RRule.WEEKLY, RRule.MONTHLY, RRule.YEARLY];
 

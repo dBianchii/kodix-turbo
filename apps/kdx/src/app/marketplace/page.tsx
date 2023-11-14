@@ -1,11 +1,13 @@
+import { auth } from "@kdx/auth";
 import { H1, Lead } from "@kdx/ui";
 
-import { KodixApp } from "~/app/components/app/kodix-app";
-import MaxWidthWrapper from "~/app/components/max-width-wrapper";
+import { KodixApp } from "~/app/_components/app/kodix-app";
+import MaxWidthWrapper from "~/app/_components/max-width-wrapper";
 import { api } from "~/trpc/server";
 
 export default async function Apps() {
   const apps = await api.app.getAll.query();
+  const session = await auth();
 
   return (
     <MaxWidthWrapper>
@@ -24,6 +26,7 @@ export default async function Apps() {
               appDescription={app.description}
               appUrl={app.urlApp}
               installed={app.installed}
+              session={session}
             />
           </div>
         ))}

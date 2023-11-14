@@ -53,7 +53,7 @@ export async function Header() {
                 >
                   <path d="M16.88 3.549L7.12 20.451"></path>
                 </svg>
-                <TeamSwitcher />
+                <TeamSwitcher session={session} />
               </>
             )}
 
@@ -115,7 +115,7 @@ export async function UserNav() {
 
   return (
     <>
-      {!!session && <UserProfileButton />}
+      {!!session && <UserProfileButton session={session} />}
       {!session && (
         <div className="mr-5 space-x-2">
           <Link href="/signin" className={buttonVariants({ variant: "ghost" })}>

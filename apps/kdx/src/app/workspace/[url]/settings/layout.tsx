@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { auth } from "@kdx/auth";
 import { prisma } from "@kdx/db";
 
-import MaxWidthWrapper from "~/app/components/max-width-wrapper";
+import MaxWidthWrapper from "~/app/_components/max-width-wrapper";
 import { api } from "~/trpc/server";
 import { SettingsNavigation } from "./_components/settings-nav";
 import { ShouldRender } from "./general/_components/client-should-render";

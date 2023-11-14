@@ -19,18 +19,18 @@ import {
   Textarea,
 } from "@kdx/ui";
 
-import { AssigneePopover } from "~/app/components/apps/todo/assignee-popover";
+import { AssigneePopover } from "~/app/_components/apps/todo/assignee-popover";
 import {
   PriorityIcon,
   PriorityPopover,
   PriorityToTxt,
-} from "~/app/components/apps/todo/priority-popover";
-import type { Priority } from "~/app/components/apps/todo/priority-popover";
-import { StatusPopover } from "~/app/components/apps/todo/status-popover";
+} from "~/app/_components/apps/todo/priority-popover";
+import type { Priority } from "~/app/_components/apps/todo/priority-popover";
+import { StatusPopover } from "~/app/_components/apps/todo/status-popover";
 import {
   DatePickerIcon,
   DatePickerWithPresets,
-} from "~/app/components/date-picker-with-presets";
+} from "~/app/_components/date-picker-with-presets";
 import { api } from "~/trpc/react";
 
 export function CreateTaskDialogButton() {
