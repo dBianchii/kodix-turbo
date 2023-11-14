@@ -7,11 +7,11 @@ import { cookies } from "next/headers";
 
 import { cn, Toaster } from "@kdx/ui";
 
-import { Footer } from "~/components/footer/footer";
-import { Header } from "~/components/header/header";
-import { NextThemeProvider } from "~/components/providers";
-import { TailwindIndicator } from "~/components/tailwind-indicator";
-import { ThemeSwitcher } from "~/components/theme-switcher";
+import { Footer } from "~/app/components/footer/footer";
+import { Header } from "~/app/components/header/header";
+import { NextThemeProvider } from "~/app/components/providers";
+import { TailwindIndicator } from "~/app/components/tailwind-indicator";
+import { ThemeSwitcher } from "~/app/components/theme-switcher";
 import { TRPCReactProvider } from "~/trpc/react";
 
 const fontSans = FontSans({

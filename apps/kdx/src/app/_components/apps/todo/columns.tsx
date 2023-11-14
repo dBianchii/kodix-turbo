@@ -8,7 +8,7 @@ import type { RouterOutputs } from "@kdx/api";
 import type { Status } from "@kdx/db";
 import { Button, Checkbox, toast } from "@kdx/ui";
 
-import { DatePickerWithPresets } from "~/components/date-picker-with-presets";
+import { DatePickerWithPresets } from "~/app/components/date-picker-with-presets";
 import { api } from "~/trpc/react";
 import { AssigneePopover } from "./assignee-popover";
 import {

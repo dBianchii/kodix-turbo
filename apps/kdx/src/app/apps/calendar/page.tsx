@@ -4,10 +4,10 @@ import moment from "moment";
 import { auth } from "@kdx/auth";
 import { H1, Separator } from "@kdx/ui";
 
-import { columns } from "~/components/apps/calendar/columns";
-import { CreateEventDialogButton } from "~/components/apps/calendar/create-event-dialog";
-import { DataTable } from "~/components/apps/calendar/data-table";
-import MaxWidthWrapper from "~/components/max-width-wrapper";
+import { columns } from "~/app/components/apps/calendar/columns";
+import { CreateEventDialogButton } from "~/app/components/apps/calendar/create-event-dialog";
+import { DataTable } from "~/app/components/apps/calendar/data-table";
+import MaxWidthWrapper from "~/app/components/max-width-wrapper";
 import { api } from "~/trpc/server";
 
 export default async function Calendar() {
