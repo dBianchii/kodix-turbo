@@ -31,15 +31,15 @@ export const userRouter = createTRPCRouter({
 
       return user;
     }),
-  switchActiveWorkspace: protectedProcedure
-    .input(z.object({ workspaceId: string().cuid() }))
+  switchActiveTeam: protectedProcedure
+    .input(z.object({ teamId: string().cuid() }))
     .mutation(async ({ ctx, input }) => {
-      revalidateTag("activeWorkspace"); //THIS WORKS!!
+      revalidateTag("activeTeam"); //THIS WORKS!!
 
       const user = await ctx.prisma.user.update({
         where: {
           id: ctx.session.user.id,
-          workspaces: {
+          teams: {
             some: {
               activeUsers: {
                 some: {
@@ -50,12 +50,12 @@ export const userRouter = createTRPCRouter({
           },
         },
         data: {
-          activeWorkspaceId: input.workspaceId,
+          activeTeamId: input.teamId,
         },
         select: {
-          workspaces: {
+          teams: {
             where: {
-              id: input.workspaceId,
+              id: input.teamId,
             },
             select: {
               id: true,
@@ -64,20 +64,20 @@ export const userRouter = createTRPCRouter({
         },
       });
 
-      if (!user.workspaces[0])
+      if (!user.teams[0])
         throw new TRPCError({
-          message: "No Workspace Found",
+          message: "No Team Found",
           code: "INTERNAL_SERVER_ERROR",
         });
 
-      return user.workspaces[0];
+      return user.teams[0];
     }),
   installApp: protectedProcedure
     .input(z.object({ appId: string().cuid() }))
     .mutation(async ({ ctx, input }) => {
-      return await ctx.prisma.workspace.update({
+      return await ctx.prisma.team.update({
         where: {
-          id: ctx.session.user.activeWorkspaceId,
+          id: ctx.session.user.activeTeamId,
         },
         data: {
           activeApps: {

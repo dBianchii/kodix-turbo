@@ -11,11 +11,11 @@ export function _wsPrisma() {
     //     $allModels: {
     //       async $allOperations({ query, args, model, operation }) {
     //         const camelCaseModel = camelCase(model);
-    //         if ("workspaceId" in ) {
+    //         if ("teamId" in ) {
     //           if (operation !== "createMany" && operation !== "create") {
     //             args.where = {
     //               ...args.where,
-    //               workspaceId,
+    //               teamId,
     //             };
     //           }
     //         }

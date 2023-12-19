@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { kodixCareAdminRoleId, prisma } from "@kdx/db";
-import { updateWorkspaceSchema } from "@kdx/shared";
+import { updateTeamSchema } from "@kdx/shared";
 
 import {
   createTRPCRouter,
@@ -12,9 +12,9 @@ import {
 } from "../../trpc";
 import { invitationRouter } from "./invitation/invitation";
 
-export const workspaceRouter = createTRPCRouter({
+export const teamRouter = createTRPCRouter({
   getAllForLoggedUser: protectedProcedure.query(async ({ ctx }) => {
-    const workspaces = await ctx.prisma.workspace.findMany({
+    const teams = await ctx.prisma.team.findMany({
       where: {
         users: {
           some: {
@@ -29,23 +29,23 @@ export const workspaceRouter = createTRPCRouter({
       },
     });
 
-    return workspaces;
+    return teams;
   }),
   create: protectedProcedure
     .input(
       z.object({
         userId: z.string().cuid(),
-        workspaceName: z.string().min(3).max(32, {
-          message: "Workspace name must be at most 32 characters",
+        teamName: z.string().min(3).max(32, {
+          message: "Team name must be at most 32 characters",
         }),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      //! When changing workspace creation flow here, change it on @kdx/auth new user creation as well!
-      const ws = await ctx.prisma.workspace.create({
+      //! When changing team creation flow here, change it on @kdx/auth new user creation as well!
+      const ws = await ctx.prisma.team.create({
         data: {
           ownerId: input.userId,
-          name: input.workspaceName,
+          name: input.teamName,
           users: input.userId
             ? {
                 connect: [{ id: input.userId }],
@@ -57,47 +57,47 @@ export const workspaceRouter = createTRPCRouter({
       return ws;
     }),
   getOne: protectedProcedure
-    .input(z.object({ workspaceId: z.string().cuid() }))
+    .input(z.object({ teamId: z.string().cuid() }))
     .query(async ({ ctx, input }) => {
-      const workspace = await ctx.prisma.workspace.findUnique({
+      const team = await ctx.prisma.team.findUnique({
         where: {
-          id: input.workspaceId,
+          id: input.teamId,
         },
       });
 
-      if (!workspace)
+      if (!team)
         throw new TRPCError({
-          message: "No Workspace Found",
+          message: "No Team Found",
           code: "NOT_FOUND",
         });
 
-      return workspace;
+      return team;
     }),
   update: userAndWsLimitedProcedure
-    .input(updateWorkspaceSchema)
+    .input(updateTeamSchema)
     .mutation(async ({ ctx, input }) => {
-      const ws = await ctx.prisma.workspace.update({
+      const ws = await ctx.prisma.team.update({
         where: {
-          id: input.workspaceId,
+          id: input.teamId,
         },
         data: {
-          name: input.workspaceName,
+          name: input.teamName,
         },
       });
       revalidateTag("getAllForLoggedUser");
       return ws;
     }),
-  getActiveWorkspace: protectedProcedure.query(async ({ ctx }) => {
-    const workspace = await ctx.prisma.workspace.findUniqueOrThrow({
+  getActiveTeam: protectedProcedure.query(async ({ ctx }) => {
+    const team = await ctx.prisma.team.findUniqueOrThrow({
       where: {
-        id: ctx.session.user.activeWorkspaceId,
+        id: ctx.session.user.activeTeamId,
       },
       include: {
         users: true,
       },
     });
 
-    return workspace;
+    return team;
   }),
   installApp: protectedProcedure
     .input(
@@ -120,20 +120,20 @@ export const workspaceRouter = createTRPCRouter({
           code: "NOT_FOUND",
         });
 
-      const workspace = await ctx.prisma.workspace.findUnique({
+      const team = await ctx.prisma.team.findUnique({
         where: {
-          id: ctx.session.user.activeWorkspaceId,
+          id: ctx.session.user.activeTeamId,
         },
       });
-      if (!workspace)
+      if (!team)
         throw new TRPCError({
-          message: "No Workspace Found",
+          message: "No Team Found",
           code: "NOT_FOUND",
         });
 
-      if (workspace.ownerId !== ctx.session.user.id)
+      if (team.ownerId !== ctx.session.user.id)
         throw new TRPCError({
-          message: "Only the workspace owner can install apps",
+          message: "Only the team owner can install apps",
           code: "FORBIDDEN",
         });
 
@@ -143,9 +143,9 @@ export const workspaceRouter = createTRPCRouter({
             id: input.appId,
           },
           data: {
-            activeWorkspaces: {
+            activeTeams: {
               connect: {
-                id: workspace.id,
+                id: team.id,
               },
             },
           },
@@ -162,9 +162,9 @@ export const workspaceRouter = createTRPCRouter({
                 id: ctx.session.user.id,
               },
             },
-            workspace: {
+            team: {
               connect: {
-                id: ctx.session.user.activeWorkspaceId,
+                id: ctx.session.user.activeTeamId,
               },
             },
             appRole: {
@@ -189,9 +189,9 @@ export const workspaceRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const uninstalledApp = await ctx.prisma.workspace.update({
+      const uninstalledApp = await ctx.prisma.team.update({
         where: {
-          id: ctx.session.user.activeWorkspaceId,
+          id: ctx.session.user.activeTeamId,
         },
         data: {
           activeApps: {
@@ -209,7 +209,7 @@ export const workspaceRouter = createTRPCRouter({
   removeUser: protectedProcedure
     .input(
       z.object({
-        workspaceId: z.string().cuid(),
+        teamId: z.string().cuid(),
         userId: z.string().cuid(),
       }),
     )
@@ -217,9 +217,9 @@ export const workspaceRouter = createTRPCRouter({
       const isUserTryingToRemoveSelfFromWs =
         input.userId === ctx.session.user.id;
 
-      const workspace = await ctx.prisma.workspace.findFirstOrThrow({
+      const team = await ctx.prisma.team.findFirstOrThrow({
         where: {
-          id: input.workspaceId,
+          id: input.teamId,
         },
         select: {
           ownerId: true,
@@ -232,27 +232,27 @@ export const workspaceRouter = createTRPCRouter({
       });
 
       if (isUserTryingToRemoveSelfFromWs) {
-        if (workspace?.ownerId === ctx.session.user.id) {
+        if (team?.ownerId === ctx.session.user.id) {
           throw new TRPCError({
             message:
-              "You are the owner of this workspace. You must transfer ownership first before leaving it",
+              "You are the owner of this team. You must transfer ownership first before leaving it",
             code: "BAD_REQUEST",
           });
         }
       }
 
-      if (workspace?.users.length <= 1)
+      if (team?.users.length <= 1)
         throw new TRPCError({
           message:
-            "This user cannot leave since they are the only remaining owner of the workspace. Delete this workspace instead",
+            "This user cannot leave since they are the only remaining owner of the team. Delete this team instead",
           code: "BAD_REQUEST",
         });
 
       //TODO: Implemente role based access control
-      const otherWorkspace = await ctx.prisma.workspace.findFirst({
+      const otherTeam = await ctx.prisma.team.findFirst({
         where: {
           id: {
-            not: input.workspaceId,
+            not: input.teamId,
           },
           users: {
             some: {
@@ -262,35 +262,35 @@ export const workspaceRouter = createTRPCRouter({
         },
       });
 
-      if (!otherWorkspace)
+      if (!otherTeam)
         throw new TRPCError({
           message:
-            "The user needs to have at least one workspace. Please create another workspace before removing this user",
+            "The user needs to have at least one team. Please create another team before removing this user",
           code: "BAD_REQUEST",
         });
 
-      //check if there are more people in the workspace before removal
+      //check if there are more people in the team before removal
 
       await ctx.prisma.user.update({
         where: {
           id: input.userId,
         },
         data: {
-          workspaces: {
+          teams: {
             disconnect: {
-              id: input.workspaceId,
+              id: input.teamId,
             },
           },
-          activeWorkspaceId: otherWorkspace.id,
+          activeTeamId: otherTeam.id,
         },
       });
     }),
   getAllUsers: protectedProcedure.query(async ({ ctx }) => {
     return await prisma.user.findMany({
       where: {
-        workspaces: {
+        teams: {
           some: {
-            id: ctx.session.user.activeWorkspaceId,
+            id: ctx.session.user.activeTeamId,
           },
         },
       },

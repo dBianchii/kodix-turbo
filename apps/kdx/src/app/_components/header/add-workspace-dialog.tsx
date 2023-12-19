@@ -17,13 +17,13 @@ import {
 } from "@kdx/ui";
 
 import { defaultSafeActionToastError } from "~/helpers/safe-action/default-action-error-toast";
-import { createWorkspaceAction } from "./actions";
+import { createTeamAction } from "./actions";
 
 /**
  * To use this Dialog, make sure you wrap it in a DialogTrigger component.
- * To activate the AddWorkspaceDialog component from within a Context Menu or Dropdown Menu, you must encase the Context Menu or Dropdown Menu component in the AddWorkspaceDialog component.
+ * To activate the AddTeamDialog component from within a Context Menu or Dropdown Menu, you must encase the Context Menu or Dropdown Menu component in the AddTeamDialog component.
  */
-export function AddWorkspaceDialog({
+export function AddTeamDialog({
   children,
   open,
   onOpenChange,
@@ -36,27 +36,27 @@ export function AddWorkspaceDialog({
 }) {
   const router = useRouter();
   const pathname = usePathname();
-  const [workspaceName, changeWorkspaceName] = React.useState("");
+  const [teamName, changeTeamName] = React.useState("");
   const [isPending, setIsPending] = React.useState(false);
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       {children}
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create workspace</DialogTitle>
+          <DialogTitle>Create team</DialogTitle>
           <DialogDescription>
-            Create a new workspace and invite your team members
+            Create a new team and invite your team members
           </DialogDescription>
         </DialogHeader>
         <div>
           <div className="space-y-4 py-2 pb-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Workspace name</Label>
+              <Label htmlFor="name">Team name</Label>
               <Input
                 id="name"
                 placeholder="Acme Inc."
-                value={workspaceName}
-                onChange={(e) => changeWorkspaceName(e.target.value)}
+                value={teamName}
+                onChange={(e) => changeTeamName(e.target.value)}
               />
             </div>
             {/* <div className="space-y-2">
@@ -91,18 +91,18 @@ export function AddWorkspaceDialog({
             disabled={isPending}
             onClick={async () => {
               setIsPending(true);
-              const result = await createWorkspaceAction({
+              const result = await createTeamAction({
                 userId: session.user.id,
-                workspaceName: workspaceName,
+                teamName: teamName,
               });
               setIsPending(false);
               if (defaultSafeActionToastError(result)) return;
               onOpenChange(false);
-              toast(`Workspace ${result.data?.name} created`, {
-                description: "Successfully created a new workspace.",
+              toast(`Team ${result.data?.name} created`, {
+                description: "Successfully created a new team.",
               });
-              if (pathname === "/workspace") return router.refresh();
-              router.push("/workspace");
+              if (pathname === "/team") return router.refresh();
+              router.push("/team");
             }}
           >
             {isPending && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}

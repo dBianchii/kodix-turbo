@@ -4,7 +4,7 @@ import { auth } from "@kdx/auth";
 
 export default async function Home() {
   const session = await auth();
-  if (session) return redirect("/workspace");
+  if (session) return redirect("/team");
 
   return (
     <main className="flex-1 py-8">

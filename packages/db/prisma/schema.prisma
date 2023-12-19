@@ -38,8 +38,8 @@ model UserAppRole {
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
-  workspaceId String
-  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id])
 
   appId String
   app   App    @relation(fields: [appId], references: [id])
@@ -48,72 +48,72 @@ model UserAppRole {
   appRole   AppRole @relation(fields: [appRoleId], references: [id])
 
   @@index([userId])
-  @@index([workspaceId])
+  @@index([teamId])
   @@index([appId])
   @@index([appRoleId])
 }
 
-model AppWorkspaceConfig {
+model AppTeamConfig {
   id         String @id @default(cuid())
   Parameters String @db.MediumText // Para qualquer configuração 
 
   AppId String
   app   App    @relation("AppConfig", fields: [AppId], references: [id])
 
-  workspaceId String
-  workspace   Workspace @relation("WorkspaceConfig", fields: [workspaceId], references: [id])
+  teamId String
+  team   Team   @relation("TeamConfig", fields: [teamId], references: [id])
 
-  @@unique([AppId, workspaceId])
+  @@unique([AppId, teamId])
   @@index([AppId])
-  @@index([workspaceId])
+  @@index([teamId])
 }
 
-model Workspace {
+model Team {
   id        String   @id @default(cuid())
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  users     User[]   @relation("UserWorkspace")
+  users     User[]   @relation("UserTeam")
 
   ownerId String
   owner   User   @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  activeUsers User[]        @relation("UserActiveWorkspace")
-  activeApps  App[]         @relation("AppWorkspace")
+  activeUsers User[]        @relation("UserActiveTeam")
+  activeApps  App[]         @relation("AppTeam")
   Todo        Todo[]
   EventMaster EventMaster[]
   Invitations Invitation[]
 
-  workspaceConfigs AppWorkspaceConfig[] @relation("WorkspaceConfig")
-  UserAppRole      UserAppRole[]
+  teamConfigs AppTeamConfig[] @relation("TeamConfig")
+  UserAppRole UserAppRole[]
 
   @@index([ownerId])
 }
 
 model Invitation {
-  id          String    @id @default(cuid())
-  workspace   Workspace @relation(fields: [workspaceId], references: [id])
-  workspaceId String
-  email       String
-  accepted    Boolean   @default(false) //Is this necessary? Since we just delete the invitation when the user accepts it
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id        String   @id @default(cuid())
+  team      Team     @relation(fields: [teamId], references: [id])
+  teamId    String
+  email     String
+  accepted  Boolean  @default(false) //Is this necessary? Since we just delete the invitation when the user accepts it
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  @@index([workspaceId])
+  @@index([teamId])
 }
 
 model App {
-  id                  String               @id @default(cuid())
-  name                String
-  description         String
-  createdAt           DateTime             @default(now())
-  updatedAt           DateTime             @updatedAt
-  subscriptionCost    Decimal
-  activeWorkspaces    Workspace[]          @relation("AppWorkspace")
-  idpartnerDev        DevPartner           @relation(fields: [devPartnerId], references: [id])
-  devPartnerId        String
-  url                 String               @unique
-  appWorkspaceConfigs AppWorkspaceConfig[] @relation("AppConfig")
+  id               String          @id @default(cuid())
+  name             String
+  description      String
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  subscriptionCost Decimal
+  activeTeams      Team[]          @relation("AppTeam")
+  idpartnerDev     DevPartner      @relation(fields: [devPartnerId], references: [id])
+  devPartnerId     String
+  url              String          @unique
+  appTeamConfigs   AppTeamConfig[] @relation("AppConfig")
 
   appRoles    AppRole[]
   UserAppRole UserAppRole[]
@@ -155,10 +155,10 @@ model Todo {
   assignedToUserId String?
   assignedToUser   User?   @relation(fields: [assignedToUserId], references: [id])
 
-  workspaceId String
-  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id])
 
-  @@index([workspaceId])
+  @@index([teamId])
   @@index([assignedToUserId])
 }
 
@@ -175,10 +175,10 @@ model EventMaster {
   EventCancellations EventCancellation[]
   EventDone          EventDone[]
 
-  Workspace   Workspace @relation(fields: [workspaceId], references: [id])
-  workspaceId String
+  Team   Team   @relation(fields: [teamId], references: [id])
+  teamId String
 
-  @@index([workspaceId])
+  @@index([teamId])
 }
 
 model EventException {
@@ -262,22 +262,22 @@ model Session {
 }
 
 model User {
-  id                String        @id @default(cuid())
-  name              String?
-  email             String?       @unique
-  emailVerified     DateTime?
-  image             String?
-  accounts          Account[]
-  sessions          Session[]
-  workspaces        Workspace[]   @relation("UserWorkspace")
-  Todo              Todo[]
-  activeWorkspaceId String
-  activeWorkspace   Workspace     @relation("UserActiveWorkspace", fields: [activeWorkspaceId], references: [id])
-  EventDone         EventDone[]
-  ownedWorkspaces   Workspace[]
-  UserAppRole       UserAppRole[]
+  id            String        @id @default(cuid())
+  name          String?
+  email         String?       @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  teams         Team[]        @relation("UserTeam")
+  Todo          Todo[]
+  activeTeamId  String
+  activeTeam    Team          @relation("UserActiveTeam", fields: [activeTeamId], references: [id])
+  EventDone     EventDone[]
+  ownedTeams    Team[]
+  UserAppRole   UserAppRole[]
 
-  @@index([activeWorkspaceId])
+  @@index([activeTeamId])
 }
 
 model VerificationToken {

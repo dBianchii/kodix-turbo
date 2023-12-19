@@ -7,7 +7,7 @@ import { CustomKodixIcon, IconKodixApp } from "~/app/_components/app/kodix-app";
 import MaxWidthWrapper from "~/app/_components/max-width-wrapper";
 import { api } from "~/trpc/server";
 
-export default async function Workspace() {
+export default async function Team() {
   const session = await auth();
   if (!session) return redirect("/");
   const apps = await api.app.getInstalled.query();
@@ -17,7 +17,7 @@ export default async function Workspace() {
       <MaxWidthWrapper className="flex flex-col gap-12">
         <div className="flex">
           <span className="bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-4xl font-bold">
-            {session.user.activeWorkspaceName}
+            {session.user.activeTeamName}
           </span>
         </div>
         <div className="flex flex-row items-center space-x-10">
@@ -28,7 +28,7 @@ export default async function Workspace() {
           />
           <CustomKodixIcon
             appName={"Settings"}
-            appUrl={"/workspace/settings"}
+            appUrl={"/team/settings"}
             iconPath={"/appIcons/settings.png"}
           />
           {apps?.map((app) => (

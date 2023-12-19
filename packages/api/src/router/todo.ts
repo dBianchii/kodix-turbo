@@ -22,7 +22,7 @@ export const todoRouter = createTRPCRouter({
       const todo = await ctx.prisma.todo.create({
         data: {
           assignedToUserId: input.assignedToUserId,
-          workspaceId: ctx.session.user.activeWorkspaceId,
+          teamId: ctx.session.user.activeTeamId,
 
           title: input.title,
           description: input.description,
@@ -37,7 +37,7 @@ export const todoRouter = createTRPCRouter({
   getAll: protectedProcedure.query(async ({ ctx }) => {
     const todos = await ctx.prisma.todo.findMany({
       where: {
-        workspaceId: ctx.session.user.activeWorkspaceId,
+        teamId: ctx.session.user.activeTeamId,
       },
       include: {
         assignedToUser: {

@@ -33,16 +33,16 @@
 // } from "@kdx/ui";
 
 // import { api } from "~/trpc/react";
-// import { switchWorkspaceAction } from "./actions";
-// import { AddWorkspaceDialog } from "./add-workspace-dialog";
+// import { switchTeamAction } from "./actions";
+// import { AddTeamDialog } from "./add-team-dialog";
 
 // export function TeamSwitcher({
 //   session,
-//   workspaces,
+//   teams,
 //   avatar,
 // }: {
 //   session: Session;
-//   workspaces: RouterOutputs["workspace"]["getAllForLoggedUser"];
+//   teams: RouterOutputs["team"]["getAllForLoggedUser"];
 //   avatar: React.ReactNode;
 // }) {
 //   const router = useRouter();
@@ -50,19 +50,19 @@
 //   const [loading, setLoading] = React.useState(false);
 //   const utils = api.useUtils();
 //   const [open, setOpen] = React.useState(false);
-//   const [showNewWorkspaceDialog, setShowNewWorkspaceDialog] =
+//   const [showNewTeamDialog, setShowNewTeamDialog] =
 //     React.useState(false);
-//   if (!workspaces) return null;
+//   if (!teams) return null;
 //   return (
-//     <AddWorkspaceDialog
-//       open={showNewWorkspaceDialog}
-//       onOpenChange={setShowNewWorkspaceDialog}
+//     <AddTeamDialog
+//       open={showNewTeamDialog}
+//       onOpenChange={setShowNewTeamDialog}
 //       session={session}
 //     >
 //       <Popover open={open} onOpenChange={setOpen}>
 //         <div className="center flex justify-center rounded-lg">
 //           <Link
-//             href={`/workspace`}
+//             href={`/team`}
 //             className={cn(
 //               buttonVariants({ variant: "ghost", size: "sm" }),
 //               "justify-start hover:bg-inherit",
@@ -70,12 +70,12 @@
 //           >
 //             <>
 //               {avatar}
-//               {session.user.activeWorkspaceName.length > 19 ? (
+//               {session.user.activeTeamName.length > 19 ? (
 //                 <span className="text-xs">
-//                   {session.user.activeWorkspaceName}
+//                   {session.user.activeTeamName}
 //                 </span>
 //               ) : (
-//                 session.user.activeWorkspaceName
+//                 session.user.activeTeamName
 //               )}
 //             </>
 //           </Link>
@@ -86,7 +86,7 @@
 //               disabled={loading}
 //               role="combobox"
 //               aria-expanded={open}
-//               aria-label="Select a workspace"
+//               aria-label="Select a team"
 //               className="w-8"
 //             >
 //               {loading ? (
@@ -101,17 +101,17 @@
 //           <Command>
 //             <CommandList>
 //               <CommandInput placeholder="Search team..." />
-//               <CommandEmpty>No workspace found.</CommandEmpty>
+//               <CommandEmpty>No team found.</CommandEmpty>
 //               <CommandGroup>
-//                 {workspaces.map((ws) => (
+//                 {teams.map((ws) => (
 //                   <CommandItem
 //                     key={ws.name}
 //                     value={ws.name + ws.id}
 //                     onSelect={async () => {
 //                       setOpen(false);
 //                       setLoading(true);
-//                       await switchWorkspaceAction({
-//                         workspaceId: ws.id,
+//                       await switchTeamAction({
+//                         teamId: ws.id,
 //                         redirect: pathname!,
 //                       });
 //                       void utils.invalidate(); //Invalidates the full router
@@ -129,7 +129,7 @@
 //                     <Check
 //                       className={cn(
 //                         "ml-auto h-4 w-4",
-//                         session.user.activeWorkspaceId === ws.id
+//                         session.user.activeTeamId === ws.id
 //                           ? "opacity-100"
 //                           : "opacity-0",
 //                       )}
@@ -145,27 +145,27 @@
 //                   <CommandItem
 //                     onSelect={() => {
 //                       setOpen(false);
-//                       setShowNewWorkspaceDialog(true);
+//                       setShowNewTeamDialog(true);
 //                     }}
 //                   >
 //                     <PlusCircle className="mr-2 h-5 w-5" />
-//                     Create New Workspace
+//                     Create New Team
 //                   </CommandItem>
 //                 </DialogTrigger>
 //                 <CommandItem
 //                   onSelect={() => {
-//                     router.push("/workspace/settings");
+//                     router.push("/team/settings");
 //                     setOpen(false);
 //                   }}
 //                 >
 //                   <Settings className="mr-2 h-5 w-5" />
-//                   Workspace Settings
+//                   Team Settings
 //                 </CommandItem>
 //               </CommandGroup>
 //             </CommandList>
 //           </Command>
 //         </PopoverContent>
 //       </Popover>
-//     </AddWorkspaceDialog>
+//     </AddTeamDialog>
 //   );
 // }

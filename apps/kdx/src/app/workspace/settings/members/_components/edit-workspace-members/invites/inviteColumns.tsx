@@ -13,14 +13,12 @@ import {
 } from "@kdx/ui";
 
 const columnHelper =
-  createColumnHelper<
-    RouterOutputs["workspace"]["invitation"]["getAll"][number]
-  >();
+  createColumnHelper<RouterOutputs["team"]["invitation"]["getAll"][number]>();
 
 export const inviteColumns = ({
   mutate,
 }: {
-  mutate: (input: RouterInputs["workspace"]["invitation"]["delete"]) => void;
+  mutate: (input: RouterInputs["team"]["invitation"]["delete"]) => void;
 }) => [
   columnHelper.accessor("inviteEmail", {
     header: (info) => {

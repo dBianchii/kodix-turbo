@@ -22,12 +22,12 @@ import { StatusIcon, StatusPopover, StatusToText } from "./status-popover";
 
 export type TodoColumn = RouterOutputs["todo"]["getAll"][number];
 const columnHelper = createColumnHelper<TodoColumn>();
-type workspace = RouterOutputs["workspace"]["getActiveWorkspace"];
+type team = RouterOutputs["team"]["getActiveTeam"];
 
 declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface TableMeta<TData extends RowData> {
-    workspace: workspace | undefined;
+    team: team | undefined;
   }
 }
 
@@ -238,7 +238,7 @@ export const columns = [
           <AssigneePopover
             assignedToUserId={assignedToUserId}
             setAssignedToUserId={handleAssignedToUserChange}
-            users={info.table.options.meta?.workspace?.users ?? []}
+            users={info.table.options.meta?.team?.users ?? []}
           />
         </div>
       );

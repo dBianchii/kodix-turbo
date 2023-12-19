@@ -9,14 +9,14 @@ import {
 } from "@kdx/shared";
 
 import { sendEmail } from "../../../internal/email/email";
-import WorkspaceInvite from "../../../internal/email/templates/workspace-invite";
+import TeamInvite from "../../../internal/email/templates/team-invite";
 import { createTRPCRouter, protectedProcedure } from "../../../trpc";
 
 export const invitationRouter = createTRPCRouter({
   getAll: protectedProcedure.query(async ({ ctx }) => {
     const invitations = await ctx.prisma.invitation.findMany({
       where: {
-        workspaceId: ctx.session.user.activeWorkspaceId,
+        teamId: ctx.session.user.activeTeamId,
       },
     });
 
@@ -28,9 +28,9 @@ export const invitationRouter = createTRPCRouter({
   invite: protectedProcedure
     .input(inviteUserSchema)
     .mutation(async ({ ctx, input }) => {
-      const workspace = await ctx.prisma.workspace.findUniqueOrThrow({
+      const team = await ctx.prisma.team.findUniqueOrThrow({
         where: {
-          id: input.workspaceId,
+          id: input.teamId,
           users: {
             some: {
               id: ctx.session.user.id,
@@ -59,23 +59,23 @@ export const invitationRouter = createTRPCRouter({
       });
 
       const inWsEmail = input.to.find((email) =>
-        workspace.users.find((x) => x.email === email),
+        team.users.find((x) => x.email === email),
       );
       if (inWsEmail)
         throw new TRPCError({
-          message: `User ${inWsEmail} is already a member of this workspace`,
+          message: `User ${inWsEmail} is already a member of this team`,
           code: "CONFLICT",
         });
 
-      if (workspace.Invitations[0])
+      if (team.Invitations[0])
         throw new TRPCError({
-          message: `Invitation already sent to ${workspace.Invitations[0].email}`,
+          message: `Invitation already sent to ${team.Invitations[0].email}`,
           code: "CONFLICT",
         });
 
       const invitations = input.to.map((email) => ({
         id: cuid(),
-        workspaceId: workspace.id,
+        teamId: team.id,
         email,
       }));
 
@@ -84,14 +84,13 @@ export const invitationRouter = createTRPCRouter({
           await sendEmail({
             from: "Kodix <notification@kodix.com.br>",
             to: invite.email,
-            subject:
-              "You have been invited to join a workspace on kodix.com.br",
-            react: WorkspaceInvite({
+            subject: "You have been invited to join a team on kodix.com.br",
+            react: TeamInvite({
               invitedByEmail: ctx.session.user.email!,
               invitedByUsername: ctx.session.user.name!,
-              inviteLink: `${getBaseUrl()}/workspace/invite/${invite.id}`,
-              workspaceImage: `${getBaseUrl()}/api/avatar/${workspace.name}`,
-              workspaceName: workspace.name,
+              inviteLink: `${getBaseUrl()}/team/invite/${invite.id}`,
+              teamImage: `${getBaseUrl()}/api/avatar/${team.name}`,
+              teamName: team.name,
               // username: ??
             }),
           });
@@ -122,7 +121,7 @@ export const invitationRouter = createTRPCRouter({
         invitationId: z.string().cuid(),
       }),
     )
-    //.use(enforceUserHasWorkspace) // TODO: make this a middleware
+    //.use(enforceUserHasTeam) // TODO: make this a middleware
     .mutation(async ({ ctx, input }) => {
       if (!ctx.session.user.email)
         throw new TRPCError({
@@ -136,7 +135,7 @@ export const invitationRouter = createTRPCRouter({
           email: ctx.session.user.email,
         },
         select: {
-          workspace: {
+          team: {
             select: {
               id: true,
             },
@@ -156,12 +155,12 @@ export const invitationRouter = createTRPCRouter({
             id: ctx.session.user.id,
           },
           data: {
-            workspaces: {
+            teams: {
               connect: {
-                id: invitation.workspace.id,
+                id: invitation.team.id,
               },
             },
-            activeWorkspaceId: invitation.workspace.id,
+            activeTeamId: invitation.team.id,
           },
         }),
         ctx.prisma.invitation.delete({
@@ -178,13 +177,13 @@ export const invitationRouter = createTRPCRouter({
         invitationId: z.string().cuid(),
       }),
     )
-    //.use(enforceUserHasWorkspace) // TODO: make this a middleware
+    //.use(enforceUserHasTeam) // TODO: make this a middleware
     .mutation(async ({ ctx, input }) => {
       const invitation = await ctx.prisma.invitation.findUnique({
         where: {
           id: input.invitationId,
-          workspace: {
-            id: ctx.session.user.activeWorkspaceId,
+          team: {
+            id: ctx.session.user.activeTeamId,
           },
         },
       });

@@ -20,17 +20,16 @@ import {
   DropdownMenuTrigger,
 } from "@kdx/ui";
 
-import { AddWorkspaceDialog } from "./add-workspace-dialog";
+import { AddTeamDialog } from "./add-team-dialog";
 
 export function UserProfileButton({ session }: { session: Session }) {
-  const [showNewWorkspaceDialog, setShowNewWorkspaceDialog] =
-    React.useState(false);
+  const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false);
   if (!session) return null;
   return (
-    <AddWorkspaceDialog
+    <AddTeamDialog
       session={session}
-      open={showNewWorkspaceDialog}
-      onOpenChange={setShowNewWorkspaceDialog}
+      open={showNewTeamDialog}
+      onOpenChange={setShowNewTeamDialog}
     >
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -62,23 +61,21 @@ export function UserProfileButton({ session }: { session: Session }) {
             </DropdownMenuItem>
             <DropdownMenuSeparator className="mb-2" />
             <DropdownMenuItem asChild>
-              <Link href="/workspace" className="flex border border-gray-600">
+              <Link href="/team" className="flex border border-gray-600">
                 <Users className="h-4 w-4" />
-                <p className="ml-2 font-bold">
-                  {session.user.activeWorkspaceName}
-                </p>
+                <p className="ml-2 font-bold">{session.user.activeTeamName}</p>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/workspace/settings">
+              <Link href="/team/settings">
                 <Settings className="mr-2 h-4 w-4" />
                 Settings
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/account/workspaces">
+              <Link href="/account/teams">
                 <MdOutlineSwapHorizontalCircle className="mr-2 h-4 w-4" />
-                Change workspace...
+                Change team...
               </Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>
@@ -90,6 +87,6 @@ export function UserProfileButton({ session }: { session: Session }) {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-    </AddWorkspaceDialog>
+    </AddTeamDialog>
   );
 }

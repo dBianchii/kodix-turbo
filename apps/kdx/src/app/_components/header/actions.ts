@@ -7,27 +7,27 @@ import { z } from "zod";
 import { action } from "~/helpers/safe-action/safe-action";
 import { api } from "~/trpc/server";
 
-export const createWorkspaceAction = action(
+export const createTeamAction = action(
   z.object({
     userId: z.string(),
-    workspaceName: z.string(),
+    teamName: z.string(),
   }),
   async (input) => {
-    const workspace = await api.workspace.create.mutate(input);
-    void api.user.switchActiveWorkspace.mutate({ workspaceId: workspace.id });
-    revalidatePath("/workspace");
-    return workspace;
+    const team = await api.team.create.mutate(input);
+    void api.user.switchActiveTeam.mutate({ teamId: team.id });
+    revalidatePath("/team");
+    return team;
   },
 );
 
-export const switchWorkspaceAction = action(
+export const switchTeamAction = action(
   z.object({
-    workspaceId: z.string(),
+    teamId: z.string(),
     redirect: z.string().optional(),
   }),
   async (input) => {
-    await api.user.switchActiveWorkspace.mutate(input);
+    await api.user.switchActiveTeam.mutate(input);
     revalidatePath("/", "layout"); //IDK what this is doing exactly
-    redirect(input.redirect ?? "/workspace");
+    redirect(input.redirect ?? "/team");
   },
 );

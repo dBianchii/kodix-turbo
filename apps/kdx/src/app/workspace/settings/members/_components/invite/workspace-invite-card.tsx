@@ -30,7 +30,7 @@ import {
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
-export default function WorkspaceInviteCardClient({
+export default function TeamInviteCardClient({
   session,
 }: {
   session: Session;
@@ -40,7 +40,7 @@ export default function WorkspaceInviteCardClient({
   const [emails, setEmails] = useState([""]);
   const [successes, setSuccesses] = useState<string[]>([]);
 
-  const { mutate } = api.workspace.invitation.invite.useMutation({
+  const { mutate } = api.team.invitation.invite.useMutation({
     onSuccess: ({ successes, failures }) => {
       if (successes.length > 0)
         toast.success(
@@ -53,7 +53,7 @@ export default function WorkspaceInviteCardClient({
           important: true,
         });
       setSuccesses(successes);
-      void utils.workspace.invitation.getAll.invalidate();
+      void utils.team.invitation.getAll.invalidate();
 
       setTimeout(() => {
         closeDialog();
@@ -180,10 +180,10 @@ export default function WorkspaceInviteCardClient({
             </Button>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Invite to Workspace</DialogTitle>
+                <DialogTitle>Invite to Team</DialogTitle>
                 <DialogDescription>
-                  You are about to invite the following Workspace members, are
-                  you sure you want to continue?
+                  You are about to invite the following Team members, are you
+                  sure you want to continue?
                 </DialogDescription>
               </DialogHeader>
               <div className="my-4 flex flex-col space-y-2">
@@ -221,7 +221,7 @@ export default function WorkspaceInviteCardClient({
                   onClick={() => {
                     setLoading(true);
                     const values = {
-                      workspaceId: session.user.activeWorkspaceId,
+                      teamId: session.user.activeTeamId,
                       to: emails.filter((x) => Boolean(x)),
                     };
                     const parsed = inviteUserSchema.safeParse(values);

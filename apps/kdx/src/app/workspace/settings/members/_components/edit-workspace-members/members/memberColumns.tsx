@@ -14,13 +14,13 @@ import {
 } from "@kdx/ui";
 
 const columnHelper =
-  createColumnHelper<RouterOutputs["workspace"]["getAllUsers"][number]>();
+  createColumnHelper<RouterOutputs["team"]["getAllUsers"][number]>();
 
 export const memberColumns = ({
   mutate,
   session,
 }: {
-  mutate: (input: RouterInputs["workspace"]["removeUser"]) => void;
+  mutate: (input: RouterInputs["team"]["removeUser"]) => void;
   session: Session;
 }) => [
   columnHelper.accessor("name", {
@@ -79,7 +79,7 @@ export const memberColumns = ({
                 className="text-destructive"
                 onSelect={() => {
                   mutate({
-                    workspaceId: session.user.activeWorkspaceId,
+                    teamId: session.user.activeTeamId,
                     userId: session.user.id,
                   });
                 }}

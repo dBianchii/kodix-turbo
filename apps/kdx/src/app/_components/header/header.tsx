@@ -16,7 +16,7 @@ export async function Header() {
         <MaxWidthWrapper className="max-w-screen-2xl">
           <div className="mx-auto flex max-w-screen-2xl items-center">
             <Link
-              href={session ? "/workspace" : "/"}
+              href={session ? "/team" : "/"}
               className="text-bold text-primary text-xl font-medium"
             >
               <span className="hidden bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text font-extrabold tracking-tight text-transparent md:block">
@@ -45,15 +45,15 @@ export async function Header() {
                 </svg>
                 <TeamSwitcher
                   session={session}
-                  workspaces={workspaces}
+                  teams={teams}
                   avatar={
                     <AvatarWrapper
                       className="mr-2 h-5 w-5"
                       src={`${getBaseUrl()}/api/avatar/${
-                        session.user.activeWorkspaceName
+                        session.user.activeTeamName
                       }`}
-                      alt={session.user.activeWorkspaceName}
-                      fallback={session.user.activeWorkspaceName}
+                      alt={session.user.activeTeamName}
+                      fallback={session.user.activeTeamName}
                     />
                   }
                 />

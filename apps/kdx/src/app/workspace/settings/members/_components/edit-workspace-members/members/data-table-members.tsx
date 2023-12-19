@@ -26,18 +26,18 @@ export function DataTableMembers({
   initialUsers,
   session,
 }: {
-  initialUsers: RouterOutputs["workspace"]["getAllUsers"];
+  initialUsers: RouterOutputs["team"]["getAllUsers"];
   session: Session;
 }) {
-  const { data } = api.workspace.getAllUsers.useQuery(undefined, {
+  const { data } = api.team.getAllUsers.useQuery(undefined, {
     initialData: initialUsers,
   });
 
   const utils = api.useUtils();
-  const { mutate } = api.workspace.removeUser.useMutation({
+  const { mutate } = api.team.removeUser.useMutation({
     onSuccess: () => {
-      toast("User removed from workspace");
-      void utils.workspace.getAllUsers.invalidate();
+      toast("User removed from team");
+      void utils.team.getAllUsers.invalidate();
     },
     onError: (e) => trpcErrorToastDefault(e),
   });

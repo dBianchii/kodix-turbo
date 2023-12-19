@@ -20,13 +20,13 @@ import { api } from "~/trpc/react";
 import { inviteColumns } from "./inviteColumns";
 
 export function InviteDataTable() {
-  const { data } = api.workspace.invitation.getAll.useQuery();
+  const { data } = api.team.invitation.getAll.useQuery();
 
   const utils = api.useUtils();
-  const { mutate } = api.workspace.invitation.delete.useMutation({
+  const { mutate } = api.team.invitation.delete.useMutation({
     onSuccess: () => {
       toast.success("Invite deleted.");
-      void utils.workspace.invitation.getAll.invalidate();
+      void utils.team.invitation.getAll.invalidate();
     },
   });
 

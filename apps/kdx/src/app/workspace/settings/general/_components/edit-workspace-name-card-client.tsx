@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 
-import { updateWorkspaceSchema } from "@kdx/shared";
+import { updateTeamSchema } from "@kdx/shared";
 import {
   Button,
   Card,
@@ -21,31 +21,29 @@ import {
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
-export function EditWorkspaceNameCardClient({
-  workspaceId,
-  workspaceName,
+export function EditTeamNameCardClient({
+  teamId,
+  teamName,
 }: {
-  workspaceId: string;
-  workspaceName: string;
+  teamId: string;
+  teamName: string;
 }) {
   const router = useRouter();
-  const { mutate, isPending } = api.workspace.update.useMutation({
+  const { mutate, isPending } = api.team.update.useMutation({
     onSuccess: () => {
-      toast.success("Workspace name updated successfully");
+      toast.success("Team name updated successfully");
       router.refresh();
     },
     onError: (e) => trpcErrorToastDefault(e),
   });
 
-  const [newName, setNewName] = useState(workspaceName);
+  const [newName, setNewName] = useState(teamName);
 
   return (
     <Card className="w-full text-left">
       <CardHeader>
-        <CardTitle>Workspace Name</CardTitle>
-        <CardDescription>
-          This is your workspace&apos;s visible name
-        </CardDescription>
+        <CardTitle>Team Name</CardTitle>
+        <CardDescription>This is your team&apos;s visible name</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="grid w-full items-center gap-4">
@@ -68,10 +66,10 @@ export function EditWorkspaceNameCardClient({
           disabled={isPending}
           onClick={() => {
             const values = {
-              workspaceId,
-              workspaceName: newName,
+              teamId,
+              teamName: newName,
             };
-            const parsed = updateWorkspaceSchema.safeParse(values);
+            const parsed = updateTeamSchema.safeParse(values);
             if (!parsed.success) {
               return toast.error(parsed.error.errors[0]?.message);
             }

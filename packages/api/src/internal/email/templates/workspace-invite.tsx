@@ -21,13 +21,13 @@ import { getBaseKdxUrl } from "@kdx/shared";
 
 const baseUrl = getBaseKdxUrl();
 
-export const WorkspaceInvite = ({
+export const TeamInvite = ({
   username = "",
   userImage = `${baseUrl}/static/kodix-user.png`,
   invitedByUsername = "",
   invitedByEmail = "bukinoshita@example.com",
-  workspaceName = "My Project",
-  workspaceImage = `${baseUrl}/static/kodix-team.png`,
+  teamName = "My Project",
+  teamImage = `${baseUrl}/static/kodix-team.png`,
   inviteLink = "https://kodix.com/teams/invite/foo",
   inviteFromIp = "204.13.186.218",
   inviteFromLocation = "São Paulo, Brazil",
@@ -36,8 +36,8 @@ export const WorkspaceInvite = ({
   userImage?: string;
   invitedByUsername?: string;
   invitedByEmail?: string;
-  workspaceName?: string;
-  workspaceImage?: string;
+  teamName?: string;
+  teamImage?: string;
   inviteLink?: string;
   inviteFromIp?: string;
   inviteFromLocation?: string;
@@ -61,7 +61,7 @@ export const WorkspaceInvite = ({
               />
             </Section>
             <Heading className="mx-0 my-[30px] p-0 text-center text-[24px] font-normal text-black">
-              Join <strong>{workspaceName}</strong> on <strong>Kodix</strong>
+              Join <strong>{teamName}</strong> on <strong>Kodix</strong>
             </Heading>
             <Text className="text-[14px] leading-[24px] text-black">
               Hello {username},
@@ -74,7 +74,7 @@ export const WorkspaceInvite = ({
               >
                 {invitedByEmail}
               </Link>
-              ) has invited you to the <strong>{workspaceName}</strong> team on{" "}
+              ) has invited you to the <strong>{teamName}</strong> team on{" "}
               <strong>Kodix</strong>.
             </Text>
             <Section>
@@ -98,7 +98,7 @@ export const WorkspaceInvite = ({
                 <Column align="left">
                   <Img
                     className="rounded-full"
-                    src={workspaceImage}
+                    src={teamImage}
                     width="64"
                     height="64"
                   />
@@ -137,4 +137,4 @@ export const WorkspaceInvite = ({
   );
 };
 
-export default WorkspaceInvite;
+export default TeamInvite;

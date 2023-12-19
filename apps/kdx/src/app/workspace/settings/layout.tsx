@@ -17,15 +17,15 @@ export default async function Layout({
 
   const navItems = [
     {
-      href: `/workspace/settings/apps`,
+      href: `/team/settings/apps`,
       title: `Apps`,
     },
     {
-      href: `/workspace/settings/general`,
+      href: `/team/settings/general`,
       title: "General",
     },
     {
-      href: `/workspace/settings/members`,
+      href: `/team/settings/members`,
       title: "Members",
     },
   ];
@@ -33,11 +33,11 @@ export default async function Layout({
   return (
     <MaxWidthWrapper>
       <div className="flex flex-col justify-center space-y-2 border-b pb-8">
-        <h1 className="text-4xl font-bold">Workspace Settings</h1>
+        <h1 className="text-4xl font-bold">Team Settings</h1>
         <div className="flex items-center">
           <ChevronRight />
           <p className="text-muted-foreground text-2xl">
-            {session.user.activeWorkspaceName}
+            {session.user.activeTeamName}
           </p>
         </div>
       </div>
@@ -46,7 +46,7 @@ export default async function Layout({
           items={navItems}
           goBackItem={{
             title: "Settings",
-            href: `/workspace/settings`,
+            href: `/team/settings`,
           }}
         />
         <ShouldRender endsWith="/settings">{children}</ShouldRender>

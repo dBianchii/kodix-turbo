@@ -60,11 +60,11 @@ export function CreateTaskDialogButton() {
   const [priority, setPriority] = useState<Priority>(0);
   const [assignedToUserId, setAssignedToUserId] = useState<string | null>("");
 
-  const { data: workspace } = api.workspace.getActiveWorkspace.useQuery();
+  const { data: team } = api.team.getActiveTeam.useQuery();
 
   const [open, setOpen] = useState(false);
 
-  const user = (workspace?.users ?? []).find((x) => x.id === assignedToUserId);
+  const user = (team?.users ?? []).find((x) => x.id === assignedToUserId);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -104,7 +104,7 @@ export function CreateTaskDialogButton() {
             <AssigneePopover
               assignedToUserId={assignedToUserId}
               setAssignedToUserId={setAssignedToUserId}
-              users={workspace?.users ?? []}
+              users={team?.users ?? []}
             >
               <Button variant="outline" size="sm">
                 <span className="sr-only">Open assign user popover</span>

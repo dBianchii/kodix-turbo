@@ -16,7 +16,7 @@ export async function EditWSMembersAndInvitesCard() {
   const session = await auth();
   if (!session) return null;
 
-  const users = await api.workspace.getAllUsers.query();
+  const users = await api.team.getAllUsers.query();
 
   return (
     <Tabs defaultValue="members">

@@ -1,16 +1,16 @@
 import { z } from "zod";
 
 /**
- * @description Schema for validating workspace updates
+ * @description Schema for validating team updates
  * @usedBy kdx/api kdx/kdx
  */
-export const updateWorkspaceSchema = z.object({
-  workspaceId: z.string().cuid(),
-  workspaceName: z
+export const updateTeamSchema = z.object({
+  teamId: z.string().cuid(),
+  teamName: z
     .string()
-    .min(3, { message: "Workspace name must be at least 3 characters" })
+    .min(3, { message: "Team name must be at least 3 characters" })
     .max(32, {
-      message: "Workspace name must be at most 32 characters",
+      message: "Team name must be at most 32 characters",
     })
     .optional(),
 });
@@ -20,7 +20,7 @@ export const updateWorkspaceSchema = z.object({
  * @usedBy kdx/api kdx/kdx
  */
 export const inviteUserSchema = z.object({
-  workspaceId: z.string().cuid(),
+  teamId: z.string().cuid(),
   to: z
     .string()
     .email()

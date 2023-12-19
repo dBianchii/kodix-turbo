@@ -20,19 +20,19 @@ import {
   toast,
 } from "@kdx/ui";
 
-import { switchWorkspaceAction } from "~/app/_components/header/actions";
+import { switchTeamAction } from "~/app/_components/header/actions";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
-export default function EditUserWorkspacesTableClient({
-  workspaces,
+export default function EditUserTeamsTableClient({
+  teams,
   session,
 }: {
-  workspaces: RouterOutputs["workspace"]["getAllForLoggedUser"];
+  teams: RouterOutputs["team"]["getAllForLoggedUser"];
   session: Session;
 }) {
-  const currentWs = session.user.activeWorkspaceId;
-  const sortedWorkspaces = workspaces.sort((a, b) => {
+  const currentWs = session.user.activeTeamId;
+  const sortedTeams = teams.sort((a, b) => {
     if (a.id === currentWs) return -1;
     if (b.id === currentWs) return 1;
     return 0;
@@ -41,14 +41,14 @@ export default function EditUserWorkspacesTableClient({
     <div className="rounded-md border">
       <Table>
         <TableBody>
-          {sortedWorkspaces.length ? (
-            sortedWorkspaces.map((ws) => (
+          {sortedTeams.length ? (
+            sortedTeams.map((ws) => (
               <CustomRow ws={ws} session={session} key={ws.id} />
             ))
           ) : (
             <TableRow>
               <TableCell
-                colSpan={sortedWorkspaces.length}
+                colSpan={sortedTeams.length}
                 className="h-24 text-center"
               >
                 No results.
@@ -65,7 +65,7 @@ function CustomRow({
   ws,
   session,
 }: {
-  ws: RouterOutputs["workspace"]["getAllForLoggedUser"][0];
+  ws: RouterOutputs["team"]["getAllForLoggedUser"][0];
   session: Session;
 }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -76,8 +76,8 @@ function CustomRow({
     <TableRow
       key={ws.id}
       onClick={async () => {
-        await switchWorkspaceAction({
-          workspaceId: ws.id,
+        await switchTeamAction({
+          teamId: ws.id,
         });
       }}
       className="cursor-pointer"
@@ -91,7 +91,7 @@ function CustomRow({
         <div className="flex flex-col items-start">
           <div className="flex flex-row">
             <span className="font-bold">{ws.name}</span>{" "}
-            {ws.id === session.user.activeWorkspaceId && (
+            {ws.id === session.user.activeTeamId && (
               <p className="text-muted-foreground ml-1 font-bold italic">
                 {" "}
                 - Current
@@ -111,12 +111,12 @@ function CustomRow({
               e.stopPropagation();
               e.preventDefault();
 
-              if (ws.id !== session.user.activeWorkspaceId)
-                void switchWorkspaceAction({
-                  workspaceId: ws.id,
-                  redirect: "/workspace/settings",
+              if (ws.id !== session.user.activeTeamId)
+                void switchTeamAction({
+                  teamId: ws.id,
+                  redirect: "/team/settings",
                 });
-              else void router.push(`/workspace/settings`);
+              else void router.push(`/team/settings`);
             }}
           >
             <Button variant="outline" type="submit">
@@ -137,10 +137,10 @@ function CustomRow({
 function LeaveWsDropdown({ session }: { session: Session }) {
   const utils = api.useUtils();
   const router = useRouter();
-  const { mutate } = api.workspace.removeUser.useMutation({
+  const { mutate } = api.team.removeUser.useMutation({
     onSuccess: () => {
-      toast("User removed from workspace");
-      void utils.workspace.getAllUsers.invalidate();
+      toast("User removed from team");
+      void utils.team.getAllUsers.invalidate();
       router.refresh();
     },
     onError: (e) => trpcErrorToastDefault(e),
@@ -160,7 +160,7 @@ function LeaveWsDropdown({ session }: { session: Session }) {
           onClick={(e) => {
             e.stopPropagation();
             mutate({
-              workspaceId: session.user.activeWorkspaceId,
+              teamId: session.user.activeTeamId,
               userId: session.user.id,
             });
           }}

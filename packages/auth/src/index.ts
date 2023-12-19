@@ -19,15 +19,15 @@ declare module "next-auth" {
   interface Session {
     user: {
       id: string;
-      activeWorkspaceId: string; // Might need fix
-      activeWorkspaceName: string;
+      activeTeamId: string; // Might need fix
+      activeTeamName: string;
     } & DefaultSession["user"];
   }
 }
 
 const customUserInclude = {
   include: {
-    activeWorkspace: {
+    activeTeam: {
       select: {
         name: true,
       },
@@ -43,16 +43,16 @@ function CustomPrismaAdapter(p: PrismaClient): Adapter {
       const userId = cuid();
       const wsId = cuid();
 
-      //! When changing workspace creation flow here, change it on api.workspace.create router as well!
+      //! When changing team creation flow here, change it on api.team.create router as well!
       const user = await p.user.create({
         data: {
           id: userId,
           ...data,
-          activeWorkspace: {
+          activeTeam: {
             connectOrCreate: {
               create: {
                 id: wsId,
-                name: `Personal Workspace`,
+                name: `Personal Team`,
                 ownerId: userId,
               },
               where: {
@@ -60,7 +60,7 @@ function CustomPrismaAdapter(p: PrismaClient): Adapter {
               },
             },
           },
-          workspaces: {
+          teams: {
             connect: {
               id: wsId,
             },
@@ -79,7 +79,7 @@ function CustomPrismaAdapter(p: PrismaClient): Adapter {
         ...customUserInclude,
       });
       if (!user) return null;
-      return { ...user, activeWorkspaceName: user.activeWorkspace.name };
+      return { ...user, activeTeamName: user.activeTeam.name };
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async getUserByEmail(email): Promise<any> {
@@ -88,7 +88,7 @@ function CustomPrismaAdapter(p: PrismaClient): Adapter {
         ...customUserInclude,
       });
       if (!user) return null;
-      return { ...user, activeWorkspaceName: user.activeWorkspace.name };
+      return { ...user, activeTeamName: user.activeTeam.name };
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async getSessionAndUser(sessionToken): Promise<any> {
@@ -103,7 +103,7 @@ function CustomPrismaAdapter(p: PrismaClient): Adapter {
       if (!userAndSession) return null;
       const { user, ...session } = userAndSession;
       return {
-        user: { ...user, activeWorkspaceName: user.activeWorkspace.name },
+        user: { ...user, activeTeamName: user.activeTeam.name },
         session,
       };
     },
@@ -135,12 +135,12 @@ export const {
     session: ({ session, user }) => {
       session.user.id = user.id;
 
-      session.user.activeWorkspaceName = (
-        user as typeof user & { activeWorkspaceName: string }
-      ).activeWorkspaceName;
-      session.user.activeWorkspaceId = (
-        user as typeof user & { activeWorkspaceId: string }
-      ).activeWorkspaceId;
+      session.user.activeTeamName = (
+        user as typeof user & { activeTeamName: string }
+      ).activeTeamName;
+      session.user.activeTeamId = (
+        user as typeof user & { activeTeamId: string }
+      ).activeTeamId;
       return session;
     },
   },

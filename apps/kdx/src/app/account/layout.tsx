@@ -1,6 +1,6 @@
 import MaxWidthWrapper from "~/app/_components/max-width-wrapper";
 import { Navigation } from "~/app/_components/navigation";
-import { ShouldRender } from "~/app/workspace/settings/general/_components/client-should-render";
+import { ShouldRender } from "~/app/team/settings/general/_components/client-should-render";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const navItems = [
@@ -9,8 +9,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       title: "General",
     },
     {
-      href: `/account/workspaces`,
-      title: "Workspaces",
+      href: `/account/teams`,
+      title: "Teams",
     },
   ];
 

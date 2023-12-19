@@ -34,7 +34,7 @@ interface DataTableProps<TData> {
 
 export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const { data: workspace } = api.workspace.getActiveWorkspace.useQuery();
+  const { data: team } = api.team.getActiveTeam.useQuery();
 
   const table = useReactTable({
     data,
@@ -47,7 +47,7 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
       columnFilters,
     },
     meta: {
-      workspace: workspace,
+      team: team,
     },
   });
 
@@ -78,7 +78,7 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
                         <TableCell key={cell.id}>
                           {flexRender(cell.column.columnDef.cell, {
                             ...cell.getContext(),
-                            workspace: "a",
+                            team: "a",
                           })}
                         </TableCell>
                       ))}

@@ -54,14 +54,14 @@ export function KodixApp({
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const utils = api.useUtils();
-  const { mutate } = api.workspace.installApp.useMutation({
+  const { mutate } = api.team.installApp.useMutation({
     onSuccess: () => {
       void utils.app.getAll.invalidate();
       router.refresh();
       toast(`App ${appName} installed`);
     },
   });
-  const { mutate: uninstall } = api.workspace.uninstallApp.useMutation({
+  const { mutate: uninstall } = api.team.uninstallApp.useMutation({
     onSuccess: () => {
       setOpen(false);
       void utils.app.getAll.invalidate();
@@ -96,7 +96,7 @@ export function KodixApp({
                 <DialogTrigger asChild>
                   <DropdownMenuItem>
                     <Trash2 className="text-destructive mr-2 h-4 w-4" />
-                    <span>Uninstall from workspace</span>
+                    <span>Uninstall from team</span>
                   </DropdownMenuItem>
                 </DialogTrigger>
               </DropdownMenuContent>
@@ -107,7 +107,7 @@ export function KodixApp({
                 <DialogTitle>Confirm</DialogTitle>
                 <DialogDescription className="py-4">
                   Are you sure you would like to uninstall {appName} from
-                  {" " + session?.user.activeWorkspaceName}?
+                  {" " + session?.user.activeTeamName}?
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter>
