@@ -45,7 +45,7 @@ const apps = [
         {
           id: "clq5yvqdg000208ia3861eyow",
           name: "CareGiver",
-          asdas: 1,
+          minUsers: 1,
           maxUsers: 0,
         },
       ],

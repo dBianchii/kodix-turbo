@@ -13,7 +13,7 @@
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "db:generate": "pnpm with-env prisma generate",
     "db:push": "pnpm with-env prisma db push --skip-generate",
-    "db:seed": "pnpm dlx tsx ./seed/seed.ts",
+    "db:seed": "pnpm dlx tsx ./src/seed/seed.ts",
     "dev": "pnpm with-env prisma studio --port 5556",
     "with-env": "dotenv -e ../../.env --",
     "typecheck": "tsc --noEmit"
