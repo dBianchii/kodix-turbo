@@ -103,15 +103,15 @@
 //               <CommandInput placeholder="Search team..." />
 //               <CommandEmpty>No team found.</CommandEmpty>
 //               <CommandGroup>
-//                 {teams.map((ws) => (
+//                 {teams.map((team) => (
 //                   <CommandItem
-//                     key={ws.name}
-//                     value={ws.name + ws.id}
+//                     key={team.name}
+//                     value={team.name + team.id}
 //                     onSelect={async () => {
 //                       setOpen(false);
 //                       setLoading(true);
 //                       await switchTeamAction({
-//                         teamId: ws.id,
+//                         teamId: team.id,
 //                         redirect: pathname!,
 //                       });
 //                       void utils.invalidate(); //Invalidates the full router
@@ -122,14 +122,14 @@
 //                   >
 //                     <AvatarWrapper
 //                       className="mr-2 h-5 w-5"
-//                       src={`${getBaseUrl()}/api/avatar/${ws.name}`}
-//                       alt={ws.name}
+//                       src={`${getBaseUrl()}/api/avatar/${team.name}`}
+//                       alt={team.name}
 //                     />
-//                     {ws.name}
+//                     {team.name}
 //                     <Check
 //                       className={cn(
 //                         "ml-auto h-4 w-4",
-//                         session.user.activeTeamId === ws.id
+//                         session.user.activeTeamId === team.id
 //                           ? "opacity-100"
 //                           : "opacity-0",
 //                       )}

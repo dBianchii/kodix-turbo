@@ -31,10 +31,10 @@ export default function EditUserTeamsTableClient({
   teams: RouterOutputs["team"]["getAllForLoggedUser"];
   session: Session;
 }) {
-  const currentWs = session.user.activeTeamId;
+  const currentTeam = session.user.activeTeamId;
   const sortedTeams = teams.sort((a, b) => {
-    if (a.id === currentWs) return -1;
-    if (b.id === currentWs) return 1;
+    if (a.id === currentTeam) return -1;
+    if (b.id === currentTeam) return 1;
     return 0;
   });
   return (
@@ -42,8 +42,8 @@ export default function EditUserTeamsTableClient({
       <Table>
         <TableBody>
           {sortedTeams.length ? (
-            sortedTeams.map((ws) => (
-              <CustomRow ws={ws} session={session} key={ws.id} />
+            sortedTeams.map((team) => (
+              <CustomRow team={team} session={session} key={team.id} />
             ))
           ) : (
             <TableRow>
@@ -62,10 +62,10 @@ export default function EditUserTeamsTableClient({
 }
 
 function CustomRow({
-  ws,
+  team,
   session,
 }: {
-  ws: RouterOutputs["team"]["getAllForLoggedUser"][0];
+  team: RouterOutputs["team"]["getAllForLoggedUser"][0];
   session: Session;
 }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -74,10 +74,10 @@ function CustomRow({
 
   return (
     <TableRow
-      key={ws.id}
+      key={team.id}
       onClick={async () => {
         await switchTeamAction({
-          teamId: ws.id,
+          teamId: team.id,
         });
       }}
       className="cursor-pointer"
@@ -90,15 +90,15 @@ function CustomRow({
       <TableCell className="flex flex-row space-x-4">
         <div className="flex flex-col items-start">
           <div className="flex flex-row">
-            <span className="font-bold">{ws.name}</span>{" "}
-            {ws.id === session.user.activeTeamId && (
+            <span className="font-bold">{team.name}</span>{" "}
+            {team.id === session.user.activeTeamId && (
               <p className="text-muted-foreground ml-1 font-bold italic">
                 {" "}
                 - Current
               </p>
             )}
           </div>
-          {ws.ownerId === session.user.id && (
+          {team.ownerId === session.user.id && (
             <span className="text-muted-foreground">Owner</span>
           )}
         </div>
@@ -111,9 +111,9 @@ function CustomRow({
               e.stopPropagation();
               e.preventDefault();
 
-              if (ws.id !== session.user.activeTeamId)
+              if (team.id !== session.user.activeTeamId)
                 void switchTeamAction({
-                  teamId: ws.id,
+                  teamId: team.id,
                   redirect: "/team/settings",
                 });
               else void router.push(`/team/settings`);
