@@ -39,9 +39,9 @@ export const userRouter = createTRPCRouter({
       const user = await ctx.prisma.user.update({
         where: {
           id: ctx.session.user.id,
-          teams: {
+          Teams: {
             some: {
-              activeUsers: {
+              ActiveUsers: {
                 some: {
                   id: ctx.session.user.id,
                 },
@@ -53,7 +53,7 @@ export const userRouter = createTRPCRouter({
           activeTeamId: input.teamId,
         },
         select: {
-          teams: {
+          Teams: {
             where: {
               id: input.teamId,
             },
@@ -64,13 +64,13 @@ export const userRouter = createTRPCRouter({
         },
       });
 
-      if (!user.teams[0])
+      if (!user.Teams[0])
         throw new TRPCError({
           message: "No Team Found",
           code: "INTERNAL_SERVER_ERROR",
         });
 
-      return user.teams[0];
+      return user.Teams[0];
     }),
   installApp: protectedProcedure
     .input(z.object({ appId: string().cuid() }))
@@ -80,7 +80,7 @@ export const userRouter = createTRPCRouter({
           id: ctx.session.user.activeTeamId,
         },
         data: {
-          activeApps: {
+          ActiveApps: {
             connect: {
               id: input.appId,
             },

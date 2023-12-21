@@ -16,7 +16,7 @@ export const teamRouter = createTRPCRouter({
   getAllForLoggedUser: protectedProcedure.query(async ({ ctx }) => {
     const teams = await ctx.prisma.team.findMany({
       where: {
-        users: {
+        Users: {
           some: {
             id: ctx.session.user.id,
           },
@@ -46,7 +46,7 @@ export const teamRouter = createTRPCRouter({
         data: {
           ownerId: input.userId,
           name: input.teamName,
-          users: input.userId
+          Users: input.userId
             ? {
                 connect: [{ id: input.userId }],
               }
@@ -93,7 +93,7 @@ export const teamRouter = createTRPCRouter({
         id: ctx.session.user.activeTeamId,
       },
       include: {
-        users: true,
+        Users: true,
       },
     });
 
@@ -143,7 +143,7 @@ export const teamRouter = createTRPCRouter({
             id: input.appId,
           },
           data: {
-            activeTeams: {
+            ActiveTeams: {
               connect: {
                 id: team.id,
               },
@@ -152,22 +152,22 @@ export const teamRouter = createTRPCRouter({
         }),
         ctx.prisma.userAppRole.create({
           data: {
-            app: {
+            App: {
               connect: {
                 id: input.appId,
               },
             },
-            user: {
+            User: {
               connect: {
                 id: ctx.session.user.id,
               },
             },
-            team: {
+            Team: {
               connect: {
                 id: ctx.session.user.activeTeamId,
               },
             },
-            appRole: {
+            AppRole: {
               connect: {
                 id: kodixCareAdminRoleId,
               },
@@ -194,7 +194,7 @@ export const teamRouter = createTRPCRouter({
           id: ctx.session.user.activeTeamId,
         },
         data: {
-          activeApps: {
+          ActiveApps: {
             disconnect: {
               id: input.appId,
             },
@@ -223,7 +223,7 @@ export const teamRouter = createTRPCRouter({
         },
         select: {
           ownerId: true,
-          users: {
+          Users: {
             select: {
               id: true,
             },
@@ -241,7 +241,7 @@ export const teamRouter = createTRPCRouter({
         }
       }
 
-      if (team?.users.length <= 1)
+      if (team?.Users.length <= 1)
         throw new TRPCError({
           message:
             "This user cannot leave since they are the only remaining owner of the team. Delete this team instead",
@@ -254,7 +254,7 @@ export const teamRouter = createTRPCRouter({
           id: {
             not: input.teamId,
           },
-          users: {
+          Users: {
             some: {
               id: input.userId,
             },
@@ -276,7 +276,7 @@ export const teamRouter = createTRPCRouter({
           id: input.userId,
         },
         data: {
-          teams: {
+          Teams: {
             disconnect: {
               id: input.teamId,
             },
@@ -288,7 +288,7 @@ export const teamRouter = createTRPCRouter({
   getAllUsers: protectedProcedure.query(async ({ ctx }) => {
     return await prisma.user.findMany({
       where: {
-        teams: {
+        Teams: {
           some: {
             id: ctx.session.user.activeTeamId,
           },

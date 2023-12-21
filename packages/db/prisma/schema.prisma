@@ -20,7 +20,7 @@ model AppRole {
   id String @id @default(cuid())
 
   appId String
-  app   App    @relation(fields: [appId], references: [id])
+  App   App    @relation(fields: [appId], references: [id])
 
   name        String
   description String?
@@ -36,16 +36,16 @@ model UserAppRole {
   id String @id @default(cuid())
 
   userId String
-  user   User   @relation(fields: [userId], references: [id])
+  User   User   @relation(fields: [userId], references: [id])
 
   teamId String
-  team   Team   @relation(fields: [teamId], references: [id])
+  Team   Team   @relation(fields: [teamId], references: [id])
 
   appId String
-  app   App    @relation(fields: [appId], references: [id])
+  App   App    @relation(fields: [appId], references: [id])
 
   appRoleId String
-  appRole   AppRole @relation(fields: [appRoleId], references: [id])
+  AppRole   AppRole @relation(fields: [appRoleId], references: [id])
 
   @@index([userId])
   @@index([teamId])
@@ -58,10 +58,10 @@ model AppTeamConfig {
   Parameters String @db.MediumText // Para qualquer configuração 
 
   AppId String
-  app   App    @relation("AppConfig", fields: [AppId], references: [id])
+  App   App    @relation("AppConfig", fields: [AppId], references: [id])
 
   teamId String
-  team   Team   @relation("TeamConfig", fields: [teamId], references: [id])
+  Team   Team   @relation("TeamConfig", fields: [teamId], references: [id])
 
   @@unique([AppId, teamId])
   @@index([AppId])
@@ -73,26 +73,26 @@ model Team {
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  users     User[]   @relation("UserTeam")
+  Users     User[]   @relation("UserTeam")
 
   ownerId String
-  owner   User   @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Owner   User   @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  activeUsers User[]        @relation("UserActiveTeam")
-  activeApps  App[]         @relation("AppTeam")
-  Todo        Todo[]
-  EventMaster EventMaster[]
-  Invitations Invitation[]
+  ActiveUsers  User[]        @relation("UserActiveTeam")
+  ActiveApps   App[]         @relation("AppTeam")
+  Todos        Todo[]
+  EventMasters EventMaster[]
+  Invitations  Invitation[]
 
-  teamConfigs AppTeamConfig[] @relation("TeamConfig")
-  UserAppRole UserAppRole[]
+  teamConfigs  AppTeamConfig[] @relation("TeamConfig")
+  UserAppRoles UserAppRole[]
 
   @@index([ownerId])
 }
 
 model Invitation {
   id        String   @id @default(cuid())
-  team      Team     @relation(fields: [teamId], references: [id])
+  Team      Team     @relation(fields: [teamId], references: [id])
   teamId    String
   email     String
   accepted  Boolean  @default(false) //Is this necessary? Since we just delete the invitation when the user accepts it
@@ -109,8 +109,8 @@ model App {
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
   subscriptionCost Decimal
-  activeTeams      Team[]          @relation("AppTeam")
-  idpartnerDev     DevPartner      @relation(fields: [devPartnerId], references: [id])
+  ActiveTeams      Team[]          @relation("AppTeam")
+  DevPartner       DevPartner      @relation(fields: [devPartnerId], references: [id])
   devPartnerId     String
   url              String          @unique
   appTeamConfigs   AppTeamConfig[] @relation("AppConfig")
@@ -127,7 +127,7 @@ model DevPartner {
   partnerUrl String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  App        App[]
+  Apps       App[]
 }
 
 enum Status {
@@ -153,10 +153,10 @@ model Todo {
   reminder    Boolean?
 
   assignedToUserId String?
-  assignedToUser   User?   @relation(fields: [assignedToUserId], references: [id])
+  AssignedToUser   User?   @relation(fields: [assignedToUserId], references: [id])
 
   teamId String
-  team   Team   @relation(fields: [teamId], references: [id])
+  Team   Team   @relation(fields: [teamId], references: [id])
 
   @@index([teamId])
   @@index([assignedToUserId])
@@ -173,7 +173,7 @@ model EventMaster {
 
   EventExceptions    EventException[]
   EventCancellations EventCancellation[]
-  EventDone          EventDone[]
+  EventDones         EventDone[]
 
   Team   Team   @relation(fields: [teamId], references: [id])
   teamId String
@@ -212,7 +212,7 @@ model EventDone {
   done         Boolean
   details      String?
 
-  doneBy User   @relation(fields: [userId], references: [id])
+  DoneBy User   @relation(fields: [userId], references: [id])
   userId String
 
   EventMaster   EventMaster @relation(fields: [eventMasterId], references: [id])
@@ -245,7 +245,7 @@ model Account {
   scope             String?
   id_token          String? @db.Text
   session_state     String?
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  User              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@index([userId])
@@ -256,7 +256,7 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
@@ -267,15 +267,15 @@ model User {
   email         String?       @unique
   emailVerified DateTime?
   image         String?
-  accounts      Account[]
-  sessions      Session[]
-  teams         Team[]        @relation("UserTeam")
-  Todo          Todo[]
+  Accounts      Account[]
+  Sessions      Session[]
+  Teams         Team[]        @relation("UserTeam")
+  Todos         Todo[]
   activeTeamId  String
-  activeTeam    Team          @relation("UserActiveTeam", fields: [activeTeamId], references: [id])
-  EventDone     EventDone[]
-  ownedTeams    Team[]
-  UserAppRole   UserAppRole[]
+  ActiveTeam    Team          @relation("UserActiveTeam", fields: [activeTeamId], references: [id])
+  EventDones    EventDone[]
+  OwnedTeams    Team[]
+  UserAppRoles  UserAppRole[]
 
   @@index([activeTeamId])
 }

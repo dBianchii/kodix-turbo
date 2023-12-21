@@ -31,7 +31,7 @@ export const invitationRouter = createTRPCRouter({
       const team = await ctx.prisma.team.findUniqueOrThrow({
         where: {
           id: input.teamId,
-          users: {
+          Users: {
             some: {
               id: ctx.session.user.id,
             },
@@ -40,7 +40,7 @@ export const invitationRouter = createTRPCRouter({
         select: {
           name: true,
           id: true,
-          users: {
+          Users: {
             select: {
               email: true,
             },
@@ -59,7 +59,7 @@ export const invitationRouter = createTRPCRouter({
       });
 
       const inTeamEmail = input.to.find((email) =>
-        team.users.find((x) => x.email === email),
+        team.Users.find((x) => x.email === email),
       );
       if (inTeamEmail)
         throw new TRPCError({
@@ -135,7 +135,7 @@ export const invitationRouter = createTRPCRouter({
           email: ctx.session.user.email,
         },
         select: {
-          team: {
+          Team: {
             select: {
               id: true,
             },
@@ -155,12 +155,12 @@ export const invitationRouter = createTRPCRouter({
             id: ctx.session.user.id,
           },
           data: {
-            teams: {
+            Teams: {
               connect: {
-                id: invitation.team.id,
+                id: invitation.Team.id,
               },
             },
-            activeTeamId: invitation.team.id,
+            activeTeamId: invitation.Team.id,
           },
         }),
         ctx.prisma.invitation.delete({
@@ -182,7 +182,7 @@ export const invitationRouter = createTRPCRouter({
       const invitation = await ctx.prisma.invitation.findUnique({
         where: {
           id: input.invitationId,
-          team: {
+          Team: {
             id: ctx.session.user.activeTeamId,
           },
         },

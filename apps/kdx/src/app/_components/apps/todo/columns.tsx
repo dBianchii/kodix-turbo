@@ -196,7 +196,7 @@ export const columns = [
       );
     },
   }),
-  columnHelper.accessor("assignedToUser", {
+  columnHelper.accessor("AssignedToUser", {
     cell: function Cell(info) {
       const [assignedToUserId, setAssignedToUserId] = useState("");
 
@@ -238,7 +238,7 @@ export const columns = [
           <AssigneePopover
             assignedToUserId={assignedToUserId}
             setAssignedToUserId={handleAssignedToUserChange}
-            users={info.table.options.meta?.team?.users ?? []}
+            users={info.table.options.meta?.team?.Users ?? []}
           />
         </div>
       );

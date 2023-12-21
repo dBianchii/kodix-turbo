@@ -40,7 +40,7 @@ export const todoRouter = createTRPCRouter({
         teamId: ctx.session.user.activeTeamId,
       },
       include: {
-        assignedToUser: {
+        AssignedToUser: {
           select: {
             id: true,
             name: true,

@@ -33,7 +33,7 @@ export const apps = [
     subscriptionCost: 0 as const,
     devPartnerId: kdxPartnerId,
     url: "/kodixCare" as const,
-    appRoles: {
+    AppRoles: {
       create: [
         {
           id: kodixCareAdminRoleId,

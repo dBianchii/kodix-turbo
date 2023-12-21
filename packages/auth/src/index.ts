@@ -27,7 +27,7 @@ declare module "next-auth" {
 
 const customUserInclude = {
   include: {
-    activeTeam: {
+    ActiveTeam: {
       select: {
         name: true,
       },
@@ -48,7 +48,7 @@ function CustomPrismaAdapter(p: PrismaClient): Adapter {
         data: {
           id: userId,
           ...data,
-          activeTeam: {
+          ActiveTeam: {
             connectOrCreate: {
               create: {
                 id: teamId,
@@ -60,7 +60,7 @@ function CustomPrismaAdapter(p: PrismaClient): Adapter {
               },
             },
           },
-          teams: {
+          Teams: {
             connect: {
               id: teamId,
             },
@@ -79,7 +79,7 @@ function CustomPrismaAdapter(p: PrismaClient): Adapter {
         ...customUserInclude,
       });
       if (!user) return null;
-      return { ...user, activeTeamName: user.activeTeam.name };
+      return { ...user, activeTeamName: user.ActiveTeam.name };
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async getUserByEmail(email): Promise<any> {
@@ -88,22 +88,22 @@ function CustomPrismaAdapter(p: PrismaClient): Adapter {
         ...customUserInclude,
       });
       if (!user) return null;
-      return { ...user, activeTeamName: user.activeTeam.name };
+      return { ...user, activeTeamName: user.ActiveTeam.name };
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async getSessionAndUser(sessionToken): Promise<any> {
       const userAndSession = await p.session.findUnique({
         where: { sessionToken },
         include: {
-          user: {
+          User: {
             ...customUserInclude,
           },
         },
       });
       if (!userAndSession) return null;
-      const { user, ...session } = userAndSession;
+      const { User, ...session } = userAndSession;
       return {
-        user: { ...user, activeTeamName: user.activeTeam.name },
+        user: { ...User, activeTeamName: User.ActiveTeam.name },
         session,
       };
     },
