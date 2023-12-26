@@ -12,21 +12,25 @@ const adapter = new PrismaPlanetScale(client);
 const isPlanetScaleConnection = `${process.env.DATABASE_URL}`.includes("psdb");
 //* END PLANETSCALE ADAPTER SECTION
 
-const globalForPrisma = globalThis as { prisma?: PrismaClient };
-
-export const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
+const prismaClientSingleton = () => {
+  return new PrismaClient({
     adapter: isPlanetScaleConnection ? adapter : null, //?  Only use Planetscale adapter if we are connecting to Planetscale
     log:
       process.env.NODE_ENV === "development"
         ? ["query", "error", "warn"]
         : ["error"],
-  });
+  }).$extends({});
+};
+
+const globalForPrisma = globalThis as {
+  prisma?: ReturnType<typeof prismaClientSingleton>;
+};
+
+export const prisma = globalForPrisma.prisma ?? prismaClientSingleton();
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
 export * from "@prisma/client";
-export * from "./extensions";
+export * from "./getSafeTeamPrisma";
 export * from "./seed/constants";
 export * from "./seed/appConfigSchemas";

@@ -18,7 +18,6 @@ export const eventRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const eventMasters = await ctx.prisma.eventMaster.findMany({
         where: {
-          teamId: ctx.session.user.activeTeamId,
           AND: [
             {
               DateStart: {
@@ -38,9 +37,6 @@ export const eventRouter = createTRPCRouter({
       //Handling Exceptions and Cancelations
       const eventExceptions = await ctx.prisma.eventException.findMany({
         where: {
-          EventMaster: {
-            teamId: ctx.session.user.activeTeamId,
-          },
           OR: [
             {
               originalDate: {
@@ -69,9 +65,6 @@ export const eventRouter = createTRPCRouter({
 
       const eventCancelations = await ctx.prisma.eventCancellation.findMany({
         where: {
-          EventMaster: {
-            teamId: ctx.session.user.activeTeamId,
-          },
           originalDate: {
             gte: input.dateStart,
             lte: input.dateEnd,
@@ -404,9 +397,6 @@ export const eventRouter = createTRPCRouter({
             where: {
               id: input.eventExceptionId,
               newDate: input.selectedTimestamp,
-              EventMaster: {
-                teamId: ctx.session.user.activeTeamId,
-              },
             },
             data: {
               newDate: input.from,
@@ -421,7 +411,6 @@ export const eventRouter = createTRPCRouter({
         const eventMaster = await ctx.prisma.eventMaster.findUniqueOrThrow({
           where: {
             id: input.eventMasterId,
-            teamId: ctx.session.user.activeTeamId,
           },
           select: {
             id: true,
@@ -492,7 +481,6 @@ export const eventRouter = createTRPCRouter({
               await tx.eventException.deleteMany({
                 where: {
                   EventMaster: {
-                    teamId: ctx.session.user.activeTeamId,
                     id: input.eventMasterId,
                   },
                   newDate: {
@@ -505,7 +493,6 @@ export const eventRouter = createTRPCRouter({
             const oldMaster = await tx.eventMaster.findUniqueOrThrow({
               where: {
                 id: input.eventMasterId,
-                teamId: ctx.session.user.activeTeamId,
               },
               select: {
                 rule: true,
@@ -534,7 +521,6 @@ export const eventRouter = createTRPCRouter({
               return await tx.eventMaster.update({
                 where: {
                   id: input.eventMasterId,
-                  teamId: ctx.session.user.activeTeamId,
                 },
                 data: {
                   EventExceptions: shouldDeleteFutureExceptions
@@ -571,7 +557,6 @@ export const eventRouter = createTRPCRouter({
             const updatedOldMaster = await tx.eventMaster.update({
               where: {
                 id: input.eventMasterId,
-                teamId: ctx.session.user.activeTeamId,
               },
               data: {
                 DateUntil: previousOccurence,
@@ -626,7 +611,6 @@ export const eventRouter = createTRPCRouter({
                 where: {
                   EventMaster: {
                     id: oldMaster.id,
-                    teamId: ctx.session.user.activeTeamId,
                   },
                   newDate: {
                     gte: input.selectedTimestamp,
@@ -674,7 +658,6 @@ export const eventRouter = createTRPCRouter({
                   await tx.eventMaster.findUniqueOrThrow({
                     where: {
                       id: input.eventMasterId,
-                      teamId: ctx.session.user.activeTeamId,
                     },
                     select: {
                       rule: true,
@@ -706,7 +689,6 @@ export const eventRouter = createTRPCRouter({
             return await tx.eventMaster.update({
               where: {
                 id: input.eventMasterId,
-                teamId: ctx.session.user.activeTeamId,
               },
               data: {
                 EventExceptions: {
@@ -758,10 +740,6 @@ export const eventRouter = createTRPCRouter({
         message: "You are not authorized to do this",
       });
 
-    await ctx.prisma.$transaction([
-      ctx.prisma.eventMaster.deleteMany({
-        where: { teamId: ctx.session.user.activeTeamId },
-      }),
-    ]);
+    await ctx.prisma.$transaction([ctx.prisma.eventMaster.deleteMany()]);
   }),
 });

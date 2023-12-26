@@ -1,13 +1,14 @@
 import { notFound, redirect } from "next/navigation";
 
+import { getPrisma } from "@kdx/api";
 import { auth } from "@kdx/auth";
-import { prisma } from "@kdx/db";
 
 import { api } from "~/trpc/server";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const { id: invitationId } = params;
 
+  const prisma = await getPrisma();
   const invitation = await prisma.invitation.findUnique({
     where: {
       id: invitationId,
