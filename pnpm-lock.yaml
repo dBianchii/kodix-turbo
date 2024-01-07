@@ -191,7 +191,7 @@ importers:
         specifier: ^20.10.6
         version: 20.10.6
       '@types/react':
-        specifier: ^18.2.45
+        specifier: ^18.2.47
         version: 18.2.47
       '@types/react-dom':
         specifier: ^18.2.18
@@ -303,7 +303,7 @@ importers:
         specifier: ^20.10.6
         version: 20.10.6
       '@types/react':
-        specifier: ^18.2.45
+        specifier: ^18.2.47
         version: 18.2.47
       '@types/react-dom':
         specifier: ^18.2.18
@@ -409,7 +409,7 @@ importers:
         specifier: ^6.4.14
         version: 6.4.14
       '@types/react':
-        specifier: ^18.2.45
+        specifier: ^18.2.47
         version: 18.2.47
       '@types/react-dom':
         specifier: ^18.2.18
@@ -650,7 +650,7 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       '@types/react':
-        specifier: ^18.2.45
+        specifier: ^18.2.47
         version: 18.2.47
       '@types/react-dom':
         specifier: ^18.2.18
