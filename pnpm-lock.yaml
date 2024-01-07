@@ -94,14 +94,14 @@ importers:
         specifier: ^0.6.1
         version: 0.6.1(typescript@5.3.3)(zod@3.22.4)
       '@tanstack/react-query':
-        specifier: ^5.8.7
-        version: 5.17.7(react@18.2.0)
+        specifier: ^5.17.8
+        version: 5.17.8(react@18.2.0)
       '@tanstack/react-query-devtools':
-        specifier: ^5.8.7
-        version: 5.17.7(@tanstack/react-query@5.17.7)(react@18.2.0)
+        specifier: ^5.17.8
+        version: 5.17.8(@tanstack/react-query@5.17.8)(react@18.2.0)
       '@tanstack/react-query-next-experimental':
-        specifier: 5.8.7
-        version: 5.8.7(@tanstack/react-query@5.17.7)(next@14.0.4)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 5.17.8
+        version: 5.17.8(@tanstack/react-query@5.17.8)(next@14.0.4)(react@18.2.0)
       '@tanstack/react-table':
         specifier: ^8.10.7
         version: 8.11.3(react-dom@18.2.0)(react@18.2.0)
@@ -110,10 +110,10 @@ importers:
         version: 11.0.0-next-alpha.153(@trpc/server@11.0.0-next-alpha.153)
       '@trpc/next':
         specifier: next
-        version: 11.0.0-next-alpha.153(@tanstack/react-query@5.17.7)(@trpc/client@11.0.0-next-alpha.153)(@trpc/react-query@11.0.0-next-alpha.153)(@trpc/server@11.0.0-next-alpha.153)(next@14.0.4)(react-dom@18.2.0)(react@18.2.0)
+        version: 11.0.0-next-alpha.153(@tanstack/react-query@5.17.8)(@trpc/client@11.0.0-next-alpha.153)(@trpc/react-query@11.0.0-next-alpha.153)(@trpc/server@11.0.0-next-alpha.153)(next@14.0.4)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/react-query':
         specifier: next
-        version: 11.0.0-next-alpha.153(@tanstack/react-query@5.17.7)(@trpc/client@11.0.0-next-alpha.153)(@trpc/server@11.0.0-next-alpha.153)(react-dom@18.2.0)(react@18.2.0)
+        version: 11.0.0-next-alpha.153(@tanstack/react-query@5.17.8)(@trpc/client@11.0.0-next-alpha.153)(@trpc/server@11.0.0-next-alpha.153)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/server':
         specifier: next
         version: 11.0.0-next-alpha.153
@@ -215,97 +215,6 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
 
-  apps/kodix-care:
-    dependencies:
-      '@kdx/shared':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/shared
-      '@kdx/ui':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/ui
-      '@t3-oss/env-nextjs':
-        specifier: ^0.6.1
-        version: 0.6.1(typescript@5.3.3)(zod@3.22.4)
-      '@tanstack/react-query':
-        specifier: ^5.8.7
-        version: 5.17.7(react@18.2.0)
-      '@tanstack/react-query-devtools':
-        specifier: ^5.8.7
-        version: 5.17.7(@tanstack/react-query@5.17.7)(react@18.2.0)
-      '@tanstack/react-query-next-experimental':
-        specifier: 5.8.7
-        version: 5.8.7(@tanstack/react-query@5.17.7)(next@14.0.4)(react-dom@18.2.0)(react@18.2.0)
-      '@trpc/client':
-        specifier: next
-        version: 11.0.0-next-alpha.153(@trpc/server@11.0.0-next-alpha.153)
-      '@trpc/next':
-        specifier: next
-        version: 11.0.0-next-alpha.153(@tanstack/react-query@5.17.7)(@trpc/client@11.0.0-next-alpha.153)(@trpc/react-query@11.0.0-next-alpha.153)(@trpc/server@11.0.0-next-alpha.153)(next@14.0.4)(react-dom@18.2.0)(react@18.2.0)
-      '@trpc/react-query':
-        specifier: next
-        version: 11.0.0-next-alpha.153(@tanstack/react-query@5.17.7)(@trpc/client@11.0.0-next-alpha.153)(@trpc/server@11.0.0-next-alpha.153)(react-dom@18.2.0)(react@18.2.0)
-      '@trpc/server':
-        specifier: next
-        version: 11.0.0-next-alpha.153
-      next:
-        specifier: ^14.0.4
-        version: 14.0.4(@babel/core@7.23.7)(react-dom@18.2.0)(react@18.2.0)
-      react:
-        specifier: 18.2.0
-        version: 18.2.0
-      react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
-      superjson:
-        specifier: 2.2.1
-        version: 2.2.1
-      zod:
-        specifier: ^3.22.4
-        version: 3.22.4
-    devDependencies:
-      '@kdx/api':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/api
-      '@kdx/eslint-config':
-        specifier: workspace:^0.2.0
-        version: link:../../tooling/eslint
-      '@kdx/prettier-config':
-        specifier: workspace:^0.1.0
-        version: link:../../tooling/prettier
-      '@kdx/tailwind-config':
-        specifier: workspace:^0.1.0
-        version: link:../../tooling/tailwind
-      '@kdx/tsconfig':
-        specifier: workspace:^0.1.0
-        version: link:../../tooling/typescript
-      '@types/node':
-        specifier: ^20.10
-        version: 20.10.6
-      '@types/react':
-        specifier: ^18.2.45
-        version: 18.2.47
-      '@types/react-dom':
-        specifier: ^18.2.18
-        version: 18.2.18
-      autoprefixer:
-        specifier: ^10.4.16
-        version: 10.4.16(postcss@8.4.33)
-      dotenv-cli:
-        specifier: ^7.3.0
-        version: 7.3.0
-      eslint:
-        specifier: ^8.56.0
-        version: 8.56.0
-      prettier:
-        specifier: ^3.1.1
-        version: 3.1.1
-      tailwindcss:
-        specifier: 3.4.0
-        version: 3.4.0
-      typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
-
   apps/stays-ai:
     dependencies:
       '@kdx/shared':
@@ -321,23 +230,23 @@ importers:
         specifier: ^0.6.1
         version: 0.6.1(typescript@5.3.3)(zod@3.22.4)
       '@tanstack/react-query':
-        specifier: ^5.8.7
-        version: 5.17.7(react@18.2.0)
+        specifier: ^5.17.8
+        version: 5.17.8(react@18.2.0)
       '@tanstack/react-query-devtools':
-        specifier: ^5.8.7
-        version: 5.17.7(@tanstack/react-query@5.17.7)(react@18.2.0)
+        specifier: ^5.17.8
+        version: 5.17.8(@tanstack/react-query@5.17.8)(react@18.2.0)
       '@tanstack/react-query-next-experimental':
-        specifier: 5.8.7
-        version: 5.8.7(@tanstack/react-query@5.17.7)(next@14.0.4)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 5.17.8
+        version: 5.17.8(@tanstack/react-query@5.17.8)(next@14.0.4)(react@18.2.0)
       '@trpc/client':
         specifier: next
         version: 11.0.0-next-alpha.153(@trpc/server@11.0.0-next-alpha.153)
       '@trpc/next':
         specifier: next
-        version: 11.0.0-next-alpha.153(@tanstack/react-query@5.17.7)(@trpc/client@11.0.0-next-alpha.153)(@trpc/react-query@11.0.0-next-alpha.153)(@trpc/server@11.0.0-next-alpha.153)(next@14.0.4)(react-dom@18.2.0)(react@18.2.0)
+        version: 11.0.0-next-alpha.153(@tanstack/react-query@5.17.8)(@trpc/client@11.0.0-next-alpha.153)(@trpc/react-query@11.0.0-next-alpha.153)(@trpc/server@11.0.0-next-alpha.153)(next@14.0.4)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/react-query':
         specifier: next
-        version: 11.0.0-next-alpha.153(@tanstack/react-query@5.17.7)(@trpc/client@11.0.0-next-alpha.153)(@trpc/server@11.0.0-next-alpha.153)(react-dom@18.2.0)(react@18.2.0)
+        version: 11.0.0-next-alpha.153(@tanstack/react-query@5.17.8)(@trpc/client@11.0.0-next-alpha.153)(@trpc/server@11.0.0-next-alpha.153)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/server':
         specifier: next
         version: 11.0.0-next-alpha.153
@@ -3767,6 +3676,7 @@ packages:
     dependencies:
       is-glob: 4.0.3
       micromatch: 4.0.5
+      napi-wasm: 1.1.0
     dev: true
     bundledDependencies:
       - napi-wasm
@@ -6182,45 +6092,43 @@ packages:
       zod: 3.22.4
     dev: false
 
-  /@tanstack/query-core@5.17.7:
-    resolution: {integrity: sha512-PFL+z9w9U9Pvg5KjJRA9X5q5hlNoRVDNNgSEcKcZxES3z0rbWnUj2cMYIqeeoUrMo5YGCTNoJHU6ETTXpZIoPA==}
+  /@tanstack/query-core@5.17.8:
+    resolution: {integrity: sha512-V4hQv4jmRwbji9wo3F6/JQEjbWLUlv2sE2K5R49girEyok71ksDnVHbQiAvp4+FbovMY8A3IbP3cH3jqAUe/BQ==}
     dev: false
 
   /@tanstack/query-devtools@5.17.7:
     resolution: {integrity: sha512-TfgvOqza5K7Sk6slxqkRIvXlEJoUoPSsGGwpuYSrpqgSwLSSvPPpZhq7hv7hcY5IvRoTNGoq6+MT01C/jILqoQ==}
     dev: false
 
-  /@tanstack/react-query-devtools@5.17.7(@tanstack/react-query@5.17.7)(react@18.2.0):
-    resolution: {integrity: sha512-IewfiEqM6zmThv9Hq+e0HjMnxGhlrKkzuQ8iXJnRl8bQXIFiNA8NSb5nVYPpPUmsHsPCNOalJ0Exh4gE4sGUug==}
+  /@tanstack/react-query-devtools@5.17.8(@tanstack/react-query@5.17.8)(react@18.2.0):
+    resolution: {integrity: sha512-cj/VftDaTKtT23NsVN7qWEsiTY4c58giQMnd65xE0SXJMRdAQCKsm+r9MI14NhL2nxi0gHx5FYV7LC9qVB1cgQ==}
     peerDependencies:
-      '@tanstack/react-query': ^5.17.7
+      '@tanstack/react-query': ^5.17.8
       react: ^18.0.0
     dependencies:
       '@tanstack/query-devtools': 5.17.7
-      '@tanstack/react-query': 5.17.7(react@18.2.0)
+      '@tanstack/react-query': 5.17.8(react@18.2.0)
       react: 18.2.0
     dev: false
 
-  /@tanstack/react-query-next-experimental@5.8.7(@tanstack/react-query@5.17.7)(next@14.0.4)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-ZOhcgG2EsQVI8QLA7xOoYX7rXpVq33lNzgTsDboTD7RTsNQ7Lq7nE/u9YQDf+1bnABTkuZtAjCUDOfm/7BN/qQ==}
+  /@tanstack/react-query-next-experimental@5.17.8(@tanstack/react-query@5.17.8)(next@14.0.4)(react@18.2.0):
+    resolution: {integrity: sha512-i5nkvDu2uqncfGTsWjpp6MEKlgDr0kERkOzsI9voMTRN6bFpHQsJE0Yf8KI8gbYALzdYrFkS8h6bPfb0Wv0dKA==}
     peerDependencies:
-      '@tanstack/react-query': ^5.8.7
+      '@tanstack/react-query': ^5.17.8
       next: ^13 || ^14
       react: ^18.0.0
-      react-dom: ^18.0.0
     dependencies:
-      '@tanstack/react-query': 5.17.7(react@18.2.0)
+      '@tanstack/react-query': 5.17.8(react@18.2.0)
       next: 14.0.4(@babel/core@7.23.7)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@tanstack/react-query@5.17.7(react@18.2.0):
-    resolution: {integrity: sha512-JqmnJLwsJxvWXQEcaSvJn3ZpZxVqi39Xz/QoJlH8HU57idTKi9CYbcI1aNryJA0Br69F0QpN2T3bg1YPona2wQ==}
+  /@tanstack/react-query@5.17.8(react@18.2.0):
+    resolution: {integrity: sha512-J+QMBoQiAZglwVB/bEgmf9IczLPg0YwFaqmn4aTW72ZYkUYyBU9dj6OMQk3RzmD9RzUz2m7pPBCkcT0Z1i0acg==}
     peerDependencies:
       react: ^18.0.0
     dependencies:
-      '@tanstack/query-core': 5.17.7
+      '@tanstack/query-core': 5.17.8
       react: 18.2.0
     dev: false
 
@@ -6253,7 +6161,7 @@ packages:
       '@trpc/server': 11.0.0-next-alpha.153
     dev: false
 
-  /@trpc/next@11.0.0-next-alpha.153(@tanstack/react-query@5.17.7)(@trpc/client@11.0.0-next-alpha.153)(@trpc/react-query@11.0.0-next-alpha.153)(@trpc/server@11.0.0-next-alpha.153)(next@14.0.4)(react-dom@18.2.0)(react@18.2.0):
+  /@trpc/next@11.0.0-next-alpha.153(@tanstack/react-query@5.17.8)(@trpc/client@11.0.0-next-alpha.153)(@trpc/react-query@11.0.0-next-alpha.153)(@trpc/server@11.0.0-next-alpha.153)(next@14.0.4)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-w8iAC6p7OWRrLXqTDwCca9LHFmefr7aZD0s0jG3atzeVF9lk6SjSRJHG/o34hHtWAEtXKgoAAqyLXkqXfnfaxg==}
     peerDependencies:
       '@tanstack/react-query': ^5.0.0
@@ -6264,16 +6172,16 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@tanstack/react-query': 5.17.7(react@18.2.0)
+      '@tanstack/react-query': 5.17.8(react@18.2.0)
       '@trpc/client': 11.0.0-next-alpha.153(@trpc/server@11.0.0-next-alpha.153)
-      '@trpc/react-query': 11.0.0-next-alpha.153(@tanstack/react-query@5.17.7)(@trpc/client@11.0.0-next-alpha.153)(@trpc/server@11.0.0-next-alpha.153)(react-dom@18.2.0)(react@18.2.0)
+      '@trpc/react-query': 11.0.0-next-alpha.153(@tanstack/react-query@5.17.8)(@trpc/client@11.0.0-next-alpha.153)(@trpc/server@11.0.0-next-alpha.153)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/server': 11.0.0-next-alpha.153
       next: 14.0.4(@babel/core@7.23.7)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@trpc/react-query@11.0.0-next-alpha.153(@tanstack/react-query@5.17.7)(@trpc/client@11.0.0-next-alpha.153)(@trpc/server@11.0.0-next-alpha.153)(react-dom@18.2.0)(react@18.2.0):
+  /@trpc/react-query@11.0.0-next-alpha.153(@tanstack/react-query@5.17.8)(@trpc/client@11.0.0-next-alpha.153)(@trpc/server@11.0.0-next-alpha.153)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-NY2lE4l1f1scZ2q8ZdbxnoDj1G04gnRetLhSWcKJFP89/Kw18ytkwYiIQUpT2jngIiKd5GbxeOmoNsQpd0emzg==}
     peerDependencies:
       '@tanstack/react-query': ^5.0.0
@@ -6282,7 +6190,7 @@ packages:
       react: '>=18.2.0'
       react-dom: '>=18.2.0'
     dependencies:
-      '@tanstack/react-query': 5.17.7(react@18.2.0)
+      '@tanstack/react-query': 5.17.8(react@18.2.0)
       '@trpc/client': 11.0.0-next-alpha.153(@trpc/server@11.0.0-next-alpha.153)
       '@trpc/server': 11.0.0-next-alpha.153
       react: 18.2.0
@@ -10590,6 +10498,10 @@ packages:
     resolution: {integrity: sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
+
+  /napi-wasm@1.1.0:
+    resolution: {integrity: sha512-lHwIAJbmLSjF9VDRm9GoVOy9AGp3aIvkjv+Kvz9h16QR3uSVYH78PNQUnT2U4X53mhlnV2M7wrhibQ3GHicDmg==}
+    dev: true
 
   /natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
