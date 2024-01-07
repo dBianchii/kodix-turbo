@@ -61,7 +61,7 @@ importers:
         specifier: ^0.8.1
         version: 0.8.1
       '@hookform/resolvers':
-        specifier: ^3.3.3
+        specifier: ^3.3.4
         version: 3.3.4(react-hook-form@7.49.2)
       '@internationalized/date':
         specifier: ^3.5.0
@@ -550,7 +550,7 @@ importers:
   packages/ui:
     dependencies:
       '@hookform/resolvers':
-        specifier: ^3.3.3
+        specifier: ^3.3.4
         version: 3.3.4(react-hook-form@7.49.2)
       '@radix-ui/react-alert-dialog':
         specifier: ^1.0.5

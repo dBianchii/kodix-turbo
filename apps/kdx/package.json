@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@formkit/auto-animate": "^0.8.1",
-    "@hookform/resolvers": "^3.3.3",
+    "@hookform/resolvers": "^3.3.4",
     "@internationalized/date": "^3.5.0",
     "@kdx/api": "workspace:^0.1.0",
     "@kdx/auth": "workspace:^0.1.0",
