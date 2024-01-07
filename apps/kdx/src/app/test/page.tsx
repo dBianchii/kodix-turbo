@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { Check } from "lucide-react";
 import moment from "moment";
+import { RxCheck } from "react-icons/rx";
 import { RRule } from "rrule";
 
 import { Button } from "@kdx/ui/button";
@@ -75,7 +75,7 @@ const Dropdown = () => {
                   <CommandGroup>
                     {freqs.map((freq, i) => (
                       <CommandItem key={i}>
-                        <Check className={cn("mr-2 h-4 w-4")} />
+                        <RxCheck className={cn("mr-2 h-4 w-4")} />
                         {FrequencyToTxt(freq).toLowerCase()}
                       </CommandItem>
                     ))}

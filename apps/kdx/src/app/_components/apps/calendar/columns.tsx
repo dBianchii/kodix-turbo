@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { MoreHorizontal, PencilIcon, Trash2 } from "lucide-react";
+import { RxDotsHorizontal, RxPencil1, RxTrash } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import { Button } from "@kdx/ui/button";
@@ -58,16 +58,16 @@ export const columns = [
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
+                <RxDotsHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
               <DropdownMenuItem onClick={() => setOpenEditDialog(true)}>
-                <PencilIcon className="mr-2 h-4 w-4" />
+                <RxPencil1 className="mr-2 h-4 w-4" />
                 Edit event
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setOpenCancelDialog(true)}>
-                <Trash2 className="mr-2 h-4 w-4" />
+                <RxTrash className="mr-2 h-4 w-4" />
                 Delete Event
               </DropdownMenuItem>
             </DropdownMenuContent>

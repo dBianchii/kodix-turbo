@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Loader2 } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
+import { LuLoader2 } from "react-icons/lu";
 
 import { Button } from "@kdx/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@kdx/ui/card";
@@ -83,7 +83,7 @@ export function _SignIn({ callbackUrl = "/" }: { callbackUrl?: string }) {
                     disabled={loading}
                   >
                     {loading ? (
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <LuLoader2 className="mr-2 h-4 w-4 animate-spin" />
                     ) : (
                       <FcGoogle className="mr-2 h-4 w-4" />
                     )}

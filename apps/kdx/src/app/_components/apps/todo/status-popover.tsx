@@ -1,13 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Check,
-  CheckCircle2,
-  CircleDot,
-  CircleOff,
-  CircleSlash,
-} from "lucide-react";
+import { LuCircleOff, LuCircleSlash } from "react-icons/lu";
+import { RxCheck, RxCheckCircled, RxRadiobutton } from "react-icons/rx";
 
 import type { Status } from "@kdx/db";
 import { Button } from "@kdx/ui/button";
@@ -119,18 +114,20 @@ export function StatusIcon({
   switch (status) {
     case "TODO":
       return (
-        <CheckCircle2 className={cn("h-4 w-4 text-foreground", className)} />
+        <RxCheckCircled className={cn("h-4 w-4 text-foreground", className)} />
       );
     case "INPROGRESS":
-      return <CircleDot className={cn("h-4 w-4 text-yellow-400", className)} />;
+      return (
+        <RxRadiobutton className={cn("h-4 w-4 text-yellow-400", className)} />
+      );
     case "INREVIEW":
       return (
-        <CircleSlash className={cn("h-4 w-4 text-orange-400", className)} />
+        <LuCircleSlash className={cn("h-4 w-4 text-orange-400", className)} />
       );
     case "DONE":
-      return <Check className={cn("h-4 w-4 text-green-400", className)} />;
+      return <RxCheck className={cn("h-4 w-4 text-green-400", className)} />;
     case "CANCELED":
-      return <CircleOff className={cn("h-4 w-4 text-red-400", className)} />;
+      return <LuCircleOff className={cn("h-4 w-4 text-red-400", className)} />;
   }
 }
 

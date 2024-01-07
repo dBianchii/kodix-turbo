@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { ChevronRight } from "lucide-react";
+import { RxChevronRight } from "react-icons/rx";
 
 import { auth } from "@kdx/auth";
 
@@ -35,7 +35,7 @@ export default async function Layout({
       <div className="flex flex-col justify-center space-y-2 border-b pb-8">
         <h1 className="text-4xl font-bold">Team Settings</h1>
         <div className="flex items-center">
-          <ChevronRight />
+          <RxChevronRight />
           <p className="text-2xl text-muted-foreground">
             {session.user.activeTeamName}
           </p>

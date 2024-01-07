@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { format } from "date-fns";
-import { Plus, X } from "lucide-react";
 import { HiUserCircle } from "react-icons/hi";
+import { RxCross2, RxPlus } from "react-icons/rx";
 
 import type { Status } from "@kdx/db";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
@@ -70,7 +70,7 @@ export function CreateTaskDialogButton() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
-          <Plus className="mr-2 h-4 w-4" />
+          <RxPlus className="mr-2 h-4 w-4" />
           Create Task
         </Button>
       </DialogTrigger>
@@ -146,7 +146,7 @@ export function CreateTaskDialogButton() {
                       }}
                       className="ml-2 rounded-full transition-colors hover:bg-primary/90 hover:text-background"
                     >
-                      <X className="h-4 w-4 " />
+                      <RxCross2 className="h-4 w-4 " />
                     </span>
                   )}
                 </Button>

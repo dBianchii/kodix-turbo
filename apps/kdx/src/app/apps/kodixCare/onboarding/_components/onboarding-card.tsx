@@ -4,9 +4,8 @@ import type { z } from "zod";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { LuArrowRight } from "react-icons/lu";
+import { LuArrowRight, LuLoader2 } from "react-icons/lu";
 
 import { kodixCareAppId } from "@kdx/shared";
 import { Button } from "@kdx/ui/button";
@@ -99,7 +98,7 @@ export default function OnboardingCard() {
               Go to Kodix Care
               {!isSubmitting && <LuArrowRight className="ml-2 h-4 w-4" />}
               {isSubmitting && (
-                <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+                <LuLoader2 className="ml-2 h-4 w-4 animate-spin" />
               )}
             </Button>
           </CardFooter>
