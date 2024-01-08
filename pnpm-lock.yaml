@@ -372,7 +372,7 @@ importers:
         specifier: ^2.29.4
         version: 2.30.1
       nodemailer:
-        specifier: ^6.9.7
+        specifier: ^6.9.8
         version: 6.9.8
       resend:
         specifier: ^2.0.0

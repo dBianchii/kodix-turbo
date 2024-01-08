@@ -27,7 +27,7 @@
     "@upstash/redis": "^1.28.0",
     "aws-sdk": "^2.1502.0",
     "moment": "^2.29.4",
-    "nodemailer": "^6.9.7",
+    "nodemailer": "^6.9.8",
     "resend": "^2.0.0",
     "rrule": "^2.8.1",
     "superjson": "2.2.1",
