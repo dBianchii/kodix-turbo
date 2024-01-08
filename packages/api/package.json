@@ -24,7 +24,7 @@
     "@trpc/client": "next",
     "@trpc/server": "next",
     "@upstash/ratelimit": "^0.4.4",
-    "@upstash/redis": "^1.25.1",
+    "@upstash/redis": "^1.28.0",
     "aws-sdk": "^2.1502.0",
     "moment": "^2.29.4",
     "nodemailer": "^6.9.7",

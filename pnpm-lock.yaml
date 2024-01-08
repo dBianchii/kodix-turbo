@@ -363,7 +363,7 @@ importers:
         specifier: ^0.4.4
         version: 0.4.4
       '@upstash/redis':
-        specifier: ^1.25.1
+        specifier: ^1.28.0
         version: 1.28.0
       aws-sdk:
         specifier: ^2.1502.0
