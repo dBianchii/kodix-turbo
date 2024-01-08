@@ -14,9 +14,7 @@ export const action = createSafeActionClient({
       if (error.cause instanceof ZodError)
         message = error.cause.issues[0]?.message ?? message;
 
-    return {
-      serverError: message ?? "Something went wrong, please try again later.",
-    };
+    return message ?? "Something went wrong, please try again later.";
   },
   handleServerErrorLog(error) {
     // We can, for example, also send the error to a dedicated logging system.
