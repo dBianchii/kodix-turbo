@@ -488,7 +488,7 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../shared
       '@planetscale/database':
-        specifier: ^1.11.0
+        specifier: ^1.13.0
         version: 1.13.0
       '@prisma/adapter-planetscale':
         specifier: ^5.7.1
