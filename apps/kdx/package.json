@@ -34,7 +34,7 @@
     "@trpc/react-query": "next",
     "@trpc/server": "next",
     "@vercel/analytics": "^1.1.1",
-    "@vercel/speed-insights": "^1.0.2",
+    "@vercel/speed-insights": "^1.0.3",
     "ai": "^2.2.22",
     "cuid": "^3.0.0",
     "geist": "^1.2.0",
