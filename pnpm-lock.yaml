@@ -360,7 +360,7 @@ importers:
         specifier: ^2.1502.0
         version: 2.1531.0
       moment:
-        specifier: ^2.29.4
+        specifier: ^2.30.1
         version: 2.30.1
       nodemailer:
         specifier: ^6.9.8
