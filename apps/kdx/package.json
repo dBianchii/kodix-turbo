@@ -37,7 +37,7 @@
     "@vercel/speed-insights": "^1.0.3",
     "ai": "^2.2.22",
     "cuid": "^3.0.0",
-    "geist": "^1.2.0",
+    "geist": "^1.2.1",
     "lucide-react": "^0.263.1",
     "next": "^14.0.4",
     "next-safe-action": "^6.0.1",
