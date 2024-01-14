@@ -154,7 +154,7 @@ importers:
         specifier: ^7.49.3
         version: 7.49.3(react@18.2.0)
       react-icons:
-        specifier: ^4.11.0
+        specifier: ^4.12.0
         version: 4.12.0(react@18.2.0)
       string-ts:
         specifier: ^2.0.0
@@ -263,7 +263,7 @@ importers:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
       react-icons:
-        specifier: ^4.11.0
+        specifier: ^4.12.0
         version: 4.12.0(react@18.2.0)
       react-markdown:
         specifier: ^9.0.1
