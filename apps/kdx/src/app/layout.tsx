@@ -47,8 +47,6 @@ export const viewport: Viewport = {
   ],
 };
 
-const getHeaders = cache(async () => Promise.resolve(headers()));
-
 export default function Layout(props: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -60,7 +58,7 @@ export default function Layout(props: { children: React.ReactNode }) {
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <TRPCReactProvider headersPromise={getHeaders()}>
+          <TRPCReactProvider>
             <SpeedInsights />
             <Analytics />
             <Toaster richColors closeButton />
