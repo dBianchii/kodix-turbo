@@ -29,5 +29,10 @@
     "turbo": "^1.11.3",
     "typescript": "^5.3.3"
   },
-  "prettier": "@kdx/prettier-config"
+  "prettier": "@kdx/prettier-config",
+  "pnpm": {
+    "overrides": {
+      "@auth/core": "0.20.0"
+    }
+  }
 }

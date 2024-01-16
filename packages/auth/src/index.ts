@@ -149,16 +149,17 @@ export const {
     }),
   ],
   callbacks: {
-    session: ({ session, user }) => {
-      session.user.id = user.id;
+    session: (opts) => {
+      if (!("user" in opts)) throw "unreachable with session strategy";
+      opts.session.user.id = opts.user.id;
 
-      session.user.activeTeamName = (
-        user as typeof user & { activeTeamName: string }
+      opts.session.user.activeTeamName = (
+        opts.user as typeof opts.user & { activeTeamName: string }
       ).activeTeamName;
-      session.user.activeTeamId = (
-        user as typeof user & { activeTeamId: string }
+      opts.session.user.activeTeamId = (
+        opts.user as typeof opts.user & { activeTeamId: string }
       ).activeTeamId;
-      return session;
+      return opts.session;
     },
   },
   pages: {
