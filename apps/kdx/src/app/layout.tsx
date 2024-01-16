@@ -1,6 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { cache } from "react";
-import { headers } from "next/headers";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GeistMono } from "geist/font/mono";
