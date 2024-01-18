@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { LuArrowRight } from "react-icons/lu";
 
-import { kodixCareAppId } from "@kdx/shared";
 import { Button } from "@kdx/ui/button";
 import {
   Card,
@@ -28,8 +27,8 @@ import {
 import { Input } from "@kdx/ui/input";
 import { kodixCareConfigSchema } from "@kdx/validators";
 
-import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
-import { api } from "~/trpc/react";
+import { defaultSafeActionToastError } from "~/helpers/safe-action/default-action-error-toast";
+import { finishKodixCareOnboardingAction } from "../actions/onboardingActions";
 
 export default function OnboardingCard() {
   const form = useForm({
@@ -38,30 +37,25 @@ export default function OnboardingCard() {
       patientName: "",
     },
   });
-  const router = useRouter();
 
-  const { mutate: saveConfig } = api.app.saveConfig.useMutation({
-    onSuccess: () => {
-      router.push(`/apps/kodixCare`);
-    },
-    onError: (e) => trpcErrorToastDefault(e),
-    onSettled: () => setIsSubmitting(false),
-  });
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit((values) => {
+        onSubmit={form.handleSubmit(async (values) => {
           setIsSubmitting(true);
-          saveConfig({
-            appId: kodixCareAppId,
-            config: { patientName: values.patientName },
+          const result = await finishKodixCareOnboardingAction({
+            patientName: values.patientName,
           });
+          if (defaultSafeActionToastError(result)) return;
+          router.push(`/apps/kodixCare`);
+          setIsSubmitting(false);
         })}
         className="space-y-8"
       >
-        <Card className="w-[450px]">
+        <Card className="w-[550px]">
           <CardHeader>
             <CardTitle>Welcome to Kodix Care</CardTitle>
             <CardDescription>

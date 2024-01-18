@@ -18,7 +18,7 @@ export default async function KodixCare() {
   const installed = await prisma.app.findUnique({
     where: {
       id: kodixCareAppId,
-      ActiveTeams: {
+      Teams: {
         some: {
           id: session.user.activeTeamId,
         },

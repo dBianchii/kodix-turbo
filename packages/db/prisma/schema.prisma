@@ -106,7 +106,7 @@ model App {
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
   subscriptionCost Decimal
-  ActiveTeams      Team[]          @relation("AppTeam")
+  Teams            Team[]          @relation("AppTeam")
   DevPartner       DevPartner      @relation(fields: [devPartnerId], references: [id])
   devPartnerId     String
   AppTeamConfigs   AppTeamConfig[] @relation("AppConfig")

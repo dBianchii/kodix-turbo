@@ -126,7 +126,9 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
             disabled={installing}
             onClick={() => {
               if (appShouldGoToOnboarding) {
+                setInstalling(true);
                 router.push(`${appurl}/onboarding`);
+                setInstalling(false);
                 return;
               }
               void mutate({ appId: id });
