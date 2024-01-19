@@ -213,10 +213,12 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
 
 export function IconKodixApp({
   renderText = true,
+  size = 80,
   ...props
 }: {
   appId: KodixAppId;
   renderText?: boolean;
+  size?: number;
 }) {
   const appUrl = getAppUrl(props.appId);
   const appIconUrl = getAppIconUrl(props.appId);
@@ -224,7 +226,12 @@ export function IconKodixApp({
 
   return (
     <Link href={appUrl} className="flex flex-col items-center">
-      <Image src={appIconUrl} height={80} width={80} alt={`${appName} icon`} />
+      <Image
+        src={appIconUrl}
+        height={size}
+        width={size}
+        alt={`${appName} icon`}
+      />
       {renderText && <p className="text-sm text-muted-foreground">{appName}</p>}
     </Link>
   );

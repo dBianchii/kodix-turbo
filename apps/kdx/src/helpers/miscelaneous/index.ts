@@ -22,22 +22,34 @@ export const trpcErrorToastDefault = (
   );
 };
 
+/**
+ * @description Pathname for each app (used for app url and app image url)
+ */
+export const appIdToPathname = {
+  [kodixCareAppId]: "kodixCare",
+  [calendarAppId]: "calendar",
+  [todoAppId]: "todo",
+};
+
+/**
+ * @description Gets the app pathname from the app id
+ */
 const getAppPathname = (appId: KodixAppId) => {
   //? Helper to get the app pathname (for app url or app image url)
-  const appIdToPathname = {
-    [kodixCareAppId]: "kodixCare",
-    [calendarAppId]: "calendar",
-    [todoAppId]: "todo",
-  };
   return appIdToPathname[appId];
 };
+
+/**
+ * @description Prefix for app urls (ex: /apps/kodixCare)
+ */
+export const appUrlPrefix = "/apps";
 
 /**
  * @description Gets the app url from the app id
  */
 export const getAppUrl = (appId: KodixAppId) => {
   const pathname = getAppPathname(appId);
-  return `/apps/${pathname}`;
+  return `${appUrlPrefix}/${pathname}`;
 };
 
 /**
