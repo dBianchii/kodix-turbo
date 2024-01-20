@@ -101,7 +101,10 @@ async function AppSwitcher() {
           <NavigationMenuContent>
             <ul className="flex w-48 flex-col">
               {apps.map((app) => (
-                <NavigationMenuItem className="flex flex-row" key={app.id}>
+                <NavigationMenuItem
+                  className="flex w-full flex-row"
+                  key={app.id}
+                >
                   <Link
                     href={getAppUrl(app.id as KodixAppId)}
                     legacyBehavior

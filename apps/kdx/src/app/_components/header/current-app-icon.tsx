@@ -17,7 +17,7 @@ export default function CurrentAppIcon() {
     if (!currentAppPathname)
       throw new Error("Could not get current app pathname");
 
-    //Since appIdToPathname gets me the pathname from my appId, I need to reverse how it works here, so that I can do appPathnameToId
+    //reverse the appIdToPathname object
     const appPathnameToId = Object.fromEntries(
       Object.entries(appIdToPathname).map(([key, value]) => [value, key]),
     );
