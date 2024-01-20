@@ -65,28 +65,6 @@ export function AddTeamDialogButton({
                 onChange={(e) => changeTeamName(e.target.value)}
               />
             </div>
-            {/* <div className="space-y-2">
-              <Label htmlFor="plan">Subscription plan</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a plan" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="free">
-                    <span className="font-medium">Free</span> -{" "}
-                    <span className="text-muted-foreground">
-                      Trial for two weeks
-                    </span>
-                  </SelectItem>
-                  <SelectItem value="pro">
-                    <span className="font-medium">Pro</span> -{" "}
-                    <span className="text-muted-foreground">
-                      $9/month per user
-                    </span>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div> This is a nice way to do forms so I am not deleting it yet until ive used it somewhere else*/}
           </div>
         </div>
         <DialogFooter>
