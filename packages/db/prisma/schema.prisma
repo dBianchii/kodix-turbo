@@ -16,6 +16,26 @@ datasource db {
   relationMode = "prisma"
 }
 
+model CareShift {
+  id String @id @default(cuid())
+
+  caregiverId String
+  Caregiver   User   @relation(fields: [caregiverId], references: [id])
+
+  teamId String
+  Team   Team   @relation(fields: [teamId], references: [id])
+
+  checkIn  DateTime?
+  checkOut DateTime?
+
+  shiftEndedAt DateTime?
+
+  notes String?
+
+  @@index([caregiverId])
+  @@index([teamId])
+}
+
 model AppRole {
   id String @id @default(cuid())
 
@@ -85,6 +105,7 @@ model Team {
 
   AppTeamConfigs AppTeamConfig[] @relation("TeamConfig")
   UserAppRoles   UserAppRole[]
+  CareShift      CareShift[]
 
   @@index([ownerId])
 }
@@ -274,6 +295,7 @@ model User {
   EventDones   EventDone[]
   OwnedTeams   Team[]
   UserAppRoles UserAppRole[]
+  CareShift    CareShift[]
 
   @@index([activeTeamId])
 }
