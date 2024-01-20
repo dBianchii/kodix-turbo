@@ -1,7 +1,6 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -15,9 +14,7 @@ export default function SettingsEditCardSkeleton() {
         <CardTitle>
           <Skeleton className="h-6 w-[140px]" />
         </CardTitle>
-        <CardDescription>
-          <Skeleton className="h-4 w-[200px]" />
-        </CardDescription>
+        <Skeleton className="h-4 w-[200px]" />
       </CardHeader>
       <CardContent>
         <div className="grid w-full items-center gap-4">

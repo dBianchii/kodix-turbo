@@ -4,7 +4,7 @@ import { api } from "~/trpc/server";
 import EditUserTeamsTableClient from "./edit-user-teams-table-client";
 
 export async function EditUserTeamsTable() {
-  const teams = await api.team.getAllForLoggedUser.query();
+  const teams = await api.team.getAllForLoggedUser();
 
   const session = await auth();
   if (!session) return null;

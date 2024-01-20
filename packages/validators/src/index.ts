@@ -11,8 +11,7 @@ export const updateTeamSchema = z.object({
     .min(3, { message: "Team name must be at least 3 characters" })
     .max(32, {
       message: "Team name must be at most 32 characters",
-    })
-    .optional(),
+    }),
 });
 
 /**
@@ -37,7 +36,7 @@ export const inviteUserSchema = z.object({
 });
 
 /**
- * @description Schema for validating user invitation
+ * @description Schema for validating kodix care config
  * @usedBy kdx/api kdx/kdx
  */
 export const kodixCareConfigSchema = z.object({

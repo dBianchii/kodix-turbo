@@ -149,7 +149,7 @@ export const teamRouter = createTRPCRouter({
             id: input.appId,
           },
           data: {
-            ActiveTeams: {
+            Teams: {
               connect: {
                 id: team.id,
               },

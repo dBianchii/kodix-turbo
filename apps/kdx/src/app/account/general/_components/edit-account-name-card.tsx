@@ -26,7 +26,7 @@ export async function EditAccountNameCard({ name }: { name?: string | null }) {
       action={async (values) => {
         "use server";
 
-        await api.user.changeName.mutate({
+        await api.user.changeName({
           name: values.get("name") as string,
         });
         revalidatePath("/account/general");
@@ -55,7 +55,9 @@ export async function EditAccountNameCard({ name }: { name?: string | null }) {
           </div>
         </CardContent>
         <CardFooter className="flex justify-between border-t px-6 py-4">
-          <p className="">Please use 32 characters at maximum.</p>
+          <CardDescription>
+            Please use 32 characters at maximum.
+          </CardDescription>
           <Button type="submit">
             {false ? (
               <>

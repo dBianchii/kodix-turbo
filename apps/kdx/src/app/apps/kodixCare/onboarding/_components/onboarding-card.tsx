@@ -1,13 +1,9 @@
 "use client";
 
-import type { z } from "zod";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { LuArrowRight, LuLoader2 } from "react-icons/lu";
 
-import { kodixCareAppId } from "@kdx/shared";
 import { Button } from "@kdx/ui/button";
 import {
   Card,
@@ -25,46 +21,40 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  useForm,
 } from "@kdx/ui/form";
 import { Input } from "@kdx/ui/input";
 import { kodixCareConfigSchema } from "@kdx/validators";
 
-import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
-import { api } from "~/trpc/react";
+import { defaultSafeActionToastError } from "~/helpers/safe-action/default-action-error-toast";
+import { finishKodixCareOnboardingAction } from "../actions/onboardingActions";
 
 export default function OnboardingCard() {
-  const form = useForm<z.infer<typeof kodixCareConfigSchema>>({
-    resolver: zodResolver(kodixCareConfigSchema),
+  const form = useForm({
+    schema: kodixCareConfigSchema,
     defaultValues: {
       patientName: "",
     },
   });
-  const router = useRouter();
 
-  const { mutate: saveConfig } = api.app.saveConfig.useMutation({
-    onSuccess: () => {
-      router.push(`/apps/kodixCare`);
-    },
-    onError: (e) => {
-      trpcErrorToastDefault(e);
-    },
-    onSettled: () => {
-      setIsSubmitting(false);
-    },
-  });
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function onSubmit(values: z.infer<typeof kodixCareConfigSchema>) {
-    setIsSubmitting(true);
-    saveConfig({
-      appId: kodixCareAppId,
-      config: { patientName: values.patientName },
-    });
-  }
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <Card className="w-[450px]">
+      <form
+        onSubmit={form.handleSubmit(async (values) => {
+          setIsSubmitting(true);
+          const result = await finishKodixCareOnboardingAction({
+            patientName: values.patientName,
+          });
+          if (defaultSafeActionToastError(result)) return;
+          router.push(`/apps/kodixCare`);
+          setIsSubmitting(false);
+        })}
+        className="space-y-8"
+      >
+        <Card className="w-[550px]">
           <CardHeader>
             <CardTitle>Welcome to Kodix Care</CardTitle>
             <CardDescription>

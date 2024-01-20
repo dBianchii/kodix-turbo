@@ -16,7 +16,7 @@ export async function EditTeamMembersAndInvitesCard() {
   const session = await auth();
   if (!session) return null;
 
-  const users = await api.team.getAllUsers.query();
+  const users = await api.team.getAllUsers();
 
   return (
     <Tabs defaultValue="members">

@@ -5,7 +5,7 @@ import { api } from "~/trpc/server";
 import OnboardingCard from "./_components/onboarding-card";
 
 export default async function Onboarding() {
-  const onboardingCompleted = await api.kodixCare.onboardingCompleted.query();
+  const onboardingCompleted = await api.kodixCare.onboardingCompleted();
   if (onboardingCompleted) return redirect("/apps/kodixCare");
 
   return (

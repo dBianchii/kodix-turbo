@@ -16,9 +16,32 @@ export const kodixCareAdminRoleId = "clq5yvcvu000008ia3yppfnou";
 export const kodixCarePatientRoleId = "clq5yvhuz000108ia55qk06ts";
 export const kodixCareCareGiverRoleId = "clq5yvqdg000208ia3861eyow";
 
+export type KodixAppId =
+  | typeof todoAppId
+  | typeof calendarAppId
+  | typeof kodixCareAppId;
+
 //* Helpers *//
 export const appIdToAdminIdMap = {
   [todoAppId]: todoAdminRoleId,
   [calendarAppId]: todoAdminRoleId,
   [kodixCareAppId]: kodixCareAdminRoleId,
 } as const;
+
+export const getAppName = (appId: KodixAppId) => {
+  const appIdToName = {
+    [kodixCareAppId]: "Kodix Care" as const,
+    [calendarAppId]: "Calendar" as const,
+    [todoAppId]: "Todo" as const,
+  };
+  return appIdToName[appId];
+};
+
+export const getAppDescription = (appId: KodixAppId) => {
+  const appIdToDescription = {
+    [kodixCareAppId]: "Kodix Care is a health care app." as const,
+    [calendarAppId]: "Calendar is a calendar app." as const,
+    [todoAppId]: "Todo is a todo app." as const,
+  };
+  return appIdToDescription[appId];
+};

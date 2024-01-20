@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import { Blockquote, H1, H2, H3, P, UL } from "@kdx/ui/typography";
 
 export default function TypographyDemo() {
@@ -13,7 +12,8 @@ export default function TypographyDemo() {
       <H2>The Kings Plan</H2>
       <P>
         The king thought long and hard, and finally came up with{" "}
-        <a href="#">a brilliant plan</a>: he would tax the jokes in the kingdom.
+        <a href="kodix.com.br">a brilliant plan</a>: he would tax the jokes in
+        the kingdom.
       </P>
       <Blockquote>
         After all, he said, everyone enjoys a good joke, so its only fair that

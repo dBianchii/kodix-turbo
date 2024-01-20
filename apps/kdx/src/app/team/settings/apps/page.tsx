@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import type { KodixApp as KodixAppType } from "@kdx/db";
+import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
 import { Lead } from "@kdx/ui/typography";
 
@@ -11,7 +11,7 @@ import { api } from "~/trpc/server";
 export default async function AppsPage() {
   const session = await auth();
   if (!session) return redirect("/api/auth/signin");
-  const apps = await api.app.getInstalled.query();
+  const apps = await api.app.getInstalled();
 
   return (
     <MaxWidthWrapper>
@@ -25,7 +25,7 @@ export default async function AppsPage() {
         {apps?.map((app) => (
           <div key={app.id}>
             <KodixApp
-              id={app.id as KodixAppType["id"]}
+              id={app.id as KodixAppId}
               installed={true}
               session={session}
             />

@@ -1,16 +1,18 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import type { KodixApp as KodixAppType } from "@kdx/db";
+import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
 
 import { CustomKodixIcon, IconKodixApp } from "~/app/_components/app/kodix-app";
 import MaxWidthWrapper from "~/app/_components/max-width-wrapper";
+import { getAppIconUrl } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/server";
 
 export default async function Team() {
   const session = await auth();
   if (!session) return redirect("/");
-  const apps = await api.app.getInstalled.query();
+  const apps = await api.app.getInstalled();
 
   return (
     <main className="flex-1 py-8">
@@ -22,9 +24,9 @@ export default async function Team() {
         </div>
         <div className="flex flex-row items-center space-x-10">
           <CustomKodixIcon
-            appName={"Marketplace"}
-            appUrl={"/marketplace"}
-            iconPath={"/appIcons/marketplace.png"}
+            appName={"App Store"}
+            appUrl={"/apps"}
+            iconPath={"/appIcons/appstore.png"}
           />
           <CustomKodixIcon
             appName={"Settings"}
@@ -32,7 +34,13 @@ export default async function Team() {
             iconPath={"/appIcons/settings.png"}
           />
           {apps?.map((app) => (
-            <IconKodixApp key={app.id} appId={app.id as KodixAppType["id"]} />
+            <Link
+              key={app.id}
+              href={getAppIconUrl(app.id as KodixAppId)}
+              className="flex flex-col items-center"
+            >
+              <IconKodixApp appId={app.id as KodixAppId} />
+            </Link>
           ))}
         </div>
       </MaxWidthWrapper>

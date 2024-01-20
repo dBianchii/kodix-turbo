@@ -13,8 +13,8 @@ export const createTeamAction = action(
     teamName: z.string(),
   }),
   async (input) => {
-    const team = await api.team.create.mutate(input);
-    void api.user.switchActiveTeam.mutate({ teamId: team.id });
+    const team = await api.team.create(input);
+    void api.user.switchActiveTeam({ teamId: team.id });
     revalidatePath("/team");
     return team;
   },
@@ -26,7 +26,7 @@ export const switchTeamAction = action(
     redirect: z.string().optional(),
   }),
   async (input) => {
-    await api.user.switchActiveTeam.mutate(input);
+    await api.user.switchActiveTeam(input);
     revalidatePath("/", "layout"); //IDK what this is doing exactly
     redirect(input.redirect ?? "/team");
   },

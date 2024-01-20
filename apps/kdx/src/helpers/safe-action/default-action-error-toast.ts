@@ -3,23 +3,26 @@ import { toast } from "@kdx/ui/toast";
 interface ActionResult<Data> {
   data?: Data | undefined;
   serverError?: string | undefined;
-  validationError?: Partial<Record<string, string[]>> | undefined;
+  validationErrors?: Partial<Record<string, string[]>> | undefined;
 }
 /**
+ * You can do it like this to show a toast on error
+ * - if (defaultActionToastError(result)) return;
  * @param result The awaited result of a safe-action
- * @returns boolean indicatin if there was an error or not.
- * @example //You can do it like this to show a toast on error
- * if (defaultActionToastError(result)) return;
+ * @returns boolean indicating if there was an error or not.
  */
 export const defaultSafeActionToastError = <Data>(
   result: ActionResult<Data>,
 ) => {
-  if (result.validationError ?? result.serverError) {
-    const errorMessage = result.validationError
-      ? Object.values(result.validationError)[0]
-      : result.serverError;
+  if (result.validationErrors ?? result.serverError) {
+    //We check if there are validation errors first, and if not, we show the server error.
+    if (result.validationErrors) {
+      const errorMessage = Object.values(result.validationErrors)[0];
+      toast.error(errorMessage);
+      return true;
+    }
 
-    toast.error(errorMessage);
+    toast.error(result.serverError);
     return true;
   }
   return false;

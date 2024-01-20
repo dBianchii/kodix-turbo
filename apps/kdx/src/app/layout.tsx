@@ -1,6 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { cache } from "react";
-import { headers } from "next/headers";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GeistMono } from "geist/font/mono";
@@ -47,11 +45,9 @@ export const viewport: Viewport = {
   ],
 };
 
-const getHeaders = cache(async () => Promise.resolve(headers()));
-
 export default function Layout(props: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
           "min-h-screen bg-background font-sans text-foreground antialiased",
@@ -59,11 +55,11 @@ export default function Layout(props: { children: React.ReactNode }) {
           GeistMono.variable,
         )}
       >
+        <SpeedInsights />
+        <Analytics />
+        <Toaster richColors closeButton />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <TRPCReactProvider headersPromise={getHeaders()}>
-            <SpeedInsights />
-            <Analytics />
-            <Toaster richColors closeButton />
+          <TRPCReactProvider>
             <div className="flex min-h-screen flex-col">
               <Header />
               {props.children}

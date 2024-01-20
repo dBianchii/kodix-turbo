@@ -1,10 +1,25 @@
 import Link from "next/link";
 
+import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
+import { getAppName } from "@kdx/shared";
 import { buttonVariants } from "@kdx/ui/button";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@kdx/ui/navigation-menu";
+import { navigationMenuTriggerStyle } from "@kdx/ui/navigationMenuTriggerStyle";
 
 import HeaderFooterRemover from "~/app/_components/header-footer-remover";
 import MaxWidthWrapper from "~/app/_components/max-width-wrapper";
+import { getAppUrl } from "~/helpers/miscelaneous";
+import { api } from "~/trpc/server";
+import { IconKodixApp } from "../app/kodix-app";
+import CurrentAppIcon from "./current-app-icon";
 import { UserProfileButton } from "./user-profile-button";
 
 export async function Header() {
@@ -26,7 +41,7 @@ export async function Header() {
                 Kdx
               </span>
             </Link>
-            {/* {session && (
+            {session && (
               //Slash icon
               <>
                 <svg
@@ -43,22 +58,9 @@ export async function Header() {
                 >
                   <path d="M16.88 3.549L7.12 20.451"></path>
                 </svg>
-                <TeamSwitcher
-                  session={session}
-                  teams={teams}
-                  avatar={
-                    <AvatarWrapper
-                      className="mr-2 h-5 w-5"
-                      src={`${getBaseUrl()}/api/avatar/${
-                        session.user.activeTeamName
-                      }`}
-                      alt={session.user.activeTeamName}
-                      fallback={session.user.activeTeamName}
-                    />
-                  }
-                />
+                <AppSwitcher />
               </>
-            )} */}
+            )}
 
             <div className="ml-auto flex items-center space-x-4">
               {!!session && <UserProfileButton session={session} />}
@@ -83,6 +85,50 @@ export async function Header() {
         </MaxWidthWrapper>
       </header>
     </HeaderFooterRemover>
+  );
+}
+
+async function AppSwitcher() {
+  const apps = await api.app.getInstalled();
+
+  return (
+    <NavigationMenu>
+      <NavigationMenuList>
+        <NavigationMenuItem>
+          <NavigationMenuTrigger>
+            <CurrentAppIcon />
+          </NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <ul className="flex w-48 flex-col">
+              {apps.map((app) => (
+                <NavigationMenuItem
+                  className="flex w-full flex-row"
+                  key={app.id}
+                >
+                  <Link
+                    href={getAppUrl(app.id as KodixAppId)}
+                    legacyBehavior
+                    passHref
+                    className="w-full"
+                  >
+                    <NavigationMenuLink
+                      className={navigationMenuTriggerStyle()}
+                    >
+                      <IconKodixApp
+                        appId={app.id as KodixAppId}
+                        renderText={false}
+                        size={40}
+                      />
+                      <p className="ml-4">{getAppName(app.id as KodixAppId)}</p>
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+              ))}
+            </ul>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+      </NavigationMenuList>
+    </NavigationMenu>
   );
 }
 

@@ -6,7 +6,6 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -56,52 +55,50 @@ export function CancelationDialog({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Exclude recurrent event</AlertDialogTitle>
-          <AlertDialogDescription>
-            <div className="my-6">
-              <RadioGroup
-                className="flex flex-col space-y-2"
-                defaultValue="single"
-              >
-                <div className="flex">
-                  <RadioGroupItem
-                    id="single"
-                    value={"single"}
-                    onClick={() => {
-                      setRadioValue("single");
-                    }}
-                    className=""
-                  />
-                  <Label htmlFor="single" className="ml-2">
-                    This event
-                  </Label>
-                </div>
-                <div className="flex">
-                  <RadioGroupItem
-                    id="thisAndFuture"
-                    value={"thisAndFuture"}
-                    onClick={() => {
-                      setRadioValue("thisAndFuture");
-                    }}
-                  />
-                  <Label htmlFor="thisAndFuture" className="ml-2">
-                    This and future events
-                  </Label>
-                </div>
-                <div className="flex">
-                  <RadioGroupItem
-                    id="all"
-                    value={"all"}
-                    onClick={() => {
-                      setRadioValue("all");
-                    }}
-                  />
-                  <Label htmlFor="all" className="ml-2">
-                    All events
-                  </Label>
-                </div>
-              </RadioGroup>
-            </div>
-          </AlertDialogDescription>
+          <div className="py-4">
+            <RadioGroup
+              className="flex flex-col space-y-2"
+              defaultValue="single"
+            >
+              <div className="flex">
+                <RadioGroupItem
+                  id="single"
+                  value={"single"}
+                  onClick={() => {
+                    setRadioValue("single");
+                  }}
+                  className=""
+                />
+                <Label htmlFor="single" className="ml-2">
+                  This event
+                </Label>
+              </div>
+              <div className="flex">
+                <RadioGroupItem
+                  id="thisAndFuture"
+                  value={"thisAndFuture"}
+                  onClick={() => {
+                    setRadioValue("thisAndFuture");
+                  }}
+                />
+                <Label htmlFor="thisAndFuture" className="ml-2">
+                  This and future events
+                </Label>
+              </div>
+              <div className="flex">
+                <RadioGroupItem
+                  id="all"
+                  value={"all"}
+                  onClick={() => {
+                    setRadioValue("all");
+                  }}
+                />
+                <Label htmlFor="all" className="ml-2">
+                  All events
+                </Label>
+              </div>
+            </RadioGroup>
+          </div>
         </AlertDialogHeader>
         <AlertDialogFooter className="bg-background">
           <AlertDialogCancel>Cancel</AlertDialogCancel>

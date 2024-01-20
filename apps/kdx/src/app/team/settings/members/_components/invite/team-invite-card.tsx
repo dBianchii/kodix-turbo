@@ -40,7 +40,7 @@ export default function TeamInviteCardClient({
 }) {
   const utils = api.useUtils();
   const [loading, setLoading] = useState(false);
-  const [emails, setEmails] = useState([""]);
+  const [emails, setEmails] = useState([{ key: 0, value: "" }]); //key is used to work with formkit
   const [successes, setSuccesses] = useState<string[]>([]);
 
   const { mutate } = api.team.invitation.invite.useMutation({
@@ -69,8 +69,8 @@ export default function TeamInviteCardClient({
   });
 
   const closeDialog = () => {
-    const failures = emails.filter((x) => !successes.includes(x));
-    setEmails(failures.length > 0 ? failures : [""]); // Keep the failed to send emails
+    const failures = emails.filter((x) => !successes.includes(x.value));
+    setEmails(failures.length > 0 ? failures : [{ key: 0, value: "" }]); // Keep the failed to send emails
     setSuccesses([]);
     setOpen(false);
   };
@@ -116,17 +116,17 @@ export default function TeamInviteCardClient({
               </Label>
               <div ref={parent} className="space-y-2">
                 {emails.map((email, index) => (
-                  <div
-                    key={"email" + index}
-                    className="flex flex-row space-x-1"
-                  >
+                  <div key={email.key} className="flex flex-row space-x-1">
                     <Input
                       id={`email-${index}`}
                       type="email"
-                      value={email}
+                      value={email.value}
                       onChange={(e) => {
                         const newEmails = [...emails];
-                        newEmails[index] = e.target.value;
+                        newEmails[index] = {
+                          key: email.key,
+                          value: e.target.value,
+                        };
                         setEmails(newEmails);
                       }}
                       placeholder={"layla@gmail.com"}
@@ -161,7 +161,7 @@ export default function TeamInviteCardClient({
               className="h-8 p-2 text-xs"
               onClick={() => {
                 const newEmails = [...emails];
-                newEmails.push("");
+                newEmails.push({ key: Math.random(), value: "" });
                 setEmails(newEmails);
               }}
             >
@@ -178,7 +178,10 @@ export default function TeamInviteCardClient({
             }}
             open={open}
           >
-            <Button type="submit" disabled={!emails.some((x) => x.length)}>
+            <Button
+              type="submit"
+              disabled={!emails.some((x) => x.value.length)}
+            >
               Invite
             </Button>
             <DialogContent>
@@ -197,12 +200,12 @@ export default function TeamInviteCardClient({
                       className="m-0 flex justify-between rounded-md border p-3"
                       key={Math.random()}
                     >
-                      {email}
+                      {email.value}
 
                       <LuMailCheck
                         className={cn(
                           "text-green-600 fade-in-0",
-                          !successes.includes(email) && "hidden",
+                          !successes.includes(email.value) && "hidden",
                         )}
                       />
                     </div>
@@ -225,7 +228,7 @@ export default function TeamInviteCardClient({
                     setLoading(true);
                     const values = {
                       teamId: session.user.activeTeamId,
-                      to: emails.filter((x) => Boolean(x)),
+                      to: emails.map((x) => x.value).filter((x) => Boolean(x)),
                     };
                     const parsed = inviteUserSchema.safeParse(values);
                     if (!parsed.success) {

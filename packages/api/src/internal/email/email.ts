@@ -1,4 +1,3 @@
-import type { CreateEmailOptions } from "resend/build/src/emails/interfaces";
 import { renderAsync } from "@react-email/components";
 import { Resend } from "resend";
 
@@ -29,6 +28,9 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 //     pass: process.env.RESEND_API_KEY,
 //   },
 // });
+
+//get the type of parameters from emails.send
+type CreateEmailOptions = Parameters<typeof resend.emails.send>[0];
 
 export async function sendEmail(
   mailOptions: CreateEmailOptions & { react: JSX.Element },

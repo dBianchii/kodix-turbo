@@ -102,7 +102,7 @@ export const eventRouter = createTRPCRouter({
         const rrule = rrulestr(eventMaster.rule);
         const allDates = rrule.between(input.dateStart, input.dateEnd, true);
 
-        for (const date of allDates) {
+        for (const date of allDates)
           calendarTasks.push({
             eventMasterId: eventMaster.id,
             eventExceptionId: undefined,
@@ -111,10 +111,9 @@ export const eventRouter = createTRPCRouter({
             date: date,
             rule: eventMaster.rule,
           });
-        }
       }
 
-      for (const eventException of eventExceptions) {
+      for (const eventException of eventExceptions)
         calendarTasks.push({
           eventMasterId: eventException.eventMasterId,
           eventExceptionId: eventException.id,
@@ -130,7 +129,6 @@ export const eventRouter = createTRPCRouter({
           originaDate: eventException.originalDate,
           rule: eventException.EventMaster.rule,
         });
-      }
 
       //we have exceptions and recurrences from masters in calendarTasks. Some master recurrences must be deleted.
       //because of the exception's change of date.
@@ -374,10 +372,10 @@ export const eventRouter = createTRPCRouter({
 
               from: z
                 .string()
-                .refine((value) => {
-                  const regex = /^([01]\d|2[0-3]):([0-5]\d)$/;
-                  return regex.test(value);
-                }, "Invalid time format. Should be HH:MM")
+                .refine(
+                  (value) => /^([01]\d|2[0-3]):([0-5]\d)$/.test(value),
+                  "Invalid time format. Should be HH:MM",
+                )
                 .optional(),
 
               editDefinition: z.literal("all"),

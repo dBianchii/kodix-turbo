@@ -11,7 +11,7 @@ export const appsRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     const apps = await ctx.prisma.app.findMany({
       include: {
-        ActiveTeams: true,
+        Teams: true,
       },
     });
 
@@ -26,14 +26,14 @@ export const appsRouter = createTRPCRouter({
       .map((app) => {
         return {
           ...app,
-          installed: !!app.ActiveTeams.find(
+          installed: !!app.Teams.find(
             (x) => x.id === ctx.session?.user.activeTeamId,
           ),
         };
       })
       .map(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        ({ ActiveTeams, devPartnerId, subscriptionCost, ...rest }) => rest,
+        ({ Teams, devPartnerId, subscriptionCost, ...rest }) => rest,
       ); // remove some fields
 
     return appsWithInstalled;
@@ -41,7 +41,7 @@ export const appsRouter = createTRPCRouter({
   getInstalled: protectedProcedure.query(async ({ ctx }) => {
     const apps = await ctx.prisma.app.findMany({
       where: {
-        ActiveTeams: {
+        Teams: {
           some: {
             id: ctx.session.user.activeTeamId,
           },

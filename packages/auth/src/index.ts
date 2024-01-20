@@ -40,29 +40,37 @@ function CustomPrismaAdapter(p: PrismaClient): Adapter {
     ...PrismaAdapter(p),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async createUser(data): Promise<any> {
-      const userId = cuid();
       const teamId = cuid();
-
+      data.id = cuid();
       //! When changing team creation flow here, change it on api.team.create router as well!
+      const teamConnectOrCreate = {
+        create: {
+          id: teamId,
+          name: `Personal Team`,
+          ownerId: data.id,
+        },
+        where: {
+          id: teamId,
+        },
+      };
       const user = await p.user.create({
         data: {
-          id: userId,
           ...data,
+          Teams: {
+            connectOrCreate: teamConnectOrCreate,
+          },
           ActiveTeam: {
+            connectOrCreate: teamConnectOrCreate,
+          },
+          OwnedTeams: {
             connectOrCreate: {
               create: {
                 id: teamId,
                 name: `Personal Team`,
-                ownerId: userId,
               },
               where: {
                 id: teamId,
               },
-            },
-          },
-          Teams: {
-            connect: {
-              id: teamId,
             },
           },
         },
@@ -141,16 +149,17 @@ export const {
     }),
   ],
   callbacks: {
-    session: ({ session, user }) => {
-      session.user.id = user.id;
+    session: (opts) => {
+      if (!("user" in opts)) throw "unreachable with session strategy";
+      opts.session.user.id = opts.user.id;
 
-      session.user.activeTeamName = (
-        user as typeof user & { activeTeamName: string }
+      opts.session.user.activeTeamName = (
+        opts.user as typeof opts.user & { activeTeamName: string }
       ).activeTeamName;
-      session.user.activeTeamId = (
-        user as typeof user & { activeTeamId: string }
+      opts.session.user.activeTeamId = (
+        opts.user as typeof opts.user & { activeTeamId: string }
       ).activeTeamId;
-      return session;
+      return opts.session;
     },
   },
   pages: {

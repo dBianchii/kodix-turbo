@@ -73,8 +73,8 @@ export const apps = [
   },
 ];
 
-(async () => {
-  console.log("Seeding...");
+async function main() {
+  console.log("🌱 Seeding...");
 
   await prisma.devPartner.upsert({
     where: {
@@ -89,18 +89,34 @@ export const apps = [
   });
 
   for (const app of apps) {
+    const appExists = await prisma.app.findUnique({
+      where: {
+        id: app.id,
+      },
+    });
+
+    if (appExists) {
+      console.log(`App ${app.id} already exists, skipping...`);
+      continue;
+    }
     await prisma.app.upsert({
       where: {
         id: app.id,
       },
-      update: app,
+      update: {},
       create: app,
     });
   }
-})()
+}
+
+main()
   .then(() => {
-    console.log("Done!");
+    console.log("🌳 Done!");
   })
-  .catch((e: Error) => {
-    console.error(e.message);
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(() => {
+    void prisma.$disconnect();
   });

@@ -41,8 +41,8 @@
       "cache": false
     },
     "db:seed": {
-      "inputs": ["seed/seed.ts"],
-      "cache": false
+      "cache": false,
+      "dependsOn": ["db:generate"]
     },
     "clean": {
       "cache": false

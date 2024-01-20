@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { Label } from "@radix-ui/react-label";
 import { LuLoader2 } from "react-icons/lu";
 import { RxPlusCircled } from "react-icons/rx";
 
@@ -18,6 +17,7 @@ import {
   DialogTrigger,
 } from "@kdx/ui/dialog";
 import { Input } from "@kdx/ui/input";
+import { Label } from "@kdx/ui/label";
 import { toast } from "@kdx/ui/toast";
 import { cn } from "@kdx/ui/utils";
 
@@ -66,28 +66,6 @@ export function AddTeamDialogButton({
                 onChange={(e) => changeTeamName(e.target.value)}
               />
             </div>
-            {/* <div className="space-y-2">
-              <Label htmlFor="plan">Subscription plan</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a plan" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="free">
-                    <span className="font-medium">Free</span> -{" "}
-                    <span className="text-muted-foreground">
-                      Trial for two weeks
-                    </span>
-                  </SelectItem>
-                  <SelectItem value="pro">
-                    <span className="font-medium">Pro</span> -{" "}
-                    <span className="text-muted-foreground">
-                      $9/month per user
-                    </span>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div> This is a nice way to do forms so I am not deleting it yet until ive used it somewhere else*/}
           </div>
         </div>
         <DialogFooter>

@@ -22,7 +22,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     );
 
   if (session.user.email !== invitation.email) return notFound();
-  await api.team.invitation.accept.mutate({ invitationId });
+  await api.team.invitation.accept({ invitationId });
 
   return redirect("/");
 }
