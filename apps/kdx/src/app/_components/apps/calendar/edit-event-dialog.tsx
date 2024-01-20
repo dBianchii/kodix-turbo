@@ -20,7 +20,6 @@ import { Calendar } from "@kdx/ui/calendar";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
