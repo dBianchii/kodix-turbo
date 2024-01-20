@@ -47,7 +47,7 @@ export const viewport: Viewport = {
 
 export default function Layout(props: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
           "min-h-screen bg-background font-sans text-foreground antialiased",
@@ -55,11 +55,11 @@ export default function Layout(props: { children: React.ReactNode }) {
           GeistMono.variable,
         )}
       >
+        <SpeedInsights />
+        <Analytics />
+        <Toaster richColors closeButton />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <TRPCReactProvider>
-            <SpeedInsights />
-            <Analytics />
-            <Toaster richColors closeButton />
             <div className="flex min-h-screen flex-col">
               <Header />
               {props.children}
