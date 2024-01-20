@@ -11,7 +11,6 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -142,8 +141,6 @@ export function EditEventDialog({
       defaultCalendarTask.from.format("YYYY-MM-DD")
     ),
   };
-  console.log(defaultCalendarTask.count);
-  console.log(count);
 
   const isFormChanged =
     title !== defaultCalendarTask.title ||
@@ -218,95 +215,93 @@ export function EditEventDialog({
         <DialogHeader>
           <DialogTitle>Edit Event</DialogTitle>
         </DialogHeader>
-        <DialogDescription>
-          <div className="space-y-4">
-            <div className="flex flex-row gap-2">
-              <Input
-                placeholder="Event title..."
-                onChange={(e) => setTitle(e.target.value)}
-                value={title ?? ""}
-              />
-            </div>
-            <div className="flex flex-row gap-4">
-              <div className="flex flex-col space-y-2">
-                <Label>From</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-[200px] pl-3 text-left font-normal",
-                        !from && "text-muted-foreground",
-                      )}
-                    >
-                      {from ? (
-                        format(from.toDate(), "PPP")
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={from.toDate()}
-                      onSelect={(date) => {
-                        setFrom(
-                          moment(date)
-                            .hours(from.hours())
-                            .minutes(from.minutes()),
-                        );
-                      }}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-              <div className="flex flex-col space-y-2">
-                <Label className="invisible">From</Label>
-                <Input
-                  type="time"
-                  value={from.format("HH:mm")}
-                  onChange={(e) => {
-                    const newTime = e.target.value;
-
-                    setFrom(
-                      moment(from).set({
-                        hour: parseInt(newTime.split(":")[0] ?? "0"),
-                        minute: parseInt(newTime.split(":")[1] ?? "0"),
-                        second: 0,
-                        millisecond: 0,
-                      }),
-                    );
-                  }}
-                  className="w-26"
-                />
-              </div>
-            </div>
-            <div className="flex flex-row gap-2">
-              <RecurrencePicker
-                open={personalizedRecurrenceOpen}
-                setOpen={setPersonalizedRecurrenceOpen}
-                interval={interval}
-                setInterval={setInterval}
-                frequency={frequency}
-                setFrequency={setFrequency}
-                until={until}
-                setUntil={setUntil}
-                count={count}
-                setCount={setCount}
-                weekdays={weekdays}
-                setWeekdays={setWeekdays}
-              />
-            </div>
-            <Textarea
-              placeholder="Add description..."
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            ></Textarea>
+        <div className="space-y-4">
+          <div className="flex flex-row gap-2">
+            <Input
+              placeholder="Event title..."
+              onChange={(e) => setTitle(e.target.value)}
+              value={title ?? ""}
+            />
           </div>
-        </DialogDescription>
+          <div className="flex flex-row gap-4">
+            <div className="flex flex-col space-y-2">
+              <Label>From</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-[200px] pl-3 text-left font-normal",
+                      !from && "text-muted-foreground",
+                    )}
+                  >
+                    {from ? (
+                      format(from.toDate(), "PPP")
+                    ) : (
+                      <span>Pick a date</span>
+                    )}
+                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={from.toDate()}
+                    onSelect={(date) => {
+                      setFrom(
+                        moment(date)
+                          .hours(from.hours())
+                          .minutes(from.minutes()),
+                      );
+                    }}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+            <div className="flex flex-col space-y-2">
+              <Label className="invisible">From</Label>
+              <Input
+                type="time"
+                value={from.format("HH:mm")}
+                onChange={(e) => {
+                  const newTime = e.target.value;
+
+                  setFrom(
+                    moment(from).set({
+                      hour: parseInt(newTime.split(":")[0] ?? "0"),
+                      minute: parseInt(newTime.split(":")[1] ?? "0"),
+                      second: 0,
+                      millisecond: 0,
+                    }),
+                  );
+                }}
+                className="w-26"
+              />
+            </div>
+          </div>
+          <div className="flex flex-row gap-2">
+            <RecurrencePicker
+              open={personalizedRecurrenceOpen}
+              setOpen={setPersonalizedRecurrenceOpen}
+              interval={interval}
+              setInterval={setInterval}
+              frequency={frequency}
+              setFrequency={setFrequency}
+              until={until}
+              setUntil={setUntil}
+              count={count}
+              setCount={setCount}
+              weekdays={weekdays}
+              setWeekdays={setWeekdays}
+            />
+          </div>
+          <Textarea
+            placeholder="Add description..."
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          ></Textarea>
+        </div>
         <DialogFooter>
           <TooltipProvider>
             <Tooltip>
@@ -372,57 +367,55 @@ function SubmitEditEventDialog({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Edit event</AlertDialogTitle>
-          <AlertDialogDescription>
-            <div className="my-6">
-              <RadioGroup className="flex flex-col space-y-2">
-                {allowedDefinitions.single && (
-                  <div className="flex">
-                    <RadioGroupItem
-                      id="single"
-                      value={"single"}
-                      onClick={() => {
-                        setDefinition("single");
-                      }}
-                      checked={definition === "single"}
-                    />
-                    <Label htmlFor="single" className="ml-2">
-                      This event
-                    </Label>
-                  </div>
-                )}
-                {allowedDefinitions.thisAndFuture && (
-                  <div className="flex">
-                    <RadioGroupItem
-                      id="thisAndFuture"
-                      value={"thisAndFuture"}
-                      checked={definition === "thisAndFuture"}
-                      onClick={() => {
-                        setDefinition("thisAndFuture");
-                      }}
-                    />
-                    <Label htmlFor="thisAndFuture" className="ml-2">
-                      This and future events
-                    </Label>
-                  </div>
-                )}
-                {allowedDefinitions.all && (
-                  <div className="flex">
-                    <RadioGroupItem
-                      id="all"
-                      value={"all"}
-                      checked={definition === "all"}
-                      onClick={() => {
-                        setDefinition("all");
-                      }}
-                    />
-                    <Label htmlFor="all" className="ml-2">
-                      All events
-                    </Label>
-                  </div>
-                )}
-              </RadioGroup>
-            </div>
-          </AlertDialogDescription>
+          <div className="my-6">
+            <RadioGroup className="flex flex-col space-y-2">
+              {allowedDefinitions.single && (
+                <div className="flex">
+                  <RadioGroupItem
+                    id="single"
+                    value={"single"}
+                    onClick={() => {
+                      setDefinition("single");
+                    }}
+                    checked={definition === "single"}
+                  />
+                  <Label htmlFor="single" className="ml-2">
+                    This event
+                  </Label>
+                </div>
+              )}
+              {allowedDefinitions.thisAndFuture && (
+                <div className="flex">
+                  <RadioGroupItem
+                    id="thisAndFuture"
+                    value={"thisAndFuture"}
+                    checked={definition === "thisAndFuture"}
+                    onClick={() => {
+                      setDefinition("thisAndFuture");
+                    }}
+                  />
+                  <Label htmlFor="thisAndFuture" className="ml-2">
+                    This and future events
+                  </Label>
+                </div>
+              )}
+              {allowedDefinitions.all && (
+                <div className="flex">
+                  <RadioGroupItem
+                    id="all"
+                    value={"all"}
+                    checked={definition === "all"}
+                    onClick={() => {
+                      setDefinition("all");
+                    }}
+                  />
+                  <Label htmlFor="all" className="ml-2">
+                    All events
+                  </Label>
+                </div>
+              )}
+            </RadioGroup>
+          </div>
         </AlertDialogHeader>
         <AlertDialogFooter className="bg-background">
           <AlertDialogCancel>Cancel</AlertDialogCancel>
