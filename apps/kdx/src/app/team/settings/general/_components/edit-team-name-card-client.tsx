@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { LuLoader2 } from "react-icons/lu";
 
 import { Button } from "@kdx/ui/button";
 import {
@@ -90,7 +90,7 @@ export function EditTeamNameCardClient({
             <Button disabled={isPending}>
               {isPending ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving
+                  <LuLoader2 className="mr-2 h-4 w-4 animate-spin" /> Saving
                 </>
               ) : (
                 <>Save</>

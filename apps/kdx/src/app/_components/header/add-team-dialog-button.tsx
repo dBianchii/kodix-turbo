@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, PlusCircle } from "lucide-react";
+import { LuLoader2 } from "react-icons/lu";
+import { RxPlusCircled } from "react-icons/rx";
 
 import type { Session } from "@kdx/auth";
 import { Button } from "@kdx/ui/button";
@@ -42,7 +43,7 @@ export function AddTeamDialogButton({
       {children ?? (
         <DialogTrigger asChild>
           <Button className={cn(className)}>
-            <PlusCircle className="mr-2 h-5 w-5" />
+            <RxPlusCircled className="mr-2 h-5 w-5" />
             Create New Team
           </Button>
         </DialogTrigger>
@@ -88,7 +89,7 @@ export function AddTeamDialogButton({
               return router.refresh();
             }}
           >
-            {isPending && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
+            {isPending && <LuLoader2 className="mr-2 h-5 w-5 animate-spin" />}
             Create
           </Button>
         </DialogFooter>

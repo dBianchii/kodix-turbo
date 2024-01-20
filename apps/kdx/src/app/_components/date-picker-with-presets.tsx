@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { addDays, format } from "date-fns";
-import { CalendarIcon, ChevronDown, X } from "lucide-react";
+import { RxCalendar, RxChevronDown, RxCross2 } from "react-icons/rx";
 
 import { Button } from "@kdx/ui/button";
 import { Calendar } from "@kdx/ui/calendar";
@@ -73,7 +73,7 @@ export function DatePickerWithPresets({
                 }}
                 className="ml-2 rounded-full transition-colors hover:bg-primary/90 hover:text-background"
               >
-                <X className="h-4 w-4 " />
+                <RxCross2 className="h-4 w-4 " />
               </span>
             )}
           </Button>
@@ -84,7 +84,7 @@ export function DatePickerWithPresets({
           <PopoverTrigger>
             <Button variant="outline" className="w-full justify-between">
               Select...
-              <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              <RxChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[350px] p-0" side="bottom">
@@ -134,13 +134,11 @@ export function DatePickerIcon({
 }) {
   if (date === undefined) {
     return (
-      <CalendarIcon className={cn("h-4 w-4 text-foreground/70", className)} />
+      <RxCalendar className={cn("h-4 w-4 text-foreground/70", className)} />
     );
   } else if (new Date() > date) {
-    return <CalendarIcon className={cn("h-4 w-4 text-red-500", className)} />;
+    return <RxCalendar className={cn("h-4 w-4 text-red-500", className)} />;
   } else {
-    return (
-      <CalendarIcon className={cn("h-4 w-4 text-foreground", className)} />
-    );
+    return <RxCalendar className={cn("h-4 w-4 text-foreground", className)} />;
   }
 }

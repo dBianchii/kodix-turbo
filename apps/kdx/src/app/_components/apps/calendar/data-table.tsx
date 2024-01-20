@@ -10,15 +10,15 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { addDays, format } from "date-fns";
-import {
-  CalendarIcon,
-  ChevronLeft,
-  ChevronRight,
-  Loader2,
-  PencilIcon,
-  Trash2,
-} from "lucide-react";
 import moment from "moment";
+import { LuLoader2 } from "react-icons/lu";
+import {
+  RxCalendar,
+  RxChevronLeft,
+  RxChevronRight,
+  RxPencil1,
+  RxTrash,
+} from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
@@ -134,7 +134,7 @@ export function DataTable({
             }}
             className="h-10 w-10 p-3"
           >
-            <ChevronLeft />
+            <RxChevronLeft />
           </Button>
           <Popover>
             <PopoverTrigger asChild>
@@ -145,7 +145,7 @@ export function DataTable({
                   !selectedDay && "text-muted-foreground",
                 )}
               >
-                <CalendarIcon className="mr-2 h-4 w-4" />
+                <RxCalendar className="mr-2 h-4 w-4" />
                 {selectedDay ? (
                   format(selectedDay, "PPP")
                 ) : (
@@ -171,7 +171,7 @@ export function DataTable({
             }}
             className="h-10 w-10 p-3"
           >
-            <ChevronRight />
+            <RxChevronRight />
           </Button>
         </div>
         <div className="flex w-44">
@@ -237,7 +237,7 @@ export function DataTable({
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24">
                   <div className="flex h-full items-center justify-center">
-                    <Loader2 className="h-6 w-6 animate-spin" />
+                    <LuLoader2 className="h-6 w-6 animate-spin" />
                   </div>
                 </TableCell>
               </TableRow>
@@ -251,7 +251,7 @@ export function DataTable({
                         setOpenEditDialog(true);
                       }}
                     >
-                      <PencilIcon className="mr-2 h-4 w-4" />
+                      <RxPencil1 className="mr-2 h-4 w-4" />
                       Edit Event
                     </ContextMenuItem>
                     <ContextMenuItem
@@ -260,7 +260,7 @@ export function DataTable({
                         setOpenCancelDialog(true);
                       }}
                     >
-                      <Trash2 className="mr-2 h-4 w-4" />
+                      <RxTrash className="mr-2 h-4 w-4" />
                       Delete Event
                     </ContextMenuItem>
                   </ContextMenuContent>

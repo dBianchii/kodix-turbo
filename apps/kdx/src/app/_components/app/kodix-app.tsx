@@ -4,7 +4,8 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Loader2, MoreHorizontal, Trash2 } from "lucide-react";
+import { LuLoader2 } from "react-icons/lu";
+import { RxDotsHorizontal, RxTrash } from "react-icons/rx";
 
 import type { Session } from "@kdx/auth";
 import type { KodixAppId } from "@kdx/shared";
@@ -139,7 +140,7 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
               !isActive && "pointer-events-none opacity-50",
             )}
           >
-            {installing && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
+            {installing && <LuLoader2 className="mr-2 h-5 w-5 animate-spin" />}
             {isActive ? "Install" : "Coming soon"}
           </Button>
         )}
@@ -159,14 +160,14 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="ml-auto">
-                  <MoreHorizontal className="h-4 w-4" />
+                  <RxDotsHorizontal className="h-4 w-4" />
                   <span className="sr-only">Open dialog</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DialogTrigger asChild>
                   <DropdownMenuItem>
-                    <Trash2 className="mr-2 h-4 w-4 text-destructive" />
+                    <RxTrash className="mr-2 h-4 w-4 text-destructive" />
                     <span>Uninstall from team</span>
                   </DropdownMenuItem>
                 </DialogTrigger>
@@ -198,7 +199,7 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
                   variant="destructive"
                 >
                   {uninstalling && (
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    <LuLoader2 className="mr-2 h-5 w-5 animate-spin" />
                   )}
                   Uninstall
                 </Button>

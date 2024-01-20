@@ -3,8 +3,9 @@
 import type { Weekday } from "rrule";
 import { useState } from "react";
 import { format } from "date-fns";
-import { CalendarIcon, Loader2, Plus } from "lucide-react";
 import moment from "moment";
+import { LuLoader2 } from "react-icons/lu";
+import { RxCalendar, RxPlus } from "react-icons/rx";
 import { RRule } from "rrule";
 
 import type { RouterInputs } from "@kdx/api";
@@ -116,7 +117,7 @@ export function CreateEventDialogButton() {
     >
       <DialogTrigger asChild>
         <Button size="sm">
-          <Plus className="mr-2 h-4 w-4" />
+          <RxPlus className="mr-2 h-4 w-4" />
           Create Event
         </Button>
       </DialogTrigger>
@@ -150,7 +151,7 @@ export function CreateEventDialogButton() {
                       ) : (
                         <span>Pick a date</span>
                       )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      <RxCalendar className="ml-auto h-4 w-4 opacity-50" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
@@ -215,7 +216,7 @@ export function CreateEventDialogButton() {
           <DialogFooter>
             <Button type="submit" size="sm" disabled={buttonLoading}>
               {buttonLoading ? (
-                <Loader2 className="mx-2 h-4 w-4 animate-spin" />
+                <LuLoader2 className="mx-2 h-4 w-4 animate-spin" />
               ) : (
                 <>Create task</>
               )}

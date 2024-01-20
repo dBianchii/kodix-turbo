@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { RxArrowLeft } from "react-icons/rx";
 
 import {
   NavigationMenu,
@@ -38,7 +38,7 @@ export function Navigation({
       >
         {!pathname.endsWith(entryPoint) && !isSmallerScreen ? (
           <NavigationItem href={goBackItem.href}>
-            <ArrowLeft className="mr-2 h-4 w-4" /> {goBackItem.title}
+            <RxArrowLeft className="mr-2 h-4 w-4" /> {goBackItem.title}
           </NavigationItem>
         ) : (
           items.map((item, i) => (

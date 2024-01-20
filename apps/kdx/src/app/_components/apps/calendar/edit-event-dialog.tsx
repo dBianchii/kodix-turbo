@@ -1,8 +1,9 @@
 import type { Frequency } from "rrule";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
-import { CalendarIcon, Loader2 } from "lucide-react";
 import moment from "moment";
+import { LuLoader2 } from "react-icons/lu";
+import { RxCalendar } from "react-icons/rx";
 import { RRule, Weekday } from "rrule";
 
 import type { RouterInputs, RouterOutputs } from "@kdx/api";
@@ -239,7 +240,7 @@ export function EditEventDialog({
                     ) : (
                       <span>Pick a date</span>
                     )}
-                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    <RxCalendar className="ml-auto h-4 w-4 opacity-50" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
@@ -313,7 +314,7 @@ export function EditEventDialog({
                     onClick={() => setEditDefinitionOpen(true)}
                   >
                     {buttonLoading ? (
-                      <Loader2 className="mx-2 h-4 w-4 animate-spin" />
+                      <LuLoader2 className="mx-2 h-4 w-4 animate-spin" />
                     ) : (
                       <>OK</>
                     )}

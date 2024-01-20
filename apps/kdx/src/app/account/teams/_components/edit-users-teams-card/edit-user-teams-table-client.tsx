@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, Loader2, MoreHorizontal } from "lucide-react";
+import { LuLoader2 } from "react-icons/lu";
+import { RxChevronLeft, RxDotsHorizontal } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
@@ -82,7 +83,7 @@ function CustomRow({
       onMouseLeave={() => setIsHovered(false)}
     >
       <TableCell className="w-2">
-        {<ChevronLeft className={cn(!isHovered && "text-transparent")} />}
+        {<RxChevronLeft className={cn(!isHovered && "text-transparent")} />}
       </TableCell>
       <TableCell className="flex flex-row space-x-4">
         <div className="flex flex-col items-start">
@@ -118,7 +119,7 @@ function CustomRow({
           >
             <Button variant="outline" type="submit" disabled={manageLoading}>
               {manageLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <LuLoader2 className="h-4 w-4 animate-spin" />
               ) : (
                 <>Manage</>
               )}
@@ -148,7 +149,7 @@ function LeaveTeamDropdown({ session }: { session: Session }) {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-8 w-8 p-0">
           <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
+          <RxDotsHorizontal className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

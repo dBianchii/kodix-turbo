@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { LuLoader2 } from "react-icons/lu";
 
 import {
   AlertDialog,
@@ -125,7 +125,7 @@ export function CancelationDialog({
             }}
           >
             {buttonLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <LuLoader2 className="h-4 w-4 animate-spin" />
             ) : (
               <>OK</>
             )}

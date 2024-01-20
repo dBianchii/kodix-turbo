@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
-import { LuArrowRight } from "react-icons/lu";
+import { LuArrowRight, LuLoader2 } from "react-icons/lu";
 
 import { Button } from "@kdx/ui/button";
 import {
@@ -89,7 +88,7 @@ export default function OnboardingCard() {
               Go to Kodix Care
               {!isSubmitting && <LuArrowRight className="ml-2 h-4 w-4" />}
               {isSubmitting && (
-                <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+                <LuLoader2 className="ml-2 h-4 w-4 animate-spin" />
               )}
             </Button>
           </CardFooter>

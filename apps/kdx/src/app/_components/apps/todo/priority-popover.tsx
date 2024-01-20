@@ -1,7 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Signal, SignalHigh, SignalLow, SignalMedium } from "lucide-react";
+import {
+  LuSignal,
+  LuSignalHigh,
+  LuSignalLow,
+  LuSignalMedium,
+} from "react-icons/lu";
 
 import { Button } from "@kdx/ui/button";
 import {
@@ -82,17 +87,17 @@ export function PriorityIcon({
 }) {
   switch (priority) {
     case 0:
-      return <SignalLow className={cn("h-4 w-4 text-white/60", className)} />;
+      return <LuSignalLow className={cn("h-4 w-4 text-white/60", className)} />;
     case 1:
       return (
-        <SignalMedium className={cn("h-4 w-4 text-green-400", className)} />
+        <LuSignalMedium className={cn("h-4 w-4 text-green-400", className)} />
       );
     case 2:
       return (
-        <SignalHigh className={cn("h-4 w-4 text-yellow-400", className)} />
+        <LuSignalHigh className={cn("h-4 w-4 text-yellow-400", className)} />
       );
     case 3:
-      return <Signal className={cn("h-4 w-4 text-red-400", className)} />;
+      return <LuSignal className={cn("h-4 w-4 text-red-400", className)} />;
   }
 }
 

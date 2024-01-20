@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { Loader2, MailCheck, MinusCircle, PlusCircle } from "lucide-react";
+import { LuLoader2, LuMailCheck } from "react-icons/lu";
+import { RxMinusCircled, RxPlusCircled } from "react-icons/rx";
 
 import type { Session } from "@kdx/auth";
 import { Button } from "@kdx/ui/button";
@@ -145,7 +146,7 @@ export default function TeamInviteCardClient({
                         setEmails(newEmails);
                       }}
                     >
-                      <MinusCircle className="h-4 w-4 " />
+                      <RxMinusCircled className="h-4 w-4 " />
                     </Button>
                   </div>
                 ))}
@@ -164,7 +165,7 @@ export default function TeamInviteCardClient({
                 setEmails(newEmails);
               }}
             >
-              <PlusCircle className="mr-2 h-4 w-4" />
+              <RxPlusCircled className="mr-2 h-4 w-4" />
               Add more
             </Button>
           </div>
@@ -201,7 +202,7 @@ export default function TeamInviteCardClient({
                     >
                       {email.value}
 
-                      <MailCheck
+                      <LuMailCheck
                         className={cn(
                           "text-green-600 fade-in-0",
                           !successes.includes(email.value) && "hidden",
@@ -238,7 +239,8 @@ export default function TeamInviteCardClient({
                 >
                   {loading ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Sending
+                      <LuLoader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
+                      Sending
                     </>
                   ) : (
                     "Confirm"

@@ -3,7 +3,7 @@
 import type { DateRange } from "react-day-picker";
 import * as React from "react";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { RxCalendar } from "react-icons/rx";
 
 import { Button } from "@kdx/ui/button";
 import { Calendar } from "@kdx/ui/calendar";
@@ -33,7 +33,7 @@ export function DateRangePicker({
               !date && "text-muted-foreground",
             )}
           >
-            <CalendarIcon className="mr-2 h-4 w-4" />
+            <RxCalendar className="mr-2 h-4 w-4" />
             {date?.from ? (
               date.to ? (
                 <>

@@ -2,9 +2,10 @@
 
 import React from "react";
 import Link from "next/link";
-import { LogOut, Settings, User, Users } from "lucide-react";
 import { signOut } from "next-auth/react";
+import { LuLogOut, LuUsers } from "react-icons/lu";
 import { MdOutlineSwapHorizontalCircle } from "react-icons/md";
+import { RxGear, RxPerson } from "react-icons/rx";
 
 import type { Session } from "@kdx/auth";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
@@ -47,20 +48,20 @@ export function UserProfileButton({ session }: { session: Session }) {
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
             <Link href="/account">
-              <User className="mr-2 h-4 w-4" />
+              <RxPerson className="mr-2 h-4 w-4" />
               <span>Account</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator className="mb-2" />
           <DropdownMenuItem asChild>
             <Link href="/team" className="flex border border-gray-600">
-              <Users className="h-4 w-4" />
+              <LuUsers className="h-4 w-4" />
               <p className="ml-2 font-bold">{session.user.activeTeamName}</p>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href="/team/settings">
-              <Settings className="mr-2 h-4 w-4" />
+              <RxGear className="mr-2 h-4 w-4" />
               Settings
             </Link>
           </DropdownMenuItem>
@@ -73,7 +74,7 @@ export function UserProfileButton({ session }: { session: Session }) {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => void signOut()}>
-          <LogOut className="mr-2 h-4 w-4" />
+          <LuLogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>

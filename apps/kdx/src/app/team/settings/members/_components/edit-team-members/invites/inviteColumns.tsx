@@ -1,5 +1,5 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { RouterInputs, RouterOutputs } from "@kdx/api";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
@@ -68,7 +68,7 @@ export const inviteColumns = ({
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
+                <RxDotsHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
