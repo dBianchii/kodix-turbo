@@ -1,8 +1,23 @@
 import { kodixCareAppId } from "@kdx/shared";
 
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import {
+  createTRPCRouter,
+  kodixCareInstalledMiddleware,
+  protectedProcedure,
+} from "../trpc";
 
 export const kodixCareRouter = createTRPCRouter({
+  startShift: protectedProcedure
+    .use(kodixCareInstalledMiddleware)
+    .mutation(async ({ ctx }) => {
+      await ctx.prisma.careShift.create({
+        data: {
+          teamId: ctx.session.user.activeTeamId,
+          checkIn: new Date(),
+          caregiverId: ctx.session.user.id,
+        },
+      });
+    }),
   onboardingCompleted: protectedProcedure.query(async ({ ctx }) => {
     const result = await ctx.prisma.appTeamConfig.findUnique({
       where: {

@@ -6,15 +6,21 @@
  * tl;dr - this is where all the tRPC server stuff is created and plugged in.
  * The pieces you will need to use are documented accordingly near the end
  */
-import { initTRPC, TRPCError } from "@trpc/server";
+import {
+  experimental_standaloneMiddleware,
+  initTRPC,
+  TRPCError,
+} from "@trpc/server";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
 import type { Session } from "@kdx/auth";
+import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
 import { prisma } from "@kdx/db";
+import { getAppName, kodixCareAppId } from "@kdx/shared";
 
 /**
  * 1. CONTEXT
@@ -139,3 +145,35 @@ export const userAndTeamLimitedProcedure = protectedProcedure.use(
     });
   },
 );
+
+/**
+ *  Helper/factory that returns a reusable middleware that checks if a certain app is installed for the current team
+ */
+const appInstalledMiddlewareFactory = (appId: KodixAppId) =>
+  experimental_standaloneMiddleware<{
+    ctx: Awaited<ReturnType<typeof createTRPCContext>> & {
+      session: Session;
+    };
+  }>().create(async ({ ctx, next }) => {
+    const team = await ctx.prisma.team.findUnique({
+      where: { id: ctx.session.user.activeTeamId },
+      select: {
+        ActiveApps: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+
+    if (!team?.ActiveApps.some((x) => x.id === appId))
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: `${getAppName(appId)} is not installed`,
+      });
+
+    return next({ ctx });
+  });
+
+export const kodixCareInstalledMiddleware =
+  appInstalledMiddlewareFactory(kodixCareAppId);
