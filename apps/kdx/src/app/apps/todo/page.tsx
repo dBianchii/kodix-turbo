@@ -1,18 +1,23 @@
-"use client";
-
+import { prisma } from "@kdx/db";
 import { todoAppId } from "@kdx/shared";
 import { Separator } from "@kdx/ui/separator";
 import { H1 } from "@kdx/ui/typography";
 
-import { IconKodixApp } from "~/app/_components/app/kodix-app";
+import { IconKodixApp } from "~/app/_components/app/kodix-icon";
 import { columns } from "~/app/_components/apps/todo/columns";
 import { CreateTaskDialogButton } from "~/app/_components/apps/todo/create-task-dialog-button";
 import { DataTable } from "~/app/_components/apps/todo/data-table";
 import MaxWidthWrapper from "~/app/_components/max-width-wrapper";
-import { api } from "~/trpc/react";
+import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
+import { api } from "~/trpc/server";
 
-export default function Todo() {
-  const { data } = api.todo.getAll.useQuery();
+export default async function Todo() {
+  await redirectIfAppNotInstalled({
+    appId: todoAppId,
+    prisma,
+  });
+
+  const data = await api.todo.getAll();
 
   return (
     <MaxWidthWrapper>

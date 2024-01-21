@@ -190,7 +190,7 @@ model EventMaster {
 
   EventExceptions    EventException[]
   EventCancellations EventCancellation[]
-  EventDones         EventDone[]
+  CareTasks          CareTask[]
 
   Team   Team   @relation(fields: [teamId], references: [id])
   teamId String
@@ -222,7 +222,7 @@ model EventCancellation {
   @@index([eventMasterId])
 }
 
-model EventDone {
+model CareTask {
   id           String   @id @default(cuid())
   eventDate    DateTime
   registerDate DateTime @default(now())
@@ -240,6 +240,7 @@ model EventDone {
 
   @@index([eventMasterId])
   @@index([userId])
+  @@map("CareTask")
 }
 
 model Post {
@@ -292,7 +293,7 @@ model User {
   activeTeamId String
   ActiveTeam   Team   @relation("UserActiveTeam", fields: [activeTeamId], references: [id])
 
-  EventDones   EventDone[]
+  CareTasks    CareTask[]
   OwnedTeams   Team[]
   UserAppRoles UserAppRole[]
   CareShift    CareShift[]

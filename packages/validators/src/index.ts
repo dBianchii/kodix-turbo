@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { KodixAppId } from "@kdx/shared";
+
 /**
  * @description Schema for validating team updates
  * @usedBy kdx/api kdx/kdx
@@ -47,4 +49,5 @@ export const kodixCareConfigSchema = z.object({
     .regex(/^[^\d]+$/, {
       message: "Numbers are not allowed in the patient name",
     }),
+  clonedCareTasksUntil: z.date().optional(),
 });

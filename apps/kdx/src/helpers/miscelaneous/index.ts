@@ -53,7 +53,7 @@ export const getAppUrl = (appId: KodixAppId) => {
 };
 
 /**
- * @description Gets the app
+ * @description Gets the app icon url from the app id
  */
 export const getAppIconUrl = (appId: KodixAppId) => {
   const pathname = getAppPathname(appId);
