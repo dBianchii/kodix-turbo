@@ -1,40 +1,47 @@
-import React from "react";
-import { redirect } from "next/navigation";
+import { HiUserCircle } from "react-icons/hi";
 
-import { auth } from "@kdx/auth";
 import { prisma } from "@kdx/db";
 import { kodixCareAppId } from "@kdx/shared";
-import { Separator } from "@kdx/ui/separator";
-import { H1 } from "@kdx/ui/typography";
 
-import { IconKodixApp } from "~/app/_components/app/kodix-app";
 import MaxWidthWrapper from "~/app/_components/max-width-wrapper";
+import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
+import { api } from "~/trpc/server";
+import KodixCareTable from "./_components/kodix-care-table";
+import StartShiftButton from "./_components/start-shift-button";
 
 export const dynamic = "force-dynamic"; //TODO: help me
 export default async function KodixCare() {
-  const session = await auth();
-  if (!session) return redirect("/");
-
-  const installed = await prisma.app.findUnique({
-    where: {
-      id: kodixCareAppId,
-      Teams: {
-        some: {
-          id: session.user.activeTeamId,
-        },
-      },
-    },
+  await redirectIfAppNotInstalled({
+    appId: kodixCareAppId,
+    prisma,
+    customRedirect: "/apps/kodixCare/onboarding",
   });
 
-  if (!installed) return redirect("/apps/kodixCare/onboarding");
+  await api.kodixCare.getCurrentShift();
 
   return (
     <MaxWidthWrapper>
-      <div className="flex space-x-4">
-        <IconKodixApp appId={kodixCareAppId} renderText={false} />
-        <H1>Kodix Care</H1>
+      <div className="flex flex-col md:flex-row md:space-x-6">
+        <div className="flex w-full max-w-52 flex-col">
+          <div className="flex flex-col space-y-3 pt-4">
+            <h2 className="font-semibold leading-none tracking-tight">
+              Current Shift
+            </h2>
+            <div className="flex items-center space-x-2 rounded-md">
+              <HiUserCircle className="h-5 w-5" />
+              <div className="flex-1 space-y-1">
+                <p className="text-sm text-muted-foreground">
+                  No shift started yet
+                </p>
+              </div>
+            </div>
+            <StartShiftButton />
+          </div>
+        </div>
+        <div className="w-full">
+          <KodixCareTable />
+        </div>
       </div>
-      <Separator className="my-4" />
     </MaxWidthWrapper>
   );
 }

@@ -1,6 +1,8 @@
 //* Partners
 export const kdxPartnerId = "clh9tiqsj000835711pg3sskn";
 
+const banna = "asd";
+
 //**  	Apps 		 *//
 //*     Todo app
 export const todoAppId = "clj2117860007skypdpzj0k1u" as const;
