@@ -2,11 +2,11 @@ import { TRPCError } from "@trpc/server";
 import cuid from "cuid";
 import { z } from "zod";
 
+import TeamInvite from "@kdx/react-email/team-invite";
 import { getBaseUrl, getSuccessesAndErrors } from "@kdx/shared";
 import { inviteUserSchema } from "@kdx/validators";
 
 import { sendEmail } from "../../../internal/email/email";
-import TeamInvite from "../../../internal/email/templates/team-invite";
 import { createTRPCRouter, protectedProcedure } from "../../../trpc";
 
 export const invitationRouter = createTRPCRouter({

@@ -1,4 +1,3 @@
-import * as React from "react";
 import {
   Body,
   Button,
@@ -17,12 +16,12 @@ import {
 } from "@react-email/components";
 import { Tailwind } from "@react-email/tailwind";
 
-import { getBaseKdxUrl } from "@kdx/shared";
+import { getBaseUrl } from "@kdx/shared";
 
-const baseUrl = getBaseKdxUrl();
+const baseUrl = getBaseUrl();
 
 export const TeamInvite = ({
-  username = "",
+  username = "User",
   userImage = `${baseUrl}/static/kodix-user.png`,
   invitedByUsername = "",
   invitedByEmail = "bukinoshita@example.com",

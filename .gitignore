@@ -27,6 +27,9 @@ dist/
 expo-env.d.ts
 apps/expo/.gitignore
 
+#react-email
+.react-email
+
 # production
 build
 
