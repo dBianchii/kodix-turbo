@@ -2,12 +2,14 @@ import { TRPCError } from "@trpc/server";
 import moment from "moment";
 
 import type { Prisma, PrismaClient } from "@kdx/db";
+import WarnPreviousShiftNotEnded from "@kdx/react-email/warn-previous-shift-not-ended";
 import {
   kodixCareAdminRoleId,
   kodixCareAppId,
   todoAdminRoleId,
 } from "@kdx/shared";
 
+import { sendEmail } from "../internal/email/email";
 import { kodixCareInstalledMiddleware, roleMiddlewareOR } from "../middlewares";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { getAppConfig } from "./apps";
@@ -104,7 +106,13 @@ export const kodixCareRouter = createTRPCRouter({
             tx,
           });
         });
-        //TODO: Notificar o [Responsável anterior] de que o [Responsável novo] assumiu o turno no horário X. Deve informar ao [Responsável anterior] que ele deverá atualizar o app com o horário que finalizou o turno.
+        if (lastCareShift.Caregiver.email)
+          await sendEmail({
+            from: "Kodix <notification@kodix.com.br>",
+            to: lastCareShift.Caregiver.email,
+            subject: `Your last shift was ended by ${ctx.session.user.name}`,
+            react: WarnPreviousShiftNotEnded(),
+          });
       }
 
       //3. Create a new shift, since the previous one has ended

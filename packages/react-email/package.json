@@ -5,7 +5,8 @@
   "type": "module",
   "exports": {
     "./verification-request": "./src/emails/verification-request.tsx",
-    "./team-invite": "./src/emails/team-invite.tsx"
+    "./team-invite": "./src/emails/team-invite.tsx",
+    "./warn-previous-shift-not-ended": "./src/emails/kodixCare/warn-previous-shift-not-ended.tsx"
   },
   "scripts": {
     "dev": "pnpm dlx react-email@latest dev --dir='src'",
