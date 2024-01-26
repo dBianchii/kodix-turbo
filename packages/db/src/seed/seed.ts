@@ -1,6 +1,7 @@
 import {
   calendarAdminRoleId,
   calendarAppId,
+  getRoleName,
   kdxPartnerId,
   kdxProductionURL,
   kodixCareAdminRoleId,
@@ -22,7 +23,7 @@ export const apps = [
       create: [
         {
           id: todoAdminRoleId,
-          name: "Admin",
+          name: getRoleName(todoAdminRoleId),
           minUsers: 1,
           maxUsers: 0,
         },
@@ -37,7 +38,7 @@ export const apps = [
       create: [
         {
           id: calendarAdminRoleId,
-          name: "Admin",
+          name: getRoleName(calendarAdminRoleId),
           minUsers: 1,
           maxUsers: 0,
         },
@@ -52,19 +53,19 @@ export const apps = [
       create: [
         {
           id: kodixCareAdminRoleId,
-          name: "Admin",
+          name: getRoleName(kodixCareAdminRoleId),
           minUsers: 1,
           maxUsers: 0,
         },
         {
           id: kodixCarePatientRoleId,
-          name: "Patient",
+          name: getRoleName(kodixCarePatientRoleId),
           minUsers: 1,
           maxUsers: 1,
         },
         {
           id: kodixCareCareGiverRoleId,
-          name: "CareGiver",
+          name: getRoleName(kodixCareCareGiverRoleId),
           minUsers: 1,
           maxUsers: 0,
         },

@@ -4,9 +4,12 @@ import { redirect } from "next/navigation";
 import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
 
-import { CustomKodixIcon, IconKodixApp } from "~/app/_components/app/kodix-app";
+import {
+  CustomKodixIcon,
+  IconKodixApp,
+} from "~/app/_components/app/kodix-icon";
 import MaxWidthWrapper from "~/app/_components/max-width-wrapper";
-import { getAppIconUrl } from "~/helpers/miscelaneous";
+import { getAppUrl } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/server";
 
 export default async function Team() {
@@ -36,7 +39,7 @@ export default async function Team() {
           {apps?.map((app) => (
             <Link
               key={app.id}
-              href={getAppIconUrl(app.id as KodixAppId)}
+              href={getAppUrl(app.id as KodixAppId)}
               className="flex flex-col items-center"
             >
               <IconKodixApp appId={app.id as KodixAppId} />

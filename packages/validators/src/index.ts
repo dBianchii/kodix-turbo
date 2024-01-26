@@ -47,4 +47,5 @@ export const kodixCareConfigSchema = z.object({
     .regex(/^[^\d]+$/, {
       message: "Numbers are not allowed in the patient name",
     }),
+  clonedCareTasksUntil: z.date().optional(),
 });

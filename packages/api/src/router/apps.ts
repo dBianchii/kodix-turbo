@@ -1,11 +1,14 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import type { Prisma } from "@kdx/db";
+import type { Session } from "@kdx/auth";
+import type { PrismaClient } from "@kdx/db";
 import { kodixCareAppId } from "@kdx/shared";
 import { kodixCareConfigSchema } from "@kdx/validators";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
+
+type AppIdsWithConfig = typeof kodixCareAppId; //? Some apps might not have config implemented
 
 export const appsRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
@@ -57,7 +60,7 @@ export const appsRouter = createTRPCRouter({
 
     return apps;
   }),
-  saveConfig: protectedProcedure
+  saveConfig: protectedProcedure //TODO: dynamically check if app is installed
     .input(
       z.object({
         appId: z.literal(kodixCareAppId),
@@ -66,7 +69,7 @@ export const appsRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const updateConfig = {
-        config: input.config as Prisma.JsonObject,
+        config: input.config,
       };
       return await ctx.prisma.appTeamConfig.upsert({
         where: {
@@ -83,4 +86,54 @@ export const appsRouter = createTRPCRouter({
         },
       });
     }),
+  getConfig: protectedProcedure
+    .input(
+      z.object({
+        appId: z.custom<AppIdsWithConfig>(),
+      }),
+    )
+    .query(
+      async ({ ctx, input }) =>
+        await getAppConfig({
+          appId: input.appId,
+          prisma: ctx.prisma,
+          session: ctx.session,
+        }),
+    ),
 });
+
+export async function getAppConfig({
+  appId,
+  prisma,
+  session,
+}: {
+  appId: AppIdsWithConfig;
+  prisma: PrismaClient;
+  session: Session;
+}) {
+  const result = await prisma.appTeamConfig.findUnique({
+    where: {
+      appId_teamId: {
+        appId,
+        teamId: session.user.activeTeamId,
+      },
+    },
+    select: {
+      config: true,
+    },
+  });
+  if (!result)
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "No appTeamConfig found",
+    });
+
+  //TODO: Maybe move this getAppTeamConfigSchema elsewhere
+  const appIdToAppTeamConfigSchema = {
+    [kodixCareAppId]: kodixCareConfigSchema,
+  };
+
+  const schema = appIdToAppTeamConfigSchema[appId];
+
+  return schema.parse(result?.config);
+}

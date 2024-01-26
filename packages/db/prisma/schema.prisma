@@ -30,9 +30,37 @@ model CareShift {
 
   shiftEndedAt DateTime?
 
-  notes String?
+  notes    String?
+  CareTask CareTask[]
 
   @@index([caregiverId])
+  @@index([teamId])
+}
+
+model CareTask {
+  id        String   @id @default(cuid())
+  eventDate DateTime
+  createdAt DateTime @default(now())
+
+  DoneBy       User?   @relation(fields: [doneByUserId], references: [id])
+  doneByUserId String?
+
+  Team   Team   @relation(fields: [teamId], references: [id])
+  teamId String
+
+  EventMaster   EventMaster @relation(fields: [eventMasterId], references: [id])
+  eventMasterId String
+
+  idCareShift String
+  CareShift   CareShift @relation(fields: [idCareShift], references: [id])
+
+  title       String?
+  description String?
+  details     String?
+
+  @@index([eventMasterId])
+  @@index([doneByUserId])
+  @@index([idCareShift])
   @@index([teamId])
 }
 
@@ -106,6 +134,7 @@ model Team {
   AppTeamConfigs AppTeamConfig[] @relation("TeamConfig")
   UserAppRoles   UserAppRole[]
   CareShift      CareShift[]
+  CareTask       CareTask[]
 
   @@index([ownerId])
 }
@@ -190,7 +219,7 @@ model EventMaster {
 
   EventExceptions    EventException[]
   EventCancellations EventCancellation[]
-  EventDones         EventDone[]
+  CareTasks          CareTask[]
 
   Team   Team   @relation(fields: [teamId], references: [id])
   teamId String
@@ -220,26 +249,6 @@ model EventCancellation {
   eventMasterId String
 
   @@index([eventMasterId])
-}
-
-model EventDone {
-  id           String   @id @default(cuid())
-  eventDate    DateTime
-  registerDate DateTime @default(now())
-  done         Boolean
-  details      String?
-
-  DoneBy User   @relation(fields: [userId], references: [id])
-  userId String
-
-  EventMaster   EventMaster @relation(fields: [eventMasterId], references: [id])
-  eventMasterId String
-
-  title       String?
-  description String?
-
-  @@index([eventMasterId])
-  @@index([userId])
 }
 
 model Post {
@@ -292,7 +301,7 @@ model User {
   activeTeamId String
   ActiveTeam   Team   @relation("UserActiveTeam", fields: [activeTeamId], references: [id])
 
-  EventDones   EventDone[]
+  CareTasks    CareTask[]
   OwnedTeams   Team[]
   UserAppRoles UserAppRole[]
   CareShift    CareShift[]

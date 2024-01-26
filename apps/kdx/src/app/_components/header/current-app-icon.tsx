@@ -6,7 +6,7 @@ import { IoApps } from "react-icons/io5";
 import type { KodixAppId } from "@kdx/shared";
 
 import { appIdToPathname } from "~/helpers/miscelaneous";
-import { IconKodixApp } from "../app/kodix-app";
+import { IconKodixApp } from "../app/kodix-icon";
 
 export default function CurrentAppIcon() {
   const pathname = usePathname();

@@ -18,7 +18,7 @@ import HeaderFooterRemover from "~/app/_components/header-footer-remover";
 import MaxWidthWrapper from "~/app/_components/max-width-wrapper";
 import { getAppUrl } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/server";
-import { IconKodixApp } from "../app/kodix-app";
+import { IconKodixApp } from "../app/kodix-icon";
 import CurrentAppIcon from "./current-app-icon";
 import { UserProfileButton } from "./user-profile-button";
 
@@ -27,7 +27,7 @@ export async function Header() {
 
   return (
     <HeaderFooterRemover>
-      <header className="border-b py-4">
+      <header className="border-b py-2">
         <MaxWidthWrapper className="max-w-screen-2xl">
           <div className="mx-auto flex max-w-screen-2xl items-center">
             <Link
