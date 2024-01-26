@@ -1,7 +1,7 @@
 import type { SendVerificationRequestParams } from "next-auth/providers";
 import { Resend } from "resend";
 
-import VerificationRequestEmail from "./templates/verification-request";
+import VerificationRequestEmail from "@kdx/react-email/verification-request";
 
 export const resend = new Resend(process.env.RESEND_API_KEY);
 

@@ -335,6 +335,9 @@ importers:
       '@kdx/db':
         specifier: workspace:^0.1.0
         version: link:../db
+      '@kdx/react-email':
+        specifier: workspace:^0.1.0
+        version: link:../react-email
       '@kdx/shared':
         specifier: workspace:^0.1.0
         version: link:../shared
@@ -429,6 +432,9 @@ importers:
       '@kdx/db':
         specifier: workspace:^0.1.0
         version: link:../db
+      '@kdx/react-email':
+        specifier: workspace:^0.1.0
+        version: link:../react-email
       '@kdx/shared':
         specifier: workspace:^0.1.0
         version: link:../shared
@@ -519,8 +525,11 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
 
-  packages/email-preview:
+  packages/react-email:
     dependencies:
+      '@kdx/shared':
+        specifier: workspace:^0.1.0
+        version: link:../shared
       react-email:
         specifier: ^2.0.0
         version: 2.0.0(eslint@8.56.0)
