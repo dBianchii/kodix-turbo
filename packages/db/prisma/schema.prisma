@@ -40,7 +40,8 @@ model CareShift {
 model CareTask {
   id        String   @id @default(cuid())
   eventDate DateTime
-  createdAt DateTime @default(now())
+
+  doneAt DateTime?
 
   DoneBy       User?   @relation(fields: [doneByUserId], references: [id])
   doneByUserId String?
