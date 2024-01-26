@@ -1,4 +1,4 @@
-import type { Adapter } from "@auth/core/adapters";
+import type { AdapterAccount, AdapterUser } from "@auth/core/adapters";
 import type { DefaultSession } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import cuid from "cuid";
@@ -7,7 +7,7 @@ import EmailProvider from "next-auth/providers/email";
 // import EmailProvider from "next-auth/providers/email";
 import Google from "next-auth/providers/google";
 
-import type { PrismaClient } from "@kdx/db";
+import type { PrismaClient, User } from "@kdx/db";
 import { prisma } from "@kdx/db";
 
 import { env } from "../env.js";
@@ -35,11 +35,11 @@ const customUserInclude = {
   },
 };
 
-function CustomPrismaAdapter(p: PrismaClient): Adapter {
+/** @return { import("next-auth/adapters").Adapter } */
+function KodixAdapter(prisma: PrismaClient) {
   return {
-    ...PrismaAdapter(p),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async createUser(data): Promise<any> {
+    ...PrismaAdapter(prisma),
+    createUser: async (data: AdapterUser) => {
       const teamId = cuid();
       data.id = cuid();
       //! When changing team creation flow here, change it on api.team.create router as well!
@@ -53,7 +53,7 @@ function CustomPrismaAdapter(p: PrismaClient): Adapter {
           id: teamId,
         },
       };
-      const user = await p.user.create({
+      const user = await prisma.user.create({
         data: {
           ...data,
           Teams: {
@@ -78,9 +78,8 @@ function CustomPrismaAdapter(p: PrismaClient): Adapter {
 
       return user;
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async getUser(id): Promise<any> {
-      const user = await p.user.findUnique({
+    getUser: async (id: string) => {
+      const user = await prisma.user.findUnique({
         where: {
           id,
         },
@@ -89,27 +88,29 @@ function CustomPrismaAdapter(p: PrismaClient): Adapter {
       if (!user) return null;
       return { ...user, activeTeamName: user.ActiveTeam.name };
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async getUserByEmail(email): Promise<any> {
-      const user = await p.user.findUnique({
+    getUserByEmail: async (email: User["email"]) => {
+      const user = await prisma.user.findUnique({
         where: { email },
         ...customUserInclude,
       });
       if (!user) return null;
       return { ...user, activeTeamName: user.ActiveTeam.name };
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async getUserByAccount(provider_providerAccountId): Promise<any> {
+    getUserByAccount: async (
+      provider_providerAccountId: Pick<
+        AdapterAccount,
+        "provider" | "providerAccountId"
+      >,
+    ) => {
       //? Had to add his manually because we changed the schema to uppercase User
-      const account = await p.account.findUnique({
+      const account = await prisma.account.findUnique({
         where: { provider_providerAccountId },
         select: { User: true },
       });
       return account?.User ?? null;
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async getSessionAndUser(sessionToken): Promise<any> {
-      const userAndSession = await p.session.findUnique({
+    getSessionAndUser: async (sessionToken: string) => {
+      const userAndSession = await prisma.session.findUnique({
         where: { sessionToken },
         include: {
           User: {
@@ -133,9 +134,7 @@ export const {
   signIn,
   signOut,
 } = NextAuth({
-  adapter: {
-    ...CustomPrismaAdapter(prisma),
-  },
+  adapter: KodixAdapter(prisma),
   providers: [
     Google({
       clientId: env.AUTH_GOOGLE_CLIENT_ID,
