@@ -680,6 +680,9 @@ importers:
       '@kdx/prettier-config':
         specifier: workspace:^0.1.0
         version: link:../../tooling/prettier
+      '@kdx/shared':
+        specifier: workspace:^0.1.0
+        version: link:../shared
       '@kdx/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript

@@ -3,6 +3,8 @@ import moment from "moment";
 import { Frequency, RRule, rrulestr } from "rrule";
 import { z } from "zod";
 
+import type { Session } from "@kdx/auth";
+import type { Prisma, PrismaClient } from "@kdx/db";
 import { authorizedEmails } from "@kdx/shared";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc";
@@ -16,161 +18,12 @@ export const eventRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      const eventMasters = await ctx.prisma.eventMaster.findMany({
-        where: {
-          teamId: ctx.session.user.activeTeamId,
-          AND: [
-            {
-              DateStart: {
-                lte: input.dateEnd,
-              },
-            },
-            {
-              OR: [
-                { DateUntil: { gte: input.dateStart } },
-                { DateUntil: null },
-              ],
-            },
-          ],
-        },
+      return await getAllCalendarTasksHandler({
+        prisma: ctx.prisma,
+        session: ctx.session,
+        dateStart: input.dateStart,
+        dateEnd: input.dateEnd,
       });
-
-      //Handling Exceptions and Cancelations
-      const eventExceptions = await ctx.prisma.eventException.findMany({
-        where: {
-          EventMaster: {
-            teamId: ctx.session.user.activeTeamId,
-          },
-          OR: [
-            {
-              originalDate: {
-                gte: input.dateStart,
-                lte: input.dateEnd,
-              },
-            },
-            {
-              newDate: {
-                gte: input.dateStart,
-                lte: input.dateEnd,
-              },
-            },
-          ],
-        },
-        include: {
-          EventMaster: {
-            select: {
-              rule: true,
-              title: true,
-              description: true,
-            },
-          },
-        },
-      });
-
-      const eventCancelations = await ctx.prisma.eventCancellation.findMany({
-        where: {
-          EventMaster: {
-            teamId: ctx.session.user.activeTeamId,
-          },
-          originalDate: {
-            gte: input.dateStart,
-            lte: input.dateEnd,
-          },
-        },
-        include: {
-          EventMaster: {
-            select: {
-              id: true,
-            },
-          },
-        },
-      });
-
-      //* We have all needed data. Now, let's add all masters and exceptions to calendarTasks.
-      interface CalendarTask {
-        title: string | undefined;
-        description: string | undefined;
-        date: Date;
-        eventMasterId: string;
-        eventExceptionId: string | undefined;
-        originaDate?: Date | undefined;
-        rule: string;
-      }
-      let calendarTasks: CalendarTask[] = [];
-
-      for (const eventMaster of eventMasters) {
-        const rrule = rrulestr(eventMaster.rule);
-        const allDates = rrule.between(input.dateStart, input.dateEnd, true);
-
-        for (const date of allDates)
-          calendarTasks.push({
-            eventMasterId: eventMaster.id,
-            eventExceptionId: undefined,
-            title: eventMaster.title ?? undefined,
-            description: eventMaster.description ?? undefined,
-            date: date,
-            rule: eventMaster.rule,
-          });
-      }
-
-      for (const eventException of eventExceptions)
-        calendarTasks.push({
-          eventMasterId: eventException.eventMasterId,
-          eventExceptionId: eventException.id,
-          title:
-            eventException.title ??
-            eventException.EventMaster?.title ??
-            undefined,
-          description:
-            eventException?.description ??
-            eventException.EventMaster?.description ??
-            undefined,
-          date: eventException.newDate,
-          originaDate: eventException.originalDate,
-          rule: eventException.EventMaster.rule,
-        });
-
-      //we have exceptions and recurrences from masters in calendarTasks. Some master recurrences must be deleted.
-      //because of the exception's change of date.
-      calendarTasks = calendarTasks
-        .map((calendarTask) => {
-          if (calendarTask.eventExceptionId) {
-            //handle exclusion of tasks that came from exceptions. (shouldnt appear if are outside selected range)
-            if (
-              moment(input.dateStart).isAfter(calendarTask.date) ||
-              moment(input.dateEnd).isBefore(calendarTask.date)
-            )
-              return null;
-            return calendarTask;
-          }
-          //Cuidar de cancelamentos -> deletar os advindos do master
-          const foundCancelation = eventCancelations.some(
-            (x) =>
-              x.eventMasterId === calendarTask.eventMasterId &&
-              moment(x.originalDate).isSame(calendarTask.date),
-          );
-          if (foundCancelation) return null;
-
-          //For a calendarTask that came from master,
-          //Delete it if it has an exception associated with it. (originalDate === calendartask date)
-          const foundException = calendarTasks.some(
-            (x) =>
-              x.eventExceptionId &&
-              x.eventMasterId === calendarTask.eventMasterId &&
-              moment(calendarTask.date).isSame(x.originaDate, "day"),
-          );
-          if (foundException) return null;
-
-          return calendarTask;
-        })
-        .filter((task): task is CalendarTask => !!task)
-        .sort((a, b) => {
-          if (a.date < b.date) return -1;
-          if (a.date > b.date) return 1;
-          return 0;
-        });
-
-      return calendarTasks;
     }),
   create: protectedProcedure
     .input(
@@ -763,3 +616,160 @@ export const eventRouter = createTRPCRouter({
     ]);
   }),
 });
+
+export async function getAllCalendarTasksHandler({
+  prisma,
+  session,
+  dateStart,
+  dateEnd,
+}: {
+  prisma: PrismaClient | Prisma.TransactionClient;
+  session: Session;
+  dateStart: Date;
+  dateEnd: Date;
+}) {
+  const eventMasters = await prisma.eventMaster.findMany({
+    where: {
+      teamId: session.user.activeTeamId,
+      AND: [
+        {
+          DateStart: {
+            lte: dateEnd,
+          },
+        },
+        {
+          OR: [{ DateUntil: { gte: dateStart } }, { DateUntil: null }],
+        },
+      ],
+    },
+  });
+
+  //Handling Exceptions and Cancelations
+  const eventExceptions = await prisma.eventException.findMany({
+    where: {
+      EventMaster: {
+        teamId: session.user.activeTeamId,
+      },
+      OR: [
+        {
+          originalDate: { gte: dateStart, lte: dateEnd },
+        },
+        {
+          newDate: { gte: dateStart, lte: dateEnd },
+        },
+      ],
+    },
+    include: {
+      EventMaster: {
+        select: {
+          rule: true,
+          title: true,
+          description: true,
+        },
+      },
+    },
+  });
+
+  const eventCancelations = await prisma.eventCancellation.findMany({
+    where: {
+      EventMaster: {
+        teamId: session.user.activeTeamId,
+      },
+      originalDate: {
+        gte: dateStart,
+        lte: dateEnd,
+      },
+    },
+    include: {
+      EventMaster: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  });
+
+  //* We have all needed data. Now, let's add all masters and exceptions to calendarTasks.
+  interface CalendarTask {
+    title: string | undefined;
+    description: string | undefined;
+    date: Date;
+    eventMasterId: string;
+    eventExceptionId: string | undefined;
+    originaDate?: Date | undefined;
+    rule: string;
+  }
+  let calendarTasks: CalendarTask[] = [];
+
+  for (const eventMaster of eventMasters) {
+    const rrule = rrulestr(eventMaster.rule);
+    const allDates = rrule.between(dateStart, dateEnd, true);
+
+    for (const date of allDates)
+      calendarTasks.push({
+        eventMasterId: eventMaster.id,
+        eventExceptionId: undefined,
+        title: eventMaster.title ?? undefined,
+        description: eventMaster.description ?? undefined,
+        date: date,
+        rule: eventMaster.rule,
+      });
+  }
+
+  for (const eventException of eventExceptions)
+    calendarTasks.push({
+      eventMasterId: eventException.eventMasterId,
+      eventExceptionId: eventException.id,
+      title:
+        eventException.title ?? eventException.EventMaster?.title ?? undefined,
+      description:
+        eventException?.description ??
+        eventException.EventMaster?.description ??
+        undefined,
+      date: eventException.newDate,
+      originaDate: eventException.originalDate,
+      rule: eventException.EventMaster.rule,
+    });
+
+  //we have exceptions and recurrences from masters in calendarTasks. Some master recurrences must be deleted.
+  //because of the exception's change of date.
+  calendarTasks = calendarTasks
+    .map((calendarTask) => {
+      if (calendarTask.eventExceptionId) {
+        //handle exclusion of tasks that came from exceptions. (shouldnt appear if are outside selected range)
+        if (
+          moment(dateStart).isAfter(calendarTask.date) ||
+          moment(dateEnd).isBefore(calendarTask.date)
+        )
+          return null;
+        return calendarTask;
+      }
+      //Cuidar de cancelamentos -> deletar os advindos do master
+      const foundCancelation = eventCancelations.some(
+        (x) =>
+          x.eventMasterId === calendarTask.eventMasterId &&
+          moment(x.originalDate).isSame(calendarTask.date),
+      );
+      if (foundCancelation) return null;
+
+      //For a calendarTask that came from master,
+      //Delete it if it has an exception associated with it. (originalDate === calendartask date)
+      const foundException = calendarTasks.some(
+        (x) =>
+          x.eventExceptionId &&
+          x.eventMasterId === calendarTask.eventMasterId &&
+          moment(calendarTask.date).isSame(x.originaDate, "day"),
+      );
+      if (foundException) return null;
+
+      return calendarTask;
+    })
+    .filter((task): task is CalendarTask => !!task)
+    .sort((a, b) => {
+      if (a.date < b.date) return -1;
+      if (a.date > b.date) return 1;
+      return 0;
+    });
+
+  return calendarTasks;
+}
