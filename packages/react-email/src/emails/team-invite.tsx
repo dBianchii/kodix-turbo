@@ -12,9 +12,9 @@ import {
   Preview,
   Row,
   Section,
+  Tailwind,
   Text,
 } from "@react-email/components";
-import { Tailwind } from "@react-email/tailwind";
 
 import { getBaseUrl } from "@kdx/shared";
 

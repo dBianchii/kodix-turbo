@@ -20,8 +20,6 @@
     "@kdx/shared": "workspace:^0.1.0",
     "@kdx/validators": "workspace:^0.1.0",
     "@paralleldrive/cuid2": "^2.2.2",
-    "@react-email/components": "0.0.14",
-    "@react-email/tailwind": "^0.0.8",
     "@trpc/server": "next",
     "@upstash/ratelimit": "^1.0.0",
     "@upstash/redis": "^1.28.0",
