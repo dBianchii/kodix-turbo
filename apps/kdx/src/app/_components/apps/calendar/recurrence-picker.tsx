@@ -4,10 +4,10 @@
 import type { Weekday } from "rrule";
 import { useCallback, useEffect, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import moment from "moment";
 import { RxCheck } from "react-icons/rx";
 import { Frequency, RRule } from "rrule";
 
+import dayjs from "@kdx/dayjs";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -36,10 +36,10 @@ import { FrequencyToTxt } from "~/app/_components/frequency-picker";
  * @description rrule.toText() returns the text based on the UTC timezone. This function returns the text based on the local timezone.
  */
 export function tzOffsetText(rule: RRule) {
-  const tzOffset = moment().utcOffset();
+  const tzOffset = dayjs().utcOffset();
   const newRRule = rule.clone();
   newRRule.options.until = newRRule.options.until
-    ? moment(rule.options.until).add(tzOffset, "minutes").toDate()
+    ? dayjs(rule.options.until).add(tzOffset, "minutes").toDate()
     : null;
   return newRRule.toText();
 }
@@ -75,8 +75,8 @@ export function RecurrencePicker({
   setInterval: React.Dispatch<React.SetStateAction<number>>;
   frequency: Frequency;
   setFrequency: React.Dispatch<React.SetStateAction<Frequency>>;
-  until: moment.Moment | undefined;
-  setUntil: React.Dispatch<React.SetStateAction<moment.Moment | undefined>>;
+  until: dayjs.Dayjs | undefined;
+  setUntil: React.Dispatch<React.SetStateAction<dayjs.Dayjs | undefined>>;
   count: number | undefined;
   setCount: React.Dispatch<React.SetStateAction<number | undefined>>;
   weekdays: Weekday[] | undefined;
@@ -283,7 +283,7 @@ export function RecurrencePicker({
                           });
                         }}
                       >
-                        {moment().weekday(weekday.getJsWeekday()).format("ddd")}
+                        {dayjs().day(weekday.getJsWeekday()).format("ddd")}
                       </Toggle>
                     ))}
                   </div>
@@ -316,7 +316,7 @@ export function RecurrencePicker({
                         value="0"
                         id="r2"
                         checked={draftUntil !== undefined}
-                        onClick={() => setDraftUntil(until ?? moment())}
+                        onClick={() => setDraftUntil(until ?? dayjs())}
                       />
                       <Label htmlFor="r2" className="ml-2">
                         At
@@ -326,7 +326,7 @@ export function RecurrencePicker({
                     <div className=" ml-8">
                       <DatePicker
                         date={draftUntil?.toDate()}
-                        setDate={(date) => setDraftUntil(moment(date))}
+                        setDate={(date) => setDraftUntil(dayjs(date))}
                         // disabledDate={(date) =>
                         //   date < new Date()
                         // }

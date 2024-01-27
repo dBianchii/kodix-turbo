@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
-import moment from "moment";
 
 import type { Prisma, PrismaClient } from "@kdx/db";
+import dayjs from "@kdx/dayjs";
 import WarnPreviousShiftNotEnded from "@kdx/react-email/warn-previous-shift-not-ended";
 import {
   kodixCareAdminRoleId,
@@ -36,7 +36,7 @@ export const kodixCareRouter = createTRPCRouter({
         })
       ).clonedCareTasksUntil;
 
-      const dayAfterTomorrowEndOfDay = moment
+      const dayAfterTomorrowEndOfDay = dayjs
         .utc()
         .add(2, "day")
         .endOf("day")
@@ -46,7 +46,7 @@ export const kodixCareRouter = createTRPCRouter({
       //TODO: verificar se a condição abaixo está correta
       const isFirstShiftEver = !clonedCareTasksUntil;
       if (isFirstShiftEver) {
-        const yesterdayStartOfDay = moment
+        const yesterdayStartOfDay = dayjs
           .utc()
           .subtract(1, "day")
           .startOf("day")

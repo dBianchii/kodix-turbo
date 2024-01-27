@@ -1,10 +1,10 @@
 import { TRPCError } from "@trpc/server";
-import moment from "moment";
 import { Frequency, RRule, rrulestr } from "rrule";
 import { z } from "zod";
 
 import type { Session } from "@kdx/auth";
 import type { Prisma, PrismaClient } from "@kdx/db";
+import dayjs from "@kdx/dayjs";
 import { authorizedEmails } from "@kdx/shared";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc";
@@ -34,7 +34,7 @@ export const eventRouter = createTRPCRouter({
           from: z.date(),
           until: z
             .date()
-            .transform((date) => moment(date).endOf("day").toDate())
+            .transform((date) => dayjs(date).endOf("day").toDate())
             .optional(),
           interval: z.number().optional(),
           count: z.number().optional(),
@@ -204,7 +204,7 @@ export const eventRouter = createTRPCRouter({
               frequency: z.nativeEnum(Frequency).optional(),
               until: z
                 .date()
-                .transform((date) => moment(date).endOf("day").toDate())
+                .transform((date) => dayjs(date).endOf("day").toDate())
                 .optional(),
               interval: z.number().optional(),
               count: z.number().nullish().optional(),
@@ -217,7 +217,7 @@ export const eventRouter = createTRPCRouter({
               frequency: z.nativeEnum(Frequency).optional(),
               until: z
                 .date()
-                .transform((date) => moment(date).endOf("day").toDate())
+                .transform((date) => dayjs(date).endOf("day").toDate())
                 .optional(),
               interval: z.number().optional(),
               count: z.number().nullish().optional(),
@@ -367,7 +367,7 @@ export const eventRouter = createTRPCRouter({
             });
             const oldRule = rrulestr(oldMaster.rule);
             const previousOccurence = oldRule.before(
-              moment(input.selectedTimestamp).startOf("day").toDate(),
+              dayjs(input.selectedTimestamp).startOf("day").toDate(),
               false,
             );
             if (!previousOccurence) {
@@ -535,9 +535,9 @@ export const eventRouter = createTRPCRouter({
               );
 
               const newStartDate = input.from
-                ? moment(oldRule.options.dtstart)
-                    .hours(moment(input.from, "HH:mm").hours())
-                    .minutes(moment(input.from, "HH:mm").minutes())
+                ? dayjs(oldRule.options.dtstart)
+                    .hour(dayjs(input.from, "HH:mm").hour())
+                    .minute(dayjs(input.from, "HH:mm").minute())
                     .toDate()
                 : oldRule.options.dtstart;
 
@@ -738,8 +738,8 @@ export async function getAllCalendarTasksHandler({
       if (calendarTask.eventExceptionId) {
         //handle exclusion of tasks that came from exceptions. (shouldnt appear if are outside selected range)
         if (
-          moment(dateStart).isAfter(calendarTask.date) ||
-          moment(dateEnd).isBefore(calendarTask.date)
+          dayjs(dateStart).isAfter(calendarTask.date) ||
+          dayjs(dateEnd).isBefore(calendarTask.date)
         )
           return null;
         return calendarTask;
@@ -748,7 +748,7 @@ export async function getAllCalendarTasksHandler({
       const foundCancelation = eventCancelations.some(
         (x) =>
           x.eventMasterId === calendarTask.eventMasterId &&
-          moment(x.originalDate).isSame(calendarTask.date),
+          dayjs(x.originalDate).isSame(calendarTask.date),
       );
       if (foundCancelation) return null;
 
@@ -758,7 +758,7 @@ export async function getAllCalendarTasksHandler({
         (x) =>
           x.eventExceptionId &&
           x.eventMasterId === calendarTask.eventMasterId &&
-          moment(calendarTask.date).isSame(x.originaDate, "day"),
+          dayjs(calendarTask.date).isSame(x.originaDate, "day"),
       );
       if (foundException) return null;
 

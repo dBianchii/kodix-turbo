@@ -1,5 +1,4 @@
-import moment from "moment";
-
+import dayjs from "@kdx/dayjs";
 import { prisma } from "@kdx/db";
 import { calendarAppId } from "@kdx/shared";
 import { Separator } from "@kdx/ui/separator";
@@ -22,8 +21,8 @@ export default async function Calendar() {
   //date Start should be the beginninig of the day
   //date End should be the end of the day
   const data = await api.event.getAll({
-    dateStart: moment().utc().startOf("day").toDate(),
-    dateEnd: moment().utc().endOf("day").toDate(),
+    dateStart: dayjs.utc().startOf("day").toDate(),
+    dateEnd: dayjs.utc().endOf("day").toDate(),
   });
 
   return (
