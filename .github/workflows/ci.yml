@@ -37,10 +37,10 @@ jobs:
         run: echo "::set-output name=key::$(date +%s)"
 
       - name: Cache Prisma Client
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
-            node_modules/.prisma/client
+            packages/db/node_modules/@prisma/client
           key: ${{ steps.cache-keys.outputs.key }}
   lint:
     needs: generate-prisma-client
@@ -51,16 +51,12 @@ jobs:
       - name: Setup
         uses: ./tooling/github/setup
 
-      - name: Cache Prisma Client
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules/.prisma/client
-          key: ${{ needs.generate-prisma-client.outputs.cache-key }}
-
       - name: Copy env
         shell: bash
         run: cp .env.example .env
+
+      - name: Generate Prisma Client
+        run: pnpm turbo db:generate
 
       - name: Lint
         run: pnpm lint && pnpm lint:ws
@@ -83,12 +79,8 @@ jobs:
       - name: Setup
         uses: ./tooling/github/setup
 
-      - name: Cache Prisma Client
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules/.prisma/client
-          key: ${{ needs.generate-prisma-client.outputs.cache-key }}
+      - name: Generate Prisma Client
+        run: pnpm turbo db:generate
 
       - name: Typecheck
         run: pnpm typecheck

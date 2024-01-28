@@ -14,20 +14,22 @@
     "db:push": "pnpm with-env prisma db push --skip-generate",
     "db:seed": "pnpm dlx tsx ./src/seed/seed.ts",
     "dev": "pnpm with-env prisma studio --port 5556",
-    "with-env": "dotenv -e ../../.env --",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
     "@kdx/shared": "workspace:^0.1.0",
     "@planetscale/database": "^1.13.0",
     "@prisma/adapter-planetscale": "^5.8.1",
     "@prisma/client": "^5.8.1",
+    "undici": "^6.5.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
     "@kdx/eslint-config": "workspace:^0.2.0",
     "@kdx/prettier-config": "workspace:^0.1.0",
     "@kdx/tsconfig": "workspace:^0.1.0",
+    "@types/node": "^20.11.0",
     "dotenv-cli": "^7.3.0",
     "eslint": "^8.56.0",
     "prettier": "^3.1.1",
