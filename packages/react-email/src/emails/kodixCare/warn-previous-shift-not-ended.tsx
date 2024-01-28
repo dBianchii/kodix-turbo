@@ -7,8 +7,8 @@ import {
   Img,
   Preview,
   Section,
+  Tailwind,
   Text,
-  Tailwind
 } from "@react-email/components";
 
 export default function WarnPreviousShiftNotEnded() {
