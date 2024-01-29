@@ -69,6 +69,9 @@ jobs:
       - name: Setup
         uses: ./tooling/github/setup
 
+      - name: Generate Prisma Client
+        run: pnpm turbo db:generate
+
       - name: Upload Drift
         run: cd packages/api && pnpm trpc upload -vv # optional: -vv for verbose output
         env:
