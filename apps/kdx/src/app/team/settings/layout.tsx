@@ -32,11 +32,11 @@ export default async function Layout({
 
   return (
     <MaxWidthWrapper>
-      <div className="flex flex-col justify-center space-y-2 border-b pb-8">
-        <h1 className="text-4xl font-bold">Team Settings</h1>
+      <div className="flex flex-col justify-center border-b pb-4">
+        <h1 className="text-lg font-bold">Team Settings</h1>
         <div className="flex items-center">
           <RxChevronRight />
-          <p className="text-2xl text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             {session.user.activeTeamName}
           </p>
         </div>
