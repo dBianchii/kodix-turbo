@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Link from "next/link";
 
 import type { KodixAppId } from "@kdx/shared";
@@ -13,6 +14,7 @@ import {
   NavigationMenuTrigger,
 } from "@kdx/ui/navigation-menu";
 import { navigationMenuTriggerStyle } from "@kdx/ui/navigationMenuTriggerStyle";
+import { Skeleton } from "@kdx/ui/skeleton";
 
 import HeaderFooterRemover from "~/app/_components/header-footer-remover";
 import MaxWidthWrapper from "~/app/_components/max-width-wrapper";
@@ -58,7 +60,9 @@ export async function Header() {
                 >
                   <path d="M16.88 3.549L7.12 20.451"></path>
                 </svg>
-                <AppSwitcher />
+                <Suspense fallback={<Skeleton className="h-9 w-16 py-2" />}>
+                  <AppSwitcher />
+                </Suspense>
               </>
             )}
 
