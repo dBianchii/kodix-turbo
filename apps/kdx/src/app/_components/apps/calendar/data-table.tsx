@@ -10,7 +10,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { addDays, format } from "date-fns";
-import moment from "moment";
 import { LuLoader2 } from "react-icons/lu";
 import {
   RxCalendar,
@@ -22,6 +21,7 @@ import {
 
 import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
+import dayjs from "@kdx/dayjs";
 import { authorizedEmails } from "@kdx/shared";
 import { Button } from "@kdx/ui/button";
 import { Calendar } from "@kdx/ui/calendar";
@@ -63,7 +63,7 @@ export function DataTable({
 }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-  const [selectedDay, setSelectedDay] = useState<Date>(moment().utc().toDate());
+  const [selectedDay, setSelectedDay] = useState<Date>(dayjs.utc().toDate());
   const [calendarTask, setCalendarTask] = useState<CalendarTask | undefined>();
 
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
@@ -72,8 +72,8 @@ export function DataTable({
   const utils = api.useUtils();
   const result = api.event.getAll.useQuery(
     {
-      dateStart: moment(selectedDay).startOf("day").toDate(),
-      dateEnd: moment(selectedDay).endOf("day").toDate(),
+      dateStart: dayjs(selectedDay).startOf("day").toDate(),
+      dateEnd: dayjs(selectedDay).endOf("day").toDate(),
     },
     {
       refetchOnWindowFocus: false,

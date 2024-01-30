@@ -3,12 +3,12 @@
 import type { Weekday } from "rrule";
 import { useState } from "react";
 import { format } from "date-fns";
-import moment from "moment";
 import { LuLoader2 } from "react-icons/lu";
 import { RxCalendar, RxPlus } from "react-icons/rx";
 import { RRule } from "rrule";
 
 import type { RouterInputs } from "@kdx/api";
+import dayjs from "@kdx/dayjs";
 import { Button } from "@kdx/ui/button";
 import { Calendar } from "@kdx/ui/calendar";
 import {
@@ -53,14 +53,14 @@ export function CreateEventDialogButton() {
   const defaultState = {
     title: "",
     description: "",
-    from: moment(new Date())
+    from: dayjs(new Date())
       .startOf("hour")
-      .hours(
-        moment().utc().minutes() < 30
+      .hour(
+        dayjs.utc().minute() < 30
           ? new Date().getHours()
           : new Date().getHours() + 1,
       )
-      .minutes(moment().utc().minutes() < 30 ? 30 : 0),
+      .minute(dayjs.utc().minute() < 30 ? 30 : 0),
 
     frequency: RRule.DAILY,
     interval: 1,
@@ -71,10 +71,10 @@ export function CreateEventDialogButton() {
 
   const [title, setTitle] = useState(defaultState.title);
   const [description, setDescription] = useState(defaultState.description);
-  const [from, setFrom] = useState<moment.Moment>(defaultState.from);
+  const [from, setFrom] = useState<dayjs.Dayjs>(defaultState.from);
   const [frequency, setFrequency] = useState(defaultState.frequency);
   const [interval, setInterval] = useState(defaultState.interval);
-  const [until, setUntil] = useState<moment.Moment | undefined>(
+  const [until, setUntil] = useState<dayjs.Dayjs | undefined>(
     defaultState.until,
   );
   const [count, setCount] = useState<number | undefined>(defaultState.count);
@@ -160,9 +160,7 @@ export function CreateEventDialogButton() {
                       selected={from.toDate()}
                       onSelect={(date) => {
                         setFrom(
-                          moment(date)
-                            .hours(from.hours())
-                            .minutes(from.minutes()),
+                          dayjs(date).hour(from.hour()).minute(from.minute()),
                         );
                       }}
                       initialFocus
@@ -177,14 +175,12 @@ export function CreateEventDialogButton() {
                   value={from.format("HH:mm")}
                   onChange={(e) => {
                     const newTime = e.target.value;
-
                     setFrom(
-                      moment(from).set({
-                        hour: parseInt(newTime.split(":")[0] ?? "0"),
-                        minute: parseInt(newTime.split(":")[1] ?? "0"),
-                        second: 0,
-                        millisecond: 0,
-                      }),
+                      dayjs(from)
+                        .hour(parseInt(newTime.split(":")[0] ?? "0"))
+                        .minute(parseInt(newTime.split(":")[1] ?? "0"))
+                        .second(0)
+                        .millisecond(0),
                     );
                   }}
                   className="w-26"

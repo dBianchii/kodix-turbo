@@ -1,12 +1,12 @@
 import type { Frequency } from "rrule";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
-import moment from "moment";
 import { LuLoader2 } from "react-icons/lu";
 import { RxCalendar } from "react-icons/rx";
 import { RRule, Weekday } from "rrule";
 
 import type { RouterInputs, RouterOutputs } from "@kdx/api";
+import dayjs from "@kdx/dayjs";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -77,12 +77,12 @@ export function EditEventDialog({
       calendarTask: calendarTask,
       title: calendarTask.title,
       description: calendarTask.description ?? "",
-      from: moment(calendarTask.date),
-      time: moment(calendarTask.date).format("HH:mm"),
+      from: dayjs(calendarTask.date),
+      time: dayjs(calendarTask.date).format("HH:mm"),
       frequency: RRule.fromString(calendarTask.rule).options.freq,
       interval: RRule.fromString(calendarTask.rule).options.interval,
       until: RRule.fromString(calendarTask.rule).options.until
-        ? moment(RRule.fromString(calendarTask.rule).options.until)
+        ? dayjs(RRule.fromString(calendarTask.rule).options.until)
         : undefined,
       count: RRule.fromString(calendarTask.rule).options.count ?? undefined,
       date: calendarTask.date,
@@ -94,14 +94,14 @@ export function EditEventDialog({
 
   const [title, setTitle] = useState(calendarTask.title);
   const [description, setDescription] = useState(calendarTask.description);
-  const [from, setFrom] = useState(moment(calendarTask.date));
+  const [from, setFrom] = useState(dayjs(calendarTask.date));
   const [frequency, setFrequency] = useState<Frequency>(
     defaultCalendarTask.frequency,
   );
   const [interval, setInterval] = useState<number>(
     defaultCalendarTask.interval,
   );
-  const [until, setUntil] = useState<moment.Moment | undefined>(
+  const [until, setUntil] = useState<dayjs.Dayjs | undefined>(
     defaultCalendarTask.until,
   );
   const [count, setCount] = useState<number | undefined>(
@@ -249,9 +249,7 @@ export function EditEventDialog({
                     selected={from.toDate()}
                     onSelect={(date) => {
                       setFrom(
-                        moment(date)
-                          .hours(from.hours())
-                          .minutes(from.minutes()),
+                        dayjs(date).hour(from.hour()).minute(from.minute()),
                       );
                     }}
                     initialFocus
@@ -268,12 +266,11 @@ export function EditEventDialog({
                   const newTime = e.target.value;
 
                   setFrom(
-                    moment(from).set({
-                      hour: parseInt(newTime.split(":")[0] ?? "0"),
-                      minute: parseInt(newTime.split(":")[1] ?? "0"),
-                      second: 0,
-                      millisecond: 0,
-                    }),
+                    dayjs(from)
+                      .hour(parseInt(newTime.split(":")[0] ?? "0"))
+                      .minute(parseInt(newTime.split(":")[1] ?? "0"))
+                      .second(0)
+                      .millisecond(0),
                   );
                 }}
                 className="w-26"
