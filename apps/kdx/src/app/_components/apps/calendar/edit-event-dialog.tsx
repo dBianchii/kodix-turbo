@@ -131,6 +131,7 @@ export function EditEventDialog({
     single: !(
       count !== defaultCalendarTask.count ||
       interval !== defaultCalendarTask.interval ||
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       (until && !until?.isSame(defaultCalendarTask.until)) ||
       frequency !== defaultCalendarTask.frequency ||
       weekdays !== defaultCalendarTask.weekdays
