@@ -6,9 +6,10 @@ import { getAppName } from "@kdx/shared";
 
 import { getAppIconUrl } from "~/helpers/miscelaneous";
 
+const defaultSize = 70;
 export function IconKodixApp({
   renderText = true,
-  size = 80,
+  size = defaultSize,
   ...props
 }: {
   appId: KodixAppId;
@@ -33,19 +34,21 @@ export function IconKodixApp({
 
 export function CustomKodixIcon({
   renderText = true,
+  size = defaultSize,
   ...props
 }: {
   appUrl: string;
   appName: string;
   renderText?: boolean;
   iconPath: string;
+  size?: number;
 }) {
   return (
     <Link href={props.appUrl} className="flex flex-col items-center">
       <Image
         src={props.iconPath}
-        height={"80"}
-        width={"80"}
+        height={size}
+        width={size}
         alt={`${props.appName} icon`}
       />
       {renderText && (

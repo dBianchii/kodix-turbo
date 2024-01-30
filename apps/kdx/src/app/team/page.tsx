@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 
 import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
+import { Separator } from "@kdx/ui/separator";
 import { Skeleton } from "@kdx/ui/skeleton";
 
 import {
@@ -19,13 +20,14 @@ export default async function Team() {
   if (!session) return redirect("/");
 
   return (
-    <main className="flex-1 py-8">
-      <MaxWidthWrapper className="flex flex-col gap-12">
+    <main className="flex-1 py-1">
+      <MaxWidthWrapper className="flex flex-col">
         <div className="flex">
-          <span className="bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-4xl font-bold">
+          <span className="bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-xl font-bold">
             {session.user.activeTeamName}
           </span>
         </div>
+        <Separator className="mb-8 mt-1" />
         <Suspense fallback={<AppsSectionSkeleton />}>
           <AppsSection />
         </Suspense>

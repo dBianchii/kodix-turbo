@@ -86,7 +86,9 @@ export function EditTeamNameCardClient({
             </div>
           </CardContent>
           <CardFooter className="flex justify-between border-t px-6 py-4">
-            <p className="">Please use 32 characters at maximum.</p>
+            <CardDescription>
+              Please use 32 characters at maximum.
+            </CardDescription>
             <Button disabled={isPending}>
               {isPending ? (
                 <>
