@@ -7,6 +7,7 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { RxCheck } from "react-icons/rx";
 import { Frequency, RRule } from "rrule";
 
+import type { Dayjs } from "@kdx/dayjs";
 import dayjs from "@kdx/dayjs";
 import {
   AlertDialog,
@@ -76,7 +77,7 @@ export function RecurrencePicker({
   frequency: Frequency;
   setFrequency: React.Dispatch<React.SetStateAction<Frequency>>;
   until: dayjs.Dayjs | undefined;
-  setUntil: React.Dispatch<React.SetStateAction<dayjs.Dayjs | undefined>>;
+  setUntil: React.Dispatch<React.SetStateAction<Dayjs | undefined>>;
   count: number | undefined;
   setCount: React.Dispatch<React.SetStateAction<number | undefined>>;
   weekdays: Weekday[] | undefined;

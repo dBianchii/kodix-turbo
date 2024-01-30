@@ -6,6 +6,7 @@ import { RxCalendar } from "react-icons/rx";
 import { RRule, Weekday } from "rrule";
 
 import type { RouterInputs, RouterOutputs } from "@kdx/api";
+import type { Dayjs } from "@kdx/dayjs";
 import dayjs from "@kdx/dayjs";
 import {
   AlertDialog,
@@ -101,7 +102,7 @@ export function EditEventDialog({
   const [interval, setInterval] = useState<number>(
     defaultCalendarTask.interval,
   );
-  const [until, setUntil] = useState<dayjs.Dayjs | undefined>(
+  const [until, setUntil] = useState<Dayjs | undefined>(
     defaultCalendarTask.until,
   );
   const [count, setCount] = useState<number | undefined>(
@@ -130,7 +131,6 @@ export function EditEventDialog({
     single: !(
       count !== defaultCalendarTask.count ||
       interval !== defaultCalendarTask.interval ||
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       (until && !until?.isSame(defaultCalendarTask.until)) ||
       frequency !== defaultCalendarTask.frequency ||
       weekdays !== defaultCalendarTask.weekdays
