@@ -8,6 +8,7 @@ import { RxCalendar, RxPlus } from "react-icons/rx";
 import { RRule } from "rrule";
 
 import type { RouterInputs } from "@kdx/api";
+import type { Dayjs } from "@kdx/dayjs";
 import dayjs from "@kdx/dayjs";
 import { Button } from "@kdx/ui/button";
 import { Calendar } from "@kdx/ui/calendar";
@@ -71,12 +72,10 @@ export function CreateEventDialogButton() {
 
   const [title, setTitle] = useState(defaultState.title);
   const [description, setDescription] = useState(defaultState.description);
-  const [from, setFrom] = useState<dayjs.Dayjs>(defaultState.from);
+  const [from, setFrom] = useState<Dayjs>(defaultState.from);
   const [frequency, setFrequency] = useState(defaultState.frequency);
   const [interval, setInterval] = useState(defaultState.interval);
-  const [until, setUntil] = useState<dayjs.Dayjs | undefined>(
-    defaultState.until,
-  );
+  const [until, setUntil] = useState<Dayjs | undefined>(defaultState.until);
   const [count, setCount] = useState<number | undefined>(defaultState.count);
   const [weekdays, setWeekdays] = useState<Weekday[] | undefined>();
 
