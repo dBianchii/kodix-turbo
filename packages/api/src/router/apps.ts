@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import type { Session } from "@kdx/auth";
-import type { PrismaClient } from "@kdx/db";
+import type { Prisma, PrismaClient } from "@kdx/db";
 import { kodixCareAppId } from "@kdx/shared";
 import { kodixCareConfigSchema } from "@kdx/validators";
 
@@ -68,22 +68,11 @@ export const appsRouter = createTRPCRouter({
       }), //TODO: make dynamic based on app
     )
     .mutation(async ({ ctx, input }) => {
-      const updateConfig = {
+      await saveAppConfig({
+        appId: input.appId,
         config: input.config,
-      };
-      return await ctx.prisma.appTeamConfig.upsert({
-        where: {
-          appId_teamId: {
-            appId: input.appId,
-            teamId: ctx.session.user.activeTeamId,
-          },
-        },
-        update: updateConfig,
-        create: {
-          ...updateConfig,
-          teamId: ctx.session.user.activeTeamId,
-          appId: input.appId,
-        },
+        prisma: ctx.prisma,
+        activeTeamId: ctx.session.user.activeTeamId,
       });
     }),
   getConfig: protectedProcedure
@@ -101,6 +90,36 @@ export const appsRouter = createTRPCRouter({
         }),
     ),
 });
+
+export async function saveAppConfig({
+  appId,
+  config,
+  prisma,
+  activeTeamId,
+}: {
+  appId: AppIdsWithConfig;
+  config: z.infer<typeof kodixCareConfigSchema>;
+  prisma: PrismaClient | Prisma.TransactionClient;
+  activeTeamId: string;
+}) {
+  const updateConfig = {
+    config: config,
+  };
+  return await prisma.appTeamConfig.upsert({
+    where: {
+      appId_teamId: {
+        appId: appId,
+        teamId: activeTeamId,
+      },
+    },
+    update: updateConfig,
+    create: {
+      ...updateConfig,
+      teamId: activeTeamId,
+      appId: appId,
+    },
+  });
+}
 
 export async function getAppConfig({
   appId,
