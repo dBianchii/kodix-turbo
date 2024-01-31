@@ -19,7 +19,7 @@ export const env = createEnv({
    */
   server: {
     DATABASE_URL: z.string().url(),
-    STAYS_OPENAI_API_KEY: z.string(),
+    STAYS_OPENAI_API_KEY: z.string().optional(),
     UPSTASH_REDIS_REST_URL: z.string().url(),
     UPSTASH_REDIS_REST_TOKEN: z.string(),
     RESEND_API_KEY: z.string(),
