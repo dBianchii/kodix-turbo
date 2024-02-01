@@ -13,7 +13,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@aws-sdk/client-ses": "^3.490.0",
     "@kdx/auth": "workspace:^0.1.0",
     "@kdx/dayjs": "workspace:^0.1.0",
     "@kdx/db": "workspace:^0.1.0",
@@ -24,7 +23,6 @@
     "@trpc/server": "11.0.0-next-beta.236",
     "@upstash/ratelimit": "^1.0.0",
     "@upstash/redis": "^1.28.0",
-    "aws-sdk": "^2.1502.0",
     "cuid": "^3.0.0",
     "dayjs": "^1.11.10",
     "next": "^14.1.0",
