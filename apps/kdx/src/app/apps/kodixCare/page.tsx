@@ -39,7 +39,7 @@ export default async function KodixCare() {
 }
 
 async function CurrentShift() {
-  const currentShift = await api.kodixCare.getCurrentShift();
+  const currentShift = await api.app.kodixCare.getCurrentShift();
 
   //se nao tiver shift é pq nao tem nenhum historico de shift.
   //Se tiver shift mas nao tiver shiftEndedAt é pq o shift ta em progresso
@@ -70,7 +70,9 @@ function NoPreviousShift() {
 function ShiftInProgress({
   currentShift,
 }: {
-  currentShift: NonNullable<RouterOutputs["kodixCare"]["getCurrentShift"]>;
+  currentShift: NonNullable<
+    RouterOutputs["app"]["kodixCare"]["getCurrentShift"]
+  >;
 }) {
   return (
     <div className="flex flex-col space-y-3 pt-4">
@@ -97,7 +99,9 @@ function ShiftInProgress({
 function ShiftEnded({
   currentShift,
 }: {
-  currentShift: NonNullable<RouterOutputs["kodixCare"]["getCurrentShift"]>;
+  currentShift: NonNullable<
+    RouterOutputs["app"]["kodixCare"]["getCurrentShift"]
+  >;
 }) {
   return (
     <div className="flex flex-col space-y-3 pt-4">

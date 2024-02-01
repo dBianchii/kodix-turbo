@@ -17,7 +17,7 @@ export default async function Todo() {
     prisma,
   });
 
-  const data = await api.todo.getAll();
+  const data = await api.app.todo.getAll();
 
   return (
     <MaxWidthWrapper>

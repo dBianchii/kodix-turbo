@@ -21,7 +21,7 @@ import {
 } from "./priority-popover";
 import { StatusIcon, StatusPopover, StatusToText } from "./status-popover";
 
-export type TodoColumn = RouterOutputs["todo"]["getAll"][number];
+export type TodoColumn = RouterOutputs["app"]["todo"]["getAll"][number];
 const columnHelper = createColumnHelper<TodoColumn>();
 type team = RouterOutputs["team"]["getActiveTeam"];
 
@@ -64,12 +64,12 @@ export const columns = [
       }, [value]);
 
       const utils = api.useUtils();
-      const { mutate: updateTodo } = api.todo.update.useMutation({
+      const { mutate: updateTodo } = api.app.todo.update.useMutation({
         async onMutate(newData) {
           if (!newData.priority) return;
 
           // Cancel outgoing fetches (so they don't overwrite our optimistic update)
-          await utils.todo.getAll.cancel();
+          await utils.app.todo.getAll.cancel();
 
           // Get the previous data, so we can rollback later
           const prevData = priority;
@@ -116,12 +116,12 @@ export const columns = [
       }, [value]);
 
       const utils = api.useUtils();
-      const { mutate: updateTodo } = api.todo.update.useMutation({
+      const { mutate: updateTodo } = api.app.todo.update.useMutation({
         async onMutate(newData) {
           if (!newData.status) return;
 
           // Cancel outgoing fetches (so they don't overwrite our optimistic update)
-          await utils.todo.getAll.cancel();
+          await utils.app.todo.getAll.cancel();
 
           // Get the previous data, so we can rollback later
           const prevData = status;
@@ -168,10 +168,10 @@ export const columns = [
       }, [value]);
 
       const utils = api.useUtils();
-      const { mutate: updateTodo } = api.todo.update.useMutation({
+      const { mutate: updateTodo } = api.app.todo.update.useMutation({
         async onMutate(newData) {
           // Cancel outgoing fetches (so they don't overwrite our optimistic update)
-          await utils.todo.getAll.cancel();
+          await utils.app.todo.getAll.cancel();
 
           // Get the previous data, so we can rollback later
           const prevData = dueDate;
@@ -207,10 +207,10 @@ export const columns = [
       }, [value]);
 
       const utils = api.useUtils();
-      const { mutate: updateTodo } = api.todo.update.useMutation({
+      const { mutate: updateTodo } = api.app.todo.update.useMutation({
         async onMutate(newData) {
           // Cancel outgoing fetches (so they don't overwrite our optimistic update)
-          await utils.todo.getAll.cancel();
+          await utils.app.todo.getAll.cancel();
 
           // Get the previous data, so we can rollback later
           const prevData = assignedToUserId;

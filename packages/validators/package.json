@@ -4,7 +4,14 @@
   "version": "0.1.0",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./trpc/team": "./src/trpc/team/team.ts",
+    "./trpc/invitation": "./src/trpc/team/invitation/invitation.ts",
+    "./trpc/user": "./src/trpc/user.ts",
+    "./trpc/event": "./src/trpc/event.ts",
+    "./trpc/app": "./src/trpc/app/app.ts",
+    "./trpc/app/kodixCare": "./src/trpc/app/kodixCare/kodixCare.ts",
+    "./trpc/app/todo": "./src/trpc/app/todo/todo.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
@@ -16,12 +23,15 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@kdx/dayjs": "workspace:^0.1.0",
+    "@kdx/db": "workspace:^0.1.0",
     "@kdx/eslint-config": "workspace:^0.2.0",
     "@kdx/prettier-config": "workspace:^0.1.0",
     "@kdx/shared": "workspace:^0.1.0",
     "@kdx/tsconfig": "workspace:^0.1.0",
     "eslint": "^8.56.0",
     "prettier": "^3.1.1",
+    "rrule": "^2.8.1",
     "typescript": "^5.3.3"
   },
   "eslintConfig": {
