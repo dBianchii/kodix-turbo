@@ -155,6 +155,7 @@ export const kodixCareRouter = createTRPCRouter({
             eventDate: calendarTask.date,
             eventMasterId: calendarTask.eventMasterId,
             doneByUserId: null,
+            doneAt: new Date(),
           })),
         });
 
