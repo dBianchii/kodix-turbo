@@ -36,11 +36,7 @@ export const kodixCareRouter = createTRPCRouter({
         })
       ).clonedCareTasksUntil;
 
-      const dayAfterTomorrowEndOfDay = dayjs
-        .utc()
-        .add(2, "day")
-        .endOf("day")
-        .toDate();
+      const TomorrowEndOfDay = dayjs.utc().add(1, "day").endOf("day").toDate();
 
       //1. Verify if it is the first shift ever
       //TODO: verificar se a condição abaixo está correta
@@ -63,7 +59,7 @@ export const kodixCareRouter = createTRPCRouter({
           return await cloneCalendarTasksToCareTasks({
             careShiftId: careShift.id,
             start: yesterdayStartOfDay,
-            end: dayAfterTomorrowEndOfDay,
+            end: TomorrowEndOfDay,
             tx,
           });
         });
@@ -102,7 +98,7 @@ export const kodixCareRouter = createTRPCRouter({
           await cloneCalendarTasksToCareTasks({
             careShiftId: lastCareShift.id,
             start: clonedCareTasksUntil,
-            end: dayAfterTomorrowEndOfDay,
+            end: TomorrowEndOfDay,
             tx,
           });
         });
@@ -127,7 +123,7 @@ export const kodixCareRouter = createTRPCRouter({
         await cloneCalendarTasksToCareTasks({
           careShiftId: newCareShift.id,
           start: clonedCareTasksUntil,
-          end: dayAfterTomorrowEndOfDay,
+          end: TomorrowEndOfDay,
           tx,
         });
       });
