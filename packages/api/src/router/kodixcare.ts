@@ -6,7 +6,7 @@ import WarnPreviousShiftNotEnded from "@kdx/react-email/warn-previous-shift-not-
 import {
   kodixCareAdminRoleId,
   kodixCareAppId,
-  todoAdminRoleId,
+  kodixCareCareGiverRoleId,
 } from "@kdx/shared";
 
 import { sendEmail } from "../internal/email/email";
@@ -26,7 +26,7 @@ export const kodixCareRouter = createTRPCRouter({
     ),
   startShift: protectedProcedure
     .use(kodixCareInstalledMiddleware)
-    .use(roleMiddlewareOR([kodixCareAdminRoleId, todoAdminRoleId]))
+    .use(roleMiddlewareOR([kodixCareCareGiverRoleId, kodixCareAdminRoleId]))
     .mutation(async ({ ctx }) => {
       const clonedCareTasksUntil = (
         await getAppConfig({
@@ -57,7 +57,7 @@ export const kodixCareRouter = createTRPCRouter({
             data: {
               caregiverId: ctx.session.user.id,
               teamId: ctx.session.user.activeTeamId,
-              checkIn: yesterdayStartOfDay,
+              checkIn: new Date(),
             },
           });
           return await cloneCalendarTasksToCareTasks({
@@ -161,6 +161,15 @@ export const kodixCareRouter = createTRPCRouter({
             doneByUserId: null,
           })),
         });
+
+        // await saveAppConfig({
+        //   appId: kodixCareAppId,
+        //   config: {
+        //     clonedCareTasksUntil: end,
+        //   },
+        //   prisma: tx,
+        //   activeTeamId: ctx.session.user.activeTeamId,
+        // });
       }
     }),
   onboardingCompleted: protectedProcedure.query(async ({ ctx }) => {
@@ -190,6 +199,7 @@ async function getCurrentCareShift({
   teamId: string;
   prisma: PrismaClient;
 }) {
+  //TODO: orderBy?
   return await prisma.careShift.findFirst({
     where: {
       teamId: teamId,

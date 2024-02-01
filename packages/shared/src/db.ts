@@ -31,7 +31,7 @@ export type AllAppRoles =
 //* Helpers *//
 export const appIdToAdminIdMap = {
   [todoAppId]: todoAdminRoleId,
-  [calendarAppId]: todoAdminRoleId,
+  [calendarAppId]: calendarAdminRoleId,
   [kodixCareAppId]: kodixCareAdminRoleId,
 } as const;
 
