@@ -12,10 +12,7 @@ interface NukeOptions {
 }
 
 export const nukeHandler = async ({ ctx }: NukeOptions) => {
-  if (
-    ctx.session.user.email &&
-    !authorizedEmails.includes(ctx.session.user.email)
-  )
+  if (!authorizedEmails.includes(ctx.session.user.email))
     throw new TRPCError({
       code: "UNAUTHORIZED",
       message: "You are not authorized to do this",

@@ -175,16 +175,15 @@ export function DataTable({
           </Button>
         </div>
         <div className="flex w-44">
-          {session.user.email &&
-            authorizedEmails.includes(session.user.email) && (
-              <Button
-                className="ml-auto mr-2 self-end"
-                onClick={() => nukeEvents()}
-                variant={"destructive"}
-              >
-                Nuke Events
-              </Button>
-            )}
+          {authorizedEmails.includes(session.user.email) && (
+            <Button
+              className="ml-auto mr-2 self-end"
+              onClick={() => nukeEvents()}
+              variant={"destructive"}
+            >
+              Nuke Events
+            </Button>
+          )}
 
           <Button
             className="ml-auto self-end "

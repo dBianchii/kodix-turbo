@@ -76,7 +76,7 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
         to: invite.email,
         subject: "You have been invited to join a team on kodix.com.br",
         react: TeamInvite({
-          invitedByEmail: ctx.session.user.email!,
+          invitedByEmail: ctx.session.user.email,
           invitedByUsername: ctx.session.user.name!,
           inviteLink: `${getBaseUrl()}/team/invite/${invite.id}`,
           teamImage: `${getBaseUrl()}/api/avatar/${team.name}`,

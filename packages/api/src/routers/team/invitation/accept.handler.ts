@@ -13,12 +13,6 @@ interface AcceptOptions {
 }
 
 export const acceptHandler = async ({ ctx, input }: AcceptOptions) => {
-  if (!ctx.session.user.email)
-    throw new TRPCError({
-      message: "Not implemented",
-      code: "NOT_IMPLEMENTED",
-    }); //TODO: WTF do I do about non existing emails? ??
-
   const invitation = await ctx.prisma.invitation.findUnique({
     where: {
       id: input.invitationId,

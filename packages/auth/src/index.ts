@@ -21,6 +21,7 @@ declare module "next-auth" {
       id: string;
       activeTeamId: string; // Might need fix
       activeTeamName: string;
+      email: string;
     } & DefaultSession["user"];
   }
 }

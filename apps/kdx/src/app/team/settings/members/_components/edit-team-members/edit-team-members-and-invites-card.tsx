@@ -5,13 +5,6 @@ import { api } from "~/trpc/server";
 import { InviteDataTable } from "./invites/data-table-invite";
 import { DataTableMembers } from "./members/data-table-members";
 
-export interface Member {
-  id: string;
-  name: string | null;
-  email: string | null;
-  image: string | null;
-}
-
 export async function EditTeamMembersAndInvitesCard() {
   const session = await auth();
   if (!session) return null;
