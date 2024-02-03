@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { kodixCareAppId } from "@kdx/shared";
+
 /**
  * @description Schema for validating kodix care config
  * @usedBy kdx/api kdx/kdx
@@ -14,3 +16,8 @@ export const kodixCareConfigSchema = z.object({
     }),
   clonedCareTasksUntil: z.date().optional(),
 });
+
+//TODO: Maybe move this getAppTeamConfigSchema elsewhere
+export const appIdToAppTeamConfigSchema = {
+  [kodixCareAppId]: kodixCareConfigSchema,
+};

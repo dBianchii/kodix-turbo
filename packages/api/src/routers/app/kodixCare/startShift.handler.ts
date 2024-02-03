@@ -9,6 +9,7 @@ import { kodixCareAppId } from "@kdx/shared";
 import { sendEmail } from "../../../internal/email/email";
 import { getAllHandler } from "../../event/getAll.handler";
 import { getConfigHandler } from "../getConfig.handler";
+import { saveConfigHandler } from "../saveConfig.handler";
 import { getCurrentCareShiftHandler } from "./getCurrentCareShift.handler";
 
 interface StartShiftOptions {
@@ -137,7 +138,6 @@ export const startShiftHandler = async ({ ctx }: StartShiftOptions) => {
         dateEnd: end,
       },
     });
-
     await tx.careTask.createMany({
       data: calendarTasks.map((calendarTask) => ({
         idCareShift: careShiftId,
@@ -150,14 +150,14 @@ export const startShiftHandler = async ({ ctx }: StartShiftOptions) => {
         doneAt: new Date(),
       })),
     });
-
-    // await saveAppConfig({
-    //   appId: kodixCareAppId,
-    //   config: {
-    //     clonedCareTasksUntil: end,
-    //   },
-    //   prisma: tx,
-    //   activeTeamId: ctx.session.user.activeTeamId,
-    // });
+    await saveConfigHandler({
+      ctx,
+      input: {
+        appId: kodixCareAppId,
+        config: {
+          clonedCareTasksUntil: end,
+        },
+      },
+    });
   }
 };

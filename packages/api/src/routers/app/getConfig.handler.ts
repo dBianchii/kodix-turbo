@@ -3,8 +3,7 @@ import { TRPCError } from "@trpc/server";
 import type { Session } from "@kdx/auth";
 import type { PrismaClient } from "@kdx/db";
 import type { TGetConfigInput } from "@kdx/validators/trpc/app";
-import { kodixCareAppId } from "@kdx/shared";
-import { kodixCareConfigSchema } from "@kdx/validators";
+import { appIdToAppTeamConfigSchema } from "@kdx/validators";
 
 interface GetConfigOptions {
   ctx: {
@@ -31,11 +30,6 @@ export const getConfigHandler = async ({ ctx, input }: GetConfigOptions) => {
       code: "NOT_FOUND",
       message: "No appTeamConfig found",
     });
-
-  //TODO: Maybe move this getAppTeamConfigSchema elsewhere
-  const appIdToAppTeamConfigSchema = {
-    [kodixCareAppId]: kodixCareConfigSchema,
-  };
 
   const schema = appIdToAppTeamConfigSchema[input.appId];
 

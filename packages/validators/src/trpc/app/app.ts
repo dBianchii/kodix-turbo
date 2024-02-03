@@ -13,6 +13,6 @@ export type TGetConfigInput = z.infer<typeof ZGetConfigInput>;
 
 export const ZSaveConfigInput = z.object({
   appId: z.literal(kodixCareAppId),
-  config: kodixCareConfigSchema,
+  config: kodixCareConfigSchema.partial(), //? Partial because we can just be updating a single field
 }); //TODO: make dynamic based on app
 export type TSaveConfigInput = z.infer<typeof ZSaveConfigInput>;
