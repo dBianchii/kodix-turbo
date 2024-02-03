@@ -157,8 +157,8 @@ importers:
         specifier: ^14.1.0
         version: 14.1.0(@babel/core@7.23.7)(react-dom@18.2.0)(react@18.2.0)
       next-auth:
-        specifier: 5.0.0-beta.4
-        version: 5.0.0-beta.4(next@14.1.0)(react@18.2.0)
+        specifier: 5.0.0-beta.5
+        version: 5.0.0-beta.5(next@14.1.0)(react@18.2.0)
       next-safe-action:
         specifier: ^6.0.2
         version: 6.0.2(next@14.1.0)(react@18.2.0)
@@ -472,8 +472,8 @@ importers:
         specifier: ^14.1.0
         version: 14.1.0(@babel/core@7.23.7)(react-dom@18.2.0)(react@18.2.0)
       next-auth:
-        specifier: 5.0.0-beta.4
-        version: 5.0.0-beta.4(next@14.1.0)(react@18.2.0)
+        specifier: 5.0.0-beta.5
+        version: 5.0.0-beta.5(next@14.1.0)(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -10526,8 +10526,8 @@ packages:
     engines: {node: '>= 0.4.0'}
     dev: true
 
-  /next-auth@5.0.0-beta.4(next@14.1.0)(react@18.2.0):
-    resolution: {integrity: sha512-vgocjvwPA8gxd/zrIP/vr9lJ/HeNe+C56lPP1D3sdyenHt8KncQV6ro7q0xCsDp1fcOKx7WAWVZH5o8aMxDzgw==}
+  /next-auth@5.0.0-beta.5(next@14.1.0)(react@18.2.0):
+    resolution: {integrity: sha512-tEYIPhm/i0byW4xf9Ldlsnh7ckBQfNvMjOA3B3eXQX9taAQWb8earravSn1fjk4fKfKvaOApFJkks0VeI7Vy/A==}
     peerDependencies:
       next: ^14
       nodemailer: ^6.6.5
