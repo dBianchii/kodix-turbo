@@ -451,8 +451,8 @@ importers:
   packages/auth:
     dependencies:
       '@auth/prisma-adapter':
-        specifier: ^1.0.14
-        version: 1.0.14(@prisma/client@5.9.1)
+        specifier: ^1.2.0
+        version: 1.2.0(@prisma/client@5.9.1)
       '@kdx/db':
         specifier: workspace:^0.1.0
         version: link:../db
@@ -977,8 +977,8 @@ packages:
       preact: 10.11.3
       preact-render-to-string: 5.2.3(preact@10.11.3)
 
-  /@auth/prisma-adapter@1.0.14(@prisma/client@5.9.1):
-    resolution: {integrity: sha512-7urwnDT+K81SocU0SbfY/vtY/NbXgj8/AU2k6Ek8waHT/7YPLsOQnXQsTWROmolFshNVkt2kq9Z/HOVnRdHrkQ==}
+  /@auth/prisma-adapter@1.2.0(@prisma/client@5.9.1):
+    resolution: {integrity: sha512-yn1ZHX/a57x8hhU+rwi+GL1IHx8k92Fhqk5w9R5toAtO9PxAr9xD+sNjD0OgrAMrO7GttKyW/mac6t8G0NYDEg==}
     peerDependencies:
       '@prisma/client': '>=2.26.0 || >=3 || >=4 || >=5'
     dependencies:
