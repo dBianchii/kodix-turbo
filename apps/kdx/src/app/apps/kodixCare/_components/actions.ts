@@ -10,6 +10,6 @@ import { action } from "~/helpers/safe-action/safe-action";
 import { api } from "~/trpc/server";
 
 export const startShiftButtonAction = action(z.void(), async () => {
-  await api.kodixCare.startShift();
+  await api.app.kodixCare.startShift();
   revalidatePath(`${getAppUrl(kodixCareAppId)}`);
 });

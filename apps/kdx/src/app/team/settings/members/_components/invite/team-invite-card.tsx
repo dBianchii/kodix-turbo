@@ -28,7 +28,7 @@ import { Label } from "@kdx/ui/label";
 import { Separator } from "@kdx/ui/separator";
 import { toast } from "@kdx/ui/toast";
 import { cn } from "@kdx/ui/utils";
-import { inviteUserSchema } from "@kdx/validators";
+import { ZInviteInputSchema } from "@kdx/validators/trpc/invitation";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
@@ -230,7 +230,7 @@ export default function TeamInviteCardClient({
                       teamId: session.user.activeTeamId,
                       to: emails.map((x) => x.value).filter((x) => Boolean(x)),
                     };
-                    const parsed = inviteUserSchema.safeParse(values);
+                    const parsed = ZInviteInputSchema.safeParse(values);
                     if (!parsed.success) {
                       return toast.error(parsed.error.errors[0]?.message);
                     }

@@ -1,22 +1,14 @@
-import { appsRouter } from "./router/apps";
-import { authRouter } from "./router/auth";
-import { eventRouter } from "./router/event";
-import { kodixCareRouter } from "./router/kodixcare";
-import { teamRouter } from "./router/team/team";
-import { testRouter } from "./router/test";
-import { todoRouter } from "./router/todo";
-import { userRouter } from "./router/user";
+import { appRouter as _appRouter } from "./routers/app/_router"; //sad that I had to alias it lol
+import { eventRouter } from "./routers/event/_router";
+import { teamRouter } from "./routers/team/_router";
+import { userRouter } from "./routers/user/_router";
 import { createTRPCRouter } from "./trpc";
 
 export const appRouter = createTRPCRouter({
-  app: appsRouter,
-  auth: authRouter,
-  user: userRouter,
-  team: teamRouter,
-  todo: todoRouter,
+  app: _appRouter,
   event: eventRouter,
-  test: testRouter,
-  kodixCare: kodixCareRouter,
+  team: teamRouter,
+  user: userRouter,
 });
 
 // export type definition of API

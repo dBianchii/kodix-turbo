@@ -23,7 +23,7 @@ import {
 } from "@kdx/ui/form";
 import { Input } from "@kdx/ui/input";
 import { toast } from "@kdx/ui/toast";
-import { updateTeamSchema } from "@kdx/validators";
+import { ZUpdateInputSchema } from "@kdx/validators/trpc/team";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
@@ -36,7 +36,7 @@ export function EditTeamNameCardClient({
   teamName: string;
 }) {
   const form = useForm({
-    schema: updateTeamSchema,
+    schema: ZUpdateInputSchema,
     defaultValues: {
       teamId,
       teamName,

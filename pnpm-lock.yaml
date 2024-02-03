@@ -787,6 +787,12 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
+      '@kdx/dayjs':
+        specifier: workspace:^0.1.0
+        version: link:../dayjs
+      '@kdx/db':
+        specifier: workspace:^0.1.0
+        version: link:../db
       '@kdx/eslint-config':
         specifier: workspace:^0.2.0
         version: link:../../tooling/eslint
@@ -805,6 +811,9 @@ importers:
       prettier:
         specifier: ^3.1.1
         version: 3.1.1
+      rrule:
+        specifier: ^2.8.1
+        version: 2.8.1
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -12080,7 +12089,6 @@ packages:
     resolution: {integrity: sha512-hM3dHSBMeaJ0Ktp7W38BJZ7O1zOgaFEsn41PDk+yHoEtfLV+PoJt9E9xAlZiWgf/iqEqionN0ebHFZIDAp+iGw==}
     dependencies:
       tslib: 2.6.2
-    dev: false
 
   /run-async@2.4.1:
     resolution: {integrity: sha512-tvVnVv01b8c1RrA6Ep7JkStj85Guv/YrMcwqYQnwjsAS2cTmmPGBBjAjpCW7RrSodNSoE2/qg9O4bceNvUuDgQ==}

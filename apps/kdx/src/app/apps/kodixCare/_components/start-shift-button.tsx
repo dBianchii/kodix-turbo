@@ -26,7 +26,7 @@ export default function StartShiftButton({
 }) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const query = api.kodixCare.getCurrentShift.useQuery(undefined, {
+  const query = api.app.kodixCare.getCurrentShift.useQuery(undefined, {
     enabled: false,
   });
 
