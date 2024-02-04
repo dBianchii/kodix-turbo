@@ -21,6 +21,10 @@ export default async function Layout({
       title: `Apps`,
     },
     {
+      href: "/team/settings/roles",
+      title: `Roles`,
+    },
+    {
       href: `/team/settings/general`,
       title: "General",
     },
