@@ -12,7 +12,7 @@
     "lint": "eslint .",
     "db:generate": "pnpm with-env prisma generate",
     "db:push": "pnpm with-env prisma db push --skip-generate",
-    "db:seed": "pnpm dlx tsx ./src/seed/seed.ts",
+    "db:seed": "pnpm with-env npx tsx ./src/seed/seed.ts",
     "dev": "pnpm with-env prisma studio --port 5556",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"

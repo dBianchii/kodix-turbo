@@ -13,6 +13,9 @@ export const getCurrentCareShiftHandler = async ({
 }: GetCurrentCareShiftOptions) => {
   //TODO: orderBy?
   return await ctx.prisma.careShift.findFirst({
+    orderBy: {
+      checkIn: "desc",
+    },
     where: {
       teamId: ctx.session.user.activeTeamId,
       shiftEndedAt: null,

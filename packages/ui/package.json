@@ -30,6 +30,7 @@
     "./table": "./src/table.tsx",
     "./tabs": "./src/tabs.tsx",
     "./textarea": "./src/textarea.tsx",
+    "./time-picker-input": "./src/time-picker/time-picker-input.tsx",
     "./theme": "./src/theme.tsx",
     "./toast": "./src/toast.tsx",
     "./toggle": "./src/toggle.tsx",

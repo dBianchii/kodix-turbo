@@ -12,14 +12,15 @@ import { getConfigHandler } from "../getConfig.handler";
 import { saveConfigHandler } from "../saveConfig.handler";
 import { getCurrentCareShiftHandler } from "./getCurrentCareShift.handler";
 
-interface StartShiftOptions {
+interface ToggleShiftOptions {
   ctx: {
     session: Session;
     prisma: PrismaClient;
   };
 }
 
-export const startShiftHandler = async ({ ctx }: StartShiftOptions) => {
+/**Starts a new shift and ends the previous one */
+export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
   const clonedCareTasksUntil = (
     await getConfigHandler({
       ctx,
@@ -58,7 +59,6 @@ export const startShiftHandler = async ({ ctx }: StartShiftOptions) => {
     });
   }
 
-  //2. Verify if there is a previous shift that has not ended yet
   const lastCareShift = await getCurrentCareShiftHandler({
     ctx,
   });
@@ -67,9 +67,10 @@ export const startShiftHandler = async ({ ctx }: StartShiftOptions) => {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message:
-        "No previous careshift found even though clonedCalendarTasks exists. This should only happen if we allow users to delete careshifts.",
+        "No previous careshift found even though clonedCalendarTasks exists. This should only happen if we allow users to past careshifts.",
     });
 
+  //2. Verify if previous shift that has not ended yet
   if (!lastCareShift.shiftEndedAt) {
     await ctx.prisma.$transaction(async (tx) => {
       await tx.careShift.update({
@@ -94,7 +95,10 @@ export const startShiftHandler = async ({ ctx }: StartShiftOptions) => {
         tx,
       });
     });
-    if (lastCareShift.Caregiver.email)
+    if (
+      !lastCareShift.checkOut &&
+      ctx.session.user.id !== lastCareShift.Caregiver.id
+    )
       await sendEmail({
         from: "Kodix <notification@kodix.com.br>",
         to: lastCareShift.Caregiver.email,

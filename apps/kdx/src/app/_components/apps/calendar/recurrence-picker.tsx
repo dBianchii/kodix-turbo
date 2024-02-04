@@ -36,7 +36,7 @@ import { FrequencyToTxt } from "~/app/_components/frequency-picker";
 /**
  * @description rrule.toText() returns the text based on the UTC timezone. This function returns the text based on the local timezone.
  */
-export function tzOffsetText(rule: RRule) {
+export function tzOffsetRruleText(rule: RRule) {
   const tzOffset = dayjs().utcOffset();
   const newRRule = rule.clone();
   newRRule.options.until = newRRule.options.until
@@ -128,7 +128,7 @@ export function RecurrencePicker({
       <Popover>
         <PopoverTrigger asChild>
           <Button type="button" variant="outline" size="sm">
-            {count === 1 ? "doesn't repeat" : tzOffsetText(ruleForText)}
+            {count === 1 ? "doesn't repeat" : tzOffsetRruleText(ruleForText)}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-300 p-0" side="bottom" align={"start"}>

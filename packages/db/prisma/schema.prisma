@@ -25,7 +25,7 @@ model CareShift {
   teamId String
   Team   Team   @relation(fields: [teamId], references: [id])
 
-  checkIn  DateTime?
+  checkIn  DateTime  @default(now())
   checkOut DateTime?
 
   shiftEndedAt DateTime?

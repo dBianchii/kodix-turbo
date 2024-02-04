@@ -1,5 +1,5 @@
 import type { Session } from "@kdx/auth";
-import type { PrismaClient } from "@kdx/db";
+import type { Prisma, PrismaClient } from "@kdx/db";
 import type { TSaveConfigInput } from "@kdx/validators/trpc/app";
 import { appIdToAppTeamConfigSchema } from "@kdx/validators";
 
@@ -12,10 +12,6 @@ interface SaveConfigOptions {
 }
 
 export const saveConfigHandler = async ({ ctx, input }: SaveConfigOptions) => {
-  const updateConfig = {
-    config: input.config,
-  };
-
   const existingConfig = await ctx.prisma.appTeamConfig.findUnique({
     where: {
       appId_teamId: {
@@ -37,7 +33,12 @@ export const saveConfigHandler = async ({ ctx, input }: SaveConfigOptions) => {
           teamId: ctx.session.user.activeTeamId,
         },
       },
-      data: updateConfig,
+      data: {
+        config: {
+          ...(existingConfig.config as Prisma.JsonObject),
+          ...input.config,
+        },
+      },
     });
   }
 

@@ -20,6 +20,8 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        orange:
+          "bg-orange-600 text-destructive-foreground shadow-sm hover:bg-orange-600/90", //TODO: Create orange CSS variable!
       },
       size: {
         default: "h-9 px-4 py-2",
