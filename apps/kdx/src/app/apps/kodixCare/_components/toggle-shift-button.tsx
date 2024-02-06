@@ -27,7 +27,6 @@ import {
   FormMessage,
   useForm,
 } from "@kdx/ui/form";
-import { Input } from "@kdx/ui/input";
 import { TimePickerInput } from "@kdx/ui/time-picker-input";
 
 import { DatePicker } from "~/app/_components/date-picker";
@@ -243,9 +242,9 @@ function DoCheckoutDialog({
         .date()
         .refine(
           (date) => dayjs(date).isAfter(dayjs(currentShift.checkIn)),
-          `Must be after check-in time. (${dayjs(currentShift.checkIn).format(
-            "HH:mm",
-          )})`,
+          `Time must be after check-in time. (${dayjs(
+            currentShift.checkIn,
+          ).format("HH:mm")})`,
         ),
     }),
     defaultValues: {
@@ -296,7 +295,10 @@ function DoCheckoutDialog({
                         }
                         date={field.value}
                         setDate={(newDate) =>
-                          form.setValue("date", newDate ?? new Date())
+                          form.setValue(
+                            "date",
+                            newDate ?? dayjs(new Date()).toDate(),
+                          )
                         }
                         className="w-fit"
                       />

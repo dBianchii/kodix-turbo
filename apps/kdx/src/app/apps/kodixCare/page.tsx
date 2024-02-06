@@ -1,11 +1,10 @@
 import { Suspense } from "react";
-import { format, formatRelative, subDays } from "date-fns";
+import { formatRelative } from "date-fns";
 import { HiUserCircle } from "react-icons/hi";
 import { IoMdTime } from "react-icons/io";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
-import dayjs from "@kdx/dayjs";
 import { prisma } from "@kdx/db";
 import { kodixCareAppId } from "@kdx/shared";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";

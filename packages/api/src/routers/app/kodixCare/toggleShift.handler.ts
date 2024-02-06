@@ -72,7 +72,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
 
   //2. Verify if previous shift that has not ended yet
   if (!lastCareShift.shiftEndedAt) {
-    await ctx.prisma.$transaction(async (tx) => {
+    return await ctx.prisma.$transaction(async (tx) => {
       await tx.careShift.update({
         where: {
           id: lastCareShift.id,
@@ -94,17 +94,18 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
         end: tomorrowEndOfDay,
         tx,
       });
+
+      if (
+        !lastCareShift.checkOut &&
+        ctx.session.user.id !== lastCareShift.Caregiver.id
+      )
+        await sendEmail({
+          from: "Kodix <notification@kodix.com.br>",
+          to: lastCareShift.Caregiver.email,
+          subject: `Your last shift was ended by ${ctx.session.user.name}`,
+          react: WarnPreviousShiftNotEnded(),
+        });
     });
-    if (
-      !lastCareShift.checkOut &&
-      ctx.session.user.id !== lastCareShift.Caregiver.id
-    )
-      await sendEmail({
-        from: "Kodix <notification@kodix.com.br>",
-        to: lastCareShift.Caregiver.email,
-        subject: `Your last shift was ended by ${ctx.session.user.name}`,
-        react: WarnPreviousShiftNotEnded(),
-      });
   }
 
   //3. Create a new shift, since the previous one has ended
