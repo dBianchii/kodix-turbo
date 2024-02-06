@@ -5,7 +5,7 @@ import type { Session } from "@kdx/auth";
 import type { PrismaClient } from "@kdx/db";
 import type { TInviteInputSchema } from "@kdx/validators/trpc/invitation";
 import TeamInvite from "@kdx/react-email/team-invite";
-import { getBaseUrl, getSuccessesAndErrors } from "@kdx/shared";
+import { getBaseKdxUrl, getBaseUrl, getSuccessesAndErrors } from "@kdx/shared";
 
 import { sendEmail } from "../../../internal/email/email";
 
@@ -78,8 +78,8 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
         react: TeamInvite({
           invitedByEmail: ctx.session.user.email,
           invitedByUsername: ctx.session.user.name!,
-          inviteLink: `${getBaseUrl()}/team/invite/${invite.id}`,
-          teamImage: `${getBaseUrl()}/api/avatar/${team.name}`,
+          inviteLink: `${getBaseKdxUrl()}/team/invite/${invite.id}`,
+          teamImage: `${getBaseKdxUrl()}/api/avatar/${team.name}`,
           teamName: team.name,
           // username: ??
         }),
