@@ -5,7 +5,7 @@ import type { Session } from "@kdx/auth";
 import type { PrismaClient } from "@kdx/db";
 import type { TInviteInputSchema } from "@kdx/validators/trpc/invitation";
 import TeamInvite from "@kdx/react-email/team-invite";
-import { getBaseKdxUrl, getBaseUrl, getSuccessesAndErrors } from "@kdx/shared";
+import { getBaseKdxUrl, getSuccessesAndErrors } from "@kdx/shared";
 
 import { sendEmail } from "../../../internal/email/email";
 
