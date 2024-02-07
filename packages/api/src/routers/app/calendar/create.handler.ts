@@ -2,7 +2,7 @@ import { RRule } from "rrule";
 
 import type { Session } from "@kdx/auth";
 import type { PrismaClient } from "@kdx/db";
-import type { TCreateInput } from "@kdx/validators/trpc/event";
+import type { TCreateInput } from "@kdx/validators/trpc/app/calendar";
 
 interface CreateOptions {
   ctx: {

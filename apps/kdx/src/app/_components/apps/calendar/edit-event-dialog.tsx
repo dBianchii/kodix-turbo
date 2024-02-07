@@ -48,17 +48,17 @@ export function EditEventDialog({
   open,
   setOpen,
 }: {
-  calendarTask: RouterOutputs["event"]["getAll"][number];
+  calendarTask: RouterOutputs["app"]["calendar"]["getAll"][number];
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const utils = api.useUtils();
-  const { mutate: editEvent } = api.event.edit.useMutation({
+  const { mutate: editEvent } = api.app.calendar.edit.useMutation({
     onMutate: () => {
       setButtonLoading(true);
     },
     onSuccess: () => {
-      void utils.event.getAll.invalidate();
+      void utils.app.calendar.getAll.invalidate();
       setOpen(false);
     },
     onSettled: () => {
@@ -155,7 +155,7 @@ export function EditEventDialog({
   function handleSubmitFormData(
     definition: "single" | "thisAndFuture" | "all",
   ) {
-    const input: RouterInputs["event"]["edit"] = {
+    const input: RouterInputs["app"]["calendar"]["edit"] = {
       eventExceptionId: defaultCalendarTask.eventExceptionId,
       eventMasterId: defaultCalendarTask.eventMasterId,
       selectedTimestamp: defaultCalendarTask.date,

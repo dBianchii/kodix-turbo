@@ -37,12 +37,12 @@ export function CancelationDialog({
 
   const [buttonLoading, setButtonLoading] = useState(false);
   const utils = api.useUtils();
-  const { mutate: cancelEvent } = api.event.cancel.useMutation({
+  const { mutate: cancelEvent } = api.app.calendar.cancel.useMutation({
     onMutate: () => {
       setButtonLoading(true);
     },
     onSuccess: () => {
-      void utils.event.getAll.invalidate();
+      void utils.app.calendar.getAll.invalidate();
       setOpen(false);
     },
     onSettled: () => {

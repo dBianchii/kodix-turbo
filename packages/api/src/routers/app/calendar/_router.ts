@@ -3,16 +3,16 @@ import {
   ZCreateInput,
   ZEditInput,
   ZGetAllInput,
-} from "@kdx/validators/trpc/event";
+} from "@kdx/validators/trpc/app/calendar";
 
-import { createTRPCRouter, protectedProcedure } from "../../trpc";
+import { createTRPCRouter, protectedProcedure } from "../../../trpc";
 import { cancelHandler } from "./cancel.handler";
 import { createHandler } from "./create.handler";
 import { editHandler } from "./edit.handler";
 import { getAllHandler } from "./getAll.handler";
 import { nukeHandler } from "./nuke.handler";
 
-export const eventRouter = createTRPCRouter({
+export const calendarRouter = createTRPCRouter({
   cancel: protectedProcedure
     .input(ZCancelInput)
     .mutation(async (opts) => await cancelHandler(opts)),

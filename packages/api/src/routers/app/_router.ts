@@ -5,6 +5,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "../../trpc";
+import { calendarRouter } from "./calendar/_router";
 import { getAllHandler } from "./getAll.handler";
 import { getConfigHandler } from "./getConfig.handler";
 import { getInstalledHandler } from "./getInstalled.handler";
@@ -13,6 +14,7 @@ import { saveConfigHandler } from "./saveConfig.handler";
 import { todoRouter } from "./todo/_router";
 
 export const appRouter = createTRPCRouter({
+  calendar: calendarRouter,
   kodixCare: kodixCareRouter,
   todo: todoRouter,
   getAll: publicProcedure.query(async (opts) => await getAllHandler(opts)),
