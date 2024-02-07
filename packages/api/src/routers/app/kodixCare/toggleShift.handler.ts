@@ -71,46 +71,20 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
     });
 
   //2. Verify if previous shift that has not ended yet
-  if (!lastCareShift.shiftEndedAt) {
-    return await ctx.prisma.$transaction(async (tx) => {
-      await tx.careShift.update({
-        where: {
-          id: lastCareShift.id,
-        },
-        data: {
-          shiftEndedAt: new Date(),
-        },
-      });
-      await tx.careShift.create({
-        data: {
-          teamId: ctx.session.user.activeTeamId,
-          checkIn: new Date(),
-          caregiverId: ctx.session.user.id,
-        },
-      });
-      await cloneCalendarTasksToCareTasks({
-        careShiftId: lastCareShift.id,
-        start: clonedCareTasksUntil,
-        end: tomorrowEndOfDay,
-        tx,
-      });
+  const loggedUserIsCaregiverForCurrentShift =
+    ctx.session.user.id === lastCareShift.Caregiver.id;
 
-      if (
-        !lastCareShift.checkOut &&
-        ctx.session.user.id !== lastCareShift.Caregiver.id
-      )
-        await sendEmail({
-          from: "Kodix <notification@kodix.com.br>",
-          to: lastCareShift.Caregiver.email,
-          subject: `Your last shift was ended by ${ctx.session.user.name}`,
-          react: WarnPreviousShiftNotEnded(),
-        });
+  return await ctx.prisma.$transaction(async (tx) => {
+    await tx.careShift.update({
+      where: {
+        id: lastCareShift.id,
+      },
+      data: {
+        checkOut: loggedUserIsCaregiverForCurrentShift ? new Date() : undefined, //Also checkOut if user is the caregiver
+        shiftEndedAt: new Date(),
+      },
     });
-  }
-
-  //3. Create a new shift, since the previous one has ended
-  await ctx.prisma.$transaction(async (tx) => {
-    const newCareShift = await tx.careShift.create({
+    await tx.careShift.create({
       data: {
         teamId: ctx.session.user.activeTeamId,
         checkIn: new Date(),
@@ -118,12 +92,38 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
       },
     });
     await cloneCalendarTasksToCareTasks({
-      careShiftId: newCareShift.id,
+      careShiftId: lastCareShift.id,
       start: clonedCareTasksUntil,
       end: tomorrowEndOfDay,
       tx,
     });
+
+    if (!lastCareShift.checkOut && !loggedUserIsCaregiverForCurrentShift)
+      //Send email to caregiver if the previous shift was not ended by the caregiver
+      await sendEmail({
+        from: "Kodix <notification@kodix.com.br>",
+        to: lastCareShift.Caregiver.email,
+        subject: `Your last shift was ended by ${ctx.session.user.name}`,
+        react: WarnPreviousShiftNotEnded(),
+      });
   });
+
+  // //3. Create a new shift, since the previous one has ended
+  // await ctx.prisma.$transaction(async (tx) => {
+  //   const newCareShift = await tx.careShift.create({
+  //     data: {
+  //       teamId: ctx.session.user.activeTeamId,
+  //       checkIn: new Date(),
+  //       caregiverId: ctx.session.user.id,
+  //     },
+  //   });
+  //   await cloneCalendarTasksToCareTasks({
+  //     careShiftId: newCareShift.id,
+  //     start: clonedCareTasksUntil,
+  //     end: tomorrowEndOfDay,
+  //     tx,
+  //   });
+  // });
 
   async function cloneCalendarTasksToCareTasks({
     start,
