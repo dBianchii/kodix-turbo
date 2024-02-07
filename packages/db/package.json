@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@kdx/shared": "workspace:^0.1.0",
-    "@planetscale/database": "^1.13.0",
+    "@planetscale/database": "^1.15.0",
     "@prisma/adapter-planetscale": "^5.9.1",
     "@prisma/client": "^5.9.1",
     "undici": "^6.5.0",
