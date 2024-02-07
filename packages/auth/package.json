@@ -14,7 +14,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@auth/prisma-adapter": "^1.2.0",
+    "@auth/prisma-adapter": "^1.3.3",
     "@kdx/db": "workspace:^0.1.0",
     "@kdx/react-email": "workspace:^0.1.0",
     "@kdx/shared": "workspace:^0.1.0",
