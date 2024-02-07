@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import Link from "next/link";
+import { RxPlusCircled } from "react-icons/rx";
 
 import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
@@ -15,6 +16,7 @@ import {
 } from "@kdx/ui/navigation-menu";
 import { navigationMenuTriggerStyle } from "@kdx/ui/navigationMenuTriggerStyle";
 import { Skeleton } from "@kdx/ui/skeleton";
+import { cn } from "@kdx/ui/utils";
 
 import HeaderFooterRemover from "~/app/_components/header-footer-remover";
 import MaxWidthWrapper from "~/app/_components/max-width-wrapper";
@@ -103,7 +105,7 @@ async function AppSwitcher() {
             <CurrentAppIcon />
           </NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="flex w-48 flex-col">
+            <ul className="flex flex-col">
               {apps.map((app) => (
                 <NavigationMenuItem
                   className="flex w-full flex-row"
@@ -113,21 +115,36 @@ async function AppSwitcher() {
                     href={getAppUrl(app.id as KodixAppId)}
                     legacyBehavior
                     passHref
-                    className="w-full"
                   >
                     <NavigationMenuLink
-                      className={navigationMenuTriggerStyle()}
+                      className={cn(
+                        navigationMenuTriggerStyle(),
+                        "py-6, w-44 justify-start p-4",
+                      )}
                     >
                       <IconKodixApp
                         appId={app.id as KodixAppId}
                         renderText={false}
-                        size={40}
+                        size={28}
                       />
                       <p className="ml-4">{getAppName(app.id as KodixAppId)}</p>
                     </NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
               ))}
+              <NavigationMenuItem className="flex w-full flex-row">
+                <Link href={"/apps"} legacyBehavior passHref>
+                  <NavigationMenuLink
+                    className={cn(
+                      navigationMenuTriggerStyle(),
+                      "py-6, w-44 justify-start p-4",
+                    )}
+                  >
+                    <RxPlusCircled className="ml-2 h-4 w-4" />
+                    <p className="ml-4">Add more apps</p>
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
