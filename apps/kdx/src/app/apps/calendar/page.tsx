@@ -20,7 +20,7 @@ export default async function Calendar() {
 
   //date Start should be the beginninig of the day
   //date End should be the end of the day
-  const data = await api.event.getAll({
+  const data = await api.app.calendar.getAll({
     dateStart: dayjs.utc().startOf("day").toDate(),
     dateEnd: dayjs.utc().endOf("day").toDate(),
   });

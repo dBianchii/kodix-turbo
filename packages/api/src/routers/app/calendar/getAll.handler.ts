@@ -2,7 +2,7 @@ import { rrulestr } from "rrule";
 
 import type { Session } from "@kdx/auth";
 import type { PrismaClient } from "@kdx/db";
-import type { TGetAllInput } from "@kdx/validators/trpc/event";
+import type { TGetAllInput } from "@kdx/validators/trpc/app/calendar";
 import dayjs from "@kdx/dayjs";
 
 interface GetAllCalendarTasksOptions {

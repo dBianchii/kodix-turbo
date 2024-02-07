@@ -3,7 +3,7 @@ import { RRule, rrulestr } from "rrule";
 
 import type { Session } from "@kdx/auth";
 import type { PrismaClient } from "@kdx/db";
-import type { TCancelInput } from "@kdx/validators/trpc/event";
+import type { TCancelInput } from "@kdx/validators/trpc/app/calendar";
 
 interface CancelOptions {
   ctx: {

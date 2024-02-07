@@ -33,12 +33,12 @@ import { RecurrencePicker } from "./recurrence-picker";
 export function CreateEventDialogButton() {
   const [open, setOpen] = useState(false);
   const utils = api.useUtils();
-  const { mutate: createEvent } = api.event.create.useMutation({
+  const { mutate: createEvent } = api.app.calendar.create.useMutation({
     onMutate: () => {
       setButtonLoading(true);
     },
     onSuccess: () => {
-      void utils.event.getAll.invalidate();
+      void utils.app.calendar.getAll.invalidate();
       revertStateToDefault();
       setOpen(false);
     },
@@ -92,7 +92,7 @@ export function CreateEventDialogButton() {
   function handleSubmitFormData(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     //We need to make sure that everything is the same as from, except for the date.
-    const input: RouterInputs["event"]["create"] = {
+    const input: RouterInputs["app"]["calendar"]["create"] = {
       title,
       description,
       from: from.toDate(),

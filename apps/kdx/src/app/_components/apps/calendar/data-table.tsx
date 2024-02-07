@@ -49,7 +49,7 @@ import { api } from "~/trpc/react";
 import { CancelationDialog } from "./cancel-event-dialog";
 import { EditEventDialog } from "./edit-event-dialog";
 
-type CalendarTask = RouterOutputs["event"]["getAll"][number];
+type CalendarTask = RouterOutputs["app"]["calendar"]["getAll"][number];
 
 export function DataTable({
   columns,
@@ -70,7 +70,7 @@ export function DataTable({
   const [openEditDialog, setOpenEditDialog] = useState(false);
 
   const utils = api.useUtils();
-  const result = api.event.getAll.useQuery(
+  const result = api.app.calendar.getAll.useQuery(
     {
       dateStart: dayjs(selectedDay).startOf("day").toDate(),
       dateEnd: dayjs(selectedDay).endOf("day").toDate(),
@@ -82,9 +82,9 @@ export function DataTable({
     },
   );
 
-  const { mutate: nukeEvents } = api.event.nuke.useMutation({
+  const { mutate: nukeEvents } = api.app.calendar.nuke.useMutation({
     onSuccess() {
-      void utils.event.getAll.invalidate();
+      void utils.app.calendar.getAll.invalidate();
     },
   });
 

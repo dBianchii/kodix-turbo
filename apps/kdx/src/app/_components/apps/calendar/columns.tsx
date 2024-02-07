@@ -16,7 +16,7 @@ import {
 import { CancelationDialog } from "./cancel-event-dialog";
 import { EditEventDialog } from "./edit-event-dialog";
 
-type CalendarTask = RouterOutputs["event"]["getAll"][number];
+type CalendarTask = RouterOutputs["app"]["calendar"]["getAll"][number];
 const columnHelper = createColumnHelper<CalendarTask>();
 
 //TODO: extract dialogs to one meta component

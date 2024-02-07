@@ -8,8 +8,8 @@
     "./trpc/team": "./src/trpc/team/team.ts",
     "./trpc/invitation": "./src/trpc/team/invitation/invitation.ts",
     "./trpc/user": "./src/trpc/user.ts",
-    "./trpc/event": "./src/trpc/event.ts",
     "./trpc/app": "./src/trpc/app/app.ts",
+    "./trpc/app/calendar": "./src/trpc/app/calendar/calendar.ts",
     "./trpc/app/kodixCare": "./src/trpc/app/kodixCare/kodixCare.ts",
     "./trpc/app/todo": "./src/trpc/app/todo/todo.ts"
   },
