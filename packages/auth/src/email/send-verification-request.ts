@@ -1,6 +1,7 @@
 import type { SendVerificationRequestParams } from "next-auth/providers";
 import { Resend } from "resend";
 
+import { kodixNotificationFromEmail } from "@kdx/react-email/constants";
 import VerificationRequestEmail from "@kdx/react-email/verification-request";
 
 export const resend = new Resend(process.env.RESEND_API_KEY);
@@ -10,7 +11,7 @@ export const sendVerificationRequest = async (
 ) => {
   try {
     await resend.emails.send({
-      from: "Kodix <notification@kodix.com.br>",
+      from: kodixNotificationFromEmail,
       to: params.identifier,
       subject: "Kodix login verification",
       react: VerificationRequestEmail({

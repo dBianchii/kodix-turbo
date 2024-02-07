@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 import type { Session } from "@kdx/auth";
 import type { Prisma, PrismaClient } from "@kdx/db";
 import dayjs from "@kdx/dayjs";
+import { kodixNotificationFromEmail } from "@kdx/react-email/constants";
 import WarnPreviousShiftNotEnded from "@kdx/react-email/warn-previous-shift-not-ended";
 import { kodixCareAppId } from "@kdx/shared";
 
@@ -101,7 +102,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
     if (!lastCareShift.checkOut && !loggedUserIsCaregiverForCurrentShift)
       //Send email to caregiver if the previous shift was not ended by the caregiver
       await sendEmail({
-        from: "Kodix <notification@kodix.com.br>",
+        from: kodixNotificationFromEmail,
         to: lastCareShift.Caregiver.email,
         subject: `Your last shift was ended by ${ctx.session.user.name}`,
         react: WarnPreviousShiftNotEnded(),

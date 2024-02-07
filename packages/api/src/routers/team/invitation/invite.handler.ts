@@ -4,6 +4,7 @@ import cuid from "cuid";
 import type { Session } from "@kdx/auth";
 import type { PrismaClient } from "@kdx/db";
 import type { TInviteInputSchema } from "@kdx/validators/trpc/invitation";
+import { kodixNotificationFromEmail } from "@kdx/react-email/constants";
 import TeamInvite from "@kdx/react-email/team-invite";
 import { getBaseKdxUrl, getSuccessesAndErrors } from "@kdx/shared";
 
@@ -72,7 +73,7 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
   const results = await Promise.allSettled(
     invitations.map(async (invite) => {
       await sendEmail({
-        from: "Kodix <notification@kodix.com.br>",
+        from: kodixNotificationFromEmail,
         to: invite.email,
         subject: "You have been invited to join a team on kodix.com.br",
         react: TeamInvite({
