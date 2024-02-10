@@ -1,10 +1,13 @@
-// Importing env files here to validate on build
-import "./src/env.js";
-import "@kdx/auth/env";
-
 //TODO: remove once prisma fixes this https://www.prisma.io/docs/orm/more/help-and-troubleshooting/help-articles/nextjs-prisma-client-monorepo
 //TODO: https://github.com/vercel/next.js/issues/46070
 import { PrismaPlugin } from "@prisma/nextjs-monorepo-workaround-plugin";
+import _jiti from "jiti";
+
+const jiti = _jiti(new URL(import.meta.url).pathname);
+
+// Import env files to validate at build time. Use jiti so we can load .ts files in here.
+jiti("./src/env");
+jiti("@kdx/auth/env");
 
 /** @type {import("next").NextConfig} */
 const config = {
