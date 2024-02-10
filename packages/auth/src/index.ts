@@ -9,8 +9,7 @@ import Google from "next-auth/providers/google";
 import type { PrismaClient, User } from "@kdx/db";
 import { prisma } from "@kdx/db";
 import { kodixNotificationFromEmail } from "@kdx/react-email/constants";
-
-import Resend from "@auth/core/providers/resend";
+import EmailProvider from "next-auth/providers/email";
 import { env } from "../env";
 import { sendVerificationRequest } from "./email/send-verification-request";
 
@@ -142,8 +141,9 @@ export const {
       clientId: env.AUTH_GOOGLE_CLIENT_ID,
       clientSecret: env.AUTH_GOOGLE_CLIENT_SECRET,
     }),
-    Resend({
+    EmailProvider({
       name: "email",
+      server: "",
       from: kodixNotificationFromEmail,
       sendVerificationRequest,
     }),
