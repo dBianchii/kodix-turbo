@@ -3,15 +3,15 @@ import type { DefaultSession } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import cuid from "cuid";
 import NextAuth from "next-auth";
+import EmailProvider from "next-auth/providers/email";
 // import EmailProvider from "next-auth/providers/email";
 import Google from "next-auth/providers/google";
-import Resend from "next-auth/providers/resend";
 
 import type { PrismaClient, User } from "@kdx/db";
 import { prisma } from "@kdx/db";
 import { kodixNotificationFromEmail } from "@kdx/react-email/constants";
 
-import { env } from "../env";
+import { env } from "../env.js";
 import { sendVerificationRequest } from "./email/send-verification-request";
 
 export type { Session } from "next-auth";
@@ -142,8 +142,9 @@ export const {
       clientId: env.AUTH_GOOGLE_CLIENT_ID,
       clientSecret: env.AUTH_GOOGLE_CLIENT_SECRET,
     }),
-    Resend({
+    EmailProvider({
       name: "email",
+      server: "",
       from: kodixNotificationFromEmail,
       sendVerificationRequest,
     }),

@@ -69,10 +69,10 @@ function EmailSignIn({ callbackUrl, loading, setLoading }: SignInButtonsProps) {
         variant="default"
         onClick={async () => {
           setLoading(true);
-          await signIn("email", {
-            email,
-            callbackUrl,
-          });
+            await signIn("email", {
+              email,
+              callbackUrl,
+            });
           setLoading(false);
         }}
         disabled={loading}

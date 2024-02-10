@@ -10,7 +10,7 @@ export const sendVerificationRequest = async (params: {
   url: string;
 }) => {
   try {
-    await resend.emails.send({
+        await resend.emails.send({
       from: kodixNotificationFromEmail,
       to: params.identifier,
       subject: "Kodix login verification",
@@ -19,6 +19,6 @@ export const sendVerificationRequest = async (params: {
       }),
     });
   } catch (error) {
-    console.log({ error });
+    throw new Error(`Error sending verification email`);
   }
 };
