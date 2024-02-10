@@ -23,7 +23,7 @@ model CareShift {
   Caregiver   User   @relation(fields: [caregiverId], references: [id])
 
   teamId String
-  Team   Team   @relation(fields: [teamId], references: [id])
+  Team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
   checkIn  DateTime  @default(now())
   checkOut DateTime?
@@ -43,7 +43,7 @@ model CareTask {
 
   doneAt DateTime?
 
-  DoneBy       User?   @relation(fields: [doneByUserId], references: [id])
+  DoneBy       User?   @relation(fields: [doneByUserId], references: [id], onDelete: Restrict) //Restrict because we have to keep logs somehow
   doneByUserId String?
 
   Team   Team   @relation(fields: [teamId], references: [id])
@@ -85,13 +85,13 @@ model UserAppRole {
   id String @id @default(cuid())
 
   userId String
-  User   User   @relation(fields: [userId], references: [id])
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   teamId String
-  Team   Team   @relation(fields: [teamId], references: [id])
+  Team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
   appId String
-  App   App    @relation(fields: [appId], references: [id])
+  App   App    @relation(fields: [appId], references: [id], onDelete: Cascade)
 
   appRoleId String
   AppRole   AppRole @relation(fields: [appRoleId], references: [id])
@@ -106,10 +106,10 @@ model AppTeamConfig {
   id     String @id @default(cuid())
   config Json
   appId  String
-  App    App    @relation("AppConfig", fields: [appId], references: [id])
+  App    App    @relation("AppConfig", fields: [appId], references: [id], onDelete: Cascade)
 
   teamId String
-  Team   Team   @relation("TeamConfig", fields: [teamId], references: [id])
+  Team   Team   @relation("TeamConfig", fields: [teamId], references: [id], onDelete: Cascade)
 
   @@unique([appId, teamId])
   @@index([appId])
@@ -124,7 +124,7 @@ model Team {
   Users     User[]   @relation("UserTeam")
 
   ownerId String
-  Owner   User   @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Owner   User   @relation("UserTeamOwner", fields: [ownerId], references: [id], onUpdate: NoAction)
 
   ActiveUsers  User[]        @relation("UserActiveTeam")
   ActiveApps   App[]         @relation("AppTeam")
@@ -142,7 +142,7 @@ model Team {
 
 model Invitation {
   id        String   @id @default(cuid())
-  Team      Team     @relation(fields: [teamId], references: [id])
+  Team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
   teamId    String
   email     String
   accepted  Boolean  @default(false) //Is this necessary? Since we just delete the invitation when the user accepts it
@@ -222,7 +222,7 @@ model EventMaster {
   EventCancellations EventCancellation[]
   CareTasks          CareTask[]
 
-  Team   Team   @relation(fields: [teamId], references: [id])
+  Team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
   teamId String
 
   @@index([teamId])
@@ -303,7 +303,7 @@ model User {
   ActiveTeam   Team   @relation("UserActiveTeam", fields: [activeTeamId], references: [id])
 
   CareTasks    CareTask[]
-  OwnedTeams   Team[]
+  OwnedTeams   Team[]        @relation("UserTeamOwner")
   UserAppRoles UserAppRole[]
   CareShift    CareShift[]
 
