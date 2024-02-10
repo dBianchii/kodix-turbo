@@ -11,6 +11,6 @@ export const authorizedEmails = [
 
 /**
  * @description Full http url for the production environment.
- * @usedBy kdx/kdx kdx/stays-ai kdx/db
+ * @usedBy kdx/kdx kdx/db
  */
 export const kdxProductionURL = "https://www.kodix.com.br";
