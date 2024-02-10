@@ -166,7 +166,7 @@ importers:
         specifier: 18.2.0
         version: 18.2.0
       react-day-picker:
-        specifier: ^8.9.1
+        specifier: ^8.10.0
         version: 8.10.0(date-fns@3.3.1)(react@18.2.0)
       react-dom:
         specifier: 18.2.0
@@ -608,7 +608,7 @@ importers:
         specifier: ^0.2.1
         version: 0.2.1(next@14.1.0)(react-dom@18.2.0)(react@18.2.0)
       react-day-picker:
-        specifier: ^8.9.1
+        specifier: ^8.10.0
         version: 8.10.0(date-fns@3.3.1)(react@18.2.0)
       react-hook-form:
         specifier: ^7.50.1
