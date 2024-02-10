@@ -22,7 +22,7 @@
     "@planetscale/database": "^1.16.0",
     "@prisma/adapter-planetscale": "^5.9.1",
     "@prisma/client": "^5.9.1",
-    "undici": "^6.5.0",
+    "undici": "^6.6.2",
     "zod": "^3.22.4"
   },
   "devDependencies": {
