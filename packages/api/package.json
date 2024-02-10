@@ -40,10 +40,10 @@
     "@kdx/tsconfig": "workspace:^0.1.0",
     "@types/node": "^20.11.14",
     "@types/nodemailer": "^6.4.14",
-    "@types/react": "^18.2.48",
-    "@types/react-dom": "^18.2.18",
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19",
     "eslint": "^8.56.0",
-    "prettier": "^3.1.1",
+    "prettier": "^3.2.5",
     "trpc-tools": "0.12.1-canary.2dfb1delosg",
     "typescript": "^5.3.3"
   },

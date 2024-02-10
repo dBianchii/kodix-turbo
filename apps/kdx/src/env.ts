@@ -7,11 +7,6 @@ export const env = createEnv({
       .enum(["development", "production", "test"])
       .default("development"),
     VERCEL_ENV: z.enum(["development", "preview", "production"]).optional(),
-    VERCEL_URL: z
-      .string()
-      .optional()
-      .transform((v) => (v ? `https://${v}` : undefined)),
-    PORT: z.coerce.number().default(3000),
   },
   /**
    * Specify your server-side environment variables schema here.
@@ -36,17 +31,9 @@ export const env = createEnv({
   /**
    * Destructure all variables from `process.env` to make sure they aren't tree-shaken away.
    */
-  runtimeEnv: {
-    VERCEL_URL: process.env.VERCEL_URL,
-    DATABASE_URL: process.env.DATABASE_URL,
-    STAYS_OPENAI_API_KEY: process.env.STAYS_OPENAI_API_KEY,
-    PORT: process.env.PORT,
-    UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
-    UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
-    RESEND_API_KEY: process.env.RESEND_API_KEY,
-    AWS_SMTP_USER: process.env.AWS_SMTP_USER,
-    AWS_SMTP_PASSWORD: process.env.AWS_SMTP_PASSWORD,
-    // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+  experimental__runtimeEnv: {
+    VERCEL_ENV: process.env.VERCEL_ENV,
+    NODE_ENV: process.env.NODE_ENV,
   },
   skipValidation: !!process.env.CI || !!process.env.SKIP_ENV_VALIDATION,
 });

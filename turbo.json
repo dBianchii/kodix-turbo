@@ -52,22 +52,14 @@
     }
   },
   "globalEnv": [
-    "CI",
     "DATABASE_URL",
-    "EXPO_ROUTER_APP_ROOT",
-    "AUTH_SECRET",
-    "AUTH_URL",
-    "NODE_ENV",
-    "SKIP_ENV_VALIDATION",
-    "VERCEL",
-    "VERCEL_URL",
     "AUTH_GOOGLE_CLIENT_ID",
     "AUTH_GOOGLE_CLIENT_SECRET",
     "AUTH_REDIRECT_PROXY_URL",
+    "AUTH_SECRET",
     "STAYS_OPENAI_API_KEY",
     "UPSTASH_REDIS_REST_URL",
     "UPSTASH_REDIS_REST_TOKEN",
-    "RESEND_API_KEY",
-    "PORT"
+    "RESEND_API_KEY"
   ]
 }
