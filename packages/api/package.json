@@ -20,7 +20,7 @@
     "@kdx/shared": "workspace:^0.1.0",
     "@kdx/validators": "workspace:^0.1.0",
     "@paralleldrive/cuid2": "^2.2.2",
-    "@trpc/server": "11.0.0-next-beta.236",
+    "@trpc/server": "11.0.0-next-beta.285",
     "@upstash/ratelimit": "^1.0.0",
     "@upstash/redis": "^1.28.3",
     "cuid": "^3.0.0",
