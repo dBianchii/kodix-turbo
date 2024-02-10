@@ -11,7 +11,7 @@ import type { PrismaClient, User } from "@kdx/db";
 import { prisma } from "@kdx/db";
 import { kodixNotificationFromEmail } from "@kdx/react-email/constants";
 
-import { env } from "../env.js";
+import { env } from "../env";
 import { sendVerificationRequest } from "./email/send-verification-request";
 
 export type { Session } from "next-auth";
