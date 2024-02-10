@@ -130,8 +130,8 @@ importers:
         specifier: ^1.0.9
         version: 1.0.9(next@14.1.0)(react@18.2.0)(svelte@4.2.10)(vue@3.4.18)
       ai:
-        specifier: ^2.2.22
-        version: 2.2.31(react@18.2.0)(solid-js@1.8.14)(svelte@4.2.10)(vue@3.4.18)
+        specifier: ^2.2.34
+        version: 2.2.34(react@18.2.0)(solid-js@1.8.14)(svelte@4.2.10)(vue@3.4.18)
       cuid:
         specifier: ^3.0.0
         version: 3.0.0
@@ -5225,8 +5225,8 @@ packages:
       indent-string: 4.0.0
     dev: true
 
-  /ai@2.2.31(react@18.2.0)(solid-js@1.8.14)(svelte@4.2.10)(vue@3.4.18):
-    resolution: {integrity: sha512-WQH13RxP+RYo9IE/FX8foNQh9gcKO/dhl9OGy5JL2bHJVBlnugPmH2CYJWaRt+mvjXHaU8txB+jzGo/fbtH2HA==}
+  /ai@2.2.34(react@18.2.0)(solid-js@1.8.14)(svelte@4.2.10)(vue@3.4.18):
+    resolution: {integrity: sha512-5U/Q9Kkc24vfgq+NpwgbXnS5wgk++ljx1sAyfOFdG2byOR57gkX8wK1gVwiz0CaoZzVj62IqdmnQBoSCAIsbCA==}
     engines: {node: '>=14.6'}
     peerDependencies:
       react: ^18.2.0
