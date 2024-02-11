@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
@@ -8,10 +5,6 @@ generator client {
 
 datasource db {
   provider     = "mysql"
-  // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-  // Further reading:
-  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
   url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
@@ -49,8 +42,8 @@ model CareTask {
   Team   Team   @relation(fields: [teamId], references: [id])
   teamId String
 
-  EventMaster   EventMaster @relation(fields: [eventMasterId], references: [id])
-  eventMasterId String
+  EventMaster   EventMaster? @relation(fields: [eventMasterId], references: [id])
+  eventMasterId String?
 
   idCareShift String
   CareShift   CareShift @relation(fields: [idCareShift], references: [id])
@@ -65,42 +58,72 @@ model CareTask {
   @@index([teamId])
 }
 
-model AppRole {
+//*---------------------   START ACCESS CONTROL    ---------------------*//
+
+//? AppPermission defines which permissions are available for an app.
+model AppPermission {
   id String @id @default(cuid())
 
   appId String
-  App   App    @relation(fields: [appId], references: [id])
+  App   App    @relation(fields: [appId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  name        String
+  description String?
+
+  AppRole_defaults AppRole_default[] //Default roles that have this permission
+  TeamAppRole      TeamAppRole[]
+
+  @@index([appId])
+}
+
+//? AppRole_default defines which roles are available for an app by default. Should be cloned to TeamAppRole once app is installed for a team 
+model AppRole_default {
+  id String @id @default(cuid())
+
+  appId String
+  App   App    @relation(fields: [appId], references: [id], onDelete: Cascade) //TODO: Do we need App reference here? 
+
+  //Here we defined default values for this role. (name, description... and the default permissions.)
+  name           String
+  description    String?
+  minUsers       Int             @default(0)
+  maxUsers       Int             @default(0)
+  AppPermissions AppPermission[]
+
+  TeamAppRoles TeamAppRole[] //Effective role(s) within a team. Spawned from this model after app is installed. (post-clone)
+
+  @@index([appId])
+}
+
+//? TeamAppRole defines which roles are available for an app in a team, and also which users have this role.
+//? Default roles are cloned from AppRole upon app install.
+model TeamAppRole {
+  id String @id @default(cuid())
 
   name        String
   description String?
   minUsers    Int     @default(0)
   maxUsers    Int     @default(0)
 
-  UserAppRole UserAppRole[]
-
-  @@index([appId])
-}
-
-model UserAppRole {
-  id String @id @default(cuid())
-
-  userId String
-  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  appId String
+  App   App    @relation(fields: [appId], references: [id], onDelete: Cascade)
 
   teamId String
   Team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
-  appId String
-  App   App    @relation(fields: [appId], references: [id], onDelete: Cascade)
+  Users User[]
 
-  appRoleId String
-  AppRole   AppRole @relation(fields: [appRoleId], references: [id])
+  appRole_defaultId String? //The default role from where this role was cloned from upon app install
+  AppRole_default   AppRole_default? @relation(fields: [appRole_defaultId], references: [id], onDelete: SetNull, onUpdate: Cascade)
 
-  @@index([userId])
+  AppPermissions AppPermission[] //Permissions granted for this role. (defaults are cloned from AppRole_default.AppPermissions on app install)
+
   @@index([teamId])
+  @@index([appRole_defaultId])
   @@index([appId])
-  @@index([appRoleId])
 }
+
+//*---------------------   END ACCESS CONTROL    ---------------------*//
 
 model AppTeamConfig {
   id     String @id @default(cuid())
@@ -133,7 +156,7 @@ model Team {
   Invitations  Invitation[]
 
   AppTeamConfigs AppTeamConfig[] @relation("TeamConfig")
-  UserAppRoles   UserAppRole[]
+  TeamAppRoles   TeamAppRole[]
   CareShift      CareShift[]
   CareTask       CareTask[]
 
@@ -162,8 +185,9 @@ model App {
   devPartnerId     String
   AppTeamConfigs   AppTeamConfig[] @relation("AppConfig")
 
-  AppRoles     AppRole[]
-  UserAppRoles UserAppRole[]
+  AppRole_defaults AppRole_default[]
+  TeamAppRoles     TeamAppRole[]
+  AppPermissions   AppPermission[]
 
   @@index([devPartnerId])
 }
@@ -302,10 +326,10 @@ model User {
   activeTeamId String
   ActiveTeam   Team   @relation("UserActiveTeam", fields: [activeTeamId], references: [id])
 
-  CareTasks    CareTask[]
-  OwnedTeams   Team[]        @relation("UserTeamOwner")
-  UserAppRoles UserAppRole[]
-  CareShift    CareShift[]
+  CareTasks   CareTask[]
+  OwnedTeams  Team[]        @relation("UserTeamOwner")
+  CareShifts  CareShift[]
+  TeamAppRole TeamAppRole[]
 
   @@index([activeTeamId])
 }
