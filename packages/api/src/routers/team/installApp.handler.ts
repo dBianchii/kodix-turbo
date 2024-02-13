@@ -55,27 +55,42 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
           },
         },
       },
+      select: {
+        id: true,
+      },
     });
-    await tx.userAppRole.create({
+
+    const allDefaultRolesForApp = await tx.appRole_default.findMany({
+      where: {
+        appId: input.appId,
+      },
+      select: {
+        appId: true,
+        maxUsers: true,
+        minUsers: true,
+        description: true,
+        id: true,
+        name: true,
+      },
+    });
+    await tx.teamAppRole.createMany({
+      data: allDefaultRolesForApp.map((role) => ({
+        appId: role.appId,
+        name: role.name,
+        description: role.description,
+        maxUsers: role.maxUsers,
+        minUsers: role.minUsers,
+        teamId: ctx.session.user.activeTeamId,
+      })),
+    });
+    await tx.teamAppRole.update({
+      where: {
+        id: appIdToAdminIdMap[input.appId],
+      },
       data: {
-        App: {
-          connect: {
-            id: input.appId,
-          },
-        },
-        User: {
+        Users: {
           connect: {
             id: ctx.session.user.id,
-          },
-        },
-        Team: {
-          connect: {
-            id: ctx.session.user.activeTeamId,
-          },
-        },
-        AppRole: {
-          connect: {
-            id: appIdToAdminIdMap[input.appId],
           },
         },
       },
