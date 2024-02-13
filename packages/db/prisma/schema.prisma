@@ -147,7 +147,7 @@ model Team {
   Users     User[]   @relation("UserTeam")
 
   ownerId String
-  Owner   User   @relation("UserTeamOwner", fields: [ownerId], references: [id], onUpdate: NoAction)
+  Owner   User   @relation("UserTeamOwner", fields: [ownerId], references: [id], onUpdate: Cascade)
 
   ActiveUsers  User[]        @relation("UserActiveTeam")
   ActiveApps   App[]         @relation("AppTeam")
@@ -324,7 +324,7 @@ model User {
   Todos         Todo[]
 
   activeTeamId String
-  ActiveTeam   Team   @relation("UserActiveTeam", fields: [activeTeamId], references: [id])
+  ActiveTeam   Team   @relation("UserActiveTeam", fields: [activeTeamId], references: [id], onUpdate: NoAction)
 
   CareTasks   CareTask[]
   OwnedTeams  Team[]        @relation("UserTeamOwner")
