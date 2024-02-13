@@ -12,14 +12,15 @@ import {
   todoAppId,
 } from "@kdx/shared";
 
+import type { Prisma } from "..";
 import { prisma } from "..";
 
-export const apps = [
+export const apps: Prisma.AppUpsertArgs["create"][] = [
   {
     id: todoAppId, //As const so it can be used as a type
     subscriptionCost: 0 as const,
     devPartnerId: kdxPartnerId,
-    AppRoles: {
+    AppRole_defaults: {
       create: [
         {
           id: todoAdminRoleId,
@@ -34,7 +35,7 @@ export const apps = [
     id: calendarAppId,
     subscriptionCost: 0 as const,
     devPartnerId: kdxPartnerId,
-    AppRoles: {
+    AppRole_defaults: {
       create: [
         {
           id: calendarAdminRoleId,
@@ -49,7 +50,7 @@ export const apps = [
     id: kodixCareAppId,
     subscriptionCost: 0 as const,
     devPartnerId: kdxPartnerId,
-    AppRoles: {
+    AppRole_defaults: {
       create: [
         {
           id: kodixCareAdminRoleId,
@@ -90,11 +91,11 @@ async function main() {
   });
 
   for (const app of apps) {
-    const appExists = await prisma.app.findUnique({
+    const appExists = !!(await prisma.app.findUnique({
       where: {
         id: app.id,
       },
-    });
+    }));
 
     if (appExists) {
       console.log(`App ${app.id} already exists, skipping...`);
@@ -112,7 +113,7 @@ async function main() {
 
 main()
   .then(() => {
-    console.log("🌳 Done!");
+    console.log("🌳 Fully seeded!");
   })
   .catch((e) => {
     console.error(e);
