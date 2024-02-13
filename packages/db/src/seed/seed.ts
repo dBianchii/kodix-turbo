@@ -8,6 +8,7 @@ import {
   kodixCareAppId,
   kodixCareCareGiverRoleId,
   kodixCarePatientRoleId,
+  PKodixCare_CanToggleShiftId,
   todoAdminRoleId,
   todoAppId,
 } from "@kdx/shared";
@@ -57,6 +58,18 @@ export const apps: Prisma.AppUpsertArgs["create"][] = [
           name: getRoleName(kodixCareAdminRoleId),
           minUsers: 1,
           maxUsers: 0,
+          AppPermissions: {
+            connectOrCreate: {
+              create: {
+                id: PKodixCare_CanToggleShiftId,
+                name: "Can Toggle Shift",
+                appId: kodixCareAppId,
+              },
+              where: {
+                id: PKodixCare_CanToggleShiftId,
+              },
+            },
+          },
         },
         {
           id: kodixCarePatientRoleId,

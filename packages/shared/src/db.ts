@@ -1,20 +1,22 @@
 //* Partners
 export const kdxPartnerId = "clh9tiqsj000835711pg3sskn";
 
-//**  	Apps 		 *//
-//*     Todo app
+//-------------------------------  	Apps 	 -------------------------------//
+//* Todo *//
 export const todoAppId = "clj2117860007skypdpzj0k1u" as const;
 export const todoAdminRoleId = "clqfpp3he000008l4hyyg7tdl";
 
-//*     Calendar app
+//* Calendar *//
 export const calendarAppId = "clohjphbm000008ju6oywfy4i" as const;
 export const calendarAdminRoleId = "clqfpp77z000108l4c1je0e5z";
 
-//*     KodixCare app
+//*  KodixCare *//
 export const kodixCareAppId = "clj2117860009skyp5e613fih" as const;
 export const kodixCareAdminRoleId = "clq5yvcvu000008ia3yppfnou";
 export const kodixCarePatientRoleId = "clq5yvhuz000108ia55qk06ts";
 export const kodixCareCareGiverRoleId = "clq5yvqdg000208ia3861eyow";
+//*   KodixCare permissions -------
+export const PKodixCare_CanToggleShiftId = "clsklq5vz000008li0ac3co6w";
 
 export type KodixAppId =
   | typeof todoAppId
@@ -27,6 +29,9 @@ export type AllAppRoles =
   | typeof kodixCareCareGiverRoleId
   | typeof todoAdminRoleId
   | typeof calendarAdminRoleId;
+
+export type AllAppPermissions = typeof PKodixCare_CanToggleShiftId;
+//-------------------------------  	Apps 	 -------------------------------//
 
 //* Helpers *//
 export const appIdToAdminIdMap = {
