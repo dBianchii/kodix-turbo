@@ -23,7 +23,6 @@ export const ZInstallAppInputSchema = z.object({
 export type TInstallAppInputSchema = z.infer<typeof ZInstallAppInputSchema>;
 
 export const ZRemoveUserSchema = z.object({
-  teamId: z.string().cuid(),
   userId: z.string().cuid(),
 });
 export type TRemoveUserSchema = z.infer<typeof ZRemoveUserSchema>;

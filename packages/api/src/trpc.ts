@@ -7,8 +7,6 @@
  * The pieces you will need to use are documented accordingly near the end
  */
 import { initTRPC, TRPCError } from "@trpc/server";
-import { Ratelimit } from "@upstash/ratelimit";
-import { Redis } from "@upstash/redis";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
@@ -107,35 +105,3 @@ export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
     },
   });
 });
-
-const ratelimit = new Ratelimit({
-  redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(5, "1 h"), //5 Requests per 1 hour
-  analytics: true,
-});
-
-/**
- * Protected (authed) procedure that limits by id and current active team
- *
- * This is the same as protectedProcedure, but it also rate limits per user and
- * current active teamId. This is using a shared cache, so it will rate
- * limit across all instances that use this same procedure.
- */
-export const userAndTeamLimitedProcedure = protectedProcedure.use(
-  async ({ ctx, next }) => {
-    const { success, reset } = await ratelimit.limit(
-      `userId:${ctx.session.user.id} teamId:${ctx.session.user.activeTeamId}`,
-    );
-    if (!success)
-      throw new TRPCError({
-        code: "TOO_MANY_REQUESTS",
-        message: `Too many requests. Please try again at ${new Date(
-          reset,
-        ).toString()}`,
-      });
-
-    return next({
-      ctx,
-    });
-  },
-);

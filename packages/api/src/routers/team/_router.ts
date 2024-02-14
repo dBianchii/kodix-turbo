@@ -8,10 +8,10 @@ import {
 } from "@kdx/validators/trpc/team";
 
 import {
-  createTRPCRouter,
-  protectedProcedure,
+  isTeamOwnerProcedure,
   userAndTeamLimitedProcedure,
-} from "../../trpc";
+} from "../../customProcedures";
+import { createTRPCRouter, protectedProcedure } from "../../trpc";
 import { createHandler } from "./create.handler";
 import { getActiveTeamHandler } from "./getActiveTeam.handler";
 import { getAllForLoggedUserHandler } from "./getAllForLoggedUser.handler";
@@ -40,7 +40,7 @@ export const teamRouter = createTRPCRouter({
   getOne: protectedProcedure
     .input(ZGetOneInputSchema)
     .query(async (opts) => await getOneHandler(opts)),
-  installApp: protectedProcedure
+  installApp: isTeamOwnerProcedure
     .input(ZInstallAppInputSchema)
     .mutation(async (opts) => await installAppHandler(opts)),
   removeUser: protectedProcedure

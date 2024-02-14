@@ -17,7 +17,7 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
 
   const team = await ctx.prisma.team.findFirstOrThrow({
     where: {
-      id: input.teamId,
+      id: ctx.session.user.activeTeamId,
     },
     select: {
       ownerId: true,
@@ -50,7 +50,7 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
   const otherTeam = await ctx.prisma.team.findFirst({
     where: {
       id: {
-        not: input.teamId,
+        not: ctx.session.user.activeTeamId,
       },
       Users: {
         some: {
@@ -76,7 +76,7 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
     data: {
       Teams: {
         disconnect: {
-          id: input.teamId,
+          id: ctx.session.user.activeTeamId,
         },
       },
       activeTeamId: otherTeam.id,

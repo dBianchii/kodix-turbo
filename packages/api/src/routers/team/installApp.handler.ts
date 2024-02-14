@@ -10,6 +10,9 @@ interface InstallAppOptions {
   ctx: {
     session: Session;
     prisma: PrismaClient;
+    team: {
+      id: string;
+    };
   };
   input: TInstallAppInputSchema;
 }
@@ -31,23 +34,6 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
       code: "BAD_REQUEST",
     });
 
-  const team = await ctx.prisma.team.findUnique({
-    where: {
-      id: ctx.session.user.activeTeamId,
-    },
-  });
-  if (!team)
-    throw new TRPCError({
-      message: "No Team Found",
-      code: "NOT_FOUND",
-    });
-
-  if (team.ownerId !== ctx.session.user.id)
-    throw new TRPCError({
-      message: "Only the team owner can install apps",
-      code: "FORBIDDEN",
-    });
-
   const appUpdated = await ctx.prisma.$transaction(async (tx) => {
     const updatedApp = await tx.app.update({
       where: {
@@ -56,7 +42,7 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
       data: {
         Teams: {
           connect: {
-            id: team.id,
+            id: ctx.team.id,
           },
         },
       },
