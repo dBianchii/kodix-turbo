@@ -79,7 +79,6 @@ export const memberColumns = ({
                 className="text-destructive"
                 onSelect={() => {
                   mutate({
-                    teamId: session.user.activeTeamId,
                     userId: session.user.id,
                   });
                 }}

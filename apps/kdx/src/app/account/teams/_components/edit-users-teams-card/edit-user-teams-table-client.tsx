@@ -158,7 +158,6 @@ function LeaveTeamDropdown({ session }: { session: Session }) {
           onClick={(e) => {
             e.stopPropagation();
             mutate({
-              teamId: session.user.activeTeamId,
               userId: session.user.id,
             });
           }}
