@@ -4,17 +4,17 @@ export const kdxPartnerId = "clh9tiqsj000835711pg3sskn";
 //-------------------------------  	Apps 	 -------------------------------//
 //* Todo *//
 export const todoAppId = "clj2117860007skypdpzj0k1u" as const;
-export const todoAdminRoleId = "clqfpp3he000008l4hyyg7tdl";
+export const todoAdminRoleDefaultId = "clqfpp3he000008l4hyyg7tdl";
 
 //* Calendar *//
 export const calendarAppId = "clohjphbm000008ju6oywfy4i" as const;
-export const calendarAdminRoleId = "clqfpp77z000108l4c1je0e5z";
+export const calendarAdminRoleDefaultId = "clqfpp77z000108l4c1je0e5z";
 
 //*  KodixCare *//
 export const kodixCareAppId = "clj2117860009skyp5e613fih" as const;
-export const kodixCareAdminRoleId = "clq5yvcvu000008ia3yppfnou";
-export const kodixCarePatientRoleId = "clq5yvhuz000108ia55qk06ts";
-export const kodixCareCareGiverRoleId = "clq5yvqdg000208ia3861eyow";
+export const kodixCareAdminRoleDefaultId = "clq5yvcvu000008ia3yppfnou";
+export const kodixCarePatientRoleDefaultId = "clq5yvhuz000108ia55qk06ts";
+export const kodixCareCareGiverRoleDefaultId = "clq5yvqdg000208ia3861eyow";
 //*   KodixCare permissions -------
 export const PKodixCare_CanToggleShiftId = "clsklq5vz000008li0ac3co6w";
 
@@ -23,21 +23,21 @@ export type KodixAppId =
   | typeof calendarAppId
   | typeof kodixCareAppId;
 
-export type AllAppRoles =
-  | typeof kodixCareAdminRoleId
-  | typeof kodixCarePatientRoleId
-  | typeof kodixCareCareGiverRoleId
-  | typeof todoAdminRoleId
-  | typeof calendarAdminRoleId;
+export type AllAppRoles_defaults =
+  | typeof kodixCareAdminRoleDefaultId
+  | typeof kodixCarePatientRoleDefaultId
+  | typeof kodixCareCareGiverRoleDefaultId
+  | typeof todoAdminRoleDefaultId
+  | typeof calendarAdminRoleDefaultId;
 
-export type AllAppPermissions = typeof PKodixCare_CanToggleShiftId;
+export type AppPermissionIds = typeof PKodixCare_CanToggleShiftId;
 //-------------------------------  	Apps 	 -------------------------------//
 
 //* Helpers *//
-export const appIdToAdminIdMap = {
-  [todoAppId]: todoAdminRoleId,
-  [calendarAppId]: calendarAdminRoleId,
-  [kodixCareAppId]: kodixCareAdminRoleId,
+export const appIdToAdminRole_defaultIdMap = {
+  [todoAppId]: todoAdminRoleDefaultId,
+  [calendarAppId]: calendarAdminRoleDefaultId,
+  [kodixCareAppId]: kodixCareAdminRoleDefaultId,
 } as const;
 
 export const getAppName = (appId: KodixAppId) => {
@@ -58,13 +58,14 @@ export const getAppDescription = (appId: KodixAppId) => {
   return appIdToDescription[appId];
 };
 
-export const getRoleName = (roleId: AllAppRoles) => {
+export const getAppRole_defaultRoleName = (roleId: AllAppRoles_defaults) => {
+  //TODO: Maybe store this in memory from db?
   const roleIdToName = {
-    [todoAdminRoleId]: "Admin" as const,
-    [calendarAdminRoleId]: "Admin" as const,
-    [kodixCareAdminRoleId]: "Admin" as const,
-    [kodixCarePatientRoleId]: "Patient" as const,
-    [kodixCareCareGiverRoleId]: "CareGiver" as const,
+    [todoAdminRoleDefaultId]: "Admin" as const,
+    [calendarAdminRoleDefaultId]: "Admin" as const,
+    [kodixCareAdminRoleDefaultId]: "Admin" as const,
+    [kodixCarePatientRoleDefaultId]: "Patient" as const,
+    [kodixCareCareGiverRoleDefaultId]: "CareGiver" as const,
   };
   return roleIdToName[roleId];
 };

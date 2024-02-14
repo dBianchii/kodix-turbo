@@ -136,7 +136,12 @@ function StartShiftDialog({
   const utils = api.useUtils();
   async function handleClick() {
     setLoading(true);
-    await toggleShiftButtonAction();
+    const result = await toggleShiftButtonAction();
+    if (defaultSafeActionToastError(result)) {
+      setLoading(false);
+      return;
+    }
+
     void utils.app.kodixCare.getCurrentShift.invalidate();
     setStartShiftOpen(false);
     setLoading(false);

@@ -1,7 +1,7 @@
 import { experimental_standaloneMiddleware, TRPCError } from "@trpc/server";
 
 import type { Session } from "@kdx/auth";
-import type { AllAppPermissions, KodixAppId } from "@kdx/shared";
+import type { AppPermissionIds, KodixAppId } from "@kdx/shared";
 import { getAppName, kodixCareAppId } from "@kdx/shared";
 
 import type { createTRPCContext } from "./trpc";
@@ -38,28 +38,32 @@ const appInstalledMiddlewareFactory = (appId: KodixAppId) =>
 export const kodixCareInstalledMiddleware =
   appInstalledMiddlewareFactory(kodixCareAppId);
 
-export const appPermissionMiddlewareOR = (roleIds: AllAppPermissions[]) =>
+export const appPermissionMiddleware = (permissionId: AppPermissionIds) =>
   experimental_standaloneMiddleware<{
     ctx: Awaited<ReturnType<typeof createTRPCContext>> & {
       session: Session;
     };
   }>().create(async ({ ctx, next }) => {
-    const foundPermissions = await ctx.prisma.teamAppRole.findMany({
+    const foundPermission = !!(await ctx.prisma.teamAppRole.findFirst({
       where: {
-        Users: {
-          some: { id: ctx.session.user.id },
-        },
-        Team: { id: ctx.session.user.activeTeamId },
         AppPermissions: {
           some: {
-            id: { in: roleIds },
+            id: permissionId,
+          },
+        },
+        Team: {
+          id: ctx.session.user.activeTeamId,
+        },
+        Users: {
+          some: {
+            id: permissionId,
           },
         },
       },
       select: { id: true },
-    });
+    }));
 
-    if (foundPermissions.length === 0)
+    if (!foundPermission)
       throw new TRPCError({
         code: "UNAUTHORIZED",
         message: `You don't have permission to do this. Contact an administrator if you believe it is an error.`,

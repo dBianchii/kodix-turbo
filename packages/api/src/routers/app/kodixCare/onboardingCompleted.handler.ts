@@ -12,20 +12,15 @@ interface OnboardingCompletedOptions {
 export const onboardingCompletedHandler = async ({
   ctx,
 }: OnboardingCompletedOptions) => {
-  const result = await ctx.prisma.appTeamConfig.findUnique({
+  const appInstalled = await ctx.prisma.app.findUnique({
     where: {
-      appId_teamId: {
-        appId: kodixCareAppId,
-        teamId: ctx.session.user.activeTeamId,
-      },
-      config: {
-        path: "$.patientName",
-        not: {
-          equals: null,
+      id: kodixCareAppId,
+      Teams: {
+        some: {
+          id: ctx.session.user.activeTeamId,
         },
       },
     },
-    select: { id: true },
   });
-  return !!result;
+  return !!appInstalled;
 };

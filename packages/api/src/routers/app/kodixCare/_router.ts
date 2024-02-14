@@ -2,7 +2,7 @@ import { PKodixCare_CanToggleShiftId } from "@kdx/shared";
 import { ZDoCheckoutForShiftInput } from "@kdx/validators/trpc/app/kodixCare";
 
 import {
-  appPermissionMiddlewareOR,
+  appPermissionMiddleware,
   kodixCareInstalledMiddleware,
 } from "../../../middlewares";
 import { createTRPCRouter, protectedProcedure } from "../../../trpc";
@@ -14,7 +14,7 @@ import { toggleShiftHandler } from "./toggleShift.handler";
 export const kodixCareRouter = createTRPCRouter({
   toggleShift: protectedProcedure
     .use(kodixCareInstalledMiddleware)
-    .use(appPermissionMiddlewareOR([PKodixCare_CanToggleShiftId]))
+    .use(appPermissionMiddleware(PKodixCare_CanToggleShiftId))
     .mutation(async (opts) => await toggleShiftHandler(opts)),
   doCheckoutForShift: protectedProcedure
     .use(kodixCareInstalledMiddleware)

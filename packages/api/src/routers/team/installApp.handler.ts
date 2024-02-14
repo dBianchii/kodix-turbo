@@ -1,10 +1,10 @@
 import { revalidateTag } from "next/cache";
 import { TRPCError } from "@trpc/server";
+import cuid from "cuid";
 
 import type { Session } from "@kdx/auth";
-import type { PrismaClient } from "@kdx/db";
+import type { Prisma, PrismaClient } from "@kdx/db";
 import type { TInstallAppInputSchema } from "@kdx/validators/trpc/team";
-import { appIdToAdminIdMap } from "@kdx/shared";
 
 interface InstallAppOptions {
   ctx: {
@@ -18,12 +18,17 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
   const app = await ctx.prisma.app.findUnique({
     where: {
       id: input.appId,
+      Teams: {
+        some: {
+          id: ctx.session.user.activeTeamId,
+        },
+      },
     },
   });
-  if (!app)
+  if (app)
     throw new TRPCError({
-      message: "No App Found",
-      code: "NOT_FOUND",
+      message: "App already installed",
+      code: "BAD_REQUEST",
     });
 
   const team = await ctx.prisma.team.findUnique({
@@ -60,7 +65,7 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
       },
     });
 
-    const allDefaultRolesForApp = await tx.appRole_default.findMany({
+    const defaultAppRoles = await tx.appRole_default.findMany({
       where: {
         appId: input.appId,
       },
@@ -71,30 +76,46 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
         description: true,
         id: true,
         name: true,
+        AppPermissions: true,
       },
     });
+
+    const newAppRoles = defaultAppRoles.map(
+      (role) =>
+        ({
+          id: cuid(),
+          appId: role.appId,
+          name: role.name,
+          description: role.description,
+          maxUsers: role.maxUsers,
+          minUsers: role.minUsers,
+          teamId: ctx.session.user.activeTeamId,
+          appRole_defaultId: role.id,
+        }) satisfies Prisma.TeamAppRoleCreateManyInput,
+    );
+
     await tx.teamAppRole.createMany({
-      data: allDefaultRolesForApp.map((role) => ({
-        appId: role.appId,
-        name: role.name,
-        description: role.description,
-        maxUsers: role.maxUsers,
-        minUsers: role.minUsers,
-        teamId: ctx.session.user.activeTeamId,
-      })),
+      data: newAppRoles,
     });
-    await tx.teamAppRole.update({
-      where: {
-        id: appIdToAdminIdMap[input.appId],
-      },
-      data: {
-        Users: {
-          connect: {
-            id: ctx.session.user.id,
+
+    const defaultRolesWithPerms = defaultAppRoles.filter(
+      (x) => !!x.AppPermissions,
+    );
+
+    for (const defaultRole of defaultRolesWithPerms) {
+      await tx.appRole_default.update({
+        where: {
+          id: defaultRole.id,
+        },
+        data: {
+          AppPermissions: {
+            connect: defaultRole.AppPermissions.map((perm) => ({
+              id: perm.id,
+            })),
           },
         },
-      },
-    });
+      });
+    }
 
     return updatedApp;
   });

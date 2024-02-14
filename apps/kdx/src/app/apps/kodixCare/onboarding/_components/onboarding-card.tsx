@@ -48,7 +48,10 @@ export default function OnboardingCard() {
           const result = await finishKodixCareOnboardingAction({
             patientName: values.patientName,
           });
-          if (defaultSafeActionToastError(result)) return;
+          if (defaultSafeActionToastError(result)) {
+            setIsSubmitting(false);
+            return;
+          }
           router.push(`/apps/kodixCare`);
           setIsSubmitting(false);
         })}

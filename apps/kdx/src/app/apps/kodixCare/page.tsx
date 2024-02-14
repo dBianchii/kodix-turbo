@@ -1,29 +1,30 @@
 import { Suspense } from "react";
+import { redirect } from "next/navigation";
 import { formatRelative } from "date-fns";
 import { HiUserCircle } from "react-icons/hi";
 import { IoMdTime } from "react-icons/io";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
-import { prisma } from "@kdx/db";
-import { kodixCareAppId } from "@kdx/shared";
+import { auth } from "@kdx/auth";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Badge } from "@kdx/ui/badge";
 import { Label } from "@kdx/ui/label";
 
 import MaxWidthWrapper from "~/app/_components/max-width-wrapper";
-import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
 import { api } from "~/trpc/server";
 import KodixCareTable from "./_components/kodix-care-table";
 import { ToggleShiftButton } from "./_components/toggle-shift-button";
 
 export const dynamic = "force-dynamic"; //TODO: help me
 export default async function KodixCare() {
-  const session = await redirectIfAppNotInstalled({
-    appId: kodixCareAppId,
-    prisma,
-    customRedirect: "/apps/kodixCare/onboarding",
-  });
+  const session = await auth();
+  if (!session) return redirect("/");
+
+  const completed = await api.app.kodixCare.onboardingCompleted();
+  if (!completed) {
+    return redirect("/apps/kodixCare/onboarding");
+  }
 
   return (
     <MaxWidthWrapper>
