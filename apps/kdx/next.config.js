@@ -1,5 +1,6 @@
 //TODO: remove once prisma fixes this https://www.prisma.io/docs/orm/more/help-and-troubleshooting/help-articles/nextjs-prisma-client-monorepo
 //TODO: https://github.com/vercel/next.js/issues/46070
+import { fileURLToPath } from "url";
 import { PrismaPlugin } from "@prisma/nextjs-monorepo-workaround-plugin";
 import _jiti from "jiti";
 
