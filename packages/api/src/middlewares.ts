@@ -44,7 +44,7 @@ export const appPermissionMiddleware = (permissionId: AppPermissionIds) =>
       session: Session;
     };
   }>().create(async ({ ctx, next }) => {
-    const foundPermission = !!(await ctx.prisma.teamAppRole.findFirst({
+    const foundPermission = await ctx.prisma.teamAppRole.findFirst({
       where: {
         AppPermissions: {
           some: {
@@ -56,12 +56,12 @@ export const appPermissionMiddleware = (permissionId: AppPermissionIds) =>
         },
         Users: {
           some: {
-            id: permissionId,
+            id: ctx.session.user.id,
           },
         },
       },
       select: { id: true },
-    }));
+    });
 
     if (!foundPermission)
       throw new TRPCError({

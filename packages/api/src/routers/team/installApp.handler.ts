@@ -5,12 +5,14 @@ import cuid from "cuid";
 import type { Session } from "@kdx/auth";
 import type { Prisma, PrismaClient } from "@kdx/db";
 import type { TInstallAppInputSchema } from "@kdx/validators/trpc/team";
+import { appIdToAdminRole_defaultIdMap } from "@kdx/shared";
 
 interface InstallAppOptions {
   ctx: {
     session: Session;
     prisma: PrismaClient;
     team: {
+      //TODO:
       id: string;
     };
   };
@@ -66,36 +68,57 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
       },
     });
 
-    const newAppRoles = defaultAppRoles.map(
-      (role) =>
-        ({
-          id: cuid(),
-          appId: role.appId,
-          name: role.name,
-          description: role.description,
-          maxUsers: role.maxUsers,
-          minUsers: role.minUsers,
-          teamId: ctx.session.user.activeTeamId,
-          appRole_defaultId: role.id,
-        }) satisfies Prisma.TeamAppRoleCreateManyInput,
-    );
+    const toCopyAppRoles = defaultAppRoles.map((role) => ({
+      id: cuid(),
+      appId: role.appId,
+      name: role.name,
+      description: role.description,
+      maxUsers: role.maxUsers,
+      minUsers: role.minUsers,
+      teamId: ctx.session.user.activeTeamId,
+      appRole_defaultId: role.id,
+      AppPermissions: role.AppPermissions,
+    }));
 
     await tx.teamAppRole.createMany({
-      data: newAppRoles,
+      data: toCopyAppRoles.map((role) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { AppPermissions, ...rest } = role;
+
+        const roleWithoutAppPermission: Prisma.TeamAppRoleCreateManyInput =
+          rest;
+
+        return roleWithoutAppPermission;
+      }),
     });
 
-    const defaultRolesWithPerms = defaultAppRoles.filter(
+    const copiedRolesWithPerms = toCopyAppRoles.filter(
       (x) => !!x.AppPermissions,
     );
 
-    for (const defaultRole of defaultRolesWithPerms) {
-      await tx.appRole_default.update({
+    for (const copiedRole of copiedRolesWithPerms) {
+      const adminRoleId = appIdToAdminRole_defaultIdMap[input.appId];
+      const shouldGiveCurrentUserThisRole =
+        copiedRole.appRole_defaultId === adminRoleId;
+
+      let Users:
+        | undefined
+        | {
+            connect: { id: string };
+          };
+      if (shouldGiveCurrentUserThisRole)
+        Users = {
+          connect: { id: ctx.session.user.id },
+        };
+
+      await tx.teamAppRole.update({
         where: {
-          id: defaultRole.id,
+          id: copiedRole.id,
         },
         data: {
+          Users,
           AppPermissions: {
-            connect: defaultRole.AppPermissions.map((perm) => ({
+            connect: copiedRole.AppPermissions.map((perm) => ({
               id: perm.id,
             })),
           },
