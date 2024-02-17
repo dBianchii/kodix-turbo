@@ -33,7 +33,7 @@
     "@trpc/react-query": "11.0.0-next-beta.264",
     "@trpc/server": "11.0.0-next-beta.264",
     "@upstash/ratelimit": "^1.0.1",
-    "@upstash/redis": "^1.28.3",
+    "@upstash/redis": "^1.28.4",
     "@vercel/analytics": "^1.1.3",
     "@vercel/speed-insights": "^1.0.9",
     "ai": "^2.2.34",
