@@ -1,12 +1,9 @@
-import type { Session } from "@kdx/auth";
-import type { PrismaClient } from "@kdx/db";
 import { kodixCareAppId } from "@kdx/shared";
 
+import type { TProtectedProcedureContext } from "../../../trpc";
+
 interface OnboardingCompletedOptions {
-  ctx: {
-    session: Session;
-    prisma: PrismaClient;
-  };
+  ctx: TProtectedProcedureContext;
 }
 
 export const onboardingCompletedHandler = async ({

@@ -1,14 +1,11 @@
 import { TRPCError } from "@trpc/server";
 
-import type { Session } from "@kdx/auth";
-import type { PrismaClient } from "@kdx/db";
 import type { TAcceptInputSchema } from "@kdx/validators/trpc/invitation";
 
+import type { TProtectedProcedureContext } from "../../../trpc";
+
 interface AcceptOptions {
-  ctx: {
-    session: Session;
-    prisma: PrismaClient;
-  };
+  ctx: TProtectedProcedureContext;
   input: TAcceptInputSchema;
 }
 

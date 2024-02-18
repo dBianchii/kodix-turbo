@@ -1,14 +1,11 @@
 import { TRPCError } from "@trpc/server";
 
-import type { Session } from "@kdx/auth";
-import type { PrismaClient } from "@kdx/db";
 import type { TRemoveUserSchema } from "@kdx/validators/trpc/team";
 
+import type { TProtectedProcedureContext } from "../../trpc";
+
 interface RemoveUserOptions {
-  ctx: {
-    session: Session;
-    prisma: PrismaClient;
-  };
+  ctx: TProtectedProcedureContext;
   input: TRemoveUserSchema;
 }
 

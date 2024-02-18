@@ -1,20 +1,16 @@
 import { TRPCError } from "@trpc/server";
 import cuid from "cuid";
 
-import type { Session } from "@kdx/auth";
-import type { PrismaClient } from "@kdx/db";
 import type { TInviteInputSchema } from "@kdx/validators/trpc/invitation";
 import { kodixNotificationFromEmail } from "@kdx/react-email/constants";
 import TeamInvite from "@kdx/react-email/team-invite";
 import { getBaseKdxUrl, getSuccessesAndErrors } from "@kdx/shared";
 
+import type { TProtectedProcedureContext } from "../../../trpc";
 import { sendEmail } from "../../../internal/email/email";
 
 interface InviteOptions {
-  ctx: {
-    session: Session;
-    prisma: PrismaClient;
-  };
+  ctx: TProtectedProcedureContext;
   input: TInviteInputSchema;
 }
 

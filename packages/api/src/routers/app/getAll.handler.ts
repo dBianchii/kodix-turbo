@@ -1,13 +1,9 @@
 import { TRPCError } from "@trpc/server";
 
-import type { Session } from "@kdx/auth";
-import type { PrismaClient } from "@kdx/db";
+import type { TPublicProcedureContext } from "../../trpc";
 
 interface GetAllOptions {
-  ctx: {
-    session: Session | null;
-    prisma: PrismaClient;
-  };
+  ctx: TPublicProcedureContext;
 }
 
 export const getAllHandler = async ({ ctx }: GetAllOptions) => {

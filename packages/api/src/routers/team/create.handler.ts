@@ -1,12 +1,11 @@
-import type { inferProcedureBuilderResolverOptions } from "@trpc/server";
 import { revalidateTag } from "next/cache";
 
 import type { TCreateInputSchema } from "@kdx/validators/trpc/team";
 
-import type { protectedProcedure } from "../../trpc";
+import type { TProtectedProcedureContext } from "../../trpc";
 
 interface CreateOptions {
-  ctx: inferProcedureBuilderResolverOptions<typeof protectedProcedure>["ctx"];
+  ctx: TProtectedProcedureContext;
   input: TCreateInputSchema;
 }
 

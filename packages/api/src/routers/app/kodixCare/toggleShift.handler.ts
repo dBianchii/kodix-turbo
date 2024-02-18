@@ -1,12 +1,12 @@
 import { TRPCError } from "@trpc/server";
 
-import type { Session } from "@kdx/auth";
-import type { Prisma, PrismaClient } from "@kdx/db";
+import type { Prisma } from "@kdx/db";
 import dayjs from "@kdx/dayjs";
 import { kodixNotificationFromEmail } from "@kdx/react-email/constants";
 import WarnPreviousShiftNotEnded from "@kdx/react-email/warn-previous-shift-not-ended";
 import { kodixCareAppId } from "@kdx/shared";
 
+import type { TProtectedProcedureContext } from "../../../trpc";
 import { sendEmail } from "../../../internal/email/email";
 import { getAllHandler } from "../calendar/getAll.handler";
 import { getConfigHandler } from "../getConfig.handler";
@@ -14,10 +14,7 @@ import { saveConfigHandler } from "../saveConfig.handler";
 import { getCurrentCareShiftHandler } from "./getCurrentCareShift.handler";
 
 interface ToggleShiftOptions {
-  ctx: {
-    session: Session;
-    prisma: PrismaClient;
-  };
+  ctx: TProtectedProcedureContext;
 }
 
 /**Starts a new shift and ends the previous one */

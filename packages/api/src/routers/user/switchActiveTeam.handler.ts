@@ -1,15 +1,12 @@
 import { revalidateTag } from "next/cache";
 import { TRPCError } from "@trpc/server";
 
-import type { Session } from "@kdx/auth";
-import type { PrismaClient } from "@kdx/db";
 import type { TSwitchActiveTeamInputSchema } from "@kdx/validators/trpc/user";
 
+import type { TProtectedProcedureContext } from "../../trpc";
+
 interface SwitchActiveTeamOptions {
-  ctx: {
-    session: Session;
-    prisma: PrismaClient;
-  };
+  ctx: TProtectedProcedureContext;
   input: TSwitchActiveTeamInputSchema;
 }
 

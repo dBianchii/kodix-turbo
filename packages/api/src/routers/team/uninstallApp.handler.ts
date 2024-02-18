@@ -1,14 +1,11 @@
 import { revalidateTag } from "next/cache";
 
-import type { Session } from "@kdx/auth";
-import type { PrismaClient } from "@kdx/db";
 import type { TUninstallAppSchema } from "@kdx/validators/trpc/team";
 
+import type { TProtectedProcedureContext } from "../../trpc";
+
 interface UninstallAppOptions {
-  ctx: {
-    session: Session;
-    prisma: PrismaClient;
-  };
+  ctx: TProtectedProcedureContext;
   input: TUninstallAppSchema;
 }
 
