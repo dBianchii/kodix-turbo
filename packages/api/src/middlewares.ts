@@ -1,19 +1,16 @@
 import { experimental_standaloneMiddleware, TRPCError } from "@trpc/server";
 
-import type { Session } from "@kdx/auth";
 import type { AppPermissionIds, KodixAppId } from "@kdx/shared";
 import { getAppName, kodixCareAppId } from "@kdx/shared";
 
-import type { createTRPCContext } from "./trpc";
+import type { TProtectedProcedureContext } from "./trpc";
 
 /**
  *  Helper/factory that returns a reusable middleware that checks if a certain app is installed for the current team
  */
 const appInstalledMiddlewareFactory = (appId: KodixAppId) =>
   experimental_standaloneMiddleware<{
-    ctx: Awaited<ReturnType<typeof createTRPCContext>> & {
-      session: Session;
-    };
+    ctx: TProtectedProcedureContext;
   }>().create(async ({ ctx, next }) => {
     const team = await ctx.prisma.team.findUnique({
       where: { id: ctx.session.user.activeTeamId },
@@ -40,9 +37,7 @@ export const kodixCareInstalledMiddleware =
 
 export const appPermissionMiddleware = (permissionId: AppPermissionIds) =>
   experimental_standaloneMiddleware<{
-    ctx: Awaited<ReturnType<typeof createTRPCContext>> & {
-      session: Session;
-    };
+    ctx: TProtectedProcedureContext;
   }>().create(async ({ ctx, next }) => {
     const foundPermission = await ctx.prisma.teamAppRole.findFirst({
       where: {
