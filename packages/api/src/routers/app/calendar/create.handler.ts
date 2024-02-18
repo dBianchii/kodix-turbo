@@ -1,14 +1,11 @@
 import { RRule } from "rrule";
 
-import type { Session } from "@kdx/auth";
-import type { PrismaClient } from "@kdx/db";
 import type { TCreateInput } from "@kdx/validators/trpc/app/calendar";
 
+import type { TProtectedProcedureContext } from "../../../trpc";
+
 interface CreateOptions {
-  ctx: {
-    session: Session;
-    prisma: PrismaClient;
-  };
+  ctx: TProtectedProcedureContext;
   input: TCreateInput;
 }
 

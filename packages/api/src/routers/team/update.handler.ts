@@ -1,14 +1,11 @@
 import { revalidateTag } from "next/cache";
 
-import type { Session } from "@kdx/auth";
-import type { PrismaClient } from "@kdx/db";
 import type { TUpdateInputSchema } from "@kdx/validators/trpc/team";
 
+import type { TUserAndTeamLimitedProcedureContext } from "../../customProcedures";
+
 interface CreateHandler {
-  ctx: {
-    session: Session;
-    prisma: PrismaClient;
-  };
+  ctx: TUserAndTeamLimitedProcedureContext;
   input: TUpdateInputSchema;
 }
 

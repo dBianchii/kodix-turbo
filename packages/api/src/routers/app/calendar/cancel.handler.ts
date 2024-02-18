@@ -1,15 +1,12 @@
 import { TRPCError } from "@trpc/server";
 import { RRule, rrulestr } from "rrule";
 
-import type { Session } from "@kdx/auth";
-import type { PrismaClient } from "@kdx/db";
 import type { TCancelInput } from "@kdx/validators/trpc/app/calendar";
 
+import type { TProtectedProcedureContext } from "../../../trpc";
+
 interface CancelOptions {
-  ctx: {
-    session: Session;
-    prisma: PrismaClient;
-  };
+  ctx: TProtectedProcedureContext;
   input: TCancelInput;
 }
 

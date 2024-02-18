@@ -1,17 +1,13 @@
 import { TRPCError } from "@trpc/server";
 
-import type { Session } from "@kdx/auth";
-import type { PrismaClient } from "@kdx/db";
 import type { TDoCheckoutForShiftInput } from "@kdx/validators/trpc/app/kodixCare";
 import dayjs from "@kdx/dayjs";
 
+import type { TProtectedProcedureContext } from "../../../trpc";
 import { getCurrentCareShiftHandler } from "./getCurrentCareShift.handler";
 
 interface DoCheckoutForShiftOptions {
-  ctx: {
-    session: Session;
-    prisma: PrismaClient;
-  };
+  ctx: TProtectedProcedureContext;
   input: TDoCheckoutForShiftInput;
 }
 

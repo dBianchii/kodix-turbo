@@ -1,13 +1,11 @@
-import type { Session } from "@kdx/auth";
-import type { Prisma, PrismaClient } from "@kdx/db";
+import type { Prisma } from "@kdx/db";
 import type { TSaveConfigInput } from "@kdx/validators/trpc/app";
 import { appIdToAppTeamConfigSchema } from "@kdx/validators";
 
+import type { TProtectedProcedureContext } from "../../trpc";
+
 interface SaveConfigOptions {
-  ctx: {
-    session: Session;
-    prisma: PrismaClient;
-  };
+  ctx: TProtectedProcedureContext;
   input: TSaveConfigInput;
 }
 

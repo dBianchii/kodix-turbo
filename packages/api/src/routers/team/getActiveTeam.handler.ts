@@ -1,11 +1,7 @@
-import type { Session } from "@kdx/auth";
-import type { PrismaClient } from "@kdx/db";
+import type { TProtectedProcedureContext } from "../../trpc";
 
 interface GetActiveTeamOptions {
-  ctx: {
-    session: Session;
-    prisma: PrismaClient;
-  };
+  ctx: TProtectedProcedureContext;
 }
 
 export const getActiveTeamHandler = async ({ ctx }: GetActiveTeamOptions) => {

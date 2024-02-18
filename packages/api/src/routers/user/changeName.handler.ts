@@ -1,12 +1,9 @@
-import type { Session } from "@kdx/auth";
-import type { PrismaClient } from "@kdx/db";
 import type { TChangeNameInputSchema } from "@kdx/validators/trpc/user";
 
+import type { TProtectedProcedureContext } from "../../trpc";
+
 interface ChangeNameOptions {
-  ctx: {
-    session: Session;
-    prisma: PrismaClient;
-  };
+  ctx: TProtectedProcedureContext;
   input: TChangeNameInputSchema;
 }
 

@@ -1,12 +1,9 @@
-import type { Session } from "@kdx/auth";
-import type { PrismaClient } from "@kdx/db";
 import type { TCreateInputSchema } from "@kdx/validators/trpc/app/todo";
 
+import type { TProtectedProcedureContext } from "../../../trpc";
+
 interface CreateOptions {
-  ctx: {
-    session: Session;
-    prisma: PrismaClient;
-  };
+  ctx: TProtectedProcedureContext;
   input: TCreateInputSchema;
 }
 
