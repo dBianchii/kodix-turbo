@@ -1,21 +1,16 @@
+import type { inferProcedureBuilderResolverOptions } from "@trpc/server";
 import { revalidateTag } from "next/cache";
 import { TRPCError } from "@trpc/server";
 import cuid from "cuid";
 
-import type { Session } from "@kdx/auth";
-import type { Prisma, PrismaClient } from "@kdx/db";
+import type { Prisma } from "@kdx/db";
 import type { TInstallAppInputSchema } from "@kdx/validators/trpc/team";
 import { appIdToAdminRole_defaultIdMap } from "@kdx/shared";
 
+import type { isTeamOwnerProcedure } from "../../customProcedures";
+
 interface InstallAppOptions {
-  ctx: {
-    session: Session;
-    prisma: PrismaClient;
-    team: {
-      //TODO:
-      id: string;
-    };
-  };
+  ctx: inferProcedureBuilderResolverOptions<typeof isTeamOwnerProcedure>["ctx"];
   input: TInstallAppInputSchema;
 }
 

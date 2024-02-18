@@ -1,14 +1,12 @@
+import type { inferProcedureBuilderResolverOptions } from "@trpc/server";
 import { revalidateTag } from "next/cache";
 
-import type { Session } from "@kdx/auth";
-import type { PrismaClient } from "@kdx/db";
 import type { TCreateInputSchema } from "@kdx/validators/trpc/team";
 
+import type { protectedProcedure } from "../../trpc";
+
 interface CreateOptions {
-  ctx: {
-    session: Session;
-    prisma: PrismaClient;
-  };
+  ctx: inferProcedureBuilderResolverOptions<typeof protectedProcedure>["ctx"];
   input: TCreateInputSchema;
 }
 
