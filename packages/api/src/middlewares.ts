@@ -66,3 +66,31 @@ export const appPermissionMiddleware = (permissionId: AppPermissionIds) =>
 
     return next({ ctx });
   });
+
+/**
+ * Same middleware as what is returned by `appInstalledMiddlewareFactory` but does it dynamically based on appId input.
+ * This requires the input to have a `appId` as a property.
+ */
+export const appInstalledMiddleware = experimental_standaloneMiddleware<{
+  ctx: TProtectedProcedureContext;
+  input: { appId: KodixAppId };
+}>().create(async ({ ctx, input, next }) => {
+  const team = await ctx.prisma.team.findUnique({
+    where: { id: ctx.session.user.activeTeamId },
+    select: {
+      ActiveApps: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  });
+
+  if (!team?.ActiveApps.some((x) => x.id === input.appId))
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: `${getAppName(input.appId)} is not installed`,
+    });
+
+  return next({ ctx });
+});

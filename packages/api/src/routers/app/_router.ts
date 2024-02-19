@@ -1,5 +1,6 @@
 import { ZGetConfigInput, ZSaveConfigInput } from "@kdx/validators/trpc/app";
 
+import { appInstalledMiddleware } from "../../middlewares";
 import {
   createTRPCRouter,
   protectedProcedure,
@@ -20,11 +21,13 @@ export const appRouter = createTRPCRouter({
   getAll: publicProcedure.query(async (opts) => await getAllHandler(opts)),
   getConfig: protectedProcedure
     .input(ZGetConfigInput)
+    .use(appInstalledMiddleware)
     .query(async (opts) => await getConfigHandler(opts)),
   getInstalled: protectedProcedure.query(
     async (opts) => await getInstalledHandler(opts),
   ),
-  saveConfig: protectedProcedure //TODO: dynamically check if app is installed?
+  saveConfig: protectedProcedure
     .input(ZSaveConfigInput)
+    .use(appInstalledMiddleware)
     .mutation(async (opts) => await saveConfigHandler(opts)),
 });
