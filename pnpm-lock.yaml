@@ -109,14 +109,14 @@ importers:
         specifier: ^8.11.8
         version: 8.11.8(react-dom@18.2.0)(react@18.2.0)
       '@trpc/client':
-        specifier: 11.0.0-next-beta.289
-        version: 11.0.0-next-beta.289(@trpc/server@11.0.0-next-beta.289)
+        specifier: 11.0.0-next-beta.294
+        version: 11.0.0-next-beta.294(@trpc/server@11.0.0-next-beta.294)
       '@trpc/react-query':
-        specifier: 11.0.0-next-beta.289
-        version: 11.0.0-next-beta.289(@tanstack/react-query@5.20.1)(@trpc/client@11.0.0-next-beta.289)(@trpc/server@11.0.0-next-beta.289)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 11.0.0-next-beta.294
+        version: 11.0.0-next-beta.294(@tanstack/react-query@5.20.1)(@trpc/client@11.0.0-next-beta.294)(@trpc/server@11.0.0-next-beta.294)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/server':
-        specifier: 11.0.0-next-beta.289
-        version: 11.0.0-next-beta.289
+        specifier: 11.0.0-next-beta.294
+        version: 11.0.0-next-beta.294
       '@upstash/ratelimit':
         specifier: ^1.0.1
         version: 1.0.1
@@ -263,8 +263,8 @@ importers:
         specifier: ^2.2.2
         version: 2.2.2
       '@trpc/server':
-        specifier: 11.0.0-next-beta.289
-        version: 11.0.0-next-beta.289
+        specifier: 11.0.0-next-beta.294
+        version: 11.0.0-next-beta.294
       '@upstash/ratelimit':
         specifier: ^1.0.1
         version: 1.0.1
@@ -294,7 +294,7 @@ importers:
         version: 2.2.1
       trpc-openapi:
         specifier: ^1.2.0
-        version: 1.2.0(@trpc/server@11.0.0-next-beta.289)(zod@3.22.4)
+        version: 1.2.0(@trpc/server@11.0.0-next-beta.294)(zod@3.22.4)
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -331,7 +331,7 @@ importers:
         version: 3.2.5
       trpc-tools:
         specifier: 0.12.1-canary.2dfb1delosg
-        version: 0.12.1-canary.2dfb1delosg(@trpc/server@11.0.0-next-beta.289)(typanion@3.14.0)(typescript@5.3.3)(zod@3.22.4)
+        version: 0.12.1-canary.2dfb1delosg(@trpc/server@11.0.0-next-beta.294)(typanion@3.14.0)(typescript@5.3.3)(zod@3.22.4)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -4480,32 +4480,32 @@ packages:
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
     dev: true
 
-  /@trpc/client@11.0.0-next-beta.289(@trpc/server@11.0.0-next-beta.289):
-    resolution: {integrity: sha512-jqBzRRXNO9xn+onayc8BH6CDBDFA3NWGxXkuppTm2yu3r7wcbl5S7S5y6SvGGmyVqISoQT3u0t4dz9AZOuETHQ==}
+  /@trpc/client@11.0.0-next-beta.294(@trpc/server@11.0.0-next-beta.294):
+    resolution: {integrity: sha512-9rK+bwg7TPNsvisDAanaAiR2TYmgFA2zNll4TexUGKQaQ09dt6ZPdFDqWIZqa33cyoXeK9Z5LQptr3NVfaSjNA==}
     peerDependencies:
-      '@trpc/server': 11.0.0-next-beta.289+27a9183d8
+      '@trpc/server': 11.0.0-next-beta.294+1e32ff91b
     dependencies:
-      '@trpc/server': 11.0.0-next-beta.289
+      '@trpc/server': 11.0.0-next-beta.294
     dev: false
 
-  /@trpc/react-query@11.0.0-next-beta.289(@tanstack/react-query@5.20.1)(@trpc/client@11.0.0-next-beta.289)(@trpc/server@11.0.0-next-beta.289)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-SAn09DmZ4eFYLS0cCHOVNvRHJhHZ2ssUj4LUTj56wym0MieaCSrcxTqiolnaMfF+mWc1SJlLOzebrxaTHPwJSw==}
+  /@trpc/react-query@11.0.0-next-beta.294(@tanstack/react-query@5.20.1)(@trpc/client@11.0.0-next-beta.294)(@trpc/server@11.0.0-next-beta.294)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-behVOMsJRh73wltFrLc7J3ulWO/A2O529oDWlFZagtM2i/WWM2/7CVh3iL1MgW5pRB3hwC9mARKpGb80ZN4V0A==}
     peerDependencies:
       '@tanstack/react-query': ^5.0.0
-      '@trpc/client': 11.0.0-next-beta.289+27a9183d8
-      '@trpc/server': 11.0.0-next-beta.289+27a9183d8
+      '@trpc/client': 11.0.0-next-beta.294+1e32ff91b
+      '@trpc/server': 11.0.0-next-beta.294+1e32ff91b
       react: '>=18.2.0'
       react-dom: '>=18.2.0'
     dependencies:
       '@tanstack/react-query': 5.20.1(react@18.2.0)
-      '@trpc/client': 11.0.0-next-beta.289(@trpc/server@11.0.0-next-beta.289)
-      '@trpc/server': 11.0.0-next-beta.289
+      '@trpc/client': 11.0.0-next-beta.294(@trpc/server@11.0.0-next-beta.294)
+      '@trpc/server': 11.0.0-next-beta.294
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@trpc/server@11.0.0-next-beta.289:
-    resolution: {integrity: sha512-HfBVYUShvktA6M78jrCsRLyeE6l2NdaPJxKg095h4vk0bgWVfz0MgEOCQR/hjGdw0EFLEVcZANhqTZaHEzr36w==}
+  /@trpc/server@11.0.0-next-beta.294:
+    resolution: {integrity: sha512-wwz78kfl4c8WQ3ytjzYf3SM8uxhvhSRYVxqqChPM+IbDb9scfNyEsZOUzSWds8brFNgO3LHeHYkP0l8S4YdDXA==}
 
   /@tsconfig/node10@1.0.9:
     resolution: {integrity: sha512-jNsYVVxU8v5g43Erja32laIDHXeoNvFEpX33OK4d6hljo3jDhCBDhx5dhCCTMWUojscpAagGiRkBKxpdl9fxqA==}
@@ -11055,13 +11055,13 @@ packages:
     engines: {node: '>=8'}
     dev: false
 
-  /trpc-openapi@1.2.0(@trpc/server@11.0.0-next-beta.289)(zod@3.22.4):
+  /trpc-openapi@1.2.0(@trpc/server@11.0.0-next-beta.294)(zod@3.22.4):
     resolution: {integrity: sha512-pfYoCd/3KYXWXvUPZBKJw455OOwngKN/6SIcj7Yit19OMLJ+8yVZkEvGEeg5wUSwfsiTdRsKuvqkRPXVSwV7ew==}
     peerDependencies:
       '@trpc/server': ^10.0.0
       zod: ^3.14.4
     dependencies:
-      '@trpc/server': 11.0.0-next-beta.289
+      '@trpc/server': 11.0.0-next-beta.294
       co-body: 6.1.0
       h3: 1.10.1
       lodash.clonedeep: 4.5.0
@@ -11071,7 +11071,7 @@ packages:
       zod-to-json-schema: 3.22.3(zod@3.22.4)
     dev: false
 
-  /trpc-tools@0.12.1-canary.2dfb1delosg(@trpc/server@11.0.0-next-beta.289)(typanion@3.14.0)(typescript@5.3.3)(zod@3.22.4):
+  /trpc-tools@0.12.1-canary.2dfb1delosg(@trpc/server@11.0.0-next-beta.294)(typanion@3.14.0)(typescript@5.3.3)(zod@3.22.4):
     resolution: {integrity: sha512-XLVrTeYmH0zGhDiuSBnfbuwCQN2jOqMh6hVZ5dO45eVm7gLPUk2yA/pxtnU/fOjro7YKhcQvLDhOc6F+diOiRg==}
     hasBin: true
     peerDependencies:
@@ -11084,7 +11084,7 @@ packages:
       '@onetyped/core': 0.1.1
       '@onetyped/typescript': 1.0.1(@onetyped/core@0.1.1)(typescript@5.3.3)
       '@onetyped/zod': 1.0.1(@onetyped/core@0.1.1)(zod@3.22.4)
-      '@trpc/server': 11.0.0-next-beta.289
+      '@trpc/server': 11.0.0-next-beta.294
       bundle-require: 4.0.2(esbuild@0.18.20)
       chalk: 5.3.0
       cli-truncate: 3.1.0
