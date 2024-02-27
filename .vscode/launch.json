@@ -10,22 +10,6 @@
       "skipFiles": ["<node_internals>/**"]
     },
     {
-      "name": "stays-ai",
-      "type": "node-terminal",
-      "request": "launch",
-      "command": "pnpm dev",
-      "cwd": "${workspaceFolder}/apps/stays-ai/",
-      "skipFiles": ["<node_internals>/**"]
-    },
-    {
-      "name": "kodix-care",
-      "type": "node-terminal",
-      "request": "launch",
-      "command": "pnpm dev",
-      "cwd": "${workspaceFolder}/apps/kodix-care/",
-      "skipFiles": ["<node_internals>/**"]
-    },
-    {
       "name": "react-email",
       "type": "node-terminal",
       "request": "launch",

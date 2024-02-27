@@ -18,7 +18,7 @@
     "@kdx/prettier-config": "workspace:^0.1.0",
     "@kdx/tailwind-config": "workspace:^0.1.0",
     "@kdx/tsconfig": "workspace:^0.1.0",
-    "@types/node": "^20.11.19",
+    "@types/node": "^20.11.21",
     "eslint": "^8.56.0",
     "h3": "^1.10.1",
     "nitropack": "^2.8.1",
