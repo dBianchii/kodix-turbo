@@ -12,6 +12,7 @@ import {
   userAndTeamLimitedProcedure,
 } from "../../customProcedures";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
+import { appRoleRouter } from "./appRole/_router";
 import { createHandler } from "./create.handler";
 import { getActiveTeamHandler } from "./getActiveTeam.handler";
 import { getAllForLoggedUserHandler } from "./getAllForLoggedUser.handler";
@@ -24,6 +25,7 @@ import { uninstallAppHandler } from "./uninstallApp.handler";
 import { updateHandler } from "./update.handler";
 
 export const teamRouter = createTRPCRouter({
+  appRole: appRoleRouter,
   invitation: invitationRouter,
   create: protectedProcedure
     .input(ZCreateInputSchema)

@@ -29,15 +29,22 @@ export const appIdToPathname = {
   [kodixCareAppId]: "kodixCare",
   [calendarAppId]: "calendar",
   [todoAppId]: "todo",
-};
+} as const;
+export type AppPathnames =
+  (typeof appIdToPathname)[keyof typeof appIdToPathname];
 
-/**
- * @description Gets the app pathname from the app id
- */
-const getAppPathname = (appId: KodixAppId) => {
-  //? Helper to get the app pathname (for app url or app image url)
-  return appIdToPathname[appId];
+const reverseRecord = <T extends PropertyKey, U extends PropertyKey>(
+  input: Record<T, U>,
+) => {
+  return Object.fromEntries(
+    Object.entries(input).map(([key, value]) => [value, key]),
+  ) as Record<U, T>;
 };
+/**
+ * @description Does exactly the opposite of appIdToPathname
+ * @see appIdToPathname
+ */
+export const appPathnameToAppId = reverseRecord(appIdToPathname);
 
 /**
  * @description Prefix for app urls (ex: /apps/kodixCare)
@@ -48,7 +55,7 @@ export const appUrlPrefix = "/apps";
  * @description Gets the app url from the app id
  */
 export const getAppUrl = (appId: KodixAppId) => {
-  const pathname = getAppPathname(appId);
+  const pathname = appIdToPathname[appId];
   return `${appUrlPrefix}/${pathname}`;
 };
 
@@ -56,6 +63,6 @@ export const getAppUrl = (appId: KodixAppId) => {
  * @description Gets the app icon url from the app id
  */
 export const getAppIconUrl = (appId: KodixAppId) => {
-  const pathname = getAppPathname(appId);
+  const pathname = appIdToPathname[appId];
   return `/appIcons/${pathname}.png`;
 };

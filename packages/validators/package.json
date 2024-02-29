@@ -5,13 +5,14 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./trpc/team": "./src/trpc/team/team.ts",
-    "./trpc/invitation": "./src/trpc/team/invitation/invitation.ts",
-    "./trpc/user": "./src/trpc/user.ts",
     "./trpc/app": "./src/trpc/app/app.ts",
     "./trpc/app/calendar": "./src/trpc/app/calendar/calendar.ts",
     "./trpc/app/kodixCare": "./src/trpc/app/kodixCare/kodixCare.ts",
-    "./trpc/app/todo": "./src/trpc/app/todo/todo.ts"
+    "./trpc/app/todo": "./src/trpc/app/todo/todo.ts",
+    "./trpc/team": "./src/trpc/team/team.ts",
+    "./trpc/team/appRole": "./src/trpc/team/appRole/appRole.ts",
+    "./trpc/invitation": "./src/trpc/team/invitation/invitation.ts",
+    "./trpc/user": "./src/trpc/user.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",

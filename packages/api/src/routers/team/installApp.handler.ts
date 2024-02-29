@@ -6,10 +6,10 @@ import type { Prisma } from "@kdx/db";
 import type { TInstallAppInputSchema } from "@kdx/validators/trpc/team";
 import { appIdToAdminRole_defaultIdMap } from "@kdx/shared";
 
-import type { TisTeamOwnerProcedureContext } from "../../customProcedures";
+import type { TIsTeamOwnerProcedureContext } from "../../customProcedures";
 
 interface InstallAppOptions {
-  ctx: TisTeamOwnerProcedureContext;
+  ctx: TIsTeamOwnerProcedureContext;
   input: TInstallAppInputSchema;
 }
 

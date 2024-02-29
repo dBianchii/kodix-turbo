@@ -69,6 +69,6 @@ export const isTeamOwnerProcedure = protectedProcedure.use(
     });
   },
 );
-export type TisTeamOwnerProcedureContext = inferProcedureBuilderResolverOptions<
+export type TIsTeamOwnerProcedureContext = inferProcedureBuilderResolverOptions<
   typeof isTeamOwnerProcedure
 >["ctx"];
