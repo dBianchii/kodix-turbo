@@ -15,9 +15,35 @@ import MaxWidthWrapper from "~/app/_components/max-width-wrapper";
 import { getAppUrl } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/server";
 
+interface CustomApp {
+  appName: string;
+  appUrl: string;
+  iconPath: string;
+  shown?: boolean;
+}
+
 export default async function Team() {
   const session = await auth();
   if (!session) return redirect("/");
+
+  const customApps: CustomApp[] = [
+    {
+      appName: "App Store",
+      appUrl: "/apps",
+      iconPath: "/appIcons/appstore.png",
+    },
+    {
+      appName: "Settings",
+      appUrl: "/team/settings",
+      iconPath: "/appIcons/settings.png",
+    },
+    {
+      appName: "Dev Settings",
+      appUrl: "/devsettings",
+      iconPath: "/appIcons/devsettings.png",
+      shown: !!session.user.kodixAdmin,
+    },
+  ].filter((app) => app.shown);
 
   return (
     <main className="flex-1 py-1">
@@ -28,51 +54,48 @@ export default async function Team() {
           </span>
         </div>
         <Separator className="mb-8 mt-1" />
-        <Suspense fallback={<AppsSectionSkeleton />}>
-          <AppsSection />
+        <Suspense fallback={<AppsSectionSkeleton customApps={customApps} />}>
+          <AppsSection customApps={customApps} />
         </Suspense>
       </MaxWidthWrapper>
     </main>
   );
 }
 
-function AppsSectionSkeleton() {
-  const numberOfApps = 5;
+function AppsSectionSkeleton({ customApps }: { customApps: CustomApp[] }) {
+  const numberOfSkeletonApps = 5;
+
   return (
     <div className="flex flex-row items-center space-x-10">
-      <CustomKodixIcon
-        appName={"App Store"}
-        appUrl={"/apps"}
-        iconPath={"/appIcons/appstore.png"}
-      />
-      <CustomKodixIcon
-        appName={"Settings"}
-        appUrl={"/team/settings"}
-        iconPath={"/appIcons/settings.png"}
-      />
-      {Array.from({ length: numberOfApps }).map((_, i) => (
+      {customApps.map((app) => (
+        <CustomKodixIcon
+          appName={app.appName}
+          appUrl={app.appUrl}
+          iconPath={app.iconPath}
+          key={app.appName}
+        />
+      ))}
+      {Array.from({ length: numberOfSkeletonApps }).map((_, i) => (
         <Skeleton className="mb-2 h-[80px] w-[80px] rounded-xl" key={i} />
       ))}
     </div>
   );
 }
 
-async function AppsSection() {
+async function AppsSection({ customApps }: { customApps: CustomApp[] }) {
   const apps = await api.app.getInstalled();
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
   return (
     <div className="flex flex-row items-center space-x-10">
-      <CustomKodixIcon
-        appName={"App Store"}
-        appUrl={"/apps"}
-        iconPath={"/appIcons/appstore.png"}
-      />
-      <CustomKodixIcon
-        appName={"Settings"}
-        appUrl={"/team/settings"}
-        iconPath={"/appIcons/settings.png"}
-      />
+      {customApps.map((app) => (
+        <CustomKodixIcon
+          appName={app.appName}
+          appUrl={app.appUrl}
+          iconPath={app.iconPath}
+          key={app.appName}
+        />
+      ))}
       {apps?.map((app) => (
         <Link
           key={app.id}

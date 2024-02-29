@@ -323,6 +323,8 @@ model User {
   Teams         Team[]    @relation("UserTeam")
   Todos         Todo[]
 
+  kodixAdmin Boolean @default(false)
+
   activeTeamId String
   ActiveTeam   Team   @relation("UserActiveTeam", fields: [activeTeamId], references: [id], onUpdate: NoAction)
 

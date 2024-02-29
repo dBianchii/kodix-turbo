@@ -7,7 +7,7 @@ import EmailProvider from "next-auth/providers/email";
 // import EmailProvider from "next-auth/providers/email";
 import Google from "next-auth/providers/google";
 
-import type { PrismaClient, User } from "@kdx/db";
+import type { Prisma, PrismaClient, User } from "@kdx/db";
 import { prisma } from "@kdx/db";
 import { kodixNotificationFromEmail } from "@kdx/react-email/constants";
 
@@ -23,16 +23,15 @@ declare module "next-auth" {
       activeTeamId: string; // Might need fix
       activeTeamName: string;
       email: string;
+      kodixAdmin: boolean;
     } & DefaultSession["user"];
   }
 }
 
-const customUserInclude = {
-  include: {
-    ActiveTeam: {
-      select: {
-        name: true,
-      },
+const customUserInclude: Prisma.UserInclude = {
+  ActiveTeam: {
+    select: {
+      name: true,
     },
   },
 };
@@ -85,7 +84,7 @@ function KodixAdapter(prisma: PrismaClient) {
         where: {
           id,
         },
-        ...customUserInclude,
+        include: customUserInclude,
       });
       if (!user) return null;
       return { ...user, activeTeamName: user.ActiveTeam.name };
@@ -93,7 +92,7 @@ function KodixAdapter(prisma: PrismaClient) {
     getUserByEmail: async (email: User["email"]) => {
       const user = await prisma.user.findUnique({
         where: { email },
-        ...customUserInclude,
+        include: customUserInclude,
       });
       if (!user) return null;
       return { ...user, activeTeamName: user.ActiveTeam.name };
@@ -116,7 +115,7 @@ function KodixAdapter(prisma: PrismaClient) {
         where: { sessionToken },
         include: {
           User: {
-            ...customUserInclude,
+            include: customUserInclude,
           },
         },
       });
@@ -160,6 +159,9 @@ export const {
       opts.session.user.activeTeamId = (
         opts.user as typeof opts.user & { activeTeamId: string }
       ).activeTeamId;
+      opts.session.user.kodixAdmin = (
+        opts.user as typeof opts.user & { kodixAdmin: boolean }
+      ).kodixAdmin;
       return opts.session;
     },
   },

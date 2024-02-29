@@ -30,6 +30,9 @@ export const uninstallAppHandler = async ({
       },
     },
   });
+
+  //TODO: remove all data from the app.
+
   revalidateTag("getAllForLoggedUser");
 
   return uninstalledApp;
