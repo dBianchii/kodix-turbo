@@ -74,6 +74,12 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
       router.refresh();
       toast(`App ${appName} uninstalled`);
     },
+    onError: () => {
+      toast.error(`Error uninstalling ${appName}`);
+    },
+    onSettled: () => {
+      setUninstalling(false);
+    },
   });
 
   const isActive = true;

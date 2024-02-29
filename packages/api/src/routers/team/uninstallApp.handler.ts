@@ -23,6 +23,11 @@ export const uninstallAppHandler = async ({
           id: input.appId,
         },
       },
+      TeamAppRoles: {
+        deleteMany: {
+          appId: input.appId,
+        },
+      },
     },
   });
   revalidateTag("getAllForLoggedUser");
