@@ -37,12 +37,12 @@ export default async function Team() {
       appUrl: "/team/settings",
       iconPath: "/appIcons/settings.png",
     },
-    {
-      appName: "Dev Settings",
-      appUrl: "/devsettings",
-      iconPath: "/appIcons/devsettings.png",
-      shown: !!session.user.kodixAdmin,
-    },
+    // {
+    //   appName: "Dev Settings",
+    //   appUrl: "/devsettings",
+    //   iconPath: "/appIcons/devsettings.png",
+    //   shown: !!session.user.kodixAdmin,
+    // },
   ].filter((app) => app.shown);
 
   return (

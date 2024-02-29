@@ -42,6 +42,21 @@ export const apps: Prisma.AppUpsertArgs["create"][] = [
   },
 ];
 
+//TODO: definir abstracao de roles default em uma arvore como essa
+//TODO: Cada app deve ter um numero de permissoes definidas. E ao definir a arvore de roles com as suas permissoes, deve-se garantir que todas as permissoes estejam definidas.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const estrutura = {
+  apps: {
+    [kodixCareAppId]: {
+      Roles: {
+        name: "Admin",
+        description: "Admin do KodixCare",
+        permissions: [PKodixCare_CanToggleShiftId],
+      },
+    },
+  },
+};
+
 const appRole_defaults: Prisma.AppRole_defaultUpsertArgs["create"][] = [
   {
     id: todoAdminRoleDefaultId,
