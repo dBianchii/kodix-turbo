@@ -28,6 +28,5 @@ export const appRouter = createTRPCRouter({
   ),
   saveConfig: protectedProcedure
     .input(ZSaveConfigInput)
-    .use(appInstalledMiddleware)
     .mutation(async (opts) => await saveConfigHandler(opts)),
 });
