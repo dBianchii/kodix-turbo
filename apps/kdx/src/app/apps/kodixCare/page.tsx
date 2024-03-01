@@ -7,17 +7,18 @@ import { IoMdTime } from "react-icons/io";
 import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
 import { auth } from "@kdx/auth";
+import dayjs from "@kdx/dayjs";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Badge } from "@kdx/ui/badge";
 import { Label } from "@kdx/ui/label";
 
 import MaxWidthWrapper from "~/app/_components/max-width-wrapper";
 import { api } from "~/trpc/server";
-import KodixCareTable from "./_components/kodix-care-table";
+import DataTableKodixCare from "./_components/data-table-kodix-care";
 import { ToggleShiftButton } from "./_components/toggle-shift-button";
 
 export const dynamic = "force-dynamic"; //TODO: help me
-export default async function KodixCare() {
+export default async function KodixCarePage() {
   const session = await auth();
   if (!session) return redirect("/");
 
@@ -35,10 +36,24 @@ export default async function KodixCare() {
           </Suspense>
         </div>
         <div className="w-full">
-          <KodixCareTable />
+          <Suspense fallback={<ShiftSkeleton />}>
+            <KodixCareTable />
+          </Suspense>
         </div>
       </div>
     </MaxWidthWrapper>
+  );
+}
+
+async function KodixCareTable() {
+  const input = {
+    dateStart: dayjs.utc().startOf("day").toDate(),
+    dateEnd: dayjs.utc().endOf("day").toDate(),
+  };
+
+  const initialCareTasks = await api.app.kodixCare.getCareTasks(input);
+  return (
+    <DataTableKodixCare initialCareTasks={initialCareTasks} input={input} />
   );
 }
 

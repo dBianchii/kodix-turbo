@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import type { TDoCheckoutForShiftInput } from "@kdx/validators/trpc/app/kodixCare";
+import type { TDoCheckoutForShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import dayjs from "@kdx/dayjs";
 
 import type { TProtectedProcedureContext } from "../../../trpc";
@@ -8,7 +8,7 @@ import { getCurrentCareShiftHandler } from "./getCurrentCareShift.handler";
 
 interface DoCheckoutForShiftOptions {
   ctx: TProtectedProcedureContext;
-  input: TDoCheckoutForShiftInput;
+  input: TDoCheckoutForShiftInputSchema;
 }
 
 export const doCheckoutForShiftHandler = async ({
