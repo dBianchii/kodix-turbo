@@ -21,6 +21,9 @@ export const updateUserAssociationHandler = async ({
         },
       },
     },
+    select: {
+      id: true,
+    },
   });
 
   await ctx.prisma.user.update({
