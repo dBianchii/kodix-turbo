@@ -57,15 +57,3 @@ export const getAppDescription = (appId: KodixAppId) => {
   };
   return appIdToDescription[appId];
 };
-
-export const getAppRole_defaultRoleName = (roleId: AllAppRoles_defaults) => {
-  //TODO: Maybe store this in memory from db?
-  const roleIdToName = {
-    [todoAdminRoleDefaultId]: "Admin" as const,
-    [calendarAdminRoleDefaultId]: "Admin" as const,
-    [kodixCareAdminRoleDefaultId]: "Admin" as const,
-    [kodixCarePatientRoleDefaultId]: "Patient" as const,
-    [kodixCareCareGiverRoleDefaultId]: "CareGiver" as const,
-  };
-  return roleIdToName[roleId];
-};

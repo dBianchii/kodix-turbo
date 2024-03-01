@@ -1,20 +1,14 @@
 import {
-  calendarAdminRoleDefaultId,
   calendarAppId,
-  getAppRole_defaultRoleName,
   kdxPartnerId,
   kdxProductionURL,
-  kodixCareAdminRoleDefaultId,
   kodixCareAppId,
-  kodixCareCareGiverRoleDefaultId,
-  kodixCarePatientRoleDefaultId,
-  PKodixCare_CanToggleShiftId,
-  todoAdminRoleDefaultId,
   todoAppId,
 } from "@kdx/shared";
 
 import type { Prisma } from "..";
 import { prisma } from "..";
+import { appRoles_defaultTree } from "./appRoles_defaultTree";
 
 const devPartners: Prisma.DevPartnerUpsertArgs["create"][] = [
   {
@@ -42,74 +36,10 @@ export const apps: Prisma.AppUpsertArgs["create"][] = [
   },
 ];
 
-//TODO: definir abstracao de roles default em uma arvore como essa
-//TODO: Cada app deve ter um numero de permissoes definidas. E ao definir a arvore de roles com as suas permissoes, deve-se garantir que todas as permissoes estejam definidas.
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const estrutura = {
-  apps: {
-    [kodixCareAppId]: {
-      Roles: {
-        name: "Admin",
-        description: "Admin do KodixCare",
-        permissions: [PKodixCare_CanToggleShiftId],
-      },
-    },
-  },
-};
-
-const appRole_defaults: Prisma.AppRole_defaultUpsertArgs["create"][] = [
-  {
-    id: todoAdminRoleDefaultId,
-    name: getAppRole_defaultRoleName(todoAdminRoleDefaultId),
-    minUsers: 1,
-    maxUsers: 0,
-    appId: todoAppId,
-  },
-  {
-    id: calendarAdminRoleDefaultId,
-    name: getAppRole_defaultRoleName(calendarAdminRoleDefaultId),
-    minUsers: 1,
-    maxUsers: 0,
-    appId: calendarAppId,
-  },
-  {
-    id: kodixCarePatientRoleDefaultId,
-    name: getAppRole_defaultRoleName(kodixCarePatientRoleDefaultId),
-    minUsers: 1,
-    maxUsers: 1,
-    appId: kodixCareAppId,
-  },
-  {
-    id: kodixCareCareGiverRoleDefaultId,
-    name: getAppRole_defaultRoleName(kodixCareCareGiverRoleDefaultId),
-    minUsers: 1,
-    maxUsers: 0,
-    appId: kodixCareAppId,
-  },
-  {
-    id: kodixCareAdminRoleDefaultId,
-    name: getAppRole_defaultRoleName(kodixCareAdminRoleDefaultId),
-    minUsers: 1,
-    maxUsers: 0,
-    appId: kodixCareAppId,
-  },
-];
-
-const appPermissions: Prisma.AppPermissionUpsertArgs["create"][] = [
-  {
-    id: PKodixCare_CanToggleShiftId,
-    name: "CanToggleShift",
-    appId: kodixCareAppId,
-    AppRole_defaults: {
-      connect: {
-        id: kodixCareAdminRoleDefaultId,
-      },
-    },
-  },
-];
-
 async function main() {
   console.log("🌱 Seeding...");
+
+  validateSeedInput();
 
   await prisma.$transaction(
     async (tx) => {
@@ -131,34 +61,70 @@ async function main() {
           create: app,
         });
 
-      for (const role of appRole_defaults)
-        await tx.appRole_default.upsert({
-          where: {
-            id: role.id,
-          },
-          update: role,
-          create: role,
-        });
+      for (const [
+        appId,
+        { appRole_defaults, appPermissions },
+      ] of Object.entries(appRoles_defaultTree)) {
+        for (const { id, AppPermissions: _, ...role } of appRole_defaults) {
+          const updateOrCreate: Prisma.AppPermissionUpsertArgs["create"] = {
+            ...role,
+            appId,
+          };
+          await tx.appRole_default.upsert({
+            where: { id },
+            update: updateOrCreate,
+            create: updateOrCreate,
+          });
+        }
 
-      for (const appPermission of appPermissions)
-        await tx.appPermission.upsert({
-          where: {
-            id: appPermission.id,
-          },
-          update: appPermission,
-          create: {
+        for (const appPermission of appPermissions ?? []) {
+          const rolesToAdd = appRole_defaults
+            .filter((role) => role.AppPermissions.includes(appPermission.id))
+            .map((role) => ({ id: role.id }));
+
+          const create: Prisma.AppPermissionUpsertArgs["create"] = {
+            appId,
             ...appPermission,
             AppRole_defaults: {
-              connect: [
-                { id: kodixCareAdminRoleDefaultId },
-                { id: kodixCareCareGiverRoleDefaultId },
-              ],
+              connect: rolesToAdd,
             },
-          },
-        });
+          };
+
+          await tx.appPermission.upsert({
+            where: { id: appPermission.id },
+            update: {
+              ...create,
+              AppRole_defaults: {
+                set: [], //Disconnect all roles and reconnect them
+                connect: rolesToAdd,
+              },
+            },
+            create: create,
+          });
+        }
+      }
     },
     { maxWait: 1000000000 },
   );
+}
+
+function validateSeedInput() {
+  //? 1. Validate that all appPermissions are assigned to at least one role in their designated app
+  for (const [appId, { appRole_defaults, appPermissions }] of Object.entries(
+    appRoles_defaultTree,
+  )) {
+    const allPermissionsInRoles = appRole_defaults.flatMap(
+      (role) => role.AppPermissions,
+    );
+    for (const appPermission of appPermissions ?? []) {
+      if (!allPermissionsInRoles.includes(appPermission.id)) {
+        throw new Error(
+          `🌱 - ❌ Seed input validation failed! Permission ${appPermission.id} is not assigned to any role in app ${appId}`,
+        );
+      }
+    }
+  }
+  console.log("🌱 - ✅ Seed input validation passed!");
 }
 
 main()
