@@ -43,7 +43,7 @@ export default async function Team() {
     //   iconPath: "/appIcons/devsettings.png",
     //   shown: !!session.user.kodixAdmin,
     // },
-  ].filter((app) => app.shown);
+  ];
 
   return (
     <main className="flex-1 py-1">
