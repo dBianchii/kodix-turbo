@@ -7,7 +7,7 @@ import TeamInvite from "@kdx/react-email/team-invite";
 import { getBaseKdxUrl, getSuccessesAndErrors } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../trpc";
-import { sendEmail } from "../../../internal/email/email";
+import { sendEmail } from "../../../utils/email/email";
 
 interface InviteOptions {
   ctx: TProtectedProcedureContext;

@@ -1,12 +1,25 @@
 import { Suspense } from "react";
+import { redirect } from "next/navigation";
+
+import { auth } from "@kdx/auth";
+import { prisma } from "@kdx/db";
 
 import { AppSwitcher } from "~/app/_components/app-switcher/app-switcher";
 
-export default function RolesLayout({
+export default async function RolesLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth();
+  if (!session) redirect("/");
+  const team = await prisma.team.findUnique({
+    where: {
+      id: session.user.activeTeamId,
+    },
+  });
+  if (team?.ownerId !== session.user.id) redirect("/team/settings");
+
   return (
     <div className="mt-8 space-y-8 md:mt-0">
       <Suspense>
