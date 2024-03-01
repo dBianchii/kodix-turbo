@@ -10,11 +10,14 @@ export default function RolesLayout({
   return (
     <div className="mt-8 space-y-8 md:mt-0">
       <Suspense>
-        <AppSwitcher
-          hrefPrefix="/team/settings/roles/"
-          hideAddMoreApps
-          iconSize={40}
-        />
+        <div>
+          <h1 className="text-lg font-bold">Select your app</h1>
+          <AppSwitcher
+            hrefPrefix="/team/settings/roles/"
+            hideAddMoreApps
+            iconSize={40}
+          />
+        </div>
       </Suspense>
       {children}
     </div>

@@ -14,10 +14,26 @@ export const ZGetAllInputSchema = z.object({
 });
 export type TGetAllInputSchema = z.infer<typeof ZGetAllInputSchema>;
 
+export const ZGetPermissionsInputSchema = z.object({
+  appId: z.custom<KodixAppId>(),
+});
+export type TGetPermissionsInputSchema = z.infer<
+  typeof ZGetPermissionsInputSchema
+>;
+
+export const ZUpdatePermissionAssociationInputSchema = z.object({
+  permissionId: z.string().cuid(), //Permission to update
+  appId: z.custom<KodixAppId>(), //Which app the permission belongs to.
+  teamAppRoleIds: z.array(z.string().cuid()), //teamAppRoleIds to connect
+});
+export type TUpdatePermissionAssociationInputSchema = z.infer<
+  typeof ZUpdatePermissionAssociationInputSchema
+>;
+
 export const ZUpdateUserAssociationInputSchema = z.object({
   userId: z.string().cuid(), //User to update
   appId: z.custom<KodixAppId>(), //Which app teamAppRoleIds belong to.
-  teamAppRoleIds: z.array(z.string().cuid()), //Array of teamAppRoleIds to connect
+  teamAppRoleIds: z.array(z.string().cuid()), //teamAppRoleIds to connect
 });
 export type TUpdateUserAssociationInputSchema = z.infer<
   typeof ZUpdateUserAssociationInputSchema

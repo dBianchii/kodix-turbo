@@ -5,7 +5,6 @@ import { createColumnHelper } from "@tanstack/react-table";
 import type { RouterOutputs } from "@kdx/api";
 import type { KodixAppId } from "@kdx/shared";
 import type { FixedColumnsType } from "@kdx/ui/data-table";
-import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { DataTable } from "@kdx/ui/data-table";
 import { MultiSelect } from "@kdx/ui/multi-select";
 
@@ -14,43 +13,43 @@ import { api } from "~/trpc/react";
 
 const columnHelper =
   createColumnHelper<
-    RouterOutputs["team"]["appRole"]["getUsersWithRoles"][number]
+    RouterOutputs["team"]["appRole"]["getPermissions"][number]
   >();
 
-export function DataTableUserAppRoles({
-  initialUsers,
-  allAppRoles,
+export function DataTableAppPermissions({
+  initialPermissions,
   appId,
+  allAppRoles,
 }: {
-  initialUsers: RouterOutputs["team"]["appRole"]["getUsersWithRoles"];
-  allAppRoles: RouterOutputs["team"]["appRole"]["getAll"];
+  initialPermissions: RouterOutputs["team"]["appRole"]["getPermissions"];
   appId: KodixAppId;
+  allAppRoles: RouterOutputs["team"]["appRole"]["getAll"];
 }) {
   const utils = api.useUtils();
 
-  const { data } = api.team.appRole.getUsersWithRoles.useQuery(
+  const { data } = api.team.appRole.getPermissions.useQuery(
     { appId },
     {
       refetchOnMount: false,
-      initialData: initialUsers,
+      initialData: initialPermissions,
     },
   );
-  const { mutate: updateUserAssociation } =
-    api.team.appRole.updateUserAssociation.useMutation({
+  const { mutate: updatePermissionAssociation } =
+    api.team.appRole.updatePermissionAssociation.useMutation({
       async onMutate(newValues) {
         // Cancel any outgoing refetches
         // (so they don't overwrite our optimistic update)
-        await utils.team.appRole.getUsersWithRoles.cancel();
+        await utils.team.appRole.getPermissions.cancel();
         // Snapshot the previous value
-        const previousUsers = utils.team.appRole.getUsersWithRoles.getData();
+        const previousPermissions = utils.team.appRole.getPermissions.getData();
         // Optimistically update to the new value
-        utils.team.appRole.getUsersWithRoles.setData({ appId }, (old) => {
+        utils.team.appRole.getPermissions.setData({ appId }, (old) => {
           const teamAppRolesToUpdate = allAppRoles.filter((role) =>
             newValues.teamAppRoleIds.includes(role.id),
           );
 
-          const updatedUsers = old?.map((user) => {
-            if (user.id === newValues.userId) {
+          const updatedPermissions = old?.map((user) => {
+            if (user.id === newValues.permissionId) {
               return {
                 ...user,
                 TeamAppRole: teamAppRolesToUpdate,
@@ -59,11 +58,11 @@ export function DataTableUserAppRoles({
             return user;
           });
 
-          return updatedUsers;
+          return updatedPermissions;
         });
 
         // Return a context object with the snapshotted value
-        return { previousUsers };
+        return { previousPermissions };
       },
       onSuccess() {
         void utils.team.appRole.getUsersWithRoles.invalidate();
@@ -71,9 +70,9 @@ export function DataTableUserAppRoles({
       onError(err, _, context) {
         // If the mutation fails,
         // use the context returned from onMutate to roll back
-        utils.team.appRole.getUsersWithRoles.setData(
+        utils.team.appRole.getPermissions.setData(
           { appId },
-          context?.previousUsers,
+          context?.previousPermissions,
         );
         trpcErrorToastDefault(err);
       },
@@ -85,21 +84,11 @@ export function DataTableUserAppRoles({
 
   const columns = [
     columnHelper.accessor("name", {
-      header: () => <div className="pl-2">User</div>,
+      header: () => <div className="pl-2">Permission</div>,
       cell: (info) => (
-        <div className="flex w-60 flex-row gap-3  pl-2">
-          <div className="flex flex-col">
-            <AvatarWrapper
-              className="h-8 w-8"
-              src={info.cell.row.original.image ?? ""}
-              fallback={info.getValue()}
-            />
-          </div>
+        <div className="flex w-60 flex-row gap-3 pl-2">
           <div className="flex flex-col items-start">
             <span className="font-bold">{info.cell.row.original.name}</span>
-            <span className="text-xs text-muted-foreground">
-              {info.cell.row.original.email}
-            </span>
           </div>
         </div>
       ),
@@ -108,7 +97,7 @@ export function DataTableUserAppRoles({
       header: "Roles",
       cell: function Cell(info) {
         const selected = info.getValue().map((role) => role.id);
-
+        console.log(allAppRoles);
         return (
           <MultiSelect
             className="w-96"
@@ -118,8 +107,8 @@ export function DataTableUserAppRoles({
             }))}
             selected={selected}
             onChange={(newValues: string[]) => {
-              updateUserAssociation({
-                userId: info.cell.row.original.id,
+              updatePermissionAssociation({
+                permissionId: info.cell.row.original.id,
                 teamAppRoleIds: newValues,
                 appId,
               });
@@ -129,8 +118,14 @@ export function DataTableUserAppRoles({
       },
     }),
   ] as FixedColumnsType<
-    RouterOutputs["team"]["appRole"]["getUsersWithRoles"][number]
+    RouterOutputs["team"]["appRole"]["getPermissions"][number]
   >;
 
-  return <DataTable columns={columns} data={data}></DataTable>;
+  return (
+    <DataTable
+      columns={columns}
+      data={data}
+      noResultsMessage="This app does not have any permissions"
+    ></DataTable>
+  );
 }
