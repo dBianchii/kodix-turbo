@@ -90,9 +90,9 @@
 //               className="w-8"
 //             >
 //               {loading ? (
-//                 <Loader2 className="h-4 w-4 shrink-0 animate-spin" />
+//                 <Loader2 className="size-4 shrink-0 animate-spin" />
 //               ) : (
-//                 <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
+//                 <ChevronsUpDown className="size-4 shrink-0 opacity-50" />
 //               )}
 //             </Button>
 //           </PopoverTrigger>
@@ -121,14 +121,14 @@
 //                     className="text-sm"
 //                   >
 //                     <AvatarWrapper
-//                       className="mr-2 h-5 w-5"
+//                       className="mr-2 size-5"
 //                       src={`${getBaseUrl()}/api/avatar/${team.name}`}
 //                       alt={team.name}
 //                     />
 //                     {team.name}
 //                     <Check
 //                       className={cn(
-//                         "ml-auto h-4 w-4",
+//                         "ml-auto size-4",
 //                         session.user.activeTeamId === team.id
 //                           ? "opacity-100"
 //                           : "opacity-0",
@@ -148,7 +148,7 @@
 //                       setShowNewTeamDialog(true);
 //                     }}
 //                   >
-//                     <PlusCircle className="mr-2 h-5 w-5" />
+//                     <PlusCircle className="mr-2 size-5" />
 //                     Create New Team
 //                   </CommandItem>
 //                 </DialogTrigger>
@@ -158,7 +158,7 @@
 //                     setOpen(false);
 //                   }}
 //                 >
-//                   <Settings className="mr-2 h-5 w-5" />
+//                   <Settings className="mr-2 size-5" />
 //                   Team Settings
 //                 </CommandItem>
 //               </CommandGroup>

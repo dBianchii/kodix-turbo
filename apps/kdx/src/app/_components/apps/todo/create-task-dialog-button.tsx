@@ -72,7 +72,7 @@ export function CreateTaskDialogButton() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
-          <RxPlus className="mr-2 h-4 w-4" />
+          <RxPlus className="mr-2 size-4" />
           Create Task
         </Button>
       </DialogTrigger>
@@ -114,7 +114,7 @@ export function CreateTaskDialogButton() {
                 {user ? (
                   <>
                     <AvatarWrapper
-                      className="mr-2 h-4 w-4"
+                      className="mr-2 size-4"
                       src={user.image ?? ""}
                       alt={user.name ?? "" + " avatar"}
                       fallback={<HiUserCircle />}
@@ -123,7 +123,7 @@ export function CreateTaskDialogButton() {
                   </>
                 ) : (
                   <>
-                    <HiUserCircle className="mr-2 h-4 w-4" />
+                    <HiUserCircle className="mr-2 size-4" />
                     Assignee
                   </>
                 )}
@@ -138,7 +138,7 @@ export function CreateTaskDialogButton() {
                   }
                   size="sm"
                 >
-                  <DatePickerIcon date={dueDate} className="mr-2 h-4 w-4" />
+                  <DatePickerIcon date={dueDate} className="mr-2 size-4" />
                   {dueDate ? format(dueDate, "PPP") : "Pick a date"}
                   {dueDate && (
                     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
@@ -148,7 +148,7 @@ export function CreateTaskDialogButton() {
                       }}
                       className="ml-2 rounded-full transition-colors hover:bg-primary/90 hover:text-background"
                     >
-                      <RxCross2 className="h-4 w-4 " />
+                      <RxCross2 className="size-4 " />
                     </span>
                   )}
                 </Button>

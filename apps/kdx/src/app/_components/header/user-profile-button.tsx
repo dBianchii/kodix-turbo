@@ -48,33 +48,33 @@ export function UserProfileButton({ session }: { session: Session }) {
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
             <Link href="/account">
-              <RxPerson className="mr-2 h-4 w-4" />
+              <RxPerson className="mr-2 size-4" />
               <span>Account</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator className="mb-2" />
           <DropdownMenuItem asChild>
             <Link href="/team" className="flex border border-gray-600">
-              <LuUsers className="h-4 w-4" />
+              <LuUsers className="size-4" />
               <p className="ml-2 font-bold">{session.user.activeTeamName}</p>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href="/team/settings">
-              <RxGear className="mr-2 h-4 w-4" />
+              <RxGear className="mr-2 size-4" />
               Settings
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href="/account/teams">
-              <MdOutlineSwapHorizontalCircle className="mr-2 h-4 w-4" />
+              <MdOutlineSwapHorizontalCircle className="mr-2 size-4" />
               Change team...
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => void signOut()}>
-          <LuLogOut className="mr-2 h-4 w-4" />
+          <LuLogOut className="mr-2 size-4" />
           <span>Log out</span>
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>

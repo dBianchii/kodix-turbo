@@ -145,7 +145,7 @@ export function RecurrencePicker({
                 >
                   <RxCheck
                     className={cn(
-                      "mr-2 h-4 w-4",
+                      "mr-2 size-4",
                       frequency === RRule.DAILY && interval === 1 && count === 1
                         ? "opacity-100"
                         : "opacity-0",
@@ -166,7 +166,7 @@ export function RecurrencePicker({
                   >
                     <RxCheck
                       className={cn(
-                        "mr-2 h-4 w-4",
+                        "mr-2 size-4",
                         frequency === freq &&
                           interval === 1 &&
                           !until &&
@@ -182,7 +182,7 @@ export function RecurrencePicker({
                 <CommandItem onSelect={() => setOpen(true)}>
                   <RxCheck
                     className={cn(
-                      "mr-2 h-4 w-4",
+                      "mr-2 size-4",
                       until ?? interval > 1 ? "opacity-100" : "opacity-0",
                     )}
                   />
@@ -240,7 +240,7 @@ export function RecurrencePicker({
                           >
                             <RxCheck
                               className={cn(
-                                "mr-2 h-4 w-4",
+                                "mr-2 size-4",
                                 draftFrequency === freq
                                   ? "opacity-100"
                                   : "opacity-0",

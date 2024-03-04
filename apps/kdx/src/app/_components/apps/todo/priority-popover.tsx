@@ -87,17 +87,17 @@ export function PriorityIcon({
 }) {
   switch (priority) {
     case 0:
-      return <LuSignalLow className={cn("h-4 w-4 text-white/60", className)} />;
+      return <LuSignalLow className={cn("size-4 text-white/60", className)} />;
     case 1:
       return (
-        <LuSignalMedium className={cn("h-4 w-4 text-green-400", className)} />
+        <LuSignalMedium className={cn("size-4 text-green-400", className)} />
       );
     case 2:
       return (
-        <LuSignalHigh className={cn("h-4 w-4 text-yellow-400", className)} />
+        <LuSignalHigh className={cn("size-4 text-yellow-400", className)} />
       );
     case 3:
-      return <LuSignal className={cn("h-4 w-4 text-red-400", className)} />;
+      return <LuSignal className={cn("size-4 text-red-400", className)} />;
   }
 }
 

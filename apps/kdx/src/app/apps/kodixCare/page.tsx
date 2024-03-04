@@ -85,7 +85,7 @@ function NoPreviousShift({
         </h2>
       </div>
       <div className="flex items-center space-x-2 rounded-md">
-        <HiUserCircle className="h-5 w-5" />
+        <HiUserCircle className="size-5" />
         <p className="text-sm text-muted-foreground">No shift started yet</p>
       </div>
       <ToggleShiftButton currentShift={currentShift} session={session} />
@@ -113,7 +113,7 @@ function ShiftInProgress({
       <TimeInfo currentShift={currentShift} />
       <div className="flex items-center space-x-2 rounded-md">
         <AvatarWrapper
-          className="h-5 w-5"
+          className="size-5"
           src={currentShift.Caregiver.image ?? undefined}
           fallback={currentShift.Caregiver.name}
         />
@@ -146,7 +146,7 @@ function ShiftCheckedOut({
       <TimeInfo currentShift={currentShift} />
       <div className="flex items-center space-x-2 rounded-md">
         <AvatarWrapper
-          className="mt-2 h-5 w-5"
+          className="mt-2 size-5"
           src={currentShift.Caregiver.image ?? undefined}
           fallback={currentShift.Caregiver.name}
         />

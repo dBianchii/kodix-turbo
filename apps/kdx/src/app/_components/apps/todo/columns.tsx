@@ -299,7 +299,7 @@ export const columns = [
   //     return (
   //       <div className="text-right">
   //         <Button variant="ghost" size="sm">
-  //           {<Calendar className="mr-2 h-4 w-4" />}
+  //           {<Calendar className="mr-2 size-4" />}
   //           <span className="">{formatedDate}</span>
   //         </Button>
   //       </div>

@@ -101,7 +101,7 @@ export function ToggleShiftButton({
         disabled={query.isFetching}
       >
         {query.isFetching ? (
-          <LuLoader2 className="mx-2 h-4 w-4 animate-spin" />
+          <LuLoader2 className="mx-2 size-4 animate-spin" />
         ) : (
           state.message
         )}
@@ -165,7 +165,7 @@ function StartShiftDialog({
           </DialogClose>
           <Button onClick={() => handleClick()} disabled={loading}>
             {loading ? (
-              <LuLoader2 className="mx-2 h-4 w-4 animate-spin" />
+              <LuLoader2 className="mx-2 size-4 animate-spin" />
             ) : (
               "Start new shift"
             )}
@@ -216,7 +216,7 @@ function StartShiftWarnPreviousPersonDialog({
             disabled={loading}
           >
             {loading ? (
-              <LuLoader2 className="mx-2 h-4 w-4 animate-spin" />
+              <LuLoader2 className="mx-2 size-4 animate-spin" />
             ) : (
               "End previous shift and start new"
             )}
@@ -308,7 +308,7 @@ function DoCheckoutDialog({
                         className="w-fit"
                       />
                       <div className="flex items-center gap-1 pl-4">
-                        <IoMdTime className="h-5 w-5 text-muted-foreground" />
+                        <IoMdTime className="size-5 text-muted-foreground" />
                         <TimePickerInput
                           picker={"hours"}
                           date={field.value}
@@ -357,7 +357,7 @@ function DoCheckoutDialog({
                 variant={"destructive"}
               >
                 {isSubmitting ? (
-                  <LuLoader2 className="mx-2 h-4 w-4 animate-spin" />
+                  <LuLoader2 className="mx-2 size-4 animate-spin" />
                 ) : (
                   "Checkout"
                 )}

@@ -145,7 +145,7 @@ export function DataTable({
                   !selectedDay && "text-muted-foreground",
                 )}
               >
-                <RxCalendar className="mr-2 h-4 w-4" />
+                <RxCalendar className="mr-2 size-4" />
                 {selectedDay ? (
                   format(selectedDay, "PPP")
                 ) : (
@@ -250,7 +250,7 @@ export function DataTable({
                         setOpenEditDialog(true);
                       }}
                     >
-                      <RxPencil1 className="mr-2 h-4 w-4" />
+                      <RxPencil1 className="mr-2 size-4" />
                       Edit Event
                     </ContextMenuItem>
                     <ContextMenuItem
@@ -259,7 +259,7 @@ export function DataTable({
                         setOpenCancelDialog(true);
                       }}
                     >
-                      <RxTrash className="mr-2 h-4 w-4" />
+                      <RxTrash className="mr-2 size-4" />
                       Delete Event
                     </ContextMenuItem>
                   </ContextMenuContent>

@@ -78,7 +78,7 @@ export async function AppSwitcher({
                         "py-6, w-44 justify-start p-4",
                       )}
                     >
-                      <RxPlusCircled className="ml-2 h-4 w-4" />
+                      <RxPlusCircled className="ml-2 size-4" />
                       <p className="ml-4">Add more apps</p>
                     </NavigationMenuLink>
                   </Link>

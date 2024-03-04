@@ -68,7 +68,7 @@ export const inviteColumns = ({
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
-                <RxDotsHorizontal className="h-4 w-4" />
+                <RxDotsHorizontal className="size-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">

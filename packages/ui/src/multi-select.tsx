@@ -109,7 +109,7 @@ function MultiSelect({
             ))}
           </div>
 
-          <CaretSortIcon className="h-4 w-4 shrink-0 opacity-50" />
+          <CaretSortIcon className="size-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full p-0">
@@ -141,7 +141,7 @@ function MultiSelect({
               >
                 <CheckIcon
                   className={cn(
-                    "mr-2 h-4 w-4",
+                    "mr-2 size-4",
                     selected.includes(option.value)
                       ? "opacity-100"
                       : "opacity-0",
@@ -172,7 +172,7 @@ function MultiSelect({
                 className="justify-between"
               >
                 <div className="flex">
-                  <PlusCircledIcon className="mr-2 h-4 w-4 text-muted-foreground" />
+                  <PlusCircledIcon className="mr-2 size-4 text-muted-foreground" />
                   Add{"  "}
                   <span className="ml-1 text-sm">{commandInput}</span>
                 </div>

@@ -125,7 +125,7 @@ export function CancelationDialog({
             }}
           >
             {buttonLoading ? (
-              <LuLoader2 className="h-4 w-4 animate-spin" />
+              <LuLoader2 className="size-4 animate-spin" />
             ) : (
               <>OK</>
             )}

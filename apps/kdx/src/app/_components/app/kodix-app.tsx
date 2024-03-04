@@ -146,7 +146,7 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
               !isActive && "pointer-events-none opacity-50",
             )}
           >
-            {installing && <LuLoader2 className="mr-2 h-5 w-5 animate-spin" />}
+            {installing && <LuLoader2 className="mr-2 size-5 animate-spin" />}
             {isActive ? "Install" : "Coming soon"}
           </Button>
         )}
@@ -159,21 +159,21 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
           </Link>
         )}
         {/* <Button variant={"outline"} className="flex-none">
-            <Trash2 className="text-destructive h-4 w-4" />
+            <Trash2 className="text-destructive size-4" />
           </Button> */}
         {installed && (
           <Dialog open={open} onOpenChange={setOpen}>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="ml-auto">
-                  <RxDotsHorizontal className="h-4 w-4" />
+                  <RxDotsHorizontal className="size-4" />
                   <span className="sr-only">Open dialog</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DialogTrigger asChild>
                   <DropdownMenuItem>
-                    <RxTrash className="mr-2 h-4 w-4 text-destructive" />
+                    <RxTrash className="mr-2 size-4 text-destructive" />
                     <span>Uninstall from team</span>
                   </DropdownMenuItem>
                 </DialogTrigger>
@@ -205,7 +205,7 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
                   variant="destructive"
                 >
                   {uninstalling && (
-                    <LuLoader2 className="mr-2 h-5 w-5 animate-spin" />
+                    <LuLoader2 className="mr-2 size-5 animate-spin" />
                   )}
                   Uninstall
                 </Button>

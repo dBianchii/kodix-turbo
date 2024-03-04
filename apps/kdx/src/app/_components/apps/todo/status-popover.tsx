@@ -114,20 +114,20 @@ export function StatusIcon({
   switch (status) {
     case "TODO":
       return (
-        <RxCheckCircled className={cn("h-4 w-4 text-foreground", className)} />
+        <RxCheckCircled className={cn("size-4 text-foreground", className)} />
       );
     case "INPROGRESS":
       return (
-        <RxRadiobutton className={cn("h-4 w-4 text-yellow-400", className)} />
+        <RxRadiobutton className={cn("size-4 text-yellow-400", className)} />
       );
     case "INREVIEW":
       return (
-        <LuCircleSlash className={cn("h-4 w-4 text-orange-400", className)} />
+        <LuCircleSlash className={cn("size-4 text-orange-400", className)} />
       );
     case "DONE":
-      return <RxCheck className={cn("h-4 w-4 text-green-400", className)} />;
+      return <RxCheck className={cn("size-4 text-green-400", className)} />;
     case "CANCELED":
-      return <LuCircleOff className={cn("h-4 w-4 text-red-400", className)} />;
+      return <LuCircleOff className={cn("size-4 text-red-400", className)} />;
   }
 }
 

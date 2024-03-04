@@ -241,7 +241,7 @@ export function EditEventDialog({
                     ) : (
                       <span>Pick a date</span>
                     )}
-                    <RxCalendar className="ml-auto h-4 w-4 opacity-50" />
+                    <RxCalendar className="ml-auto size-4 opacity-50" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
@@ -312,7 +312,7 @@ export function EditEventDialog({
                     onClick={() => setEditDefinitionOpen(true)}
                   >
                     {buttonLoading ? (
-                      <LuLoader2 className="mx-2 h-4 w-4 animate-spin" />
+                      <LuLoader2 className="mx-2 size-4 animate-spin" />
                     ) : (
                       <>OK</>
                     )}

@@ -65,7 +65,7 @@ export function AssigneePopover({
                   setOpen(false);
                 }}
               >
-                <HiUserCircle className="mr-2 h-4 w-4" />
+                <HiUserCircle className="mr-2 size-4" />
                 Unassigned
               </CommandItem>
               {users.map((user) => (
@@ -78,10 +78,10 @@ export function AssigneePopover({
                   value={user.id}
                 >
                   <AvatarWrapper
-                    className="mr-2 h-4 w-4"
+                    className="mr-2 size-4"
                     src={user.image ?? ""}
                     alt={user.image ?? "" + " avatar"}
-                    fallback={<HiUserCircle className="mr-2 h-4 w-4" />}
+                    fallback={<HiUserCircle className="mr-2 size-4" />}
                   />
                   {user.name}
                 </CommandItem>

@@ -79,7 +79,7 @@ function EmailSignIn({ callbackUrl, loading, setLoading }: SignInButtonsProps) {
         className="mt-4 w-full"
       >
         Sign In
-        {loading && <LuLoader2 className="ml-2 h-4 w-4 animate-spin" />}
+        {loading && <LuLoader2 className="ml-2 size-4 animate-spin" />}
       </Button>
     </>
   );
@@ -103,7 +103,7 @@ function GoogleSignIn({
         setLoading(false);
       }}
     >
-      <FcGoogle className="mr-2 h-4 w-4" />
+      <FcGoogle className="mr-2 size-4" />
       Sign in with Google
     </Button>
   );

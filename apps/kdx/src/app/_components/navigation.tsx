@@ -38,7 +38,7 @@ export function Navigation({
       >
         {!pathname.endsWith(entryPoint) && !isSmallerScreen ? (
           <NavigationItem href={goBackItem.href}>
-            <RxArrowLeft className="mr-2 h-4 w-4" /> {goBackItem.title}
+            <RxArrowLeft className="mr-2 size-4" /> {goBackItem.title}
           </NavigationItem>
         ) : (
           items.map((item, i) => (

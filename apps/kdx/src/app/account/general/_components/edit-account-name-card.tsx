@@ -61,7 +61,7 @@ export async function EditAccountNameCard({ name }: { name?: string | null }) {
           <Button type="submit">
             {false ? (
               <>
-                <LuLoader2 className="mr-2 h-4 w-4 animate-spin" /> Saving
+                <LuLoader2 className="mr-2 size-4 animate-spin" /> Saving
               </>
             ) : (
               <>Save</>

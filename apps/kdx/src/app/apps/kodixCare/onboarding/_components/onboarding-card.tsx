@@ -89,9 +89,9 @@ export default function OnboardingCard() {
           <CardFooter className="flex justify-end">
             <Button type="submit">
               Go to Kodix Care
-              {!isSubmitting && <LuArrowRight className="ml-2 h-4 w-4" />}
+              {!isSubmitting && <LuArrowRight className="ml-2 size-4" />}
               {isSubmitting && (
-                <LuLoader2 className="ml-2 h-4 w-4 animate-spin" />
+                <LuLoader2 className="ml-2 size-4 animate-spin" />
               )}
             </Button>
           </CardFooter>

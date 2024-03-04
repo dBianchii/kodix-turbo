@@ -58,16 +58,16 @@ export const columns = [
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
-                <RxDotsHorizontal className="h-4 w-4" />
+                <RxDotsHorizontal className="size-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
               <DropdownMenuItem onClick={() => setOpenEditDialog(true)}>
-                <RxPencil1 className="mr-2 h-4 w-4" />
+                <RxPencil1 className="mr-2 size-4" />
                 Edit event
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setOpenCancelDialog(true)}>
-                <RxTrash className="mr-2 h-4 w-4" />
+                <RxTrash className="mr-2 size-4" />
                 Delete Event
               </DropdownMenuItem>
             </DropdownMenuContent>

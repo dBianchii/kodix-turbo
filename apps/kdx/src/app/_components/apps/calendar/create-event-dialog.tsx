@@ -116,7 +116,7 @@ export function CreateEventDialogButton() {
     >
       <DialogTrigger asChild>
         <Button size="sm">
-          <RxPlus className="mr-2 h-4 w-4" />
+          <RxPlus className="mr-2 size-4" />
           Create Event
         </Button>
       </DialogTrigger>
@@ -150,7 +150,7 @@ export function CreateEventDialogButton() {
                       ) : (
                         <span>Pick a date</span>
                       )}
-                      <RxCalendar className="ml-auto h-4 w-4 opacity-50" />
+                      <RxCalendar className="ml-auto size-4 opacity-50" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
@@ -211,7 +211,7 @@ export function CreateEventDialogButton() {
           <DialogFooter>
             <Button type="submit" size="sm" disabled={buttonLoading}>
               {buttonLoading ? (
-                <LuLoader2 className="mx-2 h-4 w-4 animate-spin" />
+                <LuLoader2 className="mx-2 size-4 animate-spin" />
               ) : (
                 <>Create task</>
               )}

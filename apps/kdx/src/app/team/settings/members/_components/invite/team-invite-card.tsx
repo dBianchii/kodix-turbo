@@ -94,7 +94,7 @@ export default function TeamInviteCardClient({
           <Dialog>
             {/* <DialogTrigger asChild>
             <Button variant={"outline"} size={"sm"}>
-              <Link className="mr-2 h-4 w-4" />
+              <Link className="mr-2 size-4" />
               Invite Link
             </Button>
           </DialogTrigger> */}
@@ -146,7 +146,7 @@ export default function TeamInviteCardClient({
                         setEmails(newEmails);
                       }}
                     >
-                      <RxMinusCircled className="h-4 w-4 " />
+                      <RxMinusCircled className="size-4 " />
                     </Button>
                   </div>
                 ))}
@@ -165,7 +165,7 @@ export default function TeamInviteCardClient({
                 setEmails(newEmails);
               }}
             >
-              <RxPlusCircled className="mr-2 h-4 w-4" />
+              <RxPlusCircled className="mr-2 size-4" />
               Add more
             </Button>
           </div>
@@ -239,8 +239,7 @@ export default function TeamInviteCardClient({
                 >
                   {loading ? (
                     <>
-                      <LuLoader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
-                      Sending
+                      <LuLoader2 className="mr-2 size-4 animate-spin" /> Sending
                     </>
                   ) : (
                     "Confirm"
