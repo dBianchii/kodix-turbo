@@ -24,7 +24,7 @@ interface CustomApp {
 
 export default async function Team() {
   const session = await auth();
-  if (!session) return redirect("/");
+  if (!session) redirect("/");
 
   const customApps: CustomApp[] = [
     {

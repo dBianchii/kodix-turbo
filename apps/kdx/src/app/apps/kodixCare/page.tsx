@@ -20,11 +20,11 @@ import { ToggleShiftButton } from "./_components/toggle-shift-button";
 export const dynamic = "force-dynamic"; //TODO: help me
 export default async function KodixCarePage() {
   const session = await auth();
-  if (!session) return redirect("/");
+  if (!session) redirect("/");
 
   const completed = await api.app.kodixCare.onboardingCompleted();
   if (!completed) {
-    return redirect("/apps/kodixCare/onboarding");
+    redirect("/apps/kodixCare/onboarding");
   }
 
   return (

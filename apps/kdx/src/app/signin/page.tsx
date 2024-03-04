@@ -12,7 +12,7 @@ export default async function SignIn({
   searchParams?: Record<string, string | undefined>;
 }) {
   const session = await auth();
-  if (session) return redirect(searchParams?.callbackUrl ?? "/");
+  if (session) redirect(searchParams?.callbackUrl ?? "/");
 
   return (
     <section className="mx-auto flex flex-1 flex-col items-center justify-center px-6 py-8 lg:py-0">

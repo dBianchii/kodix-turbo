@@ -17,12 +17,10 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   const session = await auth();
   if (!session)
-    return redirect(
-      `/api/auth/signin?callbackUrl=/team/invite/${invitationId}`,
-    );
+    redirect(`/api/auth/signin?callbackUrl=/team/invite/${invitationId}`);
 
   if (session.user.email !== invitation.email) return notFound();
   await api.team.invitation.accept({ invitationId });
 
-  return redirect("/");
+  redirect("/");
 }

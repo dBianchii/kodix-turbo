@@ -17,7 +17,7 @@ export const redirectIfAppNotInstalled = async ({
   customRedirect?: string;
 }) => {
   const session = await auth();
-  if (!session) return redirect("/");
+  if (!session) redirect("/");
 
   const installed = await prisma.app.findUnique({
     where: {
@@ -32,7 +32,7 @@ export const redirectIfAppNotInstalled = async ({
       id: true,
     },
   });
-  if (!installed) return redirect(customRedirect ?? "/apps");
+  if (!installed) redirect(customRedirect ?? "/apps");
 
   return session;
 };

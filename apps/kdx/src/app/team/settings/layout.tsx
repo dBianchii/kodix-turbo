@@ -13,7 +13,7 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const session = await auth();
-  if (!session) return redirect("/signin");
+  if (!session) redirect("/signin");
 
   const navItems = [
     {

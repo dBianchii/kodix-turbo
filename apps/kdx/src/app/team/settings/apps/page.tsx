@@ -9,7 +9,7 @@ import { api } from "~/trpc/server";
 
 export default async function AppsPage() {
   const session = await auth();
-  if (!session) return redirect("/api/auth/signin");
+  if (!session) redirect("/api/auth/signin");
   const apps = await api.app.getInstalled();
 
   return (
