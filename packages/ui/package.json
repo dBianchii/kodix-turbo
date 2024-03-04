@@ -26,6 +26,7 @@
     "./multi-select": "./src/multi-select.tsx",
     "./popover": "./src/popover.tsx",
     "./radio-group": "./src/radio-group.tsx",
+    "./resizable": "./src/resizable.tsx",
     "./scroll-area": "./src/scroll-area.tsx",
     "./select": "./src/select.tsx",
     "./separator": "./src/separator.tsx",
@@ -78,6 +79,7 @@
     "next-themes": "^0.2.1",
     "react-day-picker": "^8.10.0",
     "react-hook-form": "^7.50.1",
+    "react-resizable-panels": "^2.0.12",
     "sonner": "^1.4.1",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7"

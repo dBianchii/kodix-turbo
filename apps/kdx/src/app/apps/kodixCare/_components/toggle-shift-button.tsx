@@ -142,6 +142,7 @@ function StartShiftDialog({
       return;
     }
 
+    void utils.app.kodixCare.getCareTasks.invalidate();
     void utils.app.kodixCare.getCurrentShift.invalidate();
     setStartShiftOpen(false);
     setLoading(false);
@@ -189,6 +190,7 @@ function StartShiftWarnPreviousPersonDialog({
   async function handleClick() {
     setLoading(true);
     await toggleShiftButtonAction();
+    void utils.app.kodixCare.getCareTasks.invalidate();
     void utils.app.kodixCare.getCurrentShift.invalidate();
     setOpen(false);
     setLoading(false);
