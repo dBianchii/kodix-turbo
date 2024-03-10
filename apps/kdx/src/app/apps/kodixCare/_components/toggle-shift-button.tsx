@@ -189,7 +189,11 @@ function StartShiftWarnPreviousPersonDialog({
 
   async function handleClick() {
     setLoading(true);
-    await toggleShiftButtonAction();
+    const result = await toggleShiftButtonAction();
+    if (defaultSafeActionToastError(result)) {
+      setLoading(false);
+      return;
+    }
     void utils.app.kodixCare.getCareTasks.invalidate();
     void utils.app.kodixCare.getCurrentShift.invalidate();
     setOpen(false);

@@ -5,6 +5,7 @@ import { auth } from "@kdx/auth";
 
 import MaxWidthWrapper from "~/app/_components/max-width-wrapper";
 import { Navigation } from "~/app/_components/navigation";
+import { api } from "~/trpc/server";
 import { ShouldRender } from "./general/_components/client-should-render";
 
 export default async function Layout({
@@ -13,6 +14,7 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const session = await auth();
+  const team = await api.team.getActiveTeam();
   if (!session) redirect("/signin");
 
   const navItems = [
@@ -23,6 +25,7 @@ export default async function Layout({
     {
       href: "/team/settings/roles",
       title: `Roles`,
+      shown: session.user.activeTeamId === team?.ownerId,
     },
     {
       href: `/team/settings/general`,

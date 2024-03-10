@@ -24,12 +24,15 @@ export function Navigation({
   items: {
     href: string;
     title: string;
+    shown?: boolean;
   }[];
 }) {
   const pathname = usePathname();
   const isSmallerScreen = useMediaQuery({ query: "md" });
   const entryPoint = goBackItem.href.split("/").at(-1);
   if (!entryPoint) throw new Error("Your goBackItem.href is invalid");
+
+  items = items.filter((item) => item.shown !== false);
 
   return (
     <NavigationMenu className="flex w-full max-w-4xl self-start">
