@@ -179,6 +179,15 @@ model Invitation {
   @@index([invitedById])
 }
 
+model Notification {
+  id String @id @default(cuid())
+
+  userId String
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
 model App {
   id               String          @id @default(cuid())
   createdAt        DateTime        @default(now())
@@ -332,11 +341,12 @@ model User {
   activeTeamId String
   ActiveTeam   Team   @relation("UserActiveTeam", fields: [activeTeamId], references: [id], onUpdate: NoAction)
 
-  CareTasks   CareTask[]
-  OwnedTeams  Team[]        @relation("UserTeamOwner")
-  CareShifts  CareShift[]
-  TeamAppRole TeamAppRole[]
-  Invitation  Invitation[]
+  CareTasks     CareTask[]
+  OwnedTeams    Team[]         @relation("UserTeamOwner")
+  CareShifts    CareShift[]
+  TeamAppRole   TeamAppRole[]
+  Invitation    Invitation[]
+  Notifications Notification[]
 
   @@index([activeTeamId])
 }
