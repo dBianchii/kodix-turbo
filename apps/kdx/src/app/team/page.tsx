@@ -45,6 +45,7 @@ export default async function Team() {
     // },
   ];
 
+  //TODO: remove this main because layout has it
   return (
     <main className="flex-1 py-1">
       <MaxWidthWrapper className="flex flex-col">
