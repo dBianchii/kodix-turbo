@@ -1,22 +1,15 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { MdNotificationsActive } from "react-icons/md";
 
 import { auth } from "@kdx/auth";
-import { Button, buttonVariants } from "@kdx/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
+import { buttonVariants } from "@kdx/ui/button";
 import { Skeleton } from "@kdx/ui/skeleton";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@kdx/ui/tooltip";
 
 import HeaderFooterRemover from "~/app/_components/header-footer-remover";
 import MaxWidthWrapper from "~/app/_components/max-width-wrapper";
 import { api } from "~/trpc/server";
 import { AppSwitcher } from "../app-switcher/app-switcher";
+import { NotificationsPopoverClient } from "./notifications-popover-client";
 import { UserProfileButton } from "./user-profile-button";
 
 export async function Header() {
@@ -95,50 +88,11 @@ export async function Header() {
 }
 
 async function NotificationsPopover() {
-  const { invitations } = await api.user.getNotifications();
-  if (!invitations.length) return null;
+  const initialNotifications = await api.user.getNotifications();
+  if (!initialNotifications.invitations.length) return null;
+
   return (
-    <Popover>
-      <PopoverTrigger>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <MdNotificationsActive className="size-4 text-orange-500" />
-                <span className="sr-only">Notifications</span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Notifications</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </PopoverTrigger>
-      <PopoverContent>
-        <div className="flex items-center gap-2">
-          <MdNotificationsActive className="size-4 text-orange-500" />
-          <h4 className="text-md font-semibold">Notifications</h4>
-        </div>
-        <ul className="space-y-2">
-          {invitations.map((invitation) => (
-            <li key={invitation.id}>
-              <div>
-                <p>
-                  <strong>{invitation.InvitedBy.name}</strong> invited you to{" "}
-                  <strong>{invitation.Team.name}</strong>
-                </p>
-                <div className="flex space-x-2">
-                  <Button variant="ghost" size="sm">
-                    Accept
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    Decline
-                  </Button>
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </PopoverContent>
-    </Popover>
+    <NotificationsPopoverClient initialNotifications={initialNotifications} />
   );
 }
 

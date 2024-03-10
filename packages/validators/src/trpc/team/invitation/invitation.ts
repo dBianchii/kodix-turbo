@@ -5,6 +5,11 @@ export const ZAcceptInputSchema = z.object({
 });
 export type TAcceptInputSchema = z.infer<typeof ZAcceptInputSchema>;
 
+export const ZDeclineInputSchema = z.object({
+  invitationId: z.string().cuid(),
+});
+export type TDeclineInputSchema = z.infer<typeof ZDeclineInputSchema>;
+
 export const ZDeleteUserSchema = z.object({
   invitationId: z.string().cuid(),
 });

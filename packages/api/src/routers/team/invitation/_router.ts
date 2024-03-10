@@ -6,6 +6,7 @@ import {
 
 import { createTRPCRouter, protectedProcedure } from "../../../trpc";
 import { acceptHandler } from "./accept.handler";
+import { declineHandler } from "./decline.handler";
 import { deleteHandler } from "./delete.handler";
 import { getAllHandler } from "./getAll.handler";
 import { inviteHandler } from "./invite.handler";
@@ -15,6 +16,10 @@ export const invitationRouter = createTRPCRouter({
     .input(ZAcceptInputSchema)
     //.use(enforceUserHasTeam) // TODO: make this a middleware
     .mutation(async (opts) => await acceptHandler(opts)),
+  decline: protectedProcedure
+    .input(ZAcceptInputSchema)
+    //.use(enforceUserHasTeam)
+    .mutation(async (opts) => await declineHandler(opts)),
   delete: protectedProcedure
     .input(ZDeleteUserSchema)
     //.use(enforceUserHasTeam) // TODO: make this a middleware
