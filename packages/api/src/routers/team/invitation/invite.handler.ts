@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import cuid from "cuid";
 
+import type { Prisma } from "@kdx/db";
 import type { TInviteInputSchema } from "@kdx/validators/trpc/invitation";
 import { kodixNotificationFromEmail } from "@kdx/react-email/constants";
 import TeamInvite from "@kdx/react-email/team-invite";
@@ -60,11 +61,14 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
       code: "CONFLICT",
     });
 
-  const invitations = input.to.map((email) => ({
-    id: cuid(),
-    teamId: team.id,
-    email,
-  }));
+  const invitations: Prisma.InvitationCreateManyInput[] = input.to.map(
+    (email) => ({
+      id: cuid(),
+      teamId: team.id,
+      email,
+      invitedById: ctx.session.user.id,
+    }),
+  );
 
   const results = await Promise.allSettled(
     invitations.map(async (invite) => {

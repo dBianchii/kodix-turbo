@@ -172,7 +172,11 @@ model Invitation {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  invitedById String
+  InvitedBy   User   @relation(fields: [invitedById], references: [id])
+
   @@index([teamId])
+  @@index([invitedById])
 }
 
 model App {
@@ -332,6 +336,7 @@ model User {
   OwnedTeams  Team[]        @relation("UserTeamOwner")
   CareShifts  CareShift[]
   TeamAppRole TeamAppRole[]
+  Invitation  Invitation[]
 
   @@index([activeTeamId])
 }
