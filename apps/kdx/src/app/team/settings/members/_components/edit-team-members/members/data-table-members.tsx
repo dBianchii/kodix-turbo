@@ -6,7 +6,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
 import {
   Table,

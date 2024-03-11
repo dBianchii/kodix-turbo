@@ -35,7 +35,7 @@ export default async function Calendar() {
       <Separator className="my-4" />
       <CreateEventDialogButton />
       <HydrateClient>
-        <DataTable columns={columns} session={session} input={input} />
+        <DataTable columns={columns} session={session} />
       </HydrateClient>
     </MaxWidthWrapper>
   );

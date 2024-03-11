@@ -54,15 +54,10 @@ type CalendarTask = RouterOutputs["app"]["calendar"]["getAll"][number];
 export function DataTable({
   columns,
   session,
-  input,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   columns: ColumnDef<CalendarTask, any>[];
   session: Session;
-  input: {
-    dateStart: Date;
-    dateEnd: Date;
-  };
 }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
@@ -73,7 +68,10 @@ export function DataTable({
   const [openEditDialog, setOpenEditDialog] = useState(false);
 
   const utils = api.useUtils();
-  const [data, query] = api.app.calendar.getAll.useSuspenseQuery(input);
+  const [data, query] = api.app.calendar.getAll.useSuspenseQuery({
+    dateStart: dayjs(selectedDay).startOf("day").toDate(),
+    dateEnd: dayjs(selectedDay).endOf("day").toDate(),
+  });
 
   const { mutate: nukeEvents } = api.app.calendar.nuke.useMutation({
     onSuccess() {
