@@ -15,6 +15,7 @@ export const getInstalledHandler = async ({ ctx }: GetInstalledOptions) => {
         },
       },
     },
+    select: { id: true },
   });
 
   if (!apps)

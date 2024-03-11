@@ -54,10 +54,15 @@ type CalendarTask = RouterOutputs["app"]["calendar"]["getAll"][number];
 export function DataTable({
   columns,
   session,
+  input,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   columns: ColumnDef<CalendarTask, any>[];
   session: Session;
+  input: {
+    dateStart: Date;
+    dateEnd: Date;
+  };
 }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
@@ -68,10 +73,7 @@ export function DataTable({
   const [openEditDialog, setOpenEditDialog] = useState(false);
 
   const utils = api.useUtils();
-  const [data] = api.app.calendar.getAll.useSuspenseQuery({
-    dateStart: dayjs(selectedDay).startOf("day").toDate(),
-    dateEnd: dayjs(selectedDay).endOf("day").toDate(),
-  });
+  const [data, query] = api.app.calendar.getAll.useSuspenseQuery(input);
 
   const { mutate: nukeEvents } = api.app.calendar.nuke.useMutation({
     onSuccess() {
@@ -223,7 +225,7 @@ export function DataTable({
             ))}
           </TableHeader>
           <TableBody>
-            {result.isLoading || result.isFetching ? (
+            {query.isLoading || query.isFetching ? (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24">
                   <div className="flex h-full items-center justify-center">

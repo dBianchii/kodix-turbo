@@ -20,10 +20,11 @@ export default async function Calendar() {
 
   //date Start should be the beginninig of the day
   //date End should be the end of the day
-  await api.app.calendar.getAll({
+  const input = {
     dateStart: dayjs.utc().startOf("day").toDate(),
     dateEnd: dayjs.utc().endOf("day").toDate(),
-  });
+  };
+  await api.app.calendar.getAll(input);
 
   return (
     <MaxWidthWrapper>
@@ -34,7 +35,7 @@ export default async function Calendar() {
       <Separator className="my-4" />
       <CreateEventDialogButton />
       <HydrateClient>
-        <DataTable columns={columns} session={session} />
+        <DataTable columns={columns} session={session} input={input} />
       </HydrateClient>
     </MaxWidthWrapper>
   );
