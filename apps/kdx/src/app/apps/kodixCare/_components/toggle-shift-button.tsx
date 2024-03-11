@@ -78,8 +78,13 @@ export function ToggleShiftButton({ session }: { session: Session }) {
         state.variant = "default";
       }
     } else {
-      state.message = "End previous shift and start new";
-      state.variant = "orange";
+      if (!query.data.checkOut) {
+        state.message = "End previous shift and start new";
+        state.variant = "orange";
+      } else {
+        state.message = "Start new shift";
+        state.variant = "default";
+      }
     }
   }
 
