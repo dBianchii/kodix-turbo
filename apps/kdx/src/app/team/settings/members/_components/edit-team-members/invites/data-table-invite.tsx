@@ -20,7 +20,7 @@ import { api } from "~/trpc/react";
 import { inviteColumns } from "./inviteColumns";
 
 export function InviteDataTable() {
-  const { data } = api.team.invitation.getAll.useQuery();
+  const [data] = api.team.invitation.getAll.useSuspenseQuery();
 
   const utils = api.useUtils();
   const { mutate } = api.team.invitation.delete.useMutation({

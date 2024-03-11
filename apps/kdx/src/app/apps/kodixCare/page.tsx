@@ -6,7 +6,7 @@ import { auth } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
 
 import MaxWidthWrapper from "~/app/_components/max-width-wrapper";
-import { api } from "~/trpc/server";
+import { api, HydrateClient } from "~/trpc/server";
 import DataTableKodixCare from "./_components/data-table-kodix-care";
 import { CurrentShiftClient } from "./_components/shifts";
 
@@ -44,20 +44,21 @@ async function KodixCareTable() {
     dateEnd: dayjs.utc().endOf("day").toDate(),
   };
 
-  const initialCareTasks = await api.app.kodixCare.getCareTasks(input);
+  await api.app.kodixCare.getCareTasks(input);
   return (
-    <DataTableKodixCare initialCareTasks={initialCareTasks} input={input} />
+    <HydrateClient>
+      <DataTableKodixCare input={input} />
+    </HydrateClient>
   );
 }
 
 async function CurrentShift({ session }: { session: Session }) {
-  const initialCurrentShift = await api.app.kodixCare.getCurrentShift();
+  await api.app.kodixCare.getCurrentShift();
 
   return (
-    <CurrentShiftClient
-      initialCurrentShift={initialCurrentShift}
-      session={session}
-    />
+    <HydrateClient>
+      <CurrentShiftClient session={session} />;
+    </HydrateClient>
   );
 }
 

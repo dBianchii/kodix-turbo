@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { LuLoader2 } from "react-icons/lu";
 import { MdNotificationsActive } from "react-icons/md";
 
-import type { RouterOutputs } from "@kdx/api";
 import { Button } from "@kdx/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
 import { Separator } from "@kdx/ui/separator";
@@ -20,17 +19,8 @@ import {
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
-export async function NotificationsPopoverClient({
-  initialNotifications,
-}: {
-  initialNotifications: RouterOutputs["user"]["getNotifications"];
-}) {
-  const { data: notifications } = api.user.getNotifications.useQuery(
-    undefined,
-    {
-      initialData: initialNotifications,
-    },
-  );
+export async function NotificationsPopoverClient() {
+  const [notifications] = api.user.getNotifications.useSuspenseQuery();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const utils = api.useUtils();

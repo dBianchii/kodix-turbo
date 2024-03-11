@@ -16,16 +16,11 @@ const columnHelper =
   >();
 
 export default function DataTableKodixCare({
-  initialCareTasks,
   input,
 }: {
-  initialCareTasks: RouterOutputs["app"]["kodixCare"]["getCareTasks"];
   input: TGetCareTasksInputSchema;
 }) {
-  const { data } = api.app.kodixCare.getCareTasks.useQuery(input, {
-    refetchOnMount: false,
-    initialData: initialCareTasks,
-  });
+  const [data] = api.app.kodixCare.getCareTasks.useSuspenseQuery(input);
 
   const columns = [
     columnHelper.accessor("title", {

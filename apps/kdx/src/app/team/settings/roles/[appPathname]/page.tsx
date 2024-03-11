@@ -6,7 +6,7 @@ import { getAppName } from "@kdx/shared";
 
 import type { AppPathnames } from "~/helpers/miscelaneous";
 import { appIdToPathname, appPathnameToAppId } from "~/helpers/miscelaneous";
-import { api } from "~/trpc/server";
+import { api, HydrateClient } from "~/trpc/server";
 import { DataTableAppPermissions } from "./_components/data-table-app-permissions";
 import { DataTableUserAppRoles } from "./_components/data-table-user-app-roles";
 
@@ -31,29 +31,22 @@ export default async function RolesForAppPage({
 }
 
 async function UserAppRolesTable({ appId }: { appId: KodixAppId }) {
-  const initialPermissions = await api.team.appRole.getPermissions({ appId });
-  const initialUsers = await api.team.appRole.getUsersWithRoles({ appId });
-  const allAppRoles = await api.team.appRole.getAll({ appId });
+  await api.team.appRole.getPermissions({ appId });
+  await api.team.appRole.getUsersWithRoles({ appId });
+  await api.team.appRole.getAll({ appId });
 
-  console.log(initialPermissions);
   return (
     <div className="flex flex-col gap-2">
       <h1 className="font-semibold text-muted-foreground">
         Edit {getAppName(appId)} Permissions
       </h1>
-      <DataTableAppPermissions
-        initialPermissions={initialPermissions}
-        appId={appId}
-        allAppRoles={allAppRoles}
-      />
-      <h1 className="font-semibold text-muted-foreground">
-        Edit {getAppName(appId)} Roles
-      </h1>
-      <DataTableUserAppRoles
-        initialUsers={initialUsers}
-        appId={appId}
-        allAppRoles={allAppRoles}
-      />
+      <HydrateClient>
+        <DataTableAppPermissions appId={appId} allAppRoles={allAppRoles} />
+        <h1 className="font-semibold text-muted-foreground">
+          Edit {getAppName(appId)} Roles
+        </h1>
+        <DataTableUserAppRoles appId={appId} allAppRoles={allAppRoles} />
+      </HydrateClient>
     </div>
   );
 }

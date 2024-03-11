@@ -22,16 +22,8 @@ import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 import { memberColumns } from "./memberColumns";
 
-export function DataTableMembers({
-  initialUsers,
-  session,
-}: {
-  initialUsers: RouterOutputs["team"]["getAllUsers"];
-  session: Session;
-}) {
-  const { data } = api.team.getAllUsers.useQuery(undefined, {
-    initialData: initialUsers,
-  });
+export function DataTableMembers({ session }: { session: Session }) {
+  const [data] = api.team.getAllUsers.useSuspenseQuery();
 
   const utils = api.useUtils();
   const { mutate } = api.team.removeUser.useMutation({
