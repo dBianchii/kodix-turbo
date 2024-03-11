@@ -36,7 +36,7 @@ export default function DataTableKodixCare({
       header: () => <div>Description</div>,
       cell: (info) => <p className="">{info.getValue()}</p>,
     }),
-    columnHelper.accessor("eventDate", {
+    columnHelper.accessor("date", {
       header: () => <div>Date and time</div>,
       cell: (info) => (
         <div className="flex w-60 flex-row gap-3 pl-2">
