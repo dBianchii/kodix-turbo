@@ -34,22 +34,13 @@ import { defaultSafeActionToastError } from "~/helpers/safe-action/default-actio
 import { api } from "~/trpc/react";
 import { doCheckoutAction, toggleShiftButtonAction } from "./actions";
 
-export function ToggleShiftButton({
-  session,
-  currentShift,
-}: {
-  session: Session;
-  currentShift: RouterOutputs["app"]["kodixCare"]["getCurrentShift"];
-}) {
+export function ToggleShiftButton({ session }: { session: Session }) {
+  const query = api.app.kodixCare.getCurrentShift.useQuery();
+
   const [openStartShiftDialog, setOpenStartShiftWarnPreviousDialog] =
     useState(false);
   const [isDoCheckoutDialogOpen, setIsDoCheckoutDialogOpen] = useState(false);
   const [isStartShiftDialogOpen, setIsStartShiftDialogOpen] = useState(false);
-
-  const query = api.app.kodixCare.getCurrentShift.useQuery(undefined, {
-    initialData: currentShift,
-    refetchOnMount: false,
-  });
 
   async function handleClick() {
     if (query.data && !query.data.checkOut) {
