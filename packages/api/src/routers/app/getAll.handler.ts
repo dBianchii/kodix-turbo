@@ -33,6 +33,5 @@ export const getAllHandler = async ({ ctx }: GetAllOptions) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       ({ Teams, devPartnerId, subscriptionCost, ...rest }) => rest,
     ); // remove some fields
-
   return appsWithInstalled;
 };
