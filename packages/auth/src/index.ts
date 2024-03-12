@@ -1,5 +1,6 @@
 import type { AdapterAccount, AdapterUser } from "@auth/core/adapters";
 import type { DefaultSession } from "next-auth";
+import { cache } from "react";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import cuid from "cuid";
 import NextAuth from "next-auth";
@@ -131,7 +132,7 @@ function KodixAdapter(prisma: PrismaClient) {
 
 export const {
   handlers: { GET, POST },
-  auth,
+  auth: defaultAuth,
   signIn,
   signOut,
 } = NextAuth({
@@ -173,3 +174,9 @@ export const {
     //newUser: "/auth/new-user"
   },
 });
+
+/**
+ * This is the main way to get session data for your RSCs.
+ * This will de-duplicate all calls to next-auth's default `auth()` function and only call it once per request across all components
+ */
+export const auth = cache(defaultAuth);
