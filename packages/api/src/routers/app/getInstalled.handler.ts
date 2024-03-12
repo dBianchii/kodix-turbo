@@ -1,5 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
+import { eq } from "@kdx/db";
+
 import type { TProtectedProcedureContext } from "../../trpc";
 
 interface GetInstalledOptions {
@@ -7,12 +9,10 @@ interface GetInstalledOptions {
 }
 
 export const getInstalledHandler = async ({ ctx }: GetInstalledOptions) => {
-  const apps = await ctx.prisma.app.findMany({
-    where: {
-      Teams: {
-        some: {
-          id: ctx.session.user.activeTeamId,
-        },
+  const apps = await ctx.db.query.app.findMany({
+    with: {
+      AppsToTeams: {
+        where: (team) => eq(team.teamId, ctx.session.user.activeTeamId),
       },
     },
   });
