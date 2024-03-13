@@ -7,7 +7,7 @@ import { Skeleton } from "@kdx/ui/skeleton";
 
 import HeaderFooterRemover from "~/app/_components/header-footer-remover";
 import MaxWidthWrapper from "~/app/_components/max-width-wrapper";
-import { api } from "~/trpc/server";
+import { api, HydrateClient } from "~/trpc/server";
 import { AppSwitcher } from "../app-switcher/app-switcher";
 import { NotificationsPopoverClient } from "./notifications-popover-client";
 import { UserProfileButton } from "./user-profile-button";
@@ -88,11 +88,12 @@ export async function Header() {
 }
 
 async function NotificationsPopover() {
-  const initialNotifications = await api.user.getNotifications();
-  if (!initialNotifications.invitations.length) return null;
+  await api.user.getNotifications();
 
   return (
-    <NotificationsPopoverClient initialNotifications={initialNotifications} />
+    <HydrateClient>
+      <NotificationsPopoverClient />
+    </HydrateClient>
   );
 }
 

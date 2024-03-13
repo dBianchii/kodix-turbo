@@ -9,7 +9,16 @@ import SuperJSON from "superjson";
 import type { AppRouter } from "@kdx/api";
 import { getBaseUrl } from "@kdx/shared";
 
-const createQueryClient = () => new QueryClient();
+const createQueryClient = () =>
+  new QueryClient({
+    defaultOptions: {
+      queries: {
+        // Since queries are prefetched on the server, we set a stale time so that
+        // queries aren't immediately refetched on the client
+        staleTime: 60 * 1000,
+      },
+    },
+  });
 
 let clientQueryClientSingleton: QueryClient | undefined = undefined;
 const getQueryClient = () => {

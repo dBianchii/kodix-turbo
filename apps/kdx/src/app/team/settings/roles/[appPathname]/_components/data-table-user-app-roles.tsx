@@ -18,23 +18,15 @@ const columnHelper =
   >();
 
 export function DataTableUserAppRoles({
-  initialUsers,
   allAppRoles,
   appId,
 }: {
-  initialUsers: RouterOutputs["team"]["appRole"]["getUsersWithRoles"];
   allAppRoles: RouterOutputs["team"]["appRole"]["getAll"];
   appId: KodixAppId;
 }) {
   const utils = api.useUtils();
 
-  const { data } = api.team.appRole.getUsersWithRoles.useQuery(
-    { appId },
-    {
-      refetchOnMount: false,
-      initialData: initialUsers,
-    },
-  );
+  const [data] = api.team.appRole.getUsersWithRoles.useSuspenseQuery({ appId });
   const { mutate: updateUserAssociation } =
     api.team.appRole.updateUserAssociation.useMutation({
       async onMutate(newValues) {

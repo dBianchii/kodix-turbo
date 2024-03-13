@@ -6,7 +6,8 @@
  * tl;dr - this is where all the tRPC server stuff is created and plugged in.
  * The pieces you will need to use are documented accordingly near the end
  */
-import type { inferProcedureBuilderResolverOptions } from "@trpc/server";
+// import type { inferProcedureBuilderResolverOptions } from "@trpc/server"; //TODO: revert
+
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
@@ -86,9 +87,9 @@ export const createTRPCRouter = t.router;
  * can still access user session data if they are logged in
  */
 export const publicProcedure = t.procedure;
-export type TPublicProcedureContext = inferProcedureBuilderResolverOptions<
-  typeof publicProcedure
->["ctx"];
+export type TPublicProcedureContext = Parameters<
+  Parameters<(typeof publicProcedure)["mutation"]>[0]
+>[0]["ctx"];
 
 /**
  * Protected (authenticated) procedure
@@ -109,6 +110,7 @@ export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
     },
   });
 });
-export type TProtectedProcedureContext = inferProcedureBuilderResolverOptions<
-  typeof protectedProcedure
->["ctx"];
+export type TProtectedProcedureContext = Parameters<
+  Parameters<(typeof protectedProcedure)["mutation"]>[0]
+>[0]["ctx"];
+//TODO: revert to inferProcedureBuilderResolverOptions

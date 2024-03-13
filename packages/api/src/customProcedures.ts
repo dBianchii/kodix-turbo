@@ -1,4 +1,4 @@
-import type { inferProcedureBuilderResolverOptions } from "@trpc/server";
+// import type { inferProcedureBuilderResolverOptions } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
@@ -36,10 +36,9 @@ export const userAndTeamLimitedProcedure = protectedProcedure.use(
     });
   },
 );
-export type TUserAndTeamLimitedProcedureContext =
-  inferProcedureBuilderResolverOptions<
-    typeof userAndTeamLimitedProcedure
-  >["ctx"];
+export type TUserAndTeamLimitedProcedureContext = Parameters<
+  Parameters<(typeof userAndTeamLimitedProcedure)["mutation"]>[0]
+>[0]["ctx"];
 
 export const isTeamOwnerProcedure = protectedProcedure.use(
   async ({ ctx, next }) => {
@@ -69,6 +68,6 @@ export const isTeamOwnerProcedure = protectedProcedure.use(
     });
   },
 );
-export type TIsTeamOwnerProcedureContext = inferProcedureBuilderResolverOptions<
-  typeof isTeamOwnerProcedure
->["ctx"];
+export type TIsTeamOwnerProcedureContext = Parameters<
+  Parameters<(typeof isTeamOwnerProcedure)["mutation"]>[0]
+>[0]["ctx"];

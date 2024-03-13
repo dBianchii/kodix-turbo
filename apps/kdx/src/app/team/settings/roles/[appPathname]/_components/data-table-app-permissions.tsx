@@ -17,23 +17,15 @@ const columnHelper =
   >();
 
 export function DataTableAppPermissions({
-  initialPermissions,
   appId,
   allAppRoles,
 }: {
-  initialPermissions: RouterOutputs["team"]["appRole"]["getPermissions"];
   appId: KodixAppId;
   allAppRoles: RouterOutputs["team"]["appRole"]["getAll"];
 }) {
   const utils = api.useUtils();
 
-  const { data } = api.team.appRole.getPermissions.useQuery(
-    { appId },
-    {
-      refetchOnMount: false,
-      initialData: initialPermissions,
-    },
-  );
+  const [data] = api.team.appRole.getPermissions.useSuspenseQuery({ appId });
   const { mutate: updatePermissionAssociation } =
     api.team.appRole.updatePermissionAssociation.useMutation({
       async onMutate(newValues) {

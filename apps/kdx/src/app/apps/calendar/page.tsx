@@ -10,7 +10,7 @@ import { CreateEventDialogButton } from "~/app/_components/apps/calendar/create-
 import { DataTable } from "~/app/_components/apps/calendar/data-table";
 import MaxWidthWrapper from "~/app/_components/max-width-wrapper";
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
-import { api } from "~/trpc/server";
+import { api, HydrateClient } from "~/trpc/server";
 
 export default async function Calendar() {
   const session = await redirectIfAppNotInstalled({
@@ -20,10 +20,11 @@ export default async function Calendar() {
 
   //date Start should be the beginninig of the day
   //date End should be the end of the day
-  const data = await api.app.calendar.getAll({
+  const input = {
     dateStart: dayjs.utc().startOf("day").toDate(),
     dateEnd: dayjs.utc().endOf("day").toDate(),
-  });
+  };
+  await api.app.calendar.getAll(input);
 
   return (
     <MaxWidthWrapper>
@@ -33,7 +34,9 @@ export default async function Calendar() {
       </div>
       <Separator className="my-4" />
       <CreateEventDialogButton />
-      <DataTable columns={columns} data={data} session={session} />
+      <HydrateClient>
+        <DataTable columns={columns} session={session} />
+      </HydrateClient>
     </MaxWidthWrapper>
   );
 }
