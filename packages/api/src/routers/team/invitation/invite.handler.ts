@@ -3,6 +3,7 @@ import cuid from "cuid";
 
 import type { Prisma } from "@kdx/db";
 import type { TInviteInputSchema } from "@kdx/validators/trpc/invitation";
+import { schema } from "@kdx/db";
 import { kodixNotificationFromEmail } from "@kdx/react-email/constants";
 import TeamInvite from "@kdx/react-email/team-invite";
 import { getBaseKdxUrl, getSuccessesAndErrors } from "@kdx/shared";
@@ -16,38 +17,70 @@ interface InviteOptions {
 }
 
 export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
-  const team = await ctx.prisma.team.findUniqueOrThrow({
-    where: {
-      id: input.teamId,
-      Users: {
-        some: {
-          id: ctx.session.user.id,
-        },
-      },
-    },
-    select: {
+  // const team = await ctx.prisma.team.findUniqueOrThrow({
+  //   where: {
+  //     id: input.teamId,
+  //     Users: {
+  //       some: {
+  //         id: ctx.session.user.id,
+  //       },
+  //     },
+  //   },
+  //   select: {
+  //     name: true,
+  //     id: true,
+  //     Users: {
+  //       select: {
+  //         email: true,
+  //       },
+  //     },
+  //     Invitations: {
+  //       where: {
+  //         email: {
+  //           in: input.to,
+  //         },
+  //       },
+  //       select: {
+  //         email: true,
+  //       },
+  //     },
+  //   },
+  // });
+  const team = await ctx.db.query.teams.findFirst({
+    where: (teams, { and, eq }) => and(eq(teams.id, input.teamId)),
+    columns: {
       name: true,
       id: true,
-      Users: {
-        select: {
-          email: true,
+    },
+    with: {
+      UsersToTeams: {
+        // where: (usersToTeams, { eq }) =>
+        //   eq(usersToTeams.userId, ctx.session.user.id),
+        with: {
+          User: {
+            columns: {
+              email: true,
+            },
+          },
         },
       },
       Invitations: {
-        where: {
-          email: {
-            in: input.to,
-          },
-        },
-        select: {
+        where: (invitations, { inArray }) =>
+          inArray(invitations.email, input.to),
+        columns: {
           email: true,
         },
       },
     },
   });
+  if (!team)
+    throw new TRPCError({
+      message: "Team not found",
+      code: "NOT_FOUND",
+    });
 
   const inTeamEmail = input.to.find((email) =>
-    team.Users.find((x) => x.email === email),
+    team.UsersToTeams.some((usersToTeams) => usersToTeams.User.email === email),
   );
   if (inTeamEmail)
     throw new TRPCError({
@@ -61,9 +94,9 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
       code: "CONFLICT",
     });
 
-  const invitations: Prisma.InvitationCreateManyInput[] = input.to.map(
+  const invitations: (typeof schema.invitations.$inferInsert)[] = input.to.map(
     (email) => ({
-      id: cuid(),
+      id: crypto.randomUUID(),
       teamId: team.id,
       email,
       invitedById: ctx.session.user.id,
@@ -92,11 +125,16 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
   const { successes } = getSuccessesAndErrors(results);
 
   if (successes.length)
-    await ctx.prisma.invitation.createMany({
-      data: successes.map((success) => {
+    // await ctx.prisma.invitation.createMany({
+    //   data: successes.map((success) => {
+    //     return invitations.find((x) => x.id === success.value.id)!;
+    //   }),
+    // });
+    await ctx.db.insert(schema.invitations).values(
+      successes.map((success) => {
         return invitations.find((x) => x.id === success.value.id)!;
       }),
-    });
+    );
 
   const failedInvites = invitations.filter(
     (invite) => !successes.find((x) => x.value.id === invite.id),

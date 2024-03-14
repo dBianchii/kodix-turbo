@@ -1,22 +1,15 @@
 import {
-  calendarAdminRoleDefaultId,
   calendarAppId,
-  getAppRole_defaultRoleName,
   kdxPartnerId,
   kdxProductionURL,
-  kodixCareAdminRoleDefaultId,
   kodixCareAppId,
-  kodixCareCareGiverRoleDefaultId,
-  kodixCarePatientRoleDefaultId,
-  PKodixCare_CanToggleShiftId,
-  todoAdminRoleDefaultId,
   todoAppId,
 } from "@kdx/shared";
 
-import type { Prisma } from "..";
-import { prisma } from "..";
+import { db, schema, sql } from "..";
+import { appRoles_defaultTree } from "./appRolesDefault_tree";
 
-const devPartners: Prisma.DevPartnerUpsertArgs["create"][] = [
+const devPartners: (typeof schema.devPartners.$inferInsert)[] = [
   {
     id: kdxPartnerId,
     name: "Kodix",
@@ -24,7 +17,7 @@ const devPartners: Prisma.DevPartnerUpsertArgs["create"][] = [
   },
 ];
 
-export const apps: Prisma.AppUpsertArgs["create"][] = [
+export const apps: (typeof schema.apps.$inferInsert)[] = [
   {
     id: todoAppId, //As const so it can be used as a type
     subscriptionCost: 0 as const,
@@ -42,123 +35,109 @@ export const apps: Prisma.AppUpsertArgs["create"][] = [
   },
 ];
 
-//TODO: definir abstracao de roles default em uma arvore como essa
-//TODO: Cada app deve ter um numero de permissoes definidas. E ao definir a arvore de roles com as suas permissoes, deve-se garantir que todas as permissoes estejam definidas.
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const estrutura = {
-  apps: {
-    [kodixCareAppId]: {
-      Roles: {
-        name: "Admin",
-        description: "Admin do KodixCare",
-        permissions: [PKodixCare_CanToggleShiftId],
-      },
-    },
-  },
-};
-
-const appRole_defaults: Prisma.AppRole_defaultUpsertArgs["create"][] = [
-  {
-    id: todoAdminRoleDefaultId,
-    name: getAppRole_defaultRoleName(todoAdminRoleDefaultId),
-    minUsers: 1,
-    maxUsers: 0,
-    appId: todoAppId,
-  },
-  {
-    id: calendarAdminRoleDefaultId,
-    name: getAppRole_defaultRoleName(calendarAdminRoleDefaultId),
-    minUsers: 1,
-    maxUsers: 0,
-    appId: calendarAppId,
-  },
-  {
-    id: kodixCarePatientRoleDefaultId,
-    name: getAppRole_defaultRoleName(kodixCarePatientRoleDefaultId),
-    minUsers: 1,
-    maxUsers: 1,
-    appId: kodixCareAppId,
-  },
-  {
-    id: kodixCareCareGiverRoleDefaultId,
-    name: getAppRole_defaultRoleName(kodixCareCareGiverRoleDefaultId),
-    minUsers: 1,
-    maxUsers: 0,
-    appId: kodixCareAppId,
-  },
-  {
-    id: kodixCareAdminRoleDefaultId,
-    name: getAppRole_defaultRoleName(kodixCareAdminRoleDefaultId),
-    minUsers: 1,
-    maxUsers: 0,
-    appId: kodixCareAppId,
-  },
-];
-
-const appPermissions: Prisma.AppPermissionUpsertArgs["create"][] = [
-  {
-    id: PKodixCare_CanToggleShiftId,
-    name: "CanToggleShift",
-    appId: kodixCareAppId,
-    AppRole_defaults: {
-      connect: {
-        id: kodixCareAdminRoleDefaultId,
-      },
-    },
-  },
-];
-
 async function main() {
   console.log("🌱 Seeding...");
+  validateSeedInput();
 
-  await prisma.$transaction(
-    async (tx) => {
-      for (const devPartner of devPartners)
-        await tx.devPartner.upsert({
-          where: {
-            id: devPartner.id,
-          },
-          update: devPartner,
-          create: devPartner,
-        });
+  await db.transaction(async (tx) => {
+    const toInsertAppPermissions: (typeof schema.appPermissions.$inferInsert)[] =
+      [];
+    const toInsertAppRoleDefaults: (typeof schema.appRoleDefaults.$inferInsert)[] =
+      [];
+    const toInsertAppPermissionsToAppRoleDefaults: (typeof schema.appPermissionsToAppRoleDefaults.$inferInsert)[] =
+      [];
 
-      for (const app of apps)
-        await tx.app.upsert({
-          where: {
-            id: app.id,
-          },
-          update: app,
-          create: app,
-        });
+    for (const [
+      appId,
+      { appRoleDefaults: appRole_defaults, appPermissions },
+    ] of Object.entries(appRoles_defaultTree)) {
+      toInsertAppRoleDefaults.push(
+        ...appRole_defaults.map((appRoleDefault) => {
+          //Remove relations
+          const { AppPermissions: _, ...rest } = appRoleDefault;
 
-      for (const role of appRole_defaults)
-        await tx.appRole_default.upsert({
-          where: {
-            id: role.id,
-          },
-          update: role,
-          create: role,
-        });
+          return { ...rest, appId };
+        }),
+      );
 
-      for (const appPermission of appPermissions)
-        await tx.appPermission.upsert({
-          where: {
-            id: appPermission.id,
-          },
-          update: appPermission,
-          create: {
+      if (appPermissions) {
+        toInsertAppPermissions.push(
+          ...appPermissions.map((appPermission) => ({
             ...appPermission,
-            AppRole_defaults: {
-              connect: [
-                { id: kodixCareAdminRoleDefaultId },
-                { id: kodixCareCareGiverRoleDefaultId },
-              ],
-            },
-          },
+            appId,
+          })),
+        );
+      }
+
+      appPermissions?.forEach((appPermission) => {
+        appRole_defaults.forEach((appRoleDefault) => {
+          toInsertAppPermissionsToAppRoleDefaults.push({
+            appPermissionId: appPermission.id,
+            appRoleDefaultId: appRoleDefault.id,
+          });
         });
-    },
-    { maxWait: 1000000000 },
-  );
+      });
+    }
+
+    await tx
+      .insert(schema.devPartners)
+      .values(devPartners)
+      .onDuplicateKeyUpdate({
+        set: allSetValues(devPartners),
+      });
+    await tx
+      .insert(schema.apps)
+      .values(apps)
+      .onDuplicateKeyUpdate({
+        set: allSetValues(apps),
+      });
+    await tx
+      .insert(schema.appRoleDefaults)
+      .values(toInsertAppRoleDefaults)
+      .onDuplicateKeyUpdate({
+        set: allSetValues(toInsertAppRoleDefaults),
+      });
+    await tx
+      .insert(schema.appPermissions)
+      .values(toInsertAppPermissions)
+      .onDuplicateKeyUpdate({
+        set: allSetValues(toInsertAppPermissions),
+      });
+
+    await tx.delete(schema.appPermissionsToAppRoleDefaults);
+    await tx
+      .insert(schema.appPermissionsToAppRoleDefaults)
+      .values(toInsertAppPermissionsToAppRoleDefaults);
+  });
+}
+
+//TODO: Understand how to upsert correctly https://github.com/drizzle-team/drizzle-orm/issues/1728
+function allSetValues(values: Record<string, unknown>[]) {
+  return Object.assign(
+    {},
+    ...Object.keys(values[0]!).map(
+      (k) => ({ [k]: sql.raw(`values(${k})`) }), //Needs to be raw!
+    ),
+  ) as Record<string, unknown>;
+}
+
+function validateSeedInput() {
+  //? 1. Validate that all appPermissions are assigned to at least one role in their designated app
+  for (const [appId, { appRoleDefaults, appPermissions }] of Object.entries(
+    appRoles_defaultTree,
+  )) {
+    const allPermissionsInRoles = appRoleDefaults.flatMap(
+      (role) => role.AppPermissions,
+    );
+    for (const appPermission of appPermissions ?? []) {
+      if (!allPermissionsInRoles.includes(appPermission.id)) {
+        throw new Error(
+          `🌱 - ❌ Seed input validation failed! Permission ${appPermission.id} is not assigned to any role in app ${appId}`,
+        );
+      }
+    }
+  }
+  console.log("🌱 - ✅ Seed input validation passed!");
 }
 
 main()
@@ -170,5 +149,5 @@ main()
     process.exit(1);
   })
   .finally(() => {
-    void prisma.$disconnect();
+    // void db.$disconnect();
   });

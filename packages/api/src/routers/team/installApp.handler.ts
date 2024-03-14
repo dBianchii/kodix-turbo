@@ -2,8 +2,8 @@ import { revalidateTag } from "next/cache";
 import { TRPCError } from "@trpc/server";
 import cuid from "cuid";
 
-import type { Prisma } from "@kdx/db";
 import type { TInstallAppInputSchema } from "@kdx/validators/trpc/team";
+import { and, eq, schema } from "@kdx/db";
 import { appIdToAdminRole_defaultIdMap } from "@kdx/shared";
 
 import type { TIsTeamOwnerProcedureContext } from "../../customProcedures";
@@ -14,116 +14,135 @@ interface InstallAppOptions {
 }
 
 export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
-  const app = await ctx.prisma.app.findUnique({
-    where: {
-      id: input.appId,
-      Teams: {
-        some: {
-          id: ctx.session.user.activeTeamId,
-        },
-      },
-    },
-  });
-  if (app)
+  const installed = await ctx.db
+    .select({ id: schema.apps.id })
+    .from(schema.apps)
+    .innerJoin(schema.appsToTeams, eq(schema.appsToTeams.appId, schema.apps.id))
+    .innerJoin(schema.teams, eq(schema.teams.id, schema.appsToTeams.teamId))
+    .where(
+      and(
+        eq(schema.teams.id, ctx.session.user.activeTeamId),
+        eq(schema.apps.id, input.appId),
+      ),
+    )
+    .then((res) => res[0]);
+
+  if (installed)
     throw new TRPCError({
       message: "App already installed",
       code: "BAD_REQUEST",
     });
 
-  const appUpdated = await ctx.prisma.$transaction(async (tx) => {
-    const updatedApp = await tx.app.update({
-      where: {
-        id: input.appId,
-      },
-      data: {
-        Teams: {
-          connect: {
-            id: ctx.team.id,
-          },
-        },
-      },
-      select: {
-        id: true,
-      },
+  await ctx.db.transaction(async (tx) => {
+    // const updatedApp = await tx.app.update({
+    //   where: {
+    //     id: input.appId,
+    //   },
+    //   data: {
+    //     Teams: {
+    //       connect: {
+    //         id: ctx.team.id,
+    //       },
+    //     },
+    //   },
+    //   select: {
+    //     id: true,
+    //   },
+    // });
+    await tx.insert(schema.appsToTeams).values({
+      appId: input.appId,
+      teamId: ctx.session.user.activeTeamId,
     });
 
-    const defaultAppRoles = await tx.appRole_default.findMany({
-      where: {
-        appId: input.appId,
-      },
-      select: {
+    // const defaultAppRoles = await tx.appRole_default.findMany({
+    //   where: {
+    //     appId: input.appId,
+    //   },
+    //   select: {
+    //     appId: true,
+    //     maxUsers: true,
+    //     minUsers: true,
+    //     description: true,
+    //     id: true,
+    //     name: true,
+    //     AppPermissions: true,
+    //   },
+    // });
+    const defaultAppRoles = await tx.query.appRoleDefaults.findMany({
+      where: (defaultAppRole, { eq }) => eq(defaultAppRole.appId, input.appId),
+      columns: {
         appId: true,
         maxUsers: true,
         minUsers: true,
         description: true,
         id: true,
         name: true,
-        AppPermissions: true,
+      },
+      with: {
+        AppPermissionsToAppRoleDefaults: true,
       },
     });
 
     const toCopyAppRoles = defaultAppRoles.map((role) => ({
-      id: cuid(),
+      id: crypto.randomUUID(),
       appId: role.appId,
       name: role.name,
       description: role.description,
       maxUsers: role.maxUsers,
       minUsers: role.minUsers,
       teamId: ctx.session.user.activeTeamId,
-      appRole_defaultId: role.id,
-      AppPermissions: role.AppPermissions,
+      appRoleDefaultId: role.id,
+      AppPermissionsToAppRoleDefaults: role.AppPermissionsToAppRoleDefaults,
     }));
 
-    await tx.teamAppRole.createMany({
-      data: toCopyAppRoles.map((role) => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { AppPermissions, ...rest } = role;
+    // await tx.teamAppRole.createMany({
+    //   data: toCopyAppRoles.map((role) => {
+    //     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    //     const { AppPermissions, ...rest } = role;
 
-        const roleWithoutAppPermission: Prisma.TeamAppRoleCreateManyInput =
-          rest;
+    //     const roleWithoutAppPermission: Prisma.TeamAppRoleCreateManyInput =
+    //       rest;
 
-        return roleWithoutAppPermission;
+    //     return roleWithoutAppPermission;
+    //   }),
+    // });
+
+    //? 1. Insert the copied roles
+    await tx.insert(schema.teamAppRoles).values(
+      toCopyAppRoles.map((role) => {
+        const { AppPermissionsToAppRoleDefaults: _, ...rest } = role;
+
+        return rest;
       }),
-    });
-
-    const copiedRolesWithPerms = toCopyAppRoles.filter(
-      (x) => !!x.AppPermissions,
     );
 
-    for (const copiedRole of copiedRolesWithPerms) {
-      const adminRoleId = appIdToAdminRole_defaultIdMap[input.appId];
-      const shouldGiveCurrentUserThisRole =
-        copiedRole.appRole_defaultId === adminRoleId;
+    //? 2. Also connect the permissions to the copied roles
+    const toConnectPermissions = toCopyAppRoles
+      .filter((role) => role.AppPermissionsToAppRoleDefaults.length > 0)
+      .flatMap((role) =>
+        role.AppPermissionsToAppRoleDefaults.map((permission) => ({
+          teamAppRoleId: role.id,
+          appPermissionId: permission.appPermissionId,
+        })),
+      );
 
-      let Users:
-        | undefined
-        | {
-            connect: { id: string };
-          };
-      if (shouldGiveCurrentUserThisRole)
-        Users = {
-          connect: { id: ctx.session.user.id },
-        };
+    if (toConnectPermissions.length > 0)
+      await tx
+        .insert(schema.appPermissionsToTeamAppRoles)
+        .values(toConnectPermissions);
 
-      await tx.teamAppRole.update({
-        where: {
-          id: copiedRole.id,
-        },
-        data: {
-          Users,
-          AppPermissions: {
-            connect: copiedRole.AppPermissions.map((perm) => ({
-              id: perm.id,
-            })),
-          },
-        },
+    const adminRoleForApp = toCopyAppRoles.find(
+      (role) =>
+        role.appRoleDefaultId === appIdToAdminRole_defaultIdMap[input.appId],
+    );
+    if (adminRoleForApp)
+      await tx.insert(schema.teamAppRolesToUsers).values({
+        teamAppRoleId: adminRoleForApp.id,
+        userId: ctx.session.user.id,
       });
-    }
 
-    return updatedApp;
+    // return updatedApp;
   });
 
   revalidateTag("getAllForLoggedUser");
-
-  return appUpdated;
 };

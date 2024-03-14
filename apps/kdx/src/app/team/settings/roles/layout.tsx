@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { redirect } from "next/navigation";
 
 import { auth } from "@kdx/auth";
-import { prisma } from "@kdx/db";
+import { db, eq, schema } from "@kdx/db";
 
 import { AppSwitcher } from "~/app/_components/app-switcher/app-switcher";
 
@@ -13,11 +13,18 @@ export default async function RolesLayout({
 }) {
   const session = await auth();
   if (!session) redirect("/");
-  const team = await prisma.team.findUnique({
-    where: {
-      id: session.user.activeTeamId,
+  // const team = await prisma.team.findUnique({
+  //   where: {
+  //     id: session.user.activeTeamId,
+  //   },
+  // });
+  const team = await db.query.teams.findFirst({
+    where: eq(schema.teams.id, session.user.activeTeamId),
+    columns: {
+      ownerId: true,
     },
   });
+
   if (team?.ownerId !== session.user.id) redirect("/team/settings");
 
   return (

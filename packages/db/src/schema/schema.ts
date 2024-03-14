@@ -1,65 +1,61 @@
 import { relations, sql } from "drizzle-orm";
 import {
-  datetime,
-  decimal,
+  customType,
   index,
   int,
   json,
   mysqlEnum,
   mysqlTable,
   primaryKey,
-  text,
+  timestamp,
   tinyint,
   unique,
   varchar,
 } from "drizzle-orm/mysql-core";
 
 const DEFAULTLENGTH = 255;
+const moneyDecimal = customType<{ data: number }>({
+  dataType: () => "decimal(15,2)",
+  fromDriver: (value) => Number(value), //Remember that JavaScript number is a 64-bit floating point value
+});
 
-export const account = mysqlTable(
+export const accounts = mysqlTable(
   "Account",
   {
-    id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
-    userId: varchar("userId", { length: DEFAULTLENGTH })
-      .notNull()
-      // .references(() => user.id, { onDelete: "cascade" })
+    userId: varchar("userId", { length: DEFAULTLENGTH }).notNull(),
+    // .references(() => users.id, { onDelete: "cascade" }),
+    type: varchar("type", { length: DEFAULTLENGTH })
+      .$type<"oauth" | "oidc" | "email">()
       .notNull(),
-    type: varchar("type", { length: DEFAULTLENGTH }).notNull(),
     provider: varchar("provider", { length: DEFAULTLENGTH }).notNull(),
     providerAccountId: varchar("providerAccountId", {
       length: DEFAULTLENGTH,
     }).notNull(),
-    refreshToken: text("refresh_token"),
-    accessToken: text("access_token"),
-    expiresAt: int("expires_at"),
-    tokenType: varchar("token_type", { length: DEFAULTLENGTH }),
+    refresh_token: varchar("refresh_token", { length: DEFAULTLENGTH }),
+    access_token: varchar("access_token", { length: DEFAULTLENGTH }),
+    expires_at: int("expires_at"),
+    token_type: varchar("token_type", { length: DEFAULTLENGTH }),
     scope: varchar("scope", { length: DEFAULTLENGTH }),
-    idToken: text("id_token"),
-    sessionState: varchar("session_state", { length: DEFAULTLENGTH }),
+    id_token: varchar("id_token", { length: 2048 }),
+    session_state: varchar("session_state", { length: DEFAULTLENGTH }),
   },
-  (table) => {
-    return {
-      userIdIdx: index("Account_userId_idx").on(table.userId),
-      accountId: primaryKey({ columns: [table.id], name: "Account_id" }),
-      accountProviderProviderAccountIdKey: unique(
-        "Account_provider_providerAccountId_key",
-      ).on(table.provider, table.providerAccountId),
-    };
-  },
+  (account) => ({
+    compoundKey: primaryKey({
+      columns: [account.provider, account.providerAccountId],
+    }),
+    userIdIdx: index("userId_idx").on(account.userId),
+  }),
 );
 
-export const app = mysqlTable(
+export const apps = mysqlTable(
   "App",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
-    createdAt: datetime("createdAt", { mode: "string", fsp: 3 })
-      .default(sql`CURRENT_TIMESTAMP(3)`)
+    createdAt: timestamp("createdAt")
+      .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: datetime("updatedAt", { mode: "string", fsp: 3 }).notNull(),
-    subscriptionCost: decimal("subscriptionCost", {
-      precision: 65,
-      scale: 30,
-    }).notNull(),
+    updatedAt: timestamp("updatedAt").onUpdateNow(),
+    subscriptionCost: moneyDecimal("subscriptionCost").notNull(),
     devPartnerId: varchar("devPartnerId", { length: DEFAULTLENGTH }).notNull(),
     // .references(() => devPartner.id),
   },
@@ -71,7 +67,7 @@ export const app = mysqlTable(
   },
 );
 
-export const appPermission = mysqlTable(
+export const appPermissions = mysqlTable(
   "AppPermission",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
@@ -91,7 +87,7 @@ export const appPermission = mysqlTable(
   },
 );
 
-export const appRoleDefault = mysqlTable(
+export const appRoleDefaults = mysqlTable(
   "AppRole_default",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
@@ -113,7 +109,7 @@ export const appRoleDefault = mysqlTable(
   },
 );
 
-export const appTeamConfig = mysqlTable(
+export const appTeamConfigs = mysqlTable(
   "AppTeamConfig",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
@@ -139,7 +135,7 @@ export const appTeamConfig = mysqlTable(
   },
 );
 
-export const careShift = mysqlTable(
+export const careShifts = mysqlTable(
   "CareShift",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
@@ -147,11 +143,11 @@ export const careShift = mysqlTable(
     // .references(() => user.id),
     teamId: varchar("teamId", { length: DEFAULTLENGTH }).notNull(),
     // .references(() => team.id, { onDelete: "cascade" }),
-    checkIn: datetime("checkIn", { mode: "string", fsp: 3 })
-      .default(sql`CURRENT_TIMESTAMP(3)`)
+    checkIn: timestamp("checkIn")
+      .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    checkOut: datetime("checkOut", { mode: "string", fsp: 3 }),
-    shiftEndedAt: datetime("shiftEndedAt", { mode: "string", fsp: 3 }),
+    checkOut: timestamp("checkOut"),
+    shiftEndedAt: timestamp("shiftEndedAt"),
     notes: varchar("notes", { length: DEFAULTLENGTH }),
   },
   (table) => {
@@ -163,12 +159,12 @@ export const careShift = mysqlTable(
   },
 );
 
-export const careTask = mysqlTable(
+export const careTasks = mysqlTable(
   "CareTask",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
-    eventDate: datetime("eventDate", { mode: "string", fsp: 3 }).notNull(),
-    doneAt: datetime("doneAt", { mode: "string", fsp: 3 }),
+    eventDate: timestamp("eventDate").notNull(),
+    doneAt: timestamp("doneAt"),
     doneByUserId: varchar("doneByUserId", { length: DEFAULTLENGTH }),
     // .references(
     //   () => user.id,
@@ -201,16 +197,16 @@ export const careTask = mysqlTable(
   },
 );
 
-export const devPartner = mysqlTable(
+export const devPartners = mysqlTable(
   "DevPartner",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
     name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
     partnerUrl: varchar("partnerUrl", { length: DEFAULTLENGTH }),
-    createdAt: datetime("createdAt", { mode: "string", fsp: 3 })
-      .default(sql`CURRENT_TIMESTAMP(3)`)
+    createdAt: timestamp("createdAt")
+      .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: datetime("updatedAt", { mode: "string", fsp: 3 }).notNull(),
+    updatedAt: timestamp("updatedAt").onUpdateNow(),
   },
   (table) => {
     return {
@@ -219,12 +215,12 @@ export const devPartner = mysqlTable(
   },
 );
 
-export const eventCancellation = mysqlTable(
+export const eventCancellations = mysqlTable(
   "EventCancellation",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
-    originalDate: datetime("originalDate", {
-      mode: "string",
+    originalDate: timestamp("originalDate", {
+      mode: "date",
       fsp: 3,
     }).notNull(),
     eventMasterId: varchar("eventMasterId", {
@@ -245,15 +241,15 @@ export const eventCancellation = mysqlTable(
   },
 );
 
-export const eventException = mysqlTable(
+export const eventExceptions = mysqlTable(
   "EventException",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
-    originalDate: datetime("originalDate", {
-      mode: "string",
+    originalDate: timestamp("originalDate", {
+      mode: "date",
       fsp: 3,
     }).notNull(),
-    newDate: datetime("newDate", { mode: "string", fsp: 3 }).notNull(),
+    newDate: timestamp("newDate", { mode: "date", fsp: 3 }).notNull(),
     title: varchar("title", { length: DEFAULTLENGTH }),
     description: varchar("description", { length: DEFAULTLENGTH }),
     eventMasterId: varchar("eventMasterId", {
@@ -274,13 +270,13 @@ export const eventException = mysqlTable(
   },
 );
 
-export const eventMaster = mysqlTable(
+export const eventMasters = mysqlTable(
   "EventMaster",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
     rule: varchar("rule", { length: DEFAULTLENGTH }).notNull(),
-    dateStart: datetime("DateStart", { mode: "string", fsp: 3 }).notNull(),
-    dateUntil: datetime("DateUntil", { mode: "string", fsp: 3 }),
+    dateStart: timestamp("DateStart", { mode: "date", fsp: 3 }).notNull(),
+    dateUntil: timestamp("DateUntil", { mode: "date", fsp: 3 }),
     title: varchar("title", { length: DEFAULTLENGTH }),
     description: varchar("description", { length: DEFAULTLENGTH }),
     teamId: varchar("teamId", { length: DEFAULTLENGTH }).notNull(),
@@ -297,7 +293,7 @@ export const eventMaster = mysqlTable(
   },
 );
 
-export const invitation = mysqlTable(
+export const invitations = mysqlTable(
   "Invitation",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
@@ -305,10 +301,10 @@ export const invitation = mysqlTable(
     // .references(() => team.id, { onDelete: "cascade" }),
     email: varchar("email", { length: DEFAULTLENGTH }).notNull(),
     accepted: tinyint("accepted").default(0).notNull(), //Is this necessary? Since we just delete the invitation when the user accepts it
-    createdAt: datetime("createdAt", { mode: "string", fsp: 3 })
-      .default(sql`CURRENT_TIMESTAMP(3)`)
+    createdAt: timestamp("createdAt")
+      .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: datetime("updatedAt", { mode: "string", fsp: 3 }).notNull(),
+    updatedAt: timestamp("updatedAt").onUpdateNow(),
     invitedById: varchar("invitedById", { length: DEFAULTLENGTH }).notNull(),
     // .references(() => user.id),
   },
@@ -321,7 +317,7 @@ export const invitation = mysqlTable(
   },
 );
 
-export const notification = mysqlTable(
+export const notifications = mysqlTable(
   "Notification",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
@@ -339,49 +335,45 @@ export const notification = mysqlTable(
   },
 );
 
-export const post = mysqlTable(
-  "Post",
-  {
-    id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
-    title: varchar("title", { length: DEFAULTLENGTH }).notNull(),
-    content: varchar("content", { length: DEFAULTLENGTH }).notNull(),
-  },
-  (table) => {
-    return {
-      postId: primaryKey({ columns: [table.id], name: "Post_id" }),
-    };
-  },
-);
+// export const posts = mysqlTable(
+//   "Post",
+//   {
+//     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
+//     title: varchar("title", { length: DEFAULTLENGTH }).notNull(),
+//     content: varchar("content", { length: DEFAULTLENGTH }).notNull(),
+//   },
+//   (table) => {
+//     return {
+//       postId: primaryKey({ columns: [table.id], name: "Post_id" }),
+//     };
+//   },
+// );
 
-export const session = mysqlTable(
+export const sessions = mysqlTable(
   "Session",
   {
-    id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
-    sessionToken: varchar("sessionToken", { length: DEFAULTLENGTH }).notNull(),
+    sessionToken: varchar("sessionToken", { length: DEFAULTLENGTH })
+      .notNull()
+      .primaryKey()
+      .unique(), //REMOVE UNIQUE AFTER PRISMA
     userId: varchar("userId", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => user.id, { onDelete: "cascade" }),
-    expires: datetime("expires", { mode: "string", fsp: 3 }).notNull(),
+    // .references(() => users.id, { onDelete: "cascade" }),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
   },
-  (table) => {
-    return {
-      userIdIdx: index("Session_userId_idx").on(table.userId),
-      sessionId: primaryKey({ columns: [table.id], name: "Session_id" }),
-      sessionSessionTokenKey: unique("Session_sessionToken_key").on(
-        table.sessionToken,
-      ),
-    };
-  },
+  (session) => ({
+    userIdIdx: index("userId_idx").on(session.userId),
+  }),
 );
 
-export const team = mysqlTable(
+export const teams = mysqlTable(
   "Team",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
     name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
-    createdAt: datetime("createdAt", { mode: "string", fsp: 3 })
-      .default(sql`CURRENT_TIMESTAMP(3)`)
+    createdAt: timestamp("createdAt")
+      .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: datetime("updatedAt", { mode: "string", fsp: 3 }).notNull(),
+    updatedAt: timestamp("updatedAt").onUpdateNow(),
     ownerId: varchar("ownerId", { length: DEFAULTLENGTH }).notNull(),
     // .references(() => user.id, { onUpdate: "cascade" }),
   },
@@ -394,7 +386,7 @@ export const team = mysqlTable(
   },
 );
 
-export const teamAppRole = mysqlTable(
+export const teamAppRoles = mysqlTable(
   "TeamAppRole",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
@@ -406,11 +398,12 @@ export const teamAppRole = mysqlTable(
     // .references(() => app.id, { onDelete: "cascade" }),
     teamId: varchar("teamId", { length: DEFAULTLENGTH }).notNull(),
     // .references(() => team.id, { onDelete: "cascade" }),
-    appRoleDefaultId: varchar("appRole_defaultId", { length: DEFAULTLENGTH }),
-    // .references(
-    //   () => appRoleDefault.id,
-    //   { onDelete: "set null", onUpdate: "cascade" },
-    // ),
+    appRoleDefaultId: varchar("appRole_defaultId", {
+      length: DEFAULTLENGTH,
+    }).references(() => appRoleDefaults.id, {
+      onDelete: "set null",
+      onUpdate: "cascade",
+    }),
   },
   (table) => {
     return {
@@ -427,13 +420,13 @@ export const teamAppRole = mysqlTable(
   },
 );
 
-export const todo = mysqlTable(
+export const todos = mysqlTable(
   "Todo",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
     title: varchar("title", { length: DEFAULTLENGTH }).notNull(),
     description: varchar("description", { length: DEFAULTLENGTH }),
-    dueDate: datetime("dueDate", { mode: "string", fsp: 3 }),
+    dueDate: timestamp("dueDate"),
     priority: int("priority"),
     category: varchar("category", { length: DEFAULTLENGTH }),
     status: mysqlEnum("status", [
@@ -462,13 +455,13 @@ export const todo = mysqlTable(
   },
 );
 
-export const user = mysqlTable(
+export const users = mysqlTable(
   "User",
   {
-    id: varchar("id", { length: 255 }).notNull().primaryKey(),
+    id: varchar("id", { length: DEFAULTLENGTH }).notNull().primaryKey(),
     name: varchar("name", { length: DEFAULTLENGTH }),
     email: varchar("email", { length: DEFAULTLENGTH }).notNull(),
-    emailVerified: datetime("emailVerified", { mode: "string", fsp: 3 }),
+    emailVerified: timestamp("emailVerified").default(sql`CURRENT_TIMESTAMP`),
     image: varchar("image", { length: DEFAULTLENGTH }),
     activeTeamId: varchar("activeTeamId", { length: DEFAULTLENGTH }).notNull(),
     kodixAdmin: tinyint("kodixAdmin").default(0).notNull(),
@@ -481,26 +474,21 @@ export const user = mysqlTable(
   },
 );
 
-export const verificationToken = mysqlTable(
+export const verificationTokens = mysqlTable(
   "VerificationToken",
   {
-    identifier: varchar("identifier", { length: DEFAULTLENGTH }).notNull(),
-    token: varchar("token", { length: DEFAULTLENGTH }).notNull(),
-    expires: datetime("expires", { mode: "string", fsp: 3 }).notNull(),
+    identifier: varchar("identifier", { length: DEFAULTLENGTH })
+      .notNull()
+      .unique(), //REMOVE UNIQUE AFTER PRISMA
+    token: varchar("token", { length: DEFAULTLENGTH }).notNull().unique(), //REMOVE UNIQUE AFTER PRISMA
+    expires: timestamp("expires", { mode: "date" }).notNull(),
   },
-  (table) => {
-    return {
-      verificationTokenIdentifierTokenKey: unique(
-        "VerificationToken_identifier_token_key",
-      ).on(table.identifier, table.token),
-      verificationTokenTokenKey: unique("VerificationToken_token_key").on(
-        table.token,
-      ),
-    };
-  },
+  (vt) => ({
+    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
+  }),
 );
 
-export const appPermissionToAppRoleDefault = mysqlTable(
+export const appPermissionsToAppRoleDefaults = mysqlTable(
   "_AppPermissionToAppRole_default",
   {
     appPermissionId: varchar("A", { length: DEFAULTLENGTH }).notNull(),
@@ -510,7 +498,7 @@ export const appPermissionToAppRoleDefault = mysqlTable(
   },
   (table) => {
     return {
-      bIdx: index("bIdx").on(table.appRoleDefaultId),
+      appRoleDefaultIdIdx: index("bIdx").on(table.appRoleDefaultId),
       appPermissionToAppRoleDefaultAbUnique: unique(
         "_AppPermissionToAppRole_default_AB_unique",
       ).on(table.appPermissionId, table.appRoleDefaultId),
@@ -518,21 +506,21 @@ export const appPermissionToAppRoleDefault = mysqlTable(
   },
 );
 
-export const appPermissionToAppRoleDefaultRelations = relations(
-  appPermissionToAppRoleDefault,
+export const appPermissionsToAppRoleDefaultsRelations = relations(
+  appPermissionsToAppRoleDefaults,
   ({ one }) => ({
-    AppPermission: one(appPermission, {
-      fields: [appPermissionToAppRoleDefault.appPermissionId],
-      references: [appPermission.id],
+    AppPermission: one(appPermissions, {
+      fields: [appPermissionsToAppRoleDefaults.appPermissionId],
+      references: [appPermissions.id],
     }),
-    AppRoleDefault: one(appRoleDefault, {
-      fields: [appPermissionToAppRoleDefault.appRoleDefaultId],
-      references: [appRoleDefault.id],
+    AppRoleDefault: one(appRoleDefaults, {
+      fields: [appPermissionsToAppRoleDefaults.appRoleDefaultId],
+      references: [appRoleDefaults.id],
     }),
   }),
 );
 
-export const appPermissionToTeamAppRole = mysqlTable(
+export const appPermissionsToTeamAppRoles = mysqlTable(
   "_AppPermissionToTeamAppRole",
   {
     appPermissionId: varchar("A", { length: DEFAULTLENGTH }).notNull(),
@@ -550,21 +538,21 @@ export const appPermissionToTeamAppRole = mysqlTable(
   },
 );
 
-export const appPermissionToTeamAppRoleRelations = relations(
-  appPermissionToTeamAppRole,
+export const appPermissionsToTeamAppRolesRelations = relations(
+  appPermissionsToTeamAppRoles,
   ({ one }) => ({
-    AppPermission: one(appPermission, {
-      fields: [appPermissionToTeamAppRole.appPermissionId],
-      references: [appPermission.id],
+    AppPermission: one(appPermissions, {
+      fields: [appPermissionsToTeamAppRoles.appPermissionId],
+      references: [appPermissions.id],
     }),
-    TeamAppRole: one(teamAppRole, {
-      fields: [appPermissionToTeamAppRole.teamAppRoleId],
-      references: [teamAppRole.id],
+    TeamAppRole: one(teamAppRoles, {
+      fields: [appPermissionsToTeamAppRoles.teamAppRoleId],
+      references: [teamAppRoles.id],
     }),
   }),
 );
 
-export const appToTeam = mysqlTable(
+export const appsToTeams = mysqlTable(
   "_AppTeam",
   {
     appId: varchar("A", { length: DEFAULTLENGTH }).notNull(),
@@ -583,18 +571,18 @@ export const appToTeam = mysqlTable(
   },
 );
 
-export const appToTeamRelations = relations(appToTeam, ({ one }) => ({
-  App: one(app, {
-    fields: [appToTeam.appId],
-    references: [app.id],
+export const appsToTeamsRelations = relations(appsToTeams, ({ one }) => ({
+  App: one(apps, {
+    fields: [appsToTeams.appId],
+    references: [apps.id],
   }),
-  Team: one(team, {
-    fields: [appToTeam.teamId],
-    references: [team.id],
+  Team: one(teams, {
+    fields: [appsToTeams.teamId],
+    references: [teams.id],
   }),
 }));
 
-export const teamAppRoleToUser = mysqlTable(
+export const teamAppRolesToUsers = mysqlTable(
   "_TeamAppRoleToUser",
   {
     teamAppRoleId: varchar("A", { length: DEFAULTLENGTH }).notNull(),
@@ -613,228 +601,250 @@ export const teamAppRoleToUser = mysqlTable(
   },
 );
 
-export const teamAppRoleToUserRelations = relations(
-  teamAppRoleToUser,
+export const teamAppRolesToUsersRelations = relations(
+  teamAppRolesToUsers,
   ({ one }) => ({
-    TeamAppRole: one(teamAppRole, {
-      fields: [teamAppRoleToUser.teamAppRoleId],
-      references: [teamAppRole.id],
+    TeamAppRole: one(teamAppRoles, {
+      fields: [teamAppRolesToUsers.teamAppRoleId],
+      references: [teamAppRoles.id],
     }),
-    User: one(user, {
-      fields: [teamAppRoleToUser.userId],
-      references: [user.id],
+    User: one(users, {
+      fields: [teamAppRolesToUsers.userId],
+      references: [users.id],
     }),
   }),
 );
 
-export const userTeam = mysqlTable(
+export const usersToTeams = mysqlTable(
   "_UserTeam",
   {
-    a: varchar("A", { length: DEFAULTLENGTH }).notNull(),
+    userId: varchar("A", { length: DEFAULTLENGTH }).notNull(),
     // .references(() => user.id),
-    b: varchar("B", { length: DEFAULTLENGTH }).notNull(),
+    teamId: varchar("B", { length: DEFAULTLENGTH }).notNull(),
     // .references(() => team.id),
   },
   (table) => {
     return {
-      bIdx: index("bIdx").on(table.b),
-      userTeamAbUnique: unique("_UserTeam_AB_unique").on(table.a, table.b),
+      bIdx: index("bIdx").on(table.teamId),
+      userTeamAbUnique: unique("_UserTeam_AB_unique").on(
+        table.userId,
+        table.teamId,
+      ),
     };
   },
 );
 
-export const accountRelations = relations(account, ({ many }) => ({
-  Users: many(account),
-}));
-
-export const appRelations = relations(app, ({ many, one }) => ({
-  AppsToTeams: many(appToTeam),
-  DevPartners: one(devPartner, {
-    fields: [app.devPartnerId],
-    references: [devPartner.id],
+export const usersToTeamsRelations = relations(usersToTeams, ({ one }) => ({
+  User: one(users, {
+    fields: [usersToTeams.userId],
+    references: [users.id],
   }),
-  AppTeamConfigs: many(appTeamConfig),
-  AppRole_defaults: many(appRoleDefault),
-  TeamAppRoles: many(teamAppRole),
-  AppPermissions: many(appPermission),
+  Team: one(teams, {
+    fields: [usersToTeams.teamId],
+    references: [teams.id],
+  }),
 }));
 
-export const appPermissionRelations = relations(
-  appPermission,
+export const accountsRelations = relations(accounts, ({ one }) => ({
+  Users: one(users, { fields: [accounts.userId], references: [users.id] }),
+}));
+
+export const appRelations = relations(apps, ({ many, one }) => ({
+  AppsToTeams: many(appsToTeams),
+  DevPartners: one(devPartners, {
+    fields: [apps.devPartnerId],
+    references: [devPartners.id],
+  }),
+  AppTeamConfigs: many(appTeamConfigs),
+  AppRole_defaults: many(appRoleDefaults),
+  TeamAppRoles: many(teamAppRoles),
+  AppPermissions: many(appPermissions),
+}));
+
+export const appPermissionsRelations = relations(
+  appPermissions,
   ({ many, one }) => ({
-    App: one(app, {
-      fields: [appPermission.appId],
-      references: [app.id],
+    App: one(apps, {
+      fields: [appPermissions.appId],
+      references: [apps.id],
     }),
-    AppRoles: many(appRoleDefault),
-    TeamAppRoles: many(teamAppRole),
+    AppPermissionsToAppRoleDefaults: many(appPermissionsToAppRoleDefaults),
+    AppPermissionsToTeamAppRoles: many(appPermissionsToTeamAppRoles),
   }),
 );
 
-export const appRoleDefaultRelations = relations(
-  appRoleDefault,
+export const appRoleDefaultsRelations = relations(
+  appRoleDefaults,
   ({ many, one }) => ({
-    App: one(app, {
-      fields: [appRoleDefault.appId],
-      references: [app.id],
+    App: one(apps, {
+      fields: [appRoleDefaults.appId],
+      references: [apps.id],
     }),
-    AppPermissions: many(appPermission),
-    TeamAppRoles: many(teamAppRole),
+    AppPermissionsToAppRoleDefaults: many(appPermissionsToAppRoleDefaults),
+    TeamAppRoles: many(teamAppRoles),
   }),
 );
 
-export const appTeamConfigRelations = relations(appTeamConfig, ({ one }) => ({
-  App: one(app, {
-    fields: [appTeamConfig.appId],
-    references: [app.id],
+export const appTeamConfigsRelations = relations(appTeamConfigs, ({ one }) => ({
+  App: one(apps, {
+    fields: [appTeamConfigs.appId],
+    references: [apps.id],
   }),
-  Team: one(team, {
-    fields: [appTeamConfig.teamId],
-    references: [team.id],
-  }),
-}));
-
-export const careShiftRelations = relations(careShift, ({ one }) => ({
-  Caregiver: one(user, {
-    fields: [careShift.caregiverId],
-    references: [user.id],
-  }),
-  Team: one(team, {
-    fields: [careShift.teamId],
-    references: [team.id],
+  Team: one(teams, {
+    fields: [appTeamConfigs.teamId],
+    references: [teams.id],
   }),
 }));
 
-export const careTaskRelations = relations(careTask, ({ one, many }) => ({
-  DoneByUser: one(user, {
-    fields: [careTask.doneByUserId],
-    references: [user.id],
+export const careShiftsRelations = relations(careShifts, ({ one }) => ({
+  Caregiver: one(users, {
+    fields: [careShifts.caregiverId],
+    references: [users.id],
   }),
-  Team: one(team, {
-    fields: [careTask.teamId],
-    references: [team.id],
-  }),
-  CareShift: one(careShift, {
-    fields: [careTask.idCareShift],
-    references: [careShift.id],
+  Team: one(teams, {
+    fields: [careShifts.teamId],
+    references: [teams.id],
   }),
 }));
 
-export const devPartnerRelations = relations(devPartner, ({ many }) => ({
-  Apps: many(app),
+export const careTasksRelations = relations(careTasks, ({ one }) => ({
+  DoneByUser: one(users, {
+    fields: [careTasks.doneByUserId],
+    references: [users.id],
+  }),
+  Team: one(teams, {
+    fields: [careTasks.teamId],
+    references: [teams.id],
+  }),
+  CareShift: one(careShifts, {
+    fields: [careTasks.idCareShift],
+    references: [careShifts.id],
+  }),
+  EventMaster: one(eventMasters, {
+    fields: [careTasks.eventMasterId],
+    references: [eventMasters.id],
+  }),
 }));
 
-export const eventCancellationRelations = relations(
-  eventCancellation,
+export const devPartnersRelations = relations(devPartners, ({ many }) => ({
+  Apps: many(apps),
+}));
+
+export const eventCancellationsRelations = relations(
+  eventCancellations,
   ({ one }) => ({
-    EventMaster: one(eventMaster, {
-      fields: [eventCancellation.eventMasterId],
-      references: [eventMaster.id],
+    EventMaster: one(eventMasters, {
+      fields: [eventCancellations.eventMasterId],
+      references: [eventMasters.id],
     }),
   }),
 );
 
-export const eventExceptionRelations = relations(eventException, ({ one }) => ({
-  EventMaster: one(eventMaster, {
-    fields: [eventException.eventMasterId],
-    references: [eventMaster.id],
+export const eventExceptionsRelations = relations(
+  eventExceptions,
+  ({ one }) => ({
+    EventMaster: one(eventMasters, {
+      fields: [eventExceptions.eventMasterId],
+      references: [eventMasters.id],
+    }),
+  }),
+);
+
+export const eventMastersRelations = relations(
+  eventMasters,
+  ({ many, one }) => ({
+    Team: one(teams, {
+      fields: [eventMasters.teamId],
+      references: [teams.id],
+    }),
+    CareTasks: many(careTasks),
+    EventExceptions: many(eventExceptions),
+    EventCancellations: many(eventCancellations),
+  }),
+);
+
+export const invitationsRelations = relations(invitations, ({ one }) => ({
+  InvitedBy: one(users, {
+    fields: [invitations.invitedById],
+    references: [users.id],
+  }),
+  Team: one(teams, {
+    fields: [invitations.teamId],
+    references: [teams.id],
   }),
 }));
 
-export const eventMasterRelations = relations(eventMaster, ({ many, one }) => ({
-  Team: one(team, {
-    fields: [eventMaster.teamId],
-    references: [team.id],
-  }),
-  CareTasks: many(careTask),
-  EventExceptions: many(eventException),
-  EventCancellations: many(eventCancellation),
-}));
-
-export const invitationRelations = relations(invitation, ({ one }) => ({
-  InvitedBy: one(user, {
-    fields: [invitation.invitedById],
-    references: [user.id],
-  }),
-  Team: one(team, {
-    fields: [invitation.teamId],
-    references: [team.id],
+export const notificationsRelations = relations(notifications, ({ one }) => ({
+  User: one(users, {
+    fields: [notifications.userId],
+    references: [users.id],
   }),
 }));
 
-export const notificationRelations = relations(notification, ({ one }) => ({
-  User: one(user, {
-    fields: [notification.userId],
-    references: [user.id],
+export const sessionsRelations = relations(sessions, ({ one }) => ({
+  User: one(users, {
+    fields: [sessions.userId],
+    references: [users.id],
   }),
 }));
 
-export const postRelations = relations(post, ({ many }) => ({
-  Users: many(user),
+export const teamsRelations = relations(teams, ({ many, one }) => ({
+  Owner: one(users, {
+    fields: [teams.ownerId],
+    references: [users.id],
+  }),
+  UsersToTeams: many(usersToTeams),
+  AppsToTeams: many(appsToTeams),
+  TeamAppRoles: many(teamAppRoles),
+  AppTeamConfigs: many(appTeamConfigs),
+  CareShifts: many(careShifts),
+  CareTasks: many(careTasks),
+  EventMasters: many(eventMasters),
+  Invitations: many(invitations),
+  Todos: many(todos),
 }));
 
-export const sessionRelations = relations(session, ({ one }) => ({
-  User: one(user, {
-    fields: [session.userId],
-    references: [user.id],
+export const teamAppRolesRelations = relations(
+  teamAppRoles,
+  ({ one, many }) => ({
+    App: one(apps, {
+      fields: [teamAppRoles.appId],
+      references: [apps.id],
+    }),
+    Team: one(teams, {
+      fields: [teamAppRoles.teamId],
+      references: [teams.id],
+    }),
+    AppRoleDefault: one(appRoleDefaults, {
+      fields: [teamAppRoles.appRoleDefaultId],
+      references: [appRoleDefaults.id],
+    }),
+    AppPermissionsToTeamAppRoles: many(appPermissionsToTeamAppRoles),
+    TeamAppRolesToUsers: many(teamAppRolesToUsers),
   }),
-}));
+);
 
-export const teamRelations = relations(team, ({ many, one }) => ({
-  Owner: one(user, {
-    fields: [team.ownerId],
-    references: [user.id],
+export const todosRelations = relations(todos, ({ one }) => ({
+  AssignedToUser: one(users, {
+    fields: [todos.assignedToUserId],
+    references: [users.id],
   }),
-  Users: many(user),
-  AppsToTeams: many(appToTeam),
-  TeamAppRoles: many(teamAppRole),
-  AppTeamConfigs: many(appTeamConfig),
-  CareShifts: many(careShift),
-  CareTasks: many(careTask),
-  EventMasters: many(eventMaster),
-  Invitations: many(invitation),
-  Notifications: many(notification),
-  Todos: many(todo),
-}));
-
-export const teamAppRoleRelations = relations(teamAppRole, ({ one, many }) => ({
-  App: one(app, {
-    fields: [teamAppRole.appId],
-    references: [app.id],
-  }),
-  Team: one(team, {
-    fields: [teamAppRole.teamId],
-    references: [team.id],
-  }),
-  AppRoleDefault: one(appRoleDefault, {
-    fields: [teamAppRole.appRoleDefaultId],
-    references: [appRoleDefault.id],
-  }),
-  AppPermissions: many(appPermission),
-  Users: many(user),
-}));
-
-export const todoRelations = relations(todo, ({ one }) => ({
-  AssignedToUser: one(user, {
-    fields: [todo.assignedToUserId],
-    references: [user.id],
-  }),
-  Team: one(team, {
-    fields: [todo.teamId],
-    references: [team.id],
+  Team: one(teams, {
+    fields: [todos.teamId],
+    references: [teams.id],
   }),
 }));
 
-export const userRelations = relations(user, ({ many, one }) => ({
-  ActiveTeam: one(team, {
-    fields: [user.activeTeamId],
-    references: [team.id],
+export const usersRelations = relations(users, ({ many, one }) => ({
+  ActiveTeam: one(teams, {
+    fields: [users.activeTeamId],
+    references: [teams.id],
   }),
-  Invitations: many(invitation),
-  Notifications: many(notification),
-  Posts: many(post),
-  Sessions: many(session),
-  Teams: many(team),
-  Todos: many(todo),
-  TeamAppRoles: many(teamAppRole),
+  Invitations: many(invitations),
+  Notifications: many(notifications),
+  Sessions: many(sessions),
+  Teams: many(usersToTeams),
+  Todos: many(todos),
+  TeamAppRolesToUsers: many(teamAppRolesToUsers),
+  Accounts: many(accounts),
 }));

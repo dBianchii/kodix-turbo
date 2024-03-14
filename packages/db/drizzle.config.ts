@@ -9,14 +9,14 @@ const uri = [
   process.env.DB_HOST,
   ":3306/",
   process.env.DB_NAME,
-  '?ssl={"rejectUnauthorized":true}',
+  !process.env.DB_HOST?.includes("localhost")
+    ? '?ssl={"rejectUnauthorized":true}'
+    : "",
 ].join("");
-
-console.log(uri);
 
 export default {
   schema: "./src/schema",
+  out: "./drizzle",
   driver: "mysql2",
   dbCredentials: { uri },
-  // tablesFilter: ["drizzlekdx_*"],
 } satisfies Config;

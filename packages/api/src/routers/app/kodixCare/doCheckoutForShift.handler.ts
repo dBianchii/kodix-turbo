@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import type { TDoCheckoutForShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import dayjs from "@kdx/dayjs";
+import { eq, schema } from "@kdx/db";
 
 import type { TProtectedProcedureContext } from "../../../trpc";
 import { getCurrentCareShiftHandler } from "./getCurrentCareShift.handler";
@@ -33,8 +34,12 @@ export const doCheckoutForShiftHandler = async ({
       message: "Checkout time must be after checkin time",
     });
 
-  await ctx.prisma.careShift.update({
-    where: { id: currentShift.id },
-    data: { checkOut: input },
-  });
+  // await ctx.prisma.careShift.update({
+  //   where: { id: currentShift.id },
+  //   data: { checkOut: input },
+  // });
+  await ctx.db
+    .update(schema.careShifts)
+    .set({ checkOut: input })
+    .where(eq(schema.careShifts.id, currentShift.id));
 };

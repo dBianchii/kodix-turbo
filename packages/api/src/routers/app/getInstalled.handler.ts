@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import { eq } from "@kdx/db";
+import { eq, schema } from "@kdx/db";
 
 import type { TProtectedProcedureContext } from "../../trpc";
 
@@ -9,13 +9,14 @@ interface GetInstalledOptions {
 }
 
 export const getInstalledHandler = async ({ ctx }: GetInstalledOptions) => {
-  const apps = await ctx.db.query.app.findMany({
-    with: {
-      AppsToTeams: {
-        where: (team) => eq(team.teamId, ctx.session.user.activeTeamId),
-      },
-    },
-  });
+  const apps = await ctx.db
+    .select({
+      id: schema.apps.id,
+    })
+    .from(schema.apps)
+    .innerJoin(schema.appsToTeams, eq(schema.apps.id, schema.appsToTeams.appId))
+    .innerJoin(schema.teams, eq(schema.appsToTeams.teamId, schema.teams.id))
+    .where(eq(schema.teams.id, ctx.session.user.activeTeamId));
 
   if (!apps)
     throw new TRPCError({

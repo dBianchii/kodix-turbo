@@ -1,11 +1,18 @@
 ///
+import type { ExtractTablesWithRelations } from "drizzle-orm";
+import type { MySqlTransaction } from "drizzle-orm/mysql-core";
+import type {
+  PlanetScalePreparedQueryHKT,
+  PlanetscaleQueryResultHKT,
+} from "drizzle-orm/planetscale-serverless";
 import { Client, Client as DrizzleClient } from "@planetscale/database";
 import { PrismaPlanetScale } from "@prisma/adapter-planetscale";
 import { PrismaClient } from "@prisma/client";
 import { drizzle } from "drizzle-orm/planetscale-serverless";
+import { createInsertSchema } from "drizzle-zod";
 import { fetch as undiciFetch } from "undici";
 
-import * as schema from "./schema/schema";
+import * as mySchema from "./schema/schema";
 
 //* START PLANETSCALE ADAPTER SECTION
 const client = new Client({
@@ -33,9 +40,10 @@ if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 export * from "@prisma/client";
 
 //DRIZZLE ORM
-export { mySqlTable as tableCreator } from "./schema/_table";
 
 export * from "drizzle-orm";
+
+export const schema = { ...mySchema };
 
 const psClient = new DrizzleClient({
   host: process.env.DB_HOST!,
@@ -43,4 +51,16 @@ const psClient = new DrizzleClient({
   password: process.env.DB_PASSWORD!,
 });
 
-export const db = drizzle(psClient, { schema });
+export const db = drizzle(psClient, {
+  schema,
+  logger: process.env.NODE_ENV === "development",
+});
+
+export type DrizzleTransaction = MySqlTransaction<
+  PlanetscaleQueryResultHKT,
+  PlanetScalePreparedQueryHKT,
+  typeof schema,
+  ExtractTablesWithRelations<typeof schema>
+>;
+
+export const insertTodosSchema = createInsertSchema(schema.todos);

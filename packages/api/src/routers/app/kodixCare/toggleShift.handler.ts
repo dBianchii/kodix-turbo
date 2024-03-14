@@ -1,7 +1,8 @@
 import { TRPCError } from "@trpc/server";
 
-import type { Prisma } from "@kdx/db";
+import type { DrizzleTransaction } from "@kdx/db";
 import dayjs from "@kdx/dayjs";
+import { eq, schema } from "@kdx/db";
 import { kodixNotificationFromEmail } from "@kdx/react-email/constants";
 import WarnPreviousShiftNotEnded from "@kdx/react-email/warn-previous-shift-not-ended";
 import { kodixCareAppId } from "@kdx/shared";
@@ -40,16 +41,31 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
       .startOf("day")
       .toDate();
 
-    return await ctx.prisma.$transaction(async (tx) => {
-      const careShift = await tx.careShift.create({
-        data: {
-          caregiverId: ctx.session.user.id,
-          teamId: ctx.session.user.activeTeamId,
-          checkIn: new Date(),
-        },
+    // return await ctx.prisma.$transaction(async (tx) => {
+    //   const careShift = await tx.careShift.create({
+    //     data: {
+    //       caregiverId: ctx.session.user.id,
+    //       teamId: ctx.session.user.activeTeamId,
+    //       checkIn: new Date(),
+    //     },
+    //   });
+    //   return await cloneCalendarTasksToCareTasks({
+    //     careShiftId: careShift.id,
+    //     start: yesterdayStartOfDay,
+    //     end: tomorrowEndOfDay,
+    //     tx,
+    //   });
+    // });
+    return await ctx.db.transaction(async (tx) => {
+      const careShiftId = crypto.randomUUID();
+      await ctx.db.insert(schema.careShifts).values({
+        id: careShiftId,
+        caregiverId: ctx.session.user.id,
+        teamId: ctx.session.user.activeTeamId,
       });
+
       return await cloneCalendarTasksToCareTasks({
-        careShiftId: careShift.id,
+        careShiftId: careShiftId,
         start: yesterdayStartOfDay,
         end: tomorrowEndOfDay,
         tx,
@@ -72,23 +88,38 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
   const loggedUserIsCaregiverForCurrentShift =
     ctx.session.user.id === lastCareShift.Caregiver.id;
 
-  return await ctx.prisma.$transaction(async (tx) => {
-    await tx.careShift.update({
-      where: {
-        id: lastCareShift.id,
-      },
-      data: {
+  return await ctx.db.transaction(async (tx) => {
+    // await tx.careShift.update({
+    //   where: {
+    //     id: lastCareShift.id,
+    //   },
+    //   data: {
+    //     checkOut: loggedUserIsCaregiverForCurrentShift ? new Date() : undefined, //Also checkOut if user is the caregiver
+    //     shiftEndedAt: new Date(),
+    //   },
+    // });
+    await tx
+      .update(schema.careShifts)
+      .set({
         checkOut: loggedUserIsCaregiverForCurrentShift ? new Date() : undefined, //Also checkOut if user is the caregiver
         shiftEndedAt: new Date(),
-      },
+      })
+      .where(eq(schema.careShifts.id, lastCareShift.id));
+    // await tx.careShift.create({
+    //   data: {
+    //     teamId: ctx.session.user.activeTeamId,
+    //     checkIn: new Date(),
+    //     caregiverId: ctx.session.user.id,
+    //   },
+    // });
+
+    await tx.insert(schema.careShifts).values({
+      id: crypto.randomUUID(),
+      teamId: ctx.session.user.activeTeamId,
+      checkIn: new Date(),
+      caregiverId: ctx.session.user.id,
     });
-    await tx.careShift.create({
-      data: {
-        teamId: ctx.session.user.activeTeamId,
-        checkIn: new Date(),
-        caregiverId: ctx.session.user.id,
-      },
-    });
+
     await cloneCalendarTasksToCareTasks({
       careShiftId: lastCareShift.id,
       start: clonedCareTasksUntil,
@@ -132,7 +163,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
     start: Date;
     end: Date;
     careShiftId: string;
-    tx: Prisma.TransactionClient; //Function must be used with a transaction
+    tx: DrizzleTransaction; //Function must be used with a transaction
   }) {
     const calendarTasks = await getAllHandler({
       ctx,
@@ -141,8 +172,22 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
         dateEnd: end,
       },
     });
-    await tx.careTask.createMany({
-      data: calendarTasks.map((calendarTask) => ({
+    // await tx.careTask.createMany({
+    //   data: calendarTasks.map((calendarTask) => ({
+    //     idCareShift: careShiftId,
+    //     teamId: ctx.session.user.activeTeamId,
+    //     title: calendarTask.title,
+    //     description: calendarTask.description,
+    //     eventDate: calendarTask.date,
+    //     eventMasterId: calendarTask.eventMasterId,
+    //     doneByUserId: null,
+    //     doneAt: new Date(),
+    //   })),
+    // });
+
+    await tx.insert(schema.careTasks).values(
+      calendarTasks.map((calendarTask) => ({
+        id: crypto.randomUUID(),
         idCareShift: careShiftId,
         teamId: ctx.session.user.activeTeamId,
         title: calendarTask.title,
@@ -152,7 +197,8 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
         doneByUserId: null,
         doneAt: new Date(),
       })),
-    });
+    );
+
     await saveConfigHandler({
       ctx,
       input: {

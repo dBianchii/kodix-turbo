@@ -3,6 +3,8 @@ import { TRPCError } from "@trpc/server";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
+import { eq, schema } from "@kdx/db";
+
 import { protectedProcedure } from "./trpc";
 
 const ratelimit = new Ratelimit({
@@ -43,9 +45,16 @@ export type TUserAndTeamLimitedProcedureContext =
 
 export const isTeamOwnerProcedure = protectedProcedure.use(
   async ({ ctx, next }) => {
-    const team = await ctx.prisma.team.findUnique({
-      where: {
-        id: ctx.session.user.activeTeamId,
+    // const team = await ctx.prisma.team.findUnique({
+    //   where: {
+    //     id: ctx.session.user.activeTeamId,
+    //   },
+    // });
+    const team = await ctx.db.query.teams.findFirst({
+      where: eq(schema.teams.id, ctx.session.user.activeTeamId),
+      columns: {
+        id: true,
+        ownerId: true,
       },
     });
 

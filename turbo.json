@@ -41,8 +41,10 @@
       "cache": false
     },
     "db:seed": {
-      "cache": false,
-      "dependsOn": ["db:generate"]
+      "cache": false
+    },
+    "db:nuke": {
+      "cache": false
     },
     "clean": {
       "cache": false

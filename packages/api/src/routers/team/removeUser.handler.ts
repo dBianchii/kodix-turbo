@@ -12,19 +12,41 @@ interface RemoveUserOptions {
 export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
   const isUserTryingToRemoveSelfFromTeam = input.userId === ctx.session.user.id;
 
-  const team = await ctx.prisma.team.findFirstOrThrow({
-    where: {
-      id: ctx.session.user.activeTeamId,
-    },
-    select: {
+  // const team = await ctx.prisma.team.findFirstOrThrow({
+  //   where: {
+  //     id: ctx.session.user.activeTeamId,
+  //   },
+  //   select: {
+  //     ownerId: true,
+  //     Users: {
+  //       select: {
+  //         id: true,
+  //       },
+  //     },
+  //   },
+  // });
+  const team = await ctx.db.query.teams.findFirst({
+    where: (teams, { eq }) => eq(teams.id, ctx.session.user.activeTeamId),
+    columns: {
       ownerId: true,
-      Users: {
-        select: {
-          id: true,
+    },
+    with: {
+      UsersToTeams: {
+        with: {
+          User: {
+            columns: {
+              id: true,
+            },
+          },
         },
       },
     },
   });
+  if (!team)
+    throw new TRPCError({
+      message: "No Team Found",
+      code: "NOT_FOUND",
+    });
 
   if (isUserTryingToRemoveSelfFromTeam) {
     if (team?.ownerId === ctx.session.user.id) {
@@ -36,7 +58,7 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
     }
   }
 
-  if (team?.Users.length <= 1)
+  if (team?.UsersToTeams.length <= 1)
     throw new TRPCError({
       message:
         "This user cannot leave since they are the only remaining owner of the team. Delete this team instead",
