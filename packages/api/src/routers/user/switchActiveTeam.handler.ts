@@ -49,7 +49,7 @@ export const switchActiveTeamHandler = async ({
     .set({ activeTeamId: input.teamId })
     .where(
       eq(schema.users.id, ctx.session.user.id),
-      //TODO: Make sure he is part of the team!!
+      //TODO: Make sure they are part of the team!!
     );
 
   if (user.rowsAffected < 1)

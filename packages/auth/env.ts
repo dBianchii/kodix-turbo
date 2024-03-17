@@ -9,6 +9,7 @@ export const env = createEnv({
         : z.string().min(1).optional(),
     AUTH_GOOGLE_CLIENT_ID: z.string(),
     AUTH_GOOGLE_CLIENT_SECRET: z.string(),
+    RESEND_API_KEY: z.string(),
   },
   client: {},
   experimental__runtimeEnv: {},

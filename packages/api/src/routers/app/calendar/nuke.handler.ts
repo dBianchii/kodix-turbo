@@ -1,7 +1,5 @@
 import { TRPCError } from "@trpc/server";
 
-import type { Session } from "@kdx/auth";
-import type { PrismaClient } from "@kdx/db";
 import { eq, schema } from "@kdx/db";
 import { authorizedEmails } from "@kdx/shared";
 

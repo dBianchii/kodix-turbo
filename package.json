@@ -13,6 +13,7 @@
     "db:push": "turbo db:push db:generate",
     "db:seed": "turbo db:seed",
     "db:nuke": "pnpm db:nuke",
+    "db:drop": "pnpm db:drop",
     "db:studio": "pnpm -F db studio",
     "dev": "turbo dev --parallel",
     "format": "turbo format --continue -- --cache --cache-location node_modules/.cache/.prettiercache",

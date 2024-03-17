@@ -1,22 +1,22 @@
 import { z } from "zod";
 
 export const ZAcceptInputSchema = z.object({
-  invitationId: z.string().cuid(),
+  invitationId: z.string().uuid(),
 });
 export type TAcceptInputSchema = z.infer<typeof ZAcceptInputSchema>;
 
 export const ZDeclineInputSchema = z.object({
-  invitationId: z.string().cuid(),
+  invitationId: z.string().uuid(),
 });
 export type TDeclineInputSchema = z.infer<typeof ZDeclineInputSchema>;
 
 export const ZDeleteUserSchema = z.object({
-  invitationId: z.string().cuid(),
+  invitationId: z.string().uuid(),
 });
 export type TDeleteUserSchema = z.infer<typeof ZDeleteUserSchema>;
 
 export const ZInviteInputSchema = z.object({
-  teamId: z.string().cuid(),
+  teamId: z.string().uuid(),
   to: z
     .string()
     .email()

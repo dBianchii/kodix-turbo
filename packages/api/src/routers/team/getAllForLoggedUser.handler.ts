@@ -24,12 +24,12 @@ export const getAllForLoggedUserHandler = async ({
   //   },
   // });
   const teams = await ctx.db
-    .select()
+    .select({ teams: schema.teams })
     .from(schema.teams)
     .where(eq(schema.usersToTeams.userId, ctx.session.user.id))
     .innerJoin(
       schema.usersToTeams,
       eq(schema.usersToTeams.teamId, schema.teams.id),
     );
-  return teams;
+  return teams.map((x) => x.teams);
 };

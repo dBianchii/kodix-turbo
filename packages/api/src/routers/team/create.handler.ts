@@ -1,7 +1,7 @@
 import { revalidateTag } from "next/cache";
 
 import type { TCreateInputSchema } from "@kdx/validators/trpc/team";
-import { eq, schema } from "@kdx/db";
+import { schema } from "@kdx/db";
 
 import type { TProtectedProcedureContext } from "../../trpc";
 
@@ -22,22 +22,18 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
   //       : undefined,
   //   },
   // });
-  const team = await ctx.db.transaction(async (tx) => {
-    const teamId = crypto.randomUUID();
+  const teamId = crypto.randomUUID();
+  await ctx.db.transaction(async (tx) => {
     const team = await tx.insert(schema.teams).values({
       id: teamId,
       ownerId: input.userId,
       name: input.teamName,
     });
     await tx
-      .update(schema.usersToTeams)
-      .set({
-        teamId,
-        userId: input.userId,
-      })
-      .where(eq(schema.users.id, input.userId));
+      .insert(schema.usersToTeams)
+      .values({ userId: input.userId, teamId });
     return team;
   });
   revalidateTag("getAllForLoggedUser");
-  return team;
+  return { name: input.teamName, id: teamId };
 };

@@ -10,7 +10,7 @@ datasource db {
 }
 
 model CareShift {
-  id String @id @default(cuid())
+  id String @id @default(uuid())
 
   caregiverId String
   Caregiver   User   @relation(fields: [caregiverId], references: [id])
@@ -28,10 +28,11 @@ model CareShift {
 
   @@index([caregiverId])
   @@index([teamId])
+  @@map("careShift")
 }
 
 model CareTask {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid())
   eventDate DateTime
 
   doneAt DateTime?
@@ -56,13 +57,14 @@ model CareTask {
   @@index([doneByUserId])
   @@index([idCareShift])
   @@index([teamId])
+  @@map("careTask")
 }
 
 //*---------------------   START ACCESS CONTROL    ---------------------*//
 
 //? AppPermission defines which permissions are available for an app.
 model AppPermission {
-  id String @id @default(cuid())
+  id String @id @default(uuid())
 
   appId String
   App   App    @relation(fields: [appId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -74,11 +76,12 @@ model AppPermission {
   TeamAppRole      TeamAppRole[]
 
   @@index([appId])
+  @@map("appPermission")
 }
 
 //? AppRole_default defines which roles are available for an app by default. Should be cloned to TeamAppRole once app is installed for a team 
 model AppRole_default {
-  id String @id @default(cuid())
+  id String @id @default(uuid())
 
   appId String
   App   App    @relation(fields: [appId], references: [id], onDelete: Cascade) //TODO: Do we need App reference here? 
@@ -93,12 +96,13 @@ model AppRole_default {
   TeamAppRoles TeamAppRole[] //Effective role(s) within a team. Spawned from this model after app is installed. (post-clone)
 
   @@index([appId])
+  @@map("appRoleDefault")
 }
 
 //? TeamAppRole defines which roles are available for an app in a team, and also which users have this role.
 //? Default roles are cloned from AppRole upon app install.
 model TeamAppRole {
-  id String @id @default(cuid())
+  id String @id @default(uuid())
 
   name        String
   description String?
@@ -121,12 +125,13 @@ model TeamAppRole {
   @@index([teamId])
   @@index([appRole_defaultId])
   @@index([appId])
+  @@map("teamAppRole")
 }
 
 //*---------------------   END ACCESS CONTROL    ---------------------*//
 
 model AppTeamConfig {
-  id     String @id @default(cuid())
+  id     String @id @default(uuid())
   config Json
   appId  String
   App    App    @relation("AppConfig", fields: [appId], references: [id], onDelete: Cascade)
@@ -137,10 +142,11 @@ model AppTeamConfig {
   @@unique([appId, teamId])
   @@index([appId])
   @@index([teamId])
+  @@map("appTeamConfig")
 }
 
 model Team {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid())
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -161,10 +167,11 @@ model Team {
   CareTask       CareTask[]
 
   @@index([ownerId])
+  @@map("team")
 }
 
 model Invitation {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid())
   Team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
   teamId    String
   email     String
@@ -177,19 +184,21 @@ model Invitation {
 
   @@index([teamId])
   @@index([invitedById])
+  @@map("invitation")
 }
 
 model Notification {
-  id String @id @default(cuid())
+  id String @id @default(uuid())
 
   userId String
   User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@map("notification")
 }
 
 model App {
-  id               String          @id @default(cuid())
+  id               String          @id @default(uuid())
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
   subscriptionCost Decimal
@@ -203,15 +212,18 @@ model App {
   AppPermissions   AppPermission[]
 
   @@index([devPartnerId])
+  @@map("app")
 }
 
 model DevPartner {
-  id         String   @id @default(cuid())
+  id         String   @id @default(uuid())
   name       String
   partnerUrl String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   Apps       App[]
+
+  @@map("devPartner")
 }
 
 enum Status {
@@ -223,7 +235,7 @@ enum Status {
 }
 
 model Todo {
-  id          String    @id @default(cuid())
+  id          String    @id @default(uuid())
   title       String
   description String?
   dueDate     DateTime?
@@ -244,10 +256,11 @@ model Todo {
 
   @@index([teamId])
   @@index([assignedToUserId])
+  @@map("todo")
 }
 
 model EventMaster {
-  id        String    @id @default(cuid())
+  id        String    @id @default(uuid())
   rule      String
   DateStart DateTime
   DateUntil DateTime?
@@ -263,10 +276,11 @@ model EventMaster {
   teamId String
 
   @@index([teamId])
+  @@map("eventMaster")
 }
 
 model EventException {
-  id           String   @id @default(cuid())
+  id           String   @id @default(uuid())
   originalDate DateTime
   newDate      DateTime
 
@@ -277,27 +291,31 @@ model EventException {
   eventMasterId String
 
   @@index([eventMasterId])
+  @@map("eventException")
 }
 
 model EventCancellation {
-  id           String   @id @default(cuid())
+  id           String   @id @default(uuid())
   originalDate DateTime
 
   EventMaster   EventMaster @relation(fields: [eventMasterId], references: [id], onDelete: Cascade)
   eventMasterId String
 
   @@index([eventMasterId])
+  @@map("eventCancellation")
 }
 
 model Post {
-  id      String @id @default(cuid())
+  id      String @id @default(uuid())
   title   String
   content String
+
+  @@map("post")
 }
 
 // Necessary for Next auth
 model Account {
-  id                String  @id @default(cuid())
+  id                String  @id @default(uuid())
   userId            String
   type              String
   provider          String
@@ -313,20 +331,22 @@ model Account {
 
   @@unique([provider, providerAccountId])
   @@index([userId])
+  @@map("account")
 }
 
 model Session {
-  id           String   @id @default(cuid())
+  id           String   @id @default(uuid())
   sessionToken String   @unique
   userId       String
   expires      DateTime
   User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@map("session")
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String    @id @default(uuid())
   name          String?
   email         String    @unique
   emailVerified DateTime?
@@ -349,6 +369,7 @@ model User {
   Notifications Notification[]
 
   @@index([activeTeamId])
+  @@map("user")
 }
 
 model VerificationToken {
@@ -357,4 +378,5 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+  @@map("verificationToken")
 }

@@ -1,7 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import cuid from "cuid";
 
-import type { Prisma } from "@kdx/db";
 import type { TInviteInputSchema } from "@kdx/validators/trpc/invitation";
 import { schema } from "@kdx/db";
 import { kodixNotificationFromEmail } from "@kdx/react-email/constants";
@@ -122,6 +120,7 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
     }),
   );
 
+  console.log(results);
   const { successes } = getSuccessesAndErrors(results);
 
   if (successes.length)

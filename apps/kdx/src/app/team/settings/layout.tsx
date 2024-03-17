@@ -14,8 +14,8 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const session = await auth();
-  const team = await api.team.getActiveTeam();
   if (!session) redirect("/signin");
+  const team = await api.team.getActiveTeam();
 
   const navItems = [
     {
@@ -25,7 +25,7 @@ export default async function Layout({
     {
       href: "/team/settings/roles",
       title: `Roles`,
-      shown: session.user.activeTeamId === team?.ownerId,
+      shown: session.user.id === team?.ownerId,
     },
     {
       href: `/team/settings/general`,

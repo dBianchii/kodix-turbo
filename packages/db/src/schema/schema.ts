@@ -20,7 +20,7 @@ const moneyDecimal = customType<{ data: number }>({
 });
 
 export const accounts = mysqlTable(
-  "Account",
+  "account",
   {
     userId: varchar("userId", { length: DEFAULTLENGTH }).notNull(),
     // .references(() => users.id, { onDelete: "cascade" }),
@@ -48,7 +48,7 @@ export const accounts = mysqlTable(
 );
 
 export const apps = mysqlTable(
-  "App",
+  "app",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
     createdAt: timestamp("createdAt")
@@ -68,7 +68,7 @@ export const apps = mysqlTable(
 );
 
 export const appPermissions = mysqlTable(
-  "AppPermission",
+  "appPermission",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
     appId: varchar("appId", { length: DEFAULTLENGTH }).notNull(),
@@ -88,7 +88,7 @@ export const appPermissions = mysqlTable(
 );
 
 export const appRoleDefaults = mysqlTable(
-  "AppRole_default",
+  "appRoleDefault",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
     appId: varchar("appId", { length: DEFAULTLENGTH }).notNull(),
@@ -110,7 +110,7 @@ export const appRoleDefaults = mysqlTable(
 );
 
 export const appTeamConfigs = mysqlTable(
-  "AppTeamConfig",
+  "appTeamConfig",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
     config: json("config").notNull(),
@@ -136,7 +136,7 @@ export const appTeamConfigs = mysqlTable(
 );
 
 export const careShifts = mysqlTable(
-  "CareShift",
+  "careShift",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
     caregiverId: varchar("caregiverId", { length: DEFAULTLENGTH }).notNull(),
@@ -160,7 +160,7 @@ export const careShifts = mysqlTable(
 );
 
 export const careTasks = mysqlTable(
-  "CareTask",
+  "careTask",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
     eventDate: timestamp("eventDate").notNull(),
@@ -198,7 +198,7 @@ export const careTasks = mysqlTable(
 );
 
 export const devPartners = mysqlTable(
-  "DevPartner",
+  "devPartner",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
     name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
@@ -216,7 +216,7 @@ export const devPartners = mysqlTable(
 );
 
 export const eventCancellations = mysqlTable(
-  "EventCancellation",
+  "eventCancellation",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
     originalDate: timestamp("originalDate", {
@@ -242,7 +242,7 @@ export const eventCancellations = mysqlTable(
 );
 
 export const eventExceptions = mysqlTable(
-  "EventException",
+  "eventException",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
     originalDate: timestamp("originalDate", {
@@ -271,7 +271,7 @@ export const eventExceptions = mysqlTable(
 );
 
 export const eventMasters = mysqlTable(
-  "EventMaster",
+  "eventMaster",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
     rule: varchar("rule", { length: DEFAULTLENGTH }).notNull(),
@@ -294,7 +294,7 @@ export const eventMasters = mysqlTable(
 );
 
 export const invitations = mysqlTable(
-  "Invitation",
+  "invitation",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
     teamId: varchar("teamId", { length: DEFAULTLENGTH }).notNull(),
@@ -318,7 +318,7 @@ export const invitations = mysqlTable(
 );
 
 export const notifications = mysqlTable(
-  "Notification",
+  "notification",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
     userId: varchar("userId", { length: DEFAULTLENGTH }).notNull(),
@@ -335,22 +335,22 @@ export const notifications = mysqlTable(
   },
 );
 
-// export const posts = mysqlTable(
-//   "Post",
-//   {
-//     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
-//     title: varchar("title", { length: DEFAULTLENGTH }).notNull(),
-//     content: varchar("content", { length: DEFAULTLENGTH }).notNull(),
-//   },
-//   (table) => {
-//     return {
-//       postId: primaryKey({ columns: [table.id], name: "Post_id" }),
-//     };
-//   },
-// );
+export const posts = mysqlTable(
+  "post",
+  {
+    id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
+    title: varchar("title", { length: DEFAULTLENGTH }).notNull(),
+    content: varchar("content", { length: DEFAULTLENGTH }).notNull(),
+  },
+  (table) => {
+    return {
+      postId: primaryKey({ columns: [table.id], name: "Post_id" }),
+    };
+  },
+);
 
 export const sessions = mysqlTable(
-  "Session",
+  "session",
   {
     sessionToken: varchar("sessionToken", { length: DEFAULTLENGTH })
       .notNull()
@@ -366,7 +366,7 @@ export const sessions = mysqlTable(
 );
 
 export const teams = mysqlTable(
-  "Team",
+  "team",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
     name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
@@ -387,7 +387,7 @@ export const teams = mysqlTable(
 );
 
 export const teamAppRoles = mysqlTable(
-  "TeamAppRole",
+  "teamAppRole",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
     name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
@@ -400,10 +400,11 @@ export const teamAppRoles = mysqlTable(
     // .references(() => team.id, { onDelete: "cascade" }),
     appRoleDefaultId: varchar("appRole_defaultId", {
       length: DEFAULTLENGTH,
-    }).references(() => appRoleDefaults.id, {
-      onDelete: "set null",
-      onUpdate: "cascade",
     }),
+    // .references(() => appRoleDefaults.id, {
+    //   onDelete: "set null",
+    //   onUpdate: "cascade",
+    // }),
   },
   (table) => {
     return {
@@ -421,7 +422,7 @@ export const teamAppRoles = mysqlTable(
 );
 
 export const todos = mysqlTable(
-  "Todo",
+  "todo",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
     title: varchar("title", { length: DEFAULTLENGTH }).notNull(),
@@ -456,7 +457,7 @@ export const todos = mysqlTable(
 );
 
 export const users = mysqlTable(
-  "User",
+  "user",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull().primaryKey(),
     name: varchar("name", { length: DEFAULTLENGTH }),
@@ -475,7 +476,7 @@ export const users = mysqlTable(
 );
 
 export const verificationTokens = mysqlTable(
-  "VerificationToken",
+  "verificationToken",
   {
     identifier: varchar("identifier", { length: DEFAULTLENGTH })
       .notNull()

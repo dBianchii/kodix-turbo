@@ -15,10 +15,9 @@ export default async function Page({ params }: { params: { id: string } }) {
   // });
 
   const invitation = await db.query.invitations.findFirst({
-    where: eq(schema.invitations, invitationId),
+    where: eq(schema.invitations.id, invitationId),
   });
   if (!invitation) return notFound();
-
   const session = await auth();
   if (!session)
     redirect(`/api/auth/signin?callbackUrl=/team/invite/${invitationId}`);

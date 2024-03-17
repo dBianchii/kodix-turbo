@@ -104,10 +104,12 @@ export function DataTableUserAppRoles({
         </div>
       ),
     }),
-    columnHelper.accessor("TeamAppRole", {
+    columnHelper.accessor("TeamAppRolesToUsers", {
       header: "Roles",
       cell: function Cell(info) {
-        const selected = info.getValue().map((role) => role.id);
+        const selected = info
+          .getValue()
+          .map((teamAppRolesToUser) => teamAppRolesToUser.teamAppRoleId);
 
         return (
           <MultiSelect

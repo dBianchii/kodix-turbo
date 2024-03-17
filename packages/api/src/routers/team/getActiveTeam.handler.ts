@@ -6,11 +6,6 @@ interface GetActiveTeamOptions {
   ctx: TProtectedProcedureContext;
 }
 
-interface User {
-  name: string | null;
-  id: string;
-  image: string | null;
-}
 export const getActiveTeamHandler = async ({ ctx }: GetActiveTeamOptions) => {
   // const team = await ctx.prisma.team.findUniqueOrThrow({
   //   where: {

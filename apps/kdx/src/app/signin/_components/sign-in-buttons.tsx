@@ -69,7 +69,7 @@ function EmailSignIn({ callbackUrl, loading, setLoading }: SignInButtonsProps) {
         variant="default"
         onClick={async () => {
           setLoading(true);
-          await signIn("email", {
+          await signIn("resend", {
             email,
             callbackUrl,
           });

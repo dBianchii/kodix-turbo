@@ -29,6 +29,6 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
     description: input.description,
     dueDate: input.dueDate,
     priority: input.priority,
-    status: input.status.status,
+    status: input.status,
   });
 };

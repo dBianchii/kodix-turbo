@@ -5,20 +5,14 @@ import type { Adapter, AdapterSession } from "next-auth/adapters";
 import { cache } from "react";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import NextAuth from "next-auth";
-// import EmailProvider from "next-auth/providers/email";
 import Google from "next-auth/providers/google";
+import resend from "next-auth/providers/resend";
 
-import { and, db, eq, tableCreator } from "@kdx/db";
+import { and, db, eq, schema } from "@kdx/db";
+import { kodixNotificationFromEmail } from "@kdx/react-email/constants";
 
-import {
-  accounts,
-  sessions,
-  teams,
-  users,
-  usersToTeams,
-  verificationTokens,
-} from "../../db/src/schema/schema";
 import { env } from "../env";
+import { sendVerificationRequest } from "./email/send-verification-request";
 
 export type { Session } from "next-auth";
 
@@ -26,8 +20,8 @@ declare module "next-auth" {
   interface Session {
     user: {
       id: string;
-      activeTeamId: string; // Might need fix
-      activeTeamName: string;
+      activeTeamId: string;
+      activeTeamName: string; //"Virtual" field from the team table
       email: string;
       kodixAdmin: boolean;
     } & DefaultSession["user"];
@@ -44,6 +38,7 @@ declare module "next-auth" {
 
 /** @return { import("next-auth/adapters").Adapter } */
 function KodixAdapter(): Adapter {
+  const { users, teams, usersToTeams, accounts, sessions } = schema;
   return {
     ...DrizzleAdapter(db),
     async createUser(data) {
@@ -53,19 +48,21 @@ function KodixAdapter(): Adapter {
       const id = crypto.randomUUID();
       const teamId = crypto.randomUUID();
 
-      await db.insert(teams).values({
-        id: teamId,
-        ownerId: id,
-        name: `Personal Team`,
-      });
-      await db.insert(users).values({
-        ...data,
-        id,
-        activeTeamId: teamId,
-      });
-      await db.insert(usersToTeams).values({
-        userId: id,
-        teamId: teamId,
+      await db.transaction(async (tx) => {
+        await tx.insert(teams).values({
+          id: teamId,
+          ownerId: id,
+          name: `Personal Team`,
+        });
+        await tx.insert(users).values({
+          ...data,
+          id,
+          activeTeamId: teamId,
+        });
+        await tx.insert(usersToTeams).values({
+          userId: id,
+          teamId: teamId,
+        });
       });
 
       const result = (await db
@@ -94,17 +91,15 @@ function KodixAdapter(): Adapter {
           .innerJoin(teams, eq(teams.id, users.activeTeamId))
           .then((res) => res[0])) ?? null;
 
-      return (
-        sessionAndUser
-          ? {
-              ...sessionAndUser,
-              user: {
-                ...sessionAndUser?.user,
-                activeTeamName: sessionAndUser?.team?.name,
-              },
-            }
-          : null
-      ) as Awaitable<{
+      if (!sessionAndUser) return null;
+
+      return {
+        ...sessionAndUser,
+        user: {
+          ...sessionAndUser?.user,
+          activeTeamName: sessionAndUser?.team?.name,
+        },
+      } as Awaitable<{
         session: AdapterSession;
         user: AdapterUser;
       } | null>;
@@ -112,14 +107,20 @@ function KodixAdapter(): Adapter {
     async getUserByEmail(data) {
       console.log("getUserByEmail");
       console.log("getUserByEmail");
-      const user =
+      const result =
         (await db
           .select()
           .from(users)
           .where(eq(users.email, data))
+          .innerJoin(teams, eq(users.activeTeamId, teams.id))
           .then((res) => res[0])) ?? null;
 
-      return user as Awaitable<AdapterUser | null>;
+      if (!result) return null;
+
+      return {
+        ...result.user,
+        activeTeamName: result.team.name,
+      } as Awaitable<AdapterUser | null>;
     },
     async getUserByAccount(account) {
       console.log("getUserByAccount");
@@ -127,7 +128,7 @@ function KodixAdapter(): Adapter {
       console.log("getUserByAccount");
       const dbAccount =
         (await db
-          .select()
+          .select({ User: users, Team: teams })
           .from(accounts)
           .where(
             and(
@@ -136,13 +137,17 @@ function KodixAdapter(): Adapter {
             ),
           )
           .leftJoin(users, eq(accounts.userId, users.id))
+          .innerJoin(teams, eq(users.activeTeamId, teams.id))
           .then((res) => res[0])) ?? null;
 
       if (!dbAccount) {
         return null;
       }
 
-      return dbAccount.User as Awaitable<AdapterUser | null>;
+      return {
+        ...dbAccount.User,
+        activeTeamName: dbAccount.Team.name,
+      } as Awaitable<AdapterUser | null>;
     },
 
     async getUser(data) {
@@ -155,152 +160,14 @@ function KodixAdapter(): Adapter {
           .select()
           .from(users)
           .where(eq(users.id, data))
+          .innerJoin(teams, eq(users.activeTeamId, teams.id))
           .then((res) => res[0])) ?? null;
+      if (!thing) return null;
 
-      return thing as Awaitable<AdapterUser | null>;
-    },
-    async createSession(data) {
-      console.log("createSession");
-      console.log("createSession");
-      console.log("createSession");
-
-      await db.insert(sessions).values(data);
-
-      return (await db
-        .select()
-        .from(sessions)
-        .where(eq(sessions.sessionToken, data.sessionToken))
-        .then((res) => res[0])) as Awaitable<AdapterSession>;
-    },
-    async updateUser(data) {
-      console.log("updateUser");
-      console.log("updateUser");
-      console.log("updateUser");
-
-      if (!data.id) {
-        throw new Error("No user id.");
-      }
-
-      await db.update(users).set(data).where(eq(users.id, data.id));
-
-      return (await db
-        .select()
-        .from(users)
-        .where(eq(users.id, data.id))
-        .then((res) => res[0])) as Awaitable<AdapterUser>;
-    },
-    async updateSession(data) {
-      console.log("updateSession");
-      console.log("updateSession");
-      console.log("updateSession");
-
-      await db
-        .update(sessions)
-        .set(data)
-        .where(eq(sessions.sessionToken, data.sessionToken));
-
-      return (await db
-        .select()
-        .from(sessions)
-        .where(eq(sessions.sessionToken, data.sessionToken))
-        .then((res) => res[0])) as Awaitable<AdapterSession>;
-    },
-    async linkAccount(rawAccount) {
-      console.log("linkAccount");
-      await db.insert(accounts).values({
-        ...rawAccount,
-        type: rawAccount.type as "oauth" | "oidc" | "email",
-      });
-    },
-    async deleteSession(sessionToken) {
-      console.log("deleteSession");
-      console.log("deleteSession");
-      console.log("deleteSession");
-
-      const session =
-        (await db
-          .select()
-          .from(sessions)
-          .where(eq(sessions.sessionToken, sessionToken))
-          .then((res) => res[0])) ?? null;
-
-      await db.delete(sessions).where(eq(sessions.sessionToken, sessionToken));
-
-      return session;
-    },
-    async createVerificationToken(token) {
-      console.log("createVerificationToken");
-      console.log("createVerificationToken");
-      console.log("createVerificationToken");
-
-      await db.insert(verificationTokens).values(token);
-
-      return await db
-        .select()
-        .from(verificationTokens)
-        .where(eq(verificationTokens.identifier, token.identifier))
-        .then((res) => res[0]);
-    },
-    async useVerificationToken(token) {
-      console.log("useVerificationToken");
-      console.log("useVerificationToken");
-      console.log("useVerificationToken");
-      try {
-        const deletedToken =
-          (await db
-            .select()
-            .from(verificationTokens)
-            .where(
-              and(
-                eq(verificationTokens.identifier, token.identifier),
-                eq(verificationTokens.token, token.token),
-              ),
-            )
-            .then((res) => res[0])) ?? null;
-
-        await db
-          .delete(verificationTokens)
-          .where(
-            and(
-              eq(verificationTokens.identifier, token.identifier),
-              eq(verificationTokens.token, token.token),
-            ),
-          );
-
-        return deletedToken;
-      } catch (err) {
-        throw new Error("No verification token found.");
-      }
-    },
-    async deleteUser(id) {
-      console.log("deleteUser");
-      console.log("deleteUser");
-      console.log("deleteUser");
-
-      const user = await db
-        .select()
-        .from(users)
-        .where(eq(users.id, id))
-        .then((res) => res[0] ?? null);
-
-      await db.delete(users).where(eq(users.id, id));
-
-      return user;
-    },
-    async unlinkAccount(account) {
-      console.log("unlinkAccount");
-      console.log("unlinkAccount");
-      console.log("unlinkAccount");
-      await db
-        .delete(accounts)
-        .where(
-          and(
-            eq(accounts.providerAccountId, account.providerAccountId),
-            eq(accounts.provider, account.provider),
-          ),
-        );
-
-      return undefined;
+      return {
+        ...thing.user,
+        activeTeamName: thing.team.name,
+      } as Awaitable<AdapterUser | null>;
     },
 
     // createUser: async (data: AdapterUser) => {
@@ -405,12 +272,11 @@ export const {
       clientId: env.AUTH_GOOGLE_CLIENT_ID,
       clientSecret: env.AUTH_GOOGLE_CLIENT_SECRET,
     }),
-    // EmailProvider({
-    //   name: "email",
-    //   server: "",
-    //   from: kodixNotificationFromEmail,
-    //   sendVerificationRequest,
-    // }),
+    resend({
+      apiKey: env.RESEND_API_KEY,
+      from: kodixNotificationFromEmail,
+      sendVerificationRequest,
+    }),
   ],
   callbacks: {
     session: (opts) => {

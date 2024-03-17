@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 
-import type { PrismaClient } from "@kdx/db";
 import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
 import { and, db, eq, schema } from "@kdx/db";
@@ -10,11 +9,9 @@ import { and, db, eq, schema } from "@kdx/db";
  */
 export const redirectIfAppNotInstalled = async ({
   appId,
-  prisma,
   customRedirect,
 }: {
   appId: KodixAppId;
-  prisma: PrismaClient;
   customRedirect?: string;
 }) => {
   const session = await auth();
@@ -34,7 +31,7 @@ export const redirectIfAppNotInstalled = async ({
   //   },
   // });
   const installed = await db
-    .select({})
+    .select({ id: schema.apps.id })
     .from(schema.apps)
     .innerJoin(schema.appsToTeams, eq(schema.appsToTeams.appId, schema.apps.id))
     .innerJoin(schema.teams, eq(schema.teams.id, schema.appsToTeams.teamId))

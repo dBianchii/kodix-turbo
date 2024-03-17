@@ -1,6 +1,5 @@
 import { revalidateTag } from "next/cache";
 import { TRPCError } from "@trpc/server";
-import cuid from "cuid";
 
 import type { TInstallAppInputSchema } from "@kdx/validators/trpc/team";
 import { and, eq, schema } from "@kdx/db";
