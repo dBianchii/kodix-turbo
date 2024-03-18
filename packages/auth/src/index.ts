@@ -4,9 +4,9 @@ import { cache } from "react";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import cuid from "cuid";
 import NextAuth from "next-auth";
-import EmailProvider from "next-auth/providers/email";
 // import EmailProvider from "next-auth/providers/email";
 import Google from "next-auth/providers/google";
+import resend from "next-auth/providers/resend";
 
 import type { Prisma, PrismaClient, User } from "@kdx/db";
 import { prisma } from "@kdx/db";
@@ -142,9 +142,8 @@ export const {
       clientId: env.AUTH_GOOGLE_CLIENT_ID,
       clientSecret: env.AUTH_GOOGLE_CLIENT_SECRET,
     }),
-    EmailProvider({
-      name: "email",
-      server: "",
+    resend({
+      apiKey: env.RESEND_API_KEY,
       from: kodixNotificationFromEmail,
       sendVerificationRequest,
     }),
