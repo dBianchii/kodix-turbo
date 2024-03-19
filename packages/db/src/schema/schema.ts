@@ -1,5 +1,6 @@
 import { relations, sql } from "drizzle-orm";
 import {
+  boolean,
   customType,
   index,
   int,
@@ -22,8 +23,9 @@ const moneyDecimal = customType<{ data: number }>({
 export const accounts = mysqlTable(
   "account",
   {
-    userId: varchar("userId", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => users.id, { onDelete: "cascade" }),
+    userId: varchar("userId", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
     type: varchar("type", { length: DEFAULTLENGTH })
       .$type<"oauth" | "oidc" | "email">()
       .notNull(),
@@ -50,19 +52,19 @@ export const accounts = mysqlTable(
 export const apps = mysqlTable(
   "app",
   {
-    id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
+    id: varchar("id", { length: DEFAULTLENGTH }).notNull().primaryKey(),
     createdAt: timestamp("createdAt")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt").onUpdateNow(),
     subscriptionCost: moneyDecimal("subscriptionCost").notNull(),
-    devPartnerId: varchar("devPartnerId", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => devPartner.id),
+    devPartnerId: varchar("devPartnerId", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => devPartners.id),
   },
   (table) => {
     return {
-      devPartnerIdIdx: index("App_devPartnerId_idx").on(table.devPartnerId),
-      appId: primaryKey({ columns: [table.id], name: "App_id" }),
+      devPartnerIdIdx: index("devPartnerId_idx").on(table.devPartnerId),
     };
   },
 );
@@ -70,19 +72,16 @@ export const apps = mysqlTable(
 export const appPermissions = mysqlTable(
   "appPermission",
   {
-    id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
-    appId: varchar("appId", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => app.id, { onDelete: "cascade", onUpdate: "cascade" }),
+    id: varchar("id", { length: DEFAULTLENGTH }).notNull().primaryKey(),
+    appId: varchar("appId", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => apps.id, { onDelete: "cascade", onUpdate: "cascade" }),
     name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
     description: varchar("description", { length: DEFAULTLENGTH }),
   },
   (table) => {
     return {
-      appIdIdx: index("AppPermission_appId_idx").on(table.appId),
-      appPermissionId: primaryKey({
-        columns: [table.id],
-        name: "AppPermission_id",
-      }),
+      appIdIdx: index("appId_idx").on(table.appId),
     };
   },
 );
@@ -90,9 +89,10 @@ export const appPermissions = mysqlTable(
 export const appRoleDefaults = mysqlTable(
   "appRoleDefault",
   {
-    id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
-    appId: varchar("appId", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => app.id, { onDelete: "cascade" }),
+    id: varchar("id", { length: DEFAULTLENGTH }).notNull().primaryKey(),
+    appId: varchar("appId", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => apps.id, { onDelete: "cascade" }),
     name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
     description: varchar("description", { length: DEFAULTLENGTH }),
     minUsers: int("minUsers").default(0).notNull(),
@@ -100,11 +100,7 @@ export const appRoleDefaults = mysqlTable(
   },
   (table) => {
     return {
-      appIdIdx: index("AppRole_default_appId_idx").on(table.appId),
-      appRoleDefaultId: primaryKey({
-        columns: [table.id],
-        name: "AppRole_default_id",
-      }),
+      appIdIdx: index("appId_Idx").on(table.appId),
     };
   },
 );
@@ -112,22 +108,21 @@ export const appRoleDefaults = mysqlTable(
 export const appTeamConfigs = mysqlTable(
   "appTeamConfig",
   {
-    id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
+    id: varchar("id", { length: DEFAULTLENGTH }).notNull().primaryKey(),
     config: json("config").notNull(),
-    appId: varchar("appId", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => app.id, { onDelete: "cascade" }),
-    teamId: varchar("teamId", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => team.id, { onDelete: "cascade" }),
+    appId: varchar("appId", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => apps.id, { onDelete: "cascade" }),
+    teamId: varchar("teamId", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => teams.id, { onDelete: "cascade" }),
   },
   (table) => {
     return {
-      appIdIdx: index("AppTeamConfig_appId_idx").on(table.appId),
-      teamIdIdx: index("AppTeamConfig_teamId_idx").on(table.teamId),
-      appTeamConfigId: primaryKey({
-        columns: [table.id],
-        name: "AppTeamConfig_id",
-      }),
-      appTeamConfigAppIdTeamIdKey: unique("AppTeamConfig_appId_teamId_key").on(
+      appIdIdx: index("appId_idx").on(table.appId),
+      teamIdIdx: index("teamId_idx").on(table.teamId),
+
+      unique_appId_teamId: unique("unique_appId_teamId").on(
         table.appId,
         table.teamId,
       ),
@@ -138,11 +133,13 @@ export const appTeamConfigs = mysqlTable(
 export const careShifts = mysqlTable(
   "careShift",
   {
-    id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
-    caregiverId: varchar("caregiverId", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => user.id),
-    teamId: varchar("teamId", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => team.id, { onDelete: "cascade" }),
+    id: varchar("id", { length: DEFAULTLENGTH }).notNull().primaryKey(),
+    caregiverId: varchar("caregiverId", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => users.id),
+    teamId: varchar("teamId", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => teams.id, { onDelete: "cascade" }),
     checkIn: timestamp("checkIn")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
@@ -152,9 +149,8 @@ export const careShifts = mysqlTable(
   },
   (table) => {
     return {
-      caregiverIdIdx: index("CareShift_caregiverId_idx").on(table.caregiverId),
-      teamIdIdx: index("CareShift_teamId_idx").on(table.teamId),
-      careShiftId: primaryKey({ columns: [table.id], name: "CareShift_id" }),
+      caregiverIdIdx: index("caregiverId_idx").on(table.caregiverId),
+      teamIdIdx: index("teamId_idx").on(table.teamId),
     };
   },
 );
@@ -162,81 +158,60 @@ export const careShifts = mysqlTable(
 export const careTasks = mysqlTable(
   "careTask",
   {
-    id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
+    id: varchar("id", { length: DEFAULTLENGTH }).notNull().primaryKey(),
     eventDate: timestamp("eventDate").notNull(),
     doneAt: timestamp("doneAt"),
-    doneByUserId: varchar("doneByUserId", { length: DEFAULTLENGTH }),
-    // .references(
-    //   () => user.id,
-    //   { onDelete: "restrict" }, //Restrict because we have to keep logs somehow
-    // ),
-    teamId: varchar("teamId", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => team.id),
-    eventMasterId: varchar("eventMasterId", { length: DEFAULTLENGTH }),
-    // .references(
-    //   () => eventMaster.id,
-    // ),
-    idCareShift: varchar("idCareShift", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => careShift.id),
+    doneByUserId: varchar("doneByUserId", { length: DEFAULTLENGTH }).references(
+      () => users.id,
+      { onDelete: "restrict" }, //Restrict because we have to keep logs somehow
+    ),
+    teamId: varchar("teamId", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => teams.id),
+    eventMasterId: varchar("eventMasterId", {
+      length: DEFAULTLENGTH,
+    }).references(() => eventMasters.id),
+    idCareShift: varchar("idCareShift", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => careShifts.id),
     title: varchar("title", { length: DEFAULTLENGTH }),
     description: varchar("description", { length: DEFAULTLENGTH }),
     details: varchar("details", { length: DEFAULTLENGTH }),
   },
   (table) => {
     return {
-      doneByUserIdIdx: index("CareTask_doneByUserId_idx").on(
-        table.doneByUserId,
-      ),
-      eventMasterIdIdx: index("CareTask_eventMasterId_idx").on(
-        table.eventMasterId,
-      ),
-      idCareShiftIdx: index("CareTask_idCareShift_idx").on(table.idCareShift),
-      teamIdIdx: index("CareTask_teamId_idx").on(table.teamId),
-      careTaskId: primaryKey({ columns: [table.id], name: "CareTask_id" }),
+      doneByUserIdIdx: index("doneByUserId_idx").on(table.doneByUserId),
+      eventMasterIdIdx: index("eventMasterId_Idx").on(table.eventMasterId),
+      idCareShiftIdx: index("idCareShift_idx").on(table.idCareShift),
+      teamIdIdx: index("teamId_idx").on(table.teamId),
     };
   },
 );
 
-export const devPartners = mysqlTable(
-  "devPartner",
-  {
-    id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
-    name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
-    partnerUrl: varchar("partnerUrl", { length: DEFAULTLENGTH }),
-    createdAt: timestamp("createdAt")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updatedAt").onUpdateNow(),
-  },
-  (table) => {
-    return {
-      devPartnerId: primaryKey({ columns: [table.id], name: "DevPartner_id" }),
-    };
-  },
-);
+export const devPartners = mysqlTable("devPartner", {
+  id: varchar("id", { length: DEFAULTLENGTH }).notNull().primaryKey(),
+  name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
+  partnerUrl: varchar("partnerUrl", { length: DEFAULTLENGTH }),
+  createdAt: timestamp("createdAt")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt").onUpdateNow(),
+});
 
 export const eventCancellations = mysqlTable(
   "eventCancellation",
   {
-    id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
-    originalDate: timestamp("originalDate", {
-      mode: "date",
-      fsp: 3,
-    }).notNull(),
+    id: varchar("id", { length: DEFAULTLENGTH }).notNull().primaryKey(),
+    originalDate: timestamp("originalDate").notNull(),
     eventMasterId: varchar("eventMasterId", {
       length: DEFAULTLENGTH,
-    }).notNull(),
-    // .references(() => eventMaster.id, { onDelete: "cascade" }),
+    })
+      .notNull()
+      .references(() => eventMasters.id, { onDelete: "cascade" }),
   },
   (table) => {
     return {
-      eventMasterIdIdx: index("EventCancellation_eventMasterId_idx").on(
-        table.eventMasterId,
-      ),
-      eventCancellationId: primaryKey({
-        columns: [table.id],
-        name: "EventCancellation_id",
-      }),
+      eventMasterIdIdx: index("eventMasterId_idx").on(table.eventMasterId),
     };
   },
 );
@@ -244,28 +219,20 @@ export const eventCancellations = mysqlTable(
 export const eventExceptions = mysqlTable(
   "eventException",
   {
-    id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
-    originalDate: timestamp("originalDate", {
-      mode: "date",
-      fsp: 3,
-    }).notNull(),
+    id: varchar("id", { length: DEFAULTLENGTH }).notNull().primaryKey(),
+    originalDate: timestamp("originalDate").notNull(),
     newDate: timestamp("newDate", { mode: "date", fsp: 3 }).notNull(),
     title: varchar("title", { length: DEFAULTLENGTH }),
     description: varchar("description", { length: DEFAULTLENGTH }),
     eventMasterId: varchar("eventMasterId", {
       length: DEFAULTLENGTH,
-    }).notNull(),
-    // .references(() => eventMaster.id, { onDelete: "cascade" }),
+    })
+      .notNull()
+      .references(() => eventMasters.id, { onDelete: "cascade" }),
   },
   (table) => {
     return {
-      eventMasterIdIdx: index("EventException_eventMasterId_idx").on(
-        table.eventMasterId,
-      ),
-      eventExceptionId: primaryKey({
-        columns: [table.id],
-        name: "EventException_id",
-      }),
+      eventMasterIdIdx: index("eventMasterId_idx").on(table.eventMasterId),
     };
   },
 );
@@ -273,22 +240,19 @@ export const eventExceptions = mysqlTable(
 export const eventMasters = mysqlTable(
   "eventMaster",
   {
-    id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
+    id: varchar("id", { length: DEFAULTLENGTH }).notNull().primaryKey(),
     rule: varchar("rule", { length: DEFAULTLENGTH }).notNull(),
     dateStart: timestamp("DateStart", { mode: "date", fsp: 3 }).notNull(),
     dateUntil: timestamp("DateUntil", { mode: "date", fsp: 3 }),
     title: varchar("title", { length: DEFAULTLENGTH }),
     description: varchar("description", { length: DEFAULTLENGTH }),
-    teamId: varchar("teamId", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => team.id, { onDelete: "cascade" }),
+    teamId: varchar("teamId", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => teams.id, { onDelete: "cascade" }),
   },
   (table) => {
     return {
-      teamIdIdx: index("EventMaster_teamId_idx").on(table.teamId),
-      eventMasterId: primaryKey({
-        columns: [table.id],
-        name: "EventMaster_id",
-      }),
+      teamIdIdx: index("teamId_idx").on(table.teamId),
     };
   },
 );
@@ -297,22 +261,23 @@ export const invitations = mysqlTable(
   "invitation",
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
-    teamId: varchar("teamId", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => team.id, { onDelete: "cascade" }),
+    teamId: varchar("teamId", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => teams.id, { onDelete: "cascade" }),
     email: varchar("email", { length: DEFAULTLENGTH }).notNull(),
     accepted: tinyint("accepted").default(0).notNull(), //Is this necessary? Since we just delete the invitation when the user accepts it
     createdAt: timestamp("createdAt")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt").onUpdateNow(),
-    invitedById: varchar("invitedById", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => user.id),
+    invitedById: varchar("invitedById", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => users.id),
   },
   (table) => {
     return {
-      invitedByIdIdx: index("Invitation_invitedById_idx").on(table.invitedById),
-      teamIdIdx: index("Invitation_teamId_idx").on(table.teamId),
-      invitationId: primaryKey({ columns: [table.id], name: "Invitation_id" }),
+      invitedByIdIdx: index("invitedById_idx").on(table.invitedById),
+      teamIdIdx: index("teamId_idx").on(table.teamId),
     };
   },
 );
@@ -320,34 +285,23 @@ export const invitations = mysqlTable(
 export const notifications = mysqlTable(
   "notification",
   {
-    id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
-    userId: varchar("userId", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => user.id, { onDelete: "cascade" }),
+    id: varchar("id", { length: DEFAULTLENGTH }).notNull().primaryKey(),
+    userId: varchar("userId", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
   },
   (table) => {
     return {
-      userIdIdx: index("Notification_userId_idx").on(table.userId),
-      notificationId: primaryKey({
-        columns: [table.id],
-        name: "Notification_id",
-      }),
+      userIdIdx: index("userId_idx").on(table.userId),
     };
   },
 );
 
-export const posts = mysqlTable(
-  "post",
-  {
-    id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
-    title: varchar("title", { length: DEFAULTLENGTH }).notNull(),
-    content: varchar("content", { length: DEFAULTLENGTH }).notNull(),
-  },
-  (table) => {
-    return {
-      postId: primaryKey({ columns: [table.id], name: "Post_id" }),
-    };
-  },
-);
+export const posts = mysqlTable("post", {
+  id: varchar("id", { length: DEFAULTLENGTH }).notNull().primaryKey(),
+  title: varchar("title", { length: DEFAULTLENGTH }).notNull(),
+  content: varchar("content", { length: DEFAULTLENGTH }).notNull(),
+});
 
 export const sessions = mysqlTable(
   "session",
@@ -356,8 +310,9 @@ export const sessions = mysqlTable(
       .notNull()
       .primaryKey()
       .unique(), //REMOVE UNIQUE AFTER PRISMA
-    userId: varchar("userId", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => users.id, { onDelete: "cascade" }),
+    userId: varchar("userId", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
     expires: timestamp("expires", { mode: "date" }).notNull(),
   },
   (session) => ({
@@ -368,20 +323,19 @@ export const sessions = mysqlTable(
 export const teams = mysqlTable(
   "team",
   {
-    id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
+    id: varchar("id", { length: DEFAULTLENGTH }).notNull().primaryKey(),
     name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
     createdAt: timestamp("createdAt")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt").onUpdateNow(),
-    ownerId: varchar("ownerId", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => user.id, { onUpdate: "cascade" }),
+    ownerId: varchar("ownerId", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => users.id, { onUpdate: "cascade" }),
   },
   (table) => {
     return {
-      ownerIdIdx: index("Team_ownerId_idx").on(table.ownerId),
-      teamId: primaryKey({ columns: [table.id], name: "Team_id" }),
-      asd: relations,
+      ownerIdIdx: index("ownerId_idx").on(table.ownerId),
     };
   },
 );
@@ -389,34 +343,31 @@ export const teams = mysqlTable(
 export const teamAppRoles = mysqlTable(
   "teamAppRole",
   {
-    id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
+    id: varchar("id", { length: DEFAULTLENGTH }).notNull().primaryKey(),
     name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
     description: varchar("description", { length: DEFAULTLENGTH }),
     minUsers: int("minUsers").default(0).notNull(),
     maxUsers: int("maxUsers").default(0).notNull(),
-    appId: varchar("appId", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => app.id, { onDelete: "cascade" }),
-    teamId: varchar("teamId", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => team.id, { onDelete: "cascade" }),
-    appRoleDefaultId: varchar("appRole_defaultId", {
+    appId: varchar("appId", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => apps.id, { onDelete: "cascade" }),
+    teamId: varchar("teamId", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => teams.id, { onDelete: "cascade" }),
+    appRoleDefaultId: varchar("appRoleDefaultId", {
       length: DEFAULTLENGTH,
+    }).references(() => appRoleDefaults.id, {
+      onDelete: "set null",
+      onUpdate: "cascade",
     }),
-    // .references(() => appRoleDefaults.id, {
-    //   onDelete: "set null",
-    //   onUpdate: "cascade",
-    // }),
   },
   (table) => {
     return {
-      appIdIdx: index("TeamAppRole_appId_idx").on(table.appId),
-      appRoleDefaultIdIdx: index("TeamAppRole_appRole_defaultId_idx").on(
+      appIdIdx: index("appId_idx").on(table.appId),
+      appRoleDefaultIdIdx: index("appRoleDefaultId_idx").on(
         table.appRoleDefaultId,
       ),
-      teamIdIdx: index("TeamAppRole_teamId_idx").on(table.teamId),
-      teamAppRoleId: primaryKey({
-        columns: [table.id],
-        name: "TeamAppRole_id",
-      }),
+      teamIdIdx: index("teamId_idx").on(table.teamId),
     };
   },
 );
@@ -424,7 +375,7 @@ export const teamAppRoles = mysqlTable(
 export const todos = mysqlTable(
   "todo",
   {
-    id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
+    id: varchar("id", { length: DEFAULTLENGTH }).notNull().primaryKey(),
     title: varchar("title", { length: DEFAULTLENGTH }).notNull(),
     description: varchar("description", { length: DEFAULTLENGTH }),
     dueDate: timestamp("dueDate"),
@@ -438,20 +389,19 @@ export const todos = mysqlTable(
       "CANCELED",
     ]),
     reminder: tinyint("reminder"),
-    assignedToUserId: varchar("assignedToUserId", { length: DEFAULTLENGTH }),
-    // .references(
-    //   () => user.id,
-    // ),
-    teamId: varchar("teamId", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => team.id),
+    assignedToUserId: varchar("assignedToUserId", {
+      length: DEFAULTLENGTH,
+    }).references(() => users.id),
+    teamId: varchar("teamId", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => teams.id),
   },
   (table) => {
     return {
-      assignedToUserIdIdx: index("Todo_assignedToUserId_idx").on(
+      assignedToUserIdIdx: index("assignedToUserId_idx").on(
         table.assignedToUserId,
       ),
-      teamIdIdx: index("Todo_teamId_idx").on(table.teamId),
-      todoId: primaryKey({ columns: [table.id], name: "Todo_id" }),
+      teamIdIdx: index("teamId_idx").on(table.teamId),
     };
   },
 );
@@ -461,16 +411,15 @@ export const users = mysqlTable(
   {
     id: varchar("id", { length: DEFAULTLENGTH }).notNull().primaryKey(),
     name: varchar("name", { length: DEFAULTLENGTH }),
-    email: varchar("email", { length: DEFAULTLENGTH }).notNull(),
+    email: varchar("email", { length: DEFAULTLENGTH }).notNull().unique(),
     emailVerified: timestamp("emailVerified").default(sql`CURRENT_TIMESTAMP`),
     image: varchar("image", { length: DEFAULTLENGTH }),
     activeTeamId: varchar("activeTeamId", { length: DEFAULTLENGTH }).notNull(),
-    kodixAdmin: tinyint("kodixAdmin").default(0).notNull(),
+    kodixAdmin: boolean("kodixAdmin").default(false).notNull(),
   },
   (table) => {
     return {
-      activeTeamIdIdx: index("User_activeTeamId_idx").on(table.activeTeamId),
-      userEmailKey: unique("User_email_key").on(table.email),
+      activeTeamIdIdx: index("activeTeamId_idx").on(table.activeTeamId),
     };
   },
 );
@@ -492,16 +441,20 @@ export const verificationTokens = mysqlTable(
 export const appPermissionsToAppRoleDefaults = mysqlTable(
   "_AppPermissionToAppRole_default",
   {
-    appPermissionId: varchar("A", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => appPermission.id),
-    appRoleDefaultId: varchar("B", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => appRoleDefault.id),
+    appPermissionId: varchar("A", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => appPermissions.id),
+    appRoleDefaultId: varchar("B", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => appRoleDefaults.id),
   },
   (table) => {
     return {
-      appRoleDefaultIdIdx: index("bIdx").on(table.appRoleDefaultId),
-      appPermissionToAppRoleDefaultAbUnique: unique(
-        "_AppPermissionToAppRole_default_AB_unique",
+      appRoleDefaultIdIdx: index("appRoleDefaultId_idx").on(
+        table.appRoleDefaultId,
+      ),
+      unique_appPermissionId_appRoleDefaultId: unique(
+        "unique_appPermissionId_appRoleDefaultId",
       ).on(table.appPermissionId, table.appRoleDefaultId),
     };
   },
@@ -524,16 +477,21 @@ export const appPermissionsToAppRoleDefaultsRelations = relations(
 export const appPermissionsToTeamAppRoles = mysqlTable(
   "_AppPermissionToTeamAppRole",
   {
-    appPermissionId: varchar("A", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => appPermission.id),
-    teamAppRoleId: varchar("B", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => teamAppRole.id),
+    appPermissionId: varchar("A", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => appPermissions.id, { onDelete: "cascade" }),
+    teamAppRoleId: varchar("B", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => teamAppRoles.id, { onDelete: "cascade" }),
   },
   (table) => {
     return {
-      bIdx: index("bIdx").on(table.teamAppRoleId),
-      appPermissionToTeamAppRoleAbUnique: unique(
-        "_AppPermissionToTeamAppRole_AB_unique",
+      appPermissionIdIdx: index("appPermissionId_idx").on(
+        table.appPermissionId,
+      ),
+      teamAppRoleIdIdx: index("teamAppRoleId_idx").on(table.teamAppRoleId),
+      unique_appPermissionId_teamAppRoleId: unique(
+        "unique_appPermissionId_teamAppRoleId",
       ).on(table.appPermissionId, table.teamAppRoleId),
     };
   },
@@ -556,15 +514,18 @@ export const appPermissionsToTeamAppRolesRelations = relations(
 export const appsToTeams = mysqlTable(
   "_AppTeam",
   {
-    appId: varchar("A", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => app.id),
-    teamId: varchar("B", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => team.id),
+    appId: varchar("A", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => apps.id),
+    teamId: varchar("B", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => teams.id),
   },
   (table) => {
     return {
-      bIdx: index("bIdx").on(table.teamId),
-      appTeamAbUnique: unique("_AppTeam_AB_unique").on(
+      appId: index("appId_idx").on(table.appId),
+      teamId: index("teamId_idx").on(table.teamId),
+      unique_appId_teamId: unique("unique_appId_teamId").on(
         table.appId,
         table.teamId,
       ),
@@ -586,15 +547,19 @@ export const appsToTeamsRelations = relations(appsToTeams, ({ one }) => ({
 export const teamAppRolesToUsers = mysqlTable(
   "_TeamAppRoleToUser",
   {
-    teamAppRoleId: varchar("A", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => teamAppRole.id),
-    userId: varchar("B", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => user.id),
+    teamAppRoleId: varchar("A", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => teamAppRoles.id, { onDelete: "cascade" }),
+    userId: varchar("B", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
   },
   (table) => {
     return {
-      bIdx: index("bIdx").on(table.userId),
-      teamAppRoleToUserAbUnique: unique("_TeamAppRoleToUser_AB_unique").on(
+      teamAppRoleIdIdx: index("teamAppRoleId_idx").on(table.teamAppRoleId),
+      userIdIdx: index("userId_idx").on(table.userId),
+
+      unique_teamAppRoleId_userId: unique("unique_teamAppRoleId_userId").on(
         table.teamAppRoleId,
         table.userId,
       ),
@@ -619,15 +584,18 @@ export const teamAppRolesToUsersRelations = relations(
 export const usersToTeams = mysqlTable(
   "_UserTeam",
   {
-    userId: varchar("A", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => user.id),
-    teamId: varchar("B", { length: DEFAULTLENGTH }).notNull(),
-    // .references(() => team.id),
+    userId: varchar("A", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => users.id),
+    teamId: varchar("B", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => teams.id),
   },
   (table) => {
     return {
-      bIdx: index("bIdx").on(table.teamId),
-      userTeamAbUnique: unique("_UserTeam_AB_unique").on(
+      userIdIdx: index("userId_idx").on(table.userId),
+      teamIdIdx: index("teamId_idx").on(table.teamId),
+      unique_userId_teamId: unique("unique_userId_teamId").on(
         table.userId,
         table.teamId,
       ),
@@ -657,7 +625,7 @@ export const appRelations = relations(apps, ({ many, one }) => ({
     references: [devPartners.id],
   }),
   AppTeamConfigs: many(appTeamConfigs),
-  AppRole_defaults: many(appRoleDefaults),
+  AppRoleDefaults: many(appRoleDefaults),
   TeamAppRoles: many(teamAppRoles),
   AppPermissions: many(appPermissions),
 }));

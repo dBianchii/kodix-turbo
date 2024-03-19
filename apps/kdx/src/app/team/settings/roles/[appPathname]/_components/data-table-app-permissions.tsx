@@ -93,10 +93,10 @@ export function DataTableAppPermissions({
         </div>
       ),
     }),
-    columnHelper.accessor("TeamAppRole", {
+    columnHelper.accessor("AppPermissionsToTeamAppRoles", {
       header: "Roles",
       cell: function Cell(info) {
-        const selected = info.getValue().map((role) => role.id);
+        const selected = info.getValue().map((role) => role.teamAppRoleId);
         console.log(allAppRoles);
         return (
           <MultiSelect

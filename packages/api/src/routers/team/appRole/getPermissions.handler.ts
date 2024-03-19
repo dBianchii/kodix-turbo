@@ -1,5 +1,5 @@
 import type { TGetPermissionsInputSchema } from "@kdx/validators/trpc/team/appRole";
-import { eq, schema } from "@kdx/db";
+import { schema } from "@kdx/db";
 
 import type { TIsTeamOwnerProcedureContext } from "../../../customProcedures";
 
@@ -38,7 +38,7 @@ export const getPermissionsHandler = async ({
     where: (appPermission, { eq, and }) =>
       and(
         eq(appPermission.appId, input.appId),
-        eq(appPermission.TeamAppRole.teamId, ctx.session.user.activeTeamId),
+        eq(schema.teamAppRoles.teamId, ctx.session.user.activeTeamId),
       ),
     with: {
       AppPermissionsToTeamAppRoles: {

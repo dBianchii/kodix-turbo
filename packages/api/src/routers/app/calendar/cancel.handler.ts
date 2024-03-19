@@ -128,19 +128,19 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
 
     return await ctx.db.transaction(async (tx) => {
       if (input.eventExceptionId) {
-        const result = await tx.delete(eventExceptions).where(
+        await tx.delete(eventExceptions).where(
           and(
             //TODO: add connection to team where teamId is the same as the user's teamId.
             eq(schema.eventExceptions.id, input.eventExceptionId),
             gte(schema.eventExceptions.newDate, input.date),
           ),
         );
-        if (!result.rowsAffected) {
-          throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "Exception not found",
-          });
-        }
+        // if (!result.rowsAffected) {
+        //   throw new TRPCError({
+        //     code: "NOT_FOUND",
+        //     message: "Exception not found",
+        //   });
+        // }
       }
       const eventMaster = await tx.query.eventMasters.findFirst({
         where: eq(schema.eventMasters.id, input.eventMasterId),

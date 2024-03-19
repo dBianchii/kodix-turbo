@@ -95,17 +95,13 @@
       "compositePrimaryKeys": {
         "Account_id": {
           "name": "Account_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "indexes": {
         "Account_userId_idx": {
           "name": "Account_userId_idx",
-          "columns": [
-            "userId"
-          ],
+          "columns": ["userId"],
           "isUnique": false
         }
       },
@@ -113,10 +109,7 @@
       "uniqueConstraints": {
         "Account_provider_providerAccountId_key": {
           "name": "Account_provider_providerAccountId_key",
-          "columns": [
-            "provider",
-            "providerAccountId"
-          ]
+          "columns": ["provider", "providerAccountId"]
         }
       }
     },
@@ -163,17 +156,13 @@
       "compositePrimaryKeys": {
         "App_id": {
           "name": "App_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "indexes": {
         "App_devPartnerId_idx": {
           "name": "App_devPartnerId_idx",
-          "columns": [
-            "devPartnerId"
-          ],
+          "columns": ["devPartnerId"],
           "isUnique": false
         }
       },
@@ -215,17 +204,13 @@
       "compositePrimaryKeys": {
         "AppPermission_id": {
           "name": "AppPermission_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "indexes": {
         "AppPermission_appId_idx": {
           "name": "AppPermission_appId_idx",
-          "columns": [
-            "appId"
-          ],
+          "columns": ["appId"],
           "isUnique": false
         }
       },
@@ -283,17 +268,13 @@
       "compositePrimaryKeys": {
         "AppRole_default_id": {
           "name": "AppRole_default_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "indexes": {
         "AppRole_default_appId_idx": {
           "name": "AppRole_default_appId_idx",
-          "columns": [
-            "appId"
-          ],
+          "columns": ["appId"],
           "isUnique": false
         }
       },
@@ -335,24 +316,18 @@
       "compositePrimaryKeys": {
         "AppTeamConfig_id": {
           "name": "AppTeamConfig_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "indexes": {
         "AppTeamConfig_appId_idx": {
           "name": "AppTeamConfig_appId_idx",
-          "columns": [
-            "appId"
-          ],
+          "columns": ["appId"],
           "isUnique": false
         },
         "AppTeamConfig_teamId_idx": {
           "name": "AppTeamConfig_teamId_idx",
-          "columns": [
-            "teamId"
-          ],
+          "columns": ["teamId"],
           "isUnique": false
         }
       },
@@ -360,10 +335,7 @@
       "uniqueConstraints": {
         "AppTeamConfig_appId_teamId_key": {
           "name": "AppTeamConfig_appId_teamId_key",
-          "columns": [
-            "appId",
-            "teamId"
-          ]
+          "columns": ["appId", "teamId"]
         }
       }
     },
@@ -424,24 +396,18 @@
       "compositePrimaryKeys": {
         "CareShift_id": {
           "name": "CareShift_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "indexes": {
         "CareShift_caregiverId_idx": {
           "name": "CareShift_caregiverId_idx",
-          "columns": [
-            "caregiverId"
-          ],
+          "columns": ["caregiverId"],
           "isUnique": false
         },
         "CareShift_teamId_idx": {
           "name": "CareShift_teamId_idx",
-          "columns": [
-            "teamId"
-          ],
+          "columns": ["teamId"],
           "isUnique": false
         }
       },
@@ -525,38 +491,28 @@
       "compositePrimaryKeys": {
         "CareTask_id": {
           "name": "CareTask_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "indexes": {
         "CareTask_doneByUserId_idx": {
           "name": "CareTask_doneByUserId_idx",
-          "columns": [
-            "doneByUserId"
-          ],
+          "columns": ["doneByUserId"],
           "isUnique": false
         },
         "CareTask_eventMasterId_idx": {
           "name": "CareTask_eventMasterId_idx",
-          "columns": [
-            "eventMasterId"
-          ],
+          "columns": ["eventMasterId"],
           "isUnique": false
         },
         "CareTask_idCareShift_idx": {
           "name": "CareTask_idCareShift_idx",
-          "columns": [
-            "idCareShift"
-          ],
+          "columns": ["idCareShift"],
           "isUnique": false
         },
         "CareTask_teamId_idx": {
           "name": "CareTask_teamId_idx",
-          "columns": [
-            "teamId"
-          ],
+          "columns": ["teamId"],
           "isUnique": false
         }
       },
@@ -606,9 +562,7 @@
       "compositePrimaryKeys": {
         "DevPartner_id": {
           "name": "DevPartner_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "indexes": {},
@@ -643,17 +597,13 @@
       "compositePrimaryKeys": {
         "EventCancellation_id": {
           "name": "EventCancellation_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "indexes": {
         "EventCancellation_eventMasterId_idx": {
           "name": "EventCancellation_eventMasterId_idx",
-          "columns": [
-            "eventMasterId"
-          ],
+          "columns": ["eventMasterId"],
           "isUnique": false
         }
       },
@@ -709,17 +659,13 @@
       "compositePrimaryKeys": {
         "EventException_id": {
           "name": "EventException_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "indexes": {
         "EventException_eventMasterId_idx": {
           "name": "EventException_eventMasterId_idx",
-          "columns": [
-            "eventMasterId"
-          ],
+          "columns": ["eventMasterId"],
           "isUnique": false
         }
       },
@@ -782,17 +728,13 @@
       "compositePrimaryKeys": {
         "EventMaster_id": {
           "name": "EventMaster_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "indexes": {
         "EventMaster_teamId_idx": {
           "name": "EventMaster_teamId_idx",
-          "columns": [
-            "teamId"
-          ],
+          "columns": ["teamId"],
           "isUnique": false
         }
       },
@@ -857,24 +799,18 @@
       "compositePrimaryKeys": {
         "Invitation_id": {
           "name": "Invitation_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "indexes": {
         "Invitation_invitedById_idx": {
           "name": "Invitation_invitedById_idx",
-          "columns": [
-            "invitedById"
-          ],
+          "columns": ["invitedById"],
           "isUnique": false
         },
         "Invitation_teamId_idx": {
           "name": "Invitation_teamId_idx",
-          "columns": [
-            "teamId"
-          ],
+          "columns": ["teamId"],
           "isUnique": false
         }
       },
@@ -902,17 +838,13 @@
       "compositePrimaryKeys": {
         "Notification_id": {
           "name": "Notification_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "indexes": {
         "Notification_userId_idx": {
           "name": "Notification_userId_idx",
-          "columns": [
-            "userId"
-          ],
+          "columns": ["userId"],
           "isUnique": false
         }
       },
@@ -947,9 +879,7 @@
       "compositePrimaryKeys": {
         "Post_id": {
           "name": "Post_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "indexes": {},
@@ -991,17 +921,13 @@
       "compositePrimaryKeys": {
         "Session_id": {
           "name": "Session_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "indexes": {
         "Session_userId_idx": {
           "name": "Session_userId_idx",
-          "columns": [
-            "userId"
-          ],
+          "columns": ["userId"],
           "isUnique": false
         }
       },
@@ -1009,9 +935,7 @@
       "uniqueConstraints": {
         "Session_sessionToken_key": {
           "name": "Session_sessionToken_key",
-          "columns": [
-            "sessionToken"
-          ]
+          "columns": ["sessionToken"]
         }
       }
     },
@@ -1058,17 +982,13 @@
       "compositePrimaryKeys": {
         "Team_id": {
           "name": "Team_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "indexes": {
         "Team_ownerId_idx": {
           "name": "Team_ownerId_idx",
-          "columns": [
-            "ownerId"
-          ],
+          "columns": ["ownerId"],
           "isUnique": false
         }
       },
@@ -1140,31 +1060,23 @@
       "compositePrimaryKeys": {
         "TeamAppRole_id": {
           "name": "TeamAppRole_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "indexes": {
         "TeamAppRole_appId_idx": {
           "name": "TeamAppRole_appId_idx",
-          "columns": [
-            "appId"
-          ],
+          "columns": ["appId"],
           "isUnique": false
         },
         "TeamAppRole_appRole_defaultId_idx": {
           "name": "TeamAppRole_appRole_defaultId_idx",
-          "columns": [
-            "appRole_defaultId"
-          ],
+          "columns": ["appRole_defaultId"],
           "isUnique": false
         },
         "TeamAppRole_teamId_idx": {
           "name": "TeamAppRole_teamId_idx",
-          "columns": [
-            "teamId"
-          ],
+          "columns": ["teamId"],
           "isUnique": false
         }
       },
@@ -1248,24 +1160,18 @@
       "compositePrimaryKeys": {
         "Todo_id": {
           "name": "Todo_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "indexes": {
         "Todo_assignedToUserId_idx": {
           "name": "Todo_assignedToUserId_idx",
-          "columns": [
-            "assignedToUserId"
-          ],
+          "columns": ["assignedToUserId"],
           "isUnique": false
         },
         "Todo_teamId_idx": {
           "name": "Todo_teamId_idx",
-          "columns": [
-            "teamId"
-          ],
+          "columns": ["teamId"],
           "isUnique": false
         }
       },
@@ -1329,17 +1235,13 @@
       "compositePrimaryKeys": {
         "User_id": {
           "name": "User_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "indexes": {
         "User_activeTeamId_idx": {
           "name": "User_activeTeamId_idx",
-          "columns": [
-            "activeTeamId"
-          ],
+          "columns": ["activeTeamId"],
           "isUnique": false
         }
       },
@@ -1347,9 +1249,7 @@
       "uniqueConstraints": {
         "User_email_key": {
           "name": "User_email_key",
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       }
     },
@@ -1384,16 +1284,11 @@
       "uniqueConstraints": {
         "VerificationToken_identifier_token_key": {
           "name": "VerificationToken_identifier_token_key",
-          "columns": [
-            "identifier",
-            "token"
-          ]
+          "columns": ["identifier", "token"]
         },
         "VerificationToken_token_key": {
           "name": "VerificationToken_token_key",
-          "columns": [
-            "token"
-          ]
+          "columns": ["token"]
         }
       }
     },
@@ -1419,9 +1314,7 @@
       "indexes": {
         "_AppPermissionToAppRole_default_B_index": {
           "name": "_AppPermissionToAppRole_default_B_index",
-          "columns": [
-            "B"
-          ],
+          "columns": ["B"],
           "isUnique": false
         }
       },
@@ -1429,10 +1322,7 @@
       "uniqueConstraints": {
         "_AppPermissionToAppRole_default_AB_unique": {
           "name": "_AppPermissionToAppRole_default_AB_unique",
-          "columns": [
-            "A",
-            "B"
-          ]
+          "columns": ["A", "B"]
         }
       }
     },
@@ -1458,9 +1348,7 @@
       "indexes": {
         "_AppPermissionToTeamAppRole_B_index": {
           "name": "_AppPermissionToTeamAppRole_B_index",
-          "columns": [
-            "B"
-          ],
+          "columns": ["B"],
           "isUnique": false
         }
       },
@@ -1468,10 +1356,7 @@
       "uniqueConstraints": {
         "_AppPermissionToTeamAppRole_AB_unique": {
           "name": "_AppPermissionToTeamAppRole_AB_unique",
-          "columns": [
-            "A",
-            "B"
-          ]
+          "columns": ["A", "B"]
         }
       }
     },
@@ -1497,9 +1382,7 @@
       "indexes": {
         "_AppTeam_B_index": {
           "name": "_AppTeam_B_index",
-          "columns": [
-            "B"
-          ],
+          "columns": ["B"],
           "isUnique": false
         }
       },
@@ -1507,10 +1390,7 @@
       "uniqueConstraints": {
         "_AppTeam_AB_unique": {
           "name": "_AppTeam_AB_unique",
-          "columns": [
-            "A",
-            "B"
-          ]
+          "columns": ["A", "B"]
         }
       }
     },
@@ -1536,9 +1416,7 @@
       "indexes": {
         "_TeamAppRoleToUser_B_index": {
           "name": "_TeamAppRoleToUser_B_index",
-          "columns": [
-            "B"
-          ],
+          "columns": ["B"],
           "isUnique": false
         }
       },
@@ -1546,10 +1424,7 @@
       "uniqueConstraints": {
         "_TeamAppRoleToUser_AB_unique": {
           "name": "_TeamAppRoleToUser_AB_unique",
-          "columns": [
-            "A",
-            "B"
-          ]
+          "columns": ["A", "B"]
         }
       }
     },
@@ -1575,9 +1450,7 @@
       "indexes": {
         "_UserTeam_B_index": {
           "name": "_UserTeam_B_index",
-          "columns": [
-            "B"
-          ],
+          "columns": ["B"],
           "isUnique": false
         }
       },
@@ -1585,10 +1458,7 @@
       "uniqueConstraints": {
         "_UserTeam_AB_unique": {
           "name": "_UserTeam_AB_unique",
-          "columns": [
-            "A",
-            "B"
-          ]
+          "columns": ["A", "B"]
         }
       }
     },
@@ -1676,18 +1546,13 @@
       "compositePrimaryKeys": {
         "t3turbo_account_provider_providerAccountId": {
           "name": "t3turbo_account_provider_providerAccountId",
-          "columns": [
-            "provider",
-            "providerAccountId"
-          ]
+          "columns": ["provider", "providerAccountId"]
         }
       },
       "indexes": {
         "userId_idx": {
           "name": "userId_idx",
-          "columns": [
-            "userId"
-          ],
+          "columns": ["userId"],
           "isUnique": false
         }
       },
@@ -1738,9 +1603,7 @@
       "compositePrimaryKeys": {
         "t3turbo_post_id": {
           "name": "t3turbo_post_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "indexes": {},
@@ -1748,9 +1611,7 @@
       "uniqueConstraints": {
         "id": {
           "name": "id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       }
     },
@@ -1782,17 +1643,13 @@
       "compositePrimaryKeys": {
         "t3turbo_session_sessionToken": {
           "name": "t3turbo_session_sessionToken",
-          "columns": [
-            "sessionToken"
-          ]
+          "columns": ["sessionToken"]
         }
       },
       "indexes": {
         "userId_idx": {
           "name": "userId_idx",
-          "columns": [
-            "userId"
-          ],
+          "columns": ["userId"],
           "isUnique": false
         }
       },
@@ -1842,9 +1699,7 @@
       "compositePrimaryKeys": {
         "t3turbo_user_id": {
           "name": "t3turbo_user_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "indexes": {},
@@ -1879,10 +1734,7 @@
       "compositePrimaryKeys": {
         "t3turbo_verificationToken_identifier_token": {
           "name": "t3turbo_verificationToken_identifier_token",
-          "columns": [
-            "identifier",
-            "token"
-          ]
+          "columns": ["identifier", "token"]
         }
       },
       "indexes": {},

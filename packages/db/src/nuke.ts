@@ -1,9 +1,6 @@
-import type { PlanetScaleDatabase } from "drizzle-orm/planetscale-serverless";
-
-import type { schema } from "./index";
 import { db, sql } from "./index";
 
-async function emptyDBTables(db: PlanetScaleDatabase<typeof schema>) {
+async function emptyDBTables() {
   console.log("🗑️ Emptying the entire database");
 
   const tablesSchema = db._.schema;
@@ -21,7 +18,7 @@ async function emptyDBTables(db: PlanetScaleDatabase<typeof schema>) {
   });
 }
 
-emptyDBTables(db)
+emptyDBTables()
   .then(() => {
     console.log("✅ Database emptied");
   })

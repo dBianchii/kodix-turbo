@@ -2,14 +2,15 @@
 import type { ExtractTablesWithRelations } from "drizzle-orm";
 import type { MySqlTransaction } from "drizzle-orm/mysql-core";
 import type {
-  PlanetScalePreparedQueryHKT,
-  PlanetscaleQueryResultHKT,
-} from "drizzle-orm/planetscale-serverless";
-import { Client, Client as DrizzleClient } from "@planetscale/database";
+  MySql2PreparedQueryHKT,
+  MySql2QueryResultHKT,
+} from "drizzle-orm/mysql2";
+import { Client } from "@planetscale/database";
 import { PrismaPlanetScale } from "@prisma/adapter-planetscale";
 import { PrismaClient } from "@prisma/client";
-import { drizzle } from "drizzle-orm/planetscale-serverless";
+import { drizzle } from "drizzle-orm/mysql2";
 import { createInsertSchema } from "drizzle-zod";
+import mysql from "mysql2/promise";
 import { fetch as undiciFetch } from "undici";
 
 import * as mySchema from "./schema/schema";
@@ -45,20 +46,19 @@ export * from "drizzle-orm";
 
 export const schema = { ...mySchema };
 
-const psClient = new DrizzleClient({
-  host: process.env.DB_HOST!,
-  username: process.env.DB_USERNAME!,
-  password: process.env.DB_PASSWORD!,
+const connection = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USERNAME,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: 58247,
 });
 
-export const db = drizzle(psClient, {
-  schema,
-  logger: process.env.NODE_ENV === "development",
-});
+export const db = drizzle(connection, { mode: "default", schema });
 
 export type DrizzleTransaction = MySqlTransaction<
-  PlanetscaleQueryResultHKT,
-  PlanetScalePreparedQueryHKT,
+  MySql2QueryResultHKT,
+  MySql2PreparedQueryHKT,
   typeof schema,
   ExtractTablesWithRelations<typeof schema>
 >;

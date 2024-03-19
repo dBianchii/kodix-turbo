@@ -1,5 +1,4 @@
 import { revalidateTag } from "next/cache";
-import { TRPCError } from "@trpc/server";
 
 import type { TSwitchActiveTeamInputSchema } from "@kdx/validators/trpc/user";
 import { eq, schema } from "@kdx/db";
@@ -44,17 +43,8 @@ export const switchActiveTeamHandler = async ({
   //     },
   //   },
   // });
-  const user = await ctx.db
-    .update(schema.users)
-    .set({ activeTeamId: input.teamId })
-    .where(
-      eq(schema.users.id, ctx.session.user.id),
-      //TODO: Make sure they are part of the team!!
-    );
-
-  if (user.rowsAffected < 1)
-    throw new TRPCError({
-      message: "No Team Found",
-      code: "INTERNAL_SERVER_ERROR",
-    });
+  await ctx.db.update(schema.users).set({ activeTeamId: input.teamId }).where(
+    eq(schema.users.id, ctx.session.user.id),
+    //TODO: Make sure they are part of the team!!
+  );
 };
