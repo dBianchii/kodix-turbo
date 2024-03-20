@@ -49,15 +49,15 @@ function KodixAdapter(): Adapter {
       const teamId = crypto.randomUUID();
 
       await db.transaction(async (tx) => {
-        await tx.insert(teams).values({
-          id: teamId,
-          ownerId: id,
-          name: `Personal Team`,
-        });
         await tx.insert(users).values({
           ...data,
           id,
           activeTeamId: teamId,
+        });
+        await tx.insert(teams).values({
+          id: teamId,
+          ownerId: id,
+          name: `Personal Team`,
         });
         await tx.insert(usersToTeams).values({
           userId: id,

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
 
 import type { RouterOutputs } from "@kdx/api";
-import type { Status } from "@kdx/db";
+import type { schema } from "@kdx/db";
 import { Button } from "@kdx/ui/button";
 import { Checkbox } from "@kdx/ui/checkbox";
 
@@ -25,6 +25,7 @@ export type TodoColumn = RouterOutputs["app"]["todo"]["getAll"][number];
 const columnHelper = createColumnHelper<TodoColumn>();
 type team = RouterOutputs["team"]["getActiveTeam"];
 
+type Status = typeof schema.todos.$inferInsert.status;
 declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface TableMeta<TData extends RowData> {

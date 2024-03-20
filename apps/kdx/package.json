@@ -6,7 +6,7 @@
   "scripts": {
     "build": "pnpm with-env next build",
     "clean": "git clean -xdf .next .turbo node_modules",
-    "dev": "pnpm with-env next dev --port 3000",
+    "dev": "pnpm with-env next dev --turbo --port 3000",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "dotenv -v SKIP_ENV_VALIDATION=1 next lint",
     "start": "pnpm with-env next start --port 3000",
@@ -63,7 +63,6 @@
     "@kdx/prettier-config": "workspace:^0.1.0",
     "@kdx/tailwind-config": "workspace:^0.1.0",
     "@kdx/tsconfig": "workspace:^0.1.0",
-    "@prisma/nextjs-monorepo-workaround-plugin": "^5.10.2",
     "@types/node": "^20.11.21",
     "@types/react": "^18.2.60",
     "@types/react-dom": "^18.2.19",

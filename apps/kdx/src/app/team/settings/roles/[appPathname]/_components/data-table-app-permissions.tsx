@@ -48,14 +48,21 @@ export function DataTableAppPermissions({
             newValues.teamAppRoleIds.includes(role.id),
           );
 
-          const updatedPermissions = old?.map((user) => {
-            if (user.id === newValues.permissionId) {
+          const updatedPermissions = old?.map((permission) => {
+            if (permission.id === newValues.permissionId) {
               return {
-                ...user,
-                TeamAppRole: teamAppRolesToUpdate,
+                ...permission,
+                AppPermissionsToTeamAppRoles: teamAppRolesToUpdate.map((x) => ({
+                  appPermissionId: permission.id,
+                  teamAppRoleId: x.id,
+                  TeamAppRole: {
+                    id: x.id,
+                    name: x.name,
+                  },
+                })),
               };
             }
-            return user;
+            return permission;
           });
 
           return updatedPermissions;
@@ -93,11 +100,10 @@ export function DataTableAppPermissions({
         </div>
       ),
     }),
-    columnHelper.accessor("TeamAppRole", {
+    columnHelper.accessor("AppPermissionsToTeamAppRoles", {
       header: "Roles",
       cell: function Cell(info) {
-        const selected = info.getValue().map((role) => role.id);
-        console.log(allAppRoles);
+        const selected = info.getValue().map((role) => role.teamAppRoleId);
         return (
           <MultiSelect
             className="w-96"

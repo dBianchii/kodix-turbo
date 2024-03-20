@@ -7,16 +7,13 @@ const uri = [
   process.env.DB_PASSWORD,
   "@",
   process.env.DB_HOST,
-  ":3306/",
+  ":58247/",
   process.env.DB_NAME,
-  !process.env.DB_HOST?.includes("localhost")
-    ? '?ssl={"rejectUnauthorized":true}'
-    : "",
 ].join("");
 
 export default {
-  schema: "./src/schema",
+  schema: "./src/schema/**",
   out: "./drizzle",
   driver: "mysql2",
-  dbCredentials: { uri },
+  dbCredentials: { uri: uri },
 } satisfies Config;

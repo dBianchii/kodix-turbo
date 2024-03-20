@@ -53,7 +53,14 @@ export function DataTableUserAppRoles({
             if (user.id === newValues.userId) {
               return {
                 ...user,
-                TeamAppRole: teamAppRolesToUpdate,
+                TeamAppRolesToUsers: teamAppRolesToUpdate.map((x) => ({
+                  teamAppRoleId: x.id,
+                  userId: user.id,
+                  TeamAppRole: {
+                    id: x.id,
+                    name: x.name,
+                  },
+                })),
               };
             }
             return user;

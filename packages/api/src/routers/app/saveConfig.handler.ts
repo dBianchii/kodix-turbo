@@ -1,9 +1,8 @@
 import type { TSaveConfigInput } from "@kdx/validators/trpc/app";
-import { and, eq } from "@kdx/db";
+import { and, eq, schema } from "@kdx/db";
 import { appIdToAppTeamConfigSchema } from "@kdx/validators";
 
 import type { TProtectedProcedureContext } from "../../trpc";
-import { appTeamConfigs } from "../../../../db/src/schema/schema";
 
 interface SaveConfigOptions {
   ctx: TProtectedProcedureContext;
@@ -41,7 +40,7 @@ export const saveConfigHandler = async ({ ctx, input }: SaveConfigOptions) => {
     // });
 
     return await ctx.db
-      .update(appTeamConfigs)
+      .update(schema.appTeamConfigs)
       .set({
         config: {
           ...configSchema.parse(existingConfig.config),
@@ -50,8 +49,8 @@ export const saveConfigHandler = async ({ ctx, input }: SaveConfigOptions) => {
       })
       .where(
         and(
-          eq(appTeamConfigs.appId, input.appId),
-          eq(appTeamConfigs.teamId, ctx.session.user.activeTeamId),
+          eq(schema.appTeamConfigs.appId, input.appId),
+          eq(schema.appTeamConfigs.teamId, ctx.session.user.activeTeamId),
         ),
       );
   }
@@ -67,7 +66,7 @@ export const saveConfigHandler = async ({ ctx, input }: SaveConfigOptions) => {
   //   },
   // });
 
-  return await ctx.db.insert(appTeamConfigs).values({
+  return await ctx.db.insert(schema.appTeamConfigs).values({
     id: crypto.randomUUID(),
     config: parsedInput,
     teamId: ctx.session.user.activeTeamId,

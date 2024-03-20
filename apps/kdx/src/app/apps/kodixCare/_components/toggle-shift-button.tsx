@@ -30,9 +30,8 @@ import {
 import { TimePickerInput } from "@kdx/ui/time-picker-input";
 
 import { DatePicker } from "~/app/_components/date-picker";
-import { defaultSafeActionToastError } from "~/helpers/safe-action/default-action-error-toast";
+import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
-import { doCheckoutAction, toggleShiftButtonAction } from "./actions";
 
 export function ToggleShiftButton({ session }: { session: Session }) {
   const query = api.app.kodixCare.getCurrentShift.useQuery();
@@ -130,19 +129,24 @@ function StartShiftDialog({
 }) {
   const [loading, setLoading] = useState(false);
   const utils = api.useUtils();
-  async function handleClick() {
-    setLoading(true);
-    const result = await toggleShiftButtonAction();
-    if (defaultSafeActionToastError(result)) {
+  const mutation = api.app.kodixCare.toggleShift.useMutation({
+    onMutate: () => {
+      setLoading(true);
+    },
+    onSuccess: () => {
+      setStartShiftOpen(false);
+      void utils.app.kodixCare.getCareTasks.invalidate();
+      void utils.app.kodixCare.getCurrentShift.invalidate();
+    },
+    onError: (err) => {
+      trpcErrorToastDefault(err);
       setLoading(false);
       return;
-    }
-
-    void utils.app.kodixCare.getCareTasks.invalidate();
-    void utils.app.kodixCare.getCurrentShift.invalidate();
-    setStartShiftOpen(false);
-    setLoading(false);
-  }
+    },
+    onSettled: () => {
+      setLoading(false);
+    },
+  });
   return (
     <Dialog open={startShiftOpen} onOpenChange={setStartShiftOpen}>
       <DialogContent>
@@ -160,7 +164,7 @@ function StartShiftDialog({
               Close
             </Button>
           </DialogClose>
-          <Button onClick={() => handleClick()} disabled={loading}>
+          <Button onClick={() => mutation.mutate()} disabled={loading}>
             {loading ? (
               <LuLoader2 className="mx-2 size-4 animate-spin" />
             ) : (
@@ -183,18 +187,23 @@ function StartShiftWarnPreviousPersonDialog({
   const utils = api.useUtils();
   const [loading, setLoading] = useState(false);
 
-  async function handleClick() {
-    setLoading(true);
-    const result = await toggleShiftButtonAction();
-    if (defaultSafeActionToastError(result)) {
+  const mutation = api.app.kodixCare.toggleShift.useMutation({
+    onMutate: () => {
+      setLoading(true);
+    },
+    onSuccess: () => {
+      setOpen(false);
+      void utils.app.kodixCare.getCareTasks.invalidate();
+      void utils.app.kodixCare.getCurrentShift.invalidate();
+    },
+    onError: (err) => {
+      trpcErrorToastDefault(err);
+    },
+    onSettled: () => {
       setLoading(false);
-      return;
-    }
-    void utils.app.kodixCare.getCareTasks.invalidate();
-    void utils.app.kodixCare.getCurrentShift.invalidate();
-    setOpen(false);
-    setLoading(false);
-  }
+    },
+  });
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
@@ -214,7 +223,9 @@ function StartShiftWarnPreviousPersonDialog({
           </DialogClose>
           <Button
             variant={"orange"}
-            onClick={() => handleClick()}
+            onClick={() => {
+              mutation.mutate();
+            }}
             disabled={loading}
           >
             {loading ? (
@@ -262,6 +273,22 @@ function DoCheckoutDialog({
     form.reset({ date: new Date() });
   }, [form, open]);
 
+  const mutation = api.app.kodixCare.doCheckoutForShift.useMutation({
+    onMutate: () => {
+      setIsSubmitting(true);
+    },
+    onSuccess: () => {
+      setOpen(false);
+      void utils.app.kodixCare.getCurrentShift.invalidate();
+    },
+    onError: (err) => {
+      trpcErrorToastDefault(err);
+    },
+    onSettled: () => {
+      setIsSubmitting(false);
+    },
+  });
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
@@ -272,17 +299,7 @@ function DoCheckoutDialog({
           <form
             className="base"
             onSubmit={form.handleSubmit(async (values) => {
-              setIsSubmitting(true);
-              const result = await doCheckoutAction(values.date);
-              if (defaultSafeActionToastError(result)) {
-                setIsSubmitting(false);
-                setOpen(false);
-                return;
-              }
-
-              void utils.app.kodixCare.getCurrentShift.invalidate();
-              setIsSubmitting(false);
-              setOpen(false);
+              mutation.mutate(values.date);
             })}
           >
             <DialogDescription className="mb-4">

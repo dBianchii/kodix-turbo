@@ -5,11 +5,6 @@ import type { TCancelInput } from "@kdx/validators/trpc/app/calendar";
 import { and, eq, gte, schema } from "@kdx/db";
 
 import type { TProtectedProcedureContext } from "../../../trpc";
-import {
-  eventCancellations,
-  eventExceptions,
-  eventMasters,
-} from "../../../../../db/src/schema/schema";
 
 interface CancelOptions {
   ctx: TProtectedProcedureContext;
@@ -47,9 +42,9 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
           });
         }
         await tx
-          .delete(eventExceptions)
+          .delete(schema.eventExceptions)
           .where(eq(schema.eventExceptions.id, input.eventExceptionId!));
-        return await tx.insert(eventCancellations).values({
+        return await tx.insert(schema.eventCancellations).values({
           id: crypto.randomUUID(),
           eventMasterId: toDeleteException.eventMasterId,
           originalDate: toDeleteException.originalDate,
@@ -67,7 +62,7 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
     //     originalDate: input.date,
     //   },
     // });
-    return await ctx.db.insert(eventCancellations).values({
+    return await ctx.db.insert(schema.eventCancellations).values({
       id: crypto.randomUUID(),
       eventMasterId: input.eventMasterId,
       originalDate: input.date,
@@ -128,19 +123,19 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
 
     return await ctx.db.transaction(async (tx) => {
       if (input.eventExceptionId) {
-        const result = await tx.delete(eventExceptions).where(
+        await tx.delete(schema.eventExceptions).where(
           and(
             //TODO: add connection to team where teamId is the same as the user's teamId.
             eq(schema.eventExceptions.id, input.eventExceptionId),
             gte(schema.eventExceptions.newDate, input.date),
           ),
         );
-        if (!result.rowsAffected) {
-          throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "Exception not found",
-          });
-        }
+        // if (!result.rowsAffected) {
+        //   throw new TRPCError({
+        //     code: "NOT_FOUND",
+        //     message: "Exception not found",
+        //   });
+        // }
       }
       const eventMaster = await tx.query.eventMasters.findFirst({
         where: eq(schema.eventMasters.id, input.eventMasterId),
@@ -182,7 +177,7 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
     //   },
     // });
     return await ctx.db
-      .delete(eventMasters)
+      .delete(schema.eventMasters)
       .where(eq(schema.eventMasters.id, input.eventMasterId));
   }
 };

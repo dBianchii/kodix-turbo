@@ -1,5 +1,5 @@
 import type { TUpdateUserAssociationInputSchema } from "@kdx/validators/trpc/team/appRole";
-import { inArray, schema } from "@kdx/db";
+import { eq, inArray, schema } from "@kdx/db";
 
 import type { TIsTeamOwnerProcedureContext } from "../../../customProcedures";
 
@@ -26,17 +26,6 @@ export const updateUserAssociationHandler = async ({
   //     id: true,
   //   },
   // });
-  const toDisconnect = await ctx.db.query.teamAppRoles.findMany({
-    where: (teamAppRole, { eq, and, notInArray }) =>
-      and(
-        eq(teamAppRole.teamId, ctx.session.user.activeTeamId),
-        eq(teamAppRole.appId, input.appId),
-        notInArray(teamAppRole.id, input.teamAppRoleIds),
-      ),
-    columns: {
-      id: true,
-    },
-  });
 
   // await ctx.prisma.user.update({
   //   where: {
@@ -57,17 +46,25 @@ export const updateUserAssociationHandler = async ({
   //   },
   // });
   await ctx.db.transaction(async (tx) => {
-    await tx.delete(schema.teamAppRolesToUsers).where(
-      inArray(
-        schema.teamAppRoles.id,
-        toDisconnect.map((role) => role.id),
-      ),
-    );
-    await tx.insert(schema.teamAppRolesToUsers).values(
-      input.teamAppRoleIds.map((appRoleId) => ({
-        userId: input.userId,
-        teamAppRoleId: appRoleId,
-      })),
-    );
+    await tx
+      .delete(schema.teamAppRolesToUsers)
+      .where(
+        inArray(
+          schema.teamAppRolesToUsers.teamAppRoleId,
+          ctx.db
+            .select({ id: schema.teamAppRoles.id })
+            .from(schema.teamAppRoles)
+            .where(
+              eq(schema.teamAppRoles.teamId, ctx.session.user.activeTeamId),
+            ),
+        ),
+      );
+    if (input.teamAppRoleIds.length > 0)
+      await tx.insert(schema.teamAppRolesToUsers).values(
+        input.teamAppRoleIds.map((appRoleId) => ({
+          userId: input.userId,
+          teamAppRoleId: appRoleId,
+        })),
+      );
   });
 };

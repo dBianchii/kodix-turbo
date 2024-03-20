@@ -185,19 +185,20 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
     //   })),
     // });
 
-    await tx.insert(schema.careTasks).values(
-      calendarTasks.map((calendarTask) => ({
-        id: crypto.randomUUID(),
-        idCareShift: careShiftId,
-        teamId: ctx.session.user.activeTeamId,
-        title: calendarTask.title,
-        description: calendarTask.description,
-        eventDate: calendarTask.date,
-        eventMasterId: calendarTask.eventMasterId,
-        doneByUserId: null,
-        doneAt: new Date(),
-      })),
-    );
+    if (calendarTasks.length > 0)
+      await tx.insert(schema.careTasks).values(
+        calendarTasks.map((calendarTask) => ({
+          id: crypto.randomUUID(),
+          idCareShift: careShiftId,
+          teamId: ctx.session.user.activeTeamId,
+          title: calendarTask.title,
+          description: calendarTask.description,
+          eventDate: calendarTask.date,
+          eventMasterId: calendarTask.eventMasterId,
+          doneByUserId: null,
+          doneAt: new Date(),
+        })),
+      );
 
     await saveConfigHandler({
       ctx,

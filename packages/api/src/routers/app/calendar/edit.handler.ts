@@ -322,7 +322,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
       //     description: true,
       //   },
       // });
-      const updatedOldMaster = await tx
+      await tx
         .update(schema.eventMasters)
         .set({
           dateUntil: previousOccurence,
@@ -342,11 +342,11 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
           ),
         );
 
-      if (updatedOldMaster.rowsAffected < 1)
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Could not update event master",
-        });
+      // if (updatedOldMaster.rowsAffected < 1)
+      //   throw new TRPCError({
+      //     code: "NOT_FOUND",
+      //     message: "Could not update event master",
+      //   });
 
       // const newMaster = await tx.eventMaster.create({
       //   data: {

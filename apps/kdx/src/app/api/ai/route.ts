@@ -3,7 +3,7 @@ import { OpenAIStream, StreamingTextResponse } from "ai";
 import { Configuration, OpenAIApi } from "openai-edge";
 
 import { env } from "~/env";
-import { CorsOptions } from "../_enableCors";
+import { OPTIONS } from "../_enableCors";
 
 //export const runtime = "edge";
 
@@ -76,6 +76,4 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export function OPTIONS() {
-  return CorsOptions();
-}
+export { OPTIONS };

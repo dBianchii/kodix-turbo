@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import { HiUserCircle } from "react-icons/hi";
 import { RxCross2, RxPlus } from "react-icons/rx";
 
-import type { Status } from "@kdx/db";
+import type { schema } from "@kdx/db";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Button } from "@kdx/ui/button";
 import {
@@ -34,6 +34,8 @@ import {
   DatePickerWithPresets,
 } from "~/app/_components/date-picker-with-presets";
 import { api } from "~/trpc/react";
+
+type Status = typeof schema.todos.$inferInsert.status;
 
 export function CreateTaskDialogButton() {
   function handleCreateTask() {

@@ -1,10 +1,8 @@
-"use client";
-
 import { useState } from "react";
 import { LuCircleOff, LuCircleSlash } from "react-icons/lu";
 import { RxCheck, RxCheckCircled, RxRadiobutton } from "react-icons/rx";
 
-import type { Status } from "@kdx/db";
+import type { schema } from "@kdx/db";
 import { Button } from "@kdx/ui/button";
 import {
   Command,
@@ -16,6 +14,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
 import { cn } from "@kdx/ui/utils";
 
+type Status = typeof schema.todos.$inferInsert.status;
 /**
  * @description You can optionally input a button to overwrite the default button trigger.
  */

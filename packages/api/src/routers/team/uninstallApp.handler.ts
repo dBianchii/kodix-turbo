@@ -48,6 +48,14 @@ export const uninstallAppHandler = async ({
           eq(schema.teamAppRoles.teamId, ctx.session.user.activeTeamId),
         ),
       );
+    await tx
+      .delete(schema.appTeamConfigs)
+      .where(
+        and(
+          eq(schema.appTeamConfigs.appId, input.appId),
+          eq(schema.appTeamConfigs.teamId, ctx.session.user.activeTeamId),
+        ),
+      );
   });
 
   //TODO: remove all data from the app.

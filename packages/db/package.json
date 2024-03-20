@@ -10,20 +10,17 @@
     "clean": "rm -rf .turbo node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint .",
-    "db:generate": "pnpm with-env prisma generate",
-    "db:push": "pnpm with-env drizzle-kit push:mysql",
-    "db:seed": "pnpm with-env npx tsx ./src/seed/seed.ts",
-    "db:nuke": "pnpm with-env npx tsx ./src/nuke.ts",
-    "db:drop": "pnpm with-env npx tsx ./src/drop.ts",
+    "push": "pnpm with-env drizzle-kit push:mysql",
     "studio": "pnpm with-env drizzle-kit studio",
+    "seed": "pnpm with-env npx tsx ./src/seed/seed.ts",
+    "nuke": "pnpm with-env npx tsx ./src/nuke.ts",
+    "drop": "pnpm with-env npx tsx ./src/drop.ts",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
     "@kdx/shared": "workspace:^0.1.0",
     "@planetscale/database": "^1.16.0",
-    "@prisma/adapter-planetscale": "^5.11.0",
-    "@prisma/client": "^5.11.0",
     "drizzle-orm": "^0.30.2",
     "drizzle-zod": "^0.5.1",
     "mysql2": "^3.9.2",
@@ -39,7 +36,6 @@
     "drizzle-kit": "^0.20.14",
     "eslint": "^8.56.0",
     "prettier": "^3.2.5",
-    "prisma": "^5.11.0",
     "typescript": "^5.3.3"
   },
   "eslintConfig": {

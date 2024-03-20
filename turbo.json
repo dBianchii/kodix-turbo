@@ -6,7 +6,6 @@
       "dependsOn": ["^topo"]
     },
     "build": {
-      "dependsOn": ["^build", "^db:generate"],
       "outputs": [
         ".next/**",
         "!.next/cache/**",
@@ -30,20 +29,6 @@
     },
     "typecheck": {
       "dependsOn": ["^topo"],
-      "cache": false
-    },
-    "db:generate": {
-      "inputs": ["prisma/schema.prisma"],
-      "cache": false
-    },
-    "db:push": {
-      "inputs": ["prisma/schema.prisma"],
-      "cache": false
-    },
-    "db:seed": {
-      "cache": false
-    },
-    "db:nuke": {
       "cache": false
     },
     "clean": {

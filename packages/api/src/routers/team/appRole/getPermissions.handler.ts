@@ -34,21 +34,60 @@ export const getPermissionsHandler = async ({
   //     },
   //   },
   // });
+  // const permissionsToTeamAppRole = await ctx.db
+  //   .select({
+  //     appPermissions: schema.appPermissions,
+  //     teamAppRole: schema.teamAppRoles,
+  //   })
+  //   .from(schema.appPermissions)
+  //   .innerJoin(
+  //     schema.appPermissionsToTeamAppRoles,
+  //     eq(
+  //       schema.appPermissions.id,
+  //       schema.appPermissionsToTeamAppRoles.appPermissionId,
+  //     ),
+  //   )
+  //   .innerJoin(
+  //     schema.teamAppRoles,
+  //     eq(
+  //       schema.teamAppRoles.id,
+  //       schema.appPermissionsToTeamAppRoles.teamAppRoleId,
+  //     ),
+  //   )
+  //   .where(
+  //     and(
+  //       eq(schema.teamAppRoles.teamId, ctx.session.user.activeTeamId),
+  //       eq(schema.appPermissions.appId, input.appId),
+  //     ),
+  //   );
+  const teamAppRolesIdsForActiveTeamId = await ctx.db
+    .select({ id: schema.teamAppRoles.id })
+    .from(schema.teamAppRoles)
+    .where(eq(schema.teamAppRoles.teamId, ctx.session.user.activeTeamId))
+    .then((res) => res.map((r) => r.id));
+
   const permissions = await ctx.db.query.appPermissions.findMany({
     where: (appPermission, { eq, and }) =>
-      and(
-        eq(appPermission.appId, input.appId),
-        eq(appPermission.TeamAppRole.teamId, ctx.session.user.activeTeamId),
-      ),
+      and(eq(appPermission.appId, input.appId)),
     with: {
       AppPermissionsToTeamAppRoles: {
-        where: (appPermissionToTeamAppRole, { eq }) =>
-          eq(
-            appPermissionToTeamAppRole.teamAppRoleId,
-            ctx.session.user.activeTeamId,
+        where: (appPermissionToTeamAppRole, { and, inArray }) =>
+          and(
+            inArray(
+              appPermissionToTeamAppRole.teamAppRoleId,
+              teamAppRolesIdsForActiveTeamId,
+            ),
           ),
+        with: {
+          TeamAppRole: {
+            columns: {
+              id: true,
+            },
+          },
+        },
       },
     },
   });
+
   return permissions;
 };
