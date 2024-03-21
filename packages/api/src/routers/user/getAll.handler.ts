@@ -7,7 +7,8 @@ interface GetAllOptions {
 }
 
 export const getAllHandler = async ({ ctx }: GetAllOptions) => {
-  const user = await ctx.prisma.user.findMany();
+  // const user = await ctx.prisma.user.findMany();
+  const user = await ctx.db.query.users.findMany();
   if (!user)
     throw new TRPCError({
       message: "No User Found",

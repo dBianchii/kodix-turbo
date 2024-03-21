@@ -53,7 +53,14 @@ export function DataTableUserAppRoles({
             if (user.id === newValues.userId) {
               return {
                 ...user,
-                TeamAppRole: teamAppRolesToUpdate,
+                TeamAppRolesToUsers: teamAppRolesToUpdate.map((x) => ({
+                  teamAppRoleId: x.id,
+                  userId: user.id,
+                  TeamAppRole: {
+                    id: x.id,
+                    name: x.name,
+                  },
+                })),
               };
             }
             return user;
@@ -104,10 +111,12 @@ export function DataTableUserAppRoles({
         </div>
       ),
     }),
-    columnHelper.accessor("TeamAppRole", {
+    columnHelper.accessor("TeamAppRolesToUsers", {
       header: "Roles",
       cell: function Cell(info) {
-        const selected = info.getValue().map((role) => role.id);
+        const selected = info
+          .getValue()
+          .map((teamAppRolesToUser) => teamAppRolesToUser.teamAppRoleId);
 
         return (
           <MultiSelect

@@ -5,20 +5,41 @@ interface GetAllOptions {
 }
 
 export const getNotificationsHandler = async ({ ctx }: GetAllOptions) => {
-  const invitations = await ctx.prisma.invitation.findMany({
-    where: {
-      email: ctx.session.user.email,
-    },
-    select: {
+  // const invitations = await ctx.prisma.invitation.findMany({
+  //   where: {
+  //     email: ctx.session.user.email,
+  //   },
+  //   select: {
+  //     id: true,
+  //     Team: {
+  //       select: {
+  //         id: true,
+  //         name: true,
+  //       },
+  //     },
+  //     InvitedBy: {
+  //       select: {
+  //         id: true,
+  //         name: true,
+  //         image: true,
+  //       },
+  //     },
+  //   },
+  // });
+  const invitations = await ctx.db.query.invitations.findMany({
+    where: (invitation, { eq }) => eq(invitation.email, ctx.session.user.email),
+    columns: {
       id: true,
+    },
+    with: {
       Team: {
-        select: {
+        columns: {
           id: true,
           name: true,
         },
       },
       InvitedBy: {
-        select: {
+        columns: {
           id: true,
           name: true,
           image: true,

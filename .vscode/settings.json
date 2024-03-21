@@ -21,7 +21,6 @@
     "next/dist/client/router.d.ts"
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
-  "[prisma]": { "editor.defaultFormatter": "Prisma.prisma" },
   /*
    * Note - add the following JSON to your User keybindings.json:
    * { "key": "f5", "command": "workbench.action.debug.selectandstart", "when": "config.workspaceKeybindings.selectAndStartDebugging.enabled && debuggersAvailable && debugState == 'inactive'" }

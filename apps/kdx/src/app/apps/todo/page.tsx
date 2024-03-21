@@ -1,4 +1,3 @@
-import { prisma } from "@kdx/db";
 import { todoAppId } from "@kdx/shared";
 import { Separator } from "@kdx/ui/separator";
 import { H1 } from "@kdx/ui/typography";
@@ -14,7 +13,6 @@ import { api } from "~/trpc/server";
 export default async function Todo() {
   await redirectIfAppNotInstalled({
     appId: todoAppId,
-    prisma,
   });
 
   const data = await api.app.todo.getAll();

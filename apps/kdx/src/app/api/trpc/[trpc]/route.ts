@@ -3,7 +3,7 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { appRouter, createTRPCContext } from "@kdx/api";
 import { auth } from "@kdx/auth";
 
-import { CorsOptions, setCorsHeaders } from "../../_enableCors";
+import { OPTIONS, setCorsHeaders } from "../../_enableCors";
 
 export const runtime = "nodejs";
 
@@ -26,4 +26,4 @@ const handler = auth(async (req) => {
   return response;
 });
 
-export { handler as GET, handler as POST, CorsOptions as OPTIONS };
+export { handler as GET, handler as POST, OPTIONS };

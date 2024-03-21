@@ -7,9 +7,18 @@ interface GetAllOptions {
 }
 
 export const getAllHandler = async ({ ctx }: GetAllOptions) => {
-  const apps = await ctx.prisma.app.findMany({
-    include: {
-      Teams: true,
+  // const apps = await ctx.prisma.app.findMany({
+  //   include: {
+  //     Teams: true,
+  //   },
+  // });
+  const apps = await ctx.db.query.apps.findMany({
+    with: {
+      AppsToTeams: {
+        with: {
+          Team: true,
+        },
+      },
     },
   });
 
@@ -24,14 +33,14 @@ export const getAllHandler = async ({ ctx }: GetAllOptions) => {
     .map((app) => {
       return {
         ...app,
-        installed: !!app.Teams.find(
-          (x) => x.id === ctx.session?.user.activeTeamId,
+        installed: !!app.AppsToTeams.find(
+          (x) => x.teamId === ctx.session?.user.activeTeamId,
         ),
       };
     })
     .map(
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      ({ Teams, devPartnerId, subscriptionCost, ...rest }) => rest,
+      ({ AppsToTeams, devPartnerId, subscriptionCost, ...rest }) => rest,
     ); // remove some fields
 
   return appsWithInstalled;

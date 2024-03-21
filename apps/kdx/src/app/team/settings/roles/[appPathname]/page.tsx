@@ -35,7 +35,6 @@ async function UserAppRolesTable({ appId }: { appId: KodixAppId }) {
   const initialUsers = await api.team.appRole.getUsersWithRoles({ appId });
   const allAppRoles = await api.team.appRole.getAll({ appId });
 
-  console.log(initialPermissions);
   return (
     <div className="flex flex-col gap-2">
       <h1 className="font-semibold text-muted-foreground">

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { HiUserCircle } from "react-icons/hi";
 
-import type { User } from "@kdx/db";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import {
   Command,
@@ -23,7 +22,11 @@ export function AssigneePopover({
 }: {
   assignedToUserId: string | null;
   setAssignedToUserId: (newUserId: string | null) => void;
-  users: User[];
+  users: {
+    name: string | null;
+    id: string;
+    image: string | null;
+  }[];
   children?: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);

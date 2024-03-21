@@ -1,5 +1,4 @@
 import dayjs from "@kdx/dayjs";
-import { prisma } from "@kdx/db";
 import { calendarAppId } from "@kdx/shared";
 import { Separator } from "@kdx/ui/separator";
 import { H1 } from "@kdx/ui/typography";
@@ -15,7 +14,6 @@ import { api } from "~/trpc/server";
 export default async function Calendar() {
   const session = await redirectIfAppNotInstalled({
     appId: calendarAppId,
-    prisma,
   });
 
   //date Start should be the beginninig of the day

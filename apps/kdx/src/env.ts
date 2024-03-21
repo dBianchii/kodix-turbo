@@ -13,7 +13,11 @@ export const env = createEnv({
    * This way you can ensure the app isn't built with invalid env vars.
    */
   server: {
-    DATABASE_URL: z.string().url(),
+    DB_HOST: z.string(),
+    DB_NAME: z.string(),
+    DB_PASSWORD: z.string(),
+    DB_USERNAME: z.string(),
+
     STAYS_OPENAI_API_KEY: z.string().optional(),
     UPSTASH_REDIS_REST_URL: z.string().url(),
     UPSTASH_REDIS_REST_TOKEN: z.string(),

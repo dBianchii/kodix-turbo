@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { Status } from "@kdx/db";
+import type { schema } from "@kdx/db";
 
 export const ZCreateInputSchema = z.object({
   title: z.string(),
@@ -8,19 +8,19 @@ export const ZCreateInputSchema = z.object({
   dueDate: z.date().optional(),
   reminder: z.boolean().optional(),
   priority: z.number().optional(),
-  status: z.nativeEnum(Status).optional(),
-  assignedToUserId: z.string().cuid().optional().nullish(),
+  status: z.custom<typeof schema.todos.$inferInsert.status>().optional(),
+  assignedToUserId: z.string().uuid().optional().nullish(),
 });
 export type TCreateInputSchema = z.infer<typeof ZCreateInputSchema>;
 
 export const ZUpdateInputSchema = z.object({
-  id: z.string().cuid(),
+  id: z.string().uuid(),
   title: z.string().optional(),
   description: z.string().optional(),
   dueDate: z.date().optional().nullish(),
   reminder: z.boolean().optional(),
   priority: z.number().optional(),
-  status: z.nativeEnum(Status).optional(),
-  assignedToUserId: z.string().cuid().optional().nullish(),
-});
+  status: z.custom<typeof schema.todos.$inferInsert.status>().optional(),
+  assignedToUserId: z.string().uuid().optional().nullish(),
+}); //TODO: investigate
 export type TUpdateInputSchema = z.infer<typeof ZUpdateInputSchema>;

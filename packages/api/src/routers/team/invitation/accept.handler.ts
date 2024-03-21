@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import type { TAcceptInputSchema } from "@kdx/validators/trpc/invitation";
+import { eq, schema } from "@kdx/db";
 
 import type { TProtectedProcedureContext } from "../../../trpc";
 
@@ -10,14 +11,28 @@ interface AcceptOptions {
 }
 
 export const acceptHandler = async ({ ctx, input }: AcceptOptions) => {
-  const invitation = await ctx.prisma.invitation.findUnique({
-    where: {
-      id: input.invitationId,
-      email: ctx.session.user.email,
-    },
-    select: {
+  // const invitation = await ctx.prisma.invitation.findUnique({
+  //   where: {
+  //     id: input.invitationId,
+  //     email: ctx.session.user.email,
+  //   },
+  //   select: {
+  //     Team: {
+  //       select: {
+  //         id: true,
+  //       },
+  //     },
+  //   },
+  // });
+  const invitation = await ctx.db.query.invitations.findFirst({
+    where: (invitation, { and, eq }) =>
+      and(
+        eq(invitation.id, input.invitationId),
+        eq(invitation.email, ctx.session.user.email),
+      ),
+    with: {
       Team: {
-        select: {
+        columns: {
           id: true,
         },
       },
@@ -30,24 +45,19 @@ export const acceptHandler = async ({ ctx, input }: AcceptOptions) => {
       code: "NOT_FOUND",
     });
 
-  await ctx.prisma.$transaction([
-    ctx.prisma.user.update({
-      where: {
-        id: ctx.session.user.id,
-      },
-      data: {
-        Teams: {
-          connect: {
-            id: invitation.Team.id,
-          },
-        },
+  await ctx.db.transaction(async (tx) => {
+    await tx
+      .update(schema.users)
+      .set({
         activeTeamId: invitation.Team.id,
-      },
-    }),
-    ctx.prisma.invitation.delete({
-      where: {
-        id: input.invitationId,
-      },
-    }),
-  ]);
+      })
+      .where(eq(schema.users.id, ctx.session.user.id));
+    await tx.insert(schema.usersToTeams).values({
+      userId: ctx.session.user.id,
+      teamId: invitation.Team.id,
+    });
+    await tx
+      .delete(schema.invitations)
+      .where(eq(schema.invitations.id, input.invitationId));
+  });
 };

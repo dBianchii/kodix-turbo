@@ -1,29 +1,46 @@
-import { Client } from "@planetscale/database";
-import { PrismaPlanetScale } from "@prisma/adapter-planetscale";
-import { PrismaClient } from "@prisma/client";
-import { fetch as undiciFetch } from "undici";
+import type { ExtractTablesWithRelations } from "drizzle-orm";
+import type { MySqlTransaction } from "drizzle-orm/mysql-core";
+import type {
+  MySql2PreparedQueryHKT,
+  MySql2QueryResultHKT,
+} from "drizzle-orm/mysql2";
+import { drizzle } from "drizzle-orm/mysql2";
+import { createInsertSchema } from "drizzle-zod";
+import mysql from "mysql2/promise";
 
-//* START PLANETSCALE ADAPTER SECTION
-const client = new Client({
-  url: `${process.env.DATABASE_URL}`,
-  fetch: undiciFetch,
+import * as apps from "./schema/apps";
+import * as calendar from "./schema/apps/calendar";
+import * as kodixCare from "./schema/apps/kodixCare";
+import * as todos from "./schema/apps/todos";
+import * as auth from "./schema/auth";
+import * as teams from "./schema/teams";
+
+export * from "drizzle-orm";
+
+export const schema = {
+  ...auth,
+  ...teams,
+  ...apps,
+  ...calendar,
+  ...kodixCare,
+  ...todos,
+};
+
+const connection = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USERNAME,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: 58247,
 });
-const adapter = new PrismaPlanetScale(client);
-const isPlanetScaleConnection = `${process.env.DATABASE_URL}`.includes("psdb");
-//* END PLANETSCALE ADAPTER SECTION
 
-const globalForPrisma = globalThis as { prisma?: PrismaClient };
+export const db = drizzle(connection, { mode: "default", schema });
 
-export const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    adapter: isPlanetScaleConnection ? adapter : null, //?  Only use Planetscale adapter if we are connecting to Planetscale
-    log:
-      process.env.NODE_ENV === "development"
-        ? ["query", "error", "warn"]
-        : ["error"],
-  });
+export type DrizzleTransaction = MySqlTransaction<
+  MySql2QueryResultHKT,
+  MySql2PreparedQueryHKT,
+  typeof schema,
+  ExtractTablesWithRelations<typeof schema>
+>;
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
-
-export * from "@prisma/client";
+export const insertTodosSchema = createInsertSchema(schema.todos);

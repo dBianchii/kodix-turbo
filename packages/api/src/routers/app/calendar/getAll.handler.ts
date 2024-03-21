@@ -1,15 +1,13 @@
 import { rrulestr } from "rrule";
 
-import type { Session } from "@kdx/auth";
-import type { PrismaClient } from "@kdx/db";
 import type { TGetAllInput } from "@kdx/validators/trpc/app/calendar";
 import dayjs from "@kdx/dayjs";
+import { and, eq, gte, lte, or, schema } from "@kdx/db";
+
+import type { TProtectedProcedureContext } from "../../../trpc";
 
 interface GetAllCalendarTasksOptions {
-  ctx: {
-    session: Session;
-    prisma: PrismaClient;
-  };
+  ctx: TProtectedProcedureContext;
   input: TGetAllInput;
 }
 
@@ -17,66 +15,131 @@ export const getAllHandler = async ({
   ctx,
   input,
 }: GetAllCalendarTasksOptions) => {
-  const eventMasters = await ctx.prisma.eventMaster.findMany({
-    where: {
-      teamId: ctx.session.user.activeTeamId,
-      AND: [
-        {
-          DateStart: {
-            lte: input.dateEnd,
-          },
-        },
-        {
-          OR: [{ DateUntil: { gte: input.dateStart } }, { DateUntil: null }],
-        },
-      ],
-    },
+  // const eventMasters = await ctx.prisma.eventMaster.findMany({
+  //   where: {
+  //     teamId: ctx.session.user.activeTeamId,
+  //     AND: [
+  //       {
+  //         DateStart: {
+  //           lte: input.dateEnd,
+  //         },
+  //       },
+  //       {
+  //         OR: [{ DateUntil: { gte: input.dateStart } }, { DateUntil: null }],
+  //       },
+  //     ],
+  //   },
+  // });
+  const eventMasters = await ctx.db.query.eventMasters.findMany({
+    where: (eventMasters, { and, gte, eq, or, lte, isNull }) =>
+      and(
+        eq(eventMasters.teamId, ctx.session.user.activeTeamId),
+        and(
+          lte(eventMasters.dateStart, input.dateEnd),
+          or(
+            gte(eventMasters.dateUntil, input.dateStart),
+            isNull(eventMasters.dateUntil),
+          ),
+        ),
+      ),
   });
 
   //Handling Exceptions and Cancelations
-  const eventExceptions = await ctx.prisma.eventException.findMany({
-    where: {
-      EventMaster: {
-        teamId: ctx.session.user.activeTeamId,
-      },
-      OR: [
-        {
-          originalDate: { gte: input.dateStart, lte: input.dateEnd },
-        },
-        {
-          newDate: { gte: input.dateStart, lte: input.dateEnd },
-        },
-      ],
-    },
-    include: {
-      EventMaster: {
-        select: {
-          rule: true,
-          title: true,
-          description: true,
-        },
-      },
-    },
-  });
+  // const eventExceptions = await ctx.prisma.eventException.findMany({
+  //   where: {
+  //     EventMaster: {
+  //       teamId: ctx.session.user.activeTeamId,
+  //     },
+  //     OR: [
+  //       {
+  //         originalDate: { gte: input.dateStart, lte: input.dateEnd },
+  //       },
+  //       {
+  //         newDate: { gte: input.dateStart, lte: input.dateEnd },
+  //       },
+  //     ],
+  //   },
+  //   include: {
+  //     EventMaster: {
+  //       select: {
+  //         rule: true,
+  //         title: true,
+  //         description: true,
+  //       },
+  //     },
+  //   },
+  // });
+  const eventExceptions = await ctx.db
+    .select({
+      id: schema.eventExceptions.id,
+      eventMasterId: schema.eventExceptions.eventMasterId,
+      originalDate: schema.eventExceptions.originalDate,
+      newDate: schema.eventExceptions.newDate,
+      title: schema.eventExceptions.title,
+      description: schema.eventExceptions.description,
+      rule: schema.eventMasters.rule,
+      eventMasterTitle: schema.eventMasters.title,
+      eventMasterDescription: schema.eventMasters.description,
+      eventMasterRule: schema.eventMasters.rule,
+    })
+    .from(schema.eventExceptions)
+    .where((eventExceptions) =>
+      and(
+        eq(schema.eventMasters.teamId, ctx.session.user.activeTeamId),
+        or(
+          and(
+            gte(eventExceptions.originalDate, input.dateStart),
+            lte(eventExceptions.originalDate, input.dateEnd),
+          ),
+          and(
+            gte(eventExceptions.newDate, input.dateStart),
+            lte(eventExceptions.newDate, input.dateEnd),
+          ),
+        ),
+      ),
+    )
+    .innerJoin(
+      schema.eventMasters,
+      eq(schema.eventMasters.id, schema.eventExceptions.eventMasterId),
+    );
 
-  const eventCancelations = await ctx.prisma.eventCancellation.findMany({
-    where: {
-      EventMaster: {
-        teamId: ctx.session.user.activeTeamId,
-      },
-      originalDate: {
-        gte: input.dateStart,
-        lte: input.dateEnd,
-      },
-    },
-    include: {
-      EventMaster: {
-        select: {
-          id: true,
-        },
-      },
-    },
-  });
+  // const eventCancelations = await ctx.prisma.eventCancellation.findMany({
+  //   where: {
+  //     EventMaster: {
+  //       teamId: ctx.session.user.activeTeamId,
+  //     },
+  //     originalDate: {
+  //       gte: input.dateStart,
+  //       lte: input.dateEnd,
+  //     },
+  //   },
+  //   include: {
+  //     EventMaster: {
+  //       select: {
+  //         id: true,
+  //       },
+  //     },
+  //   },
+  // });
+  const eventCancelations = await ctx.db
+    .select({
+      originalDate: schema.eventCancellations.originalDate,
+      eventMasterId: schema.eventMasters.id,
+    })
+    .from(schema.eventCancellations)
+    .where((eventCancellations) =>
+      and(
+        eq(schema.eventMasters.teamId, ctx.session.user.activeTeamId),
+        and(
+          gte(eventCancellations.originalDate, input.dateStart),
+          lte(eventCancellations.originalDate, input.dateEnd),
+        ),
+      ),
+    )
+    .innerJoin(
+      schema.eventMasters,
+      eq(schema.eventMasters.id, schema.eventCancellations.eventMasterId),
+    );
 
   //* We have all needed data. Now, let's add all masters and exceptions to calendarTasks.
   interface CalendarTask {
@@ -110,14 +173,14 @@ export const getAllHandler = async ({
       eventMasterId: eventException.eventMasterId,
       eventExceptionId: eventException.id,
       title:
-        eventException.title ?? eventException.EventMaster?.title ?? undefined,
+        eventException.title ?? eventException.eventMasterTitle ?? undefined,
       description:
         eventException?.description ??
-        eventException.EventMaster?.description ??
+        eventException.eventMasterDescription ??
         undefined,
       date: eventException.newDate,
       originaDate: eventException.originalDate,
-      rule: eventException.EventMaster.rule,
+      rule: eventException.rule,
     });
 
   //we have exceptions and recurrences from masters in calendarTasks. Some master recurrences must be deleted.
