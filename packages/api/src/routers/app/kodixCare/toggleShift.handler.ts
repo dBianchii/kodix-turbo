@@ -8,7 +8,7 @@ import WarnPreviousShiftNotEnded from "@kdx/react-email/warn-previous-shift-not-
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../trpc";
-import { sendEmail } from "../../../utils/email/email";
+import { resend } from "../../../utils/email/email";
 import { getAllHandler } from "../calendar/getAll.handler";
 import { getConfigHandler } from "../getConfig.handler";
 import { saveConfigHandler } from "../saveConfig.handler";
@@ -129,7 +129,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
 
     if (!lastCareShift.checkOut && !loggedUserIsCaregiverForCurrentShift)
       //Send email to caregiver if the previous shift was not ended by the caregiver
-      await sendEmail({
+      await resend.emails.send({
         from: kodixNotificationFromEmail,
         to: lastCareShift.Caregiver.email,
         subject: `Your last shift was ended by ${ctx.session.user.name}`,

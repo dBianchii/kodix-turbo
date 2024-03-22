@@ -7,7 +7,7 @@ import TeamInvite from "@kdx/react-email/team-invite";
 import { getBaseKdxUrl, getSuccessesAndErrors } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../trpc";
-import { sendEmail } from "../../../utils/email/email";
+import { resend } from "../../../utils/email/email";
 
 interface InviteOptions {
   ctx: TProtectedProcedureContext;
@@ -103,7 +103,7 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
 
   const results = await Promise.allSettled(
     invitations.map(async (invite) => {
-      await sendEmail({
+      await resend.emails.send({
         from: kodixNotificationFromEmail,
         to: invite.email,
         subject: "You have been invited to join a team on kodix.com.br",

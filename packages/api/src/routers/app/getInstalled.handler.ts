@@ -6,7 +6,7 @@ import { kodixNotificationFromEmail } from "@kdx/react-email/constants";
 
 import type { TProtectedProcedureContext } from "../../trpc";
 import { cacheTags } from "../../cache-tags";
-import { sendEmail } from "../../utils/email/email";
+import { resend } from "../../utils/email/email";
 
 interface GetInstalledOptions {
   ctx: TProtectedProcedureContext;
@@ -17,7 +17,7 @@ export const getInstalledHandler = async ({ ctx }: GetInstalledOptions) =>
 
 const getInstalledCached = unstable_cache(
   async ({ activeTeamId }: { activeTeamId: string }) => {
-    await sendEmail({
+    await resend.emails.send({
       from: kodixNotificationFromEmail,
       to: "gdbianchii@gmail.com",
       subject: "getInstalledHandler called",
