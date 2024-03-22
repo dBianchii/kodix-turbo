@@ -111,11 +111,16 @@ async function main() {
       .values(toInsertAppPermissionsToAppRoleDefaults);
   });
 
-  const res = await fetch(`${kdxProductionURL}/api/revalidateTag`, {
-    body: JSON.stringify([cacheTags.INSTALLED_APPS]),
+  const urlToRevalidate = `${kdxProductionURL}/api/revalidateTag`;
+  const tagsToRevalidate = [cacheTags.INSTALLED_APPS];
+  console.log(
+    `🌱 Revalidating ${tagsToRevalidate.join(" ")} tags on ${urlToRevalidate}`,
+  );
+  const res = await fetch(urlToRevalidate, {
+    body: JSON.stringify(tagsToRevalidate),
     method: "POST",
   });
-  console.log(await res.json());
+  console.log("🌱 ", await res.json());
 }
 
 //TODO: Understand how to upsert correctly https://github.com/drizzle-team/drizzle-orm/issues/1728
@@ -144,7 +149,7 @@ function validateSeedInput() {
       }
     }
   }
-  console.log("🌱 - ✅ Seed input validation passed!");
+  console.log("🌱 ✅ Seed input validation passed!");
 }
 
 main()
