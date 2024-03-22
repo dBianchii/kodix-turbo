@@ -21,7 +21,7 @@ const getInstalledCached = unstable_cache(
       from: kodixNotificationFromEmail,
       to: "gdbianchii@gmail.com",
       subject: "getInstalledHandler called",
-      html: `getInstalledHandler called by ${activeTeamId} `,
+      html: `<h1>getInstalledHandler called by ${activeTeamId} </h1>`,
     });
     const apps = await db
       .select({
