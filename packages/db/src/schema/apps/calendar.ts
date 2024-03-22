@@ -1,6 +1,8 @@
 import { relations } from "drizzle-orm";
 import { index, mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core";
 
+import { NANOID_SIZE } from "@kdx/shared";
+
 import { teams } from "../teams";
 import { DEFAULTLENGTH } from "../utils";
 import { careTasks } from "./kodixCare";
@@ -8,13 +10,13 @@ import { careTasks } from "./kodixCare";
 export const eventMasters = mysqlTable(
   "eventMaster",
   {
-    id: varchar("id", { length: DEFAULTLENGTH }).notNull().primaryKey(),
+    id: varchar("id", { length: NANOID_SIZE }).notNull().primaryKey(),
     rule: varchar("rule", { length: DEFAULTLENGTH }).notNull(),
     dateStart: timestamp("DateStart", { mode: "date", fsp: 3 }).notNull(),
     dateUntil: timestamp("DateUntil", { mode: "date", fsp: 3 }),
     title: varchar("title", { length: DEFAULTLENGTH }),
     description: varchar("description", { length: DEFAULTLENGTH }),
-    teamId: varchar("teamId", { length: DEFAULTLENGTH })
+    teamId: varchar("teamId", { length: NANOID_SIZE })
       .notNull()
       .references(() => teams.id, { onDelete: "cascade" }),
   },
@@ -40,10 +42,10 @@ export const eventMastersRelations = relations(
 export const eventCancellations = mysqlTable(
   "eventCancellation",
   {
-    id: varchar("id", { length: DEFAULTLENGTH }).notNull().primaryKey(),
+    id: varchar("id", { length: NANOID_SIZE }).notNull().primaryKey(),
     originalDate: timestamp("originalDate").notNull(),
     eventMasterId: varchar("eventMasterId", {
-      length: DEFAULTLENGTH,
+      length: NANOID_SIZE,
     })
       .notNull()
       .references(() => eventMasters.id, { onDelete: "cascade" }),
@@ -67,13 +69,13 @@ export const eventCancellationsRelations = relations(
 export const eventExceptions = mysqlTable(
   "eventException",
   {
-    id: varchar("id", { length: DEFAULTLENGTH }).notNull().primaryKey(),
+    id: varchar("id", { length: NANOID_SIZE }).notNull().primaryKey(),
     originalDate: timestamp("originalDate").notNull(),
     newDate: timestamp("newDate", { mode: "date", fsp: 3 }).notNull(),
     title: varchar("title", { length: DEFAULTLENGTH }),
     description: varchar("description", { length: DEFAULTLENGTH }),
     eventMasterId: varchar("eventMasterId", {
-      length: DEFAULTLENGTH,
+      length: NANOID_SIZE,
     })
       .notNull()
       .references(() => eventMasters.id, { onDelete: "cascade" }),

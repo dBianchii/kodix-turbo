@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import type { KodixAppId } from "@kdx/shared";
+import { isNanoIdRegex } from "@kdx/shared";
 
 export const ZGetUsersWithRolesInputSchema = z.object({
   appId: z.custom<KodixAppId>(),
@@ -22,18 +23,18 @@ export type TGetPermissionsInputSchema = z.infer<
 >;
 
 export const ZUpdatePermissionAssociationInputSchema = z.object({
-  permissionId: z.string().uuid(), //Permission to update
+  permissionId: z.string().regex(isNanoIdRegex), //Permission to update
   appId: z.custom<KodixAppId>(), //Which app the permission belongs to.
-  teamAppRoleIds: z.array(z.string().uuid()), //teamAppRoleIds to connect
+  teamAppRoleIds: z.array(z.string().regex(isNanoIdRegex)), //teamAppRoleIds to connect
 });
 export type TUpdatePermissionAssociationInputSchema = z.infer<
   typeof ZUpdatePermissionAssociationInputSchema
 >;
 
 export const ZUpdateUserAssociationInputSchema = z.object({
-  userId: z.string().uuid(), //User to update
+  userId: z.string().regex(isNanoIdRegex), //User to update
   appId: z.custom<KodixAppId>(), //Which app teamAppRoleIds belong to.
-  teamAppRoleIds: z.array(z.string().uuid()), //teamAppRoleIds to connect
+  teamAppRoleIds: z.array(z.string().regex(isNanoIdRegex)), //teamAppRoleIds to connect
 });
 export type TUpdateUserAssociationInputSchema = z.infer<
   typeof ZUpdateUserAssociationInputSchema

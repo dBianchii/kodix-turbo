@@ -9,6 +9,8 @@ import {
   varchar,
 } from "drizzle-orm/mysql-core";
 
+import { NANOID_SIZE } from "@kdx/shared";
+
 import {
   appPermissionsToTeamAppRoles,
   appRoleDefaults,
@@ -25,13 +27,13 @@ import { DEFAULTLENGTH } from "./utils";
 export const teams = mysqlTable(
   "team",
   {
-    id: varchar("id", { length: DEFAULTLENGTH }).notNull().primaryKey(),
+    id: varchar("id", { length: NANOID_SIZE }).notNull().primaryKey(),
     name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
     createdAt: timestamp("createdAt")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt").onUpdateNow(),
-    ownerId: varchar("ownerId", { length: DEFAULTLENGTH })
+    ownerId: varchar("ownerId", { length: NANOID_SIZE })
       .notNull()
       .references(() => users.id, { onUpdate: "cascade" }),
   },
@@ -60,10 +62,10 @@ export const teamsRelations = relations(teams, ({ many, one }) => ({
 export const usersToTeams = mysqlTable(
   "_UserTeam",
   {
-    userId: varchar("A", { length: DEFAULTLENGTH })
+    userId: varchar("A", { length: NANOID_SIZE })
       .notNull()
       .references(() => users.id),
-    teamId: varchar("B", { length: DEFAULTLENGTH })
+    teamId: varchar("B", { length: NANOID_SIZE })
       .notNull()
       .references(() => teams.id),
   },
@@ -92,19 +94,19 @@ export const usersToTeamsRelations = relations(usersToTeams, ({ one }) => ({
 export const teamAppRoles = mysqlTable(
   "teamAppRole",
   {
-    id: varchar("id", { length: DEFAULTLENGTH }).notNull().primaryKey(),
+    id: varchar("id", { length: NANOID_SIZE }).notNull().primaryKey(),
     name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
     description: varchar("description", { length: DEFAULTLENGTH }),
     minUsers: int("minUsers").default(0).notNull(),
     maxUsers: int("maxUsers").default(0).notNull(),
-    appId: varchar("appId", { length: DEFAULTLENGTH })
+    appId: varchar("appId", { length: NANOID_SIZE })
       .notNull()
       .references(() => apps.id, { onDelete: "cascade" }),
-    teamId: varchar("teamId", { length: DEFAULTLENGTH })
+    teamId: varchar("teamId", { length: NANOID_SIZE })
       .notNull()
       .references(() => teams.id, { onDelete: "cascade" }),
     appRoleDefaultId: varchar("appRoleDefaultId", {
-      length: DEFAULTLENGTH,
+      length: NANOID_SIZE,
     }).references(() => appRoleDefaults.id, {
       onDelete: "set null",
       onUpdate: "cascade",
@@ -143,10 +145,10 @@ export const teamAppRolesRelations = relations(
 export const teamAppRolesToUsers = mysqlTable(
   "_TeamAppRoleToUser",
   {
-    teamAppRoleId: varchar("A", { length: DEFAULTLENGTH })
+    teamAppRoleId: varchar("A", { length: NANOID_SIZE })
       .notNull()
       .references(() => teamAppRoles.id, { onDelete: "cascade" }),
-    userId: varchar("B", { length: DEFAULTLENGTH })
+    userId: varchar("B", { length: NANOID_SIZE })
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
   },
@@ -179,8 +181,8 @@ export const teamAppRolesToUsersRelations = relations(
 export const notifications = mysqlTable(
   "notification",
   {
-    id: varchar("id", { length: DEFAULTLENGTH }).notNull().primaryKey(),
-    userId: varchar("userId", { length: DEFAULTLENGTH })
+    id: varchar("id", { length: NANOID_SIZE }).notNull().primaryKey(),
+    userId: varchar("userId", { length: NANOID_SIZE })
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
   },
@@ -200,8 +202,8 @@ export const notificationsRelations = relations(notifications, ({ one }) => ({
 export const invitations = mysqlTable(
   "invitation",
   {
-    id: varchar("id", { length: DEFAULTLENGTH }).notNull(),
-    teamId: varchar("teamId", { length: DEFAULTLENGTH })
+    id: varchar("id", { length: NANOID_SIZE }).notNull(),
+    teamId: varchar("teamId", { length: NANOID_SIZE })
       .notNull()
       .references(() => teams.id, { onDelete: "cascade" }),
     email: varchar("email", { length: DEFAULTLENGTH }).notNull(),
@@ -210,7 +212,7 @@ export const invitations = mysqlTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt").onUpdateNow(),
-    invitedById: varchar("invitedById", { length: DEFAULTLENGTH })
+    invitedById: varchar("invitedById", { length: NANOID_SIZE })
       .notNull()
       .references(() => users.id),
   },

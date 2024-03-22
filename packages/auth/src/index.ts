@@ -10,6 +10,7 @@ import resend from "next-auth/providers/resend";
 
 import { and, db, eq, schema } from "@kdx/db";
 import { kodixNotificationFromEmail } from "@kdx/react-email/constants";
+import { nanoid } from "@kdx/shared";
 
 import { env } from "../env";
 import { sendVerificationRequest } from "./email/send-verification-request";
@@ -45,8 +46,8 @@ function KodixAdapter(): Adapter {
       console.log("createUser");
       console.log("createUser");
       console.log("createUser");
-      const id = crypto.randomUUID();
-      const teamId = crypto.randomUUID();
+      const id = nanoid();
+      const teamId = nanoid();
 
       await db.transaction(async (tx) => {
         await tx.insert(users).values({

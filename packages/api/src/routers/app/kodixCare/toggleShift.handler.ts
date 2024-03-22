@@ -5,7 +5,7 @@ import dayjs from "@kdx/dayjs";
 import { eq, schema } from "@kdx/db";
 import { kodixNotificationFromEmail } from "@kdx/react-email/constants";
 import WarnPreviousShiftNotEnded from "@kdx/react-email/warn-previous-shift-not-ended";
-import { kodixCareAppId } from "@kdx/shared";
+import { kodixCareAppId, nanoid } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../trpc";
 import { resend } from "../../../utils/email/email";
@@ -57,7 +57,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
     //   });
     // });
     return await ctx.db.transaction(async (tx) => {
-      const careShiftId = crypto.randomUUID();
+      const careShiftId = nanoid();
       await ctx.db.insert(schema.careShifts).values({
         id: careShiftId,
         caregiverId: ctx.session.user.id,
@@ -114,7 +114,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
     // });
 
     await tx.insert(schema.careShifts).values({
-      id: crypto.randomUUID(),
+      id: nanoid(),
       teamId: ctx.session.user.activeTeamId,
       checkIn: new Date(),
       caregiverId: ctx.session.user.id,
@@ -188,7 +188,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
     if (calendarTasks.length > 0)
       await tx.insert(schema.careTasks).values(
         calendarTasks.map((calendarTask) => ({
-          id: crypto.randomUUID(),
+          id: nanoid(),
           idCareShift: careShiftId,
           teamId: ctx.session.user.activeTeamId,
           title: calendarTask.title,

@@ -4,6 +4,7 @@ import { RRule, rrulestr } from "rrule";
 import type { TEditInput } from "@kdx/validators/trpc/app/calendar";
 import dayjs from "@kdx/dayjs";
 import { and, eq, gt, gte, schema } from "@kdx/db";
+import { nanoid } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../trpc";
 
@@ -114,7 +115,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
       //   },
       // });
       return await ctx.db.insert(schema.eventExceptions).values({
-        id: crypto.randomUUID(),
+        id: nanoid(),
         eventMasterId: eventMaster.id,
         originalDate: foundTimestamp,
         newDate: input.from ?? foundTimestamp,
@@ -133,7 +134,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
     // }); //! END OF PROCEDURE
     else
       return await ctx.db.insert(schema.eventExceptions).values({
-        id: crypto.randomUUID(),
+        id: nanoid(),
         eventMasterId: eventMaster.id,
         originalDate: foundTimestamp,
         newDate: input.from ?? foundTimestamp,
@@ -372,7 +373,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
       //     id: true,
       //   },
       // });
-      const newMasterId = crypto.randomUUID();
+      const newMasterId = nanoid();
       await tx.insert(schema.eventMasters).values({
         id: newMasterId,
         teamId: ctx.session.user.activeTeamId,
