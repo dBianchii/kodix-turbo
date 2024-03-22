@@ -70,9 +70,8 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
     onSuccess: () => {
       setOpen(false);
       void utils.app.getAll.invalidate();
-      setUninstalling(false);
       router.refresh();
-      toast(`App ${appName} uninstalled`);
+      toast.success(`App ${appName} uninstalled`);
     },
     onError: () => {
       toast.error(`Error uninstalling ${appName}`);
@@ -188,7 +187,7 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
                   {" " + session?.user.activeTeamName}?
                 </DialogDescription>
               </DialogHeader>
-              <DialogFooter>
+              <DialogFooter className="gap-3 sm:justify-between">
                 <Button
                   variant="outline"
                   onClick={() => setOpen(false)}
