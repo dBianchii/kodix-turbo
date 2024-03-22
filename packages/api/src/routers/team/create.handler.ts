@@ -2,6 +2,7 @@ import { revalidateTag } from "next/cache";
 
 import type { TCreateInputSchema } from "@kdx/validators/trpc/team";
 import { schema } from "@kdx/db";
+import { nanoid } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../trpc";
 
@@ -22,7 +23,7 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
   //       : undefined,
   //   },
   // });
-  const teamId = crypto.randomUUID();
+  const teamId = nanoid();
   await ctx.db.transaction(async (tx) => {
     const team = await tx.insert(schema.teams).values({
       id: teamId,

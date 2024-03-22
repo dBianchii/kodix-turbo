@@ -2,6 +2,7 @@ import { RRule } from "rrule";
 
 import type { TCreateInput } from "@kdx/validators/trpc/app/calendar";
 import { schema } from "@kdx/db";
+import { nanoid } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../trpc";
 
@@ -29,7 +30,7 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
   //   },
   // });
   return await ctx.db.insert(schema.eventMasters).values({
-    id: crypto.randomUUID(),
+    id: nanoid(),
     title: input.title,
     description: input.description,
     rule: new RRule({

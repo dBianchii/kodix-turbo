@@ -1,4 +1,13 @@
+import { customAlphabet } from "nanoid";
+
 import { kdxProductionURL } from "./constants";
+
+export const NANOID_SIZE = 12;
+export const nanoid = customAlphabet(
+  "1234567890abcdefghijklmnopqrstuvwxyz",
+  NANOID_SIZE,
+);
+export const isNanoIdRegex = /^[0-9a-z]{NANOID_SIZE}$/;
 
 /**
  * @description Base URL for the KDX server. Make sure that when developing, your KDX app is on localhost:3000

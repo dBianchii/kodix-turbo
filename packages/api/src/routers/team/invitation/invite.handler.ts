@@ -4,7 +4,7 @@ import type { TInviteInputSchema } from "@kdx/validators/trpc/invitation";
 import { schema } from "@kdx/db";
 import { kodixNotificationFromEmail } from "@kdx/react-email/constants";
 import TeamInvite from "@kdx/react-email/team-invite";
-import { getBaseKdxUrl, getSuccessesAndErrors } from "@kdx/shared";
+import { getBaseKdxUrl, getSuccessesAndErrors, nanoid } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../trpc";
 import { resend } from "../../../utils/email/email";
@@ -94,7 +94,7 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
 
   const invitations: (typeof schema.invitations.$inferInsert)[] = input.to.map(
     (email) => ({
-      id: crypto.randomUUID(),
+      id: nanoid(),
       teamId: team.id,
       email,
       invitedById: ctx.session.user.id,

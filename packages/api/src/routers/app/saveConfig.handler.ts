@@ -1,5 +1,6 @@
 import type { TSaveConfigInput } from "@kdx/validators/trpc/app";
 import { and, eq, schema } from "@kdx/db";
+import { nanoid } from "@kdx/shared";
 import { appIdToAppTeamConfigSchema } from "@kdx/validators";
 
 import type { TProtectedProcedureContext } from "../../trpc";
@@ -67,7 +68,7 @@ export const saveConfigHandler = async ({ ctx, input }: SaveConfigOptions) => {
   // });
 
   return await ctx.db.insert(schema.appTeamConfigs).values({
-    id: crypto.randomUUID(),
+    id: nanoid(),
     config: parsedInput,
     teamId: ctx.session.user.activeTeamId,
     appId: input.appId,

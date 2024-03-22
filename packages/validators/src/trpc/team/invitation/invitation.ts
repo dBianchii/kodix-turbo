@@ -1,22 +1,24 @@
 import { z } from "zod";
 
+import { isNanoIdRegex } from "@kdx/shared";
+
 export const ZAcceptInputSchema = z.object({
-  invitationId: z.string().uuid(),
+  invitationId: z.string().regex(isNanoIdRegex),
 });
 export type TAcceptInputSchema = z.infer<typeof ZAcceptInputSchema>;
 
 export const ZDeclineInputSchema = z.object({
-  invitationId: z.string().uuid(),
+  invitationId: z.string().regex(isNanoIdRegex),
 });
 export type TDeclineInputSchema = z.infer<typeof ZDeclineInputSchema>;
 
 export const ZDeleteUserSchema = z.object({
-  invitationId: z.string().uuid(),
+  invitationId: z.string().regex(isNanoIdRegex),
 });
 export type TDeleteUserSchema = z.infer<typeof ZDeleteUserSchema>;
 
 export const ZInviteInputSchema = z.object({
-  teamId: z.string().uuid(),
+  teamId: z.string().regex(isNanoIdRegex),
   to: z
     .string()
     .email()

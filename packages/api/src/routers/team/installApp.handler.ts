@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 
 import type { TInstallAppInputSchema } from "@kdx/validators/trpc/team";
 import { and, eq, schema } from "@kdx/db";
-import { appIdToAdminRole_defaultIdMap } from "@kdx/shared";
+import { appIdToAdminRole_defaultIdMap, nanoid } from "@kdx/shared";
 
 import type { TIsTeamOwnerProcedureContext } from "../../customProcedures";
 import { cacheTags } from "../../cache-tags";
@@ -84,7 +84,7 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
     });
 
     const toCopyAppRoles = defaultAppRoles.map((role) => ({
-      id: crypto.randomUUID(),
+      id: nanoid(),
       appId: role.appId,
       name: role.name,
       description: role.description,

@@ -3,6 +3,7 @@ import { RRule, rrulestr } from "rrule";
 
 import type { TCancelInput } from "@kdx/validators/trpc/app/calendar";
 import { and, eq, gte, schema } from "@kdx/db";
+import { nanoid } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../trpc";
 
@@ -45,7 +46,7 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
           .delete(schema.eventExceptions)
           .where(eq(schema.eventExceptions.id, input.eventExceptionId!));
         return await tx.insert(schema.eventCancellations).values({
-          id: crypto.randomUUID(),
+          id: nanoid(),
           eventMasterId: toDeleteException.eventMasterId,
           originalDate: toDeleteException.originalDate,
         });
@@ -63,7 +64,7 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
     //   },
     // });
     return await ctx.db.insert(schema.eventCancellations).values({
-      id: crypto.randomUUID(),
+      id: nanoid(),
       eventMasterId: input.eventMasterId,
       originalDate: input.date,
     });

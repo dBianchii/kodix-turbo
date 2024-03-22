@@ -1,27 +1,22 @@
 //* Partners
-export const kdxPartnerId = "bf77d19a-60e3-4585-82d2-90488433116a";
+export const kdxPartnerId = "p8bmvvk3cy3l";
 
 //-------------------------------  	Apps 	 -------------------------------//
 //* Todo *//
-export const todoAppId = "288a81ff-264c-4983-87ed-e3c8b51bb675" as const;
-export const todoAdminRoleDefaultId = "3dd58804-ea58-4d13-863e-c07e7a7fd5be";
+export const todoAppId = "7mwag78tv8pa" as const;
+export const todoAdminRoleDefaultId = "01v9cgqz7uuc";
 
 //* Calendar *//
-export const calendarAppId = "5a231085-4d69-4aab-bc5e-9aaaaea1d773" as const;
-export const calendarAdminRoleDefaultId =
-  "7e762d33-cc96-4a6e-b3cc-81899e3419da";
+export const calendarAppId = "rglo4zodf341" as const;
+export const calendarAdminRoleDefaultId = "6q3jsrycj0pz";
 
 //*  KodixCare *//
-export const kodixCareAppId = "b68852cc-cc65-42bd-8ed8-12fea20d1d93" as const;
-export const kodixCareAdminRoleDefaultId =
-  "24482255-a3df-469b-a7a6-043af64ebc09";
-export const kodixCarePatientRoleDefaultId =
-  "938c92db-58ea-4673-9a21-25718da2de9c";
-export const kodixCareCareGiverRoleDefaultId =
-  "540f027e-c70b-4047-93d4-2336f7b0734d";
+export const kodixCareAppId = "1z50i9xblo4b" as const;
+export const kodixCareAdminRoleDefaultId = "kiq5p7htma4k";
+export const kodixCarePatientRoleDefaultId = "h19p6ny82j9f";
+export const kodixCareCareGiverRoleDefaultId = "jl9lfayikjyv";
 //*   KodixCare permissions -------
-export const PKodixCare_CanToggleShiftId =
-  "974e44c9-104a-498c-8cbe-ad2c3adb6deb";
+export const PKodixCare_CanToggleShiftId = "t3rf70tpu02h";
 
 export type KodixAppId =
   | typeof todoAppId

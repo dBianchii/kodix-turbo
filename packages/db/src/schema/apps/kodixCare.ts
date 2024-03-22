@@ -1,6 +1,8 @@
 import { relations, sql } from "drizzle-orm";
 import { index, mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core";
 
+import { NANOID_SIZE } from "@kdx/shared";
+
 import { users } from "../auth";
 import { teams } from "../teams";
 import { DEFAULTLENGTH } from "../utils";
@@ -9,11 +11,11 @@ import { eventMasters } from "./calendar";
 export const careShifts = mysqlTable(
   "careShift",
   {
-    id: varchar("id", { length: DEFAULTLENGTH }).notNull().primaryKey(),
-    caregiverId: varchar("caregiverId", { length: DEFAULTLENGTH })
+    id: varchar("id", { length: NANOID_SIZE }).notNull().primaryKey(),
+    caregiverId: varchar("caregiverId", { length: NANOID_SIZE })
       .notNull()
       .references(() => users.id),
-    teamId: varchar("teamId", { length: DEFAULTLENGTH })
+    teamId: varchar("teamId", { length: NANOID_SIZE })
       .notNull()
       .references(() => teams.id, { onDelete: "cascade" }),
     checkIn: timestamp("checkIn")
@@ -44,20 +46,20 @@ export const careShiftsRelations = relations(careShifts, ({ one }) => ({
 export const careTasks = mysqlTable(
   "careTask",
   {
-    id: varchar("id", { length: DEFAULTLENGTH }).notNull().primaryKey(),
+    id: varchar("id", { length: NANOID_SIZE }).notNull().primaryKey(),
     eventDate: timestamp("eventDate").notNull(),
     doneAt: timestamp("doneAt"),
-    doneByUserId: varchar("doneByUserId", { length: DEFAULTLENGTH }).references(
+    doneByUserId: varchar("doneByUserId", { length: NANOID_SIZE }).references(
       () => users.id,
       { onDelete: "restrict" }, //Restrict because we have to keep logs somehow
     ),
-    teamId: varchar("teamId", { length: DEFAULTLENGTH })
+    teamId: varchar("teamId", { length: NANOID_SIZE })
       .notNull()
       .references(() => teams.id),
     eventMasterId: varchar("eventMasterId", {
-      length: DEFAULTLENGTH,
+      length: NANOID_SIZE,
     }).references(() => eventMasters.id),
-    idCareShift: varchar("idCareShift", { length: DEFAULTLENGTH })
+    idCareShift: varchar("idCareShift", { length: NANOID_SIZE })
       .notNull()
       .references(() => careShifts.id),
     title: varchar("title", { length: DEFAULTLENGTH }),

@@ -1,5 +1,6 @@
 import type { TCreateInputSchema } from "@kdx/validators/trpc/app/todo";
 import { schema } from "@kdx/db";
+import { nanoid } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../trpc";
 
@@ -22,7 +23,7 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
   //   },
   // });
   await ctx.db.insert(schema.todos).values({
-    id: crypto.randomUUID(),
+    id: nanoid(),
     assignedToUserId: input.assignedToUserId,
     teamId: ctx.session.user.activeTeamId,
     title: input.title,
