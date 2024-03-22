@@ -109,6 +109,12 @@ async function main() {
       .insert(schema.appPermissionsToAppRoleDefaults)
       .values(toInsertAppPermissionsToAppRoleDefaults);
   });
+
+  const result = await fetch(kdxProductionURL, {
+    body: "",
+    method: "POST",
+  });
+  console.log(await result.json());
 }
 
 //TODO: Understand how to upsert correctly https://github.com/drizzle-team/drizzle-orm/issues/1728

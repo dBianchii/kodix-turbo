@@ -2,9 +2,9 @@ import { unstable_cache } from "next/cache";
 import { TRPCError } from "@trpc/server";
 
 import { db } from "@kdx/db";
+import { cacheTags } from "@kdx/shared";
 
 import type { TPublicProcedureContext } from "../../trpc";
-import { cacheTags } from "../../cache-tags";
 
 interface GetAllOptions {
   ctx: TPublicProcedureContext;

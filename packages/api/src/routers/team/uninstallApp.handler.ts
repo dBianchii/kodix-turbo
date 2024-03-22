@@ -2,9 +2,9 @@ import { revalidateTag } from "next/cache";
 
 import type { TUninstallAppSchema } from "@kdx/validators/trpc/team";
 import { and, eq, schema } from "@kdx/db";
+import { cacheTags } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../trpc";
-import { cacheTags } from "../../cache-tags";
 
 interface UninstallAppOptions {
   ctx: TProtectedProcedureContext;

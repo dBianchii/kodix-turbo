@@ -3,10 +3,9 @@ import { TRPCError } from "@trpc/server";
 
 import type { TInstallAppInputSchema } from "@kdx/validators/trpc/team";
 import { and, eq, schema } from "@kdx/db";
-import { appIdToAdminRole_defaultIdMap, nanoid } from "@kdx/shared";
+import { appIdToAdminRole_defaultIdMap, cacheTags, nanoid } from "@kdx/shared";
 
 import type { TIsTeamOwnerProcedureContext } from "../../customProcedures";
-import { cacheTags } from "../../cache-tags";
 
 interface InstallAppOptions {
   ctx: TIsTeamOwnerProcedureContext;

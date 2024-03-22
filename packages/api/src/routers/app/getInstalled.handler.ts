@@ -3,9 +3,9 @@ import { TRPCError } from "@trpc/server";
 
 import { db, eq, schema } from "@kdx/db";
 import { kodixNotificationFromEmail } from "@kdx/react-email/constants";
+import { cacheTags } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../trpc";
-import { cacheTags } from "../../cache-tags";
 import { resend } from "../../utils/email/email";
 
 interface GetInstalledOptions {

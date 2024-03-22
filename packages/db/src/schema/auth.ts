@@ -63,7 +63,7 @@ export const accounts = mysqlTable(
       .notNull(),
     provider: varchar("provider", { length: DEFAULTLENGTH }).notNull(),
     providerAccountId: varchar("providerAccountId", {
-      length: NANOID_SIZE,
+      length: DEFAULTLENGTH,
     }).notNull(),
     refresh_token: varchar("refresh_token", { length: DEFAULTLENGTH }),
     access_token: varchar("access_token", { length: DEFAULTLENGTH }),
