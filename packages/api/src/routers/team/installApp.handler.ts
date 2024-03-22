@@ -6,6 +6,7 @@ import { and, eq, schema } from "@kdx/db";
 import { appIdToAdminRole_defaultIdMap } from "@kdx/shared";
 
 import type { TIsTeamOwnerProcedureContext } from "../../customProcedures";
+import { cacheTags } from "../../cache-tags";
 
 interface InstallAppOptions {
   ctx: TIsTeamOwnerProcedureContext;
@@ -142,6 +143,6 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
 
     // return updatedApp;
   });
-
+  revalidateTag(cacheTags.INSTALLED_APPS);
   revalidateTag("getAllForLoggedUser");
 };

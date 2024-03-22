@@ -2,10 +2,12 @@ import { redirect } from "next/navigation";
 
 import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
-import { and, db, eq, schema } from "@kdx/db";
+
+import { api } from "~/trpc/server";
 
 /**
- * @description Sees if user has this app on current team, if not, redirects to /apps
+ * @description Checks if user is logged in and has this app on current team. If not, redirects to /apps
+ * @returns session
  */
 export const redirectIfAppNotInstalled = async ({
   appId,
@@ -16,34 +18,10 @@ export const redirectIfAppNotInstalled = async ({
 }) => {
   const session = await auth();
   if (!session) redirect("/");
+  const installedApps = await api.app.getInstalled();
 
-  // const installed = await prisma.app.findUnique({
-  //   where: {
-  //     id: appId,
-  //     Teams: {
-  //       some: {
-  //         id: session.user.activeTeamId,
-  //       },
-  //     },
-  //   },
-  //   select: {
-  //     id: true,
-  //   },
-  // });
-  const installed = await db
-    .select({ id: schema.apps.id })
-    .from(schema.apps)
-    .innerJoin(schema.appsToTeams, eq(schema.appsToTeams.appId, schema.apps.id))
-    .innerJoin(schema.teams, eq(schema.teams.id, schema.appsToTeams.teamId))
-    .where(
-      and(
-        eq(schema.teams.id, session.user.activeTeamId),
-        eq(schema.apps.id, appId),
-      ),
-    )
-    .then((res) => res[0]);
-
-  if (!installed) redirect(customRedirect ?? "/apps");
+  if (!installedApps.some((x) => x.id === appId))
+    redirect(customRedirect ?? "/apps");
 
   return session;
 };

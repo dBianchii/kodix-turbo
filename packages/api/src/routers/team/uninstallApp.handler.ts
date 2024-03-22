@@ -4,6 +4,7 @@ import type { TUninstallAppSchema } from "@kdx/validators/trpc/team";
 import { and, eq, schema } from "@kdx/db";
 
 import type { TProtectedProcedureContext } from "../../trpc";
+import { cacheTags } from "../../cache-tags";
 
 interface UninstallAppOptions {
   ctx: TProtectedProcedureContext;
@@ -60,5 +61,6 @@ export const uninstallAppHandler = async ({
 
   //TODO: remove all data from the app.
 
+  revalidateTag(cacheTags.INSTALLED_APPS);
   revalidateTag("getAllForLoggedUser");
 };
