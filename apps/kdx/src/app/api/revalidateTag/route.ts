@@ -1,11 +1,16 @@
 import { revalidateTag } from "next/cache";
-import { z } from "zod";
+
+import { cacheTags, getBaseUrl, getZodEnumFromObjectEnum } from "@kdx/shared";
 
 export const POST = async (request: Request) => {
-  const json = (await request.json()) as unknown;
-  const tag = z.string().parse(json);
+  const tags = getZodEnumFromObjectEnum(cacheTags)
+    .array()
+    .min(1)
+    .parse(await request.json());
 
-  revalidateTag(tag);
+  for (const tag of tags) revalidateTag(tag);
 
-  return Response.json({ success: `Revalidated tag "${tag}"` });
+  return Response.json(
+    `Successfully revalidated tags: "${tags.join(", ")}" on Next.JS app running at ${getBaseUrl()}`,
+  );
 };

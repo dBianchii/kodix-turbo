@@ -1,4 +1,5 @@
 import {
+  cacheTags,
   calendarAppId,
   kdxPartnerId,
   kdxProductionURL,
@@ -110,11 +111,11 @@ async function main() {
       .values(toInsertAppPermissionsToAppRoleDefaults);
   });
 
-  const result = await fetch(kdxProductionURL, {
-    body: "",
+  const res = await fetch(`${kdxProductionURL}/api/revalidateTag`, {
+    body: JSON.stringify([cacheTags.INSTALLED_APPS]),
     method: "POST",
   });
-  console.log(await result.json());
+  console.log(await res.json());
 }
 
 //TODO: Understand how to upsert correctly https://github.com/drizzle-team/drizzle-orm/issues/1728

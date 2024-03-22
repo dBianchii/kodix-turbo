@@ -1,13 +1,14 @@
 import { customAlphabet } from "nanoid";
+import { z } from "zod";
 
 import { kdxProductionURL } from "./constants";
 
-export const NANOID_SIZE = 12;
+export const NANOID_SIZE = 12; //If this is changed, the regex in isNanoIdRegex must be updated
 export const nanoid = customAlphabet(
   "1234567890abcdefghijklmnopqrstuvwxyz",
   NANOID_SIZE,
 );
-export const isNanoIdRegex = /^[0-9a-z]{NANOID_SIZE}$/;
+export const isNanoIdRegex = /^[0-9a-z]{12}$/;
 
 /**
  * @description Base URL for the KDX server. Make sure that when developing, your KDX app is on localhost:3000
@@ -40,3 +41,11 @@ export const getSuccessesAndErrors = <T>(
 
   return { successes, errors };
 };
+
+export function getZodEnumFromObjectEnum<
+  TI extends Record<string, unknown>,
+  R extends string = TI extends Record<infer R, unknown> ? R : never,
+>(input: TI): z.ZodEnum<[R, ...R[]]> {
+  const [firstKey, ...otherKeys] = Object.keys(input) as [R, ...R[]];
+  return z.enum([firstKey, ...otherKeys]);
+}
