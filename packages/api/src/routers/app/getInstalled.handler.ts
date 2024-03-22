@@ -2,9 +2,11 @@ import { unstable_cache } from "next/cache";
 import { TRPCError } from "@trpc/server";
 
 import { db, eq, schema } from "@kdx/db";
+import { kodixNotificationFromEmail } from "@kdx/react-email/constants";
 
 import type { TProtectedProcedureContext } from "../../trpc";
 import { cacheTags } from "../../cache-tags";
+import { sendEmail } from "../../utils/email/email";
 
 interface GetInstalledOptions {
   ctx: TProtectedProcedureContext;
@@ -15,6 +17,12 @@ export const getInstalledHandler = async ({ ctx }: GetInstalledOptions) =>
 
 const getInstalledCached = unstable_cache(
   async ({ activeTeamId }: { activeTeamId: string }) => {
+    await sendEmail({
+      from: kodixNotificationFromEmail,
+      to: "gdbianchii@gmail.com",
+      subject: "getInstalledHandler called",
+      html: `getInstalledHandler called by ${activeTeamId} `,
+    });
     const apps = await db
       .select({
         id: schema.apps.id,

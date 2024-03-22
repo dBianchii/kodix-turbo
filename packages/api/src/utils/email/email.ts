@@ -30,9 +30,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 type CreateEmailOptions = Parameters<typeof resend.emails.send>[0];
 
-export async function sendEmail(
-  mailOptions: CreateEmailOptions & { react: JSX.Element },
-) {
+export async function sendEmail(mailOptions: CreateEmailOptions) {
   // const result = await transporter.sendMail({ ...options, html });
   return await resend.emails.send({ ...mailOptions });
 }
