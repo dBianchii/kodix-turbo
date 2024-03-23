@@ -1,6 +1,5 @@
 "use client";
 
-import { Label } from "@radix-ui/react-label";
 import { formatRelative } from "date-fns";
 import { HiUserCircle } from "react-icons/hi";
 import { IoMdTime } from "react-icons/io";
@@ -9,6 +8,7 @@ import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Badge } from "@kdx/ui/badge";
+import { Label } from "@kdx/ui/label";
 
 import { api } from "~/trpc/react";
 import { ToggleShiftButton } from "./toggle-shift-button";
