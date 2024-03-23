@@ -29,6 +29,9 @@ importers:
       '@auth/core':
         specifier: 0.28.0
         version: 0.28.0
+      '@kdx/shared':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/shared
     devDependencies:
       '@kdx/eslint-config':
         specifier: workspace:^0.2.0

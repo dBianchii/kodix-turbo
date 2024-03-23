@@ -9,8 +9,7 @@ import Google from "next-auth/providers/google";
 import resend from "next-auth/providers/resend";
 
 import { and, db, eq, schema } from "@kdx/db";
-import { kodixNotificationFromEmail } from "@kdx/react-email/constants";
-import { nanoid } from "@kdx/shared";
+import { kodixNotificationFromEmail, nanoid } from "@kdx/shared";
 
 import { env } from "../env";
 import { sendVerificationRequest } from "./email/send-verification-request";

@@ -14,3 +14,4 @@ export const authorizedEmails = [
  * @usedBy kdx/kdx kdx/db
  */
 export const kdxProductionURL = "https://www.kodix.com.br";
+export const kodixNotificationFromEmail = "Kodix <notification@kodix.com.br>"; //? Default 'from' email for notifications

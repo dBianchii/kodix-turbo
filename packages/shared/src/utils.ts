@@ -41,11 +41,3 @@ export const getSuccessesAndErrors = <T>(
 
   return { successes, errors };
 };
-
-export function getZodEnumFromObjectEnum<
-  TI extends Record<string, unknown>,
-  R extends string = TI extends Record<infer R, unknown> ? R : never,
->(input: TI): z.ZodEnum<[R, ...R[]]> {
-  const [firstKey, ...otherKeys] = Object.keys(input) as [R, ...R[]];
-  return z.enum([firstKey, ...otherKeys]);
-}

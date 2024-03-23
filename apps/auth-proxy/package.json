@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@auth/core": "0.28.0"
+    "@auth/core": "0.28.0",
+    "@kdx/shared": "workspace:^0.1.0"
   },
   "devDependencies": {
     "@kdx/eslint-config": "workspace:^0.2.0",
