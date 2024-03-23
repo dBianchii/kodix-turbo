@@ -587,8 +587,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1
       embla-carousel-react:
-        specifier: 8.0.0-rc22
-        version: 8.0.0-rc22(react@18.2.0)
+        specifier: 8.0.0
+        version: 8.0.0(react@18.2.0)
       next-themes:
         specifier: ^0.2.1
         version: 0.2.1(next@14.1.4)(react-dom@18.2.0)(react@18.2.0)
@@ -6747,26 +6747,26 @@ packages:
   /electron-to-chromium@1.4.623:
     resolution: {integrity: sha512-lKoz10iCYlP1WtRYdh5MvocQPWVRoI7ysp6qf18bmeBgR8abE6+I2CsfyNKztRDZvhdWc+krKT6wS7Neg8sw3A==}
 
-  /embla-carousel-react@8.0.0-rc22(react@18.2.0):
-    resolution: {integrity: sha512-NwmISV0Cw9XVo76Vquz3hJaeZe7qoCRtrzStxlEY7qfZD8WR/f4JlQAso35URTs1BeYVhcuClflelioo+Zmidg==}
+  /embla-carousel-react@8.0.0(react@18.2.0):
+    resolution: {integrity: sha512-qT0dii8ZwoCtEIBE6ogjqU2+5IwnGfdt2teKjCzW88JRErflhlCpz8KjWnW8xoRZOP8g0clRtsMEFoAgS/elfA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.1 || ^18.0.0
     dependencies:
-      embla-carousel: 8.0.0-rc22
-      embla-carousel-reactive-utils: 8.0.0-rc22(embla-carousel@8.0.0-rc22)
+      embla-carousel: 8.0.0
+      embla-carousel-reactive-utils: 8.0.0(embla-carousel@8.0.0)
       react: 18.2.0
     dev: false
 
-  /embla-carousel-reactive-utils@8.0.0-rc22(embla-carousel@8.0.0-rc22):
-    resolution: {integrity: sha512-K4b8QhQGXYW5wr4l+U6XryhafsFV5c/IyohDnZN3MGoYIB9xY7qpjUWAcs5bTDjAD+qCZPOuXre0D3IVa28mqw==}
+  /embla-carousel-reactive-utils@8.0.0(embla-carousel@8.0.0):
+    resolution: {integrity: sha512-JCw0CqCXI7tbHDRogBb9PoeMLyjEC1vpN0lDOzUjmlfVgtfF+ffLaOK8bVtXVUEbNs/3guGe3NSzA5J5aYzLzw==}
     peerDependencies:
-      embla-carousel: 8.0.0-rc22
+      embla-carousel: 8.0.0
     dependencies:
-      embla-carousel: 8.0.0-rc22
+      embla-carousel: 8.0.0
     dev: false
 
-  /embla-carousel@8.0.0-rc22:
-    resolution: {integrity: sha512-MeXnPT1LShfgAu8qXj3CskayV0R6OkHx7w3cPTx+Q5ZWKyShKpIuu7qVQJ5BoFegalE4n6yxqoQaRuGFbK9pYw==}
+  /embla-carousel@8.0.0:
+    resolution: {integrity: sha512-ecixcyqS6oKD2nh5Nj5MObcgoSILWNI/GtBxkidn5ytFaCCmwVHo2SecksaQZHcARMMpIR2dWOlSIdA1LkZFUA==}
     dev: false
 
   /emoji-regex@8.0.0:
