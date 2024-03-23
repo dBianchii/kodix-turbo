@@ -142,6 +142,7 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
 
     // return updatedApp;
   });
-  revalidateTag(cacheTags.INSTALLED_APPS);
-  revalidateTag("getAllForLoggedUser");
+  revalidateTag(
+    cacheTags.INSTALLEDAPPS({ teamId: ctx.session.user.activeTeamId }),
+  );
 };

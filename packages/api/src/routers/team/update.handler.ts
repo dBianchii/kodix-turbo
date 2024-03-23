@@ -11,20 +11,11 @@ interface CreateHandler {
 }
 
 export const updateHandler = async ({ ctx, input }: CreateHandler) => {
-  // const team = await ctx.prisma.team.update({
-  //   where: {
-  //     id: input.teamId,
-  //   },
-  //   data: {
-  //     name: input.teamName,
-  //   },
-  // });
   const team = await ctx.db
     .update(schema.teams)
     .set({
       name: input.teamName,
     })
     .where(eq(schema.teams.id, input.teamId));
-  revalidateTag("getAllForLoggedUser");
   return team;
 };

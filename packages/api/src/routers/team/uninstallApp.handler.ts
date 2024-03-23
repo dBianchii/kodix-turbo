@@ -15,23 +15,6 @@ export const uninstallAppHandler = async ({
   ctx,
   input,
 }: UninstallAppOptions) => {
-  // const uninstalledApp = await ctx.prisma.team.update({
-  //   where: {
-  //     id: ctx.session.user.activeTeamId,
-  //   },
-  //   data: {
-  //     ActiveApps: {
-  //       disconnect: {
-  //         id: input.appId,
-  //       },
-  //     },
-  //     TeamAppRoles: {
-  //       deleteMany: {
-  //         appId: input.appId,
-  //       },
-  //     },
-  //   },
-  // });
   await ctx.db.transaction(async (tx) => {
     await tx
       .delete(schema.appsToTeams)
@@ -61,6 +44,7 @@ export const uninstallAppHandler = async ({
 
   //TODO: remove all data from the app.
 
-  revalidateTag(cacheTags.INSTALLED_APPS);
-  revalidateTag("getAllForLoggedUser");
+  revalidateTag(
+    cacheTags.INSTALLEDAPPS({ teamId: ctx.session.user.activeTeamId }),
+  );
 };
