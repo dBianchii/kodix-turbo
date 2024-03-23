@@ -3,15 +3,15 @@ export const kdxPartnerId = "p8bmvvk3cy3l";
 
 //-------------------------------  	Apps 	 -------------------------------//
 //* Todo *//
-export const todoAppId = "7mwag78tv8pa" as const;
+export const todoAppId = "7mwag78tv8pa";
 export const todoAdminRoleDefaultId = "01v9cgqz7uuc";
 
 //* Calendar *//
-export const calendarAppId = "rglo4zodf341" as const;
+export const calendarAppId = "rglo4zodf341";
 export const calendarAdminRoleDefaultId = "6q3jsrycj0pz";
 
 //*  KodixCare *//
-export const kodixCareAppId = "1z50i9xblo4b" as const;
+export const kodixCareAppId = "1z50i9xblo4b";
 export const kodixCareAdminRoleDefaultId = "kiq5p7htma4k";
 export const kodixCarePatientRoleDefaultId = "h19p6ny82j9f";
 export const kodixCareCareGiverRoleDefaultId = "jl9lfayikjyv";
