@@ -1,10 +1,10 @@
 import type { TUpdateInputSchema } from "@kdx/validators/trpc/team";
 import { eq, schema } from "@kdx/db";
 
-import type { TUserAndTeamLimitedProcedureContext } from "../../customProcedures";
+import { TProtectedProcedureContext } from "../../trpc";
 
 interface CreateHandler {
-  ctx: TUserAndTeamLimitedProcedureContext;
+  ctx: TProtectedProcedureContext;
   input: TUpdateInputSchema;
 }
 

@@ -7,10 +7,7 @@ import {
   ZUpdateInputSchema,
 } from "@kdx/validators/trpc/team";
 
-import {
-  isTeamOwnerProcedure,
-  userAndTeamLimitedProcedure,
-} from "../../customProcedures";
+import { isTeamOwnerProcedure } from "../../customProcedures";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 import { appRoleRouter } from "./appRole/_router";
 import { createHandler } from "./create.handler";
@@ -51,7 +48,7 @@ export const teamRouter = createTRPCRouter({
   uninstallApp: protectedProcedure
     .input(ZUninstallAppSchema)
     .mutation(async (opts) => await uninstallAppHandler(opts)),
-  update: userAndTeamLimitedProcedure
+  update: protectedProcedure
     .input(ZUpdateInputSchema)
     .mutation(async (opts) => await updateHandler(opts)),
 });
