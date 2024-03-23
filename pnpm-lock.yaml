@@ -27,8 +27,8 @@ importers:
   apps/auth-proxy:
     dependencies:
       '@auth/core':
-        specifier: 0.24.0
-        version: 0.24.0
+        specifier: 0.28.0
+        version: 0.28.0
     devDependencies:
       '@kdx/eslint-config':
         specifier: workspace:^0.2.0
@@ -346,8 +346,8 @@ importers:
         version: 3.22.4
     devDependencies:
       '@auth/core':
-        specifier: 0.24.0
-        version: 0.24.0
+        specifier: 0.28.0
+        version: 0.28.0
       '@kdx/eslint-config':
         specifier: workspace:^0.2.0
         version: link:../../tooling/eslint
@@ -825,22 +825,6 @@ packages:
       '@jridgewell/trace-mapping': 0.3.25
     dev: false
 
-  /@auth/core@0.24.0:
-    resolution: {integrity: sha512-wwTyapljg4ydyvtQRXSeOaj6nBVSvPkVoXws6i+/vPfINxz4lo9UuLifPLqW7iO72/f4Ttaez0g3XA42VtKQ8A==}
-    peerDependencies:
-      nodemailer: ^6.8.0
-    peerDependenciesMeta:
-      nodemailer:
-        optional: true
-    dependencies:
-      '@panva/hkdf': 1.1.1
-      '@types/cookie': 0.6.0
-      cookie: 0.6.0
-      jose: 5.2.1
-      oauth4webapi: 2.10.3
-      preact: 10.11.3
-      preact-render-to-string: 5.2.3(preact@10.11.3)
-
   /@auth/core@0.27.0:
     resolution: {integrity: sha512-3bydnRJIM/Al6mkYmb53MsC+6G8ojw3lLPzwgVnX4dCo6N2lrib6Wq6r0vxZIhuHGjLObqqtUfpeaEj5aeTHFg==}
     peerDependencies:
@@ -885,7 +869,6 @@ packages:
       oauth4webapi: 2.10.3
       preact: 10.11.3
       preact-render-to-string: 5.2.3(preact@10.11.3)
-    dev: false
 
   /@auth/drizzle-adapter@0.8.0:
     resolution: {integrity: sha512-cwLMOJHf+R8VeHYFzdA5DReKelidWSx8bz9kJ6hydPjUugHate2F7u9XHoCOu7zXIA5azSPb3b2WR9C0Fjq7eA==}
