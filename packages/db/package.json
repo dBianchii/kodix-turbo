@@ -32,7 +32,7 @@
     "@kdx/prettier-config": "workspace:^0.1.0",
     "@kdx/tsconfig": "workspace:^0.1.0",
     "@types/node": "^20.11.30",
-    "dotenv-cli": "^7.3.0",
+    "dotenv-cli": "^7.4.1",
     "drizzle-kit": "^0.20.14",
     "eslint": "^8.56.0",
     "prettier": "^3.2.5",
