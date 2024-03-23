@@ -22,7 +22,7 @@
     "@trpc/server": "11.0.0-next-beta.294",
     "dayjs": "^1.11.10",
     "next": "^14.1.4",
-    "nodemailer": "^6.9.10",
+    "nodemailer": "^6.9.13",
     "resend": "^3.2.0",
     "rrule": "^2.8.1",
     "superjson": "2.2.1",
