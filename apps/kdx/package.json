@@ -34,7 +34,7 @@
     "@trpc/server": "11.0.0-next-beta.294",
     "@upstash/ratelimit": "^1.0.1",
     "@upstash/redis": "^1.28.4",
-    "@vercel/analytics": "^1.2.0",
+    "@vercel/analytics": "^1.2.2",
     "@vercel/speed-insights": "^1.0.9",
     "ai": "^2.2.34",
     "date-fns": "^3.3.1",
