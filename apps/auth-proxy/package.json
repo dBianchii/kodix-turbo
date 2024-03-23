@@ -20,7 +20,7 @@
     "@kdx/tsconfig": "workspace:^0.1.0",
     "@types/node": "^20.11.30",
     "eslint": "^8.56.0",
-    "h3": "^1.10.1",
+    "h3": "^1.11.1",
     "nitropack": "^2.8.1",
     "prettier": "^3.2.5",
     "typescript": "^5.4.3"

@@ -49,8 +49,8 @@ importers:
         specifier: ^8.56.0
         version: 8.56.0
       h3:
-        specifier: ^1.10.1
-        version: 1.10.1
+        specifier: ^1.11.1
+        version: 1.11.1
       nitropack:
         specifier: ^2.8.1
         version: 2.8.1
@@ -6289,6 +6289,14 @@ packages:
       shebang-command: 2.0.0
       which: 2.0.2
 
+  /crossws@0.2.4:
+    resolution: {integrity: sha512-DAxroI2uSOgUKLz00NX6A8U/8EE3SZHmIND+10jkVSaypvyt57J5JEOxAQOL6lQxyzi/wZbTIwssU1uy69h5Vg==}
+    peerDependencies:
+      uWebSockets.js: '*'
+    peerDependenciesMeta:
+      uWebSockets.js:
+        optional: true
+
   /css-tree@2.3.1:
     resolution: {integrity: sha512-6Fv1DV/TYw//QF5IzQdqsNDjx/wc8TrMBZsqjL9eW01tWb7R7k/mq+/VXfJCl7SoD5emsJop9cOByJZfs8hYIw==}
     engines: {node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0}
@@ -6475,6 +6483,10 @@ packages:
 
   /destr@2.0.2:
     resolution: {integrity: sha512-65AlobnZMiCET00KaFFjUefxDX0khFA/E4myqZ7a6Sq1yZtR8+FVIvilVX66vF2uobSumxooYZChiRPCKNqhmg==}
+    dev: true
+
+  /destr@2.0.3:
+    resolution: {integrity: sha512-2N3BOUU4gYMpTP24s5rF5iP7BDr7uNTCs4ozw3kf/eKfvWSIu93GEBi5m427YoyJoeOzQ5smuu4nNAPGb8idSQ==}
 
   /destroy@1.2.0:
     resolution: {integrity: sha512-2sJGJTaXIIaR1w4iJSNoN0hnMY7Gpc/n8D4qSCJw8QqFWXf7cuAgnEHxBpweaVcPevC2l3KpjYCx3NypQQgaJg==}
@@ -7895,18 +7907,21 @@ packages:
       duplexer: 0.1.2
     dev: true
 
-  /h3@1.10.1:
-    resolution: {integrity: sha512-UBAUp47hmm4BB5/njB4LrEa9gpuvZj4/Qf/ynSMzO6Ku2RXaouxEfiG2E2IFnv6fxbhAkzjasDxmo6DFdEeXRg==}
+  /h3@1.11.1:
+    resolution: {integrity: sha512-AbaH6IDnZN6nmbnJOH72y3c5Wwh9P97soSVdGSBbcDACRdkC0FEWf25pzx4f/NuOCK6quHmW18yF2Wx+G4Zi1A==}
     dependencies:
       cookie-es: 1.0.0
+      crossws: 0.2.4
       defu: 6.1.4
-      destr: 2.0.2
+      destr: 2.0.3
       iron-webcrypto: 1.0.0
       ohash: 1.1.3
       radix3: 1.1.0
       ufo: 1.4.0
       uncrypto: 0.1.3
       unenv: 1.9.0
+    transitivePeerDependencies:
+      - uWebSockets.js
 
   /handlebars@4.7.8:
     resolution: {integrity: sha512-vafaFqs8MZkRrSX7sFVUdo3ap/eNiLnb4IakshzvP56X5Nr1iGKAIqdX6tMlm6HcNRIkr6AxO5jFEoJzzpT8aQ==}
@@ -8708,7 +8723,7 @@ packages:
       consola: 3.2.3
       defu: 6.1.4
       get-port-please: 3.1.1
-      h3: 1.10.1
+      h3: 1.11.1
       http-shutdown: 1.2.2
       jiti: 1.21.0
       mlly: 1.4.2
@@ -8718,6 +8733,8 @@ packages:
       ufo: 1.3.2
       untun: 0.1.3
       uqr: 0.1.2
+    transitivePeerDependencies:
+      - uWebSockets.js
     dev: true
 
   /load-tsconfig@0.2.5:
@@ -9411,7 +9428,7 @@ packages:
       fs-extra: 11.2.0
       globby: 14.0.0
       gzip-size: 7.0.0
-      h3: 1.10.1
+      h3: 1.11.1
       hookable: 5.5.3
       httpxy: 0.1.5
       is-primitive: 3.0.1
@@ -9460,6 +9477,7 @@ packages:
       - encoding
       - idb-keyval
       - supports-color
+      - uWebSockets.js
     dev: true
 
   /no-case@2.3.2:
@@ -9604,7 +9622,7 @@ packages:
       citty: 0.1.5
       execa: 8.0.1
       pathe: 1.1.1
-      ufo: 1.3.2
+      ufo: 1.4.0
     dev: true
 
   /oauth4webapi@2.10.3:
@@ -11614,12 +11632,14 @@ packages:
     dependencies:
       '@trpc/server': 11.0.0-next-beta.294
       co-body: 6.1.0
-      h3: 1.10.1
+      h3: 1.11.1
       lodash.clonedeep: 4.5.0
       node-mocks-http: 1.14.1
       openapi-types: 12.1.3
       zod: 3.22.4
       zod-to-json-schema: 3.22.3(zod@3.22.4)
+    transitivePeerDependencies:
+      - uWebSockets.js
     dev: false
 
   /trpc-tools@0.12.1-canary.2dfb1delosg(@trpc/server@11.0.0-next-beta.294)(typanion@3.14.0)(typescript@5.4.3)(zod@3.22.4):
@@ -12037,7 +12057,7 @@ packages:
       anymatch: 3.1.3
       chokidar: 3.5.3
       destr: 2.0.2
-      h3: 1.10.1
+      h3: 1.11.1
       ioredis: 5.3.2
       listhen: 1.5.5
       lru-cache: 10.1.0
@@ -12047,6 +12067,7 @@ packages:
       ufo: 1.3.2
     transitivePeerDependencies:
       - supports-color
+      - uWebSockets.js
     dev: true
 
   /untun@0.1.3:
