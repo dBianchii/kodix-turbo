@@ -130,8 +130,8 @@ importers:
         specifier: ^1.0.9
         version: 1.0.9(next@14.1.3)(react@18.2.0)(svelte@4.2.12)(vue@3.4.21)
       ai:
-        specifier: ^2.2.34
-        version: 2.2.34(react@18.2.0)(solid-js@1.8.16)(svelte@4.2.12)(vue@3.4.21)
+        specifier: ^3.0.13
+        version: 3.0.13(react@18.2.0)(solid-js@1.8.16)(svelte@4.2.12)(vue@3.4.21)(zod@3.22.4)
       date-fns:
         specifier: ^3.3.1
         version: 3.3.1
@@ -4940,6 +4940,10 @@ packages:
       '@types/node': 20.11.30
     dev: false
 
+  /@types/diff-match-patch@1.0.36:
+    resolution: {integrity: sha512-xFdR6tkm0MWvBfO8xXCSsinYxHcqkQUlcHeSpMC2ukzOb6lwQAfDmW+Qt0AvlGd8HpsS28qKsB+oPeJn9I39jg==}
+    dev: false
+
   /@types/eslint-scope@3.7.7:
     resolution: {integrity: sha512-MzMFlSLBqNF2gcHWO0G1vP/YQyfvrxZ0bF+u7mzUdZ1/xK4A4sru+nraZz5i3iEIk1l1uyicaDVTB4QbbEkAYg==}
     dependencies:
@@ -5588,14 +5592,15 @@ packages:
       indent-string: 4.0.0
     dev: true
 
-  /ai@2.2.34(react@18.2.0)(solid-js@1.8.16)(svelte@4.2.12)(vue@3.4.21):
-    resolution: {integrity: sha512-5U/Q9Kkc24vfgq+NpwgbXnS5wgk++ljx1sAyfOFdG2byOR57gkX8wK1gVwiz0CaoZzVj62IqdmnQBoSCAIsbCA==}
+  /ai@3.0.13(react@18.2.0)(solid-js@1.8.16)(svelte@4.2.12)(vue@3.4.21)(zod@3.22.4):
+    resolution: {integrity: sha512-fDrYnVTdMJuS/qYUq0T/CX3WDuTfcZFie9LkgnoQ2layfUG2Wzh/mpfkfYXFEq/mqnpep3xUtECOB1weyyvwUg==}
     engines: {node: '>=14.6'}
     peerDependencies:
       react: ^18.2.0
       solid-js: ^1.7.7
       svelte: ^3.0.0 || ^4.0.0
       vue: ^3.3.4
+      zod: ^3.0.0
     peerDependenciesMeta:
       react:
         optional: true
@@ -5605,8 +5610,11 @@ packages:
         optional: true
       vue:
         optional: true
+      zod:
+        optional: true
     dependencies:
       eventsource-parser: 1.0.0
+      jsondiffpatch: 0.6.0
       nanoid: 3.3.6
       react: 18.2.0
       solid-js: 1.8.16
@@ -5617,6 +5625,8 @@ packages:
       swr-store: 0.10.6
       swrv: 1.0.4(vue@3.4.21)
       vue: 3.4.21(typescript@5.4.3)
+      zod: 3.22.4
+      zod-to-json-schema: 3.22.5(zod@3.22.4)
     dev: false
 
   /ajv-keywords@3.5.2(ajv@6.12.6):
@@ -6143,7 +6153,6 @@ packages:
   /chalk@5.3.0:
     resolution: {integrity: sha512-dLitG79d+GV1Nb/VYcCDFivJeK1hiukt9QjRNVOsUtTy1rR1YJsmpGGTZ3qJos+uw7WmWF4wUwBd9jxjocFC2w==}
     engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
-    dev: true
 
   /change-case@3.1.0:
     resolution: {integrity: sha512-2AZp7uJZbYEzRPsFoa+ijKdvp9zsrnnt6+yFokfwEpeJm0xuJDVoxiRCAaTzyJND8GJkofo2IcKWaUZ/OECVzw==}
@@ -6719,6 +6728,10 @@ packages:
 
   /didyoumean@1.2.2:
     resolution: {integrity: sha512-gxtyfqMg7GKyhQmb056K7M3xszy/myH8w+B4RT+QXBQsvAOdc3XymqDDPHx1BgPgsdAA5SIifona89YtRATDzw==}
+
+  /diff-match-patch@1.0.5:
+    resolution: {integrity: sha512-IayShXAgj/QMXgB0IWmKx+rOPuGMhqm5w6jvFxmVenXKIzRqTAAsbBPT3kWQeGANj3jGgvcvv4yK6SxqYmikgw==}
+    dev: false
 
   /diff@4.0.2:
     resolution: {integrity: sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==}
@@ -8837,6 +8850,16 @@ packages:
   /jsonc-parser@3.2.1:
     resolution: {integrity: sha512-AilxAyFOAcK5wA1+LeaySVBrHsGQvUFCDWXKpZjzaL0PqW+xfBOttn8GNtWKFWqneyMZj41MWF9Kl6iPWLwgOA==}
     dev: true
+
+  /jsondiffpatch@0.6.0:
+    resolution: {integrity: sha512-3QItJOXp2AP1uv7waBkao5nCvhEv+QmJAd38Ybq7wNI74Q+BBmnLn4EDKz6yI9xGAIQoUF87qHt+kc1IVxB4zQ==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+    hasBin: true
+    dependencies:
+      '@types/diff-match-patch': 1.0.36
+      chalk: 5.3.0
+      diff-match-patch: 1.0.5
+    dev: false
 
   /jsonfile@6.1.0:
     resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
@@ -12678,6 +12701,14 @@ packages:
 
   /zod-to-json-schema@3.22.3(zod@3.22.4):
     resolution: {integrity: sha512-9isG8SqRe07p+Aio2ruBZmLm2Q6Sq4EqmXOiNpDxp+7f0LV6Q/LX65fs5Nn+FV/CzfF3NLBoksXbS2jNYIfpKw==}
+    peerDependencies:
+      zod: ^3.22.4
+    dependencies:
+      zod: 3.22.4
+    dev: false
+
+  /zod-to-json-schema@3.22.5(zod@3.22.4):
+    resolution: {integrity: sha512-+akaPo6a0zpVCCseDed504KBJUQpEW5QZw7RMneNmKw+fGaML1Z9tUNLnHHAC8x6dzVRO1eB2oEMyZRnuBZg7Q==}
     peerDependencies:
       zod: ^3.22.4
     dependencies:
