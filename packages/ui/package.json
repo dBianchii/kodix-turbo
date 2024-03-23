@@ -78,7 +78,7 @@
     "embla-carousel-react": "8.0.0-rc22",
     "next-themes": "^0.2.1",
     "react-day-picker": "^8.10.0",
-    "react-hook-form": "^7.50.1",
+    "react-hook-form": "^7.51.1",
     "react-resizable-panels": "^2.0.12",
     "sonner": "^1.4.1",
     "tailwind-merge": "^2.2.1",
