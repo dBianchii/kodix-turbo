@@ -178,8 +178,8 @@ importers:
         specifier: ^2.8.1
         version: 2.8.1
       string-ts:
-        specifier: ^2.0.0
-        version: 2.0.0
+        specifier: ^2.1.0
+        version: 2.1.0
       superjson:
         specifier: 2.2.1
         version: 2.2.1
@@ -11369,8 +11369,8 @@ packages:
       queue-tick: 1.0.1
     dev: true
 
-  /string-ts@2.0.0:
-    resolution: {integrity: sha512-Q+WJ5tQ0AdCeWgbhe3ZqDw1v5DGac5/lmDVNbJIa/bFR7TGfB8nJ1rHQSqinZHB8wKetUfhQlfR89puRcIKZZw==}
+  /string-ts@2.1.0:
+    resolution: {integrity: sha512-YpGEBxS3Qw1De+RO3Gdrsx2gwYU9b7WmPtKhRLTTKc3oKzbOxqGDYLRGkNeIXLL4BGVZMXY49hPpzP3RAwUFAA==}
     dev: false
 
   /string-width@4.2.3:
