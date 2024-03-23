@@ -20,11 +20,9 @@
   },
   "dependencies": {
     "@kdx/shared": "workspace:^0.1.0",
-    "@planetscale/database": "^1.16.0",
     "drizzle-orm": "^0.30.4",
     "drizzle-zod": "^0.5.1",
     "mysql2": "^3.9.2",
-    "undici": "^6.6.2",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -32,7 +30,7 @@
     "@kdx/prettier-config": "workspace:^0.1.0",
     "@kdx/tsconfig": "workspace:^0.1.0",
     "@types/node": "^20.11.30",
-    "dotenv-cli": "^7.3.0",
+    "dotenv-cli": "^7.4.1",
     "drizzle-kit": "^0.20.14",
     "eslint": "^8.56.0",
     "prettier": "^3.2.5",
