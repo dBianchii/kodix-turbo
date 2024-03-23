@@ -36,7 +36,7 @@
     "@kdx/prettier-config": "workspace:^0.1.0",
     "@kdx/tailwind-config": "workspace:^0.1.0",
     "@kdx/tsconfig": "workspace:^0.1.0",
-    "@types/node": "^20.11.21",
+    "@types/node": "^20.11.30",
     "@types/nodemailer": "^6.4.14",
     "@types/react": "^18.2.60",
     "@types/react-dom": "^18.2.19",
