@@ -25,9 +25,9 @@
   },
   "devDependencies": {
     "@kdx/prettier-config": "workspace:^0.1.0",
-    "@turbo/gen": "^1.12.4",
+    "@turbo/gen": "^1.13.0",
     "prettier": "^3.2.5",
-    "turbo": "^1.12.4",
+    "turbo": "^1.13.0",
     "typescript": "^5.4.3"
   },
   "prettier": "@kdx/prettier-config"
