@@ -1,5 +1,4 @@
 import {
-  cacheTags,
   calendarAppId,
   kdxPartnerId,
   kdxProductionURL,
@@ -40,88 +39,76 @@ async function main() {
   console.log("🌱 Seeding...");
   validateSeedInput();
 
-  if (false)
-    await db.transaction(async (tx) => {
-      const toInsertAppPermissions: (typeof schema.appPermissions.$inferInsert)[] =
-        [];
-      const toInsertAppRoleDefaults: (typeof schema.appRoleDefaults.$inferInsert)[] =
-        [];
-      const toInsertAppPermissionsToAppRoleDefaults: (typeof schema.appPermissionsToAppRoleDefaults.$inferInsert)[] =
-        [];
+  await db.transaction(async (tx) => {
+    const toInsertAppPermissions: (typeof schema.appPermissions.$inferInsert)[] =
+      [];
+    const toInsertAppRoleDefaults: (typeof schema.appRoleDefaults.$inferInsert)[] =
+      [];
+    const toInsertAppPermissionsToAppRoleDefaults: (typeof schema.appPermissionsToAppRoleDefaults.$inferInsert)[] =
+      [];
 
-      for (const [
-        appId,
-        { appRoleDefaults: appRole_defaults, appPermissions },
-      ] of Object.entries(appRoles_defaultTree)) {
-        toInsertAppRoleDefaults.push(
-          ...appRole_defaults.map((appRoleDefault) => {
-            //Remove relations
-            const { AppPermissions: _, ...rest } = appRoleDefault;
+    for (const [
+      appId,
+      { appRoleDefaults: appRole_defaults, appPermissions },
+    ] of Object.entries(appRoles_defaultTree)) {
+      toInsertAppRoleDefaults.push(
+        ...appRole_defaults.map((appRoleDefault) => {
+          //Remove relations
+          const { AppPermissions: _, ...rest } = appRoleDefault;
 
-            return { ...rest, appId };
-          }),
+          return { ...rest, appId };
+        }),
+      );
+
+      if (appPermissions) {
+        toInsertAppPermissions.push(
+          ...appPermissions.map((appPermission) => ({
+            ...appPermission,
+            appId,
+          })),
         );
-
-        if (appPermissions) {
-          toInsertAppPermissions.push(
-            ...appPermissions.map((appPermission) => ({
-              ...appPermission,
-              appId,
-            })),
-          );
-        }
-
-        appPermissions?.forEach((appPermission) => {
-          appRole_defaults.forEach((appRoleDefault) => {
-            toInsertAppPermissionsToAppRoleDefaults.push({
-              appPermissionId: appPermission.id,
-              appRoleDefaultId: appRoleDefault.id,
-            });
-          });
-        });
       }
 
-      await tx
-        .insert(schema.devPartners)
-        .values(devPartners)
-        .onDuplicateKeyUpdate({
-          set: allSetValues(devPartners),
+      appPermissions?.forEach((appPermission) => {
+        appRole_defaults.forEach((appRoleDefault) => {
+          toInsertAppPermissionsToAppRoleDefaults.push({
+            appPermissionId: appPermission.id,
+            appRoleDefaultId: appRoleDefault.id,
+          });
         });
-      await tx
-        .insert(schema.apps)
-        .values(apps)
-        .onDuplicateKeyUpdate({
-          set: allSetValues(apps),
-        });
-      await tx
-        .insert(schema.appRoleDefaults)
-        .values(toInsertAppRoleDefaults)
-        .onDuplicateKeyUpdate({
-          set: allSetValues(toInsertAppRoleDefaults),
-        });
-      await tx
-        .insert(schema.appPermissions)
-        .values(toInsertAppPermissions)
-        .onDuplicateKeyUpdate({
-          set: allSetValues(toInsertAppPermissions),
-        });
+      });
+    }
 
-      await tx.delete(schema.appPermissionsToAppRoleDefaults);
-      await tx
-        .insert(schema.appPermissionsToAppRoleDefaults)
-        .values(toInsertAppPermissionsToAppRoleDefaults);
-    });
+    await tx
+      .insert(schema.devPartners)
+      .values(devPartners)
+      .onDuplicateKeyUpdate({
+        set: allSetValues(devPartners),
+      });
+    await tx
+      .insert(schema.apps)
+      .values(apps)
+      .onDuplicateKeyUpdate({
+        set: allSetValues(apps),
+      });
+    await tx
+      .insert(schema.appRoleDefaults)
+      .values(toInsertAppRoleDefaults)
+      .onDuplicateKeyUpdate({
+        set: allSetValues(toInsertAppRoleDefaults),
+      });
+    await tx
+      .insert(schema.appPermissions)
+      .values(toInsertAppPermissions)
+      .onDuplicateKeyUpdate({
+        set: allSetValues(toInsertAppPermissions),
+      });
 
-  const urlToRevalidate = `${kdxProductionURL}/api/revalidateTag`;
-  const tagsToRevalidate = [cacheTags.APPS];
-  console.log(
-    `🌱 Revalidating ${tagsToRevalidate.join(" ")} tags on ${urlToRevalidate}`,
-  );
-  const res = await fetch(urlToRevalidate, {
-    body: JSON.stringify(tagsToRevalidate),
-    method: "POST",
+    await tx.delete(schema.appPermissionsToAppRoleDefaults);
+    await tx
+      .insert(schema.appPermissionsToAppRoleDefaults)
+      .values(toInsertAppPermissionsToAppRoleDefaults);
   });
-  console.log("🌱 ", await res.json());
 }
 
 //TODO: Understand how to upsert correctly https://github.com/drizzle-team/drizzle-orm/issues/1728

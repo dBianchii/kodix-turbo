@@ -1,8 +1,5 @@
-import { revalidateTag } from "next/cache";
-
 import type { TUninstallAppSchema } from "@kdx/validators/trpc/team";
 import { and, eq, schema } from "@kdx/db";
-import { cacheTags } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../trpc";
 
@@ -43,8 +40,4 @@ export const uninstallAppHandler = async ({
   });
 
   //TODO: remove all data from the app.
-
-  revalidateTag(
-    cacheTags.INSTALLEDAPPS({ teamId: ctx.session.user.activeTeamId }),
-  );
 };

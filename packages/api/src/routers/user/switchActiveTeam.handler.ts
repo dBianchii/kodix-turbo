@@ -1,5 +1,3 @@
-import { revalidateTag } from "next/cache";
-
 import type { TSwitchActiveTeamInputSchema } from "@kdx/validators/trpc/user";
 import { eq, schema } from "@kdx/db";
 
@@ -14,8 +12,6 @@ export const switchActiveTeamHandler = async ({
   ctx,
   input,
 }: SwitchActiveTeamOptions) => {
-  revalidateTag("activeTeam"); //THIS WORKS!!
-
   // const user = await ctx.prisma.user.update({
   //   where: {
   //     id: ctx.session.user.id,

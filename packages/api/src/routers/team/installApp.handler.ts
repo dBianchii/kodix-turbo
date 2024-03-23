@@ -1,9 +1,8 @@
-import { revalidateTag } from "next/cache";
 import { TRPCError } from "@trpc/server";
 
 import type { TInstallAppInputSchema } from "@kdx/validators/trpc/team";
 import { and, eq, schema } from "@kdx/db";
-import { appIdToAdminRole_defaultIdMap, cacheTags, nanoid } from "@kdx/shared";
+import { appIdToAdminRole_defaultIdMap, nanoid } from "@kdx/shared";
 
 import type { TIsTeamOwnerProcedureContext } from "../../customProcedures";
 
@@ -33,40 +32,10 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
     });
 
   await ctx.db.transaction(async (tx) => {
-    // const updatedApp = await tx.app.update({
-    //   where: {
-    //     id: input.appId,
-    //   },
-    //   data: {
-    //     Teams: {
-    //       connect: {
-    //         id: ctx.team.id,
-    //       },
-    //     },
-    //   },
-    //   select: {
-    //     id: true,
-    //   },
-    // });
     await tx.insert(schema.appsToTeams).values({
       appId: input.appId,
       teamId: ctx.session.user.activeTeamId,
     });
-
-    // const defaultAppRoles = await tx.appRole_default.findMany({
-    //   where: {
-    //     appId: input.appId,
-    //   },
-    //   select: {
-    //     appId: true,
-    //     maxUsers: true,
-    //     minUsers: true,
-    //     description: true,
-    //     id: true,
-    //     name: true,
-    //     AppPermissions: true,
-    //   },
-    // });
     const defaultAppRoles = await tx.query.appRoleDefaults.findMany({
       where: (defaultAppRole, { eq }) => eq(defaultAppRole.appId, input.appId),
       columns: {
@@ -93,18 +62,6 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
       appRoleDefaultId: role.id,
       AppPermissionsToAppRoleDefaults: role.AppPermissionsToAppRoleDefaults,
     }));
-
-    // await tx.teamAppRole.createMany({
-    //   data: toCopyAppRoles.map((role) => {
-    //     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    //     const { AppPermissions, ...rest } = role;
-
-    //     const roleWithoutAppPermission: Prisma.TeamAppRoleCreateManyInput =
-    //       rest;
-
-    //     return roleWithoutAppPermission;
-    //   }),
-    // });
 
     //? 1. Insert the copied roles
     await tx.insert(schema.teamAppRoles).values(
@@ -139,10 +96,5 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
         teamAppRoleId: adminRoleForApp.id,
         userId: ctx.session.user.id,
       });
-
-    // return updatedApp;
   });
-  revalidateTag(
-    cacheTags.INSTALLEDAPPS({ teamId: ctx.session.user.activeTeamId }),
-  );
 };
