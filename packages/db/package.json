@@ -21,7 +21,7 @@
   "dependencies": {
     "@kdx/shared": "workspace:^0.1.0",
     "@planetscale/database": "^1.16.0",
-    "drizzle-orm": "^0.30.2",
+    "drizzle-orm": "^0.30.4",
     "drizzle-zod": "^0.5.1",
     "mysql2": "^3.9.2",
     "undici": "^6.6.2",
