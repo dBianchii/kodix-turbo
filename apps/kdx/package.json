@@ -36,7 +36,7 @@
     "@upstash/redis": "^1.28.4",
     "@vercel/analytics": "^1.2.0",
     "@vercel/speed-insights": "^1.0.9",
-    "ai": "^2.2.34",
+    "ai": "^2.2.37",
     "date-fns": "^3.3.1",
     "dayjs": "^1.11.10",
     "geist": "^1.2.2",
