@@ -33,7 +33,7 @@
     "@trpc/react-query": "11.0.0-next-beta.294",
     "@trpc/server": "11.0.0-next-beta.294",
     "@vercel/analytics": "^1.2.2",
-    "@vercel/speed-insights": "^1.0.9",
+    "@vercel/speed-insights": "^1.0.10",
     "ai": "^2.2.34",
     "date-fns": "^3.3.1",
     "dayjs": "^1.11.10",
