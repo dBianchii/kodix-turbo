@@ -27,7 +27,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@auth/core": "0.24.0",
+    "@auth/core": "0.28.0",
     "@kdx/eslint-config": "workspace:^0.2.0",
     "@kdx/prettier-config": "workspace:^0.1.0",
     "@kdx/tsconfig": "workspace:^0.1.0",
