@@ -428,8 +428,8 @@ importers:
         specifier: ^3.9.2
         version: 3.9.2
       undici:
-        specifier: ^6.6.2
-        version: 6.6.2
+        specifier: ^6.10.1
+        version: 6.10.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1882,6 +1882,7 @@ packages:
   /@fastify/busboy@2.1.0:
     resolution: {integrity: sha512-+KpH+QxZU7O4675t3mnkQKcZZg56u+K/Ct2K+N2AZYNVK8kyeo/bI18tI8aPm3tvNNRyTWfj6s5tnGNlcbQRsA==}
     engines: {node: '>=14'}
+    dev: true
 
   /@floating-ui/core@1.5.3(react@18.2.0):
     resolution: {integrity: sha512-O0WKDOo0yhJuugCx6trZQj5jVJ9yR0ystG2JaNAemYUWce+pmM6WUEFIibnWyEJKdrDxhm75NoSRME35FNaM/Q==}
@@ -12170,11 +12171,9 @@ packages:
       '@fastify/busboy': 2.1.0
     dev: true
 
-  /undici@6.6.2:
-    resolution: {integrity: sha512-vSqvUE5skSxQJ5sztTZ/CdeJb1Wq0Hf44hlYMciqHghvz+K88U0l7D6u1VsndoFgskDcnU+nG3gYmMzJVzd9Qg==}
+  /undici@6.10.1:
+    resolution: {integrity: sha512-kSzmWrOx3XBKTgPm4Tal8Hyl3yf+hzlA00SAf4goxv8LZYafKmS6gJD/7Fe5HH/DMNiFTRXvkwhLo7mUn5fuQQ==}
     engines: {node: '>=18.0'}
-    dependencies:
-      '@fastify/busboy': 2.1.0
     dev: false
 
   /unenv@1.9.0:
