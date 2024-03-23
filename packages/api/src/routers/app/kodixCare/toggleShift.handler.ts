@@ -3,9 +3,12 @@ import { TRPCError } from "@trpc/server";
 import type { DrizzleTransaction } from "@kdx/db";
 import dayjs from "@kdx/dayjs";
 import { eq, schema } from "@kdx/db";
-import { kodixNotificationFromEmail } from "@kdx/react-email/constants";
 import WarnPreviousShiftNotEnded from "@kdx/react-email/warn-previous-shift-not-ended";
-import { kodixCareAppId, nanoid } from "@kdx/shared";
+import {
+  kodixCareAppId,
+  kodixNotificationFromEmail,
+  nanoid,
+} from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../trpc";
 import { resend } from "../../../utils/email/email";
