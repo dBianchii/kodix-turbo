@@ -1,11 +1,9 @@
+import type { TRPCRouterRecord } from "@trpc/server";
+
 import { ZGetConfigInput, ZSaveConfigInput } from "@kdx/validators/trpc/app";
 
 import { appInstalledMiddleware } from "../../middlewares";
-import {
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
-} from "../../trpc";
+import { protectedProcedure, publicProcedure } from "../../trpc";
 import { calendarRouter } from "./calendar/_router";
 import { getAllHandler } from "./getAll.handler";
 import { getConfigHandler } from "./getConfig.handler";
@@ -14,7 +12,7 @@ import { kodixCareRouter } from "./kodixCare/_router";
 import { saveConfigHandler } from "./saveConfig.handler";
 import { todoRouter } from "./todo/_router";
 
-export const appRouter = createTRPCRouter({
+export const appRouter = {
   calendar: calendarRouter,
   kodixCare: kodixCareRouter,
   todo: todoRouter,
@@ -29,4 +27,4 @@ export const appRouter = createTRPCRouter({
   saveConfig: protectedProcedure
     .input(ZSaveConfigInput)
     .mutation(async (opts) => await saveConfigHandler(opts)),
-});
+} satisfies TRPCRouterRecord;

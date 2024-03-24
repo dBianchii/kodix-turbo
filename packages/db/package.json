@@ -4,37 +4,42 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    }
   },
   "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
     "clean": "rm -rf .turbo node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint .",
-    "push": "pnpm with-env drizzle-kit push:mysql",
-    "studio": "pnpm with-env drizzle-kit studio",
+    "push": "pnpm with-env drizzle-kit push:mysql --config src/config.ts",
+    "studio": "pnpm with-env drizzle-kit studio --config src/config.ts",
     "seed": "pnpm with-env npx tsx ./src/seed/seed.ts",
     "nuke": "pnpm with-env npx tsx ./src/nuke.ts",
     "drop": "pnpm with-env npx tsx ./src/drop.ts",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "@kdx/shared": "workspace:^0.1.0",
+    "@kdx/shared": "workspace:*",
     "drizzle-orm": "^0.30.4",
     "drizzle-zod": "^0.5.1",
     "mysql2": "^3.9.2",
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@kdx/eslint-config": "workspace:^0.2.0",
-    "@kdx/prettier-config": "workspace:^0.1.0",
-    "@kdx/tsconfig": "workspace:^0.1.0",
+    "@kdx/eslint-config": "workspace:*",
+    "@kdx/prettier-config": "workspace:*",
+    "@kdx/tsconfig": "workspace:*",
     "@types/node": "^20.11.30",
     "dotenv-cli": "^7.4.1",
     "drizzle-kit": "^0.20.14",
-    "eslint": "^8.56.0",
+    "eslint": "^8.57.0",
     "prettier": "^3.2.5",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.3"
   },
   "eslintConfig": {
     "root": true,

@@ -14,21 +14,22 @@
     "clean": "rm -rf .turbo node_modules",
     "lint": "eslint .",
     "format": "prettier --check . --ignore-path ../../.gitignore",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@kdx/shared": "workspace:^0.1.0",
+    "@kdx/shared": "workspace:*",
     "@react-email/components": "^0.0.15",
     "react-email": "^2.1.0"
   },
   "devDependencies": {
-    "@kdx/eslint-config": "workspace:^0.2.0",
-    "@kdx/prettier-config": "workspace:^0.1.0",
-    "@kdx/tsconfig": "workspace:^0.1.0",
+    "@kdx/eslint-config": "workspace:*",
+    "@kdx/prettier-config": "workspace:*",
+    "@kdx/tsconfig": "workspace:*",
     "@types/node": "^20.11.30",
-    "eslint": "^8.56.0",
+    "@types/react": "^18.2.69",
+    "eslint": "^8.57.0",
     "prettier": "^3.2.5",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.3"
   },
   "eslintConfig": {
     "extends": [

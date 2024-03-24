@@ -4,7 +4,10 @@
   "version": "0.1.0",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    },
     "./trpc/app": "./src/trpc/app/app.ts",
     "./trpc/app/calendar": "./src/trpc/app/calendar/calendar.ts",
     "./trpc/app/kodixCare": "./src/trpc/app/kodixCare/kodixCare.ts",
@@ -15,25 +18,27 @@
     "./trpc/user": "./src/trpc/user.ts"
   },
   "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
     "clean": "rm -rf .turbo node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@kdx/dayjs": "workspace:^0.1.0",
-    "@kdx/db": "workspace:^0.1.0",
-    "@kdx/eslint-config": "workspace:^0.2.0",
-    "@kdx/prettier-config": "workspace:^0.1.0",
-    "@kdx/shared": "workspace:^0.1.0",
-    "@kdx/tsconfig": "workspace:^0.1.0",
-    "eslint": "^8.56.0",
+    "@kdx/dayjs": "workspace:*",
+    "@kdx/db": "workspace:*",
+    "@kdx/eslint-config": "workspace:*",
+    "@kdx/prettier-config": "workspace:*",
+    "@kdx/shared": "workspace:*",
+    "@kdx/tsconfig": "workspace:*",
+    "eslint": "^8.57.0",
     "prettier": "^3.2.5",
     "rrule": "^2.8.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.3"
   },
   "eslintConfig": {
     "extends": [

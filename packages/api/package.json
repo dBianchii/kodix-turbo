@@ -4,13 +4,18 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    }
   },
   "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
     "clean": "rm -rf .turbo node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
     "@kdx/auth": "workspace:^0.1.0",
@@ -19,7 +24,7 @@
     "@kdx/react-email": "workspace:^0.1.0",
     "@kdx/shared": "workspace:^0.1.0",
     "@kdx/validators": "workspace:^0.1.0",
-    "@trpc/server": "11.0.0-next-beta.294",
+    "@trpc/server": "11.0.0-next.320",
     "dayjs": "^1.11.10",
     "next": "^14.1.4",
     "nodemailer": "^6.9.13",
@@ -38,10 +43,10 @@
     "@types/nodemailer": "^6.4.14",
     "@types/react": "^18.2.69",
     "@types/react-dom": "^18.2.22",
-    "eslint": "^8.56.0",
+    "eslint": "^8.57.0",
     "prettier": "^3.2.5",
     "trpc-tools": "0.12.1-canary.2dfb1delosg",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.3"
   },
   "eslintConfig": {
     "root": true,

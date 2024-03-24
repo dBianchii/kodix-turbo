@@ -15,9 +15,9 @@
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^0.8.0",
-    "@kdx/db": "workspace:^0.1.0",
-    "@kdx/react-email": "workspace:^0.1.0",
-    "@kdx/shared": "workspace:^0.1.0",
+    "@kdx/db": "workspace:*",
+    "@kdx/react-email": "workspace:*",
+    "@kdx/shared": "workspace:*",
     "@t3-oss/env-nextjs": "^0.9.2",
     "next": "^14.1.4",
     "next-auth": "5.0.0-beta.15",
@@ -28,13 +28,13 @@
   },
   "devDependencies": {
     "@auth/core": "0.28.0",
-    "@kdx/eslint-config": "workspace:^0.2.0",
-    "@kdx/prettier-config": "workspace:^0.1.0",
-    "@kdx/tsconfig": "workspace:^0.1.0",
+    "@kdx/eslint-config": "workspace:*",
+    "@kdx/prettier-config": "workspace:*",
+    "@kdx/tsconfig": "workspace:*",
     "@types/react": "^18.2.69",
-    "eslint": "^8.56.0",
+    "eslint": "^8.57.0",
     "prettier": "^3.2.5",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.3"
   },
   "eslintConfig": {
     "root": true,

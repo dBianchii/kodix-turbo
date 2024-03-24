@@ -1,20 +1,16 @@
 {
   "extends": "@kdx/tsconfig/base.json",
   "compilerOptions": {
+    "lib": ["es2022", "dom", "dom.iterable"],
+    "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"]
     },
     "plugins": [{ "name": "next" }],
-    "strict": true
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
+    "module": "esnext"
   },
-  "exclude": [],
-  "include": [
-    "next-env.d.ts",
-    "src",
-    "*.ts",
-    "*.mjs",
-    ".next/types/**/*.ts",
-    "next.config.js"
-  ]
+  "include": [".", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }

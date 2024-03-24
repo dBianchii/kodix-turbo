@@ -47,7 +47,7 @@
     "clean": "rm -rf .turbo node_modules",
     "lint": "eslint .",
     "format": "prettier --check . --ignore-path ../../.gitignore",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
@@ -85,17 +85,17 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@kdx/eslint-config": "workspace:^0.2.0",
-    "@kdx/prettier-config": "workspace:^0.1.0",
-    "@kdx/tailwind-config": "workspace:^0.1.0",
-    "@kdx/tsconfig": "workspace:^0.1.0",
+    "@kdx/eslint-config": "workspace:*",
+    "@kdx/prettier-config": "workspace:*",
+    "@kdx/tailwind-config": "workspace:*",
+    "@kdx/tsconfig": "workspace:*",
     "@types/react": "^18.2.69",
     "@types/react-dom": "^18.2.22",
-    "eslint": "^8.56.0",
+    "eslint": "^8.57.0",
     "prettier": "^3.2.5",
     "react": "18.2.0",
-    "tailwindcss": "3.4.1",
-    "typescript": "^5.3.3"
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.4.3"
   },
   "peerDependencies": {
     "react": "18.2.0",

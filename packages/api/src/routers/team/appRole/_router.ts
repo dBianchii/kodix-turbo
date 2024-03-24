@@ -1,3 +1,5 @@
+import type { TRPCRouterRecord } from "@trpc/server";
+
 import {
   ZGetAllInputSchema,
   ZGetPermissionsInputSchema,
@@ -8,14 +10,13 @@ import {
 
 import { isTeamOwnerProcedure } from "../../../customProcedures";
 import { appInstalledMiddleware } from "../../../middlewares";
-import { createTRPCRouter } from "../../../trpc";
 import { getAllHandler } from "./getAll.handler";
 import { getPermissionsHandler } from "./getPermissions.handler";
 import { getUsersWithRolesHandler } from "./getUsersWithRoles.handler";
 import { updatePermissionAssociationHandler } from "./updatePermissionAssociation.handler";
 import { updateUserAssociationHandler } from "./updateUserAssociation.handler";
 
-export const appRoleRouter = createTRPCRouter({
+export const appRoleRouter = {
   getAll: isTeamOwnerProcedure
     .input(ZGetAllInputSchema)
     .query(async (opts) => await getAllHandler(opts)),
@@ -34,4 +35,4 @@ export const appRoleRouter = createTRPCRouter({
     .input(ZUpdateUserAssociationInputSchema)
     .use(appInstalledMiddleware)
     .mutation(async (opts) => await updateUserAssociationHandler(opts)),
-});
+} satisfies TRPCRouterRecord;

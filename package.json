@@ -24,11 +24,11 @@
     "typecheck": "turbo typecheck"
   },
   "devDependencies": {
-    "@kdx/prettier-config": "workspace:^0.1.0",
+    "@kdx/prettier-config": "workspace:*",
     "@turbo/gen": "^1.13.0",
     "prettier": "^3.2.5",
     "turbo": "^1.13.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.3"
   },
   "prettier": "@kdx/prettier-config"
 }
