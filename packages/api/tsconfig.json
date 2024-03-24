@@ -5,6 +5,6 @@
     "jsx": "preserve",
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
   },
-  "include": ["src", "trpc.config.ts"],
+  "include": ["src"],
   "exclude": ["node_modules"]
 }
