@@ -18,6 +18,8 @@
     "./trpc/user": "./src/trpc/user.ts"
   },
   "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
     "clean": "rm -rf .turbo node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint .",

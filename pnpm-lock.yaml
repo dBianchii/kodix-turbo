@@ -724,6 +724,9 @@ importers:
       '@kdx/tsconfig':
         specifier: workspace:*
         version: link:../typescript
+      '@types/node':
+        specifier: ^20.11.30
+        version: 20.11.30
       typescript:
         specifier: ^5.4.3
         version: 5.4.3
