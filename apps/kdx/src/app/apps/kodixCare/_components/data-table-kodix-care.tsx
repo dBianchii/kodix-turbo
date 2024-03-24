@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { RxPencil1 } from "react-icons/rx";
 
@@ -39,9 +39,6 @@ export default function DataTableKodixCare({
   initialCareTasks: RouterOutputs["app"]["kodixCare"]["getCareTasks"];
   input: TGetCareTasksInputSchema;
 }) {
-  // ***** Coloquei o UseState aqui
-  const [selectedDate, setDate] = useState(null);
-
   const { data } = api.app.kodixCare.getCareTasks.useQuery(input, {
     refetchOnMount: false,
     initialData: initialCareTasks,
@@ -70,7 +67,9 @@ export default function DataTableKodixCare({
     }),
     columnHelper.display({
       id: "actions",
-      cell: (info) => {
+      cell: function Cell(info) {
+        const [date, setDate] = useState(new Date());
+
         return (
           <div className="flex flex-row items-center">
             <Dialog>
@@ -103,11 +102,11 @@ export default function DataTableKodixCare({
             </Dialog>
             {info.row.original.isCareTask && (
               <div className="p-1">
-                <Dialog>
+                <Dialog onOpenChange={() => setDate(new Date())}>
                   <DialogTrigger asChild>
                     <Checkbox
                       checked={false}
-                      className="ml-4 size-6 border-muted-foreground"
+                      className="ml-4 size-5 border-muted-foreground"
                     />
                   </DialogTrigger>
                   <DialogContent>
@@ -122,19 +121,20 @@ export default function DataTableKodixCare({
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                       <DatePicker
-                        selected={selectedDate}
-                        onChange={(newDate) => setDate(newDate)}
+                        disabledDate={(date) => date > new Date()}
+                        date={date}
+                        setDate={(newDate) => setDate(newDate ?? new Date())}
                       />
                       <div className="flex flex-row gap-2">
                         <TimePickerInput
                           picker={"hours"}
-                          date={new Date()}
-                          setDate={() => {}}
+                          date={date}
+                          setDate={(newDate) => setDate(newDate ?? new Date())}
                         />
                         <TimePickerInput
                           picker={"minutes"}
-                          date={new Date()}
-                          setDate={() => {}}
+                          date={date}
+                          setDate={(newDate) => setDate(newDate ?? new Date())}
                         />
                       </div>
                       <Textarea
