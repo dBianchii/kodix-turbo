@@ -51,6 +51,7 @@ export const getCareTasksHandler = async ({
           },
         },
         columns: {
+          doneAt: true,
           id: true,
           title: true,
           description: true,
@@ -61,6 +62,7 @@ export const getCareTasksHandler = async ({
       title: task.title,
       description: task.description,
       date: task.eventDate,
+      doneAt: task.doneAt,
     }));
 
   const config = await getConfigHandler({
@@ -75,11 +77,23 @@ export const getCareTasksHandler = async ({
         !config.clonedCareTasksUntil ||
         dayjs(ct.date).isAfter(config.clonedCareTasksUntil),
     ),
-  ].map((tasks) => ({
-    title: tasks.title,
-    description: tasks.description,
-    date: tasks.date,
-  }));
+  ].map((task) => {
+    const data = {
+      title: task.title,
+      description: task.description,
+      date: task.date,
+      doneAt: null,
+      isCareTask: false,
+    };
+    if ("doneAt" in task) {
+      return {
+        ...data,
+        doneAt: task.doneAt,
+        isCareTask: true,
+      };
+    }
+    return data;
+  });
 
   return union;
 };

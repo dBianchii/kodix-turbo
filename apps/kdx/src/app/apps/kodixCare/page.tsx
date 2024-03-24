@@ -41,7 +41,7 @@ export default async function KodixCarePage() {
 async function KodixCareTable() {
   const input = {
     dateStart: dayjs.utc().startOf("day").toDate(),
-    dateEnd: dayjs.utc().endOf("day").toDate(),
+    dateEnd: dayjs.utc().add(4, "days").endOf("day").toDate(),
   };
 
   const initialCareTasks = await api.app.kodixCare.getCareTasks(input);
