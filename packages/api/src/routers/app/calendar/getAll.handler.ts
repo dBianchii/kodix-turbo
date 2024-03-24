@@ -10,6 +10,15 @@ interface GetAllCalendarTasksOptions {
   ctx: TProtectedProcedureContext;
   input: TGetAllInput;
 }
+export interface CalendarTask {
+  title: string | undefined;
+  description: string | undefined;
+  date: Date;
+  eventMasterId: string;
+  eventExceptionId: string | undefined;
+  originaDate?: Date | undefined;
+  rule: string;
+}
 
 export const getAllHandler = async ({
   ctx,
@@ -142,15 +151,7 @@ export const getAllHandler = async ({
     );
 
   //* We have all needed data. Now, let's add all masters and exceptions to calendarTasks.
-  interface CalendarTask {
-    title: string | undefined;
-    description: string | undefined;
-    date: Date;
-    eventMasterId: string;
-    eventExceptionId: string | undefined;
-    originaDate?: Date | undefined;
-    rule: string;
-  }
+
   let calendarTasks: CalendarTask[] = [];
 
   for (const eventMaster of eventMasters) {
