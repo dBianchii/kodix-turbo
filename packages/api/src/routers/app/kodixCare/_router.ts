@@ -1,3 +1,5 @@
+import type { TRPCRouterRecord } from "@trpc/server";
+
 import { PKodixCare_CanToggleShiftId } from "@kdx/shared";
 import {
   ZDoCheckoutForShiftInputSchema,
@@ -8,14 +10,14 @@ import {
   appPermissionMiddleware,
   kodixCareInstalledMiddleware,
 } from "../../../middlewares";
-import { createTRPCRouter, protectedProcedure } from "../../../trpc";
+import { protectedProcedure } from "../../../trpc";
 import { doCheckoutForShiftHandler } from "./doCheckoutForShift.handler";
 import { getCareTasksHandler } from "./getCareTasks.handler";
 import { getCurrentCareShiftHandler } from "./getCurrentCareShift.handler";
 import { onboardingCompletedHandler } from "./onboardingCompleted.handler";
 import { toggleShiftHandler } from "./toggleShift.handler";
 
-export const kodixCareRouter = createTRPCRouter({
+export const kodixCareRouter = {
   toggleShift: protectedProcedure
     .use(kodixCareInstalledMiddleware)
     .use(appPermissionMiddleware(PKodixCare_CanToggleShiftId))
@@ -34,4 +36,4 @@ export const kodixCareRouter = createTRPCRouter({
   onboardingCompleted: protectedProcedure.query(
     async (opts) => await onboardingCompletedHandler(opts),
   ),
-});
+} satisfies TRPCRouterRecord;

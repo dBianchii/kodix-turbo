@@ -1,17 +1,19 @@
+import type { TRPCRouterRecord } from "@trpc/server";
+
 import {
   ZAcceptInputSchema,
   ZDeleteUserSchema,
   ZInviteInputSchema,
 } from "@kdx/validators/trpc/invitation";
 
-import { createTRPCRouter, protectedProcedure } from "../../../trpc";
+import { protectedProcedure } from "../../../trpc";
 import { acceptHandler } from "./accept.handler";
 import { declineHandler } from "./decline.handler";
 import { deleteHandler } from "./delete.handler";
 import { getAllHandler } from "./getAll.handler";
 import { inviteHandler } from "./invite.handler";
 
-export const invitationRouter = createTRPCRouter({
+export const invitationRouter = {
   accept: protectedProcedure
     .input(ZAcceptInputSchema)
     //.use(enforceUserHasTeam) // TODO: make this a middleware
@@ -30,4 +32,4 @@ export const invitationRouter = createTRPCRouter({
   invite: protectedProcedure
     .input(ZInviteInputSchema)
     .mutation(async (opts) => await inviteHandler(opts)),
-});
+} satisfies TRPCRouterRecord;

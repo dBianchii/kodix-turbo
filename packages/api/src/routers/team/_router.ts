@@ -1,3 +1,5 @@
+import type { TRPCRouterRecord } from "@trpc/server";
+
 import {
   ZCreateInputSchema,
   ZGetOneInputSchema,
@@ -8,7 +10,7 @@ import {
 } from "@kdx/validators/trpc/team";
 
 import { isTeamOwnerProcedure } from "../../customProcedures";
-import { createTRPCRouter, protectedProcedure } from "../../trpc";
+import { protectedProcedure } from "../../trpc";
 import { appRoleRouter } from "./appRole/_router";
 import { createHandler } from "./create.handler";
 import { getActiveTeamHandler } from "./getActiveTeam.handler";
@@ -21,7 +23,7 @@ import { removeUserHandler } from "./removeUser.handler";
 import { uninstallAppHandler } from "./uninstallApp.handler";
 import { updateHandler } from "./update.handler";
 
-export const teamRouter = createTRPCRouter({
+export const teamRouter = {
   appRole: appRoleRouter,
   invitation: invitationRouter,
   create: protectedProcedure
@@ -51,4 +53,4 @@ export const teamRouter = createTRPCRouter({
   update: protectedProcedure
     .input(ZUpdateInputSchema)
     .mutation(async (opts) => await updateHandler(opts)),
-});
+} satisfies TRPCRouterRecord;

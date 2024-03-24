@@ -1,21 +1,19 @@
+import type { TRPCRouterRecord } from "@trpc/server";
+
 import {
   ZChangeNameInputSchema,
   ZGetOneInputSchema,
   ZSwitchActiveTeamInputSchema,
 } from "@kdx/validators/trpc/user";
 
-import {
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
-} from "../../trpc";
+import { protectedProcedure, publicProcedure } from "../../trpc";
 import { changeNameHandler } from "./changeName.handler";
 import { getAllHandler } from "./getAll.handler";
 import { getNotificationsHandler } from "./getNotifications.handler";
 import { getOneHandler } from "./getOne.handler";
 import { switchActiveTeamHandler } from "./switchActiveTeam.handler";
 
-export const userRouter = createTRPCRouter({
+export const userRouter = {
   changeName: protectedProcedure
     .input(ZChangeNameInputSchema)
     .mutation(async (opts) => await changeNameHandler(opts)),
@@ -31,4 +29,4 @@ export const userRouter = createTRPCRouter({
   switchActiveTeam: protectedProcedure
     .input(ZSwitchActiveTeamInputSchema)
     .mutation(async (opts) => await switchActiveTeamHandler(opts)),
-});
+} satisfies TRPCRouterRecord;
