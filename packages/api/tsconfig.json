@@ -2,6 +2,7 @@
   "extends": "@kdx/tsconfig/internal-package.json",
   "compilerOptions": {
     "outDir": "dist",
+    "jsx": "preserve",
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
   },
   "include": ["src", "trpc.config.ts"],
