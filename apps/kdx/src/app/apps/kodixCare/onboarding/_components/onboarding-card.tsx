@@ -83,7 +83,7 @@ export default function OnboardingCard() {
             </div>
           </CardContent>
           <CardFooter className="flex justify-end">
-            <Button type="submit">
+            <Button type="submit" disabled={form.formState.isSubmitting}>
               Go to Kodix Care
               {!form.formState.isSubmitting && (
                 <LuArrowRight className="ml-2 size-4" />

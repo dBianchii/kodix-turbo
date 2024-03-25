@@ -292,7 +292,7 @@ function DoCheckoutDialog({
           <form
             className="base"
             onSubmit={form.handleSubmit(async (values) => {
-              mutation.mutate(values.date);
+              await mutation.mutateAsync(values.date);
             })}
           >
             <DialogDescription className="mb-4">
@@ -359,7 +359,11 @@ function DoCheckoutDialog({
 
             <DialogFooter className="mt-6 gap-3 sm:justify-between">
               <DialogClose asChild>
-                <Button type="button" variant="secondary">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  disabled={form.formState.isSubmitting}
+                >
                   Close
                 </Button>
               </DialogClose>

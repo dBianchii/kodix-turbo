@@ -56,13 +56,16 @@ export const getCareTasksHandler = async ({
           title: true,
           description: true,
           eventDate: true,
+          updatedAt: true,
         },
       })
     ).map((task) => ({
+      id: task.id,
       title: task.title,
       description: task.description,
       date: task.eventDate,
       doneAt: task.doneAt,
+      updatedAt: task.updatedAt,
     }));
 
   const config = await getConfigHandler({
@@ -79,19 +82,22 @@ export const getCareTasksHandler = async ({
     ),
   ].map((task) => {
     const data = {
+      id: "",
       title: task.title,
       description: task.description,
       date: task.date,
       doneAt: null,
-      isCareTask: false,
+      updatedAt: null,
     };
     if ("doneAt" in task) {
       return {
         ...data,
+        id: task.id,
         doneAt: task.doneAt,
-        isCareTask: true,
+        updatedAt: task.updatedAt,
       };
     }
+
     return data;
   });
 
