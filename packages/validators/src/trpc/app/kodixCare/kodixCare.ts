@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { isNanoIdRegex } from "@kdx/shared";
+import { zNanoId } from "../../..";
 
 export const ZDoCheckoutForShiftInputSchema = z.date().default(new Date());
 export type TDoCheckoutForShiftInputSchema = z.infer<
@@ -14,8 +14,8 @@ export const ZGetCareTasksInputSchema = z.object({
 export type TGetCareTasksInputSchema = z.infer<typeof ZGetCareTasksInputSchema>;
 
 export const ZSaveCareTaskInputSchema = z.object({
-  id: z.string().regex(isNanoIdRegex),
-  doneByUserId: z.string().regex(isNanoIdRegex).optional(),
+  id: zNanoId,
+  doneByUserId: zNanoId.optional(),
   doneAt: z.date().optional(),
   details: z.string().optional(),
 });

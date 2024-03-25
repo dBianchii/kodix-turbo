@@ -1,21 +1,21 @@
 import { z } from "zod";
 
-import { isNanoIdRegex } from "@kdx/shared";
+import { zNanoId } from "..";
 
 export const ZGetOneInputSchema = z.object({
-  userId: z.string().regex(isNanoIdRegex),
+  userId: zNanoId,
 });
 export type TGetOneInputSchema = z.infer<typeof ZGetOneInputSchema>;
 
 export const ZSwitchActiveTeamInputSchema = z.object({
-  teamId: z.string().regex(isNanoIdRegex),
+  teamId: zNanoId,
 });
 export type TSwitchActiveTeamInputSchema = z.infer<
   typeof ZSwitchActiveTeamInputSchema
 >;
 
 export const ZInstallAppInputSchema = z.object({
-  appId: z.string().regex(isNanoIdRegex),
+  appId: zNanoId,
 });
 export type TInstallAppInputSchema = z.infer<typeof ZInstallAppInputSchema>;
 
