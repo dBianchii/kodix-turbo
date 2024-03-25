@@ -1,14 +1,11 @@
 import { z } from "zod";
 
-import {
-  calendarAppId,
-  isNanoIdRegex,
-  kodixCareAppId,
-  todoAppId,
-} from "@kdx/shared";
+import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
+
+import { zNanoId } from "../..";
 
 export const ZCreateInputSchema = z.object({
-  userId: z.string().regex(isNanoIdRegex),
+  userId: zNanoId,
   teamName: z.string().min(3).max(32, {
     message: "Team name must be at most 32 characters",
   }),
@@ -16,7 +13,7 @@ export const ZCreateInputSchema = z.object({
 export type TCreateInputSchema = z.infer<typeof ZCreateInputSchema>;
 
 export const ZGetOneInputSchema = z.object({
-  teamId: z.string().regex(isNanoIdRegex),
+  teamId: zNanoId,
 });
 export type TGetOneInputSchema = z.infer<typeof ZGetOneInputSchema>;
 
@@ -30,17 +27,17 @@ export const ZInstallAppInputSchema = z.object({
 export type TInstallAppInputSchema = z.infer<typeof ZInstallAppInputSchema>;
 
 export const ZRemoveUserSchema = z.object({
-  userId: z.string().regex(isNanoIdRegex),
+  userId: zNanoId,
 });
 export type TRemoveUserSchema = z.infer<typeof ZRemoveUserSchema>;
 
 export const ZUninstallAppSchema = z.object({
-  appId: z.string().regex(isNanoIdRegex),
+  appId: zNanoId,
 });
 export type TUninstallAppSchema = z.infer<typeof ZUninstallAppSchema>;
 
 export const ZUpdateInputSchema = z.object({
-  teamId: z.string().regex(isNanoIdRegex),
+  teamId: zNanoId,
   teamName: z
     .string()
     .min(3, { message: "Team name must be at least 3 characters" })

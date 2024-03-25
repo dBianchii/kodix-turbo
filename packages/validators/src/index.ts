@@ -27,3 +27,5 @@ export const kodixCareConfigSchema = z.object({
 export const appIdToAppTeamConfigSchema = {
   [kodixCareAppId]: kodixCareConfigSchema,
 };
+
+export const zNanoId = z.string().regex(/^[0-9a-z]{12}$/); //If this is changed, the NANOID_SIZE in @kdx/shared must be updated

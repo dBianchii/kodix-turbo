@@ -5,12 +5,11 @@ import { kdxProductionURL } from "./constants";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare let window: any;
 
-export const NANOID_SIZE = 12; //If this is changed, the regex in isNanoIdRegex must be updated
+export const NANOID_SIZE = 12; //If this is changed, the regex in zNanoIdRegex in @kdx/validators must be updated
 export const nanoid = customAlphabet(
   "1234567890abcdefghijklmnopqrstuvwxyz",
   NANOID_SIZE,
 );
-export const isNanoIdRegex = /^[0-9a-z]{12}$/;
 
 /**
  * @description Base URL for the KDX server. Make sure that when developing, your KDX app is on localhost:3000
