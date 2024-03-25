@@ -1,24 +1,24 @@
 import { z } from "zod";
 
-import { zNanoId } from "../../..";
+import { ZNanoId } from "../../..";
 
 export const ZAcceptInputSchema = z.object({
-  invitationId: zNanoId,
+  invitationId: ZNanoId,
 });
 export type TAcceptInputSchema = z.infer<typeof ZAcceptInputSchema>;
 
 export const ZDeclineInputSchema = z.object({
-  invitationId: zNanoId,
+  invitationId: ZNanoId,
 });
 export type TDeclineInputSchema = z.infer<typeof ZDeclineInputSchema>;
 
 export const ZDeleteUserSchema = z.object({
-  invitationId: zNanoId,
+  invitationId: ZNanoId,
 });
 export type TDeleteUserSchema = z.infer<typeof ZDeleteUserSchema>;
 
 export const ZInviteInputSchema = z.object({
-  teamId: zNanoId,
+  teamId: ZNanoId,
   to: z
     .string()
     .email()

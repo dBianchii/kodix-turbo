@@ -1,21 +1,21 @@
 import { z } from "zod";
 
-import { zNanoId } from "..";
+import { ZNanoId } from "..";
 
 export const ZGetOneInputSchema = z.object({
-  userId: zNanoId,
+  userId: ZNanoId,
 });
 export type TGetOneInputSchema = z.infer<typeof ZGetOneInputSchema>;
 
 export const ZSwitchActiveTeamInputSchema = z.object({
-  teamId: zNanoId,
+  teamId: ZNanoId,
 });
 export type TSwitchActiveTeamInputSchema = z.infer<
   typeof ZSwitchActiveTeamInputSchema
 >;
 
 export const ZInstallAppInputSchema = z.object({
-  appId: zNanoId,
+  appId: ZNanoId,
 });
 export type TInstallAppInputSchema = z.infer<typeof ZInstallAppInputSchema>;
 

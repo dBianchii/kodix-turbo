@@ -2,10 +2,10 @@ import { z } from "zod";
 
 import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
 
-import { zNanoId } from "../..";
+import { ZNanoId } from "../..";
 
 export const ZCreateInputSchema = z.object({
-  userId: zNanoId,
+  userId: ZNanoId,
   teamName: z.string().min(3).max(32, {
     message: "Team name must be at most 32 characters",
   }),
@@ -13,7 +13,7 @@ export const ZCreateInputSchema = z.object({
 export type TCreateInputSchema = z.infer<typeof ZCreateInputSchema>;
 
 export const ZGetOneInputSchema = z.object({
-  teamId: zNanoId,
+  teamId: ZNanoId,
 });
 export type TGetOneInputSchema = z.infer<typeof ZGetOneInputSchema>;
 
@@ -27,17 +27,17 @@ export const ZInstallAppInputSchema = z.object({
 export type TInstallAppInputSchema = z.infer<typeof ZInstallAppInputSchema>;
 
 export const ZRemoveUserSchema = z.object({
-  userId: zNanoId,
+  userId: ZNanoId,
 });
 export type TRemoveUserSchema = z.infer<typeof ZRemoveUserSchema>;
 
 export const ZUninstallAppSchema = z.object({
-  appId: zNanoId,
+  appId: ZNanoId,
 });
 export type TUninstallAppSchema = z.infer<typeof ZUninstallAppSchema>;
 
 export const ZUpdateInputSchema = z.object({
-  teamId: zNanoId,
+  teamId: ZNanoId,
   teamName: z
     .string()
     .min(3, { message: "Team name must be at least 3 characters" })
