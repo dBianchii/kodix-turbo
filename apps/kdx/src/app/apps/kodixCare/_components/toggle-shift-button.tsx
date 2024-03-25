@@ -185,12 +185,8 @@ function StartShiftWarnPreviousPersonDialog({
   setOpen: Dispatch<React.SetStateAction<boolean>>;
 }) {
   const utils = api.useUtils();
-  const [loading, setLoading] = useState(false);
 
   const mutation = api.app.kodixCare.toggleShift.useMutation({
-    onMutate: () => {
-      setLoading(true);
-    },
     onSuccess: () => {
       setOpen(false);
       void utils.app.kodixCare.getCareTasks.invalidate();
@@ -198,9 +194,6 @@ function StartShiftWarnPreviousPersonDialog({
     },
     onError: (err) => {
       trpcErrorToastDefault(err);
-    },
-    onSettled: () => {
-      setLoading(false);
     },
   });
 
@@ -216,7 +209,11 @@ function StartShiftWarnPreviousPersonDialog({
         <DialogFooter className="gap-3 sm:justify-between">
           <DialogClose>
             <DialogClose asChild>
-              <Button type="button" variant="outline">
+              <Button
+                type="button"
+                variant="outline"
+                disabled={mutation.isPending}
+              >
                 Close
               </Button>
             </DialogClose>
@@ -226,9 +223,9 @@ function StartShiftWarnPreviousPersonDialog({
             onClick={() => {
               mutation.mutate();
             }}
-            disabled={loading}
+            disabled={mutation.isPending}
           >
-            {loading ? (
+            {mutation.isPending ? (
               <LuLoader2 className="mx-2 size-4 animate-spin" />
             ) : (
               "End previous shift and start new"
@@ -252,7 +249,6 @@ function DoCheckoutDialog({
   >;
 }) {
   const utils = api.useUtils();
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm({
     schema: z.object({
@@ -269,14 +265,8 @@ function DoCheckoutDialog({
       date: new Date(),
     },
   });
-  useEffect(() => {
-    form.reset({ date: new Date() });
-  }, [form, open]);
 
   const mutation = api.app.kodixCare.doCheckoutForShift.useMutation({
-    onMutate: () => {
-      setIsSubmitting(true);
-    },
     onSuccess: () => {
       setOpen(false);
       void utils.app.kodixCare.getCurrentShift.invalidate();
@@ -284,13 +274,16 @@ function DoCheckoutDialog({
     onError: (err) => {
       trpcErrorToastDefault(err);
     },
-    onSettled: () => {
-      setIsSubmitting(false);
-    },
   });
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(open) => {
+        form.reset();
+        setOpen(open);
+      }}
+    >
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Checkout Shift</DialogTitle>
@@ -372,10 +365,10 @@ function DoCheckoutDialog({
               </DialogClose>
               <Button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={form.formState.isSubmitting}
                 variant={"destructive"}
               >
-                {isSubmitting ? (
+                {form.formState.isSubmitting ? (
                   <LuLoader2 className="mx-2 size-4 animate-spin" />
                 ) : (
                   "Checkout"
