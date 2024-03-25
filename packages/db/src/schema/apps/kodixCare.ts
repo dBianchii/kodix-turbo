@@ -65,6 +65,7 @@ export const careTasks = mysqlTable(
     title: varchar("title", { length: DEFAULTLENGTH }),
     description: varchar("description", { length: DEFAULTLENGTH }),
     details: varchar("details", { length: DEFAULTLENGTH }),
+    updatedAt: timestamp("updatedAt").onUpdateNow(),
   },
   (table) => {
     return {

@@ -38,22 +38,18 @@ export default function OnboardingCard() {
   });
 
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(async (values) => {
-          setIsSubmitting(true);
           const result = await finishKodixCareOnboardingAction({
             patientName: values.patientName,
           });
           if (defaultSafeActionToastError(result)) {
-            setIsSubmitting(false);
             return;
           }
           router.push(`/apps/kodixCare`);
-          setIsSubmitting(false);
         })}
         className="space-y-8"
       >
@@ -87,10 +83,12 @@ export default function OnboardingCard() {
             </div>
           </CardContent>
           <CardFooter className="flex justify-end">
-            <Button type="submit">
+            <Button type="submit" disabled={form.formState.isSubmitting}>
               Go to Kodix Care
-              {!isSubmitting && <LuArrowRight className="ml-2 size-4" />}
-              {isSubmitting && (
+              {!form.formState.isSubmitting && (
+                <LuArrowRight className="ml-2 size-4" />
+              )}
+              {form.formState.isSubmitting && (
                 <LuLoader2 className="ml-2 size-4 animate-spin" />
               )}
             </Button>

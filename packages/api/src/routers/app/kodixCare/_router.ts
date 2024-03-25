@@ -16,6 +16,7 @@ import { doCheckoutForShiftHandler } from "./doCheckoutForShift.handler";
 import { getCareTasksHandler } from "./getCareTasks.handler";
 import { getCurrentCareShiftHandler } from "./getCurrentCareShift.handler";
 import { onboardingCompletedHandler } from "./onboardingCompleted.handler";
+import { saveCareTaskHandler } from "./saveCareTask.handler";
 import { toggleShiftHandler } from "./toggleShift.handler";
 
 export const kodixCareRouter = {
@@ -36,7 +37,7 @@ export const kodixCareRouter = {
     .query(async (opts) => await getCurrentCareShiftHandler(opts)),
   saveCareTask: protectedProcedure
     .input(ZSaveCareTaskInputSchema)
-    .mutation(async (opts) => await onboardingCompletedHandler(opts)),
+    .mutation(async (opts) => await saveCareTaskHandler(opts)),
   onboardingCompleted: protectedProcedure.query(
     async (opts) => await onboardingCompletedHandler(opts),
   ),
