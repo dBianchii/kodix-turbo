@@ -5,7 +5,6 @@ import type {
   MySql2QueryResultHKT,
 } from "drizzle-orm/mysql2";
 import { drizzle } from "drizzle-orm/mysql2";
-import { createInsertSchema } from "drizzle-zod";
 import mysql from "mysql2/promise";
 
 import * as apps from "./schema/apps";
@@ -16,6 +15,7 @@ import * as auth from "./schema/auth";
 import * as teams from "./schema/teams";
 
 export * from "drizzle-orm";
+export * from "./zod";
 
 export const schema = {
   ...auth,
@@ -42,5 +42,3 @@ export type DrizzleTransaction = MySqlTransaction<
   typeof schema,
   ExtractTablesWithRelations<typeof schema>
 >;
-
-export const insertTodosSchema = createInsertSchema(schema.todos);
