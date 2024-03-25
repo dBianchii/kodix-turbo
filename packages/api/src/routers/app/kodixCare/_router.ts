@@ -4,6 +4,7 @@ import { PKodixCare_CanToggleShiftId } from "@kdx/shared";
 import {
   ZDoCheckoutForShiftInputSchema,
   ZGetCareTasksInputSchema,
+  ZSaveCareTaskInputSchema,
 } from "@kdx/validators/trpc/app/kodixCare";
 
 import {
@@ -33,6 +34,9 @@ export const kodixCareRouter = {
   getCurrentShift: protectedProcedure
     .use(kodixCareInstalledMiddleware)
     .query(async (opts) => await getCurrentCareShiftHandler(opts)),
+  saveCareTask: protectedProcedure
+    .input(ZSaveCareTaskInputSchema)
+    .mutation(async (opts) => await onboardingCompletedHandler(opts)),
   onboardingCompleted: protectedProcedure.query(
     async (opts) => await onboardingCompletedHandler(opts),
   ),

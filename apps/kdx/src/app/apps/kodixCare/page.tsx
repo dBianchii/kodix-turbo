@@ -29,8 +29,8 @@ export default async function KodixCarePage() {
           </Suspense>
         </div>
         <div className="w-full">
-          <Suspense fallback={<ShiftSkeleton />}>
-            <KodixCareTable />
+          <Suspense fallback={<>Loading...</>}>
+            <KodixCareTable session={session} />
           </Suspense>
         </div>
       </div>
@@ -38,15 +38,18 @@ export default async function KodixCarePage() {
   );
 }
 
-async function KodixCareTable() {
+async function KodixCareTable({ session }: { session: Session }) {
   const input = {
     dateStart: dayjs.utc().startOf("day").toDate(),
     dateEnd: dayjs.utc().add(4, "days").endOf("day").toDate(),
   };
-
   const initialCareTasks = await api.app.kodixCare.getCareTasks(input);
   return (
-    <DataTableKodixCare initialCareTasks={initialCareTasks} input={input} />
+    <DataTableKodixCare
+      initialCareTasks={initialCareTasks}
+      input={input}
+      session={session}
+    />
   );
 }
 

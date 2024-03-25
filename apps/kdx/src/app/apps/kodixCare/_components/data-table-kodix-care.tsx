@@ -1,7 +1,9 @@
 "use client";
 
+import type { Session } from "next-auth";
 import { useState } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
+import { IoMdTime } from "react-icons/io";
 import { RxPencil1 } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
@@ -21,8 +23,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@kdx/ui/dialog";
+import { Form, FormControl, FormField, FormItem, useForm } from "@kdx/ui/form";
 import { Textarea } from "@kdx/ui/textarea";
 import { TimePickerInput } from "@kdx/ui/time-picker-input";
+import { ZSaveCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 
 import { DatePicker } from "~/app/_components/date-picker";
 import { api } from "~/trpc/react";
@@ -35,14 +39,18 @@ const columnHelper =
 export default function DataTableKodixCare({
   initialCareTasks,
   input,
+  session,
 }: {
   initialCareTasks: RouterOutputs["app"]["kodixCare"]["getCareTasks"];
   input: TGetCareTasksInputSchema;
+  session: Session;
 }) {
   const { data } = api.app.kodixCare.getCareTasks.useQuery(input, {
     refetchOnMount: false,
     initialData: initialCareTasks,
   });
+
+  const mutation = api.app.kodixCare.saveCareTask.useMutation();
 
   const columns = [
     columnHelper.accessor("title", {
@@ -68,7 +76,12 @@ export default function DataTableKodixCare({
     columnHelper.display({
       id: "actions",
       cell: function Cell(info) {
-        const [date, setDate] = useState(new Date());
+        const form = useForm({
+          schema: ZSaveCareTaskInputSchema,
+          defaultValues: {
+            doneByUserId: session.user.id,
+          },
+        });
 
         return (
           <div className="flex flex-row items-center">
@@ -110,45 +123,75 @@ export default function DataTableKodixCare({
                     />
                   </DialogTrigger>
                   <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>
-                        Add information to conclude this task
-                      </DialogTitle>
-                      <DialogDescription>
-                        Add the date and time of completion and details about
-                        the procedure.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                      <DatePicker
-                        disabledDate={(date) => date > new Date()}
-                        date={date}
-                        setDate={(newDate) => setDate(newDate ?? new Date())}
-                      />
-                      <div className="flex flex-row gap-2">
-                        <TimePickerInput
-                          picker={"hours"}
-                          date={date}
-                          setDate={(newDate) => setDate(newDate ?? new Date())}
-                        />
-                        <TimePickerInput
-                          picker={"minutes"}
-                          date={date}
-                          setDate={(newDate) => setDate(newDate ?? new Date())}
-                        />
-                      </div>
-                      <Textarea
-                        placeholder="Any information..."
-                        className="w-full"
-                        rows={6}
-                      />
-                    </div>
-                    <DialogFooter className="mt-6 gap-3 sm:justify-between">
-                      <DialogClose asChild>
-                        <Button variant={"ghost"}>Close</Button>
-                      </DialogClose>
-                      <Button>Save</Button>
-                    </DialogFooter>
+                    <Form {...form}>
+                      <form
+                        onSubmit={form.handleSubmit((values) => {
+                          mutation.mutate(values);
+                        })}
+                      >
+                        <DialogHeader>
+                          <DialogTitle>
+                            Add information to conclude this task
+                          </DialogTitle>
+                          <DialogDescription>
+                            Add the date and time of completion and details
+                            about the procedure.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                          <FormField
+                            control={form.control}
+                            name="doneAt"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormControl>
+                                  <div className="flex flex-row gap-2">
+                                    <DatePicker
+                                      className="w-fit"
+                                      disabledDate={(date) => date > new Date()}
+                                      date={field.value}
+                                      setDate={(newDate) =>
+                                        field.onChange(newDate ?? new Date())
+                                      }
+                                    />
+                                    <div className="flex items-center gap-1 pl-4">
+                                      <IoMdTime className="size-5 text-muted-foreground" />
+                                      <TimePickerInput
+                                        picker={"hours"}
+                                        date={field.value}
+                                        setDate={(newDate) =>
+                                          setDate(newDate ?? new Date())
+                                        }
+                                      />
+                                      <TimePickerInput
+                                        picker={"minutes"}
+                                        date={field.value}
+                                        setDate={(newDate) =>
+                                          setDate(newDate ?? new Date())
+                                        }
+                                      />
+                                    </div>
+                                  </div>
+                                </FormControl>
+                                <FormMessage className="w-full" />
+                              </FormItem>
+                            )}
+                          />
+
+                          <Textarea
+                            placeholder="Any information..."
+                            className="w-full"
+                            rows={6}
+                          />
+                        </div>
+                        <DialogFooter className="mt-6 gap-3 sm:justify-between">
+                          <DialogClose asChild>
+                            <Button variant={"ghost"}>Close</Button>
+                          </DialogClose>
+                          <Button>Save</Button>
+                        </DialogFooter>
+                      </form>
+                    </Form>
                   </DialogContent>
                 </Dialog>
               </div>
