@@ -342,7 +342,7 @@ function CareTaskNotYetDoneCheckboxDialog({
                           <DatePicker
                             className="w-fit"
                             disabledDate={(date) => date > new Date()}
-                            date={field.value}
+                            date={field.value ?? undefined}
                             setDate={(newDate) =>
                               field.onChange(newDate ?? new Date())
                             }
@@ -351,14 +351,14 @@ function CareTaskNotYetDoneCheckboxDialog({
                             <IoMdTime className="size-5 text-muted-foreground" />
                             <TimePickerInput
                               picker={"hours"}
-                              date={field.value}
+                              date={field.value ?? undefined}
                               setDate={(newDate) =>
                                 field.onChange(newDate ?? new Date())
                               }
                             />
                             <TimePickerInput
                               picker={"minutes"}
-                              date={field.value}
+                              date={field.value ?? undefined}
                               setDate={(newDate) =>
                                 field.onChange(newDate ?? new Date())
                               }
@@ -378,6 +378,7 @@ function CareTaskNotYetDoneCheckboxDialog({
                       <FormControl>
                         <Textarea
                           {...field}
+                          value={field.value ?? undefined}
                           placeholder="Any information..."
                           className="w-full"
                           rows={6}
