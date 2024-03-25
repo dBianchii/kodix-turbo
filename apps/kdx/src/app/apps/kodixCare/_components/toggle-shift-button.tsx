@@ -1,7 +1,7 @@
 "use client";
 
 import type { ComponentProps, Dispatch } from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { IoMdTime } from "react-icons/io";
 import { LuLoader2 } from "react-icons/lu";
 import { z } from "zod";

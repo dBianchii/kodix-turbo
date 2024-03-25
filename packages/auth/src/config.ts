@@ -3,7 +3,6 @@ import type { Awaitable } from "@auth/core/types";
 import type { DefaultSession, NextAuthConfig } from "next-auth";
 import type { Adapter, AdapterSession } from "next-auth/adapters";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import resend from "next-auth/providers/resend";
 
