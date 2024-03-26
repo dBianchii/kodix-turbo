@@ -5,7 +5,6 @@ import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 
 import { Footer } from "~/app/_components/footer/footer";
-import { Header } from "~/app/_components/header/header";
 import { TailwindIndicator } from "~/app/_components/tailwind-indicator";
 import { env } from "~/env";
 import { TRPCReactProvider } from "~/trpc/react";
@@ -16,6 +15,8 @@ import { kdxProductionURL } from "@kdx/shared";
 import { ThemeProvider, ThemeToggle } from "@kdx/ui/theme";
 import { Toaster } from "@kdx/ui/toast";
 import { cn } from "@kdx/ui/utils";
+
+import { Header } from "./_components/header/header";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
