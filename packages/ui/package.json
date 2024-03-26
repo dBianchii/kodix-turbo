@@ -89,7 +89,7 @@
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tailwind-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "@types/react": "^18.2.69",
+    "@types/react": "^18.2.71",
     "@types/react-dom": "^18.2.22",
     "eslint": "^8.57.0",
     "prettier": "^3.2.5",

@@ -34,7 +34,7 @@
     "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "@types/react": "^18.2.69",
+    "@types/react": "^18.2.71",
     "eslint": "^8.57.0",
     "prettier": "^3.2.5",
     "typescript": "^5.4.3"
