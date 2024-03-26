@@ -41,7 +41,7 @@
     "@kdx/tsconfig": "workspace:^0.1.0",
     "@types/node": "^20.11.30",
     "@types/nodemailer": "^6.4.14",
-    "@types/react": "^18.2.69",
+    "@types/react": "^18.2.71",
     "@types/react-dom": "^18.2.22",
     "eslint": "^8.57.0",
     "prettier": "^3.2.5",
