@@ -1,13 +1,13 @@
 "use client";
 
 import type { CellContext } from "@tanstack/react-table";
-import type { Session } from "next-auth";
 import { createColumnHelper } from "@tanstack/react-table";
 import { IoMdTime } from "react-icons/io";
 import { LuLoader2 } from "react-icons/lu";
 import { RxPencil1 } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
+import type { Session } from "@kdx/auth";
 import type { FixedColumnsType } from "@kdx/ui/data-table";
 import type { TGetCareTasksInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import dayjs from "@kdx/dayjs";

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { ZInsertCareTaskSchema } from "@kdx/db";
+import { ZNanoId } from "../../..";
 
 export const ZDoCheckoutForShiftInputSchema = z.date().default(new Date());
 export type TDoCheckoutForShiftInputSchema = z.infer<
@@ -13,10 +13,10 @@ export const ZGetCareTasksInputSchema = z.object({
 });
 export type TGetCareTasksInputSchema = z.infer<typeof ZGetCareTasksInputSchema>;
 
-export const ZSaveCareTaskInputSchema = ZInsertCareTaskSchema.pick({
-  id: true,
-  doneByUserId: true,
-  doneAt: true,
-  details: true,
+export const ZSaveCareTaskInputSchema = z.object({
+  id: ZNanoId,
+  doneByUserId: ZNanoId.nullable().optional(),
+  doneAt: z.date().nullable().optional(),
+  details: z.string().nullable().optional(),
 });
 export type TSaveCareTaskInputSchema = z.infer<typeof ZSaveCareTaskInputSchema>;

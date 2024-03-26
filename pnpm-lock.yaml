@@ -100,11 +100,11 @@ importers:
         specifier: ^8.11.8
         version: 8.11.8(react-dom@18.2.0)(react@18.2.0)
       '@trpc/client':
-        specifier: 11.0.0-next-beta.294
-        version: 11.0.0-next-beta.294(@trpc/server@11.0.0-next.320)
+        specifier: 11.0.0-next.320
+        version: 11.0.0-next.320(@trpc/server@11.0.0-next.320)
       '@trpc/react-query':
-        specifier: 11.0.0-next-beta.294
-        version: 11.0.0-next-beta.294(@tanstack/react-query@5.28.6)(@trpc/client@11.0.0-next-beta.294)(@trpc/server@11.0.0-next.320)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 11.0.0-next.320
+        version: 11.0.0-next.320(@tanstack/react-query@5.28.6)(@trpc/client@11.0.0-next.320)(@trpc/server@11.0.0-next.320)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/server':
         specifier: 11.0.0-next.320
         version: 11.0.0-next.320
@@ -385,15 +385,9 @@ importers:
       drizzle-orm:
         specifier: ^0.30.4
         version: 0.30.4(mysql2@3.9.2)
-      drizzle-zod:
-        specifier: ^0.5.1
-        version: 0.5.1(drizzle-orm@0.30.4)(zod@3.22.4)
       mysql2:
         specifier: ^3.9.2
         version: 3.9.2
-      zod:
-        specifier: ^3.22.4
-        version: 3.22.4
     devDependencies:
       '@kdx/eslint-config':
         specifier: workspace:*
@@ -429,8 +423,8 @@ importers:
         specifier: workspace:*
         version: link:../shared
       '@react-email/components':
-        specifier: ^0.0.15
-        version: 0.0.15(@types/react@18.2.69)(react-email@2.1.0)(react@18.2.0)
+        specifier: ^0.0.14
+        version: 0.0.14(@types/react@18.2.69)(react@18.2.0)
       react-email:
         specifier: ^2.1.0
         version: 2.1.0(eslint@8.57.0)
@@ -629,6 +623,9 @@ importers:
 
   packages/validators:
     dependencies:
+      drizzle-zod:
+        specifier: ^0.5.1
+        version: 0.5.1(drizzle-orm@0.30.4)(zod@3.22.4)
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -4174,12 +4171,31 @@ packages:
       react: 18.2.0
     dev: false
 
+  /@react-email/button@0.0.13(react@18.2.0):
+    resolution: {integrity: sha512-e/y8u2odJ8fF83B+wvL2FXzVcbQSUh2Cn2JH2Ez4L6AuPELsh8s2JYo081IDsXc16IyFiYpObn0blOt7s/qp8g==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      react: 18.2.0
+    dependencies:
+      react: 18.2.0
+    dev: false
+
   /@react-email/button@0.0.14(react@18.2.0):
     resolution: {integrity: sha512-SMk40moGcAvkHIALX4XercQlK0PNeeEIam6OXHw68ea9WtzzqVwiK4pzLY0iiMI9B4xWHcaS2lCPf3cKbQBf1Q==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: 18.2.0
     dependencies:
+      react: 18.2.0
+    dev: false
+
+  /@react-email/code-block@0.0.2(react@18.2.0):
+    resolution: {integrity: sha512-bQApEmpsvIcVYXdPCXhJB9CGCyShhn/c1JdctE/6R1uIosLbWt40evvVfp2X9STdi02Dhsjxw/AcGuQE6zGZqw==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      react: 18.2.0
+    dependencies:
+      prismjs: 1.29.0
       react: 18.2.0
     dev: false
 
@@ -4209,6 +4225,36 @@ packages:
       react: 18.2.0
     dependencies:
       react: 18.2.0
+    dev: false
+
+  /@react-email/components@0.0.14(@types/react@18.2.69)(react@18.2.0):
+    resolution: {integrity: sha512-t/sNj0R9Mx9Sx5degPQcSBeWotNs7eUwiv72KN8v6fxaf87XlnMo0CPcKI/1by2DHZr5S0258ZQOO7vEFrbcLw==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      react: 18.2.0
+    dependencies:
+      '@react-email/body': 0.0.7(react@18.2.0)
+      '@react-email/button': 0.0.13(react@18.2.0)
+      '@react-email/code-block': 0.0.2(react@18.2.0)
+      '@react-email/code-inline': 0.0.1(react@18.2.0)
+      '@react-email/column': 0.0.9(react@18.2.0)
+      '@react-email/container': 0.0.11(react@18.2.0)
+      '@react-email/font': 0.0.5(react@18.2.0)
+      '@react-email/head': 0.0.7(react@18.2.0)
+      '@react-email/heading': 0.0.11(@types/react@18.2.69)(react@18.2.0)
+      '@react-email/hr': 0.0.7(react@18.2.0)
+      '@react-email/html': 0.0.7(react@18.2.0)
+      '@react-email/img': 0.0.7(react@18.2.0)
+      '@react-email/link': 0.0.7(react@18.2.0)
+      '@react-email/preview': 0.0.8(react@18.2.0)
+      '@react-email/render': 0.0.12
+      '@react-email/row': 0.0.7(react@18.2.0)
+      '@react-email/section': 0.0.11(react@18.2.0)
+      '@react-email/tailwind': 0.0.14(react@18.2.0)
+      '@react-email/text': 0.0.7(react@18.2.0)
+      react: 18.2.0
+    transitivePeerDependencies:
+      - '@types/react'
     dev: false
 
   /@react-email/components@0.0.15(@types/react@18.2.69)(react-email@2.1.0)(react@18.2.0):
@@ -4343,7 +4389,7 @@ packages:
     engines: {node: '>=18.0.0'}
     dependencies:
       html-to-text: 9.0.5
-      js-beautify: 1.14.11
+      js-beautify: 1.15.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
@@ -4823,25 +4869,25 @@ packages:
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
     dev: true
 
-  /@trpc/client@11.0.0-next-beta.294(@trpc/server@11.0.0-next.320):
-    resolution: {integrity: sha512-9rK+bwg7TPNsvisDAanaAiR2TYmgFA2zNll4TexUGKQaQ09dt6ZPdFDqWIZqa33cyoXeK9Z5LQptr3NVfaSjNA==}
+  /@trpc/client@11.0.0-next.320(@trpc/server@11.0.0-next.320):
+    resolution: {integrity: sha512-6VuHBXOLpVYflC75ktgMDexq6RkCNkHmPUWxdpi85O+zEk3miCJMYdlFNRO40d78HC0pTmoyuiQzyAX8J4+m3w==}
     peerDependencies:
-      '@trpc/server': 11.0.0-next-beta.294+1e32ff91b
+      '@trpc/server': 11.0.0-next.320+f3a237ccb
     dependencies:
       '@trpc/server': 11.0.0-next.320
     dev: false
 
-  /@trpc/react-query@11.0.0-next-beta.294(@tanstack/react-query@5.28.6)(@trpc/client@11.0.0-next-beta.294)(@trpc/server@11.0.0-next.320)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-behVOMsJRh73wltFrLc7J3ulWO/A2O529oDWlFZagtM2i/WWM2/7CVh3iL1MgW5pRB3hwC9mARKpGb80ZN4V0A==}
+  /@trpc/react-query@11.0.0-next.320(@tanstack/react-query@5.28.6)(@trpc/client@11.0.0-next.320)(@trpc/server@11.0.0-next.320)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-r7yECFJm7U+2Wcm/KgzNUEB0BSajJnjEcZZctXlbvvVUTVrYMyEjCh5cjJDoZfRuvrwLmJbhFSg+ytzXXJkTLw==}
     peerDependencies:
-      '@tanstack/react-query': ^5.0.0
-      '@trpc/client': 11.0.0-next-beta.294+1e32ff91b
-      '@trpc/server': 11.0.0-next-beta.294+1e32ff91b
+      '@tanstack/react-query': ^5.25.0
+      '@trpc/client': 11.0.0-next.320+f3a237ccb
+      '@trpc/server': 11.0.0-next.320+f3a237ccb
       react: '>=18.2.0'
       react-dom: '>=18.2.0'
     dependencies:
       '@tanstack/react-query': 5.28.6(react@18.2.0)
-      '@trpc/client': 11.0.0-next-beta.294(@trpc/server@11.0.0-next.320)
+      '@trpc/client': 11.0.0-next.320(@trpc/server@11.0.0-next.320)
       '@trpc/server': 11.0.0-next.320
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -9018,15 +9064,21 @@ packages:
   /jose@5.2.3:
     resolution: {integrity: sha512-KUXdbctm1uHVL8BYhnyHkgp3zDX5KW8ZhAKVFEfUbU2P8Alpzjb+48hHvjOdQIyPshoblhzsuqOwEEAbtHVirA==}
 
-  /js-beautify@1.14.11:
-    resolution: {integrity: sha512-rPogWqAfoYh1Ryqqh2agUpVfbxAhbjuN1SmU86dskQUKouRiggUTCO4+2ym9UPXllc2WAp0J+T5qxn7Um3lCdw==}
+  /js-beautify@1.15.1:
+    resolution: {integrity: sha512-ESjNzSlt/sWE8sciZH8kBF8BPlwXPwhR6pWKAw8bw4Bwj+iZcnKW6ONWUutJ7eObuBZQpiIb8S7OYspWrKt7rA==}
     engines: {node: '>=14'}
     hasBin: true
     dependencies:
       config-chain: 1.1.13
       editorconfig: 1.0.4
       glob: 10.3.10
+      js-cookie: 3.0.5
       nopt: 7.2.0
+    dev: false
+
+  /js-cookie@3.0.5:
+    resolution: {integrity: sha512-cEiJEAEoIbWfCZYKWhVwFuvPX1gETRYPw6LlaTKoxD3s2AkXzkCjnp6h0V77ozyqj0jakteJ4YqDJT830+lVGw==}
+    engines: {node: '>=14'}
     dev: false
 
   /js-tokens@4.0.0:
