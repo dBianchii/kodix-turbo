@@ -10,6 +10,7 @@ import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
 import { Button } from "@kdx/ui/button";
+import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
   Dialog,
   DialogClose,
@@ -27,7 +28,6 @@ import {
   FormMessage,
   useForm,
 } from "@kdx/ui/form";
-import { TimePickerInput } from "@kdx/ui/time-picker-input";
 
 import { DatePicker } from "~/app/_components/date-picker";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
@@ -320,16 +320,7 @@ function DoCheckoutDialog({
                         className="w-fit"
                       />
                       <div className="flex items-center gap-1 pl-4">
-                        <IoMdTime className="size-5 text-muted-foreground" />
-                        <TimePickerInput
-                          picker={"hours"}
-                          date={field.value}
-                          setDate={(date) =>
-                            form.setValue("date", date ?? field.value)
-                          }
-                        />
-                        <TimePickerInput
-                          picker={"minutes"}
+                        <DateTimePicker
                           date={field.value}
                           setDate={(date) =>
                             form.setValue("date", date ?? field.value)

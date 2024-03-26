@@ -16,6 +16,7 @@ export function DatePicker({
   disabledPopover,
   onDayClick,
   className,
+  size,
 }: {
   date?: Date | undefined;
   setDate?: (newDate: Date | undefined) => void;
@@ -23,6 +24,7 @@ export function DatePicker({
   disabledPopover?: boolean;
   onDayClick?: (date: Date | undefined) => void;
   className?: string;
+  size?: "default" | "sm";
 }) {
   return (
     <Popover>
@@ -35,6 +37,7 @@ export function DatePicker({
             className,
           )}
           disabled={disabledPopover}
+          size={size}
         >
           <RxCalendar className="mr-2 size-4" />
           {date ? format(date, "PPP") : <span>Pick a date</span>}
