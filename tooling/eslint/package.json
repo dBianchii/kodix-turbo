@@ -26,7 +26,7 @@
   "devDependencies": {
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "@types/eslint": "^8.56.2",
+    "@types/eslint": "^8.56.6",
     "eslint": "^8.57.0",
     "prettier": "^3.2.5",
     "typescript": "^5.4.3"
