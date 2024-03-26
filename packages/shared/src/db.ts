@@ -15,6 +15,7 @@ export const kodixCareAppId = "1z50i9xblo4b";
 export const kodixCareAdminRoleDefaultId = "kiq5p7htma4k";
 export const kodixCarePatientRoleDefaultId = "h19p6ny82j9f";
 export const kodixCareCareGiverRoleDefaultId = "jl9lfayikjyv";
+
 //*   KodixCare permissions -------
 export const PKodixCare_CanToggleShiftId = "t3rf70tpu02h";
 
