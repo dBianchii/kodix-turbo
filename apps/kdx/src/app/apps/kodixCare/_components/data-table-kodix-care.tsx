@@ -8,12 +8,15 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { format } from "date-fns";
+import { createPortal } from "react-dom";
 import { LuLoader2 } from "react-icons/lu";
 import { RxPencil1 } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
 import type { TGetCareTasksInputSchema } from "@kdx/validators/trpc/app/kodixCare";
+import dayjs from "@kdx/dayjs";
 import { Button } from "@kdx/ui/button";
 import { Checkbox } from "@kdx/ui/checkbox";
 import { DateTimePicker } from "@kdx/ui/date-time-picker";
@@ -48,7 +51,6 @@ import { toast } from "@kdx/ui/toast";
 import { cn } from "@kdx/ui/utils";
 import { ZSaveCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 
-import { DatePicker } from "~/app/_components/date-picker";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
@@ -100,11 +102,12 @@ export default function DataTableKodixCare({
     },
     // If the mutation fails,
     // use the context returned from onMutate to roll back
-    onError: (_, __, context) => {
+    onError: (err, __, context) => {
       utils.app.kodixCare.getCareTasks.setData(
         input,
         context?.previousCareTasks,
       );
+      trpcErrorToastDefault(err);
     },
     // Always refetch after error or success:
     onSettled: () => {
@@ -149,6 +152,10 @@ export default function DataTableKodixCare({
         </div>
       ),
     }),
+    columnHelper.accessor("date", {
+      header: () => "Date",
+      cell: (ctx) => format(ctx.row.original.date, "LLL. dd - h:mm"),
+    }),
     columnHelper.accessor("doneAt", {
       header: () => "Done at",
       cell: function Cell(ctx) {
@@ -160,12 +167,19 @@ export default function DataTableKodixCare({
           <DateTimePicker
             size="sm"
             onOpenChange={(open) => {
-              if (!open)
+              if (!open) {
+                if (
+                  dayjs(date ?? undefined).isSame(
+                    ctx.row.original.doneAt ?? undefined,
+                  )
+                )
+                  return;
                 //Send request whenever dialog is closed
                 mutation.mutate({
                   id: ctx.row.original.id,
-                  doneAt: date,
+                  doneAt: date ?? null,
                 });
+              }
             }}
             date={date}
             setDate={(newDate) => setDate(newDate)}
@@ -176,9 +190,17 @@ export default function DataTableKodixCare({
     columnHelper.display({
       id: "actions",
       cell: function Cell(ctx) {
+        const [details, setDetails] = useState(ctx.row.original.details!);
+
+        if (!ctx.row.original.id) return null;
+
         return (
           <div className="flex flex-row">
-            <Dialog>
+            <Dialog
+              onOpenChange={() => {
+                setDetails(ctx.row.original.details!);
+              }}
+            >
               <DialogTrigger asChild>
                 <Button variant={"ghost"} className="ml-auto">
                   <RxPencil1 className="size-4" />
@@ -196,13 +218,30 @@ export default function DataTableKodixCare({
                     placeholder="Any information..."
                     className="w-full"
                     rows={6}
+                    value={details}
+                    onChange={(e) => setDetails(e.target.value)}
                   />
                 </div>
                 <DialogFooter className="mt-6 gap-3 sm:justify-between">
                   <DialogClose asChild>
-                    <Button variant={"ghost"}>Close</Button>
+                    <Button variant={"ghost"} disabled={mutation.isPending}>
+                      Close
+                    </Button>
                   </DialogClose>
-                  <Button>Save</Button>
+                  <Button
+                    disabled={mutation.isPending}
+                    onClick={() => {
+                      mutation.mutate({
+                        id: ctx.row.original.id,
+                        details,
+                      });
+                    }}
+                  >
+                    {mutation.isPending && (
+                      <LuLoader2 className="mr-2 size-5 animate-spin" />
+                    )}
+                    Save
+                  </Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
@@ -245,10 +284,13 @@ export default function DataTableKodixCare({
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
-                className={cn({
-                  "bg-muted/30": !row.original.id,
-                  "hover:bg-muted/30": !row.original.id,
-                })}
+                className={cn(
+                  {
+                    "bg-muted/30": !row.original.id,
+                    "hover:bg-muted/30": !row.original.id,
+                  },
+                  "h-12",
+                )}
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>

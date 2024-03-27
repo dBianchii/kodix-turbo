@@ -15,6 +15,7 @@ interface TimePickerDemoProps {
   setDate: (date: Date | undefined) => void;
   onOpenChange?: (open: boolean) => void;
   size?: "sm" | "default";
+  disabledDate?: (date: Date) => boolean;
 }
 
 export function DateTimePicker({
@@ -22,6 +23,7 @@ export function DateTimePicker({
   setDate,
   onOpenChange,
   size,
+  disabledDate,
 }: TimePickerDemoProps) {
   return (
     <Popover onOpenChange={onOpenChange}>
@@ -39,15 +41,33 @@ export function DateTimePicker({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
+        <div className="border-t border-border p-3">
+          <TimePicker
+            setDate={setDate}
+            date={date}
+            disabledDate={disabledDate}
+          />
+        </div>
         <Calendar
           mode="single"
           selected={date}
-          onSelect={setDate}
+          onSelect={(newDate) => {
+            if (newDate && date) {
+              //only change day information and not time
+              //keep time the same
+              date.setFullYear(
+                newDate.getFullYear(),
+                newDate.getMonth(),
+                newDate.getDate(),
+              );
+              setDate(new Date(date));
+              return;
+            }
+            setDate(newDate);
+          }}
           initialFocus
+          disabled={disabledDate}
         />
-        <div className="border-t border-border p-3">
-          <TimePicker setDate={setDate} date={date} />
-        </div>
       </PopoverContent>
     </Popover>
   );

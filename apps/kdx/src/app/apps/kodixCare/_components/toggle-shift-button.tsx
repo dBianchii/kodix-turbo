@@ -305,22 +305,12 @@ function DoCheckoutDialog({
                 <FormItem>
                   <FormControl>
                     <div className="flex flex-row gap-2">
-                      <DatePicker
-                        disabledDate={(date) =>
-                          dayjs(date).startOf("day") <
-                          dayjs(currentShift.checkIn).startOf("day")
-                        }
-                        date={field.value}
-                        setDate={(newDate) =>
-                          form.setValue(
-                            "date",
-                            newDate ?? dayjs(new Date()).toDate(),
-                          )
-                        }
-                        className="w-fit"
-                      />
                       <div className="flex items-center gap-1 pl-4">
                         <DateTimePicker
+                          disabledDate={(date) =>
+                            dayjs(date).startOf("day") >
+                            dayjs(currentShift.checkIn).startOf("day")
+                          }
                           date={field.value}
                           setDate={(date) =>
                             form.setValue("date", date ?? field.value)

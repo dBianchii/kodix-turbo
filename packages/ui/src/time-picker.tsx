@@ -11,16 +11,23 @@ interface TimePickerDemoProps {
   date: Date | undefined;
   setDate: (date: Date | undefined) => void;
   granularity?: TimePickerType;
+  disabledDate?: (date: Date) => boolean;
 }
 
 export function TimePicker({
   date,
   setDate,
   granularity = "minutes",
+  disabledDate,
 }: TimePickerDemoProps) {
   const minuteRef = React.useRef<HTMLInputElement>(null);
   const hourRef = React.useRef<HTMLInputElement>(null);
   const secondRef = React.useRef<HTMLInputElement>(null);
+
+  const setDateBasedOnDisabledDate = (newDate: Date | undefined) => {
+    if (newDate && disabledDate && disabledDate(newDate)) return;
+    setDate(newDate);
+  };
 
   return (
     <div className="flex items-end gap-2">
@@ -31,7 +38,7 @@ export function TimePicker({
         <TimePickerInput
           picker="hours"
           date={date}
-          setDate={setDate}
+          setDate={setDateBasedOnDisabledDate}
           ref={hourRef}
           onRightFocus={() => minuteRef.current?.focus()}
         />
@@ -45,7 +52,7 @@ export function TimePicker({
             <TimePickerInput
               picker="minutes"
               date={date}
-              setDate={setDate}
+              setDate={setDateBasedOnDisabledDate}
               ref={minuteRef}
               onLeftFocus={() => hourRef.current?.focus()}
               onRightFocus={() => secondRef.current?.focus()}
@@ -59,7 +66,7 @@ export function TimePicker({
               <TimePickerInput
                 picker="seconds"
                 date={date}
-                setDate={setDate}
+                setDate={setDateBasedOnDisabledDate}
                 ref={secondRef}
                 onLeftFocus={() => minuteRef.current?.focus()}
               />
