@@ -24,7 +24,7 @@ export type KodixAppId =
   | typeof calendarAppId
   | typeof kodixCareAppId;
 
-export type AllAppRoles_defaults =
+type AllAppRoles_defaults =
   | typeof kodixCareAdminRoleDefaultId
   | typeof kodixCarePatientRoleDefaultId
   | typeof kodixCareCareGiverRoleDefaultId
@@ -50,17 +50,13 @@ export const getAppName = (appId: KodixAppId) => {
   return appIdToName[appId];
 };
 
-export const getAppDescription = (appId: KodixAppId) => {
-  const appIdToDescription = {
-    [kodixCareAppId]: "Kodix Care is a health care app." as const,
-    [calendarAppId]: "Calendar is a calendar app." as const,
-    [todoAppId]: "Todo is a todo app." as const,
-  };
-  return appIdToDescription[appId];
+export const appIdToDescription = {
+  [kodixCareAppId]: "Kodix Care is a health care app." as const,
+  [calendarAppId]: "Calendar is a calendar app." as const,
+  [todoAppId]: "Todo is a todo app." as const,
 };
 
 export const getAppRole_defaultRoleName = (roleId: AllAppRoles_defaults) => {
-  //TODO: Maybe store this in memory from db?
   const roleIdToName = {
     [todoAdminRoleDefaultId]: "Admin" as const,
     [calendarAdminRoleDefaultId]: "Admin" as const,

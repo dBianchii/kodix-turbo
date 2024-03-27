@@ -30,9 +30,6 @@ function KodixAdapter(): Adapter {
   return {
     ...DrizzleAdapter(db),
     async createUser(data) {
-      console.log("createUser");
-      console.log("createUser");
-      console.log("createUser");
       const id = nanoid();
       const teamId = nanoid();
 
@@ -62,10 +59,6 @@ function KodixAdapter(): Adapter {
       return result;
     },
     async getSessionAndUser(sessionToken: string) {
-      console.log("getSessionAndUser");
-      console.log("getSessionAndUser");
-      console.log("getSessionAndUser");
-
       const sessionAndUser =
         (await db
           .select({
@@ -93,8 +86,6 @@ function KodixAdapter(): Adapter {
       } | null>;
     },
     async getUserByEmail(data) {
-      console.log("getUserByEmail");
-      console.log("getUserByEmail");
       const result =
         (await db
           .select()
@@ -111,9 +102,6 @@ function KodixAdapter(): Adapter {
       } as Awaitable<AdapterUser | null>;
     },
     async getUserByAccount(account) {
-      console.log("getUserByAccount");
-      console.log("getUserByAccount");
-      console.log("getUserByAccount");
       const dbAccount =
         (await db
           .select({ User: users, Team: teams })
@@ -139,10 +127,6 @@ function KodixAdapter(): Adapter {
     },
 
     async getUser(data) {
-      console.log("getUser");
-      console.log("getUser");
-      console.log("getUser");
-
       const thing =
         (await db
           .select()
@@ -157,94 +141,6 @@ function KodixAdapter(): Adapter {
         activeTeamName: thing.team.name,
       } as Awaitable<AdapterUser | null>;
     },
-
-    // createUser: async (data: AdapterUser) => {
-    //   const teamId = cuid();
-    //   data.id = cuid();
-    //   //! When changing team creation flow here, change it on api.team.create router as well!
-    //   const teamConnectOrCreate = {
-    //     create: {
-    //       id: teamId,
-    //       name: `Personal Team`,
-    //       ownerId: data.id,
-    //     },
-    //     where: {
-    //       id: teamId,
-    //     },
-    //   };
-    //   const user = await prisma.user.create({
-    //     data: {
-    //       ...data,
-    //       Teams: {
-    //         connectOrCreate: teamConnectOrCreate,
-    //       },
-    //       ActiveTeam: {
-    //         connectOrCreate: teamConnectOrCreate,
-    //       },
-    //       OwnedTeams: {
-    //         connectOrCreate: {
-    //           create: {
-    //             id: teamId,
-    //             name: `Personal Team`,
-    //           },
-    //           where: {
-    //             id: teamId,
-    //           },
-    //         },
-    //       },
-    //     },
-    //   });
-
-    //   return user;
-    // },
-    // getUser: async (id: string) => {
-    //   const user = await prisma.user.findUnique({
-    //     where: {
-    //       id,
-    //     },
-    //     include: customUserInclude,
-    //   });
-    //   if (!user) return null;
-    //   return { ...user, activeTeamName: user.ActiveTeam.name };
-    // },
-    // getUserByEmail: async (email: User["email"]) => {
-    //   const user = await prisma.user.findUnique({
-    //     where: { email },
-    //     include: customUserInclude,
-    //   });
-    //   if (!user) return null;
-    //   return { ...user, activeTeamName: user.ActiveTeam.name };
-    // },
-    // getUserByAccount: async (
-    //   provider_providerAccountId: Pick<
-    //     AdapterAccount,
-    //     "provider" | "providerAccountId"
-    //   >,
-    // ) => {
-    //   //? Had to add his manually because we changed the schema to uppercase User
-    //   const account = await prisma.account.findUnique({
-    //     where: { provider_providerAccountId },
-    //     select: { User: true },
-    //   });
-    //   return account?.User ?? null;
-    // },
-
-    // getSessionAndUser: async (sessionToken: string) => {
-    //   const userAndSession = await prisma.session.findUnique({
-    //     where: { sessionToken },
-    //     include: {
-    //       User: {
-    //         include: customUserInclude,
-    //       },
-    //     },
-    //   });
-    //   if (!userAndSession) return null;
-    //   const { User, ...session } = userAndSession;
-    //   return {
-    //     user: { ...User, activeTeamName: User.ActiveTeam.name },
-    //     session,
-    //   };
-    // },
   };
 }
 

@@ -10,7 +10,6 @@ const dateFromISO8601 = z.preprocess(
 
 /**
  * @description Schema for validating kodix care config
- * @usedBy kdx/api kdx/kdx
  */
 export const kodixCareConfigSchema = z.object({
   patientName: z
