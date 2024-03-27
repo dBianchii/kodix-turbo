@@ -96,6 +96,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.28.6
         version: 5.28.6(react@18.2.0)
+      '@tanstack/react-query-devtools':
+        specifier: ^5.28.8
+        version: 5.28.8(@tanstack/react-query@5.28.6)(react@18.2.0)
       '@tanstack/react-table':
         specifier: ^8.15.0
         version: 8.15.0(react-dom@18.2.0)(react@18.2.0)
@@ -4618,6 +4621,21 @@ packages:
 
   /@tanstack/query-core@5.28.6:
     resolution: {integrity: sha512-hnhotV+DnQtvtR3jPvbQMPNMW4KEK0J4k7c609zJ8muiNknm+yoDyMHmxTWM5ZnlZpsz0zOxYFr+mzRJNHWJsA==}
+    dev: false
+
+  /@tanstack/query-devtools@5.28.6:
+    resolution: {integrity: sha512-DXJGqbrsteWU9XehDf6s3k3QxwQqGUlNXpitsF1xbwkYBcDaAakiC6hjJSMfPBHOrbZCnWfAGCVf4vh2D75/xw==}
+    dev: false
+
+  /@tanstack/react-query-devtools@5.28.8(@tanstack/react-query@5.28.6)(react@18.2.0):
+    resolution: {integrity: sha512-NorR2ueGlGdB5PTvt1WynzjfNI/OJwiisB1r0UAwgi0Em2UalZpMltwvoIrGhJ0T2V+8b0MV5wD+cmf0PPdHGA==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.28.8
+      react: ^18.0.0
+    dependencies:
+      '@tanstack/query-devtools': 5.28.6
+      '@tanstack/react-query': 5.28.6(react@18.2.0)
+      react: 18.2.0
     dev: false
 
   /@tanstack/react-query@5.28.6(react@18.2.0):

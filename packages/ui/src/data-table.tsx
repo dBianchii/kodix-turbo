@@ -28,7 +28,11 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   noResultsMessage = "No results.",
-}: DataTableProps<TData, TValue> & { noResultsMessage?: string }) {
+  onClickRow,
+}: DataTableProps<TData, TValue> & {
+  noResultsMessage?: string;
+  onClickRow?: () => void;
+}) {
   const table = useReactTable({
     data,
     columns,
@@ -60,6 +64,7 @@ export function DataTable<TData, TValue>({
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
+                onClick={onClickRow}
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >

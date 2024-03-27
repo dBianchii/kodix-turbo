@@ -1,19 +1,24 @@
 "use client";
 
 import type { CellContext } from "@tanstack/react-table";
-import { createColumnHelper } from "@tanstack/react-table";
-import { IoMdTime } from "react-icons/io";
+import { useEffect, useState } from "react";
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import { format } from "date-fns";
 import { LuLoader2 } from "react-icons/lu";
 import { RxPencil1 } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
-import type { FixedColumnsType } from "@kdx/ui/data-table";
 import type { TGetCareTasksInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import dayjs from "@kdx/dayjs";
 import { Button } from "@kdx/ui/button";
 import { Checkbox } from "@kdx/ui/checkbox";
-import { DataTable } from "@kdx/ui/data-table";
+import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
   Dialog,
   DialogClose,
@@ -29,16 +34,22 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
   useForm,
 } from "@kdx/ui/form";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@kdx/ui/table";
 import { Textarea } from "@kdx/ui/textarea";
-import { TimePickerInput } from "@kdx/ui/time-picker-input";
 import { toast } from "@kdx/ui/toast";
+import { cn } from "@kdx/ui/utils";
 import { ZSaveCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 
-import { DatePicker } from "~/app/_components/date-picker";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
@@ -55,230 +66,300 @@ export default function DataTableKodixCare({
   input: TGetCareTasksInputSchema;
   session: Session;
 }) {
-  const { data, isLoading } = api.app.kodixCare.getCareTasks.useQuery(input, {
+  const { data } = api.app.kodixCare.getCareTasks.useQuery(input, {
     refetchOnMount: false,
     initialData: initialCareTasks,
   });
   const utils = api.useUtils();
+  const [editDetailsOpen, setEditDetailsOpen] = useState(false);
+  const [currentlyEditing, setCurrentlyEditing] = useState<string | undefined>(
+    undefined,
+  );
 
   const mutation = api.app.kodixCare.saveCareTask.useMutation({
-    onSuccess: () => {
+    onMutate: async (savedCareTask) => {
+      // Cancel any outgoing refetches
+      // (so they don't overwrite our optimistic update)
+      await utils.app.kodixCare.getCareTasks.cancel();
+      // Snapshot the previous value
+      const previousCareTasks = utils.app.kodixCare.getCareTasks.getData();
+
+      // Optimistically update to the new value
+      utils.app.kodixCare.getCareTasks.setData(input, (prev) => {
+        return prev?.map((x) => {
+          if (x.id === savedCareTask.id) {
+            if (savedCareTask.doneAt !== undefined)
+              x.doneAt = savedCareTask.doneAt;
+            if (savedCareTask.doneByUserId !== undefined)
+              x.doneByUserId = savedCareTask.doneByUserId;
+            if (savedCareTask.details !== undefined)
+              x.details = savedCareTask.details;
+          }
+
+          return x;
+        });
+      });
+
+      // Return a context object with the snapshotted value
+      return { previousCareTasks };
+    },
+    // If the mutation fails,
+    // use the context returned from onMutate to roll back
+    onError: (err, __, context) => {
+      utils.app.kodixCare.getCareTasks.setData(
+        input,
+        context?.previousCareTasks,
+      );
+      trpcErrorToastDefault(err);
+    },
+    // Always refetch after error or success:
+    onSettled: () => {
       void utils.app.kodixCare.getCareTasks.invalidate();
     },
   });
 
   const columns = [
     columnHelper.accessor("title", {
-      header: () => <div className="pl-2">Title</div>,
-      cell: (info) => <span className="pl-2 ">{info.getValue()}</span>,
-    }),
-    columnHelper.accessor("description", {
-      header: () => <div>Description</div>,
-      cell: (info) => <p className="">{info.getValue()}</p>,
-    }),
-    columnHelper.accessor("date", {
-      header: () => <div>Date and time</div>,
-      cell: (info) => (
-        <div className="flex w-60 flex-row gap-3 pl-2">
-          <div className="flex flex-col items-start">
-            <span className="">
-              {dayjs(info.getValue()).format("DD/MM/YYYY HH:mm")}
-            </span>
+      header: () => null,
+      cell: (ctx) => (
+        <div className="flex flex-row items-center">
+          <div className="w-8">
+            {/* If it is a real caretask from caretask table and it was edited before... */}
+            {ctx.row.original.id.length > 0 && ctx.row.original.updatedAt && (
+              <div className="ml-2">
+                <Checkbox
+                  checked={!!ctx.row.original.doneAt}
+                  onCheckedChange={() => {
+                    mutation.mutate({
+                      id: ctx.row.original.id,
+                      doneByUserId: ctx.row.original.doneAt
+                        ? null
+                        : session.user.id,
+                      doneAt: ctx.row.original.doneAt ? null : new Date(),
+                    });
+                  }}
+                  className="size-5"
+                />
+              </div>
+            )}
+            {/* If it is a real caretask from caretask table and it was never edited before... */}
+            {ctx.row.original.id.length > 0 && !ctx.row.original.updatedAt && (
+              <CareTaskNotYetDoneCheckboxDialog
+                info={ctx}
+                session={session}
+                mutation={mutation}
+              />
+            )}
           </div>
+          <span className="pl-2 font-semibold">{ctx.getValue()}</span>
         </div>
       ),
     }),
+    columnHelper.accessor("date", {
+      header: () => "Date",
+      cell: (ctx) => format(ctx.row.original.date, "LLL. dd - h:mm"),
+    }),
+    columnHelper.accessor("doneAt", {
+      header: () => "Done at",
+      cell: function Cell(ctx) {
+        const [date, setDate] = useState(ctx.row.original.doneAt ?? undefined);
+
+        if (!ctx.row.original.id) return null;
+
+        return (
+          <DateTimePicker
+            size="sm"
+            onOpenChange={(open) => {
+              if (!open) {
+                if (
+                  dayjs(date ?? undefined).isSame(
+                    ctx.row.original.doneAt ?? undefined,
+                  )
+                )
+                  return;
+                //Send request whenever dialog is closed
+                mutation.mutate({
+                  id: ctx.row.original.id,
+                  doneAt: date ?? null,
+                });
+              }
+            }}
+            date={date}
+            setDate={(newDate) => setDate(newDate)}
+          />
+        );
+      },
+    }),
     columnHelper.display({
       id: "actions",
-      cell: function Cell(info) {
+      cell: function Cell(ctx) {
+        if (!ctx.row.original.id) return null;
+
         return (
-          <div className="flex flex-row items-center">
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant={"ghost"}>
-                  <RxPencil1 className="size-4" />
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Add notes</DialogTitle>
-                  <DialogDescription>
-                    Add custom notes to this task
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <Textarea
-                    placeholder="Any information..."
-                    className="w-full"
-                    rows={6}
-                  />
-                </div>
-                <DialogFooter className="mt-6 gap-3 sm:justify-between">
-                  <DialogClose asChild>
-                    <Button variant={"ghost"}>Close</Button>
-                  </DialogClose>
-                  <Button>Save</Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-            {/* If it is a real caretask from caretask table and it was edited before... */}
-            {info.row.original.id.length > 0 && info.row.original.updatedAt && (
-              <CheckBoxAlterDoneDialog info={info} mutation={mutation} />
-            )}
-            {/* If it is a real caretask from caretask table and it was never edited before... */}
-            {info.row.original.id.length > 0 &&
-              !info.row.original.updatedAt && (
-                <CareTaskNotYetDoneCheckboxDialog
-                  info={info}
-                  session={session}
-                  mutation={mutation}
-                />
-              )}
+          <div className="flex flex-row">
+            <Button
+              variant={"ghost"}
+              className="ml-auto"
+              onClick={() => {
+                setEditDetailsOpen(true);
+                setCurrentlyEditing(ctx.row.original.id);
+              }}
+            >
+              <RxPencil1 className="size-4" />
+            </Button>
           </div>
         );
       },
     }),
-  ] as FixedColumnsType<
-    RouterOutputs["app"]["kodixCare"]["getCareTasks"][number]
-  >;
+  ];
 
-  if (isLoading) return <LuLoader2 className="size-6 animate-spin" />;
-
-  return <DataTable columns={columns} data={data} />;
-}
-
-function CheckBoxAlterDoneDialog({
-  info,
-  mutation,
-}: {
-  info: CellContext<CareTask & { id: string }, unknown>;
-  mutation: ReturnType<typeof api.app.kodixCare.saveCareTask.useMutation>;
-}) {
-  const form = useForm({
-    schema: ZSaveCareTaskInputSchema.pick({
-      id: true,
-      doneAt: true,
-    }),
-    defaultValues: {
-      id: info.row.original.id,
-      doneAt: info.row.original.doneAt,
-    },
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
   });
 
   return (
-    <div className="p-1">
-      <Dialog onOpenChange={() => form.reset()}>
-        <DialogTrigger asChild>
-          <Checkbox
-            checked={!!info.row.original.doneAt}
-            className="ml-4 size-5 border-muted-foreground"
+    <>
+      <EditDetailsDialog
+        data={data}
+        id={currentlyEditing}
+        mutation={mutation}
+        open={editDetailsOpen}
+        setOpen={setEditDetailsOpen}
+      />
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                  className={cn(
+                    {
+                      "bg-muted/30": !row.original.id,
+                      "hover:bg-muted/30": !row.original.id,
+                    },
+                    "h-12",
+                  )}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  No results
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+    </>
+  );
+}
+
+function EditDetailsDialog({
+  data,
+  id,
+  mutation,
+  open,
+  setOpen,
+}: {
+  data: CareTask[];
+  id: string | undefined;
+  mutation: ReturnType<typeof api.app.kodixCare.saveCareTask.useMutation>;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}) {
+  const [details, setDetails] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!id) return;
+
+    setDetails(data.find((x) => x.id === id)!.details);
+  }, [id, data, open]);
+
+  if (!id) return null;
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild></DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Add notes</DialogTitle>
+          <DialogDescription>Add custom notes to this task</DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <Textarea
+            placeholder="Any information..."
+            className="w-full"
+            rows={6}
+            value={details ?? ""}
+            onChange={(e) => setDetails(e.target.value)}
           />
-        </DialogTrigger>
-        <DialogContent>
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(async (values) => {
-                mutation.mutate(values, {
-                  onSuccess: () => {
-                    form.reset();
-                    toast.success("Task completed!");
+        </div>
+        <DialogFooter className="mt-6 gap-3 sm:justify-between">
+          <DialogClose asChild>
+            <Button variant={"ghost"} disabled={mutation.isPending}>
+              Close
+            </Button>
+          </DialogClose>
+          <Button
+            disabled={mutation.isPending}
+            onClick={() => {
+              toast.promise(
+                mutation.mutateAsync({
+                  id: id,
+                  details,
+                }),
+                {
+                  loading: "Saving...",
+                  success: () => {
+                    return `Task updated!`;
                   },
-                  onError: (error) => {
-                    trpcErrorToastDefault(error);
-                  },
-                });
-              })}
-            >
-              <DialogHeader>
-                <DialogTitle>
-                  Would you like to change the task &quot;done&quot; status?
-                </DialogTitle>
-              </DialogHeader>
-              <div className="grid gap-4 py-8">
-                <FormField
-                  control={form.control}
-                  name="doneAt"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <FormLabel></FormLabel>
-                        <Checkbox
-                          className="size-5 border-muted-foreground"
-                          checked={!!field.value}
-                          onCheckedChange={(checked) => {
-                            field.onChange(
-                              checked ? info.row.original.doneAt : null,
-                            );
-                          }}
-                        >
-                          Done
-                        </Checkbox>
-                      </FormControl>
-                      <FormMessage className="w-full" />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="doneAt"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <div className="flex flex-row gap-2">
-                          <DatePicker
-                            className="w-fit"
-                            disabledDate={(date) => date > new Date()}
-                            date={field.value ?? undefined}
-                            setDate={(newDate) =>
-                              field.onChange(newDate ?? new Date())
-                            }
-                          />
-                          <div className="flex items-center gap-1 pl-4">
-                            <IoMdTime className="size-5 text-muted-foreground" />
-                            <TimePickerInput
-                              picker={"hours"}
-                              date={field.value ?? undefined}
-                              setDate={(newDate) =>
-                                field.onChange(newDate ?? new Date())
-                              }
-                            />
-                            <TimePickerInput
-                              picker={"minutes"}
-                              date={field.value ?? undefined}
-                              setDate={(newDate) =>
-                                field.onChange(newDate ?? new Date())
-                              }
-                            />
-                          </div>
-                        </div>
-                      </FormControl>
-                      <FormMessage className="w-full" />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <DialogFooter className="mt-6 gap-3 sm:justify-between">
-                <DialogClose asChild>
-                  <Button
-                    variant={"ghost"}
-                    disabled={form.formState.isSubmitting}
-                  >
-                    Close
-                  </Button>
-                </DialogClose>
-                <Button disabled={form.formState.isSubmitting} type="submit">
-                  {form.formState.isSubmitting ? (
-                    <LuLoader2 className="size-4 animate-spin" />
-                  ) : (
-                    <>Save</>
-                  )}
-                </Button>
-              </DialogFooter>
-            </form>
-          </Form>
-        </DialogContent>
-      </Dialog>
-    </div>
+                },
+              );
+            }}
+          >
+            {mutation.isPending && (
+              <LuLoader2 className="mr-2 size-5 animate-spin" />
+            )}
+            Save
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -304,10 +385,7 @@ function CareTaskNotYetDoneCheckboxDialog({
     <div className="p-1">
       <Dialog onOpenChange={() => form.reset()}>
         <DialogTrigger asChild>
-          <Checkbox
-            checked={false}
-            className="ml-4 size-5 border-muted-foreground"
-          />
+          <Checkbox checked={false} className="size-5" />
         </DialogTrigger>
         <DialogContent>
           <Form {...form}>
@@ -339,31 +417,12 @@ function CareTaskNotYetDoneCheckboxDialog({
                     <FormItem>
                       <FormControl>
                         <div className="flex flex-row gap-2">
-                          <DatePicker
-                            className="w-fit"
-                            disabledDate={(date) => date > new Date()}
+                          <DateTimePicker
                             date={field.value ?? undefined}
                             setDate={(newDate) =>
                               field.onChange(newDate ?? new Date())
                             }
                           />
-                          <div className="flex items-center gap-1 pl-4">
-                            <IoMdTime className="size-5 text-muted-foreground" />
-                            <TimePickerInput
-                              picker={"hours"}
-                              date={field.value ?? undefined}
-                              setDate={(newDate) =>
-                                field.onChange(newDate ?? new Date())
-                              }
-                            />
-                            <TimePickerInput
-                              picker={"minutes"}
-                              date={field.value ?? undefined}
-                              setDate={(newDate) =>
-                                field.onChange(newDate ?? new Date())
-                              }
-                            />
-                          </div>
                         </div>
                       </FormControl>
                       <FormMessage className="w-full" />

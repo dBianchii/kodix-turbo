@@ -18,55 +18,42 @@ export const getCareTasksHandler = async ({
 }: GetCareTasksOptions) => {
   const calendarTasks = await getAllHandler({ ctx, input });
 
-  const careTasks = // await ctx.prisma.careTask.findMany({
-    //   where: {
-    //     EventMaster: {
-    //       teamId: ctx.session.user.activeTeamId,
-    //     },
-    //     eventDate: {
-    //       gte: input.dateStart,
-    //       lte: input.dateEnd,
-    //     },
-    //   },
-    //   select: {
-    //     id: true,
-    //     title: true,
-    //     description: true,
-    //     eventDate: true,
-    //   },
-    // })
-    (
-      await ctx.db.query.careTasks.findMany({
-        where: (careTask, { gte, lte, eq, and }) =>
-          and(
-            eq(schema.eventMasters.teamId, ctx.session.user.activeTeamId),
-            gte(careTask.eventDate, input.dateStart),
-            lte(careTask.eventDate, input.dateEnd),
-          ),
-        with: {
-          EventMaster: {
-            columns: {
-              teamId: true,
-            },
+  const careTasks = (
+    await ctx.db.query.careTasks.findMany({
+      where: (careTask, { gte, lte, eq, and }) =>
+        and(
+          eq(schema.eventMasters.teamId, ctx.session.user.activeTeamId),
+          gte(careTask.eventDate, input.dateStart),
+          lte(careTask.eventDate, input.dateEnd),
+        ),
+      with: {
+        EventMaster: {
+          columns: {
+            teamId: true,
           },
         },
-        columns: {
-          doneAt: true,
-          id: true,
-          title: true,
-          description: true,
-          eventDate: true,
-          updatedAt: true,
-        },
-      })
-    ).map((task) => ({
-      id: task.id,
-      title: task.title,
-      description: task.description,
-      date: task.eventDate,
-      doneAt: task.doneAt,
-      updatedAt: task.updatedAt,
-    }));
+      },
+      columns: {
+        doneAt: true,
+        id: true,
+        title: true,
+        description: true,
+        eventDate: true,
+        updatedAt: true,
+        doneByUserId: true,
+        details: true,
+      },
+    })
+  ).map((task) => ({
+    id: task.id,
+    title: task.title,
+    description: task.description,
+    date: task.eventDate,
+    doneAt: task.doneAt,
+    updatedAt: task.updatedAt,
+    doneByUserId: task.doneByUserId,
+    details: task.details,
+  }));
 
   const config = await getConfigHandler({
     ctx,
@@ -88,6 +75,8 @@ export const getCareTasksHandler = async ({
       date: task.date,
       doneAt: null,
       updatedAt: null,
+      doneByUserId: null,
+      details: null,
     };
     if ("doneAt" in task) {
       return {
@@ -95,6 +84,8 @@ export const getCareTasksHandler = async ({
         id: task.id,
         doneAt: task.doneAt,
         updatedAt: task.updatedAt,
+        doneByUserId: task.doneByUserId,
+        details: task.details,
       };
     }
 

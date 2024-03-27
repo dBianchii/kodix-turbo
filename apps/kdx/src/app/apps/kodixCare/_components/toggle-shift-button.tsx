@@ -2,7 +2,6 @@
 
 import type { ComponentProps, Dispatch } from "react";
 import { useState } from "react";
-import { IoMdTime } from "react-icons/io";
 import { LuLoader2 } from "react-icons/lu";
 import { z } from "zod";
 
@@ -10,6 +9,7 @@ import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
 import { Button } from "@kdx/ui/button";
+import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
   Dialog,
   DialogClose,
@@ -27,9 +27,7 @@ import {
   FormMessage,
   useForm,
 } from "@kdx/ui/form";
-import { TimePickerInput } from "@kdx/ui/time-picker-input";
 
-import { DatePicker } from "~/app/_components/date-picker";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
@@ -305,31 +303,12 @@ function DoCheckoutDialog({
                 <FormItem>
                   <FormControl>
                     <div className="flex flex-row gap-2">
-                      <DatePicker
-                        disabledDate={(date) =>
-                          dayjs(date).startOf("day") <
-                          dayjs(currentShift.checkIn).startOf("day")
-                        }
-                        date={field.value}
-                        setDate={(newDate) =>
-                          form.setValue(
-                            "date",
-                            newDate ?? dayjs(new Date()).toDate(),
-                          )
-                        }
-                        className="w-fit"
-                      />
                       <div className="flex items-center gap-1 pl-4">
-                        <IoMdTime className="size-5 text-muted-foreground" />
-                        <TimePickerInput
-                          picker={"hours"}
-                          date={field.value}
-                          setDate={(date) =>
-                            form.setValue("date", date ?? field.value)
+                        <DateTimePicker
+                          disabledDate={(date) =>
+                            dayjs(date).startOf("day") >
+                            dayjs(currentShift.checkIn).startOf("day")
                           }
-                        />
-                        <TimePickerInput
-                          picker={"minutes"}
                           date={field.value}
                           setDate={(date) =>
                             form.setValue("date", date ?? field.value)
