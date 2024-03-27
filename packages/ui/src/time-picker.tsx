@@ -25,7 +25,7 @@ export function TimePicker({
   const secondRef = React.useRef<HTMLInputElement>(null);
 
   const setDateBasedOnDisabledDate = (newDate: Date | undefined) => {
-    if (newDate && disabledDate && disabledDate(newDate)) return;
+    if (newDate && disabledDate?.(newDate)) return;
     setDate(newDate);
   };
 

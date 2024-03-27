@@ -2,7 +2,6 @@
 
 import type { ComponentProps, Dispatch } from "react";
 import { useState } from "react";
-import { IoMdTime } from "react-icons/io";
 import { LuLoader2 } from "react-icons/lu";
 import { z } from "zod";
 
@@ -29,7 +28,6 @@ import {
   useForm,
 } from "@kdx/ui/form";
 
-import { DatePicker } from "~/app/_components/date-picker";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 

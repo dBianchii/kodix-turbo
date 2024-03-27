@@ -1,7 +1,7 @@
 "use client";
 
 import type { CellContext } from "@tanstack/react-table";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   createColumnHelper,
   flexRender,
