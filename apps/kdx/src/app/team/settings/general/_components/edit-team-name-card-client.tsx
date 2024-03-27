@@ -44,9 +44,8 @@ export function EditTeamNameCardClient({
   });
 
   const router = useRouter();
-  const { mutate, isPending } = api.team.update.useMutation({
+  const { mutateAsync, isPending } = api.team.update.useMutation({
     onSuccess: () => {
-      toast.success("Team name updated successfully");
       router.refresh();
     },
     onError: (e) => trpcErrorToastDefault(e),
@@ -57,7 +56,10 @@ export function EditTeamNameCardClient({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit((data) => {
-            mutate(data);
+            toast.promise(mutateAsync(data), {
+              loading: "Saving...",
+              success: "Team name saved successfully",
+            });
           })}
         >
           <CardHeader>

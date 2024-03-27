@@ -39,24 +39,23 @@ export default function TeamInviteCardClient({
   session: Session;
 }) {
   const utils = api.useUtils();
-  const [loading, setLoading] = useState(false);
   const [emails, setEmails] = useState([{ key: 0, value: "" }]); //key is used to work with formkit
   const [successes, setSuccesses] = useState<string[]>([]);
 
-  const { mutate } = api.team.invitation.invite.useMutation({
+  const { mutate, isPending } = api.team.invitation.invite.useMutation({
     onSuccess: ({ successes, failures }) => {
-      if (successes.length > 0)
+      if (successes.length > 0) {
         toast.success(
           `Invitation(s) sent${
-            failures.length ? ` to ${successes.join(", ")}` : "!"
+            successes.length ? ` to ${successes.join(", ")}` : "!"
           }`,
         );
+      }
       if (failures.length > 0)
         toast.error(`Failed to send invitation(s) to ${failures.join(", ")}`, {
-          important: true,
+          important: false,
         });
       setSuccesses(successes);
-      void utils.team.invitation.getAll.invalidate();
 
       setTimeout(() => {
         closeDialog();
@@ -64,7 +63,7 @@ export default function TeamInviteCardClient({
     },
     onError: (e) => trpcErrorToastDefault(e),
     onSettled: () => {
-      setLoading(false);
+      void utils.team.invitation.getAll.invalidate();
     },
   });
 
@@ -129,7 +128,7 @@ export default function TeamInviteCardClient({
                         };
                         setEmails(newEmails);
                       }}
-                      placeholder={"layla@gmail.com"}
+                      placeholder={"layla@example.com"}
                     />
                     <Button
                       type="button"
@@ -216,16 +215,15 @@ export default function TeamInviteCardClient({
                   <Button
                     className="mr-auto"
                     variant={"outline"}
-                    disabled={loading}
+                    disabled={isPending}
                   >
                     Cancel
                   </Button>
                 </DialogClose>
                 <Button
                   className="mx-auto"
-                  disabled={loading}
+                  disabled={isPending}
                   onClick={() => {
-                    setLoading(true);
                     const values = {
                       teamId: session.user.activeTeamId,
                       to: emails.map((x) => x.value).filter((x) => Boolean(x)),
@@ -237,7 +235,7 @@ export default function TeamInviteCardClient({
                     mutate(values);
                   }}
                 >
-                  {loading ? (
+                  {isPending ? (
                     <>
                       <LuLoader2 className="mr-2 size-4 animate-spin" /> Sending
                     </>

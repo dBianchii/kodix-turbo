@@ -1,7 +1,7 @@
 "use client";
 
 import type { CellContext } from "@tanstack/react-table";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   createColumnHelper,
   flexRender,
@@ -71,6 +71,10 @@ export default function DataTableKodixCare({
     initialData: initialCareTasks,
   });
   const utils = api.useUtils();
+  const [editDetailsOpen, setEditDetailsOpen] = useState(false);
+  const [currentlyEditing, setCurrentlyEditing] = useState<string | undefined>(
+    undefined,
+  );
 
   const mutation = api.app.kodixCare.saveCareTask.useMutation({
     onMutate: async (savedCareTask) => {
@@ -189,61 +193,20 @@ export default function DataTableKodixCare({
     columnHelper.display({
       id: "actions",
       cell: function Cell(ctx) {
-        const [details, setDetails] = useState(ctx.row.original.details!);
-
         if (!ctx.row.original.id) return null;
 
         return (
           <div className="flex flex-row">
-            <Dialog
-              onOpenChange={() => {
-                setDetails(ctx.row.original.details!);
+            <Button
+              variant={"ghost"}
+              className="ml-auto"
+              onClick={() => {
+                setEditDetailsOpen(true);
+                setCurrentlyEditing(ctx.row.original.id);
               }}
             >
-              <DialogTrigger asChild>
-                <Button variant={"ghost"} className="ml-auto">
-                  <RxPencil1 className="size-4" />
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Add notes</DialogTitle>
-                  <DialogDescription>
-                    Add custom notes to this task
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <Textarea
-                    placeholder="Any information..."
-                    className="w-full"
-                    rows={6}
-                    value={details}
-                    onChange={(e) => setDetails(e.target.value)}
-                  />
-                </div>
-                <DialogFooter className="mt-6 gap-3 sm:justify-between">
-                  <DialogClose asChild>
-                    <Button variant={"ghost"} disabled={mutation.isPending}>
-                      Close
-                    </Button>
-                  </DialogClose>
-                  <Button
-                    disabled={mutation.isPending}
-                    onClick={() => {
-                      mutation.mutate({
-                        id: ctx.row.original.id,
-                        details,
-                      });
-                    }}
-                  >
-                    {mutation.isPending && (
-                      <LuLoader2 className="mr-2 size-5 animate-spin" />
-                    )}
-                    Save
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+              <RxPencil1 className="size-4" />
+            </Button>
           </div>
         );
       },
@@ -257,59 +220,149 @@ export default function DataTableKodixCare({
   });
 
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-                className={cn(
-                  {
-                    "bg-muted/30": !row.original.id,
-                    "hover:bg-muted/30": !row.original.id,
-                  },
-                  "h-12",
-                )}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+    <>
+      <EditDetailsDialog
+        data={data}
+        id={currentlyEditing}
+        mutation={mutation}
+        open={editDetailsOpen}
+        setOpen={setEditDetailsOpen}
+      />
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </TableHead>
+                  );
+                })}
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                  className={cn(
+                    {
+                      "bg-muted/30": !row.original.id,
+                      "hover:bg-muted/30": !row.original.id,
+                    },
+                    "h-12",
+                  )}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  No results
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+    </>
   );
 }
+
+function EditDetailsDialog({
+  data,
+  id,
+  mutation,
+  open,
+  setOpen,
+}: {
+  data: CareTask[];
+  id: string | undefined;
+  mutation: ReturnType<typeof api.app.kodixCare.saveCareTask.useMutation>;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}) {
+  const [details, setDetails] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!id) return;
+
+    setDetails(data.find((x) => x.id === id)!.details);
+  }, [id, data, open]);
+
+  if (!id) return null;
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild></DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Add notes</DialogTitle>
+          <DialogDescription>Add custom notes to this task</DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <Textarea
+            placeholder="Any information..."
+            className="w-full"
+            rows={6}
+            value={details ?? ""}
+            onChange={(e) => setDetails(e.target.value)}
+          />
+        </div>
+        <DialogFooter className="mt-6 gap-3 sm:justify-between">
+          <DialogClose asChild>
+            <Button variant={"ghost"} disabled={mutation.isPending}>
+              Close
+            </Button>
+          </DialogClose>
+          <Button
+            disabled={mutation.isPending}
+            onClick={() => {
+              toast.promise(
+                mutation.mutateAsync({
+                  id: id,
+                  details,
+                }),
+                {
+                  loading: "Saving...",
+                  success: () => {
+                    return `Task updated!`;
+                  },
+                },
+              );
+            }}
+          >
+            {mutation.isPending && (
+              <LuLoader2 className="mr-2 size-5 animate-spin" />
+            )}
+            Save
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function CareTaskNotYetDoneCheckboxDialog({
   info,
   session,
