@@ -187,9 +187,6 @@ importers:
       '@types/react-dom':
         specifier: ^18.2.22
         version: 18.2.22
-      '@types/tinycolor2':
-        specifier: ^1.4.6
-        version: 1.4.6
       dotenv-cli:
         specifier: ^7.4.1
         version: 7.4.1
@@ -238,9 +235,6 @@ importers:
       next:
         specifier: ^14.1.4
         version: 14.1.4(react-dom@18.2.0)(react@18.2.0)
-      nodemailer:
-        specifier: ^6.9.13
-        version: 6.9.13
       resend:
         specifier: ^3.2.0
         version: 3.2.0
@@ -269,9 +263,6 @@ importers:
       '@types/node':
         specifier: ^20.11.30
         version: 20.11.30
-      '@types/nodemailer':
-        specifier: ^6.4.14
-        version: 6.4.14
       '@types/react':
         specifier: ^18.2.71
         version: 18.2.71
@@ -381,10 +372,10 @@ importers:
         version: link:../shared
       drizzle-orm:
         specifier: ^0.30.4
-        version: 0.30.4(mysql2@3.9.3)
+        version: 0.30.4(mysql2@3.9.2)
       mysql2:
-        specifier: ^3.9.3
-        version: 3.9.3
+        specifier: ^3.9.2
+        version: 3.9.2
     devDependencies:
       '@kdx/eslint-config':
         specifier: workspace:*
@@ -777,29 +768,6 @@ packages:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
-    dev: false
-
-  /@auth/core@0.28.0:
-    resolution: {integrity: sha512-/fh/tb/L4NMSYcyPoo4Imn8vN6MskcVfgESF8/ndgtI4fhD/7u7i5fTVzWgNRZ4ebIEGHNDbWFRxaTu1NtQgvA==}
-    peerDependencies:
-      '@simplewebauthn/browser': ^9.0.1
-      '@simplewebauthn/server': ^9.0.2
-      nodemailer: ^6.8.0
-    peerDependenciesMeta:
-      '@simplewebauthn/browser':
-        optional: true
-      '@simplewebauthn/server':
-        optional: true
-      nodemailer:
-        optional: true
-    dependencies:
-      '@panva/hkdf': 1.1.1
-      '@types/cookie': 0.6.0
-      cookie: 0.6.0
-      jose: 5.2.3
-      oauth4webapi: 2.10.3
-      preact: 10.11.3
-      preact-render-to-string: 5.2.3(preact@10.11.3)
     dev: false
 
   /@auth/core@0.28.1:
@@ -4854,12 +4822,6 @@ packages:
     dependencies:
       undici-types: 5.26.5
 
-  /@types/nodemailer@6.4.14:
-    resolution: {integrity: sha512-fUWthHO9k9DSdPCSPRqcu6TWhYyxTBg382vlNIttSe9M7XfsT06y0f24KHXtbnijPGGRIcVvdKHTNikOI6qiHA==}
-    dependencies:
-      '@types/node': 20.11.30
-    dev: true
-
   /@types/normalize-package-data@2.4.4:
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
     dev: false
@@ -6582,7 +6544,7 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.30.4(mysql2@3.9.3):
+  /drizzle-orm@0.30.4(mysql2@3.9.2):
     resolution: {integrity: sha512-kWoSMGbrOFkmkAweLTFtHJMpN+nwhx89q0mLELqT2aEU+1szNV8jrnBmJwZ0WGNp7J7yQn/ezEtxBI/qzTSElQ==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -6659,7 +6621,7 @@ packages:
       sqlite3:
         optional: true
     dependencies:
-      mysql2: 3.9.3
+      mysql2: 3.9.2
     dev: false
 
   /drizzle-zod@0.5.1(drizzle-orm@0.30.4)(zod@3.22.4):
@@ -6668,7 +6630,7 @@ packages:
       drizzle-orm: '>=0.23.13'
       zod: '*'
     dependencies:
-      drizzle-orm: 0.30.4(mysql2@3.9.3)
+      drizzle-orm: 0.30.4(mysql2@3.9.2)
       zod: 3.22.4
     dev: false
 
@@ -9278,8 +9240,8 @@ packages:
     resolution: {integrity: sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==}
     dev: true
 
-  /mysql2@3.9.3:
-    resolution: {integrity: sha512-+ZaoF0llESUy7BffccHG+urErHcWPZ/WuzYAA9TEeLaDYyke3/3D+VQDzK9xzRnXpd0eMtRf0WNOeo4Q1Baung==}
+  /mysql2@3.9.2:
+    resolution: {integrity: sha512-3Cwg/UuRkAv/wm6RhtPE5L7JlPB877vwSF6gfLAS68H+zhH+u5oa3AieqEd0D0/kC3W7qIhYbH419f7O9i/5nw==}
     engines: {node: '>= 8.0'}
     dependencies:
       denque: 2.1.0
@@ -9634,11 +9596,6 @@ packages:
 
   /node-releases@2.0.14:
     resolution: {integrity: sha512-y10wOWt8yZpqXmOgRo77WaHEmhYQYGNA6y421PKsKYWEK8aW+cqAphborZDhqfyKrbZEN92CN1X2KbafY2s7Yw==}
-    dev: false
-
-  /nodemailer@6.9.13:
-    resolution: {integrity: sha512-7o38Yogx6krdoBf3jCAqnIN4oSQFx+fMa0I7dK1D+me9kBxx12D+/33wSb+fhOCtIxvYJ+4x4IMEhmhCKfAiOA==}
-    engines: {node: '>=6.0.0'}
     dev: false
 
   /nopt@5.0.0:
