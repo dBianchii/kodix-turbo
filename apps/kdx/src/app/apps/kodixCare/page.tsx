@@ -10,7 +10,6 @@ import { api } from "~/trpc/server";
 import DataTableKodixCare from "./_components/data-table-kodix-care";
 import { CurrentShiftClient } from "./_components/shifts";
 
-export const dynamic = "force-dynamic"; //TODO: help me
 export default async function KodixCarePage() {
   const session = await auth();
   if (!session) redirect("/");

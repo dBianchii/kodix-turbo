@@ -9,7 +9,7 @@ import { RxDotsHorizontal, RxTrash } from "react-icons/rx";
 
 import type { Session } from "@kdx/auth";
 import type { KodixAppId } from "@kdx/shared";
-import { getAppDescription, getAppName, kodixCareAppId } from "@kdx/shared";
+import { appIdToDescription, getAppName, kodixCareAppId } from "@kdx/shared";
 import { Badge } from "@kdx/ui/badge";
 import { Button, buttonVariants } from "@kdx/ui/button";
 import {
@@ -87,7 +87,7 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
   const appurl = getAppUrl(id);
   const appIconUrl = getAppIconUrl(id);
   const appName = getAppName(id);
-  const appDescription = getAppDescription(id);
+  const appDescription = appIdToDescription[id];
 
   return (
     <Card className="flex h-64 flex-col">

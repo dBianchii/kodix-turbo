@@ -7,7 +7,6 @@ interface GetCurrentCareShiftOptions {
 export const getCurrentCareShiftHandler = async ({
   ctx,
 }: GetCurrentCareShiftOptions) => {
-  //TODO: orderBy?
   // return await ctx.prisma.careShift.findFirst({
   //   orderBy: {
   //     checkIn: "desc",

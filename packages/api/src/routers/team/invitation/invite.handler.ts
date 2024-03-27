@@ -124,7 +124,6 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
     }),
   );
 
-  console.log(results);
   const { successes } = getSuccessesAndErrors(results);
 
   if (successes.length)

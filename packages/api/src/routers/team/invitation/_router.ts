@@ -16,7 +16,6 @@ import { inviteHandler } from "./invite.handler";
 export const invitationRouter = {
   accept: protectedProcedure
     .input(ZAcceptInputSchema)
-    //.use(enforceUserHasTeam) // TODO: make this a middleware
     .mutation(async (opts) => await acceptHandler(opts)),
   decline: protectedProcedure
     .input(ZAcceptInputSchema)
@@ -24,7 +23,6 @@ export const invitationRouter = {
     .mutation(async (opts) => await declineHandler(opts)),
   delete: protectedProcedure
     .input(ZDeleteUserSchema)
-    //.use(enforceUserHasTeam) // TODO: make this a middleware
     .mutation(async (opts) => await deleteHandler(opts)),
   getAll: protectedProcedure.query(
     async ({ ctx }) => await getAllHandler({ ctx }),

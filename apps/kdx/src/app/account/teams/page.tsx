@@ -7,7 +7,6 @@ import { AddTeamDialogButton } from "~/app/_components/header/add-team-dialog-bu
 import SettingsEditCardSkeleton from "~/app/team/settings/general/_components/edit-team-name-card-skeleton";
 import { EditUserTeamsTable } from "./_components/edit-users-teams-card/edit-users-teams-table";
 
-export const dynamic = "force-dynamic"; //TODO: help me
 export default async function Teams() {
   const session = await auth();
   if (!session) redirect("/");

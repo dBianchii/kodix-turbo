@@ -23,14 +23,14 @@
     "@kdx/shared": "workspace:*",
     "@t3-oss/env-nextjs": "^0.9.2",
     "next": "^14.1.4",
-    "next-auth": "5.0.0-beta.15",
+    "next-auth": "5.0.0-beta.16",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "resend": "^3.2.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@auth/core": "0.28.0",
+    "@auth/core": "0.28.1",
     "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
