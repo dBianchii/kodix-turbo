@@ -378,10 +378,10 @@ importers:
         version: link:../shared
       drizzle-orm:
         specifier: ^0.30.4
-        version: 0.30.4(mysql2@3.9.2)
+        version: 0.30.4(mysql2@3.9.3)
       mysql2:
-        specifier: ^3.9.2
-        version: 3.9.2
+        specifier: ^3.9.3
+        version: 3.9.3
     devDependencies:
       '@kdx/eslint-config':
         specifier: workspace:*
@@ -6564,7 +6564,7 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.30.4(mysql2@3.9.2):
+  /drizzle-orm@0.30.4(mysql2@3.9.3):
     resolution: {integrity: sha512-kWoSMGbrOFkmkAweLTFtHJMpN+nwhx89q0mLELqT2aEU+1szNV8jrnBmJwZ0WGNp7J7yQn/ezEtxBI/qzTSElQ==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -6641,7 +6641,7 @@ packages:
       sqlite3:
         optional: true
     dependencies:
-      mysql2: 3.9.2
+      mysql2: 3.9.3
     dev: false
 
   /drizzle-zod@0.5.1(drizzle-orm@0.30.4)(zod@3.22.4):
@@ -6650,7 +6650,7 @@ packages:
       drizzle-orm: '>=0.23.13'
       zod: '*'
     dependencies:
-      drizzle-orm: 0.30.4(mysql2@3.9.2)
+      drizzle-orm: 0.30.4(mysql2@3.9.3)
       zod: 3.22.4
     dev: false
 
@@ -9260,8 +9260,8 @@ packages:
     resolution: {integrity: sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==}
     dev: true
 
-  /mysql2@3.9.2:
-    resolution: {integrity: sha512-3Cwg/UuRkAv/wm6RhtPE5L7JlPB877vwSF6gfLAS68H+zhH+u5oa3AieqEd0D0/kC3W7qIhYbH419f7O9i/5nw==}
+  /mysql2@3.9.3:
+    resolution: {integrity: sha512-+ZaoF0llESUy7BffccHG+urErHcWPZ/WuzYAA9TEeLaDYyke3/3D+VQDzK9xzRnXpd0eMtRf0WNOeo4Q1Baung==}
     engines: {node: '>= 8.0'}
     dependencies:
       denque: 2.1.0
