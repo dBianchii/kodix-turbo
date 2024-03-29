@@ -1,7 +1,6 @@
 "use client";
 
-import type { CellContext } from "@tanstack/react-table";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   createColumnHelper,
   flexRender,
@@ -10,12 +9,10 @@ import {
 } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { LuLoader2 } from "react-icons/lu";
-import { RxPencil1 } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
 import type { TGetCareTasksInputSchema } from "@kdx/validators/trpc/app/kodixCare";
-import dayjs from "@kdx/dayjs";
 import { Button } from "@kdx/ui/button";
 import { Checkbox } from "@kdx/ui/checkbox";
 import { DateTimePicker } from "@kdx/ui/date-time-picker";
@@ -27,13 +24,13 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@kdx/ui/dialog";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
   useForm,
 } from "@kdx/ui/form";
@@ -71,6 +68,10 @@ export default function DataTableKodixCare({
     initialData: initialCareTasks,
   });
   const utils = api.useUtils();
+  const [saveTaskAsDoneDialogOpen, setSaveTaskAsDoneDialogOpen] =
+    useState(false);
+  const [saveTaskAsNotDoneDialogOpen, setSaveTaskAsNotDoneDialogOpen] =
+    useState(false);
   const [editDetailsOpen, setEditDetailsOpen] = useState(false);
   const [currentlyEditing, setCurrentlyEditing] = useState<string | undefined>(
     undefined,
@@ -120,34 +121,37 @@ export default function DataTableKodixCare({
 
   const columns = [
     columnHelper.accessor("title", {
-      header: () => null,
+      header: () => <span className="ml-8">Title</span>,
       cell: (ctx) => (
         <div className="flex flex-row items-center">
           <div className="w-8">
             {/* If it is a real caretask from caretask table and it was edited before... */}
-            {ctx.row.original.id.length > 0 && ctx.row.original.updatedAt && (
+            {/* {ctx.row.original.id.length > 0 && ctx.row.original.updatedAt && (
               <div className="ml-2">
                 <Checkbox
                   checked={!!ctx.row.original.doneAt}
-                  onCheckedChange={() => {
-                    mutation.mutate({
-                      id: ctx.row.original.id,
-                      doneByUserId: ctx.row.original.doneAt
-                        ? null
-                        : session.user.id,
-                      doneAt: ctx.row.original.doneAt ? null : new Date(),
-                    });
-                  }}
                   className="size-5"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCurrentlyEditing(ctx.row.original.id);
+                    setEditDoneOpen(true);
+                  }}
                 />
               </div>
-            )}
+            )} */}
             {/* If it is a real caretask from caretask table and it was never edited before... */}
-            {ctx.row.original.id.length > 0 && !ctx.row.original.updatedAt && (
-              <CareTaskNotYetDoneCheckboxDialog
-                info={ctx}
-                session={session}
-                mutation={mutation}
+            {ctx.row.original.id.length > 0 && (
+              <Checkbox
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCurrentlyEditing(ctx.row.original.id);
+                  if (ctx.row.original.doneAt === null)
+                    return setSaveTaskAsDoneDialogOpen(true);
+
+                  setSaveTaskAsNotDoneDialogOpen(true);
+                }}
+                checked={!!ctx.row.original.doneAt}
+                className="size-5"
               />
             )}
           </div>
@@ -161,55 +165,15 @@ export default function DataTableKodixCare({
     }),
     columnHelper.accessor("doneAt", {
       header: () => "Done at",
-      cell: function Cell(ctx) {
-        const [date, setDate] = useState(ctx.row.original.doneAt ?? undefined);
-
+      cell: (ctx) => {
         if (!ctx.row.original.id) return null;
-
-        return (
-          <DateTimePicker
-            size="sm"
-            onOpenChange={(open) => {
-              if (!open) {
-                if (
-                  dayjs(date ?? undefined).isSame(
-                    ctx.row.original.doneAt ?? undefined,
-                  )
-                )
-                  return;
-                //Send request whenever dialog is closed
-                mutation.mutate({
-                  id: ctx.row.original.id,
-                  doneAt: date ?? null,
-                });
-              }
-            }}
-            date={date}
-            setDate={(newDate) => setDate(newDate)}
-          />
-        );
+        if (!ctx.row.original.doneAt) return null;
+        return format(ctx.row.original.doneAt, "LLL. dd - h:mm");
       },
     }),
-    columnHelper.display({
-      id: "actions",
-      cell: function Cell(ctx) {
-        if (!ctx.row.original.id) return null;
-
-        return (
-          <div className="flex flex-row">
-            <Button
-              variant={"ghost"}
-              className="ml-auto"
-              onClick={() => {
-                setEditDetailsOpen(true);
-                setCurrentlyEditing(ctx.row.original.id);
-              }}
-            >
-              <RxPencil1 className="size-4" />
-            </Button>
-          </div>
-        );
-      },
+    columnHelper.accessor("details", {
+      header: () => "Details",
+      cell: (ctx) => ctx.row.original.details,
     }),
   ];
 
@@ -219,15 +183,42 @@ export default function DataTableKodixCare({
     getCoreRowModel: getCoreRowModel(),
   });
 
+  const currentlyEditingCareTask = useMemo(() => {
+    return data?.find((x) => x.id === currentlyEditing);
+  }, [currentlyEditing, data]);
+
   return (
     <>
-      <EditDetailsDialog
-        data={data}
-        id={currentlyEditing}
-        mutation={mutation}
-        open={editDetailsOpen}
-        setOpen={setEditDetailsOpen}
-      />
+      {currentlyEditingCareTask && (
+        <>
+          {/* <EditDoneCheckBoxDialog
+            task={currentlyEditingCareTask}
+            mutation={mutation}
+            open={editDoneOpen}
+            setOpen={setEditDoneOpen}
+          /> */}
+          {/* <EditCareTaskDialog
+            task={currentlyEditingCareTask}
+            mutation={mutation}
+            open={editDetailsOpen}
+            setOpen={setEditDetailsOpen}
+          /> */}
+          <SaveTaskAsDoneDialog
+            task={currentlyEditingCareTask}
+            mutation={mutation}
+            open={saveTaskAsDoneDialogOpen}
+            setOpen={setSaveTaskAsDoneDialogOpen}
+            session={session}
+          />
+          <SaveTaskAsNotDoneDialog
+            task={currentlyEditingCareTask}
+            mutation={mutation}
+            open={saveTaskAsNotDoneDialogOpen}
+            setOpen={setSaveTaskAsNotDoneDialogOpen}
+            session={session}
+          />
+        </>
+      )}
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -252,6 +243,12 @@ export default function DataTableKodixCare({
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
+                  onClick={() => {
+                    if (!row.original.id) return;
+
+                    setCurrentlyEditing(row.original.id);
+                    setEditDetailsOpen(true);
+                  }}
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   className={cn(
@@ -289,115 +286,313 @@ export default function DataTableKodixCare({
   );
 }
 
-function EditDetailsDialog({
-  data,
-  id,
+function EditCareTaskDialog({
+  task,
   mutation,
   open,
   setOpen,
 }: {
-  data: CareTask[];
-  id: string | undefined;
+  task: CareTask;
   mutation: ReturnType<typeof api.app.kodixCare.saveCareTask.useMutation>;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
-  const [details, setDetails] = useState<string | null>(null);
+  const form = useForm({
+    schema: ZSaveCareTaskInputSchema.pick({
+      id: true,
+      details: true,
+      doneAt: true,
+    }),
+    defaultValues: {
+      id: task.id,
+      details: task.details,
+    },
+  });
 
   useEffect(() => {
-    if (!id) return;
+    form.reset({
+      id: task.id,
+      details: task.details,
+      doneAt: task.doneAt,
+    });
+  }, [task, open, form]);
 
-    setDetails(data.find((x) => x.id === id)!.details);
-  }, [id, data, open]);
-
-  if (!id) return null;
+  if (!task) return null;
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild></DialogTrigger>
+    <Dialog
+      open={open}
+      onOpenChange={(open) => {
+        setOpen(open);
+      }}
+    >
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Add notes</DialogTitle>
-          <DialogDescription>Add custom notes to this task</DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <Textarea
-            placeholder="Any information..."
-            className="w-full"
-            rows={6}
-            value={details ?? ""}
-            onChange={(e) => setDetails(e.target.value)}
-          />
-        </div>
-        <DialogFooter className="mt-6 gap-3 sm:justify-between">
-          <DialogClose asChild>
-            <Button variant={"ghost"} disabled={mutation.isPending}>
-              Close
-            </Button>
-          </DialogClose>
-          <Button
-            disabled={mutation.isPending}
-            onClick={() => {
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(async (values) => {
               toast.promise(
                 mutation.mutateAsync({
-                  id: id,
-                  details,
+                  id: values.id,
+                  details: values.details,
+                  doneAt: values.doneAt,
                 }),
                 {
-                  loading: "Saving...",
+                  loading: "Updating...",
                   success: () => {
+                    setOpen(false);
                     return `Task updated!`;
                   },
                 },
               );
-            }}
+            })}
           >
-            {mutation.isPending && (
-              <LuLoader2 className="mr-2 size-5 animate-spin" />
-            )}
-            Save
-          </Button>
-        </DialogFooter>
+            <DialogHeader>
+              <DialogTitle>Edit task</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <FormField
+                control={form.control}
+                name="doneAt"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Done at</FormLabel>
+                    <FormControl>
+                      <div className="flex flex-row gap-2">
+                        <DateTimePicker
+                          date={field.value ?? undefined}
+                          setDate={(newDate) =>
+                            field.onChange(newDate ?? new Date())
+                          }
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage className="w-full" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="details"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Details</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Any information..."
+                        className="w-full"
+                        rows={6}
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(e.target.value ?? undefined);
+                        }}
+                        value={field.value ?? undefined}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <DialogFooter className="mt-6 gap-3 sm:justify-between">
+              <DialogClose asChild>
+                <Button variant={"ghost"} disabled={mutation.isPending}>
+                  Close
+                </Button>
+              </DialogClose>
+              <Button disabled={mutation.isPending} type="submit">
+                {mutation.isPending && (
+                  <LuLoader2 className="mr-2 size-5 animate-spin" />
+                )}
+                Save
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
 }
 
-function CareTaskNotYetDoneCheckboxDialog({
-  info,
-  session,
+// function EditDoneCheckBoxDialog({
+//   task,
+//   mutation,
+//   open,
+//   setOpen,
+// }: {
+//   task: CareTask;
+//   mutation: ReturnType<typeof api.app.kodixCare.saveCareTask.useMutation>;
+//   open: boolean;
+//   setOpen: (open: boolean) => void;
+// }) {
+//   const form = useForm({
+//     schema: ZSaveCareTaskInputSchema.pick({
+//       id: true,
+//       details: true,
+//       doneAt: true,
+//     }),
+//     defaultValues: {
+//       id: task.id,
+//       details: task.details,
+//     },
+//   });
+
+//   useEffect(() => {
+//     form.reset({
+//       id: task.id,
+//       doneAt: task.doneAt,
+//     });
+//   }, [task, open, form]);
+
+//   if (!task) return null;
+
+//   return (
+//     <Dialog
+//       open={open}
+//       onOpenChange={(open) => {
+//         setOpen(open);
+//       }}
+//     >
+//       <DialogContent>
+//         <Form {...form}>
+//           <form
+//             onSubmit={form.handleSubmit(async (values) => {
+//               toast.promise(
+//                 mutation.mutateAsync({
+//                   id: values.id,
+//                   details: values.details,
+//                   doneAt: values.doneAt,
+//                 }),
+//                 {
+//                   loading: "Updating...",
+//                   success: () => {
+//                     setOpen(false);
+//                     return `Task updated!`;
+//                   },
+//                 },
+//               );
+//             })}
+//           >
+//             <DialogHeader>
+//               <DialogTitle>
+//                 {task.doneAt ? (
+//                   <>Mark task as not done?</>
+//                 ) : (
+//                   <>Mark task as done?</>
+//                 )}
+//               </DialogTitle>
+//             </DialogHeader>
+//             <div className="grid gap-4 py-4">
+//               <FormField
+//                 control={form.control}
+//                 name="doneAt"
+//                 render={({ field }) => (
+//                   <FormItem>
+//                     <FormControl>
+//                       <div className="flex flex-row gap-2">
+//                         <DateTimePicker
+//                           date={field.value ?? undefined}
+//                           setDate={(newDate) =>
+//                             field.onChange(newDate ?? new Date())
+//                           }
+//                         />
+//                       </div>
+//                     </FormControl>
+//                     <FormMessage className="w-full" />
+//                   </FormItem>
+//                 )}
+//               />
+//               <FormField
+//                 control={form.control}
+//                 name="details"
+//                 render={({ field }) => (
+//                   <FormItem>
+//                     <FormLabel>Details</FormLabel>
+//                     <FormControl>
+//                       <Textarea
+//                         placeholder="Any information..."
+//                         className="w-full"
+//                         rows={6}
+//                         {...field}
+//                         onChange={(e) => {
+//                           field.onChange(e.target.value ?? undefined);
+//                         }}
+//                         value={field.value ?? undefined}
+//                       />
+//                     </FormControl>
+//                     <FormMessage />
+//                   </FormItem>
+//                 )}
+//               />
+//             </div>
+//             <DialogFooter className="mt-6 gap-3 sm:justify-between">
+//               <DialogClose asChild>
+//                 <Button variant={"ghost"} disabled={mutation.isPending}>
+//                   Close
+//                 </Button>
+//               </DialogClose>
+//               <Button disabled={mutation.isPending} type="submit">
+//                 {mutation.isPending && (
+//                   <LuLoader2 className="mr-2 size-5 animate-spin" />
+//                 )}
+//                 Save
+//               </Button>
+//             </DialogFooter>
+//           </form>
+//         </Form>
+//       </DialogContent>
+//     </Dialog>
+//   );
+// }
+
+function SaveTaskAsDoneDialog({
+  task,
   mutation,
+  open,
+  setOpen,
+  session,
 }: {
-  info: CellContext<CareTask & { id: string }, unknown>;
-  session: Session;
+  task: CareTask;
   mutation: ReturnType<typeof api.app.kodixCare.saveCareTask.useMutation>;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  session: Session;
 }) {
   const form = useForm({
     schema: ZSaveCareTaskInputSchema,
     defaultValues: {
-      id: info.row.original.id,
+      id: task.id,
+      details: task.details,
       doneAt: new Date(),
       doneByUserId: session.user.id,
     },
   });
 
+  useEffect(() => {
+    form.reset();
+  }, [open, form, task]);
+
   return (
     <div className="p-1">
-      <Dialog onOpenChange={() => form.reset()}>
-        <DialogTrigger asChild>
-          <Checkbox checked={false} className="size-5" />
-        </DialogTrigger>
+      <Dialog
+        open={open}
+        onOpenChange={(open) => {
+          form.reset();
+          form.setValue("doneAt", new Date());
+          form.setValue("details", task.details);
+          form.setValue("doneByUserId", session.user.id);
+          setOpen(open);
+        }}
+      >
         <DialogContent>
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(async (values) => {
-                mutation.mutate(values, {
-                  onSuccess: () => {
+                toast.promise(mutation.mutateAsync(values), {
+                  loading: "Saving...",
+                  success: () => {
                     form.reset();
-                    toast.success("Task completed!");
-                  },
-                  onError: (error) => {
-                    trpcErrorToastDefault(error);
+                    setOpen(false);
+                    return `Task marked as complete!`;
                   },
                 });
               })}
@@ -450,15 +645,12 @@ function CareTaskNotYetDoneCheckboxDialog({
               </div>
               <DialogFooter className="mt-6 gap-3 sm:justify-between">
                 <DialogClose asChild>
-                  <Button
-                    variant={"ghost"}
-                    disabled={form.formState.isSubmitting}
-                  >
+                  <Button variant={"ghost"} disabled={mutation.isPending}>
                     Close
                   </Button>
                 </DialogClose>
-                <Button disabled={form.formState.isSubmitting} type="submit">
-                  {form.formState.isSubmitting ? (
+                <Button disabled={mutation.isPending} type="submit">
+                  {mutation.isPending ? (
                     <LuLoader2 className="size-4 animate-spin" />
                   ) : (
                     <>Save</>
@@ -467,6 +659,65 @@ function CareTaskNotYetDoneCheckboxDialog({
               </DialogFooter>
             </form>
           </Form>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+function SaveTaskAsNotDoneDialog({
+  task,
+  mutation,
+  open,
+  setOpen,
+  session,
+}: {
+  task: CareTask;
+  mutation: ReturnType<typeof api.app.kodixCare.saveCareTask.useMutation>;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  session: Session;
+}) {
+  return (
+    <div className="p-1">
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              Are you sure you want to mark this task as not done?
+            </DialogTitle>
+          </DialogHeader>
+          <DialogFooter className="mt-6 gap-3 sm:justify-between">
+            <DialogClose asChild>
+              <Button variant={"ghost"} disabled={mutation.isPending}>
+                Close
+              </Button>
+            </DialogClose>
+            <Button
+              disabled={mutation.isPending}
+              onClick={() => {
+                toast.promise(
+                  mutation.mutateAsync({
+                    id: task.id,
+                    doneAt: null,
+                  }),
+                  {
+                    loading: "Saving...",
+                    success: () => {
+                      setOpen(false);
+                      return `Task marked as not done!`;
+                    },
+                  },
+                );
+              }}
+            >
+              {mutation.isPending ? (
+                <LuLoader2 className="size-4 animate-spin" />
+              ) : (
+                <>Mark task as not done</>
+              )}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

@@ -199,7 +199,6 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
           eventDate: calendarTask.date,
           eventMasterId: calendarTask.eventMasterId,
           doneByUserId: null,
-          doneAt: new Date(),
         })),
       );
 

@@ -288,18 +288,19 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
             ),
           );
         if (shouldDeleteFutureExceptions) return;
-        await tx
-          .update(schema.eventExceptions)
-          .set({
-            title: input.title ? null : undefined,
-            description: input.description ? null : undefined,
-          })
-          .where(
-            and(
-              eq(schema.eventExceptions.eventMasterId, input.eventMasterId),
-              eq(schema.eventMasters.teamId, ctx.session.user.activeTeamId),
-            ),
-          );
+        if (input.title ?? input.description)
+          await tx
+            .update(schema.eventExceptions)
+            .set({
+              title: input.title ? null : undefined,
+              description: input.description ? null : undefined,
+            })
+            .where(
+              and(
+                eq(schema.eventExceptions.eventMasterId, input.eventMasterId),
+                eq(schema.eventMasters.teamId, ctx.session.user.activeTeamId),
+              ),
+            );
       }
 
       // const updatedOldMaster = await tx.eventMaster.update({

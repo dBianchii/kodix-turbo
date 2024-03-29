@@ -16,8 +16,8 @@ export const saveCareTaskHandler = async ({
   await ctx.db
     .update(schema.careTasks)
     .set({
-      doneByUserId: input.doneByUserId,
-      doneAt: input.doneAt,
+      doneByUserId: input.doneAt === null ? null : input.doneByUserId, //? if doneAt is null, doneByUserId should be null
+      doneAt: input.doneByUserId === null ? null : input.doneAt,
       details: input.details,
     })
     .where(eq(schema.careTasks.id, input.id));
