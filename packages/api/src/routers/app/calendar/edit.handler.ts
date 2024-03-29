@@ -301,6 +301,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
                 eq(schema.eventMasters.teamId, ctx.session.user.activeTeamId),
               ),
             );
+        return;
       }
 
       // const updatedOldMaster = await tx.eventMaster.update({
