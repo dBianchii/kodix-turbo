@@ -17,9 +17,9 @@
     "lint": "eslint .",
     "push": "pnpm with-env drizzle-kit push:mysql --config src/config.ts",
     "studio": "pnpm with-env drizzle-kit studio --config src/config.ts",
-    "seed": "pnpm with-env npx tsx ./src/seed/seed.ts",
-    "nuke": "pnpm with-env npx tsx ./src/nuke.ts",
-    "drop": "pnpm with-env npx tsx ./src/drop.ts",
+    "seed": "pnpm with-env tsx ./src/seed/seed.ts",
+    "nuke": "pnpm with-env tsx ./src/nuke.ts",
+    "drop": "pnpx with-env tsx ./src/drop.ts",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
     "with-env": "dotenv -e ../../.env --"
   },
@@ -37,6 +37,7 @@
     "drizzle-kit": "^0.20.14",
     "eslint": "^8.57.0",
     "prettier": "^3.2.5",
+    "tsx": "^4.7.1",
     "typescript": "^5.4.3"
   },
   "eslintConfig": {

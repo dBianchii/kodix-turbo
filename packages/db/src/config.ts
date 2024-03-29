@@ -7,7 +7,9 @@ const uri = [
   process.env.DB_PASSWORD,
   "@",
   process.env.DB_HOST,
-  ":58247/",
+  ":",
+  process.env.DB_PORT,
+  "/",
   process.env.DB_NAME,
 ].join("");
 
