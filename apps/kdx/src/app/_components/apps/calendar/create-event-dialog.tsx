@@ -2,16 +2,15 @@
 
 import type { Weekday } from "rrule";
 import { useState } from "react";
-import { format } from "date-fns";
 import { LuLoader2 } from "react-icons/lu";
-import { RxCalendar, RxPlus } from "react-icons/rx";
+import { RxPlus } from "react-icons/rx";
 import { RRule } from "rrule";
 
 import type { RouterInputs } from "@kdx/api";
 import type { Dayjs } from "@kdx/dayjs";
 import dayjs from "@kdx/dayjs";
 import { Button } from "@kdx/ui/button";
-import { Calendar } from "@kdx/ui/calendar";
+import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
   Dialog,
   DialogContent,
@@ -22,9 +21,7 @@ import {
 } from "@kdx/ui/dialog";
 import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
 import { Textarea } from "@kdx/ui/textarea";
-import { cn } from "@kdx/ui/utils";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
@@ -33,21 +30,15 @@ import { RecurrencePicker } from "./recurrence-picker";
 export function CreateEventDialogButton() {
   const [open, setOpen] = useState(false);
   const utils = api.useUtils();
-  const { mutate: createEvent } = api.app.calendar.create.useMutation({
-    onMutate: () => {
-      setButtonLoading(true);
-    },
-    onSuccess: () => {
-      void utils.app.calendar.getAll.invalidate();
-      revertStateToDefault();
-      setOpen(false);
-    },
-    onSettled: () => {
-      setButtonLoading(false);
-    },
-    onError: (e) => trpcErrorToastDefault(e),
-  });
-  const [buttonLoading, setButtonLoading] = useState(false);
+  const { mutate: createEvent, isPending } =
+    api.app.calendar.create.useMutation({
+      onSuccess: () => {
+        void utils.app.calendar.getAll.invalidate();
+        revertStateToDefault();
+        setOpen(false);
+      },
+      onError: (e) => trpcErrorToastDefault(e),
+    });
   const [personalizedRecurrenceOpen, setPersonalizedRecurrenceOpen] =
     useState(false);
 
@@ -61,7 +52,8 @@ export function CreateEventDialogButton() {
           ? new Date().getHours()
           : new Date().getHours() + 1,
       )
-      .minute(dayjs.utc().minute() < 30 ? 30 : 0),
+      .minute(dayjs.utc().minute() < 30 ? 30 : 0)
+      .toDate(),
 
     frequency: RRule.DAILY,
     interval: 1,
@@ -72,7 +64,7 @@ export function CreateEventDialogButton() {
 
   const [title, setTitle] = useState(defaultState.title);
   const [description, setDescription] = useState(defaultState.description);
-  const [from, setFrom] = useState<Dayjs>(defaultState.from);
+  const [from, setFrom] = useState(defaultState.from);
   const [frequency, setFrequency] = useState(defaultState.frequency);
   const [interval, setInterval] = useState(defaultState.interval);
   const [until, setUntil] = useState<Dayjs | undefined>(defaultState.until);
@@ -95,7 +87,7 @@ export function CreateEventDialogButton() {
     const input: RouterInputs["app"]["calendar"]["create"] = {
       title,
       description,
-      from: from.toDate(),
+      from: from,
       until: until?.toDate(),
       frequency,
       interval,
@@ -136,53 +128,9 @@ export function CreateEventDialogButton() {
             <div className="flex flex-row gap-4">
               <div className="flex flex-col space-y-2">
                 <Label>From</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-[200px] pl-3 text-left font-normal",
-                        !from && "text-muted-foreground",
-                      )}
-                    >
-                      {from ? (
-                        format(from.toDate(), "PPP")
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                      <RxCalendar className="ml-auto size-4 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={from.toDate()}
-                      onSelect={(date) => {
-                        setFrom(
-                          dayjs(date).hour(from.hour()).minute(from.minute()),
-                        );
-                      }}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-              <div className="flex flex-col space-y-2">
-                <Label className="invisible">From</Label>
-                <Input
-                  type="time"
-                  value={from.format("HH:mm")}
-                  onChange={(e) => {
-                    const newTime = e.target.value;
-                    setFrom(
-                      dayjs(from)
-                        .hour(parseInt(newTime.split(":")[0] ?? "0"))
-                        .minute(parseInt(newTime.split(":")[1] ?? "0"))
-                        .second(0)
-                        .millisecond(0),
-                    );
-                  }}
-                  className="w-26"
+                <DateTimePicker
+                  date={from}
+                  setDate={(date) => setFrom(date ?? new Date())}
                 />
               </div>
             </div>
@@ -209,8 +157,8 @@ export function CreateEventDialogButton() {
             ></Textarea>
           </div>
           <DialogFooter>
-            <Button type="submit" size="sm" disabled={buttonLoading}>
-              {buttonLoading ? (
+            <Button type="submit" size="sm" disabled={isPending}>
+              {isPending ? (
                 <LuLoader2 className="mx-2 size-4 animate-spin" />
               ) : (
                 <>Create task</>
