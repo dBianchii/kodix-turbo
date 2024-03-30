@@ -49,24 +49,16 @@ interface KodixAppProps {
 
 export function KodixApp({ id, installed, session }: KodixAppProps) {
   const [open, setOpen] = useState(false);
-  const [uninstalling, setUninstalling] = useState(false);
-  const [installing, setInstalling] = useState(false);
   const router = useRouter();
   const utils = api.useUtils();
-  const { mutate } = api.team.installApp.useMutation({
-    onMutate: () => {
-      setInstalling(true);
-    },
+  const installAppMutation = api.team.installApp.useMutation({
     onSuccess: () => {
       void utils.app.getAll.invalidate();
       router.refresh();
       toast(`App ${appName} installed`);
     },
-    onSettled: () => {
-      setInstalling(false);
-    },
   });
-  const { mutate: uninstall } = api.team.uninstallApp.useMutation({
+  const uninstallAppMutation = api.team.uninstallApp.useMutation({
     onSuccess: () => {
       setOpen(false);
       void utils.app.getAll.invalidate();
@@ -75,9 +67,6 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
     },
     onError: () => {
       toast.error(`Error uninstalling ${appName}`);
-    },
-    onSettled: () => {
-      setUninstalling(false);
     },
   });
 
@@ -129,15 +118,13 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
         )}
         {session && !installed && (
           <Button
-            disabled={installing}
+            disabled={installAppMutation.isPending}
             onClick={() => {
               if (appShouldGoToOnboarding) {
-                setInstalling(true);
                 router.push(`${appurl}/onboarding`);
-                setInstalling(false);
                 return;
               }
-              void mutate({ appId: id });
+              void installAppMutation.mutate({ appId: id });
             }}
             variant={"secondary"}
             className={cn(
@@ -145,7 +132,9 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
               !isActive && "pointer-events-none opacity-50",
             )}
           >
-            {installing && <LuLoader2 className="mr-2 size-5 animate-spin" />}
+            {installAppMutation.isPending && (
+              <LuLoader2 className="mr-2 size-5 animate-spin" />
+            )}
             {isActive ? "Install" : "Coming soon"}
           </Button>
         )}
@@ -191,19 +180,18 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
                 <Button
                   variant="outline"
                   onClick={() => setOpen(false)}
-                  disabled={uninstalling}
+                  disabled={uninstallAppMutation.isPending}
                 >
                   Cancel
                 </Button>
                 <Button
-                  disabled={uninstalling}
+                  disabled={uninstallAppMutation.isPending}
                   onClick={() => {
-                    void uninstall({ appId: id });
-                    setUninstalling(true);
+                    uninstallAppMutation.mutate({ appId: id });
                   }}
                   variant="destructive"
                 >
-                  {uninstalling && (
+                  {uninstallAppMutation.isPending && (
                     <LuLoader2 className="mr-2 size-5 animate-spin" />
                   )}
                   Uninstall

@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { LuLoader2 } from "react-icons/lu";
 import { MdNotificationsActive } from "react-icons/md";
@@ -25,19 +24,12 @@ export async function NotificationsPopoverClient({
 }: {
   initialNotifications: RouterOutputs["user"]["getNotifications"];
 }) {
-  const { data: notifications } = api.user.getNotifications.useQuery(
-    undefined,
-    {
-      initialData: initialNotifications,
-    },
-  );
+  const query = api.user.getNotifications.useQuery(undefined, {
+    initialData: initialNotifications,
+  });
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
   const utils = api.useUtils();
-  const { mutate: mutateAccept } = api.team.invitation.accept.useMutation({
-    onMutate: () => {
-      setLoading(true);
-    },
+  const acceptMutation = api.team.invitation.accept.useMutation({
     onSuccess: () => {
       toast.success("Invitation accepted");
       void utils.user.getNotifications.invalidate();
@@ -46,14 +38,8 @@ export async function NotificationsPopoverClient({
     onError: (error) => {
       trpcErrorToastDefault(error);
     },
-    onSettled: () => {
-      setLoading(false);
-    },
   });
-  const { mutate: mutateDecline } = api.team.invitation.decline.useMutation({
-    onMutate: () => {
-      setLoading(true);
-    },
+  const declineMutation = api.team.invitation.decline.useMutation({
     onSuccess: () => {
       toast.success("Invitation declined");
       void utils.user.getNotifications.invalidate();
@@ -62,12 +48,9 @@ export async function NotificationsPopoverClient({
     onError: (error) => {
       trpcErrorToastDefault(error);
     },
-    onSettled: () => {
-      setLoading(false);
-    },
   });
 
-  if (!notifications.invitations.length) return null;
+  if (!query.data.invitations.length) return null;
 
   return (
     <Popover>
@@ -94,7 +77,7 @@ export async function NotificationsPopoverClient({
         </div>
         <div className="pt-4">
           <ul className="space-y-2">
-            {notifications.invitations.map((invitation) => (
+            {query.data.invitations.map((invitation) => (
               <li key={invitation.id} className="flex flex-col gap-2">
                 <div>
                   <p className="text-sm text-muted-foreground">
@@ -112,23 +95,25 @@ export async function NotificationsPopoverClient({
                     variant="ghost"
                     size="sm"
                     onClick={() => {
-                      mutateDecline({ invitationId: invitation.id });
+                      declineMutation.mutate({ invitationId: invitation.id });
                     }}
                   >
-                    {loading ? (
+                    {declineMutation.isPending || acceptMutation.isPending ? (
                       <LuLoader2 className="mr-2 size-5 animate-spin" />
                     ) : (
                       "Decline"
                     )}
                   </Button>
                   <Button
-                    disabled={loading}
+                    disabled={
+                      declineMutation.isPending || acceptMutation.isPending
+                    }
                     size="sm"
                     onClick={() => {
-                      mutateAccept({ invitationId: invitation.id });
+                      acceptMutation.mutate({ invitationId: invitation.id });
                     }}
                   >
-                    {loading ? (
+                    {declineMutation.isPending || acceptMutation.isPending ? (
                       <LuLoader2 className="mr-2 size-5 animate-spin" />
                     ) : (
                       "Accept"

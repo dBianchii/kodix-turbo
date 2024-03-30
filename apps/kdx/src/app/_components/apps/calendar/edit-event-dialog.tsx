@@ -53,20 +53,13 @@ export function EditEventDialog({
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const utils = api.useUtils();
-  const { mutate: editEvent } = api.app.calendar.edit.useMutation({
-    onMutate: () => {
-      setButtonLoading(true);
-    },
+  const mutation = api.app.calendar.edit.useMutation({
     onSuccess: () => {
       void utils.app.calendar.getAll.invalidate();
       setOpen(false);
     },
-    onSettled: () => {
-      setButtonLoading(false);
-    },
     onError: (e) => trpcErrorToastDefault(e),
   });
-  const [buttonLoading, setButtonLoading] = useState(false);
   const [personalizedRecurrenceOpen, setPersonalizedRecurrenceOpen] =
     useState(false);
   const [editDefinitionOpen, setEditDefinitionOpen] = useState(false);
@@ -201,7 +194,7 @@ export function EditEventDialog({
         input.weekdays = weekdays?.map((w) => w.weekday);
     }
 
-    editEvent(input);
+    mutation.mutate(input);
   }
 
   return (
@@ -308,10 +301,10 @@ export function EditEventDialog({
                   <Button
                     type="submit"
                     size="sm"
-                    disabled={buttonLoading || !isFormChanged}
+                    disabled={mutation.isPending || !isFormChanged}
                     onClick={() => setEditDefinitionOpen(true)}
                   >
-                    {buttonLoading ? (
+                    {mutation.isPending ? (
                       <LuLoader2 className="mx-2 size-4 animate-spin" />
                     ) : (
                       <>OK</>

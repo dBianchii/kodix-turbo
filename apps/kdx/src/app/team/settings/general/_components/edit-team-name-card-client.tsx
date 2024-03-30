@@ -44,7 +44,7 @@ export function EditTeamNameCardClient({
   });
 
   const router = useRouter();
-  const { mutateAsync, isPending } = api.team.update.useMutation({
+  const mutation = api.team.update.useMutation({
     onSuccess: () => {
       router.refresh();
     },
@@ -56,7 +56,7 @@ export function EditTeamNameCardClient({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit((data) => {
-            toast.promise(mutateAsync(data), {
+            toast.promise(mutation.mutateAsync(data), {
               loading: "Saving...",
               success: "Team name saved successfully",
             });
@@ -91,8 +91,8 @@ export function EditTeamNameCardClient({
             <CardDescription>
               Please use 32 characters at maximum.
             </CardDescription>
-            <Button disabled={isPending}>
-              {isPending ? (
+            <Button disabled={mutation.isPending}>
+              {mutation.isPending ? (
                 <>
                   <LuLoader2 className="mr-2 size-4 animate-spin" /> Saving
                 </>

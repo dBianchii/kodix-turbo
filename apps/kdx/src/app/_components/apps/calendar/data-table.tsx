@@ -70,7 +70,7 @@ export function DataTable({
   const [openEditDialog, setOpenEditDialog] = useState(false);
 
   const utils = api.useUtils();
-  const result = api.app.calendar.getAll.useQuery(
+  const getAllQuery = api.app.calendar.getAll.useQuery(
     {
       dateStart: dayjs(selectedDay).startOf("day").toDate(),
       dateEnd: dayjs(selectedDay).endOf("day").toDate(),
@@ -89,7 +89,7 @@ export function DataTable({
   });
 
   const table = useReactTable({
-    data: result.data,
+    data: getAllQuery.data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -232,7 +232,7 @@ export function DataTable({
             ))}
           </TableHeader>
           <TableBody>
-            {result.isLoading || result.isFetching ? (
+            {getAllQuery.isLoading || getAllQuery.isFetching ? (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24">
                   <div className="flex h-full items-center justify-center">

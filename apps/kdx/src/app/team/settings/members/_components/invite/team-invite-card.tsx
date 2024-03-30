@@ -42,7 +42,7 @@ export default function TeamInviteCardClient({
   const [emails, setEmails] = useState([{ key: 0, value: "" }]); //key is used to work with formkit
   const [successes, setSuccesses] = useState<string[]>([]);
 
-  const { mutate, isPending } = api.team.invitation.invite.useMutation({
+  const mutation = api.team.invitation.invite.useMutation({
     onSuccess: ({ successes, failures }) => {
       if (successes.length > 0) {
         toast.success(
@@ -215,14 +215,14 @@ export default function TeamInviteCardClient({
                   <Button
                     className="mr-auto"
                     variant={"outline"}
-                    disabled={isPending}
+                    disabled={mutation.isPending}
                   >
                     Cancel
                   </Button>
                 </DialogClose>
                 <Button
                   className="mx-auto"
-                  disabled={isPending}
+                  disabled={mutation.isPending}
                   onClick={() => {
                     const values = {
                       teamId: session.user.activeTeamId,
@@ -232,10 +232,10 @@ export default function TeamInviteCardClient({
                     if (!parsed.success) {
                       return toast.error(parsed.error.errors[0]?.message);
                     }
-                    mutate(values);
+                    mutation.mutate(values);
                   }}
                 >
-                  {isPending ? (
+                  {mutation.isPending ? (
                     <>
                       <LuLoader2 className="mr-2 size-4 animate-spin" /> Sending
                     </>

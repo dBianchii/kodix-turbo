@@ -35,18 +35,11 @@ export function CancelationDialog({
     "all" | "thisAndFuture" | "single"
   >("single");
 
-  const [buttonLoading, setButtonLoading] = useState(false);
   const utils = api.useUtils();
-  const { mutate: cancelEvent } = api.app.calendar.cancel.useMutation({
-    onMutate: () => {
-      setButtonLoading(true);
-    },
+  const mutation = api.app.calendar.cancel.useMutation({
     onSuccess: () => {
       void utils.app.calendar.getAll.invalidate();
       setOpen(false);
-    },
-    onSettled: () => {
-      setButtonLoading(false);
     },
   });
 
@@ -107,7 +100,7 @@ export function CancelationDialog({
               e.preventDefault();
 
               if (radioValue === "all")
-                cancelEvent({
+                mutation.mutate({
                   eventExceptionId: eventExceptionId,
                   eventMasterId: eventMasterId,
                   exclusionDefinition: "all",
@@ -116,7 +109,7 @@ export function CancelationDialog({
                 radioValue === "thisAndFuture" ||
                 radioValue === "single"
               )
-                cancelEvent({
+                mutation.mutate({
                   eventExceptionId: eventExceptionId,
                   eventMasterId: eventMasterId,
                   exclusionDefinition: radioValue,
@@ -124,7 +117,7 @@ export function CancelationDialog({
                 });
             }}
           >
-            {buttonLoading ? (
+            {mutation.isPending ? (
               <LuLoader2 className="size-4 animate-spin" />
             ) : (
               <>OK</>
