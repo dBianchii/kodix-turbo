@@ -10,7 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { TimePicker } from "./time-picker";
 import { cn } from "./utils";
 
-interface TimePickerDemoProps {
+interface DateTimePickerProps {
   date: Date | undefined;
   setDate: (date: Date | undefined) => void;
   onOpenChange?: (open: boolean) => void;
@@ -24,7 +24,7 @@ export function DateTimePicker({
   onOpenChange,
   size,
   disabledDate,
-}: TimePickerDemoProps) {
+}: DateTimePickerProps) {
   return (
     <Popover onOpenChange={onOpenChange}>
       <PopoverTrigger asChild>

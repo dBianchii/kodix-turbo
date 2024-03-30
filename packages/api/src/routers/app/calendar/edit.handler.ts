@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { RRule, rrulestr } from "rrule";
 
-import type { TEditInput } from "@kdx/validators/trpc/app/calendar";
+import type { TEditInputSchema } from "@kdx/validators/trpc/app/calendar";
 import dayjs from "@kdx/dayjs";
 import { and, eq, gt, gte, schema } from "@kdx/db";
 import { nanoid } from "@kdx/shared";
@@ -10,7 +10,7 @@ import type { TProtectedProcedureContext } from "../../../trpc";
 
 interface EditOptions {
   ctx: TProtectedProcedureContext;
-  input: TEditInput;
+  input: TEditInputSchema;
 }
 
 export const editHandler = async ({ ctx, input }: EditOptions) => {
@@ -542,9 +542,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
         .set({
           title: input.title,
           description: input.description,
-          dateStart: newRule
-            ? dayjs(newRule).startOf("day").toDate()
-            : undefined,
+          dateStart: newRule ? rrulestr(newRule).options.dtstart : undefined,
           dateUntil: input.until,
           rule: newRule,
         })

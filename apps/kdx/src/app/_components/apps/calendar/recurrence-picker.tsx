@@ -73,15 +73,15 @@ export function RecurrencePicker({
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   interval: number;
-  setInterval: React.Dispatch<React.SetStateAction<number>>;
+  setInterval: (interval: number) => void;
   frequency: Frequency;
-  setFrequency: React.Dispatch<React.SetStateAction<Frequency>>;
+  setFrequency: (frequency: Frequency) => void;
   until: dayjs.Dayjs | undefined;
-  setUntil: React.Dispatch<React.SetStateAction<Dayjs | undefined>>;
+  setUntil: (dayjs: Dayjs | undefined) => void;
   count: number | undefined;
-  setCount: React.Dispatch<React.SetStateAction<number | undefined>>;
+  setCount: (count: number | undefined) => void;
   weekdays: Weekday[] | undefined;
-  setWeekdays: React.Dispatch<React.SetStateAction<Weekday[] | undefined>>;
+  setWeekdays: (weekdays: Weekday[] | undefined) => void;
 }) {
   const [draftInterval, setDraftInterval] = useState(interval);
   const [draftFrequency, setDraftFrequency] = useState(frequency);
@@ -267,7 +267,6 @@ export function RecurrencePicker({
                         pressed={draftWeekdays?.some(
                           (dw) => dw.getJsWeekday() === weekday.getJsWeekday(),
                         )}
-                        aria-label="Toggle italic"
                         key={JSON.stringify(weekday)}
                         onPressedChange={(pressed) => {
                           setDraftWeekdays((prev) => {

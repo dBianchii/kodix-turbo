@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { RRule, rrulestr } from "rrule";
 
-import type { TCancelInput } from "@kdx/validators/trpc/app/calendar";
+import type { TCancelInputSchema } from "@kdx/validators/trpc/app/calendar";
 import { and, eq, gte, schema } from "@kdx/db";
 import { nanoid } from "@kdx/shared";
 
@@ -9,7 +9,7 @@ import type { TProtectedProcedureContext } from "../../../trpc";
 
 interface CancelOptions {
   ctx: TProtectedProcedureContext;
-  input: TCancelInput;
+  input: TCancelInputSchema;
 }
 
 export const cancelHandler = async ({ ctx, input }: CancelOptions) => {

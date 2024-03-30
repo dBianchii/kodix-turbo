@@ -1,10 +1,10 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 
 import {
-  ZCancelInput,
-  ZCreateInput,
-  ZEditInput,
-  ZGetAllInput,
+  ZCancelInputSchema,
+  ZCreateInputSchema,
+  ZEditInputSchema,
+  ZGetAllInputSchema,
 } from "@kdx/validators/trpc/app/calendar";
 
 import { protectedProcedure } from "../../../trpc";
@@ -16,16 +16,16 @@ import { nukeHandler } from "./nuke.handler";
 
 export const calendarRouter = {
   cancel: protectedProcedure
-    .input(ZCancelInput)
+    .input(ZCancelInputSchema)
     .mutation(async (opts) => await cancelHandler(opts)),
   create: protectedProcedure
-    .input(ZCreateInput)
+    .input(ZCreateInputSchema)
     .mutation(async (opts) => await createHandler(opts)),
   edit: protectedProcedure
-    .input(ZEditInput)
+    .input(ZEditInputSchema)
     .mutation(async (opts) => await editHandler(opts)),
   getAll: protectedProcedure
-    .input(ZGetAllInput)
+    .input(ZGetAllInputSchema)
     .query(async (opts) => await getAllHandler(opts)),
   nuke: protectedProcedure.mutation(async (opts) => await nukeHandler(opts)),
 } satisfies TRPCRouterRecord;

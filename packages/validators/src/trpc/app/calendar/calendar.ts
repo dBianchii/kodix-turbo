@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import dayjs from "@kdx/dayjs";
 
-export const ZCancelInput = z
+export const ZCancelInputSchema = z
   .object({
     eventMasterId: z.string(),
     eventExceptionId: z.string().optional(),
@@ -22,19 +22,19 @@ export const ZCancelInput = z
       }),
     ]),
   );
-export type TCancelInput = z.infer<typeof ZCancelInput>;
+export type TCancelInputSchema = z.infer<typeof ZCancelInputSchema>;
 
-export const ZCreateInput = z
+export const ZCreateInputSchema = z
   .object({
-    title: z.string(),
+    title: z.string().min(1),
     description: z.string().optional(),
     from: z.date(),
     until: z
       .date()
       .transform((date) => dayjs(date).endOf("day").toDate())
       .optional(),
-    interval: z.number().optional(),
-    count: z.number().optional(),
+    interval: z.number().int().positive(),
+    count: z.number().int().positive().optional(),
     frequency: z.nativeEnum(Frequency),
     weekdays: z.number().array().optional(),
   })
@@ -42,7 +42,7 @@ export const ZCreateInput = z
     if (data.weekdays && data.frequency !== Frequency.WEEKLY) return false;
     return true;
   });
-export type TCreateInput = z.infer<typeof ZCreateInput>;
+export type TCreateInputSchema = z.infer<typeof ZCreateInputSchema>;
 
 //* I cannot send count with single
 //* I cannot send interval with single
@@ -50,7 +50,7 @@ export type TCreateInput = z.infer<typeof ZCreateInput>;
 //* I cannot send frequency with single
 //* I cannot send weekdays with single
 //* I CAN send from with all, but from cannot be at a different date (day, year, or month) from the selected timestamp event's master/exception. Only hour.
-export const ZEditInput = z
+export const ZEditInputSchema = z
   .object({
     eventMasterId: z.string(),
     eventExceptionId: z.string().optional(),
@@ -100,10 +100,10 @@ export const ZEditInput = z
       }),
     ]),
   );
-export type TEditInput = z.infer<typeof ZEditInput>;
+export type TEditInputSchema = z.infer<typeof ZEditInputSchema>;
 
-export const ZGetAllInput = z.object({
+export const ZGetAllInputSchema = z.object({
   dateStart: z.date(),
   dateEnd: z.date(),
 });
-export type TGetAllInput = z.infer<typeof ZGetAllInput>;
+export type TGetAllInputSchema = z.infer<typeof ZGetAllInputSchema>;
