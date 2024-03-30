@@ -17,22 +17,20 @@ import { updatePermissionAssociationHandler } from "./updatePermissionAssociatio
 import { updateUserAssociationHandler } from "./updateUserAssociation.handler";
 
 export const appRoleRouter = {
-  getAll: isTeamOwnerProcedure
-    .input(ZGetAllInputSchema)
-    .query(async (opts) => await getAllHandler(opts)),
+  getAll: isTeamOwnerProcedure.input(ZGetAllInputSchema).query(getAllHandler),
   getPermissions: isTeamOwnerProcedure
     .input(ZGetPermissionsInputSchema)
-    .query(async (opts) => await getPermissionsHandler(opts)),
+    .query(getPermissionsHandler),
   /**Gets all users in team, with added role information for app */
   getUsersWithRoles: isTeamOwnerProcedure
     .input(ZGetUsersWithRolesInputSchema)
-    .query(async (opts) => await getUsersWithRolesHandler(opts)),
+    .query(getUsersWithRolesHandler),
   updatePermissionAssociation: isTeamOwnerProcedure
     .input(ZUpdatePermissionAssociationInputSchema)
     .use(appInstalledMiddleware)
-    .mutation(async (opts) => await updatePermissionAssociationHandler(opts)),
+    .mutation(updatePermissionAssociationHandler),
   updateUserAssociation: isTeamOwnerProcedure
     .input(ZUpdateUserAssociationInputSchema)
     .use(appInstalledMiddleware)
-    .mutation(async (opts) => await updateUserAssociationHandler(opts)),
+    .mutation(updateUserAssociationHandler),
 } satisfies TRPCRouterRecord;

@@ -26,31 +26,19 @@ import { updateHandler } from "./update.handler";
 export const teamRouter = {
   appRole: appRoleRouter,
   invitation: invitationRouter,
-  create: protectedProcedure
-    .input(ZCreateInputSchema)
-    .mutation(async (opts) => await createHandler(opts)),
-  getActiveTeam: protectedProcedure.query(
-    async (opts) => await getActiveTeamHandler(opts),
-  ),
-  getAllForLoggedUser: protectedProcedure.query(
-    async (opts) => await getAllForLoggedUserHandler(opts),
-  ),
-  getAllUsers: protectedProcedure.query(
-    async (opts) => await getAllUsersHandler(opts),
-  ),
-  getOne: protectedProcedure
-    .input(ZGetOneInputSchema)
-    .query(async (opts) => await getOneHandler(opts)),
+  create: protectedProcedure.input(ZCreateInputSchema).mutation(createHandler),
+  getActiveTeam: protectedProcedure.query(getActiveTeamHandler),
+  getAllForLoggedUser: protectedProcedure.query(getAllForLoggedUserHandler),
+  getAllUsers: protectedProcedure.query(getAllUsersHandler),
+  getOne: protectedProcedure.input(ZGetOneInputSchema).query(getOneHandler),
   installApp: isTeamOwnerProcedure
     .input(ZInstallAppInputSchema)
-    .mutation(async (opts) => await installAppHandler(opts)),
+    .mutation(installAppHandler),
   removeUser: protectedProcedure
     .input(ZRemoveUserSchema)
-    .mutation(async (opts) => await removeUserHandler(opts)),
+    .mutation(removeUserHandler),
   uninstallApp: protectedProcedure
     .input(ZUninstallAppSchema)
-    .mutation(async (opts) => await uninstallAppHandler(opts)),
-  update: protectedProcedure
-    .input(ZUpdateInputSchema)
-    .mutation(async (opts) => await updateHandler(opts)),
+    .mutation(uninstallAppHandler),
+  update: protectedProcedure.input(ZUpdateInputSchema).mutation(updateHandler),
 } satisfies TRPCRouterRecord;

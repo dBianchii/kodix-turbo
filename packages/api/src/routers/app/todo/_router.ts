@@ -11,11 +11,7 @@ import { getAllHandler } from "./getAll.handler";
 import { updateHandler } from "./update.handler";
 
 export const todoRouter = {
-  create: protectedProcedure
-    .input(ZCreateInputSchema)
-    .mutation(async (opts) => await createHandler(opts)),
-  getAll: protectedProcedure.query(async (opts) => await getAllHandler(opts)),
-  update: protectedProcedure
-    .input(ZUpdateInputSchema)
-    .mutation(async (opts) => await updateHandler(opts)),
+  create: protectedProcedure.input(ZCreateInputSchema).mutation(createHandler),
+  getAll: protectedProcedure.query(getAllHandler),
+  update: protectedProcedure.input(ZUpdateInputSchema).mutation(updateHandler),
 } satisfies TRPCRouterRecord;

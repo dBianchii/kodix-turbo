@@ -23,22 +23,20 @@ export const kodixCareRouter = {
   toggleShift: protectedProcedure
     .use(kodixCareInstalledMiddleware)
     .use(appPermissionMiddleware(PKodixCare_CanToggleShiftId))
-    .mutation(async (opts) => await toggleShiftHandler(opts)),
+    .mutation(toggleShiftHandler),
   doCheckoutForShift: protectedProcedure
     .input(ZDoCheckoutForShiftInputSchema)
     .use(kodixCareInstalledMiddleware)
-    .mutation(async (opts) => await doCheckoutForShiftHandler(opts)),
+    .mutation(doCheckoutForShiftHandler),
   getCareTasks: protectedProcedure
     .input(ZGetCareTasksInputSchema)
     .use(kodixCareInstalledMiddleware)
-    .query(async (opts) => await getCareTasksHandler(opts)),
+    .query(getCareTasksHandler),
   getCurrentShift: protectedProcedure
     .use(kodixCareInstalledMiddleware)
-    .query(async (opts) => await getCurrentCareShiftHandler(opts)),
+    .query(getCurrentCareShiftHandler),
   saveCareTask: protectedProcedure
     .input(ZSaveCareTaskInputSchema)
-    .mutation(async (opts) => await saveCareTaskHandler(opts)),
-  onboardingCompleted: protectedProcedure.query(
-    async (opts) => await onboardingCompletedHandler(opts),
-  ),
+    .mutation(saveCareTaskHandler),
+  onboardingCompleted: protectedProcedure.query(onboardingCompletedHandler),
 } satisfies TRPCRouterRecord;

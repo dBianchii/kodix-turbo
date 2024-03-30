@@ -16,15 +16,13 @@ export const appRouter = {
   calendar: calendarRouter,
   kodixCare: kodixCareRouter,
   todo: todoRouter,
-  getAll: publicProcedure.query(async (opts) => await getAllHandler(opts)),
+  getAll: publicProcedure.query(getAllHandler),
   getConfig: protectedProcedure
     .input(ZGetConfigInput)
     .use(appInstalledMiddleware)
-    .query(async (opts) => await getConfigHandler(opts)),
-  getInstalled: protectedProcedure.query(
-    async (opts) => await getInstalledHandler(opts),
-  ),
+    .query(getConfigHandler),
+  getInstalled: protectedProcedure.query(getInstalledHandler),
   saveConfig: protectedProcedure
     .input(ZSaveConfigInput)
-    .mutation(async (opts) => await saveConfigHandler(opts)),
+    .mutation(saveConfigHandler),
 } satisfies TRPCRouterRecord;

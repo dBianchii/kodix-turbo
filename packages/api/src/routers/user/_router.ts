@@ -16,17 +16,11 @@ import { switchActiveTeamHandler } from "./switchActiveTeam.handler";
 export const userRouter = {
   changeName: protectedProcedure
     .input(ZChangeNameInputSchema)
-    .mutation(async (opts) => await changeNameHandler(opts)),
-  getAll: publicProcedure.query(
-    async ({ ctx }) => await getAllHandler({ ctx }),
-  ),
-  getNotifications: protectedProcedure.query(
-    async ({ ctx }) => await getNotificationsHandler({ ctx }),
-  ),
-  getOne: protectedProcedure
-    .input(ZGetOneInputSchema)
-    .query(async (opts) => await getOneHandler(opts)),
+    .mutation(changeNameHandler),
+  getAll: publicProcedure.query(getAllHandler),
+  getNotifications: protectedProcedure.query(getNotificationsHandler),
+  getOne: protectedProcedure.input(ZGetOneInputSchema).query(getOneHandler),
   switchActiveTeam: protectedProcedure
     .input(ZSwitchActiveTeamInputSchema)
-    .mutation(async (opts) => await switchActiveTeamHandler(opts)),
+    .mutation(switchActiveTeamHandler),
 } satisfies TRPCRouterRecord;
