@@ -1,7 +1,7 @@
 "use client";
 
-import type { ColumnDef, ColumnFiltersState } from "@tanstack/react-table";
-import React, { useEffect, useState } from "react";
+import type { ColumnFiltersState } from "@tanstack/react-table";
+import { useEffect, useState } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -47,23 +47,22 @@ import { cn } from "@kdx/ui/utils";
 import { DataTablePagination } from "~/app/_components/pagination";
 import { api } from "~/trpc/react";
 import { CancelationDialog } from "./cancel-event-dialog";
+import { columns } from "./columns";
+import { CreateEventDialogButton } from "./create-event-dialog";
 import { EditEventDialog } from "./edit-event-dialog";
 
 type CalendarTask = RouterOutputs["app"]["calendar"]["getAll"][number];
 
 export function DataTable({
-  columns,
   data,
   session,
 }: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  columns: ColumnDef<CalendarTask, any>[];
   data: CalendarTask[];
   session: Session;
 }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-  const [selectedDay, setSelectedDay] = useState<Date>(dayjs.utc().toDate());
+  const [selectedDay, setSelectedDay] = useState(new Date());
   const [calendarTask, setCalendarTask] = useState<CalendarTask | undefined>();
 
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
@@ -112,189 +111,193 @@ export function DataTable({
   }, []);
 
   return (
-    <div className="mt-8">
-      <div className="flex justify-between">
-        <div className=" w-44 space-y-2">
-          <Label htmlFor="search">Search...</Label>
-          <Input
-            id="search"
-            placeholder="Search by title..."
-            value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("title")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
-        </div>
-        <div className="mx-auto mt-auto flex space-x-2">
-          <Button
-            variant="ghost"
-            onClick={() => {
-              setSelectedDay((prev) => prev && addDays(prev, -1));
-            }}
-            className="h-10 w-10 p-3"
-          >
-            <RxChevronLeft />
-          </Button>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant={"outline"}
-                className={cn(
-                  "justify-start text-left font-normal",
-                  !selectedDay && "text-muted-foreground",
-                )}
-              >
-                <RxCalendar className="mr-2 size-4" />
-                {selectedDay ? (
-                  format(selectedDay, "PPP")
-                ) : (
-                  <span>Pick a date</span>
-                )}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-              <Calendar
-                mode="single"
-                selected={selectedDay}
-                onSelect={(date) => {
-                  if (date) setSelectedDay(date);
-                }}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
-          <Button
-            variant="ghost"
-            onClick={() => {
-              setSelectedDay((prev) => prev && addDays(prev, 1));
-            }}
-            className="h-10 w-10 p-3"
-          >
-            <RxChevronRight />
-          </Button>
-        </div>
-        <div className="flex w-44">
-          {authorizedEmails.includes(session.user.email) && (
+    <>
+      <div className="mt-8">
+        <div className="flex justify-between">
+          <div className=" w-44 space-y-2">
+            <Label htmlFor="search">Search...</Label>
+            <Input
+              id="search"
+              placeholder="Search by title..."
+              value={
+                (table.getColumn("title")?.getFilterValue() as string) ?? ""
+              }
+              onChange={(event) =>
+                table.getColumn("title")?.setFilterValue(event.target.value)
+              }
+              className="max-w-sm"
+            />
+          </div>
+          <div className="mx-auto mt-auto flex space-x-2">
             <Button
-              className="ml-auto mr-2 self-end"
-              onClick={() => nukeEvents()}
-              variant={"destructive"}
+              variant="ghost"
+              onClick={() => {
+                setSelectedDay((prev) => prev && addDays(prev, -1));
+              }}
+              className="h-10 w-10 p-3"
             >
-              Nuke Events
+              <RxChevronLeft />
             </Button>
-          )}
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant={"outline"}
+                  className={cn(
+                    "justify-start text-left font-normal",
+                    !selectedDay && "text-muted-foreground",
+                  )}
+                >
+                  <RxCalendar className="mr-2 size-4" />
+                  {selectedDay ? (
+                    format(selectedDay, "PPP")
+                  ) : (
+                    <span>Pick a date</span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0">
+                <Calendar
+                  mode="single"
+                  selected={selectedDay}
+                  onSelect={(date) => {
+                    if (date) setSelectedDay(date);
+                  }}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setSelectedDay((prev) => prev && addDays(prev, 1));
+              }}
+              className="h-10 w-10 p-3"
+            >
+              <RxChevronRight />
+            </Button>
+          </div>
+          <div className="flex w-44">
+            {authorizedEmails.includes(session.user.email) && (
+              <Button
+                className="ml-auto mr-2 self-end"
+                onClick={() => nukeEvents()}
+                variant={"destructive"}
+              >
+                Nuke Events
+              </Button>
+            )}
 
-          <Button
-            className="ml-auto self-end "
-            onClick={() => setSelectedDay(new Date())}
-            variant={"secondary"}
-          >
-            Today
-          </Button>
+            <Button
+              className="ml-auto self-end "
+              onClick={() => setSelectedDay(new Date())}
+              variant={"secondary"}
+            >
+              Today
+            </Button>
+          </div>
+        </div>
+
+        <div className="mt-4 rounded-md border">
+          {calendarTask && (
+            <>
+              <EditEventDialog
+                calendarTask={calendarTask}
+                open={openEditDialog}
+                setOpen={setOpenEditDialog}
+              />
+              <CancelationDialog
+                open={openCancelDialog}
+                setOpen={setOpenCancelDialog}
+                eventMasterId={calendarTask.eventMasterId}
+                eventExceptionId={calendarTask.eventExceptionId}
+                date={calendarTask.date}
+              />
+            </>
+          )}
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead key={header.id}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                      </TableHead>
+                    );
+                  })}
+                </TableRow>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {getAllQuery.isLoading || getAllQuery.isFetching ? (
+                <TableRow>
+                  <TableCell colSpan={columns.length} className="h-24">
+                    <div className="flex h-full items-center justify-center">
+                      <LuLoader2 className="h-6 w-6 animate-spin" />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <ContextMenu key={row.id}>
+                    <ContextMenuContent>
+                      <ContextMenuItem
+                        onClick={() => {
+                          setCalendarTask(row.original);
+                          setOpenEditDialog(true);
+                        }}
+                      >
+                        <RxPencil1 className="mr-2 size-4" />
+                        Edit Event
+                      </ContextMenuItem>
+                      <ContextMenuItem
+                        onClick={() => {
+                          setCalendarTask(row.original);
+                          setOpenCancelDialog(true);
+                        }}
+                      >
+                        <RxTrash className="mr-2 size-4" />
+                        Delete Event
+                      </ContextMenuItem>
+                    </ContextMenuContent>
+                    <ContextMenuTrigger asChild>
+                      <TableRow
+                        data-state={row.getIsSelected() && "selected"}
+                        key={row.id}
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <TableCell key={cell.id}>
+                            {flexRender(cell.column.columnDef.cell, {
+                              ...cell.getContext(),
+                            })}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    </ContextMenuTrigger>
+                  </ContextMenu>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No events for this day
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+        <div className="items-center justify-end space-x-2 py-4">
+          <DataTablePagination table={table} />
         </div>
       </div>
-
-      <div className="mt-4 rounded-md border">
-        {calendarTask && (
-          <>
-            <EditEventDialog
-              calendarTask={calendarTask}
-              open={openEditDialog}
-              setOpen={setOpenEditDialog}
-            />
-            <CancelationDialog
-              open={openCancelDialog}
-              setOpen={setOpenCancelDialog}
-              eventMasterId={calendarTask.eventMasterId}
-              eventExceptionId={calendarTask.eventExceptionId}
-              date={calendarTask.date}
-            />
-          </>
-        )}
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {getAllQuery.isLoading || getAllQuery.isFetching ? (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="h-24">
-                  <div className="flex h-full items-center justify-center">
-                    <LuLoader2 className="h-6 w-6 animate-spin" />
-                  </div>
-                </TableCell>
-              </TableRow>
-            ) : table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <ContextMenu key={row.id}>
-                  <ContextMenuContent>
-                    <ContextMenuItem
-                      onClick={() => {
-                        setCalendarTask(row.original);
-                        setOpenEditDialog(true);
-                      }}
-                    >
-                      <RxPencil1 className="mr-2 size-4" />
-                      Edit Event
-                    </ContextMenuItem>
-                    <ContextMenuItem
-                      onClick={() => {
-                        setCalendarTask(row.original);
-                        setOpenCancelDialog(true);
-                      }}
-                    >
-                      <RxTrash className="mr-2 size-4" />
-                      Delete Event
-                    </ContextMenuItem>
-                  </ContextMenuContent>
-                  <ContextMenuTrigger asChild>
-                    <TableRow
-                      data-state={row.getIsSelected() && "selected"}
-                      key={row.id}
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
-                          {flexRender(cell.column.columnDef.cell, {
-                            ...cell.getContext(),
-                          })}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  </ContextMenuTrigger>
-                </ContextMenu>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No events for this day
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      <div className="items-center justify-end space-x-2 py-4">
-        <DataTablePagination table={table} />
-      </div>
-    </div>
+    </>
   );
 }

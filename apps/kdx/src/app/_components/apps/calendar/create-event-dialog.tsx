@@ -183,7 +183,7 @@ export function CreateEventDialogButton() {
                 {mutation.isPending ? (
                   <LuLoader2 className="mx-2 size-4 animate-spin" />
                 ) : (
-                  <>Create task</>
+                  "Create task"
                 )}
               </Button>
             </DialogFooter>
