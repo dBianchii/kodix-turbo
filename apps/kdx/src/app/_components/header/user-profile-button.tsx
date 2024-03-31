@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { LuLogOut, LuUsers } from "react-icons/lu";
@@ -17,7 +16,6 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@kdx/ui/dropdown-menu";
 
@@ -76,7 +74,6 @@ export function UserProfileButton({ session }: { session: Session }) {
         <DropdownMenuItem onClick={() => void signOut()}>
           <LuLogOut className="mr-2 size-4" />
           <span>Log out</span>
-          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

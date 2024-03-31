@@ -7,7 +7,7 @@ import { buttonVariants } from "@kdx/ui/button";
 import HeaderFooterRemover from "~/app/_components/header-footer-remover";
 import MaxWidthWrapper from "~/app/_components/max-width-wrapper";
 import { api } from "~/trpc/server";
-import { AppSwitcher } from "../app-switcher/app-switcher";
+import { AppSwitcher } from "../app-switcher";
 import { NotificationsPopoverClient } from "./notifications-popover-client";
 import { UserProfileButton } from "./user-profile-button";
 

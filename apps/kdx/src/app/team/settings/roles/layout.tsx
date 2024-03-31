@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@kdx/auth";
 import { db, eq, schema } from "@kdx/db";
 
-import { AppSwitcher } from "~/app/_components/app-switcher/app-switcher";
+import { AppSwitcher } from "~/app/_components/app-switcher";
 
 export default async function RolesLayout({
   children,
@@ -30,12 +30,12 @@ export default async function RolesLayout({
   return (
     <div className="mt-8 space-y-8 md:mt-0">
       <Suspense>
-        <div>
+        <div className="space-y-3">
           <h1 className="text-lg font-bold">Select your app</h1>
           <AppSwitcher
             hrefPrefix="/team/settings/roles/"
             hideAddMoreApps
-            iconSize={40}
+            iconSize={28}
           />
         </div>
       </Suspense>
