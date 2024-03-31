@@ -13,6 +13,7 @@ import {
 import { Label } from "@kdx/ui/label";
 import { RadioGroup, RadioGroupItem } from "@kdx/ui/radio-group";
 
+import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
 /**
@@ -40,6 +41,9 @@ export function CancelationDialog({
     onSuccess: () => {
       void utils.app.calendar.getAll.invalidate();
       setOpen(false);
+    },
+    onError: (err) => {
+      trpcErrorToastDefault(err);
     },
   });
 

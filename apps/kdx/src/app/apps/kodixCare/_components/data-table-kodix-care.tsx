@@ -567,19 +567,15 @@ function SaveTaskAsDoneDialog({
     },
   });
 
-  useEffect(() => {
-    form.reset();
-  }, [open, form, task]);
-
   return (
     <div className="p-1">
       <Dialog
         open={open}
         onOpenChange={(open) => {
-          form.reset();
-          form.setValue("doneAt", new Date());
-          form.setValue("details", task.details);
-          form.setValue("doneByUserId", session.user.id);
+          if (open) {
+            form.reset();
+            form.setValue("doneAt", new Date());
+          }
           setOpen(open);
         }}
       >
