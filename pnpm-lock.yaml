@@ -132,6 +132,9 @@ importers:
       next-auth:
         specifier: 5.0.0-beta.16
         version: 5.0.0-beta.16(next@14.1.4)(react@18.2.0)
+      next-international:
+        specifier: ^1.2.4
+        version: 1.2.4
       next-safe-action:
         specifier: ^6.1.0
         version: 6.2.0(next@14.1.4)(react@18.2.0)
@@ -8298,6 +8301,10 @@ packages:
       side-channel: 1.0.4
     dev: false
 
+  /international-types@0.8.1:
+    resolution: {integrity: sha512-tajBCAHo4I0LIFlmQ9ZWfjMWVyRffzuvfbXCd6ssFt5u1Zw15DN0UBpVTItXdNa1ls+cpQt3Yw8+TxsfGF8JcA==}
+    dev: false
+
   /interpret@1.4.0:
     resolution: {integrity: sha512-agE4QfB2Lkp9uICn7BAqoscw4SZP9kTE2hxiFI3jBPmXJfdqiahTbUuKGsMoN2GtqL9AxhYioAcVvgsb1HvRbA==}
     engines: {node: '>= 0.10'}
@@ -9317,6 +9324,14 @@ packages:
       '@auth/core': 0.28.1
       next: 14.1.4(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
+    dev: false
+
+  /next-international@1.2.4:
+    resolution: {integrity: sha512-JQvp+h2iSgA/t8hu5S/Lwow1ZErJutQRdpnplxjv4VTlCiND8T95fYih8BjkHcVhQbtM+Wu9Mb1CM32wD9hlWQ==}
+    dependencies:
+      client-only: 0.0.1
+      international-types: 0.8.1
+      server-only: 0.0.1
     dev: false
 
   /next-safe-action@6.2.0(next@14.1.4)(react@18.2.0):
