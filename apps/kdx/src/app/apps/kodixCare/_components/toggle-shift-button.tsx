@@ -71,16 +71,7 @@ function StartShiftDialogButton() {
             You are about to start a new shift. Are you sure?
           </DialogDescription>
         </div>
-        <DialogFooter className="gap-3 sm:justify-between">
-          <DialogClose asChild>
-            <Button
-              type="button"
-              variant="outline"
-              disabled={mutation.isPending}
-            >
-              Close
-            </Button>
-          </DialogClose>
+        <DialogFooter className="justify-end">
           <Button
             onClick={() => mutation.mutate()}
             disabled={mutation.isPending}
@@ -126,18 +117,7 @@ function StartShiftWarnPreviousPersonDialog() {
         <DialogDescription>
           Previous shift exists. Would you like to end it and start a new one?
         </DialogDescription>
-        <DialogFooter className="gap-3 sm:justify-between">
-          <DialogClose>
-            <DialogClose asChild>
-              <Button
-                type="button"
-                variant="outline"
-                disabled={mutation.isPending}
-              >
-                Close
-              </Button>
-            </DialogClose>
-          </DialogClose>
+        <DialogFooter className="justify-end">
           <Button
             variant={"orange"}
             onClick={() => {
@@ -236,16 +216,7 @@ function DoCheckoutDialogButton({
                 </FormItem>
               )}
             />
-            <DialogFooter className="mt-6 gap-3 sm:justify-between">
-              <DialogClose asChild>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  disabled={form.formState.isSubmitting}
-                >
-                  Close
-                </Button>
-              </DialogClose>
+            <DialogFooter className="mt-6 justify-end">
               <Button
                 type="submit"
                 disabled={mutation.isPending}

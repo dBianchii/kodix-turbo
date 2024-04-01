@@ -210,18 +210,8 @@ export default function TeamInviteCardClient({
                     </div>
                   ))}
               </div>
-              <DialogFooter className="flex flex-row">
-                <DialogClose asChild>
-                  <Button
-                    className="mr-auto"
-                    variant={"outline"}
-                    disabled={mutation.isPending}
-                  >
-                    Cancel
-                  </Button>
-                </DialogClose>
+              <DialogFooter className="justify-end">
                 <Button
-                  className="mx-auto"
                   disabled={mutation.isPending}
                   onClick={() => {
                     const values = {

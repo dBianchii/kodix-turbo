@@ -366,12 +366,7 @@ function EditCareTaskDialog({
                 )}
               />
             </div>
-            <DialogFooter className="mt-6 gap-3 sm:justify-between">
-              <DialogClose asChild>
-                <Button variant={"ghost"} disabled={mutation.isPending}>
-                  Close
-                </Button>
-              </DialogClose>
+            <DialogFooter className="mt-6 justify-end">
               <Button disabled={mutation.isPending} type="submit">
                 {mutation.isPending && (
                   <LuLoader2 className="mr-2 size-5 animate-spin" />
@@ -488,12 +483,7 @@ function SaveTaskAsDoneDialog({
                   )}
                 />
               </div>
-              <DialogFooter className="mt-6 gap-3 sm:justify-between">
-                <DialogClose asChild>
-                  <Button variant={"ghost"} disabled={mutation.isPending}>
-                    Close
-                  </Button>
-                </DialogClose>
+              <DialogFooter className="mt-6 justify-end">
                 <Button disabled={mutation.isPending} type="submit">
                   {mutation.isPending ? (
                     <LuLoader2 className="size-4 animate-spin" />
@@ -526,16 +516,9 @@ function SaveTaskAsNotDoneDialog({
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>
-              Are you sure you want to mark this task as not done?
-            </DialogTitle>
+            <DialogTitle>Are you sure?</DialogTitle>
           </DialogHeader>
-          <DialogFooter className="mt-6 gap-3 sm:justify-between">
-            <DialogClose asChild>
-              <Button variant={"ghost"} disabled={mutation.isPending}>
-                Close
-              </Button>
-            </DialogClose>
+          <DialogFooter className="mt-6 justify-end">
             <Button
               disabled={mutation.isPending}
               onClick={() => {
