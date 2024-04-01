@@ -16,7 +16,6 @@ import {
 } from "@kdx/ui/card";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,

@@ -18,7 +18,6 @@ import { Checkbox } from "@kdx/ui/checkbox";
 import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,

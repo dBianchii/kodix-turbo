@@ -48,7 +48,6 @@ import { DataTablePagination } from "~/app/_components/pagination";
 import { api } from "~/trpc/react";
 import { CancelationDialog } from "./cancel-event-dialog";
 import { columns } from "./columns";
-import { CreateEventDialogButton } from "./create-event-dialog";
 import { EditEventDialog } from "./edit-event-dialog";
 
 type CalendarTask = RouterOutputs["app"]["calendar"]["getAll"][number];
