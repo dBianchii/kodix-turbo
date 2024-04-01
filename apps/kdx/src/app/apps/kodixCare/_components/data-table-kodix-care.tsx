@@ -147,7 +147,7 @@ export default function DataTableKodixCare({
     }),
     columnHelper.accessor("date", {
       header: () => "Date",
-      cell: (ctx) => format(ctx.row.original.date, DATE_FORMAT),
+      cell: (ctx) => <div>{format(ctx.row.original.date, DATE_FORMAT)}</div>,
     }),
     columnHelper.accessor("doneAt", {
       header: () => "Done at",
@@ -177,12 +177,6 @@ export default function DataTableKodixCare({
     <>
       {currentlyEditingCareTask && (
         <>
-          {/* <EditDoneCheckBoxDialog
-            task={currentlyEditingCareTask}
-            mutation={mutation}
-            open={editDoneOpen}
-            setOpen={setEditDoneOpen}
-          /> */}
           <EditCareTaskDialog
             task={currentlyEditingCareTask}
             mutation={mutation}
@@ -279,35 +273,32 @@ function EditCareTaskDialog({
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
+  const defaultValues = useMemo(
+    () => ({
+      id: task.id,
+      details: task.details,
+      doneAt: task.doneAt,
+    }),
+    [task],
+  );
+
   const form = useForm({
     schema: ZSaveCareTaskInputSchema.pick({
       id: true,
       details: true,
       doneAt: true,
     }),
-    defaultValues: {
-      id: task.id,
-      details: task.details,
-    },
+    defaultValues,
   });
 
   useEffect(() => {
-    form.reset({
-      id: task.id,
-      details: task.details,
-      doneAt: task.doneAt,
-    });
-  }, [task, open, form]);
+    form.reset(defaultValues);
+  }, [task, open, form, defaultValues]);
 
   if (!task) return null;
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(open) => {
-        setOpen(open);
-      }}
-    >
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <Form {...form}>
           <form
@@ -394,137 +385,6 @@ function EditCareTaskDialog({
     </Dialog>
   );
 }
-
-// function EditDoneCheckBoxDialog({
-//   task,
-//   mutation,
-//   open,
-//   setOpen,
-// }: {
-//   task: CareTask;
-//   mutation: ReturnType<typeof api.app.kodixCare.saveCareTask.useMutation>;
-//   open: boolean;
-//   setOpen: (open: boolean) => void;
-// }) {
-//   const form = useForm({
-//     schema: ZSaveCareTaskInputSchema.pick({
-//       id: true,
-//       details: true,
-//       doneAt: true,
-//     }),
-//     defaultValues: {
-//       id: task.id,
-//       details: task.details,
-//     },
-//   });
-
-//   useEffect(() => {
-//     form.reset({
-//       id: task.id,
-//       doneAt: task.doneAt,
-//     });
-//   }, [task, open, form]);
-
-//   if (!task) return null;
-
-//   return (
-//     <Dialog
-//       open={open}
-//       onOpenChange={(open) => {
-//         setOpen(open);
-//       }}
-//     >
-//       <DialogContent>
-//         <Form {...form}>
-//           <form
-//             onSubmit={form.handleSubmit(async (values) => {
-//               toast.promise(
-//                 mutation.mutateAsync({
-//                   id: values.id,
-//                   details: values.details,
-//                   doneAt: values.doneAt,
-//                 }),
-//                 {
-//                   loading: "Updating...",
-//                   success: () => {
-//                     setOpen(false);
-//                     return `Task updated!`;
-//                   },
-//                 },
-//               );
-//             })}
-//           >
-//             <DialogHeader>
-//               <DialogTitle>
-//                 {task.doneAt ? (
-//                   <>Mark task as not done?</>
-//                 ) : (
-//                   <>Mark task as done?</>
-//                 )}
-//               </DialogTitle>
-//             </DialogHeader>
-//             <div className="grid gap-4 py-4">
-//               <FormField
-//                 control={form.control}
-//                 name="doneAt"
-//                 render={({ field }) => (
-//                   <FormItem>
-//                     <FormControl>
-//                       <div className="flex flex-row gap-2">
-//                         <DateTimePicker
-//                           date={field.value ?? undefined}
-//                           setDate={(newDate) =>
-//                             field.onChange(newDate ?? new Date())
-//                           }
-//                         />
-//                       </div>
-//                     </FormControl>
-//                     <FormMessage className="w-full" />
-//                   </FormItem>
-//                 )}
-//               />
-//               <FormField
-//                 control={form.control}
-//                 name="details"
-//                 render={({ field }) => (
-//                   <FormItem>
-//                     <FormLabel>Details</FormLabel>
-//                     <FormControl>
-//                       <Textarea
-//                         placeholder="Any information..."
-//                         className="w-full"
-//                         rows={6}
-//                         {...field}
-//                         onChange={(e) => {
-//                           field.onChange(e.target.value ?? undefined);
-//                         }}
-//                         value={field.value ?? undefined}
-//                       />
-//                     </FormControl>
-//                     <FormMessage />
-//                   </FormItem>
-//                 )}
-//               />
-//             </div>
-//             <DialogFooter className="mt-6 gap-3 sm:justify-between">
-//               <DialogClose asChild>
-//                 <Button variant={"ghost"} disabled={mutation.isPending}>
-//                   Close
-//                 </Button>
-//               </DialogClose>
-//               <Button disabled={mutation.isPending} type="submit">
-//                 {mutation.isPending && (
-//                   <LuLoader2 className="mr-2 size-5 animate-spin" />
-//                 )}
-//                 Save
-//               </Button>
-//             </DialogFooter>
-//           </form>
-//         </Form>
-//       </DialogContent>
-//     </Dialog>
-//   );
-// }
 
 function SaveTaskAsDoneDialog({
   task,
