@@ -1,22 +1,11 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { PiTranslate } from "react-icons/pi";
 
 import { auth } from "@kdx/auth";
-import { Button, buttonVariants } from "@kdx/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@kdx/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
-import { cn } from "@kdx/ui/utils";
+import { buttonVariants } from "@kdx/ui/button";
 
 import HeaderFooterRemover from "~/app/[locale]/_components/header-footer-remover";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
-import { useChangeLocale } from "~/locales/client";
 import { api } from "~/trpc/server";
 import { AppSwitcher } from "../app-switcher";
 import { I18nPicker } from "./i18n-picker";
