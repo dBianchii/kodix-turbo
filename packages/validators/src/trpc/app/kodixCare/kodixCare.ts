@@ -2,7 +2,9 @@ import { z } from "zod";
 
 import { ZNanoId } from "../../..";
 
-export const ZDoCheckoutForShiftInputSchema = z.date().default(new Date());
+export const ZDoCheckoutForShiftInputSchema = z.object({
+  date: z.date().default(new Date()),
+});
 export type TDoCheckoutForShiftInputSchema = z.infer<
   typeof ZDoCheckoutForShiftInputSchema
 >;

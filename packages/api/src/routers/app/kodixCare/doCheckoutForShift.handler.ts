@@ -28,7 +28,7 @@ export const doCheckoutForShiftHandler = async ({
       code: "FORBIDDEN",
       message: "You are not the caregiver for this shift",
     });
-  if (dayjs(input).isBefore(dayjs(currentShift.checkOut)))
+  if (dayjs(input.date).isBefore(dayjs(currentShift.checkOut)))
     throw new TRPCError({
       code: "BAD_REQUEST",
       message: "Checkout time must be after checkin time",
@@ -40,6 +40,6 @@ export const doCheckoutForShiftHandler = async ({
   // });
   await ctx.db
     .update(schema.careShifts)
-    .set({ checkOut: input })
+    .set({ checkOut: input.date })
     .where(eq(schema.careShifts.id, currentShift.id));
 };

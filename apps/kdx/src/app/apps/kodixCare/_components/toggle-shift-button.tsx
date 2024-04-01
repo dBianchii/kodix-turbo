@@ -1,9 +1,7 @@
 "use client";
 
-import type { ComponentProps, Dispatch } from "react";
 import { useState } from "react";
 import { LuLoader2 } from "react-icons/lu";
-import { z } from "zod";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
@@ -18,6 +16,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@kdx/ui/dialog";
 import {
   Form,
@@ -27,6 +26,7 @@ import {
   FormMessage,
   useForm,
 } from "@kdx/ui/form";
+import { ZDoCheckoutForShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
@@ -34,119 +34,34 @@ import { api } from "~/trpc/react";
 export function ToggleShiftButton({ session }: { session: Session }) {
   const query = api.app.kodixCare.getCurrentShift.useQuery();
 
-  const [openStartShiftDialog, setOpenStartShiftWarnPreviousDialog] =
-    useState(false);
-  const [isDoCheckoutDialogOpen, setIsDoCheckoutDialogOpen] = useState(false);
-  const [isStartShiftDialogOpen, setIsStartShiftDialogOpen] = useState(false);
+  if (!(query.data && !query.data.checkOut)) return <StartShiftDialogButton />;
 
-  async function handleClick() {
-    if (query.data && !query.data.checkOut) {
-      if (query.data.Caregiver.id === session.user.id) {
-        setIsDoCheckoutDialogOpen(true);
-        return;
-      }
-      if (query.data.Caregiver.id !== session.user.id) {
-        //Warn user that he is about to end the previous shift of another person and start a new one
-        setOpenStartShiftWarnPreviousDialog(true);
-        return;
-      }
-    }
+  if (query.data.Caregiver.id === session.user.id)
+    return <DoCheckoutDialogButton currentShift={query.data} />;
 
-    setIsStartShiftDialogOpen(true);
-  }
-
-  const state: {
-    message: string;
-    variant: ComponentProps<typeof Button>["variant"];
-  } = {
-    message: "Start Shift",
-    variant: "default",
-  };
-
-  if (query.data) {
-    const loggedUserIsSessionsCaregiver =
-      session.user.id === query.data.Caregiver.id;
-    if (loggedUserIsSessionsCaregiver) {
-      if (!query.data.checkOut) {
-        state.message = "Checkout";
-        state.variant = "destructive";
-      } else {
-        state.message = "Start new shift";
-        state.variant = "default";
-      }
-    } else {
-      if (!query.data.checkOut) {
-        state.message = "End previous shift and start new";
-        state.variant = "orange";
-      } else {
-        state.message = "Start new shift";
-        state.variant = "default";
-      }
-    }
-  }
-
-  return (
-    <>
-      <Button
-        size={"sm"}
-        onClick={() => handleClick()}
-        variant={state.variant}
-        disabled={query.isFetching}
-      >
-        {query.isFetching ? (
-          <LuLoader2 className="mx-2 size-4 animate-spin" />
-        ) : (
-          state.message
-        )}
-      </Button>
-      <StartShiftDialog
-        startShiftOpen={isStartShiftDialogOpen}
-        setStartShiftOpen={setIsStartShiftDialogOpen}
-      />
-      <StartShiftWarnPreviousPersonDialog
-        open={openStartShiftDialog}
-        setOpen={setOpenStartShiftWarnPreviousDialog}
-      />
-      {query.data && (
-        <DoCheckoutDialog
-          open={isDoCheckoutDialogOpen}
-          setOpen={setIsDoCheckoutDialogOpen}
-          currentShift={query.data}
-        />
-      )}
-    </>
-  );
+  return <StartShiftWarnPreviousPersonDialog />;
 }
 
-function StartShiftDialog({
-  startShiftOpen,
-  setStartShiftOpen,
-}: {
-  startShiftOpen: boolean;
-  setStartShiftOpen: Dispatch<React.SetStateAction<boolean>>;
-}) {
-  const [loading, setLoading] = useState(false);
+function StartShiftDialogButton() {
+  const [open, setOpen] = useState(false);
+
   const utils = api.useUtils();
   const mutation = api.app.kodixCare.toggleShift.useMutation({
-    onMutate: () => {
-      setLoading(true);
-    },
     onSuccess: () => {
-      setStartShiftOpen(false);
+      setOpen(false);
       void utils.app.kodixCare.getCareTasks.invalidate();
       void utils.app.kodixCare.getCurrentShift.invalidate();
     },
     onError: (err) => {
       trpcErrorToastDefault(err);
-      setLoading(false);
       return;
-    },
-    onSettled: () => {
-      setLoading(false);
     },
   });
   return (
-    <Dialog open={startShiftOpen} onOpenChange={setStartShiftOpen}>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button size={"sm"}>Start shift</Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Start Shift</DialogTitle>
@@ -158,12 +73,19 @@ function StartShiftDialog({
         </div>
         <DialogFooter className="gap-3 sm:justify-between">
           <DialogClose asChild>
-            <Button type="button" variant="outline" disabled={loading}>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={mutation.isPending}
+            >
               Close
             </Button>
           </DialogClose>
-          <Button onClick={() => mutation.mutate()} disabled={loading}>
-            {loading ? (
+          <Button
+            onClick={() => mutation.mutate()}
+            disabled={mutation.isPending}
+          >
+            {mutation.isPending ? (
               <LuLoader2 className="mx-2 size-4 animate-spin" />
             ) : (
               "Start new shift"
@@ -175,13 +97,8 @@ function StartShiftDialog({
   );
 }
 
-function StartShiftWarnPreviousPersonDialog({
-  open,
-  setOpen,
-}: {
-  open: boolean;
-  setOpen: Dispatch<React.SetStateAction<boolean>>;
-}) {
+function StartShiftWarnPreviousPersonDialog() {
+  const [open, setOpen] = useState(false);
   const utils = api.useUtils();
 
   const mutation = api.app.kodixCare.toggleShift.useMutation({
@@ -197,6 +114,11 @@ function StartShiftWarnPreviousPersonDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button size={"sm"} variant={"orange"}>
+          End previous shift and start new
+        </Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Previous shift exists</DialogTitle>
@@ -235,30 +157,18 @@ function StartShiftWarnPreviousPersonDialog({
   );
 }
 
-function DoCheckoutDialog({
-  open,
-  setOpen,
+function DoCheckoutDialogButton({
   currentShift,
 }: {
-  open: boolean;
-  setOpen: Dispatch<React.SetStateAction<boolean>>;
   currentShift: NonNullable<
     RouterOutputs["app"]["kodixCare"]["getCurrentShift"]
   >;
 }) {
+  const [open, setOpen] = useState(false);
   const utils = api.useUtils();
 
   const form = useForm({
-    schema: z.object({
-      date: z
-        .date()
-        .refine(
-          (date) => dayjs(date).isAfter(dayjs(currentShift.checkIn)),
-          `Time must be after check-in time. (${dayjs(
-            currentShift.checkIn,
-          ).format("HH:mm")})`,
-        ),
-    }),
+    schema: ZDoCheckoutForShiftInputSchema,
     defaultValues: {
       date: new Date(),
     },
@@ -278,10 +188,15 @@ function DoCheckoutDialog({
     <Dialog
       open={open}
       onOpenChange={(open) => {
-        form.reset();
+        form.setValue("date", new Date());
         setOpen(open);
       }}
     >
+      <DialogTrigger asChild>
+        <Button size={"sm"} variant={"destructive"}>
+          Checkout
+        </Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Checkout Shift</DialogTitle>
@@ -290,7 +205,7 @@ function DoCheckoutDialog({
           <form
             className="base"
             onSubmit={form.handleSubmit(async (values) => {
-              await mutation.mutateAsync(values.date);
+              mutation.mutate(values);
             })}
           >
             <DialogDescription className="mb-4">
@@ -315,27 +230,12 @@ function DoCheckoutDialog({
                           }
                         />
                       </div>
-                      {/* <Input
-                        type="time"
-                        className="w-36"
-                        value={dayjs(field.value).format("HH:mm")}
-                        onChange={(e) => {
-                          form.setValue(
-                            "date",
-                            dayjs(field.value)
-                              .hour(parseInt(e.target.value.split(":")[0]!))
-                              .minute(parseInt(e.target.value.split(":")[1]!))
-                              .toDate(),
-                          );
-                        }}
-                      /> */}
                     </div>
                   </FormControl>
                   <FormMessage className="w-full" />
                 </FormItem>
               )}
             />
-
             <DialogFooter className="mt-6 gap-3 sm:justify-between">
               <DialogClose asChild>
                 <Button
@@ -348,10 +248,10 @@ function DoCheckoutDialog({
               </DialogClose>
               <Button
                 type="submit"
-                disabled={form.formState.isSubmitting}
+                disabled={mutation.isPending}
                 variant={"destructive"}
               >
-                {form.formState.isSubmitting ? (
+                {mutation.isPending ? (
                   <LuLoader2 className="mx-2 size-4 animate-spin" />
                 ) : (
                   "Checkout"

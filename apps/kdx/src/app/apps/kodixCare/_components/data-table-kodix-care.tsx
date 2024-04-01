@@ -54,6 +54,7 @@ type CareTask = RouterOutputs["app"]["kodixCare"]["getCareTasks"][number];
 
 const columnHelper = createColumnHelper<CareTask>();
 
+const DATE_FORMAT = "LLLL dd, yyyy, HH:mm";
 export default function DataTableKodixCare({
   initialCareTasks,
   input,
@@ -125,21 +126,6 @@ export default function DataTableKodixCare({
       cell: (ctx) => (
         <div className="flex flex-row items-center">
           <div className="w-8">
-            {/* If it is a real caretask from caretask table and it was edited before... */}
-            {/* {ctx.row.original.id.length > 0 && ctx.row.original.updatedAt && (
-              <div className="ml-2">
-                <Checkbox
-                  checked={!!ctx.row.original.doneAt}
-                  className="size-5"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setCurrentlyEditing(ctx.row.original.id);
-                    setEditDoneOpen(true);
-                  }}
-                />
-              </div>
-            )} */}
-            {/* If it is a real caretask from caretask table and it was never edited before... */}
             {ctx.row.original.id.length > 0 && (
               <Checkbox
                 onClick={(e) => {
@@ -155,25 +141,25 @@ export default function DataTableKodixCare({
               />
             )}
           </div>
-          <span className="pl-2 font-semibold">{ctx.getValue()}</span>
+          <span className="font-semibold">{ctx.getValue()}</span>
         </div>
       ),
     }),
     columnHelper.accessor("date", {
       header: () => "Date",
-      cell: (ctx) => format(ctx.row.original.date, "LLL. dd - h:mm"),
+      cell: (ctx) => format(ctx.row.original.date, DATE_FORMAT),
     }),
     columnHelper.accessor("doneAt", {
       header: () => "Done at",
       cell: (ctx) => {
         if (!ctx.row.original.id) return null;
         if (!ctx.row.original.doneAt) return null;
-        return format(ctx.row.original.doneAt, "LLL. dd - h:mm");
+        return <div>{format(ctx.row.original.doneAt, DATE_FORMAT)}</div>;
       },
     }),
     columnHelper.accessor("details", {
       header: () => "Details",
-      cell: (ctx) => ctx.row.original.details,
+      cell: (ctx) => <div className="max-w-sm">{ctx.row.original.details}</div>,
     }),
   ];
 
@@ -197,12 +183,12 @@ export default function DataTableKodixCare({
             open={editDoneOpen}
             setOpen={setEditDoneOpen}
           /> */}
-          {/* <EditCareTaskDialog
+          <EditCareTaskDialog
             task={currentlyEditingCareTask}
             mutation={mutation}
             open={editDetailsOpen}
             setOpen={setEditDetailsOpen}
-          /> */}
+          />
           <SaveTaskAsDoneDialog
             task={currentlyEditingCareTask}
             mutation={mutation}
@@ -215,7 +201,6 @@ export default function DataTableKodixCare({
             mutation={mutation}
             open={saveTaskAsNotDoneDialogOpen}
             setOpen={setSaveTaskAsNotDoneDialogOpen}
-            session={session}
           />
         </>
       )}
@@ -247,17 +232,14 @@ export default function DataTableKodixCare({
                     if (!row.original.id) return;
 
                     setCurrentlyEditing(row.original.id);
-                    setEditDetailsOpen(true);
+                    if (row.original.updatedAt) setEditDetailsOpen(true); //? Only able
                   }}
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className={cn(
-                    {
-                      "bg-muted/30": !row.original.id,
-                      "hover:bg-muted/30": !row.original.id,
-                    },
-                    "h-12",
-                  )}
+                  className={cn({
+                    "bg-muted/30": !row.original.id,
+                    "hover:bg-muted/30": !row.original.id,
+                  })}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -557,47 +539,53 @@ function SaveTaskAsDoneDialog({
   setOpen: (open: boolean) => void;
   session: Session;
 }) {
-  const form = useForm({
-    schema: ZSaveCareTaskInputSchema,
-    defaultValues: {
+  //If you find a better way to reset all fields to the default on open feel free to do it.
+  const defaultValues = useMemo(
+    () => ({
       id: task.id,
       details: task.details,
       doneAt: new Date(),
       doneByUserId: session.user.id,
-    },
+    }),
+    [task, session.user.id],
+  );
+
+  const form = useForm({
+    schema: ZSaveCareTaskInputSchema,
+    defaultValues,
   });
+
+  useEffect(() => {
+    form.reset(defaultValues);
+  }, [defaultValues, form, open]);
 
   return (
     <div className="p-1">
-      <Dialog
-        open={open}
-        onOpenChange={(open) => {
-          if (open) {
-            form.reset();
-            form.setValue("doneAt", new Date());
-          }
-          setOpen(open);
-        }}
-      >
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(async (values) => {
-                toast.promise(mutation.mutateAsync(values), {
-                  loading: "Saving...",
-                  success: () => {
-                    form.reset();
-                    setOpen(false);
-                    return `Task marked as complete!`;
+                toast.promise(
+                  mutation.mutateAsync({
+                    ...values,
+                    id: task.id,
+                  }),
+                  {
+                    loading: "Saving...",
+                    success: () => {
+                      form.reset();
+                      setOpen(false);
+                      return `Task marked as complete!`;
+                    },
                   },
-                });
+                );
               })}
             >
               <DialogHeader>
-                <DialogTitle>Add information to conclude this task</DialogTitle>
+                <DialogTitle>Mark task as done</DialogTitle>
                 <DialogDescription>
-                  Add the date and time of completion and details about the
-                  procedure.
+                  Please inform the date and time of completion
                 </DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
@@ -606,6 +594,7 @@ function SaveTaskAsDoneDialog({
                   name="doneAt"
                   render={({ field }) => (
                     <FormItem>
+                      <FormLabel>Done at</FormLabel>
                       <FormControl>
                         <div className="flex flex-row gap-2">
                           <DateTimePicker
@@ -666,13 +655,11 @@ function SaveTaskAsNotDoneDialog({
   mutation,
   open,
   setOpen,
-  session,
 }: {
   task: CareTask;
   mutation: ReturnType<typeof api.app.kodixCare.saveCareTask.useMutation>;
   open: boolean;
   setOpen: (open: boolean) => void;
-  session: Session;
 }) {
   return (
     <div className="p-1">
