@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import type { ReactNode } from "react"
+import type { ReactNode } from "react";
 
-import { I18nProviderClient } from "./client"
+import { I18nProviderClient } from "./client";
 
 interface LocaleProviderProps {
-  children: ReactNode
+  children: ReactNode;
   params: {
-    locale: string
-  }
+    locale: string;
+  };
 }
 
 export function LocaleProvider({ children, params }: LocaleProviderProps) {
-  return <I18nProviderClient {...params}>{children}</I18nProviderClient>
+  return <I18nProviderClient {...params}>{children}</I18nProviderClient>;
 }
