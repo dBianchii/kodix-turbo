@@ -1,7 +1,7 @@
-{
+export default {
   "home": {
-    "Welcome to Kodix": "Bem-vindo ao Kodix",
-    "Solutions for your business. Kodix is a multi-purpose platform that provides a wide range of business solutions.": "Soluções para o seu negócio. Kodix é uma plataforma multiuso que oferece uma ampla gama de soluções de negócios."
+    "title": "Bem-vindo ao Kodix",
+    "description": "Soluções para o seu negócio. Kodix é uma plataforma multiuso que oferece uma ampla gama de soluções de negócios"
   },
   "header": {
     "Account": "Conta",
@@ -15,4 +15,4 @@
     "Sign in": "Entrar",
     "Sign in with Google": "Entrar com Google"
   }
-}
+} as const

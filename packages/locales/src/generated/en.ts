@@ -1,7 +1,7 @@
 export default {
   "home": {
-    "Welcome to Kodix": "Welcome to Kodix",
-    "Solutions for your business. Kodix is a multi-purpose platform that provides a wide range of business solutions.": "Solutions for your business. Kodix is a multi-purpose platform that provides a wide range of business solutions."
+    "title": "Welcome to Kodix",
+    "description": "Solutions for your business. Kodix is a multi-purpose platform that provides a wide range of business solutions"
   },
   "header": {
     "Account": "Account",

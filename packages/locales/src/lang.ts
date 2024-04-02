@@ -1,2 +1,2 @@
-export * as pt from "./generated/pt";
+export * as pt_BR from "./generated/pt-BR";
 export * as en from "./generated/en";

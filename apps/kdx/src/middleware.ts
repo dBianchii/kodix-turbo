@@ -3,8 +3,8 @@ import type { NextRequest } from "next/server";
 import { createI18nMiddleware } from "@kdx/locales";
 
 const I18nMiddleware = createI18nMiddleware({
-  locales: ["pt", "en"],
-  defaultLocale: "pt",
+  locales: ["pt-BR", "en"],
+  defaultLocale: "pt-BR",
   urlMappingStrategy: "rewriteDefault",
 });
 

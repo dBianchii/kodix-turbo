@@ -1,14 +1,14 @@
 import { createI18nServer } from "next-international/server";
 
-import { pt } from "./lang";
+import { pt_BR } from "./lang";
 
 export const { getI18n, getScopedI18n, getCurrentLocale, getStaticParams } =
   createI18nServer(
     {
-      pt: () => import("./generated/pt"),
+      "pt-BR": () => import("./generated/pt-BR"),
       en: () => import("./generated/en"),
     },
     {
-      fallbackLocale: pt,
+      fallbackLocale: pt_BR,
     },
   );
