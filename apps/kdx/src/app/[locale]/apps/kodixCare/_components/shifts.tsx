@@ -96,6 +96,7 @@ export function ShiftCheckedOut({
     RouterOutputs["app"]["kodixCare"]["getCurrentShift"]
   >;
 }) {
+  const t = useI18n();
   return (
     <div className="flex flex-col space-y-3 pt-4">
       <div className="flex flex-row items-center space-x-3">

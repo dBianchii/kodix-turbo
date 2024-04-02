@@ -151,9 +151,7 @@ export default function DataTableKodixCare({
       cell: (ctx) => <div>{format(ctx.row.original.date, DATE_FORMAT)}</div>,
     }),
     columnHelper.accessor("doneAt", {
-      header: () => {
-        t("Done at");
-      },
+      header: () => t("Done at"),
       cell: (ctx) => {
         if (!ctx.row.original.id) return null;
         if (!ctx.row.original.doneAt) return null;
@@ -161,9 +159,7 @@ export default function DataTableKodixCare({
       },
     }),
     columnHelper.accessor("details", {
-      header: () => {
-        t("Details");
-      },
+      header: () => t("Details"),
       cell: (ctx) => <div className="max-w-sm">{ctx.row.original.details}</div>,
     }),
   ];
