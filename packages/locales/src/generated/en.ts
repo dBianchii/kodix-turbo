@@ -1,3 +1,4 @@
+// prettier-ignore
 export default {
   "home": {
     "title": "Welcome to Kodix",

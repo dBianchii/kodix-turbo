@@ -1,3 +1,4 @@
+// prettier-ignore
 export default {
   "home": {
     "title": "Bem-vindo ao Kodix",
@@ -40,7 +41,7 @@ export default {
   "Updating": "Atualizando",
   "Date": "Data",
   "Details": "Detalhes",
-  "Done at": "Pronto à",
+  "Done at": "Feito em",
   "No results": "Nenhum resultado",
   "Save": "Salvar",
   "Saving": "Salvando",
