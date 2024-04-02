@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { LuArrowRight, LuLoader2 } from "react-icons/lu";
 
+import { useI18n } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
 import {
   Card,
@@ -37,6 +38,7 @@ export default function OnboardingCard() {
   });
 
   const router = useRouter();
+  const t = useI18n();
 
   return (
     <Form {...form}>
@@ -54,9 +56,9 @@ export default function OnboardingCard() {
       >
         <Card className="w-[550px]">
           <CardHeader>
-            <CardTitle>Welcome to Kodix Care</CardTitle>
+            <CardTitle>{t("apps.kodixCare.onboarding.cardTitle")}</CardTitle>
             <CardDescription>
-              To start your onboarding, submit the name of the patient
+              {t("apps.kodixCare.onboarding.cardDescription")}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -72,7 +74,9 @@ export default function OnboardingCard() {
                         <Input placeholder="John appleseed" {...field} />
                       </FormControl>
                       <FormDescription>
-                        You can change this later in the settings.
+                        {t(
+                          "apps.kodixCare.onboarding.You can change this later in the settings",
+                        )}
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -83,7 +87,7 @@ export default function OnboardingCard() {
           </CardContent>
           <CardFooter className="flex justify-end">
             <Button type="submit" disabled={form.formState.isSubmitting}>
-              Go to Kodix Care
+              {t("apps.kodixCare.onboarding.goToKodixCare")}
               {!form.formState.isSubmitting && (
                 <LuArrowRight className="ml-2 size-4" />
               )}

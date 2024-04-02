@@ -6,6 +6,7 @@ import { IoMdTime } from "react-icons/io";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
+import { useI18n } from "@kdx/locales/client";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Badge } from "@kdx/ui/badge";
 import { Label } from "@kdx/ui/label";
@@ -34,11 +35,13 @@ export function CurrentShiftClient({
 }
 
 export function NoPreviousShift({ session }: { session: Session }) {
+  const t = useI18n();
+
   return (
     <div className="flex flex-col space-y-3 pt-4">
       <div className="flex flex-row items-center">
         <h2 className="font-semibold leading-none tracking-tight">
-          Current Shift
+          {t("apps.kodixCare.currentShift")}
         </h2>
       </div>
       <div className="flex items-center space-x-2 rounded-md">
@@ -59,11 +62,12 @@ export function ShiftInProgress({
     RouterOutputs["app"]["kodixCare"]["getCurrentShift"]
   >;
 }) {
+  const t = useI18n();
   return (
     <div className="flex flex-col space-y-3 pt-4">
       <div className="flex flex-row items-center space-x-3">
         <h2 className="font-semibold leading-none tracking-tight">
-          Current Shift
+          {t("apps.kodixCare.currentShift")}
         </h2>
         <Badge variant={"green"}>Active</Badge>
       </div>

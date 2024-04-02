@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import type { Session } from "@kdx/auth";
 import { auth } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
+import { getI18n } from "@kdx/locales/server";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { api } from "~/trpc/server";
@@ -63,11 +64,12 @@ async function CurrentShift({ session }: { session: Session }) {
   );
 }
 
-function ShiftSkeleton() {
+async function ShiftSkeleton() {
+  const t = await getI18n();
   return (
     <div className="flex flex-col space-y-3 pt-4">
       <h2 className="font-semibold leading-none tracking-tight">
-        Current Shift
+        {t("apps.kodixCare.currentShift")}
       </h2>
     </div>
   );

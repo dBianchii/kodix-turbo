@@ -13,6 +13,7 @@ import { LuLoader2 } from "react-icons/lu";
 import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
 import type { TGetCareTasksInputSchema } from "@kdx/validators/trpc/app/kodixCare";
+import { useI18n } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
 import { Checkbox } from "@kdx/ui/checkbox";
 import { DateTimePicker } from "@kdx/ui/date-time-picker";
@@ -118,10 +119,11 @@ export default function DataTableKodixCare({
       void utils.app.kodixCare.getCareTasks.invalidate();
     },
   });
+  const t = useI18n();
 
   const columns = [
     columnHelper.accessor("title", {
-      header: () => <span className="ml-8">Title</span>,
+      header: () => <span className="ml-8">{t("Title")}</span>,
       cell: (ctx) => (
         <div className="flex flex-row items-center">
           <div className="w-8">
@@ -144,12 +146,14 @@ export default function DataTableKodixCare({
         </div>
       ),
     }),
-    columnHelper.accessor("date", {
-      header: () => "Date",
+    columnHelper.accessor("doneAt", {
+      header: () => t("Date"),
       cell: (ctx) => <div>{format(ctx.row.original.date, DATE_FORMAT)}</div>,
     }),
     columnHelper.accessor("doneAt", {
-      header: () => "Done at",
+      header: () => {
+        t("Done at");
+      },
       cell: (ctx) => {
         if (!ctx.row.original.id) return null;
         if (!ctx.row.original.doneAt) return null;
@@ -157,7 +161,9 @@ export default function DataTableKodixCare({
       },
     }),
     columnHelper.accessor("details", {
-      header: () => "Details",
+      header: () => {
+        t("Details");
+      },
       cell: (ctx) => <div className="max-w-sm">{ctx.row.original.details}</div>,
     }),
   ];
@@ -250,7 +256,7 @@ export default function DataTableKodixCare({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results
+                  {t("No results")}
                 </TableCell>
               </TableRow>
             )}
@@ -272,6 +278,8 @@ function EditCareTaskDialog({
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
+  const t = useI18n();
+
   const defaultValues = useMemo(
     () => ({
       id: task.id,
@@ -293,7 +301,6 @@ function EditCareTaskDialog({
   useEffect(() => {
     form.reset(defaultValues);
   }, [task, open, form, defaultValues]);
-
   if (!task) return null;
 
   return (
@@ -309,17 +316,17 @@ function EditCareTaskDialog({
                   doneAt: values.doneAt,
                 }),
                 {
-                  loading: "Updating...",
+                  loading: `${t("Updating")}...`,
                   success: () => {
                     setOpen(false);
-                    return `Task updated!`;
+                    return t("apps.kodixCare.Task updated");
                   },
                 },
               );
             })}
           >
             <DialogHeader>
-              <DialogTitle>Edit task</DialogTitle>
+              <DialogTitle>{t("apps.kodixCare.Edit task")}</DialogTitle>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <FormField
@@ -327,7 +334,7 @@ function EditCareTaskDialog({
                 name="doneAt"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Done at</FormLabel>
+                    <FormLabel>{t("Done at")}</FormLabel>
                     <FormControl>
                       <div className="flex flex-row gap-2">
                         <DateTimePicker
@@ -347,10 +354,10 @@ function EditCareTaskDialog({
                 name="details"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Details</FormLabel>
+                    <FormLabel>{t("Details")}</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Any information..."
+                        placeholder={`${t("apps.kodixCare.Any information")}...`}
                         className="w-full"
                         rows={6}
                         {...field}
@@ -370,7 +377,7 @@ function EditCareTaskDialog({
                 {mutation.isPending && (
                   <LuLoader2 className="mr-2 size-5 animate-spin" />
                 )}
-                Save
+                {t("Save")}
               </Button>
             </DialogFooter>
           </form>
@@ -413,6 +420,8 @@ function SaveTaskAsDoneDialog({
     form.reset(defaultValues);
   }, [defaultValues, form, open]);
 
+  const t = useI18n();
+
   return (
     <div className="p-1">
       <Dialog open={open} onOpenChange={setOpen}>
@@ -426,20 +435,24 @@ function SaveTaskAsDoneDialog({
                     id: task.id,
                   }),
                   {
-                    loading: "Saving...",
+                    loading: `${t("Saving")}...`,
                     success: () => {
                       form.reset();
                       setOpen(false);
-                      return `Task marked as complete!`;
+                      return t("apps.kodixCare.Task marked as done");
                     },
                   },
                 );
               })}
             >
               <DialogHeader>
-                <DialogTitle>Mark task as done</DialogTitle>
+                <DialogTitle>
+                  {t("apps.kodixCare.Mark task as done")}
+                </DialogTitle>
                 <DialogDescription>
-                  Please inform the date and time of completion
+                  {t(
+                    "apps.kodixCare.Please inform the date and time of completion",
+                  )}
                 </DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
@@ -448,7 +461,7 @@ function SaveTaskAsDoneDialog({
                   name="doneAt"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Done at</FormLabel>
+                      <FormLabel>{t("Done at")}</FormLabel>
                       <FormControl>
                         <div className="flex flex-row gap-2">
                           <DateTimePicker
@@ -472,7 +485,7 @@ function SaveTaskAsDoneDialog({
                         <Textarea
                           {...field}
                           value={field.value ?? undefined}
-                          placeholder="Any information..."
+                          placeholder={`${t("apps.kodixCare.Any information")}...`}
                           className="w-full"
                           rows={6}
                         />
@@ -487,7 +500,7 @@ function SaveTaskAsDoneDialog({
                   {mutation.isPending ? (
                     <LuLoader2 className="size-4 animate-spin" />
                   ) : (
-                    <>Save</>
+                    t("Save")
                   )}
                 </Button>
               </DialogFooter>
@@ -510,12 +523,13 @@ function SaveTaskAsNotDoneDialog({
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
+  const t = useI18n();
   return (
     <div className="p-1">
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Are you sure?</DialogTitle>
+            <DialogTitle>{t("apps.kodixCare.Are you sure")}</DialogTitle>
           </DialogHeader>
           <DialogFooter className="mt-6 justify-end">
             <Button
@@ -527,10 +541,10 @@ function SaveTaskAsNotDoneDialog({
                     doneAt: null,
                   }),
                   {
-                    loading: "Saving...",
+                    loading: `${t("Saving")}...`,
                     success: () => {
                       setOpen(false);
-                      return `Task marked as not done!`;
+                      return t("apps.kodixCare.Task marked as not done");
                     },
                   },
                 );
@@ -539,7 +553,7 @@ function SaveTaskAsNotDoneDialog({
               {mutation.isPending ? (
                 <LuLoader2 className="size-4 animate-spin" />
               ) : (
-                <>Mark task as not done</>
+                t("apps.kodixCare.Mark task as not done")
               )}
             </Button>
           </DialogFooter>
