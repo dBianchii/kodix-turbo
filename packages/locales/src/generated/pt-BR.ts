@@ -7,7 +7,9 @@ export default {
     "Account": "Conta",
     "Settings": "Configurações",
     "Change team": "Mudar de time",
-    "Log out": "Sair"
+    "Log out": "Sair",
+    "Log in": "Entrar",
+    "Sign up": "Cadastrar"
   },
   "signin": {
     "Or continue with": "Ou continue com",

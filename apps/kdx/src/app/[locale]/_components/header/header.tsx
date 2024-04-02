@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 
 import { auth } from "@kdx/auth";
+import { getI18n } from "@kdx/locales/server";
 import { buttonVariants } from "@kdx/ui/button";
 
 import HeaderFooterRemover from "~/app/[locale]/_components/header-footer-remover";
@@ -90,6 +91,7 @@ async function NotificationsPopover() {
 
 async function RightSide() {
   const session = await auth();
+  const t = await getI18n();
 
   return (
     <>
@@ -105,13 +107,13 @@ async function RightSide() {
       {!session && (
         <div className="mr-5 space-x-2">
           <Link href="/signin" className={buttonVariants({ variant: "ghost" })}>
-            Sign In
+            {t("header.Log in")}
           </Link>
           <Link
             href="/signin"
             className={buttonVariants({ variant: "default" })}
           >
-            Sign Up
+            {t("header.Sign up")}
           </Link>
         </div>
       )}

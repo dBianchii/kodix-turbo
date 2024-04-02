@@ -2,6 +2,7 @@
 
 import { PiTranslate } from "react-icons/pi";
 
+import { useChangeLocale } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
 import {
   Command,
@@ -11,8 +12,6 @@ import {
   CommandItem,
 } from "@kdx/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
-
-import { useChangeLocale } from "~/locales/client";
 
 export function I18nPicker() {
   const changeLocale = useChangeLocale();
@@ -30,7 +29,7 @@ export function I18nPicker() {
           <CommandGroup>
             <CommandItem
               onSelect={() => {
-                changeLocale("pt");
+                changeLocale("pt-BR");
               }}
             >
               Portuguese
