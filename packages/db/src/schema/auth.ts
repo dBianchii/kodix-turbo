@@ -105,3 +105,15 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
     references: [users.id],
   }),
 }));
+
+export const verificationTokens = mysqlTable(
+  "verificationToken",
+  {
+    identifier: varchar("identifier", { length: DEFAULTLENGTH }).notNull(),
+    token: varchar("token", { length: DEFAULTLENGTH }).notNull(),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+  },
+  (vt) => ({
+    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
+  }),
+);
