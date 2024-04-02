@@ -28,7 +28,7 @@
     "@kdx/prettier-config": "workspace:*",
     "@turbo/gen": "^1.13.0",
     "prettier": "^3.2.5",
-    "turbo": "^1.13.0",
+    "turbo": "^1.13.1",
     "typescript": "^5.4.3"
   },
   "prettier": "@kdx/prettier-config"

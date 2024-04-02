@@ -8,6 +8,7 @@ import { DataTable } from "~/app/[locale]/_components/apps/calendar/data-table";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
 import { api } from "~/trpc/server";
+import { CreateEventDialogButton } from "../../_components/apps/calendar/create-event-dialog";
 
 export default async function Calendar() {
   const session = await redirectIfAppNotInstalled({
@@ -28,6 +29,8 @@ export default async function Calendar() {
         <H1>Calendar</H1>
       </div>
       <Separator className="my-4" />
+
+      <CreateEventDialogButton />
       <DataTable data={data} session={session} />
     </MaxWidthWrapper>
   );

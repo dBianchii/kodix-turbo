@@ -6,7 +6,7 @@
   "scripts": {
     "build": "pnpm with-env next build",
     "clean": "git clean -xdf .next .turbo node_modules",
-    "dev": "pnpm with-env next dev --turbo --port 3000",
+    "dev": "pnpm with-env next dev --port 3000",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "dotenv -v SKIP_ENV_VALIDATION=1 next lint",
     "start": "pnpm with-env next start --port 3000",
