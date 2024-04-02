@@ -8,7 +8,8 @@ export default {
     "Settings": "Settings",
     "Change team": "Change team",
     "Log out": "Log out",
-    "Log in": "Log in"
+    "Log in": "Log in",
+    "Sign up": "Sign up"
   },
   "signin": {
     "Or continue with": "Or continue with",
