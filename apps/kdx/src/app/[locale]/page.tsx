@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { auth } from "@kdx/auth";
-
-import { getScopedI18n } from "~/locales/server";
+import { getScopedI18n } from "@kdx/locales/server";
 
 export default async function Home() {
   const session = await auth();

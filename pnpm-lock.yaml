@@ -81,6 +81,9 @@ importers:
       '@kdx/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@kdx/locales':
+        specifier: workspace:*
+        version: link:../../packages/locales
       '@kdx/shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -132,9 +135,6 @@ importers:
       next-auth:
         specifier: 5.0.0-beta.16
         version: 5.0.0-beta.16(next@14.1.4)(react@18.2.0)
-      next-international:
-        specifier: ^1.2.4
-        version: 1.2.4
       next-safe-action:
         specifier: ^6.1.0
         version: 6.2.0(next@14.1.4)(react@18.2.0)
@@ -405,7 +405,41 @@ importers:
         specifier: ^3.2.5
         version: 3.2.5
       tsx:
-        specifier: ^4.7.1
+        specifier: 4.7.1
+        version: 4.7.1
+      typescript:
+        specifier: ^5.4.3
+        version: 5.4.3
+
+  packages/locales:
+    dependencies:
+      next-international:
+        specifier: ^1.2.4
+        version: 1.2.4
+      react:
+        specifier: 18.2.0
+        version: 18.2.0
+    devDependencies:
+      '@kdx/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint
+      '@kdx/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/prettier
+      '@kdx/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/typescript
+      '@types/react':
+        specifier: ^18.2.71
+        version: 18.2.71
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.0
+      prettier:
+        specifier: ^3.2.5
+        version: 3.2.5
+      tsx:
+        specifier: 4.7.1
         version: 4.7.1
       typescript:
         specifier: ^5.4.3

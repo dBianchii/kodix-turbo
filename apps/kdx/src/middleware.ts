@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server";
-import { createI18nMiddleware } from "next-international/middleware";
+
+import { createI18nMiddleware } from "@kdx/locales";
 
 const I18nMiddleware = createI18nMiddleware({
   locales: ["pt", "en"],

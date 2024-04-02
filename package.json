@@ -22,7 +22,8 @@
     "lint:fix": "turbo lint --continue -- --fix --cache --cache-location node_modules/.cache/.eslintcache",
     "lint:ws": "pnpm dlx sherif@latest",
     "postinstall": "pnpm lint:ws",
-    "typecheck": "turbo typecheck"
+    "typecheck": "turbo typecheck",
+    "lang:gen": "pnpm -F locales generate"
   },
   "devDependencies": {
     "@kdx/prettier-config": "workspace:*",

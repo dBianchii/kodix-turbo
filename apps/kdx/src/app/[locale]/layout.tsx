@@ -11,12 +11,12 @@ import { TRPCReactProvider } from "~/trpc/react";
 
 import "~/app/globals.css";
 
+import { LocaleProvider } from "@kdx/locales/provider";
 import { kdxProductionURL } from "@kdx/shared";
 import { ThemeProvider, ThemeToggle } from "@kdx/ui/theme";
 import { Toaster } from "@kdx/ui/toast";
 import { cn } from "@kdx/ui/utils";
 
-import { I18nProviderClient } from "~/locales/client";
 import { Header } from "./_components/header/header";
 
 export const metadata: Metadata = {
@@ -65,13 +65,13 @@ export default function Layout(props: {
         <Toaster richColors closeButton />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <TRPCReactProvider>
-            <I18nProviderClient locale={props.params.locale}>
+            <LocaleProvider params={props.params}>
               <div className="flex min-h-screen flex-col">
                 <Header />
                 {props.children}
                 <Footer />
               </div>
-            </I18nProviderClient>
+            </LocaleProvider>
           </TRPCReactProvider>
 
           {/* UI Design Helpers */}

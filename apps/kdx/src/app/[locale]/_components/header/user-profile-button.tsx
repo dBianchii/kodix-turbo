@@ -7,6 +7,7 @@ import { MdOutlineSwapHorizontalCircle } from "react-icons/md";
 import { RxGear, RxPerson } from "react-icons/rx";
 
 import type { Session } from "@kdx/auth";
+import { useScopedI18n } from "@kdx/locales/client";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Button } from "@kdx/ui/button";
 import {
@@ -18,8 +19,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@kdx/ui/dropdown-menu";
-
-import { useScopedI18n } from "~/locales/client";
 
 export function UserProfileButton({ session }: { session: Session }) {
   const t = useScopedI18n("header");

@@ -5,11 +5,10 @@ import { signIn } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
 import { LuLoader2 } from "react-icons/lu";
 
+import { useScopedI18n } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
 import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
-
-import { useScopedI18n } from "~/locales/client";
 
 export function SignInButtons({
   searchParams,
