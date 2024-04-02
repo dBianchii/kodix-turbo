@@ -9,13 +9,15 @@ import { Button } from "@kdx/ui/button";
 import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
 
+import { useScopedI18n } from "~/locales/client";
+
 export function SignInButtons({
   searchParams,
 }: {
   searchParams?: Record<string, string | undefined>;
 }) {
   const [disabled, setLoading] = useState(false);
-
+  const t = useScopedI18n("signin");
   return (
     <>
       <EmailSignIn
@@ -29,7 +31,7 @@ export function SignInButtons({
         </div>
         <div className="relative flex justify-center text-xs uppercase">
           <span className="bg-background px-2 text-muted-foreground">
-            Or continue with
+            {t("Or continue with")}
           </span>
         </div>
       </div>
@@ -50,13 +52,14 @@ interface SignInButtonsProps {
 
 function EmailSignIn({ callbackUrl, loading, setLoading }: SignInButtonsProps) {
   const [email, setEmail] = useState("");
+  const t = useScopedI18n("signin");
   return (
     <>
       <Label
         htmlFor="email"
         className="mb-2 block text-sm font-medium text-foreground"
       >
-        Your email
+        {t("Your email")}
       </Label>
       <Input
         type="email"
@@ -78,7 +81,7 @@ function EmailSignIn({ callbackUrl, loading, setLoading }: SignInButtonsProps) {
         disabled={loading}
         className="mt-4 w-full"
       >
-        Sign In
+        {t("Sign in")}
         {loading && <LuLoader2 className="ml-2 size-4 animate-spin" />}
       </Button>
     </>
