@@ -5,10 +5,9 @@ import { auth } from "@kdx/auth";
 import { getScopedI18n } from "~/locales/server";
 
 export default async function Home() {
-  const t = await getScopedI18n("home");
-
   const session = await auth();
   if (session) redirect("/team");
+  const t = await getScopedI18n("home");
 
   return (
     <main className="flex-1 py-8">
