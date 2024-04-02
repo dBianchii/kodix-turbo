@@ -9,6 +9,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import {CreateEventDialogButton} from "./create-event-dialog-button"
 import { addDays, format } from "date-fns";
 import { LuLoader2 } from "react-icons/lu";
 import {
@@ -111,6 +112,7 @@ export function DataTable({
 
   return (
     <>
+      <CreateEventDialogButton />
       <div className="mt-8">
         <div className="flex justify-between">
           <div className=" w-44 space-y-2">
