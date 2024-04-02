@@ -1,5 +1,5 @@
 // prettier-ignore
-export default {
+  export default {
   "home": {
     "title": "Bem-vindo ao Kodix",
     "description": "Soluções para o seu negócio. Kodix é uma plataforma multiuso que oferece uma ampla gama de soluções de negócios"

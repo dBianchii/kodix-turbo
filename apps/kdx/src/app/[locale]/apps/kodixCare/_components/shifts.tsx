@@ -100,7 +100,7 @@ export function ShiftCheckedOut({
     <div className="flex flex-col space-y-3 pt-4">
       <div className="flex flex-row items-center space-x-3">
         <h2 className="font-semibold leading-none tracking-tight">
-          Current shift
+          {t("apps.kodixCare.currentShift")}
         </h2>
         <Badge variant={"secondary"}>Ended</Badge>
       </div>

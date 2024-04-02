@@ -6,6 +6,7 @@ import { LuLoader2 } from "react-icons/lu";
 import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
+import { useI18n } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
 import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
@@ -43,6 +44,7 @@ export function ToggleShiftButton({ session }: { session: Session }) {
 
 function StartShiftDialogButton() {
   const [open, setOpen] = useState(false);
+  const t = useI18n();
 
   const utils = api.useUtils();
   const mutation = api.app.kodixCare.toggleShift.useMutation({
@@ -59,15 +61,17 @@ function StartShiftDialogButton() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size={"sm"}>Start shift</Button>
+        <Button size={"sm"}>{t("apps.kodixCare.Start shift")}</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Start Shift</DialogTitle>
+          <DialogTitle>{t("apps.kodixCare.Start shift")}</DialogTitle>
         </DialogHeader>
         <div className="mb-4">
           <DialogDescription>
-            You are about to start a new shift. Are you sure?
+            {t(
+              "apps.kodixCare.You are about to start a new shift are you sure",
+            )}
           </DialogDescription>
         </div>
         <DialogFooter className="justify-end">
@@ -78,7 +82,7 @@ function StartShiftDialogButton() {
             {mutation.isPending ? (
               <LuLoader2 className="mx-2 size-4 animate-spin" />
             ) : (
-              "Start new shift"
+              t("apps.kodixCare.Start new shift")
             )}
           </Button>
         </DialogFooter>
@@ -101,20 +105,24 @@ function StartShiftWarnPreviousPersonDialog() {
       trpcErrorToastDefault(err);
     },
   });
+  const t = useI18n();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button size={"sm"} variant={"orange"}>
-          End previous shift and start new
+          {t("apps.kodixCare.End previous shift and start new")}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Previous shift exists</DialogTitle>
+          <DialogTitle>{t("apps.kodixCare.Previous shift exists")}</DialogTitle>
         </DialogHeader>
         <DialogDescription>
-          Previous shift exists. Would you like to end it and start a new one?
+          {t("apps.kodixCare.Previous shift exists")}{" "}
+          {t(
+            "apps.kodixCare.are you sure you want to end it and start a new one",
+          )}
         </DialogDescription>
         <DialogFooter className="justify-end">
           <Button
@@ -127,7 +135,7 @@ function StartShiftWarnPreviousPersonDialog() {
             {mutation.isPending ? (
               <LuLoader2 className="mx-2 size-4 animate-spin" />
             ) : (
-              "End previous shift and start new"
+              t("apps.kodixCare.End previous shift and start new")
             )}
           </Button>
         </DialogFooter>
@@ -162,7 +170,7 @@ function DoCheckoutDialogButton({
       trpcErrorToastDefault(err);
     },
   });
-
+  const t = useI18n();
   return (
     <Dialog
       open={open}
@@ -173,12 +181,12 @@ function DoCheckoutDialogButton({
     >
       <DialogTrigger asChild>
         <Button size={"sm"} variant={"destructive"}>
-          Checkout
+          {t("apps.kodixCare.Checkout")}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Checkout Shift</DialogTitle>
+          <DialogTitle>{t("apps.kodixCare.Checkout shift")}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -188,7 +196,9 @@ function DoCheckoutDialogButton({
             })}
           >
             <DialogDescription className="mb-4">
-              You are about to finish your shift and checkout. Are you sure?
+              {t(
+                "You are about to finish your shift and checkout Are you sure",
+              )}
             </DialogDescription>
             <FormField
               control={form.control}
