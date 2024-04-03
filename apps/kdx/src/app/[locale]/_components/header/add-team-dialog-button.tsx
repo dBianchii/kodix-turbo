@@ -6,6 +6,7 @@ import { LuLoader2 } from "react-icons/lu";
 import { RxPlusCircled } from "react-icons/rx";
 
 import type { Session } from "@kdx/auth";
+import { useI18n } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
 import {
   Dialog,
@@ -37,28 +38,28 @@ export function AddTeamDialogButton({
   const [teamName, changeTeamName] = React.useState("");
   const [isPending, setIsPending] = React.useState(false);
   const [open, setOpen] = React.useState(false);
-
+  const t = useI18n();
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       {children ?? (
         <DialogTrigger asChild>
           <Button className={cn(className)}>
             <RxPlusCircled className="mr-2 size-5" />
-            Create New Team
+            {t("Create new team")}
           </Button>
         </DialogTrigger>
       )}
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create team</DialogTitle>
+          <DialogTitle>{t("Create new team")}</DialogTitle>
           <DialogDescription>
-            Create a new team and invite your team members
+            {t("create-a-new-team-and-invite-your-team-members")}
           </DialogDescription>
         </DialogHeader>
         <div>
           <div className="space-y-4 py-2 pb-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Team name</Label>
+              <Label htmlFor="name">{t("team-name")}</Label>
               <Input
                 id="name"
                 placeholder="Acme Inc."
@@ -70,7 +71,7 @@ export function AddTeamDialogButton({
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => setOpen(false)}>
-            Cancel
+            {t("Cancel")}
           </Button>
           <Button
             disabled={isPending}
@@ -83,14 +84,14 @@ export function AddTeamDialogButton({
               setIsPending(false);
               if (defaultSafeActionToastError(result)) return;
               setOpen(false);
-              toast(`Team ${result.data?.name} created`, {
-                description: "Successfully created a new team.",
+              toast(`${t("Team")} ${result.data?.name} ${t("created")}`, {
+                description: t("Successfully created a new team"),
               });
               return router.refresh();
             }}
           >
             {isPending && <LuLoader2 className="mr-2 size-5 animate-spin" />}
-            Create
+            {t("Create")}
           </Button>
         </DialogFooter>
       </DialogContent>

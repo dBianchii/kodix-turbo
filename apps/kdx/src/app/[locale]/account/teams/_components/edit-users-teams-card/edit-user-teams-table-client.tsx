@@ -7,6 +7,7 @@ import { RxChevronLeft, RxDotsHorizontal } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
+import { useI18n } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
 import {
   DropdownMenu,
@@ -29,6 +30,7 @@ export default function EditUserTeamsTableClient({
   teams: RouterOutputs["team"]["getAllForLoggedUser"];
   session: Session;
 }) {
+  const t = useI18n();
   const currentTeam = session.user.activeTeamId;
   const sortedTeams = teams.sort((a, b) => {
     if (a.id === currentTeam) return -1;
@@ -49,7 +51,7 @@ export default function EditUserTeamsTableClient({
                 colSpan={sortedTeams.length}
                 className="h-24 text-center"
               >
-                No results.
+                {t("No results")}.
               </TableCell>
             </TableRow>
           )}
@@ -69,7 +71,7 @@ function CustomRow({
   const [isHovered, setIsHovered] = useState(false);
   const [manageLoading, setManageLoading] = useState(false);
   const router = useRouter();
-
+  const t = useI18n();
   return (
     <TableRow
       key={team.id}
@@ -92,12 +94,12 @@ function CustomRow({
             {team.id === session.user.activeTeamId && (
               <p className="ml-1 font-bold italic text-muted-foreground">
                 {" "}
-                - Current
+                - {t("Current")}
               </p>
             )}
           </div>
           {team.ownerId === session.user.id && (
-            <span className="text-muted-foreground">Owner</span>
+            <span className="text-muted-foreground">{t("Owner")}</span>
           )}
         </div>
       </TableCell>
@@ -121,7 +123,7 @@ function CustomRow({
               {manageLoading ? (
                 <LuLoader2 className="size-4 animate-spin" />
               ) : (
-                <>Manage</>
+                <>{t("Manage")}</>
               )}
             </Button>
           </form>
@@ -133,11 +135,12 @@ function CustomRow({
 }
 
 function LeaveTeamDropdown({ session }: { session: Session }) {
+  const t = useI18n();
   const utils = api.useUtils();
   const router = useRouter();
   const { mutate } = api.team.removeUser.useMutation({
     onSuccess: () => {
-      toast("User removed from team");
+      toast(t("account.User removed from team"));
       void utils.team.getAllUsers.invalidate();
       router.refresh();
     },
@@ -148,7 +151,7 @@ function LeaveTeamDropdown({ session }: { session: Session }) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
+          <span className="sr-only">{t("Open menu")}</span>
           <RxDotsHorizontal className="size-4" />
         </Button>
       </DropdownMenuTrigger>
@@ -162,7 +165,7 @@ function LeaveTeamDropdown({ session }: { session: Session }) {
             });
           }}
         >
-          Leave
+          {t("Leave")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

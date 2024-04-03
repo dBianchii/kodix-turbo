@@ -1,3 +1,4 @@
+import { getI18n } from "@kdx/locales/server";
 import { todoAppId } from "@kdx/shared";
 import { Separator } from "@kdx/ui/separator";
 import { H1 } from "@kdx/ui/typography";
@@ -16,12 +17,12 @@ export default async function Todo() {
   });
 
   const data = await api.app.todo.getAll();
-
+  const t = await getI18n();
   return (
     <MaxWidthWrapper>
       <div className="flex space-x-4">
         <IconKodixApp appId={todoAppId} renderText={false} />
-        <H1>Todo</H1>
+        <H1>{t("Todo")}</H1>
       </div>
       <Separator className="my-4" />
       <CreateTaskDialogButton />

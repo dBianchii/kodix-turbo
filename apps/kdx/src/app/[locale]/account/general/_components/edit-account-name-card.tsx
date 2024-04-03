@@ -3,6 +3,7 @@ import { revalidatePath } from "next/cache";
 import { LuLoader2 } from "react-icons/lu";
 
 import { auth } from "@kdx/auth";
+import { getI18n } from "@kdx/locales/server";
 import { Button } from "@kdx/ui/button";
 import {
   Card,
@@ -20,7 +21,7 @@ import { api } from "~/trpc/server";
 export async function EditAccountNameCard({ name }: { name?: string | null }) {
   const session = await auth();
   if (!session) return null;
-
+  const t = await getI18n();
   return (
     <form
       action={async (values) => {
@@ -34,16 +35,17 @@ export async function EditAccountNameCard({ name }: { name?: string | null }) {
     >
       <Card className="w-full text-left">
         <CardHeader>
-          <CardTitle>Display Name</CardTitle>
+          <CardTitle>{t("account.Display Name")}</CardTitle>
           <CardDescription>
-            Please enter your full name, or a display name you are comfortable
-            with.
+            {t(
+              "account.please-enter-your-full-name-or-a-display-name-you-are-comfortable-with",
+            )}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="name">{t("Name")}</Label>
               <Input
                 required
                 id="name"
@@ -56,15 +58,15 @@ export async function EditAccountNameCard({ name }: { name?: string | null }) {
         </CardContent>
         <CardFooter className="flex justify-between border-t px-6 py-4">
           <CardDescription>
-            Please use 32 characters at maximum.
+            {t("account.Please use 32 characters at maximum")}
           </CardDescription>
           <Button type="submit">
             {false ? (
               <>
-                <LuLoader2 className="mr-2 size-4 animate-spin" /> Saving
+                <LuLoader2 className="mr-2 size-4 animate-spin" /> {t("Saving")}
               </>
             ) : (
-              <>Save</>
+              <>{t("Save")}</>
             )}
           </Button>
         </CardFooter>

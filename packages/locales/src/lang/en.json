@@ -13,13 +13,16 @@
     "Invitation accepted": "Invitation accepted",
     "Invitation declined": "Invitation declined",
     "invited you to": "invited you to",
-    "accept": "Accept"
+    "accept": "Accept",
+    "Add more apps": "Add more apps",
+    "Search app": "Search app..."
   },
   "signin": {
     "Or continue with": "Or continue with",
     "Your email": "Your email",
     "Sign in": "Sign in",
-    "Sign in with Google": "Sign in with Google"
+    "Sign in with Google": "Sign in with Google",
+    "Sign in to your account": "Sign in to your account"
   },
   "apps": {
     "kodixCare": {
@@ -68,6 +71,9 @@
       "Pick a date": "Pick a date",
       "Select a recurrence": "Select a recurrence",
       "Custom recurrence": "Custom recurrence"
+    },
+    "cupom": {
+      "Cupom": "Cupom"
     }
   },
   "Title": "Title",
@@ -130,5 +136,49 @@
   "invited you to": "invited you to",
   "Decline": "Decline",
   "accept": "Accept",
-  "questionmark": "?"
+  "questionmark": "?",
+  "No apps found": "No apps found",
+  "No rights reserved": "Nenhum direito reservado",
+  "Create new team": "Create new team",
+  "create-a-new-team-and-invite-your-team-members": "Create a new team and invite your team members",
+  "team-name": "Team name",
+  "Create": "Create",
+  "Team": "Team",
+  "created": "created",
+  "Successfully created a new team": "Successfully created a new team",
+  "Select": "Select",
+  "Pick a date": "Pick a date",
+  "Tomorrow": "Tomorrow",
+  "In 3 days": "In 3 days",
+  "In a week": "In a week",
+  "In one month": "In one month",
+  "In one year": "In one year",
+  "Page": "Page",
+  "de": "of",
+  "Go to first page": "Go to first page",
+  "Go to previous page": "Go to previous page",
+  "Go to next page": "Go to next page",
+  "Go to last page": "Go to last page",
+  "Rows per page": "Rows per page",
+  "rows selected": "row(s) selected.",
+  "account": {
+    "Display Name": "Display Name",
+    "please-enter-your-full-name-or-a-display-name-you-are-comfortable-with": "Please enter your full name, or a display name you are comfortable with.",
+    "Please use 32 characters at maximum": "Please use 32 characters at maximum.",
+    "User removed from team": "User removed from team",
+    "Manage the teams you are a part of or create a new one": "Manage the Teams that you&apos;re a part of, or create a new one.",
+    "Account settings": "Account Settings"
+  },
+  "Name": "Name",
+  "Current": "Current",
+  "Owner": "Owner",
+  "Manage": "Manage",
+  "Open menu": "Open menu",
+  "Leave": "Leave",
+  "Teams": "Teams",
+  "General": "General",
+  "Loading": "Loading",
+  "End": "End",
+  "Sign in to your account": "Sign in to your account",
+  "Something went wrong please try again later": "Something went wrong, please try again later"
 }

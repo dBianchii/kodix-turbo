@@ -8,6 +8,7 @@ import { RxCaretSort, RxCheck, RxPlusCircled } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { KodixAppId } from "@kdx/shared";
+import { useI18n } from "@kdx/locales/client";
 import { useAppName } from "@kdx/locales/translation-getters";
 import { Button } from "@kdx/ui/button";
 import {
@@ -41,6 +42,7 @@ export function AppSwitcherClient({
 }) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
+  const t = useI18n();
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -54,8 +56,11 @@ export function AppSwitcherClient({
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search app..." className="h-9" />
-          <CommandEmpty>No apps found.</CommandEmpty>
+          <CommandInput
+            placeholder={`${t("header.Search app")}...`}
+            className="h-9"
+          />
+          <CommandEmpty>{t("No apps found")}</CommandEmpty>
           <CommandGroup>
             {apps.map((app) => {
               const link = hrefPrefix
@@ -91,7 +96,7 @@ export function AppSwitcherClient({
               <Link href={"/apps"}>
                 <CommandItem onSelect={() => setOpen(false)}>
                   <RxPlusCircled className="size-4" />
-                  <span className="ml-3">Add more apps</span>
+                  <span className="ml-3">{t("header.Add more apps")}</span>
                 </CommandItem>
               </Link>
             )}

@@ -13,13 +13,16 @@
     "Invitation accepted": "Convite aceito",
     "Invitation declined": "Convite recusado",
     "accept": "Aceitar",
-    "invited you to": "convidei você para"
+    "invited you to": "convidei você para",
+    "Add more apps": "Adicione mais aplicativos",
+    "Search app": "Pesquisar aplicativo..."
   },
   "signin": {
     "Or continue with": "Ou continue com",
     "Your email": "Seu email",
     "Sign in": "Entrar",
-    "Sign in with Google": "Entrar com Google"
+    "Sign in with Google": "Entrar com Google",
+    "Sign in to your account": "Faça login em sua conta"
   },
   "apps": {
     "kodixCare": {
@@ -68,6 +71,9 @@
       "Select a recurrence": "Selecione uma recorrência",
       "This and future events": "Este evento e futuros",
       "This event": "Este evento"
+    },
+    "cupom": {
+      "Cupom": "Cupom"
     }
   },
   "Updating": "Atualizando",
@@ -130,5 +136,49 @@
   "accept": "Aceitar",
   "invited you to": "convidou você para",
   "notifications": "Notificações",
-  "questionmark": "?"
+  "questionmark": "?",
+  "Create": "Criar",
+  "Create new team": "Criar nova equipe",
+  "Current": "Atual",
+  "End": "Fim",
+  "General": "Em geral",
+  "Go to first page": "Ir para a primeira página",
+  "Go to last page": "Ir para a última página",
+  "Go to next page": "Ir para a próxima página",
+  "Go to previous page": "Ir para a página anterior",
+  "In 3 days": "Em 3 dias",
+  "In a week": "Em uma semana",
+  "In one month": "Num mês",
+  "In one year": "Em um ano",
+  "Leave": "Deixar",
+  "Loading": "Carregando",
+  "Manage": "Gerenciar",
+  "Name": "Nome",
+  "No apps found": "Nenhum aplicativo encontrado",
+  "No rights reserved": "Nenhum direito reservado",
+  "Open menu": "Abrir menu",
+  "Owner": "Proprietário",
+  "Page": "Página",
+  "Pick a date": "Escolha uma data",
+  "Rows per page": "Linhas por página",
+  "Select": "Selecione",
+  "Sign in to your account": "Faça login em sua conta",
+  "Something went wrong please try again later": "Algo deu errado, tente novamente mais tarde",
+  "Successfully created a new team": "Criou com sucesso uma nova equipe",
+  "Team": "Equipe",
+  "Teams": "Equipes",
+  "Tomorrow": "Amanhã",
+  "account": {
+    "Account settings": "Configurações de Conta",
+    "Display Name": "Nome de exibição",
+    "Manage the teams you are a part of or create a new one": "Gerencie as equipes que você",
+    "Please use 32 characters at maximum": "Por favor use no máximo 32 caracteres.",
+    "User removed from team": "Usuário removido da equipe",
+    "please-enter-your-full-name-or-a-display-name-you-are-comfortable-with": "Digite seu nome completo ou um nome de exibição com o qual você se sinta confortável."
+  },
+  "create-a-new-team-and-invite-your-team-members": "Crie uma nova equipe e convide os membros da sua equipe",
+  "created": "criada",
+  "de": "de",
+  "rows selected": "linha(s) selecionada(s).",
+  "team-name": "Nome do time"
 }

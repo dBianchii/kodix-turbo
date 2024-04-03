@@ -153,7 +153,7 @@ function TimeInfo({
       {currentShift.checkOut && (
         <div className="col w-20">
           <Label className="text-xs text-muted-foreground" htmlFor="endBadge">
-            End
+            {t("End")}
           </Label>
           <Badge
             id="endBadge"

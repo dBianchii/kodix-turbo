@@ -1,16 +1,23 @@
+import { getI18n } from "@kdx/locales/server";
+
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { Navigation } from "~/app/[locale]/_components/navigation";
 import { ShouldRender } from "~/app/[locale]/team/settings/general/_components/client-should-render";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const t = await getI18n();
   const navItems = [
     {
       href: `/account/general`,
-      title: "General",
+      title: t("General"),
     },
     {
       href: `/account/teams`,
-      title: "Teams",
+      title: t("Teams"),
     },
   ];
 
@@ -18,14 +25,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <main className="flex-1 py-8">
       <MaxWidthWrapper>
         <div className="flex flex-col justify-center border-b pb-8">
-          <h1 className="text-4xl font-bold">Account Settings</h1>
+          <h1 className="text-4xl font-bold">
+            {t("account.Account settings")}
+          </h1>
         </div>
         <div className="mt-8 flex flex-col md:flex-row md:space-x-6">
           <Navigation
             items={navItems}
             goBackItem={{
               href: "/account",
-              title: "Account settings",
+              title: t("account.Account settings"),
             }}
           />
           <ShouldRender endsWith="/account">{children}</ShouldRender>

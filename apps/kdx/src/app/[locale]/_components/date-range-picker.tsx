@@ -5,6 +5,7 @@ import * as React from "react";
 import { format } from "date-fns";
 import { RxCalendar } from "react-icons/rx";
 
+import { useI18n } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
 import { Calendar } from "@kdx/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
@@ -21,6 +22,7 @@ export function DateRangePicker({
     | ((newDate: DateRange | undefined) => void);
   className?: React.HTMLAttributes<HTMLDivElement>;
 }) {
+  const t = useI18n();
   return (
     <div className={cn("grid gap-2", className)}>
       <Popover>
@@ -44,7 +46,7 @@ export function DateRangePicker({
                 format(date.from, "LLL dd, y")
               )
             ) : (
-              <span>Pick a date</span>
+              <span>{t("Pick a date")}</span>
             )}
           </Button>
         </PopoverTrigger>
