@@ -8,7 +8,7 @@ import { RxCaretSort, RxCheck, RxPlusCircled } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { KodixAppId } from "@kdx/shared";
-import { getAppName } from "@kdx/shared";
+import { useAppName } from "@kdx/locales/translation-getters";
 import { Button } from "@kdx/ui/button";
 import {
   Command,
@@ -75,7 +75,7 @@ export function AppSwitcherClient({
                       size={iconSize}
                     />
                     <span className="ml-2">
-                      {getAppName(app.id as KodixAppId)}
+                      <AppName appId={app.id as KodixAppId} />
                     </span>
                     <RxCheck
                       className={cn(
@@ -100,6 +100,11 @@ export function AppSwitcherClient({
       </PopoverContent>
     </Popover>
   );
+}
+
+function AppName({ appId }: { appId: KodixAppId }) {
+  //Had to create this component because of the rules of hooks
+  return useAppName(appId);
 }
 
 function CurrentAppIcon({
@@ -128,15 +133,16 @@ function CurrentAppIcon({
 
 function CurrentAppName({ hrefPrefix = "/apps/" }: { hrefPrefix?: string }) {
   const pathname = usePathname();
+  const currentAppPathname = pathname.split(hrefPrefix)[1]?.split("/")[0];
+
+  const currentAppId = appPathnameToAppId[currentAppPathname as AppPathnames];
+  const appName = useAppName(currentAppId);
 
   if (pathname.includes(hrefPrefix)) {
-    const currentAppPathname = pathname.split(hrefPrefix)[1]?.split("/")[0];
     if (!currentAppPathname)
       throw new Error("Could not get current app pathname");
 
-    const currentAppId = appPathnameToAppId[currentAppPathname as AppPathnames];
-
-    return <>{getAppName(currentAppId)}</>;
+    return <>{appName}</>;
   }
 
   return null;

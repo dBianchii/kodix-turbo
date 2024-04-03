@@ -42,7 +42,18 @@ export default {
       "are you sure you want to end it and start a new one": "Are you sure you want to end it and start a new one?",
       "Previous shift exists": "Previous shift exists",
       "Checkout": "Checkout",
-      "Checkout shift": "Checkout shift"
+      "Checkout shift": "Checkout shift",
+      "appDescription": "Kodix Care is a care-taking app"
+    },
+    "todo": {
+      "appDescription": "Todo is a note taking app"
+    },
+    "calendar": {
+      "appDescription": "Calendar is a calendar app",
+      "Create event": "Create event",
+      "New event": "New event",
+      "Event title": "Event title",
+      "Add description": "Add description"
     }
   },
   "Title": "Title",
@@ -53,5 +64,8 @@ export default {
   "Updating": "Updating",
   "Save": "Save",
   "Saving": "Saving",
-  "You are about to finish your shift and checkout Are you sure": "You are about to finish your shift and checkout. Are you sure?"
+  "You are about to finish your shift and checkout Are you sure": "You are about to finish your shift and checkout. Are you sure?",
+  "Kodix Care": "Kodix Care",
+  "Calendar": "Calendar",
+  "Todo": "Todo"
 } as const

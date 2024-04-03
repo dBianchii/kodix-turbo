@@ -8,7 +8,8 @@
     "./server": "./src/server.ts",
     "./client": "./src/client.ts",
     "./provider": "./src/provider.tsx",
-    "./lang": "./src/lang.ts"
+    "./lang": "./src/lang.ts",
+    "./translation-getters": "./src/translation-getters.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
@@ -18,6 +19,7 @@
     "generate": "node --import tsx/esm ./src/generate.ts"
   },
   "dependencies": {
+    "@kdx/shared": "workspace:*",
     "next-international": "^1.2.4",
     "react": "18.2.0"
   },

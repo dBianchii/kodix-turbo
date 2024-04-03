@@ -6,6 +6,7 @@ import { RxPlus } from "react-icons/rx";
 import { RRule, Weekday } from "rrule";
 
 import dayjs from "@kdx/dayjs";
+import { useI18n } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
 import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
@@ -69,6 +70,8 @@ export function CreateEventDialogButton() {
     onError: (e) => trpcErrorToastDefault(e),
   });
 
+  const t = useI18n();
+
   return (
     <Dialog
       open={open}
@@ -80,12 +83,12 @@ export function CreateEventDialogButton() {
       <DialogTrigger asChild>
         <Button size="sm">
           <RxPlus className="mr-2 size-4" />
-          Create Event
+          {t("apps.calendar.Create event")}
         </Button>
       </DialogTrigger>
       <DialogContent className="mb-64 sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>New Event</DialogTitle>
+          <DialogTitle>{t("apps.calendar.New event")}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -101,9 +104,12 @@ export function CreateEventDialogButton() {
                   name="title"
                   render={({ field }) => (
                     <FormItem className="w-full">
-                      <FormLabel>Event title</FormLabel>
+                      <FormLabel>{t("apps.calendar.Event title")}</FormLabel>
                       <FormControl>
-                        <Input placeholder="Event title..." {...field} />
+                        <Input
+                          placeholder={`${t("apps.calendar.Event title")}...`}
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage className="w-full" />
                     </FormItem>
@@ -168,7 +174,7 @@ export function CreateEventDialogButton() {
                   <FormItem>
                     <FormControl>
                       <Textarea
-                        placeholder="Add description..."
+                        placeholder={`${t("apps.calendar.Add description")}...`}
                         {...field}
                         rows={3}
                       />
@@ -183,7 +189,7 @@ export function CreateEventDialogButton() {
                 {mutation.isPending ? (
                   <LuLoader2 className="mx-2 size-4 animate-spin" />
                 ) : (
-                  "Create task"
+                  t("apps.calendar.Create event")
                 )}
               </Button>
             </DialogFooter>

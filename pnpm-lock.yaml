@@ -212,22 +212,25 @@ importers:
   packages/api:
     dependencies:
       '@kdx/auth':
-        specifier: workspace:^0.1.0
+        specifier: workspace:*
         version: link:../auth
       '@kdx/dayjs':
-        specifier: workspace:^0.1.0
+        specifier: workspace:*
         version: link:../dayjs
       '@kdx/db':
-        specifier: workspace:^0.1.0
+        specifier: workspace:*
         version: link:../db
+      '@kdx/locales':
+        specifier: workspace:*
+        version: link:../locales
       '@kdx/react-email':
-        specifier: workspace:^0.1.0
+        specifier: workspace:*
         version: link:../react-email
       '@kdx/shared':
-        specifier: workspace:^0.1.0
+        specifier: workspace:*
         version: link:../shared
       '@kdx/validators':
-        specifier: workspace:^0.1.0
+        specifier: workspace:*
         version: link:../validators
       '@trpc/server':
         specifier: 11.0.0-next.320
@@ -252,16 +255,16 @@ importers:
         version: 3.22.4
     devDependencies:
       '@kdx/eslint-config':
-        specifier: workspace:^0.2.0
+        specifier: workspace:*
         version: link:../../tooling/eslint
       '@kdx/prettier-config':
-        specifier: workspace:^0.1.0
+        specifier: workspace:*
         version: link:../../tooling/prettier
       '@kdx/tailwind-config':
-        specifier: workspace:^0.1.0
+        specifier: workspace:*
         version: link:../../tooling/tailwind
       '@kdx/tsconfig':
-        specifier: workspace:^0.1.0
+        specifier: workspace:*
         version: link:../../tooling/typescript
       '@types/node':
         specifier: ^20.11.30
@@ -413,6 +416,9 @@ importers:
 
   packages/locales:
     dependencies:
+      '@kdx/shared':
+        specifier: workspace:*
+        version: link:../shared
       next-international:
         specifier: ^1.2.4
         version: 1.2.4

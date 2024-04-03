@@ -9,7 +9,11 @@ import { RxDotsHorizontal, RxTrash } from "react-icons/rx";
 
 import type { Session } from "@kdx/auth";
 import type { KodixAppId } from "@kdx/shared";
-import { appIdToDescription, getAppName, kodixCareAppId } from "@kdx/shared";
+import {
+  useAppDescription,
+  useAppName,
+} from "@kdx/locales/translation-getters";
+import { kodixCareAppId } from "@kdx/shared";
 import { Badge } from "@kdx/ui/badge";
 import { Button, buttonVariants } from "@kdx/ui/button";
 import {
@@ -75,8 +79,8 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
 
   const appurl = getAppUrl(id);
   const appIconUrl = getAppIconUrl(id);
-  const appName = getAppName(id);
-  const appDescription = appIdToDescription[id];
+  const appName = useAppName(id);
+  const appDescription = useAppDescription(id);
 
   return (
     <Card className="flex h-64 flex-col">
@@ -98,10 +102,7 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
       </CardHeader>
       <CardContent className="grow">
         <CardDescription className="line-clamp-3">
-          {appDescription} Lorem ipsum dolor sit amet consectetur adipisicing
-          elit. Placeat inventore ullam recusandae laboriosam velit et neque,
-          asperiores magnam. Ut harum corporis facilis nemo hic repudiandae
-          voluptatum minus ea ad commodi.
+          {appDescription}
         </CardDescription>
       </CardContent>
       <CardFooter>

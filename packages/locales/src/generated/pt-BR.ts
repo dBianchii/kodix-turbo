@@ -42,7 +42,18 @@ export default {
       "Start new shift": "Iniciar novo turno",
       "Start shift": "Iniciar turno",
       "You are about to start a new shift are you sure": "Você está prestes a iniciar um novo turno. Tem certeza?",
-      "are you sure you want to end it and start a new one": "Tem certeza de que deseja encerrar o turno e começar um novo?"
+      "are you sure you want to end it and start a new one": "Tem certeza de que deseja encerrar o turno e começar um novo?",
+      "appDescription": "Kodix Care é um aplicativo de cuidado"
+    },
+    "todo": {
+      "appDescription": "Todo é um aplicativo de anotações"
+    },
+    "calendar": {
+      "appDescription": "Calendário é um aplicativo de calendário",
+      "Create event": "Criar Evento",
+      "New event": "Novo evento",
+      "Add description": "Adicionar descrição",
+      "Event title": "Título do evento"
     }
   },
   "Updating": "Atualizando",
@@ -53,5 +64,8 @@ export default {
   "Save": "Salvar",
   "Saving": "Salvando",
   "Title": "Título",
-  "You are about to finish your shift and checkout Are you sure": "Você está prestes a terminar seu turno e realizar check-out. Tem certeza?"
+  "You are about to finish your shift and checkout Are you sure": "Você está prestes a terminar seu turno e realizar check-out. Tem certeza?",
+  "Calendar": "Calendário",
+  "Kodix Care": "Kodix Care",
+  "Todo": "Pendência"
 } as const

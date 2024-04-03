@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import type { KodixAppId } from "@kdx/shared";
-import { getAppName } from "@kdx/shared";
+import { useAppName } from "@kdx/locales/translation-getters";
 
 import { getAppIconUrl } from "~/helpers/miscelaneous";
 
@@ -17,7 +17,7 @@ export function IconKodixApp({
   size?: number;
 }) {
   const appIconUrl = getAppIconUrl(props.appId);
-  const appName = getAppName(props.appId);
+  const appName = useAppName(props.appId);
 
   return (
     <>

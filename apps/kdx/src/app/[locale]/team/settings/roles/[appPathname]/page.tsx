@@ -2,7 +2,7 @@ import { notFound, redirect } from "next/navigation";
 
 import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
-import { getAppName } from "@kdx/shared";
+import { getAppName } from "@kdx/locales/translation-getters";
 
 import type { AppPathnames } from "~/helpers/miscelaneous";
 import { appIdToPathname, appPathnameToAppId } from "~/helpers/miscelaneous";
@@ -38,7 +38,7 @@ async function UserAppRolesTable({ appId }: { appId: KodixAppId }) {
   return (
     <div className="flex flex-col gap-2">
       <h1 className="font-semibold text-muted-foreground">
-        Edit {getAppName(appId)} Permissions
+        Edit {await getAppName(appId)} Permissions
       </h1>
       <DataTableAppPermissions
         initialPermissions={initialPermissions}
@@ -46,7 +46,7 @@ async function UserAppRolesTable({ appId }: { appId: KodixAppId }) {
         allAppRoles={allAppRoles}
       />
       <h1 className="font-semibold text-muted-foreground">
-        Edit {getAppName(appId)} Roles
+        Edit {await getAppName(appId)} Roles
       </h1>
       <DataTableUserAppRoles
         initialUsers={initialUsers}
