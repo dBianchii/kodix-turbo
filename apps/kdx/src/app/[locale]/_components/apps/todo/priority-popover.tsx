@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import {
   LuSignal,
@@ -8,6 +6,7 @@ import {
   LuSignalMedium,
 } from "react-icons/lu";
 
+import { useI18n } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
 import {
   Command,
@@ -102,14 +101,15 @@ export function PriorityIcon({
 }
 
 export function PriorityToTxt(priority: Priority) {
+  const t = useI18n();
   switch (priority) {
     case 0:
-      return "None";
+      return t("None");
     case 1:
-      return "Low";
+      return t("Low");
     case 2:
-      return "Medium";
+      return t("Medium");
     case 3:
-      return "High";
+      return t("High");
   }
 }

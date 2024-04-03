@@ -245,5 +245,10 @@ export default {
   "Month": "Month",
   "Year": "Year",
   "Change frequency": "Change frequency",
-  "Days": "Days"
+  "Days": "Days",
+  "Assignee": "Assignee",
+  "Create task": "Create task",
+  "Low": "Low",
+  "Medium": "Medium",
+  "High": "High"
 } as const

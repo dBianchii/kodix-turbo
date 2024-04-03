@@ -6,6 +6,7 @@ import { RxCross2, RxPlus } from "react-icons/rx";
 
 import type { schema } from "@kdx/db";
 import { format } from "@kdx/date-fns";
+import { useI18n } from "@kdx/locales/client";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Button } from "@kdx/ui/button";
 import {
@@ -69,13 +70,13 @@ export function CreateTaskDialogButton() {
   const [open, setOpen] = useState(false);
 
   const user = (team?.Users ?? []).find((x) => x.id === assignedToUserId);
-
+  const t = useI18n();
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
           <RxPlus className="mr-2 size-4" />
-          Create Task
+          {t("Create task")}
         </Button>
       </DialogTrigger>
       <DialogContent className="mb-64 sm:max-w-[600px]">
@@ -126,7 +127,7 @@ export function CreateTaskDialogButton() {
                 ) : (
                   <>
                     <HiUserCircle className="mr-2 size-4" />
-                    Assignee
+                    {t("Assignee")}
                   </>
                 )}
               </Button>
@@ -141,7 +142,7 @@ export function CreateTaskDialogButton() {
                   size="sm"
                 >
                   <DatePickerIcon date={dueDate} className="mr-2 size-4" />
-                  {dueDate ? format(dueDate, "PPP") : "Pick a date"}
+                  {dueDate ? format(dueDate, "PPP") : t("Pick a date")}
                   {dueDate && (
                     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
                     <span
@@ -160,7 +161,7 @@ export function CreateTaskDialogButton() {
         </DialogDescription>
         <DialogFooter>
           <Button type="submit" size="sm" onClick={handleCreateTask}>
-            Create task
+            {t("Create task")}
           </Button>
         </DialogFooter>
       </DialogContent>
