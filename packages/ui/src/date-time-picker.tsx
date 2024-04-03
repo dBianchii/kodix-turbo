@@ -3,7 +3,8 @@
 import type { PopoverContentProps } from "@radix-ui/react-popover";
 import * as React from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { format } from "date-fns";
+
+import { format } from "@kdx/date-fns";
 
 import { Button } from "./button";
 import { Calendar } from "./calendar";
