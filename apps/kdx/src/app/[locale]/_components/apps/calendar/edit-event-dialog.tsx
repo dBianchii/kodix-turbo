@@ -309,7 +309,7 @@ export function EditEventDialog({
                     {mutation.isPending ? (
                       <LuLoader2 className="mx-2 size-4 animate-spin" />
                     ) : (
-                      {t("Ok")}
+                      t("Ok")
                     )}
                   </Button>
                 </div>
@@ -390,7 +390,7 @@ function SubmitEditEventDialog({
                     }}
                   />
                   <Label htmlFor="thisAndFuture" className="ml-2">
-                  {t("apps.calendar.This and future events")}
+                    {t("apps.calendar.This and future events")}
                   </Label>
                 </div>
               )}

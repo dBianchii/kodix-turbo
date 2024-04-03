@@ -128,6 +128,7 @@ function TimeInfo({
     RouterOutputs["app"]["kodixCare"]["getCurrentShift"]
   >;
 }) {
+  const t = useI18n();
   return (
     <div className="flex items-center justify-start">
       {(currentShift.checkIn ?? currentShift.checkOut) && (

@@ -2,7 +2,7 @@ import { experimental_standaloneMiddleware, TRPCError } from "@trpc/server";
 
 import type { AppPermissionIds, KodixAppId } from "@kdx/shared";
 import { eq, schema } from "@kdx/db";
-import { getAppName } from "@kdx/locales/appnames";
+import { getAppName } from "@kdx/locales/translation-getters";
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "./trpc";
