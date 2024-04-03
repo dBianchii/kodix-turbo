@@ -1,4 +1,5 @@
 import dayjs from "@kdx/dayjs";
+import { getI18n } from "@kdx/locales/server";
 import { calendarAppId } from "@kdx/shared";
 import { Separator } from "@kdx/ui/separator";
 import { H1 } from "@kdx/ui/typography";
@@ -21,12 +22,12 @@ export default async function Calendar() {
     dateStart: dayjs.utc().startOf("day").toDate(),
     dateEnd: dayjs.utc().endOf("day").toDate(),
   });
-
+  const t = await getI18n();
   return (
     <MaxWidthWrapper>
       <div className="flex space-x-4">
         <IconKodixApp appId={calendarAppId} renderText={false} />
-        <H1>Calendar</H1>
+        <H1>{t("Calendar")}</H1>
       </div>
       <Separator className="my-4" />
 

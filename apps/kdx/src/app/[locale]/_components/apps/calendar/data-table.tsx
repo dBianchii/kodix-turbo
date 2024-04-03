@@ -3,6 +3,7 @@
 import type { ColumnFiltersState } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 import {
+  createColumnHelper,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -15,6 +16,7 @@ import {
   RxCalendar,
   RxChevronLeft,
   RxChevronRight,
+  RxDotsHorizontal,
   RxPencil1,
   RxTrash,
 } from "react-icons/rx";
@@ -22,6 +24,7 @@ import {
 import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
+import { useI18n } from "@kdx/locales/client";
 import { authorizedEmails } from "@kdx/shared";
 import { Button } from "@kdx/ui/button";
 import { Calendar } from "@kdx/ui/calendar";
@@ -31,6 +34,12 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@kdx/ui/context-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@kdx/ui/dropdown-menu";
 import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
@@ -47,10 +56,10 @@ import { cn } from "@kdx/ui/utils";
 import { DataTablePagination } from "~/app/[locale]/_components/pagination";
 import { api } from "~/trpc/react";
 import { CancelationDialog } from "./cancel-event-dialog";
-import { columns } from "./columns";
 import { EditEventDialog } from "./edit-event-dialog";
 
 type CalendarTask = RouterOutputs["app"]["calendar"]["getAll"][number];
+const columnHelper = createColumnHelper<CalendarTask>();
 
 export function DataTable({
   data,
@@ -86,6 +95,81 @@ export function DataTable({
     },
   });
 
+  const t = useI18n();
+
+  const columns = [
+    columnHelper.accessor("eventMasterId", {
+      header: () => (
+        <>
+          {/* <Checkbox
+            checked={table.getIsAllPageRowsSelected()}
+            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+            aria-label="Select all"
+          /> */}
+        </>
+      ),
+      cell: function Cell(info) {
+        const [openCancelDialog, setOpenCancelDialog] = useState(false);
+        const [openEditDialog, setOpenEditDialog] = useState(false);
+        return (
+          <div className="space-x-4">
+            {/* <Checkbox
+              checked={info.row.getIsSelected()}
+              onCheckedChange={(value) => info.row.toggleSelected(!!value)}
+              aria-label="Select row"
+            /> */}
+            <EditEventDialog
+              calendarTask={info.row.original}
+              open={openEditDialog}
+              setOpen={setOpenEditDialog}
+            />
+            <CancelationDialog
+              open={openCancelDialog}
+              setOpen={setOpenCancelDialog}
+              eventMasterId={info.row.original.eventMasterId}
+              eventExceptionId={info.row.original.eventExceptionId}
+              date={info.row.original.date}
+            />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <RxDotsHorizontal className="size-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                <DropdownMenuItem onClick={() => setOpenEditDialog(true)}>
+                  <RxPencil1 className="mr-2 size-4" />
+                  {t("apps.calendar.Edit event")}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setOpenCancelDialog(true)}>
+                  <RxTrash className="mr-2 size-4" />
+                  {t("apps.calendar.Delete event")}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        );
+      },
+      enableSorting: false,
+      enableHiding: false,
+    }),
+    columnHelper.accessor("title", {
+      header: () => <div>{t("Title")}</div>,
+      cell: (info) => <div className="font-bold">{info.getValue()}</div>,
+    }),
+    columnHelper.accessor("description", {
+      header: () => <div>{t("Description")}</div>,
+      cell: (info) => <div className="text-sm">{info.getValue()}</div>,
+    }),
+    columnHelper.accessor("date", {
+      header: () => <div>{t("Date")}</div>,
+      cell: (info) => (
+        <div className="text-sm">{info.getValue().toLocaleString()}</div>
+      ),
+    }),
+  ];
+
   const table = useReactTable({
     data: getAllQuery.data,
     columns,
@@ -114,10 +198,10 @@ export function DataTable({
       <div className="mt-8">
         <div className="flex justify-between">
           <div className=" w-44 space-y-2">
-            <Label htmlFor="search">Search...</Label>
+            <Label htmlFor="search">`${t("Search")}...`</Label>
             <Input
               id="search"
-              placeholder="Search by title..."
+              placeholder={`${t("Search by title")}...`}
               value={
                 (table.getColumn("title")?.getFilterValue() as string) ?? ""
               }
@@ -150,7 +234,7 @@ export function DataTable({
                   {selectedDay ? (
                     format(selectedDay, "PPP")
                   ) : (
-                    <span>Pick a date</span>
+                    <span>{t("apps.calendar.Pick a date")}</span>
                   )}
                 </Button>
               </PopoverTrigger>
@@ -191,7 +275,7 @@ export function DataTable({
               onClick={() => setSelectedDay(new Date())}
               variant={"secondary"}
             >
-              Today
+              {t("Today")}
             </Button>
           </div>
         </div>
@@ -286,7 +370,7 @@ export function DataTable({
                     colSpan={columns.length}
                     className="h-24 text-center"
                   >
-                    No events for this day
+                    {t("apps.kodixCare.No events for this day")}
                   </TableCell>
                 </TableRow>
               )}

@@ -123,7 +123,7 @@ export function CreateEventDialogButton() {
                     name="from"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>From</FormLabel>
+                        <FormLabel>{t("From")}</FormLabel>
                         <FormControl>
                           <div className="flex flex-row gap-2">
                             <DateTimePicker

@@ -5,6 +5,7 @@ import { LuLoader2 } from "react-icons/lu";
 import { MdNotificationsActive } from "react-icons/md";
 
 import type { RouterOutputs } from "@kdx/api";
+import { getI18n, getScopedI18n } from "@kdx/locales/server";
 import { Button } from "@kdx/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
 import { Separator } from "@kdx/ui/separator";
@@ -24,6 +25,8 @@ export async function NotificationsPopoverClient({
 }: {
   initialNotifications: RouterOutputs["user"]["getNotifications"];
 }) {
+  // const t = await getI18n();
+  const t = await getI18n();
   const query = api.user.getNotifications.useQuery(undefined, {
     initialData: initialNotifications,
   });
@@ -31,7 +34,7 @@ export async function NotificationsPopoverClient({
   const utils = api.useUtils();
   const acceptMutation = api.team.invitation.accept.useMutation({
     onSuccess: () => {
-      toast.success("Invitation accepted");
+      toast.success(t("header.Invitation accepted"));
       void utils.user.getNotifications.invalidate();
       router.refresh();
     },
@@ -41,7 +44,7 @@ export async function NotificationsPopoverClient({
   });
   const declineMutation = api.team.invitation.decline.useMutation({
     onSuccess: () => {
-      toast.success("Invitation declined");
+      toast.success(t("Invitation declined"));
       void utils.user.getNotifications.invalidate();
       router.refresh();
     },
@@ -60,10 +63,10 @@ export async function NotificationsPopoverClient({
             <TooltipTrigger asChild>
               <Button variant="ghost" size="icon">
                 <MdNotificationsActive className="size-4 text-orange-500" />
-                <span className="sr-only">Notifications</span>
+                <span className="sr-only">{t("notifications")}</span>
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Notifications</TooltipContent>
+            <TooltipContent>{t("notifications")}</TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </PopoverTrigger>
@@ -71,7 +74,9 @@ export async function NotificationsPopoverClient({
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <MdNotificationsActive className="size-4 text-orange-500" />
-            <h4 className="font-medium leading-none">New Notifications</h4>
+            <h4 className="font-medium leading-none">
+              {t("New notifications")}
+            </h4>
           </div>
           <Separator />
         </div>
@@ -84,7 +89,7 @@ export async function NotificationsPopoverClient({
                     <span className="font-bold text-foreground">
                       {invitation.InvitedBy.name}
                     </span>{" "}
-                    invited you to{" "}
+                    {t("invited you to")}{" "}
                     <span className="font-bold text-foreground">
                       {invitation.Team.name}
                     </span>
@@ -101,7 +106,7 @@ export async function NotificationsPopoverClient({
                     {declineMutation.isPending || acceptMutation.isPending ? (
                       <LuLoader2 className="mr-2 size-5 animate-spin" />
                     ) : (
-                      "Decline"
+                      t("Decline")
                     )}
                   </Button>
                   <Button
@@ -116,7 +121,7 @@ export async function NotificationsPopoverClient({
                     {declineMutation.isPending || acceptMutation.isPending ? (
                       <LuLoader2 className="mr-2 size-5 animate-spin" />
                     ) : (
-                      "Accept"
+                      t("accept")
                     )}
                   </Button>
                 </div>

@@ -234,7 +234,7 @@ function DoCheckoutDialogButton({
                 {mutation.isPending ? (
                   <LuLoader2 className="mx-2 size-4 animate-spin" />
                 ) : (
-                  "Checkout"
+                  t("apps.kodixCare.Checkout")
                 )}
               </Button>
             </DialogFooter>

@@ -9,6 +9,7 @@ import { Frequency, RRule } from "rrule";
 
 import type { Dayjs } from "@kdx/dayjs";
 import dayjs from "@kdx/dayjs";
+import { useI18n } from "@kdx/locales/client";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -123,6 +124,8 @@ export function RecurrencePicker({
 
   const [parent] = useAutoAnimate();
 
+  const t = useI18n();
+
   return (
     <>
       <Popover>
@@ -151,7 +154,7 @@ export function RecurrencePicker({
                         : "opacity-0",
                     )}
                   />
-                  Doesn&apos;t repeat
+                  {t("Doesnt repeat")}
                 </CommandItem>
                 {freqs.map((freq, i) => (
                   <CommandItem
@@ -186,7 +189,7 @@ export function RecurrencePicker({
                       until ?? interval > 1 ? "opacity-100" : "opacity-0",
                     )}
                   />
-                  Custom...
+                  {t("Custom")}...
                 </CommandItem>
               </CommandGroup>
             </CommandList>
@@ -199,7 +202,9 @@ export function RecurrencePicker({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Personalized Recurrence</AlertDialogTitle>
+            <AlertDialogTitle>
+              {t("apps.calendar.Custom recurrence")}
+            </AlertDialogTitle>
           </AlertDialogHeader>
           <div>
             <div className="mt-4 flex flex-row gap-4">
@@ -296,7 +301,7 @@ export function RecurrencePicker({
                   className="mt-2 space-y-3"
                   defaultValue={draftUntil === undefined ? "1" : "0"}
                 >
-                  <span className="mt-4">Ends:</span>
+                  <span className="mt-4">{t("Ends")}:</span>
                   <div
                     className="flex items-center"
                     onClick={() => setDraftUntil(undefined)}
@@ -319,7 +324,7 @@ export function RecurrencePicker({
                         onClick={() => setDraftUntil(until ?? dayjs())}
                       />
                       <Label htmlFor="r2" className="ml-2">
-                        At
+                        {t("At")}
                       </Label>
                     </div>
 
@@ -340,14 +345,14 @@ export function RecurrencePicker({
           </div>
           <AlertDialogFooter>
             <Button variant="ghost" onClick={() => closeDialog(false, false)}>
-              Cancel
+              {t("Cancel")}
             </Button>
             <Button
               onClick={() => {
                 closeDialog(false, true);
               }}
             >
-              OK
+              {t("Ok")}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

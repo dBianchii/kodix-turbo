@@ -8,6 +8,7 @@ import { RRule, Weekday } from "rrule";
 import type { RouterInputs, RouterOutputs } from "@kdx/api";
 import type { Dayjs } from "@kdx/dayjs";
 import dayjs from "@kdx/dayjs";
+import { useI18n } from "@kdx/locales/client";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -196,6 +197,7 @@ export function EditEventDialog({
 
     mutation.mutate(input);
   }
+  const t = useI18n();
 
   return (
     <Dialog
@@ -207,7 +209,7 @@ export function EditEventDialog({
     >
       <DialogContent className="mb-64 sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Edit Event</DialogTitle>
+          <DialogTitle>{t("apps.calendar.Edit event")}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <div className="flex flex-row gap-2">
@@ -219,7 +221,7 @@ export function EditEventDialog({
           </div>
           <div className="flex flex-row gap-4">
             <div className="flex flex-col space-y-2">
-              <Label>From</Label>
+              <Label>{t("From")}</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -232,7 +234,7 @@ export function EditEventDialog({
                     {from ? (
                       format(from.toDate(), "PPP")
                     ) : (
-                      <span>Pick a date</span>
+                      <span>{t("apps.calendar.Pick a date")}</span>
                     )}
                     <RxCalendar className="ml-auto size-4 opacity-50" />
                   </Button>
@@ -252,7 +254,7 @@ export function EditEventDialog({
               </Popover>
             </div>
             <div className="flex flex-col space-y-2">
-              <Label className="invisible">From</Label>
+              <Label className="invisible">{t("From")}</Label>
               <Input
                 type="time"
                 value={from.format("HH:mm")}
@@ -288,7 +290,7 @@ export function EditEventDialog({
             />
           </div>
           <Textarea
-            placeholder="Add description..."
+            placeholder={`${t("apps.calendar.Add description")}...`}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           ></Textarea>
@@ -307,7 +309,7 @@ export function EditEventDialog({
                     {mutation.isPending ? (
                       <LuLoader2 className="mx-2 size-4 animate-spin" />
                     ) : (
-                      <>OK</>
+                      {t("Ok")}
                     )}
                   </Button>
                 </div>
@@ -348,6 +350,8 @@ function SubmitEditEventDialog({
     "single" | "thisAndFuture" | "all"
   >("single");
 
+  const t = useI18n();
+
   return (
     <AlertDialog
       open={open}
@@ -357,7 +361,7 @@ function SubmitEditEventDialog({
     >
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Edit event</AlertDialogTitle>
+          <AlertDialogTitle>{t("apps.calendar.Edit event")}</AlertDialogTitle>
           <div className="my-6">
             <RadioGroup className="flex flex-col space-y-2">
               {allowedDefinitions.single && (
@@ -371,7 +375,7 @@ function SubmitEditEventDialog({
                     checked={definition === "single"}
                   />
                   <Label htmlFor="single" className="ml-2">
-                    This event
+                    {t("apps.calendar.This event")}
                   </Label>
                 </div>
               )}
@@ -386,7 +390,7 @@ function SubmitEditEventDialog({
                     }}
                   />
                   <Label htmlFor="thisAndFuture" className="ml-2">
-                    This and future events
+                  {t("apps.calendar.This and future events")}
                   </Label>
                 </div>
               )}
@@ -401,7 +405,7 @@ function SubmitEditEventDialog({
                     }}
                   />
                   <Label htmlFor="all" className="ml-2">
-                    All events
+                    {t("apps.calendar.All events")}
                   </Label>
                 </div>
               )}
@@ -409,13 +413,13 @@ function SubmitEditEventDialog({
           </div>
         </AlertDialogHeader>
         <AlertDialogFooter className="bg-background">
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{t("Cancel")}</AlertDialogCancel>
           <AlertDialogAction
             onClick={() => {
               submit(definition);
             }}
           >
-            OK
+            {t("Ok")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

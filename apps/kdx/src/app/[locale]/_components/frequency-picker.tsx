@@ -4,6 +4,7 @@ import type { Frequency } from "rrule";
 import React, { useState } from "react";
 import { RRule } from "rrule";
 
+import { useI18n } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
 import {
   Command,
@@ -55,6 +56,8 @@ export function FrequencyPicker({
 
   const freqs = [RRule.DAILY, RRule.WEEKLY, RRule.MONTHLY, RRule.YEARLY];
 
+  const t = useI18n();
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger>
@@ -68,20 +71,22 @@ export function FrequencyPicker({
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Personalized Recurrence</DialogTitle>
+              <DialogTitle>{t("apps.calendar.Custom recurrence")}</DialogTitle>
               <DialogDescription>
                 <div className="mt-4 flex flex-row gap-4">
-                  <span className="font-medium">Repeat every:</span>
+                  <span className="font-medium">{t("Repeat every")}:</span>
                   <Input type="number" placeholder="1" className="w-16" />
                   <Select defaultValue="DAILY">
                     <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Select a recurrence" />
+                      <SelectValue
+                        placeholder={t("apps.calendar.Select a recurrence")}
+                      />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="DAILY">Days</SelectItem>
-                      <SelectItem value="WEEKLY">Weeks</SelectItem>
-                      <SelectItem value="MONTHLY">Months</SelectItem>
-                      <SelectItem value="YEARLY">Years</SelectItem>
+                      <SelectItem value="DAILY">{t("Days")}</SelectItem>
+                      <SelectItem value="WEEKLY">{t("Weeks")}</SelectItem>
+                      <SelectItem value="MONTHLY">{t("Months")}</SelectItem>
+                      <SelectItem value="YEARLY">{t("Years")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -91,7 +96,7 @@ export function FrequencyPicker({
                       className="mt-2 space-y-3"
                       defaultValue={neverEnds ? "1" : "0"}
                     >
-                      <span className="mt-4 font-medium">Ends:</span>
+                      <span className="mt-4 font-medium">{t("Ends")}:</span>
                       <div className="flex items-center">
                         <RadioGroupItem
                           value="1"
@@ -101,7 +106,7 @@ export function FrequencyPicker({
                           }}
                         />
                         <Label htmlFor="r1" className="ml-2">
-                          Never
+                          {t("Never")}
                         </Label>
                       </div>
                       <div className="flex items-center">
@@ -113,7 +118,7 @@ export function FrequencyPicker({
                           }}
                         />
                         <Label htmlFor="r2" className="ml-2">
-                          At
+                          {t("At")}
                         </Label>
                         <div className=" ml-8">
                           <DatePicker
@@ -154,7 +159,7 @@ export function FrequencyPicker({
                     setDialogOpen(true);
                   }}
                 >
-                  Custom...
+                  {t("Custom")}...
                 </CommandItem>
               </CommandGroup>
             </CommandList>
@@ -166,16 +171,17 @@ export function FrequencyPicker({
 }
 
 export function FrequencyToTxt(frequency: Frequency | null) {
+  const t = useI18n();
   switch (frequency) {
     case RRule.DAILY:
-      return "Day";
+      return t("Day");
     case RRule.WEEKLY:
-      return "Week";
+      return t("Week");
     case RRule.MONTHLY:
-      return "Month";
+      return t("Month");
     case RRule.YEARLY:
-      return "Year";
+      return t("Year");
     default:
-      return "None";
+      return t("None");
   }
 }

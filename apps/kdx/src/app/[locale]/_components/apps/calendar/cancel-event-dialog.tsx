@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { LuLoader2 } from "react-icons/lu";
 
+import { useI18n } from "@kdx/locales/client";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -46,12 +47,15 @@ export function CancelationDialog({
       trpcErrorToastDefault(err);
     },
   });
+  const t = useI18n();
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Exclude recurrent event</AlertDialogTitle>
+          <AlertDialogTitle>
+            {t("apps.calendar.Exclude current event")}
+          </AlertDialogTitle>
           <div className="py-4">
             <RadioGroup
               className="flex flex-col space-y-2"
@@ -67,7 +71,7 @@ export function CancelationDialog({
                   className=""
                 />
                 <Label htmlFor="single" className="ml-2">
-                  This event
+                  {t("apps.calendar.This event")}
                 </Label>
               </div>
               <div className="flex">
@@ -79,7 +83,7 @@ export function CancelationDialog({
                   }}
                 />
                 <Label htmlFor="thisAndFuture" className="ml-2">
-                  This and future events
+                  {t("apps.calendar.This and future events")}
                 </Label>
               </div>
               <div className="flex">
@@ -91,14 +95,14 @@ export function CancelationDialog({
                   }}
                 />
                 <Label htmlFor="all" className="ml-2">
-                  All events
+                  {t("apps.calendar.All events")}
                 </Label>
               </div>
             </RadioGroup>
           </div>
         </AlertDialogHeader>
         <AlertDialogFooter className="bg-background">
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{t("Cancel")}</AlertDialogCancel>
           <AlertDialogAction
             onClick={(e) => {
               e.preventDefault();
@@ -124,7 +128,7 @@ export function CancelationDialog({
             {mutation.isPending ? (
               <LuLoader2 className="size-4 animate-spin" />
             ) : (
-              <>OK</>
+              t("Ok")
             )}
           </AlertDialogAction>
         </AlertDialogFooter>

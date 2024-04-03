@@ -9,6 +9,7 @@ import { RxDotsHorizontal, RxTrash } from "react-icons/rx";
 
 import type { Session } from "@kdx/auth";
 import type { KodixAppId } from "@kdx/shared";
+import { useI18n } from "@kdx/locales/client";
 import {
   useAppDescription,
   useAppName,
@@ -55,11 +56,12 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const utils = api.useUtils();
+  const t = useI18n();
   const installAppMutation = api.team.installApp.useMutation({
     onSuccess: () => {
       void utils.app.getAll.invalidate();
       router.refresh();
-      toast(`App ${appName} installed`);
+      toast(`${t("App")} ${appName} ${t("installed").toLowerCase()}`);
     },
   });
   const uninstallAppMutation = api.team.uninstallApp.useMutation({
@@ -67,10 +69,10 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
       setOpen(false);
       void utils.app.getAll.invalidate();
       router.refresh();
-      toast.success(`App ${appName} uninstalled`);
+      toast.success(`${t("App")} ${appName} ${t("uninstalled").toLowerCase()}`);
     },
     onError: () => {
-      toast.error(`Error uninstalling ${appName}`);
+      toast.error(`${t("Error uninstalling")} ${appName}`);
     },
   });
 
@@ -94,7 +96,7 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
           />
           {installed ? (
             <Badge variant={"green"} className="h-5">
-              Installed
+              {t("Installed")}
             </Badge>
           ) : null}
         </div>
@@ -114,7 +116,7 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
               !isActive && "pointer-events-none opacity-50",
             )}
           >
-            {isActive ? "Open" : "Coming soon"}
+            {isActive ? t("Open") : t("Coming soon")}
           </Link>
         )}
         {session && !installed && (
@@ -136,7 +138,7 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
             {installAppMutation.isPending && (
               <LuLoader2 className="mr-2 size-5 animate-spin" />
             )}
-            {isActive ? "Install" : "Coming soon"}
+            {isActive ? t("Install") : t("Coming soon")}
           </Button>
         )}
         {!session && (
@@ -144,7 +146,7 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
             href="/signin"
             className={cn(buttonVariants({ variant: "default" }))}
           >
-            Install
+            {t("Install")}
           </Link>
         )}
         {/* <Button variant={"outline"} className="flex-none">
@@ -156,14 +158,14 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="ml-auto">
                   <RxDotsHorizontal className="size-4" />
-                  <span className="sr-only">Open dialog</span>
+                  <span className="sr-only">{t("open-dialog")}</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DialogTrigger asChild>
                   <DropdownMenuItem>
                     <RxTrash className="mr-2 size-4 text-destructive" />
-                    <span>Uninstall from team</span>
+                    <span>{t("Uninstall from team")}</span>
                   </DropdownMenuItem>
                 </DialogTrigger>
               </DropdownMenuContent>
@@ -171,10 +173,12 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
 
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Confirm</DialogTitle>
+                <DialogTitle>{t("confirm")}</DialogTitle>
                 <DialogDescription className="py-4">
-                  Are you sure you would like to uninstall {appName} from
-                  {" " + session?.user.activeTeamName}?
+                  {t("are-you-sure-you-would-like-to-uninstall")} {appName}{" "}
+                  {t("From").toLowerCase()}
+                  {" " + session?.user.activeTeamName}
+                  {t("questionmark")}
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter className="gap-3 sm:justify-between">
@@ -183,7 +187,7 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
                   onClick={() => setOpen(false)}
                   disabled={uninstallAppMutation.isPending}
                 >
-                  Cancel
+                  {t("Cancel")}
                 </Button>
                 <Button
                   disabled={uninstallAppMutation.isPending}
@@ -195,7 +199,7 @@ export function KodixApp({ id, installed, session }: KodixAppProps) {
                   {uninstallAppMutation.isPending && (
                     <LuLoader2 className="mr-2 size-5 animate-spin" />
                   )}
-                  Uninstall
+                  {t("Uninstall")}
                 </Button>
               </DialogFooter>
             </DialogContent>
