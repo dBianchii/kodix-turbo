@@ -5,6 +5,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import type { RouterOutputs } from "@kdx/api";
 import type { KodixAppId } from "@kdx/shared";
 import type { FixedColumnsType } from "@kdx/ui/data-table";
+import { useI18n } from "@kdx/locales/client";
 import { DataTable } from "@kdx/ui/data-table";
 import { MultiSelect } from "@kdx/ui/multi-select";
 
@@ -89,9 +90,10 @@ export function DataTableAppPermissions({
       },
     });
 
+  const t = useI18n();
   const columns = [
     columnHelper.accessor("name", {
-      header: () => <div className="pl-2">Permission</div>,
+      header: () => <div className="pl-2">{t("Permission")}</div>,
       cell: (info) => (
         <div className="flex w-60 flex-row gap-3 pl-2">
           <div className="flex flex-col items-start">
@@ -101,7 +103,7 @@ export function DataTableAppPermissions({
       ),
     }),
     columnHelper.accessor("AppPermissionsToTeamAppRoles", {
-      header: "Roles",
+      header: t("Roles"),
       cell: function Cell(info) {
         const selected = info.getValue().map((role) => role.teamAppRoleId);
         return (
@@ -131,7 +133,7 @@ export function DataTableAppPermissions({
     <DataTable
       columns={columns}
       data={data}
-      noResultsMessage="This app does not have any permissions"
+      noResultsMessage={t("This app does not have any permissions")}
     ></DataTable>
   );
 }

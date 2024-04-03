@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 
 import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
+import { getI18n } from "@kdx/locales/server";
 import { getAppName } from "@kdx/locales/server-hooks";
 
 import type { AppPathnames } from "~/helpers/miscelaneous";
@@ -34,11 +35,11 @@ async function UserAppRolesTable({ appId }: { appId: KodixAppId }) {
   const initialPermissions = await api.team.appRole.getPermissions({ appId });
   const initialUsers = await api.team.appRole.getUsersWithRoles({ appId });
   const allAppRoles = await api.team.appRole.getAll({ appId });
-
+  const t = await getI18n();
   return (
     <div className="flex flex-col gap-2">
       <h1 className="font-semibold text-muted-foreground">
-        Edit {await getAppName(appId)} Permissions
+        {t("Edit {name} permissions", { name: await getAppName(appId) })}
       </h1>
       <DataTableAppPermissions
         initialPermissions={initialPermissions}
@@ -46,7 +47,7 @@ async function UserAppRolesTable({ appId }: { appId: KodixAppId }) {
         allAppRoles={allAppRoles}
       />
       <h1 className="font-semibold text-muted-foreground">
-        Edit {await getAppName(appId)} Roles
+        {t("Edit {name} roles", { name: await getAppName(appId) })}
       </h1>
       <DataTableUserAppRoles
         initialUsers={initialUsers}

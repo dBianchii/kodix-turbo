@@ -453,6 +453,9 @@ importers:
 
   packages/react-email:
     dependencies:
+      '@kdx/locales':
+        specifier: workspace:*
+        version: link:../locales
       '@kdx/shared':
         specifier: workspace:*
         version: link:../shared
@@ -521,6 +524,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.3.4
         version: 3.3.4(react-hook-form@7.51.2)
+      '@kdx/locales':
+        specifier: workspace:*
+        version: link:../locales
       '@radix-ui/react-alert-dialog':
         specifier: ^1.0.5
         version: 1.0.5(@types/react-dom@18.2.22)(@types/react@18.2.71)(react-dom@18.2.0)(react@18.2.0)
