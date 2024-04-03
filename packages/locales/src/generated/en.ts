@@ -244,5 +244,6 @@ export default {
   "Week": "Week",
   "Month": "Month",
   "Year": "Year",
-  "Change frequency": "Change frequency"
+  "Change frequency": "Change frequency",
+  "Days": "Days"
 } as const

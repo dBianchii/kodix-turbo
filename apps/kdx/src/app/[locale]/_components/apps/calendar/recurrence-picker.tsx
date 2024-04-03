@@ -179,7 +179,7 @@ export function RecurrencePicker({
                           : "opacity-0",
                       )}
                     />
-                    {t("Every")} {FrequencyToTxt(freq).toLowerCase()}
+                    {t("Every")} {FrequencyToTxt(freq, 1).toLowerCase()}
                   </CommandItem>
                 ))}
                 <CommandItem onSelect={() => setOpen(true)}>
@@ -221,7 +221,10 @@ export function RecurrencePicker({
               <Popover>
                 <PopoverTrigger asChild>
                   <Button variant="outline" size="sm">
-                    {FrequencyToTxt(draftFrequency).toLowerCase()}
+                    {FrequencyToTxt(
+                      draftFrequency,
+                      draftInterval,
+                    ).toLowerCase()}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent
