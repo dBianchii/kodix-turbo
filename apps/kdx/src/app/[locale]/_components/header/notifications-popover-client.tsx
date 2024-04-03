@@ -5,6 +5,7 @@ import { LuLoader2 } from "react-icons/lu";
 import { MdNotificationsActive } from "react-icons/md";
 
 import type { RouterOutputs } from "@kdx/api";
+import { useI18n } from "@kdx/locales/client";
 import { getI18n, getScopedI18n } from "@kdx/locales/server";
 import { Button } from "@kdx/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
@@ -20,13 +21,12 @@ import {
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
-export async function NotificationsPopoverClient({
+export function NotificationsPopoverClient({
   initialNotifications,
 }: {
   initialNotifications: RouterOutputs["user"]["getNotifications"];
 }) {
-  // const t = await getI18n();
-  const t = await getI18n();
+  const t = useI18n();
   const query = api.user.getNotifications.useQuery(undefined, {
     initialData: initialNotifications,
   });
