@@ -131,7 +131,7 @@ export function RecurrencePicker({
       <Popover>
         <PopoverTrigger asChild>
           <Button type="button" variant="outline" size="sm">
-            {count === 1 ? "doesn't repeat" : tzOffsetRruleText(ruleForText)}
+            {count === 1 ? t("Doesnt repeat") : tzOffsetRruleText(ruleForText)}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-300 p-0" side="bottom" align={"start"}>

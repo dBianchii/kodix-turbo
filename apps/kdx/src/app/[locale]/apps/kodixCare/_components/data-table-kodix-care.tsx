@@ -8,12 +8,13 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
+import { enUS, ptBR } from "date-fns/locale";
 import { LuLoader2 } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
 import type { TGetCareTasksInputSchema } from "@kdx/validators/trpc/app/kodixCare";
-import { useI18n } from "@kdx/locales/client";
+import { useCurrentLocale, useI18n } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
 import { Checkbox } from "@kdx/ui/checkbox";
 import { DateTimePicker } from "@kdx/ui/date-time-picker";
@@ -51,10 +52,13 @@ import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
 type CareTask = RouterOutputs["app"]["kodixCare"]["getCareTasks"][number];
-
 const columnHelper = createColumnHelper<CareTask>();
 
 const DATE_FORMAT = "LLLL dd, yyyy, HH:mm";
+const i18nlocaleToDateFnsLocale = {
+  en: enUS,
+  "pt-BR": ptBR,
+};
 export default function DataTableKodixCare({
   initialCareTasks,
   input,
@@ -120,6 +124,7 @@ export default function DataTableKodixCare({
     },
   });
   const t = useI18n();
+  const locale = useCurrentLocale();
 
   const columns = [
     columnHelper.accessor("title", {
@@ -148,7 +153,13 @@ export default function DataTableKodixCare({
     }),
     columnHelper.accessor("doneAt", {
       header: () => t("Date"),
-      cell: (ctx) => <div>{format(ctx.row.original.date, DATE_FORMAT)}</div>,
+      cell: (ctx) => (
+        <div>
+          {format(ctx.row.original.date, DATE_FORMAT, {
+            locale: i18nlocaleToDateFnsLocale[locale],
+          })}
+        </div>
+      ),
     }),
     columnHelper.accessor("doneAt", {
       header: () => t("Done at"),
