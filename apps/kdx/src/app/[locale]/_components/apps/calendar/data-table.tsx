@@ -10,7 +10,6 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { addDays, format } from "date-fns";
 import { LuLoader2 } from "react-icons/lu";
 import {
   RxCalendar,
@@ -23,6 +22,7 @@ import {
 
 import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
+import { addDays, format } from "@kdx/date-fns";
 import dayjs from "@kdx/dayjs";
 import { useI18n } from "@kdx/locales/client";
 import { authorizedEmails } from "@kdx/shared";

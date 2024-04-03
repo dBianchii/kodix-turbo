@@ -2,9 +2,9 @@
 
 import type { DateRange } from "react-day-picker";
 import * as React from "react";
-import { format } from "date-fns";
 import { RxCalendar } from "react-icons/rx";
 
+import { format } from "@kdx/date-fns";
 import { useI18n } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
 import { Calendar } from "@kdx/ui/calendar";

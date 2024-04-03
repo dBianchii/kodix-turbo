@@ -1,9 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { format } from "date-fns";
 import { RxCalendar } from "react-icons/rx";
 
+import { format } from "@kdx/date-fns";
 import { Button } from "@kdx/ui/button";
 import { Calendar } from "@kdx/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";

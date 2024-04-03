@@ -1,12 +1,12 @@
 import type { Frequency } from "rrule";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { format } from "date-fns";
 import { LuLoader2 } from "react-icons/lu";
 import { RxCalendar } from "react-icons/rx";
 import { RRule, Weekday } from "rrule";
 
 import type { RouterInputs, RouterOutputs } from "@kdx/api";
 import type { Dayjs } from "@kdx/dayjs";
+import { format } from "@kdx/date-fns";
 import dayjs from "@kdx/dayjs";
 import { useI18n } from "@kdx/locales/client";
 import {

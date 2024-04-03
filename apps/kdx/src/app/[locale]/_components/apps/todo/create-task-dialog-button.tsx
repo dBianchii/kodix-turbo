@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { format } from "date-fns";
 import { HiUserCircle } from "react-icons/hi";
 import { RxCross2, RxPlus } from "react-icons/rx";
 
 import type { schema } from "@kdx/db";
+import { format } from "@kdx/date-fns";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Button } from "@kdx/ui/button";
 import {

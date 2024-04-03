@@ -75,6 +75,9 @@ importers:
       '@kdx/auth':
         specifier: workspace:*
         version: link:../../packages/auth
+      '@kdx/date-fns':
+        specifier: workspace:*
+        version: link:../../packages/date-fns
       '@kdx/dayjs':
         specifier: workspace:*
         version: link:../../packages/dayjs
@@ -120,9 +123,6 @@ importers:
       '@vercel/speed-insights':
         specifier: ^1.0.10
         version: 1.0.10(next@14.1.4)(react@18.2.0)
-      date-fns:
-        specifier: ^3.6.0
-        version: 3.6.0
       dayjs:
         specifier: ^1.11.10
         version: 1.11.10
@@ -336,6 +336,34 @@ importers:
       '@types/react':
         specifier: ^18.2.71
         version: 18.2.71
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.0
+      prettier:
+        specifier: ^3.2.5
+        version: 3.2.5
+      typescript:
+        specifier: ^5.4.3
+        version: 5.4.3
+
+  packages/date-fns:
+    dependencies:
+      date-fns:
+        specifier: ^3.6.0
+        version: 3.6.0
+    devDependencies:
+      '@kdx/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint
+      '@kdx/locales':
+        specifier: workspace:*
+        version: link:../locales
+      '@kdx/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/prettier
+      '@kdx/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/typescript
       eslint:
         specifier: ^8.57.0
         version: 8.57.0

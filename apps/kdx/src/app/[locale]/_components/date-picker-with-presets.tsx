@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { addDays, format } from "date-fns";
 import { RxCalendar, RxChevronDown, RxCross2 } from "react-icons/rx";
 
+import { addDays, format } from "@kdx/date-fns";
 import { useI18n } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
 import { Calendar } from "@kdx/ui/calendar";
