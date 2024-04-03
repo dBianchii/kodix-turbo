@@ -15,7 +15,7 @@ export default {
     "accept": "Aceitar",
     "invited you to": "convidei você para",
     "Add more apps": "Adicione mais aplicativos",
-    "Search app": "Pesquisar aplicativo..."
+    "Search app": "Pesquisar aplicativo"
   },
   "signin": {
     "Or continue with": "Ou continue com",
@@ -91,14 +91,10 @@ export default {
   "At": "No",
   "Cancel": "Cancelar",
   "Custom": "Personalizado",
-  "Day": "Dia",
-  "Days": "Dias",
   "Description": "Descrição",
   "Doesnt repeat": "Não se repete",
   "Ends": "Termina",
   "From": "De",
-  "Month": "Mês",
-  "Months": "Meses",
   "Never": "Nunca",
   "None": "Nenhum",
   "Ok": "OK",
@@ -211,8 +207,7 @@ export default {
   "system": "Sistema",
   "dark": "Escuro",
   "light": "Luz",
-  "toggle-theme": "Alternar tema",
-  "tab": "Aba",
+  "toggle-theme": "Alterar tema",
   "seconds": "Segundos",
   "minutes": "Minutos",
   "hours": "Horas",
@@ -221,16 +216,34 @@ export default {
   "Dark": "Escuro",
   "Light": "Luz",
   "System": "Sistema",
-  "Toggle theme": "Alternar tema",
+  "Toggle theme": "Alterar tema",
   "emails": {
     "Has invited you to the teamName team on Kodix": "Convidou você para a equipe {teamName} em {site}",
     "If you were not expecting this invitation you can ignore this email": "Se você não esperava este convite, pode ignorar este e-mail. \nSe você está preocupado com a segurança da sua conta, responda a este e-mail para entrar em contato conosco.",
     "Join invitedByUsername on Kodix": "Junte-se a {invitedByUsername} no Kodix",
     "Join teamName on Kodix": "Junte-se a {teamName} em {site}",
-    "Join the team": "Junte-se à equipe",
+    "Join the team": "Junte-se ao time",
     "This invitation was intended for": "Este convite foi destinado a",
     "This invite was sent from": "Este convite foi enviado de",
     "located in": "localizado em"
   },
-  "or copy and paste this URL into your browser:": "emails.ou copie e cole este URL em seu navegador:"
+  "or copy and paste this URL into your browser:": "ou copie e cole este URL em seu navegador:",
+  "Day#one": "Dia",
+  "Day#other": "Dias",
+  "Days": "Dias",
+  "Every": "Todo",
+  "Month#one": "Mês",
+  "Month#other": "Meses",
+  "Months": "Meses",
+  "Week#one": "Semana",
+  "Week#other": "Semanas",
+  "Year#one": "Ano",
+  "Year#other": "Anos",
+  "recurrence": {
+    "At": "No"
+  },
+  "tab": "Aba",
+  "Change frequency": "Mudar a frequência",
+  "Day": "Dia",
+  "Month": "Mês"
 } as const

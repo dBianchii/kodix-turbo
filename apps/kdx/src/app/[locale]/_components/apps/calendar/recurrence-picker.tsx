@@ -179,7 +179,7 @@ export function RecurrencePicker({
                           : "opacity-0",
                       )}
                     />
-                    Every {FrequencyToTxt(freq).toLowerCase()}
+                    {t("Every")} {FrequencyToTxt(freq).toLowerCase()}
                   </CommandItem>
                 ))}
                 <CommandItem onSelect={() => setOpen(true)}>
@@ -208,7 +208,7 @@ export function RecurrencePicker({
           </AlertDialogHeader>
           <div>
             <div className="mt-4 flex flex-row gap-4">
-              <p>Repeat every:</p>
+              <p>{t("Repeat every")}:</p>
               <Input
                 type="number"
                 min={1}
@@ -222,7 +222,6 @@ export function RecurrencePicker({
                 <PopoverTrigger asChild>
                   <Button variant="outline" size="sm">
                     {FrequencyToTxt(draftFrequency).toLowerCase()}
-                    {draftInterval !== 1 ? "s" : null}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent
@@ -312,7 +311,7 @@ export function RecurrencePicker({
                       checked={draftUntil === undefined}
                     />
                     <Label htmlFor="r1" className="ml-2">
-                      Never
+                      {t("Never")}
                     </Label>
                   </div>
                   <div className="flex items-center">
@@ -324,7 +323,7 @@ export function RecurrencePicker({
                         onClick={() => setDraftUntil(until ?? dayjs())}
                       />
                       <Label htmlFor="r2" className="ml-2">
-                        {t("At")}
+                        {t("recurrence.At")}
                       </Label>
                     </div>
 

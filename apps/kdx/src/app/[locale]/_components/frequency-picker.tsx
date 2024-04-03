@@ -136,7 +136,7 @@ export function FrequencyPicker({
             </DialogHeader>
           </DialogContent>
           <Command>
-            <CommandInput placeholder="Change frequency..." />
+            <CommandInput placeholder={`${t("Change frequency")}...`} />
             <CommandList
               onSelect={() => {
                 setOpen(false);
@@ -170,17 +170,17 @@ export function FrequencyPicker({
   );
 }
 
-export function FrequencyToTxt(frequency: Frequency | null) {
+export function FrequencyToTxt(frequency: Frequency | null, count = 0) {
   const t = useI18n();
   switch (frequency) {
     case RRule.DAILY:
-      return t("Day");
+      return t("Day", { count });
     case RRule.WEEKLY:
-      return t("Week");
+      return t("Week", { count });
     case RRule.MONTHLY:
-      return t("Month");
+      return t("Month", { count });
     case RRule.YEARLY:
-      return t("Year");
+      return t("Year", { count });
     default:
       return t("None");
   }

@@ -15,7 +15,7 @@
     "accept": "Aceitar",
     "invited you to": "convidei você para",
     "Add more apps": "Adicione mais aplicativos",
-    "Search app": "Pesquisar aplicativo..."
+    "Search app": "Pesquisar aplicativo"
   },
   "signin": {
     "Or continue with": "Ou continue com",
@@ -91,14 +91,10 @@
   "At": "No",
   "Cancel": "Cancelar",
   "Custom": "Personalizado",
-  "Day": "Dia",
-  "Days": "Dias",
   "Description": "Descrição",
   "Doesnt repeat": "Não se repete",
   "Ends": "Termina",
   "From": "De",
-  "Month": "Mês",
-  "Months": "Meses",
   "Never": "Nunca",
   "None": "Nenhum",
   "Ok": "OK",
@@ -231,5 +227,23 @@
     "This invite was sent from": "Este convite foi enviado de",
     "located in": "localizado em"
   },
-  "or copy and paste this URL into your browser:": "ou copie e cole este URL em seu navegador:"
+  "or copy and paste this URL into your browser:": "ou copie e cole este URL em seu navegador:",
+  "Day#one": "Dia",
+  "Day#other": "Dias",
+  "Days": "Dias",
+  "Every": "Todo",
+  "Month#one": "Mês",
+  "Month#other": "Meses",
+  "Months": "Meses",
+  "Week#one": "Semana",
+  "Week#other": "Semanas",
+  "Year#one": "Ano",
+  "Year#other": "Anos",
+  "recurrence": {
+    "At": "No"
+  },
+  "tab": "Aba",
+  "Change frequency": "Mudar a frequência",
+  "Day": "Dia",
+  "Month": "Mês"
 }

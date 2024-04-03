@@ -15,7 +15,7 @@ export default {
     "invited you to": "invited you to",
     "accept": "Accept",
     "Add more apps": "Add more apps",
-    "Search app": "Search app..."
+    "Search app": "Search app"
   },
   "signin": {
     "Or continue with": "Or continue with",
@@ -96,16 +96,19 @@ export default {
   "Today": "Today",
   "From": "From",
   "Doesnt repeat": "Doesn't repeat",
-  "Day": "Day",
-  "Week": "Week",
-  "Month": "Month",
-  "Year": "Year",
+  "Day#one": "Day",
+  "Day#other": "Days",
+  "Week#one": "Week",
+  "Week#other": "Weeks",
+  "Month#one": "Month",
+  "Month#other": "Months",
+  "Year#one": "Year",
+  "Year#other": "Years",
   "None": "None",
   "Never": "Never",
   "Weeks": "Weeks",
   "Months": "Months",
   "Years": "Years",
-  "Days": "Days",
   "Repeat every": "Repeat every",
   "Ends": "Ends",
   "At": "At",
@@ -216,7 +219,7 @@ export default {
     "located in": "located in",
     "If you were not expecting this invitation you can ignore this email": "If you were not expecting this invitation, you can ignore this email. If you are concerned about your account's safety, please reply to this email to get in touch with us."
   },
-  "or copy and paste this URL into your browser:": "emails.or copy and paste this URL into your browser:",
+  "or copy and paste this URL into your browser:": "or copy and paste this URL into your browser:",
   "Hello": "Hello",
   "Join teamName on Kodix": "Join {teamName} on Kodix",
   "add": "Add",
@@ -232,5 +235,14 @@ export default {
   "table": "Table",
   "textarea": "Textarea",
   "toggle-theme": "Toggle theme",
-  "vazio": "Empty"
+  "vazio": "Empty",
+  "Every": "Every",
+  "recurrence": {
+    "At": "At"
+  },
+  "Day": "Day",
+  "Week": "Week",
+  "Month": "Month",
+  "Year": "Year",
+  "Change frequency": "Change frequency"
 } as const

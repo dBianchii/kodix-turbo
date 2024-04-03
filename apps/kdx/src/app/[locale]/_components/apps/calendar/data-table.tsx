@@ -198,7 +198,7 @@ export function DataTable({
       <div className="mt-8">
         <div className="flex justify-between">
           <div className=" w-44 space-y-2">
-            <Label htmlFor="search">`${t("Search")}...`</Label>
+            <Label htmlFor="search">{t("Search")}...</Label>
             <Input
               id="search"
               placeholder={`${t("Search by title")}...`}
