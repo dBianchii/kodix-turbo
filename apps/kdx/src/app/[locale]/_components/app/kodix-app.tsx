@@ -10,10 +10,7 @@ import { RxDotsHorizontal, RxTrash } from "react-icons/rx";
 import type { Session } from "@kdx/auth";
 import type { KodixAppId } from "@kdx/shared";
 import { useI18n } from "@kdx/locales/client";
-import {
-  useAppDescription,
-  useAppName,
-} from "@kdx/locales/translation-getters";
+import { useAppDescription, useAppName } from "@kdx/locales/hooks";
 import { kodixCareAppId } from "@kdx/shared";
 import { Badge } from "@kdx/ui/badge";
 import { Button, buttonVariants } from "@kdx/ui/button";

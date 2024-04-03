@@ -9,7 +9,7 @@ import { RxCaretSort, RxCheck, RxPlusCircled } from "react-icons/rx";
 import type { RouterOutputs } from "@kdx/api";
 import type { KodixAppId } from "@kdx/shared";
 import { useI18n } from "@kdx/locales/client";
-import { useAppName } from "@kdx/locales/translation-getters";
+import { useAppName } from "@kdx/locales/hooks";
 import { Button } from "@kdx/ui/button";
 import {
   Command,

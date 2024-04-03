@@ -2,7 +2,7 @@ import { notFound, redirect } from "next/navigation";
 
 import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
-import { getAppName } from "@kdx/locales/translation-getters";
+import { getAppName } from "@kdx/locales/server-hooks";
 
 import type { AppPathnames } from "~/helpers/miscelaneous";
 import { appIdToPathname, appPathnameToAppId } from "~/helpers/miscelaneous";

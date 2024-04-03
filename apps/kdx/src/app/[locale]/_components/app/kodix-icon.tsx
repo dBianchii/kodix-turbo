@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import type { KodixAppId } from "@kdx/shared";
-import { useAppName } from "@kdx/locales/translation-getters";
+import { useAppName } from "@kdx/locales/hooks";
 
 import { getAppIconUrl } from "~/helpers/miscelaneous";
 

@@ -2,18 +2,7 @@ import type { KodixAppId } from "@kdx/shared";
 import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
 
 import { useI18n } from "./client";
-import { getI18n } from "./server";
-
-const appIdToName = (t: Awaited<ReturnType<typeof getI18n>>) => ({
-  [kodixCareAppId]: t("Kodix Care"),
-  [calendarAppId]: t("Calendar"),
-  [todoAppId]: t("Todo"),
-});
-
-export const getAppName = async (appId: KodixAppId) => {
-  const t = await getI18n();
-  return appIdToName(t)[appId];
-};
+import { appIdToName } from "./internal";
 
 export const useAppName = (appId: KodixAppId) => {
   const t = useI18n();
