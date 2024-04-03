@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { LuLoader2 } from "react-icons/lu";
 
+import { useI18n } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
 import {
   Card,
@@ -50,6 +51,7 @@ export function EditTeamNameCardClient({
     },
     onError: (e) => trpcErrorToastDefault(e),
   });
+  const t = useI18n();
 
   return (
     <Card className="w-full text-left">
@@ -58,14 +60,14 @@ export function EditTeamNameCardClient({
           onSubmit={form.handleSubmit((data) => {
             toast.promise(mutation.mutateAsync(data), {
               loading: "Saving...",
-              success: "Team name saved successfully",
+              success: t("Team name saved successfully"),
             });
           })}
         >
           <CardHeader>
-            <CardTitle>Team Name</CardTitle>
+            <CardTitle>{t("Team name")}</CardTitle>
             <CardDescription>
-              This is your team&apos;s visible name
+              {t("This is your teams visible name")}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -76,7 +78,7 @@ export function EditTeamNameCardClient({
                   name="teamName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Team Name</FormLabel>
+                      <FormLabel>{t("Team name")}</FormLabel>
                       <FormControl>
                         <Input placeholder="Acme" {...field} />
                       </FormControl>
@@ -89,15 +91,16 @@ export function EditTeamNameCardClient({
           </CardContent>
           <CardFooter className="flex justify-between border-t px-6 py-4">
             <CardDescription>
-              Please use 32 characters at maximum.
+              {t("Please use 32 characters at maximum")}
             </CardDescription>
             <Button disabled={mutation.isPending}>
               {mutation.isPending ? (
                 <>
-                  <LuLoader2 className="mr-2 size-4 animate-spin" /> Saving
+                  <LuLoader2 className="mr-2 size-4 animate-spin" />{" "}
+                  {t("Saving")}
                 </>
               ) : (
-                <>Save</>
+                <>{t("Save")}</>
               )}
             </Button>
           </CardFooter>

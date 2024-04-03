@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 
 import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
+import { getI18n } from "@kdx/locales/server";
 import { Separator } from "@kdx/ui/separator";
 import { Skeleton } from "@kdx/ui/skeleton";
 
@@ -25,6 +26,7 @@ interface CustomApp {
 export default async function Team() {
   const session = await auth();
   if (!session) redirect("/");
+  const t = await getI18n();
 
   const customApps: CustomApp[] = [
     {
@@ -33,7 +35,7 @@ export default async function Team() {
       iconPath: "/appIcons/appstore.png",
     },
     {
-      appName: "Settings",
+      appName: t("Settings"),
       appUrl: "/team/settings",
       iconPath: "/appIcons/settings.png",
     },

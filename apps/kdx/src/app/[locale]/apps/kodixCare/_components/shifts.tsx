@@ -69,7 +69,7 @@ export function ShiftInProgress({
         <h2 className="font-semibold leading-none tracking-tight">
           {t("apps.kodixCare.currentShift")}
         </h2>
-        <Badge variant={"green"}>Active</Badge>
+        <Badge variant={"green"}>{t("Active")}</Badge>
       </div>
       <TimeInfo currentShift={currentShift} />
       <div className="flex items-center space-x-2 rounded-md">

@@ -6,7 +6,6 @@ import { MdNotificationsActive } from "react-icons/md";
 
 import type { RouterOutputs } from "@kdx/api";
 import { useI18n } from "@kdx/locales/client";
-import { getI18n, getScopedI18n } from "@kdx/locales/server";
 import { Button } from "@kdx/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
 import { Separator } from "@kdx/ui/separator";

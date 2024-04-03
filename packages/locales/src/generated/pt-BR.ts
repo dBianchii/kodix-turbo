@@ -42,7 +42,7 @@ export default {
       "Task marked as done": "Tarefa marcada como concluída",
       "Task marked as not done": "Tarefa marcada como não concluída",
       "Task updated": "Tarefa atualizada",
-      "Checkout": "Confira",
+      "Checkout": "Check-out",
       "Checkout shift": "Realizar check-out",
       "End previous shift and start new": "Terminar o turno anterior e começar um novo",
       "Previous shift exists": "O turno anterior existe",
@@ -180,5 +180,21 @@ export default {
   "created": "criada",
   "de": "de",
   "rows selected": "linha(s) selecionada(s).",
-  "team-name": "Nome do time"
+  "team-name": "Nome do time",
+  "settings": {
+    "These are your installed apps": "Estes são seus aplicativos instalados"
+  },
+  "Active": "Ativo",
+  "Apps": "Aplicativos",
+  "Members": "Membros",
+  "Not found": "Não encontrado",
+  "Please use 32 characters at maximum": "Use no máximo 32 caracteres",
+  "Roles": "Funções",
+  "Select your app": "Selecione seu aplicativo",
+  "Team Settings": "Configurações da equipe",
+  "Team name": "Nome do time",
+  "Team name saved successfully": "Nome da equipe salvo com sucesso",
+  "This is your teams visible name": "Esta é a sua equipe",
+  "User": "Do utilizador",
+  "Your installed apps": "Seus aplicativos instalados"
 } as const

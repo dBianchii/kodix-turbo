@@ -180,5 +180,21 @@ export default {
   "Loading": "Loading",
   "End": "End",
   "Sign in to your account": "Sign in to your account",
-  "Something went wrong please try again later": "Something went wrong, please try again later"
+  "Something went wrong please try again later": "Something went wrong, please try again later",
+  "Active": "Active",
+  "Your installed apps": "Your installed apps",
+  "settings": {
+    "These are your installed apps": "These are your installed apps"
+  },
+  "Members": "Members",
+  "Team Settings": "Team Settings",
+  "Not found": "Not found",
+  "User": "User",
+  "Roles": "Roles",
+  "Select your app": "Select your app",
+  "Apps": "Apps",
+  "Team name": "Team Name",
+  "Team name saved successfully": "Team name saved successfully",
+  "This is your teams visible name": "This is your team&apos;s visible name",
+  "Please use 32 characters at maximum": "Please use 32 characters at maximum"
 } as const

@@ -5,6 +5,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import type { RouterOutputs } from "@kdx/api";
 import type { KodixAppId } from "@kdx/shared";
 import type { FixedColumnsType } from "@kdx/ui/data-table";
+import { useI18n } from "@kdx/locales/client";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { DataTable } from "@kdx/ui/data-table";
 import { MultiSelect } from "@kdx/ui/multi-select";
@@ -89,10 +90,11 @@ export function DataTableUserAppRoles({
         void utils.team.appRole.getUsersWithRoles.invalidate();
       },
     });
+  const t = useI18n();
 
   const columns = [
     columnHelper.accessor("name", {
-      header: () => <div className="pl-2">User</div>,
+      header: () => <div className="pl-2">{t("User")}</div>,
       cell: (info) => (
         <div className="flex w-60 flex-row gap-3  pl-2">
           <div className="flex flex-col">
@@ -112,7 +114,7 @@ export function DataTableUserAppRoles({
       ),
     }),
     columnHelper.accessor("TeamAppRolesToUsers", {
-      header: "Roles",
+      header: t("Roles"),
       cell: function Cell(info) {
         const selected = info
           .getValue()

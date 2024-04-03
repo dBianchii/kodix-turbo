@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { RxChevronRight } from "react-icons/rx";
 
 import { auth } from "@kdx/auth";
+import { getI18n } from "@kdx/locales/server";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { Navigation } from "~/app/[locale]/_components/navigation";
@@ -16,31 +17,32 @@ export default async function Layout({
   const session = await auth();
   if (!session) redirect("/signin");
   const team = await api.team.getActiveTeam();
+  const t = await getI18n();
 
   const navItems = [
     {
       href: `/team/settings/apps`,
-      title: `Apps`,
+      title: t("Apps"),
     },
     {
       href: "/team/settings/roles",
-      title: `Roles`,
+      title: t("Roles"),
       shown: session.user.id === team?.ownerId,
     },
     {
       href: `/team/settings/general`,
-      title: "General",
+      title: t("General"),
     },
     {
       href: `/team/settings/members`,
-      title: "Members",
+      title: t("Members"),
     },
   ];
 
   return (
     <MaxWidthWrapper>
       <div className="flex flex-col justify-center border-b pb-4">
-        <h1 className="text-lg font-bold">Team Settings</h1>
+        <h1 className="text-lg font-bold">{t("Team Settings")}</h1>
         <div className="flex items-center">
           <RxChevronRight />
           <p className="text-base text-muted-foreground">
@@ -52,7 +54,7 @@ export default async function Layout({
         <Navigation
           items={navItems}
           goBackItem={{
-            title: "Settings",
+            title: t("Settings"),
             href: `/team/settings`,
           }}
         />
