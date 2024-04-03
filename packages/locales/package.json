@@ -9,8 +9,8 @@
     "./client": "./src/client.ts",
     "./provider": "./src/provider.tsx",
     "./lang": "./src/lang.ts",
-    "./hooks": "./src/hooks.ts",
-    "./server-hooks": "./src/server-hooks.ts"
+    "./hooks": "./src/hooks/index.ts",
+    "./server-hooks": "./src/hooks/server-hooks.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",

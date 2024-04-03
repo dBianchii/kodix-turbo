@@ -1,8 +1,8 @@
 import type { KodixAppId } from "@kdx/shared";
 import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
 
-import { useI18n } from "./client";
-import { appIdToName } from "./internal";
+import { useI18n } from "../client";
+import { appIdToName } from "../internal";
 
 export const useAppName = (appId: KodixAppId) => {
   const t = useI18n();
