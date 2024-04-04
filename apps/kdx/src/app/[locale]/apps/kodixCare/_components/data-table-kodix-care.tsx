@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import dayjs from "dayjs";
 import { LuLoader2 } from "react-icons/lu";
+import { RxChevronLeft, RxChevronRight, RxLockClosed } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
@@ -47,6 +49,7 @@ import { toast } from "@kdx/ui/toast";
 import { cn } from "@kdx/ui/utils";
 import { ZSaveCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 
+import { DatePicker } from "~/app/[locale]/_components/date-picker";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
@@ -57,13 +60,15 @@ const DATE_FORMAT = "LLLL dd, yyyy, HH:mm";
 
 export default function DataTableKodixCare({
   initialCareTasks,
-  input,
+  initialInput,
   session,
 }: {
   initialCareTasks: RouterOutputs["app"]["kodixCare"]["getCareTasks"];
-  input: TGetCareTasksInputSchema;
+  initialInput: TGetCareTasksInputSchema;
   session: Session;
 }) {
+  const [input, setInput] = useState(initialInput);
+
   const { data } = api.app.kodixCare.getCareTasks.useQuery(input, {
     refetchOnMount: false,
     initialData: initialCareTasks,
@@ -87,7 +92,7 @@ export default function DataTableKodixCare({
       const previousCareTasks = utils.app.kodixCare.getCareTasks.getData();
 
       // Optimistically update to the new value
-      utils.app.kodixCare.getCareTasks.setData(input, (prev) => {
+      utils.app.kodixCare.getCareTasks.setData(initialInput, (prev) => {
         return prev?.map((x) => {
           if (x.id === savedCareTask.id) {
             if (savedCareTask.doneAt !== undefined)
@@ -109,7 +114,7 @@ export default function DataTableKodixCare({
     // use the context returned from onMutate to roll back
     onError: (err, __, context) => {
       utils.app.kodixCare.getCareTasks.setData(
-        input,
+        initialInput,
         context?.previousCareTasks,
       );
       trpcErrorToastDefault(err);
@@ -127,7 +132,7 @@ export default function DataTableKodixCare({
       cell: (ctx) => (
         <div className="flex flex-row items-center">
           <div className="w-8">
-            {ctx.row.original.id.length > 0 && (
+            {ctx.row.original.id.length > 0 ? (
               <Checkbox
                 onClick={(e) => {
                   e.stopPropagation();
@@ -140,6 +145,8 @@ export default function DataTableKodixCare({
                 checked={!!ctx.row.original.doneAt}
                 className="size-5"
               />
+            ) : (
+              <RxLockClosed className="size-4" />
             )}
           </div>
           <span className="font-semibold">{ctx.getValue()}</span>
@@ -174,6 +181,18 @@ export default function DataTableKodixCare({
     return data?.find((x) => x.id === currentlyEditing);
   }, [currentlyEditing, data]);
 
+  const leftArrowRef = useRef<HTMLButtonElement>(null);
+  const rightArrowRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const keyDownHandler = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") leftArrowRef.current?.click();
+      else if (e.key === "ArrowRight") rightArrowRef.current?.click();
+    };
+    document.addEventListener("keydown", keyDownHandler);
+    return () => document.removeEventListener("keydown", keyDownHandler);
+  }, []);
+
   return (
     <>
       {currentlyEditingCareTask && (
@@ -199,7 +218,44 @@ export default function DataTableKodixCare({
           />
         </>
       )}
-      <div className="rounded-md border">
+      <div className="flex justify-center gap-2">
+        <Button
+          ref={leftArrowRef}
+          variant="ghost"
+          onClick={() => {
+            setInput((prev) => ({
+              dateStart: dayjs(prev.dateStart).add(-1, "days").toDate(),
+              dateEnd: dayjs(prev.dateEnd).add(-1, "days").toDate(),
+            }));
+          }}
+          className="h-10 w-10 p-3"
+        >
+          <RxChevronLeft />
+        </Button>
+        <DatePicker
+          date={input.dateStart}
+          setDate={(newDate) =>
+            setInput({
+              dateStart: dayjs(newDate).startOf("day").toDate(),
+              dateEnd: dayjs(newDate).endOf("day").toDate(),
+            })
+          }
+        />
+        <Button
+          ref={rightArrowRef}
+          variant="ghost"
+          onClick={() => {
+            setInput((prev) => ({
+              dateStart: dayjs(prev.dateStart).add(1, "days").toDate(),
+              dateEnd: dayjs(prev.dateEnd).add(1, "days").toDate(),
+            }));
+          }}
+          className="h-10 w-10 p-3"
+        >
+          <RxChevronRight />
+        </Button>
+      </div>
+      <div className="mt-4 rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
