@@ -254,10 +254,7 @@ export function RecurrencePicker({
                                   : "opacity-0",
                               )}
                             />
-                            <FrequencyToTxt
-                              frequency={draftFrequency}
-                              lowercase
-                            />
+                            <FrequencyToTxt frequency={freq} lowercase />
                           </CommandItem>
                         ))}
                       </CommandGroup>
