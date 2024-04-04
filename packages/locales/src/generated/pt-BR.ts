@@ -282,5 +282,8 @@ export default {
   "Every year": "Todo ano",
   "No languages found": "Nenhum idioma encontrado",
   "Search language": "Pesquisar idioma",
-  "Portuguese Brazil": "Português (Brasil)"
+  "Portuguese Brazil": "Português (Brasil)",
+  "Ended": "Terminou",
+  "No shift started yet": "Nenhum turno começou ainda",
+  "Start": "Começar"
 } as const
