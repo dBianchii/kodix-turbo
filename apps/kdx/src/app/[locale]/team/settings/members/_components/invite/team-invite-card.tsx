@@ -6,6 +6,7 @@ import { LuLoader2, LuMailCheck } from "react-icons/lu";
 import { RxMinusCircled, RxPlusCircled } from "react-icons/rx";
 
 import type { Session } from "@kdx/auth";
+import { useI18n } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
 import {
   Card,
@@ -41,19 +42,26 @@ export default function TeamInviteCardClient({
   const [emails, setEmails] = useState([{ key: 0, value: "" }]); //key is used to work with formkit
   const [successes, setSuccesses] = useState<string[]>([]);
 
+  const t = useI18n();
+
   const mutation = api.team.invitation.invite.useMutation({
     onSuccess: ({ successes, failures }) => {
       if (successes.length > 0) {
         toast.success(
-          `Invitation(s) sent${
-            successes.length ? ` to ${successes.join(", ")}` : "!"
-          }`,
+          successes.length
+            ? t("Invitations sent to people", { people: successes.join(", ") })
+            : t("Invitations sent"),
         );
       }
       if (failures.length > 0)
-        toast.error(`Failed to send invitation(s) to ${failures.join(", ")}`, {
-          important: false,
-        });
+        toast.error(
+          t("Failed to send invitation to people", {
+            people: failures.join(", "),
+          }),
+          {
+            important: false,
+          },
+        );
       setSuccesses(successes);
 
       setTimeout(() => {
@@ -88,20 +96,14 @@ export default function TeamInviteCardClient({
     >
       <Card className="w-full text-left">
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardDescription>Invite new members by email address</CardDescription>
+          <CardDescription>
+            {t("Invite new members by email address")}
+          </CardDescription>
           <Dialog>
-            {/* <DialogTrigger asChild>
-            <Button variant={"outline"} size={"sm"}>
-              <Link className="mr-2 size-4" />
-              Invite Link
-            </Button>
-          </DialogTrigger> */}
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Edit Event</DialogTitle>
+                <DialogTitle>{t("Edit Event")}</DialogTitle>
               </DialogHeader>
-              <DialogDescription></DialogDescription>
-              <DialogFooter></DialogFooter>
             </DialogContent>
           </Dialog>
         </CardHeader>
@@ -110,7 +112,7 @@ export default function TeamInviteCardClient({
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="email-0" className="mb-1 text-muted-foreground">
-                Email Address
+                {t("Email address")}
               </Label>
               <div ref={parent} className="space-y-2">
                 {emails.map((email, index) => (
@@ -164,7 +166,7 @@ export default function TeamInviteCardClient({
               }}
             >
               <RxPlusCircled className="mr-2 size-4" />
-              Add more
+              {t("Add more")}
             </Button>
           </div>
         </CardContent>
@@ -180,14 +182,15 @@ export default function TeamInviteCardClient({
               type="submit"
               disabled={!emails.some((x) => x.value.length)}
             >
-              Invite
+              {t("Invite")}
             </Button>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Invite to Team</DialogTitle>
+                <DialogTitle>{t("Invite to team")}</DialogTitle>
                 <DialogDescription>
-                  You are about to invite the following Team members, are you
-                  sure you want to continue?
+                  {t(
+                    "You are about to invite the following Team members are you sure you want to continue",
+                  )}
                 </DialogDescription>
               </DialogHeader>
               <div className="my-4 flex flex-col space-y-2">
@@ -226,10 +229,11 @@ export default function TeamInviteCardClient({
                 >
                   {mutation.isPending ? (
                     <>
-                      <LuLoader2 className="mr-2 size-4 animate-spin" /> Sending
+                      <LuLoader2 className="mr-2 size-4 animate-spin" />{" "}
+                      {t("Sending")}
                     </>
                   ) : (
-                    "Confirm"
+                    t("Confirm")
                   )}
                 </Button>
               </DialogFooter>

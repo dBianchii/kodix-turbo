@@ -59,7 +59,7 @@ export function EditTeamNameCardClient({
         <form
           onSubmit={form.handleSubmit((data) => {
             toast.promise(mutation.mutateAsync(data), {
-              loading: "Saving...",
+              loading: `${t("Saving")}...`,
               success: t("Team name saved successfully"),
             });
           })}

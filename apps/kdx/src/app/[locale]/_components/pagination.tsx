@@ -13,13 +13,7 @@ import {
   SelectValue,
 } from "@kdx/ui/select";
 
-interface DataTablePaginationProps<TData> {
-  table: Table<TData>;
-}
-
-export function DataTablePagination<TData>({
-  table,
-}: DataTablePaginationProps<TData>) {
+export function DataTablePagination<TData>({ table }: { table: Table<TData> }) {
   const t = useI18n();
   return (
     <div className="flex items-center justify-between px-2">

@@ -10,6 +10,7 @@ import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
+import { useI18n } from "@kdx/locales/client";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Button } from "@kdx/ui/button";
 import { Checkbox } from "@kdx/ui/checkbox";
@@ -47,9 +48,10 @@ export function DataTableMembers({
   });
 
   const utils = api.useUtils();
+  const t = useI18n();
   const { mutate } = api.team.removeUser.useMutation({
     onSuccess: () => {
-      toast("User removed from team");
+      toast(t("User removed from team"));
       void utils.team.getAllUsers.invalidate();
     },
     onError: (e) => trpcErrorToastDefault(e),
@@ -64,9 +66,9 @@ export function DataTableMembers({
             onCheckedChange={(value) =>
               table.toggleAllPageRowsSelected(!!value)
             }
-            aria-label="Select all"
+            aria-label={t("Select all")}
           />
-          <div className="text-muted-foreground">Select all</div>
+          <div className="text-muted-foreground">{t("Select all")}</div>
         </div>
       ),
       cell: (info) => (
@@ -75,7 +77,7 @@ export function DataTableMembers({
             <Checkbox
               checked={info.row.getIsSelected()}
               onCheckedChange={(value) => info.row.toggleSelected(!!value)}
-              aria-label="Select row"
+              aria-label={t("Select row")}
             />
           </div>
           <div className="flex flex-col">
@@ -105,7 +107,7 @@ export function DataTableMembers({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="h-8 w-8 p-0">
-                  <span className="sr-only">Open menu</span>
+                  <span className="sr-only">{t("Open menu")}</span>
                   <RxDotsHorizontal className="size-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -119,8 +121,8 @@ export function DataTableMembers({
                   }}
                 >
                   {info.row.original.id === session.user.id
-                    ? "Leave"
-                    : "Remove"}
+                    ? t("Leave")
+                    : t("Remove")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -177,7 +179,7 @@ export function DataTableMembers({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
+                {t("No members found")}
               </TableCell>
             </TableRow>
           )}

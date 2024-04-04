@@ -1,4 +1,5 @@
 import { auth } from "@kdx/auth";
+import { getI18n } from "@kdx/locales/server";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@kdx/ui/tabs";
 
 import { api } from "~/trpc/server";
@@ -11,11 +12,13 @@ export async function EditTeamMembersAndInvitesCard() {
 
   const users = await api.team.getAllUsers();
 
+  const t = await getI18n();
+
   return (
     <Tabs defaultValue="members">
       <TabsList className="">
-        <TabsTrigger value="members">Members</TabsTrigger>
-        <TabsTrigger value="invites">Invites</TabsTrigger>
+        <TabsTrigger value="members">{t("Members")}</TabsTrigger>
+        <TabsTrigger value="invites">{t("Invites")}</TabsTrigger>
       </TabsList>
       <TabsContent value="members">
         <DataTableMembers initialUsers={users} session={session} />

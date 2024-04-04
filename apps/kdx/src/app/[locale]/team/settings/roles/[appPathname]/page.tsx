@@ -39,7 +39,7 @@ async function UserAppRolesTable({ appId }: { appId: KodixAppId }) {
   return (
     <div className="flex flex-col gap-2">
       <h1 className="font-semibold text-muted-foreground">
-        {t("Edit {name} permissions", { name: await getAppName(appId) })}
+        {t("Edit name permissions", { name: await getAppName(appId) })}
       </h1>
       <DataTableAppPermissions
         initialPermissions={initialPermissions}
@@ -47,7 +47,7 @@ async function UserAppRolesTable({ appId }: { appId: KodixAppId }) {
         allAppRoles={allAppRoles}
       />
       <h1 className="font-semibold text-muted-foreground">
-        {t("Edit {name} roles", { name: await getAppName(appId) })}
+        {t("Edit name roles", { name: await getAppName(appId) })}
       </h1>
       <DataTableUserAppRoles
         initialUsers={initialUsers}

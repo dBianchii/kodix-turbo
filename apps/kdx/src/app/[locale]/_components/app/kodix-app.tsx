@@ -43,13 +43,15 @@ import { cn } from "@kdx/ui/utils";
 import { getAppIconUrl, getAppUrl } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
-interface KodixAppProps {
+export function KodixApp({
+  id,
+  installed,
+  session,
+}: {
   id: KodixAppId;
   installed: boolean;
   session: Session | null;
-}
-
-export function KodixApp({ id, installed, session }: KodixAppProps) {
+}) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const utils = api.useUtils();

@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { redirect } from "next/navigation";
 
 import { auth } from "@kdx/auth";
 
@@ -7,7 +8,8 @@ import { EditAccountNameCard } from "./_components/edit-account-name-card";
 
 export default async function GeneralAccountSettings() {
   const session = await auth();
-  if (!session) return null;
+  if (!session) redirect("/");
+
   return (
     <div className="mt-8 space-y-8 md:mt-0">
       <Suspense fallback={<SettingsEditCardSkeleton />}>

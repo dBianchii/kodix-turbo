@@ -30,7 +30,7 @@ export default async function Team() {
 
   const customApps: CustomApp[] = [
     {
-      appName: "App Store",
+      appName: t("App Store"),
       appUrl: "/apps",
       iconPath: "/appIcons/appstore.png",
     },
