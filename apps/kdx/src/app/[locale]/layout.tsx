@@ -64,23 +64,23 @@ export default function Layout(props: {
         <Analytics />
         <Toaster richColors closeButton />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <TRPCReactProvider>
-            <LocaleProvider params={props.params}>
+          <LocaleProvider params={props.params}>
+            <TRPCReactProvider>
               <div className="flex min-h-screen flex-col">
                 <Header />
                 {props.children}
                 <Footer />
               </div>
-            </LocaleProvider>
-          </TRPCReactProvider>
+            </TRPCReactProvider>
 
-          {/* UI Design Helpers */}
-          {process.env.NODE_ENV !== "production" && (
-            <div className="fixed bottom-1 z-50 flex flex-row items-center space-x-1">
-              <ThemeToggle />
-              <TailwindIndicator />
-            </div>
-          )}
+            {/* UI Design Helpers */}
+            {process.env.NODE_ENV !== "production" && (
+              <div className="fixed bottom-1 z-50 flex flex-row items-center space-x-1">
+                <ThemeToggle />
+                <TailwindIndicator />
+              </div>
+            )}
+          </LocaleProvider>
         </ThemeProvider>
       </body>
     </html>
