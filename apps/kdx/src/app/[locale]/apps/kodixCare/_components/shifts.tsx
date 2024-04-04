@@ -46,7 +46,9 @@ export function NoPreviousShift({ session }: { session: Session }) {
       </div>
       <div className="flex items-center space-x-2 rounded-md">
         <HiUserCircle className="size-5" />
-        <p className="text-sm text-muted-foreground">No shift started yet</p>
+        <p className="text-sm text-muted-foreground">
+          {t("No shift started yet")}
+        </p>
       </div>
       <ToggleShiftButton session={session} />
     </div>
@@ -103,7 +105,7 @@ export function ShiftCheckedOut({
         <h2 className="font-semibold leading-none tracking-tight">
           {t("apps.kodixCare.currentShift")}
         </h2>
-        <Badge variant={"secondary"}>Ended</Badge>
+        <Badge variant={"secondary"}>{t("Ended")}</Badge>
       </div>
       <TimeInfo currentShift={currentShift} />
       <div className="flex items-center space-x-2 rounded-md">
@@ -140,7 +142,7 @@ function TimeInfo({
       {currentShift.checkIn && (
         <div className="col mr-6 w-20">
           <Label className="text-xs text-muted-foreground" htmlFor="startbadge">
-            Start
+            {t("Start")}
           </Label>
           <Badge
             id="startbadge"

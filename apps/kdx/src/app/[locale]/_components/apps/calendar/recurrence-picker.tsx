@@ -179,7 +179,7 @@ export function RecurrencePicker({
                           : "opacity-0",
                       )}
                     />
-                    {t("Every")} {FrequencyToTxt(freq, 1).toLowerCase()}
+                    <FrequencyToTxtWithEvery frequency={freq} />
                   </CommandItem>
                 ))}
                 <CommandItem onSelect={() => setOpen(true)}>
@@ -221,10 +221,11 @@ export function RecurrencePicker({
               <Popover>
                 <PopoverTrigger asChild>
                   <Button variant="outline" size="sm">
-                    {FrequencyToTxt(
-                      draftFrequency,
-                      draftInterval,
-                    ).toLowerCase()}
+                    <FrequencyToTxt
+                      frequency={draftFrequency}
+                      count={draftInterval}
+                      lowercase
+                    />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent
@@ -253,7 +254,10 @@ export function RecurrencePicker({
                                   : "opacity-0",
                               )}
                             />
-                            {FrequencyToTxt(freq).toLowerCase()}
+                            <FrequencyToTxt
+                              frequency={draftFrequency}
+                              lowercase
+                            />
                           </CommandItem>
                         ))}
                       </CommandGroup>
@@ -361,4 +365,24 @@ export function RecurrencePicker({
       </AlertDialog>
     </>
   );
+}
+
+export function FrequencyToTxtWithEvery({
+  frequency,
+}: {
+  frequency: Frequency;
+}) {
+  const t = useI18n();
+  switch (frequency) {
+    case RRule.DAILY:
+      return t("Every day");
+    case RRule.WEEKLY:
+      return t("Every week");
+    case RRule.MONTHLY:
+      return t("Every month");
+    case RRule.YEARLY:
+      return t("Every year");
+    default:
+      return t("None");
+  }
 }

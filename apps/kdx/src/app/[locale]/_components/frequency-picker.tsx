@@ -63,7 +63,7 @@ export function FrequencyPicker({
       <PopoverTrigger>
         {children ?? (
           <Button variant="outline" size="sm">
-            {FrequencyToTxt(frequency)}
+            <FrequencyToTxt frequency={frequency} />
           </Button>
         )}
       </PopoverTrigger>
@@ -151,7 +151,7 @@ export function FrequencyPicker({
                       setOpen(false);
                     }}
                   >
-                    {FrequencyToTxt(freq)}
+                    <FrequencyToTxt frequency={freq} />
                   </CommandItem>
                 ))}
                 <CommandItem
@@ -170,18 +170,34 @@ export function FrequencyPicker({
   );
 }
 
-export function FrequencyToTxt(frequency: Frequency | null, count = 0) {
+export function FrequencyToTxt({
+  frequency,
+  count = 0,
+  lowercase = false,
+}: {
+  frequency: Frequency | null;
+  count?: number;
+  lowercase?: boolean;
+}) {
   const t = useI18n();
+  let text;
   switch (frequency) {
     case RRule.DAILY:
-      return t("Day", { count });
+      text = t("Day", { count });
+      break;
     case RRule.WEEKLY:
-      return t("Week", { count });
+      text = t("Week", { count });
+      break;
     case RRule.MONTHLY:
-      return t("Month", { count });
+      text = t("Month", { count });
+      break;
     case RRule.YEARLY:
-      return t("Year", { count });
+      text = t("Year", { count });
+      break;
     default:
-      return t("None");
+      text = t("None");
+      break;
   }
+  if (lowercase) text = text.toLowerCase();
+  return text;
 }

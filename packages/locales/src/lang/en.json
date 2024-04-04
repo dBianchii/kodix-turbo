@@ -272,5 +272,18 @@
   "Invitations sent": "Invitations sent!",
   "Failed to send invitation to people": "Failed to send invitation to {people}",
   "App Store": "App Store",
-  "Email address": "Email address"
+  "Email address": "Email address",
+  "Search language": "Search language",
+  "English": "English",
+  "No languages found": "No languages found",
+  "Edit event": "Edit event",
+  "Delete event": "Delete event",
+  "Every day": "Every day",
+  "Every week": "Every week",
+  "Every month": "Every month",
+  "Every year": "Every year",
+  "Portuguese Brazil": "Portuguese (Brazil)",
+  "No shift started yet": "No shift started yet",
+  "Start": "Start",
+  "Ended": "Ended"
 }

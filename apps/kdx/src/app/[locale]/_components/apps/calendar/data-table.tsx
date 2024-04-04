@@ -336,7 +336,7 @@ export function DataTable({
                         }}
                       >
                         <RxPencil1 className="mr-2 size-4" />
-                        Edit Event
+                        {t("Edit event")}
                       </ContextMenuItem>
                       <ContextMenuItem
                         onClick={() => {
@@ -345,7 +345,7 @@ export function DataTable({
                         }}
                       >
                         <RxTrash className="mr-2 size-4" />
-                        Delete Event
+                        {t("Delete event")}
                       </ContextMenuItem>
                     </ContextMenuContent>
                     <ContextMenuTrigger asChild>

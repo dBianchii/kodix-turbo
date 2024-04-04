@@ -2,7 +2,7 @@
 
 import { PiTranslate } from "react-icons/pi";
 
-import { useChangeLocale } from "@kdx/locales/client";
+import { useChangeLocale, useI18n } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
 import {
   Command,
@@ -15,6 +15,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
 
 export function I18nPicker() {
   const changeLocale = useChangeLocale();
+  const t = useI18n();
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -24,22 +25,22 @@ export function I18nPicker() {
       </PopoverTrigger>
       <PopoverContent className="w-[180px] p-0">
         <Command>
-          <CommandInput placeholder="Search language..." />
-          <CommandEmpty>No language found.</CommandEmpty>
+          <CommandInput placeholder={`${t("Search language")}...`} />
+          <CommandEmpty>{t("No languages found")}</CommandEmpty>
           <CommandGroup>
             <CommandItem
               onSelect={() => {
                 changeLocale("pt-BR");
               }}
             >
-              Portuguese
+              {t("Portuguese Brazil")}
             </CommandItem>
             <CommandItem
               onSelect={() => {
                 changeLocale("en");
               }}
             >
-              English
+              {t("English")}
             </CommandItem>
           </CommandGroup>
         </Command>

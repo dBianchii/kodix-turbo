@@ -1,5 +1,8 @@
 import type { FormatOptions } from "date-fns";
-import { format as dateFnsFormat } from "date-fns";
+import {
+  format as dateFnsFormat,
+  formatRelative as dateFnsFormatRelative,
+} from "date-fns";
 import { enUS } from "date-fns/locale/en-US";
 import { ptBR } from "date-fns/locale/pt-BR";
 
@@ -24,6 +27,19 @@ export const format = <DateType extends Date>(
   const locale = useCurrentLocale();
 
   return dateFnsFormat(date, formatStr, {
+    ...options,
+    locale: i18nlocaleToDateFnsLocale[locale],
+  });
+};
+
+export const formatRelative = <DateType extends Date>(
+  date: DateType | number | string,
+  baseDate: DateType | number | string,
+  options?: Omit<FormatOptions, "locale">,
+) => {
+  const locale = useCurrentLocale();
+
+  return dateFnsFormatRelative(date, baseDate, {
     ...options,
     locale: i18nlocaleToDateFnsLocale[locale],
   });
