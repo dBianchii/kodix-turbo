@@ -1,0 +1,43 @@
+{
+  "name": "@kdx/locales",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./server": "./src/server.ts",
+    "./client": "./src/client.ts",
+    "./provider": "./src/provider.tsx",
+    "./lang": "./src/lang.ts",
+    "./hooks": "./src/hooks/index.ts",
+    "./server-hooks": "./src/hooks/server-hooks.ts"
+  },
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "format": "prettier --check . '!src/generated/**' --ignore-path ../../.gitignore",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
+    "generate": "node --import tsx/esm ./src/generate.ts"
+  },
+  "dependencies": {
+    "@kdx/shared": "workspace:*",
+    "next-international": "^1.2.4",
+    "react": "18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.71",
+    "@kdx/eslint-config": "workspace:*",
+    "@kdx/prettier-config": "workspace:*",
+    "@kdx/tsconfig": "workspace:*",
+    "eslint": "^8.57.0",
+    "tsx": "4.7.1",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.3"
+  },
+  "eslintConfig": {
+    "extends": [
+      "@kdx/eslint-config/base"
+    ]
+  },
+  "prettier": "@kdx/prettier-config"
+}

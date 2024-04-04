@@ -5,6 +5,7 @@
     "esbenp.prettier-vscode",
     "yoavbls.pretty-ts-errors",
     "bradlc.vscode-tailwindcss",
-    "aaron-bond.better-comments"
+    "aaron-bond.better-comments",
+    "lokalise.i18n-ally"
   ]
 }

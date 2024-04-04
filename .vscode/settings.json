@@ -26,5 +26,12 @@
    * { "key": "f5", "command": "workbench.action.debug.selectandstart", "when": "config.workspaceKeybindings.selectAndStartDebugging.enabled && debuggersAvailable && debugState == 'inactive'" }
    * This will allow you to select the project to debug when you press F5, and only on this workspace.
    */
-  "workspaceKeybindings.selectAndStartDebugging.enabled": true
+  "workspaceKeybindings.selectAndStartDebugging.enabled": true,
+  "i18n-ally.localesPaths": ["packages/locales/src/lang"],
+  "i18n-ally.editor.preferEditor": true,
+  "i18n-ally.pathMatcher": "{locale}.json",
+  "i18n-ally.enabledFrameworks": ["next-international"],
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.extract.autoDetect": true,
+  "i18n-ally.sourceLanguage": "en"
 }

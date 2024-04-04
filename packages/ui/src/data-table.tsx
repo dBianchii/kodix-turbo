@@ -7,6 +7,8 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
+import { useI18n } from "@kdx/locales/client";
+
 import {
   Table,
   TableBody,
@@ -27,12 +29,15 @@ export type FixedColumnsType<T> = ColumnDef<T, unknown>[]; //? Using this while 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  noResultsMessage = "No results.",
+  noResultsMessage,
   onClickRow,
 }: DataTableProps<TData, TValue> & {
   noResultsMessage?: string;
   onClickRow?: () => void;
 }) {
+  const t = useI18n();
+  noResultsMessage = noResultsMessage ?? t("No results found");
+
   const table = useReactTable({
     data,
     columns,

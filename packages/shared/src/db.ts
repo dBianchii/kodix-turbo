@@ -24,13 +24,6 @@ export type KodixAppId =
   | typeof calendarAppId
   | typeof kodixCareAppId;
 
-type AllAppRoles_defaults =
-  | typeof kodixCareAdminRoleDefaultId
-  | typeof kodixCarePatientRoleDefaultId
-  | typeof kodixCareCareGiverRoleDefaultId
-  | typeof todoAdminRoleDefaultId
-  | typeof calendarAdminRoleDefaultId;
-
 export type AppPermissionIds = typeof PKodixCare_CanToggleShiftId;
 //-------------------------------  	Apps 	 -------------------------------//
 
@@ -40,29 +33,3 @@ export const appIdToAdminRole_defaultIdMap = {
   [calendarAppId]: calendarAdminRoleDefaultId,
   [kodixCareAppId]: kodixCareAdminRoleDefaultId,
 } as const;
-
-export const getAppName = (appId: KodixAppId) => {
-  const appIdToName = {
-    [kodixCareAppId]: "Kodix Care" as const,
-    [calendarAppId]: "Calendar" as const,
-    [todoAppId]: "Todo" as const,
-  };
-  return appIdToName[appId];
-};
-
-export const appIdToDescription = {
-  [kodixCareAppId]: "Kodix Care is a health care app." as const,
-  [calendarAppId]: "Calendar is a calendar app." as const,
-  [todoAppId]: "Todo is a todo app." as const,
-};
-
-export const getAppRole_defaultRoleName = (roleId: AllAppRoles_defaults) => {
-  const roleIdToName = {
-    [todoAdminRoleDefaultId]: "Admin" as const,
-    [calendarAdminRoleDefaultId]: "Admin" as const,
-    [kodixCareAdminRoleDefaultId]: "Admin" as const,
-    [kodixCarePatientRoleDefaultId]: "Patient" as const,
-    [kodixCareCareGiverRoleDefaultId]: "CareGiver" as const,
-  };
-  return roleIdToName[roleId];
-};
