@@ -285,5 +285,9 @@
   "Portuguese Brazil": "Portuguese (Brazil)",
   "No shift started yet": "No shift started yet",
   "Start": "Start",
-  "Ended": "Ended"
+  "Ended": "Ended",
+  "Login with magic link": "Login with magic link",
+  "Click here to sign in": "Click here to sign in",
+  "If you didnt request this please ignore this email": "If you didn't request this, please ignore this email.",
+  "Best regards Kodix team custom": "Best, {custom}"
 }
