@@ -53,7 +53,8 @@
       "appDescription": "Kodix Care is a care-taking app",
       "No events for this day": "No events for this day",
       "Unlock all tasks up until here": "Unlock all tasks up until here?",
-      "This will unlock all tasks of this turn up until this task": "Isso vai desbloquear todas as tarefas deste turno até esta tarefa"
+      "This will unlock all tasks of this turn up until this task": "Isso vai desbloquear todas as tarefas deste turno até esta tarefa",
+      "Successfully unlocked tasks": "Successfully unlocked tasks!"
     },
     "todo": {
       "appDescription": "Todo is a note taking app"
@@ -292,5 +293,6 @@
   "Click here to sign in": "Click here to sign in",
   "If you didnt request this please ignore this email": "If you didn't request this, please ignore this email.",
   "Best regards Kodix team custom": "Best, {custom}",
-  "Yes": "Yes"
+  "Yes": "Yes",
+  "Unlocking": "Unlocking"
 }

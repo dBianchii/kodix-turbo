@@ -46,6 +46,7 @@ if (process.env.NODE_ENV !== "production") globalForDb.conn = conn;
 
 export const db = drizzle(conn, { schema, mode: "default" });
 
+export type Drizzle = typeof db;
 export type DrizzleTransaction = MySqlTransaction<
   MySql2QueryResultHKT,
   MySql2PreparedQueryHKT,

@@ -1,6 +1,5 @@
 import { TRPCError } from "@trpc/server";
 
-import type { DrizzleTransaction } from "@kdx/db";
 import dayjs from "@kdx/dayjs";
 import { eq, schema } from "@kdx/db";
 import WarnPreviousShiftNotEnded from "@kdx/react-email/warn-previous-shift-not-ended";
@@ -12,10 +11,9 @@ import {
 
 import type { TProtectedProcedureContext } from "../../../trpc";
 import { resend } from "../../../utils/email/email";
-import { getAllHandler } from "../calendar/getAll.handler";
 import { getConfigHandler } from "../getConfig.handler";
-import { saveConfigHandler } from "../saveConfig.handler";
 import { getCurrentCareShiftHandler } from "./getCurrentCareShift.handler";
+import { cloneCalendarTasksToCareTasks } from "./utils";
 
 interface ToggleShiftOptions {
   ctx: TProtectedProcedureContext;
@@ -71,7 +69,10 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
         careShiftId: careShiftId,
         start: yesterdayStartOfDay,
         end: tomorrowEndOfDay,
-        tx,
+        ctx: {
+          ...ctx,
+          db: tx,
+        },
       });
     });
   }
@@ -127,7 +128,10 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
       careShiftId: lastCareShift.id,
       start: clonedCareTasksUntil,
       end: tomorrowEndOfDay,
-      tx,
+      ctx: {
+        ...ctx,
+        db: tx,
+      },
     });
 
     if (!lastCareShift.checkOut && !loggedUserIsCaregiverForCurrentShift)
@@ -156,60 +160,4 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
   //     tx,
   //   });
   // });
-
-  async function cloneCalendarTasksToCareTasks({
-    start,
-    end,
-    tx,
-    careShiftId,
-  }: {
-    start: Date;
-    end: Date;
-    careShiftId: string;
-    tx: DrizzleTransaction; //Function must be used with a transaction
-  }) {
-    const calendarTasks = await getAllHandler({
-      ctx,
-      input: {
-        dateStart: start,
-        dateEnd: end,
-      },
-    });
-    // await tx.careTask.createMany({
-    //   data: calendarTasks.map((calendarTask) => ({
-    //     idCareShift: careShiftId,
-    //     teamId: ctx.session.user.activeTeamId,
-    //     title: calendarTask.title,
-    //     description: calendarTask.description,
-    //     eventDate: calendarTask.date,
-    //     eventMasterId: calendarTask.eventMasterId,
-    //     doneByUserId: null,
-    //     doneAt: new Date(),
-    //   })),
-    // });
-
-    if (calendarTasks.length > 0)
-      await tx.insert(schema.careTasks).values(
-        calendarTasks.map((calendarTask) => ({
-          id: nanoid(),
-          idCareShift: careShiftId,
-          teamId: ctx.session.user.activeTeamId,
-          title: calendarTask.title,
-          description: calendarTask.description,
-          eventDate: calendarTask.date,
-          eventMasterId: calendarTask.eventMasterId,
-          doneByUserId: null,
-        })),
-      );
-
-    await saveConfigHandler({
-      ctx,
-      input: {
-        appId: kodixCareAppId,
-        config: {
-          clonedCareTasksUntil: end,
-        },
-      },
-    });
-  }
 };

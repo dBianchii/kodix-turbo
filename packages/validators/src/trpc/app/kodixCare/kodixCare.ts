@@ -22,3 +22,10 @@ export const ZSaveCareTaskInputSchema = z.object({
   details: z.string().nullable().optional(),
 });
 export type TSaveCareTaskInputSchema = z.infer<typeof ZSaveCareTaskInputSchema>;
+
+export const ZUnlockMoreTasksInputSchema = z.object({
+  selectedTimestamp: z.date(),
+});
+export type TUnlockMoreTasksInputSchema = z.infer<
+  typeof ZUnlockMoreTasksInputSchema
+>;

@@ -5,6 +5,7 @@ import {
   ZDoCheckoutForShiftInputSchema,
   ZGetCareTasksInputSchema,
   ZSaveCareTaskInputSchema,
+  ZUnlockMoreTasksInputSchema,
 } from "@kdx/validators/trpc/app/kodixCare";
 
 import {
@@ -18,6 +19,7 @@ import { getCurrentCareShiftHandler } from "./getCurrentCareShift.handler";
 import { onboardingCompletedHandler } from "./onboardingCompleted.handler";
 import { saveCareTaskHandler } from "./saveCareTask.handler";
 import { toggleShiftHandler } from "./toggleShift.handler";
+import { unlockMoreTasksHandler } from "./unlockMoreTasks.handler";
 
 export const kodixCareRouter = {
   toggleShift: protectedProcedure
@@ -39,4 +41,7 @@ export const kodixCareRouter = {
     .input(ZSaveCareTaskInputSchema)
     .mutation(saveCareTaskHandler),
   onboardingCompleted: protectedProcedure.query(onboardingCompletedHandler),
+  unlockMoreTasks: protectedProcedure
+    .input(ZUnlockMoreTasksInputSchema)
+    .mutation(unlockMoreTasksHandler),
 } satisfies TRPCRouterRecord;

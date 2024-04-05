@@ -230,7 +230,6 @@ export default function DataTableKodixCare({
           />
           <UnlockMoreTasksDialog
             task={currentlyEditingCareTask}
-            mutation={mutation}
             open={unlockMoreTasksDialogOpen}
             setOpen={setUnlockMoreTasksDialogOpen}
           />
@@ -351,16 +350,20 @@ export default function DataTableKodixCare({
 
 function UnlockMoreTasksDialog({
   task,
-  mutation,
   open,
   setOpen,
 }: {
   task: CareTask;
-  mutation: ReturnType<typeof api.app.kodixCare.saveCareTask.useMutation>;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
+  const utils = api.useUtils();
   const t = useI18n();
+  const mutation = api.app.kodixCare.unlockMoreTasks.useMutation({
+    onSuccess: () => {
+      void utils.app.kodixCare.getCareTasks.invalidate();
+    },
+  });
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogContent>
@@ -381,14 +384,13 @@ function UnlockMoreTasksDialog({
             onClick={() => {
               toast.promise(
                 mutation.mutateAsync({
-                  id: task.id,
-                  doneAt: null,
+                  selectedTimestamp: task.date,
                 }),
                 {
-                  loading: `${t("Saving")}...`,
+                  loading: `${t("Unlocking")}...`,
                   success: () => {
                     setOpen(false);
-                    return t("apps.kodixCare.Task marked as not done");
+                    return t("apps.kodixCare.Successfully unlocked tasks");
                   },
                 },
               );
