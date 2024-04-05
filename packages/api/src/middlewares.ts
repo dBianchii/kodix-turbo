@@ -14,17 +14,6 @@ const appInstalledMiddlewareFactory = (appId: KodixAppId) =>
   experimental_standaloneMiddleware<{
     ctx: TProtectedProcedureContext;
   }>().create(async ({ ctx, next }) => {
-    // const team = await ctx.prisma.team.findUnique({
-    //   where: { id: ctx.session.user.activeTeamId },
-    //   select: {
-    //     ActiveApps: {
-    //       select: {
-    //         id: true,
-    //       },
-    //     },
-    //   },
-    // });
-
     const team = await ctx.db.query.teams.findFirst({
       where: eq(schema.teams.id, ctx.session.user.activeTeamId),
       with: {
@@ -53,24 +42,6 @@ export const appPermissionMiddleware = (permissionId: AppPermissionIds) =>
   experimental_standaloneMiddleware<{
     ctx: TProtectedProcedureContext;
   }>().create(async ({ ctx, next }) => {
-    // const foundPermission = await ctx.prisma.teamAppRole.findFirst({
-    //   where: {
-    //     AppPermissions: {
-    //       some: {
-    //         id: permissionId,
-    //       },
-    //     },
-    //     Team: {
-    //       id: ctx.session.user.activeTeamId,
-    //     },
-    //     Users: {
-    //       some: {
-    //         id: ctx.session.user.id,
-    //       },
-    //     },
-    //   },
-    //   select: { id: true },
-    // });
     const foundPermission = await ctx.db.query.teamAppRoles.findFirst({
       with: {
         AppPermissionsToTeamAppRoles: {
@@ -106,16 +77,6 @@ export const appInstalledMiddleware = experimental_standaloneMiddleware<{
   ctx: TProtectedProcedureContext;
   input: { appId: KodixAppId };
 }>().create(async ({ ctx, input, next }) => {
-  // const team = await ctx.prisma.team.findUnique({
-  //   where: { id: ctx.session.user.activeTeamId },
-  //   select: {
-  //     ActiveApps: {
-  //       select: {
-  //         id: true,
-  //       },
-  //     },
-  //   },
-  // });
   const team = await ctx.db.query.teams.findFirst({
     where: eq(schema.teams.id, ctx.session.user.activeTeamId),
     with: {

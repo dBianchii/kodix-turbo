@@ -7,21 +7,6 @@ interface GetAllUsersOptions {
 }
 
 export const getAllUsersHandler = async ({ ctx }: GetAllUsersOptions) => {
-  // return await ctx.prisma.user.findMany({
-  //   where: {
-  //     Teams: {
-  //       some: {
-  //         id: ctx.session.user.activeTeamId,
-  //       },
-  //     },
-  //   },
-  //   select: {
-  //     id: true,
-  //     email: true,
-  //     name: true,
-  //     image: true,
-  //   },
-  // });
   return await ctx.db
     .select({
       id: schema.users.id,

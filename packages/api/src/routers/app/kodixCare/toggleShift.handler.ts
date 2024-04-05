@@ -42,21 +42,6 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
       .startOf("day")
       .toDate();
 
-    // return await ctx.prisma.$transaction(async (tx) => {
-    //   const careShift = await tx.careShift.create({
-    //     data: {
-    //       caregiverId: ctx.session.user.id,
-    //       teamId: ctx.session.user.activeTeamId,
-    //       checkIn: new Date(),
-    //     },
-    //   });
-    //   return await cloneCalendarTasksToCareTasks({
-    //     careShiftId: careShift.id,
-    //     start: yesterdayStartOfDay,
-    //     end: tomorrowEndOfDay,
-    //     tx,
-    //   });
-    // });
     return await ctx.db.transaction(async (tx) => {
       const careShiftId = nanoid();
       await ctx.db.insert(schema.careShifts).values({
@@ -93,15 +78,6 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
     ctx.session.user.id === lastCareShift.Caregiver.id;
 
   return await ctx.db.transaction(async (tx) => {
-    // await tx.careShift.update({
-    //   where: {
-    //     id: lastCareShift.id,
-    //   },
-    //   data: {
-    //     checkOut: loggedUserIsCaregiverForCurrentShift ? new Date() : undefined, //Also checkOut if user is the caregiver
-    //     shiftEndedAt: new Date(),
-    //   },
-    // });
     await tx
       .update(schema.careShifts)
       .set({
@@ -109,13 +85,6 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
         shiftEndedAt: new Date(),
       })
       .where(eq(schema.careShifts.id, lastCareShift.id));
-    // await tx.careShift.create({
-    //   data: {
-    //     teamId: ctx.session.user.activeTeamId,
-    //     checkIn: new Date(),
-    //     caregiverId: ctx.session.user.id,
-    //   },
-    // });
 
     await tx.insert(schema.careShifts).values({
       id: nanoid(),
@@ -143,21 +112,4 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
         react: WarnPreviousShiftNotEnded(),
       });
   });
-
-  // //3. Create a new shift, since the previous one has ended
-  // await ctx.prisma.$transaction(async (tx) => {
-  //   const newCareShift = await tx.careShift.create({
-  //     data: {
-  //       teamId: ctx.session.user.activeTeamId,
-  //       checkIn: new Date(),
-  //       caregiverId: ctx.session.user.id,
-  //     },
-  //   });
-  //   await cloneCalendarTasksToCareTasks({
-  //     careShiftId: newCareShift.id,
-  //     start: clonedCareTasksUntil,
-  //     end: tomorrowEndOfDay,
-  //     tx,
-  //   });
-  // });
 };

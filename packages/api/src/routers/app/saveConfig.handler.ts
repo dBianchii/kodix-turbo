@@ -24,22 +24,6 @@ export const saveConfigHandler = async ({ ctx, input }: SaveConfigOptions) => {
 
   const configSchema = appIdToAppTeamConfigSchema[input.appId];
   if (existingConfig) {
-    //Existing config. This means we can save even with partial data
-    // return await ctx.prisma.appTeamConfig.update({
-    //   where: {
-    //     appId_teamId: {
-    //       appId: input.appId,
-    //       teamId: ctx.session.user.activeTeamId,
-    //     },
-    //   },
-    //   data: {
-    //     config: {
-    //       ...(existingConfig.config as Prisma.JsonObject),
-    //       ...input.config,
-    //     },
-    //   },
-    // });
-
     return await ctx.db
       .update(schema.appTeamConfigs)
       .set({
@@ -58,14 +42,6 @@ export const saveConfigHandler = async ({ ctx, input }: SaveConfigOptions) => {
 
   //new record. We need to validate the whole config without partial()
   const parsedInput = configSchema.parse(input.config);
-
-  // return await ctx.prisma.appTeamConfig.create({
-  //   data: {
-  //     config: parsedInput,
-  //     teamId: ctx.session.user.activeTeamId,
-  //     appId: input.appId,
-  //   },
-  // });
 
   return await ctx.db.insert(schema.appTeamConfigs).values({
     id: nanoid(),

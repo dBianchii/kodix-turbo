@@ -34,10 +34,6 @@ export const doCheckoutForShiftHandler = async ({
       message: "Checkout time must be after checkin time",
     });
 
-  // await ctx.prisma.careShift.update({
-  //   where: { id: currentShift.id },
-  //   data: { checkOut: input },
-  // });
   await ctx.db
     .update(schema.careShifts)
     .set({ checkOut: input.date })

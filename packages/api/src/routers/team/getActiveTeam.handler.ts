@@ -7,14 +7,6 @@ interface GetActiveTeamOptions {
 }
 
 export const getActiveTeamHandler = async ({ ctx }: GetActiveTeamOptions) => {
-  // const team = await ctx.prisma.team.findUniqueOrThrow({
-  //   where: {
-  //     id: ctx.session.user.activeTeamId,
-  //   },
-  //   include: {
-  //     Users: true,
-  //   },
-  // });
   const team = await ctx.db.query.teams.findFirst({
     where: (teams, { eq }) => eq(teams.id, ctx.session.user.activeTeamId),
     with: {

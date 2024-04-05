@@ -16,11 +16,6 @@ export const nukeHandler = async ({ ctx }: NukeOptions) => {
       message: "You are not authorized to do this",
     });
 
-  // await ctx.prisma.$transaction([
-  //   ctx.prisma.eventMaster.deleteMany({
-  //     where: { teamId: ctx.session.user.activeTeamId },
-  //   }),
-  // ]);
   await ctx.db
     .delete(schema.eventMasters)
     .where(eq(schema.eventMasters.teamId, ctx.session.user.activeTeamId));

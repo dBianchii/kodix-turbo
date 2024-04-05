@@ -13,32 +13,6 @@ export const getUsersWithRolesHandler = async ({
   input,
 }: GetUsersWithRolesOptions) => {
   //TODO: Enforce input.appId is installed. (middleware)
-  // const users = await ctx.prisma.user.findMany({
-  //   where: {
-  //     Teams: {
-  //       some: {
-  //         id: ctx.session.user.activeTeamId,
-  //       },
-  //     },
-  //   },
-  //   select: {
-  //     id: true,
-  //     name: true,
-  //     email: true,
-  //     image: true,
-  //     TeamAppRole: {
-  //       select: {
-  //         id: true,
-  //         name: true,
-  //       },
-  //       where: {
-  //         teamId: ctx.session.user.activeTeamId,
-  //         appId: input.appId,
-  //       },
-  //     },
-  //   },
-  // });
-
   const users = await ctx.db.query.users.findMany({
     where: (users, { eq, inArray }) =>
       inArray(

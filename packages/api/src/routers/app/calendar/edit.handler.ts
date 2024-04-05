@@ -23,20 +23,6 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
     if (input.eventExceptionId) {
       //* Temos uma exceção.  Isso significa que o usuário quer editar a exceção.
       //* Aqui, o usuário pode alterar o title e o description ou o from da exceção.
-      // return await ctx.prisma.eventException.update({
-      //   where: {
-      //     id: input.eventExceptionId,
-      //     newDate: input.selectedTimestamp,
-      //     EventMaster: {
-      //       teamId: ctx.session.user.activeTeamId,
-      //     },
-      //   },
-      //   data: {
-      //     newDate: input.from,
-      //     title: input.title,
-      //     description: input.description,
-      //   },
-      // });
 
       return await ctx.db
         .update(schema.eventExceptions)
@@ -57,16 +43,6 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
     }
 
     //* Se estamos aqui, o usuário enviou o masterId. Vamos procurar no eventMaster uma ocorrência do RRULE que bate com o selectedTimestamp.
-    // const eventMaster = await ctx.prisma.eventMaster.findUniqueOrThrow({
-    //   where: {
-    //     id: input.eventMasterId,
-    //     teamId: ctx.session.user.activeTeamId,
-    //   },
-    //   select: {
-    //     id: true,
-    //     rule: true,
-    //   },
-    // });
     const eventMaster = await ctx.db.query.eventMasters.findFirst({
       where: (eventMasters, { and, eq }) =>
         and(
@@ -101,19 +77,6 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
     //* Para fazer isso, temos que criar uma NOVA EXCEÇÃO.
     if (input.title !== undefined || input.description !== undefined) {
       //* Se tivermos title ou description, criamos um eventInfo e também uma exceção.
-      // return await ctx.prisma.eventException.create({
-      //   data: {
-      //     EventMaster: {
-      //       connect: {
-      //         id: eventMaster.id,
-      //       },
-      //     },
-      //     description: input.description,
-      //     title: input.title,
-      //     originalDate: foundTimestamp,
-      //     newDate: input.from ?? foundTimestamp,
-      //   },
-      // });
       return await ctx.db.insert(schema.eventExceptions).values({
         id: nanoid(),
         eventMasterId: eventMaster.id,
@@ -124,14 +87,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
       });
       //! END OF PROCEDURE
     }
-    // return await ctx.prisma.eventException.create({
-    //   //* Se não tivermos title nem description, ainda temos o from. Criamos uma exceção sem eventInfo.
-    //   data: {
-    //     eventMasterId: eventMaster.id,
-    //     originalDate: foundTimestamp,
-    //     newDate: input.from ?? foundTimestamp,
-    //   },
-    // }); //! END OF PROCEDURE
+    //* Se não tivermos title nem description, ainda temos o from. Criamos uma exceção sem eventInfo.
     else
       return await ctx.db.insert(schema.eventExceptions).values({
         id: nanoid(),
@@ -158,17 +114,6 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
           input.weekdays,
       );
       if (shouldDeleteFutureExceptions)
-        // await tx.eventException.deleteMany({
-        //   where: {
-        //     EventMaster: {
-        //       teamId: ctx.session.user.activeTeamId,
-        //       id: input.eventMasterId,
-        //     },
-        //     newDate: {
-        //       gte: input.selectedTimestamp,
-        //     },
-        //   },
-        // });
         await tx
           .delete(schema.eventExceptions)
           .where(
@@ -179,18 +124,6 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
           );
 
       //* Aqui, Vamos editar o eventMaster antigo.
-      // const oldMaster = await tx.eventMaster.findUniqueOrThrow({
-      //   where: {
-      //     id: input.eventMasterId,
-      //     teamId: ctx.session.user.activeTeamId,
-      //   },
-      //   select: {
-      //     rule: true,
-      //     title: true,
-      //     description: true,
-      //     id: true,
-      //   },
-      // });
       const oldMaster = await tx.query.eventMasters.findFirst({
         where: (eventMasters, { and, eq }) =>
           and(
@@ -226,41 +159,6 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
           });
 
         //! NO SPLIT REQUIRED !!
-        // return await tx.eventMaster.update({
-        //   where: {
-        //     id: input.eventMasterId,
-        //     teamId: ctx.session.user.activeTeamId,
-        //   },
-        //   data: {
-        //     EventExceptions: shouldDeleteFutureExceptions
-        //       ? undefined //if they're deleted, no need for update
-        //       : {
-        //           updateMany: {
-        //             where: {},
-        //             data: {
-        //               title: input.title ? null : undefined,
-        //               description: input.description ? null : undefined,
-        //             },
-        //           },
-        //         },
-        //     title: input.title,
-        //     description: input.description,
-        //     DateStart: input.from ?? input.selectedTimestamp,
-        //     DateUntil: input.until ?? oldRule.options.until ?? undefined,
-        //     rule: new RRule({
-        //       dtstart: input.from ?? input.selectedTimestamp,
-        //       until: input.until ?? oldRule.options.until ?? undefined,
-        //       freq: input.frequency ?? oldRule.options.freq,
-        //       interval: input.interval ?? oldRule.options.interval,
-        //       count:
-        //         input.count !== undefined
-        //           ? input.count
-        //           : oldRule.options.count ?? undefined,
-        //       byweekday:
-        //         input.weekdays ?? oldRule.options.byweekday ?? undefined,
-        //     }).toString(),
-        //   },
-        // });
         await tx
           .update(schema.eventMasters)
           .set({
@@ -303,28 +201,6 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
             );
         return;
       }
-
-      // const updatedOldMaster = await tx.eventMaster.update({
-      //   where: {
-      //     id: input.eventMasterId,
-      //     teamId: ctx.session.user.activeTeamId,
-      //   },
-      //   data: {
-      //     DateUntil: previousOccurence,
-      //     rule: new RRule({
-      //       dtstart: oldRule.options.dtstart,
-      //       until: previousOccurence,
-      //       freq: oldRule.options.freq,
-      //       interval: oldRule.options.interval,
-      //       count: oldRule.options.count ?? undefined,
-      //       byweekday: oldRule.options.byweekday ?? undefined,
-      //     }).toString(),
-      //   },
-      //   select: {
-      //     title: true,
-      //     description: true,
-      //   },
-      // });
       await tx
         .update(schema.eventMasters)
         .set({
@@ -345,36 +221,6 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
           ),
         );
 
-      // if (updatedOldMaster.rowsAffected < 1)
-      //   throw new TRPCError({
-      //     code: "NOT_FOUND",
-      //     message: "Could not update event master",
-      //   });
-
-      // const newMaster = await tx.eventMaster.create({
-      //   data: {
-      //     teamId: ctx.session.user.activeTeamId,
-      //     DateStart: input.from ?? input.selectedTimestamp,
-      //     DateUntil: input.until ?? oldRule.options.until ?? undefined,
-      //     rule: new RRule({
-      //       dtstart: input.from ?? input.selectedTimestamp,
-      //       until: input.until ?? oldRule.options.until ?? undefined,
-      //       freq: input.frequency ?? oldRule.options.freq,
-      //       interval: input.interval ?? oldRule.options.interval,
-      //       count:
-      //         input.count !== undefined
-      //           ? input.count
-      //           : oldRule.options.count ?? undefined,
-      //       byweekday:
-      //         input.weekdays ?? oldRule.options.byweekday ?? undefined,
-      //     }).toString(),
-      //     title: input.title ?? updatedOldMaster.title,
-      //     description: input.description ?? updatedOldMaster.description,
-      //   },
-      //   select: {
-      //     id: true,
-      //   },
-      // });
       const newMasterId = nanoid();
       await tx.insert(schema.eventMasters).values({
         id: newMasterId,
@@ -397,23 +243,6 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
       });
 
       if (!shouldDeleteFutureExceptions) {
-        //We should connect the oldMaster's exceptions to the new one.
-        // await tx.eventException.updateMany({
-        //   where: {
-        //     EventMaster: {
-        //       id: oldMaster.id,
-        //       teamId: ctx.session.user.activeTeamId,
-        //     },
-        //     newDate: {
-        //       gte: input.selectedTimestamp,
-        //     },
-        //   },
-        //   data: {
-        //     title: input.title ? null : undefined,
-        //     description: input.description ? null : undefined,
-        //     eventMasterId: newMaster.id,
-        //   },
-        // });
         await tx
           .update(schema.eventExceptions)
           .set({
@@ -469,19 +298,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
             code: "NOT_FOUND",
             message: "Event not found",
           });
-        const oldRule = rrulestr(
-          // await tx.eventMaster.findUniqueOrThrow({
-          //   where: {
-          //     id: input.eventMasterId,
-          //     teamId: ctx.session.user.activeTeamId,
-          //   },
-          //   select: {
-          //     rule: true,
-          //   },
-          // })
-
-          foundEventMasterForPreviousRule.rule,
-        );
+        const oldRule = rrulestr(foundEventMasterForPreviousRule.rule);
 
         const newStartDate = input.from
           ? dayjs(oldRule.options.dtstart)
@@ -502,41 +319,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
           byweekday: input.weekdays ?? oldRule.options.byweekday ?? undefined,
         }).toString();
       })();
-      // return await tx.eventMaster.update({
-      //   where: {
-      //     id: input.eventMasterId,
-      //     teamId: ctx.session.user.activeTeamId,
-      //   },
-      //   data: {
-      //     EventExceptions: {
-      //       deleteMany:
-      //         input.from ?? input.until
-      //           ? input.from
-      //             ? {} //Delete all exceptions if from is changed.
-      //             : {
-      //                 newDate: {
-      //                   gt: input.until, //Else, delete only the exceptions that are after or equal to the new until.
-      //                 },
-      //               }
-      //           : undefined,
 
-      //       updateMany: {
-      //         where: {},
-      //         data: {
-      //           title: input.title !== undefined ? null : undefined,
-      //           description:
-      //             input.description !== undefined ? null : undefined,
-      //         },
-      //       },
-      //     },
-
-      //     title: input.title,
-      //     description: input.description,
-      //     DateStart: newRule ? rrulestr(newRule).options.dtstart : undefined,
-      //     DateUntil: input.until,
-      //     rule: newRule,
-      //   },
-      // });
       await tx
         .update(schema.eventMasters)
         .set({

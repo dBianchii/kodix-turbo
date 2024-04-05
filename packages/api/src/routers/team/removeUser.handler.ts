@@ -13,19 +13,6 @@ interface RemoveUserOptions {
 export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
   const isUserTryingToRemoveSelfFromTeam = input.userId === ctx.session.user.id;
 
-  // const team = await ctx.prisma.team.findFirstOrThrow({
-  //   where: {
-  //     id: ctx.session.user.activeTeamId,
-  //   },
-  //   select: {
-  //     ownerId: true,
-  //     Users: {
-  //       select: {
-  //         id: true,
-  //       },
-  //     },
-  //   },
-  // });
   const team = await ctx.db.query.teams.findFirst({
     where: (teams, { eq }) => eq(teams.id, ctx.session.user.activeTeamId),
     columns: {
@@ -67,18 +54,6 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
     });
 
   //TODO: Implement role based access control
-  // const otherTeam = await ctx.prisma.team.findFirst({
-  //   where: {
-  //     id: {
-  //       not: ctx.session.user.activeTeamId,
-  //     },
-  //     Users: {
-  //       some: {
-  //         id: input.userId,
-  //       },
-  //     },
-  //   },
-  // });
   const result = await ctx.db
     .select({ team: schema.teams })
     .from(schema.teams)
@@ -102,20 +77,6 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
     });
 
   //check if there are more people in the team before removal
-
-  // await ctx.prisma.user.update({
-  //   where: {
-  //     id: input.userId,
-  //   },
-  //   data: {
-  //     Teams: {
-  //       disconnect: {
-  //         id: ctx.session.user.activeTeamId,
-  //       },
-  //     },
-  //     activeTeamId: result.team.id,
-  //   },
-  // });
   await ctx.db
     .delete(schema.usersToTeams)
     .where(

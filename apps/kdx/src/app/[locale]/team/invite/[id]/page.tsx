@@ -8,12 +8,6 @@ import { api } from "~/trpc/server";
 export default async function Page({ params }: { params: { id: string } }) {
   const { id: invitationId } = params;
 
-  // const invitation = await prisma.invitation.findUnique({
-  //   where: {
-  //     id: invitationId,
-  //   },
-  // });
-
   const invitation = await db.query.invitations.findFirst({
     where: eq(schema.invitations.id, invitationId),
   });

@@ -19,35 +19,6 @@ interface InviteOptions {
 }
 
 export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
-  // const team = await ctx.prisma.team.findUniqueOrThrow({
-  //   where: {
-  //     id: input.teamId,
-  //     Users: {
-  //       some: {
-  //         id: ctx.session.user.id,
-  //       },
-  //     },
-  //   },
-  //   select: {
-  //     name: true,
-  //     id: true,
-  //     Users: {
-  //       select: {
-  //         email: true,
-  //       },
-  //     },
-  //     Invitations: {
-  //       where: {
-  //         email: {
-  //           in: input.to,
-  //         },
-  //       },
-  //       select: {
-  //         email: true,
-  //       },
-  //     },
-  //   },
-  // });
   const team = await ctx.db.query.teams.findFirst({
     where: (teams, { and, eq }) => and(eq(teams.id, input.teamId)),
     columns: {
@@ -127,11 +98,6 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
   const { successes } = getSuccessesAndErrors(results);
 
   if (successes.length)
-    // await ctx.prisma.invitation.createMany({
-    //   data: successes.map((success) => {
-    //     return invitations.find((x) => x.id === success.value.id)!;
-    //   }),
-    // });
     await ctx.db.insert(schema.invitations).values(
       successes.map((success) => {
         return invitations.find((x) => x.id === success.value.id)!;

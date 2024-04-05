@@ -11,17 +11,6 @@ interface GetConfigOptions {
 }
 
 export const getConfigHandler = async ({ ctx, input }: GetConfigOptions) => {
-  // const result = await ctx.prisma.appTeamConfig.findUnique({
-  //   where: {
-  //     appId_teamId: {
-  //       appId: input.appId,
-  //       teamId: ctx.session.user.activeTeamId,
-  //     },
-  //   },
-  //   select: {
-  //     config: true,
-  //   },
-  // });
   const result = await ctx.db.query.appTeamConfigs.findFirst({
     where: (appteamConfig, { eq, and }) =>
       and(

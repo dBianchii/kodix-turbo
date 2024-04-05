@@ -9,14 +9,6 @@ interface ChangeNameOptions {
 }
 
 export const changeNameHandler = async ({ ctx, input }: ChangeNameOptions) => {
-  // return await ctx.prisma.user.update({
-  //   where: {
-  //     id: ctx.session.user.id,
-  //   },
-  //   data: {
-  //     name: input.name,
-  //   },
-  // });
   return await ctx.db
     .update(schema.users)
     .set({ name: input.name })

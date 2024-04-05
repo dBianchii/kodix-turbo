@@ -11,19 +11,6 @@ interface AcceptOptions {
 }
 
 export const acceptHandler = async ({ ctx, input }: AcceptOptions) => {
-  // const invitation = await ctx.prisma.invitation.findUnique({
-  //   where: {
-  //     id: input.invitationId,
-  //     email: ctx.session.user.email,
-  //   },
-  //   select: {
-  //     Team: {
-  //       select: {
-  //         id: true,
-  //       },
-  //     },
-  //   },
-  // });
   const invitation = await ctx.db.query.invitations.findFirst({
     where: (invitation, { and, eq }) =>
       and(

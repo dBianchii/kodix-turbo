@@ -14,11 +14,7 @@ export default async function RolesLayout({
 }) {
   const session = await auth();
   if (!session) redirect("/");
-  // const team = await prisma.team.findUnique({
-  //   where: {
-  //     id: session.user.activeTeamId,
-  //   },
-  // });
+
   const team = await db.query.teams.findFirst({
     where: eq(schema.teams.id, session.user.activeTeamId),
     columns: {

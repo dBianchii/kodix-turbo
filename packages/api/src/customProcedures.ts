@@ -7,11 +7,6 @@ import { protectedProcedure } from "./trpc";
 
 export const isTeamOwnerProcedure = protectedProcedure.use(
   async ({ ctx, next }) => {
-    // const team = await ctx.prisma.team.findUnique({
-    //   where: {
-    //     id: ctx.session.user.activeTeamId,
-    //   },
-    // });
     const team = await ctx.db.query.teams.findFirst({
       where: eq(schema.teams.id, ctx.session.user.activeTeamId),
       columns: {

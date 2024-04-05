@@ -9,19 +9,6 @@ interface UpdateOptions {
 }
 
 export const updateHandler = async ({ ctx, input }: UpdateOptions) => {
-  // const todo = await ctx.prisma.todo.update({
-  //   where: {
-  //     id: input.id,
-  //   },
-  //   data: {
-  //     title: input.title,
-  //     assignedToUserId: input.assignedToUserId,
-  //     description: input.description,
-  //     dueDate: input.dueDate,
-  //     priority: input.priority,
-  //     status: input.status,
-  //   },
-  // });
   const todo = await ctx.db
     .update(schema.todos)
     .set({

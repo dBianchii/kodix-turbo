@@ -10,11 +10,6 @@ interface GetOneOptions {
 }
 
 export const getOneHandler = async ({ ctx, input }: GetOneOptions) => {
-  // const team = await ctx.prisma.team.findUnique({
-  //   where: {
-  //     id: input.teamId,
-  //   },
-  // });
   const team = await ctx.db.query.teams.findFirst({
     where: (team, { eq }) => eq(team.id, input.teamId),
   });

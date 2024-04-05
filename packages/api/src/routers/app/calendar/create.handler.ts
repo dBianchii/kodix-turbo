@@ -12,23 +12,6 @@ interface CreateOptions {
 }
 
 export const createHandler = async ({ ctx, input }: CreateOptions) => {
-  // return await ctx.prisma.eventMaster.create({
-  //   data: {
-  //     title: input.title,
-  //     description: input.description,
-  //     rule: new RRule({
-  //       dtstart: input.from,
-  //       until: input.until,
-  //       freq: input.frequency,
-  //       interval: input.interval,
-  //       count: input.count,
-  //       byweekday: input.weekdays,
-  //     }).toString(),
-  //     teamId: ctx.session.user.activeTeamId,
-  //     DateStart: input.from,
-  //     DateUntil: input.until,
-  //   },
-  // });
   return await ctx.db.insert(schema.eventMasters).values({
     id: nanoid(),
     title: input.title,

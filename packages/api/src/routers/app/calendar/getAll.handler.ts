@@ -24,21 +24,6 @@ export const getAllHandler = async ({
   ctx,
   input,
 }: GetAllCalendarTasksOptions) => {
-  // const eventMasters = await ctx.prisma.eventMaster.findMany({
-  //   where: {
-  //     teamId: ctx.session.user.activeTeamId,
-  //     AND: [
-  //       {
-  //         DateStart: {
-  //           lte: input.dateEnd,
-  //         },
-  //       },
-  //       {
-  //         OR: [{ DateUntil: { gte: input.dateStart } }, { DateUntil: null }],
-  //       },
-  //     ],
-  //   },
-  // });
   const eventMasters = await ctx.db.query.eventMasters.findMany({
     where: (eventMasters, { and, gte, eq, or, lte, isNull }) =>
       and(
@@ -54,30 +39,6 @@ export const getAllHandler = async ({
   });
 
   //Handling Exceptions and Cancelations
-  // const eventExceptions = await ctx.prisma.eventException.findMany({
-  //   where: {
-  //     EventMaster: {
-  //       teamId: ctx.session.user.activeTeamId,
-  //     },
-  //     OR: [
-  //       {
-  //         originalDate: { gte: input.dateStart, lte: input.dateEnd },
-  //       },
-  //       {
-  //         newDate: { gte: input.dateStart, lte: input.dateEnd },
-  //       },
-  //     ],
-  //   },
-  //   include: {
-  //     EventMaster: {
-  //       select: {
-  //         rule: true,
-  //         title: true,
-  //         description: true,
-  //       },
-  //     },
-  //   },
-  // });
   const eventExceptions = await ctx.db
     .select({
       id: schema.eventExceptions.id,
@@ -112,24 +73,6 @@ export const getAllHandler = async ({
       eq(schema.eventMasters.id, schema.eventExceptions.eventMasterId),
     );
 
-  // const eventCancelations = await ctx.prisma.eventCancellation.findMany({
-  //   where: {
-  //     EventMaster: {
-  //       teamId: ctx.session.user.activeTeamId,
-  //     },
-  //     originalDate: {
-  //       gte: input.dateStart,
-  //       lte: input.dateEnd,
-  //     },
-  //   },
-  //   include: {
-  //     EventMaster: {
-  //       select: {
-  //         id: true,
-  //       },
-  //     },
-  //   },
-  // });
   const eventCancelations = await ctx.db
     .select({
       originalDate: schema.eventCancellations.originalDate,

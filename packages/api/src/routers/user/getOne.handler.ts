@@ -11,11 +11,6 @@ interface GetOneOptions {
 }
 
 export const getOneHandler = async ({ ctx, input }: GetOneOptions) => {
-  // const user = await ctx.prisma.user.findUnique({
-  //   where: {
-  //     id: input.userId,
-  //   },
-  // });
   const user = await ctx.db.query.users.findFirst({
     where: eq(schema.users.id, input.userId),
   });

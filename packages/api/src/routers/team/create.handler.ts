@@ -10,17 +10,6 @@ interface CreateOptions {
 }
 
 export const createHandler = async ({ ctx, input }: CreateOptions) => {
-  // const team = await ctx.prisma.team.create({
-  //   data: {
-  //     ownerId: input.userId,
-  //     name: input.teamName,
-  //     Users: input.userId
-  //       ? {
-  //           connect: [{ id: input.userId }],
-  //         }
-  //       : undefined,
-  //   },
-  // });
   const teamId = nanoid();
   await ctx.db.transaction(async (tx) => {
     const team = await tx.insert(schema.teams).values({

@@ -9,20 +9,6 @@ interface GetAllForLoggedUserOptions {
 export const getAllForLoggedUserHandler = async ({
   ctx,
 }: GetAllForLoggedUserOptions) => {
-  // const teams = await ctx.prisma.team.findMany({
-  //   where: {
-  //     Users: {
-  //       some: {
-  //         id: ctx.session.user.id,
-  //       },
-  //     },
-  //   },
-  //   select: {
-  //     id: true,
-  //     name: true,
-  //     ownerId: true,
-  //   },
-  // });
   const teams = await ctx.db
     .select({ teams: schema.teams })
     .from(schema.teams)
