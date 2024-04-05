@@ -51,7 +51,9 @@
       "Checkout": "Checkout",
       "Checkout shift": "Checkout shift",
       "appDescription": "Kodix Care is a care-taking app",
-      "No events for this day": "No events for this day"
+      "No events for this day": "No events for this day",
+      "Unlock all tasks up until here": "Unlock all tasks up until here?",
+      "This will unlock all tasks of this turn up until this task": "Isso vai desbloquear todas as tarefas deste turno até esta tarefa"
     },
     "todo": {
       "appDescription": "Todo is a note taking app"
@@ -289,5 +291,6 @@
   "Login with magic link": "Login with magic link",
   "Click here to sign in": "Click here to sign in",
   "If you didnt request this please ignore this email": "If you didn't request this, please ignore this email.",
-  "Best regards Kodix team custom": "Best, {custom}"
+  "Best regards Kodix team custom": "Best, {custom}",
+  "Yes": "Yes"
 }

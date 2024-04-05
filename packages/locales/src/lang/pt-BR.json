@@ -51,7 +51,9 @@
       "You are about to start a new shift are you sure": "Você está prestes a iniciar um novo turno. Tem certeza?",
       "are you sure you want to end it and start a new one": "Tem certeza de que deseja encerrar o turno e começar um novo?",
       "appDescription": "Kodix Care é um app de cuidado",
-      "No events for this day": "Não há eventos neste dia"
+      "No events for this day": "Não há eventos neste dia",
+      "Unlock all tasks up until here": "Unlock all tasks up until here?",
+      "This will unlock all tasks of this turn up until this task": "Isso vai desbloquear todas as tarefas deste turno até esta tarefa"
     },
     "todo": {
       "appDescription": "Todo é um app de anotações"
@@ -289,5 +291,6 @@
   "Best regards Kodix team custom": "Atenciosamente, {custom}",
   "Click here to sign in": "Clique aqui para entrar",
   "If you didnt request this please ignore this email": "Se você não solicitou isso, ignore este e-mail.",
-  "Login with magic link": "Faça login com link mágico"
+  "Login with magic link": "Faça login com link mágico",
+  "Yes": "Sim"
 }

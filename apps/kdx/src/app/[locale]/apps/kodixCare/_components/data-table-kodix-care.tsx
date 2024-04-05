@@ -16,6 +16,16 @@ import type { Session } from "@kdx/auth";
 import type { TGetCareTasksInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import { format } from "@kdx/date-fns";
 import { useI18n } from "@kdx/locales/client";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@kdx/ui/alert-dialog";
 import { Button } from "@kdx/ui/button";
 import { Checkbox } from "@kdx/ui/checkbox";
 import { DateTimePicker } from "@kdx/ui/date-time-picker";
@@ -56,7 +66,7 @@ import { api } from "~/trpc/react";
 type CareTask = RouterOutputs["app"]["kodixCare"]["getCareTasks"][number];
 const columnHelper = createColumnHelper<CareTask>();
 
-const DATE_FORMAT = "LLLL dd, yyyy, HH:mm";
+const DATE_FORMAT = "PPP, HH:mm";
 
 export default function DataTableKodixCare({
   initialCareTasks,
@@ -79,6 +89,8 @@ export default function DataTableKodixCare({
   const [saveTaskAsNotDoneDialogOpen, setSaveTaskAsNotDoneDialogOpen] =
     useState(false);
   const [editDetailsOpen, setEditDetailsOpen] = useState(false);
+  const [unlockMoreTasksDialogOpen, setUnlockMoreTasksDialogOpen] =
+    useState(false);
   const [currentlyEditing, setCurrentlyEditing] = useState<string | undefined>(
     undefined,
   );
@@ -216,6 +228,12 @@ export default function DataTableKodixCare({
             open={saveTaskAsNotDoneDialogOpen}
             setOpen={setSaveTaskAsNotDoneDialogOpen}
           />
+          <UnlockMoreTasksDialog
+            task={currentlyEditingCareTask}
+            mutation={mutation}
+            open={unlockMoreTasksDialogOpen}
+            setOpen={setUnlockMoreTasksDialogOpen}
+          />
         </>
       )}
       <div className="flex justify-center gap-2">
@@ -233,7 +251,7 @@ export default function DataTableKodixCare({
           <RxChevronLeft />
         </Button>
         <DatePicker
-          date={input.dateStart}
+          date={input.dateEnd}
           setDate={(newDate) =>
             setInput({
               dateStart: dayjs(newDate).startOf("day").toDate(),
@@ -279,17 +297,29 @@ export default function DataTableKodixCare({
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
+                  key={row.id}
                   onClick={() => {
-                    if (!row.original.id) return;
+                    if (!row.original.id) {
+                      //If it's locked...
+                      if (
+                        row.original.date >
+                        dayjs().endOf("day").add(1, "day").toDate()
+                      )
+                        return toast.warning(
+                          "You cannot unlock tasks that are scheduled for after tomorrow end of day",
+                        );
+
+                      setCurrentlyEditing(row.original.id);
+                      setUnlockMoreTasksDialogOpen(true);
+                      return;
+                    }
 
                     setCurrentlyEditing(row.original.id);
                     if (row.original.updatedAt) setEditDetailsOpen(true); //? Only able
                   }}
-                  key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   className={cn({
                     "bg-muted/30": !row.original.id,
-                    "hover:bg-muted/30": !row.original.id,
                   })}
                 >
                   {row.getVisibleCells().map((cell) => (
@@ -316,6 +346,63 @@ export default function DataTableKodixCare({
         </Table>
       </div>
     </>
+  );
+}
+
+function UnlockMoreTasksDialog({
+  task,
+  mutation,
+  open,
+  setOpen,
+}: {
+  task: CareTask;
+  mutation: ReturnType<typeof api.app.kodixCare.saveCareTask.useMutation>;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}) {
+  const t = useI18n();
+  return (
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>
+            {t("apps.kodixCare.Unlock all tasks up until here")}
+          </AlertDialogTitle>
+          <AlertDialogDescription>
+            {t(
+              "apps.kodixCare.This will unlock all tasks of this turn up until this task",
+            )}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter className="flex justify-between">
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            disabled={mutation.isPending}
+            onClick={() => {
+              toast.promise(
+                mutation.mutateAsync({
+                  id: task.id,
+                  doneAt: null,
+                }),
+                {
+                  loading: `${t("Saving")}...`,
+                  success: () => {
+                    setOpen(false);
+                    return t("apps.kodixCare.Task marked as not done");
+                  },
+                },
+              );
+            }}
+          >
+            {mutation.isPending ? (
+              <LuLoader2 className="size-4 animate-spin" />
+            ) : (
+              t("Yes")
+            )}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
 
@@ -577,40 +664,38 @@ function SaveTaskAsNotDoneDialog({
 }) {
   const t = useI18n();
   return (
-    <div className="p-1">
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{t("apps.kodixCare.Are you sure")}</DialogTitle>
-          </DialogHeader>
-          <DialogFooter className="mt-6 justify-end">
-            <Button
-              disabled={mutation.isPending}
-              onClick={() => {
-                toast.promise(
-                  mutation.mutateAsync({
-                    id: task.id,
-                    doneAt: null,
-                  }),
-                  {
-                    loading: `${t("Saving")}...`,
-                    success: () => {
-                      setOpen(false);
-                      return t("apps.kodixCare.Task marked as not done");
-                    },
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{t("apps.kodixCare.Are you sure")}</DialogTitle>
+        </DialogHeader>
+        <DialogFooter className="mt-6 justify-end">
+          <Button
+            disabled={mutation.isPending}
+            onClick={() => {
+              toast.promise(
+                mutation.mutateAsync({
+                  id: task.id,
+                  doneAt: null,
+                }),
+                {
+                  loading: `${t("Saving")}...`,
+                  success: () => {
+                    setOpen(false);
+                    return t("apps.kodixCare.Task marked as not done");
                   },
-                );
-              }}
-            >
-              {mutation.isPending ? (
-                <LuLoader2 className="size-4 animate-spin" />
-              ) : (
-                t("apps.kodixCare.Mark task as not done")
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
+                },
+              );
+            }}
+          >
+            {mutation.isPending ? (
+              <LuLoader2 className="size-4 animate-spin" />
+            ) : (
+              t("apps.kodixCare.Mark task as not done")
+            )}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
