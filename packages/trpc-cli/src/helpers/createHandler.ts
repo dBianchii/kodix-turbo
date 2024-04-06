@@ -1,17 +1,14 @@
 import fs from "fs";
 
 import type { runCli } from "../cli";
+import { toPascalCase } from "../utils/toPascalCase";
 
 export const createHandler = async (
   userInput: Awaited<ReturnType<typeof runCli>>,
+  routerRelativePath: string,
 ) => {
-  const routerRelativePath = userInput.routerPath
-    .split("routers/")[1]!
-    .replace("/_router.ts", "");
-
-  const UpperCasedEndpointName =
-    userInput.name.charAt(0).toUpperCase() + userInput.name.slice(1);
-  const TUpperCasedProcedureNameContext = `T${userInput.procedure.charAt(0).toUpperCase() + userInput.procedure.slice(1)}Context`;
+  const UpperCasedEndpointName = toPascalCase(userInput.name);
+  const TUpperCasedProcedureNameContext = `T${toPascalCase(userInput.procedure)}Context`;
 
   const TEndpointInputSchema = `T${UpperCasedEndpointName}InputSchema`;
 
@@ -22,10 +19,10 @@ import type { ${TUpperCasedProcedureNameContext} } from "~/procedures";
 
 interface ${UpperCasedEndpointName}Options {
   ctx: ${TUpperCasedProcedureNameContext};
-  ${userInput.validator ? "input: ${TEndpointInputSchema};" : ""}
+  ${userInput.validator ? `input: ${TEndpointInputSchema};` : ""}
 }
 
-export const installAppHandler = async ({ ctx${userInput.validator ? ", input" : ""} }: ${UpperCasedEndpointName}Options) => {
+export const ${userInput.name}Handler = async ({ ctx${userInput.validator ? ", input" : ""} }: ${UpperCasedEndpointName}Options) => {
 
   //... your handler logic here <3
 

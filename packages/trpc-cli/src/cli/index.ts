@@ -7,6 +7,10 @@ import z from "zod";
 import { logger } from "../utils/logger";
 
 export const ROUTERSFOLDER = path.resolve(process.cwd(), "../api/src/routers");
+export const VALIDATORSFOLDER = path.resolve(
+  process.cwd(),
+  "../validators/src/trpc",
+);
 
 export const runCli = async () => {
   return await p.group(

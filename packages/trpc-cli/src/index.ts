@@ -1,11 +1,11 @@
 import { runCli } from "./cli";
-import { createEndpoint } from "./helpers/createEndpoint";
+import { createFiles } from "./helpers/createFiles";
 import { logger } from "./utils/logger";
 
 const main = async () => {
   const userInput = await runCli();
 
-  const results = await createEndpoint(userInput);
+  const results = await createFiles(userInput);
 };
 
 main().catch((err) => {
