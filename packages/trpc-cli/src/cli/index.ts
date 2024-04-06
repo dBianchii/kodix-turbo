@@ -36,7 +36,7 @@ export const runCli = async () => {
 
               if (containsRouterFile) {
                 routers.push({
-                  label: subDir.split("/").at(-1)!,
+                  label: subDir.replace(ROUTERSFOLDER, "").replace("/", ""),
                   value: `${subDir}/${fileToLookFor}`,
                 });
               }

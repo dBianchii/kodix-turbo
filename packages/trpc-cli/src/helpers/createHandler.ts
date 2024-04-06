@@ -14,7 +14,7 @@ export const createHandler = async (
 
   //1. Criar o handler em um arquivo chamado `${userInput.name}.handler.ts`
   const contents = `
-import type { ${TEndpointInputSchema} } from "@kdx/validators/trpc/${routerRelativePath}";
+${userInput.validator ? `import type { ${TEndpointInputSchema} } from "@kdx/validators/trpc/${routerRelativePath}";` : ""}
 import type { ${TUpperCasedProcedureNameContext} } from "~/procedures";
 
 interface ${UpperCasedEndpointName}Options {

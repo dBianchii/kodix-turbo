@@ -3,13 +3,13 @@ import { createFiles } from "./helpers/createFiles";
 import { logger } from "./utils/logger";
 
 const main = async () => {
+  logger.info("Hello! Let's create your new trpc endpoint");
   const userInput = await runCli();
-
-  const results = await createFiles(userInput);
+  await createFiles(userInput);
 };
 
 main().catch((err) => {
-  logger.error("Aborting installation...");
+  logger.error("Aborting endpoint creation...");
   if (err instanceof Error) {
     logger.error(err);
   } else {
