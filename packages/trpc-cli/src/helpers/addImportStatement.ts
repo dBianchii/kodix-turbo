@@ -18,7 +18,7 @@ export async function addImportStatement(
     if (!match) {
       fileContent = importStatement + fileContent;
     } else {
-      let importContent = match[1]!;
+      let importContent = match[1]!.trim();
       if (!importContent.includes(importName)) {
         //remove trailing comma if it exists
         if (importContent.endsWith(","))
