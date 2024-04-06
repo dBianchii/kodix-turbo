@@ -7,7 +7,7 @@ import {
   ZGetAllInputSchema,
 } from "@kdx/validators/trpc/app/calendar";
 
-import { protectedProcedure } from "../../../trpc";
+import { protectedProcedure } from "~/procedures";
 import { cancelHandler } from "./cancel.handler";
 import { createHandler } from "./create.handler";
 import { editHandler } from "./edit.handler";
