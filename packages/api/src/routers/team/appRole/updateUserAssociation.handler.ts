@@ -1,7 +1,7 @@
 import type { TUpdateUserAssociationInputSchema } from "@kdx/validators/trpc/team/appRole";
 import { eq, inArray, schema } from "@kdx/db";
 
-import type { TIsTeamOwnerProcedureContext } from "../../../customProcedures";
+import type { TIsTeamOwnerProcedureContext } from "../../../procedures";
 
 interface UpdateUserAssociationOptions {
   ctx: TIsTeamOwnerProcedureContext;
