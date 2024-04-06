@@ -1,5 +1,5 @@
 import type { runCli } from "../cli";
-import { ROUTERSFOLDER } from "../cli";
+import { VALIDATORSFOLDER } from "../cli";
 import { toPascalCase } from "../utils/toPascalCase";
 import { addExportStatement } from "./addExportStatement";
 import { addImportStatement } from "./addImportStatement";
@@ -8,7 +8,8 @@ export const createValidator = async (
   userInput: Awaited<ReturnType<typeof runCli>>,
   routerRelativePath: string,
 ) => {
-  const filePath = `${ROUTERSFOLDER}/${routerRelativePath}/index.ts`;
+  const filePath = `${VALIDATORSFOLDER}/${routerRelativePath}/index.ts`;
+  console.log(filePath);
 
   const pascaledCaseName = toPascalCase(userInput.name);
 
