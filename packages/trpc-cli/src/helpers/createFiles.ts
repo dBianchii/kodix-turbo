@@ -21,7 +21,7 @@ export const createFiles = async (
   if (userInput.validator)
     promises.push(createValidator(userInput, routerRelativePath));
 
-  const successes = await Promise.allSettled(promises);
+  await Promise.allSettled(promises);
 
   spinner.stop();
 

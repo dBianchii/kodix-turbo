@@ -6,10 +6,17 @@ import z from "zod";
 
 import { logger } from "../utils/logger";
 
-export const ROUTERSFOLDER = path.resolve(process.cwd(), "../api/src/routers");
-export const VALIDATORSFOLDER = path.resolve(
+export const ROUTERS_FOLDER_PATH = path.resolve(
+  process.cwd(),
+  "../api/src/routers",
+);
+export const VALIDATORS_FOLDER_PATH = path.resolve(
   process.cwd(),
   "../validators/src/trpc",
+);
+export const PROCEDURESFILEPATH = path.resolve(
+  process.cwd(),
+  "../api/src/procedures.ts",
 );
 
 export const runCli = async () => {
@@ -36,7 +43,9 @@ export const runCli = async () => {
 
               if (containsRouterFile) {
                 routers.push({
-                  label: subDir.replace(ROUTERSFOLDER, "").replace("/", ""),
+                  label: subDir
+                    .replace(ROUTERS_FOLDER_PATH, "")
+                    .replace("/", ""),
                   value: `${subDir}/${fileToLookFor}`,
                 });
               }
@@ -46,11 +55,11 @@ export const runCli = async () => {
             }
           }
         }
-        await findRouterFolders(ROUTERSFOLDER);
+        await findRouterFolders(ROUTERS_FOLDER_PATH);
 
         if (!routers[0])
           return logger.error(
-            `No _router.ts files found inside ${chalk.yellow(ROUTERSFOLDER)}. Make sure you provided the correct path to your routers folder.`,
+            `No _router.ts files found inside ${chalk.yellow(ROUTERS_FOLDER_PATH)}. Make sure you provided the correct path to your routers folder.`,
           );
 
         return p.select({
@@ -89,27 +98,22 @@ export const runCli = async () => {
         });
       },
       procedure: async () => {
-        const proceduresFilePath = path.resolve(
-          process.cwd(),
-          "../api/src/procedures.ts",
-        );
-
         try {
-          await fs.access(proceduresFilePath);
+          await fs.access(PROCEDURESFILEPATH);
         } catch (error) {
           logger.error(
             `No procedures file found at ${chalk.yellow(
-              proceduresFilePath,
+              PROCEDURESFILEPATH,
             )}. Make sure you provided the correct path to your procedures file.`,
           );
           process.exit(1);
         }
 
-        const proceduresFile = await fs.readFile(proceduresFilePath, "utf-8");
+        const proceduresFile = await fs.readFile(PROCEDURESFILEPATH, "utf-8");
         const proceduresExport = proceduresFile.match(/export const (\w+)/g); //? Assume that all procedures are exported as const
         if (!proceduresExport?.length) {
           logger.error(
-            `We found your file at ${chalk.yellow(proceduresFilePath)}, but no procedures were found in it. Please add a procedure to the this file before continuing`,
+            `We found your file at ${chalk.yellow(PROCEDURESFILEPATH)}, but no procedures were found in it. Please add a procedure to the this file before continuing`,
           );
           process.exit(1);
         }
