@@ -45,7 +45,6 @@ export const createRouter = async (
       process.exit(1);
     }
     const routerContent = match[1];
-    console.log(routerContent);
 
     // Add new entry to the object content
     let newEntry = `  ${name}: ${procedure}`;
