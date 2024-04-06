@@ -2,96 +2,16 @@ import fs from "fs/promises";
 import path from "path";
 import * as p from "@clack/prompts";
 import chalk from "chalk";
-import { Command } from "commander";
+import z from "zod";
 
 import { logger } from "../utils/logger";
 
-const ROUTERSFOLDER = path.resolve(process.cwd(), "/api/src/routers");
+export const ROUTERSFOLDER = path.resolve(process.cwd(), "../api/src/routers");
 
 export const runCli = async () => {
-  new Command()
-    .name("trpc-tools")
-    .description("A CLI for for instantiating new trpc endpoints")
-    .argument(
-      "[dir]",
-      "The name of the application, as well as the name of the directory to create",
-    )
-    .option(
-      "--noGit",
-      "Explicitly tell the CLI to not initialize a new git repo in the project",
-      false,
-    )
-    .option(
-      "--noInstall",
-      "Explicitly tell the CLI to not run the package manager's install command",
-      false,
-    )
-    .option(
-      "-y, --default",
-      "Bypass the CLI and use all default options to bootstrap a new t3-app",
-      false,
-    )
-    .option(
-      "--appRouter [boolean]",
-      "Explicitly tell the CLI to use the new Next.js app router",
-      (value) => !!value && value !== "false",
-    )
-    .parse(process.argv);
-
   return await p.group(
     {
-      name: () => {
-        return p.text({
-          message: "What will be the name of your new endpoint?",
-          placeholder: "makeTheWorldBetter",
-          validate: (input) => {
-            if (input.includes(" ")) {
-              return "Please provide a name without spaces";
-            }
-          },
-        });
-      },
-      procedure: () => {
-        return p.select({
-          message: "Will it be a public or protected procedure?",
-          initialValue: "protected",
-          options: [
-            { value: "protected", label: "A protected procedure" },
-            { value: "public", label: "A public procedure" },
-          ],
-        });
-      },
-      validator: () => {
-        return p.text({
-          message: "Please define your zod schema",
-          placeholder: "z.object({ name: z.string() })",
-          validate: (input) => {
-            // if (!input.includes("z.")) {
-            //   return "Please provide a valid zod schema";
-            // }
-          },
-        });
-      },
-      queryOrMutation: () => {
-        return p.select({
-          message: "Will it be a query or mutation?",
-          initialValue: "query",
-          options: [
-            {
-              value: "query",
-              label: "A query for making the world better",
-              hint: "For fetching data",
-            },
-            {
-              value: "mutation",
-              label: "A mutation",
-              hint: "For mutating data",
-            },
-          ],
-        });
-      },
-      whichRouter: async () => {
-        const dir = path.resolve(process.cwd(), "../api/src/routers");
+      routerPath: async () => {
         const routers: { label: string; value: string }[] = [];
 
         async function findRouterFolders(dir: string) {
@@ -122,12 +42,119 @@ export const runCli = async () => {
             }
           }
         }
-        await findRouterFolders(dir);
+        await findRouterFolders(ROUTERSFOLDER);
+
+        if (!routers[0])
+          return logger.error(
+            `No _router.ts files found inside ${chalk.yellow(ROUTERSFOLDER)}. Make sure you provided the correct path to your routers folder.`,
+          );
 
         return p.select({
-          message: "Which router should this procedure be added to?",
+          message: "Which router should your new endpoint be added to?",
           options: routers,
-          initialValue: "app",
+          initialValue: routers[0].value,
+        });
+      },
+      name: () => {
+        return p.text({
+          message: "What will be the name of your new endpoint?",
+          placeholder: "makeTheWorldBetter",
+          defaultValue: "makeTheWorldBetter",
+          validate: (input) => {
+            if (input.length > 0) {
+              const result = z
+                .string()
+                .min(1)
+                .regex(/^[a-zA-Z0-9]+$/, {
+                  message:
+                    "Please provide a name without spaces or special characters",
+                })
+                .regex(/^[^0-9]/, {
+                  message:
+                    "Please provide a name that does not start with a number",
+                })
+                .regex(/^[a-z]/, {
+                  message:
+                    "Please provide a name that does not start with an uppercase letter",
+                })
+                .safeParse(input);
+
+              if (!result.success) return result.error.errors[0]!.message;
+            }
+          },
+        });
+      },
+      procedure: async () => {
+        const proceduresFilePath = path.resolve(
+          process.cwd(),
+          "../api/src/procedures.ts",
+        );
+
+        try {
+          await fs.access(proceduresFilePath);
+        } catch (error) {
+          logger.error(
+            `No procedures file found at ${chalk.yellow(
+              proceduresFilePath,
+            )}. Make sure you provided the correct path to your procedures file.`,
+          );
+          process.exit(1);
+        }
+
+        const proceduresFile = await fs.readFile(proceduresFilePath, "utf-8");
+        const proceduresExport = proceduresFile.match(/export const (\w+)/g); //? Assume that all procedures are exported as const
+        if (!proceduresExport?.length) {
+          logger.error(
+            `We found your file at ${chalk.yellow(proceduresFilePath)}, but no procedures were found in it. Please add a procedure to the this file before continuing`,
+          );
+          process.exit(1);
+        }
+
+        return p.select({
+          message: "Will it be a public or protected procedure?",
+          initialValue: "protected",
+          options: proceduresExport.map((procedure) => {
+            const name = procedure.split(" ")[2]!;
+            return {
+              value: name,
+              label: name,
+            };
+          }),
+        });
+      },
+      validator: () => {
+        return p.text({
+          message: "Please define your zod schema (leave empty for no input)",
+          placeholder: "z.object({ name: z.string() })",
+          validate: (input) => {
+            if (input) {
+              try {
+                const schema = eval(input) as unknown;
+                if (!(schema instanceof z.ZodSchema))
+                  return "Please provide a valid Zod schema";
+              } catch (error) {
+                return "Please provide a valid Zod schema";
+              }
+            }
+          },
+        });
+      },
+      queryOrMutation: () => {
+        return p.select({
+          message: "Will it be a query or a mutation?",
+          initialValue: "query",
+          options: [
+            {
+              value: "query",
+              label: "query",
+              hint: "For fetching data",
+            },
+            {
+              value: "mutation",
+              label: "mutation",
+              hint: "For mutating data",
+            },
+          ],
         });
       },
     },
