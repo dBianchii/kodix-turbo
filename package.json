@@ -24,7 +24,8 @@
     "postinstall": "pnpm lint:ws",
     "typecheck": "turbo typecheck",
     "ui-add": "pnpm -F ui ui-add",
-    "lang:gen": "pnpm -F locales generate"
+    "lang:gen": "pnpm -F locales generate",
+    "trpc:new": "pnpm -F trpc-cli dev"
   },
   "devDependencies": {
     "@kdx/prettier-config": "workspace:*",

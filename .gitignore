@@ -19,7 +19,6 @@ next-env.d.ts
 
 # expo
 .expo/
-dist/
 expo-env.d.ts
 apps/expo/.gitignore
 
@@ -48,6 +47,7 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+dist/
 
 # turbo
 .turbo
