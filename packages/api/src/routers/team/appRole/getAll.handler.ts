@@ -1,6 +1,6 @@
 import type { TGetAllInputSchema } from "@kdx/validators/trpc/team/appRole";
 
-import type { TIsTeamOwnerProcedureContext } from "../../../customProcedures";
+import type { TIsTeamOwnerProcedureContext } from "../../../procedures";
 
 interface GetAllOptions {
   ctx: TIsTeamOwnerProcedureContext;

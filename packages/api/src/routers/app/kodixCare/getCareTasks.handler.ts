@@ -3,7 +3,7 @@ import dayjs from "@kdx/dayjs";
 import { schema } from "@kdx/db";
 import { kodixCareAppId } from "@kdx/shared";
 
-import type { TProtectedProcedureContext } from "../../../trpc";
+import type { TProtectedProcedureContext } from "~/procedures";
 import { getAllHandler } from "../calendar/getAll.handler";
 import { getConfigHandler } from "../getConfig.handler";
 

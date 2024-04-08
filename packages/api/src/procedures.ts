@@ -1,0 +1,75 @@
+import type { inferProcedureBuilderResolverOptions } from "@trpc/server";
+import { TRPCError } from "@trpc/server";
+
+import { eq, schema } from "@kdx/db";
+
+import { t } from "./trpc";
+
+/**
+ * Public (unauthed) procedure
+ *
+ * This is the base piece you use to build new queries and mutations on your
+ * tRPC API. It does not guarantee that a user querying is authorized, but you
+ * can still access user session data if they are logged in
+ */
+export const publicProcedure = t.procedure;
+export type TPublicProcedureContext = inferProcedureBuilderResolverOptions<
+  typeof publicProcedure
+>["ctx"];
+
+/**
+ * Protected (authenticated) procedure
+ *
+ * If you want a query or mutation to ONLY be accessible to logged in users, use this. It verifies
+ * the session is valid and guarantees `ctx.session.user` is not null.
+ *
+ * @see https://trpc.io/docs/procedures
+ */
+export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
+  if (!ctx.session?.user) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  return next({
+    ctx: {
+      // infers the `session` as non-nullable
+      session: { ...ctx.session, user: ctx.session.user },
+    },
+  });
+});
+export type TProtectedProcedureContext = inferProcedureBuilderResolverOptions<
+  typeof protectedProcedure
+>["ctx"];
+
+export const isTeamOwnerProcedure = protectedProcedure.use(
+  async ({ ctx, next }) => {
+    const team = await ctx.db.query.teams.findFirst({
+      where: eq(schema.teams.id, ctx.session.user.activeTeamId),
+      columns: {
+        id: true,
+        ownerId: true,
+      },
+    });
+
+    if (!team)
+      throw new TRPCError({
+        message: "No Team Found",
+        code: "NOT_FOUND",
+      });
+
+    if (team.ownerId !== ctx.session.user.id)
+      throw new TRPCError({
+        message: "Only the team's owner can do this",
+        code: "FORBIDDEN",
+      });
+
+    return next({
+      ctx: {
+        ...ctx,
+        team,
+      },
+    });
+  },
+);
+export type TIsTeamOwnerProcedureContext = inferProcedureBuilderResolverOptions<
+  typeof isTeamOwnerProcedure
+>["ctx"];
