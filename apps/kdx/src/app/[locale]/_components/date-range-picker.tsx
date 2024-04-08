@@ -5,7 +5,7 @@ import * as React from "react";
 import { RxCalendar } from "react-icons/rx";
 
 import { format } from "@kdx/date-fns";
-import { useI18n } from "@kdx/locales/client";
+import { useCurrentLocale, useI18n } from "@kdx/locales/client";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import { Calendar } from "@kdx/ui/calendar";
@@ -23,6 +23,7 @@ export function DateRangePicker({
   className?: React.HTMLAttributes<HTMLDivElement>;
 }) {
   const t = useI18n();
+  const locale = useCurrentLocale();
   return (
     <div className={cn("grid gap-2", className)}>
       <Popover>
@@ -39,11 +40,11 @@ export function DateRangePicker({
             {date?.from ? (
               date.to ? (
                 <>
-                  {format(date.from, "LLL dd, y")} -{" "}
-                  {format(date.to, "LLL dd, y")}
+                  {format(date.from, "LLL dd, y", locale)} -{" "}
+                  {format(date.to, "LLL dd, y", locale)}
                 </>
               ) : (
-                format(date.from, "LLL dd, y")
+                format(date.from, "LLL dd, y", locale)
               )
             ) : (
               <span>{t("Pick a date")}</span>

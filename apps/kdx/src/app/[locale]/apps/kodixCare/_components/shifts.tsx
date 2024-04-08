@@ -6,7 +6,7 @@ import { IoMdTime } from "react-icons/io";
 import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
 import { formatRelative } from "@kdx/date-fns";
-import { useI18n } from "@kdx/locales/client";
+import { useCurrentLocale, useI18n } from "@kdx/locales/client";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Badge } from "@kdx/ui/badge";
 import { Label } from "@kdx/ui/label";
@@ -131,6 +131,7 @@ function TimeInfo({
   >;
 }) {
   const t = useI18n();
+  const locale = useCurrentLocale();
   return (
     <div className="flex items-center justify-start">
       <div className="col mr-4">
@@ -146,7 +147,7 @@ function TimeInfo({
           variant={"outline"}
           className="w-24 py-0 text-center text-xs text-muted-foreground"
         >
-          {formatRelative(currentShift.checkIn, new Date())}
+          {formatRelative(currentShift.checkIn, new Date(), locale)}
         </Badge>
       </div>
       {currentShift.checkOut && (
@@ -159,7 +160,7 @@ function TimeInfo({
             variant={"outline"}
             className="w-24 py-0 text-center text-xs text-muted-foreground"
           >
-            {formatRelative(currentShift.checkOut, new Date())}
+            {formatRelative(currentShift.checkOut, new Date(), locale)}
           </Badge>
         </div>
       )}

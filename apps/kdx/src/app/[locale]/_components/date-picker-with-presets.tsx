@@ -4,7 +4,7 @@ import { useState } from "react";
 import { RxCalendar, RxChevronDown, RxCross2 } from "react-icons/rx";
 
 import { addDays, format } from "@kdx/date-fns";
-import { useI18n } from "@kdx/locales/client";
+import { useCurrentLocale, useI18n } from "@kdx/locales/client";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import { Calendar } from "@kdx/ui/calendar";
@@ -58,6 +58,7 @@ export function DatePickerWithPresets({
   ];
 
   const [open, setOpen] = useState(false);
+  const locale = useCurrentLocale();
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger>
@@ -65,7 +66,7 @@ export function DatePickerWithPresets({
           <Button variant="ghost" size="sm">
             <DatePickerIcon date={date} className="mr-2" />
             {date
-              ? format(new Date(date.toString()), "PPP").split(",")[0]
+              ? format(new Date(date.toString()), "PPP", locale).split(",")[0]
               : t("Pick a date")}
             {date && (
               <span

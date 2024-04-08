@@ -24,7 +24,7 @@ import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
 import { addDays, format } from "@kdx/date-fns";
 import dayjs from "@kdx/dayjs";
-import { useI18n } from "@kdx/locales/client";
+import { useCurrentLocale, useI18n } from "@kdx/locales/client";
 import { authorizedEmails } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
@@ -191,7 +191,7 @@ export function DataTable({
     document.addEventListener("keydown", keyDownHandler);
     return () => document.removeEventListener("keydown", keyDownHandler);
   }, []);
-
+  const locale = useCurrentLocale();
   return (
     <>
       <div className="mt-8">
@@ -225,7 +225,7 @@ export function DataTable({
                   className={cn("justify-start text-left font-normal")}
                 >
                   <RxCalendar className="mr-2 size-4" />
-                  {format(selectedDay, "PPP")}
+                  {format(selectedDay, "PPP", locale)}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0">

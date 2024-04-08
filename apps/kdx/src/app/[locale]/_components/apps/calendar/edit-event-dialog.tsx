@@ -8,7 +8,7 @@ import type { RouterInputs, RouterOutputs } from "@kdx/api";
 import type { Dayjs } from "@kdx/dayjs";
 import { format } from "@kdx/date-fns";
 import dayjs from "@kdx/dayjs";
-import { useI18n } from "@kdx/locales/client";
+import { useCurrentLocale, useI18n } from "@kdx/locales/client";
 import { cn } from "@kdx/ui";
 import {
   AlertDialog,
@@ -198,6 +198,7 @@ export function EditEventDialog({
     mutation.mutate(input);
   }
   const t = useI18n();
+  const locale = useCurrentLocale();
 
   return (
     <Dialog
@@ -228,7 +229,7 @@ export function EditEventDialog({
                     variant={"outline"}
                     className={cn("w-[200px] pl-3 text-left font-normal")}
                   >
-                    {format(from.toDate(), "PPP")}
+                    {format(from.toDate(), "PPP", locale)}
                     <RxCalendar className="ml-auto size-4 opacity-50" />
                   </Button>
                 </PopoverTrigger>

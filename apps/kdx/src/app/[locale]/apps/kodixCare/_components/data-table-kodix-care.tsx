@@ -15,7 +15,7 @@ import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
 import type { TGetCareTasksInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import { format } from "@kdx/date-fns";
-import { useI18n } from "@kdx/locales/client";
+import { useCurrentLocale, useI18n } from "@kdx/locales/client";
 import { cn } from "@kdx/ui";
 import {
   AlertDialog,
@@ -137,6 +137,7 @@ export default function DataTableKodixCare({
     },
   });
   const t = useI18n();
+  const locale = useCurrentLocale();
 
   const columns = [
     columnHelper.accessor("title", {
@@ -167,14 +168,18 @@ export default function DataTableKodixCare({
     }),
     columnHelper.accessor("doneAt", {
       header: () => t("Date"),
-      cell: (ctx) => <div>{format(ctx.row.original.date, DATE_FORMAT)}</div>,
+      cell: (ctx) => (
+        <div>{format(ctx.row.original.date, DATE_FORMAT, locale)}</div>
+      ),
     }),
     columnHelper.accessor("doneAt", {
       header: () => t("Done at"),
       cell: (ctx) => {
         if (!ctx.row.original.id) return null;
         if (!ctx.row.original.doneAt) return null;
-        return <div>{format(ctx.row.original.doneAt, DATE_FORMAT)}</div>;
+        return (
+          <div>{format(ctx.row.original.doneAt, DATE_FORMAT, locale)}</div>
+        );
       },
     }),
     columnHelper.accessor("details", {

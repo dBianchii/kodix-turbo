@@ -6,7 +6,7 @@ import { RxCross2, RxPlus } from "react-icons/rx";
 
 import type { schema } from "@kdx/db";
 import { format } from "@kdx/date-fns";
-import { useI18n } from "@kdx/locales/client";
+import { useCurrentLocale, useI18n } from "@kdx/locales/client";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Button } from "@kdx/ui/button";
 import {
@@ -71,6 +71,7 @@ export function CreateTaskDialogButton() {
 
   const user = (team?.Users ?? []).find((x) => x.id === assignedToUserId);
   const t = useI18n();
+  const locale = useCurrentLocale();
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -142,7 +143,7 @@ export function CreateTaskDialogButton() {
                   size="sm"
                 >
                   <DatePickerIcon date={dueDate} className="mr-2 size-4" />
-                  {dueDate ? format(dueDate, "PPP") : t("Pick a date")}
+                  {dueDate ? format(dueDate, "PPP", locale) : t("Pick a date")}
                   {dueDate && (
                     <span
                       onClick={() => {
