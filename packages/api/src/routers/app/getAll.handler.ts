@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import { db } from "@kdx/db";
 
-import type { TPublicProcedureContext } from "~/procedures";
+import type { TPublicProcedureContext } from "../../procedures";
 
 interface GetAllOptions {
   ctx: TPublicProcedureContext;

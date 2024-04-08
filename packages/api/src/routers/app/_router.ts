@@ -2,8 +2,8 @@ import type { TRPCRouterRecord } from "@trpc/server";
 
 import { ZGetConfigInput, ZSaveConfigInput } from "@kdx/validators/trpc/app";
 
-import { protectedProcedure, publicProcedure } from "~/procedures";
 import { appInstalledMiddleware } from "../../middlewares";
+import { protectedProcedure, publicProcedure } from "../../procedures";
 import { calendarRouter } from "./calendar/_router";
 import { getAllHandler } from "./getAll.handler";
 import { getConfigHandler } from "./getConfig.handler";

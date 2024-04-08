@@ -1,7 +1,7 @@
 import { schema } from "@kdx/db";
 import { kodixCareAppId, nanoid } from "@kdx/shared";
 
-import type { TProtectedProcedureContext } from "~/procedures";
+import type { TProtectedProcedureContext } from "../../../../procedures";
 import { getAllHandler } from "../../calendar/getAll.handler";
 import { saveConfigHandler } from "../../saveConfig.handler";
 

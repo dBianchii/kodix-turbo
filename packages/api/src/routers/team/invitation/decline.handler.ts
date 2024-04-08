@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import type { TDeclineInputSchema } from "@kdx/validators/trpc/invitation";
 import { eq, schema } from "@kdx/db";
 
-import type { TProtectedProcedureContext } from "~/procedures";
+import type { TProtectedProcedureContext } from "../../../procedures";
 
 interface DeclineOptions {
   ctx: TProtectedProcedureContext;

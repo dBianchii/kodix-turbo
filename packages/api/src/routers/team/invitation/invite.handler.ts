@@ -11,7 +11,7 @@ import {
   nanoid,
 } from "@kdx/shared";
 
-import type { TProtectedProcedureContext } from "~/procedures";
+import type { TProtectedProcedureContext } from "../../../procedures";
 import { resend } from "../../../utils/email/email";
 
 interface InviteOptions {

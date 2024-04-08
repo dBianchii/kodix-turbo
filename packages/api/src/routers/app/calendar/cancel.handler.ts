@@ -5,7 +5,7 @@ import type { TCancelInputSchema } from "@kdx/validators/trpc/app/calendar";
 import { and, eq, gte, schema } from "@kdx/db";
 import { nanoid } from "@kdx/shared";
 
-import type { TProtectedProcedureContext } from "~/procedures";
+import type { TProtectedProcedureContext } from "../../../procedures";
 
 interface CancelOptions {
   ctx: TProtectedProcedureContext;

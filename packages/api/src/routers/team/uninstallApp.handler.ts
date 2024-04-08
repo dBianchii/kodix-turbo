@@ -1,7 +1,7 @@
 import type { TUninstallAppSchema } from "@kdx/validators/trpc/team";
 import { and, eq, schema } from "@kdx/db";
 
-import type { TProtectedProcedureContext } from "~/procedures";
+import type { TProtectedProcedureContext } from "../../procedures";
 
 interface UninstallAppOptions {
   ctx: TProtectedProcedureContext;

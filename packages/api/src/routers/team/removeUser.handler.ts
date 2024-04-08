@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import type { TRemoveUserSchema } from "@kdx/validators/trpc/team";
 import { and, eq, not, schema } from "@kdx/db";
 
-import type { TProtectedProcedureContext } from "~/procedures";
+import type { TProtectedProcedureContext } from "../../procedures";
 
 interface RemoveUserOptions {
   ctx: TProtectedProcedureContext;

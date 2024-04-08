@@ -5,7 +5,7 @@ import {
   ZUpdateInputSchema,
 } from "@kdx/validators/trpc/app/todo";
 
-import { protectedProcedure } from "~/procedures";
+import { protectedProcedure } from "../../../procedures";
 import { createHandler } from "./create.handler";
 import { getAllHandler } from "./getAll.handler";
 import { updateHandler } from "./update.handler";

@@ -1,4 +1,4 @@
-import type { TProtectedProcedureContext } from "~/procedures";
+import type { TProtectedProcedureContext } from "../../../procedures";
 
 interface GetAllOptions {
   ctx: TProtectedProcedureContext;
