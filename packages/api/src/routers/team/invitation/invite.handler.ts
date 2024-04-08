@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { TRPCError } from "@trpc/server";
 
 import type { TInviteInputSchema } from "@kdx/validators/trpc/invitation";

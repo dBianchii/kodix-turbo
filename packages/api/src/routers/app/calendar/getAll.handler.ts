@@ -119,7 +119,7 @@ export const getAllHandler = async ({
       title:
         eventException.title ?? eventException.eventMasterTitle ?? undefined,
       description:
-        eventException?.description ??
+        eventException.description ??
         eventException.eventMasterDescription ??
         undefined,
       date: eventException.newDate,

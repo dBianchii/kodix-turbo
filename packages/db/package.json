@@ -14,7 +14,7 @@
     "dev": "tsc --watch",
     "clean": "rm -rf .turbo node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint .",
+    "lint": "eslint",
     "push": "pnpm with-env drizzle-kit push:mysql --config src/config.ts",
     "studio": "pnpm with-env drizzle-kit studio --config src/config.ts",
     "seed": "pnpm with-env tsx ./src/seed/seed.ts",
@@ -37,16 +37,10 @@
     "@types/node": "^20.11.30",
     "dotenv-cli": "^7.4.1",
     "drizzle-kit": "^0.20.14",
-    "eslint": "^8.57.0",
+    "eslint": "^9.0.0",
     "prettier": "^3.2.5",
     "tsx": "4.7.1",
     "typescript": "^5.4.3"
-  },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "@kdx/eslint-config/base"
-    ]
   },
   "prettier": "@kdx/prettier-config"
 }

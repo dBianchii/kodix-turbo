@@ -12,7 +12,7 @@
   "scripts": {
     "dev": "pnpm dlx react-email@latest dev --dir='src'",
     "clean": "rm -rf .turbo node_modules",
-    "lint": "eslint .",
+    "lint": "eslint",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
@@ -29,15 +29,9 @@
     "@kdx/tsconfig": "workspace:*",
     "@types/node": "^20.11.30",
     "@types/react": "^18.2.71",
-    "eslint": "^8.57.0",
+    "eslint": "^9.0.0",
     "prettier": "^3.2.5",
     "typescript": "^5.4.3"
-  },
-  "eslintConfig": {
-    "extends": [
-      "@kdx/eslint-config/base",
-      "@kdx/eslint-config/react"
-    ]
   },
   "prettier": "@kdx/prettier-config"
 }

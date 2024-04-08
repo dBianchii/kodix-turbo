@@ -1,6 +1,4 @@
-/* eslint-disable no-constant-condition */
 import { revalidatePath } from "next/cache";
-import { LuLoader2 } from "react-icons/lu";
 
 import { auth } from "@kdx/auth";
 import { getI18n } from "@kdx/locales/server";
@@ -60,15 +58,7 @@ export async function EditAccountNameCard({ name }: { name?: string | null }) {
           <CardDescription>
             {t("account.Please use 32 characters at maximum")}
           </CardDescription>
-          <Button type="submit">
-            {false ? (
-              <>
-                <LuLoader2 className="mr-2 size-4 animate-spin" /> {t("Saving")}
-              </>
-            ) : (
-              <>{t("Save")}</>
-            )}
-          </Button>
+          <Button type="submit">{t("Save")}</Button>
         </CardFooter>
       </Card>
     </form>

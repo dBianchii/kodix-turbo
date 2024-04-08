@@ -117,6 +117,7 @@ async function main() {
 function allSetValues(values: Record<string, unknown>[]) {
   return Object.assign(
     {},
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     ...Object.keys(values[0]!).map(
       (k) => ({ [k]: sql.raw(`values(${k})`) }), //Needs to be raw!
     ),

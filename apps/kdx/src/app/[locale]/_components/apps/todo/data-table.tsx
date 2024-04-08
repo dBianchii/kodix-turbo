@@ -53,7 +53,7 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
       <div className="flex items-center py-4">
         <Input
           placeholder="Search by title..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+          value={table.getColumn("title")?.getFilterValue() as string}
           onChange={(event) =>
             table.getColumn("title")?.setFilterValue(event.target.value)
           }
@@ -63,7 +63,7 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
       <div className="rounded-md border">
         <Table>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
                 <ContextMenu key={row.id}>
                   <TableRow

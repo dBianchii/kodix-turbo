@@ -77,8 +77,8 @@ function KodixAdapter(): Adapter {
       return {
         ...sessionAndUser,
         user: {
-          ...sessionAndUser?.user,
-          activeTeamName: sessionAndUser?.team?.name,
+          ...sessionAndUser.user,
+          activeTeamName: sessionAndUser.team.name,
         },
       } as Awaitable<{
         session: AdapterSession;

@@ -24,7 +24,7 @@ export default async function AppsPage() {
       <br />
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {apps?.map((app) => (
+        {apps.map((app) => (
           <div key={app.id}>
             <KodixApp
               id={app.id as KodixAppId}

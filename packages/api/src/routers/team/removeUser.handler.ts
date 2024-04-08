@@ -37,7 +37,7 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
     });
 
   if (isUserTryingToRemoveSelfFromTeam) {
-    if (team?.ownerId === ctx.session.user.id) {
+    if (team.ownerId === ctx.session.user.id) {
       throw new TRPCError({
         message:
           "You are the owner of this team. You must transfer ownership first before leaving it",
@@ -46,7 +46,7 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
     }
   }
 
-  if (team?.UsersToTeams.length <= 1)
+  if (team.UsersToTeams.length <= 1)
     throw new TRPCError({
       message:
         "This user cannot leave since they are the only remaining owner of the team. Delete this team instead",

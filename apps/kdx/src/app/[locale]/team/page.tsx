@@ -98,7 +98,7 @@ async function AppsSection({ customApps }: { customApps: CustomApp[] }) {
           key={app.appName}
         />
       ))}
-      {apps?.map((app) => (
+      {apps.map((app) => (
         <Link
           key={app.id}
           href={getAppUrl(app.id as KodixAppId)}

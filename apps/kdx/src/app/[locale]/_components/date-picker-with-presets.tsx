@@ -65,10 +65,9 @@ export function DatePickerWithPresets({
           <Button variant="ghost" size="sm">
             <DatePickerIcon date={date} className="mr-2" />
             {date
-              ? format(new Date(date.toString() ?? ""), "PPP").split(",")[0]
+              ? format(new Date(date.toString()), "PPP").split(",")[0]
               : t("Pick a date")}
             {date && (
-              // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
               <span
                 onClick={() => {
                   setDate(undefined);

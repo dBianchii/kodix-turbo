@@ -10,6 +10,7 @@ export const createFiles = async (
 ) => {
   const spinner = ora(`Creating your endpoint...`).start();
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const routerRelativePath = userInput.routerPath
     .split("routers/")[1]!
     .replace("/_router.ts", "");

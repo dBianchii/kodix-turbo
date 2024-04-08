@@ -8,7 +8,7 @@
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
-    "lint": "eslint .",
+    "lint": "eslint",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
@@ -19,14 +19,9 @@
     "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "eslint": "^8.57.0",
+    "eslint": "^9.0.0",
     "prettier": "^3.2.5",
     "typescript": "^5.4.3"
-  },
-  "eslintConfig": {
-    "extends": [
-      "@kdx/eslint-config/base"
-    ]
   },
   "prettier": "@kdx/prettier-config"
 }

@@ -1,5 +1,3 @@
-import { TRPCError } from "@trpc/server";
-
 import type { TProtectedProcedureContext } from "~/procedures";
 
 interface GetAllOptions {
@@ -19,12 +17,6 @@ export const getAllHandler = async ({ ctx }: GetAllOptions) => {
       },
     },
   });
-
-  if (!todos)
-    throw new TRPCError({
-      message: "No Todos Found",
-      code: "NOT_FOUND",
-    });
 
   return todos;
 };

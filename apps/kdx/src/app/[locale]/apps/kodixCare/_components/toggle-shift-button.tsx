@@ -191,7 +191,7 @@ function DoCheckoutDialogButton({
         <Form {...form}>
           <form
             className="base"
-            onSubmit={form.handleSubmit(async (values) => {
+            onSubmit={form.handleSubmit((values) => {
               mutation.mutate(values);
             })}
           >

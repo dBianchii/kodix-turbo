@@ -26,7 +26,7 @@ export default async function Todo() {
       </div>
       <Separator className="my-4" />
       <CreateTaskDialogButton />
-      <DataTable columns={columns} data={data ?? []} />
+      <DataTable columns={columns} data={data} />
     </MaxWidthWrapper>
   );
 }

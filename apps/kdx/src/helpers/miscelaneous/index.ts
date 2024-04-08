@@ -15,12 +15,7 @@ export const trpcErrorToastDefault = (
   const zodContentErrors = error.data?.zodError?.fieldErrors.content;
   const zodFormErrors = error.data?.zodError?.formErrors;
 
-  toast.error(
-    zodContentErrors?.[0] ??
-      zodFormErrors?.[0] ??
-      error.message ??
-      "Something went wrong, please try again later.",
-  );
+  toast.error(zodContentErrors?.[0] ?? zodFormErrors?.[0] ?? error.message);
 };
 
 /**

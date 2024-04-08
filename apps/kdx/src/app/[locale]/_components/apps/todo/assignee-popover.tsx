@@ -31,7 +31,7 @@ export function AssigneePopover({
 }) {
   const [open, setOpen] = useState(false);
 
-  const user = (users ?? []).find((x) => x.id === assignedToUserId);
+  const user = users.find((x) => x.id === assignedToUserId);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -42,8 +42,8 @@ export function AssigneePopover({
           <div>
             <AvatarWrapper
               className="h-6 w-6"
-              alt={user?.name ? user.name + " avatar" : ""}
-              src={user?.image ?? undefined}
+              alt={user.name ? user.name + " avatar" : ""}
+              src={user.image ?? undefined}
               fallback={user.name}
             />
           </div>

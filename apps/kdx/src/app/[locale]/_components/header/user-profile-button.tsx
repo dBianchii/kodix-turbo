@@ -23,7 +23,6 @@ import {
 export function UserProfileButton({ session }: { session: Session }) {
   const t = useScopedI18n("header");
 
-  if (!session) return null;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
