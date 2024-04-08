@@ -7,6 +7,7 @@ import { RxMinusCircled, RxPlusCircled } from "react-icons/rx";
 
 import type { Session } from "@kdx/auth";
 import { useI18n } from "@kdx/locales/client";
+import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import {
   Card,
@@ -27,7 +28,6 @@ import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
 import { Separator } from "@kdx/ui/separator";
 import { toast } from "@kdx/ui/toast";
-import { cn } from "@kdx/ui/utils";
 import { ZInviteInputSchema } from "@kdx/validators/trpc/invitation";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";

@@ -26,6 +26,7 @@ import { addDays, format } from "@kdx/date-fns";
 import dayjs from "@kdx/dayjs";
 import { useI18n } from "@kdx/locales/client";
 import { authorizedEmails } from "@kdx/shared";
+import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import { Calendar } from "@kdx/ui/calendar";
 import {
@@ -51,7 +52,6 @@ import {
   TableHeader,
   TableRow,
 } from "@kdx/ui/table";
-import { cn } from "@kdx/ui/utils";
 
 import { DataTablePagination } from "~/app/[locale]/_components/pagination";
 import { api } from "~/trpc/react";

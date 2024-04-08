@@ -7,6 +7,8 @@ import {
   PlusCircledIcon,
 } from "@radix-ui/react-icons";
 
+import { cn } from "@kdx/ui";
+
 import { Badge } from "./badge";
 import { Button } from "./button";
 import {
@@ -17,7 +19,6 @@ import {
   CommandItem,
 } from "./command";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
-import { cn } from "./utils";
 
 export interface OptionType {
   label: string;

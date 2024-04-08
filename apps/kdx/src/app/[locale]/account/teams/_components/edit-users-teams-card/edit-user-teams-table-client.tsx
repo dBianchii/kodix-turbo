@@ -8,6 +8,7 @@ import { RxChevronLeft, RxDotsHorizontal } from "react-icons/rx";
 import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
 import { useI18n } from "@kdx/locales/client";
+import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import {
   DropdownMenu,
@@ -17,7 +18,6 @@ import {
 } from "@kdx/ui/dropdown-menu";
 import { Table, TableBody, TableCell, TableRow } from "@kdx/ui/table";
 import { toast } from "@kdx/ui/toast";
-import { cn } from "@kdx/ui/utils";
 
 import { switchTeamAction } from "~/app/[locale]/_components/header/actions";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";

@@ -18,8 +18,9 @@ import {
   useFormContext,
 } from "react-hook-form";
 
+import { cn } from "@kdx/ui";
+
 import { Label } from "./label";
-import { cn } from "./utils";
 
 const useForm = <TSchema extends ZodType>(
   props: Omit<UseFormProps<TSchema["_input"]>, "resolver"> & {

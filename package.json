@@ -23,6 +23,7 @@
     "lint:ws": "pnpm dlx sherif@latest",
     "postinstall": "pnpm lint:ws",
     "typecheck": "turbo typecheck",
+    "ui-add": "pnpm -F ui ui-add",
     "lang:gen": "pnpm -F locales generate"
   },
   "devDependencies": {

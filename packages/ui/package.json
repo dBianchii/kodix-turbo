@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "exports": {
+    ".": "./src/index.ts",
     "./avatar": "./src/avatar/avatar.tsx",
     "./avatar-wrapper": "./src/avatar/avatar-wrapper.tsx",
     "./navigation-menu": "./src/navigation-menu/navigation-menu.tsx",
@@ -48,7 +49,8 @@
     "clean": "rm -rf .turbo node_modules",
     "lint": "eslint .",
     "format": "prettier --check . --ignore-path ../../.gitignore",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
+    "ui-add": "pnpm dlx shadcn-ui add && prettier src --write --list-different"
   },
   "dependencies": {
     "@kdx/locales": "workspace:*",

@@ -10,6 +10,7 @@ import type { RouterOutputs } from "@kdx/api";
 import type { KodixAppId } from "@kdx/shared";
 import { useI18n } from "@kdx/locales/client";
 import { useAppName } from "@kdx/locales/hooks";
+import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import {
   Command,
@@ -19,7 +20,6 @@ import {
   CommandItem,
 } from "@kdx/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
-import { cn } from "@kdx/ui/utils";
 
 import type { AppPathnames } from "~/helpers/miscelaneous";
 import {

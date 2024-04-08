@@ -5,6 +5,7 @@ import { RxCalendar, RxChevronDown, RxCross2 } from "react-icons/rx";
 
 import { addDays, format } from "@kdx/date-fns";
 import { useI18n } from "@kdx/locales/client";
+import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import { Calendar } from "@kdx/ui/calendar";
 import {
@@ -15,7 +16,6 @@ import {
   CommandList,
 } from "@kdx/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
-import { cn } from "@kdx/ui/utils";
 
 export function DatePickerWithPresets({
   date,

@@ -5,12 +5,12 @@ import * as React from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
 
 import { format } from "@kdx/date-fns";
+import { cn } from "@kdx/ui";
 
 import { Button } from "./button";
 import { Calendar } from "./calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { TimePicker } from "./time-picker";
-import { cn } from "./utils";
 
 interface DateTimePickerProps {
   date: Date | undefined;

@@ -12,6 +12,7 @@ import type { KodixAppId } from "@kdx/shared";
 import { useI18n } from "@kdx/locales/client";
 import { useAppDescription, useAppName } from "@kdx/locales/hooks";
 import { kodixCareAppId } from "@kdx/shared";
+import { cn } from "@kdx/ui";
 import { Badge } from "@kdx/ui/badge";
 import { Button, buttonVariants } from "@kdx/ui/button";
 import {
@@ -38,7 +39,6 @@ import {
   DropdownMenuTrigger,
 } from "@kdx/ui/dropdown-menu";
 import { toast } from "@kdx/ui/toast";
-import { cn } from "@kdx/ui/utils";
 
 import { getAppIconUrl, getAppUrl } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";

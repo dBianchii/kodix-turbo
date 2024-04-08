@@ -16,6 +16,7 @@ import type { Session } from "@kdx/auth";
 import type { TGetCareTasksInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import { format } from "@kdx/date-fns";
 import { useI18n } from "@kdx/locales/client";
+import { cn } from "@kdx/ui";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -56,7 +57,6 @@ import {
 } from "@kdx/ui/table";
 import { Textarea } from "@kdx/ui/textarea";
 import { toast } from "@kdx/ui/toast";
-import { cn } from "@kdx/ui/utils";
 import { ZSaveCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 
 import { DatePicker } from "~/app/[locale]/_components/date-picker";

@@ -9,6 +9,7 @@ import type { Dayjs } from "@kdx/dayjs";
 import { format } from "@kdx/date-fns";
 import dayjs from "@kdx/dayjs";
 import { useI18n } from "@kdx/locales/client";
+import { cn } from "@kdx/ui";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,7 +39,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@kdx/ui/tooltip";
-import { cn } from "@kdx/ui/utils";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";

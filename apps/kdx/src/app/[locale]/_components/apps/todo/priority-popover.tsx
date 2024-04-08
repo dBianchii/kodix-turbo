@@ -7,6 +7,7 @@ import {
 } from "react-icons/lu";
 
 import { useI18n } from "@kdx/locales/client";
+import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import {
   Command,
@@ -16,7 +17,6 @@ import {
   CommandList,
 } from "@kdx/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
-import { cn } from "@kdx/ui/utils";
 
 /**
  * @description You can optionally input a button to overwrite the default button trigger.

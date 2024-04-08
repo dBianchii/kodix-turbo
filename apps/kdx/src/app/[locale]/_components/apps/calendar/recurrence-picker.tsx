@@ -10,6 +10,7 @@ import { Frequency, RRule } from "rrule";
 import type { Dayjs } from "@kdx/dayjs";
 import dayjs from "@kdx/dayjs";
 import { useI18n } from "@kdx/locales/client";
+import { cn } from "@kdx/ui";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -29,7 +30,6 @@ import { Label } from "@kdx/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@kdx/ui/radio-group";
 import { Toggle } from "@kdx/ui/toggle";
-import { cn } from "@kdx/ui/utils";
 
 import { DatePicker } from "~/app/[locale]/_components/date-picker";
 import { FrequencyToTxt } from "~/app/[locale]/_components/frequency-picker";

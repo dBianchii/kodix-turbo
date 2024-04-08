@@ -13,9 +13,9 @@ import "~/app/globals.css";
 
 import { LocaleProvider } from "@kdx/locales/provider";
 import { kdxProductionURL } from "@kdx/shared";
+import { cn } from "@kdx/ui";
 import { ThemeProvider, ThemeToggle } from "@kdx/ui/theme";
 import { Toaster } from "@kdx/ui/toast";
-import { cn } from "@kdx/ui/utils";
 
 import { Header } from "./_components/header/header";
 

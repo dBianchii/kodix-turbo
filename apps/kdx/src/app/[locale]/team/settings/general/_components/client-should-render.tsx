@@ -3,7 +3,7 @@
 import React from "react";
 import { usePathname } from "next/navigation";
 
-import { cn } from "@kdx/ui/utils";
+import { cn } from "@kdx/ui";
 
 export function ShouldRender({
   children,
