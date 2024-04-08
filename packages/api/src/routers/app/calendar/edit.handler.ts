@@ -6,7 +6,7 @@ import dayjs from "@kdx/dayjs";
 import { and, eq, gt, gte, schema } from "@kdx/db";
 import { nanoid } from "@kdx/shared";
 
-import type { TProtectedProcedureContext } from "../../../trpc";
+import type { TProtectedProcedureContext } from "~/procedures";
 
 interface EditOptions {
   ctx: TProtectedProcedureContext;

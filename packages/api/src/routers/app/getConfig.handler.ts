@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import type { TGetConfigInput } from "@kdx/validators/trpc/app";
 import { appIdToAppTeamConfigSchema } from "@kdx/validators";
 
-import type { TProtectedProcedureContext } from "../../trpc";
+import type { TProtectedProcedureContext } from "~/procedures";
 
 interface GetConfigOptions {
   ctx: TProtectedProcedureContext;

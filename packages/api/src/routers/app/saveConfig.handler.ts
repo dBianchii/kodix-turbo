@@ -3,7 +3,7 @@ import { and, eq, schema } from "@kdx/db";
 import { nanoid } from "@kdx/shared";
 import { appIdToAppTeamConfigSchema } from "@kdx/validators";
 
-import type { TProtectedProcedureContext } from "../../trpc";
+import type { TProtectedProcedureContext } from "~/procedures";
 
 interface SaveConfigOptions {
   ctx: TProtectedProcedureContext;

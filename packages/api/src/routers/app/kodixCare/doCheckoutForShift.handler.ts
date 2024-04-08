@@ -4,7 +4,7 @@ import type { TDoCheckoutForShiftInputSchema } from "@kdx/validators/trpc/app/ko
 import dayjs from "@kdx/dayjs";
 import { eq, schema } from "@kdx/db";
 
-import type { TProtectedProcedureContext } from "../../../trpc";
+import type { TProtectedProcedureContext } from "~/procedures";
 import { getCurrentCareShiftHandler } from "./getCurrentCareShift.handler";
 
 interface DoCheckoutForShiftOptions {

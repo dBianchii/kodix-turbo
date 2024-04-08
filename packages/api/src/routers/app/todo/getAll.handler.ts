@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import type { TProtectedProcedureContext } from "../../../trpc";
+import type { TProtectedProcedureContext } from "~/procedures";
 
 interface GetAllOptions {
   ctx: TProtectedProcedureContext;

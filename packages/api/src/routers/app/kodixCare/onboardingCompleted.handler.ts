@@ -1,7 +1,7 @@
 import { and, eq, schema } from "@kdx/db";
 import { kodixCareAppId } from "@kdx/shared";
 
-import type { TProtectedProcedureContext } from "../../../trpc";
+import type { TProtectedProcedureContext } from "~/procedures";
 
 interface OnboardingCompletedOptions {
   ctx: TProtectedProcedureContext;
