@@ -27,7 +27,7 @@ export default async function Layout({
     {
       href: "/team/settings/roles",
       title: t("Roles"),
-      shown: session.user.id === team?.ownerId,
+      shown: session.user.id === team.ownerId,
     },
     {
       href: `/team/settings/general`,

@@ -15,7 +15,7 @@
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
     "format": "prettier --check . '!src/generated/**' --ignore-path ../../.gitignore",
-    "lint": "eslint .",
+    "lint": "eslint",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
     "generate": "node --import tsx/esm ./src/generate.ts"
   },
@@ -25,19 +25,14 @@
     "react": "18.2.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.71",
     "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "eslint": "^8.57.0",
-    "tsx": "4.7.1",
+    "@types/react": "^18.2.71",
+    "eslint": "^9.0.0",
     "prettier": "^3.2.5",
+    "tsx": "4.7.1",
     "typescript": "^5.4.3"
-  },
-  "eslintConfig": {
-    "extends": [
-      "@kdx/eslint-config/base"
-    ]
   },
   "prettier": "@kdx/prettier-config"
 }

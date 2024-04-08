@@ -190,7 +190,7 @@ export default function DataTableKodixCare({
   });
 
   const currentlyEditingCareTask = useMemo(() => {
-    return data?.find((x) => x.id === currentlyEditing);
+    return data.find((x) => x.id === currentlyEditing);
   }, [currentlyEditing, data]);
 
   const leftArrowRef = useRef<HTMLButtonElement>(null);
@@ -293,7 +293,7 @@ export default function DataTableKodixCare({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -442,14 +442,13 @@ function EditCareTaskDialog({
   useEffect(() => {
     form.reset(defaultValues);
   }, [task, open, form, defaultValues]);
-  if (!task) return null;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(async (values) => {
+            onSubmit={form.handleSubmit((values) => {
               toast.promise(
                 mutation.mutateAsync({
                   id: values.id,
@@ -503,7 +502,7 @@ function EditCareTaskDialog({
                         rows={6}
                         {...field}
                         onChange={(e) => {
-                          field.onChange(e.target.value ?? undefined);
+                          field.onChange(e.target.value);
                         }}
                         value={field.value ?? undefined}
                       />
@@ -569,7 +568,7 @@ function SaveTaskAsDoneDialog({
         <DialogContent>
           <Form {...form}>
             <form
-              onSubmit={form.handleSubmit(async (values) => {
+              onSubmit={form.handleSubmit((values) => {
                 toast.promise(
                   mutation.mutateAsync({
                     ...values,

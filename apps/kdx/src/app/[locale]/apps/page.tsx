@@ -19,7 +19,7 @@ export default async function Apps() {
       <br />
 
       <div className="grid-col-1 grid grid-cols-1 gap-3 md:grid-cols-3">
-        {apps?.map((app) => (
+        {apps.map((app) => (
           <div key={app.id}>
             <KodixApp
               id={app.id as KodixAppId}

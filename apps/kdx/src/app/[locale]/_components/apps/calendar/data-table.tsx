@@ -184,10 +184,9 @@ export function DataTable({
 
   useEffect(() => {
     const keyDownHandler = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft")
-        setSelectedDay((prev) => prev && addDays(prev, -1));
+      if (e.key === "ArrowLeft") setSelectedDay((prev) => addDays(prev, -1));
       else if (e.key === "ArrowRight")
-        setSelectedDay((prev) => prev && addDays(prev, 1));
+        setSelectedDay((prev) => addDays(prev, 1));
     };
     document.addEventListener("keydown", keyDownHandler);
     return () => document.removeEventListener("keydown", keyDownHandler);
@@ -202,9 +201,7 @@ export function DataTable({
             <Input
               id="search"
               placeholder={`${t("Search by title")}...`}
-              value={
-                (table.getColumn("title")?.getFilterValue() as string) ?? ""
-              }
+              value={table.getColumn("title")?.getFilterValue() as string}
               onChange={(event) =>
                 table.getColumn("title")?.setFilterValue(event.target.value)
               }
@@ -215,7 +212,7 @@ export function DataTable({
             <Button
               variant="ghost"
               onClick={() => {
-                setSelectedDay((prev) => prev && addDays(prev, -1));
+                setSelectedDay((prev) => addDays(prev, -1));
               }}
               className="h-10 w-10 p-3"
             >
@@ -225,17 +222,10 @@ export function DataTable({
               <PopoverTrigger asChild>
                 <Button
                   variant={"outline"}
-                  className={cn(
-                    "justify-start text-left font-normal",
-                    !selectedDay && "text-muted-foreground",
-                  )}
+                  className={cn("justify-start text-left font-normal")}
                 >
                   <RxCalendar className="mr-2 size-4" />
-                  {selectedDay ? (
-                    format(selectedDay, "PPP")
-                  ) : (
-                    <span>{t("apps.calendar.Pick a date")}</span>
-                  )}
+                  {format(selectedDay, "PPP")}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0">
@@ -252,7 +242,7 @@ export function DataTable({
             <Button
               variant="ghost"
               onClick={() => {
-                setSelectedDay((prev) => prev && addDays(prev, 1));
+                setSelectedDay((prev) => addDays(prev, 1));
               }}
               className="h-10 w-10 p-3"
             >
@@ -317,7 +307,7 @@ export function DataTable({
               ))}
             </TableHeader>
             <TableBody>
-              {getAllQuery.isLoading || getAllQuery.isFetching ? (
+              {getAllQuery.isFetching ? (
                 <TableRow>
                   <TableCell colSpan={columns.length} className="h-24">
                     <div className="flex h-full items-center justify-center">
@@ -325,7 +315,7 @@ export function DataTable({
                     </div>
                   </TableCell>
                 </TableRow>
-              ) : table.getRowModel().rows?.length ? (
+              ) : table.getRowModel().rows.length ? (
                 table.getRowModel().rows.map((row) => (
                   <ContextMenu key={row.id}>
                     <ContextMenuContent>

@@ -81,7 +81,7 @@ export function EditEventDialog({
         : undefined,
       count: RRule.fromString(calendarTask.rule).options.count ?? undefined,
       date: calendarTask.date,
-      weekdays: RRule.fromString(calendarTask.rule).options.byweekday?.map(
+      weekdays: RRule.fromString(calendarTask.rule).options.byweekday.map(
         (w) => new Weekday(w),
       ),
     };
@@ -126,7 +126,7 @@ export function EditEventDialog({
       count !== defaultCalendarTask.count ||
       interval !== defaultCalendarTask.interval ||
       // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-      (until && !until?.isSame(defaultCalendarTask.until)) ||
+      (until && !until.isSame(defaultCalendarTask.until)) ||
       frequency !== defaultCalendarTask.frequency ||
       weekdays !== defaultCalendarTask.weekdays
     ),
@@ -226,16 +226,9 @@ export function EditEventDialog({
                 <PopoverTrigger asChild>
                   <Button
                     variant={"outline"}
-                    className={cn(
-                      "w-[200px] pl-3 text-left font-normal",
-                      !from && "text-muted-foreground",
-                    )}
+                    className={cn("w-[200px] pl-3 text-left font-normal")}
                   >
-                    {from ? (
-                      format(from.toDate(), "PPP")
-                    ) : (
-                      <span>{t("apps.calendar.Pick a date")}</span>
-                    )}
+                    {format(from.toDate(), "PPP")}
                     <RxCalendar className="ml-auto size-4 opacity-50" />
                   </Button>
                 </PopoverTrigger>

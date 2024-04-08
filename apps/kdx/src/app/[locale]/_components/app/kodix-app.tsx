@@ -75,7 +75,6 @@ export function KodixApp({
     },
   });
 
-  const isActive = true;
   const appShouldGoToOnboarding = id === kodixCareAppId;
 
   const appurl = getAppUrl(id);
@@ -110,12 +109,9 @@ export function KodixApp({
         {session && installed && (
           <Link
             href={appurl}
-            className={cn(
-              buttonVariants({ variant: "default" }),
-              !isActive && "pointer-events-none opacity-50",
-            )}
+            className={cn(buttonVariants({ variant: "default" }))}
           >
-            {isActive ? t("Open") : t("Coming soon")}
+            {t("Open")}
           </Link>
         )}
         {session && !installed && (
@@ -129,15 +125,12 @@ export function KodixApp({
               void installAppMutation.mutate({ appId: id });
             }}
             variant={"secondary"}
-            className={cn(
-              "disabled",
-              !isActive && "pointer-events-none opacity-50",
-            )}
+            className={cn("disabled")}
           >
             {installAppMutation.isPending && (
               <LuLoader2 className="mr-2 size-5 animate-spin" />
             )}
-            {isActive ? t("Install") : t("Coming soon")}
+            {t("Install")}
           </Button>
         )}
         {!session && (

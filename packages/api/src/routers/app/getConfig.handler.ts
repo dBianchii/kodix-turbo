@@ -29,5 +29,5 @@ export const getConfigHandler = async ({ ctx, input }: GetConfigOptions) => {
 
   const schema = appIdToAppTeamConfigSchema[input.appId];
 
-  return schema.parse(result?.config);
+  return schema.parse(result.config);
 };

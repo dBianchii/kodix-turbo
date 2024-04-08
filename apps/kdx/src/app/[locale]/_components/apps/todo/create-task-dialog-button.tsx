@@ -144,7 +144,6 @@ export function CreateTaskDialogButton() {
                   <DatePickerIcon date={dueDate} className="mr-2 size-4" />
                   {dueDate ? format(dueDate, "PPP") : t("Pick a date")}
                   {dueDate && (
-                    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
                     <span
                       onClick={() => {
                         setDueDate(undefined);

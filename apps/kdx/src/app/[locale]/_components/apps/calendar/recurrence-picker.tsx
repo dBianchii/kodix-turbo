@@ -1,6 +1,3 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-
 import type { Weekday } from "rrule";
 import { useCallback, useEffect, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
@@ -117,7 +114,7 @@ export function RecurrencePicker({
   }
   const ruleForText = new RRule({
     freq: frequency,
-    until: until ? until?.toDate() : undefined,
+    until: until ? until.toDate() : undefined,
     interval: interval,
     byweekday: weekdays,
   });

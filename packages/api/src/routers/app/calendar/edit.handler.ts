@@ -175,8 +175,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
                 input.count !== undefined
                   ? input.count
                   : oldRule.options.count ?? undefined,
-              byweekday:
-                input.weekdays ?? oldRule.options.byweekday ?? undefined,
+              byweekday: input.weekdays ?? oldRule.options.byweekday,
             }).toString(),
           })
           .where(
@@ -211,7 +210,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
             freq: oldRule.options.freq,
             interval: oldRule.options.interval,
             count: oldRule.options.count ?? undefined,
-            byweekday: oldRule.options.byweekday ?? undefined,
+            byweekday: oldRule.options.byweekday,
           }).toString(),
         })
         .where(
@@ -236,7 +235,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
             input.count !== undefined
               ? input.count
               : oldRule.options.count ?? undefined,
-          byweekday: input.weekdays ?? oldRule.options.byweekday ?? undefined,
+          byweekday: input.weekdays ?? oldRule.options.byweekday,
         }).toString(),
         title: input.title ?? oldMaster.title,
         description: input.description ?? oldMaster.description,
@@ -261,7 +260,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
 
       return;
     });
-  } else if (input.editDefinition === "all") {
+  } else {
     //* Se ele alterou o title ou description, Devemos verificar se ele alterou os dois.
     //* Se ele alterou os dois, devemos apagar o eventInfo de todos os eventExceptions associados ao master e criar um novo eventInfo no master (ou atualizar um existente).
     //* Se ele apagou apenas um dos dois, devemos alterar o eventInfo do master e dos eventException associado ao master caso o eventException possua eventInfo.
@@ -273,6 +272,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
     return await ctx.db.transaction(async (tx) => {
       const newRule = await (async () => {
         const shouldUpdateRule = Boolean(
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-constant-binary-expression
           input.frequency ??
             input.interval ??
             input.count !== undefined ??
@@ -316,7 +316,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
             input.count !== undefined
               ? input.count
               : oldRule.options.count ?? undefined,
-          byweekday: input.weekdays ?? oldRule.options.byweekday ?? undefined,
+          byweekday: input.weekdays ?? oldRule.options.byweekday,
         }).toString();
       })();
 

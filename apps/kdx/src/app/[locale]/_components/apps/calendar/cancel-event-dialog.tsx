@@ -113,10 +113,7 @@ export function CancelationDialog({
                   eventMasterId: eventMasterId,
                   exclusionDefinition: "all",
                 });
-              else if (
-                radioValue === "thisAndFuture" ||
-                radioValue === "single"
-              )
+              else
                 mutation.mutate({
                   eventExceptionId: eventExceptionId,
                   eventMasterId: eventMasterId,

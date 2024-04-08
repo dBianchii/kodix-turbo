@@ -83,7 +83,7 @@ export const columns = [
 
           trpcErrorToastDefault(err);
           // If the mutation fails, use the context-value from onMutate
-          setPriority(ctx?.prevData);
+          setPriority(ctx.prevData);
         },
       });
 
@@ -135,7 +135,7 @@ export const columns = [
 
           trpcErrorToastDefault(err);
           // If the mutation fails, use the context-value from onMutate
-          setStatus(ctx?.prevData);
+          setStatus(ctx.prevData);
         },
       });
 
@@ -224,7 +224,7 @@ export const columns = [
 
           trpcErrorToastDefault(err);
           // If the mutation fails, use the context-value from onMutate
-          setAssignedToUserId(ctx?.prevData);
+          setAssignedToUserId(ctx.prevData);
         },
       });
 

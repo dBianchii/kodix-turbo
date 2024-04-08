@@ -13,7 +13,7 @@ import { I18nPicker } from "./i18n-picker";
 import { NotificationsPopoverClient } from "./notifications-popover-client";
 import { UserProfileButton } from "./user-profile-button";
 
-export async function Header() {
+export function Header() {
   return (
     <HeaderFooterRemover>
       <header className="border-b py-2">

@@ -4,7 +4,6 @@ import React from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 
-// eslint-disable-next-line react/display-name
 export const AvatarWrapper = React.forwardRef<
   React.ElementRef<typeof Avatar>,
   React.ComponentProps<typeof AvatarImage> & { fallback?: React.ReactNode }

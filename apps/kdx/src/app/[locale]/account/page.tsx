@@ -1,5 +1,5 @@
 import GeneralAccountSettings from "./general/page";
 
-export default async function Account() {
+export default function Account() {
   return <GeneralAccountSettings />;
 }

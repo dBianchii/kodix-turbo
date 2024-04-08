@@ -133,26 +133,22 @@ function TimeInfo({
   const t = useI18n();
   return (
     <div className="flex items-center justify-start">
-      {(currentShift.checkIn ?? currentShift.checkOut) && (
-        <div className="col mr-4">
-          <Label className="invisible text-xs text-muted-foreground">i</Label>
-          <IoMdTime className="" />
-        </div>
-      )}
-      {currentShift.checkIn && (
-        <div className="col mr-6 w-20">
-          <Label className="text-xs text-muted-foreground" htmlFor="startbadge">
-            {t("Start")}
-          </Label>
-          <Badge
-            id="startbadge"
-            variant={"outline"}
-            className="w-24 py-0 text-center text-xs text-muted-foreground"
-          >
-            {formatRelative(currentShift.checkIn, new Date())}
-          </Badge>
-        </div>
-      )}
+      <div className="col mr-4">
+        <Label className="invisible text-xs text-muted-foreground">i</Label>
+        <IoMdTime className="" />
+      </div>
+      <div className="col mr-6 w-20">
+        <Label className="text-xs text-muted-foreground" htmlFor="startbadge">
+          {t("Start")}
+        </Label>
+        <Badge
+          id="startbadge"
+          variant={"outline"}
+          className="w-24 py-0 text-center text-xs text-muted-foreground"
+        >
+          {formatRelative(currentShift.checkIn, new Date())}
+        </Badge>
+      </div>
       {currentShift.checkOut && (
         <div className="col w-20">
           <Label className="text-xs text-muted-foreground" htmlFor="endBadge">

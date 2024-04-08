@@ -1,5 +1,3 @@
-import { TRPCError } from "@trpc/server";
-
 import { db, eq, schema } from "@kdx/db";
 
 import type { TProtectedProcedureContext } from "../../procedures";
@@ -17,12 +15,6 @@ export const getInstalledHandler = async ({ ctx }: GetInstalledOptions) => {
     .innerJoin(schema.appsToTeams, eq(schema.apps.id, schema.appsToTeams.appId))
     .innerJoin(schema.teams, eq(schema.appsToTeams.teamId, schema.teams.id))
     .where(eq(schema.teams.id, ctx.session.user.activeTeamId));
-
-  if (!apps)
-    throw new TRPCError({
-      code: "NOT_FOUND",
-      message: "No apps found",
-    });
 
   return apps;
 };

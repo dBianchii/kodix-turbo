@@ -17,6 +17,7 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
     if (input.eventExceptionId) {
       return await ctx.db.transaction(async (tx) => {
         const toDeleteException = await tx.query.eventExceptions.findFirst({
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           where: (asd, { eq }) => eq(asd.id, input.eventExceptionId!),
           columns: {
             eventMasterId: true,
@@ -31,6 +32,7 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
         }
         await tx
           .delete(schema.eventExceptions)
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           .where(eq(schema.eventExceptions.id, input.eventExceptionId!));
         return await tx.insert(schema.eventCancellations).values({
           id: nanoid(),
@@ -94,7 +96,7 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
         })
         .where(eq(schema.eventMasters.id, input.eventMasterId));
     });
-  } else if (input.exclusionDefinition === "all") {
+  } else {
     return await ctx.db
       .delete(schema.eventMasters)
       .where(eq(schema.eventMasters.id, input.eventMasterId));
