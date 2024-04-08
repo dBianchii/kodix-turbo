@@ -15,7 +15,7 @@ import * as todos from "./schema/apps/todos";
 import * as auth from "./schema/auth";
 import * as teams from "./schema/teams";
 
-export * from "drizzle-orm";
+export * from "drizzle-orm/expressions";
 
 export const schema = {
   ...auth,

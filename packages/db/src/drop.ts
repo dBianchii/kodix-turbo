@@ -1,4 +1,6 @@
-import { db, sql } from "./index";
+import { sql } from "drizzle-orm/sql";
+
+import { db } from "./index";
 
 async function emptyDBTables() {
   console.log("🗑️ Dropping the entire database");
