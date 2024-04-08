@@ -70,7 +70,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message:
-        "No previous careshift found even though clonedCalendarTasks exists. This should only happen if we allow users to past careshifts.",
+        "No previous careshift found even though clonedCalendarTasks exists. This should only happen if we allow users to delete careshifts.",
     });
 
   //2. Verify if previous shift that has not ended yet
