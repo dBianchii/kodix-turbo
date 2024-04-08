@@ -4,7 +4,7 @@ import type { TInstallAppInputSchema } from "@kdx/validators/trpc/team";
 import { and, eq, schema } from "@kdx/db";
 import { appIdToAdminRole_defaultIdMap, nanoid } from "@kdx/shared";
 
-import type { TIsTeamOwnerProcedureContext } from "../../customProcedures";
+import type { TIsTeamOwnerProcedureContext } from "../../procedures";
 
 interface InstallAppOptions {
   ctx: TIsTeamOwnerProcedureContext;

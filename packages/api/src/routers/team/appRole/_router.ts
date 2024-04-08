@@ -8,8 +8,8 @@ import {
   ZUpdateUserAssociationInputSchema,
 } from "@kdx/validators/trpc/team/appRole";
 
-import { isTeamOwnerProcedure } from "../../../customProcedures";
 import { appInstalledMiddleware } from "../../../middlewares";
+import { isTeamOwnerProcedure } from "../../../procedures";
 import { getAllHandler } from "./getAll.handler";
 import { getPermissionsHandler } from "./getPermissions.handler";
 import { getUsersWithRolesHandler } from "./getUsersWithRoles.handler";

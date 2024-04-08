@@ -4,7 +4,7 @@ import type { TCreateInputSchema } from "@kdx/validators/trpc/app/calendar";
 import { schema } from "@kdx/db";
 import { nanoid } from "@kdx/shared";
 
-import type { TProtectedProcedureContext } from "../../../trpc";
+import type { TProtectedProcedureContext } from "~/procedures";
 
 interface CreateOptions {
   ctx: TProtectedProcedureContext;

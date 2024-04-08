@@ -8,11 +8,11 @@ import {
   ZUnlockMoreTasksInputSchema,
 } from "@kdx/validators/trpc/app/kodixCare";
 
+import { protectedProcedure } from "~/procedures";
 import {
   appPermissionMiddleware,
   kodixCareInstalledMiddleware,
 } from "../../../middlewares";
-import { protectedProcedure } from "../../../trpc";
 import { doCheckoutForShiftHandler } from "./doCheckoutForShift.handler";
 import { getCareTasksHandler } from "./getCareTasks.handler";
 import { getCurrentCareShiftHandler } from "./getCurrentCareShift.handler";

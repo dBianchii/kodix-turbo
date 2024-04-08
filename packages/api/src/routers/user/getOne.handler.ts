@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import type { TGetOneInputSchema } from "@kdx/validators/trpc/user";
 import { eq, schema } from "@kdx/db";
 
-import type { TProtectedProcedureContext } from "../../trpc";
+import type { TProtectedProcedureContext } from "~/procedures";
 
 interface GetOneOptions {
   ctx: TProtectedProcedureContext;

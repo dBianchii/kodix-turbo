@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { ZNanoId } from "..";
+import { ZNanoId } from "../..";
 
 export const ZGetOneInputSchema = z.object({
   userId: ZNanoId,

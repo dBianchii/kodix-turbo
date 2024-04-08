@@ -5,7 +5,7 @@ import { eq, schema } from "@kdx/db";
 import { getAppName } from "@kdx/locales/server-hooks";
 import { kodixCareAppId } from "@kdx/shared";
 
-import type { TProtectedProcedureContext } from "./trpc";
+import type { TProtectedProcedureContext } from "~/procedures";
 
 /**
  *  Helper/factory that returns a reusable middleware that checks if a certain app is installed for the current team

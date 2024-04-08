@@ -8,14 +8,14 @@
       "types": "./dist/index.d.ts",
       "default": "./src/index.ts"
     },
-    "./trpc/app": "./src/trpc/app/app.ts",
-    "./trpc/app/calendar": "./src/trpc/app/calendar/calendar.ts",
-    "./trpc/app/kodixCare": "./src/trpc/app/kodixCare/kodixCare.ts",
-    "./trpc/app/todo": "./src/trpc/app/todo/todo.ts",
-    "./trpc/team": "./src/trpc/team/team.ts",
-    "./trpc/team/appRole": "./src/trpc/team/appRole/appRole.ts",
-    "./trpc/invitation": "./src/trpc/team/invitation/invitation.ts",
-    "./trpc/user": "./src/trpc/user.ts"
+    "./trpc/app": "./src/trpc/app/index.ts",
+    "./trpc/app/calendar": "./src/trpc/app/calendar/index.ts",
+    "./trpc/app/kodixCare": "./src/trpc/app/kodixCare/index.ts",
+    "./trpc/app/todo": "./src/trpc/app/todo/index.ts",
+    "./trpc/team": "./src/trpc/team/index.ts",
+    "./trpc/team/appRole": "./src/trpc/team/appRole/index.ts",
+    "./trpc/invitation": "./src/trpc/team/invitation/index.ts",
+    "./trpc/user": "./src/trpc/user/index.ts"
   },
   "scripts": {
     "build": "tsc",
