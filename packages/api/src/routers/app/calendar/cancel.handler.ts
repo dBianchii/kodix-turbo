@@ -17,7 +17,7 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
     if (input.eventExceptionId) {
       return await ctx.db.transaction(async (tx) => {
         const toDeleteException = await tx.query.eventExceptions.findFirst({
-          where: (asd, { eq }) => eq(asd.id, input.eventExceptionId),
+          where: (asd, { eq }) => eq(asd.id, input.eventExceptionId!),
           columns: {
             eventMasterId: true,
             originalDate: true,
@@ -31,7 +31,7 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
         }
         await tx
           .delete(schema.eventExceptions)
-          .where(eq(schema.eventExceptions.id, input.eventExceptionId));
+          .where(eq(schema.eventExceptions.id, input.eventExceptionId!));
         return await tx.insert(schema.eventCancellations).values({
           id: nanoid(),
           eventMasterId: toDeleteException.eventMasterId,
