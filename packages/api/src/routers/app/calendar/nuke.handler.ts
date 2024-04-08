@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { eq, schema } from "@kdx/db";
 import { authorizedEmails } from "@kdx/shared";
 
-import type { TProtectedProcedureContext } from "~/procedures";
+import type { TProtectedProcedureContext } from "../../../procedures";
 
 interface NukeOptions {
   ctx: TProtectedProcedureContext;

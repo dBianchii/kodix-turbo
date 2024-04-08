@@ -6,7 +6,7 @@ import {
   ZInviteInputSchema,
 } from "@kdx/validators/trpc/invitation";
 
-import { protectedProcedure } from "~/procedures";
+import { protectedProcedure } from "../../../procedures";
 import { acceptHandler } from "./accept.handler";
 import { declineHandler } from "./decline.handler";
 import { deleteHandler } from "./delete.handler";

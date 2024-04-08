@@ -9,7 +9,7 @@ import {
   ZUpdateInputSchema,
 } from "@kdx/validators/trpc/team";
 
-import { isTeamOwnerProcedure, protectedProcedure } from "~/procedures";
+import { isTeamOwnerProcedure, protectedProcedure } from "../../procedures";
 import { appRoleRouter } from "./appRole/_router";
 import { createHandler } from "./create.handler";
 import { getActiveTeamHandler } from "./getActiveTeam.handler";

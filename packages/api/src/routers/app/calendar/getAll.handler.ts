@@ -4,7 +4,7 @@ import type { TGetAllInputSchema } from "@kdx/validators/trpc/app/calendar";
 import dayjs from "@kdx/dayjs";
 import { and, eq, gte, lte, or, schema } from "@kdx/db";
 
-import type { TProtectedProcedureContext } from "~/procedures";
+import type { TProtectedProcedureContext } from "../../../procedures";
 
 interface GetAllCalendarTasksOptions {
   ctx: TProtectedProcedureContext;

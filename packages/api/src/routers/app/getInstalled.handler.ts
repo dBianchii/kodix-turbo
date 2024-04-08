@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import { db, eq, schema } from "@kdx/db";
 
-import type { TProtectedProcedureContext } from "~/procedures";
+import type { TProtectedProcedureContext } from "../../procedures";
 
 interface GetInstalledOptions {
   ctx: TProtectedProcedureContext;

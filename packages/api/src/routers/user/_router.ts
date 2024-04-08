@@ -6,7 +6,7 @@ import {
   ZSwitchActiveTeamInputSchema,
 } from "@kdx/validators/trpc/user";
 
-import { protectedProcedure, publicProcedure } from "~/procedures";
+import { protectedProcedure, publicProcedure } from "../../procedures";
 import { changeNameHandler } from "./changeName.handler";
 import { getAllHandler } from "./getAll.handler";
 import { getNotificationsHandler } from "./getNotifications.handler";
