@@ -23,7 +23,11 @@ export const createRouter = async (
   });
 
   await addImportStatement(userInput.routerPath, {
-    importPath: "~/procedures",
+    importPath:
+      routerRelativePath
+        .split("/")
+        .map(() => "..")
+        .join("/") + "/../procedures",
     importName: userInput.procedure,
   });
 
