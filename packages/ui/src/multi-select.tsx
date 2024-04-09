@@ -1,12 +1,15 @@
+"use client";
+
 import type { z } from "zod";
 import * as React from "react";
 import {
   CaretSortIcon,
   CheckIcon,
-  Cross2Icon,
+  Cross1Icon,
   PlusCircledIcon,
 } from "@radix-ui/react-icons";
 
+import { useI18n } from "@kdx/locales/client";
 import { cn } from "@kdx/ui";
 
 import { Badge } from "./badge";
@@ -69,6 +72,7 @@ function MultiSelect({
     }
   }
   const [showParseError, setShowParseError] = React.useState(false);
+  const t = useI18n();
 
   return (
     <Popover open={open} onOpenChange={setOpen} {...props}>
@@ -77,17 +81,15 @@ function MultiSelect({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={cn(`h-full min-h-10 w-full justify-between`, className)}
+          className={cn(
+            `h-full min-h-10 w-full justify-between bg-transparent hover:bg-transparent`,
+            className,
+          )}
           onClick={() => setOpen(!open)}
         >
           <div className="flex flex-wrap gap-1">
             {selected.map((item) => (
-              <Badge
-                variant="outline"
-                key={item}
-                className="mb-1 mr-1"
-                onClick={() => handleUnselect(item)}
-              >
+              <Badge variant="secondary" key={item} className="mb-1 mr-1">
                 {options.find((option) => option.value === item)?.label}
                 <div
                   role="button"
@@ -104,7 +106,7 @@ function MultiSelect({
                   }}
                   onClick={() => handleUnselect(item)}
                 >
-                  <Cross2Icon className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                  <Cross1Icon className="h-3 w-3 text-muted-foreground hover:text-foreground" />
                 </div>
               </Badge>
             ))}
@@ -116,11 +118,11 @@ function MultiSelect({
       <PopoverContent className="w-full p-0">
         <Command>
           <CommandInput
-            placeholder="Search ..."
+            placeholder={`${t("Search")}...`}
             value={commandInput}
             onValueChange={setCommandInput}
           />
-          <CommandEmpty>Vazio</CommandEmpty>
+          <CommandEmpty>{t("Empty")}</CommandEmpty>
           <CommandGroup className="max-h-64 overflow-auto">
             {options.map((option) => (
               <CommandItem
@@ -174,7 +176,8 @@ function MultiSelect({
               >
                 <div className="flex">
                   <PlusCircledIcon className="mr-2 size-4 text-muted-foreground" />
-                  Add{"  "}
+                  {t("Add")}
+                  {"  "}
                   <span className="ml-1 text-sm">{commandInput}</span>
                 </div>
                 {showParseError &&

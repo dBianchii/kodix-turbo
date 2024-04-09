@@ -143,5 +143,5 @@ export function DataTableUserAppRoles({
     RouterOutputs["team"]["appRole"]["getUsersWithRoles"][number]
   >;
 
-  return <DataTable columns={columns} data={data}></DataTable>;
+  return <DataTable columns={columns} data={data} />;
 }

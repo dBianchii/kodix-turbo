@@ -194,7 +194,7 @@
   "Team name": "Nome da equipe",
   "Team name saved successfully": "Nome da equipe salvo com sucesso",
   "This is your teams visible name": "Esta é a sua equipe",
-  "User": "Do utilizador",
+  "User": "Usuário",
   "Your installed apps": "Seus apps instalados",
   "No results found": "Nenhum resultado encontrado",
   "Permission": "Permissão",
@@ -294,5 +294,7 @@
   "If you didnt request this please ignore this email": "Se você não solicitou isso, ignore este e-mail.",
   "Login with magic link": "Faça login com link mágico",
   "Yes": "Sim",
-  "Unlocking": "Desbloqueio"
+  "Unlocking": "Desbloqueio",
+  "Empty": "Vazio",
+  "Add": "Adicionar"
 }
