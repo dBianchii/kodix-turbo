@@ -53,9 +53,13 @@ export const runCli = async () => {
         );
 
         if (containsRouterFile) {
+          const routerRelativePath = subDir
+            .replace(ROUTERS_FOLDER_PATH, "")
+            .replace("/", "");
+
           routers.push({
-            label: subDir.replace(ROUTERS_FOLDER_PATH, "").replace("/", ""),
-            value: `${subDir}/${trpcCliConfig.routerFileName}`,
+            label: routerRelativePath,
+            value: routerRelativePath,
           });
         }
 
@@ -67,7 +71,7 @@ export const runCli = async () => {
   await findRouterFolders(ROUTERS_FOLDER_PATH);
   return await p.group(
     {
-      routerPath: async () => {
+      chosenRouterPath: async () => {
         if (!routers[0])
           return logger.error(
             `No ${trpcCliConfig.routerFileName} files found inside ${chalk.yellow(ROUTERS_FOLDER_PATH)}. Make sure you provided the correct path to your routers folder.`,
@@ -87,7 +91,7 @@ export const runCli = async () => {
       },
 
       newRouterName: ({ results }) => {
-        if (results.routerPath === "newRouter")
+        if (results.chosenRouterPath === "newRouter")
           return p.text({
             message: "What will be the name of your new router?",
             placeholder: "myRouter",
@@ -101,7 +105,7 @@ export const runCli = async () => {
       },
       appendNewRouter: ({ results }) => {
         if (
-          results.routerPath === "newRouter" &&
+          results.chosenRouterPath === "newRouter" &&
           typeof results.newRouterName === "string"
         ) {
           const chalkedName = chalk.green(results.newRouterName).toString();
@@ -115,7 +119,7 @@ export const runCli = async () => {
               })),
               {
                 label: `${chalkedName} (${chalk.italic("root")})`,
-                value: "newRouter",
+                value: "",
               },
             ],
             initialValue: routers[0]!.value,
@@ -157,7 +161,7 @@ export const runCli = async () => {
         }
 
         return p.select({
-          message: "Will it be a public or protected procedure?",
+          message: "Which procedure?",
           initialValue: "protected",
           options: proceduresExport.map((procedure) => {
             const name = procedure.split(" ")[2]!;

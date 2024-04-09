@@ -1,13 +1,17 @@
-import type { runCli } from "../cli";
 import { toPascalCase } from "../utils/toPascalCase";
 import { addExportStatement } from "./addExportStatement";
 import { addImportStatement } from "./addImportStatement";
 
-export const createValidator = async (
-  userInput: Awaited<ReturnType<typeof runCli>>,
-  validatorPath: string,
-) => {
-  const pascaledCaseName = toPascalCase(userInput.endpointName);
+export const createValidator = async ({
+  validatorPath,
+  validator,
+  endpointName,
+}: {
+  validatorPath: string;
+  validator: string;
+  endpointName: string;
+}) => {
+  const pascaledCaseName = toPascalCase(endpointName);
 
   await addImportStatement(validatorPath, {
     importName: "z",
@@ -16,7 +20,7 @@ export const createValidator = async (
 
   await addExportStatement({
     filePath: validatorPath,
-    exportStatement: `export const Z${pascaledCaseName}InputSchema = ${userInput.validator};`,
+    exportStatement: `export const Z${pascaledCaseName}InputSchema = ${validator};`,
   });
   await addExportStatement({
     filePath: validatorPath,

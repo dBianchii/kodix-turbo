@@ -1,50 +1,54 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import fs from "fs/promises";
 
-import type { runCli } from "../cli";
 import { logger } from "../utils/logger";
 import { toPascalCase } from "../utils/toPascalCase";
 import { addImportStatement } from "./addImportStatement";
 
-export const createRouter = async (
-  userInput: Awaited<ReturnType<typeof runCli>>,
-  routerRelativePath: string,
-) => {
-  const ZEndpointNameInputSchema = `Z${toPascalCase(userInput.endpointName)}InputSchema`;
-  if (userInput.validator)
-    await addImportStatement(userInput.routerPath, {
-      importPath: `@kdx/validators/trpc/${routerRelativePath}`,
+export const createRouter = async ({
+  routerFolderFilePath,
+  chosenRouterPath,
+  routerFilePath,
+  endpointName,
+  validator,
+  procedure,
+  queryOrMutation,
+}: {
+  routerFolderFilePath: string;
+  chosenRouterPath: string;
+  routerFilePath: string;
+  endpointName: string;
+  validator: string;
+  procedure: string;
+  queryOrMutation: string;
+}) => {
+  const ZEndpointNameInputSchema = `Z${toPascalCase(endpointName)}InputSchema`;
+  if (validator)
+    await addImportStatement(routerFilePath, {
+      importPath: `@kdx/validators/trpc/${chosenRouterPath}`,
       importName: ZEndpointNameInputSchema,
     });
 
-  await addImportStatement(userInput.routerPath, {
-    importPath: `./${userInput.endpointName}.handler`,
-    importName: `${userInput.endpointName}Handler`,
+  const handlerName = `${endpointName}Handler`;
+
+  await addImportStatement(routerFilePath, {
+    importPath: `./${endpointName}.handler`,
+    importName: handlerName,
   });
 
-  await addImportStatement(userInput.routerPath, {
+  await addImportStatement(routerFilePath, {
     importPath:
-      routerRelativePath
+      chosenRouterPath
         .split("/")
         .map(() => "..")
         .join("/") + "/../procedures",
-    importName: userInput.procedure,
+    importName: procedure,
   });
 
-  const {
-    routerPath,
-    procedure,
-    validator,
-    endpointName: name,
-    queryOrMutation,
-  } = userInput;
-
-  const handlerName = `${name}Handler`;
-
   try {
-    let fileContent = await fs.readFile(routerPath, "utf-8");
+    let fileContent = await fs.readFile(routerFilePath, "utf-8");
 
-    const routerName = routerPath.split("/").at(-2);
+    const routerName = routerFolderFilePath.split("/").at(-1);
 
     const routerRegex = new RegExp(
       `export\\s+const\\s+${routerName}Router\\s*=\\s*{([^}]*)}`,
@@ -58,7 +62,7 @@ export const createRouter = async (
     const routerContent = match[1];
 
     // Add new entry to the object content
-    let newEntry = `  ${name}: ${procedure}`;
+    let newEntry = `  ${endpointName}: ${procedure}`;
     if (validator) newEntry += `.input(${ZEndpointNameInputSchema})`;
 
     newEntry += `.${queryOrMutation}(${handlerName}),\n`;
@@ -67,7 +71,7 @@ export const createRouter = async (
 
     // Replace the old router object content with the modified one
     fileContent = fileContent.replace(match[1]!, modifiedRouterContent);
-    await fs.writeFile(routerPath, fileContent);
+    await fs.writeFile(routerFilePath, fileContent);
   } catch (error) {
     logger.error("Error updating file");
     process.exit(1);

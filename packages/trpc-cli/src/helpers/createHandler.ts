@@ -1,21 +1,28 @@
 import fs from "fs";
 
-import type { runCli } from "../cli";
 import { toPascalCase } from "../utils/toPascalCase";
 
-export const createHandler = async (
-  userInput: Awaited<ReturnType<typeof runCli>>,
-  routerRelativePath: string,
-  handlerPath: string,
-) => {
-  const UpperCasedEndpointName = toPascalCase(userInput.endpointName);
-  const TUpperCasedProcedureNameContext = `T${toPascalCase(userInput.procedure)}Context`;
+export const createHandler = async ({
+  handlerPath,
+  chosenRouterPath,
+  endpointName,
+  validator,
+  procedure,
+}: {
+  handlerPath: string;
+  chosenRouterPath: string;
+  endpointName: string;
+  validator: string;
+  procedure: string;
+}) => {
+  const UpperCasedEndpointName = toPascalCase(endpointName);
+  const TUpperCasedProcedureNameContext = `T${toPascalCase(procedure)}Context`;
 
   const TEndpointInputSchema = `T${UpperCasedEndpointName}InputSchema`;
 
-  const contents = `${userInput.validator ? `import type { ${TEndpointInputSchema} } from "@kdx/validators/trpc/${routerRelativePath}";` : ""}
+  const contents = `${validator ? `import type { ${TEndpointInputSchema} } from "@kdx/validators/trpc/${chosenRouterPath}";` : ""}
 import type { ${TUpperCasedProcedureNameContext} } from "${
-    routerRelativePath
+    chosenRouterPath
       .split("/")
       .map(() => "..")
       .join("/") + "/../procedures"
@@ -23,10 +30,10 @@ import type { ${TUpperCasedProcedureNameContext} } from "${
 
 interface ${UpperCasedEndpointName}Options {
   ctx: ${TUpperCasedProcedureNameContext};
-  ${userInput.validator ? `input: ${TEndpointInputSchema};` : ""}
+  ${validator ? `input: ${TEndpointInputSchema};` : ""}
 }
 
-export const ${userInput.endpointName}Handler = async ({ ctx${userInput.validator ? ", input" : ""} }: ${UpperCasedEndpointName}Options) => {
+export const ${endpointName}Handler = async ({ ctx${validator ? ", input" : ""} }: ${UpperCasedEndpointName}Options) => {
   //... your handler logic here <3
 };`;
 
