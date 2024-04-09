@@ -6,6 +6,7 @@ import { toPascalCase } from "../utils/toPascalCase";
 export const createHandler = async (
   userInput: Awaited<ReturnType<typeof runCli>>,
   routerRelativePath: string,
+  handlerPath: string,
 ) => {
   const UpperCasedEndpointName = toPascalCase(userInput.name);
   const TUpperCasedProcedureNameContext = `T${toPascalCase(userInput.procedure)}Context`;
@@ -33,8 +34,5 @@ export const ${userInput.name}Handler = async ({ ctx${userInput.validator ? ", i
 
 };`;
 
-  await fs.promises.writeFile(
-    `${userInput.routerPath.replace("_router.ts", "")}${userInput.name}.handler.ts`,
-    contents,
-  );
+  await fs.promises.writeFile(handlerPath, contents);
 };

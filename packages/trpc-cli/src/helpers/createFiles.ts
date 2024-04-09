@@ -2,10 +2,12 @@ import chalk from "chalk";
 import ora from "ora";
 
 import type { runCli } from "../cli";
+import { VALIDATORS_FOLDER_PATH } from "../cli";
 import { logger } from "../utils/logger";
 import { createHandler } from "./createHandler";
 import { createRouter } from "./createRouter";
 import { createValidator } from "./createValidator";
+import { runPrettier } from "./runPrettier";
 
 export const createFiles = async (
   userInput: Awaited<ReturnType<typeof runCli>>,
@@ -17,16 +19,22 @@ export const createFiles = async (
     .split("routers/")[1]!
     .replace("/_router.ts", "");
 
+  const handlerPath = `${userInput.routerPath.replace("_router.ts", "")}${userInput.name}.handler.ts`;
+  const validatorPath = `${VALIDATORS_FOLDER_PATH}/${routerRelativePath}/index.ts`;
   const promises = [
     createRouter(userInput, routerRelativePath),
-    createHandler(userInput, routerRelativePath),
+    createHandler(userInput, routerRelativePath, handlerPath),
   ];
   if (userInput.validator)
-    promises.push(createValidator(userInput, routerRelativePath));
+    promises.push(createValidator(userInput, validatorPath));
 
   await Promise.all(promises);
 
   spinner.succeed(`Endpoint created!\n`);
+
+  const prettierSpinner = ora("Running Prettier...\n").start();
+  await runPrettier([userInput.routerPath, handlerPath, validatorPath]);
+  prettierSpinner.succeed("Prettier ran successfully!\n");
 
   logger.success("Links to your new/modified files:");
   logger.success(`Router: ${chalk.blue(`${routerRelativePath}/_router.ts`)}`);
