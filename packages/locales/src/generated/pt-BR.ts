@@ -295,5 +295,6 @@ export default {
   "Login with magic link": "Faça login com link mágico",
   "Yes": "Sim",
   "Unlocking": "Desbloqueio",
-  "Empty": "Vazio"
+  "Empty": "Vazio",
+  "Add": "Adicionar"
 } as const

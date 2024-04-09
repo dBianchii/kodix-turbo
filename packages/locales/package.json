@@ -13,12 +13,12 @@
     "./server-hooks": "./src/hooks/server-hooks.ts"
   },
   "scripts": {
+    "dev": "nodemon --watch ./src/lang --ext json --exec \"pnpm run generate\"",
     "clean": "rm -rf .turbo node_modules",
     "format": "prettier --check . '!src/generated/**' --ignore-path ../../.gitignore",
     "lint": "eslint",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
-    "generate": "node --import tsx/esm ./src/generate.ts",
-    "dev": "nodemon --watch ./src/lang/** --ext json --exec \"pnpm run generate\""
+    "generate": "node --import tsx/esm ./src/generate.ts"
   },
   "dependencies": {
     "@kdx/shared": "workspace:*",
