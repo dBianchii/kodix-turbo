@@ -25,8 +25,7 @@
     "typecheck": "turbo typecheck",
     "ui-add": "pnpm -F ui ui-add",
     "lang:gen": "pnpm -F locales generate",
-    "trpc:new": "pnpm -F trpc-cli dev",
-    "prepare": "husky"
+    "trpc:new": "pnpm -F trpc-cli dev"
   },
   "devDependencies": {
     "@kdx/prettier-config": "workspace:*",
@@ -37,5 +36,12 @@
     "turbo": "^1.13.2",
     "typescript": "^5.4.3"
   },
-  "prettier": "@kdx/prettier-config"
+  "prettier": "@kdx/prettier-config",
+  "lint-staged": {
+    "*{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "eslint --fix",
+      "eslint"
+    ]
+  }
 }
