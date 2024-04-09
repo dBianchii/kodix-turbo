@@ -10,8 +10,8 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-} from "@kdx/ui/navigation-menu";
-import { navigationMenuTriggerStyle } from "@kdx/ui/navigationMenuTriggerStyle";
+} from "@kdx/ui/navigation-menu/index";
+import { navigationMenuTriggerStyle } from "@kdx/ui/navigation-menu/navigationMenuTriggerStyle";
 
 export function Navigation({
   goBackItem,
