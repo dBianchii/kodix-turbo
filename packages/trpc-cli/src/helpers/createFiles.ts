@@ -24,7 +24,7 @@ export const createFiles = async (
   if (userInput.validator)
     promises.push(createValidator(userInput, routerRelativePath));
 
-  await Promise.allSettled(promises);
+  await Promise.all(promises);
 
   spinner.succeed(`Endpoint created!\n`);
 

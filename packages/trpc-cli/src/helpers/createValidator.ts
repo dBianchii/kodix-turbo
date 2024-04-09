@@ -9,7 +9,6 @@ export const createValidator = async (
   routerRelativePath: string,
 ) => {
   const filePath = `${VALIDATORS_FOLDER_PATH}/${routerRelativePath}/index.ts`;
-  console.log(filePath);
 
   const pascaledCaseName = toPascalCase(userInput.name);
 
