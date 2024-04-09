@@ -6,7 +6,7 @@
   },
   "packageManager": "pnpm@8.15.5",
   "scripts": {
-    "build": "turbo build --experimental-ui",
+    "build": "turbo build",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo clean",
     "db:push": "pnpm -F db push",
