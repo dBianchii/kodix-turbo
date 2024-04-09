@@ -12,7 +12,6 @@ import type { RouterOutputs } from "@kdx/api";
 import { useI18n } from "@kdx/locales/client";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Button } from "@kdx/ui/button";
-import { Checkbox } from "@kdx/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,6 +28,7 @@ import {
 } from "@kdx/ui/table";
 import { toast } from "@kdx/ui/toast";
 
+import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
 const columnHelper =
@@ -43,41 +43,21 @@ export function InviteDataTable() {
       toast.success(t("Invite deleted"));
       void utils.team.invitation.getAll.invalidate();
     },
+    onError: (e) => {
+      trpcErrorToastDefault(e);
+    },
   });
 
   const columns = [
     columnHelper.accessor("inviteEmail", {
-      header: (info) => {
-        return (
-          <div className="flex items-center space-x-8">
-            <Checkbox
-              checked={info.table.getIsAllPageRowsSelected()}
-              onCheckedChange={(value) =>
-                info.table.toggleAllPageRowsSelected(!!value)
-              }
-              aria-label="Select all"
-            />
-            <div className="text-muted-foreground">{t("Select all")}</div>
-          </div>
-        );
-      },
+      header: () => <div className="ml-2">User</div>,
       cell: (info) => (
-        <div className="flex flex-row space-x-8">
-          <div className="flex flex-col items-center justify-center">
-            <Checkbox
-              checked={info.row.getIsSelected()}
-              onCheckedChange={(value) => info.row.toggleSelected(!!value)}
-              aria-label="Select row"
-            />
-          </div>
+        <div className="ml-2 flex flex-row gap-4">
           <div className="flex flex-col">
             <AvatarWrapper className="h-8 w-8" fallback={info.getValue()} />
           </div>
-          <div className="flex flex-col items-start">
-            <span className="font-bold">
-              {info.cell.row.original.inviteEmail}
-            </span>
-            <span className="text-muted-foreground">{info.getValue()}</span>
+          <div className="flex flex-col items-center justify-center">
+            {info.cell.row.original.inviteEmail}
           </div>
         </div>
       ),
