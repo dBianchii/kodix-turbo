@@ -20,7 +20,7 @@ export const createFiles = async (
     .split("routers/")[1]!
     .replace(`/${trpcCliConfig.routerFileName}`, "");
 
-  const handlerPath = `${userInput.routerPath.replace(trpcCliConfig.routerFileName, "")}${userInput.name}.handler.ts`;
+  const handlerPath = `${userInput.routerPath.replace(trpcCliConfig.routerFileName, "")}${userInput.endpointName}.handler.ts`;
   const validatorPath = `${VALIDATORS_FOLDER_PATH}/${routerRelativePath}/index.ts`;
   const promises = [
     createRouter(userInput, routerRelativePath),
@@ -42,7 +42,7 @@ export const createFiles = async (
     `Router: ${chalk.blue(`${routerRelativePath}/${trpcCliConfig.routerFileName}`)}`,
   );
   logger.success(
-    `Handler: ${chalk.blue(`${routerRelativePath}/${userInput.name}.handler.ts`)}`,
+    `Handler: ${chalk.blue(`${routerRelativePath}/${userInput.endpointName}.handler.ts`)}`,
   );
   if (userInput.validator)
     logger.success(

@@ -8,7 +8,7 @@ export const createHandler = async (
   routerRelativePath: string,
   handlerPath: string,
 ) => {
-  const UpperCasedEndpointName = toPascalCase(userInput.name);
+  const UpperCasedEndpointName = toPascalCase(userInput.endpointName);
   const TUpperCasedProcedureNameContext = `T${toPascalCase(userInput.procedure)}Context`;
 
   const TEndpointInputSchema = `T${UpperCasedEndpointName}InputSchema`;
@@ -26,7 +26,7 @@ interface ${UpperCasedEndpointName}Options {
   ${userInput.validator ? `input: ${TEndpointInputSchema};` : ""}
 }
 
-export const ${userInput.name}Handler = async ({ ctx${userInput.validator ? ", input" : ""} }: ${UpperCasedEndpointName}Options) => {
+export const ${userInput.endpointName}Handler = async ({ ctx${userInput.validator ? ", input" : ""} }: ${UpperCasedEndpointName}Options) => {
   //... your handler logic here <3
 };`;
 

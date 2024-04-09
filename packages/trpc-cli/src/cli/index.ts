@@ -20,45 +20,54 @@ export const VALIDATORS_FOLDER_PATH = path.resolve(
   process.cwd(),
   trpcCliConfig.paths.validatorsFolderPath,
 );
-
+const zSafeName = z
+  .string()
+  .min(1)
+  .regex(/^[a-zA-Z0-9]+$/, {
+    message: "Please provide a name without spaces or special characters",
+  })
+  .regex(/^[^0-9]/, {
+    message: "Please provide a name that does not start with a number",
+  })
+  .regex(/^[a-z]/, {
+    message:
+      "Please provide a name that does not start with an uppercase letter",
+  });
 export const runCli = async () => {
+  const routers: { label: string; value: string }[] = [];
+
+  async function findRouterFolders(dir: string) {
+    const entries = await fs.readdir(dir, { withFileTypes: true });
+
+    for (const entry of entries) {
+      if (entry.isDirectory()) {
+        const subDir = path.join(dir, entry.name);
+        const subEntries = await fs.readdir(subDir, {
+          withFileTypes: true,
+        });
+
+        const containsRouterFile = subEntries.some(
+          (subEntry) =>
+            subEntry.isFile() &&
+            subEntry.name.endsWith(trpcCliConfig.routerFileName),
+        );
+
+        if (containsRouterFile) {
+          routers.push({
+            label: subDir.replace(ROUTERS_FOLDER_PATH, "").replace("/", ""),
+            value: `${subDir}/${trpcCliConfig.routerFileName}`,
+          });
+        }
+
+        // Recursively search subdirectories
+        await findRouterFolders(subDir);
+      }
+    }
+  }
+  await findRouterFolders(ROUTERS_FOLDER_PATH);
   return await p.group(
     {
       routerPath: async () => {
-        const routers: { label: string; value: string }[] = [];
-
-        async function findRouterFolders(dir: string) {
-          const entries = await fs.readdir(dir, { withFileTypes: true });
-
-          for (const entry of entries) {
-            if (entry.isDirectory()) {
-              const subDir = path.join(dir, entry.name);
-              const subEntries = await fs.readdir(subDir, {
-                withFileTypes: true,
-              });
-
-              const containsRouterFile = subEntries.some(
-                (subEntry) =>
-                  subEntry.isFile() &&
-                  subEntry.name.endsWith(trpcCliConfig.routerFileName),
-              );
-
-              if (containsRouterFile) {
-                routers.push({
-                  label: subDir
-                    .replace(ROUTERS_FOLDER_PATH, "")
-                    .replace("/", ""),
-                  value: `${subDir}/${trpcCliConfig.routerFileName}`,
-                });
-              }
-
-              // Recursively search subdirectories
-              await findRouterFolders(subDir);
-            }
-          }
-        }
-        await findRouterFolders(ROUTERS_FOLDER_PATH);
-
         if (!routers[0])
           return logger.error(
             `No ${trpcCliConfig.routerFileName} files found inside ${chalk.yellow(ROUTERS_FOLDER_PATH)}. Make sure you provided the correct path to your routers folder.`,
@@ -66,34 +75,61 @@ export const runCli = async () => {
 
         return p.select({
           message: "Which router should your new endpoint be added to?",
-          options: routers,
+          options: [
+            ...routers,
+            {
+              label: "(create new)",
+              value: "newRouter",
+            },
+          ],
           initialValue: routers[0].value,
         });
       },
-      name: () => {
+
+      newRouterName: ({ results }) => {
+        if (results.routerPath === "newRouter")
+          return p.text({
+            message: "What will be the name of your new router?",
+            placeholder: "myRouter",
+            defaultValue: "myRouter",
+            initialValue: "myRouter",
+            validate: (input) => {
+              const result = zSafeName.safeParse(input);
+              if (!result.success) return result.error.errors[0]!.message;
+            },
+          });
+      },
+      appendNewRouter: ({ results }) => {
+        if (
+          results.routerPath === "newRouter" &&
+          typeof results.newRouterName === "string"
+        ) {
+          const chalkedName = chalk.green(results.newRouterName).toString();
+          return p.select({
+            message:
+              "And which router path should your new router be added to?",
+            options: [
+              ...routers.map((router) => ({
+                label: `${router.label}/${chalkedName}`,
+                value: router.value,
+              })),
+              {
+                label: `${chalkedName} (${chalk.italic("root")})`,
+                value: "newRouter",
+              },
+            ],
+            initialValue: routers[0]!.value,
+          });
+        }
+      },
+      endpointName: () => {
         return p.text({
           message: "What will be the name of your new endpoint?",
           placeholder: "makeTheWorldBetter",
           defaultValue: "makeTheWorldBetter",
           validate: (input) => {
             if (input.length > 0) {
-              const result = z
-                .string()
-                .min(1)
-                .regex(/^[a-zA-Z0-9]+$/, {
-                  message:
-                    "Please provide a name without spaces or special characters",
-                })
-                .regex(/^[^0-9]/, {
-                  message:
-                    "Please provide a name that does not start with a number",
-                })
-                .regex(/^[a-z]/, {
-                  message:
-                    "Please provide a name that does not start with an uppercase letter",
-                })
-                .safeParse(input);
-
+              const result = zSafeName.safeParse(input);
               if (!result.success) return result.error.errors[0]!.message;
             }
           },

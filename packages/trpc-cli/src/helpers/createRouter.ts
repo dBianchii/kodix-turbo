@@ -10,7 +10,7 @@ export const createRouter = async (
   userInput: Awaited<ReturnType<typeof runCli>>,
   routerRelativePath: string,
 ) => {
-  const ZEndpointNameInputSchema = `Z${toPascalCase(userInput.name)}InputSchema`;
+  const ZEndpointNameInputSchema = `Z${toPascalCase(userInput.endpointName)}InputSchema`;
   if (userInput.validator)
     await addImportStatement(userInput.routerPath, {
       importPath: `@kdx/validators/trpc/${routerRelativePath}`,
@@ -18,8 +18,8 @@ export const createRouter = async (
     });
 
   await addImportStatement(userInput.routerPath, {
-    importPath: `./${userInput.name}.handler`,
-    importName: `${userInput.name}Handler`,
+    importPath: `./${userInput.endpointName}.handler`,
+    importName: `${userInput.endpointName}Handler`,
   });
 
   await addImportStatement(userInput.routerPath, {
@@ -31,7 +31,13 @@ export const createRouter = async (
     importName: userInput.procedure,
   });
 
-  const { routerPath, procedure, validator, name, queryOrMutation } = userInput;
+  const {
+    routerPath,
+    procedure,
+    validator,
+    endpointName: name,
+    queryOrMutation,
+  } = userInput;
 
   const handlerName = `${name}Handler`;
 

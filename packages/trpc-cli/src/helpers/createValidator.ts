@@ -7,7 +7,7 @@ export const createValidator = async (
   userInput: Awaited<ReturnType<typeof runCli>>,
   validatorPath: string,
 ) => {
-  const pascaledCaseName = toPascalCase(userInput.name);
+  const pascaledCaseName = toPascalCase(userInput.endpointName);
 
   await addImportStatement(validatorPath, {
     importName: "z",
