@@ -5,6 +5,9 @@ import { eq, schema } from "@kdx/db";
 
 import { t } from "./trpc";
 
+//? This file should ONLY EXPORT procedures and their context types. Do not export anything else from this file because they are read by @kdx/trpc-cli
+//? Also, please export them as constants inline, exactly like the others <3
+
 /**
  * Public (unauthed) procedure
  *
