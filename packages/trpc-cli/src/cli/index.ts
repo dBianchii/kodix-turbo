@@ -5,19 +5,20 @@ import * as p from "@clack/prompts";
 import chalk from "chalk";
 import z from "zod";
 
+import { trpcCliConfig } from "../../config";
 import { logger } from "../utils/logger";
 
 export const ROUTERS_FOLDER_PATH = path.resolve(
   process.cwd(),
-  "../api/src/routers",
-);
-export const VALIDATORS_FOLDER_PATH = path.resolve(
-  process.cwd(),
-  "../validators/src/trpc",
+  trpcCliConfig.paths.routersFolderPath,
 );
 export const PROCEDURESFILEPATH = path.resolve(
   process.cwd(),
-  "../api/src/procedures.ts",
+  trpcCliConfig.paths.proceduresFilePath,
+);
+export const VALIDATORS_FOLDER_PATH = path.resolve(
+  process.cwd(),
+  trpcCliConfig.paths.validatorsFolderPath,
 );
 
 export const runCli = async () => {
@@ -36,10 +37,10 @@ export const runCli = async () => {
                 withFileTypes: true,
               });
 
-              const fileToLookFor = "_router.ts";
               const containsRouterFile = subEntries.some(
                 (subEntry) =>
-                  subEntry.isFile() && subEntry.name.endsWith(fileToLookFor),
+                  subEntry.isFile() &&
+                  subEntry.name.endsWith(trpcCliConfig.routerFileName),
               );
 
               if (containsRouterFile) {
@@ -47,7 +48,7 @@ export const runCli = async () => {
                   label: subDir
                     .replace(ROUTERS_FOLDER_PATH, "")
                     .replace("/", ""),
-                  value: `${subDir}/${fileToLookFor}`,
+                  value: `${subDir}/${trpcCliConfig.routerFileName}`,
                 });
               }
 
@@ -60,7 +61,7 @@ export const runCli = async () => {
 
         if (!routers[0])
           return logger.error(
-            `No _router.ts files found inside ${chalk.yellow(ROUTERS_FOLDER_PATH)}. Make sure you provided the correct path to your routers folder.`,
+            `No ${trpcCliConfig.routerFileName} files found inside ${chalk.yellow(ROUTERS_FOLDER_PATH)}. Make sure you provided the correct path to your routers folder.`,
           );
 
         return p.select({
