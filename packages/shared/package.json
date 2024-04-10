@@ -18,7 +18,7 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "nanoid": "^5.0.6"
+    "nanoid": "^5.0.7"
   },
   "devDependencies": {
     "@kdx/eslint-config": "workspace:*",
