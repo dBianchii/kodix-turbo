@@ -31,6 +31,7 @@ const main = async () => {
   }
 
   await createFiles(params);
+  process.exit(0);
 };
 
 main().catch((err) => {

@@ -75,6 +75,4 @@ export const createFiles = async (params: CreateFilesParams) => {
     logger.success(
       `Validator: ${chalk.blue(`trpc/${params.chosenRouterPath}/index.ts`)}`,
     );
-
-  process.exit(0);
 };
