@@ -21,7 +21,7 @@
     "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "@types/node": "^20.11.30",
+    "@types/node": "^20.12.7",
     "eslint": "^9.0.0",
     "prettier": "^3.2.5",
     "tsup": "^8.0.2",

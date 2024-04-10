@@ -54,7 +54,7 @@
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tailwind-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "@types/node": "^20.11.30",
+    "@types/node": "^20.12.7",
     "@types/react": "^18.2.71",
     "@types/react-dom": "^18.2.22",
     "dotenv-cli": "^7.4.1",
