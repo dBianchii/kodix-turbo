@@ -16,6 +16,8 @@ import * as auth from "./schema/auth";
 import * as teams from "./schema/teams";
 
 export * from "drizzle-orm/expressions";
+export * from "drizzle-orm/sql";
+export { alias } from "drizzle-orm/mysql-core";
 
 export const schema = {
   ...auth,

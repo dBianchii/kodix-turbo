@@ -1,5 +1,3 @@
-import { sql } from "drizzle-orm/sql";
-
 import {
   calendarAppId,
   kdxPartnerId,
@@ -9,6 +7,7 @@ import {
 } from "@kdx/shared";
 
 import { db, schema } from "..";
+import { sql } from "../";
 import { appRoles_defaultTree } from "./appRolesDefault_tree";
 
 const devPartners: (typeof schema.devPartners.$inferInsert)[] = [
