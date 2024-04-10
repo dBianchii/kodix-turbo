@@ -19,7 +19,7 @@
   "devDependencies": {
     "@kdx/tsconfig": "workspace:*",
     "typescript": "^5.4.3",
-    "@types/node": "^20.11.30"
+    "@types/node": "^20.12.7"
   },
   "prettier": "@kdx/prettier-config"
 }
