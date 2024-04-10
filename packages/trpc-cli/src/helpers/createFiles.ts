@@ -28,6 +28,7 @@ export const createFiles = async (params: CreateFilesParams) => {
       validator: params.validator,
       procedure: params.procedure,
       queryOrMutation: params.queryOrMutation,
+      newRouterName: params.newRouterName,
     }),
     createHandler({
       handlerPath,

@@ -23,6 +23,9 @@ const main = async () => {
     procedure: userInput.procedure,
   };
   if (userInput.chosenRouterPath === "newRouter") {
+    if (params.validator)
+      throw new Error("Validators are not supported for new routers yet");
+
     params.chosenRouterPath = `${userInput.appendNewRouter as string}/${userInput.newRouterName as string}`;
     params.newRouterName = userInput.newRouterName as string;
   }
