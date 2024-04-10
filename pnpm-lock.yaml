@@ -109,14 +109,14 @@ importers:
         specifier: ^8.15.0
         version: 8.15.0(react-dom@18.2.0)(react@18.2.0)
       '@trpc/client':
-        specifier: 11.0.0-next.320
-        version: 11.0.0-next.320(@trpc/server@11.0.0-next.320)
+        specifier: 11.0.0-rc.334
+        version: 11.0.0-rc.334(@trpc/server@11.0.0-rc.334)
       '@trpc/react-query':
-        specifier: 11.0.0-next.320
-        version: 11.0.0-next.320(@tanstack/react-query@5.29.0)(@trpc/client@11.0.0-next.320)(@trpc/server@11.0.0-next.320)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 11.0.0-rc.334
+        version: 11.0.0-rc.334(@tanstack/react-query@5.29.0)(@trpc/client@11.0.0-rc.334)(@trpc/server@11.0.0-rc.334)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/server':
-        specifier: 11.0.0-next.320
-        version: 11.0.0-next.320
+        specifier: 11.0.0-rc.334
+        version: 11.0.0-rc.334
       '@vercel/analytics':
         specifier: ^1.2.2
         version: 1.2.2(next@14.1.4)(react@18.2.0)
@@ -233,8 +233,8 @@ importers:
         specifier: workspace:*
         version: link:../validators
       '@trpc/server':
-        specifier: 11.0.0-next.320
-        version: 11.0.0-next.320
+        specifier: 11.0.0-rc.334
+        version: 11.0.0-rc.334
       dayjs:
         specifier: ^1.11.10
         version: 1.11.10
@@ -564,9 +564,6 @@ importers:
       chalk:
         specifier: ^5.3.0
         version: 5.3.0
-      commander:
-        specifier: ^12.0.0
-        version: 12.0.0
       ora:
         specifier: ^8.0.1
         version: 8.0.1
@@ -4811,32 +4808,32 @@ packages:
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
     dev: true
 
-  /@trpc/client@11.0.0-next.320(@trpc/server@11.0.0-next.320):
-    resolution: {integrity: sha512-6VuHBXOLpVYflC75ktgMDexq6RkCNkHmPUWxdpi85O+zEk3miCJMYdlFNRO40d78HC0pTmoyuiQzyAX8J4+m3w==}
+  /@trpc/client@11.0.0-rc.334(@trpc/server@11.0.0-rc.334):
+    resolution: {integrity: sha512-nVKOxCfhKxBXvs1MwjfNNsWHQH/rHWzS4SxYPtYld7zqANTfNqn8cuClHMKlkeMKljObFiCfWhbdrBamKO/dDw==}
     peerDependencies:
-      '@trpc/server': 11.0.0-next.320+f3a237ccb
+      '@trpc/server': 11.0.0-rc.334+fdf26e552
     dependencies:
-      '@trpc/server': 11.0.0-next.320
+      '@trpc/server': 11.0.0-rc.334
     dev: false
 
-  /@trpc/react-query@11.0.0-next.320(@tanstack/react-query@5.29.0)(@trpc/client@11.0.0-next.320)(@trpc/server@11.0.0-next.320)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-r7yECFJm7U+2Wcm/KgzNUEB0BSajJnjEcZZctXlbvvVUTVrYMyEjCh5cjJDoZfRuvrwLmJbhFSg+ytzXXJkTLw==}
+  /@trpc/react-query@11.0.0-rc.334(@tanstack/react-query@5.29.0)(@trpc/client@11.0.0-rc.334)(@trpc/server@11.0.0-rc.334)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-DvhU7qMfQkLyrhQoDlrtMAGIgJyin9I8WCsF0oGlAD95ygoJcviD8D+lQzSCUttul9rPcNqWDuGhm5laS7V43A==}
     peerDependencies:
       '@tanstack/react-query': ^5.25.0
-      '@trpc/client': 11.0.0-next.320+f3a237ccb
-      '@trpc/server': 11.0.0-next.320+f3a237ccb
+      '@trpc/client': 11.0.0-rc.334+fdf26e552
+      '@trpc/server': 11.0.0-rc.334+fdf26e552
       react: '>=18.2.0'
       react-dom: '>=18.2.0'
     dependencies:
       '@tanstack/react-query': 5.29.0(react@18.2.0)
-      '@trpc/client': 11.0.0-next.320(@trpc/server@11.0.0-next.320)
-      '@trpc/server': 11.0.0-next.320
+      '@trpc/client': 11.0.0-rc.334(@trpc/server@11.0.0-rc.334)
+      '@trpc/server': 11.0.0-rc.334
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@trpc/server@11.0.0-next.320:
-    resolution: {integrity: sha512-cIcJBNt78OnDHAUgGEfUJZNteXfPbzTt6XQ6kTFZkOtlbxwCIfTaVYac+WmQBV4yIQZJTk0BeaDgJkXGcVDp0w==}
+  /@trpc/server@11.0.0-rc.334:
+    resolution: {integrity: sha512-ckg+f4z3Lc0wYvm1Cx8Zjz8b2hguNlUFQeF8vLrtWYBL8HEolshmxOHMG9MLc6WDE6T1R7DZrG+xEwjI44XH9w==}
     dev: false
 
   /@tsconfig/node10@1.0.9:
@@ -6200,11 +6197,6 @@ packages:
   /commander@11.1.0:
     resolution: {integrity: sha512-yPVavfyCcRhmorC7rWlkHn15b4wDVgVmBA7kV4QVBsF7kv/9TKJAbAXVTxvTnwP8HHKjRCJDClKbciiYS7p0DQ==}
     engines: {node: '>=16'}
-    dev: false
-
-  /commander@12.0.0:
-    resolution: {integrity: sha512-MwVNWlYjDTtOjX5PiD7o5pK0UrFU/OYgcJfjjK4RaHZETNtjJqrZa9Y9ds88+A+f+d5lv+561eZ+yCKoS3gbAA==}
-    engines: {node: '>=18'}
     dev: false
 
   /commander@2.20.3:
