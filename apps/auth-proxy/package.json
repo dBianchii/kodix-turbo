@@ -24,7 +24,7 @@
     "h3": "^1.11.1",
     "nitropack": "^2.9.5",
     "prettier": "^3.2.5",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.5"
   },
   "prettier": "@kdx/prettier-config"
 }
