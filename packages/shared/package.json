@@ -26,7 +26,7 @@
     "@kdx/tsconfig": "workspace:*",
     "@types/node": "^20.12.7",
     "eslint": "^9.0.0",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.5"
   },
   "prettier": "@kdx/prettier-config"
 }

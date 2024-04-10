@@ -43,7 +43,7 @@
     "@types/react-dom": "^18.2.22",
     "eslint": "^9.0.0",
     "prettier": "^3.2.5",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.5"
   },
   "prettier": "@kdx/prettier-config"
 }
