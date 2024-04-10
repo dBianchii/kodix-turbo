@@ -53,11 +53,15 @@ export const createFiles = async (params: CreateFilesParams) => {
   spinner.succeed(`Endpoint created!\n`);
 
   const prettierSpinner = ora("Running Prettier...\n").start();
-  await runPrettier([
-    routerFilePath,
-    handlerPath,
-    ...(params.validator ? [validatorPath] : []),
-  ]);
+
+  const oneLevelAboveRouter =
+    routerFolderFilePath.split("/").slice(0, -1).join("/") +
+    `/${trpcCliConfig.routerFileName}`;
+  const pathsToRunPrettier = [routerFilePath, handlerPath];
+  if (params.validator) pathsToRunPrettier.push(validatorPath);
+  if (params.newRouterName) pathsToRunPrettier.push(oneLevelAboveRouter);
+  await runPrettier(pathsToRunPrettier);
+
   prettierSpinner.succeed("Prettier ran successfully!\n");
 
   logger.success("Links to your new/modified files:");

@@ -94,9 +94,9 @@ export const runCli = async () => {
         if (results.chosenRouterPath === "newRouter")
           return p.text({
             message: "What will be the name of your new router?",
-            placeholder: "myRouter",
-            defaultValue: "myRouter",
-            initialValue: "myRouter",
+            placeholder: "world",
+            defaultValue: "world",
+            initialValue: "world",
             validate: (input) => {
               const result = zSafeName.safeParse(input);
               if (!result.success) return result.error.errors[0]!.message;
@@ -129,8 +129,8 @@ export const runCli = async () => {
       endpointName: () => {
         return p.text({
           message: "What will be the name of your new endpoint?",
-          placeholder: "makeTheWorldBetter",
-          defaultValue: "makeTheWorldBetter",
+          placeholder: "makeItBetter",
+          defaultValue: "makeItBetter",
           validate: (input) => {
             if (input.length > 0) {
               const result = zSafeName.safeParse(input);

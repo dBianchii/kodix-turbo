@@ -17,7 +17,6 @@ export const createValidator = async ({
     importName: "z",
     importPath: "zod",
   });
-
   await addExportStatement({
     filePath: validatorPath,
     exportStatement: `export const Z${pascaledCaseName}InputSchema = ${validator};`,
