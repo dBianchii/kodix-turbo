@@ -1,7 +1,7 @@
 "use client";
 
 import type { ColumnFiltersState } from "@tanstack/react-table";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   createColumnHelper,
   flexRender,
@@ -12,7 +12,6 @@ import {
 } from "@tanstack/react-table";
 import { LuLoader2 } from "react-icons/lu";
 import {
-  RxCalendar,
   RxChevronLeft,
   RxChevronRight,
   RxDotsHorizontal,
@@ -20,15 +19,12 @@ import {
   RxTrash,
 } from "react-icons/rx";
 
-import type { RouterOutputs } from "@kdx/api";
+import type { RouterInputs, RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
-import { addDays, format } from "@kdx/date-fns";
 import dayjs from "@kdx/dayjs";
-import { useCurrentLocale, useI18n } from "@kdx/locales/client";
+import { useI18n } from "@kdx/locales/client";
 import { authorizedEmails } from "@kdx/shared";
-import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
-import { Calendar } from "@kdx/ui/calendar";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -43,7 +39,6 @@ import {
 } from "@kdx/ui/dropdown-menu";
 import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
 import {
   Table,
   TableBody,
@@ -53,6 +48,7 @@ import {
   TableRow,
 } from "@kdx/ui/table";
 
+import { DatePicker } from "~/app/[locale]/_components/date-picker";
 import { DataTablePagination } from "~/app/[locale]/_components/pagination";
 import { api } from "~/trpc/react";
 import { CancelationDialog } from "./cancel-event-dialog";
@@ -61,33 +57,30 @@ import { EditEventDialog } from "./edit-event-dialog";
 type CalendarTask = RouterOutputs["app"]["calendar"]["getAll"][number];
 const columnHelper = createColumnHelper<CalendarTask>();
 
-export function DataTable({
-  data,
+export function DataTableCalendar({
+  initialData,
+  initialInput,
   session,
 }: {
-  data: CalendarTask[];
+  initialData: CalendarTask[];
+  initialInput: RouterInputs["app"]["calendar"]["getAll"];
   session: Session;
 }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-  const [selectedDay, setSelectedDay] = useState(new Date());
+  const [input, setInput] = useState(initialInput);
   const [calendarTask, setCalendarTask] = useState<CalendarTask | undefined>();
 
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
 
   const utils = api.useUtils();
-  const getAllQuery = api.app.calendar.getAll.useQuery(
-    {
-      dateStart: dayjs(selectedDay).startOf("day").toDate(),
-      dateEnd: dayjs(selectedDay).endOf("day").toDate(),
-    },
-    {
-      refetchOnWindowFocus: false,
-      initialData: data,
-      staleTime: 0,
-    },
-  );
+  const getAllQuery = api.app.calendar.getAll.useQuery(input, {
+    initialData:
+      JSON.stringify(initialInput) === JSON.stringify(input)
+        ? initialData
+        : undefined,
+  });
 
   const { mutate: nukeEvents } = api.app.calendar.nuke.useMutation({
     onSuccess() {
@@ -171,7 +164,7 @@ export function DataTable({
   ];
 
   const table = useReactTable({
-    data: getAllQuery.data,
+    data: getAllQuery.data ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -182,16 +175,17 @@ export function DataTable({
     },
   });
 
+  const leftArrowRef = useRef<HTMLButtonElement>(null);
+  const rightArrowRef = useRef<HTMLButtonElement>(null);
+
   useEffect(() => {
     const keyDownHandler = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft") setSelectedDay((prev) => addDays(prev, -1));
-      else if (e.key === "ArrowRight")
-        setSelectedDay((prev) => addDays(prev, 1));
+      if (e.key === "ArrowLeft") leftArrowRef.current?.click();
+      else if (e.key === "ArrowRight") rightArrowRef.current?.click();
     };
     document.addEventListener("keydown", keyDownHandler);
     return () => document.removeEventListener("keydown", keyDownHandler);
   }, []);
-  const locale = useCurrentLocale();
   return (
     <>
       <div className="mt-8">
@@ -212,37 +206,31 @@ export function DataTable({
             <Button
               variant="ghost"
               onClick={() => {
-                setSelectedDay((prev) => addDays(prev, -1));
+                setInput((prev) => ({
+                  dateStart: dayjs(prev.dateStart).add(-1, "days").toDate(),
+                  dateEnd: dayjs(prev.dateEnd).add(-1, "days").toDate(),
+                }));
               }}
               className="h-10 w-10 p-3"
             >
               <RxChevronLeft />
             </Button>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant={"outline"}
-                  className={cn("justify-start text-left font-normal")}
-                >
-                  <RxCalendar className="mr-2 size-4" />
-                  {format(selectedDay, "PPP", locale)}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={selectedDay}
-                  onSelect={(date) => {
-                    if (date) setSelectedDay(date);
-                  }}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
+            <DatePicker
+              date={input.dateEnd}
+              setDate={(newDate) =>
+                setInput({
+                  dateStart: dayjs(newDate).startOf("day").toDate(),
+                  dateEnd: dayjs(newDate).endOf("day").toDate(),
+                })
+              }
+            />
             <Button
               variant="ghost"
               onClick={() => {
-                setSelectedDay((prev) => addDays(prev, 1));
+                setInput((prev) => ({
+                  dateStart: dayjs(prev.dateStart).add(1, "days").toDate(),
+                  dateEnd: dayjs(prev.dateEnd).add(1, "days").toDate(),
+                }));
               }}
               className="h-10 w-10 p-3"
             >
@@ -262,7 +250,12 @@ export function DataTable({
 
             <Button
               className="ml-auto self-end "
-              onClick={() => setSelectedDay(new Date())}
+              onClick={() => {
+                setInput({
+                  dateStart: dayjs().startOf("day").toDate(),
+                  dateEnd: dayjs().endOf("day").toDate(),
+                });
+              }}
               variant={"secondary"}
             >
               {t("Today")}

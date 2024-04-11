@@ -5,11 +5,11 @@ import { Separator } from "@kdx/ui/separator";
 import { H1 } from "@kdx/ui/typography";
 
 import { IconKodixApp } from "~/app/[locale]/_components/app/kodix-icon";
-import { DataTable } from "~/app/[locale]/_components/apps/calendar/data-table";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
+import { DataTableCalendar } from "~/app/[locale]/apps/calendar/_components/data-table-calendar";
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
 import { api } from "~/trpc/server";
-import { CreateEventDialogButton } from "../../_components/apps/calendar/create-event-dialog";
+import { CreateEventDialogButton } from "./_components/create-event-dialog";
 
 export default async function CalendarPage() {
   const session = await redirectIfAppNotInstalled({
@@ -18,10 +18,11 @@ export default async function CalendarPage() {
 
   //date Start should be the beginninig of the day
   //date End should be the end of the day
-  const data = await api.app.calendar.getAll({
+  const initialInput = {
     dateStart: dayjs.utc().startOf("day").toDate(),
     dateEnd: dayjs.utc().endOf("day").toDate(),
-  });
+  };
+  const initialData = await api.app.calendar.getAll(initialInput);
   const t = await getI18n();
   return (
     <MaxWidthWrapper>
@@ -32,7 +33,11 @@ export default async function CalendarPage() {
       <Separator className="my-4" />
 
       <CreateEventDialogButton />
-      <DataTable data={data} session={session} />
+      <DataTableCalendar
+        initialData={initialData}
+        initialInput={initialInput}
+        session={session}
+      />
     </MaxWidthWrapper>
   );
 }
