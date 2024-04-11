@@ -2,7 +2,7 @@
 
 import type { ComponentProps } from "react";
 
-import { cn } from "@kdx/ui";
+import { cn } from ".";
 
 export function H1({ children, className }: ComponentProps<"h1">) {
   return (

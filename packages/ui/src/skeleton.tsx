@@ -1,4 +1,4 @@
-import { cn } from "@kdx/ui";
+import { cn } from ".";
 
 function Skeleton({
   className,

@@ -10,8 +10,8 @@ import {
 } from "@radix-ui/react-icons";
 
 import { useI18n } from "@kdx/locales/client";
-import { cn } from "@kdx/ui";
 
+import { cn } from ".";
 import { Badge } from "./badge";
 import { Button } from "./button";
 import {

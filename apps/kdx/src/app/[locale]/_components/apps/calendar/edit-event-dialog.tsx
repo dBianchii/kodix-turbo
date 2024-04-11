@@ -65,6 +65,8 @@ export function EditEventDialog({
     useState(false);
   const [editDefinitionOpen, setEditDefinitionOpen] = useState(false);
 
+  const rule = RRule.fromString(calendarTask.rule);
+
   const defaultCalendarTask = useMemo(() => {
     return {
       eventMasterId: calendarTask.eventMasterId,
@@ -74,14 +76,12 @@ export function EditEventDialog({
       description: calendarTask.description ?? "",
       from: dayjs(calendarTask.date),
       time: dayjs(calendarTask.date).format("HH:mm"),
-      frequency: RRule.fromString(calendarTask.rule).options.freq,
-      interval: RRule.fromString(calendarTask.rule).options.interval,
-      until: RRule.fromString(calendarTask.rule).options.until
-        ? dayjs(RRule.fromString(calendarTask.rule).options.until)
-        : undefined,
-      count: RRule.fromString(calendarTask.rule).options.count ?? undefined,
+      frequency: rule.options.freq,
+      interval: rule.options.interval,
+      until: rule.options.until ? dayjs(rule.options.until) : undefined,
+      count: rule.options.count ?? undefined,
       date: calendarTask.date,
-      weekdays: RRule.fromString(calendarTask.rule).options.byweekday.map(
+      weekdays: RRule.fromString(calendarTask.rule).options.byweekday?.map(
         (w) => new Weekday(w),
       ),
     };

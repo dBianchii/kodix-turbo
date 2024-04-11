@@ -3,9 +3,8 @@
 
 import React from "react";
 
-import { cn } from "@kdx/ui";
-
 import type { TimePickerType } from "./time-picker-utils";
+import { cn } from "../.";
 import { Input } from "../input";
 import {
   getArrowByType,

@@ -79,10 +79,13 @@ export default function DataTableKodixCare({
 }) {
   const [input, setInput] = useState(initialInput);
 
-  const { data } = api.app.kodixCare.getCareTasks.useQuery(input, {
-    refetchOnMount: false,
-    initialData: initialCareTasks,
+  const query = api.app.kodixCare.getCareTasks.useQuery(input, {
+    initialData:
+      JSON.stringify(initialInput) === JSON.stringify(input) //? Only use initialData for the initial input
+        ? initialCareTasks
+        : undefined,
   });
+
   const utils = api.useUtils();
   const [saveTaskAsDoneDialogOpen, setSaveTaskAsDoneDialogOpen] =
     useState(false);
@@ -189,14 +192,15 @@ export default function DataTableKodixCare({
   ];
 
   const table = useReactTable({
-    data,
+    data: query.data ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
 
   const currentlyEditingCareTask = useMemo(() => {
-    return data.find((x) => x.id === currentlyEditing);
-  }, [currentlyEditing, data]);
+    if (!query.data?.length) return undefined;
+    return query.data.find((x) => x.id === currentlyEditing);
+  }, [currentlyEditing, query.data]);
 
   const leftArrowRef = useRef<HTMLButtonElement>(null);
   const rightArrowRef = useRef<HTMLButtonElement>(null);
@@ -298,51 +302,61 @@ export default function DataTableKodixCare({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  onClick={() => {
-                    if (!row.original.id) {
-                      //If it's locked...
-                      if (
-                        row.original.date >
-                        dayjs().endOf("day").add(1, "day").toDate()
-                      )
-                        return toast.warning(
-                          "You cannot unlock tasks that are scheduled for after tomorrow end of day",
-                        );
+            {!query.isFetching ? (
+              table.getRowModel().rows.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    onClick={() => {
+                      if (!row.original.id) {
+                        //If it's locked...
+                        if (
+                          row.original.date >
+                          dayjs().endOf("day").add(1, "day").toDate()
+                        )
+                          return toast.warning(
+                            "You cannot unlock tasks that are scheduled for after tomorrow end of day",
+                          );
+
+                        setCurrentlyEditing(row.original.id);
+                        setUnlockMoreTasksDialogOpen(true);
+                        return;
+                      }
 
                       setCurrentlyEditing(row.original.id);
-                      setUnlockMoreTasksDialogOpen(true);
-                      return;
-                    }
-
-                    setCurrentlyEditing(row.original.id);
-                    if (row.original.updatedAt) setEditDetailsOpen(true); //? Only able
-                  }}
-                  data-state={row.getIsSelected() && "selected"}
-                  className={cn({
-                    "bg-muted/30": !row.original.id,
-                  })}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
+                      if (row.original.updatedAt) setEditDetailsOpen(true); //? Only able
+                    }}
+                    data-state={row.getIsSelected() && "selected"}
+                    className={cn({
+                      "bg-muted/30": !row.original.id,
+                    })}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    {t("No results")}
+                  </TableCell>
                 </TableRow>
-              ))
+              )
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  {t("No results")}
+                <TableCell colSpan={columns.length} className="h-24">
+                  <div className="flex h-full items-center justify-center">
+                    <LuLoader2 className="h-6 w-6 animate-spin" />
+                  </div>
                 </TableCell>
               </TableRow>
             )}

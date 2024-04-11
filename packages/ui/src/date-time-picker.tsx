@@ -6,8 +6,8 @@ import { CalendarIcon } from "@radix-ui/react-icons";
 
 import { format } from "@kdx/date-fns";
 import { useCurrentLocale } from "@kdx/locales/client";
-import { cn } from "@kdx/ui";
 
+import { cn } from ".";
 import { Button } from "./button";
 import { Calendar } from "./calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
