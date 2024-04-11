@@ -1,5 +1,5 @@
-import AppsPage from "./apps/page";
+import SettingsAppsPage from "./apps/page";
 
-export default function Settings() {
-  return <AppsPage />;
+export default function SettingsPage() {
+  return <SettingsAppsPage />;
 }

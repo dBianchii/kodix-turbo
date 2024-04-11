@@ -23,7 +23,7 @@ interface CustomApp {
   shown?: boolean;
 }
 
-export default async function Team() {
+export default async function TeamPage() {
   const session = await auth();
   if (!session) redirect("/");
   const t = await getI18n();

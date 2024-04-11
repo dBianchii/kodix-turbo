@@ -4,7 +4,7 @@ import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { api } from "~/trpc/server";
 import OnboardingCard from "./_components/onboarding-card";
 
-export default async function Onboarding() {
+export default async function KodixCareOnboardingPage() {
   const onboardingCompleted = await api.app.kodixCare.onboardingCompleted();
   if (onboardingCompleted) redirect("/apps/kodixCare");
 

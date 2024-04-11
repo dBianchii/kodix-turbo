@@ -6,7 +6,7 @@ import SettingsEditCardSkeleton from "../general/_components/edit-team-name-card
 import { EditTeamMembersAndInvitesCard } from "./_components/edit-team-members/edit-team-members-and-invites-card";
 import TeamInviteCard from "./_components/invite/team-invite-card";
 
-export default async function Members() {
+export default async function SettingsMembersPage() {
   const session = await auth();
   if (!session) return null;
 

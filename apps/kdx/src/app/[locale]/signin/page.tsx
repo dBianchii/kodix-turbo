@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@kdx/ui/card";
 
 import { SignInButtons } from "./_components/sign-in-buttons";
 
-export default async function SignIn({
+export default async function SignInPage({
   searchParams,
 }: {
   searchParams?: Record<string, string | undefined>;

@@ -1,6 +1,6 @@
 import { Blockquote, H1, H2, H3, P, UL } from "@kdx/ui/typography";
 
-export default function TypographyDemo() {
+export default function TypographyDemoPage() {
   return (
     <div className="p-10">
       <H1>The Joke Tax Chronicles</H1>

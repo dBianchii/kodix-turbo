@@ -11,7 +11,7 @@ import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers"
 import { api } from "~/trpc/server";
 import { CreateEventDialogButton } from "../../_components/apps/calendar/create-event-dialog";
 
-export default async function Calendar() {
+export default async function CalendarPage() {
   const session = await redirectIfAppNotInstalled({
     appId: calendarAppId,
   });

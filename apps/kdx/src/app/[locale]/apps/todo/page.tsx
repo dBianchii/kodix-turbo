@@ -11,7 +11,7 @@ import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
 import { api } from "~/trpc/server";
 
-export default async function Todo() {
+export default async function TodoPage() {
   await redirectIfAppNotInstalled({
     appId: todoAppId,
   });

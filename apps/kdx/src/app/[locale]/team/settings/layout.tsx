@@ -9,7 +9,7 @@ import { Navigation } from "~/app/[locale]/_components/navigation";
 import { api } from "~/trpc/server";
 import { ShouldRender } from "./general/_components/client-should-render";
 
-export default async function Layout({
+export default async function SettingsLayout({
   children,
 }: {
   children: React.ReactNode;

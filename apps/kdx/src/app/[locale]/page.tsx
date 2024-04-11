@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@kdx/auth";
 import { getI18n } from "@kdx/locales/server";
 
-export default async function Home() {
+export default async function HomePage() {
   const session = await auth();
   if (session) redirect("/team");
   const t = await getI18n();

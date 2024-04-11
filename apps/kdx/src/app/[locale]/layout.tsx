@@ -47,7 +47,7 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function Layout(props: {
+export default function RootLayout(props: {
   children: React.ReactNode;
   params: { locale: string };
 }) {

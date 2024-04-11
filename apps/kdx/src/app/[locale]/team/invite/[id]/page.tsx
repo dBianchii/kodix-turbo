@@ -5,7 +5,11 @@ import { db, eq, schema } from "@kdx/db";
 
 import { api } from "~/trpc/server";
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function InvitePage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const { id: invitationId } = params;
 
   const invitation = await db.query.invitations.findFirst({
