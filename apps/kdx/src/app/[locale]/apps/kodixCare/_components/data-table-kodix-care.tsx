@@ -166,7 +166,7 @@ export default function DataTableKodixCare({
         </div>
       ),
     }),
-    columnHelper.accessor("doneAt", {
+    columnHelper.accessor("date", {
       header: () => t("Date"),
       cell: (ctx) => (
         <div>{format(ctx.row.original.date, DATE_FORMAT, locale)}</div>
