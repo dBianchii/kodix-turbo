@@ -28,7 +28,7 @@
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
     "@types/node": "^20.12.7",
-    "@types/react": "^18.2.71",
+    "@types/react": "^18.2.77",
     "eslint": "^9.0.0",
     "prettier": "^3.2.5",
     "typescript": "^5.4.5"
