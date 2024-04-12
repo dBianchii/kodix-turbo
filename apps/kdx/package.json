@@ -14,7 +14,7 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "@formkit/auto-animate": "^0.8.1",
+    "@formkit/auto-animate": "^0.8.2",
     "@kdx/api": "workspace:*",
     "@kdx/auth": "workspace:*",
     "@kdx/date-fns": "workspace:*",
