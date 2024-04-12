@@ -39,8 +39,8 @@
     "@kdx/tailwind-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
     "@types/node": "^20.12.7",
-    "@types/react": "^18.2.71",
-    "@types/react-dom": "^18.2.22",
+    "@types/react": "^18.2.77",
+    "@types/react-dom": "^18.2.25",
     "eslint": "^9.0.0",
     "prettier": "^3.2.5",
     "typescript": "^5.4.5"
