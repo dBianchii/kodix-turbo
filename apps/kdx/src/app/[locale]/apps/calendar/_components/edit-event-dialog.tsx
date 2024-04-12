@@ -81,11 +81,9 @@ export function EditEventDialog({
       until: rule.options.until ? dayjs(rule.options.until) : undefined,
       count: rule.options.count ?? undefined,
       date: calendarTask.date,
-      weekdays: RRule.fromString(calendarTask.rule).options.byweekday?.map(
-        (w) => new Weekday(w),
-      ),
+      weekdays: rule.options.byweekday.map((w) => new Weekday(w)),
     };
-  }, [calendarTask]);
+  }, [calendarTask, rule]);
 
   const [title, setTitle] = useState(calendarTask.title);
   const [description, setDescription] = useState(calendarTask.description);
