@@ -37,7 +37,7 @@ packages
   |   └─ Extended dayjs configuration (mainly for centralizing plugins)
   ├- date-fns
   |   └─ Package that just extends date-fns configurations to use i18n correctly for corect date formatting
-  ├- trpc-cli
+  └─ trpc-cli
       └─ CLI tool to automatically create new endpoints in @kdx/api with the correct boilerplate
 tooling
   ├─ eslint
@@ -47,7 +47,7 @@ tooling
   ├─ tailwind
   |   └─ shared tailwind configuration
   └─ typescript
-      └─ shared tsconfig you can extend from
+     └─ shared tsconfig you can extend from
 turbo/generators
       └─ Automatically create new @kdx packages with the correct boilerplate
 ```
@@ -85,8 +85,6 @@ pnpm db:push
 ```
 
 ### 2. Most helpful commands
-
-trpc:new
 
 ```bash
 # Clean all temporary files in all packages
