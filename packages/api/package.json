@@ -25,7 +25,7 @@
     "@kdx/react-email": "workspace:*",
     "@kdx/shared": "workspace:*",
     "@kdx/validators": "workspace:*",
-    "@trpc/server": "11.0.0-rc.334",
+    "@trpc/server": "11.0.0-rc.340",
     "dayjs": "^1.11.10",
     "next": "^14.2.1",
     "resend": "^3.2.0",
