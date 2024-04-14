@@ -5,6 +5,7 @@ import { getI18n } from "@kdx/locales/server";
 
 export default async function CupomPage() {
   const t = await getI18n();
+
   return (
     <div>
       <h1>{t("apps.cupom.Cupom")}</h1>
