@@ -81,7 +81,8 @@ export function EditEventDialog({
       until: rule.options.until ? dayjs(rule.options.until) : undefined,
       count: rule.options.count ?? undefined,
       date: calendarTask.date,
-      weekdays: rule.options.byweekday.map((w) => new Weekday(w)),
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      weekdays: rule.options.byweekday?.map((w) => new Weekday(w)),
     };
   }, [calendarTask, rule]);
 
