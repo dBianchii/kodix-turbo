@@ -5,10 +5,14 @@ import type { Session } from "@kdx/auth";
 import { auth } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
 import { getI18n } from "@kdx/locales/server";
+import { kodixCareAppId } from "@kdx/shared";
+import { Separator } from "@kdx/ui/separator";
 import { Skeleton } from "@kdx/ui/skeleton";
+import { H1 } from "@kdx/ui/typography";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { api } from "~/trpc/server";
+import { IconKodixApp } from "../../_components/app/kodix-icon";
 import DataTableKodixCare from "./_components/data-table-kodix-care";
 import { CurrentShiftClient } from "./_components/shifts";
 
@@ -20,9 +24,14 @@ export default async function KodixCarePage() {
   if (!completed) {
     redirect("/apps/kodixCare/onboarding");
   }
-
+  const t = await getI18n();
   return (
     <MaxWidthWrapper>
+      <div className="flex items-center space-x-4">
+        <IconKodixApp appId={kodixCareAppId} renderText={false} />
+        <H1>{t("Kodix Care")}</H1>
+      </div>
+      <Separator className="my-4" />
       <div className="flex flex-col md:flex-row md:space-x-6">
         <div className="flex w-full max-w-full flex-col px-8 pb-8 md:max-w-60 md:px-0">
           <Suspense fallback={<ShiftSkeleton />}>
