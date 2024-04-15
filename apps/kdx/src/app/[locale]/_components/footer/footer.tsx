@@ -11,7 +11,7 @@ export async function Footer() {
     <HeaderFooterRemover>
       <footer className="bg-foreground/5">
         <MaxWidthWrapper>
-          <div className="flex flex-col items-center md:h-24 md:flex-row">
+          <div className="flex h-24 flex-col items-center justify-center md:flex-row">
             <Link href="/" className="font-medium underline underline-offset-4">
               Kodix © 2023 {t("No rights reserved")}
             </Link>

@@ -4,7 +4,6 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 
-import { Footer } from "~/app/[locale]/_components/footer/footer";
 import { TailwindIndicator } from "~/app/[locale]/_components/tailwind-indicator";
 import { env } from "~/env";
 import { TRPCReactProvider } from "~/trpc/react";
@@ -69,7 +68,6 @@ export default function RootLayout(props: {
               <div className="flex min-h-screen flex-col">
                 <Header />
                 {props.children}
-                <Footer />
               </div>
             </TRPCReactProvider>
 

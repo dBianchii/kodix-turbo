@@ -582,92 +582,88 @@ function SaveTaskAsDoneDialog({
   const t = useI18n();
 
   return (
-    <div className="p-1">
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent>
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit((values) => {
-                toast.promise(
-                  mutation.mutateAsync({
-                    ...values,
-                    id: task.id,
-                  }),
-                  {
-                    loading: `${t("Saving")}...`,
-                    success: () => {
-                      form.reset();
-                      setOpen(false);
-                      return t("apps.kodixCare.Task marked as done");
-                    },
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit((values) => {
+              toast.promise(
+                mutation.mutateAsync({
+                  ...values,
+                  id: task.id,
+                }),
+                {
+                  loading: `${t("Saving")}...`,
+                  success: () => {
+                    form.reset();
+                    setOpen(false);
+                    return t("apps.kodixCare.Task marked as done");
                   },
-                );
-              })}
-            >
-              <DialogHeader>
-                <DialogTitle>
-                  {t("apps.kodixCare.Mark task as done")}
-                </DialogTitle>
-                <DialogDescription>
-                  {t(
-                    "apps.kodixCare.Please inform the date and time of completion",
-                  )}
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <FormField
-                  control={form.control}
-                  name="doneAt"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("Done at")}</FormLabel>
-                      <FormControl>
-                        <div className="flex flex-row gap-2">
-                          <DateTimePicker
-                            date={field.value ?? undefined}
-                            setDate={(newDate) =>
-                              field.onChange(newDate ?? new Date())
-                            }
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage className="w-full" />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="details"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Textarea
-                          {...field}
-                          value={field.value ?? undefined}
-                          placeholder={`${t("apps.kodixCare.Any information")}...`}
-                          className="w-full"
-                          rows={6}
+                },
+              );
+            })}
+          >
+            <DialogHeader>
+              <DialogTitle>{t("apps.kodixCare.Mark task as done")}</DialogTitle>
+              <DialogDescription>
+                {t(
+                  "apps.kodixCare.Please inform the date and time of completion",
+                )}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <FormField
+                control={form.control}
+                name="doneAt"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("Done at")}</FormLabel>
+                    <FormControl>
+                      <div className="flex flex-row gap-2">
+                        <DateTimePicker
+                          date={field.value ?? undefined}
+                          setDate={(newDate) =>
+                            field.onChange(newDate ?? new Date())
+                          }
                         />
-                      </FormControl>
-                      <FormMessage className="w-full" />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <DialogFooter className="mt-6 justify-end">
-                <Button disabled={mutation.isPending} type="submit">
-                  {mutation.isPending ? (
-                    <LuLoader2 className="size-4 animate-spin" />
-                  ) : (
-                    t("Save")
-                  )}
-                </Button>
-              </DialogFooter>
-            </form>
-          </Form>
-        </DialogContent>
-      </Dialog>
-    </div>
+                      </div>
+                    </FormControl>
+                    <FormMessage className="w-full" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="details"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Textarea
+                        {...field}
+                        value={field.value ?? undefined}
+                        placeholder={`${t("apps.kodixCare.Any information")}...`}
+                        className="w-full"
+                        rows={6}
+                      />
+                    </FormControl>
+                    <FormMessage className="w-full" />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <DialogFooter className="mt-6 justify-end">
+              <Button disabled={mutation.isPending} type="submit">
+                {mutation.isPending ? (
+                  <LuLoader2 className="size-4 animate-spin" />
+                ) : (
+                  t("Save")
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 }
 

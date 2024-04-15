@@ -81,10 +81,11 @@ export function EditEventDialog({
       until: rule.options.until ? dayjs(rule.options.until) : undefined,
       count: rule.options.count ?? undefined,
       date: calendarTask.date,
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      weekdays: rule.options.byweekday?.map((w) => new Weekday(w)),
+      weekdays: RRule.fromString(calendarTask.rule).options.byweekday?.map(
+        (w) => new Weekday(w),
+      ),
     };
-  }, [calendarTask, rule]);
+  }, [calendarTask]);
 
   const [title, setTitle] = useState(calendarTask.title);
   const [description, setDescription] = useState(calendarTask.description);

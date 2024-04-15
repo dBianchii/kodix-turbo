@@ -5,6 +5,7 @@ import type { Session } from "@kdx/auth";
 import { auth } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
 import { getI18n } from "@kdx/locales/server";
+import { Skeleton } from "@kdx/ui/skeleton";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { api } from "~/trpc/server";
@@ -29,7 +30,19 @@ export default async function KodixCarePage() {
           </Suspense>
         </div>
         <div className="w-full">
-          <Suspense fallback={<>Loading...</>}>
+          <Suspense
+            fallback={
+              <div className="flex flex-col items-center justify-center gap-4 px-4">
+                <Skeleton className="h-8 w-60" />
+                <div className="mt-4 flex w-full flex-col gap-2">
+                  <Skeleton className="h-8" />
+                  <Skeleton className="h-8" />
+                  <Skeleton className="h-8" />
+                  <Skeleton className="h-8" />
+                </div>
+              </div>
+            }
+          >
             <KodixCareTable session={session} />
           </Suspense>
         </div>
