@@ -23,7 +23,7 @@ export default async function KodixCarePage() {
   return (
     <MaxWidthWrapper>
       <div className="flex flex-col md:flex-row md:space-x-6">
-        <div className="flex w-full max-w-60 flex-col">
+        <div className="flex w-full max-w-full flex-col px-8 pb-8 md:max-w-60 md:px-0">
           <Suspense fallback={<ShiftSkeleton />}>
             <CurrentShift session={session} />
           </Suspense>
