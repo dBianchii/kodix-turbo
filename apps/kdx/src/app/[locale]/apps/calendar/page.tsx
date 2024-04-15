@@ -6,10 +6,10 @@ import { H1 } from "@kdx/ui/typography";
 
 import { IconKodixApp } from "~/app/[locale]/_components/app/kodix-icon";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
-import { DataTableCalendar } from "~/app/[locale]/apps/calendar/_components/data-table-calendar";
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
 import { api } from "~/trpc/server";
 import { CreateEventDialogButton } from "./_components/create-event-dialog";
+import { DataTable } from "./_components/data-table-calendar";
 
 export default async function CalendarPage() {
   const session = await redirectIfAppNotInstalled({
@@ -33,11 +33,7 @@ export default async function CalendarPage() {
       <Separator className="my-4" />
 
       <CreateEventDialogButton />
-      <DataTableCalendar
-        initialData={initialData}
-        initialInput={initialInput}
-        session={session}
-      />
+      <DataTable data={initialData} session={session} />
     </MaxWidthWrapper>
   );
 }
