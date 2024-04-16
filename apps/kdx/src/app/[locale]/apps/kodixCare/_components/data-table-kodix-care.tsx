@@ -1,14 +1,16 @@
 "use client";
 
+import type { SortingState, VisibilityState } from "@tanstack/react-table";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import dayjs from "dayjs";
-import { LuLoader2 } from "react-icons/lu";
+import { LuChevronsUpDown, LuLoader2 } from "react-icons/lu";
 import { RxChevronLeft, RxChevronRight, RxLockClosed } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
@@ -38,6 +40,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@kdx/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@kdx/ui/dropdown-menu";
 import {
   Form,
   FormControl,
@@ -170,13 +178,33 @@ export default function DataTableKodixCare({
       ),
     }),
     columnHelper.accessor("date", {
-      header: () => t("Date"),
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            {t("Date")}
+            <LuChevronsUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
       cell: (ctx) => (
         <div>{format(ctx.row.original.date, DATE_FORMAT, locale)}</div>
       ),
     }),
     columnHelper.accessor("doneAt", {
-      header: () => t("Done at"),
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            {t("Done at")}
+            <LuChevronsUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
       cell: (ctx) => {
         if (!ctx.row.original.id) return null;
         if (!ctx.row.original.doneAt) return null;
@@ -191,10 +219,20 @@ export default function DataTableKodixCare({
     }),
   ];
 
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+
   const table = useReactTable({
     data: query.data ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    state: {
+      sorting,
+      columnVisibility,
+    },
   });
 
   const currentlyEditingCareTask = useMemo(() => {
@@ -245,6 +283,9 @@ export default function DataTableKodixCare({
         </>
       )}
       <div className="flex justify-center gap-2">
+        <Button variant="outline" className="invisible mr-auto">
+          {t("Columns")}
+        </Button>
         <Button
           ref={leftArrowRef}
           variant="ghost"
@@ -280,6 +321,32 @@ export default function DataTableKodixCare({
         >
           <RxChevronRight />
         </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="ml-auto">
+              {t("Columns")}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column) => {
+                return (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) =>
+                      column.toggleVisibility(!!value)
+                    }
+                  >
+                    {column.id}
+                  </DropdownMenuCheckboxItem>
+                );
+              })}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       <div className="mt-4 rounded-md border">
         <Table>

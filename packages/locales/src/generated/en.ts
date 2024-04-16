@@ -298,5 +298,6 @@ export default {
   "Yes": "Yes",
   "Unlocking": "Unlocking",
   "Empty": "Empty",
-  "Add": "Add"
+  "Add": "Add",
+  "Columns": "Columns"
 } as const

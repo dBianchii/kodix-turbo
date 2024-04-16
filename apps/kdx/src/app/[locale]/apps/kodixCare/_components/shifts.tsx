@@ -38,7 +38,7 @@ export function NoPreviousShift({ session }: { session: Session }) {
   const t = useI18n();
 
   return (
-    <div className="flex flex-col space-y-3 pt-4">
+    <div className="flex flex-col space-y-3">
       <div className="flex flex-row items-center">
         <h2 className="font-semibold leading-none tracking-tight">
           {t("apps.kodixCare.currentShift")}
@@ -66,7 +66,7 @@ export function ShiftInProgress({
 }) {
   const t = useI18n();
   return (
-    <div className="flex flex-col space-y-3 pt-4">
+    <div className="flex flex-col space-y-3">
       <div className="flex flex-row items-center space-x-3">
         <h2 className="font-semibold leading-none tracking-tight">
           {t("apps.kodixCare.currentShift")}
@@ -100,7 +100,7 @@ export function ShiftCheckedOut({
 }) {
   const t = useI18n();
   return (
-    <div className="flex flex-col space-y-3 pt-4">
+    <div className="flex flex-col space-y-3">
       <div className="flex flex-row items-center space-x-3">
         <h2 className="font-semibold leading-none tracking-tight">
           {t("apps.kodixCare.currentShift")}

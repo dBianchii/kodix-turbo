@@ -12,7 +12,6 @@ import {
 } from "@tanstack/react-table";
 import { LuLoader2 } from "react-icons/lu";
 import {
-  RxCalendar,
   RxChevronLeft,
   RxChevronRight,
   RxDotsHorizontal,
@@ -22,13 +21,11 @@ import {
 
 import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
-import { addDays, format } from "@kdx/date-fns";
+import { addDays } from "@kdx/date-fns";
 import dayjs from "@kdx/dayjs";
-import { useCurrentLocale, useI18n } from "@kdx/locales/client";
+import { useI18n } from "@kdx/locales/client";
 import { authorizedEmails } from "@kdx/shared";
-import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
-import { Calendar } from "@kdx/ui/calendar";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -43,7 +40,6 @@ import {
 } from "@kdx/ui/dropdown-menu";
 import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
 import {
   Table,
   TableBody,
@@ -53,6 +49,7 @@ import {
   TableRow,
 } from "@kdx/ui/table";
 
+import { DatePicker } from "~/app/[locale]/_components/date-picker";
 import { DataTablePagination } from "~/app/[locale]/_components/pagination";
 import { api } from "~/trpc/react";
 import { CancelationDialog } from "./cancel-event-dialog";
@@ -191,7 +188,7 @@ export function DataTable({
     document.addEventListener("keydown", keyDownHandler);
     return () => document.removeEventListener("keydown", keyDownHandler);
   }, []);
-  const locale = useCurrentLocale();
+
   return (
     <>
       <div className="mt-8">
@@ -218,27 +215,13 @@ export function DataTable({
             >
               <RxChevronLeft />
             </Button>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant={"outline"}
-                  className={cn("justify-start text-left font-normal")}
-                >
-                  <RxCalendar className="mr-2 size-4" />
-                  {format(selectedDay, "PPP", locale)}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={selectedDay}
-                  onSelect={(date) => {
-                    if (date) setSelectedDay(date);
-                  }}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
+            <DatePicker
+              className=""
+              date={selectedDay}
+              setDate={(date) => {
+                if (date) setSelectedDay(date);
+              }}
+            />
             <Button
               variant="ghost"
               onClick={() => {

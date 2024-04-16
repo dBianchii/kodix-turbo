@@ -298,5 +298,6 @@ export default {
   "Yes": "Sim",
   "Unlocking": "Desbloqueio",
   "Empty": "Vazio",
-  "Add": "Adicionar"
+  "Add": "Adicionar",
+  "Columns": "Colunas"
 } as const
