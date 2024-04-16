@@ -1,15 +1,8 @@
-'use client'
+"use client";
 
-import { Button } from "@kdx/ui/button"
+import { Button } from "@kdx/ui/button";
 
- 
-export default function GlobalError({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string }
-  reset: () => void
-}) {
+export default function GlobalError({ reset }: { reset: () => void }) {
   return (
     <html>
       <body>
@@ -17,5 +10,5 @@ export default function GlobalError({
         <Button onClick={() => reset()}>Try again</Button>
       </body>
     </html>
-  )
+  );
 }

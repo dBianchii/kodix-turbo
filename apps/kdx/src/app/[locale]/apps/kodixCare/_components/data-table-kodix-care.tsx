@@ -216,7 +216,6 @@ export default function DataTableKodixCare({
 
   return (
     <>
-    <Button onClick={() => {throw new Error("yeaa")}}>clicke me</Button>
       {currentlyEditingCareTask && (
         <>
           <EditCareTaskDialog
