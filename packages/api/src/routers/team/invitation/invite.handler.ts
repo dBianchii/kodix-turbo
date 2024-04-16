@@ -2,7 +2,7 @@
 import { TRPCError } from "@trpc/server";
 
 import type { TInviteInputSchema } from "@kdx/validators/trpc/invitation";
-import { schema } from "@kdx/db";
+import { schema } from "@kdx/db/schema";
 import TeamInvite from "@kdx/react-email/team-invite";
 import {
   getBaseKdxUrl,

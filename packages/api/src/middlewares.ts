@@ -1,7 +1,8 @@
 import { experimental_standaloneMiddleware, TRPCError } from "@trpc/server";
 
 import type { AppPermissionIds, KodixAppId } from "@kdx/shared";
-import { eq, schema } from "@kdx/db";
+import { eq } from "@kdx/db";
+import { schema } from "@kdx/db/schema";
 import { getAppName } from "@kdx/locales/server-hooks";
 import { kodixCareAppId } from "@kdx/shared";
 

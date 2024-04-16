@@ -1,5 +1,6 @@
 import type { TUninstallAppSchema } from "@kdx/validators/trpc/team";
-import { and, eq, schema } from "@kdx/db";
+import { and, eq } from "@kdx/db";
+import { schema } from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 

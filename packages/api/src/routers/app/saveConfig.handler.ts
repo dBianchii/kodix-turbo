@@ -1,5 +1,6 @@
 import type { TSaveConfigInput } from "@kdx/validators/trpc/app";
-import { and, eq, schema } from "@kdx/db";
+import { and, eq } from "@kdx/db";
+import { schema } from "@kdx/db/schema";
 import { nanoid } from "@kdx/shared";
 import { appIdToAppTeamConfigSchema } from "@kdx/validators";
 

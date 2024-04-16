@@ -1,17 +1,20 @@
+import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-import type { schema } from "@kdx/db";
+import { schema } from "@kdx/db/schema";
 
 import { ZNanoId } from "../../..";
 
-export const ZCreateInputSchema = z.object({
+export const ZCreateInputSchema = createInsertSchema(schema.todos, {
   title: z.string(),
-  description: z.string().optional(),
-  dueDate: z.date().optional(),
-  reminder: z.boolean().optional(),
-  priority: z.number().optional(),
-  status: z.custom<typeof schema.todos.$inferInsert.status>().optional(),
-  assignedToUserId: ZNanoId.optional().nullish(),
+}).pick({
+  title: true,
+  description: true,
+  dueDate: true,
+  reminder: true,
+  priority: true,
+  status: true,
+  assignedToUserId: true,
 });
 export type TCreateInputSchema = z.infer<typeof ZCreateInputSchema>;
 

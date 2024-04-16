@@ -6,8 +6,9 @@ import {
   todoAppId,
 } from "@kdx/shared";
 
-import { db, schema } from "..";
+import { db } from "..";
 import { sql } from "../";
+import { schema } from "../schema";
 import { appRoles_defaultTree } from "./appRolesDefault_tree";
 
 const devPartners: (typeof schema.devPartners.$inferInsert)[] = [

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { LuCircleOff, LuCircleSlash } from "react-icons/lu";
 import { RxCheck, RxCheckCircled, RxRadiobutton } from "react-icons/rx";
 
-import type { schema } from "@kdx/db";
+import type { schema } from "@kdx/db/schema";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import {

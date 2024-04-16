@@ -4,7 +4,7 @@ import { useState } from "react";
 import { HiUserCircle } from "react-icons/hi";
 import { RxCross2, RxPlus } from "react-icons/rx";
 
-import type { schema } from "@kdx/db";
+import type { schema } from "@kdx/db/schema";
 import { format } from "@kdx/date-fns";
 import { useCurrentLocale, useI18n } from "@kdx/locales/client";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";

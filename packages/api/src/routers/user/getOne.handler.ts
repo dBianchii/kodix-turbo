@@ -1,7 +1,8 @@
 import { TRPCError } from "@trpc/server";
 
 import type { TGetOneInputSchema } from "@kdx/validators/trpc/user";
-import { eq, schema } from "@kdx/db";
+import { eq } from "@kdx/db";
+import { schema } from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 
