@@ -145,6 +145,7 @@ function validateSeedInput() {
 main()
   .then(() => {
     console.log("🌳 Fully seeded!");
+    process.exit(0);
   })
   .catch((e) => {
     console.error(e);

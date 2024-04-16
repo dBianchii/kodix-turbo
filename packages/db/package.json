@@ -18,8 +18,7 @@
     "push": "pnpm with-env drizzle-kit push:mysql --config src/config.ts",
     "studio": "pnpm with-env drizzle-kit studio --config src/config.ts",
     "seed": "pnpm with-env tsx ./src/seed/seed.ts",
-    "nuke": "pnpm with-env tsx ./src/nuke.ts",
-    "drop": "pnpx with-env tsx ./src/drop.ts",
+    "drop": "pnpm with-env tsx ./src/drop.ts",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
     "with-env": "dotenv -e ../../.env --"
   },

@@ -12,7 +12,6 @@
     "db:push": "pnpm -F db push",
     "db:studio": "pnpm -F db studio",
     "db:seed": "pnpm -F db seed",
-    "db:nuke": "pnpm -F db nuke",
     "db:drop": "pnpm -F db drop",
     "dev": "turbo dev --parallel --experimental-ui",
     "dev:kdx": "turbo dev --scope=kdx --include-dependencies --experimental-ui",
