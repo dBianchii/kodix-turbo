@@ -17,6 +17,7 @@ import { ThemeProvider, ThemeToggle } from "@kdx/ui/theme";
 import { Toaster } from "@kdx/ui/toast";
 
 import { Header } from "./_components/header/header";
+import { CSPostHogProvider } from "./_components/posthog-provider";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -52,35 +53,37 @@ export default function RootLayout(props: {
 }) {
   return (
     <html lang={props.params.locale} suppressHydrationWarning>
-      <body
-        className={cn(
-          "min-h-screen bg-background font-sans text-foreground antialiased",
-          GeistSans.variable,
-          GeistMono.variable,
-        )}
-      >
-        <SpeedInsights />
-        <Analytics />
-        <Toaster richColors closeButton />
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <LocaleProvider params={props.params}>
-            <TRPCReactProvider>
-              <div className="flex min-h-screen flex-col">
-                <Header />
-                {props.children}
-              </div>
-            </TRPCReactProvider>
+      <CSPostHogProvider>
+        <body
+          className={cn(
+            "min-h-screen bg-background font-sans text-foreground antialiased",
+            GeistSans.variable,
+            GeistMono.variable,
+          )}
+        >
+          <SpeedInsights />
+          <Analytics />
+          <Toaster richColors closeButton />
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <LocaleProvider params={props.params}>
+              <TRPCReactProvider>
+                <div className="flex min-h-screen flex-col">
+                  <Header />
+                  {props.children}
+                </div>
+              </TRPCReactProvider>
 
-            {/* UI Design Helpers */}
-            {process.env.NODE_ENV !== "production" && (
-              <div className="fixed bottom-1 z-50 flex flex-row items-center space-x-1">
-                <ThemeToggle />
-                <TailwindIndicator />
-              </div>
-            )}
-          </LocaleProvider>
-        </ThemeProvider>
-      </body>
+              {/* UI Design Helpers */}
+              {process.env.NODE_ENV !== "production" && (
+                <div className="fixed bottom-1 z-50 flex flex-row items-center space-x-1">
+                  <ThemeToggle />
+                  <TailwindIndicator />
+                </div>
+              )}
+            </LocaleProvider>
+          </ThemeProvider>
+        </body>
+      </CSPostHogProvider>
     </html>
   );
 }
