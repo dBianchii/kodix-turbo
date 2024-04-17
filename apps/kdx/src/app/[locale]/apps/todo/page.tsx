@@ -4,10 +4,9 @@ import { Separator } from "@kdx/ui/separator";
 import { H1 } from "@kdx/ui/typography";
 
 import { IconKodixApp } from "~/app/[locale]/_components/app/kodix-icon";
-import { columns } from "~/app/[locale]/_components/apps/todo/columns";
-import { CreateTaskDialogButton } from "~/app/[locale]/_components/apps/todo/create-task-dialog-button";
-import { DataTable } from "~/app/[locale]/_components/apps/todo/data-table";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
+import { CreateTaskDialogButton } from "~/app/[locale]/apps/todo/_components/create-task-dialog-button";
+import { DataTableTodo } from "~/app/[locale]/apps/todo/_components/data-table-todo";
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
 import { api } from "~/trpc/server";
 
@@ -16,7 +15,7 @@ export default async function TodoPage() {
     appId: todoAppId,
   });
 
-  const data = await api.app.todo.getAll();
+  const initialData = await api.app.todo.getAll();
   const t = await getI18n();
   return (
     <MaxWidthWrapper>
@@ -26,7 +25,7 @@ export default async function TodoPage() {
       </div>
       <Separator className="my-4" />
       <CreateTaskDialogButton />
-      <DataTable columns={columns} data={data} />
+      <DataTableTodo initialData={initialData} />
     </MaxWidthWrapper>
   );
 }

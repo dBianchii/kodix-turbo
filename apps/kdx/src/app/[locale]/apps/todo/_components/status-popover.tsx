@@ -134,18 +134,13 @@ export function StatusToText(status: Status) {
   switch (status) {
     case "TODO":
       return "Todo";
-      break;
     case "INPROGRESS":
       return "In progress";
-      break;
     case "INREVIEW":
       return "In review";
-      break;
     case "DONE":
       return "Done";
-      break;
     case "CANCELED":
       return "Canceled";
-      break;
   }
 }
