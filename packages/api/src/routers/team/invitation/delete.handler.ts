@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import type { TDeleteUserSchema } from "@kdx/validators/trpc/invitation";
+import type { TDeleteInputSchema } from "@kdx/validators/trpc/invitation";
 import { and, eq } from "@kdx/db";
 import { schema } from "@kdx/db/schema";
 
@@ -8,7 +8,7 @@ import type { TProtectedProcedureContext } from "../../../procedures";
 
 interface DeleteOptions {
   ctx: TProtectedProcedureContext;
-  input: TDeleteUserSchema;
+  input: TDeleteInputSchema;
 }
 
 export const deleteHandler = async ({ ctx, input }: DeleteOptions) => {

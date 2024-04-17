@@ -31,10 +31,10 @@ export const ZRemoveUserSchema = z.object({
 });
 export type TRemoveUserSchema = z.infer<typeof ZRemoveUserSchema>;
 
-export const ZUninstallAppSchema = z.object({
+export const ZUninstallAppInputSchema = z.object({
   appId: ZNanoId,
 });
-export type TUninstallAppSchema = z.infer<typeof ZUninstallAppSchema>;
+export type TUninstallAppInputSchema = z.infer<typeof ZUninstallAppInputSchema>;
 
 export const ZUpdateInputSchema = z.object({
   teamId: ZNanoId,

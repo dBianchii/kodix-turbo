@@ -23,7 +23,6 @@ export const todos = mysqlTable(
     description: varchar("description", { length: DEFAULTLENGTH }),
     dueDate: timestamp("dueDate"),
     priority: int("priority"),
-    category: varchar("category", { length: DEFAULTLENGTH }),
     status: mysqlEnum("status", [
       "TODO",
       "INPROGRESS",

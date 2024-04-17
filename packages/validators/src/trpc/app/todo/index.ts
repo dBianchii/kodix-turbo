@@ -18,14 +18,17 @@ export const ZCreateInputSchema = createInsertSchema(schema.todos, {
 });
 export type TCreateInputSchema = z.infer<typeof ZCreateInputSchema>;
 
-export const ZUpdateInputSchema = z.object({
+export const ZUpdateInputSchema = createInsertSchema(schema.todos, {
   id: ZNanoId,
-  title: z.string().optional(),
-  description: z.string().optional(),
-  dueDate: z.date().optional().nullish(),
-  reminder: z.boolean().optional(),
-  priority: z.number().optional(),
-  status: z.custom<typeof schema.todos.$inferInsert.status>().optional(),
-  assignedToUserId: ZNanoId.optional().nullish(),
-}); //TODO: investigate
+  assignedToUserId: ZNanoId,
+}).pick({
+  id: true,
+  title: true,
+  description: true,
+  dueDate: true,
+  priority: true,
+  status: true,
+  reminder: true,
+  assignedToUserId: true,
+});
 export type TUpdateInputSchema = z.infer<typeof ZUpdateInputSchema>;

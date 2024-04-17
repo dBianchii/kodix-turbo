@@ -2,7 +2,7 @@ import type { TRPCRouterRecord } from "@trpc/server";
 
 import {
   ZAcceptInputSchema,
-  ZDeleteUserSchema,
+  ZDeleteInputSchema,
   ZInviteInputSchema,
 } from "@kdx/validators/trpc/invitation";
 
@@ -19,7 +19,7 @@ export const invitationRouter = {
     .input(ZAcceptInputSchema)
     //.use(enforceUserHasTeam)
     .mutation(declineHandler),
-  delete: protectedProcedure.input(ZDeleteUserSchema).mutation(deleteHandler),
+  delete: protectedProcedure.input(ZDeleteInputSchema).mutation(deleteHandler),
   getAll: protectedProcedure.query(getAllHandler),
   invite: protectedProcedure.input(ZInviteInputSchema).mutation(inviteHandler),
 } satisfies TRPCRouterRecord;
