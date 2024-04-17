@@ -1,11 +1,12 @@
-import type { TUninstallAppSchema } from "@kdx/validators/trpc/team";
-import { and, eq, schema } from "@kdx/db";
+import type { TUninstallAppInputSchema } from "@kdx/validators/trpc/team";
+import { and, eq } from "@kdx/db";
+import { schema } from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 
 interface UninstallAppOptions {
   ctx: TProtectedProcedureContext;
-  input: TUninstallAppSchema;
+  input: TUninstallAppInputSchema;
 }
 
 export const uninstallAppHandler = async ({

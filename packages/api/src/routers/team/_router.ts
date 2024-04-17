@@ -5,7 +5,7 @@ import {
   ZGetOneInputSchema,
   ZInstallAppInputSchema,
   ZRemoveUserSchema,
-  ZUninstallAppSchema,
+  ZUninstallAppInputSchema,
   ZUpdateInputSchema,
 } from "@kdx/validators/trpc/team";
 
@@ -37,7 +37,7 @@ export const teamRouter = {
     .input(ZRemoveUserSchema)
     .mutation(removeUserHandler),
   uninstallApp: protectedProcedure
-    .input(ZUninstallAppSchema)
+    .input(ZUninstallAppInputSchema)
     .mutation(uninstallAppHandler),
   update: protectedProcedure.input(ZUpdateInputSchema).mutation(updateHandler),
 } satisfies TRPCRouterRecord;

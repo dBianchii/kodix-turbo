@@ -3,7 +3,8 @@ import { RRule, rrulestr } from "rrule";
 
 import type { TEditInputSchema } from "@kdx/validators/trpc/app/calendar";
 import dayjs from "@kdx/dayjs";
-import { and, eq, gt, gte, schema } from "@kdx/db";
+import { and, eq, gt, gte } from "@kdx/db";
+import { schema } from "@kdx/db/schema";
 import { nanoid } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";

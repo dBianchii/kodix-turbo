@@ -1,4 +1,5 @@
-import { and, eq, schema } from "@kdx/db";
+import { and, eq } from "@kdx/db";
+import { schema } from "@kdx/db/schema";
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";

@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
-import { eq, schema } from "@kdx/db";
+import { eq } from "@kdx/db";
+import { schema } from "@kdx/db/schema";
 import { authorizedEmails } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";

@@ -8,25 +8,11 @@ import type { Pool } from "mysql2/promise";
 import { drizzle } from "drizzle-orm/mysql2";
 import { createPool } from "mysql2/promise";
 
-import * as apps from "./schema/apps";
-import * as calendar from "./schema/apps/calendar";
-import * as kodixCare from "./schema/apps/kodixCare";
-import * as todos from "./schema/apps/todos";
-import * as auth from "./schema/auth";
-import * as teams from "./schema/teams";
+import { schema } from "./schema";
 
 export * from "drizzle-orm/expressions";
 export * from "drizzle-orm/sql";
 export { alias } from "drizzle-orm/mysql-core";
-
-export const schema = {
-  ...auth,
-  ...teams,
-  ...apps,
-  ...calendar,
-  ...kodixCare,
-  ...todos,
-};
 
 /**
  * Cache the database connection in development. This avoids creating a new connection on every HMR

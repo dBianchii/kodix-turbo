@@ -2,7 +2,8 @@ import { TRPCError } from "@trpc/server";
 import { RRule, rrulestr } from "rrule";
 
 import type { TCancelInputSchema } from "@kdx/validators/trpc/app/calendar";
-import { and, eq, gte, schema } from "@kdx/db";
+import { and, eq, gte } from "@kdx/db";
+import { schema } from "@kdx/db/schema";
 import { nanoid } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";

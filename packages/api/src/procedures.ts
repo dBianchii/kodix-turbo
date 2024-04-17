@@ -1,7 +1,8 @@
 import type { inferProcedureBuilderResolverOptions } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 
-import { eq, schema } from "@kdx/db";
+import { eq } from "@kdx/db";
+import { schema } from "@kdx/db/schema";
 
 import { t } from "./trpc";
 

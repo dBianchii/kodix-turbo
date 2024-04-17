@@ -2,7 +2,8 @@ import { rrulestr } from "rrule";
 
 import type { TGetAllInputSchema } from "@kdx/validators/trpc/app/calendar";
 import dayjs from "@kdx/dayjs";
-import { and, eq, gte, lte, or, schema } from "@kdx/db";
+import { and, eq, gte, lte, or } from "@kdx/db";
+import { schema } from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 

@@ -1,7 +1,8 @@
 import { TRPCError } from "@trpc/server";
 
 import dayjs from "@kdx/dayjs";
-import { eq, schema } from "@kdx/db";
+import { eq } from "@kdx/db";
+import { schema } from "@kdx/db/schema";
 import WarnPreviousShiftNotEnded from "@kdx/react-email/warn-previous-shift-not-ended";
 import {
   kodixCareAppId,

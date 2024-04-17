@@ -110,7 +110,7 @@ export function ShiftCheckedOut({
       <TimeInfo currentShift={currentShift} />
       <div className="flex items-center space-x-2 rounded-md">
         <AvatarWrapper
-          className="mt-2 size-5"
+          className="size-5"
           src={currentShift.Caregiver.image ?? undefined}
           fallback={currentShift.Caregiver.name}
         />

@@ -1,5 +1,6 @@
 import type { TUpdateInputSchema } from "@kdx/validators/trpc/app/todo";
-import { eq, schema } from "@kdx/db";
+import { and, eq } from "@kdx/db";
+import { schema } from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 
@@ -19,7 +20,12 @@ export const updateHandler = async ({ ctx, input }: UpdateOptions) => {
       priority: input.priority,
       status: input.status,
     })
-    .where(eq(schema.todos.id, input.id));
+    .where(
+      and(
+        eq(schema.todos.id, input.id),
+        eq(schema.todos.teamId, ctx.session.user.activeTeamId),
+      ),
+    );
 
   return todo;
 };

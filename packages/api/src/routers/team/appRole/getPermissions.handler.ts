@@ -1,5 +1,6 @@
 import type { TGetPermissionsInputSchema } from "@kdx/validators/trpc/team/appRole";
-import { eq, schema } from "@kdx/db";
+import { eq } from "@kdx/db";
+import { schema } from "@kdx/db/schema";
 
 import type { TIsTeamOwnerProcedureContext } from "../../../procedures";
 

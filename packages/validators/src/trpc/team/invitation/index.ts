@@ -12,10 +12,10 @@ export const ZDeclineInputSchema = z.object({
 });
 export type TDeclineInputSchema = z.infer<typeof ZDeclineInputSchema>;
 
-export const ZDeleteUserSchema = z.object({
+export const ZDeleteInputSchema = z.object({
   invitationId: ZNanoId,
 });
-export type TDeleteUserSchema = z.infer<typeof ZDeleteUserSchema>;
+export type TDeleteInputSchema = z.infer<typeof ZDeleteInputSchema>;
 
 export const ZInviteInputSchema = z.object({
   teamId: ZNanoId,
