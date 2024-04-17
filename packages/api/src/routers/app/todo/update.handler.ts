@@ -29,26 +29,3 @@ export const updateHandler = async ({ ctx, input }: UpdateOptions) => {
 
   return todo;
 };
-
-// type TUpdateInputSchema = {
-//   id: string;
-//   title?: string | undefined;
-//   description?: string | undefined;
-//   dueDate?: Date | null | undefined;
-//   reminder?: boolean | undefined;
-//   priority?: number | undefined;
-//   status?: "TODO" | ... 5 more ... | undefined;
-//   assignedToUserId?: string | ... 1 more ... | undefined;
-// }
-
-// type TUpdateInputSchema = {
-//   id: string;
-//   teamId: string;
-//   title: string;
-//   description?: string | null | undefined;
-//   dueDate?: Date | null | undefined;
-//   priority?: number | null | undefined;
-//   status?: "TODO" | ... 5 more ... | undefined;
-//   reminder?: number | ... 1 more ... | undefined;
-//   assignedToUserId?: string | ... 1 more ... | undefined;
-// }

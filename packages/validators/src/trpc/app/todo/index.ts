@@ -1,12 +1,12 @@
+import type { z } from "zod";
 import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
 
 import { schema } from "@kdx/db/schema";
 
-import { ZNanoId } from "../../..";
+import { NANOID_REGEX, ZNanoId } from "../../..";
 
 export const ZCreateInputSchema = createInsertSchema(schema.todos, {
-  title: z.string(),
+  assignedToUserId: (schema) => schema.assignedToUserId.regex(NANOID_REGEX),
 }).pick({
   title: true,
   description: true,
@@ -20,7 +20,8 @@ export type TCreateInputSchema = z.infer<typeof ZCreateInputSchema>;
 
 export const ZUpdateInputSchema = createInsertSchema(schema.todos, {
   id: ZNanoId,
-  assignedToUserId: ZNanoId,
+  assignedToUserId: (schema) => schema.assignedToUserId.regex(NANOID_REGEX),
+  title: (schema) => schema.title.optional(),
 }).pick({
   id: true,
   title: true,
