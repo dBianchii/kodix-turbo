@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@kdx/auth";
 import { getI18n } from "@kdx/locales/server";
 
-import { AddTeamDialogButton } from "~/app/[locale]/_components/header/add-team-dialog-button";
+import { AddTeamDialogButton } from "~/app/[locale]/account/teams/_components/add-team-dialog-button/add-team-dialog-button";
 import SettingsEditCardSkeleton from "~/app/[locale]/team/settings/general/_components/edit-team-name-card-skeleton";
 import { EditUserTeamsTable } from "./_components/edit-users-teams-card/edit-users-teams-table";
 

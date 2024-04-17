@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@kdx/auth";
 import { getI18n } from "@kdx/locales/server";
 
-import { Footer } from "./_components/footer/footer";
+import { Footer } from "./_components/footer";
 
 export default async function HomePage() {
   const session = await auth();

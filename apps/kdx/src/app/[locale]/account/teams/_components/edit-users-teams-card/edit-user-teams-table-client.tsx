@@ -19,9 +19,9 @@ import {
 import { Table, TableBody, TableCell, TableRow } from "@kdx/ui/table";
 import { toast } from "@kdx/ui/toast";
 
-import { switchTeamAction } from "~/app/[locale]/_components/header/actions";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
+import { switchTeamAction } from "./actions";
 
 export default function EditUserTeamsTableClient({
   teams,
