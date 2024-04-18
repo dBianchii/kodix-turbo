@@ -24,7 +24,7 @@ export default async function Teams() {
               "account.Manage the teams you are a part of or create a new one",
             )}
           </p>
-          <AddTeamDialogButton session={session} className="ml-auto" />
+          <AddTeamDialogButton className="ml-auto" />
         </div>
       </div>
       <Suspense fallback={<SettingsEditCardSkeleton />}>

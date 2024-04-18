@@ -5,9 +5,8 @@ import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
 import { ZNanoId } from "../..";
 
 export const ZCreateInputSchema = z.object({
-  userId: ZNanoId,
   teamName: z.string().min(3).max(32, {
-    message: "Team name must be at most 32 characters",
+    message: "Team name must be between 3 and 32 characters",
   }),
 });
 export type TCreateInputSchema = z.infer<typeof ZCreateInputSchema>;

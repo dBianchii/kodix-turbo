@@ -2,7 +2,6 @@ import type { TRPCRouterRecord } from "@trpc/server";
 
 import {
   ZCreateInputSchema,
-  ZGetOneInputSchema,
   ZInstallAppInputSchema,
   ZRemoveUserSchema,
   ZUninstallAppInputSchema,
@@ -15,7 +14,6 @@ import { createHandler } from "./create.handler";
 import { getActiveTeamHandler } from "./getActiveTeam.handler";
 import { getAllForLoggedUserHandler } from "./getAllForLoggedUser.handler";
 import { getAllUsersHandler } from "./getAllUsers.handler";
-import { getOneHandler } from "./getOne.handler";
 import { installAppHandler } from "./installApp.handler";
 import { invitationRouter } from "./invitation/_router";
 import { removeUserHandler } from "./removeUser.handler";
@@ -29,7 +27,6 @@ export const teamRouter = {
   getActiveTeam: protectedProcedure.query(getActiveTeamHandler),
   getAllForLoggedUser: protectedProcedure.query(getAllForLoggedUserHandler),
   getAllUsers: protectedProcedure.query(getAllUsersHandler),
-  getOne: protectedProcedure.input(ZGetOneInputSchema).query(getOneHandler),
   installApp: isTeamOwnerProcedure
     .input(ZInstallAppInputSchema)
     .mutation(installAppHandler),

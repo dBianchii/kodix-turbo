@@ -8,7 +8,6 @@ import { api } from "~/trpc/server";
 
 export const createTeamAction = action(
   z.object({
-    userId: z.string(),
     teamName: z.string(),
   }),
   async (input) => {

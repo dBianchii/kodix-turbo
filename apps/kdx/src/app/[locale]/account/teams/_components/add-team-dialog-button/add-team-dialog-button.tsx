@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { LuLoader2 } from "react-icons/lu";
 import { RxPlusCircled } from "react-icons/rx";
 
-import type { Session } from "@kdx/auth";
 import { useI18n } from "@kdx/locales/client";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
@@ -26,11 +25,9 @@ import { defaultSafeActionToastError } from "~/helpers/safe-action/default-actio
 import { createTeamAction } from "./actions";
 
 export function AddTeamDialogButton({
-  session,
   children,
   className,
 }: {
-  session: Session;
   children?: React.ReactNode;
   className?: string;
 }) {
@@ -78,8 +75,7 @@ export function AddTeamDialogButton({
             onClick={async () => {
               setIsPending(true);
               const result = await createTeamAction({
-                userId: session.user.id,
-                teamName: teamName,
+                teamName,
               });
               setIsPending(false);
               if (defaultSafeActionToastError(result)) return;
