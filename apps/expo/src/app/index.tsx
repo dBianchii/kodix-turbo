@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
 import { useEffect, useRef, useState } from "react";
-import { Platform, Pressable, Text, View } from "react-native";
+import { Button, Platform, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { Stack } from "expo-router";
 
-import { api } from "~/utils/api";
+import { useSignIn, useSignOut, useUser } from "~/utils/auth";
 
 Notifications.setNotificationHandler({
   // eslint-disable-next-line @typescript-eslint/require-await
@@ -98,8 +98,6 @@ export default function App() {
   const notificationListener = useRef<Notifications.Subscription>();
   const responseListener = useRef<Notifications.Subscription>();
 
-  const ger = api.team.getActiveTeam.useQuery();
-
   useEffect(() => {
     registerForPushNotificationsAsync()
       .then((token) => setExpoPushToken(token ?? ""))
@@ -135,6 +133,8 @@ export default function App() {
           Create <Text className="text-primary">T3</Text> Turbo
         </Text>
 
+        <MobileAuth />
+
         <Text className="text-foreground">
           Your Expo push token: {expoPushToken}
         </Text>
@@ -166,5 +166,24 @@ export default function App() {
         </Pressable>
       </View>
     </SafeAreaView>
+  );
+}
+
+function MobileAuth() {
+  const user = useUser();
+  const signIn = useSignIn();
+  const signOut = useSignOut();
+
+  return (
+    <>
+      <Text className="pb-2 text-center text-xl font-semibold text-white">
+        {user?.name ?? "Not logged in"}
+      </Text>
+      <Button
+        onPress={() => (user ? signOut() : signIn())}
+        title={user ? "Sign Out" : "Sign In"}
+        color={"#5B65E9"}
+      />
+    </>
   );
 }
