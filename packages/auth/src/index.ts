@@ -1,4 +1,5 @@
 import type { Session } from "next-auth";
+import type { AdapterSession, AdapterUser } from "next-auth/adapters";
 import NextAuth from "next-auth";
 
 import { authConfig, KodixAdapter } from "./config";
@@ -18,7 +19,18 @@ const adapter = KodixAdapter();
 
 export const validateToken = async (token: string): Promise<Session | null> => {
   const sessionToken = token.slice("Bearer ".length);
-  const session = await adapter.getSessionAndUser?.(sessionToken);
+  const session = (await adapter.getSessionAndUser?.(sessionToken)) as
+    | {
+        session: AdapterSession;
+        user: AdapterUser & {
+          activeTeamId: string;
+          activeTeamName: string;
+          kodixAdmin: boolean;
+        };
+      }
+    | null
+    | undefined;
+
   return session
     ? {
         user: {

@@ -3,8 +3,12 @@ import { Suspense } from "react";
 import { db } from "@kdx/db";
 import { getI18n } from "@kdx/locales/server";
 
+import { api } from "~/trpc/react";
+
 export default async function CupomPage() {
   const t = await getI18n();
+
+  const { data } = api.auth.getSession.useQuery();
 
   return (
     <div>
