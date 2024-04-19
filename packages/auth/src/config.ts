@@ -26,7 +26,7 @@ declare module "next-auth" {
 }
 
 /** @return { import("next-auth/adapters").Adapter } */
-function KodixAdapter(): Adapter {
+export function KodixAdapter(): Adapter {
   const { users, teams, usersToTeams, accounts, sessions } = schema;
   return {
     ...DrizzleAdapter(db),

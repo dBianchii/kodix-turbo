@@ -8,6 +8,7 @@ import {
 import { protectedProcedure } from "../../procedures";
 import { changeNameHandler } from "./changeName.handler";
 import { getNotificationsHandler } from "./getNotifications.handler";
+import { signOutHandler } from "./signOut.handler";
 import { switchActiveTeamHandler } from "./switchActiveTeam.handler";
 
 export const userRouter = {
@@ -18,4 +19,5 @@ export const userRouter = {
   switchActiveTeam: protectedProcedure
     .input(ZSwitchActiveTeamInputSchema)
     .mutation(switchActiveTeamHandler),
+  signOut: protectedProcedure.mutation(signOutHandler),
 } satisfies TRPCRouterRecord;
