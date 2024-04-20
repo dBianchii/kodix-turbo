@@ -3,9 +3,10 @@
 import { createColumnHelper } from "@tanstack/react-table";
 
 import type { RouterOutputs } from "@kdx/api";
-import type { KodixAppId } from "@kdx/shared";
+import type { AppRoleDefaultId, KodixAppId } from "@kdx/shared";
 import type { FixedColumnsType } from "@kdx/ui/data-table";
 import { useI18n } from "@kdx/locales/client";
+import { useAppRoleDefaultName } from "@kdx/locales/hooks";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { DataTable } from "@kdx/ui/data-table";
 import { MultiSelect } from "@kdx/ui/multi-select";
@@ -36,6 +37,7 @@ export function DataTableUserAppRoles({
       initialData: initialUsers,
     },
   );
+
   const { mutate: updateUserAssociation } =
     api.team.appRole.updateUserAssociation.useMutation({
       async onMutate(newValues) {
@@ -59,7 +61,6 @@ export function DataTableUserAppRoles({
                   userId: user.id,
                   TeamAppRole: {
                     id: x.id,
-                    name: x.name,
                   },
                 })),
               };
@@ -124,7 +125,7 @@ export function DataTableUserAppRoles({
           <MultiSelect
             className="w-96"
             options={allAppRoles.map((role) => ({
-              label: role.name,
+              label: useAppRoleDefaultName(role.id as AppRoleDefaultId),
               value: role.id,
             }))}
             selected={selected}

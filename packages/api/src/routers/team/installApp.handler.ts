@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import type { TInstallAppInputSchema } from "@kdx/validators/trpc/team";
 import { and, eq } from "@kdx/db";
+import { appRoles_defaultTree } from "@kdx/db/constants";
 import { schema } from "@kdx/db/schema";
 import { appIdToAdminRole_defaultIdMap, nanoid } from "@kdx/shared";
 
@@ -37,65 +38,47 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
       appId: input.appId,
       teamId: ctx.session.user.activeTeamId,
     });
-    const defaultAppRoles = await tx.query.appRoleDefaults.findMany({
-      where: (defaultAppRole, { eq }) => eq(defaultAppRole.appId, input.appId),
-      columns: {
-        appId: true,
-        maxUsers: true,
-        minUsers: true,
-        description: true,
-        id: true,
-        name: true,
-      },
-      with: {
-        AppPermissionsToAppRoleDefaults: true,
-      },
-    });
 
-    const toCopyAppRoles = defaultAppRoles.map((role) => ({
-      id: nanoid(),
-      appId: role.appId,
-      name: role.name,
-      description: role.description,
-      maxUsers: role.maxUsers,
-      minUsers: role.minUsers,
-      teamId: ctx.session.user.activeTeamId,
-      appRoleDefaultId: role.id,
-      AppPermissionsToAppRoleDefaults: role.AppPermissionsToAppRoleDefaults,
-    }));
+    const appRoleDefaultForApp = appRoles_defaultTree[input.appId];
 
-    //? 1. Insert the copied roles
-    await tx.insert(schema.teamAppRoles).values(
-      toCopyAppRoles.map((role) => {
-        const { AppPermissionsToAppRoleDefaults: _, ...rest } = role;
+    //? 1. Get the default app roles for the app and create them
+    const toCreateDefaultAppRoles: (typeof schema.teamAppRoles.$inferInsert)[] =
+      appRoleDefaultForApp.appRoleDefaults.map((defaultAppRole) => ({
+        id: nanoid(),
+        appId: input.appId,
+        appRoleDefaultId: defaultAppRole.id,
+        teamId: ctx.session.user.activeTeamId,
+      }));
+    await tx.insert(schema.teamAppRoles).values(toCreateDefaultAppRoles);
 
-        return rest;
-      }),
+    //? 2. Connect the permissions to the newly created roles if any exists
+    const toAddPermissions = toCreateDefaultAppRoles.flatMap((role) =>
+      (appRoleDefaultForApp.appPermissions ?? []).map((permission) => ({
+        appPermissionId: permission.id,
+        teamAppRoleId: role.id,
+      })),
     );
-
-    //? 2. Also connect the permissions to the copied roles
-    const toConnectPermissions = toCopyAppRoles
-      .filter((role) => role.AppPermissionsToAppRoleDefaults.length > 0)
-      .flatMap((role) =>
-        role.AppPermissionsToAppRoleDefaults.map((permission) => ({
-          teamAppRoleId: role.id,
-          appPermissionId: permission.appPermissionId,
-        })),
-      );
-
-    if (toConnectPermissions.length > 0)
+    if (toAddPermissions.length > 0)
       await tx
         .insert(schema.appPermissionsToTeamAppRoles)
-        .values(toConnectPermissions);
+        .values(toAddPermissions);
 
-    const adminRoleForApp = toCopyAppRoles.find(
+    //?3. Add the user to the admin role for the app
+    const adminRoleForApp = toCreateDefaultAppRoles.find(
       (role) =>
         role.appRoleDefaultId === appIdToAdminRole_defaultIdMap[input.appId],
     );
-    if (adminRoleForApp)
-      await tx.insert(schema.teamAppRolesToUsers).values({
-        teamAppRoleId: adminRoleForApp.id,
-        userId: ctx.session.user.id,
+
+    if (!adminRoleForApp)
+      //Each app should have a designated admin role
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Admin role not found",
       });
+
+    await tx.insert(schema.teamAppRolesToUsers).values({
+      teamAppRoleId: adminRoleForApp.id,
+      userId: ctx.session.user.id,
+    });
   });
 };

@@ -299,5 +299,9 @@ export default {
   "Unlocking": "Unlocking",
   "Empty": "Empty",
   "Add": "Add",
-  "Columns": "Columns"
+  "Columns": "Columns",
+  "Admin": "Admin",
+  "Patient": "Patient",
+  "Care Giver": "Care Giver",
+  "Can toggle shift": "Can change shift"
 } as const

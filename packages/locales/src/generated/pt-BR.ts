@@ -299,5 +299,9 @@ export default {
   "Unlocking": "Desbloqueio",
   "Empty": "Vazio",
   "Add": "Adicionar",
-  "Columns": "Colunas"
+  "Columns": "Colunas",
+  "Admin": "Administrador",
+  "Care Giver": "Cuidador",
+  "Patient": "Paciente",
+  "Can toggle shift": "Pode alterar turno"
 } as const
