@@ -3,10 +3,17 @@
 import { createColumnHelper } from "@tanstack/react-table";
 
 import type { RouterOutputs } from "@kdx/api";
-import type { AppPermissionId, KodixAppId } from "@kdx/shared";
+import type {
+  AppPermissionId,
+  AppRoleDefaultId,
+  KodixAppId,
+} from "@kdx/shared";
 import type { FixedColumnsType } from "@kdx/ui/data-table";
 import { useI18n } from "@kdx/locales/client";
-import { useAppPermissionName } from "@kdx/locales/hooks";
+import {
+  useAppPermissionName,
+  useAppRoleDefaultName,
+} from "@kdx/locales/hooks";
 import { DataTable } from "@kdx/ui/data-table";
 import { MultiSelect } from "@kdx/ui/multi-select";
 
@@ -117,7 +124,9 @@ export function DataTableAppPermissions({
           <MultiSelect
             className="w-96"
             options={allAppRoles.map((role) => ({
-              label: useAppPermissionName(role.id as AppPermissionId),
+              label: useAppRoleDefaultName(
+                role.appRoleDefaultId as AppRoleDefaultId,
+              ),
               value: role.id,
             }))}
             selected={selected}

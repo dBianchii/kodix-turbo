@@ -16,6 +16,7 @@ export const getAllHandler = async ({ ctx, input }: GetAllOptions) => {
       ),
     columns: {
       id: true,
+      appRoleDefaultId: true,
     },
   });
 };
