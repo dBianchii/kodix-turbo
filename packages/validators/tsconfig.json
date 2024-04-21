@@ -1,7 +1,6 @@
 {
-  "extends": "@kdx/tsconfig/internal-package.json",
+  "extends": "@kdx/tsconfig/base.json",
   "compilerOptions": {
-    "outDir": "dist",
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
   },
   "include": ["*.ts", "src"],

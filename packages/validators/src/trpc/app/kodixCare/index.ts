@@ -1,7 +1,4 @@
-import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
-
-import { schema } from "@kdx/db/schema";
 
 import { ZNanoId } from "../../..";
 
@@ -18,14 +15,11 @@ export const ZGetCareTasksInputSchema = z.object({
 });
 export type TGetCareTasksInputSchema = z.infer<typeof ZGetCareTasksInputSchema>;
 
-export const ZSaveCareTaskInputSchema = createInsertSchema(schema.careTasks, {
+export const ZSaveCareTaskInputSchema = z.object({
   id: ZNanoId,
-  doneByUserId: ZNanoId,
-}).pick({
-  id: true,
-  doneByUserId: true,
-  doneAt: true,
-  details: true,
+  doneByUserId: ZNanoId.nullable().optional(),
+  doneAt: z.date().nullable().optional(),
+  details: z.string().nullable().optional(),
 });
 export type TSaveCareTaskInputSchema = z.infer<typeof ZSaveCareTaskInputSchema>;
 

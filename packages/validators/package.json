@@ -4,10 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./src/index.ts"
-    },
+    ".": "./src/index.ts",
     "./trpc/app": "./src/trpc/app/index.ts",
     "./trpc/app/calendar": "./src/trpc/app/calendar/index.ts",
     "./trpc/app/kodixCare": "./src/trpc/app/kodixCare/index.ts",
@@ -18,8 +15,6 @@
     "./trpc/user": "./src/trpc/user/index.ts"
   },
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
     "clean": "rm -rf .turbo node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
