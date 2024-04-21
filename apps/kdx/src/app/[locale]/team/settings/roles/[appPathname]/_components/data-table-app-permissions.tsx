@@ -12,7 +12,7 @@ import type { FixedColumnsType } from "@kdx/ui/data-table";
 import { useI18n } from "@kdx/locales/client";
 import {
   useAppPermissionName,
-  useAppRoleDefaultName,
+  useAppRoleDefaultNames,
 } from "@kdx/locales/hooks";
 import { DataTable } from "@kdx/ui/data-table";
 import { MultiSelect } from "@kdx/ui/multi-select";
@@ -102,7 +102,7 @@ export function DataTableAppPermissions({
     columnHelper.display({
       id: "name",
       header: () => <div className="pl-2">{t("Permission")}</div>,
-      cell: (info) => {
+      cell: function Cell(info) {
         const name = useAppPermissionName(
           info.cell.row.original.id as AppPermissionId,
         );
@@ -120,13 +120,13 @@ export function DataTableAppPermissions({
       header: t("Roles"),
       cell: function Cell(info) {
         const selected = info.getValue().map((role) => role.teamAppRoleId);
+        const appRoleDefaultNames = useAppRoleDefaultNames();
+
         return (
           <MultiSelect
             className="w-96"
             options={allAppRoles.map((role) => ({
-              label: useAppRoleDefaultName(
-                role.appRoleDefaultId as AppRoleDefaultId,
-              ),
+              label: appRoleDefaultNames[role.id as AppRoleDefaultId],
               value: role.id,
             }))}
             selected={selected}
@@ -150,6 +150,6 @@ export function DataTableAppPermissions({
       columns={columns}
       data={data}
       noResultsMessage={t("This app does not have any permissions")}
-    ></DataTable>
+    />
   );
 }

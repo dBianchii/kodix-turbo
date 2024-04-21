@@ -6,7 +6,7 @@ import type { RouterOutputs } from "@kdx/api";
 import type { AppRoleDefaultId, KodixAppId } from "@kdx/shared";
 import type { FixedColumnsType } from "@kdx/ui/data-table";
 import { useI18n } from "@kdx/locales/client";
-import { useAppRoleDefaultName } from "@kdx/locales/hooks";
+import { useAppRoleDefaultNames } from "@kdx/locales/hooks";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { DataTable } from "@kdx/ui/data-table";
 import { MultiSelect } from "@kdx/ui/multi-select";
@@ -120,14 +120,13 @@ export function DataTableUserAppRoles({
         const selected = info
           .getValue()
           .map((teamAppRolesToUser) => teamAppRolesToUser.teamAppRoleId);
+        const appRoleDefaultNames = useAppRoleDefaultNames();
 
         return (
           <MultiSelect
             className="w-96"
             options={allAppRoles.map((role) => ({
-              label: useAppRoleDefaultName(
-                role.appRoleDefaultId as AppRoleDefaultId,
-              ),
+              label: appRoleDefaultNames[role.id as AppRoleDefaultId],
               value: role.id,
             }))}
             selected={selected}
