@@ -24,7 +24,14 @@ export type KodixAppId =
   | typeof calendarAppId
   | typeof kodixCareAppId;
 
-export type AppPermissionIds = typeof PKodixCare_CanToggleShiftId;
+export type AppPermissionId = typeof PKodixCare_CanToggleShiftId;
+
+export type AppRoleDefaultId =
+  | typeof todoAdminRoleDefaultId
+  | typeof calendarAdminRoleDefaultId
+  | typeof kodixCareAdminRoleDefaultId
+  | typeof kodixCarePatientRoleDefaultId
+  | typeof kodixCareCareGiverRoleDefaultId;
 //-------------------------------  	Apps 	 -------------------------------//
 
 //* Helpers *//

@@ -1,7 +1,6 @@
 import { relations, sql } from "drizzle-orm";
 import {
   index,
-  int,
   mysqlTable,
   timestamp,
   tinyint,
@@ -13,7 +12,6 @@ import { NANOID_SIZE } from "@kdx/shared";
 
 import {
   appPermissionsToTeamAppRoles,
-  appRoleDefaults,
   apps,
   appsToTeams,
   appTeamConfigs,
@@ -95,10 +93,6 @@ export const teamAppRoles = mysqlTable(
   "teamAppRole",
   {
     id: varchar("id", { length: NANOID_SIZE }).notNull().primaryKey(),
-    name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
-    description: varchar("description", { length: DEFAULTLENGTH }),
-    minUsers: int("minUsers").default(0).notNull(),
-    maxUsers: int("maxUsers").default(0).notNull(),
     appId: varchar("appId", { length: NANOID_SIZE })
       .notNull()
       .references(() => apps.id, { onDelete: "cascade" }),
@@ -106,18 +100,12 @@ export const teamAppRoles = mysqlTable(
       .notNull()
       .references(() => teams.id, { onDelete: "cascade" }),
     appRoleDefaultId: varchar("appRoleDefaultId", {
-      length: NANOID_SIZE,
-    }).references(() => appRoleDefaults.id, {
-      onDelete: "set null",
-      onUpdate: "cascade",
+      length: NANOID_SIZE, //? References a hardcoded default role id and not anything in db
     }),
   },
   (table) => {
     return {
       appIdIdx: index("appId_idx").on(table.appId),
-      appRoleDefaultIdIdx: index("appRoleDefaultId_idx").on(
-        table.appRoleDefaultId,
-      ),
       teamIdIdx: index("teamId_idx").on(table.teamId),
     };
   },
@@ -132,10 +120,6 @@ export const teamAppRolesRelations = relations(
     Team: one(teams, {
       fields: [teamAppRoles.teamId],
       references: [teams.id],
-    }),
-    AppRoleDefault: one(appRoleDefaults, {
-      fields: [teamAppRoles.appRoleDefaultId],
-      references: [appRoleDefaults.id],
     }),
     AppPermissionsToTeamAppRoles: many(appPermissionsToTeamAppRoles),
     TeamAppRolesToUsers: many(teamAppRolesToUsers),

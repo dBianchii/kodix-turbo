@@ -59,6 +59,7 @@ export function KodixApp({
   const installAppMutation = api.team.installApp.useMutation({
     onSuccess: () => {
       void utils.app.getAll.invalidate();
+      void utils.app.getInstalled.invalidate();
       router.refresh();
       toast(`${t("App")} ${appName} ${t("installed").toLowerCase()}`);
     },

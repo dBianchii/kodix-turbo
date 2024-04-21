@@ -1,7 +1,6 @@
 import { relations, sql } from "drizzle-orm";
 import {
   index,
-  int,
   json,
   mysqlTable,
   timestamp,
@@ -53,7 +52,6 @@ export const appRelations = relations(apps, ({ many, one }) => ({
     references: [devPartners.id],
   }),
   AppTeamConfigs: many(appTeamConfigs),
-  AppRoleDefaults: many(appRoleDefaults),
   TeamAppRoles: many(teamAppRoles),
   AppPermissions: many(appPermissions),
 }));
@@ -97,8 +95,6 @@ export const appPermissions = mysqlTable(
     appId: varchar("appId", { length: NANOID_SIZE })
       .notNull()
       .references(() => apps.id, { onDelete: "cascade", onUpdate: "cascade" }),
-    name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
-    description: varchar("description", { length: DEFAULTLENGTH }),
   },
   (table) => {
     return {
@@ -113,73 +109,7 @@ export const appPermissionsRelations = relations(
       fields: [appPermissions.appId],
       references: [apps.id],
     }),
-    AppPermissionsToAppRoleDefaults: many(appPermissionsToAppRoleDefaults),
     AppPermissionsToTeamAppRoles: many(appPermissionsToTeamAppRoles),
-  }),
-);
-
-export const appRoleDefaults = mysqlTable(
-  "appRoleDefault",
-  {
-    id: varchar("id", { length: NANOID_SIZE }).notNull().primaryKey(),
-    appId: varchar("appId", { length: NANOID_SIZE })
-      .notNull()
-      .references(() => apps.id, { onDelete: "cascade" }),
-    name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
-    description: varchar("description", { length: DEFAULTLENGTH }),
-    minUsers: int("minUsers").default(0).notNull(),
-    maxUsers: int("maxUsers").default(0).notNull(),
-  },
-  (table) => {
-    return {
-      appIdIdx: index("appId_Idx").on(table.appId),
-    };
-  },
-);
-export const appRoleDefaultsRelations = relations(
-  appRoleDefaults,
-  ({ many, one }) => ({
-    App: one(apps, {
-      fields: [appRoleDefaults.appId],
-      references: [apps.id],
-    }),
-    AppPermissionsToAppRoleDefaults: many(appPermissionsToAppRoleDefaults),
-    TeamAppRoles: many(teamAppRoles),
-  }),
-);
-
-export const appPermissionsToAppRoleDefaults = mysqlTable(
-  "_AppPermissionToAppRole_default",
-  {
-    appPermissionId: varchar("A", { length: NANOID_SIZE })
-      .notNull()
-      .references(() => appPermissions.id),
-    appRoleDefaultId: varchar("B", { length: NANOID_SIZE })
-      .notNull()
-      .references(() => appRoleDefaults.id),
-  },
-  (table) => {
-    return {
-      appRoleDefaultIdIdx: index("appRoleDefaultId_idx").on(
-        table.appRoleDefaultId,
-      ),
-      unique_appPermissionId_appRoleDefaultId: unique(
-        "unique_appPermissionId_appRoleDefaultId",
-      ).on(table.appPermissionId, table.appRoleDefaultId),
-    };
-  },
-);
-export const appPermissionsToAppRoleDefaultsRelations = relations(
-  appPermissionsToAppRoleDefaults,
-  ({ one }) => ({
-    AppPermission: one(appPermissions, {
-      fields: [appPermissionsToAppRoleDefaults.appPermissionId],
-      references: [appPermissions.id],
-    }),
-    AppRoleDefault: one(appRoleDefaults, {
-      fields: [appPermissionsToAppRoleDefaults.appRoleDefaultId],
-      references: [appRoleDefaults.id],
-    }),
   }),
 );
 

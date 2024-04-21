@@ -44,41 +44,19 @@ async function main() {
   await db.transaction(async (tx) => {
     const toInsertAppPermissions: (typeof schema.appPermissions.$inferInsert)[] =
       [];
-    const toInsertAppRoleDefaults: (typeof schema.appRoleDefaults.$inferInsert)[] =
-      [];
-    const toInsertAppPermissionsToAppRoleDefaults: (typeof schema.appPermissionsToAppRoleDefaults.$inferInsert)[] =
-      [];
 
-    for (const [
-      appId,
-      { appRoleDefaults: appRole_defaults, appPermissions },
-    ] of Object.entries(appRoles_defaultTree)) {
-      toInsertAppRoleDefaults.push(
-        ...appRole_defaults.map((appRoleDefault) => {
-          //Remove relations
-          const { AppPermissions: _, ...rest } = appRoleDefault;
-
-          return { ...rest, appId };
-        }),
-      );
-
+    for (const [appId, { appPermissions }] of Object.entries(
+      appRoles_defaultTree,
+    )) {
       if (appPermissions) {
         toInsertAppPermissions.push(
           ...appPermissions.map((appPermission) => ({
             ...appPermission,
             appId,
+            name: "appPermission.id",
           })),
         );
       }
-
-      appPermissions?.forEach((appPermission) => {
-        appRole_defaults.forEach((appRoleDefault) => {
-          toInsertAppPermissionsToAppRoleDefaults.push({
-            appPermissionId: appPermission.id,
-            appRoleDefaultId: appRoleDefault.id,
-          });
-        });
-      });
     }
 
     await tx
@@ -94,22 +72,11 @@ async function main() {
         set: allSetValues(apps),
       });
     await tx
-      .insert(schema.appRoleDefaults)
-      .values(toInsertAppRoleDefaults)
-      .onDuplicateKeyUpdate({
-        set: allSetValues(toInsertAppRoleDefaults),
-      });
-    await tx
       .insert(schema.appPermissions)
       .values(toInsertAppPermissions)
       .onDuplicateKeyUpdate({
         set: allSetValues(toInsertAppPermissions),
       });
-
-    await tx.delete(schema.appPermissionsToAppRoleDefaults);
-    await tx
-      .insert(schema.appPermissionsToAppRoleDefaults)
-      .values(toInsertAppPermissionsToAppRoleDefaults);
   });
 }
 
