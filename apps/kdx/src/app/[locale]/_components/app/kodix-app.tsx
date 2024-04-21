@@ -106,7 +106,7 @@ export function KodixApp({
           {appDescription}
         </CardDescription>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="flex justify-between border-t px-6 py-4">
         {session && installed && (
           <Link
             href={appurl}

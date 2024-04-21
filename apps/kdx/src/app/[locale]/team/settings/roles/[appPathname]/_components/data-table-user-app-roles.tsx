@@ -126,7 +126,8 @@ export function DataTableUserAppRoles({
           <MultiSelect
             className="w-96"
             options={allAppRoles.map((role) => ({
-              label: appRoleDefaultNames[role.id as AppRoleDefaultId],
+              label:
+                appRoleDefaultNames[role.appRoleDefaultId as AppRoleDefaultId],
               value: role.id,
             }))}
             selected={selected}

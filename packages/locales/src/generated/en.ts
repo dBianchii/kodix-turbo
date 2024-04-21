@@ -303,5 +303,6 @@ export default {
   "Admin": "Admin",
   "Patient": "Patient",
   "Care Giver": "Care Giver",
-  "Can toggle shift": "Can change shift"
+  "Can toggle shift": "Can change shift",
+  "Add more apps": "Add more apps"
 } as const

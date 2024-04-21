@@ -303,5 +303,6 @@ export default {
   "Admin": "Administrador",
   "Care Giver": "Cuidador",
   "Patient": "Paciente",
-  "Can toggle shift": "Pode alterar turno"
+  "Can toggle shift": "Pode alterar turno",
+  "Add more apps": "Adicione mais aplicativos"
 } as const
