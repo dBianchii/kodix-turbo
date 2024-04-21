@@ -42,7 +42,6 @@ export const getUsersWithRolesHandler = async ({
           TeamAppRole: {
             columns: {
               id: true,
-              name: true,
             },
           },
         },

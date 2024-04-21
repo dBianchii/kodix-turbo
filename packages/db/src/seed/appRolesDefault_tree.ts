@@ -1,3 +1,8 @@
+import type {
+  AppPermissionId,
+  AppRoleDefaultId,
+  KodixAppId,
+} from "@kdx/shared";
 import {
   calendarAdminRoleDefaultId,
   calendarAppId,
@@ -11,15 +16,12 @@ import {
 } from "@kdx/shared";
 
 type appRoles_defaultTree = Record<
-  string,
+  KodixAppId,
   {
-    appPermissions?: { id: string; name: string }[];
+    appPermissions?: { id: AppPermissionId }[];
     appRoleDefaults: {
-      id: string;
-      name: string;
-      minUsers: number;
-      maxUsers: number;
-      AppPermissions: string[];
+      id: AppRoleDefaultId;
+      AppPermissions: AppPermissionId[];
     }[];
   }
 >;
@@ -28,29 +30,19 @@ export const appRoles_defaultTree: appRoles_defaultTree = {
     appPermissions: [
       {
         id: PKodixCare_CanToggleShiftId,
-        name: "CanToggleShift",
       },
     ],
     appRoleDefaults: [
       {
         id: kodixCareAdminRoleDefaultId,
-        name: "Admin",
-        minUsers: 1,
-        maxUsers: 0,
         AppPermissions: [PKodixCare_CanToggleShiftId],
       },
       {
         id: kodixCareCareGiverRoleDefaultId,
-        name: "Care Giver",
-        minUsers: 1,
-        maxUsers: 0,
         AppPermissions: [PKodixCare_CanToggleShiftId],
       },
       {
         id: kodixCarePatientRoleDefaultId,
-        name: "Patient",
-        minUsers: 1,
-        maxUsers: 0,
         AppPermissions: [],
       },
     ],
@@ -59,9 +51,6 @@ export const appRoles_defaultTree: appRoles_defaultTree = {
     appRoleDefaults: [
       {
         id: todoAdminRoleDefaultId,
-        name: "Admin",
-        minUsers: 1,
-        maxUsers: 0,
         AppPermissions: [],
       },
     ],
@@ -70,9 +59,6 @@ export const appRoles_defaultTree: appRoles_defaultTree = {
     appRoleDefaults: [
       {
         id: calendarAdminRoleDefaultId,
-        name: "Admin",
-        minUsers: 1,
-        maxUsers: 0,
         AppPermissions: [],
       },
     ],
