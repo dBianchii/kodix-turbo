@@ -1,4 +1,4 @@
-import type { TUninstallAppInputSchema } from "@kdx/validators/trpc/team";
+import type { TUninstallAppInputSchema } from "@kdx/validators/trpc/app";
 import { and, eq } from "@kdx/db";
 import { schema } from "@kdx/db/schema";
 

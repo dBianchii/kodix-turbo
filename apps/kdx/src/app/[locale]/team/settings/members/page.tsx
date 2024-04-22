@@ -7,7 +7,6 @@ import { Skeleton } from "@kdx/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@kdx/ui/tabs";
 
 import { api } from "~/trpc/server";
-import SettingsEditCardSkeleton from "../general/_components/edit-team-name-card-skeleton";
 import { InviteDataTable } from "./_components/edit-team-members/invites/data-table-invite";
 import { DataTableMembers } from "./_components/edit-team-members/members/data-table-members";
 import TeamInviteCard from "./_components/invite/team-invite-card";
@@ -18,9 +17,7 @@ export default async function SettingsMembersPage() {
 
   return (
     <div className="mt-8 space-y-8 md:mt-0">
-      <Suspense fallback={<SettingsEditCardSkeleton />}>
-        <TeamInviteCard session={session} />
-      </Suspense>
+      <TeamInviteCard session={session} />
       <Suspense
         fallback={
           <Tabs defaultValue="one">

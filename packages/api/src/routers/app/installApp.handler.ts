@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import type { TInstallAppInputSchema } from "@kdx/validators/trpc/team";
+import type { TInstallAppInputSchema } from "@kdx/validators/trpc/app";
 import { and, eq } from "@kdx/db";
 import { appRoles_defaultTree } from "@kdx/db/constants";
 import { schema } from "@kdx/db/schema";

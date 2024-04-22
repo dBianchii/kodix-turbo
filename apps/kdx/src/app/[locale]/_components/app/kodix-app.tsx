@@ -56,7 +56,7 @@ export function KodixApp({
   const router = useRouter();
   const utils = api.useUtils();
   const t = useI18n();
-  const installAppMutation = api.team.installApp.useMutation({
+  const installAppMutation = api.app.installApp.useMutation({
     onSuccess: () => {
       void utils.app.getAll.invalidate();
       void utils.app.getInstalled.invalidate();
@@ -64,7 +64,7 @@ export function KodixApp({
       toast.success(`${t("App")} ${appName} ${t("installed").toLowerCase()}`);
     },
   });
-  const uninstallAppMutation = api.team.uninstallApp.useMutation({
+  const uninstallAppMutation = api.app.uninstallApp.useMutation({
     onSuccess: () => {
       setOpen(false);
       void utils.app.getAll.invalidate();

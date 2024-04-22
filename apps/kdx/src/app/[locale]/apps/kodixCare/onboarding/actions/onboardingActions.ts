@@ -13,7 +13,7 @@ export const finishKodixCareOnboardingAction = action(
       appId: kodixCareAppId,
       config: input,
     });
-    await api.team.installApp({
+    await api.app.installApp({
       appId: kodixCareAppId,
     });
   },

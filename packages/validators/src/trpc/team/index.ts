@@ -1,7 +1,5 @@
 import { z } from "zod";
 
-import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
-
 import { ZNanoId } from "../..";
 
 export const ZCreateInputSchema = z.object({
@@ -16,24 +14,10 @@ export const ZGetOneInputSchema = z.object({
 });
 export type TGetOneInputSchema = z.infer<typeof ZGetOneInputSchema>;
 
-export const ZInstallAppInputSchema = z.object({
-  appId: z.union([
-    z.literal(todoAppId),
-    z.literal(calendarAppId),
-    z.literal(kodixCareAppId),
-  ]),
-});
-export type TInstallAppInputSchema = z.infer<typeof ZInstallAppInputSchema>;
-
 export const ZRemoveUserSchema = z.object({
   userId: ZNanoId,
 });
 export type TRemoveUserSchema = z.infer<typeof ZRemoveUserSchema>;
-
-export const ZUninstallAppInputSchema = z.object({
-  appId: ZNanoId,
-});
-export type TUninstallAppInputSchema = z.infer<typeof ZUninstallAppInputSchema>;
 
 export const ZUpdateInputSchema = z.object({
   teamId: ZNanoId,
