@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { unstable_cache } from "next/cache";
 import { redirect } from "next/navigation";
 
 import type { Session } from "@kdx/auth";
@@ -17,19 +16,11 @@ import { IconKodixApp } from "../../_components/app/kodix-icon";
 import DataTableKodixCare from "./_components/data-table-kodix-care";
 import { CurrentShiftClient } from "./_components/shifts";
 
-const getOnboardingCompleted = unstable_cache(
-  async ({ activeTeamId: _ }: { activeTeamId: string }) =>
-    api.app.kodixCare.onboardingCompleted(),
-  ["InstalledApps"],
-);
-
 export default async function KodixCarePage() {
   const session = await auth();
   if (!session) redirect("/");
 
-  const completed = await getOnboardingCompleted({
-    activeTeamId: session.user.activeTeamId,
-  });
+  const completed = await api.app.kodixCare.onboardingCompleted();
   if (!completed) redirect("/apps/kodixCare/onboarding");
 
   const t = await getI18n();

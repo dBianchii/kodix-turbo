@@ -52,7 +52,7 @@ export const appUrlPrefix = "/apps";
  */
 export const getAppUrl = (appId: KodixAppId) => {
   const pathname = appIdToPathname[appId];
-  return `${appUrlPrefix}/${pathname}`;
+  return `${appUrlPrefix}/${pathname}` as const;
 };
 
 /**
@@ -60,5 +60,5 @@ export const getAppUrl = (appId: KodixAppId) => {
  */
 export const getAppIconUrl = (appId: KodixAppId) => {
   const pathname = appIdToPathname[appId];
-  return `/appIcons/${pathname}.png`;
+  return `/appIcons/${pathname}.png` as const;
 };
