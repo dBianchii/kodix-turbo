@@ -191,7 +191,7 @@ export function DataTable({
 
   return (
     <>
-      <div className="mt-8">
+      <div className="pt-8">
         <div className="flex justify-between">
           <div className=" w-44 space-y-2">
             <Label htmlFor="search">{t("Search")}...</Label>
