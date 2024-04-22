@@ -27,13 +27,5 @@ export const onboardingCompletedHandler = async ({
     )
     .then((res) => res[0]);
 
-  void resend.emails.send({
-    from: kodixNotificationFromEmail,
-    to: "gdbianchii@gmail.com",
-    subject: "onboardingCompletedHandler was run",
-    html: "<h1>onboardingCompletedHandler was run</h1>",
-    text: "Teste",
-  });
-
   return !!installed;
 };
