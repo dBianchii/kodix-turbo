@@ -1,8 +1,9 @@
 import { and, eq } from "@kdx/db";
 import { schema } from "@kdx/db/schema";
-import { kodixCareAppId } from "@kdx/shared";
+import { kodixCareAppId, kodixNotificationFromEmail } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
+import { resend } from "../../../utils/email/email";
 
 interface OnboardingCompletedOptions {
   ctx: TProtectedProcedureContext;
@@ -25,5 +26,14 @@ export const onboardingCompletedHandler = async ({
       ),
     )
     .then((res) => res[0]);
+
+  void resend.emails.send({
+    from: kodixNotificationFromEmail,
+    to: "gdbianchii@gmail.com",
+    subject: "onboardingCompletedHandler was run",
+    html: "<h1>onboardingCompletedHandler was run</h1>",
+    text: "Teste",
+  });
+
   return !!installed;
 };

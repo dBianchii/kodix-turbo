@@ -19,6 +19,9 @@ const config = {
     "@kdx/db",
     "@kdx/ui",
     "@kdx/validators",
+    "@kdx/date-fns",
+    "@kdx/dayjs",
+    "@kdx/shared",
   ],
 
   /** We already do linting and typechecking as separate tasks in CI */
