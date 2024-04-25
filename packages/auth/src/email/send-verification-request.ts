@@ -3,7 +3,9 @@ import { Resend } from "resend";
 import VerificationRequestEmail from "@kdx/react-email/verification-request";
 import { kodixNotificationFromEmail } from "@kdx/shared";
 
-export const resend = new Resend(process.env.RESEND_API_KEY);
+import { env } from "../../env";
+
+export const resend = new Resend(env.RESEND_API_KEY);
 
 export const sendVerificationRequest = async (params: {
   identifier: string;

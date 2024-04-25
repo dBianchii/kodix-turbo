@@ -1,7 +1,6 @@
 import chalk from "chalk";
 import ora from "ora";
 
-import type { CreateFilesParams } from "..";
 import { trpcCliConfig } from "../../config";
 import { ROUTERS_FOLDER_PATH, VALIDATORS_FOLDER_PATH } from "../cli";
 import { logger } from "../utils/logger";
@@ -9,6 +8,15 @@ import { createHandler } from "./createHandler";
 import { createRouter } from "./createRouter";
 import { createValidator } from "./createValidator";
 import { runPrettier } from "./runPrettier";
+
+export interface CreateFilesParams {
+  chosenRouterPath: string;
+  endpointName: string;
+  validator: string;
+  queryOrMutation: string;
+  procedure: string;
+  newRouterName?: string;
+}
 
 export const createFiles = async (params: CreateFilesParams) => {
   const spinner = ora(`Creating your endpoint...\n`).start();
