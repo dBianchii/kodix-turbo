@@ -34,5 +34,10 @@
   "i18n-ally.enabledFrameworks": ["next-international"],
   "i18n-ally.keystyle": "nested",
   "i18n-ally.extract.autoDetect": true,
-  "i18n-ally.sourceLanguage": "en"
+  "i18n-ally.sourceLanguage": "en",
+  "workbench.editor.customLabels.patterns": {
+    "**/app/**/page.tsx": "${dirname} - Page",
+    "**/app/**/layout.tsx": "${dirname} - Layout",
+    "**/_components/**/**.tsx": "${filename} - Component"
+  }
 }
