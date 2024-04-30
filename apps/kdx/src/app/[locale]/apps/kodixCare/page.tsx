@@ -6,6 +6,7 @@ import { auth } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
 import { getI18n } from "@kdx/locales/server";
 import { kodixCareAppId } from "@kdx/shared";
+import { DataTableSkeleton } from "@kdx/ui/data-table-skeleton";
 import { Separator } from "@kdx/ui/separator";
 import { Skeleton } from "@kdx/ui/skeleton";
 import { H1 } from "@kdx/ui/typography";
@@ -21,9 +22,8 @@ export default async function KodixCarePage() {
   if (!session) redirect("/");
 
   const completed = await api.app.kodixCare.onboardingCompleted();
-  if (!completed) {
-    redirect("/apps/kodixCare/onboarding");
-  }
+  if (!completed) redirect("/apps/kodixCare/onboarding");
+
   const t = await getI18n();
   return (
     <MaxWidthWrapper>
@@ -41,15 +41,11 @@ export default async function KodixCarePage() {
         <div className="w-full">
           <Suspense
             fallback={
-              <div className="flex flex-col items-center justify-center gap-4 px-4">
-                <Skeleton className="h-8 w-60" />
-                <div className="mt-4 flex w-full flex-col gap-2">
-                  <Skeleton className="h-8" />
-                  <Skeleton className="h-8" />
-                  <Skeleton className="h-8" />
-                  <Skeleton className="h-8" />
-                </div>
-              </div>
+              <DataTableSkeleton
+                className="mt-4"
+                columnCount={4}
+                withPagination={false}
+              />
             }
           >
             <KodixCareTable session={session} />
@@ -86,13 +82,17 @@ async function CurrentShift({ session }: { session: Session }) {
   );
 }
 
-async function ShiftSkeleton() {
-  const t = await getI18n();
+function ShiftSkeleton() {
   return (
-    <div className="flex flex-col space-y-3 pt-4">
-      <h2 className="font-semibold leading-none tracking-tight">
-        {t("apps.kodixCare.currentShift")}
-      </h2>
+    <div className="flex flex-col space-y-3">
+      <div className="flex flex-row items-center">
+        <Skeleton className="h-4 w-10" />
+      </div>
+      <div className="flex items-center space-x-2 rounded-md">
+        <Skeleton className="size-5 rounded-full" />
+        <Skeleton className="h-4 w-full" />
+      </div>
+      <Skeleton className="h-8 w-full" />
     </div>
   );
 }

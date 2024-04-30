@@ -3,9 +3,17 @@
 import { createColumnHelper } from "@tanstack/react-table";
 
 import type { RouterOutputs } from "@kdx/api";
-import type { KodixAppId } from "@kdx/shared";
+import type {
+  AppPermissionId,
+  AppRoleDefaultId,
+  KodixAppId,
+} from "@kdx/shared";
 import type { FixedColumnsType } from "@kdx/ui/data-table";
 import { useI18n } from "@kdx/locales/client";
+import {
+  useAppPermissionName,
+  useAppRoleDefaultNames,
+} from "@kdx/locales/hooks";
 import { DataTable } from "@kdx/ui/data-table";
 import { MultiSelect } from "@kdx/ui/multi-select";
 
@@ -58,7 +66,6 @@ export function DataTableAppPermissions({
                   teamAppRoleId: x.id,
                   TeamAppRole: {
                     id: x.id,
-                    name: x.name,
                   },
                 })),
               };
@@ -92,25 +99,35 @@ export function DataTableAppPermissions({
 
   const t = useI18n();
   const columns = [
-    columnHelper.accessor("name", {
+    columnHelper.display({
+      id: "name",
       header: () => <div className="pl-2">{t("Permission")}</div>,
-      cell: (info) => (
-        <div className="flex w-60 flex-row gap-3 pl-2">
-          <div className="flex flex-col items-start">
-            <span className="font-bold">{info.cell.row.original.name}</span>
+      cell: function Cell(info) {
+        const name = useAppPermissionName(
+          info.cell.row.original.id as AppPermissionId,
+        );
+
+        return (
+          <div className="flex w-60 flex-row gap-3 pl-2">
+            <div className="flex flex-col items-start">
+              <span className="font-bold">{name}</span>
+            </div>
           </div>
-        </div>
-      ),
+        );
+      },
     }),
     columnHelper.accessor("AppPermissionsToTeamAppRoles", {
       header: t("Roles"),
       cell: function Cell(info) {
         const selected = info.getValue().map((role) => role.teamAppRoleId);
+        const appRoleDefaultNames = useAppRoleDefaultNames();
+
         return (
           <MultiSelect
             className="w-96"
             options={allAppRoles.map((role) => ({
-              label: role.name,
+              label:
+                appRoleDefaultNames[role.appRoleDefaultId as AppRoleDefaultId],
               value: role.id,
             }))}
             selected={selected}
@@ -134,6 +151,6 @@ export function DataTableAppPermissions({
       columns={columns}
       data={data}
       noResultsMessage={t("This app does not have any permissions")}
-    ></DataTable>
+    />
   );
 }

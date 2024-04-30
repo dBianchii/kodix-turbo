@@ -29,7 +29,12 @@ declare module "next-auth" {
 export function KodixAdapter(): Adapter {
   const { users, teams, usersToTeams, accounts, sessions } = schema;
   return {
-    ...DrizzleAdapter(db),
+    ...DrizzleAdapter(db, {
+      usersTable: schema.users,
+      accountsTable: schema.accounts,
+      sessionsTable: schema.sessions,
+      verificationTokensTable: schema.verificationTokens,
+    }),
     async createUser(data) {
       const id = nanoid();
       const teamId = nanoid();

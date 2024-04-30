@@ -1,8 +1,17 @@
-import type { KodixAppId } from "@kdx/shared";
-import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
+import type { AppPermissionId, KodixAppId } from "@kdx/shared";
+import {
+  calendarAdminRoleDefaultId,
+  calendarAppId,
+  kodixCareAdminRoleDefaultId,
+  kodixCareAppId,
+  kodixCareCareGiverRoleDefaultId,
+  kodixCarePatientRoleDefaultId,
+  todoAdminRoleDefaultId,
+  todoAppId,
+} from "@kdx/shared";
 
 import { useI18n } from "../client";
-import { appIdToName } from "../internal";
+import { appIdToName, appPermissionIdToName } from "../internal";
 
 export const useAppName = (appId: KodixAppId) => {
   const t = useI18n();
@@ -18,4 +27,22 @@ export const useAppDescription = (appId: KodixAppId) => {
     [kodixCareAppId]: t("apps.kodixCare.appDescription"),
   };
   return appIdToDescription[appId];
+};
+
+export const useAppRoleDefaultNames = () => {
+  const t = useI18n();
+  const appRoleDefaultIdToName = {
+    [todoAdminRoleDefaultId]: t("Admin"),
+    [calendarAdminRoleDefaultId]: t("Admin"),
+    [kodixCareAdminRoleDefaultId]: t("Admin"),
+    [kodixCarePatientRoleDefaultId]: t("Patient"),
+    [kodixCareCareGiverRoleDefaultId]: t("Care Giver"),
+  };
+
+  return appRoleDefaultIdToName;
+};
+
+export const useAppPermissionName = (appPermissionId: AppPermissionId) => {
+  const t = useI18n();
+  return appPermissionIdToName(t)[appPermissionId];
 };

@@ -1,4 +1,4 @@
-import baseConfig from "@kdx/eslint-config/base";
+import baseConfig, { restrictEnvAccess } from "@kdx/eslint-config/base";
 import nextjsConfig from "@kdx/eslint-config/nextjs";
 import reactConfig from "@kdx/eslint-config/react";
 
@@ -10,4 +10,5 @@ export default [
   ...baseConfig,
   ...reactConfig,
   ...nextjsConfig,
+  ...restrictEnvAccess,
 ];

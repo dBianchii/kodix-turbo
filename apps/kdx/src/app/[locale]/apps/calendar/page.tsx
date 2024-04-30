@@ -1,7 +1,12 @@
+import { Suspense } from "react";
+
+import type { Session } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
 import { getI18n } from "@kdx/locales/server";
 import { calendarAppId } from "@kdx/shared";
+import { DataTableSkeleton } from "@kdx/ui/data-table-skeleton";
 import { Separator } from "@kdx/ui/separator";
+import { Skeleton } from "@kdx/ui/skeleton";
 import { H1 } from "@kdx/ui/typography";
 
 import { IconKodixApp } from "~/app/[locale]/_components/app/kodix-icon";
@@ -18,11 +23,7 @@ export default async function CalendarPage() {
 
   //date Start should be the beginninig of the day
   //date End should be the end of the day
-  const initialInput = {
-    dateStart: dayjs.utc().startOf("day").toDate(),
-    dateEnd: dayjs.utc().endOf("day").toDate(),
-  };
-  const initialData = await api.app.calendar.getAll(initialInput);
+
   const t = await getI18n();
   return (
     <MaxWidthWrapper>
@@ -33,7 +34,45 @@ export default async function CalendarPage() {
       <Separator className="my-4" />
 
       <CreateEventDialogButton />
-      <DataTable data={initialData} session={session} />
+      <Suspense
+        fallback={
+          <div className="pt-8">
+            <div className="flex justify-between">
+              <div className="flex w-44">
+                <Skeleton className="h-6 w-28" />
+              </div>
+
+              <div className="mx-auto mt-auto flex space-x-2">
+                <Skeleton className="size-6" />
+
+                <Skeleton className="h-6 w-28" />
+                <Skeleton className="size-6" />
+              </div>
+              <div className="flex w-44">
+                <Skeleton className="h-6 w-20" />
+              </div>
+            </div>
+
+            <div className="mt-4 rounded-md border">
+              <DataTableSkeleton columnCount={3} showViewOptions={false} />
+            </div>
+          </div>
+        }
+      >
+        <DataTableServer session={session} />
+      </Suspense>
     </MaxWidthWrapper>
   );
+}
+
+async function DataTableServer({ session }: { session: Session }) {
+  const initialInput = {
+    dateStart: dayjs.utc().startOf("day").toDate(),
+    dateEnd: dayjs.utc().endOf("day").toDate(),
+  };
+  //wait 1 sec
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  const initialData = await api.app.calendar.getAll(initialInput);
+
+  return <DataTable data={initialData} session={session} />;
 }

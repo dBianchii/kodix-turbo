@@ -25,5 +25,6 @@ export const onboardingCompletedHandler = async ({
       ),
     )
     .then((res) => res[0]);
+
   return !!installed;
 };

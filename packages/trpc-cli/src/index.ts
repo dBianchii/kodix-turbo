@@ -1,15 +1,7 @@
+import type { CreateFilesParams } from "./helpers/createFiles";
 import { runCli } from "./cli";
 import { createFiles } from "./helpers/createFiles";
 import { logger } from "./utils/logger";
-
-export interface CreateFilesParams {
-  chosenRouterPath: string;
-  endpointName: string;
-  validator: string;
-  queryOrMutation: string;
-  procedure: string;
-  newRouterName?: string;
-}
 
 const main = async () => {
   logger.info("Hello! Let's create your new trpc endpoint");

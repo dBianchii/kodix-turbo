@@ -8,6 +8,10 @@ createJiti(fileURLToPath(import.meta.url))("./src/env");
 const config = {
   reactStrictMode: true,
 
+  experimental: {
+    ppr: true,
+  },
+
   /** Enables hot reloading for local packages without a build step */
   transpilePackages: [
     "@kdx/api",
@@ -15,6 +19,9 @@ const config = {
     "@kdx/db",
     "@kdx/ui",
     "@kdx/validators",
+    "@kdx/date-fns",
+    "@kdx/dayjs",
+    "@kdx/shared",
   ],
 
   /** We already do linting and typechecking as separate tasks in CI */

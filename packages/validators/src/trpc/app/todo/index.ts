@@ -1,35 +1,28 @@
-import type { z } from "zod";
-import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
 
-import { schema } from "@kdx/db/schema";
+import type { schema } from "@kdx/db/schema";
 
-import { NANOID_REGEX, ZNanoId } from "../../..";
+import { ZNanoId } from "../../..";
 
-export const ZCreateInputSchema = createInsertSchema(schema.todos, {
-  assignedToUserId: (schema) => schema.assignedToUserId.regex(NANOID_REGEX),
-}).pick({
-  title: true,
-  description: true,
-  dueDate: true,
-  reminder: true,
-  priority: true,
-  status: true,
-  assignedToUserId: true,
+export const ZCreateInputSchema = z.object({
+  title: z.string(),
+  description: z.string().optional(),
+  dueDate: z.date().optional(),
+  reminder: z.boolean().optional(),
+  priority: z.number().optional(),
+  status: z.custom<typeof schema.todos.$inferInsert.status>().optional(),
+  assignedToUserId: ZNanoId.optional().nullish(),
 });
 export type TCreateInputSchema = z.infer<typeof ZCreateInputSchema>;
 
-export const ZUpdateInputSchema = createInsertSchema(schema.todos, {
+export const ZUpdateInputSchema = z.object({
   id: ZNanoId,
-  assignedToUserId: (schema) => schema.assignedToUserId.regex(NANOID_REGEX),
-  title: (schema) => schema.title.optional(),
-}).pick({
-  id: true,
-  title: true,
-  description: true,
-  dueDate: true,
-  priority: true,
-  status: true,
-  reminder: true,
-  assignedToUserId: true,
-});
+  title: z.string().optional(),
+  description: z.string().optional(),
+  dueDate: z.date().optional().nullish(),
+  reminder: z.boolean().optional(),
+  priority: z.number().optional(),
+  status: z.custom<typeof schema.todos.$inferInsert.status>().optional(),
+  assignedToUserId: ZNanoId.optional().nullish(),
+}); //TODO: investigate
 export type TUpdateInputSchema = z.infer<typeof ZUpdateInputSchema>;

@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@auth/core": "0.28.1",
+    "@auth/core": "0.30.0",
     "@kdx/shared": "workspace:*"
   },
   "devDependencies": {
