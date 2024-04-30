@@ -46,7 +46,7 @@
     "drizzle-kit": "^0.20.17",
     "eslint": "^9.0.0",
     "prettier": "^3.2.5",
-    "tsx": "4.7.2",
+    "tsx": "4.7.3",
     "typescript": "^5.4.5"
   },
   "prettier": "@kdx/prettier-config"
