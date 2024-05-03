@@ -7,6 +7,7 @@ import { schema } from "@kdx/db/schema";
 import { appIdToAdminRole_defaultIdMap, nanoid } from "@kdx/shared";
 
 import type { TIsTeamOwnerProcedureContext } from "../../procedures";
+import { invalidateUpstashCache } from "../../upstash";
 
 interface InstallAppOptions {
   ctx: TIsTeamOwnerProcedureContext;
@@ -81,4 +82,8 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
       userId: ctx.session.user.id,
     });
   });
+
+  await invalidateUpstashCache("installedApps", {
+    teamId: ctx.session.user.activeTeamId
+  })
 };
