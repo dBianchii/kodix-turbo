@@ -7,10 +7,6 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./src/index.ts"
-    },
-    "./upstash": {
-      "types": "./dist/upstash/index.d.ts",
-      "default": "./src/upstash/index.ts"
     }
   },
   "scripts": {
