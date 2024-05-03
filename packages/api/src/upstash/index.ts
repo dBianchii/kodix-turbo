@@ -3,49 +3,45 @@ import { Redis } from "@upstash/redis";
 export const redis = Redis.fromEnv();
 
 interface KeysMapping {
-  kodixCare_onboarding_completed: {
-    variableKeys: {
+  installedApps: {
+    tags: {
       teamId: string;
     };
-    value: boolean;
-  };
-
-  somethingElse: {
-    value: boolean;
+    value: {
+      id: string;
+    }[];
   };
 }
 
 export const getUpstashCache = async <T extends keyof KeysMapping>(
   key: T,
-  variableKeys?: KeysMapping[T] extends { variableKeys: infer V }
-    ? V
-    : undefined,
+  variableKeys: KeysMapping[T]["tags"],
 ) => {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const constructedKey = variableKeys
     ? `${key}-${Object.values(variableKeys).join("-")}`
     : key;
-  const cached = await redis.get(constructedKey);
-  if (!cached) return null;
-  return cached as KeysMapping[T]["value"];
+  return redis.get(constructedKey) as Promise<KeysMapping[T]["value"]> | null;
 };
 
-export const setUpstashCache = async <T extends keyof KeysMapping>(
+export const setUpstashCache = <T extends keyof KeysMapping>(
   key: T,
+  variableKeys: KeysMapping[T]["tags"],
   value: KeysMapping[T]["value"],
-  variableKeys: KeysMapping[T]["variableKeys"],
 ) => {
-  const constructedKey = `${key}-${Object.values(variableKeys).join("-")}`;
-  await redis.set(constructedKey, value);
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const constructedKey = variableKeys
+    ? `${key}-${Object.values(variableKeys).join("-")}`
+    : key;
+  return redis.set(constructedKey, value);
 };
 
-export const invalidateUpstashCache = async <T extends keyof KeysMapping>(
+export const invalidateUpstashCache = <T extends keyof KeysMapping>(
   key: T,
+  variableKeys: KeysMapping[T]["tags"],
 ) => {
-  await redis.del(key);
+  return redis.del(
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    variableKeys ? `${key}-${Object.values(variableKeys).join("-")}` : key,
+  );
 };
-
-const used = await getUpstashCache(`kodixCare-OnboardingCompleted`, {
-  teamId: "123",
-});
-
-const used2 = await getUpstashCache(`somethingElse`);
