@@ -26,6 +26,8 @@ export const env = createEnv({
     RESEND_API_KEY: z.string(),
     AWS_SMTP_USER: z.string().optional(), //TODO: Remove once we know
     AWS_SMTP_PASSWORD: z.string().optional(),
+    UPSTASH_REDIS_REST_URL: z.string().url(),
+    UPSTASH_REDIS_REST_API_KEY: z.string(),
   },
   /**
    * Specify your client-side environment variables schema here.
