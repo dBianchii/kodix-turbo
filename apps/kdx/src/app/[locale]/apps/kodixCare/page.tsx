@@ -1,8 +1,6 @@
 import { Suspense } from "react";
-import { redirect } from "next/navigation";
 
 import type { Session } from "@kdx/auth";
-import { auth } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
 import { getI18n } from "@kdx/locales/server";
 import { kodixCareAppId } from "@kdx/shared";
@@ -12,17 +10,17 @@ import { Skeleton } from "@kdx/ui/skeleton";
 import { H1 } from "@kdx/ui/typography";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
+import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
 import { api } from "~/trpc/server";
 import { IconKodixApp } from "../../_components/app/kodix-icon";
 import DataTableKodixCare from "./_components/data-table-kodix-care";
 import { CurrentShiftClient } from "./_components/shifts";
 
 export default async function KodixCarePage() {
-  const session = await auth();
-  if (!session) redirect("/");
-
-  const completed = await api.app.kodixCare.onboardingCompleted();
-  if (!completed) redirect("/apps/kodixCare/onboarding");
+  const session = await redirectIfAppNotInstalled({
+    appId: kodixCareAppId,
+    customRedirect: "/apps/kodixCare/onboarding",
+  });
 
   const t = await getI18n();
   return (

@@ -10,7 +10,6 @@
     "./warn-previous-shift-not-ended": "./src/emails/kodixCare/warn-previous-shift-not-ended.tsx"
   },
   "scripts": {
-    "dev": "pnpm dlx react-email@latest dev --dir='src'",
     "clean": "rm -rf .turbo node_modules",
     "lint": "eslint",
     "format": "prettier --check . --ignore-path ../../.gitignore",

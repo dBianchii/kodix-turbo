@@ -6,7 +6,7 @@
   "scripts": {
     "build": "pnpm with-env next build",
     "clean": "git clean -xdf .next .turbo node_modules",
-    "dev": "pnpm with-env next dev --port 3000",
+    "dev": "pnpm with-env next dev --turbo --port 3000",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
     "start": "pnpm with-env next start --port 3000",
@@ -31,6 +31,7 @@
     "@trpc/client": "11.0.0-rc.359",
     "@trpc/react-query": "11.0.0-rc.359",
     "@trpc/server": "11.0.0-rc.359",
+    "@upstash/redis": "^1.30.0",
     "@vercel/analytics": "^1.2.2",
     "@vercel/speed-insights": "^1.0.10",
     "dayjs": "^1.11.10",

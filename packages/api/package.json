@@ -26,6 +26,7 @@
     "@kdx/shared": "workspace:*",
     "@kdx/validators": "workspace:*",
     "@trpc/server": "11.0.0-rc.359",
+    "@upstash/redis": "^1.30.0",
     "dayjs": "^1.11.10",
     "next": "14.3.0-canary.32",
     "resend": "^3.2.0",

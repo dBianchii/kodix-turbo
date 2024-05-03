@@ -1,12 +1,15 @@
 import { redirect } from "next/navigation";
 
+import { kodixCareAppId } from "@kdx/shared";
+
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { api } from "~/trpc/server";
 import OnboardingCard from "./_components/onboarding-card";
 
 export default async function KodixCareOnboardingPage() {
-  const onboardingCompleted = await api.app.kodixCare.onboardingCompleted();
-  if (onboardingCompleted) redirect("/apps/kodixCare");
+  const installed = await api.app.getInstalled();
+  if (installed.some((x) => x.id === kodixCareAppId))
+    redirect("/apps/kodixCare");
 
   return (
     <MaxWidthWrapper>
