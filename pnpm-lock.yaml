@@ -353,6 +353,9 @@ importers:
       '@kdx/validators':
         specifier: workspace:*
         version: link:../validators
+      '@react-email/render':
+        specifier: 0.0.13
+        version: 0.0.13
       '@trpc/server':
         specifier: 11.0.0-rc.359
         version: 11.0.0-rc.359
@@ -3843,6 +3846,10 @@ packages:
 
   '@react-email/render@0.0.12':
     resolution: {integrity: sha512-S8WRv/PqECEi6x0QJBj0asnAb5GFtJaHlnByxLETLkgJjc76cxMYDH4r9wdbuJ4sjkcbpwP3LPnVzwS+aIjT7g==}
+    engines: {node: '>=18.0.0'}
+
+  '@react-email/render@0.0.13':
+    resolution: {integrity: sha512-lmBizrV+rQeSa3GjiL8/kPU0gENqO/wv+4xrlWANabp9UY3lTLXzy7HMRSE8YFBES9AbxP5VX1iRKuEnsoBDew==}
     engines: {node: '>=18.0.0'}
 
   '@react-email/row@0.0.7':
@@ -13452,6 +13459,13 @@ snapshots:
       js-beautify: 1.15.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+
+  '@react-email/render@0.0.13':
+    dependencies:
+      html-to-text: 9.0.5
+      js-beautify: 1.15.1
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   '@react-email/row@0.0.7(react@18.3.1)':
     dependencies:

@@ -3,6 +3,7 @@ import {
   boolean,
   index,
   int,
+  mysqlEnum,
   mysqlTable,
   primaryKey,
   timestamp,
@@ -12,13 +13,7 @@ import {
 import { NANOID_SIZE } from "@kdx/shared";
 
 import { todos } from "./apps/todos";
-import {
-  invitations,
-  notifications,
-  teamAppRolesToUsers,
-  teams,
-  usersToTeams,
-} from "./teams";
+import { invitations, teamAppRolesToUsers, teams, usersToTeams } from "./teams";
 import { DEFAULTLENGTH } from "./utils";
 
 export const users = mysqlTable(
@@ -117,3 +112,36 @@ export const verificationTokens = mysqlTable(
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   }),
 );
+
+export const notifications = mysqlTable(
+  "notification",
+  {
+    id: varchar("id", { length: NANOID_SIZE }).notNull().primaryKey(),
+    sentToUserId: varchar("sentToUserId", { length: NANOID_SIZE })
+      .notNull()
+      .references(() => users.id, { onUpdate: "cascade", onDelete: "cascade" }),
+    teamId: varchar("teamId", { length: NANOID_SIZE })
+      .notNull()
+      .references(() => users.id, { onUpdate: "cascade", onDelete: "cascade" }),
+    sentAt: timestamp("sentAt").notNull(),
+    message: varchar("message", { length: 500 }).notNull(),
+    channel: mysqlEnum("channel", ["EMAIL"]),
+    read: boolean("read").default(false).notNull(),
+  },
+  (table) => {
+    return {
+      sentToUserIdIdx: index("sentToUserId_idx").on(table.sentToUserId),
+      teamIdIdx: index("teamId_idx").on(table.teamId),
+    };
+  },
+);
+export const notificationsRelations = relations(notifications, ({ one }) => ({
+  User: one(users, {
+    fields: [notifications.sentToUserId],
+    references: [users.id],
+  }),
+  Team: one(teams, {
+    fields: [notifications.teamId],
+    references: [teams.id],
+  }),
+}));

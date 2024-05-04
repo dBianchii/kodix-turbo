@@ -162,27 +162,6 @@ export const teamAppRolesToUsersRelations = relations(
   }),
 );
 
-export const notifications = mysqlTable(
-  "notification",
-  {
-    id: varchar("id", { length: NANOID_SIZE }).notNull().primaryKey(),
-    userId: varchar("userId", { length: NANOID_SIZE })
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-  },
-  (table) => {
-    return {
-      userIdIdx: index("userId_idx").on(table.userId),
-    };
-  },
-);
-export const notificationsRelations = relations(notifications, ({ one }) => ({
-  User: one(users, {
-    fields: [notifications.userId],
-    references: [users.id],
-  }),
-}));
-
 export const invitations = mysqlTable(
   "invitation",
   {

@@ -12,7 +12,7 @@ import {
 } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
-import { resend } from "../../../utils/email/email";
+import { resend } from "../../../utils/email";
 
 interface InviteOptions {
   ctx: TProtectedProcedureContext;

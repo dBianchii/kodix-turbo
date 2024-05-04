@@ -13,14 +13,19 @@ interface KeysMapping {
   };
 }
 
-export const getUpstashCache = async <T extends keyof KeysMapping>(
+const constructKey = <T extends keyof KeysMapping>(
   key: T,
   variableKeys: KeysMapping[T]["tags"],
 ) => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const constructedKey = variableKeys
-    ? `${key}-${Object.values(variableKeys).join("-")}`
-    : key;
+  return variableKeys ? `${key}-${Object.values(variableKeys).join("-")}` : key;
+};
+
+export const getUpstashCache = async <T extends keyof KeysMapping>(
+  key: T,
+  variableKeys: KeysMapping[T]["tags"],
+) => {
+  const constructedKey = constructKey(key, variableKeys);
   return redis.get(constructedKey) as Promise<KeysMapping[T]["value"]> | null;
 };
 
@@ -29,10 +34,7 @@ export const setUpstashCache = <T extends keyof KeysMapping>(
   variableKeys: KeysMapping[T]["tags"],
   value: KeysMapping[T]["value"],
 ) => {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const constructedKey = variableKeys
-    ? `${key}-${Object.values(variableKeys).join("-")}`
-    : key;
+  const constructedKey = constructKey(key, variableKeys);
   return redis.set(constructedKey, value);
 };
 
@@ -40,8 +42,6 @@ export const invalidateUpstashCache = <T extends keyof KeysMapping>(
   key: T,
   variableKeys: KeysMapping[T]["tags"],
 ) => {
-  return redis.del(
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    variableKeys ? `${key}-${Object.values(variableKeys).join("-")}` : key,
-  );
+  const constructedKey = constructKey(key, variableKeys);
+  return redis.del(constructedKey);
 };

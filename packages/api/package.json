@@ -25,6 +25,7 @@
     "@kdx/react-email": "workspace:*",
     "@kdx/shared": "workspace:*",
     "@kdx/validators": "workspace:*",
+    "@react-email/render": "0.0.13",
     "@trpc/server": "11.0.0-rc.359",
     "@upstash/redis": "^1.30.0",
     "dayjs": "^1.11.10",
