@@ -154,7 +154,7 @@ export function DataTableAppPermissions({
       ] as FixedColumnsType<
         RouterOutputs["team"]["appRole"]["getPermissions"][number]
       >,
-    [],
+    [allAppRoles, appId, t, updatePermissionAssociation],
   );
   const table = useReactTable({
     data,

@@ -8,6 +8,7 @@ import { H1, Lead } from "@kdx/ui/typography";
 import { ZGetNotificationsInputSchema } from "@kdx/validators/trpc/user";
 
 import { api } from "~/trpc/server";
+import { CustomKodixIcon } from "../../_components/app/kodix-icon";
 import MaxWidthWrapper from "../../_components/max-width-wrapper";
 import { DataTableNotifications } from "./_components/data-table-notifications";
 
@@ -22,7 +23,6 @@ export default async function NotificationsPage({
   if (!session) redirect("/");
   const t = await getI18n();
 
-  //TODO: understand this better.
   const search = ZGetNotificationsInputSchema.omit({ teamId: true }).parse(
     searchParams,
   );
@@ -33,7 +33,15 @@ export default async function NotificationsPage({
 
   return (
     <MaxWidthWrapper>
-      <H1>{t("Notifications")}</H1>
+      <div className="flex items-center space-x-4">
+        <CustomKodixIcon
+          appName={t("Notifications")}
+          renderText={false}
+          appUrl={"/team/notifications"}
+          iconPath={"/appIcons/notifications.png"}
+        />
+        <H1>{t("Notifications")}</H1>
+      </div>
       <Lead className="mt-2">{t("Manage your notifications")}</Lead>
       <br />
       <Suspense

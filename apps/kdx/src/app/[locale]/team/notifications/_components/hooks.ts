@@ -20,10 +20,7 @@ import {
 } from "@tanstack/react-table";
 import { z } from "zod";
 
-import type {
-  DataTableFilterField,
-  Option,
-} from "@kdx/ui/data-table/advanced/types";
+import type { DataTableFilterField } from "@kdx/ui/data-table/advanced/types";
 import { useDebounce } from "@kdx/ui";
 
 interface UseDataTableProps<TData, TValue> {
@@ -140,7 +137,7 @@ export function useDataTable<TData, TValue>({
   // Create query string
   const createQueryString = React.useCallback(
     (params: Record<string, string | number | null>) => {
-      const newSearchParams = new URLSearchParams(searchParams?.toString());
+      const newSearchParams = new URLSearchParams(searchParams.toString());
 
       for (const [key, value] of Object.entries(params)) {
         if (value === null) {
@@ -296,6 +293,7 @@ export function useDataTable<TData, TValue>({
         (searchableColumns.find((column) => column.value === key) &&
           !debouncedSearchableColumnFilters.find(
             (column) => column.id === key,
+            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
           )) ||
         (filterableColumns.find((column) => column.value === key) &&
           !filterableColumnFilters.find((column) => column.id === key))
@@ -320,6 +318,7 @@ export function useDataTable<TData, TValue>({
   const table = useReactTable({
     data,
     columns,
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     pageCount: pageCount ?? -1,
     state: {
       pagination,

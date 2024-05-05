@@ -1,4 +1,4 @@
-import type { ExtractTablesWithRelations } from "drizzle-orm";
+import type { ExtractTablesWithRelations, SQL } from "drizzle-orm";
 import type { MySqlTransaction } from "drizzle-orm/mysql-core";
 import type {
   MySql2PreparedQueryHKT,
@@ -10,10 +10,6 @@ import { createPool } from "mysql2/promise";
 
 import { schema } from "./schema";
 
-export * from "drizzle-orm/expressions";
-export * from "drizzle-orm/sql";
-export { alias } from "drizzle-orm/mysql-core";
-export type { Column, ColumnBaseConfig, ColumnDataType } from "drizzle-orm";
 /**
  * Cache the database connection in development. This avoids creating a new connection on every HMR
  * update.
@@ -41,3 +37,13 @@ export type DrizzleTransaction = MySqlTransaction<
   typeof schema,
   ExtractTablesWithRelations<typeof schema>
 >;
+
+export type DrizzleWhere<T> =
+  | SQL<unknown>
+  | ((aliases: T) => SQL<T> | undefined)
+  | undefined;
+
+export * from "drizzle-orm/expressions";
+export * from "drizzle-orm/sql";
+export { alias } from "drizzle-orm/mysql-core";
+export type { Column, ColumnBaseConfig, ColumnDataType } from "drizzle-orm";

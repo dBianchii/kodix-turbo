@@ -1,4 +1,4 @@
-import type { SQL } from "@kdx/db";
+import type { DrizzleWhere } from "@kdx/db";
 import type { TGetNotificationsInputSchema } from "@kdx/validators/trpc/user";
 import { and, asc, count, desc, eq, gte, inArray, lte, or } from "@kdx/db";
 import { schema } from "@kdx/db/schema";
@@ -11,33 +11,10 @@ interface GetAllOptions {
   input: TGetNotificationsInputSchema;
 }
 
-//TODO: move this type elsewhere?
-type DrizzleWhere<T> =
-  | SQL<unknown>
-  | ((aliases: T) => SQL<T> | undefined)
-  | undefined;
-
 export const getNotificationsHandler = async ({
   ctx,
   input,
 }: GetAllOptions) => {
-  // await sendNotifications({
-  //   userId: ctx.session.user.id,
-  //   teamId: input.teamId,
-  //   channels: [
-  //     {
-  //       type: "email",
-  //       react: <div>Notification</div>,
-  //       subject: "Notification",
-  //       to: "gdbianchii@gmail.com",
-  //     },
-  //   ],
-  // });
-
-  // const cached = await getUpstashCache("notifications", {
-  //   userId: ctx.session.user.id,
-  // });
-  // if (cached) return cached;
   const offset = (input.page - 1) * input.perPage;
 
   const [column, order] = (input.sort?.split(".").filter(Boolean) ?? [
@@ -53,13 +30,12 @@ export const getNotificationsHandler = async ({
     .from(schema.usersToTeams)
     .where(eq(schema.usersToTeams.userId, ctx.session.user.id));
 
-  console.log(input);
   const where: DrizzleWhere<typeof schema.notifications.$inferSelect> =
     !input.operator || input.operator === "and"
       ? and(
-          eq(schema.notifications.sentToUserId, ctx.session.user.id),
-          eq(schema.notifications.teamId, input.teamId),
-          inArray(schema.notifications.teamId, allTeamIdsForUserQuery),
+          eq(schema.notifications.sentToUserId, ctx.session.user.id), // Only show notifications for the logged in user
+          eq(schema.notifications.teamId, input.teamId), // Only show notifications for selected team
+          inArray(schema.notifications.teamId, allTeamIdsForUserQuery), // Ensure user is part of the team
 
           // Filter tasks by message
           input.message
@@ -68,13 +44,14 @@ export const getNotificationsHandler = async ({
                 value: input.message,
               })
             : undefined,
+          // Filter tasks by channel
           input.channel
             ? filterColumn({
                 column: schema.notifications.channel,
                 value: input.channel,
               })
             : undefined,
-          // Filter tasks by status
+          // Filter tasks by time range
           input.from && input.to
             ? and(
                 gte(schema.notifications.sentAt, input.from),
@@ -90,7 +67,15 @@ export const getNotificationsHandler = async ({
                 value: input.message,
               })
             : undefined,
-          // Filter by createdAt
+
+          // Filter tasks by channel
+          input.channel
+            ? filterColumn({
+                column: schema.notifications.channel,
+                value: input.channel,
+              })
+            : undefined,
+          // Filter by sentAt
           input.from && input.to
             ? and(
                 gte(schema.notifications.sentAt, input.from),
