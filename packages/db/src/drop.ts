@@ -11,6 +11,7 @@ async function emptyDBTables() {
 emptyDBTables()
   .then(() => {
     console.log("✅ Database dropped");
+    process.exit(0);
   })
   .catch((e) => {
     console.error(e);
