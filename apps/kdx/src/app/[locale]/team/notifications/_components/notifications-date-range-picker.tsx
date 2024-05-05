@@ -7,7 +7,7 @@ import { RxCalendar } from "react-icons/rx";
 
 import type { ButtonProps } from "@kdx/ui/button";
 import { addDays, format } from "@kdx/date-fns";
-import { useCurrentLocale } from "@kdx/locales/client";
+import { useCurrentLocale, useI18n } from "@kdx/locales/client";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import { Calendar } from "@kdx/ui/calendar";
@@ -64,7 +64,7 @@ interface NotificationsDateRangePickerProps
 export function NotificationsDateRangePicker({
   dateRange,
   dayCount,
-  placeholder = "Pick a date",
+  placeholder,
   triggerVariant = "outline",
   triggerSize = "default",
   triggerClassName,
@@ -72,8 +72,11 @@ export function NotificationsDateRangePicker({
   ...props
 }: NotificationsDateRangePickerProps) {
   const router = useRouter();
+  const t = useI18n();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  placeholder = placeholder ?? t("Pick a date");
 
   const [from, to] = React.useMemo(() => {
     let fromDay: Date | undefined = searchParams.get("from")

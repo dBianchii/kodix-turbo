@@ -8,6 +8,8 @@ import {
   TextIcon,
 } from "@radix-ui/react-icons";
 
+import { useI18n } from "@kdx/locales/client";
+
 import type { DataTableFilterOption } from "./types";
 import { Button } from "../../button";
 import {
@@ -43,7 +45,7 @@ export function DataTableFilterCombobox<TData>({
   const [selectedOption, setSelectedOption] = React.useState<
     DataTableFilterOption<TData>
   >(options[0] ?? ({} as DataTableFilterOption<TData>));
-
+  const t = useI18n();
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -58,15 +60,15 @@ export function DataTableFilterCombobox<TData>({
               className="mr-2 size-4 shrink-0"
               aria-hidden="true"
             />
-            Filter
+            {t("Filter")}
           </Button>
         )}
       </PopoverTrigger>
       <PopoverContent className="w-[12.5rem] p-0" align="end">
         <Command>
-          <CommandInput placeholder="Filter by..." />
+          <CommandInput placeholder={t("Filter by")} />
           <CommandList>
-            <CommandEmpty>No item found.</CommandEmpty>
+            <CommandEmpty> {t("No item found")}</CommandEmpty>
             <CommandGroup>
               {options
                 .filter(
@@ -124,7 +126,7 @@ export function DataTableFilterCombobox<TData>({
                 }}
               >
                 <PlusIcon className="mr-2 size-4" aria-hidden="true" />
-                Advanced filter
+                {t("Advanced filter")}
               </CommandItem>
             </CommandGroup>
           </CommandList>

@@ -5,6 +5,8 @@ import * as React from "react";
 import { useSearchParams } from "next/navigation";
 import { CaretSortIcon, PlusIcon } from "@radix-ui/react-icons";
 
+import { useI18n } from "@kdx/locales/client";
+
 import type { DataTableFilterField, DataTableFilterOption } from "./types";
 import { cn } from "../../.";
 import { Button } from "../../button";
@@ -26,6 +28,7 @@ export function DataTableAdvancedToolbar<TData>({
   className,
   ...props
 }: DataTableAdvancedToolbarProps<TData>) {
+  const t = useI18n();
   const searchParams = useSearchParams();
 
   const options = React.useMemo<DataTableFilterOption<TData>[]>(() => {
@@ -91,7 +94,7 @@ export function DataTableAdvancedToolbar<TData>({
               className="mr-2 size-4 shrink-0"
               aria-hidden="true"
             />
-            Filter
+            {t("Filter")}
           </Button>
         ) : (
           <DataTableFilterCombobox
@@ -150,7 +153,7 @@ export function DataTableAdvancedToolbar<TData>({
               onClick={() => setOpenCombobox(true)}
             >
               <PlusIcon className="mr-2 size-4 opacity-50" aria-hidden="true" />
-              Add filter
+              {t("Add filter")}
             </Button>
           </DataTableFilterCombobox>
         ) : null}

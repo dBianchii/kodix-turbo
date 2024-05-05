@@ -2,7 +2,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 
 import type { RouterOutputs } from "@kdx/api";
 import { format } from "@kdx/date-fns";
-import { useCurrentLocale } from "@kdx/locales/client";
+import { useCurrentLocale, useI18n } from "@kdx/locales/client";
 import { Checkbox } from "@kdx/ui/checkbox";
 import { DataTableColumnHeader } from "@kdx/ui/data-table/data-table-column-header";
 
@@ -15,40 +15,47 @@ export function getColumns() {
   return [
     columnHelper.display({
       id: "select",
-      header: ({ table }) => (
+      header: function Header({ table }) {
+        const t = useI18n();
         <Checkbox
           checked={
             table.getIsAllPageRowsSelected() ||
             (table.getIsSomePageRowsSelected() && "indeterminate")
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
+          aria-label={t("Select all")}
           className="translate-y-0.5"
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-          className="translate-y-0.5"
-        />
-      ),
+        />;
+      },
+      cell: function Cell({ row }) {
+        const t = useI18n();
+
+        return (
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
+            aria-label={t("Select row")}
+            className="translate-y-0.5"
+          />
+        );
+      },
       enableSorting: false,
       enableHiding: false,
     }),
     columnHelper.accessor("message", {
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Message" />
-      ),
+      header: function Header({ column }) {
+        const t = useI18n();
+        return <DataTableColumnHeader column={column} title={t("Message")} />;
+      },
       cell: ({ row }) => <div className="w-20">{row.original.message}</div>,
       enableSorting: false,
       enableHiding: false,
     }),
     columnHelper.accessor("channel", {
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Channel" />
-      ),
+      header: function Header({ column }) {
+        const t = useI18n();
+        <DataTableColumnHeader column={column} title={t("Channel")} />;
+      },
       cell: ({ row }) => {
         return (
           <div className="flex items-center">
@@ -61,9 +68,10 @@ export function getColumns() {
       },
     }),
     columnHelper.accessor("sentAt", {
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Sent at" />
-      ),
+      header: function Header({ column }) {
+        const t = useI18n();
+        return <DataTableColumnHeader column={column} title={t("Sent at")} />;
+      },
       cell: function Cell({ cell }) {
         const locale = useCurrentLocale();
         return format(cell.row.original.sentAt, "PPP, HH:mm", locale);

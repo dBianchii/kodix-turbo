@@ -4,6 +4,7 @@ import * as React from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { TrashIcon } from "@radix-ui/react-icons";
 
+import { useI18n } from "@kdx/locales/client";
 import { dataTableConfig } from "@kdx/shared";
 
 import type { DataTableFilterOption } from "./types";
@@ -38,6 +39,7 @@ export function DataTableFilterItem<TData>({
   setSelectedOptions,
   defaultOpen,
 }: DataTableFilterItemProps<TData>) {
+  const t = useI18n();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -173,7 +175,7 @@ export function DataTableFilterItem<TData>({
             </Select>
           </div>
           <Button
-            aria-label="Remove filter"
+            aria-label={t("Remove filter")}
             variant="ghost"
             size="icon"
             className="size-7 text-muted-foreground"
@@ -204,7 +206,7 @@ export function DataTableFilterItem<TData>({
           )
         ) : (
           <Input
-            placeholder="Type here..."
+            placeholder={t("Filter by")}
             className="h-8"
             value={value}
             onChange={(event) => setValue(event.target.value)}

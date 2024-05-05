@@ -1,6 +1,8 @@
 import type { Column } from "@tanstack/react-table";
 import { CheckIcon } from "@radix-ui/react-icons";
 
+import { useI18n } from "@kdx/locales/client";
+
 import type { DataTableFilterOption, Option } from "./types";
 import { cn } from "../..";
 import {
@@ -30,6 +32,7 @@ export function DataTableAdvancedFacetedFilter<TData, TValue>({
   selectedValues,
   setSelectedOptions,
 }: DataTableAdvancedFacetedFilterProps<TData, TValue>) {
+  const t = useI18n();
   return (
     <Command className="p-1">
       <div className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm [&_[cmdk-input-wrapper]]:border-0 [&_[cmdk-input-wrapper]]:px-0">
@@ -40,7 +43,7 @@ export function DataTableAdvancedFacetedFilter<TData, TValue>({
         />
       </div>
       <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandEmpty>{t("No results found")}</CommandEmpty>
         <CommandGroup className="px-0">
           {options.map((option) => {
             const isSelected = selectedValues.has(option.value);
@@ -117,7 +120,7 @@ export function DataTableAdvancedFacetedFilter<TData, TValue>({
                 }}
                 className="justify-center text-center"
               >
-                Clear filters
+                {t("Clear filters")}
               </CommandItem>
             </CommandGroup>
           </>

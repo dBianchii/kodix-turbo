@@ -1,5 +1,7 @@
 //TODO: Understand where to move this file. Its a file that needs to be shared between the api and the ...
 //TODO: Also, I dont think @kdx/api should have an icon lib installed
+
+//TODO: i18n
 import { MixIcon, SquareIcon } from "@radix-ui/react-icons";
 
 export type DataTableConfig = typeof dataTableConfig;

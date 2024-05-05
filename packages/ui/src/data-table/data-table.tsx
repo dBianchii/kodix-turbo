@@ -24,6 +24,11 @@ interface DataTableProps<TData> {
    */
   table: TanstackTable<TData>;
 
+  /**
+   * Message to display when no results are found.
+   * @default "No results found"
+   * @type string | undefined
+   */
   noResultsMessage?: string;
 }
 

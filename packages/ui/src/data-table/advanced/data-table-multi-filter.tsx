@@ -9,6 +9,7 @@ import {
 } from "@radix-ui/react-icons";
 
 import type { DataTableConfig } from "@kdx/shared";
+import { useI18n } from "@kdx/locales/client";
 import { dataTableConfig } from "@kdx/shared";
 
 import type { DataTableFilterOption } from "./types";
@@ -50,6 +51,7 @@ export function DataTableMultiFilter<TData>({
   setSelectedOptions,
   defaultOpen,
 }: DataTableMultiFilterProps<TData>) {
+  const t = useI18n();
   const [open, setOpen] = React.useState(defaultOpen);
   const [operator, setOperator] = React.useState(
     dataTableConfig.logicalOperators[0],
@@ -64,7 +66,7 @@ export function DataTableMultiFilter<TData>({
           className="h-7 truncate rounded-full"
         >
           <TextAlignCenterIcon className="mr-2 size-3" aria-hidden="true" />
-          {options.length} rule
+          {options.length} {t("rule")}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-fit p-0 text-xs" align="start">
@@ -87,7 +89,7 @@ export function DataTableMultiFilter<TData>({
         <Separator />
         <div className="p-1">
           <Button
-            aria-label="Delete filter"
+            aria-label={t("Delete filter")}
             variant="ghost"
             size="sm"
             className="w-full justify-start"
@@ -97,7 +99,7 @@ export function DataTableMultiFilter<TData>({
               );
             }}
           >
-            Delete filter
+            {t("Delete filter")}
           </Button>
         </div>
       </PopoverContent>
@@ -216,6 +218,8 @@ export function MultiFilterRow<TData>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [operator?.value]);
 
+  const t = useI18n();
+
   return (
     <div className="flex items-center space-x-2">
       {i === 0 ? (
@@ -315,7 +319,7 @@ export function MultiFilterRow<TData>({
         )
       ) : (
         <Input
-          placeholder="Type here..."
+          placeholder={t("Type here")}
           className="h-8"
           value={value}
           onChange={(event) => setValue(event.target.value)}
@@ -337,7 +341,7 @@ export function MultiFilterRow<TData>({
             }}
           >
             <TrashIcon className="mr-2 size-4" aria-hidden="true" />
-            Remove
+            {t("Remove")}
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
@@ -357,7 +361,7 @@ export function MultiFilterRow<TData>({
             }}
           >
             <CopyIcon className="mr-2 size-4" aria-hidden="true" />
-            Duplicate
+            {t("Duplicate")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
