@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 import type { DrizzleWhere } from "@kdx/db";
 import type { TGetNotificationsInputSchema } from "@kdx/validators/trpc/user";
 import { and, asc, count, desc, eq, gte, inArray, lte, or } from "@kdx/db";
@@ -25,6 +27,13 @@ export const getNotificationsHandler = async ({
     "asc" | "desc" | undefined,
   ];
 
+  // Convert the date strings to Date objects
+  const fromDay = input.from
+    ? dayjs(input.from).startOf("day").toDate()
+    : undefined;
+  const toDay = input.to ? dayjs(input.to).endOf("day").toDate() : undefined;
+
+  console.log(input);
   const allTeamIdsForUserQuery = ctx.db
     .select({ id: schema.usersToTeams.teamId })
     .from(schema.usersToTeams)
@@ -52,10 +61,10 @@ export const getNotificationsHandler = async ({
               })
             : undefined,
           // Filter tasks by time range
-          input.from && input.to
+          fromDay && toDay
             ? and(
-                gte(schema.notifications.sentAt, input.from),
-                lte(schema.notifications.sentAt, input.to),
+                gte(schema.notifications.sentAt, fromDay),
+                lte(schema.notifications.sentAt, toDay),
               )
             : undefined,
         )
@@ -76,10 +85,10 @@ export const getNotificationsHandler = async ({
               })
             : undefined,
           // Filter by sentAt
-          input.from && input.to
+          fromDay && toDay
             ? and(
-                gte(schema.notifications.sentAt, input.from),
-                lte(schema.notifications.sentAt, input.to),
+                gte(schema.notifications.sentAt, fromDay),
+                lte(schema.notifications.sentAt, toDay),
               )
             : undefined,
         );

@@ -11,6 +11,7 @@ import { api } from "~/trpc/server";
 import { CustomKodixIcon } from "../../_components/app/kodix-icon";
 import MaxWidthWrapper from "../../_components/max-width-wrapper";
 import { DataTableNotifications } from "./_components/data-table-notifications";
+import { NotificationsDateRangePicker } from "./_components/notifications-date-range-picker";
 
 type SearchParams = Record<string, string | string[] | undefined>;
 
@@ -44,6 +45,12 @@ export default async function NotificationsPage({
       </div>
       <Lead className="mt-2">{t("Manage your notifications")}</Lead>
       <br />
+
+      <NotificationsDateRangePicker
+        triggerSize="sm"
+        triggerClassName="ml-auto w-56 sm:w-60"
+        align="end"
+      />
       <Suspense
         fallback={
           <DataTableSkeleton

@@ -8,8 +8,8 @@ export type TChangeNameInputSchema = z.infer<typeof ZChangeNameInputSchema>;
 export const ZGetNotificationsInputSchema = z.object({
   teamId: ZNanoId,
 
-  from: z.date().optional(),
-  to: z.date().optional(),
+  from: z.string().optional(),
+  to: z.string().optional(),
   page: z.coerce.number().default(1),
   channel: z.string().optional(),
   operator: z.enum(["and", "or"]).optional(),

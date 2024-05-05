@@ -1,7 +1,7 @@
 "use client";
 
 import { use, useMemo } from "react";
-import { RxCrossCircled } from "react-icons/rx";
+import { MdEmail } from "react-icons/md";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { DataTableFilterField } from "@kdx/ui/data-table/advanced/types";
@@ -43,13 +43,9 @@ export function DataTableNotifications({
       options: schema.notifications.channel.enumValues.map((channel) => ({
         label: channel[0]?.toUpperCase() + channel.slice(1),
         value: channel,
-        icon: RxCrossCircled,
+        icon: MdEmail,
         withCount: true,
       })),
-    },
-    {
-      label: "Read",
-      value: "read",
     },
   ];
 
