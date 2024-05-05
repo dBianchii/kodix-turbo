@@ -122,10 +122,10 @@ export const notifications = mysqlTable(
       .references(() => users.id, { onUpdate: "cascade", onDelete: "cascade" }),
     teamId: varchar("teamId", { length: NANOID_SIZE })
       .notNull()
-      .references(() => users.id, { onUpdate: "cascade", onDelete: "cascade" }),
+      .references(() => teams.id, { onUpdate: "cascade", onDelete: "cascade" }),
     sentAt: timestamp("sentAt").notNull(),
     message: varchar("message", { length: 500 }).notNull(),
-    channel: mysqlEnum("channel", ["EMAIL"]),
+    channel: mysqlEnum("channel", ["EMAIL"]).notNull(),
     read: boolean("read").default(false).notNull(),
   },
   (table) => {

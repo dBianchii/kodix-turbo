@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { redirect } from "next/navigation";
 
 import { auth } from "@kdx/auth";
 import { getI18n } from "@kdx/locales/server";
@@ -13,7 +14,7 @@ import TeamInviteCard from "./_components/invite/team-invite-card";
 
 export default async function SettingsMembersPage() {
   const session = await auth();
-  if (!session) return null;
+  if (!session) redirect("/");
 
   return (
     <div className="mt-8 space-y-8 md:mt-0">

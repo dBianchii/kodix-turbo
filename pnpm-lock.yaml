@@ -660,6 +660,9 @@ importers:
 
   packages/shared:
     dependencies:
+      '@radix-ui/react-icons':
+        specifier: ^1.3.0
+        version: 1.3.0(react@18.3.1)
       nanoid:
         specifier: ^5.0.7
         version: 5.0.7
@@ -676,6 +679,9 @@ importers:
       '@types/node':
         specifier: ^20.12.7
         version: 20.12.7
+      '@types/react':
+        specifier: ^18.3.1
+        version: 18.3.1
       eslint:
         specifier: ^9.0.0
         version: 9.0.0
@@ -806,6 +812,9 @@ importers:
       embla-carousel-react:
         specifier: 8.0.0-rc22
         version: 8.0.0-rc22(react@18.3.1)
+      next:
+        specifier: 14.3.0-canary.32
+        version: 14.3.0-canary.32(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next-themes:
         specifier: ^0.3.0
         version: 0.3.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -837,6 +846,9 @@ importers:
       '@kdx/prettier-config':
         specifier: workspace:*
         version: link:../../tooling/prettier
+      '@kdx/shared':
+        specifier: workspace:*
+        version: link:../shared
       '@kdx/tailwind-config':
         specifier: workspace:*
         version: link:../../tooling/tailwind

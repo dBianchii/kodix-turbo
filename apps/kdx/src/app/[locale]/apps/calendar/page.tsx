@@ -70,8 +70,6 @@ async function DataTableServer({ session }: { session: Session }) {
     dateStart: dayjs.utc().startOf("day").toDate(),
     dateEnd: dayjs.utc().endOf("day").toDate(),
   };
-  //wait 1 sec
-  await new Promise((resolve) => setTimeout(resolve, 1000));
   const initialData = await api.app.calendar.getAll(initialInput);
 
   return <DataTable data={initialData} session={session} />;

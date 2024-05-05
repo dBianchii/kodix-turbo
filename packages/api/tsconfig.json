@@ -6,6 +6,6 @@
 
     "jsx": "preserve"
   },
-  "include": ["src"],
+  "include": ["src", "../shared/src/data-table-config.ts"],
   "exclude": ["node_modules"]
 }

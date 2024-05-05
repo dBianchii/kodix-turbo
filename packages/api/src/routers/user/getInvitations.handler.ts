@@ -1,10 +1,11 @@
 import type { TProtectedProcedureContext } from "../../procedures";
 
-interface GetAllOptions {
+interface GetInvitationsOptions {
   ctx: TProtectedProcedureContext;
 }
 
-export const getNotificationsHandler = async ({ ctx }: GetAllOptions) => {
+export const getInvitationsHandler = async ({ ctx }: GetInvitationsOptions) => {
+  //... your handler logic here <3
   const invitations = await ctx.db.query.invitations.findMany({
     where: (invitation, { eq }) => eq(invitation.email, ctx.session.user.email),
     columns: {
@@ -26,5 +27,6 @@ export const getNotificationsHandler = async ({ ctx }: GetAllOptions) => {
       },
     },
   });
-  return { invitations };
+
+  return invitations;
 };

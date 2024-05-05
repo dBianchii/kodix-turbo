@@ -13,7 +13,7 @@ import { schema } from "./schema";
 export * from "drizzle-orm/expressions";
 export * from "drizzle-orm/sql";
 export { alias } from "drizzle-orm/mysql-core";
-
+export type { Column, ColumnBaseConfig, ColumnDataType } from "drizzle-orm";
 /**
  * Cache the database connection in development. This avoids creating a new connection on every HMR
  * update.

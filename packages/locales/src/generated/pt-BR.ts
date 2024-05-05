@@ -304,5 +304,7 @@ export default {
   "Care Giver": "Cuidador",
   "Patient": "Paciente",
   "Can toggle shift": "Pode alterar turno",
-  "Add more apps": "Adicione mais aplicativos"
+  "Add more apps": "Adicione mais aplicativos",
+  "Notifications": "Notificações",
+  "Manage your notifications": "Gerencie suas notificações"
 } as const

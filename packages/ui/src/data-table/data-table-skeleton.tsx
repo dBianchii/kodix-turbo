@@ -1,5 +1,5 @@
-import { cn } from ".";
-import { Skeleton } from "./skeleton";
+import { cn } from "..";
+import { Skeleton } from "../skeleton";
 import {
   Table,
   TableBody,
@@ -7,7 +7,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "./table";
+} from "../table";
 
 interface DataTableSkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -61,7 +61,7 @@ interface DataTableSkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
   withPagination?: boolean;
 
   /**
-   * Flag to prevent the table from shrinking to fit the content.
+   * Flag to prevent the table cells from shrinking.
    * @default false
    * @type boolean | undefined
    */
@@ -87,28 +87,23 @@ export function DataTableSkeleton(props: DataTableSkeletonProps) {
       className={cn("w-full space-y-2.5 overflow-auto", className)}
       {...skeletonProps}
     >
-      {(searchableColumnCount > 0 ||
-        filterableColumnCount > 0 ||
-        showViewOptions) && (
-        <div className="flex w-full items-center justify-between space-x-2 overflow-auto p-1">
-          <div className="flex flex-1 items-center space-x-2">
-            {searchableColumnCount > 0
-              ? Array.from({ length: searchableColumnCount }).map((_, i) => (
-                  <Skeleton key={i} className="h-7 w-40 lg:w-60" />
-                ))
-              : null}
-            {filterableColumnCount > 0
-              ? Array.from({ length: filterableColumnCount }).map((_, i) => (
-                  <Skeleton key={i} className="h-7 w-[4.5rem] border-dashed" />
-                ))
-              : null}
-          </div>
-          {showViewOptions ? (
-            <Skeleton className="ml-auto hidden h-7 w-[4.5rem] lg:flex" />
-          ) : null}
+      <div className="flex w-full items-center justify-between space-x-2 overflow-auto p-1">
+        <div className="flex flex-1 items-center space-x-2">
+          {searchableColumnCount > 0
+            ? Array.from({ length: searchableColumnCount }).map((_, i) => (
+                <Skeleton key={i} className="h-7 w-40 lg:w-60" />
+              ))
+            : null}
+          {filterableColumnCount > 0
+            ? Array.from({ length: filterableColumnCount }).map((_, i) => (
+                <Skeleton key={i} className="h-7 w-[4.5rem] border-dashed" />
+              ))
+            : null}
         </div>
-      )}
-
+        {showViewOptions ? (
+          <Skeleton className="ml-auto hidden h-7 w-[4.5rem] lg:flex" />
+        ) : null}
+      </div>
       <div className="rounded-md border">
         <Table>
           <TableHeader>

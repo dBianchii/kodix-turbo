@@ -304,5 +304,7 @@ export default {
   "Patient": "Patient",
   "Care Giver": "Care Giver",
   "Can toggle shift": "Can change shift",
-  "Add more apps": "Add more apps"
+  "Add more apps": "Add more apps",
+  "Notifications": "Notifications",
+  "Manage your notifications": "Manage your notifications"
 } as const

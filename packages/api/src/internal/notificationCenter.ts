@@ -4,12 +4,11 @@ import { db } from "@kdx/db";
 import { schema } from "@kdx/db/schema";
 import { kodixNotificationFromEmail, nanoid } from "@kdx/shared";
 
-import { resend } from "../utils/email";
+import type { resend } from "../utils/email";
 
 interface EmailChannel {
   type: "email";
   react: JSX.Element;
-  from: Parameters<typeof resend.emails.send>[0]["from"];
   to: Parameters<typeof resend.emails.send>[0]["to"];
   subject: Parameters<typeof resend.emails.send>[0]["subject"];
 }
@@ -37,24 +36,25 @@ export async function sendNotifications({
   for (const channel of channels) {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (channel.type === "email") {
-      const result = await resend.emails.send({
-        from: kodixNotificationFromEmail,
-        to: user.email,
-        subject: channel.subject,
-        react: channel.react,
-      });
+      // const result = await resend.emails.send({
+      //   from: kodixNotificationFromEmail,
+      //   to: user.email,
+      //   subject: channel.subject,
+      //   react: channel.react,
+      // });
 
-      if (result.data) {
+      if (true) {
         sent.push({
           id: nanoid(),
           sentAt: new Date(),
           message: render(channel.react),
           sentToUserId: userId,
           teamId,
+          channel: "EMAIL",
         });
       }
     }
   }
 
-  await db.insert(schema.notifications).values(sent);
+  if (sent.length) await db.insert(schema.notifications).values(sent);
 }

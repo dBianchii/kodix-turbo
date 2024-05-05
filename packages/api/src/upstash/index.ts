@@ -1,14 +1,16 @@
 import { Redis } from "@upstash/redis";
 
+import type { schema } from "@kdx/db/schema";
+
 export const redis = Redis.fromEnv();
 
 interface KeysMapping {
   installedApps: {
     tags: {
-      teamId: string;
+      teamId: typeof schema.teams.$inferSelect.id;
     };
     value: {
-      id: string;
+      id: typeof schema.apps.$inferSelect.id;
     }[];
   };
 }

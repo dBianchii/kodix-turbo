@@ -81,8 +81,11 @@ function Logo({ redirect }: { redirect: string }) {
 }
 
 async function NotificationsPopover() {
-  const initialNotifications = await api.user.getNotifications();
-  if (!initialNotifications.invitations.length) return null;
+  const session = await auth();
+  if (!session) return null;
+
+  const initialNotifications = await api.user.getInvitations();
+  if (!initialNotifications.length) return null;
 
   return (
     <NotificationsPopoverClient initialNotifications={initialNotifications} />
