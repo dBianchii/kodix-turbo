@@ -27,3 +27,10 @@ export const ZSwitchActiveTeamInputSchema = z.object({
 export type TSwitchActiveTeamInputSchema = z.infer<
   typeof ZSwitchActiveTeamInputSchema
 >;
+
+export const ZDeleteNotificationsInputSchema = z.object({
+  ids: z.string().array().min(1),
+});
+export type TDeleteNotificationsInputSchema = z.infer<
+  typeof ZDeleteNotificationsInputSchema
+>;

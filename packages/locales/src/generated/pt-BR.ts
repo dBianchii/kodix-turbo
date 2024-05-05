@@ -160,7 +160,7 @@ export default {
   "Open menu": "Abrir menu",
   "Owner": "Dono",
   "Page": "Página",
-  "Pick a date": "Pick a date",
+  "Pick a date": "Escolha uma data",
   "Rows per page": "Linhas por página",
   "Select": "Selecione",
   "Sign in to your account": "Faça login em sua conta",
@@ -312,7 +312,7 @@ export default {
   "Channel": "Canal",
   "Asc": "Asc",
   "Clear filters": "Limpar filtros",
-  "Desc": "Descrição",
+  "Desc": "Desc",
   "Hide": "Esconder",
   "Hide column": "Ocultar coluna",
   "Not sorted Click to sort ascending": "Não ordenado. Clique para classificar em ordem crescente.",
@@ -320,7 +320,7 @@ export default {
   "Sort descending": "Ordenar em ordem decrescente",
   "Sorted ascending Click to sort descending": "Ordenado em ordem crescente. Clique para classificar em ordem decrescente.",
   "Sorted descending Click to sort ascending": "Ordenado em ordem decrescente. Clique para classificar em ordem crescente.",
-  "Toggle columns": "Alternar colunas",
+  "Toggle columns": "Visualizar colunas",
   "View": "Visualizar",
   "of": "de",
   "Add filter": "Adicionar filtro",
@@ -332,5 +332,6 @@ export default {
   "No item found": "Nenhum item encontrado.",
   "Remove filter": "Remover filtro",
   "Type here": "Digite aqui...",
-  "rule": "regra"
+  "rule": "regra",
+  "Export": "Exportar"
 } as const

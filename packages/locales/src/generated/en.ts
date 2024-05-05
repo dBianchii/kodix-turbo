@@ -332,5 +332,6 @@ export default {
   "rule": "rule",
   "Delete filter": "Delete filter",
   "Type here": "Type here...",
-  "Duplicate": "Duplicate"
+  "Duplicate": "Duplicate",
+  "Export": "Export"
 } as const
