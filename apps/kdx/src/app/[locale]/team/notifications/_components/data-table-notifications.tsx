@@ -10,9 +10,9 @@ import { schema } from "@kdx/db/schema";
 import { DataTableAdvancedToolbar } from "@kdx/ui/data-table/advanced/data-table-advanced-toolbar";
 import { DataTable } from "@kdx/ui/data-table/data-table";
 
+import { useDataTable } from "../_hooks/useDataTable";
 import { getColumns } from "./data-table-notifications-columns";
 import { DataTableNotificationsToolbarActions } from "./data-table-notifications-toolbar-actions";
-import { useDataTable } from "./hooks";
 
 export function DataTableNotifications({
   notificationsPromise,
