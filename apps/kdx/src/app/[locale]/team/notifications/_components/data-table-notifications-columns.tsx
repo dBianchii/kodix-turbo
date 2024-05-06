@@ -54,7 +54,7 @@ export function getColumns() {
     columnHelper.accessor("channel", {
       header: function Header({ column }) {
         const t = useI18n();
-        <DataTableColumnHeader column={column} title={t("Channel")} />;
+        return <DataTableColumnHeader column={column} title={t("Channel")} />;
       },
       cell: ({ row }) => {
         return (
