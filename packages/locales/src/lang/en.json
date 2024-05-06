@@ -331,5 +331,13 @@
   "Delete filter": "Delete filter",
   "Type here": "Type here...",
   "Duplicate": "Duplicate",
-  "Export": "Export"
+  "Export": "Export",
+  "Are you absolutely sure": "Are you absolutely sure",
+  "This action cannot be undone This will permanently delete your": "This action cannot be undone. This will permanently delete your",
+  "notification#one": "notification",
+  "notification#other": "notifications",
+  "from our servers": "from our servers",
+  "Deleting": "Deleting...",
+  "Notifications deleted": "Notifications deleted",
+  "notification": "notification"
 }

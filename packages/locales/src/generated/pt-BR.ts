@@ -333,5 +333,13 @@ export default {
   "Remove filter": "Remover filtro",
   "Type here": "Digite aqui...",
   "rule": "regra",
-  "Export": "Exportar"
+  "Export": "Exportar",
+  "Are you absolutely sure": "Você tem certeza absoluta",
+  "Deleting": "Excluindo...",
+  "Notifications deleted": "Notificações excluídas",
+  "This action cannot be undone This will permanently delete your": "Essa ação não pode ser desfeita. \nIsso excluirá permanentemente seu",
+  "from our servers": "de nossos servidores",
+  "notification#one": "notificação",
+  "notification#other": "notificações",
+  "notification": "notificação"
 } as const
