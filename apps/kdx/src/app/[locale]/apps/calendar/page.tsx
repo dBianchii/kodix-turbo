@@ -4,7 +4,7 @@ import type { Session } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
 import { getI18n } from "@kdx/locales/server";
 import { calendarAppId } from "@kdx/shared";
-import { DataTableSkeleton } from "@kdx/ui/data-table-skeleton";
+import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
 import { Separator } from "@kdx/ui/separator";
 import { Skeleton } from "@kdx/ui/skeleton";
 import { H1 } from "@kdx/ui/typography";
@@ -70,8 +70,6 @@ async function DataTableServer({ session }: { session: Session }) {
     dateStart: dayjs.utc().startOf("day").toDate(),
     dateEnd: dayjs.utc().endOf("day").toDate(),
   };
-  //wait 1 sec
-  await new Promise((resolve) => setTimeout(resolve, 1000));
   const initialData = await api.app.calendar.getAll(initialInput);
 
   return <DataTable data={initialData} session={session} />;

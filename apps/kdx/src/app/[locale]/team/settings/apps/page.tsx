@@ -14,7 +14,7 @@ import { api } from "~/trpc/server";
 
 export default async function SettingsAppsPage() {
   const session = await auth();
-  if (!session) redirect("/api/auth/signin");
+  if (!session) redirect("/");
   const t = await getI18n();
   return (
     <MaxWidthWrapper>

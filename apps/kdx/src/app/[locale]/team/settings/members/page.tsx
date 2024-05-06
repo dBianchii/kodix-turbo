@@ -1,8 +1,9 @@
 import { Suspense } from "react";
+import { redirect } from "next/navigation";
 
 import { auth } from "@kdx/auth";
 import { getI18n } from "@kdx/locales/server";
-import { DataTableSkeleton } from "@kdx/ui/data-table-skeleton";
+import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
 import { Skeleton } from "@kdx/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@kdx/ui/tabs";
 
@@ -13,7 +14,7 @@ import TeamInviteCard from "./_components/invite/team-invite-card";
 
 export default async function SettingsMembersPage() {
   const session = await auth();
-  if (!session) return null;
+  if (!session) redirect("/");
 
   return (
     <div className="mt-8 space-y-8 md:mt-0">

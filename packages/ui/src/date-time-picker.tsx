@@ -5,7 +5,7 @@ import * as React from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
 
 import { format } from "@kdx/date-fns";
-import { useCurrentLocale } from "@kdx/locales/client";
+import { useCurrentLocale, useI18n } from "@kdx/locales/client";
 
 import { cn } from ".";
 import { Button } from "./button";
@@ -31,6 +31,7 @@ export function DateTimePicker({
   side,
 }: DateTimePickerProps) {
   const locale = useCurrentLocale();
+  const t = useI18n();
   return (
     <Popover onOpenChange={onOpenChange}>
       <PopoverTrigger asChild>
@@ -46,7 +47,7 @@ export function DateTimePicker({
           {date ? (
             format(date, "PPP HH:mm:ss", locale)
           ) : (
-            <span>Pick a date</span>
+            <span>{t("Pick a date")}</span>
           )}
         </Button>
       </PopoverTrigger>

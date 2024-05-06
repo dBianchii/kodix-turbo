@@ -1,6 +1,11 @@
 "use client";
 
-import { createColumnHelper } from "@tanstack/react-table";
+import { useMemo } from "react";
+import {
+  createColumnHelper,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 
 import type { RouterOutputs } from "@kdx/api";
 import type {
@@ -8,13 +13,13 @@ import type {
   AppRoleDefaultId,
   KodixAppId,
 } from "@kdx/shared";
-import type { FixedColumnsType } from "@kdx/ui/data-table";
+import type { FixedColumnsType } from "@kdx/ui/data-table/data-table";
 import { useI18n } from "@kdx/locales/client";
 import {
   useAppPermissionName,
   useAppRoleDefaultNames,
 } from "@kdx/locales/hooks";
-import { DataTable } from "@kdx/ui/data-table";
+import { DataTable } from "@kdx/ui/data-table/data-table";
 import { MultiSelect } from "@kdx/ui/multi-select";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
@@ -98,58 +103,68 @@ export function DataTableAppPermissions({
     });
 
   const t = useI18n();
-  const columns = [
-    columnHelper.display({
-      id: "name",
-      header: () => <div className="pl-2">{t("Permission")}</div>,
-      cell: function Cell(info) {
-        const name = useAppPermissionName(
-          info.cell.row.original.id as AppPermissionId,
-        );
+  const columns = useMemo(
+    () =>
+      [
+        columnHelper.display({
+          id: "name",
+          header: () => <div className="pl-2">{t("Permission")}</div>,
+          cell: function Cell(info) {
+            const name = useAppPermissionName(
+              info.cell.row.original.id as AppPermissionId,
+            );
 
-        return (
-          <div className="flex w-60 flex-row gap-3 pl-2">
-            <div className="flex flex-col items-start">
-              <span className="font-bold">{name}</span>
-            </div>
-          </div>
-        );
-      },
-    }),
-    columnHelper.accessor("AppPermissionsToTeamAppRoles", {
-      header: t("Roles"),
-      cell: function Cell(info) {
-        const selected = info.getValue().map((role) => role.teamAppRoleId);
-        const appRoleDefaultNames = useAppRoleDefaultNames();
+            return (
+              <div className="flex w-60 flex-row gap-3 pl-2">
+                <div className="flex flex-col items-start">
+                  <span className="font-bold">{name}</span>
+                </div>
+              </div>
+            );
+          },
+        }),
+        columnHelper.accessor("AppPermissionsToTeamAppRoles", {
+          header: t("Roles"),
+          cell: function Cell(info) {
+            const selected = info.getValue().map((role) => role.teamAppRoleId);
+            const appRoleDefaultNames = useAppRoleDefaultNames();
 
-        return (
-          <MultiSelect
-            className="w-96"
-            options={allAppRoles.map((role) => ({
-              label:
-                appRoleDefaultNames[role.appRoleDefaultId as AppRoleDefaultId],
-              value: role.id,
-            }))}
-            selected={selected}
-            onChange={(newValues: string[]) => {
-              updatePermissionAssociation({
-                permissionId: info.cell.row.original.id,
-                teamAppRoleIds: newValues,
-                appId,
-              });
-            }}
-          />
-        );
-      },
-    }),
-  ] as FixedColumnsType<
-    RouterOutputs["team"]["appRole"]["getPermissions"][number]
-  >;
+            return (
+              <MultiSelect
+                className="w-96"
+                options={allAppRoles.map((role) => ({
+                  label:
+                    appRoleDefaultNames[
+                      role.appRoleDefaultId as AppRoleDefaultId
+                    ],
+                  value: role.id,
+                }))}
+                selected={selected}
+                onChange={(newValues: string[]) => {
+                  updatePermissionAssociation({
+                    permissionId: info.cell.row.original.id,
+                    teamAppRoleIds: newValues,
+                    appId,
+                  });
+                }}
+              />
+            );
+          },
+        }),
+      ] as FixedColumnsType<
+        RouterOutputs["team"]["appRole"]["getPermissions"][number]
+      >,
+    [allAppRoles, appId, t, updatePermissionAssociation],
+  );
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
 
   return (
     <DataTable
-      columns={columns}
-      data={data}
+      table={table}
       noResultsMessage={t("This app does not have any permissions")}
     />
   );

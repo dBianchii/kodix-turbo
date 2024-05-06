@@ -7,9 +7,8 @@ import { kodixNotificationFromEmail, nanoid } from "@kdx/shared";
 import { resend } from "../utils/email";
 
 interface EmailChannel {
-  type: "email";
+  type: "EMAIL";
   react: JSX.Element;
-  from: Parameters<typeof resend.emails.send>[0]["from"];
   to: Parameters<typeof resend.emails.send>[0]["to"];
   subject: Parameters<typeof resend.emails.send>[0]["subject"];
 }
@@ -36,7 +35,7 @@ export async function sendNotifications({
   const sent: (typeof schema.notifications.$inferInsert)[] = [];
   for (const channel of channels) {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (channel.type === "email") {
+    if (channel.type === "EMAIL") {
       const result = await resend.emails.send({
         from: kodixNotificationFromEmail,
         to: user.email,
@@ -51,10 +50,11 @@ export async function sendNotifications({
           message: render(channel.react),
           sentToUserId: userId,
           teamId,
+          channel: channel.type,
         });
       }
     }
   }
 
-  await db.insert(schema.notifications).values(sent);
+  if (sent.length) await db.insert(schema.notifications).values(sent);
 }

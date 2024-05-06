@@ -32,6 +32,7 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@kdx/ui/context-menu";
+import { DataTablePagination } from "@kdx/ui/data-table/data-table-pagination";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -50,7 +51,6 @@ import {
 } from "@kdx/ui/table";
 
 import { DatePicker } from "~/app/[locale]/_components/date-picker";
-import { DataTablePagination } from "~/app/[locale]/_components/pagination";
 import { api } from "~/trpc/react";
 import { CancelationDialog } from "./cancel-event-dialog";
 import { EditEventDialog } from "./edit-event-dialog";

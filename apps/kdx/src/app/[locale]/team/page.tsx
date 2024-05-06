@@ -39,6 +39,11 @@ export default async function TeamPage() {
       appUrl: "/team/settings",
       iconPath: "/appIcons/settings.png",
     },
+    {
+      appName: t("Notifications"),
+      appUrl: "/team/notifications",
+      iconPath: "/appIcons/notifications.png",
+    },
     // {
     //   appName: "Dev Settings",
     //   appUrl: "/devsettings",
