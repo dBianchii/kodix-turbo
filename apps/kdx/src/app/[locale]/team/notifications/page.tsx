@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 
-import type { RouterOutputs } from "@kdx/api";
 import { auth } from "@kdx/auth";
 import { getI18n } from "@kdx/locales/server";
 import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
@@ -68,11 +67,3 @@ export default async function NotificationsPage({
     </MaxWidthWrapper>
   );
 }
-
-const someone = ({
-  notificationsPromise,
-}: {
-  notificationsPromise: Promise<RouterOutputs["user"]["getNotifications"]>;
-}) => {
-  return JSON.stringify(notificationsPromise);
-};

@@ -32,7 +32,7 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@kdx/ui/context-menu";
-import { DataTablePagination } from "@kdx/ui/data-table-pagination";
+import { DataTablePagination } from "@kdx/ui/data-table/data-table-pagination";
 import {
   DropdownMenu,
   DropdownMenuContent,

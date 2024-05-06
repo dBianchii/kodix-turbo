@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@kdx/auth";
 import { getI18n } from "@kdx/locales/server";
-import { DataTableSkeleton } from "@kdx/ui/data-table-skeleton";
+import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
 import { Skeleton } from "@kdx/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@kdx/ui/tabs";
 
