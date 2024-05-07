@@ -14,6 +14,12 @@ apps
   ├─ auth-proxy
   |   ├─ Nitro server to proxy OAuth requests in preview deployments
   |   └─ Uses Auth.js Core
+  ├─ expo
+  |   ├─ Expo SDK 50
+  |   ├─ React Native using React 18
+  |   ├─ Navigation using Expo Router
+  |   ├─ Tailwind using NativeWind
+  |   └─ Typesafe API calls using tRPC
   └─ kdx
       └─ Main Next.js 14 app where tRPC endpoint is served from the @kdx/api package
 packages
