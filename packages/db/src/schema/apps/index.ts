@@ -61,10 +61,10 @@ export const appsToTeams = mysqlTable(
   {
     appId: varchar("A", { length: NANOID_SIZE })
       .notNull()
-      .references(() => apps.id),
+      .references(() => apps.id, { onDelete: "cascade" }),
     teamId: varchar("B", { length: NANOID_SIZE })
       .notNull()
-      .references(() => teams.id),
+      .references(() => teams.id, { onDelete: "cascade" }),
   },
   (table) => {
     return {

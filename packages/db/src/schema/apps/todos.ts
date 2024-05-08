@@ -1,11 +1,10 @@
 import { relations } from "drizzle-orm";
 import {
   index,
-  int,
   mysqlEnum,
   mysqlTable,
+  smallint,
   timestamp,
-  tinyint,
   varchar,
 } from "drizzle-orm/mysql-core";
 
@@ -22,7 +21,7 @@ export const todos = mysqlTable(
     title: varchar("title", { length: DEFAULTLENGTH }).notNull(),
     description: varchar("description", { length: DEFAULTLENGTH }),
     dueDate: timestamp("dueDate"),
-    priority: int("priority"),
+    priority: smallint("priority"),
     status: mysqlEnum("status", [
       "TODO",
       "INPROGRESS",
@@ -30,7 +29,6 @@ export const todos = mysqlTable(
       "DONE",
       "CANCELED",
     ]),
-    reminder: tinyint("reminder"),
     assignedToUserId: varchar("assignedToUserId", {
       length: DEFAULTLENGTH,
     }).references(() => users.id),

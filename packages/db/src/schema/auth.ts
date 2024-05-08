@@ -65,7 +65,7 @@ export const accounts = mysqlTable(
     expires_at: int("expires_at"),
     token_type: varchar("token_type", { length: DEFAULTLENGTH }),
     scope: varchar("scope", { length: DEFAULTLENGTH }),
-    id_token: varchar("id_token", { length: 2048 }), //Must be larger than 255 at least.
+    id_token: varchar("id_token", { length: 2048 }), //Must be larger than 255 at least. Trust me
     session_state: varchar("session_state", { length: DEFAULTLENGTH }),
   },
   (account) => ({

@@ -3,7 +3,6 @@ import {
   index,
   mysqlTable,
   timestamp,
-  tinyint,
   unique,
   varchar,
 } from "drizzle-orm/mysql-core";
@@ -62,10 +61,10 @@ export const usersToTeams = mysqlTable(
   {
     userId: varchar("A", { length: NANOID_SIZE })
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, { onDelete: "cascade" }),
     teamId: varchar("B", { length: NANOID_SIZE })
       .notNull()
-      .references(() => teams.id),
+      .references(() => teams.id, { onDelete: "cascade" }),
   },
   (table) => {
     return {
@@ -170,7 +169,6 @@ export const invitations = mysqlTable(
       .notNull()
       .references(() => teams.id, { onDelete: "cascade" }),
     email: varchar("email", { length: DEFAULTLENGTH }).notNull(),
-    accepted: tinyint("accepted").default(0).notNull(), //Is this necessary? Since we just delete the invitation when the user accepts it
     createdAt: timestamp("createdAt")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
