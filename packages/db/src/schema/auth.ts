@@ -123,6 +123,7 @@ export const notifications = mysqlTable(
     teamId: varchar("teamId", { length: NANOID_SIZE })
       .notNull()
       .references(() => teams.id, { onUpdate: "cascade", onDelete: "cascade" }),
+    subject: varchar("subject", { length: 100 }), //For email
     sentAt: timestamp("sentAt").notNull(),
     message: varchar("message", { length: 500 }).notNull(),
     channel: mysqlEnum("channel", ["EMAIL"]).notNull(),

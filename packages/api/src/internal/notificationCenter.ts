@@ -47,6 +47,7 @@ export async function sendNotifications({
         sent.push({
           id: nanoid(),
           sentAt: new Date(),
+          subject: channel.subject,
           message: render(channel.react),
           sentToUserId: userId,
           teamId,
