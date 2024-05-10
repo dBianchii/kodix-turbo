@@ -13,6 +13,7 @@ import { DataTable } from "@kdx/ui/data-table/data-table";
 
 import { useDataTable } from "../_hooks/useDataTable";
 import { getColumns } from "./data-table-notifications-columns";
+import { DataTableNotificationsFloatingBar } from "./data-table-notifications-floating-bar";
 import { DataTableNotificationsToolbarActions } from "./data-table-notifications-toolbar-actions";
 
 export function DataTableNotifications({
@@ -68,7 +69,10 @@ export function DataTableNotifications({
         {/* <TasksTableToolbarActions table={table} /> */}
         <DataTableNotificationsToolbarActions table={table} />
       </DataTableAdvancedToolbar>
-      <DataTable table={table} />
+      <DataTable
+        table={table}
+        floatingBar={<DataTableNotificationsFloatingBar table={table} />}
+      />
     </div>
   );
 }

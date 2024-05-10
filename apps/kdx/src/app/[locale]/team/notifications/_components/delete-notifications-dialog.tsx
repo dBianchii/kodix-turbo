@@ -2,6 +2,7 @@
 
 import type { Row } from "@tanstack/react-table";
 import * as React from "react";
+import { useMutation } from "@tanstack/react-query";
 import { RxTrash } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
@@ -20,7 +21,7 @@ import {
 import { toast } from "@kdx/ui/toast";
 
 import { getErrorMessage } from "~/helpers/miscelaneous";
-import { api } from "~/trpc/react";
+import { deleteNotificationsAction } from "../_actions/deleteNotificationsAction";
 
 interface DeleteTasksDialogProps
   extends React.ComponentPropsWithoutRef<typeof Dialog> {
@@ -31,7 +32,7 @@ interface DeleteTasksDialogProps
   showTrigger?: boolean;
 }
 
-export function DeleteTasksDialog({
+export function DeleteNotificationsDialog({
   notifications,
   onSuccess,
   showTrigger = true,
@@ -39,8 +40,10 @@ export function DeleteTasksDialog({
 }: DeleteTasksDialogProps) {
   const [isDeletePending, startDeleteTransition] = React.useTransition();
   const t = useI18n();
+  const { mutateAsync } = useMutation({
+    mutationFn: deleteNotificationsAction,
+  });
 
-  const mutation = api.user.deleteNotifications.useMutation();
   return (
     <Dialog {...props}>
       {showTrigger ? (
@@ -58,7 +61,7 @@ export function DeleteTasksDialog({
             {t(
               "This action cannot be undone This will permanently delete your",
             )}{" "}
-            <span className="font-medium">{notifications.length}</span>
+            <span className="font-medium">{notifications.length} </span>
             {t("notification", {
               count: notifications.length,
             })}{" "}
@@ -76,7 +79,7 @@ export function DeleteTasksDialog({
               onClick={() => {
                 startDeleteTransition(() => {
                   toast.promise(
-                    mutation.mutateAsync({
+                    mutateAsync({
                       ids: notifications.map((n) => n.original.id),
                     }),
                     {

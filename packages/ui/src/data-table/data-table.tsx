@@ -25,6 +25,14 @@ interface DataTableProps<TData> {
   table: TanstackTable<TData>;
 
   /**
+   * The floating bar to render at the bottom of the table on row selection.
+   * @default null
+   * @type React.ReactNode | null
+   * @example floatingBar={<TasksTableFloatingBar table={table} />}
+   */
+  floatingBar?: React.ReactNode | null;
+
+  /**
    * Message to display when no results are found.
    * @default "No results found"
    * @type string | undefined
@@ -34,6 +42,7 @@ interface DataTableProps<TData> {
 
 export function DataTable<TData>({
   table,
+  floatingBar = null,
   noResultsMessage,
   onClickRow,
 }: DataTableProps<TData> & {
@@ -98,6 +107,7 @@ export function DataTable<TData>({
       </div>
       <div className="flex flex-col gap-2.5">
         <DataTablePagination table={table} />
+        {table.getFilteredSelectedRowModel().rows.length > 0 && floatingBar}
       </div>
     </div>
   );

@@ -344,5 +344,9 @@ export default {
   "notification": "notificação",
   "Subject": "Assunto",
   "Filter titles": "Filtrar títulos...",
-  "Filter subjects": "Filtrar assuntos..."
+  "Filter subjects": "Filtrar assuntos...",
+  "Clear selection": "Seleção clara",
+  "Delete notifications": "Excluir notificações",
+  "Export notifications": "Exportar notificações",
+  "selected": "selecionado"
 } as const

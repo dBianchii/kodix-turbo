@@ -1,10 +1,21 @@
+import React from "react";
 import { createColumnHelper } from "@tanstack/react-table";
+import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import { format } from "@kdx/date-fns";
 import { useCurrentLocale, useI18n } from "@kdx/locales/client";
+import { Button } from "@kdx/ui/button";
 import { Checkbox } from "@kdx/ui/checkbox";
 import { DataTableColumnHeader } from "@kdx/ui/data-table/data-table-column-header";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@kdx/ui/dropdown-menu";
+
+import { DeleteNotificationsDialog } from "./delete-notifications-dialog";
 
 const columnHelper =
   createColumnHelper<
@@ -77,88 +88,46 @@ export function getColumns() {
         return format(cell.row.original.sentAt, "PPP, HH:mm", locale);
       },
     }),
-    // {
-    //   id: "actions",
-    //   cell: function Cell({ row }) {
-    //     const [isUpdatePending, startUpdateTransition] = React.useTransition();
-    //     const [showUpdateTaskSheet, setShowUpdateTaskSheet] =
-    //       React.useState(false);
-    //     const [showDeleteTaskDialog, setShowDeleteTaskDialog] =
-    //       React.useState(false);
-
-    //     return (
-    //       <>
-    //         <UpdateTaskSheet
-    //           open={showUpdateTaskSheet}
-    //           onOpenChange={setShowUpdateTaskSheet}
-    //           task={row.original}
-    //         />
-    //         <DeleteTasksDialog
-    //           open={showDeleteTaskDialog}
-    //           onOpenChange={setShowDeleteTaskDialog}
-    //           tasks={[row]}
-    //           showTrigger={false}
-    //         />
-    //         <DropdownMenu>
-    //           <DropdownMenuTrigger asChild>
-    //             <Button
-    //               aria-label="Open menu"
-    //               variant="ghost"
-    //               className="flex size-8 p-0 data-[state=open]:bg-muted"
-    //             >
-    //               <DotsHorizontalIcon className="size-4" aria-hidden="true" />
-    //             </Button>
-    //           </DropdownMenuTrigger>
-    //           <DropdownMenuContent align="end" className="w-40">
-    //             <DropdownMenuItem onSelect={() => setShowUpdateTaskSheet(true)}>
-    //               Edit
-    //             </DropdownMenuItem>
-    //             <DropdownMenuSub>
-    //               <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
-    //               <DropdownMenuSubContent>
-    //                 <DropdownMenuRadioGroup
-    //                   value={row.original.label}
-    //                   onValueChange={(value) => {
-    //                     startUpdateTransition(() => {
-    //                       toast.promise(
-    //                         updateTask({
-    //                           id: row.original.id,
-    //                           label: value as Task["label"],
-    //                         }),
-    //                         {
-    //                           loading: "Updating...",
-    //                           success: "Label updated",
-    //                           error: (err) => getErrorMessage(err),
-    //                         },
-    //                       );
-    //                     });
-    //                   }}
-    //                 >
-    //                   {tasks.label.enumValues.map((label) => (
-    //                     <DropdownMenuRadioItem
-    //                       key={label}
-    //                       value={label}
-    //                       className="capitalize"
-    //                       disabled={isUpdatePending}
-    //                     >
-    //                       {label}
-    //                     </DropdownMenuRadioItem>
-    //                   ))}
-    //                 </DropdownMenuRadioGroup>
-    //               </DropdownMenuSubContent>
-    //             </DropdownMenuSub>
-    //             <DropdownMenuSeparator />
-    //             <DropdownMenuItem
-    //               onSelect={() => setShowDeleteTaskDialog(true)}
-    //             >
-    //               Delete
-    //               <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-    //             </DropdownMenuItem>
-    //           </DropdownMenuContent>
-    //         </DropdownMenu>
-    //       </>
-    //     );
-    //   },
-    // },
+    {
+      id: "actions",
+      cell: function Cell({ row }) {
+        const [showDeleteTaskDialog, setShowDeleteTaskDialog] =
+          React.useState(false);
+        const t = useI18n();
+        return (
+          <>
+            {/* <UpdateTaskSheet
+              open={showUpdateTaskSheet}
+              onOpenChange={setShowUpdateTaskSheet}
+              task={row.original}
+            /> */}
+            <DeleteNotificationsDialog
+              open={showDeleteTaskDialog}
+              onOpenChange={setShowDeleteTaskDialog}
+              notifications={[row]}
+              showTrigger={false}
+            />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  aria-label="Open menu"
+                  variant="ghost"
+                  className="flex size-8 p-0 data-[state=open]:bg-muted"
+                >
+                  <RxDotsHorizontal className="size-4" aria-hidden="true" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-40">
+                <DropdownMenuItem
+                  onSelect={() => setShowDeleteTaskDialog(true)}
+                >
+                  {t("Delete")}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </>
+        );
+      },
+    },
   ];
 }
