@@ -38,11 +38,7 @@ export const getNotificationsHandler = async ({
     .from(schema.usersToTeams)
     .where(eq(schema.usersToTeams.userId, ctx.session.user.id));
 
-  const expressions: (SQL<unknown> | undefined)[] = [
-    eq(schema.notifications.sentToUserId, ctx.session.user.id), // Only show notifications for the logged in user
-    eq(schema.notifications.teamId, input.teamId), // Only show notifications for selected team
-    inArray(schema.notifications.teamId, allTeamIdsForUserQuery), // Ensure user is part of the team
-
+  const filterExpressions: (SQL<unknown> | undefined)[] = [
     // Filter notifications by message
     input.subject
       ? filterColumn({
@@ -66,10 +62,15 @@ export const getNotificationsHandler = async ({
       : undefined,
   ];
 
-  const where: DrizzleWhere<typeof schema.notifications.$inferSelect> =
+  const where: DrizzleWhere<typeof schema.notifications.$inferSelect> = and(
+    eq(schema.notifications.sentToUserId, ctx.session.user.id), // Only show notifications for the logged in user
+    eq(schema.notifications.teamId, input.teamId), // Only show notifications for selected team
+    inArray(schema.notifications.teamId, allTeamIdsForUserQuery), // Ensure user is part of the team
+
     !input.operator || input.operator === "and"
-      ? and(...expressions)
-      : or(...expressions);
+      ? and(...filterExpressions)
+      : or(...filterExpressions),
+  );
 
   const result = await ctx.db.transaction(async (tx) => {
     const data = await tx
