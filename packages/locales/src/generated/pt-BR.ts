@@ -348,5 +348,6 @@ export default {
   "Clear selection": "Seleção clara",
   "Delete notifications": "Excluir notificações",
   "Export notifications": "Exportar notificações",
-  "selected": "selecionado"
+  "selected": "selecionado",
+  "Take a look at all available apps and install them": "Dê uma olhada em todos os aplicativos disponíveis, e instale-os"
 } as const

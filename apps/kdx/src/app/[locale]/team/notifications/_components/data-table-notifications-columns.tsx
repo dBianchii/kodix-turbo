@@ -88,7 +88,16 @@ export function getColumns() {
         return format(cell.row.original.sentAt, "PPP, HH:mm", locale);
       },
     }),
-    {
+    columnHelper.accessor("teamId", {
+      header: function Header({ column }) {
+        const t = useI18n();
+        return <DataTableColumnHeader column={column} title={t("Team")} />;
+      },
+      cell: function Cell({ row }) {
+        return <div className="w-20">{row.original.teamName}</div>;
+      },
+    }),
+    columnHelper.display({
       id: "actions",
       cell: function Cell({ row }) {
         const [showDeleteTaskDialog, setShowDeleteTaskDialog] =
@@ -128,6 +137,6 @@ export function getColumns() {
           </>
         );
       },
-    },
+    }),
   ];
 }

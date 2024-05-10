@@ -43,7 +43,7 @@ export type DrizzleWhere<T> =
   | ((aliases: T) => SQL<T> | undefined)
   | undefined;
 
-export * from "drizzle-orm/expressions";
-export * from "drizzle-orm/sql";
-export { alias } from "drizzle-orm/mysql-core";
 export type { Column, ColumnBaseConfig, ColumnDataType } from "drizzle-orm";
+export * from "drizzle-orm/expressions";
+export { alias } from "drizzle-orm/mysql-core";
+export * from "drizzle-orm/sql";

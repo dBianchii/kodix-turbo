@@ -8,7 +8,7 @@ import { schema } from "@kdx/db/schema";
 import type { TProtectedProcedureContext } from "../../procedures";
 import { filterColumn } from "../../lib/filter-column";
 
-interface GetAllOptions {
+interface GetNotificationsOptions {
   ctx: TProtectedProcedureContext;
   input: TGetNotificationsInputSchema;
 }
@@ -16,7 +16,20 @@ interface GetAllOptions {
 export const getNotificationsHandler = async ({
   ctx,
   input,
-}: GetAllOptions) => {
+}: GetNotificationsOptions) => {
+  // await sendNotifications({
+  //   teamId: ctx.session.user.activeTeamId,
+  //   userId: ctx.session.user.id,
+  //   channels: [
+  //     {
+  //       subject: Math.random().toString(),
+  //       to: "gdbianchii@gmail.com",
+  //       type: "EMAIL",
+  //       react: <>{Math.random().toString()}</>,
+  //     },
+  //   ],
+  // });
+
   const offset = (input.page - 1) * input.perPage;
 
   const [column, order] = (input.sort?.split(".").filter(Boolean) ?? [
@@ -39,7 +52,7 @@ export const getNotificationsHandler = async ({
     .where(eq(schema.usersToTeams.userId, ctx.session.user.id));
 
   const filterExpressions: (SQL<unknown> | undefined)[] = [
-    // Filter notifications by message
+    // Filter notifications by subject
     input.subject
       ? filterColumn({
           column: schema.notifications.subject,
@@ -51,6 +64,7 @@ export const getNotificationsHandler = async ({
       ? filterColumn({
           column: schema.notifications.channel,
           value: input.channel,
+          isSelectable: true,
         })
       : undefined,
     // Filter notifications by time range
@@ -60,12 +74,19 @@ export const getNotificationsHandler = async ({
           lte(schema.notifications.sentAt, toDay),
         )
       : undefined,
+    // Filter notifications by teamId
+    input.teamId
+      ? filterColumn({
+          column: schema.notifications.teamId,
+          value: input.teamId,
+          isSelectable: true,
+        })
+      : undefined,
   ];
 
   const where: DrizzleWhere<typeof schema.notifications.$inferSelect> = and(
-    eq(schema.notifications.sentToUserId, ctx.session.user.id), // Only show notifications for the logged in user
-    eq(schema.notifications.teamId, input.teamId), // Only show notifications for selected team
-    inArray(schema.notifications.teamId, allTeamIdsForUserQuery), // Ensure user is part of the team
+    eq(schema.notifications.sentToUserId, ctx.session.user.id), //? Only show notifications for the logged in user
+    inArray(schema.notifications.teamId, allTeamIdsForUserQuery), //? Ensure user is part of the team
 
     !input.operator || input.operator === "and"
       ? and(...filterExpressions)
@@ -74,11 +95,20 @@ export const getNotificationsHandler = async ({
 
   const result = await ctx.db.transaction(async (tx) => {
     const data = await tx
-      .select()
+      .select({
+        id: schema.notifications.id,
+        channel: schema.notifications.channel,
+        subject: schema.notifications.subject,
+        message: schema.notifications.message,
+        sentAt: schema.notifications.sentAt,
+        teamName: schema.teams.name,
+        teamId: schema.teams.id,
+      })
       .from(schema.notifications)
       .limit(input.perPage)
       .offset(offset)
       .where(where)
+      .innerJoin(schema.teams, eq(schema.teams.id, schema.notifications.teamId)) //So that we can get team info too
       .orderBy(
         column && column in schema.notifications
           ? order === "asc"

@@ -18,10 +18,13 @@ import { DataTableNotificationsToolbarActions } from "./data-table-notifications
 
 export function DataTableNotifications({
   notificationsPromise,
+  allTeamsPromise,
 }: {
   notificationsPromise: Promise<RouterOutputs["user"]["getNotifications"]>;
+  allTeamsPromise: Promise<RouterOutputs["team"]["getAllForLoggedUser"]>;
 }) {
   const { data, pageCount } = use(notificationsPromise);
+  const teams = use(allTeamsPromise);
 
   const columns = useMemo(
     () =>
@@ -48,6 +51,15 @@ export function DataTableNotifications({
         label: channel[0]?.toUpperCase() + channel.slice(1),
         value: channel,
         icon: MdEmail,
+        withCount: true,
+      })),
+    },
+    {
+      label: t("Team"),
+      value: "teamId",
+      options: teams.map((team) => ({
+        label: team.name,
+        value: team.id,
         withCount: true,
       })),
     },

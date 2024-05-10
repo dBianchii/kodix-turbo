@@ -24,13 +24,11 @@ export default async function NotificationsPage({
   if (!session) redirect("/");
   const t = await getI18n();
 
-  const search = ZGetNotificationsInputSchema.omit({ teamId: true }).parse(
-    searchParams,
-  );
+  const search = ZGetNotificationsInputSchema.parse(searchParams);
   const notificationsPromise = api.user.getNotifications({
     ...search,
-    teamId: session.user.activeTeamId,
   });
+  const allTeamsPromise = api.team.getAllForLoggedUser();
 
   return (
     <MaxWidthWrapper>
@@ -62,7 +60,10 @@ export default async function NotificationsPage({
           />
         }
       >
-        <DataTableNotifications notificationsPromise={notificationsPromise} />
+        <DataTableNotifications
+          notificationsPromise={notificationsPromise}
+          allTeamsPromise={allTeamsPromise}
+        />
       </Suspense>
     </MaxWidthWrapper>
   );

@@ -6,7 +6,7 @@ export const ZChangeNameInputSchema = z.object({ name: z.string().max(32) });
 export type TChangeNameInputSchema = z.infer<typeof ZChangeNameInputSchema>;
 
 export const ZGetNotificationsInputSchema = z.object({
-  teamId: ZNanoId,
+  teamId: z.string().optional(),
 
   from: z.string().optional(),
   to: z.string().optional(),
