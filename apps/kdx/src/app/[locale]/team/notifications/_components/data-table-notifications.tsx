@@ -38,7 +38,7 @@ export function DataTableNotifications({
     {
       label: t("Subject"),
       value: "subject",
-      placeholder: t("Filter subject"),
+      placeholder: t("Filter subjects"),
     },
     {
       label: t("Channel"),

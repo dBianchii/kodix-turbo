@@ -344,5 +344,5 @@ export default {
   "notification": "notification",
   "Subject": "Subject",
   "Filter titles": "Filter titles...",
-  "Filter subject": "Filter subject"
+  "Filter subjects": "Filter subjects..."
 } as const

@@ -343,5 +343,6 @@ export default {
   "notification#other": "notificações",
   "notification": "notificação",
   "Subject": "Assunto",
-  "Filter titles": "Filtrar títulos..."
+  "Filter titles": "Filtrar títulos...",
+  "Filter subjects": "Filtrar assuntos..."
 } as const
