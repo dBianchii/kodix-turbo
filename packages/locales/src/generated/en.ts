@@ -341,5 +341,8 @@ export default {
   "from our servers": "from our servers",
   "Deleting": "Deleting...",
   "Notifications deleted": "Notifications deleted",
-  "notification": "notification"
+  "notification": "notification",
+  "Subject": "Subject",
+  "Filter titles": "Filter titles...",
+  "Filter subject": "Filter subject"
 } as const

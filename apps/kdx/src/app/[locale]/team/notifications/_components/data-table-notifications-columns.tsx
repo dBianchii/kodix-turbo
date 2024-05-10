@@ -42,12 +42,12 @@ export function getColumns() {
       enableSorting: false,
       enableHiding: false,
     }),
-    columnHelper.accessor("message", {
+    columnHelper.accessor("subject", {
       header: function Header({ column }) {
         const t = useI18n();
-        return <DataTableColumnHeader column={column} title={t("Message")} />;
+        return <DataTableColumnHeader column={column} title={t("Subject")} />;
       },
-      cell: ({ row }) => <div className="w-20">{row.original.message}</div>,
+      cell: ({ row }) => <div className="w-20">{row.original.subject}</div>,
       enableSorting: false,
       enableHiding: false,
     }),

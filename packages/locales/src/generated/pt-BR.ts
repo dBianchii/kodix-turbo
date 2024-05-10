@@ -2,7 +2,7 @@
 
 export default {
   "home": {
-    "title": "Bem-vinda(o) ao Kodix",
+    "title": "Bem-vindo(a) ao Kodix",
     "description": "Soluções para o seu negócio. Kodix é uma plataforma multiuso que oferece uma ampla gama de soluções de negócios"
   },
   "header": {
@@ -341,5 +341,7 @@ export default {
   "from our servers": "de nossos servidores",
   "notification#one": "notificação",
   "notification#other": "notificações",
-  "notification": "notificação"
+  "notification": "notificação",
+  "Subject": "Assunto",
+  "Filter titles": "Filtrar títulos..."
 } as const
