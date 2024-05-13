@@ -302,6 +302,9 @@ importers:
       '@kdx/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
+      '@kdx/upstash-dev':
+        specifier: workspace:*
+        version: link:../../packages/upstash-dev
       '@types/node':
         specifier: ^20.12.10
         version: 20.12.10
@@ -876,6 +879,8 @@ importers:
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
+
+  packages/upstash-dev: {}
 
   packages/validators:
     dependencies:
