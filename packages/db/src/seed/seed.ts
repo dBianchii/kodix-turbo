@@ -22,17 +22,17 @@ const devPartners: (typeof schema.devPartners.$inferInsert)[] = [
 export const apps: (typeof schema.apps.$inferInsert)[] = [
   {
     id: todoAppId, //As const so it can be used as a type
-    subscriptionCost: 0 as const,
+    subscriptionCost: "0" as const,
     devPartnerId: kdxPartnerId,
   },
   {
     id: calendarAppId,
-    subscriptionCost: 0 as const,
+    subscriptionCost: "0" as const,
     devPartnerId: kdxPartnerId,
   },
   {
     id: kodixCareAppId,
-    subscriptionCost: 0 as const,
+    subscriptionCost: "0" as const,
     devPartnerId: kdxPartnerId,
   },
 ];
