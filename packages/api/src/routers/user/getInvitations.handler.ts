@@ -1,13 +1,15 @@
+import { db, sql } from "@kdx/db";
+
 import type { TProtectedProcedureContext } from "../../procedures";
 
 interface GetInvitationsOptions {
   ctx: TProtectedProcedureContext;
 }
 
-export const getInvitationsHandler = async ({ ctx }: GetInvitationsOptions) => {
-  //... your handler logic here <3
-  const invitations = await ctx.db.query.invitations.findMany({
-    where: (invitation, { eq }) => eq(invitation.email, ctx.session.user.email),
+const prepared = db.query.invitations
+  .findMany({
+    where: (invitation, { eq }) =>
+      eq(invitation.email, sql.placeholder("email")),
     columns: {
       id: true,
     },
@@ -26,6 +28,12 @@ export const getInvitationsHandler = async ({ ctx }: GetInvitationsOptions) => {
         },
       },
     },
+  })
+  .prepare();
+
+export const getInvitationsHandler = async ({ ctx }: GetInvitationsOptions) => {
+  const invitations = await prepared.execute({
+    email: ctx.session.user.email,
   });
 
   return invitations;
