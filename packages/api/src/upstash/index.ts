@@ -37,7 +37,7 @@ export const setUpstashCache = <T extends keyof KeysMapping>(
   value: KeysMapping[T]["value"],
 ) => {
   const constructedKey = constructKey(key, variableKeys);
-  return redis.set(constructedKey, value);
+  return redis.set(constructedKey, value, { ex: 60 * 60 * 5 }); // 5 hours
 };
 
 export const invalidateUpstashCache = <T extends keyof KeysMapping>(
