@@ -134,13 +134,11 @@ export function DatePickerIcon({
   date: Date | undefined;
   className?: string;
 }) {
-  if (date === undefined) {
+  if (date === undefined)
     return (
       <RxCalendar className={cn("size-4 text-foreground/70", className)} />
     );
-  } else if (new Date() > date) {
+  if (new Date() > date)
     return <RxCalendar className={cn("size-4 text-red-500", className)} />;
-  } else {
-    return <RxCalendar className={cn("size-4 text-foreground", className)} />;
-  }
+  return <RxCalendar className={cn("size-4 text-foreground", className)} />;
 }
