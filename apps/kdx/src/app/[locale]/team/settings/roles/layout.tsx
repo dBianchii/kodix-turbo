@@ -2,11 +2,12 @@ import { Suspense } from "react";
 import { redirect } from "next/navigation";
 
 import { auth } from "@kdx/auth";
-import { db, eq } from "@kdx/db";
+import { eq } from "@kdx/db";
 import { schema } from "@kdx/db/schema";
 import { getI18n } from "@kdx/locales/server";
 
 import { AppSwitcher } from "~/app/[locale]/_components/app-switcher";
+import { db } from "@kdx/db/client";
 
 export default async function RolesLayout({
   children,

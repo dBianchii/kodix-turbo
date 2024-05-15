@@ -6,12 +6,13 @@ import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import Google from "next-auth/providers/google";
 import resend from "next-auth/providers/resend";
 
-import { and, db, eq } from "@kdx/db";
+import { and, eq } from "@kdx/db";
 import { schema } from "@kdx/db/schema";
 import { kodixNotificationFromEmail, nanoid } from "@kdx/shared";
 
 import { env } from "../env";
 import { sendVerificationRequest } from "./email/send-verification-request";
+import { db } from "@kdx/db/client";
 
 declare module "next-auth" {
   interface Session {

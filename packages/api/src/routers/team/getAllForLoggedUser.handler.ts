@@ -1,7 +1,8 @@
-import { db, eq, sql } from "@kdx/db";
+import { eq, sql } from "@kdx/db";
 import { schema } from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../procedures";
+import { db } from "@kdx/db/client";
 
 interface GetAllForLoggedUserOptions {
   ctx: TProtectedProcedureContext;
