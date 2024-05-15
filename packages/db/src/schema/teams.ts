@@ -18,7 +18,7 @@ import {
 import { eventMasters } from "./apps/calendar";
 import { careShifts, careTasks } from "./apps/kodixCare";
 import { todos } from "./apps/todos";
-import { users } from "./auth";
+import { users } from "./users";
 import { DEFAULTLENGTH, teamIdReference } from "./utils";
 
 export const teams = mysqlTable(

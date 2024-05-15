@@ -9,6 +9,7 @@ export const DEFAULTLENGTH = 255;
 
 export const moneyDecimal = decimal;
 
+/** Most of the time, we want to delete a record when the associated team is deleted. This centralizes the reference */
 export const teamIdReference = varchar("teamId", { length: NANOID_SIZE })
   .notNull()
   .references(() => teams.id, { onDelete: "cascade" });

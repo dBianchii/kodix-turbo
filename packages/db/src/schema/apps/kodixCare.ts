@@ -3,8 +3,8 @@ import { index, mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 import { NANOID_SIZE } from "@kdx/shared";
 
-import { users } from "../auth";
 import { teams } from "../teams";
+import { users } from "../users";
 import { DEFAULTLENGTH, teamIdReference } from "../utils";
 import { eventMasters } from "./calendar";
 
