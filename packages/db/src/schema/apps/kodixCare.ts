@@ -5,7 +5,7 @@ import { NANOID_SIZE } from "@kdx/shared";
 
 import { users } from "../auth";
 import { teams } from "../teams";
-import { DEFAULTLENGTH } from "../utils";
+import { DEFAULTLENGTH, teamIdReference } from "../utils";
 import { eventMasters } from "./calendar";
 
 export const careShifts = mysqlTable(
@@ -15,9 +15,7 @@ export const careShifts = mysqlTable(
     caregiverId: varchar("caregiverId", { length: NANOID_SIZE })
       .notNull()
       .references(() => users.id),
-    teamId: varchar("teamId", { length: NANOID_SIZE })
-      .notNull()
-      .references(() => teams.id, { onDelete: "cascade" }),
+    teamId: teamIdReference,
     checkIn: timestamp("checkIn")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
@@ -53,9 +51,7 @@ export const careTasks = mysqlTable(
       () => users.id,
       { onDelete: "restrict" }, //Restrict because we have to keep logs somehow
     ),
-    teamId: varchar("teamId", { length: NANOID_SIZE })
-      .notNull()
-      .references(() => teams.id),
+    teamId: teamIdReference,
     eventMasterId: varchar("eventMasterId", {
       length: NANOID_SIZE,
     }).references(() => eventMasters.id),

@@ -12,7 +12,7 @@ import { NANOID_SIZE } from "@kdx/shared";
 
 import { users } from "../auth";
 import { teams } from "../teams";
-import { DEFAULTLENGTH } from "../utils";
+import { DEFAULTLENGTH, teamIdReference } from "../utils";
 
 export const todos = mysqlTable(
   "todo",
@@ -32,9 +32,7 @@ export const todos = mysqlTable(
     assignedToUserId: varchar("assignedToUserId", {
       length: DEFAULTLENGTH,
     }).references(() => users.id),
-    teamId: varchar("teamId", { length: NANOID_SIZE })
-      .notNull()
-      .references(() => teams.id),
+    teamId: teamIdReference,
   },
   (table) => {
     return {

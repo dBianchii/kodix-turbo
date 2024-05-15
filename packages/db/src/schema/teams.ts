@@ -19,7 +19,7 @@ import { eventMasters } from "./apps/calendar";
 import { careShifts, careTasks } from "./apps/kodixCare";
 import { todos } from "./apps/todos";
 import { users } from "./auth";
-import { DEFAULTLENGTH } from "./utils";
+import { DEFAULTLENGTH, teamIdReference } from "./utils";
 
 export const teams = mysqlTable(
   "team",
@@ -62,9 +62,7 @@ export const usersToTeams = mysqlTable(
     userId: varchar("A", { length: NANOID_SIZE })
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    teamId: varchar("B", { length: NANOID_SIZE })
-      .notNull()
-      .references(() => teams.id, { onDelete: "cascade" }),
+    teamId: teamIdReference,
   },
   (table) => {
     return {
@@ -95,9 +93,7 @@ export const teamAppRoles = mysqlTable(
     appId: varchar("appId", { length: NANOID_SIZE })
       .notNull()
       .references(() => apps.id, { onDelete: "cascade" }),
-    teamId: varchar("teamId", { length: NANOID_SIZE })
-      .notNull()
-      .references(() => teams.id, { onDelete: "cascade" }),
+    teamId: teamIdReference,
     appRoleDefaultId: varchar("appRoleDefaultId", {
       length: NANOID_SIZE, //? References a hardcoded default role id and not anything in db
     }),
@@ -165,9 +161,7 @@ export const invitations = mysqlTable(
   "invitation",
   {
     id: varchar("id", { length: NANOID_SIZE }).notNull(),
-    teamId: varchar("teamId", { length: NANOID_SIZE })
-      .notNull()
-      .references(() => teams.id, { onDelete: "cascade" }),
+    teamId: teamIdReference,
     email: varchar("email", { length: DEFAULTLENGTH }).notNull(),
     createdAt: timestamp("createdAt")
       .default(sql`CURRENT_TIMESTAMP`)

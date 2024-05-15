@@ -15,7 +15,7 @@ import { NANOID_SIZE } from "@kdx/shared";
 
 import { todos } from "./apps/todos";
 import { invitations, teamAppRolesToUsers, teams, usersToTeams } from "./teams";
-import { DEFAULTLENGTH } from "./utils";
+import { DEFAULTLENGTH, teamIdReference } from "./utils";
 
 export const users = mysqlTable(
   "user",
@@ -121,9 +121,7 @@ export const notifications = mysqlTable(
     sentToUserId: varchar("sentToUserId", { length: NANOID_SIZE })
       .notNull()
       .references(() => users.id, { onUpdate: "cascade", onDelete: "cascade" }),
-    teamId: varchar("teamId", { length: NANOID_SIZE })
-      .notNull()
-      .references(() => teams.id, { onUpdate: "cascade", onDelete: "cascade" }),
+    teamId: teamIdReference,
     subject: varchar("subject", { length: 100 }), //For email
     sentAt: timestamp("sentAt").notNull(),
     message: text("message").notNull(),

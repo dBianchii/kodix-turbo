@@ -11,7 +11,7 @@ import {
 import { NANOID_SIZE } from "@kdx/shared";
 
 import { teamAppRoles, teams } from "../teams";
-import { DEFAULTLENGTH, moneyDecimal } from "../utils";
+import { DEFAULTLENGTH, moneyDecimal, teamIdReference } from "../utils";
 
 export const devPartners = mysqlTable("devPartner", {
   id: varchar("id", { length: NANOID_SIZE }).notNull().primaryKey(),
@@ -62,9 +62,7 @@ export const appsToTeams = mysqlTable(
     appId: varchar("A", { length: NANOID_SIZE })
       .notNull()
       .references(() => apps.id, { onDelete: "cascade" }),
-    teamId: varchar("B", { length: NANOID_SIZE })
-      .notNull()
-      .references(() => teams.id, { onDelete: "cascade" }),
+    teamId: teamIdReference,
   },
   (table) => {
     return {
@@ -121,9 +119,7 @@ export const appTeamConfigs = mysqlTable(
     appId: varchar("appId", { length: NANOID_SIZE })
       .notNull()
       .references(() => apps.id, { onDelete: "cascade" }),
-    teamId: varchar("teamId", { length: NANOID_SIZE })
-      .notNull()
-      .references(() => teams.id, { onDelete: "cascade" }),
+    teamId: teamIdReference,
   },
   (table) => {
     return {

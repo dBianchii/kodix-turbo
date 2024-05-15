@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
+import { calendarAppId, KodixAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
 
 import { kodixCareConfigSchema, ZNanoId } from "../..";
 
@@ -27,6 +27,6 @@ export const ZSaveConfigInput = z.object({
 export type TSaveConfigInput = z.infer<typeof ZSaveConfigInput>;
 
 export const ZUninstallAppInputSchema = z.object({
-  appId: ZNanoId,
+  appId: z.custom<KodixAppId>(),
 });
 export type TUninstallAppInputSchema = z.infer<typeof ZUninstallAppInputSchema>;

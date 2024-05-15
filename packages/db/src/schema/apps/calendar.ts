@@ -4,7 +4,7 @@ import { index, mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core";
 import { NANOID_SIZE } from "@kdx/shared";
 
 import { teams } from "../teams";
-import { DEFAULTLENGTH } from "../utils";
+import { DEFAULTLENGTH, teamIdReference } from "../utils";
 import { careTasks } from "./kodixCare";
 
 export const eventMasters = mysqlTable(
@@ -16,9 +16,7 @@ export const eventMasters = mysqlTable(
     dateUntil: timestamp("DateUntil", { mode: "date", fsp: 3 }),
     title: varchar("title", { length: DEFAULTLENGTH }),
     description: varchar("description", { length: DEFAULTLENGTH }),
-    teamId: varchar("teamId", { length: NANOID_SIZE })
-      .notNull()
-      .references(() => teams.id, { onDelete: "cascade" }),
+    teamId: teamIdReference,
   },
   (table) => {
     return {
