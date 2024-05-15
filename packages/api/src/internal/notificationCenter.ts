@@ -2,7 +2,6 @@ import { render } from "@react-email/render";
 
 import { db } from "@kdx/db/client";
 import { schema } from "@kdx/db/schema";
-import { nanoid } from "@kdx/shared";
 
 import type { resend } from "../utils/email";
 
@@ -40,7 +39,6 @@ export async function sendNotifications({
 
       if (result.data) {
         sent.push({
-          id: nanoid(),
           sentAt: new Date(),
           subject: channel.subject,
           message: render(channel.react),

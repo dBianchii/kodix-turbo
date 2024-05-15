@@ -1,8 +1,9 @@
 import { z } from "zod";
 
-import { calendarAppId, KodixAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
+import type { KodixAppId } from "@kdx/shared";
+import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
 
-import { kodixCareConfigSchema, ZNanoId } from "../..";
+import { kodixCareConfigSchema } from "../..";
 
 type AppIdsWithConfig = typeof kodixCareAppId; //? Some apps might not have config implemented
 

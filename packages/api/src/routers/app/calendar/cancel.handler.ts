@@ -4,7 +4,6 @@ import { RRule, rrulestr } from "rrule";
 import type { TCancelInputSchema } from "@kdx/validators/trpc/app/calendar";
 import { and, eq, gte } from "@kdx/db";
 import { schema } from "@kdx/db/schema";
-import { nanoid } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 
@@ -36,7 +35,6 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           .where(eq(schema.eventExceptions.id, input.eventExceptionId!));
         return await tx.insert(schema.eventCancellations).values({
-          id: nanoid(),
           eventMasterId: toDeleteException.eventMasterId,
           originalDate: toDeleteException.originalDate,
         });
@@ -44,7 +42,6 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
     }
 
     return await ctx.db.insert(schema.eventCancellations).values({
-      id: nanoid(),
       eventMasterId: input.eventMasterId,
       originalDate: input.date,
     });

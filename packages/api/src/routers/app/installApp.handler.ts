@@ -43,13 +43,15 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
     const appRoleDefaultForApp = appRoles_defaultTree[input.appId];
 
     //? 1. Get the default app roles for the app and create them
-    const toCreateDefaultAppRoles: (typeof schema.teamAppRoles.$inferInsert)[] =
-      appRoleDefaultForApp.appRoleDefaults.map((defaultAppRole) => ({
+    const toCreateDefaultAppRoles = appRoleDefaultForApp.appRoleDefaults.map(
+      (defaultAppRole) => ({
         id: nanoid(),
         appId: input.appId,
         appRoleDefaultId: defaultAppRole.id,
         teamId: ctx.session.user.activeTeamId,
-      }));
+      }),
+    ) satisfies (typeof schema.teamAppRoles.$inferInsert)[];
+
     await tx.insert(schema.teamAppRoles).values(toCreateDefaultAppRoles);
 
     //? 2. Connect the permissions to the newly created roles if any exists
@@ -58,7 +60,8 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
         appPermissionId: permission.id,
         teamAppRoleId: role.id,
       })),
-    );
+    ) satisfies (typeof schema.appPermissionsToTeamAppRoles.$inferInsert)[];
+
     if (toAddPermissions.length > 0)
       await tx
         .insert(schema.appPermissionsToTeamAppRoles)

@@ -59,7 +59,7 @@ export const careTasks = mysqlTable(
     eventMasterId: varchar("eventMasterId", {
       length: NANOID_SIZE,
     }).references(() => eventMasters.id),
-    idCareShift: varchar("idCareShift", { length: NANOID_SIZE })
+    careShiftId: varchar("careShiftId", { length: NANOID_SIZE })
       .notNull()
       .references(() => careShifts.id),
     title: varchar("title", { length: DEFAULTLENGTH }),
@@ -71,7 +71,7 @@ export const careTasks = mysqlTable(
     return {
       doneByUserIdIdx: index("doneByUserId_idx").on(table.doneByUserId),
       eventMasterIdIdx: index("eventMasterId_Idx").on(table.eventMasterId),
-      idCareShiftIdx: index("idCareShift_idx").on(table.idCareShift),
+      careShiftIdIdx: index("careShiftId_idx").on(table.careShiftId),
       teamIdIdx: index("teamId_idx").on(table.teamId),
     };
   },
@@ -86,7 +86,7 @@ export const careTasksRelations = relations(careTasks, ({ one }) => ({
     references: [teams.id],
   }),
   CareShift: one(careShifts, {
-    fields: [careTasks.idCareShift],
+    fields: [careTasks.careShiftId],
     references: [careShifts.id],
   }),
   EventMaster: one(eventMasters, {

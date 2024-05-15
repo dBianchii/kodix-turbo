@@ -1,7 +1,7 @@
 //? This file is used to create common values that can be used in the schema files.
 import { decimal, varchar } from "drizzle-orm/mysql-core";
 
-import { NANOID_SIZE } from "@kdx/shared";
+import { nanoid, NANOID_SIZE } from "@kdx/shared";
 
 import { teams } from "./teams";
 
@@ -19,4 +19,5 @@ export const teamIdReferenceCascadeDelete = varchar("teamId", {
 /** Most of the time, our primary keys always will be the same. This centralizes our PK standard */
 export const nanoidPrimaryKey = varchar("id", { length: NANOID_SIZE })
   .notNull()
+  .default(nanoid())
   .primaryKey();

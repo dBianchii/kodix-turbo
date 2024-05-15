@@ -164,7 +164,7 @@ export const teamAppRolesToUsersRelations = relations(
 export const invitations = mysqlTable(
   "invitation",
   {
-    id: varchar("id", { length: NANOID_SIZE }).notNull(),
+    id: nanoidPrimaryKey,
     teamId: teamIdReferenceCascadeDelete,
     email: varchar("email", { length: DEFAULTLENGTH }).notNull(),
     createdAt: timestamp("createdAt")

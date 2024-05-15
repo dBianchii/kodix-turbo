@@ -52,7 +52,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
       });
 
       return await cloneCalendarTasksToCareTasks({
-        careShiftId: careShiftId,
+        careShiftId,
         start: yesterdayStartOfDay,
         end: tomorrowEndOfDay,
         ctx: {
@@ -88,7 +88,6 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
       .where(eq(schema.careShifts.id, lastCareShift.id));
 
     await tx.insert(schema.careShifts).values({
-      id: nanoid(),
       teamId: ctx.session.user.activeTeamId,
       checkIn: new Date(),
       caregiverId: ctx.session.user.id,

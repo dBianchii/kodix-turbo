@@ -1,5 +1,5 @@
 import { schema } from "@kdx/db/schema";
-import { kodixCareAppId, nanoid } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
 import { getAllHandler } from "../../calendar/getAll.handler";
@@ -27,8 +27,7 @@ export async function cloneCalendarTasksToCareTasks({
   if (calendarTasks.length > 0)
     await ctx.db.insert(schema.careTasks).values(
       calendarTasks.map((calendarTask) => ({
-        id: nanoid(),
-        idCareShift: careShiftId,
+        careShiftId: careShiftId,
         teamId: ctx.session.user.activeTeamId,
         title: calendarTask.title,
         description: calendarTask.description,
