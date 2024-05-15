@@ -25,7 +25,7 @@ export const getNotificationsHandler = async ({
   //       subject: Math.random().toString(),
   //       to: "gdbianchii@gmail.com",
   //       type: "EMAIL",
-  //       react: <>{Math.random().toString()}</>,
+  //       react: WarnPreviousShiftNotEnded(),
   //     },
   //   ],
   // });

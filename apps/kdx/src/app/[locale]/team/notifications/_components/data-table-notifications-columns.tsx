@@ -1,11 +1,13 @@
 import React from "react";
+import Link from "next/link";
 import { createColumnHelper } from "@tanstack/react-table";
-import { RxDotsHorizontal } from "react-icons/rx";
+import { RxDotsHorizontal, RxExternalLink } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import { format } from "@kdx/date-fns";
 import { useCurrentLocale, useI18n } from "@kdx/locales/client";
-import { Button } from "@kdx/ui/button";
+import { cn } from "@kdx/ui";
+import { Button, buttonVariants } from "@kdx/ui/button";
 import { Checkbox } from "@kdx/ui/checkbox";
 import { DataTableColumnHeader } from "@kdx/ui/data-table/data-table-column-header";
 import {
@@ -110,6 +112,7 @@ export function getColumns() {
               onOpenChange={setShowUpdateTaskSheet}
               task={row.original}
             /> */}
+
             <DeleteNotificationsDialog
               open={showDeleteTaskDialog}
               onOpenChange={setShowDeleteTaskDialog}
@@ -127,8 +130,17 @@ export function getColumns() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-40">
+                <Link
+                  href={`/team/notifications/preview-email/${row.original.id}`}
+                  target="_blank"
+                >
+                  <DropdownMenuItem>
+                    {t("View")} <RxExternalLink className="size-6 pl-2" />
+                  </DropdownMenuItem>
+                </Link>
                 <DropdownMenuItem
                   onSelect={() => setShowDeleteTaskDialog(true)}
+                  className="text-destructive"
                 >
                   {t("Delete")}
                 </DropdownMenuItem>

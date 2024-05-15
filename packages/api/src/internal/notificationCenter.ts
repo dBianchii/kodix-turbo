@@ -2,7 +2,7 @@ import { render } from "@react-email/render";
 
 import { db } from "@kdx/db";
 import { schema } from "@kdx/db/schema";
-import { kodixNotificationFromEmail, nanoid } from "@kdx/shared";
+import { nanoid } from "@kdx/shared";
 
 import type { resend } from "../utils/email";
 
