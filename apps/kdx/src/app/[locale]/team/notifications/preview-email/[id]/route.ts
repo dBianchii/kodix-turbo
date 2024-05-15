@@ -2,8 +2,8 @@ import { notFound, redirect } from "next/navigation";
 
 import { auth } from "@kdx/auth";
 import { eq, sql } from "@kdx/db";
-import { schema } from "@kdx/db/schema";
 import { db } from "@kdx/db/client";
+import { schema } from "@kdx/db/schema";
 
 const allTeamIdsForUserQuery = db
   .select({ id: schema.usersToTeams.teamId })

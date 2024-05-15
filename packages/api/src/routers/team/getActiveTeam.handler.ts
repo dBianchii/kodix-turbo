@@ -1,9 +1,9 @@
 import { TRPCError } from "@trpc/server";
 
 import { sql } from "@kdx/db";
+import { db } from "@kdx/db/client";
 
 import type { TProtectedProcedureContext } from "../../procedures";
-import { db } from "@kdx/db/client";
 
 interface GetActiveTeamOptions {
   ctx: TProtectedProcedureContext;

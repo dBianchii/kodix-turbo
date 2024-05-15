@@ -1,9 +1,9 @@
 import { eq, sql } from "@kdx/db";
+import { db } from "@kdx/db/client";
 import { schema } from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 import { getUpstashCache, setUpstashCache } from "../../upstash";
-import { db } from "@kdx/db/client";
 
 interface GetInstalledOptions {
   ctx: TProtectedProcedureContext;
