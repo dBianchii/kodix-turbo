@@ -1,6 +1,6 @@
 import { render } from "@react-email/render";
 
-import { db } from "@kdx/db";
+import { db } from "@kdx/db/client";
 import { schema } from "@kdx/db/schema";
 import { nanoid } from "@kdx/shared";
 

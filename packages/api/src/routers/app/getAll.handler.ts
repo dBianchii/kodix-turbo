@@ -1,7 +1,5 @@
 import { TRPCError } from "@trpc/server";
 
-import { db } from "@kdx/db";
-
 import type { TPublicProcedureContext } from "../../procedures";
 
 interface GetAllOptions {
@@ -9,7 +7,7 @@ interface GetAllOptions {
 }
 
 export const getAllHandler = async ({ ctx }: GetAllOptions) => {
-  const apps = await db.query.apps.findMany({
+  const apps = await ctx.db.query.apps.findMany({
     with: {
       AppsToTeams: {
         with: {

@@ -6,7 +6,8 @@ import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import Google from "next-auth/providers/google";
 import resend from "next-auth/providers/resend";
 
-import { and, db, eq } from "@kdx/db";
+import { and, eq } from "@kdx/db";
+import { db } from "@kdx/db/client";
 import { schema } from "@kdx/db/schema";
 import { kodixNotificationFromEmail, nanoid } from "@kdx/shared";
 

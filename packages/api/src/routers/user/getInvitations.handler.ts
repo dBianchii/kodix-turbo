@@ -1,4 +1,5 @@
-import { db, sql } from "@kdx/db";
+import { sql } from "@kdx/db";
+import { db } from "@kdx/db/client";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 
