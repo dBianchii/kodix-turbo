@@ -6,6 +6,7 @@ import {
   mysqlEnum,
   mysqlTable,
   primaryKey,
+  text,
   timestamp,
   varchar,
 } from "drizzle-orm/mysql-core";
@@ -125,7 +126,7 @@ export const notifications = mysqlTable(
       .references(() => teams.id, { onUpdate: "cascade", onDelete: "cascade" }),
     subject: varchar("subject", { length: 100 }), //For email
     sentAt: timestamp("sentAt").notNull(),
-    message: varchar("message", { length: 500 }).notNull(),
+    message: text("message").notNull(),
     channel: mysqlEnum("channel", ["EMAIL"]).notNull(),
     read: boolean("read").default(false).notNull(),
   },

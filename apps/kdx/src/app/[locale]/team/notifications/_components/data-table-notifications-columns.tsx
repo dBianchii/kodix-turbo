@@ -1,6 +1,7 @@
 import React from "react";
+import Link from "next/link";
 import { createColumnHelper } from "@tanstack/react-table";
-import { RxDotsHorizontal } from "react-icons/rx";
+import { RxDotsHorizontal, RxExternalLink } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import { format } from "@kdx/date-fns";
@@ -110,6 +111,7 @@ export function getColumns() {
               onOpenChange={setShowUpdateTaskSheet}
               task={row.original}
             /> */}
+
             <DeleteNotificationsDialog
               open={showDeleteTaskDialog}
               onOpenChange={setShowDeleteTaskDialog}
@@ -127,8 +129,17 @@ export function getColumns() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-40">
+                <Link
+                  href={`/team/notifications/preview-email/${row.original.id}`}
+                  target="_blank"
+                >
+                  <DropdownMenuItem>
+                    {t("View")} <RxExternalLink className="size-6 pl-2" />
+                  </DropdownMenuItem>
+                </Link>
                 <DropdownMenuItem
                   onSelect={() => setShowDeleteTaskDialog(true)}
+                  className="text-destructive"
                 >
                   {t("Delete")}
                 </DropdownMenuItem>
