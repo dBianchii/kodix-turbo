@@ -8,16 +8,18 @@ import {
   varchar,
 } from "drizzle-orm/mysql-core";
 
-import { NANOID_SIZE } from "@kdx/shared";
-
 import { teams } from "../teams";
 import { users } from "../users";
-import { DEFAULTLENGTH, teamIdReference } from "../utils";
+import {
+  DEFAULTLENGTH,
+  nanoidPrimaryKey,
+  teamIdReferenceCascadeDelete,
+} from "../utils";
 
 export const todos = mysqlTable(
   "todo",
   {
-    id: varchar("id", { length: NANOID_SIZE }).notNull().primaryKey(),
+    id: nanoidPrimaryKey,
     title: varchar("title", { length: DEFAULTLENGTH }).notNull(),
     description: varchar("description", { length: DEFAULTLENGTH }),
     dueDate: timestamp("dueDate"),
@@ -32,7 +34,7 @@ export const todos = mysqlTable(
     assignedToUserId: varchar("assignedToUserId", {
       length: DEFAULTLENGTH,
     }).references(() => users.id),
-    teamId: teamIdReference,
+    teamId: teamIdReferenceCascadeDelete,
   },
   (table) => {
     return {

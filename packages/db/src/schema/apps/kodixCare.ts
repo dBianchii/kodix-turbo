@@ -5,17 +5,21 @@ import { NANOID_SIZE } from "@kdx/shared";
 
 import { teams } from "../teams";
 import { users } from "../users";
-import { DEFAULTLENGTH, teamIdReference } from "../utils";
+import {
+  DEFAULTLENGTH,
+  nanoidPrimaryKey,
+  teamIdReferenceCascadeDelete,
+} from "../utils";
 import { eventMasters } from "./calendar";
 
 export const careShifts = mysqlTable(
   "careShift",
   {
-    id: varchar("id", { length: NANOID_SIZE }).notNull().primaryKey(),
+    id: nanoidPrimaryKey,
     caregiverId: varchar("caregiverId", { length: NANOID_SIZE })
       .notNull()
       .references(() => users.id),
-    teamId: teamIdReference,
+    teamId: teamIdReferenceCascadeDelete,
     checkIn: timestamp("checkIn")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
@@ -44,14 +48,14 @@ export const careShiftsRelations = relations(careShifts, ({ one }) => ({
 export const careTasks = mysqlTable(
   "careTask",
   {
-    id: varchar("id", { length: NANOID_SIZE }).notNull().primaryKey(),
+    id: nanoidPrimaryKey,
     eventDate: timestamp("eventDate").notNull(),
     doneAt: timestamp("doneAt"),
     doneByUserId: varchar("doneByUserId", { length: NANOID_SIZE }).references(
       () => users.id,
       { onDelete: "restrict" }, //Restrict because we have to keep logs somehow
     ),
-    teamId: teamIdReference,
+    teamId: teamIdReferenceCascadeDelete,
     eventMasterId: varchar("eventMasterId", {
       length: NANOID_SIZE,
     }).references(() => eventMasters.id),

@@ -15,12 +15,16 @@ import { NANOID_SIZE } from "@kdx/shared";
 
 import { todos } from "./apps/todos";
 import { invitations, teamAppRolesToUsers, teams, usersToTeams } from "./teams";
-import { DEFAULTLENGTH, teamIdReference } from "./utils";
+import {
+  DEFAULTLENGTH,
+  nanoidPrimaryKey,
+  teamIdReferenceCascadeDelete,
+} from "./utils";
 
 export const users = mysqlTable(
   "user",
   {
-    id: varchar("id", { length: NANOID_SIZE }).notNull().primaryKey(),
+    id: nanoidPrimaryKey,
     name: varchar("name", { length: DEFAULTLENGTH }),
     email: varchar("email", { length: DEFAULTLENGTH }).notNull().unique(),
     emailVerified: timestamp("emailVerified").default(sql`CURRENT_TIMESTAMP`),
@@ -117,11 +121,11 @@ export const verificationTokens = mysqlTable(
 export const notifications = mysqlTable(
   "notification",
   {
-    id: varchar("id", { length: NANOID_SIZE }).notNull().primaryKey(),
+    id: nanoidPrimaryKey,
     sentToUserId: varchar("sentToUserId", { length: NANOID_SIZE })
       .notNull()
       .references(() => users.id, { onUpdate: "cascade", onDelete: "cascade" }),
-    teamId: teamIdReference,
+    teamId: teamIdReferenceCascadeDelete,
     subject: varchar("subject", { length: 100 }), //For email
     sentAt: timestamp("sentAt").notNull(),
     message: text("message").notNull(),
