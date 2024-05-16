@@ -11,6 +11,7 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 
 import type { Session } from "@kdx/auth";
+import { validateToken } from "@kdx/auth";
 import { db } from "@kdx/db/client";
 
 /**
