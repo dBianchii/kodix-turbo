@@ -146,7 +146,7 @@ function KodixAdapter(): Adapter {
         activeTeamName: thing.team.name,
       } as Awaitable<AdapterUser | null>;
     },
-  };
+  } as Adapter;
 }
 
 export const authConfig = {
