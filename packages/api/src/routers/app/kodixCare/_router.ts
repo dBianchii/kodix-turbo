@@ -16,7 +16,6 @@ import { protectedProcedure } from "../../../procedures";
 import { doCheckoutForShiftHandler } from "./doCheckoutForShift.handler";
 import { getCareTasksHandler } from "./getCareTasks.handler";
 import { getCurrentCareShiftHandler } from "./getCurrentCareShift.handler";
-import { onboardingCompletedHandler } from "./onboardingCompleted.handler";
 import { saveCareTaskHandler } from "./saveCareTask.handler";
 import { toggleShiftHandler } from "./toggleShift.handler";
 import { unlockMoreTasksHandler } from "./unlockMoreTasks.handler";
@@ -40,7 +39,6 @@ export const kodixCareRouter = {
   saveCareTask: protectedProcedure
     .input(ZSaveCareTaskInputSchema)
     .mutation(saveCareTaskHandler),
-  onboardingCompleted: protectedProcedure.query(onboardingCompletedHandler),
   unlockMoreTasks: protectedProcedure
     .input(ZUnlockMoreTasksInputSchema)
     .mutation(unlockMoreTasksHandler),

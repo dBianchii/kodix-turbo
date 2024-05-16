@@ -21,12 +21,12 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@kdx/ui/context-menu";
+import { DataTablePagination } from "@kdx/ui/data-table/data-table-pagination";
 import { Input } from "@kdx/ui/input";
 import { Table, TableBody, TableCell, TableRow } from "@kdx/ui/table";
 
 import type { Priority } from "./priority-popover";
 import { DatePickerWithPresets } from "~/app/[locale]/_components/date-picker-with-presets";
-import { DataTablePagination } from "~/app/[locale]/_components/pagination";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 import { AssigneePopover } from "./assignee-popover";

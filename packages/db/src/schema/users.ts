@@ -3,8 +3,10 @@ import {
   boolean,
   index,
   int,
+  mysqlEnum,
   mysqlTable,
   primaryKey,
+  text,
   timestamp,
   varchar,
 } from "drizzle-orm/mysql-core";
@@ -12,19 +14,17 @@ import {
 import { NANOID_SIZE } from "@kdx/shared";
 
 import { todos } from "./apps/todos";
+import { invitations, teamAppRolesToUsers, teams, usersToTeams } from "./teams";
 import {
-  invitations,
-  notifications,
-  teamAppRolesToUsers,
-  teams,
-  usersToTeams,
-} from "./teams";
-import { DEFAULTLENGTH } from "./utils";
+  DEFAULTLENGTH,
+  nanoidPrimaryKey,
+  teamIdReferenceCascadeDelete,
+} from "./utils";
 
 export const users = mysqlTable(
   "user",
   {
-    id: varchar("id", { length: NANOID_SIZE }).notNull().primaryKey(),
+    id: nanoidPrimaryKey,
     name: varchar("name", { length: DEFAULTLENGTH }),
     email: varchar("email", { length: DEFAULTLENGTH }).notNull().unique(),
     emailVerified: timestamp("emailVerified").default(sql`CURRENT_TIMESTAMP`),
@@ -70,7 +70,7 @@ export const accounts = mysqlTable(
     expires_at: int("expires_at"),
     token_type: varchar("token_type", { length: DEFAULTLENGTH }),
     scope: varchar("scope", { length: DEFAULTLENGTH }),
-    id_token: varchar("id_token", { length: 2048 }), //Must be larger than 255 at least.
+    id_token: varchar("id_token", { length: 2048 }), //Must be larger than 255 at least. Trust me
     session_state: varchar("session_state", { length: DEFAULTLENGTH }),
   },
   (account) => ({
@@ -117,3 +117,35 @@ export const verificationTokens = mysqlTable(
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   }),
 );
+
+export const notifications = mysqlTable(
+  "notification",
+  {
+    id: nanoidPrimaryKey,
+    sentToUserId: varchar("sentToUserId", { length: NANOID_SIZE })
+      .notNull()
+      .references(() => users.id, { onUpdate: "cascade", onDelete: "cascade" }),
+    teamId: teamIdReferenceCascadeDelete,
+    subject: varchar("subject", { length: 100 }), //For email
+    sentAt: timestamp("sentAt").notNull(),
+    message: text("message").notNull(),
+    channel: mysqlEnum("channel", ["EMAIL"]).notNull(),
+    read: boolean("read").default(false).notNull(),
+  },
+  (table) => {
+    return {
+      sentToUserIdIdx: index("sentToUserId_idx").on(table.sentToUserId),
+      teamIdIdx: index("teamId_idx").on(table.teamId),
+    };
+  },
+);
+export const notificationsRelations = relations(notifications, ({ one }) => ({
+  User: one(users, {
+    fields: [notifications.sentToUserId],
+    references: [users.id],
+  }),
+  Team: one(teams, {
+    fields: [notifications.teamId],
+    references: [teams.id],
+  }),
+}));

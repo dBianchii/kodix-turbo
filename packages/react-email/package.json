@@ -10,7 +10,6 @@
     "./warn-previous-shift-not-ended": "./src/emails/kodixCare/warn-previous-shift-not-ended.tsx"
   },
   "scripts": {
-    "dev": "pnpm dlx react-email@latest dev --dir='src'",
     "clean": "rm -rf .turbo node_modules",
     "lint": "eslint",
     "format": "prettier --check . --ignore-path ../../.gitignore",
@@ -20,16 +19,16 @@
     "@kdx/locales": "workspace:*",
     "@kdx/shared": "workspace:*",
     "@react-email/components": "^0.0.14",
-    "react": "18.2.0",
+    "react": "18.3.1",
     "react-email": "^2.1.1"
   },
   "devDependencies": {
     "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "@types/node": "^20.12.7",
-    "@types/react": "^18.2.78",
-    "eslint": "^9.0.0",
+    "@types/node": "^20.12.10",
+    "@types/react": "^18.3.1",
+    "eslint": "^9.2.0",
     "prettier": "^3.2.5",
     "typescript": "^5.4.5"
   },

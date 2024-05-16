@@ -1,18 +1,21 @@
 import { TRPCError } from "@trpc/server";
 
+import { sql } from "@kdx/db";
+import { db } from "@kdx/db/client";
+
 import type { TProtectedProcedureContext } from "../../procedures";
 
 interface GetActiveTeamOptions {
   ctx: TProtectedProcedureContext;
 }
 
-export const getActiveTeamHandler = async ({ ctx }: GetActiveTeamOptions) => {
-  const team = await ctx.db.query.teams.findFirst({
-    where: (teams, { eq }) => eq(teams.id, ctx.session.user.activeTeamId),
+const prepared = db.query.teams
+  .findFirst({
+    where: (teams, { eq }) => eq(teams.id, sql.placeholder("teamId")),
     with: {
       UsersToTeams: {
         where: (usersToTeams, { eq }) =>
-          eq(usersToTeams.userId, ctx.session.user.id),
+          eq(usersToTeams.userId, sql.placeholder("userId")),
         with: {
           User: {
             columns: {
@@ -24,7 +27,15 @@ export const getActiveTeamHandler = async ({ ctx }: GetActiveTeamOptions) => {
         },
       },
     },
+  })
+  .prepare();
+
+export const getActiveTeamHandler = async ({ ctx }: GetActiveTeamOptions) => {
+  const team = await prepared.execute({
+    teamId: ctx.session.user.activeTeamId,
+    userId: ctx.session.user.id,
   });
+
   if (!team)
     throw new TRPCError({
       message: "Team not found",

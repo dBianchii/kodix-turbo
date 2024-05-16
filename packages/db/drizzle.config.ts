@@ -23,6 +23,6 @@ connectionStr.password = env.DB_PASSWORD;
 export default {
   schema: "./src/schema/**",
   out: "./drizzle",
-  driver: "mysql2",
-  dbCredentials: { uri: connectionStr.href },
+  dialect: "mysql",
+  dbCredentials: { url: connectionStr.href },
 } satisfies Config;

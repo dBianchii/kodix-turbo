@@ -3,3 +3,4 @@
 export * from "./utils";
 export * from "./db";
 export * from "./constants";
+export * from "./data-table-config";

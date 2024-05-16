@@ -6,9 +6,9 @@ import {
   todoAppId,
 } from "@kdx/shared";
 
-import { db } from "..";
-import { sql } from "../";
-import { schema } from "../schema";
+import { sql } from "../..";
+import { db } from "../../client";
+import { schema } from "../../schema";
 import { appRoles_defaultTree } from "./appRolesDefault_tree";
 
 const devPartners: (typeof schema.devPartners.$inferInsert)[] = [
@@ -22,17 +22,17 @@ const devPartners: (typeof schema.devPartners.$inferInsert)[] = [
 export const apps: (typeof schema.apps.$inferInsert)[] = [
   {
     id: todoAppId, //As const so it can be used as a type
-    subscriptionCost: 0 as const,
+    subscriptionCost: "0" as const,
     devPartnerId: kdxPartnerId,
   },
   {
     id: calendarAppId,
-    subscriptionCost: 0 as const,
+    subscriptionCost: "0" as const,
     devPartnerId: kdxPartnerId,
   },
   {
     id: kodixCareAppId,
-    subscriptionCost: 0 as const,
+    subscriptionCost: "0" as const,
     devPartnerId: kdxPartnerId,
   },
 ];

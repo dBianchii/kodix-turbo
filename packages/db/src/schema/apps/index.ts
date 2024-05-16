@@ -11,10 +11,15 @@ import {
 import { NANOID_SIZE } from "@kdx/shared";
 
 import { teamAppRoles, teams } from "../teams";
-import { DEFAULTLENGTH, moneyDecimal } from "../utils";
+import {
+  DEFAULTLENGTH,
+  moneyDecimal,
+  nanoidPrimaryKey,
+  teamIdReferenceCascadeDelete,
+} from "../utils";
 
 export const devPartners = mysqlTable("devPartner", {
-  id: varchar("id", { length: NANOID_SIZE }).notNull().primaryKey(),
+  id: nanoidPrimaryKey,
   name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
   partnerUrl: varchar("partnerUrl", { length: DEFAULTLENGTH }),
   createdAt: timestamp("createdAt")
@@ -29,7 +34,7 @@ export const devPartnersRelations = relations(devPartners, ({ many }) => ({
 export const apps = mysqlTable(
   "app",
   {
-    id: varchar("id", { length: NANOID_SIZE }).notNull().primaryKey(),
+    id: nanoidPrimaryKey,
     createdAt: timestamp("createdAt")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
@@ -57,14 +62,12 @@ export const appRelations = relations(apps, ({ many, one }) => ({
 }));
 
 export const appsToTeams = mysqlTable(
-  "_AppTeam",
+  "_appToTeam",
   {
-    appId: varchar("A", { length: NANOID_SIZE })
+    appId: varchar("appId", { length: NANOID_SIZE })
       .notNull()
-      .references(() => apps.id),
-    teamId: varchar("B", { length: NANOID_SIZE })
-      .notNull()
-      .references(() => teams.id),
+      .references(() => apps.id, { onDelete: "cascade" }),
+    teamId: teamIdReferenceCascadeDelete,
   },
   (table) => {
     return {
@@ -91,7 +94,7 @@ export const appsToTeamsRelations = relations(appsToTeams, ({ one }) => ({
 export const appPermissions = mysqlTable(
   "appPermission",
   {
-    id: varchar("id", { length: NANOID_SIZE }).notNull().primaryKey(),
+    id: nanoidPrimaryKey,
     appId: varchar("appId", { length: NANOID_SIZE })
       .notNull()
       .references(() => apps.id, { onDelete: "cascade", onUpdate: "cascade" }),
@@ -116,14 +119,12 @@ export const appPermissionsRelations = relations(
 export const appTeamConfigs = mysqlTable(
   "appTeamConfig",
   {
-    id: varchar("id", { length: NANOID_SIZE }).notNull().primaryKey(),
+    id: nanoidPrimaryKey,
     config: json("config").notNull(),
     appId: varchar("appId", { length: NANOID_SIZE })
       .notNull()
       .references(() => apps.id, { onDelete: "cascade" }),
-    teamId: varchar("teamId", { length: NANOID_SIZE })
-      .notNull()
-      .references(() => teams.id, { onDelete: "cascade" }),
+    teamId: teamIdReferenceCascadeDelete,
   },
   (table) => {
     return {
@@ -149,12 +150,12 @@ export const appTeamConfigsRelations = relations(appTeamConfigs, ({ one }) => ({
 }));
 
 export const appPermissionsToTeamAppRoles = mysqlTable(
-  "_AppPermissionToTeamAppRole",
+  "_appPermissionToTeamAppRole",
   {
-    appPermissionId: varchar("A", { length: NANOID_SIZE })
+    appPermissionId: varchar("appPermissionId", { length: NANOID_SIZE })
       .notNull()
       .references(() => appPermissions.id, { onDelete: "cascade" }),
-    teamAppRoleId: varchar("B", { length: NANOID_SIZE })
+    teamAppRoleId: varchar("teamAppRoleId", { length: NANOID_SIZE })
       .notNull()
       .references(() => teamAppRoles.id, { onDelete: "cascade" }),
   },

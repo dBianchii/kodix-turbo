@@ -6,7 +6,7 @@ import { z } from "zod";
 import { env as authEnv } from "@kdx/auth/env";
 
 export const env = createEnv({
-  extends: [authEnv, vercel],
+  extends: [authEnv, vercel()],
   shared: {
     NODE_ENV: z
       .enum(["development", "production", "test"])
@@ -26,6 +26,8 @@ export const env = createEnv({
     RESEND_API_KEY: z.string(),
     AWS_SMTP_USER: z.string().optional(), //TODO: Remove once we know
     AWS_SMTP_PASSWORD: z.string().optional(),
+    UPSTASH_REDIS_REST_URL: z.string().url(),
+    UPSTASH_REDIS_REST_TOKEN: z.string(),
   },
   /**
    * Specify your client-side environment variables schema here.
@@ -33,8 +35,8 @@ export const env = createEnv({
    */
   client: {
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
-    NEXT_PUBLIC_POSTHOG_KEY: z.string().optional(),
-    NEXT_PUBLIC_POSTHOG_HOST: z.string().optional(),
+    NEXT_PUBLIC_POSTHOG_KEY: z.string(),
+    NEXT_PUBLIC_POSTHOG_HOST: z.string(),
   },
   /**
    * Destructure all variables from `process.env` to make sure they aren't tree-shaken away.

@@ -1,6 +1,9 @@
+import type { Session } from "@kdx/auth";
+import type { DrizzleTransaction } from "@kdx/db/client";
+import type { KodixAppId } from "@kdx/shared";
 import type { TUninstallAppInputSchema } from "@kdx/validators/trpc/app";
 import { and, eq } from "@kdx/db";
-import { schema } from "@kdx/db/schema";
+import { appIdToSchemas, schema } from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 
@@ -38,7 +41,33 @@ export const uninstallAppHandler = async ({
           eq(schema.appTeamConfigs.teamId, ctx.session.user.activeTeamId),
         ),
       );
-  });
 
-  //TODO: remove all data from the app.
+    await removeAppData({
+      tx,
+      appId: input.appId,
+      session: ctx.session,
+    });
+  });
 };
+
+async function removeAppData({
+  tx,
+  appId,
+  session,
+}: {
+  tx: DrizzleTransaction;
+  appId: KodixAppId;
+  session: Session;
+}) {
+  const allSchemasForApp = appIdToSchemas[appId];
+
+  await tx.transaction(async (tx) => {
+    for (const schema of Object.values(allSchemasForApp)) {
+      if (!("teamId" in schema)) continue;
+
+      await tx
+        .delete(schema)
+        .where(eq(schema.teamId, session.user.activeTeamId));
+    }
+  });
+}

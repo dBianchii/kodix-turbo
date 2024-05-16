@@ -1,6 +1,8 @@
 import { sql } from "drizzle-orm/sql";
 
-import { db } from "./index";
+import { db } from "../client";
+
+if (!process.env.DB_NAME) throw new Error("DB_NAME is not set");
 
 async function emptyDBTables() {
   console.log("🗑️ Dropping the entire database");
@@ -11,6 +13,7 @@ async function emptyDBTables() {
 emptyDBTables()
   .then(() => {
     console.log("✅ Database dropped");
+    process.exit(0);
   })
   .catch((e) => {
     console.error(e);

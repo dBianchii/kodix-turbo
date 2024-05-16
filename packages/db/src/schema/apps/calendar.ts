@@ -4,21 +4,23 @@ import { index, mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core";
 import { NANOID_SIZE } from "@kdx/shared";
 
 import { teams } from "../teams";
-import { DEFAULTLENGTH } from "../utils";
+import {
+  DEFAULTLENGTH,
+  nanoidPrimaryKey,
+  teamIdReferenceCascadeDelete,
+} from "../utils";
 import { careTasks } from "./kodixCare";
 
 export const eventMasters = mysqlTable(
   "eventMaster",
   {
-    id: varchar("id", { length: NANOID_SIZE }).notNull().primaryKey(),
+    id: nanoidPrimaryKey,
     rule: varchar("rule", { length: DEFAULTLENGTH }).notNull(),
-    dateStart: timestamp("DateStart", { mode: "date", fsp: 3 }).notNull(),
-    dateUntil: timestamp("DateUntil", { mode: "date", fsp: 3 }),
+    dateStart: timestamp("dateStart", { mode: "date", fsp: 3 }).notNull(),
+    dateUntil: timestamp("dateUntil", { mode: "date", fsp: 3 }),
     title: varchar("title", { length: DEFAULTLENGTH }),
     description: varchar("description", { length: DEFAULTLENGTH }),
-    teamId: varchar("teamId", { length: NANOID_SIZE })
-      .notNull()
-      .references(() => teams.id, { onDelete: "cascade" }),
+    teamId: teamIdReferenceCascadeDelete,
   },
   (table) => {
     return {
@@ -42,7 +44,7 @@ export const eventMastersRelations = relations(
 export const eventCancellations = mysqlTable(
   "eventCancellation",
   {
-    id: varchar("id", { length: NANOID_SIZE }).notNull().primaryKey(),
+    id: nanoidPrimaryKey,
     originalDate: timestamp("originalDate").notNull(),
     eventMasterId: varchar("eventMasterId", {
       length: NANOID_SIZE,
@@ -69,7 +71,7 @@ export const eventCancellationsRelations = relations(
 export const eventExceptions = mysqlTable(
   "eventException",
   {
-    id: varchar("id", { length: NANOID_SIZE }).notNull().primaryKey(),
+    id: nanoidPrimaryKey,
     originalDate: timestamp("originalDate").notNull(),
     newDate: timestamp("newDate", { mode: "date", fsp: 3 }).notNull(),
     title: varchar("title", { length: DEFAULTLENGTH }),

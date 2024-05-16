@@ -1,28 +1,29 @@
 import { relations } from "drizzle-orm";
 import {
   index,
-  int,
   mysqlEnum,
   mysqlTable,
+  smallint,
   timestamp,
-  tinyint,
   varchar,
 } from "drizzle-orm/mysql-core";
 
-import { NANOID_SIZE } from "@kdx/shared";
-
-import { users } from "../auth";
 import { teams } from "../teams";
-import { DEFAULTLENGTH } from "../utils";
+import { users } from "../users";
+import {
+  DEFAULTLENGTH,
+  nanoidPrimaryKey,
+  teamIdReferenceCascadeDelete,
+} from "../utils";
 
 export const todos = mysqlTable(
   "todo",
   {
-    id: varchar("id", { length: NANOID_SIZE }).notNull().primaryKey(),
+    id: nanoidPrimaryKey,
     title: varchar("title", { length: DEFAULTLENGTH }).notNull(),
     description: varchar("description", { length: DEFAULTLENGTH }),
     dueDate: timestamp("dueDate"),
-    priority: int("priority"),
+    priority: smallint("priority"),
     status: mysqlEnum("status", [
       "TODO",
       "INPROGRESS",
@@ -30,13 +31,10 @@ export const todos = mysqlTable(
       "DONE",
       "CANCELED",
     ]),
-    reminder: tinyint("reminder"),
     assignedToUserId: varchar("assignedToUserId", {
       length: DEFAULTLENGTH,
     }).references(() => users.id),
-    teamId: varchar("teamId", { length: NANOID_SIZE })
-      .notNull()
-      .references(() => teams.id),
+    teamId: teamIdReferenceCascadeDelete,
   },
   (table) => {
     return {

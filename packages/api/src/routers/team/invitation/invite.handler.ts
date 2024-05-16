@@ -8,11 +8,10 @@ import {
   getBaseKdxUrl,
   getSuccessesAndErrors,
   kodixNotificationFromEmail,
-  nanoid,
 } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
-import { resend } from "../../../utils/email/email";
+import { resend } from "../../../utils/email";
 
 interface InviteOptions {
   ctx: TProtectedProcedureContext;
@@ -70,7 +69,6 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
 
   const invitations: (typeof schema.invitations.$inferInsert)[] = input.to.map(
     (email) => ({
-      id: nanoid(),
       teamId: team.id,
       email,
       invitedById: ctx.session.user.id,

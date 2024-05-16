@@ -1,14 +1,19 @@
 "use client";
 
-import { createColumnHelper } from "@tanstack/react-table";
+import { useMemo } from "react";
+import {
+  createColumnHelper,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { AppRoleDefaultId, KodixAppId } from "@kdx/shared";
-import type { FixedColumnsType } from "@kdx/ui/data-table";
+import type { FixedColumnsType } from "@kdx/ui/data-table/data-table";
 import { useI18n } from "@kdx/locales/client";
 import { useAppRoleDefaultNames } from "@kdx/locales/hooks";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
-import { DataTable } from "@kdx/ui/data-table";
+import { DataTable } from "@kdx/ui/data-table/data-table";
 import { MultiSelect } from "@kdx/ui/multi-select";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
@@ -93,58 +98,70 @@ export function DataTableUserAppRoles({
     });
   const t = useI18n();
 
-  const columns = [
-    columnHelper.accessor("name", {
-      header: () => <div className="pl-2">{t("User")}</div>,
-      cell: (info) => (
-        <div className="flex w-60 flex-row gap-3  pl-2">
-          <div className="flex flex-col">
-            <AvatarWrapper
-              className="h-8 w-8"
-              src={info.cell.row.original.image ?? ""}
-              fallback={info.getValue()}
-            />
-          </div>
-          <div className="flex flex-col items-start">
-            <span className="font-bold">{info.cell.row.original.name}</span>
-            <span className="text-xs text-muted-foreground">
-              {info.cell.row.original.email}
-            </span>
-          </div>
-        </div>
-      ),
-    }),
-    columnHelper.accessor("TeamAppRolesToUsers", {
-      header: t("Roles"),
-      cell: function Cell(info) {
-        const selected = info
-          .getValue()
-          .map((teamAppRolesToUser) => teamAppRolesToUser.teamAppRoleId);
-        const appRoleDefaultNames = useAppRoleDefaultNames();
+  const columns = useMemo(
+    () =>
+      [
+        columnHelper.accessor("name", {
+          header: () => <div className="pl-2">{t("User")}</div>,
+          cell: (info) => (
+            <div className="flex w-60 flex-row gap-3  pl-2">
+              <div className="flex flex-col">
+                <AvatarWrapper
+                  className="h-8 w-8"
+                  src={info.cell.row.original.image ?? ""}
+                  fallback={info.getValue()}
+                />
+              </div>
+              <div className="flex flex-col items-start">
+                <span className="font-bold">{info.cell.row.original.name}</span>
+                <span className="text-xs text-muted-foreground">
+                  {info.cell.row.original.email}
+                </span>
+              </div>
+            </div>
+          ),
+        }),
+        columnHelper.accessor("TeamAppRolesToUsers", {
+          header: t("Roles"),
+          cell: function Cell(info) {
+            const selected = info
+              .getValue()
+              .map((teamAppRolesToUser) => teamAppRolesToUser.teamAppRoleId);
+            const appRoleDefaultNames = useAppRoleDefaultNames();
 
-        return (
-          <MultiSelect
-            className="w-96"
-            options={allAppRoles.map((role) => ({
-              label:
-                appRoleDefaultNames[role.appRoleDefaultId as AppRoleDefaultId],
-              value: role.id,
-            }))}
-            selected={selected}
-            onChange={(newValues: string[]) => {
-              updateUserAssociation({
-                userId: info.cell.row.original.id,
-                teamAppRoleIds: newValues,
-                appId,
-              });
-            }}
-          />
-        );
-      },
-    }),
-  ] as FixedColumnsType<
-    RouterOutputs["team"]["appRole"]["getUsersWithRoles"][number]
-  >;
+            return (
+              <MultiSelect
+                className="w-96"
+                options={allAppRoles.map((role) => ({
+                  label:
+                    appRoleDefaultNames[
+                      role.appRoleDefaultId as AppRoleDefaultId
+                    ],
+                  value: role.id,
+                }))}
+                selected={selected}
+                onChange={(newValues: string[]) => {
+                  updateUserAssociation({
+                    userId: info.cell.row.original.id,
+                    teamAppRoleIds: newValues,
+                    appId,
+                  });
+                }}
+              />
+            );
+          },
+        }),
+      ] as FixedColumnsType<
+        RouterOutputs["team"]["appRole"]["getUsersWithRoles"][number]
+      >,
+    [allAppRoles, appId, t, updateUserAssociation],
+  );
 
-  return <DataTable columns={columns} data={data} />;
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
+
+  return <DataTable table={table} />;
 }

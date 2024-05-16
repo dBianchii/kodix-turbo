@@ -1,9 +1,26 @@
 import type { TRPCClientErrorLike } from "@trpc/client";
+import { isRedirectError } from "next/dist/client/components/redirect";
+import { z } from "zod";
 
 import type { AppRouter } from "@kdx/api";
 import type { KodixAppId } from "@kdx/shared";
 import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
 import { toast } from "@kdx/ui/toast";
+
+export function getErrorMessage(err: unknown) {
+  const unknownError = "Something went wrong, please try again later.";
+
+  if (err instanceof z.ZodError) {
+    const errors = err.issues.map((issue) => {
+      return issue.message;
+    });
+    return errors.join("\n");
+  }
+  if (err instanceof Error) return err.message;
+  if (isRedirectError(err)) throw err;
+
+  return unknownError;
+}
 
 /**
  * @param error: TRPCClientError
@@ -12,10 +29,13 @@ import { toast } from "@kdx/ui/toast";
 export const trpcErrorToastDefault = (
   error: TRPCClientErrorLike<AppRouter>,
 ) => {
-  const zodContentErrors = error.data?.zodError?.fieldErrors.content;
-  const zodFormErrors = error.data?.zodError?.formErrors;
+  // const zodContentErrors = error.data?.zodError?.fieldErrors.content;
+  // const zodFormErrors = error.data?.zodError?.formErrors;
+  // toast.error(zodContentErrors?.[0] ?? zodFormErrors?.[0] ?? error.message);
+  //? Undo this comment if needed
 
-  toast.error(zodContentErrors?.[0] ?? zodFormErrors?.[0] ?? error.message);
+  const errorMessage = getErrorMessage(error);
+  return toast.error(errorMessage);
 };
 
 /**

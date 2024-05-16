@@ -79,7 +79,6 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
     if (input.title !== undefined || input.description !== undefined) {
       //* Se tivermos title ou description, criamos um eventInfo e também uma exceção.
       return await ctx.db.insert(schema.eventExceptions).values({
-        id: nanoid(),
         eventMasterId: eventMaster.id,
         originalDate: foundTimestamp,
         newDate: input.from ?? foundTimestamp,
@@ -91,7 +90,6 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
     //* Se não tivermos title nem description, ainda temos o from. Criamos uma exceção sem eventInfo.
     else
       return await ctx.db.insert(schema.eventExceptions).values({
-        id: nanoid(),
         eventMasterId: eventMaster.id,
         originalDate: foundTimestamp,
         newDate: input.from ?? foundTimestamp,

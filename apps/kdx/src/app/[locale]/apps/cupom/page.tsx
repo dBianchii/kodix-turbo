@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import { db } from "@kdx/db";
+import { db } from "@kdx/db/client";
 import { getI18n } from "@kdx/locales/server";
 
 export default async function CupomPage() {

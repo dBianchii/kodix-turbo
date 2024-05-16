@@ -6,7 +6,8 @@ import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import Google from "next-auth/providers/google";
 import resend from "next-auth/providers/resend";
 
-import { and, db, eq } from "@kdx/db";
+import { and, eq } from "@kdx/db";
+import { db } from "@kdx/db/client";
 import { schema } from "@kdx/db/schema";
 import { kodixNotificationFromEmail, nanoid } from "@kdx/shared";
 
@@ -59,24 +60,23 @@ export function KodixAdapter(): Adapter {
       const result = (await db
         .select()
         .from(users)
-        .where(eq(users.id, id))
+        .where(eq(users.email, data.email))
         .then((res) => res[0])) as Awaitable<AdapterUser>;
 
       return result;
     },
     async getSessionAndUser(sessionToken: string) {
-      const sessionAndUser =
-        (await db
-          .select({
-            session: sessions,
-            user: users,
-            team: teams,
-          })
-          .from(sessions)
-          .where(eq(sessions.sessionToken, sessionToken))
-          .innerJoin(users, eq(users.id, sessions.userId))
-          .innerJoin(teams, eq(teams.id, users.activeTeamId))
-          .then((res) => res[0])) ?? null;
+      const sessionAndUser = await db
+        .select({
+          session: sessions,
+          user: users,
+          team: teams,
+        })
+        .from(sessions)
+        .where(eq(sessions.sessionToken, sessionToken))
+        .innerJoin(users, eq(users.id, sessions.userId))
+        .innerJoin(teams, eq(teams.id, users.activeTeamId))
+        .then((res) => (res.length > 0 ? res[0] : null));
 
       if (!sessionAndUser) return null;
 
@@ -91,14 +91,13 @@ export function KodixAdapter(): Adapter {
         user: AdapterUser;
       } | null>;
     },
-    async getUserByEmail(data) {
-      const result =
-        (await db
-          .select()
-          .from(users)
-          .where(eq(users.email, data))
-          .innerJoin(teams, eq(users.activeTeamId, teams.id))
-          .then((res) => res[0])) ?? null;
+    async getUserByEmail(email) {
+      const result = await db
+        .select({ user: users, team: { name: teams.name } })
+        .from(users)
+        .where(eq(users.email, email))
+        .innerJoin(teams, eq(users.activeTeamId, teams.id))
+        .then((res) => (res.length > 0 ? res[0] : null));
 
       if (!result) return null;
 
@@ -112,13 +111,13 @@ export function KodixAdapter(): Adapter {
         (await db
           .select({ User: users, Team: teams })
           .from(accounts)
+          .innerJoin(users, eq(accounts.userId, users.id))
           .where(
             and(
               eq(accounts.providerAccountId, account.providerAccountId),
               eq(accounts.provider, account.provider),
             ),
           )
-          .leftJoin(users, eq(accounts.userId, users.id))
           .innerJoin(teams, eq(users.activeTeamId, teams.id))
           .then((res) => res[0])) ?? null;
 

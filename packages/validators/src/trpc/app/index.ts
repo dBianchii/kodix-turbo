@@ -1,8 +1,9 @@
 import { z } from "zod";
 
+import type { KodixAppId } from "@kdx/shared";
 import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
 
-import { kodixCareConfigSchema, ZNanoId } from "../..";
+import { kodixCareConfigSchema } from "../..";
 
 type AppIdsWithConfig = typeof kodixCareAppId; //? Some apps might not have config implemented
 
@@ -27,6 +28,6 @@ export const ZSaveConfigInput = z.object({
 export type TSaveConfigInput = z.infer<typeof ZSaveConfigInput>;
 
 export const ZUninstallAppInputSchema = z.object({
-  appId: ZNanoId,
+  appId: z.custom<KodixAppId>(),
 });
 export type TUninstallAppInputSchema = z.infer<typeof ZUninstallAppInputSchema>;
