@@ -1,6 +1,6 @@
 import type { AdapterUser } from "@auth/core/adapters";
 import type { Awaitable } from "@auth/core/types";
-import type { DefaultSession, NextAuthConfig } from "next-auth";
+import type { DefaultSession, NextAuthConfig, Session } from "next-auth";
 import type { Adapter, AdapterSession } from "next-auth/adapters";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import Google from "next-auth/providers/google";
@@ -27,7 +27,7 @@ declare module "next-auth" {
 }
 
 /** @return { import("next-auth/adapters").Adapter } */
-export function KodixAdapter(): Adapter {
+function KodixAdapter(): Adapter {
   const { users, teams, usersToTeams, accounts, sessions } = schema;
   return {
     ...DrizzleAdapter(db, {
@@ -148,9 +148,10 @@ export function KodixAdapter(): Adapter {
     },
   };
 }
+export const adapter = KodixAdapter();
 
 export const authConfig = {
-  adapter: KodixAdapter(),
+  adapter,
   providers: [
     Google({
       clientId: env.AUTH_GOOGLE_CLIENT_ID,
@@ -193,3 +194,31 @@ export const authConfig = {
     //newUser: "/auth/new-user"
   },
 } satisfies NextAuthConfig;
+
+export const validateToken = async (token: string): Promise<Session | null> => {
+  const sessionToken = token.slice("Bearer ".length);
+  const session = (await adapter.getSessionAndUser?.(sessionToken)) as
+    | {
+        session: AdapterSession;
+        user: AdapterUser & {
+          activeTeamId: string;
+          activeTeamName: string;
+          kodixAdmin: boolean;
+        };
+      }
+    | null
+    | undefined;
+
+  return session
+    ? {
+        user: {
+          ...session.user,
+        },
+        expires: session.session.expires.toISOString(),
+      }
+    : null;
+};
+
+export const invalidateSessionToken = async (token: string) => {
+  await adapter.deleteSession?.(token);
+};
