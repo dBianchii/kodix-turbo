@@ -198,17 +198,6 @@ export const authConfig = {
     //verifyRequest: '/auth/verify-request', // (used for check email message)
     //newUser: "/auth/new-user"
   },
-  cookies: {
-    pkceCodeVerifier: {
-      name: "next-auth.pkce.code_verifier",
-      options: {
-        httpOnly: true,
-        sameSite: "none",
-        path: "/",
-        secure: true,
-      },
-    },
-  },
 } satisfies NextAuthConfig;
 
 export const validateToken = async (token: string): Promise<Session | null> => {
