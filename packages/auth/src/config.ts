@@ -157,13 +157,16 @@ export const authConfig = {
     Google({
       clientId: env.AUTH_GOOGLE_CLIENT_ID,
       clientSecret: env.AUTH_GOOGLE_CLIENT_SECRET,
+      allowDangerousEmailAccountLinking: true,
     }),
     resend({
       apiKey: env.RESEND_API_KEY,
       from: kodixNotificationFromEmail,
       sendVerificationRequest,
     }),
-    Discord,
+    Discord({
+      allowDangerousEmailAccountLinking: true,
+    }),
   ],
   callbacks: {
     session: (opts) => {
@@ -194,6 +197,17 @@ export const authConfig = {
     //error: '/auth/error', // Error code passed in query string as ?error=
     //verifyRequest: '/auth/verify-request', // (used for check email message)
     //newUser: "/auth/new-user"
+  },
+  cookies: {
+    pkceCodeVerifier: {
+      name: "next-auth.pkce.code_verifier",
+      options: {
+        httpOnly: true,
+        sameSite: "none",
+        path: "/",
+        secure: true,
+      },
+    },
   },
 } satisfies NextAuthConfig;
 
