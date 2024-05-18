@@ -15,7 +15,7 @@
     "db:seed": "pnpm -F db seed",
     "db:drop": "pnpm -F db drop",
     "dev": "turbo dev --parallel --experimental-ui",
-    "dev:kdx": "turbo dev --scope=kdx --include-dependencies --experimental-ui",
+    "dev:kdx": "turbo dev --filter=kdx --experimental-ui",
     "dev:upstash": "pnpm -F api dev:upstash",
     "format": "turbo format --continue -- --cache --cache-location node_modules/.cache/.prettiercache",
     "format:fix": "turbo format --continue -- --write --cache --cache-location node_modules/.cache/.prettiercache",

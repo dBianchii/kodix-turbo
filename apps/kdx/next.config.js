@@ -8,9 +8,9 @@ createJiti(fileURLToPath(import.meta.url))("./src/env");
 const config = {
   reactStrictMode: true,
 
-  experimental: {
-    ppr: true,
-  },
+  // experimental: {
+  //   ppr: true,
+  // },
 
   /** Enables hot reloading for local packages without a build step */
   transpilePackages: [
