@@ -4,6 +4,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
 import { LuLoader2 } from "react-icons/lu";
+import { RxDiscordLogo } from "react-icons/rx";
 
 import { useScopedI18n } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
@@ -34,11 +35,18 @@ export function SignInButtons({
           </span>
         </div>
       </div>
-      <GoogleSignIn
-        callbackUrl={searchParams?.callbackUrl}
-        loading={disabled}
-        setLoading={setLoading}
-      />
+      <div className="flex flex-col gap-2">
+        <GoogleSignIn
+          callbackUrl={searchParams?.callbackUrl}
+          loading={disabled}
+          setLoading={setLoading}
+        />
+        <DiscordSignIn
+          callbackUrl={searchParams?.callbackUrl}
+          loading={disabled}
+          setLoading={setLoading}
+        />
+      </div>
     </>
   );
 }
@@ -107,6 +115,30 @@ function GoogleSignIn({
     >
       <FcGoogle className="mr-2 size-4" />
       Sign in with Google
+    </Button>
+  );
+}
+
+function DiscordSignIn({
+  callbackUrl,
+  loading,
+  setLoading,
+}: SignInButtonsProps) {
+  return (
+    <Button
+      className="w-full"
+      variant="outline"
+      disabled={loading}
+      onClick={async () => {
+        setLoading(true);
+        await signIn("discord", {
+          callbackUrl,
+        });
+        setLoading(false);
+      }}
+    >
+      <RxDiscordLogo className="mr-2 size-4" />
+      Sign in with Discord
     </Button>
   );
 }

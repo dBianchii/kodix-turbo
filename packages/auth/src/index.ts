@@ -1,5 +1,3 @@
-import type { Session } from "next-auth";
-import type { AdapterSession, AdapterUser } from "next-auth/adapters";
 import NextAuth from "next-auth";
 
 import { authConfig } from "./config";

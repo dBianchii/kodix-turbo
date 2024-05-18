@@ -3,6 +3,7 @@ import type { Awaitable } from "@auth/core/types";
 import type { DefaultSession, NextAuthConfig, Session } from "next-auth";
 import type { Adapter, AdapterSession } from "next-auth/adapters";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import Discord from "next-auth/providers/discord";
 import Google from "next-auth/providers/google";
 import resend from "next-auth/providers/resend";
 
@@ -162,6 +163,7 @@ export const authConfig = {
       from: kodixNotificationFromEmail,
       sendVerificationRequest,
     }),
+    Discord,
   ],
   callbacks: {
     session: (opts) => {
