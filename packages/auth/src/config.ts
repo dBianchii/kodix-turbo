@@ -3,6 +3,7 @@ import type { Awaitable } from "@auth/core/types";
 import type { DefaultSession, NextAuthConfig } from "next-auth";
 import type { Adapter, AdapterSession } from "next-auth/adapters";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import Discord from "next-auth/providers/discord";
 import Google from "next-auth/providers/google";
 import resend from "next-auth/providers/resend";
 
@@ -155,11 +156,15 @@ export const authConfig = {
     Google({
       clientId: env.AUTH_GOOGLE_CLIENT_ID,
       clientSecret: env.AUTH_GOOGLE_CLIENT_SECRET,
+      allowDangerousEmailAccountLinking: true,
     }),
     resend({
       apiKey: env.RESEND_API_KEY,
       from: kodixNotificationFromEmail,
       sendVerificationRequest,
+    }),
+    Discord({
+      allowDangerousEmailAccountLinking: true,
     }),
   ],
   callbacks: {
@@ -191,5 +196,16 @@ export const authConfig = {
     //error: '/auth/error', // Error code passed in query string as ?error=
     //verifyRequest: '/auth/verify-request', // (used for check email message)
     //newUser: "/auth/new-user"
+  },
+  cookies: {
+    pkceCodeVerifier: {
+      name: "next-auth.pkce.code_verifier",
+      options: {
+        httpOnly: true,
+        sameSite: "none",
+        path: "/",
+        secure: true,
+      },
+    },
   },
 } satisfies NextAuthConfig;
