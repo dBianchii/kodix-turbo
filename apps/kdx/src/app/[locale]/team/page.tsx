@@ -8,13 +8,11 @@ import { getI18n } from "@kdx/locales/server";
 import { Separator } from "@kdx/ui/separator";
 import { Skeleton } from "@kdx/ui/skeleton";
 
-import {
-  CustomKodixIcon,
-  IconKodixApp,
-} from "~/app/[locale]/_components/app/kodix-icon";
+import { IconKodixApp } from "~/app/[locale]/_components/app/kodix-icon";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { getAppUrl } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/server";
+import { CustomKodixIcon } from "../_components/app/custom-kodix-icon";
 
 interface CustomApp {
   appName: string;
