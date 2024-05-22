@@ -42,6 +42,12 @@ export const VerificationRequestEmail = async ({
               <Link style={link} href={magicLink}>
                 👉 {t("Click here to sign in")} 👈
               </Link>
+              <br />
+              Or copy and paste the following link into your browser:
+              <br />
+              <Link style={link} href={magicLink}>
+                {magicLink}
+              </Link>
             </Text>
             <Text style={paragraph}>
               {t("If you didnt request this please ignore this email")}

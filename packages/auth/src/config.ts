@@ -158,6 +158,7 @@ export const authConfig = {
       clientId: env.AUTH_GOOGLE_CLIENT_ID,
       clientSecret: env.AUTH_GOOGLE_CLIENT_SECRET,
       allowDangerousEmailAccountLinking: true,
+      // redirectProxyUrl: "http://localhost:3000/api/auth",
     }),
     resend({
       apiKey: env.RESEND_API_KEY,

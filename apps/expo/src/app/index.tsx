@@ -2,11 +2,15 @@
 import { useEffect, useRef, useState } from "react";
 import { Button, Platform, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as QueryParams from "expo-auth-session/build/QueryParams";
 import * as Device from "expo-device";
+import * as Linking from "expo-linking";
 import * as Notifications from "expo-notifications";
-import { Stack } from "expo-router";
+import { Link, Stack } from "expo-router";
 
+import { api } from "~/utils/api";
 import { useSignIn, useSignOut, useUser } from "~/utils/auth";
+import { setToken } from "~/utils/session-store";
 
 Notifications.setNotificationHandler({
   // eslint-disable-next-line @typescript-eslint/require-await
@@ -124,6 +128,18 @@ export default function App() {
     };
   }, []);
 
+  const utils = api.useUtils();
+  const url = Linking.useURL();
+  if (url) {
+    const { params } = QueryParams.getQueryParams(url);
+    const { session_token } = params;
+    if (session_token) {
+      console.log(session_token, "has been set");
+      setToken(session_token);
+      void utils.invalidate();
+    }
+  }
+
   return (
     <SafeAreaView className=" bg-background">
       {/* Changes page title visible on the header */}
@@ -164,6 +180,9 @@ export default function App() {
         >
           <Text className="text-foreground">Send notification</Text>
         </Pressable>
+        <Link href="/login">
+          <Text className="text-foreground">Login</Text>
+        </Link>
       </View>
     </SafeAreaView>
   );

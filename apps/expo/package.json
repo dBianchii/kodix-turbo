@@ -23,6 +23,7 @@
     "@trpc/react-query": "11.0.0-rc.359",
     "@trpc/server": "11.0.0-rc.359",
     "expo": "~51.0.5",
+    "expo-auth-session": "^5.5.2",
     "expo-constants": "~16.0.1",
     "expo-dev-client": "^4.0.13",
     "expo-device": "~5.9.4",

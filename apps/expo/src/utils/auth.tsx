@@ -7,7 +7,7 @@ import { deleteToken, setToken } from "./session-store";
 
 export const signIn = async () => {
   const signInUrl = `${getBaseUrl()}/api/auth/signin`;
-  const redirectTo = Linking.createURL("/login");
+  const redirectTo = Linking.createURL("/");
   const result = await Browser.openAuthSessionAsync(
     `${signInUrl}?expo-redirect=${encodeURIComponent(redirectTo)}`,
   );
