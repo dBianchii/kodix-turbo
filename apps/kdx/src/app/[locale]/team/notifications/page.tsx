@@ -8,7 +8,7 @@ import { H1, Lead } from "@kdx/ui/typography";
 import { ZGetNotificationsInputSchema } from "@kdx/validators/trpc/user";
 
 import { api } from "~/trpc/server";
-import { CustomKodixIcon } from "../../_components/app/kodix-icon";
+import { CustomKodixIcon } from "../../_components/app/custom-kodix-icon";
 import MaxWidthWrapper from "../../_components/max-width-wrapper";
 import { DataTableNotifications } from "./_components/data-table-notifications";
 import { NotificationsDateRangePicker } from "./_components/notifications-date-range-picker";
