@@ -63,23 +63,23 @@ export default function RootLayout(props: {
         >
           <SpeedInsights />
           <Analytics />
-          <Toaster richColors closeButton />
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <Toaster richColors closeButton />
             <LocaleProvider params={props.params}>
               <TRPCReactProvider>
                 <div className="flex min-h-screen flex-col">
                   <Header />
                   {props.children}
                 </div>
-              </TRPCReactProvider>
 
-              {/* UI Design Helpers */}
-              {env.NODE_ENV !== "production" && (
-                <div className="fixed bottom-1 z-50 flex flex-row items-center space-x-1">
-                  <ThemeToggle />
-                  <TailwindIndicator />
-                </div>
-              )}
+                {/* UI Design Helpers */}
+                {env.NODE_ENV !== "production" && (
+                  <div className="fixed bottom-1 z-50 flex flex-row items-center space-x-1">
+                    <ThemeToggle />
+                    <TailwindIndicator />
+                  </div>
+                )}
+              </TRPCReactProvider>
             </LocaleProvider>
           </ThemeProvider>
         </body>
