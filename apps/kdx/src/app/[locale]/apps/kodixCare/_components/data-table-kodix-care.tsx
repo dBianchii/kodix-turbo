@@ -9,7 +9,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import dayjs from "dayjs";
 import { LuChevronsUpDown, LuLoader2 } from "react-icons/lu";
 import { RxChevronLeft, RxChevronRight, RxLockClosed } from "react-icons/rx";
 
@@ -17,6 +16,7 @@ import type { RouterOutputs } from "@kdx/api";
 import type { Session } from "@kdx/auth";
 import type { TGetCareTasksInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import { format } from "@kdx/date-fns";
+import dayjs from "@kdx/dayjs";
 import { useCurrentLocale, useI18n } from "@kdx/locales/client";
 import { cn } from "@kdx/ui";
 import {
