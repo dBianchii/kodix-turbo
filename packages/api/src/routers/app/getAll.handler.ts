@@ -15,6 +15,9 @@ export const getAllHandler = async ({ ctx }: GetAllOptions) => {
         },
       },
     },
+    columns: {
+      id: true,
+    },
   });
 
   if (!apps.length) {
@@ -23,7 +26,6 @@ export const getAllHandler = async ({ ctx }: GetAllOptions) => {
       message: "No apps found",
     });
   }
-
   const appsWithInstalled = apps
     .map((app) => {
       return {
@@ -34,9 +36,8 @@ export const getAllHandler = async ({ ctx }: GetAllOptions) => {
       };
     })
     .map(
-      // remove some fields
-      ({ AppsToTeams: _, devPartnerId: __, subscriptionCost: ___, ...rest }) =>
-        rest,
+      // remove AppsToTeams fields
+      ({ AppsToTeams: _, ...rest }) => rest,
     );
 
   return appsWithInstalled;
