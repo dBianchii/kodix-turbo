@@ -6,12 +6,13 @@ import type { AppPermissionId } from "@kdx/shared";
 export const redis = Redis.fromEnv();
 
 interface KeysMapping {
-  installedApps: {
+  apps: {
     tags: {
-      teamId: typeof schema.teams.$inferSelect.id;
+      teamId: typeof schema.teams.$inferSelect.id | undefined; //? If teamId isn't provided, it will refer to all existant apps
     };
     value: {
       id: typeof schema.apps.$inferSelect.id;
+      installed: boolean;
     }[];
   };
 
