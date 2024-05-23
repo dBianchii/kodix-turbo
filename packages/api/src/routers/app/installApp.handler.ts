@@ -86,7 +86,7 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
     });
   });
 
-  await invalidateUpstashCache("installedApps", {
+  await invalidateUpstashCache("apps", {
     teamId: ctx.session.user.activeTeamId,
   });
 };

@@ -50,6 +50,7 @@ export const getUpstashCache = async <T extends keyof KeysMapping>(
   key: T,
   variableKeys: KeysMapping[T]["tags"],
 ) => {
+  if (process.env.DISABLE_UPSTASH_CACHE) return Promise.resolve(null);
   const constructedKey = constructKey(key, variableKeys);
   return redis.get(constructedKey) as Promise<KeysMapping[T]["value"]> | null;
 };
@@ -62,6 +63,7 @@ export const setUpstashCache = <T extends keyof KeysMapping>(
     ex?: number;
   },
 ) => {
+  if (process.env.DISABLE_UPSTASH_CACHE) return Promise.resolve("OK");
   const { variableKeys, value, ex } = options;
   const constructedKey = constructKey(key, variableKeys);
   return redis.set(constructedKey, value, { ex: ex ?? 60 * 60 * 6 }); // 6 hours
@@ -71,6 +73,7 @@ export const invalidateUpstashCache = <T extends keyof KeysMapping>(
   key: T,
   variableKeys: KeysMapping[T]["tags"],
 ) => {
+  if (process.env.DISABLE_UPSTASH_CACHE) return Promise.resolve(0);
   const constructedKey = constructKey(key, variableKeys);
   return redis.del(constructedKey);
 };
