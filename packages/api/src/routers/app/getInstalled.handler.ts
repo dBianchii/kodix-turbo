@@ -29,13 +29,12 @@ export const getInstalledHandler = async ({ ctx }: GetInstalledOptions) => {
     teamId: ctx.session.user.activeTeamId,
   });
 
-  await setUpstashCache(
-    "installedApps",
-    {
+  await setUpstashCache("installedApps", {
+    value: apps,
+    variableKeys: {
       teamId: ctx.session.user.activeTeamId,
     },
-    apps,
-  );
+  });
 
   return apps;
 };

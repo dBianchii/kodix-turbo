@@ -60,15 +60,14 @@ export const appPermissionMiddleware = (permissionId: AppPermissionId) =>
         },
       });
 
-      await setUpstashCache(
-        "permissions",
-        {
+      await setUpstashCache("permissions", {
+        variableKeys: {
           userId: ctx.session.user.id,
           teamId: ctx.session.user.activeTeamId,
           permissionId,
         },
-        foundPermission,
-      );
+        value: foundPermission,
+      });
     }
 
     if (!foundPermission)

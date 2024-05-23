@@ -55,11 +55,15 @@ export const getUpstashCache = async <T extends keyof KeysMapping>(
 
 export const setUpstashCache = <T extends keyof KeysMapping>(
   key: T,
-  variableKeys: KeysMapping[T]["tags"],
-  value: KeysMapping[T]["value"],
+  options: {
+    variableKeys: KeysMapping[T]["tags"];
+    value: KeysMapping[T]["value"];
+    ex?: number;
+  },
 ) => {
+  const { variableKeys, value, ex } = options;
   const constructedKey = constructKey(key, variableKeys);
-  return redis.set(constructedKey, value, { ex: 60 * 60 * 5 }); // 5 hours
+  return redis.set(constructedKey, value, { ex: ex ?? 60 * 60 * 6 }); // 6 hours
 };
 
 export const invalidateUpstashCache = <T extends keyof KeysMapping>(
