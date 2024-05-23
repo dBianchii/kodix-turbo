@@ -12,8 +12,6 @@ interface RemoveUserOptions {
 }
 
 export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
-  const isUserTryingToRemoveSelfFromTeam = input.userId === ctx.session.user.id;
-
   const team = await ctx.db.query.teams.findFirst({
     where: (teams, { eq }) => eq(teams.id, ctx.session.user.activeTeamId),
     columns: {
@@ -37,6 +35,7 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
       code: "NOT_FOUND",
     });
 
+  const isUserTryingToRemoveSelfFromTeam = input.userId === ctx.session.user.id;
   if (isUserTryingToRemoveSelfFromTeam) {
     if (team.ownerId === ctx.session.user.id) {
       throw new TRPCError({
@@ -55,8 +54,8 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
     });
 
   //TODO: Implement role based access control
-  const result = await ctx.db
-    .select({ team: schema.teams })
+  const userHasAtLeastOneOtherTeam = await ctx.db
+    .select({ id: schema.teams.id })
     .from(schema.teams)
     .innerJoin(
       schema.usersToTeams,
@@ -70,7 +69,7 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
     )
     .then((res) => res[0]);
 
-  if (!result)
+  if (!userHasAtLeastOneOtherTeam)
     throw new TRPCError({
       message:
         "The user needs to have at least one team. Please create another team before removing this user",

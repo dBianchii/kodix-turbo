@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { RRule, rrulestr } from "rrule";
 
 import type { TCancelInputSchema } from "@kdx/validators/trpc/app/calendar";
-import { and, eq, gte } from "@kdx/db";
+import { and, eq, gte, inArray } from "@kdx/db";
 import { schema } from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
@@ -48,19 +48,23 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
   } else if (input.exclusionDefinition === "thisAndFuture") {
     return await ctx.db.transaction(async (tx) => {
       if (input.eventExceptionId) {
-        await tx.delete(schema.eventExceptions).where(
-          and(
-            //TODO: add connection to team where teamId is the same as the user's teamId.
-            eq(schema.eventExceptions.id, input.eventExceptionId),
-            gte(schema.eventExceptions.newDate, input.date),
-          ),
-        );
-        // if (!result.rowsAffected) {
-        //   throw new TRPCError({
-        //     code: "NOT_FOUND",
-        //     message: "Exception not found",
-        //   });
-        // }
+        const allEventMastersIdsForThisTeamQuery = ctx.db
+          .select({ id: schema.eventMasters.id })
+          .from(schema.eventMasters)
+          .where(eq(schema.eventMasters.teamId, ctx.session.user.activeTeamId));
+
+        await tx
+          .delete(schema.eventExceptions)
+          .where(
+            and(
+              inArray(
+                schema.eventExceptions.eventMasterId,
+                allEventMastersIdsForThisTeamQuery,
+              ),
+              eq(schema.eventExceptions.id, input.eventExceptionId),
+              gte(schema.eventExceptions.newDate, input.date),
+            ),
+          );
       }
       const eventMaster = await tx.query.eventMasters.findFirst({
         where: eq(schema.eventMasters.id, input.eventMasterId),

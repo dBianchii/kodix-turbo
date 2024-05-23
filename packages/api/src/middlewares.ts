@@ -7,6 +7,7 @@ import { getAppName } from "@kdx/locales/server-hooks";
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "./procedures";
+import { getInstalledHandler } from "./routers/app/getInstalled.handler";
 
 /**
  *  Helper/factory that returns a reusable middleware that checks if a certain app is installed for the current team
@@ -78,19 +79,10 @@ export const appInstalledMiddleware = experimental_standaloneMiddleware<{
   ctx: TProtectedProcedureContext;
   input: { appId: KodixAppId };
 }>().create(async ({ ctx, input, next }) => {
-  const team = await ctx.db.query.teams.findFirst({
-    where: eq(schema.teams.id, ctx.session.user.activeTeamId),
-    with: {
-      AppsToTeams: {
-        where: (appsToTeams, { eq }) => eq(appsToTeams.appId, input.appId),
-      },
-    },
-    columns: {
-      id: true,
-    },
-  });
+  //? By using the `getInstalledHandler`, we can use cached data, improving performance
+  const installed = await getInstalledHandler({ ctx });
 
-  if (!team)
+  if (!installed.some((app) => app.id === input.appId))
     throw new TRPCError({
       code: "UNAUTHORIZED",
       message: `${await getAppName(input.appId)} is not installed`,
