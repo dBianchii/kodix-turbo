@@ -1,6 +1,7 @@
 import { Redis } from "@upstash/redis";
 
 import type { schema } from "@kdx/db/schema";
+import type { AppPermissionId } from "@kdx/shared";
 
 export const redis = Redis.fromEnv();
 
@@ -12,6 +13,27 @@ interface KeysMapping {
     value: {
       id: typeof schema.apps.$inferSelect.id;
     }[];
+  };
+
+  permissions: {
+    tags: {
+      userId: typeof schema.users.$inferSelect.id;
+      permissionId: AppPermissionId;
+      teamId: typeof schema.teams.$inferSelect.id;
+    };
+    value:
+      | {
+          id: string;
+          AppPermissionsToTeamAppRoles: {
+            teamAppRoleId: string;
+            appPermissionId: string;
+          }[];
+          TeamAppRolesToUsers: {
+            userId: string;
+            teamAppRoleId: string;
+          }[];
+        }
+      | undefined;
   };
 }
 
