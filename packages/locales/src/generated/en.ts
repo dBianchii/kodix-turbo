@@ -2,7 +2,7 @@
 
 export default {
   "home": {
-    "title": "Kodix",
+    "title": "Kodix - the white label enterprise solution you have been looking for all along",
     "description": "Solutions for your business. Kodix is a multi-purpose platform that provides a wide range of business solutions"
   },
   "header": {

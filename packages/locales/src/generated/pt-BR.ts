@@ -2,7 +2,7 @@
 
 export default {
   "home": {
-    "title": "Bem-vindo(a) ao Kodix",
+    "title": "Kodix - a solução empresarial de marca branca que você sempre procurou",
     "description": "Soluções para o seu negócio. Kodix é uma plataforma multiuso que oferece uma ampla gama de soluções de negócios"
   },
   "header": {
