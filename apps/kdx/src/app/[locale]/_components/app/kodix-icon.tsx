@@ -21,7 +21,7 @@ export function IconKodixApp({
   const appName = useAppName(props.appId);
 
   return (
-    <>
+    <div className="flex flex-col items-center">
       <Image
         src={appIconUrl}
         height={size}
@@ -29,6 +29,6 @@ export function IconKodixApp({
         alt={`${appName} icon`}
       />
       {renderText && <p className="text-sm text-muted-foreground">{appName}</p>}
-    </>
+    </div>
   );
 }
