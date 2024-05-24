@@ -32,7 +32,7 @@
     "@kdx/prettier-config": "workspace:*",
     "@turbo/gen": "^1.13.3",
     "prettier": "^3.2.5",
-    "turbo": "^1.13.3",
+    "turbo": "1.13.4-canary.5",
     "typescript": "^5.4.5"
   },
   "prettier": "@kdx/prettier-config"

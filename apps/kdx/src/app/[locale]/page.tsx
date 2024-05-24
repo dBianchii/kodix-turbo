@@ -9,6 +9,7 @@ import { buttonVariants } from "@kdx/ui/button";
 
 import { BentoDemo } from "./_components/bento-grid";
 import { Footer } from "./_components/footer";
+import { HeroLamp } from "./_components/hero-lamp";
 
 export default async function HomePage({
   params: { locale },
@@ -27,7 +28,7 @@ export default async function HomePage({
         <section id="hero">
           <div className="relative h-full overflow-hidden py-8">
             <div className="container z-10 flex flex-col">
-              <div className="mt-20 grid grid-cols-1">
+              <div className="mt-10 grid grid-cols-1">
                 <div className="flex flex-col items-center gap-6 pb-8 text-center">
                   <h1 className="text-balance bg-gradient-to-br from-black from-30% to-black/60 bg-clip-text py-6 text-5xl font-semibold leading-none tracking-tighter text-transparent dark:from-white dark:to-white/40 sm:text-6xl md:text-7xl lg:text-7xl">
                     {t("home.title")}
@@ -47,7 +48,7 @@ export default async function HomePage({
                         "group relative w-full gap-1 overflow-hidden rounded-full text-sm font-semibold tracking-tighter",
                       )}
                     >
-                      Browse Components
+                      {t("Browse apps")}
                       <RxChevronRight className="ml-1 size-4 transition-all duration-300 ease-out group-hover:translate-x-1" />
                     </Link>
                     <Link
@@ -61,7 +62,7 @@ export default async function HomePage({
                         "group relative w-full gap-1 overflow-hidden rounded-full text-sm font-semibold tracking-tighter",
                       )}
                     >
-                      Get Started
+                      {t("Get started")}
                       <RxChevronRight className="ml-1 size-4 transition-all duration-300 ease-out group-hover:translate-x-1" />
                     </Link>
                   </div>
@@ -72,7 +73,9 @@ export default async function HomePage({
         </section>
         <section className="px-8">
           <BentoDemo />
+          <HeroLamp />
         </section>
+        <section id="contact"></section>
       </main>
       <Footer />
     </>

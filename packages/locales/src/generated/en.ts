@@ -349,5 +349,9 @@ export default {
   "selected": "selected",
   "Export notifications": "Export notifications",
   "Delete notifications": "Delete notifications",
-  "Take a look at all available apps and install them": "Take a look at all available apps, and install them"
+  "Take a look at all available apps and install them": "Take a look at all available apps, and install them",
+  "Browse apps": "Browse apps",
+  "Get started": "Get started",
+  "The last stop": "The last stop",
+  "for your companys growth": "for your company's growth"
 } as const
