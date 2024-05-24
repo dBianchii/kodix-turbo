@@ -8,18 +8,20 @@ import {
   varchar,
 } from "drizzle-orm/mysql-core";
 
-import { NANOID_SIZE } from "@kdx/shared";
+import { nanoid, NANOID_SIZE } from "@kdx/shared";
 
 import { teamAppRoles, teams } from "../teams";
 import {
   DEFAULTLENGTH,
   moneyDecimal,
-  nanoidPrimaryKey,
   teamIdReferenceCascadeDelete,
 } from "../utils";
 
 export const devPartners = mysqlTable("devPartner", {
-  id: nanoidPrimaryKey,
+  id: varchar("id", { length: NANOID_SIZE })
+    .notNull()
+    .default(nanoid())
+    .primaryKey(),
   name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
   partnerUrl: varchar("partnerUrl", { length: DEFAULTLENGTH }),
   createdAt: timestamp("createdAt")
@@ -34,7 +36,10 @@ export const devPartnersRelations = relations(devPartners, ({ many }) => ({
 export const apps = mysqlTable(
   "app",
   {
-    id: nanoidPrimaryKey,
+    id: varchar("id", { length: NANOID_SIZE })
+      .notNull()
+      .default(nanoid())
+      .primaryKey(),
     createdAt: timestamp("createdAt")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
@@ -94,7 +99,10 @@ export const appsToTeamsRelations = relations(appsToTeams, ({ one }) => ({
 export const appPermissions = mysqlTable(
   "appPermission",
   {
-    id: nanoidPrimaryKey,
+    id: varchar("id", { length: NANOID_SIZE })
+      .notNull()
+      .default(nanoid())
+      .primaryKey(),
     appId: varchar("appId", { length: NANOID_SIZE })
       .notNull()
       .references(() => apps.id, { onDelete: "cascade", onUpdate: "cascade" }),
@@ -119,7 +127,10 @@ export const appPermissionsRelations = relations(
 export const appTeamConfigs = mysqlTable(
   "appTeamConfig",
   {
-    id: nanoidPrimaryKey,
+    id: varchar("id", { length: NANOID_SIZE })
+      .notNull()
+      .default(nanoid())
+      .primaryKey(),
     config: json("config").notNull(),
     appId: varchar("appId", { length: NANOID_SIZE })
       .notNull()

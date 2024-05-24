@@ -1,21 +1,20 @@
 import { relations, sql } from "drizzle-orm";
 import { index, mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core";
 
-import { NANOID_SIZE } from "@kdx/shared";
+import { nanoid, NANOID_SIZE } from "@kdx/shared";
 
 import { teams } from "../teams";
 import { users } from "../users";
-import {
-  DEFAULTLENGTH,
-  nanoidPrimaryKey,
-  teamIdReferenceCascadeDelete,
-} from "../utils";
+import { DEFAULTLENGTH, teamIdReferenceCascadeDelete } from "../utils";
 import { eventMasters } from "./calendar";
 
 export const careShifts = mysqlTable(
   "careShift",
   {
-    id: nanoidPrimaryKey,
+    id: varchar("id", { length: NANOID_SIZE })
+      .notNull()
+      .default(nanoid())
+      .primaryKey(),
     caregiverId: varchar("caregiverId", { length: NANOID_SIZE })
       .notNull()
       .references(() => users.id),
@@ -48,7 +47,10 @@ export const careShiftsRelations = relations(careShifts, ({ one }) => ({
 export const careTasks = mysqlTable(
   "careTask",
   {
-    id: nanoidPrimaryKey,
+    id: varchar("id", { length: NANOID_SIZE })
+      .notNull()
+      .default(nanoid())
+      .primaryKey(),
     eventDate: timestamp("eventDate").notNull(),
     doneAt: timestamp("doneAt"),
     doneByUserId: varchar("doneByUserId", { length: NANOID_SIZE }).references(
