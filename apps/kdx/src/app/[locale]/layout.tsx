@@ -48,9 +48,9 @@ export const viewport: Viewport = {
   ],
 };
 
-export function generateStaticParams() {
-  return getStaticParams();
-}
+// export function generateStaticParams() {
+//   return getStaticParams();
+// }
 
 export default function RootLayout(props: {
   children: React.ReactNode;

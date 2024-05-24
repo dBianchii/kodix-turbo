@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { RxChevronRight } from "react-icons/rx";
 
 import { auth } from "@kdx/auth";
-import { getI18n, setStaticParamsLocale } from "@kdx/locales/server";
+// import { getI18n, setStaticParamsLocale } from "@kdx/locales/server";
 import { cn } from "@kdx/ui";
 import { buttonVariants } from "@kdx/ui/button";
 import { RadialGradient } from "@kdx/ui/magic-ui/radial-gradient";
@@ -12,12 +12,8 @@ import { Footer } from "./_components/footer";
 import { HeroBento } from "./_components/hero-bento";
 import { HeroLamp } from "./_components/hero-lamp";
 
-export default async function HomePage({
-  params: { locale },
-}: {
-  params: { locale: string };
-}) {
-  setStaticParamsLocale(locale);
+export default async function HomePage() {
+  // setStaticParamsLocale(locale);
 
   const session = await auth();
   if (session) redirect("/team");
