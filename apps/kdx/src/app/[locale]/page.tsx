@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { RxChevronRight } from "react-icons/rx";
 
 import { auth } from "@kdx/auth";
+import { getI18n } from "@kdx/locales/server";
 // import { getI18n, setStaticParamsLocale } from "@kdx/locales/server";
 import { cn } from "@kdx/ui";
 import { buttonVariants } from "@kdx/ui/button";
