@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@kdx/auth";
 import { getI18n } from "@kdx/locales/server";
 
+import { BentoDemo } from "./_components/bento-grid";
 import { Footer } from "./_components/footer";
 
 export default async function HomePage() {
@@ -38,6 +39,9 @@ export default async function HomePage() {
           </a>
         </div> */}
           </div>
+        </section>
+        <section className="px-8">
+          <BentoDemo />
         </section>
       </main>
       <Footer />
