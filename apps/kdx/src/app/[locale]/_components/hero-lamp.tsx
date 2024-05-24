@@ -17,7 +17,7 @@ export function HeroLamp() {
           duration: 0.8,
           ease: "easeInOut",
         }}
-        className="bg-gradient-to-br from-slate-300 to-slate-500 bg-clip-text py-4 text-center text-4xl font-medium tracking-tight text-transparent md:text-7xl"
+        className="bg-gradient-to-br from-slate-200 to-slate-500 bg-clip-text py-4 text-center text-4xl font-medium tracking-tight text-transparent md:text-7xl"
       >
         {t("The last stop")} <br />{" "}
         <span className="font-normal">{t("for your companys growth")}</span>

@@ -2,7 +2,7 @@
 
 export default {
   "home": {
-    "title": "Welcome to Kodix",
+    "title": "Kodix",
     "description": "Solutions for your business. Kodix is a multi-purpose platform that provides a wide range of business solutions"
   },
   "header": {
@@ -353,5 +353,16 @@ export default {
   "Browse apps": "Browse apps",
   "Get started": "Get started",
   "The last stop": "The last stop",
-  "for your companys growth": "for your company's growth"
+  "for your companys growth": "for your company's growth",
+  "Multilingual": "Multilingual",
+  "The ultimate solution for managing your home clinic or your home care": "The ultimate solution for managing your home clinic or your home care",
+  "The unified calendar system that integrates with all your apps": "The unified calendar system that integrates with all your apps",
+  "A simple todo app that integrates with all your apps": "A simple todo app that integrates with all your apps",
+  "An ecosystem of apps": "An ecosystem of apps",
+  "Kodix offers a wide arangement of apps tailored for your business needs": "Kodix offers a wide arangement of apps, tailored for your business needs.",
+  "Full text search": "Made for humans",
+  "A design system that will blow competition out of the water": "A design system that will blow competition out of the water",
+  "Made for humans": "Made for humans",
+  "Supports 3 languages and counting": "Supports 2+ languages and counting.",
+  "Learn more": "Learn more"
 } as const
