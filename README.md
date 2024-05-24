@@ -88,6 +88,8 @@ cp .env.example .env
 
 # Push the Drizzle schema to the database
 pnpm db:push
+
+#In order to get the upstash-dev dockerfile to run with no complaints, run sudo usermod -aG docker $USER´ and then log out and back in.
 ```
 
 ### 2. Most helpful commands

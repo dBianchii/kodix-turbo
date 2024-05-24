@@ -1,43 +1,73 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
+import { RxChevronRight } from "react-icons/rx";
 
 import { auth } from "@kdx/auth";
-import { getI18n } from "@kdx/locales/server";
+import { getI18n, setStaticParamsLocale } from "@kdx/locales/server";
+import { cn } from "@kdx/ui";
+import { buttonVariants } from "@kdx/ui/button";
 
 import { BentoDemo } from "./_components/bento-grid";
 import { Footer } from "./_components/footer";
 
-export default async function HomePage() {
+export default async function HomePage({
+  params: { locale },
+}: {
+  params: { locale: string };
+}) {
+  setStaticParamsLocale(locale);
+
   const session = await auth();
   if (session) redirect("/team");
   const t = await getI18n();
 
   return (
     <>
-      <main className="flex-1 py-8">
-        <section className="space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">
-          <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center">
-            <h1 className="scroll-m-20 bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-6xl font-extrabold tracking-tight text-transparent lg:text-8xl">
-              {t("home.title")}
-            </h1>
-            <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
-              {t("home.description")}
-            </p>
-            {/* <div className="space-x-4">
-          <a
-            className="focus-visible:ring-ring ring-offset-background bg-primary text-primary-foreground hover:bg-primary/90 inline-flex h-11 items-center justify-center rounded-md px-8 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-            href="/login"
-          >
-            Get Started
-          </a>
-          <a
-            target="_blank"
-            rel="noreferrer"
-            className="focus-visible:ring-ring ring-offset-background border-input hover:bg-accent hover:text-accent-foreground inline-flex h-11 items-center justify-center rounded-md border px-8 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-            href="https://github.com/shadcn/taxonomy"
-          >
-            GitHub
-          </a>
-        </div> */}
+      <main className="flex-1">
+        <section id="hero">
+          <div className="relative h-full overflow-hidden py-8">
+            <div className="container z-10 flex flex-col">
+              <div className="mt-20 grid grid-cols-1">
+                <div className="flex flex-col items-center gap-6 pb-8 text-center">
+                  <h1 className="text-balance bg-gradient-to-br from-black from-30% to-black/60 bg-clip-text py-6 text-5xl font-semibold leading-none tracking-tighter text-transparent dark:from-white dark:to-white/40 sm:text-6xl md:text-7xl lg:text-7xl">
+                    {t("home.title")}
+                  </h1>
+                  <p className="max-w-[64rem] text-balance text-lg tracking-tight text-gray-500 md:text-xl">
+                    {t("home.description")}
+                  </p>
+                  <div className="flex flex-col gap-4 lg:flex-row">
+                    <Link
+                      href="/components"
+                      className={cn(
+                        buttonVariants({
+                          variant: "default",
+                          size: "lg",
+                        }),
+                        "gap-2 whitespace-pre md:flex",
+                        "group relative w-full gap-1 overflow-hidden rounded-full text-sm font-semibold tracking-tighter",
+                      )}
+                    >
+                      Browse Components
+                      <RxChevronRight className="ml-1 size-4 transition-all duration-300 ease-out group-hover:translate-x-1" />
+                    </Link>
+                    <Link
+                      href="/docs"
+                      className={cn(
+                        buttonVariants({
+                          size: "lg",
+                          variant: "ghost",
+                        }),
+                        "gap-2 whitespace-pre md:flex",
+                        "group relative w-full gap-1 overflow-hidden rounded-full text-sm font-semibold tracking-tighter",
+                      )}
+                    >
+                      Get Started
+                      <RxChevronRight className="ml-1 size-4 transition-all duration-300 ease-out group-hover:translate-x-1" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
         <section className="px-8">
