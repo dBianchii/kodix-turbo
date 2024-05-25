@@ -19,5 +19,5 @@ export const teamIdReferenceCascadeDelete = varchar("teamId", {
 /** Most of the time, our primary keys always will be the same. This centralizes our PK standard */
 export const nanoidPrimaryKey = varchar("id", { length: NANOID_SIZE })
   .notNull()
-  .default(nanoid())
+  .$default(() => nanoid())
   .primaryKey();
