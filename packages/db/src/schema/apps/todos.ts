@@ -8,18 +8,19 @@ import {
   varchar,
 } from "drizzle-orm/mysql-core";
 
+import { nanoid, NANOID_SIZE } from "@kdx/shared";
+
 import { teams } from "../teams";
 import { users } from "../users";
-import {
-  DEFAULTLENGTH,
-  nanoidPrimaryKey,
-  teamIdReferenceCascadeDelete,
-} from "../utils";
+import { DEFAULTLENGTH, teamIdReferenceCascadeDelete } from "../utils";
 
 export const todos = mysqlTable(
   "todo",
   {
-    id: nanoidPrimaryKey,
+    id: varchar("id", { length: NANOID_SIZE })
+      .notNull()
+      .default(nanoid())
+      .primaryKey(),
     title: varchar("title", { length: DEFAULTLENGTH }).notNull(),
     description: varchar("description", { length: DEFAULTLENGTH }),
     dueDate: timestamp("dueDate"),

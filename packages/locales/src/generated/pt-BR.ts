@@ -2,7 +2,7 @@
 
 export default {
   "home": {
-    "title": "Bem-vindo(a) ao Kodix",
+    "title": "Kodix - a solução empresarial de marca branca que você sempre procurou",
     "description": "Soluções para o seu negócio. Kodix é uma plataforma multiuso que oferece uma ampla gama de soluções de negócios"
   },
   "header": {
@@ -349,5 +349,21 @@ export default {
   "Delete notifications": "Excluir notificações",
   "Export notifications": "Exportar notificações",
   "selected": "selecionado",
-  "Take a look at all available apps and install them": "Dê uma olhada em todos os aplicativos disponíveis, e instale-os"
+  "Take a look at all available apps and install them": "Dê uma olhada em todos os aplicativos disponíveis, e instale-os",
+  "Browse apps": "Procurar apps",
+  "Get started": "iniciar",
+  "The last stop": "A última parada",
+  "for your companys growth": "para o crescimento da sua empresa",
+  "A design system that will blow competition out of the water": "Um sistema de design que acabará com a concorrência",
+  "A simple todo app that integrates with all your apps": "Um aplicativo de tarefas simples que se integra a todos os seus aplicativos",
+  "An ecosystem of apps": "Um ecossistema de aplicativos",
+  "Full text search": "Feito para humanos",
+  "Kodix offers a wide arangement of apps tailored for your business needs": "Kodix oferece uma ampla variedade de aplicativos, adaptados às necessidades do seu negócio.",
+  "Learn more": "Saber mais",
+  "Made for humans": "Feito para humanos",
+  "Multilingual": "Multilíngue",
+  "Supports 3 languages and counting": "Suporta 2 idiomas e contando.",
+  "The ultimate solution for managing your home clinic or your home care": "A solução definitiva para gerenciar sua clínica domiciliar ou seu atendimento domiciliar",
+  "The unified calendar system that integrates with all your apps": "O sistema de calendário unificado que se integra a todos os seus aplicativos",
+  "Sign in with Google": "Faça login no Google"
 } as const

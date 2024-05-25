@@ -6,7 +6,7 @@ import { FcGoogle } from "react-icons/fc";
 import { LuLoader2 } from "react-icons/lu";
 import { RxDiscordLogo } from "react-icons/rx";
 
-import { useScopedI18n } from "@kdx/locales/client";
+import { useI18n, useScopedI18n } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
 import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
@@ -100,6 +100,7 @@ function GoogleSignIn({
   loading,
   setLoading,
 }: SignInButtonsProps) {
+  const t = useI18n();
   return (
     <Button
       className="w-full"
@@ -114,7 +115,7 @@ function GoogleSignIn({
       }}
     >
       <FcGoogle className="mr-2 size-4" />
-      Sign in with Google
+      {t("Sign in with Google")}
     </Button>
   );
 }

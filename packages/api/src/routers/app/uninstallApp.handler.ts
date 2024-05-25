@@ -6,6 +6,7 @@ import { and, eq } from "@kdx/db";
 import { appIdToSchemas, schema } from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../procedures";
+import { invalidateUpstashCache } from "../../upstash";
 
 interface UninstallAppOptions {
   ctx: TProtectedProcedureContext;
@@ -47,6 +48,10 @@ export const uninstallAppHandler = async ({
       appId: input.appId,
       session: ctx.session,
     });
+  });
+
+  await invalidateUpstashCache("apps", {
+    teamId: ctx.session.user.activeTeamId,
   });
 };
 

@@ -3,7 +3,7 @@ import { RRule, rrulestr } from "rrule";
 
 import type { TEditInputSchema } from "@kdx/validators/trpc/app/calendar";
 import dayjs from "@kdx/dayjs";
-import { and, eq, gt, gte } from "@kdx/db";
+import { and, eq, gt, gte, inArray } from "@kdx/db";
 import { schema } from "@kdx/db/schema";
 import { nanoid } from "@kdx/shared";
 
@@ -15,6 +15,11 @@ interface EditOptions {
 }
 
 export const editHandler = async ({ ctx, input }: EditOptions) => {
+  const allEventMastersIdsForThisTeamQuery = ctx.db
+    .select({ id: schema.eventMasters.id })
+    .from(schema.eventMasters)
+    .where(eq(schema.eventMasters.teamId, ctx.session.user.activeTeamId));
+
   if (input.editDefinition === "single") {
     //* Havemos description, title, from e selectedTimestamp.
     //* Havemos um selectedTimestamp.
@@ -34,7 +39,10 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
         })
         .where(
           and(
-            //TODO: Needs to link with teamId from the eventMaster!!
+            inArray(
+              schema.eventExceptions.eventMasterId,
+              allEventMastersIdsForThisTeamQuery,
+            ),
             eq(schema.eventExceptions.id, input.eventExceptionId),
             eq(schema.eventExceptions.newDate, input.selectedTimestamp),
           ),
@@ -250,8 +258,11 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
           })
           .where(
             and(
+              inArray(
+                schema.eventExceptions.eventMasterId,
+                allEventMastersIdsForThisTeamQuery,
+              ),
               eq(schema.eventExceptions.eventMasterId, oldMaster.id),
-              //TODO: Needs to link with teamId from the eventMaster!!
               gte(schema.eventExceptions.newDate, input.selectedTimestamp),
             ),
           );

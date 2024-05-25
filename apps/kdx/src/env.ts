@@ -26,6 +26,8 @@ export const env = createEnv({
     RESEND_API_KEY: z.string(),
     AWS_SMTP_USER: z.string().optional(), //TODO: Remove once we know
     AWS_SMTP_PASSWORD: z.string().optional(),
+
+    DISABLE_UPSTASH_CACHE: z.coerce.boolean().default(false),
     UPSTASH_REDIS_REST_URL: z.string().url(),
     UPSTASH_REDIS_REST_TOKEN: z.string(),
   },

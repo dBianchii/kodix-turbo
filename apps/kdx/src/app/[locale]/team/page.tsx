@@ -8,13 +8,11 @@ import { getI18n } from "@kdx/locales/server";
 import { Separator } from "@kdx/ui/separator";
 import { Skeleton } from "@kdx/ui/skeleton";
 
-import {
-  CustomKodixIcon,
-  IconKodixApp,
-} from "~/app/[locale]/_components/app/kodix-icon";
+import { IconKodixApp } from "~/app/[locale]/_components/app/kodix-icon";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { getAppUrl } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/server";
+import { CustomKodixIcon } from "../_components/app/custom-kodix-icon";
 
 interface CustomApp {
   appName: string;
@@ -73,12 +71,16 @@ function AppsSectionSkeleton({ customApps }: { customApps: CustomApp[] }) {
   return (
     <div className="flex flex-row items-center space-x-10">
       {customApps.map((app) => (
-        <CustomKodixIcon
-          appName={app.appName}
-          appUrl={app.appUrl}
-          iconPath={app.iconPath}
-          key={app.appName}
-        />
+        <Link
+          href={app.appUrl}
+          className="transition-transform duration-300 ease-out hover:scale-105"
+        >
+          <CustomKodixIcon
+            appName={app.appName}
+            iconPath={app.iconPath}
+            key={app.appName}
+          />
+        </Link>
       ))}
       {Array.from({ length: numberOfSkeletonApps }).map((_, i) => (
         <Skeleton
@@ -96,18 +98,22 @@ async function AppsSection({ customApps }: { customApps: CustomApp[] }) {
   return (
     <div className="flex flex-row items-center space-x-10">
       {customApps.map((app) => (
-        <CustomKodixIcon
-          appName={app.appName}
-          appUrl={app.appUrl}
-          iconPath={app.iconPath}
-          key={app.appName}
-        />
+        <Link
+          href={app.appUrl}
+          className="transition-transform duration-300 ease-out hover:scale-105"
+        >
+          <CustomKodixIcon
+            appName={app.appName}
+            iconPath={app.iconPath}
+            key={app.appName}
+          />
+        </Link>
       ))}
       {apps.map((app) => (
         <Link
           key={app.id}
           href={getAppUrl(app.id as KodixAppId)}
-          className="flex flex-col items-center"
+          className="transition-transform duration-300 ease-out hover:scale-105"
         >
           <IconKodixApp appId={app.id as KodixAppId} />
         </Link>

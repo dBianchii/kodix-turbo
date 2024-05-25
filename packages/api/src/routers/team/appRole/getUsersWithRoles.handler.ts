@@ -13,7 +13,6 @@ export const getUsersWithRolesHandler = async ({
   ctx,
   input,
 }: GetUsersWithRolesOptions) => {
-  //TODO: Enforce input.appId is installed. (middleware)
   const users = await ctx.db.query.users.findMany({
     where: (users, { eq, inArray }) =>
       inArray(

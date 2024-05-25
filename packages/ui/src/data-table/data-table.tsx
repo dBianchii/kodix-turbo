@@ -38,6 +38,11 @@ interface DataTableProps<TData> {
    * @type string | undefined
    */
   noResultsMessage?: string;
+
+  /**
+   * Whether to show pagination or not.
+   */
+  showPagination?: boolean;
 }
 
 export function DataTable<TData>({
@@ -45,6 +50,7 @@ export function DataTable<TData>({
   floatingBar = null,
   noResultsMessage,
   onClickRow,
+  showPagination = true,
 }: DataTableProps<TData> & {
   noResultsMessage?: string;
   onClickRow?: () => void;
@@ -105,10 +111,12 @@ export function DataTable<TData>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex flex-col gap-2.5">
-        <DataTablePagination table={table} />
-        {table.getFilteredSelectedRowModel().rows.length > 0 && floatingBar}
-      </div>
+      {showPagination && (
+        <div className="flex flex-col gap-2.5">
+          <DataTablePagination table={table} />
+          {table.getFilteredSelectedRowModel().rows.length > 0 && floatingBar}
+        </div>
+      )}
     </div>
   );
 }

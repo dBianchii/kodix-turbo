@@ -11,6 +11,7 @@ import { TRPCReactProvider } from "~/trpc/react";
 import "~/app/globals.css";
 
 import { LocaleProvider } from "@kdx/locales/provider";
+import { getStaticParams } from "@kdx/locales/server";
 import { kdxProductionURL } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { ThemeProvider, ThemeToggle } from "@kdx/ui/theme";
@@ -47,6 +48,10 @@ export const viewport: Viewport = {
   ],
 };
 
+// export function generateStaticParams() {
+//   return getStaticParams();
+// }
+
 export default function RootLayout(props: {
   children: React.ReactNode;
   params: { locale: string };
@@ -63,23 +68,23 @@ export default function RootLayout(props: {
         >
           <SpeedInsights />
           <Analytics />
-          <Toaster richColors closeButton />
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <Toaster richColors closeButton />
             <LocaleProvider params={props.params}>
               <TRPCReactProvider>
                 <div className="flex min-h-screen flex-col">
                   <Header />
                   {props.children}
                 </div>
-              </TRPCReactProvider>
 
-              {/* UI Design Helpers */}
-              {env.NODE_ENV !== "production" && (
-                <div className="fixed bottom-1 z-50 flex flex-row items-center space-x-1">
-                  <ThemeToggle />
-                  <TailwindIndicator />
-                </div>
-              )}
+                {/* UI Design Helpers */}
+                {env.NODE_ENV !== "production" && (
+                  <div className="fixed bottom-1 z-50 flex flex-row items-center space-x-1">
+                    <ThemeToggle />
+                    <TailwindIndicator />
+                  </div>
+                )}
+              </TRPCReactProvider>
             </LocaleProvider>
           </ThemeProvider>
         </body>

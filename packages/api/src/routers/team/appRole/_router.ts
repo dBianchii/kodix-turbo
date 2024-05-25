@@ -24,6 +24,7 @@ export const appRoleRouter = {
   /**Gets all users in team, with added role information for app */
   getUsersWithRoles: isTeamOwnerProcedure
     .input(ZGetUsersWithRolesInputSchema)
+    .use(appInstalledMiddleware)
     .query(getUsersWithRolesHandler),
   updatePermissionAssociation: isTeamOwnerProcedure
     .input(ZUpdatePermissionAssociationInputSchema)

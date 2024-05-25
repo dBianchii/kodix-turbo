@@ -12,3 +12,4 @@ export const { getI18n, getScopedI18n, getCurrentLocale, getStaticParams } =
       fallbackLocale: pt_BR,
     },
   );
+export { setStaticParamsLocale } from "next-international/server";

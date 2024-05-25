@@ -7,7 +7,7 @@ import {
   varchar,
 } from "drizzle-orm/mysql-core";
 
-import { NANOID_SIZE } from "@kdx/shared";
+import { nanoid, NANOID_SIZE } from "@kdx/shared";
 
 import {
   appPermissionsToTeamAppRoles,
@@ -19,16 +19,15 @@ import { eventMasters } from "./apps/calendar";
 import { careShifts, careTasks } from "./apps/kodixCare";
 import { todos } from "./apps/todos";
 import { users } from "./users";
-import {
-  DEFAULTLENGTH,
-  nanoidPrimaryKey,
-  teamIdReferenceCascadeDelete,
-} from "./utils";
+import { DEFAULTLENGTH, teamIdReferenceCascadeDelete } from "./utils";
 
 export const teams = mysqlTable(
   "team",
   {
-    id: nanoidPrimaryKey,
+    id: varchar("id", { length: NANOID_SIZE })
+      .notNull()
+      .default(nanoid())
+      .primaryKey(),
     name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
     createdAt: timestamp("createdAt")
       .default(sql`CURRENT_TIMESTAMP`)
@@ -93,7 +92,10 @@ export const usersToTeamsRelations = relations(usersToTeams, ({ one }) => ({
 export const teamAppRoles = mysqlTable(
   "teamAppRole",
   {
-    id: nanoidPrimaryKey,
+    id: varchar("id", { length: NANOID_SIZE })
+      .notNull()
+      .default(nanoid())
+      .primaryKey(),
     appId: varchar("appId", { length: NANOID_SIZE })
       .notNull()
       .references(() => apps.id, { onDelete: "cascade" }),
@@ -164,7 +166,10 @@ export const teamAppRolesToUsersRelations = relations(
 export const invitations = mysqlTable(
   "invitation",
   {
-    id: nanoidPrimaryKey,
+    id: varchar("id", { length: NANOID_SIZE })
+      .notNull()
+      .default(nanoid())
+      .primaryKey(),
     teamId: teamIdReferenceCascadeDelete,
     email: varchar("email", { length: DEFAULTLENGTH }).notNull(),
     createdAt: timestamp("createdAt")
