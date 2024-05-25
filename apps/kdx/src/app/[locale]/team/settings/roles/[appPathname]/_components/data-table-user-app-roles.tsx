@@ -163,5 +163,5 @@ export function DataTableUserAppRoles({
     getCoreRowModel: getCoreRowModel(),
   });
 
-  return <DataTable table={table} />;
+  return <DataTable table={table} showPagination={false} />;
 }

@@ -165,6 +165,7 @@ export function DataTableAppPermissions({
   return (
     <DataTable
       table={table}
+      showPagination={false}
       noResultsMessage={t("This app does not have any permissions")}
     />
   );
