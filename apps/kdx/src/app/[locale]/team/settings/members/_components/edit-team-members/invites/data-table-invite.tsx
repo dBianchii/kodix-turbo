@@ -34,17 +34,25 @@ import { api } from "~/trpc/react";
 const columnHelper =
   createColumnHelper<RouterOutputs["team"]["invitation"]["getAll"][number]>();
 
-export function InviteDataTable() {
-  const { data } = api.team.invitation.getAll.useQuery();
+export function InviteDataTable({
+  initialInvitations,
+}: {
+  initialInvitations: RouterOutputs["team"]["invitation"]["getAll"];
+}) {
+  const { data } = api.team.invitation.getAll.useQuery(undefined, {
+    initialData: initialInvitations,
+  });
   const t = useI18n();
   const utils = api.useUtils();
   const { mutate } = api.team.invitation.delete.useMutation({
     onSuccess: () => {
       toast.success(t("Invite deleted"));
-      void utils.team.invitation.getAll.invalidate();
     },
     onError: (e) => {
       trpcErrorToastDefault(e);
+    },
+    onSettled: () => {
+      void utils.team.invitation.getAll.invalidate();
     },
   });
 
@@ -97,7 +105,7 @@ export function InviteDataTable() {
   ];
 
   const table = useReactTable({
-    data: data ?? [],
+    data: data,
     columns: columns,
     getCoreRowModel: getCoreRowModel(),
   });

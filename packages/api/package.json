@@ -26,7 +26,7 @@
     "@kdx/shared": "workspace:*",
     "@kdx/validators": "workspace:*",
     "@react-email/render": "0.0.13",
-    "@trpc/server": "11.0.0-rc.359",
+    "@trpc/server": "11.0.0-rc.377",
     "@upstash/redis": "^1.30.0",
     "next": "14.2.3",
     "resend": "^3.2.0",
