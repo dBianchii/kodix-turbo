@@ -36,7 +36,6 @@ export default async function NotificationsPage({
         <CustomKodixIcon
           appName={t("Notifications")}
           renderText={false}
-          appUrl={"/team/notifications"}
           iconPath={"/appIcons/notifications.png"}
         />
         <H1>{t("Notifications")}</H1>

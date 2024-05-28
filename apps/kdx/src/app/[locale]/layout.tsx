@@ -11,7 +11,6 @@ import { TRPCReactProvider } from "~/trpc/react";
 import "~/app/globals.css";
 
 import { LocaleProvider } from "@kdx/locales/provider";
-import { getStaticParams } from "@kdx/locales/server";
 import { kdxProductionURL } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { ThemeProvider, ThemeToggle } from "@kdx/ui/theme";
