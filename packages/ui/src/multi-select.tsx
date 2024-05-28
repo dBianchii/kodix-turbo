@@ -37,6 +37,7 @@ interface MultiSelectProps {
   className?: string;
   customValues?: boolean;
   customValuesSchema?: z.ZodString;
+  emptyMessage?: string;
 }
 
 function MultiSelect({
@@ -44,6 +45,7 @@ function MultiSelect({
   selected,
   onChange,
   className,
+  emptyMessage,
   customValues = false,
   customValuesSchema,
   ...props
@@ -110,6 +112,11 @@ function MultiSelect({
                 </div>
               </Badge>
             ))}
+            {!selected.length && (
+              <span className="text-sm text-muted-foreground">
+                {emptyMessage ?? `${t("Select")}...`}
+              </span>
+            )}
           </div>
 
           <CaretSortIcon className="size-4 shrink-0 opacity-50" />
