@@ -35,7 +35,7 @@ export async function sendNotifications({
   for (const channel of channels) {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (channel.type === "EMAIL") {
-      const result = { data: true };
+      const result = { data: true }; //TODO: send email lmao
 
       if (result.data) {
         sent.push({

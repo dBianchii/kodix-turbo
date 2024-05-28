@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import type { TransitionStartFunction } from "react";
+import { useState, useTransition } from "react";
 import { signIn } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
 import { LuLoader2 } from "react-icons/lu";
@@ -15,14 +16,14 @@ export function SignInButtons({
 }: {
   searchParams?: Record<string, string | undefined>;
 }) {
-  const [disabled, setLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const t = useScopedI18n("signin");
   return (
     <>
       <EmailSignIn
         callbackUrl={searchParams?.callbackUrl}
-        loading={disabled}
-        setLoading={setLoading}
+        loading={isPending}
+        startTransition={startTransition}
       />
       <div className="relative my-4">
         <div className="absolute inset-0 flex items-center">
@@ -36,8 +37,8 @@ export function SignInButtons({
       </div>
       <GoogleSignIn
         callbackUrl={searchParams?.callbackUrl}
-        loading={disabled}
-        setLoading={setLoading}
+        loading={isPending}
+        startTransition={startTransition}
       />
     </>
   );
@@ -46,10 +47,14 @@ export function SignInButtons({
 interface SignInButtonsProps {
   callbackUrl?: string;
   loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  startTransition: TransitionStartFunction;
 }
 
-function EmailSignIn({ callbackUrl, loading, setLoading }: SignInButtonsProps) {
+function EmailSignIn({
+  callbackUrl,
+  loading,
+  startTransition,
+}: SignInButtonsProps) {
   const [email, setEmail] = useState("");
   const t = useScopedI18n("signin");
   return (
@@ -69,13 +74,13 @@ function EmailSignIn({ callbackUrl, loading, setLoading }: SignInButtonsProps) {
       />
       <Button
         variant="default"
-        onClick={async () => {
-          setLoading(true);
-          await signIn("resend", {
-            email,
-            callbackUrl,
+        onClick={() => {
+          startTransition(async () => {
+            await signIn("resend", {
+              email,
+              callbackUrl,
+            });
           });
-          setLoading(false);
         }}
         disabled={loading}
         className="mt-4 w-full"
@@ -90,7 +95,7 @@ function EmailSignIn({ callbackUrl, loading, setLoading }: SignInButtonsProps) {
 function GoogleSignIn({
   callbackUrl,
   loading,
-  setLoading,
+  startTransition,
 }: SignInButtonsProps) {
   const t = useI18n();
   return (
@@ -98,12 +103,12 @@ function GoogleSignIn({
       className="w-full"
       variant="outline"
       disabled={loading}
-      onClick={async () => {
-        setLoading(true);
-        await signIn("google", {
-          callbackUrl,
+      onClick={() => {
+        startTransition(async () => {
+          await signIn("google", {
+            callbackUrl,
+          });
         });
-        setLoading(false);
       }}
     >
       <FcGoogle className="mr-2 size-4" />
