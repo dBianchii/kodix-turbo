@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import type { TransitionStartFunction } from "react";
+import { useState, useTransition } from "react";
 import { signIn } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
 import { LuLoader2 } from "react-icons/lu";
@@ -11,19 +12,21 @@ import { Button } from "@kdx/ui/button";
 import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
 
+import { env } from "~/env";
+
 export function SignInButtons({
   searchParams,
 }: {
   searchParams?: Record<string, string | undefined>;
 }) {
-  const [disabled, setLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const t = useScopedI18n("signin");
   return (
     <>
       <EmailSignIn
         callbackUrl={searchParams?.callbackUrl}
-        loading={disabled}
-        setLoading={setLoading}
+        loading={isPending}
+        startTransition={startTransition}
       />
       <div className="relative my-4">
         <div className="absolute inset-0 flex items-center">
@@ -35,18 +38,18 @@ export function SignInButtons({
           </span>
         </div>
       </div>
-      <div className="flex flex-col gap-2">
-        <GoogleSignIn
-          callbackUrl={searchParams?.callbackUrl}
-          loading={disabled}
-          setLoading={setLoading}
-        />
+      <GoogleSignIn
+        callbackUrl={searchParams?.callbackUrl}
+        loading={isPending}
+        startTransition={startTransition}
+      />
+      {env.NODE_ENV === "development" && (
         <DiscordSignIn
           callbackUrl={searchParams?.callbackUrl}
-          loading={disabled}
-          setLoading={setLoading}
+          loading={isPending}
+          startTransition={startTransition}
         />
-      </div>
+      )}
     </>
   );
 }
@@ -54,10 +57,14 @@ export function SignInButtons({
 interface SignInButtonsProps {
   callbackUrl?: string;
   loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  startTransition: TransitionStartFunction;
 }
 
-function EmailSignIn({ callbackUrl, loading, setLoading }: SignInButtonsProps) {
+function EmailSignIn({
+  callbackUrl,
+  loading,
+  startTransition,
+}: SignInButtonsProps) {
   const [email, setEmail] = useState("");
   const t = useScopedI18n("signin");
   return (
@@ -77,13 +84,13 @@ function EmailSignIn({ callbackUrl, loading, setLoading }: SignInButtonsProps) {
       />
       <Button
         variant="default"
-        onClick={async () => {
-          setLoading(true);
-          await signIn("resend", {
-            email,
-            callbackUrl,
+        onClick={() => {
+          startTransition(async () => {
+            await signIn("resend", {
+              email,
+              callbackUrl,
+            });
           });
-          setLoading(false);
         }}
         disabled={loading}
         className="mt-4 w-full"
@@ -98,7 +105,7 @@ function EmailSignIn({ callbackUrl, loading, setLoading }: SignInButtonsProps) {
 function GoogleSignIn({
   callbackUrl,
   loading,
-  setLoading,
+  startTransition,
 }: SignInButtonsProps) {
   const t = useI18n();
   return (
@@ -106,12 +113,12 @@ function GoogleSignIn({
       className="w-full"
       variant="outline"
       disabled={loading}
-      onClick={async () => {
-        setLoading(true);
-        await signIn("google", {
-          callbackUrl,
+      onClick={() => {
+        startTransition(async () => {
+          await signIn("google", {
+            callbackUrl,
+          });
         });
-        setLoading(false);
       }}
     >
       <FcGoogle className="mr-2 size-4" />
@@ -123,19 +130,19 @@ function GoogleSignIn({
 function DiscordSignIn({
   callbackUrl,
   loading,
-  setLoading,
+  startTransition,
 }: SignInButtonsProps) {
   return (
     <Button
       className="w-full"
       variant="outline"
       disabled={loading}
-      onClick={async () => {
-        setLoading(true);
-        await signIn("discord", {
-          callbackUrl,
+      onClick={() => {
+        startTransition(async () => {
+          await signIn("discord", {
+            callbackUrl,
+          });
         });
-        setLoading(false);
       }}
     >
       <RxDiscordLogo className="mr-2 size-4" />

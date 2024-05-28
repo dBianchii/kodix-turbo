@@ -8,20 +8,17 @@ import {
   varchar,
 } from "drizzle-orm/mysql-core";
 
-import { nanoid, NANOID_SIZE } from "@kdx/shared";
+import { NANOID_SIZE } from "@kdx/shared";
 
 import { teamAppRoles, teams } from "../teams";
 import {
   DEFAULTLENGTH,
-  moneyDecimal,
+  nanoidPrimaryKey,
   teamIdReferenceCascadeDelete,
 } from "../utils";
 
 export const devPartners = mysqlTable("devPartner", {
-  id: varchar("id", { length: NANOID_SIZE })
-    .notNull()
-    .default(nanoid())
-    .primaryKey(),
+  id: nanoidPrimaryKey,
   name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
   partnerUrl: varchar("partnerUrl", { length: DEFAULTLENGTH }),
   createdAt: timestamp("createdAt")
@@ -36,15 +33,11 @@ export const devPartnersRelations = relations(devPartners, ({ many }) => ({
 export const apps = mysqlTable(
   "app",
   {
-    id: varchar("id", { length: NANOID_SIZE })
-      .notNull()
-      .default(nanoid())
-      .primaryKey(),
+    id: nanoidPrimaryKey,
     createdAt: timestamp("createdAt")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt").onUpdateNow(),
-    subscriptionCost: moneyDecimal("subscriptionCost").notNull(),
     devPartnerId: varchar("devPartnerId", { length: NANOID_SIZE })
       .notNull()
       .references(() => devPartners.id),
@@ -99,10 +92,7 @@ export const appsToTeamsRelations = relations(appsToTeams, ({ one }) => ({
 export const appPermissions = mysqlTable(
   "appPermission",
   {
-    id: varchar("id", { length: NANOID_SIZE })
-      .notNull()
-      .default(nanoid())
-      .primaryKey(),
+    id: nanoidPrimaryKey,
     appId: varchar("appId", { length: NANOID_SIZE })
       .notNull()
       .references(() => apps.id, { onDelete: "cascade", onUpdate: "cascade" }),
@@ -127,10 +117,7 @@ export const appPermissionsRelations = relations(
 export const appTeamConfigs = mysqlTable(
   "appTeamConfig",
   {
-    id: varchar("id", { length: NANOID_SIZE })
-      .notNull()
-      .default(nanoid())
-      .primaryKey(),
+    id: nanoidPrimaryKey,
     config: json("config").notNull(),
     appId: varchar("appId", { length: NANOID_SIZE })
       .notNull()

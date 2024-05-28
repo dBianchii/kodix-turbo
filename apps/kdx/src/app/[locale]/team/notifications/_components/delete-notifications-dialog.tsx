@@ -38,9 +38,8 @@ export function DeleteNotificationsDialog({
   showTrigger = true,
   ...props
 }: DeleteTasksDialogProps) {
-  const [isDeletePending, startDeleteTransition] = React.useTransition();
   const t = useI18n();
-  const { mutateAsync } = useMutation({
+  const { mutateAsync, isPending } = useMutation({
     mutationFn: deleteNotificationsAction,
   });
 
@@ -77,23 +76,22 @@ export function DeleteNotificationsDialog({
               aria-label="Delete selected rows"
               variant="destructive"
               onClick={() => {
-                startDeleteTransition(() => {
-                  toast.promise(
-                    mutateAsync({
-                      ids: notifications.map((n) => n.original.id),
-                    }),
-                    {
-                      loading: t("Deleting"),
-                      success: () => {
-                        onSuccess?.();
-                        return t("Notifications deleted");
-                      },
-                      error: (err) => getErrorMessage(err),
+                toast.promise(
+                  mutateAsync({
+                    ids: notifications.map((n) => n.original.id),
+                  }),
+                  {
+                    loading: t("Deleting"),
+                    success: () => {
+                      onSuccess?.();
+                      props.onOpenChange?.(false);
+                      return t("Notifications deleted");
                     },
-                  );
-                });
+                    error: (err) => getErrorMessage(err),
+                  },
+                );
               }}
-              disabled={isDeletePending}
+              disabled={isPending}
             >
               {t("Delete")}
             </Button>

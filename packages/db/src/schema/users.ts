@@ -11,7 +11,7 @@ import {
   varchar,
 } from "drizzle-orm/mysql-core";
 
-import { nanoid, NANOID_SIZE } from "@kdx/shared";
+import { NANOID_SIZE } from "@kdx/shared";
 
 import { todos } from "./apps/todos";
 import { invitations, teamAppRolesToUsers, teams, usersToTeams } from "./teams";
@@ -24,10 +24,7 @@ import {
 export const users = mysqlTable(
   "user",
   {
-    id: varchar("id", { length: NANOID_SIZE })
-      .notNull()
-      .default(nanoid())
-      .primaryKey(),
+    id: nanoidPrimaryKey,
     name: varchar("name", { length: DEFAULTLENGTH }),
     email: varchar("email", { length: DEFAULTLENGTH }).notNull().unique(),
     emailVerified: timestamp("emailVerified").default(sql`CURRENT_TIMESTAMP`),
@@ -62,7 +59,7 @@ export const accounts = mysqlTable(
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     type: varchar("type", { length: DEFAULTLENGTH })
-      .$type<"oauth" | "oidc" | "email">()
+      .$type<"email" | "oauth" | "oidc" | "webauthn">()
       .notNull(),
     provider: varchar("provider", { length: DEFAULTLENGTH }).notNull(),
     providerAccountId: varchar("providerAccountId", {
@@ -124,10 +121,7 @@ export const verificationTokens = mysqlTable(
 export const notifications = mysqlTable(
   "notification",
   {
-    id: varchar("id", { length: NANOID_SIZE })
-      .notNull()
-      .default(nanoid())
-      .primaryKey(),
+    id: nanoidPrimaryKey,
     sentToUserId: varchar("sentToUserId", { length: NANOID_SIZE })
       .notNull()
       .references(() => users.id, { onUpdate: "cascade", onDelete: "cascade" }),

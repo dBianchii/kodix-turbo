@@ -1,7 +1,9 @@
 "use client";
 
-import * as React from "react";
+import type { ReactNode } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
 import { LuLoader2 } from "react-icons/lu";
 import { RxPlusCircled } from "react-icons/rx";
 
@@ -21,20 +23,22 @@ import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
 import { toast } from "@kdx/ui/toast";
 
-import { defaultSafeActionToastError } from "~/helpers/safe-action/default-action-error-toast";
+import { getErrorMessage } from "~/helpers/miscelaneous";
 import { createTeamAction } from "./actions";
 
 export function AddTeamDialogButton({
   children,
   className,
 }: {
-  children?: React.ReactNode;
+  children?: ReactNode;
   className?: string;
 }) {
   const router = useRouter();
-  const [teamName, changeTeamName] = React.useState("");
-  const [isPending, setIsPending] = React.useState(false);
-  const [open, setOpen] = React.useState(false);
+  const [teamName, setTeamName] = useState("");
+  const [open, setOpen] = useState(false);
+  const { isPending, mutateAsync } = useMutation({
+    mutationFn: createTeamAction,
+  });
   const t = useI18n();
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -61,7 +65,7 @@ export function AddTeamDialogButton({
                 id="name"
                 placeholder="Acme Inc."
                 value={teamName}
-                onChange={(e) => changeTeamName(e.target.value)}
+                onChange={(e) => setTeamName(e.target.value)}
               />
             </div>
           </div>
@@ -72,18 +76,21 @@ export function AddTeamDialogButton({
           </Button>
           <Button
             disabled={isPending}
-            onClick={async () => {
-              setIsPending(true);
-              const result = await createTeamAction({
-                teamName,
-              });
-              setIsPending(false);
-              if (defaultSafeActionToastError(result)) return;
-              setOpen(false);
-              toast(`${t("Team")} ${result.data?.name} ${t("created")}`, {
-                description: t("Successfully created a new team"),
-              });
-              return router.refresh();
+            onClick={() => {
+              toast.promise(
+                mutateAsync({
+                  teamName,
+                }),
+                {
+                  error: getErrorMessage,
+                  success: (res) => {
+                    setOpen(false);
+
+                    router.refresh();
+                    return `${t("Team")} ${res.data?.name} ${t("created")}`;
+                  },
+                },
+              );
             }}
           >
             {isPending && <LuLoader2 className="mr-2 size-5 animate-spin" />}
