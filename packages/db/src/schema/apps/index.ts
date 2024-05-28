@@ -13,7 +13,6 @@ import { NANOID_SIZE } from "@kdx/shared";
 import { teamAppRoles, teams } from "../teams";
 import {
   DEFAULTLENGTH,
-  moneyDecimal,
   nanoidPrimaryKey,
   teamIdReferenceCascadeDelete,
 } from "../utils";
@@ -39,7 +38,6 @@ export const apps = mysqlTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt").onUpdateNow(),
-    subscriptionCost: moneyDecimal("subscriptionCost").notNull(),
     devPartnerId: varchar("devPartnerId", { length: NANOID_SIZE })
       .notNull()
       .references(() => devPartners.id),

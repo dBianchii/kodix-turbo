@@ -55,9 +55,11 @@ export const usersRelations = relations(users, ({ many, one }) => ({
 export const accounts = mysqlTable(
   "account",
   {
-    userId: nanoidPrimaryKey,
+    userId: varchar("userId", { length: NANOID_SIZE })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
     type: varchar("type", { length: DEFAULTLENGTH })
-      .$type<"oauth" | "oidc" | "email">()
+      .$type<"email" | "oauth" | "oidc" | "webauthn">()
       .notNull(),
     provider: varchar("provider", { length: DEFAULTLENGTH }).notNull(),
     providerAccountId: varchar("providerAccountId", {
