@@ -256,7 +256,7 @@ export default {
   "Medium": "Médio",
   "Add more": "Adicione mais",
   "App Store": "App Store",
-  "Confirm": "confirme",
+  "Confirm": "Confirme",
   "Delete": "Excluir",
   "Edit Event": "Editar evento",
   "Edit name permissions": "Editar permissões de {name}",
