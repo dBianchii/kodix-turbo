@@ -1,4 +1,4 @@
-# Run this with: `sudo docker compose -f ./dockercompose-srh.yml up`
+# Run this with: `sudo docker-compose -f ./dockercompose-srh.yml up`
 
 version: "3"
 services:
