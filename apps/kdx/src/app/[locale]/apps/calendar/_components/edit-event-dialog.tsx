@@ -57,6 +57,7 @@ export function EditEventDialog({
   const mutation = api.app.calendar.edit.useMutation({
     onSuccess: () => {
       void utils.app.calendar.getAll.invalidate();
+      void utils.app.kodixCare.getCareTasks.invalidate();
       setOpen(false);
     },
     onError: (e) => trpcErrorToastDefault(e),
