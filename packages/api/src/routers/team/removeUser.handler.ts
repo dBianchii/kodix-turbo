@@ -54,7 +54,7 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
     });
 
   //TODO: Implement role based access control
-  const userHasAtLeastOneOtherTeam = await ctx.db
+  const otherTeam = await ctx.db
     .select({ id: schema.teams.id })
     .from(schema.teams)
     .innerJoin(
@@ -69,7 +69,7 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
     )
     .then((res) => res[0]);
 
-  if (!userHasAtLeastOneOtherTeam)
+  if (!otherTeam)
     throw new TRPCError({
       message:
         "The user needs to have at least one team. Please create another team before removing this user",
@@ -77,12 +77,23 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
     });
 
   //check if there are more people in the team before removal
-  await ctx.db
-    .delete(schema.usersToTeams)
-    .where(
-      and(
-        eq(schema.usersToTeams.userId, input.userId),
-        eq(schema.usersToTeams.teamId, ctx.session.user.activeTeamId),
-      ),
-    );
+  await ctx.db.transaction(async (tx) => {
+    //Move the user to the other team
+    await tx
+      .update(schema.users)
+      .set({
+        activeTeamId: otherTeam.id,
+      })
+      .where(eq(schema.users.id, input.userId));
+
+    //Remove the user from the team
+    await tx
+      .delete(schema.usersToTeams)
+      .where(
+        and(
+          eq(schema.usersToTeams.userId, input.userId),
+          eq(schema.usersToTeams.teamId, ctx.session.user.activeTeamId),
+        ),
+      );
+  });
 };
