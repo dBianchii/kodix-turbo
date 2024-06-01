@@ -4,6 +4,6 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "docker compose -f ./dockercompose-srh.yml up"
+    "dev": "docker-compose -f ./dockercompose-srh.yml up"
   }
 }

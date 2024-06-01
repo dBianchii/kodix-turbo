@@ -2,6 +2,7 @@ import type { AdapterUser } from "@auth/core/adapters";
 import type { Awaitable } from "@auth/core/types";
 import type { DefaultSession, NextAuthConfig, Session } from "next-auth";
 import type { Adapter, AdapterSession } from "next-auth/adapters";
+import { skipCSRFCheck } from "@auth/core";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import Discord from "next-auth/providers/discord";
 import Google from "next-auth/providers/google";
@@ -151,8 +152,13 @@ function KodixAdapter(): Adapter {
 }
 export const adapter = KodixAdapter();
 
+// eslint-disable-next-line no-restricted-properties
+const isSecureContext = process.env.NODE_ENV !== "development";
 export const authConfig = {
   adapter,
+  // In development, we need to skip checks to allow Expo to work
+  skipCSRFCheck: isSecureContext ? undefined : skipCSRFCheck,
+  trustHost: !isSecureContext,
   providers: [
     Google({
       clientId: env.AUTH_GOOGLE_CLIENT_ID,
