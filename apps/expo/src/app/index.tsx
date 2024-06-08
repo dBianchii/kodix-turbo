@@ -1,87 +1,168 @@
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 
-import { api } from "~/utils/api";
+import { Button } from "~/components/Button";
+import { useSignIn, useUser } from "~/utils/auth";
 
-// function PostCard(props: {
-//   post: RouterOutputs["post"]["all"][number];
-//   onDelete: () => void;
-// }) {
-//   return (
-//     <View className="flex flex-row rounded-lg bg-muted p-4">
-//       <View className="flex-grow">
-//         <Link
-//           asChild
-//           href={{
-//             pathname: "/post/[id]",
-//             params: { id: props.post.id },
-//           }}
-//         >
-//           <Pressable className="">
-//             <Text className=" text-xl font-semibold text-primary">
-//               {props.post.title}
-//             </Text>
-//             <Text className="mt-2 text-foreground">{props.post.content}</Text>
-//           </Pressable>
-//         </Link>
-//       </View>
-//       <Pressable onPress={props.onDelete}>
-//         <Text className="font-bold uppercase text-primary">Delete</Text>
-//       </Pressable>
-//     </View>
-//   );
+// Notifications.setNotificationHandler({
+//   // eslint-disable-next-line @typescript-eslint/require-await
+//   handleNotification: async () => ({
+//     shouldShowAlert: true,
+//     shouldPlaySound: false,
+//     shouldSetBadge: false,
+//   }),
+// });
+
+// async function sendPushNotification(expoPushToken: string) {
+//   const message = {
+//     to: expoPushToken,
+//     sound: "default",
+//     title: "Oie",
+//     body: "Como vai vc!",
+//     data: { someData: "goes here" },
+//   };
+
+//   console.log(JSON.stringify(message));
+
+//   await fetch("https://exp.host/--/api/v2/push/send", {
+//     method: "POST",
+//     headers: {
+//       Accept: "application/json",
+//       "Accept-encoding": "gzip, deflate",
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify(message),
+//   });
+// }
+
+// function handleRegistrationError(errorMessage: string) {
+//   alert(errorMessage);
+//   throw new Error(errorMessage);
+// }
+
+// async function registerForPushNotificationsAsync() {
+//   if (Platform.OS === "android") {
+//     void Notifications.setNotificationChannelAsync("default", {
+//       name: "default",
+//       importance: Notifications.AndroidImportance.MAX,
+//       vibrationPattern: [0, 250, 250, 250],
+//       lightColor: "#FF231F7C",
+//     });
+//   }
+
+//   if (Device.isDevice) {
+//     const { status: existingStatus } =
+//       await Notifications.getPermissionsAsync();
+//     let finalStatus = existingStatus;
+//     if (existingStatus !== "granted") {
+//       const { status } = await Notifications.requestPermissionsAsync();
+//       finalStatus = status;
+//     }
+//     if (finalStatus !== "granted") {
+//       handleRegistrationError(
+//         "Permission not granted to get push token for push notification!",
+//       );
+//       return;
+//     }
+
+//     const projectId = "75dbcecc-5bc8-41c3-b79f-f8582a540fdf";
+//     if (!projectId) {
+//       handleRegistrationError("Project ID not found");
+//     }
+//     try {
+//       const pushTokenString = (
+//         await Notifications.getExpoPushTokenAsync({
+//           projectId,
+//         })
+//       ).data;
+//       console.log(pushTokenString);
+//       return pushTokenString;
+//     } catch (e: unknown) {
+//       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+//       handleRegistrationError(`${e}`);
+//     }
+//     return;
+//   }
+//   handleRegistrationError("Must use physical device for push notifications");
 // }
 
 export default function Index() {
+  // const [expoPushToken, setExpoPushToken] = useState("");
+  // const [notification, setNotification] = useState<
+  //   Notifications.Notification | undefined
+  // >(undefined);
+  // const notificationListener = useRef<Notifications.Subscription>();
+  // const responseListener = useRef<Notifications.Subscription>();
+
+  // useEffect(() => {
+  //   registerForPushNotificationsAsync()
+  //     .then((token) => setExpoPushToken(token ?? ""))
+  //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //     .catch((error: any) => setExpoPushToken(`${error}`));
+
+  //   notificationListener.current =
+  //     Notifications.addNotificationReceivedListener((notification) => {
+  //       setNotification(notification);
+  //     });
+
+  //   responseListener.current =
+  //     Notifications.addNotificationResponseReceivedListener((response) => {
+  //       console.log(response);
+  //     });
+
+  //   return () => {
+  //     notificationListener.current &&
+  //       Notifications.removeNotificationSubscription(
+  //         notificationListener.current,
+  //       );
+  //     responseListener.current &&
+  //       Notifications.removeNotificationSubscription(responseListener.current);
+  //   };
+  // }, []);
+
   // const utils = api.useUtils();
-
-  // const postQuery = api.post.all.useQuery();
-
-  // const deletePostMutation = api.post.delete.useMutation({
-  //   onSettled: () => utils.post.all.invalidate().then(),
-  // });
-
-  const stuff = api.app.getAll.useQuery();
+  // const url = Linking.useURL();
+  // if (url) {
+  //   const { params } = QueryParams.getQueryParams(url);
+  //   const { session_token } = params;
+  //   if (session_token) {
+  //     console.log(session_token, "has been set");
+  //     setToken(session_token);
+  //     void utils.invalidate();
+  //   }
+  // }
+  const router = useRouter();
+  const user = useUser();
+  if (user) router.replace("/home");
 
   return (
     <SafeAreaView className=" bg-background">
       {/* Changes page title visible on the header */}
-      <Stack.Screen options={{ title: "Home Page" }} />
-      <View className="h-full w-full bg-background p-4">
-        <Text className="pb-2 text-center text-5xl font-bold text-foreground">
-          <Text className="text-primary">T3</Text> Turbo
-        </Text>
-
-        <Text className="text-white">
-          {stuff.data?.length && JSON.stringify(stuff.data)}
-        </Text>
-
-        {/* <Pressable
-          onPress={() => void utils.post.all.invalidate()}
-          className="flex items-center rounded-lg bg-primary p-2"
-        >
-          <Text className="text-foreground"> Refresh posts</Text>
-        </Pressable> */}
-
-        <View className="py-2">
-          <Text className="font-semibold italic text-primary">
-            Press on a postss
+      <Stack.Screen options={{ title: "Login page" }} />
+      <View className="center flex h-full w-full flex-col bg-background">
+        <View className="my-auto h-1/3 w-full">
+          <Text className="text-center text-5xl font-bold text-foreground">
+            Kodix
           </Text>
-        </View>
 
-        {/* <FlashList
-          data={postQuery.data}
-          estimatedItemSize={20}
-          ItemSeparatorComponent={() => <View className="h-2" />}
-          renderItem={(p) => (
-            <PostCard
-              post={p.item}
-              onDelete={() => deletePostMutation.mutate(p.item.id)}
-            />
-          )}
-        /> */}
+          <MobileAuth />
+        </View>
       </View>
     </SafeAreaView>
+  );
+}
+
+function MobileAuth() {
+  const signIn = useSignIn();
+
+  return (
+    <View className="w-80 self-center pt-4">
+      <Button
+        className="rounded-full"
+        label="Sign in"
+        onPress={() => signIn()}
+      />
+    </View>
   );
 }

@@ -1,7 +1,8 @@
 import type { AdapterUser } from "@auth/core/adapters";
 import type { Awaitable } from "@auth/core/types";
-import type { DefaultSession, NextAuthConfig } from "next-auth";
+import type { DefaultSession, NextAuthConfig, Session } from "next-auth";
 import type { Adapter, AdapterSession } from "next-auth/adapters";
+import { skipCSRFCheck } from "@auth/core";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import Discord from "next-auth/providers/discord";
 import Google from "next-auth/providers/google";
@@ -149,9 +150,15 @@ function KodixAdapter(): Adapter {
     },
   } as Adapter;
 }
+const adapter = KodixAdapter();
 
+// eslint-disable-next-line no-restricted-properties
+const isSecureContext = process.env.NODE_ENV !== "development";
 export const authConfig = {
-  adapter: KodixAdapter(),
+  adapter,
+  // In development, we need to skip checks to allow Expo to work
+  skipCSRFCheck: isSecureContext ? undefined : skipCSRFCheck,
+  trustHost: !isSecureContext,
   providers: [
     Google({
       clientId: env.AUTH_GOOGLE_CLIENT_ID,
@@ -198,3 +205,31 @@ export const authConfig = {
     //newUser: "/auth/new-user"
   },
 } satisfies NextAuthConfig;
+
+export const validateToken = async (token: string): Promise<Session | null> => {
+  const sessionToken = token.slice("Bearer ".length);
+  const session = (await adapter.getSessionAndUser?.(sessionToken)) as
+    | {
+        session: AdapterSession;
+        user: AdapterUser & {
+          activeTeamId: string;
+          activeTeamName: string;
+          kodixAdmin: boolean;
+        };
+      }
+    | null
+    | undefined;
+
+  return session
+    ? {
+        user: {
+          ...session.user,
+        },
+        expires: session.session.expires.toISOString(),
+      }
+    : null;
+};
+
+export const invalidateSessionToken = async (token: string) => {
+  await adapter.deleteSession?.(token);
+};

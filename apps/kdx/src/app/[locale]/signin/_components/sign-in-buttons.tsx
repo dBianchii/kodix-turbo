@@ -5,11 +5,14 @@ import { useState, useTransition } from "react";
 import { signIn } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
 import { LuLoader2 } from "react-icons/lu";
+import { RxDiscordLogo } from "react-icons/rx";
 
 import { useI18n, useScopedI18n } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
 import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
+
+import { env } from "~/env";
 
 export function SignInButtons({
   searchParams,
@@ -40,6 +43,13 @@ export function SignInButtons({
         loading={isPending}
         startTransition={startTransition}
       />
+      {env.NODE_ENV === "development" && (
+        <DiscordSignIn
+          callbackUrl={searchParams?.callbackUrl}
+          loading={isPending}
+          startTransition={startTransition}
+        />
+      )}
     </>
   );
 }
@@ -113,6 +123,30 @@ function GoogleSignIn({
     >
       <FcGoogle className="mr-2 size-4" />
       {t("Sign in with Google")}
+    </Button>
+  );
+}
+
+function DiscordSignIn({
+  callbackUrl,
+  loading,
+  startTransition,
+}: SignInButtonsProps) {
+  return (
+    <Button
+      className="w-full"
+      variant="outline"
+      disabled={loading}
+      onClick={() => {
+        startTransition(async () => {
+          await signIn("discord", {
+            callbackUrl,
+          });
+        });
+      }}
+    >
+      <RxDiscordLogo className="mr-2 size-4" />
+      Sign in with Discord
     </Button>
   );
 }

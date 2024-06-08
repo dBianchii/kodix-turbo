@@ -1,10 +1,12 @@
 import { appRouter as _appRouter } from "./routers/app/_router"; //sad that I had to alias it lol
+import { authRouter } from "./routers/auth/_router";
 import { teamRouter } from "./routers/team/_router";
 import { userRouter } from "./routers/user/_router";
 import { createTRPCRouter } from "./trpc";
 
 export const appRouter = createTRPCRouter({
   app: _appRouter,
+  auth: authRouter,
   team: teamRouter,
   user: userRouter,
 });

@@ -12,3 +12,5 @@ const {
 } = NextAuth(authConfig);
 
 export { GET, POST, auth, signIn, signOut };
+
+export { invalidateSessionToken, validateToken } from "./config";

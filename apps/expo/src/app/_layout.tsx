@@ -1,6 +1,8 @@
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 
+import "@bacons/text-decoder/install";
+
 import { TRPCProvider } from "~/utils/api";
 
 import "../styles.css";
@@ -19,9 +21,7 @@ export default function RootLayout() {
         */}
       <Stack
         screenOptions={{
-          headerStyle: {
-            backgroundColor: "#f472b6",
-          },
+          headerShown: false,
           contentStyle: {
             backgroundColor: colorScheme == "dark" ? "#09090B" : "#FFFFFF",
           },
