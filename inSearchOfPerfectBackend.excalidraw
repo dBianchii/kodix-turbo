@@ -1,0 +1,48 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "https://marketplace.visualstudio.com/items?itemName=pomdtr.excalidraw-editor",
+  "elements": [
+    {
+      "id": "uYbco55nOFvjWl2meXL4F",
+      "type": "text",
+      "x": 626.4000244140625,
+      "y": 210.8000030517578,
+      "width": 816.7991333007812,
+      "height": 150,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 590809295,
+      "version": 380,
+      "versionNonce": 331024449,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1717796816021,
+      "link": null,
+      "locked": false,
+      "text": "The perfect typesafe api:\n\n- Doesn't need necessarily to be REST based. (tRPC's way of doing stuff is fine)\n- Needs to have an easy way for me to call all endpoints as server calls.\n- Needs to have a way for me to define middlewares and pass on context\n",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "baseline": 142,
+      "containerId": null,
+      "originalText": "The perfect typesafe api:\n\n- Doesn't need necessarily to be REST based. (tRPC's way of doing stuff is fine)\n- Needs to have an easy way for me to call all endpoints as server calls.\n- Needs to have a way for me to define middlewares and pass on context\n",
+      "lineHeight": 1.25
+    }
+  ],
+  "appState": {
+    "gridSize": null,
+    "viewBackgroundColor": "#ffffff"
+  },
+  "files": {}
+}
