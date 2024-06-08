@@ -1,16 +1,9 @@
-import { useEffect, useRef, useState } from "react";
-import { Platform, Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import * as QueryParams from "expo-auth-session/build/QueryParams";
-import * as Device from "expo-device";
-import * as Linking from "expo-linking";
-import * as Notifications from "expo-notifications";
-import { Link, Stack, useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 
 import { Button } from "~/components/Button";
-import { api } from "~/utils/api";
-import { useSignIn, useSignOut, useUser } from "~/utils/auth";
-import { setToken } from "~/utils/session-store";
+import { useSignIn, useUser } from "~/utils/auth";
 
 // Notifications.setNotificationHandler({
 //   // eslint-disable-next-line @typescript-eslint/require-await

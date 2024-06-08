@@ -28,7 +28,7 @@ export const useUser = () => {
 
 export const useSignIn = () => {
   const utils = api.useUtils();
-  const router = useRouter();
+  // const router = useRouter();
 
   return async () => {
     await signIn();

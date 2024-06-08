@@ -1,5 +1,6 @@
-import { kdxProductionURL } from "@kdx/shared";
 import Constants from "expo-constants";
+
+import { kdxProductionURL } from "@kdx/shared";
 
 /**
  * Extend this function when going to production by

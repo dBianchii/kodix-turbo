@@ -1,7 +1,6 @@
 import React from "react";
-import { Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Stack, useRouter } from "expo-router";
+import { Stack } from "expo-router";
 
 import { Button } from "~/components/Button";
 import { useSignOut } from "~/utils/auth";
