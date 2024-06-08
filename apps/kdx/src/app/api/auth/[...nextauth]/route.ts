@@ -33,6 +33,8 @@ export const GET = async (
   req: NextRequest,
   props: { params: { nextauth: string[] } },
 ) => {
+  // First step must be to correct the request URL.
+  req = rewriteRequestUrl(req);
   const nextauthAction = props.params.nextauth[0];
   const isExpoSignIn = req.nextUrl.searchParams.get("expo-redirect");
   const isExpoCallback = cookies().get(EXPO_COOKIE_NAME);
@@ -52,6 +54,7 @@ export const GET = async (
     cookies().delete(EXPO_COOKIE_NAME);
 
     const authResponse = await DEFAULT_GET(req);
+    console.log("getSetCookie", authResponse.headers.getSetCookie());
     const setCookie = authResponse.headers
       .getSetCookie()
       .find((cookie) => AUTH_COOKIE_PATTERN.test(cookie));

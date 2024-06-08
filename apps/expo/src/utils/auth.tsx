@@ -33,7 +33,6 @@ export const useSignIn = () => {
   return async () => {
     await signIn();
     await utils.invalidate();
-    router.replace("/");
   };
 };
 

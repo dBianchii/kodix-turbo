@@ -1,13 +1,13 @@
- 
 import { useEffect, useRef, useState } from "react";
-import { Button, Platform, Pressable, Text, View } from "react-native";
+import { Platform, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as QueryParams from "expo-auth-session/build/QueryParams";
 import * as Device from "expo-device";
 import * as Linking from "expo-linking";
 import * as Notifications from "expo-notifications";
-import { Link, Stack } from "expo-router";
+import { Link, Stack, useRouter } from "expo-router";
 
+import { Button } from "~/components/Button";
 import { api } from "~/utils/api";
 import { useSignIn, useSignOut, useUser } from "~/utils/auth";
 import { setToken } from "~/utils/session-store";
@@ -94,7 +94,7 @@ import { setToken } from "~/utils/session-store";
 //   handleRegistrationError("Must use physical device for push notifications");
 // }
 
-export default function App() {
+export default function Index() {
   // const [expoPushToken, setExpoPushToken] = useState("");
   // const [notification, setNotification] = useState<
   //   Notifications.Notification | undefined
@@ -139,46 +139,37 @@ export default function App() {
   //     void utils.invalidate();
   //   }
   // }
+  const router = useRouter();
+  const user = useUser();
+  if (user) router.replace("/home");
 
   return (
     <SafeAreaView className=" bg-background">
       {/* Changes page title visible on the header */}
-      <Stack.Screen options={{ title: "Home Page" }} />
-      <View className="flex h-full w-full bg-background p-4">
-        <Text className="text-center text-5xl font-bold text-foreground">
-          Kodix
-        </Text>
+      <Stack.Screen options={{ title: "Login page" }} />
+      <View className="center flex h-full w-full flex-col bg-background">
+        <View className="my-auto h-1/3 w-full">
+          <Text className="text-center text-5xl font-bold text-foreground">
+            Kodix
+          </Text>
 
-        <MobileAuth />
+          <MobileAuth />
+        </View>
       </View>
     </SafeAreaView>
   );
 }
 
 function MobileAuth() {
-  const user = useUser();
   const signIn = useSignIn();
-  const signOut = useSignOut();
 
   return (
-    <>
-      <Text className="pb-2 text-center text-xl font-semibold text-white">
-        {user ? "Logged in" : "Not logged in"}{" "}
-        {user?.email && `as ${user.email}`}{" "}
-      </Text>
+    <View className="w-80 self-center pt-4">
       <Button
-        onPress={() => (user ? signOut() : signIn())}
-        title={user ? "Sign Out" : "Sign In With Discord"}
-        color={"#5B65E9"}
+        className="rounded-full"
+        label="Sign in"
+        onPress={() => signIn()}
       />
-      {/* <Pressable
-        onPress={() => (user ? signOut() : signIn())}
-        className="bg-primary text-primary-foreground shadow hover:bg-primary/90"
-      >
-        <Text className="text-center text-white">
-          {user ? "Sign Out" : "Sign In With Discord"}
-        </Text>
-      </Pressable> */}
-    </>
+    </View>
   );
 }

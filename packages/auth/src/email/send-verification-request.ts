@@ -20,16 +20,16 @@ export const sendVerificationRequest = async (params: {
   theme: Theme;
   request: Request;
 }) => {
-  // const isExpoCallback = params.request.headers
-  //   .get("cookie")
-  //   ?.match(EXPO_COOKIE_NAME)?.[1];
+  const isExpoCallback = params.request.headers
+    .get("cookie")
+    ?.match(EXPO_COOKIE_NAME)?.[1];
 
-  // if (isExpoCallback) {
-  //   const newExpoRedirectUrl = new URL(decodeURIComponent(isExpoCallback));
+  if (isExpoCallback) {
+    const newExpoRedirectUrl = new URL(decodeURIComponent(isExpoCallback));
 
-  //   newExpoRedirectUrl.searchParams.set("session_token", params.token);
-  //   params.url = newExpoRedirectUrl.toString();
-  // }
+    newExpoRedirectUrl.searchParams.set("session_token", params.token);
+    params.url = newExpoRedirectUrl.toString();
+  }
 
   console.log("params.url", params.url);
   try {

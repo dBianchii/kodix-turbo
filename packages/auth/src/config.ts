@@ -150,7 +150,7 @@ function KodixAdapter(): Adapter {
     },
   } as Adapter;
 }
-export const adapter = KodixAdapter();
+const adapter = KodixAdapter();
 
 // eslint-disable-next-line no-restricted-properties
 const isSecureContext = process.env.NODE_ENV !== "development";
@@ -164,7 +164,6 @@ export const authConfig = {
       clientId: env.AUTH_GOOGLE_CLIENT_ID,
       clientSecret: env.AUTH_GOOGLE_CLIENT_SECRET,
       allowDangerousEmailAccountLinking: true,
-      // redirectProxyUrl: "http://localhost:3000/api/auth",
     }),
     resend({
       apiKey: env.RESEND_API_KEY,

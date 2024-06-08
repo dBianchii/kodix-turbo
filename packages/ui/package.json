@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "main": "src/index.ts",
   "exports": {
     ".": "./src/index.ts",
     "./*": [
@@ -44,7 +45,7 @@
     "@radix-ui/react-tooltip": "^1.0.7",
     "@tanstack/react-table": "^8.16.0",
     "class-variance-authority": "^0.7.0",
-    "clsx": "^2.1.0",
+    "clsx": "^2.1.1",
     "cmdk": "^0.2.1",
     "embla-carousel-react": "8.0.0-rc22",
     "framer-motion": "^11.2.6",
@@ -54,7 +55,7 @@
     "react-hook-form": "^7.51.4",
     "react-resizable-panels": "^2.0.14",
     "sonner": "^1.4.41",
-    "tailwind-merge": "^2.2.2",
+    "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
@@ -70,7 +71,7 @@
     "prettier": "^3.2.5",
     "react": "18.3.1",
     "react-spring": "^9.7.3",
-    "tailwindcss": "^3.4.1",
+    "tailwindcss": "^3.4.4",
     "typescript": "^5.4.5"
   },
   "peerDependencies": {
