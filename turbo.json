@@ -1,7 +1,8 @@
 {
   "$schema": "https://turborepo.org/schema.json",
+  "ui": "tui",
   "globalDependencies": ["**/.env"],
-  "pipeline": {
+  "tasks": {
     "topo": {
       "dependsOn": ["^topo"]
     },
@@ -21,7 +22,7 @@
     },
     "format": {
       "outputs": ["node_modules/.cache/.prettiercache"],
-      "outputMode": "new-only"
+      "outputLogs": "new-only"
     },
     "lint": {
       "dependsOn": ["^topo", "^build"],
@@ -39,11 +40,20 @@
     }
   },
   "globalEnv": [
-    "DATABASE_URL",
+    "MYSQL_URL",
     "AUTH_GOOGLE_CLIENT_ID",
     "AUTH_GOOGLE_CLIENT_SECRET",
     "AUTH_REDIRECT_PROXY_URL",
     "AUTH_SECRET",
-    "RESEND_API_KEY"
+    "RESEND_API_KEY",
+    "PORT"
+  ],
+  "globalPassThroughEnv": [
+    "NODE_ENV",
+    "CI",
+    "VERCEL",
+    "VERCEL_ENV",
+    "VERCEL_URL",
+    "npm_lifecycle_event"
   ]
 }
