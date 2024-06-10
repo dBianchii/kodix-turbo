@@ -29,7 +29,6 @@
     "lint": "eslint",
     "push": "pnpm with-env drizzle-kit push",
     "studio": "pnpm with-env drizzle-kit studio",
-    "generate": "pnpm with-env drizzle-kit generate",
     "seed": "pnpm with-env tsx ./src/scripts/seed/index.ts",
     "drop": "pnpm with-env tsx ./src/scripts/drop.ts",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",

@@ -1,7 +1,6 @@
 {
   "$schema": "https://turborepo.org/schema.json",
   "ui": "tui",
-  "globalDependencies": ["**/.env"],
   "tasks": {
     "topo": {
       "dependsOn": ["^topo"]
@@ -37,6 +36,24 @@
     },
     "//#clean": {
       "cache": false
+    },
+    "push": {
+      "cache": false,
+      "interactive": true
+    },
+    "studio": {
+      "cache": false,
+      "persistent": true
+    },
+    "drop": {
+      "cache": false
+    },
+    "seed": {
+      "cache": false
+    },
+    "ui-add": {
+      "cache": false,
+      "interactive": true
     }
   },
   "globalEnv": [
