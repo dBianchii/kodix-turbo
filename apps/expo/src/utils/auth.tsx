@@ -8,9 +8,10 @@ import { deleteToken, setToken } from "./session-store";
 
 export const signIn = async () => {
   const signInUrl = `${getBaseUrl()}/api/auth/signin`;
-  const redirectTo = Linking.createURL("/");
+  const redirectTo = Linking.createURL("/login");
   const result = await Browser.openAuthSessionAsync(
     `${signInUrl}?expo-redirect=${encodeURIComponent(redirectTo)}`,
+    redirectTo,
   );
 
   if (result.type !== "success") return;
@@ -28,11 +29,12 @@ export const useUser = () => {
 
 export const useSignIn = () => {
   const utils = api.useUtils();
-  // const router = useRouter();
+  const router = useRouter();
 
   return async () => {
     await signIn();
     await utils.invalidate();
+    router.replace("/");
   };
 };
 

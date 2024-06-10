@@ -17,11 +17,7 @@ export const env = createEnv({
    * This way you can ensure the app isn't built with invalid env vars.
    */
   server: {
-    DB_HOST: z.string(),
-    DB_NAME: z.string(),
-    DB_PASSWORD: z.string(),
-    DB_USERNAME: z.string(),
-    DB_PORT: z.string().refine((p) => !isNaN(Number(p))),
+    MYSQL_URL: z.string(),
 
     RESEND_API_KEY: z.string(),
     AWS_SMTP_USER: z.string().optional(), //TODO: Remove once we know
