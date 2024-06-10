@@ -58,7 +58,7 @@
     "@kdx/tsconfig": "workspace:*",
     "@kdx/upstash-dev": "workspace:*",
     "@types/node": "^20.12.10",
-    "@types/react": "^18.3.1",
+    "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "dotenv-cli": "^7.4.1",
     "eslint": "^9.2.0",

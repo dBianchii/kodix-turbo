@@ -60,7 +60,7 @@
     "@kdx/tailwind-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
     "@types/babel__core": "^7.20.5",
-    "@types/react": "^18.3.1",
+    "@types/react": "^18.3.3",
     "eslint": "^9.2.0",
     "prettier": "^3.2.5",
     "tailwindcss": "^3.4.4",

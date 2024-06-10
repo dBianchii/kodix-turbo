@@ -197,7 +197,7 @@ importers:
         specifier: ^7.20.5
         version: 7.20.5
       '@types/react':
-        specifier: ^18.3.1
+        specifier: ^18.3.3
         version: 18.3.3
       eslint:
         specifier: ^9.2.0
@@ -342,7 +342,7 @@ importers:
         specifier: ^20.12.10
         version: 20.13.0
       '@types/react':
-        specifier: ^18.3.1
+        specifier: ^18.3.3
         version: 18.3.3
       '@types/react-dom':
         specifier: ^18.3.0
@@ -430,7 +430,7 @@ importers:
         specifier: ^20.12.10
         version: 20.13.0
       '@types/react':
-        specifier: ^18.3.1
+        specifier: ^18.3.3
         version: 18.3.3
       '@types/react-dom':
         specifier: ^18.3.0
@@ -494,7 +494,7 @@ importers:
         specifier: workspace:*
         version: link:../../tooling/typescript
       '@types/react':
-        specifier: ^18.3.1
+        specifier: ^18.3.3
         version: 18.3.3
       eslint:
         specifier: ^9.2.0
@@ -630,7 +630,7 @@ importers:
         specifier: workspace:*
         version: link:../../tooling/typescript
       '@types/react':
-        specifier: ^18.3.1
+        specifier: ^18.3.3
         version: 18.3.3
       eslint:
         specifier: ^9.2.0
@@ -679,7 +679,7 @@ importers:
         specifier: ^20.12.10
         version: 20.13.0
       '@types/react':
-        specifier: ^18.3.1
+        specifier: ^18.3.3
         version: 18.3.3
       eslint:
         specifier: ^9.2.0
@@ -713,7 +713,7 @@ importers:
         specifier: ^20.12.10
         version: 20.13.0
       '@types/react':
-        specifier: ^18.3.1
+        specifier: ^18.3.3
         version: 18.3.3
       eslint:
         specifier: ^9.2.0
@@ -892,7 +892,7 @@ importers:
         specifier: workspace:*
         version: link:../../tooling/typescript
       '@types/react':
-        specifier: ^18.3.1
+        specifier: ^18.3.3
         version: 18.3.3
       '@types/react-dom':
         specifier: ^18.3.0

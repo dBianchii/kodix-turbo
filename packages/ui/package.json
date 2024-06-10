@@ -64,7 +64,7 @@
     "@kdx/shared": "workspace:*",
     "@kdx/tailwind-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "@types/react": "^18.3.1",
+    "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "cobe": "^0.6.3",
     "eslint": "^9.2.0",
