@@ -137,7 +137,7 @@ export default function Index() {
   if (user) router.replace("/home");
 
   return (
-    <SafeAreaView className=" bg-background">
+    <SafeAreaView className="bg-background">
       {/* Changes page title visible on the header */}
       <Stack.Screen options={{ title: "Login page" }} />
       <View className="center flex h-full w-full flex-col bg-background">

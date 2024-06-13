@@ -11,6 +11,7 @@ export const signIn = async () => {
   const redirectTo = Linking.createURL("/");
   const result = await Browser.openAuthSessionAsync(
     `${signInUrl}?expo-redirect=${encodeURIComponent(redirectTo)}`,
+    redirectTo,
   );
 
   if (result.type !== "success") return;
@@ -33,6 +34,7 @@ export const useSignIn = () => {
   return async () => {
     await signIn();
     await utils.invalidate();
+    // router.replace("/");
   };
 };
 
