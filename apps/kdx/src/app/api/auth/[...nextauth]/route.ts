@@ -1,40 +1,41 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-import { GET as DEFAULT_GET, POST as DEFAULT_POST } from "@kdx/auth";
-
-import { env } from "~/env";
+import { handlers, isSecureContext } from "@kdx/auth";
 
 const EXPO_COOKIE_NAME = "__kdx-expo-redirect-state";
 const AUTH_COOKIE_PATTERN = /authjs\.session-token=([^;]+)/;
 
 /**
- * Correct request.url for local development so that Expo can work. Does nothing in production.
+ * Noop in production.
+ *
+ * In development, rewrite the request URL to use localhost instead of host IP address
+ * so that Expo Auth works without getting trapped by Next.js CSRF protection.
  * @param req The request to modify
  * @returns The modified request.
  */
-function rewriteRequestUrl(req: NextRequest) {
-  if (env.NODE_ENV === "production") {
-    return req;
-  }
+function rewriteRequestUrlInDevelopment(req: NextRequest) {
+  if (isSecureContext) return req;
+
   const host = req.headers.get("host");
   const newURL = new URL(req.url);
   newURL.host = host ?? req.nextUrl.host;
   return new NextRequest(newURL, req);
 }
 
-export const POST = async (req: NextRequest) => {
+export const POST = async (_req: NextRequest) => {
   // First step must be to correct the request URL.
-  req = rewriteRequestUrl(req);
-  return DEFAULT_POST(req);
+  const req = rewriteRequestUrlInDevelopment(_req);
+  return handlers.POST(req);
 };
 
 export const GET = async (
-  req: NextRequest,
+  _req: NextRequest,
   props: { params: { nextauth: string[] } },
 ) => {
   // First step must be to correct the request URL.
-  req = rewriteRequestUrl(req);
+  const req = rewriteRequestUrlInDevelopment(_req);
+
   const nextauthAction = props.params.nextauth[0];
   const isExpoSignIn = req.nextUrl.searchParams.get("expo-redirect");
   const isExpoCallback = cookies().get(EXPO_COOKIE_NAME);
@@ -53,8 +54,10 @@ export const GET = async (
   if (nextauthAction === "callback" && !!isExpoCallback) {
     cookies().delete(EXPO_COOKIE_NAME);
 
-    const authResponse = await DEFAULT_GET(req);
-    console.log("getSetCookie", authResponse.headers.getSetCookie());
+    // Run original handler, then extract the session token from the response
+    // Send it back via a query param in the Expo deep link. The Expo app
+    // will then get that and set it in the session storage.
+    const authResponse = await handlers.GET(req);
     const setCookie = authResponse.headers
       .getSetCookie()
       .find((cookie) => AUTH_COOKIE_PATTERN.test(cookie));
@@ -72,5 +75,5 @@ export const GET = async (
   }
 
   // Every other request just calls the default handler
-  return DEFAULT_GET(req);
+  return handlers.GET(req);
 };

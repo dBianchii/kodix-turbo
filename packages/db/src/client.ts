@@ -10,6 +10,10 @@ import { createPool } from "mysql2/promise";
 
 import { schema } from "./schema";
 
+if (!process.env.MYSQL_URL) {
+  throw new Error("Missing MYSQL_URL");
+}
+
 /**
  * Cache the database connection in development. This avoids creating a new connection on every HMR
  * update.
@@ -17,14 +21,16 @@ import { schema } from "./schema";
 const globalForDb = globalThis as unknown as {
   conn: Pool | undefined;
 };
+const url = new URL(process.env.MYSQL_URL);
+
 const conn =
   globalForDb.conn ??
   createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USERNAME,
-    database: process.env.DB_NAME,
-    password: process.env.DB_PASSWORD,
-    port: Number(process.env.DB_PORT),
+    host: url.host,
+    user: url.username,
+    database: url.pathname.slice(1),
+    password: url.password,
+    port: Number(url.port),
   });
 if (process.env.NODE_ENV !== "production") globalForDb.conn = conn;
 

@@ -17,11 +17,7 @@ export const env = createEnv({
    * This way you can ensure the app isn't built with invalid env vars.
    */
   server: {
-    DB_HOST: z.string(),
-    DB_NAME: z.string(),
-    DB_PASSWORD: z.string(),
-    DB_USERNAME: z.string(),
-    DB_PORT: z.string().refine((p) => !isNaN(Number(p))),
+    MYSQL_URL: z.string(),
 
     RESEND_API_KEY: z.string(),
     AWS_SMTP_USER: z.string().optional(), //TODO: Remove once we know
@@ -50,7 +46,5 @@ export const env = createEnv({
     NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
   },
   skipValidation:
-    !!process.env.CI ||
-    !!process.env.SKIP_ENV_VALIDATION ||
-    process.env.npm_lifecycle_event === "lint",
+    !!process.env.CI || process.env.npm_lifecycle_event === "lint",
 });

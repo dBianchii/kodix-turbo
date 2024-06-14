@@ -5,13 +5,12 @@
   "scripts": {
     "build": "nitro build",
     "clean": "rm -rf .turbo node_modules",
-    "dev": "nitro dev --port 3001",
     "lint": "eslint",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@auth/core": "0.30.0",
+    "@auth/core": "0.32.0",
     "@kdx/shared": "workspace:*"
   },
   "devDependencies": {

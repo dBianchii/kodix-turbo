@@ -152,13 +152,18 @@ function KodixAdapter(): Adapter {
 }
 const adapter = KodixAdapter();
 
-// eslint-disable-next-line no-restricted-properties
-const isSecureContext = process.env.NODE_ENV !== "development";
+export const isSecureContext = env.NODE_ENV !== "development";
+
 export const authConfig = {
   adapter,
   // In development, we need to skip checks to allow Expo to work
-  skipCSRFCheck: isSecureContext ? undefined : skipCSRFCheck,
-  trustHost: !isSecureContext,
+  ...(!isSecureContext
+    ? {
+        skipCSRFCheck: skipCSRFCheck,
+        trustHost: true,
+      }
+    : {}),
+  secret: env.AUTH_SECRET,
   providers: [
     Google({
       clientId: env.AUTH_GOOGLE_CLIENT_ID,

@@ -17,24 +17,24 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@auth/drizzle-adapter": "^1.0.1",
+    "@auth/drizzle-adapter": "^1.2.0",
     "@kdx/db": "workspace:*",
     "@kdx/react-email": "workspace:*",
     "@kdx/shared": "workspace:*",
     "@t3-oss/env-nextjs": "^0.10.1",
     "next": "14.2.3",
-    "next-auth": "5.0.0-beta.17",
+    "next-auth": "5.0.0-beta.19",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "resend": "^3.2.0",
     "zod": "^3.23.5"
   },
   "devDependencies": {
-    "@auth/core": "0.30.0",
+    "@auth/core": "0.32.0",
     "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "@types/react": "^18.3.1",
+    "@types/react": "^18.3.3",
     "eslint": "^9.2.0",
     "prettier": "^3.2.5",
     "typescript": "^5.4.5"

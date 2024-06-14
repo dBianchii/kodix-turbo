@@ -2,12 +2,14 @@ import { sql } from "drizzle-orm/sql";
 
 import { db } from "../client";
 
-if (!process.env.DB_NAME) throw new Error("DB_NAME is not set");
+if (!process.env.MYSQL_URL) throw new Error("MYSQL_URL is not set");
+
+const url = new URL(process.env.MYSQL_URL);
 
 async function emptyDBTables() {
   console.log("🗑️ Dropping the entire database");
-  await db.execute(sql.raw(`DROP DATABASE ${process.env.DB_NAME}`));
-  await db.execute(sql.raw(`CREATE DATABASE ${process.env.DB_NAME}`));
+  await db.execute(sql.raw(`DROP DATABASE ${url.pathname.slice(1)}`));
+  await db.execute(sql.raw(`CREATE DATABASE ${url.pathname.slice(1)}`));
 }
 
 emptyDBTables()

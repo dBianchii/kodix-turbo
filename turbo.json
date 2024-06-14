@@ -1,7 +1,7 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "globalDependencies": ["**/.env"],
-  "pipeline": {
+  "ui": "tui",
+  "tasks": {
     "topo": {
       "dependsOn": ["^topo"]
     },
@@ -21,7 +21,7 @@
     },
     "format": {
       "outputs": ["node_modules/.cache/.prettiercache"],
-      "outputMode": "new-only"
+      "outputLogs": "new-only"
     },
     "lint": {
       "dependsOn": ["^topo", "^build"],
@@ -36,14 +36,44 @@
     },
     "//#clean": {
       "cache": false
+    },
+    "push": {
+      "cache": false,
+      "interactive": true
+    },
+    "studio": {
+      "cache": false,
+      "persistent": true
+    },
+    "drop": {
+      "cache": false
+    },
+    "seed": {
+      "cache": false
+    },
+    "ui-add": {
+      "cache": false,
+      "interactive": true
     }
   },
   "globalEnv": [
-    "DATABASE_URL",
+    "MYSQL_URL",
     "AUTH_GOOGLE_CLIENT_ID",
     "AUTH_GOOGLE_CLIENT_SECRET",
     "AUTH_REDIRECT_PROXY_URL",
     "AUTH_SECRET",
-    "RESEND_API_KEY"
+    "RESEND_API_KEY",
+    "NEXT_PUBLIC_POSTHOG_HOST",
+    "NEXT_PUBLIC_POSTHOG_KEY",
+    "DISABLE_UPSTASH_CACHE",
+    "PORT"
+  ],
+  "globalPassThroughEnv": [
+    "NODE_ENV",
+    "CI",
+    "VERCEL",
+    "VERCEL_ENV",
+    "VERCEL_URL",
+    "npm_lifecycle_event"
   ]
 }
