@@ -26,7 +26,7 @@ const url = new URL(process.env.MYSQL_URL);
 const conn =
   globalForDb.conn ??
   createPool({
-    host: url.host,
+    host: url.host.split(":")[0],
     user: url.username,
     database: url.pathname.slice(1),
     password: url.password,
