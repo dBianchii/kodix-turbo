@@ -38,18 +38,20 @@ export function SignInButtons({
           </span>
         </div>
       </div>
-      <GoogleSignIn
-        callbackUrl={searchParams?.callbackUrl}
-        loading={isPending}
-        startTransition={startTransition}
-      />
-      {env.NODE_ENV === "development" && (
-        <DiscordSignIn
+      <div className="space-y-2">
+        <GoogleSignIn
           callbackUrl={searchParams?.callbackUrl}
           loading={isPending}
           startTransition={startTransition}
         />
-      )}
+        {env.NODE_ENV === "development" && (
+          <DiscordSignIn
+            callbackUrl={searchParams?.callbackUrl}
+            loading={isPending}
+            startTransition={startTransition}
+          />
+        )}
+      </div>
     </>
   );
 }
