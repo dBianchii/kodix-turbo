@@ -155,12 +155,22 @@ export default function Index() {
 
 function MobileAuth() {
   const signIn = useSignIn();
+  const router = useRouter();
 
   return (
-    <View className="w-80 self-center pt-4">
+    <View className="w-80 gap-4 self-center pt-8">
       <Button
         className="rounded-full"
-        label="Sign in"
+        label="Novo cadastro"
+        onPress={() => {
+          //redirect to register page
+          router.push("/register");
+        }}
+      />
+      <Button
+        variant={"secondary"}
+        className="rounded-full"
+        label="Login"
         onPress={() => signIn()}
       />
     </View>
