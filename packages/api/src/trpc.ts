@@ -6,7 +6,9 @@
  * tl;dr - this is where all the tRPC server stuff is created and plugged in.
  * The pieces you will need to use are documented accordingly near the end
  */
+import { headers } from "next/headers";
 import { initTRPC } from "@trpc/server";
+import { experimental_nextAppDirCaller } from "@trpc/server/adapters/next-app-dir";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
@@ -76,6 +78,20 @@ export const t = initTRPC.context<typeof createTRPCContext>().create({
  * @see https://trpc.io/docs/server/server-side-calls
  */
 export const createCallerFactory = t.createCallerFactory;
+
+export const serverActionProcedure = t.procedure.experimental_caller(
+  experimental_nextAppDirCaller({
+    async createContext() {
+      const heads = new Headers(headers());
+      heads.set("x-trpc-source", "server-action");
+
+      return createTRPCContext({
+        session: await auth(),
+        headers: heads,
+      });
+    },
+  }),
+);
 
 /**
  * 3. ROUTER & PROCEDURE (THE IMPORTANT BIT)

@@ -26,7 +26,6 @@ import {
 import { Input } from "@kdx/ui/input";
 import { kodixCareConfigSchema } from "@kdx/validators";
 
-import { defaultSafeActionToastError } from "~/helpers/safe-action/default-action-error-toast";
 import { finishKodixCareOnboardingAction } from "../actions/onboardingActions";
 
 export default function OnboardingCard() {
@@ -44,12 +43,12 @@ export default function OnboardingCard() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(async (values) => {
-          const result = await finishKodixCareOnboardingAction({
+          await finishKodixCareOnboardingAction({
             patientName: values.patientName,
           });
-          if (defaultSafeActionToastError(result)) {
-            return;
-          }
+          // if (defaultSafeActionToastError(result)) { //TODO: Implement error handling
+          //   return;
+          // }
           router.push(`/apps/kodixCare`);
         })}
         className="space-y-8"
