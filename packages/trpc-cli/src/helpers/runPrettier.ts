@@ -15,5 +15,5 @@ export const runPrettier = async (filePaths: string[]) => {
     await writeFile(filePath, formattedContents);
   });
 
-  await Promise.all(promises);
+  await Promise.allSettled(promises);
 };
