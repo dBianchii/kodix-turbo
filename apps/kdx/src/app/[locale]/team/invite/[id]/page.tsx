@@ -24,15 +24,23 @@ export default async function InvitePage({
 
   if (!session) {
     //Redirect the user
-    let url = `/api/auth/signin?callbackUrl=/team/invite/${invitationId}`;
+    const url = new URL(
+      `/api/auth/signin?callbackUrl=/team/invite/${invitationId}`,
+      window.location.href,
+    );
     const isExpoRedirect = searchParams["expo-redirect"];
     if (isExpoRedirect && typeof isExpoRedirect === "string") {
-      url += `&expo-redirect=${encodeURIComponent(isExpoRedirect)}`;
-      url += `&email=${encodeURIComponent(invitation.email)}`;
-      url += `&expo-register=${encodeURIComponent(`invite-${invitationId}`)}`;
+      url.searchParams.append(
+        "expo-redirect",
+        encodeURIComponent(isExpoRedirect),
+      );
+      url.searchParams.append(
+        "expo-register",
+        encodeURIComponent(`invite-${invitationId}`),
+      );
     }
 
-    redirect(url);
+    redirect(url.href);
   }
 
   if (session.user.email !== invitation.email) return notFound();

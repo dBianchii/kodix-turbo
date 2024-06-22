@@ -47,7 +47,7 @@ export const GET = async (
         `Invalid expo register query param: ${cameFromExpoRegister}`,
       );
 
-    //Request came from register in expo. We set a temporary cookie to indicate it, so we have this data on auth config
+    //Request came from register in expo. We set a temporary cookie to indicate it, so we have this data on auth config 'create user'
     cookies().set({
       name: EXPO_REGISTER_COOKIE_NAME,
       value: invitationId,
