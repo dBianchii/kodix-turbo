@@ -143,7 +143,7 @@ export default function Index() {
       <View className="center flex h-full w-full flex-col bg-background">
         <View className="my-auto h-1/3 w-full">
           <Text className="text-center text-5xl font-bold text-foreground">
-            Kodix
+            Kodix Care
           </Text>
 
           <MobileAuth />

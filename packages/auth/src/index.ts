@@ -9,7 +9,10 @@ const { handlers, auth, signIn, signOut } = NextAuth(authConfig);
 export { handlers, auth, signIn, signOut };
 
 export {
+  EXPO_REGISTER_COOKIE_NAME,
   invalidateSessionToken,
-  validateToken,
   isSecureContext,
+  validateToken,
 } from "./config";
+
+export { rewriteRequestUrlInDevelopment } from "./utils";

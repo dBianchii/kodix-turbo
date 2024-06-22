@@ -12,6 +12,8 @@ interface AcceptOptions {
 }
 
 export const acceptHandler = async ({ ctx, input }: AcceptOptions) => {
+  //!!This logic also exists inside the invitation accept handler.
+  //TODO: Refactor to avoid duplication
   const invitation = await ctx.db.query.invitations.findFirst({
     where: (invitation, { and, eq }) =>
       and(

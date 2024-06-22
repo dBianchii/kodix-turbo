@@ -16,7 +16,10 @@ const auth = cache(defaultAuth);
 export { handlers, auth, signIn, signOut };
 
 export {
+  EXPO_REGISTER_COOKIE_NAME,
   invalidateSessionToken,
   validateToken,
   isSecureContext,
 } from "./config";
+
+export { rewriteRequestUrlInDevelopment } from "./utils";

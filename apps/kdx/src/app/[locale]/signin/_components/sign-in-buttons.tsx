@@ -23,21 +23,26 @@ export function SignInButtons({
   const t = useScopedI18n("signin");
   return (
     <>
-      <EmailSignIn
-        callbackUrl={searchParams?.callbackUrl}
-        loading={isPending}
-        startTransition={startTransition}
-      />
-      <div className="relative my-4">
-        <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">
-            {t("Or continue with")}
-          </span>
-        </div>
-      </div>
+      {!searchParams?.["expo-redirect"] && (
+        <>
+          <EmailSignIn
+            callbackUrl={searchParams?.callbackUrl}
+            prefilledEmail={searchParams?.email}
+            loading={isPending}
+            startTransition={startTransition}
+          />
+          <div className="relative my-4">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">
+                {t("Or continue with")}
+              </span>
+            </div>
+          </div>
+        </>
+      )}
       <div className="space-y-2">
         <GoogleSignIn
           callbackUrl={searchParams?.callbackUrl}
@@ -60,11 +65,13 @@ interface SignInButtonsProps {
   callbackUrl?: string;
   loading: boolean;
   startTransition: TransitionStartFunction;
+  prefilledEmail?: string;
 }
 
 function EmailSignIn({
   callbackUrl,
   loading,
+  prefilledEmail,
   startTransition,
 }: SignInButtonsProps) {
   const [email, setEmail] = useState("");
@@ -82,6 +89,8 @@ function EmailSignIn({
         placeholder="name@email.com"
         id="email"
         name="email"
+        disabled={!!prefilledEmail}
+        value={prefilledEmail ?? email}
         onChange={(e) => setEmail(e.target.value)}
       />
       <Button

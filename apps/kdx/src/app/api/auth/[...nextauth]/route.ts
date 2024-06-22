@@ -1,27 +1,15 @@
+import type { NextRequest } from "next/server";
 import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-import { handlers, isSecureContext } from "@kdx/auth";
+import {
+  EXPO_REGISTER_COOKIE_NAME,
+  handlers,
+  rewriteRequestUrlInDevelopment,
+} from "@kdx/auth";
 
 const EXPO_COOKIE_NAME = "__kdx-expo-redirect-state";
 const AUTH_COOKIE_PATTERN = /authjs\.session-token=([^;]+)/;
-
-/**
- * Noop in production.
- *
- * In development, rewrite the request URL to use localhost instead of host IP address
- * so that Expo Auth works without getting trapped by Next.js CSRF protection.
- * @param req The request to modify
- * @returns The modified request.
- */
-function rewriteRequestUrlInDevelopment(req: NextRequest) {
-  if (isSecureContext) return req;
-
-  const host = req.headers.get("host");
-  const newURL = new URL(req.url);
-  newURL.host = host ?? req.nextUrl.host;
-  return new NextRequest(newURL, req);
-}
 
 export const POST = async (_req: NextRequest) => {
   // First step must be to correct the request URL.
@@ -51,6 +39,24 @@ export const GET = async (
     });
   }
 
+  const cameFromExpoRegister = req.nextUrl.searchParams.get("expo-register");
+  if (cameFromExpoRegister) {
+    const invitationId = cameFromExpoRegister.split("-")[1];
+    if (!invitationId)
+      throw new Error(
+        `Invalid expo register query param: ${cameFromExpoRegister}`,
+      );
+
+    //Request came from register in expo. We set a temporary cookie to indicate it, so we have this data on auth config
+    cookies().set({
+      name: EXPO_REGISTER_COOKIE_NAME,
+      value: invitationId,
+      maxAge: 60 * 2,
+      path: "/",
+    });
+    req.nextUrl.searchParams.delete("expo-register");
+  }
+
   if (nextauthAction === "callback" && !!isExpoCallback) {
     cookies().delete(EXPO_COOKIE_NAME);
 
@@ -68,9 +74,9 @@ export const GET = async (
         "Unable to find session cookie: " +
           JSON.stringify(authResponse.headers.getSetCookie()),
       );
-
     const url = new URL(isExpoCallback.value);
     url.searchParams.set("session_token", match);
+
     return NextResponse.redirect(url);
   }
 

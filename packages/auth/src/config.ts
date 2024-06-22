@@ -2,6 +2,7 @@ import type { AdapterUser } from "@auth/core/adapters";
 import type { Awaitable } from "@auth/core/types";
 import type { DefaultSession, NextAuthConfig, Session } from "next-auth";
 import type { Adapter, AdapterSession } from "next-auth/adapters";
+import { cookies } from "next/headers";
 import { skipCSRFCheck } from "@auth/core";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import Discord from "next-auth/providers/discord";
@@ -27,6 +28,7 @@ declare module "next-auth" {
     } & DefaultSession["user"];
   }
 }
+export const EXPO_REGISTER_COOKIE_NAME = "isExpoRegister"; //TODO: move to common file
 
 /** @return { import("next-auth/adapters").Adapter } */
 function KodixAdapter(): Adapter {
@@ -42,21 +44,63 @@ function KodixAdapter(): Adapter {
       const id = nanoid();
       const teamId = nanoid();
 
+      const isExpoRegister = cookies().get(EXPO_REGISTER_COOKIE_NAME);
+
       await db.transaction(async (tx) => {
         await tx.insert(users).values({
           ...data,
           id,
           activeTeamId: teamId,
         });
-        await tx.insert(teams).values({
-          id: teamId,
-          ownerId: id,
-          name: `Personal Team`,
-        });
-        await tx.insert(usersToTeams).values({
-          userId: id,
-          teamId: teamId,
-        });
+        if (!isExpoRegister) {
+          //In expo, we just accept the invite from the team and we don't need to create a default team
+          await tx.insert(teams).values({
+            id: teamId,
+            ownerId: id,
+            name: `Personal Team`,
+          });
+          await tx.insert(usersToTeams).values({
+            userId: id,
+            teamId: teamId,
+          });
+        } else {
+          //Accept invitation
+          const invitationId = isExpoRegister.value;
+
+          //!!This logic also exists inside the invitation accept handler.
+          //TODO: Refactor to avoid duplication
+          const invitation = await db.query.invitations.findFirst({
+            where: (invitation, { and, eq }) =>
+              and(
+                eq(invitation.id, invitationId),
+                // eq(invitation.email, ctx.session.user.email), //TODO: add email verification
+              ),
+            with: {
+              Team: {
+                columns: {
+                  id: true,
+                },
+              },
+            },
+          });
+
+          if (!invitation) throw new Error("No Invitation Found");
+
+          await tx
+            .update(schema.users)
+            .set({
+              activeTeamId: invitation.Team.id,
+            })
+            .where(eq(schema.users.id, id));
+          await tx.insert(schema.usersToTeams).values({
+            userId: id,
+            teamId: invitation.Team.id,
+          });
+          await tx
+            .delete(schema.invitations)
+            .where(eq(schema.invitations.id, invitationId));
+          cookies().delete(EXPO_REGISTER_COOKIE_NAME);
+        }
       });
 
       const result = (await db
@@ -132,7 +176,6 @@ function KodixAdapter(): Adapter {
         activeTeamName: dbAccount.Team.name,
       } as Awaitable<AdapterUser | null>;
     },
-
     async getUser(data) {
       const thing =
         (await db

@@ -2,6 +2,7 @@ import type { TRPCRouterRecord } from "@trpc/server";
 
 import { PKodixCare_CanToggleShiftId } from "@kdx/shared";
 import {
+  ZCheckEmailForRegisterInputSchema,
   ZDoCheckoutForShiftInputSchema,
   ZGetCareTasksInputSchema,
   ZSaveCareTaskInputSchema,
@@ -12,7 +13,8 @@ import {
   appPermissionMiddleware,
   kodixCareInstalledMiddleware,
 } from "../../../middlewares";
-import { protectedProcedure } from "../../../procedures";
+import { protectedProcedure, publicProcedure } from "../../../procedures";
+import { checkEmailForRegisterHandler } from "./checkEmailForRegister.handler";
 import { doCheckoutForShiftHandler } from "./doCheckoutForShift.handler";
 import { getCareTasksHandler } from "./getCareTasks.handler";
 import { getCurrentCareShiftHandler } from "./getCurrentCareShift.handler";
@@ -42,4 +44,7 @@ export const kodixCareRouter = {
   unlockMoreTasks: protectedProcedure
     .input(ZUnlockMoreTasksInputSchema)
     .mutation(unlockMoreTasksHandler),
+  checkEmailForRegister: publicProcedure
+    .input(ZCheckEmailForRegisterInputSchema)
+    .query(checkEmailForRegisterHandler),
 } satisfies TRPCRouterRecord;
