@@ -4,6 +4,7 @@ import { auth } from "@kdx/auth";
 import { eq } from "@kdx/db";
 import { db } from "@kdx/db/client";
 import { schema } from "@kdx/db/schema";
+import { getBaseUrl } from "@kdx/shared";
 
 import { api } from "~/trpc/server";
 
@@ -26,25 +27,22 @@ export default async function InvitePage({
     //Redirect the user
     const url = new URL(
       `/api/auth/signin?callbackUrl=/team/invite/${invitationId}`,
-      window.location.href,
+      getBaseUrl(),
     );
     const isExpoRedirect = searchParams["expo-redirect"];
     if (isExpoRedirect && typeof isExpoRedirect === "string") {
-      url.searchParams.append(
-        "expo-redirect",
-        encodeURIComponent(isExpoRedirect),
-      );
+      url.searchParams.append("expo-redirect", isExpoRedirect);
       url.searchParams.append(
         "expo-register",
         encodeURIComponent(`invite-${invitationId}`),
       );
     }
 
-    redirect(url.href);
+    redirect(`${url.pathname}${url.search}`);
   }
 
   if (session.user.email !== invitation.email) return notFound();
   await api.team.invitation.accept({ invitationId });
 
-  redirect("/");
+  redirect("/team");
 }

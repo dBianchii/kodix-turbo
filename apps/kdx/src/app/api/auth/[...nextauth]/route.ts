@@ -51,7 +51,7 @@ export const GET = async (
     cookies().set({
       name: EXPO_REGISTER_COOKIE_NAME,
       value: invitationId,
-      maxAge: 60 * 2,
+      maxAge: 60 * 4,
       path: "/",
     });
     req.nextUrl.searchParams.delete("expo-register");
