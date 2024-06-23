@@ -17,6 +17,8 @@ export { handlers, auth, signIn, signOut };
 
 export {
   CAME_FROM_INVITE_COOKIE_NAME,
+  EXPO_COOKIE_NAME,
+  DONT_CREATE_USER_COOKIE_NAME,
   invalidateSessionToken,
   validateToken,
   isSecureContext,

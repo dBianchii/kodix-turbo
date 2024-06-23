@@ -29,7 +29,7 @@ export default function Register() {
   );
   const router = useRouter();
   const utils = api.useUtils();
-  const signIn = useSignIn();
+  const { signIn } = useSignIn();
 
   useEffect(() => {
     void utils.app.kodixCare.checkEmailForRegister.reset();

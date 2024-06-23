@@ -154,7 +154,7 @@ export default function Index() {
 }
 
 function MobileAuth() {
-  const signIn = useSignIn();
+  const { signIn, error } = useSignIn();
   const router = useRouter();
 
   return (
@@ -173,6 +173,12 @@ function MobileAuth() {
         label="Login"
         onPress={() => signIn()}
       />
+      {error && (
+        <Text className="mt-4 text-sm text-destructive">
+          Usuário não registrado, por favor, faça o cadastro se você possui um
+          convite.
+        </Text>
+      )}
     </View>
   );
 }

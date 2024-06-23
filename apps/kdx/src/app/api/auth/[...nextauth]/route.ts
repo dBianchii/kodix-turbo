@@ -1,11 +1,15 @@
 import type { NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { CAME_FROM_INVITE_COOKIE_NAME } from "node_modules/@kdx/auth/src/config";
 
-import { handlers, rewriteRequestUrlInDevelopment } from "@kdx/auth";
+import {
+  CAME_FROM_INVITE_COOKIE_NAME,
+  DONT_CREATE_USER_COOKIE_NAME,
+  EXPO_COOKIE_NAME,
+  handlers,
+  rewriteRequestUrlInDevelopment,
+} from "@kdx/auth";
 
-export const EXPO_COOKIE_NAME = "__kdx-expo-redirect-state";
 const AUTH_COOKIE_PATTERN = /authjs\.session-token=([^;]+)/;
 
 export const POST = async (_req: NextRequest) => {
@@ -55,24 +59,35 @@ export const GET = async (
   }
 
   if (nextauthAction === "callback" && !!isExpoCallback) {
-    cookies().delete(EXPO_COOKIE_NAME);
-
     // Run original handler, then extract the session token from the response
     // Send it back via a query param in the Expo deep link. The Expo app
     // will then get that and set it in the session storage.
-    const authResponse = await handlers.GET(req);
-    const setCookie = authResponse.headers
-      .getSetCookie()
-      .find((cookie) => AUTH_COOKIE_PATTERN.test(cookie));
-    const match = setCookie?.match(AUTH_COOKIE_PATTERN)?.[1];
-
-    if (!match)
-      throw new Error(
-        "Unable to find session cookie: " +
-          JSON.stringify(authResponse.headers.getSetCookie()),
-      );
     const url = new URL(isExpoCallback.value);
-    url.searchParams.set("session_token", match);
+
+    try {
+      const authResponse = await handlers.GET(req);
+      const setCookie = authResponse.headers
+        .getSetCookie()
+        .find((cookie) => AUTH_COOKIE_PATTERN.test(cookie));
+      const match = setCookie?.match(AUTH_COOKIE_PATTERN)?.[1];
+
+      if (!match)
+        throw new Error(
+          "Unable to find session cookie: " +
+            JSON.stringify(authResponse.headers.getSetCookie()),
+        );
+
+      url.searchParams.set("session_token", match);
+    } catch (err) {
+      if (cookies().get(DONT_CREATE_USER_COOKIE_NAME)) {
+        cookies().delete(DONT_CREATE_USER_COOKIE_NAME);
+        url.searchParams.set("notRegistered", "true");
+        return NextResponse.redirect(url);
+      }
+
+      //All other errors should be thrown
+      throw err;
+    }
 
     return NextResponse.redirect(url);
   }

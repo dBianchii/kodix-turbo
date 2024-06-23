@@ -29,6 +29,8 @@ declare module "next-auth" {
   }
 }
 export const CAME_FROM_INVITE_COOKIE_NAME = "cameFromInvite";
+export const EXPO_COOKIE_NAME = "__kdx-expo-redirect-state";
+export const DONT_CREATE_USER_COOKIE_NAME = "dontCreateUser";
 
 /** @return { import("next-auth/adapters").Adapter } */
 function KodixAdapter(): Adapter {
@@ -41,6 +43,10 @@ function KodixAdapter(): Adapter {
       verificationTokensTable: schema.verificationTokens,
     }),
     async createUser(data) {
+      if (cookies().get(DONT_CREATE_USER_COOKIE_NAME)) {
+        return null;
+      }
+
       const id = nanoid();
       const teamId = nanoid();
 
@@ -145,7 +151,17 @@ function KodixAdapter(): Adapter {
         .innerJoin(teams, eq(users.activeTeamId, teams.id))
         .then((res) => (res.length > 0 ? res[0] : null));
 
-      if (!result) return null;
+      if (!result) {
+        const isFromExpo = cookies().get(EXPO_COOKIE_NAME);
+        if (isFromExpo) {
+          cookies().set({
+            name: DONT_CREATE_USER_COOKIE_NAME,
+            value: isFromExpo.value,
+            maxAge: 60 * 1, //1 min
+          });
+        }
+        return null;
+      }
 
       return {
         ...result.user,

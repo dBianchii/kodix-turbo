@@ -1,3 +1,4 @@
+import { useState } from "react";
 import * as Linking from "expo-linking";
 import { useRouter } from "expo-router";
 import * as Browser from "expo-web-browser";
@@ -14,11 +15,15 @@ export const signIn = async (signInUrl: string) => {
   );
 
   if (result.type !== "success") return;
+
   const url = Linking.parse(result.url);
+  if (url.queryParams?.notRegistered) return "userNotRegistered";
+
   const sessionToken = String(url.queryParams?.session_token);
   if (!sessionToken) return;
 
   setToken(sessionToken);
+  return;
 };
 
 export const useUser = () => {
@@ -29,13 +34,22 @@ export const useUser = () => {
 export const useSignIn = () => {
   const utils = api.useUtils();
   const router = useRouter();
+  const [error, setError] = useState<"userNotRegistered" | null>(null);
 
-  return async (props?: { signInUrl?: string }) => {
-    const url = new URL("/api/auth/signin", getBaseUrl());
+  return {
+    signIn: async (props?: { signInUrl?: string }) => {
+      const url = new URL("/api/auth/signin", getBaseUrl());
 
-    await signIn(props?.signInUrl ?? url.href);
-    await utils.invalidate();
-    router.replace("/");
+      const result = await signIn(props?.signInUrl ?? url.href);
+      if (result === "userNotRegistered") {
+        setError("userNotRegistered");
+        return;
+      }
+
+      await utils.invalidate();
+      router.replace("/");
+    },
+    error,
   };
 };
 
