@@ -14,7 +14,7 @@ export const signIn = async (signInUrl: string) => {
     redirectTo,
   );
 
-  if (result.type !== "success") return;
+  if (result.type !== "success") return result.type;
 
   const url = Linking.parse(result.url);
   if (url.queryParams?.notRegistered) return "userNotRegistered";
@@ -23,7 +23,7 @@ export const signIn = async (signInUrl: string) => {
   if (!sessionToken) return;
 
   setToken(sessionToken);
-  return;
+  return "success";
 };
 
 export const useUser = () => {
@@ -38,17 +38,19 @@ export const useSignIn = () => {
 
   return {
     signIn: async (props?: { signInUrl?: string }) => {
-      const url = new URL("/api/auth/signin", getBaseUrl());
+      setError(null);
 
+      const url = new URL("/api/auth/signin", getBaseUrl());
       const result = await signIn(props?.signInUrl ?? url.href);
       if (result === "userNotRegistered") {
         setError("userNotRegistered");
         return;
       }
-
+      if (result !== "success") return;
       await utils.invalidate();
       router.replace("/");
     },
+    resetError: () => setError(null),
     error,
   };
 };
