@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -5,6 +6,7 @@ import { auth } from "@kdx/auth";
 import { getI18n } from "@kdx/locales/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@kdx/ui/card";
 
+import { EXPO_COOKIE_NAME } from "~/app/api/auth/[...nextauth]/route";
 import { SignInButtons } from "./_components/sign-in-buttons";
 
 export default async function SignInPage({
@@ -15,6 +17,8 @@ export default async function SignInPage({
   const session = await auth();
   if (session) redirect(searchParams?.callbackUrl ?? "/");
   const t = await getI18n();
+  const isFromExpo = !!cookies().get(EXPO_COOKIE_NAME);
+
   return (
     <section className="mx-auto flex flex-1 flex-col items-center justify-center px-6 py-8 lg:py-0">
       <Link href="/" className="my-4 text-4xl font-extrabold">
@@ -29,7 +33,10 @@ export default async function SignInPage({
         <CardContent>
           <div className="grid w-full items-center">
             <div className="flex flex-col">
-              <SignInButtons searchParams={searchParams} />
+              <SignInButtons
+                searchParams={searchParams}
+                isFromExpo={isFromExpo}
+              />
             </div>
           </div>
         </CardContent>

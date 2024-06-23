@@ -16,18 +16,19 @@ import { env } from "~/env";
 
 export function SignInButtons({
   searchParams,
+  isFromExpo,
 }: {
   searchParams?: Record<string, string | undefined>;
+  isFromExpo: boolean;
 }) {
   const [isPending, startTransition] = useTransition();
   const t = useScopedI18n("signin");
   return (
     <>
-      {!searchParams?.["expo-redirect"] && (
+      {!isFromExpo && (
         <>
           <EmailSignIn
             callbackUrl={searchParams?.callbackUrl}
-            prefilledEmail={searchParams?.email}
             loading={isPending}
             startTransition={startTransition}
           />
@@ -65,13 +66,11 @@ interface SignInButtonsProps {
   callbackUrl?: string;
   loading: boolean;
   startTransition: TransitionStartFunction;
-  prefilledEmail?: string;
 }
 
 function EmailSignIn({
   callbackUrl,
   loading,
-  prefilledEmail,
   startTransition,
 }: SignInButtonsProps) {
   const [email, setEmail] = useState("");
@@ -89,8 +88,7 @@ function EmailSignIn({
         placeholder="name@email.com"
         id="email"
         name="email"
-        disabled={!!prefilledEmail}
-        value={prefilledEmail ?? email}
+        value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
       <Button

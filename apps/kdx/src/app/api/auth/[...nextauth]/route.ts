@@ -5,7 +5,7 @@ import { CAME_FROM_INVITE_COOKIE_NAME } from "node_modules/@kdx/auth/src/config"
 
 import { handlers, rewriteRequestUrlInDevelopment } from "@kdx/auth";
 
-const EXPO_COOKIE_NAME = "__kdx-expo-redirect-state";
+export const EXPO_COOKIE_NAME = "__kdx-expo-redirect-state";
 const AUTH_COOKIE_PATTERN = /authjs\.session-token=([^;]+)/;
 
 export const POST = async (_req: NextRequest) => {

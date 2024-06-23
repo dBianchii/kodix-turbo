@@ -31,7 +31,9 @@ export const useSignIn = () => {
   const router = useRouter();
 
   return async (props?: { signInUrl?: string }) => {
-    await signIn(props?.signInUrl ?? `${getBaseUrl()}/api/auth/signin`);
+    const url = new URL("/api/auth/signin", getBaseUrl());
+
+    await signIn(props?.signInUrl ?? url.href);
     await utils.invalidate();
     router.replace("/");
   };
