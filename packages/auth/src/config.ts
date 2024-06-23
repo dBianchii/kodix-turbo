@@ -28,7 +28,7 @@ declare module "next-auth" {
     } & DefaultSession["user"];
   }
 }
-export const EXPO_REGISTER_COOKIE_NAME = "isExpoRegister"; //TODO: move to common file
+export const CAME_FROM_INVITE_COOKIE_NAME = "cameFromInvite";
 
 /** @return { import("next-auth/adapters").Adapter } */
 function KodixAdapter(): Adapter {
@@ -44,7 +44,7 @@ function KodixAdapter(): Adapter {
       const id = nanoid();
       const teamId = nanoid();
 
-      const isExpoRegister = cookies().get(EXPO_REGISTER_COOKIE_NAME);
+      const cameFromInvite = cookies().get(CAME_FROM_INVITE_COOKIE_NAME);
 
       await db.transaction(async (tx) => {
         await tx.insert(users).values({
@@ -52,8 +52,8 @@ function KodixAdapter(): Adapter {
           id,
           activeTeamId: teamId,
         });
-        if (!isExpoRegister) {
-          //In expo, we just accept the invite from the team and we don't need to create a default team
+        if (!cameFromInvite) {
+          //If the user came from invite, we just accept the invite from the team and we don't need to create a default team
           await tx.insert(teams).values({
             id: teamId,
             ownerId: id,
@@ -65,7 +65,7 @@ function KodixAdapter(): Adapter {
           });
         } else {
           //Accept invitation
-          const invitationId = isExpoRegister.value;
+          const invitationId = cameFromInvite.value;
 
           //!!This logic also exists inside the invitation accept handler.
           //TODO: Refactor to avoid duplication
@@ -99,7 +99,7 @@ function KodixAdapter(): Adapter {
           await tx
             .delete(schema.invitations)
             .where(eq(schema.invitations.id, invitationId));
-          cookies().delete(EXPO_REGISTER_COOKIE_NAME);
+          cookies().delete(CAME_FROM_INVITE_COOKIE_NAME);
         }
       });
 

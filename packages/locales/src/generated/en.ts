@@ -365,5 +365,8 @@ export default {
   "Made for humans": "Made for humans",
   "Supports 3 languages and counting": "Supports 2+ languages and counting.",
   "Learn more": "Learn more",
-  "Sign in with Google": "Sign in with Google"
+  "Sign in with Google": "Sign in with Google",
+  "This invitation no longer exists or is invalid": "This invitation no longer exists or is invalid",
+  "The user is not authorized to join the team Did you log into the correct account": "The user is not authorized to join the team. Did you log into the correct account?",
+  "Use another account": "Use another account..."
 } as const

@@ -1,25 +1,13 @@
-"use client";
+import { getI18n } from "@kdx/locales/server";
 
-import { signOut } from "next-auth/react";
-
-import { Button } from "@kdx/ui/button";
-
-export default function InviteNotFound() {
+export default async function InviteNotFound() {
+  const t = await getI18n();
   return (
     <section className="flex min-h-screen flex-col items-center justify-center space-y-8">
-      <h1 className="text-4xl font-bold">Not found</h1>
+      <h1 className="text-4xl font-bold">{t("Not found")}</h1>
       <p className="text-center">
-        Team not found by the given invite code or user is not authorized to
-        join the team. Did you log into the correct account?
+        {t("This invitation no longer exists or is invalid")}
       </p>
-
-      <Button
-        onClick={() => {
-          void signOut();
-        }}
-      >
-        Use another account...
-      </Button>
     </section>
   );
 }

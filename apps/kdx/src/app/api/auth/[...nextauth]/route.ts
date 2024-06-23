@@ -1,12 +1,9 @@
 import type { NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { CAME_FROM_INVITE_COOKIE_NAME } from "node_modules/@kdx/auth/src/config";
 
-import {
-  EXPO_REGISTER_COOKIE_NAME,
-  handlers,
-  rewriteRequestUrlInDevelopment,
-} from "@kdx/auth";
+import { handlers, rewriteRequestUrlInDevelopment } from "@kdx/auth";
 
 const EXPO_COOKIE_NAME = "__kdx-expo-redirect-state";
 const AUTH_COOKIE_PATTERN = /authjs\.session-token=([^;]+)/;
@@ -28,33 +25,33 @@ export const GET = async (
   const isExpoSignIn = req.nextUrl.searchParams.get("expo-redirect");
   const isExpoCallback = cookies().get(EXPO_COOKIE_NAME);
 
-  if (nextauthAction === "signin" && !!isExpoSignIn) {
-    // set a cookie we can read in the callback
-    // to know to send the user back to expo
-    cookies().set({
-      name: EXPO_COOKIE_NAME,
-      value: isExpoSignIn,
-      maxAge: 60 * 10, // 10 min
-      path: "/",
-    });
-  }
+  if (nextauthAction === "signin") {
+    if (isExpoSignIn) {
+      // set a cookie we can read in the callback
+      // to know to send the user back to expo
+      cookies().set({
+        name: EXPO_COOKIE_NAME,
+        value: isExpoSignIn,
+        maxAge: 60 * 10, // 10 min
+        path: "/",
+      });
+    }
 
-  const cameFromExpoRegister = req.nextUrl.searchParams.get("expo-register");
-  if (cameFromExpoRegister) {
-    const invitationId = cameFromExpoRegister.split("-")[1];
-    if (!invitationId)
-      throw new Error(
-        `Invalid expo register query param: ${cameFromExpoRegister}`,
-      );
+    const cameFromInvite = req.nextUrl.searchParams.get("invite");
+    if (cameFromInvite) {
+      //Request came from invite. Set a cookie so we can use it in the createUser function
+      const invitationId = cameFromInvite;
+      if (!invitationId)
+        throw new Error(`Invalid expo register query param: ${cameFromInvite}`);
 
-    //Request came from register in expo. We set a temporary cookie to indicate it, so we have this data on auth config 'create user'
-    cookies().set({
-      name: EXPO_REGISTER_COOKIE_NAME,
-      value: invitationId,
-      maxAge: 60 * 4,
-      path: "/",
-    });
-    req.nextUrl.searchParams.delete("expo-register");
+      cookies().set({
+        name: CAME_FROM_INVITE_COOKIE_NAME,
+        value: invitationId,
+        maxAge: 60 * 4,
+        path: "/",
+      });
+      req.nextUrl.searchParams.delete("invite");
+    }
   }
 
   if (nextauthAction === "callback" && !!isExpoCallback) {

@@ -8,9 +8,9 @@ export default function HeaderFooterRemover({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const blockedPaths = ["/signin"];
+  const blockedPaths = ["/signin", "invite/\\d+"];
 
-  if (blockedPaths.some((bp) => pathname.endsWith(bp))) {
+  if (blockedPaths.some((bp) => new RegExp(bp).test(pathname))) {
     return null;
   }
   return <>{children}</>;
