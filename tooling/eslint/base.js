@@ -71,7 +71,19 @@ export default tseslint.config(
       ],
       "@typescript-eslint/no-non-null-assertion": "error",
       "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
-      "one-var": ["error", "never"], //Added by me
+
+      //* --- Added by me bellow this line --- *//
+
+      "one-var": ["error", "never"],
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector:
+            "CallExpression[callee.object.name='Promise'][callee.property.name='all']",
+          message:
+            "Hi friend, please use 'Promise.allSettled' instead of 'Promise.all' to avoid silent failures. @see https://youtu.be/f2Z1v3cqgDI?si=xbk0-u4nBMxCjlp_ Also, you can combo it with 'getSuccessesAndErrors' from @kdx/shared",
+        },
+      ],
     },
   },
   {
