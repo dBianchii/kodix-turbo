@@ -9,7 +9,7 @@ import SettingsEditCardSkeleton from "~/app/[locale]/team/settings/general/_comp
 import { EditUserTeamsTable } from "./_components/edit-users-teams-card/edit-users-teams-table";
 
 export default async function Teams() {
-  const session = await auth();
+  const { user } = await auth();
   if (!session) redirect("/");
   const t = await getI18n();
   return (

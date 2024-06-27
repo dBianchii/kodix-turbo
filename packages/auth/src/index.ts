@@ -1,15 +1,5 @@
-import NextAuth from "next-auth";
+export { lucia, auth, providers, isSecureContext } from "./config";
 
-import { authConfig } from "./config";
-
-export type { Session } from "next-auth";
-
-const { handlers, auth, signIn, signOut } = NextAuth(authConfig);
-
-export { handlers, auth, signIn, signOut };
-
-export {
-  invalidateSessionToken,
-  validateToken,
-  isSecureContext,
-} from "./config";
+export type { Providers, AuthResponse } from "./config";
+export type { Session } from "lucia";
+export type { User } from "lucia";

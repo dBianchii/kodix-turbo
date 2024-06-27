@@ -22,7 +22,7 @@ interface CustomApp {
 }
 
 export default async function TeamPage() {
-  const session = await auth();
+  const { user } = await auth();
   if (!session) redirect("/");
   const t = await getI18n();
 
@@ -46,7 +46,7 @@ export default async function TeamPage() {
     //   appName: "Dev Settings",
     //   appUrl: "/devsettings",
     //   iconPath: "/appIcons/devsettings.png",
-    //   shown: !!session.user.kodixAdmin,
+    //   shown: !!user.kodixAdmin,
     // },
   ];
 
@@ -54,7 +54,7 @@ export default async function TeamPage() {
     <MaxWidthWrapper className="flex flex-col">
       <div className="flex">
         <span className="bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-xl font-bold">
-          {session.user.activeTeamName}
+          {user.activeTeamName}
         </span>
       </div>
       <Separator className="mb-8 mt-1" />

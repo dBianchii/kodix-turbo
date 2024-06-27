@@ -20,7 +20,7 @@ import {
 } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
-import type { Session } from "@kdx/auth";
+import type { User } from "@kdx/auth";
 import { addDays } from "@kdx/date-fns";
 import dayjs from "@kdx/dayjs";
 import { useI18n } from "@kdx/locales/client";
@@ -60,10 +60,10 @@ const columnHelper = createColumnHelper<CalendarTask>();
 
 export function DataTable({
   data,
-  session,
+  user,
 }: {
   data: CalendarTask[];
-  session: Session;
+  user: User;
 }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
@@ -234,7 +234,7 @@ export function DataTable({
             </Button>
           </div>
           <div className="flex w-44">
-            {authorizedEmails.includes(session.user.email) && (
+            {authorizedEmails.includes(user.email) && (
               <Button
                 className="ml-auto mr-2 self-end"
                 onClick={() => nukeEvents()}

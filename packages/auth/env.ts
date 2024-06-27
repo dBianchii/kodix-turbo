@@ -11,6 +11,8 @@ export const env = createEnv({
     NODE_ENV: z.enum(["development", "production"]).optional(),
     AUTH_GOOGLE_CLIENT_ID: z.string(),
     AUTH_GOOGLE_CLIENT_SECRET: z.string(),
+    AUTH_DISCORD_ID: z.string(),
+    AUTH_DISCORD_SECRET: z.string(),
     RESEND_API_KEY: z.string(),
   },
   client: {},

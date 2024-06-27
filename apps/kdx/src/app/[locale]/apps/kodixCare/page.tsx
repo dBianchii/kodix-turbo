@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import type { Session } from "@kdx/auth";
+import type { User } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
 import { getI18n } from "@kdx/locales/server";
 import { kodixCareAppId } from "@kdx/shared";
@@ -33,7 +33,7 @@ export default async function KodixCarePage() {
       <div className="flex flex-col md:flex-row md:space-x-6">
         <div className="flex w-full max-w-full flex-col px-8 pb-8 md:max-w-60 md:px-0">
           <Suspense fallback={<ShiftSkeleton />}>
-            <CurrentShift session={session} />
+            <CurrentShift user={user} />
           </Suspense>
         </div>
         <div className="w-full">
@@ -46,7 +46,7 @@ export default async function KodixCarePage() {
               />
             }
           >
-            <KodixCareTable session={session} />
+            <KodixCareTable user={user} />
           </Suspense>
         </div>
       </div>
@@ -54,7 +54,7 @@ export default async function KodixCarePage() {
   );
 }
 
-async function KodixCareTable({ session }: { session: Session }) {
+async function KodixCareTable({ user }: { user: User }) {
   const input = {
     dateStart: dayjs.utc().startOf("day").toDate(),
     dateEnd: dayjs.utc().endOf("day").toDate(),
@@ -64,19 +64,16 @@ async function KodixCareTable({ session }: { session: Session }) {
     <DataTableKodixCare
       initialCareTasks={initialCareTasks}
       initialInput={input}
-      session={session}
+      user={user}
     />
   );
 }
 
-async function CurrentShift({ session }: { session: Session }) {
+async function CurrentShift({ user }: { user: User }) {
   const initialCurrentShift = await api.app.kodixCare.getCurrentShift();
 
   return (
-    <CurrentShiftClient
-      initialCurrentShift={initialCurrentShift}
-      session={session}
-    />
+    <CurrentShiftClient initialCurrentShift={initialCurrentShift} user={user} />
   );
 }
 

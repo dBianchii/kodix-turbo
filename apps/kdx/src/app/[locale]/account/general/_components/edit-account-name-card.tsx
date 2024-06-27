@@ -17,7 +17,7 @@ import { Label } from "@kdx/ui/label";
 import { api } from "~/trpc/server";
 
 export async function EditAccountNameCard({ name }: { name?: string | null }) {
-  const session = await auth();
+  const { user } = await auth();
   if (!session) return null;
   const t = await getI18n();
   return (

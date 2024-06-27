@@ -18,11 +18,11 @@ export default async function InvitePage({
     where: eq(schema.invitations.id, invitationId),
   });
   if (!invitation) return notFound();
-  const session = await auth();
+  const { user } = await auth();
   if (!session)
     redirect(`/api/auth/signin?callbackUrl=/team/invite/${invitationId}`);
 
-  if (session.user.email !== invitation.email) return notFound();
+  if (user.email !== invitation.email) return notFound();
   await api.team.invitation.accept({ invitationId });
 
   redirect("/");

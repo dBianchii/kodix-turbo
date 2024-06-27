@@ -36,7 +36,7 @@ export function Header() {
 }
 
 async function LogoWithAppSwitcher() {
-  const session = await auth();
+  const { user } = await auth();
 
   return (
     <>
@@ -81,7 +81,7 @@ function Logo({ redirect }: { redirect: string }) {
 }
 
 async function NotificationsPopover() {
-  const session = await auth();
+  const { user } = await auth();
   if (!session) return null;
 
   const initialNotifications = await api.user.getInvitations();
@@ -93,7 +93,7 @@ async function NotificationsPopover() {
 }
 
 async function RightSide() {
-  const session = await auth();
+  const { user } = await auth();
   const t = await getI18n();
 
   return (
@@ -104,7 +104,7 @@ async function RightSide() {
           <Suspense>
             <NotificationsPopover />
           </Suspense>
-          <UserProfileButton session={session} />
+          <UserProfileButton user={user} />
         </>
       )}
       {!session && (
@@ -125,7 +125,7 @@ async function RightSide() {
 }
 
 // async function MainNav() {
-//   const session = await auth();
+//   const { user } = await auth();
 //   const navigation: {
 //     href: string;
 //     title: string;
@@ -139,7 +139,7 @@ async function RightSide() {
 //     {
 //       href: "/apps",
 //       title: "Apps",
-//       shown: !!session,
+//       shown: !!user,
 //     },
 //   ];
 

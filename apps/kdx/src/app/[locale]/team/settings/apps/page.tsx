@@ -13,7 +13,7 @@ import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { api } from "~/trpc/server";
 
 export default async function SettingsAppsPage() {
-  const session = await auth();
+  const { user } = await auth();
   if (!session) redirect("/");
   const t = await getI18n();
   return (
@@ -41,7 +41,7 @@ export default async function SettingsAppsPage() {
 
 async function Apps() {
   const apps = await api.app.getInstalled();
-  const session = await auth();
+  const { user } = await auth();
   const t = await getI18n();
 
   if (!apps.length)
@@ -65,7 +65,7 @@ async function Apps() {
     <KodixApp
       id={app.id as KodixAppId}
       installed={true}
-      session={session}
+      user={user}
       key={app.id}
     />
   ));

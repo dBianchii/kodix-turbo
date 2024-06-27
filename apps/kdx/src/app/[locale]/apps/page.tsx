@@ -9,7 +9,7 @@ import { api } from "~/trpc/server";
 
 export default async function AppsPage() {
   const apps = await api.app.getAll();
-  const session = await auth();
+  const { user } = await auth();
   const t = await getI18n();
   return (
     <MaxWidthWrapper>
@@ -25,7 +25,7 @@ export default async function AppsPage() {
             <KodixApp
               id={app.id as KodixAppId}
               installed={app.installed}
-              session={session}
+              user={user}
             />
           </div>
         ))}

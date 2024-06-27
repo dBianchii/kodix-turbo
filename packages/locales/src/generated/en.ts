@@ -365,5 +365,7 @@ export default {
   "Made for humans": "Made for humans",
   "Supports 3 languages and counting": "Supports 2+ languages and counting.",
   "Learn more": "Learn more",
-  "Sign in with Google": "Sign in with Google"
+  "Sign in with Google": "Sign in with Google",
+  "Register your account": "Register your account",
+  "Password": "Password"
 } as const

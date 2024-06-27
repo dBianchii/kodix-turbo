@@ -6,7 +6,7 @@ import { LuLoader2 } from "react-icons/lu";
 import { RxChevronLeft, RxDotsHorizontal } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
-import type { Session } from "@kdx/auth";
+import type { User } from "@kdx/auth";
 import { useI18n } from "@kdx/locales/client";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
@@ -25,13 +25,13 @@ import { switchTeamAction } from "./actions";
 
 export default function EditUserTeamsTableClient({
   teams,
-  session,
+  user,
 }: {
   teams: RouterOutputs["team"]["getAllForLoggedUser"];
-  session: Session;
+  user: User;
 }) {
   const t = useI18n();
-  const currentTeam = session.user.activeTeamId;
+  const currentTeam = user.activeTeamId;
   const sortedTeams = teams.sort((a, b) => {
     if (a.id === currentTeam) return -1;
     if (b.id === currentTeam) return 1;
@@ -43,7 +43,7 @@ export default function EditUserTeamsTableClient({
         <TableBody>
           {sortedTeams.length ? (
             sortedTeams.map((team) => (
-              <CustomRow team={team} session={session} key={team.id} />
+              <CustomRow team={team} user={user} key={team.id} />
             ))
           ) : (
             <TableRow>
@@ -63,10 +63,10 @@ export default function EditUserTeamsTableClient({
 
 function CustomRow({
   team,
-  session,
+  user,
 }: {
   team: RouterOutputs["team"]["getAllForLoggedUser"][0];
-  session: Session;
+  user: User;
 }) {
   const [isHovered, setIsHovered] = useState(false);
   const [manageLoading, setManageLoading] = useState(false);
@@ -91,14 +91,14 @@ function CustomRow({
         <div className="flex flex-col items-start">
           <div className="flex flex-row">
             <span className="font-bold">{team.name}</span>{" "}
-            {team.id === session.user.activeTeamId && (
+            {team.id === user.activeTeamId && (
               <p className="ml-1 font-bold italic text-muted-foreground">
                 {" "}
                 - {t("Current")}
               </p>
             )}
           </div>
-          {team.ownerId === session.user.id && (
+          {team.ownerId === user.id && (
             <span className="text-muted-foreground">{t("Owner")}</span>
           )}
         </div>
@@ -111,7 +111,7 @@ function CustomRow({
               e.stopPropagation();
               e.preventDefault();
 
-              if (team.id !== session.user.activeTeamId)
+              if (team.id !== user.activeTeamId)
                 void switchTeamAction({
                   teamId: team.id,
                   redirect: "/team/settings",
@@ -127,14 +127,14 @@ function CustomRow({
               )}
             </Button>
           </form>
-          <LeaveTeamDropdown session={session} />
+          <LeaveTeamDropdown user={user} />
         </div>
       </TableCell>
     </TableRow>
   );
 }
 
-function LeaveTeamDropdown({ session }: { session: Session }) {
+function LeaveTeamDropdown({ user }: { user: User }) {
   const t = useI18n();
   const utils = api.useUtils();
   const router = useRouter();
@@ -161,7 +161,7 @@ function LeaveTeamDropdown({ session }: { session: Session }) {
           onClick={(e) => {
             e.stopPropagation();
             mutate({
-              userId: session.user.id,
+              userId: user.id,
             });
           }}
         >

@@ -6,7 +6,7 @@ import { LuLogOut, LuUsers } from "react-icons/lu";
 import { MdOutlineSwapHorizontalCircle } from "react-icons/md";
 import { RxGear, RxPerson } from "react-icons/rx";
 
-import type { Session } from "@kdx/auth";
+import type { User } from "@kdx/auth";
 import { useScopedI18n } from "@kdx/locales/client";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Button } from "@kdx/ui/button";
@@ -20,7 +20,7 @@ import {
   DropdownMenuTrigger,
 } from "@kdx/ui/dropdown-menu";
 
-export function UserProfileButton({ session }: { session: Session }) {
+export function UserProfileButton({ user }: { user: User }) {
   const t = useScopedI18n("header");
 
   return (
@@ -29,19 +29,17 @@ export function UserProfileButton({ session }: { session: Session }) {
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <AvatarWrapper
             className="h-8 w-8"
-            src={session.user.image ?? ""}
-            fallback={session.user.name}
+            src={user.image ?? ""}
+            fallback={user.name}
           />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">
-              {session.user.name}
-            </p>
+            <p className="text-sm font-medium leading-none">{user.name}</p>
             <p className="text-xs leading-none text-muted-foreground">
-              {session.user.email}
+              {user.email}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -56,7 +54,7 @@ export function UserProfileButton({ session }: { session: Session }) {
           <DropdownMenuItem asChild>
             <Link href="/team" className="flex border border-gray-600">
               <LuUsers className="size-4" />
-              <p className="ml-2 font-bold">{session.user.activeTeamName}</p>
+              <p className="ml-2 font-bold">{user.activeTeamName}</p>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>

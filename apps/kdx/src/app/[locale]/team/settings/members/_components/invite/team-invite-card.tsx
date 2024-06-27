@@ -9,7 +9,7 @@ import {
   RxPlusCircled,
 } from "react-icons/rx";
 
-import type { Session } from "@kdx/auth";
+import type { User } from "@kdx/auth";
 import { useI18n } from "@kdx/locales/client";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
@@ -37,11 +37,7 @@ import { ZInviteInputSchema } from "@kdx/validators/trpc/invitation";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
-export default function TeamInviteCardClient({
-  session,
-}: {
-  session: Session;
-}) {
+export default function TeamInviteCardClient({ user }: { session: Session }) {
   const utils = api.useUtils();
   const [emails, setEmails] = useState([{ key: 0, value: "" }]); //key is used to work with formkit
   const [successes, setSuccesses] = useState<string[]>([]);
@@ -221,7 +217,7 @@ export default function TeamInviteCardClient({
                   disabled={mutation.isPending}
                   onClick={() => {
                     const values = {
-                      teamId: session.user.activeTeamId,
+                      teamId: user.activeTeamId,
                       to: emails.map((x) => x.value).filter((x) => Boolean(x)),
                     };
                     const parsed = ZInviteInputSchema.safeParse(values);

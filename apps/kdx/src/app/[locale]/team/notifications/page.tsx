@@ -20,7 +20,7 @@ export default async function NotificationsPage({
 }: {
   searchParams: SearchParams;
 }) {
-  const session = await auth();
+  const { user } = await auth();
   if (!session) redirect("/");
   const t = await getI18n();
 

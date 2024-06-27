@@ -7,7 +7,7 @@ import { EditTeamNameCard } from "./_components/edit-team-name-card";
 import SettingsEditCardSkeleton from "./_components/edit-team-name-card-skeleton";
 
 export default async function SettingsGeneralPage() {
-  const session = await auth();
+  const { user } = await auth();
   if (!session) redirect("/");
   return (
     <div className="mt-8 space-y-8 md:mt-0">

@@ -21,7 +21,7 @@ export default async function RolesForAppPage({
 
   const appId = appPathnameToAppId[appPathname];
 
-  const session = await auth();
+  const { user } = await auth();
   if (!session) redirect("/");
 
   return (

@@ -4,7 +4,7 @@ import { HiUserCircle } from "react-icons/hi";
 import { IoMdTime } from "react-icons/io";
 
 import type { RouterOutputs } from "@kdx/api";
-import type { Session } from "@kdx/auth";
+import type { User } from "@kdx/auth";
 import { formatRelative } from "@kdx/date-fns";
 import { useCurrentLocale, useI18n } from "@kdx/locales/client";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
@@ -15,10 +15,10 @@ import { api } from "~/trpc/react";
 import { ToggleShiftButton } from "./toggle-shift-button";
 
 export function CurrentShiftClient({
-  session,
+  user,
   initialCurrentShift,
 }: {
-  session: Session;
+  user: User;
   initialCurrentShift: RouterOutputs["app"]["kodixCare"]["getCurrentShift"];
 }) {
   const query = api.app.kodixCare.getCurrentShift.useQuery(undefined, {
@@ -28,13 +28,13 @@ export function CurrentShiftClient({
   //se nao tiver shift é pq nao tem nenhum historico de shift.
   //Se tiver shift mas nao tiver shiftEndedAt é pq o shift ta em progresso
   //Se tiver shift e tiver shiftEndedAt é pq o shift acabou
-  if (!query.data) return <NoPreviousShift session={session} />;
+  if (!query.data) return <NoPreviousShift user={user} />;
   if (!query.data.checkOut)
-    return <ShiftInProgress currentShift={query.data} session={session} />;
-  return <ShiftCheckedOut currentShift={query.data} session={session} />;
+    return <ShiftInProgress currentShift={query.data} user={user} />;
+  return <ShiftCheckedOut currentShift={query.data} user={user} />;
 }
 
-export function NoPreviousShift({ session }: { session: Session }) {
+export function NoPreviousShift({ user }: { user: User }) {
   const t = useI18n();
 
   return (
@@ -50,16 +50,16 @@ export function NoPreviousShift({ session }: { session: Session }) {
           {t("No shift started yet")}
         </p>
       </div>
-      <ToggleShiftButton session={session} />
+      <ToggleShiftButton user={user} />
     </div>
   );
 }
 
 export function ShiftInProgress({
-  session,
+  user,
   currentShift,
 }: {
-  session: Session;
+  user: User;
   currentShift: NonNullable<
     RouterOutputs["app"]["kodixCare"]["getCurrentShift"]
   >;
@@ -84,16 +84,16 @@ export function ShiftInProgress({
           {currentShift.Caregiver.name}
         </p>
       </div>
-      <ToggleShiftButton session={session} />
+      <ToggleShiftButton user={user} />
     </div>
   );
 }
 
 export function ShiftCheckedOut({
-  session,
+  user,
   currentShift,
 }: {
-  session: Session;
+  user: User;
   currentShift: NonNullable<
     RouterOutputs["app"]["kodixCare"]["getCurrentShift"]
   >;
@@ -118,7 +118,7 @@ export function ShiftCheckedOut({
           {currentShift.Caregiver.name}
         </p>
       </div>
-      <ToggleShiftButton session={session} />
+      <ToggleShiftButton user={user} />
     </div>
   );
 }

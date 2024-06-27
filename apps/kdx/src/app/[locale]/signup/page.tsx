@@ -5,7 +5,7 @@ import { auth } from "@kdx/auth";
 import { getI18n } from "@kdx/locales/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@kdx/ui/card";
 
-import { SignInButtons } from "./_components/sign-in-buttons";
+import { RegisterButtons } from "./_components/register-buttons";
 
 export default async function SignInPage({
   searchParams,
@@ -23,13 +23,13 @@ export default async function SignInPage({
       <Card className="w-[275px] sm:w-[400px]">
         <CardHeader className="text-center">
           <CardTitle className="text-bold text-lg">
-            {t("Sign in to your account")}
+            {t("Register your account")}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid w-full items-center">
             <div className="flex flex-col">
-              <SignInButtons searchParams={searchParams} />
+              <RegisterButtons searchParams={searchParams} />
             </div>
           </div>
         </CardContent>
