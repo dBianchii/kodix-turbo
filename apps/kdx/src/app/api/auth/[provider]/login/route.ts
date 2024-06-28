@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { generateState } from "arctic";
+import { generateCodeVerifier, generateState } from "arctic";
 
 import type { Providers } from "@kdx/auth";
 import { providers } from "@kdx/auth";
@@ -13,7 +13,7 @@ export async function GET(
   }: {
     params: { provider: string };
   },
-): Promise<Response> {
+) {
   if (!Object.keys(providers).includes(params.provider)) {
     console.error("Invalid oauth provider", params.provider);
     return new Response(null, {
@@ -24,6 +24,16 @@ export async function GET(
   const state = generateState();
   const currentProvider = providers[params.provider as Providers];
   const url = await currentProvider.getAuthorizationUrl(state);
+  if (currentProvider.name === "Google") {
+    const codeVerifier = generateCodeVerifier();
+    cookies().set("code_verifier", codeVerifier, {
+      path: "/",
+      secure: env.NODE_ENV === "production",
+      httpOnly: true,
+      maxAge: 60 * 10,
+      sameSite: "lax",
+    });
+  }
   cookies().set(`oauth_state`, state, {
     path: "/",
     secure: env.NODE_ENV === "production",

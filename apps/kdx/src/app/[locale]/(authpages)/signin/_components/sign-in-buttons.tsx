@@ -2,7 +2,6 @@
 
 import type { TransitionStartFunction } from "react";
 import { useState, useTransition } from "react";
-import { signIn } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
 import { LuLoader2 } from "react-icons/lu";
 import { RxDiscordLogo } from "react-icons/rx";
@@ -13,6 +12,8 @@ import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
 
 import { env } from "~/env";
+import { defaultSafeActionToastError } from "~/helpers/safe-action/default-action-error-toast";
+import { signInAction } from "../actions";
 
 export function SignInButtons({
   searchParams,
@@ -38,7 +39,7 @@ export function SignInButtons({
           </span>
         </div>
       </div>
-      <div className="space-y-2">
+      {/* <div className="space-y-2">
         <GoogleSignIn
           callbackUrl={searchParams?.callbackUrl}
           loading={isPending}
@@ -51,7 +52,7 @@ export function SignInButtons({
             startTransition={startTransition}
           />
         )}
-      </div>
+      </div> */}
     </>
   );
 }
@@ -68,30 +69,52 @@ function EmailSignIn({
   startTransition,
 }: SignInButtonsProps) {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const t = useScopedI18n("signin");
   return (
     <>
-      <Label
-        htmlFor="email"
-        className="mb-2 block text-sm font-medium text-foreground"
-      >
-        {t("Your email")}
-      </Label>
-      <Input
-        type="email"
-        placeholder="name@email.com"
-        id="email"
-        name="email"
-        onChange={(e) => setEmail(e.target.value)}
-      />
+      <div>
+        <Label
+          htmlFor="email"
+          className="mb-2 block text-sm font-medium text-foreground"
+        >
+          {t("Your email")}
+        </Label>
+        <Input
+          type="email"
+          placeholder="name@email.com"
+          id="email"
+          name="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </div>
+      <div>
+        <Label
+          htmlFor="password"
+          className="mb-2 block text-sm font-medium text-foreground"
+        >
+          {t("Your password")}
+        </Label>
+        <Input
+          type="password"
+          placeholder="password"
+          id="password"
+          name="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </div>
       <Button
         variant="default"
         onClick={() => {
           startTransition(async () => {
-            await signIn("resend", {
+            const result = await signInAction({
               email,
+              password,
               callbackUrl,
             });
+            if (!defaultSafeActionToastError(result)) return;
           });
         }}
         disabled={loading}
@@ -104,51 +127,51 @@ function EmailSignIn({
   );
 }
 
-function GoogleSignIn({
-  callbackUrl,
-  loading,
-  startTransition,
-}: SignInButtonsProps) {
-  const t = useI18n();
-  return (
-    <Button
-      className="w-full"
-      variant="outline"
-      disabled={loading}
-      onClick={() => {
-        startTransition(async () => {
-          await signIn("google", {
-            callbackUrl,
-          });
-        });
-      }}
-    >
-      <FcGoogle className="mr-2 size-4" />
-      {t("Sign in with Google")}
-    </Button>
-  );
-}
+// function GoogleSignIn({
+//   callbackUrl,
+//   loading,
+//   startTransition,
+// }: SignInButtonsProps) {
+//   const t = useI18n();
+//   return (
+//     <Button
+//       className="w-full"
+//       variant="outline"
+//       disabled={loading}
+//       onClick={() => {
+//         startTransition(async () => {
+//           await signIn("google", {
+//             callbackUrl,
+//           });
+//         });
+//       }}
+//     >
+//       <FcGoogle className="mr-2 size-4" />
+//       {t("Sign in with Google")}
+//     </Button>
+//   );
+// }
 
-function DiscordSignIn({
-  callbackUrl,
-  loading,
-  startTransition,
-}: SignInButtonsProps) {
-  return (
-    <Button
-      className="w-full"
-      variant="outline"
-      disabled={loading}
-      onClick={() => {
-        startTransition(async () => {
-          await signIn("discord", {
-            callbackUrl,
-          });
-        });
-      }}
-    >
-      <RxDiscordLogo className="mr-2 size-4" />
-      Sign in with Discord
-    </Button>
-  );
-}
+// function DiscordSignIn({
+//   callbackUrl,
+//   loading,
+//   startTransition,
+// }: SignInButtonsProps) {
+//   return (
+//     <Button
+//       className="w-full"
+//       variant="outline"
+//       disabled={loading}
+//       onClick={() => {
+//         startTransition(async () => {
+//           await signIn("discord", {
+//             callbackUrl,
+//           });
+//         });
+//       }}
+//     >
+//       <RxDiscordLogo className="mr-2 size-4" />
+//       Sign in with Discord
+//     </Button>
+//   );
+// }

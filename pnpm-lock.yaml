@@ -286,9 +286,6 @@ importers:
       next:
         specifier: 14.2.4
         version: 14.2.4(@babel/core@7.24.6)(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      next-auth:
-        specifier: 5.0.0-beta.19
-        version: 5.0.0-beta.19(next@14.2.4(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       next-safe-action:
         specifier: ^6.1.0
         version: 6.2.0(ajv@8.16.0)(joi@17.13.1)(next@14.2.4(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
@@ -480,9 +477,6 @@ importers:
       next:
         specifier: 14.2.4
         version: 14.2.4(@babel/core@7.24.6)(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      next-auth:
-        specifier: 5.0.0-beta.19
-        version: 5.0.0-beta.19(next@14.2.4(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       react:
         specifier: 18.3.1
         version: 18.3.1
@@ -8253,22 +8247,6 @@ packages:
   netmask@2.0.2:
     resolution: {integrity: sha512-dBpDMdxv9Irdq66304OLfEmQ9tbNRFnFTuZiLo+bD+r332bBmMJ8GBLXklIXXgxd3+v9+KUnZaUR5PJMa75Gsg==}
     engines: {node: '>= 0.4.0'}
-
-  next-auth@5.0.0-beta.19:
-    resolution: {integrity: sha512-YHu1igcAxZPh8ZB7GIM93dqgY6gcAzq66FOhQFheAdOx1raxNcApt05nNyNCSB6NegSiyJ4XOPsaNow4pfDmsg==}
-    peerDependencies:
-      '@simplewebauthn/browser': ^9.0.1
-      '@simplewebauthn/server': ^9.0.2
-      next: ^14 || ^15.0.0-0
-      nodemailer: ^6.6.5
-      react: ^18.2.0 || ^19.0.0-0
-    peerDependenciesMeta:
-      '@simplewebauthn/browser':
-        optional: true
-      '@simplewebauthn/server':
-        optional: true
-      nodemailer:
-        optional: true
 
   next-international@1.2.4:
     resolution: {integrity: sha512-JQvp+h2iSgA/t8hu5S/Lwow1ZErJutQRdpnplxjv4VTlCiND8T95fYih8BjkHcVhQbtM+Wu9Mb1CM32wD9hlWQ==}
@@ -18808,12 +18786,6 @@ snapshots:
 
   netmask@2.0.2: {}
 
-  next-auth@5.0.0-beta.19(next@14.2.4(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1):
-    dependencies:
-      '@auth/core': 0.32.0
-      next: 14.2.4(@babel/core@7.24.6)(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      react: 18.3.1
-
   next-international@1.2.4:
     dependencies:
       client-only: 0.0.1
@@ -20908,7 +20880,7 @@ snapshots:
       ansi-escapes: 4.3.2
       supports-hyperlinks: 2.3.0
 
-  terser-webpack-plugin@5.3.10(@swc/core@1.3.101(@swc/helpers@0.5.5))(esbuild@0.19.11)(webpack@5.91.0(@swc/core@1.3.101)):
+  terser-webpack-plugin@5.3.10(@swc/core@1.3.101(@swc/helpers@0.5.5))(esbuild@0.19.11)(webpack@5.91.0(@swc/core@1.3.101(@swc/helpers@0.5.5))(esbuild@0.19.11)):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
       jest-worker: 27.5.1
@@ -21466,7 +21438,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 3.3.0
       tapable: 2.2.1
-      terser-webpack-plugin: 5.3.10(@swc/core@1.3.101(@swc/helpers@0.5.5))(esbuild@0.19.11)(webpack@5.91.0(@swc/core@1.3.101))
+      terser-webpack-plugin: 5.3.10(@swc/core@1.3.101(@swc/helpers@0.5.5))(esbuild@0.19.11)(webpack@5.91.0(@swc/core@1.3.101(@swc/helpers@0.5.5))(esbuild@0.19.11))
       watchpack: 2.4.1
       webpack-sources: 3.2.3
     transitivePeerDependencies:

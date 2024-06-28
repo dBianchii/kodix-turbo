@@ -13,7 +13,6 @@ import { defaultSafeActionToastError } from "~/helpers/safe-action/default-actio
 import { signupAction } from "../actions";
 
 export function RegisterButtons({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   searchParams,
 }: {
   searchParams?: Record<string, string | undefined>;
@@ -22,7 +21,11 @@ export function RegisterButtons({
   const t = useScopedI18n("signin");
   return (
     <>
-      <EmailRegister loading={isPending} startTransition={startTransition} />
+      <EmailRegister
+        loading={isPending}
+        startTransition={startTransition}
+        searchParams={searchParams}
+      />
       <div className="relative my-4">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t" />
@@ -34,13 +37,13 @@ export function RegisterButtons({
         </div>
       </div>
       {/* <div className="space-y-2">
-        <GoogleSignIn
+        <GoogleRegister
           callbackUrl={searchParams?.callbackUrl}
           loading={isPending}
           startTransition={startTransition}
         />
         {env.NODE_ENV === "development" && (
-          <DiscordSignIn
+          <DiscordRegister
             callbackUrl={searchParams?.callbackUrl}
             loading={isPending}
             startTransition={startTransition}
@@ -54,6 +57,7 @@ export function RegisterButtons({
 interface SignInButtonsProps {
   loading: boolean;
   startTransition: TransitionStartFunction;
+  searchParams?: Record<string, string | undefined>;
 }
 
 function EmailRegister({ loading, startTransition }: SignInButtonsProps) {
@@ -132,7 +136,7 @@ function EmailRegister({ loading, startTransition }: SignInButtonsProps) {
   );
 }
 
-// function GoogleSignIn({
+// function GoogleRegister({
 //   callbackUrl,
 //   loading,
 //   startTransition,
@@ -157,7 +161,7 @@ function EmailRegister({ loading, startTransition }: SignInButtonsProps) {
 //   );
 // }
 
-// function DiscordSignIn({
+// function DiscordRegister({
 //   callbackUrl,
 //   loading,
 //   startTransition,

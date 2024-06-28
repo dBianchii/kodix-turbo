@@ -5,7 +5,6 @@
   "type": "module",
   "exports": {
     "./constants": "./src/constants.ts",
-    "./verification-request": "./src/emails/verification-request.tsx",
     "./team-invite": "./src/emails/team-invite.tsx",
     "./warn-previous-shift-not-ended": "./src/emails/kodixCare/warn-previous-shift-not-ended.tsx"
   },

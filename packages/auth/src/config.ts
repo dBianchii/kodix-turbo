@@ -7,6 +7,7 @@ import type { schema } from "@kdx/db/schema";
 import { env } from "../env";
 import { adapter } from "./lucia-custom-adapter";
 import * as discordProvider from "./providers/discord";
+import * as googleProvider from "./providers/google";
 
 export const isSecureContext = env.NODE_ENV !== "development";
 
@@ -73,6 +74,7 @@ export const auth = async (): Promise<AuthResponse> => {
 
 export const providers = {
   discord: discordProvider,
+  google: googleProvider,
 } as const;
 
 export type Providers = keyof typeof providers;

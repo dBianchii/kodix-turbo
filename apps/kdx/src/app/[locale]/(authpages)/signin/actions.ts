@@ -12,8 +12,12 @@ import { action } from "~/helpers/safe-action/safe-action";
 import { argon2Config } from "../utils";
 
 export const signInAction = action(
-  z.object({ email: z.string().email(), password: z.string().min(3).max(31) }),
-  async ({ email, password }) => {
+  z.object({
+    email: z.string().email(),
+    password: z.string().min(3).max(31),
+    callbackUrl: z.string().optional(),
+  }),
+  async ({ email, password, callbackUrl }) => {
     const existingUser = await db.query.users.findFirst({
       where: (users, { eq }) => eq(users.email, email),
       columns: {
@@ -63,6 +67,6 @@ export const signInAction = action(
       sessionCookie.value,
       sessionCookie.attributes,
     );
-    return redirect("/team");
+    return redirect(callbackUrl ?? "/team");
   },
 );

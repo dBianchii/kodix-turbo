@@ -12,7 +12,7 @@ export async function GET(
   }: {
     params: { provider: string };
   },
-): Promise<Response> {
+) {
   if (!Object.keys(providers).includes(params.provider)) {
     console.error("Invalid oauth provider", params.provider);
     return new Response(null, {
@@ -38,8 +38,16 @@ export async function GET(
 
   try {
     const currentProvider = providers[params.provider as Providers];
+    const codeVerifier = cookies().get("code_verifier")?.value;
+    if (currentProvider.name === "Google" && !codeVerifier) {
+      console.error("Missing code verifier");
+      return new Response(null, {
+        status: 400,
+      });
+    }
 
-    const userId = await currentProvider.handleCallback(code);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const userId = await currentProvider.handleCallback(code, codeVerifier!);
 
     const session = await lucia.createSession(userId, {
       ipAddress:
