@@ -13,7 +13,7 @@ import TeamInviteCard from "./_components/invite/team-invite-card";
 
 export default async function SettingsMembersPage() {
   const { user } = await auth();
-  if (!session) redirect("/");
+  if (!user) redirect("/");
   const t = await getI18n();
 
   return (
@@ -65,7 +65,7 @@ export default async function SettingsMembersPage() {
 
 async function DataTableMembersServer() {
   const { user } = await auth();
-  if (!session) return null;
+  if (!user) return null;
 
   const users = await api.team.getAllUsers();
 

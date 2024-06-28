@@ -7,7 +7,7 @@ export async function EditUserTeamsTable() {
   const teams = await api.team.getAllForLoggedUser();
 
   const { user } = await auth();
-  if (!session) return null;
+  if (!user) return null;
 
   return <EditUserTeamsTableClient teams={teams} user={user} />;
 }

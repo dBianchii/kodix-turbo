@@ -9,7 +9,7 @@ import OnboardingCard from "./_components/onboarding-card";
 
 export default async function KodixCareOnboardingPage() {
   const { user } = await auth();
-  if (!session) return redirect("/");
+  if (!user) return redirect("/");
   const installed = await api.app.getInstalled();
   if (installed.some((x) => x.id === kodixCareAppId))
     redirect("/apps/kodixCare");

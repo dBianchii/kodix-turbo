@@ -18,7 +18,7 @@ import { api } from "~/trpc/server";
 
 export async function EditAccountNameCard({ name }: { name?: string | null }) {
   const { user } = await auth();
-  if (!session) return null;
+  if (!user) return null;
   const t = await getI18n();
   return (
     <form

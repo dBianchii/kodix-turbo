@@ -26,12 +26,12 @@ const prepared = db.query.notifications
   .prepare();
 
 export async function GET(request: Request) {
-  const session = await auth();
-  if (!session) redirect("/");
+  const { user } = await auth();
+  if (!user) redirect("/");
 
   const notif = await prepared.execute({
     id: request.url.split("/").pop(),
-    userId: session.user.id,
+    userId: user.id,
   });
   if (!notif) return notFound();
 

@@ -367,5 +367,6 @@ export default {
   "Learn more": "Learn more",
   "Sign in with Google": "Sign in with Google",
   "Register your account": "Register your account",
-  "Password": "Password"
+  "Password": "Password",
+  "Your name": "Your name"
 } as const

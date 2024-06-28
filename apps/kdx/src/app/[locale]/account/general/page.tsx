@@ -8,7 +8,7 @@ import { EditAccountNameCard } from "./_components/edit-account-name-card";
 
 export default async function GeneralAccountSettings() {
   const { user } = await auth();
-  if (!session) redirect("/");
+  if (!user) redirect("/");
 
   return (
     <div className="mt-8 space-y-8 md:mt-0">

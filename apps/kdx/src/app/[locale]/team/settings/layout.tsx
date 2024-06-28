@@ -15,7 +15,7 @@ export default async function SettingsLayout({
   children: React.ReactNode;
 }) {
   const { user } = await auth();
-  if (!session) redirect("/");
+  if (!user) redirect("/");
   const team = await api.team.getActiveTeam();
   const t = await getI18n();
 

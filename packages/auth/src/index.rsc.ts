@@ -11,5 +11,6 @@ export const auth = cache(_auth);
 export { providers, isSecureContext } from "./config";
 
 export type { Providers, AuthResponse } from "./config";
+export { lucia } from "./config";
 export type { Session } from "lucia";
 export type { User } from "lucia";

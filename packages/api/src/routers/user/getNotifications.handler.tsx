@@ -19,8 +19,8 @@ export const getNotificationsHandler = async ({
   input,
 }: GetNotificationsOptions) => {
   await sendNotifications({
-    teamId: ctx.user.activeTeamId,
-    userId: ctx.user.id,
+    teamId: ctx.session.user.activeTeamId,
+    userId: ctx.session.user.id,
     channels: [
       {
         subject: Math.random().toString(),
@@ -50,7 +50,7 @@ export const getNotificationsHandler = async ({
   const allTeamIdsForUserQuery = ctx.db
     .select({ id: schema.usersToTeams.teamId })
     .from(schema.usersToTeams)
-    .where(eq(schema.usersToTeams.userId, ctx.user.id));
+    .where(eq(schema.usersToTeams.userId, ctx.session.user.id));
 
   const filterExpressions: (SQL<unknown> | undefined)[] = [
     // Filter notifications by subject
@@ -86,7 +86,7 @@ export const getNotificationsHandler = async ({
   ];
 
   const where: DrizzleWhere<typeof schema.notifications.$inferSelect> = and(
-    eq(schema.notifications.sentToUserId, ctx.user.id), //? Only show notifications for the logged in user
+    eq(schema.notifications.sentToUserId, ctx.session.user.id), //? Only show notifications for the logged in user
     inArray(schema.notifications.teamId, allTeamIdsForUserQuery), //? Ensure user is part of the team
 
     !input.operator || input.operator === "and"

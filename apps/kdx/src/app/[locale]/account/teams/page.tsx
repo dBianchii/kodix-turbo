@@ -10,7 +10,7 @@ import { EditUserTeamsTable } from "./_components/edit-users-teams-card/edit-use
 
 export default async function Teams() {
   const { user } = await auth();
-  if (!session) redirect("/");
+  if (!user) redirect("/");
   const t = await getI18n();
   return (
     <div className="mt-8 space-y-8 md:mt-0">

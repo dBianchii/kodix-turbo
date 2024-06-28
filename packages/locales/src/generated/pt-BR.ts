@@ -365,5 +365,8 @@ export default {
   "Supports 3 languages and counting": "Suporta 2 idiomas e contando.",
   "The ultimate solution for managing your home clinic or your home care": "A solução definitiva para gerenciar sua clínica domiciliar ou seu atendimento domiciliar",
   "The unified calendar system that integrates with all your apps": "O sistema de calendário unificado que se integra a todos os seus aplicativos",
-  "Sign in with Google": "Faça login no Google"
+  "Sign in with Google": "Faça login no Google",
+  "Password": "Senha",
+  "Register your account": "Registre sua conta",
+  "Your name": "Seu nome"
 } as const

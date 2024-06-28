@@ -21,7 +21,7 @@ export default async function NotificationsPage({
   searchParams: SearchParams;
 }) {
   const { user } = await auth();
-  if (!session) redirect("/");
+  if (!user) redirect("/");
   const t = await getI18n();
 
   const search = ZGetNotificationsInputSchema.parse(searchParams);

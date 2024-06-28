@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import type { MySqlDatabase } from "drizzle-orm/mysql-core";
@@ -66,12 +67,11 @@ function transformIntoDatabaseSession(raw: any): DatabaseSession {
 }
 function transformIntoDatabaseUser(raw: any, team: any): DatabaseUser {
   const { id, ...attributes } = raw;
-  const { ...teamAttributes } = team;
   return {
     id,
     attributes: {
       ...attributes,
-      ...teamAttributes,
+      activeTeamName: team.name,
     },
   };
 }

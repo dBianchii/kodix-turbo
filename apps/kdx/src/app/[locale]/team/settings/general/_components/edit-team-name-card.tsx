@@ -4,7 +4,7 @@ import { EditTeamNameCardClient } from "./edit-team-name-card-client";
 
 export async function EditTeamNameCard() {
   const { user } = await auth();
-  if (!session) return null;
+  if (!user) return null;
 
   return (
     <EditTeamNameCardClient

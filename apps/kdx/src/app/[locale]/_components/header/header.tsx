@@ -40,8 +40,8 @@ async function LogoWithAppSwitcher() {
 
   return (
     <>
-      <Logo redirect={session ? "/team" : "/"} />
-      {session && (
+      <Logo redirect={user ? "/team" : "/"} />
+      {user && (
         <>
           <svg
             className="text-[#eaeaea] dark:text-[#333]"
@@ -82,7 +82,7 @@ function Logo({ redirect }: { redirect: string }) {
 
 async function NotificationsPopover() {
   const { user } = await auth();
-  if (!session) return null;
+  if (!user) return null;
 
   const initialNotifications = await api.user.getInvitations();
   if (!initialNotifications.length) return null;
@@ -99,7 +99,7 @@ async function RightSide() {
   return (
     <>
       <I18nPicker />
-      {!!session && (
+      {!!user && (
         <>
           <Suspense>
             <NotificationsPopover />
@@ -107,13 +107,13 @@ async function RightSide() {
           <UserProfileButton user={user} />
         </>
       )}
-      {!session && (
+      {!user && (
         <div className="mr-5 space-x-2">
           <Link href="/signin" className={buttonVariants({ variant: "ghost" })}>
             {t("header.Log in")}
           </Link>
           <Link
-            href="/signin"
+            href="/signup"
             className={buttonVariants({ variant: "default" })}
           >
             {t("header.Sign up")}

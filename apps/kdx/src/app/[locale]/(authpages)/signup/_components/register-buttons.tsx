@@ -9,6 +9,7 @@ import { Button } from "@kdx/ui/button";
 import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
 
+import { defaultSafeActionToastError } from "~/helpers/safe-action/default-action-error-toast";
 import { signupAction } from "../actions";
 
 export function RegisterButtons({
@@ -62,7 +63,7 @@ function EmailRegister({ loading, startTransition }: SignInButtonsProps) {
   const t = useScopedI18n("signin");
   return (
     <>
-      <div className="flex w-full">
+      <div className="pb-4">
         <Label
           htmlFor="email"
           className="mb-2 block text-sm font-medium text-foreground"
@@ -78,7 +79,7 @@ function EmailRegister({ loading, startTransition }: SignInButtonsProps) {
           onChange={(e) => setName(e.target.value)}
         />
       </div>
-      <div className="flex w-full">
+      <div className="pb-4">
         <Label
           htmlFor="email"
           className="mb-2 block text-sm font-medium text-foreground"
@@ -113,11 +114,12 @@ function EmailRegister({ loading, startTransition }: SignInButtonsProps) {
         variant="default"
         onClick={() => {
           startTransition(async () => {
-            await signupAction({
+            const result = await signupAction({
               email,
               password,
-              name: "test",
+              name,
             });
+            if (defaultSafeActionToastError(result)) return;
           });
         }}
         disabled={loading}

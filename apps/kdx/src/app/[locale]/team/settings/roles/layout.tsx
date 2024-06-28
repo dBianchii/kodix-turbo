@@ -15,7 +15,7 @@ export default async function RolesLayout({
   children: React.ReactNode;
 }) {
   const { user } = await auth();
-  if (!session) redirect("/");
+  if (!user) redirect("/");
 
   const team = await db.query.teams.findFirst({
     where: eq(schema.teams.id, user.activeTeamId),

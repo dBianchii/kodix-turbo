@@ -49,10 +49,7 @@ export const createTRPCContext = (opts: {
   console.log(">>> tRPC Request from", source, "by", session?.user);
 
   return {
-    session: {
-      ...session,
-      user: session?.user ?? null,
-    },
+    session,
     db,
     token: authToken,
   };

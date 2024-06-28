@@ -1,6 +1,6 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { hash } from "@node-rs/argon2";
 import { z } from "zod";
@@ -12,14 +12,11 @@ import { schema } from "@kdx/db/schema";
 import { nanoid } from "@kdx/shared";
 
 import { action } from "~/helpers/safe-action/safe-action";
+import { argon2Config } from "../utils";
 
 export const signupAction = action(
   z.object({
-    name: z
-      .string()
-      .min(3)
-      .max(31)
-      .regex(/^[a-z0-9_-]+$/),
+    name: z.string().min(3).max(31),
     email: z.string().email(),
     password: z.string().min(6).max(255),
   }),
@@ -36,14 +33,7 @@ export const signupAction = action(
       };
     }
 
-    const passwordHash = await hash(input.password, {
-      // recommended minimum parameters
-      memoryCost: 19456,
-      timeCost: 2,
-      outputLen: 32,
-      parallelism: 1,
-    });
-    // const userId = generateIdFromEntropySize(10); // 16 characters long
+    const passwordHash = await hash(input.password, argon2Config);
     const userId = nanoid();
     const teamId = nanoid();
 
@@ -61,18 +51,26 @@ export const signupAction = action(
         name: `Personal Team`,
       });
       await tx.insert(schema.usersToTeams).values({
-        userId: teamId,
+        userId: userId,
         teamId: teamId,
       });
     });
 
-    const session = await lucia.createSession(userId, {});
+    const heads = headers();
+
+    const session = await lucia.createSession(userId, {
+      ipAddress:
+        heads.get("X-Forwarded-For") ??
+        heads.get("X-Forwarded-For") ??
+        "127.0.0.1",
+      userAgent: heads.get("user-agent"),
+    });
     const sessionCookie = lucia.createSessionCookie(session.id);
     cookies().set(
       sessionCookie.name,
       sessionCookie.value,
       sessionCookie.attributes,
     );
-    return redirect("/team");
+    redirect("/team");
   },
 );

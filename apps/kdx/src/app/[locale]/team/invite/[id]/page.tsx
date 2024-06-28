@@ -19,7 +19,7 @@ export default async function InvitePage({
   });
   if (!invitation) return notFound();
   const { user } = await auth();
-  if (!session)
+  if (!user)
     redirect(`/api/auth/signin?callbackUrl=/team/invite/${invitationId}`);
 
   if (user.email !== invitation.email) return notFound();
