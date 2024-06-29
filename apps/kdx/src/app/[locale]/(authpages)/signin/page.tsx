@@ -6,7 +6,8 @@ import { getI18n } from "@kdx/locales/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@kdx/ui/card";
 
 import { env } from "~/env";
-import { SignInButtons } from "./_components/sign-in-buttons";
+import { DiscordSignIn, GoogleSignIn } from "../_components/provider-buttons";
+import { PasswordSignInForm } from "./_components/password-signin-form";
 
 const renderDiscord = env.NODE_ENV === "development";
 
@@ -33,14 +34,30 @@ export default async function SignInPage({
         <CardContent>
           <div className="grid w-full items-center">
             <div className="flex flex-col">
-              <SignInButtons
-                searchParams={searchParams}
-                renderDiscord={renderDiscord}
-              />
+              <PasswordSignInForm callbackUrl={searchParams?.callbackUrl} />
+              <div className="relative my-4">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground">
+                    {t("Or continue with")}
+                  </span>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <GoogleSignIn callbackUrl={searchParams?.callbackUrl} />
+                {renderDiscord && (
+                  <DiscordSignIn callbackUrl={searchParams?.callbackUrl} />
+                )}
+              </div>
             </div>
           </div>
         </CardContent>
       </Card>
+      <Link href="/signup" className="mt-8 text-sm font-medium">
+        {t("Dont have an account")}
+      </Link>
     </section>
   );
 }

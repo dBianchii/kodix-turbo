@@ -19,19 +19,23 @@ export const signupAction = action(
     name: z.string().min(3).max(31),
     email: z.string().email(),
     password: z.string().min(6).max(255),
+    agreeToTOS: z
+      .boolean()
+      .default(false)
+      .refine((val) => !!val, {
+        message: "You must agree to the terms of service",
+      }),
   }),
   async (input) => {
     const registered = await db
-      .select()
+      .select({
+        id: schema.users.id,
+      })
       .from(schema.users)
       .where(eq(schema.users.email, input.email))
-      .then((res) => res[0]);
+      .then((res) => !!res[0]);
 
-    if (registered) {
-      return {
-        error: "Email already registered",
-      };
-    }
+    if (registered) throw new Error("Email already registered");
 
     const passwordHash = await hash(input.password, argon2Config);
     const userId = nanoid();

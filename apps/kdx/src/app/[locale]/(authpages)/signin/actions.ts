@@ -35,23 +35,17 @@ export const signInAction = action(
       // Since protecting against this is non-trivial,
       // it is crucial your implementation is protected against brute-force attacks with login throttling etc.
       // If usernames are public, you may outright tell the user that the username is invalid.
-      return {
-        error: "Incorrect username or password",
-      };
+      throw new Error("Incorrect email or password");
     }
     if (!existingUser.passwordHash)
-      return { error: "Incorrect username or password" }; //User has registered with a provider. Don't tell them the username is valid though.
+      throw new Error("Incorrect email or password");
 
     const validPassword = await verify(
       existingUser.passwordHash,
       password,
       argon2Config,
     );
-    if (!validPassword) {
-      return {
-        error: "Incorrect username or password",
-      };
-    }
+    if (!validPassword) throw new Error("Incorrect email or password");
 
     const heads = headers();
     const session = await lucia.createSession(existingUser.id, {

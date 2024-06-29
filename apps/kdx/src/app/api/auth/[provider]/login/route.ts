@@ -23,9 +23,10 @@ export async function GET(
 
   const state = generateState();
   const currentProvider = providers[params.provider as Providers];
-  const url = await currentProvider.getAuthorizationUrl(state);
+
+  const codeVerifier = generateCodeVerifier(); //? Not needed for all providers.
+  const url = await currentProvider.getAuthorizationUrl(state, codeVerifier);
   if (currentProvider.name === "Google") {
-    const codeVerifier = generateCodeVerifier();
     cookies().set("code_verifier", codeVerifier, {
       path: "/",
       secure: env.NODE_ENV === "production",

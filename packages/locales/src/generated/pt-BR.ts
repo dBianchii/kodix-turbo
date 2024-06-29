@@ -369,5 +369,7 @@ export default {
   "Sign in with Google": "Faça login no Google",
   "Password": "Senha",
   "Register your account": "Registre sua conta",
-  "Your name": "Seu nome"
+  "Your name": "Seu nome",
+  "Dont have an account": "Não tem uma conta?",
+  "Your password": "Sua senha"
 } as const
