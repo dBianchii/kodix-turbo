@@ -3,7 +3,7 @@ import { Redis } from "@upstash/redis";
 import type { schema } from "@kdx/db/schema";
 import type { AppPermissionId } from "@kdx/shared";
 
-export const redis = Redis.fromEnv();
+const redis = Redis.fromEnv();
 
 interface KeysMapping {
   apps: {
