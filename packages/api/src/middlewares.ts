@@ -6,6 +6,7 @@ import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "./procedures";
 import { getInstalledHandler } from "./routers/app/getInstalled.handler";
+import { getUpstashCache, setUpstashCache } from "./upstash";
 
 /**
  *  Helper/factory that returns a reusable middleware that checks if a certain app is installed for the current team
@@ -33,23 +34,41 @@ export const appPermissionMiddleware = (permissionId: AppPermissionId) =>
   experimental_standaloneMiddleware<{
     ctx: TProtectedProcedureContext;
   }>().create(async ({ ctx, next }) => {
-    const foundPermission = await ctx.db.query.teamAppRoles.findFirst({
-      with: {
-        AppPermissionsToTeamAppRoles: {
-          where: (appPermissionsToTeamAppRole, { eq }) =>
-            eq(appPermissionsToTeamAppRole.appPermissionId, permissionId),
-        },
-        TeamAppRolesToUsers: {
-          where: (usersToPermissions, { eq }) =>
-            eq(usersToPermissions.userId, ctx.session.user.id),
-        },
-      },
-      where: (teamAppRole, { eq }) =>
-        eq(teamAppRole.teamId, ctx.session.user.activeTeamId),
-      columns: {
-        id: true,
-      },
+    const cached = await getUpstashCache("permissions", {
+      userId: ctx.session.user.id,
+      teamId: ctx.session.user.activeTeamId,
+      permissionId,
     });
+    let foundPermission = cached;
+
+    if (cached === null) {
+      foundPermission = await ctx.db.query.teamAppRoles.findFirst({
+        with: {
+          AppPermissionsToTeamAppRoles: {
+            where: (appPermissionsToTeamAppRole, { eq }) =>
+              eq(appPermissionsToTeamAppRole.appPermissionId, permissionId),
+          },
+          TeamAppRolesToUsers: {
+            where: (usersToPermissions, { eq }) =>
+              eq(usersToPermissions.userId, ctx.session.user.id),
+          },
+        },
+        where: (teamAppRole, { eq }) =>
+          eq(teamAppRole.teamId, ctx.session.user.activeTeamId),
+        columns: {
+          id: true,
+        },
+      });
+
+      await setUpstashCache("permissions", {
+        variableKeys: {
+          userId: ctx.session.user.id,
+          teamId: ctx.session.user.activeTeamId,
+          permissionId,
+        },
+        value: foundPermission,
+      });
+    }
 
     if (!foundPermission)
       throw new TRPCError({
