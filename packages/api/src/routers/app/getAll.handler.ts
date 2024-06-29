@@ -4,12 +4,18 @@ import { eq, sql } from "@kdx/db";
 import { schema } from "@kdx/db/schema";
 
 import type { TPublicProcedureContext } from "../../procedures";
+import { getUpstashCache, setUpstashCache } from "../../upstash";
 
 interface GetAllOptions {
   ctx: TPublicProcedureContext;
 }
 
 export const getAllHandler = async ({ ctx }: GetAllOptions) => {
+  const cached = await getUpstashCache("apps", {
+    teamId: ctx.session?.user.activeTeamId,
+  });
+  if (cached) return cached;
+
   const apps = await ctx.db
     .select({
       id: schema.apps.id,
@@ -39,6 +45,13 @@ export const getAllHandler = async ({ ctx }: GetAllOptions) => {
       message: "No apps found",
     });
   }
+
+  await setUpstashCache("apps", {
+    variableKeys: {
+      teamId: ctx.session?.user.activeTeamId,
+    },
+    value: apps,
+  });
 
   return apps;
 };
