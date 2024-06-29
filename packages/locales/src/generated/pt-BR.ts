@@ -20,6 +20,7 @@ export default {
     "Search app": "Pesquisar app"
   },
   "signin": {
+    "Your password": "Sua senha",
     "Or continue with": "Ou continue com",
     "Your email": "Seu email",
     "Sign in": "Entrar",

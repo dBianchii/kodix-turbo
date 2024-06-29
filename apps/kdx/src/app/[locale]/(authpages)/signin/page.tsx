@@ -5,7 +5,10 @@ import { auth } from "@kdx/auth";
 import { getI18n } from "@kdx/locales/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@kdx/ui/card";
 
+import { env } from "~/env";
 import { SignInButtons } from "./_components/sign-in-buttons";
+
+const renderDiscord = env.NODE_ENV === "development";
 
 export default async function SignInPage({
   searchParams,
@@ -15,6 +18,7 @@ export default async function SignInPage({
   const { user } = await auth();
   if (user) redirect(searchParams?.callbackUrl ?? "/");
   const t = await getI18n();
+
   return (
     <section className="mx-auto flex flex-1 flex-col items-center justify-center px-6 py-8 lg:py-0">
       <Link href="/" className="my-4 text-4xl font-extrabold">
@@ -29,7 +33,10 @@ export default async function SignInPage({
         <CardContent>
           <div className="grid w-full items-center">
             <div className="flex flex-col">
-              <SignInButtons searchParams={searchParams} />
+              <SignInButtons
+                searchParams={searchParams}
+                renderDiscord={renderDiscord}
+              />
             </div>
           </div>
         </CardContent>

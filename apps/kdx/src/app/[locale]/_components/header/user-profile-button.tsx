@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { signOut } from "next-auth/react";
 import { LuLogOut, LuUsers } from "react-icons/lu";
 import { MdOutlineSwapHorizontalCircle } from "react-icons/md";
 import { RxGear, RxPerson } from "react-icons/rx";
@@ -19,6 +18,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@kdx/ui/dropdown-menu";
+
+import { signOutAction } from "~/helpers/actions";
 
 export function UserProfileButton({ user }: { user: User }) {
   const t = useScopedI18n("header");
@@ -71,7 +72,7 @@ export function UserProfileButton({ user }: { user: User }) {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => void signOut()}>
+        <DropdownMenuItem onClick={() => void signOutAction()}>
           <LuLogOut className="mr-2 size-4" />
           <span>{t("Log out")}</span>
         </DropdownMenuItem>

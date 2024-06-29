@@ -24,7 +24,8 @@ export default {
     "Your email": "Your email",
     "Sign in": "Sign in",
     "Sign in with Google": "Sign in with Google",
-    "Sign in to your account": "Sign in to your account"
+    "Sign in to your account": "Sign in to your account",
+    "Your password": "Your password"
   },
   "apps": {
     "kodixCare": {
@@ -368,5 +369,6 @@ export default {
   "Sign in with Google": "Sign in with Google",
   "Register your account": "Register your account",
   "Password": "Password",
-  "Your name": "Your name"
+  "Your name": "Your name",
+  "Your password": "Your password"
 } as const
