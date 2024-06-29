@@ -2,6 +2,9 @@ import { customAlphabet } from "nanoid";
 
 import { kdxProductionURL } from "./constants";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+declare let window: any;
+
 export const NANOID_SIZE = 12; //If this is changed, the regex in zNanoIdRegex in @kdx/validators must be updated
 export const nanoid = customAlphabet(
   "1234567890abcdefghijklmnopqrstuvwxyz",
@@ -21,8 +24,8 @@ export const getBaseKdxUrl = () => {
  * @description Base URL for the current environment.
  */
 export const getBaseUrl = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  if (typeof window !== "undefined") return window.location.origin as string;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+  if (typeof window !== "undefined") return window.location.origin;
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
   return `http://localhost:${process.env.PORT ?? 3000}`;
 };
