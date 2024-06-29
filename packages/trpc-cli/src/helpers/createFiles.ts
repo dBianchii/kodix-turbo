@@ -56,7 +56,7 @@ export const createFiles = async (params: CreateFilesParams) => {
       }),
     );
 
-  await Promise.all(promises);
+  await Promise.allSettled(promises);
 
   spinner.succeed(`Endpoint created!\n`);
 

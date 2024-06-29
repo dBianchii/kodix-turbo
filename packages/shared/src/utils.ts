@@ -24,8 +24,8 @@ export const getBaseKdxUrl = () => {
  * @description Base URL for the current environment.
  */
 export const getBaseUrl = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  if (typeof window !== "undefined") return window.location.origin as string;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+  if (typeof window !== "undefined") return window.location.origin;
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
   return `http://localhost:${process.env.PORT ?? 3000}`;
 };

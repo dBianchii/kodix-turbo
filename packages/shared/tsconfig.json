@@ -1,6 +1,7 @@
 {
   "extends": "@kdx/tsconfig/internal-package.json",
   "compilerOptions": {
+    "lib": ["es2022", "dom", "dom.iterable"],
     "outDir": "dist",
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
   },
