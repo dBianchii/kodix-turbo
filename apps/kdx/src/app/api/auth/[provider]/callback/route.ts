@@ -13,6 +13,7 @@ export async function GET(
     params: { provider: string };
   },
 ) {
+  const heads = request.headers;
   if (!Object.keys(providers).includes(params.provider)) {
     console.error("Invalid oauth provider", params.provider);
     return new Response(null, {

@@ -1,4 +1,6 @@
+import type { NextRequest } from "next/server";
 import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 import { generateCodeVerifier, generateState } from "arctic";
 
 import type { Providers } from "@kdx/auth";
@@ -7,7 +9,7 @@ import { providers } from "@kdx/auth";
 import { env } from "~/env";
 
 export async function GET(
-  request: Request,
+  request: NextRequest,
   {
     params,
   }: {
@@ -16,7 +18,7 @@ export async function GET(
 ) {
   if (!Object.keys(providers).includes(params.provider)) {
     console.error("Invalid oauth provider", params.provider);
-    return new Response(null, {
+    return new NextResponse(null, {
       status: 400,
     });
   }
@@ -43,5 +45,17 @@ export async function GET(
     sameSite: "lax",
   });
 
-  return Response.redirect(url);
+  const { searchParams } = new URL(request.url);
+  const invite = searchParams.get("invite");
+
+  return new NextResponse(null, {
+    ...(invite
+      ? {
+          headers: {
+            invite,
+          },
+        }
+      : {}),
+    url: url.href,
+  });
 }

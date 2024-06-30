@@ -46,9 +46,15 @@ export default async function SignInPage({
                 </div>
               </div>
               <div className="space-y-2">
-                <GoogleSignIn callbackUrl={searchParams?.callbackUrl} />
+                <GoogleSignIn
+                  callbackUrl={searchParams?.callbackUrl}
+                  invite={searchParams?.invite}
+                />
                 {renderDiscord && (
-                  <DiscordSignIn callbackUrl={searchParams?.callbackUrl} />
+                  <DiscordSignIn
+                    callbackUrl={searchParams?.callbackUrl}
+                    invite={searchParams?.invite}
+                  />
                 )}
               </div>
             </div>
