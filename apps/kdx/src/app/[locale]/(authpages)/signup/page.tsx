@@ -26,7 +26,7 @@ export default async function SignUpPage({
             {t("Create an account to access all the features of Kodix")}
           </p>
           <div className="space-y-4">
-            <PasswordSignupForm />
+            <PasswordSignupForm invite={searchParams?.invite} />
             <div className="relative my-4">
               <div className="absolute inset-0 flex items-center">
                 <span className="w-full border-t" />
@@ -38,8 +38,8 @@ export default async function SignUpPage({
               </div>
             </div>
             <div className="flex space-x-2">
-              <GoogleSignIn />
-              <DiscordSignIn />
+              <GoogleSignIn invite={searchParams?.invite} />
+              <DiscordSignIn invite={searchParams?.invite} />
             </div>
             <div className="text-center text-sm text-muted-foreground">
               Já tem uma conta?{" "}

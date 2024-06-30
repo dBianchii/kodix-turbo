@@ -8,6 +8,8 @@ import { providers } from "@kdx/auth";
 
 import { env } from "~/env";
 
+const providersWithCodeVerifier = ["Google"];
+
 export async function GET(
   request: NextRequest,
   {
@@ -28,15 +30,7 @@ export async function GET(
 
   const codeVerifier = generateCodeVerifier(); //? Not needed for all providers.
   const url = await currentProvider.getAuthorizationUrl(state, codeVerifier);
-  if (currentProvider.name === "Google") {
-    cookies().set("code_verifier", codeVerifier, {
-      path: "/",
-      secure: env.NODE_ENV === "production",
-      httpOnly: true,
-      maxAge: 60 * 10,
-      sameSite: "lax",
-    });
-  }
+
   cookies().set(`oauth_state`, state, {
     path: "/",
     secure: env.NODE_ENV === "production",
@@ -45,17 +39,34 @@ export async function GET(
     sameSite: "lax",
   });
 
-  const { searchParams } = new URL(request.url);
-  const invite = searchParams.get("invite");
+  if (providersWithCodeVerifier.includes(currentProvider.name))
+    cookies().set("code_verifier", codeVerifier, {
+      path: "/",
+      secure: env.NODE_ENV === "production",
+      httpOnly: true,
+      maxAge: 60 * 10,
+      sameSite: "lax",
+    });
 
-  return new NextResponse(null, {
-    ...(invite
-      ? {
-          headers: {
-            invite,
-          },
-        }
-      : {}),
-    url: url.href,
-  });
+  const invite = request.nextUrl.searchParams.get("invite");
+  if (invite)
+    cookies().set("invite", invite, {
+      path: "/",
+      secure: env.NODE_ENV === "production",
+      httpOnly: true,
+      maxAge: 60 * 10,
+      sameSite: "lax",
+    });
+
+  const callbackUrl = request.nextUrl.searchParams.get("callbackUrl");
+  if (callbackUrl)
+    cookies().set("callbackUrl", callbackUrl, {
+      path: "/",
+      secure: env.NODE_ENV === "production",
+      httpOnly: true,
+      maxAge: 60 * 10,
+      sameSite: "lax",
+    });
+
+  return NextResponse.redirect(url);
 }

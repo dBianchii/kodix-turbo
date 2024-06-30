@@ -1,7 +1,5 @@
 "use client";
 
-import { z } from "zod";
-
 import { useI18n } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
 import { Checkbox } from "@kdx/ui/checkbox";
@@ -17,21 +15,14 @@ import {
 import { Input } from "@kdx/ui/input";
 
 import { defaultSafeActionToastError } from "~/helpers/safe-action/default-action-error-toast";
-import { signupAction } from "../actions";
+import { signupAction } from "./actions";
+import { ZSignUpActionSchema } from "./schema";
 
-export function PasswordSignupForm() {
+export function PasswordSignupForm({ invite }: { invite?: string }) {
   const t = useI18n();
   const form = useForm({
-    schema: z.object({
-      name: z.string().min(3).max(31),
-      email: z.string().email(),
-      password: z.string().min(6).max(255),
-      agreeToTOS: z
-        .boolean()
-        .default(false)
-        .refine((val) => !!val, {
-          message: "You must agree to the terms of service",
-        }),
+    schema: ZSignUpActionSchema.omit({
+      invite: true,
     }),
   });
 
@@ -45,6 +36,7 @@ export function PasswordSignupForm() {
             password: values.password,
             name: values.name,
             agreeToTOS: values.agreeToTOS,
+            invite: invite,
           });
           if (defaultSafeActionToastError(result)) return;
         })}

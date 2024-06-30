@@ -2,11 +2,11 @@ import type { APIUser as DiscordUser } from "discord-api-types/v10";
 import { Discord } from "arctic";
 import { OAuth2Scopes } from "discord-api-types/v10";
 
-import { db } from "@kdx/db/client";
 import { getBaseKdxUrl } from "@kdx/shared";
 
 import { env } from "../../env";
 import createOrGetExistingUserForUnlinkedProviderAccount from "./utils/createOrGetExistingUserForUnlinkedProviderAccount";
+import getAccountByProviderUserId from "./utils/getAccountByProviderUserId";
 
 const discord = new Discord(
   env.AUTH_DISCORD_ID,
@@ -32,23 +32,12 @@ export const handleCallback = async (code: string) => {
   });
   const discordUser = (await response.json()) as DiscordUser;
 
-  const existingAccount = await db.query.accounts.findFirst({
-    columns: {
-      userId: true,
-    },
-
-    where: (accounts, { and, eq }) => {
-      return and(
-        eq(accounts.providerId, "discord"),
-
-        eq(accounts.providerUserId, discordUser.id),
-      );
-    },
+  const existingAccount = await getAccountByProviderUserId({
+    providerId: "discord",
+    providerUserId: discordUser.id,
   });
 
-  if (existingAccount) {
-    return existingAccount.userId;
-  }
+  if (existingAccount) return existingAccount.userId;
 
   const userId = await createOrGetExistingUserForUnlinkedProviderAccount({
     name: discordUser.username,

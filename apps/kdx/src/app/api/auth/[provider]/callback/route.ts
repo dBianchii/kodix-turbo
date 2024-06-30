@@ -13,7 +13,6 @@ export async function GET(
     params: { provider: string };
   },
 ) {
-  const heads = request.headers;
   if (!Object.keys(providers).includes(params.provider)) {
     console.error("Invalid oauth provider", params.provider);
     return new Response(null, {
@@ -60,10 +59,14 @@ export async function GET(
       sessionCookie.value,
       sessionCookie.attributes,
     );
+
+    const callbackUrl = cookies().get("callbackUrl")?.value;
+    if (callbackUrl) cookies().delete("callbackUrl");
+
     return new Response(null, {
       status: 302,
       headers: {
-        Location: "/",
+        Location: callbackUrl ?? "/",
       },
     });
   } catch (e) {

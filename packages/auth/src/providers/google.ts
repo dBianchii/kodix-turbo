@@ -1,10 +1,10 @@
 import { Google } from "arctic";
 
-import { db } from "@kdx/db/client";
 import { getBaseKdxUrl } from "@kdx/shared";
 
 import { env } from "../../env";
 import createOrGetExistingUserForUnlinkedProviderAccount from "./utils/createOrGetExistingUserForUnlinkedProviderAccount";
+import getAccountByProviderUserId from "./utils/getAccountByProviderUserId";
 
 interface GoogleUser {
   id: string;
@@ -46,27 +46,16 @@ export const handleCallback = async (code: string, codeVerifier: string) => {
   );
   const googleUser = (await response.json()) as GoogleUser;
 
-  const existingAccount = await db.query.accounts.findFirst({
-    columns: {
-      userId: true,
-    },
-    where: (accounts, { and, eq }) => {
-      return and(
-        eq(accounts.providerId, "google"),
-        eq(accounts.providerUserId, googleUser.id),
-      );
-    },
+  const existingAccount = await getAccountByProviderUserId({
+    providerId: "google",
+    providerUserId: googleUser.id,
   });
 
-  if (existingAccount) {
-    return existingAccount.userId;
-  }
-
-  const userEmail = googleUser.email;
+  if (existingAccount) return existingAccount.userId;
 
   const userId = await createOrGetExistingUserForUnlinkedProviderAccount({
     name: googleUser.name,
-    email: userEmail,
+    email: googleUser.email,
     image: googleUser.picture,
     providerUserId: googleUser.id,
     providerId: "google",

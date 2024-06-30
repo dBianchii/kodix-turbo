@@ -8,6 +8,7 @@
       "react-server": "./src/index.rsc.ts",
       "default": "./src/index.ts"
     },
+    "./db": "./src/db.ts",
     "./env": "./env.ts"
   },
   "scripts": {

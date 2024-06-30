@@ -5,11 +5,9 @@ import { auth } from "@kdx/auth";
 import { getI18n } from "@kdx/locales/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@kdx/ui/card";
 
-import { env } from "~/env";
 import { DiscordSignIn, GoogleSignIn } from "../_components/provider-buttons";
+import { renderDiscord } from "../utils";
 import { PasswordSignInForm } from "./_components/password-signin-form";
-
-const renderDiscord = env.NODE_ENV === "development";
 
 export default async function SignInPage({
   searchParams,
