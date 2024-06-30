@@ -375,5 +375,10 @@ export default {
   "Create an account to access all the features of Kodix": "Create an account to access all the features of Kodix",
   "Create your Kodix account": "Create your Kodix account",
   "I agree to the terms of service": "I agree to the terms of service",
-  "Create account": "Create account"
+  "Create account": "Create account",
+  "Forgot password": "Forgot password?",
+  "Go back to sign in page": "Go back to sign in page",
+  "Enter your email": "Enter your email",
+  "Email": "Email",
+  "Send reset email": "Send reset email"
 } as const

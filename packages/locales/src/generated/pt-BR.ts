@@ -371,5 +371,9 @@ export default {
   "Register your account": "Registre sua conta",
   "Your name": "Seu nome",
   "Dont have an account": "Não tem uma conta?",
-  "Your password": "Sua senha"
+  "Your password": "Sua senha",
+  "Create account": "Criar uma conta",
+  "Create an account to access all the features of Kodix": "Crie uma conta para acessar todos os recursos do Kodix",
+  "Create your Kodix account": "Crie sua conta Kodix",
+  "I agree to the terms of service": "Eu aceito os Termos de Serviço"
 } as const
