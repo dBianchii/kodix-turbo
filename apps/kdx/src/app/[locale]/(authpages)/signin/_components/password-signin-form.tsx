@@ -1,7 +1,7 @@
 "use client";
 
+import Link from "next/link";
 import { LuLoader2 } from "react-icons/lu";
-import { z } from "zod";
 
 import { useScopedI18n } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
@@ -57,7 +57,12 @@ export function PasswordSignInForm({ callbackUrl }: { callbackUrl?: string }) {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t("Your password")}</FormLabel>
+              <div className="flex justify-between">
+                <FormLabel>{t("Your password")}</FormLabel>
+                <Link href="/forgot-password" className="text-sm text-primary">
+                  {t("Forgot password")}
+                </Link>
+              </div>
               <FormControl>
                 <Input type="password" placeholder="*******" {...field} />
               </FormControl>
