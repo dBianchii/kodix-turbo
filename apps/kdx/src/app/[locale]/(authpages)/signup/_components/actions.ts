@@ -30,14 +30,16 @@ export const signupAction = action(ZSignUpActionSchema, async (input) => {
   const userId = nanoid();
   const teamId = nanoid();
 
-  await createUser({
-    name: input.name,
-    teamId: teamId,
-    userId: userId,
-    email: input.email,
-    invite: input.invite,
-    passwordHash: passwordHash,
-    db: db,
+  await db.transaction(async (tx) => {
+    await createUser({
+      name: input.name,
+      teamId: teamId,
+      userId: userId,
+      email: input.email,
+      invite: input.invite,
+      passwordHash: passwordHash,
+      db: tx,
+    });
   });
 
   const heads = headers();

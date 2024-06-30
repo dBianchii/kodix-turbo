@@ -34,3 +34,11 @@ export const ZDeleteNotificationsInputSchema = z.object({
 export type TDeleteNotificationsInputSchema = z.infer<
   typeof ZDeleteNotificationsInputSchema
 >;
+
+export const ZSignInByPasswordInputSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(3).max(31),
+});
+export type TSignInByPasswordInputSchema = z.infer<
+  typeof ZSignInByPasswordInputSchema
+>;

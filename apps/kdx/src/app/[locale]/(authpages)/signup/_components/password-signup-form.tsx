@@ -48,11 +48,7 @@ export function PasswordSignupForm({ invite }: { invite?: string }) {
             <FormItem>
               <FormLabel>{t("Name")}</FormLabel>
               <FormControl>
-                <Input
-                  placeholder={t("Name")}
-                  className="lowercase"
-                  {...field}
-                />
+                <Input placeholder={t("Name")} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

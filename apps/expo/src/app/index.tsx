@@ -3,6 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useRouter } from "expo-router";
 
 import { Button } from "~/components/Button";
+import { Input } from "~/components/Input";
 import { useSignIn, useUser } from "~/utils/auth";
 
 // Notifications.setNotificationHandler({
@@ -158,7 +159,7 @@ function MobileAuth() {
   const router = useRouter();
 
   return (
-    <View className="w-80 gap-4 self-center pt-8">
+    <View className="w-80 gap-2 self-center pt-8">
       <Button
         className="rounded-full"
         label="Novo cadastro"
@@ -173,7 +174,7 @@ function MobileAuth() {
         className="rounded-full"
         label="Login"
         onPress={() => {
-          void signIn();
+          router.push("/signIn");
         }}
       />
       {error && (

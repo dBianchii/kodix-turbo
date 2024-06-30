@@ -42,7 +42,7 @@ export async function createUser({
     });
 
     await db.insert(schema.usersToTeams).values({
-      userId: teamId,
+      userId: userId,
       teamId: teamId,
     });
   }

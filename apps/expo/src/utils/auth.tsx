@@ -10,7 +10,7 @@ import { deleteToken, setToken } from "./session-store";
 export const signIn = async (signInUrl: string) => {
   const redirectTo = Linking.createURL("/login");
   const result = await Browser.openAuthSessionAsync(
-    `${signInUrl}?expo-redirect=${encodeURIComponent(redirectTo)}`,
+    `${signInUrl}?callbackUrl=${encodeURIComponent(redirectTo)}`,
     redirectTo,
   );
 
@@ -36,17 +36,20 @@ export const useSignIn = () => {
   const router = useRouter();
   const [error, setError] = useState<"userNotRegistered" | null>(null);
 
+  const mutation = api.user.signInByPassword.useMutation();
+
   return {
-    signIn: async (props?: { signInUrl?: string }) => {
+    signIn: async (props: { email: string; password: string }) => {
       setError(null);
 
-      const url = new URL("/api/auth/signin", getBaseUrl());
-      const result = await signIn(props?.signInUrl ?? url.href);
-      if (result === "userNotRegistered") {
-        setError("userNotRegistered");
-        return;
-      }
-      if (result !== "success") return;
+      const sessionToken = await mutation.mutateAsync({
+        email: props.email,
+        password: props.password,
+      });
+
+      if (!sessionToken) return;
+      setToken(sessionToken);
+
       await utils.invalidate();
       router.replace("/");
     },

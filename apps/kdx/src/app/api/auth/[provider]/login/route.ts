@@ -5,13 +5,14 @@ import { generateCodeVerifier, generateState } from "arctic";
 
 import type { Providers } from "@kdx/auth";
 import { providers } from "@kdx/auth";
+import { rewriteRequestUrlInDevelopment } from "@kdx/auth/utils";
 
 import { env } from "~/env";
 
 const providersWithCodeVerifier = ["Google"];
 
 export async function GET(
-  request: NextRequest,
+  _req: NextRequest,
   {
     params,
   }: {

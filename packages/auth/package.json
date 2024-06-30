@@ -9,7 +9,8 @@
       "default": "./src/index.ts"
     },
     "./db": "./src/db.ts",
-    "./env": "./env.ts"
+    "./env": "./env.ts",
+    "./utils": "./src/utils.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
