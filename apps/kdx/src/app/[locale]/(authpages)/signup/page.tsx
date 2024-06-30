@@ -60,24 +60,6 @@ export default async function SignUpPage({
             </div>
           </div>
         </div>
-
-        {/* <Link href="/" className="my-4 text-4xl font-extrabold">
-        Kodix
-      </Link>
-      <Card className="w-[275px] sm:w-[400px]">
-        <CardHeader className="text-center">
-          <CardTitle className="text-bold text-lg">
-            {t("Register your account")}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid w-full items-center">
-            <div className="flex flex-col">
-              <RegisterButtons searchParams={searchParams} />
-            </div>
-          </div>
-        </CardContent>
-      </Card> */}
       </div>
     </div>
   );
