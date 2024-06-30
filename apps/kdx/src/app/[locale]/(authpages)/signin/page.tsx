@@ -18,6 +18,9 @@ export default async function SignInPage({
   if (user) redirect(searchParams?.callbackUrl ?? "/");
   const t = await getI18n();
 
+  let signUpHref = "/signup";
+  if (searchParams?.invite) signUpHref += `?invite=${searchParams.invite}`;
+
   return (
     <section className="mx-auto flex flex-1 flex-col items-center justify-center px-6 py-8 lg:py-0">
       <Link href="/" className="my-4 text-4xl font-extrabold">
@@ -59,7 +62,7 @@ export default async function SignInPage({
           </div>
         </CardContent>
       </Card>
-      <Link href="/signup" className="mt-8 text-sm font-medium">
+      <Link href={signUpHref} className="mt-8 text-sm font-medium">
         {t("Dont have an account")}
       </Link>
     </section>

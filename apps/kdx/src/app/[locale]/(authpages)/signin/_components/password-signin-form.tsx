@@ -17,15 +17,13 @@ import {
 import { Input } from "@kdx/ui/input";
 
 import { defaultSafeActionToastError } from "~/helpers/safe-action/default-action-error-toast";
-import { signInAction } from "../actions";
+import { signInAction } from "./actions";
+import { ZSigninActionSchema } from "./schema";
 
 export function PasswordSignInForm({ callbackUrl }: { callbackUrl?: string }) {
   const t = useScopedI18n("signin");
   const form = useForm({
-    schema: z.object({
-      email: z.string().email(),
-      password: z.string().min(3).max(31),
-    }),
+    schema: ZSigninActionSchema,
   });
 
   return (
