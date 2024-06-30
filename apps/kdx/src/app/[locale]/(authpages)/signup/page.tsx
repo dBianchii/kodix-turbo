@@ -42,19 +42,19 @@ export default async function SignUpPage({
               <DiscordSignIn invite={searchParams?.invite} />
             </div>
             <div className="text-center text-sm text-muted-foreground">
-              Já tem uma conta?{" "}
+              {t("Already have an account")}{" "}
               <Link href="/signin" className="text-white underline">
-                Iniciar sessão
+                {t("Sign in")}
               </Link>
             </div>
             <div className="text-center text-xs text-muted-foreground">
-              Ao continuar, você concorda com os nossos{" "}
+              {t("By continuing you agree to our")}{" "}
               <a href="#" className="text-white underline">
-                Termos
+                {t("Terms of Service")}
               </a>{" "}
               e{" "}
               <a href="#" className="text-white underline">
-                Política de Privacidade
+                {t("Privacy policy")}
               </a>
               .
             </div>

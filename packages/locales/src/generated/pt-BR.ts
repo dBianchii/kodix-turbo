@@ -375,5 +375,14 @@ export default {
   "Create account": "Criar uma conta",
   "Create an account to access all the features of Kodix": "Crie uma conta para acessar todos os recursos do Kodix",
   "Create your Kodix account": "Crie sua conta Kodix",
-  "I agree to the terms of service": "Eu aceito os Termos de Serviço"
+  "I agree to the terms of service": "Eu aceito os Termos de Serviço",
+  "Already have an account": "já tem uma conta?",
+  "By continuing you agree to our": "Ao continuar você concorda com nossos",
+  "Email": "E-mail",
+  "Enter your email": "Digite seu e-mail",
+  "Forgot password": "Esqueceu sua senha?",
+  "Go back to sign in page": "Voltar para a página de login",
+  "Privacy policy": "Política de Privacidade",
+  "Send reset email": "Enviar e-mail de redefinição",
+  "Terms of Service": "Termos de serviço"
 } as const

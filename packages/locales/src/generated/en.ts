@@ -380,5 +380,9 @@ export default {
   "Go back to sign in page": "Go back to sign in page",
   "Enter your email": "Enter your email",
   "Email": "Email",
-  "Send reset email": "Send reset email"
+  "Send reset email": "Send reset email",
+  "Already have an account": "Already have an account?",
+  "By continuing you agree to our": "By continuing you agree to our",
+  "Terms of Service": "Terms of service",
+  "Privacy policy": "Privacy policy"
 } as const
