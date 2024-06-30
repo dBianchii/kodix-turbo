@@ -143,7 +143,7 @@ export default function Index() {
       <View className="center flex h-full w-full flex-col bg-background">
         <View className="my-auto h-1/3 w-full">
           <Text className="text-center text-5xl font-bold text-foreground">
-            Kodix
+            Kodix Care
           </Text>
 
           <MobileAuth />
@@ -154,7 +154,7 @@ export default function Index() {
 }
 
 function MobileAuth() {
-  const signIn = useSignIn();
+  const { signIn, error, resetError } = useSignIn();
   const router = useRouter();
 
   return (
@@ -165,14 +165,23 @@ function MobileAuth() {
         onPress={() => {
           //redirect to register page
           router.push("/register");
+          resetError();
         }}
       />
       <Button
         variant={"secondary"}
         className="rounded-full"
         label="Login"
-        onPress={() => signIn()}
+        onPress={() => {
+          void signIn();
+        }}
       />
+      {error && (
+        <Text className="mt-4 text-sm text-destructive">
+          Usuário não registrado. Por favor, faça o cadastro se você possui um
+          convite.
+        </Text>
+      )}
     </View>
   );
 }

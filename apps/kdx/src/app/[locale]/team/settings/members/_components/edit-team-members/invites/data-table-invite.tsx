@@ -41,6 +41,7 @@ export function InviteDataTable({
 }) {
   const { data } = api.team.invitation.getAll.useQuery(undefined, {
     initialData: initialInvitations,
+    staleTime: 30000,
   });
   const t = useI18n();
   const utils = api.useUtils();

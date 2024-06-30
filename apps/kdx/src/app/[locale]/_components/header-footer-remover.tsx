@@ -10,7 +10,7 @@ export default function HeaderFooterRemover({
   const pathname = usePathname();
   const blockedPaths = ["/signin", "/signup", "forgot-password"];
 
-  if (blockedPaths.some((bp) => pathname.endsWith(bp))) {
+  if (blockedPaths.some((bp) => new RegExp(bp).test(pathname))) {
     return null;
   }
   return <>{children}</>;
