@@ -41,7 +41,7 @@ export default function ForgotPasswordPage() {
             <form
               onSubmit={form.handleSubmit(async (values) => {
                 const result = await resetPasswordAction(values);
-                if (!defaultSafeActionToastError(result)) return;
+                if (defaultSafeActionToastError(result)) return;
               })}
               className="space-y-6"
             >

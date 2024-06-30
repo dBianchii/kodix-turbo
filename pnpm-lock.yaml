@@ -38,6 +38,9 @@ importers:
       '@kdx/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@react-native-google-signin/google-signin':
+        specifier: ^12.2.1
+        version: 12.2.1(expo@51.0.11(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6)))(react-dom@18.3.1(react@18.3.1))(react-native@0.74.2(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
       '@shopify/flash-list':
         specifier: 1.6.4
         version: 1.6.4(@babel/runtime@7.24.7)(react-native@0.74.2(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
@@ -3856,6 +3859,19 @@ packages:
     resolution: {integrity: sha512-0lRdgLNaXixWY4BfFRl1J6Ao9Lapo2z+++iE7TD4GAbuxOWJSyFi+KUA8XNfSDyML4jFO02MZgyBPxAWdaminQ==}
     engines: {node: '>=18'}
     hasBin: true
+
+  '@react-native-google-signin/google-signin@12.2.1':
+    resolution: {integrity: sha512-qt2Cb+bN2NS8BBT06M3UbLVS1gaSYTenNh4uZtPNmyJC23xZAynLkuhvsC6gmeEnxcj0wLVUn1Es+LSHw0OhVQ==}
+    peerDependencies:
+      expo: '>=50.0.0'
+      react: '*'
+      react-dom: '*'
+      react-native: '*'
+    peerDependenciesMeta:
+      expo:
+        optional: true
+      react-dom:
+        optional: true
 
   '@react-native/assets-registry@0.74.84':
     resolution: {integrity: sha512-dzUhwyaX04QosWZ8zyaaNB/WYZIdeDN1lcpfQbqiOhZJShRH+FLTDVONE/dqlMQrP+EO7lDqF0RrlIt9lnOCQQ==}
@@ -12956,6 +12972,14 @@ snapshots:
       - supports-color
       - utf-8-validate
 
+  '@react-native-google-signin/google-signin@12.2.1(expo@51.0.11(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6)))(react-dom@18.3.1(react@18.3.1))(react-native@0.74.2(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      react: 18.3.1
+      react-native: 0.74.2(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))(@types/react@18.3.3)(react@18.3.1)
+    optionalDependencies:
+      expo: 51.0.11(@babel/core@7.24.6)(@babel/preset-env@7.24.6(@babel/core@7.24.6))
+      react-dom: 18.3.1(react@18.3.1)
+
   '@react-native/assets-registry@0.74.84': {}
 
   '@react-native/babel-plugin-codegen@0.74.84(@babel/preset-env@7.24.6(@babel/core@7.24.6))':
@@ -19035,7 +19059,7 @@ snapshots:
       ansi-escapes: 4.3.2
       supports-hyperlinks: 2.3.0
 
-  terser-webpack-plugin@5.3.10(@swc/core@1.3.101(@swc/helpers@0.5.5))(esbuild@0.19.11)(webpack@5.91.0(@swc/core@1.3.101(@swc/helpers@0.5.5))(esbuild@0.19.11)):
+  terser-webpack-plugin@5.3.10(@swc/core@1.3.101(@swc/helpers@0.5.5))(esbuild@0.19.11)(webpack@5.91.0(@swc/core@1.3.101)):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
       jest-worker: 27.5.1
@@ -19498,7 +19522,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 3.3.0
       tapable: 2.2.1
-      terser-webpack-plugin: 5.3.10(@swc/core@1.3.101(@swc/helpers@0.5.5))(esbuild@0.19.11)(webpack@5.91.0(@swc/core@1.3.101(@swc/helpers@0.5.5))(esbuild@0.19.11))
+      terser-webpack-plugin: 5.3.10(@swc/core@1.3.101(@swc/helpers@0.5.5))(esbuild@0.19.11)(webpack@5.91.0(@swc/core@1.3.101))
       watchpack: 2.4.1
       webpack-sources: 3.2.3
     transitivePeerDependencies:
