@@ -21,7 +21,7 @@ export const VALIDATORS_FOLDER_PATH = path.resolve(
   process.cwd(),
   trpcCliConfig.paths.validatorsFolderPath,
 );
-const zSafeName = z
+const ZSafeName = z
   .string()
   .min(1)
   .regex(/^[a-zA-Z0-9]+$/, {
@@ -99,7 +99,7 @@ export const runCli = async () => {
             defaultValue: "world",
             initialValue: "world",
             validate: (input) => {
-              const result = zSafeName.safeParse(input);
+              const result = ZSafeName.safeParse(input);
               if (!result.success) return result.error.errors[0]!.message;
             },
           });
@@ -134,7 +134,7 @@ export const runCli = async () => {
           defaultValue: "makeItBetter",
           validate: (input) => {
             if (input.length > 0) {
-              const result = zSafeName.safeParse(input);
+              const result = ZSafeName.safeParse(input);
               if (!result.success) return result.error.errors[0]!.message;
             }
           },

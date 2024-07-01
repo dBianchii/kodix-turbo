@@ -81,7 +81,7 @@ export default tseslint.config(
           selector:
             "CallExpression[callee.object.name='Promise'][callee.property.name='all']",
           message:
-            "Hi friend, please use 'Promise.allSettled' instead of 'Promise.all' to avoid silent failures. @see https://youtu.be/f2Z1v3cqgDI?si=xbk0-u4nBMxCjlp_ Also, you can combo it with 'getSuccessesAndErrors' from @kdx/shared",
+            "Please use 'Promise.allSettled' instead of 'Promise.all' to avoid silent failures. @see https://youtu.be/f2Z1v3cqgDI?si=xbk0-u4nBMxCjlp_ Also, you can combo it with 'getSuccessesAndErrors' from @kdx/shared",
         },
       ],
     },
