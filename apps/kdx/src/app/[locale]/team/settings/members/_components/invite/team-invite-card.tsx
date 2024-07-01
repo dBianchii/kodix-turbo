@@ -37,7 +37,7 @@ import { ZInviteInputSchema } from "@kdx/validators/trpc/invitation";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
-export default function TeamInviteCardClient({ user }: { session: Session }) {
+export default function TeamInviteCardClient({ user }: { user: User }) {
   const utils = api.useUtils();
   const [emails, setEmails] = useState([{ key: 0, value: "" }]); //key is used to work with formkit
   const [successes, setSuccesses] = useState<string[]>([]);

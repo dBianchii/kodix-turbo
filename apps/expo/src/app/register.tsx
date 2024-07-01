@@ -14,7 +14,6 @@ import { Button } from "~/components/Button";
 import { Input } from "~/components/Input";
 import { api } from "~/utils/api";
 import { useSignIn } from "~/utils/auth";
-import { getBaseUrl } from "~/utils/base-url";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -81,9 +80,9 @@ export default function Register() {
               const result = await query.refetch();
               if (result.data?.status === "invited") {
                 // Navigate to the next step
-                void signIn({
-                  signInUrl: `${getBaseUrl()}/team/invite/${result.data.inviteId}`,
-                });
+                // void signIn({
+                //   signInUrl: `${getBaseUrl()}/team/invite/${result.data.inviteId}`,
+                // });
               }
             }}
           />
