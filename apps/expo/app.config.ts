@@ -19,11 +19,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   assetBundlePatterns: ["**/*"],
   ios: {
-    bundleIdentifier: "your.bundle.identifier",
+    bundleIdentifier: "com.kodix.kodixCare",
     supportsTablet: true,
   },
   android: {
-    package: "your.bundle.identifier",
+    package: "com.kodix.kodixCare",
     adaptiveIcon: {
       foregroundImage: "./assets/icon.png",
       backgroundColor: "#020817",

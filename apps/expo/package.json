@@ -19,6 +19,7 @@
     "@expo/metro-config": "^0.18.3",
     "@kdx/shared": "workspace:*",
     "@kdx/ui": "workspace:*",
+    "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-google-signin/google-signin": "^12.2.1",
     "@shopify/flash-list": "1.6.4",
     "@tanstack/react-query": "^5.35.1",
