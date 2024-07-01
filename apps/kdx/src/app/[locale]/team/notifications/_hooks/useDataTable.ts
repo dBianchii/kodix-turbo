@@ -21,7 +21,7 @@ import {
 import { z } from "zod";
 
 import type { DataTableFilterField } from "@kdx/ui/data-table/advanced/types";
-import { useDebounce } from "@kdx/ui";
+import { useDebounce } from "@kdx/ui/hooks";
 
 interface UseDataTableProps<TData, TValue> {
   /**

@@ -1,15 +1,15 @@
 import type { Table } from "@tanstack/react-table";
 import * as React from "react";
-//TODO: I'm pretty sure @kdx/ui should not have next as a dependency.
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { TrashIcon } from "@radix-ui/react-icons";
 
 import { useI18n } from "@kdx/locales/client";
 import { dataTableConfig } from "@kdx/shared";
+import { cn } from "@kdx/ui";
 
 import type { DataTableFilterOption } from "./types";
-import { cn, useDebounce } from "../../.";
 import { Button } from "../../button";
+import { useDebounce } from "../../hooks";
 import { Input } from "../../input";
 import { Popover, PopoverContent, PopoverTrigger } from "../../popover";
 import {

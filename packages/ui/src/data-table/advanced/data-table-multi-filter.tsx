@@ -1,6 +1,6 @@
 import type { Table } from "@tanstack/react-table";
 import * as React from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation"; //TODO: 'next' dependency in @kdx/ui ? no no
 import {
   CopyIcon,
   DotsHorizontalIcon,
@@ -13,7 +13,6 @@ import { useI18n } from "@kdx/locales/client";
 import { dataTableConfig } from "@kdx/shared";
 
 import type { DataTableFilterOption } from "./types";
-import { useDebounce } from "../../";
 import { Button } from "../../button";
 import {
   DropdownMenu,
@@ -21,6 +20,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../../dropdown-menu";
+import { useDebounce } from "../../hooks";
 import { Input } from "../../input";
 import { Popover, PopoverContent, PopoverTrigger } from "../../popover";
 import {
