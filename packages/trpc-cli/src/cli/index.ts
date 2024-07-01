@@ -218,7 +218,8 @@ export const runCli = async () => {
     },
     {
       onCancel() {
-        process.exit(1);
+        logger.info("Bye! 👋");
+        process.exit(0);
       },
     },
   );
