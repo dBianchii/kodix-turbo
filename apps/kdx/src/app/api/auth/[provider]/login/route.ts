@@ -5,7 +5,6 @@ import { generateCodeVerifier, generateState } from "arctic";
 
 import type { Providers } from "@kdx/auth";
 import { providers } from "@kdx/auth";
-import { rewriteRequestUrlInDevelopment } from "@kdx/auth/utils";
 
 import { env } from "~/env";
 
