@@ -4,7 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "build": "tsup",
     "dev": "tsup --watch",
+    "start": "node dist/index.js || npm run build && node dist/index.js",
     "clean": "rm -rf .turbo node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
@@ -14,6 +16,7 @@
     "@clack/prompts": "^0.7.0",
     "chalk": "^5.3.0",
     "ora": "^8.0.1",
+    "vm": "^0.1.0",
     "zod": "^3.23.5"
   },
   "devDependencies": {

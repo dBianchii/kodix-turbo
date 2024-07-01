@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import fs from "fs/promises";
 import path from "path";
+import * as vm from "vm";
 import * as p from "@clack/prompts";
 import chalk from "chalk";
 import z from "zod";
@@ -179,7 +180,14 @@ export const runCli = async () => {
           validate: (input) => {
             if (input) {
               try {
-                const schema = eval(input) as unknown;
+                const sandbox = { z, result: null };
+                const context = vm.createContext(sandbox);
+
+                // Execute the input in the sandbox environment
+                vm.runInContext(`result = (${input})`, context);
+
+                // Extract the result from the sandbox
+                const schema = context.result as unknown;
                 if (!(schema instanceof z.ZodSchema))
                   return "Please provide a valid Zod schema";
               } catch (error) {

@@ -733,6 +733,9 @@ importers:
       ora:
         specifier: ^8.0.1
         version: 8.0.1
+      vm:
+        specifier: ^0.1.0
+        version: 0.1.0
       zod:
         specifier: ^3.23.5
         version: 3.23.8
@@ -10223,6 +10226,9 @@ packages:
 
   vlq@1.0.1:
     resolution: {integrity: sha512-gQpnTgkubC6hQgdIcRdYGDSDc+SaujOdyesZQMv6JlfQee/9Mp0Qhnys6WxDWvQnL5WZdT7o2Ul187aSt0Rq+w==}
+
+  vm@0.1.0:
+    resolution: {integrity: sha512-1aKVjgohVDnVhGrJLhl2k8zIrapH+7HsdnIjGvBp3XX2OCj6XGzsIbDp9rZ3r7t6qgDfXEE1EoEAEOLJm9LKnw==}
 
   walker@1.0.8:
     resolution: {integrity: sha512-ts/8E8l5b7kY0vlWLewOkDXMmPdLcVV4GmOQLyxuSswIJsweeFZtAsMF7k1Nszz+TYBQrlYRmzOnr398y1JemQ==}
@@ -21026,6 +21032,8 @@ snapshots:
   vary@1.1.2: {}
 
   vlq@1.0.1: {}
+
+  vm@0.1.0: {}
 
   walker@1.0.8:
     dependencies:
