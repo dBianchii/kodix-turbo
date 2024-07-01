@@ -11,7 +11,7 @@ import { env } from "~/env";
 const providersWithCodeVerifier = ["Google"];
 
 export async function GET(
-  _req: NextRequest,
+  request: NextRequest,
   {
     params,
   }: {
