@@ -1,9 +1,8 @@
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Stack, useRouter } from "expo-router";
+import { Link, Stack, useRouter } from "expo-router";
 
 import { Button } from "~/components/Button";
-import { Input } from "~/components/Input";
 import { useSignIn, useUser } from "~/utils/auth";
 
 // Notifications.setNotificationHandler({
@@ -160,15 +159,9 @@ function MobileAuth() {
 
   return (
     <View className="w-80 gap-2 self-center pt-8">
-      <Button
-        className="rounded-full"
-        label="Novo cadastro"
-        onPress={() => {
-          //redirect to register page
-          router.push("/register");
-          resetError();
-        }}
-      />
+      <Link href="/register" asChild>
+        <Button className="rounded-full" label="Novo cadastro" />
+      </Link>
       <Button
         variant={"secondary"}
         className="rounded-full"

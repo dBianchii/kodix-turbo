@@ -28,7 +28,6 @@ export default function Register() {
   );
   const router = useRouter();
   const utils = api.useUtils();
-  const { signIn } = useSignIn();
 
   useEffect(() => {
     void utils.app.kodixCare.checkEmailForRegister.reset();
@@ -79,10 +78,8 @@ export default function Register() {
               Keyboard.dismiss();
               const result = await query.refetch();
               if (result.data?.status === "invited") {
-                // Navigate to the next step
-                // void signIn({
-                //   signInUrl: `${getBaseUrl()}/team/invite/${result.data.inviteId}`,
-                // });
+                //Navigate to the next step
+                void router.push(`/register/step2/${email}`);
               }
             }}
           />
