@@ -5,8 +5,7 @@ import { auth } from "@kdx/auth";
 import { getI18n } from "@kdx/locales/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@kdx/ui/card";
 
-import { DiscordSignIn, GoogleSignIn } from "../_components/provider-buttons";
-import { renderDiscord } from "../utils";
+import { ProviderButtons } from "../_components/provider-buttons";
 import { PasswordSignInForm } from "./_components/password-signin-form";
 
 export default async function SignInPage({
@@ -47,16 +46,10 @@ export default async function SignInPage({
                 </div>
               </div>
               <div className="space-y-2">
-                <GoogleSignIn
+                <ProviderButtons
                   callbackUrl={searchParams?.callbackUrl}
                   invite={searchParams?.invite}
                 />
-                {renderDiscord && (
-                  <DiscordSignIn
-                    callbackUrl={searchParams?.callbackUrl}
-                    invite={searchParams?.invite}
-                  />
-                )}
               </div>
             </div>
           </div>

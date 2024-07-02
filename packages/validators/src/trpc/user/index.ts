@@ -42,3 +42,13 @@ export const ZSignInByPasswordInputSchema = z.object({
 export type TSignInByPasswordInputSchema = z.infer<
   typeof ZSignInByPasswordInputSchema
 >;
+
+export const ZSignupWithPasswordInputSchema = z.object({
+  name: z.string().min(3).max(31),
+  email: z.string().email(),
+  password: z.string().min(6).max(255),
+  invite: z.string().optional(),
+});
+export type TSignupWithPasswordInputSchema = z.infer<
+  typeof ZSignupWithPasswordInputSchema
+>;

@@ -5,6 +5,7 @@ import {
   ZDeleteNotificationsInputSchema,
   ZGetNotificationsInputSchema,
   ZSignInByPasswordInputSchema,
+  ZSignupWithPasswordInputSchema,
   ZSwitchActiveTeamInputSchema,
 } from "@kdx/validators/trpc/user";
 
@@ -14,6 +15,7 @@ import { deleteNotificationsHandler } from "./deleteNotifications.handler";
 import { getInvitationsHandler } from "./getInvitations.handler";
 import { getNotificationsHandler } from "./getNotifications.handler";
 import { signInHandler } from "./signInByPassword.handler";
+import { signupWithPasswordHandler } from "./signupWithPassword.handler";
 import { switchActiveTeamHandler } from "./switchActiveTeam.handler";
 
 export const userRouter = {
@@ -35,4 +37,7 @@ export const userRouter = {
   signInByPassword: publicProcedure
     .input(ZSignInByPasswordInputSchema)
     .mutation(signInHandler),
+  signupWithPassword: publicProcedure
+    .input(ZSignupWithPasswordInputSchema)
+    .mutation(signupWithPasswordHandler),
 } satisfies TRPCRouterRecord;

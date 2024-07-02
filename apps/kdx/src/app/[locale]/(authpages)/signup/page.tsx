@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@kdx/auth";
 import { getI18n } from "@kdx/locales/server";
 
-import { DiscordSignIn, GoogleSignIn } from "../_components/provider-buttons";
+import { ProviderButtons } from "../_components/provider-buttons";
 import { PasswordSignupForm } from "./_components/password-signup-form";
 
 export default async function SignUpPage({
@@ -38,8 +38,10 @@ export default async function SignUpPage({
               </div>
             </div>
             <div className="flex space-x-2">
-              <GoogleSignIn invite={searchParams?.invite} />
-              <DiscordSignIn invite={searchParams?.invite} />
+              <ProviderButtons
+                callbackUrl={searchParams?.callbackUrl}
+                invite={searchParams?.invite}
+              />
             </div>
             <div className="text-center text-sm text-muted-foreground">
               {t("Already have an account")}{" "}
