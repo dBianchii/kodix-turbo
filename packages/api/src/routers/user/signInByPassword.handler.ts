@@ -5,6 +5,7 @@ import type { TSignInByPasswordInputSchema } from "@kdx/validators/trpc/user";
 import { lucia } from "@kdx/auth";
 
 import type { TPublicProcedureContext } from "../../procedures";
+import { argon2Config } from "./utils";
 
 interface SignInByPasswordOptions {
   ctx: TPublicProcedureContext;
@@ -41,13 +42,7 @@ export const signInHandler = async ({
   const validPassword = await verify(
     existingUser.passwordHash,
     input.password,
-    {
-      // recommended minimum parameters
-      memoryCost: 19456,
-      timeCost: 2,
-      outputLen: 32,
-      parallelism: 1, //TODO: place argon2 config in a shared place.
-    },
+    argon2Config,
   );
   if (!validPassword) throw new Error("Incorrect email or password");
 
