@@ -1,10 +1,18 @@
 import React, { useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Keyboard,
+  Pressable,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
 import { ArrowLeft } from "lucide-react-native";
 
+import { Button } from "~/components/Button";
 import { Input } from "~/components/Input";
+import { api } from "~/utils/api";
 
 export default function RegisterStep2() {
   const { email } = useLocalSearchParams();
@@ -13,6 +21,11 @@ export default function RegisterStep2() {
   }
 
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const mutation = api.user.signupWithPassword.useMutation({
+    onError: (err) => {},
+  });
 
   return (
     <SafeAreaView className="bg-background">
@@ -36,6 +49,14 @@ export default function RegisterStep2() {
             </Text>
           </View>
           <Input
+            value={name}
+            label="Nome"
+            placeholder="joan doe"
+            className="flex w-full "
+            inputClasses="border-2 text-foreground"
+            labelClasses="text-lg text-muted-foreground"
+          />
+          <Input
             value={email}
             label="Email"
             keyboardType="email-address"
@@ -54,11 +75,11 @@ export default function RegisterStep2() {
             inputClasses="border-2 text-foreground"
             labelClasses="text-lg text-muted-foreground"
           />
-          {/* <Button
-            disabled={!email || query.isFetching}
+          <Button
+            disabled={!email || mutation.isPending}
             className="mt-5 w-full items-center"
             label={
-              query.isFetching ? (
+              mutation.isPending ? (
                 <ActivityIndicator color={"white"} />
               ) : (
                 "Continuar"
@@ -66,13 +87,13 @@ export default function RegisterStep2() {
             }
             onPress={async () => {
               Keyboard.dismiss();
-              const result = await query.refetch();
-              if (result.data?.status === "invited") {
-                //Navigate to the next step
-                void router.push(`/register/step2/${email}`);
-              }
+              const result = await mutation.mutateAsync({
+                email,
+                password,
+                name,
+              });
             }}
-          /> */}
+          />
         </View>
       </View>
     </SafeAreaView>
