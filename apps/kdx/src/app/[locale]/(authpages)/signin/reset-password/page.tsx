@@ -136,7 +136,7 @@ export default function ForgotPasswordPage({
                     {mutation.isPending && (
                       <LuLoader2 className="mr-2 size-5 animate-spin" />
                     )}
-                    {t("Send reset email")}
+                    {t("Change password")}
                   </Button>
                 </form>
               </Form>
