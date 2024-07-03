@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import fs from "fs/promises";
+import vm from "node:vm";
 import path from "path";
-import * as vm from "vm";
 import * as p from "@clack/prompts";
 import chalk from "chalk";
 import z from "zod";
