@@ -1,9 +1,10 @@
-import { Redis } from "@upstash/redis";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// import { Redis } from "@upstash/redis";
 
 import type { schema } from "@kdx/db/schema";
 import type { AppPermissionId } from "@kdx/shared";
 
-const redis = Redis.fromEnv();
+// const redis = Redis.fromEnv();
 
 interface KeysMapping {
   apps: {
@@ -52,7 +53,8 @@ export const getUpstashCache = async <T extends keyof KeysMapping>(
 ) => {
   if (process.env.DISABLE_UPSTASH_CACHE) return Promise.resolve(null);
   const constructedKey = constructKey(key, variableKeys);
-  return redis.get(constructedKey) as Promise<KeysMapping[T]["value"]> | null;
+  // return redis.get(constructedKey) as Promise<KeysMapping[T]["value"]> | null;
+  return null;
 };
 
 export const setUpstashCache = <T extends keyof KeysMapping>(
@@ -66,7 +68,8 @@ export const setUpstashCache = <T extends keyof KeysMapping>(
   if (process.env.DISABLE_UPSTASH_CACHE) return Promise.resolve("OK");
   const { variableKeys, value, ex } = options;
   const constructedKey = constructKey(key, variableKeys);
-  return redis.set(constructedKey, value, { ex: ex ?? 60 * 60 * 6 }); // 6 hours
+  // return redis.set(constructedKey, value, { ex: ex ?? 60 * 60 * 6 }); // 6 hours
+  return;
 };
 
 export const invalidateUpstashCache = <T extends keyof KeysMapping>(
@@ -75,5 +78,6 @@ export const invalidateUpstashCache = <T extends keyof KeysMapping>(
 ) => {
   if (process.env.DISABLE_UPSTASH_CACHE) return Promise.resolve(0);
   const constructedKey = constructKey(key, variableKeys);
-  return redis.del(constructedKey);
+  // return redis.del(constructedKey);
+  return;
 };
