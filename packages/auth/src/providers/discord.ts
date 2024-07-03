@@ -9,8 +9,8 @@ import createOrGetExistingUserForUnlinkedProviderAccount from "./utils/createOrG
 import getAccountByProviderUserId from "./utils/getAccountByProviderUserId";
 
 const discord = new Discord(
-  env.AUTH_DISCORD_ID,
-  env.AUTH_DISCORD_SECRET,
+  env.AUTH_DISCORD_ID ?? "",
+  env.AUTH_DISCORD_SECRET ?? "",
   `${getBaseKdxUrl()}/api/auth/discord/callback`,
 );
 
