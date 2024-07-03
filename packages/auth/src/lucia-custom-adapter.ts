@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import type { MySQLSessionTable } from "@lucia-auth/adapter-drizzle";
 import type { Adapter, DatabaseSession, DatabaseUser } from "lucia";
 
 import type { Drizzle } from "@kdx/db/client";
@@ -15,7 +14,7 @@ class KodixAdapter implements Adapter {
   teamTable;
   constructor(
     db: Drizzle,
-    sessionTable: MySQLSessionTable,
+    sessionTable: typeof schema.sessions,
     userTable: typeof schema.users,
     teamTable: typeof schema.teams,
   ) {
