@@ -2,8 +2,10 @@ import type { TRPCRouterRecord } from "@trpc/server";
 
 import {
   ZChangeNameInputSchema,
+  ZChangePasswordInputSchema,
   ZDeleteNotificationsInputSchema,
   ZGetNotificationsInputSchema,
+  ZSendResetPasswordEmailInputSchema,
   ZSignInByPasswordInputSchema,
   ZSignupWithPasswordInputSchema,
   ZSwitchActiveTeamInputSchema,
@@ -11,9 +13,11 @@ import {
 
 import { protectedProcedure, publicProcedure } from "../../procedures";
 import { changeNameHandler } from "./changeName.handler";
+import { changePasswordHandler } from "./changePassword.handler";
 import { deleteNotificationsHandler } from "./deleteNotifications.handler";
 import { getInvitationsHandler } from "./getInvitations.handler";
 import { getNotificationsHandler } from "./getNotifications.handler";
+import { sendResetPasswordEmail } from "./sendResetPasswordEmail";
 import { signInHandler } from "./signInByPassword.handler";
 import { signupWithPasswordHandler } from "./signupWithPassword.handler";
 import { switchActiveTeamHandler } from "./switchActiveTeam.handler";
@@ -40,4 +44,10 @@ export const userRouter = {
   signupWithPassword: publicProcedure
     .input(ZSignupWithPasswordInputSchema)
     .mutation(signupWithPasswordHandler),
+  sendResetPasswordEmail: publicProcedure
+    .input(ZSendResetPasswordEmailInputSchema)
+    .mutation(sendResetPasswordEmail),
+  changePassword: publicProcedure
+    .input(ZChangePasswordInputSchema)
+    .mutation(changePasswordHandler),
 } satisfies TRPCRouterRecord;

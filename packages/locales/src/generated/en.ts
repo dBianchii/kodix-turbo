@@ -377,5 +377,14 @@ export default {
   "By continuing you agree to our": "By continuing you agree to our",
   "Terms of Service": "Terms of service",
   "Privacy policy": "Privacy policy",
-  "This invitation no longer exists or is invalid": "This invitation no longer exists or is invalid"
+  "This invitation no longer exists or is invalid": "This invitation no longer exists or is invalid",
+  "Reset email sent Check your inbox": "Reset email sent. Check your inbox",
+  "Password reset email sent": "Password reset email sent",
+  "We have sent you an email with instructions to reset your password": "We have sent you an email with instructions to reset your password",
+  "Confirm password": "Confirm password",
+  "Enter confirm password": "Enter confirm password",
+  "Enter your password": "Enter your password",
+  "Password updated": "Password updated",
+  "Your password has been successfully updated": "Your password has been successfully updated",
+  "Sign in with new password": "Sign in with new password"
 } as const

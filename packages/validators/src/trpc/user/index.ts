@@ -37,7 +37,7 @@ export type TDeleteNotificationsInputSchema = z.infer<
 
 export const ZSignInByPasswordInputSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(3).max(31),
+  password: z.string().min(6).max(31),
 });
 export type TSignInByPasswordInputSchema = z.infer<
   typeof ZSignInByPasswordInputSchema
@@ -51,4 +51,19 @@ export const ZSignupWithPasswordInputSchema = z.object({
 });
 export type TSignupWithPasswordInputSchema = z.infer<
   typeof ZSignupWithPasswordInputSchema
+>;
+
+export const ZSendResetPasswordEmailInputSchema = z.object({
+  email: z.string().email(),
+});
+export type TSendResetPasswordEmailInputSchema = z.infer<
+  typeof ZSendResetPasswordEmailInputSchema
+>;
+
+export const ZChangePasswordInputSchema = z.object({
+  token: z.string(),
+  password: z.string().min(3).max(255),
+});
+export type TChangePasswordInputSchema = z.infer<
+  typeof ZChangePasswordInputSchema
 >;

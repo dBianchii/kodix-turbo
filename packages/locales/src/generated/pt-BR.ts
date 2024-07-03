@@ -377,5 +377,14 @@ export default {
   "Privacy policy": "Política de Privacidade",
   "Send reset email": "Enviar e-mail de redefinição",
   "Terms of Service": "Termos de serviço",
-  "This invitation no longer exists or is invalid": "Este convite não existe mais ou é inválido"
+  "This invitation no longer exists or is invalid": "Este convite não existe mais ou é inválido",
+  "Password reset email sent": "E-mail de redefinição de senha enviado",
+  "Confirm password": "Confirme sua senha",
+  "Enter confirm password": "Digite confirmar senha",
+  "Enter your password": "Coloque sua senha",
+  "Password updated": "senha atualizada",
+  "Reset email sent Check your inbox": "Redefinir e-mail enviado. \nVerifique sua caixa de entrada",
+  "Sign in with new password": "Faça login com nova senha",
+  "We have sent you an email with instructions to reset your password": "Enviamos um e-mail para você com instruções para redefinir sua senha",
+  "Your password has been successfully updated": "Sua senha foi atualizada com sucesso"
 } as const

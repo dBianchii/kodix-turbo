@@ -1,3 +1,4 @@
+import { table } from "console";
 import { relations, sql } from "drizzle-orm";
 import {
   boolean,
@@ -11,7 +12,7 @@ import {
   varchar,
 } from "drizzle-orm/mysql-core";
 
-import { NANOID_SIZE } from "@kdx/shared";
+import { nanoid, NANOID_SIZE } from "@kdx/shared";
 
 import { todos } from "./apps/todos";
 import { invitations, teamAppRolesToUsers, teams, usersToTeams } from "./teams";
@@ -125,3 +126,32 @@ export const notificationsRelations = relations(notifications, ({ one }) => ({
     references: [teams.id],
   }),
 }));
+
+export const resetPasswordTokens = mysqlTable(
+  "resetToken",
+  {
+    id: nanoidPrimaryKey,
+    userId: varchar("userId", { length: DEFAULTLENGTH })
+      .unique()
+      .notNull()
+      .references(() => users.id, { onUpdate: "cascade", onDelete: "cascade" }),
+    token: varchar("token", { length: NANOID_SIZE })
+      .notNull()
+      .$default(() => nanoid()),
+    tokenExpiresAt: timestamp("tokenExpiresAt").notNull(),
+  },
+  (table) => {
+    return {
+      userIdIdx: index("userId_idx").on(table.userId),
+    };
+  },
+);
+export const resetPasswordTokensRelations = relations(
+  resetPasswordTokens,
+  ({ one }) => ({
+    User: one(users, {
+      fields: [resetPasswordTokens.userId],
+      references: [users.id],
+    }),
+  }),
+);
