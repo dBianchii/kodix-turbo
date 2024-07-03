@@ -222,6 +222,9 @@ importers:
       '@kdx/validators':
         specifier: workspace:*
         version: link:../../packages/validators
+      '@node-rs/argon2':
+        specifier: ^1.8.3
+        version: 1.8.3
       '@t3-oss/env-nextjs':
         specifier: ^0.10.1
         version: 0.10.1(typescript@5.4.5)(zod@3.23.8)
