@@ -5,7 +5,10 @@ import { Redis } from "@upstash/redis";
 import type { schema } from "@kdx/db/schema";
 import type { AppPermissionId } from "@kdx/shared";
 
-const redis = Redis.fromEnv();
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
 
 interface KeysMapping {
   apps: {
