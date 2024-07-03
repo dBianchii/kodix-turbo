@@ -1,10 +1,8 @@
-import { useState } from "react";
 import * as Linking from "expo-linking";
 import { useRouter } from "expo-router";
 import * as Browser from "expo-web-browser";
 
 import { api } from "./api";
-import { getBaseUrl } from "./base-url";
 import { deleteToken, setToken } from "./session-store";
 
 export const signIn = async (signInUrl: string) => {
@@ -34,28 +32,18 @@ export const useUser = () => {
 export const useSignIn = () => {
   const utils = api.useUtils();
   const router = useRouter();
-  const [error, setError] = useState<"userNotRegistered" | null>(null);
 
-  const mutation = api.user.signInByPassword.useMutation();
-
-  return {
-    signIn: async (props: { email: string; password: string }) => {
-      setError(null);
-
-      const sessionToken = await mutation.mutateAsync({
-        email: props.email,
-        password: props.password,
-      });
-
-      if (!sessionToken) return;
+  const mutation = api.user.signInByPassword.useMutation({
+    onSuccess: async (sessionToken) => {
       setToken(sessionToken);
 
       await utils.invalidate();
       router.replace("/");
     },
-    resetError: () => setError(null),
-    error,
-  };
+    onSettled: () => utils.invalidate(),
+  });
+
+  return mutation;
 };
 
 export const useSignOut = () => {

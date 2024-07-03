@@ -68,4 +68,5 @@ export const signupWithPasswordHandler = async ({
     sessionCookie.value,
     sessionCookie.attributes,
   );
+  return session.id;
 };

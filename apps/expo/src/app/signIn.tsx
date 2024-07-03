@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Keyboard, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import * as Google from "expo-auth-session/providers/google";
 import { router } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { ArrowLeft } from "lucide-react-native";
@@ -9,7 +8,6 @@ import { ArrowLeft } from "lucide-react-native";
 import { Button } from "~/components/Button";
 import { Input } from "~/components/Input";
 import { useSignIn } from "~/utils/auth";
-import { getBaseUrl } from "~/utils/base-url";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -20,18 +18,17 @@ export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { signIn, error, resetError } = useSignIn();
+  const mutation = useSignIn();
 
-  const [userInfo, setUserInfo] = useState(null);
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    androidClientId:
-      "42896229992-sbbdfg3cedm3sfsf5ahde8b06ud9ldu5.apps.googleusercontent.com",
-    iosClientId:
-      "42896229992-7k78j9qped4kbpcbghb8pkfbivop5g6c.apps.googleusercontent.com",
-    webClientId:
-      "42896229992-4ct0npg1074r199ilc5g3r6id6vsnocm.apps.googleusercontent.com",
-    redirectUri: getBaseUrl() + "/auth/google/callback",
-  });
+  // const [request, response, promptAsync] = Google.useAuthRequest({
+  //   androidClientId:
+  //     "42896229992-sbbdfg3cedm3sfsf5ahde8b06ud9ldu5.apps.googleusercontent.com",
+  //   iosClientId:
+  //     "42896229992-7k78j9qped4kbpcbghb8pkfbivop5g6c.apps.googleusercontent.com",
+  //   webClientId:
+  //     "42896229992-4ct0npg1074r199ilc5g3r6id6vsnocm.apps.googleusercontent.com",
+  //   redirectUri: getBaseUrl() + "/auth/google/callback",
+  // });
 
   // const getUserInfo = async (token: string) => {
   //   //absent token
@@ -86,7 +83,7 @@ export default function SignIn() {
   // }, [response]);
 
   //log the userInfo to see user details
-  console.log(JSON.stringify(userInfo));
+  //console.log(JSON.stringify(userInfo));
 
   return (
     <SafeAreaView className="bg-background">
@@ -105,13 +102,6 @@ export default function SignIn() {
               Bem vindo(a) de volta
             </Text>
           </View>
-          <Button
-            label="sign in with google"
-            onPress={async () => {
-              await promptAsync();
-            }}
-          />
-
           <Input
             label="Email"
             keyboardType="email-address"
@@ -131,15 +121,21 @@ export default function SignIn() {
             className="flex w-full"
             inputClasses="border-2 text-foreground"
             labelClasses="text-lg text-muted-foreground"
+            secureTextEntry
           />
           <Button
             className="mt-5 w-full items-center"
             label={"Continuar"}
-            onPress={async () => {
+            onPress={() => {
               Keyboard.dismiss();
-              await signIn({ email, password });
+              void mutation.mutate({ email, password });
             }}
           />
+        </View>
+        <View className="mt-5 w-full items-center">
+          {mutation.isError && (
+            <Text className="text-destructive">{mutation.error.message}</Text>
+          )}
         </View>
       </View>
     </SafeAreaView>

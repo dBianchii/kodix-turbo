@@ -1,30 +1,31 @@
 import React, { useState } from "react";
-import {
-  ActivityIndicator,
-  Keyboard,
-  Pressable,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
 import { ArrowLeft } from "lucide-react-native";
+import { z } from "zod";
 
 import { Button } from "~/components/Button";
+import { Form, useForm } from "~/components/Form";
 import { Input } from "~/components/Input";
 import { api } from "~/utils/api";
+import { setToken } from "~/utils/session-store";
 
 export default function RegisterStep2() {
-  const { email } = useLocalSearchParams();
-  if (typeof email !== "string") {
-    throw new Error("Invalid email");
-  }
+  const { email, inviteId } = useLocalSearchParams();
+  if (typeof email !== "string" || typeof inviteId !== "string")
+    throw new Error("Invalid email or inviteId");
 
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const utils = api.useUtils();
+
   const mutation = api.user.signupWithPassword.useMutation({
-    onError: (err) => {},
+    onSuccess: async (sessionToken) => {
+      setToken(sessionToken);
+      await utils.invalidate();
+      router.replace("/");
+    },
   });
 
   return (
@@ -38,7 +39,7 @@ export default function RegisterStep2() {
         >
           <ArrowLeft color={"white"} />
         </Pressable>
-        <View className="mt-28 flex h-full items-center">
+        <View className="flex h-full items-center">
           <View className="pb-8">
             <Text className="text-center text-4xl font-bold text-primary">
               Step2
@@ -49,8 +50,9 @@ export default function RegisterStep2() {
             </Text>
           </View>
           <Input
-            value={name}
             label="Nome"
+            value={name}
+            onChangeText={setName}
             placeholder="joan doe"
             className="flex w-full "
             inputClasses="border-2 text-foreground"
@@ -68,10 +70,11 @@ export default function RegisterStep2() {
           />
           <Input
             value={password}
+            onChangeText={setPassword}
             label="Senha"
             placeholder="********"
-            readOnly
-            className="flex w-full "
+            className="flex w-full"
+            secureTextEntry
             inputClasses="border-2 text-foreground"
             labelClasses="text-lg text-muted-foreground"
           />
@@ -85,16 +88,19 @@ export default function RegisterStep2() {
                 "Continuar"
               )
             }
-            onPress={async () => {
-              Keyboard.dismiss();
-              const result = await mutation.mutateAsync({
+            onPress={() => {
+              mutation.mutate({
                 email,
                 password,
                 name,
+                invite: inviteId,
               });
             }}
           />
         </View>
+        {mutation.error && (
+          <Text className="text-destructive">{mutation.error.message}</Text>
+        )}
       </View>
     </SafeAreaView>
   );
