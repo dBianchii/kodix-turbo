@@ -26,7 +26,7 @@ packages
   ├─ api
   |   └─ tRPC v11 router definition
   ├─ auth
-  |   └─ Authentication using lucia-auth. **NOTE: Only for Next.js app**
+  |   └─ Authentication using lucia-auth.
   ├─ db
   |   └─ Typesafe db calls using Drizzle and MySQL
   ├─ ui

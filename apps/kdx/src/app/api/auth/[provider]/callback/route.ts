@@ -50,7 +50,8 @@ export async function GET(
     const userId = await currentProvider.handleCallback(code, codeVerifier!);
 
     const session = await lucia.createSession(userId, {
-      ipAddress: getIp(),
+      ipAddress:
+        request.ip ?? request.headers.get("X-Forwarded-For") ?? "127.0.0.1",
       userAgent: request.headers.get("user-agent"),
     });
     const sessionCookie = lucia.createSessionCookie(session.id);
@@ -82,19 +83,4 @@ export async function GET(
       status: 500,
     });
   }
-}
-
-export function getIp() {
-  const forwardedFor = headers().get("x-forwarded-for");
-  const realIp = headers().get("x-real-ip");
-
-  if (forwardedFor) {
-    return forwardedFor.split(",")[0].trim();
-  }
-
-  if (realIp) {
-    return realIp.trim();
-  }
-
-  return null;
 }

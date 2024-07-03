@@ -11,9 +11,9 @@ import {
 import type { DataTableConfig } from "@kdx/shared";
 import { useI18n } from "@kdx/locales/client";
 import { dataTableConfig } from "@kdx/shared";
+import { useDebounce } from "@kdx/ui/hooks";
 
 import type { DataTableFilterOption } from "./types";
-import { useDebounce } from "../../";
 import { Button } from "../../button";
 import {
   DropdownMenu,

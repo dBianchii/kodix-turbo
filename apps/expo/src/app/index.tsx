@@ -3,7 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, Stack, useRouter } from "expo-router";
 
 import { Button } from "~/components/Button";
-import { useSignIn, useUser } from "~/utils/auth";
+import { useUser } from "~/utils/auth";
 
 // Notifications.setNotificationHandler({
 //   // eslint-disable-next-line @typescript-eslint/require-await
@@ -134,7 +134,10 @@ export default function Index() {
   // }
   const router = useRouter();
   const user = useUser();
-  if (user) router.replace("/home");
+  if (user) {
+    router.dismissAll();
+    router.replace("/home");
+  }
 
   return (
     <SafeAreaView className="bg-background">
@@ -154,7 +157,6 @@ export default function Index() {
 }
 
 function MobileAuth() {
-  const { signIn, error, resetError } = useSignIn();
   const router = useRouter();
 
   return (
@@ -170,12 +172,6 @@ function MobileAuth() {
           router.push("/signIn");
         }}
       />
-      {error && (
-        <Text className="mt-4 text-sm text-destructive">
-          Usuário não registrado. Por favor, faça o cadastro se você possui um
-          convite.
-        </Text>
-      )}
     </View>
   );
 }

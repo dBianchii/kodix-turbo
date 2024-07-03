@@ -17,14 +17,6 @@
     "Add more apps": "Adicione mais apps",
     "Search app": "Pesquisar app"
   },
-  "signin": {
-    "Your password": "Sua senha",
-    "Or continue with": "Ou continue com",
-    "Your email": "Seu email",
-    "Sign in": "Entrar",
-    "Sign in with Google": "Entrar com Google",
-    "Sign in to your account": "Faça login em sua conta"
-  },
   "apps": {
     "kodixCare": {
       "currentShift": "Turno atual",
@@ -382,5 +374,6 @@
   "Go back to sign in page": "Voltar para a página de login",
   "Privacy policy": "Política de Privacidade",
   "Send reset email": "Enviar e-mail de redefinição",
-  "Terms of Service": "Termos de serviço"
+  "Terms of Service": "Termos de serviço",
+  "This invitation no longer exists or is invalid": "Este convite não existe mais ou é inválido"
 }

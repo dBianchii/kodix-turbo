@@ -17,14 +17,6 @@
     "Add more apps": "Add more apps",
     "Search app": "Search app"
   },
-  "signin": {
-    "Or continue with": "Or continue with",
-    "Your email": "Your email",
-    "Sign in": "Sign in",
-    "Sign in with Google": "Sign in with Google",
-    "Sign in to your account": "Sign in to your account",
-    "Your password": "Your password"
-  },
   "apps": {
     "kodixCare": {
       "currentShift": "Current Shift",
@@ -382,5 +374,6 @@
   "Already have an account": "Already have an account?",
   "By continuing you agree to our": "By continuing you agree to our",
   "Terms of Service": "Terms of service",
-  "Privacy policy": "Privacy policy"
+  "Privacy policy": "Privacy policy",
+  "This invitation no longer exists or is invalid": "This invitation no longer exists or is invalid"
 }

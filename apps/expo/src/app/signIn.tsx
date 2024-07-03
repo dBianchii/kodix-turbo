@@ -5,6 +5,8 @@ import { router } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { ArrowLeft } from "lucide-react-native";
 
+import { getErrorMessage } from "@kdx/shared";
+
 import { Button } from "~/components/Button";
 import { Input } from "~/components/Input";
 import { useSignIn } from "~/utils/auth";
@@ -131,10 +133,12 @@ export default function SignIn() {
               void mutation.mutate({ email, password });
             }}
           />
-        </View>
-        <View className="mt-5 w-full items-center">
           {mutation.isError && (
-            <Text className="text-destructive">{mutation.error.message}</Text>
+            <View className="mt-5 w-full items-center">
+              <Text className="text-destructive">
+                {getErrorMessage(mutation.error)}
+              </Text>
+            </View>
           )}
         </View>
       </View>

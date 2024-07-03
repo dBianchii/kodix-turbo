@@ -1,5 +1,6 @@
 import { cookies, headers } from "next/headers";
 import { verify } from "@node-rs/argon2";
+import { TRPCError } from "@trpc/server";
 
 import type { TSignInByPasswordInputSchema } from "@kdx/validators/trpc/user";
 import { lucia } from "@kdx/auth";
@@ -34,17 +35,27 @@ export const signInHandler = async ({
     // Since protecting against this is non-trivial,
     // it is crucial your implementation is protected against brute-force attacks with login throttling etc.
     // If usernames are public, you may outright tell the user that the username is invalid.
-    throw new Error("Incorrect email or password");
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "Incorrect email or password",
+    });
   }
   if (!existingUser.passwordHash)
-    throw new Error("Incorrect email or password");
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "Incorrect email or password",
+    });
 
   const validPassword = await verify(
     existingUser.passwordHash,
     input.password,
     argon2Config,
   );
-  if (!validPassword) throw new Error("Incorrect email or password");
+  if (!validPassword)
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "Incorrect email or password",
+    });
 
   const heads = headers();
   const session = await lucia.createSession(existingUser.id, {

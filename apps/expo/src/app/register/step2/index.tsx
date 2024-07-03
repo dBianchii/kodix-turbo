@@ -3,10 +3,8 @@ import { ActivityIndicator, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
 import { ArrowLeft } from "lucide-react-native";
-import { z } from "zod";
 
 import { Button } from "~/components/Button";
-import { Form, useForm } from "~/components/Form";
 import { Input } from "~/components/Input";
 import { api } from "~/utils/api";
 import { setToken } from "~/utils/session-store";
@@ -79,7 +77,7 @@ export default function RegisterStep2() {
             labelClasses="text-lg text-muted-foreground"
           />
           <Button
-            disabled={!email || mutation.isPending}
+            disabled={!email || mutation.isPending || !password || !name}
             className="mt-5 w-full items-center"
             label={
               mutation.isPending ? (

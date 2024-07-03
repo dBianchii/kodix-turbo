@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { LuLoader2 } from "react-icons/lu";
 
-import { useScopedI18n } from "@kdx/locales/client";
+import { useI18n } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
 import {
   Form,
@@ -21,7 +21,7 @@ import { signInAction } from "./actions";
 import { ZSigninActionSchema } from "./schema";
 
 export function PasswordSignInForm({ callbackUrl }: { callbackUrl?: string }) {
-  const t = useScopedI18n("signin");
+  const t = useI18n();
   const form = useForm({
     schema: ZSigninActionSchema,
   });

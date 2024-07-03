@@ -17,7 +17,7 @@ import DataTableKodixCare from "./_components/data-table-kodix-care";
 import { CurrentShiftClient } from "./_components/shifts";
 
 export default async function KodixCarePage() {
-  const session = await redirectIfAppNotInstalled({
+  const user = await redirectIfAppNotInstalled({
     appId: kodixCareAppId,
     customRedirect: "/apps/kodixCare/onboarding",
   });
