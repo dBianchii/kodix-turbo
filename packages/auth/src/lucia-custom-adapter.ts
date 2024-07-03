@@ -1,62 +1,98 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import type { MySqlDatabase } from "drizzle-orm/mysql-core";
-import type { DatabaseSession, DatabaseUser } from "lucia";
-import { DrizzleMySQLAdapter } from "@lucia-auth/adapter-drizzle";
+import type { MySQLSessionTable } from "@lucia-auth/adapter-drizzle";
+import type { Adapter, DatabaseSession, DatabaseUser } from "lucia";
 
 import type { Drizzle } from "@kdx/db/client";
-import { eq } from "@kdx/db";
+import { eq, lte } from "@kdx/db";
 import { db } from "@kdx/db/client";
 import { schema } from "@kdx/db/schema";
 
-class KodixAdapter extends DrizzleMySQLAdapter {
+class KodixAdapter implements Adapter {
+  db;
+  sessionTable;
+  userTable;
+  teamTable;
   constructor(
-    db: MySqlDatabase<any, any, any>,
-    sessionTable: typeof schema.sessions,
+    db: Drizzle,
+    sessionTable: MySQLSessionTable,
     userTable: typeof schema.users,
-    teamsTable: typeof schema.teams,
+    teamTable: typeof schema.teams,
   ) {
-    super(db, sessionTable, userTable);
-    this.kdx_db = db;
-    this.kdx_sessionTable = sessionTable;
-    this.kdx_userTable = userTable;
-    this.kdx_teamsTable = teamsTable;
+    this.db = db;
+    this.sessionTable = sessionTable;
+    this.userTable = userTable;
+    this.teamTable = teamTable;
   }
-
-  private kdx_db: Drizzle;
-  private kdx_sessionTable: typeof schema.sessions;
-  private kdx_userTable: typeof schema.users;
-  private kdx_teamsTable: typeof schema.teams;
 
   async getSessionAndUser(
     sessionId: string,
   ): Promise<[session: DatabaseSession | null, user: DatabaseUser | null]> {
-    const result = await this.kdx_db
+    const result = await this.db
       .select({
-        user: this.kdx_userTable,
-        session: this.kdx_sessionTable,
-        team: this.kdx_teamsTable,
+        user: this.userTable,
+        session: this.sessionTable,
+        team: this.teamTable,
       })
-      .from(this.kdx_sessionTable)
+      .from(this.sessionTable)
       .innerJoin(
-        this.kdx_userTable,
-        eq(this.kdx_sessionTable.userId, this.kdx_userTable.id),
+        this.userTable,
+        eq(this.sessionTable.userId, this.userTable.id),
       )
       .innerJoin(
-        this.kdx_teamsTable,
-        eq(this.kdx_userTable.activeTeamId, this.kdx_teamsTable.id),
+        this.teamTable,
+        eq(this.teamTable.id, this.userTable.activeTeamId),
       )
-      .where(eq(this.kdx_sessionTable.id, sessionId));
-    if (!result[0]) return [null, null];
+      .where(eq(this.sessionTable.id, sessionId));
+    if (!result[0]?.session) return [null, null];
 
     return [
       transformIntoDatabaseSession(result[0].session),
-      transformIntoDatabaseUser(result[0].user, result[0].team),
+      transformIntoDatabaseUser(result[0].user, result[0].team.name),
     ];
   }
+  async deleteSession(sessionId: string) {
+    await this.db
+      .delete(this.sessionTable)
+      .where(eq(this.sessionTable.id, sessionId));
+  }
+  async deleteUserSessions(userId: string) {
+    await this.db
+      .delete(this.sessionTable)
+      .where(eq(this.sessionTable.userId, userId));
+  }
+  async getUserSessions(userId: string) {
+    const result = await this.db
+      .select()
+      .from(this.sessionTable)
+      .where(eq(this.sessionTable.userId, userId));
+    return result.map((val) => {
+      return transformIntoDatabaseSession(val);
+    });
+  }
+  async setSession(session: DatabaseSession) {
+    await this.db.insert(this.sessionTable).values({
+      id: session.id,
+      userId: session.userId,
+      expiresAt: session.expiresAt,
+      ...session.attributes,
+    });
+  }
+  async updateSessionExpiration(sessionId: string, expiresAt: Date) {
+    await this.db
+      .update(this.sessionTable)
+      .set({
+        expiresAt,
+      })
+      .where(eq(this.sessionTable.id, sessionId));
+  }
+  async deleteExpiredSessions() {
+    await this.db
+      .delete(this.sessionTable)
+      .where(lte(this.sessionTable.expiresAt, new Date()));
+  }
 }
-function transformIntoDatabaseSession(raw: any): DatabaseSession {
+function transformIntoDatabaseSession(raw: any) {
   const { id, userId, expiresAt, ...attributes } = raw;
   return {
     userId,
@@ -65,13 +101,13 @@ function transformIntoDatabaseSession(raw: any): DatabaseSession {
     attributes,
   };
 }
-function transformIntoDatabaseUser(raw: any, team: any): DatabaseUser {
+function transformIntoDatabaseUser(raw: any, activeTeamName: string) {
   const { id, ...attributes } = raw;
   return {
     id,
     attributes: {
       ...attributes,
-      activeTeamName: team.name,
+      activeTeamName,
     },
   };
 }
