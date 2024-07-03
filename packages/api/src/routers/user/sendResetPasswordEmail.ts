@@ -41,7 +41,7 @@ export const sendResetPasswordEmail = async ({
     tokenExpiresAt,
   });
 
-  void resend.emails.send({
+  await resend.emails.send({
     from: kodixNotificationFromEmail,
     to: input.email,
     subject: "Kodix - Reset password",
