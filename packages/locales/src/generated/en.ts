@@ -386,5 +386,8 @@ export default {
   "Enter your password": "Enter your password",
   "Password updated": "Password updated",
   "Your password has been successfully updated": "Your password has been successfully updated",
-  "Sign in with new password": "Sign in with new password"
+  "Sign in with new password": "Sign in with new password",
+  "Redefine password": "Redefine password",
+  "Enter your new password": "Enter your new password",
+  "Confirm your new password": "Confirm your new password"
 } as const

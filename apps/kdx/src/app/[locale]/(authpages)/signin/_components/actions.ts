@@ -13,6 +13,6 @@ export const signInAction = action(
       email,
       password,
     });
-    return redirect(callbackUrl ?? "/team");
+    redirect(callbackUrl ?? "/team");
   },
 );

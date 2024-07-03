@@ -80,7 +80,7 @@ export default function ForgotPasswordPage({
           <>
             <CardHeader className="text-center">
               <CardTitle className="text-bold text-lg">
-                {t("Forgot password")}
+                {t("Redefine password")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -101,7 +101,7 @@ export default function ForgotPasswordPage({
                           <Input
                             {...field}
                             className="w-full"
-                            placeholder={t("Enter your password")}
+                            placeholder={t("Enter your new password")}
                             type="password"
                           />
                         </FormControl>
@@ -114,7 +114,7 @@ export default function ForgotPasswordPage({
                     name="passwordConfirmation"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{t("Confirm password")}</FormLabel>
+                        <FormLabel>{t("Confirm your new password")}</FormLabel>
                         <FormControl>
                           <Input
                             {...field}

@@ -35,7 +35,8 @@ export function PasswordSignInForm({ callbackUrl }: { callbackUrl?: string }) {
             password: values.password,
             callbackUrl,
           });
-          if (defaultSafeActionToastError(result)) return;
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+          if (result && defaultSafeActionToastError(result)) return;
         })}
         className="space-y-4"
       >

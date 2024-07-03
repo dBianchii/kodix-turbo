@@ -384,5 +384,8 @@
   "Reset email sent Check your inbox": "Redefinir e-mail enviado. \nVerifique sua caixa de entrada",
   "Sign in with new password": "Faça login com nova senha",
   "We have sent you an email with instructions to reset your password": "Enviamos um e-mail para você com instruções para redefinir sua senha",
-  "Your password has been successfully updated": "Sua senha foi atualizada com sucesso"
+  "Your password has been successfully updated": "Sua senha foi atualizada com sucesso",
+  "Confirm your new password": "Confirme sua nova senha",
+  "Enter your new password": "Digite sua nova senha",
+  "Redefine password": "Redefinir senha"
 }
