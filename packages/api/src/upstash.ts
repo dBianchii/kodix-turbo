@@ -1,3 +1,5 @@
+import "server-only";
+
 import { Redis } from "@upstash/redis";
 
 import type { schema } from "@kdx/db/schema";
