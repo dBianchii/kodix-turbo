@@ -9,7 +9,7 @@ import createOrGetExistingUserForUnlinkedProviderAccount from "./utils/createOrG
 import getAccountByProviderUserId from "./utils/getAccountByProviderUserId";
 
 const discord = new Discord(
-  env.AUTH_DISCORD_ID ?? "",
+  env.AUTH_DISCORD_ID ?? "", //Discord is not used in production, so... no need to worry about this
   env.AUTH_DISCORD_SECRET ?? "",
   `${getBaseKdxUrl()}/api/auth/discord/callback`,
 );
@@ -23,6 +23,10 @@ export const getAuthorizationUrl = async (state: string) => {
 };
 
 export const handleCallback = async (code: string) => {
+  if (env.NODE_ENV === "production") {
+    throw new Error(`Login with ${name} is not enabled in production`);
+  }
+
   const tokens = await discord.validateAuthorizationCode(code);
 
   const response = await fetch("https://discord.com/api/users/@me", {

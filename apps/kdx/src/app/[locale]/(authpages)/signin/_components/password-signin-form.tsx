@@ -59,7 +59,10 @@ export function PasswordSignInForm({ callbackUrl }: { callbackUrl?: string }) {
             <FormItem>
               <div className="flex justify-between">
                 <FormLabel>{t("Your password")}</FormLabel>
-                <Link href="/forgot-password" className="text-sm text-primary">
+                <Link
+                  href="/signin/forgot-password"
+                  className="text-sm text-primary"
+                >
                   {t("Forgot password")}
                 </Link>
               </div>

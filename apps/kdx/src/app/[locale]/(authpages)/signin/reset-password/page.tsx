@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { LuLoader2 } from "react-icons/lu";
 
 import { useI18n } from "@kdx/locales/client";
 import { cn } from "@kdx/ui";
@@ -24,7 +25,7 @@ import {
 import { Input } from "@kdx/ui/input";
 import { ZChangePasswordInputSchema } from "@kdx/validators/trpc/user";
 
-import { defaultSafeActionToastError } from "~/helpers/safe-action/default-action-error-toast";
+import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
 export default function ForgotPasswordPage({
@@ -47,7 +48,9 @@ export default function ForgotPasswordPage({
   });
 
   const mutation = api.user.changePassword.useMutation({
-    onError: defaultSafeActionToastError,
+    onError: (err) => {
+      trpcErrorToastDefault(err);
+    },
   });
 
   return (
@@ -63,7 +66,7 @@ export default function ForgotPasswordPage({
                 {t("Password updated")}
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="text-center">
               <CardDescription>
                 {t("Your password has been successfully updated")}
               </CardDescription>
@@ -125,7 +128,14 @@ export default function ForgotPasswordPage({
                     )}
                   />
 
-                  <Button className="w-full" type="submit">
+                  <Button
+                    className="w-full"
+                    type="submit"
+                    disabled={mutation.isPending}
+                  >
+                    {mutation.isPending && (
+                      <LuLoader2 className="mr-2 size-5 animate-spin" />
+                    )}
                     {t("Send reset email")}
                   </Button>
                 </form>
