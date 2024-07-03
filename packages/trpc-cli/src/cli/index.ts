@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import fs from "fs/promises";
+import vm from "node:vm";
 import path from "path";
 import * as p from "@clack/prompts";
 import chalk from "chalk";
@@ -20,7 +21,7 @@ export const VALIDATORS_FOLDER_PATH = path.resolve(
   process.cwd(),
   trpcCliConfig.paths.validatorsFolderPath,
 );
-const zSafeName = z
+const ZSafeName = z
   .string()
   .min(1)
   .regex(/^[a-zA-Z0-9]+$/, {
@@ -98,7 +99,7 @@ export const runCli = async () => {
             defaultValue: "world",
             initialValue: "world",
             validate: (input) => {
-              const result = zSafeName.safeParse(input);
+              const result = ZSafeName.safeParse(input);
               if (!result.success) return result.error.errors[0]!.message;
             },
           });
@@ -133,7 +134,7 @@ export const runCli = async () => {
           defaultValue: "makeItBetter",
           validate: (input) => {
             if (input.length > 0) {
-              const result = zSafeName.safeParse(input);
+              const result = ZSafeName.safeParse(input);
               if (!result.success) return result.error.errors[0]!.message;
             }
           },
@@ -179,7 +180,14 @@ export const runCli = async () => {
           validate: (input) => {
             if (input) {
               try {
-                const schema = eval(input) as unknown;
+                const sandbox = { z, result: null };
+                const context = vm.createContext(sandbox);
+
+                // Execute the input in the sandbox environment
+                vm.runInContext(`result = (${input})`, context);
+
+                // Extract the result from the sandbox
+                const schema = context.result as unknown;
                 if (!(schema instanceof z.ZodSchema))
                   return "Please provide a valid Zod schema";
               } catch (error) {
@@ -210,7 +218,8 @@ export const runCli = async () => {
     },
     {
       onCancel() {
-        process.exit(1);
+        logger.info("Bye! 👋");
+        process.exit(0);
       },
     },
   );

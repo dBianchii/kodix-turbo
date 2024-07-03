@@ -1,6 +1,6 @@
 import type { Table } from "@tanstack/react-table";
 import * as React from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation"; //TODO: 'next' dependency in @kdx/ui ? no no
 import {
   CopyIcon,
   DotsHorizontalIcon,
@@ -21,6 +21,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../../dropdown-menu";
+import { useDebounce } from "../../hooks";
 import { Input } from "../../input";
 import { Popover, PopoverContent, PopoverTrigger } from "../../popover";
 import {

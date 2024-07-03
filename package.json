@@ -25,7 +25,7 @@
     "typecheck": "turbo run typecheck",
     "ui-add": "turbo run ui-add",
     "lang:gen": "pnpm -F locales generate",
-    "trpc:new": "pnpm -F trpc-cli dev"
+    "trpc:new": "pnpm -F trpc-cli start"
   },
   "devDependencies": {
     "@kdx/prettier-config": "workspace:*",

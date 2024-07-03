@@ -1,6 +1,5 @@
 import type { Table } from "@tanstack/react-table";
 import * as React from "react";
-//TODO: I'm pretty sure @kdx/ui should not have next as a dependency.
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { TrashIcon } from "@radix-ui/react-icons";
 
