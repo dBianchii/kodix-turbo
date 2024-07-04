@@ -1,5 +1,5 @@
 import type { NextRequest } from "next/server";
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 import { OAuth2RequestError } from "arctic";
 
 import type { Providers } from "@kdx/auth";

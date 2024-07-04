@@ -9,10 +9,8 @@ import { api } from "~/trpc/server";
 
 export default async function InvitePage({
   params,
-  searchParams,
 }: {
   params: { id: string };
-  searchParams: Record<string, string | string[] | undefined>;
 }) {
   const { id: invitationId } = params;
 

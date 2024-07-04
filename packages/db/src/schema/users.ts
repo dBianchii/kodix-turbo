@@ -1,4 +1,3 @@
-import { table } from "console";
 import { relations, sql } from "drizzle-orm";
 import {
   boolean,
