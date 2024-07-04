@@ -36,12 +36,12 @@ export function Header() {
 }
 
 async function LogoWithAppSwitcher() {
-  const session = await auth();
+  const { user } = await auth();
 
   return (
     <>
-      <Logo redirect={session ? "/team" : "/"} />
-      {session && (
+      <Logo redirect={user ? "/team" : "/"} />
+      {user && (
         <>
           <svg
             className="text-[#eaeaea] dark:text-[#333]"
@@ -81,8 +81,8 @@ function Logo({ redirect }: { redirect: string }) {
 }
 
 async function NotificationsPopover() {
-  const session = await auth();
-  if (!session) return null;
+  const { user } = await auth();
+  if (!user) return null;
 
   const initialNotifications = await api.user.getInvitations();
   if (!initialNotifications.length) return null;
@@ -93,27 +93,27 @@ async function NotificationsPopover() {
 }
 
 async function RightSide() {
-  const session = await auth();
+  const { user } = await auth();
   const t = await getI18n();
 
   return (
     <>
       <I18nPicker />
-      {!!session && (
+      {!!user && (
         <>
           <Suspense>
             <NotificationsPopover />
           </Suspense>
-          <UserProfileButton session={session} />
+          <UserProfileButton user={user} />
         </>
       )}
-      {!session && (
+      {!user && (
         <div className="mr-5 space-x-2">
           <Link href="/signin" className={buttonVariants({ variant: "ghost" })}>
             {t("header.Log in")}
           </Link>
           <Link
-            href="/signin"
+            href="/signup"
             className={buttonVariants({ variant: "default" })}
           >
             {t("header.Sign up")}
@@ -125,7 +125,7 @@ async function RightSide() {
 }
 
 // async function MainNav() {
-//   const session = await auth();
+//   const { user } = await auth();
 //   const navigation: {
 //     href: string;
 //     title: string;
@@ -139,7 +139,7 @@ async function RightSide() {
 //     {
 //       href: "/apps",
 //       title: "Apps",
-//       shown: !!session,
+//       shown: !!user,
 //     },
 //   ];
 

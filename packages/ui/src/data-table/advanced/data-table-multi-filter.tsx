@@ -11,6 +11,7 @@ import {
 import type { DataTableConfig } from "@kdx/shared";
 import { useI18n } from "@kdx/locales/client";
 import { dataTableConfig } from "@kdx/shared";
+import { useDebounce } from "@kdx/ui/hooks";
 
 import type { DataTableFilterOption } from "./types";
 import { Button } from "../../button";
@@ -20,7 +21,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../../dropdown-menu";
-import { useDebounce } from "../../hooks";
 import { Input } from "../../input";
 import { Popover, PopoverContent, PopoverTrigger } from "../../popover";
 import {

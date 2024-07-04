@@ -1,9 +1,9 @@
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Stack, useRouter } from "expo-router";
+import { Link, Stack, useRouter } from "expo-router";
 
 import { Button } from "~/components/Button";
-import { useSignIn, useUser } from "~/utils/auth";
+import { useUser } from "~/utils/auth";
 
 // Notifications.setNotificationHandler({
 //   // eslint-disable-next-line @typescript-eslint/require-await
@@ -134,7 +134,10 @@ export default function Index() {
   // }
   const router = useRouter();
   const user = useUser();
-  if (user) router.replace("/home");
+  if (user) {
+    router.dismissAll();
+    router.replace("/home");
+  }
 
   return (
     <SafeAreaView className="bg-background">
@@ -143,7 +146,7 @@ export default function Index() {
       <View className="center flex h-full w-full flex-col bg-background">
         <View className="my-auto h-1/3 w-full">
           <Text className="text-center text-5xl font-bold text-foreground">
-            Kodix
+            Kodix Care
           </Text>
 
           <MobileAuth />
@@ -154,24 +157,20 @@ export default function Index() {
 }
 
 function MobileAuth() {
-  const signIn = useSignIn();
   const router = useRouter();
 
   return (
-    <View className="w-80 gap-4 self-center pt-8">
-      <Button
-        className="rounded-full"
-        label="Novo cadastro"
-        onPress={() => {
-          //redirect to register page
-          router.push("/register");
-        }}
-      />
+    <View className="w-80 gap-2 self-center pt-8">
+      <Link href="/register" asChild>
+        <Button className="rounded-full" label="Novo cadastro" />
+      </Link>
       <Button
         variant={"secondary"}
         className="rounded-full"
         label="Login"
-        onPress={() => signIn()}
+        onPress={() => {
+          router.push("/signIn");
+        }}
       />
     </View>
   );

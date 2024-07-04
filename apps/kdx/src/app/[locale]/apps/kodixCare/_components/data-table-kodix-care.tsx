@@ -13,7 +13,7 @@ import { LuChevronsUpDown, LuLoader2 } from "react-icons/lu";
 import { RxChevronLeft, RxChevronRight, RxLockClosed } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
-import type { Session } from "@kdx/auth";
+import type { User } from "@kdx/auth";
 import type { TGetCareTasksInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import { format } from "@kdx/date-fns";
 import dayjs from "@kdx/dayjs";
@@ -79,11 +79,11 @@ const DATE_FORMAT = "PPP, HH:mm";
 export default function DataTableKodixCare({
   initialCareTasks,
   initialInput,
-  session,
+  user,
 }: {
   initialCareTasks: RouterOutputs["app"]["kodixCare"]["getCareTasks"];
   initialInput: TGetCareTasksInputSchema;
-  session: Session;
+  user: User;
 }) {
   const [input, setInput] = useState(initialInput);
 
@@ -267,7 +267,7 @@ export default function DataTableKodixCare({
             mutation={mutation}
             open={saveTaskAsDoneDialogOpen}
             setOpen={setSaveTaskAsDoneDialogOpen}
-            session={session}
+            user={user}
           />
           <SaveTaskAsNotDoneDialog
             task={currentlyEditingCareTask}
@@ -618,13 +618,13 @@ function SaveTaskAsDoneDialog({
   mutation,
   open,
   setOpen,
-  session,
+  user,
 }: {
   task: CareTask;
   mutation: ReturnType<typeof api.app.kodixCare.saveCareTask.useMutation>;
   open: boolean;
   setOpen: (open: boolean) => void;
-  session: Session;
+  user: User;
 }) {
   //If you find a better way to reset all fields to the default on open feel free to do it.
   const defaultValues = useMemo(
@@ -632,9 +632,9 @@ function SaveTaskAsDoneDialog({
       id: task.id,
       details: task.details,
       doneAt: new Date(),
-      doneByUserId: session.user.id,
+      doneByUserId: user.id,
     }),
-    [task, session.user.id],
+    [task, user.id],
   );
 
   const form = useForm({

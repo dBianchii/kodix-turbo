@@ -9,8 +9,8 @@ import SettingsEditCardSkeleton from "~/app/[locale]/team/settings/general/_comp
 import { EditUserTeamsTable } from "./_components/edit-users-teams-card/edit-users-teams-table";
 
 export default async function Teams() {
-  const session = await auth();
-  if (!session) redirect("/");
+  const { user } = await auth();
+  if (!user) redirect("/");
   const t = await getI18n();
   return (
     <div className="mt-8 space-y-8 md:mt-0">

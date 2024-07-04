@@ -3,10 +3,8 @@ import type { TGetNotificationsInputSchema } from "@kdx/validators/trpc/user";
 import dayjs from "@kdx/dayjs";
 import { and, asc, count, desc, eq, gte, inArray, lte, or } from "@kdx/db";
 import { schema } from "@kdx/db/schema";
-import WarnPreviousShiftNotEnded from "@kdx/react-email/warn-previous-shift-not-ended";
 
 import type { TProtectedProcedureContext } from "../../procedures";
-import { sendNotifications } from "../../internal/notificationCenter";
 import { filterColumn } from "../../lib/filter-column";
 
 interface GetNotificationsOptions {
@@ -18,19 +16,6 @@ export const getNotificationsHandler = async ({
   ctx,
   input,
 }: GetNotificationsOptions) => {
-  await sendNotifications({
-    teamId: ctx.session.user.activeTeamId,
-    userId: ctx.session.user.id,
-    channels: [
-      {
-        subject: Math.random().toString(),
-        to: "gdbianchii@gmail.com",
-        type: "EMAIL",
-        react: WarnPreviousShiftNotEnded(),
-      },
-    ],
-  });
-
   const offset = (input.page - 1) * input.perPage;
 
   const [column, order] = (input.sort?.split(".").filter(Boolean) ?? [

@@ -1,4 +1,0 @@
-{
-  "extends": "@kdx/tsconfig/base.json",
-  "include": ["routes"]
-}

@@ -4,6 +4,7 @@ import { RxCross2, RxDownload, RxReload, RxTrash } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import { useI18n } from "@kdx/locales/client";
+import { getErrorMessage } from "@kdx/shared";
 import { Button } from "@kdx/ui/button";
 import { exportTableToCSV } from "@kdx/ui/data-table/export";
 import { Kbd } from "@kdx/ui/kbd";
@@ -16,7 +17,6 @@ import {
   TooltipTrigger,
 } from "@kdx/ui/tooltip";
 
-import { getErrorMessage } from "~/helpers/miscelaneous";
 import { deleteNotificationsAction } from "../_actions/deleteNotificationsAction";
 
 interface DataTableNotificationsFloatingBarProps {

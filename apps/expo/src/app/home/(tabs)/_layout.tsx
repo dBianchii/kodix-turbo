@@ -1,9 +1,6 @@
 import { Tabs, useRouter } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
-import { cn } from "@kdx/ui";
-
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/Avatar";
 import { useUser } from "~/utils/auth";
 
 export default function TabLayout() {

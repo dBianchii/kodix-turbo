@@ -19,13 +19,6 @@ export default {
     "Add more apps": "Adicione mais apps",
     "Search app": "Pesquisar app"
   },
-  "signin": {
-    "Or continue with": "Ou continue com",
-    "Your email": "Seu email",
-    "Sign in": "Entrar",
-    "Sign in with Google": "Entrar com Google",
-    "Sign in to your account": "Faça login em sua conta"
-  },
   "apps": {
     "kodixCare": {
       "currentShift": "Turno atual",
@@ -365,5 +358,37 @@ export default {
   "Supports 3 languages and counting": "Suporta 2 idiomas e contando.",
   "The ultimate solution for managing your home clinic or your home care": "A solução definitiva para gerenciar sua clínica domiciliar ou seu atendimento domiciliar",
   "The unified calendar system that integrates with all your apps": "O sistema de calendário unificado que se integra a todos os seus aplicativos",
-  "Sign in with Google": "Faça login no Google"
+  "Sign in with Google": "Faça login no Google",
+  "Password": "Senha",
+  "Register your account": "Registre sua conta",
+  "Your name": "Seu nome",
+  "Dont have an account": "Não tem uma conta?",
+  "Your password": "Sua senha",
+  "Create account": "Criar uma conta",
+  "Create an account to access all the features of Kodix": "Crie uma conta para acessar todos os recursos do Kodix",
+  "Create your Kodix account": "Crie sua conta Kodix",
+  "I agree to the terms of service": "Eu aceito os Termos de Serviço",
+  "Already have an account": "já tem uma conta?",
+  "By continuing you agree to our": "Ao continuar você concorda com nossos",
+  "Email": "E-mail",
+  "Enter your email": "Digite seu e-mail",
+  "Forgot password": "Esqueceu sua senha?",
+  "Go back to sign in page": "Voltar para a página de login",
+  "Privacy policy": "Política de Privacidade",
+  "Send reset email": "Enviar e-mail de redefinição",
+  "Terms of Service": "Termos de serviço",
+  "This invitation no longer exists or is invalid": "Este convite não existe mais ou é inválido",
+  "Password reset email sent": "E-mail de redefinição de senha enviado",
+  "Confirm password": "Confirme sua senha",
+  "Enter confirm password": "Digite confirmar senha",
+  "Enter your password": "Coloque sua senha",
+  "Password updated": "senha atualizada",
+  "Reset email sent Check your inbox": "Redefinir e-mail enviado. \nVerifique sua caixa de entrada",
+  "Sign in with new password": "Faça login com nova senha",
+  "We have sent you an email with instructions to reset your password": "Enviamos um e-mail para você com instruções para redefinir sua senha",
+  "Your password has been successfully updated": "Sua senha foi atualizada com sucesso",
+  "Confirm your new password": "Confirme sua nova senha",
+  "Enter your new password": "Digite sua nova senha",
+  "Redefine password": "Redefinir senha",
+  "Change password": "Alterar a senha"
 } as const

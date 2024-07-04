@@ -7,6 +7,7 @@ import { RxTrash } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import { useI18n } from "@kdx/locales/client";
+import { getErrorMessage } from "@kdx/shared";
 import { Button } from "@kdx/ui/button";
 import {
   Dialog,
@@ -20,7 +21,6 @@ import {
 } from "@kdx/ui/dialog";
 import { toast } from "@kdx/ui/toast";
 
-import { getErrorMessage } from "~/helpers/miscelaneous";
 import { deleteNotificationsAction } from "../_actions/deleteNotificationsAction";
 
 interface DeleteTasksDialogProps

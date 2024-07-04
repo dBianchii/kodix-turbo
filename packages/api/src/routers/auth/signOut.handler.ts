@@ -1,4 +1,4 @@
-import { invalidateSessionToken } from "@kdx/auth";
+import { lucia } from "@kdx/auth";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 
@@ -10,6 +10,6 @@ export const signOutHandler = async ({ ctx }: SignOutOptions) => {
   if (!ctx.token) {
     return { success: false };
   }
-  await invalidateSessionToken(ctx.token);
+  await lucia.invalidateSession(ctx.session.session.id);
   return { success: true };
 };

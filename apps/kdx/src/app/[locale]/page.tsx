@@ -16,8 +16,8 @@ import { HeroLamp } from "./_components/hero-lamp";
 export default async function HomePage() {
   // setStaticParamsLocale(locale);
 
-  const session = await auth();
-  if (session) redirect("/team");
+  const { user } = await auth();
+  if (user) redirect("/team");
   const t = await getI18n();
 
   return (

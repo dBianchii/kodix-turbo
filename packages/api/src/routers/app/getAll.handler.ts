@@ -12,14 +12,14 @@ interface GetAllOptions {
 
 export const getAllHandler = async ({ ctx }: GetAllOptions) => {
   const cached = await getUpstashCache("apps", {
-    teamId: ctx.session?.user.activeTeamId,
+    teamId: ctx.session?.user?.activeTeamId,
   });
   if (cached) return cached;
 
   const apps = await ctx.db
     .select({
       id: schema.apps.id,
-      ...(ctx.session?.user.activeTeamId && {
+      ...(ctx.session?.user?.activeTeamId && {
         installed: sql`EXISTS(SELECT 1 FROM ${schema.appsToTeams} WHERE ${eq(
           schema.apps.id,
           schema.appsToTeams.appId,
@@ -28,7 +28,7 @@ export const getAllHandler = async ({ ctx }: GetAllOptions) => {
     })
     .from(schema.apps)
     .then((res) => {
-      if (ctx.session?.user.activeTeamId)
+      if (ctx.session?.user?.activeTeamId)
         return res.map((x) => ({
           ...x,
           installed: !!x.installed, //? And then we convert it to boolean. Javascript is amazing /s
@@ -48,7 +48,7 @@ export const getAllHandler = async ({ ctx }: GetAllOptions) => {
 
   await setUpstashCache("apps", {
     variableKeys: {
-      teamId: ctx.session?.user.activeTeamId,
+      teamId: ctx.session?.user?.activeTeamId,
     },
     value: apps,
   });

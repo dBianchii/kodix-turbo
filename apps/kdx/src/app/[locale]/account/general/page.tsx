@@ -7,13 +7,13 @@ import SettingsEditCardSkeleton from "~/app/[locale]/team/settings/general/_comp
 import { EditAccountNameCard } from "./_components/edit-account-name-card";
 
 export default async function GeneralAccountSettings() {
-  const session = await auth();
-  if (!session) redirect("/");
+  const { user } = await auth();
+  if (!user) redirect("/");
 
   return (
     <div className="mt-8 space-y-8 md:mt-0">
       <Suspense fallback={<SettingsEditCardSkeleton />}>
-        <EditAccountNameCard name={session.user.name} />
+        <EditAccountNameCard name={user.name} />
       </Suspense>
     </div>
   );

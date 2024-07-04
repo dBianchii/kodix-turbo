@@ -12,13 +12,13 @@ import { DataTableMembers } from "./_components/edit-team-members/members/data-t
 import TeamInviteCard from "./_components/invite/team-invite-card";
 
 export default async function SettingsMembersPage() {
-  const session = await auth();
-  if (!session) redirect("/");
+  const { user } = await auth();
+  if (!user) redirect("/");
   const t = await getI18n();
 
   return (
     <div className="mt-8 space-y-8 md:mt-0">
-      <TeamInviteCard session={session} />
+      <TeamInviteCard user={user} />
       <Tabs defaultValue="members">
         <TabsList className="">
           <TabsTrigger value="members">{t("Members")}</TabsTrigger>
@@ -64,10 +64,10 @@ export default async function SettingsMembersPage() {
 }
 
 async function DataTableMembersServer() {
-  const session = await auth();
-  if (!session) return null;
+  const { user } = await auth();
+  if (!user) return null;
 
   const users = await api.team.getAllUsers();
 
-  return <DataTableMembers initialUsers={users} session={session} />;
+  return <DataTableMembers initialUsers={users} user={user} />;
 }

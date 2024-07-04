@@ -5,9 +5,9 @@
   "type": "module",
   "exports": {
     "./constants": "./src/constants.ts",
-    "./verification-request": "./src/emails/verification-request.tsx",
     "./team-invite": "./src/emails/team-invite.tsx",
-    "./warn-previous-shift-not-ended": "./src/emails/kodixCare/warn-previous-shift-not-ended.tsx"
+    "./warn-previous-shift-not-ended": "./src/emails/kodixCare/warn-previous-shift-not-ended.tsx",
+    "./reset-password": "./src/emails/reset-password.tsx"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",

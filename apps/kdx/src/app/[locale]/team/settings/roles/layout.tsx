@@ -14,17 +14,17 @@ export default async function RolesLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
-  if (!session) redirect("/");
+  const { user } = await auth();
+  if (!user) redirect("/");
 
   const team = await db.query.teams.findFirst({
-    where: eq(schema.teams.id, session.user.activeTeamId),
+    where: eq(schema.teams.id, user.activeTeamId),
     columns: {
       ownerId: true,
     },
   });
 
-  if (team?.ownerId !== session.user.id) redirect("/team/settings");
+  if (team?.ownerId !== user.id) redirect("/team/settings");
   const t = await getI18n();
   return (
     <div className="mt-8 space-y-8 md:mt-0">

@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { LuLoader2 } from "react-icons/lu";
 import { RxDotsHorizontal, RxTrash } from "react-icons/rx";
 
-import type { Session } from "@kdx/auth";
+import type { User } from "@kdx/auth";
 import type { KodixAppId } from "@kdx/shared";
 import { useI18n } from "@kdx/locales/client";
 import { useAppDescription, useAppName } from "@kdx/locales/hooks";
@@ -46,11 +46,11 @@ import { api } from "~/trpc/react";
 export function KodixApp({
   id,
   installed,
-  session,
+  user,
 }: {
   id: KodixAppId;
   installed: boolean;
-  session: Session | null;
+  user: User | null;
 }) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
@@ -107,7 +107,7 @@ export function KodixApp({
         </CardDescription>
       </CardContent>
       <CardFooter className="flex justify-between border-t px-6 py-4">
-        {session && installed && (
+        {user && installed && (
           <Link
             href={appurl}
             className={cn(buttonVariants({ variant: "default" }))}
@@ -115,7 +115,7 @@ export function KodixApp({
             {t("Open")}
           </Link>
         )}
-        {session && !installed && (
+        {user && !installed && (
           <Button
             disabled={installAppMutation.isPending}
             onClick={() => {
@@ -134,7 +134,7 @@ export function KodixApp({
             {t("Install")}
           </Button>
         )}
-        {!session && (
+        {!user && (
           <Link
             href="/signin"
             className={cn(buttonVariants({ variant: "default" }))}
@@ -170,7 +170,7 @@ export function KodixApp({
                 <DialogDescription className="py-4">
                   {t("are-you-sure-you-would-like-to-uninstall")} {appName}{" "}
                   {t("From").toLowerCase()}
-                  {" " + session?.user.activeTeamName}
+                  {" " + user?.activeTeamName}
                   {t("questionmark")}
                 </DialogDescription>
               </DialogHeader>

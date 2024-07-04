@@ -1,8 +1,8 @@
 import { relations, sql } from "drizzle-orm";
 import {
   boolean,
+  datetime,
   index,
-  int,
   mysqlEnum,
   mysqlTable,
   primaryKey,
@@ -11,7 +11,7 @@ import {
   varchar,
 } from "drizzle-orm/mysql-core";
 
-import { NANOID_SIZE } from "@kdx/shared";
+import { nanoid, NANOID_SIZE } from "@kdx/shared";
 
 import { todos } from "./apps/todos";
 import { invitations, teamAppRolesToUsers, teams, usersToTeams } from "./teams";
@@ -26,6 +26,7 @@ export const users = mysqlTable(
   {
     id: nanoidPrimaryKey,
     name: varchar("name", { length: DEFAULTLENGTH }),
+    passwordHash: varchar("passwordHash", { length: 255 }),
     email: varchar("email", { length: DEFAULTLENGTH }).notNull().unique(),
     emailVerified: timestamp("emailVerified").default(sql`CURRENT_TIMESTAMP`),
     image: varchar("image", { length: DEFAULTLENGTH }),
@@ -49,33 +50,22 @@ export const usersRelations = relations(users, ({ many, one }) => ({
   UsersToTeams: many(usersToTeams),
   Todos: many(todos),
   TeamAppRolesToUsers: many(teamAppRolesToUsers),
-  Accounts: many(accounts),
 }));
 
 export const accounts = mysqlTable(
   "account",
   {
-    userId: varchar("userId", { length: NANOID_SIZE })
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    type: varchar("type", { length: DEFAULTLENGTH })
-      .$type<"email" | "oauth" | "oidc" | "webauthn">()
-      .notNull(),
-    provider: varchar("provider", { length: DEFAULTLENGTH }).notNull(),
-    providerAccountId: varchar("providerAccountId", {
+    providerId: varchar("providerId", { length: DEFAULTLENGTH }).notNull(),
+    providerUserId: varchar("providerUserId", {
       length: DEFAULTLENGTH,
     }).notNull(),
-    refresh_token: varchar("refresh_token", { length: DEFAULTLENGTH }),
-    access_token: varchar("access_token", { length: DEFAULTLENGTH }),
-    expires_at: int("expires_at"),
-    token_type: varchar("token_type", { length: DEFAULTLENGTH }),
-    scope: varchar("scope", { length: DEFAULTLENGTH }),
-    id_token: varchar("id_token", { length: 2048 }), //Must be larger than 255 at least. Trust me
-    session_state: varchar("session_state", { length: DEFAULTLENGTH }),
+    userId: varchar("userId", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => users.id), //TODO: referential action?
   },
   (account) => ({
     compoundKey: primaryKey({
-      columns: [account.provider, account.providerAccountId],
+      columns: [account.providerId, account.providerUserId],
     }),
     userIdIdx: index("userId_idx").on(account.userId),
   }),
@@ -84,39 +74,25 @@ export const accountsRelations = relations(accounts, ({ one }) => ({
   Users: one(users, { fields: [accounts.userId], references: [users.id] }),
 }));
 
-export const sessions = mysqlTable(
-  "session",
-  {
-    sessionToken: varchar("sessionToken", { length: DEFAULTLENGTH })
-      .notNull()
-      .primaryKey(),
-    userId: varchar("userId", { length: NANOID_SIZE })
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
-  },
-  (session) => ({
-    userIdIdx: index("userId_idx").on(session.userId),
-  }),
-);
+export const sessions = mysqlTable("session", {
+  id: varchar("id", {
+    length: DEFAULTLENGTH,
+  }).primaryKey(),
+  userId: varchar("user_id", {
+    length: DEFAULTLENGTH,
+  })
+    .notNull()
+    .references(() => users.id),
+  expiresAt: datetime("expires_at").notNull(),
+  ipAddress: varchar("ip_address", { length: 45 }),
+  userAgent: text("user_agent"),
+});
 export const sessionsRelations = relations(sessions, ({ one }) => ({
   User: one(users, {
     fields: [sessions.userId],
     references: [users.id],
   }),
 }));
-
-export const verificationTokens = mysqlTable(
-  "verificationToken",
-  {
-    identifier: varchar("identifier", { length: DEFAULTLENGTH }).notNull(),
-    token: varchar("token", { length: DEFAULTLENGTH }).notNull(),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
-  },
-  (vt) => ({
-    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
-  }),
-);
 
 export const notifications = mysqlTable(
   "notification",
@@ -149,3 +125,32 @@ export const notificationsRelations = relations(notifications, ({ one }) => ({
     references: [teams.id],
   }),
 }));
+
+export const resetPasswordTokens = mysqlTable(
+  "resetToken",
+  {
+    id: nanoidPrimaryKey,
+    userId: varchar("userId", { length: DEFAULTLENGTH })
+      .unique()
+      .notNull()
+      .references(() => users.id, { onUpdate: "cascade", onDelete: "cascade" }),
+    token: varchar("token", { length: NANOID_SIZE })
+      .notNull()
+      .$default(() => nanoid()),
+    tokenExpiresAt: timestamp("tokenExpiresAt").notNull(),
+  },
+  (table) => {
+    return {
+      userIdIdx: index("userId_idx").on(table.userId),
+    };
+  },
+);
+export const resetPasswordTokensRelations = relations(
+  resetPasswordTokens,
+  ({ one }) => ({
+    User: one(users, {
+      fields: [resetPasswordTokens.userId],
+      references: [users.id],
+    }),
+  }),
+);

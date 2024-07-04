@@ -14,8 +14,8 @@ export default async function SettingsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
-  if (!session) redirect("/");
+  const { user } = await auth();
+  if (!user) redirect("/");
   const team = await api.team.getActiveTeam();
   const t = await getI18n();
 
@@ -27,7 +27,7 @@ export default async function SettingsLayout({
     {
       href: "/team/settings/roles",
       title: t("Roles"),
-      shown: session.user.id === team.ownerId,
+      shown: user.id === team.ownerId,
     },
     {
       href: `/team/settings/general`,
@@ -46,7 +46,7 @@ export default async function SettingsLayout({
         <div className="flex items-center">
           <RxChevronRight />
           <p className="text-base text-muted-foreground">
-            {session.user.activeTeamName}
+            {user.activeTeamName}
           </p>
         </div>
       </div>

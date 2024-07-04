@@ -8,6 +8,7 @@
       "react-server": "./src/index.rsc.ts",
       "default": "./src/index.ts"
     },
+    "./db": "./src/db.ts",
     "./env": "./env.ts"
   },
   "scripts": {
@@ -21,9 +22,11 @@
     "@kdx/db": "workspace:*",
     "@kdx/react-email": "workspace:*",
     "@kdx/shared": "workspace:*",
+    "@lucia-auth/adapter-drizzle": "^1.0.7",
     "@t3-oss/env-nextjs": "^0.10.1",
+    "discord-api-types": "^0.37.91",
+    "lucia": "^3.2.0",
     "next": "14.2.4",
-    "next-auth": "5.0.0-beta.19",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "resend": "^3.2.0",

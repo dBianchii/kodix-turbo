@@ -8,6 +8,7 @@ import { LuLoader2 } from "react-icons/lu";
 import { RxPlusCircled } from "react-icons/rx";
 
 import { useI18n } from "@kdx/locales/client";
+import { getErrorMessage } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import {
@@ -23,7 +24,6 @@ import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
 import { toast } from "@kdx/ui/toast";
 
-import { getErrorMessage } from "~/helpers/miscelaneous";
 import { createTeamAction } from "./actions";
 
 export function AddTeamDialogButton({

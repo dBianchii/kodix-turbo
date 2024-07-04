@@ -29,3 +29,10 @@ export const ZUnlockMoreTasksInputSchema = z.object({
 export type TUnlockMoreTasksInputSchema = z.infer<
   typeof ZUnlockMoreTasksInputSchema
 >;
+
+export const ZCheckEmailForRegisterInputSchema = z.object({
+  email: z.string().email(),
+});
+export type TCheckEmailForRegisterInputSchema = z.infer<
+  typeof ZCheckEmailForRegisterInputSchema
+>;

@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import type { Session } from "@kdx/auth";
+import type { User } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
 import { getI18n } from "@kdx/locales/server";
 import { calendarAppId } from "@kdx/shared";
@@ -17,7 +17,7 @@ import { CreateEventDialogButton } from "./_components/create-event-dialog";
 import { DataTable } from "./_components/data-table-calendar";
 
 export default async function CalendarPage() {
-  const session = await redirectIfAppNotInstalled({
+  const user = await redirectIfAppNotInstalled({
     appId: calendarAppId,
   });
 
@@ -59,18 +59,18 @@ export default async function CalendarPage() {
           </div>
         }
       >
-        <DataTableServer session={session} />
+        <DataTableServer user={user} />
       </Suspense>
     </MaxWidthWrapper>
   );
 }
 
-async function DataTableServer({ session }: { session: Session }) {
+async function DataTableServer({ user }: { user: User }) {
   const initialInput = {
     dateStart: dayjs.utc().startOf("day").toDate(),
     dateEnd: dayjs.utc().endOf("day").toDate(),
   };
   const initialData = await api.app.calendar.getAll(initialInput);
 
-  return <DataTable data={initialData} session={session} />;
+  return <DataTable data={initialData} user={user} />;
 }

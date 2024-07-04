@@ -4,7 +4,7 @@ import { useState } from "react";
 import { LuLoader2 } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
-import type { Session } from "@kdx/auth";
+import type { User } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
 import { useI18n } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
@@ -31,12 +31,12 @@ import { ZDoCheckoutForShiftInputSchema } from "@kdx/validators/trpc/app/kodixCa
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
-export function ToggleShiftButton({ session }: { session: Session }) {
+export function ToggleShiftButton({ user }: { user: User }) {
   const query = api.app.kodixCare.getCurrentShift.useQuery();
 
   if (!(query.data && !query.data.checkOut)) return <StartShiftDialogButton />;
 
-  if (query.data.Caregiver.id === session.user.id)
+  if (query.data.Caregiver.id === user.id)
     return <DoCheckoutDialogButton currentShift={query.data} />;
 
   return <StartShiftWarnPreviousPersonDialog />;

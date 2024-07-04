@@ -9,7 +9,7 @@ import {
 import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
-import type { Session } from "@kdx/auth";
+import type { User } from "@kdx/auth";
 import { useI18n } from "@kdx/locales/client";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Button } from "@kdx/ui/button";
@@ -37,10 +37,10 @@ const columnHelper =
 
 export function DataTableMembers({
   initialUsers,
-  session,
+  user,
 }: {
   initialUsers: RouterOutputs["team"]["getAllUsers"];
-  session: Session;
+  user: User;
 }) {
   const { data } = api.team.getAllUsers.useQuery(undefined, {
     initialData: initialUsers,
@@ -101,9 +101,7 @@ export function DataTableMembers({
                     });
                   }}
                 >
-                  {info.row.original.id === session.user.id
-                    ? t("Leave")
-                    : t("Remove")}
+                  {info.row.original.id === user.id ? t("Leave") : t("Remove")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

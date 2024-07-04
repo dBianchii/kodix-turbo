@@ -8,8 +8,8 @@ import { api } from "~/trpc/server";
 import OnboardingCard from "./_components/onboarding-card";
 
 export default async function KodixCareOnboardingPage() {
-  const session = await auth();
-  if (!session) return redirect("/");
+  const { user } = await auth();
+  if (!user) return redirect("/");
   const installed = await api.app.getInstalled();
   if (installed.some((x) => x.id === kodixCareAppId))
     redirect("/apps/kodixCare");

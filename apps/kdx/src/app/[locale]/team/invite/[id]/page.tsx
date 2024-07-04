@@ -18,12 +18,24 @@ export default async function InvitePage({
     where: eq(schema.invitations.id, invitationId),
   });
   if (!invitation) return notFound();
-  const session = await auth();
-  if (!session)
-    redirect(`/api/auth/signin?callbackUrl=/team/invite/${invitationId}`);
 
-  if (session.user.email !== invitation.email) return notFound();
+  const { user } = await auth();
+  if (!user) {
+    let path = `/signup?invite=${invitationId}`;
+
+    const existingUser = await db.query.users.findFirst({
+      where: eq(schema.users.email, invitation.email),
+      columns: { id: true },
+    });
+
+    //? If the user already has an account, redirect them back here after signing in.
+    if (existingUser) path = `/signin?callbackUrl=/team/invite/${invitationId}`;
+
+    return redirect(path);
+  }
+
+  if (user.email !== invitation.email) return notFound();
   await api.team.invitation.accept({ invitationId });
 
-  redirect("/");
+  redirect("/team");
 }

@@ -17,13 +17,6 @@
     "Add more apps": "Add more apps",
     "Search app": "Search app"
   },
-  "signin": {
-    "Or continue with": "Or continue with",
-    "Your email": "Your email",
-    "Sign in": "Sign in",
-    "Sign in with Google": "Sign in with Google",
-    "Sign in to your account": "Sign in to your account"
-  },
   "apps": {
     "kodixCare": {
       "currentShift": "Current Shift",
@@ -363,5 +356,37 @@
   "Made for humans": "Made for humans",
   "Supports 3 languages and counting": "Supports 2+ languages and counting.",
   "Learn more": "Learn more",
-  "Sign in with Google": "Sign in with Google"
+  "Sign in with Google": "Sign in with Google",
+  "Register your account": "Register your account",
+  "Password": "Password",
+  "Your name": "Your name",
+  "Your password": "Your password",
+  "Dont have an account": "Don't have an account?",
+  "Create an account to access all the features of Kodix": "Create an account to access all the features of Kodix",
+  "Create your Kodix account": "Create your Kodix account",
+  "I agree to the terms of service": "I agree to the terms of service",
+  "Create account": "Create account",
+  "Forgot password": "Forgot password?",
+  "Go back to sign in page": "Go back to sign in page",
+  "Enter your email": "Enter your email",
+  "Email": "Email",
+  "Send reset email": "Send reset email",
+  "Already have an account": "Already have an account?",
+  "By continuing you agree to our": "By continuing you agree to our",
+  "Terms of Service": "Terms of service",
+  "Privacy policy": "Privacy policy",
+  "This invitation no longer exists or is invalid": "This invitation no longer exists or is invalid",
+  "Reset email sent Check your inbox": "Reset email sent. Check your inbox",
+  "Password reset email sent": "Password reset email sent",
+  "We have sent you an email with instructions to reset your password": "We have sent you an email with instructions to reset your password",
+  "Confirm password": "Confirm password",
+  "Enter confirm password": "Enter confirm password",
+  "Enter your password": "Enter your password",
+  "Password updated": "Password updated",
+  "Your password has been successfully updated": "Your password has been successfully updated",
+  "Sign in with new password": "Sign in with new password",
+  "Redefine password": "Redefine password",
+  "Enter your new password": "Enter your new password",
+  "Confirm your new password": "Confirm your new password",
+  "Change password": "Change password"
 }

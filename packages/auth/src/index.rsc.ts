@@ -1,22 +1,16 @@
 import { cache } from "react";
-import NextAuth from "next-auth";
 
-import { authConfig } from "./config";
-
-export type { Session } from "next-auth";
-
-const { handlers, auth: defaultAuth, signIn, signOut } = NextAuth(authConfig);
+import { auth as _auth } from "./config";
 
 /**
  * This is the main way to get session data for your RSCs.
- * This will de-duplicate all calls to next-auth's default `auth()` function and only call it once per request across all components
+ * This will de-duplicate all calls to the default `auth()` function and only call it once per request across all components
  */
-const auth = cache(defaultAuth);
+export const auth = cache(_auth);
 
-export { handlers, auth, signIn, signOut };
+export { providers, isSecureContext } from "./config";
 
-export {
-  invalidateSessionToken,
-  validateToken,
-  isSecureContext,
-} from "./config";
+export type { Providers, AuthResponse } from "./config";
+export { lucia } from "./config";
+export type { Session } from "lucia";
+export type { User } from "lucia";
