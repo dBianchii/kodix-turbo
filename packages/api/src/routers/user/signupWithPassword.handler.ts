@@ -22,7 +22,6 @@ export const signupWithPasswordHandler = async ({
   ctx,
   input,
 }: SignupWithPasswordOptions) => {
-  //... your handler logic here <3
   const registered = await ctx.db
     .select({
       id: schema.users.id,

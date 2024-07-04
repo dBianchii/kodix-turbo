@@ -17,7 +17,6 @@ export const signInHandler = async ({
   ctx,
   input,
 }: SignInByPasswordOptions) => {
-  //... your handler logic here <3
   const existingUser = await ctx.db.query.users.findFirst({
     where: (users, { eq }) => eq(users.email, input.email),
     columns: {
