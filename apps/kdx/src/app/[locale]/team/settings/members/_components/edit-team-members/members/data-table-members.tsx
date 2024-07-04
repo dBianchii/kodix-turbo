@@ -35,16 +35,8 @@ import { api } from "~/trpc/react";
 const columnHelper =
   createColumnHelper<RouterOutputs["team"]["getAllUsers"][number]>();
 
-export function DataTableMembers({
-  initialUsers,
-  user,
-}: {
-  initialUsers: RouterOutputs["team"]["getAllUsers"];
-  user: User;
-}) {
-  const { data } = api.team.getAllUsers.useQuery(undefined, {
-    initialData: initialUsers,
-  });
+export function DataTableMembers({ user }: { user: User }) {
+  const { data } = api.team.getAllUsers.useQuery(undefined);
 
   const utils = api.useUtils();
   const t = useI18n();
@@ -112,7 +104,7 @@ export function DataTableMembers({
   ];
 
   const table = useReactTable({
-    data,
+    data: data ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     defaultColumn: {

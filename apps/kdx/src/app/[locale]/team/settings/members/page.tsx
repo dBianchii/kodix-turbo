@@ -67,7 +67,5 @@ async function DataTableMembersServer() {
   const { user } = await auth();
   if (!user) return null;
 
-  const users = await api.team.getAllUsers();
-
-  return <DataTableMembers initialUsers={users} user={user} />;
+  return <DataTableMembers user={user} />;
 }

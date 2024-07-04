@@ -214,7 +214,7 @@ export default function TeamInviteCardClient({ user }: { user: User }) {
               </div>
               <DialogFooter className="justify-end">
                 <Button
-                  disabled={mutation.isPending}
+                  disabled={mutation.isPending || successes.length > 0}
                   onClick={() => {
                     const values = {
                       teamId: user.activeTeamId,
