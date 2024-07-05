@@ -2,7 +2,7 @@ import type { APIUser as DiscordUser } from "discord-api-types/v10";
 import { Discord } from "arctic";
 import { OAuth2Scopes } from "discord-api-types/v10";
 
-import { getBaseKdxUrl } from "@kdx/shared";
+import { getBaseUrl } from "@kdx/shared";
 
 import { env } from "../../env";
 import createOrGetExistingUserForUnlinkedProviderAccount from "./utils/createOrGetExistingUserForUnlinkedProviderAccount";
@@ -11,7 +11,7 @@ import getAccountByProviderUserId from "./utils/getAccountByProviderUserId";
 const discord = new Discord(
   env.AUTH_DISCORD_ID ?? "", //Discord is not used in production, so... no need to worry about this
   env.AUTH_DISCORD_SECRET ?? "",
-  `${getBaseKdxUrl()}/api/auth/discord/callback`,
+  `${getBaseUrl()}/api/auth/discord/callback`,
 );
 
 export const name = "Discord";
