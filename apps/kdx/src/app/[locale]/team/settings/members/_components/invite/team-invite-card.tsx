@@ -75,8 +75,8 @@ export default function TeamInviteCardClient({ user }: { user: User }) {
   });
 
   const closeDialog = () => {
-    const failures = emails.filter((x) => !successes.includes(x.value));
-    setEmails(failures.length > 0 ? failures : [{ key: 0, value: "" }]); // Keep the failed to send emails
+    //TODO: Keep the emails that were unsuccessful
+    setEmails([{ key: 0, value: "" }]);
     setSuccesses([]);
     setOpen(false);
   };
