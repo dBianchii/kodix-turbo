@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 import type { TRemoveUserSchema } from "@kdx/validators/trpc/team";
 import { and, eq, not } from "@kdx/db";
 import { schema } from "@kdx/db/schema";
+import { nanoid } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 
@@ -54,7 +55,7 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
     });
 
   //TODO: Implement role based access control
-  const otherTeam = await ctx.db
+  let otherTeam = await ctx.db
     .select({ id: schema.teams.id })
     .from(schema.teams)
     .innerJoin(
@@ -69,15 +70,26 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
     )
     .then((res) => res[0]);
 
-  if (!otherTeam)
-    throw new TRPCError({
-      message:
-        "The user needs to have at least one team. Please create another team before removing this user",
-      code: "BAD_REQUEST",
-    });
-
   //check if there are more people in the team before removal
   await ctx.db.transaction(async (tx) => {
+    if (!otherTeam) {
+      //Create a new team for the user and move them to it
+      const newTeamId = nanoid();
+      await tx.insert(schema.teams).values({
+        id: newTeamId,
+        ownerId: input.userId,
+        name: "Personal Team",
+      });
+      await tx
+        .insert(schema.usersToTeams)
+        .values({ userId: input.userId, teamId: newTeamId });
+      await tx.update(schema.users).set({
+        activeTeamId: newTeamId,
+      });
+
+      otherTeam = { id: newTeamId };
+    }
+
     //Move the user to the other team
     await tx
       .update(schema.users)
