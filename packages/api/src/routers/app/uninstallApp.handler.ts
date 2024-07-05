@@ -48,10 +48,9 @@ export const uninstallAppHandler = async ({
       appId: input.appId,
       user: ctx.session.user,
     });
-  });
-
-  await invalidateUpstashCache("apps", {
-    teamId: ctx.session.user.activeTeamId,
+    await invalidateUpstashCache("apps", {
+      teamId: ctx.session.user.activeTeamId,
+    });
   });
 };
 
@@ -66,11 +65,8 @@ async function removeAppData({
 }) {
   const allSchemasForApp = appIdToSchemas[appId];
 
-  await tx.transaction(async (tx) => {
-    for (const schema of Object.values(allSchemasForApp)) {
-      if (!("teamId" in schema)) continue;
-
-      await tx.delete(schema).where(eq(schema.teamId, user.activeTeamId));
-    }
-  });
+  for (const schema of Object.values(allSchemasForApp)) {
+    if (!("teamId" in schema)) continue;
+    await tx.delete(schema).where(eq(schema.teamId, user.activeTeamId));
+  }
 }
