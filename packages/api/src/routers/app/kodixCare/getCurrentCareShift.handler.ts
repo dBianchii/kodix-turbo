@@ -7,7 +7,7 @@ interface GetCurrentCareShiftOptions {
 export const getCurrentCareShiftHandler = async ({
   ctx,
 }: GetCurrentCareShiftOptions) => {
-  return await ctx.db.query.careShifts.findFirst({
+  const currentShift = await ctx.db.query.careShifts.findFirst({
     orderBy: (careShift, { desc }) => desc(careShift.checkIn),
     where: (careShift, { eq, and, isNull }) =>
       and(
@@ -31,4 +31,5 @@ export const getCurrentCareShiftHandler = async ({
       id: true,
     },
   });
+  return currentShift ?? null;
 };

@@ -19,17 +19,14 @@ export function Header() {
       <header className="border-b py-2">
         <MaxWidthWrapper className="max-w-screen-2xl">
           <div className="mx-auto flex max-w-screen-2xl items-center">
-            <HydrateClient>
-              <Suspense fallback={<Logo redirect="/team" />}>
-                <LogoWithAppSwitcher />
+            <Suspense fallback={<Logo redirect="/team" />}>
+              <LogoWithAppSwitcher />
+            </Suspense>
+            <div className="ml-auto flex items-center space-x-4">
+              <Suspense>
+                <RightSide />
               </Suspense>
-
-              <div className="ml-auto flex items-center space-x-4">
-                <Suspense>
-                  <RightSide />
-                </Suspense>
-              </div>
-            </HydrateClient>
+            </div>
           </div>
         </MaxWidthWrapper>
       </header>
@@ -82,27 +79,20 @@ function Logo({ redirect }: { redirect: string }) {
   );
 }
 
-async function NotificationsPopover() {
-  const { user } = await auth();
-  if (!user) return null;
-
-  void api.user.getInvitations.prefetch();
-
-  return <NotificationsPopoverClient />;
-}
-
 async function RightSide() {
   const { user } = await auth();
   const t = await getI18n();
-
+  void api.user.getInvitations.prefetch();
   return (
     <>
       <I18nPicker />
       {!!user && (
         <>
-          <Suspense>
-            <NotificationsPopover />
-          </Suspense>
+          <HydrateClient>
+            <Suspense>
+              <NotificationsPopoverClient />
+            </Suspense>
+          </HydrateClient>
           <UserProfileButton user={user} />
         </>
       )}
