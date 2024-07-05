@@ -39,7 +39,7 @@ export const appRouter = {
   saveConfig: protectedProcedure
     .input(ZSaveConfigInput)
     .mutation(saveConfigHandler),
-  uninstallApp: protectedProcedure
+  uninstallApp: isTeamOwnerProcedure
     .input(ZUninstallAppInputSchema)
     .mutation(uninstallAppHandler),
 } satisfies TRPCRouterRecord;

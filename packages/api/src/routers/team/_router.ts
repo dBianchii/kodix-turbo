@@ -6,7 +6,7 @@ import {
   ZUpdateInputSchema,
 } from "@kdx/validators/trpc/team";
 
-import { protectedProcedure } from "../../procedures";
+import { isTeamOwnerProcedure, protectedProcedure } from "../../procedures";
 import { appRoleRouter } from "./appRole/_router";
 import { createHandler } from "./create.handler";
 import { getActiveTeamHandler } from "./getActiveTeam.handler";
@@ -26,5 +26,7 @@ export const teamRouter = {
   removeUser: protectedProcedure
     .input(ZRemoveUserSchema)
     .mutation(removeUserHandler),
-  update: protectedProcedure.input(ZUpdateInputSchema).mutation(updateHandler),
+  update: isTeamOwnerProcedure
+    .input(ZUpdateInputSchema)
+    .mutation(updateHandler),
 } satisfies TRPCRouterRecord;

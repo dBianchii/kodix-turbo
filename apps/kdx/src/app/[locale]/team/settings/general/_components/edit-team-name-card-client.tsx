@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { LuLoader2 } from "react-icons/lu";
 
 import { useI18n } from "@kdx/locales/client";
+import { getErrorMessage } from "@kdx/shared";
+import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import {
   Card,
@@ -32,9 +34,11 @@ import { api } from "~/trpc/react";
 export function EditTeamNameCardClient({
   teamId,
   teamName,
+  canEdit,
 }: {
   teamId: string;
   teamName: string;
+  canEdit: boolean;
 }) {
   const form = useForm({
     schema: ZUpdateInputSchema,
@@ -61,6 +65,9 @@ export function EditTeamNameCardClient({
             toast.promise(mutation.mutateAsync(data), {
               loading: `${t("Saving")}...`,
               success: t("Team name saved successfully"),
+              error: (err) => {
+                return getErrorMessage(err);
+              },
             });
           })}
         >
@@ -80,7 +87,14 @@ export function EditTeamNameCardClient({
                     <FormItem>
                       <FormLabel>{t("Team name")}</FormLabel>
                       <FormControl>
-                        <Input placeholder="Acme" {...field} />
+                        <Input
+                          className={cn({
+                            "cursor-not-allowed": !canEdit,
+                          })}
+                          placeholder="Acme"
+                          {...field}
+                          disabled={!canEdit}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

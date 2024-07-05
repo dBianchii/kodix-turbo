@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { FcGoogle } from "react-icons/fc";
 import { RxDiscordLogo } from "react-icons/rx";
 
@@ -30,14 +29,14 @@ export function ProviderButtons({
   return (
     <>
       {providers.map((provider) => (
-        <Link
+        <a
           key={provider.name}
           className={cn(buttonVariants({ variant: "outline" }), "w-full")}
           href={getProviderUrl(provider.name, callbackUrl, invite)}
         >
           {provider.icon}
           {provider.name}
-        </Link>
+        </a>
       ))}
     </>
   );

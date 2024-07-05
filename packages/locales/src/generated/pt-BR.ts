@@ -393,5 +393,6 @@ export default {
   "Change password": "Alterar a senha",
   "An error occurred": "Um erro ocorreu",
   "Removing user": "Removendo usuário...",
-  "Error installing": "Erro ao instalar"
+  "Error installing": "Erro ao instalar",
+  "Only the team owner can edit this": "Somente o proprietário da equipe pode editar isso"
 } as const
