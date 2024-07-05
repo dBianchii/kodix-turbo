@@ -10,6 +10,7 @@
       "./src/*.tsx",
       "./src/*.ts"
     ],
+    "./hooks": "./src/hooks.ts",
     "./data-table/export": "./src/data-table/export.ts"
   },
   "scripts": {
