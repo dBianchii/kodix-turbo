@@ -23,14 +23,9 @@ import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 import { switchTeamAction } from "./actions";
 
-export default function EditUserTeamsTableClient({
-  teams,
-  user,
-}: {
-  teams: RouterOutputs["team"]["getAllForLoggedUser"];
-  user: User;
-}) {
+export default function EditUserTeamsTableClient({ user }: { user: User }) {
   const t = useI18n();
+  const [teams] = api.team.getAllForLoggedUser.useSuspenseQuery();
   const currentTeam = user.activeTeamId;
   const sortedTeams = teams.sort((a, b) => {
     if (a.id === currentTeam) return -1;
