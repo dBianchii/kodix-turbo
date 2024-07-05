@@ -7,7 +7,7 @@ import { buttonVariants } from "@kdx/ui/button";
 
 import HeaderFooterRemover from "~/app/[locale]/_components/header-footer-remover";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
-import { api } from "~/trpc/server";
+import { api, HydrateClient } from "~/trpc/server";
 import { AppSwitcher } from "../app-switcher";
 import { I18nPicker } from "./i18n-picker";
 import { NotificationsPopoverClient } from "./notifications-popover-client";
@@ -19,15 +19,17 @@ export function Header() {
       <header className="border-b py-2">
         <MaxWidthWrapper className="max-w-screen-2xl">
           <div className="mx-auto flex max-w-screen-2xl items-center">
-            <Suspense fallback={<Logo redirect="/team" />}>
-              <LogoWithAppSwitcher />
-            </Suspense>
-
-            <div className="ml-auto flex items-center space-x-4">
-              <Suspense>
-                <RightSide />
+            <HydrateClient>
+              <Suspense fallback={<Logo redirect="/team" />}>
+                <LogoWithAppSwitcher />
               </Suspense>
-            </div>
+
+              <div className="ml-auto flex items-center space-x-4">
+                <Suspense>
+                  <RightSide />
+                </Suspense>
+              </div>
+            </HydrateClient>
           </div>
         </MaxWidthWrapper>
       </header>
@@ -84,12 +86,9 @@ async function NotificationsPopover() {
   const { user } = await auth();
   if (!user) return null;
 
-  const initialNotifications = await api.user.getInvitations();
-  if (!initialNotifications.length) return null;
+  void api.user.getInvitations.prefetch();
 
-  return (
-    <NotificationsPopoverClient initialNotifications={initialNotifications} />
-  );
+  return <NotificationsPopoverClient />;
 }
 
 async function RightSide() {

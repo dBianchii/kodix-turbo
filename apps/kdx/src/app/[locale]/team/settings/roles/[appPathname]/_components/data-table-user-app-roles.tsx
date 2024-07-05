@@ -24,22 +24,14 @@ const columnHelper =
     RouterOutputs["team"]["appRole"]["getUsersWithRoles"][number]
   >();
 
-export function DataTableUserAppRoles({
-  initialUsers,
-  allAppRoles,
-  appId,
-}: {
-  initialUsers: RouterOutputs["team"]["appRole"]["getUsersWithRoles"];
-  allAppRoles: RouterOutputs["team"]["appRole"]["getAll"];
-  appId: KodixAppId;
-}) {
+export function DataTableUserAppRoles({ appId }: { appId: KodixAppId }) {
   const utils = api.useUtils();
 
-  const { data } = api.team.appRole.getUsersWithRoles.useQuery(
+  const [allAppRoles] = api.team.appRole.getAll.useSuspenseQuery({ appId });
+  const [data] = api.team.appRole.getUsersWithRoles.useSuspenseQuery(
     { appId },
     {
       refetchOnMount: false,
-      initialData: initialUsers,
     },
   );
 

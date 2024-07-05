@@ -30,22 +30,14 @@ const columnHelper =
     RouterOutputs["team"]["appRole"]["getPermissions"][number]
   >();
 
-export function DataTableAppPermissions({
-  initialPermissions,
-  appId,
-  allAppRoles,
-}: {
-  initialPermissions: RouterOutputs["team"]["appRole"]["getPermissions"];
-  appId: KodixAppId;
-  allAppRoles: RouterOutputs["team"]["appRole"]["getAll"];
-}) {
+export function DataTableAppPermissions({ appId }: { appId: KodixAppId }) {
   const utils = api.useUtils();
 
-  const { data } = api.team.appRole.getPermissions.useQuery(
+  const [allAppRoles] = api.team.appRole.getAll.useSuspenseQuery({ appId });
+  const [data] = api.team.appRole.getPermissions.useSuspenseQuery(
     { appId },
     {
       refetchOnMount: false,
-      initialData: initialPermissions,
     },
   );
   const { mutate: updatePermissionAssociation } =

@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 
-import type { User } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
 import { getI18n } from "@kdx/locales/server";
 import { calendarAppId } from "@kdx/shared";
@@ -12,7 +11,7 @@ import { H1 } from "@kdx/ui/typography";
 import { IconKodixApp } from "~/app/[locale]/_components/app/kodix-icon";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
-import { api } from "~/trpc/server";
+import { api, HydrateClient } from "~/trpc/server";
 import { CreateEventDialogButton } from "./_components/create-event-dialog";
 import { DataTable } from "./_components/data-table-calendar";
 
@@ -25,6 +24,13 @@ export default async function CalendarPage() {
   //date End should be the end of the day
 
   const t = await getI18n();
+
+  const initialInput = {
+    dateStart: dayjs.utc().startOf("day").toDate(),
+    dateEnd: dayjs.utc().endOf("day").toDate(),
+  };
+  void api.app.calendar.getAll.prefetch(initialInput);
+
   return (
     <MaxWidthWrapper>
       <div className="flex items-center space-x-4">
@@ -34,43 +40,35 @@ export default async function CalendarPage() {
       <Separator className="my-4" />
 
       <CreateEventDialogButton />
-      <Suspense
-        fallback={
-          <div className="pt-8">
-            <div className="flex justify-between">
-              <div className="flex w-44">
-                <Skeleton className="h-6 w-28" />
+      <HydrateClient>
+        <Suspense
+          fallback={
+            <div className="pt-8">
+              <div className="flex justify-between">
+                <div className="flex w-44">
+                  <Skeleton className="h-6 w-28" />
+                </div>
+
+                <div className="mx-auto mt-auto flex space-x-2">
+                  <Skeleton className="size-6" />
+
+                  <Skeleton className="h-6 w-28" />
+                  <Skeleton className="size-6" />
+                </div>
+                <div className="flex w-44">
+                  <Skeleton className="h-6 w-20" />
+                </div>
               </div>
 
-              <div className="mx-auto mt-auto flex space-x-2">
-                <Skeleton className="size-6" />
-
-                <Skeleton className="h-6 w-28" />
-                <Skeleton className="size-6" />
-              </div>
-              <div className="flex w-44">
-                <Skeleton className="h-6 w-20" />
+              <div className="mt-4 rounded-md border">
+                <DataTableSkeleton columnCount={3} showViewOptions={false} />
               </div>
             </div>
-
-            <div className="mt-4 rounded-md border">
-              <DataTableSkeleton columnCount={3} showViewOptions={false} />
-            </div>
-          </div>
-        }
-      >
-        <DataTableServer user={user} />
-      </Suspense>
+          }
+        >
+          <DataTable user={user} />;
+        </Suspense>
+      </HydrateClient>
     </MaxWidthWrapper>
   );
-}
-
-async function DataTableServer({ user }: { user: User }) {
-  const initialInput = {
-    dateStart: dayjs.utc().startOf("day").toDate(),
-    dateEnd: dayjs.utc().endOf("day").toDate(),
-  };
-  const initialData = await api.app.calendar.getAll(initialInput);
-
-  return <DataTable data={initialData} user={user} />;
 }

@@ -14,24 +14,17 @@ import { Label } from "@kdx/ui/label";
 import { api } from "~/trpc/react";
 import { ToggleShiftButton } from "./toggle-shift-button";
 
-export function CurrentShiftClient({
-  user,
-  initialCurrentShift,
-}: {
-  user: User;
-  initialCurrentShift: RouterOutputs["app"]["kodixCare"]["getCurrentShift"];
-}) {
-  const query = api.app.kodixCare.getCurrentShift.useQuery(undefined, {
-    initialData: initialCurrentShift,
+export function CurrentShiftClient({ user }: { user: User }) {
+  const [data] = api.app.kodixCare.getCurrentShift.useSuspenseQuery(undefined, {
     refetchOnMount: false,
   });
   //se nao tiver shift é pq nao tem nenhum historico de shift.
   //Se tiver shift mas nao tiver shiftEndedAt é pq o shift ta em progresso
   //Se tiver shift e tiver shiftEndedAt é pq o shift acabou
-  if (!query.data) return <NoPreviousShift user={user} />;
-  if (!query.data.checkOut)
-    return <ShiftInProgress currentShift={query.data} user={user} />;
-  return <ShiftCheckedOut currentShift={query.data} user={user} />;
+  if (!data) return <NoPreviousShift user={user} />;
+  if (!data.checkOut)
+    return <ShiftInProgress currentShift={data} user={user} />;
+  return <ShiftCheckedOut currentShift={data} user={user} />;
 }
 
 export function NoPreviousShift({ user }: { user: User }) {

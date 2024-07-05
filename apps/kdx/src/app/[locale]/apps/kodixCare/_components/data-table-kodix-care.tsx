@@ -77,22 +77,15 @@ const columnHelper = createColumnHelper<CareTask>();
 const DATE_FORMAT = "PPP, HH:mm";
 
 export default function DataTableKodixCare({
-  initialCareTasks,
   initialInput,
   user,
 }: {
-  initialCareTasks: RouterOutputs["app"]["kodixCare"]["getCareTasks"];
   initialInput: TGetCareTasksInputSchema;
   user: User;
 }) {
   const [input, setInput] = useState(initialInput);
 
-  const query = api.app.kodixCare.getCareTasks.useQuery(input, {
-    initialData:
-      JSON.stringify(initialInput) === JSON.stringify(input) //? Only use initialData for the initial input
-        ? initialCareTasks
-        : undefined,
-  });
+  const [data, query] = api.app.kodixCare.getCareTasks.useSuspenseQuery(input);
 
   const utils = api.useUtils();
   const [saveTaskAsDoneDialogOpen, setSaveTaskAsDoneDialogOpen] =
@@ -223,7 +216,7 @@ export default function DataTableKodixCare({
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
   const table = useReactTable({
-    data: query.data ?? [],
+    data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
@@ -236,9 +229,9 @@ export default function DataTableKodixCare({
   });
 
   const currentlyEditingCareTask = useMemo(() => {
-    if (!query.data?.length) return undefined;
-    return query.data.find((x) => x.id === currentlyEditing);
-  }, [currentlyEditing, query.data]);
+    if (!data.length) return undefined;
+    return data.find((x) => x.id === currentlyEditing);
+  }, [currentlyEditing, data]);
 
   const leftArrowRef = useRef<HTMLButtonElement>(null);
   const rightArrowRef = useRef<HTMLButtonElement>(null);
