@@ -390,5 +390,7 @@ export default {
   "Confirm your new password": "Confirme sua nova senha",
   "Enter your new password": "Digite sua nova senha",
   "Redefine password": "Redefinir senha",
-  "Change password": "Alterar a senha"
+  "Change password": "Alterar a senha",
+  "An error occurred": "Um erro ocorreu",
+  "Removing user": "Removendo usuário..."
 } as const

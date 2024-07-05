@@ -35,7 +35,7 @@ const columnHelper =
   createColumnHelper<RouterOutputs["team"]["invitation"]["getAll"][number]>();
 
 export function InviteDataTable() {
-  const [data] = api.team.invitation.getAll.useSuspenseQuery(undefined, {
+  const [data, query] = api.team.invitation.getAll.useSuspenseQuery(undefined, {
     staleTime: 30000,
   });
   const t = useI18n();
@@ -128,7 +128,19 @@ export function InviteDataTable() {
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows.length ? (
+          {query.isFetching ? (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                {t("Loading")}...
+              </TableCell>
+            </TableRow>
+          ) : query.isError ? (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                {t("An error occurred")}
+              </TableCell>
+            </TableRow>
+          ) : table.getRowModel().rows.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}
