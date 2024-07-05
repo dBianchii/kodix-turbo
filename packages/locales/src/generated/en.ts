@@ -390,5 +390,6 @@ export default {
   "Redefine password": "Redefine password",
   "Enter your new password": "Enter your new password",
   "Confirm your new password": "Confirm your new password",
-  "Change password": "Change password"
+  "Change password": "Change password",
+  "Error installing": "Error installing"
 } as const
