@@ -391,5 +391,6 @@ export default {
   "Enter your new password": "Digite sua nova senha",
   "Redefine password": "Redefinir senha",
   "Change password": "Alterar a senha",
-  "Error installing": "Erro ao instalar"
+  "Error installing": "Erro ao instalar",
+  "Only the team owner can edit this": "Somente o proprietário da equipe pode editar isso"
 } as const

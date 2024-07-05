@@ -196,7 +196,7 @@ export default {
   "Apps": "Apps",
   "Team name": "Team Name",
   "Team name saved successfully": "Team name saved successfully",
-  "This is your teams visible name": "This is your team&apos;s visible name",
+  "This is your teams visible name": "This is your team's visible name",
   "Please use 32 characters at maximum": "Please use 32 characters at maximum",
   "Edit name permissions": "Edit {name} permissions",
   "Edit name roles": "Edit {name} roles",
@@ -391,5 +391,6 @@ export default {
   "Enter your new password": "Enter your new password",
   "Confirm your new password": "Confirm your new password",
   "Change password": "Change password",
-  "Error installing": "Error installing"
+  "Error installing": "Error installing",
+  "Only the team owner can edit this": "Only the team owner can edit this"
 } as const
