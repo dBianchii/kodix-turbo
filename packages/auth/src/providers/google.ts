@@ -1,6 +1,6 @@
 import { Google } from "arctic";
 
-import { getBaseKdxUrl } from "@kdx/shared";
+import { getBaseUrl } from "@kdx/shared";
 
 import { env } from "../../env";
 import createOrGetExistingUserForUnlinkedProviderAccount from "./utils/createOrGetExistingUserForUnlinkedProviderAccount";
@@ -19,7 +19,7 @@ interface GoogleUser {
 const google = new Google(
   env.AUTH_GOOGLE_CLIENT_ID,
   env.AUTH_GOOGLE_CLIENT_SECRET,
-  `${getBaseKdxUrl()}/api/auth/google/callback`,
+  `${getBaseUrl()}/api/auth/google/callback`,
 );
 
 export const name = "Google";

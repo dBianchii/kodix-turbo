@@ -13,7 +13,7 @@ import {
   Text,
 } from "@react-email/components";
 
-import { getBaseKdxUrl } from "@kdx/shared";
+import { getBaseUrl } from "@kdx/shared";
 
 export default function ResetPassword({ token }: { token: string }) {
   return (
@@ -26,7 +26,7 @@ export default function ResetPassword({ token }: { token: string }) {
             <Container className="mx-auto my-[40px] w-[465px] rounded border border-solid border-[#eaeaea] p-[20px]">
               <Section className="mt-[32px]">
                 <Img
-                  src={`${getBaseKdxUrl()}/group.jpeg`}
+                  src={`${getBaseUrl()}/group.jpeg`}
                   width="160"
                   height="48"
                   alt="StarterKit"
@@ -41,7 +41,7 @@ export default function ResetPassword({ token }: { token: string }) {
 
                 <Text className="text-[14px] font-medium leading-[24px] text-black">
                   <Link
-                    href={`${getBaseKdxUrl()}/signin/reset-password?token=${token}`}
+                    href={`${getBaseUrl()}/signin/reset-password?token=${token}`}
                     target="_blank"
                     className="text-[#2754C5] underline"
                   >
