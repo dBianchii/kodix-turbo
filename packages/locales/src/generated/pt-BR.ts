@@ -392,5 +392,6 @@ export default {
   "Redefine password": "Redefinir senha",
   "Change password": "Alterar a senha",
   "An error occurred": "Um erro ocorreu",
-  "Removing user": "Removendo usuário..."
+  "Removing user": "Removendo usuário...",
+  "Error installing": "Erro ao instalar"
 } as const

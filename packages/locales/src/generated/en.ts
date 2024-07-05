@@ -392,5 +392,6 @@ export default {
   "Confirm your new password": "Confirm your new password",
   "Change password": "Change password",
   "An error occurred": "An error occured",
-  "Removing user": "Removing user..."
+  "Removing user": "Removing user...",
+  "Error installing": "Error installing"
 } as const

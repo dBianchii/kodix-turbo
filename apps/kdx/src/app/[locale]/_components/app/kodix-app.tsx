@@ -40,7 +40,11 @@ import {
 } from "@kdx/ui/dropdown-menu";
 import { toast } from "@kdx/ui/toast";
 
-import { getAppIconUrl, getAppUrl } from "~/helpers/miscelaneous";
+import {
+  getAppIconUrl,
+  getAppUrl,
+  trpcErrorToastDefault,
+} from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
 export function KodixApp({
@@ -63,6 +67,9 @@ export function KodixApp({
       router.refresh();
       toast.success(`${t("App")} ${appName} ${t("installed").toLowerCase()}`);
     },
+    onError: (err) => {
+      trpcErrorToastDefault(err);
+    },
   });
   const uninstallAppMutation = api.app.uninstallApp.useMutation({
     onSuccess: () => {
@@ -71,8 +78,8 @@ export function KodixApp({
       router.refresh();
       toast.success(`${t("App")} ${appName} ${t("uninstalled").toLowerCase()}`);
     },
-    onError: () => {
-      toast.error(`${t("Error uninstalling")} ${appName}`);
+    onError: (err) => {
+      trpcErrorToastDefault(err);
     },
   });
 
