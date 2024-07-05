@@ -30,9 +30,9 @@
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
     "@types/react": "^18.3.3",
-    "eslint": "^9.2.0",
+    "eslint": "^9.6.0",
     "nodemon": "^3.1.0",
-    "prettier": "^3.2.5",
+    "prettier": "^3.3.2",
     "tsx": "4.7.3",
     "typescript": "^5.4.5"
   },

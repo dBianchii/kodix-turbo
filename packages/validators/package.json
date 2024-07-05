@@ -33,8 +33,8 @@
     "@kdx/prettier-config": "workspace:*",
     "@kdx/shared": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "eslint": "^9.2.0",
-    "prettier": "^3.2.5",
+    "eslint": "^9.6.0",
+    "prettier": "^3.3.2",
     "rrule": "^2.8.1",
     "typescript": "^5.4.5"
   },
