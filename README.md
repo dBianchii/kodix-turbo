@@ -11,14 +11,10 @@ Kodix's main monorepo. It uses [Turborepo](https://turborepo.org) and contains:
 .vscode
   └─ Recommended extensions and settings for VSCode users
 apps
-  ├─ auth-proxy
-  |   ├─ Nitro server to proxy OAuth requests in preview deployments
-  |   └─ Uses Auth.js Core
-  ├─ expo
-  |   ├─ Expo SDK 50
+  ├─ care-expo
+  |   ├─ Expo SDK 51 app for Care
   |   ├─ React Native using React 18
   |   ├─ Navigation using Expo Router
-  |   ├─ Tailwind using NativeWind
   |   └─ Typesafe API calls using tRPC
   └─ kdx
       └─ Main Next.js 14 app where tRPC endpoint is served from the @kdx/api package
