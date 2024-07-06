@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { RxChevronRight } from "react-icons/rx";
 
@@ -41,8 +40,8 @@ export default async function HomePage() {
                     {t("home.description")}
                   </p>
                   <div className="flex flex-col gap-4 lg:flex-row">
-                    <Link
-                      href="/components"
+                    <a
+                      href="#"
                       className={cn(
                         buttonVariants({
                           variant: "default",
@@ -54,9 +53,9 @@ export default async function HomePage() {
                     >
                       {t("Browse apps")}
                       <RxChevronRight className="ml-1 size-4 transition-all duration-300 ease-out group-hover:translate-x-1" />
-                    </Link>
-                    <Link
-                      href="/docs"
+                    </a>
+                    <a
+                      href="#"
                       className={cn(
                         buttonVariants({
                           size: "lg",
@@ -68,7 +67,7 @@ export default async function HomePage() {
                     >
                       {t("Get started")}
                       <RxChevronRight className="ml-1 size-4 transition-all duration-300 ease-out group-hover:translate-x-1" />
-                    </Link>
+                    </a>
                   </div>
                 </div>
               </div>

@@ -5,7 +5,7 @@ import type { TInviteInputSchema } from "@kdx/validators/trpc/invitation";
 import { schema } from "@kdx/db/schema";
 import TeamInvite from "@kdx/react-email/team-invite";
 import {
-  getBaseKdxUrl,
+  getBaseUrl,
   getSuccessesAndErrors,
   kodixNotificationFromEmail,
   nanoid,
@@ -83,12 +83,12 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
       await resend.emails.send({
         from: kodixNotificationFromEmail,
         to: invite.email,
-        subject: "You have been invited to join a team on kodix.com.br",
+        subject: `You have been invited to join a team on ${getBaseUrl()}`,
         react: TeamInvite({
           invitedByEmail: ctx.session.user.email,
           invitedByUsername: ctx.session.user.name!,
-          inviteLink: `${getBaseKdxUrl()}/team/invite/${invite.id}`,
-          teamImage: `${getBaseKdxUrl()}/api/avatar/${team.name}`,
+          inviteLink: `${getBaseUrl()}/team/invite/${invite.id}`,
+          teamImage: `${getBaseUrl()}/api/avatar/${team.name}`,
           teamName: team.name,
           // username: ??
         }),

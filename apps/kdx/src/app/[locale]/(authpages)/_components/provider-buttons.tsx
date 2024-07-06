@@ -1,8 +1,7 @@
-import Link from "next/link";
 import { FcGoogle } from "react-icons/fc";
 import { RxDiscordLogo } from "react-icons/rx";
 
-import { getBaseKdxUrl } from "@kdx/shared";
+import { getBaseUrl } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { buttonVariants } from "@kdx/ui/button";
 
@@ -30,14 +29,14 @@ export function ProviderButtons({
   return (
     <>
       {providers.map((provider) => (
-        <Link
+        <a
           key={provider.name}
           className={cn(buttonVariants({ variant: "outline" }), "w-full")}
           href={getProviderUrl(provider.name, callbackUrl, invite)}
         >
           {provider.icon}
           {provider.name}
-        </Link>
+        </a>
       ))}
     </>
   );
@@ -50,7 +49,7 @@ function getProviderUrl(
 ): string {
   const url = new URL(
     `/api/auth/${provider.toLowerCase()}/login`,
-    getBaseKdxUrl(),
+    getBaseUrl(),
   );
   if (invite) url.searchParams.append("invite", invite);
   if (callbackUrl) url.searchParams.append("callbackUrl", callbackUrl);

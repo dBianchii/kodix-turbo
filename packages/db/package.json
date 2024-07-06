@@ -47,9 +47,9 @@
     "@kdx/tsconfig": "workspace:*",
     "@types/node": "^20.12.10",
     "dotenv-cli": "^7.4.1",
-    "drizzle-kit": "^0.22.6",
-    "eslint": "^9.2.0",
-    "prettier": "^3.2.5",
+    "drizzle-kit": "^0.22.8",
+    "eslint": "^9.6.0",
+    "prettier": "^3.3.2",
     "tsx": "4.7.3",
     "typescript": "^5.4.5"
   },

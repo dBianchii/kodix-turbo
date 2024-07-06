@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@kdx/auth";
 
-import SettingsEditCardSkeleton from "~/app/[locale]/team/settings/general/_components/edit-team-name-card-skeleton";
+import SettingsEditCardSkeleton from "../../team/settings/general/_components/edit-team-name-card-skeleton";
 import { EditAccountNameCard } from "./_components/edit-account-name-card";
 
 export default async function GeneralAccountSettings() {
