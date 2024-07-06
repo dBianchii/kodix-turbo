@@ -116,6 +116,7 @@ function CustomRow({
                   teamId: team.id,
                   redirect: "/team/settings",
                 });
+              //TODO: error handling...
               else void router.push(`/team/settings`);
             }}
           >
