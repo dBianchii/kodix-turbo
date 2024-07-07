@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useAction } from "next-safe-action/hooks";
 import { LuArrowRight, LuLoader2 } from "react-icons/lu";
 
 import { useI18n } from "@kdx/locales/client";
@@ -39,18 +40,22 @@ export default function OnboardingCard() {
 
   const router = useRouter();
   const t = useI18n();
+  const { execute } = useAction(finishKodixCareOnboardingAction, {
+    onError: (res) => {
+      defaultSafeActionToastError(res.error);
+    },
+    onSuccess: () => {
+      router.push(`/apps/kodixCare`);
+    },
+  });
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(async (values) => {
-          const result = await finishKodixCareOnboardingAction({
+        onSubmit={form.handleSubmit((values) => {
+          execute({
             patientName: values.patientName,
           });
-          if (defaultSafeActionToastError(result)) {
-            return;
-          }
-          router.push(`/apps/kodixCare`);
         })}
         className="space-y-8"
       >
