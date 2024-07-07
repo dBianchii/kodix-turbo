@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
+import { useAction } from "next-safe-action/hooks";
 import { LuLoader2 } from "react-icons/lu";
 import { RxPlusCircled } from "react-icons/rx";
 
@@ -36,9 +36,7 @@ export function AddTeamDialogButton({
   const router = useRouter();
   const [teamName, setTeamName] = useState("");
   const [open, setOpen] = useState(false);
-  const { isPending, mutateAsync } = useMutation({
-    mutationFn: createTeamAction,
-  });
+  const { isExecuting, executeAsync } = useAction(createTeamAction);
   const t = useI18n();
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -75,10 +73,10 @@ export function AddTeamDialogButton({
             {t("Cancel")}
           </Button>
           <Button
-            disabled={isPending}
+            disabled={isExecuting}
             onClick={() => {
               toast.promise(
-                mutateAsync({
+                executeAsync({
                   teamName,
                 }),
                 {
@@ -87,13 +85,14 @@ export function AddTeamDialogButton({
                     setOpen(false);
 
                     router.refresh();
-                    return `${t("Team")} ${res.data?.name} ${t("created")}`;
+                    if (res?.data)
+                      return `${t("Team")} ${res.data.name} ${t("created")}`;
                   },
                 },
               );
             }}
           >
-            {isPending && <LuLoader2 className="mr-2 size-5 animate-spin" />}
+            {isExecuting && <LuLoader2 className="mr-2 size-5 animate-spin" />}
             {t("Create")}
           </Button>
         </DialogFooter>
