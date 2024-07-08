@@ -23,18 +23,18 @@
   "dependencies": {
     "@kdx/shared": "workspace:*",
     "next-international": "^1.2.4",
-    "react": "18.3.1"
+    "react": "catalog:react18"
   },
   "devDependencies": {
     "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "@types/react": "^18.3.3",
-    "eslint": "^9.6.0",
+    "@types/react": "catalog:react18",
+    "eslint": "catalog:",
     "nodemon": "^3.1.0",
-    "prettier": "^3.3.2",
+    "prettier": "catalog:",
     "tsx": "4.7.3",
-    "typescript": "^5.5.3"
+    "typescript": "catalog:"
   },
   "prettier": "@kdx/prettier-config"
 }

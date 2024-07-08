@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "drizzle-zod": "^0.5.1",
-    "zod": "^3.23.5"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@kdx/dayjs": "workspace:*",
@@ -33,10 +33,10 @@
     "@kdx/prettier-config": "workspace:*",
     "@kdx/shared": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "eslint": "^9.6.0",
-    "prettier": "^3.3.2",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
     "rrule": "^2.8.1",
-    "typescript": "^5.5.3"
+    "typescript": "catalog:"
   },
   "prettier": "@kdx/prettier-config"
 }

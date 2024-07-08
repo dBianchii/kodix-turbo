@@ -26,10 +26,10 @@
     "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "@types/node": "^20.12.10",
-    "@types/react": "^18.3.3",
-    "eslint": "^9.6.0",
-    "typescript": "^5.5.3"
+    "@types/node": "catalog:",
+    "@types/react": "catalog:react18",
+    "eslint": "catalog:",
+    "typescript": "catalog:"
   },
   "prettier": "@kdx/prettier-config"
 }

@@ -29,10 +29,10 @@
     "@tamagui/config": "^1.101.7",
     "@tamagui/font-inter": "^1.101.7",
     "@tamagui/lucide-icons": "^1.101.7",
-    "@tanstack/react-query": "^5.50.1",
-    "@trpc/client": "11.0.0-rc.446",
-    "@trpc/react-query": "11.0.0-rc.446",
-    "@trpc/server": "11.0.0-rc.446",
+    "@tanstack/react-query": "catalog:",
+    "@trpc/client": "catalog:",
+    "@trpc/react-query": "catalog:",
+    "@trpc/server": "catalog:",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "expo": "~51.0.11",
@@ -48,8 +48,11 @@
     "expo-splash-screen": "~0.27.5",
     "expo-status-bar": "~1.12.1",
     "expo-web-browser": "^13.0.3",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
+    "lucide-react-native": "^0.395.0",
+    "nativewind": "~4.0.36",
+    "radix-ui-react-native-icons": "^1.1.0",
+    "react": "catalog:react18",
+    "react-dom": "catalog:react18",
     "react-native": "~0.74.2",
     "react-native-css-interop": "~0.0.34",
     "react-native-gesture-handler": "~2.16.2",
@@ -59,7 +62,7 @@
     "superjson": "2.2.1",
     "tailwind-merge": "^2.3.0",
     "tamagui": "^1.101.7",
-    "zod": "^3.23.5"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@babel/core": "^7.24.5",
@@ -71,11 +74,11 @@
     "@kdx/tailwind-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
     "@types/babel__core": "^7.20.5",
-    "@types/react": "^18.3.3",
-    "eslint": "^9.6.0",
-    "prettier": "^3.3.2",
-    "tailwindcss": "^3.4.4",
-    "typescript": "^5.5.3"
+    "@types/react": "catalog:react18",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:"
   },
   "prettier": "@kdx/prettier-config"
 }
