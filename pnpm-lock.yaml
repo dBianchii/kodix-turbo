@@ -4,6 +4,55 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  default:
+    '@tanstack/react-query':
+      specifier: ^5.50.1
+      version: 5.50.1
+    '@trpc/client':
+      specifier: 11.0.0-rc.446
+      version: 11.0.0-rc.446
+    '@trpc/react-query':
+      specifier: 11.0.0-rc.446
+      version: 11.0.0-rc.446
+    '@trpc/server':
+      specifier: 11.0.0-rc.446
+      version: 11.0.0-rc.446
+    '@types/node':
+      specifier: ^20.12.10
+      version: 20.14.9
+    eslint:
+      specifier: ^9.6.0
+      version: 9.6.0
+    next:
+      specifier: 14.2.4
+      version: 14.2.4
+    prettier:
+      specifier: ^3.3.2
+      version: 3.3.2
+    tailwindcss:
+      specifier: ^3.4.4
+      version: 3.4.4
+    typescript:
+      specifier: ^5.5.3
+      version: 5.5.3
+    zod:
+      specifier: ^3.23.8
+      version: 3.23.8
+  react18:
+    '@types/react':
+      specifier: ^18.3.3
+      version: 18.3.3
+    '@types/react-dom':
+      specifier: ^18.3.0
+      version: 18.3.0
+    react:
+      specifier: 18.3.1
+      version: 18.3.1
+    react-dom:
+      specifier: 18.3.1
+      version: 18.3.1
+
 importers:
 
   .:
@@ -15,13 +64,13 @@ importers:
         specifier: ^2.0.6
         version: 2.0.6(@swc/core@1.3.101)(@types/node@20.14.9)(typescript@5.5.3)
       prettier:
-        specifier: ^3.3.2
+        specifier: 'catalog:'
         version: 3.3.2
       turbo:
         specifier: 2.0.6
         version: 2.0.6
       typescript:
-        specifier: ^5.5.3
+        specifier: 'catalog:'
         version: 5.5.3
 
   apps/care-expo:
@@ -51,16 +100,16 @@ importers:
         specifier: 1.6.4
         version: 1.6.4(@babel/runtime@7.24.7)(react-native@0.74.2(@babel/core@7.24.7)(@babel/preset-env@7.24.6(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
       '@tanstack/react-query':
-        specifier: ^5.50.1
+        specifier: 'catalog:'
         version: 5.50.1(react@18.3.1)
       '@trpc/client':
-        specifier: 11.0.0-rc.446
+        specifier: 'catalog:'
         version: 11.0.0-rc.446(@trpc/server@11.0.0-rc.446)
       '@trpc/react-query':
-        specifier: 11.0.0-rc.446
+        specifier: 'catalog:'
         version: 11.0.0-rc.446(@tanstack/react-query@5.50.1(react@18.3.1))(@trpc/client@11.0.0-rc.446(@trpc/server@11.0.0-rc.446))(@trpc/server@11.0.0-rc.446)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@trpc/server':
-        specifier: 11.0.0-rc.446
+        specifier: 'catalog:'
         version: 11.0.0-rc.446
       class-variance-authority:
         specifier: ^0.7.0
@@ -91,7 +140,7 @@ importers:
         version: 0.28.7(expo@51.0.11(@babel/core@7.24.7)(@babel/preset-env@7.24.6(@babel/core@7.24.7)))
       expo-router:
         specifier: ~3.5.15
-        version: 3.5.15(expo-constants@16.0.2(expo@51.0.11(@babel/core@7.24.7)(@babel/preset-env@7.24.6(@babel/core@7.24.7))))(expo-linking@6.3.1(expo@51.0.11(@babel/core@7.24.7)(@babel/preset-env@7.24.6(@babel/core@7.24.7))))(expo-modules-autolinking@1.11.1)(expo-status-bar@1.12.1)(expo@51.0.11(@babel/core@7.24.7)(@babel/preset-env@7.24.6(@babel/core@7.24.7)))(react-native-reanimated@3.10.1(@babel/core@7.24.7)(react-native@0.74.2(@babel/core@7.24.7)(@babel/preset-env@7.24.6(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1))(react-native-safe-area-context@4.10.1(react-native@0.74.2(@babel/core@7.24.7)(@babel/preset-env@7.24.6(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1))(react-native-screens@3.31.1(react-native@0.74.2(@babel/core@7.24.7)(@babel/preset-env@7.24.6(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1))(react-native@0.74.2(@babel/core@7.24.7)(@babel/preset-env@7.24.6(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)(typescript@5.5.3)
+        version: 3.5.15(whrlxjyosu4c4yotfsot2pylde)
       expo-secure-store:
         specifier: ^13.0.1
         version: 13.0.1(expo@51.0.11(@babel/core@7.24.7)(@babel/preset-env@7.24.6(@babel/core@7.24.7)))
@@ -114,10 +163,10 @@ importers:
         specifier: ^1.1.0
         version: 1.1.0(react-native@0.74.2(@babel/core@7.24.7)(@babel/preset-env@7.24.6(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
       react:
-        specifier: 18.3.1
+        specifier: catalog:react18
         version: 18.3.1
       react-dom:
-        specifier: 18.3.1
+        specifier: catalog:react18
         version: 18.3.1(react@18.3.1)
       react-native:
         specifier: ~0.74.2
@@ -144,7 +193,7 @@ importers:
         specifier: ^2.3.0
         version: 2.3.0
       zod:
-        specifier: ^3.23.5
+        specifier: 'catalog:'
         version: 3.23.8
     devDependencies:
       '@babel/core':
@@ -175,19 +224,19 @@ importers:
         specifier: ^7.20.5
         version: 7.20.5
       '@types/react':
-        specifier: ^18.3.3
+        specifier: catalog:react18
         version: 18.3.3
       eslint:
-        specifier: ^9.6.0
+        specifier: 'catalog:'
         version: 9.6.0
       prettier:
-        specifier: ^3.3.2
+        specifier: 'catalog:'
         version: 3.3.2
       tailwindcss:
-        specifier: ^3.4.4
+        specifier: 'catalog:'
         version: 3.4.4(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.14.9)(typescript@5.5.3))
       typescript:
-        specifier: ^5.5.3
+        specifier: 'catalog:'
         version: 5.5.3
 
   apps/kdx:
@@ -229,7 +278,7 @@ importers:
         specifier: ^0.10.1
         version: 0.10.1(typescript@5.5.3)(zod@3.23.8)
       '@tanstack/react-query':
-        specifier: ^5.50.1
+        specifier: 'catalog:'
         version: 5.50.1(react@18.3.1)
       '@tanstack/react-query-devtools':
         specifier: ^5.32.0
@@ -238,13 +287,13 @@ importers:
         specifier: ^8.16.0
         version: 8.17.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@trpc/client':
-        specifier: 11.0.0-rc.446
+        specifier: 'catalog:'
         version: 11.0.0-rc.446(@trpc/server@11.0.0-rc.446)
       '@trpc/react-query':
-        specifier: 11.0.0-rc.446
+        specifier: 'catalog:'
         version: 11.0.0-rc.446(@tanstack/react-query@5.50.1(react@18.3.1))(@trpc/client@11.0.0-rc.446(@trpc/server@11.0.0-rc.446))(@trpc/server@11.0.0-rc.446)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@trpc/server':
-        specifier: 11.0.0-rc.446
+        specifier: 'catalog:'
         version: 11.0.0-rc.446
       '@upstash/redis':
         specifier: ^1.31.6
@@ -265,7 +314,7 @@ importers:
         specifier: ^1.3.0
         version: 1.3.0(next@14.2.4(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       next:
-        specifier: 14.2.4
+        specifier: 'catalog:'
         version: 14.2.4(@babel/core@7.24.7)(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next-safe-action:
         specifier: 7.1.4-experimental.1
@@ -277,13 +326,13 @@ importers:
         specifier: ^1.130.1
         version: 1.136.2
       react:
-        specifier: 18.3.1
+        specifier: catalog:react18
         version: 18.3.1
       react-day-picker:
         specifier: ^8.10.0
         version: 8.10.1(date-fns@3.6.0)(react@18.3.1)
       react-dom:
-        specifier: 18.3.1
+        specifier: catalog:react18
         version: 18.3.1(react@18.3.1)
       react-hook-form:
         specifier: ^7.52.1
@@ -302,9 +351,9 @@ importers:
         version: 2.2.1
       tailwindcss-animate:
         specifier: ^1.0.7
-        version: 1.0.7(tailwindcss@3.4.4(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.13.0)(typescript@5.5.3)))
+        version: 1.0.7(tailwindcss@3.4.4(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.14.9)(typescript@5.5.3)))
       zod:
-        specifier: ^3.23.5
+        specifier: 'catalog:'
         version: 3.23.8
     devDependencies:
       '@kdx/eslint-config':
@@ -323,31 +372,31 @@ importers:
         specifier: workspace:*
         version: link:../../packages/upstash-dev
       '@types/node':
-        specifier: ^20.12.10
-        version: 20.13.0
+        specifier: 'catalog:'
+        version: 20.14.9
       '@types/react':
-        specifier: ^18.3.3
+        specifier: catalog:react18
         version: 18.3.3
       '@types/react-dom':
-        specifier: ^18.3.0
+        specifier: catalog:react18
         version: 18.3.0
       dotenv-cli:
         specifier: ^7.4.1
         version: 7.4.2
       eslint:
-        specifier: ^9.6.0
+        specifier: 'catalog:'
         version: 9.6.0
       jiti:
         specifier: ^1.21.6
         version: 1.21.6
       prettier:
-        specifier: ^3.3.2
+        specifier: 'catalog:'
         version: 3.3.2
       tailwindcss:
-        specifier: ^3.4.4
-        version: 3.4.4(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.13.0)(typescript@5.5.3))
+        specifier: 'catalog:'
+        version: 3.4.4(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.14.9)(typescript@5.5.3))
       typescript:
-        specifier: ^5.5.3
+        specifier: 'catalog:'
         version: 5.5.3
 
   packages/api:
@@ -380,13 +429,13 @@ importers:
         specifier: 0.0.13
         version: 0.0.13
       '@trpc/server':
-        specifier: 11.0.0-rc.446
+        specifier: 'catalog:'
         version: 11.0.0-rc.446
       '@upstash/redis':
         specifier: ^1.31.6
         version: 1.31.6
       next:
-        specifier: 14.2.4
+        specifier: 'catalog:'
         version: 14.2.4(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.2.0))(react@18.2.0)
       resend:
         specifier: ^3.2.0
@@ -398,7 +447,7 @@ importers:
         specifier: 2.2.1
         version: 2.2.1
       zod:
-        specifier: ^3.23.5
+        specifier: 'catalog:'
         version: 3.23.8
     devDependencies:
       '@kdx/eslint-config':
@@ -414,22 +463,22 @@ importers:
         specifier: workspace:*
         version: link:../../tooling/typescript
       '@types/node':
-        specifier: ^20.12.10
-        version: 20.13.0
+        specifier: 'catalog:'
+        version: 20.14.9
       '@types/react':
-        specifier: ^18.3.3
+        specifier: catalog:react18
         version: 18.3.3
       '@types/react-dom':
-        specifier: ^18.3.0
+        specifier: catalog:react18
         version: 18.3.0
       eslint:
-        specifier: ^9.6.0
+        specifier: 'catalog:'
         version: 9.6.0
       prettier:
-        specifier: ^3.3.2
+        specifier: 'catalog:'
         version: 3.3.2
       typescript:
-        specifier: ^5.5.3
+        specifier: 'catalog:'
         version: 5.5.3
 
   packages/auth:
@@ -459,19 +508,19 @@ importers:
         specifier: ^3.2.0
         version: 3.2.0
       next:
-        specifier: 14.2.4
+        specifier: 'catalog:'
         version: 14.2.4(@babel/core@7.24.7)(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
-        specifier: 18.3.1
+        specifier: catalog:react18
         version: 18.3.1
       react-dom:
-        specifier: 18.3.1
+        specifier: catalog:react18
         version: 18.3.1(react@18.3.1)
       resend:
         specifier: ^3.2.0
         version: 3.2.0
       zod:
-        specifier: ^3.23.5
+        specifier: 'catalog:'
         version: 3.23.8
     devDependencies:
       '@auth/core':
@@ -487,16 +536,16 @@ importers:
         specifier: workspace:*
         version: link:../../tooling/typescript
       '@types/react':
-        specifier: ^18.3.3
+        specifier: catalog:react18
         version: 18.3.3
       eslint:
-        specifier: ^9.6.0
+        specifier: 'catalog:'
         version: 9.6.0
       prettier:
-        specifier: ^3.3.2
+        specifier: 'catalog:'
         version: 3.3.2
       typescript:
-        specifier: ^5.5.3
+        specifier: 'catalog:'
         version: 5.5.3
 
   packages/date-fns:
@@ -518,13 +567,13 @@ importers:
         specifier: workspace:*
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.6.0
+        specifier: 'catalog:'
         version: 9.6.0
       prettier:
-        specifier: ^3.3.2
+        specifier: 'catalog:'
         version: 3.3.2
       typescript:
-        specifier: ^5.5.3
+        specifier: 'catalog:'
         version: 5.5.3
 
   packages/dayjs:
@@ -543,13 +592,13 @@ importers:
         specifier: workspace:*
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.6.0
+        specifier: 'catalog:'
         version: 9.6.0
       prettier:
-        specifier: ^3.3.2
+        specifier: 'catalog:'
         version: 3.3.2
       typescript:
-        specifier: ^5.5.3
+        specifier: 'catalog:'
         version: 5.5.3
 
   packages/db:
@@ -567,7 +616,7 @@ importers:
         specifier: ^3.9.2
         version: 3.10.0
       zod:
-        specifier: ^3.23.5
+        specifier: 'catalog:'
         version: 3.23.8
     devDependencies:
       '@kdx/eslint-config':
@@ -580,8 +629,8 @@ importers:
         specifier: workspace:*
         version: link:../../tooling/typescript
       '@types/node':
-        specifier: ^20.12.10
-        version: 20.13.0
+        specifier: 'catalog:'
+        version: 20.14.9
       dotenv-cli:
         specifier: ^7.4.1
         version: 7.4.2
@@ -589,16 +638,16 @@ importers:
         specifier: ^0.22.8
         version: 0.22.8
       eslint:
-        specifier: ^9.6.0
+        specifier: 'catalog:'
         version: 9.6.0
       prettier:
-        specifier: ^3.3.2
+        specifier: 'catalog:'
         version: 3.3.2
       tsx:
         specifier: 4.7.3
         version: 4.7.3
       typescript:
-        specifier: ^5.5.3
+        specifier: 'catalog:'
         version: 5.5.3
 
   packages/locales:
@@ -610,7 +659,7 @@ importers:
         specifier: ^1.2.4
         version: 1.2.4
       react:
-        specifier: 18.3.1
+        specifier: catalog:react18
         version: 18.3.1
     devDependencies:
       '@kdx/eslint-config':
@@ -623,22 +672,22 @@ importers:
         specifier: workspace:*
         version: link:../../tooling/typescript
       '@types/react':
-        specifier: ^18.3.3
+        specifier: catalog:react18
         version: 18.3.3
       eslint:
-        specifier: ^9.6.0
+        specifier: 'catalog:'
         version: 9.6.0
       nodemon:
         specifier: ^3.1.0
         version: 3.1.2
       prettier:
-        specifier: ^3.3.2
+        specifier: 'catalog:'
         version: 3.3.2
       tsx:
         specifier: 4.7.3
         version: 4.7.3
       typescript:
-        specifier: ^5.5.3
+        specifier: 'catalog:'
         version: 5.5.3
 
   packages/react-email:
@@ -653,11 +702,11 @@ importers:
         specifier: ^0.0.14
         version: 0.0.14(@types/react@18.3.3)(react@18.3.1)
       react:
-        specifier: 18.3.1
+        specifier: catalog:react18
         version: 18.3.1
       react-email:
         specifier: ^2.1.1
-        version: 2.1.4(@opentelemetry/api@1.8.0)(@swc/helpers@0.5.5)(eslint@9.6.0)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.13.0)(typescript@5.5.3))
+        version: 2.1.4(@opentelemetry/api@1.8.0)(@swc/helpers@0.5.5)(eslint@9.6.0)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.14.9)(typescript@5.5.3))
     devDependencies:
       '@kdx/eslint-config':
         specifier: workspace:*
@@ -669,19 +718,19 @@ importers:
         specifier: workspace:*
         version: link:../../tooling/typescript
       '@types/node':
-        specifier: ^20.12.10
-        version: 20.13.0
+        specifier: 'catalog:'
+        version: 20.14.9
       '@types/react':
-        specifier: ^18.3.3
+        specifier: catalog:react18
         version: 18.3.3
       eslint:
-        specifier: ^9.6.0
+        specifier: 'catalog:'
         version: 9.6.0
       prettier:
-        specifier: ^3.3.2
+        specifier: 'catalog:'
         version: 3.3.2
       typescript:
-        specifier: ^5.5.3
+        specifier: 'catalog:'
         version: 5.5.3
 
   packages/shared:
@@ -703,16 +752,16 @@ importers:
         specifier: workspace:*
         version: link:../../tooling/typescript
       '@types/node':
-        specifier: ^20.12.10
-        version: 20.13.0
+        specifier: 'catalog:'
+        version: 20.14.9
       '@types/react':
-        specifier: ^18.3.3
+        specifier: catalog:react18
         version: 18.3.3
       eslint:
-        specifier: ^9.6.0
+        specifier: 'catalog:'
         version: 9.6.0
       typescript:
-        specifier: ^5.5.3
+        specifier: 'catalog:'
         version: 5.5.3
 
   packages/trpc-cli:
@@ -727,7 +776,7 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: ^3.23.5
+        specifier: 'catalog:'
         version: 3.23.8
     devDependencies:
       '@kdx/eslint-config':
@@ -740,19 +789,19 @@ importers:
         specifier: workspace:*
         version: link:../../tooling/typescript
       '@types/node':
-        specifier: ^20.12.10
-        version: 20.13.0
+        specifier: 'catalog:'
+        version: 20.14.9
       eslint:
-        specifier: ^9.6.0
+        specifier: 'catalog:'
         version: 9.6.0
       prettier:
-        specifier: ^3.3.2
+        specifier: 'catalog:'
         version: 3.3.2
       tsup:
         specifier: ^8.0.2
-        version: 8.0.2(@swc/core@1.3.101)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.13.0)(typescript@5.5.3))(typescript@5.5.3)
+        version: 8.0.2(@swc/core@1.3.101)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.14.9)(typescript@5.5.3))(typescript@5.5.3)
       typescript:
-        specifier: ^5.5.3
+        specifier: 'catalog:'
         version: 5.5.3
 
   packages/ui:
@@ -842,7 +891,7 @@ importers:
         specifier: ^11.2.6
         version: 11.2.10(@emotion/is-prop-valid@0.8.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next:
-        specifier: 14.2.4
+        specifier: 'catalog:'
         version: 14.2.4(@babel/core@7.24.7)(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next-themes:
         specifier: ^0.3.0
@@ -866,7 +915,7 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.4(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.14.9)(typescript@5.5.3)))
       zod:
-        specifier: ^3.23.5
+        specifier: 'catalog:'
         version: 3.23.8
     devDependencies:
       '@kdx/eslint-config':
@@ -885,31 +934,31 @@ importers:
         specifier: workspace:*
         version: link:../../tooling/typescript
       '@types/react':
-        specifier: ^18.3.3
+        specifier: catalog:react18
         version: 18.3.3
       '@types/react-dom':
-        specifier: ^18.3.0
+        specifier: catalog:react18
         version: 18.3.0
       cobe:
         specifier: ^0.6.3
         version: 0.6.3
       eslint:
-        specifier: ^9.6.0
+        specifier: 'catalog:'
         version: 9.6.0
       prettier:
-        specifier: ^3.3.2
+        specifier: 'catalog:'
         version: 3.3.2
       react:
-        specifier: 18.3.1
+        specifier: catalog:react18
         version: 18.3.1
       react-spring:
         specifier: ^9.7.3
         version: 9.7.3(@react-three/fiber@8.16.7(expo-asset@10.0.8(expo@51.0.11(@babel/core@7.24.7)(@babel/preset-env@7.24.6(@babel/core@7.24.7))))(expo-file-system@17.0.1(expo@51.0.11(@babel/core@7.24.7)(@babel/preset-env@7.24.6(@babel/core@7.24.7))))(expo@51.0.11(@babel/core@7.24.7)(@babel/preset-env@7.24.6(@babel/core@7.24.7)))(react-dom@18.3.1(react@18.3.1))(react-native@0.74.2(@babel/core@7.24.7)(@babel/preset-env@7.24.6(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)(three@0.165.0))(konva@9.3.11)(react-dom@18.3.1(react@18.3.1))(react-konva@18.2.10(konva@9.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-native@0.74.2(@babel/core@7.24.7)(@babel/preset-env@7.24.6(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react-zdog@1.2.2)(react@18.3.1)(three@0.165.0)(zdog@1.1.3)
       tailwindcss:
-        specifier: ^3.4.4
+        specifier: 'catalog:'
         version: 3.4.4(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.14.9)(typescript@5.5.3))
       typescript:
-        specifier: ^5.5.3
+        specifier: 'catalog:'
         version: 5.5.3
 
   packages/upstash-dev: {}
@@ -920,7 +969,7 @@ importers:
         specifier: ^0.5.1
         version: 0.5.1(drizzle-orm@0.31.2(@opentelemetry/api@1.8.0)(@types/react@18.3.3)(mysql2@3.10.0)(react@18.3.1))(zod@3.23.8)
       zod:
-        specifier: ^3.23.5
+        specifier: 'catalog:'
         version: 3.23.8
     devDependencies:
       '@kdx/dayjs':
@@ -942,16 +991,16 @@ importers:
         specifier: workspace:*
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.6.0
+        specifier: 'catalog:'
         version: 9.6.0
       prettier:
-        specifier: ^3.3.2
+        specifier: 'catalog:'
         version: 3.3.2
       rrule:
         specifier: ^2.8.1
         version: 2.8.1
       typescript:
-        specifier: ^5.5.3
+        specifier: 'catalog:'
         version: 5.5.3
 
   tooling/eslint:
@@ -985,13 +1034,13 @@ importers:
         specifier: workspace:*
         version: link:../typescript
       eslint:
-        specifier: ^9.6.0
+        specifier: 'catalog:'
         version: 9.6.0
       prettier:
-        specifier: ^3.3.2
+        specifier: 'catalog:'
         version: 3.3.2
       typescript:
-        specifier: ^5.5.3
+        specifier: 'catalog:'
         version: 5.5.3
 
   tooling/github: {}
@@ -1002,7 +1051,7 @@ importers:
         specifier: ^4.3.0
         version: 4.3.0(prettier@3.3.2)
       prettier:
-        specifier: ^3.3.2
+        specifier: 'catalog:'
         version: 3.3.2
       prettier-plugin-tailwindcss:
         specifier: ^0.5.14
@@ -1012,10 +1061,10 @@ importers:
         specifier: workspace:*
         version: link:../typescript
       '@types/node':
-        specifier: ^20.12.10
-        version: 20.13.0
+        specifier: 'catalog:'
+        version: 20.14.9
       typescript:
-        specifier: ^5.5.3
+        specifier: 'catalog:'
         version: 5.5.3
 
   tooling/tailwind:
@@ -1024,7 +1073,7 @@ importers:
         specifier: ^8.4.39
         version: 8.4.39
       tailwindcss:
-        specifier: ^3.4.4
+        specifier: 'catalog:'
         version: 3.4.4(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.14.9)(typescript@5.5.3))
       tailwindcss-animate:
         specifier: ^1.0.7
@@ -1040,13 +1089,13 @@ importers:
         specifier: workspace:*
         version: link:../typescript
       eslint:
-        specifier: ^9.6.0
+        specifier: 'catalog:'
         version: 9.6.0
       prettier:
-        specifier: ^3.3.2
+        specifier: 'catalog:'
         version: 3.3.2
       typescript:
-        specifier: ^5.5.3
+        specifier: 'catalog:'
         version: 5.5.3
 
   tooling/typescript: {}
@@ -4566,9 +4615,6 @@ packages:
 
   '@types/node@18.19.33':
     resolution: {integrity: sha512-NR9+KrpSajr2qBVp/Yt5TU/rp+b5Mayi3+OlMlcg2cVCfRmcG5PWZ7S4+MG9PZ5gWBoc9Pd0BKSRViuBCRPu0A==}
-
-  '@types/node@20.13.0':
-    resolution: {integrity: sha512-FM6AOb3khNkNIXPnHFDYaHerSv8uN22C91z098AnGccVu+Pcdhi+pNUFDi0iLmPIsVE0JBD0KVS7mzUYt4nRzQ==}
 
   '@types/node@20.14.9':
     resolution: {integrity: sha512-06OCtnTXtWOZBJlRApleWndH4JsRVs1pDCc8dLSQp+7PpUpX3ePdHyeNSFTeSe7FtKyQkrlPvHwJOW3SLd8Oyg==}
@@ -13917,10 +13963,6 @@ snapshots:
     dependencies:
       undici-types: 5.26.5
 
-  '@types/node@20.13.0':
-    dependencies:
-      undici-types: 5.26.5
-
   '@types/node@20.14.9':
     dependencies:
       undici-types: 5.26.5
@@ -13956,7 +13998,7 @@ snapshots:
 
   '@types/webpack@5.28.5(@swc/core@1.3.101(@swc/helpers@0.5.5))(esbuild@0.19.11)':
     dependencies:
-      '@types/node': 20.13.0
+      '@types/node': 20.14.9
       tapable: 2.2.1
       webpack: 5.91.0(@swc/core@1.3.101(@swc/helpers@0.5.5))(esbuild@0.19.11)
     transitivePeerDependencies:
@@ -15246,7 +15288,7 @@ snapshots:
     dependencies:
       '@types/cookie': 0.4.1
       '@types/cors': 2.8.17
-      '@types/node': 20.13.0
+      '@types/node': 20.14.9
       accepts: 1.3.8
       base64id: 2.0.0
       cookie: 0.4.2
@@ -15842,8 +15884,8 @@ snapshots:
       - encoding
       - supports-color
 
-  ? expo-router@3.5.15(expo-constants@16.0.2(expo@51.0.11(@babel/core@7.24.7)(@babel/preset-env@7.24.6(@babel/core@7.24.7))))(expo-linking@6.3.1(expo@51.0.11(@babel/core@7.24.7)(@babel/preset-env@7.24.6(@babel/core@7.24.7))))(expo-modules-autolinking@1.11.1)(expo-status-bar@1.12.1)(expo@51.0.11(@babel/core@7.24.7)(@babel/preset-env@7.24.6(@babel/core@7.24.7)))(react-native-reanimated@3.10.1(@babel/core@7.24.7)(react-native@0.74.2(@babel/core@7.24.7)(@babel/preset-env@7.24.6(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1))(react-native-safe-area-context@4.10.1(react-native@0.74.2(@babel/core@7.24.7)(@babel/preset-env@7.24.6(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1))(react-native-screens@3.31.1(react-native@0.74.2(@babel/core@7.24.7)(@babel/preset-env@7.24.6(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1))(react-native@0.74.2(@babel/core@7.24.7)(@babel/preset-env@7.24.6(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)(typescript@5.5.3)
-  : dependencies:
+  expo-router@3.5.15(whrlxjyosu4c4yotfsot2pylde):
+    dependencies:
       '@expo/metro-runtime': 3.2.1(react-native@0.74.2(@babel/core@7.24.7)(@babel/preset-env@7.24.6(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))
       '@expo/server': 0.4.2(typescript@5.5.3)
       '@radix-ui/react-slot': 1.0.1(react@18.3.1)
@@ -17965,14 +18007,6 @@ snapshots:
       camelcase-css: 2.0.1
       postcss: 8.4.39
 
-  postcss-load-config@4.0.2(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.13.0)(typescript@5.5.3)):
-    dependencies:
-      lilconfig: 3.1.2
-      yaml: 2.4.5
-    optionalDependencies:
-      postcss: 8.4.39
-      ts-node: 10.9.2(@swc/core@1.3.101)(@types/node@20.13.0)(typescript@5.5.3)
-
   postcss-load-config@4.0.2(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.14.9)(typescript@5.5.3)):
     dependencies:
       lilconfig: 3.1.2
@@ -18177,7 +18211,7 @@ snapshots:
       react: 18.3.1
       scheduler: 0.23.2
 
-  react-email@2.1.4(@opentelemetry/api@1.8.0)(@swc/helpers@0.5.5)(eslint@9.6.0)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.13.0)(typescript@5.5.3)):
+  react-email@2.1.4(@opentelemetry/api@1.8.0)(@swc/helpers@0.5.5)(eslint@9.6.0)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.14.9)(typescript@5.5.3)):
     dependencies:
       '@babel/core': 7.24.5
       '@babel/parser': 7.24.5
@@ -18218,7 +18252,7 @@ snapshots:
       source-map-js: 1.0.2
       stacktrace-parser: 0.1.10
       tailwind-merge: 2.2.0
-      tailwindcss: 3.4.0(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.13.0)(typescript@5.5.3))
+      tailwindcss: 3.4.0(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.14.9)(typescript@5.5.3))
       typescript: 5.1.6
     transitivePeerDependencies:
       - '@opentelemetry/api'
@@ -19239,15 +19273,11 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.24.7
 
-  tailwindcss-animate@1.0.7(tailwindcss@3.4.4(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.13.0)(typescript@5.5.3))):
-    dependencies:
-      tailwindcss: 3.4.4(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.13.0)(typescript@5.5.3))
-
   tailwindcss-animate@1.0.7(tailwindcss@3.4.4(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.14.9)(typescript@5.5.3))):
     dependencies:
       tailwindcss: 3.4.4(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.14.9)(typescript@5.5.3))
 
-  tailwindcss@3.4.0(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.13.0)(typescript@5.5.3)):
+  tailwindcss@3.4.0(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.14.9)(typescript@5.5.3)):
     dependencies:
       '@alloc/quick-lru': 5.2.0
       arg: 5.0.2
@@ -19266,34 +19296,7 @@ snapshots:
       postcss: 8.4.39
       postcss-import: 15.1.0(postcss@8.4.39)
       postcss-js: 4.0.1(postcss@8.4.39)
-      postcss-load-config: 4.0.2(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.13.0)(typescript@5.5.3))
-      postcss-nested: 6.0.1(postcss@8.4.39)
-      postcss-selector-parser: 6.1.0
-      resolve: 1.22.8
-      sucrase: 3.35.0
-    transitivePeerDependencies:
-      - ts-node
-
-  tailwindcss@3.4.4(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.13.0)(typescript@5.5.3)):
-    dependencies:
-      '@alloc/quick-lru': 5.2.0
-      arg: 5.0.2
-      chokidar: 3.6.0
-      didyoumean: 1.2.2
-      dlv: 1.1.3
-      fast-glob: 3.3.2
-      glob-parent: 6.0.2
-      is-glob: 4.0.3
-      jiti: 1.21.6
-      lilconfig: 2.1.0
-      micromatch: 4.0.7
-      normalize-path: 3.0.0
-      object-hash: 3.0.0
-      picocolors: 1.0.1
-      postcss: 8.4.39
-      postcss-import: 15.1.0(postcss@8.4.39)
-      postcss-js: 4.0.1(postcss@8.4.39)
-      postcss-load-config: 4.0.2(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.13.0)(typescript@5.5.3))
+      postcss-load-config: 4.0.2(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.14.9)(typescript@5.5.3))
       postcss-nested: 6.0.1(postcss@8.4.39)
       postcss-selector-parser: 6.1.0
       resolve: 1.22.8
@@ -19454,27 +19457,6 @@ snapshots:
 
   ts-interface-checker@0.1.13: {}
 
-  ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.13.0)(typescript@5.5.3):
-    dependencies:
-      '@cspotcode/source-map-support': 0.8.1
-      '@tsconfig/node10': 1.0.11
-      '@tsconfig/node12': 1.0.11
-      '@tsconfig/node14': 1.0.3
-      '@tsconfig/node16': 1.0.4
-      '@types/node': 20.13.0
-      acorn: 8.12.1
-      acorn-walk: 8.3.3
-      arg: 4.1.3
-      create-require: 1.1.1
-      diff: 4.0.2
-      make-error: 1.3.6
-      typescript: 5.5.3
-      v8-compile-cache-lib: 3.0.1
-      yn: 3.1.1
-    optionalDependencies:
-      '@swc/core': 1.3.101(@swc/helpers@0.5.5)
-    optional: true
-
   ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.14.9)(typescript@5.5.3):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
@@ -19512,7 +19494,7 @@ snapshots:
 
   tslib@2.6.3: {}
 
-  tsup@8.0.2(@swc/core@1.3.101)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.13.0)(typescript@5.5.3))(typescript@5.5.3):
+  tsup@8.0.2(@swc/core@1.3.101)(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.14.9)(typescript@5.5.3))(typescript@5.5.3):
     dependencies:
       bundle-require: 4.1.0(esbuild@0.19.12)
       cac: 6.7.14
@@ -19522,7 +19504,7 @@ snapshots:
       execa: 5.1.1
       globby: 11.1.0
       joycon: 3.1.1
-      postcss-load-config: 4.0.2(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.13.0)(typescript@5.5.3))
+      postcss-load-config: 4.0.2(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.14.9)(typescript@5.5.3))
       resolve-from: 5.0.0
       rollup: 4.18.0
       source-map: 0.8.0-beta.0
