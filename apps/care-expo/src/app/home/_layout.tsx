@@ -1,8 +1,8 @@
+import { useColorScheme } from "react-native";
 import { Stack } from "expo-router/stack";
-import { useColorScheme } from "nativewind";
 
 export default function Layout() {
-  const { colorScheme } = useColorScheme();
+  const colorScheme = useColorScheme();
   return (
     <Stack
       screenOptions={{

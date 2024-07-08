@@ -1,12 +1,13 @@
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { YStack } from "tamagui";
 
 export default function Tab() {
   return (
-    <View className="flex h-full w-full flex-col bg-background p-8">
-      <SafeAreaView className="flex bg-background">
-        <Text className="text-2xl text-foreground">Settings page yaay</Text>
+    <YStack bg={"$background"} flex={1} alignItems="center" px={"$3"}>
+      <SafeAreaView>
+        <Text>Settings page</Text>
       </SafeAreaView>
-    </View>
+    </YStack>
   );
 }

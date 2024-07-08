@@ -47,5 +47,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
           "com.googleusercontent.apps.42896229992-7k78j9qped4kbpcbghb8pkfbivop5g6c",
       },
     ],
+    "expo-font",
   ],
 });

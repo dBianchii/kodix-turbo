@@ -48,14 +48,15 @@ export const useSignIn = () => {
 
 export const useSignOut = () => {
   const utils = api.useUtils();
-  const signOut = api.auth.signOut.useMutation();
+  const signOut = api.auth.signOut.useMutation({
+    onSuccess: async () => {
+      await deleteToken();
+      await utils.invalidate();
+      router.replace("/");
+    },
+    onSettled: () => utils.invalidate(),
+  });
   const router = useRouter();
 
-  return async () => {
-    const res = await signOut.mutateAsync();
-    if (!res.success) return;
-    await deleteToken();
-    await utils.invalidate();
-    router.replace("/");
-  };
+  return signOut;
 };
