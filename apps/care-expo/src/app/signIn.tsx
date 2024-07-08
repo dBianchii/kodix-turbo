@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Keyboard, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import * as WebBrowser from "expo-web-browser";
 import { ArrowLeft } from "@tamagui/lucide-icons";
 import { Button, H1, Input, Spinner, Text, View, YStack } from "tamagui";
 import { z } from "zod";
@@ -20,8 +19,6 @@ import {
   useForm,
 } from "~/components/form";
 import { useSignIn } from "~/utils/auth";
-
-WebBrowser.maybeCompleteAuthSession();
 
 //https://www.youtube.com/watch?v=ykQaIZtankk&ab_channel=OmatsolaDev
 //https://www.youtube.com/watch?v=ykQaIZtankk&ab_channel=OmatsolaDev

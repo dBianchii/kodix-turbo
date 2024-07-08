@@ -1,28 +1,7 @@
-import * as Linking from "expo-linking";
 import { useRouter } from "expo-router";
-import * as Browser from "expo-web-browser";
 
 import { api } from "./api";
 import { deleteToken, setToken } from "./session-store";
-
-export const signIn = async (signInUrl: string) => {
-  const redirectTo = Linking.createURL("/login");
-  const result = await Browser.openAuthSessionAsync(
-    `${signInUrl}?callbackUrl=${encodeURIComponent(redirectTo)}`,
-    redirectTo,
-  );
-
-  if (result.type !== "success") return result.type;
-
-  const url = Linking.parse(result.url);
-  if (url.queryParams?.notRegistered) return "userNotRegistered";
-
-  const sessionToken = String(url.queryParams?.session_token);
-  if (!sessionToken) return;
-
-  setToken(sessionToken);
-  return "success";
-};
 
 export const useUser = () => {
   const { data: session } = api.auth.getSession.useQuery();
