@@ -11,7 +11,7 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { TamaguiProvider } from "tamagui";
-import tamaguiConfig from "tamagui-config/tamagui.config";
+import tamaguiConfig from "tamagui.config";
 
 import { TRPCProvider } from "~/utils/api";
 
@@ -41,14 +41,14 @@ export default function RootLayout() {
 
   return (
     <TRPCProvider>
-      {/*
-          The Stack component displays the current page.
-          It also allows you to configure your screens 
-        */}
       <TamaguiProvider
         config={tamaguiConfig}
         defaultTheme={colorScheme === "dark" ? "dark_blue" : "light_blue"}
       >
+        {/*
+          The Stack component displays the current page.
+          It also allows you to configure your screens 
+          */}
         <Stack screenOptions={{ headerShown: false }} />
       </TamaguiProvider>
     </TRPCProvider>
