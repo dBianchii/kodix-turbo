@@ -7,8 +7,8 @@ import { lucia } from "@kdx/auth";
 import { createUser } from "@kdx/auth/db";
 import { eq } from "@kdx/db";
 import { db } from "@kdx/db/client";
+import { nanoid } from "@kdx/db/nanoid";
 import { schema } from "@kdx/db/schema";
-import { nanoid } from "@kdx/shared";
 
 import type { TPublicProcedureContext } from "../../procedures";
 import { argon2Config } from "./utils";

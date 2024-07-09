@@ -1,7 +1,23 @@
+import type { BottomTabBarButtonProps } from "@react-navigation/bottom-tabs/src/types";
+import React from "react";
+import { Pressable } from "react-native";
+import * as Haptics from "expo-haptics";
 import { Tabs, useRouter } from "expo-router";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { Bell, Home } from "@tamagui/lucide-icons";
 
 import { useUser } from "~/utils/auth";
+
+function TabBarButton(props: BottomTabBarButtonProps) {
+  return (
+    <Pressable
+      {...props}
+      onPress={(e) => {
+        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        return props.onPress?.(e);
+      }}
+    />
+  );
+}
 
 export default function TabLayout() {
   const user = useUser();
@@ -11,64 +27,30 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "#6d28d9",
+        tabBarActiveTintColor: "$white",
+        tabBarStyle: {
+          borderTopColor: "rgba(34,36,40,1)",
+          backgroundColor: "rgba(34,36,40,1)",
+        },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          headerStyle: {
-            backgroundColor: "#6d28d9",
-          },
-          headerShown: false,
           tabBarLabel: () => null,
-          tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="home" color={color} />
-          ),
+          tabBarButton: TabBarButton,
+          tabBarIcon: ({ color }) => <Home color={color} />,
         }}
       />
-      {/* <Tabs.Screen
-        name=""
-        options={{
-          headerShown: false,
-          tabBarLabel: () => null,
-          tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="bell" color={color} />
-          ),
-        }}
-      /> */}
       <Tabs.Screen
-        name="settings"
+        name="notifications"
         options={{
           headerShown: false,
           tabBarLabel: () => null,
-          tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="bell" color={color} />
-          ),
+          tabBarButton: TabBarButton,
+          tabBarIcon: ({ color }) => <Bell color={color} />,
         }}
       />
-      {/* <Tabs.Screen
-        name="account"
-        options={{
-          headerShown: false,
-          tabBarLabel: () => null,
-          tabBarIcon: ({ color, focused }) => (
-            <Avatar
-              className={cn(
-                "size-10",
-                focused && `border-{color} border-2 transition-all`,
-              )}
-            >
-              <AvatarImage
-                source={{
-                  uri: user.image ?? "https://i.pravatar.cc/300",
-                }}
-              />
-              <AvatarFallback>CG</AvatarFallback>
-            </Avatar>
-          ),
-        }}
-      /> */}
     </Tabs>
   );
 }

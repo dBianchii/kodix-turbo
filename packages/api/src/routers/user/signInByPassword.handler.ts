@@ -35,13 +35,13 @@ export const signInHandler = async ({
     // it is crucial your implementation is protected against brute-force attacks with login throttling etc.
     // If usernames are public, you may outright tell the user that the username is invalid.
     throw new TRPCError({
-      code: "NOT_FOUND",
+      code: "UNAUTHORIZED",
       message: "Incorrect email or password",
     });
   }
   if (!existingUser.passwordHash)
     throw new TRPCError({
-      code: "NOT_FOUND",
+      code: "UNAUTHORIZED",
       message: "Incorrect email or password",
     });
 
@@ -52,7 +52,7 @@ export const signInHandler = async ({
   );
   if (!validPassword)
     throw new TRPCError({
-      code: "NOT_FOUND",
+      code: "UNAUTHORIZED",
       message: "Incorrect email or password",
     });
 

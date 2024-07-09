@@ -1,8 +1,7 @@
 import { relations } from "drizzle-orm";
 import { index, mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core";
 
-import { NANOID_SIZE } from "@kdx/shared";
-
+import { NANOID_SIZE } from "../../nanoid";
 import { teams } from "../teams";
 import {
   DEFAULTLENGTH,

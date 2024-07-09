@@ -1,8 +1,7 @@
-import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Link, Stack, useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
+import { Button, H1, View, YStack } from "tamagui";
 
-import { Button } from "~/components/Button";
 import { useUser } from "~/utils/auth";
 
 // Notifications.setNotificationHandler({
@@ -140,19 +139,20 @@ export default function Index() {
   }
 
   return (
-    <SafeAreaView className="bg-background">
-      {/* Changes page title visible on the header */}
-      <Stack.Screen options={{ title: "Login page" }} />
-      <View className="center flex h-full w-full flex-col bg-background">
-        <View className="my-auto h-1/3 w-full">
-          <Text className="text-center text-5xl font-bold text-foreground">
-            Kodix Care
-          </Text>
-
-          <MobileAuth />
-        </View>
-      </View>
-    </SafeAreaView>
+    <YStack
+      bg={"$background"}
+      flex={1}
+      alignItems="center"
+      gap="$8"
+      pt="$10"
+      px={"$3"}
+    >
+      <SafeAreaView>
+        {/* Changes page title visible on the header */}
+        <H1 alignSelf="center">Kodix Care</H1>
+        <MobileAuth />
+      </SafeAreaView>
+    </YStack>
   );
 }
 
@@ -160,18 +160,21 @@ function MobileAuth() {
   const router = useRouter();
 
   return (
-    <View className="w-80 gap-2 self-center pt-8">
+    <View my={"$7"} gap="$4">
       <Link href="/register" asChild>
-        <Button className="rounded-full" label="Novo cadastro" />
+        <Button w={"$20"} themeInverse>
+          Novo cadastro
+        </Button>
       </Link>
       <Button
-        variant={"secondary"}
-        className="rounded-full"
-        label="Login"
+        w={"$20"}
+        theme="active"
         onPress={() => {
           router.push("/signIn");
         }}
-      />
+      >
+        Entrar
+      </Button>
     </View>
   );
 }

@@ -23,6 +23,7 @@ expo-env.d.ts
 apps/care-expo/.gitignore
 apps/care-expo/ios
 apps/care-expo/android
+.tamagui
 
 #react-email
 .react-email

@@ -1,15 +1,8 @@
 import { isRedirectError } from "next/dist/client/components/redirect";
-import { customAlphabet } from "nanoid";
 import { z } from "zod";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare let window: any;
-
-export const NANOID_SIZE = 12; //If this is changed, the regex in zNanoIdRegex in @kdx/validators must be updated
-export const nanoid = customAlphabet(
-  "1234567890abcdefghijklmnopqrstuvwxyz",
-  NANOID_SIZE,
-);
 
 /**
  * @description Base URL for the current environment.

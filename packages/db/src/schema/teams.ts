@@ -7,8 +7,7 @@ import {
   varchar,
 } from "drizzle-orm/mysql-core";
 
-import { NANOID_SIZE } from "@kdx/shared";
-
+import { NANOID_SIZE } from "../nanoid";
 import {
   appPermissionsToTeamAppRoles,
   apps,

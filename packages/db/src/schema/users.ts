@@ -11,8 +11,7 @@ import {
   varchar,
 } from "drizzle-orm/mysql-core";
 
-import { nanoid, NANOID_SIZE } from "@kdx/shared";
-
+import { nanoid, NANOID_SIZE } from "../nanoid";
 import { todos } from "./apps/todos";
 import { invitations, teamAppRolesToUsers, teams, usersToTeams } from "./teams";
 import {

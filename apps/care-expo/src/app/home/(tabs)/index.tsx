@@ -1,9 +1,10 @@
 import React from "react";
-import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
+import { Text, YStack } from "tamagui";
 
 import { useUser } from "~/utils/auth";
+import { Header } from "../_components/header";
 
 export default function Tab() {
   const user = useUser();
@@ -12,10 +13,11 @@ export default function Tab() {
   if (!user) router.replace("/");
 
   return (
-    <View className="flex h-full w-full flex-col bg-background p-8">
-      <SafeAreaView className="flex bg-background">
-        <Text className="text-2xl text-foreground">Home page. Yayy</Text>
+    <YStack bg={"$background"} flex={1} px={"$3"} ai={"flex-end"}>
+      <SafeAreaView>
+        <Header />
+        <Text>Home page. Yayy</Text>
       </SafeAreaView>
-    </View>
+    </YStack>
   );
 }
