@@ -1,4 +1,4 @@
-import type { PressableProps } from "react-native";
+import type { BottomTabBarButtonProps } from "@react-navigation/bottom-tabs/src/types";
 import React from "react";
 import { Pressable } from "react-native";
 import * as Haptics from "expo-haptics";
@@ -7,7 +7,7 @@ import { Bell, Home } from "@tamagui/lucide-icons";
 
 import { useUser } from "~/utils/auth";
 
-function TabBarButton(props: PressableProps) {
+function TabBarButton(props: BottomTabBarButtonProps) {
   return (
     <Pressable
       {...props}
