@@ -4,7 +4,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
 import { ArrowLeft } from "@tamagui/lucide-icons";
 import { Button, H3, Input, Paragraph, Spinner, View, YStack } from "tamagui";
-import { z } from "zod";
+
+import { ZSignupWithPasswordInputSchema } from "@kdx/validators/trpc/user";
 
 import {
   Form,
@@ -34,10 +35,8 @@ export default function RegisterStep2() {
     },
   });
   const form = useForm({
-    schema: z.object({
-      name: z.string().min(3),
-      email: z.string().email(),
-      password: z.string().min(3),
+    schema: ZSignupWithPasswordInputSchema.omit({
+      invite: true,
     }),
     defaultValues: {
       email,

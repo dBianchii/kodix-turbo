@@ -1,8 +1,8 @@
 import { cookies } from "next/headers";
 
 import { db } from "@kdx/db/client";
+import { nanoid } from "@kdx/db/nanoid";
 import { schema } from "@kdx/db/schema";
-import { nanoid } from "@kdx/shared";
 
 import { createUser } from "../../db";
 

@@ -2,8 +2,8 @@ import { TRPCError } from "@trpc/server";
 
 import type { TRemoveUserSchema } from "@kdx/validators/trpc/team";
 import { and, eq, not } from "@kdx/db";
+import { nanoid } from "@kdx/db/nanoid";
 import { schema } from "@kdx/db/schema";
-import { nanoid } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 

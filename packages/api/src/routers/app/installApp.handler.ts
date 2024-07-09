@@ -3,8 +3,9 @@ import { TRPCError } from "@trpc/server";
 import type { TInstallAppInputSchema } from "@kdx/validators/trpc/app";
 import { and, eq } from "@kdx/db";
 import { appRoles_defaultTree } from "@kdx/db/constants";
+import { nanoid } from "@kdx/db/nanoid";
 import { schema } from "@kdx/db/schema";
-import { appIdToAdminRole_defaultIdMap, nanoid } from "@kdx/shared";
+import { appIdToAdminRole_defaultIdMap } from "@kdx/shared";
 
 import type { TIsTeamOwnerProcedureContext } from "../../procedures";
 import { invalidateUpstashCache } from "../../upstash";

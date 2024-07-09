@@ -13,7 +13,8 @@ import {
   View,
   YStack,
 } from "tamagui";
-import { z } from "zod";
+
+import { ZCheckEmailForRegisterInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 
 import { DismissKeyboard } from "~/components/dismiss-keyboard";
 import {
@@ -37,9 +38,7 @@ export default function Register() {
   }, [utils]);
 
   const form = useForm({
-    schema: z.object({
-      email: z.string().email(),
-    }),
+    schema: ZCheckEmailForRegisterInputSchema,
   });
 
   const query = api.app.kodixCare.checkEmailForRegister.useQuery(

@@ -5,11 +5,6 @@ import "@bacons/text-decoder/install";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
 import { useFonts } from "expo-font";
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
 import { TamaguiProvider } from "tamagui";
 import tamaguiConfig from "tamagui.config";
 

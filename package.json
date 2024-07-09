@@ -34,5 +34,10 @@
     "turbo": "2.0.6",
     "typescript": "catalog:"
   },
-  "prettier": "@kdx/prettier-config"
+  "prettier": "@kdx/prettier-config",
+  "pnpm": {
+    "patchedDependencies": {
+      "metro@0.80.9": "patches/metro@0.80.9.patch"
+    }
+  }
 }

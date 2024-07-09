@@ -1,12 +1,11 @@
-import { useState } from "react";
 import { Keyboard, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { ArrowLeft } from "@tamagui/lucide-icons";
 import { Button, H1, Input, Spinner, Text, View, YStack } from "tamagui";
-import { z } from "zod";
 
 import { getErrorMessage } from "@kdx/shared";
+import { ZSignInByPasswordInputSchema } from "@kdx/validators/trpc/user";
 
 import {
   Form,
@@ -91,10 +90,7 @@ export default function SignIn() {
   //log the userInfo to see user details
   //console.log(JSON.stringify(userInfo));
   const form = useForm({
-    schema: z.object({
-      email: z.string().email(),
-      password: z.string().min(8),
-    }),
+    schema: ZSignInByPasswordInputSchema,
   });
   return (
     <YStack bg={"$background"} flex={1} alignItems="center" px={"$3"}>
