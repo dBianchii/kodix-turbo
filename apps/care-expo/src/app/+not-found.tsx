@@ -1,38 +1,21 @@
-import { StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, Stack } from "expo-router";
-import { Text, View } from "tamagui";
+import { Button, Text, YStack } from "tamagui";
 
 export default function NotFoundScreen() {
   return (
     <>
-      <Stack.Screen options={{ title: "Oops!" }} />
-      <View margin={10}>
-        <Text>This screen doesn't exist.</Text>
-        <Link href="/" style={styles.link}>
-          <Text style={styles.linkText}>Go to home screen!</Text>
-        </Link>
-      </View>
+      <YStack bg={"$background"} flex={1} px={"$3"}>
+        <SafeAreaView>
+          <Stack.Screen options={{ title: "Oops!" }} />
+          <YStack backgroundColor={"$background"} jc={"center"} ai={"center"}>
+            <Text>This screen doesn't exist.</Text>
+            <Link href="/" asChild>
+              <Button>Go to home screen!</Button>
+            </Link>
+          </YStack>
+        </SafeAreaView>
+      </YStack>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  link: {
-    marginTop: 15,
-    paddingVertical: 15,
-  },
-  linkText: {
-    fontSize: 14,
-    color: "#2e78b7",
-  },
-});
