@@ -17,7 +17,7 @@ import {
   FormProvider,
   useFormContext,
 } from "react-hook-form";
-import { Label, Paragraph, SizableText, Text, View } from "tamagui";
+import { Label, Paragraph, Text, View } from "tamagui";
 
 const useForm = <
   TOut extends FieldValues,

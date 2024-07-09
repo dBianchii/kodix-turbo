@@ -1,7 +1,7 @@
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
-import { Text, View, YStack } from "tamagui";
+import { Text, YStack } from "tamagui";
 
 import { useUser } from "~/utils/auth";
 import { Header } from "../_components/header";

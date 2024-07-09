@@ -1,27 +1,6 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  ArrowLeftToLine,
-  ArrowRight,
-  Cloud,
-  Moon,
-  Star,
-  Sun,
-} from "@tamagui/lucide-icons";
-import {
-  Button,
-  Card,
-  H2,
-  H3,
-  H4,
-  ListItem,
-  Paragraph,
-  Separator,
-  Text,
-  View,
-  XStack,
-  YGroup,
-  YStack,
-} from "tamagui";
+import { ArrowLeftToLine, ArrowRight, Moon } from "@tamagui/lucide-icons";
+import { H4, ListItem, Separator, XStack, YGroup, YStack } from "tamagui";
 
 import { AvatarWrapper } from "~/components/avatar-wrapper";
 import { useSignOut, useUser } from "~/utils/auth";
