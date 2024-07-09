@@ -2,9 +2,10 @@ import { TRPCError } from "@trpc/server";
 
 import type { TSendResetPasswordEmailInputSchema } from "@kdx/validators/trpc/user";
 import { eq } from "@kdx/db";
+import { nanoid } from "@kdx/db/nanoid";
 import { schema } from "@kdx/db/schema";
 import ResetPassword from "@kdx/react-email/reset-password";
-import { kodixNotificationFromEmail, nanoid } from "@kdx/shared";
+import { kodixNotificationFromEmail } from "@kdx/shared";
 
 import type { TPublicProcedureContext } from "../../procedures";
 import { resend } from "../../utils/email";

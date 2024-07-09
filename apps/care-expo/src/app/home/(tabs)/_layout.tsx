@@ -1,10 +1,23 @@
-import { Text } from "react-native";
+import type { PressableProps } from "react-native";
+import React from "react";
+import { Pressable } from "react-native";
+import * as Haptics from "expo-haptics";
 import { Tabs, useRouter } from "expo-router";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Bell, Home } from "@tamagui/lucide-icons";
-import { View } from "tamagui";
 
 import { useUser } from "~/utils/auth";
+
+function TabBarButton(props: PressableProps) {
+  return (
+    <Pressable
+      {...props}
+      onPress={(e) => {
+        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        return props.onPress?.(e);
+      }}
+    />
+  );
+}
 
 export default function TabLayout() {
   const user = useUser();
@@ -25,6 +38,7 @@ export default function TabLayout() {
         name="index"
         options={{
           tabBarLabel: () => null,
+          tabBarButton: TabBarButton,
           tabBarIcon: ({ color }) => <Home color={color} />,
         }}
       />
@@ -33,6 +47,7 @@ export default function TabLayout() {
         options={{
           headerShown: false,
           tabBarLabel: () => null,
+          tabBarButton: TabBarButton,
           tabBarIcon: ({ color }) => <Bell color={color} />,
         }}
       />
