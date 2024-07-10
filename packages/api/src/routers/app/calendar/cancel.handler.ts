@@ -15,7 +15,7 @@ interface CancelOptions {
 export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
   if (input.exclusionDefinition === "single") {
     if (input.eventExceptionId) {
-      return await ctx.db.transaction(async (tx) => {
+      await ctx.db.transaction(async (tx) => {
         const toDeleteException = await tx.query.eventExceptions.findFirst({
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           where: (asd, { eq }) => eq(asd.id, input.eventExceptionId!),
@@ -39,14 +39,16 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
           originalDate: toDeleteException.originalDate,
         });
       });
+      return;
     }
 
-    return await ctx.db.insert(schema.eventCancellations).values({
+    await ctx.db.insert(schema.eventCancellations).values({
       eventMasterId: input.eventMasterId,
       originalDate: input.date,
     });
+    return;
   } else if (input.exclusionDefinition === "thisAndFuture") {
-    return await ctx.db.transaction(async (tx) => {
+    await ctx.db.transaction(async (tx) => {
       if (input.eventExceptionId) {
         const allEventMastersIdsForThisTeamQuery = ctx.db
           .select({ id: schema.eventMasters.id })
@@ -98,9 +100,11 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
         })
         .where(eq(schema.eventMasters.id, input.eventMasterId));
     });
+    return;
   } else {
-    return await ctx.db
+    await ctx.db
       .delete(schema.eventMasters)
       .where(eq(schema.eventMasters.id, input.eventMasterId));
+    return;
   }
 };

@@ -10,7 +10,7 @@ interface UpdateOptions {
 }
 
 export const updateHandler = async ({ ctx, input }: UpdateOptions) => {
-  const todo = await ctx.db
+  await ctx.db
     .update(schema.todos)
     .set({
       title: input.title,
@@ -26,6 +26,4 @@ export const updateHandler = async ({ ctx, input }: UpdateOptions) => {
         eq(schema.todos.teamId, ctx.session.user.activeTeamId),
       ),
     );
-
-  return todo;
 };

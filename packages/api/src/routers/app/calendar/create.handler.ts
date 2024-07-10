@@ -11,7 +11,7 @@ interface CreateOptions {
 }
 
 export const createHandler = async ({ ctx, input }: CreateOptions) => {
-  return await ctx.db.insert(schema.eventMasters).values({
+  await ctx.db.insert(schema.eventMasters).values({
     title: input.title,
     description: input.description,
     rule: new RRule({

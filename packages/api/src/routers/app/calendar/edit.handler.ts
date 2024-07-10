@@ -30,7 +30,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
       //* Temos uma exceção.  Isso significa que o usuário quer editar a exceção.
       //* Aqui, o usuário pode alterar o title e o description ou o from da exceção.
 
-      return await ctx.db
+      await ctx.db
         .update(schema.eventExceptions)
         .set({
           newDate: input.from,
@@ -47,6 +47,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
             eq(schema.eventExceptions.newDate, input.selectedTimestamp),
           ),
         );
+      return;
 
       //! END OF PROCEDURE
     }
@@ -86,22 +87,25 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
     //* Para fazer isso, temos que criar uma NOVA EXCEÇÃO.
     if (input.title !== undefined || input.description !== undefined) {
       //* Se tivermos title ou description, criamos um eventInfo e também uma exceção.
-      return await ctx.db.insert(schema.eventExceptions).values({
+      await ctx.db.insert(schema.eventExceptions).values({
         eventMasterId: eventMaster.id,
         originalDate: foundTimestamp,
         newDate: input.from ?? foundTimestamp,
         title: input.title,
         description: input.description,
       });
+      return;
       //! END OF PROCEDURE
     }
     //* Se não tivermos title nem description, ainda temos o from. Criamos uma exceção sem eventInfo.
-    else
-      return await ctx.db.insert(schema.eventExceptions).values({
+    else {
+      await ctx.db.insert(schema.eventExceptions).values({
         eventMasterId: eventMaster.id,
         originalDate: foundTimestamp,
         newDate: input.from ?? foundTimestamp,
       });
+      return;
+    }
 
     //* Não temos uma exceção nem uma ocorrência que bate com o selectedTimestamp. Vamos gerar um erro.
   } else if (input.editDefinition === "thisAndFuture") {
@@ -279,7 +283,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
 
     //*Temos que pegar a nova regra se alterou o input.frequency ?? input.interval ?? input.count ?? input.until ou se alterou o input.from
 
-    return await ctx.db.transaction(async (tx) => {
+    await ctx.db.transaction(async (tx) => {
       const newRule = await (async () => {
         const shouldUpdateRule = Boolean(
           // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-constant-binary-expression
@@ -361,5 +365,6 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
           );
       }
     });
+    return;
   }
 };
