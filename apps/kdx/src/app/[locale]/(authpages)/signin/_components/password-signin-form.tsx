@@ -26,7 +26,7 @@ export function PasswordSignInForm({ callbackUrl }: { callbackUrl?: string }) {
   const form = useForm({
     schema: ZSigninActionSchema,
   });
-  const { execute } = useAction(signInAction, {
+  const { execute, isExecuting } = useAction(signInAction, {
     onError: (res) => {
       defaultSafeActionToastError(res.error);
     },
@@ -80,11 +80,11 @@ export function PasswordSignInForm({ callbackUrl }: { callbackUrl?: string }) {
         />
         <Button
           variant="default"
-          disabled={form.formState.isSubmitting}
+          disabled={form.formState.isSubmitting || isExecuting}
           className="mt-4 w-full"
         >
           {t("Sign in")}
-          {form.formState.isSubmitting && (
+          {(form.formState.isSubmitting || isExecuting) && (
             <LuLoader2 className="ml-2 size-4 animate-spin" />
           )}
         </Button>
