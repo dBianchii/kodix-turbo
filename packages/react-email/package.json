@@ -19,18 +19,18 @@
     "@kdx/locales": "workspace:*",
     "@kdx/shared": "workspace:*",
     "@react-email/components": "^0.0.14",
-    "react": "18.3.1",
+    "react": "catalog:react18",
     "react-email": "^2.1.1"
   },
   "devDependencies": {
     "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "@types/node": "^20.12.10",
-    "@types/react": "^18.3.3",
-    "eslint": "^9.6.0",
-    "prettier": "^3.3.2",
-    "typescript": "^5.4.5"
+    "@types/node": "catalog:",
+    "@types/react": "catalog:react18",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
   },
   "prettier": "@kdx/prettier-config"
 }

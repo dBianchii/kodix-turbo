@@ -19,17 +19,16 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@radix-ui/react-icons": "^1.3.0",
-    "nanoid": "^5.0.7"
+    "@radix-ui/react-icons": "^1.3.0"
   },
   "devDependencies": {
     "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "@types/node": "^20.12.10",
-    "@types/react": "^18.3.3",
-    "eslint": "^9.6.0",
-    "typescript": "^5.4.5"
+    "@types/node": "catalog:",
+    "@types/react": "catalog:react18",
+    "eslint": "catalog:",
+    "typescript": "catalog:"
   },
   "prettier": "@kdx/prettier-config"
 }

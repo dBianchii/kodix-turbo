@@ -2,13 +2,10 @@ import { TRPCError } from "@trpc/server";
 
 import dayjs from "@kdx/dayjs";
 import { eq } from "@kdx/db";
+import { nanoid } from "@kdx/db/nanoid";
 import { schema } from "@kdx/db/schema";
 import WarnPreviousShiftNotEnded from "@kdx/react-email/warn-previous-shift-not-ended";
-import {
-  kodixCareAppId,
-  kodixNotificationFromEmail,
-  nanoid,
-} from "@kdx/shared";
+import { kodixCareAppId, kodixNotificationFromEmail } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 import { resend } from "../../../utils/email";
@@ -43,7 +40,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
       .startOf("day")
       .toDate();
 
-    return await ctx.db.transaction(async (tx) => {
+    await ctx.db.transaction(async (tx) => {
       const careShiftId = nanoid();
       await ctx.db.insert(schema.careShifts).values({
         id: careShiftId,
@@ -51,7 +48,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
         teamId: ctx.session.user.activeTeamId,
       });
 
-      return await cloneCalendarTasksToCareTasks({
+      await cloneCalendarTasksToCareTasks({
         careShiftId,
         start: yesterdayStartOfDay,
         end: tomorrowEndOfDay,
@@ -61,6 +58,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
         },
       });
     });
+    return;
   }
 
   const lastCareShift = await getCurrentCareShiftHandler({
@@ -78,7 +76,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
   const loggedUserIsCaregiverForCurrentShift =
     ctx.session.user.id === lastCareShift.Caregiver.id;
 
-  return await ctx.db.transaction(async (tx) => {
+  await ctx.db.transaction(async (tx) => {
     await tx
       .update(schema.careShifts)
       .set({
@@ -112,4 +110,5 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
         react: WarnPreviousShiftNotEnded(),
       });
   });
+  return;
 };

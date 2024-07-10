@@ -1,29 +1,33 @@
 import { toast } from "@kdx/ui/toast";
 
-interface ActionResult<Data> {
-  data?: Data | undefined;
-  serverError?: string | undefined;
-  validationErrors?: Partial<Record<string, string[]>> | undefined;
-}
 /**
- * You can do it like this to show a toast on error
- * - if (defaultSafeActionToastError(result)) return;
- * @param result The awaited result of a safe-action
- * @returns boolean indicating if there was an error or not.
+ * Used with onError in useAction to display a toast error message
  */
-export const defaultSafeActionToastError = <Data>(
-  result: ActionResult<Data>,
-) => {
-  if (result.validationErrors ?? result.serverError) {
-    //We check if there are validation errors first, and if not, we show the server error.
-    if (result.validationErrors) {
-      const errorMessage = Object.values(result.validationErrors)[0];
-      toast.error(errorMessage);
-      return true;
-    }
+export const defaultSafeActionToastError = (error: {
+  serverError?: string | undefined;
+  validationErrors?:
+    | {
+        formErrors: string[];
+        fieldErrors: Record<string, string[] | undefined>;
+      }
+    | undefined;
+  bindArgsValidationErrors?: readonly [] | undefined;
+  fetchError?: string;
+}) => {
+  let errorMessage =
+    error.serverError ??
+    error.validationErrors?.formErrors[0] ??
+    error.fetchError;
 
-    toast.error(result.serverError);
-    return true;
+  if (!errorMessage) {
+    if (error.validationErrors?.fieldErrors.length) {
+      const fieldErrors = Object.entries(error.validationErrors.fieldErrors);
+      const firstErrorMessage = fieldErrors[0]?.[1]?.[0];
+      if (firstErrorMessage) {
+        errorMessage = firstErrorMessage;
+      }
+    }
   }
-  return false;
+
+  toast.error(errorMessage);
 };

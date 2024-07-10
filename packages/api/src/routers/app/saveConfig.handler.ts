@@ -43,7 +43,7 @@ export const saveConfigHandler = async ({ ctx, input }: SaveConfigOptions) => {
   //new record. We need to validate the whole config without partial()
   const parsedInput = configSchema.parse(input.config);
 
-  return await ctx.db.insert(schema.appTeamConfigs).values({
+  await ctx.db.insert(schema.appTeamConfigs).values({
     config: parsedInput,
     teamId: ctx.session.user.activeTeamId,
     appId: input.appId,

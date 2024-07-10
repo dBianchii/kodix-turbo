@@ -1,5 +1,7 @@
 "use client";
 
+import { useAction } from "next-safe-action/hooks";
+import { LuLoader2 } from "react-icons/lu";
 import { z } from "zod";
 
 import { useI18n } from "@kdx/locales/client";
@@ -35,18 +37,23 @@ export function PasswordSignupForm({ invite }: { invite?: string }) {
     }),
   });
 
+  const { execute, isExecuting } = useAction(signupAction, {
+    onError: (res) => {
+      defaultSafeActionToastError(res.error);
+    },
+  });
+
   return (
     <Form {...form}>
       <form
         className="space-y-2"
-        onSubmit={form.handleSubmit(async (values) => {
-          const result = await signupAction({
+        onSubmit={form.handleSubmit((values) => {
+          execute({
             email: values.email,
             password: values.password,
             name: values.name,
             invite: invite,
           });
-          if (defaultSafeActionToastError(result)) return;
         })}
       >
         <FormField
@@ -109,7 +116,15 @@ export function PasswordSignupForm({ invite }: { invite?: string }) {
           )}
         />
 
-        <Button className="w-full">{t("Create account")}</Button>
+        <Button
+          className="w-full"
+          disabled={form.formState.isSubmitting || isExecuting}
+        >
+          {t("Create account")}{" "}
+          {(form.formState.isSubmitting || isExecuting) && (
+            <LuLoader2 className="ml-2 size-4 animate-spin" />
+          )}
+        </Button>
       </form>
     </Form>
   );

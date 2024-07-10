@@ -6,15 +6,14 @@ import { kodixCareConfigSchema } from "@kdx/validators";
 import { action } from "~/helpers/safe-action/safe-action";
 import { api } from "~/trpc/server";
 
-export const finishKodixCareOnboardingAction = action(
-  kodixCareConfigSchema,
-  async (input) => {
+export const finishKodixCareOnboardingAction = action
+  .schema(kodixCareConfigSchema)
+  .action(async ({ parsedInput }) => {
     await api.app.saveConfig({
       appId: kodixCareAppId,
-      config: input,
+      config: parsedInput,
     });
     await api.app.installApp({
       appId: kodixCareAppId,
     });
-  },
-);
+  });

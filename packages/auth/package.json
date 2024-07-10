@@ -26,21 +26,21 @@
     "@t3-oss/env-nextjs": "^0.10.1",
     "discord-api-types": "^0.37.91",
     "lucia": "^3.2.0",
-    "next": "14.2.4",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
+    "next": "catalog:",
+    "react": "catalog:react18",
+    "react-dom": "catalog:react18",
     "resend": "^3.2.0",
-    "zod": "^3.23.5"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@auth/core": "0.32.0",
     "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "@types/react": "^18.3.3",
-    "eslint": "^9.6.0",
-    "prettier": "^3.3.2",
-    "typescript": "^5.4.5"
+    "@types/react": "catalog:react18",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
   },
   "prettier": "@kdx/prettier-config"
 }

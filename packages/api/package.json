@@ -27,25 +27,25 @@
     "@kdx/validators": "workspace:*",
     "@node-rs/argon2": "^1.8.3",
     "@react-email/render": "0.0.13",
-    "@trpc/server": "11.0.0-rc.441",
+    "@trpc/server": "catalog:",
     "@upstash/redis": "^1.31.6",
-    "next": "14.2.4",
+    "next": "catalog:",
     "resend": "^3.2.0",
     "rrule": "^2.8.1",
     "superjson": "2.2.1",
-    "zod": "^3.23.5"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tailwind-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "@types/node": "^20.12.10",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
-    "eslint": "^9.6.0",
-    "prettier": "^3.3.2",
-    "typescript": "^5.4.5"
+    "@types/node": "catalog:",
+    "@types/react": "catalog:react18",
+    "@types/react-dom": "catalog:react18",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
   },
   "prettier": "@kdx/prettier-config"
 }

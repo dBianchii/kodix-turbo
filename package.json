@@ -4,7 +4,7 @@
   "engines": {
     "node": ">=20.12.2"
   },
-  "packageManager": "pnpm@9.2.0",
+  "packageManager": "pnpm@9.5.0",
   "scripts": {
     "build": "turbo run build",
     "clean": "git clean -xdf node_modules",
@@ -30,9 +30,14 @@
   "devDependencies": {
     "@kdx/prettier-config": "workspace:*",
     "@turbo/gen": "^2.0.6",
-    "prettier": "^3.3.2",
+    "prettier": "catalog:",
     "turbo": "2.0.6",
-    "typescript": "^5.4.5"
+    "typescript": "catalog:"
   },
-  "prettier": "@kdx/prettier-config"
+  "prettier": "@kdx/prettier-config",
+  "pnpm": {
+    "patchedDependencies": {
+      "metro@0.80.9": "patches/metro@0.80.9.patch"
+    }
+  }
 }

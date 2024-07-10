@@ -49,7 +49,7 @@
     "cmdk": "^0.2.1",
     "embla-carousel-react": "8.0.0-rc22",
     "framer-motion": "^11.2.6",
-    "next": "14.2.4",
+    "next": "catalog:",
     "next-themes": "^0.3.0",
     "react-day-picker": "^8.10.0",
     "react-hook-form": "^7.52.1",
@@ -64,19 +64,19 @@
     "@kdx/shared": "workspace:*",
     "@kdx/tailwind-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
+    "@types/react": "catalog:react18",
+    "@types/react-dom": "catalog:react18",
     "cobe": "^0.6.3",
-    "eslint": "^9.6.0",
-    "prettier": "^3.3.2",
-    "react": "18.3.1",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "react": "catalog:react18",
     "react-spring": "^9.7.3",
-    "tailwindcss": "^3.4.4",
-    "typescript": "^5.4.5"
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:"
   },
   "peerDependencies": {
-    "react": "18.3.1",
-    "zod": "^3.23.5"
+    "react": "catalog:react18",
+    "zod": "catalog:"
   },
   "prettier": "@kdx/prettier-config"
 }

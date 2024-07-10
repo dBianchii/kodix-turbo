@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useAction } from "next-safe-action/hooks";
 import { LuLoader2 } from "react-icons/lu";
 
 import { useI18n } from "@kdx/locales/client";
@@ -25,18 +26,21 @@ export function PasswordSignInForm({ callbackUrl }: { callbackUrl?: string }) {
   const form = useForm({
     schema: ZSigninActionSchema,
   });
+  const { execute, isExecuting } = useAction(signInAction, {
+    onError: (res) => {
+      defaultSafeActionToastError(res.error);
+    },
+  });
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(async (values) => {
-          const result = await signInAction({
+        onSubmit={form.handleSubmit((values) => {
+          execute({
             email: values.email,
             password: values.password,
             callbackUrl,
           });
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          if (result && defaultSafeActionToastError(result)) return;
         })}
         className="space-y-4"
       >
@@ -76,11 +80,11 @@ export function PasswordSignInForm({ callbackUrl }: { callbackUrl?: string }) {
         />
         <Button
           variant="default"
-          disabled={form.formState.isSubmitting}
+          disabled={form.formState.isSubmitting || isExecuting}
           className="mt-4 w-full"
         >
           {t("Sign in")}
-          {form.formState.isSubmitting && (
+          {(form.formState.isSubmitting || isExecuting) && (
             <LuLoader2 className="ml-2 size-4 animate-spin" />
           )}
         </Button>

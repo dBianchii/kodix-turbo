@@ -21,21 +21,21 @@ export default async function SettingsLayout({
 
   const navItems = [
     {
+      href: `/team/settings/general`,
+      title: t("General"),
+    },
+    {
       href: `/team/settings/apps`,
       title: t("Apps"),
+    },
+    {
+      href: `/team/settings/members`,
+      title: t("Members"),
     },
     {
       href: "/team/settings/roles",
       title: t("Roles"),
       shown: user.id === team.ownerId,
-    },
-    {
-      href: `/team/settings/general`,
-      title: t("General"),
-    },
-    {
-      href: `/team/settings/members`,
-      title: t("Members"),
     },
   ];
 

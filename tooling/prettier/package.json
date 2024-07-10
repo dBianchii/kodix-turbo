@@ -13,13 +13,13 @@
   },
   "dependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.3.0",
-    "prettier": "^3.3.2",
+    "prettier": "catalog:",
     "prettier-plugin-tailwindcss": "^0.5.14"
   },
   "devDependencies": {
     "@kdx/tsconfig": "workspace:*",
-    "@types/node": "^20.12.10",
-    "typescript": "^5.4.5"
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
   },
   "prettier": "@kdx/prettier-config"
 }
