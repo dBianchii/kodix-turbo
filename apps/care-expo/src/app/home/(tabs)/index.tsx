@@ -6,6 +6,7 @@ import { Text, YStack } from "tamagui";
 import { useAuth } from "~/utils/auth";
 import { Header } from "../_components/header";
 
+//Comecei a fazer
 export default function Tab() {
   const { user } = useAuth();
 
