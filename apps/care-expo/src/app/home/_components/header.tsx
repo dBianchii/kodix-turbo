@@ -2,10 +2,10 @@ import { Link } from "expo-router";
 import { XStack } from "tamagui";
 
 import { AvatarWrapper } from "~/components/avatar-wrapper";
-import { useUser } from "~/utils/auth";
+import { useAuth } from "~/utils/auth";
 
 export function Header() {
-  const user = useUser();
+  const { user } = useAuth();
   if (!user) return;
   return (
     <XStack>
