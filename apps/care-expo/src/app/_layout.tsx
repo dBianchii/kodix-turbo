@@ -1,11 +1,11 @@
-import { Slot, SplashScreen, Stack, useRouter } from "expo-router";
+import { SplashScreen, Stack, useRouter } from "expo-router";
 
 import "@bacons/text-decoder/install";
 
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
 import { useFonts } from "expo-font";
-import { H1, Spinner, TamaguiProvider, View, YStack } from "tamagui";
+import { Spinner, TamaguiProvider, YStack } from "tamagui";
 import tamaguiConfig from "tamagui.config";
 
 import { TRPCProvider } from "~/utils/api";

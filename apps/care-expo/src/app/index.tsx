@@ -1,6 +1,5 @@
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Link, Stack, useRouter } from "expo-router";
-import { Button, H1, View, YStack } from "tamagui";
+import { Link, useRouter } from "expo-router";
+import { Button, H1, View } from "tamagui";
 
 import { RootSafeAreaView } from "~/components/safe-area-view";
 
