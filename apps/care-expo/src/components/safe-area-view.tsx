@@ -4,10 +4,10 @@ import { View } from "tamagui";
 
 export function RootSafeAreaView({ children, ...props }: ViewProps) {
   return (
-    <View bg={"$background"} f={1}>
-      <SafeAreaView>
-        <View {...props}>{children}</View>
-      </SafeAreaView>
+    <View bg={"$background"} h={"100%"}>
+      <View mx={"$4"} {...props}>
+        <SafeAreaView>{children}</SafeAreaView>
+      </View>
     </View>
   );
 }

@@ -17,7 +17,7 @@ export const useSignIn = () => {
       setToken(sessionToken);
 
       await utils.invalidate();
-      router.replace("/");
+      router.dismissAll();
     },
     onSettled: () => utils.invalidate(),
   });

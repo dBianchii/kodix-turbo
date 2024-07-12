@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { Keyboard } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { ArrowLeft } from "@tamagui/lucide-icons";
 import {
@@ -27,6 +26,7 @@ import {
   FormMessage,
   useForm,
 } from "~/components/form";
+import { RootSafeAreaView } from "~/components/safe-area-view";
 import { api } from "~/utils/api";
 
 export default function Register() {
@@ -52,7 +52,7 @@ export default function Register() {
 
   return (
     <DismissKeyboard>
-      <SafeAreaView>
+      <RootSafeAreaView>
         <Button
           onPress={() => {
             router.back();
@@ -130,7 +130,7 @@ export default function Register() {
             )}
           </View>
         </YStack>
-      </SafeAreaView>
+      </RootSafeAreaView>
     </DismissKeyboard>
   );
 }

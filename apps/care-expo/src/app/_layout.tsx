@@ -5,9 +5,10 @@ import "@bacons/text-decoder/install";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
 import { useFonts } from "expo-font";
-import { Spinner, TamaguiProvider, YStack } from "tamagui";
+import { Spinner, TamaguiProvider } from "tamagui";
 import tamaguiConfig from "tamagui.config";
 
+import { RootSafeAreaView } from "~/components/safe-area-view";
 import { TRPCProvider } from "~/utils/api";
 import { useAuth } from "~/utils/auth";
 
@@ -47,14 +48,9 @@ function MainLayout() {
   return (
     <>
       {isLoading ? (
-        <YStack
-          backgroundColor={"$background"}
-          f={1}
-          ai={"center"}
-          jc={"center"}
-        >
+        <RootSafeAreaView f={1} jc={"center"} ai={"center"}>
           <Spinner />
-        </YStack>
+        </RootSafeAreaView>
       ) : (
         <Stack screenOptions={{ headerShown: false }} />
       )}
