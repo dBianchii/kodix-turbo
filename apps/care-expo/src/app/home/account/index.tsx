@@ -1,7 +1,7 @@
-import type { ListItemProps } from "tamagui";
+import { TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
-import { ArrowRight, LogOut } from "@tamagui/lucide-icons";
+import { Stack, useRouter } from "expo-router";
+import { ArrowRight, LogOut, X } from "@tamagui/lucide-icons";
 import {
   H4,
   ListItem,
@@ -13,6 +13,7 @@ import {
 } from "tamagui";
 
 import { AvatarWrapper } from "~/components/avatar-wrapper";
+import { MenuListItem } from "~/components/menu-list-item";
 import { useAuth, useSignOut } from "~/utils/auth";
 
 export default function ProfilePage() {
@@ -41,17 +42,24 @@ export default function ProfilePage() {
 
   return (
     <YStack bg={"$background"} flex={1} p={"$4"}>
+      <Stack.Screen
+        options={{
+          animation: "slide_from_bottom",
+        }}
+      />
       <SafeAreaView>
-        <XStack jc={"flex-end"} gap={"$4"}>
-          <H4 alignSelf="center">{user.name}</H4>
-          <AvatarWrapper src={user.image} fallback={user.name} />
+        <XStack jc={"space-between"} gap={"$4"}>
+          <View alignSelf="center">
+            <TouchableOpacity onPress={() => router.back()}>
+              <X ml={"$3"} />
+            </TouchableOpacity>
+          </View>
+          <XStack gap={"$4"}>
+            <H4 alignSelf="center">{user.name}</H4>
+            <AvatarWrapper src={user.image} fallback={user.name} />
+          </XStack>
         </XStack>
-        <YGroup
-          width={"100%"}
-          alignSelf="center"
-          separator={<Separator />}
-          my={"$7"}
-        >
+        <YGroup width={"100%"} alignSelf="center" my={"$7"}>
           {items.map((item) => (
             <MenuListItem
               key={item.text}
@@ -62,7 +70,7 @@ export default function ProfilePage() {
                 <SizableText fontWeight={"$7"} fontFamily={"$silkscreen"}>
                   {item.text}
                 </SizableText>
-                <SizableText size={"$4"} color={"$color8"}>
+                <SizableText size={"$4"} color={"$color10"}>
                   {item.textRight}
                 </SizableText>
               </XStack>
@@ -98,23 +106,5 @@ export default function ProfilePage() {
         </YGroup>
       </SafeAreaView>
     </YStack>
-  );
-}
-
-function MenuListItem({ children, ...props }: ListItemProps) {
-  return (
-    <YGroup.Item>
-      <ListItem
-        hoverTheme
-        pressTheme
-        icon={props.icon}
-        fontSize={"$5"}
-        iconAfter={props.iconAfter}
-        py={"$5"}
-        {...props}
-      >
-        {children}
-      </ListItem>
-    </YGroup.Item>
   );
 }

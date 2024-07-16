@@ -1,5 +1,5 @@
-import type { AvatarProps } from "tamagui";
 import React from "react";
+import type { AvatarProps } from "tamagui";
 import { Avatar, Text } from "tamagui";
 
 export function AvatarWrapper({
@@ -11,14 +11,10 @@ export function AvatarWrapper({
   fallback?: React.ReactNode;
 }) {
   return (
-    <Avatar circular size={"$5"} {...props}>
+    <Avatar circular size={"$5"} {...props} bordered>
       {src && <Avatar.Image src={src} />}
       {fallback && (
-        <Avatar.Fallback
-          backgroundColor={"$backgroundPress"}
-          ai="center"
-          jc="center"
-        >
+        <Avatar.Fallback ai="center" jc="center">
           <Text color={"$gray12Dark"}>
             {typeof fallback === "string"
               ? fallback

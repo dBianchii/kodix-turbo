@@ -1,14 +1,11 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { YStack } from "tamagui";
 
-import { Header } from "../_components/header";
+import { RootSafeAreaView } from "~/components/safe-area-view";
 
-export default function Tab() {
+export default function NotificationsTab() {
   return (
-    <YStack bg={"$background"} flex={1} px={"$3"}>
-      <SafeAreaView>
-        <Header />
-      </SafeAreaView>
-    </YStack>
+    <RootSafeAreaView>
+      <SafeAreaView></SafeAreaView>
+W    </RootSafeAreaView>
   );
 }

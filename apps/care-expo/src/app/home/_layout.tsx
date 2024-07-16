@@ -1,24 +1,25 @@
-import { useColorScheme } from "react-native";
 import { Stack } from "expo-router/stack";
+import { useTheme } from "tamagui";
+
+import { Header } from "./_components/header";
 
 export default function Layout() {
-  const colorScheme = useColorScheme();
+  const theme = useTheme();
   return (
     <Stack
       screenOptions={{
         headerShown: false,
-        contentStyle: {
-          backgroundColor: colorScheme == "dark" ? "#6d28d9" : "#FFFFFF",
-        },
       }}
     >
       <Stack.Screen
         name="(tabs)"
         options={{
-          headerShown: false,
-          contentStyle: {
-            backgroundColor: colorScheme == "dark" ? "#6d28d9" : "#FFFFFF",
+          headerStyle: {
+            backgroundColor: theme.background.val,
           },
+          header: () => <Header />,
+          title: "",
+          headerShown: true,
         }}
       />
     </Stack>

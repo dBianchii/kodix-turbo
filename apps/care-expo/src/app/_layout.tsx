@@ -1,4 +1,4 @@
-import { SplashScreen, Stack, useRouter } from "expo-router";
+import { SplashScreen, Stack, useRouter, useSegments } from "expo-router";
 
 import "@bacons/text-decoder/install";
 
@@ -23,17 +23,26 @@ function MainLayout() {
     InterBold: require("@tamagui/font-inter/otf/Inter-Bold.otf"),
   });
 
+  const segments = useSegments();
   const router = useRouter();
   const { user, isLoading } = useAuth();
 
   useEffect(() => {
     if (isLoading) return;
-    if (user) {
-      router.replace("/home");
+    const inProtectedPage = segments[0] === "home";
+
+    if (!user) {
+      if (inProtectedPage) {
+        router.replace("/");
+        return;
+      }
       return;
     }
-    router.replace("/");
-  }, [user, isLoading, router]);
+
+    if (!inProtectedPage) {
+      router.replace("/home");
+    }
+  }, [user, isLoading, router, segments]);
 
   useEffect(() => {
     if (fontsLoaded || fontsError) {

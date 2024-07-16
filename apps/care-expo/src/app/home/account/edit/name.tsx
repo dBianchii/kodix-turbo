@@ -1,7 +1,7 @@
 import { Pressable } from "react-native";
 import { router, Stack } from "expo-router";
-import { ArrowLeft, ChevronLeft } from "@tamagui/lucide-icons";
-import { H1, H4, Input, SizableText, Text, View, XStack } from "tamagui";
+import { ChevronLeft } from "@tamagui/lucide-icons";
+import { Input, SizableText, Spinner, useTheme, View } from "tamagui";
 
 import { ZChangeNameInputSchema } from "@kdx/validators/trpc/user";
 
@@ -14,83 +14,99 @@ import {
   FormMessage,
   useForm,
 } from "~/components/form";
-import { RootSafeAreaView } from "~/components/safe-area-view";
+import { defaultMargin } from "~/components/safe-area-view";
+import { api } from "~/utils/api";
+import { useAuth } from "~/utils/auth";
 
 export default function EditNamePage() {
+  const { user } = useAuth();
+
   const form = useForm({
     schema: ZChangeNameInputSchema,
+    defaultValues: {
+      name: user?.name ?? undefined,
+    },
   });
 
+  const utils = api.useUtils();
+  const mutation = api.user.changeName.useMutation({
+    onSuccess: async () => {
+      await utils.auth.invalidate();
+      router.back();
+    },
+  });
+
+  const theme = useTheme();
+  if (!user) return null;
+
   return (
-    <RootSafeAreaView>
+    <>
       <Stack.Screen
         options={{
-          title: "Edit Name",
+          headerTitleStyle: {
+            color: theme.color.val,
+          },
+          title: "Editar nome",
+          headerStyle: {
+            backgroundColor: theme.background.val,
+          },
+          headerShown: true,
+          headerLeft: () => (
+            <Pressable
+              onPress={() => {
+                router.back();
+              }}
+            >
+              <ChevronLeft size={"$2"} />
+            </Pressable>
+          ),
+          headerRight: () => {
+            if (!form.formState.isDirty) return null;
 
-          header: (props) => {
+            if (mutation.isPending) return <Spinner />;
             return (
-              <View
-                h={"$9"}
-                jc={"flex-end"}
-                bg={"$background"}
-                borderColor={"$backgroundHover"}
-                borderBottomWidth={"1px"}
+              <Pressable
+                onPress={form.handleSubmit((values) => {
+                  mutation.mutate(values);
+                })}
               >
-                <XStack mx={"$4"} ai={"center"} mb={"$2"}>
-                  <Pressable
-                    onPress={() => {
-                      router.back();
-                    }}
-                  >
-                    <ChevronLeft size={"$2"} />
-                  </Pressable>
-                  <SizableText
-                    size={"$6"}
-                    fontFamily={"$mono"}
-                    textAlign="center"
-                    alignSelf="center"
-                    mx={"auto"}
-                  >
-                    {props.options.title}
-                  </SizableText>
-                  <Pressable>
-                    <SizableText
-                      size={"$4"}
-                      fontFamily={"$mono"}
-                      textAlign="center"
-                      color={"$color11"}
-                    >
-                      Salvar
-                    </SizableText>
-                  </Pressable>
-                </XStack>
-              </View>
+                <SizableText
+                  size={"$4"}
+                  fontFamily={"$mono"}
+                  textAlign="center"
+                  color={"$color11"}
+                >
+                  Salvar
+                </SizableText>
+              </Pressable>
             );
           },
-          headerBackTitleStyle: {},
-          navigationBarHidden: true,
         }}
       />
-      <Form {...form}>
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem bg={"red"}>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  placeholder="Nome"
-                  onChangeText={field.onChange}
-                />
-              </FormControl>
+      <View bg={"$background"} f={1}>
+        <View mx={defaultMargin}>
+          <Form {...form}>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      placeholder="Nome"
+                      onChangeText={field.onChange}
+                    />
+                  </FormControl>
 
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </Form>
-    </RootSafeAreaView>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </Form>
+        </View>
+      </View>
+    </>
   );
 }
