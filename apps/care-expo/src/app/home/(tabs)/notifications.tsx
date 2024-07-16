@@ -6,6 +6,6 @@ export default function NotificationsTab() {
   return (
     <RootSafeAreaView>
       <SafeAreaView></SafeAreaView>
-W    </RootSafeAreaView>
+    </RootSafeAreaView>
   );
 }
