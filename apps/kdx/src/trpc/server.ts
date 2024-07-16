@@ -1,7 +1,7 @@
 import { cache } from "react";
 import { headers } from "next/headers";
 
-import { createCaller, createTRPCContext } from "@kdx/api";
+import { appRouter, createappRouterCaller, createTRPCContext } from "@kdx/api";
 import { auth } from "@kdx/auth";
 
 /**
@@ -18,7 +18,7 @@ const createContext = cache(async () => {
   });
 });
 
-export const api = createCaller(createContext);
+export const appApi = createappRouterCaller(createContext);
 
 // export const createCaller = cache(async () =>
 // appRouter.createCaller(await createTRPCContext({})),

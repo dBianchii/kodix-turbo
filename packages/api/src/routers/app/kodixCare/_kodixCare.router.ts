@@ -14,6 +14,7 @@ import {
   kodixCareInstalledMiddleware,
 } from "../../../middlewares";
 import { protectedProcedure, publicProcedure } from "../../../procedures";
+import { createTRPCRouter } from "../../../trpc";
 import { checkEmailForRegisterHandler } from "./checkEmailForRegister.handler";
 import { doCheckoutForShiftHandler } from "./doCheckoutForShift.handler";
 import { getCareTasksHandler } from "./getCareTasks.handler";
@@ -22,7 +23,7 @@ import { saveCareTaskHandler } from "./saveCareTask.handler";
 import { toggleShiftHandler } from "./toggleShift.handler";
 import { unlockMoreTasksHandler } from "./unlockMoreTasks.handler";
 
-export const kodixCareRouter = {
+export const kodixCareRouter = createTRPCRouter({
   toggleShift: protectedProcedure
     .use(kodixCareInstalledMiddleware)
     .use(appPermissionMiddleware(PKodixCare_CanToggleShiftId))
@@ -47,4 +48,4 @@ export const kodixCareRouter = {
   checkEmailForRegister: publicProcedure
     .input(ZCheckEmailForRegisterInputSchema)
     .query(checkEmailForRegisterHandler),
-} satisfies TRPCRouterRecord;
+});

@@ -8,16 +8,17 @@ import {
 } from "@kdx/validators/trpc/app/calendar";
 
 import { protectedProcedure } from "../../../procedures";
+import { createTRPCRouter } from "../../../trpc";
 import { cancelHandler } from "./cancel.handler";
 import { createHandler } from "./create.handler";
 import { editHandler } from "./edit.handler";
 import { getAllHandler } from "./getAll.handler";
 import { nukeHandler } from "./nuke.handler";
 
-export const calendarRouter = {
+export const calendarRouter = createTRPCRouter({
   cancel: protectedProcedure.input(ZCancelInputSchema).mutation(cancelHandler),
   create: protectedProcedure.input(ZCreateInputSchema).mutation(createHandler),
   edit: protectedProcedure.input(ZEditInputSchema).mutation(editHandler),
   getAll: protectedProcedure.input(ZGetAllInputSchema).query(getAllHandler),
   nuke: protectedProcedure.mutation(nukeHandler),
-} satisfies TRPCRouterRecord;
+});

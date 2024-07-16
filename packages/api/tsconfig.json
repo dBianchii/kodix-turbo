@@ -1,11 +1,15 @@
 {
-  "extends": "@kdx/tsconfig/internal-package.json",
+  "extends": "@kdx/tsconfig/base.json",
   "compilerOptions": {
-    "outDir": "dist",
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
 
-    "jsx": "preserve"
+    "jsx": "preserve",
+    //Added by me below:
+    "paths": {
+      "~/*": ["./src/*"]
+    }
   },
+
   "include": ["src", "../shared/src/data-table-config.ts"], //TODO: fix extra data-table-config.ts
   "exclude": ["node_modules"]
 }

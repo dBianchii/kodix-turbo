@@ -11,6 +11,7 @@ import {
   ZSwitchActiveTeamInputSchema,
 } from "@kdx/validators/trpc/user";
 
+import { createTRPCRouter } from "~/trpc";
 import { protectedProcedure, publicProcedure } from "../../procedures";
 import { changeNameHandler } from "./changeName.handler";
 import { changePasswordHandler } from "./changePassword.handler";
@@ -22,7 +23,7 @@ import { signInHandler } from "./signInByPassword.handler";
 import { signupWithPasswordHandler } from "./signupWithPassword.handler";
 import { switchActiveTeamHandler } from "./switchActiveTeam.handler";
 
-export const userRouter = {
+export const userRouter = createTRPCRouter({
   changeName: protectedProcedure
     .input(ZChangeNameInputSchema)
     .mutation(changeNameHandler),
@@ -50,4 +51,4 @@ export const userRouter = {
   changePassword: publicProcedure
     .input(ZChangePasswordInputSchema)
     .mutation(changePasswordHandler),
-} satisfies TRPCRouterRecord;
+});

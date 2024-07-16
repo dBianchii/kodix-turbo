@@ -1,5 +1,3 @@
-import type { TRPCRouterRecord } from "@trpc/server";
-
 import {
   ZGetAllInputSchema,
   ZGetPermissionsInputSchema,
@@ -8,6 +6,7 @@ import {
   ZUpdateUserAssociationInputSchema,
 } from "@kdx/validators/trpc/team/appRole";
 
+import { createTRPCRouter } from "~/trpc";
 import { appInstalledMiddleware } from "../../../middlewares";
 import { isTeamOwnerProcedure } from "../../../procedures";
 import { getAllHandler } from "./getAll.handler";
@@ -16,7 +15,7 @@ import { getUsersWithRolesHandler } from "./getUsersWithRoles.handler";
 import { updatePermissionAssociationHandler } from "./updatePermissionAssociation.handler";
 import { updateUserAssociationHandler } from "./updateUserAssociation.handler";
 
-export const appRoleRouter = {
+export const appRoleRouter = createTRPCRouter({
   getAll: isTeamOwnerProcedure.input(ZGetAllInputSchema).query(getAllHandler),
   getPermissions: isTeamOwnerProcedure
     .input(ZGetPermissionsInputSchema)
@@ -34,4 +33,4 @@ export const appRoleRouter = {
     .input(ZUpdateUserAssociationInputSchema)
     .use(appInstalledMiddleware)
     .mutation(updateUserAssociationHandler),
-} satisfies TRPCRouterRecord;
+});

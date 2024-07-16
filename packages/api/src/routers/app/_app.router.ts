@@ -1,5 +1,3 @@
-import type { TRPCRouterRecord } from "@trpc/server";
-
 import {
   ZGetConfigInput,
   ZInstallAppInputSchema,
@@ -13,17 +11,18 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "../../procedures";
-import { calendarRouter } from "./calendar/_router";
+import { createTRPCRouter } from "../../trpc";
+import { calendarRouter } from "./calendar/_calendar.router";
 import { getAllHandler } from "./getAll.handler";
 import { getConfigHandler } from "./getConfig.handler";
 import { getInstalledHandler } from "./getInstalled.handler";
 import { installAppHandler } from "./installApp.handler";
-import { kodixCareRouter } from "./kodixCare/_router";
+import { kodixCareRouter } from "./kodixCare/_kodixCare.router";
 import { saveConfigHandler } from "./saveConfig.handler";
-import { todoRouter } from "./todo/_router";
+import { todoRouter } from "./todo/_todo.router";
 import { uninstallAppHandler } from "./uninstallApp.handler";
 
-export const appRouter = {
+export const appRouter = createTRPCRouter({
   calendar: calendarRouter,
   kodixCare: kodixCareRouter,
   todo: todoRouter,
@@ -42,4 +41,4 @@ export const appRouter = {
   uninstallApp: isTeamOwnerProcedure
     .input(ZUninstallAppInputSchema)
     .mutation(uninstallAppHandler),
-} satisfies TRPCRouterRecord;
+});
