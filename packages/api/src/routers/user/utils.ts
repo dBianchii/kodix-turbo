@@ -2,7 +2,9 @@ import { verify } from "@node-rs/argon2";
 import { TRPCError } from "@trpc/server";
 
 import type { Drizzle } from "@kdx/db/client";
+import { eq } from "@kdx/db";
 import { db as _db } from "@kdx/db/client";
+import { schema } from "@kdx/db/schema";
 
 export const argon2Config = {
   // recommended minimum parameters
@@ -28,6 +30,7 @@ export async function validateUserEmailAndPassword({
     where: (users, { eq }) => eq(users.email, email),
     columns: {
       id: true,
+      activeTeamId: true,
       passwordHash: true,
     },
   });
@@ -63,5 +66,21 @@ export async function validateUserEmailAndPassword({
       message: "Incorrect email or password",
     });
 
-  return existingUser.id;
+  /**Returns an object representing the validated user */
+  return { id: existingUser.id, activeTeamId: existingUser.activeTeamId };
+}
+
+export async function switchActiveTeamForUser({
+  db = _db,
+  userId,
+  teamId,
+}: {
+  db: Drizzle;
+  userId: string;
+  teamId: string;
+}) {
+  await db.update(schema.users).set({ activeTeamId: teamId }).where(
+    eq(schema.users.id, userId),
+    //TODO: Make sure they are part of the team!!
+  );
 }

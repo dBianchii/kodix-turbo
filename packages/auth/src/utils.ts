@@ -3,7 +3,7 @@
 
 import { cookies, headers } from "next/headers";
 
-import type { Drizzle } from "@kdx/db/client";
+import type { Drizzle, DrizzleTransaction } from "@kdx/db/client";
 import { lucia } from "@kdx/auth";
 import { eq } from "@kdx/db";
 import { schema } from "@kdx/db/schema";
@@ -25,7 +25,7 @@ export async function createUser({
   email: string;
   image?: string;
   passwordHash?: string;
-  db: Drizzle;
+  db: DrizzleTransaction;
 }) {
   await db.insert(schema.users).values({
     id: userId,

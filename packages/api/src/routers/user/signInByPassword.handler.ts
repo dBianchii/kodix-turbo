@@ -13,7 +13,7 @@ export const signInByPasswordHandler = async ({
   ctx,
   input,
 }: SignInByPasswordOptions) => {
-  const userId = await validateUserEmailAndPassword({
+  const { id: userId } = await validateUserEmailAndPassword({
     db: ctx.db,
     email: input.email,
     password: input.password,
