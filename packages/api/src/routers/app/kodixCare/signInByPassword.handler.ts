@@ -1,13 +1,11 @@
 import { TRPCError } from "@trpc/server";
 
 import type { TSignInByPasswordInputSchema } from "@kdx/validators/trpc/app/kodixCare";
+import { createDbSessionAndCookie } from "@kdx/auth/utils";
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TPublicProcedureContext } from "../../../procedures";
-import {
-  createDbSessionAndCookie,
-  validateUserEmailAndPassword,
-} from "../../user/utils";
+import { validateUserEmailAndPassword } from "../../user/utils";
 import { getUserTeamsWithAppInstalled } from "./utils";
 
 interface SignInByPasswordOptions {

@@ -1,9 +1,7 @@
-import { cookies, headers } from "next/headers";
 import { verify } from "@node-rs/argon2";
 import { TRPCError } from "@trpc/server";
 
 import type { Drizzle } from "@kdx/db/client";
-import { lucia } from "@kdx/auth";
 import { db as _db } from "@kdx/db/client";
 
 export const argon2Config = {
@@ -66,22 +64,4 @@ export async function validateUserEmailAndPassword({
     });
 
   return existingUser.id;
-}
-
-export async function createDbSessionAndCookie({ userId }: { userId: string }) {
-  const heads = headers();
-  const session = await lucia.createSession(userId, {
-    ipAddress:
-      heads.get("X-Forwarded-For") ??
-      heads.get("X-Forwarded-For") ??
-      "127.0.0.1",
-    userAgent: heads.get("user-agent"),
-  });
-  const sessionCookie = lucia.createSessionCookie(session.id);
-  cookies().set(
-    sessionCookie.name,
-    sessionCookie.value,
-    sessionCookie.attributes,
-  );
-  return session.id;
 }
