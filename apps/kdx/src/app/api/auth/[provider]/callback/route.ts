@@ -49,6 +49,7 @@ export async function GET(
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const userId = await currentProvider.handleCallback(code, codeVerifier!);
 
+    //TODO: use createDbSessionAndCookie function instead
     const session = await lucia.createSession(userId, {
       ipAddress:
         request.ip ?? request.headers.get("X-Forwarded-For") ?? "127.0.0.1",

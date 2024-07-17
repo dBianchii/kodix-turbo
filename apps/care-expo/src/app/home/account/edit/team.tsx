@@ -15,7 +15,7 @@ import {
 import { AvatarWrapper } from "~/components/avatar-wrapper";
 import { ElasticSpinnerView } from "~/components/loading-spinner";
 import { MenuListItem } from "~/components/menu-list-item";
-import { defaultMargin } from "~/components/safe-area-view";
+import { defaultPadding } from "~/components/safe-area-view";
 import { api } from "~/utils/api";
 import { useAuth } from "~/utils/auth";
 
@@ -58,7 +58,7 @@ export default function EditTeamPage() {
       />
 
       <View bg={"$background"} f={1}>
-        <View mx={defaultMargin} py={"$4"}>
+        <View mx={defaultPadding} py={"$4"}>
           {isLoading ? (
             <Spinner />
           ) : (

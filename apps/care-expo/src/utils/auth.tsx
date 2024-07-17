@@ -1,5 +1,7 @@
 import { useRouter } from "expo-router";
 
+import { getErrorMessage } from "@kdx/shared";
+
 import { api } from "./api";
 import { deleteToken, setToken } from "./session-store";
 
@@ -12,7 +14,7 @@ export const useSignIn = () => {
   const utils = api.useUtils();
   const router = useRouter();
 
-  const mutation = api.user.signInByPassword.useMutation({
+  const mutation = api.app.kodixCare.signInByPassword.useMutation({
     onSuccess: async (sessionToken) => {
       setToken(sessionToken);
 

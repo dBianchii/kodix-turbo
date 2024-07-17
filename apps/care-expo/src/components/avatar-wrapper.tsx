@@ -1,5 +1,5 @@
-import React from "react";
 import type { AvatarProps } from "tamagui";
+import React from "react";
 import { Avatar, Text } from "tamagui";
 
 export function AvatarWrapper({
@@ -27,6 +27,7 @@ export function AvatarWrapper({
           </Text>
         </Avatar.Fallback>
       )}
+
       <Avatar.Fallback backgroundColor="$blue10" />
     </Avatar>
   );

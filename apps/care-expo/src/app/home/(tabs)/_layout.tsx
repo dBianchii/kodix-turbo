@@ -4,9 +4,9 @@ import { Pressable } from "react-native";
 import * as Haptics from "expo-haptics";
 import { Tabs, useRouter } from "expo-router";
 import { Bell, Home } from "@tamagui/lucide-icons";
-import { useTheme } from "tamagui";
 
 import { useAuth } from "~/utils/auth";
+import { Header } from "../_components/header";
 
 function TabBarButton(props: BottomTabBarButtonProps) {
   return (
@@ -23,13 +23,13 @@ function TabBarButton(props: BottomTabBarButtonProps) {
 export default function TabLayout() {
   const { user } = useAuth();
   const router = useRouter();
-  const theme = useTheme();
   if (!user) return router.replace("/");
   return (
     <>
       <Tabs
         screenOptions={{
-          headerShown: false,
+          header: () => <Header />,
+          headerShown: true,
           tabBarActiveTintColor: "$color",
           tabBarStyle: {
             borderTopColor: "rgba(34,36,40,1)",
@@ -41,6 +41,7 @@ export default function TabLayout() {
           name="index"
           options={{
             tabBarLabel: () => null,
+            headerShown: true,
             tabBarButton: TabBarButton,
             tabBarIcon: ({ color }) => <Home color={color} />,
           }}

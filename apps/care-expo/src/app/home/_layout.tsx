@@ -17,9 +17,7 @@ export default function Layout() {
           headerStyle: {
             backgroundColor: theme.background.val,
           },
-          header: () => <Header />,
-          title: "",
-          headerShown: true,
+          headerShown: false,
         }}
       />
     </Stack>

@@ -1,4 +1,4 @@
-import { TouchableOpacity, View } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useRouter } from "expo-router";
 import { ArrowRight, LogOut, X } from "@tamagui/lucide-icons";
@@ -7,6 +7,7 @@ import {
   ListItem,
   Separator,
   SizableText,
+  View,
   XStack,
   YGroup,
   YStack,
@@ -45,6 +46,7 @@ export default function ProfilePage() {
       <Stack.Screen
         options={{
           animation: "slide_from_bottom",
+          gestureEnabled: false,
         }}
       />
       <SafeAreaView>

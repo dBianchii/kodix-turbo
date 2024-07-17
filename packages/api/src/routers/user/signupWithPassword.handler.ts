@@ -1,9 +1,7 @@
-import { cookies, headers } from "next/headers";
 import { hash } from "@node-rs/argon2";
 import { TRPCError } from "@trpc/server";
 
 import type { TSignupWithPasswordInputSchema } from "@kdx/validators/trpc/user";
-import { lucia } from "@kdx/auth";
 import { createUser } from "@kdx/auth/db";
 import { eq } from "@kdx/db";
 import { db } from "@kdx/db/client";
@@ -11,7 +9,7 @@ import { nanoid } from "@kdx/db/nanoid";
 import { schema } from "@kdx/db/schema";
 
 import type { TPublicProcedureContext } from "../../procedures";
-import { argon2Config } from "./utils";
+import { argon2Config, createDbSessionAndCookie } from "./utils";
 
 interface SignupWithPasswordOptions {
   ctx: TPublicProcedureContext;
@@ -52,20 +50,6 @@ export const signupWithPasswordHandler = async ({
     });
   });
 
-  const heads = headers();
-
-  const session = await lucia.createSession(userId, {
-    ipAddress:
-      heads.get("X-Forwarded-For") ??
-      heads.get("X-Forwarded-For") ??
-      "127.0.0.1",
-    userAgent: heads.get("user-agent"),
-  });
-  const sessionCookie = lucia.createSessionCookie(session.id);
-  cookies().set(
-    sessionCookie.name,
-    sessionCookie.value,
-    sessionCookie.attributes,
-  );
-  return session.id;
+  const sessionId = createDbSessionAndCookie({ userId });
+  return sessionId;
 };

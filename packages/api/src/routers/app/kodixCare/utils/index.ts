@@ -1,3 +1,6 @@
+import type { Drizzle } from "@kdx/db/client";
+import { and, eq } from "@kdx/db";
+import { db as _db } from "@kdx/db/client";
 import { schema } from "@kdx/db/schema";
 import { kodixCareAppId } from "@kdx/shared";
 
@@ -46,4 +49,34 @@ export async function cloneCalendarTasksToCareTasks({
       },
     },
   });
+}
+
+export async function getUserTeamsWithAppInstalled({
+  userId,
+  appId,
+  db = _db,
+}: {
+  userId: string;
+  appId: string;
+  db: Drizzle;
+}) {
+  return await db
+    .select({
+      id: schema.teams.id,
+    })
+    .from(schema.teams)
+    .where(
+      and(
+        eq(schema.usersToTeams.userId, userId),
+        eq(schema.appsToTeams.appId, appId),
+      ),
+    )
+    .innerJoin(
+      schema.appsToTeams,
+      eq(schema.appsToTeams.teamId, schema.teams.id),
+    )
+    .innerJoin(
+      schema.usersToTeams,
+      eq(schema.usersToTeams.teamId, schema.teams.id),
+    );
 }

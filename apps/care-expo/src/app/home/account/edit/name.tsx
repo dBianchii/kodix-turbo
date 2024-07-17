@@ -14,7 +14,7 @@ import {
   FormMessage,
   useForm,
 } from "~/components/form";
-import { defaultMargin } from "~/components/safe-area-view";
+import { defaultPadding } from "~/components/safe-area-view";
 import { api } from "~/utils/api";
 import { useAuth } from "~/utils/auth";
 
@@ -84,7 +84,7 @@ export default function EditNamePage() {
         }}
       />
       <View bg={"$background"} f={1}>
-        <View mx={defaultMargin}>
+        <View mx={defaultPadding}>
           <Form {...form}>
             <FormField
               control={form.control}

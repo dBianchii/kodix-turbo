@@ -18,7 +18,7 @@ import { deleteNotificationsHandler } from "./deleteNotifications.handler";
 import { getInvitationsHandler } from "./getInvitations.handler";
 import { getNotificationsHandler } from "./getNotifications.handler";
 import { sendResetPasswordEmail } from "./sendResetPasswordEmail";
-import { signInHandler } from "./signInByPassword.handler";
+import { signInByPasswordHandler } from "./signInByPassword.handler";
 import { signupWithPasswordHandler } from "./signupWithPassword.handler";
 import { switchActiveTeamHandler } from "./switchActiveTeam.handler";
 
@@ -40,7 +40,7 @@ export const userRouter = {
     .mutation(deleteNotificationsHandler),
   signInByPassword: publicProcedure
     .input(ZSignInByPasswordInputSchema)
-    .mutation(signInHandler),
+    .mutation(signInByPasswordHandler),
   signupWithPassword: publicProcedure
     .input(ZSignupWithPasswordInputSchema)
     .mutation(signupWithPasswordHandler),

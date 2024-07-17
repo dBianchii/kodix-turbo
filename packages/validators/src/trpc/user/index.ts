@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import type { schema } from "@kdx/db/schema";
+
 import { ZNanoId } from "../..";
 
 export const ZChangeNameInputSchema = z.object({ name: z.string().max(32) });
@@ -11,7 +13,9 @@ export const ZGetNotificationsInputSchema = z.object({
   from: z.string().optional(),
   to: z.string().optional(),
   page: z.coerce.number().default(1),
-  channel: z.string().optional(),
+  channel: z
+    .custom<typeof schema.notifications.$inferInsert.channel>()
+    .optional(),
   operator: z.enum(["and", "or"]).optional(),
   subject: z.string().optional(),
   perPage: z.coerce.number().default(10),
