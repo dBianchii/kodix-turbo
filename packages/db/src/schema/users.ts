@@ -1,4 +1,3 @@
-import type { AnyMySqlColumn } from "drizzle-orm/mysql-core";
 import { relations, sql } from "drizzle-orm";
 import {
   boolean,
