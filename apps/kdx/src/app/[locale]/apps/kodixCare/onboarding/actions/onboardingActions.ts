@@ -1,5 +1,7 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
+
 import { kodixCareAppId } from "@kdx/shared";
 import { kodixCareConfigSchema } from "@kdx/validators";
 
@@ -16,4 +18,5 @@ export const finishKodixCareOnboardingAction = action
     await api.app.installApp({
       appId: kodixCareAppId,
     });
+    revalidatePath("/", "layout");
   });
