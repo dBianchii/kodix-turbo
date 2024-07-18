@@ -30,9 +30,7 @@ export const users = mysqlTable(
     email: varchar("email", { length: DEFAULTLENGTH }).notNull().unique(),
     emailVerified: timestamp("emailVerified").default(sql`CURRENT_TIMESTAMP`),
     image: varchar("image", { length: DEFAULTLENGTH }),
-    activeTeamId: varchar("activeTeamId", { length: DEFAULTLENGTH })
-      .references((): AnyMySqlColumn => teams.id)
-      .notNull(),
+    activeTeamId: varchar("activeTeamId", { length: DEFAULTLENGTH }).notNull(),
     kodixAdmin: boolean("kodixAdmin").default(false).notNull(),
   },
   (table) => {
