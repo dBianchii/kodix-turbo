@@ -10,7 +10,7 @@
     "./reset-password": "./src/emails/reset-password.tsx"
   },
   "scripts": {
-    "dev": "pnpm dlx react-email@latest dev --dir='src'",
+    "dev-yes": "pnpm dlx react-email@latest dev --dir='src'",
     "clean": "rm -rf .turbo node_modules",
     "lint": "eslint",
     "format": "prettier --check . --ignore-path ../../.gitignore",

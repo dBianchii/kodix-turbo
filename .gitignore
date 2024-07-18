@@ -54,3 +54,6 @@ dist/
 
 # turbo
 .turbo
+
+# testing stuff
+test
