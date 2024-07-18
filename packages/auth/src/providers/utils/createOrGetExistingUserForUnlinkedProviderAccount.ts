@@ -42,7 +42,7 @@ export default async function createOrGetExistingUserForUnlinkedProviderAccount(
         teamId,
         userId,
         invite,
-        db: tx,
+        tx,
       });
       cookies().delete("invite");
     } else {

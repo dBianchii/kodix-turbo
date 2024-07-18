@@ -48,7 +48,7 @@ export const signupWithPasswordHandler = async ({
       email: input.email,
       invite: input.invite,
       passwordHash: passwordHash,
-      db: tx,
+      tx,
     });
   });
 

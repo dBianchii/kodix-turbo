@@ -1,7 +1,7 @@
 //? This file contains some db interactions that need to exist here instead of @kdx/api.
 //? It's to avoid circular dependencies / duplicated code for db calls that need to be here in @kdx/auth
 
-import type { Drizzle } from "@kdx/db/client";
+import type { Drizzle, DrizzleTransaction } from "@kdx/db/client";
 import { eq } from "@kdx/db";
 import { schema } from "@kdx/db/schema";
 
@@ -12,7 +12,7 @@ export async function createUser({
   userId,
   email,
   image,
-  db,
+  tx,
   passwordHash,
 }: {
   invite?: string;
@@ -22,9 +22,9 @@ export async function createUser({
   email: string;
   image?: string;
   passwordHash?: string;
-  db: Drizzle;
+  tx: DrizzleTransaction;
 }) {
-  await db.insert(schema.users).values({
+  await tx.insert(schema.users).values({
     id: userId,
     name: name,
     activeTeamId: teamId,
@@ -33,15 +33,15 @@ export async function createUser({
     passwordHash: passwordHash,
   });
   if (invite) {
-    await acceptInvite({ invite, userId, email, db });
+    await acceptInvite({ invite, userId, email, db: tx });
   } else {
-    await db.insert(schema.teams).values({
+    await tx.insert(schema.teams).values({
       id: teamId,
       ownerId: userId,
       name: `Personal Team`,
     });
 
-    await db.insert(schema.usersToTeams).values({
+    await tx.insert(schema.usersToTeams).values({
       userId: userId,
       teamId: teamId,
     });
