@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import type { KodixAppId } from "@kdx/shared";
 
-import { ZNanoId } from "../../..";
+import { ZNanoId, ZUserId } from "../../..";
 
 export const ZGetUsersWithRolesInputSchema = z.object({
   appId: z.custom<KodixAppId>(),
@@ -33,7 +33,7 @@ export type TUpdatePermissionAssociationInputSchema = z.infer<
 >;
 
 export const ZUpdateUserAssociationInputSchema = z.object({
-  userId: ZNanoId, //User to update
+  userId: ZUserId, //User to update
   appId: z.custom<KodixAppId>(), //Which app teamAppRoleIds belong to.
   teamAppRoleIds: z.array(ZNanoId), //teamAppRoleIds to connect
 });

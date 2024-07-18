@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { ZNanoId } from "../..";
+import { ZNanoId, ZUserId } from "../..";
 
 export const ZCreateInputSchema = z.object({
   teamName: z.string().min(3).max(32, {
@@ -15,7 +15,7 @@ export const ZGetOneInputSchema = z.object({
 export type TGetOneInputSchema = z.infer<typeof ZGetOneInputSchema>;
 
 export const ZRemoveUserSchema = z.object({
-  userId: ZNanoId,
+  userId: ZUserId,
 });
 export type TRemoveUserSchema = z.infer<typeof ZRemoveUserSchema>;
 

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { ZNanoId } from "../../..";
+import { ZNanoId, ZUserId } from "../../..";
 
 export const ZDoCheckoutForShiftInputSchema = z.object({
   date: z.date().default(new Date()),
@@ -17,7 +17,7 @@ export type TGetCareTasksInputSchema = z.infer<typeof ZGetCareTasksInputSchema>;
 
 export const ZSaveCareTaskInputSchema = z.object({
   id: ZNanoId,
-  doneByUserId: ZNanoId.nullable().optional(),
+  doneByUserId: ZUserId.nullable().optional(),
   doneAt: z.date().nullable().optional(),
   details: z.string().nullable().optional(),
 });

@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import type { schema } from "@kdx/db/schema";
 
-import { ZNanoId } from "../../..";
+import { ZNanoId, ZUserId } from "../../..";
 
 export const ZCreateInputSchema = z.object({
   title: z.string(),
@@ -10,7 +10,7 @@ export const ZCreateInputSchema = z.object({
   dueDate: z.date().optional(),
   priority: z.number().optional(),
   status: z.custom<typeof schema.todos.$inferInsert.status>().optional(),
-  assignedToUserId: ZNanoId.optional().nullish(),
+  assignedToUserId: ZUserId.optional().nullish(),
 });
 export type TCreateInputSchema = z.infer<typeof ZCreateInputSchema>;
 
@@ -21,6 +21,6 @@ export const ZUpdateInputSchema = z.object({
   dueDate: z.date().optional().nullish(),
   priority: z.number().optional(),
   status: z.custom<typeof schema.todos.$inferInsert.status>().optional(),
-  assignedToUserId: ZNanoId.optional().nullish(),
+  assignedToUserId: ZUserId.optional().nullish(),
 }); //TODO: investigate
 export type TUpdateInputSchema = z.infer<typeof ZUpdateInputSchema>;

@@ -4,6 +4,7 @@ import { db } from "@kdx/db/client";
 import { nanoid } from "@kdx/db/nanoid";
 import { schema } from "@kdx/db/schema";
 
+import { generateUserId } from "../..";
 import { createUser } from "../../db";
 
 export default async function createOrGetExistingUserForUnlinkedProviderAccount({
@@ -19,7 +20,7 @@ export default async function createOrGetExistingUserForUnlinkedProviderAccount(
   providerUserId: string;
   providerId: "google" | "discord";
 }) {
-  let userId = nanoid();
+  let userId = generateUserId();
 
   await db.transaction(async (tx) => {
     const existingUser = await tx.query.users.findFirst({

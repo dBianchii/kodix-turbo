@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import dayjs from "@kdx/dayjs";
+import { NANOID_SIZE } from "@kdx/db/nanoid";
 import { kodixCareAppId } from "@kdx/shared";
 
 /**
@@ -33,7 +34,14 @@ export const appIdToAppTeamConfigSchema = {
   [kodixCareAppId]: kodixCareConfigSchema,
 };
 
+//If this is changed, the NANOID_SIZE in @kdx/shared must be updated.
 export const NANOID_REGEX = /^[0-9a-z]{12}$/;
 export const ZNanoId = z
   .string()
-  .regex(NANOID_REGEX, { message: "Not a valid id" }); //If this is changed, the NANOID_SIZE in @kdx/shared must be updated
+  .regex(NANOID_REGEX, { message: "Not a valid id" });
+
+//If this is changed please update generateUserId in @kdx/auth
+export const ZUserId = z
+  .string()
+  .length(NANOID_SIZE)
+  .regex(/^[a-z2-7]+$/); //? lowercase letters between a and z, and numbers between 2 and 7.
