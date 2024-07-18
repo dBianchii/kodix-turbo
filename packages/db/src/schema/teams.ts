@@ -64,7 +64,7 @@ export const usersToTeams = mysqlTable(
   {
     userId: varchar("userId", { length: NANOID_SIZE })
       .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
+      .references(() => users.id, { onDelete: "cascade", onUpdate: "cascade" }),
     teamId: teamIdReferenceCascadeDelete,
   },
   (table) => {
@@ -172,7 +172,7 @@ export const invitations = mysqlTable(
     updatedAt: timestamp("updatedAt").onUpdateNow(),
     invitedById: varchar("invitedById", { length: NANOID_SIZE })
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, { onUpdate: "cascade" }),
   },
   (table) => {
     return {

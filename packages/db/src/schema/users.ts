@@ -60,7 +60,7 @@ export const accounts = mysqlTable(
     }).notNull(),
     userId: varchar("userId", { length: DEFAULTLENGTH })
       .notNull()
-      .references(() => users.id), //TODO: referential action?
+      .references(() => users.id, { onUpdate: "cascade" }), //TODO: referential action?
   },
   (account) => ({
     compoundKey: primaryKey({
@@ -81,7 +81,7 @@ export const sessions = mysqlTable("session", {
     length: DEFAULTLENGTH,
   })
     .notNull()
-    .references(() => users.id),
+    .references(() => users.id, { onUpdate: "cascade" }),
   expiresAt: datetime("expires_at").notNull(),
   ipAddress: varchar("ip_address", { length: 45 }),
   userAgent: text("user_agent"),
