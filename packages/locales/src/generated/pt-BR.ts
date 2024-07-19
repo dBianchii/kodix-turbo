@@ -392,5 +392,7 @@ export default {
   "Redefine password": "Redefinir senha",
   "Change password": "Alterar a senha",
   "Error installing": "Erro ao instalar",
-  "Only the team owner can edit this": "Somente o proprietário da equipe pode editar isso"
+  "Only the team owner can edit this": "Somente o proprietário da equipe pode editar isso",
+  "Only the owner of the team can invite new members": "(Somente o proprietário da equipe pode convidar novos membros)",
+  "Only the owner of the team can remove invites": "Somente o proprietário da equipe pode remover convites"
 } as const
