@@ -5,10 +5,10 @@ import { and, eq, not } from "@kdx/db";
 import { nanoid } from "@kdx/db/nanoid";
 import { schema } from "@kdx/db/schema";
 
-import type { TProtectedProcedureContext } from "../../procedures";
+import type { TIsTeamOwnerProcedureContext } from "../../procedures";
 
 interface RemoveUserOptions {
-  ctx: TProtectedProcedureContext;
+  ctx: TIsTeamOwnerProcedureContext;
   input: TRemoveUserSchema;
 }
 

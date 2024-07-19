@@ -127,20 +127,20 @@ function CustomRow({
               )}
             </Button>
           </form>
-          <LeaveTeamDropdown user={user} />
+          <LeaveTeamDropdown teamId={team.id} />
         </div>
       </TableCell>
     </TableRow>
   );
 }
 
-function LeaveTeamDropdown({ user }: { user: User }) {
+function LeaveTeamDropdown({ teamId }: { teamId: string }) {
   const t = useI18n();
   const utils = api.useUtils();
   const router = useRouter();
-  const { mutate } = api.team.removeUser.useMutation({
+  const { mutate } = api.team.leaveTeam.useMutation({
     onSuccess: () => {
-      toast(t("account.User removed from team"));
+      toast.success(t("account.You have left the team"));
       void utils.team.getAllUsers.invalidate();
       router.refresh();
     },
@@ -161,7 +161,7 @@ function LeaveTeamDropdown({ user }: { user: User }) {
           onClick={(e) => {
             e.stopPropagation();
             mutate({
-              userId: user.id,
+              teamId,
             });
           }}
         >

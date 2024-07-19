@@ -11,11 +11,11 @@ import {
   kodixNotificationFromEmail,
 } from "@kdx/shared";
 
-import type { TProtectedProcedureContext } from "../../../procedures";
+import type { TIsTeamOwnerProcedureContext } from "../../../procedures";
 import { resend } from "../../../utils/email";
 
 interface InviteOptions {
-  ctx: TProtectedProcedureContext;
+  ctx: TIsTeamOwnerProcedureContext;
   input: TInviteInputSchema;
 }
 

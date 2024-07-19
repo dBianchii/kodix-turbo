@@ -167,8 +167,8 @@ export default {
     "Display Name": "Nome de exibição",
     "Manage the teams you are a part of or create a new one": "Gerencie as equipes que você",
     "Please use 32 characters at maximum": "Por favor use no máximo 32 caracteres.",
-    "User removed from team": "Usuário removido da equipe",
-    "please-enter-your-full-name-or-a-display-name-you-are-comfortable-with": "Digite seu nome completo ou um nome de exibição com o qual você se sinta confortável."
+    "please-enter-your-full-name-or-a-display-name-you-are-comfortable-with": "Digite seu nome completo ou um nome de exibição com o qual você se sinta confortável.",
+    "You have left the team": "Você saiu da equipe"
   },
   "create-a-new-team-and-invite-your-team-members": "Crie uma nova equipe e convide os membros da sua equipe",
   "created": "criada",

@@ -29,3 +29,6 @@ export const ZUpdateInputSchema = z.object({
     }),
 });
 export type TUpdateInputSchema = z.infer<typeof ZUpdateInputSchema>;
+
+export const ZLeaveTeamInputSchema = z.object({ teamId: ZNanoId });
+export type TLeaveTeamInputSchema = z.infer<typeof ZLeaveTeamInputSchema>;
