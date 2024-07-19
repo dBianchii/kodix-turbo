@@ -24,7 +24,7 @@ export default async function SettingsMembersPage() {
     },
   });
   if (!currentTeam) throw new Error("No team found");
-  const canEditPage = currentTeam.ownerId !== user.id;
+  const canEditPage = currentTeam.ownerId === user.id;
 
   return (
     <div className="mt-8 space-y-8 md:mt-0">
