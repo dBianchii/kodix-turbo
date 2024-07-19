@@ -42,7 +42,7 @@ export function DataTableMembers({ user }: { user: User }) {
   const t = useI18n();
   const { mutate } = api.team.removeUser.useMutation({
     onSuccess: () => {
-      toast(t("User removed from team"));
+      toast.success(t("User removed from team"));
       void utils.team.getAllUsers.invalidate();
     },
     onError: (e) => trpcErrorToastDefault(e),
@@ -75,6 +75,8 @@ export function DataTableMembers({ user }: { user: User }) {
     columnHelper.display({
       id: "actions",
       cell: function Cell(info) {
+        if (info.row.original.id === user.id) return null;
+
         return (
           <div className="flex justify-end">
             <DropdownMenu>
@@ -93,7 +95,7 @@ export function DataTableMembers({ user }: { user: User }) {
                     });
                   }}
                 >
-                  {info.row.original.id === user.id ? t("Leave") : t("Remove")}
+                  {t("Remove")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

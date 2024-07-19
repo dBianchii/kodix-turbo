@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import type { TRemoveUserSchema } from "@kdx/validators/trpc/team";
-import { and, eq, not } from "@kdx/db";
+import { and, eq, inArray, not } from "@kdx/db";
 import { nanoid } from "@kdx/db/nanoid";
 import { schema } from "@kdx/db/schema";
 
@@ -38,13 +38,11 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
 
   const isUserTryingToRemoveSelfFromTeam = input.userId === ctx.session.user.id;
   if (isUserTryingToRemoveSelfFromTeam) {
-    if (team.ownerId === ctx.session.user.id) {
-      throw new TRPCError({
-        message:
-          "You are the owner of this team. You must transfer ownership first before leaving it",
-        code: "BAD_REQUEST",
-      });
-    }
+    throw new TRPCError({
+      message:
+        "You cannot remove yourself from a team you are an owner of. Delete this team instead",
+      code: "BAD_REQUEST",
+    });
   }
 
   if (team.UsersToTeams.length <= 1)
@@ -54,7 +52,6 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
       code: "BAD_REQUEST",
     });
 
-  //TODO: Implement role based access control
   let otherTeam = await ctx.db
     .select({ id: schema.teams.id })
     .from(schema.teams)
@@ -73,7 +70,7 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
   //check if there are more people in the team before removal
   await ctx.db.transaction(async (tx) => {
     if (!otherTeam) {
-      //Create a new team for the user and move them to it
+      //Create a new team for the user so we can move them to it
       const newTeamId = nanoid();
       await tx.insert(schema.teams).values({
         id: newTeamId,
@@ -83,9 +80,6 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
       await tx
         .insert(schema.usersToTeams)
         .values({ userId: input.userId, teamId: newTeamId });
-      await tx.update(schema.users).set({
-        activeTeamId: newTeamId,
-      });
 
       otherTeam = { id: newTeamId };
     }
@@ -105,6 +99,24 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
         and(
           eq(schema.usersToTeams.userId, input.userId),
           eq(schema.usersToTeams.teamId, ctx.session.user.activeTeamId),
+        ),
+      );
+
+    //Remove the user association from the team's apps
+    await tx
+      .delete(schema.teamAppRolesToUsers)
+      .where(
+        and(
+          eq(schema.teamAppRolesToUsers.userId, input.userId),
+          inArray(
+            schema.teamAppRolesToUsers.teamAppRoleId,
+            ctx.db
+              .select({ id: schema.teamAppRoles.id })
+              .from(schema.teamAppRoles)
+              .where(
+                eq(schema.teamAppRoles.teamId, ctx.session.user.activeTeamId),
+              ),
+          ),
         ),
       );
   });

@@ -60,6 +60,7 @@ export const leaveTeamHandler = async ({ ctx, input }: LeaveTeamOptions) => {
       .set({ activeTeamId: otherTeam.id })
       .where(eq(schema.users.id, ctx.session.user.id));
 
+    //Remove the user from the team
     await tx
       .delete(schema.usersToTeams)
       .where(
@@ -69,6 +70,7 @@ export const leaveTeamHandler = async ({ ctx, input }: LeaveTeamOptions) => {
         ),
       );
 
+    //Remove the user association from the team's apps
     await tx
       .delete(schema.teamAppRolesToUsers)
       .where(
