@@ -45,13 +45,6 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
     });
   }
 
-  if (team.UsersToTeams.length <= 1)
-    throw new TRPCError({
-      message:
-        "This user cannot leave since they are the only remaining owner of the team. Delete this team instead",
-      code: "BAD_REQUEST",
-    });
-
   let otherTeam = await ctx.db
     .select({ id: schema.teams.id })
     .from(schema.teams)
