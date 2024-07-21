@@ -47,7 +47,7 @@ export default async function SettingsMembersPage() {
               />
             }
           >
-            <DataTableMembersServer />
+            <DataTableMembersServer canEditPage={canEditPage} />
           </Suspense>
         </TabsContent>
         <TabsContent value="invites">
@@ -74,9 +74,13 @@ export default async function SettingsMembersPage() {
   );
 }
 
-async function DataTableMembersServer() {
+async function DataTableMembersServer({
+  canEditPage,
+}: {
+  canEditPage: boolean;
+}) {
   const { user } = await auth();
   if (!user) return null;
 
-  return <DataTableMembers user={user} />;
+  return <DataTableMembers user={user} canEditPage={canEditPage} />;
 }

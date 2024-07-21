@@ -394,5 +394,6 @@ export default {
   "Error installing": "Error installing",
   "Only the team owner can edit this": "Only the team owner can edit this",
   "Only the owner of the team can invite new members": "(Only the owner of the team can invite new members)",
-  "Only the owner of the team can remove invites": "Only the owner of the team can remove invites"
+  "Only the owner of the team can remove invites": "Only the owner of the team can remove invites",
+  "Only the owner of the team can remove members": "Only the owner of the team can remove members"
 } as const
