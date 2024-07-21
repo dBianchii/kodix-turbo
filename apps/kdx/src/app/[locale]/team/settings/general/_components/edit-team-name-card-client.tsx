@@ -53,7 +53,6 @@ export function EditTeamNameCardClient({
     onSuccess: () => {
       router.refresh();
     },
-    onError: (e) => trpcErrorToastDefault(e),
   });
   const t = useI18n();
 
