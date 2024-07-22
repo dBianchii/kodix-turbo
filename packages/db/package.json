@@ -6,29 +6,29 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "default": "./dist/index.ts"
+      "default": "./dist/index.js"
     },
     "./client": {
       "types": "./dist/client.d.ts",
-      "default": "./dist/client.ts"
+      "default": "./dist/client.js"
     },
     "./schema": {
       "types": "./dist/schema/index.d.ts",
-      "default": "./dist/schema/index.ts"
+      "default": "./dist/schema/index.js"
     },
     "./constants": {
       "types": "./dist/constants.d.ts",
-      "default": "./dist/constants.ts"
+      "default": "./dist/constants.js"
     },
     "./nanoid": {
       "types": "./dist/nanoid.d.ts",
-      "default": "./dist/nanoid.ts"
+      "default": "./dist/nanoid.js"
     }
   },
   "scripts": {
     "build": "tsc",
-    "clean": "rm -rf .turbo dist node_modules",
     "dev": "tsc",
+    "clean": "rm -rf .turbo dist node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
     "push": "pnpm with-env drizzle-kit push",

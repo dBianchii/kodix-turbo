@@ -6,6 +6,7 @@
       "dependsOn": ["^topo"]
     },
     "build": {
+      "dependsOn": ["^build"],
       "outputs": ["node_modules/.cache/tsbuildinfo.json", "dist/**"]
     },
     "dev": {
@@ -22,7 +23,7 @@
     },
     "typecheck": {
       "dependsOn": ["^topo", "^build"],
-      "cache": false
+      "outputs": ["node_modules/.cache/tsbuildinfo.json"]
     },
     "clean": {
       "cache": false
