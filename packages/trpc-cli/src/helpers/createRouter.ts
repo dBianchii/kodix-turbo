@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { existsSync } from "fs";
 import fs from "fs/promises";
 
@@ -91,13 +90,14 @@ export const ${newRouterName}Router = {
         process.exit(1);
       }
       const routerContent = match[1];
+      if (!routerContent) throw new Error("Router content not found");
 
       const modifiedRouterContent = begginningOfRecord
         ? newEntry + routerContent
         : routerContent + newEntry;
 
       // Replace the old router object content with the modified one
-      fileContent = fileContent.replace(match[1]!, modifiedRouterContent);
+      fileContent = fileContent.replace(routerContent, modifiedRouterContent);
       await fs.writeFile(routerFilePath, fileContent);
     } catch (error) {
       logger.error("Error updating file");

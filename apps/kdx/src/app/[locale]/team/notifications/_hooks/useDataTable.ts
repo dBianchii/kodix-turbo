@@ -293,7 +293,7 @@ export function useDataTable<TData, TValue>({
         (searchableColumns.find((column) => column.value === key) &&
           !debouncedSearchableColumnFilters.find(
             (column) => column.id === key,
-            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+             
           )) ||
         (filterableColumns.find((column) => column.value === key) &&
           !filterableColumnFilters.find((column) => column.id === key))

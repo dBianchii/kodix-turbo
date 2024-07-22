@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import fs from "fs/promises";
 import vm from "node:vm";
 import path from "path";
