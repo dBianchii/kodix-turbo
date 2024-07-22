@@ -4,20 +4,47 @@
   "version": "0.1.0",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
-    "./trpc/app": "./src/trpc/app/index.ts",
-    "./trpc/app/calendar": "./src/trpc/app/calendar/index.ts",
-    "./trpc/app/kodixCare": "./src/trpc/app/kodixCare/index.ts",
-    "./trpc/app/todo": "./src/trpc/app/todo/index.ts",
-    "./trpc/team": "./src/trpc/team/index.ts",
-    "./trpc/team/appRole": "./src/trpc/team/appRole/index.ts",
-    "./trpc/invitation": "./src/trpc/team/invitation/index.ts",
-    "./trpc/user": "./src/trpc/user/index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    },
+    "./trpc/app": {
+      "types": "./dist/trpc/app/index.d.ts",
+      "default": "./src/trpc/app/index.ts"
+    },
+    "./trpc/app/calendar": {
+      "types": "./dist/trpc/app/calendar/index.d.ts",
+      "default": "./src/trpc/app/calendar/index.ts"
+    },
+    "./trpc/app/kodixCare": {
+      "types": "./dist/trpc/app/kodixCare/index.d.ts",
+      "default": "./src/trpc/app/kodixCare/index.ts"
+    },
+    "./trpc/app/todo": {
+      "types": "./dist/trpc/app/todo/index.d.ts",
+      "default": "./src/trpc/app/todo/index.ts"
+    },
+    "./trpc/team": {
+      "types": "./dist/trpc/team/index.d.ts",
+      "default": "./src/trpc/team/index.ts"
+    },
+    "./trpc/team/appRole": {
+      "types": "./dist/trpc/team/appRole/index.d.ts",
+      "default": "./src/trpc/team/appRole/index.ts"
+    },
+    "./trpc/team/invitation": {
+      "types": "./dist/trpc/team/invitation/index.d.ts",
+      "default": "./src/trpc/team/invitation/index.ts"
+    },
+    "./trpc/user": {
+      "types": "./dist/trpc/user/index.d.ts",
+      "default": "./src/trpc/user/index.ts"
+    }
   },
   "scripts": {
     "build": "tsc",
-    "dev": "tsc --watch",
     "clean": "rm -rf .turbo dist node_modules",
+    "dev": "tsc",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"

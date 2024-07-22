@@ -6,28 +6,28 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "default": "./src/index.ts"
+      "default": "./dist/index.js"
     },
     "./client": {
       "types": "./dist/client.d.ts",
-      "default": "./src/client.ts"
+      "default": "./dist/client.js"
     },
     "./schema": {
       "types": "./dist/schema/index.d.ts",
-      "default": "./src/schema/index.ts"
+      "default": "./dist/schema/index.js"
     },
     "./constants": {
       "types": "./dist/constants.d.ts",
-      "default": "./src/constants.ts"
+      "default": "./dist/constants.js"
     },
     "./nanoid": {
       "types": "./dist/nanoid.d.ts",
-      "default": "./src/nanoid.ts"
+      "default": "./dist/nanoid.js"
     }
   },
   "scripts": {
     "build": "tsc",
-    "dev": "tsc --watch",
+    "dev": "tsc",
     "clean": "rm -rf .turbo dist node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
