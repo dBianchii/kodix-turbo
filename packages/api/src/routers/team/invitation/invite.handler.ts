@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { TRPCError } from "@trpc/server";
 
-import type { TInviteInputSchema } from "@kdx/validators/trpc/invitation";
+import type { TInviteInputSchema } from "@kdx/validators/trpc/team/invitation";
 import { nanoid } from "@kdx/db/nanoid";
 import { schema } from "@kdx/db/schema";
 import TeamInvite from "@kdx/react-email/team-invite";
