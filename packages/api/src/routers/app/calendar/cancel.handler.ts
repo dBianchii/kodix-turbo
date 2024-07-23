@@ -3,7 +3,7 @@ import { RRule, rrulestr } from "rrule";
 
 import type { TCancelInputSchema } from "@kdx/validators/trpc/app/calendar";
 import { and, eq, gte, inArray } from "@kdx/db";
-import { schema } from "@kdx/db/schema";
+import * as schema from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 

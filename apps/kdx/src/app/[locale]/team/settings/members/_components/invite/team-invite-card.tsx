@@ -32,7 +32,7 @@ import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
 import { Separator } from "@kdx/ui/separator";
 import { toast } from "@kdx/ui/toast";
-import { ZInviteInputSchema } from "@kdx/validators/trpc/invitation";
+import { ZInviteInputSchema } from "@kdx/validators/trpc/team/invitation";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";

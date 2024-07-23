@@ -8,7 +8,7 @@ import {
 
 import { sql } from "../..";
 import { db } from "../../client";
-import { schema } from "../../schema";
+import * as schema from "../../schema";
 import { appRoles_defaultTree } from "./appRolesDefault_tree";
 
 const devPartners: (typeof schema.devPartners.$inferInsert)[] = [

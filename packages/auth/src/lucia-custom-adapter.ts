@@ -5,7 +5,7 @@ import type { Adapter, DatabaseSession, DatabaseUser } from "lucia";
 import type { Drizzle } from "@kdx/db/client";
 import { eq, lte } from "@kdx/db";
 import { db } from "@kdx/db/client";
-import { schema } from "@kdx/db/schema";
+import * as schema from "@kdx/db/schema";
 
 class KodixAdapter implements Adapter {
   db;

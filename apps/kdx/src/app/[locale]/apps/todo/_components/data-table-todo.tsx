@@ -12,7 +12,7 @@ import {
 } from "@tanstack/react-table";
 
 import type { RouterOutputs } from "@kdx/api";
-import type { schema } from "@kdx/db/schema";
+import type { todos } from "@kdx/db/schema";
 import { Button } from "@kdx/ui/button";
 import { Checkbox } from "@kdx/ui/checkbox";
 import {
@@ -42,7 +42,7 @@ export type TodoColumn = RouterOutputs["app"]["todo"]["getAll"][number];
 const columnHelper = createColumnHelper<TodoColumn>();
 type team = RouterOutputs["team"]["getActiveTeam"];
 
-type Status = typeof schema.todos.$inferInsert.status;
+type Status = typeof todos.$inferInsert.status;
 
 declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

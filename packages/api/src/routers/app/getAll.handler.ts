@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import { eq, sql } from "@kdx/db";
-import { schema } from "@kdx/db/schema";
+import * as schema from "@kdx/db/schema";
 
 import type { TPublicProcedureContext } from "../../procedures";
 import { getUpstashCache, setUpstashCache } from "../../upstash";
