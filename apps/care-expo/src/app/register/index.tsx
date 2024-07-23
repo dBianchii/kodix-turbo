@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import { Keyboard } from "react-native";
-import { useRouter } from "expo-router";
-import { ArrowLeft } from "@tamagui/lucide-icons";
+import { Keyboard, Pressable, TouchableOpacity } from "react-native";
+import { Link, Stack, useRouter } from "expo-router";
+import { ArrowLeft, ChevronLeft, ChevronRight } from "@tamagui/lucide-icons";
 import {
   Button,
   H3,
@@ -9,6 +9,7 @@ import {
   Paragraph,
   Spinner,
   Text,
+  useTheme,
   View,
   YStack,
 } from "tamagui";
@@ -50,48 +51,61 @@ export default function Register() {
     },
   );
 
+  const theme = useTheme();
+
   return (
     <DismissKeyboard>
-      <RootSafeAreaView>
-        <Button
-          onPress={() => {
-            router.back();
+      <YStack bg={"$background"} flex={1} px={"$4"}>
+        <Stack.Screen
+          options={{
+            headerStyle: {
+              backgroundColor: theme.background.val,
+            },
+            title: "",
+            headerShown: true,
+            headerShadowVisible: false,
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() => {
+                  router.back();
+                }}
+              >
+                <ChevronLeft size={"$2"} />
+              </TouchableOpacity>
+            ),
           }}
-          unstyled
-          scaleIcon={2}
-          icon={<ArrowLeft />}
         />
         <YStack>
-          <YStack>
-            <H3 alignSelf="center">Digite seu email</H3>
-            <Paragraph mt={"$3"}>
-              Se você já recebeu um convite para o KodixCare, digite seu email
-              para continuar
-            </Paragraph>
-          </YStack>
-          <YStack mt={"$4"}>
-            <Form {...form}>
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        placeholder="name@email.com"
-                        onChangeText={field.onChange}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      This is your public display name.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+          <H3 alignSelf="center">Digite seu email</H3>
+          <Paragraph mt={"$3"}>
+            Se você já recebeu um convite para o KodixCare, digite seu email
+            para continuar
+          </Paragraph>
+        </YStack>
+        <YStack mt={"$4"}>
+          <Form {...form}>
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      placeholder="name@email.com"
+                      onChangeText={field.onChange}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    This is your public display name.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
+            {!query.data ? (
               <Button
                 mt={"$6"}
                 onPress={form.handleSubmit(async (values) => {
@@ -109,28 +123,35 @@ export default function Register() {
               >
                 {query.isFetching ? <Spinner /> : "Continuar"}
               </Button>
-            </Form>
-          </YStack>
-          <View mt={"$6"} ai={"center"}>
-            {!query.data && query.isError && (
-              <Text color="red">
-                Ocorreu um erro ao verificar o email. Tente novamente.
-              </Text>
-            )}
-            {query.data?.status === "not invited" && (
-              <Text color="red">
-                Parece que você não possui um convite ainda. Peça um convite
-                para um cuidador para continuar.
-              </Text>
-            )}
-            {query.data?.status === "already registered" && (
-              <Text color="red">
+            ) : null}
+          </Form>
+        </YStack>
+        <View mt={"$6"} ai={"center"}>
+          {!query.data && query.isError && (
+            <Text color="red">
+              Ocorreu um erro ao verificar o email. Tente novamente.
+            </Text>
+          )}
+          {query.data?.status === "not invited" && (
+            <Text color="red">
+              Parece que você não possui um convite ainda. Peça um convite para
+              um cuidador para continuar.
+            </Text>
+          )}
+          {query.data?.status === "already registered" && (
+            <>
+              <Text color="red" mb={"$3"}>
                 Email já cadastrado. Faça login para continuar.
               </Text>
-            )}
-          </View>
-        </YStack>
-      </RootSafeAreaView>
+              <Link href="/signIn" asChild>
+                <Button variant="outlined">
+                  Entrar <ChevronRight />
+                </Button>
+              </Link>
+            </>
+          )}
+        </View>
+      </YStack>
     </DismissKeyboard>
   );
 }
