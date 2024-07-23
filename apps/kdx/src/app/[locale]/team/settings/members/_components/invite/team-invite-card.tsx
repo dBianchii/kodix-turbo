@@ -89,8 +89,7 @@ export default function TeamInviteCardClient({ user }: { user: User }) {
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        emails.length > 0 &&
-          emails.filter((x) => Boolean(x)).length > 0 &&
+        if (emails.length > 0 && emails.filter((x) => Boolean(x)).length > 0)
           setOpen(true);
       }}
     >
