@@ -99,7 +99,7 @@ export const ${newRouterName}Router = {
       // Replace the old router object content with the modified one
       fileContent = fileContent.replace(routerContent, modifiedRouterContent);
       await fs.writeFile(routerFilePath, fileContent);
-    } catch (error) {
+    } catch {
       logger.error("Error updating file");
       process.exit(1);
     }

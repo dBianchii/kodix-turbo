@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import fs from "fs/promises";
 import vm from "node:vm";
 import path from "path";
@@ -142,7 +143,7 @@ export const runCli = async () => {
       procedure: async () => {
         try {
           await fs.access(PROCEDURESFILEPATH);
-        } catch (error) {
+        } catch {
           logger.error(
             `No procedures file found at ${chalk.yellow(
               PROCEDURESFILEPATH,
@@ -189,7 +190,7 @@ export const runCli = async () => {
                 const schema = context.result as unknown;
                 if (!(schema instanceof z.ZodSchema))
                   return "Please provide a valid Zod schema";
-              } catch (error) {
+              } catch {
                 return "Please provide a valid Zod schema";
               }
             }
