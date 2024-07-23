@@ -1,4 +1,5 @@
 //? This file is used to create common values that can be used in the schema files.
+
 import { decimal, varchar } from "drizzle-orm/mysql-core";
 
 import { nanoid, NANOID_SIZE } from "../nanoid";

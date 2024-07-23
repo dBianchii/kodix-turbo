@@ -2,7 +2,7 @@ import type { DrizzleWhere, SQL } from "@kdx/db";
 import type { TGetNotificationsInputSchema } from "@kdx/validators/trpc/user";
 import dayjs from "@kdx/dayjs";
 import { and, asc, count, desc, eq, gte, inArray, lte, or } from "@kdx/db";
-import { schema } from "@kdx/db/schema";
+import * as schema from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 import { filterColumn } from "../../lib/filter-column";

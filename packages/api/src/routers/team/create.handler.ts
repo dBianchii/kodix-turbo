@@ -1,6 +1,6 @@
 import type { TCreateInputSchema } from "@kdx/validators/trpc/team";
 import { nanoid } from "@kdx/db/nanoid";
-import { schema } from "@kdx/db/schema";
+import * as schema from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 

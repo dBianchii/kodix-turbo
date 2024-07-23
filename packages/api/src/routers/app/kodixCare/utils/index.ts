@@ -1,4 +1,4 @@
-import { schema } from "@kdx/db/schema";
+import * as schema from "@kdx/db/schema";
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";

@@ -1,5 +1,5 @@
 import type { TCreateInputSchema } from "@kdx/validators/trpc/app/todo";
-import { schema } from "@kdx/db/schema";
+import * as schema from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 
