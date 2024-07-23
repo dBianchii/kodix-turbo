@@ -6,18 +6,12 @@
       "dependsOn": ["^topo"]
     },
     "build": {
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**",
-        "next-env.d.ts",
-        ".expo/**",
-        ".output/**",
-        ".vercel/output/**"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": ["node_modules/.cache/tsbuildinfo.json", "dist/**"]
     },
     "dev": {
-      "persistent": true,
-      "cache": false
+      "cache": false,
+      "persistent": false
     },
     "format": {
       "outputs": ["node_modules/.cache/.prettiercache"],
@@ -29,7 +23,7 @@
     },
     "typecheck": {
       "dependsOn": ["^topo", "^build"],
-      "cache": false
+      "outputs": ["node_modules/.cache/tsbuildinfo.json"]
     },
     "clean": {
       "cache": false

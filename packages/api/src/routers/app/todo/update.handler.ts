@@ -1,6 +1,6 @@
 import type { TUpdateInputSchema } from "@kdx/validators/trpc/app/todo";
 import { and, eq } from "@kdx/db";
-import { schema } from "@kdx/db/schema";
+import * as schema from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 

@@ -6,7 +6,7 @@ import { createDbSessionAndCookie, createUser } from "@kdx/auth/utils";
 import { eq } from "@kdx/db";
 import { db } from "@kdx/db/client";
 import { nanoid } from "@kdx/db/nanoid";
-import { schema } from "@kdx/db/schema";
+import * as schema from "@kdx/db/schema";
 
 import type { TPublicProcedureContext } from "../../procedures";
 import { argon2Config } from "./utils";
@@ -46,7 +46,7 @@ export const signupWithPasswordHandler = async ({
       email: input.email,
       invite: input.invite,
       passwordHash: passwordHash,
-      db: tx,
+      tx,
     });
   });
 

@@ -1,7 +1,7 @@
 import type { Drizzle } from "@kdx/db/client";
 import { and, eq } from "@kdx/db";
 import { db as _db } from "@kdx/db/client";
-import { schema } from "@kdx/db/schema";
+import * as schema from "@kdx/db/schema";
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";

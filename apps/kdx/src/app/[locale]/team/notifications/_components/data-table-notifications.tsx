@@ -6,7 +6,7 @@ import { MdEmail } from "react-icons/md";
 import type { RouterOutputs } from "@kdx/api";
 import type { DataTableFilterField } from "@kdx/ui/data-table/advanced/types";
 import type { FixedColumnsType } from "@kdx/ui/data-table/data-table";
-import { schema } from "@kdx/db/schema";
+import * as schema from "@kdx/db/schema";
 import { useI18n } from "@kdx/locales/client";
 import { DataTableAdvancedToolbar } from "@kdx/ui/data-table/advanced/data-table-advanced-toolbar";
 import { DataTable } from "@kdx/ui/data-table/data-table";

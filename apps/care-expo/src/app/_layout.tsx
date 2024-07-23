@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
+
 import { SplashScreen, Stack, useRouter, useSegments } from "expo-router";
 
 import "@bacons/text-decoder/install";
 
+import type { FontSource } from "expo-font";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
 import { useFonts } from "expo-font";
@@ -17,10 +20,8 @@ void SplashScreen.preventAutoHideAsync();
 
 function MainLayout() {
   const [fontsLoaded, fontsError] = useFonts({
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    Inter: require("@tamagui/font-inter/otf/Inter-Medium.otf"),
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    InterBold: require("@tamagui/font-inter/otf/Inter-Bold.otf"),
+    Inter: require("@tamagui/font-inter/otf/Inter-Medium.otf") as FontSource,
+    InterBold: require("@tamagui/font-inter/otf/Inter-Bold.otf") as FontSource,
   });
 
   const segments = useSegments();

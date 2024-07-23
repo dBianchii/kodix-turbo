@@ -1,8 +1,8 @@
 import { TRPCError } from "@trpc/server";
 
-import type { TDeleteInputSchema } from "@kdx/validators/trpc/invitation";
+import type { TDeleteInputSchema } from "@kdx/validators/trpc/team/invitation";
 import { and, eq } from "@kdx/db";
-import { schema } from "@kdx/db/schema";
+import * as schema from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 

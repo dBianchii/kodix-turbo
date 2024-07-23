@@ -2,9 +2,9 @@
   "name": "kodix-turbo",
   "private": true,
   "engines": {
-    "node": ">=20.12.2"
+    "node": ">=20.15.0"
   },
-  "packageManager": "pnpm@9.5.0",
+  "packageManager": "pnpm@9.6.0",
   "scripts": {
     "build": "turbo run build",
     "clean": "git clean -xdf node_modules",
@@ -15,6 +15,7 @@
     "db:drop": "turbo -F @kdx/db drop",
     "dev": "turbo watch dev",
     "dev:kdx": "turbo watch dev -F @kdx/kdx...",
+    "dev:email": "turbo watch dev -F @kdx/react-email...",
     "dev:upstash": "turbo watch dev -F @kdx/upstash-dev...",
     "format": "turbo run format --continue -- --cache --cache-location node_modules/.cache/.prettiercache",
     "format:fix": "turbo run format --continue -- --write --cache --cache-location node_modules/.cache/.prettiercache",
@@ -31,7 +32,7 @@
     "@kdx/prettier-config": "workspace:*",
     "@turbo/gen": "^2.0.6",
     "prettier": "catalog:",
-    "turbo": "2.0.6",
+    "turbo": "2.0.9",
     "typescript": "catalog:"
   },
   "prettier": "@kdx/prettier-config",

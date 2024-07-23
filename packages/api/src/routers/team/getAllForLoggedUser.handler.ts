@@ -1,6 +1,6 @@
 import { eq, sql } from "@kdx/db";
 import { db } from "@kdx/db/client";
-import { schema } from "@kdx/db/schema";
+import * as schema from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 

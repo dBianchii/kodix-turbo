@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { auth } from "@kdx/auth";
 import { eq } from "@kdx/db";
 import { db } from "@kdx/db/client";
-import { schema } from "@kdx/db/schema";
+import * as schema from "@kdx/db/schema";
 
 import { api } from "~/trpc/server";
 

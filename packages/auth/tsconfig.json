@@ -1,9 +1,6 @@
 {
   "extends": "@kdx/tsconfig/base.json",
-  "compilerOptions": {
-    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
-    "jsx": "preserve"
-  },
+  "compilerOptions": {},
   "include": ["src", "*.ts"],
   "exclude": ["node_modules"]
 }
