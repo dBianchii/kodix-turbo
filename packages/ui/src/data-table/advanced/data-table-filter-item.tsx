@@ -5,11 +5,11 @@ import { TrashIcon } from "@radix-ui/react-icons";
 
 import { useI18n } from "@kdx/locales/client";
 import { dataTableConfig } from "@kdx/shared";
-import { useDebounce } from "@kdx/ui/hooks";
 
 import type { DataTableFilterOption } from "./types";
 import { cn } from "../../.";
 import { Button } from "../../button";
+import { useDebounce } from "../../hooks";
 import { Input } from "../../input";
 import { Popover, PopoverContent, PopoverTrigger } from "../../popover";
 import {
