@@ -3,11 +3,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { Text, YStack } from "tamagui";
 
-import { useUser } from "~/utils/auth";
+import { useAuth } from "~/utils/auth";
 import { Header } from "../_components/header";
 
 export default function Tab() {
-  const user = useUser();
+  const { user } = useAuth();
 
   const router = useRouter();
   if (!user) router.replace("/");

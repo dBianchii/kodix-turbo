@@ -5,7 +5,7 @@ import * as Haptics from "expo-haptics";
 import { Tabs, useRouter } from "expo-router";
 import { Bell, Home } from "@tamagui/lucide-icons";
 
-import { useUser } from "~/utils/auth";
+import { useAuth } from "~/utils/auth";
 
 function TabBarButton(props: BottomTabBarButtonProps) {
   return (
@@ -20,7 +20,7 @@ function TabBarButton(props: BottomTabBarButtonProps) {
 }
 
 export default function TabLayout() {
-  const user = useUser();
+  const { user } = useAuth();
   const router = useRouter();
   if (!user) return router.replace("/");
   return (

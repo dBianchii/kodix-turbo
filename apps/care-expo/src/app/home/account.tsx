@@ -3,11 +3,11 @@ import { ArrowLeftToLine, ArrowRight, Moon } from "@tamagui/lucide-icons";
 import { H4, ListItem, Separator, XStack, YGroup, YStack } from "tamagui";
 
 import { AvatarWrapper } from "~/components/avatar-wrapper";
-import { useSignOut, useUser } from "~/utils/auth";
+import { useAuth, useSignOut } from "~/utils/auth";
 
 export default function ProfilePage() {
   const signOutMutation = useSignOut();
-  const user = useUser();
+  const { user } = useAuth();
   if (!user) return null;
 
   return (
