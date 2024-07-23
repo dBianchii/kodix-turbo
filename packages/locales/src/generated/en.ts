@@ -392,5 +392,9 @@ export default {
   "Confirm your new password": "Confirm your new password",
   "Change password": "Change password",
   "Error installing": "Error installing",
-  "Only the team owner can edit this": "Only the team owner can edit this"
+  "Only the team owner can edit this": "Only the team owner can edit this",
+  "Reset your password": "Reset your password",
+  "Click the following link to reset your password": "Click the following link to reset your password",
+  "Reset Password": "Reset Password",
+  "All rights reserved": "All rights reserved."
 } as const

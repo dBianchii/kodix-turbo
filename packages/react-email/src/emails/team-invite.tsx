@@ -1,33 +1,25 @@
 import {
   Body,
   Button,
-  Column,
   Container,
   Head,
   Heading,
   Hr,
   Html,
-  Img,
   Link,
   Preview,
-  Row,
   Section,
   Tailwind,
   Text,
 } from "@react-email/components";
 
 import { getI18n } from "@kdx/locales/server";
-import { getBaseUrl } from "@kdx/shared";
-
-const baseUrl = getBaseUrl();
 
 export const TeamInvite = async ({
   username = "User",
-  userImage = `${baseUrl}/static/kodix-user.png`,
   invitedByUsername = "",
   invitedByEmail = "bukinoshita@example.com",
   teamName = "My Project",
-  teamImage = `${baseUrl}/static/kodix-team.png`,
   inviteLink = "https://kodix.com/teams/invite/foo",
   inviteFromIp = "204.13.186.218",
   inviteFromLocation = "São Paulo, Brazil",
@@ -55,13 +47,9 @@ export const TeamInvite = async ({
         <Body className="mx-auto my-auto bg-white font-sans">
           <Container className="mx-auto my-[40px] w-[465px] rounded border border-solid border-[#eaeaea] p-[20px]">
             <Section className="mt-[32px]">
-              <Img
-                src={`${baseUrl}/static/kodix-logo.png`}
-                width="40"
-                height="37"
-                alt="Kodix"
-                className="mx-auto my-0"
-              />
+              <Text className="text-bold text-balance bg-gradient-to-br from-black from-30% to-black/80 bg-clip-text text-center text-xl font-semibold leading-none tracking-tighter ">
+                Kodix
+              </Text>
             </Section>
             <Heading className="mx-0 my-[30px] p-0 text-center text-[24px] font-normal text-black">
               {t("emails.Join teamName on Kodix", {
@@ -86,7 +74,7 @@ export const TeamInvite = async ({
                 site: "Kodix",
               })}
             </Text>
-            <Section>
+            {/* <Section>
               <Row>
                 <Column align="right">
                   <Img
@@ -113,7 +101,7 @@ export const TeamInvite = async ({
                   />
                 </Column>
               </Row>
-            </Section>
+            </Section> */}
             <Section className="mb-[32px] mt-[32px] text-center">
               <Button
                 className="rounded bg-[#000000] px-[20px] py-[12px] text-center text-[12px] font-semibold text-white no-underline"
