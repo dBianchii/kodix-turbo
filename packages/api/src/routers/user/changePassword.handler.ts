@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 
 import type { TChangePasswordInputSchema } from "@kdx/validators/trpc/user";
 import { eq } from "@kdx/db";
-import { schema } from "@kdx/db/schema";
+import * as schema from "@kdx/db/schema";
 
 import type { TPublicProcedureContext } from "../../procedures";
 import { argon2Config } from "./utils";

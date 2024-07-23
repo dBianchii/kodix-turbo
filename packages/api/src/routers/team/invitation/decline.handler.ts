@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import type { TDeclineInputSchema } from "@kdx/validators/trpc/team/invitation";
 import { eq } from "@kdx/db";
-import { schema } from "@kdx/db/schema";
+import * as schema from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 

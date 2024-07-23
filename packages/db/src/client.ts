@@ -8,7 +8,7 @@ import type { Pool } from "mysql2/promise";
 import { drizzle } from "drizzle-orm/mysql2";
 import { createPool } from "mysql2/promise";
 
-import { schema } from "./schema";
+import * as schema from "./schema";
 
 if (!process.env.MYSQL_URL) {
   throw new Error("Missing MYSQL_URL");

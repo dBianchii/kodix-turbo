@@ -3,7 +3,7 @@
 
 import type { Drizzle, DrizzleTransaction } from "@kdx/db/client";
 import { eq } from "@kdx/db";
-import { schema } from "@kdx/db/schema";
+import * as schema from "@kdx/db/schema";
 
 export async function createUser({
   invite,

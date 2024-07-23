@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@kdx/auth";
 import { eq } from "@kdx/db";
 import { db } from "@kdx/db/client";
-import { schema } from "@kdx/db/schema";
+import * as schema from "@kdx/db/schema";
 import { getI18n } from "@kdx/locales/server";
 
 import { AppSwitcher } from "~/app/[locale]/_components/app-switcher";

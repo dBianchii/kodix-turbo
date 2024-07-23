@@ -1,6 +1,6 @@
 import type { TDeleteNotificationsInputSchema } from "@kdx/validators/trpc/user";
 import { and, eq, inArray } from "@kdx/db";
-import { schema } from "@kdx/db/schema";
+import * as schema from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 

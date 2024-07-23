@@ -5,7 +5,7 @@ import type { TEditInputSchema } from "@kdx/validators/trpc/app/calendar";
 import dayjs from "@kdx/dayjs";
 import { and, eq, gt, gte, inArray } from "@kdx/db";
 import { nanoid } from "@kdx/db/nanoid";
-import { schema } from "@kdx/db/schema";
+import * as schema from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 

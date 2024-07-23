@@ -23,6 +23,10 @@
     "./nanoid": {
       "types": "./dist/nanoid.d.ts",
       "default": "./dist/nanoid.js"
+    },
+    "./utils": {
+      "types": "./dist/utils.d.ts",
+      "default": "./dist/utils.js"
     }
   },
   "scripts": {

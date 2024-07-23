@@ -1,7 +1,7 @@
 import { RRule } from "rrule";
 
 import type { TCreateInputSchema } from "@kdx/validators/trpc/app/calendar";
-import { schema } from "@kdx/db/schema";
+import * as schema from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 

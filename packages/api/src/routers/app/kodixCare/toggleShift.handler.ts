@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import dayjs from "@kdx/dayjs";
 import { eq } from "@kdx/db";
 import { nanoid } from "@kdx/db/nanoid";
-import { schema } from "@kdx/db/schema";
+import * as schema from "@kdx/db/schema";
 import WarnPreviousShiftNotEnded from "@kdx/react-email/warn-previous-shift-not-ended";
 import { kodixCareAppId, kodixNotificationFromEmail } from "@kdx/shared";
 
