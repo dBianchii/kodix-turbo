@@ -27,13 +27,12 @@ const columnHelper =
 export function DataTableUserAppRoles({ appId }: { appId: KodixAppId }) {
   const utils = api.useUtils();
 
-  const [allAppRoles] = api.team.appRole.getAll.useSuspenseQuery({ appId });
-  const [data] = api.team.appRole.getUsersWithRoles.useSuspenseQuery(
-    { appId },
-    {
-      refetchOnMount: false,
-    },
-  );
+  const [allAppRoles] = api.team.appRole.getAll.useSuspenseQuery({
+    appId,
+  });
+  const [data] = api.team.appRole.getUsersWithRoles.useSuspenseQuery({
+    appId,
+  });
 
   const { mutate: updateUserAssociation } =
     api.team.appRole.updateUserAssociation.useMutation({
