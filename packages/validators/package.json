@@ -6,39 +6,39 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "default": "./src/index.ts"
+      "default": "./dist/index.js"
     },
     "./trpc/app": {
       "types": "./dist/trpc/app/index.d.ts",
-      "default": "./src/trpc/app/index.js"
+      "default": "./dist/trpc/app/index.js"
     },
     "./trpc/app/calendar": {
       "types": "./dist/trpc/app/calendar/index.d.ts",
-      "default": "./src/trpc/app/calendar/index.js"
+      "default": "./dist/trpc/app/calendar/index.js"
     },
     "./trpc/app/kodixCare": {
       "types": "./dist/trpc/app/kodixCare/index.d.ts",
-      "default": "./src/trpc/app/kodixCare/index.js"
+      "default": "./dist/trpc/app/kodixCare/index.js"
     },
     "./trpc/app/todo": {
       "types": "./dist/trpc/app/todo/index.d.ts",
-      "default": "./src/trpc/app/todo/index.js"
+      "default": "./dist/trpc/app/todo/index.js"
     },
     "./trpc/team": {
       "types": "./dist/trpc/team/index.d.ts",
-      "default": "./src/trpc/team/index.js"
+      "default": "./dist/trpc/team/index.js"
     },
     "./trpc/team/appRole": {
       "types": "./dist/trpc/team/appRole/index.d.ts",
-      "default": "./src/trpc/team/appRole/index.js"
+      "default": "./dist/trpc/team/appRole/index.js"
     },
     "./trpc/team/invitation": {
       "types": "./dist/trpc/team/invitation/index.d.ts",
-      "default": "./src/trpc/team/invitation/index.js"
+      "default": "./dist/trpc/team/invitation/index.js"
     },
     "./trpc/user": {
       "types": "./dist/trpc/user/index.d.ts",
-      "default": "./src/trpc/user/index.js"
+      "default": "./dist/trpc/user/index.js"
     }
   },
   "scripts": {
