@@ -7,19 +7,19 @@
   "exports": {
     ".": {
       "types": "./dist/src/index.d.ts",
-      "default": "./dist/src/index.ts"
+      "default": "./src/index.ts"
     },
     "./*": {
       "types": "./dist/src/*.d.ts",
-      "default": "./dist/src/*.tsx"
+      "default": "./src/*.tsx"
     },
     "./hooks": {
       "types": "./dist/src/hooks.d.ts",
-      "default": "./dist/src/hooks.ts"
+      "default": "./src/hooks.ts"
     },
     "./data-table/export": {
       "types": "./dist/src/data-table/export.d.ts",
-      "default": "./dist/src/data-table/export.ts"
+      "default": "./src/data-table/export.ts"
     }
   },
   "scripts": {
