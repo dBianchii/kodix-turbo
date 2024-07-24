@@ -392,5 +392,9 @@ export default {
   "Redefine password": "Redefinir senha",
   "Change password": "Alterar a senha",
   "Error installing": "Erro ao instalar",
-  "Only the team owner can edit this": "Somente o proprietário da equipe pode editar isso"
+  "Only the team owner can edit this": "Somente o proprietário da equipe pode editar isso",
+  "All rights reserved": "Todos os direitos reservados.",
+  "Click the following link to reset your password": "Clique no link a seguir para redefinir sua senha",
+  "Reset Password": "Redefinir senha",
+  "Reset your password": "Redefinir sua senha"
 } as const
