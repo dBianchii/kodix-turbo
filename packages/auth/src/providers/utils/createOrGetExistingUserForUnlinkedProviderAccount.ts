@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 
 import { db } from "@kdx/db/client";
 import { nanoid } from "@kdx/db/nanoid";
-import * as schema from "@kdx/db/schema";
+import { accounts } from "@kdx/db/schema";
 
 import { createUser } from "../../db";
 
@@ -49,7 +49,7 @@ export default async function createOrGetExistingUserForUnlinkedProviderAccount(
       userId = existingUser.id;
     }
 
-    await tx.insert(schema.accounts).values({
+    await tx.insert(accounts).values({
       providerId: providerId,
       providerUserId: providerUserId,
       userId,

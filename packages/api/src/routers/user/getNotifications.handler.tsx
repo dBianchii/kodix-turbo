@@ -2,7 +2,7 @@ import type { DrizzleWhere, SQL } from "@kdx/db";
 import type { TGetNotificationsInputSchema } from "@kdx/validators/trpc/user";
 import dayjs from "@kdx/dayjs";
 import { and, asc, count, desc, eq, gte, inArray, lte, or } from "@kdx/db";
-import * as schema from "@kdx/db/schema";
+import { notifications, teams, usersToTeams } from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 import { filterColumn } from "../../lib/filter-column";
@@ -22,7 +22,7 @@ export const getNotificationsHandler = async ({
     "sentAt",
     "desc",
   ]) as [
-    keyof typeof schema.notifications.$inferSelect | undefined,
+    keyof typeof notifications.$inferSelect | undefined,
     "asc" | "desc" | undefined,
   ];
 
@@ -33,22 +33,22 @@ export const getNotificationsHandler = async ({
   const toDay = input.to ? dayjs(input.to).endOf("day").toDate() : undefined;
 
   const allTeamIdsForUserQuery = ctx.db
-    .select({ id: schema.usersToTeams.teamId })
-    .from(schema.usersToTeams)
-    .where(eq(schema.usersToTeams.userId, ctx.session.user.id));
+    .select({ id: usersToTeams.teamId })
+    .from(usersToTeams)
+    .where(eq(usersToTeams.userId, ctx.session.user.id));
 
   const filterExpressions: (SQL<unknown> | undefined)[] = [
     // Filter notifications by subject
     input.subject
       ? filterColumn({
-          column: schema.notifications.subject,
+          column: notifications.subject,
           value: input.subject,
         })
       : undefined,
     // Filter notifications by channel
     input.channel
       ? filterColumn({
-          column: schema.notifications.channel,
+          column: notifications.channel,
           value: input.channel,
           isSelectable: true,
         })
@@ -56,23 +56,23 @@ export const getNotificationsHandler = async ({
     // Filter notifications by time range
     fromDay && toDay
       ? and(
-          gte(schema.notifications.sentAt, fromDay),
-          lte(schema.notifications.sentAt, toDay),
+          gte(notifications.sentAt, fromDay),
+          lte(notifications.sentAt, toDay),
         )
       : undefined,
     // Filter notifications by teamId
     input.teamId
       ? filterColumn({
-          column: schema.notifications.teamId,
+          column: notifications.teamId,
           value: input.teamId,
           isSelectable: true,
         })
       : undefined,
   ];
 
-  const where: DrizzleWhere<typeof schema.notifications.$inferSelect> = and(
-    eq(schema.notifications.sentToUserId, ctx.session.user.id), //? Only show notifications for the logged in user
-    inArray(schema.notifications.teamId, allTeamIdsForUserQuery), //? Ensure user is part of the team
+  const where: DrizzleWhere<typeof notifications.$inferSelect> = and(
+    eq(notifications.sentToUserId, ctx.session.user.id), //? Only show notifications for the logged in user
+    inArray(notifications.teamId, allTeamIdsForUserQuery), //? Ensure user is part of the team
 
     !input.operator || input.operator === "and"
       ? and(...filterExpressions)
@@ -82,32 +82,32 @@ export const getNotificationsHandler = async ({
   const result = await ctx.db.transaction(async (tx) => {
     const data = await tx
       .select({
-        id: schema.notifications.id,
-        channel: schema.notifications.channel,
-        subject: schema.notifications.subject,
-        message: schema.notifications.message,
-        sentAt: schema.notifications.sentAt,
-        teamName: schema.teams.name,
-        teamId: schema.teams.id,
+        id: notifications.id,
+        channel: notifications.channel,
+        subject: notifications.subject,
+        message: notifications.message,
+        sentAt: notifications.sentAt,
+        teamName: teams.name,
+        teamId: teams.id,
       })
-      .from(schema.notifications)
+      .from(notifications)
       .limit(input.perPage)
       .offset(offset)
       .where(where)
-      .innerJoin(schema.teams, eq(schema.teams.id, schema.notifications.teamId)) //So that we can get team info too
+      .innerJoin(teams, eq(teams.id, notifications.teamId)) //So that we can get team info too
       .orderBy(
-        column && column in schema.notifications
+        column && column in notifications
           ? order === "asc"
-            ? asc(schema.notifications[column])
-            : desc(schema.notifications[column])
-          : desc(schema.notifications.id),
+            ? asc(notifications[column])
+            : desc(notifications[column])
+          : desc(notifications.id),
       );
 
     const total = await tx
       .select({
         count: count(),
       })
-      .from(schema.notifications)
+      .from(notifications)
       .where(where)
       .execute()
       .then((res) => res[0]?.count ?? 0);

@@ -1,6 +1,6 @@
 import type { TDeleteNotificationsInputSchema } from "@kdx/validators/trpc/user";
 import { and, eq, inArray } from "@kdx/db";
-import * as schema from "@kdx/db/schema";
+import { notifications } from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 
@@ -14,11 +14,11 @@ export const deleteNotificationsHandler = async ({
   input,
 }: DeleteNotificationsOptions) => {
   await ctx.db
-    .delete(schema.notifications)
+    .delete(notifications)
     .where(
       and(
-        eq(schema.notifications.sentToUserId, ctx.session.user.id),
-        inArray(schema.notifications.id, input.ids),
+        eq(notifications.sentToUserId, ctx.session.user.id),
+        inArray(notifications.id, input.ids),
       ),
     );
 };

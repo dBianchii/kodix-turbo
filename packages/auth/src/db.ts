@@ -3,7 +3,7 @@
 
 import type { Drizzle, DrizzleTransaction } from "@kdx/db/client";
 import { eq } from "@kdx/db";
-import * as schema from "@kdx/db/schema";
+import { invitations, teams, users, usersToTeams } from "@kdx/db/schema";
 
 export async function createUser({
   invite,
@@ -24,7 +24,7 @@ export async function createUser({
   passwordHash?: string;
   tx: DrizzleTransaction;
 }) {
-  await tx.insert(schema.users).values({
+  await tx.insert(users).values({
     id: userId,
     name: name,
     activeTeamId: teamId,
@@ -35,13 +35,13 @@ export async function createUser({
   if (invite) {
     await acceptInvite({ invite, userId, email, db: tx });
   } else {
-    await tx.insert(schema.teams).values({
+    await tx.insert(teams).values({
       id: teamId,
       ownerId: userId,
       name: `Personal Team`,
     });
 
-    await tx.insert(schema.usersToTeams).values({
+    await tx.insert(usersToTeams).values({
       userId: userId,
       teamId: teamId,
     });
@@ -74,14 +74,14 @@ export async function acceptInvite({
   if (!invitation) throw new Error("No invitation found");
 
   await db
-    .update(schema.users)
+    .update(users)
     .set({
       activeTeamId: invitation.Team.id,
     })
-    .where(eq(schema.users.id, userId));
-  await db.insert(schema.usersToTeams).values({
+    .where(eq(users.id, userId));
+  await db.insert(usersToTeams).values({
     userId: userId,
     teamId: invitation.Team.id,
   });
-  await db.delete(schema.invitations).where(eq(schema.invitations.id, invite));
+  await db.delete(invitations).where(eq(invitations.id, invite));
 }

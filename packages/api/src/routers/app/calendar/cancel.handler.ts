@@ -3,7 +3,11 @@ import { RRule, rrulestr } from "rrule";
 
 import type { TCancelInputSchema } from "@kdx/validators/trpc/app/calendar";
 import { and, eq, gte, inArray } from "@kdx/db";
-import * as schema from "@kdx/db/schema";
+import {
+  eventCancellations,
+  eventExceptions,
+  eventMasters,
+} from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 
@@ -31,10 +35,10 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
           });
         }
         await tx
-          .delete(schema.eventExceptions)
+          .delete(eventExceptions)
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          .where(eq(schema.eventExceptions.id, input.eventExceptionId!));
-        return await tx.insert(schema.eventCancellations).values({
+          .where(eq(eventExceptions.id, input.eventExceptionId!));
+        return await tx.insert(eventCancellations).values({
           eventMasterId: toDeleteException.eventMasterId,
           originalDate: toDeleteException.originalDate,
         });
@@ -42,7 +46,7 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
       return;
     }
 
-    await ctx.db.insert(schema.eventCancellations).values({
+    await ctx.db.insert(eventCancellations).values({
       eventMasterId: input.eventMasterId,
       originalDate: input.date,
     });
@@ -51,25 +55,25 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
     await ctx.db.transaction(async (tx) => {
       if (input.eventExceptionId) {
         const allEventMastersIdsForThisTeamQuery = ctx.db
-          .select({ id: schema.eventMasters.id })
-          .from(schema.eventMasters)
-          .where(eq(schema.eventMasters.teamId, ctx.session.user.activeTeamId));
+          .select({ id: eventMasters.id })
+          .from(eventMasters)
+          .where(eq(eventMasters.teamId, ctx.session.user.activeTeamId));
 
         await tx
-          .delete(schema.eventExceptions)
+          .delete(eventExceptions)
           .where(
             and(
               inArray(
-                schema.eventExceptions.eventMasterId,
+                eventExceptions.eventMasterId,
                 allEventMastersIdsForThisTeamQuery,
               ),
-              eq(schema.eventExceptions.id, input.eventExceptionId),
-              gte(schema.eventExceptions.newDate, input.date),
+              eq(eventExceptions.id, input.eventExceptionId),
+              gte(eventExceptions.newDate, input.date),
             ),
           );
       }
       const eventMaster = await tx.query.eventMasters.findFirst({
-        where: eq(schema.eventMasters.id, input.eventMasterId),
+        where: eq(eventMasters.id, input.eventMasterId),
         columns: {
           rule: true,
           dateStart: true,
@@ -86,25 +90,25 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
       const penultimateOccurence = occurences[occurences.length - 2];
       if (!penultimateOccurence)
         await tx
-          .delete(schema.eventMasters)
-          .where(eq(schema.eventMasters.id, input.eventMasterId));
+          .delete(eventMasters)
+          .where(eq(eventMasters.id, input.eventMasterId));
 
       const options = RRule.parseString(eventMaster.rule);
       options.until = penultimateOccurence;
 
       return await tx
-        .update(schema.eventMasters)
+        .update(eventMasters)
         .set({
           dateUntil: penultimateOccurence,
           rule: new RRule(options).toString(),
         })
-        .where(eq(schema.eventMasters.id, input.eventMasterId));
+        .where(eq(eventMasters.id, input.eventMasterId));
     });
     return;
   } else {
     await ctx.db
-      .delete(schema.eventMasters)
-      .where(eq(schema.eventMasters.id, input.eventMasterId));
+      .delete(eventMasters)
+      .where(eq(eventMasters.id, input.eventMasterId));
     return;
   }
 };

@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import type { TDoCheckoutForShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import dayjs from "@kdx/dayjs";
 import { eq } from "@kdx/db";
-import * as schema from "@kdx/db/schema";
+import { careShifts } from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 import { getCurrentCareShiftHandler } from "./getCurrentCareShift.handler";
@@ -36,7 +36,7 @@ export const doCheckoutForShiftHandler = async ({
     });
 
   await ctx.db
-    .update(schema.careShifts)
+    .update(careShifts)
     .set({ checkOut: input.date })
-    .where(eq(schema.careShifts.id, currentShift.id));
+    .where(eq(careShifts.id, currentShift.id));
 };

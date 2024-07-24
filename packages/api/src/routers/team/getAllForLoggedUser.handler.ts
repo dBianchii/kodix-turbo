@@ -1,6 +1,6 @@
 import { eq, sql } from "@kdx/db";
 import { db } from "@kdx/db/client";
-import * as schema from "@kdx/db/schema";
+import { teams, usersToTeams } from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 
@@ -9,13 +9,10 @@ interface GetAllForLoggedUserOptions {
 }
 
 const prepared = db
-  .select({ teams: schema.teams })
-  .from(schema.teams)
-  .where(eq(schema.usersToTeams.userId, sql.placeholder("userId")))
-  .innerJoin(
-    schema.usersToTeams,
-    eq(schema.usersToTeams.teamId, schema.teams.id),
-  )
+  .select({ teams: teams })
+  .from(teams)
+  .where(eq(usersToTeams.userId, sql.placeholder("userId")))
+  .innerJoin(usersToTeams, eq(usersToTeams.teamId, teams.id))
   .prepare();
 
 export const getAllForLoggedUserHandler = async ({

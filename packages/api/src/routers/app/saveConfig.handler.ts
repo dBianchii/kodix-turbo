@@ -1,6 +1,6 @@
 import type { TSaveConfigInput } from "@kdx/validators/trpc/app";
 import { and, eq } from "@kdx/db";
-import * as schema from "@kdx/db/schema";
+import { appTeamConfigs } from "@kdx/db/schema";
 import { appIdToAppTeamConfigSchema } from "@kdx/validators";
 
 import type { TProtectedProcedureContext } from "../../procedures";
@@ -25,7 +25,7 @@ export const saveConfigHandler = async ({ ctx, input }: SaveConfigOptions) => {
   const configSchema = appIdToAppTeamConfigSchema[input.appId];
   if (existingConfig) {
     return await ctx.db
-      .update(schema.appTeamConfigs)
+      .update(appTeamConfigs)
       .set({
         config: {
           ...configSchema.parse(existingConfig.config),
@@ -34,8 +34,8 @@ export const saveConfigHandler = async ({ ctx, input }: SaveConfigOptions) => {
       })
       .where(
         and(
-          eq(schema.appTeamConfigs.appId, input.appId),
-          eq(schema.appTeamConfigs.teamId, ctx.session.user.activeTeamId),
+          eq(appTeamConfigs.appId, input.appId),
+          eq(appTeamConfigs.teamId, ctx.session.user.activeTeamId),
         ),
       );
   }
@@ -43,7 +43,7 @@ export const saveConfigHandler = async ({ ctx, input }: SaveConfigOptions) => {
   //new record. We need to validate the whole config without partial()
   const parsedInput = configSchema.parse(input.config);
 
-  await ctx.db.insert(schema.appTeamConfigs).values({
+  await ctx.db.insert(appTeamConfigs).values({
     config: parsedInput,
     teamId: ctx.session.user.activeTeamId,
     appId: input.appId,
