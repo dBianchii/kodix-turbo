@@ -19,35 +19,12 @@ interface RemoveUserOptions {
 }
 
 export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
-  const team = await ctx.db.query.teams.findFirst({
-    where: (teams, { eq }) => eq(teams.id, ctx.session.user.activeTeamId),
-    columns: {
-      ownerId: true,
-    },
-    with: {
-      UsersToTeams: {
-        with: {
-          User: {
-            columns: {
-              id: true,
-            },
-          },
-        },
-      },
-    },
-  });
-  if (!team)
-    throw new TRPCError({
-      message: "No Team Found",
-      code: "NOT_FOUND",
-    });
-
   const isUserTryingToRemoveSelfFromTeam = input.userId === ctx.session.user.id;
   if (isUserTryingToRemoveSelfFromTeam) {
     throw new TRPCError({
       message:
         "You cannot remove yourself from a team you are an owner of. Delete this team instead",
-      code: "BAD_REQUEST",
+      code: "FORBIDDEN",
     });
   }
 
@@ -63,8 +40,8 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
     )
     .then((res) => res[0]);
 
-  //check if there are more people in the team before removal
   await ctx.db.transaction(async (tx) => {
+    //check if there are more people in the team before removal
     if (!otherTeam) {
       //Create a new team for the user so we can move them to it
       const newTeamId = nanoid();
