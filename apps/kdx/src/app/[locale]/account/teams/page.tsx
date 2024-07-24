@@ -6,11 +6,14 @@ import { getI18n } from "@kdx/locales/server";
 
 import { AddTeamDialogButton } from "~/app/[locale]/account/teams/_components/add-team-dialog-button/add-team-dialog-button";
 import SettingsEditCardSkeleton from "~/app/[locale]/team/settings/general/_components/edit-team-name-card-skeleton";
-import { EditUserTeamsTable } from "./_components/edit-users-teams-card/edit-users-teams-table";
+import { api, HydrateClient } from "~/trpc/server";
+import EditUserTeamsTableClient from "./_components/edit-users-teams-card/edit-user-teams-table-client";
 
 export default async function Teams() {
   const { user } = await auth();
   if (!user) redirect("/");
+  void api.team.getAllForLoggedUser.prefetch();
+
   const t = await getI18n();
   return (
     <div className="mt-8 space-y-8 md:mt-0">
@@ -27,9 +30,11 @@ export default async function Teams() {
           <AddTeamDialogButton className="ml-auto" />
         </div>
       </div>
-      <Suspense fallback={<SettingsEditCardSkeleton />}>
-        <EditUserTeamsTable />
-      </Suspense>
+      <HydrateClient>
+        <Suspense fallback={<SettingsEditCardSkeleton />}>
+          <EditUserTeamsTableClient user={user} />
+        </Suspense>
+      </HydrateClient>
     </div>
   );
 }

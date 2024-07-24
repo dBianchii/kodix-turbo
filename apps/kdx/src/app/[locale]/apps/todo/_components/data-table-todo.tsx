@@ -51,17 +51,11 @@ declare module "@tanstack/react-table" {
   }
 }
 
-export function DataTableTodo({
-  initialData,
-}: {
-  initialData: RouterOutputs["app"]["todo"]["getAll"];
-}) {
+export function DataTableTodo() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const { data: team } = api.team.getActiveTeam.useQuery();
 
-  const todosQuery = api.app.todo.getAll.useQuery(undefined, {
-    initialData,
-  });
+  const [data] = api.app.todo.getAll.useSuspenseQuery();
 
   const columns = [
     columnHelper.display({
@@ -281,7 +275,7 @@ export function DataTableTodo({
     }),
   ];
   const table = useReactTable({
-    data: todosQuery.data,
+    data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),

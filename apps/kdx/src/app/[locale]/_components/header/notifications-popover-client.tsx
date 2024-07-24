@@ -19,26 +19,9 @@ import {
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
-export function NotificationsPopoverClient({
-  initialNotifications,
-}: {
-  initialNotifications: {
-    id: string;
-    InvitedBy: {
-      id: string;
-      name: string | null;
-      image: string | null;
-    };
-    Team: {
-      id: string;
-      name: string;
-    };
-  }[];
-}) {
+export function NotificationsPopoverClient() {
   const t = useI18n();
-  const query = api.user.getInvitations.useQuery(undefined, {
-    initialData: initialNotifications,
-  });
+  const [data] = api.user.getInvitations.useSuspenseQuery();
   const router = useRouter();
   const utils = api.useUtils();
   const acceptMutation = api.team.invitation.accept.useMutation({
@@ -62,7 +45,7 @@ export function NotificationsPopoverClient({
     },
   });
 
-  if (!query.data.length) return null;
+  if (!data.length) return null;
 
   return (
     <Popover>
@@ -91,7 +74,7 @@ export function NotificationsPopoverClient({
         </div>
         <div className="pt-4">
           <ul className="space-y-2">
-            {query.data.map((invitation) => (
+            {data.map((invitation) => (
               <li key={invitation.id} className="flex flex-col gap-2">
                 <div>
                   <p className="text-sm text-muted-foreground">

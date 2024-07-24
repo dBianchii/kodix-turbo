@@ -8,14 +8,14 @@ import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { CreateTaskDialogButton } from "~/app/[locale]/apps/todo/_components/create-task-dialog-button";
 import { DataTableTodo } from "~/app/[locale]/apps/todo/_components/data-table-todo";
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
-import { api } from "~/trpc/server";
+import { api, HydrateClient } from "~/trpc/server";
 
 export default async function TodoPage() {
   await redirectIfAppNotInstalled({
     appId: todoAppId,
   });
 
-  const initialData = await api.app.todo.getAll();
+  void api.app.todo.getAll.prefetch();
   const t = await getI18n();
   return (
     <MaxWidthWrapper>
@@ -25,7 +25,9 @@ export default async function TodoPage() {
       </div>
       <Separator className="my-4" />
       <CreateTaskDialogButton />
-      <DataTableTodo initialData={initialData} />
+      <HydrateClient>
+        <DataTableTodo />
+      </HydrateClient>
     </MaxWidthWrapper>
   );
 }

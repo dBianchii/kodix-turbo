@@ -11,6 +11,7 @@ import { RxDotsHorizontal } from "react-icons/rx";
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
 import { useI18n } from "@kdx/locales/client";
+import { getErrorMessage } from "@kdx/shared";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Button } from "@kdx/ui/button";
 import {
@@ -29,24 +30,17 @@ import {
 } from "@kdx/ui/table";
 import { toast } from "@kdx/ui/toast";
 
-import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
 const columnHelper =
   createColumnHelper<RouterOutputs["team"]["getAllUsers"][number]>();
 
 export function DataTableMembers({ user }: { user: User }) {
-  const { data } = api.team.getAllUsers.useQuery(undefined);
+  const [data, query] = api.team.getAllUsers.useSuspenseQuery(undefined);
 
   const utils = api.useUtils();
   const t = useI18n();
-  const { mutate } = api.team.removeUser.useMutation({
-    onSuccess: () => {
-      toast(t("User removed from team"));
-      void utils.team.getAllUsers.invalidate();
-    },
-    onError: (e) => trpcErrorToastDefault(e),
-  });
+  const mutation = api.team.removeUser.useMutation();
 
   const columns = [
     columnHelper.accessor("name", {
@@ -88,9 +82,19 @@ export function DataTableMembers({ user }: { user: User }) {
                 <DropdownMenuItem
                   className="text-destructive"
                   onSelect={() => {
-                    mutate({
-                      userId: info.row.original.id,
-                    });
+                    toast.promise(
+                      mutation.mutateAsync({ userId: info.row.original.id }),
+                      {
+                        loading: `${t("Removing user")}`,
+                        success: () => {
+                          void utils.team.getAllUsers.invalidate();
+                          return t("apps.kodixCare.Task updated");
+                        },
+                        error: (err) => {
+                          return getErrorMessage(err);
+                        },
+                      },
+                    );
                   }}
                 >
                   {info.row.original.id === user.id ? t("Leave") : t("Remove")}
@@ -104,7 +108,7 @@ export function DataTableMembers({ user }: { user: User }) {
   ];
 
   const table = useReactTable({
-    data: data ?? [],
+    data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     defaultColumn: {
@@ -134,7 +138,19 @@ export function DataTableMembers({ user }: { user: User }) {
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows.length ? (
+          {query.isFetching ? (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                {t("Loading")}...
+              </TableCell>
+            </TableRow>
+          ) : query.isError ? (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                {t("An error occurred")}
+              </TableCell>
+            </TableRow>
+          ) : table.getRowModel().rows.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}

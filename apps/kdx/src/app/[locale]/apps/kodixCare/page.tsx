@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 
-import type { User } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
 import { getI18n } from "@kdx/locales/server";
 import { kodixCareAppId } from "@kdx/shared";
@@ -11,7 +10,7 @@ import { H1 } from "@kdx/ui/typography";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
-import { api } from "~/trpc/server";
+import { api, HydrateClient } from "~/trpc/server";
 import { IconKodixApp } from "../../_components/app/kodix-icon";
 import DataTableKodixCare from "./_components/data-table-kodix-care";
 import { CurrentShiftClient } from "./_components/shifts";
@@ -23,6 +22,14 @@ export default async function KodixCarePage() {
   });
 
   const t = await getI18n();
+
+  const input = {
+    dateStart: dayjs.utc().startOf("day").toDate(),
+    dateEnd: dayjs.utc().endOf("day").toDate(),
+  };
+  void api.app.kodixCare.getCareTasks.prefetch(input);
+  void api.app.kodixCare.getCurrentShift.prefetch();
+
   return (
     <MaxWidthWrapper>
       <div className="flex items-center space-x-4">
@@ -30,50 +37,29 @@ export default async function KodixCarePage() {
         <H1>{t("Kodix Care")}</H1>
       </div>
       <Separator className="my-4" />
-      <div className="flex flex-col md:flex-row md:space-x-6">
-        <div className="flex w-full max-w-full flex-col px-8 pb-8 md:max-w-60 md:px-0">
-          <Suspense fallback={<ShiftSkeleton />}>
-            <CurrentShift user={user} />
-          </Suspense>
+      <HydrateClient>
+        <div className="flex flex-col md:flex-row md:space-x-6">
+          <div className="flex w-full max-w-full flex-col px-8 pb-8 md:max-w-60 md:px-0">
+            <Suspense fallback={<ShiftSkeleton />}>
+              <CurrentShiftClient user={user} />
+            </Suspense>
+          </div>
+          <div className="w-full">
+            <Suspense
+              fallback={
+                <DataTableSkeleton
+                  className="mt-4"
+                  columnCount={4}
+                  withPagination={false}
+                />
+              }
+            >
+              <DataTableKodixCare initialInput={input} user={user} />
+            </Suspense>
+          </div>
         </div>
-        <div className="w-full">
-          <Suspense
-            fallback={
-              <DataTableSkeleton
-                className="mt-4"
-                columnCount={4}
-                withPagination={false}
-              />
-            }
-          >
-            <KodixCareTable user={user} />
-          </Suspense>
-        </div>
-      </div>
+      </HydrateClient>
     </MaxWidthWrapper>
-  );
-}
-
-async function KodixCareTable({ user }: { user: User }) {
-  const input = {
-    dateStart: dayjs.utc().startOf("day").toDate(),
-    dateEnd: dayjs.utc().endOf("day").toDate(),
-  };
-  const initialCareTasks = await api.app.kodixCare.getCareTasks(input);
-  return (
-    <DataTableKodixCare
-      initialCareTasks={initialCareTasks}
-      initialInput={input}
-      user={user}
-    />
-  );
-}
-
-async function CurrentShift({ user }: { user: User }) {
-  const initialCurrentShift = await api.app.kodixCare.getCurrentShift();
-
-  return (
-    <CurrentShiftClient initialCurrentShift={initialCurrentShift} user={user} />
   );
 }
 

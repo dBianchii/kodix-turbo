@@ -58,13 +58,7 @@ import { EditEventDialog } from "./edit-event-dialog";
 type CalendarTask = RouterOutputs["app"]["calendar"]["getAll"][number];
 const columnHelper = createColumnHelper<CalendarTask>();
 
-export function DataTable({
-  data,
-  user,
-}: {
-  data: CalendarTask[];
-  user: User;
-}) {
+export function DataTable({ user }: { user: User }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const [selectedDay, setSelectedDay] = useState(new Date());
@@ -74,14 +68,13 @@ export function DataTable({
   const [openEditDialog, setOpenEditDialog] = useState(false);
 
   const utils = api.useUtils();
-  const getAllQuery = api.app.calendar.getAll.useQuery(
+  const [data, getAllQuery] = api.app.calendar.getAll.useSuspenseQuery(
     {
       dateStart: dayjs(selectedDay).startOf("day").toDate(),
       dateEnd: dayjs(selectedDay).endOf("day").toDate(),
     },
     {
       refetchOnWindowFocus: false,
-      initialData: data,
       staleTime: 0,
     },
   );
@@ -169,7 +162,7 @@ export function DataTable({
   ];
 
   const table = useReactTable({
-    data: getAllQuery.data,
+    data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),

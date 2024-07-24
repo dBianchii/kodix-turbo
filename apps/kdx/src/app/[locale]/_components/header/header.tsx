@@ -7,7 +7,7 @@ import { buttonVariants } from "@kdx/ui/button";
 
 import HeaderFooterRemover from "~/app/[locale]/_components/header-footer-remover";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
-import { api } from "~/trpc/server";
+import { api, HydrateClient } from "~/trpc/server";
 import { AppSwitcher } from "../app-switcher";
 import { I18nPicker } from "./i18n-picker";
 import { NotificationsPopoverClient } from "./notifications-popover-client";
@@ -22,7 +22,6 @@ export function Header() {
             <Suspense fallback={<Logo redirect="/team" />}>
               <LogoWithAppSwitcher />
             </Suspense>
-
             <div className="ml-auto flex items-center space-x-4">
               <Suspense>
                 <RightSide />
@@ -80,30 +79,20 @@ function Logo({ redirect }: { redirect: string }) {
   );
 }
 
-async function NotificationsPopover() {
-  const { user } = await auth();
-  if (!user) return null;
-
-  const initialNotifications = await api.user.getInvitations();
-  if (!initialNotifications.length) return null;
-
-  return (
-    <NotificationsPopoverClient initialNotifications={initialNotifications} />
-  );
-}
-
 async function RightSide() {
   const { user } = await auth();
   const t = await getI18n();
-
+  void api.user.getInvitations.prefetch();
   return (
     <>
       <I18nPicker />
       {!!user && (
         <>
-          <Suspense>
-            <NotificationsPopover />
-          </Suspense>
+          <HydrateClient>
+            <Suspense>
+              <NotificationsPopoverClient />
+            </Suspense>
+          </HydrateClient>
           <UserProfileButton user={user} />
         </>
       )}
