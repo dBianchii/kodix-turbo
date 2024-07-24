@@ -41,7 +41,7 @@
     "next": "catalog:",
     "next-safe-action": "7.1.4-experimental.1",
     "next-themes": "^0.3.0",
-    "posthog-js": "^1.130.1",
+    "posthog-js": "^1.149.0",
     "react": "catalog:react18",
     "react-day-picker": "^8.10.0",
     "react-dom": "catalog:react18",

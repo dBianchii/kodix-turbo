@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { auth } from "@kdx/auth";
 import { eq } from "@kdx/db";
 import { db } from "@kdx/db/client";
-import { schema } from "@kdx/db/schema";
+import { invitations, users } from "@kdx/db/schema";
 
 import { api } from "~/trpc/server";
 
@@ -15,7 +15,7 @@ export default async function InvitePage({
   const { id: invitationId } = params;
 
   const invitation = await db.query.invitations.findFirst({
-    where: eq(schema.invitations.id, invitationId),
+    where: eq(invitations.id, invitationId),
   });
   if (!invitation) return notFound();
 
@@ -24,7 +24,7 @@ export default async function InvitePage({
     let path = `/signup?invite=${invitationId}`;
 
     const existingUser = await db.query.users.findFirst({
-      where: eq(schema.users.email, invitation.email),
+      where: eq(users.email, invitation.email),
       columns: { id: true },
     });
 

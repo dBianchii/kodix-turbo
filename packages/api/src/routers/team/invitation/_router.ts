@@ -4,7 +4,7 @@ import {
   ZAcceptInputSchema,
   ZDeleteInputSchema,
   ZInviteInputSchema,
-} from "@kdx/validators/trpc/invitation";
+} from "@kdx/validators/trpc/team/invitation";
 
 import { isTeamOwnerProcedure, protectedProcedure } from "../../../procedures";
 import { acceptHandler } from "./accept.handler";

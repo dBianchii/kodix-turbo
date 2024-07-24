@@ -2,7 +2,7 @@ import type { inferProcedureBuilderResolverOptions } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 
 import { eq } from "@kdx/db";
-import { schema } from "@kdx/db/schema";
+import { teams } from "@kdx/db/schema";
 
 import { t } from "./trpc";
 
@@ -47,7 +47,7 @@ export type TProtectedProcedureContext = inferProcedureBuilderResolverOptions<
 export const isTeamOwnerProcedure = protectedProcedure.use(
   async ({ ctx, next }) => {
     const team = await ctx.db.query.teams.findFirst({
-      where: eq(schema.teams.id, ctx.session.user.activeTeamId),
+      where: eq(teams.id, ctx.session.user.activeTeamId),
       columns: {
         id: true,
         ownerId: true,

@@ -1,6 +1,6 @@
 import type { TGetCareTasksInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import dayjs from "@kdx/dayjs";
-import { schema } from "@kdx/db/schema";
+import { eventMasters } from "@kdx/db/schema";
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
@@ -22,7 +22,7 @@ export const getCareTasksHandler = async ({
     await ctx.db.query.careTasks.findMany({
       where: (careTask, { gte, lte, eq, and }) =>
         and(
-          eq(schema.eventMasters.teamId, ctx.session.user.activeTeamId),
+          eq(eventMasters.teamId, ctx.session.user.activeTeamId),
           gte(careTask.eventDate, input.dateStart),
           lte(careTask.eventDate, input.dateEnd),
         ),

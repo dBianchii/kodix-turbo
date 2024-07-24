@@ -3,7 +3,11 @@ import { rrulestr } from "rrule";
 import type { TGetAllInputSchema } from "@kdx/validators/trpc/app/calendar";
 import dayjs from "@kdx/dayjs";
 import { and, eq, gte, lte, or } from "@kdx/db";
-import { schema } from "@kdx/db/schema";
+import {
+  eventCancellations,
+  eventExceptions,
+  eventMasters,
+} from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 
@@ -25,7 +29,7 @@ export const getAllHandler = async ({
   ctx,
   input,
 }: GetAllCalendarTasksOptions) => {
-  const eventMasters = await ctx.db.query.eventMasters.findMany({
+  const _eventMasters = await ctx.db.query.eventMasters.findMany({
     where: (eventMasters, { and, gte, eq, or, lte, isNull }) =>
       and(
         eq(eventMasters.teamId, ctx.session.user.activeTeamId),
@@ -40,23 +44,23 @@ export const getAllHandler = async ({
   });
 
   //Handling Exceptions and Cancelations
-  const eventExceptions = await ctx.db
+  const _eventExceptions = await ctx.db
     .select({
-      id: schema.eventExceptions.id,
-      eventMasterId: schema.eventExceptions.eventMasterId,
-      originalDate: schema.eventExceptions.originalDate,
-      newDate: schema.eventExceptions.newDate,
-      title: schema.eventExceptions.title,
-      description: schema.eventExceptions.description,
-      rule: schema.eventMasters.rule,
-      eventMasterTitle: schema.eventMasters.title,
-      eventMasterDescription: schema.eventMasters.description,
-      eventMasterRule: schema.eventMasters.rule,
+      id: eventExceptions.id,
+      eventMasterId: eventExceptions.eventMasterId,
+      originalDate: eventExceptions.originalDate,
+      newDate: eventExceptions.newDate,
+      title: eventExceptions.title,
+      description: eventExceptions.description,
+      rule: eventMasters.rule,
+      eventMasterTitle: eventMasters.title,
+      eventMasterDescription: eventMasters.description,
+      eventMasterRule: eventMasters.rule,
     })
-    .from(schema.eventExceptions)
+    .from(eventExceptions)
     .where((eventExceptions) =>
       and(
-        eq(schema.eventMasters.teamId, ctx.session.user.activeTeamId),
+        eq(eventMasters.teamId, ctx.session.user.activeTeamId),
         or(
           and(
             gte(eventExceptions.originalDate, input.dateStart),
@@ -70,19 +74,19 @@ export const getAllHandler = async ({
       ),
     )
     .innerJoin(
-      schema.eventMasters,
-      eq(schema.eventMasters.id, schema.eventExceptions.eventMasterId),
+      eventMasters,
+      eq(eventMasters.id, eventExceptions.eventMasterId),
     );
 
-  const eventCancelations = await ctx.db
+  const _eventCancelations = await ctx.db
     .select({
-      originalDate: schema.eventCancellations.originalDate,
-      eventMasterId: schema.eventMasters.id,
+      originalDate: eventCancellations.originalDate,
+      eventMasterId: eventMasters.id,
     })
-    .from(schema.eventCancellations)
+    .from(eventCancellations)
     .where((eventCancellations) =>
       and(
-        eq(schema.eventMasters.teamId, ctx.session.user.activeTeamId),
+        eq(eventMasters.teamId, ctx.session.user.activeTeamId),
         and(
           gte(eventCancellations.originalDate, input.dateStart),
           lte(eventCancellations.originalDate, input.dateEnd),
@@ -90,15 +94,15 @@ export const getAllHandler = async ({
       ),
     )
     .innerJoin(
-      schema.eventMasters,
-      eq(schema.eventMasters.id, schema.eventCancellations.eventMasterId),
+      eventMasters,
+      eq(eventMasters.id, eventCancellations.eventMasterId),
     );
 
   //* We have all needed data. Now, let's add all masters and exceptions to calendarTasks.
 
   let calendarTasks: CalendarTask[] = [];
 
-  for (const eventMaster of eventMasters) {
+  for (const eventMaster of _eventMasters) {
     const rrule = rrulestr(eventMaster.rule);
     const allDates = rrule.between(input.dateStart, input.dateEnd, true);
 
@@ -113,7 +117,7 @@ export const getAllHandler = async ({
       });
   }
 
-  for (const eventException of eventExceptions)
+  for (const eventException of _eventExceptions)
     calendarTasks.push({
       eventMasterId: eventException.eventMasterId,
       eventExceptionId: eventException.id,
@@ -142,7 +146,7 @@ export const getAllHandler = async ({
         return calendarTask;
       }
       //Cuidar de cancelamentos -> deletar os advindos do master
-      const foundCancelation = eventCancelations.some(
+      const foundCancelation = _eventCancelations.some(
         (x) =>
           x.eventMasterId === calendarTask.eventMasterId &&
           dayjs(x.originalDate).isSame(calendarTask.date),

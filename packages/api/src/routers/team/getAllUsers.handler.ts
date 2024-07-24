@@ -1,5 +1,5 @@
 import { eq } from "@kdx/db";
-import { schema } from "@kdx/db/schema";
+import { users, usersToTeams } from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 
@@ -10,15 +10,12 @@ interface GetAllUsersOptions {
 export const getAllUsersHandler = async ({ ctx }: GetAllUsersOptions) => {
   return await ctx.db
     .select({
-      id: schema.users.id,
-      email: schema.users.email,
-      name: schema.users.name,
-      image: schema.users.image,
+      id: users.id,
+      email: users.email,
+      name: users.name,
+      image: users.image,
     })
-    .from(schema.users)
-    .where(eq(schema.usersToTeams.teamId, ctx.session.user.activeTeamId))
-    .innerJoin(
-      schema.usersToTeams,
-      eq(schema.usersToTeams.userId, schema.users.id),
-    );
+    .from(users)
+    .where(eq(usersToTeams.teamId, ctx.session.user.activeTeamId))
+    .innerJoin(usersToTeams, eq(usersToTeams.userId, users.id));
 };

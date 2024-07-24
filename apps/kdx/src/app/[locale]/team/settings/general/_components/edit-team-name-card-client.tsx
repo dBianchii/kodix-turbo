@@ -28,7 +28,6 @@ import { Input } from "@kdx/ui/input";
 import { toast } from "@kdx/ui/toast";
 import { ZUpdateInputSchema } from "@kdx/validators/trpc/team";
 
-import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
 export function EditTeamNameCardClient({
@@ -53,7 +52,6 @@ export function EditTeamNameCardClient({
     onSuccess: () => {
       router.refresh();
     },
-    onError: (e) => trpcErrorToastDefault(e),
   });
   const t = useI18n();
 
