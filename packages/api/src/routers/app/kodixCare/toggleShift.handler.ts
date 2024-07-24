@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 import dayjs from "@kdx/dayjs";
 import { eq } from "@kdx/db";
 import { nanoid } from "@kdx/db/nanoid";
+import { careShifts } from "@kdx/db/schema";
 import WarnPreviousShiftNotEnded from "@kdx/react-email/warn-previous-shift-not-ended";
 import { kodixCareAppId, kodixNotificationFromEmail } from "@kdx/shared";
 
@@ -11,7 +12,6 @@ import { resend } from "../../../utils/email";
 import { getConfigHandler } from "../getConfig.handler";
 import { getCurrentCareShiftHandler } from "./getCurrentCareShift.handler";
 import { cloneCalendarTasksToCareTasks } from "./utils";
-import { careShifts } from "@kdx/db/schema";
 
 interface ToggleShiftOptions {
   ctx: TProtectedProcedureContext;
