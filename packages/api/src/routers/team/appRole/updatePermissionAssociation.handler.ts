@@ -1,6 +1,6 @@
 import type { TUpdatePermissionAssociationInputSchema } from "@kdx/validators/trpc/team/appRole";
 import { eq, inArray } from "@kdx/db";
-import * as schema from "@kdx/db/schema";
+import { appPermissionsToTeamAppRoles, teamAppRoles } from "@kdx/db/schema";
 
 import type { TIsTeamOwnerProcedureContext } from "../../../procedures";
 
@@ -15,20 +15,18 @@ export const updatePermissionAssociationHandler = async ({
 }: UpdatePermissionAssociationOptions) => {
   await ctx.db.transaction(async (tx) => {
     await tx
-      .delete(schema.appPermissionsToTeamAppRoles)
+      .delete(appPermissionsToTeamAppRoles)
       .where(
         inArray(
-          schema.appPermissionsToTeamAppRoles.teamAppRoleId,
+          appPermissionsToTeamAppRoles.teamAppRoleId,
           ctx.db
-            .select({ id: schema.teamAppRoles.id })
-            .from(schema.teamAppRoles)
-            .where(
-              eq(schema.teamAppRoles.teamId, ctx.session.user.activeTeamId),
-            ),
+            .select({ id: teamAppRoles.id })
+            .from(teamAppRoles)
+            .where(eq(teamAppRoles.teamId, ctx.session.user.activeTeamId)),
         ),
       );
     if (input.teamAppRoleIds.length > 0)
-      await tx.insert(schema.appPermissionsToTeamAppRoles).values(
+      await tx.insert(appPermissionsToTeamAppRoles).values(
         input.teamAppRoleIds.map((id) => ({
           teamAppRoleId: id,
           appPermissionId: input.permissionId,

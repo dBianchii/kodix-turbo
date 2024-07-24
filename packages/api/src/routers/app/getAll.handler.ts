@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import { eq, sql } from "@kdx/db";
-import * as schema from "@kdx/db/schema";
+import { apps, appsToTeams } from "@kdx/db/schema";
 
 import type { TPublicProcedureContext } from "../../procedures";
 import { getUpstashCache, setUpstashCache } from "../../upstash";
@@ -16,17 +16,17 @@ export const getAllHandler = async ({ ctx }: GetAllOptions) => {
   });
   if (cached) return cached;
 
-  const apps = await ctx.db
+  const _apps = await ctx.db
     .select({
-      id: schema.apps.id,
+      id: apps.id,
       ...(ctx.session?.user?.activeTeamId && {
-        installed: sql`EXISTS(SELECT 1 FROM ${schema.appsToTeams} WHERE ${eq(
-          schema.apps.id,
-          schema.appsToTeams.appId,
-        )} AND ${eq(schema.appsToTeams.teamId, ctx.session.user.activeTeamId)})`, //? If user is logged in, we select 1 or 0
+        installed: sql`EXISTS(SELECT 1 FROM ${appsToTeams} WHERE ${eq(
+          apps.id,
+          appsToTeams.appId,
+        )} AND ${eq(appsToTeams.teamId, ctx.session.user.activeTeamId)})`, //? If user is logged in, we select 1 or 0
       }),
     })
-    .from(schema.apps)
+    .from(apps)
     .then((res) => {
       if (ctx.session?.user?.activeTeamId)
         return res.map((x) => ({
@@ -39,7 +39,7 @@ export const getAllHandler = async ({ ctx }: GetAllOptions) => {
       }));
     });
 
-  if (!apps.length) {
+  if (!_apps.length) {
     throw new TRPCError({
       code: "NOT_FOUND",
       message: "No apps found",
@@ -50,8 +50,8 @@ export const getAllHandler = async ({ ctx }: GetAllOptions) => {
     variableKeys: {
       teamId: ctx.session?.user?.activeTeamId,
     },
-    value: apps,
+    value: _apps,
   });
 
-  return apps;
+  return _apps;
 };
