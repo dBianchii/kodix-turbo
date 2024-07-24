@@ -52,7 +52,7 @@ export const leaveTeamHandler = async ({ ctx, input }: LeaveTeamOptions) => {
     throw new TRPCError({
       code: "FORBIDDEN",
       message:
-        "You are attempting to leave a team you are the only member of. Please create a new team first",
+        "You are attempting to leave a team, but you have no other teams. Please create a new team first",
     });
   }
 
