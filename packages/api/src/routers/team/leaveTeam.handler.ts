@@ -2,7 +2,13 @@ import { TRPCError } from "@trpc/server";
 
 import type { TLeaveTeamInputSchema } from "@kdx/validators/trpc/team";
 import { and, eq, inArray, not } from "@kdx/db";
-import { schema } from "@kdx/db/schema";
+import {
+  teamAppRoles,
+  teamAppRolesToUsers,
+  teams,
+  users,
+  usersToTeams,
+} from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 
@@ -31,16 +37,13 @@ export const leaveTeamHandler = async ({ ctx, input }: LeaveTeamOptions) => {
     });
 
   const otherTeam = await ctx.db
-    .select({ id: schema.teams.id })
-    .from(schema.teams)
-    .innerJoin(
-      schema.usersToTeams,
-      eq(schema.teams.id, schema.usersToTeams.teamId),
-    )
+    .select({ id: teams.id })
+    .from(teams)
+    .innerJoin(usersToTeams, eq(teams.id, usersToTeams.teamId))
     .where(
       and(
-        not(eq(schema.teams.id, ctx.session.user.activeTeamId)),
-        eq(schema.usersToTeams.userId, ctx.session.user.id),
+        not(eq(teams.id, ctx.session.user.activeTeamId)),
+        eq(usersToTeams.userId, ctx.session.user.id),
       ),
     )
     .then((res) => res[0]);
@@ -56,32 +59,32 @@ export const leaveTeamHandler = async ({ ctx, input }: LeaveTeamOptions) => {
   await ctx.db.transaction(async (tx) => {
     //Move the user to the other team
     await tx
-      .update(schema.users)
+      .update(users)
       .set({ activeTeamId: otherTeam.id })
-      .where(eq(schema.users.id, ctx.session.user.id));
+      .where(eq(users.id, ctx.session.user.id));
 
     //Remove the user from the team
     await tx
-      .delete(schema.usersToTeams)
+      .delete(usersToTeams)
       .where(
         and(
-          eq(schema.usersToTeams.teamId, input.teamId),
-          eq(schema.usersToTeams.userId, ctx.session.user.id),
+          eq(usersToTeams.teamId, input.teamId),
+          eq(usersToTeams.userId, ctx.session.user.id),
         ),
       );
 
     //Remove the user association from the team's apps
     await tx
-      .delete(schema.teamAppRolesToUsers)
+      .delete(teamAppRolesToUsers)
       .where(
         and(
-          eq(schema.teamAppRolesToUsers.userId, ctx.session.user.id),
+          eq(teamAppRolesToUsers.userId, ctx.session.user.id),
           inArray(
-            schema.teamAppRolesToUsers.teamAppRoleId,
+            teamAppRolesToUsers.teamAppRoleId,
             ctx.db
-              .select({ id: schema.teamAppRoles.id })
-              .from(schema.teamAppRoles)
-              .where(eq(schema.teamAppRoles.teamId, input.teamId)),
+              .select({ id: teamAppRoles.id })
+              .from(teamAppRoles)
+              .where(eq(teamAppRoles.teamId, input.teamId)),
           ),
         ),
       );
