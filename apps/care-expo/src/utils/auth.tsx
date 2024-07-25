@@ -1,7 +1,5 @@
 import { useRouter } from "expo-router";
 
-import { getErrorMessage } from "@kdx/shared";
-
 import { api } from "./api";
 import { deleteToken, setToken } from "./session-store";
 

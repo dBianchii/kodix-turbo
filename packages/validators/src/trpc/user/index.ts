@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { notifications } from "@kdx/db/schema";
+import type { notifications } from "@kdx/db/schema";
 
 import { ZNanoId } from "../..";
 

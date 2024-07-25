@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import { Keyboard, Pressable, TouchableOpacity } from "react-native";
+import { Keyboard, TouchableOpacity } from "react-native";
 import { Link, Stack, useRouter } from "expo-router";
-import { ArrowLeft, ChevronLeft, ChevronRight } from "@tamagui/lucide-icons";
+import { ChevronLeft, ChevronRight } from "@tamagui/lucide-icons";
 import {
   Button,
   H3,
@@ -27,7 +27,6 @@ import {
   FormMessage,
   useForm,
 } from "~/components/form";
-import { RootSafeAreaView } from "~/components/safe-area-view";
 import { api } from "~/utils/api";
 
 export default function Register() {
@@ -143,7 +142,7 @@ export default function Register() {
               <Text color="red" mb={"$3"}>
                 Email já cadastrado. Faça login para continuar.
               </Text>
-              <Link href="/signIn" asChild>
+              <Link href="/signIn" asChild replace>
                 <Button variant="outlined">
                   Entrar <ChevronRight />
                 </Button>

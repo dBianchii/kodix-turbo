@@ -1,7 +1,6 @@
-import { Keyboard, Pressable, TouchableOpacity } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Keyboard, TouchableOpacity } from "react-native";
 import { router, Stack } from "expo-router";
-import { ArrowLeft, ChevronLeft } from "@tamagui/lucide-icons";
+import { ChevronLeft } from "@tamagui/lucide-icons";
 import {
   Button,
   H1,

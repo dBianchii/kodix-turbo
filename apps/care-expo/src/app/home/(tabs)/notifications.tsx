@@ -1,6 +1,5 @@
-import { FlatList } from "react-native";
 import { Stack } from "expo-router";
-import { H3, ListItem, Spinner, View, YGroup } from "tamagui";
+import { H3, Spinner, View, YGroup } from "tamagui";
 
 import { RootSafeAreaView } from "~/components/safe-area-view";
 import { api } from "~/utils/api";
@@ -28,7 +27,7 @@ export default function NotificationsTab() {
         </View>
       ) : (
         <YGroup alignSelf="center" bordered width={240} size="$4">
-          <FlatList
+          {/* <FlatList
             data={notifications?.data ?? []}
             renderItem={({ item: notification }) => (
               <YGroup.Item>
@@ -36,7 +35,7 @@ export default function NotificationsTab() {
               </YGroup.Item>
             )}
             keyExtractor={(item) => item.id}
-          />
+          /> */}
         </YGroup>
       )}
     </RootSafeAreaView>
