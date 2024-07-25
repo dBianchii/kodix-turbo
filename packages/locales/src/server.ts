@@ -1,3 +1,4 @@
+import { createT } from "next-international";
 import { createI18nServer } from "next-international/server";
 
 import { pt_BR } from "./lang";
@@ -12,4 +13,5 @@ export const { getI18n, getScopedI18n, getCurrentLocale, getStaticParams } =
       fallbackLocale: pt_BR,
     },
   );
+
 export { setStaticParamsLocale } from "next-international/server";
