@@ -10,6 +10,7 @@ import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import { useI18n } from "@kdx/locales/client";
+import { cn } from "@kdx/ui";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Button } from "@kdx/ui/button";
 import {
@@ -27,6 +28,12 @@ import {
   TableRow,
 } from "@kdx/ui/table";
 import { toast } from "@kdx/ui/toast";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@kdx/ui/tooltip";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
@@ -36,8 +43,10 @@ const columnHelper =
 
 export function InviteDataTable({
   initialInvitations,
+  canEditPage,
 }: {
   initialInvitations: RouterOutputs["team"]["invitation"]["getAll"];
+  canEditPage: boolean;
 }) {
   const { data } = api.team.invitation.getAll.useQuery(undefined, {
     initialData: initialInvitations,
@@ -79,26 +88,45 @@ export function InviteDataTable({
       cell: (info) => {
         return (
           <div className="flex justify-end">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
-                  <span className="sr-only">{t("Open menu")}</span>
-                  <RxDotsHorizontal className="size-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                  className="text-destructive"
-                  onSelect={() => {
-                    mutate({
-                      invitationId: info.row.original.inviteId,
-                    });
-                  }}
-                >
-                  {t("Delete")}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <TooltipProvider>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="h-8 w-8 p-0">
+                    <span className="sr-only">{t("Open menu")}</span>
+                    <RxDotsHorizontal className="size-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div>
+                        <DropdownMenuItem
+                          disabled={!canEditPage}
+                          className="text-destructive"
+                          onSelect={() => {
+                            mutate({
+                              invitationId: info.row.original.inviteId,
+                            });
+                          }}
+                        >
+                          {t("Delete")}
+                        </DropdownMenuItem>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent
+                      side="left"
+                      className={cn("bg-background", {
+                        hidden: canEditPage, // Only show tooltip if the user can't edit page
+                      })}
+                    >
+                      <p>
+                        {t("Only the owner of the team can remove invites")}
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </TooltipProvider>
           </div>
         );
       },
