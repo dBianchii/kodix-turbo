@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import type { TUpdateUserAssociationInputSchema } from "@kdx/validators/trpc/team/appRole";
 import { and, eq, inArray } from "@kdx/db";
-import { teamAppRoles, teamAppRoles, teamAppRolesToUsers } from "@kdx/db/schema";
+import { teamAppRoles, teamAppRolesToUsers } from "@kdx/db/schema";
 import { appIdToAdminRole_defaultIdMap } from "@kdx/shared";
 
 import type { TIsTeamOwnerProcedureContext } from "../../../procedures";
