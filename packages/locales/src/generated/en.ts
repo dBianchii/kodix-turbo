@@ -166,9 +166,9 @@ export default {
     "Display Name": "Display Name",
     "please-enter-your-full-name-or-a-display-name-you-are-comfortable-with": "Please enter your full name, or a display name you are comfortable with.",
     "Please use 32 characters at maximum": "Please use 32 characters at maximum.",
-    "User removed from team": "User removed from team",
     "Manage the teams you are a part of or create a new one": "Manage the Teams that you&apos;re a part of, or create a new one.",
-    "Account settings": "Account Settings"
+    "Account settings": "Account Settings",
+    "You have left the team": "You have left the team"
   },
   "Name": "Name",
   "Current": "Current",
@@ -392,5 +392,8 @@ export default {
   "Confirm your new password": "Confirm your new password",
   "Change password": "Change password",
   "Error installing": "Error installing",
-  "Only the team owner can edit this": "Only the team owner can edit this"
+  "Only the team owner can edit this": "Only the team owner can edit this",
+  "Only the owner of the team can invite new members": "(Only the owner of the team can invite new members)",
+  "Only the owner of the team can remove invites": "Only the owner of the team can remove invites",
+  "Only the owner of the team can remove members": "Only the owner of the team can remove members"
 } as const

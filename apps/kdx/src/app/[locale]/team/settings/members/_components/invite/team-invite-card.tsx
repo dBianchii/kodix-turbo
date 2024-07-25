@@ -37,7 +37,13 @@ import { ZInviteInputSchema } from "@kdx/validators/trpc/team/invitation";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
-export default function TeamInviteCardClient({ user }: { user: User }) {
+export default function TeamInviteCardClient({
+  user,
+  canEditPage,
+}: {
+  user: User;
+  canEditPage: boolean;
+}) {
   const utils = api.useUtils();
   const [emails, setEmails] = useState([{ key: 0, value: "" }]); //key is used to work with formkit
   const [successes, setSuccesses] = useState<string[]>([]);
@@ -119,6 +125,7 @@ export default function TeamInviteCardClient({ user }: { user: User }) {
                     <Input
                       id={`email-${index}`}
                       type="email"
+                      disabled={!canEditPage}
                       value={email.value}
                       onChange={(e) => {
                         const newEmails = [...emails];
@@ -154,6 +161,7 @@ export default function TeamInviteCardClient({ user }: { user: User }) {
           </div>
           <div className="mt-2">
             <Button
+              disabled={!emails.some((x) => x.value.length) || !canEditPage}
               type="button"
               variant={"secondary"}
               size={"sm"}
@@ -169,7 +177,10 @@ export default function TeamInviteCardClient({ user }: { user: User }) {
             </Button>
           </div>
         </CardContent>
-        <CardFooter className="flex justify-end border-t px-6 py-4">
+        <CardFooter className="flex justify-between border-t px-6 py-4">
+          <CardDescription className="text-xs italic">
+            {t("Only the owner of the team can invite new members")}
+          </CardDescription>
           <Dialog
             onOpenChange={(open) => {
               if (!open) return closeDialog();
@@ -179,7 +190,7 @@ export default function TeamInviteCardClient({ user }: { user: User }) {
           >
             <Button
               type="submit"
-              disabled={!emails.some((x) => x.value.length)}
+              disabled={!emails.some((x) => x.value.length) || !canEditPage}
             >
               {t("Invite")}
             </Button>
