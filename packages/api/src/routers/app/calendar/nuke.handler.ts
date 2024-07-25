@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import { eq } from "@kdx/db";
-import { schema } from "@kdx/db/schema";
+import { eventMasters } from "@kdx/db/schema";
 import { authorizedEmails } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
@@ -18,6 +18,6 @@ export const nukeHandler = async ({ ctx }: NukeOptions) => {
     });
 
   await ctx.db
-    .delete(schema.eventMasters)
-    .where(eq(schema.eventMasters.teamId, ctx.session.user.activeTeamId));
+    .delete(eventMasters)
+    .where(eq(eventMasters.teamId, ctx.session.user.activeTeamId));
 };

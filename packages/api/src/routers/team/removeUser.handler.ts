@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import type { TRemoveUserSchema } from "@kdx/validators/trpc/team";
 import { and, eq, not } from "@kdx/db";
 import { nanoid } from "@kdx/db/nanoid";
-import { schema } from "@kdx/db/schema";
+import { teams, users, usersToTeams } from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 
@@ -56,16 +56,13 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
 
   //TODO: Implement role based access control
   let otherTeam = await ctx.db
-    .select({ id: schema.teams.id })
-    .from(schema.teams)
-    .innerJoin(
-      schema.usersToTeams,
-      eq(schema.teams.id, schema.usersToTeams.teamId),
-    )
+    .select({ id: teams.id })
+    .from(teams)
+    .innerJoin(usersToTeams, eq(teams.id, usersToTeams.teamId))
     .where(
       and(
-        not(eq(schema.teams.id, ctx.session.user.activeTeamId)),
-        eq(schema.usersToTeams.userId, input.userId),
+        not(eq(teams.id, ctx.session.user.activeTeamId)),
+        eq(usersToTeams.userId, input.userId),
       ),
     )
     .then((res) => res[0]);
@@ -75,15 +72,15 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
     if (!otherTeam) {
       //Create a new team for the user and move them to it
       const newTeamId = nanoid();
-      await tx.insert(schema.teams).values({
+      await tx.insert(teams).values({
         id: newTeamId,
         ownerId: input.userId,
         name: "Personal Team",
       });
       await tx
-        .insert(schema.usersToTeams)
+        .insert(usersToTeams)
         .values({ userId: input.userId, teamId: newTeamId });
-      await tx.update(schema.users).set({
+      await tx.update(users).set({
         activeTeamId: newTeamId,
       });
 
@@ -92,19 +89,19 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
 
     //Move the user to the other team
     await tx
-      .update(schema.users)
+      .update(users)
       .set({
         activeTeamId: otherTeam.id,
       })
-      .where(eq(schema.users.id, input.userId));
+      .where(eq(users.id, input.userId));
 
     //Remove the user from the team
     await tx
-      .delete(schema.usersToTeams)
+      .delete(usersToTeams)
       .where(
         and(
-          eq(schema.usersToTeams.userId, input.userId),
-          eq(schema.usersToTeams.teamId, ctx.session.user.activeTeamId),
+          eq(usersToTeams.userId, input.userId),
+          eq(usersToTeams.teamId, ctx.session.user.activeTeamId),
         ),
       );
   });

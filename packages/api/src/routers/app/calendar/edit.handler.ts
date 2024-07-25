@@ -5,7 +5,7 @@ import type { TEditInputSchema } from "@kdx/validators/trpc/app/calendar";
 import dayjs from "@kdx/dayjs";
 import { and, eq, gt, gte, inArray } from "@kdx/db";
 import { nanoid } from "@kdx/db/nanoid";
-import { schema } from "@kdx/db/schema";
+import { eventExceptions, eventMasters } from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 
@@ -16,9 +16,9 @@ interface EditOptions {
 
 export const editHandler = async ({ ctx, input }: EditOptions) => {
   const allEventMastersIdsForThisTeamQuery = ctx.db
-    .select({ id: schema.eventMasters.id })
-    .from(schema.eventMasters)
-    .where(eq(schema.eventMasters.teamId, ctx.session.user.activeTeamId));
+    .select({ id: eventMasters.id })
+    .from(eventMasters)
+    .where(eq(eventMasters.teamId, ctx.session.user.activeTeamId));
 
   if (input.editDefinition === "single") {
     //* Havemos description, title, from e selectedTimestamp.
@@ -31,7 +31,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
       //* Aqui, o usuário pode alterar o title e o description ou o from da exceção.
 
       await ctx.db
-        .update(schema.eventExceptions)
+        .update(eventExceptions)
         .set({
           newDate: input.from,
           title: input.title,
@@ -40,11 +40,11 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
         .where(
           and(
             inArray(
-              schema.eventExceptions.eventMasterId,
+              eventExceptions.eventMasterId,
               allEventMastersIdsForThisTeamQuery,
             ),
-            eq(schema.eventExceptions.id, input.eventExceptionId),
-            eq(schema.eventExceptions.newDate, input.selectedTimestamp),
+            eq(eventExceptions.id, input.eventExceptionId),
+            eq(eventExceptions.newDate, input.selectedTimestamp),
           ),
         );
       return;
@@ -87,7 +87,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
     //* Para fazer isso, temos que criar uma NOVA EXCEÇÃO.
     if (input.title !== undefined || input.description !== undefined) {
       //* Se tivermos title ou description, criamos um eventInfo e também uma exceção.
-      await ctx.db.insert(schema.eventExceptions).values({
+      await ctx.db.insert(eventExceptions).values({
         eventMasterId: eventMaster.id,
         originalDate: foundTimestamp,
         newDate: input.from ?? foundTimestamp,
@@ -99,7 +99,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
     }
     //* Se não tivermos title nem description, ainda temos o from. Criamos uma exceção sem eventInfo.
     else {
-      await ctx.db.insert(schema.eventExceptions).values({
+      await ctx.db.insert(eventExceptions).values({
         eventMasterId: eventMaster.id,
         originalDate: foundTimestamp,
         newDate: input.from ?? foundTimestamp,
@@ -126,11 +126,11 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
       );
       if (shouldDeleteFutureExceptions)
         await tx
-          .delete(schema.eventExceptions)
+          .delete(eventExceptions)
           .where(
             and(
-              eq(schema.eventExceptions.eventMasterId, input.eventMasterId),
-              gte(schema.eventExceptions.newDate, input.selectedTimestamp),
+              eq(eventExceptions.eventMasterId, input.eventMasterId),
+              gte(eventExceptions.newDate, input.selectedTimestamp),
             ),
           );
 
@@ -171,7 +171,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
 
         //! NO SPLIT REQUIRED !!
         await tx
-          .update(schema.eventMasters)
+          .update(eventMasters)
           .set({
             title: input.title,
             description: input.description,
@@ -191,28 +191,28 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
           })
           .where(
             and(
-              eq(schema.eventMasters.id, input.eventMasterId),
-              eq(schema.eventMasters.teamId, ctx.session.user.activeTeamId),
+              eq(eventMasters.id, input.eventMasterId),
+              eq(eventMasters.teamId, ctx.session.user.activeTeamId),
             ),
           );
         if (shouldDeleteFutureExceptions) return;
         if (input.title ?? input.description)
           await tx
-            .update(schema.eventExceptions)
+            .update(eventExceptions)
             .set({
               title: input.title ? null : undefined,
               description: input.description ? null : undefined,
             })
             .where(
               and(
-                eq(schema.eventExceptions.eventMasterId, input.eventMasterId),
-                eq(schema.eventMasters.teamId, ctx.session.user.activeTeamId),
+                eq(eventExceptions.eventMasterId, input.eventMasterId),
+                eq(eventMasters.teamId, ctx.session.user.activeTeamId),
               ),
             );
         return;
       }
       await tx
-        .update(schema.eventMasters)
+        .update(eventMasters)
         .set({
           dateUntil: previousOccurence,
           rule: new RRule({
@@ -226,13 +226,13 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
         })
         .where(
           and(
-            eq(schema.eventMasters.id, input.eventMasterId),
-            eq(schema.eventMasters.teamId, ctx.session.user.activeTeamId),
+            eq(eventMasters.id, input.eventMasterId),
+            eq(eventMasters.teamId, ctx.session.user.activeTeamId),
           ),
         );
 
       const newMasterId = nanoid();
-      await tx.insert(schema.eventMasters).values({
+      await tx.insert(eventMasters).values({
         id: newMasterId,
         teamId: ctx.session.user.activeTeamId,
         dateStart: input.from ?? input.selectedTimestamp,
@@ -254,7 +254,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
 
       if (!shouldDeleteFutureExceptions) {
         await tx
-          .update(schema.eventExceptions)
+          .update(eventExceptions)
           .set({
             title: input.title ? null : undefined,
             description: input.description ? null : undefined,
@@ -263,11 +263,11 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
           .where(
             and(
               inArray(
-                schema.eventExceptions.eventMasterId,
+                eventExceptions.eventMasterId,
                 allEventMastersIdsForThisTeamQuery,
               ),
-              eq(schema.eventExceptions.eventMasterId, oldMaster.id),
-              gte(schema.eventExceptions.newDate, input.selectedTimestamp),
+              eq(eventExceptions.eventMasterId, oldMaster.id),
+              gte(eventExceptions.newDate, input.selectedTimestamp),
             ),
           );
       }
@@ -335,7 +335,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
       })();
 
       await tx
-        .update(schema.eventMasters)
+        .update(eventMasters)
         .set({
           title: input.title,
           description: input.description,
@@ -345,21 +345,21 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
         })
         .where(
           and(
-            eq(schema.eventMasters.id, input.eventMasterId),
-            eq(schema.eventMasters.teamId, ctx.session.user.activeTeamId),
+            eq(eventMasters.id, input.eventMasterId),
+            eq(eventMasters.teamId, ctx.session.user.activeTeamId),
           ),
         );
 
       if (input.from ?? input.until) {
         await tx
-          .delete(schema.eventExceptions)
+          .delete(eventExceptions)
           .where(
             and(
-              eq(schema.eventExceptions.eventMasterId, input.eventMasterId),
+              eq(eventExceptions.eventMasterId, input.eventMasterId),
               input.from
                 ? undefined
                 : input.until
-                  ? gt(schema.eventExceptions.newDate, input.until)
+                  ? gt(eventExceptions.newDate, input.until)
                   : undefined,
             ),
           );

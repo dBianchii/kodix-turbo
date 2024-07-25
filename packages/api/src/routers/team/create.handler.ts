@@ -1,6 +1,6 @@
 import type { TCreateInputSchema } from "@kdx/validators/trpc/team";
 import { nanoid } from "@kdx/db/nanoid";
-import { schema } from "@kdx/db/schema";
+import { teams, usersToTeams } from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 
@@ -12,13 +12,13 @@ interface CreateOptions {
 export const createHandler = async ({ ctx, input }: CreateOptions) => {
   const teamId = nanoid();
   await ctx.db.transaction(async (tx) => {
-    const team = await tx.insert(schema.teams).values({
+    const team = await tx.insert(teams).values({
       id: teamId,
       ownerId: ctx.session.user.id,
       name: input.teamName,
     });
     await tx
-      .insert(schema.usersToTeams)
+      .insert(usersToTeams)
       .values({ userId: ctx.session.user.id, teamId });
     return team;
   });

@@ -5,7 +5,7 @@ import type { Adapter, DatabaseSession, DatabaseUser } from "lucia";
 import type { Drizzle } from "@kdx/db/client";
 import { eq, lte } from "@kdx/db";
 import { db } from "@kdx/db/client";
-import { schema } from "@kdx/db/schema";
+import { sessions, teams, users } from "@kdx/db/schema";
 
 class KodixAdapter implements Adapter {
   db;
@@ -14,9 +14,9 @@ class KodixAdapter implements Adapter {
   teamTable;
   constructor(
     db: Drizzle,
-    sessionTable: typeof schema.sessions,
-    userTable: typeof schema.users,
-    teamTable: typeof schema.teams,
+    sessionTable: typeof sessions,
+    userTable: typeof users,
+    teamTable: typeof teams,
   ) {
     this.db = db;
     this.sessionTable = sessionTable;
@@ -111,9 +111,4 @@ function transformIntoDatabaseUser(raw: any, activeTeamName: string) {
   };
 }
 
-export const adapter = new KodixAdapter(
-  db,
-  schema.sessions,
-  schema.users,
-  schema.teams,
-);
+export const adapter = new KodixAdapter(db, sessions, users, teams);
