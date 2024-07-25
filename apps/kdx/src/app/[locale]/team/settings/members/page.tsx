@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { redirect } from "next/navigation";
 
 import { auth } from "@kdx/auth";
+import { db } from "@kdx/db/client";
 import { getI18n } from "@kdx/locales/server";
 import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@kdx/ui/tabs";
@@ -16,9 +17,18 @@ export default async function SettingsMembersPage() {
   if (!user) redirect("/");
   const t = await getI18n();
 
+  const currentTeam = await db.query.teams.findFirst({
+    where: (teams, { eq }) => eq(teams.id, user.activeTeamId),
+    columns: {
+      ownerId: true,
+    },
+  });
+  if (!currentTeam) throw new Error("No team found");
+  const canEditPage = currentTeam.ownerId === user.id;
+
   return (
     <div className="mt-8 space-y-8 md:mt-0">
-      <TeamInviteCard user={user} />
+      <TeamInviteCard user={user} canEditPage={canEditPage} />
       <Tabs defaultValue="members">
         <TabsList className="">
           <TabsTrigger value="members">{t("Members")}</TabsTrigger>
@@ -37,7 +47,7 @@ export default async function SettingsMembersPage() {
               />
             }
           >
-            <DataTableMembersServer />
+            <DataTableMembersServer canEditPage={canEditPage} />
           </Suspense>
         </TabsContent>
         <TabsContent value="invites">
@@ -54,6 +64,7 @@ export default async function SettingsMembersPage() {
             }
           >
             <InviteDataTable
+              canEditPage={canEditPage}
               initialInvitations={await api.team.invitation.getAll()}
             />
           </Suspense>
@@ -63,9 +74,13 @@ export default async function SettingsMembersPage() {
   );
 }
 
-async function DataTableMembersServer() {
+async function DataTableMembersServer({
+  canEditPage,
+}: {
+  canEditPage: boolean;
+}) {
   const { user } = await auth();
   if (!user) return null;
 
-  return <DataTableMembers user={user} />;
+  return <DataTableMembers user={user} canEditPage={canEditPage} />;
 }

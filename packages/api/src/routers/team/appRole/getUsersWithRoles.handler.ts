@@ -1,6 +1,6 @@
 import type { TGetUsersWithRolesInputSchema } from "@kdx/validators/trpc/team/appRole";
 import { and, eq } from "@kdx/db";
-import * as schema from "@kdx/db/schema";
+import { teamAppRoles, usersToTeams } from "@kdx/db/schema";
 
 import type { TIsTeamOwnerProcedureContext } from "../../../procedures";
 
@@ -18,9 +18,9 @@ export const getUsersWithRolesHandler = async ({
       inArray(
         users.id,
         ctx.db
-          .select({ id: schema.usersToTeams.userId })
-          .from(schema.usersToTeams)
-          .where(eq(schema.usersToTeams.teamId, ctx.session.user.activeTeamId)),
+          .select({ id: usersToTeams.userId })
+          .from(usersToTeams)
+          .where(eq(usersToTeams.teamId, ctx.session.user.activeTeamId)),
       ),
     with: {
       TeamAppRolesToUsers: {
@@ -28,12 +28,12 @@ export const getUsersWithRolesHandler = async ({
           inArray(
             teamAppRolesToUsers.teamAppRoleId,
             ctx.db
-              .select({ id: schema.teamAppRoles.id })
-              .from(schema.teamAppRoles)
+              .select({ id: teamAppRoles.id })
+              .from(teamAppRoles)
               .where(
                 and(
-                  eq(schema.teamAppRoles.teamId, ctx.session.user.activeTeamId),
-                  eq(schema.teamAppRoles.appId, input.appId),
+                  eq(teamAppRoles.teamId, ctx.session.user.activeTeamId),
+                  eq(teamAppRoles.appId, input.appId),
                 ),
               ),
           ),

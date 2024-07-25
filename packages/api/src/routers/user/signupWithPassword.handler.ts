@@ -6,7 +6,7 @@ import { createDbSessionAndCookie, createUser } from "@kdx/auth/utils";
 import { eq } from "@kdx/db";
 import { db } from "@kdx/db/client";
 import { nanoid } from "@kdx/db/nanoid";
-import * as schema from "@kdx/db/schema";
+import { users } from "@kdx/db/schema";
 
 import type { TPublicProcedureContext } from "../../procedures";
 import { argon2Config } from "./utils";
@@ -22,10 +22,10 @@ export const signupWithPasswordHandler = async ({
 }: SignupWithPasswordOptions) => {
   const registered = await ctx.db
     .select({
-      id: schema.users.id,
+      id: users.id,
     })
-    .from(schema.users)
-    .where(eq(schema.users.email, input.email))
+    .from(users)
+    .where(eq(users.email, input.email))
     .then((res) => !!res[0]);
 
   if (registered)

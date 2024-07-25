@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 
 import type { TInviteInputSchema } from "@kdx/validators/trpc/team/invitation";
 import { nanoid } from "@kdx/db/nanoid";
-import * as schema from "@kdx/db/schema";
+import { invitations } from "@kdx/db/schema";
 import TeamInvite from "@kdx/react-email/team-invite";
 import {
   getBaseUrl,
@@ -11,11 +11,11 @@ import {
   kodixNotificationFromEmail,
 } from "@kdx/shared";
 
-import type { TProtectedProcedureContext } from "../../../procedures";
+import type { TIsTeamOwnerProcedureContext } from "../../../procedures";
 import { resend } from "../../../utils/email";
 
 interface InviteOptions {
-  ctx: TProtectedProcedureContext;
+  ctx: TIsTeamOwnerProcedureContext;
   input: TInviteInputSchema;
 }
 
@@ -68,18 +68,18 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
       code: "CONFLICT",
     });
 
-  const invitations = input.to.map(
+  const _invitations = input.to.map(
     (email) =>
       ({
         id: nanoid(),
         teamId: team.id,
         email,
         invitedById: ctx.session.user.id,
-      }) satisfies typeof schema.invitations.$inferInsert,
+      }) satisfies typeof invitations.$inferInsert,
   );
 
   const results = await Promise.allSettled(
-    invitations.map(async (invite) => {
+    _invitations.map(async (invite) => {
       await resend.emails.send({
         from: kodixNotificationFromEmail,
         to: invite.email,
@@ -100,13 +100,13 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
   const { successes } = getSuccessesAndErrors(results);
 
   if (successes.length)
-    await ctx.db.insert(schema.invitations).values(
+    await ctx.db.insert(invitations).values(
       successes.map((success) => {
-        return invitations.find((x) => x.id === success.value.id)!;
+        return _invitations.find((x) => x.id === success.value.id)!;
       }),
     );
 
-  const failedInvites = invitations.filter(
+  const failedInvites = _invitations.filter(
     (invite) => !successes.find((x) => x.value.id === invite.id),
   );
   return {

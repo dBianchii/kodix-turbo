@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import dayjs from "@kdx/dayjs";
 import { eq } from "@kdx/db";
 import { nanoid } from "@kdx/db/nanoid";
-import * as schema from "@kdx/db/schema";
+import { careShifts } from "@kdx/db/schema";
 import WarnPreviousShiftNotEnded from "@kdx/react-email/warn-previous-shift-not-ended";
 import { kodixCareAppId, kodixNotificationFromEmail } from "@kdx/shared";
 
@@ -42,7 +42,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
 
     await ctx.db.transaction(async (tx) => {
       const careShiftId = nanoid();
-      await ctx.db.insert(schema.careShifts).values({
+      await ctx.db.insert(careShifts).values({
         id: careShiftId,
         caregiverId: ctx.session.user.id,
         teamId: ctx.session.user.activeTeamId,
@@ -78,14 +78,14 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
 
   await ctx.db.transaction(async (tx) => {
     await tx
-      .update(schema.careShifts)
+      .update(careShifts)
       .set({
         checkOut: loggedUserIsCaregiverForCurrentShift ? new Date() : undefined, //Also checkOut if user is the caregiver
         shiftEndedAt: new Date(),
       })
-      .where(eq(schema.careShifts.id, lastCareShift.id));
+      .where(eq(careShifts.id, lastCareShift.id));
 
-    await tx.insert(schema.careShifts).values({
+    await tx.insert(careShifts).values({
       teamId: ctx.session.user.activeTeamId,
       checkIn: new Date(),
       caregiverId: ctx.session.user.id,

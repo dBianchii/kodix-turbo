@@ -1,7 +1,7 @@
 import { RRule } from "rrule";
 
 import type { TCreateInputSchema } from "@kdx/validators/trpc/app/calendar";
-import * as schema from "@kdx/db/schema";
+import { eventMasters } from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 
@@ -11,7 +11,7 @@ interface CreateOptions {
 }
 
 export const createHandler = async ({ ctx, input }: CreateOptions) => {
-  await ctx.db.insert(schema.eventMasters).values({
+  await ctx.db.insert(eventMasters).values({
     title: input.title,
     description: input.description,
     rule: new RRule({

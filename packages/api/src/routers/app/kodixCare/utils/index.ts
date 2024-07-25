@@ -1,7 +1,7 @@
 import type { Drizzle } from "@kdx/db/client";
 import { and, eq } from "@kdx/db";
 import { db as _db } from "@kdx/db/client";
-import * as schema from "@kdx/db/schema";
+import { appsToTeams, careTasks, teams, usersToTeams } from "@kdx/db/schema";
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
@@ -28,7 +28,7 @@ export async function cloneCalendarTasksToCareTasks({
   });
 
   if (calendarTasks.length > 0)
-    await ctx.db.insert(schema.careTasks).values(
+    await ctx.db.insert(careTasks).values(
       calendarTasks.map((calendarTask) => ({
         careShiftId: careShiftId,
         teamId: ctx.session.user.activeTeamId,
@@ -62,21 +62,10 @@ export async function getUserTeamsWithAppInstalled({
 }) {
   return await db
     .select({
-      id: schema.teams.id,
+      id: teams.id,
     })
-    .from(schema.teams)
-    .where(
-      and(
-        eq(schema.usersToTeams.userId, userId),
-        eq(schema.appsToTeams.appId, appId),
-      ),
-    )
-    .innerJoin(
-      schema.appsToTeams,
-      eq(schema.appsToTeams.teamId, schema.teams.id),
-    )
-    .innerJoin(
-      schema.usersToTeams,
-      eq(schema.usersToTeams.teamId, schema.teams.id),
-    );
+    .from(teams)
+    .where(and(eq(usersToTeams.userId, userId), eq(appsToTeams.appId, appId)))
+    .innerJoin(appsToTeams, eq(appsToTeams.teamId, teams.id))
+    .innerJoin(usersToTeams, eq(usersToTeams.teamId, teams.id));
 }

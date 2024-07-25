@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import type { TDeleteInputSchema } from "@kdx/validators/trpc/team/invitation";
 import { and, eq } from "@kdx/db";
-import * as schema from "@kdx/db/schema";
+import { invitations } from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 
@@ -27,6 +27,6 @@ export const deleteHandler = async ({ ctx, input }: DeleteOptions) => {
     });
 
   await ctx.db
-    .delete(schema.invitations)
-    .where(eq(schema.invitations.id, input.invitationId));
+    .delete(invitations)
+    .where(eq(invitations.id, input.invitationId));
 };
