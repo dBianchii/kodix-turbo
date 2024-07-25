@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import type { TUpdateUserAssociationInputSchema } from "@kdx/validators/trpc/team/appRole";
-import { eq } from "@kdx/db";
+import { and, eq, inArray } from "@kdx/db";
 import { teamAppRoles, teamAppRolesToUsers } from "@kdx/db/schema";
 import { appIdToAdminRole_defaultIdMap } from "@kdx/shared";
 
@@ -16,6 +16,16 @@ export const updateUserAssociationHandler = async ({
   input,
 }: UpdateUserAssociationOptions) => {
   await ctx.db.transaction(async (tx) => {
+    const teamAppRolesForTeamAndAppQuery = tx
+      .select({ id: teamAppRoles.id })
+      .from(teamAppRoles)
+      .where(
+        and(
+          eq(teamAppRoles.appId, input.appId),
+          eq(teamAppRoles.teamId, ctx.session.user.activeTeamId),
+        ),
+      );
+
     if (input.userId === ctx.session.user.id) {
       //need to detect if they are sending the admin role to prevent removing themselves
       const adminTeamAppRolesForApp = await tx
@@ -42,7 +52,15 @@ export const updateUserAssociationHandler = async ({
 
     await tx
       .delete(teamAppRolesToUsers)
-      .where(eq(teamAppRolesToUsers.userId, input.userId));
+      .where(
+        and(
+          eq(teamAppRolesToUsers.userId, input.userId),
+          inArray(
+            teamAppRolesToUsers.teamAppRoleId,
+            teamAppRolesForTeamAndAppQuery,
+          ),
+        ),
+      );
 
     if (input.teamAppRoleIds.length)
       // If there are any teamAppRoleIds to connect, insert them after deletion
