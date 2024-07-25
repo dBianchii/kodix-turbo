@@ -2,7 +2,7 @@ import type { Session, User } from "lucia";
 import { cookies } from "next/headers";
 import { Lucia } from "lucia";
 
-import type { schema } from "@kdx/db/schema";
+import type { sessions, users } from "@kdx/db/schema";
 
 import { env } from "../env";
 import { adapter } from "./lucia-custom-adapter";
@@ -86,10 +86,10 @@ export type AuthResponse =
 declare module "lucia" {
   interface Register {
     Lucia: typeof lucia;
-    DatabaseUserAttributes: Omit<typeof schema.users.$inferSelect, "id"> &
+    DatabaseUserAttributes: Omit<typeof users.$inferSelect, "id"> &
       ExtendedDatabaseUserAttributes;
     DatabaseSessionAttributes: Pick<
-      typeof schema.sessions.$inferSelect,
+      typeof sessions.$inferSelect,
       "ipAddress" | "userAgent"
     >;
   }

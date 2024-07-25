@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@kdx/auth";
 import { eq } from "@kdx/db";
 import { db } from "@kdx/db/client";
-import { schema } from "@kdx/db/schema";
+import { teams } from "@kdx/db/schema";
 import { getI18n } from "@kdx/locales/server";
 
 import { AppSwitcher } from "~/app/[locale]/_components/app-switcher";
@@ -18,7 +18,7 @@ export default async function RolesLayout({
   if (!user) redirect("/");
 
   const team = await db.query.teams.findFirst({
-    where: eq(schema.teams.id, user.activeTeamId),
+    where: eq(teams.id, user.activeTeamId),
     columns: {
       ownerId: true,
     },

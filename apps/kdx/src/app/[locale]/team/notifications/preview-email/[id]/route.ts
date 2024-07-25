@@ -3,12 +3,12 @@ import { notFound, redirect } from "next/navigation";
 import { auth } from "@kdx/auth";
 import { eq, sql } from "@kdx/db";
 import { db } from "@kdx/db/client";
-import { schema } from "@kdx/db/schema";
+import { usersToTeams } from "@kdx/db/schema";
 
 const allTeamIdsForUserQuery = db
-  .select({ id: schema.usersToTeams.teamId })
-  .from(schema.usersToTeams)
-  .where(eq(schema.usersToTeams.userId, sql.placeholder("userId")));
+  .select({ id: usersToTeams.teamId })
+  .from(usersToTeams)
+  .where(eq(usersToTeams.userId, sql.placeholder("userId")));
 
 const prepared = db.query.notifications
   .findFirst({

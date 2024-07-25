@@ -2,7 +2,7 @@ import { useState } from "react";
 import { LuCircleOff, LuCircleSlash } from "react-icons/lu";
 import { RxCheck, RxCheckCircled, RxRadiobutton } from "react-icons/rx";
 
-import type { schema } from "@kdx/db/schema";
+import type { todos } from "@kdx/db/schema";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import {
@@ -14,7 +14,7 @@ import {
 } from "@kdx/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
 
-type Status = typeof schema.todos.$inferInsert.status;
+type Status = typeof todos.$inferInsert.status;
 /**
  * @description You can optionally input a button to overwrite the default button trigger.
  */

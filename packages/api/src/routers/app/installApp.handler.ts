@@ -4,7 +4,14 @@ import type { TInstallAppInputSchema } from "@kdx/validators/trpc/app";
 import { and, eq } from "@kdx/db";
 import { appRoles_defaultTree } from "@kdx/db/constants";
 import { nanoid } from "@kdx/db/nanoid";
-import { schema } from "@kdx/db/schema";
+import {
+  appPermissionsToTeamAppRoles,
+  apps,
+  appsToTeams,
+  teamAppRoles,
+  teamAppRolesToUsers,
+  teams,
+} from "@kdx/db/schema";
 import { appIdToAdminRole_defaultIdMap } from "@kdx/shared";
 
 import type { TIsTeamOwnerProcedureContext } from "../../procedures";
@@ -17,14 +24,14 @@ interface InstallAppOptions {
 
 export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
   const installed = await ctx.db
-    .select({ id: schema.apps.id })
-    .from(schema.apps)
-    .innerJoin(schema.appsToTeams, eq(schema.appsToTeams.appId, schema.apps.id))
-    .innerJoin(schema.teams, eq(schema.teams.id, schema.appsToTeams.teamId))
+    .select({ id: apps.id })
+    .from(apps)
+    .innerJoin(appsToTeams, eq(appsToTeams.appId, apps.id))
+    .innerJoin(teams, eq(teams.id, appsToTeams.teamId))
     .where(
       and(
-        eq(schema.teams.id, ctx.session.user.activeTeamId),
-        eq(schema.apps.id, input.appId),
+        eq(teams.id, ctx.session.user.activeTeamId),
+        eq(apps.id, input.appId),
       ),
     )
     .then((res) => res[0]);
@@ -36,7 +43,7 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
     });
 
   await ctx.db.transaction(async (tx) => {
-    await tx.insert(schema.appsToTeams).values({
+    await tx.insert(appsToTeams).values({
       appId: input.appId,
       teamId: ctx.session.user.activeTeamId,
     });
@@ -51,9 +58,9 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
         appRoleDefaultId: defaultAppRole.id,
         teamId: ctx.session.user.activeTeamId,
       }),
-    ) satisfies (typeof schema.teamAppRoles.$inferInsert)[];
+    ) satisfies (typeof teamAppRoles.$inferInsert)[];
 
-    await tx.insert(schema.teamAppRoles).values(toCreateDefaultAppRoles);
+    await tx.insert(teamAppRoles).values(toCreateDefaultAppRoles);
 
     //? 2. Connect the permissions to the newly created roles if any exists
     const toAddPermissions = toCreateDefaultAppRoles.flatMap((role) =>
@@ -61,12 +68,10 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
         appPermissionId: permission.id,
         teamAppRoleId: role.id,
       })),
-    ) satisfies (typeof schema.appPermissionsToTeamAppRoles.$inferInsert)[];
+    ) satisfies (typeof appPermissionsToTeamAppRoles.$inferInsert)[];
 
     if (toAddPermissions.length > 0)
-      await tx
-        .insert(schema.appPermissionsToTeamAppRoles)
-        .values(toAddPermissions);
+      await tx.insert(appPermissionsToTeamAppRoles).values(toAddPermissions);
 
     //?3. Add the user to the admin role for the app
     const adminRoleForApp = toCreateDefaultAppRoles.find(
@@ -81,7 +86,7 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
         message: "Admin role not found",
       });
 
-    await tx.insert(schema.teamAppRolesToUsers).values({
+    await tx.insert(teamAppRolesToUsers).values({
       teamAppRoleId: adminRoleForApp.id,
       userId: ctx.session.user.id,
     });

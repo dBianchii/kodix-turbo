@@ -8,10 +8,10 @@ import {
 
 import { sql } from "../..";
 import { db } from "../../client";
-import { schema } from "../../schema";
+import { appPermissions, apps, devPartners } from "../../schema";
 import { appRoles_defaultTree } from "./appRolesDefault_tree";
 
-const devPartners: (typeof schema.devPartners.$inferInsert)[] = [
+const _devPartners: (typeof devPartners.$inferInsert)[] = [
   {
     id: kdxPartnerId,
     name: "Kodix",
@@ -19,7 +19,7 @@ const devPartners: (typeof schema.devPartners.$inferInsert)[] = [
   },
 ];
 
-export const apps: (typeof schema.apps.$inferInsert)[] = [
+export const _apps: (typeof apps.$inferInsert)[] = [
   {
     id: todoAppId, //As const so it can be used as a type
     devPartnerId: kdxPartnerId,
@@ -39,8 +39,7 @@ async function main() {
   validateSeedInput();
 
   await db.transaction(async (tx) => {
-    const toInsertAppPermissions: (typeof schema.appPermissions.$inferInsert)[] =
-      [];
+    const toInsertAppPermissions: (typeof appPermissions.$inferInsert)[] = [];
 
     for (const [appId, { appPermissions }] of Object.entries(
       appRoles_defaultTree,
@@ -57,19 +56,19 @@ async function main() {
     }
 
     await tx
-      .insert(schema.devPartners)
-      .values(devPartners)
+      .insert(devPartners)
+      .values(_devPartners)
       .onDuplicateKeyUpdate({
-        set: allSetValues(devPartners),
+        set: allSetValues(_devPartners),
       });
     await tx
-      .insert(schema.apps)
-      .values(apps)
+      .insert(apps)
+      .values(_apps)
       .onDuplicateKeyUpdate({
-        set: allSetValues(apps),
+        set: allSetValues(_apps),
       });
     await tx
-      .insert(schema.appPermissions)
+      .insert(appPermissions)
       .values(toInsertAppPermissions)
       .onDuplicateKeyUpdate({
         set: allSetValues(toInsertAppPermissions),

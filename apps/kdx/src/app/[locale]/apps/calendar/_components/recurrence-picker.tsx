@@ -161,7 +161,7 @@ export function RecurrencePicker({
                       setFrequency(freq);
                       setUntil(undefined);
                       setCount(undefined);
-                      freq !== Frequency.WEEKLY && setWeekdays(undefined);
+                      if (freq !== Frequency.WEEKLY) setWeekdays(undefined);
                     }}
                   >
                     <RxCheck
