@@ -1,6 +1,6 @@
 import type { TUpdateUserAssociationInputSchema } from "@kdx/validators/trpc/team/appRole";
 import { and, eq, inArray } from "@kdx/db";
-import { schema } from "@kdx/db/schema";
+import { teamAppRoles, teamAppRolesToUsers } from "@kdx/db/schema";
 
 import type { TIsTeamOwnerProcedureContext } from "../../../procedures";
 
@@ -15,22 +15,22 @@ export const updateUserAssociationHandler = async ({
 }: UpdateUserAssociationOptions) => {
   await ctx.db.transaction(async (tx) => {
     const teamAppRolesForTeamAndAppQuery = tx
-      .select({ id: schema.teamAppRoles.id })
-      .from(schema.teamAppRoles)
+      .select({ id: teamAppRoles.id })
+      .from(teamAppRoles)
       .where(
         and(
-          eq(schema.teamAppRoles.appId, input.appId),
-          eq(schema.teamAppRoles.teamId, ctx.session.user.activeTeamId),
+          eq(teamAppRoles.appId, input.appId),
+          eq(teamAppRoles.teamId, ctx.session.user.activeTeamId),
         ),
       );
 
     await tx
-      .delete(schema.teamAppRolesToUsers)
+      .delete(teamAppRolesToUsers)
       .where(
         and(
-          eq(schema.teamAppRolesToUsers.userId, input.userId),
+          eq(teamAppRolesToUsers.userId, input.userId),
           inArray(
-            schema.teamAppRolesToUsers.teamAppRoleId,
+            teamAppRolesToUsers.teamAppRoleId,
             teamAppRolesForTeamAndAppQuery,
           ),
         ),
@@ -38,7 +38,7 @@ export const updateUserAssociationHandler = async ({
 
     if (input.teamAppRoleIds.length)
       // If there are any teamAppRoleIds to connect, insert them after deletion
-      await tx.insert(schema.teamAppRolesToUsers).values(
+      await tx.insert(teamAppRolesToUsers).values(
         input.teamAppRoleIds.map((appRoleId) => ({
           userId: input.userId,
           teamAppRoleId: appRoleId,
