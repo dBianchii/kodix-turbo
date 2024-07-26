@@ -40,7 +40,7 @@ export default async function RolesLayout({
       </div>
       <Suspense>
         <div className="space-y-3">
-          <p className="text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             {t("Select your app to change its configurations")}
           </p>
           <AppSwitcher

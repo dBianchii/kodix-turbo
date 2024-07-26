@@ -1,4 +1,5 @@
 import { notFound, redirect } from "next/navigation";
+import { RxDividerVertical } from "react-icons/rx";
 
 import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
@@ -37,10 +38,10 @@ async function UserAppRolesTable({ appId }: { appId: KodixAppId }) {
   const allAppRoles = await api.team.appRole.getAll({ appId });
   const t = await getI18n();
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-2">
         <h1 className="font-semibold text-muted-foreground">
-          {t("Define the role of each user", { name: await getAppName(appId) })}
+          {t("Define the role of each user")}
         </h1>
         <DataTableAppPermissions
           initialPermissions={initialPermissions}
