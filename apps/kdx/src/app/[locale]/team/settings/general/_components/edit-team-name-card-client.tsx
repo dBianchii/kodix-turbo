@@ -10,7 +10,6 @@ import { Button } from "@kdx/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
