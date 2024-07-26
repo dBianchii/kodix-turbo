@@ -1,1 +1,3 @@
-export { createI18nMiddleware } from "next-international/middleware";
+import withNextIntl from "next-intl/plugin";
+
+export { withNextIntl };
