@@ -14,7 +14,7 @@ import type {
   KodixAppId,
 } from "@kdx/shared";
 import type { FixedColumnsType } from "@kdx/ui/data-table/data-table";
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/client";
 import {
   useAppPermissionName,
   useAppRoleDefaultNames,
@@ -102,7 +102,7 @@ export function DataTableAppPermissions({
       },
     });
 
-  const t = useI18n();
+  const t = useTranslations();
   const columns = useMemo(
     () =>
       [

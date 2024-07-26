@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@kdx/auth";
 import { db } from "@kdx/db/client";
-import { getI18n } from "@kdx/locales/server";
+import { getTranslations } from "@kdx/locales/server";
 import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@kdx/ui/tabs";
 
@@ -15,7 +15,7 @@ import TeamInviteCard from "./_components/invite/team-invite-card";
 export default async function SettingsMembersPage() {
   const { user } = await auth();
   if (!user) redirect("/");
-  const t = await getI18n();
+  const t = await getTranslations();
 
   const currentTeam = await db.query.teams.findFirst({
     where: (teams, { eq }) => eq(teams.id, user.activeTeamId),

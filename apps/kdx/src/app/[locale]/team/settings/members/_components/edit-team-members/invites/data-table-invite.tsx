@@ -9,7 +9,7 @@ import {
 import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/client";
 import { cn } from "@kdx/ui";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Button } from "@kdx/ui/button";
@@ -52,7 +52,7 @@ export function InviteDataTable({
     initialData: initialInvitations,
     staleTime: 30000,
   });
-  const t = useI18n();
+  const t = useTranslations();
   const utils = api.useUtils();
   const { mutate } = api.team.invitation.delete.useMutation({
     onSuccess: () => {

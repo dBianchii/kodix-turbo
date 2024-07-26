@@ -7,7 +7,7 @@ import { RxChevronLeft, RxDotsHorizontal } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/client";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import {
@@ -30,7 +30,7 @@ export default function EditUserTeamsTableClient({
   teams: RouterOutputs["team"]["getAllForLoggedUser"];
   user: User;
 }) {
-  const t = useI18n();
+  const t = useTranslations();
   const currentTeam = user.activeTeamId;
   const sortedTeams = teams.sort((a, b) => {
     if (a.id === currentTeam) return -1;
@@ -71,7 +71,7 @@ function CustomRow({
   const [isHovered, setIsHovered] = useState(false);
   const [manageLoading, setManageLoading] = useState(false);
   const router = useRouter();
-  const t = useI18n();
+  const t = useTranslations();
   return (
     <TableRow
       key={team.id}
@@ -135,7 +135,7 @@ function CustomRow({
 }
 
 function LeaveTeamDropdown({ teamId }: { teamId: string }) {
-  const t = useI18n();
+  const t = useTranslations();
   const utils = api.useUtils();
   const router = useRouter();
   const { mutate } = api.team.leaveTeam.useMutation({

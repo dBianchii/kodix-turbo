@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { auth } from "@kdx/auth";
-import { getI18n } from "@kdx/locales/server";
+import { getTranslations } from "@kdx/locales/server";
 
 import { ProviderButtons } from "../_components/provider-buttons";
 import { PasswordSignupForm } from "./_components/password-signup-form";
@@ -14,7 +14,7 @@ export default async function SignUpPage({
 }) {
   const { user } = await auth();
   if (user) redirect(searchParams?.callbackUrl ?? "/");
-  const t = await getI18n();
+  const t = await getTranslations();
   return (
     <div className="container my-auto flex max-w-2xl">
       <div className="flex w-full flex-col rounded-xl bg-card md:border">

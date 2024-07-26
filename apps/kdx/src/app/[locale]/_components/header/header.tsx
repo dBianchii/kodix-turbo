@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 
 import { auth } from "@kdx/auth";
-import { getI18n } from "@kdx/locales/server";
+import { getTranslations } from "@kdx/locales/server";
 import { buttonVariants } from "@kdx/ui/button";
 
 import HeaderFooterRemover from "~/app/[locale]/_components/header-footer-remover";
@@ -94,7 +94,7 @@ async function NotificationsPopover() {
 
 async function RightSide() {
   const { user } = await auth();
-  const t = await getI18n();
+  const t = await getTranslations();
 
   return (
     <>

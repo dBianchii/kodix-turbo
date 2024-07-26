@@ -5,7 +5,7 @@ import { auth } from "@kdx/auth";
 import { eq } from "@kdx/db";
 import { db } from "@kdx/db/client";
 import { teams } from "@kdx/db/schema";
-import { getI18n } from "@kdx/locales/server";
+import { getTranslations } from "@kdx/locales/server";
 
 import { AppSwitcher } from "~/app/[locale]/_components/app-switcher";
 
@@ -25,7 +25,7 @@ export default async function RolesLayout({
   });
 
   if (team?.ownerId !== user.id) redirect("/team/settings");
-  const t = await getI18n();
+  const t = await getTranslations();
   return (
     <div className="mt-8 space-y-8 md:mt-0">
       <Suspense>

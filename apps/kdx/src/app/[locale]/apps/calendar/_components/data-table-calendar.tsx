@@ -23,7 +23,7 @@ import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
 import { addDays } from "@kdx/date-fns";
 import dayjs from "@kdx/dayjs";
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/client";
 import { authorizedEmails } from "@kdx/shared";
 import { Button } from "@kdx/ui/button";
 import {
@@ -93,7 +93,7 @@ export function DataTable({
     },
   });
 
-  const t = useI18n();
+  const t = useTranslations();
 
   const columns = [
     columnHelper.accessor("eventMasterId", {

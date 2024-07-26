@@ -16,7 +16,7 @@ import {
   Text,
 } from "@react-email/components";
 
-import { getI18n } from "@kdx/locales/server";
+import { getTranslations } from "@kdx/locales/server";
 import { getBaseUrl } from "@kdx/shared";
 
 const baseUrl = getBaseUrl();
@@ -42,7 +42,7 @@ export const TeamInvite = async ({
   inviteFromIp?: string;
   inviteFromLocation?: string;
 }) => {
-  const t = await getI18n();
+  const t = await getTranslations();
   const previewText = t("emails.Join invitedByUsername on Kodix", {
     invitedByUsername,
   });
@@ -64,8 +64,8 @@ export const TeamInvite = async ({
               />
             </Section>
             <Heading className="mx-0 my-[30px] p-0 text-center text-[24px] font-normal text-black">
-              {t("emails.Join teamName on Kodix", {
-                teamName: <strong>{teamName}</strong>,
+              {t.rich("emails.Join teamName on Kodix", {
+                teamName: () => <strong>{teamName}</strong>,
                 site: "Kodix",
               })}
             </Heading>
@@ -81,8 +81,8 @@ export const TeamInvite = async ({
                 {invitedByEmail}
               </Link>
               ){" "}
-              {t("emails.Has invited you to the teamName team on Kodix", {
-                teamName: <strong>{teamName}</strong>,
+              {t.rich("emails.Has invited you to the teamName team on Kodix", {
+                teamName: () => <strong>{teamName}</strong>,
                 site: "Kodix",
               })}
             </Text>

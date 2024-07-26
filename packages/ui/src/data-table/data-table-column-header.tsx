@@ -6,7 +6,7 @@ import {
   EyeNoneIcon,
 } from "@radix-ui/react-icons";
 
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/client";
 
 import { cn } from "..";
 import { Button } from "../button";
@@ -29,7 +29,7 @@ export function DataTableColumnHeader<TData, TValue>({
   title,
   className,
 }: DataTableColumnHeaderProps<TData, TValue>) {
-  const t = useI18n();
+  const t = useTranslations();
 
   if (!column.getCanSort() && !column.getCanHide()) {
     return <div className={cn(className)}>{title}</div>;

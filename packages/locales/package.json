@@ -5,12 +5,13 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./provider": "./src/provider.tsx",
     "./server": "./src/server.ts",
     "./client": "./src/client.ts",
-    "./provider": "./src/provider.tsx",
-    "./lang": "./src/lang.ts",
     "./hooks": "./src/hooks/index.ts",
-    "./server-hooks": "./src/hooks/server-hooks.ts"
+    "./server-hooks": "./src/hooks/server-hooks.ts",
+    "./plugin": "./src/plugin.js",
+    "./messages": "./src/messages/**/*.json"
   },
   "scripts": {
     "dev": "nodemon --watch ./src/lang --ext json --exec \"pnpm run generate\"",
@@ -21,7 +22,6 @@
   },
   "dependencies": {
     "@kdx/shared": "workspace:*",
-    "next-international": "^1.2.4",
     "next-intl": "^3.17.2",
     "react": "catalog:react18"
   },

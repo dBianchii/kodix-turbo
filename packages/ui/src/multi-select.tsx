@@ -9,7 +9,7 @@ import {
   PlusCircledIcon,
 } from "@radix-ui/react-icons";
 
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/client";
 
 import { cn } from ".";
 import { Badge } from "./badge";
@@ -74,7 +74,7 @@ function MultiSelect({
     }
   }
   const [showParseError, setShowParseError] = React.useState(false);
-  const t = useI18n();
+  const t = useTranslations();
 
   return (
     <Popover open={open} onOpenChange={setOpen} {...props}>
