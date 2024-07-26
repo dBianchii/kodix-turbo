@@ -20,7 +20,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
   useForm,
 } from "@kdx/ui/form";
@@ -71,9 +70,6 @@ export function EditTeamNameCardClient({
         >
           <CardHeader>
             <CardTitle>{t("Team name")}</CardTitle>
-            <CardDescription>
-              {t("This is your teams visible name")}
-            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid w-full items-center gap-4">
@@ -83,7 +79,6 @@ export function EditTeamNameCardClient({
                   name="teamName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t("Team name")}</FormLabel>
                       <FormControl>
                         <Input
                           className={cn({
@@ -91,6 +86,10 @@ export function EditTeamNameCardClient({
                           })}
                           placeholder="Acme"
                           {...field}
+                          onChange={(e) => {
+                            void form.trigger("teamName");
+                            field.onChange(e);
+                          }}
                           disabled={!canEdit}
                         />
                       </FormControl>
@@ -101,10 +100,7 @@ export function EditTeamNameCardClient({
               </div>
             </div>
           </CardContent>
-          <CardFooter className="flex justify-between border-t px-6 py-4">
-            <CardDescription>
-              {t("Please use 32 characters at maximum")}
-            </CardDescription>
+          <CardFooter className="flex justify-end border-t px-6 py-4">
             <Button disabled={mutation.isPending}>
               {mutation.isPending ? (
                 <>
