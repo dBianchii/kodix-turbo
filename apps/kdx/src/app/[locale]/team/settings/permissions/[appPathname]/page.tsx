@@ -1,5 +1,4 @@
 import { notFound, redirect } from "next/navigation";
-import { RxDividerVertical } from "react-icons/rx";
 
 import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
