@@ -176,7 +176,11 @@ export default {
   "rows selected": "linha(s) selecionada(s).",
   "team-name": "Nome da equipe",
   "settings": {
-    "These are your installed apps": "Estes são seus apps instalados"
+    "These are your installed apps": "Estes são seus apps instalados",
+    "Change the name of your team and manage your participation": "Mude o nome da sua equipe e gerencie sua participação",
+    "Manage your apps": "Gerencie seus apps, instale novos ou desinstale os que você não usa mais",
+    "Invite members to your team and remove active members": "Convide novos membros ou remova menbros ativos",
+    "Define which role can make each action and define the roles of each member": "Defina qual papel pode fazer determinada ação e defina os papéis de cada usuário"
   },
   "Active": "Ativo",
   "Apps": "Apps",
@@ -184,7 +188,6 @@ export default {
   "Not found": "Não encontrado",
   "Please use 32 characters at maximum": "Use no máximo 32 caracteres",
   "Roles": "Papéis",
-  "Select your app": "Selecione seu app",
   "Team Settings": "Configurações da equipe",
   "Team name": "Nome da equipe",
   "Team name saved successfully": "Nome da equipe salvo com sucesso",
@@ -252,7 +255,6 @@ export default {
   "Confirm": "Confirme",
   "Delete": "Excluir",
   "Edit Event": "Editar evento",
-  "Edit name permissions": "Editar permissões de {name}",
   "Edit name roles": "Editar papéis de {name}",
   "Failed to send invitation to people": "Falha ao enviar convite para {people}",
   "Invitations sent": "Convites enviados!",
@@ -395,5 +397,8 @@ export default {
   "Only the team owner can edit this": "Somente o proprietário da equipe pode editar isso",
   "Only the owner of the team can invite new members": "(Somente o proprietário da equipe pode convidar novos membros)",
   "Only the owner of the team can remove invites": "Somente o proprietário da equipe pode remover convites",
-  "Only the owner of the team can remove members": "Somente o proprietário da equipe pode remover membros"
+  "Only the owner of the team can remove members": "Somente o proprietário da equipe pode remover membros",
+  "Permissions": "Permissões",
+  "Define the role of each user": "Defina o papel de cada usuário",
+  "Select your app to change its configurations": "Selecione o app para alterar as definições:"
 } as const

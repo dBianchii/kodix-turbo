@@ -27,7 +27,15 @@ export default async function SettingsMembersPage() {
   const canEditPage = currentTeam.ownerId === user.id;
 
   return (
-    <div className="mt-8 space-y-8 md:mt-0">
+    <div className="mt-8 space-y-6 md:mt-0">
+      <div>
+        <h2 className="text-center text-2xl font-bold md:text-left">
+          {t("Members")}
+        </h2>
+        <p className="text-sm text-muted-foreground">
+          {t("settings.Invite members to your team and remove active members")}
+        </p>
+      </div>
       <TeamInviteCard user={user} canEditPage={canEditPage} />
       <Tabs defaultValue="members">
         <TabsList className="">

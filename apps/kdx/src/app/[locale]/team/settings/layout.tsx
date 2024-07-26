@@ -33,8 +33,8 @@ export default async function SettingsLayout({
       title: t("Members"),
     },
     {
-      href: "/team/settings/roles",
-      title: t("Roles"),
+      href: "/team/settings/permissions",
+      title: t("Permissions"),
       shown: user.id === team.ownerId,
     },
   ];

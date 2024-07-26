@@ -185,20 +185,22 @@ export default {
   "Active": "Active",
   "Your installed apps": "Your installed apps",
   "settings": {
-    "These are your installed apps": "These are your installed apps"
+    "These are your installed apps": "These are your installed apps",
+    "Change the name of your team and manage your participation": "Change your team name and manage your membership",
+    "Define which role can make each action and define the roles of each member": "Define which role can perform a certain action and define the roles of each user",
+    "Invite members to your team and remove active members": "Invite new members or remove active members",
+    "Manage your apps": "Manage your apps, install new ones or uninstall the ones you no longer use"
   },
   "Members": "Members",
   "Team Settings": "Team Settings",
   "Not found": "Not found",
   "User": "User",
   "Roles": "Roles",
-  "Select your app": "Select your app",
   "Apps": "Apps",
   "Team name": "Team Name",
   "Team name saved successfully": "Team name saved successfully",
   "This is your teams visible name": "This is your team's visible name",
   "Please use 32 characters at maximum": "Please use 32 characters at maximum",
-  "Edit name permissions": "Edit {name} permissions",
   "Edit name roles": "Edit {name} roles",
   "Permission": "Permission",
   "This app does not have any permissions": "This app does not have any permissions",
@@ -395,5 +397,8 @@ export default {
   "Only the team owner can edit this": "Only the team owner can edit this",
   "Only the owner of the team can invite new members": "(Only the owner of the team can invite new members)",
   "Only the owner of the team can remove invites": "Only the owner of the team can remove invites",
-  "Only the owner of the team can remove members": "Only the owner of the team can remove members"
+  "Only the owner of the team can remove members": "Only the owner of the team can remove members",
+  "Permissions": "Permissions",
+  "Define the role of each user": "Define the role of each user",
+  "Select your app to change its configurations": "Select the app to change settings:"
 } as const

@@ -9,7 +9,6 @@ import { getI18n } from "@kdx/locales/server";
 
 import { KodixApp } from "~/app/[locale]/_components/app/kodix-app";
 import { KodixAppSkeleton } from "~/app/[locale]/_components/app/kodix-app-skeleton";
-import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { api } from "~/trpc/server";
 
 export default async function SettingsAppsPage() {
@@ -17,15 +16,15 @@ export default async function SettingsAppsPage() {
   if (!user) redirect("/");
   const t = await getI18n();
   return (
-    <MaxWidthWrapper>
-      <h1 className="text-lg font-bold text-foreground">
-        {t("Your installed apps")}
-      </h1>
-      <p className="mt-2 text-muted-foreground">
-        {t("settings.These are your installed apps")}
-      </p>
-      <br />
-
+    <div className="mt-8 space-y-6 md:mt-0">
+      <div>
+        <h2 className="text-center text-2xl font-bold md:text-left">
+          {t("Apps")}
+        </h2>
+        <p className="text-sm text-muted-foreground">
+          {t("settings.Manage your apps")}
+        </p>
+      </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Suspense
           fallback={Array.from({ length: 3 }).map((_, i) => (
@@ -35,7 +34,7 @@ export default async function SettingsAppsPage() {
           <Apps />
         </Suspense>
       </div>
-    </MaxWidthWrapper>
+    </div>
   );
 }
 
