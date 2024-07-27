@@ -10,6 +10,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { addDays } from "date-fns";
 import { LuLoader2 } from "react-icons/lu";
 import {
   RxChevronLeft,
@@ -21,7 +22,6 @@ import {
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
-import { addDays } from "@kdx/date-fns";
 import dayjs from "@kdx/dayjs";
 import { useTranslations } from "@kdx/locales/client";
 import { authorizedEmails } from "@kdx/shared";

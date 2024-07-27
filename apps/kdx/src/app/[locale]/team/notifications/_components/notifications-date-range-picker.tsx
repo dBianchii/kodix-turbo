@@ -3,10 +3,10 @@
 import type { DateRange } from "react-day-picker";
 import * as React from "react";
 import { useSearchParams } from "next/navigation";
+import { addDays, format } from "date-fns";
 import { RxCalendar } from "react-icons/rx";
 
 import type { ButtonProps } from "@kdx/ui/button";
-import { addDays, format } from "@kdx/date-fns";
 import { useFormatter } from "@kdx/locales";
 import { useTranslations } from "@kdx/locales/client";
 import { usePathname, useRouter } from "@kdx/locales/navigation";
