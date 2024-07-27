@@ -565,9 +565,6 @@ importers:
       '@kdx/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint
-      '@kdx/locales':
-        specifier: workspace:*
-        version: link:../locales
       '@kdx/prettier-config':
         specifier: workspace:*
         version: link:../../tooling/prettier
