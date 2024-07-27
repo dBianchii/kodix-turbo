@@ -1,10 +1,10 @@
 import { Suspense } from "react";
-import { redirect } from "next/navigation";
 
 import { auth } from "@kdx/auth";
 import { eq } from "@kdx/db";
 import { db } from "@kdx/db/client";
 import { teams } from "@kdx/db/schema";
+import { redirect } from "@kdx/locales/navigation";
 import { getTranslations } from "@kdx/locales/server";
 
 import { AppSwitcher } from "~/app/[locale]/_components/app-switcher";
@@ -15,7 +15,7 @@ export default async function RolesLayout({
   children: React.ReactNode;
 }) {
   const { user } = await auth();
-  if (!user) redirect("/");
+  if (!user) return redirect("/");
 
   const team = await db.query.teams.findFirst({
     where: eq(teams.id, user.activeTeamId),

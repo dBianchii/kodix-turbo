@@ -1,7 +1,7 @@
 import { Suspense } from "react";
-import { redirect } from "next/navigation";
 
 import { auth } from "@kdx/auth";
+import { redirect } from "@kdx/locales/navigation";
 import { getTranslations } from "@kdx/locales/server";
 import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
 import { H1, Lead } from "@kdx/ui/typography";

@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
 import { auth } from "@kdx/auth";
+import { redirect } from "@kdx/locales/navigation";
 import { getTranslations } from "@kdx/locales/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@kdx/ui/card";
 

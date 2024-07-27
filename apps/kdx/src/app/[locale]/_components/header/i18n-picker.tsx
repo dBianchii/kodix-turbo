@@ -3,47 +3,33 @@
 import { PiTranslate } from "react-icons/pi";
 
 import { useTranslations } from "@kdx/locales/client";
+import { Link, usePathname } from "@kdx/locales/navigation";
 import { Button } from "@kdx/ui/button";
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@kdx/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@kdx/ui/dropdown-menu";
 
 export function I18nPicker() {
+  const pathname = usePathname();
   const t = useTranslations();
   return (
-    <Popover>
-      <PopoverTrigger asChild>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
         <Button variant={"outline"} className="size-8 p-1">
           <PiTranslate className="size-5" />
         </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[180px] p-0">
-        <Command>
-          <CommandInput placeholder={`${t("Search language")}...`} />
-          <CommandEmpty>{t("No languages found")}</CommandEmpty>
-          <CommandGroup>
-            <CommandItem
-              onSelect={() => {
-                // changeLocale("pt-BR");
-              }}
-            >
-              {t("Portuguese Brazil")}
-            </CommandItem>
-            <CommandItem
-              onSelect={() => {
-                // changeLocale("en");
-              }}
-            >
-              {t("English")}
-            </CommandItem>
-          </CommandGroup>
-        </Command>
-      </PopoverContent>
-    </Popover>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <Link href={pathname} locale="pt-BR">
+          <DropdownMenuItem>{t("Portuguese Brazil")}</DropdownMenuItem>
+        </Link>
+        <Link href={pathname} locale="en">
+          <DropdownMenuItem>{t("English")}</DropdownMenuItem>
+        </Link>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

@@ -11,7 +11,8 @@
     "./hooks": "./src/hooks/index.ts",
     "./server-hooks": "./src/hooks/server-hooks.ts",
     "./plugin": "./src/plugin.js",
-    "./messages": "./src/messages/**/*.json"
+    "./messages": "./src/messages/**/*.json",
+    "./navigation": "./src/navigation.ts"
   },
   "scripts": {
     "dev": "nodemon --watch ./src/lang --ext json --exec \"pnpm run generate\"",

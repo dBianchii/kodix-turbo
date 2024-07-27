@@ -1,10 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
 import { LuArrowRight, LuLoader2 } from "react-icons/lu";
 
 import { useTranslations } from "@kdx/locales/client";
+import { useRouter } from "@kdx/locales/navigation";
 import { Button } from "@kdx/ui/button";
 import {
   Card,

@@ -1,7 +1,7 @@
 import { Suspense } from "react";
-import { redirect } from "next/navigation";
 
 import { auth } from "@kdx/auth";
+import { redirect } from "@kdx/locales/navigation";
 import { getTranslations } from "@kdx/locales/server";
 
 import { AddTeamDialogButton } from "~/app/[locale]/account/teams/_components/add-team-dialog-button/add-team-dialog-button";
@@ -10,7 +10,7 @@ import { EditUserTeamsTable } from "./_components/edit-users-teams-card/edit-use
 
 export default async function Teams() {
   const { user } = await auth();
-  if (!user) redirect("/");
+  if (!user) return redirect("/");
   const t = await getTranslations();
   return (
     <div className="mt-8 space-y-8 md:mt-0">

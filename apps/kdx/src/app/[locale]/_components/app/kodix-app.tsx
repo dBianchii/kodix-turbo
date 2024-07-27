@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { LuLoader2 } from "react-icons/lu";
 import { RxDotsHorizontal, RxTrash } from "react-icons/rx";
 
@@ -11,6 +10,7 @@ import type { User } from "@kdx/auth";
 import type { KodixAppId } from "@kdx/shared";
 import { useTranslations } from "@kdx/locales/client";
 import { useAppDescription, useAppName } from "@kdx/locales/hooks";
+import { useRouter } from "@kdx/locales/navigation";
 import { kodixCareAppId } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { Badge } from "@kdx/ui/badge";

@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
 import { IoApps } from "react-icons/io5";
 import { RxCaretSort, RxCheck, RxPlusCircled } from "react-icons/rx";
 
@@ -10,6 +9,7 @@ import type { RouterOutputs } from "@kdx/api";
 import type { KodixAppId } from "@kdx/shared";
 import { useTranslations } from "@kdx/locales/client";
 import { useAppName } from "@kdx/locales/hooks";
+import { usePathname, useRouter } from "@kdx/locales/navigation";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import {
@@ -42,7 +42,7 @@ export function AppSwitcherClient({
 }) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  const t = useTranslations("header");
+  const t = useTranslations();
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -56,7 +56,10 @@ export function AppSwitcherClient({
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder={`${t("Search app")}...`} className="h-9" />
+          <CommandInput
+            placeholder={`${t("header.Search app")}...`}
+            className="h-9"
+          />
           <CommandEmpty>{t("No apps found")}</CommandEmpty>
           <CommandGroup>
             {apps.map((app) => {

@@ -2,13 +2,14 @@
 
 import type { DateRange } from "react-day-picker";
 import * as React from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { RxCalendar } from "react-icons/rx";
 
 import type { ButtonProps } from "@kdx/ui/button";
 import { addDays, format } from "@kdx/date-fns";
 import { useFormatter } from "@kdx/locales";
 import { useTranslations } from "@kdx/locales/client";
+import { usePathname, useRouter } from "@kdx/locales/navigation";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import { Calendar } from "@kdx/ui/calendar";

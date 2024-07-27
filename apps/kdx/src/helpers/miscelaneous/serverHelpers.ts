@@ -1,7 +1,6 @@
-import { redirect } from "next/navigation";
-
 import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
+import { redirect } from "@kdx/locales/navigation";
 
 import { api } from "~/trpc/server";
 

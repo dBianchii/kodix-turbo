@@ -1,9 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { LuLoader2 } from "react-icons/lu";
 
 import { useTranslations } from "@kdx/locales/client";
+import { useRouter } from "@kdx/locales/navigation";
 import { getErrorMessage } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";

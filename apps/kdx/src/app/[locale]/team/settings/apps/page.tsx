@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { RxPlusCircled } from "react-icons/rx";
 
 import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
+import { redirect } from "@kdx/locales/navigation";
 import { getTranslations } from "@kdx/locales/server";
 
 import { KodixApp } from "~/app/[locale]/_components/app/kodix-app";

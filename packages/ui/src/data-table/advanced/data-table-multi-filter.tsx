@@ -1,6 +1,6 @@
 import type { Table } from "@tanstack/react-table";
 import * as React from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation"; //TODO: 'next' dependency in @kdx/ui ? no no
+import { useSearchParams } from "next/navigation"; //TODO: 'next' dependency in @kdx/ui ? no no
 import {
   CopyIcon,
   DotsHorizontalIcon,
@@ -10,6 +10,7 @@ import {
 
 import type { DataTableConfig } from "@kdx/shared";
 import { useTranslations } from "@kdx/locales/client";
+import { usePathname, useRouter } from "@kdx/locales/navigation";
 import { dataTableConfig } from "@kdx/shared";
 
 import type { DataTableFilterOption } from "./types";

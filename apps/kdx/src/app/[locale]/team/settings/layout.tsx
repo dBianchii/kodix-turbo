@@ -1,7 +1,7 @@
-import { redirect } from "next/navigation";
 import { RxChevronRight } from "react-icons/rx";
 
 import { auth } from "@kdx/auth";
+import { redirect } from "@kdx/locales/navigation";
 import { getTranslations } from "@kdx/locales/server";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
@@ -15,7 +15,7 @@ export default async function SettingsLayout({
   children: React.ReactNode;
 }) {
   const { user } = await auth();
-  if (!user) redirect("/");
+  if (!user) return redirect("/");
   const team = await api.team.getActiveTeam();
   const t = await getTranslations();
 
