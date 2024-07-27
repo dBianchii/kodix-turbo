@@ -6,7 +6,7 @@ import { Frequency, RRule } from "rrule";
 
 import type { Dayjs } from "@kdx/dayjs";
 import dayjs from "@kdx/dayjs";
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/client";
 import { cn } from "@kdx/ui";
 import {
   AlertDialog,
@@ -121,7 +121,7 @@ export function RecurrencePicker({
 
   const [parent] = useAutoAnimate();
 
-  const t = useI18n();
+  const t = useTranslations();
 
   return (
     <>
@@ -366,7 +366,7 @@ export function FrequencyToTxtWithEvery({
 }: {
   frequency: Frequency;
 }) {
-  const t = useI18n();
+  const t = useTranslations();
   switch (frequency) {
     case RRule.DAILY:
       return t("Every day");

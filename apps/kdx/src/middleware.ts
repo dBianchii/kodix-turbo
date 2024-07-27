@@ -1,11 +1,12 @@
 import type { NextRequest } from "next/server";
 
-import { createI18nMiddleware } from "@kdx/locales";
+import { createMiddleware } from "@kdx/locales";
+import { defaultLocale, locales } from "@kdx/locales/locales";
 
-const I18nMiddleware = createI18nMiddleware({
-  locales: ["pt-BR", "en"],
-  defaultLocale: "pt-BR",
-  urlMappingStrategy: "rewriteDefault",
+const I18nMiddleware = createMiddleware({
+  locales: locales,
+  defaultLocale: defaultLocale,
+  localePrefix: "as-needed",
 });
 
 export function middleware(request: NextRequest) {
@@ -13,5 +14,13 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|static|.*\\..*|_next|favicon.ico|robots.txt).*)"],
+  // matcher: ["/((?!api|static|.*\\..*|_next|favicon.ico|robots.txt).*)"],
+  matcher: [
+    // Match all pathnames except for
+    // - … if they start with `/api`, `/_next` or `/_vercel`
+    // - … the ones containing a dot (e.g. `favicon.ico`)
+    "/((?!api|_next|_vercel|.*\\..*).*)",
+    // Match all pathnames within `/users`, optionally with a locale prefix
+    "/(.+)?/users/(.+)",
+  ],
 };

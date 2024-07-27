@@ -10,7 +10,8 @@ import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/client";
+import { cn } from "@kdx/ui";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Button } from "@kdx/ui/button";
 import {
@@ -28,6 +29,12 @@ import {
   TableRow,
 } from "@kdx/ui/table";
 import { toast } from "@kdx/ui/toast";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@kdx/ui/tooltip";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
@@ -35,14 +42,20 @@ import { api } from "~/trpc/react";
 const columnHelper =
   createColumnHelper<RouterOutputs["team"]["getAllUsers"][number]>();
 
-export function DataTableMembers({ user }: { user: User }) {
+export function DataTableMembers({
+  user,
+  canEditPage,
+}: {
+  user: User;
+  canEditPage: boolean;
+}) {
   const { data } = api.team.getAllUsers.useQuery(undefined);
 
   const utils = api.useUtils();
-  const t = useI18n();
+  const t = useTranslations();
   const { mutate } = api.team.removeUser.useMutation({
     onSuccess: () => {
-      toast(t("User removed from team"));
+      toast.success(t("User removed from team"));
       void utils.team.getAllUsers.invalidate();
     },
     onError: (e) => trpcErrorToastDefault(e),
@@ -75,28 +88,49 @@ export function DataTableMembers({ user }: { user: User }) {
     columnHelper.display({
       id: "actions",
       cell: function Cell(info) {
+        if (info.row.original.id === user.id) return null;
+
         return (
           <div className="flex justify-end">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
-                  <span className="sr-only">{t("Open menu")}</span>
-                  <RxDotsHorizontal className="size-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                  className="text-destructive"
-                  onSelect={() => {
-                    mutate({
-                      userId: info.row.original.id,
-                    });
-                  }}
-                >
-                  {info.row.original.id === user.id ? t("Leave") : t("Remove")}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <TooltipProvider>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="h-8 w-8 p-0">
+                    <span className="sr-only">{t("Open menu")}</span>
+                    <RxDotsHorizontal className="size-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div>
+                        <DropdownMenuItem
+                          disabled={!canEditPage}
+                          className="text-destructive"
+                          onSelect={() => {
+                            mutate({
+                              userId: info.row.original.id,
+                            });
+                          }}
+                        >
+                          {t("Remove")}
+                        </DropdownMenuItem>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent
+                      side="left"
+                      className={cn("bg-background", {
+                        hidden: canEditPage, // Only show tooltip if the user can't edit page
+                      })}
+                    >
+                      <p>
+                        {t("Only the owner of the team can remove members")}
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </TooltipProvider>
           </div>
         );
       },

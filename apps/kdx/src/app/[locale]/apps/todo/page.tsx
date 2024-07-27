@@ -1,4 +1,4 @@
-import { getI18n } from "@kdx/locales/server";
+import { getTranslations } from "@kdx/locales/server";
 import { todoAppId } from "@kdx/shared";
 import { Separator } from "@kdx/ui/separator";
 import { H1 } from "@kdx/ui/typography";
@@ -16,7 +16,7 @@ export default async function TodoPage() {
   });
 
   const initialData = await api.app.todo.getAll();
-  const t = await getI18n();
+  const t = await getTranslations();
   return (
     <MaxWidthWrapper>
       <div className="flex space-x-4">

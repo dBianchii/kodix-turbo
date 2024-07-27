@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useAction } from "next-safe-action/hooks";
 import { LuLoader2 } from "react-icons/lu";
 
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
 import {
   Form,
@@ -22,7 +22,7 @@ import { signInAction } from "./actions";
 import { ZSigninActionSchema } from "./schema";
 
 export function PasswordSignInForm({ callbackUrl }: { callbackUrl?: string }) {
-  const t = useI18n();
+  const t = useTranslations();
   const form = useForm({
     schema: ZSigninActionSchema,
   });

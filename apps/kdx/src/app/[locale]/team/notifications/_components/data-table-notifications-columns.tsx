@@ -4,8 +4,8 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { RxDotsHorizontal, RxExternalLink } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
-import { format } from "@kdx/date-fns";
-import { useCurrentLocale, useI18n } from "@kdx/locales/client";
+import { useFormatter } from "@kdx/locales";
+import { useTranslations } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
 import { Checkbox } from "@kdx/ui/checkbox";
 import { DataTableColumnHeader } from "@kdx/ui/data-table/data-table-column-header";
@@ -28,7 +28,7 @@ export function getColumns() {
     columnHelper.display({
       id: "select",
       header: function Header({ table }) {
-        const t = useI18n();
+        const t = useTranslations();
         <Checkbox
           checked={
             table.getIsAllPageRowsSelected() ||
@@ -40,7 +40,7 @@ export function getColumns() {
         />;
       },
       cell: function Cell({ row }) {
-        const t = useI18n();
+        const t = useTranslations();
 
         return (
           <Checkbox
@@ -56,7 +56,7 @@ export function getColumns() {
     }),
     columnHelper.accessor("subject", {
       header: function Header({ column }) {
-        const t = useI18n();
+        const t = useTranslations();
         return <DataTableColumnHeader column={column} title={t("Subject")} />;
       },
       cell: ({ row }) => <div className="w-20">{row.original.subject}</div>,
@@ -65,7 +65,7 @@ export function getColumns() {
     }),
     columnHelper.accessor("channel", {
       header: function Header({ column }) {
-        const t = useI18n();
+        const t = useTranslations();
         return <DataTableColumnHeader column={column} title={t("Channel")} />;
       },
       cell: ({ row }) => {
@@ -81,17 +81,23 @@ export function getColumns() {
     }),
     columnHelper.accessor("sentAt", {
       header: function Header({ column }) {
-        const t = useI18n();
+        const t = useTranslations();
         return <DataTableColumnHeader column={column} title={t("Sent at")} />;
       },
       cell: function Cell({ cell }) {
-        const locale = useCurrentLocale();
-        return format(cell.row.original.sentAt, "PPP, HH:mm", locale);
+        const format = useFormatter();
+        return format.dateTime(cell.row.original.sentAt, {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+        });
       },
     }),
     columnHelper.accessor("teamId", {
       header: function Header({ column }) {
-        const t = useI18n();
+        const t = useTranslations();
         return <DataTableColumnHeader column={column} title={t("Team")} />;
       },
       cell: function Cell({ row }) {
@@ -103,7 +109,7 @@ export function getColumns() {
       cell: function Cell({ row }) {
         const [showDeleteTaskDialog, setShowDeleteTaskDialog] =
           React.useState(false);
-        const t = useI18n();
+        const t = useTranslations();
         return (
           <>
             {/* <UpdateTaskSheet

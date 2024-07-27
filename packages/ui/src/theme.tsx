@@ -4,7 +4,7 @@ import * as React from "react";
 import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import { ThemeProvider, useTheme } from "next-themes";
 
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/client";
 
 import { Button } from "./button";
 import {
@@ -16,7 +16,7 @@ import {
 
 function ThemeToggle() {
   const { setTheme } = useTheme();
-  const t = useI18n();
+  const t = useTranslations();
 
   return (
     <DropdownMenu>

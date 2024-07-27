@@ -1,7 +1,6 @@
-import { redirect } from "next/navigation";
-
 import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
+import { redirect } from "@kdx/locales/navigation";
 
 import { api } from "~/trpc/server";
 
@@ -17,11 +16,11 @@ export const redirectIfAppNotInstalled = async ({
   customRedirect?: string;
 }) => {
   const { user } = await auth();
-  if (!user) redirect("/");
+  if (!user) return redirect("/");
   const installedApps = await api.app.getInstalled();
 
   if (!installedApps.some((x) => x.id === appId))
-    redirect(customRedirect ?? "/apps");
+    return redirect(customRedirect ?? "/apps");
 
   return user;
 };

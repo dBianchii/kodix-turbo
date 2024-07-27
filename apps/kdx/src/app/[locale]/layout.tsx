@@ -4,13 +4,18 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 
+import { LocaleProvider } from "@kdx/locales/provider";
+
 import { TailwindIndicator } from "~/app/[locale]/_components/tailwind-indicator";
 import { env } from "~/env";
 import { TRPCReactProvider } from "~/trpc/react";
 
 import "~/app/globals.css";
 
-import { LocaleProvider } from "@kdx/locales/provider";
+import { notFound } from "next/navigation";
+
+import { locales } from "@kdx/locales/locales";
+import { getMessages } from "@kdx/locales/server";
 import { kdxProductionURL } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { ThemeProvider, ThemeToggle } from "@kdx/ui/theme";
@@ -51,10 +56,13 @@ export const viewport: Viewport = {
 //   return getStaticParams();
 // }
 
-export default function RootLayout(props: {
+export default async function RootLayout(props: {
   children: React.ReactNode;
   params: { locale: string };
 }) {
+  if (!locales.includes(props.params.locale)) notFound();
+  const messages = await getMessages();
+
   return (
     <html lang={props.params.locale} suppressHydrationWarning>
       <CSPostHogProvider>
@@ -69,7 +77,7 @@ export default function RootLayout(props: {
           <Analytics />
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <Toaster richColors closeButton />
-            <LocaleProvider params={props.params}>
+            <LocaleProvider messages={messages}>
               <TRPCReactProvider>
                 <div className="flex min-h-screen flex-col">
                   <Header />

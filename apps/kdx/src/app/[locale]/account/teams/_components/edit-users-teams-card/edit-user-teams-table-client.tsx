@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { LuLoader2 } from "react-icons/lu";
 import { RxChevronLeft, RxDotsHorizontal } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/client";
+import { useRouter } from "@kdx/locales/navigation";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import {
@@ -30,7 +30,7 @@ export default function EditUserTeamsTableClient({
   teams: RouterOutputs["team"]["getAllForLoggedUser"];
   user: User;
 }) {
-  const t = useI18n();
+  const t = useTranslations();
   const currentTeam = user.activeTeamId;
   const sortedTeams = teams.sort((a, b) => {
     if (a.id === currentTeam) return -1;
@@ -71,7 +71,7 @@ function CustomRow({
   const [isHovered, setIsHovered] = useState(false);
   const [manageLoading, setManageLoading] = useState(false);
   const router = useRouter();
-  const t = useI18n();
+  const t = useTranslations();
   return (
     <TableRow
       key={team.id}
@@ -127,20 +127,20 @@ function CustomRow({
               )}
             </Button>
           </form>
-          <LeaveTeamDropdown user={user} />
+          <LeaveTeamDropdown teamId={team.id} />
         </div>
       </TableCell>
     </TableRow>
   );
 }
 
-function LeaveTeamDropdown({ user }: { user: User }) {
-  const t = useI18n();
+function LeaveTeamDropdown({ teamId }: { teamId: string }) {
+  const t = useTranslations();
   const utils = api.useUtils();
   const router = useRouter();
-  const { mutate } = api.team.removeUser.useMutation({
+  const { mutate } = api.team.leaveTeam.useMutation({
     onSuccess: () => {
-      toast(t("account.User removed from team"));
+      toast.success(t("account.You have left the team"));
       void utils.team.getAllUsers.invalidate();
       router.refresh();
     },
@@ -161,7 +161,7 @@ function LeaveTeamDropdown({ user }: { user: User }) {
           onClick={(e) => {
             e.stopPropagation();
             mutate({
-              userId: user.id,
+              teamId,
             });
           }}
         >

@@ -4,7 +4,7 @@ import { useAction } from "next-safe-action/hooks";
 import { LuLoader2 } from "react-icons/lu";
 import { z } from "zod";
 
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
 import { Checkbox } from "@kdx/ui/checkbox";
 import {
@@ -23,7 +23,7 @@ import { defaultSafeActionToastError } from "~/helpers/safe-action/default-actio
 import { signupAction } from "./actions";
 
 export function PasswordSignupForm({ invite }: { invite?: string }) {
-  const t = useI18n();
+  const t = useTranslations();
   const form = useForm({
     schema: ZSignupWithPasswordInputSchema.omit({
       invite: true,

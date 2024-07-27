@@ -6,7 +6,7 @@ import { LuLoader2 } from "react-icons/lu";
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
 import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
@@ -44,7 +44,7 @@ export function ToggleShiftButton({ user }: { user: User }) {
 
 function StartShiftDialogButton() {
   const [open, setOpen] = useState(false);
-  const t = useI18n();
+  const t = useTranslations();
 
   const utils = api.useUtils();
   const mutation = api.app.kodixCare.toggleShift.useMutation({
@@ -105,7 +105,7 @@ function StartShiftWarnPreviousPersonDialog() {
       trpcErrorToastDefault(err);
     },
   });
-  const t = useI18n();
+  const t = useTranslations();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -170,7 +170,7 @@ function DoCheckoutDialogButton({
       trpcErrorToastDefault(err);
     },
   });
-  const t = useI18n();
+  const t = useTranslations();
   return (
     <Dialog
       open={open}
