@@ -1,10 +1,11 @@
 import type { NextRequest } from "next/server";
 
 import { createMiddleware } from "@kdx/locales";
+import { defaultLocale, locales } from "@kdx/locales/locales";
 
 const I18nMiddleware = createMiddleware({
-  locales: ["pt-BR", "en"],
-  defaultLocale: "pt-BR",
+  locales: locales,
+  defaultLocale: defaultLocale,
   localePrefix: "as-needed",
 });
 

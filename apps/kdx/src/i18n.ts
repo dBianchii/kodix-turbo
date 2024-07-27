@@ -1,9 +1,8 @@
 /* eslint-disable */
 import { notFound } from "next/navigation";
 
-import { getRequestConfig } from "@kdx/locales";
-
-const locales = ["pt-BR", "en"];
+import { locales } from "@kdx/locales/locales";
+import { getRequestConfig } from "@kdx/locales/server";
 
 export default getRequestConfig(async ({ locale }) => {
   // Validate that the incoming `locale` parameter is valid

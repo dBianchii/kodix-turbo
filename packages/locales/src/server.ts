@@ -1,1 +1,5 @@
-export { getTranslations, getMessages } from "next-intl/server";
+export {
+  getTranslations,
+  getMessages,
+  getRequestConfig,
+} from "next-intl/server";

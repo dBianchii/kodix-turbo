@@ -14,6 +14,7 @@ import "~/app/globals.css";
 
 import { notFound } from "next/navigation";
 
+import { locales } from "@kdx/locales/locales";
 import { getMessages } from "@kdx/locales/server";
 import { kdxProductionURL } from "@kdx/shared";
 import { cn } from "@kdx/ui";
@@ -54,7 +55,6 @@ export const viewport: Viewport = {
 // export function generateStaticParams() {
 //   return getStaticParams();
 // }
-const locales = ["pt-BR", "en"];
 
 export default async function RootLayout(props: {
   children: React.ReactNode;

@@ -36,7 +36,7 @@ export const createTRPCContext = (opts: {
   const source = opts.headers.get("x-trpc-source") ?? "unknown";
   console.log(">>> tRPC Request from", source, "by", session?.user);
 
-  // const locale = cookies().get("NEXT_LOCALE")?.value ?? "pt-BR";
+  // const locale = cookies().get("NEXT_LOCALE")?.value ?? defaultLocale;
   // const t = await getTranslations({ locale });
 
   return {
