@@ -1,3 +1,5 @@
+import { TRPCError } from "@trpc/server";
+
 import type { TGetUsersWithRolesInputSchema } from "@kdx/validators/trpc/team/appRole";
 import { and, eq } from "@kdx/db";
 import { teamAppRoles, usersToTeams } from "@kdx/db/schema";

@@ -21,7 +21,9 @@ const appInstalledMiddlewareFactory = (appId: KodixAppId) =>
     if (!apps.some((app) => app.id === appId))
       throw new TRPCError({
         code: "UNAUTHORIZED",
-        message: `${await getAppName(appId)} is not installed`,
+        message: ctx.t("appName is not installed", {
+          app: await getAppName(appId),
+        }),
       });
 
     return next({ ctx });
@@ -73,7 +75,9 @@ export const appPermissionMiddleware = (permissionId: AppPermissionId) =>
     if (!foundPermission)
       throw new TRPCError({
         code: "UNAUTHORIZED",
-        message: `You don't have permission to do this. Contact a team administrator if you believe this is an error.`,
+        message: ctx.t(
+          "You dont have permission to do this Contact a team administrator if you believe this is an error",
+        ),
       });
 
     return next({ ctx });
@@ -93,7 +97,9 @@ export const appInstalledMiddleware = experimental_standaloneMiddleware<{
   if (!installed.some((app) => app.id === input.appId))
     throw new TRPCError({
       code: "UNAUTHORIZED",
-      message: `${await getAppName(input.appId)} is not installed`,
+      message: ctx.t("appName is not installed", {
+        app: await getAppName(input.appId),
+      }),
     });
 
   return next({ ctx });
