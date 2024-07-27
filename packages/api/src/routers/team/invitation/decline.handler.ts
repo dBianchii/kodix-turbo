@@ -22,7 +22,7 @@ export const declineHandler = async ({ ctx, input }: DeclineOptions) => {
 
   if (!invitation) {
     throw new TRPCError({
-      message: "No Invitation Found",
+      message: ctx.t("No Invitation Found"),
       code: "NOT_FOUND",
     });
   }

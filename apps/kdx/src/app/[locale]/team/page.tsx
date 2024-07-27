@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
 import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
-import { getI18n } from "@kdx/locales/server";
+import { redirect } from "@kdx/locales/navigation";
+import { getTranslations } from "@kdx/locales/server";
 import { Separator } from "@kdx/ui/separator";
 import { Skeleton } from "@kdx/ui/skeleton";
 
@@ -23,8 +23,8 @@ interface CustomApp {
 
 export default async function TeamPage() {
   const { user } = await auth();
-  if (!user) redirect("/");
-  const t = await getI18n();
+  if (!user) return redirect("/");
+  const t = await getTranslations();
 
   const customApps: CustomApp[] = [
     {

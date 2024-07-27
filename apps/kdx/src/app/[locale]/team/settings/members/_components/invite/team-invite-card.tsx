@@ -10,7 +10,7 @@ import {
 } from "react-icons/rx";
 
 import type { User } from "@kdx/auth";
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/client";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import {
@@ -48,7 +48,7 @@ export default function TeamInviteCardClient({
   const [emails, setEmails] = useState([{ key: 0, value: "" }]); //key is used to work with formkit
   const [successes, setSuccesses] = useState<string[]>([]);
 
-  const t = useI18n();
+  const t = useTranslations();
 
   const mutation = api.team.invitation.invite.useMutation({
     onSuccess: ({ successes, failures }) => {

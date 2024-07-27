@@ -1,9 +1,9 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 import { auth, lucia } from "@kdx/auth";
+import { redirect } from "@kdx/locales/navigation";
 
 export async function signOutAction() {
   const { session } = await auth();

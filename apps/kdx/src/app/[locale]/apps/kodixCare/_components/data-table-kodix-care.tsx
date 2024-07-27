@@ -15,9 +15,9 @@ import { RxChevronLeft, RxChevronRight, RxLockClosed } from "react-icons/rx";
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
 import type { TGetCareTasksInputSchema } from "@kdx/validators/trpc/app/kodixCare";
-import { format } from "@kdx/date-fns";
 import dayjs from "@kdx/dayjs";
-import { useCurrentLocale, useI18n } from "@kdx/locales/client";
+import { useFormatter } from "@kdx/locales";
+import { useTranslations } from "@kdx/locales/client";
 import { cn } from "@kdx/ui";
 import {
   AlertDialog,
@@ -74,8 +74,6 @@ import { api } from "~/trpc/react";
 type CareTask = RouterOutputs["app"]["kodixCare"]["getCareTasks"][number];
 const columnHelper = createColumnHelper<CareTask>();
 
-const DATE_FORMAT = "PPP, HH:mm";
-
 export default function DataTableKodixCare({
   initialCareTasks,
   initialInput,
@@ -105,6 +103,7 @@ export default function DataTableKodixCare({
   const [currentlyEditing, setCurrentlyEditing] = useState<string | undefined>(
     undefined,
   );
+  const format = useFormatter();
 
   const mutation = api.app.kodixCare.saveCareTask.useMutation({
     onMutate: async (savedCareTask) => {
@@ -147,8 +146,7 @@ export default function DataTableKodixCare({
       void utils.app.kodixCare.getCareTasks.invalidate();
     },
   });
-  const t = useI18n();
-  const locale = useCurrentLocale();
+  const t = useTranslations();
 
   const columns = [
     columnHelper.accessor("title", {
@@ -190,7 +188,15 @@ export default function DataTableKodixCare({
         );
       },
       cell: (ctx) => (
-        <div>{format(ctx.row.original.date, DATE_FORMAT, locale)}</div>
+        <div>
+          {format.dateTime(ctx.row.original.date, {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+          })}
+        </div>
       ),
     }),
     columnHelper.accessor("doneAt", {
@@ -209,7 +215,15 @@ export default function DataTableKodixCare({
         if (!ctx.row.original.id) return null;
         if (!ctx.row.original.doneAt) return null;
         return (
-          <div>{format(ctx.row.original.doneAt, DATE_FORMAT, locale)}</div>
+          <div>
+            {format.dateTime(ctx.row.original.doneAt, {
+              day: "2-digit",
+              month: "long",
+              year: "numeric",
+              hour: "numeric",
+              minute: "numeric",
+            })}
+          </div>
         );
       },
     }),
@@ -444,7 +458,7 @@ function UnlockMoreTasksDialog({
   setOpen: (open: boolean) => void;
 }) {
   const utils = api.useUtils();
-  const t = useI18n();
+  const t = useTranslations();
   const mutation = api.app.kodixCare.unlockMoreTasks.useMutation({
     onSuccess: () => {
       void utils.app.kodixCare.getCareTasks.invalidate();
@@ -505,7 +519,7 @@ function EditCareTaskDialog({
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
-  const t = useI18n();
+  const t = useTranslations();
 
   const defaultValues = useMemo(
     () => ({
@@ -646,7 +660,7 @@ function SaveTaskAsDoneDialog({
     form.reset(defaultValues);
   }, [defaultValues, form, open]);
 
-  const t = useI18n();
+  const t = useTranslations();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -745,7 +759,7 @@ function SaveTaskAsNotDoneDialog({
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
-  const t = useI18n();
+  const t = useTranslations();
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>

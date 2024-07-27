@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
 import { auth } from "@kdx/auth";
-import { getI18n } from "@kdx/locales/server";
+import { redirect } from "@kdx/locales/navigation";
+import { getTranslations } from "@kdx/locales/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@kdx/ui/card";
 
 import { ProviderButtons } from "../_components/provider-buttons";
@@ -15,7 +15,7 @@ export default async function SignInPage({
 }) {
   const { user } = await auth();
   if (user) redirect(searchParams?.callbackUrl ?? "/");
-  const t = await getI18n();
+  const t = await getTranslations();
 
   let signUpHref = "/signup";
   if (searchParams?.invite) signUpHref += `?invite=${searchParams.invite}`;

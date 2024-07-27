@@ -1,9 +1,9 @@
-import { redirect } from "next/navigation";
 import { RxChevronRight } from "react-icons/rx";
 
 import { auth } from "@kdx/auth";
-import { getI18n } from "@kdx/locales/server";
-// import { getI18n, setStaticParamsLocale } from "@kdx/locales/server";
+import { redirect } from "@kdx/locales/navigation";
+import { getTranslations } from "@kdx/locales/server";
+// import { getTranslations, setStaticParamsLocale } from "@kdx/locales/server";
 import { cn } from "@kdx/ui";
 import { buttonVariants } from "@kdx/ui/button";
 import { RadialGradient } from "@kdx/ui/magic-ui/radial-gradient";
@@ -17,7 +17,7 @@ export default async function HomePage() {
 
   const { user } = await auth();
   if (user) redirect("/team");
-  const t = await getI18n();
+  const t = await getTranslations();
 
   return (
     <>

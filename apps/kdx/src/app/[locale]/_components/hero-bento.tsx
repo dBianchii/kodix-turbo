@@ -1,6 +1,6 @@
 import { RxCalendar, RxCube, RxGlobe, RxInput } from "react-icons/rx";
 
-import { getI18n } from "@kdx/locales/server";
+import { getTranslations } from "@kdx/locales/server";
 import { getAppName } from "@kdx/locales/server-hooks";
 import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
 import { cn } from "@kdx/ui";
@@ -20,25 +20,25 @@ import Marquee from "@kdx/ui/magic-ui/marquee";
 import { IconKodixApp } from "./app/kodix-icon";
 
 export async function HeroBento() {
-  const t = await getI18n();
+  const t = await getTranslations();
   const apps = [
     {
       icon: (
         <IconKodixApp appId={kodixCareAppId} size={20} renderText={false} />
       ),
-      name: getAppName(kodixCareAppId),
+      name: await getAppName(kodixCareAppId),
       body: t(
         "The ultimate solution for managing your home clinic or your home care",
       ),
     },
     {
       icon: <IconKodixApp appId={calendarAppId} size={20} renderText={false} />,
-      name: getAppName(calendarAppId),
+      name: await getAppName(calendarAppId),
       body: t("The unified calendar system that integrates with all your apps"),
     },
     {
       icon: <IconKodixApp appId={todoAppId} size={20} renderText={false} />,
-      name: getAppName(todoAppId),
+      name: await getAppName(todoAppId),
       body: t("A simple todo app that integrates with all your apps"),
     },
   ];

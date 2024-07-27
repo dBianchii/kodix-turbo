@@ -21,18 +21,18 @@ export const doCheckoutForShiftHandler = async ({
   if (!currentShift) {
     throw new TRPCError({
       code: "NOT_FOUND",
-      message: "No current shift found",
+      message: ctx.t("No current shift found"),
     });
   }
   if (currentShift.Caregiver.id !== ctx.session.user.id)
     throw new TRPCError({
       code: "FORBIDDEN",
-      message: "You are not the caregiver for this shift",
+      message: ctx.t("You are not the caregiver for this shift"),
     });
   if (dayjs(input.date).isBefore(dayjs(currentShift.checkOut)))
     throw new TRPCError({
       code: "BAD_REQUEST",
-      message: "Checkout time must be after checkin time",
+      message: ctx.t("Checkout time must be after checkin time"),
     });
 
   await ctx.db

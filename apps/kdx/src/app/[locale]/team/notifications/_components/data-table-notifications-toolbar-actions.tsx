@@ -4,7 +4,7 @@ import type { Table } from "@tanstack/react-table";
 import { RxDownload } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/client";
 import { Button } from "@kdx/ui/button";
 import { exportTableToCSV } from "@kdx/ui/data-table/export";
 
@@ -15,7 +15,7 @@ interface TasksTableToolbarActionsProps {
 export function DataTableNotificationsToolbarActions({
   table,
 }: TasksTableToolbarActionsProps) {
-  const t = useI18n();
+  const t = useTranslations();
   return (
     <div className="flex items-center gap-2">
       <Button

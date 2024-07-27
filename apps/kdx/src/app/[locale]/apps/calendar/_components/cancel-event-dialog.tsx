@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { LuLoader2 } from "react-icons/lu";
 
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/client";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -48,7 +48,7 @@ export function CancelationDialog({
       trpcErrorToastDefault(err);
     },
   });
-  const t = useI18n();
+  const t = useTranslations();
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>

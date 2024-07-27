@@ -2,12 +2,14 @@
 
 import type { DateRange } from "react-day-picker";
 import * as React from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { addDays, format } from "date-fns";
 import { RxCalendar } from "react-icons/rx";
 
 import type { ButtonProps } from "@kdx/ui/button";
-import { addDays, format } from "@kdx/date-fns";
-import { useCurrentLocale, useI18n } from "@kdx/locales/client";
+import { useFormatter } from "@kdx/locales";
+import { useTranslations } from "@kdx/locales/client";
+import { usePathname, useRouter } from "@kdx/locales/navigation";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import { Calendar } from "@kdx/ui/calendar";
@@ -72,7 +74,7 @@ export function NotificationsDateRangePicker({
   ...props
 }: NotificationsDateRangePickerProps) {
   const router = useRouter();
-  const t = useI18n();
+  const t = useTranslations();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -103,18 +105,17 @@ export function NotificationsDateRangePicker({
     from,
     to,
   });
-  const locale = useCurrentLocale();
   // Update query string
   React.useEffect(() => {
     const newSearchParams = new URLSearchParams(searchParams);
     if (date?.from) {
-      newSearchParams.set("from", format(date.from, "yyyy-MM-dd", locale));
+      newSearchParams.set("from", format(date.from, "yyyy-MM-dd"));
     } else {
       newSearchParams.delete("from");
     }
 
     if (date?.to) {
-      newSearchParams.set("to", format(date.to, "yyyy-MM-dd", locale));
+      newSearchParams.set("to", format(date.to, "yyyy-MM-dd"));
     } else {
       newSearchParams.delete("to");
     }
@@ -125,7 +126,7 @@ export function NotificationsDateRangePicker({
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date?.from, date?.to]);
-
+  const formatT = useFormatter();
   return (
     <div className="grid gap-2">
       <Popover>
@@ -143,11 +144,24 @@ export function NotificationsDateRangePicker({
             {date?.from ? (
               date.to ? (
                 <>
-                  {format(date.from, "LLL dd, y", locale)} -{" "}
-                  {format(date.to, "LLL dd, y", locale)}
+                  {formatT.dateTime(date.from, {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}{" "}
+                  -{" "}
+                  {formatT.dateTime(date.to, {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
                 </>
               ) : (
-                format(date.from, "LLL dd, y", locale)
+                formatT.dateTime(date.from, {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })
               )
             ) : (
               <span>{placeholder}</span>

@@ -1,12 +1,12 @@
 import Link from "next/link";
 
-import { getI18n } from "@kdx/locales/server";
+import { getTranslations } from "@kdx/locales/server";
 
 import HeaderFooterRemover from "~/app/[locale]/_components/header-footer-remover";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 
 export async function Footer() {
-  const t = await getI18n();
+  const t = await getTranslations();
   return (
     <HeaderFooterRemover>
       <footer className="bg-foreground/5">
