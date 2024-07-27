@@ -22,8 +22,9 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
   const isUserTryingToRemoveSelfFromTeam = input.userId === ctx.session.user.id;
   if (isUserTryingToRemoveSelfFromTeam) {
     throw new TRPCError({
-      message:
-        "You cannot remove yourself from a team you are an owner of. Delete this team instead",
+      message: ctx.t(
+        "You cannot remove yourself from a team you are an owner of Delete this team instead",
+      ),
       code: "FORBIDDEN",
     });
   }

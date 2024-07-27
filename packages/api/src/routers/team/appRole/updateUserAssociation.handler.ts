@@ -44,7 +44,9 @@ export const updateUserAssociationHandler = async ({
         )
       ) {
         throw new TRPCError({
-          message: "You cannot remove yourself from the Administrator role",
+          message: ctx.t(
+            "You cannot remove yourself from the Administrator role",
+          ),
           code: "BAD_REQUEST",
         });
       }
