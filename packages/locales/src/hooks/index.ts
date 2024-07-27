@@ -11,11 +11,11 @@ import {
 } from "@kdx/shared";
 
 import { useTranslations } from "../client";
-import { appIdToName, appPermissionIdToName } from "../internal";
+import { appIdToName, appPermissionIdToName } from "./internal";
 
 export const useAppName = (appId: KodixAppId) => {
   const t = useTranslations();
-  return appIdToName(t)[appId];
+  return t(appIdToName[appId]);
 };
 
 export const useAppDescription = (appId: KodixAppId) => {
@@ -44,5 +44,5 @@ export const useAppRoleDefaultNames = () => {
 
 export const useAppPermissionName = (appPermissionId: AppPermissionId) => {
   const t = useTranslations();
-  return appPermissionIdToName(t)[appPermissionId];
+  return t(appPermissionIdToName[appPermissionId]);
 };

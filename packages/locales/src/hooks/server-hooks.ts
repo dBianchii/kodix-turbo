@@ -1,9 +1,9 @@
 import type { KodixAppId } from "@kdx/shared";
 
-import { appIdToName } from "../internal";
 import { getTranslations } from "../server";
+import { appIdToName } from "./internal";
 
 export const getAppName = async (appId: KodixAppId) => {
   const t = await getTranslations();
-  return appIdToName(t)[appId];
+  return t(appIdToName[appId]);
 };
