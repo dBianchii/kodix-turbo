@@ -26,19 +26,19 @@ export async function HeroBento() {
       icon: (
         <IconKodixApp appId={kodixCareAppId} size={20} renderText={false} />
       ),
-      name: getAppName(kodixCareAppId),
+      name: await getAppName(kodixCareAppId),
       body: t(
         "The ultimate solution for managing your home clinic or your home care",
       ),
     },
     {
       icon: <IconKodixApp appId={calendarAppId} size={20} renderText={false} />,
-      name: getAppName(calendarAppId),
+      name: await getAppName(calendarAppId),
       body: t("The unified calendar system that integrates with all your apps"),
     },
     {
       icon: <IconKodixApp appId={todoAppId} size={20} renderText={false} />,
-      name: getAppName(todoAppId),
+      name: await getAppName(todoAppId),
       body: t("A simple todo app that integrates with all your apps"),
     },
   ];
