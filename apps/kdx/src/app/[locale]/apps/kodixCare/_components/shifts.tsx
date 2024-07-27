@@ -5,8 +5,8 @@ import { IoMdTime } from "react-icons/io";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
-import { formatRelative } from "@kdx/date-fns";
-import { useCurrentLocale, useI18n } from "@kdx/locales/client";
+import { useFormatter } from "@kdx/locales";
+import { useTranslations } from "@kdx/locales/client";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Badge } from "@kdx/ui/badge";
 import { Label } from "@kdx/ui/label";
@@ -35,7 +35,7 @@ export function CurrentShiftClient({
 }
 
 export function NoPreviousShift({ user }: { user: User }) {
-  const t = useI18n();
+  const t = useTranslations();
 
   return (
     <div className="flex flex-col space-y-3">
@@ -64,7 +64,7 @@ export function ShiftInProgress({
     RouterOutputs["app"]["kodixCare"]["getCurrentShift"]
   >;
 }) {
-  const t = useI18n();
+  const t = useTranslations();
   return (
     <div className="flex flex-col space-y-3">
       <div className="flex flex-row items-center space-x-3">
@@ -98,7 +98,7 @@ export function ShiftCheckedOut({
     RouterOutputs["app"]["kodixCare"]["getCurrentShift"]
   >;
 }) {
-  const t = useI18n();
+  const t = useTranslations();
   return (
     <div className="flex flex-col space-y-3">
       <div className="flex flex-row items-center space-x-3">
@@ -130,8 +130,9 @@ function TimeInfo({
     RouterOutputs["app"]["kodixCare"]["getCurrentShift"]
   >;
 }) {
-  const t = useI18n();
-  const locale = useCurrentLocale();
+  const t = useTranslations();
+  const format = useFormatter();
+
   return (
     <div className="flex items-center justify-start">
       <div className="col mr-4">
@@ -147,7 +148,7 @@ function TimeInfo({
           variant={"outline"}
           className="w-24 py-0 text-center text-xs text-muted-foreground"
         >
-          {formatRelative(currentShift.checkIn, new Date(), locale)}
+          {format.relativeTime(currentShift.checkIn, new Date())}
         </Badge>
       </div>
       {currentShift.checkOut && (
@@ -160,7 +161,7 @@ function TimeInfo({
             variant={"outline"}
             className="w-24 py-0 text-center text-xs text-muted-foreground"
           >
-            {formatRelative(currentShift.checkOut, new Date(), locale)}
+            {format.relativeTime(currentShift.checkOut, new Date())}
           </Badge>
         </div>
       )}

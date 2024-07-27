@@ -1,9 +1,10 @@
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import { auth } from "@kdx/auth";
 import { eq, sql } from "@kdx/db";
 import { db } from "@kdx/db/client";
 import { usersToTeams } from "@kdx/db/schema";
+import { redirect } from "@kdx/locales/navigation";
 
 const allTeamIdsForUserQuery = db
   .select({ id: usersToTeams.teamId })
@@ -27,7 +28,7 @@ const prepared = db.query.notifications
 
 export async function GET(request: Request) {
   const { user } = await auth();
-  if (!user) redirect("/");
+  if (!user) return redirect("/");
 
   const notif = await prepared.execute({
     id: request.url.split("/").pop(),

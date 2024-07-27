@@ -4,6 +4,6 @@
     "lib": ["dom", "dom.iterable", "ES2022"],
     "jsx": "preserve"
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.json"],
+  "include": ["**/*.ts", "**/*.tsx", "**/*.json", "src/plugin.js"],
   "exclude": ["node_modules"]
 }
