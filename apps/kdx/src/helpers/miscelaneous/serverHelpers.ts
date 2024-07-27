@@ -16,11 +16,11 @@ export const redirectIfAppNotInstalled = async ({
   customRedirect?: string;
 }) => {
   const { user } = await auth();
-  if (!user) redirect("/");
+  if (!user) return redirect("/");
   const installedApps = await api.app.getInstalled();
 
   if (!installedApps.some((x) => x.id === appId))
-    redirect(customRedirect ?? "/apps");
+    return redirect(customRedirect ?? "/apps");
 
   return user;
 };

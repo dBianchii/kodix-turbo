@@ -14,7 +14,7 @@ import TeamInviteCard from "./_components/invite/team-invite-card";
 
 export default async function SettingsMembersPage() {
   const { user } = await auth();
-  if (!user) redirect("/");
+  if (!user) return redirect("/");
   const t = await getTranslations();
 
   const currentTeam = await db.query.teams.findFirst({
