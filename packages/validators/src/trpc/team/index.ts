@@ -23,16 +23,14 @@ export type TRemoveUserSchema = z.infer<typeof ZRemoveUserSchema>;
 export const ZUpdateInputSchema = (t: ClientOrServerT) =>
   z.object({
     teamId: ZNanoId,
-    teamName: z.string().regex(/^[a-zA-Z0-9_]*$/, {
-      message: t("customErrors.admin_username_error"),
-    }),
-    // .min(3, {
-    //   message: "admin_username_error",
-    // })
-    // .max(32)
-    // .refine((value) => value !== "admin", {
-    //   params: { i18n: "admin_username_error" },
-    // }),
+    teamName: z
+      .string()
+      .min(3, {
+        message: t("validators.Team name must be at least 3 characters"),
+      })
+      .max(32, {
+        message: t("validators.Team name must be at most 32 characters"),
+      }),
   });
 export type TUpdateInputSchema = z.infer<ReturnType<typeof ZUpdateInputSchema>>;
 

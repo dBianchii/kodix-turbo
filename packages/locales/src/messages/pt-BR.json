@@ -431,5 +431,9 @@
   },
   "form": {
     "teamName": "Nome da equipe"
+  },
+  "validators": {
+    "Team name must be at most 32 characters": "Nome do time deve ter no máximo 32 caracteres",
+    "Team name must be at least 3 characters": "Nome do time deve ter no mínimo 3 caracteres"
   }
 }
