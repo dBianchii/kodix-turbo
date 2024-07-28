@@ -8,6 +8,7 @@ import {
 } from "@kdx/validators/trpc/team";
 
 import { isTeamOwnerProcedure, protectedProcedure } from "../../procedures";
+import { T } from "../../utils/locales";
 import { appRoleRouter } from "./appRole/_router";
 import { createHandler } from "./create.handler";
 import { getActiveTeamHandler } from "./getActiveTeam.handler";
@@ -29,7 +30,7 @@ export const teamRouter = {
     .input(ZRemoveUserSchema)
     .mutation(removeUserHandler),
   update: isTeamOwnerProcedure
-    .input(ZUpdateInputSchema)
+    .input(T(ZUpdateInputSchema))
     .mutation(updateHandler),
   leaveTeam: protectedProcedure
     .input(ZLeaveTeamInputSchema)

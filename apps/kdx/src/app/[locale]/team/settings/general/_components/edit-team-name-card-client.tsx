@@ -27,6 +27,7 @@ import {
 import { Input } from "@kdx/ui/input";
 import { toast } from "@kdx/ui/toast";
 import { ZUpdateInputSchema } from "@kdx/validators/trpc/team";
+import { useI18nZodErrors } from "@kdx/validators/useI18nZodErrors";
 
 import { api } from "~/trpc/react";
 
@@ -39,8 +40,11 @@ export function EditTeamNameCardClient({
   teamName: string;
   canEdit: boolean;
 }) {
+  useI18nZodErrors();
+  const t = useTranslations();
+
   const form = useForm({
-    schema: ZUpdateInputSchema,
+    schema: ZUpdateInputSchema(t),
     defaultValues: {
       teamId,
       teamName,
@@ -53,7 +57,6 @@ export function EditTeamNameCardClient({
       router.refresh();
     },
   });
-  const t = useTranslations();
 
   return (
     <Card className="w-full text-left">

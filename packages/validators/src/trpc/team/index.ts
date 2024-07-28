@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { ZNanoId } from "../..";
+import { ClientOrServerT } from "../../utils/withT";
 
 export const ZCreateInputSchema = z.object({
   teamName: z.string().min(3).max(32, {
@@ -19,16 +20,21 @@ export const ZRemoveUserSchema = z.object({
 });
 export type TRemoveUserSchema = z.infer<typeof ZRemoveUserSchema>;
 
-export const ZUpdateInputSchema = z.object({
-  teamId: ZNanoId,
-  teamName: z
-    .string()
-    .min(3, { message: "Team name must be at least 3 characters" })
-    .max(32, {
-      message: "Team name must be at most 32 characters",
+export const ZUpdateInputSchema = (t: ClientOrServerT) =>
+  z.object({
+    teamId: ZNanoId,
+    teamName: z.string().regex(/^[a-zA-Z0-9_]*$/, {
+      message: t("customErrors.admin_username_error"),
     }),
-});
-export type TUpdateInputSchema = z.infer<typeof ZUpdateInputSchema>;
+    // .min(3, {
+    //   message: "admin_username_error",
+    // })
+    // .max(32)
+    // .refine((value) => value !== "admin", {
+    //   params: { i18n: "admin_username_error" },
+    // }),
+  });
+export type TUpdateInputSchema = z.infer<ReturnType<typeof ZUpdateInputSchema>>;
 
 export const ZLeaveTeamInputSchema = z.object({ teamId: ZNanoId });
 export type TLeaveTeamInputSchema = z.infer<typeof ZLeaveTeamInputSchema>;

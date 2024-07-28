@@ -8,6 +8,10 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
+    "./useI18nZodErrors": {
+      "types": "./dist/utils/useI18nZodErrors.d.ts",
+      "default": "./dist/utils/useI18nZodErrors.js"
+    },
     "./trpc/app": {
       "types": "./dist/trpc/app/index.d.ts",
       "default": "./dist/trpc/app/index.js"
@@ -59,6 +63,7 @@
     "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/shared": "workspace:*",
+    "@kdx/locales": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
     "eslint": "catalog:",
     "prettier": "catalog:",

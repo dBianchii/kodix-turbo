@@ -9,8 +9,14 @@ export default getRequestConfig(async ({ locale }) => {
   if (!locales.includes(locale as any)) notFound();
 
   return {
-    messages: (
-      await import(`../../../packages/locales/src/messages/${locale}.json`)
-    ).default,
+    messages: {
+      ...(await import(`../../../packages/locales/src/messages/${locale}.json`))
+        .default,
+      ...(
+        await import(
+          `../../../packages/locales/src/messages/zod/${locale}.json`
+        )
+      ).default,
+    },
   };
 });

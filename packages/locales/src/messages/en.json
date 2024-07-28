@@ -424,5 +424,11 @@
     "User not found": "User not found",
     "Incorrect email or password": "Incorrect email or password",
     "Email already registered": "Email already registered"
+  },
+  "customErrors": {
+    "admin_username_error": "Nice try!"
+  },
+  "form": {
+    "teamName": "Team name"
   }
 }
