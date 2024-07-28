@@ -37,8 +37,6 @@ packages
   |   └─ Shared locale files for i18n configuration (right now, only for the context of @kdx/kdx)
   ├- dayjs
   |   └─ Extended dayjs configuration (mainly for centralizing plugins)
-  ├- date-fns
-  |   └─ Package that just extends date-fns configurations to use i18n correctly for corect date formatting
   └─ trpc-cli
       └─ CLI tool to automatically create new endpoints in @kdx/api with the correct boilerplate
 tooling
@@ -115,9 +113,6 @@ pnpm db:push
 
 # Generate a new tRPC endpoint using the trpc-cli tool
 pnpm trpc:new
-
-# Generate language files after altering json files in locales
-pnpm lang:gen
 
 # Add new shadcn-ui components to the ui package
 pnpm ui:add

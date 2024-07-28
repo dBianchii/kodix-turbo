@@ -6,7 +6,7 @@ import { MdOutlineSwapHorizontalCircle } from "react-icons/md";
 import { RxGear, RxPerson } from "react-icons/rx";
 
 import type { User } from "@kdx/auth";
-import { useScopedI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/client";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Button } from "@kdx/ui/button";
 import {
@@ -22,7 +22,7 @@ import {
 import { signOutAction } from "~/helpers/actions";
 
 export function UserProfileButton({ user }: { user: User }) {
-  const t = useScopedI18n("header");
+  const t = useTranslations("header");
 
   return (
     <DropdownMenu>

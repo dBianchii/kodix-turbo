@@ -10,7 +10,7 @@ import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/client";
 import { cn } from "@kdx/ui";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Button } from "@kdx/ui/button";
@@ -52,7 +52,7 @@ export function DataTableMembers({
   const { data } = api.team.getAllUsers.useQuery(undefined);
 
   const utils = api.useUtils();
-  const t = useI18n();
+  const t = useTranslations();
   const { mutate } = api.team.removeUser.useMutation({
     onSuccess: () => {
       toast.success(t("User removed from team"));

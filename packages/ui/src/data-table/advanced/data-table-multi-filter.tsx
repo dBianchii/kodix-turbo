@@ -1,6 +1,6 @@
 import type { Table } from "@tanstack/react-table";
 import * as React from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation"; //TODO: 'next' dependency in @kdx/ui ? no no
+import { useSearchParams } from "next/navigation"; //TODO: 'next' dependency in @kdx/ui ? no no
 import {
   CopyIcon,
   DotsHorizontalIcon,
@@ -9,7 +9,8 @@ import {
 } from "@radix-ui/react-icons";
 
 import type { DataTableConfig } from "@kdx/shared";
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/client";
+import { usePathname, useRouter } from "@kdx/locales/navigation";
 import { dataTableConfig } from "@kdx/shared";
 
 import type { DataTableFilterOption } from "./types";
@@ -51,7 +52,7 @@ export function DataTableMultiFilter<TData>({
   setSelectedOptions,
   defaultOpen,
 }: DataTableMultiFilterProps<TData>) {
-  const t = useI18n();
+  const t = useTranslations();
   const [open, setOpen] = React.useState(defaultOpen);
   const [operator, setOperator] = React.useState(
     dataTableConfig.logicalOperators[0],
@@ -218,7 +219,7 @@ export function MultiFilterRow<TData>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [operator?.value]);
 
-  const t = useI18n();
+  const t = useTranslations();
 
   return (
     <div className="flex items-center space-x-2">

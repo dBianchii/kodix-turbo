@@ -1,9 +1,10 @@
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import { auth } from "@kdx/auth";
 import { eq } from "@kdx/db";
 import { db } from "@kdx/db/client";
 import { invitations, users } from "@kdx/db/schema";
+import { redirect } from "@kdx/locales/navigation";
 
 import { api } from "~/trpc/server";
 

@@ -36,13 +36,13 @@ export const signInHandler = async ({
     // If usernames are public, you may outright tell the user that the username is invalid.
     throw new TRPCError({
       code: "UNAUTHORIZED",
-      message: "Incorrect email or password",
+      message: ctx.t("Incorrect email or password"),
     });
   }
   if (!existingUser.passwordHash)
     throw new TRPCError({
       code: "UNAUTHORIZED",
-      message: "Incorrect email or password",
+      message: ctx.t("Incorrect email or password"),
     });
 
   const validPassword = await verify(
@@ -53,7 +53,7 @@ export const signInHandler = async ({
   if (!validPassword)
     throw new TRPCError({
       code: "UNAUTHORIZED",
-      message: "Incorrect email or password",
+      message: ctx.t("Incorrect email or password"),
     });
 
   const heads = headers();

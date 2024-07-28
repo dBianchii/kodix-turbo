@@ -1,8 +1,8 @@
 import { Suspense } from "react";
-import { redirect } from "next/navigation";
 
 import { auth } from "@kdx/auth";
-import { getI18n } from "@kdx/locales/server";
+import { redirect } from "@kdx/locales/navigation";
+import { getTranslations } from "@kdx/locales/server";
 
 import { EditTeamNameCard } from "./_components/edit-team-name-card";
 import SettingsEditCardSkeleton from "./_components/edit-team-name-card-skeleton";
@@ -10,7 +10,8 @@ import SettingsEditCardSkeleton from "./_components/edit-team-name-card-skeleton
 export default async function SettingsGeneralPage() {
   const { user } = await auth();
   if (!user) redirect("/");
-  const t = await getI18n();
+  const t = await getTranslations();
+  if (!user) return redirect("/");
   return (
     <div className="mt-8 space-y-6 md:mt-0">
       <div>

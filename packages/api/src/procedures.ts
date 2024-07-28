@@ -56,13 +56,13 @@ export const isTeamOwnerProcedure = protectedProcedure.use(
 
     if (!team)
       throw new TRPCError({
-        message: "No Team Found",
+        message: ctx.t("No Team Found"),
         code: "NOT_FOUND",
       });
 
     if (team.ownerId !== ctx.session.user.id)
       throw new TRPCError({
-        message: "Only the team's owner can do this",
+        message: ctx.t("Only the team owner can perform this action"),
         code: "FORBIDDEN",
       });
 
