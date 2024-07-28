@@ -16,7 +16,6 @@
     "./locales": "./src/locales.ts"
   },
   "scripts": {
-    "dev": "nodemon --watch ./src/lang --ext json --exec \"pnpm run generate\"",
     "clean": "rm -rf .turbo node_modules",
     "format": "prettier --check . '!src/generated/**' --ignore-path ../../.gitignore",
     "lint": "eslint",
