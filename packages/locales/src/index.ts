@@ -1,1 +1,4 @@
-export { createI18nMiddleware } from "next-international/middleware";
+import createMiddleware from "next-intl/middleware";
+
+export { useFormatter, createTranslator } from "next-intl";
+export { createMiddleware };

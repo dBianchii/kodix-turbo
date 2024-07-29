@@ -5,7 +5,7 @@ import * as React from "react";
 import { useSearchParams } from "next/navigation";
 import { CaretSortIcon, PlusIcon } from "@radix-ui/react-icons";
 
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/client";
 
 import type { DataTableFilterField, DataTableFilterOption } from "./types";
 import { cn } from "../../.";
@@ -28,7 +28,7 @@ export function DataTableAdvancedToolbar<TData>({
   className,
   ...props
 }: DataTableAdvancedToolbarProps<TData>) {
-  const t = useI18n();
+  const t = useTranslations();
   const searchParams = useSearchParams();
 
   const options = React.useMemo<DataTableFilterOption<TData>[]>(() => {

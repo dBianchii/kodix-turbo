@@ -1,7 +1,7 @@
 import type { Column } from "@tanstack/react-table";
 import { CheckIcon } from "@radix-ui/react-icons";
 
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/client";
 
 import type { DataTableFilterOption, Option } from "./types";
 import { cn } from "../..";
@@ -32,7 +32,7 @@ export function DataTableAdvancedFacetedFilter<TData, TValue>({
   selectedValues,
   setSelectedOptions,
 }: DataTableAdvancedFacetedFilterProps<TData, TValue>) {
-  const t = useI18n();
+  const t = useTranslations();
   return (
     <Command className="p-1">
       <div className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm [&_[cmdk-input-wrapper]]:border-0 [&_[cmdk-input-wrapper]]:px-0">

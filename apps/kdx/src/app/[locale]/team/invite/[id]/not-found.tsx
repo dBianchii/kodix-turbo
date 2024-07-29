@@ -1,7 +1,7 @@
-import { getI18n } from "@kdx/locales/server";
+import { getTranslations } from "@kdx/locales/server";
 
 export default async function InviteNotFound() {
-  const t = await getI18n();
+  const t = await getTranslations();
   return (
     <section className="flex min-h-screen flex-col items-center justify-center space-y-8">
       <h1 className="text-4xl font-bold">{t("Not found")}</h1>

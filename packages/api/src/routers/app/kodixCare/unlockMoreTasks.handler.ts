@@ -28,17 +28,28 @@ export const unlockMoreTasksHandler = async ({
 
   const isFirstShiftEver = !clonedCareTasksUntil;
   if (isFirstShiftEver)
-    throw new TRPCError({ code: "CONFLICT", message: "No active shift" });
+    throw new TRPCError({
+      code: "CONFLICT",
+      message: ctx.t("No active shift"),
+    });
 
   if (clonedCareTasksUntil >= input.selectedTimestamp)
     throw new TRPCError({
       code: "CONFLICT",
-      message: `No tasks to unlock. We have already unlocked all tasks up until ${clonedCareTasksUntil.toISOString()}`,
+      message: ctx.t(
+        `No tasks to unlock We have already unlocked all tasks up until TIME`,
+        {
+          time: clonedCareTasksUntil.toISOString(),
+        },
+      ),
     });
 
   const careShift = await getCurrentCareShiftHandler({ ctx });
   if (!careShift)
-    throw new TRPCError({ code: "CONFLICT", message: "No active shift" });
+    throw new TRPCError({
+      code: "CONFLICT",
+      message: ctx.t("No active shift"),
+    });
 
   await cloneCalendarTasksToCareTasks({
     careShiftId: careShift.id,

@@ -31,7 +31,7 @@ export const signupWithPasswordHandler = async ({
   if (registered)
     throw new TRPCError({
       code: "BAD_REQUEST",
-      message: "Email already registered",
+      message: ctx.t("Email already registered"),
     });
 
   const passwordHash = await hash(input.password, argon2Config);

@@ -10,16 +10,16 @@ import {
   todoAppId,
 } from "@kdx/shared";
 
-import { useI18n } from "../client";
-import { appIdToName, appPermissionIdToName } from "../internal";
+import { useTranslations } from "../client";
+import { appIdToName, appPermissionIdToName } from "./internal";
 
 export const useAppName = (appId: KodixAppId) => {
-  const t = useI18n();
-  return appIdToName(t)[appId];
+  const t = useTranslations();
+  return t(appIdToName[appId]);
 };
 
 export const useAppDescription = (appId: KodixAppId) => {
-  const t = useI18n();
+  const t = useTranslations();
 
   const appIdToDescription = {
     [todoAppId]: t("apps.todo.appDescription"),
@@ -30,7 +30,7 @@ export const useAppDescription = (appId: KodixAppId) => {
 };
 
 export const useAppRoleDefaultNames = () => {
-  const t = useI18n();
+  const t = useTranslations();
   const appRoleDefaultIdToName = {
     [todoAdminRoleDefaultId]: t("Admin"),
     [calendarAdminRoleDefaultId]: t("Admin"),
@@ -43,6 +43,6 @@ export const useAppRoleDefaultNames = () => {
 };
 
 export const useAppPermissionName = (appPermissionId: AppPermissionId) => {
-  const t = useI18n();
-  return appPermissionIdToName(t)[appPermissionId];
+  const t = useTranslations();
+  return t(appPermissionIdToName[appPermissionId]);
 };
