@@ -12,10 +12,10 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { db } from "@kdx/db/client";
-import { defaultLocale } from "@kdx/locales/locales";
 import { getTranslations } from "@kdx/locales/server";
 
 import type { AuthResponse } from "../../auth/src/config";
+import { getLocaleBasedOnCookie } from "./utils/locales";
 
 /**
  * 1. CONTEXT
@@ -39,7 +39,7 @@ export const createTRPCContext = async (opts: {
   const source = opts.headers.get("x-trpc-source") ?? "unknown";
   console.log(">>> tRPC Request from", source, "by", session?.user);
 
-  const locale = cookies().get("NEXT_LOCALE")?.value ?? defaultLocale;
+  const locale = getLocaleBasedOnCookie();
   const t = await getTranslations({ locale, namespace: "trpc" });
 
   return {

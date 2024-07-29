@@ -5,20 +5,19 @@ import { defaultLocale } from "@kdx/locales/locales";
 import { getTranslations } from "@kdx/locales/server";
 import { createI18nZodErrors } from "@kdx/validators/useI18nZodErrors";
 
-const getT = async () => {
-  const locale = cookies().get("NEXT_LOCALE")?.value ?? defaultLocale;
-  const t = await getTranslations({ locale });
-  return t;
-};
+export const getLocaleBasedOnCookie = () =>
+  cookies().get("NEXT_LOCALE")?.value ?? defaultLocale;
 
-type SchemaGetter<S extends ZodSchema> = (
-  t: Awaited<ReturnType<typeof getTranslations>>,
+type SchemaGetterFromT<S extends ZodSchema> = (
+  t: Awaited<ReturnType<typeof getTranslations<"validators">>>,
 ) => S;
 
 export const T =
-  <S extends ZodSchema>(schemaGetter: SchemaGetter<S>) =>
+  <S extends ZodSchema>(schemaGetter: SchemaGetterFromT<S>) =>
   async (input: unknown) => {
-    const t = await getT();
-    createI18nZodErrors();
+    const locale = getLocaleBasedOnCookie();
+    const t = await getTranslations({ locale, namespace: "validators" });
+
+    createI18nZodErrors({ locale });
     return schemaGetter(t).parse(input) as z.infer<S>;
   };
