@@ -33,7 +33,6 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.8.0",
-    "@kdx/date-fns": "workspace:*",
     "@kdx/locales": "workspace:*",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.0.4",

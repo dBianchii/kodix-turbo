@@ -1,9 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { LuLoader2 } from "react-icons/lu";
 
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/client";
+import { useRouter } from "@kdx/locales/navigation";
 import { getErrorMessage } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
@@ -53,7 +53,7 @@ export function EditTeamNameCardClient({
       router.refresh();
     },
   });
-  const t = useI18n();
+  const t = useTranslations();
 
   return (
     <Card className="w-full text-left">

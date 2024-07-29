@@ -6,9 +6,9 @@ import { RRule, Weekday } from "rrule";
 
 import type { RouterInputs, RouterOutputs } from "@kdx/api";
 import type { Dayjs } from "@kdx/dayjs";
-import { format } from "@kdx/date-fns";
 import dayjs from "@kdx/dayjs";
-import { useCurrentLocale, useI18n } from "@kdx/locales/client";
+import { useFormatter } from "@kdx/locales";
+import { useTranslations } from "@kdx/locales/client";
 import { cn } from "@kdx/ui";
 import {
   AlertDialog,
@@ -199,8 +199,8 @@ export function EditEventDialog({
 
     mutation.mutate(input);
   }
-  const t = useI18n();
-  const locale = useCurrentLocale();
+  const t = useTranslations();
+  const format = useFormatter();
 
   return (
     <Dialog
@@ -231,7 +231,13 @@ export function EditEventDialog({
                     variant={"outline"}
                     className={cn("w-[200px] pl-3 text-left font-normal")}
                   >
-                    {format(from.toDate(), "PPP", locale)}
+                    {format.dateTime(from.toDate(), {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                      hour: "numeric",
+                      minute: "numeric",
+                    })}
                     <RxCalendar className="ml-auto size-4 opacity-50" />
                   </Button>
                 </PopoverTrigger>
@@ -346,7 +352,7 @@ function SubmitEditEventDialog({
     "single" | "thisAndFuture" | "all"
   >("single");
 
-  const t = useI18n();
+  const t = useTranslations();
 
   return (
     <AlertDialog

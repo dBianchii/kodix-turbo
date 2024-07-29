@@ -6,11 +6,14 @@
  * tl;dr - this is where all the tRPC server stuff is created and plugged in.
  * The pieces you will need to use are documented accordingly near the end
  */
+import { cookies } from "next/headers";
 import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { db } from "@kdx/db/client";
+import { defaultLocale } from "@kdx/locales/locales";
+import { getTranslations } from "@kdx/locales/server";
 
 import type { AuthResponse } from "../../auth/src/config";
 
@@ -26,7 +29,7 @@ import type { AuthResponse } from "../../auth/src/config";
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = (opts: {
+export const createTRPCContext = async (opts: {
   headers: Headers;
   session: AuthResponse | null;
 }) => {
@@ -36,7 +39,11 @@ export const createTRPCContext = (opts: {
   const source = opts.headers.get("x-trpc-source") ?? "unknown";
   console.log(">>> tRPC Request from", source, "by", session?.user);
 
+  const locale = cookies().get("NEXT_LOCALE")?.value ?? defaultLocale;
+  const t = await getTranslations({ locale, namespace: "trpc" });
+
   return {
+    t,
     session,
     db,
     token: authToken,

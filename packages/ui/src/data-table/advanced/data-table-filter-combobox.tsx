@@ -8,7 +8,7 @@ import {
   TextIcon,
 } from "@radix-ui/react-icons";
 
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/client";
 
 import type { DataTableFilterOption } from "./types";
 import { Button } from "../../button";
@@ -45,7 +45,7 @@ export function DataTableFilterCombobox<TData>({
   const [selectedOption, setSelectedOption] = React.useState<
     DataTableFilterOption<TData>
   >(options[0] ?? ({} as DataTableFilterOption<TData>));
-  const t = useI18n();
+  const t = useTranslations();
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>

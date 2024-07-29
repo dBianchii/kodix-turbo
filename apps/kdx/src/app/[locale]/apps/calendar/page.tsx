@@ -2,7 +2,7 @@ import { Suspense } from "react";
 
 import type { User } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
-import { getI18n } from "@kdx/locales/server";
+import { getTranslations } from "@kdx/locales/server";
 import { calendarAppId } from "@kdx/shared";
 import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
 import { Separator } from "@kdx/ui/separator";
@@ -24,7 +24,7 @@ export default async function CalendarPage() {
   //date Start should be the beginninig of the day
   //date End should be the end of the day
 
-  const t = await getI18n();
+  const t = await getTranslations();
   return (
     <MaxWidthWrapper>
       <div className="flex items-center space-x-4">

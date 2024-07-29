@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 
 import { db } from "@kdx/db/client";
-import { getI18n } from "@kdx/locales/server";
+import { getTranslations } from "@kdx/locales/server";
 
 export default async function CupomPage() {
-  const t = await getI18n();
+  const t = await getTranslations();
 
   return (
     <div>
