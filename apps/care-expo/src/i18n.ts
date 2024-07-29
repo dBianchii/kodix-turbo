@@ -9,8 +9,8 @@ import { en, pt_BR } from "@kdx/locales/lang";
 // (tip move them in a JSON file and import them,
 // or even better, manage them separated from your code: https://react.i18next.com/guides/multiple-translation-files)
 const resources = {
-  en: { translation: en.default },
-  "pt-BR": { translation: pt_BR.default },
+  en: { translation: en },
+  "pt-BR": { translation: pt_BR },
 };
 
 const initI18n = async () => {
@@ -20,7 +20,7 @@ const initI18n = async () => {
     savedLanguage = Localization.locale;
   }
 
-  i18n.use(initReactI18next).init({
+  await i18n.use(initReactI18next).init({
     compatibilityJSON: "v3",
     resources,
     lng: "pt-BR",
@@ -31,6 +31,6 @@ const initI18n = async () => {
   });
 };
 
-initI18n();
+void initI18n();
 
 export default i18n;
