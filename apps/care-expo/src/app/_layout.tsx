@@ -3,6 +3,7 @@
 import { SplashScreen, Stack, useRouter, useSegments } from "expo-router";
 
 import "@bacons/text-decoder/install";
+import "~/i18n";
 
 import type { FontSource } from "expo-font";
 import { useEffect } from "react";
