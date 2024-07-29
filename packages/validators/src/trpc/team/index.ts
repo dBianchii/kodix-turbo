@@ -21,16 +21,16 @@ export const ZRemoveUserSchema = z.object({
 });
 export type TRemoveUserSchema = z.infer<typeof ZRemoveUserSchema>;
 
-export const ZUpdateInputSchema = (t: ClientOrServerT<"validators">) =>
+export const ZUpdateInputSchema = (t: ClientOrServerT) =>
   z.object({
     teamId: ZNanoId,
     teamName: z
       .string()
       .min(3, {
-        message: t("Team name must be at least 3 characters"),
+        message: t("validators.Team name must be at least 3 characters"),
       })
       .max(32, {
-        message: t("Team name must be at most 32 characters"),
+        message: t("validators.Team name must be at most 32 characters"),
       }),
   });
 export type TUpdateInputSchema = z.infer<ReturnType<typeof ZUpdateInputSchema>>;
