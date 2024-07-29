@@ -9,7 +9,7 @@ import { kodixCareAppId } from "@kdx/shared";
  * If the value is a string, it is parsed using the dayjs library and converted to a Date object.
  * @returns A Date object representing the input value.
  */
-const dateFromISO8601 = z.preprocess(
+export const dateFromISO8601 = z.preprocess(
   (value) => (value instanceof Date ? value : dayjs(value as string).toDate()),
   z.date(),
 );

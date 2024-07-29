@@ -3,7 +3,8 @@ import { cookies } from "next/headers";
 import { OAuth2RequestError } from "arctic";
 
 import type { Providers } from "@kdx/auth";
-import { lucia, providers } from "@kdx/auth";
+import { providers } from "@kdx/auth";
+import { createDbSessionAndCookie } from "@kdx/auth/utils";
 
 export async function GET(
   request: NextRequest,
@@ -49,17 +50,7 @@ export async function GET(
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const userId = await currentProvider.handleCallback(code, codeVerifier!);
 
-    const session = await lucia.createSession(userId, {
-      ipAddress:
-        request.ip ?? request.headers.get("X-Forwarded-For") ?? "127.0.0.1",
-      userAgent: request.headers.get("user-agent"),
-    });
-    const sessionCookie = lucia.createSessionCookie(session.id);
-    cookies().set(
-      sessionCookie.name,
-      sessionCookie.value,
-      sessionCookie.attributes,
-    );
+    await createDbSessionAndCookie({ userId });
 
     const callbackUrl = cookies().get("callbackUrl")?.value;
     if (callbackUrl) cookies().delete("callbackUrl");

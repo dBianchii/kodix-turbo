@@ -4,12 +4,15 @@ const { FileStore } = require("metro-cache");
 
 const path = require("path");
 
-module.exports = withTurborepoManagedCache(
-  withMonorepoPaths(getDefaultConfig(__dirname), {
-    input: "./src/styles.css",
-    configPath: "./tailwind.config.ts",
-  }),
+const config = withTurborepoManagedCache(
+  withMonorepoPaths(getDefaultConfig(__dirname)),
 );
+
+// XXX: Resolve our exports in workspace packages
+// https://github.com/expo/expo/issues/26926
+config.resolver.unstable_enablePackageExports = true;
+
+module.exports = config;
 
 /**
  * Add the monorepo paths to the Metro config.
