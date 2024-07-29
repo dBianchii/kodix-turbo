@@ -63,11 +63,9 @@ export const makeZodI18nMap: MakeZodI18nMap = (option) => (issue, ctx) => {
   const { t, tForm, tCustom } = {
     ...option,
   };
-  console.log("option", option);
 
   let message: string;
   message = defaultErrorMap(issue, ctx).message;
-  console.log("here");
 
   const path =
     issue.path.length > 0 && !!tForm
