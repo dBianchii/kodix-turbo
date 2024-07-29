@@ -5,13 +5,13 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./lang": "./src/lang.ts",
     "./provider": "./src/provider.tsx",
     "./server": "./src/server.ts",
     "./client": "./src/client.ts",
     "./hooks": "./src/hooks/index.ts",
     "./server-hooks": "./src/hooks/server-hooks.ts",
     "./plugin": "./src/plugin.js",
-    "./messages": "./src/messages/**/*.json",
     "./navigation": "./src/navigation.ts",
     "./locales": "./src/locales.ts"
   },
