@@ -6,8 +6,9 @@ import type { getTranslations } from "@kdx/locales/server";
 export { useFormatter, createTranslator } from "next-intl";
 export { createMiddleware };
 
-//TODO: figure out how to make typed namespaces work. Right now TranslationKeys won't do anything
-type TranslationKeys = "validators" | "";
-export type ClientOrServerT<S extends TranslationKeys = ""> =
+//TODO: figure out how to make typed namespaces work.
+type TranslationKeys = "validators" | never;
+export type ClientOrServerT<S extends TranslationKeys = never> =
   | Awaited<ReturnType<typeof getTranslations<S>>>
-  | ReturnType<typeof useTranslations<S>>;
+  | ReturnType<typeof useTranslations<S>>
+  | ((t: string) => string);

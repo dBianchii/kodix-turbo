@@ -23,6 +23,15 @@
         "cuid": "CUID inválido",
         "regex": "Combinação inválida",
         "datetime": "datetime inválido",
+        "date": "Data inválida",
+        "emoji": "Emoji inválido",
+        "nanoid": "Nanoid inválido",
+        "cuid2": "CUID2 inválido",
+        "ulid": "ULID inválido",
+        "time": "Hora inválida",
+        "ip": "IP inválido",
+        "base64": "Base64 inválido",
+        "duration": "Duração inválida",
         "startsWith": "Entrada inválida: deve iniciar com \"{startsWith}\"",
         "endsWith": "Entrada inválida: deve terminar com \"{endsWith}\""
       },
@@ -97,7 +106,16 @@
       "uuid": "uuid",
       "cuid": "cuid",
       "regex": "regex",
-      "datetime": "datetime"
+      "datetime": "datetime",
+      "date": "date",
+      "emoji": "emoji",
+      "nanoid": "nanoid",
+      "cuid2": "cuid2",
+      "ulid": "ulid",
+      "time": "time",
+      "ip": "ip",
+      "base64": "base64",
+      "duration": "duration"
     },
     "types": {
       "function": "function",

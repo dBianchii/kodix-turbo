@@ -51,9 +51,9 @@ const getKeyAndValues = (
 };
 
 type ZodI18nMapOption = {
-  t: ReturnType<typeof useTranslations>;
-  tForm?: ReturnType<typeof useTranslations>;
-  tCustom?: ReturnType<typeof useTranslations>;
+  t: ReturnType<typeof useTranslations<"zod">>;
+  tForm?: ReturnType<typeof useTranslations<"form">>;
+  tCustom?: ReturnType<typeof useTranslations<"customErrors">>;
   ns?: string | readonly string[];
 };
 

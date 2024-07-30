@@ -1,6 +1,7 @@
 import { Pressable } from "react-native";
 import { router, Stack } from "expo-router";
 import { ChevronLeft } from "@tamagui/lucide-icons";
+import { useTranslation } from "react-i18next";
 import { Input, SizableText, Spinner, useTheme, View } from "tamagui";
 
 import { ZChangeNameInputSchema } from "@kdx/validators/trpc/user";
@@ -18,11 +19,13 @@ import { defaultPadding } from "~/components/safe-area-view";
 import { api } from "~/utils/api";
 import { useAuth } from "~/utils/auth";
 
+const t = (string: string) => string;
 export default function EditNamePage() {
   const { user } = useAuth();
 
+  // const { t } = useTranslation();
   const form = useForm({
-    schema: ZChangeNameInputSchema,
+    schema: ZChangeNameInputSchema(t),
     defaultValues: {
       name: user?.name ?? undefined,
     },
