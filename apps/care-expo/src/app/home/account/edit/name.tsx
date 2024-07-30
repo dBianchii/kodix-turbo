@@ -23,7 +23,7 @@ const t = (string: string) => string;
 export default function EditNamePage() {
   const { user } = useAuth();
 
-  // const { t } = useTranslation();
+  const { t } = useTranslation();
   const form = useForm({
     schema: ZChangeNameInputSchema(t),
     defaultValues: {

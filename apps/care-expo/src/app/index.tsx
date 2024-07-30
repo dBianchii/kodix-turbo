@@ -1,7 +1,8 @@
 import type { ViewProps } from "tamagui";
 import { Link, useRouter } from "expo-router";
-import { useTranslation } from "react-i18next";
 import { Button, H1, View } from "tamagui";
+
+import { useTranslation } from "@kdx/locales/expo/react-i18next";
 
 import { RootSafeAreaView } from "~/components/safe-area-view";
 

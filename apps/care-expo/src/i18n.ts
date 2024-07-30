@@ -1,8 +1,8 @@
 import * as Localization from "expo-localization";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import i18n from "i18next";
-import { initReactI18next } from "react-i18next";
 
+import i18n from "@kdx/locales/expo/i18next";
+import { initReactI18next } from "@kdx/locales/expo/react-i18next";
 import { en, pt_BR } from "@kdx/locales/lang";
 
 // the translations
