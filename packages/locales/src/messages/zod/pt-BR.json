@@ -138,6 +138,12 @@
       "never": "never",
       "map": "map",
       "set": "set"
+    },
+    "customErrors": {
+      "admin_username_error": "Boa irmao!"
+    },
+    "form": {
+      "teamName": "Nome da equipe"
     }
   }
 }

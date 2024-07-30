@@ -138,6 +138,12 @@
       "never": "never",
       "map": "map",
       "set": "set"
+    },
+    "customErrors": {
+      "admin_username_error": "Nice try!"
+    },
+    "form": {
+      "teamName": "Team name"
     }
   }
 }

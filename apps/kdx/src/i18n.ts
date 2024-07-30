@@ -17,6 +17,11 @@ export default getRequestConfig(async ({ locale }) => {
           `../../../packages/locales/src/messages/zod/${locale}.json`
         )
       ).default,
+      ...(
+        await import(
+          `../../../packages/locales/src/messages/validators/${locale}.json`
+        )
+      ).default,
     },
   };
 });

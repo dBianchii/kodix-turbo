@@ -424,15 +424,5 @@
     "User not found": "User not found",
     "Incorrect email or password": "Incorrect email or password",
     "Email already registered": "Email already registered"
-  },
-  "customErrors": {
-    "admin_username_error": "Nice try!"
-  },
-  "form": {
-    "teamName": "Team name"
-  },
-  "validators": {
-    "Team name must be at most 32 characters": "Team name must be at most 32 characters",
-    "Team name must be at least 3 characters": "Team name must be at least 3 characters"
   }
 }

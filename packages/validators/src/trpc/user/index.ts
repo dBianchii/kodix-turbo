@@ -1,15 +1,15 @@
 import { z } from "zod";
 
 import type { notifications } from "@kdx/db/schema";
-import { ClientOrServerT } from "@kdx/locales";
+import { IsomorficT } from "@kdx/locales";
 
 import { ZNanoId } from "../..";
 
-export const ZChangeNameInputSchema = (t: ClientOrServerT) =>
+export const ZChangeNameInputSchema = (t: IsomorficT) =>
   z.object({
-    name: z
-      .string()
-      .max(32, { message: t("account.Please use 32 characters at maximum") }),
+    name: z.string().max(32, {
+      message: t("validators.Please use 32 characters at maximum"),
+    }),
   });
 export type TChangeNameInputSchema = z.infer<
   ReturnType<typeof ZChangeNameInputSchema>

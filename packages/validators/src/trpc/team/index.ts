@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { ClientOrServerT } from "@kdx/locales";
+import type { IsomorficT } from "@kdx/locales";
 
 import { ZNanoId } from "../..";
 
@@ -21,7 +21,7 @@ export const ZRemoveUserSchema = z.object({
 });
 export type TRemoveUserSchema = z.infer<typeof ZRemoveUserSchema>;
 
-export const ZUpdateInputSchema = (t: ClientOrServerT) =>
+export const ZUpdateInputSchema = (t: IsomorficT) =>
   z.object({
     teamId: ZNanoId,
     teamName: z

@@ -424,15 +424,5 @@
     "You have been invited to join a team on URL": "Você foi convidado para participar de uma equipe em {url}",
     "Your last shift was ended by NAME": "Seu último turno foi encerrado por {name}",
     "appName is not installed": "{appName} não está instalado"
-  },
-  "customErrors": {
-    "admin_username_error": "Boa irmao!"
-  },
-  "form": {
-    "teamName": "Nome da equipe"
-  },
-  "validators": {
-    "Team name must be at most 32 characters": "Nome do time deve ter no máximo 32 caracteres",
-    "Team name must be at least 3 characters": "Nome do time deve ter no mínimo 3 caracteres"
   }
 }

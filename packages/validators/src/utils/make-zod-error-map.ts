@@ -50,10 +50,14 @@ const getKeyAndValues = (
   return { key: defaultKey, values: {} };
 };
 
+export const zodNs = "zod";
+export const formNs = "zod.form";
+export const customErrorsNs = "zod.customErrors";
+
 type ZodI18nMapOption = {
-  t: ReturnType<typeof useTranslations<"zod">>;
-  tForm?: ReturnType<typeof useTranslations<"form">>;
-  tCustom?: ReturnType<typeof useTranslations<"customErrors">>;
+  t: ReturnType<typeof useTranslations<typeof zodNs>>;
+  tForm?: ReturnType<typeof useTranslations<typeof formNs>>;
+  tCustom?: ReturnType<typeof useTranslations<typeof customErrorsNs>>;
   ns?: string | readonly string[];
 };
 
