@@ -49,7 +49,7 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
   });
   if (!team)
     throw new TRPCError({
-      message: ctx.t("No Team Found"),
+      message: ctx.t("api.No Team Found"),
       code: "NOT_FOUND",
     });
 
@@ -58,7 +58,7 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
   );
   if (inTeamEmail)
     throw new TRPCError({
-      message: ctx.t("User USER is already a member of this team", {
+      message: ctx.t("api.User USER is already a member of this team", {
         user: inTeamEmail,
       }),
       code: "CONFLICT",
@@ -66,7 +66,7 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
 
   if (team.Invitations[0])
     throw new TRPCError({
-      message: ctx.t("Invitation already sent to EMAIL", {
+      message: ctx.t("api.Invitation already sent to EMAIL", {
         email: team.Invitations[0].email,
       }),
       code: "CONFLICT",
@@ -87,7 +87,7 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
       await resend.emails.send({
         from: kodixNotificationFromEmail,
         to: invite.email,
-        subject: ctx.t("You have been invited to join a team on URL", {
+        subject: ctx.t("api.You have been invited to join a team on URL", {
           url: getBaseUrl(),
         }),
         react: TeamInvite({

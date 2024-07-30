@@ -69,7 +69,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: ctx.t(
-        "No previous careshift found even though clonedCalendarTasks exists This should only happen if we allow users to delete careshifts",
+        "api.No previous careshift found even though clonedCalendarTasks exists This should only happen if we allow users to delete careshifts",
       ),
     });
 
@@ -107,7 +107,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
       await resend.emails.send({
         from: kodixNotificationFromEmail,
         to: lastCareShift.Caregiver.email,
-        subject: ctx.t(`Your last shift was ended by NAME`, {
+        subject: ctx.t(`api.Your last shift was ended by NAME`, {
           name: ctx.session.user.name,
         }),
         react: WarnPreviousShiftNotEnded(),

@@ -9,8 +9,8 @@ import {
 } from "@radix-ui/react-icons";
 
 import type { DataTableConfig } from "@kdx/shared";
-import { useTranslations } from "@kdx/locales/client";
-import { usePathname, useRouter } from "@kdx/locales/navigation";
+import { useTranslations } from "@kdx/locales/next-intl/client";
+import { usePathname, useRouter } from "@kdx/locales/next-intl/navigation";
 import { dataTableConfig } from "@kdx/shared";
 
 import type { DataTableFilterOption } from "./types";

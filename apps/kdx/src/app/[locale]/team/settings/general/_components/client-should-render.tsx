@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { usePathname } from "@kdx/locales/navigation";
+import { usePathname } from "@kdx/locales/next-intl/navigation";
 import { cn } from "@kdx/ui";
 
 export function ShouldRender({

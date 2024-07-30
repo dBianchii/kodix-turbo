@@ -8,7 +8,7 @@ import {
   TextIcon,
 } from "@radix-ui/react-icons";
 
-import { useTranslations } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 
 import type { DataTableFilterOption } from "./types";
 import { Button } from "../../button";

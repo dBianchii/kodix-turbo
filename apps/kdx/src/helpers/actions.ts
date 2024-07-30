@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 
 import { auth, lucia } from "@kdx/auth";
-import { redirect } from "@kdx/locales/navigation";
+import { redirect } from "@kdx/locales/next-intl/navigation";
 
 export async function signOutAction() {
   const { session } = await auth();

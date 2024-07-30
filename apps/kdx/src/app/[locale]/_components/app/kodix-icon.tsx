@@ -3,7 +3,7 @@
 import Image from "next/image";
 
 import type { KodixAppId } from "@kdx/shared";
-import { useAppName } from "@kdx/locales/hooks";
+import { useAppName } from "@kdx/locales/next-intl/hooks";
 
 import { getAppIconUrl } from "~/helpers/miscelaneous";
 

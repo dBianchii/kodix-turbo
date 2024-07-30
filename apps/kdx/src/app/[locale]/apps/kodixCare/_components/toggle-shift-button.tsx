@@ -6,7 +6,7 @@ import { LuLoader2 } from "react-icons/lu";
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
-import { useTranslations } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import { Button } from "@kdx/ui/button";
 import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {

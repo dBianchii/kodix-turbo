@@ -24,7 +24,7 @@ export const getConfigHandler = async ({ ctx, input }: GetConfigOptions) => {
   if (!result)
     throw new TRPCError({
       code: "NOT_FOUND",
-      message: ctx.t("No appTeamConfig found"),
+      message: ctx.t("api.No appTeamConfig found"),
     });
 
   const schema = appIdToAppTeamConfigSchema[input.appId];

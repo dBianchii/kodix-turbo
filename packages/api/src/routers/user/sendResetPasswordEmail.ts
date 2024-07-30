@@ -27,7 +27,7 @@ export const sendResetPasswordEmail = async ({
   if (!user)
     throw new TRPCError({
       code: "NOT_FOUND",
-      message: ctx.t("User not found"),
+      message: ctx.t("api.User not found"),
     });
 
   const tokenExpiresAt = new Date(Date.now() + 1000 * 60 * 5); // 5 minutes

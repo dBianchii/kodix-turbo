@@ -6,8 +6,8 @@ import { useAction } from "next-safe-action/hooks";
 import { LuLoader2 } from "react-icons/lu";
 import { RxPlusCircled } from "react-icons/rx";
 
-import { useTranslations } from "@kdx/locales/client";
-import { useRouter } from "@kdx/locales/navigation";
+import { useTranslations } from "@kdx/locales/next-intl/client";
+import { useRouter } from "@kdx/locales/next-intl/navigation";
 import { getErrorMessage } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";

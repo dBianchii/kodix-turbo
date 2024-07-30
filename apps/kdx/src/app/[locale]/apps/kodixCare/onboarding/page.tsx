@@ -1,5 +1,5 @@
 import { auth } from "@kdx/auth";
-import { redirect } from "@kdx/locales/navigation";
+import { redirect } from "@kdx/locales/next-intl/navigation";
 import { kodixCareAppId } from "@kdx/shared";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";

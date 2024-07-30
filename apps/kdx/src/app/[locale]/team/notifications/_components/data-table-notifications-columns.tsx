@@ -5,7 +5,7 @@ import { RxDotsHorizontal, RxExternalLink } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import { useFormatter } from "@kdx/locales";
-import { useTranslations } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import { Button } from "@kdx/ui/button";
 import { Checkbox } from "@kdx/ui/checkbox";
 import { DataTableColumnHeader } from "@kdx/ui/data-table/data-table-column-header";

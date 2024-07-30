@@ -5,7 +5,7 @@
 
 import { defaultErrorMap, ZodErrorMap, ZodIssueCode, ZodParsedType } from "zod";
 
-import { useTranslations } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 
 const jsonStringifyReplacer = (_: string, value: unknown): unknown => {
   if (typeof value === "bigint") {

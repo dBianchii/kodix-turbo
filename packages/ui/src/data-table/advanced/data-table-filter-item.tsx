@@ -3,8 +3,8 @@ import * as React from "react";
 import { useSearchParams } from "next/navigation";
 import { TrashIcon } from "@radix-ui/react-icons";
 
-import { useTranslations } from "@kdx/locales/client";
-import { usePathname, useRouter } from "@kdx/locales/navigation";
+import { useTranslations } from "@kdx/locales/next-intl/client";
+import { usePathname, useRouter } from "@kdx/locales/next-intl/navigation";
 import { dataTableConfig } from "@kdx/shared";
 
 import type { DataTableFilterOption } from "./types";

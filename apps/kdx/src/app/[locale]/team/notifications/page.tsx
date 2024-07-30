@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 
 import { auth } from "@kdx/auth";
-import { redirect } from "@kdx/locales/navigation";
-import { getTranslations } from "@kdx/locales/server";
+import { redirect } from "@kdx/locales/next-intl/navigation";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
 import { H1, Lead } from "@kdx/ui/typography";
 import { ZGetNotificationsInputSchema } from "@kdx/validators/trpc/user";

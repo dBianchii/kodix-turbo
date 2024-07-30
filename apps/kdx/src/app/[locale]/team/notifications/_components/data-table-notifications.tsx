@@ -7,7 +7,7 @@ import type { RouterOutputs } from "@kdx/api";
 import type { DataTableFilterField } from "@kdx/ui/data-table/advanced/types";
 import type { FixedColumnsType } from "@kdx/ui/data-table/data-table";
 import { notifications } from "@kdx/db/schema";
-import { useTranslations } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import { DataTableAdvancedToolbar } from "@kdx/ui/data-table/advanced/data-table-advanced-toolbar";
 import { DataTable } from "@kdx/ui/data-table/data-table";
 

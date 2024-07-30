@@ -26,14 +26,14 @@ export const leaveTeamHandler = async ({ ctx, input }: LeaveTeamOptions) => {
   if (!team)
     throw new TRPCError({
       code: "NOT_FOUND",
-      message: ctx.t("No Team Found"),
+      message: ctx.t("api.No Team Found"),
     });
 
   if (team.ownerId === ctx.session.user.id)
     throw new TRPCError({
       code: "FORBIDDEN",
       message: ctx.t(
-        "You cannot leave a team you are an owner of Delete this team instead",
+        "api.You cannot leave a team you are an owner of Delete this team instead",
       ),
     });
 
@@ -53,7 +53,7 @@ export const leaveTeamHandler = async ({ ctx, input }: LeaveTeamOptions) => {
     throw new TRPCError({
       code: "FORBIDDEN",
       message: ctx.t(
-        "You are attempting to leave a team but you have no other teams Please create a new team first",
+        "api.You are attempting to leave a team but you have no other teams Please create a new team first",
       ),
     });
   }

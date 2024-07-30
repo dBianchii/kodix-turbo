@@ -38,7 +38,7 @@ export const getActiveTeamHandler = async ({ ctx }: GetActiveTeamOptions) => {
 
   if (!team)
     throw new TRPCError({
-      message: ctx.t("No Team Found"),
+      message: ctx.t("api.No Team Found"),
       code: "NOT_FOUND",
     });
 

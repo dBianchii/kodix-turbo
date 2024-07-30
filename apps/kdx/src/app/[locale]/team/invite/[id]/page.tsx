@@ -4,7 +4,7 @@ import { auth } from "@kdx/auth";
 import { eq } from "@kdx/db";
 import { db } from "@kdx/db/client";
 import { invitations, users } from "@kdx/db/schema";
-import { redirect } from "@kdx/locales/navigation";
+import { redirect } from "@kdx/locales/next-intl/navigation";
 
 import { api } from "~/trpc/server";
 

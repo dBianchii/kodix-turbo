@@ -29,12 +29,9 @@
    * This will allow you to select the project to debug when you press F5, and only on this workspace.
    */
   "workspaceKeybindings.selectAndStartDebugging.enabled": true,
-  "i18n-ally.localesPaths": [
-    "packages/locales/src/messages",
-    "packages/locales/src/messages/zod"
-  ],
-  "i18n-ally.editor.preferEditor": true,
+  "i18n-ally.localesPaths": ["packages/locales/src/messages/**"],
   "i18n-ally.pathMatcher": "{locale}.json",
+  "i18n-ally.editor.preferEditor": true,
   "i18n-ally.enabledFrameworks": ["next-intl"],
   "i18n-ally.keystyle": "nested",
   "i18n-ally.extract.autoDetect": true,

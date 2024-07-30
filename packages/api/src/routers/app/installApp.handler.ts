@@ -38,7 +38,7 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
 
   if (installed)
     throw new TRPCError({
-      message: ctx.t("App already installed"),
+      message: ctx.t("api.App already installed"),
       code: "BAD_REQUEST",
     });
 
@@ -83,7 +83,7 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
       //Each app should have a designated admin role
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message: ctx.t("Admin role not found"),
+        message: ctx.t("api.Admin role not found"),
       });
 
     await tx.insert(teamAppRolesToUsers).values({

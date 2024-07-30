@@ -2,7 +2,7 @@ import type { z, ZodSchema } from "zod";
 import { cookies } from "next/headers";
 
 import { defaultLocale } from "@kdx/locales/locales";
-import { getTranslations } from "@kdx/locales/server";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 import { createI18nZodErrors } from "@kdx/validators/useI18nZodErrors";
 
 export const getLocaleBasedOnCookie = () =>

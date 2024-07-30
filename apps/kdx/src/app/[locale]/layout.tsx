@@ -15,7 +15,7 @@ import "~/app/globals.css";
 import { notFound } from "next/navigation";
 
 import { locales } from "@kdx/locales/locales";
-import { getMessages } from "@kdx/locales/server";
+import { getMessages } from "@kdx/locales/next-intl/server";
 import { kdxProductionURL } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { ThemeProvider, ThemeToggle } from "@kdx/ui/theme";

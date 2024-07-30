@@ -16,7 +16,7 @@ import {
   Text,
 } from "@react-email/components";
 
-import { getTranslations } from "@kdx/locales/server";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 import { getBaseUrl } from "@kdx/shared";
 
 const baseUrl = getBaseUrl();

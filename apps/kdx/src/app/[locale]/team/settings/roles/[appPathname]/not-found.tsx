@@ -1,4 +1,4 @@
-import { getTranslations } from "@kdx/locales/server";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 
 export default async function NotFound() {
   const t = await getTranslations();

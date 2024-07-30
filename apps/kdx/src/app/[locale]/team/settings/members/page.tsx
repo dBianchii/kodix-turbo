@@ -2,8 +2,8 @@ import { Suspense } from "react";
 
 import { auth } from "@kdx/auth";
 import { db } from "@kdx/db/client";
-import { redirect } from "@kdx/locales/navigation";
-import { getTranslations } from "@kdx/locales/server";
+import { redirect } from "@kdx/locales/next-intl/navigation";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@kdx/ui/tabs";
 

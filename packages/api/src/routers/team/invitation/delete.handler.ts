@@ -22,7 +22,7 @@ export const deleteHandler = async ({ ctx, input }: DeleteOptions) => {
 
   if (!invitation)
     throw new TRPCError({
-      message: ctx.t("No Invitation Found"),
+      message: ctx.t("api.No Invitation Found"),
       code: "NOT_FOUND",
     });
 

@@ -7,9 +7,9 @@ import { RxCaretSort, RxCheck, RxPlusCircled } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { KodixAppId } from "@kdx/shared";
-import { useTranslations } from "@kdx/locales/client";
-import { useAppName } from "@kdx/locales/hooks";
-import { usePathname, useRouter } from "@kdx/locales/navigation";
+import { useTranslations } from "@kdx/locales/next-intl/client";
+import { useAppName } from "@kdx/locales/next-intl/hooks";
+import { usePathname, useRouter } from "@kdx/locales/next-intl/navigation";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import {

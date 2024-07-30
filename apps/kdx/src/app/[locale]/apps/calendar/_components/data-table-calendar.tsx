@@ -23,7 +23,7 @@ import {
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
-import { useTranslations } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import { authorizedEmails } from "@kdx/shared";
 import { Button } from "@kdx/ui/button";
 import {

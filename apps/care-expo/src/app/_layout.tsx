@@ -11,8 +11,8 @@ import { useFonts } from "expo-font";
 import { Spinner, TamaguiProvider } from "tamagui";
 import tamaguiConfig from "tamagui.config";
 
-import { IntlProvider } from "@kdx/locales/expo/use-intl";
-import { en, pt_BR } from "@kdx/locales/lang";
+import { en, pt_BR } from "@kdx/locales/messages/care-expo";
+import { IntlProvider } from "@kdx/locales/use-intl";
 
 import { RootSafeAreaView } from "~/components/safe-area-view";
 import { TRPCProvider } from "~/utils/api";

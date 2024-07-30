@@ -42,7 +42,7 @@ export const getAllHandler = async ({ ctx }: GetAllOptions) => {
   if (!_apps.length) {
     throw new TRPCError({
       code: "NOT_FOUND",
-      message: ctx.t("No apps found"),
+      message: ctx.t("api.No apps found"),
     });
   }
 

@@ -27,7 +27,7 @@ export const changePasswordHandler = async ({
   if (!existingToken)
     throw new TRPCError({
       code: "NOT_FOUND",
-      message: ctx.t("Token not found"),
+      message: ctx.t("api.Token not found"),
     });
 
   const hashed = await hash(input.password, argon2Config);

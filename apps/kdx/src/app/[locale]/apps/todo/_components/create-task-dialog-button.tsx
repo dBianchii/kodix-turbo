@@ -6,7 +6,7 @@ import { RxCross2, RxPlus } from "react-icons/rx";
 
 import type { todos } from "@kdx/db/schema";
 import { useFormatter } from "@kdx/locales";
-import { useTranslations } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Button } from "@kdx/ui/button";
 import {

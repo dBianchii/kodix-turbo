@@ -31,7 +31,7 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
         if (!toDeleteException) {
           throw new TRPCError({
             code: "NOT_FOUND",
-            message: ctx.t("Exception not found"),
+            message: ctx.t("api.Exception not found"),
           });
         }
         await tx
@@ -82,7 +82,7 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
       if (!eventMaster)
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: ctx.t("Event master not found"),
+          message: ctx.t("api.Event master not found"),
         });
 
       const rule = rrulestr(eventMaster.rule);

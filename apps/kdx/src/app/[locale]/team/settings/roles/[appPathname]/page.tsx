@@ -2,9 +2,9 @@ import { notFound } from "next/navigation";
 
 import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
-import { redirect } from "@kdx/locales/navigation";
-import { getTranslations } from "@kdx/locales/server";
-import { getAppName } from "@kdx/locales/server-hooks";
+import { redirect } from "@kdx/locales/next-intl/navigation";
+import { getTranslations } from "@kdx/locales/next-intl/server";
+import { getAppName } from "@kdx/locales/next-intl/server-hooks";
 
 import type { AppPathnames } from "~/helpers/miscelaneous";
 import { appIdToPathname, appPathnameToAppId } from "~/helpers/miscelaneous";
