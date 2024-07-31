@@ -43,7 +43,7 @@ export const TeamInvite = async ({
   inviteFromLocation?: string;
 }) => {
   const t = await getTranslations();
-  const previewText = t("emails.Join invitedByUsername on Kodix", {
+  const previewText = t("api.emails.Join invitedByUsername on Kodix", {
     invitedByUsername,
   });
 
@@ -64,13 +64,13 @@ export const TeamInvite = async ({
               />
             </Section>
             <Heading className="mx-0 my-[30px] p-0 text-center text-[24px] font-normal text-black">
-              {t.rich("emails.Join teamName on Kodix", {
+              {t.rich("api.emails.Join teamName on Kodix", {
                 teamName: () => <strong>{teamName}</strong>,
                 site: "Kodix",
               })}
             </Heading>
             <Text className="text-[14px] leading-[24px] text-black">
-              {t("Hello")} {username},
+              {t("api.emails.Hello")} {username},
             </Text>
             <Text className="text-[14px] leading-[24px] text-black">
               <strong>{invitedByUsername}</strong> (
@@ -81,10 +81,13 @@ export const TeamInvite = async ({
                 {invitedByEmail}
               </Link>
               ){" "}
-              {t.rich("emails.Has invited you to the teamName team on Kodix", {
-                teamName: () => <strong>{teamName}</strong>,
-                site: "Kodix",
-              })}
+              {t.rich(
+                "api.emails.Has invited you to the teamName team on Kodix",
+                {
+                  teamName: () => <strong>{teamName}</strong>,
+                  site: "Kodix",
+                },
+              )}
             </Text>
             <Section>
               <Row>
@@ -119,25 +122,25 @@ export const TeamInvite = async ({
                 className="rounded bg-[#000000] px-[20px] py-[12px] text-center text-[12px] font-semibold text-white no-underline"
                 href={inviteLink}
               >
-                {t("emails.Join the team")}
+                {t("api.emails.Join the team")}
               </Button>
             </Section>
             <Text className="text-[14px] leading-[24px] text-black">
-              {t("or copy and paste this URL into your browser:")}{" "}
+              {t("api.emails.or copy and paste this URL into your browser:")}{" "}
               <Link href={inviteLink} className="text-blue-600 no-underline">
                 {inviteLink}
               </Link>
             </Text>
             <Hr className="mx-0 my-[26px] w-full border border-solid border-[#eaeaea]" />
             <Text className="text-[12px] leading-[24px] text-[#666666]">
-              {t("emails.This invitation was intended for")}{" "}
+              {t("api.emails.This invitation was intended for")}{" "}
               <span className="text-black">{username} </span>.
-              {t("emails.This invite was sent from")}{" "}
+              {t("api.emails.This invite was sent from")}{" "}
               <span className="text-black">{inviteFromIp}</span>{" "}
-              {t("emails.located in")}{" "}
+              {t("api.emails.located in")}{" "}
               <span className="text-black">{inviteFromLocation}</span>.{" "}
               {t(
-                "emails.If you were not expecting this invitation you can ignore this email",
+                "api.emails.If you were not expecting this invitation you can ignore this email",
               )}
             </Text>
           </Container>

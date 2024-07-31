@@ -3,9 +3,10 @@
  * Checkout the original at: https://github.com/aiji42/zod-i18n
  */
 
-import { defaultErrorMap, ZodErrorMap, ZodIssueCode, ZodParsedType } from "zod";
+import type { ZodErrorMap } from "zod";
+import { defaultErrorMap, ZodIssueCode, ZodParsedType } from "zod";
 
-import { useTranslations } from "@kdx/locales/next-intl/client";
+import type { useTranslations } from "@kdx/locales/next-intl/client";
 
 const jsonStringifyReplacer = (_: string, value: unknown): unknown => {
   if (typeof value === "bigint") {
@@ -54,12 +55,12 @@ export const zodNs = "zod";
 export const formNs = "zod.form";
 export const customErrorsNs = "zod.customErrors";
 
-type ZodI18nMapOption = {
+interface ZodI18nMapOption {
   t: ReturnType<typeof useTranslations<typeof zodNs>>;
   tForm?: ReturnType<typeof useTranslations<typeof formNs>>;
   tCustom?: ReturnType<typeof useTranslations<typeof customErrorsNs>>;
   ns?: string | readonly string[];
-};
+}
 
 type MakeZodI18nMap = (option: ZodI18nMapOption) => ZodErrorMap;
 
@@ -73,7 +74,8 @@ export const makeZodI18nMap: MakeZodI18nMap = (option) => (issue, ctx) => {
 
   const path =
     issue.path.length > 0 && !!tForm
-      ? { path: tForm(issue.path.join(".") as any) }
+      ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        { path: tForm(issue.path.join(".") as any) }
       : {};
 
   switch (issue.code) {
@@ -163,7 +165,6 @@ export const makeZodI18nMap: MakeZodI18nMap = (option) => (issue, ctx) => {
           : (issue.minimum as number);
       message = t(
         `errors.too_small.${issue.type}.${
-          // eslint-disable-next-line no-nested-ternary
           issue.exact
             ? "exact"
             : issue.inclusive
@@ -185,7 +186,6 @@ export const makeZodI18nMap: MakeZodI18nMap = (option) => (issue, ctx) => {
           : (issue.maximum as number);
       message = t(
         `errors.too_big.${issue.type}.${
-          // eslint-disable-next-line no-nested-ternary
           issue.exact
             ? "exact"
             : issue.inclusive
@@ -206,6 +206,7 @@ export const makeZodI18nMap: MakeZodI18nMap = (option) => (issue, ctx) => {
         "errors.custom",
       );
 
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       message = (tCustom || t)(key as Parameters<typeof t>[0], {
         ...values,
         ...path,

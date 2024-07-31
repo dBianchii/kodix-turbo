@@ -205,17 +205,6 @@
   "Light": "Light",
   "Dark": "Dark",
   "System": "System",
-  "emails": {
-    "Join invitedByUsername on Kodix": "Join {invitedByUsername} on Kodix",
-    "Join teamName on Kodix": "Join <teamname></teamname> on <site></site>",
-    "Has invited you to the teamName team on Kodix": "Has invited you to the <teamname></teamname> team on <site></site>",
-    "Join the team": "Join the team",
-    "This invitation was intended for": "This invitation was intended for",
-    "This invite was sent from": "This invite was sent from",
-    "located in": "located in",
-    "If you were not expecting this invitation you can ignore this email": "If you were not expecting this invitation, you can ignore this email. If you are concerned about your account's safety, please reply to this email to get in touch with us."
-  },
-  "or copy and paste this URL into your browser:": "or copy and paste this URL into your browser:",
   "Hello": "Hello",
   "Join teamName on Kodix": "Join {teamName} on Kodix",
   "add": "Add",
