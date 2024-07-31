@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import path from "path";
 import { notFound } from "next/navigation";
 
 import { locales } from "@kdx/locales";
@@ -20,6 +19,7 @@ import { getRequestConfig } from "@kdx/locales/next-intl/server";
 //   return messages;
 // };
 
+const prefix = "../../../packages/locales/src/messages";
 export default getRequestConfig(async ({ locale }) => {
   // Validate that the incoming `locale` parameter is valid
   if (!locales.includes(locale as any)) notFound();
@@ -27,38 +27,10 @@ export default getRequestConfig(async ({ locale }) => {
   return {
     //! We should only load messages that are hosted by kdx. No need to load more messages than necessary.
     messages: {
-      ...(
-        await import(
-          path.resolve(
-            __dirname,
-            `../../../packages/locales/src/messages/kdx/${locale}.json`,
-          )
-        )
-      ).default,
-      ...(
-        await import(
-          path.resolve(
-            __dirname,
-            `../../../packages/locales/src/messages/api/${locale}.json`,
-          )
-        )
-      ).default,
-      ...(
-        await import(
-          path.resolve(
-            __dirname,
-            `../../../packages/locales/src/messages/zod/${locale}.json`,
-          )
-        )
-      ).default,
-      ...(
-        await import(
-          path.resolve(
-            __dirname,
-            `../../../packages/locales/src/messages/validators/${locale}.json`,
-          )
-        )
-      ).default,
+      ...(await import(`${prefix}/kdx/${locale}.json`)).default,
+      ...(await import(`${prefix}/api/${locale}.json`)).default,
+      ...(await import(`${prefix}/zod/${locale}.json`)).default,
+      ...(await import(`${prefix}/validators/${locale}.json`)).default,
     },
   };
 });

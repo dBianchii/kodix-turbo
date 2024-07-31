@@ -4,7 +4,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 
-import { LocaleProvider } from "@kdx/locales/next-intl/provider";
+import { NextIntlClientProvider } from "@kdx/locales/next-intl/provider";
 
 import { TailwindIndicator } from "~/app/[locale]/_components/tailwind-indicator";
 import { env } from "~/env";
@@ -12,9 +12,6 @@ import { TRPCReactProvider } from "~/trpc/react";
 
 import "~/app/globals.css";
 
-import { notFound } from "next/navigation";
-
-import { locales } from "@kdx/locales";
 import { getMessages } from "@kdx/locales/next-intl/server";
 import { kdxProductionURL } from "@kdx/shared";
 import { cn } from "@kdx/ui";
@@ -60,7 +57,6 @@ export default async function RootLayout(props: {
   children: React.ReactNode;
   params: { locale: string };
 }) {
-  if (!locales.includes(props.params.locale)) notFound();
   const messages = await getMessages();
 
   return (
@@ -77,7 +73,7 @@ export default async function RootLayout(props: {
           <Analytics />
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <Toaster richColors closeButton />
-            <LocaleProvider messages={messages}>
+            <NextIntlClientProvider messages={messages}>
               <TRPCReactProvider>
                 <div className="flex min-h-screen flex-col">
                   <Header />
@@ -92,7 +88,7 @@ export default async function RootLayout(props: {
                   </div>
                 )}
               </TRPCReactProvider>
-            </LocaleProvider>
+            </NextIntlClientProvider>
           </ThemeProvider>
         </body>
       </CSPostHogProvider>

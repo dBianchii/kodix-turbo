@@ -1,1 +1,1 @@
-export { NextIntlClientProvider as LocaleProvider } from "next-intl";
+export { NextIntlClientProvider } from "next-intl";
