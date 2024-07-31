@@ -2,11 +2,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import path from "path";
 import { notFound } from "next/navigation";
 
 import { locales } from "@kdx/locales";
 import { getRequestConfig } from "@kdx/locales/next-intl/server";
-
 // const messagesFolderPath = path.resolve(
 //   __dirname,
 //   "../../../packages/locales/src/messages",
@@ -29,22 +29,34 @@ export default getRequestConfig(async ({ locale }) => {
     messages: {
       ...(
         await import(
-          `../../../packages/locales/src/messages/kdx/${locale}.json`
+          path.resolve(
+            __dirname,
+            `../../../packages/locales/src/messages/kdx/${locale}.json`,
+          )
         )
       ).default,
       ...(
         await import(
-          `../../../packages/locales/src/messages/api/${locale}.json`
+          path.resolve(
+            __dirname,
+            `../../../packages/locales/src/messages/api/${locale}.json`,
+          )
         )
       ).default,
       ...(
         await import(
-          `../../../packages/locales/src/messages/zod/${locale}.json`
+          path.resolve(
+            __dirname,
+            `../../../packages/locales/src/messages/zod/${locale}.json`,
+          )
         )
       ).default,
       ...(
         await import(
-          `../../../packages/locales/src/messages/validators/${locale}.json`
+          path.resolve(
+            __dirname,
+            `../../../packages/locales/src/messages/validators/${locale}.json`,
+          )
         )
       ).default,
     },
