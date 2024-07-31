@@ -1,25 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import path from "path";
 import { notFound } from "next/navigation";
 
 import { locales } from "@kdx/locales";
 import { getRequestConfig } from "@kdx/locales/next-intl/server";
 
-const messagesFolderPath = path.resolve(
-  __dirname,
-  "../../../packages/locales/src/messages",
-);
+// const messagesFolderPath = path.resolve(
+//   __dirname,
+//   "../../../packages/locales/src/messages",
+// );
 
-const loadMessages = async (folder: string, locale: string) => {
-  const messages = (
-    await import(path.resolve(messagesFolderPath, `${folder}/${locale}.json`))
-  ).default;
-  return messages;
-};
+// const loadMessages = async (folder: string, locale: string) => {
+//   const messages = (
+//     await import(path.resolve(messagesFolderPath, `${folder}/${locale}.json`))
+//   ).default;
+//   return messages;
+// };
 
 export default getRequestConfig(async ({ locale }) => {
   // Validate that the incoming `locale` parameter is valid
@@ -27,11 +25,28 @@ export default getRequestConfig(async ({ locale }) => {
 
   return {
     //! We should only load messages that are hosted by kdx. No need to load more messages than necessary.
+
     messages: {
-      ...(await loadMessages("kdx", locale)),
-      ...(await loadMessages("api", locale)),
-      ...(await loadMessages("validators", locale)),
-      ...(await loadMessages("zod", locale)),
+      ...(
+        await import(
+          `../../../packages/locales/src/messages/kdx/${locale}.json`
+        )
+      ).default,
+      ...(
+        await import(
+          `../../../packages/locales/src/messages/api/${locale}.json`
+        )
+      ).default,
+      ...(
+        await import(
+          `../../../packages/locales/src/messages/zod/${locale}.json`
+        )
+      ).default,
+      ...(
+        await import(
+          `../../../packages/locales/src/messages/validators/${locale}.json`
+        )
+      ).default,
     },
   };
 });
