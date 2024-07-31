@@ -1,7 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable */
 import { notFound } from "next/navigation";
 
 import { locales } from "@kdx/locales";
@@ -19,7 +16,6 @@ import { getRequestConfig } from "@kdx/locales/next-intl/server";
 //   return messages;
 // };
 
-const prefix = "../../../packages/locales/src/messages";
 export default getRequestConfig(async ({ locale }) => {
   // Validate that the incoming `locale` parameter is valid
   if (!locales.includes(locale as any)) notFound();
