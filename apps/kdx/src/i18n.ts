@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 
 import { locales } from "@kdx/locales";
 import { getRequestConfig } from "@kdx/locales/next-intl/server";
+
 // const messagesFolderPath = path.resolve(
 //   __dirname,
 //   "../../../packages/locales/src/messages",
@@ -25,7 +26,6 @@ export default getRequestConfig(async ({ locale }) => {
 
   return {
     //! We should only load messages that are hosted by kdx. No need to load more messages than necessary.
-
     messages: {
       ...(
         await import(
