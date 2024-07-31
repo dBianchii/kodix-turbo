@@ -18,5 +18,5 @@ export const finishKodixCareOnboardingAction = action
     await api.app.installApp({
       appId: kodixCareAppId,
     });
-    // revalidatePath("/", "layout");
+    revalidatePath("/", "layout");
   });
