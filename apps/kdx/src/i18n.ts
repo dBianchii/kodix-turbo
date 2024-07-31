@@ -27,10 +27,26 @@ export default getRequestConfig(async ({ locale }) => {
   return {
     //! We should only load messages that are hosted by kdx. No need to load more messages than necessary.
     messages: {
-      ...(await import(`${prefix}/kdx/${locale}.json`)).default,
-      ...(await import(`${prefix}/api/${locale}.json`)).default,
-      ...(await import(`${prefix}/zod/${locale}.json`)).default,
-      ...(await import(`${prefix}/validators/${locale}.json`)).default,
+      ...(
+        await import(
+          `../../../packages/locales/src/messages/kdx/${locale}.json`
+        )
+      ).default,
+      ...(
+        await import(
+          `../../../packages/locales/src/messages/api/${locale}.json`
+        )
+      ).default,
+      ...(
+        await import(
+          `../../../packages/locales/src/messages/zod/${locale}.json`
+        )
+      ).default,
+      ...(
+        await import(
+          `../../../packages/locales/src/messages/validators/${locale}.json`
+        )
+      ).default,
     },
   };
 });
