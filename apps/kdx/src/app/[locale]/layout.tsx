@@ -4,7 +4,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 
-import { LocaleProvider } from "@kdx/locales/provider";
+import { LocaleProvider } from "@kdx/locales/next-intl/provider";
 
 import { TailwindIndicator } from "~/app/[locale]/_components/tailwind-indicator";
 import { env } from "~/env";
@@ -14,7 +14,7 @@ import "~/app/globals.css";
 
 import { notFound } from "next/navigation";
 
-import { locales } from "@kdx/locales/locales";
+import { locales } from "@kdx/locales";
 import { getMessages } from "@kdx/locales/next-intl/server";
 import { kdxProductionURL } from "@kdx/shared";
 import { cn } from "@kdx/ui";

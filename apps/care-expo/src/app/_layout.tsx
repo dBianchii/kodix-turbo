@@ -77,7 +77,7 @@ export default function RootLayout() {
     en,
     "pt-BR": pt_BR,
   };
-  const [locale, setLocale] = useState<"en" | "pt-BR">("pt-BR");
+  const [locale, _setLocale] = useState<"en" | "pt-BR">("pt-BR");
 
   return (
     <TRPCProvider>

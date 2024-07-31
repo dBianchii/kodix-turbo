@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import type { notifications } from "@kdx/db/schema";
-import { IsomorficT } from "@kdx/locales";
+import type { IsomorficT } from "@kdx/locales";
 
 import { ZNanoId } from "../..";
 

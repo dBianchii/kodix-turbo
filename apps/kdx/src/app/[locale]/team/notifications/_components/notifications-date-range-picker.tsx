@@ -7,7 +7,7 @@ import { addDays, format } from "date-fns";
 import { RxCalendar } from "react-icons/rx";
 
 import type { ButtonProps } from "@kdx/ui/button";
-import { useFormatter } from "@kdx/locales";
+import { useFormatter } from "@kdx/locales/next-intl";
 import { useTranslations } from "@kdx/locales/next-intl/client";
 import { usePathname, useRouter } from "@kdx/locales/next-intl/navigation";
 import { cn } from "@kdx/ui";

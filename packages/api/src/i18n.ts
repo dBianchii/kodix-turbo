@@ -1,7 +1,7 @@
 // /* eslint-disable */
 // import { notFound } from "next/navigation";
 
-// import { getRequestConfig } from "@kdx/locales";
+// import { getRequestConfig } from "@kdx/locales/next-intl";
 
 // const locales = ["pt-BR", "en"];
 

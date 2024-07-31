@@ -3,7 +3,7 @@ import { router, Stack } from "expo-router";
 import { ChevronLeft } from "@tamagui/lucide-icons";
 import { Input, SizableText, Spinner, useTheme, View } from "tamagui";
 
-import { useTranslations } from "@kdx/locales/expo/use-intl";
+import { useTranslations } from "@kdx/locales/use-intl";
 import { ZChangeNameInputSchema } from "@kdx/validators/trpc/user";
 
 import {

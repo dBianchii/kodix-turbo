@@ -18,6 +18,7 @@ export const T =
     const locale = getLocaleBasedOnCookie();
     const t = await getTranslations({ locale });
 
-    createI18nZodErrors({ locale });
+    await createI18nZodErrors({ locale });
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return schemaGetter(t).parse(input) as z.infer<S>;
   };

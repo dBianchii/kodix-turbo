@@ -4,7 +4,7 @@ import { useState } from "react";
 import { addDays } from "date-fns";
 import { RxCalendar, RxChevronDown, RxCross2 } from "react-icons/rx";
 
-import { useFormatter } from "@kdx/locales";
+import { useFormatter } from "@kdx/locales/next-intl";
 import { useTranslations } from "@kdx/locales/next-intl/client";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";

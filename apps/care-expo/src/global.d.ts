@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/consistent-type-imports */
 // Use type safe message keys with `next-intl`
 
 //? @kdx/care-expo should only use "care-expo" namespace
