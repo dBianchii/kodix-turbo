@@ -1,8 +1,8 @@
 import { z } from "zod";
 
-import { useTranslations as expo_useTranslations } from "@kdx/locales/expo/use-intl";
 import { useTranslations } from "@kdx/locales/next-intl/client";
 import { getTranslations } from "@kdx/locales/next-intl/server";
+import { useTranslations as expo_useTranslations } from "@kdx/locales/use-intl";
 
 import {
   customErrorsNs,
