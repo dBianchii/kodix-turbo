@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import path from "path";
@@ -15,13 +18,11 @@ const loadMessages = async (folder: string, locale: string) => {
   const messages = (
     await import(path.resolve(messagesFolderPath, `${folder}/${locale}.json`))
   ).default;
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return messages;
 };
 
 export default getRequestConfig(async ({ locale }) => {
   // Validate that the incoming `locale` parameter is valid
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
   if (!locales.includes(locale as any)) notFound();
 
   return {
