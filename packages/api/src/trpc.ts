@@ -27,8 +27,9 @@ import { getLocaleBasedOnCookie } from "./utils/locales";
  * @see https://trpc.io/docs/server/context
  */
 export const createTRPCContext = async () => {
-
   const locale = getLocaleBasedOnCookie();
+
+  //Calling the getTranslations here is causng the error:
   const t = await getTranslations({ locale });
 
   return {
