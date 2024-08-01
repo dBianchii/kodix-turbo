@@ -10,10 +10,8 @@ import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
-import { db } from "@kdx/db/client";
 import { getTranslations } from "@kdx/locales/next-intl/server";
 
-import type { AuthResponse } from "../../auth/src/config";
 import { getLocaleBasedOnCookie } from "./utils/locales";
 
 /**
@@ -28,24 +26,13 @@ import { getLocaleBasedOnCookie } from "./utils/locales";
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = async (opts: {
-  headers: Headers;
-  session: AuthResponse | null;
-}) => {
-  const authToken = opts.headers.get("Authorization") ?? null;
-  const session = opts.session;
-
-  const source = opts.headers.get("x-trpc-source") ?? "unknown";
-  console.log(">>> tRPC Request from", source, "by", session?.user);
+export const createTRPCContext = async () => {
 
   const locale = getLocaleBasedOnCookie();
   const t = await getTranslations({ locale });
 
   return {
     t,
-    session,
-    db,
-    token: authToken,
   };
 };
 

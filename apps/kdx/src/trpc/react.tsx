@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-properties */
 "use client";
 
 import { useState } from "react";
@@ -8,9 +9,13 @@ import { createTRPCReact } from "@trpc/react-query";
 import SuperJSON from "superjson";
 
 import type { AppRouter } from "@kdx/api";
-import { getBaseUrl } from "@kdx/shared";
+const getBaseUrl = () => {
+  if (typeof window !== "undefined") return window.location.origin;
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+   
+  return `http://localhost:${process.env.PORT ?? 3000}`;
+};
 
-import { env } from "~/env";
 
 const createQueryClient = () =>
   new QueryClient({
@@ -44,7 +49,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
       links: [
         loggerLink({
           enabled: (op) =>
-            env.NODE_ENV === "development" ||
+            process.env.NODE_ENV === "development" ||
             (op.direction === "down" && op.result instanceof Error),
         }),
         unstable_httpBatchStreamLink({

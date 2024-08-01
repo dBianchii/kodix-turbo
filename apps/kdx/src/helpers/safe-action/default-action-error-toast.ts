@@ -1,4 +1,3 @@
-import { toast } from "@kdx/ui/toast";
 
 /**
  * Used with onError in useAction to display a toast error message
@@ -28,6 +27,5 @@ export const defaultSafeActionToastError = (error: {
       }
     }
   }
-
-  toast.error(errorMessage);
+  console.log(errorMessage)
 };

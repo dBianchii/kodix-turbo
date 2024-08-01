@@ -1,24 +1,19 @@
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 
 import { appRouter, createTRPCContext } from "@kdx/api";
-import { auth } from "@kdx/auth";
 
 import { OPTIONS, setCorsHeaders } from "../../_enableCors";
 
 export const runtime = "nodejs";
 
 const handler = async (req: Request) => {
-  const currentUser = await auth();
 
   const response = await fetchRequestHandler({
     endpoint: "/api/trpc",
     router: appRouter,
     req,
     createContext: () =>
-      createTRPCContext({
-        session: currentUser,
-        headers: req.headers,
-      }),
+      createTRPCContext(),
     onError({ error, path }) {
       console.error(`>>> tRPC Error on '${path}'`, error);
     },

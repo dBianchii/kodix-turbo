@@ -2,7 +2,6 @@ import { TRPCError } from "@trpc/server";
 import { createSafeActionClient } from "next-safe-action";
 import { ZodError } from "zod";
 
-import { auth } from "@kdx/auth";
 
 //? This is from https://next-safe-action.dev/docs/getting-started
 export const action = createSafeActionClient({
@@ -24,9 +23,4 @@ export const action = createSafeActionClient({
     // reportToErrorHandlingSystem(e);
     console.error(error);
   },
-});
-
-export const authActionClient = action.use(async ({ next }) => {
-  const session = await auth();
-  return next({ ctx: { session } });
 });

@@ -1,8 +1,5 @@
 import type { inferProcedureBuilderResolverOptions } from "@trpc/server";
-import { TRPCError } from "@trpc/server";
 
-import { eq } from "@kdx/db";
-import { teams } from "@kdx/db/schema";
 
 import { t } from "./trpc";
 
@@ -21,59 +18,3 @@ export type TPublicProcedureContext = inferProcedureBuilderResolverOptions<
   typeof publicProcedure
 >["ctx"];
 
-/**
- * Protected (authenticated) procedure
- *
- * If you want a query or mutation to ONLY be accessible to logged in users, use this. It verifies
- * the session is valid and guarantees `ctx.session.user` is not null.
- *
- * @see https://trpc.io/docs/procedures
- */
-export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
-  if (!ctx.session?.user) {
-    throw new TRPCError({ code: "UNAUTHORIZED" });
-  }
-  return next({
-    ctx: {
-      // infers the `session` as non-nullable
-      session: { ...ctx.session, user: ctx.session.user },
-    },
-  });
-});
-export type TProtectedProcedureContext = inferProcedureBuilderResolverOptions<
-  typeof protectedProcedure
->["ctx"];
-
-export const isTeamOwnerProcedure = protectedProcedure.use(
-  async ({ ctx, next }) => {
-    const team = await ctx.db.query.teams.findFirst({
-      where: eq(teams.id, ctx.session.user.activeTeamId),
-      columns: {
-        id: true,
-        ownerId: true,
-      },
-    });
-
-    if (!team)
-      throw new TRPCError({
-        message: ctx.t("api.No Team Found"),
-        code: "NOT_FOUND",
-      });
-
-    if (team.ownerId !== ctx.session.user.id)
-      throw new TRPCError({
-        message: ctx.t("api.Only the team owner can perform this action"),
-        code: "FORBIDDEN",
-      });
-
-    return next({
-      ctx: {
-        ...ctx,
-        team,
-      },
-    });
-  },
-);
-export type TIsTeamOwnerProcedureContext = inferProcedureBuilderResolverOptions<
-  typeof isTeamOwnerProcedure
->["ctx"];
