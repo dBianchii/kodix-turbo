@@ -23,7 +23,6 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@kdx/shared": "workspace:*",
     "next-intl": "^3.17.2",
     "react": "catalog:react18",
     "use-intl": "^3.17.2"

@@ -18,13 +18,7 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@kdx/auth": "workspace:*",
-    "@kdx/dayjs": "workspace:*",
-    "@kdx/db": "workspace:*",
     "@kdx/locales": "workspace:*",
-    "@kdx/react-email": "workspace:*",
-    "@kdx/shared": "workspace:*",
-    "@kdx/validators": "workspace:*",
     "@node-rs/argon2": "^1.8.3",
     "@react-email/render": "0.0.13",
     "@trpc/server": "catalog:",

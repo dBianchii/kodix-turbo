@@ -16,7 +16,6 @@
     "dev": "turbo watch --no-daemon dev",
     "dev:kdx": "turbo watch dev -F @kdx/kdx...",
     "dev:email": "turbo watch dev -F @kdx/react-email...",
-    "dev:upstash": "turbo watch dev -F @kdx/upstash-dev...",
     "format": "turbo run format --continue -- --cache --cache-location node_modules/.cache/.prettiercache",
     "format:fix": "turbo run format --continue -- --write --cache --cache-location node_modules/.cache/.prettiercache",
     "lint": "turbo run lint --continue -- --cache --cache-location node_modules/.cache/.eslintcache",
@@ -34,10 +33,5 @@
     "turbo": "2.0.9",
     "typescript": "catalog:"
   },
-  "prettier": "@kdx/prettier-config",
-  "pnpm": {
-    "patchedDependencies": {
-      "metro@0.80.9": "patches/metro@0.80.9.patch"
-    }
-  }
+  "prettier": "@kdx/prettier-config"
 }
