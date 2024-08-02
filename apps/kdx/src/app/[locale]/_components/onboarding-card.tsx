@@ -2,7 +2,6 @@
 
 import { useAction } from "next-safe-action/hooks";
 
-
 import { defaultSafeActionToastError } from "~/helpers/safe-action/default-action-error-toast";
 import { finishKodixCareOnboardingAction } from "../actions/onboardingActions";
 
@@ -14,7 +13,7 @@ export default function OnboardingCard() {
   });
 
   return (
-    <button type="submit" onClick={() => execute({ patientName: "values.patientName"})}>
+    <button onClick={() => execute({ patientName: "values.patientName" })}>
       Cause the error
     </button>
   );
