@@ -7,7 +7,7 @@
  * The pieces you will need to use are documented accordingly near the end
  */
 import { initTRPC } from "@trpc/server";
-//TODO: make it import from our package: https://github.com/amannn/next-intl/issues/1229
+//TODO: make it import from our package: https://github.com/amannn/next-intl/issues/1229 sadface
 import { getTranslations } from "next-intl/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
