@@ -10,10 +10,6 @@ import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
-import { getTranslations } from "@kdx/locales/next-intl/server";
-
-import { getLocaleBasedOnCookie } from "./utils/locales";
-
 /**
  * 1. CONTEXT
  *
@@ -26,14 +22,15 @@ import { getLocaleBasedOnCookie } from "./utils/locales";
  *
  * @see https://trpc.io/docs/server/context
  */
+// eslint-disable-next-line @typescript-eslint/require-await
 export const createTRPCContext = async () => {
-  const locale = getLocaleBasedOnCookie();
+  // const locale = getLocaleBasedOnCookie();
 
   //Calling the getTranslations here is causng the error:
-  const t = await getTranslations({ locale });
+  // const t = await getTranslations();
 
   return {
-    t,
+    notNeeded: "yeah no need for context for this reprocution",
   };
 };
 

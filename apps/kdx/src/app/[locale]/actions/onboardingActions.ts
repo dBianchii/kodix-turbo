@@ -1,13 +1,10 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { getTranslations } from "@kdx/locales/next-intl/server"; //! THIS ONE DOESN'T WORK
 
+// import { getTranslations } from "next-intl/server";//! This one works!! You can uncomment this line and comment the one above to see the difference
 
-import { action } from "~/helpers/safe-action/safe-action";
-import { api } from "~/trpc/server";
-
-export const finishKodixCareOnboardingAction = action
-  .action(async () => {
-    await api.app.saveConfig();
-    revalidatePath("/", "layout");
-  });
+export const finishKodixCareOnboardingAction = async () => {
+  const t = await getTranslations();
+  console.log(t("Title"));
+};
