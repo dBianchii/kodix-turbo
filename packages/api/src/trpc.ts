@@ -7,12 +7,12 @@
  * The pieces you will need to use are documented accordingly near the end
  */
 import { initTRPC } from "@trpc/server";
-//TODO: make it import from our package: https://github.com/amannn/next-intl/issues/1229 sadface
-import { getTranslations } from "next-intl/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { db } from "@kdx/db/client";
+//TODO: make it import from our package: https://github.com/amannn/next-intl/issues/1229 sadface
+import { getTranslations } from "@kdx/locales/next-intl/server";
 
 import type { AuthResponse } from "../../auth/src/config";
 import { getLocaleBasedOnCookie } from "./utils/locales";
