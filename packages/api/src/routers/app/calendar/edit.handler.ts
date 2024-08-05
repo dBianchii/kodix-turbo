@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
 import { RRule, rrulestr } from "rrule";
 
 import type { TEditInputSchema } from "@kdx/validators/trpc/app/calendar";
@@ -6,7 +7,6 @@ import dayjs from "@kdx/dayjs";
 import { and, eq, gt, gte, inArray } from "@kdx/db";
 import { nanoid } from "@kdx/db/nanoid";
 import { eventExceptions, eventMasters } from "@kdx/db/schema";
-import { getTranslations } from "@kdx/locales/next-intl/server";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 

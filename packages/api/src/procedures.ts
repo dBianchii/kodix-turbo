@@ -1,9 +1,9 @@
 import type { inferProcedureBuilderResolverOptions } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
 
 import { eq } from "@kdx/db";
 import { teams } from "@kdx/db/schema";
-import { getTranslations } from "@kdx/locales/next-intl/server";
 
 import { t } from "./trpc";
 

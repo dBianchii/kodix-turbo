@@ -1,10 +1,10 @@
 import { TRPCError } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
 
 import dayjs from "@kdx/dayjs";
 import { eq } from "@kdx/db";
 import { nanoid } from "@kdx/db/nanoid";
 import { careShifts } from "@kdx/db/schema";
-import { getTranslations } from "@kdx/locales/next-intl/server";
 import WarnPreviousShiftNotEnded from "@kdx/react-email/warn-previous-shift-not-ended";
 import { kodixCareAppId, kodixNotificationFromEmail } from "@kdx/shared";
 

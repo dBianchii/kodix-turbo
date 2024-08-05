@@ -1,10 +1,10 @@
 import { hash } from "@node-rs/argon2";
 import { TRPCError } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
 
 import type { TChangePasswordInputSchema } from "@kdx/validators/trpc/user";
 import { eq } from "@kdx/db";
 import { resetPasswordTokens, users } from "@kdx/db/schema";
-import { getTranslations } from "@kdx/locales/next-intl/server";
 
 import type { TPublicProcedureContext } from "../../procedures";
 import { argon2Config } from "./utils";

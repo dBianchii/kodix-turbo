@@ -1,10 +1,10 @@
 import { TRPCError } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
 
 import type { TSendResetPasswordEmailInputSchema } from "@kdx/validators/trpc/user";
 import { eq } from "@kdx/db";
 import { nanoid } from "@kdx/db/nanoid";
 import { resetPasswordTokens } from "@kdx/db/schema";
-import { getTranslations } from "@kdx/locales/next-intl/server";
 import ResetPassword from "@kdx/react-email/reset-password";
 import { kodixNotificationFromEmail } from "@kdx/shared";
 

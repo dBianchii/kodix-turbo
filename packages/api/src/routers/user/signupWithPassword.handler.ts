@@ -1,5 +1,6 @@
 import { hash } from "@node-rs/argon2";
 import { TRPCError } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
 
 import type { TSignupWithPasswordInputSchema } from "@kdx/validators/trpc/user";
 import { createDbSessionAndCookie, createUser } from "@kdx/auth/utils";
@@ -7,7 +8,6 @@ import { eq } from "@kdx/db";
 import { db } from "@kdx/db/client";
 import { nanoid } from "@kdx/db/nanoid";
 import { users } from "@kdx/db/schema";
-import { getTranslations } from "@kdx/locales/next-intl/server";
 
 import type { TPublicProcedureContext } from "../../procedures";
 import { argon2Config } from "./utils";

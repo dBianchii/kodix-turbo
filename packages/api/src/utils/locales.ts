@@ -1,8 +1,8 @@
 import type { z, ZodSchema } from "zod";
 import { cookies } from "next/headers";
+import { getTranslations } from "next-intl/server";
 
 import { defaultLocale } from "@kdx/locales";
-import { getTranslations } from "@kdx/locales/next-intl/server";
 import { createI18nZodErrors } from "@kdx/validators/useI18nZodErrors";
 
 export const getLocaleBasedOnCookie = () =>

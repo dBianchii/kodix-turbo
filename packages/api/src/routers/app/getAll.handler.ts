@@ -1,8 +1,8 @@
 import { TRPCError } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
 
 import { eq, sql } from "@kdx/db";
 import { apps, appsToTeams } from "@kdx/db/schema";
-import { getTranslations } from "@kdx/locales/next-intl/server";
 
 import type { TPublicProcedureContext } from "../../procedures";
 import { getUpstashCache, setUpstashCache } from "../../upstash";

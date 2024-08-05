@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { TRPCError } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
 
 import type { TInviteInputSchema } from "@kdx/validators/trpc/team/invitation";
 import { nanoid } from "@kdx/db/nanoid";
 import { invitations } from "@kdx/db/schema";
-import { getTranslations } from "@kdx/locales/next-intl/server";
 import TeamInvite from "@kdx/react-email/team-invite";
 import {
   getBaseUrl,

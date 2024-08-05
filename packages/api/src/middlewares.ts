@@ -1,7 +1,7 @@
 import { experimental_standaloneMiddleware, TRPCError } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
 
 import type { AppPermissionId, KodixAppId } from "@kdx/shared";
-import { getTranslations } from "@kdx/locales/next-intl/server";
 import { getAppName } from "@kdx/locales/next-intl/server-hooks";
 import { kodixCareAppId } from "@kdx/shared";
 

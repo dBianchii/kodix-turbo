@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
 
 import type { TInstallAppInputSchema } from "@kdx/validators/trpc/app";
 import { and, eq } from "@kdx/db";
@@ -12,7 +13,6 @@ import {
   teamAppRolesToUsers,
   teams,
 } from "@kdx/db/schema";
-import { getTranslations } from "@kdx/locales/next-intl/server";
 import { appIdToAdminRole_defaultIdMap } from "@kdx/shared";
 
 import type { TIsTeamOwnerProcedureContext } from "../../procedures";

@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
 
 import type { TLeaveTeamInputSchema } from "@kdx/validators/trpc/team";
 import { and, eq, inArray, not } from "@kdx/db";
@@ -9,7 +10,6 @@ import {
   users,
   usersToTeams,
 } from "@kdx/db/schema";
-import { getTranslations } from "@kdx/locales/next-intl/server";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 

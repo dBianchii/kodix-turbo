@@ -1,10 +1,10 @@
 import { TRPCError } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
 
 import type { TDoCheckoutForShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import dayjs from "@kdx/dayjs";
 import { eq } from "@kdx/db";
 import { careShifts } from "@kdx/db/schema";
-import { getTranslations } from "@kdx/locales/next-intl/server";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 import { getCurrentCareShiftHandler } from "./getCurrentCareShift.handler";

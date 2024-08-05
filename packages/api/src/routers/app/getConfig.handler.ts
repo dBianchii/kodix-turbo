@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
 
 import type { TGetConfigInput } from "@kdx/validators/trpc/app";
-import { getTranslations } from "@kdx/locales/next-intl/server";
 import { appIdToAppTeamConfigSchema } from "@kdx/validators";
 
 import type { TProtectedProcedureContext } from "../../procedures";
