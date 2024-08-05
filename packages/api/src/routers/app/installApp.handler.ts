@@ -12,6 +12,7 @@ import {
   teamAppRolesToUsers,
   teams,
 } from "@kdx/db/schema";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 import { appIdToAdminRole_defaultIdMap } from "@kdx/shared";
 
 import type { TIsTeamOwnerProcedureContext } from "../../procedures";
@@ -36,9 +37,10 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
     )
     .then((res) => res[0]);
 
+  const t = await getTranslations({ locale: ctx.locale });
   if (installed)
     throw new TRPCError({
-      message: ctx.t("api.App already installed"),
+      message: t("api.App already installed"),
       code: "BAD_REQUEST",
     });
 
@@ -83,7 +85,7 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
       //Each app should have a designated admin role
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message: ctx.t("api.Admin role not found"),
+        message: t("api.Admin role not found"),
       });
 
     await tx.insert(teamAppRolesToUsers).values({

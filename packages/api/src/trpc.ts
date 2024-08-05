@@ -11,8 +11,8 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { db } from "@kdx/db/client";
+
 //TODO: make it import from our package: https://github.com/amannn/next-intl/issues/1229 sadface
-import { getTranslations } from "@kdx/locales/next-intl/server";
 
 import type { AuthResponse } from "../../auth/src/config";
 import { getLocaleBasedOnCookie } from "./utils/locales";
@@ -29,7 +29,7 @@ import { getLocaleBasedOnCookie } from "./utils/locales";
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = async (opts: {
+export const createTRPCContext = (opts: {
   headers: Headers;
   session: AuthResponse | null;
 }) => {
@@ -39,11 +39,8 @@ export const createTRPCContext = async (opts: {
   const source = opts.headers.get("x-trpc-source") ?? "unknown";
   console.log(">>> tRPC Request from", source, "by", session?.user);
 
-  const locale = getLocaleBasedOnCookie();
-  const t = await getTranslations({ locale });
-
   return {
-    t,
+    locale: getLocaleBasedOnCookie(),
     session,
     db,
     token: authToken,

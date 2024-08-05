@@ -4,6 +4,7 @@ import { TRPCError } from "@trpc/server";
 import type { TInviteInputSchema } from "@kdx/validators/trpc/team/invitation";
 import { nanoid } from "@kdx/db/nanoid";
 import { invitations } from "@kdx/db/schema";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 import TeamInvite from "@kdx/react-email/team-invite";
 import {
   getBaseUrl,
@@ -47,9 +48,11 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
       },
     },
   });
+  const t = await getTranslations({ locale: ctx.locale });
+
   if (!team)
     throw new TRPCError({
-      message: ctx.t("api.No Team Found"),
+      message: t("api.No Team Found"),
       code: "NOT_FOUND",
     });
 
@@ -58,7 +61,7 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
   );
   if (inTeamEmail)
     throw new TRPCError({
-      message: ctx.t("api.User USER is already a member of this team", {
+      message: t("api.User USER is already a member of this team", {
         user: inTeamEmail,
       }),
       code: "CONFLICT",
@@ -66,7 +69,7 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
 
   if (team.Invitations[0])
     throw new TRPCError({
-      message: ctx.t("api.Invitation already sent to EMAIL", {
+      message: t("api.Invitation already sent to EMAIL", {
         email: team.Invitations[0].email,
       }),
       code: "CONFLICT",
@@ -87,7 +90,7 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
       await resend.emails.send({
         from: kodixNotificationFromEmail,
         to: invite.email,
-        subject: ctx.t("api.You have been invited to join a team on URL", {
+        subject: t("api.You have been invited to join a team on URL", {
           url: getBaseUrl(),
         }),
         react: TeamInvite({

@@ -1,6 +1,7 @@
 import { experimental_standaloneMiddleware, TRPCError } from "@trpc/server";
 
 import type { AppPermissionId, KodixAppId } from "@kdx/shared";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 import { getAppName } from "@kdx/locales/next-intl/server-hooks";
 import { kodixCareAppId } from "@kdx/shared";
 
@@ -18,13 +19,15 @@ const appInstalledMiddlewareFactory = (appId: KodixAppId) =>
     //? By using the `getInstalledHandler`, we can use cached data, improving performance
     const apps = await getInstalledHandler({ ctx });
 
-    if (!apps.some((app) => app.id === appId))
+    if (!apps.some((app) => app.id === appId)) {
+      const t = await getTranslations({ locale: ctx.locale });
       throw new TRPCError({
         code: "UNAUTHORIZED",
-        message: ctx.t("api.appName is not installed", {
+        message: t("api.appName is not installed", {
           app: await getAppName(appId),
         }),
       });
+    }
 
     return next({ ctx });
   });
@@ -72,13 +75,15 @@ export const appPermissionMiddleware = (permissionId: AppPermissionId) =>
       });
     }
 
-    if (!foundPermission)
+    if (!foundPermission) {
+      const t = await getTranslations({ locale: ctx.locale });
       throw new TRPCError({
         code: "UNAUTHORIZED",
-        message: ctx.t(
+        message: t(
           "api.You dont have permission to do this Contact a team administrator if you believe this is an error",
         ),
       });
+    }
 
     return next({ ctx });
   });
@@ -94,13 +99,15 @@ export const appInstalledMiddleware = experimental_standaloneMiddleware<{
   //? By using the `getInstalledHandler`, we can use cached data, improving performance
   const installed = await getInstalledHandler({ ctx });
 
-  if (!installed.some((app) => app.id === input.appId))
+  if (!installed.some((app) => app.id === input.appId)) {
+    const t = await getTranslations({ locale: ctx.locale });
     throw new TRPCError({
       code: "UNAUTHORIZED",
-      message: ctx.t("api.appName is not installed", {
+      message: t("api.appName is not installed", {
         app: await getAppName(input.appId),
       }),
     });
+  }
 
   return next({ ctx });
 });

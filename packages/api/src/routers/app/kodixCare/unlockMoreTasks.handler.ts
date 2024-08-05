@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import type { TUnlockMoreTasksInputSchema } from "@kdx/validators/trpc/app/kodixCare";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
@@ -27,16 +28,18 @@ export const unlockMoreTasksHandler = async ({
   ).clonedCareTasksUntil;
 
   const isFirstShiftEver = !clonedCareTasksUntil;
+
+  const t = await getTranslations({ locale: ctx.locale });
   if (isFirstShiftEver)
     throw new TRPCError({
       code: "CONFLICT",
-      message: ctx.t("api.No active shift"),
+      message: t("api.No active shift"),
     });
 
   if (clonedCareTasksUntil >= input.selectedTimestamp)
     throw new TRPCError({
       code: "CONFLICT",
-      message: ctx.t(
+      message: t(
         `api.No tasks to unlock We have already unlocked all tasks up until TIME`,
         {
           time: clonedCareTasksUntil.toISOString(),
@@ -48,7 +51,7 @@ export const unlockMoreTasksHandler = async ({
   if (!careShift)
     throw new TRPCError({
       code: "CONFLICT",
-      message: ctx.t("api.No active shift"),
+      message: t("api.No active shift"),
     });
 
   await cloneCalendarTasksToCareTasks({

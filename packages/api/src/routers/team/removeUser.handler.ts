@@ -10,6 +10,7 @@ import {
   users,
   usersToTeams,
 } from "@kdx/db/schema";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 
 import type { TIsTeamOwnerProcedureContext } from "../../procedures";
 
@@ -21,8 +22,9 @@ interface RemoveUserOptions {
 export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
   const isUserTryingToRemoveSelfFromTeam = input.userId === ctx.session.user.id;
   if (isUserTryingToRemoveSelfFromTeam) {
+    const t = await getTranslations({ locale: ctx.locale });
     throw new TRPCError({
-      message: ctx.t(
+      message: t(
         "api.You cannot remove yourself from a team you are an owner of Delete this team instead",
       ),
       code: "FORBIDDEN",

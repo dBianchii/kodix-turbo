@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import { sql } from "@kdx/db";
 import { db } from "@kdx/db/client";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 
@@ -36,11 +37,13 @@ export const getActiveTeamHandler = async ({ ctx }: GetActiveTeamOptions) => {
     userId: ctx.session.user.id,
   });
 
-  if (!team)
+  if (!team) {
+    const t = await getTranslations({ locale: ctx.locale });
     throw new TRPCError({
-      message: ctx.t("api.No Team Found"),
+      message: t("api.No Team Found"),
       code: "NOT_FOUND",
     });
+  }
 
   const teamWithUsers = {
     ...team,

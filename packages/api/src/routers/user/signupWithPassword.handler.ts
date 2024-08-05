@@ -7,6 +7,7 @@ import { eq } from "@kdx/db";
 import { db } from "@kdx/db/client";
 import { nanoid } from "@kdx/db/nanoid";
 import { users } from "@kdx/db/schema";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 
 import type { TPublicProcedureContext } from "../../procedures";
 import { argon2Config } from "./utils";
@@ -28,11 +29,14 @@ export const signupWithPasswordHandler = async ({
     .where(eq(users.email, input.email))
     .then((res) => !!res[0]);
 
-  if (registered)
+  if (registered) {
+    const t = await getTranslations({ locale: ctx.locale });
+
     throw new TRPCError({
       code: "BAD_REQUEST",
-      message: ctx.t("api.Email already registered"),
+      message: t("api.Email already registered"),
     });
+  }
 
   const passwordHash = await hash(input.password, argon2Config);
   const userId = nanoid();

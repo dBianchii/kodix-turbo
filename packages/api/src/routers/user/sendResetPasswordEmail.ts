@@ -4,6 +4,7 @@ import type { TSendResetPasswordEmailInputSchema } from "@kdx/validators/trpc/us
 import { eq } from "@kdx/db";
 import { nanoid } from "@kdx/db/nanoid";
 import { resetPasswordTokens } from "@kdx/db/schema";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 import ResetPassword from "@kdx/react-email/reset-password";
 import { kodixNotificationFromEmail } from "@kdx/shared";
 
@@ -24,11 +25,14 @@ export const sendResetPasswordEmail = async ({
     columns: { id: true },
   });
 
-  if (!user)
+  if (!user) {
+    const t = await getTranslations({ locale: ctx.locale });
+
     throw new TRPCError({
       code: "NOT_FOUND",
-      message: ctx.t("api.User not found"),
+      message: t("api.User not found"),
     });
+  }
 
   const tokenExpiresAt = new Date(Date.now() + 1000 * 60 * 5); // 5 minutes
 

@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 
 import { eq } from "@kdx/db";
 import { teams } from "@kdx/db/schema";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 
 import { t } from "./trpc";
 
@@ -54,15 +55,16 @@ export const isTeamOwnerProcedure = protectedProcedure.use(
       },
     });
 
+    const t = await getTranslations({ locale: ctx.locale });
     if (!team)
       throw new TRPCError({
-        message: ctx.t("api.No Team Found"),
+        message: t("api.No Team Found"),
         code: "NOT_FOUND",
       });
 
     if (team.ownerId !== ctx.session.user.id)
       throw new TRPCError({
-        message: ctx.t("api.Only the team owner can perform this action"),
+        message: t("api.Only the team owner can perform this action"),
         code: "FORBIDDEN",
       });
 
