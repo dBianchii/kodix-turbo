@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 
-import { createMiddleware } from "@kdx/locales";
-import { defaultLocale, locales } from "@kdx/locales/locales";
+import { defaultLocale, locales } from "@kdx/locales";
+import { createMiddleware } from "@kdx/locales/next-intl";
 
 const I18nMiddleware = createMiddleware({
   locales: locales,
@@ -20,7 +20,8 @@ export const config = {
     // - … if they start with `/api`, `/_next` or `/_vercel`
     // - … the ones containing a dot (e.g. `favicon.ico`)
     "/((?!api|_next|_vercel|.*\\..*).*)",
+
     // Match all pathnames within `/users`, optionally with a locale prefix
-    "/(.+)?/users/(.+)",
+    // "/(.+)?/users/(.+)",
   ],
 };

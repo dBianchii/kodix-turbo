@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { LuLoader2 } from "react-icons/lu";
 
-import { useTranslations } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import {
   AlertDialog,
   AlertDialogAction,

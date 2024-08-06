@@ -1,7 +1,7 @@
 import type { Column } from "@tanstack/react-table";
 import { CheckIcon } from "@radix-ui/react-icons";
 
-import { useTranslations } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 
 import type { DataTableFilterOption, Option } from "./types";
 import { cn } from "../..";

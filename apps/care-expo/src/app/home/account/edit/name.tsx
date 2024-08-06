@@ -3,6 +3,7 @@ import { router, Stack } from "expo-router";
 import { ChevronLeft } from "@tamagui/lucide-icons";
 import { Input, SizableText, Spinner, useTheme, View } from "tamagui";
 
+import { useTranslations } from "@kdx/locales/use-intl";
 import { ZChangeNameInputSchema } from "@kdx/validators/trpc/user";
 
 import {
@@ -21,8 +22,9 @@ import { useAuth } from "~/utils/auth";
 export default function EditNamePage() {
   const { user } = useAuth();
 
+  const t = useTranslations();
   const form = useForm({
-    schema: ZChangeNameInputSchema,
+    schema: ZChangeNameInputSchema(t),
     defaultValues: {
       name: user?.name ?? undefined,
     },

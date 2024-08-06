@@ -12,6 +12,7 @@ import {
 } from "@kdx/validators/trpc/user";
 
 import { protectedProcedure, publicProcedure } from "../../procedures";
+import { T } from "../../utils/locales";
 import { changeNameHandler } from "./changeName.handler";
 import { changePasswordHandler } from "./changePassword.handler";
 import { deleteNotificationsHandler } from "./deleteNotifications.handler";
@@ -24,7 +25,7 @@ import { switchActiveTeamHandler } from "./switchActiveTeam.handler";
 
 export const userRouter = {
   changeName: protectedProcedure
-    .input(ZChangeNameInputSchema)
+    .input(T(ZChangeNameInputSchema))
     .mutation(changeNameHandler),
 
   /** Gets all notifications for the selected teamId and also all their pending invitations */

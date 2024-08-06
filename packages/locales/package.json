@@ -5,15 +5,16 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./lang": "./src/lang.ts",
-    "./provider": "./src/provider.tsx",
-    "./server": "./src/server.ts",
-    "./client": "./src/client.ts",
-    "./hooks": "./src/hooks/index.ts",
-    "./server-hooks": "./src/hooks/server-hooks.ts",
-    "./plugin": "./src/plugin.js",
-    "./navigation": "./src/navigation.ts",
-    "./locales": "./src/locales.ts"
+    "./next-intl": "./src/next-intl/index.ts",
+    "./next-intl/provider": "./src/next-intl/provider.tsx",
+    "./next-intl/server": "./src/next-intl/server.ts",
+    "./next-intl/client": "./src/next-intl/client.ts",
+    "./next-intl/hooks": "./src/next-intl/hooks/index.ts",
+    "./next-intl/server-hooks": "./src/next-intl/hooks/server-hooks.ts",
+    "./next-intl/plugin": "./src/next-intl/plugin.js",
+    "./next-intl/navigation": "./src/next-intl/navigation.ts",
+    "./use-intl": "./src/use-intl/index.ts",
+    "./messages/care-expo": "./src/messages/_exports/care-expo.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
@@ -24,7 +25,8 @@
   "dependencies": {
     "@kdx/shared": "workspace:*",
     "next-intl": "^3.17.2",
-    "react": "catalog:react18"
+    "react": "catalog:react18",
+    "use-intl": "^3.17.2"
   },
   "devDependencies": {
     "@kdx/eslint-config": "workspace:*",

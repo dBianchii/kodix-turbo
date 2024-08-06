@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
 
 import type { TDeleteInputSchema } from "@kdx/validators/trpc/team/invitation";
 import { and, eq } from "@kdx/db";
@@ -20,11 +21,14 @@ export const deleteHandler = async ({ ctx, input }: DeleteOptions) => {
       ),
   });
 
-  if (!invitation)
+  if (!invitation) {
+    const t = await getTranslations({ locale: ctx.locale });
+
     throw new TRPCError({
-      message: ctx.t("No Invitation Found"),
+      message: t("api.No Invitation Found"),
       code: "NOT_FOUND",
     });
+  }
 
   await ctx.db
     .delete(invitations)

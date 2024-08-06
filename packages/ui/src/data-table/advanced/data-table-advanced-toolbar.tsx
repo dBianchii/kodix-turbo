@@ -5,7 +5,7 @@ import * as React from "react";
 import { useSearchParams } from "next/navigation";
 import { CaretSortIcon, PlusIcon } from "@radix-ui/react-icons";
 
-import { useTranslations } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 
 import type { DataTableFilterField, DataTableFilterOption } from "./types";
 import { cn } from "../../.";

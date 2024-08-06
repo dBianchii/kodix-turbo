@@ -3,14 +3,16 @@
 import { SplashScreen, Stack, useRouter, useSegments } from "expo-router";
 
 import "@bacons/text-decoder/install";
-import "~/i18n";
 
 import type { FontSource } from "expo-font";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useColorScheme } from "react-native";
 import { useFonts } from "expo-font";
 import { Spinner, TamaguiProvider } from "tamagui";
 import tamaguiConfig from "tamagui.config";
+
+import { en, pt_BR } from "@kdx/locales/messages/care-expo";
+import { IntlProvider } from "@kdx/locales/use-intl";
 
 import { RootSafeAreaView } from "~/components/safe-area-view";
 import { TRPCProvider } from "~/utils/api";
@@ -71,15 +73,22 @@ function MainLayout() {
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const messages = {
+    en,
+    "pt-BR": pt_BR,
+  };
+  const [locale, _setLocale] = useState<"en" | "pt-BR">("pt-BR");
 
   return (
     <TRPCProvider>
-      <TamaguiProvider
-        config={tamaguiConfig}
-        defaultTheme={colorScheme === "dark" ? "dark_blue" : "light_blue"}
-      >
-        <MainLayout />
-      </TamaguiProvider>
+      <IntlProvider messages={messages[locale]} locale={locale}>
+        <TamaguiProvider
+          config={tamaguiConfig}
+          defaultTheme={colorScheme === "dark" ? "dark_blue" : "light_blue"}
+        >
+          <MainLayout />
+        </TamaguiProvider>
+      </IntlProvider>
     </TRPCProvider>
   );
 }

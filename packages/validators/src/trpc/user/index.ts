@@ -1,11 +1,19 @@
 import { z } from "zod";
 
 import type { notifications } from "@kdx/db/schema";
+import type { IsomorficT } from "@kdx/locales";
 
 import { ZNanoId } from "../..";
 
-export const ZChangeNameInputSchema = z.object({ name: z.string().max(32) });
-export type TChangeNameInputSchema = z.infer<typeof ZChangeNameInputSchema>;
+export const ZChangeNameInputSchema = (t: IsomorficT) =>
+  z.object({
+    name: z.string().max(32, {
+      message: t("validators.Please use 32 characters at maximum"),
+    }),
+  });
+export type TChangeNameInputSchema = z.infer<
+  ReturnType<typeof ZChangeNameInputSchema>
+>;
 
 export const ZGetNotificationsInputSchema = z.object({
   teamId: z.string().optional(),

@@ -5,40 +5,44 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
+      "types": "./dist/validators/src/index.d.ts",
+      "default": "./dist/validators/src/index.js"
+    },
+    "./useI18nZodErrors": {
+      "types": "./dist/validators/src/utils/useI18nZodErrors.d.ts",
+      "default": "./dist/validators/src/utils/useI18nZodErrors.js"
     },
     "./trpc/app": {
-      "types": "./dist/trpc/app/index.d.ts",
-      "default": "./dist/trpc/app/index.js"
+      "types": "./dist/validators/src/trpc/app/index.d.ts",
+      "default": "./dist/validators/src/trpc/app/index.js"
     },
     "./trpc/app/calendar": {
-      "types": "./dist/trpc/app/calendar/index.d.ts",
-      "default": "./dist/trpc/app/calendar/index.js"
+      "types": "./dist/validators/src/trpc/app/calendar/index.d.ts",
+      "default": "./dist/validators/src/trpc/app/calendar/index.js"
     },
     "./trpc/app/kodixCare": {
-      "types": "./dist/trpc/app/kodixCare/index.d.ts",
-      "default": "./dist/trpc/app/kodixCare/index.js"
+      "types": "./dist/validators/src/trpc/app/kodixCare/index.d.ts",
+      "default": "./dist/validators/src/trpc/app/kodixCare/index.js"
     },
     "./trpc/app/todo": {
-      "types": "./dist/trpc/app/todo/index.d.ts",
-      "default": "./dist/trpc/app/todo/index.js"
+      "types": "./dist/validators/src/trpc/app/todo/index.d.ts",
+      "default": "./dist/validators/src/trpc/app/todo/index.js"
     },
     "./trpc/team": {
-      "types": "./dist/trpc/team/index.d.ts",
-      "default": "./dist/trpc/team/index.js"
+      "types": "./dist/validators/src/trpc/team/index.d.ts",
+      "default": "./dist/validators/src/trpc/team/index.js"
     },
     "./trpc/team/appRole": {
-      "types": "./dist/trpc/team/appRole/index.d.ts",
-      "default": "./dist/trpc/team/appRole/index.js"
+      "types": "./dist/validators/src/trpc/team/appRole/index.d.ts",
+      "default": "./dist/validators/src/trpc/team/appRole/index.js"
     },
     "./trpc/team/invitation": {
-      "types": "./dist/trpc/team/invitation/index.d.ts",
-      "default": "./dist/trpc/team/invitation/index.js"
+      "types": "./dist/validators/src/trpc/team/invitation/index.d.ts",
+      "default": "./dist/validators/src/trpc/team/invitation/index.js"
     },
     "./trpc/user": {
-      "types": "./dist/trpc/user/index.d.ts",
-      "default": "./dist/trpc/user/index.js"
+      "types": "./dist/validators/src/trpc/user/index.d.ts",
+      "default": "./dist/validators/src/trpc/user/index.js"
     }
   },
   "scripts": {
@@ -59,6 +63,7 @@
     "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/shared": "workspace:*",
+    "@kdx/locales": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
     "eslint": "catalog:",
     "prettier": "catalog:",

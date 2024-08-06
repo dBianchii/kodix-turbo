@@ -6,7 +6,7 @@ import {
   LuSignalMedium,
 } from "react-icons/lu";
 
-import { useTranslations } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import {

@@ -1,7 +1,8 @@
 import type { ViewProps } from "tamagui";
 import { Link, useRouter } from "expo-router";
-import { useTranslation } from "react-i18next";
 import { Button, H1, View } from "tamagui";
+
+import { useTranslations } from "@kdx/locales/use-intl";
 
 import { RootSafeAreaView } from "~/components/safe-area-view";
 
@@ -132,10 +133,10 @@ export default function Index() {
   //     void utils.invalidate();
   //   }
   // }
-  const { t } = useTranslation();
+  const t = useTranslations();
   return (
     <RootSafeAreaView f={1} jc={"center"} ai={"center"}>
-      <H1 alignSelf="center">{t("Kodix Care")}</H1>
+      <H1 alignSelf="center">{t("something")}</H1>
       <MobileAuth mt={"$6"} />
     </RootSafeAreaView>
   );

@@ -2,8 +2,8 @@
 
 import { RxCalendar } from "react-icons/rx";
 
-import { useFormatter } from "@kdx/locales";
-import { useTranslations } from "@kdx/locales/client";
+import { useFormatter } from "@kdx/locales/next-intl";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import { Calendar } from "@kdx/ui/calendar";

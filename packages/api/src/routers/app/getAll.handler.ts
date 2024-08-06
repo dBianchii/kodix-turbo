@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
 
 import { eq, sql } from "@kdx/db";
 import { apps, appsToTeams } from "@kdx/db/schema";
@@ -40,9 +41,10 @@ export const getAllHandler = async ({ ctx }: GetAllOptions) => {
     });
 
   if (!_apps.length) {
+    const t = await getTranslations({ locale: ctx.locale });
     throw new TRPCError({
       code: "NOT_FOUND",
-      message: ctx.t("No apps found"),
+      message: t("api.No apps found"),
     });
   }
 

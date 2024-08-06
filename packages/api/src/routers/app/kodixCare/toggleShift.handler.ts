@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
 
 import dayjs from "@kdx/dayjs";
 import { eq } from "@kdx/db";
@@ -19,6 +20,7 @@ interface ToggleShiftOptions {
 
 /**Starts a new shift and ends the previous one */
 export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
+  const t = await getTranslations({ locale: ctx.locale });
   const clonedCareTasksUntil = (
     await getConfigHandler({
       ctx,
@@ -68,8 +70,8 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
     //Needed for typesafety
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
-      message: ctx.t(
-        "No previous careshift found even though clonedCalendarTasks exists This should only happen if we allow users to delete careshifts",
+      message: t(
+        "api.No previous careshift found even though clonedCalendarTasks exists This should only happen if we allow users to delete careshifts",
       ),
     });
 
@@ -107,7 +109,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
       await resend.emails.send({
         from: kodixNotificationFromEmail,
         to: lastCareShift.Caregiver.email,
-        subject: ctx.t(`Your last shift was ended by NAME`, {
+        subject: t(`api.Your last shift was ended by NAME`, {
           name: ctx.session.user.name,
         }),
         react: WarnPreviousShiftNotEnded(),

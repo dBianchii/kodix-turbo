@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { getTranslations } from "@kdx/locales/server";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 
 import HeaderFooterRemover from "~/app/[locale]/_components/header-footer-remover";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";

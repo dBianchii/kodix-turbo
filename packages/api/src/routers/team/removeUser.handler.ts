@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
 
 import type { TRemoveUserSchema } from "@kdx/validators/trpc/team";
 import { and, eq, inArray, not } from "@kdx/db";
@@ -21,9 +22,10 @@ interface RemoveUserOptions {
 export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
   const isUserTryingToRemoveSelfFromTeam = input.userId === ctx.session.user.id;
   if (isUserTryingToRemoveSelfFromTeam) {
+    const t = await getTranslations({ locale: ctx.locale });
     throw new TRPCError({
-      message: ctx.t(
-        "You cannot remove yourself from a team you are an owner of Delete this team instead",
+      message: t(
+        "api.You cannot remove yourself from a team you are an owner of Delete this team instead",
       ),
       code: "FORBIDDEN",
     });

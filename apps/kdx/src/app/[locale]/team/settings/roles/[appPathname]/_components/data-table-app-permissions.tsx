@@ -14,11 +14,11 @@ import type {
   KodixAppId,
 } from "@kdx/shared";
 import type { FixedColumnsType } from "@kdx/ui/data-table/data-table";
-import { useTranslations } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import {
   useAppPermissionName,
   useAppRoleDefaultNames,
-} from "@kdx/locales/hooks";
+} from "@kdx/locales/next-intl/hooks";
 import { DataTable } from "@kdx/ui/data-table/data-table";
 import { MultiSelect } from "@kdx/ui/multi-select";
 

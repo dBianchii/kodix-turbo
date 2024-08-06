@@ -6,7 +6,7 @@ import { RxPlus } from "react-icons/rx";
 import { RRule, Weekday } from "rrule";
 
 import dayjs from "@kdx/dayjs";
-import { useTranslations } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import { Button } from "@kdx/ui/button";
 import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {

@@ -6,7 +6,7 @@ import { Frequency, RRule } from "rrule";
 
 import type { Dayjs } from "@kdx/dayjs";
 import dayjs from "@kdx/dayjs";
-import { useTranslations } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import { cn } from "@kdx/ui";
 import {
   AlertDialog,

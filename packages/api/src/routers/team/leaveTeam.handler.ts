@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
 
 import type { TLeaveTeamInputSchema } from "@kdx/validators/trpc/team";
 import { and, eq, inArray, not } from "@kdx/db";
@@ -23,17 +24,19 @@ export const leaveTeamHandler = async ({ ctx, input }: LeaveTeamOptions) => {
     columns: { id: true, ownerId: true },
   });
 
+  const t = await getTranslations({ locale: ctx.locale });
+
   if (!team)
     throw new TRPCError({
       code: "NOT_FOUND",
-      message: ctx.t("No Team Found"),
+      message: t("api.No Team Found"),
     });
 
   if (team.ownerId === ctx.session.user.id)
     throw new TRPCError({
       code: "FORBIDDEN",
-      message: ctx.t(
-        "You cannot leave a team you are an owner of Delete this team instead",
+      message: t(
+        "api.You cannot leave a team you are an owner of Delete this team instead",
       ),
     });
 
@@ -52,8 +55,8 @@ export const leaveTeamHandler = async ({ ctx, input }: LeaveTeamOptions) => {
   if (!otherTeam) {
     throw new TRPCError({
       code: "FORBIDDEN",
-      message: ctx.t(
-        "You are attempting to leave a team but you have no other teams Please create a new team first",
+      message: t(
+        "api.You are attempting to leave a team but you have no other teams Please create a new team first",
       ),
     });
   }

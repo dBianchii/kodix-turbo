@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 
-import { useTranslations } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import { LampContainer } from "@kdx/ui/aceternity/lamp";
 
 export function HeroLamp() {
