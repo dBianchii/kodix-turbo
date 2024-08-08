@@ -44,6 +44,9 @@
     "You dont have permission to do this Contact a team administrator if you believe this is an error": "Você não tem permissão para fazer isso. \nEntre em contato com um administrador da equipe se você acredita que isso é um erro.",
     "You have been invited to join a team on URL": "Você foi convidado para participar de uma equipe em {url}",
     "Your last shift was ended by NAME": "Seu último turno foi encerrado por {name}",
-    "appName is not installed": "{appName} não está instalado"
+    "appName is not installed": "{appName} não está instalado",
+    "The team cannot be deleted while it has other members": "A equipe não pode ser excluída enquanto tiver outros membros",
+    "The team name confirmation does not match the team name": "A confirmação do nome da equipe não corresponde ao nome da equipe",
+    "You are attempting to delete a team but you have no other teams Please create a new team first": "Você está tentando excluir uma equipe, mas não possui outras equipes. \nPor favor, crie uma nova equipe primeiro"
   }
 }
