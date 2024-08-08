@@ -378,5 +378,7 @@
   "Error installing": "Erro ao instalar",
   "Only the owner of the team can invite new members": "(Somente o proprietário da equipe pode convidar novos membros)",
   "Only the owner of the team can remove invites": "Somente o proprietário da equipe pode remover convites",
-  "Only the owner of the team can remove members": "Somente o proprietário da equipe pode remover membros"
+  "Only the owner of the team can remove members": "Somente o proprietário da equipe pode remover membros",
+  "Before deleting your team you must remove all members": "Antes de excluir sua equipe, você deve remover todos os membros",
+  "You are deleting your team teamName": "Você está excluindo sua equipe <teamname>teamname</teamname>"
 }
