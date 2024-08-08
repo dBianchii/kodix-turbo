@@ -624,8 +624,8 @@ importers:
         specifier: ^7.4.1
         version: 7.4.2
       drizzle-kit:
-        specifier: ^0.23.0
-        version: 0.23.0
+        specifier: ^0.24.0
+        version: 0.24.0
       eslint:
         specifier: 'catalog:'
         version: 9.6.0
@@ -1011,7 +1011,7 @@ importers:
         version: 7.35.0(eslint@9.6.0)
       eslint-plugin-react-hooks:
         specifier: rc
-        version: 5.1.0-rc-65903583-20240805(eslint@9.6.0)
+        version: 5.1.0-rc-9d2da591-20240808(eslint@9.6.0)
       eslint-plugin-turbo:
         specifier: ^2.0.11
         version: 2.0.11(eslint@9.6.0)
@@ -1924,6 +1924,9 @@ packages:
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
     engines: {node: '>=12'}
+
+  '@drizzle-team/brocli@0.8.2':
+    resolution: {integrity: sha512-zTrFENsqGvOkBOuHDC1pXCkDXNd2UhP4lI3gYGhQ1R1SPeAAfqzPsV1dcpMy4uNU6kB5VpU5NGhvwxVNETR02A==}
 
   '@egjs/hammerjs@2.0.17':
     resolution: {integrity: sha512-XQsZgjm2EcVUiZQf11UBJQfmZeEmOW8DpI1gsFeln6w0ae0ii4dMQEQ0kjl6DspdWX1aGY1/loyXnP0JS06e/A==}
@@ -6883,8 +6886,8 @@ packages:
     resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
     engines: {node: '>=12'}
 
-  drizzle-kit@0.23.0:
-    resolution: {integrity: sha512-w9jE97z193dd4jzAyj4Uv2SOh8Ydue70Ki6W0awy4bGM1aPXan6zD6Yv+nNTA6oGgNTDl2MJFxutjHG4fden5g==}
+  drizzle-kit@0.24.0:
+    resolution: {integrity: sha512-rUl5Rf5HLOVkAwHEVEi8xgulIRWzoys0q77RHGCxv5e9v8AI3JGFg7Ug5K1kn513RwNZbuNJMUKOXo0j8kPRgg==}
     hasBin: true
 
   drizzle-orm@0.32.0:
@@ -7216,8 +7219,8 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8
 
-  eslint-plugin-react-hooks@5.1.0-rc-65903583-20240805:
-    resolution: {integrity: sha512-NEsjgvv/oqnwGu1PIuk0LKo5UrBO0SnvFdavWl56R5SAcHPZi+sEnQ7Onzp6hpRuEAC69bhfTA/9no6JItCM/w==}
+  eslint-plugin-react-hooks@5.1.0-rc-9d2da591-20240808:
+    resolution: {integrity: sha512-yI6jfxprwD6nIQbyWsyFzxf7CpBAm2oncUmszXQMJivYs+tcuWMKe8FBZUGjBNPCPAh89MjxOTJ6F7B+ZGNQmw==}
     engines: {node: '>=10'}
     peerDependencies:
       eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0
@@ -12766,6 +12769,8 @@ snapshots:
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
+
+  '@drizzle-team/brocli@0.8.2': {}
 
   '@egjs/hammerjs@2.0.17':
     dependencies:
@@ -18876,8 +18881,9 @@ snapshots:
 
   dotenv@16.4.5: {}
 
-  drizzle-kit@0.23.0:
+  drizzle-kit@0.24.0:
     dependencies:
+      '@drizzle-team/brocli': 0.8.2
       '@esbuild-kit/esm-loader': 2.6.5
       esbuild: 0.19.12
       esbuild-register: 3.5.0(esbuild@0.19.12)
@@ -19322,7 +19328,7 @@ snapshots:
       safe-regex-test: 1.0.3
       string.prototype.includes: 2.0.0
 
-  eslint-plugin-react-hooks@5.1.0-rc-65903583-20240805(eslint@9.6.0):
+  eslint-plugin-react-hooks@5.1.0-rc-9d2da591-20240808(eslint@9.6.0):
     dependencies:
       eslint: 9.6.0
 
