@@ -381,7 +381,14 @@
   "Only the owner of the team can remove members": "Only the owner of the team can remove members",
   "Delete team": "Delete team",
   "Before deleting your team you must remove all members": "Before deleting your team, you must remove all members",
-  "You are deleting your team teamName": "You are deleting your team <teamname>teamname</teamname>",
+  "You are deleting your team teamName": "You are deleting your team <teamName>teamName</teamName>",
   "All data related to your team will be permanently lost and cannot be recovered": "All data related to your team will be permanently lost and cannot be recovered",
-  "Continue": "Continue"
+  "Continue": "Continue",
+  "Warning": "Warning",
+  "This action is not reversible please be certain": "This action is not reversible. Please be certain.",
+  "Enter the team name teamName to continue": "Enter the team name <teamName>teamName</teamName> to continue",
+  "Team name does not match": "Team name does not match",
+  "delete my team": "delete my team",
+  "To verify please type KEY": "To verify, please type <deleteMyTeam>deleteMyTeam</deleteMyTeam>",
+  "Team deleted successfully": "Team deleted successfully"
 }
