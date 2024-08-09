@@ -6,6 +6,7 @@ import {
   ZDoCheckoutForShiftInputSchema,
   ZGetCareTasksInputSchema,
   ZSaveCareTaskInputSchema,
+  ZSignInByPasswordInputSchema,
   ZUnlockMoreTasksInputSchema,
 } from "@kdx/validators/trpc/app/kodixCare";
 
@@ -19,6 +20,7 @@ import { doCheckoutForShiftHandler } from "./doCheckoutForShift.handler";
 import { getCareTasksHandler } from "./getCareTasks.handler";
 import { getCurrentCareShiftHandler } from "./getCurrentCareShift.handler";
 import { saveCareTaskHandler } from "./saveCareTask.handler";
+import { signInByPasswordHandler } from "./signInByPassword.handler";
 import { toggleShiftHandler } from "./toggleShift.handler";
 import { unlockMoreTasksHandler } from "./unlockMoreTasks.handler";
 
@@ -47,4 +49,7 @@ export const kodixCareRouter = {
   checkEmailForRegister: publicProcedure
     .input(ZCheckEmailForRegisterInputSchema)
     .query(checkEmailForRegisterHandler),
+  signInByPassword: publicProcedure
+    .input(ZSignInByPasswordInputSchema)
+    .mutation(signInByPasswordHandler),
 } satisfies TRPCRouterRecord;

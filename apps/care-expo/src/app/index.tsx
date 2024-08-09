@@ -1,3 +1,4 @@
+import type { ViewProps } from "tamagui";
 import { Link, useRouter } from "expo-router";
 import { Button, H1, View } from "tamagui";
 
@@ -130,22 +131,19 @@ export default function Index() {
   //     void utils.invalidate();
   //   }
   // }
-
   return (
-    <RootSafeAreaView bg={"$c"}>
-      {/* Changes page title visible on the header */}
+    <RootSafeAreaView f={1} jc={"center"} ai={"center"}>
       <H1 alignSelf="center">Kodix Care</H1>
-
-      <MobileAuth />
+      <MobileAuth mt={"$6"} />
     </RootSafeAreaView>
   );
 }
 
-function MobileAuth() {
+function MobileAuth(props: ViewProps) {
   const router = useRouter();
 
   return (
-    <View my={"$8"} gap="$4">
+    <View gap="$4" {...props}>
       <Link href="/register" asChild>
         <Button w={"$20"} themeInverse>
           Novo cadastro

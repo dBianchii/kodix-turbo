@@ -4,7 +4,7 @@ import { auth } from "@kdx/auth";
 import { eq, sql } from "@kdx/db";
 import { db } from "@kdx/db/client";
 import { usersToTeams } from "@kdx/db/schema";
-import { redirect } from "@kdx/locales/navigation";
+import { redirect } from "@kdx/locales/next-intl/navigation";
 
 const allTeamIdsForUserQuery = db
   .select({ id: usersToTeams.teamId })

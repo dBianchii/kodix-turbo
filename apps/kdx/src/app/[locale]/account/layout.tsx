@@ -1,4 +1,4 @@
-import { getTranslations } from "@kdx/locales/server";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { Navigation } from "~/app/[locale]/_components/navigation";

@@ -1,7 +1,7 @@
 import { revalidatePath } from "next/cache";
 
 import { auth } from "@kdx/auth";
-import { getTranslations } from "@kdx/locales/server";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 import { Button } from "@kdx/ui/button";
 import {
   Card,

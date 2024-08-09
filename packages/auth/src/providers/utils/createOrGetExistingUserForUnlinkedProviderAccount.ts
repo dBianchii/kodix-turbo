@@ -4,7 +4,7 @@ import { db } from "@kdx/db/client";
 import { nanoid } from "@kdx/db/nanoid";
 import { accounts } from "@kdx/db/schema";
 
-import { createUser } from "../../db";
+import { createUser } from "../../utils";
 
 export default async function createOrGetExistingUserForUnlinkedProviderAccount({
   name,

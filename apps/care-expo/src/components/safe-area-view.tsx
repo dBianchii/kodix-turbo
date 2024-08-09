@@ -1,13 +1,10 @@
-import type { ViewProps } from "tamagui";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View } from "tamagui";
+import { styled } from "tamagui";
 
-export function RootSafeAreaView({ children, ...props }: ViewProps) {
-  return (
-    <View bg={"$background"} f={1}>
-      <SafeAreaView>
-        <View {...props}>{children}</View>
-      </SafeAreaView>
-    </View>
-  );
-}
+export const defaultPadding = "$4";
+
+export const RootSafeAreaView = styled(SafeAreaView, {
+  bg: "$background",
+  h: "100%",
+  p: defaultPadding,
+});

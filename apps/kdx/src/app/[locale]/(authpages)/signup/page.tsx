@@ -1,8 +1,8 @@
 import Link from "next/link";
 
 import { auth } from "@kdx/auth";
-import { redirect } from "@kdx/locales/navigation";
-import { getTranslations } from "@kdx/locales/server";
+import { redirect } from "@kdx/locales/next-intl/navigation";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 
 import { ProviderButtons } from "../_components/provider-buttons";
 import { PasswordSignupForm } from "./_components/password-signup-form";

@@ -2,8 +2,8 @@
 
 import { PiTranslate } from "react-icons/pi";
 
-import { useTranslations } from "@kdx/locales/client";
-import { Link, usePathname } from "@kdx/locales/navigation";
+import { useTranslations } from "@kdx/locales/next-intl/client";
+import { Link, usePathname } from "@kdx/locales/next-intl/navigation";
 import { Button } from "@kdx/ui/button";
 import {
   DropdownMenu,

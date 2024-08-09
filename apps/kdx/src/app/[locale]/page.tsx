@@ -1,9 +1,9 @@
 import { RxChevronRight } from "react-icons/rx";
 
 import { auth } from "@kdx/auth";
-import { redirect } from "@kdx/locales/navigation";
-import { getTranslations } from "@kdx/locales/server";
-// import { getTranslations, setStaticParamsLocale } from "@kdx/locales/server";
+import { redirect } from "@kdx/locales/next-intl/navigation";
+import { getTranslations } from "@kdx/locales/next-intl/server";
+// import { getTranslations, setStaticParamsLocale } from "@kdx/locales/next-intl/server";
 import { cn } from "@kdx/ui";
 import { buttonVariants } from "@kdx/ui/button";
 import { RadialGradient } from "@kdx/ui/magic-ui/radial-gradient";

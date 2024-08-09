@@ -10,8 +10,8 @@ import {
 import type { RouterOutputs } from "@kdx/api";
 import type { AppRoleDefaultId, KodixAppId } from "@kdx/shared";
 import type { FixedColumnsType } from "@kdx/ui/data-table/data-table";
-import { useTranslations } from "@kdx/locales/client";
-import { useAppRoleDefaultNames } from "@kdx/locales/hooks";
+import { useTranslations } from "@kdx/locales/next-intl/client";
+import { useAppRoleDefaultNames } from "@kdx/locales/next-intl/hooks";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { DataTable } from "@kdx/ui/data-table/data-table";
 import { MultiSelect } from "@kdx/ui/multi-select";

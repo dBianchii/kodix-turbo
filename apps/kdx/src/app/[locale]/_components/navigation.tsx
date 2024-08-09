@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { RxArrowLeft } from "react-icons/rx";
 
-import { usePathname } from "@kdx/locales/navigation";
+import { usePathname } from "@kdx/locales/next-intl/navigation";
 import { cn } from "@kdx/ui";
 import { useMediaQuery } from "@kdx/ui/hooks";
 import {

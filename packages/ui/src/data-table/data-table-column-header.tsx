@@ -6,7 +6,7 @@ import {
   EyeNoneIcon,
 } from "@radix-ui/react-icons";
 
-import { useTranslations } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 
 import { cn } from "..";
 import { Button } from "../button";

@@ -1,7 +1,7 @@
 import { RxCalendar, RxCube, RxGlobe, RxInput } from "react-icons/rx";
 
-import { getTranslations } from "@kdx/locales/server";
-import { getAppName } from "@kdx/locales/server-hooks";
+import { getTranslations } from "@kdx/locales/next-intl/server";
+import { getAppName } from "@kdx/locales/next-intl/server-hooks";
 import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { Calendar } from "@kdx/ui/calendar";

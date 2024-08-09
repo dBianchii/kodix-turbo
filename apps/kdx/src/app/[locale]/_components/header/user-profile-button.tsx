@@ -6,7 +6,7 @@ import { MdOutlineSwapHorizontalCircle } from "react-icons/md";
 import { RxGear, RxPerson } from "react-icons/rx";
 
 import type { User } from "@kdx/auth";
-import { useTranslations } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Button } from "@kdx/ui/button";
 import {

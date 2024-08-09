@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 
 import { auth } from "@kdx/auth";
-import { getTranslations } from "@kdx/locales/server";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 import { buttonVariants } from "@kdx/ui/button";
 
 import HeaderFooterRemover from "~/app/[locale]/_components/header-footer-remover";

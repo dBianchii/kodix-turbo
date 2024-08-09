@@ -1,5 +1,5 @@
 import type { TAcceptInputSchema } from "@kdx/validators/trpc/team/invitation";
-import { acceptInvite } from "@kdx/auth/db";
+import { acceptInvite } from "@kdx/auth/utils";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 

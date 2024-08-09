@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
 
 import type { TSendResetPasswordEmailInputSchema } from "@kdx/validators/trpc/user";
 import { eq } from "@kdx/db";
@@ -24,11 +25,14 @@ export const sendResetPasswordEmail = async ({
     columns: { id: true },
   });
 
-  if (!user)
+  if (!user) {
+    const t = await getTranslations({ locale: ctx.locale });
+
     throw new TRPCError({
       code: "NOT_FOUND",
-      message: ctx.t("User not found"),
+      message: t("api.User not found"),
     });
+  }
 
   const tokenExpiresAt = new Date(Date.now() + 1000 * 60 * 5); // 5 minutes
 

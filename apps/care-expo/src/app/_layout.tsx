@@ -1,16 +1,20 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 
-import { SplashScreen, Stack, useRouter } from "expo-router";
+import { SplashScreen, Stack, useRouter, useSegments } from "expo-router";
 
 import "@bacons/text-decoder/install";
 
 import type { FontSource } from "expo-font";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useColorScheme } from "react-native";
 import { useFonts } from "expo-font";
-import { Spinner, TamaguiProvider, YStack } from "tamagui";
+import { Spinner, TamaguiProvider } from "tamagui";
 import tamaguiConfig from "tamagui.config";
 
+import { en, pt_BR } from "@kdx/locales/messages/care-expo";
+import { IntlProvider } from "@kdx/locales/use-intl";
+
+import { RootSafeAreaView } from "~/components/safe-area-view";
 import { TRPCProvider } from "~/utils/api";
 import { useAuth } from "~/utils/auth";
 
@@ -23,17 +27,26 @@ function MainLayout() {
     InterBold: require("@tamagui/font-inter/otf/Inter-Bold.otf") as FontSource,
   });
 
+  const segments = useSegments();
   const router = useRouter();
   const { user, isLoading } = useAuth();
 
   useEffect(() => {
     if (isLoading) return;
-    if (user) {
-      router.replace("/home");
+    const inProtectedPage = segments[0] === "home";
+
+    if (!user) {
+      if (inProtectedPage) {
+        router.replace("/");
+        return;
+      }
       return;
     }
-    router.replace("/");
-  }, [user, isLoading, router]);
+
+    if (!inProtectedPage) {
+      router.replace("/home");
+    }
+  }, [user, isLoading, router, segments]);
 
   useEffect(() => {
     if (fontsLoaded || fontsError) {
@@ -48,14 +61,9 @@ function MainLayout() {
   return (
     <>
       {isLoading ? (
-        <YStack
-          backgroundColor={"$background"}
-          f={1}
-          ai={"center"}
-          jc={"center"}
-        >
+        <RootSafeAreaView f={1} jc={"center"} ai={"center"}>
           <Spinner />
-        </YStack>
+        </RootSafeAreaView>
       ) : (
         <Stack screenOptions={{ headerShown: false }} />
       )}
@@ -65,15 +73,22 @@ function MainLayout() {
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const messages = {
+    en,
+    "pt-BR": pt_BR,
+  };
+  const [locale, _setLocale] = useState<"en" | "pt-BR">("pt-BR");
 
   return (
     <TRPCProvider>
-      <TamaguiProvider
-        config={tamaguiConfig}
-        defaultTheme={colorScheme === "dark" ? "dark_blue" : "light_blue"}
-      >
-        <MainLayout />
-      </TamaguiProvider>
+      <IntlProvider messages={messages[locale]} locale={locale}>
+        <TamaguiProvider
+          config={tamaguiConfig}
+          defaultTheme={colorScheme === "dark" ? "dark_blue" : "light_blue"}
+        >
+          <MainLayout />
+        </TamaguiProvider>
+      </IntlProvider>
     </TRPCProvider>
   );
 }

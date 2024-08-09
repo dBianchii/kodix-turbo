@@ -1,6 +1,6 @@
 "use server";
 
-import { redirect } from "@kdx/locales/navigation";
+import { redirect } from "@kdx/locales/next-intl/navigation";
 import { ZSignupWithPasswordInputSchema } from "@kdx/validators/trpc/user";
 
 import { action } from "~/helpers/safe-action/safe-action";

@@ -12,12 +12,12 @@ export const useSignIn = () => {
   const utils = api.useUtils();
   const router = useRouter();
 
-  const mutation = api.user.signInByPassword.useMutation({
+  const mutation = api.app.kodixCare.signInByPassword.useMutation({
     onSuccess: async (sessionToken) => {
       setToken(sessionToken);
 
       await utils.invalidate();
-      router.replace("/");
+      router.dismissAll();
     },
     onSettled: () => utils.invalidate(),
   });

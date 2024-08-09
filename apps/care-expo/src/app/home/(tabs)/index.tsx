@@ -1,10 +1,9 @@
 import React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
-import { Text, YStack } from "tamagui";
+import { YStack } from "tamagui";
 
+import { RootSafeAreaView } from "~/components/safe-area-view";
 import { useAuth } from "~/utils/auth";
-import { Header } from "../_components/header";
 
 export default function Tab() {
   const { user } = useAuth();
@@ -12,12 +11,15 @@ export default function Tab() {
   const router = useRouter();
   if (!user) router.replace("/");
 
+  // const shift = api.app.kodixCare.getCurrentShift.useQuery(undefined);
+
   return (
-    <YStack bg={"$background"} flex={1} px={"$3"} ai={"flex-end"}>
-      <SafeAreaView>
-        <Header />
-        <Text>Home page. Yayy</Text>
-      </SafeAreaView>
-    </YStack>
+    <RootSafeAreaView>
+      <YStack
+        backgroundColor={"$background"}
+        jc={"center"}
+        ai={"center"}
+      ></YStack>
+    </RootSafeAreaView>
   );
 }

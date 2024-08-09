@@ -1,8 +1,16 @@
-import { Keyboard, Pressable } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { router } from "expo-router";
-import { ArrowLeft } from "@tamagui/lucide-icons";
-import { Button, H1, Input, Spinner, Text, View, YStack } from "tamagui";
+import { Keyboard, TouchableOpacity } from "react-native";
+import { router, Stack } from "expo-router";
+import { ChevronLeft } from "@tamagui/lucide-icons";
+import {
+  Button,
+  H1,
+  Input,
+  Spinner,
+  Text,
+  useTheme,
+  View,
+  YStack,
+} from "tamagui";
 
 import { getErrorMessage } from "@kdx/shared";
 import { ZSignInByPasswordInputSchema } from "@kdx/validators/trpc/user";
@@ -92,85 +100,93 @@ export default function SignIn() {
   const form = useForm({
     schema: ZSignInByPasswordInputSchema,
   });
+
+  const theme = useTheme();
+
   return (
     <YStack bg={"$background"} flex={1} alignItems="center" px={"$3"}>
-      <SafeAreaView>
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            backgroundColor: theme.background.val,
+          },
+          title: "",
+          headerShown: true,
+          headerShadowVisible: false,
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                router.back();
+              }}
+            >
+              <ChevronLeft size={"$2"} />
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <View mt={"$2"}>
         <View>
-          <Pressable
-            onPress={() => {
-              router.back();
-            }}
-          >
-            <ArrowLeft color={"white"} />
-          </Pressable>
-          <View>
-            <View>
-              <H1>Bem vindo(a) de volta</H1>
-            </View>
-            <Form {...form}>
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        keyboardType="email-address"
-                        placeholder="name@email.com"
-                        onChangeText={field.onChange}
-                        value={field.value}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      This is your public display name.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        secureTextEntry
-                        onChangeText={field.onChange}
-                        value={field.value}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      This is your public display name.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <Button
-                mt={"$6"}
-                onPress={form.handleSubmit((values) => {
-                  Keyboard.dismiss();
-                  void mutation.mutate(values);
-                })}
-              >
-                {mutation.isPending ? <Spinner /> : "Continuar"}
-              </Button>
-            </Form>
-
-            {mutation.isError && (
-              <View>
-                <Text>{getErrorMessage(mutation.error)}</Text>
-              </View>
-            )}
-          </View>
+          <H1>Bem vindo(a) de volta</H1>
         </View>
-      </SafeAreaView>
+        <Form {...form}>
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    keyboardType="email-address"
+                    placeholder="name@email.com"
+                    onChangeText={field.onChange}
+                    value={field.value}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Este é o seu nome de exibição público.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Senha</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    secureTextEntry
+                    onChangeText={field.onChange}
+                    value={field.value}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Button
+            mt={"$6"}
+            onPress={form.handleSubmit((values) => {
+              Keyboard.dismiss();
+              void mutation.mutate(values);
+            })}
+          >
+            {mutation.isPending ? <Spinner /> : "Continuar"}
+          </Button>
+        </Form>
+
+        {mutation.isError && (
+          <View>
+            <Text>{getErrorMessage(mutation.error)}</Text>
+          </View>
+        )}
+      </View>
     </YStack>
   );
 }

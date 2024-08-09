@@ -1,10 +1,9 @@
-import { cookies, headers } from "next/headers";
 import { hash } from "@node-rs/argon2";
 import { TRPCError } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
 
 import type { TSignupWithPasswordInputSchema } from "@kdx/validators/trpc/user";
-import { lucia } from "@kdx/auth";
-import { createUser } from "@kdx/auth/db";
+import { createDbSessionAndCookie, createUser } from "@kdx/auth/utils";
 import { eq } from "@kdx/db";
 import { db } from "@kdx/db/client";
 import { nanoid } from "@kdx/db/nanoid";
@@ -30,11 +29,14 @@ export const signupWithPasswordHandler = async ({
     .where(eq(users.email, input.email))
     .then((res) => !!res[0]);
 
-  if (registered)
+  if (registered) {
+    const t = await getTranslations({ locale: ctx.locale });
+
     throw new TRPCError({
       code: "BAD_REQUEST",
-      message: ctx.t("Email already registered"),
+      message: t("api.Email already registered"),
     });
+  }
 
   const passwordHash = await hash(input.password, argon2Config);
   const userId = nanoid();
@@ -52,20 +54,6 @@ export const signupWithPasswordHandler = async ({
     });
   });
 
-  const heads = headers();
-
-  const session = await lucia.createSession(userId, {
-    ipAddress:
-      heads.get("X-Forwarded-For") ??
-      heads.get("X-Forwarded-For") ??
-      "127.0.0.1",
-    userAgent: heads.get("user-agent"),
-  });
-  const sessionCookie = lucia.createSessionCookie(session.id);
-  cookies().set(
-    sessionCookie.name,
-    sessionCookie.value,
-    sessionCookie.attributes,
-  );
-  return session.id;
+  const sessionId = createDbSessionAndCookie({ userId });
+  return sessionId;
 };

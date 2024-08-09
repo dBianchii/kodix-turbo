@@ -6,8 +6,8 @@ import { RxChevronLeft, RxDotsHorizontal } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
-import { useTranslations } from "@kdx/locales/client";
-import { useRouter } from "@kdx/locales/navigation";
+import { useTranslations } from "@kdx/locales/next-intl/client";
+import { useRouter } from "@kdx/locales/next-intl/navigation";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import {

@@ -4,8 +4,8 @@ import { auth } from "@kdx/auth";
 import { eq } from "@kdx/db";
 import { db } from "@kdx/db/client";
 import { teams } from "@kdx/db/schema";
-import { redirect } from "@kdx/locales/navigation";
-import { getTranslations } from "@kdx/locales/server";
+import { redirect } from "@kdx/locales/next-intl/navigation";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 
 import { AppSwitcher } from "~/app/[locale]/_components/app-switcher";
 
