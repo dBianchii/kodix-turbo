@@ -17,7 +17,7 @@ export default async function SettingsGeneralPage() {
         <EditTeamNameCard />
       </Suspense>
       <Suspense fallback={<SettingsEditCardSkeleton />}>
-        <DeleteTeamCard />
+        <DeleteTeamCardOrLeaveTeamCard />
       </Suspense>
     </div>
   );
@@ -38,13 +38,15 @@ async function EditTeamNameCard() {
   );
 }
 
-async function DeleteTeamCard() {
+async function DeleteTeamCardOrLeaveTeamCard() {
   const { user } = await auth();
   if (!user) return null;
   const team = await api.team.getActiveTeam();
-  const canDelete = team.ownerId === user.id;
+  const isOwner = team.ownerId === user.id;
+  if (isOwner) return <DeleteTeamCardClient teamName={user.activeTeamName} />;
 
-  return (
-    <DeleteTeamCardClient canEdit={canDelete} teamName={user.activeTeamName} />
-  );
+  // return (
+  //   <LeaveTeamCardClient />
+  // )
+  return null;
 }

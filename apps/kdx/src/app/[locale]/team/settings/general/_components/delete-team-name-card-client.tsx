@@ -40,13 +40,7 @@ import { useI18nZodErrors } from "@kdx/validators/useI18nZodErrors";
 
 import { api } from "~/trpc/react";
 
-export function DeleteTeamCardClient({
-  teamName,
-  canEdit,
-}: {
-  teamName: string;
-  canEdit: boolean;
-}) {
+export function DeleteTeamCardClient({ teamName }: { teamName: string }) {
   useI18nZodErrors();
   const t = useTranslations();
 
@@ -142,7 +136,7 @@ export function DeleteTeamCardClient({
                           })}
                         </FormLabel>
                         <FormControl>
-                          <Input {...field} disabled={!canEdit} />
+                          <Input {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -159,7 +153,7 @@ export function DeleteTeamCardClient({
                           })}
                         </FormLabel>
                         <FormControl>
-                          <Input {...field} disabled={!canEdit} />
+                          <Input {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
