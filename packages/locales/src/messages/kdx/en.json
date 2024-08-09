@@ -398,8 +398,7 @@
   "You are leaving the team TEAMNAME": "You are leaving the team <teamName>teamName</teamName>",
   "Leaving team": "Leaving team...",
   "Successfully left the team": "Successfully left the team",
-  "Are you sure you want to leave the team": "Are you sure you want to leave the team?"
-  "Only the owner of the team can remove members": "Only the owner of the team can remove members",
+  "Are you sure you want to leave the team": "Are you sure you want to leave the team?",
   "Permissions": "Permissions",
   "Define the role of each user": "Define the role of each user",
   "Select your app to change its configurations": "Select the app to change settings:",

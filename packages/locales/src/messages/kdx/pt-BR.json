@@ -393,8 +393,7 @@
   "Warning": "Aviso",
   "delete my team": "excluir minha equipe",
   "You are leaving the team TEAMNAME": "Você está saindo da equipe <teamName>teamName</teamName>",
-  "Are you sure you want to leave the team": "Tem certeza de que deseja sair do time?"
-  "Only the owner of the team can remove members": "Somente o proprietário da equipe pode remover membros",
+  "Are you sure you want to leave the team": "Tem certeza de que deseja sair do time?",
   "Permissions": "Permissões",
   "Define the role of each user": "Defina o papel de cada usuário",
   "Select your app to change its configurations": "Selecione o app para alterar as definições:",
