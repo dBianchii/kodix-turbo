@@ -73,16 +73,6 @@ export const deleteTeamHandler = async ({ ctx, input }: DeleteTeamOptions) => {
       .set({ activeTeamId: otherTeam.id })
       .where(eq(users.id, ctx.session.user.id));
 
-    //Remove the user from the team
-    await tx
-      .delete(usersToTeams)
-      .where(
-        and(
-          eq(usersToTeams.teamId, ctx.session.user.activeTeamId),
-          eq(usersToTeams.userId, ctx.session.user.id),
-        ),
-      );
-
     //Remove the team
     await tx.delete(teams).where(eq(teams.id, ctx.session.user.activeTeamId)); //! Should delete many other tables based on referential actions
   });
