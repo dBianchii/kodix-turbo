@@ -2,6 +2,7 @@ import { Suspense } from "react";
 
 import { auth } from "@kdx/auth";
 import { redirect } from "@kdx/locales/next-intl/navigation";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 
 import { api } from "~/trpc/server";
 import { DeleteTeamCardClient } from "./_components/delete-team-name-card-client";
@@ -11,15 +12,29 @@ import { LeaveTeamCardClient } from "./_components/leave-team-card-client";
 
 export default async function SettingsGeneralPage() {
   const { user } = await auth();
+  if (!user) redirect("/");
+  const t = await getTranslations();
   if (!user) return redirect("/");
   return (
-    <div className="mt-8 space-y-8 md:mt-0">
-      <Suspense fallback={<SettingsEditCardSkeleton />}>
-        <EditTeamNameCard />
-      </Suspense>
-      <Suspense fallback={<SettingsEditCardSkeleton />}>
-        <DeleteTeamCardOrLeaveTeamCard />
-      </Suspense>
+    <div className="mt-8 space-y-6 md:mt-0">
+      <div>
+        <h2 className="text-center text-2xl font-bold md:text-left">
+          {t("General")}
+        </h2>
+        <p className="text-sm text-muted-foreground">
+          {t(
+            "settings.Change the name of your team and manage your participation",
+          )}
+        </p>
+      </div>
+      <div className="space-y-4">
+        <Suspense fallback={<SettingsEditCardSkeleton />}>
+          <EditTeamNameCard />
+        </Suspense>
+        <Suspense fallback={<SettingsEditCardSkeleton />}>
+          <DeleteTeamCardOrLeaveTeamCard />
+        </Suspense>
+      </div>
     </div>
   );
 }

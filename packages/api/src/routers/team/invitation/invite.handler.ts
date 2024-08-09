@@ -99,6 +99,7 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
           inviteLink: `${getBaseUrl()}/team/invite/${invite.id}`,
           teamImage: `${getBaseUrl()}/api/avatar/${team.name}`,
           teamName: team.name,
+          locale: ctx.locale,
           // username: ??
         }),
       });

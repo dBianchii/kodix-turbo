@@ -16,6 +16,7 @@ import {
   Text,
 } from "@react-email/components";
 
+import type { locales } from "@kdx/locales";
 import { getTranslations } from "@kdx/locales/next-intl/server";
 import { getBaseUrl } from "@kdx/shared";
 
@@ -31,6 +32,7 @@ export const TeamInvite = async ({
   inviteLink = "https://kodix.com/teams/invite/foo",
   inviteFromIp = "204.13.186.218",
   inviteFromLocation = "São Paulo, Brazil",
+  locale = "pt-BR",
 }: {
   username?: string;
   userImage?: string;
@@ -41,8 +43,9 @@ export const TeamInvite = async ({
   inviteLink?: string;
   inviteFromIp?: string;
   inviteFromLocation?: string;
+  locale: (typeof locales)[number];
 }) => {
-  const t = await getTranslations();
+  const t = await getTranslations({ locale });
   const previewText = t("api.emails.Join invitedByUsername on Kodix", {
     invitedByUsername,
   });

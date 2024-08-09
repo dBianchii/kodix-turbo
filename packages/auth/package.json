@@ -18,7 +18,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@auth/drizzle-adapter": "^1.2.0",
     "@kdx/db": "workspace:*",
     "@kdx/react-email": "workspace:*",
     "@kdx/shared": "workspace:*",
@@ -33,7 +32,6 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@auth/core": "0.32.0",
     "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",

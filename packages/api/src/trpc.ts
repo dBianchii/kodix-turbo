@@ -38,7 +38,6 @@ export const createTRPCContext = (opts: {
 
   const source = opts.headers.get("x-trpc-source") ?? "unknown";
   console.log(">>> tRPC Request from", source, "by", session?.user);
-
   return {
     locale: getLocaleBasedOnCookie(),
     session,
