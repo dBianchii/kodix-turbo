@@ -389,5 +389,7 @@
   "This action is not reversible please be certain": "Esta ação não é reversível. \nPor favor, tenha certeza.",
   "To verify please type KEY": "Para verificar, digite <deleteMyTeam>deleteMyTeam</deleteMyTeam>",
   "Warning": "Aviso",
-  "delete my team": "excluir minha equipe"
+  "delete my team": "excluir minha equipe",
+  "You are leaving the team TEAMNAME": "Você está saindo da equipe <teamName>teamName</teamName>",
+  "Are you sure you want to leave the team": "Tem certeza de que deseja sair do time?"
 }

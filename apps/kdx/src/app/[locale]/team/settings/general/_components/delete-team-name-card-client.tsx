@@ -124,7 +124,7 @@ export function DeleteTeamCardClient({ teamName }: { teamName: string }) {
                     </span>
                   </div>
                 </AlertDialogHeader>
-                <div className="bg-card/40 py-8">
+                <div className="flex flex-col gap-4 bg-card/40 py-8">
                   <FormField
                     control={form.control}
                     name="teamNameConfirmation"

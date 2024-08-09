@@ -7,6 +7,7 @@ import { api } from "~/trpc/server";
 import { DeleteTeamCardClient } from "./_components/delete-team-name-card-client";
 import { EditTeamNameCardClient } from "./_components/edit-team-name-card-client";
 import SettingsEditCardSkeleton from "./_components/edit-team-name-card-skeleton";
+import { LeaveTeamCardClient } from "./_components/leave-team-card-client";
 
 export default async function SettingsGeneralPage() {
   const { user } = await auth();
@@ -45,8 +46,10 @@ async function DeleteTeamCardOrLeaveTeamCard() {
   const isOwner = team.ownerId === user.id;
   if (isOwner) return <DeleteTeamCardClient teamName={user.activeTeamName} />;
 
-  // return (
-  //   <LeaveTeamCardClient />
-  // )
-  return null;
+  return (
+    <LeaveTeamCardClient
+      teamId={user.activeTeamId}
+      teamName={user.activeTeamName}
+    />
+  );
 }

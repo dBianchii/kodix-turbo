@@ -390,5 +390,11 @@
   "Team name does not match": "Team name does not match",
   "delete my team": "delete my team",
   "To verify please type KEY": "To verify, please type <deleteMyTeam>deleteMyTeam</deleteMyTeam>",
-  "Team deleted successfully": "Team deleted successfully"
+  "Team deleted successfully": "Team deleted successfully",
+  "Leave team": "Leave team",
+  "If you leave the team you will not be able to access it anymore until you are invited back": "If you leave the team, you will not be able to access it anymore until you are invited back",
+  "You are leaving the team TEAMNAME": "You are leaving the team <teamName>teamName</teamName>",
+  "Leaving team": "Leaving team...",
+  "Successfully left the team": "Successfully left the team",
+  "Are you sure you want to leave the team": "Are you sure you want to leave the team?"
 }
