@@ -15,7 +15,7 @@ import { appIdToName, appPermissionIdToName } from "./internal";
 
 export const useAppName = (appId: KodixAppId) => {
   const t = useTranslations();
-  return t(`api.${appIdToName[appId]}`);
+  return t(`${appIdToName[appId]}`);
 };
 
 export const useAppDescription = (appId: KodixAppId) => {

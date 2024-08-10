@@ -4,5 +4,6 @@
 //? @kdx/care-expo should only use "care-expo" namespace
 type CareExpoMessages =
   typeof import("../../../packages/locales/src/messages/care-expo/en.json");
-
-type IntlMessages = CareExpoMessages;
+declare global {
+  type IntlMessages = CareExpoMessages;
+}

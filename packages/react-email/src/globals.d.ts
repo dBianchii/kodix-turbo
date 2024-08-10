@@ -2,4 +2,6 @@
 //? @kdx/react-email should only use "emails" namespace
 type ApiMessages = typeof import("../../locales/src/messages/api/en.json");
 
-type IntlMessages = ApiMessages;
+declare global {
+  type IntlMessages = ApiMessages;
+}
