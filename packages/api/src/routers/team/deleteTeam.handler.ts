@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 
 import type { TDeleteTeamInputSchema } from "@kdx/validators/trpc/team";
 import { and, eq, not } from "@kdx/db";
-import { teams, users, usersToTeams } from "@kdx/db/schema";
+import { careTasks, teams, users, usersToTeams } from "@kdx/db/schema";
 
 import type { TIsTeamOwnerProcedureContext } from "../../procedures";
 
@@ -74,6 +74,9 @@ export const deleteTeamHandler = async ({ ctx, input }: DeleteTeamOptions) => {
       .where(eq(users.id, ctx.session.user.id));
 
     //Remove the team
+    await tx
+      .delete(careTasks)
+      .where(eq(careTasks.teamId, ctx.session.user.activeTeamId)); //?uuuuh...
     await tx.delete(teams).where(eq(teams.id, ctx.session.user.activeTeamId)); //! Should delete many other tables based on referential actions
   });
 };
