@@ -17,7 +17,7 @@
     "./messages/care-expo": "./src/messages/_exports/care-expo.ts"
   },
   "scripts": {
-    "clean": "rm -rf .turbo node_modules",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
     "format": "prettier --check . '!src/generated/**' --ignore-path ../../.gitignore",
     "lint": "eslint",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"

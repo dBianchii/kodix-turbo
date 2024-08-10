@@ -7,7 +7,7 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "start": "if [ ! -d dist ]; then pnpm run build; fi && node dist/index.js",
-    "clean": "rm -rf .turbo dist node_modules",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
