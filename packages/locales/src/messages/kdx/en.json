@@ -415,5 +415,8 @@
     "User not found": "User not found",
     "Incorrect email or password": "Incorrect email or password",
     "Email already registered": "Email already registered"
-  }
+  },
+  "Calendar": "Calendar",
+  "Kodix Care": "Kodix Care",
+  "Todo": "Todo"
 }

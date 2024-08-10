@@ -6,8 +6,10 @@ type CareExpoMessages = typeof import("./messages/care-expo/en.json");
 type ValidatorsMessages = typeof import("./messages/validators/en.json");
 type ZodMessages = typeof import("./messages/zod/en.json");
 
-type IntlMessages = KdxMessages &
-  ApiMessages &
-  CareExpoMessages &
-  ValidatorsMessages &
-  ZodMessages;
+declare global {
+  type IntlMessages = KdxMessages &
+    ApiMessages &
+    CareExpoMessages &
+    ValidatorsMessages &
+    ZodMessages;
+}

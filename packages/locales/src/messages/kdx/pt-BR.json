@@ -415,5 +415,8 @@
     "You have been invited to join a team on URL": "Você foi convidado para participar de uma equipe em {url}",
     "Your last shift was ended by NAME": "Seu último turno foi encerrado por {name}",
     "appName is not installed": "{appName} não está instalado"
-  }
+  },
+  "Calendar": "Calendário",
+  "Kodix Care": "Kodix Care",
+  "Todo": "Todo"
 }

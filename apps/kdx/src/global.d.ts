@@ -14,4 +14,6 @@ declare module "next/navigation" {
 type KdxMessages =
   typeof import("../../../packages/locales/src/messages/kdx/en.json");
 
-type IntlMessages = KdxMessages;
+declare global {
+  type IntlMessages = KdxMessages;
+}
