@@ -382,6 +382,7 @@
   "Only the owner of the team can remove invites": "Only the owner of the team can remove invites",
   "Only the owner of the team can remove members": "Only the owner of the team can remove members",
   "Delete team": "Delete team",
+  "Deleting team": "Deleting team...",
   "Before deleting your team you must remove all members": "Before deleting your team, you must remove all members",
   "You are deleting your team teamName": "You are deleting your team <teamName>teamName</teamName>",
   "All data related to your team will be permanently lost and cannot be recovered": "All data related to your team will be permanently lost and cannot be recovered",

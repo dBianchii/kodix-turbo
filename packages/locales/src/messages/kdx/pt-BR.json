@@ -386,6 +386,7 @@
   "All data related to your team will be permanently lost and cannot be recovered": "Todos os dados relacionados à sua equipe serão perdidos permanentemente e não poderão ser recuperados",
   "Continue": "Continuar",
   "Delete team": "Excluir equipe",
+  "Deleting team": "Excluindo equipe...",
   "Enter the team name teamName to continue": "Digite o nome da equipe <teamName>teamName</teamName> para continuar",
   "Team name does not match": "O nome da equipe não corresponde",
   "To verify please type KEY": "Para verificar, digite <deleteMyTeam>deleteMyTeam</deleteMyTeam>",

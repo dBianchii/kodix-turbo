@@ -99,7 +99,7 @@ export function DeleteTeamCardClient({ teamName }: { teamName: string }) {
                       teamNameConfirmation: values.teamNameConfirmation,
                     }),
                     {
-                      loading: t("Deleting team..."),
+                      loading: t("Deleting team"),
                       success: t("Team deleted successfully"),
                       error: (err) => getErrorMessage(err),
                     },
