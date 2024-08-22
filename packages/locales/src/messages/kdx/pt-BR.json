@@ -387,6 +387,7 @@
   "Continue": "Continuar",
   "Delete team": "Excluir equipe",
   "Enter the team name teamName to continue": "Digite o nome da equipe que deseja excluir: <teamName>teamName</teamName>",
+  "Deleting team": "Excluindo equipe...",
   "Team name does not match": "O nome da equipe não corresponde",
   "To verify please type KEY": "Para verificar, digite <deleteMyTeam>deleteMyTeam</deleteMyTeam>",
   "Warning": "Aviso",
@@ -433,5 +434,8 @@
     "You have been invited to join a team on URL": "Você foi convidado para participar de uma equipe em {url}",
     "Your last shift was ended by NAME": "Seu último turno foi encerrado por {name}",
     "appName is not installed": "{appName} não está instalado"
-  }
+  },
+  "Calendar": "Calendário",
+  "Kodix Care": "Kodix Care",
+  "Todo": "Todo"
 }

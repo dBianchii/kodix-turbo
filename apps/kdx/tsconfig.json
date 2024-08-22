@@ -12,7 +12,6 @@
         "name": "next"
       }
     ],
-    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
     "module": "esnext",
     "strictNullChecks": true
   },
