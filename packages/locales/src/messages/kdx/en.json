@@ -388,7 +388,7 @@
   "Continue": "Continue",
   "Warning": "Warning",
   "This action is not reversible please be certain": "This action is not reversible. Please be certain.",
-  "Enter the team name teamName to continue": "Enter the team name <teamName>teamName</teamName> to continue",
+  "Enter the team name teamName to continue": "Enter the team name you are about to delete: <teamName>teamName</teamName>",
   "Team name does not match": "Team name does not match",
   "delete my team": "delete my team",
   "To verify please type KEY": "To verify, please type <deleteMyTeam>deleteMyTeam</deleteMyTeam>",
