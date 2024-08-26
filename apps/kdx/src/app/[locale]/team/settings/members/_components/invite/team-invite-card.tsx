@@ -152,7 +152,7 @@ export default function TeamInviteCardClient({
                         setEmails(newEmails);
                       }}
                     >
-                      <RxMinusCircled className="size-4 " />
+                      <RxMinusCircled className="size-4" />
                     </Button>
                   </div>
                 ))}

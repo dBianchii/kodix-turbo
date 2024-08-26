@@ -328,7 +328,7 @@ export function RecurrencePicker({
                       </Label>
                     </div>
 
-                    <div className=" ml-8">
+                    <div className="ml-8">
                       <DatePicker
                         date={draftUntil?.toDate()}
                         setDate={(date) => setDraftUntil(dayjs(date))}

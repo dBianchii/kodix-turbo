@@ -120,7 +120,7 @@ export function FrequencyPicker({
                         <Label htmlFor="r2" className="ml-2">
                           {t("At")}
                         </Label>
-                        <div className=" ml-8">
+                        <div className="ml-8">
                           <DatePicker
                             date={untilDate}
                             setDate={setUntilDate}
