@@ -12,9 +12,17 @@
     "./*": {
       "types": "./dist/src/*.d.ts",
       "default": [
-        "./src/*.ts",
-        "./src/*.tsx"
+        "./src/*.tsx",
+        "./src/*.ts"
       ]
+    },
+    "./hooks": {
+      "types": "./dist/src/hooks.d.ts",
+      "default": "./src/hooks.ts"
+    },
+    "./data-table/export": {
+      "types": "./dist/src/data-table/export.d.ts",
+      "default": "./src/data-table/export.ts"
     }
   },
   "scripts": {
