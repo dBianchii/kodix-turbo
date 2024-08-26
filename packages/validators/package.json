@@ -6,43 +6,43 @@
   "exports": {
     ".": {
       "types": "./dist/validators/src/index.d.ts",
-      "default": "./dist/validators/src/index.js"
+      "default": "./src/index.ts"
     },
     "./useI18nZodErrors": {
       "types": "./dist/validators/src/utils/useI18nZodErrors.d.ts",
-      "default": "./dist/validators/src/utils/useI18nZodErrors.js"
+      "default": "./src/utils/useI18nZodErrors.ts"
     },
     "./trpc/app": {
       "types": "./dist/validators/src/trpc/app/index.d.ts",
-      "default": "./dist/validators/src/trpc/app/index.js"
+      "default": "./src/trpc/app/index.ts"
     },
     "./trpc/app/calendar": {
       "types": "./dist/validators/src/trpc/app/calendar/index.d.ts",
-      "default": "./dist/validators/src/trpc/app/calendar/index.js"
+      "default": "./src/trpc/app/calendar/index.ts"
     },
     "./trpc/app/kodixCare": {
       "types": "./dist/validators/src/trpc/app/kodixCare/index.d.ts",
-      "default": "./dist/validators/src/trpc/app/kodixCare/index.js"
+      "default": "./src/trpc/app/kodixCare/index.ts"
     },
     "./trpc/app/todo": {
       "types": "./dist/validators/src/trpc/app/todo/index.d.ts",
-      "default": "./dist/validators/src/trpc/app/todo/index.js"
+      "default": "./src/trpc/app/todo/index.ts"
     },
     "./trpc/team": {
       "types": "./dist/validators/src/trpc/team/index.d.ts",
-      "default": "./dist/validators/src/trpc/team/index.js"
+      "default": "./src/trpc/team/index.ts"
     },
     "./trpc/team/appRole": {
       "types": "./dist/validators/src/trpc/team/appRole/index.d.ts",
-      "default": "./dist/validators/src/trpc/team/appRole/index.js"
+      "default": "./src/trpc/team/appRole/index.ts"
     },
     "./trpc/team/invitation": {
       "types": "./dist/validators/src/trpc/team/invitation/index.d.ts",
-      "default": "./dist/validators/src/trpc/team/invitation/index.js"
+      "default": "./src/trpc/team/invitation/index.ts"
     },
     "./trpc/user": {
       "types": "./dist/validators/src/trpc/user/index.d.ts",
-      "default": "./dist/validators/src/trpc/user/index.js"
+      "default": "./src/trpc/user/index.ts"
     }
   },
   "scripts": {

@@ -56,7 +56,7 @@ export async function HeroBento() {
       background: (
         <Marquee
           pauseOnHover
-          className="absolute top-10 [--duration:20s] [mask-image:linear-gradient(to_top,transparent_40%,#000_100%)] "
+          className="absolute top-10 [--duration:20s] [mask-image:linear-gradient(to_top,transparent_40%,#000_100%)]"
         >
           {apps.map((f, idx) => (
             <figure
@@ -71,7 +71,7 @@ export async function HeroBento() {
               <div className="flex flex-row items-center gap-2">
                 <div className="flex flex-row">
                   {f.icon}
-                  <figcaption className="ml-2 text-sm font-medium dark:text-white ">
+                  <figcaption className="ml-2 text-sm font-medium dark:text-white">
                     {f.name}
                   </figcaption>
                 </div>

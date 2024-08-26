@@ -109,7 +109,7 @@ export function DataTableNotificationsFloatingBar({
                     )}
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent className=" border bg-accent font-semibold text-foreground dark:bg-zinc-900">
+                <TooltipContent className="border bg-accent font-semibold text-foreground dark:bg-zinc-900">
                   <p>{t("Export notifications")}</p>
                 </TooltipContent>
               </Tooltip>
@@ -150,7 +150,7 @@ export function DataTableNotificationsFloatingBar({
                     )}
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent className=" border bg-accent font-semibold text-foreground dark:bg-zinc-900">
+                <TooltipContent className="border bg-accent font-semibold text-foreground dark:bg-zinc-900">
                   <p>{t("Delete notifications")}</p>
                 </TooltipContent>
               </Tooltip>

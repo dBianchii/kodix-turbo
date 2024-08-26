@@ -104,7 +104,7 @@ export function DataTableUserAppRoles({
         columnHelper.accessor("name", {
           header: () => <div className="pl-2">{t("User")}</div>,
           cell: (info) => (
-            <div className="flex w-60 flex-row gap-3  pl-2">
+            <div className="flex w-60 flex-row gap-3 pl-2">
               <div className="flex flex-col">
                 <AvatarWrapper
                   className="h-8 w-8"

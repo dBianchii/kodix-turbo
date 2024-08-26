@@ -11,15 +11,10 @@
     },
     "./*": {
       "types": "./dist/src/*.d.ts",
-      "default": "./src/*.tsx"
-    },
-    "./hooks": {
-      "types": "./dist/src/hooks.d.ts",
-      "default": "./src/hooks.ts"
-    },
-    "./data-table/export": {
-      "types": "./dist/src/data-table/export.d.ts",
-      "default": "./src/data-table/export.ts"
+      "default": [
+        "./src/*.ts",
+        "./src/*.tsx"
+      ]
     }
   },
   "scripts": {
@@ -32,7 +27,7 @@
     "ui-add": "pnpm dlx shadcn-ui add && prettier src --write --list-different"
   },
   "dependencies": {
-    "@hookform/resolvers": "^3.8.0",
+    "@hookform/resolvers": "^3.9.0",
     "@kdx/locales": "workspace:*",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.0.4",
@@ -62,17 +57,16 @@
     "next": "catalog:",
     "next-themes": "^0.3.0",
     "react-day-picker": "^8.10.0",
-    "react-hook-form": "^7.52.1",
+    "react-hook-form": "^7.52.2",
     "react-resizable-panels": "^2.0.14",
     "sonner": "^1.5.0",
-    "tailwind-merge": "^2.3.0",
+    "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/shared": "workspace:*",
-    "@kdx/tailwind-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
     "@types/react": "catalog:react18",
     "@types/react-dom": "catalog:react18",
@@ -81,7 +75,6 @@
     "prettier": "catalog:",
     "react": "catalog:react18",
     "react-spring": "^9.7.3",
-    "tailwindcss": "catalog:",
     "typescript": "catalog:"
   },
   "peerDependencies": {
