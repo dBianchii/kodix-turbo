@@ -21,7 +21,7 @@ export function DataTableNotifications({
   allTeamsPromise,
 }: {
   notificationsPromise: Promise<RouterOutputs["user"]["getNotifications"]>;
-  allTeamsPromise: Promise<RouterOutputs["team"]["getAllForLoggedUser"]>;
+  allTeamsPromise: Promise<RouterOutputs["team"]["getAll"]>;
 }) {
   const { data, pageCount } = use(notificationsPromise);
   const teams = use(allTeamsPromise);

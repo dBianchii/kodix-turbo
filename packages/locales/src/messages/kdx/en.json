@@ -418,5 +418,17 @@
   },
   "Calendar": "Calendar",
   "Kodix Care": "Kodix Care",
-  "Todo": "Todo"
+  "Todo": "Todo",
+  "Delete my account": "Delete my account",
+  "Delete account": "Delete account",
+  "You are deleting your account": "You are deleting your account",
+  "All data related to you will be permanently lost and cannot be recovered": "All data related to you will be permanently lost and cannot be recovered",
+  "Warning": "Warning",
+  "This action is not reversible please be certain": "This action is not reversible please be certain",
+  "Please type DELETE_ACCOUNT to continue": "Please type <deleteAccount>deleteAccount</deleteAccount> to continue",
+  "Continue": "Continue",
+  "Deleting account": "Deleting account",
+  "Account deleted successfully": "Account deleted successfully",
+  "Permanently delete your account and all your data ": "Permanently delete your account and all your data",
+  "COUNT members": "{count, plural, =0 {# members} =1 {# member} other {# members}}"
 }

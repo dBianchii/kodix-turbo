@@ -27,7 +27,7 @@ export default function EditUserTeamsTableClient({
   teams,
   user,
 }: {
-  teams: RouterOutputs["team"]["getAllForLoggedUser"];
+  teams: RouterOutputs["team"]["getAll"];
   user: User;
 }) {
   const t = useTranslations();
@@ -65,7 +65,7 @@ function CustomRow({
   team,
   user,
 }: {
-  team: RouterOutputs["team"]["getAllForLoggedUser"][0];
+  team: RouterOutputs["team"]["getAll"][0];
   user: User;
 }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -98,6 +98,13 @@ function CustomRow({
               </p>
             )}
           </div>
+          <span className="text-muted-foreground">
+            {" "}
+            {t("COUNT members", {
+              count: team.UsersToTeams.length,
+            })}
+          </span>
+
           {team.ownerId === user.id && (
             <span className="text-muted-foreground">{t("Owner")}</span>
           )}

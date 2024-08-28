@@ -160,7 +160,7 @@
   "account": {
     "Account settings": "Configurações de Conta",
     "Display Name": "Nome de exibição",
-    "Manage the teams you are a part of or create a new one": "Gerencie as equipes que você",
+    "Manage the teams you are a part of or create a new one": "Gerencie as equipes que você participa, ou crie uma nova",
     "Please use 32 characters at maximum": "Por favor use no máximo 32 caracteres.",
     "please-enter-your-full-name-or-a-display-name-you-are-comfortable-with": "Digite seu nome completo ou um nome de exibição com o qual você se sinta confortável.",
     "You have left the team": "Você saiu da equipe"
@@ -418,5 +418,17 @@
   },
   "Calendar": "Calendário",
   "Kodix Care": "Kodix Care",
-  "Todo": "Todo"
+  "Todo": "Todo",
+  "Delete my account": "Deletar minha conta",
+  "You are deleting your account": "Você está excluindo sua conta",
+  "Deleting account": "Excluindo conta",
+  "Delete account": "Excluir conta",
+  "Permanently delete your account and all your data ": "Exclua permanentemente sua conta e todos os seus dados",
+  "All data related to you will be permanently lost and cannot be recovered": "Todos os dados relacionados a você serão perdidos permanentemente e não poderão ser recuperados",
+  "Continue": "Continuar",
+  "Please type DELETE_ACCOUNT to continue": "Digite <deleteAccount>deleteAccount</deleteAccount> para continuar",
+  "This action is not reversible please be certain": "Esta ação não é reversível, tenha certeza",
+  "Account deleted successfully": "Conta excluída com sucesso",
+  "Warning": "Aviso",
+  "COUNT members": "{count, plural, =0 {# membros} =1 {# membro} other {# membros}}"
 }

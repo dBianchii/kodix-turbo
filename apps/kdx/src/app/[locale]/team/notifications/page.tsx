@@ -28,7 +28,7 @@ export default async function NotificationsPage({
   const notificationsPromise = api.user.getNotifications({
     ...search,
   });
-  const allTeamsPromise = api.team.getAllForLoggedUser();
+  const allTeamsPromise = api.team.getAll();
 
   return (
     <MaxWidthWrapper>

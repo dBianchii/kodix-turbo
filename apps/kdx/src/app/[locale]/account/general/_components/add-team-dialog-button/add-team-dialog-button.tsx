@@ -42,7 +42,7 @@ export function AddTeamDialogButton({
     <Dialog open={open} onOpenChange={setOpen}>
       {children ?? (
         <DialogTrigger asChild>
-          <Button className={cn(className)}>
+          <Button size={"sm"} className={cn(className)}>
             <RxPlusCircled className="mr-2 size-5" />
             {t("Create new team")}
           </Button>
