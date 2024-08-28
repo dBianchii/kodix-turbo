@@ -160,7 +160,7 @@ export function CreateTaskDialogButton() {
                       }}
                       className="ml-2 rounded-full transition-colors hover:bg-primary/90 hover:text-background"
                     >
-                      <RxCross2 className="size-4 " />
+                      <RxCross2 className="size-4" />
                     </span>
                   )}
                 </Button>

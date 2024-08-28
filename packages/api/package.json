@@ -6,7 +6,7 @@
   "exports": {
     ".": {
       "types": "./dist/api/src/index.d.ts",
-      "default": "./dist/api/src/index.js"
+      "default": "./src/index.ts"
     }
   },
   "scripts": {

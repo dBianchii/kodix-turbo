@@ -194,7 +194,7 @@ export function DataTable({
     <>
       <div className="pt-8">
         <div className="flex justify-between">
-          <div className=" w-44 space-y-2">
+          <div className="w-44 space-y-2">
             <Label htmlFor="search">{t("Search")}...</Label>
             <Input
               id="search"
@@ -245,7 +245,7 @@ export function DataTable({
             )}
 
             <Button
-              className="ml-auto self-end "
+              className="ml-auto self-end"
               onClick={() => setSelectedDay(new Date())}
               variant={"secondary"}
             >
