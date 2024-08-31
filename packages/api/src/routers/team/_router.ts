@@ -2,6 +2,7 @@ import type { TRPCRouterRecord } from "@trpc/server";
 
 import {
   ZCreateInputSchema,
+  ZDeleteTeamInputSchema,
   ZLeaveTeamInputSchema,
   ZRemoveUserSchema,
   ZUpdateInputSchema,
@@ -11,6 +12,7 @@ import { isTeamOwnerProcedure, protectedProcedure } from "../../procedures";
 import { T } from "../../utils/locales";
 import { appRoleRouter } from "./appRole/_router";
 import { createHandler } from "./create.handler";
+import { deleteTeamHandler } from "./deleteTeam.handler";
 import { getActiveTeamHandler } from "./getActiveTeam.handler";
 import { getAllHandler } from "./getAll";
 import { getAllUsersHandler } from "./getAllUsers.handler";
@@ -35,4 +37,7 @@ export const teamRouter = {
   leaveTeam: protectedProcedure
     .input(ZLeaveTeamInputSchema)
     .mutation(leaveTeamHandler),
+  deleteTeam: isTeamOwnerProcedure
+    .input(ZDeleteTeamInputSchema)
+    .mutation(deleteTeamHandler),
 } satisfies TRPCRouterRecord;
