@@ -44,6 +44,7 @@
     "Token not found": "Token not found",
     "User not found": "User not found",
     "Incorrect email or password": "Incorrect email or password",
-    "Email already registered": "Email already registered"
+    "Email already registered": "Email already registered",
+    "To delete your account you must have only one team with no other users": "To delete your account, you must have only one team with no other users"
   }
 }

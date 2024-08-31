@@ -132,8 +132,12 @@ export function DeleteAccountCard() {
                   />
                 </div>
                 <AlertDialogFooter className="gap-3 sm:justify-between">
-                  <AlertDialogCancel>{t("Cancel")}</AlertDialogCancel>
-                  <Button type="submit">{t("Delete account")}</Button>
+                  <AlertDialogCancel disabled={mutation.isPending}>
+                    {t("Cancel")}
+                  </AlertDialogCancel>
+                  <Button type="submit" disabled={mutation.isPending}>
+                    {t("Delete account")}
+                  </Button>
                 </AlertDialogFooter>
               </form>
             </Form>

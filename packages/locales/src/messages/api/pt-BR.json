@@ -44,6 +44,7 @@
     "You dont have permission to do this Contact a team administrator if you believe this is an error": "Você não tem permissão para fazer isso. \nEntre em contato com um administrador da equipe se você acredita que isso é um erro.",
     "You have been invited to join a team on URL": "Você foi convidado para participar de uma equipe em {url}",
     "Your last shift was ended by NAME": "Seu último turno foi encerrado por {name}",
-    "appName is not installed": "{appName} não está instalado"
+    "appName is not installed": "{appName} não está instalado",
+    "To delete your account you must have only one team with no other users": "Para excluir sua conta, você deve ter apenas uma equipe sem outros usuários"
   }
 }
