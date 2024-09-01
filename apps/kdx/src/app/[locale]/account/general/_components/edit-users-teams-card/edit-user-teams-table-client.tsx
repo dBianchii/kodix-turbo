@@ -19,6 +19,7 @@ import {
 import { Table, TableBody, TableCell, TableRow } from "@kdx/ui/table";
 import { toast } from "@kdx/ui/toast";
 
+import { DeleteTeamConfirmationDialog } from "~/app/[locale]/team/settings/general/_components/delete-team-confirmation-dialog";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 import { switchTeamAction } from "./actions";
@@ -72,6 +73,8 @@ function CustomRow({
   const [manageLoading, setManageLoading] = useState(false);
   const router = useRouter();
   const t = useTranslations();
+  const isOwner = team.ownerId === user.id;
+
   return (
     <TableRow
       key={team.id}
@@ -105,12 +108,17 @@ function CustomRow({
             })}
           </span>
 
-          {team.ownerId === user.id && (
+          {isOwner && (
             <span className="text-muted-foreground">{t("Owner")}</span>
           )}
         </div>
       </TableCell>
-      <TableCell>
+      <TableCell
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+        }}
+      >
         <div className="flex justify-end space-x-4">
           <form
             onSubmit={(e) => {
@@ -134,18 +142,30 @@ function CustomRow({
               )}
             </Button>
           </form>
-          <LeaveTeamDropdown teamId={team.id} />
+          <LeaveOrDeleteTeamDropdown
+            teamId={team.id}
+            teamName={team.name}
+            isOwner={isOwner}
+          />
         </div>
       </TableCell>
     </TableRow>
   );
 }
 
-function LeaveTeamDropdown({ teamId }: { teamId: string }) {
+function LeaveOrDeleteTeamDropdown({
+  isOwner,
+  teamId,
+  teamName,
+}: {
+  isOwner: boolean;
+  teamId: string;
+  teamName: string;
+}) {
   const t = useTranslations();
   const utils = api.useUtils();
   const router = useRouter();
-  const { mutate } = api.team.leaveTeam.useMutation({
+  const leaveTeamMutation = api.team.leaveTeam.useMutation({
     onSuccess: () => {
       toast.success(t("account.You have left the team"));
       void utils.team.getAllUsers.invalidate();
@@ -153,28 +173,54 @@ function LeaveTeamDropdown({ teamId }: { teamId: string }) {
     },
     onError: (e) => trpcErrorToastDefault(e),
   });
+  const [open, setOpen] = useState(false);
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">{t("Open menu")}</span>
-          <RxDotsHorizontal className="size-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem
-          className="text-destructive"
-          onClick={(e) => {
-            e.stopPropagation();
-            mutate({
-              teamId,
-            });
-          }}
-        >
-          {t("Leave")}
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      <DeleteTeamConfirmationDialog
+        teamName={teamName}
+        open={open}
+        setOpen={(open) => {
+          setOpen(open);
+          setTimeout(() => {
+            //A hack to fix page becoming unresponsive: https://github.com/shadcn-ui/ui/issues/1912#issuecomment-2295203962
+            const body = document.querySelector("body");
+            if (body) body.style.pointerEvents = "auto";
+          }, 200);
+        }}
+      />
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">{t("Open menu")}</span>
+            <RxDotsHorizontal className="size-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          {isOwner ? (
+            <DropdownMenuItem
+              className="text-destructive"
+              onClick={() => {
+                setOpen(true);
+              }}
+            >
+              {t("Delete team")}
+            </DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem
+              className="text-destructive"
+              onClick={(e) => {
+                e.stopPropagation();
+                leaveTeamMutation.mutate({
+                  teamId,
+                });
+              }}
+            >
+              {t("Leave")}
+            </DropdownMenuItem>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
   );
 }
