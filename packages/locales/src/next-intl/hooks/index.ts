@@ -13,8 +13,9 @@ import {
 import { useTranslations } from "../client";
 import { appIdToName, appPermissionIdToName } from "./internal";
 
-export const useAppName = (appId: KodixAppId) => {
+export const useAppName = (appId: KodixAppId | undefined) => {
   const t = useTranslations();
+  if (!appId) return "";
   return t(`${appIdToName[appId]}`);
 };
 

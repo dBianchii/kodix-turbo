@@ -3,14 +3,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import { IoApps } from "react-icons/io5";
-import { RxCaretSort, RxCheck, RxPlusCircled } from "react-icons/rx";
+import { RxCaretSort, RxPlusCircled } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { KodixAppId } from "@kdx/shared";
 import { useTranslations } from "@kdx/locales/next-intl/client";
 import { useAppName } from "@kdx/locales/next-intl/hooks";
 import { usePathname, useRouter } from "@kdx/locales/next-intl/navigation";
-import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import {
   Command,
@@ -64,8 +63,8 @@ export function AppSwitcherClient({
           <CommandGroup>
             {apps.map((app) => {
               const link = hrefPrefix
-                ? `${hrefPrefix}/${appIdToPathname[app.id as KodixAppId]}`
-                : getAppUrl(app.id as KodixAppId);
+                ? `${hrefPrefix}/${appIdToPathname[app.id]}`
+                : getAppUrl(app.id);
               return (
                 <Link href={link} key={app.id} passHref>
                   <CommandItem
@@ -75,19 +74,13 @@ export function AppSwitcherClient({
                     }}
                   >
                     <IconKodixApp
-                      appId={app.id as KodixAppId}
+                      appId={app.id}
                       renderText={false}
                       size={iconSize}
                     />
                     <span className="ml-2">
-                      <AppName appId={app.id as KodixAppId} />
+                      <AppName appId={app.id} />
                     </span>
-                    <RxCheck
-                      className={cn(
-                        "ml-auto h-4 w-4",
-                        "value" === app.id ? "opacity-100" : "opacity-0",
-                      )}
-                    />
                   </CommandItem>
                 </Link>
               );
