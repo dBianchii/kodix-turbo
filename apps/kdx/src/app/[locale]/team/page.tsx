@@ -100,6 +100,7 @@ async function AppsSection({ customApps }: { customApps: CustomApp[] }) {
     <div className="flex flex-row items-center space-x-10">
       {customApps.map((app) => (
         <Link
+          key={app.appUrl}
           href={app.appUrl}
           className="transition-transform duration-300 ease-out hover:scale-105"
         >
