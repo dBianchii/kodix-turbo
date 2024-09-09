@@ -1,16 +1,21 @@
 import { isRedirectError } from "next/dist/client/components/redirect";
 import { z } from "zod";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-declare let window: any;
+import { KDX_PRODUCTION_URL, KDX_VERCEL_PROJECT_NAME } from "./constants";
 
 /**
  * @description Base URL for the current environment.
  */
 export const getBaseUrl = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  if (typeof window !== "undefined") return window.location.origin as string;
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  if (typeof window !== "undefined") return window.location.origin;
+  if (process.env.VERCEL_URL) {
+    if (
+      process.env.VERCEL_URL.includes(`${KDX_VERCEL_PROJECT_NAME}-`) &&
+      process.env.VERCEL_ENV === "production"
+    )
+      return KDX_PRODUCTION_URL;
+    return `https://${process.env.VERCEL_URL}`;
+  }
   return `http://localhost:${process.env.PORT ?? 3000}`;
 };
 
