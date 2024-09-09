@@ -1,7 +1,7 @@
 import {
   calendarAppId,
+  KDX_PRODUCTION_URL,
   kdxPartnerId,
-  kdxProductionURL,
   kodixCareAppId,
   todoAppId,
 } from "@kdx/shared";
@@ -15,7 +15,7 @@ const _devPartners: (typeof devPartners.$inferInsert)[] = [
   {
     id: kdxPartnerId,
     name: "Kodix",
-    partnerUrl: kdxProductionURL,
+    partnerUrl: KDX_PRODUCTION_URL,
   },
 ];
 
