@@ -4,7 +4,7 @@ import { ZNanoId } from "../../..";
 import { ZSignInByPasswordInputSchema as default_ZSignInByPasswordInputSchema } from "../../user";
 
 export const ZDoCheckoutForShiftInputSchema = z.object({
-  date: z.date().default(new Date()),
+  date: z.date(),
 });
 export type TDoCheckoutForShiftInputSchema = z.infer<
   typeof ZDoCheckoutForShiftInputSchema

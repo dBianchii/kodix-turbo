@@ -99,7 +99,7 @@ export const teamAppRoles = mysqlTable(
     teamId: teamIdReferenceCascadeDelete,
     appRoleDefaultId: varchar("appRoleDefaultId", {
       length: NANOID_SIZE, //? References a hardcoded default role id and not anything in db
-    }),
+    }).notNull(),
   },
   (table) => {
     return {
