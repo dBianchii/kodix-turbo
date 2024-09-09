@@ -9,6 +9,7 @@ import { useFormatter } from "@kdx/locales/next-intl";
 import { useTranslations } from "@kdx/locales/next-intl/client";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Badge } from "@kdx/ui/badge";
+import { useRerenderForRelativeTime } from "@kdx/ui/hooks";
 import { Label } from "@kdx/ui/label";
 
 import { api } from "~/trpc/react";
@@ -132,6 +133,8 @@ function TimeInfo({
 }) {
   const t = useTranslations();
   const format = useFormatter();
+
+  useRerenderForRelativeTime([currentShift.checkIn, currentShift.checkOut]);
 
   return (
     <div className="flex items-center justify-start">
