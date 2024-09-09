@@ -98,7 +98,7 @@ export default function RootLayout() {
 
   return (
     <TRPCProvider>
-      <IntlProvider messages={messages[locale]} locale={"pt-BR"}>
+      <IntlProvider messages={messages[locale]} locale={locale}>
         <TamaguiProvider
           config={tamaguiConfig}
           defaultTheme={colorScheme === "dark" ? "dark_blue" : "light_blue"}
