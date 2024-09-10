@@ -8,7 +8,7 @@ import type { FontSource } from "expo-font";
 import React, { useEffect, useState } from "react";
 import { useColorScheme } from "react-native";
 import { useFonts } from "expo-font";
-import { Spinner, TamaguiProvider } from "tamagui";
+import { PortalProvider, Spinner, TamaguiProvider } from "tamagui";
 import tamaguiConfig from "tamagui.config";
 import { IntlProvider } from "use-intl";
 
@@ -98,15 +98,21 @@ export default function RootLayout() {
 
   return (
     <TRPCProvider>
-      <IntlProvider messages={messages[locale]} locale={locale}>
+      <IntlProvider
+        messages={messages[locale]}
+        locale={locale}
+        timeZone="America/Sao_Paulo"
+      >
         <TamaguiProvider
           config={tamaguiConfig}
           defaultTheme={colorScheme === "dark" ? "dark_blue" : "light_blue"}
         >
           <ToastProvider swipeDirection="up" swipeThreshold={20}>
-            <DefaultToast />
-            <MainLayout />
-            <SafeToastViewport></SafeToastViewport>
+            <PortalProvider shouldAddRootHost>
+              <DefaultToast />
+              <MainLayout />
+              <SafeToastViewport></SafeToastViewport>
+            </PortalProvider>
           </ToastProvider>
         </TamaguiProvider>
       </IntlProvider>

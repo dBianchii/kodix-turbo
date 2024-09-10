@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Alert } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useToastController } from "@tamagui/toast";
-import { Button, H3, Paragraph, Sheet, Text } from "tamagui";
+import { Button, H3, Paragraph, Sheet, Spinner } from "tamagui";
 
 import { ZDoCheckoutForShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 
@@ -45,6 +45,9 @@ function StartShiftDialogButton() {
 
   return (
     <Button
+      opacity={mutation.isPending ? 0.5 : 1}
+      disabled={mutation.isPending}
+      w={"$18"}
       bordered
       onPress={() =>
         Alert.alert(
@@ -62,7 +65,7 @@ function StartShiftDialogButton() {
         )
       }
     >
-      Iniciar turno
+      {mutation.isPending ? <Spinner /> : "Iniciar turno"}
     </Button>
   );
 }
@@ -105,11 +108,22 @@ function DoCheckoutDialogButton({
 
   return (
     <>
-      <Button onPress={() => setOpen(true)} bordered theme={"red"}>
-        <Text fontWeight={"$14"}>Check-out</Text>
+      <Button
+        onPress={() => setOpen(true)}
+        bordered
+        theme={"red"}
+        w={"$18"}
+        opacity={mutation.isPending ? 0.5 : 1}
+        disabled={mutation.isPending}
+      >
+        {mutation.isPending ? <Spinner /> : "Check-out"}
       </Button>
-
       <Sheet
+        animationConfig={{
+          type: "spring",
+          damping: 10,
+          mass: 0.3,
+        }}
         open={open}
         forceRemoveScrollEnabled={open}
         modal
@@ -150,6 +164,8 @@ function DoCheckoutDialogButton({
               )}
             />
             <Button
+              opacity={mutation.isPending ? 0.5 : 1}
+              disabled={mutation.isPending}
               width={"100%"}
               bordered
               theme="red"
@@ -157,81 +173,11 @@ function DoCheckoutDialogButton({
                 void mutation.mutate(values);
               })}
             >
-              Check-out
+              {mutation.isPending ? <Spinner /> : "Finalizar turno"}
             </Button>
           </Form>
         </Sheet.Frame>
       </Sheet>
     </>
-    // <Dialog
-    //   open={open}
-    //   onOpenChange={(open) => {
-    //     form.setValue("date", new Date());
-    //     setOpen(open);
-    //   }}
-    // >
-    //   <DialogTrigger asChild>
-    //     <Button size={"sm"} variant={"destructive"}>
-    //       {t("apps.kodixCare.Checkout")}
-    //     </Button>
-    //   </DialogTrigger>
-    //   <DialogContent>
-    //     <DialogHeader>
-    //       <DialogTitle>{t("apps.kodixCare.Checkout shift")}</DialogTitle>
-    //     </DialogHeader>
-    //     <Form {...form}>
-    //       <form
-    //         className="base"
-    //         onSubmit={form.handleSubmit((values) => {
-    //           mutation.mutate(values);
-    //         })}
-    //       >
-    //         <DialogDescription className="mb-4">
-    //           {t(
-    //             "You are about to finish your shift and checkout Are you sure",
-    //           )}
-    //         </DialogDescription>
-    //         <FormField
-    //           control={form.control}
-    //           name="date"
-    //           render={({ field }) => (
-    //             <FormItem>
-    //               <FormControl>
-    //                 <div className="flex flex-row gap-2">
-    //                   <div className="flex items-center gap-1 pl-4">
-    //                     <DateTimePicker
-    //                       disabledDate={(date) =>
-    //                         dayjs(date).startOf("day") >
-    //                         dayjs(currentShift.checkIn).startOf("day")
-    //                       }
-    //                       date={field.value}
-    //                       setDate={(date) =>
-    //                         form.setValue("date", date ?? field.value)
-    //                       }
-    //                     />
-    //                   </div>
-    //                 </div>
-    //               </FormControl>
-    //               <FormMessage className="w-full" />
-    //             </FormItem>
-    //           )}
-    //         />
-    //         <DialogFooter className="mt-6 justify-end">
-    //           <Button
-    //             type="submit"
-    //             disabled={mutation.isPending}
-    //             variant={"destructive"}
-    //           >
-    //             {mutation.isPending ? (
-    //               <LuLoader2 className="mx-2 size-4 animate-spin" />
-    //             ) : (
-    //               t("apps.kodixCare.Checkout")
-    //             )}
-    //           </Button>
-    //         </DialogFooter>
-    //       </form>
-    //     </Form>
-    //   </DialogContent>
-    // </Dialog>
   );
 }
