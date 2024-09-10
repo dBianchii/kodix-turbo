@@ -116,7 +116,6 @@ function CustomRow({
       <TableCell
         onClick={(e) => {
           e.stopPropagation();
-          e.preventDefault();
         }}
       >
         <div className="flex justify-end space-x-4">

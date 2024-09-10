@@ -1,7 +1,6 @@
 import { useTranslations } from "next-intl";
 import { z } from "zod";
 
-import type { User } from "@kdx/auth";
 import { useRouter } from "@kdx/locales/next-intl/navigation";
 import { getErrorMessage } from "@kdx/shared";
 import {
@@ -50,6 +49,9 @@ export function DeleteTeamConfirmationDialog({
       }),
       verification: z.literal(deleteMyTeamString),
     }),
+    defaultValues: {
+      teamId,
+    },
   });
 
   const router = useRouter();
@@ -70,82 +72,82 @@ export function DeleteTeamConfirmationDialog({
     >
       <AlertDialogContent>
         <Form {...form}>
-          <div className="flex flex-col gap-4">
-            <AlertDialogHeader>
-              <AlertDialogTitle>
-                {t.rich("You are deleting your team teamName", {
-                  teamName: () => <b className="font-light">{teamName}</b>,
-                })}
-              </AlertDialogTitle>
-              <AlertDialogDescription>
-                {t(
-                  "All data related to your team will be permanently lost and cannot be recovered",
-                )}
-              </AlertDialogDescription>
-              <div className="flex gap-2 rounded-md bg-destructive/40 p-3 text-sm text-red-400">
-                <span className="font-bold">{t("Warning")}:</span>
-                <span>
-                  {t("This action is not reversible please be certain")}
-                </span>
+          <form
+            onSubmit={form.handleSubmit((values) => {
+              toast.promise(
+                mutation.mutateAsync({
+                  teamNameConfirmation: values.teamNameConfirmation,
+                  teamId: teamId,
+                }),
+                {
+                  loading: t("Deleting team"),
+                  success: t("Team deleted successfully"),
+                  error: (err) => getErrorMessage(err),
+                },
+              );
+            })}
+          >
+            <div className="flex flex-col gap-4">
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  {t.rich("You are deleting your team teamName", {
+                    teamName: () => <b className="font-light">{teamName}</b>,
+                  })}
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  {t(
+                    "All data related to your team will be permanently lost and cannot be recovered",
+                  )}
+                </AlertDialogDescription>
+                <div className="flex gap-2 rounded-md bg-destructive/40 p-3 text-sm text-red-400">
+                  <span className="font-bold">{t("Warning")}:</span>
+                  <span>
+                    {t("This action is not reversible please be certain")}
+                  </span>
+                </div>
+              </AlertDialogHeader>
+              <div className="flex flex-col gap-4 bg-card/40 py-8">
+                <FormField
+                  control={form.control}
+                  name="teamNameConfirmation"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-muted-foreground">
+                        {t.rich("Enter the team name teamName to continue", {
+                          teamName: () => <b>{teamName}</b>,
+                        })}
+                      </FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="verification"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-muted-foreground">
+                        {t.rich("To verify please type KEY", {
+                          deleteMyTeam: () => <b>{deleteMyTeamString}</b>,
+                        })}
+                      </FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
-            </AlertDialogHeader>
-            <div className="flex flex-col gap-4 bg-card/40 py-8">
-              <FormField
-                control={form.control}
-                name="teamNameConfirmation"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-muted-foreground">
-                      {t.rich("Enter the team name teamName to continue", {
-                        teamName: () => <b>{teamName}</b>,
-                      })}
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="verification"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-muted-foreground">
-                      {t.rich("To verify please type KEY", {
-                        deleteMyTeam: () => <b>{deleteMyTeamString}</b>,
-                      })}
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <AlertDialogFooter className="gap-3 sm:justify-between">
+                <AlertDialogCancel>{t("Cancel")}</AlertDialogCancel>
+                <Button>{t("Continue")}</Button>
+              </AlertDialogFooter>
             </div>
-            <AlertDialogFooter className="gap-3 sm:justify-between">
-              <AlertDialogCancel>{t("Cancel")}</AlertDialogCancel>
-              <Button
-                onClick={form.handleSubmit((values) => {
-                  toast.promise(
-                    mutation.mutateAsync({
-                      teamNameConfirmation: values.teamNameConfirmation,
-                      teamId: teamId,
-                    }),
-                    {
-                      loading: t("Deleting team"),
-                      success: t("Team deleted successfully"),
-                      error: (err) => getErrorMessage(err),
-                    },
-                  );
-                })}
-              >
-                {t("Continue")}
-              </Button>
-            </AlertDialogFooter>
-          </div>
+          </form>
         </Form>
       </AlertDialogContent>
     </AlertDialog>
