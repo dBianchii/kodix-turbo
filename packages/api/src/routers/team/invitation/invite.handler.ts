@@ -9,7 +9,7 @@ import TeamInvite from "@kdx/react-email/team-invite";
 import {
   getBaseUrl,
   getSuccessesAndErrors,
-  kodixNotificationFromEmail,
+  KODIX_NOTIFICATION_FROM_EMAIL,
 } from "@kdx/shared";
 
 import type { TIsTeamOwnerProcedureContext } from "../../../procedures";
@@ -88,7 +88,7 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
   const results = await Promise.allSettled(
     _invitations.map(async (invite) => {
       await resend.emails.send({
-        from: kodixNotificationFromEmail,
+        from: KODIX_NOTIFICATION_FROM_EMAIL,
         to: invite.email,
         subject: t("api.You have been invited to join a team on URL", {
           url: getBaseUrl(),

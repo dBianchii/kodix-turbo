@@ -2,7 +2,6 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { RxPlusCircled } from "react-icons/rx";
 
-import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
 import { redirect } from "@kdx/locales/next-intl/navigation";
 import { getTranslations } from "@kdx/locales/next-intl/server";
@@ -61,11 +60,6 @@ async function Apps() {
     );
 
   return apps.map((app) => (
-    <KodixApp
-      id={app.id as KodixAppId}
-      installed={true}
-      user={user}
-      key={app.id}
-    />
+    <KodixApp id={app.id} installed={true} user={user} key={app.id} />
   ));
 }

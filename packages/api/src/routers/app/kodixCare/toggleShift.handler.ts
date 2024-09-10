@@ -6,7 +6,7 @@ import { eq } from "@kdx/db";
 import { nanoid } from "@kdx/db/nanoid";
 import { careShifts } from "@kdx/db/schema";
 import WarnPreviousShiftNotEnded from "@kdx/react-email/warn-previous-shift-not-ended";
-import { kodixCareAppId, kodixNotificationFromEmail } from "@kdx/shared";
+import { KODIX_NOTIFICATION_FROM_EMAIL, kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 import { resend } from "../../../utils/email";
@@ -107,7 +107,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
     if (!lastCareShift.checkOut && !loggedUserIsCaregiverForCurrentShift)
       //Send email to caregiver if the previous shift was not ended by the caregiver
       await resend.emails.send({
-        from: kodixNotificationFromEmail,
+        from: KODIX_NOTIFICATION_FROM_EMAIL,
         to: lastCareShift.Caregiver.email,
         subject: t(`api.Your last shift was ended by NAME`, {
           name: ctx.session.user.name,

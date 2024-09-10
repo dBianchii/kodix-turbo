@@ -6,7 +6,7 @@ import { eq } from "@kdx/db";
 import { nanoid } from "@kdx/db/nanoid";
 import { resetPasswordTokens } from "@kdx/db/schema";
 import ResetPassword from "@kdx/react-email/reset-password";
-import { kodixNotificationFromEmail } from "@kdx/shared";
+import { KODIX_NOTIFICATION_FROM_EMAIL } from "@kdx/shared";
 
 import type { TPublicProcedureContext } from "../../procedures";
 import { resend } from "../../utils/email";
@@ -47,7 +47,7 @@ export const sendResetPasswordEmail = async ({
   });
 
   await resend.emails.send({
-    from: kodixNotificationFromEmail,
+    from: KODIX_NOTIFICATION_FROM_EMAIL,
     to: input.email,
     subject: "Kodix - Reset password",
     react: ResetPassword({ token }),

@@ -13,7 +13,7 @@ import { TRPCReactProvider } from "~/trpc/react";
 import "~/app/globals.css";
 
 import { getMessages } from "@kdx/locales/next-intl/server";
-import { kdxProductionURL } from "@kdx/shared";
+import { getBaseUrl } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { ThemeProvider, ThemeToggle } from "@kdx/ui/theme";
 import { Toaster } from "@kdx/ui/toast";
@@ -22,17 +22,13 @@ import { Header } from "./_components/header/header";
 import { CSPostHogProvider } from "./_components/posthog-provider";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    env.VERCEL_ENV === "production"
-      ? kdxProductionURL
-      : "http://localhost:3000",
-  ),
+  metadataBase: new URL(getBaseUrl()),
   title: "Kodix",
   description: "Software on demand",
   openGraph: {
     title: "Kodix",
     description: "Software on demand",
-    url: kdxProductionURL,
+    url: getBaseUrl(),
     siteName: "Kodix",
   },
   twitter: {

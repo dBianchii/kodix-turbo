@@ -1,3 +1,5 @@
+import type { KodixAppId } from "@kdx/shared";
+
 import type { TProtectedProcedureContext } from "../../procedures";
 import { getAllHandler } from "./getAll.handler";
 
@@ -8,7 +10,7 @@ interface GetInstalledOptions {
 export const getInstalledHandler = async ({ ctx }: GetInstalledOptions) => {
   const installedApps = (await getAllHandler({ ctx }))
     .filter((app) => app.installed)
-    .map((app) => ({ id: app.id }));
+    .map((app) => ({ id: app.id as KodixAppId }));
 
   return installedApps;
 };
