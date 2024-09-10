@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import { z } from "zod";
 
+import type { User } from "@kdx/auth";
 import { useRouter } from "@kdx/locales/next-intl/navigation";
 import { getErrorMessage } from "@kdx/shared";
 import {
@@ -29,11 +30,11 @@ import { ZDeleteTeamInputSchema } from "@kdx/validators/trpc/team";
 import { api } from "~/trpc/react";
 
 export function DeleteTeamConfirmationDialog({
-  teamName,
+  user,
   open,
   setOpen,
 }: {
-  teamName: string;
+  user: User;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
@@ -42,7 +43,7 @@ export function DeleteTeamConfirmationDialog({
 
   const form = useForm({
     schema: ZDeleteTeamInputSchema.extend({
-      teamNameConfirmation: z.literal(teamName, {
+      teamNameConfirmation: z.literal(user.activeTeamName, {
         message: t("Team name does not match"),
       }),
       verification: z.literal(deleteMyTeamString),
@@ -71,7 +72,9 @@ export function DeleteTeamConfirmationDialog({
             <AlertDialogHeader>
               <AlertDialogTitle>
                 {t.rich("You are deleting your team teamName", {
-                  teamName: () => <b className="font-light">{teamName}</b>,
+                  teamName: () => (
+                    <b className="font-light">{user.activeTeamName}</b>
+                  ),
                 })}
               </AlertDialogTitle>
               <AlertDialogDescription>
@@ -94,7 +97,7 @@ export function DeleteTeamConfirmationDialog({
                   <FormItem>
                     <FormLabel className="text-muted-foreground">
                       {t.rich("Enter the team name teamName to continue", {
-                        teamName: () => <b>{teamName}</b>,
+                        teamName: () => <b>{user.activeTeamName}</b>,
                       })}
                     </FormLabel>
                     <FormControl>
@@ -129,6 +132,7 @@ export function DeleteTeamConfirmationDialog({
                   toast.promise(
                     mutation.mutateAsync({
                       teamNameConfirmation: values.teamNameConfirmation,
+                      teamId: user.activeTeamId,
                     }),
                     {
                       loading: t("Deleting team"),
