@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import type { User } from "@kdx/auth";
 import { useTranslations } from "@kdx/locales/next-intl/client";
 import { Button } from "@kdx/ui/button";
 import {
@@ -16,7 +17,7 @@ import { useI18nZodErrors } from "@kdx/validators/useI18nZodErrors";
 
 import { DeleteTeamConfirmationDialog } from "./delete-team-confirmation-dialog";
 
-export function DeleteTeamCardClient({ teamName }: { teamName: string }) {
+export function DeleteTeamCardClient({ user }: { user: User }) {
   useI18nZodErrors();
   const t = useTranslations();
   const [open, setOpen] = useState(false);
