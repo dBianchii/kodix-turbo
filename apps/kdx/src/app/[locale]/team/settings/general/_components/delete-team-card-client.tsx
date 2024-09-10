@@ -40,7 +40,8 @@ export function DeleteTeamCardClient({ user }: { user: User }) {
               {t("Please use 32 characters at maximum")}
             </CardDescription> */}
         <DeleteTeamConfirmationDialog
-          user={user}
+          teamId={user.activeTeamId}
+          teamName={user.activeTeamName}
           open={open}
           setOpen={setOpen}
         />

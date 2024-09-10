@@ -145,6 +145,7 @@ function CustomRow({
           <LeaveOrDeleteTeamDropdown
             teamId={team.id}
             teamName={team.name}
+            user={user}
             isOwner={isOwner}
           />
         </div>
@@ -161,6 +162,7 @@ function LeaveOrDeleteTeamDropdown({
   isOwner: boolean;
   teamId: string;
   teamName: string;
+  user: User;
 }) {
   const t = useTranslations();
   const utils = api.useUtils();
@@ -178,6 +180,7 @@ function LeaveOrDeleteTeamDropdown({
   return (
     <>
       <DeleteTeamConfirmationDialog
+        teamId={teamId}
         teamName={teamName}
         open={open}
         setOpen={(open) => {

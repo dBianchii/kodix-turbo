@@ -30,11 +30,13 @@ import { ZDeleteTeamInputSchema } from "@kdx/validators/trpc/team";
 import { api } from "~/trpc/react";
 
 export function DeleteTeamConfirmationDialog({
-  user,
+  teamName,
+  teamId,
   open,
   setOpen,
 }: {
-  user: User;
+  teamName: string;
+  teamId: string;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
@@ -43,7 +45,7 @@ export function DeleteTeamConfirmationDialog({
 
   const form = useForm({
     schema: ZDeleteTeamInputSchema.extend({
-      teamNameConfirmation: z.literal(user.activeTeamName, {
+      teamNameConfirmation: z.literal(teamName, {
         message: t("Team name does not match"),
       }),
       verification: z.literal(deleteMyTeamString),
@@ -72,9 +74,7 @@ export function DeleteTeamConfirmationDialog({
             <AlertDialogHeader>
               <AlertDialogTitle>
                 {t.rich("You are deleting your team teamName", {
-                  teamName: () => (
-                    <b className="font-light">{user.activeTeamName}</b>
-                  ),
+                  teamName: () => <b className="font-light">{teamName}</b>,
                 })}
               </AlertDialogTitle>
               <AlertDialogDescription>
@@ -97,7 +97,7 @@ export function DeleteTeamConfirmationDialog({
                   <FormItem>
                     <FormLabel className="text-muted-foreground">
                       {t.rich("Enter the team name teamName to continue", {
-                        teamName: () => <b>{user.activeTeamName}</b>,
+                        teamName: () => <b>{teamName}</b>,
                       })}
                     </FormLabel>
                     <FormControl>
@@ -132,7 +132,7 @@ export function DeleteTeamConfirmationDialog({
                   toast.promise(
                     mutation.mutateAsync({
                       teamNameConfirmation: values.teamNameConfirmation,
-                      teamId: user.activeTeamId,
+                      teamId: teamId,
                     }),
                     {
                       loading: t("Deleting team"),
