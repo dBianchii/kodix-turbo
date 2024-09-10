@@ -445,7 +445,7 @@
   "Permanently delete your account and all your data ": "Exclua permanentemente sua conta e todos os seus dados",
   "All data related to you will be permanently lost and cannot be recovered": "Todos os dados relacionados a você serão perdidos permanentemente e não poderão ser recuperados",
   "Continue": "Continuar",
-  "Please type DELETE_ACCOUNT to continue": "Digite <deleteAccount>deleteAccount</deleteAccount> para continuar",
+  "Please type DELETE_ACCOUNT to continue": "Digite '<deleteAccount>deleteAccount</deleteAccount>' para continuar",
   "This action is not reversible please be certain": "Esta ação não é reversível, tenha certeza",
   "Account deleted successfully": "Conta excluída com sucesso",
   "Warning": "Aviso",
