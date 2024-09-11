@@ -2,8 +2,9 @@
 
 import { PiTranslate } from "react-icons/pi";
 
+import type { Locales } from "@kdx/locales";
 import { useTranslations } from "@kdx/locales/next-intl/client";
-import { Link, usePathname } from "@kdx/locales/next-intl/navigation";
+import { usePathname, useRouter } from "@kdx/locales/next-intl/navigation";
 import { Button } from "@kdx/ui/button";
 import {
   DropdownMenu,
@@ -13,8 +14,13 @@ import {
 } from "@kdx/ui/dropdown-menu";
 
 export function I18nPicker() {
-  const pathname = usePathname();
   const t = useTranslations();
+  const pathname = usePathname();
+  const router = useRouter();
+  const handleLocaleChange = (locale: Locales) => {
+    router.replace(pathname, { locale: locale });
+    router.refresh();
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -23,12 +29,13 @@ export function I18nPicker() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <Link href={pathname} locale="pt-BR">
-          <DropdownMenuItem>{t("Portuguese Brazil")}</DropdownMenuItem>
-        </Link>
-        <Link href={pathname} locale="en">
-          <DropdownMenuItem>{t("English")}</DropdownMenuItem>
-        </Link>
+        <DropdownMenuItem onClick={() => handleLocaleChange("pt-BR")}>
+          {t("Portuguese Brazil")}
+        </DropdownMenuItem>
+
+        <DropdownMenuItem onClick={() => handleLocaleChange("en")}>
+          {t("English")}
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

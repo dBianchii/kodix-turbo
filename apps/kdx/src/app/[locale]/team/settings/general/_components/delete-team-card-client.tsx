@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 
+import type { User } from "@kdx/auth";
 import { useTranslations } from "@kdx/locales/next-intl/client";
 import { useRouter } from "@kdx/locales/next-intl/navigation";
 import { getErrorMessage } from "@kdx/shared";
@@ -40,7 +41,7 @@ import { useI18nZodErrors } from "@kdx/validators/useI18nZodErrors";
 
 import { api } from "~/trpc/react";
 
-export function DeleteTeamCardClient({ teamName }: { teamName: string }) {
+export function DeleteTeamCardClient({ user }: { user: User }) {
   useI18nZodErrors();
   const t = useTranslations();
 
@@ -48,7 +49,7 @@ export function DeleteTeamCardClient({ teamName }: { teamName: string }) {
 
   const form = useForm({
     schema: ZDeleteTeamInputSchema.extend({
-      teamNameConfirmation: z.literal(teamName, {
+      teamNameConfirmation: z.literal(user.activeTeamName, {
         message: t("Team name does not match"),
       }),
       verification: z.literal(deleteMyTeamString),
@@ -97,6 +98,7 @@ export function DeleteTeamCardClient({ teamName }: { teamName: string }) {
                   toast.promise(
                     mutation.mutateAsync({
                       teamNameConfirmation: values.teamNameConfirmation,
+                      teamId: user.activeTeamId,
                     }),
                     {
                       loading: t("Deleting team"),
@@ -109,7 +111,9 @@ export function DeleteTeamCardClient({ teamName }: { teamName: string }) {
                 <AlertDialogHeader>
                   <AlertDialogTitle>
                     {t.rich("You are deleting your team teamName", {
-                      teamName: () => <b className="font-light">{teamName}</b>,
+                      teamName: () => (
+                        <b className="font-light">{user.activeTeamName}</b>
+                      ),
                     })}
                   </AlertDialogTitle>
                   <AlertDialogDescription>
@@ -132,7 +136,7 @@ export function DeleteTeamCardClient({ teamName }: { teamName: string }) {
                       <FormItem>
                         <FormLabel className="text-muted-foreground">
                           {t.rich("Enter the team name teamName to continue", {
-                            teamName: () => <b>{teamName}</b>,
+                            teamName: () => <b>{user.activeTeamName}</b>,
                           })}
                         </FormLabel>
                         <FormControl>

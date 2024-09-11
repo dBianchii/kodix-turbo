@@ -59,7 +59,7 @@ async function DeleteTeamCardOrLeaveTeamCard() {
   if (!user) return null;
   const team = await api.team.getActiveTeam();
   const isOwner = team.ownerId === user.id;
-  if (isOwner) return <DeleteTeamCardClient teamName={user.activeTeamName} />;
+  if (isOwner) return <DeleteTeamCardClient user={user} />;
 
   return (
     <LeaveTeamCardClient
