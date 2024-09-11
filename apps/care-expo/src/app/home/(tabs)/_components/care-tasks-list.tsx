@@ -1,16 +1,13 @@
 import { useState } from "react";
 import { KeyboardAvoidingView, TouchableOpacity } from "react-native";
 import * as Haptics from "expo-haptics";
-import { Check as CheckIcon, ChevronDown } from "@tamagui/lucide-icons";
+import { Check as CheckIcon } from "@tamagui/lucide-icons";
 import {
-  Button,
   Checkbox,
-  H2,
-  Input,
-  Paragraph,
   ScrollView,
   Sheet,
   SizableText,
+  Spinner,
   Text,
   TextArea,
   View,
@@ -21,23 +18,22 @@ import { useFormatter } from "use-intl";
 
 import dayjs from "@kdx/dayjs";
 
-import { api, RouterOutputs } from "~/utils/api";
+import type { RouterOutputs } from "~/utils/api";
+import { api } from "~/utils/api";
 
 export function CaretasksList() {
   const careTasksQuery = api.app.kodixCare.getCareTasks.useQuery({
     dateStart: dayjs.utc().add(2, "days").startOf("day").toDate(),
     dateEnd: dayjs.utc().add(2, "days").endOf("day").toDate(),
   });
-  const [open, setOpen] = useState(true);
   const [position, setPosition] = useState(1);
 
   const borderTopRadius = "$6";
   return (
     <Sheet
       disableDrag
-      forceRemoveScrollEnabled={open}
-      open={open}
-      onOpenChange={setOpen}
+      forceRemoveScrollEnabled
+      open
       snapPoints={[100, 65]}
       snapPointsMode={"percent"}
       position={position}
@@ -59,18 +55,18 @@ export function CaretasksList() {
         borderWidth={1}
         borderBottomWidth={0}
       >
-        <ScrollView f={1} w="100%" p={"$3"}>
-          {careTasksQuery.isLoading ? (
-            <Text>Loading...</Text>
-          ) : (
-            [...careTasksQuery.data, ...careTasksQuery.data].map((task, i) => (
+        {careTasksQuery.isLoading || !careTasksQuery.data ? (
+          <Spinner mt="$20" />
+        ) : (
+          <ScrollView f={1} w="100%" p={"$3"}>
+            {careTasksQuery.data.map((task, i) => (
               <CareTaskItem
                 key={`${task.id}${task.title}${task.description}${i}`}
                 task={task}
               />
-            ))
-          )}
-        </ScrollView>
+            ))}
+          </ScrollView>
+        )}
       </Sheet.Frame>
     </Sheet>
   );
@@ -84,6 +80,8 @@ function CareTaskItem({
   const [checked, setChecked] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
 
+  // const isKeyBoardVisible = useIsKeyBoardVisible();
+
   const format = useFormatter();
   return (
     <>
@@ -91,7 +89,8 @@ function CareTaskItem({
         forceRemoveScrollEnabled={sheetOpen}
         open={sheetOpen}
         onOpenChange={setSheetOpen}
-        snapPoints={[45]}
+        snapPoints={[100, 45]}
+        // position={isKeyBoardVisible ? 1 : 2}
         snapPointsMode={"percent"}
         zIndex={100_000}
         dismissOnSnapToBottom
@@ -108,7 +107,6 @@ function CareTaskItem({
           enterStyle={{ opacity: 0 }}
           exitStyle={{ opacity: 0 }}
         />
-        <Sheet.Handle />
         <Sheet.Frame
           p={"$2"}
           ai="center"
@@ -117,7 +115,10 @@ function CareTaskItem({
           borderWidth={1}
           borderBottomWidth={0}
         >
-          <KeyboardAvoidingView>
+          <KeyboardAvoidingView
+            behavior={"padding"}
+            keyboardVerticalOffset={100}
+          >
             <TextArea
               value={task.title ?? ""}
               borderWidth={0}

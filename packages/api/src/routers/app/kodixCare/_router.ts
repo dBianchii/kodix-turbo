@@ -18,7 +18,7 @@ import { protectedProcedure, publicProcedure } from "../../../procedures";
 import { checkEmailForRegisterHandler } from "./checkEmailForRegister.handler";
 import { doCheckoutForShiftHandler } from "./doCheckoutForShift.handler";
 import { getCareTasksHandler } from "./getCareTasks.handler";
-import { getCurrentCareShiftHandler } from "./getCurrentCareShift.handler";
+import { getCurrentShiftHandler } from "./getCurrentShift.handler";
 import { saveCareTaskHandler } from "./saveCareTask.handler";
 import { signInByPasswordHandler } from "./signInByPassword.handler";
 import { toggleShiftHandler } from "./toggleShift.handler";
@@ -39,7 +39,7 @@ export const kodixCareRouter = {
     .query(getCareTasksHandler),
   getCurrentShift: protectedProcedure
     .use(kodixCareInstalledMiddleware)
-    .query(getCurrentCareShiftHandler),
+    .query(getCurrentShiftHandler),
   saveCareTask: protectedProcedure
     .input(ZSaveCareTaskInputSchema)
     .mutation(saveCareTaskHandler),

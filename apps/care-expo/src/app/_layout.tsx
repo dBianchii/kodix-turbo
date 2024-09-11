@@ -7,6 +7,7 @@ import "@bacons/text-decoder/install";
 import type { FontSource } from "expo-font";
 import React, { useEffect, useState } from "react";
 import { useColorScheme } from "react-native";
+import { KeyboardProvider } from "react-native-keyboard-controller";
 import { useFonts } from "expo-font";
 import { PortalProvider, Spinner, TamaguiProvider } from "tamagui";
 import tamaguiConfig from "tamagui.config";
@@ -107,13 +108,15 @@ export default function RootLayout() {
           config={tamaguiConfig}
           defaultTheme={colorScheme === "dark" ? "dark_blue" : "light_blue"}
         >
+          {/* <KeyboardProvider> need to use development build*/}
           <ToastProvider swipeDirection="up" swipeThreshold={20}>
             <PortalProvider shouldAddRootHost>
               <DefaultToast />
               <MainLayout />
-              <SafeToastViewport></SafeToastViewport>
+              <SafeToastViewport />
             </PortalProvider>
           </ToastProvider>
+          {/* </KeyboardProvider> */}
         </TamaguiProvider>
       </IntlProvider>
     </TRPCProvider>
