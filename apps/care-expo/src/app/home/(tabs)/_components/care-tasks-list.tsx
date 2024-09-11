@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { KeyboardAvoidingView, TouchableOpacity } from "react-native";
+import { useEffect, useState } from "react";
+import { TouchableOpacity } from "react-native";
 import * as Haptics from "expo-haptics";
 import { Check as CheckIcon } from "@tamagui/lucide-icons";
 import {
@@ -17,21 +17,24 @@ import {
 import { useFormatter } from "use-intl";
 
 import dayjs from "@kdx/dayjs";
+import { ZSaveCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 
 import type { RouterOutputs } from "~/utils/api";
+import { useForm } from "~/components/form";
 import { api } from "~/utils/api";
+import { useIsKeyBoardVisible } from "~/utils/hooks";
 
 export function CaretasksList() {
   const careTasksQuery = api.app.kodixCare.getCareTasks.useQuery({
     dateStart: dayjs.utc().add(2, "days").startOf("day").toDate(),
     dateEnd: dayjs.utc().add(2, "days").endOf("day").toDate(),
   });
+
   const [position, setPosition] = useState(1);
 
   const borderTopRadius = "$6";
   return (
     <Sheet
-      disableDrag
       forceRemoveScrollEnabled
       open
       snapPoints={[100, 65]}
@@ -40,6 +43,7 @@ export function CaretasksList() {
       onPositionChange={setPosition}
       zIndex={2}
       animation="medium"
+      native
       animationConfig={{
         type: "spring",
         damping: 10,
@@ -77,10 +81,19 @@ function CareTaskItem({
 }: {
   task: RouterOutputs["app"]["kodixCare"]["getCareTasks"][number];
 }) {
-  const [checked, setChecked] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
-
-  // const isKeyBoardVisible = useIsKeyBoardVisible();
+  const form = useForm({
+    schema: ZSaveCareTaskInputSchema,
+  });
+  const isKeyboardVisible = useIsKeyBoardVisible();
+  const [position, setPosition] = useState(1);
+  useEffect(() => {
+    if (isKeyboardVisible) {
+      setPosition(0);
+    } else {
+      setPosition(1);
+    }
+  }, [isKeyboardVisible]);
 
   const format = useFormatter();
   return (
@@ -89,8 +102,8 @@ function CareTaskItem({
         forceRemoveScrollEnabled={sheetOpen}
         open={sheetOpen}
         onOpenChange={setSheetOpen}
+        position={position}
         snapPoints={[100, 45]}
-        // position={isKeyBoardVisible ? 1 : 2}
         snapPointsMode={"percent"}
         zIndex={100_000}
         dismissOnSnapToBottom
@@ -101,6 +114,7 @@ function CareTaskItem({
           mass: 0.3,
         }}
         modal
+        native
       >
         <Sheet.Overlay
           animation="medium"
@@ -115,16 +129,12 @@ function CareTaskItem({
           borderWidth={1}
           borderBottomWidth={0}
         >
-          <KeyboardAvoidingView
-            behavior={"padding"}
-            keyboardVerticalOffset={100}
-          >
-            <TextArea
-              value={task.title ?? ""}
-              borderWidth={0}
-              backgroundColor={"$color3"}
-            />
-          </KeyboardAvoidingView>
+          <TextArea
+            onChange={() => {}}
+            value={task.title ?? ""}
+            borderWidth={0}
+            backgroundColor={"$color3"}
+          />
         </Sheet.Frame>
       </Sheet>
       <TouchableOpacity

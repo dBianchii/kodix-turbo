@@ -1,9 +1,20 @@
 import React, { useState } from "react";
-import { Alert } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import { Alert, Platform, TouchableOpacity } from "react-native";
+import DateTimePicker, {
+  DateTimePickerAndroid,
+} from "@react-native-community/datetimepicker";
 import { useToastController } from "@tamagui/toast";
-import { Button, H3, Paragraph, Sheet, Spinner } from "tamagui";
+import {
+  Button,
+  H3,
+  Paragraph,
+  Sheet,
+  SizableText,
+  Spinner,
+  XStack,
+} from "tamagui";
 
+import { useFormatter } from "@kdx/locales/use-intl";
 import { ZDoCheckoutForShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 
 import type { RouterOutputs } from "~/utils/api";
@@ -105,6 +116,7 @@ function DoCheckoutDialogButton({
       });
     },
   });
+  const format = useFormatter();
 
   return (
     <>
@@ -132,6 +144,7 @@ function DoCheckoutDialogButton({
         snapPointsMode={"percent"}
         dismissOnSnapToBottom
         zIndex={100_000}
+        native
       >
         <Sheet.Overlay enterStyle={{ opacity: 0 }} exitStyle={{ opacity: 0 }} />
         <Sheet.Handle backgroundColor={"$blue5Dark"} />
@@ -148,16 +161,57 @@ function DoCheckoutDialogButton({
               render={({ field }) => (
                 <FormItem ai="center">
                   <FormControl>
-                    <DateTimePicker
-                      {...field}
-                      minimumDate={currentShift.checkIn}
-                      onChange={(_, date) => {
-                        field.onChange(date);
-                      }}
-                      value={field.value}
-                      mode="datetime"
-                      display="spinner"
-                    />
+                    {Platform.OS === "ios" ? (
+                      <DateTimePicker
+                        {...field}
+                        minimumDate={currentShift.checkIn}
+                        onChange={(_, date) => {
+                          field.onChange(date);
+                        }}
+                        value={field.value}
+                        mode="datetime"
+                        display="spinner"
+                      />
+                    ) : (
+                      <XStack jc="center" gap="$5">
+                        <TouchableOpacity
+                          onPress={() => {
+                            DateTimePickerAndroid.open({
+                              value: field.value,
+                              onChange: (_, date) => {
+                                field.onChange(date);
+                              },
+                              minimumDate: currentShift.checkIn,
+                              mode: "date",
+                              display: "spinner",
+                            });
+                          }}
+                        >
+                          <SizableText size={"$8"}>
+                            {format.dateTime(field.value)}
+                          </SizableText>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={() => {
+                            DateTimePickerAndroid.open({
+                              value: field.value,
+                              onChange: (_, date) => {
+                                field.onChange(date);
+                              },
+                              minimumDate: currentShift.checkIn,
+                              mode: "time",
+                              display: "spinner",
+                            });
+                          }}
+                        >
+                          <SizableText size={"$8"}>
+                            {format.dateTime(field.value, {
+                              timeStyle: "short",
+                            })}
+                          </SizableText>
+                        </TouchableOpacity>
+                      </XStack>
+                    )}
                   </FormControl>
                   <FormMessage />
                 </FormItem>
