@@ -43,14 +43,19 @@ export const deleteAccountHandler = async ({ ctx }: DeleteAccountOptions) => {
   }
   const t = await getTranslations({ locale: ctx.locale });
 
-  if (_teams.length > 1 || _teams[0].UsersToTeams.length > 1) {
+  if (_teams.length > 1) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: t("api.To delete you account you must have only one team left"),
+    });
+  }
+  if (_teams[0].UsersToTeams.length > 1)
     throw new TRPCError({
       code: "FORBIDDEN",
       message: t(
-        "api.To delete your account you must have only one team with no other users",
+        "api.To delete your account first remove all other users from your team",
       ),
     });
-  }
 
   await ctx.db.transaction(async (tx) => {
     await tx.delete(accounts).where(eq(accounts.userId, ctx.session.user.id));
