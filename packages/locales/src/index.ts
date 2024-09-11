@@ -2,6 +2,7 @@ import type { useTranslations } from "./next-intl/client";
 import type { getTranslations } from "./next-intl/server";
 
 export const locales = ["pt-BR", "en"] as const;
+export type Locales = (typeof locales)[number];
 export const defaultLocale = "pt-BR";
 
 //TODO: figure out how to make typed namespaces work. (Both with i18n-ally and next-intl/use-intl)
