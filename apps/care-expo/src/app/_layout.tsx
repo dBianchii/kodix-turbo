@@ -104,10 +104,7 @@ export default function RootLayout() {
         locale={locale}
         timeZone="America/Sao_Paulo"
       >
-        <TamaguiProvider
-          config={tamaguiConfig}
-          defaultTheme={colorScheme === "dark" ? "dark_blue" : "light_blue"}
-        >
+        <TamaguiProvider config={tamaguiConfig} defaultTheme={"dark_blue"}>
           {/* <KeyboardProvider> need to use development build*/}
           <ToastProvider swipeDirection="up" swipeThreshold={20}>
             <PortalProvider shouldAddRootHost>
