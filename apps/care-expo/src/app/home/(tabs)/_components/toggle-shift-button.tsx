@@ -14,7 +14,7 @@ import {
   XStack,
 } from "tamagui";
 
-import { useFormatter } from "@kdx/locales/use-intl";
+import { useFormatter, useTranslations } from "@kdx/locales/use-intl";
 import { ZDoCheckoutForShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 
 import type { RouterOutputs } from "~/utils/api";
@@ -91,9 +91,9 @@ function DoCheckoutDialogButton({
   const [open, setOpen] = useState(false);
   const utils = api.useUtils();
   const toast = useToastController();
-
+  const t = useTranslations();
   const form = useForm({
-    schema: ZDoCheckoutForShiftInputSchema,
+    schema: ZDoCheckoutForShiftInputSchema(t),
     defaultValues: {
       date: new Date(),
     },

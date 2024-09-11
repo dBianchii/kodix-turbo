@@ -1,13 +1,20 @@
 import { z } from "zod";
 
+import type { IsomorficT } from "@kdx/locales";
+
 import { ZNanoId } from "../../..";
 import { ZSignInByPasswordInputSchema as default_ZSignInByPasswordInputSchema } from "../../user";
 
-export const ZDoCheckoutForShiftInputSchema = z.object({
-  date: z.date(),
-});
+export const ZDoCheckoutForShiftInputSchema = (t: IsomorficT) =>
+  z.object({
+    date: z
+      .date()
+      .max(new Date(), {
+        message: t("validators.Checkout time cannot be in the future"),
+      }),
+  });
 export type TDoCheckoutForShiftInputSchema = z.infer<
-  typeof ZDoCheckoutForShiftInputSchema
+  ReturnType<typeof ZDoCheckoutForShiftInputSchema>
 >;
 
 export const ZGetCareTasksInputSchema = z.object({

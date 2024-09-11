@@ -153,9 +153,10 @@ function DoCheckoutDialogButton({
 }) {
   const [open, setOpen] = useState(false);
   const utils = api.useUtils();
+  const t = useTranslations();
 
   const form = useForm({
-    schema: ZDoCheckoutForShiftInputSchema,
+    schema: ZDoCheckoutForShiftInputSchema(t),
     defaultValues: {
       date: new Date(),
     },
@@ -170,7 +171,6 @@ function DoCheckoutDialogButton({
       trpcErrorToastDefault(err);
     },
   });
-  const t = useTranslations();
   return (
     <Dialog
       open={open}

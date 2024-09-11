@@ -15,6 +15,7 @@ import {
   kodixCareInstalledMiddleware,
 } from "../../../middlewares";
 import { protectedProcedure, publicProcedure } from "../../../procedures";
+import { T } from "../../../utils/locales";
 import { checkEmailForRegisterHandler } from "./checkEmailForRegister.handler";
 import { doCheckoutForShiftHandler } from "./doCheckoutForShift.handler";
 import { getCareTasksHandler } from "./getCareTasks.handler";
@@ -30,7 +31,7 @@ export const kodixCareRouter = {
     .use(appPermissionMiddleware(PKodixCare_CanToggleShiftId))
     .mutation(toggleShiftHandler),
   doCheckoutForShift: protectedProcedure
-    .input(ZDoCheckoutForShiftInputSchema)
+    .input(T(ZDoCheckoutForShiftInputSchema))
     .use(kodixCareInstalledMiddleware)
     .mutation(doCheckoutForShiftHandler),
   getCareTasks: protectedProcedure
