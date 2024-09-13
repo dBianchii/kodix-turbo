@@ -1,6 +1,12 @@
 "use client";
 
-import type { SortingState, VisibilityState } from "@tanstack/react-table";
+import type {
+  Column,
+  ColumnDef,
+  SortingState,
+  VisibilityState,
+} from "@tanstack/react-table";
+import type { CareTask } from "node_modules/@kdx/api/dist/api/src/routers/app/kodixCare/getCareTasks.handler";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   createColumnHelper,
@@ -71,8 +77,28 @@ import { DatePicker } from "~/app/[locale]/_components/date-picker";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
-type CareTask = RouterOutputs["app"]["kodixCare"]["getCareTasks"][number];
-const columnHelper = createColumnHelper<CareTask>();
+type CareTaskOrCalendarTask =
+  RouterOutputs["app"]["kodixCare"]["getCareTasks"][number];
+
+const columnHelper = createColumnHelper<CareTaskOrCalendarTask>();
+
+function HeaderSort({
+  column,
+  children,
+}: {
+  column: Column<CareTaskOrCalendarTask>;
+  children?: React.ReactNode;
+}) {
+  return (
+    <Button
+      variant="ghost"
+      onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+    >
+      {children}
+      <LuChevronsUpDown className="ml-2 h-4 w-4" />
+    </Button>
+  );
+}
 
 export default function DataTableKodixCare({
   initialCareTasks,
@@ -100,9 +126,9 @@ export default function DataTableKodixCare({
   const [editDetailsOpen, setEditDetailsOpen] = useState(false);
   const [unlockMoreTasksDialogOpen, setUnlockMoreTasksDialogOpen] =
     useState(false);
-  const [currentlyEditing, setCurrentlyEditing] = useState<string | undefined>(
-    undefined,
-  );
+  const [currentlyEditing, setCurrentlyEditing] = useState<
+    CareTask["id"] | undefined
+  >(undefined);
   const format = useFormatter();
 
   const mutation = api.app.kodixCare.saveCareTask.useMutation({
@@ -147,46 +173,41 @@ export default function DataTableKodixCare({
     },
   });
   const t = useTranslations();
+  const isCareTask = (id: CareTaskOrCalendarTask["id"]): id is string => !!id;
 
   const columns = [
     columnHelper.accessor("title", {
       header: () => <span className="ml-8">{t("Title")}</span>,
-      cell: (ctx) => (
-        <div className="flex flex-row items-center">
-          <div className="w-8">
-            {ctx.row.original.id.length > 0 ? (
-              <Checkbox
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setCurrentlyEditing(ctx.row.original.id);
-                  if (ctx.row.original.doneAt === null)
-                    return setSaveTaskAsDoneDialogOpen(true);
-
-                  setSaveTaskAsNotDoneDialogOpen(true);
-                }}
-                checked={!!ctx.row.original.doneAt}
-                className="size-5"
-              />
-            ) : (
-              <RxLockClosed className="size-4" />
-            )}
-          </div>
-          <span className="font-semibold">{ctx.getValue()}</span>
-        </div>
-      ),
-    }),
-    columnHelper.accessor("date", {
-      header: ({ column }) => {
+      cell: (ctx) => {
         return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            {t("Date")}
-            <LuChevronsUpDown className="ml-2 h-4 w-4" />
-          </Button>
+          <div className="flex flex-row items-center">
+            <div className="w-8">
+              {isCareTask(ctx.row.original.id) ? (
+                <Checkbox
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    setCurrentlyEditing(ctx.row.original.id!);
+                    if (!ctx.row.original.doneAt)
+                      return setSaveTaskAsDoneDialogOpen(true);
+                    setSaveTaskAsNotDoneDialogOpen(true);
+                  }}
+                  checked={!!ctx.row.original.doneAt}
+                  className="size-5"
+                />
+              ) : (
+                <RxLockClosed className="size-4" />
+              )}
+            </div>
+            <span className="font-semibold">{ctx.getValue()}</span>
+          </div>
         );
       },
+    }),
+    columnHelper.accessor("date", {
+      header: ({ column }) => (
+        <HeaderSort column={column}>{t("Date")}</HeaderSort>
+      ),
       cell: (ctx) => (
         <div>
           {format.dateTime(ctx.row.original.date, {
@@ -201,15 +222,7 @@ export default function DataTableKodixCare({
     }),
     columnHelper.accessor("doneAt", {
       header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            {t("Done at")}
-            <LuChevronsUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
+        return <HeaderSort column={column}>{t("Done at")}</HeaderSort>;
       },
       cell: (ctx) => {
         if (!ctx.row.original.id) return null;
@@ -251,7 +264,7 @@ export default function DataTableKodixCare({
 
   const currentlyEditingCareTask = useMemo(() => {
     if (!query.data?.length) return undefined;
-    return query.data.find((x) => x.id === currentlyEditing);
+    return query.data.find((x) => x.id === currentlyEditing) as CareTask;
   }, [currentlyEditing, query.data]);
 
   const leftArrowRef = useRef<HTMLButtonElement>(null);
@@ -399,7 +412,7 @@ export default function DataTableKodixCare({
                             "You cannot unlock tasks that are scheduled for after tomorrow end of day",
                           );
 
-                        setCurrentlyEditing(row.original.id);
+                        // setCurrentlyEditing(row.original.id);
                         setUnlockMoreTasksDialogOpen(true);
                         return;
                       }

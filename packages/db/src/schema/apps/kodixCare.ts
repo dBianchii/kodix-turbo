@@ -48,7 +48,7 @@ export const careTasks = mysqlTable(
   "careTask",
   {
     id: nanoidPrimaryKey,
-    eventDate: timestamp("eventDate").notNull(),
+    date: timestamp("date").notNull(),
     doneAt: timestamp("doneAt"),
     doneByUserId: varchar("doneByUserId", { length: NANOID_SIZE }).references(
       () => users.id,

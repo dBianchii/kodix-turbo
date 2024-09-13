@@ -34,7 +34,7 @@ export async function cloneCalendarTasksToCareTasks({
         teamId: ctx.session.user.activeTeamId,
         title: calendarTask.title,
         description: calendarTask.description,
-        eventDate: calendarTask.date,
+        date: calendarTask.date,
         eventMasterId: calendarTask.eventMasterId,
         doneByUserId: null,
       })),
