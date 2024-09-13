@@ -1,7 +1,6 @@
 import React from "react";
-import { KeyboardAvoidingView } from "react-native";
 import { useRouter } from "expo-router";
-import { H2, H3, Spinner, Text, View } from "tamagui";
+import { H3, Spinner, Text, View } from "tamagui";
 
 import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
 

@@ -2,7 +2,7 @@ import type { ConfigContext, ExpoConfig } from "expo/config";
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: "care-expo",
+  name: "Kodix Care",
   slug: "care-expo",
   scheme: "care-expo",
   version: "0.1.0",

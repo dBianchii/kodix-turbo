@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import * as Haptics from "expo-haptics";
 import { Check as CheckIcon } from "@tamagui/lucide-icons";
@@ -20,126 +20,155 @@ import dayjs from "@kdx/dayjs";
 import { ZSaveCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 
 import type { RouterOutputs } from "~/utils/api";
-import { useForm } from "~/components/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+  useForm,
+} from "~/components/form";
+import { SheetModal } from "~/components/sheet-modal";
 import { api } from "~/utils/api";
-import { useIsKeyBoardVisible } from "~/utils/hooks";
+
+type CareTaskOrCalendarTask =
+  RouterOutputs["app"]["kodixCare"]["getCareTasks"][number];
 
 export function CaretasksList() {
   const careTasksQuery = api.app.kodixCare.getCareTasks.useQuery({
     dateStart: dayjs.utc().add(2, "days").startOf("day").toDate(),
     dateEnd: dayjs.utc().add(2, "days").endOf("day").toDate(),
   });
+  const saveCareTaskMutation = api.app.kodixCare.saveCareTask.useMutation();
 
   const [position, setPosition] = useState(1);
+  const [editCareTaskSheetOpen, setEditCareTaskSheetOpen] = useState(false);
+
+  const [currentlyEditing, setCurrentlyEditing] =
+    useState<CareTaskOrCalendarTask["id"]>(null);
+  const currentlyEditingCareTask = useMemo(() => {
+    if (!careTasksQuery.data?.length) return undefined;
+    return careTasksQuery.data.find((x) => x.id === currentlyEditing);
+  }, [currentlyEditing, careTasksQuery.data]);
 
   const borderTopRadius = "$6";
   return (
-    <Sheet
-      forceRemoveScrollEnabled
-      open
-      snapPoints={[100, 65]}
-      snapPointsMode={"percent"}
-      position={position}
-      onPositionChange={setPosition}
-      zIndex={2}
-      animation="medium"
-      native
-      animationConfig={{
-        type: "spring",
-        damping: 10,
-        mass: 0.3,
-      }}
-    >
-      <Sheet.Frame
-        borderTopLeftRadius={borderTopRadius}
-        borderTopRightRadius={borderTopRadius}
-        ai="center"
-        borderColor={"$color6"}
-        backgroundColor="$color3"
-        borderWidth={1}
-        borderBottomWidth={0}
-      >
-        {careTasksQuery.isLoading || !careTasksQuery.data ? (
-          <Spinner mt="$20" />
-        ) : (
-          <ScrollView f={1} w="100%" p={"$3"}>
-            {careTasksQuery.data.map((task, i) => (
-              <CareTaskItem
-                key={`${task.id}${task.title}${task.description}${i}`}
-                task={task}
-              />
-            ))}
-          </ScrollView>
-        )}
-      </Sheet.Frame>
-    </Sheet>
-  );
-}
-
-function CareTaskItem({
-  task,
-}: {
-  task: RouterOutputs["app"]["kodixCare"]["getCareTasks"][number];
-}) {
-  const [sheetOpen, setSheetOpen] = useState(false);
-  const form = useForm({
-    schema: ZSaveCareTaskInputSchema,
-  });
-  const isKeyboardVisible = useIsKeyBoardVisible();
-  const [position, setPosition] = useState(1);
-  useEffect(() => {
-    if (isKeyboardVisible) {
-      setPosition(0);
-    } else {
-      setPosition(1);
-    }
-  }, [isKeyboardVisible]);
-
-  const format = useFormatter();
-  return (
     <>
+      {currentlyEditingCareTask && (
+        <EditCareTaskSheet
+          task={currentlyEditingCareTask}
+          mutation={saveCareTaskMutation}
+          open={editCareTaskSheetOpen}
+          setOpen={setEditCareTaskSheetOpen}
+        />
+      )}
       <Sheet
-        forceRemoveScrollEnabled={sheetOpen}
-        open={sheetOpen}
-        onOpenChange={setSheetOpen}
-        position={position}
-        snapPoints={[100, 45]}
+        forceRemoveScrollEnabled
+        open
+        snapPoints={[100, 65]}
         snapPointsMode={"percent"}
-        zIndex={100_000}
-        dismissOnSnapToBottom
+        position={position}
+        onPositionChange={setPosition}
+        zIndex={2}
         animation="medium"
+        native
         animationConfig={{
           type: "spring",
           damping: 10,
           mass: 0.3,
         }}
-        modal
-        native
       >
-        <Sheet.Overlay
-          animation="medium"
-          enterStyle={{ opacity: 0 }}
-          exitStyle={{ opacity: 0 }}
-        />
         <Sheet.Frame
-          p={"$2"}
+          borderTopLeftRadius={borderTopRadius}
+          borderTopRightRadius={borderTopRadius}
           ai="center"
           borderColor={"$color6"}
           backgroundColor="$color3"
           borderWidth={1}
           borderBottomWidth={0}
         >
-          <TextArea
-            onChange={() => {}}
-            value={task.title ?? ""}
-            borderWidth={0}
-            backgroundColor={"$color3"}
-          />
+          {careTasksQuery.isLoading || !careTasksQuery.data ? (
+            <Spinner mt="$20" />
+          ) : (
+            <ScrollView f={1} w="100%" p={"$3"}>
+              {careTasksQuery.data.map((task, i) => (
+                <CareTaskItem
+                  key={`${task.id}${task.title}${task.description}${i}`}
+                  task={task}
+                  setCurrentlyEditing={setCurrentlyEditing}
+                  setEditCareTaskSheetOpen={setEditCareTaskSheetOpen}
+                />
+              ))}
+            </ScrollView>
+          )}
         </Sheet.Frame>
       </Sheet>
+    </>
+  );
+}
+
+function EditCareTaskSheet({
+  task,
+  mutation,
+  open,
+  setOpen,
+}: {
+  task: CareTaskOrCalendarTask;
+  mutation: ReturnType<typeof api.app.kodixCare.saveCareTask.useMutation>;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}) {
+  const form = useForm({
+    schema: ZSaveCareTaskInputSchema.pick({
+      id: true,
+      details: true,
+      doneAt: true,
+    }),
+  });
+
+  return (
+    <SheetModal open={open} setOpen={setOpen}>
+      <Form {...form}>
+        <FormField
+          control={form.control}
+          name="details"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <TextArea
+                  id={Math.random().toString()}
+                  {...field}
+                  onChange={field.onChange}
+                  value={field.value ?? undefined}
+                  borderWidth={0}
+                  backgroundColor={"$color3"}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </Form>
+    </SheetModal>
+  );
+}
+
+function CareTaskItem({
+  task,
+  setEditCareTaskSheetOpen,
+  setCurrentlyEditing,
+}: {
+  task: RouterOutputs["app"]["kodixCare"]["getCareTasks"][number];
+  setEditCareTaskSheetOpen: (open: boolean) => void;
+  setCurrentlyEditing: (id: string) => void;
+}) {
+  const format = useFormatter();
+  return (
+    <>
       <TouchableOpacity
         onPress={() => {
-          setSheetOpen(true);
+          setCurrentlyEditing(task.id);
+          setEditCareTaskSheetOpen(true);
         }}
       >
         <XStack mb="$2" ai={"center"} gap="$3" maxWidth={"100%"}>

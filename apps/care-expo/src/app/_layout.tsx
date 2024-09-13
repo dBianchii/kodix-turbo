@@ -6,13 +6,12 @@ import "@bacons/text-decoder/install";
 
 import type { FontSource } from "expo-font";
 import React, { useEffect, useState } from "react";
-import { useColorScheme } from "react-native";
-import { KeyboardProvider } from "react-native-keyboard-controller";
 import { useFonts } from "expo-font";
 import { PortalProvider, Spinner, TamaguiProvider } from "tamagui";
 import tamaguiConfig from "tamagui.config";
 import { IntlProvider } from "use-intl";
 
+/* prettier-ignore-start */ //!Do not format formatjs imports!
 import "@formatjs/intl-getcanonicallocales/polyfill";
 import "@formatjs/intl-locale/polyfill";
 import "@formatjs/intl-pluralrules/polyfill";
@@ -21,6 +20,8 @@ import "@formatjs/intl-pluralrules/locale-data/en";
 import "@formatjs/intl-pluralrules/locale-data/pt";
 import "@formatjs/intl-relativetimeformat/locale-data/en";
 import "@formatjs/intl-relativetimeformat/locale-data/pt";
+
+/* prettier-ignore-end */
 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
@@ -90,7 +91,6 @@ function MainLayout() {
 }
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
   const messages = {
     en,
     "pt-BR": pt_BR,
