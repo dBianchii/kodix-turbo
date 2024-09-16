@@ -2,7 +2,6 @@
 
 import type {
   Column,
-  ColumnDef,
   SortingState,
   VisibilityState,
 } from "@tanstack/react-table";
@@ -15,7 +14,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { LuChevronsUpDown, LuLoader2 } from "react-icons/lu";
+import { LuChevronsUpDown } from "react-icons/lu";
 import { RxChevronLeft, RxChevronRight, RxLockClosed } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
@@ -140,7 +139,7 @@ export default function DataTableKodixCare({
       const previousCareTasks = utils.app.kodixCare.getCareTasks.getData();
 
       // Optimistically update to the new value
-      utils.app.kodixCare.getCareTasks.setData(initialInput, (prev) => {
+      utils.app.kodixCare.getCareTasks.setData(input, (prev) => {
         return prev?.map((x) => {
           if (x.id === savedCareTask.id) {
             if (savedCareTask.doneAt !== undefined)
@@ -162,7 +161,7 @@ export default function DataTableKodixCare({
     // use the context returned from onMutate to roll back
     onError: (err, __, context) => {
       utils.app.kodixCare.getCareTasks.setData(
-        initialInput,
+        input,
         context?.previousCareTasks,
       );
       trpcErrorToastDefault(err);
@@ -175,61 +174,48 @@ export default function DataTableKodixCare({
   const t = useTranslations();
   const isCareTask = (id: CareTaskOrCalendarTask["id"]): id is string => !!id;
 
-  const columns = [
-    columnHelper.accessor("title", {
-      header: () => <span className="ml-8">{t("Title")}</span>,
-      cell: (ctx) => {
-        return (
-          <div className="flex flex-row items-center">
-            <div className="w-8">
-              {isCareTask(ctx.row.original.id) ? (
-                <Checkbox
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    setCurrentlyEditing(ctx.row.original.id!);
-                    if (!ctx.row.original.doneAt)
-                      return setSaveTaskAsDoneDialogOpen(true);
-                    setSaveTaskAsNotDoneDialogOpen(true);
-                  }}
-                  checked={!!ctx.row.original.doneAt}
-                  className="size-5"
-                />
-              ) : (
-                <RxLockClosed className="size-4" />
-              )}
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor("title", {
+        header: () => <span className="ml-8">{t("Title")}</span>,
+        cell: (ctx) => {
+          return (
+            <div className="flex flex-row items-center">
+              <div className="w-8">
+                {isCareTask(ctx.row.original.id) ? (
+                  <Checkbox
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (!ctx.row.original.id) return; //Will never happen. its just to make ts happy
+                      setCurrentlyEditing(ctx.row.original.id);
+
+                      if (!ctx.row.original.doneAt)
+                        return setSaveTaskAsDoneDialogOpen(true);
+
+                      mutation.mutate({
+                        id: ctx.row.original.id,
+                        doneAt: null,
+                      });
+                    }}
+                    checked={!!ctx.row.original.doneAt}
+                    className="size-5"
+                  />
+                ) : (
+                  <RxLockClosed className="size-4" />
+                )}
+              </div>
+              <span className="font-semibold">{ctx.getValue()}</span>
             </div>
-            <span className="font-semibold">{ctx.getValue()}</span>
-          </div>
-        );
-      },
-    }),
-    columnHelper.accessor("date", {
-      header: ({ column }) => (
-        <HeaderSort column={column}>{t("Date")}</HeaderSort>
-      ),
-      cell: (ctx) => (
-        <div>
-          {format.dateTime(ctx.row.original.date, {
-            day: "2-digit",
-            month: "long",
-            year: "numeric",
-            hour: "numeric",
-            minute: "numeric",
-          })}
-        </div>
-      ),
-    }),
-    columnHelper.accessor("doneAt", {
-      header: ({ column }) => {
-        return <HeaderSort column={column}>{t("Done at")}</HeaderSort>;
-      },
-      cell: (ctx) => {
-        if (!ctx.row.original.id) return null;
-        if (!ctx.row.original.doneAt) return null;
-        return (
+          );
+        },
+      }),
+      columnHelper.accessor("date", {
+        header: ({ column }) => (
+          <HeaderSort column={column}>{t("Date")}</HeaderSort>
+        ),
+        cell: (ctx) => (
           <div>
-            {format.dateTime(ctx.row.original.doneAt, {
+            {format.dateTime(ctx.row.original.date, {
               day: "2-digit",
               month: "long",
               year: "numeric",
@@ -237,14 +223,37 @@ export default function DataTableKodixCare({
               minute: "numeric",
             })}
           </div>
-        );
-      },
-    }),
-    columnHelper.accessor("details", {
-      header: () => t("Details"),
-      cell: (ctx) => <div className="max-w-sm">{ctx.row.original.details}</div>,
-    }),
-  ];
+        ),
+      }),
+      columnHelper.accessor("doneAt", {
+        header: ({ column }) => {
+          return <HeaderSort column={column}>{t("Done at")}</HeaderSort>;
+        },
+        cell: (ctx) => {
+          if (!ctx.row.original.id) return null;
+          if (!ctx.row.original.doneAt) return null;
+          return (
+            <div>
+              {format.dateTime(ctx.row.original.doneAt, {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+              })}
+            </div>
+          );
+        },
+      }),
+      columnHelper.accessor("details", {
+        header: () => t("Details"),
+        cell: (ctx) => (
+          <div className="max-w-sm">{ctx.row.original.details}</div>
+        ),
+      }),
+    ],
+    [format, mutation, t],
+  );
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -295,12 +304,6 @@ export default function DataTableKodixCare({
             open={saveTaskAsDoneDialogOpen}
             setOpen={setSaveTaskAsDoneDialogOpen}
             user={user}
-          />
-          <SaveTaskAsNotDoneDialog
-            task={currentlyEditingCareTask}
-            mutation={mutation}
-            open={saveTaskAsNotDoneDialogOpen}
-            setOpen={setSaveTaskAsNotDoneDialogOpen}
           />
           <UnlockMoreTasksDialog
             task={currentlyEditingCareTask}
@@ -396,61 +399,51 @@ export default function DataTableKodixCare({
             ))}
           </TableHeader>
           <TableBody>
-            {!query.isFetching ? (
-              table.getRowModel().rows.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    onClick={() => {
-                      if (!row.original.id) {
-                        //If it's locked...
-                        if (
-                          row.original.date >
-                          dayjs().endOf("day").add(1, "day").toDate()
-                        )
-                          return toast.warning(
-                            "You cannot unlock tasks that are scheduled for after tomorrow end of day",
-                          );
+            {table.getRowModel().rows.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  onClick={() => {
+                    if (!row.original.id) {
+                      //If it's locked...
+                      if (
+                        row.original.date >
+                        dayjs().endOf("day").add(1, "day").toDate()
+                      )
+                        return toast.warning(
+                          "You cannot unlock tasks that are scheduled for after tomorrow end of day",
+                        );
 
-                        // setCurrentlyEditing(row.original.id);
-                        setUnlockMoreTasksDialogOpen(true);
-                        return;
-                      }
+                      // setCurrentlyEditing(row.original.id);
+                      setUnlockMoreTasksDialogOpen(true);
+                      return;
+                    }
 
-                      setCurrentlyEditing(row.original.id);
-                      if (row.original.updatedAt) setEditDetailsOpen(true); //? Only able
-                    }}
-                    data-state={row.getIsSelected() && "selected"}
-                    className={cn({
-                      "bg-muted/30": !row.original.id,
-                    })}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    {t("No results")}
-                  </TableCell>
+                    setCurrentlyEditing(row.original.id);
+                    if (row.original.updatedAt) setEditDetailsOpen(true); //? Only able
+                  }}
+                  data-state={row.getIsSelected() && "selected"}
+                  className={cn({
+                    "bg-muted/30": !row.original.id,
+                  })}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
                 </TableRow>
-              )
+              ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24">
-                  <div className="flex h-full items-center justify-center">
-                    <LuLoader2 className="h-6 w-6 animate-spin" />
-                  </div>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  {t("No results")}
                 </TableCell>
               </TableRow>
             )}
@@ -495,25 +488,13 @@ function UnlockMoreTasksDialog({
           <AlertDialogAction
             disabled={mutation.isPending}
             onClick={() => {
-              toast.promise(
-                mutation.mutateAsync({
-                  selectedTimestamp: task.date,
-                }),
-                {
-                  loading: `${t("Unlocking")}...`,
-                  success: () => {
-                    setOpen(false);
-                    return t("apps.kodixCare.Successfully unlocked tasks");
-                  },
-                },
-              );
+              mutation.mutate({
+                selectedTimestamp: task.date,
+              });
+              setOpen(false);
             }}
           >
-            {mutation.isPending ? (
-              <LuLoader2 className="size-4 animate-spin" />
-            ) : (
-              t("Yes")
-            )}
+            {t("Yes")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -562,20 +543,12 @@ function EditCareTaskDialog({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit((values) => {
-              toast.promise(
-                mutation.mutateAsync({
-                  id: values.id,
-                  details: values.details,
-                  doneAt: values.doneAt,
-                }),
-                {
-                  loading: `${t("Updating")}...`,
-                  success: () => {
-                    setOpen(false);
-                    return t("apps.kodixCare.Task updated");
-                  },
-                },
-              );
+              mutation.mutate({
+                id: values.id,
+                details: values.details,
+                doneAt: values.doneAt,
+              });
+              setOpen(false);
             })}
           >
             <DialogHeader>
@@ -627,9 +600,6 @@ function EditCareTaskDialog({
             </div>
             <DialogFooter className="mt-6 justify-end">
               <Button disabled={mutation.isPending} type="submit">
-                {mutation.isPending && (
-                  <LuLoader2 className="mr-2 size-5 animate-spin" />
-                )}
                 {t("Save")}
               </Button>
             </DialogFooter>
@@ -681,20 +651,11 @@ function SaveTaskAsDoneDialog({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit((values) => {
-              toast.promise(
-                mutation.mutateAsync({
-                  ...values,
-                  id: task.id,
-                }),
-                {
-                  loading: `${t("Saving")}...`,
-                  success: () => {
-                    form.reset();
-                    setOpen(false);
-                    return t("apps.kodixCare.Task marked as done");
-                  },
-                },
-              );
+              mutation.mutate({
+                ...values,
+                id: task.id,
+              });
+              setOpen(false);
             })}
           >
             <DialogHeader>
@@ -747,64 +708,11 @@ function SaveTaskAsDoneDialog({
             </div>
             <DialogFooter className="mt-6 justify-end">
               <Button disabled={mutation.isPending} type="submit">
-                {mutation.isPending ? (
-                  <LuLoader2 className="size-4 animate-spin" />
-                ) : (
-                  t("Save")
-                )}
+                {t("Save")}
               </Button>
             </DialogFooter>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
-  );
-}
-
-function SaveTaskAsNotDoneDialog({
-  task,
-  mutation,
-  open,
-  setOpen,
-}: {
-  task: CareTask;
-  mutation: ReturnType<typeof api.app.kodixCare.saveCareTask.useMutation>;
-  open: boolean;
-  setOpen: (open: boolean) => void;
-}) {
-  const t = useTranslations();
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{t("apps.kodixCare.Are you sure")}</DialogTitle>
-        </DialogHeader>
-        <DialogFooter className="mt-6 justify-end">
-          <Button
-            disabled={mutation.isPending}
-            onClick={() => {
-              toast.promise(
-                mutation.mutateAsync({
-                  id: task.id,
-                  doneAt: null,
-                }),
-                {
-                  loading: `${t("Saving")}...`,
-                  success: () => {
-                    setOpen(false);
-                    return t("apps.kodixCare.Task marked as not done");
-                  },
-                },
-              );
-            }}
-          >
-            {mutation.isPending ? (
-              <LuLoader2 className="size-4 animate-spin" />
-            ) : (
-              t("apps.kodixCare.Mark task as not done")
-            )}
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

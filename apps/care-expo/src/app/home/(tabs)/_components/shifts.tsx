@@ -13,8 +13,8 @@ import {
 } from "tamagui";
 
 import type { RouterOutputs } from "@kdx/api";
+import type { DateTimeFormatOptions } from "@kdx/locales/use-intl";
 import { useFormatter } from "@kdx/locales/use-intl";
-import { useRerenderForRelativeTime } from "@kdx/ui/hooks";
 
 import { AvatarWrapper } from "~/components/avatar-wrapper";
 import { api } from "~/utils/api";
@@ -99,9 +99,10 @@ function ShiftInProgress({
   return (
     <YStack gap={"$1"} ai={"center"}>
       <XStack gap={"$3"} jc="center" ai={"center"}>
-        <H4 animate-ping>Turno atual</H4>
+        <H4>Turno atual</H4>
         <ActiveShiftIndicator />
       </XStack>
+
       <XStack gap={"$3"} ai={"center"} my={"$2"}>
         <AvatarWrapper
           size={"$4"}
@@ -169,7 +170,12 @@ function TimeInfo({
 }) {
   const format = useFormatter();
 
-  useRerenderForRelativeTime([currentShift.checkIn, currentShift.checkOut]);
+  const timeInfoFormat: DateTimeFormatOptions = {
+    day: "numeric",
+    month: "short",
+    hour: "numeric",
+    minute: "numeric",
+  };
 
   return (
     <XStack gap={"$4"}>
@@ -184,7 +190,7 @@ function TimeInfo({
         >
           <View px={"$2"} py={0} jc={"center"} h={"$1"}>
             <Text color={"$white075"}>
-              {format.relativeTime(currentShift.checkIn, new Date())}
+              {format.dateTime(currentShift.checkIn, timeInfoFormat)}
             </Text>
           </View>
         </YStack>
@@ -205,7 +211,7 @@ function TimeInfo({
             >
               <View px={"$2"} py={0} jc={"center"} h={"$1"}>
                 <Text color={"$white075"}>
-                  {format.relativeTime(currentShift.checkOut, new Date())}
+                  {format.dateTime(currentShift.checkOut, timeInfoFormat)}
                 </Text>
               </View>
             </YStack>

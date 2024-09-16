@@ -7,10 +7,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   scheme: "care-expo",
   version: "0.1.0",
   orientation: "portrait",
-  icon: "./assets/icon.png",
+  icon: "./assets/kodixCare.png",
   userInterfaceStyle: "automatic",
   splash: {
-    image: "./assets/icon.png",
+    image: "./assets/kodixCare.png",
     resizeMode: "contain",
     backgroundColor: "#020817",
   },

@@ -5,6 +5,7 @@ import { IoMdTime } from "react-icons/io";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
+import type { DateTimeFormatOptions } from "@kdx/locales/next-intl";
 import { useFormatter } from "@kdx/locales/next-intl";
 import { useTranslations } from "@kdx/locales/next-intl/client";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
@@ -133,9 +134,13 @@ function TimeInfo({
 }) {
   const t = useTranslations();
   const format = useFormatter();
-
+  const timeInfoFormat: DateTimeFormatOptions = {
+    day: "numeric",
+    month: "short",
+    hour: "numeric",
+    minute: "numeric",
+  };
   useRerenderForRelativeTime([currentShift.checkIn, currentShift.checkOut]);
-
   return (
     <div className="flex items-center justify-start">
       <div className="col mr-4">
@@ -151,7 +156,7 @@ function TimeInfo({
           variant={"outline"}
           className="w-24 py-0 text-center text-xs text-muted-foreground"
         >
-          {format.relativeTime(currentShift.checkIn, new Date())}
+          {format.dateTime(currentShift.checkIn, timeInfoFormat)}
         </Badge>
       </div>
       {currentShift.checkOut && (
@@ -164,7 +169,7 @@ function TimeInfo({
             variant={"outline"}
             className="w-24 py-0 text-center text-xs text-muted-foreground"
           >
-            {format.relativeTime(currentShift.checkOut, new Date())}
+            {format.dateTime(currentShift.checkOut, timeInfoFormat)}
           </Badge>
         </div>
       )}
