@@ -333,7 +333,7 @@ export default function DataTableKodixCare({
           <RxChevronLeft />
         </Button>
         <DatePicker
-          date={input.dateEnd}
+          date={input.dateStart}
           setDate={(newDate) =>
             setInput({
               dateStart: dayjs(newDate).startOf("day").toDate(),
