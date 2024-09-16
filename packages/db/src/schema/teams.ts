@@ -29,9 +29,7 @@ export const teams = mysqlTable(
   {
     id: nanoidPrimaryKey,
     name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
-    createdAt: timestamp("createdAt")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").onUpdateNow(),
     ownerId: varchar("ownerId", { length: NANOID_SIZE })
       .notNull()
@@ -98,7 +96,7 @@ export const teamAppRoles = mysqlTable(
       .references(() => apps.id, { onDelete: "cascade" }),
     teamId: teamIdReferenceCascadeDelete,
     appRoleDefaultId: varchar("appRoleDefaultId", {
-      length: NANOID_SIZE, //? References a hardcoded default role id and not anything in db
+      length: NANOID_SIZE, //? References a hardcoded default role id and not anything in db. See appRoleDefaults_tree.ts
     }).notNull(),
   },
   (table) => {
@@ -166,9 +164,7 @@ export const invitations = mysqlTable(
     id: nanoidPrimaryKey,
     teamId: teamIdReferenceCascadeDelete,
     email: varchar("email", { length: DEFAULTLENGTH }).notNull(),
-    createdAt: timestamp("createdAt")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").onUpdateNow(),
     invitedById: varchar("invitedById", { length: NANOID_SIZE })
       .notNull()

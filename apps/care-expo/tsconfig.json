@@ -8,13 +8,6 @@
     "jsx": "react-native",
     "checkJs": false
   },
-  "include": [
-    "src",
-    "*.ts",
-    "*.js",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts",
-    "tamagui-config/*.ts"
-  ],
+  "include": ["src", "*.ts", "*.js", "tamagui-config/*.ts"],
   "exclude": ["node_modules"]
 }

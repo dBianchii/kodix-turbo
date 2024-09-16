@@ -47,6 +47,8 @@
     "Email already registered": "Email already registered",
     "The team cannot be deleted while it has other members": "The team cannot be deleted while it has other members",
     "The team name confirmation does not match the team name": "The team name confirmation does not match the team name",
-    "You are attempting to delete a team but you have no other teams Please create a new team first": "You are attempting to delete a team but you have no other teams. Please create a new team first"
+    "You are attempting to delete a team but you have no other teams Please create a new team first": "You are attempting to delete a team but you have no other teams. Please create a new team first",
+    "Token expired Please request your password change again": "Token expired. Please request your password change again",
+    "Kodix - Reset your password": "Kodix - Reset your password"
   }
 }
