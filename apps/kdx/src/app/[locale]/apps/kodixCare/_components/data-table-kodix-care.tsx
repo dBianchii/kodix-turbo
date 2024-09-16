@@ -14,7 +14,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { LuChevronsUpDown } from "react-icons/lu";
+import { LuChevronsUpDown, LuLoader2 } from "react-icons/lu";
 import { RxChevronLeft, RxChevronRight, RxLockClosed } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
@@ -120,14 +120,15 @@ export default function DataTableKodixCare({
   const utils = api.useUtils();
   const [saveTaskAsDoneDialogOpen, setSaveTaskAsDoneDialogOpen] =
     useState(false);
-  const [saveTaskAsNotDoneDialogOpen, setSaveTaskAsNotDoneDialogOpen] =
-    useState(false);
+
   const [editDetailsOpen, setEditDetailsOpen] = useState(false);
   const [unlockMoreTasksDialogOpen, setUnlockMoreTasksDialogOpen] =
     useState(false);
+  const [unlockUpUntil, setUnlockUpUntil] = useState<Date>(new Date());
   const [currentlyEditing, setCurrentlyEditing] = useState<
     CareTask["id"] | undefined
   >(undefined);
+
   const format = useFormatter();
 
   const mutation = api.app.kodixCare.saveCareTask.useMutation({
@@ -305,13 +306,15 @@ export default function DataTableKodixCare({
             setOpen={setSaveTaskAsDoneDialogOpen}
             user={user}
           />
-          <UnlockMoreTasksDialog
-            task={currentlyEditingCareTask}
-            open={unlockMoreTasksDialogOpen}
-            setOpen={setUnlockMoreTasksDialogOpen}
-          />
         </>
       )}
+
+      <UnlockMoreTasksDialog
+        unlockUpUntil={unlockUpUntil}
+        open={unlockMoreTasksDialogOpen}
+        setOpen={setUnlockMoreTasksDialogOpen}
+      />
+
       <div className="flex justify-center gap-2">
         <Button variant="outline" className="invisible mr-auto">
           {t("Columns")}
@@ -399,51 +402,60 @@ export default function DataTableKodixCare({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  onClick={() => {
-                    if (!row.original.id) {
-                      //If it's locked...
-                      if (
-                        row.original.date >
-                        dayjs().endOf("day").add(1, "day").toDate()
-                      )
-                        return toast.warning(
-                          "You cannot unlock tasks that are scheduled for after tomorrow end of day",
-                        );
+            {!query.isFetching ? (
+              table.getRowModel().rows.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    onClick={() => {
+                      if (!row.original.id) {
+                        //If it's locked...
+                        if (
+                          row.original.date >
+                          dayjs().endOf("day").add(1, "day").toDate()
+                        )
+                          return toast.warning(
+                            "You cannot unlock tasks that are scheduled for after tomorrow end of day",
+                          );
+                        setUnlockUpUntil(row.original.date);
+                        setUnlockMoreTasksDialogOpen(true);
+                        return;
+                      }
 
-                      // setCurrentlyEditing(row.original.id);
-                      setUnlockMoreTasksDialogOpen(true);
-                      return;
-                    }
-
-                    setCurrentlyEditing(row.original.id);
-                    if (row.original.updatedAt) setEditDetailsOpen(true); //? Only able
-                  }}
-                  data-state={row.getIsSelected() && "selected"}
-                  className={cn({
-                    "bg-muted/30": !row.original.id,
-                  })}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
+                      setCurrentlyEditing(row.original.id);
+                      if (row.original.updatedAt) setEditDetailsOpen(true); //? Only able
+                    }}
+                    data-state={row.getIsSelected() && "selected"}
+                    className={cn({
+                      "bg-muted/30": !row.original.id,
+                    })}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    {t("No results")}
+                  </TableCell>
                 </TableRow>
-              ))
+              )
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  {t("No results")}
+                <TableCell colSpan={columns.length} className="h-24">
+                  <div className="flex h-full items-center justify-center">
+                    <LuLoader2 className="h-6 w-6 animate-spin" />
+                  </div>
                 </TableCell>
               </TableRow>
             )}
@@ -455,11 +467,11 @@ export default function DataTableKodixCare({
 }
 
 function UnlockMoreTasksDialog({
-  task,
+  unlockUpUntil,
   open,
   setOpen,
 }: {
-  task: CareTask;
+  unlockUpUntil: Date;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
@@ -489,7 +501,7 @@ function UnlockMoreTasksDialog({
             disabled={mutation.isPending}
             onClick={() => {
               mutation.mutate({
-                selectedTimestamp: task.date,
+                selectedTimestamp: unlockUpUntil,
               });
               setOpen(false);
             }}
