@@ -14,8 +14,20 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { LuChevronsUpDown, LuLoader2 } from "react-icons/lu";
-import { RxChevronLeft, RxChevronRight, RxLockClosed } from "react-icons/rx";
+import {
+  LuCheck,
+  LuChevronDown,
+  LuChevronsUpDown,
+  LuChevronUp,
+  LuLoader2,
+  LuText,
+} from "react-icons/lu";
+import {
+  RxCalendar,
+  RxChevronLeft,
+  RxChevronRight,
+  RxLockClosed,
+} from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
@@ -84,17 +96,28 @@ const columnHelper = createColumnHelper<CareTaskOrCalendarTask>();
 function HeaderSort({
   column,
   children,
+  ...buttonAttributes
 }: {
   column: Column<CareTaskOrCalendarTask>;
   children?: React.ReactNode;
-}) {
+} & React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  const className = "ml-2 size-4";
   return (
     <Button
       variant="ghost"
       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      {...buttonAttributes}
     >
       {children}
-      <LuChevronsUpDown className="ml-2 h-4 w-4" />
+      {column.getIsSorted() ? (
+        column.getIsSorted() === "asc" ? (
+          <LuChevronUp className={className} />
+        ) : (
+          <LuChevronDown className={className} />
+        )
+      ) : (
+        <LuChevronsUpDown className={className} />
+      )}
     </Button>
   );
 }
@@ -109,6 +132,15 @@ export default function DataTableKodixCare({
   user: User;
 }) {
   const [input, setInput] = useState(initialInput);
+  const handleChangeInput = (date: Date) => {
+    setInput({
+      dateStart: dayjs(date).startOf("day").toDate(),
+      dateEnd: dayjs(date).endOf("day").toDate(),
+    });
+    setSaveTaskAsDoneDialogOpen(false);
+    setEditDetailsOpen(false);
+    setUnlockMoreTasksDialogOpen(false);
+  };
 
   const query = api.app.kodixCare.getCareTasks.useQuery(input, {
     initialData:
@@ -120,7 +152,6 @@ export default function DataTableKodixCare({
   const utils = api.useUtils();
   const [saveTaskAsDoneDialogOpen, setSaveTaskAsDoneDialogOpen] =
     useState(false);
-
   const [editDetailsOpen, setEditDetailsOpen] = useState(false);
   const [unlockMoreTasksDialogOpen, setUnlockMoreTasksDialogOpen] =
     useState(false);
@@ -128,8 +159,6 @@ export default function DataTableKodixCare({
   const [currentlyEditing, setCurrentlyEditing] = useState<
     CareTask["id"] | undefined
   >(undefined);
-
-  const format = useFormatter();
 
   const mutation = api.app.kodixCare.saveCareTask.useMutation({
     onMutate: async (savedCareTask) => {
@@ -172,13 +201,19 @@ export default function DataTableKodixCare({
       void utils.app.kodixCare.getCareTasks.invalidate();
     },
   });
-  const t = useTranslations();
   const isCareTask = (id: CareTaskOrCalendarTask["id"]): id is string => !!id;
+  const t = useTranslations();
+  const format = useFormatter();
 
   const columns = useMemo(
     () => [
       columnHelper.accessor("title", {
-        header: () => <span className="ml-8">{t("Title")}</span>,
+        header: ({ column }) => (
+          <HeaderSort column={column} className="ml-8">
+            <RxCalendar className="mr-2 size-4" />
+            {t("Title")}
+          </HeaderSort>
+        ),
         cell: (ctx) => {
           return (
             <div className="flex flex-row items-center">
@@ -212,7 +247,10 @@ export default function DataTableKodixCare({
       }),
       columnHelper.accessor("date", {
         header: ({ column }) => (
-          <HeaderSort column={column}>{t("Date")}</HeaderSort>
+          <HeaderSort column={column}>
+            <RxCalendar className="mr-2 size-4" />
+            {t("Date")}
+          </HeaderSort>
         ),
         cell: (ctx) => (
           <div>
@@ -228,7 +266,12 @@ export default function DataTableKodixCare({
       }),
       columnHelper.accessor("doneAt", {
         header: ({ column }) => {
-          return <HeaderSort column={column}>{t("Done at")}</HeaderSort>;
+          return (
+            <HeaderSort column={column}>
+              <LuCheck className="mr-2 size-4 text-green-400" />
+              {t("Done at")}
+            </HeaderSort>
+          );
         },
         cell: (ctx) => {
           if (!ctx.row.original.id) return null;
@@ -247,7 +290,12 @@ export default function DataTableKodixCare({
         },
       }),
       columnHelper.accessor("details", {
-        header: () => t("Details"),
+        header: ({ column }) => (
+          <HeaderSort column={column} className="ml-8">
+            <LuText className="mr-2 size-4 text-orange-400" />
+            {t("Details")}
+          </HeaderSort>
+        ),
         cell: (ctx) => (
           <div className="max-w-sm">{ctx.row.original.details}</div>
         ),
@@ -279,7 +327,6 @@ export default function DataTableKodixCare({
 
   const leftArrowRef = useRef<HTMLButtonElement>(null);
   const rightArrowRef = useRef<HTMLButtonElement>(null);
-
   useEffect(() => {
     const keyDownHandler = (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft") leftArrowRef.current?.click();
@@ -323,10 +370,9 @@ export default function DataTableKodixCare({
           ref={leftArrowRef}
           variant="ghost"
           onClick={() => {
-            setInput((prev) => ({
-              dateStart: dayjs(prev.dateStart).add(-1, "days").toDate(),
-              dateEnd: dayjs(prev.dateEnd).add(-1, "days").toDate(),
-            }));
+            handleChangeInput(
+              dayjs(input.dateStart).subtract(1, "days").toDate(),
+            );
           }}
           className="h-10 w-10 p-3"
         >
@@ -334,21 +380,13 @@ export default function DataTableKodixCare({
         </Button>
         <DatePicker
           date={input.dateStart}
-          setDate={(newDate) =>
-            setInput({
-              dateStart: dayjs(newDate).startOf("day").toDate(),
-              dateEnd: dayjs(newDate).endOf("day").toDate(),
-            })
-          }
+          setDate={(newDate) => handleChangeInput(dayjs(newDate).toDate())}
         />
         <Button
           ref={rightArrowRef}
           variant="ghost"
           onClick={() => {
-            setInput((prev) => ({
-              dateStart: dayjs(prev.dateStart).add(1, "days").toDate(),
-              dateEnd: dayjs(prev.dateEnd).add(1, "days").toDate(),
-            }));
+            handleChangeInput(dayjs(input.dateStart).add(1, "days").toDate());
           }}
           className="h-10 w-10 p-3"
         >
@@ -688,6 +726,7 @@ function SaveTaskAsDoneDialog({
                     <FormControl>
                       <div className="flex flex-row gap-2">
                         <DateTimePicker
+                          {...field}
                           date={field.value ?? undefined}
                           setDate={(newDate) =>
                             field.onChange(newDate ?? new Date())
