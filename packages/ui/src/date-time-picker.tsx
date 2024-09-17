@@ -51,7 +51,6 @@ export function DateTimePicker({
               year: "numeric",
               hour: "numeric",
               minute: "numeric",
-              second: "2-digit",
             })
           ) : (
             <span>{t("Pick a date")}</span>
