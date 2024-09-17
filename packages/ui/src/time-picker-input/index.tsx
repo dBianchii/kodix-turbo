@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 "use client";
 
+//?Modified version of https://tie.openstatus.dev/
 import React from "react";
 
 import type { TimePickerType } from "./time-picker-utils";
@@ -28,7 +29,7 @@ const TimePickerInput = React.forwardRef<
   (
     {
       className,
-      type = "tel",
+      type = "number",
       value,
       id,
       name,
