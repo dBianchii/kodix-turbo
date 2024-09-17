@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { notFound } from "next/navigation";
 
-import { locales } from "@kdx/locales";
+import { formats, locales } from "@kdx/locales";
 import { getRequestConfig } from "@kdx/locales/next-intl/server";
 
 // const messagesFolderPath = path.resolve(
@@ -44,5 +44,6 @@ export default getRequestConfig(async ({ locale }) => {
         )
       ).default,
     },
+    formats: formats,
   };
 });

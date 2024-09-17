@@ -231,13 +231,7 @@ export function EditEventDialog({
                     variant={"outline"}
                     className={cn("w-[200px] pl-3 text-left font-normal")}
                   >
-                    {format.dateTime(from.toDate(), {
-                      day: "2-digit",
-                      month: "long",
-                      year: "numeric",
-                      hour: "numeric",
-                      minute: "numeric",
-                    })}
+                    {format.dateTime(from.toDate(), "extensive")}
                     <RxCalendar className="ml-auto size-4 opacity-50" />
                   </Button>
                 </PopoverTrigger>

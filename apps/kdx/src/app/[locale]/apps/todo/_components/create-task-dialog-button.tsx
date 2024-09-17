@@ -145,13 +145,7 @@ export function CreateTaskDialogButton() {
                 >
                   <DatePickerIcon date={dueDate} className="mr-2 size-4" />
                   {dueDate
-                    ? format.dateTime(dueDate, {
-                        day: "2-digit",
-                        month: "long",
-                        year: "numeric",
-                        hour: "numeric",
-                        minute: "numeric",
-                      })
+                    ? format.dateTime(dueDate, "extensive")
                     : t("Pick a date")}
                   {dueDate && (
                     <span
