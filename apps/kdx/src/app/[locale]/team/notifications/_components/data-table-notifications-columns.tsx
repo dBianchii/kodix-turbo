@@ -86,13 +86,7 @@ export function getColumns() {
       },
       cell: function Cell({ cell }) {
         const format = useFormatter();
-        return format.dateTime(cell.row.original.sentAt, {
-          day: "2-digit",
-          month: "long",
-          year: "numeric",
-          hour: "numeric",
-          minute: "numeric",
-        });
+        return format.dateTime(cell.row.original.sentAt, "extensive");
       },
     }),
     columnHelper.accessor("teamId", {

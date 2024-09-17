@@ -12,6 +12,7 @@ import { TRPCReactProvider } from "~/trpc/react";
 
 import "~/app/globals.css";
 
+import { formats } from "@kdx/locales";
 import { getMessages } from "@kdx/locales/next-intl/server";
 import { getBaseUrl } from "@kdx/shared";
 import { cn } from "@kdx/ui";
@@ -69,7 +70,7 @@ export default async function RootLayout(props: {
           <Analytics />
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <Toaster richColors closeButton />
-            <NextIntlClientProvider messages={messages}>
+            <NextIntlClientProvider messages={messages} formats={formats}>
               <TRPCReactProvider>
                 <div className="flex min-h-screen flex-col">
                   <Header />

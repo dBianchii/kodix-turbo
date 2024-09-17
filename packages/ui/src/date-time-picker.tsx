@@ -45,14 +45,7 @@ export function DateTimePicker({
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
           {date ? (
-            format.dateTime(date, {
-              day: "2-digit",
-              month: "long",
-              year: "numeric",
-              hour: "numeric",
-              minute: "numeric",
-              second: "2-digit",
-            })
+            format.dateTime(date, "extensive")
           ) : (
             <span>{t("Pick a date")}</span>
           )}
