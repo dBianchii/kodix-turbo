@@ -210,7 +210,6 @@ export default function DataTableKodixCare({
       columnHelper.accessor("title", {
         header: ({ column }) => (
           <HeaderSort column={column} className="ml-8">
-            <RxCalendar className="mr-2 size-4" />
             {t("Title")}
           </HeaderSort>
         ),
