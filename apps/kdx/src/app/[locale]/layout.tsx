@@ -70,7 +70,11 @@ export default async function RootLayout(props: {
           <Analytics />
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <Toaster richColors closeButton />
-            <NextIntlClientProvider messages={messages} formats={formats}>
+            <NextIntlClientProvider
+              messages={messages}
+              formats={formats}
+              timeZone="America/Sao_Paulo" //?Fix me!
+            >
               <TRPCReactProvider>
                 <div className="flex min-h-screen flex-col">
                   <Header />
