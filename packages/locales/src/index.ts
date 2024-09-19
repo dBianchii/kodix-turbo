@@ -9,6 +9,27 @@ export const defaultLocale = "pt-BR";
 
 export const formats = {
   dateTime: {
+    short: {
+      day: "2-digit",
+      month: "2-digit",
+      year: "2-digit",
+    },
+    medium: {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    },
+    long: {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    },
+    full: {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+      weekday: "long",
+    },
     extensive: {
       day: "2-digit",
       month: "long",
