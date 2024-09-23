@@ -13,7 +13,6 @@ import { useToastController } from "@tamagui/toast";
 import {
   Button,
   Checkbox,
-  H3,
   H4,
   Paragraph,
   ScrollView,
@@ -44,7 +43,6 @@ import {
 } from "~/components/form";
 import { SheetModal } from "~/components/sheet-modal";
 import { api } from "~/utils/api";
-import { useAuth } from "~/utils/auth";
 
 type CareTaskOrCalendarTask =
   RouterOutputs["app"]["kodixCare"]["getCareTasks"][number];
@@ -121,8 +119,6 @@ export function CaretasksList() {
   const [position, setPosition] = useState(1);
 
   const [editCareTaskSheetOpen, setEditCareTaskSheetOpen] = useState(false);
-  const [saveTaskAsDoneDialogOpen, setSaveTaskAsDoneDialogOpen] =
-    useState(false);
 
   const [currentlyEditing, setCurrentlyEditing] =
     useState<CareTaskOrCalendarTask["id"]>(null);
@@ -141,12 +137,6 @@ export function CaretasksList() {
             mutation={saveCareTaskMutation}
             open={editCareTaskSheetOpen}
             setOpen={setEditCareTaskSheetOpen}
-          />
-          <SaveTaskAsDoneDialog
-            task={currentlyEditingCareTask}
-            mutation={saveCareTaskMutation}
-            open={saveTaskAsDoneDialogOpen}
-            setOpen={setSaveTaskAsDoneDialogOpen}
           />
 
           {/* <UnlockMoreTasksDialog
@@ -185,7 +175,6 @@ export function CaretasksList() {
                 mutation={saveCareTaskMutation}
                 setCurrentlyEditing={setCurrentlyEditing}
                 setEditCareTaskSheetOpen={setEditCareTaskSheetOpen}
-                setSaveTaskAsDoneDialogOpen={setSaveTaskAsDoneDialogOpen}
               />
             ))}
           </ScrollView>
@@ -200,7 +189,6 @@ function CareTaskOrCalendarTaskItem(props: {
   mutation: ReturnType<typeof api.app.kodixCare.saveCareTask.useMutation>;
   setEditCareTaskSheetOpen: (open: boolean) => void;
   setCurrentlyEditing: (id: string) => void;
-  setSaveTaskAsDoneDialogOpen: (open: boolean) => void;
 }) {
   const format = useFormatter();
   const isCareTaskItem = !!props.task.id;
@@ -225,12 +213,9 @@ function CareTaskOrCalendarTaskItem(props: {
               if (!props.task.id) return; //Will never happen. its just to make ts happy
               props.setCurrentlyEditing(props.task.id);
 
-              if (!props.task.doneAt)
-                return props.setSaveTaskAsDoneDialogOpen(true);
-
               props.mutation.mutate({
                 id: props.task.id,
-                doneAt: null,
+                doneAt: props.task.doneAt ? null : new Date(),
               });
             }}
             checked={!!props.task.doneAt}
@@ -273,106 +258,6 @@ function CareTaskOrCalendarTaskItem(props: {
         </XStack>
       </XStack>
     </TouchableOpacity>
-  );
-}
-
-function SaveTaskAsDoneDialog(props: {
-  task: CareTask;
-  mutation: ReturnType<typeof api.app.kodixCare.saveCareTask.useMutation>;
-  open: boolean;
-  setOpen: (open: boolean) => void;
-}) {
-  const { user } = useAuth();
-  if (!user) throw new Error("User not found");
-
-  //If you find a better way to reset all fields to the default on open feel free to do it.
-  const defaultValues = useMemo(
-    () => ({
-      id: props.task.id,
-      details: props.task.details,
-      doneAt: new Date(),
-      doneByUserId: user.id,
-    }),
-    [props.task, user.id],
-  );
-
-  const form = useForm({
-    schema: ZSaveCareTaskInputSchema,
-    defaultValues,
-  });
-
-  useEffect(() => {
-    form.reset(defaultValues);
-  }, [defaultValues, form, props.open]);
-
-  return (
-    <SheetModal
-      open={props.open}
-      setOpen={(open) => {
-        form.reset(defaultValues);
-        props.setOpen(open);
-      }}
-    >
-      <YStack>
-        <H3>Marcar tarefa como concluída</H3>
-        <Paragraph color={"$gray11Dark"}>
-          Informe a data e hora de conclusão
-        </Paragraph>
-        <Form {...form}>
-          <YStack gap={"$4"} mt={"$4"}>
-            <FormField
-              control={form.control}
-              name="doneAt"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Feito em</FormLabel>
-                  <FormControl>
-                    <DateTimePicker
-                      {...field}
-                      date={field.value ?? defaultValues.doneAt}
-                      onChange={field.onChange}
-                      minimumDate={new Date()}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="details"
-              render={({ field }) => (
-                <FormItem>
-                  <XStack gap="$2" ai="center" alignContent="center">
-                    <FormLabel>Detalhes</FormLabel>
-                    <TextIcon size={16} color={"$orange11Dark"} />
-                  </XStack>
-                  <FormControl>
-                    <TextArea
-                      {...field}
-                      verticalAlign="top"
-                      onChangeText={field.onChange}
-                      value={field.value ?? undefined}
-                      placeholder={"Alguma informação adicional?"}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button
-              onPress={form.handleSubmit((values) => {
-                Keyboard.dismiss();
-                props.mutation.mutate(values);
-                props.setOpen(false);
-              })}
-            >
-              {props.mutation.isPending ? <Spinner /> : "Salvar"}
-            </Button>
-          </YStack>
-        </Form>
-      </YStack>
-    </SheetModal>
   );
 }
 
@@ -430,7 +315,7 @@ function EditCareTaskSheet(props: {
       }}
       position={position}
       onPositionChange={setPosition}
-      snapPoints={[100, 45]}
+      snapPoints={[100, 50]}
       withHandle={false}
     >
       <SafeAreaView>
@@ -474,19 +359,17 @@ function EditCareTaskSheet(props: {
                 name="details"
                 render={({ field }) => (
                   <FormItem>
+                    <XStack gap="$2" ai="center" alignContent="center">
+                      <FormLabel>Detalhes</FormLabel>
+                      <TextIcon size={16} color={"$orange11Dark"} />
+                    </XStack>
                     <FormControl>
                       <TextArea
                         {...field}
-                        multiline
                         verticalAlign="top"
-                        placeholder="Add details..."
-                        borderWidth={0}
-                        p={0}
-                        backgroundColor={"$color1"}
-                        placeholderTextColor={"$gray11Dark"}
-                        style={{ color: "white" }}
                         onChangeText={field.onChange}
                         value={field.value ?? undefined}
+                        placeholder={"Alguma informação adicional?"}
                       />
                     </FormControl>
                     <FormMessage />

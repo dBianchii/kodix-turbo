@@ -1,6 +1,7 @@
 import React from "react";
+import { RefreshControl } from "react-native";
 import { useRouter } from "expo-router";
-import { H3, Spinner, Text, View } from "tamagui";
+import { H3, ScrollView, Spinner, Text, View } from "tamagui";
 
 import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
 
@@ -69,9 +70,23 @@ export default function Tab() {
 }
 
 function HomeView() {
+  const [refreshing, setRefreshing] = React.useState(false);
+  const utils = api.useUtils();
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await utils.app.kodixCare.invalidate();
+    setRefreshing(false);
+  };
+
   return (
     <View backgroundColor={"$background"} f={1} gap="$4">
-      <CurrentShift />
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <CurrentShift />
+      </ScrollView>
       <CaretasksList />
     </View>
   );
