@@ -30,7 +30,6 @@ import {
 } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
-import type { User } from "@kdx/auth";
 import type { TGetCareTasksInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import dayjs from "@kdx/dayjs";
 import { useFormatter } from "@kdx/locales/next-intl";
@@ -52,7 +51,6 @@ import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -125,11 +123,9 @@ function HeaderSort({
 export default function DataTableKodixCare({
   initialCareTasks,
   initialInput,
-  user,
 }: {
   initialCareTasks: RouterOutputs["app"]["kodixCare"]["getCareTasks"];
   initialInput: TGetCareTasksInputSchema;
-  user: User;
 }) {
   const [input, setInput] = useState(initialInput);
   const handleChangeInput = (date: Date) => {
@@ -137,7 +133,6 @@ export default function DataTableKodixCare({
       dateStart: dayjs(date).startOf("day").toDate(),
       dateEnd: dayjs(date).endOf("day").toDate(),
     });
-    setSaveTaskAsDoneDialogOpen(false);
     setEditDetailsOpen(false);
     setUnlockMoreTasksDialogOpen(false);
   };
@@ -150,8 +145,6 @@ export default function DataTableKodixCare({
   });
 
   const utils = api.useUtils();
-  const [saveTaskAsDoneDialogOpen, setSaveTaskAsDoneDialogOpen] =
-    useState(false);
   const [editDetailsOpen, setEditDetailsOpen] = useState(false);
   const [unlockMoreTasksDialogOpen, setUnlockMoreTasksDialogOpen] =
     useState(false);
@@ -224,12 +217,9 @@ export default function DataTableKodixCare({
                       if (!ctx.row.original.id) return; //Will never happen. its just to make ts happy
                       setCurrentlyEditing(ctx.row.original.id);
 
-                      if (!ctx.row.original.doneAt)
-                        return setSaveTaskAsDoneDialogOpen(true);
-
                       mutation.mutate({
                         id: ctx.row.original.id,
-                        doneAt: null,
+                        doneAt: ctx.row.original.doneAt ? null : new Date(),
                       });
                     }}
                     checked={!!ctx.row.original.doneAt}
@@ -290,7 +280,7 @@ export default function DataTableKodixCare({
       }),
       columnHelper.accessor("details", {
         header: ({ column }) => (
-          <HeaderSort column={column} className="ml-8">
+          <HeaderSort column={column}>
             <LuText className="mr-2 size-4 text-orange-400" />
             {t("Details")}
           </HeaderSort>
@@ -345,22 +335,13 @@ export default function DataTableKodixCare({
             open={editDetailsOpen}
             setOpen={setEditDetailsOpen}
           />
-          <SaveTaskAsDoneDialog
-            task={currentlyEditingCareTask}
-            mutation={mutation}
-            open={saveTaskAsDoneDialogOpen}
-            setOpen={setSaveTaskAsDoneDialogOpen}
-            user={user}
-          />
         </>
       )}
-
       <UnlockMoreTasksDialog
         unlockUpUntil={unlockUpUntil}
         open={unlockMoreTasksDialogOpen}
         setOpen={setUnlockMoreTasksDialogOpen}
       />
-
       <div className="flex justify-center gap-2">
         <Button variant="outline" className="invisible mr-auto">
           {t("Columns")}
@@ -439,7 +420,7 @@ export default function DataTableKodixCare({
             ))}
           </TableHeader>
           <TableBody>
-            {!query.isFetching ? (
+            {!query.isLoading ? (
               table.getRowModel().rows.length ? (
                 table.getRowModel().rows.map((row) => (
                   <TableRow
@@ -460,7 +441,7 @@ export default function DataTableKodixCare({
                       }
 
                       setCurrentlyEditing(row.original.id);
-                      if (row.original.updatedAt) setEditDetailsOpen(true); //? Only able
+                      setEditDetailsOpen(true);
                     }}
                     data-state={row.getIsSelected() && "selected"}
                     className={cn({
@@ -643,115 +624,6 @@ function EditCareTaskDialog({
                       />
                     </FormControl>
                     <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <DialogFooter className="mt-6 justify-end">
-              <Button disabled={mutation.isPending} type="submit">
-                {t("Save")}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
-  );
-}
-
-function SaveTaskAsDoneDialog({
-  task,
-  mutation,
-  open,
-  setOpen,
-  user,
-}: {
-  task: CareTask;
-  mutation: ReturnType<typeof api.app.kodixCare.saveCareTask.useMutation>;
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  user: User;
-}) {
-  //If you find a better way to reset all fields to the default on open feel free to do it.
-  const defaultValues = useMemo(
-    () => ({
-      id: task.id,
-      details: task.details,
-      doneAt: new Date(),
-      doneByUserId: user.id,
-    }),
-    [task, user.id],
-  );
-
-  const form = useForm({
-    schema: ZSaveCareTaskInputSchema,
-    defaultValues,
-  });
-
-  useEffect(() => {
-    form.reset(defaultValues);
-  }, [defaultValues, form, open]);
-
-  const t = useTranslations();
-
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit((values) => {
-              mutation.mutate({
-                ...values,
-                id: task.id,
-              });
-              setOpen(false);
-            })}
-          >
-            <DialogHeader>
-              <DialogTitle>{t("apps.kodixCare.Mark task as done")}</DialogTitle>
-              <DialogDescription>
-                {t(
-                  "apps.kodixCare.Please inform the date and time of completion",
-                )}
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <FormField
-                control={form.control}
-                name="doneAt"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("Done at")}</FormLabel>
-                    <FormControl>
-                      <div className="flex flex-row gap-2">
-                        <DateTimePicker
-                          {...field}
-                          date={field.value ?? undefined}
-                          setDate={(newDate) =>
-                            field.onChange(newDate ?? new Date())
-                          }
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage className="w-full" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="details"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Textarea
-                        {...field}
-                        value={field.value ?? undefined}
-                        placeholder={`${t("apps.kodixCare.Any information")}...`}
-                        className="w-full"
-                        rows={6}
-                      />
-                    </FormControl>
-                    <FormMessage className="w-full" />
                   </FormItem>
                 )}
               />
