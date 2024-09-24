@@ -8,6 +8,7 @@ import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
 import { defaultPadding, RootSafeAreaView } from "~/components/safe-area-view";
 import { api } from "~/utils/api";
 import { useAuth } from "~/utils/auth";
+import { usePushNotifications } from "~/utils/usePushNotifications";
 import { CaretasksList } from "./_components/care-tasks-list";
 import { CurrentShift } from "./_components/shifts";
 
@@ -72,6 +73,9 @@ export default function Tab() {
 function HomeView() {
   const [refreshing, setRefreshing] = React.useState(false);
   const utils = api.useUtils();
+
+  const { expoPushToken, notification } = usePushNotifications();
+
   const onRefresh = async () => {
     setRefreshing(true);
     await utils.app.kodixCare.invalidate();
@@ -80,6 +84,13 @@ function HomeView() {
 
   return (
     <View backgroundColor={"$background"} f={1} gap="$4">
+      <Text>{expoPushToken}</Text>
+      {notification && (
+        <View>
+          <Text>Notification:</Text>
+          <Text>{JSON.stringify(notification)}</Text>
+        </View>
+      )}
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

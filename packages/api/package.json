@@ -29,6 +29,7 @@
     "@react-email/render": "0.0.13",
     "@trpc/server": "catalog:",
     "@upstash/redis": "^1.31.6",
+    "expo-server-sdk": "^3.11.0",
     "next": "catalog:",
     "resend": "^3.2.0",
     "rrule": "^2.8.1",

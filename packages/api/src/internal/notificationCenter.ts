@@ -12,7 +12,13 @@ interface EmailChannel {
   subject: Parameters<typeof resend.emails.send>[0]["subject"];
 }
 
-type Channel = EmailChannel;
+interface MobileNotificationsChannel {
+  type: "NOTIFICATIONS";
+  title: string;
+  body: string;
+}
+
+type Channel = EmailChannel | MobileNotificationsChannel;
 
 export async function sendNotifications({
   userId,
@@ -33,7 +39,6 @@ export async function sendNotifications({
 
   const sent: (typeof notifications.$inferInsert)[] = [];
   for (const channel of channels) {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (channel.type === "EMAIL") {
       const result = { data: true }; //TODO: send email lmao
 
