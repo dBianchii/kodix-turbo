@@ -43,6 +43,10 @@
     "./trpc/user": {
       "types": "./dist/validators/src/trpc/user/index.d.ts",
       "default": "./src/trpc/user/index.ts"
+    },
+    "./trpc/user/notifications": {
+      "types": "./dist/validators/src/trpc/user/notifications/index.d.ts",
+      "default": "./src/trpc/user/notifications/index.ts"
     }
   },
   "scripts": {

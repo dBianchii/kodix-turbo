@@ -6,6 +6,8 @@ import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import { api } from "./api";
+
 const expoPushTokenKey = "expoPushToken";
 const getTokenFromStorage = async () => {
   try {
@@ -84,7 +86,8 @@ export const usePushNotifications = () => {
   const [notification, setNotification] = useState<
     Notifications.Notification | undefined
   >();
-
+  const saveExpoTokenMutation =
+    api.user.notifications.saveExpoToken.useMutation();
   const notificationListener = useRef<Notifications.Subscription>();
   const responseListener = useRef<Notifications.Subscription>();
 
@@ -102,6 +105,7 @@ export const usePushNotifications = () => {
           if (token) {
             setExpoPushToken(token);
             await saveTokenToStorage(token);
+            saveExpoTokenMutation.mutate({ expoToken: token });
           }
         })
         .catch((error: unknown) => {
