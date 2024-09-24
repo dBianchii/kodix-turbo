@@ -433,7 +433,9 @@ export default function DataTableKodixCare({
                           dayjs().endOf("day").add(1, "day").toDate()
                         )
                           return toast.warning(
-                            "You cannot unlock tasks that are scheduled for after tomorrow end of day",
+                            t(
+                              "You cannot unlock tasks that are scheduled for after tomorrow end of day",
+                            ),
                           );
                         setUnlockUpUntil(row.original.date);
                         setUnlockMoreTasksDialogOpen(true);

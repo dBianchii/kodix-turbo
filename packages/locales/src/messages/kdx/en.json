@@ -437,5 +437,6 @@
   },
   "Calendar": "Calendar",
   "Kodix Care": "Kodix Care",
-  "Todo": "Todo"
+  "Todo": "Todo",
+  "You cannot unlock tasks that are scheduled for after tomorrow end of day": "You cannot unlock tasks that are scheduled for after tomorrow end of day"
 }

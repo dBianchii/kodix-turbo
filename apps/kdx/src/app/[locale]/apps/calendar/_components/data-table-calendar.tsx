@@ -107,8 +107,6 @@ export function DataTable({
         </>
       ),
       cell: function Cell(info) {
-        const [openCancelDialog, setOpenCancelDialog] = useState(false);
-        const [openEditDialog, setOpenEditDialog] = useState(false);
         return (
           <div className="space-x-4">
             {/* <Checkbox
@@ -116,18 +114,6 @@ export function DataTable({
               onCheckedChange={(value) => info.row.toggleSelected(!!value)}
               aria-label="Select row"
             /> */}
-            <EditEventDialog
-              calendarTask={info.row.original}
-              open={openEditDialog}
-              setOpen={setOpenEditDialog}
-            />
-            <CancelationDialog
-              open={openCancelDialog}
-              setOpen={setOpenCancelDialog}
-              eventMasterId={info.row.original.eventMasterId}
-              eventExceptionId={info.row.original.eventExceptionId}
-              date={info.row.original.date}
-            />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="h-8 w-8 p-0">
@@ -136,7 +122,12 @@ export function DataTable({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
-                <DropdownMenuItem onClick={() => setOpenEditDialog(true)}>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setCalendarTask(info.row.original);
+                    setOpenEditDialog(true);
+                  }}
+                >
                   <RxPencil1 className="mr-2 size-4" />
                   {t("apps.calendar.Edit event")}
                 </DropdownMenuItem>
@@ -192,6 +183,22 @@ export function DataTable({
 
   return (
     <>
+      {calendarTask && (
+        <>
+          <EditEventDialog
+            calendarTask={calendarTask}
+            open={openEditDialog}
+            setOpen={setOpenEditDialog}
+          />
+          <CancelationDialog
+            open={openCancelDialog}
+            setOpen={setOpenCancelDialog}
+            eventMasterId={calendarTask.eventMasterId}
+            eventExceptionId={calendarTask.eventExceptionId}
+            date={calendarTask.date}
+          />
+        </>
+      )}
       <div className="pt-8">
         <div className="flex justify-between">
           <div className="w-44 space-y-2">
@@ -255,22 +262,6 @@ export function DataTable({
         </div>
 
         <div className="mt-4 rounded-md border">
-          {calendarTask && (
-            <>
-              <EditEventDialog
-                calendarTask={calendarTask}
-                open={openEditDialog}
-                setOpen={setOpenEditDialog}
-              />
-              <CancelationDialog
-                open={openCancelDialog}
-                setOpen={setOpenCancelDialog}
-                eventMasterId={calendarTask.eventMasterId}
-                eventExceptionId={calendarTask.eventExceptionId}
-                date={calendarTask.date}
-              />
-            </>
-          )}
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
