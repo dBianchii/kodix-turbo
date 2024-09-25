@@ -1,10 +1,11 @@
 import type { CareTask } from "node_modules/@kdx/api/dist/api/src/routers/app/kodixCare/getCareTasks.handler";
 import React, { useEffect, useMemo, useState } from "react";
-import { Keyboard, TouchableOpacity } from "react-native";
+import { Alert, Keyboard, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Audio } from "expo-av";
 import * as Haptics from "expo-haptics";
 import {
+  ArrowRightLeft,
   Check as CheckIcon,
   Lock,
   Text as TextIcon,
@@ -52,10 +53,27 @@ export function CaretasksList() {
     dateStart: dayjs.utc().add(0, "days").startOf("day").toDate(),
     dateEnd: dayjs.utc().add(0, "days").endOf("day").toDate(),
   };
+  const utils = api.useUtils();
+
   const careTasksQuery = api.app.kodixCare.getCareTasks.useQuery(input);
+  const currentShift = api.app.kodixCare.getCurrentShift.useQuery();
+  const syncCareTasksFromCalendarMutation =
+    api.app.kodixCare.syncCareTasksFromCalendar.useMutation({
+      onSettled: () => {
+        void utils.app.kodixCare.invalidate();
+      },
+      onError: (err) => {
+        toast.show("Um erro ocorreu", {
+          message: getErrorMessage(err),
+          variant: "error",
+          customData: {
+            variant: "error",
+          },
+        });
+      },
+    });
 
   const toast = useToastController();
-  const utils = api.useUtils();
   const saveCareTaskMutation = api.app.kodixCare.saveCareTask.useMutation({
     onMutate: async (savedCareTask) => {
       // Snapshot the previous value
@@ -112,7 +130,7 @@ export function CaretasksList() {
     },
     // Always refetch after error or success:
     onSettled: () => {
-      void utils.app.kodixCare.getCareTasks.invalidate();
+      void utils.app.kodixCare.invalidate();
     },
   });
 
@@ -128,6 +146,9 @@ export function CaretasksList() {
       (x) => x.id === currentlyEditing,
     ) as CareTask;
   }, [currentlyEditing, careTasksQuery.data]);
+
+  const canSyncShift = !currentShift.data?.checkOut;
+
   return (
     <>
       {currentlyEditingCareTask && (
@@ -138,12 +159,6 @@ export function CaretasksList() {
             open={editCareTaskSheetOpen}
             setOpen={setEditCareTaskSheetOpen}
           />
-
-          {/* <UnlockMoreTasksDialog
-            task={currentlyEditingCareTask}
-            open={unlockMoreTasksDialogOpen}
-            setOpen={setUnlockMoreTasksDialogOpen}
-          /> */}
         </>
       )}
       <SheetModal
@@ -167,17 +182,49 @@ export function CaretasksList() {
         {careTasksQuery.isLoading || !careTasksQuery.data ? (
           <Spinner mt="$20" />
         ) : (
-          <ScrollView f={1} w="100%" p={"$3"}>
-            {careTasksQuery.data.map((task, i) => (
-              <CareTaskOrCalendarTaskItem
-                key={`${task.id}${task.title}${task.description}${i}`}
-                task={task}
-                mutation={saveCareTaskMutation}
-                setCurrentlyEditing={setCurrentlyEditing}
-                setEditCareTaskSheetOpen={setEditCareTaskSheetOpen}
-              />
-            ))}
-          </ScrollView>
+          <>
+            {canSyncShift ? (
+              <TouchableOpacity
+                onPress={() => {
+                  void Haptics.selectionAsync();
+                  Alert.alert(
+                    "Sincronizar tarefas",
+                    "Substituir os dados do seu turno pelo calendário de planejamento?",
+                    [
+                      {
+                        text: "Cancelar",
+                      },
+                      {
+                        text: "Ok",
+                        onPress: () =>
+                          syncCareTasksFromCalendarMutation.mutate(),
+                      },
+                    ],
+                  );
+                }}
+              >
+                <XStack
+                  justifyContent="flex-end"
+                  ai="flex-end"
+                  w="100%"
+                  p={"$2"}
+                >
+                  <ArrowRightLeft size={"$2"} />
+                </XStack>
+              </TouchableOpacity>
+            ) : null}
+            <ScrollView f={1} w="100%" p={"$3"}>
+              {careTasksQuery.data.map((task, i) => (
+                <CareTaskOrCalendarTaskItem
+                  key={`${task.id}${task.title}${task.description}${i}`}
+                  task={task}
+                  mutation={saveCareTaskMutation}
+                  setCurrentlyEditing={setCurrentlyEditing}
+                  setEditCareTaskSheetOpen={setEditCareTaskSheetOpen}
+                />
+              ))}
+            </ScrollView>
+          </>
         )}
       </SheetModal>
     </>

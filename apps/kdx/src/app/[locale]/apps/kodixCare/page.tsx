@@ -46,7 +46,7 @@ export default async function KodixCarePage() {
               />
             }
           >
-            <KodixCareTable user={user} />
+            <KodixCareTable />
           </Suspense>
         </div>
       </div>
@@ -54,7 +54,7 @@ export default async function KodixCarePage() {
   );
 }
 
-async function KodixCareTable({ user }: { user: User }) {
+async function KodixCareTable() {
   const input = {
     dateStart: dayjs.utc().startOf("day").toDate(),
     dateEnd: dayjs.utc().endOf("day").toDate(),
@@ -64,7 +64,6 @@ async function KodixCareTable({ user }: { user: User }) {
     <DataTableKodixCare
       initialCareTasks={initialCareTasks}
       initialInput={input}
-      user={user}
     />
   );
 }

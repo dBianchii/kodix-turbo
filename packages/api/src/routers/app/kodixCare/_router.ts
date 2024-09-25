@@ -22,6 +22,7 @@ import { getCareTasksHandler } from "./getCareTasks.handler";
 import { getCurrentShiftHandler } from "./getCurrentShift.handler";
 import { saveCareTaskHandler } from "./saveCareTask.handler";
 import { signInByPasswordHandler } from "./signInByPassword.handler";
+import { syncCareTasksFromCalendarHandler } from "./syncCareTasksFromCalendar.handler";
 import { toggleShiftHandler } from "./toggleShift.handler";
 import { unlockMoreTasksHandler } from "./unlockMoreTasks.handler";
 
@@ -42,9 +43,11 @@ export const kodixCareRouter = {
     .use(kodixCareInstalledMiddleware)
     .query(getCurrentShiftHandler),
   saveCareTask: protectedProcedure
+    .use(kodixCareInstalledMiddleware)
     .input(ZSaveCareTaskInputSchema)
     .mutation(saveCareTaskHandler),
   unlockMoreTasks: protectedProcedure
+    .use(kodixCareInstalledMiddleware)
     .input(ZUnlockMoreTasksInputSchema)
     .mutation(unlockMoreTasksHandler),
   checkEmailForRegister: publicProcedure
@@ -53,4 +56,7 @@ export const kodixCareRouter = {
   signInByPassword: publicProcedure
     .input(ZSignInByPasswordInputSchema)
     .mutation(signInByPasswordHandler),
+  syncCareTasksFromCalendar: protectedProcedure
+    .use(kodixCareInstalledMiddleware)
+    .mutation(syncCareTasksFromCalendarHandler),
 } satisfies TRPCRouterRecord;

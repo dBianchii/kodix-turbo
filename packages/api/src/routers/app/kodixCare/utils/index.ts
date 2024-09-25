@@ -1,4 +1,5 @@
 import type { Drizzle } from "@kdx/db/client";
+import dayjs from "@kdx/dayjs";
 import { and, eq } from "@kdx/db";
 import { db as _db } from "@kdx/db/client";
 import { appsToTeams, careTasks, teams, usersToTeams } from "@kdx/db/schema";
@@ -8,14 +9,15 @@ import type { TProtectedProcedureContext } from "../../../../procedures";
 import { getAllHandler } from "../../calendar/getAll.handler";
 import { saveConfigHandler } from "../../saveConfig.handler";
 
+const tomorrowEndOfDay = dayjs.utc().add(1, "day").endOf("day").toDate();
 export async function cloneCalendarTasksToCareTasks({
   start,
-  end,
+  end = tomorrowEndOfDay,
   careShiftId,
   ctx,
 }: {
   start: Date;
-  end: Date;
+  end?: Date;
   careShiftId: string;
   ctx: TProtectedProcedureContext;
 }) {

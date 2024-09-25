@@ -71,7 +71,7 @@ export const getCareTasksHandler = async ({
         doneByUserId: null,
         details: null,
       })),
-  ];
+  ].sort((a, b) => a.date.getTime() - b.date.getTime()); //? Sort by ascending time
 
   return union;
 };

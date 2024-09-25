@@ -49,6 +49,9 @@
     "The team name confirmation does not match the team name": "A confirmação do nome da equipe não corresponde ao nome da equipe",
     "You are attempting to delete a team but you have no other teams Please create a new team first": "Você está tentando excluir uma equipe, mas não possui outras equipes. \nPor favor, crie uma nova equipe primeiro",
     "Kodix - Reset your password": "Kodix - Redefinir sua senha",
-    "Token expired Please request your password change again": "O token expirou. Solicite novamente a alteração da sua senha"
+    "Token expired Please request your password change again": "O token expirou. Solicite novamente a alteração da sua senha",
+    "You cannot edit a task in a closed shift": "Você não pode editar uma tarefa em um turno fechado",
+    "You cannot edit a task from another caregivers shift": "Você não pode editar uma tarefa do turno de outro cuidador",
+    "The current shift must be ongoing for this action": "O turno atual precisa estar aberto para realizar esta ação"
   }
 }

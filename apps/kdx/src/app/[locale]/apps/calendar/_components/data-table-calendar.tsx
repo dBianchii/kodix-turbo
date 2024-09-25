@@ -23,6 +23,7 @@ import {
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
+import { useFormatter } from "@kdx/locales/next-intl";
 import { useTranslations } from "@kdx/locales/next-intl/client";
 import { authorizedEmails } from "@kdx/shared";
 import { Button } from "@kdx/ui/button";
@@ -94,6 +95,7 @@ export function DataTable({
   });
 
   const t = useTranslations();
+  const format = useFormatter();
 
   const columns = [
     columnHelper.accessor("eventMasterId", {
@@ -154,7 +156,9 @@ export function DataTable({
     columnHelper.accessor("date", {
       header: () => <div>{t("Date")}</div>,
       cell: (info) => (
-        <div className="text-sm">{info.getValue().toLocaleString()}</div>
+        <div className="text-sm">
+          {format.dateTime(info.getValue(), "extensive")}
+        </div>
       ),
     }),
   ];

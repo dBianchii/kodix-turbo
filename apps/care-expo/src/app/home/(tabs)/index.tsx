@@ -1,6 +1,8 @@
 import React from "react";
 import { RefreshControl } from "react-native";
 import { useRouter } from "expo-router";
+import { useIsFetching, useIsMutating } from "@tanstack/react-query";
+import { getQueryKey } from "@trpc/react-query";
 import { H3, ScrollView, Spinner, Text, View } from "tamagui";
 
 import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
@@ -78,6 +80,14 @@ function HomeView() {
     setRefreshing(false);
   };
 
+  const kodixCareQueryKey = getQueryKey(api.app.kodixCare);
+  const isFetching = useIsFetching({
+    queryKey: kodixCareQueryKey,
+  });
+  const isMutating = useIsMutating({
+    mutationKey: kodixCareQueryKey,
+  });
+
   return (
     <View backgroundColor={"$background"} f={1} gap="$4">
       <ScrollView
@@ -86,6 +96,7 @@ function HomeView() {
         }
       >
         <CurrentShift />
+        <View mt={"$6"}>{isFetching || isMutating ? <Spinner /> : null}</View>
       </ScrollView>
       <CaretasksList />
     </View>
