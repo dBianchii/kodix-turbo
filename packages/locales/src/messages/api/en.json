@@ -52,6 +52,8 @@
     "Kodix - Reset your password": "Kodix - Reset your password",
     "You cannot edit a task in a closed shift": "You cannot edit a task in a closed shift",
     "You cannot edit a task from another caregivers shift": "You cannot edit a task from another caregiver's shift",
-    "The current shift must be ongoing for this action": "The current shift must be ongoing for this action"
+    "The current shift must be ongoing for this action": "The current shift must be ongoing for this action",
+    "Care task not found": "Care task not found",
+    "You cannot edit a task before the start of the start of the shift": "You cannot edit a task with a date before the start of the shift"
   }
 }

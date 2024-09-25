@@ -52,6 +52,8 @@
     "Token expired Please request your password change again": "O token expirou. Solicite novamente a alteração da sua senha",
     "You cannot edit a task in a closed shift": "Você não pode editar uma tarefa em um turno fechado",
     "You cannot edit a task from another caregivers shift": "Você não pode editar uma tarefa do turno de outro cuidador",
-    "The current shift must be ongoing for this action": "O turno atual precisa estar aberto para realizar esta ação"
+    "The current shift must be ongoing for this action": "O turno atual precisa estar aberto para realizar esta ação",
+    "You cannot edit a task before the start of the start of the shift": "Você não pode alterar uma tarefa com data antes do início do turno",
+    "Care task not found": "Tarefa não encontrada"
   }
 }
