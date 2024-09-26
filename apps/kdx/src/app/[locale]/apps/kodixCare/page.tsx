@@ -36,6 +36,7 @@ export default async function KodixCarePage() {
             <CurrentShift user={user} />
           </Suspense>
         </div>
+
         <div className="w-full">
           <Suspense
             fallback={

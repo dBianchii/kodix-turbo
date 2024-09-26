@@ -15,6 +15,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import {
+  LuArrowLeftRight,
   LuCheck,
   LuChevronDown,
   LuChevronsUpDown,
@@ -50,10 +51,13 @@ import { Checkbox } from "@kdx/ui/checkbox";
 import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@kdx/ui/dialog";
 import {
   DropdownMenu,
@@ -80,6 +84,12 @@ import {
 } from "@kdx/ui/table";
 import { Textarea } from "@kdx/ui/textarea";
 import { toast } from "@kdx/ui/toast";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@kdx/ui/tooltip";
 import { ZSaveCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 
 import { DatePicker } from "~/app/[locale]/_components/date-picker";
@@ -146,6 +156,8 @@ export default function DataTableKodixCare({
 
   const utils = api.useUtils();
   const [editDetailsOpen, setEditDetailsOpen] = useState(false);
+  const [syncDialogOpen, setSyncDialogOpen] = useState(false);
+
   const [unlockMoreTasksDialogOpen, setUnlockMoreTasksDialogOpen] =
     useState(false);
   const [unlockUpUntil, setUnlockUpUntil] = useState<Date>(new Date());
@@ -153,7 +165,7 @@ export default function DataTableKodixCare({
     CareTask["id"] | undefined
   >(undefined);
 
-  const mutation = api.app.kodixCare.saveCareTask.useMutation({
+  const saveCareTaskMutation = api.app.kodixCare.saveCareTask.useMutation({
     onMutate: async (savedCareTask) => {
       // Cancel any outgoing refetches
       // (so they don't overwrite our optimistic update)
@@ -194,6 +206,14 @@ export default function DataTableKodixCare({
       void utils.app.kodixCare.getCareTasks.invalidate();
     },
   });
+  const syncCareTasksFromCalendarMutation =
+    api.app.kodixCare.syncCareTasksFromCalendar.useMutation({
+      onSuccess: () => {
+        void utils.app.kodixCare.invalidate();
+      },
+      onError: trpcErrorToastDefault,
+    });
+
   const isCareTask = (id: CareTaskOrCalendarTask["id"]): id is string => !!id;
   const t = useTranslations();
   const format = useFormatter();
@@ -217,7 +237,7 @@ export default function DataTableKodixCare({
                       if (!ctx.row.original.id) return; //Will never happen. its just to make ts happy
                       setCurrentlyEditing(ctx.row.original.id);
 
-                      mutation.mutate({
+                      saveCareTaskMutation.mutate({
                         id: ctx.row.original.id,
                         doneAt: ctx.row.original.doneAt ? null : new Date(),
                       });
@@ -290,7 +310,7 @@ export default function DataTableKodixCare({
         ),
       }),
     ],
-    [format, mutation, t],
+    [format, saveCareTaskMutation, t],
   );
 
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -331,7 +351,7 @@ export default function DataTableKodixCare({
         <>
           <EditCareTaskDialog
             task={currentlyEditingCareTask}
-            mutation={mutation}
+            mutation={saveCareTaskMutation}
             open={editDetailsOpen}
             setOpen={setEditDetailsOpen}
           />
@@ -342,39 +362,92 @@ export default function DataTableKodixCare({
         open={unlockMoreTasksDialogOpen}
         setOpen={setUnlockMoreTasksDialogOpen}
       />
-      <div className="flex justify-center gap-2">
-        <Button variant="outline" className="invisible mr-auto">
-          {t("Columns")}
-        </Button>
-        <Button
-          ref={leftArrowRef}
-          variant="ghost"
-          onClick={() => {
-            handleChangeInput(
-              dayjs(input.dateStart).subtract(1, "days").toDate(),
-            );
-          }}
-          className="h-10 w-10 p-3"
-        >
-          <RxChevronLeft />
-        </Button>
-        <DatePicker
-          date={input.dateStart}
-          setDate={(newDate) => handleChangeInput(dayjs(newDate).toDate())}
-        />
-        <Button
-          ref={rightArrowRef}
-          variant="ghost"
-          onClick={() => {
-            handleChangeInput(dayjs(input.dateStart).add(1, "days").toDate());
-          }}
-          className="h-10 w-10 p-3"
-        >
-          <RxChevronRight />
-        </Button>
+      <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-center">
+        <Dialog open={syncDialogOpen} onOpenChange={setSyncDialogOpen}>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="secondary"
+                    className="sm:mr-auto"
+                    size="icon"
+                    aria-label="Documentation"
+                  >
+                    <LuArrowLeftRight className="size-4" />
+                  </Button>
+                </DialogTrigger>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p>{t("Sync tasks")}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>{t("Sync tasks")}</DialogTitle>
+              <DialogDescription>
+                {t(
+                  "Substitue the tasks of this turn with the tasks from the calendar",
+                )}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex items-center space-x-2">
+              <div className="grid flex-1 gap-2"></div>
+            </div>
+            <DialogFooter className="gap-3 sm:justify-between">
+              <DialogClose asChild>
+                <Button type="button" variant="secondary">
+                  {t("Close")}
+                </Button>
+              </DialogClose>
+              <Button
+                disabled={syncCareTasksFromCalendarMutation.isPending}
+                onClick={async () => {
+                  await syncCareTasksFromCalendarMutation.mutateAsync();
+                  setSyncDialogOpen(false);
+                }}
+              >
+                {syncCareTasksFromCalendarMutation.isPending ? (
+                  <LuLoader2 className="size-4 animate-spin" />
+                ) : (
+                  t("Sync tasks")
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+        <div className="flex gap-2">
+          <Button
+            ref={leftArrowRef}
+            variant="ghost"
+            onClick={() => {
+              handleChangeInput(
+                dayjs(input.dateStart).subtract(1, "days").toDate(),
+              );
+            }}
+            className="h-10 w-10 p-3"
+          >
+            <RxChevronLeft />
+          </Button>
+          <DatePicker
+            date={input.dateStart}
+            setDate={(newDate) => handleChangeInput(dayjs(newDate).toDate())}
+          />
+          <Button
+            ref={rightArrowRef}
+            variant="ghost"
+            onClick={() => {
+              handleChangeInput(dayjs(input.dateStart).add(1, "days").toDate());
+            }}
+            className="h-10 w-10 p-3"
+          >
+            <RxChevronRight />
+          </Button>
+        </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
+            <Button variant="outline" className="sm:ml-auto">
               {t("Columns")}
             </Button>
           </DropdownMenuTrigger>

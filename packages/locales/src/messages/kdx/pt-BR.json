@@ -438,5 +438,8 @@
   "Calendar": "Calendário",
   "Kodix Care": "Kodix Care",
   "Todo": "Todo",
-  "You cannot unlock tasks that are scheduled for after tomorrow end of day": "Você não pode desbloquear tarefas agendadas para depois do final do dia de amanhã"
+  "You cannot unlock tasks that are scheduled for after tomorrow end of day": "Você não pode desbloquear tarefas agendadas para depois do final do dia de amanhã",
+  "Substitue the tasks of this turn with the tasks from the calendar": "Substituir os dados do seu turno pelo calendário de planejamento?",
+  "Close": "Fechar",
+  "Sync tasks": "Sincronizar tarefas"
 }

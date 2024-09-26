@@ -438,5 +438,8 @@
   "Calendar": "Calendar",
   "Kodix Care": "Kodix Care",
   "Todo": "Todo",
-  "You cannot unlock tasks that are scheduled for after tomorrow end of day": "You cannot unlock tasks that are scheduled for after tomorrow end of day"
+  "You cannot unlock tasks that are scheduled for after tomorrow end of day": "You cannot unlock tasks that are scheduled for after tomorrow end of day",
+  "Sync tasks": "Sync tasks",
+  "Substitue the tasks of this turn with the tasks from the calendar": "Substitue the tasks of this turn with the tasks from the calendar?",
+  "Close": "Close"
 }
