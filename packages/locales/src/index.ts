@@ -38,7 +38,7 @@ export const formats = {
       minute: "numeric",
     },
   },
-} as const satisfies Partial<Formats> | undefined;
+} satisfies Formats;
 
 //TODO: figure out how to make typed namespaces work. (Both with i18n-ally and next-intl/use-intl)
 type TranslationKeys = never;
