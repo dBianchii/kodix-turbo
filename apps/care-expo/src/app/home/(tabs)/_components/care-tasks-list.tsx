@@ -342,6 +342,27 @@ function CreateCareTaskSheet({
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <XStack gap="$2" ai="center" alignContent="center">
+                  <FormLabel>Descrição</FormLabel>
+                </XStack>
+                <FormControl>
+                  <TextArea
+                    {...field}
+                    verticalAlign="top"
+                    onChangeText={field.onChange}
+                    value={field.value}
+                    placeholder={"Qualquer informação..."}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <Button
             onPress={form.handleSubmit((values) => {
               createCareTaskMutation.mutate(values);
