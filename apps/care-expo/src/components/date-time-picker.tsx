@@ -54,7 +54,7 @@ export function DateTimePicker({
           {type === "date" && <Calendar color={"$gray11Dark"} />}
           {type === "time" && <Clock color={"$gray11Dark"} />}
         </XStack>
-        <Input pointerEvents="none" editable={false}>
+        <Input pointerEvents="none" editable={false} minWidth={"$10"}>
           {type === "date" && selectedDate?.toLocaleDateString()}
           {type === "time" && selectedDate?.toLocaleTimeString()}
         </Input>

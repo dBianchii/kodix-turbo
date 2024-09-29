@@ -47,7 +47,8 @@
       "No events for this day": "Não há eventos neste dia",
       "Unlock all tasks up until here": "Desbloquear todas as tarefas até aqui?",
       "This will unlock all tasks of this turn up until this task": "Isso vai desbloquear todas as tarefas deste turno até esta tarefa",
-      "Successfully unlocked tasks": "Tarefas desbloqueadas com sucesso!"
+      "Successfully unlocked tasks": "Tarefas desbloqueadas com sucesso!",
+      "Add task": "Adicionar tarefa"
     },
     "todo": {
       "appDescription": "Todo é um app de anotações"
@@ -438,5 +439,9 @@
   "Calendar": "Calendário",
   "Kodix Care": "Kodix Care",
   "Todo": "Todo",
-  "You cannot unlock tasks that are scheduled for after tomorrow end of day": "Você não pode desbloquear tarefas agendadas para depois do final do dia de amanhã"
+  "You cannot unlock tasks that are scheduled for after tomorrow end of day": "Você não pode desbloquear tarefas agendadas para depois do final do dia de amanhã",
+  "Substitue the tasks of this turn with the tasks from the calendar": "Substituir os dados do seu turno pelo calendário de planejamento?",
+  "Close": "Fechar",
+  "Sync tasks": "Sincronizar tarefas",
+  "Add task": "Adicionar tarefa"
 }
