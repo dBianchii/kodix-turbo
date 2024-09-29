@@ -21,6 +21,7 @@ import {
   LuChevronsUpDown,
   LuChevronUp,
   LuLoader2,
+  LuPlus,
   LuText,
 } from "react-icons/lu";
 import {
@@ -74,6 +75,7 @@ import {
   FormMessage,
   useForm,
 } from "@kdx/ui/form";
+import { Input } from "@kdx/ui/input";
 import {
   Table,
   TableBody,
@@ -90,7 +92,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@kdx/ui/tooltip";
-import { ZSaveCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare";
+import {
+  ZCreateCareTaskInputSchema,
+  ZSaveCareTaskInputSchema,
+} from "@kdx/validators/trpc/app/kodixCare";
 
 import { DatePicker } from "~/app/[locale]/_components/date-picker";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
@@ -156,10 +161,10 @@ export default function DataTableKodixCare({
 
   const utils = api.useUtils();
   const [editDetailsOpen, setEditDetailsOpen] = useState(false);
-  const [syncDialogOpen, setSyncDialogOpen] = useState(false);
 
   const [unlockMoreTasksDialogOpen, setUnlockMoreTasksDialogOpen] =
     useState(false);
+
   const [unlockUpUntil, setUnlockUpUntil] = useState<Date>(new Date());
   const [currentlyEditing, setCurrentlyEditing] = useState<
     CareTask["id"] | undefined
@@ -206,13 +211,6 @@ export default function DataTableKodixCare({
       void utils.app.kodixCare.getCareTasks.invalidate();
     },
   });
-  const syncCareTasksFromCalendarMutation =
-    api.app.kodixCare.syncCareTasksFromCalendar.useMutation({
-      onSuccess: () => {
-        void utils.app.kodixCare.invalidate();
-      },
-      onError: trpcErrorToastDefault,
-    });
 
   const isCareTask = (id: CareTaskOrCalendarTask["id"]): id is string => !!id;
   const t = useTranslations();
@@ -357,66 +355,17 @@ export default function DataTableKodixCare({
           />
         </>
       )}
+
       <UnlockMoreTasksDialog
         unlockUpUntil={unlockUpUntil}
         open={unlockMoreTasksDialogOpen}
         setOpen={setUnlockMoreTasksDialogOpen}
       />
       <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-center">
-        <Dialog open={syncDialogOpen} onOpenChange={setSyncDialogOpen}>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <DialogTrigger asChild>
-                  <Button
-                    variant="secondary"
-                    className="sm:mr-auto"
-                    size="icon"
-                    aria-label="Documentation"
-                  >
-                    <LuArrowLeftRight className="size-4" />
-                  </Button>
-                </DialogTrigger>
-              </TooltipTrigger>
-              <TooltipContent side="right">
-                <p>{t("Sync tasks")}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>{t("Sync tasks")}</DialogTitle>
-              <DialogDescription>
-                {t(
-                  "Substitue the tasks of this turn with the tasks from the calendar",
-                )}
-              </DialogDescription>
-            </DialogHeader>
-            <div className="flex items-center space-x-2">
-              <div className="grid flex-1 gap-2"></div>
-            </div>
-            <DialogFooter className="gap-3 sm:justify-between">
-              <DialogClose asChild>
-                <Button type="button" variant="secondary">
-                  {t("Close")}
-                </Button>
-              </DialogClose>
-              <Button
-                disabled={syncCareTasksFromCalendarMutation.isPending}
-                onClick={async () => {
-                  await syncCareTasksFromCalendarMutation.mutateAsync();
-                  setSyncDialogOpen(false);
-                }}
-              >
-                {syncCareTasksFromCalendarMutation.isPending ? (
-                  <LuLoader2 className="size-4 animate-spin" />
-                ) : (
-                  t("Sync tasks")
-                )}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+        <div className="flex gap-2 sm:mr-auto">
+          <AddCareTaskDialog />
+          <SyncTasksFromCalendarDialogButton />
+        </div>
         <div className="flex gap-2">
           <Button
             ref={leftArrowRef}
@@ -445,6 +394,7 @@ export default function DataTableKodixCare({
             <RxChevronRight />
           </Button>
         </div>
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="sm:ml-auto">
@@ -556,6 +506,188 @@ export default function DataTableKodixCare({
         </Table>
       </div>
     </>
+  );
+}
+
+function SyncTasksFromCalendarDialogButton() {
+  const [syncDialogOpen, setSyncDialogOpen] = useState(false);
+
+  const utils = api.useUtils();
+  const syncCareTasksFromCalendarMutation =
+    api.app.kodixCare.syncCareTasksFromCalendar.useMutation({
+      onSuccess: () => {
+        void utils.app.kodixCare.invalidate();
+      },
+      onError: trpcErrorToastDefault,
+      onSettled: () => {
+        void utils.app.kodixCare.getCareTasks.invalidate();
+        void utils.app.kodixCare.getCurrentShift.invalidate();
+      },
+    });
+  const t = useTranslations();
+  return (
+    <Dialog open={syncDialogOpen} onOpenChange={setSyncDialogOpen}>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <DialogTrigger asChild>
+              <Button variant="secondary" size="sm" aria-label="Documentation">
+                <LuArrowLeftRight className="size-4" />
+              </Button>
+            </DialogTrigger>
+          </TooltipTrigger>
+          <TooltipContent side="right">
+            <p>{t("Sync tasks")}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>{t("Sync tasks")}</DialogTitle>
+          <DialogDescription>
+            {t(
+              "Substitue the tasks of this turn with the tasks from the calendar",
+            )}
+          </DialogDescription>
+        </DialogHeader>
+        <div className="flex items-center space-x-2">
+          <div className="grid flex-1 gap-2"></div>
+        </div>
+        <DialogFooter className="gap-3 sm:justify-between">
+          <DialogClose asChild>
+            <Button type="button" variant="secondary">
+              {t("Close")}
+            </Button>
+          </DialogClose>
+          <Button
+            disabled={syncCareTasksFromCalendarMutation.isPending}
+            onClick={async () => {
+              await syncCareTasksFromCalendarMutation.mutateAsync();
+              setSyncDialogOpen(false);
+            }}
+          >
+            {syncCareTasksFromCalendarMutation.isPending ? (
+              <LuLoader2 className="size-4 animate-spin" />
+            ) : (
+              t("Sync tasks")
+            )}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function AddCareTaskDialog() {
+  const [open, setOpen] = useState(false);
+
+  const utils = api.useUtils();
+  const form = useForm({
+    schema: ZCreateCareTaskInputSchema,
+  });
+  const mutation = api.app.kodixCare.createCareTask.useMutation({
+    onError: trpcErrorToastDefault,
+    onSettled: () => {
+      void utils.app.kodixCare.getCareTasks.invalidate();
+      void utils.app.kodixCare.getCurrentShift.invalidate();
+    },
+    onSuccess: () => {
+      setOpen(false);
+    },
+  });
+  const t = useTranslations();
+
+  useEffect(() => {
+    form.reset();
+  }, [open, form]);
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button size={"sm"}>
+          <LuPlus className="mr-2" />
+          {t("apps.kodixCare.Add task")}
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit((values) => {
+              mutation.mutate(values);
+              setOpen(false);
+            })}
+          >
+            <DialogHeader>
+              <DialogTitle>{t("apps.kodixCare.Add task")}</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("Title")}</FormLabel>
+                    <FormControl>
+                      <div className="flex flex-row gap-2">
+                        <Input {...field} />
+                      </div>
+                    </FormControl>
+                    <FormMessage className="w-full" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("Date")}</FormLabel>
+                    <FormControl>
+                      <div className="flex flex-row gap-2">
+                        <DateTimePicker
+                          date={field.value}
+                          setDate={(newDate) =>
+                            field.onChange(newDate ?? new Date())
+                          }
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage className="w-full" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("Description")}</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder={`${t("apps.kodixCare.Any information")}...`}
+                        className="w-full"
+                        rows={6}
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(e.target.value);
+                        }}
+                        value={field.value}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <DialogFooter className="mt-6 justify-end">
+              <Button disabled={mutation.isPending} type="submit">
+                {t("Save")}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 }
 

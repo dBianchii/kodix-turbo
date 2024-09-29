@@ -8,6 +8,7 @@ import {
   ArrowRightLeft,
   Check as CheckIcon,
   Lock,
+  Plus,
   Text as TextIcon,
 } from "@tamagui/lucide-icons";
 import { useToastController } from "@tamagui/toast";
@@ -15,6 +16,7 @@ import {
   Button,
   Checkbox,
   H4,
+  Input,
   Paragraph,
   ScrollView,
   SizableText,
@@ -29,7 +31,10 @@ import { useFormatter } from "use-intl";
 
 import dayjs from "@kdx/dayjs";
 import { getErrorMessage } from "@kdx/shared";
-import { ZSaveCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare";
+import {
+  ZCreateCareTaskInputSchema,
+  ZSaveCareTaskInputSchema,
+} from "@kdx/validators/trpc/app/kodixCare";
 
 import type { RouterOutputs } from "~/utils/api";
 import { DateTimePicker } from "~/components/date-time-picker";
@@ -42,6 +47,7 @@ import {
   FormMessage,
   useForm,
 } from "~/components/form";
+import { defaultPadding } from "~/components/safe-area-view";
 import { SheetModal } from "~/components/sheet-modal";
 import { api } from "~/utils/api";
 
@@ -137,7 +143,7 @@ export function CaretasksList() {
   const [position, setPosition] = useState(1);
 
   const [editCareTaskSheetOpen, setEditCareTaskSheetOpen] = useState(false);
-
+  const [createCareTaskSheetOpen, setCreateCareTaskSheetOpen] = useState(false);
   const [currentlyEditing, setCurrentlyEditing] =
     useState<CareTaskOrCalendarTask["id"]>(null);
   const currentlyEditingCareTask = useMemo(() => {
@@ -151,6 +157,24 @@ export function CaretasksList() {
 
   return (
     <>
+      <Button
+        zIndex={100000}
+        position="absolute"
+        bottom={"$5"}
+        right={"$5"}
+        theme={"orange_active"}
+        circular
+        size={"$6"}
+        icon={<Plus size={"$2"} />}
+        onPress={() => {
+          void Haptics.selectionAsync();
+          setCreateCareTaskSheetOpen(true);
+        }}
+      />
+      <CreateCareTaskSheet
+        open={createCareTaskSheetOpen}
+        setOpen={setCreateCareTaskSheetOpen}
+      />
       {currentlyEditingCareTask && (
         <>
           <EditCareTaskSheet
@@ -164,6 +188,7 @@ export function CaretasksList() {
       <SheetModal
         dismissOnSnapToBottom={false}
         open
+        zIndex={9999}
         modal={false}
         snapPoints={[100, 65]}
         onPositionChange={setPosition}
@@ -183,36 +208,36 @@ export function CaretasksList() {
           <Spinner mt="$20" />
         ) : (
           <>
-            {canSyncShift ? (
-              <TouchableOpacity
-                onPress={() => {
-                  void Haptics.selectionAsync();
-                  Alert.alert(
-                    "Sincronizar tarefas",
-                    "Substituir os dados do seu turno pelo calendário de planejamento?",
-                    [
-                      {
-                        text: "Cancelar",
-                      },
-                      {
-                        text: "Ok",
-                        onPress: () =>
-                          syncCareTasksFromCalendarMutation.mutate(),
-                      },
-                    ],
-                  );
-                }}
-              >
-                <XStack
-                  justifyContent="flex-end"
-                  ai="flex-end"
-                  w="100%"
-                  p={"$2"}
+            <XStack
+              justifyContent="flex-end"
+              w="100%"
+              px={defaultPadding}
+              py={"$2"}
+            >
+              {canSyncShift ? (
+                <TouchableOpacity
+                  onPress={() => {
+                    void Haptics.selectionAsync();
+                    Alert.alert(
+                      "Sincronizar tarefas",
+                      "Substituir os dados do seu turno pelo calendário de planejamento?",
+                      [
+                        {
+                          text: "Cancelar",
+                        },
+                        {
+                          text: "Ok",
+                          onPress: () =>
+                            syncCareTasksFromCalendarMutation.mutate(),
+                        },
+                      ],
+                    );
+                  }}
                 >
                   <ArrowRightLeft size={"$2"} />
-                </XStack>
-              </TouchableOpacity>
-            ) : null}
+                </TouchableOpacity>
+              ) : null}
+            </XStack>
             <ScrollView f={1} w="100%" p={"$3"}>
               {careTasksQuery.data.map((task, i) => (
                 <CareTaskOrCalendarTaskItem
@@ -228,6 +253,110 @@ export function CaretasksList() {
         )}
       </SheetModal>
     </>
+  );
+}
+
+function CreateCareTaskSheet({
+  open,
+  setOpen,
+}: {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}) {
+  const form = useForm({
+    schema: ZCreateCareTaskInputSchema,
+  });
+  const utils = api.useUtils();
+  const toast = useToastController();
+  const createCareTaskMutation = api.app.kodixCare.createCareTask.useMutation({
+    onSuccess: () => {
+      setOpen(false);
+    },
+    onError: (err) => {
+      toast.show("Um erro ocorreu", {
+        message: getErrorMessage(err),
+        variant: "error",
+        customData: {
+          variant: "error",
+        },
+      });
+    },
+    onSettled: () => {
+      void utils.app.kodixCare.invalidate();
+    },
+  });
+
+  useEffect(() => {
+    form.reset();
+  }, [form, open]);
+
+  return (
+    <SheetModal
+      open={open}
+      setOpen={setOpen}
+      snapPoints={[50]}
+      withHandle={false}
+    >
+      <Form {...form}>
+        <View mt="$4" gap="$4">
+          <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Title</FormLabel>
+                <FormControl>
+                  <Input {...field} onChangeText={field.onChange} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="date"
+            render={({ field }) => (
+              <FormItem>
+                <XStack gap="$2" ai="center" alignContent="center">
+                  <FormLabel>Data</FormLabel>
+                </XStack>
+                <FormControl>
+                  <XStack gap={"$3"}>
+                    <DateTimePicker
+                      {...field}
+                      type="date"
+                      date={field.value}
+                      onConfirm={field.onChange}
+                      minimumDate={new Date()}
+                    />
+                    <DateTimePicker
+                      {...field}
+                      type="time"
+                      date={field.value}
+                      onConfirm={field.onChange}
+                      minimumDate={new Date()}
+                    />
+                  </XStack>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button
+            onPress={form.handleSubmit((values) => {
+              createCareTaskMutation.mutate(values);
+            })}
+            disabled={createCareTaskMutation.isPending}
+          >
+            {createCareTaskMutation.isPending ? (
+              <Spinner />
+            ) : (
+              "Adicionar tarefa"
+            )}
+          </Button>
+        </View>
+      </Form>
+    </SheetModal>
   );
 }
 
@@ -370,70 +499,68 @@ function EditCareTaskSheet(props: {
           <H4>{props.task.title}</H4>
           <Paragraph>{props.task.description}</Paragraph>
         </View>
-        <ScrollView>
-          <Form {...form}>
-            <View mt="$4" gap="$4">
-              <FormField
-                control={form.control}
-                name="doneAt"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Feito em</FormLabel>
-                    <FormControl>
-                      <XStack gap={"$3"}>
-                        <DateTimePicker
-                          {...field}
-                          type="date"
-                          date={field.value ?? undefined}
-                          onConfirm={field.onChange}
-                          minimumDate={new Date()}
-                        />
-                        <DateTimePicker
-                          {...field}
-                          type="time"
-                          date={field.value ?? undefined}
-                          onConfirm={field.onChange}
-                          minimumDate={new Date()}
-                        />
-                      </XStack>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="details"
-                render={({ field }) => (
-                  <FormItem>
-                    <XStack gap="$2" ai="center" alignContent="center">
-                      <FormLabel>Detalhes</FormLabel>
-                      <TextIcon size={16} color={"$orange11Dark"} />
-                    </XStack>
-                    <FormControl>
-                      <TextArea
+        <Form {...form}>
+          <View mt="$4" gap="$4">
+            <FormField
+              control={form.control}
+              name="doneAt"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Feito em</FormLabel>
+                  <FormControl>
+                    <XStack gap={"$3"}>
+                      <DateTimePicker
                         {...field}
-                        verticalAlign="top"
-                        onChangeText={field.onChange}
-                        value={field.value ?? undefined}
-                        placeholder={"Alguma informação adicional?"}
+                        type="date"
+                        date={field.value ?? undefined}
+                        onConfirm={field.onChange}
+                        minimumDate={new Date()}
                       />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button
-                onPress={form.handleSubmit((values) => {
-                  props.mutation.mutate(values);
-                  props.setOpen(false);
-                })}
-              >
-                Salvar
-              </Button>
-            </View>
-          </Form>
-        </ScrollView>
+                      <DateTimePicker
+                        {...field}
+                        type="time"
+                        date={field.value ?? undefined}
+                        onConfirm={field.onChange}
+                        minimumDate={new Date()}
+                      />
+                    </XStack>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="details"
+              render={({ field }) => (
+                <FormItem>
+                  <XStack gap="$2" ai="center" alignContent="center">
+                    <FormLabel>Detalhes</FormLabel>
+                    <TextIcon size={16} color={"$orange11Dark"} />
+                  </XStack>
+                  <FormControl>
+                    <TextArea
+                      {...field}
+                      verticalAlign="top"
+                      onChangeText={field.onChange}
+                      value={field.value ?? undefined}
+                      placeholder={"Alguma informação adicional?"}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button
+              onPress={form.handleSubmit((values) => {
+                props.mutation.mutate(values);
+                props.setOpen(false);
+              })}
+            >
+              Salvar
+            </Button>
+          </View>
+        </Form>
       </SafeAreaView>
     </SheetModal>
   );

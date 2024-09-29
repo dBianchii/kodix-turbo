@@ -47,7 +47,8 @@
       "No events for this day": "No events for this day",
       "Unlock all tasks up until here": "Unlock all tasks up until here?",
       "This will unlock all tasks of this turn up until this task": "Isso vai desbloquear todas as tarefas deste turno até esta tarefa",
-      "Successfully unlocked tasks": "Successfully unlocked tasks!"
+      "Successfully unlocked tasks": "Successfully unlocked tasks!",
+      "Add task": "Add task"
     },
     "todo": {
       "appDescription": "Todo is a note taking app"
@@ -441,5 +442,6 @@
   "You cannot unlock tasks that are scheduled for after tomorrow end of day": "You cannot unlock tasks that are scheduled for after tomorrow end of day",
   "Sync tasks": "Sync tasks",
   "Substitue the tasks of this turn with the tasks from the calendar": "Substitue the tasks of this turn with the tasks from the calendar?",
-  "Close": "Close"
+  "Close": "Close",
+  "Add task": "Add task"
 }
