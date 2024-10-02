@@ -24,9 +24,9 @@
   },
   "dependencies": {
     "@kdx/shared": "workspace:*",
-    "next-intl": "^3.17.2",
+    "next-intl": "^3.20.0",
     "react": "catalog:react18",
-    "use-intl": "^3.17.2"
+    "use-intl": "^3.20.0"
   },
   "devDependencies": {
     "@kdx/eslint-config": "workspace:*",
