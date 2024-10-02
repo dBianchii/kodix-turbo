@@ -1,4 +1,8 @@
 import createMiddleware from "next-intl/middleware";
 
-export { useFormatter, createTranslator } from "next-intl";
+export {
+  createTranslator,
+  useFormatter,
+  type DateTimeFormatOptions,
+} from "next-intl";
 export { createMiddleware };

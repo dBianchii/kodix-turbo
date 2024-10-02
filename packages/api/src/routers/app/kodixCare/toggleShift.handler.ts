@@ -11,7 +11,7 @@ import { KODIX_NOTIFICATION_FROM_EMAIL, kodixCareAppId } from "@kdx/shared";
 import type { TProtectedProcedureContext } from "../../../procedures";
 import { resend } from "../../../utils/email";
 import { getConfigHandler } from "../getConfig.handler";
-import { getCurrentCareShiftHandler } from "./getCurrentCareShift.handler";
+import { getCurrentShiftHandler } from "./getCurrentShift.handler";
 import { cloneCalendarTasksToCareTasks } from "./utils";
 
 interface ToggleShiftOptions {
@@ -63,7 +63,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
     return;
   }
 
-  const lastCareShift = await getCurrentCareShiftHandler({
+  const lastCareShift = await getCurrentShiftHandler({
     ctx,
   });
   if (!lastCareShift)

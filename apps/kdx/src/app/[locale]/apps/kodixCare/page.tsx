@@ -36,6 +36,7 @@ export default async function KodixCarePage() {
             <CurrentShift user={user} />
           </Suspense>
         </div>
+
         <div className="w-full">
           <Suspense
             fallback={
@@ -46,7 +47,7 @@ export default async function KodixCarePage() {
               />
             }
           >
-            <KodixCareTable user={user} />
+            <KodixCareTable />
           </Suspense>
         </div>
       </div>
@@ -54,7 +55,7 @@ export default async function KodixCarePage() {
   );
 }
 
-async function KodixCareTable({ user }: { user: User }) {
+async function KodixCareTable() {
   const input = {
     dateStart: dayjs.utc().startOf("day").toDate(),
     dateEnd: dayjs.utc().endOf("day").toDate(),
@@ -64,7 +65,6 @@ async function KodixCareTable({ user }: { user: User }) {
     <DataTableKodixCare
       initialCareTasks={initialCareTasks}
       initialInput={input}
-      user={user}
     />
   );
 }

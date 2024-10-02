@@ -96,8 +96,8 @@ export const teamAppRoles = mysqlTable(
       .references(() => apps.id, { onDelete: "cascade" }),
     teamId: teamIdReferenceCascadeDelete,
     appRoleDefaultId: varchar("appRoleDefaultId", {
-      length: NANOID_SIZE, //? References a hardcoded default role id and not anything in db
-    }),
+      length: NANOID_SIZE, //? References a hardcoded default role id and not anything in db. See appRoleDefaults_tree.ts
+    }).notNull(),
   },
   (table) => {
     return {

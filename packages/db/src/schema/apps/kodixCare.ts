@@ -46,7 +46,7 @@ export const careTasks = mysqlTable(
   "careTask",
   {
     id: nanoidPrimaryKey,
-    eventDate: timestamp("eventDate").notNull(),
+    date: timestamp("date").notNull(),
     doneAt: timestamp("doneAt"),
     doneByUserId: varchar("doneByUserId", { length: NANOID_SIZE }).references(
       () => users.id,
@@ -55,7 +55,8 @@ export const careTasks = mysqlTable(
     teamId: teamIdReferenceCascadeDelete,
     eventMasterId: varchar("eventMasterId", {
       length: NANOID_SIZE,
-    }).references(() => eventMasters.id),
+    }),
+    //.references(() => eventMasters.id), //TODO: should we have foreignKey????????????????????????????????????????????????????????????????
     careShiftId: varchar("careShiftId", { length: NANOID_SIZE })
       .notNull()
       .references(() => careShifts.id),

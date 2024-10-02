@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 "use client";
 
+//?Modified version of https://tie.openstatus.dev/
 import React from "react";
 
 import type { TimePickerType } from "./time-picker-utils";
@@ -28,7 +29,7 @@ const TimePickerInput = React.forwardRef<
   (
     {
       className,
-      type = "tel",
+      type = "number",
       value,
       id,
       name,
@@ -67,6 +68,7 @@ const TimePickerInput = React.forwardRef<
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === "Tab") return;
       e.preventDefault();
+      e.stopPropagation();
       if (e.key === "ArrowRight") onRightFocus?.();
       if (e.key === "ArrowLeft") onLeftFocus?.();
       if (["ArrowUp", "ArrowDown"].includes(e.key)) {

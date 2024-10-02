@@ -111,7 +111,6 @@ const FormLabel = React.forwardRef<typeof Label, LabelProps>(
 
     return (
       <Label
-        blockSize={"$3"}
         ref={ref}
         htmlFor={formItemId}
         {...props}

@@ -1,13 +1,13 @@
 import type { TProtectedProcedureContext } from "../../../procedures";
 
-interface GetCurrentCareShiftOptions {
+interface GetCurrentShiftOptions {
   ctx: TProtectedProcedureContext;
 }
 
-export const getCurrentCareShiftHandler = async ({
+export const getCurrentShiftHandler = async ({
   ctx,
-}: GetCurrentCareShiftOptions) => {
-  return await ctx.db.query.careShifts.findFirst({
+}: GetCurrentShiftOptions) => {
+  const shift = await ctx.db.query.careShifts.findFirst({
     orderBy: (careShift, { desc }) => desc(careShift.checkIn),
     where: (careShift, { eq, and, isNull }) =>
       and(
@@ -31,4 +31,5 @@ export const getCurrentCareShiftHandler = async ({
       id: true,
     },
   });
+  return shift ?? null;
 };
