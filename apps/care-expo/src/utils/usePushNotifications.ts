@@ -4,28 +4,9 @@ import { Platform } from "react-native";
 import Constants from "expo-constants";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { api } from "./api";
-
-const expoPushTokenKey = "expoPushToken";
-const getTokenFromStorage = async () => {
-  try {
-    const token = await AsyncStorage.getItem(expoPushTokenKey);
-    return token;
-  } catch (error) {
-    console.error("Failed to retrieve token from storage:", error);
-    return null;
-  }
-};
-
-async function saveTokenToStorage(token: string) {
-  try {
-    await AsyncStorage.setItem(expoPushTokenKey, token);
-  } catch (error) {
-    console.error("Failed to save push token to storage", error);
-  }
-}
+import { getExpoToken, saveExpoToken } from "./expoToken-store";
 
 async function registerForPushNotificationsAsync() {
   if (Platform.OS === "android") {
@@ -73,15 +54,15 @@ async function registerForPushNotificationsAsync() {
   }
 }
 
-Notifications.setNotificationHandler({
-  // eslint-disable-next-line @typescript-eslint/require-await
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-});
 export const usePushNotifications = () => {
+  Notifications.setNotificationHandler({
+    // eslint-disable-next-line @typescript-eslint/require-await
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: false,
+      shouldSetBadge: false,
+    }),
+  });
   const [expoPushToken, setExpoPushToken] = useState<string | undefined>();
   const [notification, setNotification] = useState<
     Notifications.Notification | undefined
@@ -94,7 +75,7 @@ export const usePushNotifications = () => {
   useEffect(() => {
     const setupPushNotifications = async () => {
       // Check if the token is stored in AsyncStorage
-      const storedToken = await getTokenFromStorage();
+      const storedToken = await getExpoToken();
       if (storedToken) {
         setExpoPushToken(storedToken);
         return;
@@ -104,7 +85,7 @@ export const usePushNotifications = () => {
         .then(async (token) => {
           if (token) {
             setExpoPushToken(token);
-            await saveTokenToStorage(token);
+            await saveExpoToken(token);
             saveExpoTokenMutation.mutate({ expoToken: token });
           }
         })
@@ -134,6 +115,7 @@ export const usePushNotifications = () => {
       if (responseListener.current)
         Notifications.removeNotificationSubscription(responseListener.current);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { expoPushToken, notification };

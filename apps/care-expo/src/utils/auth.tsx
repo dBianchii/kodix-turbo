@@ -1,7 +1,9 @@
 import { useRouter } from "expo-router";
 
 import { api } from "./api";
+import { deleteExpoToken } from "./expoToken-store";
 import { deleteToken, setToken } from "./session-store";
+import { usePushNotifications } from "./usePushNotifications";
 
 export const useAuth = () => {
   const { data, isLoading, isError } = api.auth.getSession.useQuery();
@@ -32,10 +34,37 @@ export const useSignOut = () => {
   const mutation = api.auth.signOut.useMutation({
     onSuccess: async () => {
       await deleteToken();
+      await deleteExpoToken();
       await utils.invalidate();
       router.replace("/");
     },
     onSettled: () => utils.invalidate(),
   });
-  return mutation;
+
+  const { expoPushToken } = usePushNotifications();
+
+  //? Here we override the mutation functions to always send the expoPushToken as default
+  const mutate = (
+    input?: Parameters<typeof mutation.mutate>["0"],
+    options?: Parameters<typeof mutation.mutate>["1"],
+  ) =>
+    mutation.mutate(
+      input ?? {
+        expoToken: expoPushToken,
+      },
+      options,
+    );
+
+  const mutateAsync = (
+    input?: Parameters<typeof mutation.mutateAsync>["0"],
+    options?: Parameters<typeof mutation.mutateAsync>["1"],
+  ) =>
+    mutation.mutateAsync(
+      input ?? {
+        expoToken: expoPushToken,
+      },
+      options,
+    );
+
+  return { ...mutation, mutate, mutateAsync };
 };

@@ -40,6 +40,10 @@
       "types": "./dist/validators/src/trpc/team/invitation/index.d.ts",
       "default": "./src/trpc/team/invitation/index.ts"
     },
+    "./trpc/auth": {
+      "types": "./dist/validators/src/trpc/auth/index.d.ts",
+      "default": "./src/trpc/auth/index.ts"
+    },
     "./trpc/user": {
       "types": "./dist/validators/src/trpc/user/index.d.ts",
       "default": "./src/trpc/user/index.ts"
