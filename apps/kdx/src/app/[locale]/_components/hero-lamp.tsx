@@ -2,11 +2,11 @@
 
 import { motion } from "framer-motion";
 
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import { LampContainer } from "@kdx/ui/aceternity/lamp";
 
 export function HeroLamp() {
-  const t = useI18n();
+  const t = useTranslations();
   return (
     <LampContainer className="mt-0">
       <motion.h1

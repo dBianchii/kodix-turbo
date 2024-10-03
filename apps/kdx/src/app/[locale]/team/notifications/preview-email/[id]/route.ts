@@ -1,14 +1,15 @@
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import { auth } from "@kdx/auth";
 import { eq, sql } from "@kdx/db";
 import { db } from "@kdx/db/client";
-import { schema } from "@kdx/db/schema";
+import { usersToTeams } from "@kdx/db/schema";
+import { redirect } from "@kdx/locales/next-intl/navigation";
 
 const allTeamIdsForUserQuery = db
-  .select({ id: schema.usersToTeams.teamId })
-  .from(schema.usersToTeams)
-  .where(eq(schema.usersToTeams.userId, sql.placeholder("userId")));
+  .select({ id: usersToTeams.teamId })
+  .from(usersToTeams)
+  .where(eq(usersToTeams.userId, sql.placeholder("userId")));
 
 const prepared = db.query.notifications
   .findFirst({
@@ -27,7 +28,7 @@ const prepared = db.query.notifications
 
 export async function GET(request: Request) {
   const { user } = await auth();
-  if (!user) redirect("/");
+  if (!user) return redirect("/");
 
   const notif = await prepared.execute({
     id: request.url.split("/").pop(),

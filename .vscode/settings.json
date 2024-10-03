@@ -5,12 +5,13 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "eslint.rules.customizations": [{ "rule": "*", "severity": "warn" }],
-  "eslint.experimental.useFlatConfig": true,
+  "eslint.runtime": "node",
   "eslint.workingDirectories": [
     { "pattern": "apps/*/" },
     { "pattern": "packages/*/" },
     { "pattern": "tooling/*/" }
   ],
+  "prettier.ignorePath": ".gitignore",
   "tailwindCSS.experimental.classRegex": [
     ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
     ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
@@ -28,10 +29,10 @@
    * This will allow you to select the project to debug when you press F5, and only on this workspace.
    */
   "workspaceKeybindings.selectAndStartDebugging.enabled": true,
-  "i18n-ally.localesPaths": ["packages/locales/src/lang"],
-  "i18n-ally.editor.preferEditor": true,
+  "i18n-ally.localesPaths": ["packages/locales/src/messages/**"],
   "i18n-ally.pathMatcher": "{locale}.json",
-  "i18n-ally.enabledFrameworks": ["next-international"],
+  "i18n-ally.editor.preferEditor": true,
+  "i18n-ally.enabledFrameworks": ["next-intl"],
   "i18n-ally.keystyle": "nested",
   "i18n-ally.extract.autoDetect": true,
   "i18n-ally.sourceLanguage": "en",

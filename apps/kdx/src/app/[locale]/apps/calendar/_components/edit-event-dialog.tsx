@@ -1,15 +1,12 @@
 import type { Frequency } from "rrule";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { LuLoader2 } from "react-icons/lu";
-import { RxCalendar } from "react-icons/rx";
 import { RRule, Weekday } from "rrule";
 
 import type { RouterInputs, RouterOutputs } from "@kdx/api";
 import type { Dayjs } from "@kdx/dayjs";
-import { format } from "@kdx/date-fns";
 import dayjs from "@kdx/dayjs";
-import { useCurrentLocale, useI18n } from "@kdx/locales/client";
-import { cn } from "@kdx/ui";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,7 +17,7 @@ import {
   AlertDialogTitle,
 } from "@kdx/ui/alert-dialog";
 import { Button } from "@kdx/ui/button";
-import { Calendar } from "@kdx/ui/calendar";
+import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
   Dialog,
   DialogContent,
@@ -30,7 +27,6 @@ import {
 } from "@kdx/ui/dialog";
 import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@kdx/ui/radio-group";
 import { Textarea } from "@kdx/ui/textarea";
 import {
@@ -199,8 +195,7 @@ export function EditEventDialog({
 
     mutation.mutate(input);
   }
-  const t = useI18n();
-  const locale = useCurrentLocale();
+  const t = useTranslations();
 
   return (
     <Dialog
@@ -225,47 +220,9 @@ export function EditEventDialog({
           <div className="flex flex-row gap-4">
             <div className="flex flex-col space-y-2">
               <Label>{t("From")}</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant={"outline"}
-                    className={cn("w-[200px] pl-3 text-left font-normal")}
-                  >
-                    {format(from.toDate(), "PPP", locale)}
-                    <RxCalendar className="ml-auto size-4 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={from.toDate()}
-                    onSelect={(date) => {
-                      setFrom(
-                        dayjs(date).hour(from.hour()).minute(from.minute()),
-                      );
-                    }}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-            <div className="flex flex-col space-y-2">
-              <Label className="invisible">{t("From")}</Label>
-              <Input
-                type="time"
-                value={from.format("HH:mm")}
-                onChange={(e) => {
-                  const newTime = e.target.value;
-
-                  setFrom(
-                    dayjs(from)
-                      .hour(parseInt(newTime.split(":")[0] ?? "0"))
-                      .minute(parseInt(newTime.split(":")[1] ?? "0"))
-                      .second(0)
-                      .millisecond(0),
-                  );
-                }}
-                className="w-26"
+              <DateTimePicker
+                date={from.toDate()}
+                setDate={(newDate) => setFrom(dayjs(newDate))}
               />
             </div>
           </div>
@@ -346,7 +303,7 @@ function SubmitEditEventDialog({
     "single" | "thisAndFuture" | "all"
   >("single");
 
-  const t = useI18n();
+  const t = useTranslations();
 
   return (
     <AlertDialog

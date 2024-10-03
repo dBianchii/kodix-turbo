@@ -1,10 +1,9 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
-import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
-import { getI18n } from "@kdx/locales/server";
+import { redirect } from "@kdx/locales/next-intl/navigation";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 import { Separator } from "@kdx/ui/separator";
 import { Skeleton } from "@kdx/ui/skeleton";
 
@@ -23,8 +22,8 @@ interface CustomApp {
 
 export default async function TeamPage() {
   const { user } = await auth();
-  if (!user) redirect("/");
-  const t = await getI18n();
+  if (!user) return redirect("/");
+  const t = await getTranslations();
 
   const customApps: CustomApp[] = [
     {
@@ -100,6 +99,7 @@ async function AppsSection({ customApps }: { customApps: CustomApp[] }) {
     <div className="flex flex-row items-center space-x-10">
       {customApps.map((app) => (
         <Link
+          key={app.appUrl}
           href={app.appUrl}
           className="transition-transform duration-300 ease-out hover:scale-105"
         >
@@ -113,10 +113,10 @@ async function AppsSection({ customApps }: { customApps: CustomApp[] }) {
       {apps.map((app) => (
         <Link
           key={app.id}
-          href={getAppUrl(app.id as KodixAppId)}
+          href={getAppUrl(app.id)}
           className="transition-transform duration-300 ease-out hover:scale-105"
         >
-          <IconKodixApp appId={app.id as KodixAppId} />
+          <IconKodixApp appId={app.id} />
         </Link>
       ))}
     </div>

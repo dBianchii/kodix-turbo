@@ -3,7 +3,7 @@ import * as React from "react";
 import { RxCross2, RxDownload, RxReload, RxTrash } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import { getErrorMessage } from "@kdx/shared";
 import { Button } from "@kdx/ui/button";
 import { exportTableToCSV } from "@kdx/ui/data-table/export";
@@ -43,7 +43,7 @@ export function DataTableNotificationsFloatingBar({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [table]);
 
-  const t = useI18n();
+  const t = useTranslations();
 
   return (
     <div className="fixed inset-x-0 bottom-4 z-50 mx-auto w-fit px-4">
@@ -109,7 +109,7 @@ export function DataTableNotificationsFloatingBar({
                     )}
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent className=" border bg-accent font-semibold text-foreground dark:bg-zinc-900">
+                <TooltipContent className="border bg-accent font-semibold text-foreground dark:bg-zinc-900">
                   <p>{t("Export notifications")}</p>
                 </TooltipContent>
               </Tooltip>
@@ -150,7 +150,7 @@ export function DataTableNotificationsFloatingBar({
                     )}
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent className=" border bg-accent font-semibold text-foreground dark:bg-zinc-900">
+                <TooltipContent className="border bg-accent font-semibold text-foreground dark:bg-zinc-900">
                   <p>{t("Delete notifications")}</p>
                 </TooltipContent>
               </Tooltip>

@@ -1,6 +1,11 @@
 "use client";
 
-import type { SortingState, VisibilityState } from "@tanstack/react-table";
+import type {
+  Column,
+  SortingState,
+  VisibilityState,
+} from "@tanstack/react-table";
+import type { CareTask } from "node_modules/@kdx/api/dist/api/src/routers/app/kodixCare/getCareTasks.handler";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   createColumnHelper,
@@ -9,15 +14,28 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { LuChevronsUpDown, LuLoader2 } from "react-icons/lu";
-import { RxChevronLeft, RxChevronRight, RxLockClosed } from "react-icons/rx";
+import {
+  LuArrowLeftRight,
+  LuCheck,
+  LuChevronDown,
+  LuChevronsUpDown,
+  LuChevronUp,
+  LuLoader2,
+  LuPlus,
+  LuText,
+} from "react-icons/lu";
+import {
+  RxCalendar,
+  RxChevronLeft,
+  RxChevronRight,
+  RxLockClosed,
+} from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
-import type { User } from "@kdx/auth";
 import type { TGetCareTasksInputSchema } from "@kdx/validators/trpc/app/kodixCare";
-import { format } from "@kdx/date-fns";
 import dayjs from "@kdx/dayjs";
-import { useCurrentLocale, useI18n } from "@kdx/locales/client";
+import { useFormatter } from "@kdx/locales/next-intl";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import { cn } from "@kdx/ui";
 import {
   AlertDialog,
@@ -34,11 +52,13 @@ import { Checkbox } from "@kdx/ui/checkbox";
 import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@kdx/ui/dialog";
 import {
   DropdownMenu,
@@ -55,6 +75,7 @@ import {
   FormMessage,
   useForm,
 } from "@kdx/ui/form";
+import { Input } from "@kdx/ui/input";
 import {
   Table,
   TableBody,
@@ -65,27 +86,71 @@ import {
 } from "@kdx/ui/table";
 import { Textarea } from "@kdx/ui/textarea";
 import { toast } from "@kdx/ui/toast";
-import { ZSaveCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@kdx/ui/tooltip";
+import {
+  ZCreateCareTaskInputSchema,
+  ZSaveCareTaskInputSchema,
+} from "@kdx/validators/trpc/app/kodixCare";
 
 import { DatePicker } from "~/app/[locale]/_components/date-picker";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
-type CareTask = RouterOutputs["app"]["kodixCare"]["getCareTasks"][number];
-const columnHelper = createColumnHelper<CareTask>();
+type CareTaskOrCalendarTask =
+  RouterOutputs["app"]["kodixCare"]["getCareTasks"][number];
 
-const DATE_FORMAT = "PPP, HH:mm";
+const columnHelper = createColumnHelper<CareTaskOrCalendarTask>();
+
+function HeaderSort({
+  column,
+  children,
+  ...buttonAttributes
+}: {
+  column: Column<CareTaskOrCalendarTask>;
+  children?: React.ReactNode;
+} & React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  const className = "ml-2 size-4";
+  return (
+    <Button
+      variant="ghost"
+      onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      {...buttonAttributes}
+    >
+      {children}
+      {column.getIsSorted() ? (
+        column.getIsSorted() === "asc" ? (
+          <LuChevronUp className={className} />
+        ) : (
+          <LuChevronDown className={className} />
+        )
+      ) : (
+        <LuChevronsUpDown className={className} />
+      )}
+    </Button>
+  );
+}
 
 export default function DataTableKodixCare({
   initialCareTasks,
   initialInput,
-  user,
 }: {
   initialCareTasks: RouterOutputs["app"]["kodixCare"]["getCareTasks"];
   initialInput: TGetCareTasksInputSchema;
-  user: User;
 }) {
   const [input, setInput] = useState(initialInput);
+  const handleChangeInput = (date: Date) => {
+    setInput({
+      dateStart: dayjs(date).startOf("day").toDate(),
+      dateEnd: dayjs(date).endOf("day").toDate(),
+    });
+    setEditDetailsOpen(false);
+    setUnlockMoreTasksDialogOpen(false);
+  };
 
   const query = api.app.kodixCare.getCareTasks.useQuery(input, {
     initialData:
@@ -95,18 +160,17 @@ export default function DataTableKodixCare({
   });
 
   const utils = api.useUtils();
-  const [saveTaskAsDoneDialogOpen, setSaveTaskAsDoneDialogOpen] =
-    useState(false);
-  const [saveTaskAsNotDoneDialogOpen, setSaveTaskAsNotDoneDialogOpen] =
-    useState(false);
   const [editDetailsOpen, setEditDetailsOpen] = useState(false);
+
   const [unlockMoreTasksDialogOpen, setUnlockMoreTasksDialogOpen] =
     useState(false);
-  const [currentlyEditing, setCurrentlyEditing] = useState<string | undefined>(
-    undefined,
-  );
 
-  const mutation = api.app.kodixCare.saveCareTask.useMutation({
+  const [unlockUpUntil, setUnlockUpUntil] = useState<Date>(new Date());
+  const [currentlyEditing, setCurrentlyEditing] = useState<
+    CareTask["id"] | undefined
+  >(undefined);
+
+  const saveCareTaskMutation = api.app.kodixCare.saveCareTask.useMutation({
     onMutate: async (savedCareTask) => {
       // Cancel any outgoing refetches
       // (so they don't overwrite our optimistic update)
@@ -115,7 +179,7 @@ export default function DataTableKodixCare({
       const previousCareTasks = utils.app.kodixCare.getCareTasks.getData();
 
       // Optimistically update to the new value
-      utils.app.kodixCare.getCareTasks.setData(initialInput, (prev) => {
+      utils.app.kodixCare.getCareTasks.setData(input, (prev) => {
         return prev?.map((x) => {
           if (x.id === savedCareTask.id) {
             if (savedCareTask.doneAt !== undefined)
@@ -137,7 +201,7 @@ export default function DataTableKodixCare({
     // use the context returned from onMutate to roll back
     onError: (err, __, context) => {
       utils.app.kodixCare.getCareTasks.setData(
-        initialInput,
+        input,
         context?.previousCareTasks,
       );
       trpcErrorToastDefault(err);
@@ -147,77 +211,105 @@ export default function DataTableKodixCare({
       void utils.app.kodixCare.getCareTasks.invalidate();
     },
   });
-  const t = useI18n();
-  const locale = useCurrentLocale();
 
-  const columns = [
-    columnHelper.accessor("title", {
-      header: () => <span className="ml-8">{t("Title")}</span>,
-      cell: (ctx) => (
-        <div className="flex flex-row items-center">
-          <div className="w-8">
-            {ctx.row.original.id.length > 0 ? (
-              <Checkbox
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setCurrentlyEditing(ctx.row.original.id);
-                  if (ctx.row.original.doneAt === null)
-                    return setSaveTaskAsDoneDialogOpen(true);
+  const isCareTask = (id: CareTaskOrCalendarTask["id"]): id is string => !!id;
+  const t = useTranslations();
+  const format = useFormatter();
 
-                  setSaveTaskAsNotDoneDialogOpen(true);
-                }}
-                checked={!!ctx.row.original.doneAt}
-                className="size-5"
-              />
-            ) : (
-              <RxLockClosed className="size-4" />
-            )}
-          </div>
-          <span className="font-semibold">{ctx.getValue()}</span>
-        </div>
-      ),
-    }),
-    columnHelper.accessor("date", {
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor("title", {
+        header: ({ column }) => (
+          <HeaderSort column={column} className="ml-8">
+            {t("Title")}
+          </HeaderSort>
+        ),
+        cell: (ctx) => {
+          return (
+            <div className="flex flex-row items-center">
+              <div className="w-8">
+                {isCareTask(ctx.row.original.id) ? (
+                  <Checkbox
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (!ctx.row.original.id) return; //Will never happen. its just to make ts happy
+                      setCurrentlyEditing(ctx.row.original.id);
+
+                      saveCareTaskMutation.mutate({
+                        id: ctx.row.original.id,
+                        doneAt: ctx.row.original.doneAt ? null : new Date(),
+                      });
+                    }}
+                    checked={!!ctx.row.original.doneAt}
+                    className="size-5"
+                  />
+                ) : (
+                  <RxLockClosed className="size-4" />
+                )}
+              </div>
+              <span className="font-semibold">{ctx.getValue()}</span>
+            </div>
+          );
+        },
+      }),
+      columnHelper.accessor("date", {
+        header: ({ column }) => (
+          <HeaderSort column={column}>
+            <RxCalendar className="mr-2 size-4" />
             {t("Date")}
-            <LuChevronsUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: (ctx) => (
-        <div>{format(ctx.row.original.date, DATE_FORMAT, locale)}</div>
-      ),
-    }),
-    columnHelper.accessor("doneAt", {
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            {t("Done at")}
-            <LuChevronsUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: (ctx) => {
-        if (!ctx.row.original.id) return null;
-        if (!ctx.row.original.doneAt) return null;
-        return (
-          <div>{format(ctx.row.original.doneAt, DATE_FORMAT, locale)}</div>
-        );
-      },
-    }),
-    columnHelper.accessor("details", {
-      header: () => t("Details"),
-      cell: (ctx) => <div className="max-w-sm">{ctx.row.original.details}</div>,
-    }),
-  ];
+          </HeaderSort>
+        ),
+        cell: (ctx) => (
+          <div>
+            {format.dateTime(ctx.row.original.date, {
+              day: "2-digit",
+              month: "long",
+              year: "numeric",
+              hour: "numeric",
+              minute: "numeric",
+            })}
+          </div>
+        ),
+      }),
+      columnHelper.accessor("doneAt", {
+        header: ({ column }) => {
+          return (
+            <HeaderSort column={column}>
+              <LuCheck className="mr-2 size-4 text-green-400" />
+              {t("Done at")}
+            </HeaderSort>
+          );
+        },
+        cell: (ctx) => {
+          if (!ctx.row.original.id) return null;
+          if (!ctx.row.original.doneAt) return null;
+          return (
+            <div>
+              {format.dateTime(ctx.row.original.doneAt, {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+              })}
+            </div>
+          );
+        },
+      }),
+      columnHelper.accessor("details", {
+        header: ({ column }) => (
+          <HeaderSort column={column}>
+            <LuText className="mr-2 size-4 text-orange-400" />
+            {t("Details")}
+          </HeaderSort>
+        ),
+        cell: (ctx) => (
+          <div className="max-w-sm">{ctx.row.original.details}</div>
+        ),
+      }),
+    ],
+    [format, saveCareTaskMutation, t],
+  );
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -237,12 +329,11 @@ export default function DataTableKodixCare({
 
   const currentlyEditingCareTask = useMemo(() => {
     if (!query.data?.length) return undefined;
-    return query.data.find((x) => x.id === currentlyEditing);
+    return query.data.find((x) => x.id === currentlyEditing) as CareTask;
   }, [currentlyEditing, query.data]);
 
   const leftArrowRef = useRef<HTMLButtonElement>(null);
   const rightArrowRef = useRef<HTMLButtonElement>(null);
-
   useEffect(() => {
     const keyDownHandler = (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft") leftArrowRef.current?.click();
@@ -258,72 +349,55 @@ export default function DataTableKodixCare({
         <>
           <EditCareTaskDialog
             task={currentlyEditingCareTask}
-            mutation={mutation}
+            mutation={saveCareTaskMutation}
             open={editDetailsOpen}
             setOpen={setEditDetailsOpen}
           />
-          <SaveTaskAsDoneDialog
-            task={currentlyEditingCareTask}
-            mutation={mutation}
-            open={saveTaskAsDoneDialogOpen}
-            setOpen={setSaveTaskAsDoneDialogOpen}
-            user={user}
-          />
-          <SaveTaskAsNotDoneDialog
-            task={currentlyEditingCareTask}
-            mutation={mutation}
-            open={saveTaskAsNotDoneDialogOpen}
-            setOpen={setSaveTaskAsNotDoneDialogOpen}
-          />
-          <UnlockMoreTasksDialog
-            task={currentlyEditingCareTask}
-            open={unlockMoreTasksDialogOpen}
-            setOpen={setUnlockMoreTasksDialogOpen}
-          />
         </>
       )}
-      <div className="flex justify-center gap-2">
-        <Button variant="outline" className="invisible mr-auto">
-          {t("Columns")}
-        </Button>
-        <Button
-          ref={leftArrowRef}
-          variant="ghost"
-          onClick={() => {
-            setInput((prev) => ({
-              dateStart: dayjs(prev.dateStart).add(-1, "days").toDate(),
-              dateEnd: dayjs(prev.dateEnd).add(-1, "days").toDate(),
-            }));
-          }}
-          className="h-10 w-10 p-3"
-        >
-          <RxChevronLeft />
-        </Button>
-        <DatePicker
-          date={input.dateEnd}
-          setDate={(newDate) =>
-            setInput({
-              dateStart: dayjs(newDate).startOf("day").toDate(),
-              dateEnd: dayjs(newDate).endOf("day").toDate(),
-            })
-          }
-        />
-        <Button
-          ref={rightArrowRef}
-          variant="ghost"
-          onClick={() => {
-            setInput((prev) => ({
-              dateStart: dayjs(prev.dateStart).add(1, "days").toDate(),
-              dateEnd: dayjs(prev.dateEnd).add(1, "days").toDate(),
-            }));
-          }}
-          className="h-10 w-10 p-3"
-        >
-          <RxChevronRight />
-        </Button>
+
+      <UnlockMoreTasksDialog
+        unlockUpUntil={unlockUpUntil}
+        open={unlockMoreTasksDialogOpen}
+        setOpen={setUnlockMoreTasksDialogOpen}
+      />
+      <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-center">
+        <div className="flex gap-2 sm:mr-auto">
+          <AddCareTaskDialog />
+          <SyncTasksFromCalendarDialogButton />
+        </div>
+        <div className="flex gap-2">
+          <Button
+            ref={leftArrowRef}
+            variant="ghost"
+            onClick={() => {
+              handleChangeInput(
+                dayjs(input.dateStart).subtract(1, "days").toDate(),
+              );
+            }}
+            className="h-10 w-10 p-3"
+          >
+            <RxChevronLeft />
+          </Button>
+          <DatePicker
+            date={input.dateStart}
+            setDate={(newDate) => handleChangeInput(dayjs(newDate).toDate())}
+          />
+          <Button
+            ref={rightArrowRef}
+            variant="ghost"
+            onClick={() => {
+              handleChangeInput(dayjs(input.dateStart).add(1, "days").toDate());
+            }}
+            className="h-10 w-10 p-3"
+          >
+            <RxChevronRight />
+          </Button>
+        </div>
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
+            <Button variant="outline" className="sm:ml-auto">
               {t("Columns")}
             </Button>
           </DropdownMenuTrigger>
@@ -369,7 +443,7 @@ export default function DataTableKodixCare({
             ))}
           </TableHeader>
           <TableBody>
-            {!query.isFetching ? (
+            {!query.isLoading ? (
               table.getRowModel().rows.length ? (
                 table.getRowModel().rows.map((row) => (
                   <TableRow
@@ -382,16 +456,17 @@ export default function DataTableKodixCare({
                           dayjs().endOf("day").add(1, "day").toDate()
                         )
                           return toast.warning(
-                            "You cannot unlock tasks that are scheduled for after tomorrow end of day",
+                            t(
+                              "You cannot unlock tasks that are scheduled for after tomorrow end of day",
+                            ),
                           );
-
-                        setCurrentlyEditing(row.original.id);
+                        setUnlockUpUntil(row.original.date);
                         setUnlockMoreTasksDialogOpen(true);
                         return;
                       }
 
                       setCurrentlyEditing(row.original.id);
-                      if (row.original.updatedAt) setEditDetailsOpen(true); //? Only able
+                      setEditDetailsOpen(true);
                     }}
                     data-state={row.getIsSelected() && "selected"}
                     className={cn({
@@ -434,17 +509,199 @@ export default function DataTableKodixCare({
   );
 }
 
+function SyncTasksFromCalendarDialogButton() {
+  const [syncDialogOpen, setSyncDialogOpen] = useState(false);
+
+  const utils = api.useUtils();
+  const syncCareTasksFromCalendarMutation =
+    api.app.kodixCare.syncCareTasksFromCalendar.useMutation({
+      onSuccess: () => {
+        void utils.app.kodixCare.invalidate();
+      },
+      onError: trpcErrorToastDefault,
+      onSettled: () => {
+        void utils.app.kodixCare.getCareTasks.invalidate();
+        void utils.app.kodixCare.getCurrentShift.invalidate();
+      },
+    });
+  const t = useTranslations();
+  return (
+    <Dialog open={syncDialogOpen} onOpenChange={setSyncDialogOpen}>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <DialogTrigger asChild>
+              <Button variant="secondary" size="sm" aria-label="Documentation">
+                <LuArrowLeftRight className="size-4" />
+              </Button>
+            </DialogTrigger>
+          </TooltipTrigger>
+          <TooltipContent side="right">
+            <p>{t("Sync tasks")}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>{t("Sync tasks")}</DialogTitle>
+          <DialogDescription>
+            {t(
+              "Substitue the tasks of this turn with the tasks from the calendar",
+            )}
+          </DialogDescription>
+        </DialogHeader>
+        <div className="flex items-center space-x-2">
+          <div className="grid flex-1 gap-2"></div>
+        </div>
+        <DialogFooter className="gap-3 sm:justify-between">
+          <DialogClose asChild>
+            <Button type="button" variant="secondary">
+              {t("Close")}
+            </Button>
+          </DialogClose>
+          <Button
+            disabled={syncCareTasksFromCalendarMutation.isPending}
+            onClick={async () => {
+              await syncCareTasksFromCalendarMutation.mutateAsync();
+              setSyncDialogOpen(false);
+            }}
+          >
+            {syncCareTasksFromCalendarMutation.isPending ? (
+              <LuLoader2 className="size-4 animate-spin" />
+            ) : (
+              t("Sync tasks")
+            )}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function AddCareTaskDialog() {
+  const [open, setOpen] = useState(false);
+
+  const utils = api.useUtils();
+  const form = useForm({
+    schema: ZCreateCareTaskInputSchema,
+  });
+  const mutation = api.app.kodixCare.createCareTask.useMutation({
+    onError: trpcErrorToastDefault,
+    onSettled: () => {
+      void utils.app.kodixCare.getCareTasks.invalidate();
+      void utils.app.kodixCare.getCurrentShift.invalidate();
+    },
+    onSuccess: () => {
+      setOpen(false);
+    },
+  });
+  const t = useTranslations();
+
+  useEffect(() => {
+    form.reset();
+  }, [open, form]);
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button size={"sm"}>
+          <LuPlus className="mr-2" />
+          {t("apps.kodixCare.Add task")}
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit((values) => {
+              mutation.mutate(values);
+              setOpen(false);
+            })}
+          >
+            <DialogHeader>
+              <DialogTitle>{t("apps.kodixCare.Add task")}</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("Title")}</FormLabel>
+                    <FormControl>
+                      <div className="flex flex-row gap-2">
+                        <Input {...field} />
+                      </div>
+                    </FormControl>
+                    <FormMessage className="w-full" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("Date")}</FormLabel>
+                    <FormControl>
+                      <div className="flex flex-row gap-2">
+                        <DateTimePicker
+                          date={field.value}
+                          setDate={(newDate) =>
+                            field.onChange(newDate ?? new Date())
+                          }
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage className="w-full" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("Description")}</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder={`${t("apps.kodixCare.Any information")}...`}
+                        className="w-full"
+                        rows={6}
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(e.target.value);
+                        }}
+                        value={field.value}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <DialogFooter className="mt-6 justify-end">
+              <Button disabled={mutation.isPending} type="submit">
+                {t("Save")}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function UnlockMoreTasksDialog({
-  task,
+  unlockUpUntil,
   open,
   setOpen,
 }: {
-  task: CareTask;
+  unlockUpUntil: Date;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
   const utils = api.useUtils();
-  const t = useI18n();
+  const t = useTranslations();
   const mutation = api.app.kodixCare.unlockMoreTasks.useMutation({
     onSuccess: () => {
       void utils.app.kodixCare.getCareTasks.invalidate();
@@ -468,25 +725,13 @@ function UnlockMoreTasksDialog({
           <AlertDialogAction
             disabled={mutation.isPending}
             onClick={() => {
-              toast.promise(
-                mutation.mutateAsync({
-                  selectedTimestamp: task.date,
-                }),
-                {
-                  loading: `${t("Unlocking")}...`,
-                  success: () => {
-                    setOpen(false);
-                    return t("apps.kodixCare.Successfully unlocked tasks");
-                  },
-                },
-              );
+              mutation.mutate({
+                selectedTimestamp: unlockUpUntil,
+              });
+              setOpen(false);
             }}
           >
-            {mutation.isPending ? (
-              <LuLoader2 className="size-4 animate-spin" />
-            ) : (
-              t("Yes")
-            )}
+            {t("Yes")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -505,7 +750,7 @@ function EditCareTaskDialog({
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
-  const t = useI18n();
+  const t = useTranslations();
 
   const defaultValues = useMemo(
     () => ({
@@ -535,20 +780,12 @@ function EditCareTaskDialog({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit((values) => {
-              toast.promise(
-                mutation.mutateAsync({
-                  id: values.id,
-                  details: values.details,
-                  doneAt: values.doneAt,
-                }),
-                {
-                  loading: `${t("Updating")}...`,
-                  success: () => {
-                    setOpen(false);
-                    return t("apps.kodixCare.Task updated");
-                  },
-                },
-              );
+              mutation.mutate({
+                id: values.id,
+                details: values.details,
+                doneAt: values.doneAt,
+              });
+              setOpen(false);
             })}
           >
             <DialogHeader>
@@ -600,184 +837,11 @@ function EditCareTaskDialog({
             </div>
             <DialogFooter className="mt-6 justify-end">
               <Button disabled={mutation.isPending} type="submit">
-                {mutation.isPending && (
-                  <LuLoader2 className="mr-2 size-5 animate-spin" />
-                )}
                 {t("Save")}
               </Button>
             </DialogFooter>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
-  );
-}
-
-function SaveTaskAsDoneDialog({
-  task,
-  mutation,
-  open,
-  setOpen,
-  user,
-}: {
-  task: CareTask;
-  mutation: ReturnType<typeof api.app.kodixCare.saveCareTask.useMutation>;
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  user: User;
-}) {
-  //If you find a better way to reset all fields to the default on open feel free to do it.
-  const defaultValues = useMemo(
-    () => ({
-      id: task.id,
-      details: task.details,
-      doneAt: new Date(),
-      doneByUserId: user.id,
-    }),
-    [task, user.id],
-  );
-
-  const form = useForm({
-    schema: ZSaveCareTaskInputSchema,
-    defaultValues,
-  });
-
-  useEffect(() => {
-    form.reset(defaultValues);
-  }, [defaultValues, form, open]);
-
-  const t = useI18n();
-
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit((values) => {
-              toast.promise(
-                mutation.mutateAsync({
-                  ...values,
-                  id: task.id,
-                }),
-                {
-                  loading: `${t("Saving")}...`,
-                  success: () => {
-                    form.reset();
-                    setOpen(false);
-                    return t("apps.kodixCare.Task marked as done");
-                  },
-                },
-              );
-            })}
-          >
-            <DialogHeader>
-              <DialogTitle>{t("apps.kodixCare.Mark task as done")}</DialogTitle>
-              <DialogDescription>
-                {t(
-                  "apps.kodixCare.Please inform the date and time of completion",
-                )}
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <FormField
-                control={form.control}
-                name="doneAt"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("Done at")}</FormLabel>
-                    <FormControl>
-                      <div className="flex flex-row gap-2">
-                        <DateTimePicker
-                          date={field.value ?? undefined}
-                          setDate={(newDate) =>
-                            field.onChange(newDate ?? new Date())
-                          }
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage className="w-full" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="details"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Textarea
-                        {...field}
-                        value={field.value ?? undefined}
-                        placeholder={`${t("apps.kodixCare.Any information")}...`}
-                        className="w-full"
-                        rows={6}
-                      />
-                    </FormControl>
-                    <FormMessage className="w-full" />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <DialogFooter className="mt-6 justify-end">
-              <Button disabled={mutation.isPending} type="submit">
-                {mutation.isPending ? (
-                  <LuLoader2 className="size-4 animate-spin" />
-                ) : (
-                  t("Save")
-                )}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
-  );
-}
-
-function SaveTaskAsNotDoneDialog({
-  task,
-  mutation,
-  open,
-  setOpen,
-}: {
-  task: CareTask;
-  mutation: ReturnType<typeof api.app.kodixCare.saveCareTask.useMutation>;
-  open: boolean;
-  setOpen: (open: boolean) => void;
-}) {
-  const t = useI18n();
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{t("apps.kodixCare.Are you sure")}</DialogTitle>
-        </DialogHeader>
-        <DialogFooter className="mt-6 justify-end">
-          <Button
-            disabled={mutation.isPending}
-            onClick={() => {
-              toast.promise(
-                mutation.mutateAsync({
-                  id: task.id,
-                  doneAt: null,
-                }),
-                {
-                  loading: `${t("Saving")}...`,
-                  success: () => {
-                    setOpen(false);
-                    return t("apps.kodixCare.Task marked as not done");
-                  },
-                },
-              );
-            }}
-          >
-            {mutation.isPending ? (
-              <LuLoader2 className="size-4 animate-spin" />
-            ) : (
-              t("apps.kodixCare.Mark task as not done")
-            )}
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

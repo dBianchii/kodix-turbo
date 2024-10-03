@@ -1,4 +1,4 @@
-import { getI18n } from "@kdx/locales/server";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { Navigation } from "~/app/[locale]/_components/navigation";
@@ -9,7 +9,7 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  const t = await getI18n();
+  const t = await getTranslations();
   const navItems = [
     {
       href: `/account/general`,

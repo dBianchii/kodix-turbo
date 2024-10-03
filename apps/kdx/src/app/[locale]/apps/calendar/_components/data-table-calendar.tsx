@@ -10,6 +10,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { addDays } from "date-fns";
 import { LuLoader2 } from "react-icons/lu";
 import {
   RxChevronLeft,
@@ -21,9 +22,9 @@ import {
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
-import { addDays } from "@kdx/date-fns";
 import dayjs from "@kdx/dayjs";
-import { useI18n } from "@kdx/locales/client";
+import { useFormatter } from "@kdx/locales/next-intl";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import { authorizedEmails } from "@kdx/shared";
 import { Button } from "@kdx/ui/button";
 import {
@@ -93,7 +94,8 @@ export function DataTable({
     },
   });
 
-  const t = useI18n();
+  const t = useTranslations();
+  const format = useFormatter();
 
   const columns = [
     columnHelper.accessor("eventMasterId", {
@@ -107,8 +109,6 @@ export function DataTable({
         </>
       ),
       cell: function Cell(info) {
-        const [openCancelDialog, setOpenCancelDialog] = useState(false);
-        const [openEditDialog, setOpenEditDialog] = useState(false);
         return (
           <div className="space-x-4">
             {/* <Checkbox
@@ -116,18 +116,6 @@ export function DataTable({
               onCheckedChange={(value) => info.row.toggleSelected(!!value)}
               aria-label="Select row"
             /> */}
-            <EditEventDialog
-              calendarTask={info.row.original}
-              open={openEditDialog}
-              setOpen={setOpenEditDialog}
-            />
-            <CancelationDialog
-              open={openCancelDialog}
-              setOpen={setOpenCancelDialog}
-              eventMasterId={info.row.original.eventMasterId}
-              eventExceptionId={info.row.original.eventExceptionId}
-              date={info.row.original.date}
-            />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="h-8 w-8 p-0">
@@ -136,7 +124,12 @@ export function DataTable({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
-                <DropdownMenuItem onClick={() => setOpenEditDialog(true)}>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setCalendarTask(info.row.original);
+                    setOpenEditDialog(true);
+                  }}
+                >
                   <RxPencil1 className="mr-2 size-4" />
                   {t("apps.calendar.Edit event")}
                 </DropdownMenuItem>
@@ -163,7 +156,9 @@ export function DataTable({
     columnHelper.accessor("date", {
       header: () => <div>{t("Date")}</div>,
       cell: (info) => (
-        <div className="text-sm">{info.getValue().toLocaleString()}</div>
+        <div className="text-sm">
+          {format.dateTime(info.getValue(), "extensive")}
+        </div>
       ),
     }),
   ];
@@ -192,9 +187,25 @@ export function DataTable({
 
   return (
     <>
+      {calendarTask && (
+        <>
+          <EditEventDialog
+            calendarTask={calendarTask}
+            open={openEditDialog}
+            setOpen={setOpenEditDialog}
+          />
+          <CancelationDialog
+            open={openCancelDialog}
+            setOpen={setOpenCancelDialog}
+            eventMasterId={calendarTask.eventMasterId}
+            eventExceptionId={calendarTask.eventExceptionId}
+            date={calendarTask.date}
+          />
+        </>
+      )}
       <div className="pt-8">
         <div className="flex justify-between">
-          <div className=" w-44 space-y-2">
+          <div className="w-44 space-y-2">
             <Label htmlFor="search">{t("Search")}...</Label>
             <Input
               id="search"
@@ -245,7 +256,7 @@ export function DataTable({
             )}
 
             <Button
-              className="ml-auto self-end "
+              className="ml-auto self-end"
               onClick={() => setSelectedDay(new Date())}
               variant={"secondary"}
             >
@@ -255,22 +266,6 @@ export function DataTable({
         </div>
 
         <div className="mt-4 rounded-md border">
-          {calendarTask && (
-            <>
-              <EditEventDialog
-                calendarTask={calendarTask}
-                open={openEditDialog}
-                setOpen={setOpenEditDialog}
-              />
-              <CancelationDialog
-                open={openCancelDialog}
-                setOpen={setOpenCancelDialog}
-                eventMasterId={calendarTask.eventMasterId}
-                eventExceptionId={calendarTask.eventExceptionId}
-                date={calendarTask.date}
-              />
-            </>
-          )}
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (

@@ -1,15 +1,16 @@
 import type { Table } from "@tanstack/react-table";
 import * as React from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { TrashIcon } from "@radix-ui/react-icons";
 
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
+import { usePathname, useRouter } from "@kdx/locales/next-intl/navigation";
 import { dataTableConfig } from "@kdx/shared";
-import { useDebounce } from "@kdx/ui/hooks";
 
 import type { DataTableFilterOption } from "./types";
 import { cn } from "../../.";
 import { Button } from "../../button";
+import { useDebounce } from "../../hooks";
 import { Input } from "../../input";
 import { Popover, PopoverContent, PopoverTrigger } from "../../popover";
 import {
@@ -39,7 +40,7 @@ export function DataTableFilterItem<TData>({
   setSelectedOptions,
   defaultOpen,
 }: DataTableFilterItemProps<TData>) {
-  const t = useI18n();
+  const t = useTranslations();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();

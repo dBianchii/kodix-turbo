@@ -1,8 +1,9 @@
 import { Suspense } from "react";
-import { redirect } from "next/navigation";
 
 import { auth } from "@kdx/auth";
-import { getI18n } from "@kdx/locales/server";
+import { db } from "@kdx/db/client";
+import { redirect } from "@kdx/locales/next-intl/navigation";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@kdx/ui/tabs";
 
@@ -13,12 +14,29 @@ import TeamInviteCard from "./_components/invite/team-invite-card";
 
 export default async function SettingsMembersPage() {
   const { user } = await auth();
-  if (!user) redirect("/");
-  const t = await getI18n();
+  if (!user) return redirect("/");
+  const t = await getTranslations();
+
+  const currentTeam = await db.query.teams.findFirst({
+    where: (teams, { eq }) => eq(teams.id, user.activeTeamId),
+    columns: {
+      ownerId: true,
+    },
+  });
+  if (!currentTeam) throw new Error("No team found");
+  const canEditPage = currentTeam.ownerId === user.id;
 
   return (
-    <div className="mt-8 space-y-8 md:mt-0">
-      <TeamInviteCard user={user} />
+    <div className="mt-8 space-y-6 md:mt-0">
+      <div>
+        <h2 className="text-center text-2xl font-bold md:text-left">
+          {t("Members")}
+        </h2>
+        <p className="text-sm text-muted-foreground">
+          {t("settings.Invite members to your team and remove active members")}
+        </p>
+      </div>
+      <TeamInviteCard user={user} canEditPage={canEditPage} />
       <Tabs defaultValue="members">
         <TabsList className="">
           <TabsTrigger value="members">{t("Members")}</TabsTrigger>
@@ -37,7 +55,7 @@ export default async function SettingsMembersPage() {
               />
             }
           >
-            <DataTableMembersServer />
+            <DataTableMembersServer canEditPage={canEditPage} />
           </Suspense>
         </TabsContent>
         <TabsContent value="invites">
@@ -54,6 +72,7 @@ export default async function SettingsMembersPage() {
             }
           >
             <InviteDataTable
+              canEditPage={canEditPage}
               initialInvitations={await api.team.invitation.getAll()}
             />
           </Suspense>
@@ -63,9 +82,13 @@ export default async function SettingsMembersPage() {
   );
 }
 
-async function DataTableMembersServer() {
+async function DataTableMembersServer({
+  canEditPage,
+}: {
+  canEditPage: boolean;
+}) {
   const { user } = await auth();
   if (!user) return null;
 
-  return <DataTableMembers user={user} />;
+  return <DataTableMembers user={user} canEditPage={canEditPage} />;
 }

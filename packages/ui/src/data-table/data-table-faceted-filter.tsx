@@ -1,7 +1,7 @@
 import type { Column } from "@tanstack/react-table";
 import { CheckIcon, PlusCircledIcon } from "@radix-ui/react-icons";
 
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 
 import type { Option } from "./advanced/types";
 import { cn } from "../.";
@@ -31,7 +31,7 @@ export function DataTableFacetedFilter<TData, TValue>({
   options,
 }: DataTableFacetedFilterProps<TData, TValue>) {
   const selectedValues = new Set(column?.getFilterValue() as string[]);
-  const t = useI18n();
+  const t = useTranslations();
   return (
     <Popover>
       <PopoverTrigger asChild>

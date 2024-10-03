@@ -1,8 +1,9 @@
 import { TRPCError } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
 
-import type { TDeclineInputSchema } from "@kdx/validators/trpc/invitation";
+import type { TDeclineInputSchema } from "@kdx/validators/trpc/team/invitation";
 import { eq } from "@kdx/db";
-import { schema } from "@kdx/db/schema";
+import { invitations } from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 
@@ -19,15 +20,16 @@ export const declineHandler = async ({ ctx, input }: DeclineOptions) => {
         eq(invitation.email, ctx.session.user.email),
       ),
   });
+  const t = await getTranslations({ locale: ctx.locale });
 
   if (!invitation) {
     throw new TRPCError({
-      message: "No Invitation Found",
+      message: t("api.No Invitation Found"),
       code: "NOT_FOUND",
     });
   }
 
   await ctx.db
-    .delete(schema.invitations)
-    .where(eq(schema.invitations.id, input.invitationId));
+    .delete(invitations)
+    .where(eq(invitations.id, input.invitationId));
 };

@@ -1,10 +1,9 @@
 "use client";
 
-import * as React from "react";
 import { RxCalendar } from "react-icons/rx";
 
-import { format } from "@kdx/date-fns";
-import { useCurrentLocale, useI18n } from "@kdx/locales/client";
+import { useFormatter } from "@kdx/locales/next-intl";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import { Calendar } from "@kdx/ui/calendar";
@@ -27,8 +26,8 @@ export function DatePicker({
   className?: string;
   size?: "default" | "sm";
 }) {
-  const t = useI18n();
-  const locale = useCurrentLocale();
+  const t = useTranslations();
+  const format = useFormatter();
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -43,7 +42,15 @@ export function DatePicker({
           size={size}
         >
           <RxCalendar className="mr-2 size-4" />
-          {date ? format(date, "PPP", locale) : <span>{t("Pick a date")}</span>}
+          {date ? (
+            format.dateTime(date, {
+              day: "2-digit",
+              month: "long",
+              year: "numeric",
+            })
+          ) : (
+            <span>{t("Pick a date")}</span>
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">

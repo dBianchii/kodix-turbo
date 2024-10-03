@@ -1,8 +1,9 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { z } from "zod";
+
+import { redirect } from "@kdx/locales/next-intl/navigation";
 
 import { action } from "~/helpers/safe-action/safe-action";
 import { api } from "~/trpc/server";

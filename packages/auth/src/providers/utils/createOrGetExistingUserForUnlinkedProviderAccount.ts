@@ -2,9 +2,9 @@ import { cookies } from "next/headers";
 
 import { db } from "@kdx/db/client";
 import { nanoid } from "@kdx/db/nanoid";
-import { schema } from "@kdx/db/schema";
+import { accounts } from "@kdx/db/schema";
 
-import { createUser } from "../../db";
+import { createUser } from "../../utils";
 
 export default async function createOrGetExistingUserForUnlinkedProviderAccount({
   name,
@@ -42,14 +42,14 @@ export default async function createOrGetExistingUserForUnlinkedProviderAccount(
         teamId,
         userId,
         invite,
-        db: tx,
+        tx,
       });
       cookies().delete("invite");
     } else {
       userId = existingUser.id;
     }
 
-    await tx.insert(schema.accounts).values({
+    await tx.insert(accounts).values({
       providerId: providerId,
       providerUserId: providerUserId,
       userId,

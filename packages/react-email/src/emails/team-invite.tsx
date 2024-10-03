@@ -16,7 +16,8 @@ import {
   Text,
 } from "@react-email/components";
 
-import { getI18n } from "@kdx/locales/server";
+import type { locales } from "@kdx/locales";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 import { getBaseUrl } from "@kdx/shared";
 
 const baseUrl = getBaseUrl();
@@ -31,6 +32,7 @@ export const TeamInvite = async ({
   inviteLink = "https://kodix.com/teams/invite/foo",
   inviteFromIp = "204.13.186.218",
   inviteFromLocation = "São Paulo, Brazil",
+  locale = "pt-BR",
 }: {
   username?: string;
   userImage?: string;
@@ -41,9 +43,10 @@ export const TeamInvite = async ({
   inviteLink?: string;
   inviteFromIp?: string;
   inviteFromLocation?: string;
+  locale: (typeof locales)[number];
 }) => {
-  const t = await getI18n();
-  const previewText = t("emails.Join invitedByUsername on Kodix", {
+  const t = await getTranslations({ locale });
+  const previewText = t("api.emails.Join invitedByUsername on Kodix", {
     invitedByUsername,
   });
 
@@ -64,13 +67,13 @@ export const TeamInvite = async ({
               />
             </Section>
             <Heading className="mx-0 my-[30px] p-0 text-center text-[24px] font-normal text-black">
-              {t("emails.Join teamName on Kodix", {
-                teamName: <strong>{teamName}</strong>,
+              {t.rich("api.emails.Join teamName on Kodix", {
+                teamName: () => <strong>{teamName}</strong>,
                 site: "Kodix",
               })}
             </Heading>
             <Text className="text-[14px] leading-[24px] text-black">
-              {t("Hello")} {username},
+              {t("api.emails.Hello")} {username},
             </Text>
             <Text className="text-[14px] leading-[24px] text-black">
               <strong>{invitedByUsername}</strong> (
@@ -81,10 +84,13 @@ export const TeamInvite = async ({
                 {invitedByEmail}
               </Link>
               ){" "}
-              {t("emails.Has invited you to the teamName team on Kodix", {
-                teamName: <strong>{teamName}</strong>,
-                site: "Kodix",
-              })}
+              {t.rich(
+                "api.emails.Has invited you to the teamName team on Kodix",
+                {
+                  teamName: () => <strong>{teamName}</strong>,
+                  site: "Kodix",
+                },
+              )}
             </Text>
             <Section>
               <Row>
@@ -119,25 +125,25 @@ export const TeamInvite = async ({
                 className="rounded bg-[#000000] px-[20px] py-[12px] text-center text-[12px] font-semibold text-white no-underline"
                 href={inviteLink}
               >
-                {t("emails.Join the team")}
+                {t("api.emails.Join the team")}
               </Button>
             </Section>
             <Text className="text-[14px] leading-[24px] text-black">
-              {t("or copy and paste this URL into your browser:")}{" "}
+              {t("api.emails.or copy and paste this URL into your browser:")}{" "}
               <Link href={inviteLink} className="text-blue-600 no-underline">
                 {inviteLink}
               </Link>
             </Text>
             <Hr className="mx-0 my-[26px] w-full border border-solid border-[#eaeaea]" />
             <Text className="text-[12px] leading-[24px] text-[#666666]">
-              {t("emails.This invitation was intended for")}{" "}
+              {t("api.emails.This invitation was intended for")}{" "}
               <span className="text-black">{username} </span>.
-              {t("emails.This invite was sent from")}{" "}
+              {t("api.emails.This invite was sent from")}{" "}
               <span className="text-black">{inviteFromIp}</span>{" "}
-              {t("emails.located in")}{" "}
+              {t("api.emails.located in")}{" "}
               <span className="text-black">{inviteFromLocation}</span>.{" "}
               {t(
-                "emails.If you were not expecting this invitation you can ignore this email",
+                "api.emails.If you were not expecting this invitation you can ignore this email",
               )}
             </Text>
           </Container>

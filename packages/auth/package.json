@@ -8,22 +8,21 @@
       "react-server": "./src/index.rsc.ts",
       "default": "./src/index.ts"
     },
-    "./db": "./src/db.ts",
+    "./utils": "./src/utils.ts",
     "./env": "./env.ts"
   },
   "scripts": {
-    "clean": "rm -rf .turbo node_modules",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@auth/drizzle-adapter": "^1.2.0",
     "@kdx/db": "workspace:*",
     "@kdx/react-email": "workspace:*",
     "@kdx/shared": "workspace:*",
     "@lucia-auth/adapter-drizzle": "^1.0.7",
-    "@t3-oss/env-nextjs": "^0.10.1",
+    "@t3-oss/env-nextjs": "^0.11.1",
     "discord-api-types": "^0.37.91",
     "lucia": "^3.2.0",
     "next": "catalog:",
@@ -33,7 +32,6 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@auth/core": "0.32.0",
     "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",

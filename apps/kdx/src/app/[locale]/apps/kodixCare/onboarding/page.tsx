@@ -1,6 +1,5 @@
-import { redirect } from "next/navigation";
-
 import { auth } from "@kdx/auth";
+import { redirect } from "@kdx/locales/next-intl/navigation";
 import { kodixCareAppId } from "@kdx/shared";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
@@ -12,7 +11,7 @@ export default async function KodixCareOnboardingPage() {
   if (!user) return redirect("/");
   const installed = await api.app.getInstalled();
   if (installed.some((x) => x.id === kodixCareAppId))
-    redirect("/apps/kodixCare");
+    return redirect("/apps/kodixCare");
 
   return (
     <MaxWidthWrapper>

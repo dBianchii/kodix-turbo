@@ -1,6 +1,10 @@
 import { fileURLToPath } from "url";
 import createJiti from "jiti";
 
+import createNextIntlPlugin from "@kdx/locales/next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin("./src/i18n.ts");
+
 // Import env files to validate at build time. Use jiti so we can load .ts files in here.
 createJiti(fileURLToPath(import.meta.url))("./src/env");
 
@@ -19,9 +23,9 @@ const config = {
     "@kdx/db",
     "@kdx/ui",
     "@kdx/validators",
-    "@kdx/date-fns",
     "@kdx/dayjs",
     "@kdx/shared",
+    "@kdx/locales",
   ],
 
   /** We already do linting and typechecking as separate tasks in CI */
@@ -55,4 +59,4 @@ const config = {
   },
 };
 
-export default config;
+export default withNextIntl(config);

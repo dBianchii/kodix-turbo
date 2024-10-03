@@ -6,16 +6,9 @@
       "~/*": ["./src/*"]
     },
     "jsx": "react-native",
-    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
-    "checkJs": false
+    "checkJs": false,
+    "moduleSuffixes": [".ios", ".android", ".native", ""]
   },
-  "include": [
-    "src",
-    "*.ts",
-    "*.js",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts",
-    "tamagui-config/*.ts"
-  ],
+  "include": ["src", "*.ts", "*.js", "tamagui-config/*.ts"],
   "exclude": ["node_modules"]
 }

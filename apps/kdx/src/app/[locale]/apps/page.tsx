@@ -1,6 +1,6 @@
 import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
-import { getI18n } from "@kdx/locales/server";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 import { H1, Lead } from "@kdx/ui/typography";
 
 import { KodixApp } from "~/app/[locale]/_components/app/kodix-app";
@@ -10,7 +10,7 @@ import { api } from "~/trpc/server";
 export default async function AppsPage() {
   const apps = await api.app.getAll();
   const { user } = await auth();
-  const t = await getI18n();
+  const t = await getTranslations();
   return (
     <MaxWidthWrapper>
       <H1>{t("App")}</H1>

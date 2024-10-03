@@ -5,10 +5,12 @@ import { IoMdTime } from "react-icons/io";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
-import { formatRelative } from "@kdx/date-fns";
-import { useCurrentLocale, useI18n } from "@kdx/locales/client";
+import type { DateTimeFormatOptions } from "@kdx/locales/next-intl";
+import { useFormatter } from "@kdx/locales/next-intl";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Badge } from "@kdx/ui/badge";
+import { useRerenderForRelativeTime } from "@kdx/ui/hooks";
 import { Label } from "@kdx/ui/label";
 
 import { api } from "~/trpc/react";
@@ -35,7 +37,7 @@ export function CurrentShiftClient({
 }
 
 export function NoPreviousShift({ user }: { user: User }) {
-  const t = useI18n();
+  const t = useTranslations();
 
   return (
     <div className="flex flex-col space-y-3">
@@ -64,7 +66,7 @@ export function ShiftInProgress({
     RouterOutputs["app"]["kodixCare"]["getCurrentShift"]
   >;
 }) {
-  const t = useI18n();
+  const t = useTranslations();
   return (
     <div className="flex flex-col space-y-3">
       <div className="flex flex-row items-center space-x-3">
@@ -98,7 +100,7 @@ export function ShiftCheckedOut({
     RouterOutputs["app"]["kodixCare"]["getCurrentShift"]
   >;
 }) {
-  const t = useI18n();
+  const t = useTranslations();
   return (
     <div className="flex flex-col space-y-3">
       <div className="flex flex-row items-center space-x-3">
@@ -130,8 +132,15 @@ function TimeInfo({
     RouterOutputs["app"]["kodixCare"]["getCurrentShift"]
   >;
 }) {
-  const t = useI18n();
-  const locale = useCurrentLocale();
+  const t = useTranslations();
+  const format = useFormatter();
+  const timeInfoFormat: DateTimeFormatOptions = {
+    day: "numeric",
+    month: "short",
+    hour: "numeric",
+    minute: "numeric",
+  };
+  useRerenderForRelativeTime([currentShift.checkIn, currentShift.checkOut]);
   return (
     <div className="flex items-center justify-start">
       <div className="col mr-4">
@@ -147,7 +156,7 @@ function TimeInfo({
           variant={"outline"}
           className="w-24 py-0 text-center text-xs text-muted-foreground"
         >
-          {formatRelative(currentShift.checkIn, new Date(), locale)}
+          {format.dateTime(currentShift.checkIn, timeInfoFormat)}
         </Badge>
       </div>
       {currentShift.checkOut && (
@@ -160,7 +169,7 @@ function TimeInfo({
             variant={"outline"}
             className="w-24 py-0 text-center text-xs text-muted-foreground"
           >
-            {formatRelative(currentShift.checkOut, new Date(), locale)}
+            {format.dateTime(currentShift.checkOut, timeInfoFormat)}
           </Badge>
         </div>
       )}

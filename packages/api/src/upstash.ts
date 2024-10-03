@@ -1,6 +1,6 @@
 import { Redis } from "@upstash/redis";
 
-import type { schema } from "@kdx/db/schema";
+import type { apps, teams, users } from "@kdx/db/schema";
 import type { AppPermissionId } from "@kdx/shared";
 
 const redis = new Redis({
@@ -11,31 +11,23 @@ const redis = new Redis({
 interface KeysMapping {
   apps: {
     tags: {
-      teamId: typeof schema.teams.$inferSelect.id | undefined; //? If teamId isn't provided, it will refer to all existant apps
+      teamId: typeof teams.$inferSelect.id | undefined; //? If teamId isn't provided, it will refer to all existant apps
     };
     value: {
-      id: typeof schema.apps.$inferSelect.id;
+      id: typeof apps.$inferSelect.id;
       installed: boolean;
     }[];
   };
 
   permissions: {
     tags: {
-      userId: typeof schema.users.$inferSelect.id;
+      userId: typeof users.$inferSelect.id;
       permissionId: AppPermissionId;
-      teamId: typeof schema.teams.$inferSelect.id;
+      teamId: typeof teams.$inferSelect.id;
     };
     value:
       | {
-          id: string;
-          AppPermissionsToTeamAppRoles: {
-            teamAppRoleId: string;
-            appPermissionId: string;
-          }[];
-          TeamAppRolesToUsers: {
-            userId: string;
-            teamAppRoleId: string;
-          }[];
+          permissionId: string;
         }
       | undefined;
   };
@@ -49,6 +41,9 @@ const constructKey = <T extends keyof KeysMapping>(
   return variableKeys ? `${key}-${Object.values(variableKeys).join("-")}` : key;
 };
 
+/**
+ * If nothing is found, it will return `null`
+ */
 export const getUpstashCache = async <T extends keyof KeysMapping>(
   key: T,
   variableKeys: KeysMapping[T]["tags"],

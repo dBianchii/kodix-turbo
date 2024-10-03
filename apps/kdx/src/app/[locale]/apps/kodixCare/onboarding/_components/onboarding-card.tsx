@@ -1,10 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
 import { LuArrowRight, LuLoader2 } from "react-icons/lu";
 
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
+import { useRouter } from "@kdx/locales/next-intl/navigation";
 import { Button } from "@kdx/ui/button";
 import {
   Card,
@@ -39,7 +39,7 @@ export default function OnboardingCard() {
   });
 
   const router = useRouter();
-  const t = useI18n();
+  const t = useTranslations();
   const { execute } = useAction(finishKodixCareOnboardingAction, {
     onError: (res) => {
       defaultSafeActionToastError(res.error);

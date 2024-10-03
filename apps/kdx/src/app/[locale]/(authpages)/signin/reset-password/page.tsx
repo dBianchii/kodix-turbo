@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { LuLoader2 } from "react-icons/lu";
 
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import { cn } from "@kdx/ui";
 import { Button, buttonVariants } from "@kdx/ui/button";
 import {
@@ -33,7 +33,7 @@ export default function ForgotPasswordPage({
 }: {
   searchParams: { token: string };
 }) {
-  const t = useI18n();
+  const t = useTranslations();
 
   const form = useForm({
     schema: ZChangePasswordInputSchema.extend({

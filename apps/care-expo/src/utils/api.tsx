@@ -6,7 +6,7 @@ import superjson from "superjson";
 
 import type { AppRouter } from "@kdx/api";
 
-import { getBaseUrl } from "./base-url";
+import { getBaseKdxUrl } from "./base-url";
 import { getToken } from "./session-store";
 
 /**
@@ -32,7 +32,7 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
         }),
         httpBatchLink({
           transformer: superjson,
-          url: `${getBaseUrl()}/api/trpc`,
+          url: `${getBaseKdxUrl()}/api/trpc`,
           headers() {
             const headers = new Map<string, string>();
             headers.set("x-trpc-source", "expo-react");

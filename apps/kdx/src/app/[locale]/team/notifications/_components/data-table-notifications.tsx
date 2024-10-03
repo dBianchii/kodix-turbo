@@ -6,8 +6,8 @@ import { MdEmail } from "react-icons/md";
 import type { RouterOutputs } from "@kdx/api";
 import type { DataTableFilterField } from "@kdx/ui/data-table/advanced/types";
 import type { FixedColumnsType } from "@kdx/ui/data-table/data-table";
-import { schema } from "@kdx/db/schema";
-import { useI18n } from "@kdx/locales/client";
+import { notifications } from "@kdx/db/schema";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import { DataTableAdvancedToolbar } from "@kdx/ui/data-table/advanced/data-table-advanced-toolbar";
 import { DataTable } from "@kdx/ui/data-table/data-table";
 
@@ -34,7 +34,7 @@ export function DataTableNotifications({
     [],
   );
 
-  const t = useI18n();
+  const t = useTranslations();
 
   const filterFields: DataTableFilterField<
     RouterOutputs["user"]["getNotifications"]["data"][number]
@@ -47,7 +47,7 @@ export function DataTableNotifications({
     {
       label: t("Channel"),
       value: "channel",
-      options: schema.notifications.channel.enumValues.map((channel) => ({
+      options: notifications.channel.enumValues.map((channel) => ({
         label: channel[0]?.toUpperCase() + channel.slice(1),
         value: channel,
         icon: MdEmail,

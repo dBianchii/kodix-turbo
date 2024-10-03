@@ -1,7 +1,7 @@
 import { revalidatePath } from "next/cache";
 
 import { auth } from "@kdx/auth";
-import { getI18n } from "@kdx/locales/server";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 import { Button } from "@kdx/ui/button";
 import {
   Card,
@@ -19,7 +19,7 @@ import { api } from "~/trpc/server";
 export async function EditAccountNameCard({ name }: { name?: string | null }) {
   const { user } = await auth();
   if (!user) return null;
-  const t = await getI18n();
+  const t = await getTranslations();
   return (
     <form
       action={async (values) => {

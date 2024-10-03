@@ -6,7 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import { RxTrash } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import { getErrorMessage } from "@kdx/shared";
 import { Button } from "@kdx/ui/button";
 import {
@@ -38,7 +38,7 @@ export function DeleteNotificationsDialog({
   showTrigger = true,
   ...props
 }: DeleteTasksDialogProps) {
-  const t = useI18n();
+  const t = useTranslations();
   const { mutateAsync, isPending } = useMutation({
     mutationFn: deleteNotificationsAction,
   });

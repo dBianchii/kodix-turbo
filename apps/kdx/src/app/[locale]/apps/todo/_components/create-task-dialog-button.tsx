@@ -4,9 +4,9 @@ import { useState } from "react";
 import { HiUserCircle } from "react-icons/hi";
 import { RxCross2, RxPlus } from "react-icons/rx";
 
-import type { schema } from "@kdx/db/schema";
-import { format } from "@kdx/date-fns";
-import { useCurrentLocale, useI18n } from "@kdx/locales/client";
+import type { todos } from "@kdx/db/schema";
+import { useFormatter } from "@kdx/locales/next-intl";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Button } from "@kdx/ui/button";
 import {
@@ -36,7 +36,7 @@ import { StatusPopover } from "~/app/[locale]/apps/todo/_components/status-popov
 import { api } from "~/trpc/react";
 import { AssigneePopover } from "./assignee-popover";
 
-type Status = typeof schema.todos.$inferInsert.status;
+type Status = typeof todos.$inferInsert.status;
 
 export function CreateTaskDialogButton() {
   function handleCreateTask() {
@@ -70,8 +70,9 @@ export function CreateTaskDialogButton() {
   const [open, setOpen] = useState(false);
 
   const user = (team?.Users ?? []).find((x) => x.id === assignedToUserId);
-  const t = useI18n();
-  const locale = useCurrentLocale();
+  const t = useTranslations();
+  const format = useFormatter();
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -143,7 +144,9 @@ export function CreateTaskDialogButton() {
                   size="sm"
                 >
                   <DatePickerIcon date={dueDate} className="mr-2 size-4" />
-                  {dueDate ? format(dueDate, "PPP", locale) : t("Pick a date")}
+                  {dueDate
+                    ? format.dateTime(dueDate, "extensive")
+                    : t("Pick a date")}
                   {dueDate && (
                     <span
                       onClick={() => {
@@ -151,7 +154,7 @@ export function CreateTaskDialogButton() {
                       }}
                       className="ml-2 rounded-full transition-colors hover:bg-primary/90 hover:text-background"
                     >
-                      <RxCross2 className="size-4 " />
+                      <RxCross2 className="size-4" />
                     </span>
                   )}
                 </Button>

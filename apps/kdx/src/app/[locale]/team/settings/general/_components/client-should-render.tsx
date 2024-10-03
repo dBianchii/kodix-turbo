@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { usePathname } from "next/navigation";
 
+import { usePathname } from "@kdx/locales/next-intl/navigation";
 import { cn } from "@kdx/ui";
 
 export function ShouldRender({

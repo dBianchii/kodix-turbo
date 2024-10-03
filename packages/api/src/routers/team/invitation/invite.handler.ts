@@ -1,21 +1,22 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { TRPCError } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
 
-import type { TInviteInputSchema } from "@kdx/validators/trpc/invitation";
+import type { TInviteInputSchema } from "@kdx/validators/trpc/team/invitation";
 import { nanoid } from "@kdx/db/nanoid";
-import { schema } from "@kdx/db/schema";
+import { invitations } from "@kdx/db/schema";
 import TeamInvite from "@kdx/react-email/team-invite";
 import {
   getBaseUrl,
   getSuccessesAndErrors,
-  kodixNotificationFromEmail,
+  KODIX_NOTIFICATION_FROM_EMAIL,
 } from "@kdx/shared";
 
-import type { TProtectedProcedureContext } from "../../../procedures";
+import type { TIsTeamOwnerProcedureContext } from "../../../procedures";
 import { resend } from "../../../utils/email";
 
 interface InviteOptions {
-  ctx: TProtectedProcedureContext;
+  ctx: TIsTeamOwnerProcedureContext;
   input: TInviteInputSchema;
 }
 
@@ -47,9 +48,11 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
       },
     },
   });
+  const t = await getTranslations({ locale: ctx.locale });
+
   if (!team)
     throw new TRPCError({
-      message: "Team not found",
+      message: t("api.No Team Found"),
       code: "NOT_FOUND",
     });
 
@@ -58,38 +61,45 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
   );
   if (inTeamEmail)
     throw new TRPCError({
-      message: `User ${inTeamEmail} is already a member of this team`,
+      message: t("api.User USER is already a member of this team", {
+        user: inTeamEmail,
+      }),
       code: "CONFLICT",
     });
 
   if (team.Invitations[0])
     throw new TRPCError({
-      message: `Invitation already sent to ${team.Invitations[0].email}`,
+      message: t("api.Invitation already sent to EMAIL", {
+        email: team.Invitations[0].email,
+      }),
       code: "CONFLICT",
     });
 
-  const invitations = input.to.map(
+  const _invitations = input.to.map(
     (email) =>
       ({
         id: nanoid(),
         teamId: team.id,
         email,
         invitedById: ctx.session.user.id,
-      }) satisfies typeof schema.invitations.$inferInsert,
+      }) satisfies typeof invitations.$inferInsert,
   );
 
   const results = await Promise.allSettled(
-    invitations.map(async (invite) => {
+    _invitations.map(async (invite) => {
       await resend.emails.send({
-        from: kodixNotificationFromEmail,
+        from: KODIX_NOTIFICATION_FROM_EMAIL,
         to: invite.email,
-        subject: `You have been invited to join a team on ${getBaseUrl()}`,
+        subject: t("api.You have been invited to join a team on URL", {
+          url: getBaseUrl(),
+        }),
         react: TeamInvite({
           invitedByEmail: ctx.session.user.email,
           invitedByUsername: ctx.session.user.name!,
           inviteLink: `${getBaseUrl()}/team/invite/${invite.id}`,
           teamImage: `${getBaseUrl()}/api/avatar/${team.name}`,
           teamName: team.name,
+          locale: ctx.locale,
           // username: ??
         }),
       });
@@ -100,13 +110,13 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
   const { successes } = getSuccessesAndErrors(results);
 
   if (successes.length)
-    await ctx.db.insert(schema.invitations).values(
+    await ctx.db.insert(invitations).values(
       successes.map((success) => {
-        return invitations.find((x) => x.id === success.value.id)!;
+        return _invitations.find((x) => x.id === success.value.id)!;
       }),
     );
 
-  const failedInvites = invitations.filter(
+  const failedInvites = _invitations.filter(
     (invite) => !successes.find((x) => x.value.id === invite.id),
   );
   return {

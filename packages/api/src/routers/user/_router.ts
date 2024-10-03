@@ -12,19 +12,20 @@ import {
 } from "@kdx/validators/trpc/user";
 
 import { protectedProcedure, publicProcedure } from "../../procedures";
+import { T } from "../../utils/locales";
 import { changeNameHandler } from "./changeName.handler";
 import { changePasswordHandler } from "./changePassword.handler";
 import { deleteNotificationsHandler } from "./deleteNotifications.handler";
 import { getInvitationsHandler } from "./getInvitations.handler";
 import { getNotificationsHandler } from "./getNotifications.handler";
 import { sendResetPasswordEmail } from "./sendResetPasswordEmail";
-import { signInHandler } from "./signInByPassword.handler";
+import { signInByPasswordHandler } from "./signInByPassword.handler";
 import { signupWithPasswordHandler } from "./signupWithPassword.handler";
 import { switchActiveTeamHandler } from "./switchActiveTeam.handler";
 
 export const userRouter = {
   changeName: protectedProcedure
-    .input(ZChangeNameInputSchema)
+    .input(T(ZChangeNameInputSchema))
     .mutation(changeNameHandler),
 
   /** Gets all notifications for the selected teamId and also all their pending invitations */
@@ -40,7 +41,7 @@ export const userRouter = {
     .mutation(deleteNotificationsHandler),
   signInByPassword: publicProcedure
     .input(ZSignInByPasswordInputSchema)
-    .mutation(signInHandler),
+    .mutation(signInByPasswordHandler),
   signupWithPassword: publicProcedure
     .input(ZSignupWithPasswordInputSchema)
     .mutation(signupWithPasswordHandler),

@@ -1,4 +1,4 @@
-import { relations, sql } from "drizzle-orm";
+import { relations } from "drizzle-orm";
 import { index, mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 import { NANOID_SIZE } from "../../nanoid";
@@ -19,9 +19,7 @@ export const careShifts = mysqlTable(
       .notNull()
       .references(() => users.id),
     teamId: teamIdReferenceCascadeDelete,
-    checkIn: timestamp("checkIn")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
+    checkIn: timestamp("checkIn").defaultNow().notNull(),
     checkOut: timestamp("checkOut"),
     shiftEndedAt: timestamp("shiftEndedAt"),
     notes: varchar("notes", { length: DEFAULTLENGTH }),
@@ -48,7 +46,7 @@ export const careTasks = mysqlTable(
   "careTask",
   {
     id: nanoidPrimaryKey,
-    eventDate: timestamp("eventDate").notNull(),
+    date: timestamp("date").notNull(),
     doneAt: timestamp("doneAt"),
     doneByUserId: varchar("doneByUserId", { length: NANOID_SIZE }).references(
       () => users.id,
@@ -57,7 +55,8 @@ export const careTasks = mysqlTable(
     teamId: teamIdReferenceCascadeDelete,
     eventMasterId: varchar("eventMasterId", {
       length: NANOID_SIZE,
-    }).references(() => eventMasters.id),
+    }),
+    //.references(() => eventMasters.id), //TODO: should we have foreignKey????????????????????????????????????????????????????????????????
     careShiftId: varchar("careShiftId", { length: NANOID_SIZE })
       .notNull()
       .references(() => careShifts.id),

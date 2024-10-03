@@ -4,9 +4,9 @@ import {
   ZAcceptInputSchema,
   ZDeleteInputSchema,
   ZInviteInputSchema,
-} from "@kdx/validators/trpc/invitation";
+} from "@kdx/validators/trpc/team/invitation";
 
-import { protectedProcedure } from "../../../procedures";
+import { isTeamOwnerProcedure, protectedProcedure } from "../../../procedures";
 import { acceptHandler } from "./accept.handler";
 import { declineHandler } from "./decline.handler";
 import { deleteHandler } from "./delete.handler";
@@ -21,5 +21,7 @@ export const invitationRouter = {
     .mutation(declineHandler),
   delete: protectedProcedure.input(ZDeleteInputSchema).mutation(deleteHandler),
   getAll: protectedProcedure.query(getAllHandler),
-  invite: protectedProcedure.input(ZInviteInputSchema).mutation(inviteHandler),
+  invite: isTeamOwnerProcedure
+    .input(ZInviteInputSchema)
+    .mutation(inviteHandler),
 } satisfies TRPCRouterRecord;

@@ -8,7 +8,7 @@ import {
   DoubleArrowRightIcon,
 } from "@radix-ui/react-icons";
 
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 
 import { Button } from "../button";
 import {
@@ -28,7 +28,7 @@ export function DataTablePagination<TData>({
   table,
   pageSizeOptions = [10, 20, 30, 40, 50],
 }: DataTablePaginationProps<TData>) {
-  const t = useI18n();
+  const t = useTranslations();
   return (
     <div className="flex w-full flex-col-reverse items-center justify-between gap-4 overflow-auto p-1 sm:flex-row sm:gap-8">
       <div className="flex-1 whitespace-nowrap text-sm text-muted-foreground">

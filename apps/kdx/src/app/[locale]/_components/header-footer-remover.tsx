@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname } from "@kdx/locales/next-intl/navigation";
 
 export default function HeaderFooterRemover({
   children,

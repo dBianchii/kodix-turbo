@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { LuLoader2 } from "react-icons/lu";
 
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import { Button } from "@kdx/ui/button";
 import {
   Card,
@@ -31,7 +31,7 @@ export default function ForgotPasswordPage() {
   const form = useForm({
     schema: ZSendResetPasswordEmailInputSchema,
   });
-  const t = useI18n();
+  const t = useTranslations();
 
   const mutation = api.user.sendResetPasswordEmail.useMutation({
     onError: (err) => {

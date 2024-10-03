@@ -1,4 +1,4 @@
-import { relations, sql } from "drizzle-orm";
+import { relations } from "drizzle-orm";
 import {
   index,
   json,
@@ -20,9 +20,7 @@ export const devPartners = mysqlTable("devPartner", {
   id: nanoidPrimaryKey,
   name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
   partnerUrl: varchar("partnerUrl", { length: DEFAULTLENGTH }),
-  createdAt: timestamp("createdAt")
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").onUpdateNow(),
 });
 export const devPartnersRelations = relations(devPartners, ({ many }) => ({
@@ -33,9 +31,7 @@ export const apps = mysqlTable(
   "app",
   {
     id: nanoidPrimaryKey,
-    createdAt: timestamp("createdAt")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").onUpdateNow(),
     devPartnerId: varchar("devPartnerId", { length: NANOID_SIZE })
       .notNull()

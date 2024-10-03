@@ -2,7 +2,7 @@ import { Suspense } from "react";
 
 import type { User } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
-import { getI18n } from "@kdx/locales/server";
+import { getTranslations } from "@kdx/locales/next-intl/server";
 import { kodixCareAppId } from "@kdx/shared";
 import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
 import { Separator } from "@kdx/ui/separator";
@@ -22,7 +22,7 @@ export default async function KodixCarePage() {
     customRedirect: "/apps/kodixCare/onboarding",
   });
 
-  const t = await getI18n();
+  const t = await getTranslations();
   return (
     <MaxWidthWrapper>
       <div className="flex items-center space-x-4">
@@ -36,6 +36,7 @@ export default async function KodixCarePage() {
             <CurrentShift user={user} />
           </Suspense>
         </div>
+
         <div className="w-full">
           <Suspense
             fallback={
@@ -46,7 +47,7 @@ export default async function KodixCarePage() {
               />
             }
           >
-            <KodixCareTable user={user} />
+            <KodixCareTable />
           </Suspense>
         </div>
       </div>
@@ -54,7 +55,7 @@ export default async function KodixCarePage() {
   );
 }
 
-async function KodixCareTable({ user }: { user: User }) {
+async function KodixCareTable() {
   const input = {
     dateStart: dayjs.utc().startOf("day").toDate(),
     dateEnd: dayjs.utc().endOf("day").toDate(),
@@ -64,7 +65,6 @@ async function KodixCareTable({ user }: { user: User }) {
     <DataTableKodixCare
       initialCareTasks={initialCareTasks}
       initialInput={input}
-      user={user}
     />
   );
 }

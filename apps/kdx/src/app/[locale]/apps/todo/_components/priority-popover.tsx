@@ -6,7 +6,7 @@ import {
   LuSignalMedium,
 } from "react-icons/lu";
 
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import {
@@ -101,7 +101,7 @@ export function PriorityIcon({
 }
 
 export function PriorityToTxt(priority: Priority) {
-  const t = useI18n();
+  const t = useTranslations();
   switch (priority) {
     case 0:
       return t("None");

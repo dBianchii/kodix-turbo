@@ -1,8 +1,8 @@
-import { SafeAreaView } from "react-native-safe-area-context";
+import type { ViewProps } from "tamagui";
 import { Link, useRouter } from "expo-router";
-import { Button, H1, View, YStack } from "tamagui";
+import { Button, H1, View } from "tamagui";
 
-import { useUser } from "~/utils/auth";
+import { RootSafeAreaView } from "~/components/safe-area-view";
 
 // Notifications.setNotificationHandler({
 //   // eslint-disable-next-line @typescript-eslint/require-await
@@ -131,36 +131,19 @@ export default function Index() {
   //     void utils.invalidate();
   //   }
   // }
-  const router = useRouter();
-  const user = useUser();
-  if (user) {
-    router.dismissAll();
-    router.replace("/home");
-  }
-
   return (
-    <YStack
-      bg={"$background"}
-      flex={1}
-      alignItems="center"
-      gap="$8"
-      pt="$10"
-      px={"$3"}
-    >
-      <SafeAreaView>
-        {/* Changes page title visible on the header */}
-        <H1 alignSelf="center">Kodix Care</H1>
-        <MobileAuth />
-      </SafeAreaView>
-    </YStack>
+    <RootSafeAreaView f={1} jc={"center"} ai={"center"}>
+      <H1 alignSelf="center">Kodix Care</H1>
+      <MobileAuth mt={"$6"} />
+    </RootSafeAreaView>
   );
 }
 
-function MobileAuth() {
+function MobileAuth(props: ViewProps) {
   const router = useRouter();
 
   return (
-    <View my={"$7"} gap="$4">
+    <View gap="$4" {...props}>
       <Link href="/register" asChild>
         <Button w={"$20"} themeInverse>
           Novo cadastro

@@ -10,7 +10,7 @@ import {
 } from "react-icons/rx";
 
 import type { User } from "@kdx/auth";
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import {
@@ -32,17 +32,23 @@ import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
 import { Separator } from "@kdx/ui/separator";
 import { toast } from "@kdx/ui/toast";
-import { ZInviteInputSchema } from "@kdx/validators/trpc/invitation";
+import { ZInviteInputSchema } from "@kdx/validators/trpc/team/invitation";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
-export default function TeamInviteCardClient({ user }: { user: User }) {
+export default function TeamInviteCardClient({
+  user,
+  canEditPage,
+}: {
+  user: User;
+  canEditPage: boolean;
+}) {
   const utils = api.useUtils();
   const [emails, setEmails] = useState([{ key: 0, value: "" }]); //key is used to work with formkit
   const [successes, setSuccesses] = useState<string[]>([]);
 
-  const t = useI18n();
+  const t = useTranslations();
 
   const mutation = api.team.invitation.invite.useMutation({
     onSuccess: ({ successes, failures }) => {
@@ -89,8 +95,7 @@ export default function TeamInviteCardClient({ user }: { user: User }) {
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        emails.length > 0 &&
-          emails.filter((x) => Boolean(x)).length > 0 &&
+        if (emails.length > 0 && emails.filter((x) => Boolean(x)).length > 0)
           setOpen(true);
       }}
     >
@@ -120,6 +125,7 @@ export default function TeamInviteCardClient({ user }: { user: User }) {
                     <Input
                       id={`email-${index}`}
                       type="email"
+                      disabled={!canEditPage}
                       value={email.value}
                       onChange={(e) => {
                         const newEmails = [...emails];
@@ -146,7 +152,7 @@ export default function TeamInviteCardClient({ user }: { user: User }) {
                         setEmails(newEmails);
                       }}
                     >
-                      <RxMinusCircled className="size-4 " />
+                      <RxMinusCircled className="size-4" />
                     </Button>
                   </div>
                 ))}
@@ -155,6 +161,7 @@ export default function TeamInviteCardClient({ user }: { user: User }) {
           </div>
           <div className="mt-2">
             <Button
+              disabled={!emails.some((x) => x.value.length) || !canEditPage}
               type="button"
               variant={"secondary"}
               size={"sm"}
@@ -170,7 +177,10 @@ export default function TeamInviteCardClient({ user }: { user: User }) {
             </Button>
           </div>
         </CardContent>
-        <CardFooter className="flex justify-end border-t px-6 py-4">
+        <CardFooter className="flex justify-between border-t px-6 py-4">
+          <CardDescription className="text-xs italic">
+            {t("Only the owner of the team can invite new members")}
+          </CardDescription>
           <Dialog
             onOpenChange={(open) => {
               if (!open) return closeDialog();
@@ -180,7 +190,7 @@ export default function TeamInviteCardClient({ user }: { user: User }) {
           >
             <Button
               type="submit"
-              disabled={!emails.some((x) => x.value.length)}
+              disabled={!emails.some((x) => x.value.length) || !canEditPage}
             >
               {t("Invite")}
             </Button>

@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { RxArrowLeft } from "react-icons/rx";
 
+import { usePathname } from "@kdx/locales/next-intl/navigation";
 import { cn } from "@kdx/ui";
 import { useMediaQuery } from "@kdx/ui/hooks";
 import {

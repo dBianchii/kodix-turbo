@@ -1,0 +1,8 @@
+{
+  "validators": {
+    "Team name must be at most 32 characters": "Team name must be at most 32 characters",
+    "Team name must be at least 3 characters": "Team name must be at least 3 characters",
+    "Please use 32 characters at maximum": "Please use 32 characters at maximum",
+    "Checkout time cannot be in the future": "Checkout time cannot be in the future"
+  }
+}

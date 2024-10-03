@@ -8,7 +8,7 @@ import type {
   VisibilityState,
 } from "@tanstack/react-table";
 import * as React from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import {
   getCoreRowModel,
   getFacetedRowModel,
@@ -21,6 +21,7 @@ import {
 import { z } from "zod";
 
 import type { DataTableFilterField } from "@kdx/ui/data-table/advanced/types";
+import { usePathname, useRouter } from "@kdx/locales/next-intl/navigation";
 import { useDebounce } from "@kdx/ui/hooks";
 
 interface UseDataTableProps<TData, TValue> {
@@ -293,7 +294,6 @@ export function useDataTable<TData, TValue>({
         (searchableColumns.find((column) => column.value === key) &&
           !debouncedSearchableColumnFilters.find(
             (column) => column.id === key,
-            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
           )) ||
         (filterableColumns.find((column) => column.value === key) &&
           !filterableColumnFilters.find((column) => column.id === key))
