@@ -39,6 +39,10 @@
       "cache": false,
       "persistent": true
     },
+    "generate-m": {
+      "cache": false,
+      "interactive": true
+    },
     "drop": {
       "cache": false
     },
