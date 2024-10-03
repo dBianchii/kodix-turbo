@@ -76,7 +76,7 @@ function HomeView() {
   const [refreshing, setRefreshing] = React.useState(false);
   const utils = api.useUtils();
 
-  const { expoPushToken, notification } = usePushNotifications();
+  usePushNotifications();
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -94,13 +94,6 @@ function HomeView() {
 
   return (
     <View backgroundColor={"$background"} f={1} gap="$4">
-      <Text>{expoPushToken}</Text>
-      {notification && (
-        <View>
-          <Text>Notification:</Text>
-          <Text>{JSON.stringify(notification)}</Text>
-        </View>
-      )}
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

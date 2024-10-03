@@ -6,7 +6,7 @@ import {
   todoAppId,
 } from "@kdx/shared";
 
-import { sql } from "../..";
+import { buildConflictUpdateColumns } from "../../";
 import { db } from "../../client";
 import { appPermissions, apps, devPartners } from "../../schema";
 import { appRoles_defaultTree } from "./appRolesDefault_tree";
@@ -38,54 +38,55 @@ async function main() {
   console.log("🌱 Seeding...");
   validateSeedInput();
 
-  await db.transaction(async (tx) => {
-    const toInsertAppPermissions: (typeof appPermissions.$inferInsert)[] = [];
-
-    for (const [appId, { appPermissions }] of Object.entries(
-      appRoles_defaultTree,
-    )) {
-      if (appPermissions) {
-        toInsertAppPermissions.push(
-          ...appPermissions.map((appPermission) => ({
-            ...appPermission,
-            appId,
-            name: "appPermission.id",
-          })),
-        );
-      }
+  const toInsertAppPermissions: (typeof appPermissions.$inferInsert)[] = [];
+  for (const [appId, { appPermissions }] of Object.entries(
+    appRoles_defaultTree,
+  )) {
+    if (appPermissions) {
+      toInsertAppPermissions.push(
+        ...appPermissions.map((appPermission) => ({
+          ...appPermission,
+          appId,
+          name: "appPermission.id",
+        })),
+      );
     }
+  }
+
+  await db.transaction(async (tx) => {
+    if (!toInsertAppPermissions[0]) throw new Error("No appPermissions!"); //? Stuff to make TS happy
+    if (!_devPartners[0]) throw new Error("No devPartners!");
+    if (!_apps[0]) throw new Error("No apps!");
 
     await tx
       .insert(devPartners)
       .values(_devPartners)
       .onDuplicateKeyUpdate({
-        set: allSetValues(_devPartners),
+        set: buildConflictUpdateColumns(
+          devPartners,
+          typedObjectKeys(_devPartners[0]),
+        ),
       });
     await tx
       .insert(apps)
       .values(_apps)
       .onDuplicateKeyUpdate({
-        set: allSetValues(_apps),
+        set: buildConflictUpdateColumns(apps, typedObjectKeys(_apps[0])),
       });
     await tx
       .insert(appPermissions)
       .values(toInsertAppPermissions)
       .onDuplicateKeyUpdate({
-        set: allSetValues(toInsertAppPermissions),
+        set: buildConflictUpdateColumns(
+          appPermissions,
+          typedObjectKeys(toInsertAppPermissions[0]),
+        ),
       });
   });
 }
 
-//TODO: Understand how to upsert correctly https://github.com/drizzle-team/drizzle-orm/issues/1728
-function allSetValues(values: Record<string, unknown>[]) {
-  return Object.assign(
-    {},
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    ...Object.keys(values[0]!).map(
-      (k) => ({ [k]: sql.raw(`values(${k})`) }), //Needs to be raw!
-    ),
-  ) as Record<string, unknown>;
-}
+const typedObjectKeys = <T extends Record<string, unknown>>(obj: T) =>
+  Object.keys(obj) as (keyof T)[];
 
 function validateSeedInput() {
   //? 1. Validate that all appPermissions are assigned to at least one role in their designated app
