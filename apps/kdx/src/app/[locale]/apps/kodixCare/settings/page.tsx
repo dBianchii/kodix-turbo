@@ -13,7 +13,7 @@ export default async function KodixCareSettingsPage() {
 
   console.log(config);
   return (
-    <div className="p-6">
+    <main className="pt-6 md:p-6">
       <h2 className="mb-4 text-lg font-medium">{t("Settings")}</h2>
       {/* <Tabs defaultValue="account" className="w-[400px]">
         <TabsList className="grid w-full grid-cols-2">
@@ -22,6 +22,6 @@ export default async function KodixCareSettingsPage() {
         <TabsContent value="account"></TabsContent>
       </Tabs> */}
       <KodixCareUserSettingsForm config={config} />
-    </div>
+    </main>
   );
 }

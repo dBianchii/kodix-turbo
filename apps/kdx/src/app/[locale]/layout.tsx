@@ -76,8 +76,10 @@ export default async function RootLayout(props: {
               timeZone="America/Sao_Paulo" //?Fix me!
             >
               <TRPCReactProvider>
-                <Header />
-                {props.children}
+                <div className="flex min-h-screen flex-col">
+                  <Header />
+                  {props.children}
+                </div>
                 {/* UI Design Helpers */}
                 {env.NODE_ENV !== "production" && (
                   <div className="fixed bottom-1 z-50 flex flex-row items-center space-x-1">

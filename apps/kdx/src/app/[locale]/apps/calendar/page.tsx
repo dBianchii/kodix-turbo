@@ -27,7 +27,7 @@ export default async function CalendarPage() {
   const t = await getTranslations();
   return (
     <MaxWidthWrapper>
-      <main>
+      <main className="pt-6">
         <div className="flex items-center space-x-4">
           <IconKodixApp appId={calendarAppId} renderText={false} />
           <H1>{t("Calendar")}</H1>

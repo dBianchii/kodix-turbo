@@ -38,6 +38,7 @@ export const appRouter = {
     .query(getConfigHandler),
   getUserAppTeamConfig: protectedProcedure
     .input(ZGetUserAppTeamConfigInputSchema)
+    .use(appInstalledMiddleware)
     .query(getUserAppTeamConfigHandler),
   getInstalled: protectedProcedure.query(getInstalledHandler),
   installApp: isTeamOwnerProcedure
@@ -51,5 +52,6 @@ export const appRouter = {
     .mutation(uninstallAppHandler),
   saveUserAppTeamConfig: protectedProcedure
     .input(ZSaveUserAppTeamConfigInputSchema)
+    .use(appInstalledMiddleware)
     .mutation(saveUserAppTeamConfigHandler),
 } satisfies TRPCRouterRecord;

@@ -43,12 +43,12 @@ export function NoPreviousShift({ user }: { user: User }) {
   return (
     <Card className="flex flex-col gap-3 p-4 md:min-w-72">
       <div className="flex flex-row items-center justify-center space-x-3">
-        <div className="flex flex-row items-center">
-          <h2 className="font-semibold leading-none tracking-tight">
-            {t("apps.kodixCare.currentShift")}
-          </h2>
-        </div>
-        <div className="flex items-center space-x-2 rounded-md">
+        <h2 className="font-semibold leading-none tracking-tight">
+          {t("apps.kodixCare.currentShift")}
+        </h2>
+      </div>
+      <div className="my-auto flex flex-col gap-4">
+        <div className="flex items-center justify-center space-x-2 rounded-md">
           <HiUserCircle className="size-5" />
           <p className="text-sm text-muted-foreground">
             {t("No shift started yet")}

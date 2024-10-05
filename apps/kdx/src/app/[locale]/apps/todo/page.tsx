@@ -19,7 +19,7 @@ export default async function TodoPage() {
   const t = await getTranslations();
   return (
     <MaxWidthWrapper>
-      <main>
+      <main className="pt-6">
         <div className="flex space-x-4">
           <IconKodixApp appId={todoAppId} renderText={false} />
           <H1>{t("Todo")}</H1>

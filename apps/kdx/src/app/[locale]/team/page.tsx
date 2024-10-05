@@ -96,7 +96,7 @@ async function AppsSection({ customApps }: { customApps: CustomApp[] }) {
   const apps = await api.app.getInstalled();
 
   return (
-    <div className="flex flex-row items-center space-x-10">
+    <div className="grid grid-cols-4 items-center gap-4 md:grid-cols-6 lg:grid-cols-11">
       {customApps.map((app) => (
         <Link
           key={app.appUrl}
