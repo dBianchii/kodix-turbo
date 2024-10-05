@@ -25,9 +25,7 @@
       "indexes": {
         "appId_idx": {
           "name": "appId_idx",
-          "columns": [
-            "appId"
-          ],
+          "columns": ["appId"],
           "isUnique": false
         }
       },
@@ -36,12 +34,8 @@
           "name": "appPermission_appId_app_id_fk",
           "tableFrom": "appPermission",
           "tableTo": "app",
-          "columnsFrom": [
-            "appId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["appId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -49,9 +43,7 @@
       "compositePrimaryKeys": {
         "appPermission_id": {
           "name": "appPermission_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {}
@@ -77,16 +69,12 @@
       "indexes": {
         "appPermissionId_idx": {
           "name": "appPermissionId_idx",
-          "columns": [
-            "appPermissionId"
-          ],
+          "columns": ["appPermissionId"],
           "isUnique": false
         },
         "teamAppRoleId_idx": {
           "name": "teamAppRoleId_idx",
-          "columns": [
-            "teamAppRoleId"
-          ],
+          "columns": ["teamAppRoleId"],
           "isUnique": false
         }
       },
@@ -95,12 +83,8 @@
           "name": "_appPermissionToTeamAppRole_appPermissionId_appPermission_id_fk",
           "tableFrom": "_appPermissionToTeamAppRole",
           "tableTo": "appPermission",
-          "columnsFrom": [
-            "appPermissionId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["appPermissionId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -108,12 +92,8 @@
           "name": "_appPermissionToTeamAppRole_teamAppRoleId_teamAppRole_id_fk",
           "tableFrom": "_appPermissionToTeamAppRole",
           "tableTo": "teamAppRole",
-          "columnsFrom": [
-            "teamAppRoleId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["teamAppRoleId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -122,10 +102,7 @@
       "uniqueConstraints": {
         "unique_appPermissionId_teamAppRoleId": {
           "name": "unique_appPermissionId_teamAppRoleId",
-          "columns": [
-            "appPermissionId",
-            "teamAppRoleId"
-          ]
+          "columns": ["appPermissionId", "teamAppRoleId"]
         }
       }
     },
@@ -164,16 +141,12 @@
       "indexes": {
         "appId_idx": {
           "name": "appId_idx",
-          "columns": [
-            "appId"
-          ],
+          "columns": ["appId"],
           "isUnique": false
         },
         "teamId_idx": {
           "name": "teamId_idx",
-          "columns": [
-            "teamId"
-          ],
+          "columns": ["teamId"],
           "isUnique": false
         }
       },
@@ -182,12 +155,8 @@
           "name": "appTeamConfig_appId_app_id_fk",
           "tableFrom": "appTeamConfig",
           "tableTo": "app",
-          "columnsFrom": [
-            "appId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["appId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -195,12 +164,8 @@
           "name": "appTeamConfig_teamId_team_id_fk",
           "tableFrom": "appTeamConfig",
           "tableTo": "team",
-          "columnsFrom": [
-            "teamId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["teamId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -208,18 +173,13 @@
       "compositePrimaryKeys": {
         "appTeamConfig_id": {
           "name": "appTeamConfig_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {
         "unique_appId_teamId": {
           "name": "unique_appId_teamId",
-          "columns": [
-            "appId",
-            "teamId"
-          ]
+          "columns": ["appId", "teamId"]
         }
       }
     },
@@ -260,9 +220,7 @@
       "indexes": {
         "devPartnerId_idx": {
           "name": "devPartnerId_idx",
-          "columns": [
-            "devPartnerId"
-          ],
+          "columns": ["devPartnerId"],
           "isUnique": false
         }
       },
@@ -271,12 +229,8 @@
           "name": "app_devPartnerId_devPartner_id_fk",
           "tableFrom": "app",
           "tableTo": "devPartner",
-          "columnsFrom": [
-            "devPartnerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["devPartnerId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -284,9 +238,7 @@
       "compositePrimaryKeys": {
         "app_id": {
           "name": "app_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {}
@@ -312,16 +264,12 @@
       "indexes": {
         "appId_idx": {
           "name": "appId_idx",
-          "columns": [
-            "appId"
-          ],
+          "columns": ["appId"],
           "isUnique": false
         },
         "teamId_idx": {
           "name": "teamId_idx",
-          "columns": [
-            "teamId"
-          ],
+          "columns": ["teamId"],
           "isUnique": false
         }
       },
@@ -330,12 +278,8 @@
           "name": "_appToTeam_appId_app_id_fk",
           "tableFrom": "_appToTeam",
           "tableTo": "app",
-          "columnsFrom": [
-            "appId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["appId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -343,12 +287,8 @@
           "name": "_appToTeam_teamId_team_id_fk",
           "tableFrom": "_appToTeam",
           "tableTo": "team",
-          "columnsFrom": [
-            "teamId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["teamId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -357,10 +297,7 @@
       "uniqueConstraints": {
         "unique_appId_teamId": {
           "name": "unique_appId_teamId",
-          "columns": [
-            "appId",
-            "teamId"
-          ]
+          "columns": ["appId", "teamId"]
         }
       }
     },
@@ -410,9 +347,7 @@
       "compositePrimaryKeys": {
         "devPartner_id": {
           "name": "devPartner_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {}
@@ -445,9 +380,7 @@
       "indexes": {
         "eventMasterId_idx": {
           "name": "eventMasterId_idx",
-          "columns": [
-            "eventMasterId"
-          ],
+          "columns": ["eventMasterId"],
           "isUnique": false
         }
       },
@@ -456,12 +389,8 @@
           "name": "eventCancellation_eventMasterId_eventMaster_id_fk",
           "tableFrom": "eventCancellation",
           "tableTo": "eventMaster",
-          "columnsFrom": [
-            "eventMasterId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["eventMasterId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -469,9 +398,7 @@
       "compositePrimaryKeys": {
         "eventCancellation_id": {
           "name": "eventCancellation_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {}
@@ -525,9 +452,7 @@
       "indexes": {
         "eventMasterId_idx": {
           "name": "eventMasterId_idx",
-          "columns": [
-            "eventMasterId"
-          ],
+          "columns": ["eventMasterId"],
           "isUnique": false
         }
       },
@@ -536,12 +461,8 @@
           "name": "eventException_eventMasterId_eventMaster_id_fk",
           "tableFrom": "eventException",
           "tableTo": "eventMaster",
-          "columnsFrom": [
-            "eventMasterId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["eventMasterId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -549,9 +470,7 @@
       "compositePrimaryKeys": {
         "eventException_id": {
           "name": "eventException_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {}
@@ -612,9 +531,7 @@
       "indexes": {
         "teamId_idx": {
           "name": "teamId_idx",
-          "columns": [
-            "teamId"
-          ],
+          "columns": ["teamId"],
           "isUnique": false
         }
       },
@@ -623,12 +540,8 @@
           "name": "eventMaster_teamId_team_id_fk",
           "tableFrom": "eventMaster",
           "tableTo": "team",
-          "columnsFrom": [
-            "teamId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["teamId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -636,9 +549,7 @@
       "compositePrimaryKeys": {
         "eventMaster_id": {
           "name": "eventMaster_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {}
@@ -700,16 +611,12 @@
       "indexes": {
         "caregiverId_idx": {
           "name": "caregiverId_idx",
-          "columns": [
-            "caregiverId"
-          ],
+          "columns": ["caregiverId"],
           "isUnique": false
         },
         "teamId_idx": {
           "name": "teamId_idx",
-          "columns": [
-            "teamId"
-          ],
+          "columns": ["teamId"],
           "isUnique": false
         }
       },
@@ -718,12 +625,8 @@
           "name": "careShift_caregiverId_user_id_fk",
           "tableFrom": "careShift",
           "tableTo": "user",
-          "columnsFrom": [
-            "caregiverId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["caregiverId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -731,12 +634,8 @@
           "name": "careShift_teamId_team_id_fk",
           "tableFrom": "careShift",
           "tableTo": "team",
-          "columnsFrom": [
-            "teamId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["teamId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -744,9 +643,7 @@
       "compositePrimaryKeys": {
         "careShift_id": {
           "name": "careShift_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {}
@@ -836,30 +733,22 @@
       "indexes": {
         "doneByUserId_idx": {
           "name": "doneByUserId_idx",
-          "columns": [
-            "doneByUserId"
-          ],
+          "columns": ["doneByUserId"],
           "isUnique": false
         },
         "eventMasterId_Idx": {
           "name": "eventMasterId_Idx",
-          "columns": [
-            "eventMasterId"
-          ],
+          "columns": ["eventMasterId"],
           "isUnique": false
         },
         "careShiftId_idx": {
           "name": "careShiftId_idx",
-          "columns": [
-            "careShiftId"
-          ],
+          "columns": ["careShiftId"],
           "isUnique": false
         },
         "teamId_idx": {
           "name": "teamId_idx",
-          "columns": [
-            "teamId"
-          ],
+          "columns": ["teamId"],
           "isUnique": false
         }
       },
@@ -868,12 +757,8 @@
           "name": "careTask_doneByUserId_user_id_fk",
           "tableFrom": "careTask",
           "tableTo": "user",
-          "columnsFrom": [
-            "doneByUserId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["doneByUserId"],
+          "columnsTo": ["id"],
           "onDelete": "restrict",
           "onUpdate": "no action"
         },
@@ -881,12 +766,8 @@
           "name": "careTask_teamId_team_id_fk",
           "tableFrom": "careTask",
           "tableTo": "team",
-          "columnsFrom": [
-            "teamId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["teamId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -894,12 +775,8 @@
           "name": "careTask_careShiftId_careShift_id_fk",
           "tableFrom": "careTask",
           "tableTo": "careShift",
-          "columnsFrom": [
-            "careShiftId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["careShiftId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -907,9 +784,7 @@
       "compositePrimaryKeys": {
         "careTask_id": {
           "name": "careTask_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {}
@@ -977,16 +852,12 @@
       "indexes": {
         "assignedToUserId_idx": {
           "name": "assignedToUserId_idx",
-          "columns": [
-            "assignedToUserId"
-          ],
+          "columns": ["assignedToUserId"],
           "isUnique": false
         },
         "teamId_idx": {
           "name": "teamId_idx",
-          "columns": [
-            "teamId"
-          ],
+          "columns": ["teamId"],
           "isUnique": false
         }
       },
@@ -995,12 +866,8 @@
           "name": "todo_assignedToUserId_user_id_fk",
           "tableFrom": "todo",
           "tableTo": "user",
-          "columnsFrom": [
-            "assignedToUserId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["assignedToUserId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1008,12 +875,8 @@
           "name": "todo_teamId_team_id_fk",
           "tableFrom": "todo",
           "tableTo": "team",
-          "columnsFrom": [
-            "teamId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["teamId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1021,9 +884,7 @@
       "compositePrimaryKeys": {
         "todo_id": {
           "name": "todo_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {}
@@ -1079,16 +940,12 @@
       "indexes": {
         "invitedById_idx": {
           "name": "invitedById_idx",
-          "columns": [
-            "invitedById"
-          ],
+          "columns": ["invitedById"],
           "isUnique": false
         },
         "teamId_idx": {
           "name": "teamId_idx",
-          "columns": [
-            "teamId"
-          ],
+          "columns": ["teamId"],
           "isUnique": false
         }
       },
@@ -1097,12 +954,8 @@
           "name": "invitation_teamId_team_id_fk",
           "tableFrom": "invitation",
           "tableTo": "team",
-          "columnsFrom": [
-            "teamId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["teamId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1110,12 +963,8 @@
           "name": "invitation_invitedById_user_id_fk",
           "tableFrom": "invitation",
           "tableTo": "user",
-          "columnsFrom": [
-            "invitedById"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["invitedById"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1123,9 +972,7 @@
       "compositePrimaryKeys": {
         "invitation_id": {
           "name": "invitation_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {}
@@ -1165,16 +1012,12 @@
       "indexes": {
         "appId_idx": {
           "name": "appId_idx",
-          "columns": [
-            "appId"
-          ],
+          "columns": ["appId"],
           "isUnique": false
         },
         "teamId_idx": {
           "name": "teamId_idx",
-          "columns": [
-            "teamId"
-          ],
+          "columns": ["teamId"],
           "isUnique": false
         }
       },
@@ -1183,12 +1026,8 @@
           "name": "teamAppRole_appId_app_id_fk",
           "tableFrom": "teamAppRole",
           "tableTo": "app",
-          "columnsFrom": [
-            "appId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["appId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1196,12 +1035,8 @@
           "name": "teamAppRole_teamId_team_id_fk",
           "tableFrom": "teamAppRole",
           "tableTo": "team",
-          "columnsFrom": [
-            "teamId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["teamId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1209,9 +1044,7 @@
       "compositePrimaryKeys": {
         "teamAppRole_id": {
           "name": "teamAppRole_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {}
@@ -1237,16 +1070,12 @@
       "indexes": {
         "teamAppRoleId_idx": {
           "name": "teamAppRoleId_idx",
-          "columns": [
-            "teamAppRoleId"
-          ],
+          "columns": ["teamAppRoleId"],
           "isUnique": false
         },
         "userId_idx": {
           "name": "userId_idx",
-          "columns": [
-            "userId"
-          ],
+          "columns": ["userId"],
           "isUnique": false
         }
       },
@@ -1255,12 +1084,8 @@
           "name": "_teamAppRoleToUser_teamAppRoleId_teamAppRole_id_fk",
           "tableFrom": "_teamAppRoleToUser",
           "tableTo": "teamAppRole",
-          "columnsFrom": [
-            "teamAppRoleId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["teamAppRoleId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1268,12 +1093,8 @@
           "name": "_teamAppRoleToUser_userId_user_id_fk",
           "tableFrom": "_teamAppRoleToUser",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1282,10 +1103,7 @@
       "uniqueConstraints": {
         "unique_teamAppRoleId_userId": {
           "name": "unique_teamAppRoleId_userId",
-          "columns": [
-            "teamAppRoleId",
-            "userId"
-          ]
+          "columns": ["teamAppRoleId", "userId"]
         }
       }
     },
@@ -1333,9 +1151,7 @@
       "indexes": {
         "ownerId_idx": {
           "name": "ownerId_idx",
-          "columns": [
-            "ownerId"
-          ],
+          "columns": ["ownerId"],
           "isUnique": false
         }
       },
@@ -1344,12 +1160,8 @@
           "name": "team_ownerId_user_id_fk",
           "tableFrom": "team",
           "tableTo": "user",
-          "columnsFrom": [
-            "ownerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["ownerId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "cascade"
         }
@@ -1357,9 +1169,7 @@
       "compositePrimaryKeys": {
         "team_id": {
           "name": "team_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {}
@@ -1385,16 +1195,12 @@
       "indexes": {
         "userId_idx": {
           "name": "userId_idx",
-          "columns": [
-            "userId"
-          ],
+          "columns": ["userId"],
           "isUnique": false
         },
         "teamId_idx": {
           "name": "teamId_idx",
-          "columns": [
-            "teamId"
-          ],
+          "columns": ["teamId"],
           "isUnique": false
         }
       },
@@ -1403,12 +1209,8 @@
           "name": "_userToTeam_userId_user_id_fk",
           "tableFrom": "_userToTeam",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1416,12 +1218,8 @@
           "name": "_userToTeam_teamId_team_id_fk",
           "tableFrom": "_userToTeam",
           "tableTo": "team",
-          "columnsFrom": [
-            "teamId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["teamId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1430,10 +1228,7 @@
       "uniqueConstraints": {
         "unique_userId_teamId": {
           "name": "unique_userId_teamId",
-          "columns": [
-            "userId",
-            "teamId"
-          ]
+          "columns": ["userId", "teamId"]
         }
       }
     },
@@ -1465,9 +1260,7 @@
       "indexes": {
         "userId_idx": {
           "name": "userId_idx",
-          "columns": [
-            "userId"
-          ],
+          "columns": ["userId"],
           "isUnique": false
         }
       },
@@ -1476,12 +1269,8 @@
           "name": "account_userId_user_id_fk",
           "tableFrom": "account",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1489,10 +1278,7 @@
       "compositePrimaryKeys": {
         "account_providerId_providerUserId_pk": {
           "name": "account_providerId_providerUserId_pk",
-          "columns": [
-            "providerId",
-            "providerUserId"
-          ]
+          "columns": ["providerId", "providerUserId"]
         }
       },
       "uniqueConstraints": {}
@@ -1561,16 +1347,12 @@
       "indexes": {
         "sentToUserId_idx": {
           "name": "sentToUserId_idx",
-          "columns": [
-            "sentToUserId"
-          ],
+          "columns": ["sentToUserId"],
           "isUnique": false
         },
         "teamId_idx": {
           "name": "teamId_idx",
-          "columns": [
-            "teamId"
-          ],
+          "columns": ["teamId"],
           "isUnique": false
         }
       },
@@ -1579,12 +1361,8 @@
           "name": "notification_sentToUserId_user_id_fk",
           "tableFrom": "notification",
           "tableTo": "user",
-          "columnsFrom": [
-            "sentToUserId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["sentToUserId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         },
@@ -1592,12 +1370,8 @@
           "name": "notification_teamId_team_id_fk",
           "tableFrom": "notification",
           "tableTo": "team",
-          "columnsFrom": [
-            "teamId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["teamId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1605,9 +1379,7 @@
       "compositePrimaryKeys": {
         "notification_id": {
           "name": "notification_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {}
@@ -1647,9 +1419,7 @@
       "indexes": {
         "userId_idx": {
           "name": "userId_idx",
-          "columns": [
-            "userId"
-          ],
+          "columns": ["userId"],
           "isUnique": false
         }
       },
@@ -1658,12 +1428,8 @@
           "name": "resetToken_userId_user_id_fk",
           "tableFrom": "resetToken",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -1671,17 +1437,13 @@
       "compositePrimaryKeys": {
         "resetToken_id": {
           "name": "resetToken_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {
         "resetToken_userId_unique": {
           "name": "resetToken_userId_unique",
-          "columns": [
-            "userId"
-          ]
+          "columns": ["userId"]
         }
       }
     },
@@ -1730,12 +1492,8 @@
           "name": "session_user_id_user_id_fk",
           "tableFrom": "session",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1743,9 +1501,7 @@
       "compositePrimaryKeys": {
         "session_id": {
           "name": "session_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {}
@@ -1815,9 +1571,7 @@
       "indexes": {
         "activeTeamId_idx": {
           "name": "activeTeamId_idx",
-          "columns": [
-            "activeTeamId"
-          ],
+          "columns": ["activeTeamId"],
           "isUnique": false
         }
       },
@@ -1825,17 +1579,13 @@
       "compositePrimaryKeys": {
         "user_id": {
           "name": "user_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {
         "user_email_unique": {
           "name": "user_email_unique",
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       }
     }
