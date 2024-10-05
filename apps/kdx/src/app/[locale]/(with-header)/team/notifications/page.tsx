@@ -7,9 +7,9 @@ import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
 import { H1, Lead } from "@kdx/ui/typography";
 import { ZGetNotificationsInputSchema } from "@kdx/validators/trpc/user";
 
+import { CustomKodixIcon } from "~/app/[locale]/_components/app/custom-kodix-icon";
+import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { api } from "~/trpc/server";
-import { CustomKodixIcon } from "../../_components/app/custom-kodix-icon";
-import MaxWidthWrapper from "../../_components/max-width-wrapper";
 import { DataTableNotifications } from "./_components/data-table-notifications";
 import { NotificationsDateRangePicker } from "./_components/notifications-date-range-picker";
 

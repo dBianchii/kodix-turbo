@@ -22,19 +22,19 @@ import { Input } from "@kdx/ui/input";
 import { PopoverTrigger } from "@kdx/ui/popover";
 import { Textarea } from "@kdx/ui/textarea";
 
-import type { Priority } from "~/app/[locale]/apps/todo/_components/priority-popover";
+import type { Priority } from "./priority-popover";
 import {
   DatePickerIcon,
   DatePickerWithPresets,
 } from "~/app/[locale]/_components/date-picker-with-presets";
+import { api } from "~/trpc/react";
+import { AssigneePopover } from "./assignee-popover";
 import {
   PriorityIcon,
   PriorityPopover,
   PriorityToTxt,
-} from "~/app/[locale]/apps/todo/_components/priority-popover";
-import { StatusPopover } from "~/app/[locale]/apps/todo/_components/status-popover";
-import { api } from "~/trpc/react";
-import { AssigneePopover } from "./assignee-popover";
+} from "./priority-popover";
+import { StatusPopover } from "./status-popover";
 
 type Status = typeof todos.$inferInsert.status;
 

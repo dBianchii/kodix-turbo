@@ -2,7 +2,7 @@ import { getTranslations } from "@kdx/locales/next-intl/server";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { Navigation } from "~/app/[locale]/_components/navigation";
-import { ShouldRender } from "~/app/[locale]/team/settings/general/_components/client-should-render";
+import { ShouldRender } from "../team/settings/general/_components/client-should-render";
 
 export default async function Layout({
   children,

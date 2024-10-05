@@ -4,8 +4,8 @@ import { auth } from "@kdx/auth";
 import { redirect } from "@kdx/locales/next-intl/navigation";
 import { getTranslations } from "@kdx/locales/next-intl/server";
 
-import { AddTeamDialogButton } from "~/app/[locale]/account/teams/_components/add-team-dialog-button/add-team-dialog-button";
-import SettingsEditCardSkeleton from "~/app/[locale]/team/settings/general/_components/edit-team-name-card-skeleton";
+import SettingsEditCardSkeleton from "../../team/settings/general/_components/edit-team-name-card-skeleton";
+import { AddTeamDialogButton } from "./_components/add-team-dialog-button/add-team-dialog-button";
 import { EditUserTeamsTable } from "./_components/edit-users-teams-card/edit-users-teams-table";
 
 export default async function Teams() {
