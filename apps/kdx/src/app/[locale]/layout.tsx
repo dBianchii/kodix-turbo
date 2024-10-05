@@ -19,7 +19,6 @@ import { cn } from "@kdx/ui";
 import { ThemeProvider, ThemeToggle } from "@kdx/ui/theme";
 import { Toaster } from "@kdx/ui/toast";
 
-import { Header } from "./_components/header/header";
 import { CSPostHogProvider } from "./_components/posthog-provider";
 
 export const metadata: Metadata = {
@@ -77,7 +76,6 @@ export default async function RootLayout(props: {
             >
               <TRPCReactProvider>
                 <div className="flex min-h-screen flex-col">
-                  <Header />
                   {props.children}
                 </div>
                 {/* UI Design Helpers */}

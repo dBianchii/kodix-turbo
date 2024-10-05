@@ -8,9 +8,9 @@ import { cn } from "@kdx/ui";
 import { buttonVariants } from "@kdx/ui/button";
 import { RadialGradient } from "@kdx/ui/magic-ui/radial-gradient";
 
-import { Footer } from "./_components/footer";
-import { HeroBento } from "./_components/hero-bento";
-import { HeroLamp } from "./_components/hero-lamp";
+import { Footer } from "../_components/footer";
+import { HeroBento } from "../_components/hero-bento";
+import { HeroLamp } from "../_components/hero-lamp";
 
 export default async function HomePage() {
   // setStaticParamsLocale(locale);

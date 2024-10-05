@@ -11,7 +11,7 @@ import { IconKodixApp } from "~/app/[locale]/_components/app/kodix-icon";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { getAppUrl } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/server";
-import { CustomKodixIcon } from "../_components/app/custom-kodix-icon";
+import { CustomKodixIcon } from "../../_components/app/custom-kodix-icon";
 
 interface CustomApp {
   appName: string;
