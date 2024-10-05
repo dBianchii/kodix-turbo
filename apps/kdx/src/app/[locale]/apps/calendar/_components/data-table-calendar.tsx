@@ -317,20 +317,7 @@ export function DataTable({
                         {t("Delete event")}
                       </ContextMenuItem>
                     </ContextMenuContent>
-                    <ContextMenuTrigger asChild>
-                      <TableRow
-                        data-state={row.getIsSelected() && "selected"}
-                        key={row.id}
-                      >
-                        {row.getVisibleCells().map((cell) => (
-                          <TableCell key={cell.id}>
-                            {flexRender(cell.column.columnDef.cell, {
-                              ...cell.getContext(),
-                            })}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    </ContextMenuTrigger>
+                    <ContextMenuTrigger asChild></ContextMenuTrigger>
                   </ContextMenu>
                 ))
               ) : (

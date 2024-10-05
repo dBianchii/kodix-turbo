@@ -20,7 +20,9 @@
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.preferences.autoImportFileExcludePatterns": [
     "next/router.d.ts",
-    "next/dist/client/router.d.ts"
+    "next/dist/client/router.d.ts",
+    "react-day-picker", //? prevent other auto-imports bc we use our own version of stuff
+    "react-hook-form"
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
   /*

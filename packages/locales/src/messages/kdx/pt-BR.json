@@ -48,7 +48,9 @@
       "Unlock all tasks up until here": "Desbloquear todas as tarefas até aqui?",
       "This will unlock all tasks of this turn up until this task": "Isso vai desbloquear todas as tarefas deste turno até esta tarefa",
       "Successfully unlocked tasks": "Tarefas desbloqueadas com sucesso!",
-      "Add task": "Adicionar tarefa"
+      "Add task": "Adicionar tarefa",
+      "Receive notifications for delayed tasks": "Receber notificações de tarefas atrasadas?",
+      "Set this on if you want to receive notifications for delayed tasks": "Ative esta opção se desejar receber notificações de tarefas atrasadas (uma hora de atraso)"
     },
     "todo": {
       "appDescription": "Todo é um app de anotações"
@@ -443,5 +445,7 @@
   "Substitue the tasks of this turn with the tasks from the calendar": "Substituir os dados do seu turno pelo calendário de planejamento?",
   "Close": "Fechar",
   "Sync tasks": "Sincronizar tarefas",
-  "Add task": "Adicionar tarefa"
+  "Add task": "Adicionar tarefa",
+  "Main page": "Página principal",
+  "Settings saved": "Configurações salvas"
 }

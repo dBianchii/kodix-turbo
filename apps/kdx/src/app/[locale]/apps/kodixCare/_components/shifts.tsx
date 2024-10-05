@@ -10,6 +10,7 @@ import { useFormatter } from "@kdx/locales/next-intl";
 import { useTranslations } from "@kdx/locales/next-intl/client";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Badge } from "@kdx/ui/badge";
+import { Card } from "@kdx/ui/card";
 import { useRerenderForRelativeTime } from "@kdx/ui/hooks";
 import { Label } from "@kdx/ui/label";
 
@@ -40,20 +41,22 @@ export function NoPreviousShift({ user }: { user: User }) {
   const t = useTranslations();
 
   return (
-    <div className="flex flex-col space-y-3">
-      <div className="flex flex-row items-center">
-        <h2 className="font-semibold leading-none tracking-tight">
-          {t("apps.kodixCare.currentShift")}
-        </h2>
+    <Card className="flex flex-col gap-3 p-4 md:min-w-72">
+      <div className="flex flex-row items-center justify-center space-x-3">
+        <div className="flex flex-row items-center">
+          <h2 className="font-semibold leading-none tracking-tight">
+            {t("apps.kodixCare.currentShift")}
+          </h2>
+        </div>
+        <div className="flex items-center space-x-2 rounded-md">
+          <HiUserCircle className="size-5" />
+          <p className="text-sm text-muted-foreground">
+            {t("No shift started yet")}
+          </p>
+        </div>
+        <ToggleShiftButton user={user} />
       </div>
-      <div className="flex items-center space-x-2 rounded-md">
-        <HiUserCircle className="size-5" />
-        <p className="text-sm text-muted-foreground">
-          {t("No shift started yet")}
-        </p>
-      </div>
-      <ToggleShiftButton user={user} />
-    </div>
+    </Card>
   );
 }
 
@@ -68,15 +71,15 @@ export function ShiftInProgress({
 }) {
   const t = useTranslations();
   return (
-    <div className="flex flex-col space-y-3">
-      <div className="flex flex-row items-center space-x-3">
+    <Card className="flex flex-col gap-3 p-4 md:min-w-72">
+      <div className="flex flex-row items-center justify-center space-x-3">
         <h2 className="font-semibold leading-none tracking-tight">
           {t("apps.kodixCare.currentShift")}
         </h2>
         <Badge variant={"green"}>{t("Active")}</Badge>
       </div>
       <TimeInfo currentShift={currentShift} />
-      <div className="flex items-center space-x-2 rounded-md">
+      <div className="flex items-center justify-center space-x-2 rounded-md">
         <AvatarWrapper
           className="size-5"
           src={currentShift.Caregiver.image ?? undefined}
@@ -87,7 +90,7 @@ export function ShiftInProgress({
         </p>
       </div>
       <ToggleShiftButton user={user} />
-    </div>
+    </Card>
   );
 }
 
@@ -102,15 +105,15 @@ export function ShiftCheckedOut({
 }) {
   const t = useTranslations();
   return (
-    <div className="flex flex-col space-y-3">
-      <div className="flex flex-row items-center space-x-3">
+    <Card className="flex flex-col gap-3 p-4 md:min-w-72">
+      <div className="flex flex-row items-center justify-center space-x-3">
         <h2 className="font-semibold leading-none tracking-tight">
           {t("apps.kodixCare.currentShift")}
         </h2>
         <Badge variant={"secondary"}>{t("Ended")}</Badge>
       </div>
       <TimeInfo currentShift={currentShift} />
-      <div className="flex items-center space-x-2 rounded-md">
+      <div className="flex items-center justify-center space-x-2 rounded-md">
         <AvatarWrapper
           className="size-5"
           src={currentShift.Caregiver.image ?? undefined}
@@ -121,7 +124,7 @@ export function ShiftCheckedOut({
         </p>
       </div>
       <ToggleShiftButton user={user} />
-    </div>
+    </Card>
   );
 }
 
@@ -142,8 +145,8 @@ function TimeInfo({
   };
   useRerenderForRelativeTime([currentShift.checkIn, currentShift.checkOut]);
   return (
-    <div className="flex items-center justify-start">
-      <div className="col mr-4">
+    <div className="flex items-center justify-center">
+      <div className="col mr-3">
         <Label className="invisible text-xs text-muted-foreground">i</Label>
         <IoMdTime className="" />
       </div>

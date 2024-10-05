@@ -27,40 +27,41 @@ export default async function CalendarPage() {
   const t = await getTranslations();
   return (
     <MaxWidthWrapper>
-      <div className="flex items-center space-x-4">
-        <IconKodixApp appId={calendarAppId} renderText={false} />
-        <H1>{t("Calendar")}</H1>
-      </div>
-      <Separator className="my-4" />
+      <main>
+        <div className="flex items-center space-x-4">
+          <IconKodixApp appId={calendarAppId} renderText={false} />
+          <H1>{t("Calendar")}</H1>
+        </div>
+        <Separator className="my-4" />
 
-      <CreateEventDialogButton />
-      <Suspense
-        fallback={
-          <div className="pt-8">
-            <div className="flex justify-between">
-              <div className="flex w-44">
-                <Skeleton className="h-6 w-28" />
+        <CreateEventDialogButton />
+        <Suspense
+          fallback={
+            <div className="pt-8">
+              <div className="flex justify-between">
+                <div className="flex w-44">
+                  <Skeleton className="h-6 w-28" />
+                </div>
+
+                <div className="mx-auto mt-auto flex space-x-2">
+                  <Skeleton className="size-6" />
+                  <Skeleton className="h-6 w-28" />
+                  <Skeleton className="size-6" />
+                </div>
+                <div className="flex w-44">
+                  <Skeleton className="h-6 w-20" />
+                </div>
               </div>
 
-              <div className="mx-auto mt-auto flex space-x-2">
-                <Skeleton className="size-6" />
-
-                <Skeleton className="h-6 w-28" />
-                <Skeleton className="size-6" />
-              </div>
-              <div className="flex w-44">
-                <Skeleton className="h-6 w-20" />
+              <div className="mt-4 rounded-md border">
+                <DataTableSkeleton columnCount={3} showViewOptions={false} />
               </div>
             </div>
-
-            <div className="mt-4 rounded-md border">
-              <DataTableSkeleton columnCount={3} showViewOptions={false} />
-            </div>
-          </div>
-        }
-      >
-        <DataTableServer user={user} />
-      </Suspense>
+          }
+        >
+          <DataTableServer user={user} />
+        </Suspense>
+      </main>
     </MaxWidthWrapper>
   );
 }

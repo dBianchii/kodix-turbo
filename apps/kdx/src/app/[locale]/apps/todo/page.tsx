@@ -19,13 +19,15 @@ export default async function TodoPage() {
   const t = await getTranslations();
   return (
     <MaxWidthWrapper>
-      <div className="flex space-x-4">
-        <IconKodixApp appId={todoAppId} renderText={false} />
-        <H1>{t("Todo")}</H1>
-      </div>
-      <Separator className="my-4" />
-      <CreateTaskDialogButton />
-      <DataTableTodo initialData={initialData} />
+      <main>
+        <div className="flex space-x-4">
+          <IconKodixApp appId={todoAppId} renderText={false} />
+          <H1>{t("Todo")}</H1>
+        </div>
+        <Separator className="my-4" />
+        <CreateTaskDialogButton />
+        <DataTableTodo initialData={initialData} />
+      </main>
     </MaxWidthWrapper>
   );
 }

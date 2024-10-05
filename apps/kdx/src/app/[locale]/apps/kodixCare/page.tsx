@@ -2,17 +2,12 @@ import { Suspense } from "react";
 
 import type { User } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
-import { getTranslations } from "@kdx/locales/next-intl/server";
 import { kodixCareAppId } from "@kdx/shared";
 import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
-import { Separator } from "@kdx/ui/separator";
 import { Skeleton } from "@kdx/ui/skeleton";
-import { H1 } from "@kdx/ui/typography";
 
-import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
 import { api } from "~/trpc/server";
-import { IconKodixApp } from "../../_components/app/kodix-icon";
 import DataTableKodixCare from "./_components/data-table-kodix-care";
 import { CurrentShiftClient } from "./_components/shifts";
 
@@ -22,22 +17,13 @@ export default async function KodixCarePage() {
     customRedirect: "/apps/kodixCare/onboarding",
   });
 
-  const t = await getTranslations();
   return (
-    <MaxWidthWrapper>
-      <div className="flex items-center space-x-4">
-        <IconKodixApp appId={kodixCareAppId} renderText={false} />
-        <H1>{t("Kodix Care")}</H1>
-      </div>
-      <Separator className="my-4" />
-      <div className="flex flex-col md:flex-row md:space-x-6">
-        <div className="flex w-full max-w-full flex-col px-8 pb-8 md:max-w-60 md:px-0">
-          <Suspense fallback={<ShiftSkeleton />}>
-            <CurrentShift user={user} />
-          </Suspense>
-        </div>
-
-        <div className="w-full">
+    <main className="flex w-full flex-col gap-4 pt-5 md:space-x-6 md:pl-5">
+      <div className="flex flex-col gap-6 md:flex-row">
+        <Suspense fallback={<ShiftSkeleton />}>
+          <CurrentShift user={user} />
+        </Suspense>
+        <div className="flex w-full flex-col">
           <Suspense
             fallback={
               <DataTableSkeleton
@@ -51,7 +37,7 @@ export default async function KodixCarePage() {
           </Suspense>
         </div>
       </div>
-    </MaxWidthWrapper>
+    </main>
   );
 }
 

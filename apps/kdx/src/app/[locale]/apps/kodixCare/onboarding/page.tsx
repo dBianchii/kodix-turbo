@@ -15,9 +15,11 @@ export default async function KodixCareOnboardingPage() {
 
   return (
     <MaxWidthWrapper>
-      <div className="flex h-[450px] items-center justify-center">
-        <OnboardingCard />
-      </div>
+      <main>
+        <div className="flex h-[450px] items-center justify-center">
+          <OnboardingCard />
+        </div>
+      </main>
     </MaxWidthWrapper>
   );
 }
