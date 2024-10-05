@@ -1,4 +1,4 @@
-import MaxWidthWrapper from "../../_components/max-width-wrapper";
+import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import {
   KodixCareNavigationLayout,
   NavigationSheet,
