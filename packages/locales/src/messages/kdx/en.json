@@ -48,7 +48,9 @@
       "Unlock all tasks up until here": "Unlock all tasks up until here?",
       "This will unlock all tasks of this turn up until this task": "Isso vai desbloquear todas as tarefas deste turno até esta tarefa",
       "Successfully unlocked tasks": "Successfully unlocked tasks!",
-      "Add task": "Add task"
+      "Add task": "Add task",
+      "Receive notifications for delayed tasks": "Receive notifications for delayed tasks?",
+      "Set this on if you want to receive notifications for delayed tasks": "Set this on if you want to receive notifications for delayed tasks (one hour delayed)"
     },
     "todo": {
       "appDescription": "Todo is a note taking app"
@@ -443,5 +445,7 @@
   "Sync tasks": "Sync tasks",
   "Substitue the tasks of this turn with the tasks from the calendar": "Substitue the tasks of this turn with the tasks from the calendar?",
   "Close": "Close",
-  "Add task": "Add task"
+  "Add task": "Add task",
+  "Main page": "Main page",
+  "Settings saved": "Settings saved"
 }

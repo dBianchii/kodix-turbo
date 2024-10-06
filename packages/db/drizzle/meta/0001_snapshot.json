@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "719114c5-115d-43c3-a229-0a9d74ce2156",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "928c8e99-aecc-43a0-805b-497849f37ce2",
+  "prevId": "719114c5-115d-43c3-a229-0a9d74ce2156",
   "tables": {
     "appPermission": {
       "name": "appPermission",
@@ -352,6 +352,104 @@
       },
       "uniqueConstraints": {}
     },
+    "userAppTeamConfig": {
+      "name": "userAppTeamConfig",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(12)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "config": {
+          "name": "config",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "userId": {
+          "name": "userId",
+          "type": "varchar(12)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "appId": {
+          "name": "appId",
+          "type": "varchar(12)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "teamId": {
+          "name": "teamId",
+          "type": "varchar(12)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "userId_idx": {
+          "name": "userId_idx",
+          "columns": ["userId"],
+          "isUnique": false
+        },
+        "appId_idx": {
+          "name": "appId_idx",
+          "columns": ["appId"],
+          "isUnique": false
+        },
+        "teamId_idx": {
+          "name": "teamId_idx",
+          "columns": ["teamId"],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "userAppTeamConfig_userId_user_id_fk": {
+          "name": "userAppTeamConfig_userId_user_id_fk",
+          "tableFrom": "userAppTeamConfig",
+          "tableTo": "user",
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "userAppTeamConfig_appId_app_id_fk": {
+          "name": "userAppTeamConfig_appId_app_id_fk",
+          "tableFrom": "userAppTeamConfig",
+          "tableTo": "app",
+          "columnsFrom": ["appId"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "userAppTeamConfig_teamId_team_id_fk": {
+          "name": "userAppTeamConfig_teamId_team_id_fk",
+          "tableFrom": "userAppTeamConfig",
+          "tableTo": "team",
+          "columnsFrom": ["teamId"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "userAppTeamConfig_id": {
+          "name": "userAppTeamConfig_id",
+          "columns": ["id"]
+        }
+      },
+      "uniqueConstraints": {
+        "unique_userId_appId_teamId": {
+          "name": "unique_userId_appId_teamId",
+          "columns": ["userId", "appId", "teamId"]
+        }
+      }
+    },
     "eventCancellation": {
       "name": "eventCancellation",
       "columns": {
@@ -526,6 +624,14 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "enum('NORMAL','CRITICAL')",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'NORMAL'"
         }
       },
       "indexes": {

@@ -5,7 +5,6 @@ import { auth } from "@kdx/auth";
 import { getTranslations } from "@kdx/locales/next-intl/server";
 import { buttonVariants } from "@kdx/ui/button";
 
-import HeaderFooterRemover from "~/app/[locale]/_components/header-footer-remover";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { api } from "~/trpc/server";
 import { AppSwitcher } from "../app-switcher";
@@ -15,23 +14,21 @@ import { UserProfileButton } from "./user-profile-button";
 
 export function Header() {
   return (
-    <HeaderFooterRemover>
-      <header className="border-b py-2">
-        <MaxWidthWrapper className="max-w-screen-2xl">
-          <div className="mx-auto flex max-w-screen-2xl items-center">
-            <Suspense fallback={<Logo redirect="/team" />}>
-              <LogoWithAppSwitcher />
-            </Suspense>
+    <header className="border-b py-2">
+      <MaxWidthWrapper className="max-w-screen-2xl">
+        <div className="mx-auto flex max-w-screen-2xl items-center">
+          <Suspense fallback={<Logo redirect="/team" />}>
+            <LogoWithAppSwitcher />
+          </Suspense>
 
-            <div className="ml-auto flex items-center space-x-4">
-              <Suspense>
-                <RightSide />
-              </Suspense>
-            </div>
+          <div className="ml-auto flex items-center space-x-4">
+            <Suspense>
+              <RightSide />
+            </Suspense>
           </div>
-        </MaxWidthWrapper>
-      </header>
-    </HeaderFooterRemover>
+        </div>
+      </MaxWidthWrapper>
+    </header>
   );
 }
 

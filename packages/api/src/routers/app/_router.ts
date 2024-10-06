@@ -2,8 +2,10 @@ import type { TRPCRouterRecord } from "@trpc/server";
 
 import {
   ZGetConfigInput,
+  ZGetUserAppTeamConfigInputSchema,
   ZInstallAppInputSchema,
   ZSaveConfigInput,
+  ZSaveUserAppTeamConfigInputSchema,
   ZUninstallAppInputSchema,
 } from "@kdx/validators/trpc/app";
 
@@ -17,9 +19,11 @@ import { calendarRouter } from "./calendar/_router";
 import { getAllHandler } from "./getAll.handler";
 import { getConfigHandler } from "./getConfig.handler";
 import { getInstalledHandler } from "./getInstalled.handler";
+import { getUserAppTeamConfigHandler } from "./getUserAppTeamConfig.handler";
 import { installAppHandler } from "./installApp.handler";
 import { kodixCareRouter } from "./kodixCare/_router";
 import { saveConfigHandler } from "./saveConfig.handler";
+import { saveUserAppTeamConfigHandler } from "./saveUserAppTeamConfig.handler";
 import { todoRouter } from "./todo/_router";
 import { uninstallAppHandler } from "./uninstallApp.handler";
 
@@ -32,6 +36,10 @@ export const appRouter = {
     .input(ZGetConfigInput)
     .use(appInstalledMiddleware)
     .query(getConfigHandler),
+  getUserAppTeamConfig: protectedProcedure
+    .input(ZGetUserAppTeamConfigInputSchema)
+    .use(appInstalledMiddleware)
+    .query(getUserAppTeamConfigHandler),
   getInstalled: protectedProcedure.query(getInstalledHandler),
   installApp: isTeamOwnerProcedure
     .input(ZInstallAppInputSchema)
@@ -42,4 +50,8 @@ export const appRouter = {
   uninstallApp: isTeamOwnerProcedure
     .input(ZUninstallAppInputSchema)
     .mutation(uninstallAppHandler),
+  saveUserAppTeamConfig: protectedProcedure
+    .input(ZSaveUserAppTeamConfigInputSchema)
+    .use(appInstalledMiddleware)
+    .mutation(saveUserAppTeamConfigHandler),
 } satisfies TRPCRouterRecord;
