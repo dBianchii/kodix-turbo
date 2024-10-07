@@ -18,7 +18,6 @@ export default async function HomePage({
   params: { locale: string };
 }) {
   unstable_setRequestLocale(locale);
-
   const t = await getTranslations();
 
   return (
