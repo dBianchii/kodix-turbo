@@ -1,9 +1,6 @@
 import { RxChevronRight } from "react-icons/rx";
 
-import { auth } from "@kdx/auth";
-import { redirect } from "@kdx/locales/next-intl/navigation";
 import { getTranslations } from "@kdx/locales/next-intl/server";
-// import { getTranslations, setStaticParamsLocale } from "@kdx/locales/next-intl/server";
 import { cn } from "@kdx/ui";
 import { buttonVariants } from "@kdx/ui/button";
 import { RadialGradient } from "@kdx/ui/magic-ui/radial-gradient";
@@ -13,10 +10,6 @@ import { HeroBento } from "../_components/hero-bento";
 import { HeroLamp } from "../_components/hero-lamp";
 
 export default async function HomePage() {
-  // setStaticParamsLocale(locale);
-
-  const { user } = await auth();
-  if (user) redirect("/team");
   const t = await getTranslations();
 
   return (
