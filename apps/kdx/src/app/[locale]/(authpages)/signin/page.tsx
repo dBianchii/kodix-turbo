@@ -14,7 +14,7 @@ export default async function SignInPage({
   searchParams?: Record<string, string | undefined>;
 }) {
   const { user } = await auth();
-  if (user) redirect(searchParams?.callbackUrl ?? "/");
+  if (user) redirect(searchParams?.callbackUrl ?? "/team");
   const t = await getTranslations();
 
   let signUpHref = "/signup";
