@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { index, mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { index, mysqlTable } from "drizzle-orm/mysql-core";
 
 import { NANOID_SIZE } from "../../nanoid";
 import { teams } from "../teams";
@@ -13,17 +13,18 @@ import { eventMasters } from "./calendar";
 
 export const careShifts = mysqlTable(
   "careShift",
-  {
-    id: nanoidPrimaryKey,
-    caregiverId: varchar("caregiverId", { length: NANOID_SIZE })
+  (t) => ({
+    id: nanoidPrimaryKey(t),
+    caregiverId: t
+      .varchar({ length: NANOID_SIZE })
       .notNull()
       .references(() => users.id),
-    teamId: teamIdReferenceCascadeDelete,
-    checkIn: timestamp("checkIn").defaultNow().notNull(),
-    checkOut: timestamp("checkOut"),
-    shiftEndedAt: timestamp("shiftEndedAt"),
-    notes: varchar("notes", { length: DEFAULTLENGTH }),
-  },
+    teamId: teamIdReferenceCascadeDelete(t),
+    checkIn: t.timestamp().defaultNow().notNull(),
+    checkOut: t.timestamp(),
+    shiftEndedAt: t.timestamp(),
+    notes: t.varchar({ length: DEFAULTLENGTH }),
+  }),
   (table) => {
     return {
       caregiverIdIdx: index("caregiverId_idx").on(table.caregiverId),
@@ -44,27 +45,28 @@ export const careShiftsRelations = relations(careShifts, ({ one }) => ({
 
 export const careTasks = mysqlTable(
   "careTask",
-  {
-    id: nanoidPrimaryKey,
-    date: timestamp("date").notNull(),
-    doneAt: timestamp("doneAt"),
-    doneByUserId: varchar("doneByUserId", { length: NANOID_SIZE }).references(
+  (t) => ({
+    id: nanoidPrimaryKey(t),
+    date: t.timestamp("date").notNull(),
+    doneAt: t.timestamp("doneAt"),
+    doneByUserId: t.varchar("doneByUserId", { length: NANOID_SIZE }).references(
       () => users.id,
       { onDelete: "restrict" }, //Restrict because we have to keep logs somehow
     ),
-    teamId: teamIdReferenceCascadeDelete,
-    eventMasterId: varchar("eventMasterId", {
+    teamId: teamIdReferenceCascadeDelete(t),
+    eventMasterId: t.varchar("eventMasterId", {
       length: NANOID_SIZE,
     }),
     //.references(() => eventMasters.id), //TODO: should we have foreignKey????????????????????????????????????????????????????????????????
-    careShiftId: varchar("careShiftId", { length: NANOID_SIZE })
+    careShiftId: t
+      .varchar("careShiftId", { length: NANOID_SIZE })
       .notNull()
       .references(() => careShifts.id),
-    title: varchar("title", { length: DEFAULTLENGTH }),
-    description: varchar("description", { length: DEFAULTLENGTH }),
-    details: varchar("details", { length: DEFAULTLENGTH }),
-    updatedAt: timestamp("updatedAt").onUpdateNow(),
-  },
+    title: t.varchar("title", { length: DEFAULTLENGTH }),
+    description: t.varchar("description", { length: DEFAULTLENGTH }),
+    details: t.varchar("details", { length: DEFAULTLENGTH }),
+    updatedAt: t.timestamp("updatedAt").onUpdateNow(),
+  }),
   (table) => {
     return {
       doneByUserIdIdx: index("doneByUserId_idx").on(table.doneByUserId),

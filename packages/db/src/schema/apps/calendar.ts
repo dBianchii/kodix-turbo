@@ -1,11 +1,5 @@
 import { relations } from "drizzle-orm";
-import {
-  index,
-  mysqlEnum,
-  mysqlTable,
-  timestamp,
-  varchar,
-} from "drizzle-orm/mysql-core";
+import { index, mysqlTable } from "drizzle-orm/mysql-core";
 
 import { NANOID_SIZE } from "../../nanoid";
 import { teams } from "../teams";
@@ -18,16 +12,16 @@ import { careTasks } from "./kodixCare";
 
 export const eventMasters = mysqlTable(
   "eventMaster",
-  {
-    id: nanoidPrimaryKey,
-    rule: varchar("rule", { length: DEFAULTLENGTH }).notNull(),
-    dateStart: timestamp("dateStart", { mode: "date", fsp: 3 }).notNull(),
-    dateUntil: timestamp("dateUntil", { mode: "date", fsp: 3 }),
-    title: varchar("title", { length: DEFAULTLENGTH }),
-    description: varchar("description", { length: DEFAULTLENGTH }),
-    teamId: teamIdReferenceCascadeDelete,
-    type: mysqlEnum("status", ["NORMAL", "CRITICAL"]).default("NORMAL"),
-  },
+  (t) => ({
+    id: nanoidPrimaryKey(t),
+    rule: t.varchar({ length: DEFAULTLENGTH }).notNull(),
+    dateStart: t.timestamp({ mode: "date", fsp: 3 }).notNull(),
+    dateUntil: t.timestamp({ mode: "date", fsp: 3 }),
+    title: t.varchar({ length: DEFAULTLENGTH }),
+    description: t.varchar({ length: DEFAULTLENGTH }),
+    teamId: teamIdReferenceCascadeDelete(t),
+    type: t.mysqlEnum(["NORMAL", "CRITICAL"]).default("NORMAL"),
+  }),
   (table) => {
     return {
       teamIdIdx: index("teamId_idx").on(table.teamId),
@@ -49,15 +43,14 @@ export const eventMastersRelations = relations(
 
 export const eventCancellations = mysqlTable(
   "eventCancellation",
-  {
-    id: nanoidPrimaryKey,
-    originalDate: timestamp("originalDate").notNull(),
-    eventMasterId: varchar("eventMasterId", {
-      length: NANOID_SIZE,
-    })
+  (t) => ({
+    id: nanoidPrimaryKey(t),
+    originalDate: t.timestamp({ mode: "date", fsp: 3 }).notNull(),
+    eventMasterId: t
+      .varchar({ length: NANOID_SIZE })
       .notNull()
       .references(() => eventMasters.id, { onDelete: "cascade" }),
-  },
+  }),
   (table) => {
     return {
       eventMasterIdIdx: index("eventMasterId_idx").on(table.eventMasterId),
@@ -76,18 +69,17 @@ export const eventCancellationsRelations = relations(
 
 export const eventExceptions = mysqlTable(
   "eventException",
-  {
-    id: nanoidPrimaryKey,
-    originalDate: timestamp("originalDate").notNull(),
-    newDate: timestamp("newDate", { mode: "date", fsp: 3 }).notNull(),
-    title: varchar("title", { length: DEFAULTLENGTH }),
-    description: varchar("description", { length: DEFAULTLENGTH }),
-    eventMasterId: varchar("eventMasterId", {
-      length: NANOID_SIZE,
-    })
+  (t) => ({
+    id: nanoidPrimaryKey(t),
+    originalDate: t.timestamp({ mode: "date", fsp: 3 }).notNull(),
+    newDate: t.timestamp({ mode: "date", fsp: 3 }).notNull(),
+    title: t.varchar({ length: DEFAULTLENGTH }),
+    description: t.varchar({ length: DEFAULTLENGTH }),
+    eventMasterId: t
+      .varchar({ length: NANOID_SIZE })
       .notNull()
       .references(() => eventMasters.id, { onDelete: "cascade" }),
-  },
+  }),
   (table) => {
     return {
       eventMasterIdIdx: index("eventMasterId_idx").on(table.eventMasterId),
