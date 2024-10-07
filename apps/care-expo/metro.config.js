@@ -4,12 +4,15 @@ const { FileStore } = require("metro-cache");
 
 const path = require("path");
 
-module.exports = withTurborepoManagedCache(
-  withMonorepoPaths(getDefaultConfig(__dirname), {
-    input: "./src/styles.css",
-    configPath: "./tailwind.config.ts",
-  }),
+const config = withTurborepoManagedCache(
+  withMonorepoPaths(getDefaultConfig(__dirname)),
 );
+
+// XXX: Resolve our exports in workspace packages
+// https://github.com/expo/expo/issues/26926
+config.resolver.unstable_enablePackageExports = true;
+
+module.exports = config;
 
 /**
  * Add the monorepo paths to the Metro config.
@@ -36,7 +39,7 @@ function withMonorepoPaths(config) {
 }
 
 /**
- * Move the Metro cache to the `node_modules/.cache/metro` folder.
+ * Move the Metro cache to the `.cache/metro` folder.
  * This repository configured Turborepo to use this cache location as well.
  * If you have any environment variables, you can configure Turborepo to invalidate it when needed.
  *
@@ -46,7 +49,7 @@ function withMonorepoPaths(config) {
  */
 function withTurborepoManagedCache(config) {
   config.cacheStores = [
-    new FileStore({ root: path.join(__dirname, "node_modules/.cache/metro") }),
+    new FileStore({ root: path.join(__dirname, ".cache/metro") }),
   ];
   return config;
 }

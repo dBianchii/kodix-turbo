@@ -12,7 +12,10 @@ import { ZodError } from "zod";
 
 import { db } from "@kdx/db/client";
 
+//TODO: make it import from our package: https://github.com/amannn/next-intl/issues/1229 sadface
+
 import type { AuthResponse } from "../../auth/src/config";
+import { getLocaleBasedOnCookie } from "./utils/locales";
 
 /**
  * 1. CONTEXT
@@ -35,8 +38,8 @@ export const createTRPCContext = (opts: {
 
   const source = opts.headers.get("x-trpc-source") ?? "unknown";
   console.log(">>> tRPC Request from", source, "by", session?.user);
-
   return {
+    locale: getLocaleBasedOnCookie(),
     session,
     db,
     token: authToken,

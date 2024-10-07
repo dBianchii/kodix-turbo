@@ -3,7 +3,8 @@ import type { DrizzleTransaction } from "@kdx/db/client";
 import type { KodixAppId } from "@kdx/shared";
 import type { TUninstallAppInputSchema } from "@kdx/validators/trpc/app";
 import { and, eq } from "@kdx/db";
-import { appIdToSchemas, schema } from "@kdx/db/schema";
+import { appsToTeams, appTeamConfigs, teamAppRoles } from "@kdx/db/schema";
+import { appIdToSchemas } from "@kdx/db/utils";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 import { invalidateUpstashCache } from "../../upstash";
@@ -19,27 +20,27 @@ export const uninstallAppHandler = async ({
 }: UninstallAppOptions) => {
   await ctx.db.transaction(async (tx) => {
     await tx
-      .delete(schema.appsToTeams)
+      .delete(appsToTeams)
       .where(
         and(
-          eq(schema.appsToTeams.appId, input.appId),
-          eq(schema.appsToTeams.teamId, ctx.session.user.activeTeamId),
+          eq(appsToTeams.appId, input.appId),
+          eq(appsToTeams.teamId, ctx.session.user.activeTeamId),
         ),
       );
     await tx
-      .delete(schema.teamAppRoles)
+      .delete(teamAppRoles)
       .where(
         and(
-          eq(schema.teamAppRoles.appId, input.appId),
-          eq(schema.teamAppRoles.teamId, ctx.session.user.activeTeamId),
+          eq(teamAppRoles.appId, input.appId),
+          eq(teamAppRoles.teamId, ctx.session.user.activeTeamId),
         ),
       );
     await tx
-      .delete(schema.appTeamConfigs)
+      .delete(appTeamConfigs)
       .where(
         and(
-          eq(schema.appTeamConfigs.appId, input.appId),
-          eq(schema.appTeamConfigs.teamId, ctx.session.user.activeTeamId),
+          eq(appTeamConfigs.appId, input.appId),
+          eq(appTeamConfigs.teamId, ctx.session.user.activeTeamId),
         ),
       );
 

@@ -1,12 +1,12 @@
 import Constants from "expo-constants";
 
-import { kdxProductionURL } from "@kdx/shared";
+import { KDX_PRODUCTION_URL } from "@kdx/shared";
 
 /**
  * Extend this function when going to production by
  * setting the baseUrl to your production API URL.
  */
-export const getBaseUrl = () => {
+export const getBaseKdxUrl = () => {
   /**
    * Gets the IP address of your host-machine. If it cannot automatically find it,
    * you'll have to manually set it. NOTE: Port 3000 should work for most but confirm
@@ -19,7 +19,7 @@ export const getBaseUrl = () => {
   const localhost = debuggerHost?.split(":")[0];
 
   if (!localhost) {
-    return kdxProductionURL;
+    return KDX_PRODUCTION_URL;
   }
   return `http://${localhost}:3000`;
 };

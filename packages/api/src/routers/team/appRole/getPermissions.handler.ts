@@ -1,6 +1,6 @@
 import type { TGetPermissionsInputSchema } from "@kdx/validators/trpc/team/appRole";
 import { eq } from "@kdx/db";
-import { schema } from "@kdx/db/schema";
+import { teamAppRoles } from "@kdx/db/schema";
 
 import type { TIsTeamOwnerProcedureContext } from "../../../procedures";
 
@@ -14,9 +14,9 @@ export const getPermissionsHandler = async ({
   input,
 }: GetPermissionsOptions) => {
   const teamAppRolesIdsForActiveTeamId = await ctx.db
-    .select({ id: schema.teamAppRoles.id })
-    .from(schema.teamAppRoles)
-    .where(eq(schema.teamAppRoles.teamId, ctx.session.user.activeTeamId))
+    .select({ id: teamAppRoles.id })
+    .from(teamAppRoles)
+    .where(eq(teamAppRoles.teamId, ctx.session.user.activeTeamId))
     .then((res) => res.map((r) => r.id));
 
   const permissions = await ctx.db.query.appPermissions.findMany({

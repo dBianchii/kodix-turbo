@@ -1,7 +1,7 @@
 import { render } from "@react-email/render";
 
 import { db } from "@kdx/db/client";
-import { schema } from "@kdx/db/schema";
+import { notifications } from "@kdx/db/schema";
 
 import type { resend } from "../utils/email";
 
@@ -31,7 +31,7 @@ export async function sendNotifications({
   });
   if (!user) throw new Error("Could not find user to send notification");
 
-  const sent: (typeof schema.notifications.$inferInsert)[] = [];
+  const sent: (typeof notifications.$inferInsert)[] = [];
   for (const channel of channels) {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (channel.type === "EMAIL") {
@@ -50,5 +50,5 @@ export async function sendNotifications({
     }
   }
 
-  if (sent.length) await db.insert(schema.notifications).values(sent);
+  if (sent.length) await db.insert(notifications).values(sent);
 }

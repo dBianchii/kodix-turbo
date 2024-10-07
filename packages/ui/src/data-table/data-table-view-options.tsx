@@ -3,7 +3,7 @@
 import type { Table } from "@tanstack/react-table";
 import { MixerHorizontalIcon } from "@radix-ui/react-icons";
 
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 
 import { Button } from "../button";
 import {
@@ -22,7 +22,7 @@ interface DataTableViewOptionsProps<TData> {
 export function DataTableViewOptions<TData>({
   table,
 }: DataTableViewOptionsProps<TData>) {
-  const t = useI18n();
+  const t = useTranslations();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

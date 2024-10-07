@@ -1,4 +1,4 @@
-import { relations, sql } from "drizzle-orm";
+import { relations } from "drizzle-orm";
 import {
   index,
   json,
@@ -10,6 +10,7 @@ import {
 
 import { NANOID_SIZE } from "../../nanoid";
 import { teamAppRoles, teams } from "../teams";
+import { users } from "../users";
 import {
   DEFAULTLENGTH,
   nanoidPrimaryKey,
@@ -20,9 +21,7 @@ export const devPartners = mysqlTable("devPartner", {
   id: nanoidPrimaryKey,
   name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
   partnerUrl: varchar("partnerUrl", { length: DEFAULTLENGTH }),
-  createdAt: timestamp("createdAt")
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").onUpdateNow(),
 });
 export const devPartnersRelations = relations(devPartners, ({ many }) => ({
@@ -33,9 +32,7 @@ export const apps = mysqlTable(
   "app",
   {
     id: nanoidPrimaryKey,
-    createdAt: timestamp("createdAt")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").onUpdateNow(),
     devPartnerId: varchar("devPartnerId", { length: NANOID_SIZE })
       .notNull()
@@ -178,6 +175,51 @@ export const appPermissionsToTeamAppRolesRelations = relations(
     TeamAppRole: one(teamAppRoles, {
       fields: [appPermissionsToTeamAppRoles.teamAppRoleId],
       references: [teamAppRoles.id],
+    }),
+  }),
+);
+
+export const userAppTeamConfigs = mysqlTable(
+  "userAppTeamConfig",
+  {
+    id: nanoidPrimaryKey,
+    config: json("config").notNull(),
+    userId: varchar("userId", { length: NANOID_SIZE })
+      .notNull()
+      .references(() => users.id),
+    appId: varchar("appId", { length: NANOID_SIZE })
+      .notNull()
+      .references(() => apps.id, { onDelete: "cascade" }),
+    teamId: teamIdReferenceCascadeDelete,
+  },
+  (table) => {
+    return {
+      userIdIdx: index("userId_idx").on(table.userId),
+      appIdIdx: index("appId_idx").on(table.appId),
+      teamIdIdx: index("teamId_idx").on(table.teamId),
+
+      unique_userId_appId_teamId: unique("unique_userId_appId_teamId").on(
+        table.userId,
+        table.appId,
+        table.teamId,
+      ),
+    };
+  },
+);
+export const userAppTeamConfigsRelations = relations(
+  userAppTeamConfigs,
+  ({ one }) => ({
+    User: one(users, {
+      fields: [userAppTeamConfigs.userId],
+      references: [users.id],
+    }),
+    App: one(apps, {
+      fields: [userAppTeamConfigs.appId],
+      references: [apps.id],
+    }),
+    Team: one(teams, {
+      fields: [userAppTeamConfigs.teamId],
+      references: [teams.id],
     }),
   }),
 );

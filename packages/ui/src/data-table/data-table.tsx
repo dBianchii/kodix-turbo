@@ -3,7 +3,7 @@
 import type { ColumnDef, Table as TanstackTable } from "@tanstack/react-table";
 import { flexRender } from "@tanstack/react-table";
 
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 
 import {
   Table,
@@ -55,7 +55,7 @@ export function DataTable<TData>({
   noResultsMessage?: string;
   onClickRow?: () => void;
 }) {
-  const t = useI18n();
+  const t = useTranslations();
   noResultsMessage = noResultsMessage ?? t("No results found");
 
   return (

@@ -1,4 +1,4 @@
-import { relations, sql } from "drizzle-orm";
+import { relations } from "drizzle-orm";
 import {
   boolean,
   datetime,
@@ -27,7 +27,7 @@ export const users = mysqlTable(
     name: varchar("name", { length: DEFAULTLENGTH }),
     passwordHash: varchar("passwordHash", { length: 255 }),
     email: varchar("email", { length: DEFAULTLENGTH }).notNull().unique(),
-    emailVerified: timestamp("emailVerified").default(sql`CURRENT_TIMESTAMP`),
+    emailVerified: timestamp("emailVerified").defaultNow(),
     image: varchar("image", { length: DEFAULTLENGTH }),
     activeTeamId: varchar("activeTeamId", { length: DEFAULTLENGTH }).notNull(),
     kodixAdmin: boolean("kodixAdmin").default(false).notNull(),
@@ -81,7 +81,7 @@ export const sessions = mysqlTable("session", {
     length: DEFAULTLENGTH,
   })
     .notNull()
-    .references(() => users.id),
+    .references(() => users.id, { onUpdate: "cascade", onDelete: "cascade" }),
   expiresAt: datetime("expires_at").notNull(),
   ipAddress: varchar("ip_address", { length: 45 }),
   userAgent: text("user_agent"),

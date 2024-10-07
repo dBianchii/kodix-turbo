@@ -3,7 +3,7 @@
 import Image from "next/image";
 
 import type { KodixAppId } from "@kdx/shared";
-import { useAppName } from "@kdx/locales/hooks";
+import { useAppName } from "@kdx/locales/next-intl/hooks";
 
 import { getAppIconUrl } from "~/helpers/miscelaneous";
 
@@ -28,7 +28,9 @@ export function IconKodixApp({
         width={size}
         alt={`${appName} icon`}
       />
-      {renderText && <p className="text-sm text-muted-foreground">{appName}</p>}
+      {renderText && (
+        <p className="line-clamp-1 text-sm text-muted-foreground">{appName}</p>
+      )}
     </div>
   );
 }

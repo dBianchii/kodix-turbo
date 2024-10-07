@@ -1,18 +1,23 @@
-import { schema } from "@kdx/db/schema";
+import type { Drizzle } from "@kdx/db/client";
+import dayjs from "@kdx/dayjs";
+import { and, eq } from "@kdx/db";
+import { db as _db } from "@kdx/db/client";
+import { appsToTeams, careTasks, teams, usersToTeams } from "@kdx/db/schema";
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
 import { getAllHandler } from "../../calendar/getAll.handler";
 import { saveConfigHandler } from "../../saveConfig.handler";
 
+const tomorrowEndOfDay = dayjs.utc().add(1, "day").endOf("day").toDate();
 export async function cloneCalendarTasksToCareTasks({
   start,
-  end,
+  end = tomorrowEndOfDay,
   careShiftId,
   ctx,
 }: {
   start: Date;
-  end: Date;
+  end?: Date;
   careShiftId: string;
   ctx: TProtectedProcedureContext;
 }) {
@@ -25,13 +30,13 @@ export async function cloneCalendarTasksToCareTasks({
   });
 
   if (calendarTasks.length > 0)
-    await ctx.db.insert(schema.careTasks).values(
+    await ctx.db.insert(careTasks).values(
       calendarTasks.map((calendarTask) => ({
         careShiftId: careShiftId,
         teamId: ctx.session.user.activeTeamId,
         title: calendarTask.title,
         description: calendarTask.description,
-        eventDate: calendarTask.date,
+        date: calendarTask.date,
         eventMasterId: calendarTask.eventMasterId,
         doneByUserId: null,
       })),
@@ -46,4 +51,23 @@ export async function cloneCalendarTasksToCareTasks({
       },
     },
   });
+}
+
+export async function getUserTeamsWithAppInstalled({
+  userId,
+  appId,
+  db = _db,
+}: {
+  userId: string;
+  appId: string;
+  db: Drizzle;
+}) {
+  return await db
+    .select({
+      id: teams.id,
+    })
+    .from(teams)
+    .where(and(eq(usersToTeams.userId, userId), eq(appsToTeams.appId, appId)))
+    .innerJoin(appsToTeams, eq(appsToTeams.teamId, teams.id))
+    .innerJoin(usersToTeams, eq(usersToTeams.teamId, teams.id));
 }

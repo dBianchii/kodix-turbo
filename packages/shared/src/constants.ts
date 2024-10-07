@@ -1,6 +1,5 @@
 /**
  * @description Used for the nuking of events. This will be removed one day
- * @usedBy kdx/api kdx/kdx
  */
 export const authorizedEmails = [
   "gdbianchii@gmail.com",
@@ -11,7 +10,8 @@ export const authorizedEmails = [
 
 /**
  * @description Full http url for the production environment.
- * @usedBy kdx/kdx kdx/db
  */
-export const kdxProductionURL = "https://www.kodix.com.br";
-export const kodixNotificationFromEmail = "Kodix <notification@kodix.com.br>"; //? Default 'from' email for notifications
+export const KDX_PRODUCTION_URL = "https://www.kodix.com.br";
+export const KDX_VERCEL_PROJECT_NAME = "kdx";
+export const KODIX_NOTIFICATION_FROM_EMAIL =
+  "Kodix <notification@kodix.com.br>"; //? Default 'from' email for notifications

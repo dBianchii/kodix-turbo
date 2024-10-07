@@ -1,9 +1,10 @@
 import { hash } from "@node-rs/argon2";
 import { TRPCError } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
 
 import type { TChangePasswordInputSchema } from "@kdx/validators/trpc/user";
-import { eq } from "@kdx/db";
-import { schema } from "@kdx/db/schema";
+import { eq, lte, or } from "@kdx/db";
+import { resetPasswordTokens, users } from "@kdx/db/schema";
 
 import type { TPublicProcedureContext } from "../../procedures";
 import { argon2Config } from "./utils";
@@ -19,27 +20,41 @@ export const changePasswordHandler = async ({
 }: ChangePasswordOptions) => {
   const existingToken = await ctx.db.query.resetPasswordTokens.findFirst({
     where: (resetPasswordTokens, { eq }) =>
-      eq(schema.resetPasswordTokens.token, input.token),
+      eq(resetPasswordTokens.token, input.token),
     columns: {
       userId: true,
+      tokenExpiresAt: true,
     },
   });
-  if (!existingToken)
+  const t = await getTranslations({ locale: ctx.locale });
+  if (!existingToken) {
     throw new TRPCError({
       code: "NOT_FOUND",
-      message: "Token not found",
+      message: t("api.Token not found"),
     });
+  }
+  if (existingToken.tokenExpiresAt <= new Date()) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: t("api.Token expired Please request your password change again"),
+    });
+  }
 
   const hashed = await hash(input.password, argon2Config);
   await ctx.db.transaction(async (tx) => {
     await tx
-      .delete(schema.resetPasswordTokens)
-      .where(eq(schema.resetPasswordTokens.token, input.token));
+      .delete(resetPasswordTokens)
+      .where(
+        or(
+          eq(resetPasswordTokens.token, input.token),
+          lte(resetPasswordTokens.tokenExpiresAt, new Date()),
+        ),
+      );
     await tx
-      .update(schema.users)
+      .update(users)
       .set({
         passwordHash: hashed,
       })
-      .where(eq(schema.users.id, existingToken.userId));
+      .where(eq(users.id, existingToken.userId));
   });
 };

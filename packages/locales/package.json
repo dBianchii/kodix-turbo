@@ -5,25 +5,28 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./server": "./src/server.ts",
-    "./client": "./src/client.ts",
-    "./provider": "./src/provider.tsx",
-    "./lang": "./src/lang.ts",
-    "./hooks": "./src/hooks/index.ts",
-    "./server-hooks": "./src/hooks/server-hooks.ts"
+    "./next-intl": "./src/next-intl/index.ts",
+    "./next-intl/provider": "./src/next-intl/provider.tsx",
+    "./next-intl/server": "./src/next-intl/server.ts",
+    "./next-intl/client": "./src/next-intl/client.ts",
+    "./next-intl/hooks": "./src/next-intl/hooks/index.ts",
+    "./next-intl/server-hooks": "./src/next-intl/hooks/server-hooks.ts",
+    "./next-intl/plugin": "./src/next-intl/plugin.js",
+    "./next-intl/navigation": "./src/next-intl/navigation.ts",
+    "./use-intl": "./src/use-intl/index.ts",
+    "./messages/care-expo": "./src/messages/_exports/care-expo.ts"
   },
   "scripts": {
-    "dev": "nodemon --watch ./src/lang --ext json --exec \"pnpm run generate\"",
-    "clean": "rm -rf .turbo node_modules",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
     "format": "prettier --check . '!src/generated/**' --ignore-path ../../.gitignore",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
-    "generate": "node --import tsx/esm ./src/generate.ts"
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
     "@kdx/shared": "workspace:*",
-    "next-international": "^1.2.4",
-    "react": "catalog:react18"
+    "next-intl": "^3.20.0",
+    "react": "catalog:react18",
+    "use-intl": "^3.20.0"
   },
   "devDependencies": {
     "@kdx/eslint-config": "workspace:*",

@@ -1,9 +1,11 @@
 import type { inferProcedureBuilderResolverOptions } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
 
 import { eq } from "@kdx/db";
-import { schema } from "@kdx/db/schema";
+import { teams } from "@kdx/db/schema";
 
+import { timingMiddleware } from "./middlewares";
 import { t } from "./trpc";
 
 //? This file should ONLY EXPORT procedures and their context types. Do not export anything else from this file because they are read by @kdx/trpc-cli
@@ -16,7 +18,7 @@ import { t } from "./trpc";
  * tRPC API. It does not guarantee that a user querying is authorized, but you
  * can still access user session data if they are logged in
  */
-export const publicProcedure = t.procedure;
+export const publicProcedure = t.procedure.use(timingMiddleware);
 export type TPublicProcedureContext = inferProcedureBuilderResolverOptions<
   typeof publicProcedure
 >["ctx"];
@@ -29,7 +31,7 @@ export type TPublicProcedureContext = inferProcedureBuilderResolverOptions<
  *
  * @see https://trpc.io/docs/procedures
  */
-export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
+export const protectedProcedure = publicProcedure.use(({ ctx, next }) => {
   if (!ctx.session?.user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
@@ -47,22 +49,23 @@ export type TProtectedProcedureContext = inferProcedureBuilderResolverOptions<
 export const isTeamOwnerProcedure = protectedProcedure.use(
   async ({ ctx, next }) => {
     const team = await ctx.db.query.teams.findFirst({
-      where: eq(schema.teams.id, ctx.session.user.activeTeamId),
+      where: eq(teams.id, ctx.session.user.activeTeamId),
       columns: {
         id: true,
         ownerId: true,
       },
     });
 
+    const t = await getTranslations({ locale: ctx.locale });
     if (!team)
       throw new TRPCError({
-        message: "No Team Found",
+        message: t("api.No Team Found"),
         code: "NOT_FOUND",
       });
 
     if (team.ownerId !== ctx.session.user.id)
       throw new TRPCError({
-        message: "Only the team's owner can do this",
+        message: t("api.Only the team owner can perform this action"),
         code: "FORBIDDEN",
       });
 

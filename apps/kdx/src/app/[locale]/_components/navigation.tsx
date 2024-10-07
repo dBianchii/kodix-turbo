@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { RxArrowLeft } from "react-icons/rx";
 
+import { usePathname } from "@kdx/locales/next-intl/navigation";
 import { cn } from "@kdx/ui";
 import { useMediaQuery } from "@kdx/ui/hooks";
 import {
@@ -37,9 +37,7 @@ export function Navigation({
 
   return (
     <NavigationMenu className="flex w-full max-w-4xl self-start">
-      <NavigationMenuList
-        className={cn("asdas flex w-full flex-col space-y-2")}
-      >
+      <NavigationMenuList className={cn("flex w-full flex-col space-y-2")}>
         {!pathname.endsWith(entryPoint) && !isSmallerScreen ? (
           <NavigationItem href={goBackItem.href}>
             <RxArrowLeft className="mr-2 size-4" /> {goBackItem.title}

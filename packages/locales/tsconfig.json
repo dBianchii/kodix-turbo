@@ -1,10 +1,9 @@
 {
   "extends": "@kdx/tsconfig/base.json",
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "ES2022"],
-    "jsx": "preserve",
-    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
+    "lib": ["ES2022", "dom", "dom.iterable"],
+    "jsx": "preserve"
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.json"],
+  "include": ["**/*.ts", "**/*.tsx", "**/*.json", "src/next-intl/plugin.js"],
   "exclude": ["node_modules"]
 }

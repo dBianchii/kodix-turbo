@@ -40,3 +40,8 @@ export const ZUpdateUserAssociationInputSchema = z.object({
 export type TUpdateUserAssociationInputSchema = z.infer<
   typeof ZUpdateUserAssociationInputSchema
 >;
+
+export const ZGetMyRolesInputSchema = z.object({
+  appId: z.custom<KodixAppId>(),
+});
+export type TGetMyRolesInputSchema = z.infer<typeof ZGetMyRolesInputSchema>;

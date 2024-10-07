@@ -24,6 +24,7 @@ apps/care-expo/.gitignore
 apps/care-expo/ios
 apps/care-expo/android
 .tamagui
+google-services.json
 
 #react-email
 .react-email
@@ -51,6 +52,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 dist/
+.cache
 
 # turbo
 .turbo
+
+# testing stuff
+test

@@ -4,33 +4,31 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 
+import { NextIntlClientProvider } from "@kdx/locales/next-intl/provider";
+
 import { TailwindIndicator } from "~/app/[locale]/_components/tailwind-indicator";
 import { env } from "~/env";
 import { TRPCReactProvider } from "~/trpc/react";
 
 import "~/app/globals.css";
 
-import { LocaleProvider } from "@kdx/locales/provider";
-import { kdxProductionURL } from "@kdx/shared";
+import { formats } from "@kdx/locales";
+import { getMessages } from "@kdx/locales/next-intl/server";
+import { getBaseUrl } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { ThemeProvider, ThemeToggle } from "@kdx/ui/theme";
 import { Toaster } from "@kdx/ui/toast";
 
-import { Header } from "./_components/header/header";
 import { CSPostHogProvider } from "./_components/posthog-provider";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    env.VERCEL_ENV === "production"
-      ? kdxProductionURL
-      : "http://localhost:3000",
-  ),
+  metadataBase: new URL(getBaseUrl()),
   title: "Kodix",
   description: "Software on demand",
   openGraph: {
     title: "Kodix",
     description: "Software on demand",
-    url: kdxProductionURL,
+    url: getBaseUrl(),
     siteName: "Kodix",
   },
   twitter: {
@@ -47,14 +45,12 @@ export const viewport: Viewport = {
   ],
 };
 
-// export function generateStaticParams() {
-//   return getStaticParams();
-// }
-
-export default function RootLayout(props: {
+export default async function RootLayout(props: {
   children: React.ReactNode;
   params: { locale: string };
 }) {
+  const messages = await getMessages();
+
   return (
     <html lang={props.params.locale} suppressHydrationWarning>
       <CSPostHogProvider>
@@ -69,13 +65,15 @@ export default function RootLayout(props: {
           <Analytics />
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <Toaster richColors closeButton />
-            <LocaleProvider params={props.params}>
+            <NextIntlClientProvider
+              messages={messages}
+              formats={formats}
+              timeZone="America/Sao_Paulo" //?Fix me!
+            >
               <TRPCReactProvider>
                 <div className="flex min-h-screen flex-col">
-                  <Header />
                   {props.children}
                 </div>
-
                 {/* UI Design Helpers */}
                 {env.NODE_ENV !== "production" && (
                   <div className="fixed bottom-1 z-50 flex flex-row items-center space-x-1">
@@ -84,7 +82,7 @@ export default function RootLayout(props: {
                   </div>
                 )}
               </TRPCReactProvider>
-            </LocaleProvider>
+            </NextIntlClientProvider>
           </ThemeProvider>
         </body>
       </CSPostHogProvider>

@@ -4,7 +4,7 @@ import type { Frequency } from "rrule";
 import React, { useState } from "react";
 import { RRule } from "rrule";
 
-import { useI18n } from "@kdx/locales/client";
+import { useTranslations } from "@kdx/locales/next-intl/client";
 import { Button } from "@kdx/ui/button";
 import {
   Command,
@@ -56,7 +56,7 @@ export function FrequencyPicker({
 
   const freqs = [RRule.DAILY, RRule.WEEKLY, RRule.MONTHLY, RRule.YEARLY];
 
-  const t = useI18n();
+  const t = useTranslations();
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -120,7 +120,7 @@ export function FrequencyPicker({
                         <Label htmlFor="r2" className="ml-2">
                           {t("At")}
                         </Label>
-                        <div className=" ml-8">
+                        <div className="ml-8">
                           <DatePicker
                             date={untilDate}
                             setDate={setUntilDate}
@@ -179,7 +179,7 @@ export function FrequencyToTxt({
   count?: number;
   lowercase?: boolean;
 }) {
-  const t = useI18n();
+  const t = useTranslations();
   let text;
   switch (frequency) {
     case RRule.DAILY:
