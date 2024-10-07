@@ -9,6 +9,7 @@ import { buttonVariants } from "@kdx/ui/button";
 import { RadialGradient } from "@kdx/ui/magic-ui/radial-gradient";
 
 import { Footer } from "../_components/footer";
+import { StaticHeader } from "../_components/header/static-header";
 import { HeroBento } from "../_components/hero-bento";
 import { HeroLamp } from "../_components/hero-lamp";
 
@@ -22,6 +23,7 @@ export default async function HomePage({
 
   return (
     <>
+      <StaticHeader />
       <main className="flex-1">
         <section id="hero">
           <RadialGradient
