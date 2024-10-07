@@ -1,6 +1,9 @@
 import { RxChevronRight } from "react-icons/rx";
 
-import { getTranslations } from "@kdx/locales/next-intl/server";
+import {
+  getTranslations,
+  unstable_setRequestLocale,
+} from "@kdx/locales/next-intl/server";
 import { cn } from "@kdx/ui";
 import { buttonVariants } from "@kdx/ui/button";
 import { RadialGradient } from "@kdx/ui/magic-ui/radial-gradient";
@@ -9,7 +12,13 @@ import { Footer } from "../_components/footer";
 import { HeroBento } from "../_components/hero-bento";
 import { HeroLamp } from "../_components/hero-lamp";
 
-export default async function HomePage() {
+export default async function HomePage({
+  params: { locale },
+}: {
+  params: { locale: string };
+}) {
+  unstable_setRequestLocale(locale);
+
   const t = await getTranslations();
 
   return (
