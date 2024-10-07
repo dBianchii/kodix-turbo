@@ -14,7 +14,7 @@ interface DeleteTeamOptions {
 
 export const deleteTeamHandler = async ({ ctx, input }: DeleteTeamOptions) => {
   const team = await ctx.db.query.teams.findFirst({
-    where: (team, { eq }) => eq(team.id, ctx.session.user.activeTeamId),
+    where: (team, { eq }) => eq(team.id, input.teamId),
     columns: { name: true },
     with: {
       UsersToTeams: {
@@ -52,7 +52,7 @@ export const deleteTeamHandler = async ({ ctx, input }: DeleteTeamOptions) => {
     .innerJoin(usersToTeams, eq(teams.id, usersToTeams.teamId))
     .where(
       and(
-        not(eq(teams.id, ctx.session.user.activeTeamId)),
+        not(eq(teams.id, input.teamId)),
         eq(usersToTeams.userId, ctx.session.user.id),
       ),
     )
@@ -74,9 +74,7 @@ export const deleteTeamHandler = async ({ ctx, input }: DeleteTeamOptions) => {
       .where(eq(users.id, ctx.session.user.id));
 
     //Remove the team
-    await tx
-      .delete(careTasks)
-      .where(eq(careTasks.teamId, ctx.session.user.activeTeamId)); //?uuuuh...
-    await tx.delete(teams).where(eq(teams.id, ctx.session.user.activeTeamId)); //! Should delete many other tables based on referential actions
+    await tx.delete(careTasks).where(eq(careTasks.teamId, input.teamId)); //?uuuuh...
+    await tx.delete(teams).where(eq(teams.id, input.teamId)); //! Should delete many other tables based on referential actions
   });
 };

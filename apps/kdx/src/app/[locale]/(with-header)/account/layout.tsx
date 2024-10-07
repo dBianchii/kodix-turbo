@@ -15,10 +15,6 @@ export default async function Layout({
       href: `/account/general`,
       title: t("General"),
     },
-    {
-      href: `/account/teams`,
-      title: t("Teams"),
-    },
   ];
 
   return (

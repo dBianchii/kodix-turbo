@@ -15,6 +15,7 @@ import { protectedProcedure, publicProcedure } from "../../procedures";
 import { T } from "../../utils/locales";
 import { changeNameHandler } from "./changeName.handler";
 import { changePasswordHandler } from "./changePassword.handler";
+import { deleteAccountHandler } from "./deleteAccount.handler";
 import { deleteNotificationsHandler } from "./deleteNotifications.handler";
 import { getInvitationsHandler } from "./getInvitations.handler";
 import { getNotificationsHandler } from "./getNotifications.handler";
@@ -51,4 +52,5 @@ export const userRouter = {
   changePassword: publicProcedure
     .input(ZChangePasswordInputSchema)
     .mutation(changePasswordHandler),
+  deleteAccount: protectedProcedure.mutation(deleteAccountHandler),
 } satisfies TRPCRouterRecord;

@@ -65,7 +65,7 @@ export function UserProfileButton({ user }: { user: User }) {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href="/account/teams">
+            <Link href="/account/general">
               <MdOutlineSwapHorizontalCircle className="mr-2 size-4" />
               {t("Change team")}
             </Link>

@@ -14,7 +14,7 @@ import { appRoleRouter } from "./appRole/_router";
 import { createHandler } from "./create.handler";
 import { deleteTeamHandler } from "./deleteTeam.handler";
 import { getActiveTeamHandler } from "./getActiveTeam.handler";
-import { getAllForLoggedUserHandler } from "./getAllForLoggedUser.handler";
+import { getAllHandler } from "./getAll";
 import { getAllUsersHandler } from "./getAllUsers.handler";
 import { invitationRouter } from "./invitation/_router";
 import { leaveTeamHandler } from "./leaveTeam.handler";
@@ -26,7 +26,7 @@ export const teamRouter = {
   invitation: invitationRouter,
   create: protectedProcedure.input(ZCreateInputSchema).mutation(createHandler),
   getActiveTeam: protectedProcedure.query(getActiveTeamHandler),
-  getAllForLoggedUser: protectedProcedure.query(getAllForLoggedUserHandler),
+  getAll: protectedProcedure.query(getAllHandler),
   getAllUsers: protectedProcedure.query(getAllUsersHandler),
   removeUser: isTeamOwnerProcedure
     .input(ZRemoveUserSchema)
