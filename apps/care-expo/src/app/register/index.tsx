@@ -108,7 +108,6 @@ export default function Register() {
               <Button
                 mt={"$6"}
                 onPress={form.handleSubmit(async (values) => {
-                  console.log("here");
                   Keyboard.dismiss();
                   const result = await query.refetch();
 

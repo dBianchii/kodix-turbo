@@ -7,7 +7,7 @@ import { eq } from "@kdx/db";
 import { careShifts } from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
-import { getCurrentCareShiftHandler } from "./getCurrentCareShift.handler";
+import { getCurrentShiftHandler } from "./getCurrentShift.handler";
 
 interface DoCheckoutForShiftOptions {
   ctx: TProtectedProcedureContext;
@@ -18,7 +18,7 @@ export const doCheckoutForShiftHandler = async ({
   ctx,
   input,
 }: DoCheckoutForShiftOptions) => {
-  const currentShift = await getCurrentCareShiftHandler({ ctx });
+  const currentShift = await getCurrentShiftHandler({ ctx });
   const t = await getTranslations({ locale: ctx.locale });
   if (!currentShift) {
     throw new TRPCError({

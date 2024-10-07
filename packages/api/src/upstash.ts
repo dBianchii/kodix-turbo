@@ -27,15 +27,7 @@ interface KeysMapping {
     };
     value:
       | {
-          id: string;
-          AppPermissionsToTeamAppRoles: {
-            teamAppRoleId: string;
-            appPermissionId: string;
-          }[];
-          TeamAppRolesToUsers: {
-            userId: string;
-            teamAppRoleId: string;
-          }[];
+          permissionId: string;
         }
       | undefined;
   };
@@ -49,6 +41,9 @@ const constructKey = <T extends keyof KeysMapping>(
   return variableKeys ? `${key}-${Object.values(variableKeys).join("-")}` : key;
 };
 
+/**
+ * If nothing is found, it will return `null`
+ */
 export const getUpstashCache = async <T extends keyof KeysMapping>(
   key: T,
   variableKeys: KeysMapping[T]["tags"],

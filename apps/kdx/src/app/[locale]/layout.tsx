@@ -12,13 +12,13 @@ import { TRPCReactProvider } from "~/trpc/react";
 
 import "~/app/globals.css";
 
+import { formats } from "@kdx/locales";
 import { getMessages } from "@kdx/locales/next-intl/server";
 import { getBaseUrl } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { ThemeProvider, ThemeToggle } from "@kdx/ui/theme";
 import { Toaster } from "@kdx/ui/toast";
 
-import { Header } from "./_components/header/header";
 import { CSPostHogProvider } from "./_components/posthog-provider";
 
 export const metadata: Metadata = {
@@ -69,13 +69,15 @@ export default async function RootLayout(props: {
           <Analytics />
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <Toaster richColors closeButton />
-            <NextIntlClientProvider messages={messages}>
+            <NextIntlClientProvider
+              messages={messages}
+              formats={formats}
+              timeZone="America/Sao_Paulo" //?Fix me!
+            >
               <TRPCReactProvider>
                 <div className="flex min-h-screen flex-col">
-                  <Header />
                   {props.children}
                 </div>
-
                 {/* UI Design Helpers */}
                 {env.NODE_ENV !== "production" && (
                   <div className="fixed bottom-1 z-50 flex flex-row items-center space-x-1">

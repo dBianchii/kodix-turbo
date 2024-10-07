@@ -1,13 +1,11 @@
 import type { AppPermissionId, KodixAppId } from "@kdx/shared";
 import {
-  calendarAdminRoleDefaultId,
   calendarAppId,
-  kodixCareAdminRoleDefaultId,
+  calendarRoleDefaultIds,
   kodixCareAppId,
-  kodixCareCareGiverRoleDefaultId,
-  kodixCarePatientRoleDefaultId,
-  todoAdminRoleDefaultId,
+  kodixCareRoleDefaultIds,
   todoAppId,
+  todoRoleDefaultIds,
 } from "@kdx/shared";
 
 import { useTranslations } from "../client";
@@ -33,11 +31,11 @@ export const useAppDescription = (appId: KodixAppId) => {
 export const useAppRoleDefaultNames = () => {
   const t = useTranslations();
   const appRoleDefaultIdToName = {
-    [todoAdminRoleDefaultId]: t("Admin"),
-    [calendarAdminRoleDefaultId]: t("Admin"),
-    [kodixCareAdminRoleDefaultId]: t("Admin"),
-    [kodixCarePatientRoleDefaultId]: t("Patient"),
-    [kodixCareCareGiverRoleDefaultId]: t("Care Giver"),
+    [todoRoleDefaultIds.admin]: t("Admin"),
+    [calendarRoleDefaultIds.admin]: t("Admin"),
+    [kodixCareRoleDefaultIds.admin]: t("Admin"),
+    [kodixCareRoleDefaultIds.patient]: t("Patient"),
+    [kodixCareRoleDefaultIds.careGiver]: t("Care Giver"),
   };
 
   return appRoleDefaultIdToName;

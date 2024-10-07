@@ -1,3 +1,4 @@
+import type { careTasks } from "@kdx/db/schema";
 import type { TGetCareTasksInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import dayjs from "@kdx/dayjs";
 import { eventMasters } from "@kdx/db/schema";
@@ -11,86 +12,66 @@ interface GetCareTasksOptions {
   ctx: TProtectedProcedureContext;
   input: TGetCareTasksInputSchema;
 }
-
+export interface CareTask {
+  id: typeof careTasks.$inferSelect.id;
+  title: typeof careTasks.$inferSelect.title;
+  description: typeof careTasks.$inferSelect.description;
+  date: typeof careTasks.$inferSelect.date;
+  doneAt: typeof careTasks.$inferSelect.doneAt;
+  updatedAt: typeof careTasks.$inferSelect.updatedAt;
+  doneByUserId: typeof careTasks.$inferSelect.doneByUserId;
+  details: typeof careTasks.$inferSelect.details;
+}
+type CareTaskOrCalendarTask = Omit<CareTask, "id"> & { id: string | null }; //? Same as CareTask but id might not exist when it's a calendar task
 export const getCareTasksHandler = async ({
   ctx,
   input,
 }: GetCareTasksOptions) => {
   const calendarTasks = await getAllHandler({ ctx, input });
+  const careTasks = (await ctx.db.query.careTasks.findMany({
+    where: (careTask, { gte, lte, eq, and }) =>
+      and(
+        eq(eventMasters.teamId, ctx.session.user.activeTeamId),
+        gte(careTask.date, input.dateStart),
+        lte(careTask.date, input.dateEnd),
+      ),
 
-  const careTasks = (
-    await ctx.db.query.careTasks.findMany({
-      where: (careTask, { gte, lte, eq, and }) =>
-        and(
-          eq(eventMasters.teamId, ctx.session.user.activeTeamId),
-          gte(careTask.eventDate, input.dateStart),
-          lte(careTask.eventDate, input.dateEnd),
-        ),
-      with: {
-        EventMaster: {
-          columns: {
-            teamId: true,
-          },
-        },
-      },
-      columns: {
-        doneAt: true,
-        id: true,
-        title: true,
-        description: true,
-        eventDate: true,
-        updatedAt: true,
-        doneByUserId: true,
-        details: true,
-      },
-    })
-  ).map((task) => ({
-    id: task.id,
-    title: task.title,
-    description: task.description,
-    date: task.eventDate,
-    doneAt: task.doneAt,
-    updatedAt: task.updatedAt,
-    doneByUserId: task.doneByUserId,
-    details: task.details,
-  }));
+    columns: {
+      doneAt: true,
+      id: true,
+      title: true,
+      description: true,
+      date: true,
+      updatedAt: true,
+      doneByUserId: true,
+      details: true,
+    },
+  })) satisfies CareTask[];
 
   const config = await getConfigHandler({
     ctx,
     input: { appId: kodixCareAppId },
   });
 
-  const union = [
+  const union: CareTaskOrCalendarTask[] = [
     ...careTasks,
-    ...calendarTasks.filter(
-      (ct) =>
-        !config.clonedCareTasksUntil ||
-        dayjs(ct.date).isAfter(config.clonedCareTasksUntil),
-    ),
-  ].map((task) => {
-    const data = {
-      id: "",
-      title: task.title,
-      description: task.description,
-      date: task.date,
-      doneAt: null,
-      updatedAt: null,
-      doneByUserId: null,
-      details: null,
-    };
-    if ("doneAt" in task) {
-      return {
-        ...data,
-        id: task.id,
-        doneAt: task.doneAt,
-        updatedAt: task.updatedAt,
-        doneByUserId: task.doneByUserId,
-        details: task.details,
-      };
-    }
-
-    return data;
-  });
+    ...calendarTasks
+      .filter(
+        (ct) =>
+          !config.clonedCareTasksUntil ||
+          dayjs(ct.date).isAfter(config.clonedCareTasksUntil),
+      )
+      .map((x) => ({
+        id: null,
+        title: x.title ?? null,
+        description: x.description ?? null,
+        date: x.date,
+        doneAt: null,
+        updatedAt: null,
+        doneByUserId: null,
+        details: null,
+      })),
+  ].sort((a, b) => a.date.getTime() - b.date.getTime()); //? Sort by ascending time
 
   return union;
 };

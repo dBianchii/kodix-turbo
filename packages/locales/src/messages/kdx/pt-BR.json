@@ -47,7 +47,10 @@
       "No events for this day": "Não há eventos neste dia",
       "Unlock all tasks up until here": "Desbloquear todas as tarefas até aqui?",
       "This will unlock all tasks of this turn up until this task": "Isso vai desbloquear todas as tarefas deste turno até esta tarefa",
-      "Successfully unlocked tasks": "Tarefas desbloqueadas com sucesso!"
+      "Successfully unlocked tasks": "Tarefas desbloqueadas com sucesso!",
+      "Add task": "Adicionar tarefa",
+      "Receive notifications for delayed tasks": "Receber notificações de tarefas atrasadas?",
+      "Set this on if you want to receive notifications for delayed tasks": "Ative esta opção se desejar receber notificações de tarefas atrasadas (uma hora de atraso)"
     },
     "todo": {
       "appDescription": "Todo é um app de anotações"
@@ -438,16 +441,20 @@
   "Calendar": "Calendário",
   "Kodix Care": "Kodix Care",
   "Todo": "Todo",
+  "You cannot unlock tasks that are scheduled for after tomorrow end of day": "Você não pode desbloquear tarefas agendadas para depois do final do dia de amanhã",
+  "Substitue the tasks of this turn with the tasks from the calendar": "Substituir os dados do seu turno pelo calendário de planejamento?",
+  "Close": "Fechar",
+  "Sync tasks": "Sincronizar tarefas",
+  "Add task": "Adicionar tarefa",
+  "Main page": "Página principal",
+  "Settings saved": "Configurações salvas",
   "Delete my account": "Deletar minha conta",
   "You are deleting your account": "Você está excluindo sua conta",
   "Deleting account": "Excluindo conta",
   "Delete account": "Excluir conta",
   "Permanently delete your account and all your data ": "Exclua permanentemente sua conta e todos os seus dados",
   "All data related to you will be permanently lost and cannot be recovered": "Todos os dados relacionados a você serão perdidos permanentemente e não poderão ser recuperados",
-  "Continue": "Continuar",
   "Please type DELETE_ACCOUNT to continue": "Digite \"<deleteAccount>deleteAccount</deleteAccount>\" para continuar",
-  "This action is not reversible please be certain": "Esta ação não é reversível, tenha certeza",
   "Account deleted successfully": "Conta excluída com sucesso",
-  "Warning": "Aviso",
   "COUNT members": "{count, plural, =0 {# membros} =1 {# membro} other {# membros}}"
 }

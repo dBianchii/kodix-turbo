@@ -2,15 +2,15 @@ import type { ConfigContext, ExpoConfig } from "expo/config";
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: "care-expo",
+  name: "Kodix Care",
   slug: "care-expo",
   scheme: "care-expo",
   version: "0.1.0",
   orientation: "portrait",
-  icon: "./assets/icon.png",
+  icon: "./assets/kodixCare.png",
   userInterfaceStyle: "automatic",
   splash: {
-    image: "./assets/icon.png",
+    image: "./assets/kodixCare.png",
     resizeMode: "contain",
     backgroundColor: "#020817",
   },
@@ -31,12 +31,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   extra: {
     eas: {
-      projectId: "75dbcecc-5bc8-41c3-b79f-f8582a540fdf",
+      projectId: "d2701343-40d2-4b76-b504-34b546414b36",
     },
   },
   experiments: {
     tsconfigPaths: true,
-    typedRoutes: true,
   },
   plugins: [
     "expo-router",

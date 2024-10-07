@@ -2,11 +2,18 @@ import { experimental_standaloneMiddleware, TRPCError } from "@trpc/server";
 import { getTranslations } from "next-intl/server";
 
 import type { AppPermissionId, KodixAppId } from "@kdx/shared";
+import { and, eq } from "@kdx/db";
+import {
+  appPermissionsToTeamAppRoles,
+  teamAppRoles,
+  teamAppRolesToUsers,
+} from "@kdx/db/schema";
 import { getAppName } from "@kdx/locales/next-intl/server-hooks";
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "./procedures";
 import { getInstalledHandler } from "./routers/app/getInstalled.handler";
+import { t } from "./trpc";
 import { getUpstashCache, setUpstashCache } from "./upstash";
 
 /**
@@ -39,31 +46,32 @@ export const appPermissionMiddleware = (permissionId: AppPermissionId) =>
   experimental_standaloneMiddleware<{
     ctx: TProtectedProcedureContext;
   }>().create(async ({ ctx, next }) => {
-    const cached = await getUpstashCache("permissions", {
+    let foundPermission = await getUpstashCache("permissions", {
       userId: ctx.session.user.id,
       teamId: ctx.session.user.activeTeamId,
       permissionId,
     });
-    let foundPermission = cached;
 
-    if (cached === null) {
-      foundPermission = await ctx.db.query.teamAppRoles.findFirst({
-        with: {
-          AppPermissionsToTeamAppRoles: {
-            where: (appPermissionsToTeamAppRole, { eq }) =>
-              eq(appPermissionsToTeamAppRole.appPermissionId, permissionId),
-          },
-          TeamAppRolesToUsers: {
-            where: (usersToPermissions, { eq }) =>
-              eq(usersToPermissions.userId, ctx.session.user.id),
-          },
-        },
-        where: (teamAppRole, { eq }) =>
-          eq(teamAppRole.teamId, ctx.session.user.activeTeamId),
-        columns: {
-          id: true,
-        },
-      });
+    if (foundPermission === null) {
+      const permission = await ctx.db
+        .select({ permissionId: appPermissionsToTeamAppRoles.appPermissionId })
+        .from(teamAppRoles)
+        .innerJoin(
+          teamAppRolesToUsers,
+          eq(teamAppRolesToUsers.teamAppRoleId, teamAppRoles.id),
+        )
+        .innerJoin(
+          appPermissionsToTeamAppRoles,
+          eq(appPermissionsToTeamAppRoles.teamAppRoleId, teamAppRoles.id),
+        )
+        .where(
+          and(
+            eq(teamAppRolesToUsers.userId, ctx.session.user.id),
+            eq(teamAppRoles.teamId, ctx.session.user.activeTeamId),
+            eq(appPermissionsToTeamAppRoles.appPermissionId, permissionId),
+          ),
+        )
+        .then((res) => res[0]);
 
       await setUpstashCache("permissions", {
         variableKeys: {
@@ -71,8 +79,10 @@ export const appPermissionMiddleware = (permissionId: AppPermissionId) =>
           teamId: ctx.session.user.activeTeamId,
           permissionId,
         },
-        value: foundPermission,
+        value: permission,
       });
+
+      foundPermission = permission;
     }
 
     if (!foundPermission) {
@@ -110,4 +120,27 @@ export const appInstalledMiddleware = experimental_standaloneMiddleware<{
   }
 
   return next({ ctx });
+});
+
+/**
+ * Middleware for timing procedure execution and adding an articifial delay in development.
+ *
+ * You can remove this if you don't like it, but it can help catch unwanted waterfalls by simulating
+ * network latency that would occur in production but not in local development.
+ */
+export const timingMiddleware = t.middleware(async ({ next, path }) => {
+  const start = Date.now();
+
+  if (t._config.isDev) {
+    // artificial delay in dev 100-500ms
+    const waitMs = Math.floor(Math.random() * 400) + 100;
+    await new Promise((resolve) => setTimeout(resolve, waitMs));
+  }
+
+  const result = await next();
+
+  const end = Date.now();
+  console.log(`[TRPC] ${path} took ${end - start}ms to execute`);
+
+  return result;
 });

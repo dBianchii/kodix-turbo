@@ -1,5 +1,11 @@
 import { relations } from "drizzle-orm";
-import { index, mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core";
+import {
+  index,
+  mysqlEnum,
+  mysqlTable,
+  timestamp,
+  varchar,
+} from "drizzle-orm/mysql-core";
 
 import { NANOID_SIZE } from "../../nanoid";
 import { teams } from "../teams";
@@ -20,6 +26,7 @@ export const eventMasters = mysqlTable(
     title: varchar("title", { length: DEFAULTLENGTH }),
     description: varchar("description", { length: DEFAULTLENGTH }),
     teamId: teamIdReferenceCascadeDelete,
+    type: mysqlEnum("status", ["NORMAL", "CRITICAL"]).default("NORMAL"),
   },
   (table) => {
     return {

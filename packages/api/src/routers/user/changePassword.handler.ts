@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { getTranslations } from "next-intl/server";
 
 import type { TChangePasswordInputSchema } from "@kdx/validators/trpc/user";
-import { eq } from "@kdx/db";
+import { eq, lte, or } from "@kdx/db";
 import { resetPasswordTokens, users } from "@kdx/db/schema";
 
 import type { TPublicProcedureContext } from "../../procedures";
@@ -23,21 +23,33 @@ export const changePasswordHandler = async ({
       eq(resetPasswordTokens.token, input.token),
     columns: {
       userId: true,
+      tokenExpiresAt: true,
     },
   });
+  const t = await getTranslations({ locale: ctx.locale });
   if (!existingToken) {
-    const t = await getTranslations({ locale: ctx.locale });
-
     throw new TRPCError({
       code: "NOT_FOUND",
       message: t("api.Token not found"),
     });
   }
+  if (existingToken.tokenExpiresAt <= new Date()) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: t("api.Token expired Please request your password change again"),
+    });
+  }
+
   const hashed = await hash(input.password, argon2Config);
   await ctx.db.transaction(async (tx) => {
     await tx
       .delete(resetPasswordTokens)
-      .where(eq(resetPasswordTokens.token, input.token));
+      .where(
+        or(
+          eq(resetPasswordTokens.token, input.token),
+          lte(resetPasswordTokens.tokenExpiresAt, new Date()),
+        ),
+      );
     await tx
       .update(users)
       .set({

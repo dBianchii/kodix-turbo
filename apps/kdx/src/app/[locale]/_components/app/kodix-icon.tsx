@@ -28,7 +28,9 @@ export function IconKodixApp({
         width={size}
         alt={`${appName} icon`}
       />
-      {renderText && <p className="text-sm text-muted-foreground">{appName}</p>}
+      {renderText && (
+        <p className="line-clamp-1 text-sm text-muted-foreground">{appName}</p>
+      )}
     </div>
   );
 }

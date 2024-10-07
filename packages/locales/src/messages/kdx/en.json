@@ -47,7 +47,10 @@
       "No events for this day": "No events for this day",
       "Unlock all tasks up until here": "Unlock all tasks up until here?",
       "This will unlock all tasks of this turn up until this task": "Isso vai desbloquear todas as tarefas deste turno até esta tarefa",
-      "Successfully unlocked tasks": "Successfully unlocked tasks!"
+      "Successfully unlocked tasks": "Successfully unlocked tasks!",
+      "Add task": "Add task",
+      "Receive notifications for delayed tasks": "Receive notifications for delayed tasks?",
+      "Set this on if you want to receive notifications for delayed tasks": "Set this on if you want to receive notifications for delayed tasks (one hour delayed)"
     },
     "todo": {
       "appDescription": "Todo is a note taking app"
@@ -438,14 +441,18 @@
   "Calendar": "Calendar",
   "Kodix Care": "Kodix Care",
   "Todo": "Todo",
+  "You cannot unlock tasks that are scheduled for after tomorrow end of day": "You cannot unlock tasks that are scheduled for after tomorrow end of day",
+  "Sync tasks": "Sync tasks",
+  "Substitue the tasks of this turn with the tasks from the calendar": "Substitue the tasks of this turn with the tasks from the calendar?",
+  "Close": "Close",
+  "Add task": "Add task",
+  "Main page": "Main page",
+  "Settings saved": "Settings saved",
   "Delete my account": "Delete my account",
   "Delete account": "Delete account",
   "You are deleting your account": "You are deleting your account",
   "All data related to you will be permanently lost and cannot be recovered": "All data related to you will be permanently lost and cannot be recovered",
-  "Warning": "Warning",
-  "This action is not reversible please be certain": "This action is not reversible please be certain",
   "Please type DELETE_ACCOUNT to continue": "Please type \"<deleteAccount>deleteAccount</deleteAccount>\" to continue",
-  "Continue": "Continue",
   "Deleting account": "Deleting account",
   "Account deleted successfully": "Account deleted successfully",
   "Permanently delete your account and all your data ": "Permanently delete your account and all your data",

@@ -28,9 +28,18 @@ export const kodixCareConfigSchema = z.object({
   clonedCareTasksUntil: dateFromISO8601.optional(),
 });
 
+export const kodixCareUserAppTeamConfigSchema = z.object({
+  sendNotificationsForDelayedTasks: z.boolean().optional(),
+});
+
 //TODO: Maybe move this getAppTeamConfigSchema elsewhere
 export const appIdToAppTeamConfigSchema = {
   [kodixCareAppId]: kodixCareConfigSchema,
+};
+
+//TODO: Maybe move this getAppTeamConfigSchema elsewhere
+export const appIdToUserAppTeamConfigSchema = {
+  [kodixCareAppId]: kodixCareUserAppTeamConfigSchema,
 };
 
 export const NANOID_REGEX = /^[0-9a-z]{12}$/;

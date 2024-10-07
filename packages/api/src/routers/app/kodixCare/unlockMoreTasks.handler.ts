@@ -6,7 +6,7 @@ import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 import { getConfigHandler } from "../getConfig.handler";
-import { getCurrentCareShiftHandler } from "./getCurrentCareShift.handler";
+import { getCurrentShiftHandler } from "./getCurrentShift.handler";
 import { cloneCalendarTasksToCareTasks } from "./utils";
 
 interface UnlockMoreTasksInputOptions {
@@ -47,7 +47,7 @@ export const unlockMoreTasksHandler = async ({
       ),
     });
 
-  const careShift = await getCurrentCareShiftHandler({ ctx });
+  const careShift = await getCurrentShiftHandler({ ctx });
   if (!careShift)
     throw new TRPCError({
       code: "CONFLICT",
