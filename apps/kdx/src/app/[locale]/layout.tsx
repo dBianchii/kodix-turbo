@@ -45,10 +45,6 @@ export const viewport: Viewport = {
   ],
 };
 
-// export function generateStaticParams() {
-//   return getStaticParams();
-// }
-
 export default async function RootLayout(props: {
   children: React.ReactNode;
   params: { locale: string };

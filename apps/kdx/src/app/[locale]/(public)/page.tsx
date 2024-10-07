@@ -1,26 +1,31 @@
 import { RxChevronRight } from "react-icons/rx";
 
-import { auth } from "@kdx/auth";
-import { redirect } from "@kdx/locales/next-intl/navigation";
-import { getTranslations } from "@kdx/locales/next-intl/server";
-// import { getTranslations, setStaticParamsLocale } from "@kdx/locales/next-intl/server";
+import {
+  getTranslations,
+  unstable_setRequestLocale,
+} from "@kdx/locales/next-intl/server";
 import { cn } from "@kdx/ui";
 import { buttonVariants } from "@kdx/ui/button";
 import { RadialGradient } from "@kdx/ui/magic-ui/radial-gradient";
 
 import { Footer } from "../_components/footer";
+import { StaticHeader } from "../_components/header/static-header";
 import { HeroBento } from "../_components/hero-bento";
 import { HeroLamp } from "../_components/hero-lamp";
 
-export default async function HomePage() {
-  // setStaticParamsLocale(locale);
+export const dynamic = "error"; //? If any dynamic functions are used, next.js will throw an error if the page is not generated statically
 
-  const { user } = await auth();
-  if (user) redirect("/team");
+export default async function HomePage({
+  params: { locale },
+}: {
+  params: { locale: string };
+}) {
+  unstable_setRequestLocale(locale);
   const t = await getTranslations();
 
   return (
     <>
+      <StaticHeader />
       <main className="flex-1">
         <section id="hero">
           <RadialGradient

@@ -19,7 +19,7 @@ import {
 import { Table, TableBody, TableCell, TableRow } from "@kdx/ui/table";
 import { toast } from "@kdx/ui/toast";
 
-import { DeleteTeamConfirmationDialog } from "~/app/[locale]/(with-header)/team/settings/general/_components/delete-team-confirmation-dialog";
+import { DeleteTeamConfirmationDialog } from "~/app/[locale]/(authed)/team/settings/general/_components/delete-team-confirmation-dialog";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 import { switchTeamAction } from "./actions";

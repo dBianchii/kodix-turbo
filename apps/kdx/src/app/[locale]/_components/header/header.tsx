@@ -1,7 +1,7 @@
 import { Suspense } from "react";
-import Link from "next/link";
 
 import { auth } from "@kdx/auth";
+import { Link } from "@kdx/locales/next-intl/navigation";
 import { getTranslations } from "@kdx/locales/next-intl/server";
 import { buttonVariants } from "@kdx/ui/button";
 
@@ -9,6 +9,7 @@ import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { api } from "~/trpc/server";
 import { AppSwitcher } from "../app-switcher";
 import { I18nPicker } from "./i18n-picker";
+import { Logo } from "./logo";
 import { NotificationsPopoverClient } from "./notifications-popover-client";
 import { UserProfileButton } from "./user-profile-button";
 
@@ -58,22 +59,6 @@ async function LogoWithAppSwitcher() {
         </>
       )}
     </>
-  );
-}
-
-function Logo({ redirect }: { redirect: string }) {
-  return (
-    <Link
-      href={redirect}
-      className="text-bold text-xl font-medium text-primary"
-    >
-      <span className="hidden text-balance bg-gradient-to-br from-black from-30% to-black/80 bg-clip-text font-semibold leading-none tracking-tighter text-transparent dark:from-white dark:to-white/40 md:block">
-        Kodix
-      </span>
-      <span className="block text-balance bg-gradient-to-br from-black from-30% to-black/80 bg-clip-text font-semibold leading-none tracking-tighter text-transparent dark:from-white dark:to-white/40 md:hidden">
-        Kdx
-      </span>
-    </Link>
   );
 }
 
