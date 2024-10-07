@@ -112,7 +112,7 @@ export function DeleteAccountCard() {
                     </span>
                   </div>
                 </AlertDialogHeader>
-                <div className="flex flex-col gap-4 bg-card/40 py-8">
+                <div className="flex flex-col gap-4 py-8">
                   <FormField
                     control={form.control}
                     name="confirmation"
