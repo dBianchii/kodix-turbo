@@ -5,11 +5,11 @@ import { kodixCareAppId, objectGroupBy } from "@kdx/shared";
 import { getCareTasks } from "../internal/caelndarAndCareTaskCentral";
 import { sendNotifications } from "../internal/notificationCenter";
 import { getUsersAppTeamConfigs } from "../trpc/routers/app/getUserAppTeamConfig.handler";
-import { authedVercelCronJob } from "./_utils";
+import { authedQStashCronJob } from "./_utils";
 
 const IS_LATE = (date: Date) => dayjs(date).utc().isBefore(dayjs().utc());
 
-export const sendNotificationsForCriticalTasks = authedVercelCronJob(
+export const sendNotificationsForCriticalTasks = authedQStashCronJob(
   async ({ ctx }) => {
     const allTeamIdsWithKodixCareInstalled =
       await ctx.db.query.appsToTeams.findMany({

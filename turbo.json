@@ -69,7 +69,8 @@
     "UPSTASH_REDIS_REST_TOKEN",
     "DISABLE_UPSTASH_CACHE",
     "PORT",
-    "CRON_SECRET"
+    "QSTASH_CURRENT_SIGNING_KEY",
+    "QSTASH_NEXT_SIGNING_KEY"
   ],
   "globalPassThroughEnv": [
     "NODE_ENV",

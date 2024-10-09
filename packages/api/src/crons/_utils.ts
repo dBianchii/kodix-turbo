@@ -1,11 +1,12 @@
 import type { NextRequest, NextResponse } from "next/server";
+import { Receiver } from "@upstash/qstash";
 
 import { db } from "@kdx/db/client";
 
 import { getLocaleBasedOnCookie } from "../utils/locales";
 
 export const createCronJobCtx = (req: NextRequest) => {
-  const authToken = req.headers.get("Authorization") ?? null;
+  const authToken = req.headers.get("Upstash-Signature");
 
   return {
     token: authToken,
@@ -15,7 +16,7 @@ export const createCronJobCtx = (req: NextRequest) => {
 };
 export type TCronJobContext = ReturnType<typeof createCronJobCtx>;
 
-export const authedVercelCronJob =
+export const authedQStashCronJob =
   (
     handler: ({
       req,
@@ -29,10 +30,28 @@ export const authedVercelCronJob =
   ) =>
   async (req: NextRequest, res: NextResponse) => {
     const ctx = createCronJobCtx(req);
-    if (ctx.token !== `Bearer ${process.env.CRON_SECRET}`)
-      return new Response("Unauthorized", {
-        status: 401,
-      });
+
+    const QSTASH_CURRENT_SIGNING_KEY = process.env.QSTASH_CURRENT_SIGNING_KEY;
+    const QSTASH_NEXT_SIGNING_KEY = process.env.QSTASH_NEXT_SIGNING_KEY;
+
+    if (!QSTASH_CURRENT_SIGNING_KEY || !QSTASH_NEXT_SIGNING_KEY)
+      throw new Error(
+        "QSTASH_CURRENT_SIGNING_KEY and QSTASH_NEXT_SIGNING_KEY must be set",
+      );
+
+    const r = new Receiver({
+      currentSigningKey: QSTASH_CURRENT_SIGNING_KEY,
+      nextSigningKey: QSTASH_NEXT_SIGNING_KEY,
+    });
+
+    const isValid = await r.verify({
+      signature: ctx.token ?? "",
+      body: JSON.stringify(req.body),
+    });
+
+    if (!isValid) {
+      return new Response("Unauthorized", { status: 401 });
+    }
 
     return handler({
       req,
