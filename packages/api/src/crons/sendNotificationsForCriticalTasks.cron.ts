@@ -13,6 +13,8 @@ const IS_LATE = (date: Date) => dayjs(date).utc().isBefore(dayjs().utc());
 
 export const sendNotificationsForCriticalTasks = verifySignatureAppRouter(
   async () => {
+    console.time("sendNotificationsForCriticalTasks");
+
     const ctx = createCronJobCtx();
     const allTeamIdsWithKodixCareInstalled =
       await ctx.db.query.appsToTeams.findMany({
@@ -90,6 +92,8 @@ export const sendNotificationsForCriticalTasks = verifySignatureAppRouter(
         }
       }
     }
+
+    console.timeEnd("sendNotificationsForCriticalTasks");
 
     return Response.json({ success: true });
   },
