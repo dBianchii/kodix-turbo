@@ -1,3 +1,5 @@
+import { verifySignatureAppRouter } from "@upstash/qstash/dist/nextjs";
+
 import dayjs from "@kdx/dayjs";
 import WarnDelayedCriticalTasks from "@kdx/react-email/warn-delayed-critical-tasks";
 import { kodixCareAppId, objectGroupBy } from "@kdx/shared";
@@ -5,12 +7,13 @@ import { kodixCareAppId, objectGroupBy } from "@kdx/shared";
 import { getCareTasks } from "../internal/caelndarAndCareTaskCentral";
 import { sendNotifications } from "../internal/notificationCenter";
 import { getUsersAppTeamConfigs } from "../trpc/routers/app/getUserAppTeamConfig.handler";
-import { authedQStashCronJob } from "./_utils";
+import { createCronJobCtx } from "./_utils";
 
 const IS_LATE = (date: Date) => dayjs(date).utc().isBefore(dayjs().utc());
 
-export const sendNotificationsForCriticalTasks = authedQStashCronJob(
-  async ({ ctx }) => {
+export const sendNotificationsForCriticalTasks = verifySignatureAppRouter(
+  async () => {
+    const ctx = createCronJobCtx();
     const allTeamIdsWithKodixCareInstalled =
       await ctx.db.query.appsToTeams.findMany({
         where: (appsToTeams, { eq }) => eq(appsToTeams.appId, kodixCareAppId),
@@ -87,5 +90,7 @@ export const sendNotificationsForCriticalTasks = authedQStashCronJob(
         }
       }
     }
+
+    return Response.json({ success: true });
   },
 );
