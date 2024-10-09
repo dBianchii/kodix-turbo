@@ -8,8 +8,8 @@ import {
   ZUpdateInputSchema,
 } from "@kdx/validators/trpc/team";
 
+import { T } from "../../../utils/locales";
 import { isTeamOwnerProcedure, protectedProcedure } from "../../procedures";
-import { T } from "../../utils/locales";
 import { appRoleRouter } from "./appRole/_router";
 import { createHandler } from "./create.handler";
 import { deleteTeamHandler } from "./deleteTeam.handler";

@@ -42,6 +42,7 @@
     "**/app/**/page.tsx": "${dirname} - Page",
     "**/app/**/layout.tsx": "${dirname} - Layout",
     "**/_components/**/**.tsx": "${filename} - Component",
-    "**/_components/**/index.tsx": "${dirname} - Component"
+    "**/_components/**/index.tsx": "${dirname} - Component",
+    "**/crons/**.ts": "${filename} - CronJob"
   }
 }

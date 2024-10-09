@@ -17,6 +17,7 @@ import {
 } from "@react-email/components";
 
 import type { locales } from "@kdx/locales";
+import { defaultLocale } from "@kdx/locales";
 import { getTranslations } from "@kdx/locales/next-intl/server";
 import { getBaseUrl } from "@kdx/shared";
 
@@ -32,7 +33,7 @@ export const TeamInvite = async ({
   inviteLink = "https://kodix.com/teams/invite/foo",
   inviteFromIp = "204.13.186.218",
   inviteFromLocation = "São Paulo, Brazil",
-  locale = "pt-BR",
+  locale = defaultLocale,
 }: {
   username?: string;
   userImage?: string;

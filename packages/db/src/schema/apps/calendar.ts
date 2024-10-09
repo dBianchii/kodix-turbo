@@ -26,7 +26,9 @@ export const eventMasters = mysqlTable(
     title: varchar("title", { length: DEFAULTLENGTH }),
     description: varchar("description", { length: DEFAULTLENGTH }),
     teamId: teamIdReferenceCascadeDelete,
-    type: mysqlEnum("status", ["NORMAL", "CRITICAL"]).default("NORMAL"),
+    type: mysqlEnum("status", ["NORMAL", "CRITICAL"])
+      .default("NORMAL")
+      .notNull(),
   },
   (table) => {
     return {

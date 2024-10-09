@@ -14,8 +14,8 @@ import { db } from "@kdx/db/client";
 
 //TODO: make it import from our package: https://github.com/amannn/next-intl/issues/1229 sadface
 
-import type { AuthResponse } from "../../auth/src/config";
-import { getLocaleBasedOnCookie } from "./utils/locales";
+import type { AuthResponse } from "../../../auth/src/config";
+import { getLocaleBasedOnCookie } from "../utils/locales";
 
 /**
  * 1. CONTEXT

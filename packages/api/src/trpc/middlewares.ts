@@ -12,9 +12,9 @@ import { getAppName } from "@kdx/locales/next-intl/server-hooks";
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "./procedures";
+import { getUpstashCache, setUpstashCache } from "../sdks/upstash";
 import { getInstalledHandler } from "./routers/app/getInstalled.handler";
 import { t } from "./trpc";
-import { getUpstashCache, setUpstashCache } from "./upstash";
 
 /**
  *  Helper/factory that returns a reusable middleware that checks if a certain app is installed for the current team

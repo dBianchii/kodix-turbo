@@ -5,7 +5,7 @@ import { and, asc, count, desc, eq, gte, inArray, lte, or } from "@kdx/db";
 import { notifications, teams, usersToTeams } from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../procedures";
-import { filterColumn } from "../../lib/filter-column";
+import { filterColumn } from "../../../utils/filter-column";
 
 interface GetNotificationsOptions {
   ctx: TProtectedProcedureContext;

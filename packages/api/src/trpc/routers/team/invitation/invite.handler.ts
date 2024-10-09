@@ -13,7 +13,7 @@ import {
 } from "@kdx/shared";
 
 import type { TIsTeamOwnerProcedureContext } from "../../../procedures";
-import { resend } from "../../../utils/email";
+import { resend } from "../../../../sdks/email";
 
 interface InviteOptions {
   ctx: TIsTeamOwnerProcedureContext;

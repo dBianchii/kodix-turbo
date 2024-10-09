@@ -2,17 +2,17 @@ import { render } from "@react-email/render";
 
 import { db } from "@kdx/db/client";
 import { notifications } from "@kdx/db/schema";
+import { KODIX_NOTIFICATION_FROM_EMAIL } from "@kdx/shared";
 
-import type { resend } from "../utils/email";
+import { resend } from "../sdks/email";
 
 interface EmailChannel {
   type: "EMAIL";
   react: JSX.Element;
-  to: Parameters<typeof resend.emails.send>[0]["to"];
   subject: Parameters<typeof resend.emails.send>[0]["subject"];
 }
 
-type Channel = EmailChannel;
+export type Channel = EmailChannel;
 
 export async function sendNotifications({
   userId,
@@ -35,7 +35,12 @@ export async function sendNotifications({
   for (const channel of channels) {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (channel.type === "EMAIL") {
-      const result = { data: true }; //TODO: send email lmao
+      const result = await resend.emails.send({
+        from: KODIX_NOTIFICATION_FROM_EMAIL,
+        to: user.email,
+        subject: channel.subject,
+        react: channel.react,
+      });
 
       if (result.data) {
         sent.push({

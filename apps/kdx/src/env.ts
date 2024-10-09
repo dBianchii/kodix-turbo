@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-properties */
 import { createEnv } from "@t3-oss/env-nextjs";
 import { vercel } from "@t3-oss/env-nextjs/presets";
 import { z } from "zod";
@@ -26,6 +25,7 @@ export const env = createEnv({
     DISABLE_UPSTASH_CACHE: z.coerce.boolean().default(false),
     UPSTASH_REDIS_REST_URL: z.string().url(),
     UPSTASH_REDIS_REST_TOKEN: z.string(),
+    CRON_SECRET: z.string(),
   },
   /**
    * Specify your client-side environment variables schema here.

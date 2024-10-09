@@ -11,8 +11,8 @@ import {
   ZSwitchActiveTeamInputSchema,
 } from "@kdx/validators/trpc/user";
 
+import { T } from "../../../utils/locales";
 import { protectedProcedure, publicProcedure } from "../../procedures";
-import { T } from "../../utils/locales";
 import { changeNameHandler } from "./changeName.handler";
 import { changePasswordHandler } from "./changePassword.handler";
 import { deleteAccountHandler } from "./deleteAccount.handler";

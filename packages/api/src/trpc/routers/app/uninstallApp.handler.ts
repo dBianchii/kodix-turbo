@@ -7,7 +7,7 @@ import { appsToTeams, appTeamConfigs, teamAppRoles } from "@kdx/db/schema";
 import { appIdToSchemas } from "@kdx/db/utils";
 
 import type { TProtectedProcedureContext } from "../../procedures";
-import { invalidateUpstashCache } from "../../upstash";
+import { invalidateUpstashCache } from "../../../sdks/upstash";
 
 interface UninstallAppOptions {
   ctx: TProtectedProcedureContext;

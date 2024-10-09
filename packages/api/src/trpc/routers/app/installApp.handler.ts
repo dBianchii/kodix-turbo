@@ -16,7 +16,7 @@ import {
 import { appIdToAdminRole_defaultIdMap } from "@kdx/shared";
 
 import type { TIsTeamOwnerProcedureContext } from "../../procedures";
-import { invalidateUpstashCache } from "../../upstash";
+import { invalidateUpstashCache } from "../../../sdks/upstash";
 
 interface InstallAppOptions {
   ctx: TIsTeamOwnerProcedureContext;

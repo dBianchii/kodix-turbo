@@ -9,7 +9,7 @@ import ResetPassword from "@kdx/react-email/reset-password";
 import { KODIX_NOTIFICATION_FROM_EMAIL } from "@kdx/shared";
 
 import type { TPublicProcedureContext } from "../../procedures";
-import { resend } from "../../utils/email";
+import { resend } from "../../../sdks/email";
 
 interface SendResetPasswordEmailOptions {
   ctx: TPublicProcedureContext;

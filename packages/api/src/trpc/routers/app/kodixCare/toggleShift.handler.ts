@@ -9,7 +9,7 @@ import WarnPreviousShiftNotEnded from "@kdx/react-email/warn-previous-shift-not-
 import { KODIX_NOTIFICATION_FROM_EMAIL, kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
-import { resend } from "../../../utils/email";
+import { resend } from "../../../../sdks/email";
 import { getConfigHandler } from "../getConfig.handler";
 import { getCurrentShiftHandler } from "./getCurrentShift.handler";
 import { cloneCalendarTasksToCareTasks } from "./utils";

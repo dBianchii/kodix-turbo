@@ -5,7 +5,6 @@ import type {
   SortingState,
   VisibilityState,
 } from "@tanstack/react-table";
-import type { CareTask } from "node_modules/@kdx/api/dist/api/src/routers/app/kodixCare/getCareTasks.handler";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   createColumnHelper,
@@ -97,6 +96,7 @@ import {
   ZSaveCareTaskInputSchema,
 } from "@kdx/validators/trpc/app/kodixCare";
 
+import type { CareTask } from "../../../../../../../../../../packages/api/dist/api/src/trpc/routers/app/kodixCare/getCareTasks.handler";
 import { DatePicker } from "~/app/[locale]/_components/date-picker";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";

@@ -39,6 +39,7 @@ export async function cloneCalendarTasksToCareTasks({
         date: calendarTask.date,
         eventMasterId: calendarTask.eventMasterId,
         doneByUserId: null,
+        type: calendarTask.type,
       })),
     );
 

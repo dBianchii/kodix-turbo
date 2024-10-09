@@ -68,7 +68,8 @@
     "UPSTASH_REDIS_REST_URL",
     "UPSTASH_REDIS_REST_TOKEN",
     "DISABLE_UPSTASH_CACHE",
-    "PORT"
+    "PORT",
+    "CRON_SECRET"
   ],
   "globalPassThroughEnv": [
     "NODE_ENV",

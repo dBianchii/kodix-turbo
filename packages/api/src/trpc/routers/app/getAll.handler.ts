@@ -5,7 +5,7 @@ import { eq, sql } from "@kdx/db";
 import { apps, appsToTeams } from "@kdx/db/schema";
 
 import type { TPublicProcedureContext } from "../../procedures";
-import { getUpstashCache, setUpstashCache } from "../../upstash";
+import { getUpstashCache, setUpstashCache } from "../../../sdks/upstash";
 
 interface GetAllOptions {
   ctx: TPublicProcedureContext;

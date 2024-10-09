@@ -7,6 +7,10 @@
     ".": {
       "types": "./dist/api/src/index.d.ts",
       "default": "./src/index.ts"
+    },
+    "./crons/*": {
+      "types": "./dist/api/src/crons/*.ts",
+      "default": "./src/crons/*.ts"
     }
   },
   "scripts": {
