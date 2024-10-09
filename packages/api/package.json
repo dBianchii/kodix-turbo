@@ -32,6 +32,7 @@
     "@node-rs/argon2": "^1.8.3",
     "@react-email/render": "0.0.13",
     "@trpc/server": "catalog:",
+    "@upstash/qstash": "^2.7.12",
     "@upstash/redis": "^1.31.6",
     "next": "catalog:",
     "resend": "^3.2.0",
