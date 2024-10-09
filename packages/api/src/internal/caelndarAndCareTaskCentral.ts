@@ -14,21 +14,6 @@ import type { TCronJobContext } from "../crons/_utils";
 import type { TProtectedProcedureContext } from "../trpc/procedures";
 import { getConfigs } from "../trpc/routers/app/getConfig.handler";
 
-export interface CareTask {
-  id: typeof careTasks.$inferSelect.id;
-  title: typeof careTasks.$inferSelect.title;
-  description: typeof careTasks.$inferSelect.description;
-  date: typeof careTasks.$inferSelect.date;
-  doneAt: typeof careTasks.$inferSelect.doneAt;
-  updatedAt: typeof careTasks.$inferSelect.updatedAt;
-  doneByUserId: typeof careTasks.$inferSelect.doneByUserId;
-  details: typeof careTasks.$inferSelect.details;
-  type: typeof careTasks.$inferSelect.type;
-  teamId: typeof careTasks.$inferSelect.teamId;
-}
-
-type CareTaskOrCalendarTask = Omit<CareTask, "id"> & { id: string | null }; //? Same as CareTask but id might not exist when it's a calendar task
-
 export interface CalendarTask {
   title: string | undefined;
   description: string | undefined;
@@ -209,6 +194,24 @@ export async function getCalendarTasks({
   return calendarTasks;
 }
 
+export interface CareTask {
+  id: typeof careTasks.$inferSelect.id;
+  title: typeof careTasks.$inferSelect.title;
+  description: typeof careTasks.$inferSelect.description;
+  date: typeof careTasks.$inferSelect.date;
+  doneAt: typeof careTasks.$inferSelect.doneAt;
+  updatedAt: typeof careTasks.$inferSelect.updatedAt;
+  doneByUserId: typeof careTasks.$inferSelect.doneByUserId;
+  details: typeof careTasks.$inferSelect.details;
+  type: typeof careTasks.$inferSelect.type;
+  teamId: typeof careTasks.$inferSelect.teamId;
+  eventMasterId: string | null;
+}
+
+type CareTaskOrCalendarTask = Omit<CareTask, "id"> & {
+  id: string | null;
+}; //? Same as CareTask but id might not exist when it's a calendar task
+
 export async function getCareTasks({
   ctx,
   dateStart,
@@ -251,6 +254,7 @@ export async function getCareTasks({
       details: true,
       type: true,
       teamId: true,
+      eventMasterId: true,
     },
   })) satisfies CareTask[];
 
@@ -275,6 +279,7 @@ export async function getCareTasks({
       })
       .map((x) => ({
         id: null,
+        eventMasterId: x.eventMasterId,
         teamId: x.teamId,
         title: x.title ?? null,
         description: x.description ?? null,

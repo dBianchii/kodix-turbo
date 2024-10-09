@@ -50,18 +50,3 @@ export function getErrorMessage(err: unknown) {
 
   return unknownError;
 }
-
-export const objectGroupBy = <T, K extends keyof T>(
-  arr: T[],
-  key: K,
-): Record<string, T[]> => {
-  return arr.reduce(
-    (acc, item) => {
-      const group = item[key] as string;
-      if (!acc[group]) acc[group] = [];
-      acc[group].push(item);
-      return acc;
-    },
-    {} as Record<string, T[]>,
-  );
-};

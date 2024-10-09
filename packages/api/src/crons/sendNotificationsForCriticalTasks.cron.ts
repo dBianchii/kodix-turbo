@@ -1,15 +1,18 @@
 import { verifySignatureAppRouter } from "@upstash/qstash/dist/nextjs";
+import groupBy from "object.groupby";
 
 import dayjs from "@kdx/dayjs";
 import WarnDelayedCriticalTasks from "@kdx/react-email/warn-delayed-critical-tasks";
-import { kodixCareAppId, objectGroupBy } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared";
 
 import { getCareTasks } from "../internal/caelndarAndCareTaskCentral";
 import { sendNotifications } from "../internal/notificationCenter";
+import { getUpstashCache, setUpstashCache } from "../sdks/upstash";
 import { getUsersAppTeamConfigs } from "../trpc/routers/app/getUserAppTeamConfig.handler";
 import { createCronJobCtx } from "./_utils";
 
-const IS_LATE = (date: Date) => dayjs(date).utc().isBefore(dayjs().utc());
+const IS_LATE = (date: Date) =>
+  dayjs(date).utc().isBefore(dayjs().add(-1, "hour").utc());
 
 export const sendNotificationsForCriticalTasks = verifySignatureAppRouter(
   async () => {
@@ -57,11 +60,12 @@ export const sendNotificationsForCriticalTasks = verifySignatureAppRouter(
       userIds: usersWithinTheTeams,
     });
 
-    const usersThatNeedToBeNotifiedGroupedByTeamId = objectGroupBy(
+    const usersThatNeedToBeNotifiedGroupedByTeamId = groupBy(
       userConfigs.filter((x) => !!x.config?.sendNotificationsForDelayedTasks),
-      "teamId",
+      (x) => x.teamId,
     );
 
+    const fails = [];
     for (const careTask of critialCareTasks) {
       if (!IS_LATE(careTask.date)) {
         continue;
@@ -70,8 +74,25 @@ export const sendNotificationsForCriticalTasks = verifySignatureAppRouter(
       for (const [teamId, users] of Object.entries(
         usersThatNeedToBeNotifiedGroupedByTeamId,
       )) {
-        //send message
         for (const user of users) {
+          const careTaskIdOrEventMasterId =
+            careTask.id ?? careTask.eventMasterId;
+
+          if (!careTaskIdOrEventMasterId) {
+            fails.push({ careTask, user, teamId }); //? Shouldn't ever happen. But if it does, we need to know.
+            //TODO: add sentry log here if it happens
+            continue;
+          }
+
+          const alreadySentNotif = await getUpstashCache(
+            "careTasksUsersNotifs",
+            {
+              careTaskIdOrEventMasterId,
+              userId: user.userId,
+            },
+          );
+          if (alreadySentNotif) continue;
+
           await sendNotifications({
             teamId,
             channels: [
@@ -88,6 +109,15 @@ export const sendNotificationsForCriticalTasks = verifySignatureAppRouter(
               },
             ],
             userId: user.userId,
+          });
+          await setUpstashCache("careTasksUsersNotifs", {
+            variableKeys: {
+              userId: user.userId,
+              careTaskIdOrEventMasterId,
+            },
+            value: {
+              date: careTask.date.toISOString(),
+            },
           });
         }
       }

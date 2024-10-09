@@ -1,6 +1,6 @@
 import { Redis } from "@upstash/redis";
 
-import type { apps, teams, users } from "@kdx/db/schema";
+import type { apps, careTasks, teams, users } from "@kdx/db/schema";
 import type { AppPermissionId } from "@kdx/shared";
 
 const redis = new Redis({
@@ -30,6 +30,16 @@ interface KeysMapping {
           permissionId: string;
         }
       | undefined;
+  };
+
+  careTasksUsersNotifs: {
+    tags: {
+      userId: typeof users.$inferSelect.id;
+      careTaskIdOrEventMasterId: typeof careTasks.$inferSelect.id;
+    };
+    value: {
+      date: string;
+    };
   };
 }
 
