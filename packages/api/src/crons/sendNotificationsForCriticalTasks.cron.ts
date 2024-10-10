@@ -6,7 +6,7 @@ import dayjs from "@kdx/dayjs";
 import WarnDelayedCriticalTasks from "@kdx/react-email/warn-delayed-critical-tasks";
 import { kodixCareAppId } from "@kdx/shared";
 
-import { getCareTasks } from "../internal/caelndarAndCareTaskCentral";
+import { getCareTasks } from "../internal/calendarAndCareTaskCentral";
 import { sendNotifications } from "../internal/notificationCenter";
 import { getUpstashCache, setUpstashCache } from "../sdks/upstash";
 import { getUsersAppTeamConfigs } from "../trpc/routers/app/getUserAppTeamConfig.handler";

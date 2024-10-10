@@ -1,4 +1,4 @@
-import type { CareTask } from "node_modules/@kdx/api/dist/api/src/routers/app/kodixCare/getCareTasks.handler";
+import type { CareTask } from "node_modules/@kdx/api/dist/api/src/internal/calendarAndCareTaskCentral";
 import React, { useEffect, useMemo, useState } from "react";
 import { Alert, Keyboard, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
