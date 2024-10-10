@@ -52,23 +52,26 @@ export const sendNotificationsForCriticalTasks = verifySignatureAppRouter(
       .add(-MILLISECONDS_TO_BE_LATE, "milliseconds") // 1 hour ago
       .toDate();
 
-    const critialCareTasks = await getCareTasks({
+    const critialNotDoneCareTasks = await getCareTasks({
       ctx,
       dateStart: start,
       dateEnd: end,
-      onlyCritical: true,
       teamIds: allTeamIdsWithKodixCareInstalled.map((x) => x.teamId),
+      onlyCritical: true,
+      onlyNotDone: true,
     });
 
     const usersWithinTheTeams = allTeamIdsWithKodixCareInstalled.flatMap((x) =>
       x.Team.UsersToTeams.flatMap((x) => x.userId),
     );
-    const teamsWithCriticalCareTasks = critialCareTasks.map((x) => x.teamId);
+    const teamsWithDelayedCriticalCareTasks = critialNotDoneCareTasks.map(
+      (x) => x.teamId,
+    );
 
     const userConfigs = await getUsersAppTeamConfigs({
       ctx,
       appId: kodixCareAppId,
-      teamIds: teamsWithCriticalCareTasks,
+      teamIds: teamsWithDelayedCriticalCareTasks,
       userIds: usersWithinTheTeams,
     });
 
@@ -79,7 +82,7 @@ export const sendNotificationsForCriticalTasks = verifySignatureAppRouter(
 
     const fails = [];
 
-    for (const careTask of critialCareTasks) {
+    for (const careTask of critialNotDoneCareTasks) {
       if (!isLate(careTask.date)) {
         continue;
       }

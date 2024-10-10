@@ -2,7 +2,7 @@ import { rrulestr } from "rrule";
 
 import type { careTasks } from "@kdx/db/schema";
 import dayjs from "@kdx/dayjs";
-import { and, eq, gte, inArray, lte, or } from "@kdx/db";
+import { and, eq, gte, inArray, isNull, lte, or } from "@kdx/db";
 import {
   eventCancellations,
   eventExceptions,
@@ -218,12 +218,14 @@ export async function getCareTasks({
   dateEnd,
   teamIds,
   onlyCritical = false,
+  onlyNotDone = false,
 }: {
   ctx: TCronJobContext | TProtectedProcedureContext;
   dateStart: Date;
   dateEnd: Date;
   teamIds: string[];
   onlyCritical?: boolean;
+  onlyNotDone?: boolean;
 }) {
   if (!teamIds.length) throw new Error("teamIds must have at least one item");
 
@@ -238,8 +240,9 @@ export async function getCareTasks({
   const careTasks = (await ctx.db.query.careTasks.findMany({
     where: (careTask, { gte, lte, and }) =>
       and(
-        inArray(eventMasters.teamId, teamIds),
+        inArray(careTask.teamId, teamIds),
         onlyCritical ? eq(careTask.type, "CRITICAL") : undefined,
+        onlyNotDone ? isNull(careTask.doneAt) : undefined,
         gte(careTask.date, dateStart),
         lte(careTask.date, dateEnd),
       ),
@@ -264,33 +267,38 @@ export async function getCareTasks({
     teamIds,
   });
 
-  const union: CareTaskOrCalendarTask[] = [
-    ...careTasks,
-    ...calendarTasks
-      .filter((ct) => {
-        const cfgForThisCt = teamConfigs.find((x) => x.teamId === ct.teamId);
-        if (!cfgForThisCt) return true; //? Shouldn't ever happen.
-        //TODO: add sentry log here if it happens
+  let union: CareTaskOrCalendarTask[] = careTasks;
+  if (!onlyNotDone) {
+    union.push(
+      ...calendarTasks
+        .filter((ct) => {
+          const cfgForThisCt = teamConfigs.find((x) => x.teamId === ct.teamId);
+          if (!cfgForThisCt) return true; //? Shouldn't ever happen.
+          //TODO: add sentry log here if it happens
 
-        const clonedCareTasksUntil = cfgForThisCt.config.clonedCareTasksUntil;
-        if (!clonedCareTasksUntil) return true;
+          const clonedCareTasksUntil = cfgForThisCt.config.clonedCareTasksUntil;
+          if (!clonedCareTasksUntil) return true;
 
-        return dayjs(ct.date).isAfter(clonedCareTasksUntil);
-      })
-      .map((x) => ({
-        id: null,
-        eventMasterId: x.eventMasterId,
-        teamId: x.teamId,
-        title: x.title ?? null,
-        description: x.description ?? null,
-        date: x.date,
-        type: x.type,
-        doneAt: null,
-        updatedAt: null,
-        doneByUserId: null,
-        details: null,
-      })),
-  ].sort((a, b) => a.date.getTime() - b.date.getTime()); //? Sort by ascending time
+          return dayjs(ct.date).isAfter(clonedCareTasksUntil);
+        })
+        .map((x) => ({
+          id: null,
+          eventMasterId: x.eventMasterId,
+          teamId: x.teamId,
+          title: x.title ?? null,
+          description: x.description ?? null,
+          date: x.date,
+          type: x.type,
+          doneAt: null,
+          updatedAt: null,
+          doneByUserId: null,
+          details: null,
+        })),
+    );
+  }
+  union = union
+    .filter((x) => (onlyNotDone ? !x.doneAt : true)) //? Filter onlyNotDone
+    .sort((a, b) => a.date.getTime() - b.date.getTime()); //? Sort by ascending time
 
   return union;
 }
