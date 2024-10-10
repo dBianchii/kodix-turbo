@@ -155,7 +155,7 @@ export const sendNotificationsForCriticalTasks = verifySignatureAppRouter(
             );
           }
 
-          await Promise.allSettled(promises);
+          void Promise.allSettled(promises);
         }
       }
     }
