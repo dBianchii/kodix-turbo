@@ -15,10 +15,12 @@ declare module "next/navigation" {
 //? @kdx/kdx should only use "kdx" json
 type KdxMessages =
   typeof import("../../../packages/locales/src/messages/kdx/en.json");
+type ApiMessages =
+  typeof import("../../../packages/locales/src/messages/api/en.json"); //?This is just added so the typescript stops screaming at the top of its lungs.
 
 type Formats = typeof formats;
 
 declare global {
-  type IntlMessages = KdxMessages;
+  type IntlMessages = KdxMessages & ApiMessages;
   type IntlFormats = Formats;
 }
