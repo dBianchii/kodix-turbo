@@ -1,4 +1,5 @@
 import { verifySignatureAppRouter } from "@upstash/qstash/dist/nextjs";
+import ms from "ms";
 import groupBy from "object.groupby";
 
 import dayjs from "@kdx/dayjs";
@@ -11,8 +12,12 @@ import { getUpstashCache, setUpstashCache } from "../sdks/upstash";
 import { getUsersAppTeamConfigs } from "../trpc/routers/app/getUserAppTeamConfig.handler";
 import { createCronJobCtx } from "./_utils";
 
-const IS_LATE = (date: Date) =>
-  dayjs(date).utc().isBefore(dayjs().add(-1, "hour").utc());
+const MILLISECONDS_TO_BE_LATE = ms("1h");
+
+const isLate = (date: Date) =>
+  dayjs(date)
+    .utc()
+    .isBefore(dayjs().add(MILLISECONDS_TO_BE_LATE, "milliseconds").utc());
 
 export const sendNotificationsForCriticalTasks = verifySignatureAppRouter(
   async () => {
@@ -38,8 +43,15 @@ export const sendNotificationsForCriticalTasks = verifySignatureAppRouter(
         },
       });
 
-    const start = dayjs.utc().add(-2, "hour").toDate(); // 2 hours ago
-    const end = dayjs.utc().toDate(); // now
+    const start = dayjs
+      .utc()
+      .add((-MILLISECONDS_TO_BE_LATE / 2) * 3, "milliseconds") // 1.5 hours ago
+      .toDate();
+    const end = dayjs
+      .utc()
+      .add(-MILLISECONDS_TO_BE_LATE, "milliseconds") // 1 hour ago
+      .toDate();
+
     const critialCareTasks = await getCareTasks({
       ctx,
       dateStart: start,
@@ -66,11 +78,11 @@ export const sendNotificationsForCriticalTasks = verifySignatureAppRouter(
     );
 
     const fails = [];
+
     for (const careTask of critialCareTasks) {
-      if (!IS_LATE(careTask.date)) {
+      if (!isLate(careTask.date)) {
         continue;
       }
-
       for (const [teamId, users] of Object.entries(
         usersThatNeedToBeNotifiedGroupedByTeamId,
       )) {
@@ -80,47 +92,74 @@ export const sendNotificationsForCriticalTasks = verifySignatureAppRouter(
 
           if (!careTaskIdOrEventMasterId) {
             fails.push({ careTask, user, teamId }); //? Shouldn't ever happen. But if it does, we need to know.
-            //TODO: add sentry log here if it happens
             continue;
           }
 
+          const upstashCacheVariableKey = {
+            careTaskIdOrEventMasterId,
+            userId: user.userId,
+          };
+
           const alreadySentNotif = await getUpstashCache(
             "careTasksUsersNotifs",
-            {
-              careTaskIdOrEventMasterId,
-              userId: user.userId,
-            },
+            upstashCacheVariableKey,
           );
           if (alreadySentNotif) continue;
 
-          await sendNotifications({
-            teamId,
-            channels: [
-              {
-                type: "EMAIL",
-                react: await WarnDelayedCriticalTasks({
-                  task: {
-                    date: careTask.date,
-                    title: careTask.title,
-                  },
-                  locale: ctx.locale,
-                }),
-                subject: "Critical task is late",
-              },
-            ],
-            userId: user.userId,
-          });
-          await setUpstashCache("careTasksUsersNotifs", {
-            variableKeys: {
+          const promises: Promise<unknown>[] = [
+            sendNotifications({
+              teamId,
+              channels: [
+                {
+                  type: "EMAIL",
+                  react: await WarnDelayedCriticalTasks({
+                    task: {
+                      date: careTask.date,
+                      title: careTask.title,
+                    },
+                    locale: ctx.locale,
+                  }),
+                  subject: "Critical task is late",
+                },
+              ],
               userId: user.userId,
-              careTaskIdOrEventMasterId,
-            },
-            value: {
-              date: careTask.date.toISOString(),
-            },
-          });
+            }),
+          ];
+          if (careTask.id) {
+            promises.push(
+              setUpstashCache("careTasksUsersNotifs", {
+                variableKeys: {
+                  ...upstashCacheVariableKey,
+                  careTaskIdOrEventMasterId: careTask.id,
+                },
+                value: {
+                  date: careTask.date.toISOString(),
+                },
+              }),
+            );
+          }
+          if (careTask.eventMasterId) {
+            promises.push(
+              setUpstashCache("careTasksUsersNotifs", {
+                variableKeys: {
+                  ...upstashCacheVariableKey,
+                  careTaskIdOrEventMasterId: careTask.eventMasterId,
+                },
+                value: {
+                  date: careTask.date.toISOString(),
+                },
+              }),
+            );
+          }
+
+          await Promise.allSettled(promises);
         }
       }
+    }
+
+    if (fails.length) {
+      //TODO: add sentry log here if it happens
+      console.error("Failed to send notifications for critical tasks", fails);
     }
 
     console.timeEnd("sendNotificationsForCriticalTasks");
