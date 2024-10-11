@@ -10,21 +10,21 @@ import { useTranslations } from "@kdx/locales/next-intl/client";
 import { getErrorMessage } from "@kdx/shared";
 import { Button } from "@kdx/ui/button";
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  Credenza,
+  CredenzaClose,
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaFooter,
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaTrigger,
 } from "@kdx/ui/credenza";
 import { toast } from "@kdx/ui/toast";
 
 import { deleteNotificationsAction } from "../_actions/deleteNotificationsAction";
 
 interface DeleteTasksDialogProps
-  extends React.ComponentPropsWithoutRef<typeof Dialog> {
+  extends React.ComponentPropsWithoutRef<typeof Credenza> {
   notifications: Row<
     RouterOutputs["user"]["getNotifications"]["data"][number]
   >[];
@@ -51,11 +51,11 @@ export function DeleteNotificationsDialog({
             <RxTrash className="mr-2 size-4" aria-hidden="true" />
             {t("Delete")} ({notifications.length})
           </Button>
-        </DialogTrigger>
+        </CredenzaTrigger>
       ) : null}
       <CredenzaContent>
         <CredenzaHeader>
-          <CredenzaTitle>{t("Are you absolutely sure")}?</DialogTitle>
+          <CredenzaTitle>{t("Are you absolutely sure")}?</CredenzaTitle>
           <CredenzaDescription>
             {t(
               "This action cannot be undone This will permanently delete your",
@@ -65,12 +65,12 @@ export function DeleteNotificationsDialog({
               count: notifications.length,
             })}{" "}
             {t("from our servers")}
-          </DialogDescription>
-        </DialogHeader>
+          </CredenzaDescription>
+        </CredenzaHeader>
         <CredenzaFooter className="gap-2 sm:space-x-0">
           <CredenzaClose asChild>
             <Button variant="outline">{t("Cancel")}</Button>
-          </DialogClose>
+          </CredenzaClose>
           <CredenzaClose asChild>
             <Button
               aria-label="Delete selected rows"
@@ -95,9 +95,9 @@ export function DeleteNotificationsDialog({
             >
               {t("Delete")}
             </Button>
-          </DialogClose>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+          </CredenzaClose>
+        </CredenzaFooter>
+      </CredenzaContent>
+    </Credenza>
   );
 }

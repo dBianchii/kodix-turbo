@@ -8,16 +8,16 @@ import type { User } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
 import { useTranslations } from "@kdx/locales/next-intl/client";
 import { Button } from "@kdx/ui/button";
-import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  Credenza,
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaFooter,
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaTrigger,
 } from "@kdx/ui/credenza";
+import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
   Form,
   FormControl,
@@ -62,17 +62,17 @@ function StartShiftDialogButton() {
     <Credenza open={open} onOpenChange={setOpen}>
       <CredenzaTrigger asChild>
         <Button size={"sm"}>{t("apps.kodixCare.Start shift")}</Button>
-      </DialogTrigger>
+      </CredenzaTrigger>
       <CredenzaContent>
         <CredenzaHeader>
-          <CredenzaTitle>{t("apps.kodixCare.Start shift")}</DialogTitle>
-        </DialogHeader>
+          <CredenzaTitle>{t("apps.kodixCare.Start shift")}</CredenzaTitle>
+        </CredenzaHeader>
         <div className="mb-4">
           <CredenzaDescription>
             {t(
               "apps.kodixCare.You are about to start a new shift are you sure",
             )}
-          </DialogDescription>
+          </CredenzaDescription>
         </div>
         <CredenzaFooter className="justify-end">
           <Button
@@ -85,9 +85,9 @@ function StartShiftDialogButton() {
               t("apps.kodixCare.Start new shift")
             )}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </CredenzaFooter>
+      </CredenzaContent>
+    </Credenza>
   );
 }
 
@@ -113,17 +113,19 @@ function StartShiftWarnPreviousPersonDialog() {
         <Button size={"sm"} variant={"orange"}>
           {t("apps.kodixCare.End previous shift and start new")}
         </Button>
-      </DialogTrigger>
+      </CredenzaTrigger>
       <CredenzaContent>
         <CredenzaHeader>
-          <CredenzaTitle>{t("apps.kodixCare.Previous shift exists")}</DialogTitle>
-        </DialogHeader>
+          <CredenzaTitle>
+            {t("apps.kodixCare.Previous shift exists")}
+          </CredenzaTitle>
+        </CredenzaHeader>
         <CredenzaDescription>
           {t("apps.kodixCare.Previous shift exists")}{" "}
           {t(
             "apps.kodixCare.are you sure you want to end it and start a new one",
           )}
-        </DialogDescription>
+        </CredenzaDescription>
         <CredenzaFooter className="justify-end">
           <Button
             variant={"orange"}
@@ -138,9 +140,9 @@ function StartShiftWarnPreviousPersonDialog() {
               t("apps.kodixCare.End previous shift and start new")
             )}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </CredenzaFooter>
+      </CredenzaContent>
+    </Credenza>
   );
 }
 
@@ -183,11 +185,11 @@ function DoCheckoutDialogButton({
         <Button size={"sm"} variant={"destructive"}>
           {t("apps.kodixCare.Checkout")}
         </Button>
-      </DialogTrigger>
+      </CredenzaTrigger>
       <CredenzaContent>
         <CredenzaHeader>
-          <CredenzaTitle>{t("apps.kodixCare.Checkout shift")}</DialogTitle>
-        </DialogHeader>
+          <CredenzaTitle>{t("apps.kodixCare.Checkout shift")}</CredenzaTitle>
+        </CredenzaHeader>
         <Form {...form}>
           <form
             className="base"
@@ -199,7 +201,7 @@ function DoCheckoutDialogButton({
               {t(
                 "You are about to finish your shift and checkout Are you sure",
               )}
-            </DialogDescription>
+            </CredenzaDescription>
             <FormField
               control={form.control}
               name="date"
@@ -237,10 +239,10 @@ function DoCheckoutDialogButton({
                   t("apps.kodixCare.Checkout")
                 )}
               </Button>
-            </DialogFooter>
+            </CredenzaFooter>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </CredenzaContent>
+    </Credenza>
   );
 }

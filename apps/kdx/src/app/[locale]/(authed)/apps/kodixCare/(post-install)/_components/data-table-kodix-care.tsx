@@ -49,17 +49,17 @@ import {
 } from "@kdx/ui/alert-dialog";
 import { Button } from "@kdx/ui/button";
 import { Checkbox } from "@kdx/ui/checkbox";
-import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  Credenza,
+  CredenzaClose,
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaFooter,
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaTrigger,
 } from "@kdx/ui/credenza";
+import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -534,7 +534,7 @@ function SyncTasksFromCalendarDialogButton() {
               <Button variant="secondary" size="sm" aria-label="Documentation">
                 <LuArrowLeftRight className="size-4" />
               </Button>
-            </DialogTrigger>
+            </CredenzaTrigger>
           </TooltipTrigger>
           <TooltipContent side="right">
             <p>{t("Sync tasks")}</p>
@@ -543,13 +543,13 @@ function SyncTasksFromCalendarDialogButton() {
       </TooltipProvider>
       <CredenzaContent className="sm:max-w-md">
         <CredenzaHeader>
-          <CredenzaTitle>{t("Sync tasks")}</DialogTitle>
+          <CredenzaTitle>{t("Sync tasks")}</CredenzaTitle>
           <CredenzaDescription>
             {t(
               "Substitue the tasks of this turn with the tasks from the calendar",
             )}
-          </DialogDescription>
-        </DialogHeader>
+          </CredenzaDescription>
+        </CredenzaHeader>
         <div className="flex items-center space-x-2">
           <div className="grid flex-1 gap-2"></div>
         </div>
@@ -558,7 +558,7 @@ function SyncTasksFromCalendarDialogButton() {
             <Button type="button" variant="secondary">
               {t("Close")}
             </Button>
-          </DialogClose>
+          </CredenzaClose>
           <Button
             disabled={syncCareTasksFromCalendarMutation.isPending}
             onClick={async () => {
@@ -572,9 +572,9 @@ function SyncTasksFromCalendarDialogButton() {
               t("Sync tasks")
             )}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </CredenzaFooter>
+      </CredenzaContent>
+    </Credenza>
   );
 }
 
@@ -608,7 +608,7 @@ function AddCareTaskDialog() {
           <LuPlus className="mr-2" />
           {t("apps.kodixCare.Add task")}
         </Button>
-      </DialogTrigger>
+      </CredenzaTrigger>
       <CredenzaContent>
         <Form {...form}>
           <form
@@ -618,8 +618,8 @@ function AddCareTaskDialog() {
             })}
           >
             <CredenzaHeader>
-              <CredenzaTitle>{t("apps.kodixCare.Add task")}</DialogTitle>
-            </DialogHeader>
+              <CredenzaTitle>{t("apps.kodixCare.Add task")}</CredenzaTitle>
+            </CredenzaHeader>
             <div className="grid gap-4 py-4">
               <FormField
                 control={form.control}
@@ -683,11 +683,11 @@ function AddCareTaskDialog() {
               <Button disabled={mutation.isPending} type="submit">
                 {t("Save")}
               </Button>
-            </DialogFooter>
+            </CredenzaFooter>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </CredenzaContent>
+    </Credenza>
   );
 }
 
@@ -789,8 +789,8 @@ function EditCareTaskDialog({
             })}
           >
             <CredenzaHeader>
-              <CredenzaTitle>{t("apps.kodixCare.Edit task")}</DialogTitle>
-            </DialogHeader>
+              <CredenzaTitle>{t("apps.kodixCare.Edit task")}</CredenzaTitle>
+            </CredenzaHeader>
             <div className="grid gap-4 py-4">
               <FormField
                 control={form.control}
@@ -839,10 +839,10 @@ function EditCareTaskDialog({
               <Button disabled={mutation.isPending} type="submit">
                 {t("Save")}
               </Button>
-            </DialogFooter>
+            </CredenzaFooter>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </CredenzaContent>
+    </Credenza>
   );
 }

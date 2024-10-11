@@ -21,12 +21,12 @@ import {
   CardHeader,
 } from "@kdx/ui/card";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
+  Credenza,
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaFooter,
+  CredenzaHeader,
+  CredenzaTitle,
 } from "@kdx/ui/credenza";
 import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
@@ -107,10 +107,10 @@ export default function TeamInviteCardClient({
           <Credenza>
             <CredenzaContent>
               <CredenzaHeader>
-                <CredenzaTitle>{t("Edit Event")}</DialogTitle>
-              </DialogHeader>
-            </DialogContent>
-          </Dialog>
+                <CredenzaTitle>{t("Edit Event")}</CredenzaTitle>
+              </CredenzaHeader>
+            </CredenzaContent>
+          </Credenza>
         </CardHeader>
         <CardContent>
           <Separator className="mb-6" />
@@ -196,13 +196,13 @@ export default function TeamInviteCardClient({
             </Button>
             <CredenzaContent>
               <CredenzaHeader>
-                <CredenzaTitle>{t("Invite to team")}</DialogTitle>
+                <CredenzaTitle>{t("Invite to team")}</CredenzaTitle>
                 <CredenzaDescription>
                   {t(
                     "You are about to invite the following Team members are you sure you want to continue",
                   )}
-                </DialogDescription>
-              </DialogHeader>
+                </CredenzaDescription>
+              </CredenzaHeader>
               <div className="my-4 flex flex-col space-y-2">
                 {emails
                   .filter((x) => Boolean(x))
@@ -246,9 +246,9 @@ export default function TeamInviteCardClient({
                     t("Confirm")
                   )}
                 </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+              </CredenzaFooter>
+            </CredenzaContent>
+          </Credenza>
         </CardFooter>
       </Card>
     </form>

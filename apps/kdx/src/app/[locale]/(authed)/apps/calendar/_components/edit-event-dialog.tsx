@@ -17,14 +17,14 @@ import {
   AlertDialogTitle,
 } from "@kdx/ui/alert-dialog";
 import { Button } from "@kdx/ui/button";
-import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
+  Credenza,
+  CredenzaContent,
+  CredenzaFooter,
+  CredenzaHeader,
+  CredenzaTitle,
 } from "@kdx/ui/credenza";
+import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
 import { RadioGroup, RadioGroupItem } from "@kdx/ui/radio-group";
@@ -207,8 +207,8 @@ export function EditEventDialog({
     >
       <CredenzaContent className="mb-64 sm:max-w-[600px]">
         <CredenzaHeader>
-          <CredenzaTitle>{t("apps.calendar.Edit event")}</DialogTitle>
-        </DialogHeader>
+          <CredenzaTitle>{t("apps.calendar.Edit event")}</CredenzaTitle>
+        </CredenzaHeader>
         <div className="space-y-4">
           <div className="flex flex-row gap-2">
             <Input
@@ -272,15 +272,15 @@ export function EditEventDialog({
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-        </DialogFooter>
+        </CredenzaFooter>
         <SubmitEditEventDialog
           open={editDefinitionOpen}
           setOpen={setEditDefinitionOpen}
           allowedDefinitions={allowedEditDefinitions}
           submit={handleSubmitFormData}
         />
-      </DialogContent>
-    </Dialog>
+      </CredenzaContent>
+    </Credenza>
   );
 }
 

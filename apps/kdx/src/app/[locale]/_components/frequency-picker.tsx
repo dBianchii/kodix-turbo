@@ -14,11 +14,11 @@ import {
   CommandList,
 } from "@kdx/ui/command";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
+  Credenza,
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaHeader,
+  CredenzaTitle,
 } from "@kdx/ui/credenza";
 import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
@@ -71,7 +71,9 @@ export function FrequencyPicker({
         <Credenza open={dialogOpen} onOpenChange={setDialogOpen}>
           <CredenzaContent>
             <CredenzaHeader>
-              <CredenzaTitle>{t("apps.calendar.Custom recurrence")}</DialogTitle>
+              <CredenzaTitle>
+                {t("apps.calendar.Custom recurrence")}
+              </CredenzaTitle>
               <CredenzaDescription>
                 <div className="mt-4 flex flex-row gap-4">
                   <span className="font-medium">{t("Repeat every")}:</span>
@@ -132,9 +134,9 @@ export function FrequencyPicker({
                     </RadioGroup>
                   </div>
                 </div>
-              </DialogDescription>
-            </DialogHeader>
-          </DialogContent>
+              </CredenzaDescription>
+            </CredenzaHeader>
+          </CredenzaContent>
           <Command>
             <CommandInput placeholder={`${t("Change frequency")}...`} />
             <CommandList
@@ -164,7 +166,7 @@ export function FrequencyPicker({
               </CommandGroup>
             </CommandList>
           </Command>
-        </Dialog>
+        </Credenza>
       </PopoverContent>
     </Popover>
   );

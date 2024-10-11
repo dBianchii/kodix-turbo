@@ -8,15 +8,15 @@ import { RRule, Weekday } from "rrule";
 import dayjs from "@kdx/dayjs";
 import { useTranslations } from "@kdx/locales/next-intl/client";
 import { Button } from "@kdx/ui/button";
-import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  Credenza,
+  CredenzaContent,
+  CredenzaFooter,
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaTrigger,
 } from "@kdx/ui/credenza";
+import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
   Form,
   FormControl,
@@ -86,11 +86,11 @@ export function CreateEventDialogButton() {
           <RxPlus className="mr-2 size-4" />
           {t("apps.calendar.Create event")}
         </Button>
-      </DialogTrigger>
+      </CredenzaTrigger>
       <CredenzaContent className="mb-64 sm:max-w-[600px]">
         <CredenzaHeader>
-          <CredenzaTitle>{t("apps.calendar.New event")}</DialogTitle>
-        </DialogHeader>
+          <CredenzaTitle>{t("apps.calendar.New event")}</CredenzaTitle>
+        </CredenzaHeader>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit((values) => {
@@ -193,10 +193,10 @@ export function CreateEventDialogButton() {
                   t("apps.calendar.Create event")
                 )}
               </Button>
-            </DialogFooter>
+            </CredenzaFooter>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </CredenzaContent>
+    </Credenza>
   );
 }

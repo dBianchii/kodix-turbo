@@ -12,13 +12,13 @@ import { getErrorMessage } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  Credenza,
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaFooter,
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaTrigger,
 } from "@kdx/ui/credenza";
 import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
@@ -46,15 +46,15 @@ export function AddTeamDialogButton({
             <RxPlusCircled className="mr-2 size-5" />
             {t("Create new team")}
           </Button>
-        </DialogTrigger>
+        </CredenzaTrigger>
       )}
       <CredenzaContent>
         <CredenzaHeader>
-          <CredenzaTitle>{t("Create new team")}</DialogTitle>
+          <CredenzaTitle>{t("Create new team")}</CredenzaTitle>
           <CredenzaDescription>
             {t("create-a-new-team-and-invite-your-team-members")}
-          </DialogDescription>
-        </DialogHeader>
+          </CredenzaDescription>
+        </CredenzaHeader>
         <div>
           <div className="space-y-4 py-2 pb-4">
             <div className="space-y-2">
@@ -95,8 +95,8 @@ export function AddTeamDialogButton({
             {isExecuting && <LuLoader2 className="mr-2 size-5 animate-spin" />}
             {t("Create")}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </CredenzaFooter>
+      </CredenzaContent>
+    </Credenza>
   );
 }

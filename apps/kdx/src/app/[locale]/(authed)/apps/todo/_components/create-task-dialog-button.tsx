@@ -10,13 +10,13 @@ import { useTranslations } from "@kdx/locales/next-intl/client";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Button } from "@kdx/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  Credenza,
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaFooter,
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaTrigger,
 } from "@kdx/ui/credenza";
 import { Input } from "@kdx/ui/input";
 import { PopoverTrigger } from "@kdx/ui/popover";
@@ -80,11 +80,11 @@ export function CreateTaskDialogButton() {
           <RxPlus className="mr-2 size-4" />
           {t("Create task")}
         </Button>
-      </DialogTrigger>
+      </CredenzaTrigger>
       <CredenzaContent className="mb-64 sm:max-w-[600px]">
         <CredenzaHeader>
-          <CredenzaTitle>New Task</DialogTitle>
-        </DialogHeader>
+          <CredenzaTitle>New Task</CredenzaTitle>
+        </CredenzaHeader>
         <CredenzaDescription>
           <Input
             className="my-2 border-none"
@@ -161,13 +161,13 @@ export function CreateTaskDialogButton() {
               </PopoverTrigger>
             </DatePickerWithPresets>
           </div>
-        </DialogDescription>
+        </CredenzaDescription>
         <CredenzaFooter>
           <Button type="submit" size="sm" onClick={handleCreateTask}>
             {t("Create task")}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </CredenzaFooter>
+      </CredenzaContent>
+    </Credenza>
   );
 }
