@@ -26,7 +26,7 @@ import {
 import { useMediaQuery } from "./hooks";
 
 interface BaseProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 interface RootCredenzaProps extends BaseProps {
@@ -41,11 +41,11 @@ interface CredenzaProps extends BaseProps {
 
 const desktop = { query: "md" } as const;
 
-const Credenza = ({ children, ...props }: RootCredenzaProps) => {
+const Credenza = ({ ...props }: RootCredenzaProps) => {
   const isDesktop = useMediaQuery(desktop);
   const Credenza = isDesktop ? Dialog : Drawer;
 
-  return <Credenza {...props}>{children}</Credenza>;
+  return <Credenza {...props}></Credenza>;
 };
 
 const CredenzaTrigger = ({ className, children, ...props }: CredenzaProps) => {
