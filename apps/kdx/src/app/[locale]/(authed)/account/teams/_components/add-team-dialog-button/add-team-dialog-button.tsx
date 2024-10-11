@@ -19,7 +19,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@kdx/ui/dialog";
+} from "@kdx/ui/credenza";
 import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
 import { toast } from "@kdx/ui/toast";
@@ -39,19 +39,19 @@ export function AddTeamDialogButton({
   const { isExecuting, executeAsync } = useAction(createTeamAction);
   const t = useTranslations();
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Credenza open={open} onOpenChange={setOpen}>
       {children ?? (
-        <DialogTrigger asChild>
+        <CredenzaTrigger asChild>
           <Button size={"sm"} className={cn(className)}>
             <RxPlusCircled className="mr-2 size-5" />
             {t("Create new team")}
           </Button>
         </DialogTrigger>
       )}
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{t("Create new team")}</DialogTitle>
-          <DialogDescription>
+      <CredenzaContent>
+        <CredenzaHeader>
+          <CredenzaTitle>{t("Create new team")}</DialogTitle>
+          <CredenzaDescription>
             {t("create-a-new-team-and-invite-your-team-members")}
           </DialogDescription>
         </DialogHeader>
@@ -68,7 +68,7 @@ export function AddTeamDialogButton({
             </div>
           </div>
         </div>
-        <DialogFooter>
+        <CredenzaFooter>
           <Button variant="outline" onClick={() => setOpen(false)}>
             {t("Cancel")}
           </Button>

@@ -27,7 +27,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@kdx/ui/dialog";
+} from "@kdx/ui/credenza";
 import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
 import { Separator } from "@kdx/ui/separator";
@@ -104,10 +104,10 @@ export default function TeamInviteCardClient({
           <CardDescription>
             {t("Invite new members by email address")}
           </CardDescription>
-          <Dialog>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>{t("Edit Event")}</DialogTitle>
+          <Credenza>
+            <CredenzaContent>
+              <CredenzaHeader>
+                <CredenzaTitle>{t("Edit Event")}</DialogTitle>
               </DialogHeader>
             </DialogContent>
           </Dialog>
@@ -181,7 +181,7 @@ export default function TeamInviteCardClient({
           <CardDescription className="text-xs italic">
             {t("Only the owner of the team can invite new members")}
           </CardDescription>
-          <Dialog
+          <Credenza
             onOpenChange={(open) => {
               if (!open) return closeDialog();
               setOpen(open);
@@ -194,10 +194,10 @@ export default function TeamInviteCardClient({
             >
               {t("Invite")}
             </Button>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>{t("Invite to team")}</DialogTitle>
-                <DialogDescription>
+            <CredenzaContent>
+              <CredenzaHeader>
+                <CredenzaTitle>{t("Invite to team")}</DialogTitle>
+                <CredenzaDescription>
                   {t(
                     "You are about to invite the following Team members are you sure you want to continue",
                   )}
@@ -222,7 +222,7 @@ export default function TeamInviteCardClient({
                     </div>
                   ))}
               </div>
-              <DialogFooter className="justify-end">
+              <CredenzaFooter className="justify-end">
                 <Button
                   disabled={mutation.isPending || successes.length > 0}
                   onClick={() => {

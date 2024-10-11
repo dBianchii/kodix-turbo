@@ -16,7 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@kdx/ui/dialog";
+} from "@kdx/ui/credenza";
 import {
   Form,
   FormControl,
@@ -74,22 +74,22 @@ export function CreateEventDialogButton() {
   const t = useTranslations();
 
   return (
-    <Dialog
+    <Credenza
       open={open}
       onOpenChange={(open) => {
         if (!open) form.reset();
         setOpen(open);
       }}
     >
-      <DialogTrigger asChild>
+      <CredenzaTrigger asChild>
         <Button size="sm">
           <RxPlus className="mr-2 size-4" />
           {t("apps.calendar.Create event")}
         </Button>
       </DialogTrigger>
-      <DialogContent className="mb-64 sm:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>{t("apps.calendar.New event")}</DialogTitle>
+      <CredenzaContent className="mb-64 sm:max-w-[600px]">
+        <CredenzaHeader>
+          <CredenzaTitle>{t("apps.calendar.New event")}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -185,7 +185,7 @@ export function CreateEventDialogButton() {
                 )}
               />
             </div>
-            <DialogFooter>
+            <CredenzaFooter>
               <Button type="submit" size="sm" disabled={mutation.isPending}>
                 {mutation.isPending ? (
                   <LuLoader2 className="mx-2 size-4 animate-spin" />

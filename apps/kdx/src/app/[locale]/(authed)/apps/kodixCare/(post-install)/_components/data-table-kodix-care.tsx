@@ -59,7 +59,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@kdx/ui/dialog";
+} from "@kdx/ui/credenza";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -526,11 +526,11 @@ function SyncTasksFromCalendarDialogButton() {
     });
   const t = useTranslations();
   return (
-    <Dialog open={syncDialogOpen} onOpenChange={setSyncDialogOpen}>
+    <Credenza open={syncDialogOpen} onOpenChange={setSyncDialogOpen}>
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <DialogTrigger asChild>
+            <CredenzaTrigger asChild>
               <Button variant="secondary" size="sm" aria-label="Documentation">
                 <LuArrowLeftRight className="size-4" />
               </Button>
@@ -541,10 +541,10 @@ function SyncTasksFromCalendarDialogButton() {
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>{t("Sync tasks")}</DialogTitle>
-          <DialogDescription>
+      <CredenzaContent className="sm:max-w-md">
+        <CredenzaHeader>
+          <CredenzaTitle>{t("Sync tasks")}</DialogTitle>
+          <CredenzaDescription>
             {t(
               "Substitue the tasks of this turn with the tasks from the calendar",
             )}
@@ -553,8 +553,8 @@ function SyncTasksFromCalendarDialogButton() {
         <div className="flex items-center space-x-2">
           <div className="grid flex-1 gap-2"></div>
         </div>
-        <DialogFooter className="gap-3 sm:justify-between">
-          <DialogClose asChild>
+        <CredenzaFooter className="gap-3 sm:justify-between">
+          <CredenzaClose asChild>
             <Button type="button" variant="secondary">
               {t("Close")}
             </Button>
@@ -602,14 +602,14 @@ function AddCareTaskDialog() {
   }, [open, form]);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+    <Credenza open={open} onOpenChange={setOpen}>
+      <CredenzaTrigger asChild>
         <Button size={"sm"}>
           <LuPlus className="mr-2" />
           {t("apps.kodixCare.Add task")}
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <CredenzaContent>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit((values) => {
@@ -617,8 +617,8 @@ function AddCareTaskDialog() {
               setOpen(false);
             })}
           >
-            <DialogHeader>
-              <DialogTitle>{t("apps.kodixCare.Add task")}</DialogTitle>
+            <CredenzaHeader>
+              <CredenzaTitle>{t("apps.kodixCare.Add task")}</DialogTitle>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <FormField
@@ -679,7 +679,7 @@ function AddCareTaskDialog() {
                 )}
               />
             </div>
-            <DialogFooter className="mt-6 justify-end">
+            <CredenzaFooter className="mt-6 justify-end">
               <Button disabled={mutation.isPending} type="submit">
                 {t("Save")}
               </Button>
@@ -775,8 +775,8 @@ function EditCareTaskDialog({
   }, [task, open, form, defaultValues]);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent>
+    <Credenza open={open} onOpenChange={setOpen}>
+      <CredenzaContent>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit((values) => {
@@ -788,8 +788,8 @@ function EditCareTaskDialog({
               setOpen(false);
             })}
           >
-            <DialogHeader>
-              <DialogTitle>{t("apps.kodixCare.Edit task")}</DialogTitle>
+            <CredenzaHeader>
+              <CredenzaTitle>{t("apps.kodixCare.Edit task")}</DialogTitle>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <FormField
@@ -835,7 +835,7 @@ function EditCareTaskDialog({
                 )}
               />
             </div>
-            <DialogFooter className="mt-6 justify-end">
+            <CredenzaFooter className="mt-6 justify-end">
               <Button disabled={mutation.isPending} type="submit">
                 {t("Save")}
               </Button>

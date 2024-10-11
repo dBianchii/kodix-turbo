@@ -18,7 +18,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@kdx/ui/dialog";
+} from "@kdx/ui/credenza";
 import { toast } from "@kdx/ui/toast";
 
 import { deleteNotificationsAction } from "../_actions/deleteNotificationsAction";
@@ -44,19 +44,19 @@ export function DeleteNotificationsDialog({
   });
 
   return (
-    <Dialog {...props}>
+    <Credenza {...props}>
       {showTrigger ? (
-        <DialogTrigger asChild>
+        <CredenzaTrigger asChild>
           <Button variant="outline" size="sm">
             <RxTrash className="mr-2 size-4" aria-hidden="true" />
             {t("Delete")} ({notifications.length})
           </Button>
         </DialogTrigger>
       ) : null}
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{t("Are you absolutely sure")}?</DialogTitle>
-          <DialogDescription>
+      <CredenzaContent>
+        <CredenzaHeader>
+          <CredenzaTitle>{t("Are you absolutely sure")}?</DialogTitle>
+          <CredenzaDescription>
             {t(
               "This action cannot be undone This will permanently delete your",
             )}{" "}
@@ -67,11 +67,11 @@ export function DeleteNotificationsDialog({
             {t("from our servers")}
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter className="gap-2 sm:space-x-0">
-          <DialogClose asChild>
+        <CredenzaFooter className="gap-2 sm:space-x-0">
+          <CredenzaClose asChild>
             <Button variant="outline">{t("Cancel")}</Button>
           </DialogClose>
-          <DialogClose asChild>
+          <CredenzaClose asChild>
             <Button
               aria-label="Delete selected rows"
               variant="destructive"

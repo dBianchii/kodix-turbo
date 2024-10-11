@@ -17,7 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@kdx/ui/dialog";
+} from "@kdx/ui/credenza";
 import { Input } from "@kdx/ui/input";
 import { PopoverTrigger } from "@kdx/ui/popover";
 import { Textarea } from "@kdx/ui/textarea";
@@ -74,18 +74,18 @@ export function CreateTaskDialogButton() {
   const format = useFormatter();
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+    <Credenza open={open} onOpenChange={setOpen}>
+      <CredenzaTrigger asChild>
         <Button variant="outline" size="sm">
           <RxPlus className="mr-2 size-4" />
           {t("Create task")}
         </Button>
       </DialogTrigger>
-      <DialogContent className="mb-64 sm:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>New Task</DialogTitle>
+      <CredenzaContent className="mb-64 sm:max-w-[600px]">
+        <CredenzaHeader>
+          <CredenzaTitle>New Task</DialogTitle>
         </DialogHeader>
-        <DialogDescription>
+        <CredenzaDescription>
           <Input
             className="my-2 border-none"
             type="text"
@@ -162,7 +162,7 @@ export function CreateTaskDialogButton() {
             </DatePickerWithPresets>
           </div>
         </DialogDescription>
-        <DialogFooter>
+        <CredenzaFooter>
           <Button type="submit" size="sm" onClick={handleCreateTask}>
             {t("Create task")}
           </Button>

@@ -24,7 +24,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@kdx/ui/dialog";
+} from "@kdx/ui/credenza";
 import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
 import { RadioGroup, RadioGroupItem } from "@kdx/ui/radio-group";
@@ -198,16 +198,16 @@ export function EditEventDialog({
   const t = useTranslations();
 
   return (
-    <Dialog
+    <Credenza
       open={open}
       onOpenChange={(openDialog) => {
         if (!openDialog) setStateToDefault(); //Revert the data back to default when closing
         setOpen(openDialog);
       }}
     >
-      <DialogContent className="mb-64 sm:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>{t("apps.calendar.Edit event")}</DialogTitle>
+      <CredenzaContent className="mb-64 sm:max-w-[600px]">
+        <CredenzaHeader>
+          <CredenzaTitle>{t("apps.calendar.Edit event")}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <div className="flex flex-row gap-2">
@@ -248,7 +248,7 @@ export function EditEventDialog({
             onChange={(e) => setDescription(e.target.value)}
           ></Textarea>
         </div>
-        <DialogFooter>
+        <CredenzaFooter>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>

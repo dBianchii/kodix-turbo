@@ -17,7 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@kdx/ui/dialog";
+} from "@kdx/ui/credenza";
 import {
   Form,
   FormControl,
@@ -59,22 +59,22 @@ function StartShiftDialogButton() {
     },
   });
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+    <Credenza open={open} onOpenChange={setOpen}>
+      <CredenzaTrigger asChild>
         <Button size={"sm"}>{t("apps.kodixCare.Start shift")}</Button>
       </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{t("apps.kodixCare.Start shift")}</DialogTitle>
+      <CredenzaContent>
+        <CredenzaHeader>
+          <CredenzaTitle>{t("apps.kodixCare.Start shift")}</DialogTitle>
         </DialogHeader>
         <div className="mb-4">
-          <DialogDescription>
+          <CredenzaDescription>
             {t(
               "apps.kodixCare.You are about to start a new shift are you sure",
             )}
           </DialogDescription>
         </div>
-        <DialogFooter className="justify-end">
+        <CredenzaFooter className="justify-end">
           <Button
             onClick={() => mutation.mutate()}
             disabled={mutation.isPending}
@@ -108,23 +108,23 @@ function StartShiftWarnPreviousPersonDialog() {
   const t = useTranslations();
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+    <Credenza open={open} onOpenChange={setOpen}>
+      <CredenzaTrigger asChild>
         <Button size={"sm"} variant={"orange"}>
           {t("apps.kodixCare.End previous shift and start new")}
         </Button>
       </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{t("apps.kodixCare.Previous shift exists")}</DialogTitle>
+      <CredenzaContent>
+        <CredenzaHeader>
+          <CredenzaTitle>{t("apps.kodixCare.Previous shift exists")}</DialogTitle>
         </DialogHeader>
-        <DialogDescription>
+        <CredenzaDescription>
           {t("apps.kodixCare.Previous shift exists")}{" "}
           {t(
             "apps.kodixCare.are you sure you want to end it and start a new one",
           )}
         </DialogDescription>
-        <DialogFooter className="justify-end">
+        <CredenzaFooter className="justify-end">
           <Button
             variant={"orange"}
             onClick={() => {
@@ -172,21 +172,21 @@ function DoCheckoutDialogButton({
     },
   });
   return (
-    <Dialog
+    <Credenza
       open={open}
       onOpenChange={(open) => {
         form.setValue("date", new Date());
         setOpen(open);
       }}
     >
-      <DialogTrigger asChild>
+      <CredenzaTrigger asChild>
         <Button size={"sm"} variant={"destructive"}>
           {t("apps.kodixCare.Checkout")}
         </Button>
       </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{t("apps.kodixCare.Checkout shift")}</DialogTitle>
+      <CredenzaContent>
+        <CredenzaHeader>
+          <CredenzaTitle>{t("apps.kodixCare.Checkout shift")}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -195,7 +195,7 @@ function DoCheckoutDialogButton({
               mutation.mutate(values);
             })}
           >
-            <DialogDescription className="mb-4">
+            <CredenzaDescription className="mb-4">
               {t(
                 "You are about to finish your shift and checkout Are you sure",
               )}
@@ -225,7 +225,7 @@ function DoCheckoutDialogButton({
                 </FormItem>
               )}
             />
-            <DialogFooter className="mt-6 justify-end">
+            <CredenzaFooter className="mt-6 justify-end">
               <Button
                 type="submit"
                 disabled={mutation.isPending}
