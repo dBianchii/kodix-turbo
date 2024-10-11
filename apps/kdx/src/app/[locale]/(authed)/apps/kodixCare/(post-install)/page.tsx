@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import type { User } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
 import { kodixCareAppId } from "@kdx/shared";
+import { Card } from "@kdx/ui/card";
 import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
 import { Skeleton } from "@kdx/ui/skeleton";
 
@@ -28,7 +29,8 @@ export default async function KodixCarePage() {
             fallback={
               <DataTableSkeleton
                 className="mt-4"
-                columnCount={4}
+                columnCount={5}
+                rowCount={2}
                 withPagination={false}
               />
             }
@@ -65,15 +67,11 @@ async function CurrentShift({ user }: { user: User }) {
 
 function ShiftSkeleton() {
   return (
-    <div className="flex flex-col space-y-3">
-      <div className="flex flex-row items-center">
-        <Skeleton className="h-4 w-10" />
-      </div>
-      <div className="flex items-center space-x-2 rounded-md">
-        <Skeleton className="size-5 rounded-full" />
-        <Skeleton className="h-4 w-full" />
-      </div>
-      <Skeleton className="h-8 w-full" />
-    </div>
+    <Card className="flex h-48 flex-col items-center gap-3 p-4 md:min-w-72">
+      <Skeleton className="h-full w-full" />
+      <Skeleton className="invisible h-full w-full" />
+      <Skeleton className="h-full w-2/3" />
+      <Skeleton className="h-full w-full" />
+    </Card>
   );
 }

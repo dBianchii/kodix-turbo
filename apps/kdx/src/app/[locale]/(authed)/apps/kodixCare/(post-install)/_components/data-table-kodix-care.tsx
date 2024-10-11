@@ -841,6 +841,8 @@ function EditCareTaskDialog({
     form.reset(defaultValues);
   }, [task, open, form, defaultValues]);
 
+  const format = useFormatter();
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
@@ -858,6 +860,29 @@ function EditCareTaskDialog({
             <DialogHeader>
               <DialogTitle>{t("apps.kodixCare.Edit task")}</DialogTitle>
             </DialogHeader>
+            <div className="mt-6 flex flex-col gap-2 rounded-md border p-4 text-foreground/80">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-semibold">
+                  {task.title ?? ""}
+                </span>
+                {task.type === "CRITICAL" && (
+                  <LuAlertCircle className="size-3 text-orange-400" />
+                )}
+              </div>
+
+              <span className="line-clamp-3 text-xs font-semibold">
+                {task.description ?? ""}
+              </span>
+              <span className="flex text-xs font-semibold">
+                <RxCalendar className="mr-2 size-3 text-muted-foreground" />
+                {format.dateTime(task.date, {
+                  day: "2-digit",
+                  month: "short",
+                  hour: "numeric",
+                  minute: "numeric",
+                })}
+              </span>
+            </div>
             <div className="grid gap-4 py-4">
               <FormField
                 control={form.control}

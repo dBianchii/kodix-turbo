@@ -48,7 +48,7 @@ export const sendNotificationsForCriticalTasks = verifySignatureAppRouter(
 
     const start = dayjs
       .utc()
-      .add((-MILLISECONDS_TO_BE_LATE / 2) * 5, "milliseconds") // 1.5 hours ago
+      .add((-MILLISECONDS_TO_BE_LATE / 2) * 3, "milliseconds") // 1.5 hours ago
       .toDate();
     const end = dayjs
       .utc()
