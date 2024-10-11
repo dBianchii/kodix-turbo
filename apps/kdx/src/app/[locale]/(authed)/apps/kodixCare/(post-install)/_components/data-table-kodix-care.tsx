@@ -15,6 +15,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import {
+  LuAlertCircle,
   LuArrowLeftRight,
   LuCheck,
   LuChevronDown,
@@ -36,6 +37,7 @@ import type { TGetCareTasksInputSchema } from "@kdx/validators/trpc/app/kodixCar
 import dayjs from "@kdx/dayjs";
 import { useFormatter } from "@kdx/locales/next-intl";
 import { useTranslations } from "@kdx/locales/next-intl/client";
+import { Link } from "@kdx/locales/next-intl/navigation";
 import { cn } from "@kdx/ui";
 import {
   AlertDialog,
@@ -69,6 +71,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -303,8 +306,21 @@ export default function DataTableKodixCare({
             {t("Details")}
           </HeaderSort>
         ),
+        cell: (ctx) => <div>{ctx.row.original.details}</div>,
+      }),
+      columnHelper.accessor("type", {
+        header: ({ column }) => (
+          <HeaderSort column={column}>
+            <LuAlertCircle className="mr-2 size-4 text-orange-400" />
+            {t("Critical")}
+          </HeaderSort>
+        ),
         cell: (ctx) => (
-          <div className="max-w-sm">{ctx.row.original.details}</div>
+          <div className="flex max-w-sm items-center justify-center">
+            {ctx.getValue() === "CRITICAL" ? (
+              <LuAlertCircle className="mr-2 size-4 text-orange-400" />
+            ) : null}
+          </div>
         ),
       }),
     ],
@@ -584,6 +600,9 @@ function AddCareTaskDialog() {
   const utils = api.useUtils();
   const form = useForm({
     schema: ZCreateCareTaskInputSchema,
+    defaultValues: {
+      type: "NORMAL",
+    },
   });
   const mutation = api.app.kodixCare.createCareTask.useMutation({
     onError: trpcErrorToastDefault,
@@ -653,6 +672,54 @@ function AddCareTaskDialog() {
                       </div>
                     </FormControl>
                     <FormMessage className="w-full" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="type"
+                render={({ field }) => (
+                  <FormItem className="py-3">
+                    <div className="flex items-center gap-2">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value === "CRITICAL"}
+                          onCheckedChange={(checked) =>
+                            field.onChange(checked ? "CRITICAL" : "NORMAL")
+                          }
+                        />
+                      </FormControl>
+
+                      <FormLabel className="flex gap-1">
+                        <LuAlertCircle
+                          className={cn(
+                            "text-muted-foreground transition-colors",
+                            {
+                              "text-orange-400": field.value === "CRITICAL",
+                            },
+                          )}
+                        />
+                        {t("Critical task")}
+                      </FormLabel>
+                    </div>
+                    <FormDescription>
+                      {t.rich(
+                        "Wether or not this task is considered critical or important",
+                        {
+                          settings: (chunks) => (
+                            <Link
+                              target="_blank"
+                              href="/apps/kodixCare/settings"
+                              className={
+                                "text-primary underline-offset-4 hover:underline"
+                              }
+                            >
+                              {chunks}
+                            </Link>
+                          ),
+                        },
+                      )}
+                    </FormDescription>
                   </FormItem>
                 )}
               />

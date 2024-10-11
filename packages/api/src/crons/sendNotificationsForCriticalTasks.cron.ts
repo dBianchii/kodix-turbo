@@ -1,4 +1,4 @@
-import { verifySignatureAppRouter } from "@upstash/qstash/dist/nextjs";
+import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
 import ms from "ms";
 import groupBy from "object.groupby";
 
@@ -6,7 +6,10 @@ import dayjs from "@kdx/dayjs";
 import WarnDelayedCriticalTasks from "@kdx/react-email/warn-delayed-critical-tasks";
 import { getSuccessesAndErrors, kodixCareAppId } from "@kdx/shared";
 
-import { getCareTasks } from "../internal/calendarAndCareTaskCentral";
+import {
+  getCareTaskCompositeId,
+  getCareTasks,
+} from "../internal/calendarAndCareTaskCentral";
 import { sendNotifications } from "../internal/notificationCenter";
 import { getUpstashCache, setUpstashCache } from "../sdks/upstash";
 import { getUsersAppTeamConfigs } from "../trpc/routers/app/getUserAppTeamConfig.handler";
@@ -45,7 +48,7 @@ export const sendNotificationsForCriticalTasks = verifySignatureAppRouter(
 
     const start = dayjs
       .utc()
-      .add((-MILLISECONDS_TO_BE_LATE / 2) * 3, "milliseconds") // 1.5 hours ago
+      .add((-MILLISECONDS_TO_BE_LATE / 2) * 5, "milliseconds") // 1.5 hours ago
       .toDate();
     const end = dayjs
       .utc()
@@ -83,15 +86,6 @@ export const sendNotificationsForCriticalTasks = verifySignatureAppRouter(
       (x) => x.teamId,
     );
 
-    const getCareTaskIdOrEventMasterId = (careTask: {
-      id: string | null;
-      eventMasterId: string | null;
-    }) => {
-      const careTaskIdOrEventMasterId = careTask.id ?? careTask.eventMasterId;
-      if (!careTaskIdOrEventMasterId) throw new Error("Shouldn't happen");
-      return careTaskIdOrEventMasterId;
-    };
-
     const criticalNotDoneLateCareTasksWithTeamAndUsers =
       criticalNotDoneLateCareTasks.map((ct) => {
         const team = allTeamIdsWithKodixCareInstalled.find(
@@ -102,6 +96,7 @@ export const sendNotificationsForCriticalTasks = verifySignatureAppRouter(
           team.teamId
         ] ??= []).map((cfg) => cfg.userId);
 
+        //? This object should represent the care task with the team and the users that need to be notified.
         return {
           id: ct.id,
           eventMasterId: ct.eventMasterId,
@@ -116,16 +111,18 @@ export const sendNotificationsForCriticalTasks = verifySignatureAppRouter(
 
     const sentNotificationStatusPromises =
       criticalNotDoneLateCareTasksWithTeamAndUsers.flatMap((careTask) =>
-        careTask.Team.userIds.map((userId) =>
-          getUpstashCache("careTasksUsersNotifs", {
-            careTaskIdOrEventMasterId: getCareTaskIdOrEventMasterId(careTask),
+        careTask.Team.userIds.map((userId) => {
+          const careTaskCompositeId = getCareTaskCompositeId({
+            eventMasterId: careTask.eventMasterId,
+            id: careTask.id,
+            selectedTimeStamp: careTask.date,
+          });
+
+          return getUpstashCache("careTasksUsersNotifs", {
+            careTaskCompositeId,
             userId,
-          }).then((alreadySentNotif) => ({
-            careTaskOrEventMasterId: getCareTaskIdOrEventMasterId(careTask),
-            userId,
-            alreadySent: !!alreadySentNotif,
-          })),
-        ),
+          });
+        }),
       );
 
     const results = await Promise.allSettled(sentNotificationStatusPromises);
@@ -136,9 +133,12 @@ export const sendNotificationsForCriticalTasks = verifySignatureAppRouter(
         (careTask) =>
           !notificationStatuses.some(
             (x) =>
-              x.value.careTaskOrEventMasterId ===
-                getCareTaskIdOrEventMasterId(careTask) &&
-              careTask.Team.userIds.some((userId) => userId === x.value.userId),
+              x.value?.careTaskCompositeId === //?Check if it exists and also if it's the same care task
+              getCareTaskCompositeId({
+                eventMasterId: careTask.eventMasterId,
+                id: careTask.id,
+                selectedTimeStamp: careTask.date,
+              }),
           ),
       );
 
@@ -164,31 +164,24 @@ export const sendNotificationsForCriticalTasks = verifySignatureAppRouter(
             userId,
           }),
         );
-        const dateISOString = careTask.date.toISOString();
-        const value = {
-          date: dateISOString,
-        };
-        if (careTask.id)
-          promises.push(
-            setUpstashCache("careTasksUsersNotifs", {
-              variableKeys: {
-                userId,
-                careTaskIdOrEventMasterId: careTask.id,
-              },
-              value,
-            }),
-          );
-
-        if (careTask.eventMasterId)
-          promises.push(
-            setUpstashCache("careTasksUsersNotifs", {
-              variableKeys: {
-                userId,
-                careTaskIdOrEventMasterId: careTask.eventMasterId,
-              },
-              value,
-            }),
-          );
+        const careTaskCompositeId = getCareTaskCompositeId({
+          eventMasterId: careTask.eventMasterId,
+          id: careTask.id,
+          selectedTimeStamp: careTask.date,
+        });
+        promises.push(
+          setUpstashCache("careTasksUsersNotifs", {
+            variableKeys: {
+              userId,
+              careTaskCompositeId,
+            },
+            value: {
+              userId,
+              careTaskCompositeId,
+              date: careTask.date.toISOString(),
+            },
+          }),
+        );
       }
     }
 

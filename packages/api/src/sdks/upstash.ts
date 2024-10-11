@@ -1,7 +1,9 @@
 import { Redis } from "@upstash/redis";
 
-import type { apps, careTasks, teams, users } from "@kdx/db/schema";
+import type { apps, teams, users } from "@kdx/db/schema";
 import type { AppPermissionId } from "@kdx/shared";
+
+import type { getCareTaskCompositeId } from "../internal/calendarAndCareTaskCentral";
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL,
@@ -35,9 +37,11 @@ interface KeysMapping {
   careTasksUsersNotifs: {
     tags: {
       userId: typeof users.$inferSelect.id;
-      careTaskIdOrEventMasterId: typeof careTasks.$inferSelect.id;
+      careTaskCompositeId: ReturnType<typeof getCareTaskCompositeId>;
     };
     value: {
+      userId: typeof users.$inferSelect.id;
+      careTaskCompositeId: ReturnType<typeof getCareTaskCompositeId>;
       date: string;
     };
   };
@@ -47,8 +51,8 @@ const constructKey = <T extends keyof KeysMapping>(
   key: T,
   variableKeys: KeysMapping[T]["tags"],
 ) => {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  return variableKeys ? `${key}-${Object.values(variableKeys).join("-")}` : key;
+  const sortedKeys = Object.keys(variableKeys).sort(); // Ensure order is always the same
+  return `${key}-${sortedKeys.join("-")}`;
 };
 
 /**
@@ -60,7 +64,10 @@ export const getUpstashCache = async <T extends keyof KeysMapping>(
 ) => {
   if (process.env.DISABLE_UPSTASH_CACHE) return Promise.resolve(null);
   const constructedKey = constructKey(key, variableKeys);
-  return redis.get(constructedKey) as Promise<KeysMapping[T]["value"]> | null;
+  const result = (await redis.get(constructedKey)) as Promise<
+    KeysMapping[T]["value"]
+  > | null;
+  return result;
 };
 
 export const setUpstashCache = <T extends keyof KeysMapping>(

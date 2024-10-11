@@ -456,5 +456,8 @@
   "Deleting account": "Deleting account",
   "Account deleted successfully": "Account deleted successfully",
   "Permanently delete your account and all your data ": "Permanently delete your account and all your data",
-  "COUNT members": "{count, plural, =0 {# members} =1 {# member} other {# members}}"
+  "COUNT members": "{count, plural, =0 {# members} =1 {# member} other {# members}}",
+  "Critical task": "Critical task?",
+  "Wether or not this task is considered critical or important": "Wether or not this task is considered critical, or important. You can choose to receive notifications about it on the <settings>settings</settings> page",
+  "Critical": "Critical"
 }

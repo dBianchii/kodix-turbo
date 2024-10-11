@@ -26,6 +26,11 @@ export interface CalendarTask {
   teamId: typeof eventMasters.$inferSelect.teamId;
 }
 
+export const getCalendarTaskCompositeId = (compound: {
+  eventMasterId: string;
+  selectedTimeStamp: Date;
+}) => `${compound.eventMasterId}-${compound.selectedTimeStamp.toISOString()}`; //TODO: make other stuff for calendar api use this instead of sending selectedTimeStamp+eventMasterId for inputs
+
 export async function getCalendarTasks({
   ctx,
   dateStart,
@@ -211,6 +216,19 @@ export interface CareTask {
 type CareTaskOrCalendarTask = Omit<CareTask, "id"> & {
   id: string | null;
 }; //? Same as CareTask but id might not exist when it's a calendar task
+
+export const getCareTaskCompositeId = (compound: {
+  id: string | null;
+  eventMasterId: string | null;
+  selectedTimeStamp: Date;
+}) => {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  if (!compound.eventMasterId) return compound.id!;
+  return getCalendarTaskCompositeId({
+    eventMasterId: compound.eventMasterId,
+    selectedTimeStamp: compound.selectedTimeStamp,
+  });
+};
 
 export async function getCareTasks({
   ctx,
