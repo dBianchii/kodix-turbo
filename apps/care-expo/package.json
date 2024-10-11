@@ -71,14 +71,14 @@
     "react-native-screens": "~3.31.1",
     "react-native-svg": "^15.6.0",
     "superjson": "2.2.1",
-    "tailwind-merge": "^2.5.2",
+    "tailwind-merge": "^2.5.3",
     "tamagui": "^1.110.5",
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@babel/core": "^7.25.2",
-    "@babel/preset-env": "^7.25.3",
-    "@babel/runtime": "^7.25.0",
+    "@babel/core": "^7.25.8",
+    "@babel/preset-env": "^7.25.8",
+    "@babel/runtime": "^7.25.7",
     "@kdx/api": "workspace:*",
     "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
