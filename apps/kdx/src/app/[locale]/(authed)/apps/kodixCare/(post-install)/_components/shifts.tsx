@@ -41,7 +41,7 @@ export function NoPreviousShift({ user }: { user: User }) {
   const t = useTranslations();
 
   return (
-    <Card className="flex flex-col gap-3 p-4 md:min-w-72">
+    <Card className="flex h-52 w-80 max-w-sm flex-col gap-3 p-4 md:w-full md:min-w-72">
       <div className="flex flex-row items-center justify-center space-x-3">
         <h2 className="font-semibold leading-none tracking-tight">
           {t("apps.kodixCare.currentShift")}
@@ -71,7 +71,7 @@ export function ShiftInProgress({
 }) {
   const t = useTranslations();
   return (
-    <Card className="flex flex-col gap-3 p-4 md:min-w-72">
+    <Card className="flex h-52 w-80 max-w-sm flex-col gap-3 p-4 md:w-full md:min-w-72">
       <div className="flex flex-row items-center justify-center space-x-3">
         <h2 className="font-semibold leading-none tracking-tight">
           {t("apps.kodixCare.currentShift")}
@@ -105,7 +105,7 @@ export function ShiftCheckedOut({
 }) {
   const t = useTranslations();
   return (
-    <Card className="flex flex-col gap-3 p-4 md:min-w-72">
+    <Card className="flex h-52 w-80 max-w-sm flex-col gap-3 p-4 md:w-full md:min-w-72">
       <div className="flex flex-row items-center justify-center space-x-3">
         <h2 className="font-semibold leading-none tracking-tight">
           {t("apps.kodixCare.currentShift")}

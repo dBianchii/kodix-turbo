@@ -20,7 +20,7 @@ export default async function KodixCarePage() {
 
   return (
     <main className="flex w-full flex-col gap-4 pt-6 md:space-x-6 md:pl-5">
-      <div className="flex flex-col gap-6 md:flex-row">
+      <div className="flex flex-col items-center gap-6 md:flex-row md:items-baseline">
         <Suspense fallback={<ShiftSkeleton />}>
           <CurrentShift user={user} />
         </Suspense>
