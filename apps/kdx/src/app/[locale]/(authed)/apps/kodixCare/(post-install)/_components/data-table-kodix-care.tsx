@@ -51,6 +51,7 @@ import { Button } from "@kdx/ui/button";
 import { Checkbox } from "@kdx/ui/checkbox";
 import {
   Credenza,
+  CredenzaBody,
   CredenzaClose,
   CredenzaContent,
   CredenzaDescription,
@@ -550,9 +551,6 @@ function SyncTasksFromCalendarDialogButton() {
             )}
           </CredenzaDescription>
         </CredenzaHeader>
-        <div className="flex items-center space-x-2">
-          <div className="grid flex-1 gap-2"></div>
-        </div>
         <CredenzaFooter className="gap-3 sm:justify-between">
           <CredenzaClose asChild>
             <Button type="button" variant="secondary">
@@ -620,7 +618,7 @@ function AddCareTaskDialog() {
             <CredenzaHeader>
               <CredenzaTitle>{t("apps.kodixCare.Add task")}</CredenzaTitle>
             </CredenzaHeader>
-            <div className="grid gap-4 py-4">
+            <CredenzaBody className="grid gap-4 py-4">
               <FormField
                 control={form.control}
                 name="title"
@@ -678,7 +676,7 @@ function AddCareTaskDialog() {
                   </FormItem>
                 )}
               />
-            </div>
+            </CredenzaBody>
             <CredenzaFooter className="mt-6 justify-end">
               <Button disabled={mutation.isPending} type="submit">
                 {t("Save")}
@@ -791,7 +789,7 @@ function EditCareTaskDialog({
             <CredenzaHeader>
               <CredenzaTitle>{t("apps.kodixCare.Edit task")}</CredenzaTitle>
             </CredenzaHeader>
-            <div className="grid gap-4 py-4">
+            <CredenzaBody className="grid gap-4 py-4">
               <FormField
                 control={form.control}
                 name="doneAt"
@@ -834,7 +832,7 @@ function EditCareTaskDialog({
                   </FormItem>
                 )}
               />
-            </div>
+            </CredenzaBody>
             <CredenzaFooter className="mt-6 justify-end">
               <Button disabled={mutation.isPending} type="submit">
                 {t("Save")}

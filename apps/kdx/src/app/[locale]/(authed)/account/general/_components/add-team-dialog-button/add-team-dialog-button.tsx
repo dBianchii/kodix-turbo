@@ -13,6 +13,7 @@ import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import {
   Credenza,
+  CredenzaBody,
   CredenzaContent,
   CredenzaDescription,
   CredenzaFooter,
@@ -55,19 +56,17 @@ export function AddTeamDialogButton({
             {t("create-a-new-team-and-invite-your-team-members")}
           </CredenzaDescription>
         </CredenzaHeader>
-        <div>
-          <div className="space-y-4 py-2 pb-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">{t("team-name")}</Label>
-              <Input
-                id="name"
-                placeholder="Acme Inc."
-                value={teamName}
-                onChange={(e) => setTeamName(e.target.value)}
-              />
-            </div>
+        <CredenzaBody className="space-y-4 py-2 pb-4">
+          <div className="space-y-2">
+            <Label htmlFor="name">{t("team-name")}</Label>
+            <Input
+              id="name"
+              placeholder="Acme Inc."
+              value={teamName}
+              onChange={(e) => setTeamName(e.target.value)}
+            />
           </div>
-        </div>
+        </CredenzaBody>
         <CredenzaFooter>
           <Button variant="outline" onClick={() => setOpen(false)}>
             {t("Cancel")}

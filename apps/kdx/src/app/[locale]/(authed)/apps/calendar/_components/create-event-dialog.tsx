@@ -10,6 +10,7 @@ import { useTranslations } from "@kdx/locales/next-intl/client";
 import { Button } from "@kdx/ui/button";
 import {
   Credenza,
+  CredenzaBody,
   CredenzaContent,
   CredenzaFooter,
   CredenzaHeader,
@@ -91,25 +92,96 @@ export function CreateEventDialogButton() {
         <CredenzaHeader>
           <CredenzaTitle>{t("apps.calendar.New event")}</CredenzaTitle>
         </CredenzaHeader>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit((values) => {
-              mutation.mutate(values);
-            })}
-            className="space-y-8"
-          >
-            <div className="space-y-4">
-              <div className="flex flex-row">
+        <CredenzaBody>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit((values) => {
+                mutation.mutate(values);
+              })}
+              className="space-y-8"
+            >
+              <div className="space-y-4">
+                <div className="flex flex-row">
+                  <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormLabel>{t("apps.calendar.Event title")}</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder={`${t("apps.calendar.Event title")}...`}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="w-full" />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="flex flex-row">
+                  <div className="flex flex-col space-y-2">
+                    <FormField
+                      control={form.control}
+                      name="from"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t("From")}</FormLabel>
+                          <FormControl>
+                            <div className="flex flex-row gap-2">
+                              <DateTimePicker
+                                date={field.value}
+                                setDate={field.onChange}
+                              />
+                            </div>
+                          </FormControl>
+                          <FormMessage className="w-full" />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-row">
+                  <RecurrencePicker
+                    open={personalizedRecurrenceOpen}
+                    setOpen={setPersonalizedRecurrenceOpen}
+                    interval={form.getValues("interval")}
+                    setInterval={(interval) => {
+                      form.setValue("interval", interval);
+                    }}
+                    frequency={form.getValues("frequency")}
+                    setFrequency={(freq) => form.setValue("frequency", freq)}
+                    until={
+                      form.getValues("until")
+                        ? dayjs(form.getValues("until"))
+                        : undefined
+                    }
+                    setUntil={(dayjs) =>
+                      form.setValue("until", dayjs?.toDate())
+                    }
+                    count={form.getValues("count")}
+                    setCount={(count) => form.setValue("count", count)}
+                    weekdays={form
+                      .getValues("weekdays")
+                      ?.map((x) => new Weekday(x))}
+                    setWeekdays={(weekdays) =>
+                      form.setValue(
+                        "weekdays",
+                        weekdays?.map((wd) => wd.weekday),
+                      )
+                    }
+                  />
+                </div>
                 <FormField
                   control={form.control}
-                  name="title"
+                  name="description"
                   render={({ field }) => (
-                    <FormItem className="w-full">
-                      <FormLabel>{t("apps.calendar.Event title")}</FormLabel>
+                    <FormItem>
                       <FormControl>
-                        <Input
-                          placeholder={`${t("apps.calendar.Event title")}...`}
+                        <Textarea
+                          placeholder={`${t("apps.calendar.Add description")}...`}
                           {...field}
+                          rows={3}
                         />
                       </FormControl>
                       <FormMessage className="w-full" />
@@ -117,85 +189,18 @@ export function CreateEventDialogButton() {
                   )}
                 />
               </div>
-              <div className="flex flex-row">
-                <div className="flex flex-col space-y-2">
-                  <FormField
-                    control={form.control}
-                    name="from"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t("From")}</FormLabel>
-                        <FormControl>
-                          <div className="flex flex-row gap-2">
-                            <DateTimePicker
-                              date={field.value}
-                              setDate={field.onChange}
-                            />
-                          </div>
-                        </FormControl>
-                        <FormMessage className="w-full" />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-              <div className="flex flex-row">
-                <RecurrencePicker
-                  open={personalizedRecurrenceOpen}
-                  setOpen={setPersonalizedRecurrenceOpen}
-                  interval={form.getValues("interval")}
-                  setInterval={(interval) => {
-                    form.setValue("interval", interval);
-                  }}
-                  frequency={form.getValues("frequency")}
-                  setFrequency={(freq) => form.setValue("frequency", freq)}
-                  until={
-                    form.getValues("until")
-                      ? dayjs(form.getValues("until"))
-                      : undefined
-                  }
-                  setUntil={(dayjs) => form.setValue("until", dayjs?.toDate())}
-                  count={form.getValues("count")}
-                  setCount={(count) => form.setValue("count", count)}
-                  weekdays={form
-                    .getValues("weekdays")
-                    ?.map((x) => new Weekday(x))}
-                  setWeekdays={(weekdays) =>
-                    form.setValue(
-                      "weekdays",
-                      weekdays?.map((wd) => wd.weekday),
-                    )
-                  }
-                />
-              </div>
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Textarea
-                        placeholder={`${t("apps.calendar.Add description")}...`}
-                        {...field}
-                        rows={3}
-                      />
-                    </FormControl>
-                    <FormMessage className="w-full" />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <CredenzaFooter>
-              <Button type="submit" size="sm" disabled={mutation.isPending}>
-                {mutation.isPending ? (
-                  <LuLoader2 className="mx-2 size-4 animate-spin" />
-                ) : (
-                  t("apps.calendar.Create event")
-                )}
-              </Button>
-            </CredenzaFooter>
-          </form>
-        </Form>
+              <CredenzaFooter>
+                <Button type="submit" size="sm" disabled={mutation.isPending}>
+                  {mutation.isPending ? (
+                    <LuLoader2 className="mx-2 size-4 animate-spin" />
+                  ) : (
+                    t("apps.calendar.Create event")
+                  )}
+                </Button>
+              </CredenzaFooter>
+            </form>
+          </Form>
+        </CredenzaBody>
       </CredenzaContent>
     </Credenza>
   );

@@ -22,6 +22,7 @@ import {
 } from "@kdx/ui/card";
 import {
   Credenza,
+  CredenzaBody,
   CredenzaContent,
   CredenzaDescription,
   CredenzaFooter,
@@ -69,6 +70,7 @@ export default function TeamInviteCardClient({
           },
         );
       setSuccesses(successes);
+      setEmails([{ key: 0, value: "" }]);
 
       setTimeout(() => {
         closeDialog();
@@ -82,7 +84,7 @@ export default function TeamInviteCardClient({
 
   const closeDialog = () => {
     //TODO: Keep the emails that were unsuccessful
-    setEmails([{ key: 0, value: "" }]);
+    // setEmails([{ key: 0, value: "" }]);
     setSuccesses([]);
     setOpen(false);
   };
@@ -104,13 +106,6 @@ export default function TeamInviteCardClient({
           <CardDescription>
             {t("Invite new members by email address")}
           </CardDescription>
-          <Credenza>
-            <CredenzaContent>
-              <CredenzaHeader>
-                <CredenzaTitle>{t("Edit Event")}</CredenzaTitle>
-              </CredenzaHeader>
-            </CredenzaContent>
-          </Credenza>
         </CardHeader>
         <CardContent>
           <Separator className="mb-6" />
@@ -203,7 +198,7 @@ export default function TeamInviteCardClient({
                   )}
                 </CredenzaDescription>
               </CredenzaHeader>
-              <div className="my-4 flex flex-col space-y-2">
+              <CredenzaBody className="my-4 flex flex-col space-y-2">
                 {emails
                   .filter((x) => Boolean(x))
                   .map((email) => (
@@ -221,7 +216,7 @@ export default function TeamInviteCardClient({
                       />
                     </div>
                   ))}
-              </div>
+              </CredenzaBody>
               <CredenzaFooter className="justify-end">
                 <Button
                   disabled={mutation.isPending || successes.length > 0}

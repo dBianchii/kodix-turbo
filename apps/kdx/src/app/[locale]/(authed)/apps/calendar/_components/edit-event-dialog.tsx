@@ -19,6 +19,7 @@ import {
 import { Button } from "@kdx/ui/button";
 import {
   Credenza,
+  CredenzaBody,
   CredenzaContent,
   CredenzaFooter,
   CredenzaHeader,
@@ -209,7 +210,7 @@ export function EditEventDialog({
         <CredenzaHeader>
           <CredenzaTitle>{t("apps.calendar.Edit event")}</CredenzaTitle>
         </CredenzaHeader>
-        <div className="space-y-4">
+        <CredenzaBody className="space-y-4">
           <div className="flex flex-row gap-2">
             <Input
               placeholder="Event title..."
@@ -247,7 +248,7 @@ export function EditEventDialog({
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           ></Textarea>
-        </div>
+        </CredenzaBody>
         <CredenzaFooter>
           <TooltipProvider>
             <Tooltip>

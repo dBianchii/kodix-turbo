@@ -11,8 +11,8 @@ import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Button } from "@kdx/ui/button";
 import {
   Credenza,
+  CredenzaBody,
   CredenzaContent,
-  CredenzaDescription,
   CredenzaFooter,
   CredenzaHeader,
   CredenzaTitle,
@@ -85,18 +85,18 @@ export function CreateTaskDialogButton() {
         <CredenzaHeader>
           <CredenzaTitle>New Task</CredenzaTitle>
         </CredenzaHeader>
-        <CredenzaDescription>
+        <CredenzaBody>
           <Input
             className="my-2 border-none"
             type="text"
             placeholder="Event title..."
             onChange={(e) => setTitle(e.target.value)}
-          ></Input>
+          />
           <Textarea
             className="my-2 border-none"
             placeholder="Add description..."
             onChange={(e) => setDescription(e.target.value)}
-          ></Textarea>
+          />
           <div className="flex flex-row gap-1">
             <StatusPopover setStatus={setStatus} status={status} />
             <PriorityPopover priority={priority} setPriority={setPriority}>
@@ -161,7 +161,7 @@ export function CreateTaskDialogButton() {
               </PopoverTrigger>
             </DatePickerWithPresets>
           </div>
-        </CredenzaDescription>
+        </CredenzaBody>
         <CredenzaFooter>
           <Button type="submit" size="sm" onClick={handleCreateTask}>
             {t("Create task")}
