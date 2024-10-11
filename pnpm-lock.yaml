@@ -374,7 +374,7 @@ importers:
         version: 1.3.1(next@14.2.15(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       next:
         specifier: 'catalog:'
-        version: 14.2.15(@babel/core@7.25.8)(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 14.2.15(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next-safe-action:
         specifier: 7.1.4-experimental.1
         version: 7.1.4-experimental.1(next@14.2.15(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(zod@3.23.8)
@@ -495,7 +495,7 @@ importers:
         version: 1.31.6
       next:
         specifier: 'catalog:'
-        version: 14.2.15(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.2.0))(react@18.2.0)
+        version: 14.2.15(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       resend:
         specifier: ^3.2.0
         version: 3.2.0
@@ -565,7 +565,7 @@ importers:
         version: 3.2.0
       next:
         specifier: 'catalog:'
-        version: 14.2.15(@babel/core@7.25.8)(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 14.2.15(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: catalog:react18
         version: 18.3.1
@@ -941,7 +941,10 @@ importers:
         version: 2.5.3
       tailwindcss-animate:
         specifier: ^1.0.7
-        version: 1.0.7(tailwindcss@3.4.10(ts-node@10.9.2(@swc/core@1.7.24)(@types/node@22.7.4)(typescript@5.5.4)))
+        version: 1.0.7(tailwindcss@3.4.10(ts-node@10.9.2(@swc/core@1.7.24)(@types/node@20.16.1)(typescript@5.5.4)))
+      vaul:
+        specifier: ^1.0.0
+        version: 1.0.0(@types/react-dom@18.3.0)(@types/react@18.3.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       zod:
         specifier: 'catalog:'
         version: 3.23.8
@@ -1047,7 +1050,7 @@ importers:
         version: 7.37.1(eslint@9.9.1(jiti@2.3.3))
       eslint-plugin-react-hooks:
         specifier: rc
-        version: 5.1.0-rc-70fb1363-20241010(eslint@9.9.1(jiti@2.3.3))
+        version: 5.1.0-rc-09111202-20241011(eslint@9.9.1(jiti@2.3.3))
       eslint-plugin-turbo:
         specifier: ^2.1.3
         version: 2.1.3(eslint@9.9.1(jiti@2.3.3))
@@ -7376,8 +7379,8 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9
 
-  eslint-plugin-react-hooks@5.1.0-rc-70fb1363-20241010:
-    resolution: {integrity: sha512-ACpE3p5orWvc0bh5qsH65ujmM1xrPTSTmB73EGR9fn5QTqNmoHNEA5kC9f4Z9FP9rm0E9tvrFgRw2/UfoqdxIQ==}
+  eslint-plugin-react-hooks@5.1.0-rc-09111202-20241011:
+    resolution: {integrity: sha512-HLdP3Qpr9KUckSEhxwWHqpXGJYKlZV+P9gqdOwPa45Ka3qhY1kuflvtwRMMA9dd7p8AL/lRLU3UUfNcDVh5DGw==}
     engines: {node: '>=10'}
     peerDependencies:
       eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0
@@ -11573,6 +11576,12 @@ packages:
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
+
+  vaul@1.0.0:
+    resolution: {integrity: sha512-TegfMkwy86RSvSiIVREG6OqgRL7agqRsKYyWYacyVUAdpcIi34QoCOED476Mbf8J5d06e1hygSdvJhehlxEBhQ==}
+    peerDependencies:
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
 
   vite-plugin-entry-shaking-debugger@1.0.3:
     resolution: {integrity: sha512-yIlsuqa3x6kdSof58JXG7PGjn//613LoeJJCLPRk/TJC8oPbibFZYjpQSEseJ3ZSvTo0RqYGTguyunFILrL5Xw==}
@@ -19611,7 +19620,7 @@ snapshots:
       safe-regex-test: 1.0.3
       string.prototype.includes: 2.0.0
 
-  eslint-plugin-react-hooks@5.1.0-rc-70fb1363-20241010(eslint@9.9.1(jiti@2.3.3)):
+  eslint-plugin-react-hooks@5.1.0-rc-09111202-20241011(eslint@9.9.1(jiti@2.3.3)):
     dependencies:
       eslint: 9.9.1(jiti@2.3.3)
 
@@ -21915,32 +21924,6 @@ snapshots:
       - '@babel/core'
       - babel-plugin-macros
 
-  next@14.2.15(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.2.0))(react@18.2.0):
-    dependencies:
-      '@next/env': 14.2.15
-      '@swc/helpers': 0.5.5
-      busboy: 1.6.0
-      caniuse-lite: 1.0.30001668
-      graceful-fs: 4.2.11
-      postcss: 8.4.31
-      react: 18.2.0
-      react-dom: 18.3.1(react@18.2.0)
-      styled-jsx: 5.1.1(react@18.2.0)
-    optionalDependencies:
-      '@next/swc-darwin-arm64': 14.2.15
-      '@next/swc-darwin-x64': 14.2.15
-      '@next/swc-linux-arm64-gnu': 14.2.15
-      '@next/swc-linux-arm64-musl': 14.2.15
-      '@next/swc-linux-x64-gnu': 14.2.15
-      '@next/swc-linux-x64-musl': 14.2.15
-      '@next/swc-win32-arm64-msvc': 14.2.15
-      '@next/swc-win32-ia32-msvc': 14.2.15
-      '@next/swc-win32-x64-msvc': 14.2.15
-      '@opentelemetry/api': 1.8.0
-    transitivePeerDependencies:
-      - '@babel/core'
-      - babel-plugin-macros
-
   next@14.2.15(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@next/env': 14.2.15
@@ -21951,7 +21934,7 @@ snapshots:
       postcss: 8.4.31
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      styled-jsx: 5.1.1(@babel/core@7.25.8)(react@18.3.1)
+      styled-jsx: 5.1.1(@babel/core@7.24.5)(react@18.3.1)
     optionalDependencies:
       '@next/swc-darwin-arm64': 14.2.15
       '@next/swc-darwin-x64': 14.2.15
@@ -22696,12 +22679,6 @@ snapshots:
       - utf-8-validate
 
   react-dom@18.2.0(react@18.2.0):
-    dependencies:
-      loose-envify: 1.4.0
-      react: 18.2.0
-      scheduler: 0.23.2
-
-  react-dom@18.3.1(react@18.2.0):
     dependencies:
       loose-envify: 1.4.0
       react: 18.2.0
@@ -23836,11 +23813,6 @@ snapshots:
     optionalDependencies:
       '@babel/core': 7.25.8
 
-  styled-jsx@5.1.1(react@18.2.0):
-    dependencies:
-      client-only: 0.0.1
-      react: 18.2.0
-
   styleq@0.1.3: {}
 
   sucrase@3.34.0:
@@ -24108,7 +24080,7 @@ snapshots:
       ansi-escapes: 4.3.2
       supports-hyperlinks: 2.3.0
 
-  terser-webpack-plugin@5.3.10(@swc/core@1.7.24)(webpack@5.91.0(@swc/core@1.3.101(@swc/helpers@0.5.13))(esbuild@0.19.11)):
+  terser-webpack-plugin@5.3.10(@swc/core@1.3.101(@swc/helpers@0.5.13))(esbuild@0.19.11)(webpack@5.91.0(@swc/core@1.7.24)):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
       jest-worker: 27.5.1
@@ -24117,7 +24089,8 @@ snapshots:
       terser: 5.31.0
       webpack: 5.91.0(@swc/core@1.3.101(@swc/helpers@0.5.13))(esbuild@0.19.11)
     optionalDependencies:
-      '@swc/core': 1.7.24(@swc/helpers@0.5.13)
+      '@swc/core': 1.3.101(@swc/helpers@0.5.13)
+      esbuild: 0.19.11
 
   terser@5.31.0:
     dependencies:
@@ -24625,6 +24598,15 @@ snapshots:
 
   vary@1.1.2: {}
 
+  vaul@1.0.0(@types/react-dom@18.3.0)(@types/react@18.3.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      '@radix-ui/react-dialog': 1.1.2(@types/react-dom@18.3.0)(@types/react@18.3.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@types/react-dom'
+
   vite-plugin-entry-shaking-debugger@1.0.3(@upstash/redis@1.31.6)(vite-plugin-entry-shaking@0.4.3(@upstash/redis@1.31.6)(vite@6.0.0-alpha.18(@types/node@22.7.4)(lightningcss@1.22.0)(terser@5.31.0))(vue@3.4.31(typescript@5.5.4)))(vite@6.0.0-alpha.18(@types/node@22.7.4)(lightningcss@1.22.0)(terser@5.31.0))(vue@3.4.31(typescript@5.5.4)):
     dependencies:
       '@vueuse/core': 10.11.0(vue@3.4.31(typescript@5.5.4))
@@ -24765,7 +24747,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 3.3.0
       tapable: 2.2.1
-      terser-webpack-plugin: 5.3.10(@swc/core@1.7.24)(webpack@5.91.0(@swc/core@1.3.101(@swc/helpers@0.5.13))(esbuild@0.19.11))
+      terser-webpack-plugin: 5.3.10(@swc/core@1.3.101(@swc/helpers@0.5.13))(esbuild@0.19.11)(webpack@5.91.0(@swc/core@1.7.24))
       watchpack: 2.4.1
       webpack-sources: 3.2.3
     transitivePeerDependencies:

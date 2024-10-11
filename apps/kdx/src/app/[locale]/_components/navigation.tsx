@@ -5,7 +5,7 @@ import { RxArrowLeft } from "react-icons/rx";
 
 import { usePathname } from "@kdx/locales/next-intl/navigation";
 import { cn } from "@kdx/ui";
-import { useMediaQuery } from "@kdx/ui/hooks";
+import { useMediaQuery2 } from "@kdx/ui/hooks";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -29,7 +29,7 @@ export function Navigation({
   }[];
 }) {
   const pathname = usePathname();
-  const isSmallerScreen = useMediaQuery({ query: "md" });
+  const isSmallerScreen = useMediaQuery2({ query: "md" });
   const entryPoint = goBackItem.href.split("/").at(-1);
   if (!entryPoint) throw new Error("Your goBackItem.href is invalid");
 
