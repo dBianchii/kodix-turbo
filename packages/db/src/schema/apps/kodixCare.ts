@@ -1,11 +1,5 @@
 import { relations } from "drizzle-orm";
-import {
-  index,
-  mysqlEnum,
-  mysqlTable,
-  timestamp,
-  varchar,
-} from "drizzle-orm/mysql-core";
+import { index, mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 import { NANOID_SIZE } from "../../nanoid";
 import { teams } from "../teams";
@@ -14,6 +8,7 @@ import {
   DEFAULTLENGTH,
   nanoidPrimaryKey,
   teamIdReferenceCascadeDelete,
+  typeEnum,
 } from "../utils";
 import { eventMasters } from "./calendar";
 
@@ -70,9 +65,7 @@ export const careTasks = mysqlTable(
     description: varchar("description", { length: DEFAULTLENGTH }),
     details: varchar("details", { length: DEFAULTLENGTH }),
     updatedAt: timestamp("updatedAt").onUpdateNow(),
-    type: mysqlEnum("status", ["NORMAL", "CRITICAL"])
-      .default("NORMAL")
-      .notNull(),
+    type: typeEnum.notNull().default("NORMAL"),
   },
   (table) => {
     return {

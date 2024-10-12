@@ -1,7 +1,7 @@
 "use client";
 
 import type { ColumnFiltersState } from "@tanstack/react-table";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   createColumnHelper,
   flexRender,
@@ -11,8 +11,9 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { addDays } from "date-fns";
-import { LuLoader2 } from "react-icons/lu";
+import { LuAlertCircle, LuLoader2, LuText } from "react-icons/lu";
 import {
+  RxCalendar,
   RxChevronLeft,
   RxChevronRight,
   RxDotsHorizontal,
@@ -34,6 +35,7 @@ import {
   ContextMenuTrigger,
 } from "@kdx/ui/context-menu";
 import { DataTablePagination } from "@kdx/ui/data-table/data-table-pagination";
+import { HeaderSort } from "@kdx/ui/data-table/header-sort";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -70,7 +72,6 @@ export function DataTable({
 
   const [selectedDay, setSelectedDay] = useState(new Date());
   const [calendarTask, setCalendarTask] = useState<CalendarTask | undefined>();
-
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
 
@@ -97,71 +98,95 @@ export function DataTable({
   const t = useTranslations();
   const format = useFormatter();
 
-  const columns = [
-    columnHelper.accessor("eventMasterId", {
-      header: () => (
-        <>
-          {/* <Checkbox
-            checked={table.getIsAllPageRowsSelected()}
-            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-            aria-label="Select all"
-          /> */}
-        </>
-      ),
-      cell: function Cell(info) {
-        return (
-          <div className="space-x-4">
-            {/* <Checkbox
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor("eventMasterId", {
+        header: () => <></>,
+        cell: function Cell(info) {
+          return (
+            <div className="space-x-4">
+              {/* <Checkbox
               checked={info.row.getIsSelected()}
               onCheckedChange={(value) => info.row.toggleSelected(!!value)}
               aria-label="Select row"
             /> */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
-                  <span className="sr-only">Open menu</span>
-                  <RxDotsHorizontal className="size-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start">
-                <DropdownMenuItem
-                  onClick={() => {
-                    setCalendarTask(info.row.original);
-                    setOpenEditDialog(true);
-                  }}
-                >
-                  <RxPencil1 className="mr-2 size-4" />
-                  {t("apps.calendar.Edit event")}
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setOpenCancelDialog(true)}>
-                  <RxTrash className="mr-2 size-4" />
-                  {t("apps.calendar.Delete event")}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="h-8 w-8 p-0">
+                    <span className="sr-only">Open menu</span>
+                    <RxDotsHorizontal className="size-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setCalendarTask(info.row.original);
+                      setOpenEditDialog(true);
+                    }}
+                  >
+                    <RxPencil1 className="mr-2 size-4" />
+                    {t("apps.calendar.Edit event")}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setOpenCancelDialog(true)}>
+                    <RxTrash className="mr-2 size-4" />
+                    {t("apps.calendar.Delete event")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          );
+        },
+        enableSorting: false,
+        enableHiding: false,
+      }),
+      columnHelper.accessor("title", {
+        header: ({ column }) => (
+          <HeaderSort column={column}>{t("Title")}</HeaderSort>
+        ),
+        cell: (info) => <div className="font-bold">{info.getValue()}</div>,
+      }),
+      columnHelper.accessor("description", {
+        header: ({ column }) => {
+          return (
+            <HeaderSort column={column}>
+              <LuText className="mr-2 size-4" />
+              {t("Description")}
+            </HeaderSort>
+          );
+        },
+        cell: (info) => <div className="text-sm">{info.getValue()}</div>,
+      }),
+      columnHelper.accessor("date", {
+        header: ({ column }) => (
+          <HeaderSort column={column}>
+            <RxCalendar className="mr-2 size-4" />
+            {t("Date")}
+          </HeaderSort>
+        ),
+        cell: (info) => (
+          <div className="text-sm">
+            {format.dateTime(info.getValue(), "extensive")}
           </div>
-        );
-      },
-      enableSorting: false,
-      enableHiding: false,
-    }),
-    columnHelper.accessor("title", {
-      header: () => <div>{t("Title")}</div>,
-      cell: (info) => <div className="font-bold">{info.getValue()}</div>,
-    }),
-    columnHelper.accessor("description", {
-      header: () => <div>{t("Description")}</div>,
-      cell: (info) => <div className="text-sm">{info.getValue()}</div>,
-    }),
-    columnHelper.accessor("date", {
-      header: () => <div>{t("Date")}</div>,
-      cell: (info) => (
-        <div className="text-sm">
-          {format.dateTime(info.getValue(), "extensive")}
-        </div>
-      ),
-    }),
-  ];
+        ),
+      }),
+      columnHelper.accessor("type", {
+        header: ({ column }) => (
+          <HeaderSort column={column}>
+            <LuAlertCircle className="mr-2 size-4 text-orange-400" />
+            {t("Critical")}
+          </HeaderSort>
+        ),
+        cell: (ctx) => (
+          <div>
+            {ctx.getValue() === "CRITICAL" ? (
+              <LuAlertCircle className="ml-4 size-4 text-orange-400" />
+            ) : null}
+          </div>
+        ),
+      }),
+    ],
+    [format, t],
+  );
 
   const table = useReactTable({
     data: getAllQuery.data,

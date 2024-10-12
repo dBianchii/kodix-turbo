@@ -89,7 +89,11 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
 
     //* Temos uma ocorrência. Isso significa que o usuário quer editar a ocorrência que veio do master.
     //* Para fazer isso, temos que criar uma NOVA EXCEÇÃO.
-    if (input.title !== undefined || input.description !== undefined) {
+    if (
+      input.title !== undefined ||
+      input.description !== undefined ||
+      input.type !== undefined
+    ) {
       //* Se tivermos title ou description, criamos um eventInfo e também uma exceção.
       await ctx.db.insert(eventExceptions).values({
         eventMasterId: eventMaster.id,
@@ -97,11 +101,12 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
         newDate: input.from ?? foundTimestamp,
         title: input.title,
         description: input.description,
+        type: input.type,
       });
       return;
       //! END OF PROCEDURE
     }
-    //* Se não tivermos title nem description, ainda temos o from. Criamos uma exceção sem eventInfo.
+    //* Se não tivermos title nem description nem type, ainda temos o from. Criamos uma exceção sem eventInfo.
     else {
       await ctx.db.insert(eventExceptions).values({
         eventMasterId: eventMaster.id,
@@ -119,7 +124,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
       //* Temos que procurar se temos uma exceção que bate com o selectedTimestamp.
       //* Se tivermos, temos que alterá-la.
 
-      //*Deletamos as exceções seguintes, se tiver mudanã em timely info.
+      //*Deletamos as exceções seguintes, se tiver mudança em timely info.
       const shouldDeleteFutureExceptions = Boolean(
         input.from ??
           input.until ??
@@ -173,12 +178,13 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
             message: t("api.Event not found"),
           });
 
-        //! NO SPLIT REQUIRED !!
+        //! NO SPLIT REQUIRED BECAUSE ITS THE FIRST OCCURANCE! !!
         await tx
           .update(eventMasters)
           .set({
             title: input.title,
             description: input.description,
+            type: input.type,
             dateStart: input.from ?? input.selectedTimestamp,
             dateUntil: input.until ?? oldRule.options.until ?? undefined,
             rule: new RRule({
@@ -199,13 +205,16 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
               eq(eventMasters.teamId, ctx.session.user.activeTeamId),
             ),
           );
-        if (shouldDeleteFutureExceptions) return;
-        if (input.title ?? input.description)
+        if (shouldDeleteFutureExceptions) return; //* We don't need to update the exceptions if we are deleting them already.
+
+        if (input.title || input.description || input.type)
+          //* Here we are updating all of the future exceptions, because we are not deleting them. If the user has edited non-timely info, we should update the exceptions.
           await tx
             .update(eventExceptions)
             .set({
-              title: input.title ? null : undefined,
+              title: input.title ? null : undefined, //* If these inputs were sent, we have already updated the eventMaster. Just null them out so the values are brought immediately from master.
               description: input.description ? null : undefined,
+              type: input.type ? null : undefined,
             })
             .where(
               and(

@@ -1,10 +1,6 @@
 "use client";
 
-import type {
-  Column,
-  SortingState,
-  VisibilityState,
-} from "@tanstack/react-table";
+import type { SortingState, VisibilityState } from "@tanstack/react-table";
 import type { CareTask } from "node_modules/@kdx/api/src/internal/calendarAndCareTaskCentral";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -18,9 +14,6 @@ import {
   LuAlertCircle,
   LuArrowLeftRight,
   LuCheck,
-  LuChevronDown,
-  LuChevronsUpDown,
-  LuChevronUp,
   LuLoader2,
   LuPlus,
   LuText,
@@ -62,6 +55,7 @@ import {
   CredenzaTitle,
   CredenzaTrigger,
 } from "@kdx/ui/credenza";
+import { HeaderSort } from "@kdx/ui/data-table/header-sort";
 import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
   DropdownMenu,
@@ -109,35 +103,6 @@ type CareTaskOrCalendarTask =
   RouterOutputs["app"]["kodixCare"]["getCareTasks"][number];
 
 const columnHelper = createColumnHelper<CareTaskOrCalendarTask>();
-
-function HeaderSort({
-  column,
-  children,
-  ...buttonAttributes
-}: {
-  column: Column<CareTaskOrCalendarTask>;
-  children?: React.ReactNode;
-} & React.ButtonHTMLAttributes<HTMLButtonElement>) {
-  const className = "ml-2 size-4";
-  return (
-    <Button
-      variant="ghost"
-      onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      {...buttonAttributes}
-    >
-      {children}
-      {column.getIsSorted() ? (
-        column.getIsSorted() === "asc" ? (
-          <LuChevronUp className={className} />
-        ) : (
-          <LuChevronDown className={className} />
-        )
-      ) : (
-        <LuChevronsUpDown className={className} />
-      )}
-    </Button>
-  );
-}
 
 export default function DataTableKodixCare({
   initialCareTasks,

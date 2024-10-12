@@ -459,5 +459,6 @@
   "COUNT members": "{count, plural, =0 {# members} =1 {# member} other {# members}}",
   "Critical task": "Critical task?",
   "Wether or not this task is considered critical or important": "Wether or not this task is considered critical, or important. You can choose to receive notifications about it on the <settings>settings</settings> page",
-  "Critical": "Critical"
+  "Critical": "Critical",
+  "Is this task considered critical or important": "Is this task considered critical or important?"
 }

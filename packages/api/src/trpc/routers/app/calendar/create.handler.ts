@@ -25,5 +25,6 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
     teamId: ctx.session.user.activeTeamId,
     dateStart: input.from,
     dateUntil: input.until,
+    type: input.type,
   });
 };

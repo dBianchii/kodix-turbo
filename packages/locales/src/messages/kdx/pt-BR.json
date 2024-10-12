@@ -460,5 +460,5 @@
   "Wether or not this task is considered critical or important": "Se esta tarefa é considerada critica ou importante. \nVocê pode optar por receber notificações sobre tarefas críticas na <settings>página de configurações</settings>",
   "Critical task": "Tarefa crítica?",
   "Critical": "Crítica",
-  "This task is considered critical or important": "Esta tarefa é considerada crítica ou importante"
+  "Is this task considered critical or important": "Esta tarefa é considerada crítica ou importante?"
 }
