@@ -17,14 +17,15 @@ import {
   AlertDialogTitle,
 } from "@kdx/ui/alert-dialog";
 import { Button } from "@kdx/ui/button";
-import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@kdx/ui/dialog";
+  Credenza,
+  CredenzaBody,
+  CredenzaContent,
+  CredenzaFooter,
+  CredenzaHeader,
+  CredenzaTitle,
+} from "@kdx/ui/credenza";
+import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
 import { RadioGroup, RadioGroupItem } from "@kdx/ui/radio-group";
@@ -198,18 +199,18 @@ export function EditEventDialog({
   const t = useTranslations();
 
   return (
-    <Dialog
+    <Credenza
       open={open}
       onOpenChange={(openDialog) => {
         if (!openDialog) setStateToDefault(); //Revert the data back to default when closing
         setOpen(openDialog);
       }}
     >
-      <DialogContent className="mb-64 sm:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>{t("apps.calendar.Edit event")}</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4">
+      <CredenzaContent className="mb-64 sm:max-w-[600px]">
+        <CredenzaHeader>
+          <CredenzaTitle>{t("apps.calendar.Edit event")}</CredenzaTitle>
+        </CredenzaHeader>
+        <CredenzaBody className="space-y-4">
           <div className="flex flex-row gap-2">
             <Input
               placeholder="Event title..."
@@ -247,8 +248,8 @@ export function EditEventDialog({
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           ></Textarea>
-        </div>
-        <DialogFooter>
+        </CredenzaBody>
+        <CredenzaFooter>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -272,15 +273,15 @@ export function EditEventDialog({
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-        </DialogFooter>
+        </CredenzaFooter>
         <SubmitEditEventDialog
           open={editDefinitionOpen}
           setOpen={setEditDefinitionOpen}
           allowedDefinitions={allowedEditDefinitions}
           submit={handleSubmitFormData}
         />
-      </DialogContent>
-    </Dialog>
+      </CredenzaContent>
+    </Credenza>
   );
 }
 

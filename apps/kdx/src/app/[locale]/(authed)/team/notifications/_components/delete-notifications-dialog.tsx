@@ -10,21 +10,21 @@ import { useTranslations } from "@kdx/locales/next-intl/client";
 import { getErrorMessage } from "@kdx/shared";
 import { Button } from "@kdx/ui/button";
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@kdx/ui/dialog";
+  Credenza,
+  CredenzaClose,
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaFooter,
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaTrigger,
+} from "@kdx/ui/credenza";
 import { toast } from "@kdx/ui/toast";
 
 import { deleteNotificationsAction } from "../_actions/deleteNotificationsAction";
 
 interface DeleteTasksDialogProps
-  extends React.ComponentPropsWithoutRef<typeof Dialog> {
+  extends React.ComponentPropsWithoutRef<typeof Credenza> {
   notifications: Row<
     RouterOutputs["user"]["getNotifications"]["data"][number]
   >[];
@@ -44,19 +44,19 @@ export function DeleteNotificationsDialog({
   });
 
   return (
-    <Dialog {...props}>
+    <Credenza {...props}>
       {showTrigger ? (
-        <DialogTrigger asChild>
+        <CredenzaTrigger asChild>
           <Button variant="outline" size="sm">
             <RxTrash className="mr-2 size-4" aria-hidden="true" />
             {t("Delete")} ({notifications.length})
           </Button>
-        </DialogTrigger>
+        </CredenzaTrigger>
       ) : null}
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{t("Are you absolutely sure")}?</DialogTitle>
-          <DialogDescription>
+      <CredenzaContent>
+        <CredenzaHeader>
+          <CredenzaTitle>{t("Are you absolutely sure")}?</CredenzaTitle>
+          <CredenzaDescription>
             {t(
               "This action cannot be undone This will permanently delete your",
             )}{" "}
@@ -65,13 +65,13 @@ export function DeleteNotificationsDialog({
               count: notifications.length,
             })}{" "}
             {t("from our servers")}
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter className="gap-2 sm:space-x-0">
-          <DialogClose asChild>
+          </CredenzaDescription>
+        </CredenzaHeader>
+        <CredenzaFooter className="gap-2 sm:space-x-0">
+          <CredenzaClose asChild>
             <Button variant="outline">{t("Cancel")}</Button>
-          </DialogClose>
-          <DialogClose asChild>
+          </CredenzaClose>
+          <CredenzaClose asChild>
             <Button
               aria-label="Delete selected rows"
               variant="destructive"
@@ -95,9 +95,9 @@ export function DeleteNotificationsDialog({
             >
               {t("Delete")}
             </Button>
-          </DialogClose>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+          </CredenzaClose>
+        </CredenzaFooter>
+      </CredenzaContent>
+    </Credenza>
   );
 }

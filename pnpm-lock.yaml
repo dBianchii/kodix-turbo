@@ -957,6 +957,9 @@ importers:
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.10(ts-node@10.9.2(@swc/core@1.7.24(@swc/helpers@0.5.13))(@types/node@22.7.4)(typescript@5.5.4)))
+      vaul:
+        specifier: ^1.0.0
+        version: 1.0.0(@types/react-dom@18.3.0)(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       zod:
         specifier: 'catalog:'
         version: 3.23.8
@@ -11587,6 +11590,12 @@ packages:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
 
+  vaul@1.0.0:
+    resolution: {integrity: sha512-TegfMkwy86RSvSiIVREG6OqgRL7agqRsKYyWYacyVUAdpcIi34QoCOED476Mbf8J5d06e1hygSdvJhehlxEBhQ==}
+    peerDependencies:
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+
   vite-plugin-entry-shaking-debugger@1.0.3:
     resolution: {integrity: sha512-yIlsuqa3x6kdSof58JXG7PGjn//613LoeJJCLPRk/TJC8oPbibFZYjpQSEseJ3ZSvTo0RqYGTguyunFILrL5Xw==}
     peerDependencies:
@@ -17508,7 +17517,7 @@ snapshots:
 
   '@types/cors@2.8.17':
     dependencies:
-      '@types/node': 20.16.11
+      '@types/node': 22.7.4
 
   '@types/eslint-scope@3.7.7':
     dependencies:
@@ -17622,7 +17631,7 @@ snapshots:
 
   '@types/webpack@5.28.5(@swc/core@1.3.101(@swc/helpers@0.5.13))(esbuild@0.19.11)':
     dependencies:
-      '@types/node': 20.16.11
+      '@types/node': 22.7.4
       tapable: 2.2.1
       webpack: 5.91.0(@swc/core@1.3.101(@swc/helpers@0.5.13))(esbuild@0.19.11)
     transitivePeerDependencies:
@@ -19233,7 +19242,7 @@ snapshots:
     dependencies:
       '@types/cookie': 0.4.1
       '@types/cors': 2.8.17
-      '@types/node': 20.16.11
+      '@types/node': 22.7.4
       accepts: 1.3.8
       base64id: 2.0.0
       cookie: 0.4.2
@@ -20401,7 +20410,7 @@ snapshots:
 
   glob@10.4.5:
     dependencies:
-      foreground-child: 3.2.1
+      foreground-child: 3.3.0
       jackspeak: 3.4.3
       minimatch: 9.0.5
       minipass: 7.1.2
@@ -21074,7 +21083,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 20.16.11
+      '@types/node': 22.7.4
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -22449,13 +22458,6 @@ snapshots:
 
   possible-typed-array-names@1.0.0: {}
 
-  postcss-import@15.1.0(postcss@8.4.38):
-    dependencies:
-      postcss: 8.4.38
-      postcss-value-parser: 4.2.0
-      read-cache: 1.0.0
-      resolve: 1.22.8
-
   postcss-import@15.1.0(postcss@8.4.47):
     dependencies:
       postcss: 8.4.47
@@ -22463,23 +22465,10 @@ snapshots:
       read-cache: 1.0.0
       resolve: 1.22.8
 
-  postcss-js@4.0.1(postcss@8.4.38):
-    dependencies:
-      camelcase-css: 2.0.1
-      postcss: 8.4.38
-
   postcss-js@4.0.1(postcss@8.4.47):
     dependencies:
       camelcase-css: 2.0.1
       postcss: 8.4.47
-
-  postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.7.24(@swc/helpers@0.5.13))(@types/node@20.16.11)(typescript@5.5.4)):
-    dependencies:
-      lilconfig: 3.1.2
-      yaml: 2.4.5
-    optionalDependencies:
-      postcss: 8.4.38
-      ts-node: 10.9.2(@swc/core@1.7.24(@swc/helpers@0.5.13))(@types/node@20.16.11)(typescript@5.5.4)
 
   postcss-load-config@4.0.2(postcss@8.4.47)(ts-node@10.9.2(@swc/core@1.7.24(@swc/helpers@0.5.13))(@types/node@20.16.11)(typescript@5.5.4)):
     dependencies:
@@ -22496,11 +22485,6 @@ snapshots:
     optionalDependencies:
       postcss: 8.4.47
       ts-node: 10.9.2(@swc/core@1.7.24(@swc/helpers@0.5.13))(@types/node@22.7.4)(typescript@5.5.4)
-
-  postcss-nested@6.0.1(postcss@8.4.38):
-    dependencies:
-      postcss: 8.4.38
-      postcss-selector-parser: 6.1.0
 
   postcss-nested@6.0.1(postcss@8.4.47):
     dependencies:
@@ -23956,11 +23940,11 @@ snapshots:
       normalize-path: 3.0.0
       object-hash: 3.0.0
       picocolors: 1.1.0
-      postcss: 8.4.38
-      postcss-import: 15.1.0(postcss@8.4.38)
-      postcss-js: 4.0.1(postcss@8.4.38)
-      postcss-load-config: 4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.7.24(@swc/helpers@0.5.13))(@types/node@20.16.11)(typescript@5.5.4))
-      postcss-nested: 6.0.1(postcss@8.4.38)
+      postcss: 8.4.47
+      postcss-import: 15.1.0(postcss@8.4.47)
+      postcss-js: 4.0.1(postcss@8.4.47)
+      postcss-load-config: 4.0.2(postcss@8.4.47)(ts-node@10.9.2(@swc/core@1.7.24(@swc/helpers@0.5.13))(@types/node@20.16.11)(typescript@5.5.4))
+      postcss-nested: 6.0.1(postcss@8.4.47)
       postcss-selector-parser: 6.1.0
       resolve: 1.22.8
       sucrase: 3.35.0
@@ -24637,6 +24621,15 @@ snapshots:
   value-or-promise@1.0.12: {}
 
   vary@1.1.2: {}
+
+  vaul@1.0.0(@types/react-dom@18.3.0)(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      '@radix-ui/react-dialog': 1.1.2(@types/react-dom@18.3.0)(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@types/react-dom'
 
   vite-plugin-entry-shaking-debugger@1.0.3(@upstash/redis@1.31.6)(vite-plugin-entry-shaking@0.4.3(@upstash/redis@1.31.6)(vite@6.0.0-alpha.18(@types/node@22.7.4)(lightningcss@1.22.0)(terser@5.31.0))(vue@3.4.31(typescript@5.5.4)))(vite@6.0.0-alpha.18(@types/node@22.7.4)(lightningcss@1.22.0)(terser@5.31.0))(vue@3.4.31(typescript@5.5.4)):
     dependencies:

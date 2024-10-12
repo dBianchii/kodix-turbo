@@ -10,14 +10,14 @@ import { useTranslations } from "@kdx/locales/next-intl/client";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Button } from "@kdx/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@kdx/ui/dialog";
+  Credenza,
+  CredenzaBody,
+  CredenzaContent,
+  CredenzaFooter,
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaTrigger,
+} from "@kdx/ui/credenza";
 import { Input } from "@kdx/ui/input";
 import { PopoverTrigger } from "@kdx/ui/popover";
 import { Textarea } from "@kdx/ui/textarea";
@@ -74,29 +74,29 @@ export function CreateTaskDialogButton() {
   const format = useFormatter();
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+    <Credenza open={open} onOpenChange={setOpen}>
+      <CredenzaTrigger asChild>
         <Button variant="outline" size="sm">
           <RxPlus className="mr-2 size-4" />
           {t("Create task")}
         </Button>
-      </DialogTrigger>
-      <DialogContent className="mb-64 sm:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>New Task</DialogTitle>
-        </DialogHeader>
-        <DialogDescription>
+      </CredenzaTrigger>
+      <CredenzaContent className="mb-64 sm:max-w-[600px]">
+        <CredenzaHeader>
+          <CredenzaTitle>New Task</CredenzaTitle>
+        </CredenzaHeader>
+        <CredenzaBody>
           <Input
             className="my-2 border-none"
             type="text"
             placeholder="Event title..."
             onChange={(e) => setTitle(e.target.value)}
-          ></Input>
+          />
           <Textarea
             className="my-2 border-none"
             placeholder="Add description..."
             onChange={(e) => setDescription(e.target.value)}
-          ></Textarea>
+          />
           <div className="flex flex-row gap-1">
             <StatusPopover setStatus={setStatus} status={status} />
             <PriorityPopover priority={priority} setPriority={setPriority}>
@@ -161,13 +161,13 @@ export function CreateTaskDialogButton() {
               </PopoverTrigger>
             </DatePickerWithPresets>
           </div>
-        </DialogDescription>
-        <DialogFooter>
+        </CredenzaBody>
+        <CredenzaFooter>
           <Button type="submit" size="sm" onClick={handleCreateTask}>
             {t("Create task")}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </CredenzaFooter>
+      </CredenzaContent>
+    </Credenza>
   );
 }
