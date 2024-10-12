@@ -340,57 +340,57 @@ function SubmitEditEventDialog({
       <CredenzaContent>
         <CredenzaHeader>
           <CredenzaTitle>{t("apps.calendar.Edit event")}</CredenzaTitle>
-          <div className="my-6">
-            <RadioGroup className="flex flex-col space-y-2">
-              {allowedDefinitions.single && (
-                <div className="flex">
-                  <RadioGroupItem
-                    id="single"
-                    value={"single"}
-                    onClick={() => {
-                      setDefinition("single");
-                    }}
-                    checked={definition === "single"}
-                  />
-                  <Label htmlFor="single" className="ml-2">
-                    {t("apps.calendar.This event")}
-                  </Label>
-                </div>
-              )}
-              {allowedDefinitions.thisAndFuture && (
-                <div className="flex">
-                  <RadioGroupItem
-                    id="thisAndFuture"
-                    value={"thisAndFuture"}
-                    checked={definition === "thisAndFuture"}
-                    onClick={() => {
-                      setDefinition("thisAndFuture");
-                    }}
-                  />
-                  <Label htmlFor="thisAndFuture" className="ml-2">
-                    {t("apps.calendar.This and future events")}
-                  </Label>
-                </div>
-              )}
-              {allowedDefinitions.all && (
-                <div className="flex">
-                  <RadioGroupItem
-                    id="all"
-                    value={"all"}
-                    checked={definition === "all"}
-                    onClick={() => {
-                      setDefinition("all");
-                    }}
-                  />
-                  <Label htmlFor="all" className="ml-2">
-                    {t("apps.calendar.All events")}
-                  </Label>
-                </div>
-              )}
-            </RadioGroup>
-          </div>
         </CredenzaHeader>
-        <CredenzaFooter className="bg-background">
+        <CredenzaBody className="my-6">
+          <RadioGroup className="flex flex-col space-y-2">
+            {allowedDefinitions.single && (
+              <div className="flex">
+                <RadioGroupItem
+                  id="single"
+                  value={"single"}
+                  onClick={() => {
+                    setDefinition("single");
+                  }}
+                  checked={definition === "single"}
+                />
+                <Label htmlFor="single" className="ml-2">
+                  {t("apps.calendar.This event")}
+                </Label>
+              </div>
+            )}
+            {allowedDefinitions.thisAndFuture && (
+              <div className="flex">
+                <RadioGroupItem
+                  id="thisAndFuture"
+                  value={"thisAndFuture"}
+                  checked={definition === "thisAndFuture"}
+                  onClick={() => {
+                    setDefinition("thisAndFuture");
+                  }}
+                />
+                <Label htmlFor="thisAndFuture" className="ml-2">
+                  {t("apps.calendar.This and future events")}
+                </Label>
+              </div>
+            )}
+            {allowedDefinitions.all && (
+              <div className="flex">
+                <RadioGroupItem
+                  id="all"
+                  value={"all"}
+                  checked={definition === "all"}
+                  onClick={() => {
+                    setDefinition("all");
+                  }}
+                />
+                <Label htmlFor="all" className="ml-2">
+                  {t("apps.calendar.All events")}
+                </Label>
+              </div>
+            )}
+          </RadioGroup>
+        </CredenzaBody>
+        <CredenzaFooter>
           <Button
             variant={"outline"}
             onClick={() => {
