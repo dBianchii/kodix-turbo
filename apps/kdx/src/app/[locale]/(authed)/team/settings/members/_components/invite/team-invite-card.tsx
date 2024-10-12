@@ -21,13 +21,14 @@ import {
   CardHeader,
 } from "@kdx/ui/card";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@kdx/ui/dialog";
+  Credenza,
+  CredenzaBody,
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaFooter,
+  CredenzaHeader,
+  CredenzaTitle,
+} from "@kdx/ui/credenza";
 import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
 import { Separator } from "@kdx/ui/separator";
@@ -69,6 +70,7 @@ export default function TeamInviteCardClient({
           },
         );
       setSuccesses(successes);
+      setEmails([{ key: 0, value: "" }]);
 
       setTimeout(() => {
         closeDialog();
@@ -82,7 +84,7 @@ export default function TeamInviteCardClient({
 
   const closeDialog = () => {
     //TODO: Keep the emails that were unsuccessful
-    setEmails([{ key: 0, value: "" }]);
+    // setEmails([{ key: 0, value: "" }]);
     setSuccesses([]);
     setOpen(false);
   };
@@ -104,13 +106,6 @@ export default function TeamInviteCardClient({
           <CardDescription>
             {t("Invite new members by email address")}
           </CardDescription>
-          <Dialog>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>{t("Edit Event")}</DialogTitle>
-              </DialogHeader>
-            </DialogContent>
-          </Dialog>
         </CardHeader>
         <CardContent>
           <Separator className="mb-6" />
@@ -181,7 +176,7 @@ export default function TeamInviteCardClient({
           <CardDescription className="text-xs italic">
             {t("Only the owner of the team can invite new members")}
           </CardDescription>
-          <Dialog
+          <Credenza
             onOpenChange={(open) => {
               if (!open) return closeDialog();
               setOpen(open);
@@ -194,16 +189,16 @@ export default function TeamInviteCardClient({
             >
               {t("Invite")}
             </Button>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>{t("Invite to team")}</DialogTitle>
-                <DialogDescription>
+            <CredenzaContent>
+              <CredenzaHeader>
+                <CredenzaTitle>{t("Invite to team")}</CredenzaTitle>
+                <CredenzaDescription>
                   {t(
                     "You are about to invite the following Team members are you sure you want to continue",
                   )}
-                </DialogDescription>
-              </DialogHeader>
-              <div className="my-4 flex flex-col space-y-2">
+                </CredenzaDescription>
+              </CredenzaHeader>
+              <CredenzaBody className="my-4 flex flex-col space-y-2">
                 {emails
                   .filter((x) => Boolean(x))
                   .map((email) => (
@@ -221,8 +216,8 @@ export default function TeamInviteCardClient({
                       />
                     </div>
                   ))}
-              </div>
-              <DialogFooter className="justify-end">
+              </CredenzaBody>
+              <CredenzaFooter className="justify-end">
                 <Button
                   disabled={mutation.isPending || successes.length > 0}
                   onClick={() => {
@@ -246,9 +241,9 @@ export default function TeamInviteCardClient({
                     t("Confirm")
                   )}
                 </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+              </CredenzaFooter>
+            </CredenzaContent>
+          </Credenza>
         </CardFooter>
       </Card>
     </form>
