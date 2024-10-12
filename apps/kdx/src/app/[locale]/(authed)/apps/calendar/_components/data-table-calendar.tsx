@@ -42,8 +42,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@kdx/ui/dropdown-menu";
-import { Input } from "@kdx/ui/input";
-import { Label } from "@kdx/ui/label";
 import {
   Table,
   TableBody,
@@ -230,18 +228,13 @@ export function DataTable({
       )}
       <div className="pt-8">
         <div className="flex justify-between">
-          <div className="w-44 space-y-2">
-            <Label htmlFor="search">{t("Search")}...</Label>
-            <Input
-              id="search"
-              placeholder={`${t("Search by title")}...`}
-              value={table.getColumn("title")?.getFilterValue() as string}
-              onChange={(event) =>
-                table.getColumn("title")?.setFilterValue(event.target.value)
-              }
-              className="max-w-sm"
-            />
-          </div>
+          <Button
+            className="invisible"
+            onClick={() => setSelectedDay(new Date())}
+            variant={"secondary"}
+          >
+            {t("Today")}
+          </Button>
           <div className="mx-auto mt-auto flex space-x-2">
             <Button
               variant="ghost"
@@ -269,7 +262,7 @@ export function DataTable({
               <RxChevronRight />
             </Button>
           </div>
-          <div className="flex w-44">
+          <div>
             {authorizedEmails.includes(user.email) && (
               <Button
                 className="ml-auto mr-2 self-end"
@@ -279,7 +272,6 @@ export function DataTable({
                 Nuke Events
               </Button>
             )}
-
             <Button
               className="ml-auto self-end"
               onClick={() => setSelectedDay(new Date())}
@@ -289,7 +281,6 @@ export function DataTable({
             </Button>
           </div>
         </div>
-
         <div className="mt-4 rounded-md border">
           <Table>
             <TableHeader>
