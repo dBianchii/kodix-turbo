@@ -39,6 +39,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
           newDate: input.from,
           title: input.title,
           description: input.description,
+          type: input.type,
         })
         .where(
           and(
@@ -216,12 +217,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
               description: input.description ? null : undefined,
               type: input.type ? null : undefined,
             })
-            .where(
-              and(
-                eq(eventExceptions.eventMasterId, input.eventMasterId),
-                eq(eventMasters.teamId, ctx.session.user.activeTeamId),
-              ),
-            );
+            .where(and(eq(eventExceptions.eventMasterId, input.eventMasterId)));
         return;
       }
       await tx
@@ -298,15 +294,14 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
 
     await ctx.db.transaction(async (tx) => {
       const newRule = await (async () => {
-        const shouldUpdateRule = Boolean(
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-constant-binary-expression
-          input.frequency ??
-            input.interval ??
-            input.count !== undefined ??
-            input.until ??
-            input.from ??
-            input.weekdays,
-        );
+        const shouldUpdateRule =
+          !!input.frequency ||
+          !!input.interval ||
+          input.count !== undefined ||
+          !!input.until ||
+          !!input.from ||
+          !!input.weekdays;
+
         if (!shouldUpdateRule) return undefined;
 
         const foundEventMasterForPreviousRule =
@@ -329,8 +324,10 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
 
         const newStartDate = input.from
           ? dayjs(oldRule.options.dtstart)
-              .hour(dayjs(input.from, "HH:mm").hour())
-              .minute(dayjs(input.from, "HH:mm").minute())
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              .hour(Number(input.from.split(":")[0]!))
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              .minute(Number(input.from.split(":")[1]!))
               .toDate()
           : oldRule.options.dtstart;
 
@@ -351,6 +348,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
         .update(eventMasters)
         .set({
           title: input.title,
+          type: input.type,
           description: input.description,
           dateStart: newRule ? rrulestr(newRule).options.dtstart : undefined,
           dateUntil: input.until,

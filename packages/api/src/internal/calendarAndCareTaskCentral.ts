@@ -70,11 +70,12 @@ export async function getCalendarTasks({
       newDate: eventExceptions.newDate,
       title: eventExceptions.title,
       description: eventExceptions.description,
+      type: eventExceptions.type,
       rule: eventMasters.rule,
       eventMasterTitle: eventMasters.title,
       eventMasterDescription: eventMasters.description,
-      eventMasterRule: eventMasters.rule,
       eventMasterType: eventMasters.type,
+      eventMasterRule: eventMasters.rule,
       eventMasterTeamId: eventMasters.teamId,
     })
     .from(eventExceptions)
@@ -149,10 +150,10 @@ export async function getCalendarTasks({
         eventException.description ??
         eventException.eventMasterDescription ??
         undefined,
+      type: eventException.type ?? eventException.eventMasterType,
       date: eventException.newDate,
       originaDate: eventException.originalDate,
       rule: eventException.rule,
-      type: eventException.eventMasterType,
       teamId: eventException.eventMasterTeamId,
     });
 

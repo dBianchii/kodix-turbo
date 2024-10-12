@@ -45,17 +45,19 @@ export function EditEventDialog({
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const utils = api.useUtils();
-  const mutation = api.app.calendar.edit.useMutation({
-    onSuccess: () => {
-      void utils.app.calendar.getAll.invalidate();
-      void utils.app.kodixCare.getCareTasks.invalidate();
-      setOpen(false);
-    },
-    onError: (e) => trpcErrorToastDefault(e),
-  });
   const [personalizedRecurrenceOpen, setPersonalizedRecurrenceOpen] =
     useState(false);
   const [editDefinitionOpen, setEditDefinitionOpen] = useState(false);
+  const mutation = api.app.calendar.edit.useMutation({
+    onSuccess: () => {
+      setOpen(false);
+      setEditDefinitionOpen(false);
+      setPersonalizedRecurrenceOpen(false);
+      void utils.app.calendar.getAll.invalidate();
+      void utils.app.kodixCare.getCareTasks.invalidate();
+    },
+    onError: (e) => trpcErrorToastDefault(e),
+  });
 
   const defaultCalendarTask = useMemo(() => {
     return {
