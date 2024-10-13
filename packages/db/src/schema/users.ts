@@ -12,6 +12,7 @@ import {
 } from "drizzle-orm/mysql-core";
 
 import { nanoid, NANOID_SIZE } from "../nanoid";
+import { userAppTeamConfigs } from "./apps";
 import { todos } from "./apps/todos";
 import { invitations, teamAppRolesToUsers, teams, usersToTeams } from "./teams";
 import {
@@ -49,6 +50,7 @@ export const usersRelations = relations(users, ({ many, one }) => ({
   UsersToTeams: many(usersToTeams),
   Todos: many(todos),
   TeamAppRolesToUsers: many(teamAppRolesToUsers),
+  UserAppTeamConfigs: many(userAppTeamConfigs),
 }));
 
 export const accounts = mysqlTable(

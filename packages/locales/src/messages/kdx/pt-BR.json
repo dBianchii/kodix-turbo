@@ -49,7 +49,7 @@
       "This will unlock all tasks of this turn up until this task": "Isso vai desbloquear todas as tarefas deste turno até esta tarefa",
       "Successfully unlocked tasks": "Tarefas desbloqueadas com sucesso!",
       "Add task": "Adicionar tarefa",
-      "Receive notifications for delayed tasks": "Receber notificações de tarefas atrasadas?",
+      "Critical tasks": "Tarefas críticas",
       "Set this on if you want to receive notifications for delayed tasks": "Ative esta opção se desejar receber notificações de tarefas atrasadas (uma hora de atraso)"
     },
     "todo": {
@@ -456,5 +456,9 @@
   "All data related to you will be permanently lost and cannot be recovered": "Todos os dados relacionados a você serão perdidos permanentemente e não poderão ser recuperados",
   "Please type DELETE_ACCOUNT to continue": "Digite \"<deleteAccount>deleteAccount</deleteAccount>\" para continuar",
   "Account deleted successfully": "Conta excluída com sucesso",
-  "COUNT members": "{count, plural, =0 {# membros} =1 {# membro} other {# membros}}"
+  "COUNT members": "{count, plural, =0 {# membros} =1 {# membro} other {# membros}}",
+  "Wether or not this task is considered critical or important": "Se esta tarefa é considerada critica ou importante. \nVocê pode optar por receber notificações sobre tarefas críticas na <settings>página de configurações</settings>",
+  "Critical task": "Tarefa crítica?",
+  "Critical": "Crítica",
+  "Is this task considered critical or important": "Esta tarefa é considerada crítica ou importante?"
 }

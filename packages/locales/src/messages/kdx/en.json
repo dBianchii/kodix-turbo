@@ -49,7 +49,7 @@
       "This will unlock all tasks of this turn up until this task": "Isso vai desbloquear todas as tarefas deste turno até esta tarefa",
       "Successfully unlocked tasks": "Successfully unlocked tasks!",
       "Add task": "Add task",
-      "Receive notifications for delayed tasks": "Receive notifications for delayed tasks?",
+      "Critical tasks": "Critical tasks",
       "Set this on if you want to receive notifications for delayed tasks": "Set this on if you want to receive notifications for delayed tasks (one hour delayed)"
     },
     "todo": {
@@ -456,5 +456,9 @@
   "Deleting account": "Deleting account",
   "Account deleted successfully": "Account deleted successfully",
   "Permanently delete your account and all your data ": "Permanently delete your account and all your data",
-  "COUNT members": "{count, plural, =0 {# members} =1 {# member} other {# members}}"
+  "COUNT members": "{count, plural, =0 {# members} =1 {# member} other {# members}}",
+  "Critical task": "Critical task?",
+  "Wether or not this task is considered critical or important": "Wether or not this task is considered critical, or important. You can choose to receive notifications about it on the <settings>settings</settings> page",
+  "Critical": "Critical",
+  "Is this task considered critical or important": "Is this task considered critical or important?"
 }

@@ -1,6 +1,6 @@
 //? This file is used to create common values that can be used in the schema files.
 
-import { decimal, varchar } from "drizzle-orm/mysql-core";
+import { decimal, mysqlEnum, varchar } from "drizzle-orm/mysql-core";
 
 import { nanoid, NANOID_SIZE } from "../nanoid";
 import { teams } from "./teams";
@@ -21,3 +21,5 @@ export const nanoidPrimaryKey = varchar("id", { length: NANOID_SIZE })
   .notNull()
   .$default(() => nanoid())
   .primaryKey();
+
+export const typeEnum = mysqlEnum("type", ["NORMAL", "CRITICAL"]);

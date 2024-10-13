@@ -1,6 +1,7 @@
 import { Frequency } from "rrule";
 import { z } from "zod";
 
+import type { eventMasters } from "@kdx/db/schema";
 import dayjs from "@kdx/dayjs";
 
 export const ZCancelInputSchema = z
@@ -37,6 +38,7 @@ export const ZCreateInputSchema = z
     count: z.number().int().positive().optional(),
     frequency: z.nativeEnum(Frequency),
     weekdays: z.number().array().optional(),
+    type: z.custom<typeof eventMasters.$inferSelect.type>().optional(),
   })
   .refine((data) => {
     if (data.weekdays && data.frequency !== Frequency.WEEKLY) return false;
@@ -57,6 +59,7 @@ export const ZEditInputSchema = z
     selectedTimestamp: z.date(),
     title: z.string().optional(),
     description: z.string().optional(),
+    type: z.custom<typeof eventMasters.$inferSelect.type>().optional(),
   })
   .and(
     z.union([

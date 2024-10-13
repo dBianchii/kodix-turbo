@@ -8,6 +8,7 @@ import {
   DEFAULTLENGTH,
   nanoidPrimaryKey,
   teamIdReferenceCascadeDelete,
+  typeEnum,
 } from "../utils";
 import { eventMasters } from "./calendar";
 
@@ -64,6 +65,7 @@ export const careTasks = mysqlTable(
     description: varchar("description", { length: DEFAULTLENGTH }),
     details: varchar("details", { length: DEFAULTLENGTH }),
     updatedAt: timestamp("updatedAt").onUpdateNow(),
+    type: typeEnum.notNull().default("NORMAL"),
   },
   (table) => {
     return {

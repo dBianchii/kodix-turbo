@@ -68,7 +68,9 @@
     "UPSTASH_REDIS_REST_URL",
     "UPSTASH_REDIS_REST_TOKEN",
     "DISABLE_UPSTASH_CACHE",
-    "PORT"
+    "PORT",
+    "QSTASH_CURRENT_SIGNING_KEY",
+    "QSTASH_NEXT_SIGNING_KEY"
   ],
   "globalPassThroughEnv": [
     "NODE_ENV",

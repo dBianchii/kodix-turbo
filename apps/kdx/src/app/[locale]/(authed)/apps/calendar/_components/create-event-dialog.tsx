@@ -1,13 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { LuLoader2 } from "react-icons/lu";
+import { LuAlertCircle, LuLoader2 } from "react-icons/lu";
 import { RxPlus } from "react-icons/rx";
 import { RRule, Weekday } from "rrule";
 
 import dayjs from "@kdx/dayjs";
 import { useTranslations } from "@kdx/locales/next-intl/client";
+import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
+import { Checkbox } from "@kdx/ui/checkbox";
 import {
   Credenza,
   CredenzaBody,
@@ -21,6 +23,7 @@ import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -141,6 +144,38 @@ export function CreateEventDialogButton() {
                     />
                   </div>
                 </div>
+                <FormField
+                  control={form.control}
+                  name="type"
+                  render={({ field }) => (
+                    <FormItem className="py-3">
+                      <div className="flex items-center gap-2">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value === "CRITICAL"}
+                            onCheckedChange={(checked) =>
+                              field.onChange(checked ? "CRITICAL" : "NORMAL")
+                            }
+                          />
+                        </FormControl>
+                        <FormLabel className="flex gap-1">
+                          <LuAlertCircle
+                            className={cn(
+                              "text-muted-foreground transition-colors",
+                              {
+                                "text-orange-400": field.value === "CRITICAL",
+                              },
+                            )}
+                          />
+                          {t("Critical task")}
+                        </FormLabel>
+                      </div>
+                      <FormDescription>
+                        {t("Is this task considered critical or important")}
+                      </FormDescription>
+                    </FormItem>
+                  )}
+                />
                 <div className="flex flex-row">
                   <RecurrencePicker
                     open={personalizedRecurrenceOpen}
