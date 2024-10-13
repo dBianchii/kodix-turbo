@@ -21,7 +21,7 @@ import { useAuth } from "~/utils/auth";
 
 export default function EditTeamPage() {
   const utils = api.useUtils();
-  const { data, isLoading } = api.team.getAllForLoggedUser.useQuery();
+  const { data, isLoading } = api.team.getAll.useQuery();
   const mutation = api.user.switchActiveTeam.useMutation({
     onSuccess: async () => {
       await utils.invalidate();

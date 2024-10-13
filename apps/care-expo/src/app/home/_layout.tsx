@@ -15,7 +15,6 @@ export default function Layout() {
           headerStyle: {
             backgroundColor: theme.background.val,
           },
-          headerShown: false,
         }}
       />
     </Stack>

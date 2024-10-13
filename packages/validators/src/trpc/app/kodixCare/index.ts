@@ -1,6 +1,7 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 
+import type { careTasks } from "@kdx/db/schema";
 import type { IsomorficT } from "@kdx/locales";
 
 import { ZNanoId } from "../../..";
@@ -54,6 +55,7 @@ export const ZCreateCareTaskInputSchema = z.object({
   date: z.date(),
   title: z.string(),
   description: z.string().optional(),
+  type: z.custom<typeof careTasks.$inferInsert.type>(),
 });
 export type TCreateCareTaskInputSchema = z.infer<
   typeof ZCreateCareTaskInputSchema

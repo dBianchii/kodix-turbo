@@ -1,11 +1,13 @@
-import type { CareTask } from "node_modules/@kdx/api/dist/api/src/routers/app/kodixCare/getCareTasks.handler";
+import type { CareTask } from "node_modules/@kdx/api/dist/api/src/internal/calendarAndCareTaskCentral";
 import React, { useEffect, useMemo, useState } from "react";
 import { Alert, Keyboard, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Audio } from "expo-av";
 import * as Haptics from "expo-haptics";
 import {
+  AlertCircle,
   ArrowRightLeft,
+  Calendar,
   Check as CheckIcon,
   Lock,
   Plus,
@@ -265,6 +267,9 @@ function CreateCareTaskSheet({
 }) {
   const form = useForm({
     schema: ZCreateCareTaskInputSchema,
+    defaultValues: {
+      type: "NORMAL",
+    },
   });
   const utils = api.useUtils();
   const toast = useToastController();
@@ -294,7 +299,7 @@ function CreateCareTaskSheet({
     <SheetModal
       open={open}
       setOpen={setOpen}
-      snapPoints={[50]}
+      snapPoints={[75]}
       withHandle={false}
     >
       <Form {...form}>
@@ -339,6 +344,45 @@ function CreateCareTaskSheet({
                   </XStack>
                 </FormControl>
                 <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="type"
+            render={({ field }) => (
+              <FormItem>
+                <XStack ai={"center"}>
+                  <FormControl>
+                    <Checkbox
+                      size={"$5"}
+                      checked={field.value === "CRITICAL"}
+                      onCheckedChange={() =>
+                        field.onChange(
+                          field.value === "CRITICAL" ? "NORMAL" : "CRITICAL",
+                        )
+                      }
+                    >
+                      <Checkbox.Indicator>
+                        <CheckIcon />
+                      </Checkbox.Indicator>
+                    </Checkbox>
+                  </FormControl>
+                  <AlertCircle
+                    ml="$3"
+                    color={
+                      field.value === "CRITICAL"
+                        ? "$orange11Dark"
+                        : "$gray11Dark"
+                    }
+                  />
+                  <FormLabel gap={"$1"} f={1} ml={"$2"}>
+                    Tarefa crítica?
+                  </FormLabel>
+                </XStack>
+                <SizableText size={"$2"} color="$gray11Dark">
+                  Se esta tarefa é considerada crítica ou não
+                </SizableText>
               </FormItem>
             )}
           />
@@ -426,7 +470,12 @@ function CareTaskOrCalendarTaskItem(props: {
           <Lock />
         )}
         <YStack maxWidth={"$18"}>
-          <Text numberOfLines={1}>{props.task.title}</Text>
+          <XStack>
+            <Text numberOfLines={1}>{props.task.title}</Text>
+            {props.task.type === "CRITICAL" && (
+              <AlertCircle color={"$orange11Dark"} size="$1" ml={"$2"} />
+            )}
+          </XStack>
           <SizableText numberOfLines={1} size="$2" color="$gray11Dark">
             {props.task.description}
           </SizableText>
@@ -502,6 +551,7 @@ function EditCareTaskSheet(props: {
       showSubscription.remove();
     };
   }, []);
+  const format = useFormatter();
 
   return (
     <SheetModal
@@ -517,8 +567,22 @@ function EditCareTaskSheet(props: {
     >
       <SafeAreaView>
         <View>
-          <H4>{props.task.title}</H4>
+          <XStack gap="$2" ai="center">
+            <H4>{props.task.title}</H4>
+            <AlertCircle color={"$orange11Dark"} size="$1" />
+          </XStack>
           <Paragraph>{props.task.description}</Paragraph>
+          <XStack gap="$2">
+            <Calendar size={"$1"} color="$gray11Dark" />
+            <Text color="$gray11Dark">
+              {format.dateTime(props.task.date, {
+                day: "2-digit",
+                month: "short",
+                hour: "numeric",
+                minute: "numeric",
+              })}
+            </Text>
+          </XStack>
         </View>
         <Form {...form}>
           <View mt="$4" gap="$4">

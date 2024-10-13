@@ -3,14 +3,22 @@ import { z } from "zod";
 import type { KodixAppId } from "@kdx/shared";
 import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
 
-import { kodixCareConfigSchema } from "../..";
+import { kodixCareConfigSchema, kodixCareUserAppTeamConfigSchema } from "../..";
 
 type AppIdsWithConfig = typeof kodixCareAppId; //? Some apps might not have config implemented
+type AppIdsWithUserAppTeamConfig = typeof kodixCareAppId; //? Some apps might not have userAppTeamConfig implemented
 
 export const ZGetConfigInput = z.object({
   appId: z.custom<AppIdsWithConfig>(),
 });
 export type TGetConfigInput = z.infer<typeof ZGetConfigInput>;
+
+export const ZGetUserAppTeamConfigInputSchema = z.object({
+  appId: z.custom<AppIdsWithUserAppTeamConfig>(),
+});
+export type TGetUserAppTeamConfigInputSchema = z.infer<
+  typeof ZGetUserAppTeamConfigInputSchema
+>;
 
 export const ZInstallAppInputSchema = z.object({
   appId: z.union([
@@ -31,3 +39,11 @@ export const ZUninstallAppInputSchema = z.object({
   appId: z.custom<KodixAppId>(),
 });
 export type TUninstallAppInputSchema = z.infer<typeof ZUninstallAppInputSchema>;
+
+export const ZSaveUserAppTeamConfigInputSchema = z.object({
+  appId: z.literal(kodixCareAppId),
+  config: kodixCareUserAppTeamConfigSchema.partial(), //? Partial because we can just be updating a single field
+});
+export type TSaveUserAppTeamConfigInputSchema = z.infer<
+  typeof ZSaveUserAppTeamConfigInputSchema
+>;

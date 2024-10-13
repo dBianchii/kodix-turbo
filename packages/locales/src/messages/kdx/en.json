@@ -48,7 +48,9 @@
       "Unlock all tasks up until here": "Unlock all tasks up until here?",
       "This will unlock all tasks of this turn up until this task": "Isso vai desbloquear todas as tarefas deste turno até esta tarefa",
       "Successfully unlocked tasks": "Successfully unlocked tasks!",
-      "Add task": "Add task"
+      "Add task": "Add task",
+      "Critical tasks": "Critical tasks",
+      "Set this on if you want to receive notifications for delayed tasks": "Set this on if you want to receive notifications for delayed tasks (one hour delayed)"
     },
     "todo": {
       "appDescription": "Todo is a note taking app"
@@ -390,10 +392,10 @@
   "Continue": "Continue",
   "Warning": "Warning",
   "This action is not reversible please be certain": "This action is not reversible. Please be certain.",
-  "Enter the team name teamName to continue": "Enter the team name you are about to delete: <teamName>teamName</teamName>",
+  "Enter the team name teamName to continue": "Enter the team name you are about to delete: \"<teamName>teamName</teamName>\"",
   "Team name does not match": "Team name does not match",
   "delete my team": "delete my team",
-  "To verify please type KEY": "To verify, please type <deleteMyTeam>deleteMyTeam</deleteMyTeam>",
+  "To verify please type KEY": "To verify, please type \"<deleteMyTeam>deleteMyTeam</deleteMyTeam>\"",
   "Team deleted successfully": "Team deleted successfully",
   "Leave team": "Leave team",
   "If you leave the team you will not be able to access it anymore until you are invited back": "If you leave the team, you will not be able to access it anymore until you are invited back",
@@ -443,5 +445,20 @@
   "Sync tasks": "Sync tasks",
   "Substitue the tasks of this turn with the tasks from the calendar": "Substitue the tasks of this turn with the tasks from the calendar?",
   "Close": "Close",
-  "Add task": "Add task"
+  "Add task": "Add task",
+  "Main page": "Main page",
+  "Settings saved": "Settings saved",
+  "Delete my account": "Delete my account",
+  "Delete account": "Delete account",
+  "You are deleting your account": "You are deleting your account",
+  "All data related to you will be permanently lost and cannot be recovered": "All data related to you will be permanently lost and cannot be recovered",
+  "Please type DELETE_ACCOUNT to continue": "Please type \"<deleteAccount>deleteAccount</deleteAccount>\" to continue",
+  "Deleting account": "Deleting account",
+  "Account deleted successfully": "Account deleted successfully",
+  "Permanently delete your account and all your data ": "Permanently delete your account and all your data",
+  "COUNT members": "{count, plural, =0 {# members} =1 {# member} other {# members}}",
+  "Critical task": "Critical task?",
+  "Wether or not this task is considered critical or important": "Wether or not this task is considered critical, or important. You can choose to receive notifications about it on the <settings>settings</settings> page",
+  "Critical": "Critical",
+  "Is this task considered critical or important": "Is this task considered critical or important?"
 }

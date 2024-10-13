@@ -3,14 +3,14 @@ import { render } from "@react-email/render";
 
 import { db } from "@kdx/db/client";
 import { notifications } from "@kdx/db/schema";
+import { KODIX_NOTIFICATION_FROM_EMAIL } from "@kdx/shared";
 
-import type { resend } from "../utils/email";
+import { resend } from "../sdks/email";
 import { expo } from "../utils/expo";
 
 interface EmailChannel {
   type: "EMAIL";
   react: JSX.Element;
-  to: Parameters<typeof resend.emails.send>[0]["to"];
   subject: Parameters<typeof resend.emails.send>[0]["subject"];
 }
 
@@ -43,9 +43,15 @@ export async function sendNotifications({
   if (!user) throw new Error("Could not find user to send notification");
 
   const sent: (typeof notifications.$inferInsert)[] = [];
+
   for (const channel of channels) {
     if (channel.type === "EMAIL") {
-      const result = { data: true }; //TODO: send email lmao
+      const result = await resend.emails.send({
+        from: KODIX_NOTIFICATION_FROM_EMAIL,
+        to: user.email,
+        subject: channel.subject,
+        react: channel.react,
+      });
 
       if (result.data) {
         sent.push({
@@ -70,7 +76,9 @@ export async function sendNotifications({
       }[] = [];
       for (const { token } of user.ExpoTokens) {
         if (!Expo.isExpoPushToken(token)) {
-          console.error(`Push token ${token} is not a valid Expo push token`);
+          console.error(
+            `Push token ${token as string} is not a valid Expo push token`,
+          );
           continue;
         }
         toSendPushNotifications.push({

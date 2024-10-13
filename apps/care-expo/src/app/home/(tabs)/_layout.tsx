@@ -28,8 +28,6 @@ export default function TabLayout() {
     <>
       <Tabs
         screenOptions={{
-          header: () => <Header />,
-          headerShown: true,
           tabBarActiveTintColor: "$color",
           tabBarStyle: {
             borderTopColor: "rgba(34,36,40,1)",
@@ -40,8 +38,8 @@ export default function TabLayout() {
         <Tabs.Screen
           name="index"
           options={{
+            header: () => <Header />,
             tabBarLabel: () => null,
-            headerShown: true,
             tabBarButton: TabBarButton,
             tabBarIcon: ({ color }) => <Home color={color} />,
           }}

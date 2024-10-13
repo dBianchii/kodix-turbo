@@ -9,7 +9,6 @@ export const env = createEnv({
     AUTH_GOOGLE_CLIENT_SECRET: z.string(),
     AUTH_DISCORD_ID: z.string().optional(),
     AUTH_DISCORD_SECRET: z.string().optional(),
-    RESEND_API_KEY: z.string(),
   },
   client: {},
   experimental__runtimeEnv: {},

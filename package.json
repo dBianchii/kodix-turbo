@@ -11,6 +11,8 @@
     "clean:workspaces": "turbo run clean",
     "db:push": "turbo -F @kdx/db push",
     "db:studio": "turbo -F @kdx/db studio",
+    "db:generate": "turbo -F @kdx/db generate-m",
+    "db:migrate": "turbo -F @kdx/db migrate",
     "db:seed": "turbo -F @kdx/db seed",
     "db:drop": "turbo -F @kdx/db drop",
     "dev": "turbo watch dev studio --continue",

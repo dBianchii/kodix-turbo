@@ -48,7 +48,9 @@
       "Unlock all tasks up until here": "Desbloquear todas as tarefas até aqui?",
       "This will unlock all tasks of this turn up until this task": "Isso vai desbloquear todas as tarefas deste turno até esta tarefa",
       "Successfully unlocked tasks": "Tarefas desbloqueadas com sucesso!",
-      "Add task": "Adicionar tarefa"
+      "Add task": "Adicionar tarefa",
+      "Critical tasks": "Tarefas críticas",
+      "Set this on if you want to receive notifications for delayed tasks": "Ative esta opção se desejar receber notificações de tarefas atrasadas (uma hora de atraso)"
     },
     "todo": {
       "appDescription": "Todo é um app de anotações"
@@ -161,7 +163,7 @@
   "account": {
     "Account settings": "Configurações de Conta",
     "Display Name": "Nome de exibição",
-    "Manage the teams you are a part of or create a new one": "Gerencie as equipes que você",
+    "Manage the teams you are a part of or create a new one": "Gerencie as equipes que você participa, ou crie uma nova",
     "Please use 32 characters at maximum": "Por favor use no máximo 32 caracteres.",
     "please-enter-your-full-name-or-a-display-name-you-are-comfortable-with": "Digite seu nome completo ou um nome de exibição com o qual você se sinta confortável.",
     "You have left the team": "Você saiu da equipe"
@@ -387,10 +389,10 @@
   "All data related to your team will be permanently lost and cannot be recovered": "Todos os dados relacionados à sua equipe serão perdidos permanentemente e não poderão ser recuperados",
   "Continue": "Continuar",
   "Delete team": "Excluir equipe",
-  "Enter the team name teamName to continue": "Digite o nome da equipe que deseja excluir: <teamName>teamName</teamName>",
+  "Enter the team name teamName to continue": "Digite o nome da equipe que deseja excluir: \"<teamName>teamName</teamName>\"",
   "Deleting team": "Excluindo equipe...",
   "Team name does not match": "O nome da equipe não corresponde",
-  "To verify please type KEY": "Para verificar, digite <deleteMyTeam>deleteMyTeam</deleteMyTeam>",
+  "To verify please type KEY": "Para verificar, digite \"<deleteMyTeam>deleteMyTeam</deleteMyTeam>\"",
   "Warning": "Aviso",
   "This action is not reversible please be certain": "Esta ação não é reversível. \nPor favor, tenha certeza.",
   "If you leave the team you will not be able to access it anymore until you are invited back": "Se você sair da equipe, não poderá mais acessá-la até ser convidado a voltar",
@@ -443,5 +445,20 @@
   "Substitue the tasks of this turn with the tasks from the calendar": "Substituir os dados do seu turno pelo calendário de planejamento?",
   "Close": "Fechar",
   "Sync tasks": "Sincronizar tarefas",
-  "Add task": "Adicionar tarefa"
+  "Add task": "Adicionar tarefa",
+  "Main page": "Página principal",
+  "Settings saved": "Configurações salvas",
+  "Delete my account": "Deletar minha conta",
+  "You are deleting your account": "Você está excluindo sua conta",
+  "Deleting account": "Excluindo conta",
+  "Delete account": "Excluir conta",
+  "Permanently delete your account and all your data ": "Exclua permanentemente sua conta e todos os seus dados",
+  "All data related to you will be permanently lost and cannot be recovered": "Todos os dados relacionados a você serão perdidos permanentemente e não poderão ser recuperados",
+  "Please type DELETE_ACCOUNT to continue": "Digite \"<deleteAccount>deleteAccount</deleteAccount>\" para continuar",
+  "Account deleted successfully": "Conta excluída com sucesso",
+  "COUNT members": "{count, plural, =0 {# membros} =1 {# membro} other {# membros}}",
+  "Wether or not this task is considered critical or important": "Se esta tarefa é considerada critica ou importante. \nVocê pode optar por receber notificações sobre tarefas críticas na <settings>página de configurações</settings>",
+  "Critical task": "Tarefa crítica?",
+  "Critical": "Crítica",
+  "Is this task considered critical or important": "Esta tarefa é considerada crítica ou importante?"
 }
