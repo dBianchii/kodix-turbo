@@ -32,6 +32,7 @@ export async function sendNotifications({
   if (!user) throw new Error("Could not find user to send notification");
 
   const sent: (typeof notifications.$inferInsert)[] = [];
+
   for (const channel of channels) {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (channel.type === "EMAIL") {
