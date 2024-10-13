@@ -81,6 +81,7 @@ export async function sendNotifications({
           );
           continue;
         }
+
         toSendPushNotifications.push({
           to: token,
           sound: "default",

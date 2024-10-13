@@ -6,7 +6,7 @@ import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 
 import { api } from "./api";
-import { getExpoToken, saveExpoToken } from "./expoToken-store";
+import { getStorageExpoToken, saveStorageExpoToken } from "./expoToken-store";
 
 async function registerForPushNotificationsAsync() {
   if (Platform.OS === "android") {
@@ -75,7 +75,7 @@ export const usePushNotifications = () => {
   useEffect(() => {
     const setupPushNotifications = async () => {
       // Check if the token is stored in AsyncStorage
-      const storedToken = await getExpoToken();
+      const storedToken = await getStorageExpoToken();
       if (storedToken) {
         setExpoPushToken(storedToken);
         return;
@@ -85,7 +85,7 @@ export const usePushNotifications = () => {
         .then(async (token) => {
           if (token) {
             setExpoPushToken(token);
-            await saveExpoToken(token);
+            await saveStorageExpoToken(token);
             saveExpoTokenMutation.mutate({ expoToken: token });
           }
         })

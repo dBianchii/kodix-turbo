@@ -1,7 +1,7 @@
 import { useRouter } from "expo-router";
 
 import { api } from "./api";
-import { deleteExpoToken } from "./expoToken-store";
+import { deleteStorageExpoToken } from "./expoToken-store";
 import { deleteToken, setToken } from "./session-store";
 import { usePushNotifications } from "./usePushNotifications";
 
@@ -34,7 +34,7 @@ export const useSignOut = () => {
   const mutation = api.auth.signOut.useMutation({
     onSuccess: async () => {
       await deleteToken();
-      await deleteExpoToken();
+      await deleteStorageExpoToken();
       await utils.invalidate();
       router.replace("/");
     },

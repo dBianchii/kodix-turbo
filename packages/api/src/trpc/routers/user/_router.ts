@@ -27,10 +27,10 @@ import { switchActiveTeamHandler } from "./switchActiveTeam.handler";
 
 export const userRouter = {
   notifications: notificationsRouter,
+
   changeName: protectedProcedure
     .input(T(ZChangeNameInputSchema))
     .mutation(changeNameHandler),
-
   /** Gets all notifications for the selected teamId and also all their pending invitations */
   getNotifications: protectedProcedure
     .input(ZGetNotificationsInputSchema)
