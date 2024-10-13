@@ -1,7 +1,9 @@
-import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
+import { headers } from "next/headers";
+import { Receiver } from "@upstash/qstash";
 import ms from "ms";
 import groupBy from "object.groupby";
 
+import { env } from "@kdx/auth/env";
 import dayjs from "@kdx/dayjs";
 import WarnDelayedCriticalTasks from "@kdx/react-email/warn-delayed-critical-tasks";
 import { getSuccessesAndErrors, kodixCareAppId } from "@kdx/shared";
@@ -15,180 +17,197 @@ import { getUpstashCache, setUpstashCache } from "../sdks/upstash";
 import { getUsersAppTeamConfigs } from "../trpc/routers/app/getUserAppTeamConfig.handler";
 import { createCronJobCtx } from "./_utils";
 
-const MILLISECONDS_TO_BE_LATE = ms("1h");
+const receiver = new Receiver({
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  currentSigningKey: process.env.QSTASH_CURRENT_SIGNING_KEY!,
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  nextSigningKey: process.env.QSTASH_NEXT_SIGNING_KEY!,
+});
 
+const MILLISECONDS_TO_BE_LATE = ms("1h");
 const isLate = (date: Date) =>
   dayjs(date)
     .utc()
     .isBefore(dayjs().add(MILLISECONDS_TO_BE_LATE, "milliseconds").utc());
 
-export const sendNotificationsForCriticalTasks = verifySignatureAppRouter(
-  async () => {
-    console.time("sendNotificationsForCriticalTasks");
+export const sendNotificationsForCriticalTasks = async (req: Request) => {
+  console.time("sendNotificationsForCriticalTasks");
+  console.log("Upstash-Signature is", headers().get("Upstash-Signature"));
 
-    const ctx = createCronJobCtx();
-    const allTeamIdsWithKodixCareInstalled =
-      await ctx.db.query.appsToTeams.findMany({
-        where: (appsToTeams, { eq }) => eq(appsToTeams.appId, kodixCareAppId),
-        columns: {
-          teamId: true,
-        },
-        with: {
-          Team: {
-            with: {
-              UsersToTeams: {
-                columns: {
-                  userId: true,
-                },
+  if (env.NODE_ENV === "production") {
+    const qStashSignature = headers().get("Upstash-Signature");
+    if (!qStashSignature)
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
+    const isValid = await receiver.verify({
+      body: JSON.stringify(await req.json()),
+      signature: qStashSignature,
+    });
+    if (!isValid)
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const ctx = createCronJobCtx();
+  const allTeamIdsWithKodixCareInstalled =
+    await ctx.db.query.appsToTeams.findMany({
+      where: (appsToTeams, { eq }) => eq(appsToTeams.appId, kodixCareAppId),
+      columns: {
+        teamId: true,
+      },
+      with: {
+        Team: {
+          with: {
+            UsersToTeams: {
+              columns: {
+                userId: true,
               },
             },
           },
         },
-      });
+      },
+    });
 
-    const start = dayjs
-      .utc()
-      .add((-MILLISECONDS_TO_BE_LATE / 2) * 3, "milliseconds") // 1.5 hours ago
-      .toDate();
-    const end = dayjs
-      .utc()
-      .add(-MILLISECONDS_TO_BE_LATE, "milliseconds") // 1 hour ago
-      .toDate();
+  const start = dayjs
+    .utc()
+    .add((-MILLISECONDS_TO_BE_LATE / 2) * 3, "milliseconds") // 1.5 hours ago
+    .toDate();
+  const end = dayjs
+    .utc()
+    .add(-MILLISECONDS_TO_BE_LATE, "milliseconds") // 1 hour ago
+    .toDate();
 
-    const criticalNotDoneLateCareTasks = (
-      await getCareTasks({
-        ctx,
-        dateStart: start,
-        dateEnd: end,
-        teamIds: allTeamIdsWithKodixCareInstalled.map((x) => x.teamId),
-        onlyCritical: true,
-        onlyNotDone: true,
-      })
-    ).filter((x) => isLate(x.date)); //? We only want to notify about tasks that are late
+  const criticalNotDoneLateCareTasks = (
+    await getCareTasks({
+      ctx,
+      dateStart: start,
+      dateEnd: end,
+      teamIds: allTeamIdsWithKodixCareInstalled.map((x) => x.teamId),
+      onlyCritical: true,
+      onlyNotDone: true,
+    })
+  ).filter((x) => isLate(x.date)); //? We only want to notify about tasks that are late
 
-    const usersWithinTheTeams = allTeamIdsWithKodixCareInstalled.flatMap((x) =>
-      x.Team.UsersToTeams.flatMap((x) => x.userId),
-    );
-    const teamsWithCriticalNotDoneLateCareTasks =
-      criticalNotDoneLateCareTasks.map((x) => x.teamId);
+  const usersWithinTheTeams = allTeamIdsWithKodixCareInstalled.flatMap((x) =>
+    x.Team.UsersToTeams.flatMap((x) => x.userId),
+  );
+  const teamsWithCriticalNotDoneLateCareTasks =
+    criticalNotDoneLateCareTasks.map((x) => x.teamId);
 
-    const userConfigsWithEnabledNotif = (
-      await getUsersAppTeamConfigs({
-        ctx,
-        appId: kodixCareAppId,
-        teamIds: teamsWithCriticalNotDoneLateCareTasks,
-        userIds: usersWithinTheTeams,
-      })
-    ).filter((x) => !!x.config?.sendNotificationsForDelayedTasks); //?Only users that have the config enabled
+  const userConfigsWithEnabledNotif = (
+    await getUsersAppTeamConfigs({
+      ctx,
+      appId: kodixCareAppId,
+      teamIds: teamsWithCriticalNotDoneLateCareTasks,
+      userIds: usersWithinTheTeams,
+    })
+  ).filter((x) => !!x.config?.sendNotificationsForDelayedTasks); //?Only users that have the config enabled
 
-    const usersWithConfigsThatNeedToBeNotifiedGroupedByTeamId = groupBy(
-      userConfigsWithEnabledNotif,
-      (x) => x.teamId,
-    );
+  const usersWithConfigsThatNeedToBeNotifiedGroupedByTeamId = groupBy(
+    userConfigsWithEnabledNotif,
+    (x) => x.teamId,
+  );
 
-    const criticalNotDoneLateCareTasksWithTeamAndUsers =
-      criticalNotDoneLateCareTasks.map((ct) => {
-        const team = allTeamIdsWithKodixCareInstalled.find(
-          (x) => x.teamId === ct.teamId,
-        );
-        if (!team) throw new Error("Shouldn't happen");
-        const userIds = (usersWithConfigsThatNeedToBeNotifiedGroupedByTeamId[
-          team.teamId
-        ] ??= []).map((cfg) => cfg.userId);
-
-        //? This object should represent the care task with the team and the users that need to be notified.
-        return {
-          id: ct.id,
-          eventMasterId: ct.eventMasterId,
-          date: ct.date,
-          title: ct.title,
-          Team: {
-            teamId: team.teamId,
-            userIds,
-          },
-        };
-      });
-
-    const sentNotificationStatusPromises =
-      criticalNotDoneLateCareTasksWithTeamAndUsers.flatMap((careTask) =>
-        careTask.Team.userIds.map((userId) => {
-          const careTaskCompositeId = getCareTaskCompositeId({
-            eventMasterId: careTask.eventMasterId,
-            id: careTask.id,
-            selectedTimeStamp: careTask.date,
-          });
-
-          return getUpstashCache("careTasksUsersNotifs", {
-            careTaskCompositeId,
-            userId,
-          });
-        }),
+  const criticalNotDoneLateCareTasksWithTeamAndUsers =
+    criticalNotDoneLateCareTasks.map((ct) => {
+      const team = allTeamIdsWithKodixCareInstalled.find(
+        (x) => x.teamId === ct.teamId,
       );
+      if (!team) throw new Error("Shouldn't happen");
+      const userIds = (usersWithConfigsThatNeedToBeNotifiedGroupedByTeamId[
+        team.teamId
+      ] ??= []).map((cfg) => cfg.userId);
 
-    const results = await Promise.allSettled(sentNotificationStatusPromises);
-    const { successes: notificationStatuses } = getSuccessesAndErrors(results);
+      //? This object should represent the care task with the team and the users that need to be notified.
+      return {
+        id: ct.id,
+        eventMasterId: ct.eventMasterId,
+        date: ct.date,
+        title: ct.title,
+        Team: {
+          teamId: team.teamId,
+          userIds,
+        },
+      };
+    });
 
-    const criticalNotDoneLateCareTasksWithTeamAndUsersNotYetSent =
-      criticalNotDoneLateCareTasksWithTeamAndUsers.filter(
-        (careTask) =>
-          !notificationStatuses.some(
-            (x) =>
-              x.value?.careTaskCompositeId === //?Check if it exists and also if it's the same care task
-              getCareTaskCompositeId({
-                eventMasterId: careTask.eventMasterId,
-                id: careTask.id,
-                selectedTimeStamp: careTask.date,
-              }),
-          ),
-      );
-
-    const promises: Promise<unknown>[] = [];
-    for (const careTask of criticalNotDoneLateCareTasksWithTeamAndUsersNotYetSent) {
-      for (const userId of careTask.Team.userIds) {
-        promises.push(
-          sendNotifications({
-            teamId: careTask.Team.teamId,
-            channels: [
-              {
-                type: "EMAIL",
-                react: await WarnDelayedCriticalTasks({
-                  task: {
-                    date: careTask.date,
-                    title: careTask.title,
-                  },
-                  locale: ctx.locale,
-                }),
-                subject: "Critical task is late",
-              },
-            ],
-            userId,
-          }),
-        );
+  const sentNotificationStatusPromises =
+    criticalNotDoneLateCareTasksWithTeamAndUsers.flatMap((careTask) =>
+      careTask.Team.userIds.map((userId) => {
         const careTaskCompositeId = getCareTaskCompositeId({
           eventMasterId: careTask.eventMasterId,
           id: careTask.id,
           selectedTimeStamp: careTask.date,
         });
-        promises.push(
-          setUpstashCache("careTasksUsersNotifs", {
-            variableKeys: {
-              userId,
-              careTaskCompositeId,
+
+        return getUpstashCache("careTasksUsersNotifs", {
+          careTaskCompositeId,
+          userId,
+        });
+      }),
+    );
+
+  const results = await Promise.allSettled(sentNotificationStatusPromises);
+  const { successes: notificationStatuses } = getSuccessesAndErrors(results);
+
+  const criticalNotDoneLateCareTasksWithTeamAndUsersNotYetSent =
+    criticalNotDoneLateCareTasksWithTeamAndUsers.filter(
+      (careTask) =>
+        !notificationStatuses.some(
+          (x) =>
+            x.value?.careTaskCompositeId === //?Check if it exists and also if it's the same care task
+            getCareTaskCompositeId({
+              eventMasterId: careTask.eventMasterId,
+              id: careTask.id,
+              selectedTimeStamp: careTask.date,
+            }),
+        ),
+    );
+
+  const promises: Promise<unknown>[] = [];
+  for (const careTask of criticalNotDoneLateCareTasksWithTeamAndUsersNotYetSent) {
+    for (const userId of careTask.Team.userIds) {
+      promises.push(
+        sendNotifications({
+          teamId: careTask.Team.teamId,
+          channels: [
+            {
+              type: "EMAIL",
+              react: await WarnDelayedCriticalTasks({
+                task: {
+                  date: careTask.date,
+                  title: careTask.title,
+                },
+                locale: ctx.locale,
+              }),
+              subject: "Critical task is late",
             },
-            value: {
-              userId,
-              careTaskCompositeId,
-              date: careTask.date.toISOString(),
-            },
-          }),
-        );
-      }
+          ],
+          userId,
+        }),
+      );
+      const careTaskCompositeId = getCareTaskCompositeId({
+        eventMasterId: careTask.eventMasterId,
+        id: careTask.id,
+        selectedTimeStamp: careTask.date,
+      });
+      promises.push(
+        setUpstashCache("careTasksUsersNotifs", {
+          variableKeys: {
+            userId,
+            careTaskCompositeId,
+          },
+          value: {
+            userId,
+            careTaskCompositeId,
+            date: careTask.date.toISOString(),
+          },
+        }),
+      );
     }
+  }
 
-    await Promise.allSettled(promises);
+  await Promise.allSettled(promises);
 
-    console.timeEnd("sendNotificationsForCriticalTasks");
+  console.timeEnd("sendNotificationsForCriticalTasks");
 
-    return Response.json({ success: true });
-  },
-);
+  return Response.json({ success: true });
+};
