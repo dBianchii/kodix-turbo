@@ -1,10 +1,8 @@
 import { Suspense } from "react";
 
 import type { User } from "@kdx/auth";
-import dayjs from "@kdx/dayjs";
 import { kodixCareAppId } from "@kdx/shared";
 import { Card } from "@kdx/ui/card";
-import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
 import { Skeleton } from "@kdx/ui/skeleton";
 
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
@@ -25,35 +23,10 @@ export default async function KodixCarePage() {
           <CurrentShift user={user} />
         </Suspense>
         <div className="flex w-full flex-col">
-          <Suspense
-            fallback={
-              <DataTableSkeleton
-                className="mt-4"
-                columnCount={5}
-                rowCount={2}
-                withPagination={false}
-              />
-            }
-          >
-            <KodixCareTable />
-          </Suspense>
+          <DataTableKodixCare />
         </div>
       </div>
     </main>
-  );
-}
-
-async function KodixCareTable() {
-  const input = {
-    dateStart: dayjs.utc().startOf("day").toDate(),
-    dateEnd: dayjs.utc().endOf("day").toDate(),
-  };
-  const initialCareTasks = await api.app.kodixCare.getCareTasks(input);
-  return (
-    <DataTableKodixCare
-      initialCareTasks={initialCareTasks}
-      initialInput={input}
-    />
   );
 }
 

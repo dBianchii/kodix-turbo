@@ -26,7 +26,6 @@ import {
 } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
-import type { TGetCareTasksInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import dayjs from "@kdx/dayjs";
 import { useFormatter } from "@kdx/locales/next-intl";
 import { useTranslations } from "@kdx/locales/next-intl/client";
@@ -104,14 +103,11 @@ type CareTaskOrCalendarTask =
 
 const columnHelper = createColumnHelper<CareTaskOrCalendarTask>();
 
-export default function DataTableKodixCare({
-  initialCareTasks,
-  initialInput,
-}: {
-  initialCareTasks: RouterOutputs["app"]["kodixCare"]["getCareTasks"];
-  initialInput: TGetCareTasksInputSchema;
-}) {
-  const [input, setInput] = useState(initialInput);
+export default function DataTableKodixCare() {
+  const [input, setInput] = useState({
+    dateStart: dayjs().startOf("day").toDate(),
+    dateEnd: dayjs().endOf("day").toDate(),
+  });
   const handleChangeInput = (date: Date) => {
     setInput({
       dateStart: dayjs(date).startOf("day").toDate(),
@@ -121,12 +117,7 @@ export default function DataTableKodixCare({
     setUnlockMoreTasksDialogOpen(false);
   };
 
-  const query = api.app.kodixCare.getCareTasks.useQuery(input, {
-    initialData:
-      JSON.stringify(initialInput) === JSON.stringify(input) //? Only use initialData for the initial input
-        ? initialCareTasks
-        : undefined,
-  });
+  const query = api.app.kodixCare.getCareTasks.useQuery(input);
 
   const utils = api.useUtils();
   const [editDetailsOpen, setEditDetailsOpen] = useState(false);
@@ -362,7 +353,7 @@ export default function DataTableKodixCare({
             <RxChevronLeft />
           </Button>
           <DatePicker
-            date={input.dateStart}
+            date={input.dateEnd}
             setDate={(newDate) => handleChangeInput(dayjs(newDate).toDate())}
           />
           <Button
@@ -655,7 +646,6 @@ function AddCareTaskDialog() {
                           }
                         />
                       </FormControl>
-
                       <FormLabel className="flex gap-1">
                         <LuAlertCircle
                           className={cn(
