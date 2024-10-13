@@ -38,8 +38,9 @@ export const sendNotificationsForCriticalTasks = async (req: Request) => {
     const qStashSignature = headers().get("Upstash-Signature");
     if (!qStashSignature)
       return Response.json({ error: "Unauthorized" }, { status: 401 });
+
     const isValid = await receiver.verify({
-      body: JSON.stringify(await req.json()),
+      body: await req.text(),
       signature: qStashSignature,
     });
     if (!isValid)
