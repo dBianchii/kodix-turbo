@@ -49,7 +49,7 @@
       "This will unlock all tasks of this turn up until this task": "Isso vai desbloquear todas as tarefas deste turno até esta tarefa",
       "Successfully unlocked tasks": "Successfully unlocked tasks!",
       "Add task": "Add task",
-      "Receive notifications for delayed tasks": "Receive notifications for delayed tasks?",
+      "Critical tasks": "Critical tasks",
       "Set this on if you want to receive notifications for delayed tasks": "Set this on if you want to receive notifications for delayed tasks (one hour delayed)"
     },
     "todo": {

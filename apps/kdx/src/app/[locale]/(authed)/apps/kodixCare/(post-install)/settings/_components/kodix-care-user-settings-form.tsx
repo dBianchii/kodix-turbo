@@ -68,9 +68,7 @@ export function KodixCareUserSettingsForm({
                             },
                           )}
                         />
-                        {t(
-                          "apps.kodixCare.Receive notifications for delayed tasks",
-                        )}
+                        {t("apps.kodixCare.Critical tasks")}
                       </FormLabel>
                       <FormDescription>
                         {t(

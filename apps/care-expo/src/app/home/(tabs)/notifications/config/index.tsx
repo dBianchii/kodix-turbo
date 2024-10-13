@@ -97,7 +97,14 @@ function NotificationSettingsForm({
     <YGroup alignSelf="center" bordered size="$4">
       <YGroup.Item>
         <ListItem
-          icon={<AlertCircle color={"orange"} size={"$2"} />}
+          icon={
+            <AlertCircle
+              color={
+                sendNotificationsForDelayedTasks ? "orange" : "$gray11Dark"
+              }
+              size={"$2"}
+            />
+          }
           title={"Tarefas críticas"}
           onPress={handleSave}
           subTitle={
