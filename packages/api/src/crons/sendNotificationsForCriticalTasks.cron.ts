@@ -147,7 +147,7 @@ export const sendNotificationsForCriticalTasks = verifiedQstashCron(
             teamId: careTask.Team.teamId,
             channels: [
               {
-                type: "PUSHNOTIFICATIONS",
+                type: "PUSH_NOTIFICATIONS",
                 title: "Critical task is late",
                 body: `The task "${careTask.title}" is late`,
               },

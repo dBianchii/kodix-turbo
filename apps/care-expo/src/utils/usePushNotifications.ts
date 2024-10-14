@@ -4,6 +4,7 @@ import { Platform } from "react-native";
 import Constants from "expo-constants";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
+import { useToastController } from "@tamagui/toast";
 
 import { api } from "./api";
 import { getStorageExpoToken, saveStorageExpoToken } from "./expoToken-store";
@@ -64,13 +65,14 @@ export const usePushNotifications = () => {
     }),
   });
   const [expoPushToken, setExpoPushToken] = useState<string | undefined>();
-  const [notification, setNotification] = useState<
-    Notifications.Notification | undefined
-  >();
+  // const [notification, setNotification] = useState<
+  //   Notifications.Notification | undefined
+  // >();
   const saveExpoTokenMutation =
     api.user.notifications.saveExpoToken.useMutation();
   const notificationListener = useRef<Notifications.Subscription>();
   const responseListener = useRef<Notifications.Subscription>();
+  const toast = useToastController();
 
   useEffect(() => {
     const setupPushNotifications = async () => {
@@ -98,7 +100,10 @@ export const usePushNotifications = () => {
 
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
-        setNotification(notification);
+        toast.show(notification.request.content.title ?? "", {
+          message: notification.request.content.body ?? "",
+          variant: "default",
+        });
       });
 
     responseListener.current =
@@ -118,5 +123,5 @@ export const usePushNotifications = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return { expoPushToken, notification };
+  return { expoPushToken };
 };

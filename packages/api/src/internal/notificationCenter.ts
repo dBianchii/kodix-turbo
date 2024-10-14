@@ -1,9 +1,14 @@
+import type { ExpoPushMessage, ExpoPushTicket } from "expo-server-sdk";
 import Expo from "expo-server-sdk";
 import { render } from "@react-email/render";
 
+import { inArray } from "@kdx/db";
 import { db } from "@kdx/db/client";
-import { notifications } from "@kdx/db/schema";
-import { KODIX_NOTIFICATION_FROM_EMAIL } from "@kdx/shared";
+import { expoTokens, notifications } from "@kdx/db/schema";
+import {
+  getSuccessesAndErrors,
+  KODIX_NOTIFICATION_FROM_EMAIL,
+} from "@kdx/shared";
 
 import { resend } from "../sdks/email";
 import { expo } from "../utils/expo";
@@ -15,7 +20,7 @@ interface EmailChannel {
 }
 
 interface PushNotificationsChannel {
-  type: "PUSHNOTIFICATIONS";
+  type: "PUSH_NOTIFICATIONS";
   title: string;
   body: string;
 }
@@ -37,43 +42,54 @@ export async function sendNotifications({
       email: true,
     },
     with: {
-      ExpoTokens: true,
+      ExpoTokens: {
+        columns: {
+          token: true,
+        },
+      },
     },
   });
   if (!user) throw new Error("Could not find user to send notification");
 
-  const sent: (typeof notifications.$inferInsert)[] = [];
+  //* 1. Prepare the messages to send in Promise arrays
+  const toSendEmailPromises: Promise<{
+    resendResult: Awaited<ReturnType<typeof resend.emails.send>>;
+    toSendObj: {
+      from: string;
+      to: string;
+      subject: string;
+      react: JSX.Element;
+    };
+  }>[] = [];
+  const toSendPushNotificationsPromises: Promise<ExpoPushTicket[]>[] = [];
+
+  let sentMessages: (typeof notifications.$inferInsert & {
+    expoToken?: string;
+  })[] = [];
 
   for (const channel of channels) {
     if (channel.type === "EMAIL") {
-      const result = await resend.emails.send({
-        from: KODIX_NOTIFICATION_FROM_EMAIL,
-        to: user.email,
-        subject: channel.subject,
-        react: channel.react,
-      });
-
-      if (result.data) {
-        sent.push({
-          sentAt: new Date(),
+      const sendEmailPromise = (async () => {
+        const toSendObj = {
+          from: KODIX_NOTIFICATION_FROM_EMAIL,
+          to: user.email,
           subject: channel.subject,
-          message: render(channel.react),
-          sentToUserId: userId,
-          teamId,
-          channel: channel.type,
-        });
-      }
+          react: channel.react,
+        };
+        const resendResult = await resend.emails.send(toSendObj);
+
+        return {
+          resendResult,
+          toSendObj,
+        };
+      })();
+      toSendEmailPromises.push(sendEmailPromise);
     }
 
-    if (channel.type === "PUSHNOTIFICATIONS") {
-      if (!user.ExpoTokens.length) continue; //TODO: Should we error?
+    if (channel.type === "PUSH_NOTIFICATIONS") {
+      if (!user.ExpoTokens.length) continue;
 
-      const toSendPushNotifications: {
-        to: string;
-        sound: "default";
-        body: string;
-        data: Record<string, string>;
-      }[] = [];
+      const toSendPushNotifications: ExpoPushMessage[] = [];
       for (const { token } of user.ExpoTokens) {
         if (!Expo.isExpoPushToken(token)) {
           console.error(
@@ -83,41 +99,93 @@ export async function sendNotifications({
         }
 
         toSendPushNotifications.push({
+          title: channel.title,
           to: token,
           sound: "default",
           body: channel.body,
-          data: {
-            title: channel.title,
-          },
+        });
+        sentMessages.push({
+          expoToken: token,
+          sentAt: new Date(),
+          subject: channel.title,
+          message: channel.body,
+          sentToUserId: userId,
+          teamId,
+          channel: "PUSH_NOTIFICATIONS",
         });
       }
+
       const chunks = expo.chunkPushNotifications(toSendPushNotifications);
-      const tickets = [];
-
       for (const chunk of chunks) {
-        try {
-          const ticketChunk = await expo.sendPushNotificationsAsync(chunk);
-          console.log(ticketChunk);
-          tickets.push(...ticketChunk);
-          // NOTE: If a ticket contains an error code in ticket.details.error, you
-          // must handle it appropriately. The error codes are listed in the Expo
-          // documentation:
-          // https://docs.expo.io/push-notifications/sending-notifications/#individual-errors
-        } catch (error) {
-          console.error(error);
-        }
-      }
-
-      const receiptIds: string[] = [];
-      for (const ticket of tickets) {
-        // NOTE: Not all tickets have IDs; for example, tickets for notifications
-        // that could not be enqueued will have error information and no receipt ID.
-        if (ticket.status === "ok") {
-          receiptIds.push(ticket.id);
-        }
+        toSendPushNotificationsPromises.push(
+          expo.sendPushNotificationsAsync(chunk),
+        );
       }
     }
   }
 
-  if (sent.length) await db.insert(notifications).values(sent);
+  //* 2. Prepare the messages to send with Promise.allSettled
+  //* 2.1 Send emails
+  const emailResults = await Promise.allSettled(toSendEmailPromises);
+  //TODO: handle _emailErrors errors
+  const { successes: emailSuccesses, errors: _emailErrors } =
+    getSuccessesAndErrors(emailResults);
+  for (const emailSuccess of emailSuccesses) {
+    if (emailSuccess.value.resendResult.data?.id) {
+      sentMessages.push({
+        sentAt: new Date(),
+        subject: emailSuccess.value.toSendObj.subject,
+        message: render(emailSuccess.value.toSendObj.react),
+        sentToUserId: userId,
+        teamId,
+        channel: "EMAIL",
+      });
+    }
+  }
+
+  //* 2.2 Send push notifications
+  const pushNotificationsResults = await Promise.allSettled(
+    toSendPushNotificationsPromises,
+  );
+  //TODO: handle _pushNotifsErrors errors
+  const { successes: pushNotifsSuccesses, errors: _pushNotifsErrors } =
+    getSuccessesAndErrors(pushNotificationsResults);
+
+  const tickets: ExpoPushTicket[] = pushNotifsSuccesses.flatMap(
+    (pushNotifSuccess) => pushNotifSuccess.value,
+  );
+  const receiptIds: string[] = [];
+  const toDeleteExpoPushTokens: string[] = [];
+  for (const ticket of tickets) {
+    if (ticket.status === "error") {
+      if (ticket.expoPushToken) {
+        sentMessages = sentMessages.filter(
+          (x) => x.expoToken !== ticket.expoPushToken,
+        );
+      }
+
+      // https://docs.expo.io/push-notifications/sending-notifications/#individual-errors
+      if (ticket.details?.error === "DeviceNotRegistered") {
+        if (ticket.expoPushToken)
+          toDeleteExpoPushTokens.push(ticket.expoPushToken);
+
+        continue;
+      }
+
+      console.error(
+        `There was an unhandled error sending a push notification: ${ticket.message}`,
+      );
+    }
+    if (ticket.status === "ok") {
+      receiptIds.push(ticket.id); //TODO: figure out what to do with receipts: https://github.com/expo/expo-server-sdk-node
+    }
+  }
+
+  //* 3 Interact with our db depending on the results
+  if (toDeleteExpoPushTokens.length)
+    await db
+      .delete(expoTokens)
+      .where(inArray(expoTokens.token, toDeleteExpoPushTokens));
+
+  if (sentMessages.length) await db.insert(notifications).values(sentMessages);
 }

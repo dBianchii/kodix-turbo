@@ -129,7 +129,7 @@ export const notifications = mysqlTable(
     subject: varchar("subject", { length: 100 }), //?For email only!
     sentAt: timestamp("sentAt").defaultNow().notNull(),
     message: text("message").notNull(),
-    channel: mysqlEnum("channel", ["EMAIL"]).notNull(),
+    channel: mysqlEnum("channel", ["EMAIL", "PUSH_NOTIFICATIONS"]).notNull(),
   },
   (table) => {
     return {
