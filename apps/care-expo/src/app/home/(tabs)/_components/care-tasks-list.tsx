@@ -58,8 +58,8 @@ type CareTaskOrCalendarTask =
 
 export function CaretasksList() {
   const input = {
-    dateStart: dayjs.utc().add(0, "days").startOf("day").toDate(),
-    dateEnd: dayjs.utc().add(0, "days").endOf("day").toDate(),
+    dateStart: dayjs().startOf("day").toDate(),
+    dateEnd: dayjs().endOf("day").toDate(),
   };
   const utils = api.useUtils();
 

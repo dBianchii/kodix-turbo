@@ -19,16 +19,18 @@ import { deleteAccountHandler } from "./deleteAccount.handler";
 import { deleteNotificationsHandler } from "./deleteNotifications.handler";
 import { getInvitationsHandler } from "./getInvitations.handler";
 import { getNotificationsHandler } from "./getNotifications.handler";
+import { notificationsRouter } from "./notifications/_router";
 import { sendResetPasswordEmail } from "./sendResetPasswordEmail";
 import { signInByPasswordHandler } from "./signInByPassword.handler";
 import { signupWithPasswordHandler } from "./signupWithPassword.handler";
 import { switchActiveTeamHandler } from "./switchActiveTeam.handler";
 
 export const userRouter = {
+  notifications: notificationsRouter,
+
   changeName: protectedProcedure
     .input(T(ZChangeNameInputSchema))
     .mutation(changeNameHandler),
-
   /** Gets all notifications for the selected teamId and also all their pending invitations */
   getNotifications: protectedProcedure
     .input(ZGetNotificationsInputSchema)

@@ -1,4 +1,4 @@
-import { FlatList } from "react-native";
+import { FlatList, RefreshControl } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, useRouter } from "expo-router";
 import { Cog } from "@tamagui/lucide-icons";
@@ -29,11 +29,14 @@ export default function NotificationsTab() {
   const router = useRouter();
   if (!user) return router.push("/");
 
-  const { data: notifications, isLoading } = api.user.getNotifications.useQuery(
-    {
-      teamId: user.activeTeamId,
-    },
-  );
+  const {
+    data: notifications,
+    isLoading,
+    isRefetching,
+  } = api.user.getNotifications.useQuery({
+    channel: "PUSH_NOTIFICATIONS",
+    teamId: user.activeTeamId,
+  });
 
   if (isLoading)
     return (
@@ -44,6 +47,8 @@ export default function NotificationsTab() {
         </RootSafeAreaView>
       </>
     );
+
+  const utils = api.useUtils();
 
   return (
     <>
@@ -60,6 +65,14 @@ export default function NotificationsTab() {
             <FlatList
               keyExtractor={(item, idx) => item.id + idx}
               data={notifications.data}
+              refreshControl={
+                <RefreshControl
+                  refreshing={isRefetching}
+                  onRefresh={() => {
+                    void utils.user.getNotifications.invalidate();
+                  }}
+                />
+              }
               renderItem={({ item }) => (
                 <YGroup.Item>
                   <ListItem

@@ -1,10 +1,17 @@
+import type { ExpoPushMessage, ExpoPushTicket } from "expo-server-sdk";
+import Expo from "expo-server-sdk";
 import { render } from "@react-email/render";
 
+import { inArray } from "@kdx/db";
 import { db } from "@kdx/db/client";
-import { notifications } from "@kdx/db/schema";
-import { KODIX_NOTIFICATION_FROM_EMAIL } from "@kdx/shared";
+import { expoTokens, notifications } from "@kdx/db/schema";
+import {
+  getSuccessesAndErrors,
+  KODIX_NOTIFICATION_FROM_EMAIL,
+} from "@kdx/shared";
 
 import { resend } from "../sdks/email";
+import { expo } from "../utils/expo";
 
 interface EmailChannel {
   type: "EMAIL";
@@ -12,7 +19,13 @@ interface EmailChannel {
   subject: Parameters<typeof resend.emails.send>[0]["subject"];
 }
 
-export type Channel = EmailChannel;
+interface PushNotificationsChannel {
+  type: "PUSH_NOTIFICATIONS";
+  title: string;
+  body: string;
+}
+
+type Channel = EmailChannel | PushNotificationsChannel;
 
 export async function sendNotifications({
   userId,
@@ -28,33 +41,151 @@ export async function sendNotifications({
     columns: {
       email: true,
     },
+    with: {
+      ExpoTokens: {
+        columns: {
+          token: true,
+        },
+      },
+    },
   });
   if (!user) throw new Error("Could not find user to send notification");
 
-  const sent: (typeof notifications.$inferInsert)[] = [];
+  //* 1. Prepare the messages to send in Promise arrays
+  const toSendEmailPromises: Promise<{
+    resendResult: Awaited<ReturnType<typeof resend.emails.send>>;
+    toSendObj: {
+      from: string;
+      to: string;
+      subject: string;
+      react: JSX.Element;
+    };
+  }>[] = [];
+  const toSendPushNotificationsPromises: Promise<ExpoPushTicket[]>[] = [];
+
+  let sentMessages: (typeof notifications.$inferInsert & {
+    expoToken?: string;
+  })[] = [];
 
   for (const channel of channels) {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (channel.type === "EMAIL") {
-      const result = await resend.emails.send({
-        from: KODIX_NOTIFICATION_FROM_EMAIL,
-        to: user.email,
-        subject: channel.subject,
-        react: channel.react,
-      });
-
-      if (result.data) {
-        sent.push({
-          sentAt: new Date(),
+      const sendEmailPromise = (async () => {
+        const toSendObj = {
+          from: KODIX_NOTIFICATION_FROM_EMAIL,
+          to: user.email,
           subject: channel.subject,
-          message: render(channel.react),
+          react: channel.react,
+        };
+        const resendResult = await resend.emails.send(toSendObj);
+
+        return {
+          resendResult,
+          toSendObj,
+        };
+      })();
+      toSendEmailPromises.push(sendEmailPromise);
+    }
+
+    if (channel.type === "PUSH_NOTIFICATIONS") {
+      if (!user.ExpoTokens.length) continue;
+
+      const toSendPushNotifications: ExpoPushMessage[] = [];
+      for (const { token } of user.ExpoTokens) {
+        if (!Expo.isExpoPushToken(token)) {
+          console.error(
+            `Push token ${token as string} is not a valid Expo push token`,
+          );
+          continue;
+        }
+
+        toSendPushNotifications.push({
+          title: channel.title,
+          to: token,
+          sound: "default",
+          body: channel.body,
+        });
+        sentMessages.push({
+          expoToken: token,
+          sentAt: new Date(),
+          subject: channel.title,
+          message: channel.body,
           sentToUserId: userId,
           teamId,
-          channel: channel.type,
+          channel: "PUSH_NOTIFICATIONS",
         });
+      }
+
+      const chunks = expo.chunkPushNotifications(toSendPushNotifications);
+      for (const chunk of chunks) {
+        toSendPushNotificationsPromises.push(
+          expo.sendPushNotificationsAsync(chunk),
+        );
       }
     }
   }
 
-  if (sent.length) await db.insert(notifications).values(sent);
+  //* 2. Prepare the messages to send with Promise.allSettled
+  //* 2.1 Send emails
+  const emailResults = await Promise.allSettled(toSendEmailPromises);
+  //TODO: handle _emailErrors errors
+  const { successes: emailSuccesses, errors: _emailErrors } =
+    getSuccessesAndErrors(emailResults);
+  for (const emailSuccess of emailSuccesses) {
+    if (emailSuccess.value.resendResult.data?.id) {
+      sentMessages.push({
+        sentAt: new Date(),
+        subject: emailSuccess.value.toSendObj.subject,
+        message: render(emailSuccess.value.toSendObj.react),
+        sentToUserId: userId,
+        teamId,
+        channel: "EMAIL",
+      });
+    }
+  }
+
+  //* 2.2 Send push notifications
+  const pushNotificationsResults = await Promise.allSettled(
+    toSendPushNotificationsPromises,
+  );
+  //TODO: handle _pushNotifsErrors errors
+  const { successes: pushNotifsSuccesses, errors: _pushNotifsErrors } =
+    getSuccessesAndErrors(pushNotificationsResults);
+
+  const tickets: ExpoPushTicket[] = pushNotifsSuccesses.flatMap(
+    (pushNotifSuccess) => pushNotifSuccess.value,
+  );
+  const receiptIds: string[] = [];
+  const toDeleteExpoPushTokens: string[] = [];
+  for (const ticket of tickets) {
+    if (ticket.status === "error") {
+      if (ticket.expoPushToken) {
+        sentMessages = sentMessages.filter(
+          (x) => x.expoToken !== ticket.expoPushToken,
+        );
+      }
+
+      // https://docs.expo.io/push-notifications/sending-notifications/#individual-errors
+      if (ticket.details?.error === "DeviceNotRegistered") {
+        if (ticket.expoPushToken)
+          toDeleteExpoPushTokens.push(ticket.expoPushToken);
+
+        continue;
+      }
+
+      console.error(
+        `There was an unhandled error sending a push notification: ${ticket.message}`,
+      );
+    }
+    if (ticket.status === "ok") {
+      receiptIds.push(ticket.id); //TODO: figure out what to do with receipts: https://github.com/expo/expo-server-sdk-node
+    }
+  }
+
+  //* 3 Interact with our db depending on the results
+  if (toDeleteExpoPushTokens.length)
+    await db
+      .delete(expoTokens)
+      .where(inArray(expoTokens.token, toDeleteExpoPushTokens));
+
+  if (sentMessages.length) await db.insert(notifications).values(sentMessages);
 }

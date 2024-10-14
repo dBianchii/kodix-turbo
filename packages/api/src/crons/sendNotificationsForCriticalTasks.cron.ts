@@ -147,6 +147,19 @@ export const sendNotificationsForCriticalTasks = verifiedQstashCron(
             teamId: careTask.Team.teamId,
             channels: [
               {
+                type: "PUSH_NOTIFICATIONS",
+                title: "Critical task is late",
+                body: `The task "${careTask.title}" is late`,
+              },
+            ],
+            userId,
+          }),
+        );
+        promises.push(
+          sendNotifications({
+            teamId: careTask.Team.teamId,
+            channels: [
+              {
                 type: "EMAIL",
                 react: await WarnDelayedCriticalTasks({
                   task: {
