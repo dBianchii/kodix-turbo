@@ -1,12 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import { LuLogOut, LuUsers } from "react-icons/lu";
 import { MdOutlineSwapHorizontalCircle } from "react-icons/md";
 import { RxGear, RxPerson } from "react-icons/rx";
 
 import type { User } from "@kdx/auth";
 import { useTranslations } from "@kdx/locales/next-intl/client";
+import { Link } from "@kdx/locales/next-intl/navigation";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Button } from "@kdx/ui/button";
 import {

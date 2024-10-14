@@ -1,5 +1,4 @@
-import Link from "next/link";
-
+import { Link } from "@kdx/locales/next-intl/navigation";
 import { getTranslations } from "@kdx/locales/next-intl/server";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";

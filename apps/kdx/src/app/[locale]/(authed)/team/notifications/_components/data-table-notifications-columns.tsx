@@ -1,11 +1,11 @@
 import React from "react";
-import Link from "next/link";
 import { createColumnHelper } from "@tanstack/react-table";
 import { RxDotsHorizontal, RxExternalLink } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import { useFormatter } from "@kdx/locales/next-intl";
 import { useTranslations } from "@kdx/locales/next-intl/client";
+import { Link } from "@kdx/locales/next-intl/navigation";
 import { Button } from "@kdx/ui/button";
 import { Checkbox } from "@kdx/ui/checkbox";
 import { DataTableColumnHeader } from "@kdx/ui/data-table/data-table-column-header";

@@ -1,8 +1,7 @@
 import { Suspense } from "react";
-import Link from "next/link";
 
 import { auth } from "@kdx/auth";
-import { redirect } from "@kdx/locales/next-intl/navigation";
+import { Link, redirect } from "@kdx/locales/next-intl/navigation";
 import { getTranslations } from "@kdx/locales/next-intl/server";
 import { Separator } from "@kdx/ui/separator";
 import { Skeleton } from "@kdx/ui/skeleton";

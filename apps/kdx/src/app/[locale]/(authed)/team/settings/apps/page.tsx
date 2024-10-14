@@ -1,9 +1,8 @@
 import { Suspense } from "react";
-import Link from "next/link";
 import { RxPlusCircled } from "react-icons/rx";
 
 import { auth } from "@kdx/auth";
-import { redirect } from "@kdx/locales/next-intl/navigation";
+import { Link, redirect } from "@kdx/locales/next-intl/navigation";
 import { getTranslations } from "@kdx/locales/next-intl/server";
 
 import { KodixApp } from "~/app/[locale]/_components/app/kodix-app";
