@@ -73,6 +73,7 @@ export const usePushNotifications = () => {
   const notificationListener = useRef<Notifications.Subscription>();
   const responseListener = useRef<Notifications.Subscription>();
   const toast = useToastController();
+  const utils = api.useUtils();
 
   useEffect(() => {
     const setupPushNotifications = async () => {
@@ -104,6 +105,7 @@ export const usePushNotifications = () => {
           message: notification.request.content.body ?? "",
           variant: "default",
         });
+        void utils.user.getNotifications.invalidate();
       });
 
     responseListener.current =

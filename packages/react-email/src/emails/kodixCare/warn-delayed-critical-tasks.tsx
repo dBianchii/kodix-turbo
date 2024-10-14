@@ -19,7 +19,7 @@ export default async function WarnDelayedCriticalTasks({
   return (
     <Html>
       <Head />
-      <Preview>{"asd"}</Preview>
+      <Preview>{`A tarefa ${task.title} está atrasada`}</Preview>
       <Tailwind>
         <Body className="mx-auto my-auto bg-white font-sans">
           {task.title ?? t("api.emails.no title")}
