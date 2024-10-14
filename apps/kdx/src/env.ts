@@ -4,6 +4,9 @@ import { z } from "zod";
 
 import { env as authEnv } from "@kdx/auth/env";
 
+const requiredInProductionOnly = (string: string | undefined) =>
+  !!string || process.env.NODE_ENV !== "production";
+
 export const env = createEnv({
   extends: [authEnv, vercel()],
   shared: {
@@ -26,8 +29,14 @@ export const env = createEnv({
     UPSTASH_REDIS_REST_URL: z.string().url(),
     UPSTASH_REDIS_REST_TOKEN: z.string(),
 
-    QSTASH_CURRENT_SIGNING_KEY: z.string(),
-    QSTASH_NEXT_SIGNING_KEY: z.string(),
+    QSTASH_CURRENT_SIGNING_KEY: z
+      .string()
+      .optional()
+      .refine(requiredInProductionOnly, { message: "Required in production" }),
+    QSTASH_NEXT_SIGNING_KEY: z
+      .string()
+      .optional()
+      .refine(requiredInProductionOnly, { message: "Required in production" }),
   },
   /**
    * Specify your client-side environment variables schema here.
