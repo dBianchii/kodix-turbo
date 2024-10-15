@@ -51,7 +51,11 @@ export type TSignInByPasswordInputSchema = z.infer<
 >;
 
 export const ZCreateCareTaskInputSchema = z.object({
-  date: z.date(),
+  date: z.date().transform((date) => {
+    const newDate = new Date(date);
+    newDate.setSeconds(0, 0); //?make sure that seconds and milliseconds are 0
+    return newDate;
+  }),
   title: z.string(),
   description: z.string().optional(),
   type: z.custom<typeof careTasks.$inferInsert.type>(),
