@@ -13,6 +13,7 @@ export const calendarAppId = "rglo4zodf341";
 export const calendarRoleDefaultIds = {
   admin: "6q3jsrycj0pz",
 } as const;
+export const pleaseBeCachedTogether = "maybe";
 
 //*  KodixCare *//
 export const kodixCareAppId = "1z50i9xblo4b";
