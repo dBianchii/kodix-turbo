@@ -21,6 +21,7 @@ import { Toaster } from "@kdx/ui/toast";
 
 import { CSPostHogProvider } from "./_components/posthog-provider";
 
+const _willThisCache = "test";
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseUrl()),
   title: "Kodix",
