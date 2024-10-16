@@ -55,9 +55,10 @@
     "You cannot edit a task in a closed shift": "Você não pode editar uma tarefa em um turno fechado",
     "You cannot edit a task from another caregivers shift": "Você não pode editar uma tarefa do turno de outro cuidador",
     "The current shift must be ongoing for this action": "O turno atual precisa estar aberto para realizar esta ação",
-    "You cannot edit a task before the start of the start of the shift": "Você não pode alterar uma tarefa com data antes do início do turno",
+    "You cannot edit a task for a past shift": "Você não pode editar uma tarefa de um turno anterior",
     "Care task not found": "Tarefa não encontrada",
     "To delete you account you must have only one team left": "Para excluir sua conta você deve ter apenas uma equipe restante",
-    "To delete your account first remove all other users from your team": "Para excluir sua conta, primeiro remova todos os outros usuários da sua equipe"
+    "To delete your account first remove all other users from your team": "Para excluir sua conta, primeiro remova todos os outros usuários da sua equipe",
+    "You cannot mark a task as done before the start of the shift": "Você não pode marcar uma tarefa como concluída antes do início do turno"
   }
 }
