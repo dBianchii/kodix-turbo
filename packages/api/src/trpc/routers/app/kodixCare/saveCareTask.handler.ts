@@ -45,11 +45,15 @@ export const saveCareTaskHandler = async ({
     if (dayjs(task.date).isBefore(dayjs(currentShift.checkIn)))
       throw new TRPCError({
         code: "FORBIDDEN",
-        message: t(
-          "api.You cannot edit a task before the start of the start of the shift",
-        ),
+        message: t("api.You cannot edit a task for a past shift"),
       });
   }
+
+  if (dayjs(input.doneAt).isBefore(currentShift.checkIn))
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: t("api.You cannot mark a task as done before the shift started"),
+    });
 
   if (currentShift.checkOut)
     throw new TRPCError({

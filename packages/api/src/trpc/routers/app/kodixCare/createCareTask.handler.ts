@@ -24,6 +24,7 @@ export const createCareTaskHandler = async ({
       message: t("api.No active shift"),
     });
   }
+
   const currentUserIsCaregiver =
     currentCareShift.Caregiver.id === ctx.session.user.id;
   if (!currentUserIsCaregiver) {

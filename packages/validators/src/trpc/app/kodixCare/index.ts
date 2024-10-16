@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import type { careTasks } from "@kdx/db/schema";
 import type { IsomorficT } from "@kdx/locales";
+import dayjs from "@kdx/dayjs";
 
 import { ZNanoId } from "../../..";
 import { ZSignInByPasswordInputSchema as default_ZSignInByPasswordInputSchema } from "../../user";
@@ -22,13 +23,25 @@ export const ZGetCareTasksInputSchema = z.object({
 });
 export type TGetCareTasksInputSchema = z.infer<typeof ZGetCareTasksInputSchema>;
 
-export const ZSaveCareTaskInputSchema = z.object({
-  id: ZNanoId,
-  doneByUserId: ZNanoId.nullable().optional(),
-  doneAt: z.date().nullable().optional(),
-  details: z.string().nullable().optional(),
-});
-export type TSaveCareTaskInputSchema = z.infer<typeof ZSaveCareTaskInputSchema>;
+export const ZSaveCareTaskInputSchema = (t: IsomorficT) =>
+  z.object({
+    id: ZNanoId,
+    doneByUserId: ZNanoId.nullable().optional(),
+    doneAt: z
+      .date()
+      .max(new Date(), {
+        message: t("validators.Date cannot be in the future"),
+      })
+      .transform(
+        (date) => dayjs(date).second(0).millisecond(0).toDate(), // Ensure seconds and milliseconds are 0
+      )
+      .nullable()
+      .optional(),
+    details: z.string().nullable().optional(),
+  });
+export type TSaveCareTaskInputSchema = z.infer<
+  ReturnType<typeof ZSaveCareTaskInputSchema>
+>;
 
 export const ZUnlockMoreTasksInputSchema = z.object({
   selectedTimestamp: z.date(),
@@ -50,16 +63,20 @@ export type TSignInByPasswordInputSchema = z.infer<
   typeof ZSignInByPasswordInputSchema
 >;
 
-export const ZCreateCareTaskInputSchema = z.object({
-  date: z.date().transform((date) => {
-    const newDate = new Date(date);
-    newDate.setSeconds(0, 0); //?make sure that seconds and milliseconds are 0
-    return newDate;
-  }),
-  title: z.string(),
-  description: z.string().optional(),
-  type: z.custom<typeof careTasks.$inferInsert.type>(),
-});
+export const ZCreateCareTaskInputSchema = (t: IsomorficT) =>
+  z.object({
+    date: z
+      .date()
+      .min(new Date(), {
+        message: t("validators.Date cannot be in the past"),
+      })
+      .transform(
+        (date) => dayjs(date).second(0).millisecond(0).toDate(), // Ensure seconds and milliseconds are 0
+      ),
+    title: z.string(),
+    description: z.string().optional(),
+    type: z.custom<typeof careTasks.$inferInsert.type>(),
+  });
 export type TCreateCareTaskInputSchema = z.infer<
-  typeof ZCreateCareTaskInputSchema
+  ReturnType<typeof ZCreateCareTaskInputSchema>
 >;

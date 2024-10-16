@@ -32,6 +32,7 @@ import {
 import { useFormatter } from "use-intl";
 
 import dayjs from "@kdx/dayjs";
+import { useTranslations } from "@kdx/locales/use-intl";
 import { getErrorMessage } from "@kdx/shared";
 import {
   ZCreateCareTaskInputSchema,
@@ -265,8 +266,9 @@ function CreateCareTaskSheet({
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
+  const t = useTranslations();
   const form = useForm({
-    schema: ZCreateCareTaskInputSchema,
+    schema: ZCreateCareTaskInputSchema(t),
     defaultValues: {
       type: "NORMAL",
     },
@@ -327,6 +329,7 @@ function CreateCareTaskSheet({
                 </XStack>
                 <FormControl>
                   <XStack gap={"$3"}>
+                    {/* TODO: MAKE IT HAVE NOT ALLOWED DATES LOL */}
                     <DateTimePicker
                       {...field}
                       type="date"
@@ -524,9 +527,9 @@ function EditCareTaskSheet(props: {
     }),
     [props.task],
   );
-
+  const t = useTranslations();
   const form = useForm({
-    schema: ZSaveCareTaskInputSchema.pick({
+    schema: ZSaveCareTaskInputSchema(t).pick({
       id: true,
       details: true,
       doneAt: true,
