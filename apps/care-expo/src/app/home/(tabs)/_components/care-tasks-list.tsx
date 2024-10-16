@@ -329,6 +329,7 @@ function CreateCareTaskSheet({
                 </XStack>
                 <FormControl>
                   <XStack gap={"$3"}>
+                    {/* TODO: MAKE IT HAVE NOT ALLOWED DATES LOL */}
                     <DateTimePicker
                       {...field}
                       type="date"
@@ -526,9 +527,9 @@ function EditCareTaskSheet(props: {
     }),
     [props.task],
   );
-
+  const t = useTranslations();
   const form = useForm({
-    schema: ZSaveCareTaskInputSchema.pick({
+    schema: ZSaveCareTaskInputSchema(t).pick({
       id: true,
       details: true,
       doneAt: true,

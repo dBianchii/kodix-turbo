@@ -46,7 +46,7 @@ export const kodixCareRouter = {
     .query(getCurrentShiftHandler),
   saveCareTask: protectedProcedure
     .use(kodixCareInstalledMiddleware)
-    .input(ZSaveCareTaskInputSchema)
+    .input(T(ZSaveCareTaskInputSchema))
     .mutation(saveCareTaskHandler),
   unlockMoreTasks: protectedProcedure
     .use(kodixCareInstalledMiddleware)

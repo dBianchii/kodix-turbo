@@ -787,7 +787,7 @@ function EditCareTaskCredenza({
   );
 
   const form = useForm({
-    schema: ZSaveCareTaskInputSchema.pick({
+    schema: ZSaveCareTaskInputSchema(t).pick({
       id: true,
       details: true,
       doneAt: true,
