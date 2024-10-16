@@ -32,13 +32,13 @@ export const unlockMoreTasksHandler = async ({
   const t = await getTranslations({ locale: ctx.locale });
   if (isFirstShiftEver)
     throw new TRPCError({
-      code: "CONFLICT",
+      code: "FORBIDDEN",
       message: t("api.No active shift"),
     });
 
   if (clonedCareTasksUntil >= input.selectedTimestamp)
     throw new TRPCError({
-      code: "CONFLICT",
+      code: "FORBIDDEN",
       message: t(
         `api.No tasks to unlock We have already unlocked all tasks up until TIME`,
         {
@@ -50,7 +50,7 @@ export const unlockMoreTasksHandler = async ({
   const careShift = await getCurrentShiftHandler({ ctx });
   if (!careShift)
     throw new TRPCError({
-      code: "CONFLICT",
+      code: "FORBIDDEN",
       message: t("api.No active shift"),
     });
 
