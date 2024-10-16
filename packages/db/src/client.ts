@@ -1,9 +1,3 @@
-import type { ExtractTablesWithRelations } from "drizzle-orm";
-import type { MySqlTransaction } from "drizzle-orm/mysql-core";
-import type {
-  MySql2PreparedQueryHKT,
-  MySql2QueryResultHKT,
-} from "drizzle-orm/mysql2";
 import type { Pool } from "mysql2/promise";
 import { drizzle } from "drizzle-orm/mysql2";
 import { createPool } from "mysql2/promise";
@@ -37,9 +31,7 @@ if (process.env.NODE_ENV !== "production") globalForDb.conn = conn;
 export const db = drizzle(conn, { schema, mode: "default" });
 
 export type Drizzle = typeof db;
-export type DrizzleTransaction = MySqlTransaction<
-  MySql2QueryResultHKT,
-  MySql2PreparedQueryHKT,
-  typeof schema,
-  ExtractTablesWithRelations<typeof schema>
->;
+
+export type DrizzleTransaction = Parameters<
+  Parameters<(typeof db)["transaction"]>[0]
+>[0];

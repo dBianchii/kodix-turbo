@@ -82,13 +82,14 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
 
 export const expoTokens = mysqlTable(
   "expoToken",
-  {
-    id: nanoidPrimaryKey,
-    userId: varchar("userId", { length: DEFAULTLENGTH })
+  (t) => ({
+    id: nanoidPrimaryKey(t),
+    userId: t
+      .varchar({ length: DEFAULTLENGTH })
       .notNull()
       .references(() => users.id, { onUpdate: "cascade", onDelete: "cascade" }),
-    token: varchar("token", { length: DEFAULTLENGTH }).unique().notNull(),
-  },
+    token: t.varchar({ length: DEFAULTLENGTH }).unique().notNull(),
+  }),
   (table) => {
     return {
       userIdIdx: index("userId_idx").on(table.userId),
