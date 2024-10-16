@@ -5,6 +5,7 @@
     "Please use 32 characters at maximum": "Por favor, use no máximo 32 caracteres",
     "Checkout time cannot be in the future": "O horário de checkout não pode ser no futuro",
     "Care task date cannot be in the past": "A data da tarefa não pode estar no passado",
-    "Date cannot be in the past": "A data não pode ser no passado"
+    "Date cannot be in the past": "A data não pode ser no passado",
+    "Date cannot be in the future": "A data não pode ser no futuro"
   }
 }

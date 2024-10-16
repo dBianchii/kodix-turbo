@@ -23,13 +23,25 @@ export const ZGetCareTasksInputSchema = z.object({
 });
 export type TGetCareTasksInputSchema = z.infer<typeof ZGetCareTasksInputSchema>;
 
-export const ZSaveCareTaskInputSchema = z.object({
-  id: ZNanoId,
-  doneByUserId: ZNanoId.nullable().optional(),
-  doneAt: z.date().nullable().optional(),
-  details: z.string().nullable().optional(),
-});
-export type TSaveCareTaskInputSchema = z.infer<typeof ZSaveCareTaskInputSchema>;
+export const ZSaveCareTaskInputSchema = (t: IsomorficT) =>
+  z.object({
+    id: ZNanoId,
+    doneByUserId: ZNanoId.nullable().optional(),
+    doneAt: z
+      .date()
+      .max(new Date(), {
+        message: t("validators.Date cannot be in the future"),
+      })
+      .transform(
+        (date) => dayjs(date).second(0).millisecond(0).toDate(), // Ensure seconds and milliseconds are 0
+      )
+      .nullable()
+      .optional(),
+    details: z.string().nullable().optional(),
+  });
+export type TSaveCareTaskInputSchema = z.infer<
+  ReturnType<typeof ZSaveCareTaskInputSchema>
+>;
 
 export const ZUnlockMoreTasksInputSchema = z.object({
   selectedTimestamp: z.date(),
@@ -55,7 +67,7 @@ export const ZCreateCareTaskInputSchema = (t: IsomorficT) =>
   z.object({
     date: z
       .date()
-      .min(dayjs().startOf("day").toDate(), {
+      .min(new Date(), {
         message: t("validators.Date cannot be in the past"),
       })
       .transform(
