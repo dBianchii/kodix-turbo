@@ -59,6 +59,7 @@
     "The current shift must be ongoing for this action": "The current shift must be ongoing for this action",
     "Care task not found": "Care task not found",
     "You cannot edit a task for a past shift": "You cannot edit a task for a past shift",
-    "You cannot mark a task as done before the start of the shift": "You cannot mark a task as done before the start of the shift"
+    "You cannot mark a task as done before the start of the shift": "You cannot mark a task as done before the start of the shift",
+    "You cannot mark a task as done before the shift started": "You cannot mark a task as done before the shift started"
   }
 }

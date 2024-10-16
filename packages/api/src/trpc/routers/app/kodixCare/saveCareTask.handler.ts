@@ -49,6 +49,12 @@ export const saveCareTaskHandler = async ({
       });
   }
 
+  if (dayjs(input.doneAt).isBefore(currentShift.checkIn))
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: t("api.You cannot mark a task as done before the shift started"),
+    });
+
   if (currentShift.checkOut)
     throw new TRPCError({
       code: "FORBIDDEN",
