@@ -13,7 +13,7 @@ const tomorrowEndOfDay = dayjs.utc().add(1, "day").endOf("day").toDate();
 export async function cloneCalendarTasksToCareTasks({
   start,
   end = tomorrowEndOfDay,
-  careShiftId,
+  careShiftId, //? CurrentShift, where all tasks will be cloned to
   ctx,
 }: {
   start: Date;

@@ -2,9 +2,9 @@ import { TRPCError } from "@trpc/server";
 import { getTranslations } from "next-intl/server";
 
 import dayjs from "@kdx/dayjs";
-import { eq } from "@kdx/db";
+import { and, desc, eq, gte, isNotNull } from "@kdx/db";
 import { nanoid } from "@kdx/db/nanoid";
-import { careShifts } from "@kdx/db/schema";
+import { careShifts, careTasks } from "@kdx/db/schema";
 import WarnPreviousShiftNotEnded from "@kdx/react-email/warn-previous-shift-not-ended";
 import { KODIX_NOTIFICATION_FROM_EMAIL, kodixCareAppId } from "@kdx/shared";
 
@@ -63,10 +63,10 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
     return;
   }
 
-  const lastCareShift = await getCurrentShiftHandler({
+  const currentShift = await getCurrentShiftHandler({
     ctx,
   });
-  if (!lastCareShift)
+  if (!currentShift)
     //Needed for typesafety
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
@@ -75,27 +75,56 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
       ),
     });
 
-  //2. Verify if previous shift that has not ended yet
   const loggedUserIsCaregiverForCurrentShift =
-    ctx.session.user.id === lastCareShift.Caregiver.id;
+    ctx.session.user.id === currentShift.Caregiver.id;
 
   await ctx.db.transaction(async (tx) => {
+    //*End the current shift
     await tx
       .update(careShifts)
       .set({
         checkOut: loggedUserIsCaregiverForCurrentShift ? new Date() : undefined, //Also checkOut if user is the caregiver
         shiftEndedAt: new Date(),
       })
-      .where(eq(careShifts.id, lastCareShift.id));
+      .where(eq(careShifts.id, currentShift.id));
 
-    await tx.insert(careShifts).values({
-      teamId: ctx.session.user.activeTeamId,
-      checkIn: new Date(),
-      caregiverId: ctx.session.user.id,
+    const now = new Date();
+    //*Start a new shift
+    const [newCareShift] = await tx
+      .insert(careShifts)
+      .values({
+        teamId: ctx.session.user.activeTeamId,
+        checkIn: now,
+        caregiverId: ctx.session.user.id,
+      })
+      .$returningId();
+
+    //* Move all tasks from previous shift to current shift
+    const previousShift = await ctx.db.query.careShifts.findFirst({
+      orderBy: desc(careShifts.checkIn),
+      where: and(
+        eq(careShifts.teamId, ctx.session.user.activeTeamId),
+        isNotNull(careShifts.shiftEndedAt),
+      ),
+      columns: { id: true },
     });
+    if (previousShift) {
+      await ctx.db
+        .update(careTasks)
+        .set({
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          careShiftId: newCareShift!.id,
+        })
+        .where(
+          and(
+            gte(careTasks.date, now),
+            eq(careTasks.careShiftId, previousShift.id),
+          ),
+        );
+    }
 
     await cloneCalendarTasksToCareTasks({
-      careShiftId: lastCareShift.id,
+      careShiftId: currentShift.id,
       start: clonedCareTasksUntil,
       end: tomorrowEndOfDay,
       ctx: {
@@ -104,11 +133,11 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
       },
     });
 
-    if (!lastCareShift.checkOut && !loggedUserIsCaregiverForCurrentShift)
+    if (!currentShift.checkOut && !loggedUserIsCaregiverForCurrentShift)
       //Send email to caregiver if the previous shift was not ended by the caregiver
       await resend.emails.send({
-        from: KODIX_NOTIFICATION_FROM_EMAIL,
-        to: lastCareShift.Caregiver.email,
+        from: KODIX_NOTIFICATION_FROM_EMAIL, //TODO: go through kodix notification center!
+        to: currentShift.Caregiver.email,
         subject: t(`api.Your last shift was ended by NAME`, {
           name: ctx.session.user.name,
         }),
