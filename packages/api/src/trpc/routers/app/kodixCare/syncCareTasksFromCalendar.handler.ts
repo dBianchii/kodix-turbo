@@ -3,10 +3,8 @@ import { TRPCError } from "@trpc/server";
 import { gte } from "@kdx/db";
 import { careTasks } from "@kdx/db/schema";
 import { getTranslations } from "@kdx/locales/next-intl/server";
-import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
-import { saveConfigHandler } from "../saveConfig.handler";
 import { getCurrentShiftHandler } from "./getCurrentShift.handler";
 import { cloneCalendarTasksToCareTasks } from "./utils";
 
@@ -30,18 +28,7 @@ export const syncCareTasksFromCalendarHandler = async ({
   const syncFromDate = currentShift.checkIn;
   await ctx.db.transaction(async (tx) => {
     await tx.delete(careTasks).where(gte(careTasks.date, syncFromDate));
-    await saveConfigHandler({
-      ctx: {
-        ...ctx,
-        db: tx,
-      },
-      input: {
-        appId: kodixCareAppId,
-        config: {
-          clonedCareTasksUntil: syncFromDate,
-        },
-      },
-    });
+
     await cloneCalendarTasksToCareTasks({
       start: syncFromDate,
       careShiftId: currentShift.id,
