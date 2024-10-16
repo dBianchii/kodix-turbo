@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { LuLoader2 } from "react-icons/lu";
 import { RxDotsHorizontal, RxTrash } from "react-icons/rx";
 
@@ -10,7 +9,7 @@ import type { User } from "@kdx/auth";
 import type { KodixAppId } from "@kdx/shared";
 import { useTranslations } from "@kdx/locales/next-intl/client";
 import { useAppDescription, useAppName } from "@kdx/locales/next-intl/hooks";
-import { useRouter } from "@kdx/locales/next-intl/navigation";
+import { Link, useRouter } from "@kdx/locales/next-intl/navigation";
 import { kodixCareAppId } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { Badge } from "@kdx/ui/badge";
@@ -24,14 +23,14 @@ import {
   CardTitle,
 } from "@kdx/ui/card";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@kdx/ui/dialog";
+  Credenza,
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaFooter,
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaTrigger,
+} from "@kdx/ui/credenza";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -153,7 +152,7 @@ export function KodixApp({
             <Trash2 className="text-destructive size-4" />
           </Button> */}
         {installed && (
-          <Dialog open={open} onOpenChange={setOpen}>
+          <Credenza open={open} onOpenChange={setOpen}>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="ml-auto">
@@ -162,26 +161,26 @@ export function KodixApp({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DialogTrigger asChild>
+                <CredenzaTrigger asChild>
                   <DropdownMenuItem>
                     <RxTrash className="mr-2 size-4 text-destructive" />
                     <span>{t("Uninstall from team")}</span>
                   </DropdownMenuItem>
-                </DialogTrigger>
+                </CredenzaTrigger>
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>{t("confirm")}</DialogTitle>
-                <DialogDescription className="py-4">
+            <CredenzaContent>
+              <CredenzaHeader>
+                <CredenzaTitle>{t("confirm")}</CredenzaTitle>
+                <CredenzaDescription className="py-4">
                   {t("are-you-sure-you-would-like-to-uninstall")} {appName}{" "}
                   {t("From").toLowerCase()}
                   {" " + user?.activeTeamName}
                   {t("questionmark")}
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter className="gap-3 sm:justify-between">
+                </CredenzaDescription>
+              </CredenzaHeader>
+              <CredenzaFooter className="gap-3 sm:justify-between">
                 <Button
                   variant="outline"
                   onClick={() => setOpen(false)}
@@ -201,9 +200,9 @@ export function KodixApp({
                   )}
                   {t("Uninstall")}
                 </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+              </CredenzaFooter>
+            </CredenzaContent>
+          </Credenza>
         )}
       </CardFooter>
     </Card>

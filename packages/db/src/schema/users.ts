@@ -2,6 +2,7 @@ import { relations } from "drizzle-orm";
 import { index, mysqlTable, primaryKey } from "drizzle-orm/mysql-core";
 
 import { nanoid, NANOID_SIZE } from "../nanoid";
+import { userAppTeamConfigs } from "./apps";
 import { todos } from "./apps/todos";
 import { invitations, teamAppRolesToUsers, teams, usersToTeams } from "./teams";
 import {
@@ -39,6 +40,8 @@ export const usersRelations = relations(users, ({ many, one }) => ({
   UsersToTeams: many(usersToTeams),
   Todos: many(todos),
   TeamAppRolesToUsers: many(teamAppRolesToUsers),
+  ExpoTokens: many(expoTokens),
+  UserAppTeamConfigs: many(userAppTeamConfigs),
 }));
 
 export const accounts = mysqlTable(
@@ -77,6 +80,28 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
   }),
 }));
 
+export const expoTokens = mysqlTable(
+  "expoToken",
+  {
+    id: nanoidPrimaryKey,
+    userId: varchar("userId", { length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => users.id, { onUpdate: "cascade", onDelete: "cascade" }),
+    token: varchar("token", { length: DEFAULTLENGTH }).unique().notNull(),
+  },
+  (table) => {
+    return {
+      userIdIdx: index("userId_idx").on(table.userId),
+    };
+  },
+);
+export const expoTokensRelations = relations(expoTokens, ({ one }) => ({
+  User: one(users, {
+    fields: [expoTokens.userId],
+    references: [users.id],
+  }),
+}));
+
 export const notifications = mysqlTable(
   "notification",
   (t) => ({
@@ -86,10 +111,10 @@ export const notifications = mysqlTable(
       .notNull()
       .references(() => users.id, { onUpdate: "cascade", onDelete: "cascade" }),
     teamId: teamIdReferenceCascadeDelete(t),
-    subject: t.varchar({ length: 100 }), //For email
-    sentAt: t.timestamp().notNull(),
+    subject: t.varchar({ length: 100 }), //?For email only!
+    sentAt: t.timestamp().defaultNow().notNull(),
     message: t.text().notNull(),
-    channel: t.mysqlEnum(["EMAIL"]).notNull(),
+    channel: t.mysqlEnum(["EMAIL", "PUSH_NOTIFICATIONS"]).notNull(),
     read: t.boolean().default(false).notNull(),
   }),
   (table) => {

@@ -58,7 +58,7 @@ export async function GET(
     return new Response(null, {
       status: 302,
       headers: {
-        Location: callbackUrl ?? "/",
+        Location: callbackUrl ?? "/team",
       },
     });
   } catch (e) {

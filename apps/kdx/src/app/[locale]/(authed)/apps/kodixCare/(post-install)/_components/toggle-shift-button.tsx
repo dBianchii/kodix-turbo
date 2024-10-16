@@ -8,16 +8,17 @@ import type { User } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
 import { useTranslations } from "@kdx/locales/next-intl/client";
 import { Button } from "@kdx/ui/button";
-import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@kdx/ui/dialog";
+  Credenza,
+  CredenzaBody,
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaFooter,
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaTrigger,
+} from "@kdx/ui/credenza";
+import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
   Form,
   FormControl,
@@ -59,22 +60,22 @@ function StartShiftDialogButton() {
     },
   });
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+    <Credenza open={open} onOpenChange={setOpen}>
+      <CredenzaTrigger asChild>
         <Button size={"sm"}>{t("apps.kodixCare.Start shift")}</Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{t("apps.kodixCare.Start shift")}</DialogTitle>
-        </DialogHeader>
-        <div className="mb-4">
-          <DialogDescription>
+      </CredenzaTrigger>
+      <CredenzaContent>
+        <CredenzaHeader>
+          <CredenzaTitle>{t("apps.kodixCare.Start shift")}</CredenzaTitle>
+        </CredenzaHeader>
+        <CredenzaBody className="mb-4">
+          <CredenzaDescription>
             {t(
               "apps.kodixCare.You are about to start a new shift are you sure",
             )}
-          </DialogDescription>
-        </div>
-        <DialogFooter className="justify-end">
+          </CredenzaDescription>
+        </CredenzaBody>
+        <CredenzaFooter className="justify-end">
           <Button
             onClick={() => mutation.mutate()}
             disabled={mutation.isPending}
@@ -85,9 +86,9 @@ function StartShiftDialogButton() {
               t("apps.kodixCare.Start new shift")
             )}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </CredenzaFooter>
+      </CredenzaContent>
+    </Credenza>
   );
 }
 
@@ -108,23 +109,27 @@ function StartShiftWarnPreviousPersonDialog() {
   const t = useTranslations();
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+    <Credenza open={open} onOpenChange={setOpen}>
+      <CredenzaTrigger asChild>
         <Button size={"sm"} variant={"orange"}>
           {t("apps.kodixCare.End previous shift and start new")}
         </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{t("apps.kodixCare.Previous shift exists")}</DialogTitle>
-        </DialogHeader>
-        <DialogDescription>
-          {t("apps.kodixCare.Previous shift exists")}{" "}
-          {t(
-            "apps.kodixCare.are you sure you want to end it and start a new one",
-          )}
-        </DialogDescription>
-        <DialogFooter className="justify-end">
+      </CredenzaTrigger>
+      <CredenzaContent>
+        <CredenzaHeader>
+          <CredenzaTitle>
+            {t("apps.kodixCare.Previous shift exists")}
+          </CredenzaTitle>
+        </CredenzaHeader>
+        <CredenzaBody>
+          <CredenzaDescription>
+            {t("apps.kodixCare.Previous shift exists")}{" "}
+            {t(
+              "apps.kodixCare.are you sure you want to end it and start a new one",
+            )}
+          </CredenzaDescription>
+        </CredenzaBody>
+        <CredenzaFooter className="justify-end">
           <Button
             variant={"orange"}
             onClick={() => {
@@ -138,9 +143,9 @@ function StartShiftWarnPreviousPersonDialog() {
               t("apps.kodixCare.End previous shift and start new")
             )}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </CredenzaFooter>
+      </CredenzaContent>
+    </Credenza>
   );
 }
 
@@ -172,75 +177,77 @@ function DoCheckoutDialogButton({
     },
   });
   return (
-    <Dialog
+    <Credenza
       open={open}
       onOpenChange={(open) => {
         form.setValue("date", new Date());
         setOpen(open);
       }}
     >
-      <DialogTrigger asChild>
+      <CredenzaTrigger asChild>
         <Button size={"sm"} variant={"destructive"}>
           {t("apps.kodixCare.Checkout")}
         </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{t("apps.kodixCare.Checkout shift")}</DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form
-            className="base"
-            onSubmit={form.handleSubmit((values) => {
-              mutation.mutate(values);
-            })}
-          >
-            <DialogDescription className="mb-4">
-              {t(
-                "You are about to finish your shift and checkout Are you sure",
-              )}
-            </DialogDescription>
-            <FormField
-              control={form.control}
-              name="date"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <div className="flex flex-row gap-2">
-                      <div className="flex items-center gap-1 pl-4">
-                        <DateTimePicker
-                          disabledDate={(date) =>
-                            dayjs(date).startOf("day") >
-                            dayjs(currentShift.checkIn).startOf("day")
-                          }
-                          date={field.value}
-                          setDate={(date) =>
-                            form.setValue("date", date ?? field.value)
-                          }
-                        />
-                      </div>
-                    </div>
-                  </FormControl>
-                  <FormMessage className="w-full" />
-                </FormItem>
-              )}
-            />
-            <DialogFooter className="mt-6 justify-end">
-              <Button
-                type="submit"
-                disabled={mutation.isPending}
-                variant={"destructive"}
-              >
-                {mutation.isPending ? (
-                  <LuLoader2 className="mx-2 size-4 animate-spin" />
-                ) : (
-                  t("apps.kodixCare.Checkout")
+      </CredenzaTrigger>
+      <CredenzaContent>
+        <CredenzaHeader>
+          <CredenzaTitle>{t("apps.kodixCare.Checkout shift")}</CredenzaTitle>
+        </CredenzaHeader>
+        <CredenzaBody>
+          <Form {...form}>
+            <form
+              className="base"
+              onSubmit={form.handleSubmit((values) => {
+                mutation.mutate(values);
+              })}
+            >
+              <CredenzaDescription className="mb-4">
+                {t(
+                  "You are about to finish your shift and checkout Are you sure",
                 )}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+              </CredenzaDescription>
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <div className="flex flex-row gap-2">
+                        <div className="flex items-center gap-1 pl-4">
+                          <DateTimePicker
+                            disabledDate={(date) =>
+                              dayjs(date).startOf("day") >
+                              dayjs(currentShift.checkIn).startOf("day")
+                            }
+                            date={field.value}
+                            setDate={(date) =>
+                              form.setValue("date", date ?? field.value)
+                            }
+                          />
+                        </div>
+                      </div>
+                    </FormControl>
+                    <FormMessage className="w-full" />
+                  </FormItem>
+                )}
+              />
+              <CredenzaFooter className="mt-6 justify-end">
+                <Button
+                  type="submit"
+                  disabled={mutation.isPending}
+                  variant={"destructive"}
+                >
+                  {mutation.isPending ? (
+                    <LuLoader2 className="mx-2 size-4 animate-spin" />
+                  ) : (
+                    t("apps.kodixCare.Checkout")
+                  )}
+                </Button>
+              </CredenzaFooter>
+            </form>
+          </Form>
+        </CredenzaBody>
+      </CredenzaContent>
+    </Credenza>
   );
 }

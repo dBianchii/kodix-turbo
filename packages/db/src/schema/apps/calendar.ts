@@ -7,6 +7,7 @@ import {
   DEFAULTLENGTH,
   nanoidPrimaryKey,
   teamIdReferenceCascadeDelete,
+  typeEnum,
 } from "../utils";
 import { careTasks } from "./kodixCare";
 
@@ -20,7 +21,7 @@ export const eventMasters = mysqlTable(
     title: t.varchar({ length: DEFAULTLENGTH }),
     description: t.varchar({ length: DEFAULTLENGTH }),
     teamId: teamIdReferenceCascadeDelete(t),
-    type: t.mysqlEnum(["NORMAL", "CRITICAL"]).default("NORMAL"),
+    type: typeEnum(t).notNull().default("NORMAL"),
   }),
   (table) => {
     return {
@@ -79,6 +80,7 @@ export const eventExceptions = mysqlTable(
       .varchar({ length: NANOID_SIZE })
       .notNull()
       .references(() => eventMasters.id, { onDelete: "cascade" }),
+    type: typeEnum(t),
   }),
   (table) => {
     return {

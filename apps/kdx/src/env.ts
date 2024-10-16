@@ -1,9 +1,11 @@
-/* eslint-disable no-restricted-properties */
 import { createEnv } from "@t3-oss/env-nextjs";
 import { vercel } from "@t3-oss/env-nextjs/presets";
 import { z } from "zod";
 
 import { env as authEnv } from "@kdx/auth/env";
+
+const requiredInProductionOnly = (string: string | undefined) =>
+  !!string || process.env.NODE_ENV !== "production";
 
 export const env = createEnv({
   extends: [authEnv, vercel()],
@@ -26,6 +28,15 @@ export const env = createEnv({
     DISABLE_UPSTASH_CACHE: z.coerce.boolean().default(false),
     UPSTASH_REDIS_REST_URL: z.string().url(),
     UPSTASH_REDIS_REST_TOKEN: z.string(),
+
+    QSTASH_CURRENT_SIGNING_KEY: z
+      .string()
+      .optional()
+      .refine(requiredInProductionOnly, { message: "Required in production" }),
+    QSTASH_NEXT_SIGNING_KEY: z
+      .string()
+      .optional()
+      .refine(requiredInProductionOnly, { message: "Required in production" }),
   },
   /**
    * Specify your client-side environment variables schema here.

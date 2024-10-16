@@ -10,7 +10,8 @@
       "This invite was sent from": "Este convite foi enviado de",
       "located in": "localizado em",
       "Hello": "Olá",
-      "or copy and paste this URL into your browser:": "ou copie e cole este URL em seu navegador:"
+      "or copy and paste this URL into your browser:": "ou copie e cole este URL em seu navegador:",
+      "no title": "(sem título)"
     },
     "Calendar": "Calendário",
     "Kodix Care": "Kodix Care",
@@ -30,7 +31,7 @@
     "No appTeamConfig found": "Nenhum appTeamConfig encontrado",
     "No apps found": "Nenhum aplicativo encontrado",
     "No current shift found": "Nenhum turno atual encontrado",
-    "No previous careshift found even though clonedCalendarTasks exists This should only happen if we allow users to delete careshifts": "Nenhum cuidado anterior encontrado, embora existam clonedCalendarTasks. \nIsso só deverá acontecer se permitirmos que os usuários excluam os cuidados.",
+    "No previous careshift found even though clonedCalendarTasks exists This should only happen if we allow users to delete careshifts": "Nenhum turno anterior encontrado, embora existam clonedCalendarTasks. \nIsso só deverá acontecer se permitirmos que os usuários excluam os cuidados.",
     "No tasks to unlock We have already unlocked all tasks up until TIME": "Nenhuma tarefa para desbloquear. \nJá desbloqueamos todas as tarefas até {time}",
     "Only the team owner can perform this action": "Somente o proprietário da equipe pode realizar esta ação",
     "Token not found": "Token não encontrado",
@@ -54,9 +55,11 @@
     "You cannot edit a task in a closed shift": "Você não pode editar uma tarefa em um turno fechado",
     "You cannot edit a task from another caregivers shift": "Você não pode editar uma tarefa do turno de outro cuidador",
     "The current shift must be ongoing for this action": "O turno atual precisa estar aberto para realizar esta ação",
-    "You cannot edit a task before the start of the start of the shift": "Você não pode alterar uma tarefa com data antes do início do turno",
+    "You cannot edit a task for a past shift": "Você não pode editar uma tarefa de um turno anterior",
     "Care task not found": "Tarefa não encontrada",
     "To delete you account you must have only one team left": "Para excluir sua conta você deve ter apenas uma equipe restante",
-    "To delete your account first remove all other users from your team": "Para excluir sua conta, primeiro remova todos os outros usuários da sua equipe"
+    "To delete your account first remove all other users from your team": "Para excluir sua conta, primeiro remova todos os outros usuários da sua equipe",
+    "You cannot mark a task as done before the start of the shift": "Você não pode marcar uma tarefa como concluída antes do início do turno",
+    "You cannot mark a task as done before the shift started": "Você não pode marcar uma tarefa como concluída antes do início do turno"
   }
 }

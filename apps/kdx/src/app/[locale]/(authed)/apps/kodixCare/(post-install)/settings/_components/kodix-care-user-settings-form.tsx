@@ -1,10 +1,11 @@
 "use client";
 
-import { LuLoader2 } from "react-icons/lu";
+import { LuAlertCircle, LuLoader2 } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
 import { useTranslations } from "@kdx/locales/next-intl/client";
 import { kodixCareAppId } from "@kdx/shared";
+import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import {
   Form,
@@ -13,7 +14,6 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
   useForm,
 } from "@kdx/ui/form";
 import { Switch } from "@kdx/ui/switch";
@@ -52,35 +52,43 @@ export function KodixCareUserSettingsForm({
           className="w-full space-y-6"
         >
           <div className="space-y-4">
-            <FormField
-              control={form.control}
-              name="config.sendNotificationsForDelayedTasks"
-              render={({ field }) => (
-                <FormItem className="flex max-w-md flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                  <div className="space-y-0.5">
-                    <FormLabel>
-                      {t(
-                        "apps.kodixCare.Receive notifications for delayed tasks",
-                      )}
-                    </FormLabel>
-                    <FormDescription>
-                      {t(
-                        "apps.kodixCare.Set this on if you want to receive notifications for delayed tasks",
-                      )}
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="flex items-center">
+              <FormField
+                control={form.control}
+                name="config.sendNotificationsForDelayedTasks"
+                render={({ field }) => (
+                  <FormItem className="flex max-w-md flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                    <div className="space-y-2">
+                      <FormLabel className="flex items-center gap-2">
+                        <LuAlertCircle
+                          className={cn(
+                            "size-5 text-muted-foreground transition-colors",
+                            {
+                              "text-orange-500": field.value,
+                            },
+                          )}
+                        />
+                        {t("apps.kodixCare.Critical tasks")}
+                      </FormLabel>
+                      <FormDescription>
+                        {t(
+                          "apps.kodixCare.Set this on if you want to receive notifications for delayed tasks",
+                        )}
+                      </FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        className="mx-4"
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
-          <Button disabled={mutation.isPending || !form.formState.isDirty}>
+          <Button disabled={mutation.isPending}>
             {mutation.isPending ? (
               <LuLoader2 className="size-4 animate-spin" />
             ) : (

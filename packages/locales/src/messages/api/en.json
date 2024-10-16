@@ -10,7 +10,8 @@
       "located in": "located in",
       "If you were not expecting this invitation you can ignore this email": "If you were not expecting this invitation, you can ignore this email. If you are concerned about your account's safety, please reply to this email to get in touch with us.",
       "Hello": "Hello",
-      "or copy and paste this URL into your browser:": "or copy and paste this URL into your browser:"
+      "or copy and paste this URL into your browser:": "or copy and paste this URL into your browser:",
+      "no title": "(no title)"
     },
     "Kodix Care": "Kodix Care",
     "Calendar": "Calendar",
@@ -57,6 +58,8 @@
     "You cannot edit a task from another caregivers shift": "You cannot edit a task from another caregiver's shift",
     "The current shift must be ongoing for this action": "The current shift must be ongoing for this action",
     "Care task not found": "Care task not found",
-    "You cannot edit a task before the start of the start of the shift": "You cannot edit a task with a date before the start of the shift"
+    "You cannot edit a task for a past shift": "You cannot edit a task for a past shift",
+    "You cannot mark a task as done before the start of the shift": "You cannot mark a task as done before the start of the shift",
+    "You cannot mark a task as done before the shift started": "You cannot mark a task as done before the shift started"
   }
 }

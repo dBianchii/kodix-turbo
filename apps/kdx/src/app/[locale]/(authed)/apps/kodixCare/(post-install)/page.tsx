@@ -1,9 +1,8 @@
 import { Suspense } from "react";
 
 import type { User } from "@kdx/auth";
-import dayjs from "@kdx/dayjs";
 import { kodixCareAppId } from "@kdx/shared";
-import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
+import { Card } from "@kdx/ui/card";
 import { Skeleton } from "@kdx/ui/skeleton";
 
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
@@ -19,39 +18,15 @@ export default async function KodixCarePage() {
 
   return (
     <main className="flex w-full flex-col gap-4 pt-6 md:space-x-6 md:pl-5">
-      <div className="flex flex-col gap-6 md:flex-row">
+      <div className="flex flex-col items-center gap-6 md:flex-row md:items-baseline">
         <Suspense fallback={<ShiftSkeleton />}>
           <CurrentShift user={user} />
         </Suspense>
         <div className="flex w-full flex-col">
-          <Suspense
-            fallback={
-              <DataTableSkeleton
-                className="mt-4"
-                columnCount={4}
-                withPagination={false}
-              />
-            }
-          >
-            <KodixCareTable />
-          </Suspense>
+          <DataTableKodixCare />
         </div>
       </div>
     </main>
-  );
-}
-
-async function KodixCareTable() {
-  const input = {
-    dateStart: dayjs.utc().startOf("day").toDate(),
-    dateEnd: dayjs.utc().endOf("day").toDate(),
-  };
-  const initialCareTasks = await api.app.kodixCare.getCareTasks(input);
-  return (
-    <DataTableKodixCare
-      initialCareTasks={initialCareTasks}
-      initialInput={input}
-    />
   );
 }
 
@@ -65,15 +40,11 @@ async function CurrentShift({ user }: { user: User }) {
 
 function ShiftSkeleton() {
   return (
-    <div className="flex flex-col space-y-3">
-      <div className="flex flex-row items-center">
-        <Skeleton className="h-4 w-10" />
-      </div>
-      <div className="flex items-center space-x-2 rounded-md">
-        <Skeleton className="size-5 rounded-full" />
-        <Skeleton className="h-4 w-full" />
-      </div>
-      <Skeleton className="h-8 w-full" />
-    </div>
+    <Card className="flex h-48 flex-col items-center gap-3 p-4 md:min-w-72">
+      <Skeleton className="h-full w-full" />
+      <Skeleton className="invisible h-full w-full" />
+      <Skeleton className="h-full w-2/3" />
+      <Skeleton className="h-full w-full" />
+    </Card>
   );
 }

@@ -1,11 +1,7 @@
 "use client";
 
-import type {
-  Column,
-  SortingState,
-  VisibilityState,
-} from "@tanstack/react-table";
-import type { CareTask } from "node_modules/@kdx/api/dist/api/src/routers/app/kodixCare/getCareTasks.handler";
+import type { SortingState, VisibilityState } from "@tanstack/react-table";
+import type { CareTask } from "node_modules/@kdx/api/src/internal/calendarAndCareTaskCentral";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   createColumnHelper,
@@ -15,11 +11,9 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import {
+  LuAlertCircle,
   LuArrowLeftRight,
   LuCheck,
-  LuChevronDown,
-  LuChevronsUpDown,
-  LuChevronUp,
   LuLoader2,
   LuPlus,
   LuText,
@@ -32,10 +26,10 @@ import {
 } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
-import type { TGetCareTasksInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import dayjs from "@kdx/dayjs";
 import { useFormatter } from "@kdx/locales/next-intl";
 import { useTranslations } from "@kdx/locales/next-intl/client";
+import { Link } from "@kdx/locales/next-intl/navigation";
 import { cn } from "@kdx/ui";
 import {
   AlertDialog,
@@ -49,17 +43,19 @@ import {
 } from "@kdx/ui/alert-dialog";
 import { Button } from "@kdx/ui/button";
 import { Checkbox } from "@kdx/ui/checkbox";
-import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@kdx/ui/dialog";
+  Credenza,
+  CredenzaBody,
+  CredenzaClose,
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaFooter,
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaTrigger,
+} from "@kdx/ui/credenza";
+import { HeaderSort } from "@kdx/ui/data-table/header-sort";
+import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -69,6 +65,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -106,43 +103,11 @@ type CareTaskOrCalendarTask =
 
 const columnHelper = createColumnHelper<CareTaskOrCalendarTask>();
 
-function HeaderSort({
-  column,
-  children,
-  ...buttonAttributes
-}: {
-  column: Column<CareTaskOrCalendarTask>;
-  children?: React.ReactNode;
-} & React.ButtonHTMLAttributes<HTMLButtonElement>) {
-  const className = "ml-2 size-4";
-  return (
-    <Button
-      variant="ghost"
-      onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      {...buttonAttributes}
-    >
-      {children}
-      {column.getIsSorted() ? (
-        column.getIsSorted() === "asc" ? (
-          <LuChevronUp className={className} />
-        ) : (
-          <LuChevronDown className={className} />
-        )
-      ) : (
-        <LuChevronsUpDown className={className} />
-      )}
-    </Button>
-  );
-}
-
-export default function DataTableKodixCare({
-  initialCareTasks,
-  initialInput,
-}: {
-  initialCareTasks: RouterOutputs["app"]["kodixCare"]["getCareTasks"];
-  initialInput: TGetCareTasksInputSchema;
-}) {
-  const [input, setInput] = useState(initialInput);
+export default function DataTableKodixCare() {
+  const [input, setInput] = useState({
+    dateStart: dayjs().startOf("day").toDate(),
+    dateEnd: dayjs().endOf("day").toDate(),
+  });
   const handleChangeInput = (date: Date) => {
     setInput({
       dateStart: dayjs(date).startOf("day").toDate(),
@@ -152,17 +117,12 @@ export default function DataTableKodixCare({
     setUnlockMoreTasksDialogOpen(false);
   };
 
-  const query = api.app.kodixCare.getCareTasks.useQuery(input, {
-    initialData:
-      JSON.stringify(initialInput) === JSON.stringify(input) //? Only use initialData for the initial input
-        ? initialCareTasks
-        : undefined,
-  });
+  const query = api.app.kodixCare.getCareTasks.useQuery(input);
 
   const utils = api.useUtils();
   const [editDetailsOpen, setEditDetailsOpen] = useState(false);
 
-  const [unlockMoreTasksDialogOpen, setUnlockMoreTasksDialogOpen] =
+  const [unlockMoreTasksCredenzaOpen, setUnlockMoreTasksDialogOpen] =
     useState(false);
 
   const [unlockUpUntil, setUnlockUpUntil] = useState<Date>(new Date());
@@ -303,8 +263,21 @@ export default function DataTableKodixCare({
             {t("Details")}
           </HeaderSort>
         ),
+        cell: (ctx) => <div>{ctx.row.original.details}</div>,
+      }),
+      columnHelper.accessor("type", {
+        header: ({ column }) => (
+          <HeaderSort column={column}>
+            <LuAlertCircle className="mr-2 size-4 text-orange-400" />
+            {t("Critical")}
+          </HeaderSort>
+        ),
         cell: (ctx) => (
-          <div className="max-w-sm">{ctx.row.original.details}</div>
+          <div className="flex max-w-sm items-center justify-center">
+            {ctx.getValue() === "CRITICAL" ? (
+              <LuAlertCircle className="mr-2 size-4 text-orange-400" />
+            ) : null}
+          </div>
         ),
       }),
     ],
@@ -347,7 +320,7 @@ export default function DataTableKodixCare({
     <>
       {currentlyEditingCareTask && (
         <>
-          <EditCareTaskDialog
+          <EditCareTaskCredenza
             task={currentlyEditingCareTask}
             mutation={saveCareTaskMutation}
             open={editDetailsOpen}
@@ -356,15 +329,15 @@ export default function DataTableKodixCare({
         </>
       )}
 
-      <UnlockMoreTasksDialog
+      <UnlockMoreTasksCredenza
         unlockUpUntil={unlockUpUntil}
-        open={unlockMoreTasksDialogOpen}
+        open={unlockMoreTasksCredenzaOpen}
         setOpen={setUnlockMoreTasksDialogOpen}
       />
       <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-center">
         <div className="flex gap-2 sm:mr-auto">
           <AddCareTaskDialog />
-          <SyncTasksFromCalendarDialogButton />
+          <SyncTasksFromCalendarCredenzaButton />
         </div>
         <div className="flex gap-2">
           <Button
@@ -380,7 +353,7 @@ export default function DataTableKodixCare({
             <RxChevronLeft />
           </Button>
           <DatePicker
-            date={input.dateStart}
+            date={input.dateEnd}
             setDate={(newDate) => handleChangeInput(dayjs(newDate).toDate())}
           />
           <Button
@@ -509,8 +482,8 @@ export default function DataTableKodixCare({
   );
 }
 
-function SyncTasksFromCalendarDialogButton() {
-  const [syncDialogOpen, setSyncDialogOpen] = useState(false);
+function SyncTasksFromCalendarCredenzaButton() {
+  const [syncCredenzaOpen, setSyncCredenzaOpen] = useState(false);
 
   const utils = api.useUtils();
   const syncCareTasksFromCalendarMutation =
@@ -526,44 +499,44 @@ function SyncTasksFromCalendarDialogButton() {
     });
   const t = useTranslations();
   return (
-    <Dialog open={syncDialogOpen} onOpenChange={setSyncDialogOpen}>
+    <Credenza open={syncCredenzaOpen} onOpenChange={setSyncCredenzaOpen}>
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <DialogTrigger asChild>
+            <CredenzaTrigger asChild>
               <Button variant="secondary" size="sm" aria-label="Documentation">
                 <LuArrowLeftRight className="size-4" />
               </Button>
-            </DialogTrigger>
+            </CredenzaTrigger>
           </TooltipTrigger>
           <TooltipContent side="right">
             <p>{t("Sync tasks")}</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>{t("Sync tasks")}</DialogTitle>
-          <DialogDescription>
+      <CredenzaContent className="sm:max-w-md">
+        <CredenzaHeader>
+          <CredenzaTitle>{t("Sync tasks")}</CredenzaTitle>
+          <CredenzaDescription>
             {t(
               "Substitue the tasks of this turn with the tasks from the calendar",
             )}
-          </DialogDescription>
-        </DialogHeader>
+          </CredenzaDescription>
+        </CredenzaHeader>
         <div className="flex items-center space-x-2">
           <div className="grid flex-1 gap-2"></div>
         </div>
-        <DialogFooter className="gap-3 sm:justify-between">
-          <DialogClose asChild>
+        <CredenzaFooter className="gap-3 sm:justify-between">
+          <CredenzaClose asChild>
             <Button type="button" variant="secondary">
               {t("Close")}
             </Button>
-          </DialogClose>
+          </CredenzaClose>
           <Button
             disabled={syncCareTasksFromCalendarMutation.isPending}
             onClick={async () => {
               await syncCareTasksFromCalendarMutation.mutateAsync();
-              setSyncDialogOpen(false);
+              setSyncCredenzaOpen(false);
             }}
           >
             {syncCareTasksFromCalendarMutation.isPending ? (
@@ -572,9 +545,9 @@ function SyncTasksFromCalendarDialogButton() {
               t("Sync tasks")
             )}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </CredenzaFooter>
+      </CredenzaContent>
+    </Credenza>
   );
 }
 
@@ -582,8 +555,13 @@ function AddCareTaskDialog() {
   const [open, setOpen] = useState(false);
 
   const utils = api.useUtils();
+  const t = useTranslations();
+
   const form = useForm({
-    schema: ZCreateCareTaskInputSchema,
+    schema: ZCreateCareTaskInputSchema(t),
+    defaultValues: {
+      type: "NORMAL",
+    },
   });
   const mutation = api.app.kodixCare.createCareTask.useMutation({
     onError: trpcErrorToastDefault,
@@ -595,21 +573,20 @@ function AddCareTaskDialog() {
       setOpen(false);
     },
   });
-  const t = useTranslations();
 
   useEffect(() => {
     form.reset();
   }, [open, form]);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+    <Credenza open={open} onOpenChange={setOpen}>
+      <CredenzaTrigger asChild>
         <Button size={"sm"}>
           <LuPlus className="mr-2" />
           {t("apps.kodixCare.Add task")}
         </Button>
-      </DialogTrigger>
-      <DialogContent>
+      </CredenzaTrigger>
+      <CredenzaContent>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit((values) => {
@@ -617,10 +594,10 @@ function AddCareTaskDialog() {
               setOpen(false);
             })}
           >
-            <DialogHeader>
-              <DialogTitle>{t("apps.kodixCare.Add task")}</DialogTitle>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
+            <CredenzaHeader>
+              <CredenzaTitle>{t("apps.kodixCare.Add task")}</CredenzaTitle>
+            </CredenzaHeader>
+            <CredenzaBody className="grid gap-4 py-4">
               <FormField
                 control={form.control}
                 name="title"
@@ -649,10 +626,58 @@ function AddCareTaskDialog() {
                           setDate={(newDate) =>
                             field.onChange(newDate ?? new Date())
                           }
+                          disabledDate={(date) => dayjs(date).isBefore(dayjs())}
                         />
                       </div>
                     </FormControl>
                     <FormMessage className="w-full" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="type"
+                render={({ field }) => (
+                  <FormItem className="py-3">
+                    <div className="flex items-center gap-2">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value === "CRITICAL"}
+                          onCheckedChange={(checked) =>
+                            field.onChange(checked ? "CRITICAL" : "NORMAL")
+                          }
+                        />
+                      </FormControl>
+                      <FormLabel className="flex gap-1">
+                        <LuAlertCircle
+                          className={cn(
+                            "text-muted-foreground transition-colors",
+                            {
+                              "text-orange-400": field.value === "CRITICAL",
+                            },
+                          )}
+                        />
+                        {t("Critical task")}
+                      </FormLabel>
+                    </div>
+                    <FormDescription>
+                      {t.rich(
+                        "Wether or not this task is considered critical or important",
+                        {
+                          settings: (chunks) => (
+                            <Link
+                              target="_blank"
+                              href="/apps/kodixCare/settings"
+                              className={
+                                "text-primary underline-offset-4 hover:underline"
+                              }
+                            >
+                              {chunks}
+                            </Link>
+                          ),
+                        },
+                      )}
+                    </FormDescription>
                   </FormItem>
                 )}
               />
@@ -678,20 +703,20 @@ function AddCareTaskDialog() {
                   </FormItem>
                 )}
               />
-            </div>
-            <DialogFooter className="mt-6 justify-end">
+            </CredenzaBody>
+            <CredenzaFooter className="mt-6 justify-end">
               <Button disabled={mutation.isPending} type="submit">
                 {t("Save")}
               </Button>
-            </DialogFooter>
+            </CredenzaFooter>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </CredenzaContent>
+    </Credenza>
   );
 }
 
-function UnlockMoreTasksDialog({
+function UnlockMoreTasksCredenza({
   unlockUpUntil,
   open,
   setOpen,
@@ -739,7 +764,7 @@ function UnlockMoreTasksDialog({
   );
 }
 
-function EditCareTaskDialog({
+function EditCareTaskCredenza({
   task,
   mutation,
   open,
@@ -762,7 +787,7 @@ function EditCareTaskDialog({
   );
 
   const form = useForm({
-    schema: ZSaveCareTaskInputSchema.pick({
+    schema: ZSaveCareTaskInputSchema(t).pick({
       id: true,
       details: true,
       doneAt: true,
@@ -774,9 +799,11 @@ function EditCareTaskDialog({
     form.reset(defaultValues);
   }, [task, open, form, defaultValues]);
 
+  const format = useFormatter();
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent>
+    <Credenza open={open} onOpenChange={setOpen}>
+      <CredenzaContent>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit((values) => {
@@ -788,9 +815,32 @@ function EditCareTaskDialog({
               setOpen(false);
             })}
           >
-            <DialogHeader>
-              <DialogTitle>{t("apps.kodixCare.Edit task")}</DialogTitle>
-            </DialogHeader>
+            <CredenzaHeader>
+              <CredenzaTitle>{t("apps.kodixCare.Edit task")}</CredenzaTitle>
+            </CredenzaHeader>
+            <div className="mt-6 flex flex-col gap-2 rounded-md border p-4 text-foreground/80">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-semibold">
+                  {task.title ?? ""}
+                </span>
+                {task.type === "CRITICAL" && (
+                  <LuAlertCircle className="size-3 text-orange-400" />
+                )}
+              </div>
+
+              <span className="line-clamp-3 text-xs font-semibold">
+                {task.description ?? ""}
+              </span>
+              <span className="flex text-xs font-semibold">
+                <RxCalendar className="mr-2 size-3 text-muted-foreground" />
+                {format.dateTime(task.date, {
+                  day: "2-digit",
+                  month: "short",
+                  hour: "numeric",
+                  minute: "numeric",
+                })}
+              </span>
+            </div>
             <div className="grid gap-4 py-4">
               <FormField
                 control={form.control}
@@ -835,14 +885,14 @@ function EditCareTaskDialog({
                 )}
               />
             </div>
-            <DialogFooter className="mt-6 justify-end">
+            <CredenzaFooter className="mt-6 justify-end">
               <Button disabled={mutation.isPending} type="submit">
                 {t("Save")}
               </Button>
-            </DialogFooter>
+            </CredenzaFooter>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </CredenzaContent>
+    </Credenza>
   );
 }

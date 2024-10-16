@@ -10,6 +10,7 @@ import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
 import { defaultPadding, RootSafeAreaView } from "~/components/safe-area-view";
 import { api } from "~/utils/api";
 import { useAuth } from "~/utils/auth";
+import { usePushNotifications } from "~/utils/usePushNotifications";
 import { CaretasksList } from "./_components/care-tasks-list";
 import { CurrentShift } from "./_components/shifts";
 
@@ -74,6 +75,9 @@ export default function Tab() {
 function HomeView() {
   const [refreshing, setRefreshing] = React.useState(false);
   const utils = api.useUtils();
+
+  usePushNotifications();
+
   const onRefresh = async () => {
     setRefreshing(true);
     await utils.app.kodixCare.invalidate();

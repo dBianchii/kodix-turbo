@@ -1,25 +1,29 @@
 "use client";
 
 import { useState } from "react";
-import { LuLoader2 } from "react-icons/lu";
+import { LuAlertCircle, LuLoader2 } from "react-icons/lu";
 import { RxPlus } from "react-icons/rx";
 import { RRule, Weekday } from "rrule";
 
 import dayjs from "@kdx/dayjs";
 import { useTranslations } from "@kdx/locales/next-intl/client";
+import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
-import { DateTimePicker } from "@kdx/ui/date-time-picker";
+import { Checkbox } from "@kdx/ui/checkbox";
 import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@kdx/ui/dialog";
+  Credenza,
+  CredenzaBody,
+  CredenzaContent,
+  CredenzaFooter,
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaTrigger,
+} from "@kdx/ui/credenza";
+import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -74,42 +78,145 @@ export function CreateEventDialogButton() {
   const t = useTranslations();
 
   return (
-    <Dialog
+    <Credenza
       open={open}
       onOpenChange={(open) => {
         if (!open) form.reset();
         setOpen(open);
       }}
     >
-      <DialogTrigger asChild>
+      <CredenzaTrigger asChild>
         <Button size="sm">
           <RxPlus className="mr-2 size-4" />
           {t("apps.calendar.Create event")}
         </Button>
-      </DialogTrigger>
-      <DialogContent className="mb-64 sm:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>{t("apps.calendar.New event")}</DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit((values) => {
-              mutation.mutate(values);
-            })}
-            className="space-y-8"
-          >
-            <div className="space-y-4">
-              <div className="flex flex-row">
+      </CredenzaTrigger>
+      <CredenzaContent className="mb-64 sm:max-w-[600px]">
+        <CredenzaHeader>
+          <CredenzaTitle>{t("apps.calendar.New event")}</CredenzaTitle>
+        </CredenzaHeader>
+        <CredenzaBody>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit((values) => {
+                mutation.mutate(values);
+              })}
+              className="space-y-8"
+            >
+              <div className="space-y-4">
+                <div className="flex flex-row">
+                  <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormLabel>{t("apps.calendar.Event title")}</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder={`${t("apps.calendar.Event title")}...`}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="w-full" />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="flex flex-row">
+                  <div className="flex flex-col space-y-2">
+                    <FormField
+                      control={form.control}
+                      name="from"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t("From")}</FormLabel>
+                          <FormControl>
+                            <div className="flex flex-row gap-2">
+                              <DateTimePicker
+                                date={field.value}
+                                setDate={field.onChange}
+                              />
+                            </div>
+                          </FormControl>
+                          <FormMessage className="w-full" />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
                 <FormField
                   control={form.control}
-                  name="title"
+                  name="type"
                   render={({ field }) => (
-                    <FormItem className="w-full">
-                      <FormLabel>{t("apps.calendar.Event title")}</FormLabel>
+                    <FormItem className="py-3">
+                      <div className="flex items-center gap-2">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value === "CRITICAL"}
+                            onCheckedChange={(checked) =>
+                              field.onChange(checked ? "CRITICAL" : "NORMAL")
+                            }
+                          />
+                        </FormControl>
+                        <FormLabel className="flex gap-1">
+                          <LuAlertCircle
+                            className={cn(
+                              "text-muted-foreground transition-colors",
+                              {
+                                "text-orange-400": field.value === "CRITICAL",
+                              },
+                            )}
+                          />
+                          {t("Critical task")}
+                        </FormLabel>
+                      </div>
+                      <FormDescription>
+                        {t("Is this task considered critical or important")}
+                      </FormDescription>
+                    </FormItem>
+                  )}
+                />
+                <div className="flex flex-row">
+                  <RecurrencePicker
+                    open={personalizedRecurrenceOpen}
+                    setOpen={setPersonalizedRecurrenceOpen}
+                    interval={form.getValues("interval")}
+                    setInterval={(interval) => {
+                      form.setValue("interval", interval);
+                    }}
+                    frequency={form.getValues("frequency")}
+                    setFrequency={(freq) => form.setValue("frequency", freq)}
+                    until={
+                      form.getValues("until")
+                        ? dayjs(form.getValues("until"))
+                        : undefined
+                    }
+                    setUntil={(dayjs) =>
+                      form.setValue("until", dayjs?.toDate())
+                    }
+                    count={form.getValues("count")}
+                    setCount={(count) => form.setValue("count", count)}
+                    weekdays={form
+                      .getValues("weekdays")
+                      ?.map((x) => new Weekday(x))}
+                    setWeekdays={(weekdays) =>
+                      form.setValue(
+                        "weekdays",
+                        weekdays?.map((wd) => wd.weekday),
+                      )
+                    }
+                  />
+                </div>
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
                       <FormControl>
-                        <Input
-                          placeholder={`${t("apps.calendar.Event title")}...`}
+                        <Textarea
+                          placeholder={`${t("apps.calendar.Add description")}...`}
                           {...field}
+                          rows={3}
                         />
                       </FormControl>
                       <FormMessage className="w-full" />
@@ -117,86 +224,19 @@ export function CreateEventDialogButton() {
                   )}
                 />
               </div>
-              <div className="flex flex-row">
-                <div className="flex flex-col space-y-2">
-                  <FormField
-                    control={form.control}
-                    name="from"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t("From")}</FormLabel>
-                        <FormControl>
-                          <div className="flex flex-row gap-2">
-                            <DateTimePicker
-                              date={field.value}
-                              setDate={field.onChange}
-                            />
-                          </div>
-                        </FormControl>
-                        <FormMessage className="w-full" />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-              <div className="flex flex-row">
-                <RecurrencePicker
-                  open={personalizedRecurrenceOpen}
-                  setOpen={setPersonalizedRecurrenceOpen}
-                  interval={form.getValues("interval")}
-                  setInterval={(interval) => {
-                    form.setValue("interval", interval);
-                  }}
-                  frequency={form.getValues("frequency")}
-                  setFrequency={(freq) => form.setValue("frequency", freq)}
-                  until={
-                    form.getValues("until")
-                      ? dayjs(form.getValues("until"))
-                      : undefined
-                  }
-                  setUntil={(dayjs) => form.setValue("until", dayjs?.toDate())}
-                  count={form.getValues("count")}
-                  setCount={(count) => form.setValue("count", count)}
-                  weekdays={form
-                    .getValues("weekdays")
-                    ?.map((x) => new Weekday(x))}
-                  setWeekdays={(weekdays) =>
-                    form.setValue(
-                      "weekdays",
-                      weekdays?.map((wd) => wd.weekday),
-                    )
-                  }
-                />
-              </div>
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Textarea
-                        placeholder={`${t("apps.calendar.Add description")}...`}
-                        {...field}
-                        rows={3}
-                      />
-                    </FormControl>
-                    <FormMessage className="w-full" />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <DialogFooter>
-              <Button type="submit" size="sm" disabled={mutation.isPending}>
-                {mutation.isPending ? (
-                  <LuLoader2 className="mx-2 size-4 animate-spin" />
-                ) : (
-                  t("apps.calendar.Create event")
-                )}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+              <CredenzaFooter>
+                <Button type="submit" size="sm" disabled={mutation.isPending}>
+                  {mutation.isPending ? (
+                    <LuLoader2 className="mx-2 size-4 animate-spin" />
+                  ) : (
+                    t("apps.calendar.Create event")
+                  )}
+                </Button>
+              </CredenzaFooter>
+            </form>
+          </Form>
+        </CredenzaBody>
+      </CredenzaContent>
+    </Credenza>
   );
 }

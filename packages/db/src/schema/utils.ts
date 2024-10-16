@@ -27,3 +27,5 @@ export const nanoidPrimaryKey = (t: THelper) =>
     .notNull()
     .$default(() => nanoid())
     .primaryKey();
+
+export const typeEnum = (t: THelper) => t.mysqlEnum(["NORMAL", "CRITICAL"]);

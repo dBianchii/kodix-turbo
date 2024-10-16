@@ -28,6 +28,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       foregroundImage: "./assets/icon.png",
       backgroundColor: "#020817",
     },
+    googleServicesFile: process.env.GOOGLE_SERVICES_JSON,
   },
   extra: {
     eas: {
@@ -38,6 +39,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     tsconfigPaths: true,
   },
   plugins: [
+    "expo-secure-store",
     "expo-router",
     [
       "@react-native-google-signin/google-signin",

@@ -11,4 +11,28 @@ export default [
   ...reactConfig,
   ...nextjsConfig,
   ...restrictEnvAccess,
+  {
+    rules: {
+      "no-restricted-imports": [
+        //TODO: I was NOT able to move this rule to the base nextjsConfig. It was not working. I need to investigate why.
+        "error",
+        {
+          name: "next/link",
+          message:
+            "Please import from `@kdx/locales/next-intl/navigation` instead.",
+        },
+        {
+          name: "next/navigation",
+          importNames: [
+            "redirect",
+            "permanentRedirect",
+            "useRouter",
+            "usePathname",
+          ],
+          message:
+            "Please import from `@kdx/locales/next-intl/navigation` instead.",
+        },
+      ],
+    },
+  },
 ];

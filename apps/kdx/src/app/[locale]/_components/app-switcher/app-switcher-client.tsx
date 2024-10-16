@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { IoApps } from "react-icons/io5";
 import { RxCaretSort, RxPlusCircled } from "react-icons/rx";
 
@@ -9,7 +8,11 @@ import type { RouterOutputs } from "@kdx/api";
 import type { KodixAppId } from "@kdx/shared";
 import { useTranslations } from "@kdx/locales/next-intl/client";
 import { useAppName } from "@kdx/locales/next-intl/hooks";
-import { usePathname, useRouter } from "@kdx/locales/next-intl/navigation";
+import {
+  Link,
+  usePathname,
+  useRouter,
+} from "@kdx/locales/next-intl/navigation";
 import { Button } from "@kdx/ui/button";
 import {
   Command,

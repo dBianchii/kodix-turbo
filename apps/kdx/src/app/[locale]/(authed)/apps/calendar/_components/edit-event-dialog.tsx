@@ -1,30 +1,25 @@
 import type { Frequency } from "rrule";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { LuLoader2 } from "react-icons/lu";
+import { LuAlertCircle, LuLoader2 } from "react-icons/lu";
 import { RRule, Weekday } from "rrule";
 
 import type { RouterInputs, RouterOutputs } from "@kdx/api";
 import type { Dayjs } from "@kdx/dayjs";
+import type { eventMasters } from "@kdx/db/schema";
 import dayjs from "@kdx/dayjs";
 import { useTranslations } from "@kdx/locales/next-intl/client";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@kdx/ui/alert-dialog";
+import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
-import { DateTimePicker } from "@kdx/ui/date-time-picker";
+import { Checkbox } from "@kdx/ui/checkbox";
 import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@kdx/ui/dialog";
+  Credenza,
+  CredenzaBody,
+  CredenzaContent,
+  CredenzaFooter,
+  CredenzaHeader,
+  CredenzaTitle,
+} from "@kdx/ui/credenza";
+import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
 import { RadioGroup, RadioGroupItem } from "@kdx/ui/radio-group";
@@ -50,17 +45,19 @@ export function EditEventDialog({
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const utils = api.useUtils();
-  const mutation = api.app.calendar.edit.useMutation({
-    onSuccess: () => {
-      void utils.app.calendar.getAll.invalidate();
-      void utils.app.kodixCare.getCareTasks.invalidate();
-      setOpen(false);
-    },
-    onError: (e) => trpcErrorToastDefault(e),
-  });
   const [personalizedRecurrenceOpen, setPersonalizedRecurrenceOpen] =
     useState(false);
   const [editDefinitionOpen, setEditDefinitionOpen] = useState(false);
+  const mutation = api.app.calendar.edit.useMutation({
+    onSuccess: () => {
+      setOpen(false);
+      setEditDefinitionOpen(false);
+      setPersonalizedRecurrenceOpen(false);
+      void utils.app.calendar.getAll.invalidate();
+      void utils.app.kodixCare.getCareTasks.invalidate();
+    },
+    onError: (e) => trpcErrorToastDefault(e),
+  });
 
   const defaultCalendarTask = useMemo(() => {
     return {
@@ -82,6 +79,7 @@ export function EditEventDialog({
       weekdays: RRule.fromString(calendarTask.rule).options.byweekday?.map(
         (w) => new Weekday(w),
       ),
+      type: calendarTask.type,
     };
   }, [calendarTask]);
 
@@ -103,6 +101,9 @@ export function EditEventDialog({
   const [weekdays, setWeekdays] = useState<Weekday[] | undefined>(
     defaultCalendarTask.weekdays,
   );
+  const [type, setType] = useState<typeof eventMasters.$inferSelect.type>(
+    defaultCalendarTask.type,
+  );
 
   const setStateToDefault = useCallback(() => {
     setTitle(defaultCalendarTask.title);
@@ -113,6 +114,7 @@ export function EditEventDialog({
     setUntil(defaultCalendarTask.until);
     setCount(defaultCalendarTask.count);
     setWeekdays(defaultCalendarTask.weekdays);
+    setType(defaultCalendarTask.type);
   }, [defaultCalendarTask]);
 
   useEffect(() => {
@@ -143,7 +145,9 @@ export function EditEventDialog({
     interval !== defaultCalendarTask.interval ||
     until !== defaultCalendarTask.until ||
     count !== defaultCalendarTask.count ||
-    weekdays !== defaultCalendarTask.weekdays;
+    weekdays !== defaultCalendarTask.weekdays ||
+    type !== defaultCalendarTask.type;
+
   function handleSubmitFormData(
     definition: "single" | "thisAndFuture" | "all",
   ) {
@@ -157,6 +161,7 @@ export function EditEventDialog({
     if (title !== defaultCalendarTask.title) input.title = title;
     if (description !== defaultCalendarTask.description)
       input.description = description;
+    if (type !== defaultCalendarTask.type) input.type = type;
 
     if (input.editDefinition === "single") {
       if (!from.isSame(defaultCalendarTask.from)) input.from = from.toDate();
@@ -198,18 +203,18 @@ export function EditEventDialog({
   const t = useTranslations();
 
   return (
-    <Dialog
+    <Credenza
       open={open}
       onOpenChange={(openDialog) => {
         if (!openDialog) setStateToDefault(); //Revert the data back to default when closing
         setOpen(openDialog);
       }}
     >
-      <DialogContent className="mb-64 sm:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>{t("apps.calendar.Edit event")}</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4">
+      <CredenzaContent className="mb-64 sm:max-w-[600px]">
+        <CredenzaHeader>
+          <CredenzaTitle>{t("apps.calendar.Edit event")}</CredenzaTitle>
+        </CredenzaHeader>
+        <CredenzaBody className="space-y-6">
           <div className="flex flex-row gap-2">
             <Input
               placeholder="Event title..."
@@ -225,6 +230,28 @@ export function EditEventDialog({
                 setDate={(newDate) => setFrom(dayjs(newDate))}
               />
             </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-row items-center gap-2">
+              <Checkbox
+                id="critical"
+                checked={type === "CRITICAL"}
+                onCheckedChange={(checked) =>
+                  setType(checked ? "CRITICAL" : "NORMAL")
+                }
+              />
+              <Label className="flex items-center gap-1" htmlFor="critical">
+                <LuAlertCircle
+                  className={cn("text-muted-foreground transition-colors", {
+                    "text-orange-400": type === "CRITICAL",
+                  })}
+                />
+                {t("Critical task")}
+              </Label>
+            </div>
+            <p className="text-[0.8rem] text-muted-foreground">
+              {t("Is this task considered critical or important")}
+            </p>
           </div>
           <div className="flex flex-row gap-2">
             <RecurrencePicker
@@ -246,9 +273,9 @@ export function EditEventDialog({
             placeholder={`${t("apps.calendar.Add description")}...`}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-          ></Textarea>
-        </div>
-        <DialogFooter>
+          />
+        </CredenzaBody>
+        <CredenzaFooter>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -272,15 +299,15 @@ export function EditEventDialog({
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-        </DialogFooter>
+        </CredenzaFooter>
         <SubmitEditEventDialog
           open={editDefinitionOpen}
           setOpen={setEditDefinitionOpen}
           allowedDefinitions={allowedEditDefinitions}
           submit={handleSubmitFormData}
         />
-      </DialogContent>
-    </Dialog>
+      </CredenzaContent>
+    </Credenza>
   );
 }
 
@@ -306,76 +333,83 @@ function SubmitEditEventDialog({
   const t = useTranslations();
 
   return (
-    <AlertDialog
+    <Credenza
       open={open}
       onOpenChange={(boolean) => {
         setOpen(boolean);
       }}
     >
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>{t("apps.calendar.Edit event")}</AlertDialogTitle>
-          <div className="my-6">
-            <RadioGroup className="flex flex-col space-y-2">
-              {allowedDefinitions.single && (
-                <div className="flex">
-                  <RadioGroupItem
-                    id="single"
-                    value={"single"}
-                    onClick={() => {
-                      setDefinition("single");
-                    }}
-                    checked={definition === "single"}
-                  />
-                  <Label htmlFor="single" className="ml-2">
-                    {t("apps.calendar.This event")}
-                  </Label>
-                </div>
-              )}
-              {allowedDefinitions.thisAndFuture && (
-                <div className="flex">
-                  <RadioGroupItem
-                    id="thisAndFuture"
-                    value={"thisAndFuture"}
-                    checked={definition === "thisAndFuture"}
-                    onClick={() => {
-                      setDefinition("thisAndFuture");
-                    }}
-                  />
-                  <Label htmlFor="thisAndFuture" className="ml-2">
-                    {t("apps.calendar.This and future events")}
-                  </Label>
-                </div>
-              )}
-              {allowedDefinitions.all && (
-                <div className="flex">
-                  <RadioGroupItem
-                    id="all"
-                    value={"all"}
-                    checked={definition === "all"}
-                    onClick={() => {
-                      setDefinition("all");
-                    }}
-                  />
-                  <Label htmlFor="all" className="ml-2">
-                    {t("apps.calendar.All events")}
-                  </Label>
-                </div>
-              )}
-            </RadioGroup>
-          </div>
-        </AlertDialogHeader>
-        <AlertDialogFooter className="bg-background">
-          <AlertDialogCancel>{t("Cancel")}</AlertDialogCancel>
-          <AlertDialogAction
+      <CredenzaContent>
+        <CredenzaHeader>
+          <CredenzaTitle>{t("apps.calendar.Edit event")}</CredenzaTitle>
+        </CredenzaHeader>
+        <CredenzaBody className="my-6">
+          <RadioGroup className="flex flex-col space-y-2">
+            {allowedDefinitions.single && (
+              <div className="flex">
+                <RadioGroupItem
+                  id="single"
+                  value={"single"}
+                  onClick={() => {
+                    setDefinition("single");
+                  }}
+                  checked={definition === "single"}
+                />
+                <Label htmlFor="single" className="ml-2">
+                  {t("apps.calendar.This event")}
+                </Label>
+              </div>
+            )}
+            {allowedDefinitions.thisAndFuture && (
+              <div className="flex">
+                <RadioGroupItem
+                  id="thisAndFuture"
+                  value={"thisAndFuture"}
+                  checked={definition === "thisAndFuture"}
+                  onClick={() => {
+                    setDefinition("thisAndFuture");
+                  }}
+                />
+                <Label htmlFor="thisAndFuture" className="ml-2">
+                  {t("apps.calendar.This and future events")}
+                </Label>
+              </div>
+            )}
+            {allowedDefinitions.all && (
+              <div className="flex">
+                <RadioGroupItem
+                  id="all"
+                  value={"all"}
+                  checked={definition === "all"}
+                  onClick={() => {
+                    setDefinition("all");
+                  }}
+                />
+                <Label htmlFor="all" className="ml-2">
+                  {t("apps.calendar.All events")}
+                </Label>
+              </div>
+            )}
+          </RadioGroup>
+        </CredenzaBody>
+        <CredenzaFooter>
+          <Button
+            variant={"outline"}
+            onClick={() => {
+              setOpen(false);
+            }}
+          >
+            {t("Cancel")}
+          </Button>
+          <Button
             onClick={() => {
               submit(definition);
             }}
           >
             {t("Ok")}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+          </Button>
+        </CredenzaFooter>
+      </CredenzaContent>
+    </Credenza>
   );
 }
