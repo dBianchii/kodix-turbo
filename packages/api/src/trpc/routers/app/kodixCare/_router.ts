@@ -62,6 +62,6 @@ export const kodixCareRouter = {
     .use(kodixCareInstalledMiddleware)
     .mutation(syncCareTasksFromCalendarHandler),
   createCareTask: protectedProcedure
-    .input(ZCreateCareTaskInputSchema)
+    .input(T(ZCreateCareTaskInputSchema))
     .mutation(createCareTaskHandler),
 } satisfies TRPCRouterRecord;

@@ -555,8 +555,10 @@ function AddCareTaskDialog() {
   const [open, setOpen] = useState(false);
 
   const utils = api.useUtils();
+  const t = useTranslations();
+
   const form = useForm({
-    schema: ZCreateCareTaskInputSchema,
+    schema: ZCreateCareTaskInputSchema(t),
     defaultValues: {
       type: "NORMAL",
     },
@@ -571,7 +573,6 @@ function AddCareTaskDialog() {
       setOpen(false);
     },
   });
-  const t = useTranslations();
 
   useEffect(() => {
     form.reset();
@@ -625,6 +626,7 @@ function AddCareTaskDialog() {
                           setDate={(newDate) =>
                             field.onChange(newDate ?? new Date())
                           }
+                          disabledDate={(date) => dayjs(date).isBefore(dayjs())}
                         />
                       </div>
                     </FormControl>
