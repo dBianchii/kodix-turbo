@@ -656,8 +656,8 @@ importers:
         specifier: ^0.9.2
         version: 0.9.2(typescript@5.5.4)(zod@3.23.8)
       drizzle-orm:
-        specifier: ^0.35.1
-        version: 0.35.1(@opentelemetry/api@1.8.0)(@types/react@18.3.11)(mysql2@3.10.0)(react@18.3.1)
+        specifier: ^0.35.2
+        version: 0.35.2(@opentelemetry/api@1.8.0)(@types/react@18.3.11)(mysql2@3.10.0)(react@18.3.1)
       mysql2:
         specifier: ^3.9.2
         version: 3.10.0
@@ -1013,7 +1013,7 @@ importers:
     dependencies:
       drizzle-zod:
         specifier: ^0.5.1
-        version: 0.5.1(drizzle-orm@0.35.1(@opentelemetry/api@1.8.0)(@types/react@18.3.11)(mysql2@3.10.0)(react@18.3.1))(zod@3.23.8)
+        version: 0.5.1(drizzle-orm@0.35.2(@opentelemetry/api@1.8.0)(@types/react@18.3.11)(mysql2@3.10.0)(react@18.3.1))(zod@3.23.8)
       zod:
         specifier: 'catalog:'
         version: 3.23.8
@@ -1071,7 +1071,7 @@ importers:
         version: 7.37.1(eslint@9.9.1(jiti@2.3.3))
       eslint-plugin-react-hooks:
         specifier: rc
-        version: 5.1.0-rc-83825814-20241015(eslint@9.9.1(jiti@2.3.3))
+        version: 5.1.0-rc-bf7e210c-20241017(eslint@9.9.1(jiti@2.3.3))
       eslint-plugin-turbo:
         specifier: ^2.1.3
         version: 2.1.3(eslint@9.9.1(jiti@2.3.3))
@@ -7059,8 +7059,8 @@ packages:
     resolution: {integrity: sha512-cMq8omEKywjIy5KcqUo6LvEFxkl8/zYHsgYjFVXjmPWWtuW4blcz+YW9+oIhoaALgs2ebRjzXwsJgN9i6P49Dw==}
     hasBin: true
 
-  drizzle-orm@0.35.1:
-    resolution: {integrity: sha512-HQxDdYuXlZFuvDPztlUIzrX8TqWa/Ej6uN6L0hkbuGL4slexOUMc3u4nXVU15RQ5QYbk+uLQnR6v1+OIrdCTXQ==}
+  drizzle-orm@0.35.2:
+    resolution: {integrity: sha512-bLQtRchl8QvRo2MyG6kcZC90UDzR7Ubir4YwOHV3cZPdJbF+4jU/Yt0QOczsoXe25wLRt6CtCWLXtSDQKft3yg==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=3'
@@ -7406,8 +7406,8 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9
 
-  eslint-plugin-react-hooks@5.1.0-rc-83825814-20241015:
-    resolution: {integrity: sha512-lOSSyz+7A2yG93dFXY09QwCDFaCf4/oniscyMcS22DHT+BBrCH7SNKJt2bD6pG1ovnPYzGWYcXYM2GVV8eIckg==}
+  eslint-plugin-react-hooks@5.1.0-rc-bf7e210c-20241017:
+    resolution: {integrity: sha512-rMvFpYu5Qfa3pN4Rp8RL9Fz4jX9oTUP4wvdTJgvEbvV/4GH13WdUgXpDpSEKVDtosZncdWL08ljShCS3Vy3+wg==}
     engines: {node: '>=10'}
     peerDependencies:
       eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0
@@ -19270,16 +19270,16 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.35.1(@opentelemetry/api@1.8.0)(@types/react@18.3.11)(mysql2@3.10.0)(react@18.3.1):
+  drizzle-orm@0.35.2(@opentelemetry/api@1.8.0)(@types/react@18.3.11)(mysql2@3.10.0)(react@18.3.1):
     optionalDependencies:
       '@opentelemetry/api': 1.8.0
       '@types/react': 18.3.11
       mysql2: 3.10.0
       react: 18.3.1
 
-  drizzle-zod@0.5.1(drizzle-orm@0.35.1(@opentelemetry/api@1.8.0)(@types/react@18.3.11)(mysql2@3.10.0)(react@18.3.1))(zod@3.23.8):
+  drizzle-zod@0.5.1(drizzle-orm@0.35.2(@opentelemetry/api@1.8.0)(@types/react@18.3.11)(mysql2@3.10.0)(react@18.3.1))(zod@3.23.8):
     dependencies:
-      drizzle-orm: 0.35.1(@opentelemetry/api@1.8.0)(@types/react@18.3.11)(mysql2@3.10.0)(react@18.3.1)
+      drizzle-orm: 0.35.2(@opentelemetry/api@1.8.0)(@types/react@18.3.11)(mysql2@3.10.0)(react@18.3.1)
       zod: 3.23.8
 
   dset@3.1.3: {}
@@ -19745,7 +19745,7 @@ snapshots:
       safe-regex-test: 1.0.3
       string.prototype.includes: 2.0.0
 
-  eslint-plugin-react-hooks@5.1.0-rc-83825814-20241015(eslint@9.9.1(jiti@2.3.3)):
+  eslint-plugin-react-hooks@5.1.0-rc-bf7e210c-20241017(eslint@9.9.1(jiti@2.3.3)):
     dependencies:
       eslint: 9.9.1(jiti@2.3.3)
 

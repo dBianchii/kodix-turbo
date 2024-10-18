@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import dayjs from "@kdx/dayjs";
-import { kodixCareAppId } from "@kdx/shared";
+import { kodixCareAppId, NANOID_SIZE } from "@kdx/shared";
 
 /**
  * Converts a value to a Date object using the ISO 8601 format.
@@ -42,7 +42,7 @@ export const appIdToUserAppTeamConfigSchema = {
   [kodixCareAppId]: kodixCareUserAppTeamConfigSchema,
 };
 
-export const NANOID_REGEX = /^[0-9a-z]{12}$/;
+export const NANOID_REGEX = new RegExp(`^[0-9a-z]{${NANOID_SIZE}}$`);
 export const ZNanoId = z
   .string()
-  .regex(NANOID_REGEX, { message: "Not a valid id" }); //If this is changed, the NANOID_SIZE in @kdx/shared must be updated
+  .regex(NANOID_REGEX, { message: "Not a valid id" });

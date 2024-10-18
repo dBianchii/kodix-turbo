@@ -1,7 +1,9 @@
 import { relations } from "drizzle-orm";
 import { index, mysqlTable, primaryKey } from "drizzle-orm/mysql-core";
 
-import { nanoid, NANOID_SIZE } from "../nanoid";
+import { NANOID_SIZE } from "@kdx/shared";
+
+import { nanoid } from "../nanoid";
 import { userAppTeamConfigs } from "./apps";
 import { todos } from "./apps/todos";
 import { invitations, teamAppRolesToUsers, teams, usersToTeams } from "./teams";

@@ -2,7 +2,9 @@
 
 import type { mysqlTable } from "drizzle-orm/mysql-core";
 
-import { nanoid, NANOID_SIZE } from "../nanoid";
+import { NANOID_SIZE } from "@kdx/shared";
+
+import { nanoid } from "../nanoid";
 import { teams } from "./teams";
 
 export const DEFAULTLENGTH = 255;

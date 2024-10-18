@@ -1,3 +1,5 @@
+export const NANOID_SIZE = 12; //? Size of our database id's nanoids
+
 //* Partners
 export const kdxPartnerId = "p8bmvvk3cy3l";
 
