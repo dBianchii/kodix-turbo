@@ -8,6 +8,10 @@
       "types": "./dist/validators/src/index.d.ts",
       "default": "./src/index.ts"
     },
+    "./db-json": {
+      "types": "./dist/validators/src/db-json.d.ts",
+      "default": "./src/db-json.ts"
+    },
     "./useI18nZodErrors": {
       "types": "./dist/validators/src/utils/useI18nZodErrors.d.ts",
       "default": "./src/utils/useI18nZodErrors.ts"

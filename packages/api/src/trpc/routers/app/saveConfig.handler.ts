@@ -1,7 +1,7 @@
 import type { TSaveConfigInput } from "@kdx/validators/trpc/app";
 import { and, eq } from "@kdx/db";
 import { appTeamConfigs } from "@kdx/db/schema";
-import { appIdToAppTeamConfigSchema } from "@kdx/validators";
+import { appIdToAppTeamConfigSchema } from "@kdx/validators/db-json";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 

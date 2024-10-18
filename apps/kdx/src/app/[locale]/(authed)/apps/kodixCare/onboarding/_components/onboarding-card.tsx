@@ -25,7 +25,7 @@ import {
   useForm,
 } from "@kdx/ui/form";
 import { Input } from "@kdx/ui/input";
-import { kodixCareConfigSchema } from "@kdx/validators";
+import { kodixCareConfigSchema } from "@kdx/validators/db-json";
 
 import { defaultSafeActionToastError } from "~/helpers/safe-action/default-action-error-toast";
 import { finishKodixCareOnboardingAction } from "../actions/onboardingActions";

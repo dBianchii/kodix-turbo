@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { getTranslations } from "next-intl/server";
 
 import type { TGetConfigInput } from "@kdx/validators/trpc/app";
-import { appIdToAppTeamConfigSchema } from "@kdx/validators";
+import { appIdToAppTeamConfigSchema } from "@kdx/validators/db-json";
 
 import type { TCronJobContext } from "../../../crons/_utils";
 import type { TProtectedProcedureContext } from "../../procedures";

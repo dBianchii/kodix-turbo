@@ -1,6 +1,6 @@
 import type { TGetUserAppTeamConfigInputSchema } from "@kdx/validators/trpc/app";
 import { inArray } from "@kdx/db";
-import { appIdToUserAppTeamConfigSchema } from "@kdx/validators";
+import { appIdToUserAppTeamConfigSchema } from "@kdx/validators/db-json";
 
 import type { TCronJobContext } from "../../../crons/_utils";
 import type { TProtectedProcedureContext } from "../../procedures";
