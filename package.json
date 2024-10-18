@@ -15,7 +15,7 @@
     "db:migrate": "turbo -F @kdx/db migrate",
     "db:seed": "turbo -F @kdx/db seed",
     "db:drop": "turbo -F @kdx/db drop",
-    "dev": "turbo watch dev studio --continue",
+    "dev": "turbo watch dev --continue",
     "dev:kdx": "turbo watch dev -F @kdx/kdx...",
     "dev:email": "turbo watch dev -F @kdx/react-email...",
     "dev:upstash": "turbo watch dev -F @kdx/upstash-dev...",

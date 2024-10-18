@@ -26,7 +26,7 @@ export const env = createEnv({
     AWS_SMTP_PASSWORD: z.string().optional(),
 
     DISABLE_UPSTASH_CACHE: z.coerce.boolean().default(false),
-    UPSTASH_REDIS_REST_URL: z.string().url(),
+    UPSTASH_REDIS_REST_URL: z.string(),
     UPSTASH_REDIS_REST_TOKEN: z.string(),
 
     QSTASH_CURRENT_SIGNING_KEY: z
