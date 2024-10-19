@@ -15,7 +15,7 @@
     "db:migrate": "turbo -F @kdx/db migrate",
     "db:seed": "turbo -F @kdx/db seed",
     "db:drop": "turbo -F @kdx/db drop",
-    "dev": "turbo watch dev --continue",
+    "dev": "turbo watch dev studio --continue",
     "dev:kdx": "turbo watch dev -F @kdx/kdx...",
     "dev:email": "turbo watch dev -F @kdx/react-email...",
     "dev:upstash": "turbo watch dev -F @kdx/upstash-dev...",
@@ -31,9 +31,9 @@
   },
   "devDependencies": {
     "@kdx/prettier-config": "workspace:*",
-    "@turbo/gen": "^2.2.0",
+    "@turbo/gen": "^2.2.1",
     "prettier": "catalog:",
-    "turbo": "^2.2.0",
+    "turbo": "^2.2.1",
     "typescript": "catalog:"
   },
   "prettier": "@kdx/prettier-config",
