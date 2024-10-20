@@ -6,13 +6,11 @@ import { TrashIcon } from "@radix-ui/react-icons";
 import { useTranslations } from "@kdx/locales/next-intl/client";
 import { usePathname, useRouter } from "@kdx/locales/next-intl/navigation";
 import { dataTableConfig } from "@kdx/shared";
-
-import type { DataTableFilterOption } from "./types";
-import { cn } from "../../.";
-import { Button } from "../../button";
-import { useDebounce } from "../../hooks/use-debounce";
-import { Input } from "../../input";
-import { Popover, PopoverContent, PopoverTrigger } from "../../popover";
+import { cn } from "@kdx/ui";
+import { Button } from "@kdx/ui/button";
+import { useDebounce } from "@kdx/ui/hooks/use-debounce";
+import { Input } from "@kdx/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
 import {
   Select,
   SelectContent,
@@ -20,7 +18,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../select";
+} from "@kdx/ui/select";
+
+import type { DataTableFilterOption } from "./types";
 import { DataTableAdvancedFacetedFilter } from "./data-table-advanced-faceted-filter";
 
 interface DataTableFilterItemProps<TData> {
