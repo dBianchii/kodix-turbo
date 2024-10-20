@@ -4,7 +4,7 @@ import { RxArrowLeft } from "react-icons/rx";
 
 import { Link, usePathname } from "@kdx/locales/next-intl/navigation";
 import { cn } from "@kdx/ui";
-import { useMediaQuery } from "@kdx/ui/hooks";
+import { useMediaQuery } from "@kdx/ui/hooks/use-media-query";
 import {
   NavigationMenu,
   NavigationMenuItem,

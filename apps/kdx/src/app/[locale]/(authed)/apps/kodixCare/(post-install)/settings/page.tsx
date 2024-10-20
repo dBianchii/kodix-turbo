@@ -11,7 +11,6 @@ export default async function KodixCareSettingsPage() {
     appId: kodixCareAppId,
   });
 
-  console.log(config);
   return (
     <main className="pt-6 md:p-6">
       <h2 className="mb-4 text-lg font-medium">{t("Settings")}</h2>
