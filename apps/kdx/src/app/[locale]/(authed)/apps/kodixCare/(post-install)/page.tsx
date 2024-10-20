@@ -1,8 +1,10 @@
 import { Suspense } from "react";
+import { LuMenu } from "react-icons/lu";
 
 import type { User } from "@kdx/auth";
 import { kodixCareAppId } from "@kdx/shared";
 import { Card } from "@kdx/ui/card";
+import { SidebarTrigger } from "@kdx/ui/sidebar";
 import { Skeleton } from "@kdx/ui/skeleton";
 
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
@@ -17,14 +19,15 @@ export default async function KodixCarePage() {
   });
 
   return (
-    <main className="flex w-full flex-col gap-4 pt-6 md:space-x-6 md:pl-5">
-      <div className="flex flex-col items-center gap-6 md:flex-row md:items-baseline">
-        <Suspense fallback={<ShiftSkeleton />}>
-          <CurrentShift user={user} />
-        </Suspense>
-        <div className="flex w-full flex-col">
-          <DataTableKodixCare />
-        </div>
+    <main className="flex w-full flex-col items-center gap-6 pt-6 md:flex-row md:items-baseline md:gap-1 md:space-x-6 md:pl-5">
+      {/* <div className="flex w-full items-start border-b md:hidden">
+        <SidebarTrigger className="size-6 md:hidden" />
+      </div> */}
+      <Suspense fallback={<ShiftSkeleton />}>
+        <CurrentShift user={user} />
+      </Suspense>
+      <div className="flex w-full flex-col">
+        <DataTableKodixCare />
       </div>
     </main>
   );
