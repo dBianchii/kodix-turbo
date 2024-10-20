@@ -1,10 +1,8 @@
 import { Suspense } from "react";
-import { LuMenu } from "react-icons/lu";
 
 import type { User } from "@kdx/auth";
 import { kodixCareAppId } from "@kdx/shared";
 import { Card } from "@kdx/ui/card";
-import { SidebarTrigger } from "@kdx/ui/sidebar";
 import { Skeleton } from "@kdx/ui/skeleton";
 
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
