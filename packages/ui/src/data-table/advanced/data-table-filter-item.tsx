@@ -10,7 +10,7 @@ import { dataTableConfig } from "@kdx/shared";
 import type { DataTableFilterOption } from "./types";
 import { cn } from "../../.";
 import { Button } from "../../button";
-import { useDebounce } from "../../hooks";
+import { useDebounce } from "../../hooks/use-debounce";
 import { Input } from "../../input";
 import { Popover, PopoverContent, PopoverTrigger } from "../../popover";
 import {

@@ -21,7 +21,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../../dropdown-menu";
-import { useDebounce } from "../../hooks";
+import { useDebounce } from "../../hooks/use-debounce";
 import { Input } from "../../input";
 import { Popover, PopoverContent, PopoverTrigger } from "../../popover";
 import {
