@@ -13,7 +13,6 @@ import { useTranslations } from "@kdx/locales/next-intl/client";
 import { usePathname, useRouter } from "@kdx/locales/next-intl/navigation";
 import { dataTableConfig } from "@kdx/shared";
 import { Button } from "@kdx/ui/button";
-import { DataTableFacetedFilter } from "@kdx/ui/data-table/data-table-faceted-filter";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,6 +33,7 @@ import {
 import { Separator } from "@kdx/ui/separator";
 
 import type { DataTableFilterOption } from "./types";
+import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 
 interface DataTableMultiFilterProps<TData> {
   table: Table<TData>;

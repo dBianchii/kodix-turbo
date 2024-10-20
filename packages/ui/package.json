@@ -60,7 +60,6 @@
     "embla-carousel-react": "8.0.0-rc22",
     "framer-motion": "^11.2.6",
     "lucide-react": "^0.453.0",
-    "next": "catalog:",
     "next-themes": "^0.3.0",
     "react-day-picker": "^8.10.0",
     "react-hook-form": "^7.53.0",

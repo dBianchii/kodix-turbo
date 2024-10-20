@@ -57,7 +57,9 @@ export function getColumns() {
     columnHelper.accessor("subject", {
       header: function Header({ column }) {
         const t = useTranslations();
-        return <DataTableColumnHeader column={column} title={t("Subject")} />;
+        return (
+          <DataTableColumnHeader column={column} children={t("Subject")} />
+        );
       },
       cell: ({ row }) => <div className="w-20">{row.original.subject}</div>,
       enableSorting: false,
@@ -66,7 +68,9 @@ export function getColumns() {
     columnHelper.accessor("channel", {
       header: function Header({ column }) {
         const t = useTranslations();
-        return <DataTableColumnHeader column={column} title={t("Channel")} />;
+        return (
+          <DataTableColumnHeader column={column} children={t("Channel")} />
+        );
       },
       cell: ({ row }) => {
         return (
@@ -82,7 +86,9 @@ export function getColumns() {
     columnHelper.accessor("sentAt", {
       header: function Header({ column }) {
         const t = useTranslations();
-        return <DataTableColumnHeader column={column} title={t("Sent at")} />;
+        return (
+          <DataTableColumnHeader column={column} children={t("Sent at")} />
+        );
       },
       cell: function Cell({ cell }) {
         const format = useFormatter();
@@ -92,7 +98,7 @@ export function getColumns() {
     columnHelper.accessor("teamId", {
       header: function Header({ column }) {
         const t = useTranslations();
-        return <DataTableColumnHeader column={column} title={t("Team")} />;
+        return <DataTableColumnHeader column={column} children={t("Team")} />;
       },
       cell: function Cell({ row }) {
         return <div className="w-20">{row.original.teamName}</div>;
