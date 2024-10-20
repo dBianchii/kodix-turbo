@@ -9,6 +9,7 @@ import {
   kodixCareAppId,
   kodixCareRoleDefaultIds,
   PKodixCare_CanCreateCareTask,
+  PKodixCare_CanDeleteCareTask,
   PKodixCare_CanToggleShiftId,
   todoAppId,
   todoRoleDefaultIds,
@@ -34,6 +35,10 @@ export const appRoles_defaultTree: appRoles_defaultTree = {
         id: PKodixCare_CanCreateCareTask,
         editable: false,
       },
+      {
+        id: PKodixCare_CanDeleteCareTask,
+        editable: false,
+      },
     ],
     appRoleDefaults: [
       {
@@ -41,6 +46,7 @@ export const appRoles_defaultTree: appRoles_defaultTree = {
         AppPermissions: [
           PKodixCare_CanToggleShiftId,
           PKodixCare_CanCreateCareTask,
+          PKodixCare_CanDeleteCareTask,
         ],
       },
       {
@@ -48,6 +54,7 @@ export const appRoles_defaultTree: appRoles_defaultTree = {
         AppPermissions: [
           PKodixCare_CanToggleShiftId,
           PKodixCare_CanCreateCareTask,
+          PKodixCare_CanDeleteCareTask,
         ],
       },
       {

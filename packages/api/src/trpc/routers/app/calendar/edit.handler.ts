@@ -259,6 +259,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
         }).toString(),
         title: input.title ?? oldMaster.title,
         description: input.description ?? oldMaster.description,
+        createdBy: ctx.session.user.id,
       });
 
       if (!shouldDeleteFutureExceptions) {

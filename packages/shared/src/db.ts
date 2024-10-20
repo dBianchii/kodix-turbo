@@ -25,6 +25,7 @@ export const kodixCareRoleDefaultIds = {
 //*   KodixCare permissions -------
 export const PKodixCare_CanToggleShiftId = "t3rf70tpu02h";
 export const PKodixCare_CanCreateCareTask = "rary75ox9kdi";
+export const PKodixCare_CanDeleteCareTask = "9baz2op01y7k";
 
 export type KodixAppId =
   | typeof todoAppId
@@ -33,7 +34,8 @@ export type KodixAppId =
 
 export type AppPermissionId =
   | typeof PKodixCare_CanToggleShiftId
-  | typeof PKodixCare_CanCreateCareTask;
+  | typeof PKodixCare_CanCreateCareTask
+  | typeof PKodixCare_CanDeleteCareTask;
 
 export type AppRoleDefaultId =
   | (typeof todoRoleDefaultIds)[keyof typeof todoRoleDefaultIds]
