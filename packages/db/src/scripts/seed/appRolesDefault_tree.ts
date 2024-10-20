@@ -8,6 +8,7 @@ import {
   calendarRoleDefaultIds,
   kodixCareAppId,
   kodixCareRoleDefaultIds,
+  PKodixCare_CanCreateCareTask,
   PKodixCare_CanToggleShiftId,
   todoAppId,
   todoRoleDefaultIds,
@@ -16,7 +17,7 @@ import {
 type appRoles_defaultTree = Record<
   KodixAppId,
   {
-    appPermissions?: { id: AppPermissionId }[];
+    appPermissions?: { id: AppPermissionId; editable?: boolean }[];
     appRoleDefaults: {
       id: AppRoleDefaultId;
       AppPermissions: AppPermissionId[];
@@ -29,15 +30,25 @@ export const appRoles_defaultTree: appRoles_defaultTree = {
       {
         id: PKodixCare_CanToggleShiftId,
       },
+      {
+        id: PKodixCare_CanCreateCareTask,
+        editable: false,
+      },
     ],
     appRoleDefaults: [
       {
         id: kodixCareRoleDefaultIds.admin,
-        AppPermissions: [PKodixCare_CanToggleShiftId],
+        AppPermissions: [
+          PKodixCare_CanToggleShiftId,
+          PKodixCare_CanCreateCareTask,
+        ],
       },
       {
         id: kodixCareRoleDefaultIds.careGiver,
-        AppPermissions: [PKodixCare_CanToggleShiftId],
+        AppPermissions: [
+          PKodixCare_CanToggleShiftId,
+          PKodixCare_CanCreateCareTask,
+        ],
       },
       {
         id: kodixCareRoleDefaultIds.patient,

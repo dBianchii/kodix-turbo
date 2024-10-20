@@ -286,6 +286,7 @@
   "Care Giver": "Cuidador",
   "Patient": "Paciente",
   "Can toggle shift": "Pode alterar turno",
+  "Can create task": "Pode criar tarefa",
   "Add more apps": "Adicione mais aplicativos",
   "Notifications": "Notificações",
   "Manage your notifications": "Gerencie suas notificações",
@@ -460,5 +461,6 @@
   "Wether or not this task is considered critical or important": "Se esta tarefa é considerada critica ou importante. \nVocê pode optar por receber notificações sobre tarefas críticas na <settings>página de configurações</settings>",
   "Critical task": "Tarefa crítica?",
   "Critical": "Crítica",
-  "Is this task considered critical or important": "Esta tarefa é considerada crítica ou importante?"
+  "Is this task considered critical or important": "Esta tarefa é considerada crítica ou importante?",
+  "This permission is not editable": "Esta permissão não é editável"
 }
