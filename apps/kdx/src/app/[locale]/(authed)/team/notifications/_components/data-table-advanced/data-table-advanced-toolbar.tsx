@@ -6,11 +6,11 @@ import { useSearchParams } from "next/navigation";
 import { CaretSortIcon, PlusIcon } from "@radix-ui/react-icons";
 
 import { useTranslations } from "@kdx/locales/next-intl/client";
+import { cn } from "@kdx/ui";
+import { Button } from "@kdx/ui/button";
+import { DataTableViewOptions } from "@kdx/ui/data-table/data-table-view-options";
 
 import type { DataTableFilterField, DataTableFilterOption } from "./types";
-import { cn } from "../../.";
-import { Button } from "../../button";
-import { DataTableViewOptions } from "../data-table-view-options";
 import { DataTableFilterCombobox } from "./data-table-filter-combobox";
 import { DataTableFilterItem } from "./data-table-filter-item";
 import { DataTableMultiFilter } from "./data-table-multi-filter";

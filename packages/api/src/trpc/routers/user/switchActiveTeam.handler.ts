@@ -14,7 +14,7 @@ export const switchActiveTeamHandler = async ({
 }: SwitchActiveTeamOptions) => {
   await switchActiveTeamForUser({
     db: ctx.db,
-    userId: ctx.session.user.id,
+    userId: ctx.auth.user.id,
     teamId: input.teamId,
   });
 };

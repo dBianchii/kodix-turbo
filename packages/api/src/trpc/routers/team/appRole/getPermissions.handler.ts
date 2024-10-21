@@ -16,7 +16,7 @@ export const getPermissionsHandler = async ({
   const teamAppRolesIdsForActiveTeamId = await ctx.db
     .select({ id: teamAppRoles.id })
     .from(teamAppRoles)
-    .where(eq(teamAppRoles.teamId, ctx.session.user.activeTeamId))
+    .where(eq(teamAppRoles.teamId, ctx.auth.user.activeTeamId))
     .then((res) => res.map((r) => r.id));
 
   const permissions = await ctx.db.query.appPermissions.findMany({

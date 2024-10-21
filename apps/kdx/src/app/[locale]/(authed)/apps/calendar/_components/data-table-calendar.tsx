@@ -34,8 +34,8 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@kdx/ui/context-menu";
+import { DataTableColumnHeader } from "@kdx/ui/data-table/data-table-column-header";
 import { DataTablePagination } from "@kdx/ui/data-table/data-table-pagination";
-import { HeaderSort } from "@kdx/ui/data-table/header-sort";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -139,27 +139,29 @@ export function DataTable({
       }),
       columnHelper.accessor("title", {
         header: ({ column }) => (
-          <HeaderSort column={column}>{t("Title")}</HeaderSort>
+          <DataTableColumnHeader column={column}>
+            {t("Title")}
+          </DataTableColumnHeader>
         ),
         cell: (info) => <div className="font-bold">{info.getValue()}</div>,
       }),
       columnHelper.accessor("description", {
         header: ({ column }) => {
           return (
-            <HeaderSort column={column}>
+            <DataTableColumnHeader column={column}>
               <LuText className="mr-2 size-4" />
               {t("Description")}
-            </HeaderSort>
+            </DataTableColumnHeader>
           );
         },
         cell: (info) => <div className="text-sm">{info.getValue()}</div>,
       }),
       columnHelper.accessor("date", {
         header: ({ column }) => (
-          <HeaderSort column={column}>
+          <DataTableColumnHeader column={column}>
             <RxCalendar className="mr-2 size-4" />
             {t("Date")}
-          </HeaderSort>
+          </DataTableColumnHeader>
         ),
         cell: (info) => (
           <div className="text-sm">
@@ -169,10 +171,10 @@ export function DataTable({
       }),
       columnHelper.accessor("type", {
         header: ({ column }) => (
-          <HeaderSort column={column}>
+          <DataTableColumnHeader column={column}>
             <LuAlertCircle className="mr-2 size-4 text-orange-400" />
             {t("Critical")}
-          </HeaderSort>
+          </DataTableColumnHeader>
         ),
         cell: (ctx) => (
           <div>

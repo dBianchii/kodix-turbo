@@ -15,7 +15,7 @@ interface GetConfigOptions {
 export const getConfigHandler = async ({ ctx, input }: GetConfigOptions) => {
   const [teamConfig] = await getConfigs({
     appId: input.appId,
-    teamIds: [ctx.session.user.activeTeamId],
+    teamIds: [ctx.auth.user.activeTeamId],
     ctx,
   });
 

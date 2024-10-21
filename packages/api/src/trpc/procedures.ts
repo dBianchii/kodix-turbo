@@ -27,18 +27,19 @@ export type TPublicProcedureContext = inferProcedureBuilderResolverOptions<
  * Protected (authenticated) procedure
  *
  * If you want a query or mutation to ONLY be accessible to logged in users, use this. It verifies
- * the session is valid and guarantees `ctx.session.user` is not null.
+ * the session is valid and guarantees `ctx.auth.user` is not null.
  *
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = publicProcedure.use(({ ctx, next }) => {
-  if (!ctx.session?.user) {
+  if (!ctx.auth.user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return next({
     ctx: {
-      // infers the `session` as non-nullable
-      session: { ...ctx.session, user: ctx.session.user },
+      ...ctx,
+      // infers the `user` and `session` as non-nullable
+      auth: ctx.auth,
     },
   });
 });
@@ -49,7 +50,7 @@ export type TProtectedProcedureContext = inferProcedureBuilderResolverOptions<
 export const isTeamOwnerProcedure = protectedProcedure.use(
   async ({ ctx, next }) => {
     const team = await ctx.db.query.teams.findFirst({
-      where: eq(teams.id, ctx.session.user.activeTeamId),
+      where: eq(teams.id, ctx.auth.user.activeTeamId),
       columns: {
         id: true,
         ownerId: true,
@@ -63,7 +64,7 @@ export const isTeamOwnerProcedure = protectedProcedure.use(
         code: "NOT_FOUND",
       });
 
-    if (team.ownerId !== ctx.session.user.id)
+    if (team.ownerId !== ctx.auth.user.id)
       throw new TRPCError({
         message: t("api.Only the team owner can perform this action"),
         code: "FORBIDDEN",

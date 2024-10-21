@@ -54,7 +54,7 @@ import {
   CredenzaTitle,
   CredenzaTrigger,
 } from "@kdx/ui/credenza";
-import { HeaderSort } from "@kdx/ui/data-table/header-sort";
+import { DataTableColumnHeader } from "@kdx/ui/data-table/data-table-column-header";
 import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
   DropdownMenu,
@@ -180,9 +180,9 @@ export default function DataTableKodixCare() {
     () => [
       columnHelper.accessor("title", {
         header: ({ column }) => (
-          <HeaderSort column={column} className="ml-8">
+          <DataTableColumnHeader column={column} className="ml-8">
             {t("Title")}
-          </HeaderSort>
+          </DataTableColumnHeader>
         ),
         cell: (ctx) => {
           return (
@@ -214,10 +214,10 @@ export default function DataTableKodixCare() {
       }),
       columnHelper.accessor("date", {
         header: ({ column }) => (
-          <HeaderSort column={column}>
+          <DataTableColumnHeader column={column}>
             <RxCalendar className="mr-2 size-4" />
             {t("Date")}
-          </HeaderSort>
+          </DataTableColumnHeader>
         ),
         cell: (ctx) => (
           <div>
@@ -234,10 +234,10 @@ export default function DataTableKodixCare() {
       columnHelper.accessor("doneAt", {
         header: ({ column }) => {
           return (
-            <HeaderSort column={column}>
+            <DataTableColumnHeader column={column}>
               <LuCheck className="mr-2 size-4 text-green-400" />
               {t("Done at")}
-            </HeaderSort>
+            </DataTableColumnHeader>
           );
         },
         cell: (ctx) => {
@@ -258,19 +258,19 @@ export default function DataTableKodixCare() {
       }),
       columnHelper.accessor("details", {
         header: ({ column }) => (
-          <HeaderSort column={column}>
+          <DataTableColumnHeader column={column}>
             <LuText className="mr-2 size-4 text-orange-400" />
             {t("Details")}
-          </HeaderSort>
+          </DataTableColumnHeader>
         ),
         cell: (ctx) => <div>{ctx.row.original.details}</div>,
       }),
       columnHelper.accessor("type", {
         header: ({ column }) => (
-          <HeaderSort column={column}>
+          <DataTableColumnHeader column={column}>
             <LuAlertCircle className="mr-2 size-4 text-orange-400" />
             {t("Critical")}
-          </HeaderSort>
+          </DataTableColumnHeader>
         ),
         cell: (ctx) => (
           <div className="flex max-w-sm items-center justify-center">

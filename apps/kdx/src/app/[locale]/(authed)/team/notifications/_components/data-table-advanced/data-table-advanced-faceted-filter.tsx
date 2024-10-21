@@ -2,9 +2,7 @@ import type { Column } from "@tanstack/react-table";
 import { CheckIcon } from "@radix-ui/react-icons";
 
 import { useTranslations } from "@kdx/locales/next-intl/client";
-
-import type { DataTableFilterOption, Option } from "./types";
-import { cn } from "../..";
+import { cn } from "@kdx/ui";
 import {
   Command,
   CommandEmpty,
@@ -13,7 +11,9 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-} from "../../command";
+} from "@kdx/ui/command";
+
+import type { DataTableFilterOption, Option } from "./types";
 
 interface DataTableAdvancedFacetedFilterProps<TData, TValue> {
   column?: Column<TData, TValue>;

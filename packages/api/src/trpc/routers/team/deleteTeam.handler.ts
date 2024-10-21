@@ -53,7 +53,7 @@ export const deleteTeamHandler = async ({ ctx, input }: DeleteTeamOptions) => {
     .where(
       and(
         not(eq(teams.id, input.teamId)),
-        eq(usersToTeams.userId, ctx.session.user.id),
+        eq(usersToTeams.userId, ctx.auth.user.id),
       ),
     )
     .then((res) => res[0]);
@@ -71,7 +71,7 @@ export const deleteTeamHandler = async ({ ctx, input }: DeleteTeamOptions) => {
     await tx
       .update(users)
       .set({ activeTeamId: otherTeam.id })
-      .where(eq(users.id, ctx.session.user.id));
+      .where(eq(users.id, ctx.auth.user.id));
 
     //Remove the team
     await tx.delete(careTasks).where(eq(careTasks.teamId, input.teamId)); //?uuuuh...

@@ -32,7 +32,7 @@ export const leaveTeamHandler = async ({ ctx, input }: LeaveTeamOptions) => {
       message: t("api.No Team Found"),
     });
 
-  if (team.ownerId === ctx.session.user.id)
+  if (team.ownerId === ctx.auth.user.id)
     throw new TRPCError({
       code: "FORBIDDEN",
       message: t(
@@ -46,8 +46,8 @@ export const leaveTeamHandler = async ({ ctx, input }: LeaveTeamOptions) => {
     .innerJoin(usersToTeams, eq(teams.id, usersToTeams.teamId))
     .where(
       and(
-        not(eq(teams.id, ctx.session.user.activeTeamId)),
-        eq(usersToTeams.userId, ctx.session.user.id),
+        not(eq(teams.id, ctx.auth.user.activeTeamId)),
+        eq(usersToTeams.userId, ctx.auth.user.id),
       ),
     )
     .then((res) => res[0]);
@@ -66,7 +66,7 @@ export const leaveTeamHandler = async ({ ctx, input }: LeaveTeamOptions) => {
     await tx
       .update(users)
       .set({ activeTeamId: otherTeam.id })
-      .where(eq(users.id, ctx.session.user.id));
+      .where(eq(users.id, ctx.auth.user.id));
 
     //Remove the user from the team
     await tx
@@ -74,7 +74,7 @@ export const leaveTeamHandler = async ({ ctx, input }: LeaveTeamOptions) => {
       .where(
         and(
           eq(usersToTeams.teamId, input.teamId),
-          eq(usersToTeams.userId, ctx.session.user.id),
+          eq(usersToTeams.userId, ctx.auth.user.id),
         ),
       );
 
@@ -83,7 +83,7 @@ export const leaveTeamHandler = async ({ ctx, input }: LeaveTeamOptions) => {
       .delete(teamAppRolesToUsers)
       .where(
         and(
-          eq(teamAppRolesToUsers.userId, ctx.session.user.id),
+          eq(teamAppRolesToUsers.userId, ctx.auth.user.id),
           inArray(
             teamAppRolesToUsers.teamAppRoleId,
             ctx.db

@@ -11,7 +11,7 @@ import { useTranslations } from "@kdx/locales/next-intl/client";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Badge } from "@kdx/ui/badge";
 import { Card } from "@kdx/ui/card";
-import { useRerenderForRelativeTime } from "@kdx/ui/hooks";
+import { useRerenderForRelativeTime } from "@kdx/ui/hooks/use-rerender-for-relative-time";
 import { Label } from "@kdx/ui/label";
 
 import { api } from "~/trpc/react";
@@ -41,7 +41,7 @@ export function NoPreviousShift({ user }: { user: User }) {
   const t = useTranslations();
 
   return (
-    <Card className="flex h-52 w-80 max-w-sm flex-col gap-3 p-4 md:w-full md:min-w-72">
+    <Card className="flex h-52 w-80 max-w-xs flex-col gap-3 p-4 md:w-full md:min-w-72">
       <div className="flex flex-row items-center justify-center space-x-3">
         <h2 className="font-semibold leading-none tracking-tight">
           {t("apps.kodixCare.currentShift")}
@@ -71,7 +71,7 @@ export function ShiftInProgress({
 }) {
   const t = useTranslations();
   return (
-    <Card className="flex h-52 w-80 max-w-sm flex-col gap-3 p-4 md:w-full md:min-w-72">
+    <Card className="flex h-52 w-80 max-w-xs flex-col gap-3 p-4 md:w-full md:min-w-72">
       <div className="flex flex-row items-center justify-center space-x-3">
         <h2 className="font-semibold leading-none tracking-tight">
           {t("apps.kodixCare.currentShift")}
@@ -105,7 +105,7 @@ export function ShiftCheckedOut({
 }) {
   const t = useTranslations();
   return (
-    <Card className="flex h-52 w-80 max-w-sm flex-col gap-3 p-4 md:w-full md:min-w-72">
+    <Card className="flex h-52 w-80 max-w-xs flex-col gap-3 p-4 md:w-full md:min-w-72">
       <div className="flex flex-row items-center justify-center space-x-3">
         <h2 className="font-semibold leading-none tracking-tight">
           {t("apps.kodixCare.currentShift")}

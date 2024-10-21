@@ -1,8 +1,8 @@
 import type { Column } from "@tanstack/react-table";
 import {
-  ArrowDownIcon,
-  ArrowUpIcon,
+  CaretDownIcon,
   CaretSortIcon,
+  CaretUpIcon,
   EyeNoneIcon,
 } from "@radix-ui/react-icons";
 
@@ -21,18 +21,18 @@ import {
 interface DataTableColumnHeaderProps<TData, TValue>
   extends React.HTMLAttributes<HTMLDivElement> {
   column: Column<TData, TValue>;
-  title: string;
+  children: React.ReactNode;
 }
 
 export function DataTableColumnHeader<TData, TValue>({
   column,
-  title,
+  children,
   className,
 }: DataTableColumnHeaderProps<TData, TValue>) {
   const t = useTranslations();
 
   if (!column.getCanSort() && !column.getCanHide()) {
-    return <div className={cn(className)}>{title}</div>;
+    return <div className={cn(className)}>{children}</div>;
   }
 
   return (
@@ -51,11 +51,11 @@ export function DataTableColumnHeader<TData, TValue>({
             size="sm"
             className="-ml-3 h-8 data-[state=open]:bg-accent"
           >
-            <span>{title}</span>
+            <div className="flex flex-row">{children}</div>
             {column.getCanSort() && column.getIsSorted() === "desc" ? (
-              <ArrowDownIcon className="ml-2 size-4" aria-hidden="true" />
+              <CaretDownIcon className="ml-2 size-4" aria-hidden="true" />
             ) : column.getIsSorted() === "asc" ? (
-              <ArrowUpIcon className="ml-2 size-4" aria-hidden="true" />
+              <CaretUpIcon className="ml-2 size-4" aria-hidden="true" />
             ) : (
               <CaretSortIcon className="ml-2 size-4" aria-hidden="true" />
             )}
@@ -68,7 +68,7 @@ export function DataTableColumnHeader<TData, TValue>({
                 aria-label={t("Sort ascending")}
                 onClick={() => column.toggleSorting(false)}
               >
-                <ArrowUpIcon
+                <CaretUpIcon
                   className="mr-2 size-3.5 text-muted-foreground/70"
                   aria-hidden="true"
                 />
@@ -78,7 +78,7 @@ export function DataTableColumnHeader<TData, TValue>({
                 aria-label={t("Sort descending")}
                 onClick={() => column.toggleSorting(true)}
               >
-                <ArrowDownIcon
+                <CaretDownIcon
                   className="mr-2 size-3.5 text-muted-foreground/70"
                   aria-hidden="true"
                 />
