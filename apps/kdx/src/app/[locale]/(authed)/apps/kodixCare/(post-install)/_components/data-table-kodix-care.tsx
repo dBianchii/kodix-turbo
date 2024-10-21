@@ -57,10 +57,10 @@ import {
   CredenzaTrigger,
 } from "@kdx/ui/credenza";
 import { DataTableColumnHeader } from "@kdx/ui/data-table/data-table-column-header";
+import { DataTableViewOptions } from "@kdx/ui/data-table/data-table-view-options";
 import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
@@ -416,32 +416,7 @@ export default function DataTableKodixCare() {
           </Button>
         </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="sm:ml-auto">
-              {t("Columns")}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <DataTableViewOptions table={table} />
       </div>
       <div className="mt-4 rounded-md border">
         <Table>
