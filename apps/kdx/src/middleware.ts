@@ -1,17 +1,9 @@
-import type { NextRequest } from "next/server";
+import { withAuth } from "./middlewares/auth";
+import { chainMiddleware } from "./middlewares/chain-middleware";
+import { withI18n } from "./middlewares/i18n";
 
-import { defaultLocale, locales } from "@kdx/locales";
-import { createMiddleware } from "@kdx/locales/next-intl";
-
-const I18nMiddleware = createMiddleware({
-  locales: locales,
-  defaultLocale: defaultLocale,
-  localePrefix: "as-needed",
-});
-
-export function middleware(request: NextRequest) {
-  return I18nMiddleware(request);
-}
+//TODO: csrf protection https://lucia-auth.com/sessions/cookies/nextjs
+export default chainMiddleware([withI18n, withAuth]);
 
 export const config = {
   // matcher: ["/((?!api|static|.*\\..*|_next|favicon.ico|robots.txt).*)"],

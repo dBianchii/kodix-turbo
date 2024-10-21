@@ -1,74 +1,117 @@
-import type { Session, User } from "lucia";
-import { cookies } from "next/headers";
-import { Lucia } from "lucia";
+import { cookies, headers } from "next/headers";
+import { sha256 } from "@oslojs/crypto/sha2";
+import {
+  encodeBase32LowerCaseNoPadding,
+  encodeHexLowerCase,
+} from "@oslojs/encoding";
 
-import type { sessions, users } from "@kdx/db/schema";
+import { eq } from "@kdx/db";
+import { db } from "@kdx/db/client";
+import { sessions, teams, users } from "@kdx/db/schema";
 
 import { env } from "../env";
-import { adapter } from "./lucia-custom-adapter";
 import * as discordProvider from "./providers/discord";
 import * as googleProvider from "./providers/google";
 
-export const isSecureContext = env.NODE_ENV !== "development";
+type User = typeof users.$inferSelect;
+type Session = typeof sessions.$inferSelect;
 
-export const lucia = new Lucia(adapter, {
-  sessionCookie: {
-    expires: false,
-    attributes: {
-      secure: env.NODE_ENV === "production",
-    },
-  },
+interface ExtraUserProps {
+  activeTeamName: string;
+}
+export type AuthResponse =
+  | {
+      user: User & ExtraUserProps;
+      session: Session;
+    }
+  | { user: null; session: null };
 
-  getSessionAttributes(databaseSessionAttributes) {
-    return {
-      userAgent: databaseSessionAttributes.userAgent,
-      ipAddress: databaseSessionAttributes.ipAddress,
-    };
-  },
+export function generateSessionToken() {
+  const bytes = new Uint8Array(20);
+  crypto.getRandomValues(bytes);
+  const token = encodeBase32LowerCaseNoPadding(bytes);
+  return token;
+}
 
-  getUserAttributes: (attributes) => {
-    return {
-      name: attributes.name,
-      email: attributes.email,
-      activeTeamId: attributes.activeTeamId,
-      activeTeamName: attributes.activeTeamName,
-      kodixAdmin: attributes.kodixAdmin,
-      image: attributes.image,
-    };
-  },
-});
+export async function createSession(token: string, userId: string) {
+  const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+  const heads = headers();
+  const session = {
+    id: sessionId,
+    userId,
+    expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+    ipAddress:
+      heads.get("X-Forwarded-For") ??
+      heads.get("X-Forwarded-For") ??
+      "127.0.0.1",
+    userAgent: heads.get("user-agent"),
+  };
+  await db.insert(sessions).values(session);
+  return session;
+}
 
-export const auth = async (): Promise<AuthResponse> => {
-  const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
-  if (!sessionId) {
-    return {
-      user: null,
-      session: null,
-    };
+export async function validateSessionToken(
+  token: string,
+): Promise<AuthResponse> {
+  const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+  const result = await db
+    .select({ user: users, session: sessions, team: teams })
+    .from(sessions)
+    .innerJoin(users, eq(sessions.userId, users.id))
+    .innerJoin(teams, eq(teams.id, users.activeTeamId))
+    .where(eq(sessions.id, sessionId));
+
+  if (!result[0]) return { session: null, user: null };
+  const { user, session, team } = result[0];
+
+  if (Date.now() >= session.expiresAt.getTime()) {
+    await db.delete(sessions).where(eq(sessions.id, session.id));
+    return { session: null, user: null };
   }
 
-  const result = await lucia.validateSession(sessionId);
-  // next.js throws when you attempt to set cookie when rendering page
-  try {
-    if (result.session?.fresh) {
-      const sessionCookie = lucia.createSessionCookie(result.session.id);
-      cookies().set(
-        sessionCookie.name,
-        sessionCookie.value,
-        sessionCookie.attributes,
-      );
-    }
-    if (!result.session) {
-      const sessionCookie = lucia.createBlankSessionCookie();
-      cookies().set(
-        sessionCookie.name,
-        sessionCookie.value,
-        sessionCookie.attributes,
-      );
-    }
-  } catch {
-    /* empty */
+  if (Date.now() >= session.expiresAt.getTime() - 1000 * 60 * 60 * 24 * 15) {
+    session.expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
+    await db
+      .update(sessions)
+      .set({
+        expiresAt: session.expiresAt,
+      })
+      .where(eq(sessions.id, session.id));
   }
+  return { session, user: { ...user, activeTeamName: team.name } };
+}
+
+export async function invalidateSession(sessionId: string) {
+  await db.delete(sessions).where(eq(sessions.id, sessionId));
+}
+
+//* Cookies
+export function setSessionTokenCookie(token: string, expiresAt: Date) {
+  cookies().set("session", token, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: env.NODE_ENV === "production",
+    expires: expiresAt,
+    path: "/",
+  });
+}
+
+export function deleteSessionTokenCookie() {
+  cookies().set("session", "", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: env.NODE_ENV === "production",
+    maxAge: 0,
+    path: "/",
+  });
+}
+
+export const auth = async () => {
+  const token = cookies().get("session")?.value ?? null;
+
+  if (token === null) return { session: null, user: null };
+
+  const result = await validateSessionToken(token);
   return result;
 };
 
@@ -78,22 +121,3 @@ export const providers = {
 } as const;
 
 export type Providers = keyof typeof providers;
-
-export type AuthResponse =
-  | { user: User; session: Session }
-  | { user: null; session: null };
-
-declare module "lucia" {
-  interface Register {
-    Lucia: typeof lucia;
-    DatabaseUserAttributes: Omit<typeof users.$inferSelect, "id"> &
-      ExtendedDatabaseUserAttributes;
-    DatabaseSessionAttributes: Pick<
-      typeof sessions.$inferSelect,
-      "ipAddress" | "userAgent"
-    >;
-  }
-}
-interface ExtendedDatabaseUserAttributes {
-  activeTeamName: string; //"Virtual" field from the team table
-}
