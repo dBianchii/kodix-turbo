@@ -27,7 +27,10 @@ export default function NotificationsTab() {
   const { user } = useAuth();
 
   const router = useRouter();
-  if (!user) return router.push("/");
+  if (!user) {
+    router.push("/");
+    return null;
+  }
 
   const {
     data: notifications,

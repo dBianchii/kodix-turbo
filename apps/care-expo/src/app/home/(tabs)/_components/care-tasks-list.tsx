@@ -57,7 +57,7 @@ import { api } from "~/utils/api";
 type CareTaskOrCalendarTask =
   RouterOutputs["app"]["kodixCare"]["getCareTasks"][number];
 
-export function CaretasksList() {
+export function CareTasksLists() {
   const input = {
     dateStart: dayjs().startOf("day").toDate(),
     dateEnd: dayjs().endOf("day").toDate(),

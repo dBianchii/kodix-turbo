@@ -23,7 +23,10 @@ function TabBarButton(props: BottomTabBarButtonProps) {
 export default function TabLayout() {
   const { user } = useAuth();
   const router = useRouter();
-  if (!user) return router.replace("/");
+  if (!user) {
+    router.replace("/");
+    return null;
+  }
   return (
     <>
       <Tabs
