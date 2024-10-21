@@ -1,9 +1,14 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 
-import { PKodixCare_CanToggleShiftId } from "@kdx/shared";
+import {
+  PKodixCare_CanCreateCareTask,
+  PKodixCare_CanDeleteCareTask,
+  PKodixCare_CanToggleShiftId,
+} from "@kdx/shared";
 import {
   ZCheckEmailForRegisterInputSchema,
   ZCreateCareTaskInputSchema,
+  ZDeleteCareTaskInputSchema,
   ZDoCheckoutForShiftInputSchema,
   ZGetCareTasksInputSchema,
   ZSaveCareTaskInputSchema,
@@ -19,6 +24,7 @@ import {
 import { protectedProcedure, publicProcedure } from "../../../procedures";
 import { checkEmailForRegisterHandler } from "./checkEmailForRegister.handler";
 import { createCareTaskHandler } from "./createCareTask.handler";
+import { deleteCareTaskHandler } from "./deleteCareTask.handler";
 import { doCheckoutForShiftHandler } from "./doCheckoutForShift.handler";
 import { getCareTasksHandler } from "./getCareTasks.handler";
 import { getCurrentShiftHandler } from "./getCurrentShift.handler";
@@ -62,6 +68,12 @@ export const kodixCareRouter = {
     .use(kodixCareInstalledMiddleware)
     .mutation(syncCareTasksFromCalendarHandler),
   createCareTask: protectedProcedure
+    .use(kodixCareInstalledMiddleware)
+    .use(appPermissionMiddleware(PKodixCare_CanCreateCareTask))
     .input(T(ZCreateCareTaskInputSchema))
     .mutation(createCareTaskHandler),
+  deleteCareTask: protectedProcedure
+    .use(appPermissionMiddleware(PKodixCare_CanDeleteCareTask))
+    .input(ZDeleteCareTaskInputSchema)
+    .mutation(deleteCareTaskHandler),
 } satisfies TRPCRouterRecord;

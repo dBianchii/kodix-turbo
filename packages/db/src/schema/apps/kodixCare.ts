@@ -66,6 +66,9 @@ export const careTasks = mysqlTable(
     details: varchar("details", { length: DEFAULTLENGTH }),
     updatedAt: timestamp("updatedAt").onUpdateNow(),
     type: typeEnum.notNull().default("NORMAL"),
+    createdBy: varchar("createdBy", { length: NANOID_SIZE })
+      .notNull()
+      .references(() => users.id),
   },
   (table) => {
     return {

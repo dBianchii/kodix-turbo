@@ -38,5 +38,6 @@ export const createCareTaskHandler = async ({
     ...input,
     careShiftId: currentCareShift.id,
     teamId: ctx.auth.user.activeTeamId,
+    createdBy: ctx.auth.user.id,
   });
 };

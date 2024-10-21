@@ -42,5 +42,7 @@ export const getPermissionsHandler = async ({
     },
   });
 
-  return permissions;
+  return permissions.sort((a, b) =>
+    a.editable === b.editable ? 0 : a.editable ? 1 : -1,
+  );
 };
