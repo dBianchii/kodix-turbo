@@ -51,9 +51,7 @@ export async function createSession(token: string, userId: string) {
   return session;
 }
 
-export async function validateSessionToken(
-  token: string,
-): Promise<AuthResponse> {
+async function validateSessionToken(token: string): Promise<AuthResponse> {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
   const result = await db
     .select({ user: users, session: sessions, team: teams })
