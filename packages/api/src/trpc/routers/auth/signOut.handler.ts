@@ -18,7 +18,7 @@ export const signOutHandler = async ({ ctx, input }: SignOutOptions) => {
       .delete(expoTokens)
       .where(eq(expoTokens.token, input.expoToken));
 
-  await invalidateSession(ctx.session.session.id);
+  await invalidateSession(ctx.auth.session.id);
 
   return { success: true };
 };

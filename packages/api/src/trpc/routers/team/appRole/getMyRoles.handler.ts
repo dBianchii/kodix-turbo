@@ -12,14 +12,14 @@ export const getMyRolesHandler = async ({ ctx, input }: GetMyRolesOptions) => {
   const roles = await ctx.db.query.teamAppRoles.findMany({
     where: (teamAppRole, { eq, and, inArray }) =>
       and(
-        eq(teamAppRole.teamId, ctx.session.user.activeTeamId),
+        eq(teamAppRole.teamId, ctx.auth.user.activeTeamId),
         eq(teamAppRole.appId, input.appId),
         inArray(
           teamAppRole.id,
           ctx.db
             .select({ id: teamAppRolesToUsers.teamAppRoleId })
             .from(teamAppRolesToUsers)
-            .where(eq(teamAppRolesToUsers.userId, ctx.session.user.id)),
+            .where(eq(teamAppRolesToUsers.userId, ctx.auth.user.id)),
         ),
       ),
     columns: {

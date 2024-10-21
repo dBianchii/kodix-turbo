@@ -16,6 +16,6 @@ export const getAllUsersHandler = async ({ ctx }: GetAllUsersOptions) => {
       image: users.image,
     })
     .from(users)
-    .where(eq(usersToTeams.teamId, ctx.session.user.activeTeamId))
+    .where(eq(usersToTeams.teamId, ctx.auth.user.activeTeamId))
     .innerJoin(usersToTeams, eq(usersToTeams.userId, users.id));
 };

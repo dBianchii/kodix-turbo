@@ -7,7 +7,7 @@ interface GetAllOptions {
 export const getAllHandler = async ({ ctx }: GetAllOptions) => {
   const invitations = await ctx.db.query.invitations.findMany({
     where: (invitation, { eq }) =>
-      eq(invitation.teamId, ctx.session.user.activeTeamId),
+      eq(invitation.teamId, ctx.auth.user.activeTeamId),
     columns: {
       id: true,
       email: true,

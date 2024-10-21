@@ -60,7 +60,7 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
         const allEventMastersIdsForThisTeamQuery = ctx.db
           .select({ id: eventMasters.id })
           .from(eventMasters)
-          .where(eq(eventMasters.teamId, ctx.session.user.activeTeamId));
+          .where(eq(eventMasters.teamId, ctx.auth.user.activeTeamId));
 
         await tx
           .delete(eventExceptions)

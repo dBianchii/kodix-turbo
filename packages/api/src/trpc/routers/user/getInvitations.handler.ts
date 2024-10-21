@@ -34,7 +34,7 @@ const prepared = db.query.invitations
 
 export const getInvitationsHandler = async ({ ctx }: GetInvitationsOptions) => {
   const invitations = await prepared.execute({
-    email: ctx.session.user.email,
+    email: ctx.auth.user.email,
   });
 
   return invitations;

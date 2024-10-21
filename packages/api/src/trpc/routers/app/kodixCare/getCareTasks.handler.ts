@@ -16,7 +16,7 @@ export const getCareTasksHandler = async ({
     ctx,
     dateStart: input.dateStart,
     dateEnd: input.dateEnd,
-    teamIds: [ctx.session.user.activeTeamId],
+    teamIds: [ctx.auth.user.activeTeamId],
   });
 
   return careTasks;

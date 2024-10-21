@@ -31,16 +31,16 @@ import { getLocaleBasedOnCookie } from "../utils/locales";
  */
 export const createTRPCContext = (opts: {
   headers: Headers;
-  session: AuthResponse | null;
+  auth: AuthResponse;
 }) => {
   const authToken = opts.headers.get("Authorization") ?? null;
-  const session = opts.session;
+  const auth = opts.auth;
 
   const source = opts.headers.get("x-trpc-source") ?? "unknown";
-  console.log(">>> tRPC Request from", source, "by", session?.user);
+  console.log(">>> tRPC Request from", source, "by", auth.user);
   return {
     locale: getLocaleBasedOnCookie(),
-    session,
+    auth,
     db,
     token: authToken,
   };

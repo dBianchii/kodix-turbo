@@ -6,7 +6,7 @@ interface GetAllOptions {
 
 export const getAllHandler = async ({ ctx }: GetAllOptions) => {
   const todos = await ctx.db.query.todos.findMany({
-    where: (todos, { eq }) => eq(todos.teamId, ctx.session.user.activeTeamId),
+    where: (todos, { eq }) => eq(todos.teamId, ctx.auth.user.activeTeamId),
     with: {
       AssignedToUser: {
         columns: {

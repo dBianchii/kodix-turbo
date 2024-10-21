@@ -33,7 +33,7 @@ export async function cloneCalendarTasksToCareTasks({
     await ctx.db.insert(careTasks).values(
       calendarTasks.map((calendarTask) => ({
         careShiftId: careShiftId,
-        teamId: ctx.session.user.activeTeamId,
+        teamId: ctx.auth.user.activeTeamId,
         title: calendarTask.title,
         description: calendarTask.description,
         date: calendarTask.date,

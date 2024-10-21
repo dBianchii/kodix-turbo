@@ -21,7 +21,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
   const allEventMastersIdsForThisTeamQuery = ctx.db
     .select({ id: eventMasters.id })
     .from(eventMasters)
-    .where(eq(eventMasters.teamId, ctx.session.user.activeTeamId));
+    .where(eq(eventMasters.teamId, ctx.auth.user.activeTeamId));
 
   if (input.editDefinition === "single") {
     //* Havemos description, title, from e selectedTimestamp.
@@ -61,7 +61,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
       where: (eventMasters, { and, eq }) =>
         and(
           eq(eventMasters.id, input.eventMasterId),
-          eq(eventMasters.teamId, ctx.session.user.activeTeamId),
+          eq(eventMasters.teamId, ctx.auth.user.activeTeamId),
         ),
       columns: {
         id: true,
@@ -149,7 +149,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
         where: (eventMasters, { and, eq }) =>
           and(
             eq(eventMasters.id, input.eventMasterId),
-            eq(eventMasters.teamId, ctx.session.user.activeTeamId),
+            eq(eventMasters.teamId, ctx.auth.user.activeTeamId),
           ),
         columns: {
           rule: true,
@@ -203,7 +203,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
           .where(
             and(
               eq(eventMasters.id, input.eventMasterId),
-              eq(eventMasters.teamId, ctx.session.user.activeTeamId),
+              eq(eventMasters.teamId, ctx.auth.user.activeTeamId),
             ),
           );
         if (shouldDeleteFutureExceptions) return; //* We don't need to update the exceptions if we are deleting them already.
@@ -236,14 +236,14 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
         .where(
           and(
             eq(eventMasters.id, input.eventMasterId),
-            eq(eventMasters.teamId, ctx.session.user.activeTeamId),
+            eq(eventMasters.teamId, ctx.auth.user.activeTeamId),
           ),
         );
 
       const newMasterId = nanoid();
       await tx.insert(eventMasters).values({
         id: newMasterId,
-        teamId: ctx.session.user.activeTeamId,
+        teamId: ctx.auth.user.activeTeamId,
         dateStart: input.from ?? input.selectedTimestamp,
         dateUntil: input.until ?? oldRule.options.until ?? undefined,
         rule: new RRule({
@@ -309,7 +309,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
             where: (eventMasters, { and, eq }) =>
               and(
                 eq(eventMasters.id, input.eventMasterId),
-                eq(eventMasters.teamId, ctx.session.user.activeTeamId),
+                eq(eventMasters.teamId, ctx.auth.user.activeTeamId),
               ),
             columns: {
               rule: true,
@@ -357,7 +357,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
         .where(
           and(
             eq(eventMasters.id, input.eventMasterId),
-            eq(eventMasters.teamId, ctx.session.user.activeTeamId),
+            eq(eventMasters.teamId, ctx.auth.user.activeTeamId),
           ),
         );
 

@@ -20,7 +20,7 @@ interface RemoveUserOptions {
 }
 
 export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
-  const isUserTryingToRemoveSelfFromTeam = input.userId === ctx.session.user.id;
+  const isUserTryingToRemoveSelfFromTeam = input.userId === ctx.auth.user.id;
   if (isUserTryingToRemoveSelfFromTeam) {
     const t = await getTranslations({ locale: ctx.locale });
     throw new TRPCError({
@@ -37,7 +37,7 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
     .innerJoin(usersToTeams, eq(teams.id, usersToTeams.teamId))
     .where(
       and(
-        not(eq(teams.id, ctx.session.user.activeTeamId)),
+        not(eq(teams.id, ctx.auth.user.activeTeamId)),
         eq(usersToTeams.userId, input.userId),
       ),
     )
@@ -74,7 +74,7 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
       .where(
         and(
           eq(usersToTeams.userId, input.userId),
-          eq(usersToTeams.teamId, ctx.session.user.activeTeamId),
+          eq(usersToTeams.teamId, ctx.auth.user.activeTeamId),
         ),
       );
 
@@ -89,7 +89,7 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
             ctx.db
               .select({ id: teamAppRoles.id })
               .from(teamAppRoles)
-              .where(eq(teamAppRoles.teamId, ctx.session.user.activeTeamId)),
+              .where(eq(teamAppRoles.teamId, ctx.auth.user.activeTeamId)),
           ),
         ),
       );

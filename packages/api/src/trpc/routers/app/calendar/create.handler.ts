@@ -22,7 +22,7 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
       count: input.count,
       byweekday: input.weekdays,
     }).toString(),
-    teamId: ctx.session.user.activeTeamId,
+    teamId: ctx.auth.user.activeTeamId,
     dateStart: input.from,
     dateUntil: input.until,
     type: input.type,

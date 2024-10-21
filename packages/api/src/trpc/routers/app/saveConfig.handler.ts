@@ -15,7 +15,7 @@ export const saveConfigHandler = async ({ ctx, input }: SaveConfigOptions) => {
     where: (appteamConfig, { eq, and }) =>
       and(
         eq(appteamConfig.appId, input.appId),
-        eq(appteamConfig.teamId, ctx.session.user.activeTeamId),
+        eq(appteamConfig.teamId, ctx.auth.user.activeTeamId),
       ),
     columns: {
       config: true,
@@ -35,7 +35,7 @@ export const saveConfigHandler = async ({ ctx, input }: SaveConfigOptions) => {
       .where(
         and(
           eq(appTeamConfigs.appId, input.appId),
-          eq(appTeamConfigs.teamId, ctx.session.user.activeTeamId),
+          eq(appTeamConfigs.teamId, ctx.auth.user.activeTeamId),
         ),
       );
   }
@@ -45,7 +45,7 @@ export const saveConfigHandler = async ({ ctx, input }: SaveConfigOptions) => {
 
   await ctx.db.insert(appTeamConfigs).values({
     config: parsedInput,
-    teamId: ctx.session.user.activeTeamId,
+    teamId: ctx.auth.user.activeTeamId,
     appId: input.appId,
   });
 };

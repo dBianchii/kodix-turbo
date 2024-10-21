@@ -11,7 +11,7 @@ interface CreateOptions {
 export const createHandler = async ({ ctx, input }: CreateOptions) => {
   await ctx.db.insert(todos).values({
     assignedToUserId: input.assignedToUserId,
-    teamId: ctx.session.user.activeTeamId,
+    teamId: ctx.auth.user.activeTeamId,
     title: input.title,
     description: input.description,
     dueDate: input.dueDate,

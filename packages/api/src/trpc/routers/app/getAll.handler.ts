@@ -13,23 +13,23 @@ interface GetAllOptions {
 
 export const getAllHandler = async ({ ctx }: GetAllOptions) => {
   const cached = await getUpstashCache("apps", {
-    teamId: ctx.session?.user?.activeTeamId,
+    teamId: ctx.auth.user?.activeTeamId,
   });
   if (cached) return cached;
 
   const _apps = await ctx.db
     .select({
       id: apps.id,
-      ...(ctx.session?.user?.activeTeamId && {
+      ...(ctx.auth.user?.activeTeamId && {
         installed: sql`EXISTS(SELECT 1 FROM ${appsToTeams} WHERE ${eq(
           apps.id,
           appsToTeams.appId,
-        )} AND ${eq(appsToTeams.teamId, ctx.session.user.activeTeamId)})`, //? If user is logged in, we select 1 or 0
+        )} AND ${eq(appsToTeams.teamId, ctx.auth.user.activeTeamId)})`, //? If user is logged in, we select 1 or 0
       }),
     })
     .from(apps)
     .then((res) => {
-      if (ctx.session?.user?.activeTeamId)
+      if (ctx.auth.user?.activeTeamId)
         return res.map((x) => ({
           ...x,
           installed: !!x.installed, //? And then we convert it to boolean. Javascript is amazing /s
@@ -50,7 +50,7 @@ export const getAllHandler = async ({ ctx }: GetAllOptions) => {
 
   await setUpstashCache("apps", {
     variableKeys: {
-      teamId: ctx.session?.user?.activeTeamId,
+      teamId: ctx.auth.user?.activeTeamId,
     },
     value: _apps,
   });

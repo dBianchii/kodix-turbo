@@ -17,7 +17,7 @@ export const declineHandler = async ({ ctx, input }: DeclineOptions) => {
     where: (invitation, { and, eq }) =>
       and(
         eq(invitation.id, input.invitationId),
-        eq(invitation.email, ctx.session.user.email),
+        eq(invitation.email, ctx.auth.user.email),
       ),
   });
   const t = await getTranslations({ locale: ctx.locale });

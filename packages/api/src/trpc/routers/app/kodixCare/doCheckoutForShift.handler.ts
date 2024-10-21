@@ -26,7 +26,7 @@ export const doCheckoutForShiftHandler = async ({
       message: t("api.No current shift found"),
     });
   }
-  if (currentShift.Caregiver.id !== ctx.session.user.id)
+  if (currentShift.Caregiver.id !== ctx.auth.user.id)
     throw new TRPCError({
       code: "FORBIDDEN",
       message: t("api.You are not the caregiver for this shift"),

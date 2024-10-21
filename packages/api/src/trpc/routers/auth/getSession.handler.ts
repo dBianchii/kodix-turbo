@@ -5,5 +5,5 @@ interface GetSessionOptions {
 }
 
 export const getSessionHandler = ({ ctx }: GetSessionOptions) => {
-  return ctx.session;
+  return ctx.auth;
 };
