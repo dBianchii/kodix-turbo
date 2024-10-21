@@ -2,6 +2,7 @@ import {
   calendarAppId,
   kodixCareAppId,
   PKodixCare_CanCreateCareTask,
+  PKodixCare_CanDeleteCareTask,
   PKodixCare_CanToggleShiftId,
   todoAppId,
 } from "@kdx/shared";
@@ -16,4 +17,5 @@ export const appIdToName = {
 export const appPermissionIdToName = {
   [PKodixCare_CanToggleShiftId]: "Can toggle shift",
   [PKodixCare_CanCreateCareTask]: "Can create task",
+  [PKodixCare_CanDeleteCareTask]: "Can delete task",
 } as const;
