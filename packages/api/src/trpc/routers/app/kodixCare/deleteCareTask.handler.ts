@@ -55,8 +55,8 @@ export const deleteCareTaskHandler = async ({
     .from(teamAppRoles)
     .where(
       and(
-        eq(teamAppRolesToUsers.userId, ctx.session.user.id),
-        eq(teamAppRoles.teamId, ctx.session.user.activeTeamId),
+        eq(teamAppRolesToUsers.userId, ctx.auth.user.id),
+        eq(teamAppRoles.teamId, ctx.auth.user.activeTeamId),
         eq(teamAppRoles.appId, kodixCareAppId),
       ),
     )
@@ -66,7 +66,7 @@ export const deleteCareTaskHandler = async ({
     );
 
   if (
-    careTask.createdBy !== ctx.session.user.id &&
+    careTask.createdBy !== ctx.auth.user.id &&
     !roles.some((x) => x.appRoleDefaultId === kodixCareRoleDefaultIds.admin)
   )
     throw new TRPCError({
@@ -78,7 +78,7 @@ export const deleteCareTaskHandler = async ({
     .delete(careTasks)
     .where(
       and(
-        eq(careTasks.teamId, ctx.session.user.activeTeamId),
+        eq(careTasks.teamId, ctx.auth.user.activeTeamId),
         eq(careTasks.id, input.id),
       ),
     );
