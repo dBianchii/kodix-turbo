@@ -14,12 +14,10 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
   await ctx.db.transaction(async (tx) => {
     const team = await tx.insert(teams).values({
       id: teamId,
-      ownerId: ctx.session.user.id,
+      ownerId: ctx.auth.user.id,
       name: input.teamName,
     });
-    await tx
-      .insert(usersToTeams)
-      .values({ userId: ctx.session.user.id, teamId });
+    await tx.insert(usersToTeams).values({ userId: ctx.auth.user.id, teamId });
     return team;
   });
 

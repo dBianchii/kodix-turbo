@@ -12,7 +12,9 @@ import { EditUserTeamsTable } from "./_components/edit-users-teams-card/edit-use
 
 export default async function GeneralAccountSettings() {
   const { user } = await auth();
+
   if (!user) return redirect("/");
+
   const t = await getTranslations();
 
   return (

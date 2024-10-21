@@ -22,7 +22,7 @@ packages
   ├─ api
   |   └─ tRPC v11 router definition
   ├─ auth
-  |   └─ Authentication using lucia-auth.
+  |   └─ Authentication using database sessions and oslo (lucia-auth).
   ├─ db
   |   └─ Typesafe db calls using Drizzle and MySQL
   ├─ ui

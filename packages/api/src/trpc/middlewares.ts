@@ -47,8 +47,8 @@ export const appPermissionMiddleware = (permissionId: AppPermissionId) =>
     ctx: TProtectedProcedureContext;
   }>().create(async ({ ctx, next }) => {
     let foundPermission = await getUpstashCache("permissions", {
-      userId: ctx.session.user.id,
-      teamId: ctx.session.user.activeTeamId,
+      userId: ctx.auth.user.id,
+      teamId: ctx.auth.user.activeTeamId,
       permissionId,
     });
 
@@ -66,16 +66,16 @@ export const appPermissionMiddleware = (permissionId: AppPermissionId) =>
         )
         .where(
           and(
-            eq(teamAppRolesToUsers.userId, ctx.session.user.id),
-            eq(teamAppRoles.teamId, ctx.session.user.activeTeamId),
+            eq(teamAppRolesToUsers.userId, ctx.auth.user.id),
+            eq(teamAppRoles.teamId, ctx.auth.user.activeTeamId),
             eq(appPermissionsToTeamAppRoles.appPermissionId, permissionId),
           ),
         );
 
       await setUpstashCache("permissions", {
         variableKeys: {
-          userId: ctx.session.user.id,
-          teamId: ctx.session.user.activeTeamId,
+          userId: ctx.auth.user.id,
+          teamId: ctx.auth.user.activeTeamId,
           permissionId,
         },
         value: permission,

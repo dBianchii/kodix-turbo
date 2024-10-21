@@ -2,15 +2,15 @@ import { cache } from "react";
 
 import { auth as _auth } from "./config";
 
+export type { AuthResponse, Providers, User, Session } from "./config";
+
 /**
  * This is the main way to get session data for your RSCs.
  * This will de-duplicate all calls to the default `auth()` function and only call it once per request across all components
  */
 export const auth = cache(_auth);
-
-export { providers, isSecureContext } from "./config";
-
-export type { Providers, AuthResponse } from "./config";
-export { lucia } from "./config";
-export type { Session } from "lucia";
-export type { User } from "lucia";
+export {
+  deleteSessionTokenCookie,
+  invalidateSession,
+  providers,
+} from "./config";

@@ -20,7 +20,7 @@ export const getUsersWithRolesHandler = async ({
         ctx.db
           .select({ id: usersToTeams.userId })
           .from(usersToTeams)
-          .where(eq(usersToTeams.teamId, ctx.session.user.activeTeamId)),
+          .where(eq(usersToTeams.teamId, ctx.auth.user.activeTeamId)),
       ),
     with: {
       TeamAppRolesToUsers: {
@@ -32,7 +32,7 @@ export const getUsersWithRolesHandler = async ({
               .from(teamAppRoles)
               .where(
                 and(
-                  eq(teamAppRoles.teamId, ctx.session.user.activeTeamId),
+                  eq(teamAppRoles.teamId, ctx.auth.user.activeTeamId),
                   eq(teamAppRoles.appId, input.appId),
                 ),
               ),

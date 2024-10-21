@@ -18,8 +18,8 @@ export const saveUserAppTeamConfigHandler = async ({
     where: (userAppTeamConfigs, { eq, and }) =>
       and(
         eq(userAppTeamConfigs.appId, input.appId),
-        eq(userAppTeamConfigs.teamId, ctx.session.user.activeTeamId),
-        eq(userAppTeamConfigs.userId, ctx.session.user.id),
+        eq(userAppTeamConfigs.teamId, ctx.auth.user.activeTeamId),
+        eq(userAppTeamConfigs.userId, ctx.auth.user.id),
       ),
     columns: {
       config: true,
@@ -39,8 +39,8 @@ export const saveUserAppTeamConfigHandler = async ({
       .where(
         and(
           eq(userAppTeamConfigs.appId, input.appId),
-          eq(userAppTeamConfigs.teamId, ctx.session.user.activeTeamId),
-          eq(userAppTeamConfigs.userId, ctx.session.user.id),
+          eq(userAppTeamConfigs.teamId, ctx.auth.user.activeTeamId),
+          eq(userAppTeamConfigs.userId, ctx.auth.user.id),
         ),
       );
   }
@@ -50,8 +50,8 @@ export const saveUserAppTeamConfigHandler = async ({
 
   await ctx.db.insert(userAppTeamConfigs).values({
     config: parsedInput,
-    teamId: ctx.session.user.activeTeamId,
+    teamId: ctx.auth.user.activeTeamId,
     appId: input.appId,
-    userId: ctx.session.user.id,
+    userId: ctx.auth.user.id,
   });
 };

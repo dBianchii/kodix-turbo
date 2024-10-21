@@ -11,7 +11,7 @@ export const getAllHandler = async ({ ctx, input }: GetAllOptions) => {
   return await ctx.db.query.teamAppRoles.findMany({
     where: (role, { and, eq }) =>
       and(
-        eq(role.teamId, ctx.session.user.activeTeamId),
+        eq(role.teamId, ctx.auth.user.activeTeamId),
         eq(role.appId, input.appId),
       ),
     columns: {

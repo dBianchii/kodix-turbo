@@ -30,10 +30,7 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
     .innerJoin(appsToTeams, eq(appsToTeams.appId, apps.id))
     .innerJoin(teams, eq(teams.id, appsToTeams.teamId))
     .where(
-      and(
-        eq(teams.id, ctx.session.user.activeTeamId),
-        eq(apps.id, input.appId),
-      ),
+      and(eq(teams.id, ctx.auth.user.activeTeamId), eq(apps.id, input.appId)),
     )
     .then((res) => res[0]);
 
@@ -47,7 +44,7 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
   await ctx.db.transaction(async (tx) => {
     await tx.insert(appsToTeams).values({
       appId: input.appId,
-      teamId: ctx.session.user.activeTeamId,
+      teamId: ctx.auth.user.activeTeamId,
     });
 
     const appRoleDefaultForApp = appRoles_defaultTree[input.appId];
@@ -58,7 +55,7 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
         id: nanoid(),
         appId: input.appId,
         appRoleDefaultId: defaultAppRole.id,
-        teamId: ctx.session.user.activeTeamId,
+        teamId: ctx.auth.user.activeTeamId,
       }),
     ) satisfies (typeof teamAppRoles.$inferInsert)[];
 
@@ -90,11 +87,11 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
 
     await tx.insert(teamAppRolesToUsers).values({
       teamAppRoleId: adminRoleForApp.id,
-      userId: ctx.session.user.id,
+      userId: ctx.auth.user.id,
     });
   });
 
   await invalidateUpstashCache("apps", {
-    teamId: ctx.session.user.activeTeamId,
+    teamId: ctx.auth.user.activeTeamId,
   });
 };

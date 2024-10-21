@@ -1,5 +1,5 @@
 import type { TSignOutInputSchema } from "@kdx/validators/trpc/auth";
-import { lucia } from "@kdx/auth";
+import { invalidateSession } from "@kdx/auth";
 import { eq } from "@kdx/db";
 import { expoTokens } from "@kdx/db/schema";
 
@@ -18,7 +18,7 @@ export const signOutHandler = async ({ ctx, input }: SignOutOptions) => {
       .delete(expoTokens)
       .where(eq(expoTokens.token, input.expoToken));
 
-  await lucia.invalidateSession(ctx.session.session.id);
+  await invalidateSession(ctx.auth.session.id);
 
   return { success: true };
 };

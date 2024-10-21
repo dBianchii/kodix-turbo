@@ -35,7 +35,7 @@ export const getNotificationsHandler = async ({
   const allTeamIdsForUserQuery = ctx.db
     .select({ id: usersToTeams.teamId })
     .from(usersToTeams)
-    .where(eq(usersToTeams.userId, ctx.session.user.id));
+    .where(eq(usersToTeams.userId, ctx.auth.user.id));
 
   const filterExpressions: (SQL<unknown> | undefined)[] = [
     // Filter notifications by subject
@@ -71,7 +71,7 @@ export const getNotificationsHandler = async ({
   ];
 
   const where: DrizzleWhere<typeof notifications.$inferSelect> = and(
-    eq(notifications.sentToUserId, ctx.session.user.id), //? Only show notifications for the logged in user
+    eq(notifications.sentToUserId, ctx.auth.user.id), //? Only show notifications for the logged in user
     inArray(notifications.teamId, allTeamIdsForUserQuery), //? Ensure user is part of the team
 
     !input.operator || input.operator === "and"

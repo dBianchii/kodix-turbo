@@ -8,7 +8,7 @@ import { OPTIONS, setCorsHeaders } from "../../_enableCors";
 export const runtime = "nodejs";
 
 const handler = async (req: Request) => {
-  const currentUser = await auth();
+  const authResponse = await auth();
 
   const response = await fetchRequestHandler({
     endpoint: "/api/trpc",
@@ -16,7 +16,7 @@ const handler = async (req: Request) => {
     req,
     createContext: () =>
       createTRPCContext({
-        session: currentUser,
+        auth: authResponse,
         headers: req.headers,
       }),
     onError({ error, path }) {

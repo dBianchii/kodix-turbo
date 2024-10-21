@@ -46,8 +46,8 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
       const careShiftId = nanoid();
       await ctx.db.insert(careShifts).values({
         id: careShiftId,
-        caregiverId: ctx.session.user.id,
-        teamId: ctx.session.user.activeTeamId,
+        caregiverId: ctx.auth.user.id,
+        teamId: ctx.auth.user.activeTeamId,
       });
 
       await cloneCalendarTasksToCareTasks({
@@ -76,7 +76,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
     });
 
   const loggedUserIsCaregiverForCurrentShift =
-    ctx.session.user.id === currentShift.Caregiver.id;
+    ctx.auth.user.id === currentShift.Caregiver.id;
 
   await ctx.db.transaction(async (tx) => {
     //*End the current shift
@@ -93,9 +93,9 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
     const [newCareShift] = await tx
       .insert(careShifts)
       .values({
-        teamId: ctx.session.user.activeTeamId,
+        teamId: ctx.auth.user.activeTeamId,
         checkIn: now,
-        caregiverId: ctx.session.user.id,
+        caregiverId: ctx.auth.user.id,
       })
       .$returningId();
 
@@ -103,7 +103,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
     const previousShift = await ctx.db.query.careShifts.findFirst({
       orderBy: desc(careShifts.checkIn),
       where: and(
-        eq(careShifts.teamId, ctx.session.user.activeTeamId),
+        eq(careShifts.teamId, ctx.auth.user.activeTeamId),
         isNotNull(careShifts.shiftEndedAt),
       ),
       columns: { id: true },
@@ -139,7 +139,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
         from: KODIX_NOTIFICATION_FROM_EMAIL, //TODO: go through kodix notification center!
         to: currentShift.Caregiver.email,
         subject: t(`api.Your last shift was ended by NAME`, {
-          name: ctx.session.user.name,
+          name: ctx.auth.user.name,
         }),
         react: WarnPreviousShiftNotEnded(),
       });
