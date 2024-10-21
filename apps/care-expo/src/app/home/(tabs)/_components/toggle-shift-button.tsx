@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Alert } from "react-native";
+import { useRouter } from "expo-router";
 import { useToastController } from "@tamagui/toast";
 import { Button, H3, Paragraph, Spinner, XStack } from "tamagui";
 
@@ -22,11 +23,15 @@ import { useAuth } from "~/utils/auth";
 
 export function ToggleShiftButton() {
   const query = api.app.kodixCare.getCurrentShift.useQuery();
-  const user = useAuth();
-  if (!user.session) return null;
+  const { user } = useAuth();
+  const router = useRouter();
+  if (!user) {
+    router.replace("/");
+    return null;
+  }
 
   if (!(query.data && !query.data.checkOut)) return <StartShiftDialogButton />;
-  if (query.data.Caregiver.id === user.session.userId)
+  if (query.data.Caregiver.id === user.id)
     return <DoCheckoutDialogButton currentShift={query.data} />;
   // return <StartShiftWarnPreviousPersonDialog />;
 }

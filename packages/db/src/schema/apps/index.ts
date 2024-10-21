@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import {
+  boolean,
   index,
   json,
   mysqlTable,
@@ -92,6 +93,7 @@ export const appPermissions = mysqlTable(
     appId: varchar("appId", { length: NANOID_SIZE })
       .notNull()
       .references(() => apps.id, { onDelete: "cascade", onUpdate: "cascade" }),
+    editable: boolean("editable").default(true).notNull(),
   },
   (table) => {
     return {

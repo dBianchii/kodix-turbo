@@ -80,3 +80,8 @@ export const ZCreateCareTaskInputSchema = (t: IsomorficT) =>
 export type TCreateCareTaskInputSchema = z.infer<
   ReturnType<typeof ZCreateCareTaskInputSchema>
 >;
+
+export const ZDeleteCareTaskInputSchema = z.object({ id: z.string() });
+export type TDeleteCareTaskInputSchema = z.infer<
+  typeof ZDeleteCareTaskInputSchema
+>;

@@ -1,5 +1,5 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useTheme, XStack } from "tamagui";
 
 import { AvatarWrapper } from "~/components/avatar-wrapper";
@@ -9,7 +9,11 @@ import { useAuth } from "~/utils/auth";
 export function Header() {
   const { user } = useAuth();
   const theme = useTheme();
-  if (!user) return;
+  const router = useRouter();
+  if (!user) {
+    router.replace("/");
+    return null;
+  }
   return (
     <SafeAreaView style={{ backgroundColor: theme.background.val }}>
       <XStack jc={"flex-end"} mx={defaultPadding} my={"$3"}>

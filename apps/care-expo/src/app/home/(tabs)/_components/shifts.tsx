@@ -24,6 +24,7 @@ export function CurrentShift() {
   const query = api.app.kodixCare.getCurrentShift.useQuery(undefined);
 
   if (!query.data) return <NoPreviousShift />;
+
   if (!query.data.checkOut)
     return <ShiftInProgress currentShift={query.data} />;
   return <ShiftCheckedOut currentShift={query.data} />;
@@ -31,15 +32,18 @@ export function CurrentShift() {
 
 function NoPreviousShift() {
   return (
-    <YStack gap={"$3"}>
-      <XStack>
+    <YStack gap={"$1"} ai={"center"}>
+      <XStack gap={"$3"} jc="center" ai={"center"}>
         <H4>Turno atual</H4>
       </XStack>
-      <XStack gap={"$3"}>
+      <XStack gap={"$3"} ai={"center"} my={"$2"}>
         <UserCircle2 />
         <Paragraph color="$gray11Dark">Nenhum turno inciado ainda</Paragraph>
       </XStack>
-      <ToggleShiftButton />
+
+      <View mt={"$3"}>
+        <ToggleShiftButton />
+      </View>
     </YStack>
   );
 }
