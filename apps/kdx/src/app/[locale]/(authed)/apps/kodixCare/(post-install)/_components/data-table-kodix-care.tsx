@@ -22,7 +22,9 @@ import {
   RxCalendar,
   RxChevronLeft,
   RxChevronRight,
+  RxDotsHorizontal,
   RxLockClosed,
+  RxTrash,
 } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
@@ -41,7 +43,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@kdx/ui/alert-dialog";
-import { Button } from "@kdx/ui/button";
+import { Button, buttonVariants } from "@kdx/ui/button";
 import { Checkbox } from "@kdx/ui/checkbox";
 import {
   Credenza,
@@ -60,6 +62,7 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@kdx/ui/dropdown-menu";
 import {
@@ -121,7 +124,7 @@ export default function DataTableKodixCare() {
 
   const utils = api.useUtils();
   const [editDetailsOpen, setEditDetailsOpen] = useState(false);
-
+  const [deleteTaskOpen, setDeleteTaskOpen] = useState(false);
   const [unlockMoreTasksCredenzaOpen, setUnlockMoreTasksDialogOpen] =
     useState(false);
 
@@ -280,6 +283,46 @@ export default function DataTableKodixCare() {
           </div>
         ),
       }),
+      columnHelper.display({
+        id: "edit",
+        header: () => null,
+        cell: (ctx) => {
+          if (!isCareTask(ctx.row.original.id)) return null;
+
+          return (
+            <div className="space-x-4">
+              {/* <Checkbox
+              checked={info.row.getIsSelected()}
+              onCheckedChange={(value) => info.row.toggleSelected(!!value)}
+              aria-label="Select row"
+            /> */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="h-8 w-8 p-0">
+                    <span className="sr-only">Open menu</span>
+                    <RxDotsHorizontal className="size-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (!isCareTask(ctx.row.original.id)) return; //?Will never happen. its just to make ts happy
+
+                      setCurrentlyEditing(ctx.row.original.id);
+                      setDeleteTaskOpen(true);
+                    }}
+                    className="text-destructive"
+                  >
+                    <RxTrash className="mr-2 size-4" />
+                    {t("Delete")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          );
+        },
+      }),
     ],
     [format, saveCareTaskMutation, t],
   );
@@ -325,6 +368,11 @@ export default function DataTableKodixCare() {
             mutation={saveCareTaskMutation}
             open={editDetailsOpen}
             setOpen={setEditDetailsOpen}
+          />
+          <DeleteCareTaskAlertDialog
+            task={currentlyEditingCareTask}
+            open={deleteTaskOpen}
+            setOpen={setDeleteTaskOpen}
           />
         </>
       )}
@@ -479,6 +527,58 @@ export default function DataTableKodixCare() {
         </Table>
       </div>
     </>
+  );
+}
+
+function DeleteCareTaskAlertDialog({
+  task,
+  open,
+  setOpen,
+}: {
+  task: CareTask;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}) {
+  const t = useTranslations();
+
+  const utils = api.useUtils();
+
+  const mutation = api.app.kodixCare.deleteCareTask.useMutation({
+    onError: trpcErrorToastDefault,
+    onSettled: () => {
+      void utils.app.kodixCare.getCareTasks.invalidate();
+    },
+  });
+
+  return (
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{t("Delete task")}</AlertDialogTitle>
+          <AlertDialogDescription>
+            {t("Are you sure you want to delete this task")}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>{t("Cancel")}</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={() => {
+              mutation.mutate({
+                id: task.id,
+              });
+              setOpen(false);
+            }}
+            className={cn(
+              buttonVariants({
+                variant: "destructive",
+              }),
+            )}
+          >
+            {t("Yes")}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
 

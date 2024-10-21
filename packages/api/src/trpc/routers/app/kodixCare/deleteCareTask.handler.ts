@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import type { TDeleteCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import { and, eq } from "@kdx/db";
-import { careTasks, teamAppRolesToUsers } from "@kdx/db/schema";
+import { careTasks, teamAppRoles, teamAppRolesToUsers } from "@kdx/db/schema";
 import { getTranslations } from "@kdx/locales/next-intl/server";
 import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
 
@@ -48,24 +48,22 @@ export const deleteCareTaskHandler = async ({
     });
   }
 
-  const roles = await ctx.db.query.teamAppRoles.findMany({
-    where: (teamAppRoles, { eq, and }) =>
+  const roles = await ctx.db
+    .select({
+      appRoleDefaultId: teamAppRoles.appRoleDefaultId,
+    })
+    .from(teamAppRoles)
+    .where(
       and(
         eq(teamAppRolesToUsers.userId, ctx.session.user.id),
         eq(teamAppRoles.teamId, ctx.session.user.activeTeamId),
         eq(teamAppRoles.appId, kodixCareAppId),
       ),
-    with: {
-      TeamAppRolesToUsers: {
-        columns: {
-          userId: true,
-        },
-      },
-    },
-    columns: {
-      appRoleDefaultId: true,
-    },
-  });
+    )
+    .innerJoin(
+      teamAppRolesToUsers,
+      eq(teamAppRolesToUsers.teamAppRoleId, teamAppRoles.id),
+    );
 
   if (
     careTask.createdBy !== ctx.session.user.id &&
