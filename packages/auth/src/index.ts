@@ -1,4 +1,8 @@
-export { auth, isSecureContext, lucia, providers } from "./config";
+export type { AuthResponse, Providers, User, Session } from "./config";
 
-export type { Session, User } from "lucia";
-export type { AuthResponse, Providers } from "./config";
+export {
+  deleteSessionTokenCookie,
+  invalidateSession,
+  auth,
+  providers,
+} from "./config";

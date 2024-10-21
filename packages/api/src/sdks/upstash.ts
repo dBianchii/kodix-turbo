@@ -51,8 +51,14 @@ const constructKey = <T extends keyof KeysMapping>(
   key: T,
   variableKeys: KeysMapping[T]["tags"],
 ) => {
-  const sortedKeys = Object.keys(variableKeys).sort(); // Ensure order is always the same
-  return `${key}-${sortedKeys.join("-")}`;
+  const sortedEntries = Object.entries(variableKeys).sort((a, b) =>
+    a[0].localeCompare(b[0]),
+  ); // Sort entries alphabetically by keys
+
+  const constructedKey = `${key}-${sortedEntries
+    .map(([k, v]) => `${k}-${v}`)
+    .join("-")}`;
+  return constructedKey;
 };
 
 /**
