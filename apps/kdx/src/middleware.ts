@@ -1,9 +1,7 @@
-import { withAuth } from "./middlewares/auth";
 import { chainMiddleware } from "./middlewares/chain-middleware";
 import { withI18n } from "./middlewares/i18n";
 
-//TODO: csrf protection https://lucia-auth.com/sessions/cookies/nextjs
-export default chainMiddleware([withI18n, withAuth]);
+export default chainMiddleware([withI18n /*withAuth*/]);
 
 export const config = {
   // matcher: ["/((?!api|static|.*\\..*|_next|favicon.ico|robots.txt).*)"],
