@@ -1,4 +1,4 @@
-export type { AuthResponse, Providers } from "./config";
+export type { AuthResponse, Providers, User, Session } from "./config";
 
 export {
   createSession,

@@ -2,7 +2,7 @@ import { cache } from "react";
 
 import { auth as _auth } from "./config";
 
-export type { AuthResponse, Providers } from "./config";
+export type { AuthResponse, Providers, User, Session } from "./config";
 
 /**
  * This is the main way to get session data for your RSCs.

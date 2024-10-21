@@ -13,15 +13,16 @@ import { env } from "../env";
 import * as discordProvider from "./providers/discord";
 import * as googleProvider from "./providers/google";
 
-type User = typeof users.$inferSelect;
-type Session = typeof sessions.$inferSelect;
-
 interface ExtraUserProps {
   activeTeamName: string;
 }
+
+export type User = typeof users.$inferSelect & ExtraUserProps;
+export type Session = typeof sessions.$inferSelect;
+
 export type AuthResponse =
   | {
-      user: User & ExtraUserProps;
+      user: User;
       session: Session;
     }
   | { user: null; session: null };
