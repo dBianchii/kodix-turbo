@@ -24,7 +24,7 @@ export const uninstallAppHandler = async ({
       .where(
         and(
           eq(appsToTeams.appId, input.appId),
-          eq(appsToTeams.teamId, ctx.session.user.activeTeamId),
+          eq(appsToTeams.teamId, ctx.auth.user.activeTeamId),
         ),
       );
     await tx
@@ -32,7 +32,7 @@ export const uninstallAppHandler = async ({
       .where(
         and(
           eq(teamAppRoles.appId, input.appId),
-          eq(teamAppRoles.teamId, ctx.session.user.activeTeamId),
+          eq(teamAppRoles.teamId, ctx.auth.user.activeTeamId),
         ),
       );
     await tx
@@ -40,17 +40,17 @@ export const uninstallAppHandler = async ({
       .where(
         and(
           eq(appTeamConfigs.appId, input.appId),
-          eq(appTeamConfigs.teamId, ctx.session.user.activeTeamId),
+          eq(appTeamConfigs.teamId, ctx.auth.user.activeTeamId),
         ),
       );
 
     await removeAppData({
       tx,
       appId: input.appId,
-      user: ctx.session.user,
+      user: ctx.auth.user,
     });
     await invalidateUpstashCache("apps", {
-      teamId: ctx.session.user.activeTeamId,
+      teamId: ctx.auth.user.activeTeamId,
     });
   });
 };

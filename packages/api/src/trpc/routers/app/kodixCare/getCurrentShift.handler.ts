@@ -11,7 +11,7 @@ export const getCurrentShiftHandler = async ({
     orderBy: (careShift, { desc }) => desc(careShift.checkIn),
     where: (careShift, { eq, and, isNull }) =>
       and(
-        eq(careShift.teamId, ctx.session.user.activeTeamId),
+        eq(careShift.teamId, ctx.auth.user.activeTeamId),
         isNull(careShift.shiftEndedAt),
       ),
     with: {

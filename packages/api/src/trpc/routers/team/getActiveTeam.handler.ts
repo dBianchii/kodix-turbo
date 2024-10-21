@@ -33,8 +33,8 @@ const prepared = db.query.teams
 
 export const getActiveTeamHandler = async ({ ctx }: GetActiveTeamOptions) => {
   const team = await prepared.execute({
-    teamId: ctx.session.user.activeTeamId,
-    userId: ctx.session.user.id,
+    teamId: ctx.auth.user.activeTeamId,
+    userId: ctx.auth.user.id,
   });
 
   if (!team) {

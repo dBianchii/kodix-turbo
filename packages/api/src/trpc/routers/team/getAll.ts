@@ -24,7 +24,7 @@ export const getAllHandler = async ({ ctx }: GetAllOptions) => {
           .where(
             and(
               eq(usersToTeams.teamId, teams.id),
-              eq(usersToTeams.userId, ctx.session.user.id),
+              eq(usersToTeams.userId, ctx.auth.user.id),
             ),
           ),
       ),

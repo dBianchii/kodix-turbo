@@ -17,7 +17,7 @@ export const deleteHandler = async ({ ctx, input }: DeleteOptions) => {
     where: (invitation, { eq }) =>
       and(
         eq(invitation.id, input.invitationId),
-        eq(invitation.teamId, ctx.session.user.activeTeamId),
+        eq(invitation.teamId, ctx.auth.user.activeTeamId),
       ),
   });
 
