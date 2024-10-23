@@ -142,10 +142,8 @@ export default function DataTableKodixCare() {
     setUnlockMoreTasksCredenzaOpenWithDate,
   } = useCareTaskStore();
 
-  const query = api.app.kodixCare.getCareTasks.useQuery(input);
-
   const utils = api.useUtils();
-
+  const query = api.app.kodixCare.getCareTasks.useQuery(input);
   const saveCareTaskMutation = api.app.kodixCare.saveCareTask.useMutation({
     onMutate: async (savedCareTask) => {
       // Cancel any outgoing refetches
@@ -302,7 +300,6 @@ export default function DataTableKodixCare() {
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-
   const table = useReactTable({
     data: query.data ?? [],
     columns,
