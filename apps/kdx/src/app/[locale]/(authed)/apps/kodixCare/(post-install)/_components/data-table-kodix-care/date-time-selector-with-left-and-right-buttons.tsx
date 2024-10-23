@@ -8,7 +8,7 @@ import { useIsAnyOverlayMounted } from "@kdx/ui/stores/use-overlay-store";
 import { DatePicker } from "~/app/[locale]/_components/date-picker";
 import { useCareTaskStore } from ".";
 
-const useLeftAndRightArrowsSelect = () => {
+const useLeftAndRightKeyboardArrowClicks = () => {
   const shouldDisable = useIsAnyOverlayMounted();
 
   const leftArrowRef = useRef<HTMLButtonElement>(null);
@@ -28,7 +28,7 @@ const useLeftAndRightArrowsSelect = () => {
 };
 
 export function DateTimeSelectorWithLeftAndRightArrows() {
-  const { leftArrowRef, rightArrowRef } = useLeftAndRightArrowsSelect();
+  const { leftArrowRef, rightArrowRef } = useLeftAndRightKeyboardArrowClicks();
   const { input, onDateChange } = useCareTaskStore();
 
   return (
