@@ -37,6 +37,7 @@ export function DateTimeSelectorWithLeftAndRightArrows() {
         ref={leftArrowRef}
         variant="ghost"
         onClick={() => {
+          leftArrowRef.current?.focus();
           onDateChange(dayjs(input.dateStart).subtract(1, "days").toDate());
         }}
         className="h-10 w-10 p-3"
@@ -51,6 +52,7 @@ export function DateTimeSelectorWithLeftAndRightArrows() {
         ref={rightArrowRef}
         variant="ghost"
         onClick={() => {
+          leftArrowRef.current?.focus();
           onDateChange(dayjs(input.dateStart).add(1, "days").toDate());
         }}
         className="h-10 w-10 p-3"
