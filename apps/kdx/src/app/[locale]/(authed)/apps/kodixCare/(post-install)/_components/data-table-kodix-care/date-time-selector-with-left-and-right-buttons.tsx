@@ -3,15 +3,14 @@ import { RxChevronLeft, RxChevronRight } from "react-icons/rx";
 
 import dayjs from "@kdx/dayjs";
 import { Button } from "@kdx/ui/button";
+import { useIsAnyOverlayMounted } from "@kdx/ui/stores/use-overlay-store";
 
 import { DatePicker } from "~/app/[locale]/_components/date-picker";
 import { useCareTaskStore } from ".";
 
 const useLeftAndRightArrowsSelect = () => {
-  const shouldDisable = useCareTaskStore(
-    (state) =>
-      state.editDetailsOpen || state.unlockMoreTasksCredenzaWithDateOpen,
-  );
+  const shouldDisable = useIsAnyOverlayMounted();
+
   const leftArrowRef = useRef<HTMLButtonElement>(null);
   const rightArrowRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
@@ -38,6 +37,7 @@ export function DateTimeSelectorWithLeftAndRightArrows() {
         ref={leftArrowRef}
         variant="ghost"
         onClick={() => {
+          leftArrowRef.current?.focus();
           onDateChange(dayjs(input.dateStart).subtract(1, "days").toDate());
         }}
         className="h-10 w-10 p-3"
@@ -52,6 +52,7 @@ export function DateTimeSelectorWithLeftAndRightArrows() {
         ref={rightArrowRef}
         variant="ghost"
         onClick={() => {
+          rightArrowRef.current?.focus();
           onDateChange(dayjs(input.dateStart).add(1, "days").toDate());
         }}
         className="h-10 w-10 p-3"
