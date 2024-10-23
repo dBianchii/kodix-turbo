@@ -30,7 +30,7 @@ export const deleteAccountHandler = async ({ ctx }: DeleteAccountOptions) => {
           .where(
             and(
               eq(usersToTeams.teamId, teams.id),
-              eq(usersToTeams.userId, ctx.session.user.id),
+              eq(usersToTeams.userId, ctx.auth.user.id),
             ),
           ),
       ),
@@ -58,12 +58,12 @@ export const deleteAccountHandler = async ({ ctx }: DeleteAccountOptions) => {
     });
 
   await ctx.db.transaction(async (tx) => {
-    await tx.delete(accounts).where(eq(accounts.userId, ctx.session.user.id));
+    await tx.delete(accounts).where(eq(accounts.userId, ctx.auth.user.id));
     await tx
       .delete(invitations)
-      .where(eq(invitations.invitedById, ctx.session.user.id));
-    await tx.delete(teams).where(eq(teams.ownerId, ctx.session.user.id));
-    await tx.delete(sessions).where(eq(sessions.userId, ctx.session.user.id));
-    await tx.delete(users).where(eq(users.id, ctx.session.user.id));
+      .where(eq(invitations.invitedById, ctx.auth.user.id));
+    await tx.delete(teams).where(eq(teams.ownerId, ctx.auth.user.id));
+    await tx.delete(sessions).where(eq(sessions.userId, ctx.auth.user.id));
+    await tx.delete(users).where(eq(users.id, ctx.auth.user.id));
   });
 };

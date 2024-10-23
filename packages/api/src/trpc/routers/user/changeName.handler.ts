@@ -13,5 +13,5 @@ export const changeNameHandler = async ({ ctx, input }: ChangeNameOptions) => {
   return await ctx.db
     .update(users)
     .set({ name: input.name })
-    .where(eq(users.id, ctx.session.user.id));
+    .where(eq(users.id, ctx.auth.user.id));
 };

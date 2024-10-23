@@ -22,7 +22,7 @@ export const updatePermissionAssociationHandler = async ({
           ctx.db
             .select({ id: teamAppRoles.id })
             .from(teamAppRoles)
-            .where(eq(teamAppRoles.teamId, ctx.session.user.activeTeamId)),
+            .where(eq(teamAppRoles.teamId, ctx.auth.user.activeTeamId)),
         ),
       );
     if (input.teamAppRoleIds.length > 0)

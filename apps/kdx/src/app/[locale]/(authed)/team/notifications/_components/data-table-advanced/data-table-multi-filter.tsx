@@ -1,6 +1,6 @@
 import type { Table } from "@tanstack/react-table";
 import * as React from "react";
-import { useSearchParams } from "next/navigation"; //TODO: 'next' dependency in @kdx/ui ? no no
+import { useSearchParams } from "next/navigation";
 import {
   CopyIcon,
   DotsHorizontalIcon,
@@ -12,18 +12,16 @@ import type { DataTableConfig } from "@kdx/shared";
 import { useTranslations } from "@kdx/locales/next-intl/client";
 import { usePathname, useRouter } from "@kdx/locales/next-intl/navigation";
 import { dataTableConfig } from "@kdx/shared";
-
-import type { DataTableFilterOption } from "./types";
-import { Button } from "../../button";
+import { Button } from "@kdx/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../../dropdown-menu";
-import { useDebounce } from "../../hooks/use-debounce";
-import { Input } from "../../input";
-import { Popover, PopoverContent, PopoverTrigger } from "../../popover";
+} from "@kdx/ui/dropdown-menu";
+import { useDebounce } from "@kdx/ui/hooks/use-debounce";
+import { Input } from "@kdx/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
 import {
   Select,
   SelectContent,
@@ -31,9 +29,11 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../select";
-import { Separator } from "../../separator";
-import { DataTableFacetedFilter } from "../data-table-faceted-filter";
+} from "@kdx/ui/select";
+import { Separator } from "@kdx/ui/separator";
+
+import type { DataTableFilterOption } from "./types";
+import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 
 interface DataTableMultiFilterProps<TData> {
   table: Table<TData>;

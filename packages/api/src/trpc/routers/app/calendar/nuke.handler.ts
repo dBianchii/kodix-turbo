@@ -11,7 +11,7 @@ interface NukeOptions {
 }
 
 export const nukeHandler = async ({ ctx }: NukeOptions) => {
-  if (!authorizedEmails.includes(ctx.session.user.email))
+  if (!authorizedEmails.includes(ctx.auth.user.email))
     throw new TRPCError({
       code: "UNAUTHORIZED",
       message: "You are not authorized to do this",
@@ -19,5 +19,5 @@ export const nukeHandler = async ({ ctx }: NukeOptions) => {
 
   await ctx.db
     .delete(eventMasters)
-    .where(eq(eventMasters.teamId, ctx.session.user.activeTeamId));
+    .where(eq(eventMasters.teamId, ctx.auth.user.activeTeamId));
 };

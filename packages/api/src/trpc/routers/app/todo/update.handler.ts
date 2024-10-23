@@ -21,9 +21,6 @@ export const updateHandler = async ({ ctx, input }: UpdateOptions) => {
       status: input.status,
     })
     .where(
-      and(
-        eq(todos.id, input.id),
-        eq(todos.teamId, ctx.session.user.activeTeamId),
-      ),
+      and(eq(todos.id, input.id), eq(todos.teamId, ctx.auth.user.activeTeamId)),
     );
 };

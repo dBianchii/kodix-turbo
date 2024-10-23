@@ -26,7 +26,7 @@ export const saveCareTaskHandler = async ({
       message: "No current shift found",
     });
 
-  if (currentShift.Caregiver.id !== ctx.session.user.id)
+  if (currentShift.Caregiver.id !== ctx.auth.user.id)
     throw new TRPCError({
       code: "FORBIDDEN",
       message: t("api.You cannot edit a task from another caregivers shift"),

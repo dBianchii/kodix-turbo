@@ -14,6 +14,6 @@ export const saveExpoTokenHandler = async ({
 }: SaveExpoTokenOptions) => {
   await ctx.db.insert(expoTokens).values({
     token: input.expoToken,
-    userId: ctx.session.user.id,
+    userId: ctx.auth.user.id,
   });
 };

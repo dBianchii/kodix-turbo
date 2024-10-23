@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import {
   CaretSortIcon,
@@ -9,9 +7,7 @@ import {
 } from "@radix-ui/react-icons";
 
 import { useTranslations } from "@kdx/locales/next-intl/client";
-
-import type { DataTableFilterOption } from "./types";
-import { Button } from "../../button";
+import { Button } from "@kdx/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -20,8 +16,10 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-} from "../../command";
-import { Popover, PopoverContent, PopoverTrigger } from "../../popover";
+} from "@kdx/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
+
+import type { DataTableFilterOption } from "./types";
 
 interface DataTableFilterComboboxProps<TData> {
   options: DataTableFilterOption<TData>[];

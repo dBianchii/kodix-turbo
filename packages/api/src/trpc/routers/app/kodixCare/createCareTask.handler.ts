@@ -26,7 +26,7 @@ export const createCareTaskHandler = async ({
   }
 
   const currentUserIsCaregiver =
-    currentCareShift.Caregiver.id === ctx.session.user.id;
+    currentCareShift.Caregiver.id === ctx.auth.user.id;
   if (!currentUserIsCaregiver) {
     throw new TRPCError({
       code: "FORBIDDEN",
@@ -37,6 +37,6 @@ export const createCareTaskHandler = async ({
   await ctx.db.insert(careTasks).values({
     ...input,
     careShiftId: currentCareShift.id,
-    teamId: ctx.session.user.activeTeamId,
+    teamId: ctx.auth.user.activeTeamId,
   });
 };

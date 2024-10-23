@@ -1,8 +1,6 @@
 "use server";
 
-import { cookies } from "next/headers";
-
-import { auth, lucia } from "@kdx/auth";
+import { auth, deleteSessionTokenCookie, invalidateSession } from "@kdx/auth";
 import { redirect } from "@kdx/locales/next-intl/navigation";
 
 export async function signOutAction() {
@@ -13,13 +11,9 @@ export async function signOutAction() {
     };
   }
 
-  await lucia.invalidateSession(session.id);
+  await invalidateSession(session.id);
 
-  const sessionCookie = lucia.createBlankSessionCookie();
-  cookies().set(
-    sessionCookie.name,
-    sessionCookie.value,
-    sessionCookie.attributes,
-  );
+  deleteSessionTokenCookie();
+
   return redirect("/");
 }

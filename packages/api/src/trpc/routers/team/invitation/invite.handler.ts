@@ -30,7 +30,7 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
     with: {
       UsersToTeams: {
         // where: (usersToTeams, { eq }) =>
-        //   eq(usersToTeams.userId, ctx.session.user.id),
+        //   eq(usersToTeams.userId, ctx.auth.user.id),
         with: {
           User: {
             columns: {
@@ -81,7 +81,7 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
         id: nanoid(),
         teamId: team.id,
         email,
-        invitedById: ctx.session.user.id,
+        invitedById: ctx.auth.user.id,
       }) satisfies typeof invitations.$inferInsert,
   );
 
@@ -94,8 +94,8 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
           url: getBaseUrl(),
         }),
         react: TeamInvite({
-          invitedByEmail: ctx.session.user.email,
-          invitedByUsername: ctx.session.user.name!,
+          invitedByEmail: ctx.auth.user.email,
+          invitedByUsername: ctx.auth.user.name!,
           inviteLink: `${getBaseUrl()}/team/invite/${invite.id}`,
           teamImage: `${getBaseUrl()}/api/avatar/${team.name}`,
           teamName: team.name,

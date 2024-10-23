@@ -23,11 +23,11 @@ export const updateUserAssociationHandler = async ({
       .where(
         and(
           eq(teamAppRoles.appId, input.appId),
-          eq(teamAppRoles.teamId, ctx.session.user.activeTeamId),
+          eq(teamAppRoles.teamId, ctx.auth.user.activeTeamId),
         ),
       );
 
-    if (input.userId === ctx.session.user.id) {
+    if (input.userId === ctx.auth.user.id) {
       //need to detect if they are sending the admin role to prevent removing themselves
       const adminTeamAppRolesForApp = await tx
         .select({ id: teamAppRoles.id })

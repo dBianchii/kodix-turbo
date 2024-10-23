@@ -17,7 +17,7 @@ export const deleteNotificationsHandler = async ({
     .delete(notifications)
     .where(
       and(
-        eq(notifications.sentToUserId, ctx.session.user.id),
+        eq(notifications.sentToUserId, ctx.auth.user.id),
         inArray(notifications.id, input.ids),
       ),
     );

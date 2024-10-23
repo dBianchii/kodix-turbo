@@ -1,13 +1,15 @@
 //? This file contains some db interactions that need to exist here instead of @kdx/api.
 //? It's to avoid circular dependencies / duplicated code for db calls that need to be here in @kdx/auth
 
-import { cookies, headers } from "next/headers";
-
 import type { Drizzle, DrizzleTransaction } from "@kdx/db/client";
 import { eq } from "@kdx/db";
 import { invitations, teams, users, usersToTeams } from "@kdx/db/schema";
 
-import { lucia } from "./config";
+import {
+  createSession,
+  generateSessionToken,
+  setSessionTokenCookie,
+} from "./config";
 
 export async function createUser({
   invite,
@@ -91,19 +93,9 @@ export async function acceptInvite({
 }
 
 export async function createDbSessionAndCookie({ userId }: { userId: string }) {
-  const heads = headers();
-  const session = await lucia.createSession(userId, {
-    ipAddress:
-      heads.get("X-Forwarded-For") ??
-      heads.get("X-Forwarded-For") ??
-      "127.0.0.1",
-    userAgent: heads.get("user-agent"),
-  });
-  const sessionCookie = lucia.createSessionCookie(session.id);
-  cookies().set(
-    sessionCookie.name,
-    sessionCookie.value,
-    sessionCookie.attributes,
-  );
+  const token = generateSessionToken();
+  const session = await createSession(token, userId);
+  setSessionTokenCookie(token, session.expiresAt);
+
   return session.id;
 }
