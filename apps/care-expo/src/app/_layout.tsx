@@ -6,6 +6,7 @@ import "@bacons/text-decoder/install";
 
 import type { FontSource } from "expo-font";
 import React, { useEffect, useState } from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useFonts } from "expo-font";
 import { PortalProvider, Spinner, TamaguiProvider } from "tamagui";
 import tamaguiConfig from "tamagui.config";
@@ -103,17 +104,19 @@ export default function RootLayout() {
         locale={locale}
         timeZone="America/Sao_Paulo"
       >
-        <TamaguiProvider config={tamaguiConfig} defaultTheme={"dark_blue"}>
-          {/* <KeyboardProvider> need to use development build*/}
-          <ToastProvider swipeDirection="up" swipeThreshold={20}>
-            <PortalProvider shouldAddRootHost>
-              <DefaultToast />
-              <MainLayout />
-              <SafeToastViewport />
-            </PortalProvider>
-          </ToastProvider>
-          {/* </KeyboardProvider> */}
-        </TamaguiProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <TamaguiProvider config={tamaguiConfig} defaultTheme={"dark_blue"}>
+            {/* <KeyboardProvider> need to use development build*/}
+            <ToastProvider swipeDirection="up" swipeThreshold={20}>
+              <PortalProvider shouldAddRootHost>
+                <DefaultToast />
+                <MainLayout />
+                <SafeToastViewport />
+              </PortalProvider>
+            </ToastProvider>
+            {/* </KeyboardProvider> */}
+          </TamaguiProvider>
+        </GestureHandlerRootView>
       </IntlProvider>
     </TRPCProvider>
   );

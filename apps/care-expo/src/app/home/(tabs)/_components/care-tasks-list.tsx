@@ -1,6 +1,7 @@
 import type { CareTask } from "node_modules/@kdx/api/dist/api/src/internal/calendarAndCareTaskCentral";
 import React, { useEffect, useMemo, useState } from "react";
-import { Alert, Keyboard, TouchableOpacity } from "react-native";
+import { Alert, FlatList, Keyboard, TouchableOpacity } from "react-native";
+import Swipeable from "react-native-gesture-handler/Swipeable";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Audio } from "expo-av";
 import * as Haptics from "expo-haptics";
@@ -12,6 +13,7 @@ import {
   Lock,
   Plus,
   Text as TextIcon,
+  Trash2,
 } from "@tamagui/lucide-icons";
 import { useToastController } from "@tamagui/toast";
 import {
@@ -20,11 +22,11 @@ import {
   H4,
   Input,
   Paragraph,
-  ScrollView,
   SizableText,
   Spinner,
   Text,
   TextArea,
+  useTheme,
   View,
   XStack,
   YStack,
@@ -199,7 +201,7 @@ export function CareTasksLists() {
         withOverlay={false}
         withHandle={false}
         sheetFrameProps={{
-          p: "$2",
+          px: "0",
           ai: "center",
           borderColor: "$color6",
           backgroundColor: "$color3",
@@ -241,17 +243,20 @@ export function CareTasksLists() {
                 </TouchableOpacity>
               ) : null}
             </XStack>
-            <ScrollView f={1} w="100%" p={"$3"}>
-              {careTasksQuery.data.map((task, i) => (
-                <CareTaskOrCalendarTaskItem
-                  key={`${task.id}${task.title}${task.description}${i}`}
-                  task={task}
-                  mutation={saveCareTaskMutation}
-                  setCurrentlyEditing={setCurrentlyEditing}
-                  setEditCareTaskSheetOpen={setEditCareTaskSheetOpen}
-                />
-              ))}
-            </ScrollView>
+            <View f={1} w="100%">
+              <FlatList
+                data={careTasksQuery.data}
+                renderItem={({ item }) => (
+                  <CareTaskOrCalendarTaskItem
+                    task={item}
+                    mutation={saveCareTaskMutation}
+                    setCurrentlyEditing={setCurrentlyEditing}
+                    setEditCareTaskSheetOpen={setEditCareTaskSheetOpen}
+                  />
+                )}
+                keyExtractor={(item, index) => `${item.id}-${index}`}
+              />
+            </View>
           </>
         )}
       </SheetModal>
@@ -435,78 +440,131 @@ function CareTaskOrCalendarTaskItem(props: {
   setCurrentlyEditing: (id: string) => void;
 }) {
   const format = useFormatter();
-  const isCareTaskItem = !!props.task.id;
+  const isCareTaskItem = (
+    task: RouterOutputs["app"]["kodixCare"]["getCareTasks"][number],
+  ): task is CareTask => !!task.id;
+
+  const utils = api.useUtils();
+  const toast = useToastController();
+  const deleteCareTaskMutation = api.app.kodixCare.deleteCareTask.useMutation({
+    onSettled: () => {
+      void utils.app.kodixCare.getCareTasks.invalidate();
+    },
+    onError: (err) => {
+      toast.show("Um erro ocorreu", {
+        message: getErrorMessage(err),
+        variant: "error",
+        customData: {
+          variant: "error",
+        },
+      });
+    },
+  });
+
+  const theme = useTheme();
 
   return (
-    <TouchableOpacity
-      activeOpacity={isCareTaskItem ? 0.2 : 1}
-      onPress={() => {
-        if (!props.task.id) return;
-        void Haptics.selectionAsync();
-        props.setCurrentlyEditing(props.task.id);
-        props.setEditCareTaskSheetOpen(true);
-      }}
-    >
-      <XStack mb="$2" ai={"center"} gap="$3" maxWidth={"100%"}>
-        {isCareTaskItem ? (
-          <Checkbox
-            onCheckedChange={() => {
-              void Haptics.notificationAsync(
-                Haptics.NotificationFeedbackType.Success,
-              );
-              if (!props.task.id) return; //Will never happen. its just to make ts happy
-              props.setCurrentlyEditing(props.task.id);
-
-              props.mutation.mutate({
+    <Swipeable
+      renderRightActions={() => (
+        <TouchableOpacity
+          disabled={deleteCareTaskMutation.isPending}
+          onPress={() => {
+            if (isCareTaskItem(props.task)) {
+              deleteCareTaskMutation.mutate({
                 id: props.task.id,
-                doneAt: props.task.doneAt ? null : new Date(),
               });
-            }}
-            checked={!!props.task.doneAt}
-            size={"$7"}
-          >
-            <Checkbox.Indicator>
-              <CheckIcon />
-            </Checkbox.Indicator>
-          </Checkbox>
-        ) : (
-          <Lock />
-        )}
-        <YStack maxWidth={"$18"}>
-          <XStack>
-            <Text numberOfLines={1}>{props.task.title}</Text>
-            {props.task.type === "CRITICAL" && (
-              <AlertCircle color={"$orange11Dark"} size="$1" ml={"$2"} />
-            )}
-          </XStack>
-          <SizableText numberOfLines={1} size="$2" color="$gray11Dark">
-            {props.task.description}
-          </SizableText>
-        </YStack>
+            }
+          }}
+          style={{
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            backgroundColor: theme.red5Dark.val,
+            height: "100%",
+            width: 62,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Trash2 size={"$2"} />
+        </TouchableOpacity>
+      )}
+    >
+      <TouchableOpacity
+        activeOpacity={isCareTaskItem(props.task) ? 0.2 : 1}
+        onPress={() => {
+          if (!props.task.id) return;
+          void Haptics.selectionAsync();
+          props.setCurrentlyEditing(props.task.id);
+          props.setEditCareTaskSheetOpen(true);
+        }}
+      >
+        <XStack
+          px="$4"
+          pb="$2"
+          ai={"center"}
+          gap="$3"
+          maxWidth={"100%"}
+          backgroundColor={"$blue3Dark"}
+        >
+          {isCareTaskItem(props.task) ? (
+            <Checkbox
+              onCheckedChange={() => {
+                void Haptics.notificationAsync(
+                  Haptics.NotificationFeedbackType.Success,
+                );
+                if (!props.task.id) return; //Will never happen. its just to make ts happy
+                props.setCurrentlyEditing(props.task.id);
 
-        <XStack ml="auto" ai="center">
-          <YStack mr={"$2"}>
-            {props.task.details && (
-              <TextIcon size={16} color={"$orange11Dark"} />
-            )}
-          </YStack>
-          <YStack>
-            <SizableText size="$2" color="$gray11Dark" textAlign="right">
-              {format.dateTime(props.task.date, {
-                day: "numeric",
-                month: "short",
-              })}
+                props.mutation.mutate({
+                  id: props.task.id,
+                  doneAt: props.task.doneAt ? null : new Date(),
+                });
+              }}
+              checked={!!props.task.doneAt}
+              size={"$7"}
+            >
+              <Checkbox.Indicator>
+                <CheckIcon />
+              </Checkbox.Indicator>
+            </Checkbox>
+          ) : (
+            <Lock />
+          )}
+          <YStack maxWidth={"$18"}>
+            <XStack>
+              <Text numberOfLines={1}>{props.task.title}</Text>
+              {props.task.type === "CRITICAL" && (
+                <AlertCircle color={"$orange11Dark"} size="$1" ml={"$2"} />
+              )}
+            </XStack>
+            <SizableText numberOfLines={1} size="$2" color="$gray11Dark">
+              {props.task.description}
             </SizableText>
-            <SizableText size="$2" color="$gray11Dark" textAlign="right">
-              {format.dateTime(props.task.date, {
-                hour: "numeric",
-                minute: "numeric",
-              })}
-            </SizableText>
           </YStack>
+
+          <XStack ml="auto" ai="center">
+            <YStack mr={"$2"}>
+              {props.task.details && (
+                <TextIcon size={16} color={"$orange11Dark"} />
+              )}
+            </YStack>
+            <YStack>
+              <SizableText size="$2" color="$gray11Dark" textAlign="right">
+                {format.dateTime(props.task.date, {
+                  day: "numeric",
+                  month: "short",
+                })}
+              </SizableText>
+              <SizableText size="$2" color="$gray11Dark" textAlign="right">
+                {format.dateTime(props.task.date, {
+                  hour: "numeric",
+                  minute: "numeric",
+                })}
+              </SizableText>
+            </YStack>
+          </XStack>
         </XStack>
-      </XStack>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </Swipeable>
   );
 }
 
