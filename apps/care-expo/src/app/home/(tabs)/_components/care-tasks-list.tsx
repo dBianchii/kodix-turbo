@@ -465,28 +465,32 @@ function CareTaskOrCalendarTaskItem(props: {
 
   return (
     <Swipeable
-      renderRightActions={() => (
-        <TouchableOpacity
-          disabled={deleteCareTaskMutation.isPending}
-          onPress={() => {
-            if (isCareTaskItem(props.task)) {
-              deleteCareTaskMutation.mutate({
-                id: props.task.id,
-              });
-            }
-          }}
-          style={{
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            backgroundColor: theme.red5Dark.val,
-            height: "100%",
-            width: 62,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Trash2 size={"$2"} />
-        </TouchableOpacity>
-      )}
+      enabled={isCareTaskItem(props.task)}
+      renderRightActions={() => {
+        if (!isCareTaskItem(props.task)) return null;
+        return (
+          <TouchableOpacity
+            disabled={deleteCareTaskMutation.isPending}
+            onPress={() => {
+              if (isCareTaskItem(props.task)) {
+                deleteCareTaskMutation.mutate({
+                  id: props.task.id,
+                });
+              }
+            }}
+            style={{
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              backgroundColor: theme.red5Dark.val,
+              height: "100%",
+              width: 62,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Trash2 size={"$2"} />
+          </TouchableOpacity>
+        );
+      }}
     >
       <TouchableOpacity
         activeOpacity={isCareTaskItem(props.task) ? 0.2 : 1}
