@@ -25,21 +25,23 @@ function NotificationsHeader() {
 
 export default function NotificationsTab() {
   const { user } = useAuth();
-
   const router = useRouter();
-  if (!user) {
-    router.push("/");
-    return null;
-  }
+  if (!user) return router.push("/");
 
   const {
     data: notifications,
     isLoading,
     isRefetching,
-  } = api.user.getNotifications.useQuery({
-    channel: "PUSH_NOTIFICATIONS",
-    teamId: user.activeTeamId,
-  });
+  } = api.user.getNotifications.useQuery(
+    {
+      channel: "PUSH_NOTIFICATIONS",
+      teamId: user.activeTeamId,
+    },
+    {
+      enabled: !!user,
+    },
+  );
+  const utils = api.useUtils();
 
   if (isLoading)
     return (
@@ -50,8 +52,6 @@ export default function NotificationsTab() {
         </RootSafeAreaView>
       </>
     );
-
-  const utils = api.useUtils();
 
   return (
     <>
@@ -78,11 +78,7 @@ export default function NotificationsTab() {
               }
               renderItem={({ item }) => (
                 <YGroup.Item>
-                  <ListItem
-                    hoverTheme
-                    title={item.message}
-                    subTitle="Twinkles"
-                  />
+                  <ListItem hoverTheme title={item.message} />
                 </YGroup.Item>
               )}
             />
