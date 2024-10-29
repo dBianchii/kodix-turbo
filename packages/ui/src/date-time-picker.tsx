@@ -22,6 +22,9 @@ interface DateTimePickerProps {
   side?: PopoverContentProps["side"];
 }
 
+/**
+ * @deprecated This component is deprecated. Please use date-n-time instead
+ */
 export function DateTimePicker({
   date,
   setDate,

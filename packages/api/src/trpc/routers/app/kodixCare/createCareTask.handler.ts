@@ -36,7 +36,6 @@ export const createCareTaskHandler = async ({
 
   await ctx.db.insert(careTasks).values({
     ...input,
-    careShiftId: currentCareShift.id,
     teamId: ctx.auth.user.activeTeamId,
   });
 };

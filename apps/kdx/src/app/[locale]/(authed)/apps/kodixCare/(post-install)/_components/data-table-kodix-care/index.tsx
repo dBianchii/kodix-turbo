@@ -52,6 +52,7 @@ import {
 } from "@kdx/ui/credenza";
 import { DataTableColumnHeader } from "@kdx/ui/data-table/data-table-column-header";
 import { DataTableViewOptions } from "@kdx/ui/data-table/data-table-view-options";
+import { DateTimePicker24h } from "@kdx/ui/date-n-time/date-time-picker-24h";
 import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
   Form,
@@ -568,12 +569,17 @@ function AddCareTaskCredenzaButton() {
                     <FormLabel>{t("Date")}</FormLabel>
                     <FormControl>
                       <div className="flex flex-row gap-2">
-                        <DateTimePicker
+                        <DateTimePicker24h
                           date={field.value}
                           setDate={(newDate) =>
                             field.onChange(newDate ?? new Date())
                           }
-                          disabledDate={(date) => dayjs(date).isBefore(dayjs())}
+                          disabledDate={(date) => {
+                            const thing = dayjs(date).isBefore(new Date());
+                            if (!thing) console.log(date);
+
+                            return thing;
+                          }}
                         />
                       </div>
                     </FormControl>
