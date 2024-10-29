@@ -45,58 +45,56 @@ export function KodixCareUserSettingsForm({
   });
 
   return (
-    <>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit((values) => mutation.mutate(values))}
-          className="w-full space-y-6"
-        >
-          <div className="space-y-4">
-            <div className="flex items-center">
-              <FormField
-                control={form.control}
-                name="config.sendNotificationsForDelayedTasks"
-                render={({ field }) => (
-                  <FormItem className="flex max-w-md flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                    <div className="space-y-2">
-                      <FormLabel className="flex items-center gap-2">
-                        <LuAlertCircle
-                          className={cn(
-                            "size-5 text-muted-foreground transition-colors",
-                            {
-                              "text-orange-500": field.value,
-                            },
-                          )}
-                        />
-                        {t("apps.kodixCare.Critical tasks")}
-                      </FormLabel>
-                      <FormDescription>
-                        {t(
-                          "apps.kodixCare.Set this on if you want to receive notifications for delayed tasks",
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit((values) => mutation.mutate(values))}
+        className="w-full space-y-6"
+      >
+        <div className="space-y-4">
+          <div className="flex items-center">
+            <FormField
+              control={form.control}
+              name="config.sendNotificationsForDelayedTasks"
+              render={({ field }) => (
+                <FormItem className="flex max-w-md flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                  <div className="space-y-2">
+                    <FormLabel className="flex items-center gap-2">
+                      <LuAlertCircle
+                        className={cn(
+                          "size-5 text-muted-foreground transition-colors",
+                          {
+                            "text-orange-500": field.value,
+                          },
                         )}
-                      </FormDescription>
-                    </div>
-                    <FormControl>
-                      <Switch
-                        className="mx-4"
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
                       />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
+                      {t("apps.kodixCare.Critical tasks")}
+                    </FormLabel>
+                    <FormDescription>
+                      {t(
+                        "apps.kodixCare.Set this on if you want to receive notifications for delayed tasks",
+                      )}
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      className="mx-4"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
           </div>
-          <Button disabled={mutation.isPending}>
-            {mutation.isPending ? (
-              <LuLoader2 className="size-4 animate-spin" />
-            ) : (
-              t("Save")
-            )}
-          </Button>
-        </form>
-      </Form>
-    </>
+        </div>
+        <Button disabled={mutation.isPending}>
+          {mutation.isPending ? (
+            <LuLoader2 className="size-4 animate-spin" />
+          ) : (
+            t("Save")
+          )}
+        </Button>
+      </form>
+    </Form>
   );
 }

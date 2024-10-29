@@ -2,7 +2,7 @@
 
 import type { SortingState, VisibilityState } from "@tanstack/react-table";
 import type { CareTask } from "node_modules/@kdx/api/src/internal/calendarAndCareTaskCentral";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   createColumnHelper,
   flexRender,
@@ -20,12 +20,11 @@ import {
 } from "react-icons/lu";
 import {
   RxCalendar,
-  RxChevronLeft,
-  RxChevronRight,
   RxDotsHorizontal,
   RxLockClosed,
   RxTrash,
 } from "react-icons/rx";
+import { create } from "zustand";
 
 import type { RouterOutputs } from "@kdx/api";
 import dayjs from "@kdx/dayjs";
@@ -97,42 +96,67 @@ import {
   ZSaveCareTaskInputSchema,
 } from "@kdx/validators/trpc/app/kodixCare";
 
-import { DatePicker } from "~/app/[locale]/_components/date-picker";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
+import { DateTimeSelectorWithLeftAndRightArrows } from "./date-time-selector-with-left-and-right-buttons";
 
 type CareTaskOrCalendarTask =
   RouterOutputs["app"]["kodixCare"]["getCareTasks"][number];
 
 const columnHelper = createColumnHelper<CareTaskOrCalendarTask>();
 
-export default function DataTableKodixCare() {
-  const [input, setInput] = useState({
+export const useCareTaskStore = create<{
+  input: {
+    dateStart: Date;
+    dateEnd: Date;
+  };
+  editDetailsOpen: boolean;
+  unlockMoreTasksCredenzaWithDateOpen: Date | false;
+  setUnlockMoreTasksCredenzaOpenWithDate: (open: Date | false) => void;
+  currentlyEditing: CareTask["id"] | undefined;
+  setEditDetailsOpen: (open: boolean) => void;
+  setCurrentlyEditing: (id: string | undefined) => void;
+  onDateChange: (date: Date) => void;
+}>((set) => ({
+  input: {
     dateStart: dayjs().startOf("day").toDate(),
     dateEnd: dayjs().endOf("day").toDate(),
-  });
-  const handleChangeInput = (date: Date) => {
-    setInput({
-      dateStart: dayjs(date).startOf("day").toDate(),
-      dateEnd: dayjs(date).endOf("day").toDate(),
-    });
-    setEditDetailsOpen(false);
-    setUnlockMoreTasksDialogOpen(false);
-  };
+  },
+  onDateChange: (date) =>
+    set(() => ({
+      input: {
+        dateStart: dayjs(date).startOf("day").toDate(),
+        dateEnd: dayjs(date).endOf("day").toDate(),
+      },
+      editDetailsOpen: false,
+      unlockMoreTasksCredenzaWithDateOpen: false,
+    })),
 
-  const query = api.app.kodixCare.getCareTasks.useQuery(input);
+  editDetailsOpen: false,
+  setEditDetailsOpen: (open) => set(() => ({ editDetailsOpen: open })),
+
+  unlockMoreTasksCredenzaWithDateOpen: false,
+  setUnlockMoreTasksCredenzaOpenWithDate: (dateOrFalse) =>
+    set(() => ({ unlockMoreTasksCredenzaWithDateOpen: dateOrFalse })),
+
+  currentlyEditing: undefined,
+  setCurrentlyEditing: (id) => set(() => ({ currentlyEditing: id })),
+}));
+
+export default function DataTableKodixCare() {
+  const {
+    input,
+    setEditDetailsOpen,
+    editDetailsOpen,
+    currentlyEditing,
+    setCurrentlyEditing,
+    setUnlockMoreTasksCredenzaOpenWithDate,
+  } = useCareTaskStore();
 
   const utils = api.useUtils();
-  const [editDetailsOpen, setEditDetailsOpen] = useState(false);
   const [deleteTaskOpen, setDeleteTaskOpen] = useState(false);
-  const [unlockMoreTasksCredenzaOpen, setUnlockMoreTasksDialogOpen] =
-    useState(false);
 
-  const [unlockUpUntil, setUnlockUpUntil] = useState<Date>(new Date());
-  const [currentlyEditing, setCurrentlyEditing] = useState<
-    CareTask["id"] | undefined
-  >(undefined);
-
+  const query = api.app.kodixCare.getCareTasks.useQuery(input);
   const saveCareTaskMutation = api.app.kodixCare.saveCareTask.useMutation({
     onMutate: async (savedCareTask) => {
       // Cancel any outgoing refetches
@@ -324,12 +348,11 @@ export default function DataTableKodixCare() {
         },
       }),
     ],
-    [format, saveCareTaskMutation, t],
+    [format, saveCareTaskMutation, setCurrentlyEditing, t],
   );
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-
   const table = useReactTable({
     data: query.data ?? [],
     columns,
@@ -347,17 +370,6 @@ export default function DataTableKodixCare() {
     if (!query.data?.length) return undefined;
     return query.data.find((x) => x.id === currentlyEditing) as CareTask;
   }, [currentlyEditing, query.data]);
-
-  const leftArrowRef = useRef<HTMLButtonElement>(null);
-  const rightArrowRef = useRef<HTMLButtonElement>(null);
-  useEffect(() => {
-    const keyDownHandler = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft") leftArrowRef.current?.click();
-      else if (e.key === "ArrowRight") rightArrowRef.current?.click();
-    };
-    document.addEventListener("keydown", keyDownHandler);
-    return () => document.removeEventListener("keydown", keyDownHandler);
-  }, []);
 
   return (
     <>
@@ -377,45 +389,14 @@ export default function DataTableKodixCare() {
         </>
       )}
 
-      <UnlockMoreTasksCredenza
-        unlockUpUntil={unlockUpUntil}
-        open={unlockMoreTasksCredenzaOpen}
-        setOpen={setUnlockMoreTasksDialogOpen}
-      />
+      <UnlockMoreTasksCredenza />
       <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-center">
         <div className="flex gap-2 sm:mr-auto">
-          <AddCareTaskDialog />
+          <AddCareTaskCredenzaButton />
           <SyncTasksFromCalendarCredenzaButton />
         </div>
-        <div className="flex gap-2">
-          <Button
-            ref={leftArrowRef}
-            variant="ghost"
-            onClick={() => {
-              handleChangeInput(
-                dayjs(input.dateStart).subtract(1, "days").toDate(),
-              );
-            }}
-            className="h-10 w-10 p-3"
-          >
-            <RxChevronLeft />
-          </Button>
-          <DatePicker
-            date={input.dateEnd}
-            setDate={(newDate) => handleChangeInput(dayjs(newDate).toDate())}
-          />
-          <Button
-            ref={rightArrowRef}
-            variant="ghost"
-            onClick={() => {
-              handleChangeInput(dayjs(input.dateStart).add(1, "days").toDate());
-            }}
-            className="h-10 w-10 p-3"
-          >
-            <RxChevronRight />
-          </Button>
-        </div>
 
+        <DateTimeSelectorWithLeftAndRightArrows />
         <DataTableViewOptions table={table} />
       </div>
       <div className="mt-4 rounded-md border">
@@ -456,8 +437,9 @@ export default function DataTableKodixCare() {
                               "You cannot unlock tasks that are scheduled for after tomorrow end of day",
                             ),
                           );
-                        setUnlockUpUntil(row.original.date);
-                        setUnlockMoreTasksDialogOpen(true);
+                        setUnlockMoreTasksCredenzaOpenWithDate(
+                          row.original.date,
+                        );
                         return;
                       }
 
@@ -626,7 +608,7 @@ function SyncTasksFromCalendarCredenzaButton() {
   );
 }
 
-function AddCareTaskDialog() {
+function AddCareTaskCredenzaButton() {
   const [open, setOpen] = useState(false);
 
   const utils = api.useUtils();
@@ -791,15 +773,7 @@ function AddCareTaskDialog() {
   );
 }
 
-function UnlockMoreTasksCredenza({
-  unlockUpUntil,
-  open,
-  setOpen,
-}: {
-  unlockUpUntil: Date;
-  open: boolean;
-  setOpen: (open: boolean) => void;
-}) {
+function UnlockMoreTasksCredenza() {
   const utils = api.useUtils();
   const t = useTranslations();
   const mutation = api.app.kodixCare.unlockMoreTasks.useMutation({
@@ -807,8 +781,19 @@ function UnlockMoreTasksCredenza({
       void utils.app.kodixCare.getCareTasks.invalidate();
     },
   });
+
+  const {
+    unlockMoreTasksCredenzaWithDateOpen,
+    setUnlockMoreTasksCredenzaOpenWithDate,
+  } = useCareTaskStore();
+
   return (
-    <AlertDialog open={open} onOpenChange={setOpen}>
+    <AlertDialog
+      open={!!unlockMoreTasksCredenzaWithDateOpen}
+      onOpenChange={(open) => {
+        if (!open) setUnlockMoreTasksCredenzaOpenWithDate(false);
+      }}
+    >
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
@@ -825,10 +810,12 @@ function UnlockMoreTasksCredenza({
           <AlertDialogAction
             disabled={mutation.isPending}
             onClick={() => {
+              if (!unlockMoreTasksCredenzaWithDateOpen) return;
+
               mutation.mutate({
-                selectedTimestamp: unlockUpUntil,
+                selectedTimestamp: unlockMoreTasksCredenzaWithDateOpen,
               });
-              setOpen(false);
+              setUnlockMoreTasksCredenzaOpenWithDate(false);
             }}
           >
             {t("Yes")}
