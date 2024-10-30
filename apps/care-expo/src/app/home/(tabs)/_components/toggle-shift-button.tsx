@@ -42,7 +42,7 @@ function StartShiftDialogButton() {
   const toast = useToastController();
   const mutation = api.app.kodixCare.toggleShift.useMutation({
     onSuccess: () => {
-      void utils.app.kodixCare.getCareTasks.invalidate();
+      void utils.app.kodixCare.careTask.invalidate();
       void utils.app.kodixCare.getCurrentShift.invalidate();
     },
     onError: () => {
@@ -106,7 +106,7 @@ function DoCheckoutDialogButton({
     onSuccess: () => {
       setOpen(false);
       toast.show("Turno finalizado!");
-      void utils.app.kodixCare.getCareTasks.invalidate();
+      void utils.app.kodixCare.careTask.invalidate();
       void utils.app.kodixCare.getCurrentShift.invalidate();
     },
     onError: () => {

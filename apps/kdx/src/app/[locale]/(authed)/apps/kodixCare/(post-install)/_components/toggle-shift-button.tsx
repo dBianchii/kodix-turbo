@@ -51,7 +51,7 @@ function StartShiftDialogButton() {
   const mutation = api.app.kodixCare.toggleShift.useMutation({
     onSuccess: () => {
       setOpen(false);
-      void utils.app.kodixCare.getCareTasks.invalidate();
+      void utils.app.kodixCare.careTask.getCareTasks.invalidate();
       void utils.app.kodixCare.getCurrentShift.invalidate();
     },
     onError: (err) => {
@@ -99,7 +99,7 @@ function StartShiftWarnPreviousPersonDialog() {
   const mutation = api.app.kodixCare.toggleShift.useMutation({
     onSuccess: () => {
       setOpen(false);
-      void utils.app.kodixCare.getCareTasks.invalidate();
+      void utils.app.kodixCare.careTask.getCareTasks.invalidate();
       void utils.app.kodixCare.getCurrentShift.invalidate();
     },
     onError: (err) => {

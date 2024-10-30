@@ -1,8 +1,8 @@
-import type { TCreateCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare";
+import type { TCreateCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
 import { careTasks } from "@kdx/db/schema";
 
-import type { TProtectedProcedureContext } from "../../../procedures";
-import { getCurrentShiftHandler } from "./getCurrentShift.handler";
+import type { TProtectedProcedureContext } from "../../../../procedures";
+import { getCurrentShiftHandler } from "../getCurrentShift.handler";
 
 interface CreateCareTaskOptions {
   ctx: TProtectedProcedureContext;

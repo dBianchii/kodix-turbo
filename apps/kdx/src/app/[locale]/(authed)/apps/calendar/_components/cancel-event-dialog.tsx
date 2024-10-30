@@ -41,7 +41,7 @@ export function CancelationDialog({
   const mutation = api.app.calendar.cancel.useMutation({
     onSuccess: () => {
       void utils.app.calendar.getAll.invalidate();
-      void utils.app.kodixCare.getCareTasks.invalidate();
+      void utils.app.kodixCare.careTask.getCareTasks.invalidate();
       setOpen(false);
     },
     onError: (err) => {

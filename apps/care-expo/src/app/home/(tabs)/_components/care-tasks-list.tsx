@@ -39,7 +39,7 @@ import { getErrorMessage } from "@kdx/shared";
 import {
   ZCreateCareTaskInputSchema,
   ZEditCareTaskInputSchema,
-} from "@kdx/validators/trpc/app/kodixCare";
+} from "@kdx/validators/trpc/app/kodixCare/careTask";
 
 import type { RouterOutputs } from "~/utils/api";
 import { DateTimePicker } from "~/components/date-time-picker";
@@ -57,7 +57,7 @@ import { SheetModal } from "~/components/sheet-modal";
 import { api } from "~/utils/api";
 
 type CareTaskOrCalendarTask =
-  RouterOutputs["app"]["kodixCare"]["getCareTasks"][number];
+  RouterOutputs["app"]["kodixCare"]["careTask"]["getCareTasks"][number];
 
 export function CareTasksLists() {
   const input = {
@@ -66,10 +66,11 @@ export function CareTasksLists() {
   };
   const utils = api.useUtils();
 
-  const careTasksQuery = api.app.kodixCare.getCareTasks.useQuery(input);
+  const careTasksQuery =
+    api.app.kodixCare.careTask.getCareTasks.useQuery(input);
   const currentShift = api.app.kodixCare.getCurrentShift.useQuery();
   const syncCareTasksFromCalendarMutation =
-    api.app.kodixCare.syncCareTasksFromCalendar.useMutation({
+    api.app.kodixCare.careTask.syncCareTasksFromCalendar.useMutation({
       onSettled: () => {
         void utils.app.kodixCare.invalidate();
       },
@@ -85,63 +86,65 @@ export function CareTasksLists() {
     });
 
   const toast = useToastController();
-  const editCareTaskMutation = api.app.kodixCare.editCareTask.useMutation({
-    onMutate: async (editedCareTask) => {
-      // Snapshot the previous value
-      const previousCareTasks = utils.app.kodixCare.getCareTasks.getData();
+  const editCareTaskMutation =
+    api.app.kodixCare.careTask.editCareTask.useMutation({
+      onMutate: async (editedCareTask) => {
+        // Snapshot the previous value
+        const previousCareTasks =
+          utils.app.kodixCare.careTask.getCareTasks.getData();
 
-      const previousTask = previousCareTasks?.find(
-        (x) => x.id === editedCareTask.id,
-      );
-      if (!previousTask?.doneAt && editedCareTask.doneAt) {
-        const { sound } = await Audio.Sound.createAsync(
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-require-imports
-          require("../../../../../assets/taskDone.mp3"),
+        const previousTask = previousCareTasks?.find(
+          (x) => x.id === editedCareTask.id,
         );
-        void sound.playAsync();
-      }
+        if (!previousTask?.doneAt && editedCareTask.doneAt) {
+          const { sound } = await Audio.Sound.createAsync(
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-require-imports
+            require("../../../../../assets/taskDone.mp3"),
+          );
+          void sound.playAsync();
+        }
 
-      // Cancel any outgoing refetches
-      // (so they don't overwrite our optimistic update)
-      await utils.app.kodixCare.getCareTasks.cancel();
+        // Cancel any outgoing refetches
+        // (so they don't overwrite our optimistic update)
+        await utils.app.kodixCare.careTask.getCareTasks.cancel();
 
-      // Optimistically update to the new value
-      utils.app.kodixCare.getCareTasks.setData(input, (prev) => {
-        return prev?.map((x) => {
-          if (x.id === editedCareTask.id) {
-            if (editedCareTask.doneAt !== undefined)
-              x.doneAt = editedCareTask.doneAt;
-            if (editedCareTask.details !== undefined)
-              x.details = editedCareTask.details;
-          }
+        // Optimistically update to the new value
+        utils.app.kodixCare.careTask.getCareTasks.setData(input, (prev) => {
+          return prev?.map((x) => {
+            if (x.id === editedCareTask.id) {
+              if (editedCareTask.doneAt !== undefined)
+                x.doneAt = editedCareTask.doneAt;
+              if (editedCareTask.details !== undefined)
+                x.details = editedCareTask.details;
+            }
 
-          return x;
+            return x;
+          });
         });
-      });
 
-      // Return a context object with the snapshotted value
-      return { previousCareTasks };
-    },
-    // If the mutation fails,
-    // use the context returned from onMutate to roll back
-    onError: (err, __, context) => {
-      utils.app.kodixCare.getCareTasks.setData(
-        input,
-        context?.previousCareTasks,
-      );
-      toast.show("Um erro ocorreu", {
-        message: getErrorMessage(err),
-        variant: "error",
-        customData: {
+        // Return a context object with the snapshotted value
+        return { previousCareTasks };
+      },
+      // If the mutation fails,
+      // use the context returned from onMutate to roll back
+      onError: (err, __, context) => {
+        utils.app.kodixCare.careTask.getCareTasks.setData(
+          input,
+          context?.previousCareTasks,
+        );
+        toast.show("Um erro ocorreu", {
+          message: getErrorMessage(err),
           variant: "error",
-        },
-      });
-    },
-    // Always refetch after error or success:
-    onSettled: () => {
-      void utils.app.kodixCare.invalidate();
-    },
-  });
+          customData: {
+            variant: "error",
+          },
+        });
+      },
+      // Always refetch after error or success:
+      onSettled: () => {
+        void utils.app.kodixCare.invalidate();
+      },
+    });
 
   const [position, setPosition] = useState(1);
 
@@ -278,23 +281,24 @@ function CreateCareTaskSheet({
   });
   const utils = api.useUtils();
   const toast = useToastController();
-  const createCareTaskMutation = api.app.kodixCare.createCareTask.useMutation({
-    onSuccess: () => {
-      setOpen(false);
-    },
-    onError: (err) => {
-      toast.show("Um erro ocorreu", {
-        message: getErrorMessage(err),
-        variant: "error",
-        customData: {
+  const createCareTaskMutation =
+    api.app.kodixCare.careTask.createCareTask.useMutation({
+      onSuccess: () => {
+        setOpen(false);
+      },
+      onError: (err) => {
+        toast.show("Um erro ocorreu", {
+          message: getErrorMessage(err),
           variant: "error",
-        },
-      });
-    },
-    onSettled: () => {
-      void utils.app.kodixCare.invalidate();
-    },
-  });
+          customData: {
+            variant: "error",
+          },
+        });
+      },
+      onSettled: () => {
+        void utils.app.kodixCare.invalidate();
+      },
+    });
 
   useEffect(() => {
     form.reset();
@@ -432,32 +436,35 @@ function CreateCareTaskSheet({
 }
 
 function CareTaskOrCalendarTaskItem(props: {
-  task: RouterOutputs["app"]["kodixCare"]["getCareTasks"][number];
-  mutation: ReturnType<typeof api.app.kodixCare.editCareTask.useMutation>;
+  task: RouterOutputs["app"]["kodixCare"]["careTask"]["getCareTasks"][number];
+  mutation: ReturnType<
+    typeof api.app.kodixCare.careTask.editCareTask.useMutation
+  >;
   setEditCareTaskSheetOpen: (open: boolean) => void;
   setCurrentlyEditing: (id: string) => void;
 }) {
   const format = useFormatter();
   const isCareTaskItem = (
-    task: RouterOutputs["app"]["kodixCare"]["getCareTasks"][number],
+    task: RouterOutputs["app"]["kodixCare"]["careTask"]["getCareTasks"][number],
   ): task is CareTask => !!task.id;
 
   const utils = api.useUtils();
   const toast = useToastController();
-  const deleteCareTaskMutation = api.app.kodixCare.deleteCareTask.useMutation({
-    onSettled: () => {
-      void utils.app.kodixCare.getCareTasks.invalidate();
-    },
-    onError: (err) => {
-      toast.show("Um erro ocorreu", {
-        message: getErrorMessage(err),
-        variant: "error",
-        customData: {
+  const deleteCareTaskMutation =
+    api.app.kodixCare.careTask.deleteCareTask.useMutation({
+      onSettled: () => {
+        void utils.app.kodixCare.careTask.invalidate();
+      },
+      onError: (err) => {
+        toast.show("Um erro ocorreu", {
+          message: getErrorMessage(err),
           variant: "error",
-        },
-      });
-    },
-  });
+          customData: {
+            variant: "error",
+          },
+        });
+      },
+    });
 
   const theme = useTheme();
 
@@ -572,7 +579,9 @@ function CareTaskOrCalendarTaskItem(props: {
 
 function EditCareTaskSheet(props: {
   task: CareTask;
-  mutation: ReturnType<typeof api.app.kodixCare.editCareTask.useMutation>;
+  mutation: ReturnType<
+    typeof api.app.kodixCare.careTask.editCareTask.useMutation
+  >;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
