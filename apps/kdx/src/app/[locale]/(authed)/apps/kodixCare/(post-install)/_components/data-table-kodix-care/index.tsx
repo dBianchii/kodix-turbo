@@ -683,7 +683,6 @@ function AddCareTaskCredenzaButton() {
                           setDate={(newDate) =>
                             field.onChange(newDate ?? new Date())
                           }
-                          disabledDate={(date) => dayjs(date).isBefore(dayjs())}
                         />
                       </div>
                     </FormControl>
