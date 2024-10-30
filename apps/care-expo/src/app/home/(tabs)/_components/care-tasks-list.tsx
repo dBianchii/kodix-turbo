@@ -38,7 +38,7 @@ import { useTranslations } from "@kdx/locales/use-intl";
 import { getErrorMessage } from "@kdx/shared";
 import {
   ZCreateCareTaskInputSchema,
-  ZSaveCareTaskInputSchema,
+  ZEditCareTaskInputSchema,
 } from "@kdx/validators/trpc/app/kodixCare";
 
 import type { RouterOutputs } from "~/utils/api";
@@ -85,15 +85,15 @@ export function CareTasksLists() {
     });
 
   const toast = useToastController();
-  const saveCareTaskMutation = api.app.kodixCare.saveCareTask.useMutation({
-    onMutate: async (savedCareTask) => {
+  const editCareTaskMutation = api.app.kodixCare.editCareTask.useMutation({
+    onMutate: async (editedCareTask) => {
       // Snapshot the previous value
       const previousCareTasks = utils.app.kodixCare.getCareTasks.getData();
 
       const previousTask = previousCareTasks?.find(
-        (x) => x.id === savedCareTask.id,
+        (x) => x.id === editedCareTask.id,
       );
-      if (!previousTask?.doneAt && savedCareTask.doneAt) {
+      if (!previousTask?.doneAt && editedCareTask.doneAt) {
         const { sound } = await Audio.Sound.createAsync(
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-require-imports
           require("../../../../../assets/taskDone.mp3"),
@@ -108,13 +108,11 @@ export function CareTasksLists() {
       // Optimistically update to the new value
       utils.app.kodixCare.getCareTasks.setData(input, (prev) => {
         return prev?.map((x) => {
-          if (x.id === savedCareTask.id) {
-            if (savedCareTask.doneAt !== undefined)
-              x.doneAt = savedCareTask.doneAt;
-            if (savedCareTask.doneByUserId !== undefined)
-              x.doneByUserId = savedCareTask.doneByUserId;
-            if (savedCareTask.details !== undefined)
-              x.details = savedCareTask.details;
+          if (x.id === editedCareTask.id) {
+            if (editedCareTask.doneAt !== undefined)
+              x.doneAt = editedCareTask.doneAt;
+            if (editedCareTask.details !== undefined)
+              x.details = editedCareTask.details;
           }
 
           return x;
@@ -184,7 +182,7 @@ export function CareTasksLists() {
         <>
           <EditCareTaskSheet
             task={currentlyEditingCareTask}
-            mutation={saveCareTaskMutation}
+            mutation={editCareTaskMutation}
             open={editCareTaskSheetOpen}
             setOpen={setEditCareTaskSheetOpen}
           />
@@ -249,7 +247,7 @@ export function CareTasksLists() {
                 renderItem={({ item }) => (
                   <CareTaskOrCalendarTaskItem
                     task={item}
-                    mutation={saveCareTaskMutation}
+                    mutation={editCareTaskMutation}
                     setCurrentlyEditing={setCurrentlyEditing}
                     setEditCareTaskSheetOpen={setEditCareTaskSheetOpen}
                   />
@@ -435,7 +433,7 @@ function CreateCareTaskSheet({
 
 function CareTaskOrCalendarTaskItem(props: {
   task: RouterOutputs["app"]["kodixCare"]["getCareTasks"][number];
-  mutation: ReturnType<typeof api.app.kodixCare.saveCareTask.useMutation>;
+  mutation: ReturnType<typeof api.app.kodixCare.editCareTask.useMutation>;
   setEditCareTaskSheetOpen: (open: boolean) => void;
   setCurrentlyEditing: (id: string) => void;
 }) {
@@ -574,7 +572,7 @@ function CareTaskOrCalendarTaskItem(props: {
 
 function EditCareTaskSheet(props: {
   task: CareTask;
-  mutation: ReturnType<typeof api.app.kodixCare.saveCareTask.useMutation>;
+  mutation: ReturnType<typeof api.app.kodixCare.editCareTask.useMutation>;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
@@ -591,7 +589,7 @@ function EditCareTaskSheet(props: {
   );
   const t = useTranslations();
   const form = useForm({
-    schema: ZSaveCareTaskInputSchema(t).pick({
+    schema: ZEditCareTaskInputSchema(t).pick({
       id: true,
       details: true,
       doneAt: true,

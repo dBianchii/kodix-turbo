@@ -93,7 +93,7 @@ import {
 } from "@kdx/ui/tooltip";
 import {
   ZCreateCareTaskInputSchema,
-  ZSaveCareTaskInputSchema,
+  ZEditCareTaskInputSchema,
 } from "@kdx/validators/trpc/app/kodixCare";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
@@ -157,8 +157,8 @@ export default function DataTableKodixCare() {
   const [deleteTaskOpen, setDeleteTaskOpen] = useState(false);
 
   const query = api.app.kodixCare.getCareTasks.useQuery(input);
-  const saveCareTaskMutation = api.app.kodixCare.saveCareTask.useMutation({
-    onMutate: async (savedCareTask) => {
+  const saveCareTaskMutation = api.app.kodixCare.editCareTask.useMutation({
+    onMutate: async (editedCareTask) => {
       // Cancel any outgoing refetches
       // (so they don't overwrite our optimistic update)
       await utils.app.kodixCare.getCareTasks.cancel();
@@ -168,13 +168,11 @@ export default function DataTableKodixCare() {
       // Optimistically update to the new value
       utils.app.kodixCare.getCareTasks.setData(input, (prev) => {
         return prev?.map((x) => {
-          if (x.id === savedCareTask.id) {
-            if (savedCareTask.doneAt !== undefined)
-              x.doneAt = savedCareTask.doneAt;
-            if (savedCareTask.doneByUserId !== undefined)
-              x.doneByUserId = savedCareTask.doneByUserId;
-            if (savedCareTask.details !== undefined)
-              x.details = savedCareTask.details;
+          if (x.id === editedCareTask.id) {
+            if (editedCareTask.doneAt !== undefined)
+              x.doneAt = editedCareTask.doneAt;
+            if (editedCareTask.details !== undefined)
+              x.details = editedCareTask.details;
           }
 
           return x;
@@ -833,7 +831,7 @@ function EditCareTaskCredenza({
   setOpen,
 }: {
   task: CareTask;
-  mutation: ReturnType<typeof api.app.kodixCare.saveCareTask.useMutation>;
+  mutation: ReturnType<typeof api.app.kodixCare.editCareTask.useMutation>;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
@@ -849,7 +847,7 @@ function EditCareTaskCredenza({
   );
 
   const form = useForm({
-    schema: ZSaveCareTaskInputSchema(t).pick({
+    schema: ZEditCareTaskInputSchema(t).pick({
       id: true,
       details: true,
       doneAt: true,
