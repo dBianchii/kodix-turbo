@@ -41,7 +41,7 @@ export const deleteCareTaskHandler = async ({
       message: t("api.Care task not found"),
     });
   }
-  if (careTask.CareShift.shiftEndedAt) {
+  if (careTask.CareShift?.shiftEndedAt) {
     throw new TRPCError({
       code: "FORBIDDEN",
       message: t("api.You cannot delete a task from a closed shift"),

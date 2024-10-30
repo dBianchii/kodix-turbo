@@ -10,8 +10,8 @@ import {
   ZCreateCareTaskInputSchema,
   ZDeleteCareTaskInputSchema,
   ZDoCheckoutForShiftInputSchema,
+  ZEditCareTaskInputSchema,
   ZGetCareTasksInputSchema,
-  ZSaveCareTaskInputSchema,
   ZSignInByPasswordInputSchema,
   ZUnlockMoreTasksInputSchema,
 } from "@kdx/validators/trpc/app/kodixCare";
@@ -26,9 +26,9 @@ import { checkEmailForRegisterHandler } from "./checkEmailForRegister.handler";
 import { createCareTaskHandler } from "./createCareTask.handler";
 import { deleteCareTaskHandler } from "./deleteCareTask.handler";
 import { doCheckoutForShiftHandler } from "./doCheckoutForShift.handler";
+import { editCareTaskHandler } from "./editCareTask";
 import { getCareTasksHandler } from "./getCareTasks.handler";
 import { getCurrentShiftHandler } from "./getCurrentShift.handler";
-import { saveCareTaskHandler } from "./saveCareTask.handler";
 import { signInByPasswordHandler } from "./signInByPassword.handler";
 import { syncCareTasksFromCalendarHandler } from "./syncCareTasksFromCalendar.handler";
 import { toggleShiftHandler } from "./toggleShift.handler";
@@ -50,10 +50,10 @@ export const kodixCareRouter = {
   getCurrentShift: protectedProcedure
     .use(kodixCareInstalledMiddleware)
     .query(getCurrentShiftHandler),
-  saveCareTask: protectedProcedure
+  editCareTask: protectedProcedure
     .use(kodixCareInstalledMiddleware)
-    .input(T(ZSaveCareTaskInputSchema))
-    .mutation(saveCareTaskHandler),
+    .input(T(ZEditCareTaskInputSchema))
+    .mutation(editCareTaskHandler),
   unlockMoreTasks: protectedProcedure
     .use(kodixCareInstalledMiddleware)
     .input(ZUnlockMoreTasksInputSchema)

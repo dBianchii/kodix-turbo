@@ -23,10 +23,9 @@ export const ZGetCareTasksInputSchema = z.object({
 });
 export type TGetCareTasksInputSchema = z.infer<typeof ZGetCareTasksInputSchema>;
 
-export const ZSaveCareTaskInputSchema = (t: IsomorficT) =>
+export const ZEditCareTaskInputSchema = (t: IsomorficT) =>
   z.object({
     id: ZNanoId,
-    doneByUserId: ZNanoId.nullable().optional(),
     doneAt: z
       .date()
       .max(new Date(), {
@@ -39,8 +38,8 @@ export const ZSaveCareTaskInputSchema = (t: IsomorficT) =>
       .optional(),
     details: z.string().nullable().optional(),
   });
-export type TSaveCareTaskInputSchema = z.infer<
-  ReturnType<typeof ZSaveCareTaskInputSchema>
+export type TEditCareTaskInputSchema = z.infer<
+  ReturnType<typeof ZEditCareTaskInputSchema>
 >;
 
 export const ZUnlockMoreTasksInputSchema = z.object({
