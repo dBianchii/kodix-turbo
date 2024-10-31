@@ -11,14 +11,17 @@ import { defaultPadding, RootSafeAreaView } from "~/components/safe-area-view";
 import { api } from "~/utils/api";
 import { useAuth } from "~/utils/auth";
 import { usePushNotifications } from "~/utils/usePushNotifications";
-import { CaretasksList } from "./_components/care-tasks-list";
+import { CareTasksLists } from "./_components/care-tasks-list";
 import { CurrentShift } from "./_components/shifts";
 
 export default function Tab() {
   const { user } = useAuth();
 
   const router = useRouter();
-  if (!user) return router.replace("/");
+  if (!user) {
+    router.replace("/");
+    return null;
+  }
 
   const myRolesQuery = api.team.appRole.getMyRoles.useQuery({
     appId: kodixCareAppId,
@@ -102,7 +105,7 @@ function HomeView() {
         <CurrentShift />
         <View mt={"$6"}>{isFetching || isMutating ? <Spinner /> : null}</View>
       </ScrollView>
-      <CaretasksList />
+      <CareTasksLists />
     </View>
   );
 }

@@ -22,7 +22,10 @@ export default function ProfilePage() {
   const { user } = useAuth();
   const router = useRouter();
 
-  if (!user) return null;
+  if (!user) {
+    router.replace("/");
+    return null;
+  }
 
   const items = [
     {

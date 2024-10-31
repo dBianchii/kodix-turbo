@@ -24,6 +24,7 @@ export interface CalendarTask {
   rule: string;
   type: typeof eventMasters.$inferSelect.type;
   teamId: typeof eventMasters.$inferSelect.teamId;
+  createdBy: typeof eventMasters.$inferSelect.createdBy;
 }
 
 export const getCalendarTaskCompositeId = (compound: {
@@ -77,6 +78,7 @@ export async function getCalendarTasks({
       eventMasterType: eventMasters.type,
       eventMasterRule: eventMasters.rule,
       eventMasterTeamId: eventMasters.teamId,
+      eventMasterCreatedBy: eventMasters.createdBy,
     })
     .from(eventExceptions)
     .where((eventExceptions) =>
@@ -137,6 +139,7 @@ export async function getCalendarTasks({
         rule: eventMaster.rule,
         type: eventMaster.type,
         teamId: eventMaster.teamId,
+        createdBy: eventMaster.createdBy,
       });
   }
 
@@ -155,6 +158,7 @@ export async function getCalendarTasks({
       originaDate: eventException.originalDate,
       rule: eventException.rule,
       teamId: eventException.eventMasterTeamId,
+      createdBy: eventException.eventMasterCreatedBy,
     });
 
   //we have exceptions and recurrences from masters in calendarTasks. Some master recurrences must be deleted.

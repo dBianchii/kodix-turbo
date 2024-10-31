@@ -58,14 +58,17 @@ export const careTasks = mysqlTable(
       length: NANOID_SIZE,
     }),
     //.references(() => eventMasters.id), //TODO: should we have foreignKey????????????????????????????????????????????????????????????????
-    careShiftId: varchar("careShiftId", { length: NANOID_SIZE })
-      .notNull()
-      .references(() => careShifts.id),
+    careShiftId: varchar("careShiftId", { length: NANOID_SIZE }).references(
+      () => careShifts.id,
+    ),
     title: varchar("title", { length: DEFAULTLENGTH }),
     description: varchar("description", { length: DEFAULTLENGTH }),
     details: varchar("details", { length: DEFAULTLENGTH }),
     updatedAt: timestamp("updatedAt").onUpdateNow(),
     type: typeEnum.notNull().default("NORMAL"),
+    createdBy: varchar("createdBy", { length: NANOID_SIZE })
+      .notNull()
+      .references(() => users.id),
   },
   (table) => {
     return {
