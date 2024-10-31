@@ -63,17 +63,10 @@ export const sendNotificationsForCriticalTasks = verifiedQstashCron(
       })
     ).filter((x) => isLate(x.date)); //? We only want to notify about tasks that are late
 
-    const usersWithinTheTeams = allTeamIdsWithKodixCareInstalled
-      .flatMap((x) => x.Team.UsersToTeams.flatMap((x) => x.userId))
-      .filter(
-        (x) =>
-          [
-            "zxqpswklyqhq",
-            "ub4jzpfje8zl",
-            "gtmbsduucun4",
-            "39atxan7vyu5",
-          ].includes(x), //TODO: Remove this line. It's only for testing purposes
-      );
+    const usersWithinTheTeams = allTeamIdsWithKodixCareInstalled.flatMap((x) =>
+      x.Team.UsersToTeams.flatMap((x) => x.userId),
+    );
+
     const teamsWithCriticalNotDoneLateCareTasks =
       criticalNotDoneLateCareTasks.map((x) => x.teamId);
 
