@@ -1,7 +1,7 @@
-import type { TGetCareTasksInputSchema } from "@kdx/validators/trpc/app/kodixCare";
+import type { TGetCareTasksInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
 
-import type { TProtectedProcedureContext } from "../../../procedures";
-import { getCareTasks } from "../../../../internal/calendarAndCareTaskCentral";
+import type { TProtectedProcedureContext } from "../../../../procedures";
+import { getCareTasks } from "../../../../../internal/calendarAndCareTaskCentral";
 
 interface GetCareTasksOptions {
   ctx: TProtectedProcedureContext;

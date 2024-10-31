@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import { getTranslations } from "@kdx/locales/next-intl/server";
 import { kodixCareAppId } from "@kdx/shared";
 
@@ -6,10 +8,6 @@ import { KodixCareUserSettingsForm } from "./_components/kodix-care-user-setting
 
 export default async function KodixCareSettingsPage() {
   const t = await getTranslations();
-
-  const config = await api.app.getUserAppTeamConfig({
-    appId: kodixCareAppId,
-  });
 
   return (
     <main className="pt-6 md:p-6">
@@ -20,7 +18,17 @@ export default async function KodixCareSettingsPage() {
         </TabsList>
         <TabsContent value="account"></TabsContent>
       </Tabs> */}
-      <KodixCareUserSettingsForm config={config} />
+      <Suspense>
+        <KodixCareUserSettingsFormServer />
+      </Suspense>
     </main>
   );
+}
+
+async function KodixCareUserSettingsFormServer() {
+  const config = await api.app.getUserAppTeamConfig({
+    appId: kodixCareAppId,
+  });
+
+  return <KodixCareUserSettingsForm config={config} />;
 }

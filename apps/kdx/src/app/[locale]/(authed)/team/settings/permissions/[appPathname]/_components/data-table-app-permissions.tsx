@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import {
   createColumnHelper,
+  flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
@@ -19,8 +20,17 @@ import {
   useAppPermissionName,
   useAppRoleDefaultNames,
 } from "@kdx/locales/next-intl/hooks";
-import { DataTable } from "@kdx/ui/data-table/data-table";
+import { cn } from "@kdx/ui";
 import { MultiSelect } from "@kdx/ui/multi-select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@kdx/ui/table";
+import { toast } from "@kdx/ui/toast";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
@@ -117,7 +127,13 @@ export function DataTableAppPermissions({
             return (
               <div className="flex w-60 flex-row gap-3 pl-2">
                 <div className="flex flex-col items-start">
-                  <span className="font-bold">{name}</span>
+                  <span
+                    className={cn("font-semibold text-muted-foreground", {
+                      italic: !info.cell.row.original.editable,
+                    })}
+                  >
+                    {name}
+                  </span>
                 </div>
               </div>
             );
@@ -131,6 +147,7 @@ export function DataTableAppPermissions({
 
             return (
               <MultiSelect
+                readonly={!info.cell.row.original.editable}
                 className="w-96"
                 options={allAppRoles.map((role) => ({
                   label:
@@ -163,10 +180,66 @@ export function DataTableAppPermissions({
   });
 
   return (
-    <DataTable
-      table={table}
-      showPagination={false}
-      noResultsMessage={t("This app does not have any permissions")}
-    />
+    <div className="w-full space-y-2.5 overflow-auto">
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  onClick={() => {
+                    if (!row.original.editable) {
+                      toast.error(t("This permission is not editable"));
+                    }
+                  }}
+                  className={cn("hover:bg-muted/10", {
+                    "cursor-not-allowed bg-card hover:bg-card":
+                      !row.original.editable,
+                  })}
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={table.getAllColumns().length}
+                  className="h-24 text-center"
+                >
+                  {t("This app does not have any permissions")}
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
   );
 }

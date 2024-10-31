@@ -89,7 +89,7 @@ export function DataTable({
   const { mutate: nukeEvents } = api.app.calendar.nuke.useMutation({
     onSuccess() {
       void utils.app.calendar.getAll.invalidate();
-      void utils.app.kodixCare.getCareTasks.invalidate();
+      void utils.app.kodixCare.careTask.getCareTasks.invalidate();
     },
   });
 

@@ -4,6 +4,7 @@ import { index, mysqlTable } from "drizzle-orm/mysql-core";
 import { NANOID_SIZE } from "@kdx/shared";
 
 import { teams } from "../teams";
+import { users } from "../users";
 import {
   DEFAULTLENGTH,
   nanoidPrimaryKey,
@@ -23,6 +24,10 @@ export const eventMasters = mysqlTable(
     description: t.varchar({ length: DEFAULTLENGTH }),
     teamId: teamIdReferenceCascadeDelete(t),
     type: typeEnum(t).notNull().default("NORMAL"),
+    createdBy: t
+      .varchar({ length: DEFAULTLENGTH })
+      .notNull()
+      .references(() => users.id),
   }),
   (table) => {
     return {

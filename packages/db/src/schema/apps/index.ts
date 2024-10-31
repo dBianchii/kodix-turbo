@@ -90,6 +90,7 @@ export const appPermissions = mysqlTable(
       .varchar({ length: NANOID_SIZE })
       .notNull()
       .references(() => apps.id, { onDelete: "cascade", onUpdate: "cascade" }),
+    editable: t.boolean().default(true).notNull(),
   }),
   (table) => {
     return {

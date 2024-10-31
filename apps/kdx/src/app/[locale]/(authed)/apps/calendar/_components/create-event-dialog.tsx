@@ -68,7 +68,7 @@ export function CreateEventDialogButton() {
   const mutation = api.app.calendar.create.useMutation({
     onSuccess: () => {
       void utils.app.calendar.getAll.invalidate();
-      void utils.app.kodixCare.getCareTasks.invalidate();
+      void utils.app.kodixCare.careTask.getCareTasks.invalidate();
       form.reset();
       setOpen(false);
     },

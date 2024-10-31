@@ -53,7 +53,7 @@ export const appPermissionMiddleware = (permissionId: AppPermissionId) =>
     });
 
     if (foundPermission === null) {
-      const permission = await ctx.db
+      const [permission] = await ctx.db
         .select({ permissionId: appPermissionsToTeamAppRoles.appPermissionId })
         .from(teamAppRoles)
         .innerJoin(
@@ -70,8 +70,7 @@ export const appPermissionMiddleware = (permissionId: AppPermissionId) =>
             eq(teamAppRoles.teamId, ctx.auth.user.activeTeamId),
             eq(appPermissionsToTeamAppRoles.appPermissionId, permissionId),
           ),
-        )
-        .then((res) => res[0]);
+        );
 
       await setUpstashCache("permissions", {
         variableKeys: {
@@ -88,7 +87,7 @@ export const appPermissionMiddleware = (permissionId: AppPermissionId) =>
     if (!foundPermission) {
       const t = await getTranslations({ locale: ctx.locale });
       throw new TRPCError({
-        code: "UNAUTHORIZED",
+        code: "FORBIDDEN",
         message: t(
           "api.You dont have permission to do this Contact a team administrator if you believe this is an error",
         ),

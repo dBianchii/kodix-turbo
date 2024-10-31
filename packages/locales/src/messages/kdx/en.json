@@ -286,6 +286,8 @@
   "Patient": "Patient",
   "Care Giver": "Care Giver",
   "Can toggle shift": "Can change shift",
+  "Can create task": "Can create task",
+  "Can delete task": "Can delete task",
   "Add more apps": "Add more apps",
   "Notifications": "Notifications",
   "Manage your notifications": "Manage your notifications",
@@ -460,5 +462,12 @@
   "Critical task": "Critical task?",
   "Wether or not this task is considered critical or important": "Wether or not this task is considered critical, or important. You can choose to receive notifications about it on the <settings>settings</settings> page",
   "Critical": "Critical",
-  "Is this task considered critical or important": "Is this task considered critical or important?"
+  "Is this task considered critical or important": "Is this task considered critical or important?",
+  "This permission is not editable": "This permission is not editable",
+  "api": {
+    "You cannot delete a task from a closed shift": "You cannot delete a task from a closed shift",
+    "Only admins and the creator can delete a task": "Only admins and the task's creator can delete the task"
+  },
+  "Delete task": "Delete task",
+  "Are you sure you want to delete this task": "Are you sure you want to delete this task?"
 }

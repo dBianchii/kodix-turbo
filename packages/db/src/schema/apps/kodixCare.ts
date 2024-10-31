@@ -49,26 +49,29 @@ export const careTasks = mysqlTable(
   "careTask",
   (t) => ({
     id: nanoidPrimaryKey(t),
-    date: t.timestamp("date").notNull(),
-    doneAt: t.timestamp("doneAt"),
-    doneByUserId: t.varchar("doneByUserId", { length: NANOID_SIZE }).references(
+    date: t.timestamp().notNull(),
+    doneAt: t.timestamp(),
+    doneByUserId: t.varchar({ length: NANOID_SIZE }).references(
       () => users.id,
       { onDelete: "restrict" }, //Restrict because we have to keep logs somehow
     ),
     teamId: teamIdReferenceCascadeDelete(t),
-    eventMasterId: t.varchar("eventMasterId", {
+    eventMasterId: t.varchar({
       length: NANOID_SIZE,
     }),
     //.references(() => eventMasters.id), //TODO: should we have foreignKey????????????????????????????????????????????????????????????????
     careShiftId: t
-      .varchar("careShiftId", { length: NANOID_SIZE })
-      .notNull()
+      .varchar({ length: NANOID_SIZE })
       .references(() => careShifts.id),
-    title: t.varchar("title", { length: DEFAULTLENGTH }),
-    description: t.varchar("description", { length: DEFAULTLENGTH }),
-    details: t.varchar("details", { length: DEFAULTLENGTH }),
-    updatedAt: t.timestamp("updatedAt").onUpdateNow(),
+    title: t.varchar({ length: DEFAULTLENGTH }),
+    description: t.varchar({ length: DEFAULTLENGTH }),
+    details: t.varchar({ length: DEFAULTLENGTH }),
+    updatedAt: t.timestamp().onUpdateNow(),
     type: typeEnum(t).notNull().default("NORMAL"),
+    createdBy: t
+      .varchar({ length: NANOID_SIZE })
+      .notNull()
+      .references(() => users.id),
   }),
   (table) => {
     return {

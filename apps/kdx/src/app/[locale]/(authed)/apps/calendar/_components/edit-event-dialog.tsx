@@ -54,7 +54,7 @@ export function EditEventDialog({
       setEditDefinitionOpen(false);
       setPersonalizedRecurrenceOpen(false);
       void utils.app.calendar.getAll.invalidate();
-      void utils.app.kodixCare.getCareTasks.invalidate();
+      void utils.app.kodixCare.careTask.getCareTasks.invalidate();
     },
     onError: (e) => trpcErrorToastDefault(e),
   });
