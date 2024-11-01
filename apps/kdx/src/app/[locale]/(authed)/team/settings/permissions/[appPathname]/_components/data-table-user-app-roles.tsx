@@ -6,11 +6,11 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useTranslations } from "next-intl";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { AppRoleDefaultId, KodixAppId } from "@kdx/shared";
 import type { FixedColumnsType } from "@kdx/ui/data-table/data-table";
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { useAppRoleDefaultNames } from "@kdx/locales/next-intl/hooks";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { DataTable } from "@kdx/ui/data-table/data-table";

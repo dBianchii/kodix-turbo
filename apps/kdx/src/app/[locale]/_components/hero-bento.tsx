@@ -1,6 +1,6 @@
+import { getTranslations } from "next-intl/server";
 import { RxCalendar, RxCube, RxGlobe, RxInput } from "react-icons/rx";
 
-import { getTranslations } from "@kdx/locales/next-intl/server";
 import { getAppName } from "@kdx/locales/next-intl/server-hooks";
 import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
 import { cn } from "@kdx/ui";

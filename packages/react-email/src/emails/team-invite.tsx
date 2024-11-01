@@ -15,10 +15,10 @@ import {
   Tailwind,
   Text,
 } from "@react-email/components";
+import { getTranslations } from "next-intl/server";
 
 import type { locales } from "@kdx/locales";
 import { defaultLocale } from "@kdx/locales";
-import { getTranslations } from "@kdx/locales/next-intl/server";
 import { getBaseUrl } from "@kdx/shared";
 
 const baseUrl = getBaseUrl();

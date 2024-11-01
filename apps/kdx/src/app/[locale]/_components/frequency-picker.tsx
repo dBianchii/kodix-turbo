@@ -2,9 +2,9 @@
 
 import type { Frequency } from "rrule";
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 import { RRule } from "rrule";
 
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { Button } from "@kdx/ui/button";
 import {
   Command,

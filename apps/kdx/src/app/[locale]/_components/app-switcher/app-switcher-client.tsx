@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { IoApps } from "react-icons/io5";
 import { RxCaretSort, RxPlusCircled } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { KodixAppId } from "@kdx/shared";
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { useAppName } from "@kdx/locales/next-intl/hooks";
 import {
   Link,

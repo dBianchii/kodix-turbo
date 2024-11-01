@@ -1,6 +1,7 @@
+import { getTranslations } from "next-intl/server";
+
 import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
-import { getTranslations } from "@kdx/locales/next-intl/server";
 import { H1, Lead } from "@kdx/ui/typography";
 
 import { KodixApp } from "~/app/[locale]/_components/app/kodix-app";

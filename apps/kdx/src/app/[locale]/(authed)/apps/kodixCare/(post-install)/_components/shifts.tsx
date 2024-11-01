@@ -1,13 +1,12 @@
 "use client";
 
+import { useFormatter, useTranslations } from "next-intl";
 import { HiUserCircle } from "react-icons/hi";
 import { IoMdTime } from "react-icons/io";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
 import type { DateTimeFormatOptions } from "@kdx/locales/next-intl";
-import { useFormatter } from "@kdx/locales/next-intl";
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Badge } from "@kdx/ui/badge";
 import { Card } from "@kdx/ui/card";

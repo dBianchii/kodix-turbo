@@ -1,9 +1,9 @@
 import { TRPCError } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
 
 import type { TDeleteCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
 import { and, eq } from "@kdx/db";
 import { careTasks, teamAppRoles, teamAppRolesToUsers } from "@kdx/db/schema";
-import { getTranslations } from "@kdx/locales/next-intl/server";
 import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";

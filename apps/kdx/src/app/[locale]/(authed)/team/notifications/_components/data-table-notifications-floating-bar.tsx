@@ -1,9 +1,9 @@
 import type { Table } from "@tanstack/react-table";
 import * as React from "react";
+import { useTranslations } from "next-intl";
 import { RxCross2, RxDownload, RxReload, RxTrash } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { getErrorMessage } from "@kdx/shared";
 import { Button } from "@kdx/ui/button";
 import { exportTableToCSV } from "@kdx/ui/data-table/export";

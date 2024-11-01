@@ -1,8 +1,8 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { z } from "zod";
 
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { useRouter } from "@kdx/locales/next-intl/navigation";
 import { getErrorMessage } from "@kdx/shared";
 import {

@@ -1,8 +1,8 @@
 import { Suspense } from "react";
+import { getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
 import { Link } from "@kdx/locales/next-intl/navigation";
-import { getTranslations } from "@kdx/locales/next-intl/server";
 import { buttonVariants } from "@kdx/ui/button";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";

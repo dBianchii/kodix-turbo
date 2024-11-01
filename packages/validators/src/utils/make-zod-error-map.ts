@@ -3,10 +3,9 @@
  * Checkout the original at: https://github.com/aiji42/zod-i18n
  */
 
+import type { useTranslations } from "next-intl";
 import type { ZodErrorMap } from "zod";
 import { defaultErrorMap, ZodIssueCode, ZodParsedType } from "zod";
-
-import type { useTranslations } from "@kdx/locales/next-intl/client";
 
 const jsonStringifyReplacer = (_: string, value: unknown): unknown => {
   if (typeof value === "bigint") {

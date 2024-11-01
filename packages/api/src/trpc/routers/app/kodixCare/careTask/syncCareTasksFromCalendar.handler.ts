@@ -1,8 +1,8 @@
 import { TRPCError } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
 
 import { gte } from "@kdx/db";
 import { careTasks } from "@kdx/db/schema";
-import { getTranslations } from "@kdx/locales/next-intl/server";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
 import { getCurrentShiftHandler } from "../getCurrentShift.handler";
