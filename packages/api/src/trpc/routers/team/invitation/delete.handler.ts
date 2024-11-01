@@ -1,5 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import { getTranslations } from "next-intl/server";
 
 import type { TDeleteInputSchema } from "@kdx/validators/trpc/team/invitation";
 import { and, eq } from "@kdx/db";

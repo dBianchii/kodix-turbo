@@ -1,5 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import { getTranslations } from "next-intl/server";
 
 import { sql } from "@kdx/db";
 import { db } from "@kdx/db/client";

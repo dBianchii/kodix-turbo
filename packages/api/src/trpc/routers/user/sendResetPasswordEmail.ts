@@ -1,5 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import { getTranslations } from "next-intl/server";
 
 import type { TSendResetPasswordEmailInputSchema } from "@kdx/validators/trpc/user";
 import { eq } from "@kdx/db";

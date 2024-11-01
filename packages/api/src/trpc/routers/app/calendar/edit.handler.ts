@@ -1,5 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import { getTranslations } from "next-intl/server";
 import { RRule, rrulestr } from "rrule";
 
 import type { TEditInputSchema } from "@kdx/validators/trpc/app/calendar";

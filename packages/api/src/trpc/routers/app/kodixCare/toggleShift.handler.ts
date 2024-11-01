@@ -1,5 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import { getTranslations } from "next-intl/server";
 
 import dayjs from "@kdx/dayjs";
 import { and, desc, eq, gte, isNotNull } from "@kdx/db";

@@ -1,5 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import { getTranslations } from "next-intl/server";
 
 import type { TGetConfigInput } from "@kdx/validators/trpc/app";
 import { appIdToAppTeamConfigSchema } from "@kdx/validators";
@@ -20,7 +19,6 @@ export const getConfigHandler = async ({ ctx, input }: GetConfigOptions) => {
   });
 
   if (!teamConfig) {
-    const t = await getTranslations();
     throw new TRPCError({
       code: "NOT_FOUND",
       message: ctx.t("api.No appTeamConfig found"),
