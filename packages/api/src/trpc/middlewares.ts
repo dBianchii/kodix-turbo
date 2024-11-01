@@ -29,7 +29,7 @@ const appInstalledMiddlewareFactory = (appId: KodixAppId) =>
       throw new TRPCError({
         code: "UNAUTHORIZED",
         message: ctx.t("api.appName is not installed", {
-          app: await getAppName(appId),
+          app: getAppName(ctx.t, appId),
         }),
       });
     }
@@ -109,7 +109,7 @@ export const appInstalledMiddleware = experimental_standaloneMiddleware<{
     throw new TRPCError({
       code: "UNAUTHORIZED",
       message: ctx.t("api.appName is not installed", {
-        app: await getAppName(input.appId),
+        app: getAppName(ctx.t, input.appId),
       }),
     });
   }

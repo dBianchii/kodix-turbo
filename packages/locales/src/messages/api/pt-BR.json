@@ -1,4 +1,7 @@
 {
+  "Calendar": "Calendário",
+  "Kodix Care": "Kodix Care",
+  "Todo": "Todo",
   "api": {
     "emails": {
       "Has invited you to the teamName team on Kodix": "Convidou você para a equipe {teamName} em {site}",
@@ -13,9 +16,6 @@
       "or copy and paste this URL into your browser:": "ou copie e cole este URL em seu navegador:",
       "no title": "(sem título)"
     },
-    "Calendar": "Calendário",
-    "Kodix Care": "Kodix Care",
-    "Todo": "Todo",
     "No Team Found": "Nenhuma equipe encontrada",
     "Admin role not found": "Função de administrador não encontrada",
     "App already installed": "Aplicativo já instalado",

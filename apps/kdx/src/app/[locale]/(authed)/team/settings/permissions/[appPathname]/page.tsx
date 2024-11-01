@@ -51,7 +51,7 @@ async function UserAppRolesTable({ appId }: { appId: KodixAppId }) {
       </div>
       <div className="flex flex-col gap-2">
         <h1 className="font-semibold text-muted-foreground">
-          {t("Edit name roles", { name: await getAppName(appId) })}
+          {t("Edit name roles", { name: getAppName(t, appId) })}
         </h1>
         <DataTableUserAppRoles
           initialUsers={initialUsers}
