@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   LuSignal,
   LuSignalHigh,
@@ -6,7 +7,6 @@ import {
   LuSignalMedium,
 } from "react-icons/lu";
 
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import {

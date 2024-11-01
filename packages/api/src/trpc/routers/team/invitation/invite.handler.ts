@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { TRPCError } from "@trpc/server";
-import { getTranslations } from "next-intl/server";
 
 import type { TInviteInputSchema } from "@kdx/validators/trpc/team/invitation";
 import { nanoid } from "@kdx/db/nanoid";
@@ -48,11 +47,10 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
       },
     },
   });
-  const t = await getTranslations({ locale: ctx.locale });
 
   if (!team)
     throw new TRPCError({
-      message: t("api.No Team Found"),
+      message: ctx.t("api.No Team Found"),
       code: "NOT_FOUND",
     });
 
@@ -61,7 +59,7 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
   );
   if (inTeamEmail)
     throw new TRPCError({
-      message: t("api.User USER is already a member of this team", {
+      message: ctx.t("api.User USER is already a member of this team", {
         user: inTeamEmail,
       }),
       code: "CONFLICT",
@@ -69,7 +67,7 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
 
   if (team.Invitations[0])
     throw new TRPCError({
-      message: t("api.Invitation already sent to EMAIL", {
+      message: ctx.t("api.Invitation already sent to EMAIL", {
         email: team.Invitations[0].email,
       }),
       code: "CONFLICT",
@@ -90,7 +88,7 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
       await resend.emails.send({
         from: KODIX_NOTIFICATION_FROM_EMAIL,
         to: invite.email,
-        subject: t("api.You have been invited to join a team on URL", {
+        subject: ctx.t("api.You have been invited to join a team on URL", {
           url: getBaseUrl(),
         }),
         react: TeamInvite({
@@ -99,8 +97,7 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
           inviteLink: `${getBaseUrl()}/team/invite/${invite.id}`,
           teamImage: `${getBaseUrl()}/api/avatar/${team.name}`,
           teamName: team.name,
-          locale: ctx.locale,
-          // username: ??
+          t: ctx.t,
         }),
       });
       return invite;

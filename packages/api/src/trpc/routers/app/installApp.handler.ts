@@ -1,5 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import { getTranslations } from "next-intl/server";
 
 import type { TInstallAppInputSchema } from "@kdx/validators/trpc/app";
 import { and, eq } from "@kdx/db";
@@ -34,10 +33,9 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
     )
     .then((res) => res[0]);
 
-  const t = await getTranslations({ locale: ctx.locale });
   if (installed)
     throw new TRPCError({
-      message: t("api.App already installed"),
+      message: ctx.t("api.App already installed"),
       code: "BAD_REQUEST",
     });
 
@@ -82,7 +80,7 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
       //Each app should have a designated admin role
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message: t("api.Admin role not found"),
+        message: ctx.t("api.Admin role not found"),
       });
 
     await tx.insert(teamAppRolesToUsers).values({

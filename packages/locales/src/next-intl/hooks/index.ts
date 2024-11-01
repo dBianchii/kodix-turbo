@@ -1,3 +1,5 @@
+import { useTranslations } from "next-intl";
+
 import type { AppPermissionId, KodixAppId } from "@kdx/shared";
 import {
   calendarAppId,
@@ -8,7 +10,6 @@ import {
   todoRoleDefaultIds,
 } from "@kdx/shared";
 
-import { useTranslations } from "../client";
 import { appIdToName, appPermissionIdToName } from "./internal";
 
 export const useAppName = (appId: KodixAppId | undefined) => {

@@ -5,8 +5,8 @@ import {
   PlusIcon,
   TextIcon,
 } from "@radix-ui/react-icons";
+import { useTranslations } from "next-intl";
 
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { Button } from "@kdx/ui/button";
 import {
   Command,

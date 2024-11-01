@@ -1,8 +1,8 @@
 /* eslint-disable */
 import { notFound } from "next/navigation";
+import { getRequestConfig } from "next-intl/server";
 
 import { formats, locales } from "@kdx/locales";
-import { getRequestConfig } from "@kdx/locales/next-intl/server";
 
 // const messagesFolderPath = path.resolve(
 //   __dirname,

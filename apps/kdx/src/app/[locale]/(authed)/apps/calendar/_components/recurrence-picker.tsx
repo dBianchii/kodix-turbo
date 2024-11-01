@@ -1,12 +1,12 @@
 import type { Weekday } from "rrule";
 import { useCallback, useEffect, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { useTranslations } from "next-intl";
 import { RxCheck } from "react-icons/rx";
 import { Frequency, RRule } from "rrule";
 
 import type { Dayjs } from "@kdx/dayjs";
 import dayjs from "@kdx/dayjs";
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { cn } from "@kdx/ui";
 import {
   AlertDialog,

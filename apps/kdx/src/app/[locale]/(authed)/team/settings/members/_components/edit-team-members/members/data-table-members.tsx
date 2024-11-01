@@ -6,11 +6,11 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useTranslations } from "next-intl";
 import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { cn } from "@kdx/ui";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Button } from "@kdx/ui/button";

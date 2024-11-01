@@ -2,7 +2,6 @@ import { TRPCError } from "@trpc/server";
 
 import { gte } from "@kdx/db";
 import { careTasks } from "@kdx/db/schema";
-import { getTranslations } from "@kdx/locales/next-intl/server";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
 import { getCurrentShiftHandler } from "../getCurrentShift.handler";
@@ -18,10 +17,9 @@ export const syncCareTasksFromCalendarHandler = async ({
   const currentShift = await getCurrentShiftHandler({ ctx });
 
   if (!currentShift || currentShift.checkOut) {
-    const t = await getTranslations({ locale: ctx.locale });
     throw new TRPCError({
       code: "FORBIDDEN",
-      message: t("api.The current shift must be ongoing for this action"),
+      message: ctx.t("api.The current shift must be ongoing for this action"),
     });
   }
 

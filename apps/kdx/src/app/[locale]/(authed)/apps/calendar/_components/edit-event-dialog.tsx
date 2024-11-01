@@ -1,5 +1,6 @@
 import type { Frequency } from "rrule";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { LuAlertCircle, LuLoader2 } from "react-icons/lu";
 import { RRule, Weekday } from "rrule";
 
@@ -7,7 +8,6 @@ import type { RouterInputs, RouterOutputs } from "@kdx/api";
 import type { Dayjs } from "@kdx/dayjs";
 import type { eventMasters } from "@kdx/db/schema";
 import dayjs from "@kdx/dayjs";
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import { Checkbox } from "@kdx/ui/checkbox";

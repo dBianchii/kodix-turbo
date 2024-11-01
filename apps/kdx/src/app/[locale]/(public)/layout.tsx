@@ -1,7 +1,7 @@
 import type React from "react";
+import { unstable_setRequestLocale } from "next-intl/server";
 
 import { locales } from "@kdx/locales";
-import { unstable_setRequestLocale } from "@kdx/locales/next-intl/server";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));

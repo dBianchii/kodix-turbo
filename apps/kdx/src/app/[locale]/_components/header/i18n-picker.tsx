@@ -1,9 +1,9 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { PiTranslate } from "react-icons/pi";
 
 import type { Locales } from "@kdx/locales";
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { usePathname, useRouter } from "@kdx/locales/next-intl/navigation";
 import { Button } from "@kdx/ui/button";
 import {

@@ -1,6 +1,5 @@
 import { hash } from "@node-rs/argon2";
 import { TRPCError } from "@trpc/server";
-import { getTranslations } from "next-intl/server";
 
 import type { TSignupWithPasswordInputSchema } from "@kdx/validators/trpc/user";
 import { createDbSessionAndCookie, createUser } from "@kdx/auth/utils";
@@ -30,11 +29,9 @@ export const signupWithPasswordHandler = async ({
     .then((res) => !!res[0]);
 
   if (registered) {
-    const t = await getTranslations({ locale: ctx.locale });
-
     throw new TRPCError({
       code: "BAD_REQUEST",
-      message: t("api.Email already registered"),
+      message: ctx.t("api.Email already registered"),
     });
   }
 

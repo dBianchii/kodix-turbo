@@ -1,9 +1,9 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useAction } from "next-safe-action/hooks";
 import { LuArrowRight, LuLoader2 } from "react-icons/lu";
 
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { useRouter } from "@kdx/locales/next-intl/navigation";
 import { Button } from "@kdx/ui/button";
 import {

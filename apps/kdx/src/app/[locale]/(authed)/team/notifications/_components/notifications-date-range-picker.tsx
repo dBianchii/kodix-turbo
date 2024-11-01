@@ -4,11 +4,10 @@ import type { DateRange } from "react-day-picker";
 import * as React from "react";
 import { useSearchParams } from "next/navigation";
 import { addDays, format } from "date-fns";
+import { useFormatter, useTranslations } from "next-intl";
 import { RxCalendar } from "react-icons/rx";
 
 import type { ButtonProps } from "@kdx/ui/button";
-import { useFormatter } from "@kdx/locales/next-intl";
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { usePathname, useRouter } from "@kdx/locales/next-intl/navigation";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";

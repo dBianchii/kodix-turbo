@@ -1,7 +1,6 @@
+import type { useTranslations } from "next-intl";
+import type { getTranslations } from "next-intl/server";
 import type { Formats } from "use-intl";
-
-import type { useTranslations } from "./next-intl/client";
-import type { getTranslations } from "./next-intl/server";
 
 export const locales = ["pt-BR", "en"] as const;
 export type Locales = (typeof locales)[number];

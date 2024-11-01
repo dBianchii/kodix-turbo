@@ -1,6 +1,7 @@
+import { getTranslations } from "next-intl/server";
+
 import { auth } from "@kdx/auth";
 import { Link, redirect } from "@kdx/locales/next-intl/navigation";
-import { getTranslations } from "@kdx/locales/next-intl/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@kdx/ui/card";
 
 import { ProviderButtons } from "../_components/provider-buttons";

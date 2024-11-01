@@ -1,5 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import { getTranslations } from "next-intl/server";
 import { RRule, rrulestr } from "rrule";
 
 import type { TCancelInputSchema } from "@kdx/validators/trpc/app/calendar";
@@ -18,8 +17,6 @@ interface CancelOptions {
 }
 
 export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
-  const t = await getTranslations({ locale: ctx.locale });
-
   if (input.exclusionDefinition === "single") {
     if (input.eventExceptionId) {
       await ctx.db.transaction(async (tx) => {
@@ -34,7 +31,7 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
         if (!toDeleteException) {
           throw new TRPCError({
             code: "NOT_FOUND",
-            message: t("api.Exception not found"),
+            message: ctx.t("api.Exception not found"),
           });
         }
         await tx
@@ -85,7 +82,7 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
       if (!eventMaster)
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: t("api.Event master not found"),
+          message: ctx.t("api.Event master not found"),
         });
 
       const rule = rrulestr(eventMaster.rule);
