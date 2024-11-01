@@ -39,9 +39,9 @@
     "studio": "pnpm with-env drizzle-kit studio",
     "generate-m": "pnpm with-env drizzle-kit generate",
     "migrate": "pnpm with-env drizzle-kit migrate",
-    "generate-nanoid": "pnpm tsx ./src/scripts/generate-nanoid",
-    "seed": "pnpm with-env tsx ./src/scripts/seed/index.ts",
-    "drop": "pnpm with-env tsx ./src/scripts/drop.ts",
+    "generate-nanoid": "pnpm tsx ./scripts/generate-nanoid",
+    "seed": "pnpm with-env tsx ./scripts/seed/index.ts",
+    "drop": "pnpm with-env tsx ./scripts/drop.ts",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
     "with-env": "dotenv -e ../../.env --"
   },
