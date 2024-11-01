@@ -1,6 +1,8 @@
+import type { DateTimeFormatOptions } from "next-intl";
 import { Easing } from "react-native-reanimated";
 import { ArrowRight, UserCircle2 } from "@tamagui/lucide-icons";
 import { MotiView } from "moti";
+import { useFormatter } from "next-intl";
 import {
   H4,
   Paragraph,
@@ -13,8 +15,6 @@ import {
 } from "tamagui";
 
 import type { RouterOutputs } from "@kdx/api";
-import type { DateTimeFormatOptions } from "@kdx/locales/use-intl";
-import { useFormatter } from "@kdx/locales/use-intl";
 
 import { AvatarWrapper } from "~/components/avatar-wrapper";
 import { api } from "~/utils/api";

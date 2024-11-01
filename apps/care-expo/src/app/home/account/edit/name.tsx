@@ -2,8 +2,8 @@ import { Pressable } from "react-native";
 import { Stack, useRouter } from "expo-router";
 import { ChevronLeft } from "@tamagui/lucide-icons";
 import { Input, SizableText, Spinner, useTheme, View } from "tamagui";
+import { useTranslations } from "use-intl";
 
-import { useTranslations } from "@kdx/locales/use-intl";
 import { ZChangeNameInputSchema } from "@kdx/validators/trpc/user";
 
 import {

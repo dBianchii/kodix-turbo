@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 
 import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
 import { redirect } from "@kdx/locales/next-intl/navigation";
-import { getTranslations } from "@kdx/locales/next-intl/server";
 import { getAppName } from "@kdx/locales/next-intl/server-hooks";
 
 import type { AppPathnames } from "~/helpers/miscelaneous";
@@ -51,7 +51,7 @@ async function UserAppRolesTable({ appId }: { appId: KodixAppId }) {
       </div>
       <div className="flex flex-col gap-2">
         <h1 className="font-semibold text-muted-foreground">
-          {t("Edit name roles", { name: await getAppName(appId) })}
+          {t("Edit name roles", { name: getAppName(t, appId) })}
         </h1>
         <DataTableUserAppRoles
           initialUsers={initialUsers}

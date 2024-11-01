@@ -1,5 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import { getTranslations } from "next-intl/server";
 
 import { and, eq } from "@kdx/db";
 import {
@@ -41,18 +40,19 @@ export const deleteAccountHandler = async ({ ctx }: DeleteAccountOptions) => {
       code: "INTERNAL_SERVER_ERROR", //should never happen
     });
   }
-  const t = await getTranslations({ locale: ctx.locale });
 
   if (_teams.length > 1) {
     throw new TRPCError({
       code: "FORBIDDEN",
-      message: t("api.To delete you account you must have only one team left"),
+      message: ctx.t(
+        "api.To delete you account you must have only one team left",
+      ),
     });
   }
   if (_teams[0].UsersToTeams.length > 1)
     throw new TRPCError({
       code: "FORBIDDEN",
-      message: t(
+      message: ctx.t(
         "api.To delete your account first remove all other users from your team",
       ),
     });

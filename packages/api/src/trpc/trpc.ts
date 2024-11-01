@@ -7,6 +7,7 @@
  * The pieces you will need to use are documented accordingly near the end
  */
 import { initTRPC } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
@@ -29,7 +30,7 @@ import { getLocaleBasedOnCookie } from "../utils/locales";
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = (opts: {
+export const createTRPCContext = async (opts: {
   headers: Headers;
   auth: AuthResponse;
 }) => {
@@ -38,8 +39,10 @@ export const createTRPCContext = (opts: {
 
   const source = opts.headers.get("x-trpc-source") ?? "unknown";
   console.log(">>> tRPC Request from", source, "by", auth.user);
+  const t = await getTranslations({ locale: getLocaleBasedOnCookie() });
+
   return {
-    locale: getLocaleBasedOnCookie(),
+    t,
     auth,
     db,
     token: authToken,

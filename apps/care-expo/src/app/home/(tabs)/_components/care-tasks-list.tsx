@@ -31,10 +31,9 @@ import {
   XStack,
   YStack,
 } from "tamagui";
-import { useFormatter } from "use-intl";
+import { useFormatter, useTranslations } from "use-intl";
 
 import dayjs from "@kdx/dayjs";
-import { useTranslations } from "@kdx/locales/use-intl";
 import { getErrorMessage } from "@kdx/shared";
 import {
   ZCreateCareTaskInputSchema,

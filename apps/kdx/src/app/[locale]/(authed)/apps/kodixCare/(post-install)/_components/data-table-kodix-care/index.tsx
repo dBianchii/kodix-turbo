@@ -10,6 +10,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useFormatter, useTranslations } from "next-intl";
 import {
   LuAlertCircle,
   LuArrowLeftRight,
@@ -28,8 +29,6 @@ import { create } from "zustand";
 
 import type { RouterOutputs } from "@kdx/api";
 import dayjs from "@kdx/dayjs";
-import { useFormatter } from "@kdx/locales/next-intl";
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { Link } from "@kdx/locales/next-intl/navigation";
 import { cn } from "@kdx/ui";
 import {

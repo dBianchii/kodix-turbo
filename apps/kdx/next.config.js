@@ -1,7 +1,6 @@
 import { fileURLToPath } from "url";
 import { createJiti } from "jiti";
-
-import createNextIntlPlugin from "@kdx/locales/next-intl/plugin";
+import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n.ts");
 

@@ -1,8 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { LampContainer } from "@kdx/ui/aceternity/lamp";
 
 export function HeroLamp() {

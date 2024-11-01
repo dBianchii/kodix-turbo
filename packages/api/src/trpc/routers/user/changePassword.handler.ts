@@ -1,6 +1,5 @@
 import { hash } from "@node-rs/argon2";
 import { TRPCError } from "@trpc/server";
-import { getTranslations } from "next-intl/server";
 
 import type { TChangePasswordInputSchema } from "@kdx/validators/trpc/user";
 import { eq, lte, or } from "@kdx/db";
@@ -26,17 +25,19 @@ export const changePasswordHandler = async ({
       tokenExpiresAt: true,
     },
   });
-  const t = await getTranslations({ locale: ctx.locale });
+
   if (!existingToken) {
     throw new TRPCError({
       code: "NOT_FOUND",
-      message: t("api.Token not found"),
+      message: ctx.t("api.Token not found"),
     });
   }
   if (existingToken.tokenExpiresAt <= new Date()) {
     throw new TRPCError({
       code: "FORBIDDEN",
-      message: t("api.Token expired Please request your password change again"),
+      message: ctx.t(
+        "api.Token expired Please request your password change again",
+      ),
     });
   }
 

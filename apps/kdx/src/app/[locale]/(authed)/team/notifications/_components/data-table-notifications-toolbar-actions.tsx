@@ -1,10 +1,10 @@
 "use client";
 
 import type { Table } from "@tanstack/react-table";
+import { useTranslations } from "next-intl";
 import { RxDownload } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { Button } from "@kdx/ui/button";
 import { exportTableToCSV } from "@kdx/ui/data-table/export";
 

@@ -3,7 +3,6 @@ import { TRPCError } from "@trpc/server";
 import type { TDeleteCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
 import { and, eq } from "@kdx/db";
 import { careTasks, teamAppRoles, teamAppRolesToUsers } from "@kdx/db/schema";
-import { getTranslations } from "@kdx/locales/next-intl/server";
 import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
@@ -33,18 +32,16 @@ export const deleteCareTaskHandler = async ({
     },
   });
 
-  const t = await getTranslations({ locale: ctx.locale });
-
   if (!careTask) {
     throw new TRPCError({
       code: "NOT_FOUND",
-      message: t("api.Care task not found"),
+      message: ctx.t("api.Care task not found"),
     });
   }
   if (careTask.CareShift?.shiftEndedAt) {
     throw new TRPCError({
       code: "FORBIDDEN",
-      message: t("api.You cannot delete a task from a closed shift"),
+      message: ctx.t("api.You cannot delete a task from a closed shift"),
     });
   }
 
@@ -71,7 +68,7 @@ export const deleteCareTaskHandler = async ({
   )
     throw new TRPCError({
       code: "FORBIDDEN",
-      message: t("api.Only admins and the creator can delete a task"),
+      message: ctx.t("api.Only admins and the creator can delete a task"),
     });
 
   await ctx.db

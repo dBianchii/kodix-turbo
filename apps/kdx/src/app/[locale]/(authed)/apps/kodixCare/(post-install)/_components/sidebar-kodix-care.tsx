@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { LuCog, LuHome, LuPanelLeft } from "react-icons/lu";
 
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { Link, usePathname } from "@kdx/locales/next-intl/navigation";
 import { kodixCareAppId } from "@kdx/shared";
 import { Button } from "@kdx/ui/button";

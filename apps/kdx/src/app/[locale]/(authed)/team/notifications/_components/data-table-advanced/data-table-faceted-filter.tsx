@@ -1,7 +1,7 @@
 import type { Column } from "@tanstack/react-table";
 import { CheckIcon, PlusCircledIcon } from "@radix-ui/react-icons";
+import { useTranslations } from "next-intl";
 
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { cn } from "@kdx/ui";
 import { Badge } from "@kdx/ui/badge";
 import { Button } from "@kdx/ui/button";

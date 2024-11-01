@@ -1,6 +1,6 @@
 import { Suspense } from "react";
+import { getTranslations } from "next-intl/server";
 
-import { getTranslations } from "@kdx/locales/next-intl/server";
 import { kodixCareAppId } from "@kdx/shared";
 
 import { api } from "~/trpc/server";

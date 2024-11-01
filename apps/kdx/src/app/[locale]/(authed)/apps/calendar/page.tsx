@@ -1,8 +1,8 @@
 import { Suspense } from "react";
+import { getTranslations } from "next-intl/server";
 
 import type { User } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
-import { getTranslations } from "@kdx/locales/next-intl/server";
 import { calendarAppId } from "@kdx/shared";
 import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
 import { Separator } from "@kdx/ui/separator";

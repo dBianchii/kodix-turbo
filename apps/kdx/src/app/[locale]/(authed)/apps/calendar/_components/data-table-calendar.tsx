@@ -11,6 +11,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { addDays } from "date-fns";
+import { useFormatter, useTranslations } from "next-intl";
 import { LuAlertCircle, LuLoader2, LuText } from "react-icons/lu";
 import {
   RxCalendar,
@@ -24,8 +25,6 @@ import {
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
-import { useFormatter } from "@kdx/locales/next-intl";
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { authorizedEmails } from "@kdx/shared";
 import { Button } from "@kdx/ui/button";
 import {

@@ -1,6 +1,7 @@
+import { getTranslations } from "next-intl/server";
+
 import { auth } from "@kdx/auth";
 import { Link, redirect } from "@kdx/locales/next-intl/navigation";
-import { getTranslations } from "@kdx/locales/next-intl/server";
 
 import { ProviderButtons } from "../_components/provider-buttons";
 import { PasswordSignupForm } from "./_components/password-signup-form";
