@@ -11,6 +11,11 @@ interface NukeOptions {
 }
 
 export const nukeHandler = async ({ ctx }: NukeOptions) => {
+  throw new TRPCError({
+    code: "UNAUTHORIZED",
+    message: ctx.t("api.Checkout time must be after checkin time"),
+  });
+
   if (!authorizedEmails.includes(ctx.auth.user.email))
     throw new TRPCError({
       code: "UNAUTHORIZED",

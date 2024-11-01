@@ -7,6 +7,6 @@ type ApiMessages = typeof import("../../locales/src/messages/api/en.json");
 type Formats = typeof formats;
 
 declare global {
-  type IntlMessages = KdxMessages;
+  type IntlMessages = ApiMessages;
   type IntlFormats = Formats;
 }
