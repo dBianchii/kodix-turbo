@@ -19,22 +19,22 @@ export const doCheckoutForShiftHandler = async ({
   input,
 }: DoCheckoutForShiftOptions) => {
   const currentShift = await getCurrentShiftHandler({ ctx });
-  const t = await getTranslations({ locale: ctx.locale });
+
   if (!currentShift) {
     throw new TRPCError({
       code: "NOT_FOUND",
-      message: t("api.No current shift found"),
+      message: ctx.t("api.No current shift found"),
     });
   }
   if (currentShift.Caregiver.id !== ctx.auth.user.id)
     throw new TRPCError({
       code: "FORBIDDEN",
-      message: t("api.You are not the caregiver for this shift"),
+      message: ctx.t("api.You are not the caregiver for this shift"),
     });
   if (dayjs(input.date).isBefore(dayjs(currentShift.checkOut)))
     throw new TRPCError({
       code: "BAD_REQUEST",
-      message: t("api.Checkout time must be after checkin time"),
+      message: ctx.t("api.Checkout time must be after checkin time"),
     });
 
   await ctx.db

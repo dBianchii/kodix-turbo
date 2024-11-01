@@ -22,9 +22,8 @@ interface RemoveUserOptions {
 export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
   const isUserTryingToRemoveSelfFromTeam = input.userId === ctx.auth.user.id;
   if (isUserTryingToRemoveSelfFromTeam) {
-    const t = await getTranslations({ locale: ctx.locale });
     throw new TRPCError({
-      message: t(
+      message: ctx.t(
         "api.You cannot remove yourself from a team you are an owner of Delete this team instead",
       ),
       code: "FORBIDDEN",

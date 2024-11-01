@@ -16,8 +16,6 @@ interface EditOptions {
 }
 
 export const editHandler = async ({ ctx, input }: EditOptions) => {
-  const t = await getTranslations({ locale: ctx.locale });
-
   const allEventMastersIdsForThisTeamQuery = ctx.db
     .select({ id: eventMasters.id })
     .from(eventMasters)
@@ -72,7 +70,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
     if (!eventMaster)
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: t("api.Event not found"),
+        message: ctx.t("api.Event not found"),
       });
 
     const evtMasterRule = rrulestr(eventMaster.rule);
@@ -85,7 +83,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
     if (!foundTimestamp)
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: t("api.Event not found"),
+        message: ctx.t("api.Event not found"),
       }); //! END OF PROCEDURE
 
     //* Temos uma ocorrência. Isso significa que o usuário quer editar a ocorrência que veio do master.
@@ -161,7 +159,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
       if (!oldMaster)
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: t("api.Event not found"),
+          message: ctx.t("api.Event not found"),
         });
       const oldRule = rrulestr(oldMaster.rule);
       const previousOccurence = oldRule.before(
@@ -176,7 +174,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
         if (input.selectedTimestamp < oldRule.options.dtstart)
           throw new TRPCError({
             code: "NOT_FOUND",
-            message: t("api.Event not found"),
+            message: ctx.t("api.Event not found"),
           });
 
         //! NO SPLIT REQUIRED BECAUSE ITS THE FIRST OCCURANCE! !!
@@ -319,7 +317,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
         if (!foundEventMasterForPreviousRule)
           throw new TRPCError({
             code: "NOT_FOUND",
-            message: t("api.Event not found"),
+            message: ctx.t("api.Event not found"),
           });
         const oldRule = rrulestr(foundEventMasterForPreviousRule.rule);
 

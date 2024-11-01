@@ -44,9 +44,8 @@ export const updateUserAssociationHandler = async ({
           input.teamAppRoleIds.includes(x.id),
         )
       ) {
-        const t = await getTranslations({ locale: ctx.locale });
         throw new TRPCError({
-          message: t(
+          message: ctx.t(
             "api.You cannot remove yourself from the Administrator role",
           ),
           code: "BAD_REQUEST",

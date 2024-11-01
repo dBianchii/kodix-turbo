@@ -19,8 +19,6 @@ export const editCareTaskHandler = async ({
   ctx,
   input,
 }: EditCareTaskOptions) => {
-  const t = await getTranslations({ locale: ctx.locale });
-
   const set: Partial<typeof careTasks.$inferInsert> = {
     details: input.details,
   };
@@ -42,13 +40,13 @@ export const editCareTaskHandler = async ({
     if (!careTask) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: t("api.Care task not found"),
+        message: ctx.t("api.Care task not found"),
       });
     }
     if (careTask.CareShift?.shiftEndedAt) {
       throw new TRPCError({
         code: "FORBIDDEN",
-        message: t("api.You cannot delete a task from a closed shift"),
+        message: ctx.t("api.You cannot delete a task from a closed shift"),
       });
     }
 
@@ -75,14 +73,12 @@ export const editCareTaskHandler = async ({
     )
       throw new TRPCError({
         code: "FORBIDDEN",
-        message: t("api.Only admins and the creator can delete a task"),
+        message: ctx.t("api.Only admins and the creator can delete a task"),
       });
   }
 
   const isEditingDoneAt = input.doneAt !== undefined;
   if (isEditingDoneAt) {
-    const t = await getTranslations({ locale: ctx.locale });
-
     const currentShift = await getCurrentShiftHandler({ ctx });
     if (!currentShift)
       throw new TRPCError({
@@ -93,7 +89,9 @@ export const editCareTaskHandler = async ({
     if (currentShift.Caregiver.id !== ctx.auth.user.id)
       throw new TRPCError({
         code: "FORBIDDEN",
-        message: t("api.You cannot edit a task from another caregivers shift"),
+        message: ctx.t(
+          "api.You cannot edit a task from another caregivers shift",
+        ),
       });
 
     const careTask = await ctx.db.query.careTasks.findFirst({
@@ -106,14 +104,14 @@ export const editCareTaskHandler = async ({
     if (!careTask)
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: t("api.Care task not found"),
+        message: ctx.t("api.Care task not found"),
       });
 
     if (careTask.careShiftId) {
       if (careTask.careShiftId !== currentShift.id)
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: t("api.You cannot edit a task from another shift"),
+          message: ctx.t("api.You cannot edit a task from another shift"),
         });
     }
 
@@ -121,7 +119,7 @@ export const editCareTaskHandler = async ({
       if (dayjs(input.doneAt).isBefore(currentShift.checkIn))
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: t(
+          message: ctx.t(
             "api.You cannot mark a task as done before the shift started",
           ),
         });

@@ -30,19 +30,21 @@ export const deleteTeamHandler = async ({ ctx, input }: DeleteTeamOptions) => {
       code: "NOT_FOUND",
     });
 
-  const t = await getTranslations({ locale: ctx.locale });
-
   if (team.name !== input.teamNameConfirmation) {
     throw new TRPCError({
       code: "BAD_REQUEST",
-      message: t("api.The team name confirmation does not match the team name"),
+      message: ctx.t(
+        "api.The team name confirmation does not match the team name",
+      ),
     });
   }
 
   if (team.UsersToTeams.length > 1) {
     throw new TRPCError({
       code: "FORBIDDEN",
-      message: t("api.The team cannot be deleted while it has other members"),
+      message: ctx.t(
+        "api.The team cannot be deleted while it has other members",
+      ),
     });
   }
 
@@ -60,7 +62,7 @@ export const deleteTeamHandler = async ({ ctx, input }: DeleteTeamOptions) => {
   if (!otherTeam) {
     throw new TRPCError({
       code: "FORBIDDEN",
-      message: t(
+      message: ctx.t(
         "api.You are attempting to delete a team but you have no other teams Please create a new team first",
       ),
     });

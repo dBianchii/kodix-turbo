@@ -38,9 +38,8 @@ export const getActiveTeamHandler = async ({ ctx }: GetActiveTeamOptions) => {
   });
 
   if (!team) {
-    const t = await getTranslations({ locale: ctx.locale });
     throw new TRPCError({
-      message: t("api.No Team Found"),
+      message: ctx.t("api.No Team Found"),
       code: "NOT_FOUND",
     });
   }

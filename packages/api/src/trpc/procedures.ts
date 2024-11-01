@@ -57,16 +57,15 @@ export const isTeamOwnerProcedure = protectedProcedure.use(
       },
     });
 
-    const t = await getTranslations({ locale: ctx.locale });
     if (!team)
       throw new TRPCError({
-        message: t("api.No Team Found"),
+        message: ctx.t("api.No Team Found"),
         code: "NOT_FOUND",
       });
 
     if (team.ownerId !== ctx.auth.user.id)
       throw new TRPCError({
-        message: t("api.Only the team owner can perform this action"),
+        message: ctx.t("api.Only the team owner can perform this action"),
         code: "FORBIDDEN",
       });
 

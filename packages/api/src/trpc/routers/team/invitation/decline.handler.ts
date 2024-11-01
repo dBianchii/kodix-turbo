@@ -20,11 +20,10 @@ export const declineHandler = async ({ ctx, input }: DeclineOptions) => {
         eq(invitation.email, ctx.auth.user.email),
       ),
   });
-  const t = await getTranslations({ locale: ctx.locale });
 
   if (!invitation) {
     throw new TRPCError({
-      message: t("api.No Invitation Found"),
+      message: ctx.t("api.No Invitation Found"),
       code: "NOT_FOUND",
     });
   }

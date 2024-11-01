@@ -25,11 +25,10 @@ export const sendResetPasswordEmail = async ({
     columns: { id: true },
   });
 
-  const t = await getTranslations({ locale: ctx.locale });
   if (!user) {
     throw new TRPCError({
       code: "NOT_FOUND",
-      message: t("api.User not found"),
+      message: ctx.t("api.User not found"),
     });
   }
 
@@ -48,7 +47,7 @@ export const sendResetPasswordEmail = async ({
   await resend.emails.send({
     from: KODIX_NOTIFICATION_FROM_EMAIL,
     to: input.email,
-    subject: t("api.Kodix - Reset your password"),
+    subject: ctx.t("api.Kodix - Reset your password"),
     react: ResetPassword({ token }),
   });
 };

@@ -33,18 +33,16 @@ export const deleteCareTaskHandler = async ({
     },
   });
 
-  const t = await getTranslations({ locale: ctx.locale });
-
   if (!careTask) {
     throw new TRPCError({
       code: "NOT_FOUND",
-      message: t("api.Care task not found"),
+      message: ctx.t("api.Care task not found"),
     });
   }
   if (careTask.CareShift?.shiftEndedAt) {
     throw new TRPCError({
       code: "FORBIDDEN",
-      message: t("api.You cannot delete a task from a closed shift"),
+      message: ctx.t("api.You cannot delete a task from a closed shift"),
     });
   }
 
@@ -71,7 +69,7 @@ export const deleteCareTaskHandler = async ({
   )
     throw new TRPCError({
       code: "FORBIDDEN",
-      message: t("api.Only admins and the creator can delete a task"),
+      message: ctx.t("api.Only admins and the creator can delete a task"),
     });
 
   await ctx.db

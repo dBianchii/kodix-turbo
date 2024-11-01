@@ -23,7 +23,7 @@ export const getConfigHandler = async ({ ctx, input }: GetConfigOptions) => {
     const t = await getTranslations();
     throw new TRPCError({
       code: "NOT_FOUND",
-      message: t("api.No appTeamConfig found"),
+      message: ctx.t("api.No appTeamConfig found"),
     });
   }
 

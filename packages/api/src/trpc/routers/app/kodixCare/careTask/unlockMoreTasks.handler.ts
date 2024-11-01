@@ -29,17 +29,16 @@ export const unlockMoreTasksHandler = async ({
 
   const isFirstShiftEver = !clonedCareTasksUntil;
 
-  const t = await getTranslations({ locale: ctx.locale });
   if (isFirstShiftEver)
     throw new TRPCError({
       code: "FORBIDDEN",
-      message: t("api.No active shift"),
+      message: ctx.t("api.No active shift"),
     });
 
   if (clonedCareTasksUntil >= input.selectedTimestamp)
     throw new TRPCError({
       code: "FORBIDDEN",
-      message: t(
+      message: ctx.t(
         `api.No tasks to unlock We have already unlocked all tasks up until TIME`,
         {
           time: clonedCareTasksUntil.toISOString(),
@@ -51,7 +50,7 @@ export const unlockMoreTasksHandler = async ({
   if (!careShift)
     throw new TRPCError({
       code: "FORBIDDEN",
-      message: t("api.No active shift"),
+      message: ctx.t("api.No active shift"),
     });
 
   await cloneCalendarTasksToCareTasks({

@@ -22,10 +22,8 @@ export const deleteHandler = async ({ ctx, input }: DeleteOptions) => {
   });
 
   if (!invitation) {
-    const t = await getTranslations({ locale: ctx.locale });
-
     throw new TRPCError({
-      message: t("api.No Invitation Found"),
+      message: ctx.t("api.No Invitation Found"),
       code: "NOT_FOUND",
     });
   }

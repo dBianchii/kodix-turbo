@@ -18,10 +18,9 @@ export const syncCareTasksFromCalendarHandler = async ({
   const currentShift = await getCurrentShiftHandler({ ctx });
 
   if (!currentShift || currentShift.checkOut) {
-    const t = await getTranslations({ locale: ctx.locale });
     throw new TRPCError({
       code: "FORBIDDEN",
-      message: t("api.The current shift must be ongoing for this action"),
+      message: ctx.t("api.The current shift must be ongoing for this action"),
     });
   }
 

@@ -41,10 +41,9 @@ export const getAllHandler = async ({ ctx }: GetAllOptions) => {
     });
 
   if (!_apps.length) {
-    const t = await getTranslations({ locale: ctx.locale });
     throw new TRPCError({
       code: "NOT_FOUND",
-      message: t("api.No apps found"),
+      message: ctx.t("api.No apps found"),
     });
   }
 
