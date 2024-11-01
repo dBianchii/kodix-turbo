@@ -61,6 +61,8 @@
     "To delete your account first remove all other users from your team": "Para excluir sua conta, primeiro remova todos os outros usuários da sua equipe",
     "You cannot mark a task as done before the start of the shift": "Você não pode marcar uma tarefa como concluída antes do início do turno",
     "You cannot mark a task as done before the shift started": "Você não pode marcar uma tarefa como concluída antes do início do turno",
+    "You cannot delete a task from a closed shift": "Você não pode excluir uma tarefa de um turno fechado",
+    "Only admins and the creator can delete a task": "Somente administradores e o criador da tarefa podem excluí-la",
     "You cannot edit a task from another shift": "Você não pode editar uma tarefa de outro turno"
   }
 }
