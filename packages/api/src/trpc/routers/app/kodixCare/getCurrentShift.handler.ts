@@ -1,3 +1,6 @@
+import { desc } from "@kdx/db";
+import { careShifts } from "@kdx/db/schema";
+
 import type { TProtectedProcedureContext } from "../../../procedures";
 
 interface GetCurrentShiftOptions {
@@ -8,7 +11,7 @@ export const getCurrentShiftHandler = async ({
   ctx,
 }: GetCurrentShiftOptions) => {
   const shift = await ctx.db.query.careShifts.findFirst({
-    orderBy: (careShift, { desc }) => desc(careShift.checkIn),
+    orderBy: desc(careShifts.checkIn),
     where: (careShift, { eq, and, isNull }) =>
       and(
         eq(careShift.teamId, ctx.auth.user.activeTeamId),
