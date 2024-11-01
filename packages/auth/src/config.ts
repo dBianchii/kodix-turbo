@@ -5,9 +5,13 @@ import {
   encodeHexLowerCase,
 } from "@oslojs/encoding";
 
-import { eq } from "@kdx/db";
-import { db } from "@kdx/db/client";
-import { sessions, teams, users } from "@kdx/db/schema";
+import type { sessions, users } from "@kdx/db/schema";
+import {
+  createSession as dbCreateSession,
+  deleteSession,
+  findUserTeamBySessionId,
+  updateSession,
+} from "@kdx/db/auth";
 
 import { env } from "../env";
 import * as discordProvider from "./providers/discord";
@@ -48,42 +52,35 @@ export async function createSession(token: string, userId: string) {
       "127.0.0.1",
     userAgent: heads.get("user-agent"),
   };
-  await db.insert(sessions).values(session);
+  await dbCreateSession(session);
   return session;
 }
 
 async function validateSessionToken(token: string): Promise<AuthResponse> {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
-  const result = await db
-    .select({ user: users, session: sessions, team: teams })
-    .from(sessions)
-    .innerJoin(users, eq(sessions.userId, users.id))
-    .innerJoin(teams, eq(teams.id, users.activeTeamId))
-    .where(eq(sessions.id, sessionId));
+  const result = await findUserTeamBySessionId({ sessionId });
 
-  if (!result[0]) return { session: null, user: null };
-  const { user, session, team } = result[0];
+  if (!result) return { session: null, user: null };
+  const { user, session, team } = result;
 
   if (Date.now() >= session.expiresAt.getTime()) {
-    await db.delete(sessions).where(eq(sessions.id, session.id));
+    await deleteSession(session.id);
     return { session: null, user: null };
   }
 
   const fifteenDaysInMilliseconds = 1000 * 60 * 60 * 24 * 15;
   if (Date.now() >= session.expiresAt.getTime() - fifteenDaysInMilliseconds) {
     session.expiresAt = thirtyDaysFromNow;
-    await db
-      .update(sessions)
-      .set({
-        expiresAt: session.expiresAt,
-      })
-      .where(eq(sessions.id, session.id));
+    await updateSession({
+      id: session.id,
+      expiresAt: session.expiresAt,
+    });
   }
   return { session, user: { ...user, activeTeamName: team.name } };
 }
 
 export async function invalidateSession(sessionId: string) {
-  await db.delete(sessions).where(eq(sessions.id, sessionId));
+  await deleteSession(sessionId);
 }
 
 //* Cookies

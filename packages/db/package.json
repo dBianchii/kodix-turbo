@@ -8,6 +8,10 @@
       "types": "./dist/index.d.ts",
       "default": "./src/index.ts"
     },
+    "./auth": {
+      "types": "./dist/dataAccess/auth.d.ts",
+      "default": "./src/dataAccess/auth.ts"
+    },
     "./client": {
       "types": "./dist/client.d.ts",
       "default": "./src/client.ts"

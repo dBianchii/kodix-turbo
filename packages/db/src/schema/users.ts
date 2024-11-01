@@ -10,6 +10,7 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/mysql-core";
+import { createInsertSchema } from "drizzle-zod";
 
 import { nanoid, NANOID_SIZE } from "../nanoid";
 import { userAppTeamConfigs } from "./apps";
@@ -95,6 +96,7 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
     references: [users.id],
   }),
 }));
+export const sessionSchema = createInsertSchema(sessions);
 
 export const expoTokens = mysqlTable(
   "expoToken",
