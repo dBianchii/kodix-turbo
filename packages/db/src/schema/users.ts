@@ -26,7 +26,7 @@ export const users = mysqlTable(
   "user",
   {
     id: nanoidPrimaryKey,
-    name: varchar("name", { length: DEFAULTLENGTH }),
+    name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
     passwordHash: varchar("passwordHash", { length: 255 }),
     email: varchar("email", { length: DEFAULTLENGTH }).notNull().unique(),
     emailVerified: timestamp("emailVerified").defaultNow(),
@@ -54,6 +54,7 @@ export const usersRelations = relations(users, ({ many, one }) => ({
   ExpoTokens: many(expoTokens),
   UserAppTeamConfigs: many(userAppTeamConfigs),
 }));
+export const userSchema = createInsertSchema(users);
 
 export const accounts = mysqlTable(
   "account",
@@ -76,6 +77,7 @@ export const accounts = mysqlTable(
 export const accountsRelations = relations(accounts, ({ one }) => ({
   Users: one(users, { fields: [accounts.userId], references: [users.id] }),
 }));
+export const accountSchema = createInsertSchema(accounts);
 
 export const sessions = mysqlTable("session", {
   id: varchar("id", {

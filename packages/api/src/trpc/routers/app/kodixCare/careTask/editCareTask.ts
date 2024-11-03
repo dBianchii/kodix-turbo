@@ -3,11 +3,11 @@ import { TRPCError } from "@trpc/server";
 import type { TEditCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
 import dayjs from "@kdx/dayjs";
 import { and, eq } from "@kdx/db";
+import { getCurrentCareShiftByTeamId } from "@kdx/db/kodixCare";
 import { careTasks, teamAppRoles, teamAppRolesToUsers } from "@kdx/db/schema";
 import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
-import { getCurrentShiftHandler } from "../getCurrentShift.handler";
 
 interface EditCareTaskOptions {
   ctx: TProtectedProcedureContext;
@@ -78,7 +78,9 @@ export const editCareTaskHandler = async ({
 
   const isEditingDoneAt = input.doneAt !== undefined;
   if (isEditingDoneAt) {
-    const currentShift = await getCurrentShiftHandler({ ctx });
+    const currentShift = await getCurrentCareShiftByTeamId(
+      ctx.auth.user.activeTeamId,
+    );
     if (!currentShift)
       throw new TRPCError({
         code: "FORBIDDEN",

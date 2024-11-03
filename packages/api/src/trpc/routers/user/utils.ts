@@ -2,9 +2,8 @@ import { verify } from "@node-rs/argon2";
 import { TRPCError } from "@trpc/server";
 
 import type { Drizzle } from "@kdx/db/client";
-import { eq } from "@kdx/db";
+import { findUserByEmail, updateUser } from "@kdx/db/auth";
 import { db as _db } from "@kdx/db/client";
-import { users } from "@kdx/db/schema";
 
 export const argon2Config = {
   // recommended minimum parameters
@@ -34,6 +33,7 @@ export async function validateUserEmailAndPassword({
       passwordHash: true,
     },
   });
+  const uuuuuuuuuuuuuuhhhhhhhhhhhhh = findUserByEmail(email);
   if (!existingUser) {
     // NOTE:
     // Returning immediately allows malicious actors to figure out valid usernames from response times,
@@ -79,8 +79,9 @@ export async function switchActiveTeamForUser({
   userId: string;
   teamId: string;
 }) {
-  await db.update(users).set({ activeTeamId: teamId }).where(
-    eq(users.id, userId),
+  await updateUser(db, {
+    id: userId,
+    activeTeamId: teamId,
     //TODO: Make sure they are part of the team!!
-  );
+  });
 }

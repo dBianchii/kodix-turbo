@@ -12,6 +12,14 @@
       "types": "./dist/dataAccess/auth.d.ts",
       "default": "./src/dataAccess/auth.ts"
     },
+    "./team": {
+      "types": "./dist/dataAccess/team.d.ts",
+      "default": "./src/dataAccess/team.ts"
+    },
+    "./kodixCare": {
+      "types": "./dist/dataAccess/kodixCare.d.ts",
+      "default": "./src/dataAccess/kodixCare.ts"
+    },
     "./client": {
       "types": "./dist/client.d.ts",
       "default": "./src/client.ts"

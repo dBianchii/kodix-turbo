@@ -6,6 +6,7 @@ import {
   unique,
   varchar,
 } from "drizzle-orm/mysql-core";
+import { createInsertSchema } from "drizzle-zod";
 
 import { NANOID_SIZE } from "../nanoid";
 import {
@@ -56,6 +57,7 @@ export const teamsRelations = relations(teams, ({ many, one }) => ({
   Invitations: many(invitations),
   Todos: many(todos),
 }));
+export const teamSchema = createInsertSchema(teams);
 
 export const usersToTeams = mysqlTable(
   "_userToTeam",
