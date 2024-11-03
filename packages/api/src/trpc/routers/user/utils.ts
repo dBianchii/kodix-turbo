@@ -25,16 +25,16 @@ export async function validateUserEmailAndPassword({
   email: string;
   password: string;
 }) {
-  const existingUser = await db.query.users.findFirst({
-    where: (users, { eq }) => eq(users.email, email),
-    columns: {
-      id: true,
-      activeTeamId: true,
-      passwordHash: true,
-    },
-  });
-  const uuuuuuuuuuuuuuhhhhhhhhhhhhh = findUserByEmail(email);
-  if (!existingUser) {
+  // const previoususerlol = await db.query.users.findFirst({
+  //   where: (users, { eq }) => eq(users.email, email),
+  //   columns: {
+  //     id: true,
+  //     activeTeamId: true,
+  //     passwordHash: true,
+  //   },
+  // });
+  const uuuuuuuuuuuuuuhhhhhhhhhhhhh = await findUserByEmail(email);
+  if (!uuuuuuuuuuuuuuhhhhhhhhhhhhh) {
     // NOTE:
     // Returning immediately allows malicious actors to figure out valid usernames from response times,
     // allowing them to only focus on guessing passwords in brute-force attacks.
@@ -49,14 +49,14 @@ export async function validateUserEmailAndPassword({
       message: "Incorrect email or password",
     });
   }
-  if (!existingUser.passwordHash)
+  if (!uuuuuuuuuuuuuuhhhhhhhhhhhhh.passwordHash)
     throw new TRPCError({
       code: "UNAUTHORIZED",
       message: "Incorrect email or password",
     });
 
   const validPassword = await verify(
-    existingUser.passwordHash,
+    uuuuuuuuuuuuuuhhhhhhhhhhhhh.passwordHash,
     password,
     argon2Config,
   );
@@ -67,7 +67,10 @@ export async function validateUserEmailAndPassword({
     });
 
   /**Returns an object representing the validated user */
-  return { id: existingUser.id, activeTeamId: existingUser.activeTeamId };
+  return {
+    id: uuuuuuuuuuuuuuhhhhhhhhhhhhh.id,
+    activeTeamId: uuuuuuuuuuuuuuhhhhhhhhhhhhh.activeTeamId,
+  };
 }
 
 export async function switchActiveTeamForUser({
