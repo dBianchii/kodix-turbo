@@ -2,7 +2,7 @@ import type { APIUser as DiscordUser } from "discord-api-types/v10";
 import { Discord } from "arctic";
 import { OAuth2Scopes } from "discord-api-types/v10";
 
-import { findAccountByProviderUserId } from "@kdx/db/auth";
+import { authRepository } from "@kdx/db/repositories";
 import { getBaseUrl } from "@kdx/shared";
 
 import { env } from "../../env";
@@ -36,7 +36,7 @@ export const handleCallback = async (code: string) => {
   });
   const discordUser = (await response.json()) as DiscordUser;
 
-  const existingAccount = await findAccountByProviderUserId({
+  const existingAccount = await authRepository.findAccountByProviderUserId({
     providerId: "discord",
     providerUserId: discordUser.id,
   });

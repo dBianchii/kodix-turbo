@@ -3,7 +3,8 @@ import { TRPCError } from "@trpc/server";
 
 import type { TChangePasswordInputSchema } from "@kdx/validators/trpc/user";
 import { eq, lte, or } from "@kdx/db";
-import { resetPasswordTokens, users } from "@kdx/db/schema";
+import { userRepository } from "@kdx/db/repositories";
+import { resetPasswordTokens } from "@kdx/db/schema";
 
 import type { TPublicProcedureContext } from "../../procedures";
 import { argon2Config } from "./utils";
@@ -51,11 +52,9 @@ export const changePasswordHandler = async ({
           lte(resetPasswordTokens.tokenExpiresAt, new Date()),
         ),
       );
-    await tx
-      .update(users)
-      .set({
-        passwordHash: hashed,
-      })
-      .where(eq(users.id, existingToken.userId));
+    await userRepository.updateUser(tx, {
+      id: existingToken.userId,
+      passwordHash: hashed,
+    });
   });
 };

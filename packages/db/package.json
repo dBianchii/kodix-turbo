@@ -8,17 +8,9 @@
       "types": "./dist/index.d.ts",
       "default": "./src/index.ts"
     },
-    "./auth": {
-      "types": "./dist/dataAccess/auth.d.ts",
-      "default": "./src/dataAccess/auth.ts"
-    },
-    "./team": {
-      "types": "./dist/dataAccess/team.d.ts",
-      "default": "./src/dataAccess/team.ts"
-    },
-    "./kodixCare": {
-      "types": "./dist/dataAccess/kodixCare.d.ts",
-      "default": "./src/dataAccess/kodixCare.ts"
+    "./repositories": {
+      "types": "./dist/repositories/index.d.ts",
+      "default": "./src/repositories/index.ts"
     },
     "./client": {
       "types": "./dist/client.d.ts",

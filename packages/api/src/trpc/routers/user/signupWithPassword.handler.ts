@@ -37,13 +37,12 @@ export const signupWithPasswordHandler = async ({
 
   const passwordHash = await hash(input.password, argon2Config);
   const userId = nanoid();
-  const teamId = nanoid();
 
   await db.transaction(async (tx) => {
     await createUser({
       name: input.name,
-      teamId: teamId,
-      userId: userId,
+      teamId: nanoid(),
+      userId: nanoid(),
       email: input.email,
       invite: input.invite,
       passwordHash: passwordHash,

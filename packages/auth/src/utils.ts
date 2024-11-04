@@ -2,15 +2,7 @@
 //? It's to avoid circular dependencies / duplicated code for db calls that need to be here in @kdx/auth
 
 import type { Drizzle, DrizzleTransaction } from "@kdx/db/client";
-import {
-  createUser as dbCreateUser,
-  moveUserToTeamAndAssociateToTeam,
-} from "@kdx/db/auth";
-import {
-  createTeamAndAssociateUser,
-  deleteInvitationById,
-  findInvitationByIdAndEmail,
-} from "@kdx/db/team";
+import { teamRepository, userRepository } from "@kdx/db/repositories";
 
 import {
   createSession,
@@ -37,7 +29,7 @@ export async function createUser({
   passwordHash?: string;
   tx: DrizzleTransaction;
 }) {
-  await dbCreateUser(tx, {
+  await userRepository.createUser(tx, {
     id: userId,
     name: name,
     activeTeamId: teamId,
@@ -48,7 +40,7 @@ export async function createUser({
   if (invite) {
     await acceptInvite({ invite, userId, email, db: tx });
   } else {
-    await createTeamAndAssociateUser(tx, userId, {
+    await teamRepository.createTeamAndAssociateUser(tx, userId, {
       id: teamId,
       ownerId: userId,
       name: `Personal Team`,
@@ -67,16 +59,19 @@ export async function acceptInvite({
   email: string;
   db: Drizzle;
 }) {
-  const invitation = await findInvitationByIdAndEmail({ id: invite, email });
+  const invitation = await teamRepository.findInvitationByIdAndEmail({
+    id: invite,
+    email,
+  });
 
   if (!invitation) throw new Error("No invitation found");
 
-  await moveUserToTeamAndAssociateToTeam(db, {
+  await userRepository.moveUserToTeamAndAssociateToTeam(db, {
     userId,
     teamId: invitation.Team.id,
   });
 
-  await deleteInvitationById(db, invite);
+  await teamRepository.deleteInvitationById(db, invite);
 }
 
 export async function createDbSessionAndCookie({ userId }: { userId: string }) {

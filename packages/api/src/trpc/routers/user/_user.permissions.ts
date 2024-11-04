@@ -1,13 +1,13 @@
 import { TRPCError } from "@trpc/server";
 
-import { findTeamsByUserId } from "@kdx/db/team";
+import { teamRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 
 export const assertCanUserDeleteAccount = async (
   ctx: TProtectedProcedureContext,
 ) => {
-  const teams = await findTeamsByUserId(ctx.auth.user.id);
+  const teams = await teamRepository.findTeamsByUserId(ctx.auth.user.id);
   if (!teams[0]) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR", //should never happen

@@ -1,4 +1,4 @@
-import { deleteKodixAccountAndUserDataByUserId } from "@kdx/db/auth";
+import { authRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 import { protectedMutation } from "../../protectedFetchAndMutations";
@@ -11,6 +11,7 @@ interface DeleteAccountOptions {
 export const deleteAccountHandler = async ({ ctx }: DeleteAccountOptions) => {
   await protectedMutation({
     permissions: () => assertCanUserDeleteAccount(ctx),
-    operation: () => deleteKodixAccountAndUserDataByUserId(ctx.auth.user.id),
+    operation: () =>
+      authRepository.deleteKodixAccountAndUserDataByUserId(ctx.auth.user.id),
   });
 };
