@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import { gte } from "@kdx/db";
-import { getCurrentCareShiftByTeamId } from "@kdx/db/kodixCare";
+import { kodixCareRepository } from "@kdx/db/repositories";
 import { careTasks } from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
@@ -14,7 +14,7 @@ interface SyncCareTasksFromCalendarOptions {
 export const syncCareTasksFromCalendarHandler = async ({
   ctx,
 }: SyncCareTasksFromCalendarOptions) => {
-  const currentShift = await getCurrentCareShiftByTeamId(
+  const currentShift = await kodixCareRepository.getCurrentCareShiftByTeamId(
     ctx.auth.user.activeTeamId,
   );
 

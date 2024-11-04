@@ -1,8 +1,5 @@
 import type { TDoCheckoutForShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
-import {
-  getCurrentCareShiftByTeamId,
-  updateCareShift,
-} from "@kdx/db/kodixCare";
+import { kodixCareRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 import { protectedMutationFetchFirst } from "../../../protectedFetchAndMutations";
@@ -21,7 +18,10 @@ export const doCheckoutForShiftHandler = async ({
   input,
 }: DoCheckoutForShiftOptions) => {
   await protectedMutationFetchFirst({
-    fetch: async () => getCurrentCareShiftByTeamId(ctx.auth.user.activeTeamId),
+    fetch: async () =>
+      kodixCareRepository.getCurrentCareShiftByTeamId(
+        ctx.auth.user.activeTeamId,
+      ),
     notFoundMessage: ctx.t("api.No current shift found"),
     permissions: [
       (currentShift) => assertIsUserCareGiver(ctx, currentShift.Caregiver.id),
@@ -32,7 +32,7 @@ export const doCheckoutForShiftHandler = async ({
         }),
     ],
     operation: async (currentShift) => {
-      await updateCareShift(ctx.db, {
+      await kodixCareRepository.updateCareShift(ctx.db, {
         id: currentShift.id,
         checkOut: input.date,
       });

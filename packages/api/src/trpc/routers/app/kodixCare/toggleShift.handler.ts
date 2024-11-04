@@ -2,8 +2,8 @@ import { TRPCError } from "@trpc/server";
 
 import dayjs from "@kdx/dayjs";
 import { and, desc, eq, gte, isNotNull } from "@kdx/db";
-import { getCurrentCareShiftByTeamId } from "@kdx/db/kodixCare";
 import { nanoid } from "@kdx/db/nanoid";
+import { kodixCareRepository } from "@kdx/db/repositories";
 import { careShifts, careTasks } from "@kdx/db/schema";
 import WarnPreviousShiftNotEnded from "@kdx/react-email/warn-previous-shift-not-ended";
 import { KODIX_NOTIFICATION_FROM_EMAIL, kodixCareAppId } from "@kdx/shared";
@@ -61,7 +61,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
     return;
   }
 
-  const currentShift = await getCurrentCareShiftByTeamId(
+  const currentShift = await kodixCareRepository.getCurrentCareShiftByTeamId(
     ctx.auth.user.activeTeamId,
   );
   if (!currentShift)

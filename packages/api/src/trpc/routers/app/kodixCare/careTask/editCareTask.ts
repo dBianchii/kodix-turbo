@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import type { TEditCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
 import dayjs from "@kdx/dayjs";
 import { and, eq } from "@kdx/db";
-import { getCurrentCareShiftByTeamId } from "@kdx/db/kodixCare";
+import { kodixCareRepository } from "@kdx/db/repositories";
 import { careTasks, teamAppRoles, teamAppRolesToUsers } from "@kdx/db/schema";
 import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
 
@@ -78,7 +78,7 @@ export const editCareTaskHandler = async ({
 
   const isEditingDoneAt = input.doneAt !== undefined;
   if (isEditingDoneAt) {
-    const currentShift = await getCurrentCareShiftByTeamId(
+    const currentShift = await kodixCareRepository.getCurrentCareShiftByTeamId(
       ctx.auth.user.activeTeamId,
     );
     if (!currentShift)
