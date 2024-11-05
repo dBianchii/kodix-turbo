@@ -18,6 +18,34 @@ export const editCareTaskHandler = async ({
   ctx,
   input,
 }: EditCareTaskOptions) => {
+  const careTask = await ctx.db.query.careTasks.findFirst({
+    where: (careTasks, { eq }) => eq(careTasks.id, input.id),
+    columns: {
+      careShiftId: true,
+      doneAt: true,
+    },
+    with: {
+      CareShift: {
+        columns: {
+          checkOut: true,
+        },
+      },
+    },
+  });
+
+  if (!careTask)
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: ctx.t("api.Care task not found"),
+    });
+
+  if (careTask.CareShift?.checkOut) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: ctx.t("api.You cannot edit a task from a closed shift"),
+    });
+  }
+
   const set: Partial<typeof careTasks.$inferInsert> = {
     details: input.details,
   };
@@ -91,19 +119,6 @@ export const editCareTaskHandler = async ({
         message: ctx.t(
           "api.You cannot edit a task from another caregivers shift",
         ),
-      });
-
-    const careTask = await ctx.db.query.careTasks.findFirst({
-      where: (careTasks, { eq }) => eq(careTasks.id, input.id),
-      columns: {
-        careShiftId: true,
-        doneAt: true,
-      },
-    });
-    if (!careTask)
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: ctx.t("api.Care task not found"),
       });
 
     if (careTask.careShiftId) {
