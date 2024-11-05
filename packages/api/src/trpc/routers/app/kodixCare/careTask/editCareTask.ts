@@ -18,6 +18,21 @@ export const editCareTaskHandler = async ({
   ctx,
   input,
 }: EditCareTaskOptions) => {
+  const currentShift = await getCurrentShiftHandler({ ctx });
+  if (!currentShift)
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "No current shift found",
+    });
+
+  if (!currentShift.shiftEndedAt)
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: ctx.t(
+        "api.You cannot edit a task while the current shift is closed",
+      ),
+    });
+
   const careTask = await ctx.db.query.careTasks.findFirst({
     where: (careTasks, { eq }) => eq(careTasks.id, input.id),
     columns: {
@@ -27,19 +42,18 @@ export const editCareTaskHandler = async ({
     with: {
       CareShift: {
         columns: {
-          checkOut: true,
+          shiftEndedAt: true,
         },
       },
     },
   });
-
   if (!careTask)
     throw new TRPCError({
       code: "NOT_FOUND",
       message: ctx.t("api.Care task not found"),
     });
 
-  if (careTask.CareShift?.checkOut) {
+  if (careTask.CareShift?.shiftEndedAt) {
     throw new TRPCError({
       code: "FORBIDDEN",
       message: ctx.t("api.You cannot edit a task from a closed shift"),
@@ -106,13 +120,6 @@ export const editCareTaskHandler = async ({
 
   const isEditingDoneAt = input.doneAt !== undefined;
   if (isEditingDoneAt) {
-    const currentShift = await getCurrentShiftHandler({ ctx });
-    if (!currentShift)
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: "No current shift found",
-      });
-
     if (currentShift.Caregiver.id !== ctx.auth.user.id)
       throw new TRPCError({
         code: "FORBIDDEN",
