@@ -1,8 +1,8 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { LuLoader2 } from "react-icons/lu";
 
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { useRouter } from "@kdx/locales/next-intl/navigation";
 import { getErrorMessage } from "@kdx/shared";
 import { cn } from "@kdx/ui";

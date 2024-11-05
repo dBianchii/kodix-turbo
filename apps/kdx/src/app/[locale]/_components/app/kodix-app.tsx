@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { LuLoader2 } from "react-icons/lu";
 import { RxDotsHorizontal, RxTrash } from "react-icons/rx";
 
 import type { User } from "@kdx/auth";
 import type { KodixAppId } from "@kdx/shared";
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { useAppDescription, useAppName } from "@kdx/locales/next-intl/hooks";
 import { Link, useRouter } from "@kdx/locales/next-intl/navigation";
 import { kodixCareAppId } from "@kdx/shared";

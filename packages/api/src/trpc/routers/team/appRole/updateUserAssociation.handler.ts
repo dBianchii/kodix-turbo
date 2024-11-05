@@ -1,5 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import { getTranslations } from "next-intl/server";
 
 import type { TUpdateUserAssociationInputSchema } from "@kdx/validators/trpc/team/appRole";
 import { and, eq, inArray } from "@kdx/db";
@@ -44,9 +43,8 @@ export const updateUserAssociationHandler = async ({
           input.teamAppRoleIds.includes(x.id),
         )
       ) {
-        const t = await getTranslations({ locale: ctx.locale });
         throw new TRPCError({
-          message: t(
+          message: ctx.t(
             "api.You cannot remove yourself from the Administrator role",
           ),
           code: "BAD_REQUEST",

@@ -19,8 +19,10 @@ async function registerForPushNotificationsAsync() {
     });
   }
 
-  if (!Device.isDevice)
-    throw new Error("Must use physical device for Push Notifications");
+  if (!Device.isDevice) {
+    //? Must use physical device for Push Notifications :)
+    return;
+  }
 
   const { status: existingStatus } = await Notifications.getPermissionsAsync();
   let finalStatus = existingStatus;

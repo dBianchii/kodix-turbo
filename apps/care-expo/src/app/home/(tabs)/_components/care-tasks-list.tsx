@@ -1,6 +1,7 @@
 import type { CareTask } from "node_modules/@kdx/api/dist/api/src/internal/calendarAndCareTaskCentral";
 import React, { useEffect, useMemo, useState } from "react";
-import { Alert, Keyboard, TouchableOpacity } from "react-native";
+import { Alert, FlatList, Keyboard, TouchableOpacity } from "react-native";
+import Swipeable from "react-native-gesture-handler/Swipeable";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Audio } from "expo-av";
 import * as Haptics from "expo-haptics";
@@ -12,6 +13,7 @@ import {
   Lock,
   Plus,
   Text as TextIcon,
+  Trash2,
 } from "@tamagui/lucide-icons";
 import { useToastController } from "@tamagui/toast";
 import {
@@ -20,24 +22,23 @@ import {
   H4,
   Input,
   Paragraph,
-  ScrollView,
   SizableText,
   Spinner,
   Text,
   TextArea,
+  useTheme,
   View,
   XStack,
   YStack,
 } from "tamagui";
-import { useFormatter } from "use-intl";
+import { useFormatter, useTranslations } from "use-intl";
 
 import dayjs from "@kdx/dayjs";
-import { useTranslations } from "@kdx/locales/use-intl";
 import { getErrorMessage } from "@kdx/shared";
 import {
   ZCreateCareTaskInputSchema,
-  ZSaveCareTaskInputSchema,
-} from "@kdx/validators/trpc/app/kodixCare";
+  ZEditCareTaskInputSchema,
+} from "@kdx/validators/trpc/app/kodixCare/careTask";
 
 import type { RouterOutputs } from "~/utils/api";
 import { DateTimePicker } from "~/components/date-time-picker";
@@ -55,19 +56,20 @@ import { SheetModal } from "~/components/sheet-modal";
 import { api } from "~/utils/api";
 
 type CareTaskOrCalendarTask =
-  RouterOutputs["app"]["kodixCare"]["getCareTasks"][number];
+  RouterOutputs["app"]["kodixCare"]["careTask"]["getCareTasks"][number];
 
-export function CaretasksList() {
+export function CareTasksLists() {
   const input = {
     dateStart: dayjs().startOf("day").toDate(),
     dateEnd: dayjs().endOf("day").toDate(),
   };
   const utils = api.useUtils();
 
-  const careTasksQuery = api.app.kodixCare.getCareTasks.useQuery(input);
+  const careTasksQuery =
+    api.app.kodixCare.careTask.getCareTasks.useQuery(input);
   const currentShift = api.app.kodixCare.getCurrentShift.useQuery();
   const syncCareTasksFromCalendarMutation =
-    api.app.kodixCare.syncCareTasksFromCalendar.useMutation({
+    api.app.kodixCare.careTask.syncCareTasksFromCalendar.useMutation({
       onSettled: () => {
         void utils.app.kodixCare.invalidate();
       },
@@ -83,65 +85,65 @@ export function CaretasksList() {
     });
 
   const toast = useToastController();
-  const saveCareTaskMutation = api.app.kodixCare.saveCareTask.useMutation({
-    onMutate: async (savedCareTask) => {
-      // Snapshot the previous value
-      const previousCareTasks = utils.app.kodixCare.getCareTasks.getData();
+  const editCareTaskMutation =
+    api.app.kodixCare.careTask.editCareTask.useMutation({
+      onMutate: async (editedCareTask) => {
+        // Snapshot the previous value
+        const previousCareTasks =
+          utils.app.kodixCare.careTask.getCareTasks.getData();
 
-      const previousTask = previousCareTasks?.find(
-        (x) => x.id === savedCareTask.id,
-      );
-      if (!previousTask?.doneAt && savedCareTask.doneAt) {
-        const { sound } = await Audio.Sound.createAsync(
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-require-imports
-          require("../../../../../assets/taskDone.mp3"),
+        const previousTask = previousCareTasks?.find(
+          (x) => x.id === editedCareTask.id,
         );
-        void sound.playAsync();
-      }
+        if (!previousTask?.doneAt && editedCareTask.doneAt) {
+          const { sound } = await Audio.Sound.createAsync(
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-require-imports
+            require("../../../../../assets/taskDone.mp3"),
+          );
+          void sound.playAsync();
+        }
 
-      // Cancel any outgoing refetches
-      // (so they don't overwrite our optimistic update)
-      await utils.app.kodixCare.getCareTasks.cancel();
+        // Cancel any outgoing refetches
+        // (so they don't overwrite our optimistic update)
+        await utils.app.kodixCare.careTask.getCareTasks.cancel();
 
-      // Optimistically update to the new value
-      utils.app.kodixCare.getCareTasks.setData(input, (prev) => {
-        return prev?.map((x) => {
-          if (x.id === savedCareTask.id) {
-            if (savedCareTask.doneAt !== undefined)
-              x.doneAt = savedCareTask.doneAt;
-            if (savedCareTask.doneByUserId !== undefined)
-              x.doneByUserId = savedCareTask.doneByUserId;
-            if (savedCareTask.details !== undefined)
-              x.details = savedCareTask.details;
-          }
+        // Optimistically update to the new value
+        utils.app.kodixCare.careTask.getCareTasks.setData(input, (prev) => {
+          return prev?.map((x) => {
+            if (x.id === editedCareTask.id) {
+              if (editedCareTask.doneAt !== undefined)
+                x.doneAt = editedCareTask.doneAt;
+              if (editedCareTask.details !== undefined)
+                x.details = editedCareTask.details;
+            }
 
-          return x;
+            return x;
+          });
         });
-      });
 
-      // Return a context object with the snapshotted value
-      return { previousCareTasks };
-    },
-    // If the mutation fails,
-    // use the context returned from onMutate to roll back
-    onError: (err, __, context) => {
-      utils.app.kodixCare.getCareTasks.setData(
-        input,
-        context?.previousCareTasks,
-      );
-      toast.show("Um erro ocorreu", {
-        message: getErrorMessage(err),
-        variant: "error",
-        customData: {
+        // Return a context object with the snapshotted value
+        return { previousCareTasks };
+      },
+      // If the mutation fails,
+      // use the context returned from onMutate to roll back
+      onError: (err, __, context) => {
+        utils.app.kodixCare.careTask.getCareTasks.setData(
+          input,
+          context?.previousCareTasks,
+        );
+        toast.show("Um erro ocorreu", {
+          message: getErrorMessage(err),
           variant: "error",
-        },
-      });
-    },
-    // Always refetch after error or success:
-    onSettled: () => {
-      void utils.app.kodixCare.invalidate();
-    },
-  });
+          customData: {
+            variant: "error",
+          },
+        });
+      },
+      // Always refetch after error or success:
+      onSettled: () => {
+        void utils.app.kodixCare.invalidate();
+      },
+    });
 
   const [position, setPosition] = useState(1);
 
@@ -182,7 +184,7 @@ export function CaretasksList() {
         <>
           <EditCareTaskSheet
             task={currentlyEditingCareTask}
-            mutation={saveCareTaskMutation}
+            mutation={editCareTaskMutation}
             open={editCareTaskSheetOpen}
             setOpen={setEditCareTaskSheetOpen}
           />
@@ -199,7 +201,7 @@ export function CaretasksList() {
         withOverlay={false}
         withHandle={false}
         sheetFrameProps={{
-          p: "$2",
+          px: "0",
           ai: "center",
           borderColor: "$color6",
           backgroundColor: "$color3",
@@ -241,17 +243,20 @@ export function CaretasksList() {
                 </TouchableOpacity>
               ) : null}
             </XStack>
-            <ScrollView f={1} w="100%" p={"$3"}>
-              {careTasksQuery.data.map((task, i) => (
-                <CareTaskOrCalendarTaskItem
-                  key={`${task.id}${task.title}${task.description}${i}`}
-                  task={task}
-                  mutation={saveCareTaskMutation}
-                  setCurrentlyEditing={setCurrentlyEditing}
-                  setEditCareTaskSheetOpen={setEditCareTaskSheetOpen}
-                />
-              ))}
-            </ScrollView>
+            <View f={1} w="100%">
+              <FlatList
+                data={careTasksQuery.data}
+                renderItem={({ item }) => (
+                  <CareTaskOrCalendarTaskItem
+                    task={item}
+                    mutation={editCareTaskMutation}
+                    setCurrentlyEditing={setCurrentlyEditing}
+                    setEditCareTaskSheetOpen={setEditCareTaskSheetOpen}
+                  />
+                )}
+                keyExtractor={(item, index) => `${item.id}-${index}`}
+              />
+            </View>
           </>
         )}
       </SheetModal>
@@ -275,23 +280,24 @@ function CreateCareTaskSheet({
   });
   const utils = api.useUtils();
   const toast = useToastController();
-  const createCareTaskMutation = api.app.kodixCare.createCareTask.useMutation({
-    onSuccess: () => {
-      setOpen(false);
-    },
-    onError: (err) => {
-      toast.show("Um erro ocorreu", {
-        message: getErrorMessage(err),
-        variant: "error",
-        customData: {
+  const createCareTaskMutation =
+    api.app.kodixCare.careTask.createCareTask.useMutation({
+      onSuccess: () => {
+        setOpen(false);
+      },
+      onError: (err) => {
+        toast.show("Um erro ocorreu", {
+          message: getErrorMessage(err),
           variant: "error",
-        },
-      });
-    },
-    onSettled: () => {
-      void utils.app.kodixCare.invalidate();
-    },
-  });
+          customData: {
+            variant: "error",
+          },
+        });
+      },
+      onSettled: () => {
+        void utils.app.kodixCare.invalidate();
+      },
+    });
 
   useEffect(() => {
     form.reset();
@@ -429,90 +435,152 @@ function CreateCareTaskSheet({
 }
 
 function CareTaskOrCalendarTaskItem(props: {
-  task: RouterOutputs["app"]["kodixCare"]["getCareTasks"][number];
-  mutation: ReturnType<typeof api.app.kodixCare.saveCareTask.useMutation>;
+  task: RouterOutputs["app"]["kodixCare"]["careTask"]["getCareTasks"][number];
+  mutation: ReturnType<
+    typeof api.app.kodixCare.careTask.editCareTask.useMutation
+  >;
   setEditCareTaskSheetOpen: (open: boolean) => void;
   setCurrentlyEditing: (id: string) => void;
 }) {
   const format = useFormatter();
-  const isCareTaskItem = !!props.task.id;
+  const isCareTaskItem = (
+    task: RouterOutputs["app"]["kodixCare"]["careTask"]["getCareTasks"][number],
+  ): task is CareTask => !!task.id;
+
+  const utils = api.useUtils();
+  const toast = useToastController();
+  const deleteCareTaskMutation =
+    api.app.kodixCare.careTask.deleteCareTask.useMutation({
+      onSettled: () => {
+        void utils.app.kodixCare.careTask.invalidate();
+      },
+      onError: (err) => {
+        toast.show("Um erro ocorreu", {
+          message: getErrorMessage(err),
+          variant: "error",
+          customData: {
+            variant: "error",
+          },
+        });
+      },
+    });
+
+  const theme = useTheme();
 
   return (
-    <TouchableOpacity
-      activeOpacity={isCareTaskItem ? 0.2 : 1}
-      onPress={() => {
-        if (!props.task.id) return;
-        void Haptics.selectionAsync();
-        props.setCurrentlyEditing(props.task.id);
-        props.setEditCareTaskSheetOpen(true);
+    <Swipeable
+      enabled={isCareTaskItem(props.task)}
+      renderRightActions={() => {
+        if (!isCareTaskItem(props.task)) return null;
+        return (
+          <TouchableOpacity
+            disabled={deleteCareTaskMutation.isPending}
+            onPress={() => {
+              if (isCareTaskItem(props.task)) {
+                deleteCareTaskMutation.mutate({
+                  id: props.task.id,
+                });
+              }
+            }}
+            style={{
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              backgroundColor: theme.red5Dark.val,
+              height: "100%",
+              width: 62,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Trash2 size={"$2"} />
+          </TouchableOpacity>
+        );
       }}
     >
-      <XStack mb="$2" ai={"center"} gap="$3" maxWidth={"100%"}>
-        {isCareTaskItem ? (
-          <Checkbox
-            onCheckedChange={() => {
-              void Haptics.notificationAsync(
-                Haptics.NotificationFeedbackType.Success,
-              );
-              if (!props.task.id) return; //Will never happen. its just to make ts happy
-              props.setCurrentlyEditing(props.task.id);
+      <TouchableOpacity
+        activeOpacity={isCareTaskItem(props.task) ? 0.2 : 1}
+        onPress={() => {
+          if (!props.task.id) return;
+          void Haptics.selectionAsync();
+          props.setCurrentlyEditing(props.task.id);
+          props.setEditCareTaskSheetOpen(true);
+        }}
+      >
+        <XStack
+          px="$4"
+          pb="$2"
+          ai={"center"}
+          gap="$3"
+          maxWidth={"100%"}
+          backgroundColor={"$blue3Dark"}
+        >
+          {isCareTaskItem(props.task) ? (
+            <Checkbox
+              onCheckedChange={() => {
+                void Haptics.notificationAsync(
+                  Haptics.NotificationFeedbackType.Success,
+                );
+                if (!props.task.id) return; //Will never happen. its just to make ts happy
+                props.setCurrentlyEditing(props.task.id);
 
-              props.mutation.mutate({
-                id: props.task.id,
-                doneAt: props.task.doneAt ? null : new Date(),
-              });
-            }}
-            checked={!!props.task.doneAt}
-            size={"$7"}
-          >
-            <Checkbox.Indicator>
-              <CheckIcon />
-            </Checkbox.Indicator>
-          </Checkbox>
-        ) : (
-          <Lock />
-        )}
-        <YStack maxWidth={"$18"}>
-          <XStack>
-            <Text numberOfLines={1}>{props.task.title}</Text>
-            {props.task.type === "CRITICAL" && (
-              <AlertCircle color={"$orange11Dark"} size="$1" ml={"$2"} />
-            )}
+                props.mutation.mutate({
+                  id: props.task.id,
+                  doneAt: props.task.doneAt ? null : new Date(),
+                });
+              }}
+              checked={!!props.task.doneAt}
+              size={"$7"}
+            >
+              <Checkbox.Indicator>
+                <CheckIcon />
+              </Checkbox.Indicator>
+            </Checkbox>
+          ) : (
+            <Lock />
+          )}
+          <YStack maxWidth={"$18"}>
+            <XStack>
+              <Text numberOfLines={1}>{props.task.title}</Text>
+              {props.task.type === "CRITICAL" && (
+                <AlertCircle color={"$orange11Dark"} size="$1" ml={"$2"} />
+              )}
+            </XStack>
+            <SizableText numberOfLines={1} size="$2" color="$gray11Dark">
+              {props.task.description}
+            </SizableText>
+          </YStack>
+
+          <XStack ml="auto" ai="center">
+            <YStack mr={"$2"}>
+              {props.task.details && (
+                <TextIcon size={16} color={"$orange11Dark"} />
+              )}
+            </YStack>
+            <YStack>
+              <SizableText size="$2" color="$gray11Dark" textAlign="right">
+                {format.dateTime(props.task.date, {
+                  day: "numeric",
+                  month: "short",
+                })}
+              </SizableText>
+              <SizableText size="$2" color="$gray11Dark" textAlign="right">
+                {format.dateTime(props.task.date, {
+                  hour: "numeric",
+                  minute: "numeric",
+                })}
+              </SizableText>
+            </YStack>
           </XStack>
-          <SizableText numberOfLines={1} size="$2" color="$gray11Dark">
-            {props.task.description}
-          </SizableText>
-        </YStack>
-
-        <XStack ml="auto" ai="center">
-          <YStack mr={"$2"}>
-            {props.task.details && (
-              <TextIcon size={16} color={"$orange11Dark"} />
-            )}
-          </YStack>
-          <YStack>
-            <SizableText size="$2" color="$gray11Dark" textAlign="right">
-              {format.dateTime(props.task.date, {
-                day: "numeric",
-                month: "short",
-              })}
-            </SizableText>
-            <SizableText size="$2" color="$gray11Dark" textAlign="right">
-              {format.dateTime(props.task.date, {
-                hour: "numeric",
-                minute: "numeric",
-              })}
-            </SizableText>
-          </YStack>
         </XStack>
-      </XStack>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </Swipeable>
   );
 }
 
 function EditCareTaskSheet(props: {
   task: CareTask;
-  mutation: ReturnType<typeof api.app.kodixCare.saveCareTask.useMutation>;
+  mutation: ReturnType<
+    typeof api.app.kodixCare.careTask.editCareTask.useMutation
+  >;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
@@ -529,7 +597,7 @@ function EditCareTaskSheet(props: {
   );
   const t = useTranslations();
   const form = useForm({
-    schema: ZSaveCareTaskInputSchema(t).pick({
+    schema: ZEditCareTaskInputSchema(t).pick({
       id: true,
       details: true,
       doneAt: true,

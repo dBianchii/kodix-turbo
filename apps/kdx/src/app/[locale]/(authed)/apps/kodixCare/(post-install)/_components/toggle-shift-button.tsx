@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { LuLoader2 } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { Button } from "@kdx/ui/button";
 import {
   Credenza,
@@ -51,7 +51,7 @@ function StartShiftDialogButton() {
   const mutation = api.app.kodixCare.toggleShift.useMutation({
     onSuccess: () => {
       setOpen(false);
-      void utils.app.kodixCare.getCareTasks.invalidate();
+      void utils.app.kodixCare.careTask.getCareTasks.invalidate();
       void utils.app.kodixCare.getCurrentShift.invalidate();
     },
     onError: (err) => {
@@ -99,7 +99,7 @@ function StartShiftWarnPreviousPersonDialog() {
   const mutation = api.app.kodixCare.toggleShift.useMutation({
     onSuccess: () => {
       setOpen(false);
-      void utils.app.kodixCare.getCareTasks.invalidate();
+      void utils.app.kodixCare.careTask.getCareTasks.invalidate();
       void utils.app.kodixCare.getCurrentShift.invalidate();
     },
     onError: (err) => {

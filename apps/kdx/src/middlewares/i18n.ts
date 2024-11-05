@@ -1,7 +1,7 @@
 import type { NextFetchEvent, NextRequest } from "next/server";
+import createMiddleware from "next-intl/middleware";
 
 import { defaultLocale, locales } from "@kdx/locales";
-import { createMiddleware } from "@kdx/locales/next-intl";
 
 import type { CustomMiddleware } from "~/middlewares/chain-middleware";
 

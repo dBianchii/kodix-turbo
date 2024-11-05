@@ -24,6 +24,10 @@
       "types": "./dist/validators/src/trpc/app/kodixCare/index.d.ts",
       "default": "./src/trpc/app/kodixCare/index.ts"
     },
+    "./trpc/app/kodixCare/careTask": {
+      "types": "./dist/validators/src/trpc/app/kodixCare/careTask/index.d.ts",
+      "default": "./src/trpc/app/kodixCare/careTask/index.ts"
+    },
     "./trpc/app/todo": {
       "types": "./dist/validators/src/trpc/app/todo/index.d.ts",
       "default": "./src/trpc/app/todo/index.ts"

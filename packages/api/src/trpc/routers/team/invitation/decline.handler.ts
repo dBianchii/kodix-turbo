@@ -1,5 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import { getTranslations } from "next-intl/server";
 
 import type { TDeclineInputSchema } from "@kdx/validators/trpc/team/invitation";
 import { eq } from "@kdx/db";
@@ -20,11 +19,10 @@ export const declineHandler = async ({ ctx, input }: DeclineOptions) => {
         eq(invitation.email, ctx.auth.user.email),
       ),
   });
-  const t = await getTranslations({ locale: ctx.locale });
 
   if (!invitation) {
     throw new TRPCError({
-      message: t("api.No Invitation Found"),
+      message: ctx.t("api.No Invitation Found"),
       code: "NOT_FOUND",
     });
   }

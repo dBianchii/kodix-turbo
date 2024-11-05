@@ -1,5 +1,4 @@
 import { experimental_standaloneMiddleware, TRPCError } from "@trpc/server";
-import { getTranslations } from "next-intl/server";
 
 import type { AppPermissionId, KodixAppId } from "@kdx/shared";
 import { and, eq } from "@kdx/db";
@@ -27,11 +26,10 @@ const appInstalledMiddlewareFactory = (appId: KodixAppId) =>
     const apps = await getInstalledHandler({ ctx });
 
     if (!apps.some((app) => app.id === appId)) {
-      const t = await getTranslations({ locale: ctx.locale });
       throw new TRPCError({
         code: "UNAUTHORIZED",
-        message: t("api.appName is not installed", {
-          app: await getAppName(appId),
+        message: ctx.t("api.appName is not installed", {
+          app: getAppName(ctx.t, appId),
         }),
       });
     }
@@ -53,7 +51,7 @@ export const appPermissionMiddleware = (permissionId: AppPermissionId) =>
     });
 
     if (foundPermission === null) {
-      const permission = await ctx.db
+      const [permission] = await ctx.db
         .select({ permissionId: appPermissionsToTeamAppRoles.appPermissionId })
         .from(teamAppRoles)
         .innerJoin(
@@ -70,8 +68,7 @@ export const appPermissionMiddleware = (permissionId: AppPermissionId) =>
             eq(teamAppRoles.teamId, ctx.auth.user.activeTeamId),
             eq(appPermissionsToTeamAppRoles.appPermissionId, permissionId),
           ),
-        )
-        .then((res) => res[0]);
+        );
 
       await setUpstashCache("permissions", {
         variableKeys: {
@@ -86,10 +83,9 @@ export const appPermissionMiddleware = (permissionId: AppPermissionId) =>
     }
 
     if (!foundPermission) {
-      const t = await getTranslations({ locale: ctx.locale });
       throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: t(
+        code: "FORBIDDEN",
+        message: ctx.t(
           "api.You dont have permission to do this Contact a team administrator if you believe this is an error",
         ),
       });
@@ -110,11 +106,10 @@ export const appInstalledMiddleware = experimental_standaloneMiddleware<{
   const installed = await getInstalledHandler({ ctx });
 
   if (!installed.some((app) => app.id === input.appId)) {
-    const t = await getTranslations({ locale: ctx.locale });
     throw new TRPCError({
       code: "UNAUTHORIZED",
-      message: t("api.appName is not installed", {
-        app: await getAppName(input.appId),
+      message: ctx.t("api.appName is not installed", {
+        app: getAppName(ctx.t, input.appId),
       }),
     });
   }

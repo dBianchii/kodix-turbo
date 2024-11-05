@@ -10,6 +10,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useFormatter, useTranslations } from "next-intl";
 import {
   LuAlertCircle,
   LuArrowLeftRight,
@@ -18,13 +19,16 @@ import {
   LuPlus,
   LuText,
 } from "react-icons/lu";
-import { RxCalendar, RxLockClosed } from "react-icons/rx";
+import {
+  RxCalendar,
+  RxDotsHorizontal,
+  RxLockClosed,
+  RxTrash,
+} from "react-icons/rx";
 import { create } from "zustand";
 
 import type { RouterOutputs } from "@kdx/api";
 import dayjs from "@kdx/dayjs";
-import { useFormatter } from "@kdx/locales/next-intl";
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { Link } from "@kdx/locales/next-intl/navigation";
 import { cn } from "@kdx/ui";
 import {
@@ -37,7 +41,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@kdx/ui/alert-dialog";
-import { Button } from "@kdx/ui/button";
+import { Button, buttonVariants } from "@kdx/ui/button";
 import { Checkbox } from "@kdx/ui/checkbox";
 import {
   Credenza,
@@ -54,6 +58,12 @@ import { DataTableColumnHeader } from "@kdx/ui/data-table/data-table-column-head
 import { DataTableViewOptions } from "@kdx/ui/data-table/data-table-view-options";
 import { DateTimePicker24h } from "@kdx/ui/date-n-time/date-time-picker-24h";
 import { DateTimePicker } from "@kdx/ui/date-time-picker";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@kdx/ui/dropdown-menu";
 import {
   Form,
   FormControl,
@@ -83,15 +93,15 @@ import {
 } from "@kdx/ui/tooltip";
 import {
   ZCreateCareTaskInputSchema,
-  ZSaveCareTaskInputSchema,
-} from "@kdx/validators/trpc/app/kodixCare";
+  ZEditCareTaskInputSchema,
+} from "@kdx/validators/trpc/app/kodixCare/careTask";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 import { DateTimeSelectorWithLeftAndRightArrows } from "./date-time-selector-with-left-and-right-buttons";
 
 type CareTaskOrCalendarTask =
-  RouterOutputs["app"]["kodixCare"]["getCareTasks"][number];
+  RouterOutputs["app"]["kodixCare"]["careTask"]["getCareTasks"][number];
 
 const columnHelper = createColumnHelper<CareTaskOrCalendarTask>();
 
@@ -144,48 +154,50 @@ export default function DataTableKodixCare() {
   } = useCareTaskStore();
 
   const utils = api.useUtils();
-  const query = api.app.kodixCare.getCareTasks.useQuery(input);
-  const saveCareTaskMutation = api.app.kodixCare.saveCareTask.useMutation({
-    onMutate: async (savedCareTask) => {
-      // Cancel any outgoing refetches
-      // (so they don't overwrite our optimistic update)
-      await utils.app.kodixCare.getCareTasks.cancel();
-      // Snapshot the previous value
-      const previousCareTasks = utils.app.kodixCare.getCareTasks.getData();
+  const [deleteTaskOpen, setDeleteTaskOpen] = useState(false);
 
-      // Optimistically update to the new value
-      utils.app.kodixCare.getCareTasks.setData(input, (prev) => {
-        return prev?.map((x) => {
-          if (x.id === savedCareTask.id) {
-            if (savedCareTask.doneAt !== undefined)
-              x.doneAt = savedCareTask.doneAt;
-            if (savedCareTask.doneByUserId !== undefined)
-              x.doneByUserId = savedCareTask.doneByUserId;
-            if (savedCareTask.details !== undefined)
-              x.details = savedCareTask.details;
-          }
+  const query = api.app.kodixCare.careTask.getCareTasks.useQuery(input);
+  const saveCareTaskMutation =
+    api.app.kodixCare.careTask.editCareTask.useMutation({
+      onMutate: async (editedCareTask) => {
+        // Cancel any outgoing refetches
+        // (so they don't overwrite our optimistic update)
+        await utils.app.kodixCare.careTask.getCareTasks.cancel();
+        // Snapshot the previous value
+        const previousCareTasks =
+          utils.app.kodixCare.careTask.getCareTasks.getData();
 
-          return x;
+        // Optimistically update to the new value
+        utils.app.kodixCare.careTask.getCareTasks.setData(input, (prev) => {
+          return prev?.map((x) => {
+            if (x.id === editedCareTask.id) {
+              if (editedCareTask.doneAt !== undefined)
+                x.doneAt = editedCareTask.doneAt;
+              if (editedCareTask.details !== undefined)
+                x.details = editedCareTask.details;
+            }
+
+            return x;
+          });
         });
-      });
 
-      // Return a context object with the snapshotted value
-      return { previousCareTasks };
-    },
-    // If the mutation fails,
-    // use the context returned from onMutate to roll back
-    onError: (err, __, context) => {
-      utils.app.kodixCare.getCareTasks.setData(
-        input,
-        context?.previousCareTasks,
-      );
-      trpcErrorToastDefault(err);
-    },
-    // Always refetch after error or success:
-    onSettled: () => {
-      void utils.app.kodixCare.getCareTasks.invalidate();
-    },
-  });
+        // Return a context object with the snapshotted value
+        return { previousCareTasks };
+      },
+      // If the mutation fails,
+      // use the context returned from onMutate to roll back
+      onError: (err, __, context) => {
+        utils.app.kodixCare.careTask.getCareTasks.setData(
+          input,
+          context?.previousCareTasks,
+        );
+        trpcErrorToastDefault(err);
+      },
+      // Always refetch after error or success:
+      onSettled: () => {
+        void utils.app.kodixCare.careTask.getCareTasks.invalidate();
+      },
+    });
 
   const isCareTask = (id: CareTaskOrCalendarTask["id"]): id is string => !!id;
   const t = useTranslations();
@@ -295,6 +307,46 @@ export default function DataTableKodixCare() {
           </div>
         ),
       }),
+      columnHelper.display({
+        id: "edit",
+        header: () => null,
+        cell: (ctx) => {
+          if (!isCareTask(ctx.row.original.id)) return null;
+
+          return (
+            <div className="space-x-4">
+              {/* <Checkbox
+              checked={info.row.getIsSelected()}
+              onCheckedChange={(value) => info.row.toggleSelected(!!value)}
+              aria-label="Select row"
+            /> */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="h-8 w-8 p-0">
+                    <span className="sr-only">Open menu</span>
+                    <RxDotsHorizontal className="size-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (!isCareTask(ctx.row.original.id)) return; //?Will never happen. its just to make ts happy
+
+                      setCurrentlyEditing(ctx.row.original.id);
+                      setDeleteTaskOpen(true);
+                    }}
+                    className="text-destructive"
+                  >
+                    <RxTrash className="mr-2 size-4" />
+                    {t("Delete")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          );
+        },
+      }),
     ],
     [format, saveCareTaskMutation, setCurrentlyEditing, t],
   );
@@ -328,6 +380,11 @@ export default function DataTableKodixCare() {
             mutation={saveCareTaskMutation}
             open={editDetailsOpen}
             setOpen={setEditDetailsOpen}
+          />
+          <DeleteCareTaskAlertDialog
+            task={currentlyEditingCareTask}
+            open={deleteTaskOpen}
+            setOpen={setDeleteTaskOpen}
           />
         </>
       )}
@@ -430,18 +487,70 @@ export default function DataTableKodixCare() {
   );
 }
 
+function DeleteCareTaskAlertDialog({
+  task,
+  open,
+  setOpen,
+}: {
+  task: CareTask;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}) {
+  const t = useTranslations();
+
+  const utils = api.useUtils();
+
+  const mutation = api.app.kodixCare.careTask.deleteCareTask.useMutation({
+    onError: trpcErrorToastDefault,
+    onSettled: () => {
+      void utils.app.kodixCare.careTask.getCareTasks.invalidate();
+    },
+  });
+
+  return (
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{t("Delete task")}</AlertDialogTitle>
+          <AlertDialogDescription>
+            {t("Are you sure you want to delete this task")}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>{t("Cancel")}</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={() => {
+              mutation.mutate({
+                id: task.id,
+              });
+              setOpen(false);
+            }}
+            className={cn(
+              buttonVariants({
+                variant: "destructive",
+              }),
+            )}
+          >
+            {t("Yes")}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
 function SyncTasksFromCalendarCredenzaButton() {
   const [syncCredenzaOpen, setSyncCredenzaOpen] = useState(false);
 
   const utils = api.useUtils();
   const syncCareTasksFromCalendarMutation =
-    api.app.kodixCare.syncCareTasksFromCalendar.useMutation({
+    api.app.kodixCare.careTask.syncCareTasksFromCalendar.useMutation({
       onSuccess: () => {
         void utils.app.kodixCare.invalidate();
       },
       onError: trpcErrorToastDefault,
       onSettled: () => {
-        void utils.app.kodixCare.getCareTasks.invalidate();
+        void utils.app.kodixCare.careTask.getCareTasks.invalidate();
         void utils.app.kodixCare.getCurrentShift.invalidate();
       },
     });
@@ -511,10 +620,10 @@ function AddCareTaskCredenzaButton() {
       type: "NORMAL",
     },
   });
-  const mutation = api.app.kodixCare.createCareTask.useMutation({
+  const mutation = api.app.kodixCare.careTask.createCareTask.useMutation({
     onError: trpcErrorToastDefault,
     onSettled: () => {
-      void utils.app.kodixCare.getCareTasks.invalidate();
+      void utils.app.kodixCare.careTask.getCareTasks.invalidate();
       void utils.app.kodixCare.getCurrentShift.invalidate();
     },
     onSuccess: () => {
@@ -672,9 +781,9 @@ function AddCareTaskCredenzaButton() {
 function UnlockMoreTasksCredenza() {
   const utils = api.useUtils();
   const t = useTranslations();
-  const mutation = api.app.kodixCare.unlockMoreTasks.useMutation({
+  const mutation = api.app.kodixCare.careTask.unlockMoreTasks.useMutation({
     onSuccess: () => {
-      void utils.app.kodixCare.getCareTasks.invalidate();
+      void utils.app.kodixCare.careTask.getCareTasks.invalidate();
     },
   });
 
@@ -729,7 +838,9 @@ function EditCareTaskCredenza({
   setOpen,
 }: {
   task: CareTask;
-  mutation: ReturnType<typeof api.app.kodixCare.saveCareTask.useMutation>;
+  mutation: ReturnType<
+    typeof api.app.kodixCare.careTask.editCareTask.useMutation
+  >;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
@@ -745,7 +856,7 @@ function EditCareTaskCredenza({
   );
 
   const form = useForm({
-    schema: ZSaveCareTaskInputSchema(t).pick({
+    schema: ZEditCareTaskInputSchema(t).pick({
       id: true,
       details: true,
       doneAt: true,

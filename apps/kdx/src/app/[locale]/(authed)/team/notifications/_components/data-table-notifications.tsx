@@ -1,12 +1,12 @@
 "use client";
 
 import { use, useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { MdEmail } from "react-icons/md";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { FixedColumnsType } from "@kdx/ui/data-table/data-table";
 import { notifications } from "@kdx/db/schema";
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { DataTable } from "@kdx/ui/data-table/data-table";
 
 import type { DataTableFilterField } from "./data-table-advanced/types";

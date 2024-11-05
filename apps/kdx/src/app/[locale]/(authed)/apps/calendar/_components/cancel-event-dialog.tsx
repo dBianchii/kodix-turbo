@@ -1,7 +1,7 @@
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { LuLoader2 } from "react-icons/lu";
 
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { Button } from "@kdx/ui/button";
 import {
   Credenza,
@@ -41,7 +41,7 @@ export function CancelationDialog({
   const mutation = api.app.calendar.cancel.useMutation({
     onSuccess: () => {
       void utils.app.calendar.getAll.invalidate();
-      void utils.app.kodixCare.getCareTasks.invalidate();
+      void utils.app.kodixCare.careTask.getCareTasks.invalidate();
       setOpen(false);
     },
     onError: (err) => {

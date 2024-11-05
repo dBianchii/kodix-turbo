@@ -1,4 +1,5 @@
-import { getTranslations } from "@kdx/locales/next-intl/server";
+import { getTranslations } from "next-intl/server";
+
 import { todoAppId } from "@kdx/shared";
 import { Separator } from "@kdx/ui/separator";
 import { H1 } from "@kdx/ui/typography";

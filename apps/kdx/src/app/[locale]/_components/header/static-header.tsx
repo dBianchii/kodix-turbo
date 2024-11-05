@@ -1,6 +1,7 @@
 "use client";
 
-import { useTranslations } from "@kdx/locales/next-intl/client";
+import { useTranslations } from "next-intl";
+
 import { Link } from "@kdx/locales/next-intl/navigation";
 import { buttonVariants } from "@kdx/ui/button";
 

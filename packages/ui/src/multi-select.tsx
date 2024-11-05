@@ -8,8 +8,7 @@ import {
   Cross1Icon,
   PlusCircledIcon,
 } from "@radix-ui/react-icons";
-
-import { useTranslations } from "@kdx/locales/next-intl/client";
+import { useTranslations } from "next-intl";
 
 import { cn } from ".";
 import { Badge } from "./badge";
@@ -38,6 +37,7 @@ interface MultiSelectProps {
   customValues?: boolean;
   customValuesSchema?: z.ZodString;
   emptyMessage?: string;
+  readonly?: boolean;
 }
 
 function MultiSelect({
@@ -48,6 +48,7 @@ function MultiSelect({
   emptyMessage,
   customValues = false,
   customValuesSchema,
+  readonly,
   ...props
 }: MultiSelectProps) {
   const [open, setOpen] = React.useState(false);
@@ -82,6 +83,7 @@ function MultiSelect({
         <Button
           variant="outline"
           role="combobox"
+          disabled={readonly}
           aria-expanded={open}
           className={cn(
             `h-full min-h-10 w-full justify-between bg-transparent hover:bg-transparent`,

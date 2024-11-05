@@ -7,9 +7,9 @@ import {
   TextAlignCenterIcon,
   TrashIcon,
 } from "@radix-ui/react-icons";
+import { useTranslations } from "next-intl";
 
 import type { DataTableConfig } from "@kdx/shared";
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { usePathname, useRouter } from "@kdx/locales/next-intl/navigation";
 import { dataTableConfig } from "@kdx/shared";
 import { Button } from "@kdx/ui/button";

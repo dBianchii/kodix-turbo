@@ -3,8 +3,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
-
-import { NextIntlClientProvider } from "@kdx/locales/next-intl/provider";
+import { NextIntlClientProvider } from "next-intl";
 
 import { TailwindIndicator } from "~/app/[locale]/_components/tailwind-indicator";
 import { env } from "~/env";
@@ -12,8 +11,9 @@ import { TRPCReactProvider } from "~/trpc/react";
 
 import "~/app/globals.css";
 
+import { getMessages } from "next-intl/server";
+
 import { formats } from "@kdx/locales";
-import { getMessages } from "@kdx/locales/next-intl/server";
 import { getBaseUrl } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { ThemeProvider, ThemeToggle } from "@kdx/ui/theme";
