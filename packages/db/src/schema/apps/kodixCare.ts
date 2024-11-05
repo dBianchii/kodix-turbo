@@ -99,3 +99,4 @@ export const careTasksRelations = relations(careTasks, ({ one }) => ({
     references: [eventMasters.id],
   }),
 }));
+export const careTaskSchema = createInsertSchema(careTasks);

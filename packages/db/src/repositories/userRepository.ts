@@ -2,9 +2,10 @@ import type { z } from "zod";
 import { eq } from "drizzle-orm";
 
 import type { Drizzle } from "../client";
+import type { Update } from "./_types";
 import { db } from "../client";
 import { users, usersToTeams } from "../schema";
-import { zUserCreate, zUserUpdate } from "./zodSchemas/userSchemas";
+import { zUserCreate, zUserUpdate } from "./_zodSchemas/userSchemas";
 
 export async function findUserByEmail(email: string) {
   return db.query.users.findFirst({
@@ -27,12 +28,9 @@ export async function createUser(
 
 export async function updateUser(
   db: Drizzle,
-  user: z.infer<typeof zUserUpdate>,
+  { id, input }: Update<typeof zUserUpdate>,
 ) {
-  await db
-    .update(users)
-    .set(zUserUpdate.parse(user))
-    .where(eq(users.id, user.id));
+  await db.update(users).set(zUserUpdate.parse(input)).where(eq(users.id, id));
 }
 
 export async function moveUserToTeamAndAssociateToTeam(
@@ -45,7 +43,7 @@ export async function moveUserToTeamAndAssociateToTeam(
     teamId: string;
   },
 ) {
-  await updateUser(db, { id: userId, activeTeamId: teamId });
+  await updateUser(db, { id: userId, input: { activeTeamId: teamId } });
   await db.insert(usersToTeams).values({
     userId: userId,
     teamId: teamId,

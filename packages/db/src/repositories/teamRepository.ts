@@ -2,7 +2,7 @@ import type { z } from "zod";
 import { and, eq } from "drizzle-orm";
 
 import type { Drizzle, DrizzleTransaction } from "../client";
-import type { zTeamCreate } from "./zodSchemas/teamSchemas";
+import type { zTeamCreate } from "./_zodSchemas/teamSchemas";
 import { db } from "../client";
 import { invitations, teams, usersToTeams } from "../schema";
 
@@ -11,10 +11,12 @@ export async function createTeamAndAssociateUser(
   userId: string,
   team: z.infer<typeof zTeamCreate>,
 ) {
-  await db.insert(teams).values(team);
+  const [createdTeam] = await db.insert(teams).values(team).$returningId();
+  if (!createdTeam) throw new Error("Failed to create team");
+
   await db.insert(usersToTeams).values({
     userId: userId,
-    teamId: team.id,
+    teamId: createdTeam.id,
   });
 }
 

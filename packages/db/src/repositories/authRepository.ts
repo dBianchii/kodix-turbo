@@ -2,10 +2,11 @@ import type { z } from "zod";
 import { eq } from "drizzle-orm";
 
 import type { DrizzleTransaction } from "../client";
+import type { Update } from "./_types";
 import { db } from "../client";
 import { accounts, invitations, sessions, teams, users } from "../schema";
-import { zAccountCreate } from "./zodSchemas/accountSchemas";
-import { zSessionCreate, zSessionUpdate } from "./zodSchemas/sessionSchemas";
+import { zAccountCreate } from "./_zodSchemas/accountSchemas";
+import { zSessionCreate, zSessionUpdate } from "./_zodSchemas/sessionSchemas";
 
 export async function createSession(session: z.infer<typeof zSessionCreate>) {
   await db.insert(sessions).values(zSessionCreate.parse(session));
@@ -30,11 +31,14 @@ export async function deleteSession(sessionId: string) {
   await db.delete(sessions).where(eq(sessions.id, sessionId));
 }
 
-export async function updateSession(session: z.infer<typeof zSessionUpdate>) {
+export async function updateSession({
+  id,
+  input,
+}: Update<typeof zSessionUpdate>) {
   await db
     .update(sessions)
-    .set(zSessionUpdate.parse(session))
-    .where(eq(sessions.id, session.id));
+    .set(zSessionUpdate.parse(input))
+    .where(eq(sessions.id, id));
 }
 
 export async function findAccountByProviderUserId({

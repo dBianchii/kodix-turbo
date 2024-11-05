@@ -3,6 +3,7 @@ import { rrulestr } from "rrule";
 import type { careTasks } from "@kdx/db/schema";
 import dayjs from "@kdx/dayjs";
 import { and, eq, gte, inArray, isNull, lte, or } from "@kdx/db";
+import { appRepository } from "@kdx/db/repositories";
 import {
   eventCancellations,
   eventExceptions,
@@ -12,7 +13,6 @@ import { kodixCareAppId } from "@kdx/shared";
 
 import type { TCronJobContext } from "../crons/_utils";
 import type { TProtectedProcedureContext } from "../trpc/procedures";
-import { getConfigs } from "../trpc/routers/app/getConfig.handler";
 
 export interface CalendarTask {
   title: string | undefined;
@@ -284,8 +284,7 @@ export async function getCareTasks({
     },
   })) satisfies CareTask[];
 
-  const teamConfigs = await getConfigs({
-    ctx,
+  const teamConfigs = await appRepository.getAppTeamConfigs({
     appId: kodixCareAppId,
     teamIds,
   });
