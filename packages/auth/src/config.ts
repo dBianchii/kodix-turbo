@@ -69,7 +69,9 @@ async function validateSessionToken(token: string): Promise<AuthResponse> {
     session.expiresAt = thirtyDaysFromNow;
     await authRepository.updateSession({
       id: session.id,
-      expiresAt: session.expiresAt,
+      input: {
+        expiresAt: session.expiresAt,
+      },
     });
   }
   return { session, user: { ...user, activeTeamName: team.name } };

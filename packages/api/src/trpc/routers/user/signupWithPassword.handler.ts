@@ -2,14 +2,13 @@ import { hash } from "@node-rs/argon2";
 import { TRPCError } from "@trpc/server";
 
 import type { TSignupWithPasswordInputSchema } from "@kdx/validators/trpc/user";
+import { argon2Config } from "@kdx/auth";
 import { createDbSessionAndCookie, createUser } from "@kdx/auth/utils";
-import { eq } from "@kdx/db";
 import { db } from "@kdx/db/client";
 import { nanoid } from "@kdx/db/nanoid";
-import { users } from "@kdx/db/schema";
+import { userRepository } from "@kdx/db/repositories";
 
 import type { TPublicProcedureContext } from "../../procedures";
-import { argon2Config } from "./utils";
 
 interface SignupWithPasswordOptions {
   ctx: TPublicProcedureContext;
@@ -20,13 +19,7 @@ export const signupWithPasswordHandler = async ({
   ctx,
   input,
 }: SignupWithPasswordOptions) => {
-  const registered = await ctx.db
-    .select({
-      id: users.id,
-    })
-    .from(users)
-    .where(eq(users.email, input.email))
-    .then((res) => !!res[0]);
+  const registered = await userRepository.findUserByEmail(input.email);
 
   if (registered) {
     throw new TRPCError({

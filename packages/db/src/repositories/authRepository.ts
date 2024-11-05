@@ -1,10 +1,17 @@
 import type { z } from "zod";
-import { eq } from "drizzle-orm";
+import { eq, lte, or } from "drizzle-orm";
 
-import type { DrizzleTransaction } from "../client";
+import type { Drizzle, DrizzleTransaction } from "../client";
 import type { Update } from "./_types";
 import { db } from "../client";
-import { accounts, invitations, sessions, teams, users } from "../schema";
+import {
+  accounts,
+  invitations,
+  resetPasswordTokens,
+  sessions,
+  teams,
+  users,
+} from "../schema";
 import { zAccountCreate } from "./_zodSchemas/accountSchemas";
 import { zSessionCreate, zSessionUpdate } from "./_zodSchemas/sessionSchemas";
 
@@ -73,4 +80,29 @@ export async function deleteKodixAccountAndUserDataByUserId(userId: string) {
     await tx.delete(sessions).where(eq(sessions.userId, userId));
     await tx.delete(users).where(eq(users.id, userId));
   });
+}
+
+export async function findResetPasswordTokenByToken(token: string) {
+  return await db.query.resetPasswordTokens.findFirst({
+    where: (resetPasswordTokens, { eq }) =>
+      eq(resetPasswordTokens.token, token),
+    columns: {
+      userId: true,
+      tokenExpiresAt: true,
+    },
+  });
+}
+
+export async function deleteTokenAndDeleteExpiredTokens(
+  db: Drizzle,
+  token: string,
+) {
+  await db
+    .delete(resetPasswordTokens)
+    .where(
+      or(
+        eq(resetPasswordTokens.token, token),
+        lte(resetPasswordTokens.tokenExpiresAt, new Date()),
+      ),
+    );
 }

@@ -33,6 +33,14 @@ export async function updateUser(
   await db.update(users).set(zUserUpdate.parse(input)).where(eq(users.id, id));
 }
 
+export async function moveUserToTeam(
+  db: Drizzle,
+  { userId, newTeamId }: { userId: string; newTeamId: string },
+) {
+  //TODO: Enforce user is allowed to do it!!!
+  await updateUser(db, { id: userId, input: { activeTeamId: newTeamId } });
+}
+
 export async function moveUserToTeamAndAssociateToTeam(
   db: Drizzle,
   {
@@ -43,7 +51,7 @@ export async function moveUserToTeamAndAssociateToTeam(
     teamId: string;
   },
 ) {
-  await updateUser(db, { id: userId, input: { activeTeamId: teamId } });
+  await moveUserToTeam(db, { userId, newTeamId: teamId });
   await db.insert(usersToTeams).values({
     userId: userId,
     teamId: teamId,

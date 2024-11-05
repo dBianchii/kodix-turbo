@@ -152,6 +152,7 @@ export const notificationsRelations = relations(notifications, ({ one }) => ({
     references: [teams.id],
   }),
 }));
+export const notificationSchema = createInsertSchema(notifications);
 
 export const resetPasswordTokens = mysqlTable(
   "resetToken",
@@ -168,6 +169,7 @@ export const resetPasswordTokens = mysqlTable(
   },
   (table) => {
     return {
+      tokenIdx: index("token_idx").on(table.token),
       userIdIdx: index("userId_idx").on(table.userId),
     };
   },
@@ -181,3 +183,4 @@ export const resetPasswordTokensRelations = relations(
     }),
   }),
 );
+export const resetPasswordTokenSchema = createInsertSchema(resetPasswordTokens);

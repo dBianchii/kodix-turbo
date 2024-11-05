@@ -12,7 +12,7 @@ export const getUserAppTeamConfigHandler = async ({
   ctx,
   input,
 }: GetUserAppTeamConfigOptions) => {
-  const [userAppTeamConfig] = await appRepository.getUserAppTeamConfigs({
+  const [userAppTeamConfig] = await appRepository.findUserAppTeamConfigs({
     userIds: [ctx.auth.user.id],
     teamIds: [ctx.auth.user.activeTeamId],
     appId: input.appId,

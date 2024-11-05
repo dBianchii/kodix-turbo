@@ -11,9 +11,8 @@ export async function switchActiveTeamForUser({
   userId: string;
   teamId: string;
 }) {
-  await userRepository.updateUser(db, {
-    id: userId,
-    activeTeamId: teamId,
-    //TODO: Make sure they are part of the team!!
+  await userRepository.moveUserToTeam(db, {
+    userId,
+    newTeamId: teamId,
   });
 }

@@ -1,7 +1,9 @@
 import type { z } from "zod";
 import { and, eq, inArray, sql } from "drizzle-orm";
+import { nanoid } from "nanoid";
 
 import type { KodixAppId, kodixCareAppId } from "@kdx/shared";
+import { appIdToAdminRole_defaultIdMap } from "@kdx/shared";
 
 import type {
   AppIdsWithUserAppTeamConfig,
@@ -12,11 +14,15 @@ import type { Drizzle } from "../../client";
 import { appIdToAppTeamConfigSchema } from "../_zodSchemas/appTeamConfigSchemas";
 import { appIdToUserAppTeamConfigSchema } from "../_zodSchemas/userAppTeamConfigs";
 import { db } from "../../client";
+import { appRoles_defaultTree } from "../../constants";
 import {
+  appPermissionsToTeamAppRoles,
   apps,
   appsToTeams,
   appTeamConfigs,
   teamAppRoles,
+  teamAppRolesToUsers,
+  teams,
   userAppTeamConfigs,
 } from "../../schema";
 import { appIdToSchemas } from "../../utils";
@@ -46,7 +52,24 @@ export async function findInstalledAppsByTeamId(teamId: string | undefined) {
     });
   return _apps;
 }
-export async function getAppTeamConfigs({
+
+export async function findInstalledApp({
+  teamId,
+  appId,
+}: {
+  teamId: string;
+  appId: string;
+}) {
+  const [installed] = await db
+    .select({ id: apps.id })
+    .from(apps)
+    .innerJoin(appsToTeams, eq(appsToTeams.appId, apps.id))
+    .innerJoin(teams, eq(teams.id, appsToTeams.teamId))
+    .where(and(eq(teams.id, teamId), eq(apps.id, appId)));
+  return installed;
+}
+
+export async function findAppTeamConfigs({
   appId,
   teamIds,
 }: {
@@ -117,7 +140,7 @@ export async function upsertAppTeamConfig({
   });
 }
 
-export async function getUserAppTeamConfigs({
+export async function findUserAppTeamConfigs({
   appId,
   userIds,
   teamIds,
@@ -203,6 +226,58 @@ export async function upsertUserAppTeamConfigs({
     teamId: teamId,
     appId: appId,
     userId: userId,
+  });
+}
+
+export async function installAppForTeam({
+  appId,
+  teamId,
+  userId,
+}: {
+  appId: KodixAppId;
+  teamId: string;
+  userId: string;
+}) {
+  await db.transaction(async (tx) => {
+    await tx.insert(appsToTeams).values({
+      appId: appId,
+      teamId: teamId,
+    });
+
+    //? 1. Get the default app roles for the app and create them
+    const appRoleDefaultForApp = appRoles_defaultTree[appId];
+    const toCreateDefaultAppRoles = appRoleDefaultForApp.appRoleDefaults.map(
+      (defaultAppRole) => ({
+        id: nanoid(),
+        appId: appId,
+        appRoleDefaultId: defaultAppRole.id,
+        teamId: teamId,
+      }),
+    ) satisfies (typeof teamAppRoles.$inferInsert)[];
+
+    await tx.insert(teamAppRoles).values(toCreateDefaultAppRoles);
+
+    //? 2. Connect the permissions to the newly created roles if any   exists
+    const toAddPermissions = toCreateDefaultAppRoles.flatMap((role) =>
+      (appRoleDefaultForApp.appPermissions ?? []).map((permission) => ({
+        appPermissionId: permission.id,
+        teamAppRoleId: role.id,
+      })),
+    ) satisfies (typeof appPermissionsToTeamAppRoles.$inferInsert)[];
+
+    if (toAddPermissions.length > 0)
+      await tx.insert(appPermissionsToTeamAppRoles).values(toAddPermissions);
+
+    //?3. Add the user to the admin role for the app
+    const adminRoleForApp = toCreateDefaultAppRoles.find(
+      (role) => role.appRoleDefaultId === appIdToAdminRole_defaultIdMap[appId],
+    );
+    if (!adminRoleForApp) throw new Error("Admin role not found"); //Each app should have a designated admin role
+
+    await tx.insert(teamAppRolesToUsers).values({
+      teamAppRoleId: adminRoleForApp.id,
+      userId: userId,
+    });
   });
 }
 

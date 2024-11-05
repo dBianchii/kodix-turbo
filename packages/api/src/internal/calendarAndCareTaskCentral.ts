@@ -284,7 +284,7 @@ export async function getCareTasks({
     },
   })) satisfies CareTask[];
 
-  const teamConfigs = await appRepository.getAppTeamConfigs({
+  const teamConfigs = await appRepository.findAppTeamConfigs({
     appId: kodixCareAppId,
     teamIds,
   });

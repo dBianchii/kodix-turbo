@@ -1,10 +1,17 @@
 import type { z } from "zod";
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray, not } from "drizzle-orm";
 
 import type { Drizzle, DrizzleTransaction } from "../client";
 import type { zTeamCreate } from "./_zodSchemas/teamSchemas";
 import { db } from "../client";
-import { invitations, teams, usersToTeams } from "../schema";
+import {
+  invitations,
+  teamAppRoles,
+  teamAppRolesToUsers,
+  teams,
+  users,
+  usersToTeams,
+} from "../schema";
 
 export async function createTeamAndAssociateUser(
   db: DrizzleTransaction,
@@ -18,6 +25,28 @@ export async function createTeamAndAssociateUser(
     userId: userId,
     teamId: createdTeam.id,
   });
+}
+
+export async function findTeamById(teamId: string) {
+  return await db.query.teams.findFirst({
+    where: (team, { eq }) => eq(team.id, teamId),
+    columns: { id: true, ownerId: true },
+  });
+}
+
+export async function findAnyOtherTeamAssociatedWithUserThatIsNotTeamId({
+  userId,
+  teamId,
+}: {
+  userId: string;
+  teamId: string;
+}) {
+  const [otherTeam] = await db
+    .select({ id: teams.id })
+    .from(teams)
+    .innerJoin(usersToTeams, eq(teams.id, usersToTeams.teamId))
+    .where(and(not(eq(teams.id, teamId)), eq(usersToTeams.userId, userId)));
+  return otherTeam;
 }
 
 export async function findTeamsByUserId(userId: string) {
@@ -38,6 +67,56 @@ export async function findTeamsByUserId(userId: string) {
           ),
       ),
   });
+}
+
+export async function removeUserFromTeam(
+  db: Drizzle,
+  {
+    teamId,
+    userId,
+  }: {
+    teamId: string;
+    userId: string;
+  },
+) {
+  return db
+    .delete(usersToTeams)
+    .where(
+      and(eq(usersToTeams.teamId, teamId), eq(usersToTeams.userId, userId)),
+    );
+}
+
+export async function removeUserAssociationsFromTeamAppRoles(
+  db: Drizzle,
+  { teamId, userId }: { teamId: string; userId: string },
+) {
+  return db
+    .delete(teamAppRolesToUsers)
+    .where(
+      and(
+        eq(teamAppRolesToUsers.userId, userId),
+        inArray(
+          teamAppRolesToUsers.teamAppRoleId,
+          db
+            .select({ id: teamAppRoles.id })
+            .from(teamAppRoles)
+            .where(eq(teamAppRoles.teamId, teamId)),
+        ),
+      ),
+    );
+}
+
+export async function findAllTeamMembers(teamId: string) {
+  return await db
+    .select({
+      id: users.id,
+      email: users.email,
+      name: users.name,
+      image: users.image,
+    })
+    .from(users)
+    .innerJoin(usersToTeams, eq(usersToTeams.userId, users.id))
+    .where(eq(usersToTeams.teamId, teamId));
 }
 
 export async function findInvitationByIdAndEmail({

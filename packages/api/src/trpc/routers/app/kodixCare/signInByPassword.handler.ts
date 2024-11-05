@@ -3,10 +3,10 @@ import { TRPCError } from "@trpc/server";
 import type { TSignInByPasswordInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import { validateUserEmailAndPassword } from "@kdx/auth";
 import { createDbSessionAndCookie } from "@kdx/auth/utils";
+import { userRepository } from "@kdx/db/repositories";
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TPublicProcedureContext } from "../../../procedures";
-import { switchActiveTeamForUser } from "../../user/utils";
 import { getUserTeamsWithAppInstalled } from "./utils";
 
 interface SignInByPasswordOptions {
@@ -37,11 +37,10 @@ export const signInByPasswordHandler = async ({
 
   if (!teams.some((team) => team.id === activeTeamId)) {
     //If none of the KodixCare teams are the active team, we need to switch the active team
-    await switchActiveTeamForUser({
-      db: ctx.db,
+    await userRepository.moveUserToTeam(ctx.db, {
       userId,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      teamId: teams[0]!.id,
+      newTeamId: teams[0]!.id,
     });
   }
 

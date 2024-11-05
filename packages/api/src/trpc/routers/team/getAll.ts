@@ -1,5 +1,4 @@
-import { and, eq } from "@kdx/db";
-import { usersToTeams } from "@kdx/db/schema";
+import { teamRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 
@@ -8,27 +7,7 @@ interface GetAllOptions {
 }
 
 export const getAllHandler = async ({ ctx }: GetAllOptions) => {
-  const _teams = await ctx.db.query.teams.findMany({
-    with: {
-      UsersToTeams: {
-        columns: {
-          userId: true,
-        },
-      },
-    },
-    where: (teams, { exists }) =>
-      exists(
-        ctx.db
-          .select()
-          .from(usersToTeams)
-          .where(
-            and(
-              eq(usersToTeams.teamId, teams.id),
-              eq(usersToTeams.userId, ctx.auth.user.id),
-            ),
-          ),
-      ),
-  });
+  const teams = await teamRepository.findTeamsByUserId(ctx.auth.user.id);
 
-  return _teams;
+  return teams;
 };

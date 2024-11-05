@@ -19,12 +19,11 @@ export const getAllHandler = async ({ ctx }: GetAllOptions) => {
     ctx.auth.user?.activeTeamId,
   );
 
-  if (!_apps.length) {
+  if (!_apps.length)
     throw new TRPCError({
       code: "NOT_FOUND",
       message: ctx.t("api.No apps found"),
     });
-  }
 
   await setUpstashCache("apps", {
     variableKeys: {
