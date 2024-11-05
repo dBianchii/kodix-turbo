@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import { eq, sql } from "@kdx/db";
 import { apps, appsToTeams } from "@kdx/db/schema";
+import { todoAppId } from "@kdx/shared";
 
 import type { TPublicProcedureContext } from "../../procedures";
 import { getUpstashCache, setUpstashCache } from "../../../sdks/upstash";
@@ -16,7 +17,7 @@ export const getAllHandler = async ({ ctx }: GetAllOptions) => {
   });
   if (cached) return cached;
 
-  const _apps = await ctx.db
+  let _apps = await ctx.db
     .select({
       id: apps.id,
       ...(ctx.auth.user?.activeTeamId && {
@@ -38,6 +39,7 @@ export const getAllHandler = async ({ ctx }: GetAllOptions) => {
         installed: false, //? If user is not logged in, we set it to false
       }));
     });
+  _apps = _apps.filter((app) => app.id !== todoAppId);
 
   if (!_apps.length) {
     throw new TRPCError({
