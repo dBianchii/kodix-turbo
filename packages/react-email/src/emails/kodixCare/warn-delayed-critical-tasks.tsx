@@ -1,21 +1,17 @@
 import { Body, Head, Html, Preview, Tailwind } from "@react-email/components";
-import { getTranslations } from "next-intl/server";
 
-import type { locales } from "@kdx/locales";
-import { defaultLocale } from "@kdx/locales";
+import type { IsomorficT } from "@kdx/locales";
 
-export default async function WarnDelayedCriticalTasks({
+export default function WarnDelayedCriticalTasks({
   task,
-  locale = defaultLocale,
+  t,
 }: {
-  locale: (typeof locales)[number];
+  t: IsomorficT;
   task: {
     title: string | null;
     date: Date;
   };
 }) {
-  const t = await getTranslations({ locale });
-
   return (
     <Html>
       <Head />

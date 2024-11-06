@@ -47,6 +47,6 @@ export const sendResetPasswordEmail = async ({
     from: KODIX_NOTIFICATION_FROM_EMAIL,
     to: input.email,
     subject: ctx.t("api.Kodix - Reset your password"),
-    react: ResetPassword({ token }),
+    react: ResetPassword({ token, t: ctx.t }),
   });
 };
