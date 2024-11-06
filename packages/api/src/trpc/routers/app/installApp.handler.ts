@@ -12,7 +12,7 @@ import {
   teamAppRolesToUsers,
   teams,
 } from "@kdx/db/schema";
-import { appIdToAdminRole_defaultIdMap } from "@kdx/shared";
+import { appIdToAdminRole_defaultIdMap, todoAppId } from "@kdx/shared";
 
 import type { TIsTeamOwnerProcedureContext } from "../../procedures";
 import { invalidateUpstashCache } from "../../../sdks/upstash";
@@ -23,6 +23,13 @@ interface InstallAppOptions {
 }
 
 export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
+  if (input.appId === todoAppId)
+    //TODO: stinky
+    throw new TRPCError({
+      message: "DISABLED",
+      code: "BAD_REQUEST",
+    });
+
   const installed = await ctx.db
     .select({ id: apps.id })
     .from(apps)
