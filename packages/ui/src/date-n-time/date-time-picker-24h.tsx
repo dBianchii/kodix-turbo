@@ -2,9 +2,7 @@
 
 import type { PopoverContentProps } from "@radix-ui/react-popover";
 import { CalendarIcon } from "@radix-ui/react-icons";
-
-import { useFormatter } from "@kdx/locales/next-intl";
-import { useTranslations } from "@kdx/locales/next-intl/client";
+import { useFormatter, useTranslations } from "next-intl";
 
 import { cn } from "../.";
 import { Button } from "../button";
