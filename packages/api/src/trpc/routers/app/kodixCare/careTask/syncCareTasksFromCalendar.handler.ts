@@ -23,7 +23,7 @@ export const syncCareTasksFromCalendarHandler = async ({
     });
   }
 
-  if (currentShift?.Caregiver?.id !== ctx.auth.user.id)
+  if (currentShift.Caregiver.id !== ctx.auth.user.id)
     throw new TRPCError({
       code: "FORBIDDEN",
       message: ctx.t(
