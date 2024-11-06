@@ -1,8 +1,5 @@
-import type { Drizzle } from "@kdx/db/client";
 import dayjs from "@kdx/dayjs";
-import { and, eq } from "@kdx/db";
-import { db as _db } from "@kdx/db/client";
-import { appsToTeams, careTasks, teams, usersToTeams } from "@kdx/db/schema";
+import { careTasks } from "@kdx/db/schema";
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
@@ -54,23 +51,4 @@ export async function cloneCalendarTasksToCareTasks({
       },
     },
   });
-}
-
-export async function getUserTeamsWithAppInstalled({
-  userId,
-  appId,
-  db = _db,
-}: {
-  userId: string;
-  appId: string;
-  db: Drizzle;
-}) {
-  return await db
-    .select({
-      id: teams.id,
-    })
-    .from(teams)
-    .where(and(eq(usersToTeams.userId, userId), eq(appsToTeams.appId, appId)))
-    .innerJoin(appsToTeams, eq(appsToTeams.teamId, teams.id))
-    .innerJoin(usersToTeams, eq(usersToTeams.teamId, teams.id));
 }

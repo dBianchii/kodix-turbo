@@ -1,8 +1,12 @@
+import type { z } from "zod";
 import { and, eq, gte } from "drizzle-orm";
 
 import type { Update } from "../../_types";
 import type { Drizzle } from "../../../client";
-import { zCareTaskUpdate } from "../../_zodSchemas/careTaskSchemas";
+import {
+  zCareTaskCreate,
+  zCareTaskUpdate,
+} from "../../_zodSchemas/careTaskSchemas";
 import { careTasks } from "../../../schema";
 
 export async function updateCareTask(
@@ -13,6 +17,13 @@ export async function updateCareTask(
     .update(careTasks)
     .set(zCareTaskUpdate.parse(input))
     .where(eq(careTasks.id, id));
+}
+
+export async function createCareTask(
+  db: Drizzle,
+  careTask: z.infer<typeof zCareTaskCreate>,
+) {
+  await db.insert(careTasks).values(zCareTaskCreate.parse(careTask));
 }
 
 export async function reassignCareTasksFromDateToShift(

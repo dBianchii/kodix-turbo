@@ -50,7 +50,7 @@ export async function findInstalledAppsByTeamId(teamId: string | undefined) {
         installed: false, //? If user is not logged in, we set it to false
       }));
     });
-  return _apps.filter((app) => app.id !== todoAppId);
+  return _apps.filter((app) => app.id !== todoAppId); //TODO: stinky
 }
 
 export async function findInstalledApp({
