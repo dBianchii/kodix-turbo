@@ -1,12 +1,10 @@
+import { TRPCError } from "@trpc/server";
+
 import type { TDoCheckoutForShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
+import dayjs from "@kdx/dayjs";
 import { kodixCareRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
-import { protectedMutationFetchFirst } from "../../../protectedFetchAndMutations";
-import {
-  assertCheckoutTimeIsAfterCheckInTime,
-  assertIsUserCareGiver,
-} from "./_kodixCare.permissions";
 
 interface DoCheckoutForShiftOptions {
   ctx: TProtectedProcedureContext;
@@ -17,25 +15,40 @@ export const doCheckoutForShiftHandler = async ({
   ctx,
   input,
 }: DoCheckoutForShiftOptions) => {
-  await protectedMutationFetchFirst({
-    fetch: async () =>
-      kodixCareRepository.getCurrentCareShiftByTeamId(
-        ctx.auth.user.activeTeamId,
-      ),
-    notFoundMessage: ctx.t("api.No current shift found"),
-    permissions: [
-      (currentShift) => assertIsUserCareGiver(ctx, currentShift.Caregiver.id),
-      (currentShift) =>
-        assertCheckoutTimeIsAfterCheckInTime(ctx.t, {
-          checkInTime: currentShift.checkIn,
-          checkOut: input.date,
-        }),
-    ],
-    operation: async (currentShift) => {
-      await kodixCareRepository.updateCareShift(ctx.db, {
-        id: currentShift.id,
-        checkOut: input.date,
-      });
+  const currentShift = await kodixCareRepository.getCurrentCareShiftByTeamId(
+    ctx.auth.user.activeTeamId,
+  );
+
+  if (!currentShift) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: ctx.t("api.No current shift found"),
+    });
+  }
+
+  if (currentShift.shiftEndedAt) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: ctx.t("api.Shift has already ended"),
+    });
+  }
+
+  if (currentShift.Caregiver.id !== ctx.auth.user.id)
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: ctx.t("api.You are not the caregiver for this shift"),
+    });
+  if (dayjs(input.date).isBefore(dayjs(currentShift.checkIn)))
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: ctx.t("api.Checkout time must be after checkin time"),
+    });
+
+  await kodixCareRepository.updateCareShift(ctx.db, {
+    id: currentShift.id,
+    input: {
+      checkOut: input.date,
+      shiftEndedAt: input.date,
     },
   });
 };

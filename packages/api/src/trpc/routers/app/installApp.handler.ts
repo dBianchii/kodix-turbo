@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import type { TInstallAppInputSchema } from "@kdx/validators/trpc/app";
 import { appRepository } from "@kdx/db/repositories";
+import { todoAppId } from "@kdx/shared";
 
 import type { TIsTeamOwnerProcedureContext } from "../../procedures";
 import { invalidateUpstashCache } from "../../../sdks/upstash";
@@ -12,6 +13,13 @@ interface InstallAppOptions {
 }
 
 export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
+  if (input.appId === todoAppId)
+    //TODO: stinky
+    throw new TRPCError({
+      message: "DISABLED",
+      code: "BAD_REQUEST",
+    });
+
   const installed = await appRepository.findInstalledApp({
     appId: input.appId,
     teamId: ctx.auth.user.activeTeamId,

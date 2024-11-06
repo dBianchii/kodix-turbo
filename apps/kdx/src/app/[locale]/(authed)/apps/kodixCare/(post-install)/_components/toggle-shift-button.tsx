@@ -35,7 +35,8 @@ import { api } from "~/trpc/react";
 export function ToggleShiftButton({ user }: { user: User }) {
   const query = api.app.kodixCare.getCurrentShift.useQuery();
 
-  if (!(query.data && !query.data.checkOut)) return <StartShiftDialogButton />;
+  if (!(query.data && !query.data.shiftEndedAt))
+    return <StartShiftDialogButton />;
 
   if (query.data.Caregiver.id === user.id)
     return <DoCheckoutDialogButton currentShift={query.data} />;

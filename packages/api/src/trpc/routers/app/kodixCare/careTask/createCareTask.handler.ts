@@ -16,5 +16,6 @@ export const createCareTaskHandler = async ({
     ...input,
     teamId: ctx.auth.user.activeTeamId,
     createdBy: ctx.auth.user.id,
+    createdFromCalendar: false,
   });
 };

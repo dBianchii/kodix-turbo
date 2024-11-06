@@ -3,7 +3,7 @@ import { and, eq, inArray, sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
 import type { KodixAppId, kodixCareAppId } from "@kdx/shared";
-import { appIdToAdminRole_defaultIdMap } from "@kdx/shared";
+import { appIdToAdminRole_defaultIdMap, todoAppId } from "@kdx/shared";
 
 import type {
   AppIdsWithUserAppTeamConfig,
@@ -50,7 +50,7 @@ export async function findInstalledAppsByTeamId(teamId: string | undefined) {
         installed: false, //? If user is not logged in, we set it to false
       }));
     });
-  return _apps;
+  return _apps.filter((app) => app.id !== todoAppId);
 }
 
 export async function findInstalledApp({

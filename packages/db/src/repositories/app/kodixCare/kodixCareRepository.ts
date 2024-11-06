@@ -13,8 +13,7 @@ import { careShifts } from "../../../schema";
 export async function getCurrentCareShiftByTeamId(teamId: string) {
   const shift = await db.query.careShifts.findFirst({
     orderBy: desc(careShifts.checkIn),
-    where: (careShift, { eq, and, isNull }) =>
-      and(eq(careShift.teamId, teamId), isNull(careShift.shiftEndedAt)),
+    where: (careShift, { eq }) => eq(careShift.teamId, teamId),
     with: {
       Caregiver: {
         columns: {
