@@ -2,6 +2,8 @@ import { fileURLToPath } from "url";
 import { createJiti } from "jiti";
 import createNextIntlPlugin from "next-intl/plugin";
 
+import { env } from "~/env";
+
 const withNextIntl = createNextIntlPlugin("./src/i18n.ts");
 
 // Import env files to validate at build time. Use jiti so we can load .ts files in here.
@@ -13,6 +15,12 @@ const config = {
 
   experimental: {
     serverComponentsExternalPackages: ["@node-rs/argon2"],
+    serverActions:
+      env.NODE_ENV === "development"
+        ? {
+            allowedOrigins: ["localhost:3000"], //? useful for port forwarding
+          }
+        : undefined,
   },
 
   /** Enables hot reloading for local packages without a build step */

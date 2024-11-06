@@ -70,14 +70,16 @@ export const appPermissionMiddleware = (permissionId: AppPermissionId) =>
           ),
         );
 
-      await setUpstashCache("permissions", {
-        variableKeys: {
-          userId: ctx.auth.user.id,
-          teamId: ctx.auth.user.activeTeamId,
-          permissionId,
-        },
-        value: permission,
-      });
+      if (permission)
+        //TODO: REVISE sending "undefined" or "null" to upstash
+        await setUpstashCache("permissions", {
+          variableKeys: {
+            userId: ctx.auth.user.id,
+            teamId: ctx.auth.user.activeTeamId,
+            permissionId,
+          },
+          value: permission,
+        });
 
       foundPermission = permission;
     }

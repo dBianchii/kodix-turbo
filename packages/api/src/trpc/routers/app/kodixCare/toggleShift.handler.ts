@@ -98,7 +98,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
       .$returningId();
 
     //* Move all tasks from previous shift to current shift
-    const previousShift = await ctx.db.query.careShifts.findFirst({
+    const previousShift = await tx.query.careShifts.findFirst({
       orderBy: desc(careShifts.checkIn),
       where: and(
         eq(careShifts.teamId, ctx.auth.user.activeTeamId),
@@ -107,7 +107,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
       columns: { id: true },
     });
     if (previousShift) {
-      await ctx.db
+      await tx
         .update(careTasks)
         .set({
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
