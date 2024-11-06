@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import { gte } from "@kdx/db";
+import { and, eq, gte } from "@kdx/db";
 import { careTasks } from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
@@ -16,16 +16,31 @@ export const syncCareTasksFromCalendarHandler = async ({
 }: SyncCareTasksFromCalendarOptions) => {
   const currentShift = await getCurrentShiftHandler({ ctx });
 
-  if (!currentShift || currentShift.checkOut) {
+  if (!currentShift || currentShift.shiftEndedAt) {
     throw new TRPCError({
       code: "FORBIDDEN",
       message: ctx.t("api.The current shift must be ongoing for this action"),
     });
   }
 
+  if (currentShift.Caregiver.id !== ctx.auth.user.id)
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: ctx.t(
+        "api.You are not the caregiver of the current shift so you cannot sync tasks",
+      ),
+    });
+
   const syncFromDate = currentShift.checkIn;
   await ctx.db.transaction(async (tx) => {
-    await tx.delete(careTasks).where(gte(careTasks.date, syncFromDate));
+    await tx
+      .delete(careTasks)
+      .where(
+        and(
+          eq(careTasks.createdFromCalendar, true),
+          gte(careTasks.date, syncFromDate),
+        ),
+      );
 
     await cloneCalendarTasksToCareTasks({
       start: syncFromDate,

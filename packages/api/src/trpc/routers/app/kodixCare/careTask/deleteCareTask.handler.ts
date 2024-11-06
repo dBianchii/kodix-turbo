@@ -6,6 +6,7 @@ import { careTasks, teamAppRoles, teamAppRolesToUsers } from "@kdx/db/schema";
 import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
+import { getCurrentShiftHandler } from "../getCurrentShift.handler";
 
 interface DeleteCareTaskOptions {
   ctx: TProtectedProcedureContext;
@@ -16,12 +17,20 @@ export const deleteCareTaskHandler = async ({
   ctx,
   input,
 }: DeleteCareTaskOptions) => {
-  // Criador da Tarefa: O usuário que criou a tarefa pode excluí-la, desde que a tarefa não faça parte de um turno fechado e concluído, (hoje em dia já é impossível alterar uma tarefa de turno concluído 👍 )
-  // Administradores: Podem excluir qualquer tarefa, seja criada por eles ou por outro usuário, desde que a tarefa não faça parte de um turno fechado e concluído.
+  const currentShift = await getCurrentShiftHandler({ ctx });
+  if (currentShift?.shiftEndedAt)
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: ctx.t(
+        "api.You cannot delete a task when there is no active shift",
+      ),
+    });
+
   const careTask = await ctx.db.query.careTasks.findFirst({
     where: (careTasks, { eq }) => eq(careTasks.id, input.id),
     columns: {
       createdBy: true,
+      createdFromCalendar: true,
     },
     with: {
       CareShift: {
@@ -45,7 +54,7 @@ export const deleteCareTaskHandler = async ({
     });
   }
 
-  const roles = await ctx.db
+  const userRoles = await ctx.db
     .select({
       appRoleDefaultId: teamAppRoles.appRoleDefaultId,
     })
@@ -62,9 +71,23 @@ export const deleteCareTaskHandler = async ({
       eq(teamAppRolesToUsers.teamAppRoleId, teamAppRoles.id),
     );
 
+  if (careTask.createdFromCalendar) {
+    if (
+      !userRoles.some(
+        (x) => x.appRoleDefaultId === kodixCareRoleDefaultIds.admin,
+      )
+    )
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: ctx.t(
+          "api.Only admins can delete a task created from calendar",
+        ),
+      });
+  }
+
   if (
     careTask.createdBy !== ctx.auth.user.id &&
-    !roles.some((x) => x.appRoleDefaultId === kodixCareRoleDefaultIds.admin)
+    !userRoles.some((x) => x.appRoleDefaultId === kodixCareRoleDefaultIds.admin)
   )
     throw new TRPCError({
       code: "FORBIDDEN",

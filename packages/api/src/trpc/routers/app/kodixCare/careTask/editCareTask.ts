@@ -25,7 +25,7 @@ export const editCareTaskHandler = async ({
       message: "No current shift found",
     });
 
-  if (!currentShift.shiftEndedAt)
+  if (currentShift.shiftEndedAt)
     throw new TRPCError({
       code: "FORBIDDEN",
       message: ctx.t(
@@ -63,6 +63,7 @@ export const editCareTaskHandler = async ({
   const set: Partial<typeof careTasks.$inferInsert> = {
     details: input.details,
   };
+
   const isEditingDetails = input.details !== undefined;
   if (isEditingDetails) {
     const careTask = await ctx.db.query.careTasks.findFirst({
