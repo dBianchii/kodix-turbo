@@ -13,6 +13,12 @@ const config = {
 
   experimental: {
     serverComponentsExternalPackages: ["@node-rs/argon2"],
+    serverActions:
+      process.env.NODE_ENV === "development"
+        ? {
+            allowedOrigins: ["localhost:3000"], //? useful for port forwarding
+          }
+        : undefined,
   },
 
   /** Enables hot reloading for local packages without a build step */

@@ -25,12 +25,20 @@ export const doCheckoutForShiftHandler = async ({
       message: ctx.t("api.No current shift found"),
     });
   }
+
+  if (currentShift.shiftEndedAt) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: ctx.t("api.Shift has already ended"),
+    });
+  }
+
   if (currentShift.Caregiver.id !== ctx.auth.user.id)
     throw new TRPCError({
       code: "FORBIDDEN",
       message: ctx.t("api.You are not the caregiver for this shift"),
     });
-  if (dayjs(input.date).isBefore(dayjs(currentShift.checkOut)))
+  if (dayjs(input.date).isBefore(dayjs(currentShift.checkIn)))
     throw new TRPCError({
       code: "BAD_REQUEST",
       message: ctx.t("api.Checkout time must be after checkin time"),
@@ -38,6 +46,6 @@ export const doCheckoutForShiftHandler = async ({
 
   await ctx.db
     .update(careShifts)
-    .set({ checkOut: input.date })
+    .set({ checkOut: input.date, shiftEndedAt: input.date })
     .where(eq(careShifts.id, currentShift.id));
 };

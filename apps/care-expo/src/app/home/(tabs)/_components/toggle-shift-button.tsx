@@ -30,7 +30,8 @@ export function ToggleShiftButton() {
     return null;
   }
 
-  if (!(query.data && !query.data.checkOut)) return <StartShiftDialogButton />;
+  if (!(query.data && !query.data.shiftEndedAt))
+    return <StartShiftDialogButton />;
   if (query.data.Caregiver.id === user.id)
     return <DoCheckoutDialogButton currentShift={query.data} />;
   // return <StartShiftWarnPreviousPersonDialog />;

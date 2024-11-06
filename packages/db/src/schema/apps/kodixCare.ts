@@ -1,5 +1,11 @@
 import { relations } from "drizzle-orm";
-import { index, mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core";
+import {
+  boolean,
+  index,
+  mysqlTable,
+  timestamp,
+  varchar,
+} from "drizzle-orm/mysql-core";
 
 import { NANOID_SIZE } from "../../nanoid";
 import { teams } from "../teams";
@@ -69,6 +75,7 @@ export const careTasks = mysqlTable(
     createdBy: varchar("createdBy", { length: NANOID_SIZE })
       .notNull()
       .references(() => users.id),
+    createdFromCalendar: boolean("createdFromCalendar").notNull(),
   },
   (table) => {
     return {

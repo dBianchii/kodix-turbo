@@ -12,11 +12,8 @@ export const getCurrentShiftHandler = async ({
 }: GetCurrentShiftOptions) => {
   const shift = await ctx.db.query.careShifts.findFirst({
     orderBy: desc(careShifts.checkIn),
-    where: (careShift, { eq, and, isNull }) =>
-      and(
-        eq(careShift.teamId, ctx.auth.user.activeTeamId),
-        isNull(careShift.shiftEndedAt),
-      ),
+    where: (careShift, { eq, and }) =>
+      and(eq(careShift.teamId, ctx.auth.user.activeTeamId)),
     with: {
       Caregiver: {
         columns: {
