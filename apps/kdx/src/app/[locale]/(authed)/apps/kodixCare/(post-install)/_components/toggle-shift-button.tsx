@@ -18,7 +18,7 @@ import {
   CredenzaTitle,
   CredenzaTrigger,
 } from "@kdx/ui/credenza";
-import { DateTimePicker } from "@kdx/ui/date-time-picker";
+import { DateTimePicker24h } from "@kdx/ui/date-n-time/date-time-picker-24h";
 import {
   Form,
   FormControl,
@@ -215,7 +215,7 @@ function DoCheckoutDialogButton({
                     <FormControl>
                       <div className="flex flex-row gap-2">
                         <div className="flex items-center gap-1 pl-4">
-                          <DateTimePicker
+                          <DateTimePicker24h
                             disabledDate={(date) =>
                               dayjs(date).startOf("day") >
                               dayjs(currentShift.checkIn).startOf("day")

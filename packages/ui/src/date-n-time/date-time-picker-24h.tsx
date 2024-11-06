@@ -33,7 +33,12 @@ export function DateTimePicker24h({
 
   const handleDateSelect = (selectedDate: Date | undefined) => {
     if (selectedDate) {
-      setDate(selectedDate);
+      const newDate = new Date(selectedDate); //TODO:
+      if (date) {
+        newDate.setHours(date.getHours());
+        newDate.setMinutes(date.getMinutes());
+      }
+      setDate(newDate);
     }
   };
 
@@ -57,7 +62,7 @@ export function DateTimePicker24h({
           size={size}
           variant="outline"
           className={cn(
-            "w-full justify-start text-left font-normal",
+            "w-fit min-w-[280px] justify-start text-left font-normal",
             !date && "text-muted-foreground",
           )}
         >
@@ -69,14 +74,27 @@ export function DateTimePicker24h({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" side={side}>
+      <PopoverContent
+        className="w-auto p-0"
+        side={side}
+        onWheel={(e) => {
+          e.stopPropagation(); //reason: https://github.com/radix-ui/primitives/issues/1159
+        }}
+      >
         <div className="sm:flex">
           <Calendar
             mode="single"
             selected={date}
             onSelect={handleDateSelect}
             initialFocus
-            disabled={disabledDate}
+            disabled={(dateToCheck) => {
+              if (!disabledDate) return false;
+
+              const startOfDay = new Date(dateToCheck);
+              startOfDay.setHours(0, 0, 0, 0);
+
+              return disabledDate(startOfDay);
+            }}
           />
           <div className="flex flex-col divide-y sm:h-[300px] sm:flex-row sm:divide-x sm:divide-y-0">
             <ScrollArea className="w-64 sm:w-auto">
@@ -84,6 +102,7 @@ export function DateTimePicker24h({
                 {hours.reverse().map((hour) => (
                   <Button
                     key={hour}
+                    disabled={disabledDate?.(new Date(date ?? 0))} //!!CHECK THIS
                     size="icon"
                     variant={
                       date && date.getHours() === hour ? "default" : "ghost"

@@ -19,7 +19,7 @@ import {
   CredenzaHeader,
   CredenzaTitle,
 } from "@kdx/ui/credenza";
-import { DateTimePicker } from "@kdx/ui/date-time-picker";
+import { DateTimePicker24h } from "@kdx/ui/date-n-time/date-time-picker-24h";
 import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
 import { RadioGroup, RadioGroupItem } from "@kdx/ui/radio-group";
@@ -225,7 +225,7 @@ export function EditEventDialog({
           <div className="flex flex-row gap-4">
             <div className="flex flex-col space-y-2">
               <Label>{t("From")}</Label>
-              <DateTimePicker
+              <DateTimePicker24h
                 date={from.toDate()}
                 setDate={(newDate) => setFrom(dayjs(newDate))}
               />
