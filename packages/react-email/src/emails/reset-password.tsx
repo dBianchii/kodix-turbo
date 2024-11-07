@@ -13,13 +13,20 @@ import {
   Text,
 } from "@react-email/components";
 
+import type { IsomorficT } from "@kdx/locales";
 import { getBaseUrl } from "@kdx/shared";
 
-export default function ResetPassword({ token }: { token: string }) {
+export default function ResetPassword({
+  token,
+  t,
+}: {
+  token: string;
+  t: IsomorficT;
+}) {
   return (
     <Html>
       <Head />
-      <Preview>Reset your password</Preview>
+      <Preview>{t("api.emails.Reset your password")}</Preview>
       <Tailwind>
         <React.Fragment>
           <Body className="mx-auto my-auto bg-white font-sans">
@@ -36,7 +43,9 @@ export default function ResetPassword({ token }: { token: string }) {
 
               <Section className="mb-[32px] mt-[32px] text-center">
                 <Text className="mb-8 text-[14px] font-medium leading-[24px] text-black">
-                  Click the following link to reset your password
+                  {t(
+                    "api.emails.Click the following link to reset your password",
+                  )}
                 </Text>
 
                 <Text className="text-[14px] font-medium leading-[24px] text-black">
@@ -45,7 +54,7 @@ export default function ResetPassword({ token }: { token: string }) {
                     target="_blank"
                     className="text-[#2754C5] underline"
                   >
-                    Reset Password
+                    {t("api.emails.Reset your password")}
                   </Link>
                 </Text>
               </Section>

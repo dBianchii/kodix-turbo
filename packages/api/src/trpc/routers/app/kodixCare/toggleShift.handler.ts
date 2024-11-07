@@ -123,7 +123,10 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
         subject: ctx.t(`api.Your last shift was ended by NAME`, {
           name: ctx.auth.user.name,
         }),
-        react: WarnPreviousShiftNotEnded(),
+        react: WarnPreviousShiftNotEnded({
+          t: ctx.t,
+          personWhoEndedShiftName: ctx.auth.user.name ?? "",
+        }),
       });
   });
   return;
