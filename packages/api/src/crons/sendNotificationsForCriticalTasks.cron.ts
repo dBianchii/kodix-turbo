@@ -2,6 +2,7 @@ import ms from "ms";
 import groupBy from "object.groupby";
 
 import dayjs from "@kdx/dayjs";
+import { appRepository, teamRepository } from "@kdx/db/repositories";
 import WarnDelayedCriticalTasks from "@kdx/react-email/warn-delayed-critical-tasks";
 import { getSuccessesAndErrors, kodixCareAppId } from "@kdx/shared";
 
@@ -11,7 +12,6 @@ import {
 } from "../internal/calendarAndCareTaskCentral";
 import { sendNotifications } from "../internal/notificationCenter";
 import { getUpstashCache, setUpstashCache } from "../sdks/upstash";
-import { getUsersAppTeamConfigs } from "../trpc/routers/app/getUserAppTeamConfig.handler";
 import { verifiedQstashCron } from "./_utils";
 
 const MILLISECONDS_TO_BE_LATE = ms("1h");
@@ -25,23 +25,7 @@ export const sendNotificationsForCriticalTasks = verifiedQstashCron(
     console.time("sendNotificationsForCriticalTasks");
 
     const allTeamIdsWithKodixCareInstalled =
-      await ctx.db.query.appsToTeams.findMany({
-        where: (appsToTeams, { eq }) => eq(appsToTeams.appId, kodixCareAppId),
-        columns: {
-          teamId: true,
-        },
-        with: {
-          Team: {
-            with: {
-              UsersToTeams: {
-                columns: {
-                  userId: true,
-                },
-              },
-            },
-          },
-        },
-      });
+      await teamRepository.findAllTeamsWithAppInstalled(kodixCareAppId);
 
     const start = dayjs
       .utc()
@@ -71,13 +55,12 @@ export const sendNotificationsForCriticalTasks = verifiedQstashCron(
       criticalNotDoneLateCareTasks.map((x) => x.teamId);
 
     const userConfigsWithEnabledNotif = (
-      await getUsersAppTeamConfigs({
-        ctx,
+      await appRepository.findUserAppTeamConfigs({
         appId: kodixCareAppId,
         teamIds: teamsWithCriticalNotDoneLateCareTasks,
         userIds: usersWithinTheTeams,
       })
-    ).filter((x) => !!x.config?.sendNotificationsForDelayedTasks); //?Only users that have the config enabled
+    ).filter((x) => !!x.config?.sendNotificationsForDelayedTasks);
 
     const usersWithConfigsThatNeedToBeNotifiedGroupedByTeamId = groupBy(
       userConfigsWithEnabledNotif,

@@ -69,6 +69,28 @@ export async function findTeamsByUserId(userId: string) {
   });
 }
 
+export async function findAllTeamsWithAppInstalled(appId: string) {
+  const allTeamIdsWithKodixCareInstalled = await db.query.appsToTeams.findMany({
+    where: (appsToTeams, { eq }) => eq(appsToTeams.appId, appId),
+    columns: {
+      teamId: true,
+    },
+    with: {
+      Team: {
+        with: {
+          UsersToTeams: {
+            columns: {
+              userId: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return allTeamIdsWithKodixCareInstalled;
+}
+
 export async function removeUserFromTeam(
   db: Drizzle,
   {
@@ -142,6 +164,12 @@ export async function findInvitationByIdAndEmail({
 export async function findInvitationByEmail(email: string) {
   return db.query.invitations.findFirst({
     where: (invitation, { eq }) => eq(invitation.email, email),
+  });
+}
+
+export async function findInvitationById(id: string) {
+  return db.query.invitations.findFirst({
+    where: (invitation, { eq }) => eq(invitation.id, id),
   });
 }
 

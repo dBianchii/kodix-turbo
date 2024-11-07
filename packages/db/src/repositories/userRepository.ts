@@ -19,6 +19,22 @@ export async function findUserByEmail(email: string) {
   });
 }
 
+export async function findUserById(id: string) {
+  return await db.query.users.findFirst({
+    where: (users, { eq }) => eq(users.id, id),
+    columns: {
+      email: true,
+    },
+    with: {
+      ExpoTokens: {
+        columns: {
+          token: true,
+        },
+      },
+    },
+  });
+}
+
 export async function createUser(
   db: Drizzle,
   user: z.infer<typeof zUserCreate>,
