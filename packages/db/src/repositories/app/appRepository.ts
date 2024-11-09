@@ -1,14 +1,16 @@
 import type { z } from "zod";
 import { and, eq, inArray, sql } from "drizzle-orm";
 
-import type { KodixAppId } from "@kdx/shared";
-import type { AppIdsWithUserAppTeamConfig } from "@kdx/validators/trpc/app";
+import type {
+  AppIdsWithUserAppTeamConfig,
+  KodixAppId,
+  kodixCareAppId,
+} from "@kdx/shared";
 import {
   appIdToAdminRole_defaultIdMap,
-  kodixCareAppId,
+  appIdToAppTeamConfigSchema,
   todoAppId,
 } from "@kdx/shared";
-import { appIdToAppTeamConfigSchema } from "@kdx/validators";
 
 import type { zAppPermissionToTeamAppRoleCreateMany } from "../_zodSchemas/appPermissionsToTeamAppRolesSchemas";
 import type { appIdToUserAppTeamConfigSchemaUpdate } from "../_zodSchemas/userAppTeamConfigs";
@@ -140,12 +142,6 @@ export async function removePermissionFromRole(
   );
 }
 
-const getAppIdToAppTeamConfigSchemaUpdate = (
-  appId: AppIdsWithUserAppTeamConfig,
-) => appIdToAppTeamConfigSchema[appId].deepPartial();
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const helpMe = getAppIdToAppTeamConfigSchemaUpdate(kodixCareAppId); //TODO: WTF is this
-
 export async function upsertAppTeamConfig({
   appId,
   teamId,
@@ -153,8 +149,10 @@ export async function upsertAppTeamConfig({
 }: {
   appId: AppIdsWithUserAppTeamConfig;
   teamId: string;
-  config: z.infer<
-    typeof helpMe //TODO: make dynamic based on app
+  config: Partial<
+    z.infer<
+      (typeof appIdToAppTeamConfigSchema)[typeof kodixCareAppId] //TODO: make dynamic based on app
+    >
   >;
 }) {
   const existingConfig = await db.query.appTeamConfigs.findFirst({

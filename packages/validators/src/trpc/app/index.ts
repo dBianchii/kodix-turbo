@@ -1,9 +1,13 @@
 import { z } from "zod";
 
 import type { KodixAppId } from "@kdx/shared";
-import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
-
-import { kodixCareConfigSchema, kodixCareUserAppTeamConfigSchema } from "../..";
+import {
+  calendarAppId,
+  kodixCareAppId,
+  kodixCareConfigSchema,
+  kodixCareUserAppTeamConfigSchema,
+  todoAppId,
+} from "@kdx/shared";
 
 export type AppIdsWithConfig = typeof kodixCareAppId; //? Some apps might not have config implemented
 export type AppIdsWithUserAppTeamConfig = typeof kodixCareAppId; //? Some apps might not have userAppTeamConfig implemented
