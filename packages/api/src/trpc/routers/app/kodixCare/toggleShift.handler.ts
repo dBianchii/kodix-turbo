@@ -126,7 +126,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
         }),
         react: WarnPreviousShiftNotEnded({
           t: ctx.t,
-          personWhoEndedShiftName: ctx.auth.user.name ?? "",
+          personWhoEndedShiftName: ctx.auth.user.name,
         }),
       });
   });
