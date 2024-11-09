@@ -1,10 +1,11 @@
 import { TRPCError } from "@trpc/server";
 
+import type { careTasks } from "@kdx/db/schema";
 import type { TEditCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
 import dayjs from "@kdx/dayjs";
 import { and, eq } from "@kdx/db";
-import { kodixCareRepository } from "@kdx/db/repositories";
-import { careTasks, teamAppRoles, teamAppRolesToUsers } from "@kdx/db/schema";
+import { careTaskRepository, kodixCareRepository } from "@kdx/db/repositories";
+import { teamAppRoles, teamAppRolesToUsers } from "@kdx/db/schema";
 import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
@@ -35,19 +36,9 @@ export const editCareTaskHandler = async ({
       ),
     });
 
-  const careTask = await ctx.db.query.careTasks.findFirst({
-    where: (careTasks, { eq }) => eq(careTasks.id, input.id),
-    columns: {
-      careShiftId: true,
-      doneAt: true,
-    },
-    with: {
-      CareShift: {
-        columns: {
-          shiftEndedAt: true,
-        },
-      },
-    },
+  const careTask = await careTaskRepository.findCareTaskById({
+    id: input.id,
+    teamId: ctx.auth.user.activeTeamId,
   });
   if (!careTask)
     throw new TRPCError({
@@ -68,25 +59,6 @@ export const editCareTaskHandler = async ({
 
   const isEditingDetails = input.details !== undefined;
   if (isEditingDetails) {
-    const careTask = await ctx.db.query.careTasks.findFirst({
-      where: (careTasks, { eq }) => eq(careTasks.id, input.id),
-      columns: {
-        createdBy: true,
-      },
-      with: {
-        CareShift: {
-          columns: {
-            shiftEndedAt: true,
-          },
-        },
-      },
-    });
-    if (!careTask) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: ctx.t("api.Care task not found"),
-      });
-    }
     if (careTask.CareShift?.shiftEndedAt) {
       throw new TRPCError({
         code: "FORBIDDEN",
@@ -153,5 +125,8 @@ export const editCareTaskHandler = async ({
     set.doneByUserId = input.doneAt === null ? null : ctx.auth.user.id;
   }
 
-  await ctx.db.update(careTasks).set(set).where(eq(careTasks.id, input.id));
+  await careTaskRepository.updateCareTask(ctx.db, {
+    id: input.id,
+    input: set,
+  });
 };

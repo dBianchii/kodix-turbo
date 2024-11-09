@@ -6,3 +6,5 @@ export * as userRepository from "./userRepository";
 
 export * as careTaskRepository from "./app/kodixCare/careTaskRepository";
 export * as kodixCareRepository from "./app/kodixCare/kodixCareRepository";
+
+export * as calendarRepository from "./app/calendar/calendarRepository";

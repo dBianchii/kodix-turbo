@@ -94,6 +94,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
 
     //* Move all tasks from previous shift to current shift
     const previousShift = await kodixCareRepository.getPreviousShiftByTeamId(
+      tx,
       ctx.auth.user.activeTeamId,
     );
     if (previousShift) {

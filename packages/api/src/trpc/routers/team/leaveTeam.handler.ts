@@ -55,7 +55,7 @@ export const leaveTeamHandler = async ({ ctx, input }: LeaveTeamOptions) => {
     });
 
     //Remove the user association from the team's apps
-    await teamRepository.removeUserAssociationsFromTeamAppRoles(tx, {
+    await teamRepository.removeUserAssociationsFromTeamAppRolesByTeamId(tx, {
       teamId: input.teamId,
       userId: ctx.auth.user.id,
     });

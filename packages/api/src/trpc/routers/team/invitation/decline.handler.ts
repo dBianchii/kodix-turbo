@@ -1,8 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import type { TDeclineInputSchema } from "@kdx/validators/trpc/team/invitation";
-import { eq } from "@kdx/db";
-import { invitations } from "@kdx/db/schema";
+import { teamRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 
@@ -12,12 +11,9 @@ interface DeclineOptions {
 }
 
 export const declineHandler = async ({ ctx, input }: DeclineOptions) => {
-  const invitation = await ctx.db.query.invitations.findFirst({
-    where: (invitation, { and, eq }) =>
-      and(
-        eq(invitation.id, input.invitationId),
-        eq(invitation.email, ctx.auth.user.email),
-      ),
+  const invitation = await teamRepository.findInvitationByIdAndEmail({
+    id: input.invitationId,
+    email: ctx.auth.user.email,
   });
 
   if (!invitation) {
@@ -27,7 +23,5 @@ export const declineHandler = async ({ ctx, input }: DeclineOptions) => {
     });
   }
 
-  await ctx.db
-    .delete(invitations)
-    .where(eq(invitations.id, input.invitationId));
+  await teamRepository.deleteInvitationById(ctx.db, input.invitationId);
 };

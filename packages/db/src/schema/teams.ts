@@ -159,6 +159,7 @@ export const teamAppRolesToUsersRelations = relations(
     }),
   }),
 );
+export const teamAppRoleToUserSchema = createInsertSchema(teamAppRolesToUsers);
 
 export const invitations = mysqlTable(
   "invitation",
@@ -189,3 +190,4 @@ export const invitationsRelations = relations(invitations, ({ one }) => ({
     references: [teams.id],
   }),
 }));
+export const invitationSchema = createInsertSchema(invitations);

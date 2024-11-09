@@ -54,7 +54,7 @@ export async function createCareShift(
     .$returningId();
 }
 
-export async function getPreviousShiftByTeamId(teamId: string) {
+export async function getPreviousShiftByTeamId(db: Drizzle, teamId: string) {
   return await db.query.careShifts.findFirst({
     orderBy: desc(careShifts.checkIn),
     where: and(

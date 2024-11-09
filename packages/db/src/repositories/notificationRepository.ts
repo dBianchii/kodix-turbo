@@ -26,6 +26,16 @@ export async function deleteManyExpoTokens(tokens: string[]) {
   await db.delete(expoTokens).where(inArray(expoTokens.id, tokens));
 }
 
+export async function createExpoToken({
+  token,
+  userId,
+}: {
+  token: string;
+  userId: string;
+}) {
+  await db.insert(expoTokens).values({ token, userId });
+}
+
 export async function createManyNotifications(
   notifs: z.infer<typeof zNotificationCreateMany>,
 ) {

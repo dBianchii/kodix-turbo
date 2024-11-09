@@ -13,6 +13,7 @@ import {
   users,
 } from "../schema";
 import { zAccountCreate } from "./_zodSchemas/accountSchemas";
+import { zResetPasswordTokenCreate } from "./_zodSchemas/resetPasswordTokenSchemas";
 import { zSessionCreate, zSessionUpdate } from "./_zodSchemas/sessionSchemas";
 
 export async function createSession(session: z.infer<typeof zSessionCreate>) {
@@ -91,6 +92,20 @@ export async function findResetPasswordTokenByToken(token: string) {
       tokenExpiresAt: true,
     },
   });
+}
+
+export async function createResetPasswordToken(
+  data: z.infer<typeof zResetPasswordTokenCreate>,
+) {
+  await db
+    .insert(resetPasswordTokens)
+    .values(zResetPasswordTokenCreate.parse(data));
+}
+
+export async function deleteAllResetPasswordTokensByUserId(id: string) {
+  await db
+    .delete(resetPasswordTokens)
+    .where(eq(resetPasswordTokens.userId, id));
 }
 
 export async function deleteTokenAndDeleteExpiredTokens(

@@ -2,11 +2,12 @@ import { TRPCError } from "@trpc/server";
 
 import type { TDeleteCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
 import { and, eq } from "@kdx/db";
-import { careTasks, teamAppRoles, teamAppRolesToUsers } from "@kdx/db/schema";
+import { careTaskRepository } from "@kdx/db/repositories";
+import { teamAppRoles, teamAppRolesToUsers } from "@kdx/db/schema";
 import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
-import { getCurrentShiftHandler } from "../getCurrentShift.handler";
+import { getCurrentCareShiftByTeamId } from "../../../../../../../db/src/repositories/app/kodixCare/kodixCareRepository";
 
 interface DeleteCareTaskOptions {
   ctx: TProtectedProcedureContext;
@@ -17,7 +18,9 @@ export const deleteCareTaskHandler = async ({
   ctx,
   input,
 }: DeleteCareTaskOptions) => {
-  const currentShift = await getCurrentShiftHandler({ ctx });
+  const currentShift = await getCurrentCareShiftByTeamId(
+    ctx.auth.user.activeTeamId,
+  );
   if (currentShift?.shiftEndedAt)
     throw new TRPCError({
       code: "FORBIDDEN",
@@ -26,21 +29,10 @@ export const deleteCareTaskHandler = async ({
       ),
     });
 
-  const careTask = await ctx.db.query.careTasks.findFirst({
-    where: (careTasks, { eq }) => eq(careTasks.id, input.id),
-    columns: {
-      createdBy: true,
-      createdFromCalendar: true,
-    },
-    with: {
-      CareShift: {
-        columns: {
-          shiftEndedAt: true,
-        },
-      },
-    },
+  const careTask = await careTaskRepository.findCareTaskById({
+    id: input.id,
+    teamId: ctx.auth.user.activeTeamId,
   });
-
   if (!careTask) {
     throw new TRPCError({
       code: "NOT_FOUND",
@@ -94,12 +86,8 @@ export const deleteCareTaskHandler = async ({
       message: ctx.t("api.Only admins and the creator can delete a task"),
     });
 
-  await ctx.db
-    .delete(careTasks)
-    .where(
-      and(
-        eq(careTasks.teamId, ctx.auth.user.activeTeamId),
-        eq(careTasks.id, input.id),
-      ),
-    );
+  await careTaskRepository.deleteCareTaskById({
+    id: input.id,
+    teamId: ctx.auth.user.activeTeamId,
+  });
 };

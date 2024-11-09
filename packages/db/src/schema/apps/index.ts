@@ -184,6 +184,9 @@ export const appPermissionsToTeamAppRolesRelations = relations(
     }),
   }),
 );
+export const appPermissionToTeamAppRoleSchema = createInsertSchema(
+  appPermissionsToTeamAppRoles,
+);
 
 export const userAppTeamConfigs = mysqlTable(
   "userAppTeamConfig",

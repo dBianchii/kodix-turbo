@@ -318,9 +318,6 @@ importers:
       '@kdx/dayjs':
         specifier: workspace:*
         version: link:../../packages/dayjs
-      '@kdx/db':
-        specifier: workspace:*
-        version: link:../../packages/db
       '@kdx/locales':
         specifier: workspace:*
         version: link:../../packages/locales
@@ -1089,7 +1086,7 @@ importers:
         version: 7.37.1(eslint@9.9.1(jiti@2.3.3))
       eslint-plugin-react-hooks:
         specifier: rc
-        version: 5.1.0-rc-4d577fd2-20241104(eslint@9.9.1(jiti@2.3.3))
+        version: 5.1.0-rc-5c56b873-20241107(eslint@9.9.1(jiti@2.3.3))
       eslint-plugin-turbo:
         specifier: ^2.2.3
         version: 2.2.3(eslint@9.9.1(jiti@2.3.3))
@@ -7484,8 +7481,8 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9
 
-  eslint-plugin-react-hooks@5.1.0-rc-4d577fd2-20241104:
-    resolution: {integrity: sha512-HHUAprkTjOv2yPBJXcd6epxROnY2iFcBaLq0mxaNc2eeGgbAkcImyNOp8IVWemqmnPJwZgMefgZHgLg5hNXe1Q==}
+  eslint-plugin-react-hooks@5.1.0-rc-5c56b873-20241107:
+    resolution: {integrity: sha512-lnmAUpbMdH1tvor/oju3CZ4oB/nG/+iSkv3tOA6OenLyODxQujH1p1X6vW9XdI9M8bCAI0JDVGdjTmjCp3hxEA==}
     engines: {node: '>=10'}
     peerDependencies:
       eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0
@@ -19895,7 +19892,7 @@ snapshots:
       safe-regex-test: 1.0.3
       string.prototype.includes: 2.0.0
 
-  eslint-plugin-react-hooks@5.1.0-rc-4d577fd2-20241104(eslint@9.9.1(jiti@2.3.3)):
+  eslint-plugin-react-hooks@5.1.0-rc-5c56b873-20241107(eslint@9.9.1(jiti@2.3.3)):
     dependencies:
       eslint: 9.9.1(jiti@2.3.3)
 

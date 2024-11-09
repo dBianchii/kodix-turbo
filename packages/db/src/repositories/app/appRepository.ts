@@ -11,11 +11,13 @@ import type {
 } from "../_zodSchemas/appTeamConfigSchemas";
 import type { appIdToUserAppTeamConfigSchemaUpdate } from "../_zodSchemas/userAppTeamConfigs";
 import type { Drizzle } from "../../client";
+import { zAppPermissionToTeamAppRoleCreateMany } from "../_zodSchemas/appPermissionsToTeamAppRolesSchemas";
 import { appIdToAppTeamConfigSchema } from "../_zodSchemas/appTeamConfigSchemas";
 import { appIdToUserAppTeamConfigSchema } from "../_zodSchemas/userAppTeamConfigs";
 import { db } from "../../client";
 import { appRoles_defaultTree } from "../../constants";
 import {
+  appPermissions,
   appPermissionsToTeamAppRoles,
   apps,
   appsToTeams,
@@ -95,6 +97,48 @@ export async function findAppTeamConfigs({
   }));
 
   return parsedTeamConfigs;
+}
+
+export async function findAppPermissionById(permissionId: string) {
+  return db.query.appPermissions.findFirst({
+    where: (appPermissions, { eq }) => eq(appPermissions.id, permissionId),
+    columns: { editable: true },
+  });
+}
+
+export async function createManyAppPermissionToRoleAssociations(
+  db: Drizzle,
+  data: z.infer<typeof zAppPermissionToTeamAppRoleCreateMany>,
+) {
+  await db
+    .insert(appPermissionsToTeamAppRoles)
+    .values(zAppPermissionToTeamAppRoleCreateMany.parse(data));
+}
+
+export async function removePermissionFromRole(
+  db: Drizzle,
+  {
+    permissionId,
+    appId,
+  }: {
+    permissionId: string;
+    appId: string;
+  },
+) {
+  await db.delete(appPermissionsToTeamAppRoles).where(
+    inArray(
+      appPermissionsToTeamAppRoles.appPermissionId,
+      db
+        .select({ id: appPermissions.id })
+        .from(appPermissions)
+        .where(
+          and(
+            eq(appPermissions.id, permissionId),
+            eq(appPermissions.appId, appId),
+          ),
+        ),
+    ),
+  );
 }
 
 export async function upsertAppTeamConfig({

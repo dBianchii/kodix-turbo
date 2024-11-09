@@ -1,8 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import { and, eq, gte } from "@kdx/db";
-import { kodixCareRepository } from "@kdx/db/repositories";
-import { careTasks } from "@kdx/db/schema";
+import { careTaskRepository, kodixCareRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
 import { cloneCalendarTasksToCareTasks } from "../utils";
@@ -35,14 +33,13 @@ export const syncCareTasksFromCalendarHandler = async ({
 
   const syncFromDate = currentShift.checkIn;
   await ctx.db.transaction(async (tx) => {
-    await tx
-      .delete(careTasks)
-      .where(
-        and(
-          eq(careTasks.createdFromCalendar, true),
-          gte(careTasks.date, syncFromDate),
-        ),
-      );
+    await careTaskRepository.deleteManyCareTasksThatCameFromCalendarWithDateHigherOrEqualThan(
+      tx,
+      {
+        teamId: ctx.auth.user.activeTeamId,
+        date: syncFromDate,
+      },
+    );
 
     await cloneCalendarTasksToCareTasks({
       start: syncFromDate,

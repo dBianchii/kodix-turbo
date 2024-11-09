@@ -18,7 +18,6 @@
     "@kdx/api": "workspace:*",
     "@kdx/auth": "workspace:*",
     "@kdx/dayjs": "workspace:*",
-    "@kdx/db": "workspace:*",
     "@kdx/locales": "workspace:*",
     "@kdx/shared": "workspace:*",
     "@kdx/ui": "workspace:*",

@@ -1,10 +1,9 @@
 import dayjs from "@kdx/dayjs";
-import { careTasks } from "@kdx/db/schema";
+import { appRepository, careTaskRepository } from "@kdx/db/repositories";
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
 import { getAllHandler } from "../../calendar/getAll.handler";
-import { saveConfigHandler } from "../../saveConfig.handler";
 
 const tomorrowEndOfDay = dayjs.utc().add(1, "day").endOf("day").toDate();
 export async function cloneCalendarTasksToCareTasks({
@@ -27,7 +26,8 @@ export async function cloneCalendarTasksToCareTasks({
   });
 
   if (calendarTasks.length > 0)
-    await ctx.db.insert(careTasks).values(
+    await careTaskRepository.createManyCareTasks(
+      ctx.db,
       calendarTasks.map((calendarTask) => ({
         careShiftId: careShiftId,
         teamId: ctx.auth.user.activeTeamId,
@@ -42,13 +42,11 @@ export async function cloneCalendarTasksToCareTasks({
       })),
     );
 
-  await saveConfigHandler({
-    ctx,
-    input: {
-      appId: kodixCareAppId,
-      config: {
-        clonedCareTasksUntil: end,
-      },
+  await appRepository.upsertAppTeamConfig({
+    teamId: ctx.auth.user.activeTeamId,
+    appId: kodixCareAppId,
+    config: {
+      clonedCareTasksUntil: end,
     },
   });
 }
