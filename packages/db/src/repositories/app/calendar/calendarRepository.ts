@@ -142,7 +142,7 @@ export async function updateEventMasterById(
   return db
     .update(eventMasters)
     .set(zEventMasterUpdate.parse(input))
-    .where(and(eq(eventMasters.id, teamId), eq(eventMasters.teamId, id)));
+    .where(and(eq(eventMasters.id, id), eq(eventMasters.teamId, teamId)));
 }
 
 export async function updateEventExceptionById(

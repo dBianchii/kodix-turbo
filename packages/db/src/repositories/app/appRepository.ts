@@ -1,6 +1,5 @@
 import type { z } from "zod";
 import { and, eq, inArray, sql } from "drizzle-orm";
-import { nanoid } from "nanoid";
 
 import type { KodixAppId } from "@kdx/shared";
 import type { AppIdsWithUserAppTeamConfig } from "@kdx/validators/trpc/app";
@@ -17,6 +16,7 @@ import { zAppPermissionToTeamAppRoleCreateMany } from "../_zodSchemas/appPermiss
 import { appIdToUserAppTeamConfigSchema } from "../_zodSchemas/userAppTeamConfigs";
 import { db } from "../../client";
 import { appRoles_defaultTree } from "../../constants";
+import { nanoid } from "../../nanoid";
 import {
   appPermissions,
   appPermissionsToTeamAppRoles,

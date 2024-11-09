@@ -35,7 +35,7 @@ export const signupWithPasswordHandler = async ({
     await createUser({
       name: input.name,
       teamId: nanoid(),
-      userId: nanoid(),
+      userId: userId,
       email: input.email,
       invite: input.invite,
       passwordHash: passwordHash,

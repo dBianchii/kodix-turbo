@@ -25,7 +25,7 @@ export const editCareTaskHandler = async ({
   if (!currentShift)
     throw new TRPCError({
       code: "FORBIDDEN",
-      message: "No current shift found",
+      message: ctx.t("api.No active shift"),
     });
 
   if (currentShift.shiftEndedAt)

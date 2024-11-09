@@ -186,7 +186,7 @@ export async function getUsersWithRoles({
   teamId: string;
   appId: string;
 }) {
-  await db.query.users.findMany({
+  return await db.query.users.findMany({
     where: (users, { eq, inArray }) =>
       inArray(
         users.id,
