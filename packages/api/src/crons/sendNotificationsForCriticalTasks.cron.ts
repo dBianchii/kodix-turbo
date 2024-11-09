@@ -38,7 +38,6 @@ export const sendNotificationsForCriticalTasks = verifiedQstashCron(
 
     const criticalNotDoneLateCareTasks = (
       await getCareTasks({
-        ctx,
         dateStart: start,
         dateEnd: end,
         teamIds: allTeamIdsWithKodixCareInstalled.map((x) => x.teamId),

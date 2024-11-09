@@ -2,17 +2,18 @@ import type { z } from "zod";
 import { and, eq, inArray, sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
-import type { KodixAppId, kodixCareAppId } from "@kdx/shared";
-import { appIdToAdminRole_defaultIdMap, todoAppId } from "@kdx/shared";
+import type { KodixAppId } from "@kdx/shared";
+import type { AppIdsWithUserAppTeamConfig } from "@kdx/validators/trpc/app";
+import {
+  appIdToAdminRole_defaultIdMap,
+  kodixCareAppId,
+  todoAppId,
+} from "@kdx/shared";
+import { appIdToAppTeamConfigSchema } from "@kdx/validators";
 
-import type {
-  AppIdsWithUserAppTeamConfig,
-  appIdToAppTeamConfigSchemaUpdate,
-} from "../_zodSchemas/appTeamConfigSchemas";
 import type { appIdToUserAppTeamConfigSchemaUpdate } from "../_zodSchemas/userAppTeamConfigs";
 import type { Drizzle } from "../../client";
 import { zAppPermissionToTeamAppRoleCreateMany } from "../_zodSchemas/appPermissionsToTeamAppRolesSchemas";
-import { appIdToAppTeamConfigSchema } from "../_zodSchemas/appTeamConfigSchemas";
 import { appIdToUserAppTeamConfigSchema } from "../_zodSchemas/userAppTeamConfigs";
 import { db } from "../../client";
 import { appRoles_defaultTree } from "../../constants";
@@ -141,6 +142,12 @@ export async function removePermissionFromRole(
   );
 }
 
+const getAppIdToAppTeamConfigSchemaUpdate = (
+  appId: AppIdsWithUserAppTeamConfig,
+) => appIdToAppTeamConfigSchema[appId].deepPartial();
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const helpMe = getAppIdToAppTeamConfigSchemaUpdate(kodixCareAppId); //TODO: WTF is this
+
 export async function upsertAppTeamConfig({
   appId,
   teamId,
@@ -149,7 +156,7 @@ export async function upsertAppTeamConfig({
   appId: AppIdsWithUserAppTeamConfig;
   teamId: string;
   config: z.infer<
-    (typeof appIdToAppTeamConfigSchemaUpdate)[typeof kodixCareAppId] //TODO: make dynamic based on app
+    typeof helpMe //TODO: make dynamic based on app
   >;
 }) {
   const existingConfig = await db.query.appTeamConfigs.findFirst({

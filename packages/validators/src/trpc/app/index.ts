@@ -3,10 +3,10 @@ import { z } from "zod";
 import type { KodixAppId } from "@kdx/shared";
 import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
 
-import { kodixCareUserAppTeamConfigSchema } from "../..";
+import { kodixCareConfigSchema, kodixCareUserAppTeamConfigSchema } from "../..";
 
-type AppIdsWithConfig = typeof kodixCareAppId; //? Some apps might not have config implemented
-type AppIdsWithUserAppTeamConfig = typeof kodixCareAppId; //? Some apps might not have userAppTeamConfig implemented
+export type AppIdsWithConfig = typeof kodixCareAppId; //? Some apps might not have config implemented
+export type AppIdsWithUserAppTeamConfig = typeof kodixCareAppId; //? Some apps might not have userAppTeamConfig implemented
 
 export const ZGetConfigInput = z.object({
   appId: z.custom<AppIdsWithConfig>(),
