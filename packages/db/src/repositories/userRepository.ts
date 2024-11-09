@@ -3,9 +3,9 @@ import { eq } from "drizzle-orm";
 
 import type { Drizzle } from "../client";
 import type { Update } from "./_types";
+import type { zUserCreate, zUserUpdate } from "./_zodSchemas/userSchemas";
 import { db } from "../client";
 import { users, usersToTeams } from "../schema";
-import { zUserCreate, zUserUpdate } from "./_zodSchemas/userSchemas";
 
 export async function findUserByEmail(email: string) {
   return db.query.users.findFirst({
@@ -39,14 +39,14 @@ export async function createUser(
   db: Drizzle,
   user: z.infer<typeof zUserCreate>,
 ) {
-  await db.insert(users).values(zUserCreate.parse(user));
+  await db.insert(users).values(user);
 }
 
 export async function updateUser(
   db: Drizzle,
   { id, input }: Update<typeof zUserUpdate>,
 ) {
-  await db.update(users).set(zUserUpdate.parse(input)).where(eq(users.id, id));
+  await db.update(users).set(input).where(eq(users.id, id));
 }
 
 export async function moveUserToTeam(

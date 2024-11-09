@@ -3,16 +3,16 @@ import type { z } from "zod";
 import { and, eq, gt, gte, inArray, lte, or } from "drizzle-orm";
 
 import type { UpdateWithTeamId } from "../../_types";
-import type { Drizzle } from "../../../client";
-import { zEventCancellationCreate } from "../../_zodSchemas/eventCancellationSchemas";
-import {
+import type { zEventCancellationCreate } from "../../_zodSchemas/eventCancellationSchemas";
+import type {
   zEventExceptionCreate,
   zEventExceptionUpdate,
 } from "../../_zodSchemas/eventExceptionSchema";
-import {
+import type {
   zEventMasterCreate,
   zEventMasterUpdate,
 } from "../../_zodSchemas/eventMasterSchemas";
+import type { Drizzle } from "../../../client";
 import { db } from "../../../client";
 import {
   eventCancellations,
@@ -141,7 +141,7 @@ export async function updateEventMasterById(
 ) {
   return db
     .update(eventMasters)
-    .set(zEventMasterUpdate.parse(input))
+    .set(input)
     .where(and(eq(eventMasters.id, id), eq(eventMasters.teamId, teamId)));
 }
 
@@ -156,7 +156,7 @@ export async function updateEventExceptionById(
 
   await db
     .update(eventExceptions)
-    .set(zEventExceptionUpdate.parse(input))
+    .set(input)
     .where(
       and(
         inArray(
@@ -180,7 +180,7 @@ export async function updateManyEventExceptionsByEventMasterId(
 ) {
   return db
     .update(eventExceptions)
-    .set(zEventExceptionUpdate.parse(input))
+    .set(input)
     .where(eq(eventExceptions.eventMasterId, eventMasterId));
 }
 
@@ -188,23 +188,21 @@ export async function createEventCancellation(
   db: Drizzle,
   input: z.infer<typeof zEventCancellationCreate>,
 ) {
-  return db
-    .insert(eventCancellations)
-    .values(zEventCancellationCreate.parse(input));
+  return db.insert(eventCancellations).values(input);
 }
 
 export async function createEventException(
   db: Drizzle,
   input: z.infer<typeof zEventExceptionCreate>,
 ) {
-  return db.insert(eventExceptions).values(zEventExceptionCreate.parse(input));
+  return db.insert(eventExceptions).values(input);
 }
 
 export async function createEventMaster(
   db: Drizzle,
   input: z.infer<typeof zEventMasterCreate>,
 ) {
-  await db.insert(eventMasters).values(zEventMasterCreate.parse(input));
+  await db.insert(eventMasters).values(input);
 }
 
 export async function deleteEventExceptionById(db: Drizzle, id: string) {
@@ -269,7 +267,7 @@ export async function updateEventExceptionsByMasterIdWithNewDateHigherOrEqualTha
 
   await db
     .update(eventExceptions)
-    .set(zEventExceptionUpdate.parse(input))
+    .set(input)
     .where(
       and(
         inArray(

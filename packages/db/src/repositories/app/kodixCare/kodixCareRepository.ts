@@ -2,11 +2,11 @@ import type { z } from "zod";
 import { and, desc, eq, isNotNull } from "drizzle-orm";
 
 import type { Update } from "../../_types";
-import type { Drizzle } from "../../../client";
-import {
+import type {
   zCareShiftCreate,
   zCareShiftUpdate,
 } from "../../_zodSchemas/careShiftSchemas";
+import type { Drizzle } from "../../../client";
 import { db } from "../../../client";
 import { careShifts } from "../../../schema";
 
@@ -38,20 +38,14 @@ export async function updateCareShift(
   db: Drizzle,
   { id, input }: Update<typeof zCareShiftUpdate>,
 ) {
-  await db
-    .update(careShifts)
-    .set(zCareShiftUpdate.parse(input))
-    .where(eq(careShifts.id, id));
+  await db.update(careShifts).set(input).where(eq(careShifts.id, id));
 }
 
 export async function createCareShift(
   db: Drizzle,
   careShift: z.infer<typeof zCareShiftCreate>,
 ) {
-  return db
-    .insert(careShifts)
-    .values(zCareShiftCreate.parse(careShift))
-    .$returningId();
+  return db.insert(careShifts).values(careShift).$returningId();
 }
 
 export async function getPreviousShiftByTeamId(db: Drizzle, teamId: string) {

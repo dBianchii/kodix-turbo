@@ -3,6 +3,12 @@ import { eq, lte, or } from "drizzle-orm";
 
 import type { Drizzle, DrizzleTransaction } from "../client";
 import type { Update } from "./_types";
+import type { zAccountCreate } from "./_zodSchemas/accountSchemas";
+import type { zResetPasswordTokenCreate } from "./_zodSchemas/resetPasswordTokenSchemas";
+import type {
+  zSessionCreate,
+  zSessionUpdate,
+} from "./_zodSchemas/sessionSchemas";
 import { db } from "../client";
 import {
   accounts,
@@ -12,12 +18,9 @@ import {
   teams,
   users,
 } from "../schema";
-import { zAccountCreate } from "./_zodSchemas/accountSchemas";
-import { zResetPasswordTokenCreate } from "./_zodSchemas/resetPasswordTokenSchemas";
-import { zSessionCreate, zSessionUpdate } from "./_zodSchemas/sessionSchemas";
 
 export async function createSession(session: z.infer<typeof zSessionCreate>) {
-  await db.insert(sessions).values(zSessionCreate.parse(session));
+  await db.insert(sessions).values(session);
 }
 
 export async function findUserTeamBySessionId({
@@ -43,10 +46,7 @@ export async function updateSession({
   id,
   input,
 }: Update<typeof zSessionUpdate>) {
-  await db
-    .update(sessions)
-    .set(zSessionUpdate.parse(input))
-    .where(eq(sessions.id, id));
+  await db.update(sessions).set(input).where(eq(sessions.id, id));
 }
 
 export async function findAccountByProviderUserId({
@@ -70,7 +70,7 @@ export async function createAccount(
   db: DrizzleTransaction,
   account: z.infer<typeof zAccountCreate>,
 ) {
-  await db.insert(accounts).values(zAccountCreate.parse(account));
+  await db.insert(accounts).values(account);
 }
 
 export async function deleteKodixAccountAndUserDataByUserId(userId: string) {
@@ -97,9 +97,7 @@ export async function findResetPasswordTokenByToken(token: string) {
 export async function createResetPasswordToken(
   data: z.infer<typeof zResetPasswordTokenCreate>,
 ) {
-  await db
-    .insert(resetPasswordTokens)
-    .values(zResetPasswordTokenCreate.parse(data));
+  await db.insert(resetPasswordTokens).values(data);
 }
 
 export async function deleteAllResetPasswordTokensByUserId(id: string) {

@@ -7,6 +7,8 @@ import { appIdToAdminRole_defaultIdMap } from "@kdx/shared";
 import type { Drizzle, DrizzleTransaction } from "../client";
 import type { Update } from "./_types";
 import type { zInvitationCreateMany } from "./_zodSchemas/invitationSchemas";
+import type { zTeamAppRoleToUserCreateMany } from "./_zodSchemas/teamAppRoleToUserSchemas";
+import type { zTeamCreate, zTeamUpdate } from "./_zodSchemas/teamSchemas";
 import { db } from "../client";
 import {
   appPermissions,
@@ -17,18 +19,13 @@ import {
   users,
   usersToTeams,
 } from "../schema";
-import { zTeamAppRoleToUserCreateMany } from "./_zodSchemas/teamAppRoleToUserSchemas";
-import { zTeamCreate, zTeamUpdate } from "./_zodSchemas/teamSchemas";
 
 export async function createTeamAndAssociateUser(
   db: DrizzleTransaction,
   userId: string,
   team: z.infer<typeof zTeamCreate>,
 ) {
-  const [createdTeam] = await db
-    .insert(teams)
-    .values(zTeamCreate.parse(team))
-    .$returningId();
+  const [createdTeam] = await db.insert(teams).values(team).$returningId();
   if (!createdTeam) throw new Error("Failed to create team");
 
   await db.insert(usersToTeams).values({
@@ -361,9 +358,7 @@ export async function associateManyAppRolesToUsers(
   db: Drizzle,
   data: z.infer<typeof zTeamAppRoleToUserCreateMany>,
 ) {
-  await db
-    .insert(teamAppRolesToUsers)
-    .values(zTeamAppRoleToUserCreateMany.parse(data));
+  await db.insert(teamAppRolesToUsers).values(data);
 }
 
 export async function findAllTeamMembers(teamId: string) {
@@ -473,5 +468,5 @@ export async function updateTeamById(
   db: Drizzle,
   { id, input }: Update<typeof zTeamUpdate>,
 ) {
-  return db.update(teams).set(zTeamUpdate.parse(input)).where(eq(teams.id, id));
+  return db.update(teams).set(input).where(eq(teams.id, id));
 }

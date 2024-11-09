@@ -1,9 +1,9 @@
 import type { z } from "zod";
 import { and, eq, inArray } from "drizzle-orm";
 
+import type { zNotificationCreateMany } from "./_zodSchemas/notificationSchemas";
 import { db } from "../client";
 import { expoTokens, notifications, usersToTeams } from "../schema";
-import { zNotificationCreateMany } from "./_zodSchemas/notificationSchemas";
 
 export async function deleteUserNotificationsWithinTeams({
   userId,
@@ -39,7 +39,7 @@ export async function createExpoToken({
 export async function createManyNotifications(
   notifs: z.infer<typeof zNotificationCreateMany>,
 ) {
-  await db.insert(notifications).values(zNotificationCreateMany.parse(notifs));
+  await db.insert(notifications).values(notifs);
 }
 
 export async function getUserNotificationById({

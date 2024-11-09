@@ -10,9 +10,9 @@ import {
 } from "@kdx/shared";
 import { appIdToAppTeamConfigSchema } from "@kdx/validators";
 
+import type { zAppPermissionToTeamAppRoleCreateMany } from "../_zodSchemas/appPermissionsToTeamAppRolesSchemas";
 import type { appIdToUserAppTeamConfigSchemaUpdate } from "../_zodSchemas/userAppTeamConfigs";
 import type { Drizzle } from "../../client";
-import { zAppPermissionToTeamAppRoleCreateMany } from "../_zodSchemas/appPermissionsToTeamAppRolesSchemas";
 import { appIdToUserAppTeamConfigSchema } from "../_zodSchemas/userAppTeamConfigs";
 import { db } from "../../client";
 import { appRoles_defaultTree } from "../../constants";
@@ -111,9 +111,7 @@ export async function createManyAppPermissionToRoleAssociations(
   db: Drizzle,
   data: z.infer<typeof zAppPermissionToTeamAppRoleCreateMany>,
 ) {
-  await db
-    .insert(appPermissionsToTeamAppRoles)
-    .values(zAppPermissionToTeamAppRoleCreateMany.parse(data));
+  await db.insert(appPermissionsToTeamAppRoles).values(data);
 }
 
 export async function removePermissionFromRole(

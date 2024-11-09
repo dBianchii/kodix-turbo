@@ -2,12 +2,12 @@ import type { z } from "zod";
 import { and, eq, gte, inArray, isNull } from "drizzle-orm";
 
 import type { Update } from "../../_types";
-import type { Drizzle } from "../../../client";
-import {
+import type {
   zCareTaskCreate,
   zCareTaskCreateMany,
   zCareTaskUpdate,
 } from "../../_zodSchemas/careTaskSchemas";
+import type { Drizzle } from "../../../client";
 import { db } from "../../../client";
 import { careTasks } from "../../../schema";
 
@@ -132,24 +132,21 @@ export async function updateCareTask(
   { id, input }: Update<typeof zCareTaskUpdate>,
 ) {
   //!Security risk
-  await db
-    .update(careTasks)
-    .set(zCareTaskUpdate.parse(input))
-    .where(eq(careTasks.id, id));
+  await db.update(careTasks).set(input).where(eq(careTasks.id, id));
 }
 
 export async function createCareTask(
   db: Drizzle,
   careTask: z.infer<typeof zCareTaskCreate>,
 ) {
-  await db.insert(careTasks).values(zCareTaskCreate.parse(careTask));
+  await db.insert(careTasks).values(careTask);
 }
 
 export async function createManyCareTasks(
   db: Drizzle,
   data: z.infer<typeof zCareTaskCreateMany>,
 ) {
-  await db.insert(careTasks).values(zCareTaskCreateMany.parse(data));
+  await db.insert(careTasks).values(data);
 }
 
 export async function reassignCareTasksFromDateToShift(
