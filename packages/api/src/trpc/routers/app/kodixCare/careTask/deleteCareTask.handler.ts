@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import type { TDeleteCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
 import { and, eq } from "@kdx/db";
+import { db } from "@kdx/db/client";
 import { careTaskRepository } from "@kdx/db/repositories";
 import { teamAppRoles, teamAppRolesToUsers } from "@kdx/db/schema";
 import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
@@ -46,7 +47,7 @@ export const deleteCareTaskHandler = async ({
     });
   }
 
-  const userRoles = await ctx.db
+  const userRoles = await db
     .select({
       appRoleDefaultId: teamAppRoles.appRoleDefaultId,
     })

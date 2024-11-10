@@ -3,6 +3,7 @@ import { RRule, rrulestr } from "rrule";
 
 import type { TEditInputSchema } from "@kdx/validators/trpc/app/calendar";
 import dayjs from "@kdx/dayjs";
+import { db } from "@kdx/db/client";
 import { nanoid } from "@kdx/db/nanoid";
 import { calendarRepository } from "@kdx/db/repositories";
 
@@ -26,7 +27,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
       //* Temos uma exceção.  Isso significa que o usuário quer editar a exceção.
       //* Aqui, o usuário pode alterar o title e o description ou o from da exceção.
 
-      await calendarRepository.updateEventExceptionById(ctx.db, {
+      await calendarRepository.updateEventExceptionById(db, {
         id: input.eventExceptionId,
         teamId: ctx.auth.user.activeTeamId,
         input: {
@@ -42,7 +43,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
     }
 
     //* Se estamos aqui, o usuário enviou o masterId. Vamos procurar no eventMaster uma ocorrência do RRULE que bate com o selectedTimestamp.
-    const eventMaster = await calendarRepository.findEventMasterById(ctx.db, {
+    const eventMaster = await calendarRepository.findEventMasterById(db, {
       id: input.eventMasterId,
       teamId: ctx.auth.user.activeTeamId,
     });
@@ -74,7 +75,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
       input.type !== undefined
     ) {
       //* Se tivermos title ou description, criamos um eventInfo e também uma exceção.
-      await calendarRepository.createEventException(ctx.db, {
+      await calendarRepository.createEventException(db, {
         eventMasterId: eventMaster.id,
         originalDate: foundTimestamp,
         newDate: input.from ?? foundTimestamp,
@@ -88,7 +89,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
     }
     //* Se não tivermos title nem description nem type, ainda temos o from. Criamos uma exceção sem eventInfo.
     else {
-      await calendarRepository.createEventException(ctx.db, {
+      await calendarRepository.createEventException(db, {
         eventMasterId: eventMaster.id,
         originalDate: foundTimestamp,
         newDate: input.from ?? foundTimestamp,
@@ -99,7 +100,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
 
     //* Não temos uma exceção nem uma ocorrência que bate com o selectedTimestamp. Vamos gerar um erro.
   } else if (input.editDefinition === "thisAndFuture") {
-    await ctx.db.transaction(async (tx) => {
+    await db.transaction(async (tx) => {
       //* Havemos description, title, from, until, frequency, inteval, count e selectedTimestamp.
       //* Havemos um selectedTimestamp.
       //* Temos que procurar se temos uma exceção que bate com o selectedTimestamp.
@@ -259,7 +260,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
 
     //*Temos que pegar a nova regra se alterou o input.frequency ?? input.interval ?? input.count ?? input.until ou se alterou o input.from
 
-    await ctx.db.transaction(async (tx) => {
+    await db.transaction(async (tx) => {
       const newRule = await (async () => {
         const shouldUpdateRule =
           !!input.frequency ||

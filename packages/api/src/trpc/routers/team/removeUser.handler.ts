@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import type { TRemoveUserSchema } from "@kdx/validators/trpc/team";
+import { db } from "@kdx/db/client";
 import { nanoid } from "@kdx/db/nanoid";
 import { teamRepository, userRepository } from "@kdx/db/repositories";
 
@@ -28,7 +29,7 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
       teamId: ctx.auth.user.activeTeamId,
     });
 
-  await ctx.db.transaction(async (tx) => {
+  await db.transaction(async (tx) => {
     //check if there are more people in the team before removal
     if (!otherTeam) {
       //Create a new team for the user so we can move them to it

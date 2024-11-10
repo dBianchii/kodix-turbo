@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import dayjs from "@kdx/dayjs";
+import { db } from "@kdx/db/client";
 import { nanoid } from "@kdx/db/nanoid";
 import { careTaskRepository, kodixCareRepository } from "@kdx/db/repositories";
 import WarnPreviousShiftNotEnded from "@kdx/react-email/warn-previous-shift-not-ended";
@@ -38,7 +39,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
       .startOf("day")
       .toDate();
 
-    await ctx.db.transaction(async (tx) => {
+    await db.transaction(async (tx) => {
       const careShiftId = nanoid();
       await kodixCareRepository.createCareShift(tx, {
         id: careShiftId,
@@ -50,9 +51,9 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
         careShiftId,
         start: yesterdayStartOfDay,
         end: tomorrowEndOfDay,
+        tx,
         ctx: {
           ...ctx,
-          db: tx,
         },
       });
     });
@@ -74,7 +75,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
   const loggedUserIsCaregiverForCurrentShift =
     ctx.auth.user.id === currentShift.Caregiver.id;
 
-  await ctx.db.transaction(async (tx) => {
+  await db.transaction(async (tx) => {
     //*End the current shift
     await kodixCareRepository.updateCareShift(tx, {
       id: currentShift.id,
@@ -110,9 +111,9 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
       careShiftId: currentShift.id,
       start: clonedCareTasksUntil,
       end: tomorrowEndOfDay,
+      tx,
       ctx: {
         ...ctx,
-        db: tx,
       },
     });
 

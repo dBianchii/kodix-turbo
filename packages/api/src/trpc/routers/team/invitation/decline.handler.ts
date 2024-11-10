@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import type { TDeclineInputSchema } from "@kdx/validators/trpc/team/invitation";
+import { db } from "@kdx/db/client";
 import { teamRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
@@ -23,5 +24,5 @@ export const declineHandler = async ({ ctx, input }: DeclineOptions) => {
     });
   }
 
-  await teamRepository.deleteInvitationById(ctx.db, input.invitationId);
+  await teamRepository.deleteInvitationById(db, input.invitationId);
 };

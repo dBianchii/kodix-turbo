@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import type { TDeleteTeamInputSchema } from "@kdx/validators/trpc/team";
+import { db } from "@kdx/db/client";
 import {
   careTaskRepository,
   teamRepository,
@@ -56,7 +57,7 @@ export const deleteTeamHandler = async ({ ctx, input }: DeleteTeamOptions) => {
     });
   }
 
-  await ctx.db.transaction(async (tx) => {
+  await db.transaction(async (tx) => {
     //Move the user to the other team
     await userRepository.moveUserToTeam(tx, {
       userId: ctx.auth.user.id,

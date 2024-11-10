@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import type { TUpdatePermissionAssociationInputSchema } from "@kdx/validators/trpc/team/appRole";
+import { db } from "@kdx/db/client";
 import { appRepository } from "@kdx/db/repositories";
 
 import type { TIsTeamOwnerProcedureContext } from "../../../procedures";
@@ -11,7 +12,6 @@ interface UpdatePermissionAssociationOptions {
 }
 
 export const updatePermissionAssociationHandler = async ({
-  ctx,
   input,
 }: UpdatePermissionAssociationOptions) => {
   const permission = await appRepository.findAppPermissionById(
@@ -31,7 +31,7 @@ export const updatePermissionAssociationHandler = async ({
     });
   }
 
-  await ctx.db.transaction(async (tx) => {
+  await db.transaction(async (tx) => {
     await appRepository.removePermissionFromRole(tx, {
       //! Security issue found.
       permissionId: input.permissionId,

@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import type { TDoCheckoutForShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import dayjs from "@kdx/dayjs";
+import { db } from "@kdx/db/client";
 import { kodixCareRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
@@ -44,7 +45,7 @@ export const doCheckoutForShiftHandler = async ({
       message: ctx.t("api.Checkout time must be after checkin time"),
     });
 
-  await kodixCareRepository.updateCareShift(ctx.db, {
+  await kodixCareRepository.updateCareShift(db, {
     id: currentShift.id,
     input: {
       checkOut: input.date,

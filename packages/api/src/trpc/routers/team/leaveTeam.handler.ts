@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import type { TLeaveTeamInputSchema } from "@kdx/validators/trpc/team";
+import { db } from "@kdx/db/client";
 import { teamRepository, userRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../procedures";
@@ -42,7 +43,7 @@ export const leaveTeamHandler = async ({ ctx, input }: LeaveTeamOptions) => {
     });
   }
 
-  await ctx.db.transaction(async (tx) => {
+  await db.transaction(async (tx) => {
     await userRepository.moveUserToTeam(tx, {
       userId: ctx.auth.user.id,
       newTeamId: otherTeam.id,

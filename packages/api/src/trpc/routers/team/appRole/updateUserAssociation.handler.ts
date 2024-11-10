@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import type { TUpdateUserAssociationInputSchema } from "@kdx/validators/trpc/team/appRole";
+import { db } from "@kdx/db/client";
 import { teamRepository } from "@kdx/db/repositories";
 
 import type { TIsTeamOwnerProcedureContext } from "../../../procedures";
@@ -13,7 +14,7 @@ export const updateUserAssociationHandler = async ({
   ctx,
   input,
 }: UpdateUserAssociationOptions) => {
-  await ctx.db.transaction(async (tx) => {
+  await db.transaction(async (tx) => {
     if (input.userId === ctx.auth.user.id) {
       //need to detect if they are sending the admin role to prevent removing themselves
       const adminTeamAppRolesForApp =

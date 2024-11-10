@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
+import { db } from "@kdx/db/client";
 import { careTaskRepository, kodixCareRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
@@ -32,7 +33,7 @@ export const syncCareTasksFromCalendarHandler = async ({
     });
 
   const syncFromDate = currentShift.checkIn;
-  await ctx.db.transaction(async (tx) => {
+  await db.transaction(async (tx) => {
     await careTaskRepository.deleteManyCareTasksThatCameFromCalendarWithDateHigherOrEqualThan(
       tx,
       {
@@ -42,11 +43,11 @@ export const syncCareTasksFromCalendarHandler = async ({
     );
 
     await cloneCalendarTasksToCareTasks({
+      tx,
       start: syncFromDate,
       careShiftId: currentShift.id,
       ctx: {
         ...ctx,
-        db: tx,
       },
     });
   });

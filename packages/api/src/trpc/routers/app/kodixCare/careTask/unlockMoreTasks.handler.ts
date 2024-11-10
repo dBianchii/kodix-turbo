@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import type { TUnlockMoreTasksInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
+import { db } from "@kdx/db/client";
 import { kodixCareRepository } from "@kdx/db/repositories";
 import { kodixCareAppId } from "@kdx/shared";
 
@@ -55,6 +56,7 @@ export const unlockMoreTasksHandler = async ({
     });
 
   await cloneCalendarTasksToCareTasks({
+    tx: db,
     careShiftId: careShift.id,
     start: clonedCareTasksUntil,
     end: input.selectedTimestamp,

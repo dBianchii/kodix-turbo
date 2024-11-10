@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { RRule, rrulestr } from "rrule";
 
 import type { TCancelInputSchema } from "@kdx/validators/trpc/app/calendar";
+import { db } from "@kdx/db/client";
 import { calendarRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
@@ -15,7 +16,7 @@ interface CancelOptions {
 export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
   if (input.exclusionDefinition === "single") {
     if (input.eventExceptionId) {
-      await ctx.db.transaction(async (tx) => {
+      await db.transaction(async (tx) => {
         const toDeleteException =
           await calendarRepository.findEventExceptionById(
             tx,
@@ -43,14 +44,14 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
       return;
     }
 
-    await calendarRepository.createEventCancellation(ctx.db, {
+    await calendarRepository.createEventCancellation(db, {
       eventMasterId: input.eventMasterId,
       originalDate: input.date,
     });
 
     return;
   } else if (input.exclusionDefinition === "thisAndFuture") {
-    await ctx.db.transaction(async (tx) => {
+    await db.transaction(async (tx) => {
       if (input.eventExceptionId) {
         await calendarRepository.deleteEventExceptionsHigherThanDate(tx, {
           teamId: ctx.auth.user.activeTeamId,
@@ -89,7 +90,7 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
     });
     return;
   } else {
-    await deleteEventMasterById(ctx.db, input.eventMasterId);
+    await deleteEventMasterById(db, input.eventMasterId);
 
     return;
   }

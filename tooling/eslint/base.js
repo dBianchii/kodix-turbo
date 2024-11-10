@@ -43,11 +43,11 @@ export const enforceDrizzleWhere = tseslint.config({
   rules: {
     "drizzle/enforce-delete-with-where": [
       "error",
-      { drizzleObjectName: ["db", "ctx.db", "tx"] },
+      { drizzleObjectName: ["db", "tx"] },
     ],
     "drizzle/enforce-update-with-where": [
       "error",
-      { drizzleObjectName: ["db", "ctx.db", "tx"] },
+      { drizzleObjectName: ["db", "tx"] },
     ],
   },
 });

@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 
 import type { invitations } from "@kdx/db/schema";
 import type { TInviteInputSchema } from "@kdx/validators/trpc/team/invitation";
+import { db } from "@kdx/db/client";
 import { nanoid } from "@kdx/db/nanoid";
 import { teamRepository } from "@kdx/db/repositories";
 import TeamInvite from "@kdx/react-email/team-invite";
@@ -86,7 +87,7 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
 
   if (successes.length)
     await teamRepository.createManyInvitations(
-      ctx.db,
+      db,
       successes.map((success) => {
         return _invitations.find((x) => x.id === success.value.id)!;
       }),
