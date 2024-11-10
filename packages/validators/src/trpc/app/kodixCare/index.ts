@@ -6,6 +6,7 @@ import { ZSignInByPasswordInputSchema as default_ZSignInByPasswordInputSchema } 
 
 export const ZDoCheckoutForShiftInputSchema = (t: IsomorficT) =>
   z.object({
+    notes: z.string().optional(),
     date: z.date().max(new Date(), {
       message: t("validators.Checkout time cannot be in the future"),
     }),

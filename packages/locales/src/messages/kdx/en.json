@@ -50,7 +50,8 @@
       "Successfully unlocked tasks": "Successfully unlocked tasks!",
       "Add task": "Add task",
       "Critical tasks": "Critical tasks",
-      "Set this on if you want to receive notifications for delayed tasks": "Set this on if you want to receive notifications for delayed tasks (one hour delayed)"
+      "Set this on if you want to receive notifications for delayed tasks": "Set this on if you want to receive notifications for delayed tasks (one hour delayed)",
+      "Additional notes": "Additional notes"
     },
     "todo": {
       "appDescription": "Todo is a note taking app"
@@ -465,5 +466,10 @@
   "Is this task considered critical or important": "Is this task considered critical or important?",
   "This permission is not editable": "This permission is not editable",
   "Delete task": "Delete task",
-  "Are you sure you want to delete this task": "Are you sure you want to delete this task?"
+  "Are you sure you want to delete this task": "Are you sure you want to delete this task?",
+  "Shifts": "Shifts",
+  "Check in": "Check in",
+  "Check out": "Check-out",
+  "Caregiver": "Caregiver",
+  "Shift ended at": "Shift ended at"
 }

@@ -50,6 +50,7 @@ export const doCheckoutForShiftHandler = async ({
     input: {
       checkOut: input.date,
       shiftEndedAt: input.date,
+      notes: input.notes,
     },
   });
 };

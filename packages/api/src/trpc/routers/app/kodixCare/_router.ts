@@ -16,6 +16,7 @@ import { protectedProcedure, publicProcedure } from "../../../procedures";
 import { careTaskRouter } from "./careTask/_router";
 import { checkEmailForRegisterHandler } from "./checkEmailForRegister.handler";
 import { doCheckoutForShiftHandler } from "./doCheckoutForShift.handler";
+import { getAllCareShiftsHandler } from "./getAllCareShifts.handler";
 import { getCurrentShiftHandler } from "./getCurrentShift.handler";
 import { signInByPasswordHandler } from "./signInByPassword.handler";
 import { toggleShiftHandler } from "./toggleShift.handler";
@@ -39,4 +40,5 @@ export const kodixCareRouter = {
   signInByPassword: publicProcedure
     .input(ZSignInByPasswordInputSchema)
     .mutation(signInByPasswordHandler),
+  getAllCareShifts: protectedProcedure.query(getAllCareShiftsHandler),
 } satisfies TRPCRouterRecord;

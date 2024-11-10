@@ -56,7 +56,7 @@ import {
 } from "@kdx/ui/credenza";
 import { DataTableColumnHeader } from "@kdx/ui/data-table/data-table-column-header";
 import { DataTableViewOptions } from "@kdx/ui/data-table/data-table-view-options";
-import { DateTimePicker } from "@kdx/ui/date-time-picker";
+import { DateTimePicker24h } from "@kdx/ui/date-n-time/date-time-picker-24h";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -246,15 +246,7 @@ export default function DataTableKodixCare() {
           </DataTableColumnHeader>
         ),
         cell: (ctx) => (
-          <div>
-            {format.dateTime(ctx.row.original.date, {
-              day: "2-digit",
-              month: "long",
-              year: "numeric",
-              hour: "numeric",
-              minute: "numeric",
-            })}
-          </div>
+          <div>{format.dateTime(ctx.row.original.date, "shortWithHours")}</div>
         ),
       }),
       columnHelper.accessor("doneAt", {
@@ -271,13 +263,7 @@ export default function DataTableKodixCare() {
           if (!ctx.row.original.doneAt) return null;
           return (
             <div>
-              {format.dateTime(ctx.row.original.doneAt, {
-                day: "2-digit",
-                month: "long",
-                year: "numeric",
-                hour: "numeric",
-                minute: "numeric",
-              })}
+              {format.dateTime(ctx.row.original.doneAt, "shortWithHours")}
             </div>
           );
         },
@@ -677,11 +663,17 @@ function AddCareTaskCredenzaButton() {
                     <FormLabel>{t("Date")}</FormLabel>
                     <FormControl>
                       <div className="flex flex-row gap-2">
-                        <DateTimePicker
+                        <DateTimePicker24h
                           date={field.value}
                           setDate={(newDate) =>
                             field.onChange(newDate ?? new Date())
                           }
+                          // disabledDate={(date) => {
+                          //   const thing = dayjs(date).isBefore(new Date());
+                          //   if (!thing) console.log(date);
+
+                          //   return thing;
+                          // }}
                         />
                       </div>
                     </FormControl>
@@ -895,12 +887,7 @@ function EditCareTaskCredenza({
               </span>
               <span className="flex text-xs font-semibold">
                 <RxCalendar className="mr-2 size-3 text-muted-foreground" />
-                {format.dateTime(task.date, {
-                  day: "2-digit",
-                  month: "short",
-                  hour: "numeric",
-                  minute: "numeric",
-                })}
+                {format.dateTime(task.date, "shortWithHours")}
               </span>
             </div>
             <div className="grid gap-4 py-4">
@@ -912,7 +899,7 @@ function EditCareTaskCredenza({
                     <FormLabel>{t("Done at")}</FormLabel>
                     <FormControl>
                       <div className="flex flex-row gap-2">
-                        <DateTimePicker
+                        <DateTimePicker24h
                           date={field.value ?? undefined}
                           setDate={(newDate) =>
                             field.onChange(newDate ?? new Date())

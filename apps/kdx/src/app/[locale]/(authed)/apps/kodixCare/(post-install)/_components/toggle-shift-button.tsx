@@ -6,7 +6,6 @@ import { LuLoader2 } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
-import dayjs from "@kdx/dayjs";
 import { Button } from "@kdx/ui/button";
 import {
   Credenza,
@@ -18,15 +17,17 @@ import {
   CredenzaTitle,
   CredenzaTrigger,
 } from "@kdx/ui/credenza";
-import { DateTimePicker } from "@kdx/ui/date-time-picker";
+import { DateTimePicker24h } from "@kdx/ui/date-n-time/date-time-picker-24h";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
   useForm,
 } from "@kdx/ui/form";
+import { Textarea } from "@kdx/ui/textarea";
 import { ZDoCheckoutForShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
@@ -151,7 +152,7 @@ function StartShiftWarnPreviousPersonDialog() {
 }
 
 function DoCheckoutDialogButton({
-  currentShift,
+  currentShift: _,
 }: {
   currentShift: NonNullable<
     RouterOutputs["app"]["kodixCare"]["getCurrentShift"]
@@ -181,7 +182,7 @@ function DoCheckoutDialogButton({
     <Credenza
       open={open}
       onOpenChange={(open) => {
-        form.setValue("date", new Date());
+        form.reset();
         setOpen(open);
       }}
     >
@@ -197,7 +198,7 @@ function DoCheckoutDialogButton({
         <CredenzaBody>
           <Form {...form}>
             <form
-              className="base"
+              className="base flex flex-col gap-4"
               onSubmit={form.handleSubmit((values) => {
                 mutation.mutate(values);
               })}
@@ -213,20 +214,31 @@ function DoCheckoutDialogButton({
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <div className="flex flex-row gap-2">
-                        <div className="flex items-center gap-1 pl-4">
-                          <DateTimePicker
-                            disabledDate={(date) =>
-                              dayjs(date).startOf("day") >
-                              dayjs(currentShift.checkIn).startOf("day")
-                            }
-                            date={field.value}
-                            setDate={(date) =>
-                              form.setValue("date", date ?? field.value)
-                            }
-                          />
-                        </div>
-                      </div>
+                      <DateTimePicker24h
+                        date={field.value}
+                        setDate={(date) =>
+                          form.setValue("date", date ?? field.value)
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage className="w-full" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="notes"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t("apps.kodixCare.Additional notes")}
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea
+                        rows={4}
+                        {...field}
+                        placeholder={t("apps.kodixCare.Additional notes")}
+                      />
                     </FormControl>
                     <FormMessage className="w-full" />
                   </FormItem>
