@@ -17,7 +17,6 @@ interface SignInByPasswordOptions {
 }
 
 export const signInByPasswordHandler = async ({
-  ctx,
   input,
 }: SignInByPasswordOptions) => {
   const { id: userId, activeTeamId } = await validateUserEmailAndPassword({
