@@ -1,13 +1,18 @@
 import { Suspense } from "react";
+import { getTranslations } from "next-intl/server";
 
-import { getTranslations } from "@kdx/locales/next-intl/server";
 import { kodixCareAppId } from "@kdx/shared";
 
+import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
 import { api } from "~/trpc/server";
 import { KodixCareUserSettingsForm } from "./_components/kodix-care-user-settings-form";
 
 export default async function KodixCareSettingsPage() {
   const t = await getTranslations();
+  await redirectIfAppNotInstalled({
+    appId: kodixCareAppId,
+    customRedirect: "/apps/kodixCare/onboarding",
+  });
 
   return (
     <main className="pt-6 md:p-6">

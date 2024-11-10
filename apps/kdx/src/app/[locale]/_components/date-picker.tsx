@@ -1,9 +1,8 @@
 "use client";
 
+import { useFormatter, useTranslations } from "next-intl";
 import { RxCalendar } from "react-icons/rx";
 
-import { useFormatter } from "@kdx/locales/next-intl";
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import { Calendar } from "@kdx/ui/calendar";

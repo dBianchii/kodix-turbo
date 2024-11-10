@@ -16,7 +16,6 @@ export const getAllHandler = async ({
     dateStart: input.dateStart,
     dateEnd: input.dateEnd,
     teamIds: [ctx.auth.user.activeTeamId],
-    ctx,
   });
   return calendarTasks;
 };

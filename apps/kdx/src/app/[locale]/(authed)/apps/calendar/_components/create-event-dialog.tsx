@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { LuAlertCircle, LuLoader2 } from "react-icons/lu";
 import { RxPlus } from "react-icons/rx";
 import { RRule, Weekday } from "rrule";
 
 import dayjs from "@kdx/dayjs";
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import { Checkbox } from "@kdx/ui/checkbox";
@@ -19,7 +19,7 @@ import {
   CredenzaTitle,
   CredenzaTrigger,
 } from "@kdx/ui/credenza";
-import { DateTimePicker } from "@kdx/ui/date-time-picker";
+import { DateTimePicker24h } from "@kdx/ui/date-n-time/date-time-picker-24h";
 import {
   Form,
   FormControl,
@@ -132,7 +132,7 @@ export function CreateEventDialogButton() {
                           <FormLabel>{t("From")}</FormLabel>
                           <FormControl>
                             <div className="flex flex-row gap-2">
-                              <DateTimePicker
+                              <DateTimePicker24h
                                 date={field.value}
                                 setDate={field.onChange}
                               />

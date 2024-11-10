@@ -3,6 +3,7 @@
 import * as path from "node:path";
 // import { includeIgnoreFile } from "@eslint/compat";
 import eslint from "@eslint/js";
+import drizzlePlugin from "eslint-plugin-drizzle";
 import importPlugin from "eslint-plugin-import";
 import turboPlugin from "eslint-plugin-turbo";
 import tseslint from "typescript-eslint";
@@ -37,6 +38,20 @@ export const restrictEnvAccess = tseslint.config(
   },
 );
 
+export const enforceDrizzleWhere = tseslint.config({
+  files: ["**/*.js", "**/*.ts", "**/*.tsx"],
+  rules: {
+    "drizzle/enforce-delete-with-where": [
+      "error",
+      { drizzleObjectName: ["db", "tx"] },
+    ],
+    "drizzle/enforce-update-with-where": [
+      "error",
+      { drizzleObjectName: ["db", "tx"] },
+    ],
+  },
+});
+
 export default tseslint.config(
   // Ignore files not tracked by VCS and any config files
   // includeIgnoreFile(path.join(import.meta.dirname, "../../.gitignore")),
@@ -46,6 +61,7 @@ export default tseslint.config(
     plugins: {
       import: importPlugin,
       turbo: turboPlugin,
+      drizzle: drizzlePlugin,
     },
     extends: [
       eslint.configs.recommended,

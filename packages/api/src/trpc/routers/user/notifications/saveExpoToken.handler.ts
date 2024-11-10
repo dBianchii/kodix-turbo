@@ -1,5 +1,5 @@
 import type { TSaveExpoTokenInputSchema } from "@kdx/validators/trpc/user/notifications";
-import { expoTokens } from "@kdx/db/schema";
+import { notificationRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 
@@ -12,7 +12,7 @@ export const saveExpoTokenHandler = async ({
   ctx,
   input,
 }: SaveExpoTokenOptions) => {
-  await ctx.db.insert(expoTokens).values({
+  await notificationRepository.createExpoToken({
     token: input.expoToken,
     userId: ctx.auth.user.id,
   });

@@ -1,9 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { auth } from "@kdx/auth";
-import { eq } from "@kdx/db";
-import { db } from "@kdx/db/client";
-import { invitations, users } from "@kdx/db/schema";
+import { teamRepository, userRepository } from "@kdx/db/repositories";
 import { redirect } from "@kdx/locales/next-intl/navigation";
 
 import { api } from "~/trpc/server";
@@ -15,19 +13,14 @@ export default async function InvitePage({
 }) {
   const { id: invitationId } = params;
 
-  const invitation = await db.query.invitations.findFirst({
-    where: eq(invitations.id, invitationId),
-  });
+  const invitation = await teamRepository.findInvitationById(invitationId);
   if (!invitation) return notFound();
 
   const { user } = await auth();
   if (!user) {
     let path = `/signup?invite=${invitationId}`;
 
-    const existingUser = await db.query.users.findFirst({
-      where: eq(users.email, invitation.email),
-      columns: { id: true },
-    });
+    const existingUser = await userRepository.findUserByEmail(invitation.email);
 
     //? If the user already has an account, redirect them back here after signing in.
     if (existingUser) path = `/signin?callbackUrl=/team/invite/${invitationId}`;

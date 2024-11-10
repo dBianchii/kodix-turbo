@@ -1,7 +1,6 @@
+import type { useTranslations } from "next-intl";
+import type { getTranslations } from "next-intl/server";
 import type { Formats } from "use-intl";
-
-import type { useTranslations } from "./next-intl/client";
-import type { getTranslations } from "./next-intl/server";
 
 export const locales = ["pt-BR", "en"] as const;
 export type Locales = (typeof locales)[number];
@@ -13,6 +12,13 @@ export const formats = {
       day: "2-digit",
       month: "2-digit",
       year: "2-digit",
+    },
+    shortWithHours: {
+      day: "2-digit",
+      month: "2-digit",
+      year: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
     },
     medium: {
       day: "2-digit",
@@ -42,9 +48,15 @@ export const formats = {
 
 //TODO: figure out how to make typed namespaces work. (Both with i18n-ally and next-intl/use-intl)
 type TranslationKeys = never;
+export type ServerSideT<S extends TranslationKeys = never> = Awaited<
+  ReturnType<typeof getTranslations<S>>
+>;
+export type ClientSideT<S extends TranslationKeys = never> = ReturnType<
+  typeof useTranslations<S>
+>;
 export type IsomorficT<S extends TranslationKeys = never> =
-  | Awaited<ReturnType<typeof getTranslations<S>>>
-  | ReturnType<typeof useTranslations<S>>; //This type is the same type as use-intl's useTranslations.
+  | ServerSideT<S>
+  | ClientSideT<S>; //This type is the same type as use-intl's useTranslations.
 
 // type Paths<Schema, Path extends string = ""> = Schema extends string
 //   ? Path

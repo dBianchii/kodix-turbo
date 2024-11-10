@@ -6,9 +6,9 @@ import {
   todoAppId,
 } from "@kdx/shared";
 
-import { buildConflictUpdateColumns } from "../../";
-import { db } from "../../client";
-import { appPermissions, apps, devPartners } from "../../schema";
+import { buildConflictUpdateColumns } from "../../src";
+import { db } from "../../src/client";
+import { appPermissions, apps, devPartners } from "../../src/schema";
 import { appRoles_defaultTree } from "./appRolesDefault_tree";
 
 const _devPartners: (typeof devPartners.$inferInsert)[] = [

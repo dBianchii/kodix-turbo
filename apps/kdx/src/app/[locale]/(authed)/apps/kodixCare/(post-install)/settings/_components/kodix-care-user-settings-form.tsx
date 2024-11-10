@@ -1,9 +1,9 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { LuAlertCircle, LuLoader2 } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { kodixCareAppId } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";

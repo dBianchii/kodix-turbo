@@ -1,14 +1,13 @@
 import { TRPCError } from "@trpc/server";
-import { getTranslations } from "next-intl/server";
 
 import type { TSendResetPasswordEmailInputSchema } from "@kdx/validators/trpc/user";
-import { eq } from "@kdx/db";
 import { nanoid } from "@kdx/db/nanoid";
-import { resetPasswordTokens } from "@kdx/db/schema";
+import { authRepository } from "@kdx/db/repositories";
 import ResetPassword from "@kdx/react-email/reset-password";
 import { KODIX_NOTIFICATION_FROM_EMAIL } from "@kdx/shared";
 
 import type { TPublicProcedureContext } from "../../procedures";
+import { findUserByEmail } from "../../../../../db/src/repositories/userRepository";
 import { resend } from "../../../sdks/email";
 
 interface SendResetPasswordEmailOptions {
@@ -16,30 +15,24 @@ interface SendResetPasswordEmailOptions {
   input: TSendResetPasswordEmailInputSchema;
 }
 
-export const sendResetPasswordEmail = async ({
+export const sendResetPasswordEmailHandler = async ({
   ctx,
   input,
 }: SendResetPasswordEmailOptions) => {
-  const user = await ctx.db.query.users.findFirst({
-    where: (users, { eq }) => eq(users.email, input.email),
-    columns: { id: true },
-  });
+  const user = await findUserByEmail(input.email);
 
-  const t = await getTranslations({ locale: ctx.locale });
   if (!user) {
     throw new TRPCError({
       code: "NOT_FOUND",
-      message: t("api.User not found"),
+      message: ctx.t("api.User not found"),
     });
   }
 
   const tokenExpiresAt = new Date(Date.now() + 1000 * 60 * 5); // 5 minutes
+  await authRepository.deleteAllResetPasswordTokensByUserId(user.id);
 
-  await ctx.db
-    .delete(resetPasswordTokens)
-    .where(eq(resetPasswordTokens.userId, user.id));
   const token = nanoid();
-  await ctx.db.insert(resetPasswordTokens).values({
+  await authRepository.createResetPasswordToken({
     userId: user.id,
     token,
     tokenExpiresAt,
@@ -48,7 +41,7 @@ export const sendResetPasswordEmail = async ({
   await resend.emails.send({
     from: KODIX_NOTIFICATION_FROM_EMAIL,
     to: input.email,
-    subject: t("api.Kodix - Reset your password"),
-    react: ResetPassword({ token }),
+    subject: ctx.t("api.Kodix - Reset your password"),
+    react: ResetPassword({ token, t: ctx.t }),
   });
 };

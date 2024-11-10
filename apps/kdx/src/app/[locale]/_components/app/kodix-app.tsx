@@ -2,15 +2,15 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { LuLoader2 } from "react-icons/lu";
 import { RxDotsHorizontal, RxTrash } from "react-icons/rx";
 
 import type { User } from "@kdx/auth";
 import type { KodixAppId } from "@kdx/shared";
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { useAppDescription, useAppName } from "@kdx/locales/next-intl/hooks";
 import { Link, useRouter } from "@kdx/locales/next-intl/navigation";
-import { kodixCareAppId } from "@kdx/shared";
+import { kodixCareAppId, todoAppId } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { Badge } from "@kdx/ui/badge";
 import { Button, buttonVariants } from "@kdx/ui/button";
@@ -88,6 +88,8 @@ export function KodixApp({
   const appIconUrl = getAppIconUrl(id);
   const appName = useAppName(id);
   const appDescription = useAppDescription(id);
+
+  if (id === todoAppId) return null;
 
   return (
     <Card className="flex h-64 flex-col">

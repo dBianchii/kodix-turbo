@@ -1,9 +1,9 @@
 import { Suspense } from "react";
+import { getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
-import { db } from "@kdx/db/client";
+import { teamRepository } from "@kdx/db/repositories";
 import { redirect } from "@kdx/locales/next-intl/navigation";
-import { getTranslations } from "@kdx/locales/next-intl/server";
 import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@kdx/ui/tabs";
 
@@ -17,12 +17,8 @@ export default async function SettingsMembersPage() {
   if (!user) return redirect("/");
   const t = await getTranslations();
 
-  const currentTeam = await db.query.teams.findFirst({
-    where: (teams, { eq }) => eq(teams.id, user.activeTeamId),
-    columns: {
-      ownerId: true,
-    },
-  });
+  const currentTeam = await teamRepository.findTeamById(user.activeTeamId);
+
   if (!currentTeam) throw new Error("No team found");
   const canEditPage = currentTeam.ownerId === user.id;
 

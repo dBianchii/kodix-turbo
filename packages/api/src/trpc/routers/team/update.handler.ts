@@ -1,6 +1,6 @@
 import type { TUpdateInputSchema } from "@kdx/validators/trpc/team";
-import { eq } from "@kdx/db";
-import { teams } from "@kdx/db/schema";
+import { db } from "@kdx/db/client";
+import { teamRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 
@@ -9,12 +9,13 @@ interface CreateHandler {
   input: TUpdateInputSchema;
 }
 
-export const updateHandler = async ({ ctx, input }: CreateHandler) => {
-  const team = await ctx.db
-    .update(teams)
-    .set({
+export const updateHandler = async ({ input }: CreateHandler) => {
+  const team = await teamRepository.updateTeamById(db, {
+    id: input.teamId,
+    input: {
       name: input.teamName,
-    })
-    .where(eq(teams.id, input.teamId));
+    },
+  });
+
   return team;
 };

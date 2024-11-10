@@ -1,9 +1,10 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { LuLoader2 } from "react-icons/lu";
 import { MdNotificationsActive } from "react-icons/md";
 
-import { useTranslations } from "@kdx/locales/next-intl/client";
+import type { RouterOutputs } from "@kdx/api";
 import { useRouter } from "@kdx/locales/next-intl/navigation";
 import { Button } from "@kdx/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
@@ -22,18 +23,7 @@ import { api } from "~/trpc/react";
 export function NotificationsPopoverClient({
   initialNotifications,
 }: {
-  initialNotifications: {
-    id: string;
-    InvitedBy: {
-      id: string;
-      name: string | null;
-      image: string | null;
-    };
-    Team: {
-      id: string;
-      name: string;
-    };
-  }[];
+  initialNotifications: RouterOutputs["user"]["getInvitations"];
 }) {
   const t = useTranslations();
   const query = api.user.getInvitations.useQuery(undefined, {

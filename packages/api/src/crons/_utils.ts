@@ -1,17 +1,18 @@
 import type { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { Receiver } from "@upstash/qstash";
+import { getTranslations } from "next-intl/server";
 
 import { env } from "@kdx/auth/env";
 import { db } from "@kdx/db/client";
 
 import { getLocaleBasedOnCookie } from "../utils/locales";
 
-export const createCronJobCtx = () => ({
-  locale: getLocaleBasedOnCookie(),
+export const createCronJobCtx = async () => ({
+  t: await getTranslations({ locale: getLocaleBasedOnCookie() }),
   db,
 });
-export type TCronJobContext = ReturnType<typeof createCronJobCtx>;
+export type TCronJobContext = Awaited<ReturnType<typeof createCronJobCtx>>;
 
 const receiver = new Receiver({
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -33,7 +34,7 @@ export const verifiedQstashCron =
     }) => Promise<Response>,
   ) =>
   async (req: NextRequest, res: NextResponse) => {
-    const ctx = createCronJobCtx();
+    const ctx = await createCronJobCtx();
 
     //? Allow running cron jobs locally, for development purposes
     if (env.NODE_ENV !== "production") return handler({ req, res, ctx });

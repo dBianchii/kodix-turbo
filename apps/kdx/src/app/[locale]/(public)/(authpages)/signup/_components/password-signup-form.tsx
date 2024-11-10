@@ -1,10 +1,10 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useAction } from "next-safe-action/hooks";
 import { LuLoader2 } from "react-icons/lu";
 import { z } from "zod";
 
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { Button } from "@kdx/ui/button";
 import { Checkbox } from "@kdx/ui/checkbox";
 import {

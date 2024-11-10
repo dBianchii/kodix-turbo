@@ -7,8 +7,7 @@ import {
   DoubleArrowLeftIcon,
   DoubleArrowRightIcon,
 } from "@radix-ui/react-icons";
-
-import { useTranslations } from "@kdx/locales/next-intl/client";
+import { useTranslations } from "next-intl";
 
 import { Button } from "../button";
 import {

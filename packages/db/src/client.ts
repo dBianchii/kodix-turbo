@@ -3,6 +3,7 @@ import { drizzle } from "drizzle-orm/mysql2";
 import { createPool } from "mysql2/promise";
 
 import * as schema from "./schema";
+import { getTeamDb } from "./teamDb/getTeamDb";
 
 if (!process.env.MYSQL_URL) {
   throw new Error("Missing MYSQL_URL");
@@ -29,9 +30,14 @@ const conn =
 if (process.env.NODE_ENV !== "production") globalForDb.conn = conn;
 
 export const db = drizzle(conn, { schema, mode: "default" });
-
 export type Drizzle = typeof db;
 
-export type DrizzleTransaction = Parameters<
-  Parameters<(typeof db)["transaction"]>[0]
->[0];
+export { getTeamDb as createTeamDb };
+export type DrizzleTeam = ReturnType<typeof getTeamDb>;
+
+export type DrizzleTransaction = MySqlTransaction<
+  MySql2QueryResultHKT,
+  MySql2PreparedQueryHKT,
+  typeof schema,
+  ExtractTablesWithRelations<typeof schema>
+>;

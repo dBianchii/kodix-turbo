@@ -1,4 +1,7 @@
-import baseConfig, { restrictEnvAccess } from "@kdx/eslint-config/base";
+import baseConfig, {
+  enforceDrizzleWhere,
+  restrictEnvAccess,
+} from "@kdx/eslint-config/base";
 import nextjsConfig from "@kdx/eslint-config/nextjs";
 import reactConfig from "@kdx/eslint-config/react";
 
@@ -11,6 +14,7 @@ export default [
   ...reactConfig,
   ...nextjsConfig,
   ...restrictEnvAccess,
+  ...enforceDrizzleWhere,
   {
     rules: {
       "no-restricted-imports": [

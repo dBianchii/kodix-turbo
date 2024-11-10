@@ -57,7 +57,10 @@ export function DataTableTodo({
   initialData: RouterOutputs["app"]["todo"]["getAll"];
 }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const { data: team } = api.team.getActiveTeam.useQuery();
+  // const { data: team } = api.team.getActiveTeam.useQuery();
+  // const team = {
+  //   Users: [{ id: "THIS_WAS_REMOVED_LOL", name: "asdas", image: "asd" }],
+  // };
 
   const todosQuery = api.app.todo.getAll.useQuery(undefined, {
     initialData,
@@ -290,9 +293,9 @@ export function DataTableTodo({
     state: {
       columnFilters,
     },
-    meta: {
-      team: team,
-    },
+    // meta: {
+    //   team: team,
+    // },
   });
 
   return (

@@ -1,9 +1,6 @@
+import { getTranslations, unstable_setRequestLocale } from "next-intl/server";
 import { RxChevronRight } from "react-icons/rx";
 
-import {
-  getTranslations,
-  unstable_setRequestLocale,
-} from "@kdx/locales/next-intl/server";
 import { cn } from "@kdx/ui";
 import { buttonVariants } from "@kdx/ui/button";
 import { RadialGradient } from "@kdx/ui/magic-ui/radial-gradient";

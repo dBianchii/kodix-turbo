@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { useTranslations } from "next-intl";
 import { LuLoader2 } from "react-icons/lu";
 import {
   RxEnvelopeClosed,
@@ -10,7 +11,6 @@ import {
 } from "react-icons/rx";
 
 import type { User } from "@kdx/auth";
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import {

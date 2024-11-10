@@ -21,6 +21,7 @@
     "@kdx/db": "workspace:*",
     "@kdx/react-email": "workspace:*",
     "@kdx/shared": "workspace:*",
+    "@node-rs/argon2": "^1.8.3",
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
     "@t3-oss/env-nextjs": "^0.11.1",

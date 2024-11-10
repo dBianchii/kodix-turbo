@@ -1,5 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import { getTranslations } from "next-intl/server";
 
 import { sql } from "@kdx/db";
 import { db } from "@kdx/db/client";
@@ -38,9 +37,8 @@ export const getActiveTeamHandler = async ({ ctx }: GetActiveTeamOptions) => {
   });
 
   if (!team) {
-    const t = await getTranslations({ locale: ctx.locale });
     throw new TRPCError({
-      message: t("api.No Team Found"),
+      message: ctx.t("api.No Team Found"),
       code: "NOT_FOUND",
     });
   }

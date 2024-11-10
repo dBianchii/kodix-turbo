@@ -1,5 +1,16 @@
 import { relations } from "drizzle-orm";
-import { index, mysqlTable, primaryKey } from "drizzle-orm/mysql-core";
+import {
+  boolean,
+  datetime,
+  index,
+  mysqlEnum,
+  mysqlTable,
+  primaryKey,
+  text,
+  timestamp,
+  varchar,
+} from "drizzle-orm/mysql-core";
+import { createInsertSchema } from "drizzle-zod";
 
 import { NANOID_SIZE } from "@kdx/shared";
 
@@ -15,16 +26,16 @@ import {
 
 export const users = mysqlTable(
   "user",
-  (t) => ({
-    id: nanoidPrimaryKey(t),
-    name: t.varchar({ length: DEFAULTLENGTH }),
-    passwordHash: t.varchar({ length: 255 }),
-    email: t.varchar({ length: DEFAULTLENGTH }).notNull().unique(),
-    emailVerified: t.timestamp().defaultNow(),
-    image: t.varchar({ length: DEFAULTLENGTH }),
-    activeTeamId: t.varchar({ length: DEFAULTLENGTH }).notNull(),
-    kodixAdmin: t.boolean().default(false).notNull(),
-  }),
+  {
+    id: nanoidPrimaryKey,
+    name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
+    passwordHash: varchar("passwordHash", { length: 255 }),
+    email: varchar("email", { length: DEFAULTLENGTH }).notNull().unique(),
+    emailVerified: timestamp("emailVerified").defaultNow(),
+    image: varchar("image", { length: DEFAULTLENGTH }),
+    activeTeamId: varchar("activeTeamId", { length: DEFAULTLENGTH }).notNull(),
+    kodixAdmin: boolean("kodixAdmin").default(false).notNull(),
+  },
   (table) => {
     return {
       activeTeamIdIdx: index("activeTeamId_idx").on(table.activeTeamId),
@@ -45,6 +56,7 @@ export const usersRelations = relations(users, ({ many, one }) => ({
   ExpoTokens: many(expoTokens),
   UserAppTeamConfigs: many(userAppTeamConfigs),
 }));
+export const userSchema = createInsertSchema(users);
 
 export const accounts = mysqlTable(
   "account",
@@ -64,6 +76,7 @@ export const accounts = mysqlTable(
 export const accountsRelations = relations(accounts, ({ one }) => ({
   Users: one(users, { fields: [accounts.userId], references: [users.id] }),
 }));
+export const accountSchema = createInsertSchema(accounts);
 
 export const sessions = mysqlTable("session", (t) => ({
   id: t.varchar({ length: DEFAULTLENGTH }).primaryKey(),
@@ -81,6 +94,7 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
     references: [users.id],
   }),
 }));
+export const sessionSchema = createInsertSchema(sessions);
 
 export const expoTokens = mysqlTable(
   "expoToken",
@@ -137,6 +151,7 @@ export const notificationsRelations = relations(notifications, ({ one }) => ({
     references: [teams.id],
   }),
 }));
+export const notificationSchema = createInsertSchema(notifications);
 
 export const resetPasswordTokens = mysqlTable(
   "resetToken",
@@ -155,6 +170,7 @@ export const resetPasswordTokens = mysqlTable(
   }),
   (table) => {
     return {
+      tokenIdx: index("token_idx").on(table.token),
       userIdIdx: index("userId_idx").on(table.userId),
     };
   },
@@ -168,3 +184,4 @@ export const resetPasswordTokensRelations = relations(
     }),
   }),
 );
+export const resetPasswordTokenSchema = createInsertSchema(resetPasswordTokens);

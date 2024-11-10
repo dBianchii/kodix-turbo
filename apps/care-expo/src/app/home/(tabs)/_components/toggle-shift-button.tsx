@@ -3,8 +3,8 @@ import { Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { useToastController } from "@tamagui/toast";
 import { Button, H3, Paragraph, Spinner, XStack } from "tamagui";
+import { useTranslations } from "use-intl";
 
-import { useTranslations } from "@kdx/locales/use-intl";
 import { ZDoCheckoutForShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 
 import type { RouterOutputs } from "~/utils/api";
@@ -30,7 +30,8 @@ export function ToggleShiftButton() {
     return null;
   }
 
-  if (!(query.data && !query.data.checkOut)) return <StartShiftDialogButton />;
+  if (!(query.data && !query.data.shiftEndedAt))
+    return <StartShiftDialogButton />;
   if (query.data.Caregiver.id === user.id)
     return <DoCheckoutDialogButton currentShift={query.data} />;
   // return <StartShiftWarnPreviousPersonDialog />;

@@ -1,11 +1,9 @@
 import { TRPCError } from "@trpc/server";
 
-import { gte } from "@kdx/db";
-import { careTasks } from "@kdx/db/schema";
-import { getTranslations } from "@kdx/locales/next-intl/server";
+import { db } from "@kdx/db/client";
+import { careTaskRepository, kodixCareRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
-import { getCurrentShiftHandler } from "../getCurrentShift.handler";
 import { cloneCalendarTasksToCareTasks } from "../utils";
 
 interface SyncCareTasksFromCalendarOptions {
@@ -15,26 +13,41 @@ interface SyncCareTasksFromCalendarOptions {
 export const syncCareTasksFromCalendarHandler = async ({
   ctx,
 }: SyncCareTasksFromCalendarOptions) => {
-  const currentShift = await getCurrentShiftHandler({ ctx });
+  const currentShift = await kodixCareRepository.getCurrentCareShiftByTeamId(
+    ctx.auth.user.activeTeamId,
+  );
 
-  if (!currentShift || currentShift.checkOut) {
-    const t = await getTranslations({ locale: ctx.locale });
+  if (!currentShift || currentShift.shiftEndedAt) {
     throw new TRPCError({
       code: "FORBIDDEN",
-      message: t("api.The current shift must be ongoing for this action"),
+      message: ctx.t("api.The current shift must be ongoing for this action"),
     });
   }
 
+  if (currentShift.Caregiver.id !== ctx.auth.user.id)
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: ctx.t(
+        "api.You are not the caregiver of the current shift so you cannot sync tasks",
+      ),
+    });
+
   const syncFromDate = currentShift.checkIn;
-  await ctx.db.transaction(async (tx) => {
-    await tx.delete(careTasks).where(gte(careTasks.date, syncFromDate));
+  await db.transaction(async (tx) => {
+    await careTaskRepository.deleteManyCareTasksThatCameFromCalendarWithDateHigherOrEqualThan(
+      tx,
+      {
+        teamId: ctx.auth.user.activeTeamId,
+        date: syncFromDate,
+      },
+    );
 
     await cloneCalendarTasksToCareTasks({
+      tx,
       start: syncFromDate,
       careShiftId: currentShift.id,
       ctx: {
         ...ctx,
-        db: tx,
       },
     });
   });

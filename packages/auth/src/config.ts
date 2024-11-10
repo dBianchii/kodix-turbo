@@ -1,13 +1,13 @@
 import { cookies, headers } from "next/headers";
+import { verify } from "@node-rs/argon2";
 import { sha256 } from "@oslojs/crypto/sha2";
 import {
   encodeBase32LowerCaseNoPadding,
   encodeHexLowerCase,
 } from "@oslojs/encoding";
 
-import { eq } from "@kdx/db";
-import { db } from "@kdx/db/client";
-import { sessions, teams, users } from "@kdx/db/schema";
+import type { sessions, users } from "@kdx/db/schema";
+import { authRepository, userRepository } from "@kdx/db/repositories";
 
 import { env } from "../env";
 import * as discordProvider from "./providers/discord";
@@ -48,45 +48,39 @@ export async function createSession(token: string, userId: string) {
       "127.0.0.1",
     userAgent: heads.get("user-agent"),
   };
-  await db.insert(sessions).values(session);
+  await authRepository.createSession(session);
   return session;
 }
 
 async function validateSessionToken(token: string): Promise<AuthResponse> {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
-  const result = await db
-    .select({ user: users, session: sessions, team: teams })
-    .from(sessions)
-    .innerJoin(users, eq(sessions.userId, users.id))
-    .innerJoin(teams, eq(teams.id, users.activeTeamId))
-    .where(eq(sessions.id, sessionId));
+  const result = await authRepository.findUserTeamBySessionId({ sessionId });
 
-  if (!result[0]) return { session: null, user: null };
-  const { user, session, team } = result[0];
+  if (!result) return { session: null, user: null };
+  const { user, session, team } = result;
 
   if (Date.now() >= session.expiresAt.getTime()) {
-    await db.delete(sessions).where(eq(sessions.id, session.id));
+    await authRepository.deleteSession(session.id);
     return { session: null, user: null };
   }
 
   const fifteenDaysInMilliseconds = 1000 * 60 * 60 * 24 * 15;
   if (Date.now() >= session.expiresAt.getTime() - fifteenDaysInMilliseconds) {
     session.expiresAt = thirtyDaysFromNow;
-    await db
-      .update(sessions)
-      .set({
+    await authRepository.updateSession({
+      id: session.id,
+      input: {
         expiresAt: session.expiresAt,
-      })
-      .where(eq(sessions.id, session.id));
+      },
+    });
   }
   return { session, user: { ...user, activeTeamName: team.name } };
 }
 
 export async function invalidateSession(sessionId: string) {
-  await db.delete(sessions).where(eq(sessions.id, sessionId));
+  await authRepository.deleteSession(sessionId);
 }
 
-//* Cookies
 export function setSessionTokenCookie(token: string, expiresAt: Date) {
   cookies().set("session", token, {
     httpOnly: true,
@@ -105,6 +99,54 @@ export function deleteSessionTokenCookie() {
     maxAge: 0,
     path: "/",
   });
+}
+
+export const argon2Config = {
+  // recommended minimum parameters
+  memoryCost: 19456,
+  timeCost: 2,
+  outputLen: 32,
+  parallelism: 1,
+};
+
+/**
+ * Validates a user's email and password. Returns the user's ID if successful.
+ */
+export async function validateUserEmailAndPassword({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) {
+  const existingUser = await userRepository.findUserByEmail(email);
+  if (!existingUser) {
+    // NOTE:
+    // Returning immediately allows malicious actors to figure out valid usernames from response times,
+    // allowing them to only focus on guessing passwords in brute-force attacks.
+    // As a preventive measure, you may want to hash passwords even for invalid usernames.
+    // However, valid usernames can be already be revealed with the signup page among other methods.
+    // It will also be much more resource intensive.
+    // Since protecting against this is non-trivial,
+    // it is crucial your implementation is protected against brute-force attacks with login throttling etc.
+    // If usernames are public, you may outright tell the user that the username is invalid.
+    throw new Error("Incorrect email or password");
+  }
+  if (!existingUser.passwordHash)
+    throw new Error("Incorrect email or password");
+
+  const validPassword = await verify(
+    existingUser.passwordHash,
+    password,
+    argon2Config,
+  );
+  if (!validPassword) throw new Error("Incorrect email or password");
+
+  /**Returns an object representing the validated user */
+  return {
+    id: existingUser.id,
+    activeTeamId: existingUser.activeTeamId,
+  };
 }
 
 export const auth = async () => {

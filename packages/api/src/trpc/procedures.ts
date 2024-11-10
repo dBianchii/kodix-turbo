@@ -1,9 +1,7 @@
 import type { inferProcedureBuilderResolverOptions } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
-import { getTranslations } from "next-intl/server";
 
-import { eq } from "@kdx/db";
-import { teams } from "@kdx/db/schema";
+import { teamRepository } from "@kdx/db/repositories";
 
 import { timingMiddleware } from "./middlewares";
 import { t } from "./trpc";
@@ -49,24 +47,17 @@ export type TProtectedProcedureContext = inferProcedureBuilderResolverOptions<
 
 export const isTeamOwnerProcedure = protectedProcedure.use(
   async ({ ctx, next }) => {
-    const team = await ctx.db.query.teams.findFirst({
-      where: eq(teams.id, ctx.auth.user.activeTeamId),
-      columns: {
-        id: true,
-        ownerId: true,
-      },
-    });
+    const team = await teamRepository.findTeamById(ctx.auth.user.activeTeamId);
 
-    const t = await getTranslations({ locale: ctx.locale });
     if (!team)
       throw new TRPCError({
-        message: t("api.No Team Found"),
+        message: ctx.t("api.No Team Found"),
         code: "NOT_FOUND",
       });
 
     if (team.ownerId !== ctx.auth.user.id)
       throw new TRPCError({
-        message: t("api.Only the team owner can perform this action"),
+        message: ctx.t("api.Only the team owner can perform this action"),
         code: "FORBIDDEN",
       });
 

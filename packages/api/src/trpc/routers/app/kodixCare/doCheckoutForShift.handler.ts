@@ -1,13 +1,11 @@
 import { TRPCError } from "@trpc/server";
-import { getTranslations } from "next-intl/server";
 
 import type { TDoCheckoutForShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import dayjs from "@kdx/dayjs";
-import { eq } from "@kdx/db";
-import { careShifts } from "@kdx/db/schema";
+import { db } from "@kdx/db/client";
+import { kodixCareRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
-import { getCurrentShiftHandler } from "./getCurrentShift.handler";
 
 interface DoCheckoutForShiftOptions {
   ctx: TProtectedProcedureContext;
@@ -18,27 +16,41 @@ export const doCheckoutForShiftHandler = async ({
   ctx,
   input,
 }: DoCheckoutForShiftOptions) => {
-  const currentShift = await getCurrentShiftHandler({ ctx });
-  const t = await getTranslations({ locale: ctx.locale });
+  const currentShift = await kodixCareRepository.getCurrentCareShiftByTeamId(
+    ctx.auth.user.activeTeamId,
+  );
+
   if (!currentShift) {
     throw new TRPCError({
       code: "NOT_FOUND",
-      message: t("api.No current shift found"),
+      message: ctx.t("api.No current shift found"),
     });
   }
+
+  if (currentShift.shiftEndedAt) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: ctx.t("api.Shift has already ended"),
+    });
+  }
+
   if (currentShift.Caregiver.id !== ctx.auth.user.id)
     throw new TRPCError({
       code: "FORBIDDEN",
-      message: t("api.You are not the caregiver for this shift"),
+      message: ctx.t("api.You are not the caregiver for this shift"),
     });
-  if (dayjs(input.date).isBefore(dayjs(currentShift.checkOut)))
+  if (dayjs(input.date).isBefore(dayjs(currentShift.checkIn)))
     throw new TRPCError({
       code: "BAD_REQUEST",
-      message: t("api.Checkout time must be after checkin time"),
+      message: ctx.t("api.Checkout time must be after checkin time"),
     });
 
-  await ctx.db
-    .update(careShifts)
-    .set({ checkOut: input.date })
-    .where(eq(careShifts.id, currentShift.id));
+  await kodixCareRepository.updateCareShift(db, {
+    id: currentShift.id,
+    input: {
+      checkOut: input.date,
+      shiftEndedAt: input.date,
+      notes: input.notes,
+    },
+  });
 };

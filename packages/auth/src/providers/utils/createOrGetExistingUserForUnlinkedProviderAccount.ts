@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 
 import { db } from "@kdx/db/client";
 import { nanoid } from "@kdx/db/nanoid";
-import { accounts } from "@kdx/db/schema";
+import { authRepository, userRepository } from "@kdx/db/repositories";
 
 import { createUser } from "../../utils";
 
@@ -20,38 +20,27 @@ export default async function createOrGetExistingUserForUnlinkedProviderAccount(
   providerId: "google" | "discord";
 }) {
   let userId = nanoid();
+  const existingUser = await userRepository.findUserByEmail(email);
 
   await db.transaction(async (tx) => {
-    const existingUser = await tx.query.users.findFirst({
-      columns: {
-        id: true,
-        image: true,
-      },
-      where: (users, { and, eq }) => {
-        return and(eq(users.email, email));
-      },
-    });
-
-    if (!existingUser) {
-      const teamId = nanoid();
+    if (existingUser) userId = existingUser.id;
+    else {
       const invite = cookies().get("invite")?.value;
       await createUser({
+        tx,
         name,
         email,
         image: image ?? "",
-        teamId,
+        teamId: nanoid(),
         userId,
         invite,
-        tx,
       });
       cookies().delete("invite");
-    } else {
-      userId = existingUser.id;
     }
 
-    await tx.insert(accounts).values({
-      providerId: providerId,
-      providerUserId: providerUserId,
+    await authRepository.createAccount(tx, {
+      providerId,
+      providerUserId,
       userId,
     });
   });

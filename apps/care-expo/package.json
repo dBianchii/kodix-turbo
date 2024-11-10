@@ -73,6 +73,7 @@
     "superjson": "2.2.1",
     "tailwind-merge": "^2.5.3",
     "tamagui": "^1.110.5",
+    "use-intl": "^3.20.0",
     "zod": "catalog:"
   },
   "devDependencies": {

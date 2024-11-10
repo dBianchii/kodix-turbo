@@ -3,9 +3,7 @@
 import type { PopoverContentProps } from "@radix-ui/react-popover";
 import * as React from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
-
-import { useFormatter } from "@kdx/locales/next-intl";
-import { useTranslations } from "@kdx/locales/next-intl/client";
+import { useFormatter, useTranslations } from "next-intl";
 
 import { cn } from ".";
 import { Button } from "./button";
@@ -22,6 +20,9 @@ interface DateTimePickerProps {
   side?: PopoverContentProps["side"];
 }
 
+/**
+ * @deprecated This component is deprecated. Please use date-n-time instead
+ */
 export function DateTimePicker({
   date,
   setDate,

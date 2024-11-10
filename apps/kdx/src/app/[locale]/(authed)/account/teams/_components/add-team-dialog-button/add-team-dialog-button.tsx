@@ -2,11 +2,11 @@
 
 import type { ReactNode } from "react";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { useAction } from "next-safe-action/hooks";
 import { LuLoader2 } from "react-icons/lu";
 import { RxPlusCircled } from "react-icons/rx";
 
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { useRouter } from "@kdx/locales/next-intl/navigation";
 import { getErrorMessage } from "@kdx/shared";
 import { cn } from "@kdx/ui";

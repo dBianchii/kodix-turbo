@@ -1,6 +1,6 @@
 import type { TChangeNameInputSchema } from "@kdx/validators/trpc/user";
-import { eq } from "@kdx/db";
-import { users } from "@kdx/db/schema";
+import { db } from "@kdx/db/client";
+import { userRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 
@@ -10,8 +10,8 @@ interface ChangeNameOptions {
 }
 
 export const changeNameHandler = async ({ ctx, input }: ChangeNameOptions) => {
-  return await ctx.db
-    .update(users)
-    .set({ name: input.name })
-    .where(eq(users.id, ctx.auth.user.id));
+  await userRepository.updateUser(db, {
+    id: ctx.auth.user.id,
+    input: { name: input.name },
+  });
 };

@@ -4,8 +4,8 @@ import type { Table } from "@tanstack/react-table";
 import * as React from "react";
 import { useSearchParams } from "next/navigation";
 import { CaretSortIcon, PlusIcon } from "@radix-ui/react-icons";
+import { useTranslations } from "next-intl";
 
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import { DataTableViewOptions } from "@kdx/ui/data-table/data-table-view-options";

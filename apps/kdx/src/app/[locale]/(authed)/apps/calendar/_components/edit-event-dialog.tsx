@@ -1,5 +1,6 @@
 import type { Frequency } from "rrule";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { LuAlertCircle, LuLoader2 } from "react-icons/lu";
 import { RRule, Weekday } from "rrule";
 
@@ -7,7 +8,6 @@ import type { RouterInputs, RouterOutputs } from "@kdx/api";
 import type { Dayjs } from "@kdx/dayjs";
 import type { eventMasters } from "@kdx/db/schema";
 import dayjs from "@kdx/dayjs";
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import { Checkbox } from "@kdx/ui/checkbox";
@@ -19,7 +19,7 @@ import {
   CredenzaHeader,
   CredenzaTitle,
 } from "@kdx/ui/credenza";
-import { DateTimePicker } from "@kdx/ui/date-time-picker";
+import { DateTimePicker24h } from "@kdx/ui/date-n-time/date-time-picker-24h";
 import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
 import { RadioGroup, RadioGroupItem } from "@kdx/ui/radio-group";
@@ -225,7 +225,7 @@ export function EditEventDialog({
           <div className="flex flex-row gap-4">
             <div className="flex flex-col space-y-2">
               <Label>{t("From")}</Label>
-              <DateTimePicker
+              <DateTimePicker24h
                 date={from.toDate()}
                 setDate={(newDate) => setFrom(dayjs(newDate))}
               />

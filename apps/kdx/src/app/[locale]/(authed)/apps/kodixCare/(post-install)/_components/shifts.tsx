@@ -1,17 +1,15 @@
 "use client";
 
+import type { DateTimeFormatOptions } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import { HiUserCircle } from "react-icons/hi";
 import { IoMdTime } from "react-icons/io";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
-import type { DateTimeFormatOptions } from "@kdx/locales/next-intl";
-import { useFormatter } from "@kdx/locales/next-intl";
-import { useTranslations } from "@kdx/locales/next-intl/client";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Badge } from "@kdx/ui/badge";
 import { Card } from "@kdx/ui/card";
-import { useRerenderForRelativeTime } from "@kdx/ui/hooks/use-rerender-for-relative-time";
 import { Label } from "@kdx/ui/label";
 
 import { api } from "~/trpc/react";
@@ -32,9 +30,9 @@ export function CurrentShiftClient({
   //Se tiver shift mas nao tiver shiftEndedAt é pq o shift ta em progresso
   //Se tiver shift e tiver shiftEndedAt é pq o shift acabou
   if (!query.data) return <NoPreviousShift user={user} />;
-  if (!query.data.checkOut)
-    return <ShiftInProgress currentShift={query.data} user={user} />;
-  return <ShiftCheckedOut currentShift={query.data} user={user} />;
+  if (query.data.shiftEndedAt)
+    return <ShiftEnded currentShift={query.data} user={user} />;
+  return <ShiftInProgress currentShift={query.data} user={user} />;
 }
 
 export function NoPreviousShift({ user }: { user: User }) {
@@ -94,7 +92,7 @@ export function ShiftInProgress({
   );
 }
 
-export function ShiftCheckedOut({
+export function ShiftEnded({
   user,
   currentShift,
 }: {
@@ -143,7 +141,7 @@ function TimeInfo({
     hour: "numeric",
     minute: "numeric",
   };
-  useRerenderForRelativeTime([currentShift.checkIn, currentShift.checkOut]);
+
   return (
     <div className="flex items-center justify-center">
       <div className="col mr-3">
@@ -162,7 +160,7 @@ function TimeInfo({
           {format.dateTime(currentShift.checkIn, timeInfoFormat)}
         </Badge>
       </div>
-      {currentShift.checkOut && (
+      {currentShift.shiftEndedAt && (
         <div className="col w-20">
           <Label className="text-xs text-muted-foreground" htmlFor="endBadge">
             {t("End")}
@@ -172,7 +170,7 @@ function TimeInfo({
             variant={"outline"}
             className="w-24 py-0 text-center text-xs text-muted-foreground"
           >
-            {format.dateTime(currentShift.checkOut, timeInfoFormat)}
+            {format.dateTime(currentShift.shiftEndedAt, timeInfoFormat)}
           </Badge>
         </div>
       )}

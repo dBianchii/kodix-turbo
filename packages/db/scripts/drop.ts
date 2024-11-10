@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm/sql";
 
-import { db } from "../client";
+import { db } from "../src/client";
 
 if (!process.env.MYSQL_URL) throw new Error("MYSQL_URL is not set");
 

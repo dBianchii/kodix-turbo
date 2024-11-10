@@ -1,7 +1,12 @@
 import { relations } from "drizzle-orm";
-import { index, mysqlTable } from "drizzle-orm/mysql-core";
-
-import { NANOID_SIZE } from "@kdx/shared";
+import {
+  boolean,
+  index,
+  mysqlTable,
+  timestamp,
+  varchar,
+} from "drizzle-orm/mysql-core";
+import { createInsertSchema } from "drizzle-zod";
 
 import { teams } from "../teams";
 import { users } from "../users";
@@ -44,6 +49,7 @@ export const careShiftsRelations = relations(careShifts, ({ one }) => ({
     references: [teams.id],
   }),
 }));
+export const careShiftSchema = createInsertSchema(careShifts);
 
 export const careTasks = mysqlTable(
   "careTask",
@@ -72,7 +78,8 @@ export const careTasks = mysqlTable(
       .varchar({ length: NANOID_SIZE })
       .notNull()
       .references(() => users.id),
-  }),
+    createdFromCalendar: boolean("createdFromCalendar").notNull(),
+  },
   (table) => {
     return {
       doneByUserIdIdx: index("doneByUserId_idx").on(table.doneByUserId),
@@ -100,3 +107,4 @@ export const careTasksRelations = relations(careTasks, ({ one }) => ({
     references: [eventMasters.id],
   }),
 }));
+export const careTaskSchema = createInsertSchema(careTasks);

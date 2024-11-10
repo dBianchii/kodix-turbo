@@ -1,6 +1,8 @@
+import type { DateTimeFormatOptions } from "next-intl";
 import { Easing } from "react-native-reanimated";
 import { ArrowRight, UserCircle2 } from "@tamagui/lucide-icons";
 import { MotiView } from "moti";
+import { useFormatter } from "next-intl";
 import {
   H4,
   Paragraph,
@@ -13,8 +15,6 @@ import {
 } from "tamagui";
 
 import type { RouterOutputs } from "@kdx/api";
-import type { DateTimeFormatOptions } from "@kdx/locales/use-intl";
-import { useFormatter } from "@kdx/locales/use-intl";
 
 import { AvatarWrapper } from "~/components/avatar-wrapper";
 import { api } from "~/utils/api";
@@ -25,9 +25,8 @@ export function CurrentShift() {
 
   if (!query.data) return <NoPreviousShift />;
 
-  if (!query.data.checkOut)
-    return <ShiftInProgress currentShift={query.data} />;
-  return <ShiftCheckedOut currentShift={query.data} />;
+  if (query.data.shiftEndedAt) return <ShiftEnded currentShift={query.data} />;
+  return <ShiftInProgress currentShift={query.data} />;
 }
 
 function NoPreviousShift() {
@@ -123,7 +122,7 @@ function ShiftInProgress({
   );
 }
 
-function ShiftCheckedOut({
+function ShiftEnded({
   currentShift,
 }: {
   currentShift: NonNullable<
@@ -199,7 +198,7 @@ function TimeInfo({
           </View>
         </YStack>
       </YStack>
-      {currentShift.checkOut && (
+      {currentShift.shiftEndedAt && (
         <>
           <YStack jc={"flex-end"}>
             <ArrowRight color={"$white10"} />
@@ -215,7 +214,7 @@ function TimeInfo({
             >
               <View px={"$2"} py={0} jc={"center"} h={"$1"}>
                 <Text color={"$white075"}>
-                  {format.dateTime(currentShift.checkOut, timeInfoFormat)}
+                  {format.dateTime(currentShift.shiftEndedAt, timeInfoFormat)}
                 </Text>
               </View>
             </YStack>

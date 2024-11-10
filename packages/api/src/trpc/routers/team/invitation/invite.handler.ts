@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { TRPCError } from "@trpc/server";
-import { getTranslations } from "next-intl/server";
 
+import type { invitations } from "@kdx/db/schema";
 import type { TInviteInputSchema } from "@kdx/validators/trpc/team/invitation";
+import { db } from "@kdx/db/client";
 import { nanoid } from "@kdx/db/nanoid";
-import { invitations } from "@kdx/db/schema";
+import { teamRepository } from "@kdx/db/repositories";
 import TeamInvite from "@kdx/react-email/team-invite";
 import {
   getBaseUrl,
@@ -21,38 +22,14 @@ interface InviteOptions {
 }
 
 export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
-  const team = await ctx.db.query.teams.findFirst({
-    where: (teams, { and, eq }) => and(eq(teams.id, input.teamId)),
-    columns: {
-      name: true,
-      id: true,
-    },
-    with: {
-      UsersToTeams: {
-        // where: (usersToTeams, { eq }) =>
-        //   eq(usersToTeams.userId, ctx.auth.user.id),
-        with: {
-          User: {
-            columns: {
-              email: true,
-            },
-          },
-        },
-      },
-      Invitations: {
-        where: (invitations, { inArray }) =>
-          inArray(invitations.email, input.to),
-        columns: {
-          email: true,
-        },
-      },
-    },
+  const team = await teamRepository.findTeamWithUsersAndInvitations({
+    teamId: input.teamId,
+    email: input.to,
   });
-  const t = await getTranslations({ locale: ctx.locale });
 
   if (!team)
     throw new TRPCError({
-      message: t("api.No Team Found"),
+      message: ctx.t("api.No Team Found"),
       code: "NOT_FOUND",
     });
 
@@ -61,7 +38,7 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
   );
   if (inTeamEmail)
     throw new TRPCError({
-      message: t("api.User USER is already a member of this team", {
+      message: ctx.t("api.User USER is already a member of this team", {
         user: inTeamEmail,
       }),
       code: "CONFLICT",
@@ -69,7 +46,7 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
 
   if (team.Invitations[0])
     throw new TRPCError({
-      message: t("api.Invitation already sent to EMAIL", {
+      message: ctx.t("api.Invitation already sent to EMAIL", {
         email: team.Invitations[0].email,
       }),
       code: "CONFLICT",
@@ -90,17 +67,16 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
       await resend.emails.send({
         from: KODIX_NOTIFICATION_FROM_EMAIL,
         to: invite.email,
-        subject: t("api.You have been invited to join a team on URL", {
+        subject: ctx.t("api.You have been invited to join a team on URL", {
           url: getBaseUrl(),
         }),
         react: TeamInvite({
           invitedByEmail: ctx.auth.user.email,
-          invitedByUsername: ctx.auth.user.name!,
+          invitedByUsername: ctx.auth.user.name,
           inviteLink: `${getBaseUrl()}/team/invite/${invite.id}`,
           teamImage: `${getBaseUrl()}/api/avatar/${team.name}`,
           teamName: team.name,
-          locale: ctx.locale,
-          // username: ??
+          t: ctx.t,
         }),
       });
       return invite;
@@ -110,7 +86,8 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
   const { successes } = getSuccessesAndErrors(results);
 
   if (successes.length)
-    await ctx.db.insert(invitations).values(
+    await teamRepository.createManyInvitations(
+      db,
       successes.map((success) => {
         return _invitations.find((x) => x.id === success.value.id)!;
       }),
