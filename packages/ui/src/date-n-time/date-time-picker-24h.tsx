@@ -27,6 +27,7 @@ export function DateTimePicker24h({
   disabledDate,
   side,
 }: DateTimePickerProps) {
+  if (disabledDate) throw new Error("disabledDate is not implemented yet");
   const t = useTranslations();
   const format = useFormatter();
   const hours = Array.from({ length: 24 }, (_, i) => i);
@@ -87,14 +88,14 @@ export function DateTimePicker24h({
             selected={date}
             onSelect={handleDateSelect}
             initialFocus
-            disabled={(dateToCheck) => {
-              if (!disabledDate) return false;
+            // disabled={(dateToCheck) => {
+            //   if (!disabledDate) return false;
 
-              const startOfDay = new Date(dateToCheck);
-              startOfDay.setHours(0, 0, 0, 0);
+            //   const startOfDay = new Date(dateToCheck);
+            //   startOfDay.setHours(0, 0, 0, 0);
 
-              return disabledDate(startOfDay);
-            }}
+            //   return disabledDate(startOfDay);
+            // }}
           />
           <div className="flex flex-col divide-y sm:h-[300px] sm:flex-row sm:divide-x sm:divide-y-0">
             <ScrollArea className="w-64 sm:w-auto">
@@ -102,7 +103,7 @@ export function DateTimePicker24h({
                 {hours.reverse().map((hour) => (
                   <Button
                     key={hour}
-                    disabled={disabledDate?.(new Date(date ?? 0))} //!!CHECK THIS
+                    // disabled={disabledDate?.(new Date(date ?? 0))} //!!CHECK THIS
                     size="icon"
                     variant={
                       date && date.getHours() === hour ? "default" : "ghost"

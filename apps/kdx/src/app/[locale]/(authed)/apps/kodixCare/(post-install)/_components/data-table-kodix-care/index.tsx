@@ -57,7 +57,6 @@ import {
 import { DataTableColumnHeader } from "@kdx/ui/data-table/data-table-column-header";
 import { DataTableViewOptions } from "@kdx/ui/data-table/data-table-view-options";
 import { DateTimePicker24h } from "@kdx/ui/date-n-time/date-time-picker-24h";
-import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -683,12 +682,12 @@ function AddCareTaskCredenzaButton() {
                           setDate={(newDate) =>
                             field.onChange(newDate ?? new Date())
                           }
-                          disabledDate={(date) => {
-                            const thing = dayjs(date).isBefore(new Date());
-                            if (!thing) console.log(date);
+                          // disabledDate={(date) => {
+                          //   const thing = dayjs(date).isBefore(new Date());
+                          //   if (!thing) console.log(date);
 
-                            return thing;
-                          }}
+                          //   return thing;
+                          // }}
                         />
                       </div>
                     </FormControl>
@@ -919,7 +918,7 @@ function EditCareTaskCredenza({
                     <FormLabel>{t("Done at")}</FormLabel>
                     <FormControl>
                       <div className="flex flex-row gap-2">
-                        <DateTimePicker
+                        <DateTimePicker24h
                           date={field.value ?? undefined}
                           setDate={(newDate) =>
                             field.onChange(newDate ?? new Date())
