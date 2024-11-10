@@ -45,7 +45,6 @@ export function DataTableShifts({
 }) {
   const t = useTranslations();
   const format = useFormatter();
-  const [open, setOpen] = useState(false);
 
   const columns = useMemo(
     () => [
@@ -220,6 +219,7 @@ export function DataTableShifts({
                       role="link"
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
+                      className="cursor-pointer"
                     >
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id}>
