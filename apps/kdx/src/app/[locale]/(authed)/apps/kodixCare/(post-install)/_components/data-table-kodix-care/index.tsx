@@ -246,15 +246,7 @@ export default function DataTableKodixCare() {
           </DataTableColumnHeader>
         ),
         cell: (ctx) => (
-          <div>
-            {format.dateTime(ctx.row.original.date, {
-              day: "2-digit",
-              month: "long",
-              year: "numeric",
-              hour: "numeric",
-              minute: "numeric",
-            })}
-          </div>
+          <div>{format.dateTime(ctx.row.original.date, "shortWithHours")}</div>
         ),
       }),
       columnHelper.accessor("doneAt", {
@@ -271,13 +263,7 @@ export default function DataTableKodixCare() {
           if (!ctx.row.original.doneAt) return null;
           return (
             <div>
-              {format.dateTime(ctx.row.original.doneAt, {
-                day: "2-digit",
-                month: "long",
-                year: "numeric",
-                hour: "numeric",
-                minute: "numeric",
-              })}
+              {format.dateTime(ctx.row.original.doneAt, "shortWithHours")}
             </div>
           );
         },
@@ -901,12 +887,7 @@ function EditCareTaskCredenza({
               </span>
               <span className="flex text-xs font-semibold">
                 <RxCalendar className="mr-2 size-3 text-muted-foreground" />
-                {format.dateTime(task.date, {
-                  day: "2-digit",
-                  month: "short",
-                  hour: "numeric",
-                  minute: "numeric",
-                })}
+                {format.dateTime(task.date, "shortWithHours")}
               </span>
             </div>
             <div className="grid gap-4 py-4">

@@ -46,6 +46,6 @@ export const doCheckoutForShiftHandler = async ({
 
   await ctx.db
     .update(careShifts)
-    .set({ checkOut: input.date, shiftEndedAt: input.date })
+    .set({ checkOut: input.date, shiftEndedAt: input.date, notes: input.notes })
     .where(eq(careShifts.id, currentShift.id));
 };
