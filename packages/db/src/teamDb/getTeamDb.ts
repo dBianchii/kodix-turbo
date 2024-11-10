@@ -446,5 +446,7 @@ export const getTeamDb = (team: Team): TeamDbClient => {
     });
   };
 
+  //TODO: FIIIIIIIIIIIIIIIIIIIIIIIIXXXXXXXXX
+  // @ts-expect-error: typescript aint easy
   return createProxy(db, { path: ["db"] });
 };
