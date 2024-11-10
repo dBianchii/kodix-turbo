@@ -1,16 +1,15 @@
 import { TRPCError } from "@trpc/server";
 
 import dayjs from "@kdx/dayjs";
-import { and, desc, eq, gte, isNotNull } from "@kdx/db";
+import { db } from "@kdx/db/client";
 import { nanoid } from "@kdx/db/nanoid";
-import { careShifts, careTasks } from "@kdx/db/schema";
+import { careTaskRepository, kodixCareRepository } from "@kdx/db/repositories";
 import WarnPreviousShiftNotEnded from "@kdx/react-email/warn-previous-shift-not-ended";
 import { KODIX_NOTIFICATION_FROM_EMAIL, kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 import { resend } from "../../../../sdks/email";
 import { getConfigHandler } from "../getConfig.handler";
-import { getCurrentShiftHandler } from "./getCurrentShift.handler";
 import { cloneCalendarTasksToCareTasks } from "./utils";
 
 interface ToggleShiftOptions {
@@ -40,9 +39,9 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
       .startOf("day")
       .toDate();
 
-    await ctx.db.transaction(async (tx) => {
+    await db.transaction(async (tx) => {
       const careShiftId = nanoid();
-      await ctx.db.insert(careShifts).values({
+      await kodixCareRepository.createCareShift(tx, {
         id: careShiftId,
         caregiverId: ctx.auth.user.id,
         teamId: ctx.auth.user.activeTeamId,
@@ -52,18 +51,18 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
         careShiftId,
         start: yesterdayStartOfDay,
         end: tomorrowEndOfDay,
+        tx,
         ctx: {
           ...ctx,
-          db: tx,
         },
       });
     });
     return;
   }
 
-  const currentShift = await getCurrentShiftHandler({
-    ctx,
-  });
+  const currentShift = await kodixCareRepository.getCurrentCareShiftByTeamId(
+    ctx.auth.user.activeTeamId,
+  );
   if (!currentShift)
     //Needed for typesafety
     throw new TRPCError({
@@ -76,58 +75,45 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
   const loggedUserIsCaregiverForCurrentShift =
     ctx.auth.user.id === currentShift.Caregiver.id;
 
-  await ctx.db.transaction(async (tx) => {
+  await db.transaction(async (tx) => {
     //*End the current shift
-    await tx
-      .update(careShifts)
-      .set({
+    await kodixCareRepository.updateCareShift(tx, {
+      id: currentShift.id,
+      input: {
         checkOut: loggedUserIsCaregiverForCurrentShift ? new Date() : undefined, //Also checkOut if user is the caregiver
         shiftEndedAt: new Date(),
-      })
-      .where(eq(careShifts.id, currentShift.id));
+      },
+    });
 
     const now = new Date();
     //*Start a new shift
-    const [newCareShift] = await tx
-      .insert(careShifts)
-      .values({
-        teamId: ctx.auth.user.activeTeamId,
-        checkIn: now,
-        caregiverId: ctx.auth.user.id,
-      })
-      .$returningId();
+    const [newCareShift] = await kodixCareRepository.createCareShift(tx, {
+      teamId: ctx.auth.user.activeTeamId,
+      checkIn: now,
+      caregiverId: ctx.auth.user.id,
+    });
 
     //* Move all tasks from previous shift to current shift
-    const previousShift = await tx.query.careShifts.findFirst({
-      orderBy: desc(careShifts.checkIn),
-      where: and(
-        eq(careShifts.teamId, ctx.auth.user.activeTeamId),
-        isNotNull(careShifts.shiftEndedAt),
-      ),
-      columns: { id: true },
-    });
+    const previousShift = await kodixCareRepository.getPreviousShiftByTeamId(
+      tx,
+      ctx.auth.user.activeTeamId,
+    );
     if (previousShift) {
-      await tx
-        .update(careTasks)
-        .set({
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          careShiftId: newCareShift!.id,
-        })
-        .where(
-          and(
-            gte(careTasks.date, now),
-            eq(careTasks.careShiftId, previousShift.id),
-          ),
-        );
+      await careTaskRepository.reassignCareTasksFromDateToShift(tx, {
+        previousCareShiftId: previousShift.id,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        newCareShiftId: newCareShift!.id,
+        date: now,
+      });
     }
 
     await cloneCalendarTasksToCareTasks({
       careShiftId: currentShift.id,
       start: clonedCareTasksUntil,
       end: tomorrowEndOfDay,
+      tx,
       ctx: {
         ...ctx,
-        db: tx,
       },
     });
 
@@ -141,7 +127,7 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
         }),
         react: WarnPreviousShiftNotEnded({
           t: ctx.t,
-          personWhoEndedShiftName: ctx.auth.user.name ?? "",
+          personWhoEndedShiftName: ctx.auth.user.name,
         }),
       });
   });

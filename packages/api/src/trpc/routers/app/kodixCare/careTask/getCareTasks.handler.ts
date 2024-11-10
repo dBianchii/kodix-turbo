@@ -13,7 +13,6 @@ export const getCareTasksHandler = async ({
   input,
 }: GetCareTasksOptions) => {
   const careTasks = await getCareTasks({
-    ctx,
     dateStart: input.dateStart,
     dateEnd: input.dateEnd,
     teamIds: [ctx.auth.user.activeTeamId],

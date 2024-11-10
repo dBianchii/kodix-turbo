@@ -1,11 +1,12 @@
 import { TRPCError } from "@trpc/server";
 
 import type { TUnlockMoreTasksInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
+import { db } from "@kdx/db/client";
+import { kodixCareRepository } from "@kdx/db/repositories";
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
 import { getConfigHandler } from "../../getConfig.handler";
-import { getCurrentShiftHandler } from "../getCurrentShift.handler";
 import { cloneCalendarTasksToCareTasks } from "../utils";
 
 interface UnlockMoreTasksInputOptions {
@@ -45,7 +46,9 @@ export const unlockMoreTasksHandler = async ({
       ),
     });
 
-  const careShift = await getCurrentShiftHandler({ ctx });
+  const careShift = await kodixCareRepository.getCurrentCareShiftByTeamId(
+    ctx.auth.user.activeTeamId,
+  );
   if (!careShift)
     throw new TRPCError({
       code: "FORBIDDEN",
@@ -53,6 +56,7 @@ export const unlockMoreTasksHandler = async ({
     });
 
   await cloneCalendarTasksToCareTasks({
+    tx: db,
     careShiftId: careShift.id,
     start: clonedCareTasksUntil,
     end: input.selectedTimestamp,

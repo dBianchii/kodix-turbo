@@ -21,6 +21,7 @@ import { leaveTeamHandler } from "./leaveTeam.handler";
 import { removeUserHandler } from "./removeUser.handler";
 import { updateHandler } from "./update.handler";
 
+//
 export const teamRouter = {
   appRole: appRoleRouter,
   invitation: invitationRouter,

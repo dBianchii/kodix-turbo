@@ -5,6 +5,7 @@ import { useAction } from "next-safe-action/hooks";
 import { LuArrowRight, LuLoader2 } from "react-icons/lu";
 
 import { useRouter } from "@kdx/locales/next-intl/navigation";
+import { kodixCareConfigSchema } from "@kdx/shared";
 import { Button } from "@kdx/ui/button";
 import {
   Card,
@@ -25,7 +26,6 @@ import {
   useForm,
 } from "@kdx/ui/form";
 import { Input } from "@kdx/ui/input";
-import { kodixCareConfigSchema } from "@kdx/validators";
 
 import { defaultSafeActionToastError } from "~/helpers/safe-action/default-action-error-toast";
 import { finishKodixCareOnboardingAction } from "../actions/onboardingActions";

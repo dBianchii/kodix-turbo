@@ -2,14 +2,11 @@ import { TRPCError } from "@trpc/server";
 import { RRule, rrulestr } from "rrule";
 
 import type { TCancelInputSchema } from "@kdx/validators/trpc/app/calendar";
-import { and, eq, gte, inArray } from "@kdx/db";
-import {
-  eventCancellations,
-  eventExceptions,
-  eventMasters,
-} from "@kdx/db/schema";
+import { db } from "@kdx/db/client";
+import { calendarRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
+import { deleteEventMasterById } from "../../../../../../db/src/repositories/app/calendar/calendarRepository";
 
 interface CancelOptions {
   ctx: TProtectedProcedureContext;
@@ -19,26 +16,27 @@ interface CancelOptions {
 export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
   if (input.exclusionDefinition === "single") {
     if (input.eventExceptionId) {
-      await ctx.db.transaction(async (tx) => {
-        const toDeleteException = await tx.query.eventExceptions.findFirst({
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          where: (asd, { eq }) => eq(asd.id, input.eventExceptionId!),
-          columns: {
-            eventMasterId: true,
-            originalDate: true,
-          },
-        });
+      await db.transaction(async (tx) => {
+        const toDeleteException =
+          await calendarRepository.findEventExceptionById(
+            tx,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            input.eventExceptionId!,
+          );
         if (!toDeleteException) {
           throw new TRPCError({
             code: "NOT_FOUND",
             message: ctx.t("api.Exception not found"),
           });
         }
-        await tx
-          .delete(eventExceptions)
+
+        await calendarRepository.deleteEventExceptionById(
+          tx,
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          .where(eq(eventExceptions.id, input.eventExceptionId!));
-        return await tx.insert(eventCancellations).values({
+          input.eventExceptionId!,
+        );
+
+        await calendarRepository.createEventCancellation(tx, {
           eventMasterId: toDeleteException.eventMasterId,
           originalDate: toDeleteException.originalDate,
         });
@@ -46,38 +44,25 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
       return;
     }
 
-    await ctx.db.insert(eventCancellations).values({
+    await calendarRepository.createEventCancellation(db, {
       eventMasterId: input.eventMasterId,
       originalDate: input.date,
     });
+
     return;
   } else if (input.exclusionDefinition === "thisAndFuture") {
-    await ctx.db.transaction(async (tx) => {
+    await db.transaction(async (tx) => {
       if (input.eventExceptionId) {
-        const allEventMastersIdsForThisTeamQuery = ctx.db
-          .select({ id: eventMasters.id })
-          .from(eventMasters)
-          .where(eq(eventMasters.teamId, ctx.auth.user.activeTeamId));
-
-        await tx
-          .delete(eventExceptions)
-          .where(
-            and(
-              inArray(
-                eventExceptions.eventMasterId,
-                allEventMastersIdsForThisTeamQuery,
-              ),
-              eq(eventExceptions.id, input.eventExceptionId),
-              gte(eventExceptions.newDate, input.date),
-            ),
-          );
+        await calendarRepository.deleteEventExceptionsHigherThanDate(tx, {
+          teamId: ctx.auth.user.activeTeamId,
+          date: input.date,
+          eventExceptionId: input.eventExceptionId,
+        });
       }
-      const eventMaster = await tx.query.eventMasters.findFirst({
-        where: eq(eventMasters.id, input.eventMasterId),
-        columns: {
-          rule: true,
-          dateStart: true,
-        },
+
+      const eventMaster = await calendarRepository.findEventMasterById(tx, {
+        id: input.eventMasterId,
+        teamId: ctx.auth.user.activeTeamId,
       });
       if (!eventMaster)
         throw new TRPCError({
@@ -89,26 +74,24 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
       const occurences = rule.between(eventMaster.dateStart, input.date, true);
       const penultimateOccurence = occurences[occurences.length - 2];
       if (!penultimateOccurence)
-        await tx
-          .delete(eventMasters)
-          .where(eq(eventMasters.id, input.eventMasterId));
+        await calendarRepository.deleteEventMasterById(tx, input.eventMasterId);
 
       const options = RRule.parseString(eventMaster.rule);
       options.until = penultimateOccurence;
 
-      return await tx
-        .update(eventMasters)
-        .set({
+      return await calendarRepository.updateEventMasterById(tx, {
+        id: input.eventMasterId,
+        teamId: ctx.auth.user.activeTeamId,
+        input: {
           dateUntil: penultimateOccurence,
           rule: new RRule(options).toString(),
-        })
-        .where(eq(eventMasters.id, input.eventMasterId));
+        },
+      });
     });
     return;
   } else {
-    await ctx.db
-      .delete(eventMasters)
-      .where(eq(eventMasters.id, input.eventMasterId));
+    await deleteEventMasterById(db, input.eventMasterId);
+
     return;
   }
 };

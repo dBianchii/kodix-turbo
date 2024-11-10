@@ -64,11 +64,14 @@ export function CreateTaskDialogButton() {
   const [priority, setPriority] = useState<Priority>(0);
   const [assignedToUserId, setAssignedToUserId] = useState<string | null>("");
 
-  const { data: team } = api.team.getActiveTeam.useQuery();
+  // const { data: team } = api.team.getActiveTeam.useQuery();
+  const team = {
+    Users: [{ id: "THIS_WAS_REMOVED_LOL", name: "asdas", image: "asd" }],
+  };
 
   const [open, setOpen] = useState(false);
 
-  const user = (team?.Users ?? []).find((x) => x.id === assignedToUserId);
+  const user = team.Users.find((x) => x.id === assignedToUserId);
   const t = useTranslations();
   const format = useFormatter();
 
@@ -110,7 +113,7 @@ export function CreateTaskDialogButton() {
             <AssigneePopover
               assignedToUserId={assignedToUserId}
               setAssignedToUserId={setAssignedToUserId}
-              users={team?.Users ?? []}
+              users={team.Users}
             >
               <Button variant="outline" size="sm">
                 <span className="sr-only">Open assign user popover</span>
@@ -119,8 +122,8 @@ export function CreateTaskDialogButton() {
                   <>
                     <AvatarWrapper
                       className="mr-2 size-4"
-                      src={user.image ?? ""}
-                      alt={user.name ?? "" + " avatar"}
+                      src={user.image}
+                      alt={user.name + " avatar"}
                       fallback={<HiUserCircle />}
                     />
                     {user.name}

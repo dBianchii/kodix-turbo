@@ -2,6 +2,7 @@ import type { DrizzleWhere, SQL } from "@kdx/db";
 import type { TGetNotificationsInputSchema } from "@kdx/validators/trpc/user";
 import dayjs from "@kdx/dayjs";
 import { and, asc, count, desc, eq, gte, inArray, lte, or } from "@kdx/db";
+import { db } from "@kdx/db/client";
 import { notifications, teams, usersToTeams } from "@kdx/db/schema";
 
 import type { TProtectedProcedureContext } from "../../procedures";
@@ -31,11 +32,6 @@ export const getNotificationsHandler = async ({
     ? dayjs(input.from).startOf("day").toDate()
     : undefined;
   const toDay = input.to ? dayjs(input.to).endOf("day").toDate() : undefined;
-
-  const allTeamIdsForUserQuery = ctx.db
-    .select({ id: usersToTeams.teamId })
-    .from(usersToTeams)
-    .where(eq(usersToTeams.userId, ctx.auth.user.id));
 
   const filterExpressions: (SQL<unknown> | undefined)[] = [
     // Filter notifications by subject
@@ -70,6 +66,10 @@ export const getNotificationsHandler = async ({
       : undefined,
   ];
 
+  const allTeamIdsForUserQuery = db
+    .select({ id: usersToTeams.teamId })
+    .from(usersToTeams)
+    .where(eq(usersToTeams.userId, ctx.auth.user.id));
   const where: DrizzleWhere<typeof notifications.$inferSelect> = and(
     eq(notifications.sentToUserId, ctx.auth.user.id), //? Only show notifications for the logged in user
     inArray(notifications.teamId, allTeamIdsForUserQuery), //? Ensure user is part of the team
@@ -79,7 +79,7 @@ export const getNotificationsHandler = async ({
       : or(...filterExpressions),
   );
 
-  const result = await ctx.db.transaction(async (tx) => {
+  const result = await db.transaction(async (tx) => {
     const data = await tx
       .select({
         id: notifications.id,

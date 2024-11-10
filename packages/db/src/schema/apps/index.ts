@@ -8,6 +8,7 @@ import {
   unique,
   varchar,
 } from "drizzle-orm/mysql-core";
+import { createInsertSchema } from "drizzle-zod";
 
 import { NANOID_SIZE } from "../../nanoid";
 import { teamAppRoles, teams } from "../teams";
@@ -55,6 +56,7 @@ export const appRelations = relations(apps, ({ many, one }) => ({
   TeamAppRoles: many(teamAppRoles),
   AppPermissions: many(appPermissions),
 }));
+export const appSchema = createInsertSchema(apps);
 
 export const appsToTeams = mysqlTable(
   "_appToTeam",
@@ -111,6 +113,7 @@ export const appPermissionsRelations = relations(
     AppPermissionsToTeamAppRoles: many(appPermissionsToTeamAppRoles),
   }),
 );
+export const appPermissionSchema = createInsertSchema(appPermissions);
 
 export const appTeamConfigs = mysqlTable(
   "appTeamConfig",
@@ -144,6 +147,7 @@ export const appTeamConfigsRelations = relations(appTeamConfigs, ({ one }) => ({
     references: [teams.id],
   }),
 }));
+export const appTeamConfigSchema = createInsertSchema(appTeamConfigs);
 
 export const appPermissionsToTeamAppRoles = mysqlTable(
   "_appPermissionToTeamAppRole",
@@ -179,6 +183,9 @@ export const appPermissionsToTeamAppRolesRelations = relations(
       references: [teamAppRoles.id],
     }),
   }),
+);
+export const appPermissionToTeamAppRoleSchema = createInsertSchema(
+  appPermissionsToTeamAppRoles,
 );
 
 export const userAppTeamConfigs = mysqlTable(
@@ -225,3 +232,4 @@ export const userAppTeamConfigsRelations = relations(
     }),
   }),
 );
+export const userAppTeamConfigSchema = createInsertSchema(userAppTeamConfigs);

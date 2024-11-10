@@ -48,9 +48,15 @@ export const formats = {
 
 //TODO: figure out how to make typed namespaces work. (Both with i18n-ally and next-intl/use-intl)
 type TranslationKeys = never;
+export type ServerSideT<S extends TranslationKeys = never> = Awaited<
+  ReturnType<typeof getTranslations<S>>
+>;
+export type ClientSideT<S extends TranslationKeys = never> = ReturnType<
+  typeof useTranslations<S>
+>;
 export type IsomorficT<S extends TranslationKeys = never> =
-  | Awaited<ReturnType<typeof getTranslations<S>>>
-  | ReturnType<typeof useTranslations<S>>; //This type is the same type as use-intl's useTranslations.
+  | ServerSideT<S>
+  | ClientSideT<S>; //This type is the same type as use-intl's useTranslations.
 
 // type Paths<Schema, Path extends string = ""> = Schema extends string
 //   ? Path

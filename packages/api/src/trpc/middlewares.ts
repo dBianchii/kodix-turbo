@@ -2,6 +2,7 @@ import { experimental_standaloneMiddleware, TRPCError } from "@trpc/server";
 
 import type { AppPermissionId, KodixAppId } from "@kdx/shared";
 import { and, eq } from "@kdx/db";
+import { db } from "@kdx/db/client";
 import {
   appPermissionsToTeamAppRoles,
   teamAppRoles,
@@ -51,7 +52,7 @@ export const appPermissionMiddleware = (permissionId: AppPermissionId) =>
     });
 
     if (foundPermission === null) {
-      const [permission] = await ctx.db
+      const [permission] = await db
         .select({ permissionId: appPermissionsToTeamAppRoles.appPermissionId })
         .from(teamAppRoles)
         .innerJoin(

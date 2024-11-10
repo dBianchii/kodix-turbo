@@ -1,5 +1,5 @@
 import type { TGetMyRolesInputSchema } from "@kdx/validators/trpc/team/appRole";
-import { teamAppRolesToUsers } from "@kdx/db/schema";
+import { teamRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 
@@ -9,22 +9,11 @@ interface GetMyRolesOptions {
 }
 
 export const getMyRolesHandler = async ({ ctx, input }: GetMyRolesOptions) => {
-  const roles = await ctx.db.query.teamAppRoles.findMany({
-    where: (teamAppRole, { eq, and, inArray }) =>
-      and(
-        eq(teamAppRole.teamId, ctx.auth.user.activeTeamId),
-        eq(teamAppRole.appId, input.appId),
-        inArray(
-          teamAppRole.id,
-          ctx.db
-            .select({ id: teamAppRolesToUsers.teamAppRoleId })
-            .from(teamAppRolesToUsers)
-            .where(eq(teamAppRolesToUsers.userId, ctx.auth.user.id)),
-        ),
-      ),
-    columns: {
-      appRoleDefaultId: true,
-    },
+  const roles = await teamRepository.findManyTeamAppRolesByTeamAndAppAndUser({
+    appId: input.appId,
+    userId: ctx.auth.user.id,
+    teamId: ctx.auth.user.activeTeamId,
   });
+
   return roles;
 };

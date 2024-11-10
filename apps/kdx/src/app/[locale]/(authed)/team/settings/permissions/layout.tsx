@@ -2,9 +2,7 @@ import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
-import { eq } from "@kdx/db";
-import { db } from "@kdx/db/client";
-import { teams } from "@kdx/db/schema";
+import { teamRepository } from "@kdx/db/repositories";
 import { redirect } from "@kdx/locales/next-intl/navigation";
 
 import { AppSwitcher } from "~/app/[locale]/_components/app-switcher";
@@ -17,12 +15,7 @@ export default async function RolesLayout({
   const { user } = await auth();
   if (!user) return redirect("/");
 
-  const team = await db.query.teams.findFirst({
-    where: eq(teams.id, user.activeTeamId),
-    columns: {
-      ownerId: true,
-    },
-  });
+  const team = await teamRepository.findTeamById(user.activeTeamId);
 
   if (team?.ownerId !== user.id) redirect("/team/settings");
   const t = await getTranslations();

@@ -2,8 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 
-import { kodixCareAppId } from "@kdx/shared";
-import { kodixCareConfigSchema } from "@kdx/validators";
+import { kodixCareAppId, kodixCareConfigSchema } from "@kdx/shared";
 
 import { action } from "~/helpers/safe-action/safe-action";
 import { api } from "~/trpc/server";

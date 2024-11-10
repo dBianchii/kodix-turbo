@@ -2,9 +2,8 @@ import type { ExpoPushMessage, ExpoPushTicket } from "expo-server-sdk";
 import Expo from "expo-server-sdk";
 import { render } from "@react-email/render";
 
-import { inArray } from "@kdx/db";
-import { db } from "@kdx/db/client";
-import { expoTokens, notifications } from "@kdx/db/schema";
+import type { notifications } from "@kdx/db/schema";
+import { notificationRepository, userRepository } from "@kdx/db/repositories";
 import {
   getSuccessesAndErrors,
   KODIX_NOTIFICATION_FROM_EMAIL,
@@ -36,19 +35,7 @@ export async function sendNotifications({
   teamId: string;
   channels: Channel[];
 }) {
-  const user = await db.query.users.findFirst({
-    where: (users, { eq }) => eq(users.id, userId),
-    columns: {
-      email: true,
-    },
-    with: {
-      ExpoTokens: {
-        columns: {
-          token: true,
-        },
-      },
-    },
-  });
+  const user = await userRepository.findUserById(userId);
   if (!user) throw new Error("Could not find user to send notification");
 
   //* 1. Prepare the messages to send in Promise arrays
@@ -183,9 +170,7 @@ export async function sendNotifications({
 
   //* 3 Interact with our db depending on the results
   if (toDeleteExpoPushTokens.length)
-    await db
-      .delete(expoTokens)
-      .where(inArray(expoTokens.token, toDeleteExpoPushTokens));
-
-  if (sentMessages.length) await db.insert(notifications).values(sentMessages);
+    await notificationRepository.deleteManyExpoTokens(toDeleteExpoPushTokens);
+  if (sentMessages.length)
+    await notificationRepository.createManyNotifications(sentMessages);
 }

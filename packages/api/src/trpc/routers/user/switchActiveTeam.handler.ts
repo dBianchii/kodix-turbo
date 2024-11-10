@@ -1,7 +1,8 @@
 import type { TSwitchActiveTeamInputSchema } from "@kdx/validators/trpc/user";
+import { db } from "@kdx/db/client";
+import { userRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../procedures";
-import { switchActiveTeamForUser } from "./utils";
 
 interface SwitchActiveTeamOptions {
   ctx: TProtectedProcedureContext;
@@ -12,9 +13,8 @@ export const switchActiveTeamHandler = async ({
   ctx,
   input,
 }: SwitchActiveTeamOptions) => {
-  await switchActiveTeamForUser({
-    db: ctx.db,
+  await userRepository.moveUserToTeam(db, {
     userId: ctx.auth.user.id,
-    teamId: input.teamId,
+    newTeamId: input.teamId,
   });
 };

@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import { index, mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { createInsertSchema } from "drizzle-zod";
 
 import { NANOID_SIZE } from "../../nanoid";
 import { teams } from "../teams";
@@ -45,6 +46,7 @@ export const eventMastersRelations = relations(
     EventCancellations: many(eventCancellations),
   }),
 );
+export const eventMasterSchema = createInsertSchema(eventMasters);
 
 export const eventCancellations = mysqlTable(
   "eventCancellation",
@@ -72,6 +74,7 @@ export const eventCancellationsRelations = relations(
     }),
   }),
 );
+export const eventCancellationSchema = createInsertSchema(eventCancellations);
 
 export const eventExceptions = mysqlTable(
   "eventException",
@@ -103,3 +106,4 @@ export const eventExceptionsRelations = relations(
     }),
   }),
 );
+export const eventExceptionSchema = createInsertSchema(eventExceptions);

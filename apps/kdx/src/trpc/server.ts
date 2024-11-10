@@ -19,15 +19,3 @@ const createContext = cache(async () => {
 });
 
 export const api = createCaller(createContext);
-
-// export const createCaller = cache(async () =>
-// appRouter.createCaller(await createTRPCContext({})),
-// ); //Probably don't use this one
-
-// export const helpers = createServerSideHelpers({
-//   router: appRouter,
-//   ctx: await createTRPCContext({}),
-//   transformer, // optional - adds superjson serialization
-// });
-//Apparently, this one is only for preftch and fetch. It's for dehidrating to the cache I believe.
-//Let's not use this for now. To actually call procedures from the server, please use createTRPCProxyClient({}) -- https://trpc.io/docs/server/server-side-calls

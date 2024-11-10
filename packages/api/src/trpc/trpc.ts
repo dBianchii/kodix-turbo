@@ -11,10 +11,6 @@ import { getTranslations } from "next-intl/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
-import { db } from "@kdx/db/client";
-
-//TODO: make it import from our package: https://github.com/amannn/next-intl/issues/1229 sadface
-
 import type { AuthResponse } from "../../../auth/src/config";
 import { getLocaleBasedOnCookie } from "../utils/locales";
 
@@ -44,7 +40,6 @@ export const createTRPCContext = async (opts: {
   return {
     t,
     auth,
-    db,
     token: authToken,
   };
 };

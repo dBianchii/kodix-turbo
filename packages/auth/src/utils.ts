@@ -2,8 +2,7 @@
 //? It's to avoid circular dependencies / duplicated code for db calls that need to be here in @kdx/auth
 
 import type { Drizzle, DrizzleTransaction } from "@kdx/db/client";
-import { eq } from "@kdx/db";
-import { invitations, teams, users, usersToTeams } from "@kdx/db/schema";
+import { teamRepository, userRepository } from "@kdx/db/repositories";
 
 import {
   createSession,
@@ -30,7 +29,7 @@ export async function createUser({
   passwordHash?: string;
   tx: DrizzleTransaction;
 }) {
-  await tx.insert(users).values({
+  await userRepository.createUser(tx, {
     id: userId,
     name: name,
     activeTeamId: teamId,
@@ -41,15 +40,10 @@ export async function createUser({
   if (invite) {
     await acceptInvite({ invite, userId, email, db: tx });
   } else {
-    await tx.insert(teams).values({
+    await teamRepository.createTeamAndAssociateUser(tx, userId, {
       id: teamId,
       ownerId: userId,
       name: `Personal Team`,
-    });
-
-    await tx.insert(usersToTeams).values({
-      userId: userId,
-      teamId: teamId,
     });
   }
 }
@@ -65,31 +59,19 @@ export async function acceptInvite({
   email: string;
   db: Drizzle;
 }) {
-  const invitation = await db.query.invitations.findFirst({
-    where: (invitation, { and, eq }) =>
-      and(eq(invitation.id, invite), eq(invitation.email, email)),
-    with: {
-      Team: {
-        columns: {
-          id: true,
-        },
-      },
-    },
+  const invitation = await teamRepository.findInvitationByIdAndEmail({
+    id: invite,
+    email,
   });
 
   if (!invitation) throw new Error("No invitation found");
 
-  await db
-    .update(users)
-    .set({
-      activeTeamId: invitation.Team.id,
-    })
-    .where(eq(users.id, userId));
-  await db.insert(usersToTeams).values({
-    userId: userId,
+  await userRepository.moveUserToTeamAndAssociateToTeam(db, {
+    userId,
     teamId: invitation.Team.id,
   });
-  await db.delete(invitations).where(eq(invitations.id, invite));
+
+  await teamRepository.deleteInvitationById(db, invite);
 }
 
 export async function createDbSessionAndCookie({ userId }: { userId: string }) {

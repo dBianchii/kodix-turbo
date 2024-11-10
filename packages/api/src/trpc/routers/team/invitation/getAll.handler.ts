@@ -1,3 +1,5 @@
+import { teamRepository } from "@kdx/db/repositories";
+
 import type { TProtectedProcedureContext } from "../../../procedures";
 
 interface GetAllOptions {
@@ -5,14 +7,9 @@ interface GetAllOptions {
 }
 
 export const getAllHandler = async ({ ctx }: GetAllOptions) => {
-  const invitations = await ctx.db.query.invitations.findMany({
-    where: (invitation, { eq }) =>
-      eq(invitation.teamId, ctx.auth.user.activeTeamId),
-    columns: {
-      id: true,
-      email: true,
-    },
-  });
+  const invitations = await teamRepository.findManyInvitationsByTeamId(
+    ctx.auth.user.activeTeamId,
+  );
   return invitations.map((invite) => ({
     inviteId: invite.id,
     inviteEmail: invite.email,

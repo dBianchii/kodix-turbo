@@ -1,10 +1,9 @@
 import { TRPCError } from "@trpc/server";
 
-import { and, eq, gte } from "@kdx/db";
-import { careTasks } from "@kdx/db/schema";
+import { db } from "@kdx/db/client";
+import { careTaskRepository, kodixCareRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
-import { getCurrentShiftHandler } from "../getCurrentShift.handler";
 import { cloneCalendarTasksToCareTasks } from "../utils";
 
 interface SyncCareTasksFromCalendarOptions {
@@ -14,7 +13,9 @@ interface SyncCareTasksFromCalendarOptions {
 export const syncCareTasksFromCalendarHandler = async ({
   ctx,
 }: SyncCareTasksFromCalendarOptions) => {
-  const currentShift = await getCurrentShiftHandler({ ctx });
+  const currentShift = await kodixCareRepository.getCurrentCareShiftByTeamId(
+    ctx.auth.user.activeTeamId,
+  );
 
   if (!currentShift || currentShift.shiftEndedAt) {
     throw new TRPCError({
@@ -32,22 +33,21 @@ export const syncCareTasksFromCalendarHandler = async ({
     });
 
   const syncFromDate = currentShift.checkIn;
-  await ctx.db.transaction(async (tx) => {
-    await tx
-      .delete(careTasks)
-      .where(
-        and(
-          eq(careTasks.createdFromCalendar, true),
-          gte(careTasks.date, syncFromDate),
-        ),
-      );
+  await db.transaction(async (tx) => {
+    await careTaskRepository.deleteManyCareTasksThatCameFromCalendarWithDateHigherOrEqualThan(
+      tx,
+      {
+        teamId: ctx.auth.user.activeTeamId,
+        date: syncFromDate,
+      },
+    );
 
     await cloneCalendarTasksToCareTasks({
+      tx,
       start: syncFromDate,
       careShiftId: currentShift.id,
       ctx: {
         ...ctx,
-        db: tx,
       },
     });
   });

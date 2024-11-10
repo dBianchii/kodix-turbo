@@ -1,8 +1,8 @@
 import { TRPCError } from "@trpc/server";
 
 import type { TUpdatePermissionAssociationInputSchema } from "@kdx/validators/trpc/team/appRole";
-import { and, eq, inArray } from "@kdx/db";
-import { appPermissions, appPermissionsToTeamAppRoles } from "@kdx/db/schema";
+import { db } from "@kdx/db/client";
+import { appRepository } from "@kdx/db/repositories";
 
 import type { TIsTeamOwnerProcedureContext } from "../../../procedures";
 
@@ -12,14 +12,11 @@ interface UpdatePermissionAssociationOptions {
 }
 
 export const updatePermissionAssociationHandler = async ({
-  ctx,
   input,
 }: UpdatePermissionAssociationOptions) => {
-  const permission = await ctx.db.query.appPermissions.findFirst({
-    where: (appPermissions, { eq }) =>
-      eq(appPermissions.id, input.permissionId),
-    columns: { editable: true },
-  });
+  const permission = await appRepository.findAppPermissionById(
+    input.permissionId,
+  );
   if (!permission) {
     throw new TRPCError({
       code: "NOT_FOUND",
@@ -34,23 +31,15 @@ export const updatePermissionAssociationHandler = async ({
     });
   }
 
-  await ctx.db.transaction(async (tx) => {
-    await tx.delete(appPermissionsToTeamAppRoles).where(
-      inArray(
-        appPermissionsToTeamAppRoles.appPermissionId,
-        ctx.db
-          .select({ id: appPermissions.id })
-          .from(appPermissions)
-          .where(
-            and(
-              eq(appPermissions.id, input.permissionId),
-              eq(appPermissions.appId, input.appId),
-            ),
-          ),
-      ),
-    );
+  await db.transaction(async (tx) => {
+    await appRepository.removePermissionFromRole(tx, {
+      //! Security issue found.
+      permissionId: input.permissionId,
+      appId: input.appId,
+    });
     if (input.teamAppRoleIds.length > 0)
-      await tx.insert(appPermissionsToTeamAppRoles).values(
+      await appRepository.createManyAppPermissionToRoleAssociations(
+        tx,
         input.teamAppRoleIds.map((id) => ({
           teamAppRoleId: id,
           appPermissionId: input.permissionId,

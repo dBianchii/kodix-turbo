@@ -1,4 +1,5 @@
 import type { TGetAllInputSchema } from "@kdx/validators/trpc/team/appRole";
+import { teamRepository } from "@kdx/db/repositories";
 
 import type { TIsTeamOwnerProcedureContext } from "../../../procedures";
 
@@ -8,15 +9,8 @@ interface GetAllOptions {
 }
 
 export const getAllHandler = async ({ ctx, input }: GetAllOptions) => {
-  return await ctx.db.query.teamAppRoles.findMany({
-    where: (role, { and, eq }) =>
-      and(
-        eq(role.teamId, ctx.auth.user.activeTeamId),
-        eq(role.appId, input.appId),
-      ),
-    columns: {
-      id: true,
-      appRoleDefaultId: true,
-    },
+  return await teamRepository.findManyTeamAppRolesByTeamAndApp({
+    teamId: ctx.auth.user.activeTeamId,
+    appId: input.appId,
   });
 };

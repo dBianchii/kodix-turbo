@@ -10,6 +10,8 @@ export type { AuthResponse, Providers, User, Session } from "./config";
  */
 export const auth = cache(_auth);
 export {
+  argon2Config,
+  validateUserEmailAndPassword,
   deleteSessionTokenCookie,
   invalidateSession,
   providers,

@@ -10,6 +10,7 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/mysql-core";
+import { createInsertSchema } from "drizzle-zod";
 
 import { nanoid, NANOID_SIZE } from "../nanoid";
 import { userAppTeamConfigs } from "./apps";
@@ -25,7 +26,7 @@ export const users = mysqlTable(
   "user",
   {
     id: nanoidPrimaryKey,
-    name: varchar("name", { length: DEFAULTLENGTH }),
+    name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
     passwordHash: varchar("passwordHash", { length: 255 }),
     email: varchar("email", { length: DEFAULTLENGTH }).notNull().unique(),
     emailVerified: timestamp("emailVerified").defaultNow(),
@@ -53,6 +54,7 @@ export const usersRelations = relations(users, ({ many, one }) => ({
   ExpoTokens: many(expoTokens),
   UserAppTeamConfigs: many(userAppTeamConfigs),
 }));
+export const userSchema = createInsertSchema(users);
 
 export const accounts = mysqlTable(
   "account",
@@ -75,6 +77,7 @@ export const accounts = mysqlTable(
 export const accountsRelations = relations(accounts, ({ one }) => ({
   Users: one(users, { fields: [accounts.userId], references: [users.id] }),
 }));
+export const accountSchema = createInsertSchema(accounts);
 
 export const sessions = mysqlTable("session", {
   id: varchar("id", {
@@ -95,6 +98,7 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
     references: [users.id],
   }),
 }));
+export const sessionSchema = createInsertSchema(sessions);
 
 export const expoTokens = mysqlTable(
   "expoToken",
@@ -148,6 +152,7 @@ export const notificationsRelations = relations(notifications, ({ one }) => ({
     references: [teams.id],
   }),
 }));
+export const notificationSchema = createInsertSchema(notifications);
 
 export const resetPasswordTokens = mysqlTable(
   "resetToken",
@@ -164,6 +169,7 @@ export const resetPasswordTokens = mysqlTable(
   },
   (table) => {
     return {
+      tokenIdx: index("token_idx").on(table.token),
       userIdIdx: index("userId_idx").on(table.userId),
     };
   },
@@ -177,3 +183,4 @@ export const resetPasswordTokensRelations = relations(
     }),
   }),
 );
+export const resetPasswordTokenSchema = createInsertSchema(resetPasswordTokens);

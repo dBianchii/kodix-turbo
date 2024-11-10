@@ -57,11 +57,11 @@ const config = {
   //     },
   //   ];
   // },
-  logging: {
-    fetches: {
-      fullUrl: true,
-    },
-  },
+  // logging: {
+  //   fetches: {
+  //     fullUrl: true,
+  //   },
+  // },
 };
 
 export default withNextIntl(config);

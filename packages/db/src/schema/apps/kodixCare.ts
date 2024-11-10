@@ -6,6 +6,7 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/mysql-core";
+import { createInsertSchema } from "drizzle-zod";
 
 import { NANOID_SIZE } from "../../nanoid";
 import { teams } from "../teams";
@@ -48,6 +49,7 @@ export const careShiftsRelations = relations(careShifts, ({ one }) => ({
     references: [teams.id],
   }),
 }));
+export const careShiftSchema = createInsertSchema(careShifts);
 
 export const careTasks = mysqlTable(
   "careTask",
@@ -104,3 +106,4 @@ export const careTasksRelations = relations(careTasks, ({ one }) => ({
     references: [eventMasters.id],
   }),
 }));
+export const careTaskSchema = createInsertSchema(careTasks);
