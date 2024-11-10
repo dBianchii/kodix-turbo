@@ -6,7 +6,6 @@ import { LuLoader2 } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
-import dayjs from "@kdx/dayjs";
 import { Button } from "@kdx/ui/button";
 import {
   Credenza,
@@ -18,7 +17,7 @@ import {
   CredenzaTitle,
   CredenzaTrigger,
 } from "@kdx/ui/credenza";
-import { DateTimePicker } from "@kdx/ui/date-time-picker";
+import { DateTimePicker24h } from "@kdx/ui/date-n-time/date-time-picker-24h";
 import {
   Form,
   FormControl,
@@ -151,7 +150,7 @@ function StartShiftWarnPreviousPersonDialog() {
 }
 
 function DoCheckoutDialogButton({
-  currentShift,
+  currentShift: _,
 }: {
   currentShift: NonNullable<
     RouterOutputs["app"]["kodixCare"]["getCurrentShift"]
@@ -215,11 +214,7 @@ function DoCheckoutDialogButton({
                     <FormControl>
                       <div className="flex flex-row gap-2">
                         <div className="flex items-center gap-1 pl-4">
-                          <DateTimePicker
-                            disabledDate={(date) =>
-                              dayjs(date).startOf("day") >
-                              dayjs(currentShift.checkIn).startOf("day")
-                            }
+                          <DateTimePicker24h
                             date={field.value}
                             setDate={(date) =>
                               form.setValue("date", date ?? field.value)
