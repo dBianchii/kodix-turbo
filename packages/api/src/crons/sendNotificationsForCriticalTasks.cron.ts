@@ -162,12 +162,12 @@ export const sendNotificationsForCriticalTasks = verifiedQstashCron(
             channels: [
               {
                 type: "EMAIL",
-                react: await WarnDelayedCriticalTasks({
+                react: WarnDelayedCriticalTasks({
                   task: {
                     date: careTask.date,
                     title: careTask.title,
                   },
-                  locale: ctx.locale,
+                  t: ctx.t,
                 }),
                 subject: "Critical task is late",
               },
