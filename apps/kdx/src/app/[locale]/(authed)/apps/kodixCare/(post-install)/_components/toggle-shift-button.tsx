@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { LuLoader2 } from "react-icons/lu";
 
@@ -169,6 +169,10 @@ function DoCheckoutDialogButton({
     },
   });
 
+  useEffect(() => {
+    form.reset();
+  }, [open, form]);
+
   const mutation = api.app.kodixCare.doCheckoutForShift.useMutation({
     onSuccess: () => {
       setOpen(false);
@@ -179,13 +183,7 @@ function DoCheckoutDialogButton({
     },
   });
   return (
-    <Credenza
-      open={open}
-      onOpenChange={(open) => {
-        form.reset();
-        setOpen(open);
-      }}
-    >
+    <Credenza open={open} onOpenChange={setOpen}>
       <CredenzaTrigger asChild>
         <Button size={"sm"} variant={"destructive"}>
           {t("apps.kodixCare.Checkout")}

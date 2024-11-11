@@ -17,9 +17,6 @@ import { RadioGroup, RadioGroupItem } from "@kdx/ui/radio-group";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
-/**
- * To use this this component, you need to wrap it around a CredenzaTrigger component.
- */
 export function CancelationDialog({
   eventMasterId,
   eventExceptionId,
@@ -109,9 +106,7 @@ export function CancelationDialog({
             {t("Cancel")}
           </Button>
           <Button
-            onClick={(e) => {
-              e.preventDefault();
-
+            onClick={() => {
               if (radioValue === "all")
                 mutation.mutate({
                   eventExceptionId: eventExceptionId,

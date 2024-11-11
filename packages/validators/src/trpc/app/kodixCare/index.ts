@@ -2,14 +2,18 @@ import { z } from "zod";
 
 import type { IsomorficT } from "@kdx/locales";
 
+import { adjustDateToMinute } from "../../..";
 import { ZSignInByPasswordInputSchema as default_ZSignInByPasswordInputSchema } from "../../user";
 
 export const ZDoCheckoutForShiftInputSchema = (t: IsomorficT) =>
   z.object({
     notes: z.string().optional(),
-    date: z.date().max(new Date(), {
-      message: t("validators.Checkout time cannot be in the future"),
-    }),
+    date: z
+      .date()
+      .max(new Date(), {
+        message: t("validators.Checkout time cannot be in the future"),
+      })
+      .transform(adjustDateToMinute),
   });
 export type TDoCheckoutForShiftInputSchema = z.infer<
   ReturnType<typeof ZDoCheckoutForShiftInputSchema>

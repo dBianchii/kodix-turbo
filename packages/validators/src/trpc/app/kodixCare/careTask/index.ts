@@ -4,11 +4,11 @@ import type { careTasks } from "@kdx/db/schema";
 import type { IsomorficT } from "@kdx/locales";
 import dayjs from "@kdx/dayjs";
 
-import { ZNanoId } from "../../../..";
+import { adjustDateToMinute, ZNanoId } from "../../../..";
 
 export const ZGetCareTasksInputSchema = z.object({
-  dateStart: z.date(),
-  dateEnd: z.date(),
+  dateStart: z.date().transform(adjustDateToMinute),
+  dateEnd: z.date().transform(adjustDateToMinute),
 });
 export type TGetCareTasksInputSchema = z.infer<typeof ZGetCareTasksInputSchema>;
 
@@ -20,9 +20,7 @@ export const ZEditCareTaskInputSchema = (t: IsomorficT) =>
       .max(new Date(), {
         message: t("validators.Date cannot be in the future"),
       })
-      .transform(
-        (date) => dayjs(date).second(0).millisecond(0).toDate(), // Ensure seconds and milliseconds are 0
-      )
+      .transform(adjustDateToMinute)
       .nullable()
       .optional(),
     details: z.string().nullable().optional(),
@@ -32,7 +30,7 @@ export type TEditCareTaskInputSchema = z.infer<
 >;
 
 export const ZUnlockMoreTasksInputSchema = z.object({
-  selectedTimestamp: z.date(),
+  selectedTimestamp: z.date().transform(adjustDateToMinute),
 });
 export type TUnlockMoreTasksInputSchema = z.infer<
   typeof ZUnlockMoreTasksInputSchema
