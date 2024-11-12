@@ -1,472 +1,171 @@
 import type { z } from "zod";
-import { and, asc, eq, inArray, not } from "drizzle-orm";
+import { and, eq, gte, inArray, isNull } from "drizzle-orm";
 
-import type { KodixAppId } from "@kdx/shared";
-import { appIdToAdminRole_defaultIdMap } from "@kdx/shared";
+import type { Update } from "../../_types";
+import type {
+  zCareTaskCreate,
+  zCareTaskCreateMany,
+  zCareTaskUpdate,
+} from "../../_zodSchemas/careTaskSchemas";
+import type { Drizzle } from "../../../client";
+import { db } from "../../../client";
+import { careTasks } from "../../../schema";
 
-import type { Drizzle, DrizzleTransaction } from "../client";
-import type { Update } from "./_types";
-import type { zInvitationCreateMany } from "./_zodSchemas/invitationSchemas";
-import type { zTeamAppRoleToUserCreateMany } from "./_zodSchemas/teamAppRoleToUserSchemas";
-import type { zTeamCreate, zTeamUpdate } from "./_zodSchemas/teamSchemas";
-import { db } from "../client";
-import {
-  appPermissions,
-  invitations,
-  teamAppRoles,
-  teamAppRolesToUsers,
-  teams,
-  users,
-  usersToTeams,
-} from "../schema";
-
-export async function createTeamAndAssociateUser(
-  db: DrizzleTransaction,
-  userId: string,
-  team: z.infer<typeof zTeamCreate>,
-) {
-  const [createdTeam] = await db.insert(teams).values(team).$returningId();
-  if (!createdTeam) throw new Error("Failed to create team");
-
-  await db.insert(usersToTeams).values({
-    userId: userId,
-    teamId: createdTeam.id,
-  });
+export interface CareTask {
+  id: typeof careTasks.$inferSelect.id;
+  title: typeof careTasks.$inferSelect.title;
+  description: typeof careTasks.$inferSelect.description;
+  date: typeof careTasks.$inferSelect.date;
+  doneAt: typeof careTasks.$inferSelect.doneAt;
+  updatedAt: typeof careTasks.$inferSelect.updatedAt;
+  doneByUserId: typeof careTasks.$inferSelect.doneByUserId;
+  details: typeof careTasks.$inferSelect.details;
+  type: typeof careTasks.$inferSelect.type;
+  teamId: typeof careTasks.$inferSelect.teamId;
+  eventMasterId: string | null;
 }
 
-export async function findTeamById(teamId: string) {
-  return await db.query.teams.findFirst({
-    where: (team, { eq }) => eq(team.id, teamId),
-    with: {
-      UsersToTeams: {
-        columns: {
-          userId: true,
-        },
-      },
-    },
-    columns: { id: true, ownerId: true, name: true },
-  });
-}
-
-export async function findTeamWithUsersAndInvitations({
-  teamId,
-  email,
+export async function findCareTasksFromTo({
+  dateStart,
+  dateEnd,
+  teamIds,
+  onlyCritical = false,
+  onlyNotDone = false,
 }: {
-  teamId: string;
-  email: string[];
+  dateStart: Date;
+  dateEnd: Date;
+  teamIds: string[];
+  onlyCritical?: boolean;
+  onlyNotDone?: boolean;
 }) {
-  const team = await db.query.teams.findFirst({
-    where: (teams, { and, eq }) => and(eq(teams.id, teamId)),
-    columns: {
-      name: true,
-      id: true,
-    },
-    with: {
-      UsersToTeams: {
-        with: {
-          User: {
-            columns: {
-              email: true,
-            },
-          },
-        },
-      },
-      Invitations: {
-        where: (invitations, { inArray }) => inArray(invitations.email, email),
-        columns: {
-          email: true,
-        },
-      },
-    },
-  });
-
-  return team;
-}
-
-export async function findAnyOtherTeamAssociatedWithUserThatIsNotTeamId({
-  userId,
-  teamId,
-}: {
-  userId: string;
-  teamId: string;
-}) {
-  const [otherTeam] = await db
-    .select({ id: teams.id })
-    .from(teams)
-    .innerJoin(usersToTeams, eq(teams.id, usersToTeams.teamId))
-    .where(and(not(eq(teams.id, teamId)), eq(usersToTeams.userId, userId)));
-  return otherTeam;
-}
-
-export async function findTeamsByUserId(userId: string) {
-  return db.query.teams.findMany({
-    with: {
-      UsersToTeams: true,
-    },
-    where: (teams, { exists }) =>
-      exists(
-        db
-          .select()
-          .from(usersToTeams)
-          .where(
-            and(
-              eq(usersToTeams.teamId, teams.id),
-              eq(usersToTeams.userId, userId),
-            ),
-          ),
+  const careTasks: CareTask[] = await db.query.careTasks.findMany({
+    where: (careTask, { gte, lte, and }) =>
+      and(
+        inArray(careTask.teamId, teamIds),
+        onlyCritical ? eq(careTask.type, "CRITICAL") : undefined,
+        onlyNotDone ? isNull(careTask.doneAt) : undefined,
+        gte(careTask.date, dateStart),
+        lte(careTask.date, dateEnd),
       ),
-  });
-}
-
-export async function findAllTeamsWithAppInstalled(appId: string) {
-  const allTeamIdsWithKodixCareInstalled = await db.query.appsToTeams.findMany({
-    where: (appsToTeams, { eq }) => eq(appsToTeams.appId, appId),
     columns: {
+      doneAt: true,
+      id: true,
+      title: true,
+      description: true,
+      date: true,
+      updatedAt: true,
+      doneByUserId: true,
+      details: true,
+      type: true,
       teamId: true,
-    },
-    with: {
-      Team: {
-        with: {
-          UsersToTeams: {
-            columns: {
-              userId: true,
-            },
-          },
-        },
-      },
+      eventMasterId: true,
     },
   });
 
-  return allTeamIdsWithKodixCareInstalled;
+  return careTasks;
 }
 
-export async function findAppPermissionsForTeam({
+export async function findCareTaskById({
+  id,
   teamId,
-  appId,
 }: {
+  id: string;
   teamId: string;
-  appId: string;
 }) {
-  const teamAppRolesIdsForTeamIdQuery = db
-    .select({ id: teamAppRoles.id })
-    .from(teamAppRoles)
-    .where(eq(teamAppRoles.teamId, teamId));
-
-  const permissions = await db.query.appPermissions.findMany({
-    where: (appPermission, { eq, and }) => and(eq(appPermission.appId, appId)),
-    orderBy: asc(appPermissions.editable),
-    with: {
-      AppPermissionsToTeamAppRoles: {
-        where: (appPermissionToTeamAppRole, { inArray }) =>
-          inArray(
-            appPermissionToTeamAppRole.teamAppRoleId,
-            teamAppRolesIdsForTeamIdQuery,
-          ),
-        with: {
-          TeamAppRole: {
-            columns: {
-              id: true,
-            },
-          },
-        },
-      },
-    },
-  });
-
-  return permissions;
-}
-
-export async function getUsersWithRoles({
-  teamId,
-  appId,
-}: {
-  teamId: string;
-  appId: string;
-}) {
-  return await db.query.users.findMany({
-    where: (users, { eq, inArray }) =>
-      inArray(
-        users.id,
-        db
-          .select({ id: usersToTeams.userId })
-          .from(usersToTeams)
-          .where(eq(usersToTeams.teamId, teamId)),
-      ),
-    with: {
-      TeamAppRolesToUsers: {
-        where: (teamAppRolesToUsers, { inArray }) =>
-          inArray(
-            teamAppRolesToUsers.teamAppRoleId,
-            db
-              .select({ id: teamAppRoles.id })
-              .from(teamAppRoles)
-              .where(
-                and(
-                  eq(teamAppRoles.teamId, teamId),
-                  eq(teamAppRoles.appId, appId),
-                ),
-              ),
-          ),
-        with: {
-          TeamAppRole: {
-            columns: {
-              id: true,
-            },
-          },
-        },
-        columns: {
-          teamAppRoleId: true,
-          userId: true,
-        },
-      },
-    },
+  return db.query.careTasks.findFirst({
+    where: (careTask, { eq }) =>
+      and(eq(careTask.id, id), eq(careTask.teamId, teamId)),
     columns: {
-      id: true,
-      name: true,
-      email: true,
-      image: true,
+      careShiftId: true,
+      createdBy: true,
+      createdFromCalendar: true,
+    },
+    with: {
+      CareShift: {
+        columns: {
+          shiftEndedAt: true,
+        },
+      },
     },
   });
 }
 
-export async function removeUserFromTeam(
+export async function deleteCareTaskById({
+  id,
+  teamId,
+}: {
+  id: string;
+  teamId: string;
+}) {
+  await db
+    .delete(careTasks)
+    .where(and(eq(careTasks.id, id), eq(careTasks.teamId, teamId)));
+}
+
+export async function deleteManyCareTasksThatCameFromCalendarWithDateHigherOrEqualThan(
   db: Drizzle,
   {
     teamId,
-    userId,
+    date,
   }: {
     teamId: string;
-    userId: string;
+    date: Date;
   },
 ) {
-  return db
-    .delete(usersToTeams)
-    .where(
-      and(eq(usersToTeams.teamId, teamId), eq(usersToTeams.userId, userId)),
-    );
-}
-
-export async function deleteTeam(db: Drizzle, id: string) {
-  await db.delete(teams).where(eq(teams.id, id));
-}
-
-export async function removeUserAssociationsFromTeamAppRolesByTeamId(
-  db: Drizzle,
-  { teamId, userId }: { teamId: string; userId: string },
-) {
-  return db
-    .delete(teamAppRolesToUsers)
+  await db
+    .delete(careTasks)
     .where(
       and(
-        eq(teamAppRolesToUsers.userId, userId),
-        inArray(
-          teamAppRolesToUsers.teamAppRoleId,
-          db
-            .select({ id: teamAppRoles.id })
-            .from(teamAppRoles)
-            .where(eq(teamAppRoles.teamId, teamId)),
-        ),
+        eq(careTasks.teamId, teamId),
+        eq(careTasks.createdFromCalendar, true),
+        gte(careTasks.date, date),
       ),
     );
 }
 
-export async function removeUserAssociationsFromTeamAppRolesByTeamIdAndAppId(
-  db: Drizzle,
-  { teamId, userId, appId }: { teamId: string; userId: string; appId: string },
-) {
-  const teamAppRolesForTeamAndAppQuery = db
-    .select({ id: teamAppRoles.id })
-    .from(teamAppRoles)
-    .where(and(eq(teamAppRoles.appId, appId), eq(teamAppRoles.teamId, teamId)));
-
-  return db
-    .delete(teamAppRolesToUsers)
-    .where(
-      and(
-        eq(teamAppRolesToUsers.userId, userId),
-        inArray(
-          teamAppRolesToUsers.teamAppRoleId,
-          teamAppRolesForTeamAndAppQuery,
-        ),
-      ),
-    );
+export async function deleteAllCareTasksForTeam(db: Drizzle, teamId: string) {
+  await db.delete(careTasks).where(eq(careTasks.teamId, teamId));
 }
 
-export async function findAdminTeamAppRolesForApp(
+export async function updateCareTask(
+  db: Drizzle,
+  { id, input }: Update<typeof zCareTaskUpdate>,
+) {
+  //!Security risk
+  await db.update(careTasks).set(input).where(eq(careTasks.id, id));
+}
+
+export async function createCareTask(
+  db: Drizzle,
+  careTask: z.infer<typeof zCareTaskCreate>,
+) {
+  await db.insert(careTasks).values(careTask);
+}
+
+export async function createManyCareTasks(
+  db: Drizzle,
+  data: z.infer<typeof zCareTaskCreateMany>,
+) {
+  await db.insert(careTasks).values(data);
+}
+
+export async function reassignCareTasksFromDateToShift(
   db: Drizzle,
   {
-    appId,
-  }: {
-    appId: KodixAppId;
-  },
+    previousCareShiftId,
+    newCareShiftId,
+    date,
+  }: { previousCareShiftId: string; newCareShiftId: string; date: Date },
 ) {
-  const adminTeamAppRolesForApp = await db
-    .select({ id: teamAppRoles.id })
-    .from(teamAppRoles)
-    .where(
-      eq(teamAppRoles.appRoleDefaultId, appIdToAdminRole_defaultIdMap[appId]),
-    );
-  return adminTeamAppRolesForApp;
-}
-
-export async function findManyTeamAppRolesByTeamAndApp({
-  teamId,
-  appId,
-}: {
-  teamId: string;
-  appId: string;
-}) {
-  return await db.query.teamAppRoles.findMany({
-    where: (role, { and, eq }) =>
-      and(eq(role.teamId, teamId), eq(role.appId, appId)),
-    columns: {
-      id: true,
-      appRoleDefaultId: true,
-    },
-  });
-}
-
-export async function findManyTeamAppRolesByTeamAndAppAndUser({
-  teamId,
-  appId,
-  userId,
-}: {
-  teamId: string;
-  appId: string;
-  userId: string;
-}) {
-  return await db.query.teamAppRoles.findMany({
-    where: (teamAppRole, { eq, and, inArray }) =>
-      and(
-        eq(teamAppRole.teamId, teamId),
-        eq(teamAppRole.appId, appId),
-        inArray(
-          teamAppRole.id,
-          db
-            .select({ id: teamAppRolesToUsers.teamAppRoleId })
-            .from(teamAppRolesToUsers)
-            .where(eq(teamAppRolesToUsers.userId, userId)),
-        ),
-      ),
-    columns: {
-      appRoleDefaultId: true,
-    },
-  });
-}
-
-export async function associateManyAppRolesToUsers(
-  db: Drizzle,
-  data: z.infer<typeof zTeamAppRoleToUserCreateMany>,
-) {
-  await db.insert(teamAppRolesToUsers).values(data);
-}
-
-export async function findAllTeamMembers(teamId: string) {
-  return await db
-    .select({
-      id: users.id,
-      email: users.email,
-      name: users.name,
-      image: users.image,
+  await db
+    .update(careTasks)
+    .set({
+      careShiftId: newCareShiftId,
     })
-    .from(users)
-    .innerJoin(usersToTeams, eq(usersToTeams.userId, users.id))
-    .where(eq(usersToTeams.teamId, teamId));
-}
-
-export async function findInvitationByIdAndEmail({
-  id,
-  email,
-}: {
-  id: string;
-  email: string;
-}) {
-  return db.query.invitations.findFirst({
-    where: (invitation, { and, eq }) =>
-      and(eq(invitation.id, id), eq(invitation.email, email)),
-    with: {
-      Team: {
-        columns: {
-          id: true,
-        },
-      },
-    },
-  });
-}
-
-export async function createManyInvitations(
-  db: Drizzle,
-  data: z.infer<typeof zInvitationCreateMany>,
-) {
-  await db.insert(invitations).values(data);
-}
-
-export async function findInvitationByEmail(email: string) {
-  return db.query.invitations.findFirst({
-    where: (invitation, { eq }) => eq(invitation.email, email),
-  });
-}
-
-export async function findManyInvitationsByTeamId(teamId: string) {
-  return db.query.invitations.findMany({
-    where: (invitation, { eq }) => eq(invitation.teamId, teamId),
-    columns: {
-      id: true,
-      email: true,
-    },
-  });
-}
-
-export async function findManyInvitationsByEmail(email: string) {
-  return db.query.invitations.findMany({
-    where: (invitation, { eq }) => eq(invitation.email, email),
-    columns: {
-      id: true,
-    },
-    with: {
-      Team: {
-        columns: {
-          id: true,
-          name: true,
-        },
-      },
-      InvitedBy: {
-        columns: {
-          id: true,
-          name: true,
-          image: true,
-        },
-      },
-    },
-  });
-}
-
-export async function findInvitationById(id: string) {
-  return db.query.invitations.findFirst({
-    where: (invitation, { eq }) => eq(invitation.id, id),
-  });
-}
-
-export async function findInvitationByIdAndTeamId({
-  id,
-  teamId,
-}: {
-  id: string;
-  teamId: string;
-}) {
-  return db.query.invitations.findFirst({
-    where: (invitation, { and, eq }) =>
-      and(eq(invitation.id, id), eq(invitation.teamId, teamId)),
-  });
-}
-
-export async function deleteInvitationById(db: Drizzle, id: string) {
-  await db.delete(invitations).where(eq(invitations.id, id));
-}
-
-export async function updateTeamById(
-  db: Drizzle,
-  { id, input }: Update<typeof zTeamUpdate>,
-) {
-  return db.update(teams).set(input).where(eq(teams.id, id));
+    .where(
+      and(
+        gte(careTasks.date, date),
+        eq(careTasks.careShiftId, previousCareShiftId),
+      ),
+    );
 }
