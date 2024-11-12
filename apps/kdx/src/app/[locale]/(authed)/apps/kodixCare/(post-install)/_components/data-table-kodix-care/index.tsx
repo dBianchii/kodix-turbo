@@ -27,8 +27,8 @@ import {
 import { create } from "zustand";
 
 import type { RouterOutputs } from "@kdx/api";
+import type { CareTask } from "@kdx/db/repositories";
 import dayjs from "@kdx/dayjs";
-import { CareTask } from "@kdx/db/repositories";
 import { Link } from "@kdx/locales/next-intl/navigation";
 import { cn } from "@kdx/ui";
 import {

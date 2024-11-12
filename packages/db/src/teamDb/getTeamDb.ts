@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import type { DBQueryConfig, SQLWrapper } from "drizzle-orm";
-import { and, inArray } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 
 import type {
   DbTable,
@@ -55,8 +55,11 @@ export const getTeamDb = (team: Team): TeamDbClient => {
     table: {
       [teamIdColumn]: any;
     },
-    owner: Team,
-  ) => inArray(table[teamIdColumn], owner.ids);
+    team: Team,
+  ) =>
+    team.ids.length > 1
+      ? inArray(table[teamIdColumn], team.ids)
+      : eq(table[teamIdColumn], team.ids[0]);
 
   const intercept = (fn: InterceptFn, context: InvokeContext = {}) => {
     const { path = [], fnPath = [] } = context;
