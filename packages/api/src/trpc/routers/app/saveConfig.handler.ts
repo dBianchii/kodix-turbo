@@ -2,6 +2,7 @@ import type { TSaveConfigInput } from "@kdx/validators/trpc/app";
 import { appRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../procedures";
+import { getTeamDbFromCtx } from "../../getTeamDbFromCtx";
 
 interface SaveConfigOptions {
   ctx: TProtectedProcedureContext;
@@ -9,9 +10,13 @@ interface SaveConfigOptions {
 }
 
 export const saveConfigHandler = async ({ ctx, input }: SaveConfigOptions) => {
-  await appRepository.upsertAppTeamConfig({
-    appId: input.appId,
-    teamId: ctx.auth.user.activeTeamId,
-    config: input.config,
-  });
+  const teamDb = getTeamDbFromCtx(ctx);
+
+  await appRepository.upsertAppTeamConfig(
+    {
+      appId: input.appId,
+      config: input.config,
+    },
+    teamDb,
+  );
 };

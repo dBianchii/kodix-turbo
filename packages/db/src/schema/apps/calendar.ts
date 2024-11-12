@@ -58,10 +58,12 @@ export const eventCancellations = mysqlTable(
     })
       .notNull()
       .references(() => eventMasters.id, { onDelete: "cascade" }),
+    teamId: teamIdReferenceCascadeDelete,
   },
   (table) => {
     return {
       eventMasterIdIdx: index("eventMasterId_idx").on(table.eventMasterId),
+      teamIdIdx: index("teamId_idx").on(table.teamId),
     };
   },
 );
@@ -90,10 +92,12 @@ export const eventExceptions = mysqlTable(
       .notNull()
       .references(() => eventMasters.id, { onDelete: "cascade" }),
     type: typeEnum,
+    teamId: teamIdReferenceCascadeDelete,
   },
   (table) => {
     return {
       eventMasterIdIdx: index("eventMasterId_idx").on(table.eventMasterId),
+      teamIdIdx: index("teamId_idx").on(table.teamId),
     };
   },
 );

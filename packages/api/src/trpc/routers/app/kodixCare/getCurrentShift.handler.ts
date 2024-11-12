@@ -1,6 +1,7 @@
-import { kodixCareRepository } from "@kdx/db/repositories";
+import { getKodixCareRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
+import { getTeamDbFromCtx } from "../../../getTeamDbFromCtx";
 
 interface GetCurrentShiftOptions {
   ctx: TProtectedProcedureContext;
@@ -9,7 +10,7 @@ interface GetCurrentShiftOptions {
 export const getCurrentShiftHandler = async ({
   ctx,
 }: GetCurrentShiftOptions) => {
-  return await kodixCareRepository.getCurrentCareShiftByTeamId(
-    ctx.auth.user.activeTeamId,
-  );
+  const kodixCareRepository = getKodixCareRepository(getTeamDbFromCtx(ctx));
+
+  return await kodixCareRepository.getCurrentCareShift();
 };

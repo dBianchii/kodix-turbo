@@ -29,14 +29,17 @@ export async function createUser({
   passwordHash?: string;
   tx: DrizzleTransaction;
 }) {
-  await userRepository.createUser(tx, {
-    id: userId,
-    name: name,
-    activeTeamId: teamId,
-    email: email,
-    image: image,
-    passwordHash: passwordHash,
-  });
+  await userRepository.createUser(
+    {
+      id: userId,
+      name: name,
+      activeTeamId: teamId,
+      email: email,
+      image: image,
+      passwordHash: passwordHash,
+    },
+    tx,
+  );
   if (invite) {
     await acceptInvite({ invite, userId, email, db: tx });
   } else {
@@ -66,10 +69,13 @@ export async function acceptInvite({
 
   if (!invitation) throw new Error("No invitation found");
 
-  await userRepository.moveUserToTeamAndAssociateToTeam(db, {
-    userId,
-    teamId: invitation.Team.id,
-  });
+  await userRepository.moveUserToTeamAndAssociateToTeam(
+    {
+      userId,
+      teamId: invitation.Team.id,
+    },
+    db,
+  );
 
   await teamRepository.deleteInvitationById(db, invite);
 }

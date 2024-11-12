@@ -1,20 +1,27 @@
-import type { drizzle } from "drizzle-orm/mysql2";
-
+import type { db } from "../client";
 import type * as schema from "../schema";
 
-declare const db: ReturnType<typeof drizzle<typeof schema>>;
-
 export interface Team {
-  id: string | null;
+  ids: string[];
 }
 
-export type DbClient = typeof db;
-
 export type DbSchema = typeof schema;
-
 export type DbTable = keyof DbSchema;
 
-export type TeamDbClient = Omit<DbClient, "execute">;
+type TransactionFnInnerFn = Parameters<typeof db.transaction>[0];
+
+type TransactionFnInnerFnFirstArg = Parameters<TransactionFnInnerFn>[0];
+type TransactionFnInnerFnSecondArgs = Parameters<TransactionFnInnerFn>[1];
+
+export type TeamDbClient = Omit<Omit<typeof db, "execute">, "transaction"> & {
+  teamIds: string[];
+  transaction: (
+    fn: (
+      tx: TransactionFnInnerFnFirstArg & { teamIds: string[] },
+      config?: TransactionFnInnerFnSecondArgs,
+    ) => ReturnType<Parameters<typeof db.transaction>[0]>,
+  ) => ReturnType<typeof db.transaction>;
+};
 
 export type FindFn<K extends keyof typeof db.query = keyof typeof db.query> = (
   ...args:

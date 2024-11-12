@@ -2,6 +2,7 @@ import type { TGetUserAppTeamConfigInputSchema } from "@kdx/validators/trpc/app"
 import { appRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../procedures";
+import { getTeamDbFromCtx } from "../../getTeamDbFromCtx";
 
 interface GetUserAppTeamConfigOptions {
   ctx: TProtectedProcedureContext;
@@ -12,11 +13,14 @@ export const getUserAppTeamConfigHandler = async ({
   ctx,
   input,
 }: GetUserAppTeamConfigOptions) => {
-  const [userAppTeamConfig] = await appRepository.findUserAppTeamConfigs({
-    userIds: [ctx.auth.user.id],
-    teamIds: [ctx.auth.user.activeTeamId],
-    appId: input.appId,
-  });
+  const teamDb = getTeamDbFromCtx(ctx);
+  const [userAppTeamConfig] = await appRepository.findUserAppTeamConfigs(
+    {
+      userIds: [ctx.auth.user.id],
+      appId: input.appId,
+    },
+    teamDb,
+  );
 
   return userAppTeamConfig?.config;
 };

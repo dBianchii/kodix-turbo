@@ -10,8 +10,11 @@ interface ChangeNameOptions {
 }
 
 export const changeNameHandler = async ({ ctx, input }: ChangeNameOptions) => {
-  await userRepository.updateUser(db, {
-    id: ctx.auth.user.id,
-    input: { name: input.name },
-  });
+  await userRepository.updateUser(
+    {
+      id: ctx.auth.user.id,
+      input: { name: input.name },
+    },
+    db,
+  );
 };

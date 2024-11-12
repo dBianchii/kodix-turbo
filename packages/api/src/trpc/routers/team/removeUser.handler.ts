@@ -43,10 +43,13 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
       otherTeam = { id: newTeamId };
     }
 
-    await userRepository.moveUserToTeam(tx, {
-      userId: input.userId,
-      newTeamId: otherTeam.id,
-    });
+    await userRepository.moveUserToTeam(
+      {
+        userId: input.userId,
+        newTeamId: otherTeam.id,
+      },
+      tx,
+    );
 
     //Remove the user from the team
     await teamRepository.removeUserFromTeam(tx, {

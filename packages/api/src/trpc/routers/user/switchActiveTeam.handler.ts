@@ -13,8 +13,11 @@ export const switchActiveTeamHandler = async ({
   ctx,
   input,
 }: SwitchActiveTeamOptions) => {
-  await userRepository.moveUserToTeam(db, {
-    userId: ctx.auth.user.id,
-    newTeamId: input.teamId,
-  });
+  await userRepository.moveUserToTeam(
+    {
+      userId: ctx.auth.user.id,
+      newTeamId: input.teamId,
+    },
+    db,
+  );
 };

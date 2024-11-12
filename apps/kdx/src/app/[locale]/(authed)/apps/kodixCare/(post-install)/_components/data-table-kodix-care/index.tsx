@@ -1,7 +1,6 @@
 "use client";
 
 import type { SortingState, VisibilityState } from "@tanstack/react-table";
-import type { CareTask } from "node_modules/@kdx/api/src/internal/calendarAndCareTaskCentral";
 import { useEffect, useMemo, useState } from "react";
 import {
   createColumnHelper,
@@ -29,6 +28,7 @@ import { create } from "zustand";
 
 import type { RouterOutputs } from "@kdx/api";
 import dayjs from "@kdx/dayjs";
+import { CareTask } from "@kdx/db/repositories";
 import { Link } from "@kdx/locales/next-intl/navigation";
 import { cn } from "@kdx/ui";
 import {

@@ -39,9 +39,12 @@ export const changePasswordHandler = async ({
   const hashed = await hash(input.password, argon2Config);
   await db.transaction(async (tx) => {
     await authRepository.deleteTokenAndDeleteExpiredTokens(tx, input.token);
-    await userRepository.updateUser(tx, {
-      id: existingToken.userId,
-      input: { passwordHash: hashed },
-    });
+    await userRepository.updateUser(
+      {
+        id: existingToken.userId,
+        input: { passwordHash: hashed },
+      },
+      tx,
+    );
   });
 };

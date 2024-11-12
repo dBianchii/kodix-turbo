@@ -1,13 +1,12 @@
 import { rrulestr } from "rrule";
 
+import type { DrizzleTeam, DrizzleTeamTransaction } from "@kdx/db/client";
 import type { careTasks, eventMasters } from "@kdx/db/schema";
 import dayjs from "@kdx/dayjs";
-import {
-  appRepository,
-  calendarRepository,
-  careTaskRepository,
-} from "@kdx/db/repositories";
+import { appRepository, getCalendarRepository } from "@kdx/db/repositories";
 import { kodixCareAppId } from "@kdx/shared";
+
+import { getCareTaskRepository } from "../../../db/src/repositories/app/kodixCare/careTaskRepository";
 
 export interface CalendarTask {
   title: string | undefined;
@@ -22,6 +21,24 @@ export interface CalendarTask {
   createdBy: typeof eventMasters.$inferSelect.createdBy;
 }
 
+export interface CareTask {
+  id: typeof careTasks.$inferSelect.id;
+  title: typeof careTasks.$inferSelect.title;
+  description: typeof careTasks.$inferSelect.description;
+  date: typeof careTasks.$inferSelect.date;
+  doneAt: typeof careTasks.$inferSelect.doneAt;
+  updatedAt: typeof careTasks.$inferSelect.updatedAt;
+  doneByUserId: typeof careTasks.$inferSelect.doneByUserId;
+  details: typeof careTasks.$inferSelect.details;
+  type: typeof careTasks.$inferSelect.type;
+  teamId: typeof careTasks.$inferSelect.teamId;
+  eventMasterId: string | null;
+}
+
+type CareTaskOrCalendarTask = Omit<CareTask, "id"> & {
+  id: string | null;
+}; //? Same as CareTask but id might not exist when it's a calendar task
+
 export const getCalendarTaskCompositeId = (compound: {
   eventMasterId: string;
   selectedTimeStamp: Date;
@@ -30,30 +47,37 @@ export const getCalendarTaskCompositeId = (compound: {
 export async function getCalendarTasks({
   dateStart,
   dateEnd,
-  teamIds,
   onlyCritical = false,
+  teamDb,
 }: {
   dateStart: Date;
   dateEnd: Date;
-  teamIds: string[];
   onlyCritical?: boolean;
+  teamDb: DrizzleTeam | DrizzleTeamTransaction;
 }) {
-  if (!teamIds.length) throw new Error("teamIds must have at least one item");
-
+  const calendarRepository = getCalendarRepository(teamDb);
   const calendarRepositoryInput = {
     dateStart,
     dateEnd,
-    teamIds,
   };
   const [_eventMasters, _eventExceptions, _eventCancelations] =
     // eslint-disable-next-line no-restricted-syntax
     await Promise.all([
-      calendarRepository.findEventMastersFromTo({
-        ...calendarRepositoryInput,
-        onlyCritical,
-      }),
-      calendarRepository.findEventExceptionsFromTo(calendarRepositoryInput),
-      calendarRepository.findEventCancellationsFromTo(calendarRepositoryInput),
+      calendarRepository.findEventMastersFromTo(
+        {
+          ...calendarRepositoryInput,
+          onlyCritical,
+        },
+        teamDb,
+      ),
+      calendarRepository.findEventExceptionsFromTo(
+        calendarRepositoryInput,
+        teamDb,
+      ),
+      calendarRepository.findEventCancellationsFromTo(
+        calendarRepositoryInput,
+        teamDb,
+      ),
     ]);
 
   //* We have all needed data. Now, let's add all masters and exceptions to calendarTasks.
@@ -138,24 +162,6 @@ export async function getCalendarTasks({
   return calendarTasks;
 }
 
-export interface CareTask {
-  id: typeof careTasks.$inferSelect.id;
-  title: typeof careTasks.$inferSelect.title;
-  description: typeof careTasks.$inferSelect.description;
-  date: typeof careTasks.$inferSelect.date;
-  doneAt: typeof careTasks.$inferSelect.doneAt;
-  updatedAt: typeof careTasks.$inferSelect.updatedAt;
-  doneByUserId: typeof careTasks.$inferSelect.doneByUserId;
-  details: typeof careTasks.$inferSelect.details;
-  type: typeof careTasks.$inferSelect.type;
-  teamId: typeof careTasks.$inferSelect.teamId;
-  eventMasterId: string | null;
-}
-
-type CareTaskOrCalendarTask = Omit<CareTask, "id"> & {
-  id: string | null;
-}; //? Same as CareTask but id might not exist when it's a calendar task
-
 export const getCareTaskCompositeId = (compound: {
   id: string | null;
   eventMasterId: string | null;
@@ -172,37 +178,37 @@ export const getCareTaskCompositeId = (compound: {
 export async function getCareTasks({
   dateStart,
   dateEnd,
-  teamIds,
   onlyCritical = false,
   onlyNotDone = false,
+  teamDb,
 }: {
+  teamDb: DrizzleTeam;
   dateStart: Date;
   dateEnd: Date;
-  teamIds: string[];
   onlyCritical?: boolean;
   onlyNotDone?: boolean;
 }) {
-  if (!teamIds.length) throw new Error("teamIds must have at least one item");
+  const careTaskRepository = getCareTaskRepository(teamDb);
 
   // eslint-disable-next-line no-restricted-syntax
   const [calendarTasks, careTasks, teamConfigs] = await Promise.all([
     getCalendarTasks({
-      teamIds,
+      teamDb,
       onlyCritical,
       dateStart: dateStart,
       dateEnd: dateEnd,
     }),
-    careTaskRepository.findCareTasksFromTo({
-      dateStart,
-      dateEnd,
-      teamIds,
-      onlyCritical,
-      onlyNotDone,
-    }),
-    appRepository.findAppTeamConfigs({
-      appId: kodixCareAppId,
-      teamIds,
-    }),
+
+    careTaskRepository.findCareTasksFromTo(
+      {
+        dateStart,
+        dateEnd,
+        onlyCritical,
+        onlyNotDone,
+      },
+      teamDb,
+    ),
+    appRepository.findAppTeamConfigs(kodixCareAppId, teamDb),
   ]);
 
   let union: CareTaskOrCalendarTask[] = careTasks;
@@ -239,4 +245,52 @@ export async function getCareTasks({
     .sort((a, b) => a.date.getTime() - b.date.getTime()); //? Sort by ascending time
 
   return union;
+}
+
+const TOMORROW_END_OF_DAY = dayjs.utc().add(1, "day").endOf("day").toDate();
+export async function cloneCalendarTasksToCareTasks({
+  teamDb,
+  start,
+  end = TOMORROW_END_OF_DAY,
+  careShiftId, //? CurrentShift, where all tasks will be cloned to
+}: {
+  teamDb: DrizzleTeam | DrizzleTeamTransaction;
+  start: Date;
+  end?: Date;
+  careShiftId: string;
+}) {
+  const careTaskRepository = getCareTaskRepository(teamDb);
+
+  const calendarTasks = await getCalendarTasks({
+    dateStart: start,
+    dateEnd: end,
+    teamDb,
+  });
+
+  if (calendarTasks.length > 0)
+    await careTaskRepository.createManyCareTasks(
+      calendarTasks.map((calendarTask) => ({
+        careShiftId: careShiftId,
+        teamId: calendarTask.teamId,
+        title: calendarTask.title,
+        description: calendarTask.description,
+        date: calendarTask.date,
+        eventMasterId: calendarTask.eventMasterId,
+        doneByUserId: null,
+        type: calendarTask.type,
+        createdBy: calendarTask.createdBy,
+        createdFromCalendar: true,
+      })),
+      teamDb,
+    );
+
+  await appRepository.upsertAppTeamConfig(
+    {
+      appId: kodixCareAppId,
+      config: {
+        clonedCareTasksUntil: end,
+      },
+    },
+    teamDb,
+  );
 }

@@ -2,10 +2,10 @@ import { TRPCError } from "@trpc/server";
 
 import type { TDoCheckoutForShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import dayjs from "@kdx/dayjs";
-import { db } from "@kdx/db/client";
-import { kodixCareRepository } from "@kdx/db/repositories";
+import { getKodixCareRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
+import { getTeamDbFromCtx } from "../../../getTeamDbFromCtx";
 
 interface DoCheckoutForShiftOptions {
   ctx: TProtectedProcedureContext;
@@ -16,9 +16,9 @@ export const doCheckoutForShiftHandler = async ({
   ctx,
   input,
 }: DoCheckoutForShiftOptions) => {
-  const currentShift = await kodixCareRepository.getCurrentCareShiftByTeamId(
-    ctx.auth.user.activeTeamId,
-  );
+  const kodixCareRepository = getKodixCareRepository(getTeamDbFromCtx(ctx));
+
+  const currentShift = await kodixCareRepository.getCurrentCareShift();
 
   if (!currentShift) {
     throw new TRPCError({
@@ -45,7 +45,7 @@ export const doCheckoutForShiftHandler = async ({
       message: ctx.t("api.Checkout time must be after checkin time"),
     });
 
-  await kodixCareRepository.updateCareShift(db, {
+  await kodixCareRepository.updateCareShift({
     id: currentShift.id,
     input: {
       checkOut: input.date,
