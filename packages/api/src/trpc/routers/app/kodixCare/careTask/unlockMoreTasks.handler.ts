@@ -57,7 +57,6 @@ export const unlockMoreTasksHandler = async ({
 
   await cloneCalendarTasksToCareTasks({
     tx: db,
-    careShiftId: careShift.id,
     start: clonedCareTasksUntil,
     end: input.selectedTimestamp,
     ctx,

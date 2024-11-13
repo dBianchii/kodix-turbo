@@ -35,8 +35,8 @@ export async function getCurrentCareShiftByTeamId(teamId: string) {
 }
 
 export async function updateCareShift(
-  db: Drizzle,
   { id, input }: Update<typeof zCareShiftUpdate>,
+  db: Drizzle,
 ) {
   await db.update(careShifts).set(input).where(eq(careShifts.id, id));
 }

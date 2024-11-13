@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import dayjs from "@kdx/dayjs";
 import { db } from "@kdx/db/client";
 import { nanoid } from "@kdx/db/nanoid";
-import { careTaskRepository, kodixCareRepository } from "@kdx/db/repositories";
+import { kodixCareRepository } from "@kdx/db/repositories";
 import WarnPreviousShiftNotEnded from "@kdx/react-email/warn-previous-shift-not-ended";
 import { KODIX_NOTIFICATION_FROM_EMAIL, kodixCareAppId } from "@kdx/shared";
 
@@ -48,7 +48,6 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
       });
 
       await cloneCalendarTasksToCareTasks({
-        careShiftId,
         start: yesterdayStartOfDay,
         end: tomorrowEndOfDay,
         tx,
@@ -77,13 +76,18 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
 
   await db.transaction(async (tx) => {
     //*End the current shift
-    await kodixCareRepository.updateCareShift(tx, {
-      id: currentShift.id,
-      input: {
-        checkOut: loggedUserIsCaregiverForCurrentShift ? new Date() : undefined, //Also checkOut if user is the caregiver
-        shiftEndedAt: new Date(),
+    await kodixCareRepository.updateCareShift(
+      {
+        id: currentShift.id,
+        input: {
+          checkOut: loggedUserIsCaregiverForCurrentShift
+            ? new Date()
+            : undefined, //Also checkOut if user is the caregiver
+          shiftEndedAt: new Date(),
+        },
       },
-    });
+      tx,
+    );
 
     const now = new Date();
     //*Start a new shift
@@ -92,23 +96,13 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
       checkIn: now,
       caregiverId: ctx.auth.user.id,
     });
-
-    //* Move all tasks from previous shift to current shift
-    const previousShift = await kodixCareRepository.getPreviousShiftByTeamId(
-      tx,
-      ctx.auth.user.activeTeamId,
-    );
-    if (previousShift) {
-      await careTaskRepository.reassignCareTasksFromDateToShift(tx, {
-        previousCareShiftId: previousShift.id,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        newCareShiftId: newCareShift!.id,
-        date: now,
+    if (!newCareShift)
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Could not create care Shift",
       });
-    }
 
     await cloneCalendarTasksToCareTasks({
-      careShiftId: currentShift.id,
       start: clonedCareTasksUntil,
       end: tomorrowEndOfDay,
       tx,
