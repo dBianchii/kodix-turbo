@@ -14,7 +14,11 @@ import {
 
 import type { zAppPermissionToTeamAppRoleCreateMany } from "../_zodSchemas/appPermissionsToTeamAppRolesSchemas";
 import type { appIdToUserAppTeamConfigSchemaUpdate } from "../_zodSchemas/userAppTeamConfigs";
-import type { Drizzle } from "../../client";
+import type {
+  Drizzle,
+  DrizzleTeam,
+  DrizzleTeamTransaction,
+} from "../../client";
 import { appIdToUserAppTeamConfigSchema } from "../_zodSchemas/userAppTeamConfigs";
 import { db } from "../../client";
 import { appRoles_defaultTree } from "../../constants";
@@ -45,14 +49,10 @@ export async function findInstalledAppsByTeamId(teamId: string | undefined) {
     })
     .from(apps)
     .then((res) => {
-      if (teamId)
-        return res.map((x) => ({
-          ...x,
-          installed: !!x.installed, //? And then we convert it to boolean. Javascript is amazing /s
-        }));
       return res.map((x) => ({
         ...x,
-        installed: false, //? If user is not logged in, we set it to false
+        installed: teamId ? !!x.installed : false, //? And then we convert it to boolean. Javascript is amazing /s
+        //? If user is not logged in, we set it to false
       }));
     });
   return _apps.filter((app) => app.id !== todoAppId); //TODO: stinky
@@ -74,19 +74,12 @@ export async function findInstalledApp({
   return installed;
 }
 
-export async function findAppTeamConfigs({
-  appId,
-  teamIds,
-}: {
-  appId: AppIdsWithUserAppTeamConfig;
-  teamIds: string[];
-}) {
-  const teamConfigs = await db.query.appTeamConfigs.findMany({
-    where: (appteamConfig, { eq, and, inArray }) =>
-      and(
-        eq(appteamConfig.appId, appId),
-        inArray(appteamConfig.teamId, teamIds),
-      ),
+export async function findAppTeamConfigs(
+  appId: AppIdsWithUserAppTeamConfig,
+  teamDb: DrizzleTeam,
+) {
+  const teamConfigs = await teamDb.query.appTeamConfigs.findMany({
+    where: (appteamConfig, { eq, and }) => and(eq(appteamConfig.appId, appId)),
     columns: {
       config: true,
       teamId: true,
@@ -142,30 +135,34 @@ export async function removePermissionFromRole(
   );
 }
 
-export async function upsertAppTeamConfig({
-  appId,
-  teamId,
-  config,
-}: {
-  appId: AppIdsWithUserAppTeamConfig;
-  teamId: string;
-  config: Partial<
-    z.infer<
-      (typeof appIdToAppTeamConfigSchema)[typeof kodixCareAppId] //TODO: make dynamic based on app
-    >
-  >;
-}) {
-  const existingConfig = await db.query.appTeamConfigs.findFirst({
-    where: (appteamConfig, { eq, and }) =>
-      and(eq(appteamConfig.appId, appId), eq(appteamConfig.teamId, teamId)),
+export async function upsertAppTeamConfig(
+  {
+    appId,
+    config,
+  }: {
+    appId: AppIdsWithUserAppTeamConfig;
+    config: Partial<
+      z.infer<
+        (typeof appIdToAppTeamConfigSchema)[typeof kodixCareAppId] //TODO: make dynamic based on app
+      >
+    >;
+  },
+  teamDb: DrizzleTeam | DrizzleTeamTransaction,
+) {
+  if (teamDb.teamIds.length !== 1)
+    throw new Error("upsertAppTeamConfig: teamDb must have exactly 1 teamId");
+
+  const existingConfig = await teamDb.query.appTeamConfigs.findFirst({
+    where: (appteamConfig, { eq, and }) => and(eq(appteamConfig.appId, appId)),
     columns: {
+      teamId: true,
       config: true,
     },
   });
 
   const configSchema = appIdToAppTeamConfigSchema[appId];
   if (existingConfig) {
-    return await db
+    return await teamDb
       .update(appTeamConfigs)
       .set({
         config: {
@@ -173,34 +170,33 @@ export async function upsertAppTeamConfig({
           ...config,
         },
       })
-      .where(
-        and(eq(appTeamConfigs.appId, appId), eq(appTeamConfigs.teamId, teamId)),
-      );
+      .where(and(eq(appTeamConfigs.appId, appId)));
   }
 
   //new record. We need to validate the whole config without partial()
   const parsedInput = configSchema.parse(config);
   await db.insert(appTeamConfigs).values({
     config: parsedInput,
-    teamId: teamId,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    teamId: teamDb.teamIds[0]!,
     appId: appId,
   });
 }
 
-export async function findUserAppTeamConfigs({
-  appId,
-  userIds,
-  teamIds,
-}: {
-  appId: AppIdsWithUserAppTeamConfig;
-  userIds: string[];
-  teamIds: string[];
-}) {
-  const result = await db.query.userAppTeamConfigs.findMany({
+export async function findUserAppTeamConfigs(
+  {
+    appId,
+    userIds,
+  }: {
+    appId: AppIdsWithUserAppTeamConfig;
+    userIds: string[];
+  },
+  teamDb: DrizzleTeam,
+) {
+  const result = await teamDb.query.userAppTeamConfigs.findMany({
     where: (userAppTeamConfigs, { eq, and }) =>
       and(
         eq(userAppTeamConfigs.appId, appId),
-        inArray(userAppTeamConfigs.teamId, teamIds),
         inArray(userAppTeamConfigs.userId, userIds),
       ),
     columns: {

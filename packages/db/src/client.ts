@@ -38,8 +38,11 @@ if (process.env.NODE_ENV !== "production") globalForDb.conn = conn;
 export const db = drizzle(conn, { schema, mode: "default" });
 export type Drizzle = typeof db;
 
-export { getTeamDb as createTeamDb };
+export { getTeamDb };
 export type DrizzleTeam = ReturnType<typeof getTeamDb>;
+export type DrizzleTeamTransaction = DrizzleTransaction & {
+  teamIds: string[];
+};
 
 export type DrizzleTransaction = MySqlTransaction<
   MySql2QueryResultHKT,

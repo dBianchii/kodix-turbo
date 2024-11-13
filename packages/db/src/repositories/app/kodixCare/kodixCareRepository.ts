@@ -1,60 +1,73 @@
 import type { z } from "zod";
-import { and, desc, eq, isNotNull } from "drizzle-orm";
+import { and, asc, desc, eq, isNotNull } from "drizzle-orm";
 
 import type { Update } from "../../_types";
 import type {
   zCareShiftCreate,
   zCareShiftUpdate,
 } from "../../_zodSchemas/careShiftSchemas";
-import type { Drizzle } from "../../../client";
-import { db } from "../../../client";
+import type { DrizzleTeam, DrizzleTransaction } from "../../../client";
 import { careShifts } from "../../../schema";
 
-export async function getCurrentCareShiftByTeamId(teamId: string) {
-  const shift = await db.query.careShifts.findFirst({
-    orderBy: desc(careShifts.checkIn),
-    where: (careShift, { eq }) => eq(careShift.teamId, teamId),
-    with: {
-      Caregiver: {
-        columns: {
-          email: true,
-          id: true,
-          image: true,
-          name: true,
+export const getKodixCareRepository = (_teamDb: DrizzleTeam) => ({
+  async getCurrentCareShift(
+    teamDb: DrizzleTransaction | DrizzleTeam = _teamDb,
+  ) {
+    const shift = await teamDb.query.careShifts.findFirst({
+      orderBy: desc(careShifts.checkIn),
+      with: {
+        Caregiver: {
+          columns: {
+            email: true,
+            id: true,
+            image: true,
+            name: true,
+          },
         },
       },
-    },
-    columns: {
-      shiftEndedAt: true,
-      checkIn: true,
-      checkOut: true,
-      id: true,
-    },
-  });
-  return shift ?? null;
-}
+      columns: {
+        shiftEndedAt: true,
+        checkIn: true,
+        checkOut: true,
+        id: true,
+      },
+    });
+    return shift ?? null;
+  },
 
-export async function updateCareShift(
-  db: Drizzle,
-  { id, input }: Update<typeof zCareShiftUpdate>,
-) {
-  await db.update(careShifts).set(input).where(eq(careShifts.id, id));
-}
+  async getAllCareShifts(teamDb: DrizzleTransaction | DrizzleTeam = _teamDb) {
+    return await teamDb.query.careShifts.findMany({
+      orderBy: [asc(careShifts.checkIn)],
+      with: {
+        Caregiver: {
+          columns: {
+            image: true,
+            name: true,
+          },
+        },
+      },
+    });
+  },
 
-export async function createCareShift(
-  db: Drizzle,
-  careShift: z.infer<typeof zCareShiftCreate>,
-) {
-  return db.insert(careShifts).values(careShift).$returningId();
-}
+  async updateCareShift(
+    { id, input }: Update<typeof zCareShiftUpdate>,
+    teamDb: DrizzleTransaction | DrizzleTeam = _teamDb,
+  ) {
+    await teamDb.update(careShifts).set(input).where(eq(careShifts.id, id));
+  },
 
-export async function getPreviousShiftByTeamId(db: Drizzle, teamId: string) {
-  return await db.query.careShifts.findFirst({
-    orderBy: desc(careShifts.checkIn),
-    where: and(
-      eq(careShifts.teamId, teamId),
-      isNotNull(careShifts.shiftEndedAt),
-    ),
-    columns: { id: true },
-  });
-}
+  async createCareShift(
+    careShift: z.infer<typeof zCareShiftCreate>,
+    teamDb: DrizzleTransaction | DrizzleTeam = _teamDb,
+  ) {
+    return teamDb.insert(careShifts).values(careShift).$returningId();
+  },
+
+  async getPreviousShift(teamDb: DrizzleTransaction | DrizzleTeam = _teamDb) {
+    return await teamDb.query.careShifts.findFirst({
+      orderBy: desc(careShifts.checkIn),
+      where: and(isNotNull(careShifts.shiftEndedAt)),
+      columns: { id: true },
+    });
+  },
+});

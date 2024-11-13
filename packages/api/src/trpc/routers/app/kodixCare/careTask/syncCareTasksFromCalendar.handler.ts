@@ -1,10 +1,11 @@
 import { TRPCError } from "@trpc/server";
 
-import { db } from "@kdx/db/client";
-import { careTaskRepository, kodixCareRepository } from "@kdx/db/repositories";
+import { getKodixCareRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
-import { cloneCalendarTasksToCareTasks } from "../utils";
+import { getCareTaskRepository } from "../../../../../../../db/src/repositories/app/kodixCare/careTaskRepository";
+import { services } from "../../../../../services";
+import { getTeamDbFromCtx } from "../../../../getTeamDbFromCtx";
 
 interface SyncCareTasksFromCalendarOptions {
   ctx: TProtectedProcedureContext;
@@ -13,9 +14,12 @@ interface SyncCareTasksFromCalendarOptions {
 export const syncCareTasksFromCalendarHandler = async ({
   ctx,
 }: SyncCareTasksFromCalendarOptions) => {
-  const currentShift = await kodixCareRepository.getCurrentCareShiftByTeamId(
-    ctx.auth.user.activeTeamId,
-  );
+  const teamDb = getTeamDbFromCtx(ctx);
+
+  const kodixCareRepository = getKodixCareRepository(teamDb);
+  const careTaskRepository = getCareTaskRepository(teamDb);
+
+  const currentShift = await kodixCareRepository.getCurrentCareShift();
 
   if (!currentShift || currentShift.shiftEndedAt) {
     throw new TRPCError({
@@ -33,22 +37,16 @@ export const syncCareTasksFromCalendarHandler = async ({
     });
 
   const syncFromDate = currentShift.checkIn;
-  await db.transaction(async (tx) => {
+  await teamDb.transaction(async (tx) => {
     await careTaskRepository.deleteManyCareTasksThatCameFromCalendarWithDateHigherOrEqualThan(
+      syncFromDate,
       tx,
-      {
-        teamId: ctx.auth.user.activeTeamId,
-        date: syncFromDate,
-      },
     );
 
-    await cloneCalendarTasksToCareTasks({
-      tx,
+    await services.calendarAndCareTask.cloneCalendarTasksToCareTasks({
       start: syncFromDate,
       careShiftId: currentShift.id,
-      ctx: {
-        ...ctx,
-      },
+      teamDb: tx,
     });
   });
 };

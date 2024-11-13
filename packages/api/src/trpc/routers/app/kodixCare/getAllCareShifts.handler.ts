@@ -1,8 +1,7 @@
-import { asc, eq } from "@kdx/db";
-import { db } from "@kdx/db/client";
-import { careShifts } from "@kdx/db/schema";
+import { getKodixCareRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
+import { getTeamDbFromCtx } from "../../../getTeamDbFromCtx";
 
 interface GetAllCareShiftsOptions {
   ctx: TProtectedProcedureContext;
@@ -11,16 +10,6 @@ interface GetAllCareShiftsOptions {
 export const getAllCareShiftsHandler = async ({
   ctx,
 }: GetAllCareShiftsOptions) => {
-  return await db.query.careShifts.findMany({
-    where: eq(careShifts.teamId, ctx.auth.user.activeTeamId),
-    orderBy: [asc(careShifts.checkIn)],
-    with: {
-      Caregiver: {
-        columns: {
-          image: true,
-          name: true,
-        },
-      },
-    },
-  });
+  const kodixCareRepository = getKodixCareRepository(getTeamDbFromCtx(ctx));
+  return await kodixCareRepository.getAllCareShifts();
 };

@@ -1,15 +1,15 @@
 import { TRPCError } from "@trpc/server";
 
 import type { TDeleteTeamInputSchema } from "@kdx/validators/trpc/team";
-import { db } from "@kdx/db/client";
 import {
-  careTaskRepository,
+  getCareTaskRepository,
   teamRepository,
   userRepository,
 } from "@kdx/db/repositories";
 
 import type { TIsTeamOwnerProcedureContext } from "../../procedures";
 import { findTeamById } from "../../../../../db/src/repositories/teamRepository";
+import { getTeamDbFromCtx } from "../../getTeamDbFromCtx";
 
 interface DeleteTeamOptions {
   ctx: TIsTeamOwnerProcedureContext;
@@ -57,15 +57,20 @@ export const deleteTeamHandler = async ({ ctx, input }: DeleteTeamOptions) => {
     });
   }
 
-  await db.transaction(async (tx) => {
+  const teamDb = getTeamDbFromCtx(ctx);
+  const careTaskRepository = getCareTaskRepository(teamDb);
+  await teamDb.transaction(async (tx) => {
     //Move the user to the other team
-    await userRepository.moveUserToTeam(tx, {
-      userId: ctx.auth.user.id,
-      newTeamId: otherTeam.id,
-    });
+    await userRepository.moveUserToTeam(
+      {
+        userId: ctx.auth.user.id,
+        newTeamId: otherTeam.id,
+      },
+      tx,
+    );
 
     //Remove the team
-    await careTaskRepository.deleteAllCareTasksForTeam(tx, input.teamId);
+    await careTaskRepository.deleteAllCareTasksForTeam(tx);
     await teamRepository.deleteTeam(tx, input.teamId); //! Should delete many other tables based on referential actions
   });
 };

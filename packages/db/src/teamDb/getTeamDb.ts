@@ -1,12 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import type { DBQueryConfig, SQLWrapper } from "drizzle-orm";
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 
-import type { db as _db } from "../client";
 import type {
   DbTable,
   DeleteArgs,
@@ -58,8 +55,11 @@ export const getTeamDb = (team: Team): TeamDbClient => {
     table: {
       [teamIdColumn]: any;
     },
-    owner: Team,
-  ) => eq(table[teamIdColumn], owner.id);
+    team: Team,
+  ) =>
+    team.ids.length > 1
+      ? inArray(table[teamIdColumn], team.ids)
+      : eq(table[teamIdColumn], team.ids[0]);
 
   const intercept = (fn: InterceptFn, context: InvokeContext = {}) => {
     const { path = [], fnPath = [] } = context;
@@ -80,6 +80,9 @@ export const getTeamDb = (team: Team): TeamDbClient => {
           const [callback] = fn.args as Parameters<typeof db.transaction>;
 
           return transactionFn(async (tx) => {
+            // @ts-expect-error: typescript aint easy
+            tx.teamIds = team.ids;
+
             const wrappedTx = createProxy(tx, { path: ["tx"] });
             return callback(wrappedTx);
           });
@@ -213,7 +216,6 @@ export const getTeamDb = (team: Team): TeamDbClient => {
           const whereFn = fn.invoke as WhereFn;
           const whereArgs = fn.args as WhereArgs;
 
-          // @ts-expect-error: typescript aint easy
           const [table] = fnPath.findLast((x) => x.name === "from")
             ?.args as FromArgs;
 
@@ -261,7 +263,6 @@ export const getTeamDb = (team: Team): TeamDbClient => {
           const valuesFn = fn.invoke as ValuesFn;
           const valuesArgs = fn.args as ValuesArgs;
 
-          // @ts-expect-error: typescript aint easy
           const [table] = fnPath.findLast((x) => x.name === "insert")
             ?.args as InsertArgs;
 
@@ -272,12 +273,17 @@ export const getTeamDb = (team: Team): TeamDbClient => {
               valuesToInsert = [valuesToInsert];
             }
 
-            const valuesToInsertWithOwner = valuesToInsert.map((value) => ({
+            if (team.ids.length !== 1)
+              throw new Error(
+                "teamDb.insert requires exactly one team id to be set",
+              );
+
+            const valuesToInsertWithTeam = valuesToInsert.map((value) => ({
               ...value,
-              ownerId: team.id,
+              teamId: team.ids[0],
             }));
 
-            return valuesFn(valuesToInsertWithOwner);
+            return valuesFn(valuesToInsertWithTeam);
           }
 
           return valuesFn(...valuesArgs);
@@ -289,7 +295,6 @@ export const getTeamDb = (team: Team): TeamDbClient => {
           const setFn = fn.invoke as SetFn;
           const setArgs = fn.args as SetArgs;
 
-          // @ts-expect-error: typescript aint easy
           const [table] = fnPath.findLast((x) => x.name === "update")
             ?.args as UpdateArgs;
 
@@ -351,7 +356,6 @@ export const getTeamDb = (team: Team): TeamDbClient => {
           const whereFn = fn.invoke as WhereFn;
           const whereArgs = fn.args as WhereArgs;
 
-          // @ts-expect-error: typescript aint easy
           const [table] = fnPath.findLast((x) => x.name === "delete")
             ?.args as DeleteArgs;
 
@@ -446,5 +450,7 @@ export const getTeamDb = (team: Team): TeamDbClient => {
     });
   };
 
-  return createProxy(db, { path: ["db"] });
+  const modifiedDb = { ...db, teamIds: team.ids } as TeamDbClient;
+
+  return createProxy(modifiedDb, { path: ["db"] });
 };

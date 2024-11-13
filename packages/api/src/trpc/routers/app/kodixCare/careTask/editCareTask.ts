@@ -4,12 +4,13 @@ import type { careTasks } from "@kdx/db/schema";
 import type { TEditCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
 import dayjs from "@kdx/dayjs";
 import { and, eq } from "@kdx/db";
-import { db } from "@kdx/db/client";
-import { careTaskRepository, kodixCareRepository } from "@kdx/db/repositories";
+import { getKodixCareRepository } from "@kdx/db/repositories";
 import { teamAppRoles, teamAppRolesToUsers } from "@kdx/db/schema";
 import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
+import { getCareTaskRepository } from "../../../../../../../db/src/repositories/app/kodixCare/careTaskRepository";
+import { getTeamDbFromCtx } from "../../../../getTeamDbFromCtx";
 
 interface EditCareTaskOptions {
   ctx: TProtectedProcedureContext;
@@ -20,9 +21,11 @@ export const editCareTaskHandler = async ({
   ctx,
   input,
 }: EditCareTaskOptions) => {
-  const currentShift = await kodixCareRepository.getCurrentCareShiftByTeamId(
-    ctx.auth.user.activeTeamId,
-  );
+  const teamDb = getTeamDbFromCtx(ctx);
+  const kodixCareRepository = getKodixCareRepository(teamDb);
+  const careTaskRepository = getCareTaskRepository(teamDb);
+
+  const currentShift = await kodixCareRepository.getCurrentCareShift();
   if (!currentShift)
     throw new TRPCError({
       code: "FORBIDDEN",
@@ -37,10 +40,7 @@ export const editCareTaskHandler = async ({
       ),
     });
 
-  const careTask = await careTaskRepository.findCareTaskById({
-    id: input.id,
-    teamId: ctx.auth.user.activeTeamId,
-  });
+  const careTask = await careTaskRepository.findCareTaskById(input.id);
   if (!careTask)
     throw new TRPCError({
       code: "NOT_FOUND",
@@ -67,7 +67,7 @@ export const editCareTaskHandler = async ({
       });
     }
 
-    const roles = await db
+    const roles = await teamDb
       .select({
         appRoleDefaultId: teamAppRoles.appRoleDefaultId,
       })
@@ -75,7 +75,6 @@ export const editCareTaskHandler = async ({
       .where(
         and(
           eq(teamAppRolesToUsers.userId, ctx.auth.user.id),
-          eq(teamAppRoles.teamId, ctx.auth.user.activeTeamId),
           eq(teamAppRoles.appId, kodixCareAppId),
         ),
       )
@@ -126,7 +125,7 @@ export const editCareTaskHandler = async ({
     set.doneByUserId = input.doneAt === null ? null : ctx.auth.user.id;
   }
 
-  await careTaskRepository.updateCareTask(db, {
+  await careTaskRepository.updateCareTask({
     id: input.id,
     input: set,
   });

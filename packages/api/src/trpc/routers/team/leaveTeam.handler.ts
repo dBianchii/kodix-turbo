@@ -44,18 +44,19 @@ export const leaveTeamHandler = async ({ ctx, input }: LeaveTeamOptions) => {
   }
 
   await db.transaction(async (tx) => {
-    await userRepository.moveUserToTeam(tx, {
-      userId: ctx.auth.user.id,
-      newTeamId: otherTeam.id,
-    });
+    await userRepository.moveUserToTeam(
+      {
+        userId: ctx.auth.user.id,
+        newTeamId: otherTeam.id,
+      },
+      tx,
+    );
 
-    //Remove the user from the team
     await teamRepository.removeUserFromTeam(tx, {
       teamId: input.teamId,
       userId: ctx.auth.user.id,
     });
 
-    //Remove the user association from the team's apps
     await teamRepository.removeUserAssociationsFromTeamAppRolesByTeamId(tx, {
       teamId: input.teamId,
       userId: ctx.auth.user.id,

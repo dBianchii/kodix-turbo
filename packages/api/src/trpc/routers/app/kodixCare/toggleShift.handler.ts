@@ -1,16 +1,19 @@
 import { TRPCError } from "@trpc/server";
 
 import dayjs from "@kdx/dayjs";
-import { db } from "@kdx/db/client";
 import { nanoid } from "@kdx/db/nanoid";
-import { careTaskRepository, kodixCareRepository } from "@kdx/db/repositories";
+import {
+  getCareTaskRepository,
+  getKodixCareRepository,
+} from "@kdx/db/repositories";
 import WarnPreviousShiftNotEnded from "@kdx/react-email/warn-previous-shift-not-ended";
 import { KODIX_NOTIFICATION_FROM_EMAIL, kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 import { resend } from "../../../../sdks/email";
+import { services } from "../../../../services";
+import { getTeamDbFromCtx } from "../../../getTeamDbFromCtx";
 import { getConfigHandler } from "../getConfig.handler";
-import { cloneCalendarTasksToCareTasks } from "./utils";
 
 interface ToggleShiftOptions {
   ctx: TProtectedProcedureContext;
@@ -18,6 +21,11 @@ interface ToggleShiftOptions {
 
 /**Starts a new shift and ends the previous one */
 export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
+  const teamDb = getTeamDbFromCtx(ctx);
+
+  const kodixCareRepository = getKodixCareRepository(teamDb);
+  const careTaskRepository = getCareTaskRepository(teamDb);
+
   const clonedCareTasksUntil = (
     await getConfigHandler({
       ctx,
@@ -39,30 +47,28 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
       .startOf("day")
       .toDate();
 
-    await db.transaction(async (tx) => {
+    await teamDb.transaction(async (tx) => {
       const careShiftId = nanoid();
-      await kodixCareRepository.createCareShift(tx, {
-        id: careShiftId,
-        caregiverId: ctx.auth.user.id,
-        teamId: ctx.auth.user.activeTeamId,
-      });
+      await kodixCareRepository.createCareShift(
+        {
+          id: careShiftId,
+          caregiverId: ctx.auth.user.id,
+          teamId: ctx.auth.user.activeTeamId,
+        },
+        tx,
+      );
 
-      await cloneCalendarTasksToCareTasks({
+      await services.calendarAndCareTask.cloneCalendarTasksToCareTasks({
         careShiftId,
         start: yesterdayStartOfDay,
         end: tomorrowEndOfDay,
-        tx,
-        ctx: {
-          ...ctx,
-        },
+        teamDb: tx,
       });
     });
     return;
   }
 
-  const currentShift = await kodixCareRepository.getCurrentCareShiftByTeamId(
-    ctx.auth.user.activeTeamId,
-  );
+  const currentShift = await kodixCareRepository.getCurrentCareShift();
   if (!currentShift)
     //Needed for typesafety
     throw new TRPCError({
@@ -75,46 +81,51 @@ export const toggleShiftHandler = async ({ ctx }: ToggleShiftOptions) => {
   const loggedUserIsCaregiverForCurrentShift =
     ctx.auth.user.id === currentShift.Caregiver.id;
 
-  await db.transaction(async (tx) => {
+  await teamDb.transaction(async (tx) => {
     //*End the current shift
-    await kodixCareRepository.updateCareShift(tx, {
-      id: currentShift.id,
-      input: {
-        checkOut: loggedUserIsCaregiverForCurrentShift ? new Date() : undefined, //Also checkOut if user is the caregiver
-        shiftEndedAt: new Date(),
+    await kodixCareRepository.updateCareShift(
+      {
+        id: currentShift.id,
+        input: {
+          checkOut: loggedUserIsCaregiverForCurrentShift
+            ? new Date()
+            : undefined, //Also checkOut if user is the caregiver
+          shiftEndedAt: new Date(),
+        },
       },
-    });
+      tx,
+    );
 
     const now = new Date();
     //*Start a new shift
-    const [newCareShift] = await kodixCareRepository.createCareShift(tx, {
-      teamId: ctx.auth.user.activeTeamId,
-      checkIn: now,
-      caregiverId: ctx.auth.user.id,
-    });
+    const [newCareShift] = await kodixCareRepository.createCareShift(
+      {
+        teamId: ctx.auth.user.activeTeamId,
+        checkIn: now,
+        caregiverId: ctx.auth.user.id,
+      },
+      tx,
+    );
 
     //* Move all tasks from previous shift to current shift
-    const previousShift = await kodixCareRepository.getPreviousShiftByTeamId(
-      tx,
-      ctx.auth.user.activeTeamId,
-    );
+    const previousShift = await kodixCareRepository.getPreviousShift(tx);
     if (previousShift) {
-      await careTaskRepository.reassignCareTasksFromDateToShift(tx, {
-        previousCareShiftId: previousShift.id,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        newCareShiftId: newCareShift!.id,
-        date: now,
-      });
+      await careTaskRepository.reassignCareTasksFromDateToShift(
+        {
+          previousCareShiftId: previousShift.id,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          newCareShiftId: newCareShift!.id,
+          date: now,
+        },
+        tx,
+      );
     }
 
-    await cloneCalendarTasksToCareTasks({
+    await services.calendarAndCareTask.cloneCalendarTasksToCareTasks({
       careShiftId: currentShift.id,
       start: clonedCareTasksUntil,
       end: tomorrowEndOfDay,
-      tx,
-      ctx: {
-        ...ctx,
-      },
+      teamDb: tx,
     });
 
     if (!currentShift.checkOut && !loggedUserIsCaregiverForCurrentShift)

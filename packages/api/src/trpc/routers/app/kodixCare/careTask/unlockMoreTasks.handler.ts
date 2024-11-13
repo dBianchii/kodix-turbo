@@ -1,13 +1,13 @@
 import { TRPCError } from "@trpc/server";
 
 import type { TUnlockMoreTasksInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
-import { db } from "@kdx/db/client";
-import { kodixCareRepository } from "@kdx/db/repositories";
+import { getKodixCareRepository } from "@kdx/db/repositories";
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
+import { services } from "../../../../../services";
+import { getTeamDbFromCtx } from "../../../../getTeamDbFromCtx";
 import { getConfigHandler } from "../../getConfig.handler";
-import { cloneCalendarTasksToCareTasks } from "../utils";
 
 interface UnlockMoreTasksInputOptions {
   ctx: TProtectedProcedureContext;
@@ -18,6 +18,9 @@ export const unlockMoreTasksHandler = async ({
   ctx,
   input,
 }: UnlockMoreTasksInputOptions) => {
+  const teamDb = getTeamDbFromCtx(ctx);
+
+  const kodixCareRepository = getKodixCareRepository(teamDb);
   const clonedCareTasksUntil = (
     await getConfigHandler({
       ctx,
@@ -46,20 +49,17 @@ export const unlockMoreTasksHandler = async ({
       ),
     });
 
-  const careShift = await kodixCareRepository.getCurrentCareShiftByTeamId(
-    ctx.auth.user.activeTeamId,
-  );
+  const careShift = await kodixCareRepository.getCurrentCareShift();
   if (!careShift)
     throw new TRPCError({
       code: "FORBIDDEN",
       message: ctx.t("api.No active shift"),
     });
 
-  await cloneCalendarTasksToCareTasks({
-    tx: db,
+  await services.calendarAndCareTask.cloneCalendarTasksToCareTasks({
+    teamDb,
     careShiftId: careShift.id,
     start: clonedCareTasksUntil,
     end: input.selectedTimestamp,
-    ctx,
   });
 };

@@ -1,7 +1,8 @@
 import type { TGetAllInputSchema } from "@kdx/validators/trpc/app/calendar";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
-import { getCalendarTasks } from "../../../../internal/calendarAndCareTaskCentral";
+import { services } from "../../../../services";
+import { getTeamDbFromCtx } from "../../../getTeamDbFromCtx";
 
 interface GetAllCalendarTasksOptions {
   ctx: TProtectedProcedureContext;
@@ -12,10 +13,12 @@ export const getAllHandler = async ({
   ctx,
   input,
 }: GetAllCalendarTasksOptions) => {
-  const calendarTasks = await getCalendarTasks({
+  const teamDb = getTeamDbFromCtx(ctx);
+  const calendarTasks = await services.calendarAndCareTask.getCalendarTasks({
     dateStart: input.dateStart,
     dateEnd: input.dateEnd,
-    teamIds: [ctx.auth.user.activeTeamId],
+    teamDb,
   });
+
   return calendarTasks;
 };

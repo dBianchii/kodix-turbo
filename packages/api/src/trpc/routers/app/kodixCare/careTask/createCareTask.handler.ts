@@ -1,8 +1,8 @@
 import type { TCreateCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
-import { db } from "@kdx/db/client";
-import { careTaskRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
+import { getCareTaskRepository } from "../../../../../../../db/src/repositories/app/kodixCare/careTaskRepository";
+import { getTeamDbFromCtx } from "../../../../getTeamDbFromCtx";
 
 interface CreateCareTaskOptions {
   ctx: TProtectedProcedureContext;
@@ -13,10 +13,15 @@ export const createCareTaskHandler = async ({
   ctx,
   input,
 }: CreateCareTaskOptions) => {
-  await careTaskRepository.createCareTask(db, {
-    ...input,
-    teamId: ctx.auth.user.activeTeamId,
-    createdBy: ctx.auth.user.id,
-    createdFromCalendar: false,
-  });
+  const teamDb = getTeamDbFromCtx(ctx);
+  const careTaskRepository = getCareTaskRepository(teamDb);
+  await careTaskRepository.createCareTask(
+    {
+      ...input,
+      teamId: ctx.auth.user.activeTeamId,
+      createdBy: ctx.auth.user.id,
+      createdFromCalendar: false,
+    },
+    teamDb,
+  );
 };

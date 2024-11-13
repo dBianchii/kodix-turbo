@@ -4,6 +4,7 @@ import type { TGetConfigInput } from "@kdx/validators/trpc/app";
 import { appRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../procedures";
+import { getTeamDbFromCtx } from "../../getTeamDbFromCtx";
 
 interface GetConfigOptions {
   ctx: TProtectedProcedureContext;
@@ -11,10 +12,11 @@ interface GetConfigOptions {
 }
 
 export const getConfigHandler = async ({ ctx, input }: GetConfigOptions) => {
-  const [teamConfig] = await appRepository.findAppTeamConfigs({
-    appId: input.appId,
-    teamIds: [ctx.auth.user.activeTeamId],
-  });
+  const teamDb = getTeamDbFromCtx(ctx);
+  const [teamConfig] = await appRepository.findAppTeamConfigs(
+    input.appId,
+    teamDb,
+  );
 
   if (!teamConfig) {
     throw new TRPCError({
