@@ -3,12 +3,11 @@ import { TRPCError } from "@trpc/server";
 import type { TDeleteCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
 import { and, eq } from "@kdx/db";
 import { db } from "@kdx/db/client";
-import { careTaskRepository } from "@kdx/db/repositories";
+import { kodixCareRepository } from "@kdx/db/repositories";
 import { teamAppRoles, teamAppRolesToUsers } from "@kdx/db/schema";
 import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
-import { getCurrentCareShiftByTeamId } from "../../../../../../../db/src/repositories/app/kodixCare/kodixCareRepository";
 
 interface DeleteCareTaskOptions {
   ctx: TProtectedProcedureContext;
@@ -19,7 +18,7 @@ export const deleteCareTaskHandler = async ({
   ctx,
   input,
 }: DeleteCareTaskOptions) => {
-  const currentShift = await getCurrentCareShiftByTeamId(
+  const currentShift = await kodixCareRepository.getCurrentCareShiftByTeamId(
     ctx.auth.user.activeTeamId,
   );
   if (currentShift?.shiftEndedAt)
@@ -30,10 +29,7 @@ export const deleteCareTaskHandler = async ({
       ),
     });
 
-  const careTask = await careTaskRepository.findCareTaskById({
-    id: input.id,
-    teamId: ctx.auth.user.activeTeamId,
-  });
+  const careTask = await ctx.repositories.careTask.findCareTaskById(input.id);
   if (!careTask) {
     throw new TRPCError({
       code: "NOT_FOUND",
@@ -87,8 +83,5 @@ export const deleteCareTaskHandler = async ({
       message: ctx.t("api.Only admins and the creator can delete a task"),
     });
 
-  await careTaskRepository.deleteCareTaskById({
-    id: input.id,
-    teamId: ctx.auth.user.activeTeamId,
-  });
+  await ctx.repositories.careTask.deleteCareTaskById(input.id);
 };

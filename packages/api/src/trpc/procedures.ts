@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 
 import { teamRepository } from "@kdx/db/repositories";
 
+import { getRepositoriesForTeams } from "./getRepositoriesFromCtx";
 import { timingMiddleware } from "./middlewares";
 import { t } from "./trpc";
 
@@ -33,11 +34,13 @@ export const protectedProcedure = publicProcedure.use(({ ctx, next }) => {
   if (!ctx.auth.user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
+
   return next({
     ctx: {
       ...ctx,
       // infers the `user` and `session` as non-nullable
       auth: ctx.auth,
+      repositories: getRepositoriesForTeams([ctx.auth.user.activeTeamId]),
     },
   });
 });
