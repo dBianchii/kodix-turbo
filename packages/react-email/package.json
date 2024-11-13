@@ -11,6 +11,8 @@
     "./reset-password": "./src/emails/reset-password.tsx"
   },
   "scripts": {
+    "build": "email build --dir='src'",
+    "export": "email export --dir='src'",
     "dev-yes": "pnpm dlx react-email@latest dev --dir='src'",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "lint": "eslint",

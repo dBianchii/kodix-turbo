@@ -119,15 +119,12 @@ function StartShiftWarnPreviousPersonDialog() {
       </CredenzaTrigger>
       <CredenzaContent>
         <CredenzaHeader>
-          <CredenzaTitle>
-            {t("apps.kodixCare.Previous shift exists")}
-          </CredenzaTitle>
+          <CredenzaTitle>{t("apps.kodixCare.Start new shift")}</CredenzaTitle>
         </CredenzaHeader>
         <CredenzaBody>
           <CredenzaDescription>
-            {t("apps.kodixCare.Previous shift exists")}{" "}
             {t(
-              "apps.kodixCare.are you sure you want to end it and start a new one",
+              "apps.kodixCare.Previous shift is in progress are you sure you would like to start a new one",
             )}
           </CredenzaDescription>
         </CredenzaBody>

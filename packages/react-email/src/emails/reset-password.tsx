@@ -5,7 +5,6 @@ import {
   Head,
   Hr,
   Html,
-  Img,
   Link,
   Preview,
   Section,
@@ -16,12 +15,15 @@ import {
 import type { IsomorficT } from "@kdx/locales";
 import { getBaseUrl } from "@kdx/shared";
 
+import type { TMock } from "../utils";
+import { tMock } from "../utils";
+
 export default function ResetPassword({
   token,
-  t,
+  t = tMock,
 }: {
   token: string;
-  t: IsomorficT;
+  t: IsomorficT | TMock;
 }) {
   return (
     <Html>
@@ -31,7 +33,7 @@ export default function ResetPassword({
         <React.Fragment>
           <Body className="mx-auto my-auto bg-white font-sans">
             <Container className="mx-auto my-[40px] w-[465px] rounded border border-solid border-[#eaeaea] p-[20px]">
-              <Section className="mt-[32px]">
+              {/* <Section className="mt-[32px]">
                 <Img
                   src={`${getBaseUrl()}/group.jpeg`}
                   width="160"
@@ -39,7 +41,7 @@ export default function ResetPassword({
                   alt="StarterKit"
                   className="mx-auto my-0"
                 />
-              </Section>
+              </Section> */}
 
               <Section className="mb-[32px] mt-[32px] text-center">
                 <Text className="mb-8 text-[14px] font-medium leading-[24px] text-black">

@@ -19,6 +19,7 @@ interface DateTimePickerProps {
   side?: PopoverContentProps["side"];
 }
 
+const today12h30 = new Date(new Date().setHours(12, 30, 0, 0));
 export function DateTimePicker24h({
   date,
   setDate,
@@ -33,27 +34,23 @@ export function DateTimePicker24h({
   const hours = Array.from({ length: 24 }, (_, i) => i);
 
   const handleDateSelect = (selectedDate: Date | undefined) => {
-    if (selectedDate) {
-      const newDate = new Date(selectedDate); //TODO:
-      if (date) {
-        newDate.setHours(date.getHours());
-        newDate.setMinutes(date.getMinutes());
-      }
-      setDate(newDate);
-    }
+    if (!selectedDate) return;
+
+    const newDate = new Date(selectedDate);
+    newDate.setHours((date ?? today12h30).getHours());
+    newDate.setMinutes((date ?? today12h30).getMinutes());
+    setDate(newDate);
   };
 
   const handleTimeChange = (type: "hour" | "minute", value: string) => {
-    if (date) {
-      const newDate = new Date(date);
-      if (type === "hour") {
-        newDate.setHours(parseInt(value));
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      } else if (type === "minute") {
-        newDate.setMinutes(parseInt(value));
-      }
-      setDate(newDate);
+    const newDate = new Date(date ?? today12h30);
+    if (type === "hour") {
+      newDate.setHours(parseInt(value));
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    } else if (type === "minute") {
+      newDate.setMinutes(parseInt(value));
     }
+    setDate(newDate);
   };
 
   return (
