@@ -47,26 +47,12 @@ export const editCareTaskHandler = async ({
       message: ctx.t("api.Care task not found"),
     });
 
-  if (careTask.CareShift?.shiftEndedAt) {
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: ctx.t("api.You cannot edit a task from a closed shift"),
-    });
-  }
-
   const set: Partial<typeof careTasks.$inferInsert> = {
     details: input.details,
   };
 
   const isEditingDetails = input.details !== undefined;
   if (isEditingDetails) {
-    if (careTask.CareShift?.shiftEndedAt) {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: ctx.t("api.You cannot delete a task from a closed shift"),
-      });
-    }
-
     const roles = await db
       .select({
         appRoleDefaultId: teamAppRoles.appRoleDefaultId,
@@ -104,14 +90,6 @@ export const editCareTaskHandler = async ({
         ),
       });
 
-    if (careTask.careShiftId) {
-      if (careTask.careShiftId !== currentShift.id)
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: ctx.t("api.You cannot edit a task from another shift"),
-        });
-    }
-
     if (input.doneAt)
       if (dayjs(input.doneAt).isBefore(currentShift.checkIn))
         throw new TRPCError({
@@ -122,7 +100,6 @@ export const editCareTaskHandler = async ({
         });
 
     set.doneAt = input.doneAt;
-    set.careShiftId = input.doneAt === null ? null : currentShift.id;
     set.doneByUserId = input.doneAt === null ? null : ctx.auth.user.id;
   }
 

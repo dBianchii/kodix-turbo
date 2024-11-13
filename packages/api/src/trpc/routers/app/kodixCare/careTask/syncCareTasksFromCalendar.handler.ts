@@ -45,7 +45,6 @@ export const syncCareTasksFromCalendarHandler = async ({
     await cloneCalendarTasksToCareTasks({
       tx,
       start: syncFromDate,
-      careShiftId: currentShift.id,
       ctx: {
         ...ctx,
       },
