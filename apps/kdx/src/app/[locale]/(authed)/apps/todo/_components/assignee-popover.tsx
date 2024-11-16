@@ -11,9 +11,6 @@ import {
 } from "@kdx/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
 
-/**
- * @description You can optionally input a button to overwrite the default button trigger.
- */
 export function AssigneePopover({
   assignedToUserId,
   setAssignedToUserId,

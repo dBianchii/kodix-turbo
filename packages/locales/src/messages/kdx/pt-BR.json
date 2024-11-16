@@ -52,7 +52,8 @@
       "Critical tasks": "Tarefas críticas",
       "Set this on if you want to receive notifications for delayed tasks": "Ative esta opção se desejar receber notificações de tarefas atrasadas (uma hora de atraso)",
       "Additional notes": "Informações adicionais",
-      "Previous shift is in progress are you sure you would like to start a new one": "O turno anterior está em andamento. \nTem certeza de que gostaria de começar um novo?"
+      "Previous shift is in progress are you sure you would like to start a new one": "O turno anterior está em andamento. \nTem certeza de que gostaria de começar um novo?",
+      "Create shift": "Criar turno"
     },
     "todo": {
       "appDescription": "Todo é um app de anotações"
@@ -470,6 +471,15 @@
   "Are you sure you want to delete this task": "Tem certeza de que deseja excluir esta tarefa?",
   "Shifts": "Turnos",
   "Check out": "Check-out",
-  "Shift ended at": "Final do turno",
-  "Caregiver": "Cuidador"
+  "Caregiver": "Cuidador",
+  "Shift end": "Final do turno",
+  "Shift start": "Início do turno",
+  "validators": {
+    "Start time cannot be after end time": "O horário de início não pode ser posterior ao horário de término"
+  },
+  "Check in": "Check-in",
+  "Select a caregiver": "Selecione um cuidador",
+  "It seems that there are some overlapping shifts": "Parece que há alguns turnos com horários semelhantes",
+  "Are you sure you want to create a shift anyways": "Tem certeza de que deseja criar um turno mesmo assim?",
+  "Checking": "Verificando"
 }

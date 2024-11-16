@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
 
+import type { User } from "@kdx/auth";
 import { kodixCareAppId } from "@kdx/shared";
 import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
 
@@ -10,7 +11,7 @@ import { DataTableShifts } from "./_components/shifts-data-table";
 
 export default async function ShiftsPage() {
   const t = await getTranslations();
-  await redirectIfAppNotInstalled({
+  const user = await redirectIfAppNotInstalled({
     appId: kodixCareAppId,
   });
 
@@ -19,14 +20,24 @@ export default async function ShiftsPage() {
       <h2 className="mb-4 text-lg font-medium">{t("Shifts")}</h2>
 
       <Suspense fallback={<DataTableSkeleton columnCount={4} rowCount={5} />}>
-        <DataTableCareShiftsServer />
+        <DataTableCareShiftsServer user={user} />
       </Suspense>
     </main>
   );
 }
 
-async function DataTableCareShiftsServer() {
+async function DataTableCareShiftsServer({ user }: { user: User }) {
   const initialShifts = await api.app.kodixCare.getAllCareShifts();
-
-  return <DataTableShifts initialShifts={initialShifts}></DataTableShifts>;
+  const careGivers = await api.app.kodixCare.getAllCaregivers();
+  const myRoles = await api.team.appRole.getMyRoles({
+    appId: kodixCareAppId,
+  });
+  return (
+    <DataTableShifts
+      myRoles={myRoles}
+      user={user}
+      initialShifts={initialShifts}
+      careGivers={careGivers}
+    />
+  );
 }

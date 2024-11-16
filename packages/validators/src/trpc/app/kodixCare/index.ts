@@ -1,8 +1,9 @@
 import { z } from "zod";
 
 import type { IsomorficT } from "@kdx/locales";
+import dayjs from "@kdx/dayjs";
 
-import { adjustDateToMinute } from "../../..";
+import { adjustDateToMinute, ZNanoId } from "../../..";
 import { ZSignInByPasswordInputSchema as default_ZSignInByPasswordInputSchema } from "../../user";
 
 export const ZDoCheckoutForShiftInputSchema = (t: IsomorficT) =>
@@ -30,4 +31,27 @@ export const ZSignInByPasswordInputSchema =
   default_ZSignInByPasswordInputSchema;
 export type TSignInByPasswordInputSchema = z.infer<
   typeof ZSignInByPasswordInputSchema
+>;
+
+export const ZCreateCareShiftInputSchema = (t: IsomorficT) =>
+  z
+    .object({
+      careGiverId: ZNanoId,
+      startAt: z.date(),
+      endAt: z.date(),
+    })
+    .refine((data) => !dayjs(data.startAt).isAfter(data.endAt), {
+      message: t("validators.Start time cannot be after end time"),
+      path: ["startAt"],
+    });
+export type TCreateCareShiftInputSchema = z.infer<
+  ReturnType<typeof ZCreateCareShiftInputSchema>
+>;
+
+export const ZFindOverlappingShiftsInputSchema = z.object({
+  start: z.date(),
+  end: z.date(),
+});
+export type TFindOverlappingShiftsInputSchema = z.infer<
+  typeof ZFindOverlappingShiftsInputSchema
 >;

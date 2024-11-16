@@ -40,7 +40,7 @@ export default function OnboardingCard() {
 
   const router = useRouter();
   const t = useTranslations();
-  const { execute } = useAction(finishKodixCareOnboardingAction, {
+  const { execute, isExecuting } = useAction(finishKodixCareOnboardingAction, {
     onError: (res) => {
       defaultSafeActionToastError(res.error);
     },
@@ -59,7 +59,7 @@ export default function OnboardingCard() {
         })}
         className="space-y-8"
       >
-        <Card className="w-[550px]">
+        <Card className="max-w-xl">
           <CardHeader>
             <CardTitle>{t("apps.kodixCare.onboarding.cardTitle")}</CardTitle>
             <CardDescription>
@@ -91,12 +91,17 @@ export default function OnboardingCard() {
             </div>
           </CardContent>
           <CardFooter className="flex justify-end">
-            <Button type="submit" disabled={form.formState.isSubmitting}>
+            <Button type="submit" disabled={isExecuting} className="group">
               {t("apps.kodixCare.onboarding.goToKodixCare")}
-              {!form.formState.isSubmitting && (
-                <LuArrowRight className="ml-2 size-4" />
+              {!isExecuting && (
+                <LuArrowRight
+                  className="-me-1 ms-2 opacity-60 transition-transform group-hover:translate-x-0.5"
+                  size={16}
+                  strokeWidth={2}
+                  aria-hidden="true"
+                />
               )}
-              {form.formState.isSubmitting && (
+              {isExecuting && (
                 <LuLoader2 className="ml-2 size-4 animate-spin" />
               )}
             </Button>

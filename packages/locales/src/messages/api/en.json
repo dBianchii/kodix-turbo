@@ -71,6 +71,7 @@
     "You cannot delete a task when there is no active shift": "You cannot delete a task when there is no active shift",
     "Shift has already ended": "Shift has already ended",
     "You are not the caregiver of the current shift so you cannot sync tasks": "You are not the caregiver of the current shift, so you cannot sync tasks",
-    "Only admins can delete a task created from calendar": "Only admins can delete a task created from calendar"
+    "Only admins can delete a task created from calendar": "Only admins can delete a task created from calendar",
+    "Only admins can create shifts for other caregivers": "Only admins can create shifts for other caregivers"
   }
 }
