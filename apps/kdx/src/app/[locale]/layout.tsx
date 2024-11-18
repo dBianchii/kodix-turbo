@@ -64,7 +64,7 @@ export default async function RootLayout(props: {
           <SpeedInsights />
           <Analytics />
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <Toaster richColors closeButton />
+            <Toaster richColors closeButton pauseWhenPageIsHidden />
             <NextIntlClientProvider
               messages={messages}
               formats={formats}

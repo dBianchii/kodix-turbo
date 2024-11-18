@@ -8,6 +8,7 @@ import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
 import type { TProtectedProcedureContext } from "../../../procedures";
 import { logActivity } from "../../../../services/appActivityLogs.service";
 import { getMyRolesHandler } from "../../team/appRole/getMyRoles.handler";
+import { assertNoOverlappingShiftsForThisCaregiver } from "./_kodixCare.permissions";
 
 interface CreateCareShiftOptions {
   ctx: TProtectedProcedureContext;
@@ -37,6 +38,16 @@ export const createCareShiftHandler = async ({
       });
     }
   }
+
+  const overlappingShifts = await kodixCareRepository.findOverlappingShifts({
+    start: input.startAt,
+    end: input.endAt,
+    teamId: ctx.auth.user.activeTeamId,
+  });
+  assertNoOverlappingShiftsForThisCaregiver(ctx.t, {
+    caregiverId: input.careGiverId,
+    overlappingShifts: overlappingShifts,
+  });
 
   await db.transaction(async (tx) => {
     const shift = {

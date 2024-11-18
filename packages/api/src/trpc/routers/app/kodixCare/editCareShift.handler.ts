@@ -7,6 +7,7 @@ import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 import { logActivity } from "../../../../services/appActivityLogs.service";
+import { assertNoOverlappingShiftsForThisCaregiver } from "./_kodixCare.permissions";
 
 interface EditCareShiftOptions {
   ctx: TProtectedProcedureContext;
@@ -96,7 +97,7 @@ function getFlattenedChanges<T extends object>(
     } else {
       // Recurse for nested objects
       changes.push(
-        ...getFlattenedChanges(value as DeepDiffResult<any>, currentPath),
+        ...getFlattenedChanges(value as DeepDiffResult<unknown>, currentPath),
       );
     }
   }
@@ -117,6 +118,21 @@ export const editCareShiftHandler = async ({
       code: "NOT_FOUND",
       message: ctx.t("api.Shift not found"),
     });
+
+  if (input.startAt && input.endAt) {
+    const overlappingShifts = await kodixCareRepository.findOverlappingShifts({
+      teamId: ctx.auth.user.activeTeamId,
+      start: input.startAt,
+      end: input.endAt,
+    });
+
+    assertNoOverlappingShiftsForThisCaregiver(ctx.t, {
+      overlappingShifts: overlappingShifts.filter(
+        (shift) => shift.id !== input.id,
+      ),
+      caregiverId: oldShift.caregiverId,
+    });
+  }
 
   await db.transaction(async (tx) => {
     const [header] = await kodixCareRepository.updateCareShift(

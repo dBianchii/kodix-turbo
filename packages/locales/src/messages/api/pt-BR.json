@@ -75,6 +75,8 @@
     "Only admins can create shifts for other caregivers": "Somente administradores podem criar turnos para outros cuidadores",
     "Could not create shift": "Não foi possível criar turno de atendimento",
     "Shift not found": "Turno não encontrado",
-    "Could not update resource": "Não foi possível atualizar o recurso"
-  }
+    "Could not update resource": "Não foi possível atualizar o recurso",
+    "This caregiver already has a shift at this time": "Este cuidador já possui um turno neste horário"
+  },
+  "Updated": "Atualizado"
 }

@@ -75,6 +75,7 @@
     "Only admins can create shifts for other caregivers": "Only admins can create shifts for other caregivers",
     "Could not create shift": "Could not create care shift",
     "Shift not found": "Shift not found",
-    "Could not update resource": "Could not update resource"
+    "Could not update resource": "Could not update resource",
+    "This caregiver already has a shift at this time": "This caregiver already has a shift at this time"
   }
 }

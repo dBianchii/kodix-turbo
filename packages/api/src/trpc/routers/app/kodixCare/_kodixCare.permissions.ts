@@ -32,3 +32,24 @@ export const assertCheckoutTimeIsAfterCheckInTime = (
       message: t("api.Checkout time must be after checkin time"),
     });
 };
+
+export const assertNoOverlappingShiftsForThisCaregiver = (
+  t: ServerSideT,
+  {
+    overlappingShifts,
+    caregiverId,
+  }: {
+    overlappingShifts: {
+      Caregiver: {
+        id: string;
+      };
+    }[];
+    caregiverId: string;
+  },
+) => {
+  if (overlappingShifts.some((shift) => shift.Caregiver.id === caregiverId))
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: t("api.This caregiver already has a shift at this time"),
+    });
+};

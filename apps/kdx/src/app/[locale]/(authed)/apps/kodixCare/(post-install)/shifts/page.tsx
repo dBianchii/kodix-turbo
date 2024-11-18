@@ -7,7 +7,7 @@ import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
 
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
 import { api } from "~/trpc/server";
-import { ShiftsBigCalendar } from "./_components/shifts-data-table";
+import { ShiftsBigCalendar } from "./_components/shifts-big-calendar";
 
 export default async function ShiftsPage() {
   const t = await getTranslations();

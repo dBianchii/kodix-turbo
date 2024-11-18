@@ -6,14 +6,14 @@ import type { View } from "react-big-calendar";
 import type { EventInteractionArgs } from "react-big-calendar/lib/addons/dragAndDrop";
 import { useEffect, useState } from "react";
 import { useFormatter, useTranslations } from "next-intl";
-import { Calendar, dayjsLocalizer } from "react-big-calendar";
+import { Calendar, dayjsLocalizer, Views } from "react-big-calendar";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import { LuArrowRight, LuLoader2, LuPlus } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
-import { kodixCareRoleDefaultIds } from "@kdx/shared";
+import { getErrorMessage, kodixCareRoleDefaultIds } from "@kdx/shared";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Button } from "@kdx/ui/button";
 import {
@@ -67,6 +67,7 @@ interface ShiftEvent {
   id: string;
   title: string;
   start: Date;
+  caregiverId: string;
   end: Date;
   Caregiver: RouterOutputs["app"]["kodixCare"]["getAllCareShifts"][number]["Caregiver"];
   image?: string;
@@ -89,6 +90,9 @@ export function ShiftsBigCalendar({
   >(false);
   const [view, setView] = useState<View>("month");
   const [date, setDate] = useState(new Date());
+  const t = useTranslations();
+  const locale = useLocale();
+
   const utils = api.useUtils();
   const query = api.app.kodixCare.getAllCareShifts.useQuery(undefined, {
     initialData: initialShifts,
@@ -127,6 +131,22 @@ export function ShiftsBigCalendar({
 
   const handleEventChange = (args: EventInteractionArgs<ShiftEvent>) => {
     const old = query.data.find((shift) => shift.id === args.event.id);
+    const overlappingShifts = query.data.filter(
+      (shift) =>
+        shift.id !== args.event.id &&
+        dayjs(shift.startAt).isBefore(dayjs(args.end)) &&
+        dayjs(shift.endAt).isAfter(dayjs(args.start)),
+    );
+
+    if (
+      overlappingShifts.some(
+        (shift) => shift.caregiverId === args.event.caregiverId,
+      )
+    )
+      return toast.error(
+        t("api.This caregiver already has a shift at this time"),
+      );
+
     if (
       old?.startAt.getTime() !== dayjs(args.start).toDate().getTime() ||
       old.endAt.getTime() !== dayjs(args.end).toDate().getTime()
@@ -138,9 +158,9 @@ export function ShiftsBigCalendar({
           endAt: dayjs(args.end).toDate(),
         }),
         {
-          loading: "Updating...",
-          success: "Updated!",
-          error: "Error",
+          loading: t("Updating"),
+          success: t("Updated"),
+          error: getErrorMessage,
         },
       );
   };
@@ -159,7 +179,6 @@ export function ShiftsBigCalendar({
     event: "Evento",
     showMore: (total: number) => `+ (${total}) Eventos`,
   };
-  const locale = useLocale();
 
   return (
     <>
@@ -181,7 +200,7 @@ export function ShiftsBigCalendar({
           view={view}
           onView={setView}
           defaultDate={dayjs().toDate()}
-          defaultView="day"
+          defaultView={Views.DAY}
           events={query.data.map(
             (shift) =>
               ({
@@ -205,6 +224,7 @@ export function ShiftsBigCalendar({
                 <span>{event.title}</span>
               </div>
             ),
+
             // month: {
             //   header: ({ date }) => (
             //     <span>
@@ -325,22 +345,6 @@ function CreateShiftCredenzaButton({
       },
     );
 
-  const onSubmit = form.handleSubmit(async (values) => {
-    let overlappingShiftsData = findOverlappingShiftsQuery.data;
-
-    if (!overlappingShiftsData) {
-      const { data } = await findOverlappingShiftsQuery.refetch();
-      overlappingShiftsData = data;
-    }
-
-    if (overlappingShiftsData?.length) {
-      setWarnOverlappingShiftsOpen(true);
-      return;
-    }
-
-    mutation.mutate(values); //Mutate the value if there are no overlapping shifts
-  });
-
   return (
     <Credenza
       open={!!open}
@@ -358,15 +362,51 @@ function CreateShiftCredenzaButton({
       <CredenzaContent className="max-w-[750px]">
         {findOverlappingShiftsQuery.data && (
           <WarnOverlappingShifts
+            isSubmitting={mutation.isPending}
             overlaps={findOverlappingShiftsQuery.data}
-            onClickConfirm={onSubmit}
+            onClickConfirm={() => {
+              void form.handleSubmit((values) => mutation.mutate(values))();
+            }}
             open={warnOverlappingShiftsOpen}
             setOpen={setWarnOverlappingShiftsOpen}
           />
         )}
 
         <Form {...form}>
-          <form onSubmit={onSubmit}>
+          <form
+            onSubmit={form.handleSubmit(async (values) => {
+              let overlappingShiftsData = findOverlappingShiftsQuery.data;
+
+              if (!overlappingShiftsData) {
+                const { data } = await findOverlappingShiftsQuery.refetch();
+                overlappingShiftsData = data;
+              }
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              const overlappingShifts = overlappingShiftsData!.filter(
+                (shift) =>
+                  dayjs(shift.startAt).isBefore(dayjs(values.endAt)) &&
+                  dayjs(shift.endAt).isAfter(dayjs(values.startAt)),
+              );
+
+              if (
+                overlappingShifts.some(
+                  (shift) => shift.Caregiver.id === values.careGiverId,
+                )
+              )
+                return form.setError("careGiverId", {
+                  message: t(
+                    "api.This caregiver already has a shift at this time",
+                  ),
+                });
+
+              if (overlappingShiftsData?.length) {
+                setWarnOverlappingShiftsOpen(true);
+                return;
+              }
+
+              mutation.mutate(values); //Mutate the value if there are no overlapping shifts
+            })}
+          >
             <CredenzaHeader>
               <CredenzaTitle>{t("apps.kodixCare.Create shift")}</CredenzaTitle>
             </CredenzaHeader>
@@ -471,13 +511,18 @@ function CreateShiftCredenzaButton({
             </CredenzaBody>
             <CredenzaFooter className="mt-6 justify-end">
               <Button
-                disabled={findOverlappingShiftsQuery.isFetching}
+                disabled={
+                  findOverlappingShiftsQuery.isFetching || mutation.isPending
+                }
                 type="submit"
               >
-                {findOverlappingShiftsQuery.isFetching ? (
+                {findOverlappingShiftsQuery.isFetching || mutation.isPending ? (
                   <>
                     <LuLoader2 className="mr-2 size-4 animate-spin" />
-                    {t("Checking")}...
+                    {findOverlappingShiftsQuery.isFetching
+                      ? t("Checking")
+                      : t("Saving")}
+                    ...
                   </>
                 ) : (
                   t("Create")
@@ -494,16 +539,19 @@ function CreateShiftCredenzaButton({
 function WarnOverlappingShifts({
   overlaps,
   onClickConfirm,
+  isSubmitting,
   open,
   setOpen,
 }: {
   overlaps: RouterOutputs["app"]["kodixCare"]["findOverlappingShifts"];
   onClickConfirm: () => void;
+  isSubmitting: boolean;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
   const format = useFormatter();
   const t = useTranslations();
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
@@ -533,10 +581,28 @@ function WarnOverlappingShifts({
           {t("Are you sure you want to create a shift anyways")}
         </DialogDescription>
         <DialogFooter className="gap-3 sm:justify-between">
-          <Button variant={"outline"} onClick={() => setOpen(false)}>
+          <Button
+            variant={"outline"}
+            disabled={isSubmitting}
+            onClick={() => setOpen(false)}
+          >
             {t("Cancel")}
           </Button>
-          <Button onClick={onClickConfirm}>{t("Confirm")}</Button>
+          <Button
+            onClick={() => {
+              onClickConfirm();
+              setOpen(false);
+            }}
+          >
+            {isSubmitting ? (
+              <>
+                <LuLoader2 className="mr-2 size-4 animate-spin" />
+                {t("Saving")}...
+              </>
+            ) : (
+              t("Confirm")
+            )}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

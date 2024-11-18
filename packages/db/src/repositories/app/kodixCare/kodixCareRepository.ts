@@ -71,15 +71,16 @@ export async function findOverlappingShifts(
   db = _db,
 ) {
   return db.query.careShifts.findMany({
-    where: (careShifts, { and, gte, lte }) =>
+    where: (careShifts, { and, gt, lt }) =>
       and(
         eq(careShifts.teamId, teamId),
-        lte(careShifts.startAt, end),
-        gte(careShifts.endAt, start),
+        lt(careShifts.startAt, end),
+        gt(careShifts.endAt, start),
       ),
     with: {
       Caregiver: {
         columns: {
+          id: true,
           image: true,
           name: true,
         },
