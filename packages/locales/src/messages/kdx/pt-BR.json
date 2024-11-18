@@ -481,5 +481,6 @@
   "Select a caregiver": "Selecione um cuidador",
   "It seems that there are some overlapping shifts": "Parece que há alguns turnos com horários semelhantes",
   "Are you sure you want to create a shift anyways": "Tem certeza de que deseja criar um turno mesmo assim?",
-  "Checking": "Verificando"
+  "Checking": "Verificando",
+  "Care shift not found": ""
 }

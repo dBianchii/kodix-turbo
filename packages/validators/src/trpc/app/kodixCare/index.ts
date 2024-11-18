@@ -55,3 +55,12 @@ export const ZFindOverlappingShiftsInputSchema = z.object({
 export type TFindOverlappingShiftsInputSchema = z.infer<
   typeof ZFindOverlappingShiftsInputSchema
 >;
+
+export const ZEditCareShiftInputSchema = z.object({
+  id: ZNanoId,
+  startAt: z.date().optional(),
+  endAt: z.date().optional(),
+});
+export type TEditCareShiftInputSchema = z.infer<
+  typeof ZEditCareShiftInputSchema
+>;

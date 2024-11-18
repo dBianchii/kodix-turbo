@@ -7,7 +7,7 @@ import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
 
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
 import { api } from "~/trpc/server";
-import { DataTableShifts } from "./_components/shifts-data-table";
+import { ShiftsBigCalendar } from "./_components/shifts-data-table";
 
 export default async function ShiftsPage() {
   const t = await getTranslations();
@@ -33,11 +33,19 @@ async function DataTableCareShiftsServer({ user }: { user: User }) {
     appId: kodixCareAppId,
   });
   return (
-    <DataTableShifts
-      myRoles={myRoles}
-      user={user}
-      initialShifts={initialShifts}
-      careGivers={careGivers}
-    />
+    <>
+      <ShiftsBigCalendar
+        myRoles={myRoles}
+        user={user}
+        initialShifts={initialShifts}
+        careGivers={careGivers}
+      />
+      {/* <DataTableShifts
+        myRoles={myRoles}
+        user={user}
+        initialShifts={initialShifts}
+        careGivers={careGivers}
+      /> */}
+    </>
   );
 }

@@ -72,6 +72,9 @@
     "Shift has already ended": "O turno já terminou",
     "You are not the caregiver of the current shift so you cannot sync tasks": "Você não é o cuidador do turno atual, portanto não pode sincronizar tarefas",
     "Only admins can delete a task created from calendar": "Somente administradores podem excluir uma tarefa que veio do calendário",
-    "Only admins can create shifts for other caregivers": "Somente administradores podem criar turnos para outros cuidadores"
+    "Only admins can create shifts for other caregivers": "Somente administradores podem criar turnos para outros cuidadores",
+    "Could not create shift": "Não foi possível criar turno de atendimento",
+    "Shift not found": "Turno não encontrado",
+    "Could not update resource": "Não foi possível atualizar o recurso"
   }
 }

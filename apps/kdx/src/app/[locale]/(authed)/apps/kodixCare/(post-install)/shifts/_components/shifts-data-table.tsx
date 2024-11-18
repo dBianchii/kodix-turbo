@@ -1,22 +1,14 @@
 "use client";
 
-import type { SortingState, VisibilityState } from "@tanstack/react-table";
-import { useMemo, useState } from "react";
-import {
-  createColumnHelper,
-  getCoreRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import "./rbc-styles.css";
+
+import type { View } from "react-big-calendar";
+import type { EventInteractionArgs } from "react-big-calendar/lib/addons/dragAndDrop";
+import { useEffect, useState } from "react";
 import { useFormatter, useTranslations } from "next-intl";
-import {
-  LuArrowRight,
-  LuCheck,
-  LuLoader2,
-  LuLock,
-  LuPlus,
-  LuText,
-} from "react-icons/lu";
+import { Calendar, dayjsLocalizer } from "react-big-calendar";
+import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
+import { LuArrowRight, LuLoader2, LuPlus } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
@@ -33,9 +25,6 @@ import {
   CredenzaTitle,
   CredenzaTrigger,
 } from "@kdx/ui/credenza";
-import { DataTable } from "@kdx/ui/data-table/data-table";
-import { DataTableColumnHeader } from "@kdx/ui/data-table/data-table-column-header";
-import { DataTableViewOptions } from "@kdx/ui/data-table/data-table-view-options";
 import { DateTimePicker24h } from "@kdx/ui/date-n-time/date-time-picker-24h";
 import {
   Dialog,
@@ -61,173 +50,30 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@kdx/ui/select";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@kdx/ui/tooltip";
 import { ZCreateCareShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
-const useTable = (
-  data: RouterOutputs["app"]["kodixCare"]["getAllCareShifts"],
-) => {
-  const format = useFormatter();
-  const t = useTranslations();
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 
-  const columns = useMemo(
-    () => [
-      columnHelper.display({
-        id: "Shift ended",
-        header: () => null,
-        cell: (ctx) => {
-          if (ctx.row.original.checkOut) return <LuLock />;
-          return null;
-        },
-      }),
-      columnHelper.accessor("startAt", {
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} className="ml-8">
-            {t("Shift start")}
-          </DataTableColumnHeader>
-        ),
-        cell: (ctx) => {
-          return (
-            <div className="flex flex-row items-center">
-              <span className="font-semibold">
-                {format.dateTime(ctx.row.original.startAt, "shortWithHours")}
-              </span>
-            </div>
-          );
-        },
-      }),
-      columnHelper.accessor("endAt", {
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} className="ml-8">
-            {t("Shift end")}
-          </DataTableColumnHeader>
-        ),
-        cell: (ctx) => {
-          return (
-            <div className="flex flex-row items-center">
-              <span className="font-semibold">
-                {format.dateTime(ctx.row.original.endAt, "shortWithHours")}
-              </span>
-            </div>
-          );
-        },
-      }),
-      columnHelper.accessor("checkIn", {
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} className="ml-8">
-            <LuCheck className="mr-2 size-4 text-green-400" />
-            {t("Check in")}
-          </DataTableColumnHeader>
-        ),
-        cell: (ctx) => {
-          return (
-            <div className="flex flex-row items-center">
-              <div className="w-8"></div>
-              <span className="font-semibold">
-                {ctx.row.original.checkIn &&
-                  format.dateTime(ctx.row.original.checkIn, "shortWithHours")}
-              </span>
-            </div>
-          );
-        },
-      }),
-      columnHelper.accessor("checkOut", {
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} className="ml-8">
-            {t("Check out")}
-          </DataTableColumnHeader>
-        ),
-        cell: (ctx) => {
-          return (
-            <div className="flex flex-row items-center">
-              <span className="font-semibold">
-                {ctx.row.original.checkOut &&
-                  format.dateTime(ctx.row.original.checkOut, "shortWithHours")}
-              </span>
-            </div>
-          );
-        },
-      }),
+import { useLocale } from "next-intl";
 
-      columnHelper.accessor("caregiverId", {
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} className="ml-8">
-            {t("Caregiver")}
-          </DataTableColumnHeader>
-        ),
-        cell: (ctx) => {
-          return (
-            <div className="flex flex-row items-center gap-2">
-              <AvatarWrapper
-                className="size-6"
-                fallback={ctx.row.original.Caregiver.name}
-                src={ctx.row.original.Caregiver.image ?? ""}
-              />
-              <span className="text-muted-foreground">
-                {ctx.row.original.Caregiver.name}
-              </span>
-            </div>
-          );
-        },
-      }),
-      columnHelper.display({
-        id: "Notes",
-        header: () => null,
-        cell: (ctx) => {
-          if (ctx.row.original.notes)
-            return (
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <LuText className="mr-2 size-4 text-orange-400" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="max-w-xs truncate">
-                      {ctx.row.original.notes}
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            );
-          return;
-        },
-      }),
-    ],
-    [format, t],
-  );
+import { toast } from "@kdx/ui/toast";
 
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    state: {
-      sorting,
-      columnVisibility,
-    },
-  });
+const localizer = dayjsLocalizer(dayjs);
 
-  return { table };
-};
+interface ShiftEvent {
+  id: string;
+  title: string;
+  start: Date;
+  end: Date;
+  Caregiver: RouterOutputs["app"]["kodixCare"]["getAllCareShifts"][number]["Caregiver"];
+  image?: string;
+}
 
-const columnHelper =
-  createColumnHelper<
-    RouterOutputs["app"]["kodixCare"]["getAllCareShifts"][number]
-  >();
-
-export function DataTableShifts({
+const DnDCalendar = withDragAndDrop(Calendar);
+export function ShiftsBigCalendar({
   user,
   myRoles,
   initialShifts,
@@ -238,42 +84,191 @@ export function DataTableShifts({
   initialShifts: RouterOutputs["app"]["kodixCare"]["getAllCareShifts"];
   careGivers: RouterOutputs["app"]["kodixCare"]["getAllCaregivers"];
 }) {
+  const [open, setOpen] = useState<
+    { preselectedStart: Date; preselectedEnd: Date } | boolean
+  >(false);
+  const [view, setView] = useState<View>("month");
+  const [date, setDate] = useState(new Date());
+  const utils = api.useUtils();
   const query = api.app.kodixCare.getAllCareShifts.useQuery(undefined, {
     initialData: initialShifts,
   });
+  const mutation = api.app.kodixCare.editCareShift.useMutation({
+    onMutate: async (newShift) => {
+      await utils.app.kodixCare.getAllCareShifts.cancel();
+      const previousData = utils.app.kodixCare.getAllCareShifts.getData();
+      utils.app.kodixCare.getAllCareShifts.setData(undefined, (old) =>
+        old?.map((shift) =>
+          shift.id === newShift.id
+            ? {
+                ...shift,
+                startAt: newShift.startAt
+                  ? new Date(newShift.startAt)
+                  : shift.startAt,
+                endAt: newShift.endAt ? new Date(newShift.endAt) : shift.endAt,
+              }
+            : shift,
+        ),
+      );
+      return { previousData };
+    },
+    onError: (err, _newShift, context) => {
+      if (context?.previousData) {
+        utils.app.kodixCare.getAllCareShifts.setData(
+          undefined,
+          context.previousData,
+        );
+      }
+    },
+    onSettled: () => {
+      void utils.app.kodixCare.getAllCareShifts.invalidate();
+    },
+  });
 
-  const { table } = useTable(query.data);
+  const handleEventChange = (args: EventInteractionArgs<ShiftEvent>) => {
+    const old = query.data.find((shift) => shift.id === args.event.id);
+    if (
+      old?.startAt.getTime() !== dayjs(args.start).toDate().getTime() ||
+      old.endAt.getTime() !== dayjs(args.end).toDate().getTime()
+    )
+      toast.promise(
+        mutation.mutateAsync({
+          id: args.event.id,
+          startAt: dayjs(args.start).toDate(),
+          endAt: dayjs(args.end).toDate(),
+        }),
+        {
+          loading: "Updating...",
+          success: "Updated!",
+          error: "Error",
+        },
+      );
+  };
+
+  const messages = {
+    allDay: "Dia Inteiro",
+    previous: "<",
+    next: ">",
+    today: "Hoje",
+    month: "Mês",
+    week: "Semana",
+    day: "Dia",
+    agenda: "Agenda",
+    date: "Data",
+    time: "Hora",
+    event: "Evento",
+    showMore: (total: number) => `+ (${total}) Eventos`,
+  };
+  const locale = useLocale();
 
   return (
     <>
-      <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-center">
-        <div className="flex gap-2 sm:mr-auto">
-          <CreateShiftCredenzaButton
-            careGivers={careGivers}
-            user={user}
-            myRoles={myRoles}
-          />
-        </div>
-
-        <DataTableViewOptions table={table} />
+      <div>
+        <CreateShiftCredenzaButton
+          open={open}
+          setOpen={setOpen}
+          careGivers={careGivers}
+          user={user}
+          myRoles={myRoles}
+        />
       </div>
       <div className="mt-4">
-        <DataTable table={table} showPagination={false} />
+        <DnDCalendar
+          messages={messages}
+          culture={locale}
+          localizer={localizer}
+          style={{ height: 600, width: "100%" }}
+          view={view}
+          onView={setView}
+          defaultDate={dayjs().toDate()}
+          defaultView="day"
+          events={query.data.map(
+            (shift) =>
+              ({
+                ...shift,
+                id: shift.id,
+                title: shift.Caregiver.name,
+                image: shift.Caregiver.image,
+                start: dayjs(shift.startAt).toDate(),
+                end: dayjs(shift.endAt).toDate(),
+              }) as ShiftEvent,
+          )}
+          components={{
+            // @ts-expect-error react big calendar typesafety sucks
+            event: ({ event }: { event: ShiftEvent }) => (
+              <div className="flex gap-2">
+                <AvatarWrapper
+                  className="size-6"
+                  src={event.image ?? ""}
+                  fallback={event.Caregiver.name}
+                />
+                <span>{event.title}</span>
+              </div>
+            ),
+            // month: {
+            //   header: ({ date }) => (
+            //     <span>
+            //       {format.dateTime(date, {
+            //         weekday: "short",
+            //       })}
+            //     </span>
+            //   ),
+            // },
+            // // @ts-expect-error react big calendar typesafety sucks
+            // eventContainerWrapper: ({ children }) => (
+            //   <div className="flex flex-col gap-2">{children}</div>
+            // ),
+            // // @ts-expect-error react big calendar typesafety sucks
+            // eventWrapper: ({ children }) => (
+            //   <div className="flex flex-col items-center gap-2">{children}</div>
+            // ),
+            // dateCellWrapper: ({ children }) => (
+            //   <div className="flex flex-col gap-2">{children}</div>
+            // ),
+            // day: {
+            //   header: ({ date }) => (
+            //     <div className="flex flex-col items-center gap-2">
+            //       <span>{format.dateTime(date, "short")}</span>
+            //     </div>
+            //   ),
+            // },
+          }}
+          date={date}
+          onNavigate={setDate}
+          // @ts-expect-error react big calendar typesafety sucks
+          onEventDrop={handleEventChange}
+          // @ts-expect-error react big calendar typesafety sucks
+          onEventResize={handleEventChange}
+          onSelectSlot={(date) => {
+            setOpen({
+              preselectedStart: date.start,
+              preselectedEnd: date.end,
+            });
+          }}
+          draggableAccessor={() => true}
+          selectable
+          resizable
+        />
       </div>
     </>
   );
 }
 
 function CreateShiftCredenzaButton({
+  open,
+  setOpen,
   user,
   myRoles,
   careGivers,
 }: {
+  open: { preselectedStart: Date; preselectedEnd: Date } | boolean;
+  setOpen: (
+    isOpen: { preselectedStart: Date; preselectedEnd: Date } | boolean,
+  ) => void;
   user: User;
   myRoles: RouterOutputs["team"]["appRole"]["getMyRoles"];
   careGivers: RouterOutputs["app"]["kodixCare"]["getAllCaregivers"];
 }) {
-  const [open, setOpen] = useState(false);
   const [warnOverlappingShiftsOpen, setWarnOverlappingShiftsOpen] =
     useState(false);
 
@@ -287,12 +282,20 @@ function CreateShiftCredenzaButton({
 
   const utils = api.useUtils();
   const t = useTranslations();
+
   const form = useForm({
     schema: ZCreateCareShiftInputSchema(t),
     defaultValues: {
       careGiverId: shouldAutoSelectMyself ? user.id : undefined,
     },
   });
+
+  useEffect(() => {
+    if (typeof open === "object") {
+      form.setValue("startAt", open.preselectedStart);
+      form.setValue("endAt", open.preselectedEnd);
+    }
+  }, [open, form]);
 
   const mutation = api.app.kodixCare.createCareShift.useMutation({
     onError: trpcErrorToastDefault,
@@ -322,9 +325,25 @@ function CreateShiftCredenzaButton({
       },
     );
 
+  const onSubmit = form.handleSubmit(async (values) => {
+    let overlappingShiftsData = findOverlappingShiftsQuery.data;
+
+    if (!overlappingShiftsData) {
+      const { data } = await findOverlappingShiftsQuery.refetch();
+      overlappingShiftsData = data;
+    }
+
+    if (overlappingShiftsData?.length) {
+      setWarnOverlappingShiftsOpen(true);
+      return;
+    }
+
+    mutation.mutate(values); //Mutate the value if there are no overlapping shifts
+  });
+
   return (
     <Credenza
-      open={open}
+      open={!!open}
       onOpenChange={(open) => {
         form.reset();
         setOpen(open);
@@ -340,36 +359,14 @@ function CreateShiftCredenzaButton({
         {findOverlappingShiftsQuery.data && (
           <WarnOverlappingShifts
             overlaps={findOverlappingShiftsQuery.data}
-            onClickConfirm={() => {
-              mutation.mutate({
-                startAt: form.getValues("startAt"),
-                endAt: form.getValues("endAt"),
-                careGiverId: form.getValues("careGiverId"),
-              });
-            }}
+            onClickConfirm={onSubmit}
             open={warnOverlappingShiftsOpen}
             setOpen={setWarnOverlappingShiftsOpen}
           />
         )}
 
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(async (values) => {
-              let overlappingShiftsData = findOverlappingShiftsQuery.data;
-
-              if (!overlappingShiftsData) {
-                const { data } = await findOverlappingShiftsQuery.refetch();
-                overlappingShiftsData = data;
-              }
-
-              if (overlappingShiftsData?.length) {
-                setWarnOverlappingShiftsOpen(true);
-                return;
-              }
-
-              mutation.mutate(values); //Mutate the value if there are no overlapping shifts
-            })}
-          >
+          <form onSubmit={onSubmit}>
             <CredenzaHeader>
               <CredenzaTitle>{t("apps.kodixCare.Create shift")}</CredenzaTitle>
             </CredenzaHeader>

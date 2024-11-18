@@ -1,5 +1,5 @@
 import type { z } from "zod";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
 
@@ -16,7 +16,21 @@ export async function updateCareShift(
   { id, input }: Update<typeof zCareShiftUpdate>,
   db = _db,
 ) {
-  await db.update(careShifts).set(input).where(eq(careShifts.id, id));
+  return db.update(careShifts).set(input).where(eq(careShifts.id, id));
+}
+export async function getCareShiftById(
+  {
+    id,
+    teamId,
+  }: {
+    id: string;
+    teamId: string;
+  },
+  db = _db,
+) {
+  return db.query.careShifts.findFirst({
+    where: and(eq(careShifts.id, id), eq(careShifts.teamId, teamId)),
+  });
 }
 
 export async function createCareShift(
