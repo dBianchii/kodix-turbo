@@ -1,12 +1,10 @@
 "use client";
 
-import "./rbc-styles.css";
-
-import type { View } from "react-big-calendar";
+import type { EventPropGetter, View } from "react-big-calendar";
 import type { EventInteractionArgs } from "react-big-calendar/lib/addons/dragAndDrop";
 import { useEffect, useState } from "react";
 import { useFormatter, useTranslations } from "next-intl";
-import { Calendar, dayjsLocalizer, Views } from "react-big-calendar";
+import { Calendar, dayjsLocalizer } from "react-big-calendar";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import { LuArrowRight, LuLoader2, LuPlus } from "react-icons/lu";
 
@@ -56,6 +54,7 @@ import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
+import "./rbc-styles.css";
 
 import { useLocale } from "next-intl";
 
@@ -88,7 +87,7 @@ export function ShiftsBigCalendar({
   const [open, setOpen] = useState<
     { preselectedStart: Date; preselectedEnd: Date } | boolean
   >(false);
-  const [view, setView] = useState<View>("month");
+  const [view, setView] = useState<View>("day");
   const [date, setDate] = useState(new Date());
   const t = useTranslations();
   const locale = useLocale();
@@ -163,21 +162,7 @@ export function ShiftsBigCalendar({
           error: getErrorMessage,
         },
       );
-  };
-
-  const messages = {
-    allDay: "Dia Inteiro",
-    previous: "<",
-    next: ">",
-    today: "Hoje",
-    month: "Mês",
-    week: "Semana",
-    day: "Dia",
-    agenda: "Agenda",
-    date: "Data",
-    time: "Hora",
-    event: "Evento",
-    showMore: (total: number) => `+ (${total}) Eventos`,
+    return args;
   };
 
   return (
@@ -193,14 +178,43 @@ export function ShiftsBigCalendar({
       </div>
       <div className="mt-4">
         <DnDCalendar
-          messages={messages}
+          // @ts-expect-error react big calendar typesafety sucks
+          eventPropGetter={
+            ((event) => {
+              if (view === "agenda") return {}; //No need to colorize in agenda view
+              const backgroundColor =
+                "#" +
+                ((parseInt(event.caregiverId, 36) & 0x7f7f7f) + 0x606060)
+                  .toString(16)
+                  .padStart(6, "0");
+              return {
+                style: {
+                  backgroundColor: backgroundColor,
+                },
+              };
+            }) as EventPropGetter<ShiftEvent>
+          }
+          messages={{
+            allDay: "Dia Inteiro",
+            previous: "<",
+            next: ">",
+            today: "Hoje",
+            month: "Mês",
+            week: "Semana",
+            day: "Dia",
+            agenda: "Agenda",
+            date: "Data",
+            time: "Hora",
+            event: "Evento",
+            showMore: (total: number) => `+ (${total}) Eventos`,
+          }}
           culture={locale}
           localizer={localizer}
-          style={{ height: 600, width: "100%" }}
+          style={{ height: 580, width: "100%" }}
           view={view}
+          views={["month", "week", "day", "agenda"]}
           onView={setView}
           defaultDate={dayjs().toDate()}
-          defaultView={Views.DAY}
           events={query.data.map(
             (shift) =>
               ({
@@ -215,13 +229,15 @@ export function ShiftsBigCalendar({
           components={{
             // @ts-expect-error react big calendar typesafety sucks
             event: ({ event }: { event: ShiftEvent }) => (
-              <div className="flex gap-2">
+              <div className="flex items-center gap-2 pl-3">
                 <AvatarWrapper
-                  className="size-6"
+                  className="pointer-events-none size-5"
                   src={event.image ?? ""}
                   fallback={event.Caregiver.name}
                 />
-                <span>{event.title}</span>
+                <span className="text-sm text-primary-foreground">
+                  {event.title}
+                </span>
               </div>
             ),
 
@@ -235,16 +251,7 @@ export function ShiftsBigCalendar({
             //   ),
             // },
             // // @ts-expect-error react big calendar typesafety sucks
-            // eventContainerWrapper: ({ children }) => (
-            //   <div className="flex flex-col gap-2">{children}</div>
-            // ),
-            // // @ts-expect-error react big calendar typesafety sucks
-            // eventWrapper: ({ children }) => (
-            //   <div className="flex flex-col items-center gap-2">{children}</div>
-            // ),
-            // dateCellWrapper: ({ children }) => (
-            //   <div className="flex flex-col gap-2">{children}</div>
-            // ),
+
             // day: {
             //   header: ({ date }) => (
             //     <div className="flex flex-col items-center gap-2">

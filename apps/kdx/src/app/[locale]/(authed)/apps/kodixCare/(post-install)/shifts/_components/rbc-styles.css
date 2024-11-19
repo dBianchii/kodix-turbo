@@ -159,6 +159,7 @@ button.rbc-input::-moz-focus-inner {
   color: hsl(var(--primary-foreground));
   padding: 5px;
   border-radius: var(--radius);
+  border: 1px solid hsl(var(--input)) !important;
   cursor: pointer;
 }
 .rbc-slot-selecting .rbc-event {
@@ -651,8 +652,9 @@ button.rbc-input::-moz-focus-inner {
   border: none;
 }
 .rbc-event:hover {
-  background-color: hsl(var(--ring));
+  background-color: hsl(var(--primary) / 0.9);
 }
+
 .event-component {
   background-color: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
@@ -676,4 +678,60 @@ button.rbc-input::-moz-focus-inner {
   height: 100%;
   align-items: center;
   justify-content: center;
+}
+
+.rbc-addons-dnd-resize-ns-anchor {
+  height: 4px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rbc-addons-dnd-resize-ew-anchor {
+  top: 0 !important;
+}
+
+.rbc-addons-dnd
+  .rbc-addons-dnd-resize-ew-anchor
+  .rbc-addons-dnd-resize-ew-icon {
+  display: block !important;
+  border: none !important;
+  height: 100% !important;
+  background-color: transparent !important;
+  border-radius: var(--radius) !important;
+  width: 5px !important;
+}
+
+.rbc-addons-dnd
+  .rbc-addons-dnd-resize-ns-anchor
+  .rbc-addons-dnd-resize-ns-icon {
+  display: block !important;
+  border: none !important;
+  min-width: 30px !important;
+  width: 5% !important;
+  background-color: transparent !important;
+  border-radius: var(--radius) !important;
+  height: 5px !important;
+}
+
+.rbc-event:hover
+  .rbc-addons-dnd-resize-ns-anchor
+  .rbc-addons-dnd-resize-ns-icon,
+.rbc-event:hover
+  .rbc-addons-dnd-resize-ew-anchor
+  .rbc-addons-dnd-resize-ew-icon {
+  background-color: hsl(var(--primary-foreground)) !important;
+}
+
+[class*="rbc-"] {
+  transition-property: all !important;
+  transition-timing-function: ease-in-out !important;
+  transition-duration: 120ms !important;
+}
+
+[class*="rbc-"] button {
+  transition-property: color, background-color, border-color,
+    text-decoration-color, fill, stroke !important;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition-duration: 150ms !important;
 }
