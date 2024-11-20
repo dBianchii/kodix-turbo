@@ -65,39 +65,12 @@ import { useLocale } from "next-intl";
 import { useDebounce } from "@kdx/ui/hooks/use-debounce";
 import { toast } from "@kdx/ui/toast";
 
+const DnDCalendar = withDragAndDrop(Calendar);
 const localizer = dayjsLocalizer(dayjs);
 
-interface ShiftEvent {
-  id: string;
-  title: string;
-  start: Date;
-  caregiverId: string;
-  end: Date;
-  Caregiver: RouterOutputs["app"]["kodixCare"]["getAllCareShifts"][number]["Caregiver"];
-  image?: string;
-}
-
-const DnDCalendar = withDragAndDrop(Calendar);
-export function ShiftsBigCalendar({
-  user,
-  myRoles,
-  initialShifts,
-  careGivers,
-}: {
-  user: User;
-  myRoles: RouterOutputs["team"]["appRole"]["getMyRoles"];
-  initialShifts: RouterOutputs["app"]["kodixCare"]["getAllCareShifts"];
-  careGivers: RouterOutputs["app"]["kodixCare"]["getAllCaregivers"];
-}) {
-  const [open, setOpen] = useState<
-    { preselectedStart: Date; preselectedEnd: Date } | boolean
-  >(false);
-  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
-  const [view, setView] = useState<View>("day");
-  const [date, setDate] = useState(new Date());
-  const t = useTranslations();
-  const locale = useLocale();
-
+const useCareShiftsData = (
+  initialShifts: RouterOutputs["app"]["kodixCare"]["getAllCareShifts"],
+) => {
   const utils = api.useUtils();
   const query = api.app.kodixCare.getAllCareShifts.useQuery(undefined, {
     initialData: initialShifts,
@@ -134,6 +107,75 @@ export function ShiftsBigCalendar({
       void utils.app.kodixCare.getAllCareShifts.invalidate();
     },
   });
+
+  return { query, mutation };
+};
+
+const useShiftOverlap = ({
+  startAt,
+  endAt,
+  excludeId,
+}: {
+  startAt: Date | undefined;
+  endAt: Date | undefined;
+  excludeId?: string;
+}) => {
+  const query = api.app.kodixCare.findOverlappingShifts.useQuery(
+    {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      start: startAt!,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      end: endAt!,
+    },
+    {
+      enabled: Boolean(
+        startAt && endAt && dayjs(startAt).isBefore(dayjs(endAt)),
+      ),
+    },
+  );
+
+  const overlappingShifts = useMemo(
+    () => query.data?.filter((shift) => shift.id !== excludeId),
+    [query.data, excludeId],
+  );
+
+  return {
+    overlappingShifts,
+    isChecking: query.isFetching,
+  };
+};
+
+interface ShiftEvent {
+  id: string;
+  title: string;
+  start: Date;
+  caregiverId: string;
+  end: Date;
+  Caregiver: RouterOutputs["app"]["kodixCare"]["getAllCareShifts"][number]["Caregiver"];
+  image?: string;
+}
+
+export function ShiftsBigCalendar({
+  user,
+  myRoles,
+  initialShifts,
+  careGivers,
+}: {
+  user: User;
+  myRoles: RouterOutputs["team"]["appRole"]["getMyRoles"];
+  initialShifts: RouterOutputs["app"]["kodixCare"]["getAllCareShifts"];
+  careGivers: RouterOutputs["app"]["kodixCare"]["getAllCaregivers"];
+}) {
+  const [open, setOpen] = useState<
+    { preselectedStart: Date; preselectedEnd: Date } | boolean
+  >(false);
+  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
+  const [view, setView] = useState<View>("day");
+  const [date, setDate] = useState(new Date());
+  const t = useTranslations();
+  const locale = useLocale();
+
+  const { query, mutation } = useCareShiftsData(initialShifts);
 
   const selectedEvent = useMemo(
     () => query.data.find((shift) => shift.id === selectedEventId),
@@ -201,7 +243,6 @@ export function ShiftsBigCalendar({
     <>
       {selectedEvent && (
         <EditCareShiftCredenza
-          mutation={mutation}
           careGivers={careGivers}
           myRoles={myRoles}
           careShift={selectedEvent}
@@ -298,40 +339,6 @@ export function ShiftsBigCalendar({
     </>
   );
 }
-
-const useShiftOverlap = ({
-  startAt,
-  endAt,
-  excludeId,
-}: {
-  startAt: Date | undefined;
-  endAt: Date | undefined;
-  excludeId?: string;
-}) => {
-  const query = api.app.kodixCare.findOverlappingShifts.useQuery(
-    {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      start: startAt!,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      end: endAt!,
-    },
-    {
-      enabled: Boolean(
-        startAt && endAt && dayjs(startAt).isBefore(dayjs(endAt)),
-      ),
-    },
-  );
-
-  const overlappingShifts = useMemo(
-    () => query.data?.filter((shift) => shift.id !== excludeId),
-    [query.data, excludeId],
-  );
-
-  return {
-    overlappingShifts,
-    isChecking: query.isFetching,
-  };
-};
 
 function CreateShiftCredenzaButton({
   open,
@@ -549,12 +556,7 @@ function CreateShiftCredenzaButton({
               />
             </CredenzaBody>
             <CredenzaFooter className="mt-6 justify-end">
-              <Button
-                disabled={
-                  isChecking || mutation.isPending || !form.formState.isDirty
-                }
-                type="submit"
-              >
+              <Button disabled={isChecking || mutation.isPending} type="submit">
                 {isChecking || mutation.isPending ? (
                   <>
                     <LuLoader2 className="mr-2 size-4 animate-spin" />
@@ -646,13 +648,11 @@ function WarnOverlappingShifts({
 }
 
 function EditCareShiftCredenza({
-  mutation,
   careShift,
   careGivers,
   myRoles,
   setCareShift,
 }: {
-  mutation: ReturnType<typeof api.app.kodixCare.editCareShift.useMutation>;
   careShift: RouterOutputs["app"]["kodixCare"]["getAllCareShifts"][number];
   setCareShift: (shiftId: string | null) => void;
   myRoles: RouterOutputs["team"]["appRole"]["getMyRoles"];
@@ -664,6 +664,7 @@ function EditCareShiftCredenza({
   );
   const [warnOverlappingShiftsOpen, setWarnOverlappingShiftsOpen] =
     useState(false);
+  const { mutation } = useCareShiftsData([]);
 
   const form = useForm({
     schema: ZEditCareShiftInputSchema(t),
