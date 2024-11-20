@@ -3,7 +3,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
-import { NextIntlClientProvider } from "next-intl";
+import { getLocale } from "next-intl/server";
 
 import { TailwindIndicator } from "~/app/[locale]/_components/tailwind-indicator";
 import { env } from "~/env";
@@ -13,12 +13,12 @@ import "~/app/globals.css";
 
 import { getMessages } from "next-intl/server";
 
-import { formats } from "@kdx/locales";
 import { getBaseUrl } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { ThemeProvider, ThemeToggle } from "@kdx/ui/theme";
 import { Toaster } from "@kdx/ui/toast";
 
+import { CCNextIntlClientProvider } from "./_components/cc-next-intl-client-provider";
 import { CSPostHogProvider } from "./_components/posthog-provider";
 
 export const metadata: Metadata = {
@@ -50,7 +50,7 @@ export default async function RootLayout(props: {
   params: { locale: string };
 }) {
   const messages = await getMessages();
-
+  const locale = await getLocale();
   return (
     <html lang={props.params.locale} suppressHydrationWarning>
       <CSPostHogProvider>
@@ -65,11 +65,7 @@ export default async function RootLayout(props: {
           <Analytics />
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <Toaster richColors closeButton pauseWhenPageIsHidden />
-            <NextIntlClientProvider
-              messages={messages}
-              formats={formats}
-              timeZone="America/Sao_Paulo" //?Fix me!
-            >
+            <CCNextIntlClientProvider messages={messages} locale={locale}>
               <TRPCReactProvider>
                 <div className="flex min-h-screen flex-col">
                   {props.children}
@@ -82,7 +78,7 @@ export default async function RootLayout(props: {
                   </div>
                 )}
               </TRPCReactProvider>
-            </NextIntlClientProvider>
+            </CCNextIntlClientProvider>
           </ThemeProvider>
         </body>
       </CSPostHogProvider>

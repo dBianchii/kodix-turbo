@@ -7,6 +7,8 @@ import type { useTranslations } from "next-intl";
 import type { ZodErrorMap } from "zod";
 import { defaultErrorMap, ZodIssueCode, ZodParsedType } from "zod";
 
+import type { customErrorsNs, formNs, zodNs } from "./zod-namespaces";
+
 const jsonStringifyReplacer = (_: string, value: unknown): unknown => {
   if (typeof value === "bigint") {
     return value.toString();
@@ -50,10 +52,6 @@ const getKeyAndValues = (
   return { key: defaultKey, values: {} };
 };
 
-export const zodNs = "zod";
-export const formNs = "zod.form";
-export const customErrorsNs = "zod.customErrors";
-
 interface ZodI18nMapOption {
   t: ReturnType<typeof useTranslations<typeof zodNs>>;
   tForm?: ReturnType<typeof useTranslations<typeof formNs>>;
@@ -74,67 +72,67 @@ export const makeZodI18nMap: MakeZodI18nMap = (option) => (issue, ctx) => {
   const path =
     issue.path.length > 0 && !!tForm
       ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        { path: tForm(issue.path.join(".") as any) }
-      : {};
+        tForm(issue.path.join(".") as any)
+      : "missingTranslation";
 
   switch (issue.code) {
     case ZodIssueCode.invalid_type:
       if (issue.received === ZodParsedType.undefined) {
         message = t("errors.invalid_type_received_undefined", {
-          ...path,
+          path,
         });
       } else {
         message = t("errors.invalid_type", {
           expected: t(`types.${issue.expected}`),
           received: t(`types.${issue.received}`),
-          ...path,
+          path,
         });
       }
       break;
     case ZodIssueCode.invalid_literal:
       message = t("errors.invalid_literal", {
         expected: JSON.stringify(issue.expected, jsonStringifyReplacer),
-        ...path,
+        path,
       });
       break;
     case ZodIssueCode.unrecognized_keys:
       message = t("errors.unrecognized_keys", {
         keys: joinValues(issue.keys, ", "),
         count: issue.keys.length,
-        ...path,
+        path,
       });
       break;
     case ZodIssueCode.invalid_union:
       message = t("errors.invalid_union", {
-        ...path,
+        path,
       });
       break;
     case ZodIssueCode.invalid_union_discriminator:
       message = t("errors.invalid_union_discriminator", {
         options: joinValues(issue.options),
-        ...path,
+        path,
       });
       break;
     case ZodIssueCode.invalid_enum_value:
       message = t("errors.invalid_enum_value", {
         options: joinValues(issue.options),
         received: issue.received,
-        ...path,
+        path,
       });
       break;
     case ZodIssueCode.invalid_arguments:
       message = t("errors.invalid_arguments", {
-        ...path,
+        path,
       });
       break;
     case ZodIssueCode.invalid_return_type:
       message = t("errors.invalid_return_type", {
-        ...path,
+        path,
       });
       break;
     case ZodIssueCode.invalid_date:
       message = t("errors.invalid_date", {
-        ...path,
+        path,
       });
       break;
     case ZodIssueCode.invalid_string:
@@ -142,18 +140,18 @@ export const makeZodI18nMap: MakeZodI18nMap = (option) => (issue, ctx) => {
         if ("startsWith" in issue.validation) {
           message = t("errors.invalid_string.startsWith", {
             startsWith: issue.validation.startsWith,
-            ...path,
+            path,
           });
         } else if ("endsWith" in issue.validation) {
           message = t("errors.invalid_string.endsWith", {
             endsWith: issue.validation.endsWith,
-            ...path,
+            path,
           });
         }
       } else {
         message = t(`errors.invalid_string.${issue.validation}`, {
           validation: t(`validations.${issue.validation}`),
-          ...path,
+          path,
         });
       }
       break;
@@ -173,7 +171,7 @@ export const makeZodI18nMap: MakeZodI18nMap = (option) => (issue, ctx) => {
         {
           minimum,
           count: typeof minimum === "number" ? minimum : undefined,
-          ...path,
+          path,
         },
       );
       break;
@@ -194,7 +192,7 @@ export const makeZodI18nMap: MakeZodI18nMap = (option) => (issue, ctx) => {
         {
           maximum,
           count: typeof maximum === "number" ? maximum : undefined,
-          ...path,
+          path,
         },
       );
       break;
@@ -208,24 +206,24 @@ export const makeZodI18nMap: MakeZodI18nMap = (option) => (issue, ctx) => {
       // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       message = (tCustom || t)(key as Parameters<typeof t>[0], {
         ...values,
-        ...path,
+        path,
       });
       break;
     }
     case ZodIssueCode.invalid_intersection_types:
       message = t("errors.invalid_intersection_types", {
-        ...path,
+        path,
       });
       break;
     case ZodIssueCode.not_multiple_of:
       message = t("errors.not_multiple_of", {
         multipleOf: issue.multipleOf as number,
-        ...path,
+        path,
       });
       break;
     case ZodIssueCode.not_finite:
       message = t("errors.not_finite", {
-        ...path,
+        path,
       });
       break;
     default:

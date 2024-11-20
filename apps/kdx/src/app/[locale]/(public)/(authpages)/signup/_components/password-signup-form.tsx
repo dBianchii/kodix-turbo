@@ -18,13 +18,11 @@ import {
 } from "@kdx/ui/form";
 import { Input } from "@kdx/ui/input";
 import { ZSignupWithPasswordInputSchema } from "@kdx/validators/trpc/user";
-import { useI18nZodErrors } from "@kdx/validators/useI18nZodErrors";
 
 import { defaultSafeActionToastError } from "~/helpers/safe-action/default-action-error-toast";
 import { signupAction } from "./actions";
 
 export function PasswordSignupForm({ invite }: { invite?: string }) {
-  useI18nZodErrors();
   const t = useTranslations();
   const form = useForm({
     schema: ZSignupWithPasswordInputSchema.omit({
