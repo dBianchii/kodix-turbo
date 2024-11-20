@@ -767,6 +767,7 @@ function UnlockMoreTasksCredenza() {
   const utils = api.useUtils();
   const t = useTranslations();
   const mutation = api.app.kodixCare.careTask.unlockMoreTasks.useMutation({
+    onError: trpcErrorToastDefault,
     onSuccess: () => {
       void utils.app.kodixCare.careTask.getCareTasks.invalidate();
     },
