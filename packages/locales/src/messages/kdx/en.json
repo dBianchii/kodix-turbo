@@ -53,7 +53,9 @@
       "Set this on if you want to receive notifications for delayed tasks": "Set this on if you want to receive notifications for delayed tasks (one hour delayed)",
       "Additional notes": "Additional notes",
       "Previous shift is in progress are you sure you would like to start a new one": "Previous shift is in progress. \nAre you sure you would like to start a new one?",
-      "Create shift": "Create shift"
+      "Create shift": "Create shift",
+      "Edit shift": "Edit shift",
+      "Edit shift for": "Edit shift for"
     },
     "todo": {
       "appDescription": "Todo is a note taking app"

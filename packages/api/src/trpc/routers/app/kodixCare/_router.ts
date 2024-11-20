@@ -41,6 +41,6 @@ export const kodixCareRouter = {
     .input(ZFindOverlappingShiftsInputSchema)
     .query(findOverlappingShiftsHandler),
   editCareShift: protectedProcedure
-    .input(ZEditCareShiftInputSchema)
+    .input(T(ZEditCareShiftInputSchema))
     .mutation(editCareShiftHandler),
 } satisfies TRPCRouterRecord;

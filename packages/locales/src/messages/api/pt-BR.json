@@ -76,7 +76,8 @@
     "Could not create shift": "Não foi possível criar turno de atendimento",
     "Shift not found": "Turno não encontrado",
     "Could not update resource": "Não foi possível atualizar o recurso",
-    "This caregiver already has a shift at this time": "Este cuidador já possui um turno neste horário"
+    "This caregiver already has a shift at this time": "Este cuidador já possui um turno neste horário",
+    "Only admins can change caregivers": "Somente administradores podem mudar de cuidador"
   },
   "Updated": "Atualizado"
 }

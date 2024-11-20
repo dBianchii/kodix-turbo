@@ -3,10 +3,11 @@ import { TRPCError } from "@trpc/server";
 import type { TEditCareShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import { db } from "@kdx/db/client";
 import { kodixCareRepository } from "@kdx/db/repositories";
-import { kodixCareAppId } from "@kdx/shared";
+import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 import { logActivity } from "../../../../services/appActivityLogs.service";
+import { getMyRolesHandler } from "../../team/appRole/getMyRoles.handler";
 import { assertNoOverlappingShiftsForThisCaregiver } from "./_kodixCare.permissions";
 
 interface EditCareShiftOptions {
@@ -119,6 +120,27 @@ export const editCareShiftHandler = async ({
       message: ctx.t("api.Shift not found"),
     });
 
+  const updateData = {
+    ...(input.startAt && { startAt: input.startAt }),
+    ...(input.endAt && { endAt: input.endAt }),
+    ...(input.careGiverId && { careGiverId: input.careGiverId }),
+  };
+
+  if (input.careGiverId && input.careGiverId !== oldShift.caregiverId) {
+    const myRoles = await getMyRolesHandler({
+      ctx,
+      input: { appId: kodixCareAppId },
+    });
+
+    if (
+      !myRoles.some((x) => x.appRoleDefaultId === kodixCareRoleDefaultIds.admin)
+    )
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: ctx.t("api.Only admins can change caregivers"),
+      });
+  }
+
   if (input.startAt && input.endAt) {
     const overlappingShifts = await kodixCareRepository.findOverlappingShifts({
       teamId: ctx.auth.user.activeTeamId,
@@ -130,7 +152,7 @@ export const editCareShiftHandler = async ({
       overlappingShifts: overlappingShifts.filter(
         (shift) => shift.id !== input.id,
       ),
-      caregiverId: oldShift.caregiverId,
+      caregiverId: input.careGiverId ?? oldShift.caregiverId,
     });
   }
 
@@ -138,10 +160,7 @@ export const editCareShiftHandler = async ({
     const [header] = await kodixCareRepository.updateCareShift(
       {
         id: input.id,
-        input: {
-          startAt: input.startAt,
-          endAt: input.endAt,
-        },
+        input: updateData,
       },
       tx,
     );

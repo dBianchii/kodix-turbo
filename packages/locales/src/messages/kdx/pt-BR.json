@@ -53,7 +53,9 @@
       "Set this on if you want to receive notifications for delayed tasks": "Ative esta opção se desejar receber notificações de tarefas atrasadas (uma hora de atraso)",
       "Additional notes": "Informações adicionais",
       "Previous shift is in progress are you sure you would like to start a new one": "O turno anterior está em andamento. \nTem certeza de que gostaria de começar um novo?",
-      "Create shift": "Criar turno"
+      "Create shift": "Criar turno",
+      "Edit shift": "Editar turno",
+      "Edit shift for": "Editar turno para"
     },
     "todo": {
       "appDescription": "Todo é um app de anotações"

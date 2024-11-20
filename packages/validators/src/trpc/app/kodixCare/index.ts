@@ -37,8 +37,8 @@ export const ZCreateCareShiftInputSchema = (t: IsomorficT) =>
   z
     .object({
       careGiverId: ZNanoId,
-      startAt: z.date(),
-      endAt: z.date(),
+      startAt: z.date().transform(adjustDateToMinute),
+      endAt: z.date().transform(adjustDateToMinute),
     })
     .refine((data) => !dayjs(data.startAt).isAfter(data.endAt), {
       message: t("validators.Start time cannot be after end time"),
@@ -49,18 +49,33 @@ export type TCreateCareShiftInputSchema = z.infer<
 >;
 
 export const ZFindOverlappingShiftsInputSchema = z.object({
-  start: z.date(),
-  end: z.date(),
+  start: z.date().transform(adjustDateToMinute),
+  end: z.date().transform(adjustDateToMinute),
 });
 export type TFindOverlappingShiftsInputSchema = z.infer<
   typeof ZFindOverlappingShiftsInputSchema
 >;
 
-export const ZEditCareShiftInputSchema = z.object({
-  id: ZNanoId,
-  startAt: z.date().optional(),
-  endAt: z.date().optional(),
-});
+export const ZEditCareShiftInputSchema = (t: IsomorficT) =>
+  z
+    .object({
+      id: ZNanoId,
+      careGiverId: ZNanoId.optional(),
+      startAt: z.date().transform(adjustDateToMinute).optional(),
+      endAt: z.date().transform(adjustDateToMinute).optional(),
+    })
+    .refine(
+      (data) => {
+        if (data.startAt && data.endAt)
+          return !dayjs(data.startAt).isAfter(data.endAt);
+
+        return true;
+      },
+      {
+        message: t("validators.Start time cannot be after end time"),
+        path: ["startAt"],
+      },
+    );
 export type TEditCareShiftInputSchema = z.infer<
-  typeof ZEditCareShiftInputSchema
+  ReturnType<typeof ZEditCareShiftInputSchema>
 >;
