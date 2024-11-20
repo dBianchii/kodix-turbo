@@ -100,7 +100,7 @@ export function DateTimePicker24h({
           <div className="flex flex-col divide-y sm:h-[300px] sm:flex-row sm:divide-x sm:divide-y-0">
             <ScrollArea className="w-64 sm:w-auto">
               <div className="flex p-2 sm:flex-col">
-                {hours.reverse().map((hour) => (
+                {hours.map((hour) => (
                   <Button
                     key={hour}
                     // disabled={disabledDate?.(new Date(date ?? 0))} //!!CHECK THIS
@@ -110,6 +110,14 @@ export function DateTimePicker24h({
                     }
                     className="aspect-square shrink-0 sm:w-full"
                     onClick={() => handleTimeChange("hour", hour.toString())}
+                    ref={(el) => {
+                      if (el && date && date.getHours() === hour) {
+                        el.scrollIntoView({
+                          behavior: "smooth",
+                          block: "center",
+                        });
+                      }
+                    }}
                   >
                     {hour}
                   </Button>
@@ -130,6 +138,14 @@ export function DateTimePicker24h({
                     onClick={() =>
                       handleTimeChange("minute", minute.toString())
                     }
+                    ref={(el) => {
+                      if (el && date && date.getMinutes() === minute) {
+                        el.scrollIntoView({
+                          behavior: "smooth",
+                          block: "center",
+                        });
+                      }
+                    }}
                   >
                     {minute.toString().padStart(2, "0")}
                   </Button>
