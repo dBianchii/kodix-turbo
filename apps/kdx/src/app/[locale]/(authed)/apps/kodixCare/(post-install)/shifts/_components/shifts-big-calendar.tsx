@@ -62,6 +62,7 @@ import "./rbc-styles.css";
 
 import { useLocale } from "next-intl";
 
+import { useDebounce } from "@kdx/ui/hooks/use-debounce";
 import { toast } from "@kdx/ui/toast";
 
 const localizer = dayjsLocalizer(dayjs);
@@ -138,6 +139,7 @@ export function ShiftsBigCalendar({
     () => query.data.find((shift) => shift.id === selectedEventId),
     [query.data, selectedEventId],
   );
+  const delayed = useDebounce(selectedEvent, 125); //Hack. There was a bug that caused this to be fired if edit is open
 
   const handleEventChange = useCallback(
     (args: EventInteractionArgs<ShiftEvent>) => {
@@ -277,6 +279,7 @@ export function ShiftsBigCalendar({
           // @ts-expect-error react big calendar typesafety sucks
           onEventResize={handleEventChange}
           onSelectSlot={(date) => {
+            if (delayed) return; //! Hack. There was a bug that caused this to be fired if edit is open
             setOpen({
               preselectedStart: date.start,
               preselectedEnd: date.end,
