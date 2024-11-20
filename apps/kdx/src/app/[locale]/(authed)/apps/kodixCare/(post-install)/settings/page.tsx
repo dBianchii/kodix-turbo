@@ -34,6 +34,5 @@ async function KodixCareUserSettingsFormServer() {
   const config = await api.app.getUserAppTeamConfig({
     appId: kodixCareAppId,
   });
-
   return <KodixCareUserSettingsForm config={config} />;
 }
