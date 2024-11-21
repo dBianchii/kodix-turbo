@@ -4,7 +4,7 @@ import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers"
 import DataTableKodixCare from "./_components/data-table-kodix-care";
 
 export default async function KodixCarePage() {
-  const user = await redirectIfAppNotInstalled({
+  await redirectIfAppNotInstalled({
     appId: kodixCareAppId,
     customRedirect: "/apps/kodixCare/onboarding",
   });
