@@ -6,6 +6,7 @@
     "Checkout time cannot be in the future": "Checkout time cannot be in the future",
     "Care task date cannot be in the past": "Care task date cannot be in the past",
     "Date cannot be in the past": "Date cannot be in the past",
-    "Date cannot be in the future": "The date cannot be in the future"
+    "Date cannot be in the future": "The date cannot be in the future",
+    "Start time cannot be after end time": "Start time cannot be after end time"
   }
 }

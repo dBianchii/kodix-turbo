@@ -1,9 +1,5 @@
 /* eslint-disable */
 import { notFound } from "next/navigation";
-import { getRequestConfig } from "next-intl/server";
-
-import { formats, locales } from "@kdx/locales";
-
 // const messagesFolderPath = path.resolve(
 //   __dirname,
 //   "../../../packages/locales/src/messages",
@@ -15,6 +11,10 @@ import { formats, locales } from "@kdx/locales";
 //   ).default;
 //   return messages;
 // };
+import { getRequestConfig } from "next-intl/server";
+
+import { formats, locales } from "@kdx/locales";
+import { formNs } from "@kdx/validators/zod-namespaces";
 
 export default getRequestConfig(async ({ locale }) => {
   // Validate that the incoming `locale` parameter is valid
@@ -45,5 +45,12 @@ export default getRequestConfig(async ({ locale }) => {
       ).default,
     },
     formats: formats,
+    getMessageFallback({ namespace, key }) {
+      //TODO: unify it in a single place and not repeat it
+      const defaultFallback = `${namespace}.${key}`;
+      if (defaultFallback.startsWith(formNs)) return "missingTranslation";
+
+      return defaultFallback;
+    },
   };
 });

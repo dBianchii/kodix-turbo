@@ -27,7 +27,6 @@ import {
 import { Form, useForm } from "@kdx/ui/form";
 import { toast } from "@kdx/ui/toast";
 import { ZLeaveTeamInputSchema } from "@kdx/validators/trpc/team";
-import { useI18nZodErrors } from "@kdx/validators/useI18nZodErrors";
 
 import { api } from "~/trpc/react";
 
@@ -38,7 +37,6 @@ export function LeaveTeamCardClient({
   teamId: string;
   teamName: string;
 }) {
-  useI18nZodErrors();
   const t = useTranslations();
 
   const form = useForm({

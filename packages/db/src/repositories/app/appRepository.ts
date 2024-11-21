@@ -1,3 +1,4 @@
+import type { InferInsertModel } from "drizzle-orm";
 import type { z } from "zod";
 import { and, eq, inArray, sql } from "drizzle-orm";
 
@@ -16,10 +17,11 @@ import type { zAppPermissionToTeamAppRoleCreateMany } from "../_zodSchemas/appPe
 import type { appIdToUserAppTeamConfigSchemaUpdate } from "../_zodSchemas/userAppTeamConfigs";
 import type { Drizzle } from "../../client";
 import { appIdToUserAppTeamConfigSchema } from "../_zodSchemas/userAppTeamConfigs";
-import { db } from "../../client";
+import { db as _db } from "../../client";
 import { appRoles_defaultTree } from "../../constants";
 import { nanoid } from "../../nanoid";
 import {
+  appActivityLogs,
   appPermissions,
   appPermissionsToTeamAppRoles,
   apps,
@@ -32,7 +34,10 @@ import {
 } from "../../schema";
 import { appIdToSchemas } from "../../utils";
 
-export async function findInstalledAppsByTeamId(teamId: string | undefined) {
+export async function findInstalledAppsByTeamId(
+  teamId: string | undefined,
+  db = _db,
+) {
   const _apps = await db
     .select({
       id: apps.id,
@@ -58,13 +63,23 @@ export async function findInstalledAppsByTeamId(teamId: string | undefined) {
   return _apps.filter((app) => app.id !== todoAppId); //TODO: stinky
 }
 
-export async function findInstalledApp({
-  teamId,
-  appId,
-}: {
-  teamId: string;
-  appId: string;
-}) {
+export async function createAppActivityLog(
+  input: InferInsertModel<typeof appActivityLogs>,
+  db = _db,
+) {
+  return db.insert(appActivityLogs).values(input);
+}
+
+export async function findInstalledApp(
+  {
+    teamId,
+    appId,
+  }: {
+    teamId: string;
+    appId: string;
+  },
+  db = _db,
+) {
   const [installed] = await db
     .select({ id: apps.id })
     .from(apps)
@@ -74,13 +89,16 @@ export async function findInstalledApp({
   return installed;
 }
 
-export async function findAppTeamConfigs({
-  appId,
-  teamIds,
-}: {
-  appId: AppIdsWithUserAppTeamConfig;
-  teamIds: string[];
-}) {
+export async function findAppTeamConfigs(
+  {
+    appId,
+    teamIds,
+  }: {
+    appId: AppIdsWithUserAppTeamConfig;
+    teamIds: string[];
+  },
+  db = _db,
+) {
   const teamConfigs = await db.query.appTeamConfigs.findMany({
     where: (appteamConfig, { eq, and, inArray }) =>
       and(
@@ -102,7 +120,7 @@ export async function findAppTeamConfigs({
   return parsedTeamConfigs;
 }
 
-export async function findAppPermissionById(permissionId: string) {
+export async function findAppPermissionById(permissionId: string, db = _db) {
   return db.query.appPermissions.findFirst({
     where: (appPermissions, { eq }) => eq(appPermissions.id, permissionId),
     columns: { editable: true },
@@ -142,19 +160,22 @@ export async function removePermissionFromRole(
   );
 }
 
-export async function upsertAppTeamConfig({
-  appId,
-  teamId,
-  config,
-}: {
-  appId: AppIdsWithUserAppTeamConfig;
-  teamId: string;
-  config: Partial<
-    z.infer<
-      (typeof appIdToAppTeamConfigSchema)[typeof kodixCareAppId] //TODO: make dynamic based on app
-    >
-  >;
-}) {
+export async function upsertAppTeamConfig(
+  {
+    appId,
+    teamId,
+    config,
+  }: {
+    appId: AppIdsWithUserAppTeamConfig;
+    teamId: string;
+    config: Partial<
+      z.infer<
+        (typeof appIdToAppTeamConfigSchema)[typeof kodixCareAppId] //TODO: make dynamic based on app
+      >
+    >;
+  },
+  db = _db,
+) {
   const existingConfig = await db.query.appTeamConfigs.findFirst({
     where: (appteamConfig, { eq, and }) =>
       and(eq(appteamConfig.appId, appId), eq(appteamConfig.teamId, teamId)),
@@ -187,15 +208,18 @@ export async function upsertAppTeamConfig({
   });
 }
 
-export async function findUserAppTeamConfigs({
-  appId,
-  userIds,
-  teamIds,
-}: {
-  appId: AppIdsWithUserAppTeamConfig;
-  userIds: string[];
-  teamIds: string[];
-}) {
+export async function findUserAppTeamConfigs(
+  {
+    appId,
+    userIds,
+    teamIds,
+  }: {
+    appId: AppIdsWithUserAppTeamConfig;
+    userIds: string[];
+    teamIds: string[];
+  },
+  db = _db,
+) {
   const result = await db.query.userAppTeamConfigs.findMany({
     where: (userAppTeamConfigs, { eq, and }) =>
       and(
@@ -221,19 +245,22 @@ export async function findUserAppTeamConfigs({
   return userAppTeamConfigs;
 }
 
-export async function upsertUserAppTeamConfigs({
-  appId,
-  userId,
-  teamId,
-  input,
-}: {
-  appId: AppIdsWithUserAppTeamConfig;
-  userId: string;
-  teamId: string;
-  input: z.infer<
-    (typeof appIdToUserAppTeamConfigSchemaUpdate)[typeof kodixCareAppId] //TODO: make dynamic based on app
-  >;
-}) {
+export async function upsertUserAppTeamConfigs(
+  {
+    appId,
+    userId,
+    teamId,
+    input,
+  }: {
+    appId: AppIdsWithUserAppTeamConfig;
+    userId: string;
+    teamId: string;
+    input: z.infer<
+      (typeof appIdToUserAppTeamConfigSchemaUpdate)[typeof kodixCareAppId] //TODO: make dynamic based on app
+    >;
+  },
+  db = _db,
+) {
   const existingConfig = await db.query.userAppTeamConfigs.findFirst({
     where: (userAppTeamConfigs, { eq, and }) =>
       and(
@@ -276,15 +303,18 @@ export async function upsertUserAppTeamConfigs({
   });
 }
 
-export async function installAppForTeam({
-  appId,
-  teamId,
-  userId,
-}: {
-  appId: KodixAppId;
-  teamId: string;
-  userId: string;
-}) {
+export async function installAppForTeam(
+  {
+    appId,
+    teamId,
+    userId,
+  }: {
+    appId: KodixAppId;
+    teamId: string;
+    userId: string;
+  },
+  db = _db,
+) {
   await db.transaction(async (tx) => {
     await tx.insert(appsToTeams).values({
       appId: appId,

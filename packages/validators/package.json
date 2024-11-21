@@ -12,6 +12,10 @@
       "types": "./dist/validators/src/utils/useI18nZodErrors.d.ts",
       "default": "./src/utils/useI18nZodErrors.ts"
     },
+    "./zod-namespaces": {
+      "types": "./dist/validators/src/utils/zod-namespaces.d.ts",
+      "default": "./src/utils/zod-namespaces.ts"
+    },
     "./trpc/app": {
       "types": "./dist/validators/src/trpc/app/index.d.ts",
       "default": "./src/trpc/app/index.ts"

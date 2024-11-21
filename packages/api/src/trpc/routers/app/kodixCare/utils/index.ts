@@ -11,13 +11,11 @@ export async function cloneCalendarTasksToCareTasks({
   tx,
   start,
   end = tomorrowEndOfDay,
-  careShiftId, //? CurrentShift, where all tasks will be cloned to
   ctx,
 }: {
   tx: Drizzle;
   start: Date;
   end?: Date;
-  careShiftId: string;
   ctx: TProtectedProcedureContext;
 }) {
   const calendarTasks = await getAllHandler({
@@ -32,7 +30,6 @@ export async function cloneCalendarTasksToCareTasks({
     await careTaskRepository.createManyCareTasks(
       tx,
       calendarTasks.map((calendarTask) => ({
-        careShiftId: careShiftId,
         teamId: ctx.auth.user.activeTeamId,
         title: calendarTask.title,
         description: calendarTask.description,

@@ -8,7 +8,6 @@ import { teamAppRoles, teamAppRolesToUsers } from "@kdx/db/schema";
 import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
-import { getCurrentCareShiftByTeamId } from "../../../../../../../db/src/repositories/app/kodixCare/kodixCareRepository";
 
 interface DeleteCareTaskOptions {
   ctx: TProtectedProcedureContext;
@@ -19,17 +18,6 @@ export const deleteCareTaskHandler = async ({
   ctx,
   input,
 }: DeleteCareTaskOptions) => {
-  const currentShift = await getCurrentCareShiftByTeamId(
-    ctx.auth.user.activeTeamId,
-  );
-  if (currentShift?.shiftEndedAt)
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: ctx.t(
-        "api.You cannot delete a task when there is no active shift",
-      ),
-    });
-
   const careTask = await careTaskRepository.findCareTaskById({
     id: input.id,
     teamId: ctx.auth.user.activeTeamId,
@@ -38,12 +26,6 @@ export const deleteCareTaskHandler = async ({
     throw new TRPCError({
       code: "NOT_FOUND",
       message: ctx.t("api.Care task not found"),
-    });
-  }
-  if (careTask.CareShift?.shiftEndedAt) {
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: ctx.t("api.You cannot delete a task from a closed shift"),
     });
   }
 
