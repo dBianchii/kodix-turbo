@@ -4,6 +4,8 @@ import { z } from "zod";
 import type { eventMasters } from "@kdx/db/schema";
 import dayjs from "@kdx/dayjs";
 
+import { adjustDateToMinute } from "../../..";
+
 export const ZCancelInputSchema = z
   .object({
     eventMasterId: z.string(),
@@ -15,7 +17,7 @@ export const ZCancelInputSchema = z
         exclusionDefinition: z.literal("all"),
       }),
       z.object({
-        date: z.date(),
+        date: z.date().transform(adjustDateToMinute),
         exclusionDefinition: z.union([
           z.literal("thisAndFuture"),
           z.literal("single"),
@@ -29,7 +31,7 @@ export const ZCreateInputSchema = z
   .object({
     title: z.string().min(1),
     description: z.string().optional(),
-    from: z.date(),
+    from: z.date().transform(adjustDateToMinute),
     until: z
       .date()
       .transform((date) => dayjs(date).endOf("day").toDate())
@@ -71,7 +73,7 @@ export const ZEditInputSchema = z
           .optional(),
         interval: z.number().optional(),
         count: z.number().nullish().optional(),
-        from: z.date().optional(),
+        from: z.date().transform(adjustDateToMinute).optional(),
         weekdays: z.number().array().optional(),
 
         editDefinition: z.enum(["thisAndFuture"]),
@@ -97,7 +99,7 @@ export const ZEditInputSchema = z
         editDefinition: z.literal("all"),
       }),
       z.object({
-        from: z.date().optional(),
+        from: z.date().transform(adjustDateToMinute).optional(),
 
         editDefinition: z.literal("single"),
       }),
@@ -106,7 +108,7 @@ export const ZEditInputSchema = z
 export type TEditInputSchema = z.infer<typeof ZEditInputSchema>;
 
 export const ZGetAllInputSchema = z.object({
-  dateStart: z.date(),
-  dateEnd: z.date(),
+  dateStart: z.date().transform(adjustDateToMinute),
+  dateEnd: z.date().transform(adjustDateToMinute),
 });
 export type TGetAllInputSchema = z.infer<typeof ZGetAllInputSchema>;

@@ -71,10 +71,11 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
           url: getBaseUrl(),
         }),
         react: TeamInvite({
+          inviteFromIp: ctx.auth.session.ipAddress,
+          username: invite.email,
           invitedByEmail: ctx.auth.user.email,
           invitedByUsername: ctx.auth.user.name,
           inviteLink: `${getBaseUrl()}/team/invite/${invite.id}`,
-          teamImage: `${getBaseUrl()}/api/avatar/${team.name}`,
           teamName: team.name,
           t: ctx.t,
         }),

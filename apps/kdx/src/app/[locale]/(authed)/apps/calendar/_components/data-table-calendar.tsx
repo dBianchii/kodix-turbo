@@ -1,7 +1,7 @@
 "use client";
 
 import type { ColumnFiltersState } from "@tanstack/react-table";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   createColumnHelper,
   flexRender,
@@ -41,6 +41,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@kdx/ui/dropdown-menu";
+import { useIsAnyOverlayMounted } from "@kdx/ui/stores/use-overlay-store";
 import {
   Table,
   TableBody,
@@ -55,36 +56,44 @@ import { api } from "~/trpc/react";
 import { CancelationDialog } from "./cancel-event-dialog";
 import { EditEventDialog } from "./edit-event-dialog";
 
+const useLeftAndRightKeyboardArrowClicks = () => {
+  const shouldDisable = useIsAnyOverlayMounted();
+
+  const leftArrowRef = useRef<HTMLButtonElement>(null);
+  const rightArrowRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    const keyDownHandler = (e: KeyboardEvent) => {
+      if (shouldDisable) return;
+
+      if (e.key === "ArrowLeft") leftArrowRef.current?.click();
+      else if (e.key === "ArrowRight") rightArrowRef.current?.click();
+    };
+    document.addEventListener("keydown", keyDownHandler);
+    return () => document.removeEventListener("keydown", keyDownHandler);
+  }, [shouldDisable]);
+
+  return { leftArrowRef, rightArrowRef };
+};
+
 type CalendarTask = RouterOutputs["app"]["calendar"]["getAll"][number];
 const columnHelper = createColumnHelper<CalendarTask>();
 
-export function DataTable({
-  data,
-  user,
-}: {
-  data: CalendarTask[];
-  user: User;
-}) {
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-
+const useCalendarData = (
+  initialData: RouterOutputs["app"]["calendar"]["getAll"],
+) => {
   const [selectedDay, setSelectedDay] = useState(new Date());
-  const [calendarTask, setCalendarTask] = useState<CalendarTask | undefined>();
-  const [openCancelDialog, setOpenCancelDialog] = useState(false);
-  const [openEditDialog, setOpenEditDialog] = useState(false);
-
-  const utils = api.useUtils();
-  const getAllQuery = api.app.calendar.getAll.useQuery(
-    {
+  const inputForQuery = useMemo(
+    () => ({
       dateStart: dayjs(selectedDay).startOf("day").toDate(),
       dateEnd: dayjs(selectedDay).endOf("day").toDate(),
-    },
-    {
-      refetchOnWindowFocus: false,
-      initialData: data,
-      staleTime: 0,
-    },
+    }),
+    [selectedDay],
   );
-
+  const utils = api.useUtils();
+  const getAllQuery = api.app.calendar.getAll.useQuery(inputForQuery, {
+    initialData: initialData,
+    staleTime: 10,
+  });
   const { mutate: nukeEvents } = api.app.calendar.nuke.useMutation({
     onSuccess() {
       void utils.app.calendar.getAll.invalidate();
@@ -92,8 +101,28 @@ export function DataTable({
     },
   });
 
-  const t = useTranslations();
+  return {
+    selectedDay,
+    setSelectedDay,
+    getAllQuery,
+    nukeEvents,
+  };
+};
+
+const useTable = ({
+  data,
+  setCalendarTask,
+  setOpenEditDialog,
+  setOpenCancelDialog,
+}: {
+  data: CalendarTask[];
+  setCalendarTask: (task: CalendarTask) => void;
+  setOpenEditDialog: (value: boolean) => void;
+  setOpenCancelDialog: (value: boolean) => void;
+}) => {
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const format = useFormatter();
+  const t = useTranslations();
 
   const columns = useMemo(
     () => [
@@ -125,7 +154,7 @@ export function DataTable({
                     {t("apps.calendar.Edit event")}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setOpenCancelDialog(true)}>
-                    <RxTrash className="mr-2 size-4" />
+                    <RxTrash className="mr-2 size-4 text-destructive" />
                     {t("apps.calendar.Delete event")}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -184,11 +213,11 @@ export function DataTable({
         ),
       }),
     ],
-    [format, t],
+    [format, setCalendarTask, setOpenCancelDialog, setOpenEditDialog, t],
   );
 
   const table = useReactTable({
-    data: getAllQuery.data,
+    data: data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -199,15 +228,33 @@ export function DataTable({
     },
   });
 
-  useEffect(() => {
-    const keyDownHandler = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft") setSelectedDay((prev) => addDays(prev, -1));
-      else if (e.key === "ArrowRight")
-        setSelectedDay((prev) => addDays(prev, 1));
-    };
-    document.addEventListener("keydown", keyDownHandler);
-    return () => document.removeEventListener("keydown", keyDownHandler);
-  }, []);
+  return { table, columnLength: columns.length };
+};
+
+export function DataTable({
+  data,
+  user,
+}: {
+  data: CalendarTask[];
+  user: User;
+}) {
+  const [calendarTask, setCalendarTask] = useState<CalendarTask | undefined>();
+  const [openCancelDialog, setOpenCancelDialog] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+
+  const { getAllQuery, nukeEvents, selectedDay, setSelectedDay } =
+    useCalendarData(data);
+
+  const t = useTranslations();
+
+  const { leftArrowRef, rightArrowRef } = useLeftAndRightKeyboardArrowClicks();
+
+  const { table, columnLength } = useTable({
+    data: getAllQuery.data,
+    setCalendarTask,
+    setOpenEditDialog,
+    setOpenCancelDialog,
+  });
 
   return (
     <>
@@ -238,6 +285,7 @@ export function DataTable({
           </Button>
           <div className="mx-auto mt-auto flex space-x-2">
             <Button
+              ref={leftArrowRef}
               variant="ghost"
               onClick={() => {
                 setSelectedDay((prev) => addDays(prev, -1));
@@ -247,13 +295,13 @@ export function DataTable({
               <RxChevronLeft />
             </Button>
             <DatePicker
-              className=""
               date={selectedDay}
               setDate={(date) => {
                 if (date) setSelectedDay(date);
               }}
             />
             <Button
+              ref={rightArrowRef}
               variant="ghost"
               onClick={() => {
                 setSelectedDay((prev) => addDays(prev, 1));
@@ -305,7 +353,7 @@ export function DataTable({
             <TableBody>
               {getAllQuery.isFetching ? (
                 <TableRow>
-                  <TableCell colSpan={columns.length} className="h-24">
+                  <TableCell colSpan={columnLength} className="h-24">
                     <div className="flex h-full items-center justify-center">
                       <LuLoader2 className="h-6 w-6 animate-spin" />
                     </div>
@@ -330,7 +378,7 @@ export function DataTable({
                           setOpenCancelDialog(true);
                         }}
                       >
-                        <RxTrash className="mr-2 size-4" />
+                        <RxTrash className="mr-2 size-4 text-destructive" />
                         {t("Delete event")}
                       </ContextMenuItem>
                     </ContextMenuContent>
@@ -353,7 +401,7 @@ export function DataTable({
               ) : (
                 <TableRow>
                   <TableCell
-                    colSpan={columns.length}
+                    colSpan={columnLength}
                     className="h-24 text-center"
                   >
                     {t("apps.kodixCare.No events for this day")}

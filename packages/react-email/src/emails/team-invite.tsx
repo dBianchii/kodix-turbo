@@ -1,7 +1,6 @@
 import {
   Body,
   Button,
-  Column,
   Container,
   Head,
   Heading,
@@ -10,7 +9,6 @@ import {
   Img,
   Link,
   Preview,
-  Row,
   Section,
   Tailwind,
   Text,
@@ -19,30 +17,33 @@ import {
 import type { IsomorficT } from "@kdx/locales";
 import { getBaseUrl } from "@kdx/shared";
 
+import type { TMock } from "../utils";
+import { tMock } from "../utils";
+
 const baseUrl = getBaseUrl();
 
 export const TeamInvite = ({
   username = "User",
-  userImage = `${baseUrl}/static/kodix-user.png`,
+  // userImage = `${baseUrl}/static/kodix-user.png`,
   invitedByUsername = "",
   invitedByEmail = "bukinoshita@example.com",
   teamName = "My Project",
-  teamImage = `${baseUrl}/static/kodix-team.png`,
+  // teamImage = `${baseUrl}/static/kodix-team.png`,
   inviteLink = "https://kodix.com/teams/invite/foo",
   inviteFromIp = "204.13.186.218",
-  inviteFromLocation = "São Paulo, Brazil",
-  t,
+  // inviteFromLocation = "São Paulo, Brazil",
+  t = tMock,
 }: {
-  username?: string;
-  userImage?: string;
-  invitedByUsername?: string;
+  username: string;
+  // userImage: string;
+  invitedByUsername: string;
   invitedByEmail?: string;
-  teamName?: string;
-  teamImage?: string;
-  inviteLink?: string;
-  inviteFromIp?: string;
-  inviteFromLocation?: string;
-  t: IsomorficT;
+  teamName: string;
+  // teamImage: string;
+  inviteLink: string;
+  inviteFromIp: string;
+  // inviteFromLocation: string;
+  t: IsomorficT | TMock;
 }) => {
   const previewText = t("api.emails.Join invitedByUsername on Kodix", {
     invitedByUsername,
@@ -57,9 +58,8 @@ export const TeamInvite = ({
           <Container className="mx-auto my-[40px] w-[465px] rounded border border-solid border-[#eaeaea] p-[20px]">
             <Section className="mt-[32px]">
               <Img
-                src={`${baseUrl}/static/kodix-logo.png`}
-                width="40"
-                height="37"
+                src={`${baseUrl}/kodix-logo.svg`}
+                width="200"
                 alt="Kodix"
                 className="mx-auto my-0"
               />
@@ -90,7 +90,7 @@ export const TeamInvite = ({
                 },
               )}
             </Text>
-            <Section>
+            {/* <Section>
               <Row>
                 <Column align="right">
                   <Img
@@ -117,7 +117,7 @@ export const TeamInvite = ({
                   />
                 </Column>
               </Row>
-            </Section>
+            </Section> */}
             <Section className="mb-[32px] mt-[32px] text-center">
               <Button
                 className="rounded bg-[#000000] px-[20px] py-[12px] text-center text-[12px] font-semibold text-white no-underline"
@@ -138,8 +138,8 @@ export const TeamInvite = ({
               <span className="text-black">{username} </span>.
               {t("api.emails.This invite was sent from")}{" "}
               <span className="text-black">{inviteFromIp}</span>{" "}
-              {t("api.emails.located in")}{" "}
-              <span className="text-black">{inviteFromLocation}</span>.{" "}
+              {/* {t("api.emails.located in")}{" "}
+              <span className="text-black">{inviteFromLocation}</span>.{" "} */}
               {t(
                 "api.emails.If you were not expecting this invitation you can ignore this email",
               )}

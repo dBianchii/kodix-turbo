@@ -11,12 +11,15 @@ import {
 
 import type { IsomorficT } from "@kdx/locales";
 
+import type { TMock } from "../../utils";
+import { tMock } from "../../utils";
+
 export default function WarnPreviousShiftNotEnded({
   personWhoEndedShiftName,
-  t,
+  t = tMock,
 }: {
   personWhoEndedShiftName: string;
-  t: IsomorficT;
+  t: IsomorficT | TMock;
 }) {
   return (
     <Html>

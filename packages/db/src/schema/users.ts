@@ -89,7 +89,7 @@ export const sessions = mysqlTable("session", {
     .notNull()
     .references(() => users.id, { onUpdate: "cascade", onDelete: "cascade" }),
   expiresAt: datetime("expires_at").notNull(),
-  ipAddress: varchar("ip_address", { length: 45 }),
+  ipAddress: varchar("ip_address", { length: 45 }).notNull(),
   userAgent: text("user_agent"),
 });
 export const sessionsRelations = relations(sessions, ({ one }) => ({

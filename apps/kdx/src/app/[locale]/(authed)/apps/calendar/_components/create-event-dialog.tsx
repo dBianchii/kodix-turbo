@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { LuAlertCircle, LuLoader2 } from "react-icons/lu";
 import { RxPlus } from "react-icons/rx";
@@ -33,6 +33,7 @@ import {
 import { Input } from "@kdx/ui/input";
 import { Textarea } from "@kdx/ui/textarea";
 import { ZCreateInputSchema } from "@kdx/validators/trpc/app/calendar";
+import { useI18nZodErrors } from "@kdx/validators/useI18nZodErrors";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
@@ -63,7 +64,11 @@ export function CreateEventDialogButton() {
       count: 1,
     },
   });
+
   form.watch();
+  useEffect(() => {
+    form.reset();
+  }, [open, form]);
 
   const mutation = api.app.calendar.create.useMutation({
     onSuccess: () => {
@@ -77,14 +82,10 @@ export function CreateEventDialogButton() {
 
   const t = useTranslations();
 
+  useI18nZodErrors();
+
   return (
-    <Credenza
-      open={open}
-      onOpenChange={(open) => {
-        if (!open) form.reset();
-        setOpen(open);
-      }}
-    >
+    <Credenza open={open} onOpenChange={setOpen}>
       <CredenzaTrigger asChild>
         <Button size="sm">
           <RxPlus className="mr-2 size-4" />

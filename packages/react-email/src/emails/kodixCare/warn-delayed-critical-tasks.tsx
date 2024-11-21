@@ -2,23 +2,25 @@ import { Body, Head, Html, Preview, Tailwind } from "@react-email/components";
 
 import type { IsomorficT } from "@kdx/locales";
 
+import type { TMock } from "../../utils";
+import { tMock } from "../../utils";
+
 export default function WarnDelayedCriticalTasks({
-  task,
-  t,
+  taskTitle = "Comer macarrão",
+  // taskDate = new Date(),
+  t = tMock,
 }: {
-  t: IsomorficT;
-  task: {
-    title: string | null;
-    date: Date;
-  };
+  t: IsomorficT | TMock;
+  taskTitle: string | null;
+  // taskDate: Date;
 }) {
   return (
     <Html>
       <Head />
-      <Preview>{`A tarefa ${task.title} está atrasada`}</Preview>
+      <Preview>{`A tarefa ${taskTitle} está atrasada`}</Preview>
       <Tailwind>
         <Body className="mx-auto my-auto bg-white font-sans">
-          {task.title ?? t("api.emails.no title")}
+          {taskTitle ?? t("api.emails.no title")}
         </Body>
       </Tailwind>
     </Html>

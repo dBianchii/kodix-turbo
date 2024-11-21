@@ -19,6 +19,7 @@ interface DateTimePickerProps {
   side?: PopoverContentProps["side"];
 }
 
+const today12h30 = new Date(new Date().setHours(12, 30, 0, 0));
 export function DateTimePicker24h({
   date,
   setDate,
@@ -33,27 +34,23 @@ export function DateTimePicker24h({
   const hours = Array.from({ length: 24 }, (_, i) => i);
 
   const handleDateSelect = (selectedDate: Date | undefined) => {
-    if (selectedDate) {
-      const newDate = new Date(selectedDate); //TODO:
-      if (date) {
-        newDate.setHours(date.getHours());
-        newDate.setMinutes(date.getMinutes());
-      }
-      setDate(newDate);
-    }
+    if (!selectedDate) return;
+
+    const newDate = new Date(selectedDate);
+    newDate.setHours((date ?? today12h30).getHours());
+    newDate.setMinutes((date ?? today12h30).getMinutes());
+    setDate(newDate);
   };
 
   const handleTimeChange = (type: "hour" | "minute", value: string) => {
-    if (date) {
-      const newDate = new Date(date);
-      if (type === "hour") {
-        newDate.setHours(parseInt(value));
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      } else if (type === "minute") {
-        newDate.setMinutes(parseInt(value));
-      }
-      setDate(newDate);
+    const newDate = new Date(date ?? today12h30);
+    if (type === "hour") {
+      newDate.setHours(parseInt(value));
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    } else if (type === "minute") {
+      newDate.setMinutes(parseInt(value));
     }
+    setDate(newDate);
   };
 
   return (
@@ -100,7 +97,7 @@ export function DateTimePicker24h({
           <div className="flex flex-col divide-y sm:h-[300px] sm:flex-row sm:divide-x sm:divide-y-0">
             <ScrollArea className="w-64 sm:w-auto">
               <div className="flex p-2 sm:flex-col">
-                {hours.reverse().map((hour) => (
+                {hours.map((hour) => (
                   <Button
                     key={hour}
                     // disabled={disabledDate?.(new Date(date ?? 0))} //!!CHECK THIS
@@ -110,6 +107,14 @@ export function DateTimePicker24h({
                     }
                     className="aspect-square shrink-0 sm:w-full"
                     onClick={() => handleTimeChange("hour", hour.toString())}
+                    ref={(el) => {
+                      if (el && date && date.getHours() === hour) {
+                        el.scrollIntoView({
+                          behavior: "smooth",
+                          block: "center",
+                        });
+                      }
+                    }}
                   >
                     {hour}
                   </Button>
@@ -119,7 +124,7 @@ export function DateTimePicker24h({
             </ScrollArea>
             <ScrollArea className="w-64 sm:w-auto">
               <div className="flex p-2 sm:flex-col">
-                {Array.from({ length: 12 }, (_, i) => i * 5).map((minute) => (
+                {Array.from({ length: 60 }, (_, i) => i).map((minute) => (
                   <Button
                     key={minute}
                     size="icon"
@@ -130,6 +135,14 @@ export function DateTimePicker24h({
                     onClick={() =>
                       handleTimeChange("minute", minute.toString())
                     }
+                    ref={(el) => {
+                      if (el && date && date.getMinutes() === minute) {
+                        el.scrollIntoView({
+                          behavior: "smooth",
+                          block: "center",
+                        });
+                      }
+                    }}
                   >
                     {minute.toString().padStart(2, "0")}
                   </Button>

@@ -1,5 +1,5 @@
 /**
- * This error map is a modified version of the on used by zod-i18n
+ * This error map is a modified version of the one used by zod-i18n
  * Checkout the original at: https://github.com/aiji42/zod-i18n
  */
 
