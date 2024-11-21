@@ -67,7 +67,7 @@ export function CareTasksLists() {
 
   const careTasksQuery =
     api.app.kodixCare.careTask.getCareTasks.useQuery(input);
-  const currentShift = api.app.kodixCare.getCurrentShift.useQuery();
+  // const currentShift = api.app.kodixCare.getCurrentShift.useQuery();
   const syncCareTasksFromCalendarMutation =
     api.app.kodixCare.careTask.syncCareTasksFromCalendar.useMutation({
       onSettled: () => {
@@ -158,7 +158,7 @@ export function CareTasksLists() {
     ) as CareTask;
   }, [currentlyEditing, careTasksQuery.data]);
 
-  const canSyncShift = !currentShift.data?.checkOut;
+  // const canSyncShift = true;
 
   return (
     <>
@@ -219,29 +219,27 @@ export function CareTasksLists() {
               px={defaultPadding}
               py={"$2"}
             >
-              {canSyncShift ? (
-                <TouchableOpacity
-                  onPress={() => {
-                    void Haptics.selectionAsync();
-                    Alert.alert(
-                      "Sincronizar tarefas",
-                      "Substituir os dados do seu turno pelo calendário de planejamento?",
-                      [
-                        {
-                          text: "Cancelar",
-                        },
-                        {
-                          text: "Ok",
-                          onPress: () =>
-                            syncCareTasksFromCalendarMutation.mutate(),
-                        },
-                      ],
-                    );
-                  }}
-                >
-                  <ArrowRightLeft size={"$2"} />
-                </TouchableOpacity>
-              ) : null}
+              <TouchableOpacity
+                onPress={() => {
+                  void Haptics.selectionAsync();
+                  Alert.alert(
+                    "Sincronizar tarefas",
+                    "Substituir os dados do seu turno pelo calendário de planejamento?",
+                    [
+                      {
+                        text: "Cancelar",
+                      },
+                      {
+                        text: "Ok",
+                        onPress: () =>
+                          syncCareTasksFromCalendarMutation.mutate(),
+                      },
+                    ],
+                  );
+                }}
+              >
+                <ArrowRightLeft size={"$2"} />
+              </TouchableOpacity>
             </XStack>
             <View f={1} w="100%">
               <FlatList

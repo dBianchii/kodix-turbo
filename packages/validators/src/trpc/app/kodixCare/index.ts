@@ -1,8 +1,9 @@
 import { z } from "zod";
 
 import type { IsomorficT } from "@kdx/locales";
+import dayjs from "@kdx/dayjs";
 
-import { adjustDateToMinute } from "../../..";
+import { adjustDateToMinute, ZNanoId } from "../../..";
 import { ZSignInByPasswordInputSchema as default_ZSignInByPasswordInputSchema } from "../../user";
 
 export const ZDoCheckoutForShiftInputSchema = (t: IsomorficT) =>
@@ -30,4 +31,51 @@ export const ZSignInByPasswordInputSchema =
   default_ZSignInByPasswordInputSchema;
 export type TSignInByPasswordInputSchema = z.infer<
   typeof ZSignInByPasswordInputSchema
+>;
+
+export const ZCreateCareShiftInputSchema = (t: IsomorficT) =>
+  z
+    .object({
+      careGiverId: ZNanoId,
+      startAt: z.date().transform(adjustDateToMinute),
+      endAt: z.date().transform(adjustDateToMinute),
+    })
+    .refine((data) => !dayjs(data.startAt).isAfter(data.endAt), {
+      message: t("validators.Start time cannot be after end time"),
+      path: ["startAt"],
+    });
+export type TCreateCareShiftInputSchema = z.infer<
+  ReturnType<typeof ZCreateCareShiftInputSchema>
+>;
+
+export const ZFindOverlappingShiftsInputSchema = z.object({
+  start: z.date().transform(adjustDateToMinute),
+  end: z.date().transform(adjustDateToMinute),
+});
+export type TFindOverlappingShiftsInputSchema = z.infer<
+  typeof ZFindOverlappingShiftsInputSchema
+>;
+
+export const ZEditCareShiftInputSchema = (t: IsomorficT) =>
+  z
+    .object({
+      id: ZNanoId,
+      careGiverId: ZNanoId.optional(),
+      startAt: z.date().transform(adjustDateToMinute).optional(),
+      endAt: z.date().transform(adjustDateToMinute).optional(),
+    })
+    .refine(
+      (data) => {
+        if (data.startAt && data.endAt)
+          return !dayjs(data.startAt).isAfter(data.endAt);
+
+        return true;
+      },
+      {
+        message: t("validators.Start time cannot be after end time"),
+        path: ["startAt"],
+      },
+    );
+export type TEditCareShiftInputSchema = z.infer<
+  ReturnType<typeof ZEditCareShiftInputSchema>
 >;

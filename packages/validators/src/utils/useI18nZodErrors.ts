@@ -4,12 +4,8 @@ import { z } from "zod";
 
 // import { useTranslations as expo_useTranslations } from "use-intl";
 
-import {
-  customErrorsNs,
-  formNs,
-  makeZodI18nMap,
-  zodNs,
-} from "./make-zod-error-map";
+import { makeZodI18nMap } from "./make-zod-error-map";
+import { customErrorsNs, formNs, zodNs } from "./zod-namespaces";
 
 export const useI18nZodErrors = () => {
   const t = useTranslations(zodNs);

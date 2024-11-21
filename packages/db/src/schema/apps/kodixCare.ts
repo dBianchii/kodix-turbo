@@ -27,10 +27,12 @@ export const careShifts = mysqlTable(
       .notNull()
       .references(() => users.id),
     teamId: teamIdReferenceCascadeDelete,
-    checkIn: timestamp("checkIn").defaultNow().notNull(),
+    startAt: timestamp("startAt").notNull(),
+    endAt: timestamp("endAt").notNull(),
+    checkIn: timestamp("checkIn"),
     checkOut: timestamp("checkOut"),
-    shiftEndedAt: timestamp("shiftEndedAt"),
     notes: varchar("notes", { length: DEFAULTLENGTH }),
+    finished: boolean("finished").default(false).notNull(),
   },
   (table) => {
     return {

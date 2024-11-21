@@ -35,12 +35,10 @@ import {
 } from "@kdx/ui/form";
 import { Input } from "@kdx/ui/input";
 import { toast } from "@kdx/ui/toast";
-import { useI18nZodErrors } from "@kdx/validators/useI18nZodErrors";
 
 import { api } from "~/trpc/react";
 
 export function DeleteAccountCard() {
-  useI18nZodErrors();
   const t = useTranslations();
 
   const confirmationNeeded = t("Delete my account");
