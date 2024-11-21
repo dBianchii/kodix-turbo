@@ -1,11 +1,5 @@
 import { relations } from "drizzle-orm";
-import {
-  index,
-  mysqlTable,
-  timestamp,
-  unique,
-  varchar,
-} from "drizzle-orm/mysql-core";
+import { index, mysqlTable, unique } from "drizzle-orm/mysql-core";
 import { createInsertSchema } from "drizzle-zod";
 
 import { NANOID_SIZE } from "../nanoid";
@@ -27,15 +21,16 @@ import {
 
 export const teams = mysqlTable(
   "team",
-  {
-    id: nanoidPrimaryKey,
-    name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
-    createdAt: timestamp("createdAt").defaultNow().notNull(),
-    updatedAt: timestamp("updatedAt").onUpdateNow(),
-    ownerId: varchar("ownerId", { length: NANOID_SIZE })
+  (t) => ({
+    id: nanoidPrimaryKey(t),
+    name: t.varchar({ length: DEFAULTLENGTH }).notNull(),
+    createdAt: t.timestamp().defaultNow().notNull(),
+    updatedAt: t.timestamp().onUpdateNow(),
+    ownerId: t
+      .varchar({ length: NANOID_SIZE })
       .notNull()
       .references(() => users.id, { onUpdate: "cascade" }),
-  },
+  }),
   (table) => {
     return {
       ownerIdIdx: index("ownerId_idx").on(table.ownerId),
@@ -61,12 +56,13 @@ export const teamSchema = createInsertSchema(teams);
 
 export const usersToTeams = mysqlTable(
   "_userToTeam",
-  {
-    userId: varchar("userId", { length: NANOID_SIZE })
+  (t) => ({
+    userId: t
+      .varchar({ length: NANOID_SIZE })
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    teamId: teamIdReferenceCascadeDelete,
-  },
+    teamId: teamIdReferenceCascadeDelete(t),
+  }),
   (table) => {
     return {
       userIdIdx: index("userId_idx").on(table.userId),
@@ -91,16 +87,19 @@ export const usersToTeamsRelations = relations(usersToTeams, ({ one }) => ({
 
 export const teamAppRoles = mysqlTable(
   "teamAppRole",
-  {
-    id: nanoidPrimaryKey,
-    appId: varchar("appId", { length: NANOID_SIZE })
+  (t) => ({
+    id: nanoidPrimaryKey(t),
+    appId: t
+      .varchar({ length: NANOID_SIZE })
       .notNull()
       .references(() => apps.id, { onDelete: "cascade" }),
-    teamId: teamIdReferenceCascadeDelete,
-    appRoleDefaultId: varchar("appRoleDefaultId", {
-      length: NANOID_SIZE, //? References a hardcoded default role id and not anything in db. See appRoleDefaults_tree.ts
-    }).notNull(),
-  },
+    teamId: teamIdReferenceCascadeDelete(t),
+    appRoleDefaultId: t
+      .varchar({
+        length: NANOID_SIZE, //? References a hardcoded default role id and not anything in db. See appRoleDefaults_tree.ts
+      })
+      .notNull(),
+  }),
   (table) => {
     return {
       appIdIdx: index("appId_idx").on(table.appId),
@@ -126,14 +125,16 @@ export const teamAppRolesRelations = relations(
 
 export const teamAppRolesToUsers = mysqlTable(
   "_teamAppRoleToUser",
-  {
-    teamAppRoleId: varchar("teamAppRoleId", { length: NANOID_SIZE })
+  (t) => ({
+    teamAppRoleId: t
+      .varchar({ length: NANOID_SIZE })
       .notNull()
       .references(() => teamAppRoles.id, { onDelete: "cascade" }),
-    userId: varchar("userId", { length: NANOID_SIZE })
+    userId: t
+      .varchar({ length: NANOID_SIZE })
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-  },
+  }),
   (table) => {
     return {
       teamAppRoleIdIdx: index("teamAppRoleId_idx").on(table.teamAppRoleId),
@@ -163,16 +164,17 @@ export const teamAppRoleToUserSchema = createInsertSchema(teamAppRolesToUsers);
 
 export const invitations = mysqlTable(
   "invitation",
-  {
-    id: nanoidPrimaryKey,
-    teamId: teamIdReferenceCascadeDelete,
-    email: varchar("email", { length: DEFAULTLENGTH }).notNull(),
-    createdAt: timestamp("createdAt").defaultNow().notNull(),
-    updatedAt: timestamp("updatedAt").onUpdateNow(),
-    invitedById: varchar("invitedById", { length: NANOID_SIZE })
+  (t) => ({
+    id: nanoidPrimaryKey(t),
+    teamId: teamIdReferenceCascadeDelete(t),
+    email: t.varchar({ length: DEFAULTLENGTH }).notNull(),
+    createdAt: t.timestamp().defaultNow().notNull(),
+    updatedAt: t.timestamp().onUpdateNow(),
+    invitedById: t
+      .varchar({ length: NANOID_SIZE })
       .notNull()
       .references(() => users.id),
-  },
+  }),
   (table) => {
     return {
       invitedByIdIdx: index("invitedById_idx").on(table.invitedById),
