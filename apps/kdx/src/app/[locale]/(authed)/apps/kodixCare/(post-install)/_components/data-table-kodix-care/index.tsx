@@ -536,7 +536,6 @@ function SyncTasksFromCalendarCredenzaButton() {
       onError: trpcErrorToastDefault,
       onSettled: () => {
         void utils.app.kodixCare.careTask.getCareTasks.invalidate();
-        void utils.app.kodixCare.getCurrentShift.invalidate();
       },
     });
   const t = useTranslations();
@@ -609,7 +608,6 @@ function AddCareTaskCredenzaButton() {
     onError: trpcErrorToastDefault,
     onSettled: () => {
       void utils.app.kodixCare.careTask.getCareTasks.invalidate();
-      void utils.app.kodixCare.getCurrentShift.invalidate();
     },
     onSuccess: () => {
       setOpen(false);
