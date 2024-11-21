@@ -1,39 +1,28 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 
-import { PKodixCare_CanToggleShiftId } from "@kdx/shared";
 import {
   ZCheckEmailForRegisterInputSchema,
-  ZDoCheckoutForShiftInputSchema,
+  ZCreateCareShiftInputSchema,
+  ZEditCareShiftInputSchema,
+  ZFindOverlappingShiftsInputSchema,
   ZSignInByPasswordInputSchema,
 } from "@kdx/validators/trpc/app/kodixCare";
 
 import { T } from "../../../../utils/locales";
-import {
-  appPermissionMiddleware,
-  kodixCareInstalledMiddleware,
-} from "../../../middlewares";
+import { kodixCareInstalledMiddleware } from "../../../middlewares";
 import { protectedProcedure, publicProcedure } from "../../../procedures";
 import { careTaskRouter } from "./careTask/_router";
 import { checkEmailForRegisterHandler } from "./checkEmailForRegister.handler";
-import { doCheckoutForShiftHandler } from "./doCheckoutForShift.handler";
+import { createCareShiftHandler } from "./createCareShift.handler";
+import { editCareShiftHandler } from "./editCareShift.handler";
+import { findOverlappingShiftsHandler } from "./findOverlappingShifts.handler";
+import { getAllCaregiversHandler } from "./getAllCaregivers.handler";
 import { getAllCareShiftsHandler } from "./getAllCareShifts.handler";
-import { getCurrentShiftHandler } from "./getCurrentShift.handler";
 import { signInByPasswordHandler } from "./signInByPassword.handler";
-import { toggleShiftHandler } from "./toggleShift.handler";
 
 export const kodixCareRouter = {
   careTask: careTaskRouter,
-  toggleShift: protectedProcedure
-    .use(kodixCareInstalledMiddleware)
-    .use(appPermissionMiddleware(PKodixCare_CanToggleShiftId))
-    .mutation(toggleShiftHandler),
-  doCheckoutForShift: protectedProcedure
-    .input(T(ZDoCheckoutForShiftInputSchema))
-    .use(kodixCareInstalledMiddleware)
-    .mutation(doCheckoutForShiftHandler),
-  getCurrentShift: protectedProcedure
-    .use(kodixCareInstalledMiddleware)
-    .query(getCurrentShiftHandler),
+
   checkEmailForRegister: publicProcedure
     .input(ZCheckEmailForRegisterInputSchema)
     .query(checkEmailForRegisterHandler),
@@ -41,4 +30,17 @@ export const kodixCareRouter = {
     .input(ZSignInByPasswordInputSchema)
     .mutation(signInByPasswordHandler),
   getAllCareShifts: protectedProcedure.query(getAllCareShiftsHandler),
+  createCareShift: protectedProcedure
+    .use(kodixCareInstalledMiddleware)
+    .input(T(ZCreateCareShiftInputSchema))
+    .mutation(createCareShiftHandler),
+  getAllCaregivers: protectedProcedure
+    .use(kodixCareInstalledMiddleware)
+    .query(getAllCaregiversHandler),
+  findOverlappingShifts: protectedProcedure
+    .input(ZFindOverlappingShiftsInputSchema)
+    .query(findOverlappingShiftsHandler),
+  editCareShift: protectedProcedure
+    .input(T(ZEditCareShiftInputSchema))
+    .mutation(editCareShiftHandler),
 } satisfies TRPCRouterRecord;

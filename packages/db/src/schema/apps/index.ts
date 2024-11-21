@@ -3,6 +3,7 @@ import {
   boolean,
   index,
   json,
+  mysqlEnum,
   mysqlTable,
   timestamp,
   unique,
@@ -233,3 +234,44 @@ export const userAppTeamConfigsRelations = relations(
   }),
 );
 export const userAppTeamConfigSchema = createInsertSchema(userAppTeamConfigs);
+
+export const appActivityLogs = mysqlTable(
+  "appActivityLog",
+  {
+    id: nanoidPrimaryKey,
+    teamId: teamIdReferenceCascadeDelete,
+    appId: varchar("appId", { length: NANOID_SIZE })
+      .notNull()
+      .references(() => apps.id, { onDelete: "cascade" }),
+    userId: varchar("userId", { length: NANOID_SIZE })
+      .notNull()
+      .references(() => users.id),
+    tableName: mysqlEnum("table", ["careShift", "careTask"]).notNull(),
+    rowId: varchar("rowId", { length: NANOID_SIZE }).notNull(),
+    loggedAt: timestamp("loggedAt").defaultNow().notNull(),
+    body: json("body").notNull(),
+    type: mysqlEnum("type", ["create", "update", "delete"]).notNull(),
+  },
+  (table) => {
+    return {
+      teamIdIdx: index("teamId_idx").on(table.teamId),
+      appIdIdx: index("appId_idx").on(table.appId),
+      userIdIdx: index("userId_idx").on(table.userId),
+      tableNameIdx: index("tableName_idx").on(table.tableName),
+      rowIdIdx: index("rowId_idx").on(table.rowId),
+    };
+  },
+);
+export const appActivityLogsRelations = relations(
+  appActivityLogs,
+  ({ one }) => ({
+    App: one(apps, {
+      fields: [appActivityLogs.appId],
+      references: [apps.id],
+    }),
+    Team: one(teams, {
+      fields: [appActivityLogs.teamId],
+      references: [teams.id],
+    }),
+  }),
+);

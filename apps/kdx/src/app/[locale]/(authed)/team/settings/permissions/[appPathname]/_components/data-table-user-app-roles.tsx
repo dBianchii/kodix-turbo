@@ -65,6 +65,7 @@ export function DataTableUserAppRoles({
                   teamAppRoleId: x.id,
                   userId: user.id,
                   TeamAppRole: {
+                    appRoleDefaultId: x.appRoleDefaultId,
                     id: x.id,
                   },
                 })),

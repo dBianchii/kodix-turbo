@@ -42,9 +42,9 @@
           "not_inclusive": "{path, select, missingTranslation {Array} other {{path}}} deve conter mais que {minimum} elemento(s)"
         },
         "string": {
-          "exact": "{path, select, missingTranslation {String} other {{path}}} deve conter exatamente {minimum} character(es)",
-          "inclusive": "{path, select, missingTranslation {String} other {{path}}} deve conter pelo menos {minimum} character(es)",
-          "not_inclusive": "{path, select, missingTranslation {String} other {{path}}} deve conter mais que {minimum} character(es)"
+          "exact": "{path, select, missingTranslation {String} other {{path}}} deve conter exatamente {minimum} caracter(es)",
+          "inclusive": "{path, select, missingTranslation {String} other {{path}}} deve conter pelo menos {minimum} caracter(es)",
+          "not_inclusive": "{path, select, missingTranslation {String} other {{path}}} deve conter mais que {minimum} caracter(es)"
         },
         "number": {
           "exact": "{path, select, missingTranslation {Number} other {{path}}} deve ser exatamenter {minimum}",

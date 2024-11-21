@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { useAction } from "next-safe-action/hooks";
 import { LuAlertCircle, LuLoader2 } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
@@ -20,8 +21,7 @@ import { Switch } from "@kdx/ui/switch";
 import { toast } from "@kdx/ui/toast";
 import { ZSaveUserAppTeamConfigInputSchema } from "@kdx/validators/trpc/app";
 
-import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
-import { api } from "~/trpc/react";
+import { saveUserAppTeamConfig } from "./actions";
 
 export function KodixCareUserSettingsForm({
   config,
@@ -37,58 +37,56 @@ export function KodixCareUserSettingsForm({
       config,
     },
   });
-  const mutation = api.app.saveUserAppTeamConfig.useMutation({
+
+  const { execute, isExecuting } = useAction(saveUserAppTeamConfig, {
     onSuccess: () => {
       toast.success(t("Settings saved"));
     },
-    onError: trpcErrorToastDefault,
   });
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit((values) => mutation.mutate(values))}
+        onSubmit={form.handleSubmit((values) => {
+          execute(values);
+        })}
         className="w-full space-y-6"
       >
-        <div className="space-y-4">
-          <div className="flex items-center">
-            <FormField
-              control={form.control}
-              name="config.sendNotificationsForDelayedTasks"
-              render={({ field }) => (
-                <FormItem className="flex max-w-md flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                  <div className="space-y-2">
-                    <FormLabel className="flex items-center gap-2">
-                      <LuAlertCircle
-                        className={cn(
-                          "size-5 text-muted-foreground transition-colors",
-                          {
-                            "text-orange-500": field.value,
-                          },
-                        )}
-                      />
-                      {t("apps.kodixCare.Critical tasks")}
-                    </FormLabel>
-                    <FormDescription>
-                      {t(
-                        "apps.kodixCare.Set this on if you want to receive notifications for delayed tasks",
-                      )}
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      className="mx-4"
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-          </div>
-        </div>
-        <Button disabled={mutation.isPending}>
-          {mutation.isPending ? (
+        <FormField
+          control={form.control}
+          name="config.sendNotificationsForDelayedTasks"
+          render={({ field }) => (
+            <FormItem className="flex max-w-md flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+              <div className="space-y-2">
+                <FormLabel className="flex items-center gap-2">
+                  <LuAlertCircle
+                    className={cn(
+                      "size-5 text-muted-foreground transition-colors",
+                      {
+                        "text-orange-500": field.value === true,
+                      },
+                    )}
+                  />
+                  {t("apps.kodixCare.Critical tasks")}
+                </FormLabel>
+                <FormDescription>
+                  {t(
+                    "apps.kodixCare.Set this on if you want to receive notifications for delayed tasks",
+                  )}
+                </FormDescription>
+              </div>
+              <FormControl>
+                <Switch
+                  className="mx-4"
+                  onCheckedChange={field.onChange}
+                  checked={field.value}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <Button disabled={isExecuting}>
+          {isExecuting ? (
             <LuLoader2 className="size-4 animate-spin" />
           ) : (
             t("Save")

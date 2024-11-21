@@ -2,7 +2,6 @@ import { TRPCError } from "@trpc/server";
 
 import type { TUnlockMoreTasksInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
 import { db } from "@kdx/db/client";
-import { kodixCareRepository } from "@kdx/db/repositories";
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
@@ -46,18 +45,8 @@ export const unlockMoreTasksHandler = async ({
       ),
     });
 
-  const careShift = await kodixCareRepository.getCurrentCareShiftByTeamId(
-    ctx.auth.user.activeTeamId,
-  );
-  if (!careShift)
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: ctx.t("api.No active shift"),
-    });
-
   await cloneCalendarTasksToCareTasks({
     tx: db,
-    careShiftId: careShift.id,
     start: clonedCareTasksUntil,
     end: input.selectedTimestamp,
     ctx,

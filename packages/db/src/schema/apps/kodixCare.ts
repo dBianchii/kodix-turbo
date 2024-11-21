@@ -27,10 +27,12 @@ export const careShifts = mysqlTable(
       .notNull()
       .references(() => users.id),
     teamId: teamIdReferenceCascadeDelete,
-    checkIn: timestamp("checkIn").defaultNow().notNull(),
+    startAt: timestamp("startAt").notNull(),
+    endAt: timestamp("endAt").notNull(),
+    checkIn: timestamp("checkIn"),
     checkOut: timestamp("checkOut"),
-    shiftEndedAt: timestamp("shiftEndedAt"),
     notes: varchar("notes", { length: DEFAULTLENGTH }),
+    finished: boolean("finished").default(false).notNull(),
   },
   (table) => {
     return {
@@ -66,9 +68,6 @@ export const careTasks = mysqlTable(
       length: NANOID_SIZE,
     }),
     //.references(() => eventMasters.id), //TODO: should we have foreignKey????????????????????????????????????????????????????????????????
-    careShiftId: varchar("careShiftId", { length: NANOID_SIZE }).references(
-      () => careShifts.id,
-    ),
     title: varchar("title", { length: DEFAULTLENGTH }),
     description: varchar("description", { length: DEFAULTLENGTH }),
     details: varchar("details", { length: DEFAULTLENGTH }),
@@ -83,7 +82,6 @@ export const careTasks = mysqlTable(
     return {
       doneByUserIdIdx: index("doneByUserId_idx").on(table.doneByUserId),
       eventMasterIdIdx: index("eventMasterId_Idx").on(table.eventMasterId),
-      careShiftIdIdx: index("careShiftId_idx").on(table.careShiftId),
       teamIdIdx: index("teamId_idx").on(table.teamId),
     };
   },
@@ -96,10 +94,6 @@ export const careTasksRelations = relations(careTasks, ({ one }) => ({
   Team: one(teams, {
     fields: [careTasks.teamId],
     references: [teams.id],
-  }),
-  CareShift: one(careShifts, {
-    fields: [careTasks.careShiftId],
-    references: [careShifts.id],
   }),
   EventMaster: one(eventMasters, {
     fields: [careTasks.eventMasterId],

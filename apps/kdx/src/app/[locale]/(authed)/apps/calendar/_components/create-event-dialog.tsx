@@ -33,7 +33,6 @@ import {
 import { Input } from "@kdx/ui/input";
 import { Textarea } from "@kdx/ui/textarea";
 import { ZCreateInputSchema } from "@kdx/validators/trpc/app/calendar";
-import { useI18nZodErrors } from "@kdx/validators/useI18nZodErrors";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
@@ -81,8 +80,6 @@ export function CreateEventDialogButton() {
   });
 
   const t = useTranslations();
-
-  useI18nZodErrors();
 
   return (
     <Credenza open={open} onOpenChange={setOpen}>

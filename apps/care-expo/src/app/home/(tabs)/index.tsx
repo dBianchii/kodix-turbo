@@ -26,13 +26,13 @@ export default function Tab() {
   const myRolesQuery = api.team.appRole.getMyRoles.useQuery({
     appId: kodixCareAppId,
   });
-  const getCurrentShiftQuery =
-    api.app.kodixCare.getCurrentShift.useQuery(undefined);
+  // const getCurrentShiftQuery =
+  //   api.app.kodixCare.getCurrentShift.useQuery(undefined);
 
   if (
     myRolesQuery.isLoading ||
-    !myRolesQuery.data ||
-    getCurrentShiftQuery.isLoading
+    !myRolesQuery.data
+    // getCurrentShiftQuery.isLoading
   )
     return (
       <RootSafeAreaView f={1} jc={"center"} ai={"center"}>

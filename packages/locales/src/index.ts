@@ -1,4 +1,4 @@
-import type { useTranslations } from "next-intl";
+import type { NamespaceKeys, NestedKeyOf, useTranslations } from "next-intl";
 import type { getTranslations } from "next-intl/server";
 import type { Formats } from "use-intl";
 
@@ -46,8 +46,12 @@ export const formats = {
   },
 } satisfies Formats;
 
-//TODO: figure out how to make typed namespaces work. (Both with i18n-ally and next-intl/use-intl)
-type TranslationKeys = never;
+type AllowedMessageKeys = NamespaceKeys<
+  IntlMessages,
+  NestedKeyOf<IntlMessages>
+>;
+
+type TranslationKeys = AllowedMessageKeys;
 export type ServerSideT<S extends TranslationKeys = never> = Awaited<
   ReturnType<typeof getTranslations<S>>
 >;

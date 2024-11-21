@@ -26,7 +26,8 @@ export const action = createSafeActionClient({
   },
 });
 
-export const authActionClient = action.use(async ({ next }) => {
-  const session = await auth();
-  return next({ ctx: { session } });
+export const protectedAction = action.use(async ({ next }) => {
+  const authResponse = await auth();
+  if (!authResponse.session) throw new Error("Not authenticated");
+  return next({ ctx: { auth: authResponse } });
 });

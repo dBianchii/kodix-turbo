@@ -13,12 +13,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@kdx/ui/card";
-import { useI18nZodErrors } from "@kdx/validators/useI18nZodErrors";
 
 import { DeleteTeamConfirmationDialog } from "./delete-team-confirmation-dialog";
 
 export function DeleteTeamCardClient({ user }: { user: User }) {
-  useI18nZodErrors();
   const t = useTranslations();
   const [open, setOpen] = useState(false);
 

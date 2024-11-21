@@ -52,7 +52,10 @@
       "Critical tasks": "Critical tasks",
       "Set this on if you want to receive notifications for delayed tasks": "Set this on if you want to receive notifications for delayed tasks (one hour delayed)",
       "Additional notes": "Additional notes",
-      "Previous shift is in progress are you sure you would like to start a new one": "Previous shift is in progress. \nAre you sure you would like to start a new one?"
+      "Previous shift is in progress are you sure you would like to start a new one": "Previous shift is in progress. \nAre you sure you would like to start a new one?",
+      "Create shift": "Create shift",
+      "Edit shift": "Edit shift",
+      "Edit shift for": "Edit shift for"
     },
     "todo": {
       "appDescription": "Todo is a note taking app"
@@ -472,5 +475,11 @@
   "Check in": "Check in",
   "Check out": "Check-out",
   "Caregiver": "Caregiver",
-  "Shift ended at": "Shift ended at"
+  "Shift end": "Shift end",
+  "Shift start": "Shift start",
+  "Select a caregiver": "Select a caregiver",
+  "It seems that there are some overlapping shifts": "It seems that there are some overlapping shifts",
+  "Are you sure you want to create a shift anyways": "Are you sure you want to create a shift anyways?",
+  "Checking": "Checking",
+  "Updated": "Updated"
 }

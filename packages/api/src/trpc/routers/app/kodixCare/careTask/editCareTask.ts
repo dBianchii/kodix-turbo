@@ -2,10 +2,9 @@ import { TRPCError } from "@trpc/server";
 
 import type { careTasks } from "@kdx/db/schema";
 import type { TEditCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
-import dayjs from "@kdx/dayjs";
 import { and, eq } from "@kdx/db";
 import { db } from "@kdx/db/client";
-import { careTaskRepository, kodixCareRepository } from "@kdx/db/repositories";
+import { careTaskRepository } from "@kdx/db/repositories";
 import { teamAppRoles, teamAppRolesToUsers } from "@kdx/db/schema";
 import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
 
@@ -20,23 +19,6 @@ export const editCareTaskHandler = async ({
   ctx,
   input,
 }: EditCareTaskOptions) => {
-  const currentShift = await kodixCareRepository.getCurrentCareShiftByTeamId(
-    ctx.auth.user.activeTeamId,
-  );
-  if (!currentShift)
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: ctx.t("api.No active shift"),
-    });
-
-  if (currentShift.shiftEndedAt)
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: ctx.t(
-        "api.You cannot edit a task while the current shift is closed",
-      ),
-    });
-
   const careTask = await careTaskRepository.findCareTaskById({
     id: input.id,
     teamId: ctx.auth.user.activeTeamId,
@@ -47,26 +29,12 @@ export const editCareTaskHandler = async ({
       message: ctx.t("api.Care task not found"),
     });
 
-  if (careTask.CareShift?.shiftEndedAt) {
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: ctx.t("api.You cannot edit a task from a closed shift"),
-    });
-  }
-
   const set: Partial<typeof careTasks.$inferInsert> = {
     details: input.details,
   };
 
   const isEditingDetails = input.details !== undefined;
   if (isEditingDetails) {
-    if (careTask.CareShift?.shiftEndedAt) {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: ctx.t("api.You cannot delete a task from a closed shift"),
-      });
-    }
-
     const roles = await db
       .select({
         appRoleDefaultId: teamAppRoles.appRoleDefaultId,
@@ -96,33 +64,7 @@ export const editCareTaskHandler = async ({
 
   const isEditingDoneAt = input.doneAt !== undefined;
   if (isEditingDoneAt) {
-    if (currentShift.Caregiver.id !== ctx.auth.user.id)
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: ctx.t(
-          "api.You cannot edit a task from another caregivers shift",
-        ),
-      });
-
-    if (careTask.careShiftId) {
-      if (careTask.careShiftId !== currentShift.id)
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: ctx.t("api.You cannot edit a task from another shift"),
-        });
-    }
-
-    if (input.doneAt)
-      if (dayjs(input.doneAt).isBefore(currentShift.checkIn))
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: ctx.t(
-            "api.You cannot mark a task as done before the shift started",
-          ),
-        });
-
     set.doneAt = input.doneAt;
-    set.careShiftId = input.doneAt === null ? null : currentShift.id;
     set.doneByUserId = input.doneAt === null ? null : ctx.auth.user.id;
   }
 

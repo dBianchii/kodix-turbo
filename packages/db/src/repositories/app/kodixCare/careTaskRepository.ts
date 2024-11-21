@@ -76,16 +76,9 @@ export async function findCareTaskById({
     where: (careTask, { eq }) =>
       and(eq(careTask.id, id), eq(careTask.teamId, teamId)),
     columns: {
-      careShiftId: true,
       createdBy: true,
       createdFromCalendar: true,
-    },
-    with: {
-      CareShift: {
-        columns: {
-          shiftEndedAt: true,
-        },
-      },
+      date: true,
     },
   });
 }
@@ -147,25 +140,4 @@ export async function createManyCareTasks(
   data: z.infer<typeof zCareTaskCreateMany>,
 ) {
   await db.insert(careTasks).values(data);
-}
-
-export async function reassignCareTasksFromDateToShift(
-  db: Drizzle,
-  {
-    previousCareShiftId,
-    newCareShiftId,
-    date,
-  }: { previousCareShiftId: string; newCareShiftId: string; date: Date },
-) {
-  await db
-    .update(careTasks)
-    .set({
-      careShiftId: newCareShiftId,
-    })
-    .where(
-      and(
-        gte(careTasks.date, date),
-        eq(careTasks.careShiftId, previousCareShiftId),
-      ),
-    );
 }
