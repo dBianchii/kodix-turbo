@@ -1,11 +1,5 @@
 import { relations } from "drizzle-orm";
-import {
-  boolean,
-  index,
-  mysqlTable,
-  timestamp,
-  varchar,
-} from "drizzle-orm/mysql-core";
+import { index, mysqlTable } from "drizzle-orm/mysql-core";
 import { createInsertSchema } from "drizzle-zod";
 
 import { NANOID_SIZE } from "../../nanoid";
@@ -21,19 +15,20 @@ import { eventMasters } from "./calendar";
 
 export const careShifts = mysqlTable(
   "careShift",
-  {
-    id: nanoidPrimaryKey,
-    caregiverId: varchar("caregiverId", { length: NANOID_SIZE })
+  (t) => ({
+    id: nanoidPrimaryKey(t),
+    caregiverId: t
+      .varchar({ length: NANOID_SIZE })
       .notNull()
       .references(() => users.id),
-    teamId: teamIdReferenceCascadeDelete,
-    startAt: timestamp("startAt").notNull(),
-    endAt: timestamp("endAt").notNull(),
-    checkIn: timestamp("checkIn"),
-    checkOut: timestamp("checkOut"),
-    notes: varchar("notes", { length: DEFAULTLENGTH }),
-    finished: boolean("finished").default(false).notNull(),
-  },
+    teamId: teamIdReferenceCascadeDelete(t),
+    startAt: t.timestamp().notNull(),
+    endAt: t.timestamp().notNull(),
+    checkIn: t.timestamp(),
+    checkOut: t.timestamp(),
+    notes: t.varchar({ length: DEFAULTLENGTH }),
+    finished: t.boolean().default(false).notNull(),
+  }),
   (table) => {
     return {
       caregiverIdIdx: index("caregiverId_idx").on(table.caregiverId),
@@ -55,29 +50,30 @@ export const careShiftSchema = createInsertSchema(careShifts);
 
 export const careTasks = mysqlTable(
   "careTask",
-  {
-    id: nanoidPrimaryKey,
-    date: timestamp("date").notNull(),
-    doneAt: timestamp("doneAt"),
-    doneByUserId: varchar("doneByUserId", { length: NANOID_SIZE }).references(
+  (t) => ({
+    id: nanoidPrimaryKey(t),
+    date: t.timestamp().notNull(),
+    doneAt: t.timestamp(),
+    doneByUserId: t.varchar({ length: NANOID_SIZE }).references(
       () => users.id,
       { onDelete: "restrict" }, //Restrict because we have to keep logs somehow
     ),
-    teamId: teamIdReferenceCascadeDelete,
-    eventMasterId: varchar("eventMasterId", {
+    teamId: teamIdReferenceCascadeDelete(t),
+    eventMasterId: t.varchar({
       length: NANOID_SIZE,
     }),
     //.references(() => eventMasters.id), //TODO: should we have foreignKey????????????????????????????????????????????????????????????????
-    title: varchar("title", { length: DEFAULTLENGTH }),
-    description: varchar("description", { length: DEFAULTLENGTH }),
-    details: varchar("details", { length: DEFAULTLENGTH }),
-    updatedAt: timestamp("updatedAt").onUpdateNow(),
-    type: typeEnum.notNull().default("NORMAL"),
-    createdBy: varchar("createdBy", { length: NANOID_SIZE })
+    title: t.varchar({ length: DEFAULTLENGTH }),
+    description: t.varchar({ length: DEFAULTLENGTH }),
+    details: t.varchar({ length: DEFAULTLENGTH }),
+    updatedAt: t.timestamp().onUpdateNow(),
+    type: typeEnum(t).notNull().default("NORMAL"),
+    createdBy: t
+      .varchar({ length: NANOID_SIZE })
       .notNull()
       .references(() => users.id),
-    createdFromCalendar: boolean("createdFromCalendar").notNull(),
-  },
+    createdFromCalendar: t.boolean().notNull(),
+  }),
   (table) => {
     return {
       doneByUserIdIdx: index("doneByUserId_idx").on(table.doneByUserId),

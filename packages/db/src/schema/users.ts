@@ -1,15 +1,5 @@
 import { relations } from "drizzle-orm";
-import {
-  boolean,
-  datetime,
-  index,
-  mysqlEnum,
-  mysqlTable,
-  primaryKey,
-  text,
-  timestamp,
-  varchar,
-} from "drizzle-orm/mysql-core";
+import { index, mysqlTable, primaryKey } from "drizzle-orm/mysql-core";
 import { createInsertSchema } from "drizzle-zod";
 
 import { nanoid, NANOID_SIZE } from "../nanoid";
@@ -24,16 +14,16 @@ import {
 
 export const users = mysqlTable(
   "user",
-  {
-    id: nanoidPrimaryKey,
-    name: varchar("name", { length: DEFAULTLENGTH }).notNull(),
-    passwordHash: varchar("passwordHash", { length: 255 }),
-    email: varchar("email", { length: DEFAULTLENGTH }).notNull().unique(),
-    emailVerified: timestamp("emailVerified").defaultNow(),
-    image: varchar("image", { length: DEFAULTLENGTH }),
-    activeTeamId: varchar("activeTeamId", { length: DEFAULTLENGTH }).notNull(),
-    kodixAdmin: boolean("kodixAdmin").default(false).notNull(),
-  },
+  (t) => ({
+    id: nanoidPrimaryKey(t),
+    name: t.varchar({ length: DEFAULTLENGTH }).notNull(),
+    passwordHash: t.varchar({ length: 255 }),
+    email: t.varchar({ length: DEFAULTLENGTH }).notNull().unique(),
+    emailVerified: t.timestamp().defaultNow(),
+    image: t.varchar({ length: DEFAULTLENGTH }),
+    activeTeamId: t.varchar({ length: DEFAULTLENGTH }).notNull(),
+    kodixAdmin: t.boolean().default(false).notNull(),
+  }),
   (table) => {
     return {
       activeTeamIdIdx: index("activeTeamId_idx").on(table.activeTeamId),
@@ -58,15 +48,18 @@ export const userSchema = createInsertSchema(users);
 
 export const accounts = mysqlTable(
   "account",
-  {
-    providerId: varchar("providerId", { length: DEFAULTLENGTH }).notNull(),
-    providerUserId: varchar("providerUserId", {
-      length: DEFAULTLENGTH,
-    }).notNull(),
-    userId: varchar("userId", { length: DEFAULTLENGTH })
+  (t) => ({
+    providerId: t.varchar({ length: DEFAULTLENGTH }).notNull(),
+    providerUserId: t
+      .varchar({
+        length: DEFAULTLENGTH,
+      })
+      .notNull(),
+    userId: t
+      .varchar({ length: DEFAULTLENGTH })
       .notNull()
       .references(() => users.id), //TODO: referential action?
-  },
+  }),
   (account) => ({
     compoundKey: primaryKey({
       columns: [account.providerId, account.providerUserId],
@@ -79,19 +72,22 @@ export const accountsRelations = relations(accounts, ({ one }) => ({
 }));
 export const accountSchema = createInsertSchema(accounts);
 
-export const sessions = mysqlTable("session", {
-  id: varchar("id", {
-    length: DEFAULTLENGTH,
-  }).primaryKey(),
-  userId: varchar("user_id", {
-    length: DEFAULTLENGTH,
-  })
+export const sessions = mysqlTable("session", (t) => ({
+  id: t
+    .varchar({
+      length: DEFAULTLENGTH,
+    })
+    .primaryKey(),
+  userId: t
+    .varchar({
+      length: DEFAULTLENGTH,
+    })
     .notNull()
     .references(() => users.id, { onUpdate: "cascade", onDelete: "cascade" }),
-  expiresAt: datetime("expires_at").notNull(),
-  ipAddress: varchar("ip_address", { length: 45 }).notNull(),
-  userAgent: text("user_agent"),
-});
+  expiresAt: t.datetime().notNull(),
+  ipAddress: t.varchar({ length: 45 }).notNull(),
+  userAgent: t.text(),
+}));
 export const sessionsRelations = relations(sessions, ({ one }) => ({
   User: one(users, {
     fields: [sessions.userId],
@@ -102,13 +98,14 @@ export const sessionSchema = createInsertSchema(sessions);
 
 export const expoTokens = mysqlTable(
   "expoToken",
-  {
-    id: nanoidPrimaryKey,
-    userId: varchar("userId", { length: DEFAULTLENGTH })
+  (t) => ({
+    id: nanoidPrimaryKey(t),
+    userId: t
+      .varchar({ length: DEFAULTLENGTH })
       .notNull()
       .references(() => users.id, { onUpdate: "cascade", onDelete: "cascade" }),
-    token: varchar("token", { length: DEFAULTLENGTH }).unique().notNull(),
-  },
+    token: t.varchar({ length: DEFAULTLENGTH }).unique().notNull(),
+  }),
   (table) => {
     return {
       userIdIdx: index("userId_idx").on(table.userId),
@@ -124,17 +121,18 @@ export const expoTokensRelations = relations(expoTokens, ({ one }) => ({
 
 export const notifications = mysqlTable(
   "notification",
-  {
-    id: nanoidPrimaryKey,
-    sentToUserId: varchar("sentToUserId", { length: NANOID_SIZE })
+  (t) => ({
+    id: nanoidPrimaryKey(t),
+    sentToUserId: t
+      .varchar({ length: NANOID_SIZE })
       .notNull()
       .references(() => users.id, { onUpdate: "cascade", onDelete: "cascade" }),
-    teamId: teamIdReferenceCascadeDelete,
-    subject: varchar("subject", { length: 100 }), //?For email only!
-    sentAt: timestamp("sentAt").defaultNow().notNull(),
-    message: text("message").notNull(),
-    channel: mysqlEnum("channel", ["EMAIL", "PUSH_NOTIFICATIONS"]).notNull(),
-  },
+    teamId: teamIdReferenceCascadeDelete(t),
+    subject: t.varchar({ length: 100 }), //?For email only!
+    sentAt: t.timestamp().defaultNow().notNull(),
+    message: t.text().notNull(),
+    channel: t.mysqlEnum(["EMAIL", "PUSH_NOTIFICATIONS"]).notNull(),
+  }),
   (table) => {
     return {
       sentToUserIdIdx: index("sentToUserId_idx").on(table.sentToUserId),
@@ -156,17 +154,19 @@ export const notificationSchema = createInsertSchema(notifications);
 
 export const resetPasswordTokens = mysqlTable(
   "resetToken",
-  {
-    id: nanoidPrimaryKey,
-    userId: varchar("userId", { length: DEFAULTLENGTH })
+  (t) => ({
+    id: nanoidPrimaryKey(t),
+    userId: t
+      .varchar({ length: DEFAULTLENGTH })
       .unique()
       .notNull()
       .references(() => users.id, { onUpdate: "cascade", onDelete: "cascade" }),
-    token: varchar("token", { length: NANOID_SIZE })
+    token: t
+      .varchar({ length: NANOID_SIZE })
       .notNull()
       .$default(() => nanoid()),
-    tokenExpiresAt: timestamp("tokenExpiresAt").notNull(),
-  },
+    tokenExpiresAt: t.timestamp().notNull(),
+  }),
   (table) => {
     return {
       tokenIdx: index("token_idx").on(table.token),
