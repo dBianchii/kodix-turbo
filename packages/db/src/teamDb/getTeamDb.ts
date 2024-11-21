@@ -211,7 +211,6 @@ export const getTeamDb = (team: Team): TeamDbClient => {
           const whereFn = fn.invoke as WhereFn;
           const whereArgs = fn.args as WhereArgs;
 
-          // @ts-expect-error: typescript aint easy
           const [table] = fnPath.findLast((x) => x.name === "from")
             ?.args as FromArgs;
 
@@ -259,7 +258,6 @@ export const getTeamDb = (team: Team): TeamDbClient => {
           const valuesFn = fn.invoke as ValuesFn;
           const valuesArgs = fn.args as ValuesArgs;
 
-          // @ts-expect-error: typescript aint easy
           const [table] = fnPath.findLast((x) => x.name === "insert")
             ?.args as InsertArgs;
 
@@ -287,7 +285,6 @@ export const getTeamDb = (team: Team): TeamDbClient => {
           const setFn = fn.invoke as SetFn;
           const setArgs = fn.args as SetArgs;
 
-          // @ts-expect-error: typescript aint easy
           const [table] = fnPath.findLast((x) => x.name === "update")
             ?.args as UpdateArgs;
 
@@ -349,7 +346,6 @@ export const getTeamDb = (team: Team): TeamDbClient => {
           const whereFn = fn.invoke as WhereFn;
           const whereArgs = fn.args as WhereArgs;
 
-          // @ts-expect-error: typescript aint easy
           const [table] = fnPath.findLast((x) => x.name === "delete")
             ?.args as DeleteArgs;
 
