@@ -42,10 +42,7 @@ export async function createSession(token: string, userId: string) {
     id: sessionId,
     userId,
     expiresAt: thirtyDaysFromNow,
-    ipAddress:
-      heads.get("X-Forwarded-For") ??
-      heads.get("X-Forwarded-For") ??
-      "127.0.0.1",
+    ipAddress: heads.get("X-Forwarded-For") ?? "127.0.0.1",
     userAgent: heads.get("user-agent"),
   };
   await authRepository.createSession(session);
