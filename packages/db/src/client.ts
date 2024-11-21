@@ -1,6 +1,7 @@
 import type { ExtractTablesWithRelations } from "drizzle-orm";
 import type { MySqlTransaction } from "drizzle-orm/mysql-core";
 import type {
+  MySql2Database,
   MySql2PreparedQueryHKT,
   MySql2QueryResultHKT,
 } from "drizzle-orm/mysql2";
@@ -35,7 +36,11 @@ const conn =
   });
 if (process.env.NODE_ENV !== "production") globalForDb.conn = conn;
 
-export const db = drizzle(conn, { schema, mode: "default" });
+// TODO: Remove typecasting once https://github.com/drizzle-team/drizzle-orm/issues/3282 is resolved
+export const db = drizzle(conn, { schema, mode: "default" }) as MySql2Database<
+  typeof schema
+>;
+
 export type Drizzle = typeof db;
 
 export { getTeamDb as createTeamDb };
