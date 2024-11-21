@@ -6,3 +6,5 @@ const tMock: TMock = (key, _options) => key;
 tMock.rich = (key, _options) => key;
 
 export { tMock };
+
+//
