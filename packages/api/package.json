@@ -39,7 +39,7 @@
     "next": "^15.0.3",
     "next-intl": "^3.25.1",
     "object.groupby": "^1.0.3",
-    "resend": "^3.2.0",
+    "resend": "^4.0.1",
     "rrule": "^2.8.1",
     "superjson": "2.2.1",
     "zod": "catalog:"

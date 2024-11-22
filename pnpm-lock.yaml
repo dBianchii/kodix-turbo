@@ -501,7 +501,7 @@ importers:
         version: 0.0.13
       '@trpc/server':
         specifier: 'catalog:'
-        version: 11.0.0-rc.638(@opentelemetry/api@1.8.0)(babel-plugin-react-compiler@0.0.0)(react-dom@19.0.0-rc-66855b96-20241106(react@18.2.0))(react@18.2.0)
+        version: 11.0.0-rc.638(@opentelemetry/api@1.8.0)(babel-plugin-react-compiler@0.0.0)(react-dom@19.0.0-rc-66855b96-20241106(react@18.3.1))(react@18.3.1)
       '@upstash/qstash':
         specifier: ^2.7.12
         version: 2.7.12
@@ -516,16 +516,16 @@ importers:
         version: 2.1.3
       next:
         specifier: ^15.0.3
-        version: 15.0.3(@opentelemetry/api@1.8.0)(babel-plugin-react-compiler@0.0.0)(react-dom@19.0.0-rc-66855b96-20241106(react@18.2.0))(react@18.2.0)
+        version: 15.0.3(@opentelemetry/api@1.8.0)(babel-plugin-react-compiler@0.0.0)(react-dom@19.0.0-rc-66855b96-20241106(react@18.3.1))(react@18.3.1)
       next-intl:
         specifier: ^3.25.1
-        version: 3.25.1(next@15.0.3(@opentelemetry/api@1.8.0)(babel-plugin-react-compiler@0.0.0)(react-dom@19.0.0-rc-66855b96-20241106(react@18.2.0))(react@18.2.0))(react@18.2.0)
+        version: 3.25.1(next@15.0.3(@opentelemetry/api@1.8.0)(babel-plugin-react-compiler@0.0.0)(react-dom@19.0.0-rc-66855b96-20241106(react@18.3.1))(react@18.3.1))(react@18.3.1)
       object.groupby:
         specifier: ^1.0.3
         version: 1.0.3
       resend:
-        specifier: ^3.2.0
-        version: 3.2.0
+        specifier: ^4.0.1
+        version: 4.0.1(react-dom@19.0.0-rc-66855b96-20241106(react@18.3.1))(react@18.3.1)
       rrule:
         specifier: ^2.8.1
         version: 2.8.1
@@ -4733,13 +4733,16 @@ packages:
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
-  '@react-email/render@0.0.12':
-    resolution: {integrity: sha512-S8WRv/PqECEi6x0QJBj0asnAb5GFtJaHlnByxLETLkgJjc76cxMYDH4r9wdbuJ4sjkcbpwP3LPnVzwS+aIjT7g==}
-    engines: {node: '>=18.0.0'}
-
   '@react-email/render@0.0.13':
     resolution: {integrity: sha512-lmBizrV+rQeSa3GjiL8/kPU0gENqO/wv+4xrlWANabp9UY3lTLXzy7HMRSE8YFBES9AbxP5VX1iRKuEnsoBDew==}
     engines: {node: '>=18.0.0'}
+
+  '@react-email/render@1.0.1':
+    resolution: {integrity: sha512-W3gTrcmLOVYnG80QuUp22ReIT/xfLsVJ+n7ghSlG2BITB8evNABn1AO2rGQoXuK84zKtDAlxCdm3hRyIpZdGSA==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      react: ^18.0 || ^19.0 || ^19.0.0-rc
+      react-dom: ^18.0 || ^19.0 || ^19.0.0-rc
 
   '@react-email/render@1.0.2':
     resolution: {integrity: sha512-q82eBd39TepzA/xjlm8szqJlrQk/gh7mgtxXMGlJ4dcdx89go1m9YBDpZY98SFy+2r2KAOd5A1mxvUbsPwoATg==}
@@ -10422,11 +10425,6 @@ packages:
   react-devtools-core@5.2.0:
     resolution: {integrity: sha512-vZK+/gvxxsieAoAyYaiRIVFxlajb7KXhgBDV7OsoMzaAE+IqGpoxusBjIgq5ibqA2IloKu0p9n7tE68z1xs18A==}
 
-  react-dom@18.2.0:
-    resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
-    peerDependencies:
-      react: ^18.2.0
-
   react-dom@18.3.1:
     resolution: {integrity: sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==}
     peerDependencies:
@@ -10682,10 +10680,6 @@ packages:
   react-zdog@1.2.2:
     resolution: {integrity: sha512-Ix7ALha91aOEwiHuxumCeYbARS5XNpc/w0v145oGkM6poF/CvhKJwzLhM5sEZbtrghMA+psAhOJkCTzJoseicA==}
 
-  react@18.2.0:
-    resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
-    engines: {node: '>=0.10.0'}
-
   react@18.3.1:
     resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
     engines: {node: '>=0.10.0'}
@@ -10804,8 +10798,8 @@ packages:
   requires-port@1.0.0:
     resolution: {integrity: sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==}
 
-  resend@3.2.0:
-    resolution: {integrity: sha512-lDHhexiFYPoLXy7zRlJ8D5eKxoXy6Tr9/elN3+Vv7PkUoYuSSD1fpiIfa/JYXEWyiyN2UczkCTLpkT8dDPJ4Pg==}
+  resend@4.0.1:
+    resolution: {integrity: sha512-EkCRfzKw9JX7N75L+0BC8oXohDBLhlhl4w7AgrkEW2TAsOMBsVcbQHPe8cRWP6Ea7KDhD158TsNjbCBcohed5A==}
     engines: {node: '>=18'}
 
   resize-observer-polyfill@1.5.1:
@@ -16151,19 +16145,20 @@ snapshots:
     dependencies:
       react: 19.0.0-rc.1
 
-  '@react-email/render@0.0.12':
-    dependencies:
-      html-to-text: 9.0.5
-      js-beautify: 1.15.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-
   '@react-email/render@0.0.13':
     dependencies:
       html-to-text: 9.0.5
       js-beautify: 1.15.1
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
+
+  '@react-email/render@1.0.1(react-dom@19.0.0-rc-66855b96-20241106(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      html-to-text: 9.0.5
+      js-beautify: 1.15.1
+      react: 18.3.1
+      react-dom: 19.0.0-rc-66855b96-20241106(react@18.3.1)
+      react-promise-suspense: 0.3.4
 
   '@react-email/render@1.0.2(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc.1))(react@19.0.0-rc.1)':
     dependencies:
@@ -18037,12 +18032,12 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@trpc/server@11.0.0-rc.638(@opentelemetry/api@1.8.0)(babel-plugin-react-compiler@0.0.0)(react-dom@19.0.0-rc-66855b96-20241106(react@18.2.0))(react@18.2.0)':
+  '@trpc/server@11.0.0-rc.638(@opentelemetry/api@1.8.0)(babel-plugin-react-compiler@0.0.0)(react-dom@19.0.0-rc-66855b96-20241106(react@18.3.1))(react@18.3.1)':
     optionalDependencies:
       '@types/aws-lambda': 8.10.145
       express: 4.19.2
       fastify: 5.1.0
-      next: 15.0.3(@opentelemetry/api@1.8.0)(babel-plugin-react-compiler@0.0.0)(react-dom@19.0.0-rc-66855b96-20241106(react@18.2.0))(react@18.2.0)
+      next: 15.0.3(@opentelemetry/api@1.8.0)(babel-plugin-react-compiler@0.0.0)(react-dom@19.0.0-rc-66855b96-20241106(react@18.3.1))(react@18.3.1)
       ws: 8.17.0
     transitivePeerDependencies:
       - '@babel/core'
@@ -22704,13 +22699,13 @@ snapshots:
 
   neverthrow@7.2.0: {}
 
-  next-intl@3.25.1(next@15.0.3(@opentelemetry/api@1.8.0)(babel-plugin-react-compiler@0.0.0)(react-dom@19.0.0-rc-66855b96-20241106(react@18.2.0))(react@18.2.0))(react@18.2.0):
+  next-intl@3.25.1(next@15.0.3(@opentelemetry/api@1.8.0)(babel-plugin-react-compiler@0.0.0)(react-dom@19.0.0-rc-66855b96-20241106(react@18.3.1))(react@18.3.1))(react@18.3.1):
     dependencies:
       '@formatjs/intl-localematcher': 0.5.8
       negotiator: 1.0.0
-      next: 15.0.3(@opentelemetry/api@1.8.0)(babel-plugin-react-compiler@0.0.0)(react-dom@19.0.0-rc-66855b96-20241106(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      use-intl: 3.25.1(react@18.2.0)
+      next: 15.0.3(@opentelemetry/api@1.8.0)(babel-plugin-react-compiler@0.0.0)(react-dom@19.0.0-rc-66855b96-20241106(react@18.3.1))(react@18.3.1)
+      react: 18.3.1
+      use-intl: 3.25.1(react@18.3.1)
 
   next-intl@3.25.1(next@15.0.3(@opentelemetry/api@1.8.0)(babel-plugin-react-compiler@0.0.0)(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc.1))(react@19.0.0-rc.1))(react@19.0.0-rc.1):
     dependencies:
@@ -22791,7 +22786,7 @@ snapshots:
       - babel-plugin-macros
     optional: true
 
-  next@15.0.3(@opentelemetry/api@1.8.0)(babel-plugin-react-compiler@0.0.0)(react-dom@19.0.0-rc-66855b96-20241106(react@18.2.0))(react@18.2.0):
+  next@15.0.3(@opentelemetry/api@1.8.0)(babel-plugin-react-compiler@0.0.0)(react-dom@19.0.0-rc-66855b96-20241106(react@18.3.1))(react@18.3.1):
     dependencies:
       '@next/env': 15.0.3
       '@swc/counter': 0.1.3
@@ -22799,9 +22794,9 @@ snapshots:
       busboy: 1.6.0
       caniuse-lite: 1.0.30001668
       postcss: 8.4.31
-      react: 18.2.0
-      react-dom: 19.0.0-rc-66855b96-20241106(react@18.2.0)
-      styled-jsx: 5.1.6(react@18.2.0)
+      react: 18.3.1
+      react-dom: 19.0.0-rc-66855b96-20241106(react@18.3.1)
+      styled-jsx: 5.1.6(react@18.3.1)
     optionalDependencies:
       '@next/swc-darwin-arm64': 15.0.3
       '@next/swc-darwin-x64': 15.0.3
@@ -23613,12 +23608,6 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  react-dom@18.2.0(react@18.2.0):
-    dependencies:
-      loose-envify: 1.4.0
-      react: 18.2.0
-      scheduler: 0.23.2
-
   react-dom@18.3.1(react@18.3.1):
     dependencies:
       loose-envify: 1.4.0
@@ -23631,9 +23620,9 @@ snapshots:
       react: 19.0.0-rc.1
       scheduler: 0.23.2
 
-  react-dom@19.0.0-rc-66855b96-20241106(react@18.2.0):
+  react-dom@19.0.0-rc-66855b96-20241106(react@18.3.1):
     dependencies:
-      react: 18.2.0
+      react: 18.3.1
       scheduler: 0.25.0-rc-66855b96-20241106
 
   react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc.1):
@@ -24013,10 +24002,6 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       resize-observer-polyfill: 1.5.1
 
-  react@18.2.0:
-    dependencies:
-      loose-envify: 1.4.0
-
   react@18.3.1:
     dependencies:
       loose-envify: 1.4.0
@@ -24155,9 +24140,12 @@ snapshots:
 
   requires-port@1.0.0: {}
 
-  resend@3.2.0:
+  resend@4.0.1(react-dom@19.0.0-rc-66855b96-20241106(react@18.3.1))(react@18.3.1):
     dependencies:
-      '@react-email/render': 0.0.12
+      '@react-email/render': 1.0.1(react-dom@19.0.0-rc-66855b96-20241106(react@18.3.1))(react@18.3.1)
+    transitivePeerDependencies:
+      - react
+      - react-dom
 
   resize-observer-polyfill@1.5.1: {}
 
@@ -24779,10 +24767,10 @@ snapshots:
       '@babel/core': 7.26.0
     optional: true
 
-  styled-jsx@5.1.6(react@18.2.0):
+  styled-jsx@5.1.6(react@18.3.1):
     dependencies:
       client-only: 0.0.1
-      react: 18.2.0
+      react: 18.3.1
 
   styled-jsx@5.1.6(react@19.0.0-rc.1):
     dependencies:
@@ -25482,11 +25470,11 @@ snapshots:
       intl-messageformat: 10.5.14
       react: 19.0.0-rc.1
 
-  use-intl@3.25.1(react@18.2.0):
+  use-intl@3.25.1(react@18.3.1):
     dependencies:
       '@formatjs/fast-memoize': 2.2.3
       intl-messageformat: 10.7.7
-      react: 18.2.0
+      react: 18.3.1
 
   use-intl@3.25.1(react@19.0.0-rc.1):
     dependencies:
