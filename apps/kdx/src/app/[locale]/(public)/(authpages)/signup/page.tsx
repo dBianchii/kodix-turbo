@@ -51,7 +51,7 @@ export default async function SignUpPage(props: {
                 {t("Sign in")}
               </Link>
             </div>
-            <div className="text-center text-xs text-muted-foreground">
+            {/* <div className="text-center text-xs text-muted-foreground">
               {t("By continuing you agree to our")}{" "}
               <a href="#" className="text-white underline">
                 {t("Terms of Service")}
@@ -61,7 +61,7 @@ export default async function SignUpPage(props: {
                 {t("Privacy policy")}
               </a>
               .
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

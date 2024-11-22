@@ -3,10 +3,8 @@
 import { useTranslations } from "next-intl";
 import { useAction } from "next-safe-action/hooks";
 import { LuLoader2 } from "react-icons/lu";
-import { z } from "zod";
 
 import { Button } from "@kdx/ui/button";
-import { Checkbox } from "@kdx/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -27,14 +25,15 @@ export function PasswordSignupForm({ invite }: { invite?: string }) {
   const form = useForm({
     schema: ZSignupWithPasswordInputSchema.omit({
       invite: true,
-    }).extend({
-      agreeToTOS: z
-        .boolean()
-        .default(false)
-        .refine((val) => !!val, {
-          message: "You must agree to the terms of service",
-        }),
     }),
+    // .extend({
+    //   agreeToTOS: z
+    //     .boolean()
+    //     .default(false)
+    //     .refine((val) => !!val, {
+    //       message: "You must agree to the terms of service",
+    //     }),
+    // }),
   });
 
   const { execute, isExecuting } = useAction(signupAction, {
@@ -95,7 +94,7 @@ export function PasswordSignupForm({ invite }: { invite?: string }) {
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name="agreeToTOS"
           render={({ field }) => (
@@ -114,7 +113,7 @@ export function PasswordSignupForm({ invite }: { invite?: string }) {
               </div>
             </FormItem>
           )}
-        />
+        /> */}
 
         <Button
           className="w-full"
