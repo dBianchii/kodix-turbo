@@ -1,3 +1,5 @@
+// eslint-disable-next-line react-compiler/react-compiler
+/* eslint-disable react-hooks/exhaustive-deps */
 import type { Table } from "@tanstack/react-table";
 import * as React from "react";
 import { useSearchParams } from "next/navigation";
@@ -201,7 +203,6 @@ export function MultiFilterRow<TData>({
         },
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debounceValue, filterVariety, selectedOption?.value]);
 
   // Update operator query string
@@ -216,7 +217,6 @@ export function MultiFilterRow<TData>({
         },
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [operator?.value]);
 
   const t = useTranslations();

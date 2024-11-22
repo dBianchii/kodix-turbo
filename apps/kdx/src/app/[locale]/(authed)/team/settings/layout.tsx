@@ -15,7 +15,7 @@ export default async function SettingsLayout({
   children: React.ReactNode;
 }) {
   const { user } = await auth();
-  if (!user) redirect({ href: "/", locale: await getLocale() });
+  if (!user) return redirect({ href: "/", locale: await getLocale() });
 
   const team = await api.team.getActiveTeam();
   const t = await getTranslations();

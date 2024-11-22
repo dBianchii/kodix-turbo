@@ -1,3 +1,5 @@
+// eslint-disable-next-line react-compiler/react-compiler
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import type {
@@ -215,8 +217,6 @@ export function useDataTable<TData, TValue>({
         scroll: false,
       },
     );
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageIndex, pageSize]);
 
   // Handle server-side sorting
@@ -236,8 +236,6 @@ export function useDataTable<TData, TValue>({
           : null,
       })}`,
     );
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sorting]);
 
   // Handle server-side filtering
@@ -307,12 +305,9 @@ export function useDataTable<TData, TValue>({
     router.push(`${pathname}?${createQueryString(newParamsObject)}`);
 
     table.setPageIndex(0);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     JSON.stringify(debouncedSearchableColumnFilters),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     JSON.stringify(filterableColumnFilters),
   ]);
 

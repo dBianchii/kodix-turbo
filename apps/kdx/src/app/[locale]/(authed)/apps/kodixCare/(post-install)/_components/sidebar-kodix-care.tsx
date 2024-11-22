@@ -50,8 +50,7 @@ export function KodixCareSideBar() {
 
   useEffect(() => {
     setOpenMobile(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname, isMobile]);
+  }, [pathname, isMobile, setOpenMobile]);
 
   return (
     <Sidebar
