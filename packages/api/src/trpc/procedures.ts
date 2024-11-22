@@ -3,7 +3,6 @@ import { TRPCError } from "@trpc/server";
 
 import { teamRepository } from "@kdx/db/repositories";
 
-import { timingMiddleware } from "./middlewares";
 import { t } from "./trpc";
 
 //? This file should ONLY EXPORT procedures and their context types. Do not export anything else from this file because they are read by @kdx/trpc-cli
@@ -16,7 +15,7 @@ import { t } from "./trpc";
  * tRPC API. It does not guarantee that a user querying is authorized, but you
  * can still access user session data if they are logged in
  */
-export const publicProcedure = t.procedure.use(timingMiddleware);
+export const publicProcedure = t.procedure; // t.procedure.use(timingMiddleware);
 export type TPublicProcedureContext = inferProcedureBuilderResolverOptions<
   typeof publicProcedure
 >["ctx"];

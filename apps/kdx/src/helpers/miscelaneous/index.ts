@@ -23,11 +23,8 @@ export const trpcErrorToastDefault = (
   //? Undo this comment if needed
 
   const errorMessage = getErrorMessage(error);
-  const isMobile = window.innerWidth <= 768;
-  const toastOptions = isMobile
-    ? ({ position: "top-center" } as const)
-    : undefined;
-  return toast.error(errorMessage, toastOptions);
+
+  return toast.error(errorMessage);
 };
 
 /**
