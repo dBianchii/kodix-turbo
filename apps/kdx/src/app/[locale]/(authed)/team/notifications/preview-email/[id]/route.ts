@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { getLocale } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
 import { notificationRepository } from "@kdx/db/repositories";
@@ -6,7 +7,7 @@ import { redirect } from "@kdx/locales/next-intl/navigation";
 
 export async function GET(request: Request) {
   const { user } = await auth();
-  if (!user) return redirect("/");
+  if (!user) return redirect({ href: "/", locale: await getLocale() });
 
   const notif = await notificationRepository.getUserNotificationById({
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

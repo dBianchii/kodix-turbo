@@ -1,3 +1,5 @@
+import { getLocaleBasedOnCookie } from "node_modules/@kdx/api/src/utils/locales";
+
 import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
 import { redirect } from "@kdx/locales/next-intl/navigation";
@@ -16,11 +18,18 @@ export const redirectIfAppNotInstalled = async ({
   customRedirect?: string;
 }) => {
   const { user } = await auth();
-  if (!user) return redirect("/");
+  if (!user)
+    return redirect({
+      href: "/",
+      locale: await getLocaleBasedOnCookie(),
+    });
   const installedApps = await api.app.getInstalled();
 
   if (!installedApps.some((x) => x.id === appId))
-    return redirect(customRedirect ?? "/apps");
+    return redirect({
+      href: customRedirect ?? "/apps",
+      locale: await getLocaleBasedOnCookie(),
+    });
 
   return user;
 };

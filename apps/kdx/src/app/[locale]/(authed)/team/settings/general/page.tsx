@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
 import { redirect } from "@kdx/locales/next-intl/navigation";
@@ -12,9 +12,10 @@ import { LeaveTeamCardClient } from "./_components/leave-team-card-client";
 
 export default async function SettingsGeneralPage() {
   const { user } = await auth();
-  if (!user) redirect("/");
+  if (!user) redirect({ href: "/", locale: await getLocale() });
   const t = await getTranslations();
-  if (!user) return redirect("/");
+  if (!user) return redirect({ href: "/", locale: await getLocale() });
+
   return (
     <div className="mt-8 space-y-6 md:mt-0">
       <div>

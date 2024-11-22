@@ -12,12 +12,11 @@ const providersWithCodeVerifier = ["Google"];
 
 export async function GET(
   request: NextRequest,
-  {
-    params,
-  }: {
-    params: { provider: string };
+  props: {
+    params: Promise<{ provider: string }>;
   },
 ) {
+  const params = await props.params;
   if (!Object.keys(providers).includes(params.provider)) {
     console.error("Invalid oauth provider", params.provider);
     return new NextResponse(null, {
@@ -31,7 +30,7 @@ export async function GET(
   const codeVerifier = generateCodeVerifier(); //? Not needed for all providers.
   const url = await currentProvider.getAuthorizationUrl(state, codeVerifier);
 
-  cookies().set(`oauth_state`, state, {
+  (await cookies()).set(`oauth_state`, state, {
     path: "/",
     secure: env.NODE_ENV === "production",
     httpOnly: true,
@@ -40,7 +39,7 @@ export async function GET(
   });
 
   if (providersWithCodeVerifier.includes(currentProvider.name))
-    cookies().set("code_verifier", codeVerifier, {
+    (await cookies()).set("code_verifier", codeVerifier, {
       path: "/",
       secure: env.NODE_ENV === "production",
       httpOnly: true,
@@ -50,7 +49,7 @@ export async function GET(
 
   const invite = request.nextUrl.searchParams.get("invite");
   if (invite)
-    cookies().set("invite", invite, {
+    (await cookies()).set("invite", invite, {
       path: "/",
       secure: env.NODE_ENV === "production",
       httpOnly: true,
@@ -60,7 +59,7 @@ export async function GET(
 
   const callbackUrl = request.nextUrl.searchParams.get("callbackUrl");
   if (callbackUrl)
-    cookies().set("callbackUrl", callbackUrl, {
+    (await cookies()).set("callbackUrl", callbackUrl, {
       path: "/",
       secure: env.NODE_ENV === "production",
       httpOnly: true,

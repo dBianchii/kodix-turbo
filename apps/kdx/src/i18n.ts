@@ -16,7 +16,8 @@ import { getRequestConfig } from "next-intl/server";
 import { formats, locales } from "@kdx/locales";
 import { formNs } from "@kdx/validators/zod-namespaces";
 
-export default getRequestConfig(async ({ locale }) => {
+export default getRequestConfig(async ({ requestLocale }) => {
+  let locale = await requestLocale;
   // Validate that the incoming `locale` parameter is valid
   if (!locales.includes(locale as any)) notFound();
 

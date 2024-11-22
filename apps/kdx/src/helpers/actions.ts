@@ -1,5 +1,7 @@
 "use server";
 
+import { getLocaleBasedOnCookie } from "node_modules/@kdx/api/src/utils/locales";
+
 import { auth, deleteSessionTokenCookie, invalidateSession } from "@kdx/auth";
 import { redirect } from "@kdx/locales/next-intl/navigation";
 
@@ -13,7 +15,10 @@ export async function signOutAction() {
 
   await invalidateSession(session.id);
 
-  deleteSessionTokenCookie();
+  await deleteSessionTokenCookie();
 
-  return redirect("/");
+  return redirect({
+    href: "/",
+    locale: await getLocaleBasedOnCookie(),
+  });
 }

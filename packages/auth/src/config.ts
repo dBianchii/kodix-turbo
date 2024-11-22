@@ -37,7 +37,7 @@ export function generateSessionToken() {
 const thirtyDaysFromNow = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
 export async function createSession(token: string, userId: string) {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
-  const heads = headers();
+  const heads = await headers();
   const session = {
     id: sessionId,
     userId,
@@ -78,8 +78,8 @@ export async function invalidateSession(sessionId: string) {
   await authRepository.deleteSession(sessionId);
 }
 
-export function setSessionTokenCookie(token: string, expiresAt: Date) {
-  cookies().set("session", token, {
+export async function setSessionTokenCookie(token: string, expiresAt: Date) {
+  (await cookies()).set("session", token, {
     httpOnly: true,
     sameSite: "lax",
     secure: env.NODE_ENV === "production",
@@ -88,8 +88,8 @@ export function setSessionTokenCookie(token: string, expiresAt: Date) {
   });
 }
 
-export function deleteSessionTokenCookie() {
-  cookies().set("session", "", {
+export async function deleteSessionTokenCookie() {
+  (await cookies()).set("session", "", {
     httpOnly: true,
     sameSite: "lax",
     secure: env.NODE_ENV === "production",
@@ -147,7 +147,7 @@ export async function validateUserEmailAndPassword({
 }
 
 export const auth = async () => {
-  const token = cookies().get("session")?.value ?? null;
+  const token = (await cookies()).get("session")?.value ?? null;
 
   if (token === null) return { session: null, user: null };
 

@@ -26,7 +26,6 @@ function NotificationsHeader() {
 export default function NotificationsTab() {
   const { user } = useAuth();
   const router = useRouter();
-  if (!user) return router.push("/");
 
   const {
     data: notifications,
@@ -35,13 +34,15 @@ export default function NotificationsTab() {
   } = api.user.getNotifications.useQuery(
     {
       channel: "PUSH_NOTIFICATIONS",
-      teamId: user.activeTeamId,
+      teamId: user?.activeTeamId,
     },
     {
       enabled: !!user,
     },
   );
+
   const utils = api.useUtils();
+  if (!user) return router.push("/");
 
   if (isLoading)
     return (

@@ -1,5 +1,6 @@
 "use client";
 
+import { use } from "react";
 import { useTranslations } from "next-intl";
 import { LuLoader2 } from "react-icons/lu";
 
@@ -28,11 +29,10 @@ import { ZChangePasswordInputSchema } from "@kdx/validators/trpc/user";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
-export default function ForgotPasswordPage({
-  searchParams,
-}: {
-  searchParams: { token: string };
+export default function ForgotPasswordPage(props: {
+  searchParams: Promise<{ token: string }>;
 }) {
+  const searchParams = use(props.searchParams);
   const t = useTranslations();
 
   const form = useForm({

@@ -25,7 +25,7 @@ export default async function createOrGetExistingUserForUnlinkedProviderAccount(
   await db.transaction(async (tx) => {
     if (existingUser) userId = existingUser.id;
     else {
-      const invite = cookies().get("invite")?.value;
+      const invite = (await cookies()).get("invite")?.value;
       await createUser({
         tx,
         name,
@@ -35,7 +35,7 @@ export default async function createOrGetExistingUserForUnlinkedProviderAccount(
         userId,
         invite,
       });
-      cookies().delete("invite");
+      (await cookies()).delete("invite");
     }
 
     await authRepository.createAccount(tx, {

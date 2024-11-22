@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
 import { Link, redirect } from "@kdx/locales/next-intl/navigation";
@@ -21,7 +21,8 @@ interface CustomApp {
 
 export default async function TeamPage() {
   const { user } = await auth();
-  if (!user) return redirect("/");
+  if (!user) return redirect({ href: "/", locale: await getLocale() });
+
   const t = await getTranslations();
 
   const customApps: CustomApp[] = [

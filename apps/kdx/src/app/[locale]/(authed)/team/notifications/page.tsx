@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
 import { redirect } from "@kdx/locales/next-intl/navigation";
@@ -15,13 +15,12 @@ import { NotificationsDateRangePicker } from "./_components/notifications-date-r
 
 type SearchParams = Record<string, string | string[] | undefined>;
 
-export default async function NotificationsPage({
-  searchParams,
-}: {
-  searchParams: SearchParams;
+export default async function NotificationsPage(props: {
+  searchParams: Promise<SearchParams>;
 }) {
+  const searchParams = await props.searchParams;
   const { user } = await auth();
-  if (!user) redirect("/");
+  if (!user) redirect({ href: "/", locale: await getLocale() });
   const t = await getTranslations();
 
   const search = ZGetNotificationsInputSchema.parse(searchParams);

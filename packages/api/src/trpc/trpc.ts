@@ -35,7 +35,7 @@ export const createTRPCContext = async (opts: {
 
   const source = opts.headers.get("x-trpc-source") ?? "unknown";
   console.log(">>> tRPC Request from", source, "by", auth.user);
-  const t = await getTranslations({ locale: getLocaleBasedOnCookie() });
+  const t = await getTranslations({ locale: await getLocaleBasedOnCookie() });
 
   return {
     t,

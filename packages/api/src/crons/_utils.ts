@@ -9,7 +9,7 @@ import { db } from "@kdx/db/client";
 import { getLocaleBasedOnCookie } from "../utils/locales";
 
 export const createCronJobCtx = async () => ({
-  t: await getTranslations({ locale: getLocaleBasedOnCookie() }),
+  t: await getTranslations({ locale: await getLocaleBasedOnCookie() }),
   db,
 });
 export type TCronJobContext = Awaited<ReturnType<typeof createCronJobCtx>>;
@@ -39,7 +39,7 @@ export const verifiedQstashCron =
     //? Allow running cron jobs locally, for development purposes
     if (env.NODE_ENV !== "production") return handler({ req, res, ctx });
 
-    const qStashSignature = headers().get("Upstash-Signature");
+    const qStashSignature = (await headers()).get("Upstash-Signature");
     if (!qStashSignature)
       return Response.json({ error: "Unauthorized" }, { status: 401 });
 

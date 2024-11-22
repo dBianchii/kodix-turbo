@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
@@ -12,18 +12,17 @@ import { api } from "~/trpc/server";
 import { DataTableAppPermissions } from "./_components/data-table-app-permissions";
 import { DataTableUserAppRoles } from "./_components/data-table-user-app-roles";
 
-export default async function RolesForAppPage({
-  params,
-}: {
-  params: { appPathname: string };
+export default async function RolesForAppPage(props: {
+  params: Promise<{ appPathname: string }>;
 }) {
+  const params = await props.params;
   const appPathname = params.appPathname as AppPathnames;
   if (!Object.values(appIdToPathname).includes(appPathname)) notFound();
 
   const appId = appPathnameToAppId[appPathname];
 
   const { user } = await auth();
-  if (!user) redirect("/");
+  if (!user) redirect({ href: "/", locale: await getLocale() });
 
   return (
     <div className="mt-8 space-y-8 md:mt-0">

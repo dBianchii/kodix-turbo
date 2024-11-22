@@ -18,14 +18,14 @@ export default function Tab() {
   const { user } = useAuth();
 
   const router = useRouter();
-  if (!user) {
-    router.replace("/");
-    return null;
-  }
 
   const myRolesQuery = api.team.appRole.getMyRoles.useQuery({
     appId: kodixCareAppId,
   });
+  if (!user) {
+    router.replace("/");
+    return null;
+  }
   // const getCurrentShiftQuery =
   //   api.app.kodixCare.getCurrentShift.useQuery(undefined);
 

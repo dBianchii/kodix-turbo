@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
 import { teamRepository } from "@kdx/db/repositories";
@@ -13,11 +13,15 @@ export default async function RolesLayout({
   children: React.ReactNode;
 }) {
   const { user } = await auth();
-  if (!user) return redirect("/");
+  if (!user) return redirect({ href: "/", locale: await getLocale() });
 
   const team = await teamRepository.findTeamById(user.activeTeamId);
 
-  if (team?.ownerId !== user.id) redirect("/team/settings");
+  if (team?.ownerId !== user.id)
+    redirect({
+      href: "/team/settings",
+      locale: await getLocale(),
+    });
   const t = await getTranslations();
   return (
     <div className="mt-8 space-y-6 md:mt-0">

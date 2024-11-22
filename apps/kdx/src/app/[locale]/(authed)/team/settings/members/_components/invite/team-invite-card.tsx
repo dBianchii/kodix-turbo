@@ -65,9 +65,6 @@ export default function TeamInviteCardClient({
           t("Failed to send invitation to people", {
             people: failures.join(", "),
           }),
-          {
-            important: false,
-          },
         );
       setSuccesses(successes);
       setEmails([{ key: 0, value: "" }]);

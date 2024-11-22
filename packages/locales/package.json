@@ -19,15 +19,15 @@
   },
   "dependencies": {
     "@kdx/shared": "workspace:*",
-    "next-intl": "^3.20.0",
-    "react": "catalog:react18",
+    "next-intl": "^3.25.1",
+    "react": "catalog:react19",
     "use-intl": "^3.20.0"
   },
   "devDependencies": {
     "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "@types/react": "catalog:react18",
+    "@types/react": "catalog:react19",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "tsx": "4.7.3",

@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { RxPlusCircled } from "react-icons/rx";
 
 import { auth } from "@kdx/auth";
@@ -11,7 +11,7 @@ import { api } from "~/trpc/server";
 
 export default async function SettingsAppsPage() {
   const { user } = await auth();
-  if (!user) redirect("/");
+  if (!user) redirect({ href: "/", locale: await getLocale() });
   const t = await getTranslations();
   return (
     <div className="mt-8 space-y-6 md:mt-0">

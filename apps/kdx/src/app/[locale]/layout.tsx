@@ -47,12 +47,12 @@ export const viewport: Viewport = {
 
 export default async function RootLayout(props: {
   children: React.ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
   const messages = await getMessages();
   const locale = await getLocale();
   return (
-    <html lang={props.params.locale} suppressHydrationWarning>
+    <html lang={(await props.params).locale} suppressHydrationWarning>
       <CSPostHogProvider>
         <body
           className={cn(

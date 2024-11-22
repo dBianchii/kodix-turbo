@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { getLocale } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
 import { teamRepository, userRepository } from "@kdx/db/repositories";
@@ -6,11 +7,10 @@ import { redirect } from "@kdx/locales/next-intl/navigation";
 
 import { api } from "~/trpc/server";
 
-export default async function InvitePage({
-  params,
-}: {
-  params: { id: string };
+export default async function InvitePage(props: {
+  params: Promise<{ id: string }>;
 }) {
+  const params = await props.params;
   const { id: invitationId } = params;
 
   const invitation = await teamRepository.findInvitationById(invitationId);
@@ -25,11 +25,17 @@ export default async function InvitePage({
     //? If the user already has an account, redirect them back here after signing in.
     if (existingUser) path = `/signin?callbackUrl=/team/invite/${invitationId}`;
 
-    return redirect(path);
+    return redirect({
+      href: path,
+      locale: await getLocale(),
+    });
   }
 
   if (user.email !== invitation.email) return notFound();
   await api.team.invitation.accept({ invitationId });
 
-  redirect("/team");
+  redirect({
+    href: "/team",
+    locale: await getLocale(),
+  });
 }

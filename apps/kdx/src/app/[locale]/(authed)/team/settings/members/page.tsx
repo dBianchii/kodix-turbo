@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
 import { teamRepository } from "@kdx/db/repositories";
@@ -14,7 +14,8 @@ import TeamInviteCard from "./_components/invite/team-invite-card";
 
 export default async function SettingsMembersPage() {
   const { user } = await auth();
-  if (!user) return redirect("/");
+  if (!user) return redirect({ href: "/", locale: await getLocale() });
+
   const t = await getTranslations();
 
   const currentTeam = await teamRepository.findTeamById(user.activeTeamId);

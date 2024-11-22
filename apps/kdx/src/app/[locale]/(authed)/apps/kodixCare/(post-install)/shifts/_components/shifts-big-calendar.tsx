@@ -259,6 +259,7 @@ export function ShiftsBigCalendar({
         />
       </div>
       <div className="mt-4">
+        {/* @ts-expect-error REACT19 INCOMPATIVILITY */}
         <DnDCalendar
           // @ts-expect-error react big calendar typesafety sucks
           eventPropGetter={

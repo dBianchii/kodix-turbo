@@ -22,16 +22,16 @@
   "dependencies": {
     "@kdx/locales": "workspace:*",
     "@kdx/shared": "workspace:*",
-    "@react-email/components": "^0.0.14",
-    "react": "catalog:react18",
-    "react-email": "^2.1.5"
+    "@react-email/components": "^0.0.28",
+    "react": "catalog:react19",
+    "react-email": "^3.0.2"
   },
   "devDependencies": {
     "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
     "@types/node": "catalog:",
-    "@types/react": "catalog:react18",
+    "@types/react": "catalog:react19",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"

@@ -9,10 +9,10 @@ await createJiti(fileURLToPath(import.meta.url)).import("./src/env");
 
 /** @type {import("next").NextConfig} */
 const config = {
-  reactStrictMode: true,
+  // reactStrictMode: true,
+  serverExternalPackages: ["@node-rs/argon2"],
 
   experimental: {
-    serverComponentsExternalPackages: ["@node-rs/argon2"],
     serverActions:
       process.env.NODE_ENV === "development"
         ? {

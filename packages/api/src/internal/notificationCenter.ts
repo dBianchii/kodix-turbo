@@ -1,4 +1,5 @@
 import type { ExpoPushMessage, ExpoPushTicket } from "expo-server-sdk";
+import type { JSX } from "react";
 import Expo from "expo-server-sdk";
 import { render } from "@react-email/render";
 

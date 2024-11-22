@@ -1,4 +1,4 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
 import { Link, redirect } from "@kdx/locales/next-intl/navigation";
@@ -6,13 +6,16 @@ import { Link, redirect } from "@kdx/locales/next-intl/navigation";
 import { ProviderButtons } from "../_components/provider-buttons";
 import { PasswordSignupForm } from "./_components/password-signup-form";
 
-export default async function SignUpPage({
-  searchParams,
-}: {
-  searchParams?: Record<string, string | undefined>;
+export default async function SignUpPage(props: {
+  searchParams?: Promise<Record<string, string | undefined>>;
 }) {
+  const searchParams = await props.searchParams;
   const { user } = await auth();
-  if (user) return redirect(searchParams?.callbackUrl ?? "/");
+  if (user)
+    return redirect({
+      href: searchParams?.callbackUrl ?? "/",
+      locale: await getLocale(),
+    });
   const t = await getTranslations();
   return (
     <div className="container my-auto flex max-w-2xl">

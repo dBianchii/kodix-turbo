@@ -1,4 +1,4 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { RxChevronRight } from "react-icons/rx";
 
 import { auth } from "@kdx/auth";
@@ -15,7 +15,8 @@ export default async function SettingsLayout({
   children: React.ReactNode;
 }) {
   const { user } = await auth();
-  if (!user) return redirect("/");
+  if (!user) redirect({ href: "/", locale: await getLocale() });
+
   const team = await api.team.getActiveTeam();
   const t = await getTranslations();
 

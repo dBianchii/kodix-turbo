@@ -7,10 +7,10 @@ export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
-export default function StaticLocaleLayout(props: {
+export default async function StaticLocaleLayout(props: {
   children: React.ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
-  unstable_setRequestLocale(props.params.locale);
+  unstable_setRequestLocale((await props.params).locale);
   return props.children;
 }

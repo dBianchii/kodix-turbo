@@ -26,16 +26,16 @@
     "@oslojs/encoding": "^1.1.0",
     "@t3-oss/env-nextjs": "^0.11.1",
     "discord-api-types": "^0.37.91",
-    "next": "catalog:",
-    "react": "catalog:react18",
-    "react-dom": "catalog:react18",
+    "next": "^15.0.3",
+    "react": "catalog:react19",
+    "react-dom": "catalog:react19",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "@types/react": "catalog:react18",
+    "@types/react": "catalog:react19",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"
