@@ -8,11 +8,6 @@ import { RxCaretSort, RxPlusCircled } from "react-icons/rx";
 import type { RouterOutputs } from "@kdx/api";
 import type { KodixAppId } from "@kdx/shared";
 import { useAppName } from "@kdx/locales/next-intl/hooks";
-import {
-  Link,
-  usePathname,
-  useRouter,
-} from "@kdx/locales/next-intl/navigation";
 import { Button } from "@kdx/ui/button";
 import {
   Command,
@@ -29,6 +24,7 @@ import {
   appPathnameToAppId,
   getAppUrl,
 } from "~/helpers/miscelaneous";
+import { Link, usePathname, useRouter } from "~/i18n/routing";
 import { IconKodixApp } from "../app/kodix-icon";
 
 export function AppSwitcherClient({

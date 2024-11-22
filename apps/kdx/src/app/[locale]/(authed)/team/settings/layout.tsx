@@ -2,10 +2,10 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { RxChevronRight } from "react-icons/rx";
 
 import { auth } from "@kdx/auth";
-import { redirect } from "@kdx/locales/next-intl/navigation";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { Navigation } from "~/app/[locale]/_components/navigation";
+import { redirect } from "~/i18n/routing";
 import { api } from "~/trpc/server";
 import { ShouldRender } from "./general/_components/client-should-render";
 

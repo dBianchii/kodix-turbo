@@ -4,7 +4,6 @@ import { useTranslations } from "next-intl";
 import { PiTranslate } from "react-icons/pi";
 
 import type { Locales } from "@kdx/locales";
-import { usePathname, useRouter } from "@kdx/locales/next-intl/navigation";
 import { Button } from "@kdx/ui/button";
 import {
   DropdownMenu,
@@ -12,6 +11,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@kdx/ui/dropdown-menu";
+
+import { usePathname, useRouter } from "~/i18n/routing";
 
 export function I18nPicker() {
   const t = useTranslations();

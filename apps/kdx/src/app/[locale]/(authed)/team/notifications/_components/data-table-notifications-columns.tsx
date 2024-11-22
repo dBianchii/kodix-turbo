@@ -4,7 +4,6 @@ import { useFormatter, useTranslations } from "next-intl";
 import { RxDotsHorizontal, RxExternalLink } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
-import { Link } from "@kdx/locales/next-intl/navigation";
 import { Button } from "@kdx/ui/button";
 import { Checkbox } from "@kdx/ui/checkbox";
 import { DataTableColumnHeader } from "@kdx/ui/data-table/data-table-column-header";
@@ -15,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@kdx/ui/dropdown-menu";
 
+import { Link } from "~/i18n/routing";
 import { DeleteNotificationsDialog } from "./delete-notifications-dialog";
 
 const columnHelper =

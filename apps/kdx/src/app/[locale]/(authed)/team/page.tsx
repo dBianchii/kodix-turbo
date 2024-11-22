@@ -2,13 +2,13 @@ import { Suspense } from "react";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
-import { Link, redirect } from "@kdx/locales/next-intl/navigation";
 import { Separator } from "@kdx/ui/separator";
 import { Skeleton } from "@kdx/ui/skeleton";
 
 import { IconKodixApp } from "~/app/[locale]/_components/app/kodix-icon";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { getAppUrl } from "~/helpers/miscelaneous";
+import { Link, redirect } from "~/i18n/routing";
 import { api } from "~/trpc/server";
 import { CustomKodixIcon } from "../../_components/app/custom-kodix-icon";
 

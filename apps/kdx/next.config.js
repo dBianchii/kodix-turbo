@@ -2,7 +2,7 @@ import { fileURLToPath } from "url";
 import { createJiti } from "jiti";
 import createNextIntlPlugin from "next-intl/plugin";
 
-const withNextIntl = createNextIntlPlugin("./src/i18n.ts");
+const withNextIntl = createNextIntlPlugin();
 
 // Import env files to validate at build time. Use jiti so we can load .ts files in here.
 await createJiti(fileURLToPath(import.meta.url)).import("./src/env");

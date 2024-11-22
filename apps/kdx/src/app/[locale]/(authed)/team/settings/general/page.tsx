@@ -2,8 +2,8 @@ import { Suspense } from "react";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
-import { redirect } from "@kdx/locales/next-intl/navigation";
 
+import { redirect } from "~/i18n/routing";
 import { api } from "~/trpc/server";
 import { DeleteTeamCardClient } from "./_components/delete-team-card-client";
 import { EditTeamNameCardClient } from "./_components/edit-team-name-card-client";

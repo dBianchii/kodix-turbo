@@ -4,9 +4,8 @@ import { revalidatePath } from "next/cache";
 import { getLocale } from "next-intl/server";
 import { z } from "zod";
 
-import { redirect } from "@kdx/locales/next-intl/navigation";
-
 import { action } from "~/helpers/safe-action/safe-action";
+import { redirect } from "~/i18n/routing";
 import { api } from "~/trpc/server";
 
 export const switchTeamAction = action

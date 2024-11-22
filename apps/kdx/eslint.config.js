@@ -22,8 +22,7 @@ export default [
         "error",
         {
           name: "next/link",
-          message:
-            "Please import from `@kdx/locales/next-intl/navigation` instead.",
+          message: "Please import from `~/i18n/routing` instead.",
         },
         {
           name: "next/navigation",
@@ -33,8 +32,7 @@ export default [
             "useRouter",
             "usePathname",
           ],
-          message:
-            "Please import from `@kdx/locales/next-intl/navigation` instead.",
+          message: "Please import from `~/i18n/routing` instead.",
         },
       ],
     },

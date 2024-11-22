@@ -3,11 +3,11 @@ import { getLocale, getTranslations } from "next-intl/server";
 
 import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
-import { redirect } from "@kdx/locales/next-intl/navigation";
 import { getAppName } from "@kdx/locales/next-intl/server-hooks";
 
 import type { AppPathnames } from "~/helpers/miscelaneous";
 import { appIdToPathname, appPathnameToAppId } from "~/helpers/miscelaneous";
+import { redirect } from "~/i18n/routing";
 import { api } from "~/trpc/server";
 import { DataTableAppPermissions } from "./_components/data-table-app-permissions";
 import { DataTableUserAppRoles } from "./_components/data-table-user-app-roles";

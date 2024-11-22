@@ -4,7 +4,6 @@ import { use } from "react";
 import { useTranslations } from "next-intl";
 import { LuLoader2 } from "react-icons/lu";
 
-import { Link } from "@kdx/locales/next-intl/navigation";
 import { cn } from "@kdx/ui";
 import { Button, buttonVariants } from "@kdx/ui/button";
 import {
@@ -27,6 +26,7 @@ import { Input } from "@kdx/ui/input";
 import { ZChangePasswordInputSchema } from "@kdx/validators/trpc/user";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
+import { Link } from "~/i18n/routing";
 import { api } from "~/trpc/react";
 
 export default function ForgotPasswordPage(props: {

@@ -5,7 +5,6 @@ import { LuLoader2 } from "react-icons/lu";
 import { MdNotificationsActive } from "react-icons/md";
 
 import type { RouterOutputs } from "@kdx/api";
-import { useRouter } from "@kdx/locales/next-intl/navigation";
 import { Button } from "@kdx/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
 import { Separator } from "@kdx/ui/separator";
@@ -18,6 +17,7 @@ import {
 } from "@kdx/ui/tooltip";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
+import { useRouter } from "~/i18n/routing";
 import { api } from "~/trpc/react";
 
 export function NotificationsPopoverClient({

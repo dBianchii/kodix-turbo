@@ -3,7 +3,6 @@
 import { useTranslations } from "next-intl";
 import { LuLoader2 } from "react-icons/lu";
 
-import { useRouter } from "@kdx/locales/next-intl/navigation";
 import { getErrorMessage } from "@kdx/shared";
 import {
   AlertDialog,
@@ -28,6 +27,7 @@ import { Form, useForm } from "@kdx/ui/form";
 import { toast } from "@kdx/ui/toast";
 import { ZLeaveTeamInputSchema } from "@kdx/validators/trpc/team";
 
+import { useRouter } from "~/i18n/routing";
 import { api } from "~/trpc/react";
 
 export function LeaveTeamCardClient({

@@ -1,8 +1,7 @@
 import { getTranslations } from "next-intl/server";
 
-import { Link } from "@kdx/locales/next-intl/navigation";
-
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
+import { Link } from "~/i18n/routing";
 
 export async function Footer() {
   const t = await getTranslations();

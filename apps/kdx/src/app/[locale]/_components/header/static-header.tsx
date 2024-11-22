@@ -2,9 +2,9 @@
 
 import { useTranslations } from "next-intl";
 
-import { Link } from "@kdx/locales/next-intl/navigation";
 import { buttonVariants } from "@kdx/ui/button";
 
+import { Link } from "~/i18n/routing";
 import { api } from "~/trpc/react";
 import MaxWidthWrapper from "../max-width-wrapper";
 import { I18nPicker } from "./i18n-picker";

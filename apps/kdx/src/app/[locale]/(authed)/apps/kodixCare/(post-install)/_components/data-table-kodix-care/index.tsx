@@ -29,7 +29,6 @@ import { create } from "zustand";
 
 import type { RouterOutputs } from "@kdx/api";
 import dayjs from "@kdx/dayjs";
-import { Link } from "@kdx/locales/next-intl/navigation";
 import { cn } from "@kdx/ui";
 import {
   AlertDialog,
@@ -96,6 +95,7 @@ import {
 } from "@kdx/validators/trpc/app/kodixCare/careTask";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
+import { Link } from "~/i18n/routing";
 import { api } from "~/trpc/react";
 import { DateTimeSelectorWithLeftAndRightArrows } from "./date-time-selector-with-left-and-right-buttons";
 

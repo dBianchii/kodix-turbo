@@ -3,10 +3,10 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { RxPlusCircled } from "react-icons/rx";
 
 import { auth } from "@kdx/auth";
-import { Link, redirect } from "@kdx/locales/next-intl/navigation";
 
 import { KodixApp } from "~/app/[locale]/_components/app/kodix-app";
 import { KodixAppSkeleton } from "~/app/[locale]/_components/app/kodix-app-skeleton";
+import { Link, redirect } from "~/i18n/routing";
 import { api } from "~/trpc/server";
 
 export default async function SettingsAppsPage() {

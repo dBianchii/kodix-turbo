@@ -6,7 +6,6 @@ import { MdOutlineSwapHorizontalCircle } from "react-icons/md";
 import { RxGear, RxPerson } from "react-icons/rx";
 
 import type { User } from "@kdx/auth";
-import { Link } from "@kdx/locales/next-intl/navigation";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Button } from "@kdx/ui/button";
 import {
@@ -20,6 +19,7 @@ import {
 } from "@kdx/ui/dropdown-menu";
 
 import { signOutAction } from "~/helpers/actions";
+import { Link } from "~/i18n/routing";
 
 export function UserProfileButton({ user }: { user: User }) {
   const t = useTranslations("header");

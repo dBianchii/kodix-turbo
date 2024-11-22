@@ -9,7 +9,6 @@ import { RxDotsHorizontal, RxTrash } from "react-icons/rx";
 import type { User } from "@kdx/auth";
 import type { KodixAppId } from "@kdx/shared";
 import { useAppDescription, useAppName } from "@kdx/locales/next-intl/hooks";
-import { Link, useRouter } from "@kdx/locales/next-intl/navigation";
 import { kodixCareAppId, todoAppId } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { Badge } from "@kdx/ui/badge";
@@ -44,6 +43,7 @@ import {
   getAppUrl,
   trpcErrorToastDefault,
 } from "~/helpers/miscelaneous";
+import { Link, useRouter } from "~/i18n/routing";
 import { api } from "~/trpc/react";
 
 export function KodixApp({

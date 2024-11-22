@@ -3,8 +3,8 @@ import { getLocale } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
 import { teamRepository, userRepository } from "@kdx/db/repositories";
-import { redirect } from "@kdx/locales/next-intl/navigation";
 
+import { redirect } from "~/i18n/routing";
 import { api } from "~/trpc/server";
 
 export default async function InvitePage(props: {

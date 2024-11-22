@@ -22,10 +22,10 @@ import {
 } from "@tanstack/react-table";
 import { z } from "zod";
 
-import { usePathname, useRouter } from "@kdx/locales/next-intl/navigation";
 import { useDebounce } from "@kdx/ui/hooks/use-debounce";
 
 import type { DataTableFilterField } from "../_components/data-table-advanced/types";
+import { usePathname, useRouter } from "~/i18n/routing";
 
 interface UseDataTableProps<TData, TValue> {
   /**

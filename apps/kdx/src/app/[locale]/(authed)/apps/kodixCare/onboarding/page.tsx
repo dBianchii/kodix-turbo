@@ -1,10 +1,10 @@
 import { getLocale } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
-import { redirect } from "@kdx/locales/next-intl/navigation";
 import { kodixCareAppId } from "@kdx/shared";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
+import { redirect } from "~/i18n/routing";
 import { api } from "~/trpc/server";
 import OnboardingCard from "./_components/onboarding-card";
 

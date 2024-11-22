@@ -1,9 +1,9 @@
 import { getLocale, getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
-import { Link, redirect } from "@kdx/locales/next-intl/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@kdx/ui/card";
 
+import { Link, redirect } from "~/i18n/routing";
 import { ProviderButtons } from "../_components/provider-buttons";
 import { PasswordSignInForm } from "./_components/password-signin-form";
 

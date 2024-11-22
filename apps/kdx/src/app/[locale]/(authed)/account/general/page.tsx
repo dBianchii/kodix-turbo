@@ -2,8 +2,8 @@ import { Suspense } from "react";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
-import { redirect } from "@kdx/locales/next-intl/navigation";
 
+import { redirect } from "~/i18n/routing";
 import SettingsEditCardSkeleton from "../../team/settings/general/_components/edit-team-name-card-skeleton";
 import { AddTeamDialogButton } from "./_components/add-team-dialog-button/add-team-dialog-button";
 import { DeleteAccountCard } from "./_components/delete-account-card";

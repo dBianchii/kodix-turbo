@@ -4,7 +4,6 @@ import { useSearchParams } from "next/navigation";
 import { TrashIcon } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
 
-import { usePathname, useRouter } from "@kdx/locales/next-intl/navigation";
 import { dataTableConfig } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
@@ -21,6 +20,7 @@ import {
 } from "@kdx/ui/select";
 
 import type { DataTableFilterOption } from "./types";
+import { usePathname, useRouter } from "~/i18n/routing";
 import { DataTableAdvancedFacetedFilter } from "./data-table-advanced-faceted-filter";
 
 interface DataTableFilterItemProps<TData> {

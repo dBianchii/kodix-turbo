@@ -2,8 +2,8 @@ import { getLocaleBasedOnCookie } from "node_modules/@kdx/api/src/utils/locales"
 
 import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
-import { redirect } from "@kdx/locales/next-intl/navigation";
 
+import { redirect } from "~/i18n/routing";
 import { api } from "~/trpc/server";
 
 /**

@@ -1,4 +1,4 @@
-import { Link } from "@kdx/locales/next-intl/navigation";
+import { Link } from "~/i18n/routing";
 
 export function Logo({ redirect }: { redirect: string }) {
   return (

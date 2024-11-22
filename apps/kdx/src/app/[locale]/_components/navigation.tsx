@@ -2,7 +2,6 @@
 
 import { RxArrowLeft } from "react-icons/rx";
 
-import { Link, usePathname } from "@kdx/locales/next-intl/navigation";
 import { cn } from "@kdx/ui";
 import { useMediaQuery } from "@kdx/ui/hooks/use-media-query";
 import {
@@ -12,6 +11,8 @@ import {
   NavigationMenuList,
 } from "@kdx/ui/navigation-menu/index";
 import { navigationMenuTriggerStyle } from "@kdx/ui/navigation-menu/navigationMenuTriggerStyle";
+
+import { Link, usePathname } from "~/i18n/routing";
 
 export function Navigation({
   goBackItem,
