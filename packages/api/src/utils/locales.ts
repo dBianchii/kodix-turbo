@@ -6,8 +6,8 @@ import type { locales } from "@kdx/locales";
 import { defaultLocale } from "@kdx/locales";
 import { createI18nZodErrors } from "@kdx/validators/useI18nZodErrors";
 
-export const getLocaleBasedOnCookie = () =>
-  (cookies().get("NEXT_LOCALE")?.value ??
+export const getLocaleBasedOnCookie = async () =>
+  ((await cookies()).get("NEXT_LOCALE")?.value ??
     defaultLocale) as (typeof locales)[number];
 
 type SchemaGetterFromT<S extends ZodSchema> = (
@@ -17,7 +17,7 @@ type SchemaGetterFromT<S extends ZodSchema> = (
 export const T =
   <S extends ZodSchema>(schemaGetter: SchemaGetterFromT<S>) =>
   async (input: unknown) => {
-    const locale = getLocaleBasedOnCookie();
+    const locale = await getLocaleBasedOnCookie();
     const t = await getTranslations({ locale });
 
     await createI18nZodErrors({ locale });

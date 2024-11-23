@@ -1,18 +1,21 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
-import { Link, redirect } from "@kdx/locales/next-intl/navigation";
 
+import { Link, redirect } from "~/i18n/routing";
 import { ProviderButtons } from "../_components/provider-buttons";
 import { PasswordSignupForm } from "./_components/password-signup-form";
 
-export default async function SignUpPage({
-  searchParams,
-}: {
-  searchParams?: Record<string, string | undefined>;
+export default async function SignUpPage(props: {
+  searchParams?: Promise<Record<string, string | undefined>>;
 }) {
+  const searchParams = await props.searchParams;
   const { user } = await auth();
-  if (user) return redirect(searchParams?.callbackUrl ?? "/");
+  if (user)
+    return redirect({
+      href: searchParams?.callbackUrl ?? "/",
+      locale: await getLocale(),
+    });
   const t = await getTranslations();
   return (
     <div className="container my-auto flex max-w-2xl">
@@ -48,7 +51,7 @@ export default async function SignUpPage({
                 {t("Sign in")}
               </Link>
             </div>
-            <div className="text-center text-xs text-muted-foreground">
+            {/* <div className="text-center text-xs text-muted-foreground">
               {t("By continuing you agree to our")}{" "}
               <a href="#" className="text-white underline">
                 {t("Terms of Service")}
@@ -58,7 +61,7 @@ export default async function SignUpPage({
                 {t("Privacy policy")}
               </a>
               .
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

@@ -2,8 +2,9 @@
 
 import React from "react";
 
-import { usePathname } from "@kdx/locales/next-intl/navigation";
 import { cn } from "@kdx/ui";
+
+import { usePathname } from "~/i18n/routing";
 
 export function ShouldRender({
   children,

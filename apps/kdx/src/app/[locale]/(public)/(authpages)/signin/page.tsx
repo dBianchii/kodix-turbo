@@ -1,19 +1,22 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
-import { Link, redirect } from "@kdx/locales/next-intl/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@kdx/ui/card";
 
+import { Link, redirect } from "~/i18n/routing";
 import { ProviderButtons } from "../_components/provider-buttons";
 import { PasswordSignInForm } from "./_components/password-signin-form";
 
-export default async function SignInPage({
-  searchParams,
-}: {
-  searchParams?: Record<string, string | undefined>;
+export default async function SignInPage(props: {
+  searchParams?: Promise<Record<string, string | undefined>>;
 }) {
+  const searchParams = await props.searchParams;
   const { user } = await auth();
-  if (user) redirect(searchParams?.callbackUrl ?? "/team");
+  if (user)
+    redirect({
+      href: searchParams?.callbackUrl ?? "/team",
+      locale: await getLocale(),
+    });
   const t = await getTranslations();
 
   let signUpHref = "/signup";

@@ -4,6 +4,7 @@
  */
 
 import type { useTranslations } from "next-intl";
+import type { getTranslations } from "next-intl/server";
 import type { ZodErrorMap } from "zod";
 import { defaultErrorMap, ZodIssueCode, ZodParsedType } from "zod";
 
@@ -53,9 +54,15 @@ const getKeyAndValues = (
 };
 
 interface ZodI18nMapOption {
-  t: ReturnType<typeof useTranslations<typeof zodNs>>;
-  tForm?: ReturnType<typeof useTranslations<typeof formNs>>;
-  tCustom?: ReturnType<typeof useTranslations<typeof customErrorsNs>>;
+  t:
+    | ReturnType<typeof useTranslations<typeof zodNs>>
+    | Awaited<ReturnType<typeof getTranslations<typeof zodNs>>>;
+  tForm?:
+    | ReturnType<typeof useTranslations<typeof formNs>>
+    | Awaited<ReturnType<typeof getTranslations<typeof formNs>>>;
+  tCustom?:
+    | ReturnType<typeof useTranslations<typeof customErrorsNs>>
+    | Awaited<ReturnType<typeof getTranslations<typeof customErrorsNs>>>;
   ns?: string | readonly string[];
 }
 

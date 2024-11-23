@@ -2,7 +2,6 @@ import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
-import { Button } from "@kdx/ui/button";
 import {
   Card,
   CardContent,
@@ -15,6 +14,7 @@ import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
 
 import { api } from "~/trpc/server";
+import { SubmitButton } from "./submit-button";
 
 export async function EditAccountNameCard({ name }: { name?: string | null }) {
   const { user } = await auth();
@@ -58,7 +58,7 @@ export async function EditAccountNameCard({ name }: { name?: string | null }) {
           <CardDescription>
             {t("account.Please use 32 characters at maximum")}
           </CardDescription>
-          <Button type="submit">{t("Save")}</Button>
+          <SubmitButton>{t("Save")}</SubmitButton>
         </CardFooter>
       </Card>
     </form>

@@ -557,11 +557,10 @@ export function postfixObjKeys<
 >(
   obj: A,
   postfix: B,
-): {
-  [Key in `${keyof A extends string ? keyof A : never}${B}`]:
-    | Variable<string>
-    | string;
-} {
+): Record<
+  `${keyof A extends string ? keyof A : never}${B}`,
+  Variable<string> | string
+> {
   return Object.fromEntries(
     Object.entries(obj).map(([k, v]) => [`${k}${postfix}`, v]),
   ) as any;
@@ -600,7 +599,7 @@ export type UnionToIntersection<UNION_T> = // From https://stackoverflow.com/a/5
 export type UnionObjectFromArrayOfPairs<ARR_T extends EntriesType> =
   DeepWritable<ARR_T> extends (infer R)[]
     ? R extends [infer key, infer val]
-      ? { [prop in key & PropertyKey]: val }
+      ? Record<key & PropertyKey, val>
       : never
     : never;
 export type MergeIntersectingObjects<ObjT> = { [key in keyof ObjT]: ObjT[key] };

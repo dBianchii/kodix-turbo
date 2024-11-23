@@ -72,8 +72,8 @@ export const usePushNotifications = () => {
   // >();
   const saveExpoTokenMutation =
     api.user.notifications.saveExpoToken.useMutation();
-  const notificationListener = useRef<Notifications.Subscription>();
-  const responseListener = useRef<Notifications.Subscription>();
+  const notificationListener = useRef<Notifications.Subscription>(undefined);
+  const responseListener = useRef<Notifications.Subscription>(undefined);
   const toast = useToastController();
   const utils = api.useUtils();
 
@@ -124,8 +124,7 @@ export const usePushNotifications = () => {
       if (responseListener.current)
         Notifications.removeNotificationSubscription(responseListener.current);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [saveExpoTokenMutation, toast, utils.user.getNotifications]);
 
   return { expoPushToken };
 };

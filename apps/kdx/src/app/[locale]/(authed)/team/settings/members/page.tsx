@@ -1,12 +1,12 @@
 import { Suspense } from "react";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
 import { teamRepository } from "@kdx/db/repositories";
-import { redirect } from "@kdx/locales/next-intl/navigation";
 import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@kdx/ui/tabs";
 
+import { redirect } from "~/i18n/routing";
 import { api } from "~/trpc/server";
 import { InviteDataTable } from "./_components/edit-team-members/invites/data-table-invite";
 import { DataTableMembers } from "./_components/edit-team-members/members/data-table-members";
@@ -14,7 +14,8 @@ import TeamInviteCard from "./_components/invite/team-invite-card";
 
 export default async function SettingsMembersPage() {
   const { user } = await auth();
-  if (!user) return redirect("/");
+  if (!user) return redirect({ href: "/", locale: await getLocale() });
+
   const t = await getTranslations();
 
   const currentTeam = await teamRepository.findTeamById(user.activeTeamId);

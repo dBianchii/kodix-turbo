@@ -92,7 +92,6 @@ export default function SignIn() {
   // //add it to a useEffect with response as a dependency
   // useEffect(() => {
   //   void signInWithGoogle();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [response]);
 
   //log the userInfo to see user details

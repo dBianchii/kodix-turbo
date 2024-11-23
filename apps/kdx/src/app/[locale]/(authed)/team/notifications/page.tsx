@@ -1,27 +1,26 @@
 import { Suspense } from "react";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
-import { redirect } from "@kdx/locales/next-intl/navigation";
 import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
 import { H1, Lead } from "@kdx/ui/typography";
 import { ZGetNotificationsInputSchema } from "@kdx/validators/trpc/user";
 
 import { CustomKodixIcon } from "~/app/[locale]/_components/app/custom-kodix-icon";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
+import { redirect } from "~/i18n/routing";
 import { api } from "~/trpc/server";
 import { DataTableNotifications } from "./_components/data-table-notifications";
 import { NotificationsDateRangePicker } from "./_components/notifications-date-range-picker";
 
 type SearchParams = Record<string, string | string[] | undefined>;
 
-export default async function NotificationsPage({
-  searchParams,
-}: {
-  searchParams: SearchParams;
+export default async function NotificationsPage(props: {
+  searchParams: Promise<SearchParams>;
 }) {
+  const searchParams = await props.searchParams;
   const { user } = await auth();
-  if (!user) redirect("/");
+  if (!user) redirect({ href: "/", locale: await getLocale() });
   const t = await getTranslations();
 
   const search = ZGetNotificationsInputSchema.parse(searchParams);

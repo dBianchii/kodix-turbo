@@ -4,7 +4,6 @@ import { useTranslations } from "next-intl";
 import { useAction } from "next-safe-action/hooks";
 import { LuArrowRight, LuLoader2 } from "react-icons/lu";
 
-import { useRouter } from "@kdx/locales/next-intl/navigation";
 import { kodixCareConfigSchema } from "@kdx/shared";
 import { Button } from "@kdx/ui/button";
 import {
@@ -28,6 +27,7 @@ import {
 import { Input } from "@kdx/ui/input";
 
 import { defaultSafeActionToastError } from "~/helpers/safe-action/default-action-error-toast";
+import { useRouter } from "~/i18n/routing";
 import { finishKodixCareOnboardingAction } from "../actions/onboardingActions";
 
 export default function OnboardingCard() {

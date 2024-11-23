@@ -1,9 +1,9 @@
 import { Suspense } from "react";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
-import { redirect } from "@kdx/locales/next-intl/navigation";
 
+import { redirect } from "~/i18n/routing";
 import SettingsEditCardSkeleton from "../../team/settings/general/_components/edit-team-name-card-skeleton";
 import { AddTeamDialogButton } from "./_components/add-team-dialog-button/add-team-dialog-button";
 import { DeleteAccountCard } from "./_components/delete-account-card";
@@ -13,7 +13,7 @@ import { EditUserTeamsTable } from "./_components/edit-users-teams-card/edit-use
 export default async function GeneralAccountSettings() {
   const { user } = await auth();
 
-  if (!user) return redirect("/");
+  if (!user) return redirect({ href: "/", locale: await getLocale() });
 
   const t = await getTranslations();
 

@@ -2,8 +2,9 @@
 
 import { LuArrowLeft } from "react-icons/lu";
 
-import { useRouter } from "@kdx/locales/next-intl/navigation";
 import { Button } from "@kdx/ui/button";
+
+import { useRouter } from "~/i18n/routing";
 
 export function BackButton() {
   const router = useRouter();

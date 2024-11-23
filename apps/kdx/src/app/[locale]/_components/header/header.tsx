@@ -2,10 +2,10 @@ import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
-import { Link } from "@kdx/locales/next-intl/navigation";
 import { buttonVariants } from "@kdx/ui/button";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
+import { Link } from "~/i18n/routing";
 import { api } from "~/trpc/server";
 import { AppSwitcher } from "../app-switcher";
 import { I18nPicker } from "./i18n-picker";

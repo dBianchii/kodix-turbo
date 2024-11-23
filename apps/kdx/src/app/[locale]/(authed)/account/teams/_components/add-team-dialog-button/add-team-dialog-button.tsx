@@ -7,7 +7,6 @@ import { useAction } from "next-safe-action/hooks";
 import { LuLoader2 } from "react-icons/lu";
 import { RxPlusCircled } from "react-icons/rx";
 
-import { useRouter } from "@kdx/locales/next-intl/navigation";
 import { getErrorMessage } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
@@ -25,6 +24,7 @@ import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
 import { toast } from "@kdx/ui/toast";
 
+import { useRouter } from "~/i18n/routing";
 import { createTeamAction } from "./actions";
 
 export function AddTeamDialogButton({

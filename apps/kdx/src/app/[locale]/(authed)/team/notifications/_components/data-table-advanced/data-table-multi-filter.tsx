@@ -1,3 +1,5 @@
+// eslint-disable-next-line react-compiler/react-compiler
+/* eslint-disable react-hooks/exhaustive-deps */
 import type { Table } from "@tanstack/react-table";
 import * as React from "react";
 import { useSearchParams } from "next/navigation";
@@ -10,7 +12,6 @@ import {
 import { useTranslations } from "next-intl";
 
 import type { DataTableConfig } from "@kdx/shared";
-import { usePathname, useRouter } from "@kdx/locales/next-intl/navigation";
 import { dataTableConfig } from "@kdx/shared";
 import { Button } from "@kdx/ui/button";
 import {
@@ -33,6 +34,7 @@ import {
 import { Separator } from "@kdx/ui/separator";
 
 import type { DataTableFilterOption } from "./types";
+import { usePathname, useRouter } from "~/i18n/routing";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 
 interface DataTableMultiFilterProps<TData> {
@@ -201,7 +203,6 @@ export function MultiFilterRow<TData>({
         },
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debounceValue, filterVariety, selectedOption?.value]);
 
   // Update operator query string
@@ -216,7 +217,6 @@ export function MultiFilterRow<TData>({
         },
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [operator?.value]);
 
   const t = useTranslations();

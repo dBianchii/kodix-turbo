@@ -1,3 +1,5 @@
+// eslint-disable-next-line react-compiler/react-compiler
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import type {
@@ -20,10 +22,10 @@ import {
 } from "@tanstack/react-table";
 import { z } from "zod";
 
-import { usePathname, useRouter } from "@kdx/locales/next-intl/navigation";
 import { useDebounce } from "@kdx/ui/hooks/use-debounce";
 
 import type { DataTableFilterField } from "../_components/data-table-advanced/types";
+import { usePathname, useRouter } from "~/i18n/routing";
 
 interface UseDataTableProps<TData, TValue> {
   /**
@@ -215,8 +217,6 @@ export function useDataTable<TData, TValue>({
         scroll: false,
       },
     );
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageIndex, pageSize]);
 
   // Handle server-side sorting
@@ -236,8 +236,6 @@ export function useDataTable<TData, TValue>({
           : null,
       })}`,
     );
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sorting]);
 
   // Handle server-side filtering
@@ -307,12 +305,9 @@ export function useDataTable<TData, TValue>({
     router.push(`${pathname}?${createQueryString(newParamsObject)}`);
 
     table.setPageIndex(0);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     JSON.stringify(debouncedSearchableColumnFilters),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     JSON.stringify(filterableColumnFilters),
   ]);
 

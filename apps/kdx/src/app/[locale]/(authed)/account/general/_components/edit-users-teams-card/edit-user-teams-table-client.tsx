@@ -7,7 +7,6 @@ import { RxChevronLeft, RxDotsHorizontal } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
-import { useRouter } from "@kdx/locales/next-intl/navigation";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import {
@@ -21,6 +20,7 @@ import { toast } from "@kdx/ui/toast";
 
 import { DeleteTeamConfirmationDialog } from "~/app/[locale]/(authed)/team/settings/general/_components/delete-team-confirmation-dialog";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
+import { useRouter } from "~/i18n/routing";
 import { api } from "~/trpc/react";
 import { switchTeamAction } from "./actions";
 

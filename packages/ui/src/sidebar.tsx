@@ -3,6 +3,7 @@
 import type { VariantProps } from "class-variance-authority";
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { cva } from "class-variance-authority";
 import { PanelLeft } from "lucide-react";
 
@@ -11,7 +12,13 @@ import { Button } from "./button";
 import { useIsMobile } from "./hooks/use-mobile";
 import { Input } from "./input";
 import { Separator } from "./separator";
-import { Sheet, SheetContent } from "./sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "./sheet";
 import { Skeleton } from "./skeleton";
 import {
   Tooltip,
@@ -84,6 +91,7 @@ const SidebarProvider = React.forwardRef<
         _setOpen(value);
 
         // This sets the cookie to keep the sidebar state.
+        // eslint-disable-next-line react-compiler/react-compiler
         document.cookie = `${SIDEBAR_COOKIE_NAME}=${open}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
       },
       [setOpenProp, open],
@@ -214,6 +222,12 @@ const Sidebar = React.forwardRef<
             }
             side={side}
           >
+            <VisuallyHidden>
+              <SheetHeader>
+                <SheetTitle>Sidebar</SheetTitle>
+                <SheetDescription>Sidebar</SheetDescription>
+              </SheetHeader>
+            </VisuallyHidden>
             <div className="flex h-full w-full flex-col">{children}</div>
           </SheetContent>
         </Sheet>

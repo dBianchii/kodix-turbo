@@ -3,7 +3,6 @@
 import { useTranslations } from "next-intl";
 import { z } from "zod";
 
-import { useRouter } from "@kdx/locales/next-intl/navigation";
 import { getErrorMessage } from "@kdx/shared";
 import {
   AlertDialog,
@@ -36,6 +35,7 @@ import {
 import { Input } from "@kdx/ui/input";
 import { toast } from "@kdx/ui/toast";
 
+import { useRouter } from "~/i18n/routing";
 import { api } from "~/trpc/react";
 
 export function DeleteAccountCard() {

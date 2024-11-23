@@ -8,11 +8,12 @@ import { useFormatter, useTranslations } from "next-intl";
 import { RxCalendar } from "react-icons/rx";
 
 import type { ButtonProps } from "@kdx/ui/button";
-import { usePathname, useRouter } from "@kdx/locales/next-intl/navigation";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import { Calendar } from "@kdx/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
+
+import { usePathname, useRouter } from "~/i18n/routing";
 
 interface NotificationsDateRangePickerProps
   extends React.ComponentPropsWithoutRef<typeof PopoverContent> {
@@ -123,6 +124,7 @@ export function NotificationsDateRangePicker({
       scroll: false,
     });
 
+    // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date?.from, date?.to]);
   const formatT = useFormatter();

@@ -8,12 +8,11 @@ import { createDbSessionAndCookie } from "@kdx/auth/utils";
 
 export async function GET(
   request: NextRequest,
-  {
-    params,
-  }: {
-    params: { provider: string };
+  props: {
+    params: Promise<{ provider: string }>;
   },
 ) {
+  const params = await props.params;
   if (!Object.keys(providers).includes(params.provider)) {
     console.error("Invalid oauth provider", params.provider);
     return new Response(null, {
@@ -24,7 +23,7 @@ export async function GET(
   const searchParams = request.nextUrl.searchParams;
   const code = searchParams.get("code");
   const state = searchParams.get("state");
-  const storedState = cookies().get(`oauth_state`)?.value ?? null;
+  const storedState = (await cookies()).get(`oauth_state`)?.value ?? null;
   if (!code || !state || !storedState || state !== storedState) {
     console.error(
       "token mismatch",
@@ -39,7 +38,7 @@ export async function GET(
 
   try {
     const currentProvider = providers[params.provider as Providers];
-    const codeVerifier = cookies().get("code_verifier")?.value;
+    const codeVerifier = (await cookies()).get("code_verifier")?.value;
     if (currentProvider.name === "Google" && !codeVerifier) {
       console.error("Missing code verifier");
       return new Response(null, {
@@ -52,8 +51,8 @@ export async function GET(
 
     await createDbSessionAndCookie({ userId });
 
-    const callbackUrl = cookies().get("callbackUrl")?.value;
-    if (callbackUrl) cookies().delete("callbackUrl");
+    const callbackUrl = (await cookies()).get("callbackUrl")?.value;
+    if (callbackUrl) (await cookies()).delete("callbackUrl");
 
     return new Response(null, {
       status: 302,

@@ -5,8 +5,8 @@
   "api": {
     "emails": {
       "Join invitedByUsername on Kodix": "Join {invitedByUsername} on Kodix",
-      "Join teamName on Kodix": "Join <teamname></teamname> on <site></site>",
-      "Has invited you to the teamName team on Kodix": "Has invited you to the <teamname></teamname> team on <site></site>",
+      "Join teamName on Kodix": "Join <teamName>teamName</teamName> on {site}",
+      "Has invited you to the teamName team on Kodix": "Has invited you to the <teamName>teamName</teamName> team on {site}",
       "Join the team": "Join the team",
       "This invitation was intended for": "This invitation was intended for",
       "This invite was sent from": "This invite was sent from",

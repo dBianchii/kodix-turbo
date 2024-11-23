@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { LuCog, LuHome, LuListChecks, LuPanelLeft } from "react-icons/lu";
 
-import { Link, usePathname } from "@kdx/locales/next-intl/navigation";
 import { kodixCareAppId } from "@kdx/shared";
 import { Button } from "@kdx/ui/button";
 import {
@@ -19,6 +18,7 @@ import {
 } from "@kdx/ui/sidebar";
 
 import { IconKodixApp } from "~/app/[locale]/_components/app/kodix-icon";
+import { Link, usePathname } from "~/i18n/routing";
 
 export function SideBarToggle() {
   const { toggleSidebar } = useSidebar();
@@ -50,8 +50,7 @@ export function KodixCareSideBar() {
 
   useEffect(() => {
     setOpenMobile(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname, isMobile]);
+  }, [pathname, isMobile, setOpenMobile]);
 
   return (
     <Sidebar

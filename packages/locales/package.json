@@ -7,31 +7,32 @@
     ".": "./src/index.ts",
     "./next-intl/hooks": "./src/next-intl/hooks/index.ts",
     "./next-intl/server-hooks": "./src/next-intl/hooks/server-hooks.ts",
-    "./next-intl/navigation": "./src/next-intl/navigation.ts",
     "./use-intl": "./src/use-intl/index.ts",
     "./messages/care-expo": "./src/messages/_exports/care-expo.ts"
   },
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "format": "prettier --check . '!src/generated/**' --ignore-path ../../.gitignore",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
     "@kdx/shared": "workspace:*",
-    "next-intl": "^3.20.0",
-    "react": "catalog:react18",
-    "use-intl": "^3.20.0"
+    "react": "catalog:react19"
   },
   "devDependencies": {
     "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "@types/react": "catalog:react18",
+    "@types/react": "catalog:react19",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "tsx": "4.7.3",
     "typescript": "catalog:"
+  },
+  "peerDependencies": {
+    "next-intl": "^3.25.1",
+    "use-intl": "^3.20.0"
   },
   "prettier": "@kdx/prettier-config"
 }
