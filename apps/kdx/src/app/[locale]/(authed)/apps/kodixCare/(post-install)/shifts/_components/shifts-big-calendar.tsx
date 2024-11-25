@@ -3,7 +3,7 @@
 import type { EventPropGetter, View } from "react-big-calendar";
 import type { EventInteractionArgs } from "react-big-calendar/lib/addons/dragAndDrop";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { Calendar, dayjsLocalizer } from "react-big-calendar";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import { LuArrowRight, LuLoader2, LuPlus } from "react-icons/lu";
@@ -18,21 +18,12 @@ import {
   Credenza,
   CredenzaBody,
   CredenzaContent,
-  CredenzaDescription,
   CredenzaFooter,
   CredenzaHeader,
   CredenzaTitle,
   CredenzaTrigger,
 } from "@kdx/ui/credenza";
 import { DateTimePicker24h } from "@kdx/ui/date-n-time/date-time-picker-24h";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@kdx/ui/dialog";
 import {
   Form,
   FormControl,
@@ -49,10 +40,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@kdx/ui/select";
-import {
-  ZCreateCareShiftInputSchema,
-  ZEditCareShiftInputSchema,
-} from "@kdx/validators/trpc/app/kodixCare";
+import { ZCreateCareShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
@@ -65,85 +53,12 @@ import { useLocale } from "next-intl";
 import { useDebounce } from "@kdx/ui/hooks/use-debounce";
 import { toast } from "@kdx/ui/toast";
 
+import { EditCareShiftCredenza } from "./edit-care-shift-credenza";
+import { useCareShiftsData, useEditCareShift, useShiftOverlap } from "./hooks";
+import { WarnOverlappingShifts } from "./warn-overlapping-shifts";
+
 const DnDCalendar = withDragAndDrop(Calendar);
 const localizer = dayjsLocalizer(dayjs);
-
-const useCareShiftsData = (
-  initialShifts: RouterOutputs["app"]["kodixCare"]["getAllCareShifts"],
-) => {
-  const utils = api.useUtils();
-  const query = api.app.kodixCare.getAllCareShifts.useQuery(undefined, {
-    initialData: initialShifts,
-  });
-  const mutation = api.app.kodixCare.editCareShift.useMutation({
-    onMutate: async (newShift) => {
-      await utils.app.kodixCare.getAllCareShifts.cancel();
-      const previousData = utils.app.kodixCare.getAllCareShifts.getData();
-      utils.app.kodixCare.getAllCareShifts.setData(undefined, (old) =>
-        old?.map((shift) =>
-          shift.id === newShift.id
-            ? {
-                ...shift,
-                startAt: newShift.startAt
-                  ? new Date(newShift.startAt)
-                  : shift.startAt,
-                endAt: newShift.endAt ? new Date(newShift.endAt) : shift.endAt,
-              }
-            : shift,
-        ),
-      );
-      return { previousData };
-    },
-    onError: (err, _newShift, context) => {
-      trpcErrorToastDefault(err);
-      if (context?.previousData) {
-        utils.app.kodixCare.getAllCareShifts.setData(
-          undefined,
-          context.previousData,
-        );
-      }
-    },
-    onSettled: () => {
-      void utils.app.kodixCare.getAllCareShifts.invalidate();
-    },
-  });
-
-  return { query, mutation };
-};
-
-const useShiftOverlap = ({
-  startAt,
-  endAt,
-  excludeId,
-}: {
-  startAt: Date | undefined;
-  endAt: Date | undefined;
-  excludeId?: string;
-}) => {
-  const query = api.app.kodixCare.findOverlappingShifts.useQuery(
-    {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      start: startAt!,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      end: endAt!,
-    },
-    {
-      enabled: Boolean(
-        startAt && endAt && dayjs(startAt).isBefore(dayjs(endAt)),
-      ),
-    },
-  );
-
-  const overlappingShifts = useMemo(
-    () => query.data?.filter((shift) => shift.id !== excludeId),
-    [query.data, excludeId],
-  );
-
-  return {
-    overlappingShifts,
-    isChecking: query.isFetching,
-  };
-};
 
 interface ShiftEvent {
   id: string;
@@ -175,7 +90,8 @@ export function ShiftsBigCalendar({
   const t = useTranslations();
   const locale = useLocale();
 
-  const { query, mutation } = useCareShiftsData(initialShifts);
+  const query = useCareShiftsData(initialShifts);
+  const mutation = useEditCareShift();
 
   const selectedEvent = useMemo(
     () => query.data.find((shift) => shift.id === selectedEventId),
@@ -558,285 +474,6 @@ function CreateShiftCredenzaButton({
             </CredenzaBody>
             <CredenzaFooter className="mt-6 justify-end">
               <Button disabled={isChecking || mutation.isPending} type="submit">
-                {isChecking || mutation.isPending ? (
-                  <>
-                    <LuLoader2 className="mr-2 size-4 animate-spin" />
-                    {isChecking ? t("Checking") : t("Saving")}...
-                  </>
-                ) : (
-                  t("Create")
-                )}
-              </Button>
-            </CredenzaFooter>
-          </form>
-        </Form>
-      </CredenzaContent>
-    </Credenza>
-  );
-}
-
-function WarnOverlappingShifts({
-  overlaps,
-  onClickConfirm,
-  isSubmitting,
-  open,
-  setOpen,
-}: {
-  overlaps: RouterOutputs["app"]["kodixCare"]["findOverlappingShifts"];
-  onClickConfirm: () => void;
-  isSubmitting: boolean;
-  open: boolean;
-  setOpen: (open: boolean) => void;
-}) {
-  const format = useFormatter();
-  const t = useTranslations();
-
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent>
-        <DialogHeader className="mt-6">
-          <DialogTitle>
-            {t("It seems that there are some overlapping shifts")}
-          </DialogTitle>
-        </DialogHeader>
-        {overlaps.length && (
-          <ul className="my-4 list-disc rounded-md border p-4 pl-5">
-            {overlaps.map((overlap) => (
-              <li key={overlap.id} className="mb-2 flex items-center gap-2">
-                <AvatarWrapper
-                  className="size-6"
-                  src={overlap.Caregiver.image ?? ""}
-                  fallback={overlap.Caregiver.name}
-                />
-                {overlap.Caregiver.name}:
-                <span className="text-muted-foreground">
-                  {`${format.dateTime(overlap.startAt, "shortWithHours")} - ${format.dateTime(overlap.endAt, "shortWithHours")}`}
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
-        <DialogDescription>
-          {t("Are you sure you want to create a shift anyways")}
-        </DialogDescription>
-        <DialogFooter className="gap-3 sm:justify-between">
-          <Button
-            variant={"outline"}
-            disabled={isSubmitting}
-            onClick={() => setOpen(false)}
-          >
-            {t("Cancel")}
-          </Button>
-          <Button
-            onClick={() => {
-              onClickConfirm();
-              setOpen(false);
-            }}
-          >
-            {isSubmitting ? (
-              <>
-                <LuLoader2 className="mr-2 size-4 animate-spin" />
-                {t("Saving")}...
-              </>
-            ) : (
-              t("Confirm")
-            )}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
-
-function EditCareShiftCredenza({
-  careShift,
-  careGivers,
-  myRoles,
-  setCareShift,
-}: {
-  careShift: RouterOutputs["app"]["kodixCare"]["getAllCareShifts"][number];
-  setCareShift: (shiftId: string | null) => void;
-  myRoles: RouterOutputs["team"]["appRole"]["getMyRoles"];
-  careGivers: RouterOutputs["app"]["kodixCare"]["getAllCaregivers"];
-}) {
-  const t = useTranslations();
-  const canEditCareGiver = myRoles.some(
-    (x) => x.appRoleDefaultId === kodixCareRoleDefaultIds.admin,
-  );
-  const [warnOverlappingShiftsOpen, setWarnOverlappingShiftsOpen] =
-    useState(false);
-  const { mutation } = useCareShiftsData([]);
-
-  const form = useForm({
-    schema: ZEditCareShiftInputSchema(t),
-    defaultValues: {
-      id: careShift.id,
-      startAt: careShift.startAt,
-      endAt: careShift.endAt,
-      careGiverId: careShift.caregiverId,
-    },
-  });
-
-  const { startAt, endAt } = form.watch();
-  const { isChecking, overlappingShifts } = useShiftOverlap({
-    startAt,
-    endAt,
-    excludeId: careShift.id,
-  });
-
-  const handleClose = () => {
-    form.reset();
-    setCareShift(null);
-  };
-
-  const getSubmitHandler = (force = false) =>
-    form.handleSubmit(async (values) => {
-      if (values.startAt && values.endAt && !force) {
-        if (!overlappingShifts) return;
-
-        if (
-          overlappingShifts.some(
-            (shift) => shift.Caregiver.id === values.careGiverId,
-          )
-        )
-          return form.setError("careGiverId", {
-            message: t("api.This caregiver already has a shift at this time"),
-          });
-
-        if (overlappingShifts.length) {
-          setWarnOverlappingShiftsOpen(true);
-          return;
-        }
-      }
-
-      await mutation.mutateAsync(values);
-      handleClose();
-    });
-
-  return (
-    <Credenza open={!!careShift} onOpenChange={handleClose}>
-      <CredenzaContent className="max-w-[750px]">
-        {overlappingShifts ? (
-          <WarnOverlappingShifts
-            isSubmitting={mutation.isPending}
-            overlaps={overlappingShifts}
-            onClickConfirm={() => {
-              void getSubmitHandler(true)();
-            }}
-            open={warnOverlappingShiftsOpen}
-            setOpen={setWarnOverlappingShiftsOpen}
-          />
-        ) : null}
-        <Form {...form}>
-          <form onSubmit={getSubmitHandler()} className="space-y-6">
-            <CredenzaHeader>
-              <CredenzaTitle>{t("apps.kodixCare.Edit shift")}</CredenzaTitle>
-              <CredenzaDescription>
-                {t("apps.kodixCare.Edit shift for")} {careShift.Caregiver.name}
-              </CredenzaDescription>
-            </CredenzaHeader>
-
-            <CredenzaBody className="grid gap-4 py-4">
-              <div className="flex flex-col gap-4 md:flex-row">
-                <FormField
-                  control={form.control}
-                  name="startAt"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("Start")}</FormLabel>
-                      <FormControl>
-                        <div className="flex flex-row gap-2">
-                          <DateTimePicker24h
-                            date={field.value}
-                            setDate={(newDate) =>
-                              field.onChange(newDate ?? new Date())
-                            }
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <LuArrowRight className="mt-8 hidden size-6 flex-shrink-0 self-center md:mb-[14px] md:block" />
-
-                <FormField
-                  control={form.control}
-                  name="endAt"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>{t("End")}</FormLabel>
-                      <FormControl>
-                        <div className="flex flex-row gap-2">
-                          <DateTimePicker24h
-                            date={field.value}
-                            setDate={(newDate) =>
-                              field.onChange(newDate ?? new Date())
-                            }
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              {/* Caregiver Selection */}
-              <FormField
-                control={form.control}
-                name="careGiverId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("Caregiver")}</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      value={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger
-                          disabled={!canEditCareGiver}
-                          className="h-auto ps-2 [&>span]:flex [&>span]:items-center [&>span]:gap-2 [&>span_img]:shrink-0"
-                        >
-                          <SelectValue placeholder={t("Select a caregiver")} />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {careGivers.map((user) => (
-                          <SelectItem
-                            key={user.id}
-                            value={user.id}
-                            className="p-2"
-                          >
-                            <div className="flex items-center gap-2">
-                              <AvatarWrapper
-                                className="size-10 rounded-full"
-                                src={user.image ?? ""}
-                                alt={user.name}
-                                fallback={user.name}
-                                width={40}
-                                height={40}
-                              />
-                              <span className="font-medium">{user.name}</span>
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </CredenzaBody>
-            <CredenzaFooter>
-              <Button
-                type="submit"
-                disabled={
-                  mutation.isPending || !form.formState.isDirty || isChecking
-                }
-              >
                 {isChecking || mutation.isPending ? (
                   <>
                     <LuLoader2 className="mr-2 size-4 animate-spin" />

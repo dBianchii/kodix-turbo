@@ -19,7 +19,6 @@ export const users = mysqlTable(
     name: t.varchar({ length: DEFAULTLENGTH }).notNull(),
     passwordHash: t.varchar({ length: 255 }),
     email: t.varchar({ length: DEFAULTLENGTH }).notNull().unique(),
-    emailVerified: t.timestamp().defaultNow(),
     image: t.varchar({ length: DEFAULTLENGTH }),
     activeTeamId: t.varchar({ length: DEFAULTLENGTH }).notNull(),
     kodixAdmin: t.boolean().default(false).notNull(),

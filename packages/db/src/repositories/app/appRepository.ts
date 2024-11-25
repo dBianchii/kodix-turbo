@@ -1,6 +1,6 @@
 import type { InferInsertModel } from "drizzle-orm";
 import type { z } from "zod";
-import { and, eq, inArray, sql } from "drizzle-orm";
+import { and, asc, eq, inArray, sql } from "drizzle-orm";
 
 import type {
   AppIdsWithUserAppTeamConfig,
@@ -384,6 +384,30 @@ export async function uninstallAppForTeam(
     tx: db,
     appId: appId,
     teamId: teamId,
+  });
+}
+
+export async function findManyAppActivityLogs(
+  {
+    appId,
+    teamId,
+    page,
+    pageSize,
+  }: {
+    appId: KodixAppId;
+    teamId: string;
+    page: number;
+    pageSize: number;
+  },
+  db = _db,
+) {
+  const offset = (page - 1) * pageSize;
+  return db.query.appActivityLogs.findMany({
+    where: (appActivityLogs, { eq }) =>
+      and(eq(appActivityLogs.appId, appId), eq(appActivityLogs.teamId, teamId)),
+    orderBy: [asc(appActivityLogs.loggedAt)],
+    limit: pageSize,
+    offset: offset,
   });
 }
 

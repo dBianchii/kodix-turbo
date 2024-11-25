@@ -71,7 +71,7 @@ export const createCareShiftHandler = async ({
       tableName: "careShift",
       rowId: result.id,
       type: "create",
-      body: shift,
+      diff: shift,
     });
   });
 };

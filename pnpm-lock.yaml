@@ -508,6 +508,9 @@ importers:
       '@upstash/redis':
         specifier: ^1.31.6
         version: 1.31.6
+      deep-diff:
+        specifier: ^1.0.2
+        version: 1.0.2
       expo-server-sdk:
         specifier: ^3.11.0
         version: 3.11.0
@@ -548,6 +551,9 @@ importers:
       '@kdx/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
+      '@types/deep-diff':
+        specifier: ^1.0.5
+        version: 1.0.5
       '@types/ms':
         specifier: ^0.7.34
         version: 0.7.34
@@ -5899,6 +5905,9 @@ packages:
   '@types/date-arithmetic@4.1.4':
     resolution: {integrity: sha512-p9eZ2X9B80iKiTW4ukVj8B4K6q9/+xFtQ5MGYA5HWToY9nL4EkhV9+6ftT2VHpVMEZb5Tv00Iel516bVdO+yRw==}
 
+  '@types/deep-diff@1.0.5':
+    resolution: {integrity: sha512-PQyNSy1YMZU1hgZA5tTYfHPpUAo9Dorn1PZho2/budQLfqLu3JIP37JAavnwYpR1S2yFZTXa3hxaE4ifGW5jaA==}
+
   '@types/estree@1.0.5':
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
 
@@ -6522,6 +6531,7 @@ packages:
 
   babel-plugin-react-compiler@0.0.0:
     resolution: {integrity: sha512-Kigl0V36a/6hLVH7+CCe1CCtU3mFBqBd829V//VtuG7I/pyq+B2QZJqOefd63snQmdfCryNhO9XW1FbGPBvYDA==}
+    deprecated: 'This is a bad release: please install from the experimental tag instead'
 
   babel-plugin-react-compiler@0.0.0-experimental-592953e-20240517:
     resolution: {integrity: sha512-OjG1SVaeQZaJrqkMFJatg8W/MTow8Ak5rx2SI0ETQBO1XvOk/XZGMbltNCPdFJLKghBYoBjC+Y3Ap/Xr7B01mA==}
@@ -7166,6 +7176,9 @@ packages:
   decode-uri-component@0.2.2:
     resolution: {integrity: sha512-FqUYQ+8o158GyGTrMFJms9qh3CqTKvAqgqsTnkLI8sKu0028orqBhxNMFkFen0zGyg6epACD32pjVk58ngIErQ==}
     engines: {node: '>=0.10'}
+
+  deep-diff@1.0.2:
+    resolution: {integrity: sha512-aWS3UIVH+NPGCD1kki+DCU9Dua032iSsO43LqQpcs4R3+dVv7tX0qBGjiVHJHjplsoUM2XRO/KB92glqc68awg==}
 
   deep-extend@0.6.0:
     resolution: {integrity: sha512-LOHxIOaPYdHlJRtCQfDIVZtfw/ufM8+rVj649RIHzcm/vGwQRXFt6OPqIFWsm2XEMrNIEtWR64sY1LEKD2vAOA==}
@@ -18169,6 +18182,8 @@ snapshots:
 
   '@types/date-arithmetic@4.1.4': {}
 
+  '@types/deep-diff@1.0.5': {}
+
   '@types/estree@1.0.5': {}
 
   '@types/estree@1.0.6': {}
@@ -19601,6 +19616,8 @@ snapshots:
   decamelize@1.2.0: {}
 
   decode-uri-component@0.2.2: {}
+
+  deep-diff@1.0.2: {}
 
   deep-extend@0.6.0: {}
 

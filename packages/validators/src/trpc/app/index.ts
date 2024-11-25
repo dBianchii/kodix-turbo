@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import type { appActivityLogs } from "@kdx/db/schema";
 import type { KodixAppId } from "@kdx/shared";
 import {
   calendarAppId,
@@ -50,4 +51,16 @@ export const ZSaveUserAppTeamConfigInputSchema = z.object({
 });
 export type TSaveUserAppTeamConfigInputSchema = z.infer<
   typeof ZSaveUserAppTeamConfigInputSchema
+>;
+
+export const ZGetAppActivityInputSchema = z.object({
+  appId: z.custom<KodixAppId>(),
+  tables: z
+    .array(z.custom<typeof appActivityLogs.$inferSelect.tableName>())
+    .min(1),
+  perPage: z.number().min(1).default(10),
+  page: z.number().min(1).default(1),
+});
+export type TGetAppActivityInputSchema = z.infer<
+  typeof ZGetAppActivityInputSchema
 >;
