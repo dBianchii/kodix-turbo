@@ -53,7 +53,7 @@ export type TSaveUserAppTeamConfigInputSchema = z.infer<
   typeof ZSaveUserAppTeamConfigInputSchema
 >;
 
-export const ZGetAppActivityInputSchema = z.object({
+export const ZGetAppActivityLogsInputSchema = z.object({
   appId: z.custom<KodixAppId>(),
   tables: z
     .array(z.custom<typeof appActivityLogs.$inferSelect.tableName>())
@@ -61,6 +61,6 @@ export const ZGetAppActivityInputSchema = z.object({
   perPage: z.number().min(1).default(10),
   page: z.number().min(1).default(1),
 });
-export type TGetAppActivityInputSchema = z.infer<
-  typeof ZGetAppActivityInputSchema
+export type TGetAppActivityLogsInputSchema = z.infer<
+  typeof ZGetAppActivityLogsInputSchema
 >;

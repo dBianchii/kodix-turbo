@@ -1,17 +1,17 @@
-import type { TGetAppActivityInputSchema } from "@kdx/validators/trpc/app";
+import type { TGetAppActivityLogsInputSchema } from "@kdx/validators/trpc/app";
 import { appRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 
-interface GetAppActivityOptions {
+interface GetAppActivityLogsOptions {
   ctx: TProtectedProcedureContext;
-  input: TGetAppActivityInputSchema;
+  input: TGetAppActivityLogsInputSchema;
 }
 
-export const getAppActivityHandler = async ({
+export const getAppActivityLogsHandler = async ({
   ctx,
   input,
-}: GetAppActivityOptions) => {
+}: GetAppActivityLogsOptions) => {
   return await appRepository.findManyAppActivityLogs({
     appId: input.appId,
     page: input.page,

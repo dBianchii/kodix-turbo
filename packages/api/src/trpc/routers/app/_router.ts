@@ -1,7 +1,7 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 
 import {
-  ZGetAppActivityInputSchema,
+  ZGetAppActivityLogsInputSchema,
   ZGetConfigInput,
   ZGetUserAppTeamConfigInputSchema,
   ZInstallAppInputSchema,
@@ -18,7 +18,7 @@ import {
 } from "../../procedures";
 import { calendarRouter } from "./calendar/_router";
 import { getAllHandler } from "./getAll.handler";
-import { getAppActivityHandler } from "./getAppActivity.handler";
+import { getAppActivityLogsHandler } from "./getAppActivityLogs.handler";
 import { getConfigHandler } from "./getConfig.handler";
 import { getInstalledHandler } from "./getInstalled.handler";
 import { getUserAppTeamConfigHandler } from "./getUserAppTeamConfig.handler";
@@ -56,8 +56,8 @@ export const appRouter = {
     .input(ZSaveUserAppTeamConfigInputSchema)
     .use(appInstalledMiddleware)
     .mutation(saveUserAppTeamConfigHandler),
-  getAppActivity: protectedProcedure
-    .input(ZGetAppActivityInputSchema)
+  getAppActivityLogs: protectedProcedure
+    .input(ZGetAppActivityLogsInputSchema)
     .use(appInstalledMiddleware)
-    .query(getAppActivityHandler),
+    .query(getAppActivityLogsHandler),
 } satisfies TRPCRouterRecord;
