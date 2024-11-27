@@ -40,6 +40,22 @@ interface ShiftEvent {
   image?: string;
 }
 
+const useSelectEvent = ({
+  careShiftsData,
+}: {
+  careShiftsData:
+    | RouterOutputs["app"]["kodixCare"]["getAllCareShifts"]
+    | undefined;
+}) => {
+  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
+  const selectedEvent = useMemo(
+    () => careShiftsData?.find((shift) => shift.id === selectedEventId),
+    [careShiftsData, selectedEventId],
+  );
+  const delayed = useDebounce(selectedEvent, 125); //Hack. There was a bug that caused this to be fired if edit is open
+  return { selectedEvent, setSelectedEventId, delayed };
+};
+
 export function ShiftsBigCalendar({
   user,
   myRoles,
@@ -54,20 +70,19 @@ export function ShiftsBigCalendar({
   const [open, setOpen] = useState<
     { preselectedStart: Date; preselectedEnd: Date } | boolean
   >(false);
-  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const [view, setView] = useState<View>("day");
-  const [date, setDate] = useState(new Date());
+
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
   const t = useTranslations();
   const locale = useLocale();
 
   const query = useCareShiftsData(initialShifts);
   const mutation = useEditCareShift();
 
-  const selectedEvent = useMemo(
-    () => query.data.find((shift) => shift.id === selectedEventId),
-    [query.data, selectedEventId],
-  );
-  const delayed = useDebounce(selectedEvent, 125); //Hack. There was a bug that caused this to be fired if edit is open
+  const { selectedEvent, setSelectedEventId, delayed } = useSelectEvent({
+    careShiftsData: query.data,
+  });
 
   const handleEventChange = useCallback(
     (args: EventInteractionArgs<ShiftEvent>) => {
@@ -206,7 +221,6 @@ export function ShiftsBigCalendar({
           view={view}
           views={["month", "week", "day", "agenda"]}
           onView={setView}
-          defaultDate={dayjs().toDate()}
           events={calendarEvents}
           components={{
             // @ts-expect-error react big calendar typesafety sucks
@@ -224,8 +238,8 @@ export function ShiftsBigCalendar({
               </div>
             ),
           }}
-          date={date}
-          onNavigate={setDate}
+          date={selectedDate}
+          onNavigate={setSelectedDate}
           // @ts-expect-error react big calendar typesafety sucks
           onEventDrop={handleEventChange}
           // @ts-expect-error react big calendar typesafety sucks
@@ -239,10 +253,7 @@ export function ShiftsBigCalendar({
           }}
           draggableAccessor={() => true}
           // @ts-expect-error react big calendar typesafety sucks
-          onSelectEvent={(event: ShiftEvent) => {
-            setSelectedEventId(event.id);
-            return;
-          }}
+          onSelectEvent={(event: ShiftEvent) => setSelectedEventId(event.id)}
           selectable
           resizable
         />
