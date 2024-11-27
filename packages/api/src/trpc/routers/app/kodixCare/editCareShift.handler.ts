@@ -31,7 +31,17 @@ export const editCareShiftHandler = async ({
       message: ctx.t("api.Shift not found"),
     });
 
-  if (input.careGiverId && input.careGiverId !== oldShift.caregiverId) {
+  if (oldShift.finishedByUserId)
+    if (input.finishedByUserId !== null)
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: ctx.t("api.Cannot edit finished shifts"),
+      });
+
+  const currentUserIsShiftsCaregiver =
+    ctx.auth.user.id === oldShift.caregiverId;
+
+  if (!currentUserIsShiftsCaregiver) {
     const myRoles = await getMyRolesHandler({
       ctx,
       input: { appId: kodixCareAppId },
@@ -42,7 +52,7 @@ export const editCareShiftHandler = async ({
     )
       throw new TRPCError({
         code: "FORBIDDEN",
-        message: ctx.t("api.Only admins can change caregivers"),
+        message: ctx.t("api.Only admins can edit shifts for other caregivers"),
       });
   }
 
@@ -68,9 +78,8 @@ export const editCareShiftHandler = async ({
     checkIn: input.checkIn,
     checkOut: input.checkOut,
     notes: input.notes,
-    finished: input.finished,
+    finishedByUserId: input.finishedByUserId,
   };
-  if (input.checkOut) updateData.finished = input.finished ?? true;
 
   await db.transaction(async (tx) => {
     await kodixCareRepository.updateCareShift(

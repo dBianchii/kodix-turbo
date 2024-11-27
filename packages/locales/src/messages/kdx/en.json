@@ -57,9 +57,9 @@
       "Edit shift": "Edit shift",
       "Edit shift for": "Edit shift for",
       "Confirm finish shift": "Confirm finish shift",
-      "Are you sure you want to finish this shift": "Are you sure you want to finish this shift",
+      "Are you sure you want to finish this shift": "Do you want to finish this shift?",
       "This shift is locked": {
-        " Unlock it to make changes": "This shift is locked. Unlock it to make changes"
+        " Unlock it to make changes": "This shift is locked. Click on the lock to make changes"
       }
     },
     "todo": {
@@ -487,5 +487,14 @@
   "Are you sure you want to create a shift anyways": "Are you sure you want to create a shift anyways?",
   "Checking": "Checking",
   "Updated": "Updated",
-  "Logs": "Logs"
+  "Logs": "Logs",
+  "Confirm and finish": "Confirm and finish",
+  "Only save": "Only save",
+  "No": "No",
+  "Unlock shift": "Unlock shift",
+  "Are you sure you want to unlock this shift": "Are you sure you want to unlock this shift?",
+  "Unlock": "Unlock",
+  "Shift deleted": "Shift deleted",
+  "Edit task": "Edit task",
+  "Please wait": "Please wait..."
 }

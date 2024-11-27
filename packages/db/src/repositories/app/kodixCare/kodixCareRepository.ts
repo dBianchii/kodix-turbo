@@ -40,6 +40,15 @@ export async function createCareShift(
   return db.insert(careShifts).values(careShift).$returningId();
 }
 
+export async function deleteCareShiftById(
+  { id, teamId }: { id: string; teamId: string },
+  db = _db,
+) {
+  return db
+    .delete(careShifts)
+    .where(and(eq(careShifts.teamId, teamId), eq(careShifts.id, id)));
+}
+
 export async function getAllCareGivers(teamId: string, db = _db) {
   const users = await teamRepository.getUsersWithRoles(
     {
@@ -71,11 +80,11 @@ export async function findOverlappingShifts(
   db = _db,
 ) {
   return db.query.careShifts.findMany({
-    where: (careShifts, { and, gt, lt }) =>
+    where: (careShifts, { and, gte, lte }) =>
       and(
         eq(careShifts.teamId, teamId),
-        lt(careShifts.startAt, end),
-        gt(careShifts.endAt, start),
+        lte(careShifts.startAt, end),
+        gte(careShifts.endAt, start),
       ),
     with: {
       Caregiver: {

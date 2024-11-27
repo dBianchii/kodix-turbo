@@ -77,7 +77,12 @@
     "Shift not found": "Turno não encontrado",
     "Could not update resource": "Não foi possível atualizar o recurso",
     "This caregiver already has a shift at this time": "Este cuidador já possui um turno neste horário",
-    "Only admins can change caregivers": "Somente administradores podem mudar de cuidador"
+    "Only admins can change caregivers": "Somente administradores podem mudar de cuidador",
+    "Cannot edit finished shifts": "Não é possível editar turnos concluídos",
+    "Only admins can edit shifts for other caregivers": "Somente administradores podem editar turnos de outros cuidadores",
+    "Only admins can edit tasks that were done by others": "Somente administradores podem editar tarefas realizadas por outras pessoas",
+    "Only admins can delete shifts created by others": "Somente administradores podem excluir turnos criados por outras pessoas",
+    "This shift was not originally created by you ask your team manager to delete it": "Este turno não foi criado originalmente por você, peça ao administrador da equipe para excluí-lo"
   },
   "Updated": "Atualizado"
 }

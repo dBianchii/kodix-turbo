@@ -45,6 +45,7 @@ export const useEditCareShift = () => {
       }
     },
     onSettled: () => {
+      void utils.app.kodixCare.findOverlappingShifts.invalidate();
       void utils.app.kodixCare.getAllCareShifts.invalidate();
     },
   });

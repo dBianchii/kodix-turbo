@@ -28,6 +28,7 @@ import {
 import { create } from "zustand";
 
 import type { RouterOutputs } from "@kdx/api";
+import type { User } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
 import { cn } from "@kdx/ui";
 import {
@@ -97,6 +98,7 @@ import {
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { Link } from "~/i18n/routing";
 import { api } from "~/trpc/react";
+import { CreateShiftCredenzaButton } from "../../shifts/_components/create-care-shift-credenza";
 import { DateTimeSelectorWithLeftAndRightArrows } from "./date-time-selector-with-left-and-right-buttons";
 
 type CareTaskOrCalendarTask =
@@ -142,7 +144,7 @@ export const useCareTaskStore = create<{
   setCurrentlyEditing: (id) => set(() => ({ currentlyEditing: id })),
 }));
 
-export default function DataTableKodixCare() {
+export default function DataTableKodixCare({ user }: { user: User }) {
   const {
     input,
     setEditDetailsOpen,
@@ -361,6 +363,7 @@ export default function DataTableKodixCare() {
       {currentlyEditingCareTask && (
         <>
           <EditCareTaskCredenza
+            user={user}
             task={currentlyEditingCareTask}
             mutation={saveCareTaskMutation}
             open={editDetailsOpen}
@@ -816,11 +819,13 @@ function UnlockMoreTasksCredenza() {
 }
 
 function EditCareTaskCredenza({
+  user,
   task,
   mutation,
   open,
   setOpen,
 }: {
+  user: User;
   task: CareTask;
   mutation: ReturnType<
     typeof api.app.kodixCare.careTask.editCareTask.useMutation
@@ -830,6 +835,15 @@ function EditCareTaskCredenza({
 }) {
   const t = useTranslations();
 
+  const [editCareTaskOpen, setEditCareTaskOpen] = useState(false);
+  const [createShiftOpen, setCreateShiftOpen] = useState(false);
+
+  const overlappingShiftsQuery =
+    api.app.kodixCare.findOverlappingShifts.useQuery({
+      start: task.date,
+      end: task.date,
+    });
+
   const defaultValues = useMemo(
     () => ({
       id: task.id,
@@ -838,7 +852,6 @@ function EditCareTaskCredenza({
     }),
     [task],
   );
-
   const form = useForm({
     schema: ZEditCareTaskInputSchema(t).pick({
       id: true,
@@ -854,93 +867,156 @@ function EditCareTaskCredenza({
 
   const format = useFormatter();
 
-  return (
-    <Credenza open={open} onOpenChange={setOpen}>
-      <CredenzaContent>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit((values) => {
-              mutation.mutate({
-                id: values.id,
-                details: values.details,
-                doneAt: values.doneAt,
-              });
-              setOpen(false);
-            })}
-          >
-            <CredenzaHeader>
-              <CredenzaTitle>{t("apps.kodixCare.Edit task")}</CredenzaTitle>
-            </CredenzaHeader>
-            <div className="mt-6 flex flex-col gap-2 rounded-md border p-4 text-foreground/80">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold">
-                  {task.title ?? ""}
-                </span>
-                {task.type === "CRITICAL" && (
-                  <LuAlertCircle className="size-3 text-orange-400" />
-                )}
-              </div>
+  const isAtLeastOneOfTheOverlappingShiftsMine =
+    overlappingShiftsQuery.data?.some((x) => x.Caregiver.id === user.id);
 
-              <span className="line-clamp-3 text-xs font-semibold">
-                {task.description ?? ""}
-              </span>
-              <span className="flex text-xs font-semibold">
-                <RxCalendar className="mr-2 size-3 text-muted-foreground" />
-                {format.dateTime(task.date, "shortWithHours")}
-              </span>
+  useEffect(() => {
+    if (overlappingShiftsQuery.data) {
+      if (isAtLeastOneOfTheOverlappingShiftsMine) {
+        setOpen(false);
+        setEditCareTaskOpen(true);
+      }
+    }
+  }, [
+    overlappingShiftsQuery.data,
+    setOpen,
+    open,
+    isAtLeastOneOfTheOverlappingShiftsMine,
+  ]);
+
+  return (
+    <>
+      <AlertDialog open={open} onOpenChange={setOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("apps.kodixCare.Edit task")}</AlertDialogTitle>
+          </AlertDialogHeader>
+          {overlappingShiftsQuery.isLoading ? (
+            <div className="flex">
+              <LuLoader2 className="mr-2 size-4 animate-spin" />
+              {t("Please wait")}...
             </div>
-            <div className="grid gap-4 py-4">
-              <FormField
-                control={form.control}
-                name="doneAt"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("Done at")}</FormLabel>
-                    <FormControl>
-                      <div className="flex flex-row gap-2">
-                        <DateTimePicker24h
-                          date={field.value ?? undefined}
-                          setDate={(newDate) =>
-                            field.onChange(newDate ?? new Date())
-                          }
+          ) : (
+            <>
+              <div>
+                {!overlappingShiftsQuery.data?.length
+                  ? "Não existe um turno definido para essa tarefa. Você prefere definir um turno antes de editar?"
+                  : !isAtLeastOneOfTheOverlappingShiftsMine
+                    ? "Atenção: “Essa tarefa está inserida dentro de um turno que não é seu. Você prefere definir um turno seu antes de editar?"
+                    : ""}
+              </div>
+              <AlertDialogFooter className="flex gap-2 md:justify-between">
+                <AlertDialogAction
+                  className={cn(
+                    buttonVariants({
+                      variant: "secondary",
+                    }),
+                  )}
+                  onClick={() => {
+                    setEditCareTaskOpen(true);
+                  }}
+                >
+                  {t("No")}
+                </AlertDialogAction>
+                <CreateShiftCredenzaButton
+                  open={createShiftOpen}
+                  user={user}
+                  setOpen={(open) => {
+                    setCreateShiftOpen(!!open);
+                  }}
+                />
+              </AlertDialogFooter>
+            </>
+          )}
+        </AlertDialogContent>
+      </AlertDialog>
+      <Credenza open={editCareTaskOpen} onOpenChange={setEditCareTaskOpen}>
+        <CredenzaContent>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit((values) => {
+                mutation.mutate({
+                  id: values.id,
+                  details: values.details,
+                  doneAt: values.doneAt,
+                });
+                setOpen(false);
+              })}
+            >
+              <CredenzaHeader>
+                <CredenzaTitle>{t("apps.kodixCare.Edit task")}</CredenzaTitle>
+              </CredenzaHeader>
+              <div className="mt-6 flex flex-col gap-2 rounded-md border p-4 text-foreground/80">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-semibold">
+                    {task.title ?? ""}
+                  </span>
+                  {task.type === "CRITICAL" && (
+                    <LuAlertCircle className="size-3 text-orange-400" />
+                  )}
+                </div>
+
+                <span className="line-clamp-3 text-xs font-semibold">
+                  {task.description ?? ""}
+                </span>
+                <span className="flex text-xs font-semibold">
+                  <RxCalendar className="mr-2 size-3 text-muted-foreground" />
+                  {format.dateTime(task.date, "shortWithHours")}
+                </span>
+              </div>
+              <div className="grid gap-4 py-4">
+                <FormField
+                  control={form.control}
+                  name="doneAt"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("Done at")}</FormLabel>
+                      <FormControl>
+                        <div className="flex flex-row gap-2">
+                          <DateTimePicker24h
+                            date={field.value ?? undefined}
+                            setDate={(newDate) =>
+                              field.onChange(newDate ?? new Date())
+                            }
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage className="w-full" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="details"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("Details")}</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder={`${t("apps.kodixCare.Any information")}...`}
+                          className="w-full"
+                          rows={6}
+                          {...field}
+                          onChange={(e) => {
+                            field.onChange(e.target.value);
+                          }}
+                          value={field.value ?? undefined}
                         />
-                      </div>
-                    </FormControl>
-                    <FormMessage className="w-full" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="details"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("Details")}</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder={`${t("apps.kodixCare.Any information")}...`}
-                        className="w-full"
-                        rows={6}
-                        {...field}
-                        onChange={(e) => {
-                          field.onChange(e.target.value);
-                        }}
-                        value={field.value ?? undefined}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <CredenzaFooter className="mt-6 justify-end">
-              <Button disabled={mutation.isPending} type="submit">
-                {t("Save")}
-              </Button>
-            </CredenzaFooter>
-          </form>
-        </Form>
-      </CredenzaContent>
-    </Credenza>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <CredenzaFooter className="mt-6 justify-end">
+                <Button disabled={mutation.isPending} type="submit">
+                  {t("Save")}
+                </Button>
+              </CredenzaFooter>
+            </form>
+          </Form>
+        </CredenzaContent>
+      </Credenza>
+    </>
   );
 }

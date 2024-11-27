@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { LuArrowRight, LuLoader2, LuLock, LuUnlock } from "react-icons/lu";
+import { LuLoader2, LuLock, LuTrash, LuUnlock } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
+import type { User } from "@kdx/auth";
 import { kodixCareRoleDefaultIds } from "@kdx/shared";
+import { cn } from "@kdx/ui";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,7 +31,6 @@ import { DateTimePicker24h } from "@kdx/ui/date-n-time/date-time-picker-24h";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -43,7 +44,6 @@ import {
   FormMessage,
   useForm,
 } from "@kdx/ui/form";
-import { Label } from "@kdx/ui/label";
 import {
   Select,
   SelectContent,
@@ -55,24 +55,31 @@ import { Textarea } from "@kdx/ui/textarea";
 import { toast } from "@kdx/ui/toast";
 import { ZEditCareShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 
+import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
+import { api } from "~/trpc/react";
 import { useCareShiftsData, useEditCareShift, useShiftOverlap } from "./hooks";
 import { WarnOverlappingShifts } from "./warn-overlapping-shifts";
 
 export function EditCareShiftCredenza({
+  user,
   careShift,
   careGivers,
   myRoles,
   setCareShift,
 }: {
+  user: User;
   careShift: RouterOutputs["app"]["kodixCare"]["getAllCareShifts"][number];
   setCareShift: (shiftId: string | null) => void;
   myRoles: RouterOutputs["team"]["appRole"]["getMyRoles"];
   careGivers: RouterOutputs["app"]["kodixCare"]["getAllCaregivers"];
 }) {
   const t = useTranslations();
-  const canEditCareGiver = myRoles.some(
+  const userIsAdmin = myRoles.some(
     (x) => x.appRoleDefaultId === kodixCareRoleDefaultIds.admin,
   );
+  const canEdit = careShift.caregiverId === user.id || userIsAdmin;
+  const canEditCareGiver = userIsAdmin;
+
   const [confirmFinishShiftAlertOpen, setConfirmFinishShiftAlertOpen] =
     useState(false);
   const [warnOverlappingShiftsOpen, setWarnOverlappingShiftsOpen] =
@@ -82,6 +89,7 @@ export function EditCareShiftCredenza({
   const form = useForm({
     schema: ZEditCareShiftInputSchema(t),
     defaultValues: {
+      finishedByUserId: careShift.finishedByUserId,
       id: careShift.id,
       startAt: careShift.startAt,
       endAt: careShift.endAt,
@@ -91,6 +99,20 @@ export function EditCareShiftCredenza({
       notes: careShift.notes ?? undefined,
     },
   });
+  const utils = api.useUtils();
+  const deleteCareShiftMutation = api.app.kodixCare.deleteCareShift.useMutation(
+    {
+      onSuccess: () => {
+        setCareShift(null);
+        toast.success(t("Shift deleted"));
+      },
+      onError: (err) => trpcErrorToastDefault(err),
+      onSettled: () => {
+        void utils.app.kodixCare.getAllCareShifts.invalidate();
+        void utils.app.kodixCare.findOverlappingShifts.invalidate();
+      },
+    },
+  );
 
   const { startAt, endAt } = form.watch();
   const { isChecking, overlappingShifts } = useShiftOverlap({
@@ -117,17 +139,17 @@ export function EditCareShiftCredenza({
     handleClose();
   };
 
-  const isLocked = !!careShift.finished;
+  const isLocked = !!careShift.finishedByUserId;
 
   return (
     <Credenza open={!!careShift} onOpenChange={handleClose}>
       <CredenzaContent className="max-w-[750px]">
         <ConfirmFinishShiftAlert
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          checkIn={form.getValues().checkIn!}
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          checkOut={form.getValues().checkOut!}
-          onConfirm={form.handleSubmit(handleSendData)}
+          onConfirm={({ finish }) => {
+            form.setValue("finishedByUserId", finish ? user.id : null);
+
+            void form.handleSubmit(handleSendData)();
+          }}
           isSubmitting={mutation.isPending}
           open={confirmFinishShiftAlertOpen}
           setOpen={setConfirmFinishShiftAlertOpen}
@@ -163,14 +185,6 @@ export function EditCareShiftCredenza({
 
         <Form {...form}>
           <form
-            onClick={() => {
-              if (!isLocked) return;
-              toast.warning(
-                t(
-                  "apps.kodixCare.This shift is locked. Unlock it to make changes",
-                ),
-              );
-            }}
             onSubmit={form.handleSubmit(async (values) => {
               if (!overlappingShifts) return;
               if (values.startAt && values.endAt) {
@@ -185,7 +199,11 @@ export function EditCareShiftCredenza({
                     ),
                   });
 
-                if (overlappingShifts.length) {
+                if (
+                  overlappingShifts.length &&
+                  form.formState.touchedFields.startAt &&
+                  form.formState.touchedFields.endAt
+                ) {
                   setWarnOverlappingShiftsOpen(true);
                   return;
                 }
@@ -201,168 +219,220 @@ export function EditCareShiftCredenza({
             })}
             className="space-y-6"
           >
-            <CredenzaBody className="grid gap-4 py-4">
-              <div className="flex flex-col gap-4 md:flex-row">
-                <FormField
-                  control={form.control}
-                  name="startAt"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("Start")}</FormLabel>
-                      <FormControl>
-                        <div className="flex flex-row gap-2">
-                          <DateTimePicker24h
-                            disabled={isLocked}
-                            date={field.value}
-                            setDate={(newDate) =>
-                              field.onChange(newDate ?? new Date())
-                            }
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="endAt"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>{t("End")}</FormLabel>
-                      <FormControl>
-                        <div className="flex flex-row gap-2">
-                          <DateTimePicker24h
-                            disabled={isLocked}
-                            date={field.value}
-                            setDate={(newDate) =>
-                              field.onChange(newDate ?? new Date())
-                            }
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="flex flex-col gap-4 md:flex-row">
-                <FormField
-                  control={form.control}
-                  name="checkIn"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("Check in")}</FormLabel>
-                      <FormControl>
-                        <div className="flex flex-row gap-2">
-                          <DateTimePicker24h
-                            disabled={isLocked}
-                            date={field.value}
-                            setDate={(newDate) => field.onChange(newDate)}
-                            showClearButton
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="checkOut"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("Check out")}</FormLabel>
-                      <FormControl>
-                        <div className="flex flex-row gap-2">
-                          <DateTimePicker24h
-                            disabled={isLocked}
-                            showClearButton
-                            date={field.value}
-                            setDate={(newDate) => field.onChange(newDate)}
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <FormField
-                control={form.control}
-                name="careGiverId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("Caregiver")}</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      value={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger
-                          disabled={!canEditCareGiver || isLocked}
-                          className="h-auto ps-2 [&>span]:flex [&>span]:items-center [&>span]:gap-2 [&>span_img]:shrink-0"
-                        >
-                          <SelectValue placeholder={t("Select a caregiver")} />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {careGivers.map((user) => (
-                          <SelectItem
-                            key={user.id}
-                            value={user.id}
-                            className="p-2"
-                          >
-                            <div className="flex items-center gap-2">
-                              <AvatarWrapper
-                                className="size-10 rounded-full"
-                                src={user.image ?? ""}
-                                alt={user.name}
-                                fallback={user.name}
-                                width={40}
-                                height={40}
-                              />
-                              <span className="font-medium">{user.name}</span>
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="notes"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      {t("apps.kodixCare.Additional notes")}
-                    </FormLabel>
-
-                    <FormControl>
-                      <Textarea
-                        disabled={isLocked}
-                        {...field}
-                        placeholder={t("apps.kodixCare.Additional notes")}
-                        rows={3}
+            <CredenzaBody>
+              <div
+                onClick={() => {
+                  if (!isLocked) return;
+                  toast.warning(
+                    t(
+                      "apps.kodixCare.This shift is locked. Unlock it to make changes",
+                    ),
+                  );
+                }}
+              >
+                <div className="flex flex-col gap-4">
+                  <div className="flex flex-row gap-4">
+                    <div className="flex flex-col gap-4">
+                      <FormField
+                        control={form.control}
+                        name="startAt"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t("Start")}</FormLabel>
+                            <FormControl>
+                              <div className="flex flex-row gap-2">
+                                <DateTimePicker24h
+                                  disabled={!canEdit}
+                                  date={field.value}
+                                  setDate={(newDate) =>
+                                    field.onChange(newDate ?? new Date())
+                                  }
+                                />
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
                       />
-                    </FormControl>
+                      <FormField
+                        control={form.control}
+                        name="checkIn"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t("Check in")}</FormLabel>
+                            <FormControl>
+                              <div className="flex flex-row gap-2">
+                                <DateTimePicker24h
+                                  disabled={isLocked || !canEdit}
+                                  date={field.value}
+                                  setDate={(newDate) => field.onChange(newDate)}
+                                  showClearButton
+                                />
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
 
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                    <div className="flex flex-col gap-4">
+                      <FormField
+                        control={form.control}
+                        name="endAt"
+                        render={({ field }) => (
+                          <FormItem className="flex-1">
+                            <FormLabel>{t("End")}</FormLabel>
+                            <FormControl>
+                              <div className="flex flex-row gap-2">
+                                <DateTimePicker24h
+                                  disabled={isLocked || !canEdit}
+                                  date={field.value}
+                                  setDate={(newDate) =>
+                                    field.onChange(newDate ?? new Date())
+                                  }
+                                />
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="checkOut"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t("Check out")}</FormLabel>
+                            <FormControl>
+                              <div className="flex flex-row gap-2">
+                                <DateTimePicker24h
+                                  disabled={isLocked || !canEdit}
+                                  showClearButton
+                                  date={field.value}
+                                  setDate={(newDate) => field.onChange(newDate)}
+                                />
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-4">
+                    <FormField
+                      control={form.control}
+                      name="careGiverId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t("Caregiver")}</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                            value={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger
+                                disabled={
+                                  !canEditCareGiver || !canEdit || isLocked
+                                }
+                                className="h-auto ps-2 [&>span]:flex [&>span]:items-center [&>span]:gap-2 [&>span_img]:shrink-0"
+                              >
+                                <SelectValue
+                                  placeholder={t("Select a caregiver")}
+                                />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {careGivers.map((user) => (
+                                <SelectItem
+                                  key={user.id}
+                                  value={user.id}
+                                  className="p-2"
+                                >
+                                  <div className="flex items-center gap-2">
+                                    <AvatarWrapper
+                                      className="size-10 rounded-full"
+                                      src={user.image ?? ""}
+                                      alt={user.name}
+                                      fallback={user.name}
+                                      width={40}
+                                      height={40}
+                                    />
+                                    <span className="font-medium">
+                                      {user.name}
+                                    </span>
+                                  </div>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="notes"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>
+                            {t("apps.kodixCare.Additional notes")}
+                          </FormLabel>
+
+                          <FormControl>
+                            <Textarea
+                              disabled={isLocked || !canEdit}
+                              {...field}
+                              placeholder={t("apps.kodixCare.Additional notes")}
+                              rows={3}
+                            />
+                          </FormControl>
+
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+              </div>
             </CredenzaBody>
-            <CredenzaFooter>
+            <CredenzaFooter
+              className={cn({
+                "flex md:justify-between": !isLocked,
+              })}
+            >
+              {!isLocked && (
+                <Button
+                  type="button"
+                  variant={"destructive"}
+                  disabled={!canEdit || deleteCareShiftMutation.isPending}
+                  onClick={() => {
+                    deleteCareShiftMutation.mutate({
+                      id: careShift.id,
+                    });
+                  }}
+                >
+                  {deleteCareShiftMutation.isPending ? (
+                    <>
+                      <LuTrash className="mr-2 size-4" />
+                      <LuLoader2 className="mr-2 size-4 animate-spin" />
+                    </>
+                  ) : (
+                    <>
+                      <LuTrash className="mr-2 size-4" />
+                      {t("Delete")}
+                    </>
+                  )}
+                </Button>
+              )}
+
               <Button
                 type="submit"
                 disabled={
-                  mutation.isPending || !form.formState.isDirty || isChecking
+                  mutation.isPending || isChecking || isLocked || !canEdit
                 }
               >
                 {isChecking || mutation.isPending ? (
@@ -371,7 +441,7 @@ export function EditCareShiftCredenza({
                     {isChecking ? t("Checking") : t("Saving")}...
                   </>
                 ) : (
-                  t("apps.kodixCare.Edit shift")
+                  t("Save")
                 )}
               </Button>
             </CredenzaFooter>
@@ -383,17 +453,13 @@ export function EditCareShiftCredenza({
 }
 
 function ConfirmFinishShiftAlert({
-  checkIn,
-  checkOut,
   isSubmitting,
   onConfirm,
   open,
   setOpen,
 }: {
-  checkIn: Date;
-  checkOut: Date;
   isSubmitting: boolean;
-  onConfirm: () => void;
+  onConfirm: ({ finish }: { finish: boolean }) => void;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
@@ -401,37 +467,26 @@ function ConfirmFinishShiftAlert({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="gap-4">
         <DialogHeader>
-          <DialogTitle>{t("apps.kodixCare.Confirm finish shift")}</DialogTitle>
+          <DialogTitle>
+            {t("apps.kodixCare.Are you sure you want to finish this shift")}
+          </DialogTitle>
         </DialogHeader>
-        <DialogDescription>
-          {t("apps.kodixCare.Are you sure you want to finish this shift")}
-        </DialogDescription>
-        <div className="my-4 flex w-full flex-col items-center justify-between sm:flex-row">
-          <div className="flex flex-col gap-2">
-            <Label className="text-muted-foreground">{t("Check in")}</Label>
-            <DateTimePicker24h disabled date={checkIn} />
-          </div>
-          <LuArrowRight className="mt-4 size-6 rotate-90 text-muted-foreground sm:rotate-0" />
-          <div className="flex flex-col gap-2">
-            <Label className="text-muted-foreground">{t("Check out")}</Label>
-            <DateTimePicker24h disabled date={checkOut} />
-          </div>
-        </div>
+
         <DialogFooter className="gap-3 sm:justify-between">
           <Button
-            variant={"outline"}
-            onClick={() => setOpen(false)}
+            variant={"secondary"}
+            onClick={() => onConfirm({ finish: false })}
             disabled={isSubmitting}
           >
-            {t("Cancel")}
+            {t("No")}
           </Button>
-          <Button onClick={onConfirm}>
+          <Button onClick={() => onConfirm({ finish: true })}>
             {isSubmitting ? (
               <LuLoader2 className="mr-2 size-4 animate-spin" />
             ) : (
-              t("Confirm")
+              t("Yes")
             )}
           </Button>
         </DialogFooter>
@@ -449,6 +504,7 @@ function Lock({
 }) {
   const query = useCareShiftsData([]);
   const mutation = useEditCareShift();
+  const t = useTranslations();
   const LockIcon = isLocked ? LuLock : LuUnlock;
 
   return (
@@ -470,22 +526,22 @@ function Lock({
       <AlertDialogContent>
         <AlertDialogHeader className="flex flex-row items-center gap-2">
           <LuUnlock className="mt-2 size-5 text-muted-foreground" />
-          <AlertDialogTitle>Unlock shift</AlertDialogTitle>
+          <AlertDialogTitle>{t("Unlock shift")}</AlertDialogTitle>
         </AlertDialogHeader>
         <AlertDialogDescription>
-          Are you sure you want to unlock this shift?
+          {t("Are you sure you want to unlock this shift")}
         </AlertDialogDescription>
         <DialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{t("Cancel")}</AlertDialogCancel>
           <AlertDialogAction
             onClick={async () => {
               await mutation.mutateAsync({
                 id: idCareShift,
-                finished: false,
+                finishedByUserId: null,
               });
             }}
           >
-            Unlock
+            {t("Unlock")}
           </AlertDialogAction>
         </DialogFooter>
       </AlertDialogContent>

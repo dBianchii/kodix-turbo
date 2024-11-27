@@ -51,6 +51,7 @@ export const createCareShiftHandler = async ({
 
   await db.transaction(async (tx) => {
     const shift = {
+      createdById: ctx.auth.user.id,
       caregiverId: input.careGiverId,
       endAt: input.endAt,
       startAt: input.startAt,

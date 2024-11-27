@@ -66,7 +66,7 @@ export const ZEditCareShiftInputSchema = (t: IsomorficT) =>
       notes: z.string().optional(),
       checkIn: z.date().transform(adjustDateToMinute).nullable().optional(),
       checkOut: z.date().transform(adjustDateToMinute).nullable().optional(),
-      finished: z.boolean().optional(),
+      finishedByUserId: ZNanoId.nullable().optional(),
     })
     .refine(
       (data) => {
@@ -94,4 +94,9 @@ export const ZEditCareShiftInputSchema = (t: IsomorficT) =>
     );
 export type TEditCareShiftInputSchema = z.infer<
   ReturnType<typeof ZEditCareShiftInputSchema>
+>;
+
+export const ZDeleteCareShiftInputSchema = z.object({ id: ZNanoId });
+export type TDeleteCareShiftInputSchema = z.infer<
+  typeof ZDeleteCareShiftInputSchema
 >;

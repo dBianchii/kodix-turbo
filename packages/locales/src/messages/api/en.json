@@ -77,6 +77,11 @@
     "Shift not found": "Shift not found",
     "Could not update resource": "Could not update resource",
     "This caregiver already has a shift at this time": "This caregiver already has a shift at this time",
-    "Only admins can change caregivers": "Only admins can change caregivers"
+    "Only admins can change caregivers": "Only admins can change caregivers",
+    "Cannot edit finished shifts": "Cannot edit finished shifts",
+    "Only admins can edit shifts for other caregivers": "Only admins can edit shifts for other caregivers",
+    "Only admins can edit tasks that were done by others": "Only admins can edit tasks that were done by others",
+    "Only admins can delete shifts created by others": "Only admins can delete shifts created by others",
+    "This shift was not originally created by you ask your team manager to delete it": "This shift was not originally created by you, ask your team admin to delete it"
   }
 }

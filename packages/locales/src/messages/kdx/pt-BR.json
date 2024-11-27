@@ -57,9 +57,9 @@
       "Edit shift": "Editar turno",
       "Edit shift for": "Editar turno para",
       "Confirm finish shift": "Confirmar finalização de turno",
-      "Are you sure you want to finish this shift": "Tem certeza de que deseja terminar este turno",
+      "Are you sure you want to finish this shift": "Deseja finalizar este turno?",
       "This shift is locked": {
-        " Unlock it to make changes": "Este turno está bloqueado. \nDesbloqueie-o para fazer alterações"
+        " Unlock it to make changes": "Este turno está bloqueado. \nClique no cadeado para fazer alterações"
       }
     },
     "todo": {
@@ -489,5 +489,13 @@
   "It seems that there are some overlapping shifts": "Parece que há alguns turnos com horários semelhantes",
   "Are you sure you want to create a shift anyways": "Tem certeza de que deseja criar um turno mesmo assim?",
   "Checking": "Verificando",
-  "Logs": "Registros"
+  "Logs": "Registros",
+  "Confirm and finish": "Confirmar e finalizar",
+  "Only save": "Salvar apenas",
+  "No": "Não",
+  "Unlock shift": "Desbloquear turno",
+  "Are you sure you want to unlock this shift": "Tem certeza de que deseja desbloquear este turno?",
+  "Unlock": "Desbloquear",
+  "Shift deleted": "Turno excluído",
+  "Please wait": "Por favor espere..."
 }

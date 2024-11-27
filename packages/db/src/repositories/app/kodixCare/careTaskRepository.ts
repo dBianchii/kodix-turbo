@@ -76,6 +76,7 @@ export async function findCareTaskById({
     where: (careTask, { eq }) =>
       and(eq(careTask.id, id), eq(careTask.teamId, teamId)),
     columns: {
+      doneByUserId: true,
       createdBy: true,
       createdFromCalendar: true,
       date: true,
