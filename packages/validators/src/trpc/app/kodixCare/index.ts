@@ -51,6 +51,7 @@ export type TCreateCareShiftInputSchema = z.infer<
 export const ZFindOverlappingShiftsInputSchema = z.object({
   start: z.date().transform(adjustDateToMinute),
   end: z.date().transform(adjustDateToMinute),
+  inclusive: z.boolean().default(false).optional(),
 });
 export type TFindOverlappingShiftsInputSchema = z.infer<
   typeof ZFindOverlappingShiftsInputSchema

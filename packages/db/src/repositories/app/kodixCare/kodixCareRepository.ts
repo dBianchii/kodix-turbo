@@ -1,5 +1,5 @@
 import type { z } from "zod";
-import { and, eq } from "drizzle-orm";
+import { and, eq, gt, gte, lt, lte } from "drizzle-orm";
 
 import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
 
@@ -72,19 +72,24 @@ export async function findOverlappingShifts(
     teamId,
     start,
     end,
+    inclusive = false,
   }: {
     teamId: string;
     start: Date;
     end: Date;
+    inclusive?: boolean;
   },
   db = _db,
 ) {
+  const startCondition = inclusive ? gte : gt;
+  const endCondition = inclusive ? lte : lt;
+
   return db.query.careShifts.findMany({
-    where: (careShifts, { and, gte, lte }) =>
+    where: (careShifts, { and }) =>
       and(
         eq(careShifts.teamId, teamId),
-        lte(careShifts.startAt, end),
-        gte(careShifts.endAt, start),
+        startCondition(careShifts.endAt, start),
+        endCondition(careShifts.startAt, end),
       ),
     with: {
       Caregiver: {

@@ -13,6 +13,7 @@ import {
 import { useFormatter, useTranslations } from "next-intl";
 import {
   LuAlertCircle,
+  LuAlertTriangle,
   LuArrowLeftRight,
   LuCheck,
   LuLoader2,
@@ -31,6 +32,7 @@ import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
 import { cn } from "@kdx/ui";
+import { Alert, AlertDescription, AlertTitle } from "@kdx/ui/alert";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -835,9 +837,6 @@ function EditCareTaskCredenza({
 }) {
   const t = useTranslations();
 
-  const [editCareTaskOpen, setEditCareTaskOpen] = useState(false);
-  const [createShiftOpen, setCreateShiftOpen] = useState(false);
-
   const overlappingShiftsQuery =
     api.app.kodixCare.findOverlappingShifts.useQuery({
       start: task.date,
@@ -870,68 +869,16 @@ function EditCareTaskCredenza({
   const isAtLeastOneOfTheOverlappingShiftsMine =
     overlappingShiftsQuery.data?.some((x) => x.Caregiver.id === user.id);
 
-  useEffect(() => {
-    if (overlappingShiftsQuery.data) {
-      if (isAtLeastOneOfTheOverlappingShiftsMine) {
-        setOpen(false);
-        setEditCareTaskOpen(true);
-      }
-    }
-  }, [
-    overlappingShiftsQuery.data,
-    setOpen,
-    open,
-    isAtLeastOneOfTheOverlappingShiftsMine,
-  ]);
-
   return (
     <>
-      <AlertDialog open={open} onOpenChange={setOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t("apps.kodixCare.Edit task")}</AlertDialogTitle>
-          </AlertDialogHeader>
-          {overlappingShiftsQuery.isLoading ? (
-            <div className="flex">
-              <LuLoader2 className="mr-2 size-4 animate-spin" />
-              {t("Please wait")}...
-            </div>
-          ) : (
-            <>
-              <div>
-                {!overlappingShiftsQuery.data?.length
-                  ? "Não existe um turno definido para essa tarefa. Você prefere definir um turno antes de editar?"
-                  : !isAtLeastOneOfTheOverlappingShiftsMine
-                    ? "Atenção: “Essa tarefa está inserida dentro de um turno que não é seu. Você prefere definir um turno seu antes de editar?"
-                    : ""}
-              </div>
-              <AlertDialogFooter className="flex gap-2 md:justify-between">
-                <AlertDialogAction
-                  className={cn(
-                    buttonVariants({
-                      variant: "secondary",
-                    }),
-                  )}
-                  onClick={() => {
-                    setEditCareTaskOpen(true);
-                  }}
-                >
-                  {t("No")}
-                </AlertDialogAction>
-                <CreateShiftCredenzaButton
-                  open={createShiftOpen}
-                  user={user}
-                  setOpen={(open) => {
-                    setCreateShiftOpen(!!open);
-                  }}
-                />
-              </AlertDialogFooter>
-            </>
-          )}
-        </AlertDialogContent>
-      </AlertDialog>
-      <Credenza open={editCareTaskOpen} onOpenChange={setEditCareTaskOpen}>
-        <CredenzaContent>
+      <Credenza
+        open={true}
+        onOpenChange={(open) => {
+          form.reset(defaultValues);
+          setOpen(open);
+        }}
+      >
+        <CredenzaContent className="px-4">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit((values) => {
@@ -946,6 +893,11 @@ function EditCareTaskCredenza({
               <CredenzaHeader>
                 <CredenzaTitle>{t("apps.kodixCare.Edit task")}</CredenzaTitle>
               </CredenzaHeader>
+              <Alert variant="warning">
+                <LuAlertTriangle className="h-4 w-4" />
+                <AlertTitle>Warning</AlertTitle>
+                <AlertDescription>IdkMan</AlertDescription>
+              </Alert>
               <div className="mt-6 flex flex-col gap-2 rounded-md border p-4 text-foreground/80">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-semibold">

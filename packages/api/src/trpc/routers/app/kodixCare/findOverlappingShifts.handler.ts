@@ -16,6 +16,7 @@ export const findOverlappingShiftsHandler = async ({
     teamId: ctx.auth.user.activeTeamId,
     start: input.start,
     end: input.end,
+    inclusive: input.inclusive,
   });
   return overlaps;
 };
