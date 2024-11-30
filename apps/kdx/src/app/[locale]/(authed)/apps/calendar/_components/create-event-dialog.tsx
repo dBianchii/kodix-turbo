@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { LuAlertCircle, LuLoader2 } from "react-icons/lu";
-import { RxPlus } from "react-icons/rx";
+import { LuAlertCircle, LuLoader2, LuPlus } from "react-icons/lu";
 import { RRule, Weekday } from "rrule";
 
 import dayjs from "@kdx/dayjs";
@@ -85,7 +84,7 @@ export function CreateEventDialogButton() {
     <Credenza open={open} onOpenChange={setOpen}>
       <CredenzaTrigger asChild>
         <Button size="sm">
-          <RxPlus className="mr-2 size-4" />
+          <LuPlus className="mr-2 size-4" />
           {t("apps.calendar.Create event")}
         </Button>
       </CredenzaTrigger>

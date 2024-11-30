@@ -1,4 +1,3 @@
-//? Note: This file is separated from navigation-menu.tsx so we can render use it in server components
 import { cva } from "class-variance-authority";
 
 export const navigationMenuTriggerStyle = cva(

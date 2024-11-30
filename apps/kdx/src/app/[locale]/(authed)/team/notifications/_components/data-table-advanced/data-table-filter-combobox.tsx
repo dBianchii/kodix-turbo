@@ -1,11 +1,11 @@
 import * as React from "react";
-import {
-  CaretSortIcon,
-  ChevronDownIcon,
-  PlusIcon,
-  TextIcon,
-} from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
+import {
+  LuChevronDown,
+  LuChevronsUpDown,
+  LuPlus,
+  LuType,
+} from "react-icons/lu";
 
 import { Button } from "@kdx/ui/button";
 import {
@@ -54,7 +54,7 @@ export function DataTableFilterCombobox<TData>({
             role="combobox"
             className="capitalize"
           >
-            <CaretSortIcon
+            <LuChevronsUpDown
               className="mr-2 size-4 shrink-0"
               aria-hidden="true"
             />
@@ -91,12 +91,12 @@ export function DataTableFilterCombobox<TData>({
                     }}
                   >
                     {option.options.length > 0 ? (
-                      <ChevronDownIcon
+                      <LuChevronDown
                         className="mr-2 size-4"
                         aria-hidden="true"
                       />
                     ) : (
-                      <TextIcon className="mr-2 size-4" aria-hidden="true" />
+                      <LuType className="mr-2 size-4" aria-hidden="true" />
                     )}
                     {option.label}
                   </CommandItem>
@@ -123,7 +123,7 @@ export function DataTableFilterCombobox<TData>({
                   onSelect();
                 }}
               >
-                <PlusIcon className="mr-2 size-4" aria-hidden="true" />
+                <LuPlus className="mr-2 size-4" aria-hidden="true" />
                 {t("Advanced filter")}
               </CommandItem>
             </CommandGroup>

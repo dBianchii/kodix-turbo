@@ -3,13 +3,9 @@
 import type { Table } from "@tanstack/react-table";
 import * as React from "react";
 import { useSearchParams } from "next/navigation";
-import {
-  CopyIcon,
-  DotsHorizontalIcon,
-  TextAlignCenterIcon,
-  TrashIcon,
-} from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
+import { LuAlignCenter, LuCopy, LuTrash } from "react-icons/lu";
+import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { DataTableConfig } from "@kdx/shared";
 import { dataTableConfig } from "@kdx/shared";
@@ -68,7 +64,7 @@ export function DataTableMultiFilter<TData>({
           size="sm"
           className="h-7 truncate rounded-full"
         >
-          <TextAlignCenterIcon className="mr-2 size-3" aria-hidden="true" />
+          <LuAlignCenter className="mr-2 size-3" aria-hidden="true" />
           {options.length} {t("rule")}
         </Button>
       </PopoverTrigger>
@@ -330,7 +326,7 @@ export function MultiFilterRow<TData>({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon" className="size-8 shrink-0">
-            <DotsHorizontalIcon className="size-4" aria-hidden="true" />
+            <RxDotsHorizontal className="size-4" aria-hidden="true" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
@@ -341,7 +337,7 @@ export function MultiFilterRow<TData>({
               );
             }}
           >
-            <TrashIcon className="mr-2 size-4" aria-hidden="true" />
+            <LuTrash className="mr-2 size-4" aria-hidden="true" />
             {t("Remove")}
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -361,7 +357,7 @@ export function MultiFilterRow<TData>({
               ]);
             }}
           >
-            <CopyIcon className="mr-2 size-4" aria-hidden="true" />
+            <LuCopy className="mr-2 size-4" aria-hidden="true" />
             {t("Duplicate")}
           </DropdownMenuItem>
         </DropdownMenuContent>

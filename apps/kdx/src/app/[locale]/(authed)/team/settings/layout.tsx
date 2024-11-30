@@ -1,5 +1,5 @@
 import { getLocale, getTranslations } from "next-intl/server";
-import { RxChevronRight } from "react-icons/rx";
+import { LuChevronRight } from "react-icons/lu";
 
 import { auth } from "@kdx/auth";
 
@@ -45,7 +45,7 @@ export default async function SettingsLayout({
       <div className="flex flex-col justify-center border-b pb-4">
         <h1 className="text-lg font-bold">{t("Team Settings")}</h1>
         <div className="flex items-center">
-          <RxChevronRight />
+          <LuChevronRight />
           <p className="text-base text-muted-foreground">
             {user.activeTeamName}
           </p>

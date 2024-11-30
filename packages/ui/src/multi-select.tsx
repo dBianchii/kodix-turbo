@@ -2,12 +2,7 @@
 
 import type { z } from "zod";
 import * as React from "react";
-import {
-  CaretSortIcon,
-  CheckIcon,
-  Cross1Icon,
-  PlusCircledIcon,
-} from "@radix-ui/react-icons";
+import { Check, ChevronsUpDown, PlusCircle, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { cn } from ".";
@@ -110,7 +105,7 @@ function MultiSelect({
                   }}
                   onClick={() => handleUnselect(item)}
                 >
-                  <Cross1Icon className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                  <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
                 </div>
               </Badge>
             ))}
@@ -121,7 +116,7 @@ function MultiSelect({
             )}
           </div>
 
-          <CaretSortIcon className="size-4 shrink-0 opacity-50" />
+          <ChevronsUpDown className="size-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full p-0">
@@ -151,7 +146,7 @@ function MultiSelect({
                   setOpen(true);
                 }}
               >
-                <CheckIcon
+                <Check
                   className={cn(
                     "mr-2 size-4",
                     selected.includes(option.value)
@@ -184,7 +179,7 @@ function MultiSelect({
                 className="justify-between"
               >
                 <div className="flex">
-                  <PlusCircledIcon className="mr-2 size-4 text-muted-foreground" />
+                  <PlusCircle className="mr-2 size-4 text-muted-foreground" />
                   {t("Add")}
                   {"  "}
                   <span className="ml-1 text-sm">{commandInput}</span>

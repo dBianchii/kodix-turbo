@@ -1,7 +1,7 @@
 "use client";
 
 import { useFormatter, useTranslations } from "next-intl";
-import { RxCalendar } from "react-icons/rx";
+import { LuCalendar } from "react-icons/lu";
 
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
@@ -40,7 +40,7 @@ export function DatePicker({
           disabled={disabledPopover}
           size={size}
         >
-          <RxCalendar className="mr-2 size-4" />
+          <LuCalendar className="mr-2 size-4" />
           {date ? (
             format.dateTime(date, {
               day: "2-digit",

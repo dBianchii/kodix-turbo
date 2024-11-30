@@ -2,7 +2,7 @@
 
 import type { Table } from "@tanstack/react-table";
 import { useTranslations } from "next-intl";
-import { RxDownload } from "react-icons/rx";
+import { LuDownload } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
 import { Button } from "@kdx/ui/button";
@@ -28,7 +28,7 @@ export function DataTableNotificationsToolbarActions({
           })
         }
       >
-        <RxDownload className="mr-2 size-4" aria-hidden="true" />
+        <LuDownload className="mr-2 size-4" aria-hidden="true" />
         {t("Export")}
       </Button>
       {/**

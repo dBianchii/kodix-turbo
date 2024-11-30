@@ -2,7 +2,7 @@ import type { Weekday } from "rrule";
 import { useCallback, useEffect, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useTranslations } from "next-intl";
-import { RxCheck } from "react-icons/rx";
+import { LuCheck } from "react-icons/lu";
 import { Frequency, RRule } from "rrule";
 
 import type { Dayjs } from "@kdx/dayjs";
@@ -143,7 +143,7 @@ export function RecurrencePicker({
                     setUntil(undefined);
                   }}
                 >
-                  <RxCheck
+                  <LuCheck
                     className={cn(
                       "mr-2 size-4",
                       frequency === RRule.DAILY && interval === 1 && count === 1
@@ -164,7 +164,7 @@ export function RecurrencePicker({
                       if (freq !== Frequency.WEEKLY) setWeekdays(undefined);
                     }}
                   >
-                    <RxCheck
+                    <LuCheck
                       className={cn(
                         "mr-2 size-4",
                         frequency === freq &&
@@ -180,7 +180,7 @@ export function RecurrencePicker({
                   </CommandItem>
                 ))}
                 <CommandItem onSelect={() => setOpen(true)}>
-                  <RxCheck
+                  <LuCheck
                     className={cn(
                       "mr-2 size-4",
                       until ?? interval > 1 ? "opacity-100" : "opacity-0",
@@ -243,7 +243,7 @@ export function RecurrencePicker({
                               setDraftFrequency(freq);
                             }}
                           >
-                            <RxCheck
+                            <LuCheck
                               className={cn(
                                 "mr-2 size-4",
                                 draftFrequency === freq

@@ -1,10 +1,5 @@
 import type { Column } from "@tanstack/react-table";
-import {
-  CaretDownIcon,
-  CaretSortIcon,
-  CaretUpIcon,
-  EyeNoneIcon,
-} from "@radix-ui/react-icons";
+import { ChevronDown, ChevronsUpDown, ChevronUp, EyeOff } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { cn } from "..";
@@ -52,11 +47,11 @@ export function DataTableColumnHeader<TData, TValue>({
           >
             <div className="flex flex-row">{children}</div>
             {column.getCanSort() && column.getIsSorted() === "desc" ? (
-              <CaretDownIcon className="ml-2 size-4" aria-hidden="true" />
+              <ChevronDown className="ml-2 size-4" aria-hidden="true" />
             ) : column.getIsSorted() === "asc" ? (
-              <CaretUpIcon className="ml-2 size-4" aria-hidden="true" />
+              <ChevronUp className="ml-2 size-4" aria-hidden="true" />
             ) : (
-              <CaretSortIcon className="ml-2 size-4" aria-hidden="true" />
+              <ChevronsUpDown className="ml-2 size-4" aria-hidden="true" />
             )}
           </Button>
         </DropdownMenuTrigger>
@@ -67,7 +62,7 @@ export function DataTableColumnHeader<TData, TValue>({
                 aria-label={t("Sort ascending")}
                 onClick={() => column.toggleSorting(false)}
               >
-                <CaretUpIcon
+                <ChevronUp
                   className="mr-2 size-3.5 text-muted-foreground/70"
                   aria-hidden="true"
                 />
@@ -77,7 +72,7 @@ export function DataTableColumnHeader<TData, TValue>({
                 aria-label={t("Sort descending")}
                 onClick={() => column.toggleSorting(true)}
               >
-                <CaretDownIcon
+                <ChevronDown
                   className="mr-2 size-3.5 text-muted-foreground/70"
                   aria-hidden="true"
                 />
@@ -93,7 +88,7 @@ export function DataTableColumnHeader<TData, TValue>({
               aria-label={t("Hide column")}
               onClick={() => column.toggleVisibility(false)}
             >
-              <EyeNoneIcon
+              <EyeOff
                 className="mr-2 size-3.5 text-muted-foreground/70"
                 aria-hidden="true"
               />
