@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { RxCalendar, RxCube, RxGlobe, RxInput } from "react-icons/rx";
+import { LuBox, LuCalendar, LuGlobe, LuTextCursorInput } from "react-icons/lu";
 
 import { getAppName } from "@kdx/locales/next-intl/server-hooks";
 import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
@@ -45,7 +45,7 @@ export async function HeroBento() {
 
   const features = [
     {
-      Icon: RxCube,
+      Icon: LuBox,
       name: t("An ecosystem of apps"),
       description: t(
         "Kodix offers a wide arangement of apps tailored for your business needs",
@@ -83,7 +83,7 @@ export async function HeroBento() {
       ),
     },
     {
-      Icon: RxInput,
+      Icon: LuTextCursorInput,
       name: t("Made for humans"),
       description: t(
         "A design system that will blow competition out of the water",
@@ -109,7 +109,7 @@ export async function HeroBento() {
       ),
     },
     {
-      Icon: RxGlobe,
+      Icon: LuGlobe,
       name: t("Multilingual"),
       description: t("Supports 3 languages and counting"),
       href: "/",
@@ -120,7 +120,7 @@ export async function HeroBento() {
       ),
     },
     {
-      Icon: RxCalendar,
+      Icon: LuCalendar,
       name: "Calendar",
       description: "Use the calendar to filter your files by date.",
       className: "col-span-3 lg:col-span-1",

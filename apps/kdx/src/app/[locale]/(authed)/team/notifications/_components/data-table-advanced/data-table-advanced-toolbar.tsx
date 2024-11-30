@@ -3,8 +3,8 @@
 import type { Table } from "@tanstack/react-table";
 import * as React from "react";
 import { useSearchParams } from "next/navigation";
-import { CaretSortIcon, PlusIcon } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
+import { LuChevronsUpDown, LuPlus } from "react-icons/lu";
 
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
@@ -90,7 +90,7 @@ export function DataTableAdvancedToolbar<TData>({
             size="sm"
             onClick={() => setOpenFilterBuilder(!openFilterBuilder)}
           >
-            <CaretSortIcon
+            <LuChevronsUpDown
               className="mr-2 size-4 shrink-0"
               aria-hidden="true"
             />
@@ -152,7 +152,7 @@ export function DataTableAdvancedToolbar<TData>({
               className="h-7 rounded-full"
               onClick={() => setOpenCombobox(true)}
             >
-              <PlusIcon className="mr-2 size-4 opacity-50" aria-hidden="true" />
+              <LuPlus className="mr-2 size-4 opacity-50" aria-hidden="true" />
               {t("Add filter")}
             </Button>
           </DataTableFilterCombobox>

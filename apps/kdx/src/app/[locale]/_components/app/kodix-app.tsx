@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { LuLoader2 } from "react-icons/lu";
-import { RxDotsHorizontal, RxTrash } from "react-icons/rx";
+import { LuLoader2, LuTrash } from "react-icons/lu";
+import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { User } from "@kdx/auth";
 import type { KodixAppId } from "@kdx/shared";
@@ -166,7 +166,7 @@ export function KodixApp({
               <DropdownMenuContent>
                 <CredenzaTrigger asChild>
                   <DropdownMenuItem>
-                    <RxTrash className="mr-2 size-4 text-destructive" />
+                    <LuTrash className="mr-2 size-4 text-destructive" />
                     <span>{t("Uninstall from team")}</span>
                   </DropdownMenuItem>
                 </CredenzaTrigger>

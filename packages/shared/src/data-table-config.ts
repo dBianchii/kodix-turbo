@@ -2,7 +2,6 @@
 //TODO: Also, I dont think @kdx/api should have an icon lib installed
 
 //TODO: i18n
-import { MixIcon, SquareIcon } from "@radix-ui/react-icons";
 
 export type DataTableConfig = typeof dataTableConfig;
 
@@ -33,22 +32,6 @@ export const dataTableConfig = {
       label: "Or",
       value: "or" as const,
       description: "At least one condition must be met",
-    },
-  ],
-  featureFlags: [
-    {
-      label: "Advanced filter",
-      value: "advancedFilter" as const,
-      icon: MixIcon,
-      tooltipTitle: "Toggle advanced filter",
-      tooltipDescription: "A notion like query builder to filter rows.",
-    },
-    {
-      label: "Floating bar",
-      value: "floatingBar" as const,
-      icon: SquareIcon,
-      tooltipTitle: "Toggle floating bar",
-      tooltipDescription: "A floating bar that sticks to the top of the table.",
     },
   ],
 };

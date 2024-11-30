@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { getLocale, getTranslations } from "next-intl/server";
-import { RxPlusCircled } from "react-icons/rx";
+import { LuPlusCircle } from "react-icons/lu";
 
 import { auth } from "@kdx/auth";
 
@@ -46,7 +46,7 @@ async function Apps() {
       <Link href={"/apps"}>
         <div className="group flex h-64 flex-col rounded-xl outline-dashed outline-2 outline-muted-foreground/50">
           <div className="mx-auto my-auto flex flex-col items-center justify-center">
-            <RxPlusCircled
+            <LuPlusCircle
               className="text-muted-foreground/80 transition-all group-hover:translate-y-[-4px] group-hover:text-muted-foreground"
               size={32}
             />

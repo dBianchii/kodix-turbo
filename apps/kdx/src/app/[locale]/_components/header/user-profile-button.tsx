@@ -1,9 +1,8 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { LuLogOut, LuUsers } from "react-icons/lu";
+import { LuCog, LuLogOut, LuUser, LuUsers } from "react-icons/lu";
 import { MdOutlineSwapHorizontalCircle } from "react-icons/md";
-import { RxGear, RxPerson } from "react-icons/rx";
 
 import type { User } from "@kdx/auth";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
@@ -47,7 +46,7 @@ export function UserProfileButton({ user }: { user: User }) {
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
             <Link href="/account">
-              <RxPerson className="mr-2 size-4" />
+              <LuUser className="mr-2 size-4" />
               <span>{t("Account")}</span>
             </Link>
           </DropdownMenuItem>
@@ -60,7 +59,7 @@ export function UserProfileButton({ user }: { user: User }) {
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href="/team/settings">
-              <RxGear className="mr-2 size-4" />
+              <LuCog className="mr-2 size-4" />
               {t("Settings")}
             </Link>
           </DropdownMenuItem>

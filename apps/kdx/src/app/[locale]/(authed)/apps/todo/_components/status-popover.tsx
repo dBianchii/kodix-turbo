@@ -1,6 +1,11 @@
 import { useState } from "react";
-import { LuCircleOff, LuCircleSlash } from "react-icons/lu";
-import { RxCheck, RxCheckCircled, RxRadiobutton } from "react-icons/rx";
+import {
+  LuCheck,
+  LuCheckCircle,
+  LuCircleOff,
+  LuCircleSlash,
+} from "react-icons/lu";
+import { RxRadiobutton } from "react-icons/rx";
 
 import type { todos } from "@kdx/db/schema";
 import { cn } from "@kdx/ui";
@@ -113,7 +118,7 @@ export function StatusIcon({
   switch (status) {
     case "TODO":
       return (
-        <RxCheckCircled className={cn("size-4 text-foreground", className)} />
+        <LuCheckCircle className={cn("size-4 text-foreground", className)} />
       );
     case "INPROGRESS":
       return (
@@ -124,7 +129,7 @@ export function StatusIcon({
         <LuCircleSlash className={cn("size-4 text-orange-400", className)} />
       );
     case "DONE":
-      return <RxCheck className={cn("size-4 text-green-400", className)} />;
+      return <LuCheck className={cn("size-4 text-green-400", className)} />;
     case "CANCELED":
       return <LuCircleOff className={cn("size-4 text-red-400", className)} />;
   }

@@ -15,17 +15,15 @@ import {
   LuAlertCircle,
   LuAlertTriangle,
   LuArrowLeftRight,
+  LuCalendar,
   LuCheck,
   LuLoader2,
+  LuLock,
   LuPlus,
   LuText,
+  LuTrash,
 } from "react-icons/lu";
-import {
-  RxCalendar,
-  RxDotsHorizontal,
-  RxLockClosed,
-  RxTrash,
-} from "react-icons/rx";
+import { RxDotsHorizontal } from "react-icons/rx";
 import { create } from "zustand";
 
 import type { RouterOutputs } from "@kdx/api";
@@ -234,7 +232,7 @@ export default function DataTableKodixCare({ user }: { user: User }) {
                     className="size-5"
                   />
                 ) : (
-                  <RxLockClosed className="size-4" />
+                  <LuLock className="size-4" />
                 )}
               </div>
               <span className="font-semibold">{ctx.getValue()}</span>
@@ -245,7 +243,7 @@ export default function DataTableKodixCare({ user }: { user: User }) {
       columnHelper.accessor("date", {
         header: ({ column }) => (
           <DataTableColumnHeader column={column}>
-            <RxCalendar className="mr-2 size-4" />
+            <LuCalendar className="mr-2 size-4" />
             {t("Date")}
           </DataTableColumnHeader>
         ),
@@ -327,7 +325,7 @@ export default function DataTableKodixCare({ user }: { user: User }) {
                     }}
                     className="text-destructive"
                   >
-                    <RxTrash className="mr-2 size-4" />
+                    <LuTrash className="mr-2 size-4" />
                     {t("Delete")}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -912,7 +910,7 @@ function EditCareTaskCredenza({
                   {task.description ?? ""}
                 </span>
                 <span className="flex text-xs font-semibold">
-                  <RxCalendar className="mr-2 size-3 text-muted-foreground" />
+                  <LuCalendar className="mr-2 size-3 text-muted-foreground" />
                   {format.dateTime(task.date, "shortWithHours")}
                 </span>
               </div>

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useFormatter, useTranslations } from "next-intl";
 import { HiUserCircle } from "react-icons/hi";
-import { RxCross2, RxPlus } from "react-icons/rx";
+import { LuPlus, LuX } from "react-icons/lu";
 
 import type { todos } from "@kdx/db/schema";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
@@ -79,7 +79,7 @@ export function CreateTaskDialogButton() {
     <Credenza open={open} onOpenChange={setOpen}>
       <CredenzaTrigger asChild>
         <Button variant="outline" size="sm">
-          <RxPlus className="mr-2 size-4" />
+          <LuPlus className="mr-2 size-4" />
           {t("Create task")}
         </Button>
       </CredenzaTrigger>
@@ -156,7 +156,7 @@ export function CreateTaskDialogButton() {
                       }}
                       className="ml-2 rounded-full transition-colors hover:bg-primary/90 hover:text-background"
                     >
-                      <RxCross2 className="size-4" />
+                      <LuX className="size-4" />
                     </span>
                   )}
                 </Button>

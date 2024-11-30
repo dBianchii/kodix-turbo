@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { RxChevronRight } from "react-icons/rx";
+import { LuChevronRight } from "react-icons/lu";
 
 import { cn } from "@kdx/ui";
 import { buttonVariants } from "@kdx/ui/button";
@@ -49,7 +49,7 @@ export default async function HomePage() {
                       )}
                     >
                       {t("Browse apps")}
-                      <RxChevronRight className="ml-1 size-4 transition-all duration-300 ease-out group-hover:translate-x-1" />
+                      <LuChevronRight className="ml-1 size-4 transition-all duration-300 ease-out group-hover:translate-x-1" />
                     </a>
                     <a
                       href="#"
@@ -63,7 +63,7 @@ export default async function HomePage() {
                       )}
                     >
                       {t("Get started")}
-                      <RxChevronRight className="ml-1 size-4 transition-all duration-300 ease-out group-hover:translate-x-1" />
+                      <LuChevronRight className="ml-1 size-4 transition-all duration-300 ease-out group-hover:translate-x-1" />
                     </a>
                   </div>
                 </div>

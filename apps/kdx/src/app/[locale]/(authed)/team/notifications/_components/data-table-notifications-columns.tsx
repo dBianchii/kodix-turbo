@@ -1,7 +1,8 @@
 import React from "react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { useFormatter, useTranslations } from "next-intl";
-import { RxDotsHorizontal, RxExternalLink } from "react-icons/rx";
+import { LuExternalLink } from "react-icons/lu";
+import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import { Button } from "@kdx/ui/button";
@@ -139,7 +140,7 @@ export function getColumns() {
                   target="_blank"
                 >
                   <DropdownMenuItem>
-                    {t("View")} <RxExternalLink className="size-6 pl-2" />
+                    {t("View")} <LuExternalLink className="size-6 pl-2" />
                   </DropdownMenuItem>
                 </Link>
                 <DropdownMenuItem

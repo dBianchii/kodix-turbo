@@ -4,7 +4,7 @@ import type { Row } from "@tanstack/react-table";
 import * as React from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { RxTrash } from "react-icons/rx";
+import { LuTrash } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
 import { getErrorMessage } from "@kdx/shared";
@@ -48,7 +48,7 @@ export function DeleteNotificationsDialog({
       {showTrigger ? (
         <CredenzaTrigger asChild>
           <Button variant="outline" size="sm">
-            <RxTrash className="mr-2 size-4" aria-hidden="true" />
+            <LuTrash className="mr-2 size-4" aria-hidden="true" />
             {t("Delete")} ({notifications.length})
           </Button>
         </CredenzaTrigger>

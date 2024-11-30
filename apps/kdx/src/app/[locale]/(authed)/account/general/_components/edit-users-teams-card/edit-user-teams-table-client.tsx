@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { LuLoader2 } from "react-icons/lu";
-import { RxChevronLeft, RxDotsHorizontal } from "react-icons/rx";
+import { LuChevronLeft, LuLoader2 } from "react-icons/lu";
+import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
@@ -88,7 +88,7 @@ function CustomRow({
       onMouseLeave={() => setIsHovered(false)}
     >
       <TableCell className="w-2">
-        {<RxChevronLeft className={cn(!isHovered && "text-transparent")} />}
+        {<LuChevronLeft className={cn(!isHovered && "text-transparent")} />}
       </TableCell>
       <TableCell className="flex flex-row space-x-4">
         <div className="flex flex-col items-start">

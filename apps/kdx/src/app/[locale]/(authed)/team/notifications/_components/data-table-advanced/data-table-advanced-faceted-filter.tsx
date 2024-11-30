@@ -1,6 +1,6 @@
 import type { Column } from "@tanstack/react-table";
-import { CheckIcon } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
+import { LuCheck } from "react-icons/lu";
 
 import { cn } from "@kdx/ui";
 import {
@@ -81,7 +81,7 @@ export function DataTableAdvancedFacetedFilter<TData, TValue>({
                       : "opacity-50 [&_svg]:invisible",
                   )}
                 >
-                  <CheckIcon className="size-4" aria-hidden="true" />
+                  <LuCheck className="size-4" aria-hidden="true" />
                 </div>
                 {option.icon && (
                   <option.icon

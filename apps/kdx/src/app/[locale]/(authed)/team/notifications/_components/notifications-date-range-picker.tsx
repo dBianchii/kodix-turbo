@@ -5,7 +5,7 @@ import * as React from "react";
 import { useSearchParams } from "next/navigation";
 import { addDays, format } from "date-fns";
 import { useFormatter, useTranslations } from "next-intl";
-import { RxCalendar } from "react-icons/rx";
+import { LuCalendar } from "react-icons/lu";
 
 import type { ButtonProps } from "@kdx/ui/button";
 import { cn } from "@kdx/ui";
@@ -141,7 +141,7 @@ export function NotificationsDateRangePicker({
               triggerClassName,
             )}
           >
-            <RxCalendar className="mr-2 size-4" />
+            <LuCalendar className="mr-2 size-4" />
             {date?.from ? (
               date.to ? (
                 <>
