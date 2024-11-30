@@ -12,15 +12,17 @@ import {
 } from "@tanstack/react-table";
 import { addDays } from "date-fns";
 import { useFormatter, useTranslations } from "next-intl";
-import { LuAlertCircle, LuLoader2, LuText } from "react-icons/lu";
 import {
-  RxCalendar,
-  RxChevronLeft,
-  RxChevronRight,
-  RxDotsHorizontal,
-  RxPencil1,
-  RxTrash,
-} from "react-icons/rx";
+  LuAlertCircle,
+  LuCalendar,
+  LuChevronLeft,
+  LuChevronRight,
+  LuLoader2,
+  LuPencil,
+  LuText,
+  LuTrash,
+} from "react-icons/lu";
+import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
@@ -150,11 +152,11 @@ const useTable = ({
                       setOpenEditDialog(true);
                     }}
                   >
-                    <RxPencil1 className="mr-2 size-4" />
+                    <LuPencil className="mr-2 size-4" />
                     {t("apps.calendar.Edit event")}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setOpenCancelDialog(true)}>
-                    <RxTrash className="mr-2 size-4 text-destructive" />
+                    <LuTrash className="mr-2 size-4 text-destructive" />
                     {t("apps.calendar.Delete event")}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -187,7 +189,7 @@ const useTable = ({
       columnHelper.accessor("date", {
         header: ({ column }) => (
           <DataTableColumnHeader column={column}>
-            <RxCalendar className="mr-2 size-4" />
+            <LuCalendar className="mr-2 size-4" />
             {t("Date")}
           </DataTableColumnHeader>
         ),
@@ -292,7 +294,7 @@ export function DataTable({
               }}
               className="h-10 w-10 p-3"
             >
-              <RxChevronLeft />
+              <LuChevronLeft />
             </Button>
             <DatePicker
               date={selectedDay}
@@ -308,7 +310,7 @@ export function DataTable({
               }}
               className="h-10 w-10 p-3"
             >
-              <RxChevronRight />
+              <LuChevronRight />
             </Button>
           </div>
           <div>
@@ -369,7 +371,7 @@ export function DataTable({
                           setOpenEditDialog(true);
                         }}
                       >
-                        <RxPencil1 className="mr-2 size-4" />
+                        <LuPencil className="mr-2 size-4" />
                         {t("Edit event")}
                       </ContextMenuItem>
                       <ContextMenuItem
@@ -378,7 +380,7 @@ export function DataTable({
                           setOpenCancelDialog(true);
                         }}
                       >
-                        <RxTrash className="mr-2 size-4 text-destructive" />
+                        <LuTrash className="mr-2 size-4 text-destructive" />
                         {t("Delete event")}
                       </ContextMenuItem>
                     </ContextMenuContent>

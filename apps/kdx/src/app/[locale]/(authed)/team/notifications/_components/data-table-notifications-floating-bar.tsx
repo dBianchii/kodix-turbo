@@ -1,7 +1,7 @@
 import type { Table } from "@tanstack/react-table";
 import * as React from "react";
 import { useTranslations } from "next-intl";
-import { RxCross2, RxDownload, RxReload, RxTrash } from "react-icons/rx";
+import { LuDownload, LuRotateCw, LuTrash, LuX } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
 import { getErrorMessage } from "@kdx/shared";
@@ -63,10 +63,7 @@ export function DataTableNotificationsFloatingBar({
                     className="size-5 hover:border"
                     onClick={() => table.toggleAllRowsSelected(false)}
                   >
-                    <RxCross2
-                      className="size-3.5 shrink-0"
-                      aria-hidden="true"
-                    />
+                    <LuX className="size-3.5 shrink-0" aria-hidden="true" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent className="flex items-center border bg-accent px-2 py-1 font-semibold text-foreground dark:bg-zinc-900">
@@ -100,12 +97,12 @@ export function DataTableNotificationsFloatingBar({
                     disabled={isPending}
                   >
                     {isPending && method === "export" ? (
-                      <RxReload
+                      <LuRotateCw
                         className="size-3.5 animate-spin"
                         aria-hidden="true"
                       />
                     ) : (
-                      <RxDownload className="size-3.5" aria-hidden="true" />
+                      <LuDownload className="size-3.5" aria-hidden="true" />
                     )}
                   </Button>
                 </TooltipTrigger>
@@ -141,12 +138,12 @@ export function DataTableNotificationsFloatingBar({
                     disabled={isPending}
                   >
                     {isPending && method === "delete" ? (
-                      <RxReload
+                      <LuRotateCw
                         className="size-3.5 animate-spin"
                         aria-hidden="true"
                       />
                     ) : (
-                      <RxTrash className="size-3.5" aria-hidden="true" />
+                      <LuTrash className="size-3.5" aria-hidden="true" />
                     )}
                   </Button>
                 </TooltipTrigger>

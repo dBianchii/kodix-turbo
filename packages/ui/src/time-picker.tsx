@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ClockIcon } from "@radix-ui/react-icons";
+import { Clock } from "lucide-react";
 
 import type { TimePickerType } from "./time-picker-input/time-picker-utils";
 import { Label } from "./label";
@@ -75,7 +75,7 @@ export function TimePicker({
         </>
       )}
       <div className="flex h-10 items-center">
-        <ClockIcon className="ml-2 h-4 w-4" />
+        <Clock className="ml-2 h-4 w-4" />
       </div>
     </div>
   );

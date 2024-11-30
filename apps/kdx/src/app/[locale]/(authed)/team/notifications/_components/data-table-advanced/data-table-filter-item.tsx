@@ -1,8 +1,8 @@
 import type { Table } from "@tanstack/react-table";
 import * as React from "react";
 import { useSearchParams } from "next/navigation";
-import { TrashIcon } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
+import { LuTrash } from "react-icons/lu";
 
 import { dataTableConfig } from "@kdx/shared";
 import { cn } from "@kdx/ui";
@@ -192,7 +192,7 @@ export function DataTableFilterItem<TData>({
               router.push(`${pathname}?${newSearchParams}`);
             }}
           >
-            <TrashIcon className="size-4" aria-hidden="true" />
+            <LuTrash className="size-4" aria-hidden="true" />
           </Button>
         </div>
         {selectedOption.options.length > 0 ? (

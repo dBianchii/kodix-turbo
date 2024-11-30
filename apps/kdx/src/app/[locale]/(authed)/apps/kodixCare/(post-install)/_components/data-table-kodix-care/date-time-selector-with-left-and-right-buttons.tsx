@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { RxChevronLeft, RxChevronRight } from "react-icons/rx";
+import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 
 import dayjs from "@kdx/dayjs";
 import { Button } from "@kdx/ui/button";
@@ -42,7 +42,7 @@ export function DateTimeSelectorWithLeftAndRightArrows() {
         }}
         className="h-10 w-10 p-3"
       >
-        <RxChevronLeft />
+        <LuChevronLeft />
       </Button>
       <DatePicker
         date={input.dateEnd}
@@ -57,7 +57,7 @@ export function DateTimeSelectorWithLeftAndRightArrows() {
         }}
         className="h-10 w-10 p-3"
       >
-        <RxChevronRight />
+        <LuChevronRight />
       </Button>
     </div>
   );

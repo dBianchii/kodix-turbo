@@ -1,7 +1,7 @@
 "use client";
 
 import type { Table } from "@tanstack/react-table";
-import { MixerHorizontalIcon } from "@radix-ui/react-icons";
+import { Settings2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "../button";
@@ -31,7 +31,7 @@ export function DataTableViewOptions<TData>({
           size="sm"
           className="ml-auto hidden h-8 lg:flex"
         >
-          <MixerHorizontalIcon className="mr-2 size-4" />
+          <Settings2 className="mr-2 size-4" />
           {t("View")}
         </Button>
       </DropdownMenuTrigger>

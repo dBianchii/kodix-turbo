@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { IoApps } from "react-icons/io5";
-import { RxCaretSort, RxPlusCircled } from "react-icons/rx";
+import { LuChevronsUpDown, LuPlusCircle } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { KodixAppId } from "@kdx/shared";
@@ -49,7 +49,7 @@ export function AppSwitcherClient({
           <span className="ml-2">
             <CurrentAppName hrefPrefix={hrefPrefix} />
           </span>
-          <RxCaretSort className="ml-4 h-4 w-4 shrink-0 opacity-50" />
+          <LuChevronsUpDown className="ml-4 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
@@ -87,7 +87,7 @@ export function AppSwitcherClient({
             {!hideAddMoreApps && (
               <Link href={"/apps"}>
                 <CommandItem onSelect={() => setOpen(false)}>
-                  <RxPlusCircled className="size-4" />
+                  <LuPlusCircle className="size-4" />
                   <span className="ml-3">{t("Add more apps")}</span>
                 </CommandItem>
               </Link>

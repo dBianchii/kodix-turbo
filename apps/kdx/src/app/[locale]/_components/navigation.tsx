@@ -1,6 +1,6 @@
 "use client";
 
-import { RxArrowLeft } from "react-icons/rx";
+import { LuArrowLeft } from "react-icons/lu";
 
 import { cn } from "@kdx/ui";
 import { useMediaQuery } from "@kdx/ui/hooks/use-media-query";
@@ -40,7 +40,7 @@ export function Navigation({
       <NavigationMenuList className={cn("flex w-full flex-col space-y-2")}>
         {!pathname.endsWith(entryPoint) && !isSmallerScreen ? (
           <NavigationItem href={goBackItem.href}>
-            <RxArrowLeft className="mr-2 size-4" /> {goBackItem.title}
+            <LuArrowLeft className="mr-2 size-4" /> {goBackItem.title}
           </NavigationItem>
         ) : (
           items.map((item, i) => (

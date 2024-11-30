@@ -3,12 +3,8 @@
 import { useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useTranslations } from "next-intl";
-import { LuLoader2 } from "react-icons/lu";
-import {
-  RxEnvelopeClosed,
-  RxMinusCircled,
-  RxPlusCircled,
-} from "react-icons/rx";
+import { LuLoader2, LuMail } from "react-icons/lu";
+import { RxMinusCircled, RxPlusCircled } from "react-icons/rx";
 
 import type { User } from "@kdx/auth";
 import { cn } from "@kdx/ui";
@@ -205,7 +201,7 @@ export default function TeamInviteCardClient({
                     >
                       {email.value}
 
-                      <RxEnvelopeClosed
+                      <LuMail
                         className={cn(
                           "text-green-600 fade-in-0",
                           !successes.includes(email.value) && "hidden",
