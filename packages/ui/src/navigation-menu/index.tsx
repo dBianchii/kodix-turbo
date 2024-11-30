@@ -2,10 +2,10 @@
 
 import * as React from "react";
 import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
+import { ChevronDown } from "lucide-react";
 
 import { cn } from "../.";
 import { navigationMenuTriggerStyle } from "./navigationMenuTriggerStyle";
-import { ChevronDown } from "lucide-react";
 
 const NavigationMenu = React.forwardRef<
   //? This is a div
