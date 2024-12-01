@@ -496,5 +496,7 @@
   "Unlock": "Unlock",
   "Shift deleted": "Shift deleted",
   "Edit task": "Edit task",
-  "Please wait": "Please wait..."
+  "Please wait": "Please wait...",
+  "There is no shift associated with this task Its recommended that you create a shift for this task": "There is no shift associated with this task. It is recommended that you create a shift so it can be completed",
+  "This task is not associated with any of your shifts You can still edit it but its recommended that you create a shift for it": "This task is not associated with any of your shifts. You can still edit it but its recommended that you create a shift for it"
 }

@@ -497,5 +497,7 @@
   "Are you sure you want to unlock this shift": "Tem certeza de que deseja desbloquear este turno?",
   "Unlock": "Desbloquear",
   "Shift deleted": "Turno excluído",
-  "Please wait": "Por favor espere..."
+  "Please wait": "Por favor espere...",
+  "There is no shift associated with this task Its recommended that you create a shift for this task": "Não há nenhum turno associada a esta tarefa. \nÉ recomendado que você crie um turno para ela ser completada",
+  "This task is not associated with any of your shifts You can still edit it but its recommended that you create a shift for it": "Esta tarefa não está associada a nenhum dos seus turnos. \nVocê ainda pode editá-lo, mas é recomendado que você crie um turno para ele"
 }

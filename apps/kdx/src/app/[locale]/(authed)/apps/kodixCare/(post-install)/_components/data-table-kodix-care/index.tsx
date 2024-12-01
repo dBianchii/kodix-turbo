@@ -98,7 +98,6 @@ import {
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { Link } from "~/i18n/routing";
 import { api } from "~/trpc/react";
-import { CreateShiftCredenzaButton } from "../../shifts/_components/create-care-shift-credenza";
 import { DateTimeSelectorWithLeftAndRightArrows } from "./date-time-selector-with-left-and-right-buttons";
 
 type CareTaskOrCalendarTask =
@@ -605,6 +604,8 @@ function AddCareTaskCredenzaButton() {
     schema: ZCreateCareTaskInputSchema(t),
     defaultValues: {
       type: "NORMAL",
+      title: "",
+      description: "",
     },
   });
   const mutation = api.app.kodixCare.careTask.createCareTask.useMutation({
@@ -835,12 +836,6 @@ function EditCareTaskCredenza({
 }) {
   const t = useTranslations();
 
-  const overlappingShiftsQuery =
-    api.app.kodixCare.findOverlappingShifts.useQuery({
-      start: task.date,
-      end: task.date,
-    });
-
   const defaultValues = useMemo(
     () => ({
       id: task.id,
@@ -864,13 +859,10 @@ function EditCareTaskCredenza({
 
   const format = useFormatter();
 
-  const isAtLeastOneOfTheOverlappingShiftsMine =
-    overlappingShiftsQuery.data?.some((x) => x.Caregiver.id === user.id);
-
   return (
     <>
       <Credenza
-        open={true}
+        open={open}
         onOpenChange={(open) => {
           form.reset(defaultValues);
           setOpen(open);
@@ -891,11 +883,7 @@ function EditCareTaskCredenza({
               <CredenzaHeader>
                 <CredenzaTitle>{t("apps.kodixCare.Edit task")}</CredenzaTitle>
               </CredenzaHeader>
-              <Alert variant="warning">
-                <LuAlertTriangle className="h-4 w-4" />
-                <AlertTitle>Warning</AlertTitle>
-                <AlertDescription>IdkMan</AlertDescription>
-              </Alert>
+
               <div className="mt-6 flex flex-col gap-2 rounded-md border p-4 text-foreground/80">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-semibold">
@@ -958,6 +946,7 @@ function EditCareTaskCredenza({
                   )}
                 />
               </div>
+              <AlertNoShiftsOrNotYours task={task} user={user} />
               <CredenzaFooter className="mt-6 justify-end">
                 <Button disabled={mutation.isPending} type="submit">
                   {t("Save")}
@@ -968,5 +957,50 @@ function EditCareTaskCredenza({
         </CredenzaContent>
       </Credenza>
     </>
+  );
+}
+
+function AlertNoShiftsOrNotYours({
+  task,
+  user,
+}: {
+  task: CareTask;
+  user: User;
+}) {
+  const overlappingShiftsQuery =
+    api.app.kodixCare.findOverlappingShifts.useQuery(
+      {
+        start: task.date,
+        end: task.date,
+      },
+      {
+        refetchOnWindowFocus: "always",
+      },
+    );
+
+  const atLeastOneShiftExists = !!overlappingShiftsQuery.data?.length;
+  const isAtLeastOneOfTheOverlappingShiftsMine =
+    overlappingShiftsQuery.data?.some((x) => x.Caregiver.id === user.id);
+  const t = useTranslations();
+
+  if (atLeastOneShiftExists && isAtLeastOneOfTheOverlappingShiftsMine)
+    return null;
+
+  const text = !atLeastOneShiftExists
+    ? t(
+        "There is no shift associated with this task Its recommended that you create a shift for this task",
+      )
+    : !isAtLeastOneOfTheOverlappingShiftsMine
+      ? t(
+          "This task is not associated with any of your shifts You can still edit it but its recommended that you create a shift for it",
+        )
+      : "";
+
+  return (
+    <Alert variant="warning">
+      <LuAlertTriangle className="h-4 w-4" />
+      <AlertTitle>{t("Warning")}</AlertTitle>
+      <AlertDescription>{text}</AlertDescription>
+    </Alert>
   );
 }
