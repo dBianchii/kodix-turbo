@@ -1,7 +1,6 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { LuLoader2 } from "react-icons/lu";
 
 import { Button } from "@kdx/ui/button";
 import {
@@ -97,11 +96,8 @@ export default function ForgotPasswordPage() {
                   <Button
                     className="w-full"
                     type="submit"
-                    disabled={mutation.isPending}
+                    loading={mutation.isPending}
                   >
-                    {mutation.isPending && (
-                      <LuLoader2 className="mr-2 size-5 animate-spin" />
-                    )}
                     {t("Send reset email")}
                   </Button>
                 </form>

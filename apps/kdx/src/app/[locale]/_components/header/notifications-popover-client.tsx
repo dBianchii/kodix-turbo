@@ -1,7 +1,6 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { LuLoader2 } from "react-icons/lu";
 import { MdNotificationsActive } from "react-icons/md";
 
 import type { RouterOutputs } from "@kdx/api";
@@ -101,15 +100,14 @@ export function NotificationsPopoverClient({
                     onClick={() => {
                       declineMutation.mutate({ invitationId: invitation.id });
                     }}
+                    loading={
+                      declineMutation.isPending || acceptMutation.isPending
+                    }
                   >
-                    {declineMutation.isPending || acceptMutation.isPending ? (
-                      <LuLoader2 className="mr-2 size-5 animate-spin" />
-                    ) : (
-                      t("Decline")
-                    )}
+                    {t("Decline")}
                   </Button>
                   <Button
-                    disabled={
+                    loading={
                       declineMutation.isPending || acceptMutation.isPending
                     }
                     size="sm"
@@ -117,11 +115,7 @@ export function NotificationsPopoverClient({
                       acceptMutation.mutate({ invitationId: invitation.id });
                     }}
                   >
-                    {declineMutation.isPending || acceptMutation.isPending ? (
-                      <LuLoader2 className="mr-2 size-5 animate-spin" />
-                    ) : (
-                      t("accept")
-                    )}
+                    {t("accept")}
                   </Button>
                 </div>
               </li>

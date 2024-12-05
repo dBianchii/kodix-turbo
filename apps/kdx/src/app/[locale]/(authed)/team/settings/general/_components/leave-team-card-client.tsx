@@ -1,7 +1,6 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { LuLoader2 } from "react-icons/lu";
 
 import { getErrorMessage } from "@kdx/shared";
 import {
@@ -112,15 +111,8 @@ export function LeaveTeamCardClient({
 
                 <AlertDialogFooter className="gap-3 sm:justify-between">
                   <AlertDialogCancel>{t("Cancel")}</AlertDialogCancel>
-                  <Button type="submit" disabled={mutation.isPending}>
-                    {mutation.isPending ? (
-                      <>
-                        <LuLoader2 className="mr-2 size-4 animate-spin" />{" "}
-                        {t("Leaving team")}
-                      </>
-                    ) : (
-                      <>{t("Leave team")}</>
-                    )}
+                  <Button type="submit" loading={mutation.isPending}>
+                    {mutation.isPending ? t("Leaving team") : t("Leave team")}
                   </Button>
                 </AlertDialogFooter>
               </form>

@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useAction } from "next-safe-action/hooks";
-import { LuAlertCircle, LuLoader2 } from "react-icons/lu";
+import { LuAlertCircle } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
 import { kodixCareAppId } from "@kdx/shared";
@@ -85,13 +85,7 @@ export function KodixCareUserSettingsForm({
             </FormItem>
           )}
         />
-        <Button disabled={isExecuting}>
-          {isExecuting ? (
-            <LuLoader2 className="size-4 animate-spin" />
-          ) : (
-            t("Save")
-          )}
-        </Button>
+        <Button loading={isExecuting}>{t("Save")}</Button>
       </form>
     </Form>
   );

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { LuAlertCircle, LuLoader2, LuPlus } from "react-icons/lu";
+import { LuAlertCircle, LuPlus } from "react-icons/lu";
 import { RRule, Weekday } from "rrule";
 
 import dayjs from "@kdx/dayjs";
@@ -222,12 +222,8 @@ export function CreateEventDialogButton() {
                 />
               </div>
               <CredenzaFooter>
-                <Button type="submit" size="sm" disabled={mutation.isPending}>
-                  {mutation.isPending ? (
-                    <LuLoader2 className="mx-2 size-4 animate-spin" />
-                  ) : (
-                    t("apps.calendar.Create event")
-                  )}
+                <Button type="submit" size="sm" loading={mutation.isPending}>
+                  {t("apps.calendar.Create event")}
                 </Button>
               </CredenzaFooter>
             </form>
