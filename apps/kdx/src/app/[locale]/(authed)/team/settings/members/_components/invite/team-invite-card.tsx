@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useTranslations } from "next-intl";
-import { LuLoader2, LuMail } from "react-icons/lu";
+import { LuMail } from "react-icons/lu";
 import { RxMinusCircled, RxPlusCircled } from "react-icons/rx";
 
 import type { User } from "@kdx/auth";
@@ -213,6 +213,7 @@ export default function TeamInviteCardClient({
               <CredenzaFooter className="justify-end">
                 <Button
                   disabled={mutation.isPending || successes.length > 0}
+                  loading={mutation.isPending}
                   onClick={() => {
                     const values = {
                       teamId: user.activeTeamId,
@@ -225,14 +226,7 @@ export default function TeamInviteCardClient({
                     mutation.mutate(values);
                   }}
                 >
-                  {mutation.isPending ? (
-                    <>
-                      <LuLoader2 className="mr-2 size-4 animate-spin" />{" "}
-                      {t("Sending")}
-                    </>
-                  ) : (
-                    t("Confirm")
-                  )}
+                  {mutation.isPending ? t("Sending") : t("Confirm")}
                 </Button>
               </CredenzaFooter>
             </CredenzaContent>

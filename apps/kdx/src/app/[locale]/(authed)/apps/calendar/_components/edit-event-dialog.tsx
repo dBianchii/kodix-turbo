@@ -1,7 +1,7 @@
 import type { Frequency } from "rrule";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { LuAlertCircle, LuLoader2 } from "react-icons/lu";
+import { LuAlertCircle } from "react-icons/lu";
 import { RRule, Weekday } from "rrule";
 
 import type { RouterInputs, RouterOutputs } from "@kdx/api";
@@ -283,14 +283,11 @@ export function EditEventDialog({
                   <Button
                     type="submit"
                     size="sm"
-                    disabled={mutation.isPending || !isFormChanged}
+                    disabled={!isFormChanged}
+                    loading={mutation.isPending}
                     onClick={() => setEditDefinitionOpen(true)}
                   >
-                    {mutation.isPending ? (
-                      <LuLoader2 className="mx-2 size-4 animate-spin" />
-                    ) : (
-                      t("Ok")
-                    )}
+                    {t("Ok")}
                   </Button>
                 </div>
               </TooltipTrigger>

@@ -1,5 +1,4 @@
 import { useTranslations } from "next-intl";
-import { LuLoader2 } from "react-icons/lu";
 import { z } from "zod";
 
 import { getErrorMessage } from "@kdx/shared";
@@ -145,12 +144,7 @@ export function DeleteTeamConfirmationDialog({
               </div>
               <AlertDialogFooter className="gap-3 sm:justify-between">
                 <AlertDialogCancel>{t("Cancel")}</AlertDialogCancel>
-                <Button disabled={mutation.isPending}>
-                  {t("Continue")}{" "}
-                  {mutation.isPending && (
-                    <LuLoader2 className="ml-2 size-4 animate-spin" />
-                  )}
-                </Button>
+                <Button loading={mutation.isPending}>{t("Continue")}</Button>
               </AlertDialogFooter>
             </div>
           </form>

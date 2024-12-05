@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useFormatter, useTranslations } from "next-intl";
 import { Calendar, dayjsLocalizer } from "react-big-calendar";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
-import { LuArrowRight, LuLoader2, LuPlus } from "react-icons/lu";
+import { LuArrowRight, LuPlus } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
@@ -557,12 +557,9 @@ function CreateShiftCredenzaButton({
               />
             </CredenzaBody>
             <CredenzaFooter className="mt-6 justify-end">
-              <Button disabled={isChecking || mutation.isPending} type="submit">
+              <Button loading={isChecking || mutation.isPending} type="submit">
                 {isChecking || mutation.isPending ? (
-                  <>
-                    <LuLoader2 className="mr-2 size-4 animate-spin" />
-                    {isChecking ? t("Checking") : t("Saving")}...
-                  </>
+                  <>{isChecking ? t("Checking") : t("Saving")}...</>
                 ) : (
                   t("Create")
                 )}
@@ -628,19 +625,13 @@ function WarnOverlappingShifts({
             {t("Cancel")}
           </Button>
           <Button
+            loading={isSubmitting}
             onClick={() => {
               onClickConfirm();
               setOpen(false);
             }}
           >
-            {isSubmitting ? (
-              <>
-                <LuLoader2 className="mr-2 size-4 animate-spin" />
-                {t("Saving")}...
-              </>
-            ) : (
-              t("Confirm")
-            )}
+            {t("Confirm")}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -836,15 +827,13 @@ function EditCareShiftCredenza({
                 disabled={
                   mutation.isPending || !form.formState.isDirty || isChecking
                 }
+                loading={isChecking || mutation.isPending}
               >
-                {isChecking || mutation.isPending ? (
-                  <>
-                    <LuLoader2 className="mr-2 size-4 animate-spin" />
-                    {isChecking ? t("Checking") : t("Saving")}...
-                  </>
-                ) : (
-                  t("Create")
-                )}
+                {isChecking
+                  ? t("Checking")
+                  : mutation.isPending
+                    ? t("Saving")
+                    : t("Create")}
               </Button>
             </CredenzaFooter>
           </form>

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { LuChevronLeft, LuLoader2 } from "react-icons/lu";
+import { LuChevronLeft } from "react-icons/lu";
 import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
@@ -133,12 +133,8 @@ function CustomRow({
               else void router.push(`/team/settings`);
             }}
           >
-            <Button variant="outline" type="submit" disabled={manageLoading}>
-              {manageLoading ? (
-                <LuLoader2 className="size-4 animate-spin" />
-              ) : (
-                <>{t("Manage")}</>
-              )}
+            <Button variant="outline" type="submit" loading={manageLoading}>
+              {t("Manage")}
             </Button>
           </form>
           <LeaveOrDeleteTeamDropdown

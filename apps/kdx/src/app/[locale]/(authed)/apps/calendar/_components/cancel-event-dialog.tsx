@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { LuLoader2 } from "react-icons/lu";
 
 import { Button } from "@kdx/ui/button";
 import {
@@ -106,6 +105,7 @@ export function CancelationDialog({
             {t("Cancel")}
           </Button>
           <Button
+            loading={mutation.isPending}
             onClick={() => {
               if (radioValue === "all")
                 mutation.mutate({
@@ -122,11 +122,7 @@ export function CancelationDialog({
                 });
             }}
           >
-            {mutation.isPending ? (
-              <LuLoader2 className="size-4 animate-spin" />
-            ) : (
-              t("Ok")
-            )}
+            {t("Ok")}
           </Button>
         </CredenzaFooter>
       </CredenzaContent>

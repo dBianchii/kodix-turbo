@@ -2,7 +2,6 @@
 
 import { useTranslations } from "next-intl";
 import { useAction } from "next-safe-action/hooks";
-import { LuLoader2 } from "react-icons/lu";
 
 import { Button } from "@kdx/ui/button";
 import {
@@ -117,12 +116,9 @@ export function PasswordSignupForm({ invite }: { invite?: string }) {
 
         <Button
           className="w-full"
-          disabled={form.formState.isSubmitting || isExecuting}
+          loading={form.formState.isSubmitting || isExecuting}
         >
-          {t("Create account")}{" "}
-          {(form.formState.isSubmitting || isExecuting) && (
-            <LuLoader2 className="ml-2 size-4 animate-spin" />
-          )}
+          {t("Create account")}
         </Button>
       </form>
     </Form>
