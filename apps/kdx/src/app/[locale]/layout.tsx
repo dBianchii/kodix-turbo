@@ -11,7 +11,6 @@ import { TRPCReactProvider } from "~/trpc/react";
 
 import "~/app/globals.css";
 
-import dynamic from "next/dynamic";
 import { getMessages } from "next-intl/server";
 
 import { getBaseUrl } from "@kdx/shared";
@@ -20,14 +19,8 @@ import { ThemeProvider, ThemeToggle } from "@kdx/ui/theme";
 import { Toaster } from "@kdx/ui/toast";
 
 import { CCNextIntlClientProvider } from "./_components/cc-next-intl-client-provider";
+import PostHogPageView from "./_components/posthog-page-view";
 import { CSPostHogProvider } from "./_components/posthog-provider";
-
-const PostHogPageView = dynamic(
-  () => import("./_components/posthog-page-view"),
-  {
-    ssr: false,
-  },
-);
 
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseUrl()),

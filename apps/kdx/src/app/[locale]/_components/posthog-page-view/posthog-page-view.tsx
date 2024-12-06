@@ -6,7 +6,7 @@ import { usePostHog } from "posthog-js/react";
 
 import { usePathname } from "~/i18n/routing";
 
-export default function PostHogPageView() {
+export default function PostHogPageView_DO_NOT_IMPORT_DIRECTLY() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const posthog = usePostHog();
