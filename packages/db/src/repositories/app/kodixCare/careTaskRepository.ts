@@ -136,7 +136,7 @@ export async function createCareTask(
   careTask: z.infer<typeof zCareTaskCreate>,
   db = _db,
 ) {
-  await db.insert(careTasks).values(careTask);
+  return db.insert(careTasks).values(careTask).$returningId();
 }
 
 export async function createManyCareTasks(

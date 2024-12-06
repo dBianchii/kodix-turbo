@@ -31,6 +31,8 @@ const diffSchema = editNewDeleteDiffSchema;
 // Schema for the top-level array of diffs
 const deepDiffSchema = z.array(diffSchema);
 
+const PATHS_TO_REMOVE = ["updatedAt"];
+
 export async function getAppActivityLogs({
   tableNames,
   rowId,
@@ -55,29 +57,28 @@ export async function getAppActivityLogs({
     teamId,
   });
 
-  for (const log of logs) {
-    if (log.type === "update") {
-      const diffs = deepDiffSchema.parse(log.diff);
+  const logsWithMessage = logs.map((log) => {
+    const diffs = deepDiffSchema.parse(log.diff);
+    const messageParts: string[] = [];
+    for (const diff of diffs) {
+      // Remove paths that are not relevant to the user
+      if (PATHS_TO_REMOVE.some((path) => diff.path.includes(path))) continue;
 
-      const messageParts: string[] = [];
-      for (const diff of diffs) {
-        if (diff.kind !== "E") continue; //What do we do if it isnt?
-        if (typeof diff.lhs !== "string" && typeof diff.rhs !== "string")
-          continue; //What do we do if it isnt?
-
-        if (!diff.lhs) {
-          messageParts.push(`inserted at ${diff.path.join(".")} ${diff.rhs}`);
-          continue;
-        }
-
-        messageParts.push(
-          `updated ${diff.path.join(".")} from ${diff.lhs} to ${diff.rhs}`,
-        );
+      if (!diff.lhs) {
+        messageParts.push(`inserted at ${diff.path.join(".")} ${diff.rhs}`);
+        continue;
       }
 
-      log.message = `${log.User.name} ${messageParts.join(", ")}`;
+      messageParts.push(
+        `updated ${diff.path.join(".")} from ${diff.lhs} to ${diff.rhs}`,
+      );
     }
-  }
 
-  return logs;
+    return {
+      ...log,
+      message: `${log.User.name} ${messageParts.join(", ")}`,
+    };
+  });
+
+  return logsWithMessage;
 }

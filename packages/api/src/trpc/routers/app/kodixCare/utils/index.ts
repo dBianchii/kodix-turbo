@@ -28,7 +28,6 @@ export async function cloneCalendarTasksToCareTasks({
 
   if (calendarTasks.length > 0)
     await careTaskRepository.createManyCareTasks(
-      tx,
       calendarTasks.map((calendarTask) => ({
         teamId: ctx.auth.user.activeTeamId,
         title: calendarTask.title,
@@ -40,6 +39,7 @@ export async function cloneCalendarTasksToCareTasks({
         createdBy: calendarTask.createdBy,
         createdFromCalendar: true,
       })),
+      tx,
     );
 
   await appRepository.upsertAppTeamConfig({
