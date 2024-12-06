@@ -2,7 +2,7 @@
 
 import type { EventPropGetter, View } from "react-big-calendar";
 import type { EventInteractionArgs } from "react-big-calendar/lib/addons/dragAndDrop";
-import { useCallback, useMemo, useState } from "react";
+import { use, useCallback, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Calendar, dayjsLocalizer } from "react-big-calendar";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
@@ -63,9 +63,9 @@ export function ShiftsBigCalendar({
   careGivers,
 }: {
   user: User;
-  myRoles: RouterOutputs["team"]["appRole"]["getMyRoles"];
-  initialShifts: RouterOutputs["app"]["kodixCare"]["getAllCareShifts"];
-  careGivers: RouterOutputs["app"]["kodixCare"]["getAllCaregivers"];
+  myRoles: Promise<RouterOutputs["team"]["appRole"]["getMyRoles"]>;
+  initialShifts: Promise<RouterOutputs["app"]["kodixCare"]["getAllCareShifts"]>;
+  careGivers: Promise<RouterOutputs["app"]["kodixCare"]["getAllCaregivers"]>;
 }) {
   const [open, setOpen] = useState<
     { preselectedStart: Date; preselectedEnd: Date } | boolean
@@ -77,7 +77,7 @@ export function ShiftsBigCalendar({
   const t = useTranslations();
   const locale = useLocale();
 
-  const query = useCareShiftsData(initialShifts);
+  const query = useCareShiftsData(use(initialShifts));
   const mutation = useEditCareShift();
 
   const { selectedEvent, setSelectedEventId, delayed } = useSelectEvent({
@@ -144,8 +144,8 @@ export function ShiftsBigCalendar({
     <>
       {selectedEvent && (
         <EditCareShiftCredenza
-          careGivers={careGivers}
-          myRoles={myRoles}
+          careGivers={use(careGivers)}
+          myRoles={use(myRoles)}
           careShift={selectedEvent}
           setCareShift={setSelectedEventId}
           user={user}
@@ -155,7 +155,6 @@ export function ShiftsBigCalendar({
         <CreateShiftCredenzaButton open={open} setOpen={setOpen} user={user} />
       </div>
       <div className="mt-4">
-        {/* @ts-expect-error REACT19 INCOMPATIVILITY */}
         <DnDCalendar
           // @ts-expect-error react big calendar typesafety sucks
           eventPropGetter={
@@ -218,7 +217,7 @@ export function ShiftsBigCalendar({
           scrollToTime={new Date()} // Scroll to current time
           culture={locale}
           localizer={localizer}
-          style={{ height: 580, width: "100%" }}
+          style={{ height: 630, width: "100%" }}
           view={view}
           views={["month", "week", "day", "agenda"]}
           onView={setView}

@@ -231,7 +231,7 @@ export function EditCareShiftCredenza({
                 }}
               >
                 <div className="flex flex-col gap-4">
-                  <div className="flex flex-row gap-4">
+                  <div className="flex flex-col gap-4 sm:flex-row">
                     <div className="flex flex-col gap-4">
                       <FormField
                         control={form.control}
