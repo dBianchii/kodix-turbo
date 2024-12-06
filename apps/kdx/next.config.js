@@ -13,6 +13,7 @@ const config = {
   serverExternalPackages: ["@node-rs/argon2"],
 
   experimental: {
+    after: true,
     serverActions:
       process.env.NODE_ENV === "development"
         ? {
