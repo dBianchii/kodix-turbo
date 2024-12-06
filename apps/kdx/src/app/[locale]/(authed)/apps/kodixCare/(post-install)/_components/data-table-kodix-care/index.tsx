@@ -3,6 +3,7 @@
 import type { SortingState, VisibilityState } from "@tanstack/react-table";
 import type { CareTask } from "node_modules/@kdx/api/src/internal/calendarAndCareTaskCentral";
 import { useEffect, useMemo, useState } from "react";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 import {
   createColumnHelper,
   flexRender,
@@ -14,12 +15,14 @@ import { useFormatter, useTranslations } from "next-intl";
 import {
   LuAlertCircle,
   LuAlertTriangle,
+  LuArrowLeft,
   LuArrowLeftRight,
   LuCalendar,
   LuCheck,
   LuLoader2,
   LuLock,
   LuPlus,
+  LuScrollText,
   LuText,
   LuTrash,
 } from "react-icons/lu";
@@ -29,6 +32,7 @@ import { create } from "zustand";
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
+import { kodixCareAppId } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { Alert, AlertDescription, AlertTitle } from "@kdx/ui/alert";
 import {
@@ -98,6 +102,7 @@ import {
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { Link } from "~/i18n/routing";
 import { api } from "~/trpc/react";
+import { ExpandableDialog } from "../expendable-dialog";
 import { DateTimeSelectorWithLeftAndRightArrows } from "./date-time-selector-with-left-and-right-buttons";
 
 type CareTaskOrCalendarTask =
@@ -196,6 +201,9 @@ export default function DataTableKodixCare({ user }: { user: User }) {
       // Always refetch after error or success:
       onSettled: () => {
         void utils.app.kodixCare.careTask.getCareTasks.invalidate();
+        void utils.app.getAppActivityLogs.invalidate({
+          tableNames: ["careTask"],
+        });
       },
     });
 
@@ -375,7 +383,7 @@ export default function DataTableKodixCare({ user }: { user: User }) {
           />
         </>
       )}
-
+      <ExpandableDialog />
       <UnlockMoreTasksCredenza />
       <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-center">
         <div className="flex gap-2 sm:mr-auto">
@@ -834,8 +842,20 @@ function EditCareTaskCredenza({
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
+  const [isLogView, setIsLogView] = useState(false);
   const t = useTranslations();
-
+  const [parent] = useAutoAnimate({
+    duration: 300,
+    easing: "ease-in-out",
+  });
+  const [parent2] = useAutoAnimate({
+    duration: 300,
+    easing: "ease-in-out",
+  });
+  const [parent3] = useAutoAnimate({
+    duration: 300,
+    easing: "ease-in-out",
+  });
   const defaultValues = useMemo(
     () => ({
       id: task.id,
@@ -868,92 +888,136 @@ function EditCareTaskCredenza({
           setOpen(open);
         }}
       >
-        <CredenzaContent className="px-4">
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit((values) => {
-                mutation.mutate({
-                  id: values.id,
-                  details: values.details,
-                  doneAt: values.doneAt,
-                });
-                setOpen(false);
-              })}
-            >
-              <CredenzaHeader>
-                <CredenzaTitle>{t("apps.kodixCare.Edit task")}</CredenzaTitle>
-              </CredenzaHeader>
-
-              <div className="mt-6 flex flex-col gap-2 rounded-md border p-4 text-foreground/80">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold">
-                    {task.title ?? ""}
-                  </span>
-                  {task.type === "CRITICAL" && (
-                    <LuAlertCircle className="size-3 text-orange-400" />
-                  )}
-                </div>
-
-                <span className="line-clamp-3 text-xs font-semibold">
-                  {task.description ?? ""}
-                </span>
-                <span className="flex text-xs font-semibold">
-                  <LuCalendar className="mr-2 size-3 text-muted-foreground" />
-                  {format.dateTime(task.date, "shortWithHours")}
-                </span>
-              </div>
-              <div className="grid gap-4 py-4">
-                <FormField
-                  control={form.control}
-                  name="doneAt"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("Done at")}</FormLabel>
-                      <FormControl>
-                        <div className="flex flex-row gap-2">
-                          <DateTimePicker24h
-                            date={field.value ?? undefined}
-                            setDate={(newDate) =>
-                              field.onChange(newDate ?? new Date())
-                            }
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage className="w-full" />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="details"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("Details")}</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder={`${t("apps.kodixCare.Any information")}...`}
-                          className="w-full"
-                          rows={6}
-                          {...field}
-                          onChange={(e) => {
-                            field.onChange(e.target.value);
-                          }}
-                          value={field.value ?? undefined}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <AlertNoShiftsOrNotYours task={task} user={user} />
-              <CredenzaFooter className="mt-6 justify-end">
-                <Button disabled={mutation.isPending} type="submit">
-                  {t("Save")}
+        <CredenzaContent>
+          <CredenzaHeader>
+            <div ref={parent2} className="flex flex-row items-center">
+              {isLogView && (
+                <Button
+                  size={"sm"}
+                  variant={"ghost"}
+                  className="mr-2"
+                  onClick={() => {
+                    setIsLogView(false);
+                  }}
+                >
+                  <LuArrowLeft className="size-3" />
                 </Button>
-              </CredenzaFooter>
-            </form>
-          </Form>
+              )}
+              {isLogView ? (
+                <CredenzaTitle>{t("Logs")}</CredenzaTitle>
+              ) : (
+                <CredenzaTitle key={"somekey"}>
+                  {t("apps.kodixCare.Edit task")}
+                </CredenzaTitle>
+              )}
+            </div>
+          </CredenzaHeader>
+          <div className="overflow-hidden">
+            <div
+              ref={parent}
+              className={cn(
+                "h-[600px] flex-grow transition-all duration-300 ease-in-out",
+              )}
+            >
+              {isLogView ? (
+                <LogsView careTaskId={task.id} />
+              ) : (
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit((values) => {
+                      mutation.mutate({
+                        id: values.id,
+                        details: values.details,
+                        doneAt: values.doneAt,
+                      });
+                      setOpen(false);
+                    })}
+                  >
+                    <div className="mt-6 flex flex-col gap-2 rounded-md border p-4 text-foreground/80">
+                      <div className="flex gap-2">
+                        <span className="text-sm font-semibold">
+                          {task.title ?? ""}
+                        </span>
+                        {task.type === "CRITICAL" && (
+                          <LuAlertCircle className="size-3 text-orange-400" />
+                        )}
+                        <Button
+                          className="ml-auto"
+                          variant={"outline"}
+                          size={"sm"}
+                          type="button"
+                          onClick={() => setIsLogView(true)}
+                        >
+                          <LuScrollText className="mr-2 size-3" />
+                          {t("Logs")}
+                        </Button>
+                      </div>
+                      <span className="line-clamp-3 text-xs font-semibold">
+                        {task.description ?? ""}
+                      </span>
+                      <span className="flex text-xs font-semibold">
+                        <LuCalendar className="mr-2 size-3 text-muted-foreground" />
+                        {format.dateTime(task.date, "shortWithHours")}
+                      </span>
+                    </div>
+                    <div className="grid gap-4 py-4">
+                      <FormField
+                        control={form.control}
+                        name="doneAt"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t("Done at")}</FormLabel>
+                            <FormControl>
+                              <div className="flex flex-row gap-2">
+                                <DateTimePicker24h
+                                  date={field.value ?? undefined}
+                                  setDate={(newDate) =>
+                                    field.onChange(newDate ?? new Date())
+                                  }
+                                />
+                              </div>
+                            </FormControl>
+                            <FormMessage className="w-full" />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="details"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t("Details")}</FormLabel>
+                            <FormControl>
+                              <Textarea
+                                autoFocus
+                                placeholder={`${t("apps.kodixCare.Any information")}...`}
+                                className="w-full"
+                                rows={6}
+                                {...field}
+                                onChange={(e) => {
+                                  field.onChange(e.target.value);
+                                }}
+                                value={field.value ?? undefined}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div ref={parent3}>
+                      <AlertNoShiftsOrNotYours task={task} user={user} />
+                    </div>
+                    <CredenzaFooter className="mt-6 justify-end">
+                      <Button disabled={mutation.isPending} type="submit">
+                        {t("Save")}
+                      </Button>
+                    </CredenzaFooter>
+                  </form>
+                </Form>
+              )}
+            </div>
+          </div>
         </CredenzaContent>
       </Credenza>
     </>
@@ -983,7 +1047,10 @@ function AlertNoShiftsOrNotYours({
     overlappingShiftsQuery.data?.some((x) => x.Caregiver.id === user.id);
   const t = useTranslations();
 
-  if (atLeastOneShiftExists && isAtLeastOneOfTheOverlappingShiftsMine)
+  if (
+    overlappingShiftsQuery.isLoading ||
+    (atLeastOneShiftExists && isAtLeastOneOfTheOverlappingShiftsMine)
+  )
     return null;
 
   const text = !atLeastOneShiftExists
@@ -1002,5 +1069,36 @@ function AlertNoShiftsOrNotYours({
       <AlertTitle>{t("Warning")}</AlertTitle>
       <AlertDescription>{text}</AlertDescription>
     </Alert>
+  );
+}
+
+function LogsView({ careTaskId }: { careTaskId: string }) {
+  const getAppActivityLogsQuery = api.app.getAppActivityLogs.useQuery({
+    appId: kodixCareAppId,
+    tableNames: ["careTask"],
+    rowId: careTaskId,
+  });
+  const t = useTranslations();
+  if (getAppActivityLogsQuery.isLoading)
+    return <LuLoader2 className="size-6" />;
+
+  return (
+    <Table>
+      <TableBody>
+        {getAppActivityLogsQuery.data?.length ? (
+          getAppActivityLogsQuery.data.map((log) => (
+            <TableRow key={log.id}>
+              <TableCell>{log.message}</TableCell>
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell className="h-24 text-center">
+              {t("No results")}.
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
   );
 }

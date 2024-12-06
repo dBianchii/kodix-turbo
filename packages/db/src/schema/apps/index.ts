@@ -266,6 +266,10 @@ export const appActivityLogs = mysqlTable(
 export const appActivityLogsRelations = relations(
   appActivityLogs,
   ({ one }) => ({
+    User: one(users, {
+      fields: [appActivityLogs.userId],
+      references: [users.id],
+    }),
     App: one(apps, {
       fields: [appActivityLogs.appId],
       references: [apps.id],

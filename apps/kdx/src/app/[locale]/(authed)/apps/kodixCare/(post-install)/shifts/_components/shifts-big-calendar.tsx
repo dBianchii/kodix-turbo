@@ -215,6 +215,7 @@ export function ShiftsBigCalendar({
             event: "Evento",
             showMore: (total: number) => `+ (${total}) Eventos`,
           }}
+          scrollToTime={new Date()} // Scroll to current time
           culture={locale}
           localizer={localizer}
           style={{ height: 580, width: "100%" }}

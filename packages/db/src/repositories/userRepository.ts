@@ -23,6 +23,7 @@ export async function findUserById(id: string) {
   return await db.query.users.findFirst({
     where: (users, { eq }) => eq(users.id, id),
     columns: {
+      name: true,
       email: true,
     },
     with: {
@@ -31,6 +32,15 @@ export async function findUserById(id: string) {
           token: true,
         },
       },
+    },
+  });
+}
+
+export async function findManyUsersByIds(ids: string[]) {
+  return await db.query.users.findMany({
+    where: (users, { inArray }) => inArray(users.id, ids),
+    columns: {
+      name: true,
     },
   });
 }

@@ -39,16 +39,10 @@ import { api } from "~/trpc/react";
 import { useShiftOverlap } from "./hooks";
 import { WarnOverlappingShifts } from "./warn-overlapping-shifts";
 
-const useMyRoles = ({ enabled }: { enabled: boolean }) => {
-  const getMyRolesQuery = api.team.appRole.getMyRoles.useQuery(
-    {
-      appId: kodixCareAppId,
-    },
-    {
-      enabled,
-      staleTime: 0,
-    },
-  );
+const useMyRoles = () => {
+  const getMyRolesQuery = api.team.appRole.getMyRoles.useQuery({
+    appId: kodixCareAppId,
+  });
 
   const shouldAutoSelectMyself = useMemo(
     () =>
@@ -70,9 +64,7 @@ const useCreateShiftForm = ({
   open: { preselectedStart: Date; preselectedEnd: Date } | boolean;
   userId: string;
 }) => {
-  const { shouldAutoSelectMyself } = useMyRoles({
-    enabled: !!open,
-  });
+  const { shouldAutoSelectMyself } = useMyRoles();
 
   const t = useTranslations();
   const form = useForm({
@@ -111,12 +103,9 @@ export function CreateShiftCredenzaButton({
     undefined,
     {
       enabled: !!open,
-      staleTime: 0,
     },
   );
-  const { getMyRolesQuery } = useMyRoles({
-    enabled: !!open,
-  });
+  const { getMyRolesQuery } = useMyRoles();
 
   const mutation = api.app.kodixCare.createCareShift.useMutation({
     onSuccess: () => {
@@ -251,6 +240,7 @@ export function CreateShiftCredenzaButton({
                           ) || getMyRolesQuery.isFetching
                         }
                         {...field}
+                        onValueChange={field.onChange}
                       >
                         <FormControl>
                           <SelectTrigger

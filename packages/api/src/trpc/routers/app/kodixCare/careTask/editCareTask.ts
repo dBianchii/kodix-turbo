@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import deepDiff from "deep-diff";
 
 import type { careTasks } from "@kdx/db/schema";
 import type { TEditCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
@@ -7,6 +8,7 @@ import { careTaskRepository } from "@kdx/db/repositories";
 import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
+import { logActivity } from "../../../../../services/appActivityLogs.service";
 import { getMyRolesHandler } from "../../../team/appRole/getMyRoles.handler";
 
 interface EditCareTaskOptions {
@@ -18,11 +20,11 @@ export const editCareTaskHandler = async ({
   ctx,
   input,
 }: EditCareTaskOptions) => {
-  const careTask = await careTaskRepository.findCareTaskById({
+  const oldCareTask = await careTaskRepository.findCareTaskById({
     id: input.id,
     teamId: ctx.auth.user.activeTeamId,
   });
-  if (!careTask)
+  if (!oldCareTask)
     throw new TRPCError({
       code: "NOT_FOUND",
       message: ctx.t("api.Care task not found"),
@@ -32,8 +34,9 @@ export const editCareTaskHandler = async ({
     details: input.details,
   };
 
-  if (careTask.doneByUserId) {
-    const taskWasDoneByCurrentUser = careTask.doneByUserId === ctx.auth.user.id;
+  if (oldCareTask.doneByUserId) {
+    const taskWasDoneByCurrentUser =
+      oldCareTask.doneByUserId === ctx.auth.user.id;
     if (!taskWasDoneByCurrentUser) {
       const myRoles = await getMyRolesHandler({
         ctx,
@@ -87,8 +90,35 @@ export const editCareTaskHandler = async ({
     set.doneByUserId = input.doneAt === null ? null : ctx.auth.user.id;
   }
 
-  await careTaskRepository.updateCareTask(db, {
-    id: input.id,
-    input: set,
+  await db.transaction(async (tx) => {
+    await careTaskRepository.updateCareTask(
+      {
+        id: input.id,
+        input: set,
+      },
+      tx,
+    );
+    const newCareTask = await careTaskRepository.findCareTaskById(
+      {
+        id: input.id,
+        teamId: ctx.auth.user.activeTeamId,
+      },
+      tx,
+    );
+    if (!newCareTask)
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: ctx.t("api.Care task not found"),
+      });
+    const diff = deepDiff(oldCareTask, newCareTask);
+    await logActivity({
+      appId: kodixCareAppId,
+      diff,
+      tableName: "careTask",
+      teamId: ctx.auth.user.activeTeamId,
+      type: "update",
+      userId: ctx.auth.user.id,
+      rowId: input.id,
+    });
   });
 };

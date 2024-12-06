@@ -8,7 +8,7 @@ import type {
   zCareTaskUpdate,
 } from "../../_zodSchemas/careTaskSchemas";
 import type { Drizzle } from "../../../client";
-import { db } from "../../../client";
+import { db as _db } from "../../../client";
 import { careTasks } from "../../../schema";
 
 export interface CareTask {
@@ -25,19 +25,22 @@ export interface CareTask {
   eventMasterId: string | null;
 }
 
-export async function findCareTasksFromTo({
-  dateStart,
-  dateEnd,
-  teamIds,
-  onlyCritical = false,
-  onlyNotDone = false,
-}: {
-  dateStart: Date;
-  dateEnd: Date;
-  teamIds: string[];
-  onlyCritical?: boolean;
-  onlyNotDone?: boolean;
-}) {
+export async function findCareTasksFromTo(
+  {
+    dateStart,
+    dateEnd,
+    teamIds,
+    onlyCritical = false,
+    onlyNotDone = false,
+  }: {
+    dateStart: Date;
+    dateEnd: Date;
+    teamIds: string[];
+    onlyCritical?: boolean;
+    onlyNotDone?: boolean;
+  },
+  db = _db,
+) {
   const careTasks: CareTask[] = await db.query.careTasks.findMany({
     where: (careTask, { gte, lte, and }) =>
       and(
@@ -65,39 +68,38 @@ export async function findCareTasksFromTo({
   return careTasks;
 }
 
-export async function findCareTaskById({
-  id,
-  teamId,
-}: {
-  id: string;
-  teamId: string;
-}) {
+export async function findCareTaskById(
+  {
+    id,
+    teamId,
+  }: {
+    id: string;
+    teamId: string;
+  },
+  db = _db,
+) {
   return db.query.careTasks.findFirst({
     where: (careTask, { eq }) =>
       and(eq(careTask.id, id), eq(careTask.teamId, teamId)),
-    columns: {
-      doneByUserId: true,
-      createdBy: true,
-      createdFromCalendar: true,
-      date: true,
-    },
   });
 }
 
-export async function deleteCareTaskById({
-  id,
-  teamId,
-}: {
-  id: string;
-  teamId: string;
-}) {
+export async function deleteCareTaskById(
+  {
+    id,
+    teamId,
+  }: {
+    id: string;
+    teamId: string;
+  },
+  db = _db,
+) {
   await db
     .delete(careTasks)
     .where(and(eq(careTasks.id, id), eq(careTasks.teamId, teamId)));
 }
 
 export async function deleteManyCareTasksThatCameFromCalendarWithDateHigherOrEqualThan(
-  db: Drizzle,
   {
     teamId,
     date,
@@ -105,6 +107,7 @@ export async function deleteManyCareTasksThatCameFromCalendarWithDateHigherOrEqu
     teamId: string;
     date: Date;
   },
+  db = _db,
 ) {
   await db
     .delete(careTasks)
@@ -122,23 +125,23 @@ export async function deleteAllCareTasksForTeam(db: Drizzle, teamId: string) {
 }
 
 export async function updateCareTask(
-  db: Drizzle,
   { id, input }: Update<typeof zCareTaskUpdate>,
+  db = _db,
 ) {
   //!Security risk
   await db.update(careTasks).set(input).where(eq(careTasks.id, id));
 }
 
 export async function createCareTask(
-  db: Drizzle,
   careTask: z.infer<typeof zCareTaskCreate>,
+  db = _db,
 ) {
   await db.insert(careTasks).values(careTask);
 }
 
 export async function createManyCareTasks(
-  db: Drizzle,
   data: z.infer<typeof zCareTaskCreateMany>,
+  db = _db,
 ) {
   await db.insert(careTasks).values(data);
 }

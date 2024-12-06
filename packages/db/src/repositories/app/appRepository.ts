@@ -389,11 +389,15 @@ export async function uninstallAppForTeam(
 
 export async function findManyAppActivityLogs(
   {
+    tableNames,
+    rowId,
     appId,
     teamId,
     page,
     pageSize,
   }: {
+    tableNames?: (typeof appActivityLogs.$inferSelect.tableName)[];
+    rowId?: string;
     appId: KodixAppId;
     teamId: string;
     page: number;
@@ -403,11 +407,24 @@ export async function findManyAppActivityLogs(
 ) {
   const offset = (page - 1) * pageSize;
   return db.query.appActivityLogs.findMany({
-    where: (appActivityLogs, { eq }) =>
-      and(eq(appActivityLogs.appId, appId), eq(appActivityLogs.teamId, teamId)),
+    where: (appActivityLogs, { eq, inArray }) =>
+      and(
+        eq(appActivityLogs.appId, appId),
+        eq(appActivityLogs.teamId, teamId),
+
+        rowId ? eq(appActivityLogs.rowId, rowId) : undefined,
+        tableNames ? inArray(appActivityLogs.tableName, tableNames) : undefined,
+      ),
     orderBy: [asc(appActivityLogs.loggedAt)],
     limit: pageSize,
     offset: offset,
+    with: {
+      User: {
+        columns: {
+          name: true,
+        },
+      },
+    },
   });
 }
 

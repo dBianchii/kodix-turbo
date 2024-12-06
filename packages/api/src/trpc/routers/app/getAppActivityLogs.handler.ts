@@ -1,7 +1,7 @@
 import type { TGetAppActivityLogsInputSchema } from "@kdx/validators/trpc/app";
-import { appRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../procedures";
+import { getAppActivityLogs } from "../../../services/appActivityLogs.service";
 
 interface GetAppActivityLogsOptions {
   ctx: TProtectedProcedureContext;
@@ -12,9 +12,11 @@ export const getAppActivityLogsHandler = async ({
   ctx,
   input,
 }: GetAppActivityLogsOptions) => {
-  return await appRepository.findManyAppActivityLogs({
+  return await getAppActivityLogs({
     appId: input.appId,
     page: input.page,
+    rowId: input.rowId,
+    tableNames: input.tableNames,
     pageSize: input.perPage,
     teamId: ctx.auth.user.activeTeamId,
   });

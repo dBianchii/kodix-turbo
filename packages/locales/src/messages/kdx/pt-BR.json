@@ -489,7 +489,7 @@
   "It seems that there are some overlapping shifts": "Parece que há alguns turnos com horários semelhantes",
   "Are you sure you want to create a shift anyways": "Tem certeza de que deseja criar um turno mesmo assim?",
   "Checking": "Verificando",
-  "Logs": "Registros",
+  "Logs": "Logs",
   "Confirm and finish": "Confirmar e finalizar",
   "Only save": "Salvar apenas",
   "No": "Não",
@@ -498,6 +498,7 @@
   "Unlock": "Desbloquear",
   "Shift deleted": "Turno excluído",
   "Please wait": "Por favor espere...",
-  "There is no shift associated with this task Its recommended that you create a shift for this task": "Não há nenhum turno associada a esta tarefa. \nÉ recomendado que você crie um turno para ela ser completada",
-  "This task is not associated with any of your shifts You can still edit it but its recommended that you create a shift for it": "Esta tarefa não está associada a nenhum dos seus turnos. \nVocê ainda pode editá-lo, mas é recomendado que você crie um turno para ele"
+  "There is no shift associated with this task Its recommended that you create a shift for this task": "Não há nenhum turno associado a esta tarefa. \nÉ recomendado que você crie um turno para ela ser completada",
+  "This task is not associated with any of your shifts You can still edit it but its recommended that you create a shift for it": "Você não tem um turno ativo para editar esta tarefa. \n Recomendamos criar um para melhor organização.",
+  "View logs": "Visualizar logs"
 }

@@ -10,6 +10,8 @@ import {
   todoAppId,
 } from "@kdx/shared";
 
+import { ZNanoId } from "../..";
+
 export type AppIdsWithConfig = typeof kodixCareAppId; //? Some apps might not have config implemented
 export type AppIdsWithUserAppTeamConfig = typeof kodixCareAppId; //? Some apps might not have userAppTeamConfig implemented
 
@@ -55,9 +57,10 @@ export type TSaveUserAppTeamConfigInputSchema = z.infer<
 
 export const ZGetAppActivityLogsInputSchema = z.object({
   appId: z.custom<KodixAppId>(),
-  tables: z
+  tableNames: z
     .array(z.custom<typeof appActivityLogs.$inferSelect.tableName>())
     .min(1),
+  rowId: ZNanoId.optional(),
   perPage: z.number().min(1).default(10),
   page: z.number().min(1).default(1),
 });
