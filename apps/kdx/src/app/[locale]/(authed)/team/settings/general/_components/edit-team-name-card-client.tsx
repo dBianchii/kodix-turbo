@@ -1,7 +1,6 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { LuLoader2 } from "react-icons/lu";
 
 import { getErrorMessage } from "@kdx/shared";
 import { cn } from "@kdx/ui";
@@ -101,16 +100,7 @@ export function EditTeamNameCardClient({
             </div>
           </CardContent>
           <CardFooter className="flex justify-end border-t px-6 py-4">
-            <Button disabled={mutation.isPending}>
-              {mutation.isPending ? (
-                <>
-                  <LuLoader2 className="mr-2 size-4 animate-spin" />{" "}
-                  {t("Saving")}
-                </>
-              ) : (
-                <>{t("Save")}</>
-              )}
-            </Button>
+            <Button loading={mutation.isPending}>{t("Save")}</Button>
           </CardFooter>
         </form>
       </Form>

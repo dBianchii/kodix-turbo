@@ -2,7 +2,6 @@
 
 import { use } from "react";
 import { useTranslations } from "next-intl";
-import { LuLoader2 } from "react-icons/lu";
 
 import { cn } from "@kdx/ui";
 import { Button, buttonVariants } from "@kdx/ui/button";
@@ -131,11 +130,8 @@ export default function ForgotPasswordPage(props: {
                   <Button
                     className="w-full"
                     type="submit"
-                    disabled={mutation.isPending}
+                    loading={mutation.isPending}
                   >
-                    {mutation.isPending && (
-                      <LuLoader2 className="mr-2 size-5 animate-spin" />
-                    )}
                     {t("Change password")}
                   </Button>
                 </form>

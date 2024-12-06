@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useAction } from "next-safe-action/hooks";
-import { LuLoader2, LuPlusCircle } from "react-icons/lu";
+import { LuPlusCircle } from "react-icons/lu";
 
 import { getErrorMessage } from "@kdx/shared";
 import { cn } from "@kdx/ui";
@@ -71,7 +71,7 @@ export function AddTeamDialogButton({
             {t("Cancel")}
           </Button>
           <Button
-            disabled={isExecuting}
+            loading={isExecuting}
             onClick={() => {
               toast.promise(
                 executeAsync({
@@ -90,7 +90,6 @@ export function AddTeamDialogButton({
               );
             }}
           >
-            {isExecuting && <LuLoader2 className="mr-2 size-5 animate-spin" />}
             {t("Create")}
           </Button>
         </CredenzaFooter>

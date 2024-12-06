@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@kdx/prettier-config": "workspace:*",
-    "@turbo/gen": "^2.3.1",
+    "@turbo/gen": "^2.3.3",
     "prettier": "catalog:",
     "turbo": "^2.3.3",
     "typescript": "catalog:"

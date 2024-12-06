@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { LuLoader2, LuTrash } from "react-icons/lu";
+import { LuTrash } from "react-icons/lu";
 import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { User } from "@kdx/auth";
@@ -126,7 +126,7 @@ export function KodixApp({
         )}
         {user && !installed && (
           <Button
-            disabled={installAppMutation.isPending}
+            loading={installAppMutation.isPending}
             onClick={() => {
               if (appShouldGoToOnboarding) {
                 router.push(`${appurl}/onboarding`);
@@ -137,9 +137,6 @@ export function KodixApp({
             variant={"secondary"}
             className={cn("disabled")}
           >
-            {installAppMutation.isPending && (
-              <LuLoader2 className="mr-2 size-5 animate-spin" />
-            )}
             {t("Install")}
           </Button>
         )}
@@ -192,15 +189,12 @@ export function KodixApp({
                   {t("Cancel")}
                 </Button>
                 <Button
-                  disabled={uninstallAppMutation.isPending}
+                  loading={uninstallAppMutation.isPending}
                   onClick={() => {
                     uninstallAppMutation.mutate({ appId: id });
                   }}
                   variant="destructive"
                 >
-                  {uninstallAppMutation.isPending && (
-                    <LuLoader2 className="mr-2 size-5 animate-spin" />
-                  )}
                   {t("Uninstall")}
                 </Button>
               </CredenzaFooter>

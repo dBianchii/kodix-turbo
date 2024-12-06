@@ -576,17 +576,13 @@ function SyncTasksFromCalendarCredenzaButton() {
             </Button>
           </CredenzaClose>
           <Button
-            disabled={syncCareTasksFromCalendarMutation.isPending}
+            loading={syncCareTasksFromCalendarMutation.isPending}
             onClick={async () => {
               await syncCareTasksFromCalendarMutation.mutateAsync();
               setSyncCredenzaOpen(false);
             }}
           >
-            {syncCareTasksFromCalendarMutation.isPending ? (
-              <LuLoader2 className="size-4 animate-spin" />
-            ) : (
-              t("Sync tasks")
-            )}
+            {t("Sync tasks")}
           </Button>
         </CredenzaFooter>
       </CredenzaContent>
