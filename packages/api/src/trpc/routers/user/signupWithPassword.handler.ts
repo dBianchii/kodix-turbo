@@ -9,6 +9,7 @@ import { nanoid } from "@kdx/db/nanoid";
 import { userRepository } from "@kdx/db/repositories";
 
 import type { TPublicProcedureContext } from "../../procedures";
+import { captureProductAnalytic } from "../../../services/productAnalytics.service";
 
 interface SignupWithPasswordOptions {
   ctx: TPublicProcedureContext;
@@ -44,5 +45,11 @@ export const signupWithPasswordHandler = async ({
   });
 
   const sessionId = createDbSessionAndCookie({ userId });
+  captureProductAnalytic({
+    event: "signup",
+    userId,
+    properties: { email: input.email },
+  });
+
   return sessionId;
 };
