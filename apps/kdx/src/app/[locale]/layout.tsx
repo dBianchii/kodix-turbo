@@ -19,6 +19,7 @@ import { ThemeProvider, ThemeToggle } from "@kdx/ui/theme";
 import { Toaster } from "@kdx/ui/toast";
 
 import { CCNextIntlClientProvider } from "./_components/cc-next-intl-client-provider";
+import PostHogPageView from "./_components/posthog-page-view";
 import { CSPostHogProvider } from "./_components/posthog-provider";
 
 export const metadata: Metadata = {
@@ -61,6 +62,7 @@ export default async function RootLayout(props: {
             GeistMono.variable,
           )}
         >
+          <PostHogPageView />
           <SpeedInsights />
           <Analytics />
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
