@@ -93,7 +93,6 @@ import { ZCreateCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/c
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { Link } from "~/i18n/routing";
 import { api } from "~/trpc/react";
-import { ExpandableDialog } from "../expendable-dialog";
 import { DateTimeSelectorWithLeftAndRightArrows } from "./date-time-selector-with-left-and-right-buttons";
 import { EditCareTaskCredenza } from "./edit-care-task-credenza";
 
@@ -375,7 +374,6 @@ export default function DataTableKodixCare({ user }: { user: User }) {
           />
         </>
       )}
-      <ExpandableDialog />
       <UnlockMoreTasksCredenza />
       <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-center">
         <div className="flex gap-2 sm:mr-auto">

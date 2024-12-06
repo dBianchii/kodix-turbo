@@ -1,5 +1,5 @@
 import type { CareTask } from "node_modules/@kdx/api/src/internal/calendarAndCareTaskCentral";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useFormatter, useTranslations } from "next-intl";
 import {
@@ -85,21 +85,17 @@ export function EditCareTaskCredenza({
     defaultValues,
   });
 
-  useEffect(() => {
+  const handleCloseOrOpen = (open: boolean) => {
     form.reset(defaultValues);
-  }, [task, open, form, defaultValues]);
+    setOpen(open);
+    setIsLogView(false);
+  };
 
   const format = useFormatter();
 
   return (
     <>
-      <Credenza
-        open={open}
-        onOpenChange={(open) => {
-          form.reset(defaultValues);
-          setOpen(open);
-        }}
-      >
+      <Credenza open={open} onOpenChange={handleCloseOrOpen}>
         <CredenzaContent>
           <CredenzaHeader>
             <div ref={parent2} className="flex flex-row items-center">
@@ -142,7 +138,7 @@ export function EditCareTaskCredenza({
                         details: values.details,
                         doneAt: values.doneAt,
                       });
-                      setOpen(false);
+                      handleCloseOrOpen(false);
                     })}
                   >
                     <div className="mt-6 flex flex-col gap-2 rounded-md border p-4 text-foreground/80">
