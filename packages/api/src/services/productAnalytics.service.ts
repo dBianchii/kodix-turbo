@@ -11,10 +11,11 @@ export const captureProductAnalytic = ({
   event: string;
   properties: Record<string, unknown>;
 }) =>
-  after(() =>
+  after(async () => {
     posthog.capture({
       distinctId: userId,
       event,
       properties,
-    }),
-  );
+    });
+    await posthog.shutdown();
+  });
