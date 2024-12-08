@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import type { appActivityLogs } from "@kdx/db/schema";
 import type { KodixAppId } from "@kdx/shared";
 import {
   calendarAppId,
@@ -8,6 +9,8 @@ import {
   kodixCareUserAppTeamConfigSchema,
   todoAppId,
 } from "@kdx/shared";
+
+import { ZNanoId } from "../..";
 
 export type AppIdsWithConfig = typeof kodixCareAppId; //? Some apps might not have config implemented
 export type AppIdsWithUserAppTeamConfig = typeof kodixCareAppId; //? Some apps might not have userAppTeamConfig implemented
@@ -50,4 +53,17 @@ export const ZSaveUserAppTeamConfigInputSchema = z.object({
 });
 export type TSaveUserAppTeamConfigInputSchema = z.infer<
   typeof ZSaveUserAppTeamConfigInputSchema
+>;
+
+export const ZGetAppActivityLogsInputSchema = z.object({
+  appId: z.custom<KodixAppId>(),
+  tableNames: z
+    .array(z.custom<typeof appActivityLogs.$inferSelect.tableName>())
+    .min(1),
+  rowId: ZNanoId.optional(),
+  perPage: z.number().min(1).default(10),
+  page: z.number().min(1).default(1),
+});
+export type TGetAppActivityLogsInputSchema = z.infer<
+  typeof ZGetAppActivityLogsInputSchema
 >;

@@ -1,5 +1,7 @@
 import { TRPCError } from "@trpc/server";
+import { diff } from "deep-diff";
 
+import type { careShifts } from "@kdx/db/schema";
 import type { TEditCareShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import { db } from "@kdx/db/client";
 import { kodixCareRepository } from "@kdx/db/repositories";
@@ -13,97 +15,6 @@ import { assertNoOverlappingShiftsForThisCaregiver } from "./_kodixCare.permissi
 interface EditCareShiftOptions {
   ctx: TProtectedProcedureContext;
   input: TEditCareShiftInputSchema;
-}
-type Primitive = string | number | boolean | null | undefined | Date;
-
-interface DiffResult<T> {
-  changed: boolean;
-  oldValue: T | undefined;
-  newValue: T | undefined;
-}
-
-type DeepDiffResult<T> = {
-  [P in keyof T]: T[P] extends Primitive
-    ? DiffResult<T[P]>
-    : T[P] extends unknown[]
-      ? DiffResult<T[P]> // Treat arrays as primitives
-      : T[P] extends object
-        ? DeepDiffResult<T[P]>
-        : DiffResult<T[P]>;
-};
-
-function createDiff<T extends object>(oldObj: T, newObj: T): DeepDiffResult<T> {
-  const result = {} as DeepDiffResult<T>;
-
-  // Get all unique keys from both objects
-  const allKeys = new Set([...Object.keys(oldObj), ...Object.keys(newObj)]);
-
-  for (const key of allKeys) {
-    const oldValue = oldObj[key as keyof T];
-    const newValue = newObj[key as keyof T];
-
-    if (oldValue instanceof Date && newValue instanceof Date) {
-      result[key as keyof T] = {
-        changed: oldValue.getTime() !== newValue.getTime(),
-        oldValue,
-        newValue,
-      } as DeepDiffResult<T>[keyof T];
-    } else if (Array.isArray(oldValue) && Array.isArray(newValue)) {
-      result[key as keyof T] = {
-        changed: JSON.stringify(oldValue) !== JSON.stringify(newValue),
-        oldValue,
-        newValue,
-      } as DeepDiffResult<T>[keyof T];
-    } else if (
-      oldValue &&
-      newValue &&
-      typeof oldValue === "object" &&
-      typeof newValue === "object"
-    ) {
-      result[key as keyof T] = createDiff(
-        oldValue as object,
-        newValue as object,
-      ) as DeepDiffResult<T>[keyof T];
-    } else {
-      result[key as keyof T] = {
-        changed: oldValue !== newValue,
-        oldValue,
-        newValue,
-      } as DeepDiffResult<T>[keyof T];
-    }
-  }
-
-  return result;
-}
-
-// Helper function to get a flat list of all changes
-function getFlattenedChanges<T extends object>(
-  diff: DeepDiffResult<T>,
-  prefix = "",
-): { path: string; oldValue: unknown; newValue: unknown }[] {
-  const changes: { path: string; oldValue: unknown; newValue: unknown }[] = [];
-
-  for (const key in diff) {
-    const currentPath = prefix ? `${prefix}.${key}` : key;
-    const value = diff[key];
-
-    if ("changed" in value) {
-      if (value.changed) {
-        changes.push({
-          path: currentPath,
-          oldValue: value.oldValue,
-          newValue: value.newValue,
-        });
-      }
-    } else {
-      // Recurse for nested objects
-      changes.push(
-        ...getFlattenedChanges(value as DeepDiffResult<unknown>, currentPath),
-      );
-    }
-  }
-
-  return changes;
 }
 
 export const editCareShiftHandler = async ({
@@ -120,13 +31,17 @@ export const editCareShiftHandler = async ({
       message: ctx.t("api.Shift not found"),
     });
 
-  const updateData = {
-    ...(input.startAt && { startAt: input.startAt }),
-    ...(input.endAt && { endAt: input.endAt }),
-    ...(input.careGiverId && { careGiverId: input.careGiverId }),
-  };
+  if (oldShift.finishedByUserId)
+    if (input.finishedByUserId !== null)
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: ctx.t("api.Cannot edit finished shifts"),
+      });
 
-  if (input.careGiverId && input.careGiverId !== oldShift.caregiverId) {
+  const currentUserIsShiftsCaregiver =
+    ctx.auth.user.id === oldShift.caregiverId;
+
+  if (!currentUserIsShiftsCaregiver) {
     const myRoles = await getMyRolesHandler({
       ctx,
       input: { appId: kodixCareAppId },
@@ -137,7 +52,7 @@ export const editCareShiftHandler = async ({
     )
       throw new TRPCError({
         code: "FORBIDDEN",
-        message: ctx.t("api.Only admins can change caregivers"),
+        message: ctx.t("api.Only admins can edit shifts for other caregivers"),
       });
   }
 
@@ -156,28 +71,39 @@ export const editCareShiftHandler = async ({
     });
   }
 
+  const updateData: Partial<typeof careShifts.$inferInsert> = {
+    startAt: input.startAt,
+    endAt: input.endAt,
+    caregiverId: input.careGiverId,
+    checkIn: input.checkIn,
+    checkOut: input.checkOut,
+    notes: input.notes,
+    finishedByUserId: input.finishedByUserId,
+  };
+
   await db.transaction(async (tx) => {
-    const [header] = await kodixCareRepository.updateCareShift(
+    await kodixCareRepository.updateCareShift(
       {
         id: input.id,
         input: updateData,
       },
       tx,
     );
-    const newShift = await kodixCareRepository.getCareShiftById({
-      id: input.id,
-      teamId: ctx.auth.user.activeTeamId,
-    });
+    const newShift = await kodixCareRepository.getCareShiftById(
+      {
+        id: input.id,
+        teamId: ctx.auth.user.activeTeamId,
+      },
+      tx,
+    );
     if (!newShift)
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: ctx.t("api.Could not update resource"),
       });
 
-    const diff = createDiff(oldShift, newShift);
-    const changes = getFlattenedChanges(diff);
-
-    if (header.affectedRows)
+    const changes = diff(oldShift, newShift);
+    if (changes?.length)
       await logActivity({
         appId: kodixCareAppId,
         userId: ctx.auth.user.id,
@@ -185,7 +111,7 @@ export const editCareShiftHandler = async ({
         type: "update",
         rowId: input.id,
         tableName: "careShift",
-        body: changes,
+        diff: changes,
       });
   });
 };

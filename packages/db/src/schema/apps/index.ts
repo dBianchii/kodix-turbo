@@ -250,7 +250,7 @@ export const appActivityLogs = mysqlTable(
     tableName: t.mysqlEnum(["careShift", "careTask"]).notNull(),
     rowId: t.varchar({ length: NANOID_SIZE }).notNull(),
     loggedAt: t.timestamp().defaultNow().notNull(),
-    body: t.json().notNull(),
+    diff: t.json().notNull(),
     type: t.mysqlEnum(["create", "update", "delete"]).notNull(),
   }),
   (table) => {
@@ -266,6 +266,10 @@ export const appActivityLogs = mysqlTable(
 export const appActivityLogsRelations = relations(
   appActivityLogs,
   ({ one }) => ({
+    User: one(users, {
+      fields: [appActivityLogs.userId],
+      references: [users.id],
+    }),
     App: one(apps, {
       fields: [appActivityLogs.appId],
       references: [apps.id],

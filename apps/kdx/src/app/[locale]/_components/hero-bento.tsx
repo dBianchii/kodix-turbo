@@ -50,7 +50,7 @@ export async function HeroBento() {
       description: t(
         "Kodix offers a wide arangement of apps tailored for your business needs",
       ),
-      href: "/",
+      href: "/apps",
       cta: t("Browse apps"),
       className: "col-span-3 lg:col-span-1",
       background: (
@@ -101,7 +101,6 @@ export async function HeroBento() {
               <CommandItem>bitcoin.pdf</CommandItem>
               <CommandItem>finances.xlsx</CommandItem>
               <CommandItem>logo.svg</CommandItem>
-              <CommandItem>keys.gpg</CommandItem>
               <CommandItem>seed.txt</CommandItem>
             </CommandGroup>
           </CommandList>

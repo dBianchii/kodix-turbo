@@ -27,7 +27,14 @@ export const careShifts = mysqlTable(
     checkIn: t.timestamp(),
     checkOut: t.timestamp(),
     notes: t.varchar({ length: DEFAULTLENGTH }),
-    finished: t.boolean().default(false).notNull(),
+    createdById: t
+      .varchar({ length: NANOID_SIZE })
+      .notNull()
+      .references(() => users.id),
+    finishedByUserId: t.varchar({ length: NANOID_SIZE }).references(
+      () => users.id,
+      { onDelete: "restrict" }, //Restrict because we have to keep logs somehow
+    ),
   }),
   (table) => {
     return {

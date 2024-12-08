@@ -1,7 +1,7 @@
 "use client";
 
 import type { PopoverContentProps } from "@radix-ui/react-popover";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon, X } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 
 import { cn } from "../.";
@@ -10,31 +10,37 @@ import { Calendar } from "../calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "../popover";
 import { ScrollArea, ScrollBar } from "../scroll-area";
 
-interface DateTimePickerProps {
-  date: Date | undefined;
-  setDate: (date: Date | undefined) => void;
+interface DateTimePickerProps<Clearable extends boolean = false> {
+  date: Clearable extends true ? Date | null | undefined : Date | undefined;
+  setDate?: Clearable extends true
+    ? (date: Date | null | undefined) => void
+    : (date: Date | undefined) => void;
   onOpenChange?: (open: boolean) => void;
   size?: "sm" | "default";
   disabledDate?: (date: Date) => boolean;
   side?: PopoverContentProps["side"];
+  showClearButton?: Clearable;
+  disabled?: boolean;
 }
 
 const today12h30 = new Date(new Date().setHours(12, 30, 0, 0));
-export function DateTimePicker24h({
+export function DateTimePicker24h<Clearable extends boolean = false>({
   date,
   setDate,
   onOpenChange,
   size,
+  disabled,
   disabledDate,
   side,
-}: DateTimePickerProps) {
+  showClearButton,
+}: DateTimePickerProps<Clearable>) {
   if (disabledDate) throw new Error("disabledDate is not implemented yet");
   const t = useTranslations();
   const format = useFormatter();
   const hours = Array.from({ length: 24 }, (_, i) => i);
 
   const handleDateSelect = (selectedDate: Date | undefined) => {
-    if (!selectedDate) return;
+    if (!selectedDate || !setDate) return;
 
     const newDate = new Date(selectedDate);
     newDate.setHours((date ?? today12h30).getHours());
@@ -50,13 +56,14 @@ export function DateTimePicker24h({
     } else if (type === "minute") {
       newDate.setMinutes(parseInt(value));
     }
-    setDate(newDate);
+    setDate?.(newDate);
   };
 
   return (
     <Popover onOpenChange={onOpenChange}>
       <PopoverTrigger asChild>
         <Button
+          disabled={disabled}
           size={size}
           variant="outline"
           className={cn(
@@ -70,6 +77,19 @@ export function DateTimePicker24h({
           ) : (
             <span>{t("Pick a date")}</span>
           )}
+          {showClearButton && date && (
+            <div
+              className="ml-2 flex justify-end rounded-full p-1 hover:bg-secondary"
+              onClick={(e) => {
+                e.stopPropagation();
+                //@ts-expect-error showClearButton is true, so we can still pass setDate
+                setDate(null);
+              }}
+            >
+              {/* @ts-expect-error showClearButton is true, so we can still pass setDate */}
+              <X className="size-4" onClick={() => setDate(null)} />
+            </div>
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent
@@ -82,7 +102,7 @@ export function DateTimePicker24h({
         <div className="sm:flex">
           <Calendar
             mode="single"
-            selected={date}
+            selected={date ?? undefined}
             onSelect={handleDateSelect}
             initialFocus
             // disabled={(dateToCheck) => {

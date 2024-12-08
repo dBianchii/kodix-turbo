@@ -3,6 +3,7 @@ import type { TRPCRouterRecord } from "@trpc/server";
 import {
   ZCheckEmailForRegisterInputSchema,
   ZCreateCareShiftInputSchema,
+  ZDeleteCareShiftInputSchema,
   ZEditCareShiftInputSchema,
   ZFindOverlappingShiftsInputSchema,
   ZSignInByPasswordInputSchema,
@@ -14,6 +15,7 @@ import { protectedProcedure, publicProcedure } from "../../../procedures";
 import { careTaskRouter } from "./careTask/_router";
 import { checkEmailForRegisterHandler } from "./checkEmailForRegister.handler";
 import { createCareShiftHandler } from "./createCareShift.handler";
+import { deleteCareShiftHandler } from "./deleteCareShift.handler";
 import { editCareShiftHandler } from "./editCareShift.handler";
 import { findOverlappingShiftsHandler } from "./findOverlappingShifts.handler";
 import { getAllCaregiversHandler } from "./getAllCaregivers.handler";
@@ -43,4 +45,7 @@ export const kodixCareRouter = {
   editCareShift: protectedProcedure
     .input(T(ZEditCareShiftInputSchema))
     .mutation(editCareShiftHandler),
+  deleteCareShift: protectedProcedure
+    .input(ZDeleteCareShiftInputSchema)
+    .mutation(deleteCareShiftHandler),
 } satisfies TRPCRouterRecord;

@@ -66,7 +66,12 @@ export default async function RootLayout(props: {
           <SpeedInsights />
           <Analytics />
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <Toaster richColors closeButton pauseWhenPageIsHidden />
+            <Toaster
+              richColors
+              closeButton
+              pauseWhenPageIsHidden
+              duration={7000}
+            />
             <CCNextIntlClientProvider messages={messages} locale={locale}>
               <TRPCReactProvider>
                 <div className="flex min-h-screen flex-col">

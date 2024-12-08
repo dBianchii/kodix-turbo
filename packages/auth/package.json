@@ -26,7 +26,7 @@
     "@oslojs/encoding": "^1.1.0",
     "@t3-oss/env-nextjs": "^0.11.1",
     "discord-api-types": "^0.37.91",
-    "next": "^15.0.3",
+    "next": "^15.0.4",
     "react": "catalog:react19",
     "react-dom": "catalog:react19",
     "zod": "catalog:"

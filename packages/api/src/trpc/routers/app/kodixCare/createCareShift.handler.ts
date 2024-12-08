@@ -51,6 +51,7 @@ export const createCareShiftHandler = async ({
 
   await db.transaction(async (tx) => {
     const shift = {
+      createdById: ctx.auth.user.id,
       caregiverId: input.careGiverId,
       endAt: input.endAt,
       startAt: input.startAt,
@@ -71,7 +72,7 @@ export const createCareShiftHandler = async ({
       tableName: "careShift",
       rowId: result.id,
       type: "create",
-      body: shift,
+      diff: shift,
     });
   });
 };

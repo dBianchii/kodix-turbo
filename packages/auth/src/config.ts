@@ -34,14 +34,16 @@ export function generateSessionToken() {
   return token;
 }
 
-const thirtyDaysFromNow = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
+const getSessionExpireTime = () =>
+  new Date(Date.now() + 1000 * 60 * 60 * 24 * 30); // 30 days
+
 export async function createSession(token: string, userId: string) {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
   const heads = await headers();
   const session = {
     id: sessionId,
     userId,
-    expiresAt: thirtyDaysFromNow,
+    expiresAt: getSessionExpireTime(),
     ipAddress: heads.get("X-Forwarded-For") ?? "127.0.0.1",
     userAgent: heads.get("user-agent"),
   };
@@ -63,7 +65,7 @@ async function validateSessionToken(token: string): Promise<AuthResponse> {
 
   const fifteenDaysInMilliseconds = 1000 * 60 * 60 * 24 * 15;
   if (Date.now() >= session.expiresAt.getTime() - fifteenDaysInMilliseconds) {
-    session.expiresAt = thirtyDaysFromNow;
+    session.expiresAt = getSessionExpireTime();
     await authRepository.updateSession({
       id: session.id,
       input: {

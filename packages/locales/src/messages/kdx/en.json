@@ -55,7 +55,12 @@
       "Previous shift is in progress are you sure you would like to start a new one": "Previous shift is in progress. \nAre you sure you would like to start a new one?",
       "Create shift": "Create shift",
       "Edit shift": "Edit shift",
-      "Edit shift for": "Edit shift for"
+      "Edit shift for": "Edit shift for",
+      "Confirm finish shift": "Confirm finish shift",
+      "Are you sure you want to finish this shift": "Do you want to finish this shift?",
+      "This shift is locked": {
+        " Unlock it to make changes": "This shift is locked. Click on the lock to make changes"
+      }
     },
     "todo": {
       "appDescription": "Todo is a note taking app"
@@ -481,5 +486,18 @@
   "It seems that there are some overlapping shifts": "It seems that there are some overlapping shifts",
   "Are you sure you want to create a shift anyways": "Are you sure you want to create a shift anyways?",
   "Checking": "Checking",
-  "Updated": "Updated"
+  "Updated": "Updated",
+  "Logs": "Logs",
+  "Confirm and finish": "Confirm and finish",
+  "Only save": "Only save",
+  "No": "No",
+  "Unlock shift": "Unlock shift",
+  "Are you sure you want to unlock this shift": "Are you sure you want to unlock this shift?",
+  "Unlock": "Unlock",
+  "Shift deleted": "Shift deleted",
+  "Edit task": "Edit task",
+  "Please wait": "Please wait...",
+  "There is no shift associated with this task Its recommended that you create a shift for this task": "There is no shift associated with this task. It is recommended that you create a shift so it can be completed",
+  "This task is not associated with any of your shifts You can still edit it but its recommended that you create a shift for it": "You do not have a shift active for this task. \n We recommend you create one for better organization.",
+  "View logs": "View logs"
 }

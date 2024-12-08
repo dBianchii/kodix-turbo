@@ -36,6 +36,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@kdx/ui/dropdown-menu";
+import { Skeleton } from "@kdx/ui/skeleton";
 import { toast } from "@kdx/ui/toast";
 
 import {
@@ -200,6 +201,29 @@ export function KodixApp({
             </CredenzaContent>
           </Credenza>
         )}
+      </CardFooter>
+    </Card>
+  );
+}
+
+export function AppCardSkeleton() {
+  return (
+    <Card className="flex h-64 flex-col">
+      <CardHeader className="pb-1">
+        <div className="mb-4 flex justify-between">
+          <Skeleton className="h-[50px] w-[50px] rounded-md" />
+          <Skeleton className="h-5 w-20" />
+        </div>
+        <Skeleton className="h-6 w-2/4" />
+      </CardHeader>
+      <CardContent className="grow">
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-5/6" />
+          <Skeleton className="h-4 w-4/6" />
+        </div>
+      </CardContent>
+      <CardFooter className="flex justify-between border-t px-6 py-4">
+        <Skeleton className="h-9 w-24" />
       </CardFooter>
     </Card>
   );

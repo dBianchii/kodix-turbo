@@ -58,3 +58,8 @@ export const ZDeleteCareTaskInputSchema = z.object({ id: z.string() });
 export type TDeleteCareTaskInputSchema = z.infer<
   typeof ZDeleteCareTaskInputSchema
 >;
+
+export const ZGetCareShiftsByCareTaskInputSchema = z.object({ id: z.string() });
+export type TGetCareShiftsByCareTaskInputSchema = z.infer<
+  typeof ZGetCareShiftsByCareTaskInputSchema
+>;

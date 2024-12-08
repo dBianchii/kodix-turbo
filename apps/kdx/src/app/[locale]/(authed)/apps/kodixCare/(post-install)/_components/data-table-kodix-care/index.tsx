@@ -26,6 +26,7 @@ import { RxDotsHorizontal } from "react-icons/rx";
 import { create } from "zustand";
 
 import type { RouterOutputs } from "@kdx/api";
+import type { User } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
 import { cn } from "@kdx/ui";
 import {
@@ -87,15 +88,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@kdx/ui/tooltip";
-import {
-  ZCreateCareTaskInputSchema,
-  ZEditCareTaskInputSchema,
-} from "@kdx/validators/trpc/app/kodixCare/careTask";
+import { ZCreateCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { Link } from "~/i18n/routing";
 import { api } from "~/trpc/react";
 import { DateTimeSelectorWithLeftAndRightArrows } from "./date-time-selector-with-left-and-right-buttons";
+import { EditCareTaskCredenza } from "./edit-care-task-credenza";
 
 type CareTaskOrCalendarTask =
   RouterOutputs["app"]["kodixCare"]["careTask"]["getCareTasks"][number];
@@ -140,7 +139,7 @@ export const useCareTaskStore = create<{
   setCurrentlyEditing: (id) => set(() => ({ currentlyEditing: id })),
 }));
 
-export default function DataTableKodixCare() {
+export default function DataTableKodixCare({ user }: { user: User }) {
   const {
     input,
     setEditDetailsOpen,
@@ -193,6 +192,9 @@ export default function DataTableKodixCare() {
       // Always refetch after error or success:
       onSettled: () => {
         void utils.app.kodixCare.careTask.getCareTasks.invalidate();
+        void utils.app.getAppActivityLogs.invalidate({
+          tableNames: ["careTask"],
+        });
       },
     });
 
@@ -359,6 +361,7 @@ export default function DataTableKodixCare() {
       {currentlyEditingCareTask && (
         <>
           <EditCareTaskCredenza
+            user={user}
             task={currentlyEditingCareTask}
             mutation={saveCareTaskMutation}
             open={editDetailsOpen}
@@ -371,7 +374,6 @@ export default function DataTableKodixCare() {
           />
         </>
       )}
-
       <UnlockMoreTasksCredenza />
       <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-center">
         <div className="flex gap-2 sm:mr-auto">
@@ -596,6 +598,8 @@ function AddCareTaskCredenzaButton() {
     schema: ZCreateCareTaskInputSchema(t),
     defaultValues: {
       type: "NORMAL",
+      title: "",
+      description: "",
     },
   });
   const mutation = api.app.kodixCare.careTask.createCareTask.useMutation({
@@ -806,135 +810,5 @@ function UnlockMoreTasksCredenza() {
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
-}
-
-function EditCareTaskCredenza({
-  task,
-  mutation,
-  open,
-  setOpen,
-}: {
-  task: CareTask;
-  mutation: ReturnType<
-    typeof api.app.kodixCare.careTask.editCareTask.useMutation
-  >;
-  open: boolean;
-  setOpen: (open: boolean) => void;
-}) {
-  const t = useTranslations();
-
-  const defaultValues = useMemo(
-    () => ({
-      id: task.id,
-      details: task.details,
-      doneAt: task.doneAt,
-    }),
-    [task],
-  );
-
-  const form = useForm({
-    schema: ZEditCareTaskInputSchema(t).pick({
-      id: true,
-      details: true,
-      doneAt: true,
-    }),
-    defaultValues,
-  });
-
-  useEffect(() => {
-    form.reset(defaultValues);
-  }, [task, open, form, defaultValues]);
-
-  const format = useFormatter();
-
-  return (
-    <Credenza open={open} onOpenChange={setOpen}>
-      <CredenzaContent>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit((values) => {
-              mutation.mutate({
-                id: values.id,
-                details: values.details,
-                doneAt: values.doneAt,
-              });
-              setOpen(false);
-            })}
-          >
-            <CredenzaHeader>
-              <CredenzaTitle>{t("apps.kodixCare.Edit task")}</CredenzaTitle>
-            </CredenzaHeader>
-            <div className="mt-6 flex flex-col gap-2 rounded-md border p-4 text-foreground/80">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold">
-                  {task.title ?? ""}
-                </span>
-                {task.type === "CRITICAL" && (
-                  <LuAlertCircle className="size-3 text-orange-400" />
-                )}
-              </div>
-
-              <span className="line-clamp-3 text-xs font-semibold">
-                {task.description ?? ""}
-              </span>
-              <span className="flex text-xs font-semibold">
-                <LuCalendar className="mr-2 size-3 text-muted-foreground" />
-                {format.dateTime(task.date, "shortWithHours")}
-              </span>
-            </div>
-            <div className="grid gap-4 py-4">
-              <FormField
-                control={form.control}
-                name="doneAt"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("Done at")}</FormLabel>
-                    <FormControl>
-                      <div className="flex flex-row gap-2">
-                        <DateTimePicker24h
-                          date={field.value ?? undefined}
-                          setDate={(newDate) =>
-                            field.onChange(newDate ?? new Date())
-                          }
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage className="w-full" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="details"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("Details")}</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder={`${t("apps.kodixCare.Any information")}...`}
-                        className="w-full"
-                        rows={6}
-                        {...field}
-                        onChange={(e) => {
-                          field.onChange(e.target.value);
-                        }}
-                        value={field.value ?? undefined}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <CredenzaFooter className="mt-6 justify-end">
-              <Button disabled={mutation.isPending} type="submit">
-                {t("Save")}
-              </Button>
-            </CredenzaFooter>
-          </form>
-        </Form>
-      </CredenzaContent>
-    </Credenza>
   );
 }

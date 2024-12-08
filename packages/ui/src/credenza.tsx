@@ -25,116 +25,71 @@ import {
 } from "./drawer";
 import { useMediaQuery } from "./hooks/use-media-query";
 
-interface BaseProps {
-  children?: React.ReactNode;
-}
-
-interface RootCredenzaProps extends BaseProps {
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
-}
-
-interface CredenzaProps extends BaseProps {
-  className?: string;
-  asChild?: true;
-}
-
 const desktop = { query: "md" } as const;
 
-const Credenza = ({ ...props }: RootCredenzaProps) => {
+const Credenza = (props: React.ComponentProps<typeof Dialog>) => {
   const isDesktop = useMediaQuery(desktop);
   const Credenza = isDesktop ? Dialog : Drawer;
 
-  return <Credenza {...props}></Credenza>;
+  return <Credenza {...props} />;
 };
 
-const CredenzaTrigger = ({ className, children, ...props }: CredenzaProps) => {
+const CredenzaTrigger = (props: React.ComponentProps<typeof DialogTrigger>) => {
   const isDesktop = useMediaQuery(desktop);
   const CredenzaTrigger = isDesktop ? DialogTrigger : DrawerTrigger;
 
-  return (
-    <CredenzaTrigger className={className} {...props}>
-      {children}
-    </CredenzaTrigger>
-  );
+  return <CredenzaTrigger {...props} />;
 };
 
-const CredenzaClose = ({ className, children, ...props }: CredenzaProps) => {
+const CredenzaClose = (props: React.ComponentProps<typeof DialogClose>) => {
   const isDesktop = useMediaQuery(desktop);
   const CredenzaClose = isDesktop ? DialogClose : DrawerClose;
 
-  return (
-    <CredenzaClose className={className} {...props}>
-      {children}
-    </CredenzaClose>
-  );
+  return <CredenzaClose {...props} />;
 };
 
-const CredenzaContent = ({ className, children, ...props }: CredenzaProps) => {
+const CredenzaContent = (props: React.ComponentProps<typeof DialogContent>) => {
   const isDesktop = useMediaQuery(desktop);
   const CredenzaContent = isDesktop ? DialogContent : DrawerContent;
 
-  return (
-    <CredenzaContent className={className} {...props}>
-      {children}
-    </CredenzaContent>
-  );
+  return <CredenzaContent {...props} />;
 };
 
-const CredenzaDescription = ({
-  className,
-  children,
-  ...props
-}: CredenzaProps) => {
+const CredenzaDescription = (
+  props: React.ComponentProps<typeof DialogDescription>,
+) => {
   const isDesktop = useMediaQuery(desktop);
   const CredenzaDescription = isDesktop ? DialogDescription : DrawerDescription;
 
-  return (
-    <CredenzaDescription className={className} {...props}>
-      {children}
-    </CredenzaDescription>
-  );
+  return <CredenzaDescription {...props} />;
 };
 
-const CredenzaHeader = ({ className, children, ...props }: CredenzaProps) => {
+const CredenzaHeader = (props: React.ComponentProps<typeof DialogHeader>) => {
   const isDesktop = useMediaQuery(desktop);
   const CredenzaHeader = isDesktop ? DialogHeader : DrawerHeader;
 
-  return (
-    <CredenzaHeader className={className} {...props}>
-      {children}
-    </CredenzaHeader>
-  );
+  return <CredenzaHeader {...props} />;
 };
 
-const CredenzaTitle = ({ className, children, ...props }: CredenzaProps) => {
+const CredenzaTitle = (props: React.ComponentProps<typeof DialogTitle>) => {
   const isDesktop = useMediaQuery(desktop);
   const CredenzaTitle = isDesktop ? DialogTitle : DrawerTitle;
 
-  return (
-    <CredenzaTitle className={className} {...props}>
-      {children}
-    </CredenzaTitle>
-  );
+  return <CredenzaTitle {...props} />;
 };
 
-const CredenzaBody = ({ className, children, ...props }: CredenzaProps) => {
-  return (
-    <div className={cn("px-4 md:px-0", className)} {...props}>
-      {children}
-    </div>
-  );
+const CredenzaBody = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => {
+  return <div className={cn("px-4 md:px-0", className)} {...props} />;
 };
 
-const CredenzaFooter = ({ className, children, ...props }: CredenzaProps) => {
+const CredenzaFooter = (props: React.ComponentProps<typeof DialogFooter>) => {
   const isDesktop = useMediaQuery(desktop);
   const CredenzaFooter = isDesktop ? DialogFooter : DrawerFooter;
 
-  return (
-    <CredenzaFooter className={className} {...props}>
-      {children}
-    </CredenzaFooter>
-  );
+  return <CredenzaFooter {...props} />;
 };
 
 export {

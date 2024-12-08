@@ -4,13 +4,13 @@ import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers"
 import DataTableKodixCare from "./_components/data-table-kodix-care";
 
 export default async function KodixCarePage() {
-  await redirectIfAppNotInstalled({
+  const user = await redirectIfAppNotInstalled({
     appId: kodixCareAppId,
     customRedirect: "/apps/kodixCare/onboarding",
   });
 
   return (
-    <main className="flex w-full flex-col items-center gap-6 pt-6 md:flex-row md:items-baseline md:gap-1 md:space-x-6 md:pl-5">
+    <main className="flex w-full flex-col gap-6 pl-4 pt-4 md:gap-1">
       {/* <div className="flex w-full items-start border-b md:hidden">
         <SidebarTrigger className="size-6 md:hidden" />
       </div> */}
@@ -18,7 +18,7 @@ export default async function KodixCarePage() {
         <CurrentShift user={user} />
       </Suspense> */}
 
-      <DataTableKodixCare />
+      <DataTableKodixCare user={user} />
     </main>
   );
 }

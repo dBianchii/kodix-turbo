@@ -6,6 +6,7 @@ import type {
   FieldPath,
   FieldValues,
   UseFormProps,
+  UseFormReturn,
 } from "react-hook-form";
 import type { ZodType, ZodTypeDef } from "zod";
 import * as React from "react";
@@ -191,6 +192,7 @@ FormMessage.displayName = "FormMessage";
 
 export {
   useForm,
+  UseFormReturn,
   useFormField,
   Form,
   FormItem,
