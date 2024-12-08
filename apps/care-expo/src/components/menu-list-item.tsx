@@ -8,8 +8,10 @@ export function MenuListItem({ children, ...props }: ListItemProps) {
         bg={"$color3"}
         hoverTheme
         pressTheme
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         icon={props.icon}
         fontSize={"$5"}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         iconAfter={props.iconAfter}
         py={"$4"}
         bordered
