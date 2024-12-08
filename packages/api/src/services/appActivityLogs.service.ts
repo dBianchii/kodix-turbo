@@ -65,18 +65,20 @@ export async function getAppActivityLogs({
       if (PATHS_TO_REMOVE.some((path) => diff.path.includes(path))) continue;
 
       if (!diff.lhs) {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         messageParts.push(`inserted at ${diff.path.join(".")} ${diff.rhs}`);
         continue;
       }
 
       messageParts.push(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-base-to-string
         `updated ${diff.path.join(".")} from ${diff.lhs} to ${diff.rhs}`,
       );
     }
 
     return {
       ...log,
-      message: `${log.User.name} ${messageParts.join(", ")}`,
+      message: `${messageParts.join(", ")}`,
     };
   });
 

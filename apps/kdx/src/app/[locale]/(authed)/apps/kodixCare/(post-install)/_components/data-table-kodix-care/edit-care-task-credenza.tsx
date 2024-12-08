@@ -33,7 +33,14 @@ import {
   FormMessage,
   useForm,
 } from "@kdx/ui/form";
-import { Table, TableBody, TableCell, TableRow } from "@kdx/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@kdx/ui/table";
 import { Textarea } from "@kdx/ui/textarea";
 import { ZEditCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
 
@@ -96,7 +103,11 @@ export function EditCareTaskCredenza({
   return (
     <>
       <Credenza open={open} onOpenChange={handleCloseOrOpen}>
-        <CredenzaContent>
+        <CredenzaContent
+          className={cn({
+            "max-w-[900px]": isLogView,
+          })}
+        >
           <CredenzaHeader>
             <div ref={parent2} className="flex flex-row items-center">
               {isLogView && (
@@ -287,15 +298,31 @@ function LogsView({ careTaskId }: { careTaskId: string }) {
     rowId: careTaskId,
   });
   const t = useTranslations();
+  const format = useFormatter();
   if (getAppActivityLogsQuery.isLoading)
-    return <LuLoader2 className="size-6" />;
+    return (
+      <div className="flex h-full items-center justify-center">
+        <LuLoader2 className="size-6 animate-spin" />
+      </div>
+    );
 
   return (
     <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>{t("Date")}</TableHead>
+          <TableHead>{t("User")}</TableHead>
+          <TableHead>{t("Message")}</TableHead>
+        </TableRow>
+      </TableHeader>
       <TableBody>
         {getAppActivityLogsQuery.data?.length ? (
           getAppActivityLogsQuery.data.map((log) => (
             <TableRow key={log.id}>
+              <TableCell>
+                {format.dateTime(log.loggedAt, "shortWithHours")}
+              </TableCell>
+              <TableCell>{log.User.name}</TableCell>
               <TableCell>{log.message}</TableCell>
             </TableRow>
           ))
