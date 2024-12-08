@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { diff } from "deep-diff";
 
 import type { TCreateCareShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import { db } from "@kdx/db/client";
@@ -72,7 +73,7 @@ export const createCareShiftHandler = async ({
       tableName: "careShift",
       rowId: result.id,
       type: "create",
-      diff: shift,
+      diff: diff({}, shift),
     });
   });
 };

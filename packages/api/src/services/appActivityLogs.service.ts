@@ -1,21 +1,28 @@
+import type { getFormatter } from "next-intl/server";
 import { z } from "zod";
 
 import type { appActivityLogs } from "@kdx/db/schema";
+import type { ServerSideT } from "@kdx/locales";
 import type { KodixAppId } from "@kdx/shared";
+import dayjs from "@kdx/dayjs";
 import { appRepository } from "@kdx/db/repositories";
-
-export async function logActivity(input: typeof appActivityLogs.$inferInsert) {
-  await appRepository.createAppActivityLog(input);
-}
+import { ZNanoId } from "@kdx/validators";
 
 const baseDiffSchema = z.object({
   path: z.array(z.string()),
 });
+const valueSchema = z.union([
+  z.string(),
+  z.null(),
+  z.date(),
+  z.undefined(),
+  z.boolean(),
+]);
 // Schema for "Edit" (E), "New" (N), and "Delete" (D) diffs
 const editNewDeleteDiffSchema = baseDiffSchema.extend({
   kind: z.enum(["E", "N", "D"]),
-  lhs: z.unknown(), // Left-hand side value
-  rhs: z.unknown(), // Right-hand side value
+  lhs: valueSchema, // Left-hand side value
+  rhs: valueSchema, // Right-hand side value
 });
 
 //  Schema for "Array" (A) diffs, with nested item diffs
@@ -31,9 +38,38 @@ const diffSchema = editNewDeleteDiffSchema;
 // Schema for the top-level array of diffs
 const deepDiffSchema = z.array(diffSchema);
 
-const PATHS_TO_REMOVE = ["updatedAt"];
+export async function logActivity(input: typeof appActivityLogs.$inferInsert) {
+  deepDiffSchema.parse(input.diff);
+  await appRepository.createAppActivityLog(input);
+}
 
+const formatSide = (
+  value: z.infer<typeof valueSchema>,
+  path: string,
+  log: {
+    User: {
+      name: string;
+    };
+  },
+  format: Awaited<ReturnType<typeof getFormatter>>,
+  t: ServerSideT,
+) => {
+  if (value === null) return t("api.appActivityLogs.null");
+
+  if (typeof value === "string")
+    if (dayjs(value).isValid())
+      return format.dateTime(new Date(value), "shortWithHours");
+
+  if (ZNanoId.safeParse(value).success && path.includes("UserId"))
+    return log.User.name;
+
+  return value;
+};
+
+const PATHS_TO_REMOVE = ["updatedAt"];
 export async function getAppActivityLogs({
+  t,
+  format,
   tableNames,
   rowId,
   teamId,
@@ -41,6 +77,8 @@ export async function getAppActivityLogs({
   page,
   pageSize,
 }: {
+  t: ServerSideT;
+  format: Awaited<ReturnType<typeof getFormatter>>;
   tableNames?: (typeof appActivityLogs.$inferSelect.tableName)[];
   rowId?: string;
   teamId: string;
@@ -59,20 +97,44 @@ export async function getAppActivityLogs({
 
   const logsWithMessage = logs.map((log) => {
     const diffs = deepDiffSchema.parse(log.diff);
+    if (log.type === "create") {
+      return {
+        ...log,
+        message: `${t("api.appActivityLogs.created")} ${JSON.stringify(
+          diffs.reduce(
+            (acc, diff) => ({
+              ...acc,
+              [diff.path.join(".")]: diff.rhs,
+            }),
+            {},
+          ),
+        )}`,
+      };
+    }
+
     const messageParts: string[] = [];
     for (const diff of diffs) {
+      const fullPath = diff.path.join(".");
       // Remove paths that are not relevant to the user
       if (PATHS_TO_REMOVE.some((path) => diff.path.includes(path))) continue;
 
-      if (!diff.lhs) {
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        messageParts.push(`inserted at ${diff.path.join(".")} ${diff.rhs}`);
+      const lhs = formatSide(diff.lhs, fullPath, log, format, t);
+      const rhs = formatSide(diff.rhs, fullPath, log, format, t);
+
+      //@ts-expect-error It might not be set
+      const translatedPath = t(`api.appActivityLogs.${fullPath}`);
+      const isTranslated = !translatedPath.includes("api.appActivityLogs");
+      const pathMessage = `[${isTranslated ? translatedPath : fullPath}]`;
+
+      if (!lhs) {
+        messageParts.push(
+          `${t("api.appActivityLogs.inserted at")} ${pathMessage} ${JSON.stringify(rhs)}`,
+        );
         continue;
       }
 
       messageParts.push(
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-base-to-string
-        `updated ${diff.path.join(".")} from ${diff.lhs} to ${diff.rhs}`,
+        `${t("api.appActivityLogs.updated")} ${pathMessage} ${t("api.appActivityLogs.from")} ${JSON.stringify(lhs)} ${t("api.appActivityLogs.to")} ${JSON.stringify(rhs)}`,
       );
     }
 

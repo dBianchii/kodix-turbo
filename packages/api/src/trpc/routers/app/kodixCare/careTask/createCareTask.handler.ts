@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { diff } from "deep-diff";
 
 import type { TCreateCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
 import { careTaskRepository } from "@kdx/db/repositories";
@@ -38,7 +39,7 @@ export const createCareTaskHandler = async ({
     teamId: ctx.auth.user.activeTeamId,
     tableName: "careTask",
     rowId: created.id,
-    diff: careTaskInserted,
+    diff: diff({}, careTaskInserted),
     userId: ctx.auth.user.id,
     type: "create",
   });

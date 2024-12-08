@@ -7,7 +7,7 @@
  * The pieces you will need to use are documented accordingly near the end
  */
 import { initTRPC } from "@trpc/server";
-import { getTranslations } from "next-intl/server";
+import { getFormatter, getTranslations } from "next-intl/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
@@ -35,9 +35,12 @@ export const createTRPCContext = async (opts: {
 
   const source = opts.headers.get("x-trpc-source") ?? "unknown";
   console.log(">>> tRPC Request from", source, "by", auth.user);
-  const t = await getTranslations({ locale: await getLocaleBasedOnCookie() });
+  const locale = await getLocaleBasedOnCookie();
+  const t = await getTranslations({ locale });
+  const format = await getFormatter({ locale });
 
   return {
+    format,
     t,
     auth,
     token: authToken,

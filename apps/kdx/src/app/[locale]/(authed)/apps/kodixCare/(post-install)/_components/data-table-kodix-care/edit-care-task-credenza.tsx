@@ -307,33 +307,35 @@ function LogsView({ careTaskId }: { careTaskId: string }) {
     );
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>{t("Date")}</TableHead>
-          <TableHead>{t("User")}</TableHead>
-          <TableHead>{t("Message")}</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {getAppActivityLogsQuery.data?.length ? (
-          getAppActivityLogsQuery.data.map((log) => (
-            <TableRow key={log.id}>
-              <TableCell>
-                {format.dateTime(log.loggedAt, "shortWithHours")}
-              </TableCell>
-              <TableCell>{log.User.name}</TableCell>
-              <TableCell>{log.message}</TableCell>
-            </TableRow>
-          ))
-        ) : (
+    <div className="flex h-full w-full justify-center">
+      <Table>
+        <TableHeader>
           <TableRow>
-            <TableCell className="h-24 text-center">
-              {t("No results")}.
-            </TableCell>
+            <TableHead>{t("Date")}</TableHead>
+            <TableHead>{t("User")}</TableHead>
+            <TableHead>{t("Message")}</TableHead>
           </TableRow>
-        )}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {getAppActivityLogsQuery.data?.length ? (
+            getAppActivityLogsQuery.data.map((log) => (
+              <TableRow key={log.id}>
+                <TableCell>
+                  {format.dateTime(log.loggedAt, "shortWithHours")}
+                </TableCell>
+                <TableCell>{log.User.name}</TableCell>
+                <TableCell>{log.message}</TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={3} className="h-24 text-center">
+                {t("No results")}.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </div>
   );
 }

@@ -3,6 +3,17 @@
   "Calendar": "Calendar",
   "Todo": "Todo",
   "api": {
+    "appActivityLogs": {
+      "inserted at": "inserted at",
+      "from": "from",
+      "to": "to",
+      "doneAt": "done at",
+      "details": "details",
+      "doneByUserId": "done by",
+      "updated": "updated",
+      "null": "empty",
+      "created": "created"
+    },
     "emails": {
       "Join invitedByUsername on Kodix": "Join {invitedByUsername} on Kodix",
       "Join teamName on Kodix": "Join <teamName>teamName</teamName> on {site}",
@@ -82,6 +93,7 @@
     "Only admins can edit shifts for other caregivers": "Only admins can edit shifts for other caregivers",
     "Only admins can edit tasks that were done by others": "Only admins can edit tasks that were done by others",
     "Only admins can delete shifts created by others": "Only admins can delete shifts created by others",
-    "This shift was not originally created by you ask your team manager to delete it": "This shift was not originally created by you, ask your team admin to delete it"
+    "This shift was not originally created by you ask your team manager to delete it": "This shift was not originally created by you, ask your team admin to delete it",
+    "updated": "updated"
   }
 }

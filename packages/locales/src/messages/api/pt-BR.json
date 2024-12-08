@@ -3,6 +3,17 @@
   "Kodix Care": "Kodix Care",
   "Todo": "Todo",
   "api": {
+    "appActivityLogs": {
+      "inserted at": "inseriu em",
+      "from": "de",
+      "to": "para",
+      "doneAt": "feito em",
+      "details": "detalhes",
+      "doneByUserId": "feito por",
+      "updated": "atualizou",
+      "null": "vazio",
+      "created": "criou"
+    },
     "emails": {
       "Has invited you to the teamName team on Kodix": "Convidou você para a equipe <teamName>teamName</teamName> em {site}",
       "If you were not expecting this invitation you can ignore this email": "Se você não esperava este convite, pode ignorar este e-mail. \nSe você está preocupado com a segurança da sua conta, responda a este e-mail para entrar em contato conosco.",
@@ -82,7 +93,8 @@
     "Only admins can edit shifts for other caregivers": "Somente administradores podem editar turnos de outros cuidadores",
     "Only admins can edit tasks that were done by others": "Somente administradores podem editar tarefas realizadas por outras pessoas",
     "Only admins can delete shifts created by others": "Somente administradores podem excluir turnos criados por outras pessoas",
-    "This shift was not originally created by you ask your team manager to delete it": "Este turno não foi criado originalmente por você, peça ao administrador da equipe para excluí-lo"
+    "This shift was not originally created by you ask your team manager to delete it": "Este turno não foi criado originalmente por você, peça ao administrador da equipe para excluí-lo",
+    "updated": "atualizado"
   },
   "Updated": "Atualizado"
 }

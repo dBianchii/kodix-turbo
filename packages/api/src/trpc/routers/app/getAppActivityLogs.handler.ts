@@ -13,6 +13,8 @@ export const getAppActivityLogsHandler = async ({
   input,
 }: GetAppActivityLogsOptions) => {
   return await getAppActivityLogs({
+    t: ctx.t,
+    format: ctx.format,
     appId: input.appId,
     page: input.page,
     rowId: input.rowId,
