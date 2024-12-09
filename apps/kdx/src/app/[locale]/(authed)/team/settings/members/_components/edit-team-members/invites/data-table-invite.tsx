@@ -41,16 +41,9 @@ import { api } from "~/trpc/react";
 const columnHelper =
   createColumnHelper<RouterOutputs["team"]["invitation"]["getAll"][number]>();
 
-export function InviteDataTable({
-  initialInvitations,
-  canEditPage,
-}: {
-  initialInvitations: RouterOutputs["team"]["invitation"]["getAll"];
-  canEditPage: boolean;
-}) {
+export function InviteDataTable({ canEditPage }: { canEditPage: boolean }) {
   const { data } = api.team.invitation.getAll.useQuery(undefined, {
-    initialData: initialInvitations,
-    staleTime: 30000,
+    refetchOnMount: true,
   });
   const t = useTranslations();
   const utils = api.useUtils();
@@ -134,7 +127,7 @@ export function InviteDataTable({
   ];
 
   const table = useReactTable({
-    data: data,
+    data: data ?? [],
     columns: columns,
     getCoreRowModel: getCoreRowModel(),
   });

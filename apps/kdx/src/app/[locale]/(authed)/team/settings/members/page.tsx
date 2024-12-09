@@ -7,7 +7,6 @@ import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@kdx/ui/tabs";
 
 import { redirect } from "~/i18n/routing";
-import { api } from "~/trpc/server";
 import { InviteDataTable } from "./_components/edit-team-members/invites/data-table-invite";
 import { DataTableMembers } from "./_components/edit-team-members/members/data-table-members";
 import TeamInviteCard from "./_components/invite/team-invite-card";
@@ -52,40 +51,13 @@ export default async function SettingsMembersPage() {
               />
             }
           >
-            <DataTableMembersServer canEditPage={canEditPage} />
+            <DataTableMembers user={user} canEditPage={canEditPage} />
           </Suspense>
         </TabsContent>
         <TabsContent value="invites">
-          <Suspense
-            fallback={
-              <DataTableSkeleton
-                columnCount={2}
-                rowCount={3}
-                withPagination={false}
-                showViewOptions={false}
-                cellWidths={["auto", "5rem"]}
-                shrinkZero
-              />
-            }
-          >
-            <InviteDataTable
-              canEditPage={canEditPage}
-              initialInvitations={await api.team.invitation.getAll()}
-            />
-          </Suspense>
+          <InviteDataTable canEditPage={canEditPage} />
         </TabsContent>
       </Tabs>
     </div>
   );
-}
-
-async function DataTableMembersServer({
-  canEditPage,
-}: {
-  canEditPage: boolean;
-}) {
-  const { user } = await auth();
-  if (!user) return null;
-
-  return <DataTableMembers user={user} canEditPage={canEditPage} />;
 }

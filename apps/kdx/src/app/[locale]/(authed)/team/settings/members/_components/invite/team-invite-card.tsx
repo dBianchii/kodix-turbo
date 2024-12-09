@@ -87,13 +87,63 @@ export default function TeamInviteCardClient({
   const [open, setOpen] = useState(false);
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        if (emails.length > 0 && emails.filter((x) => Boolean(x)).length > 0)
-          setOpen(true);
-      }}
-    >
+    <>
+      <Credenza
+        onOpenChange={(open) => {
+          if (!open) return closeDialog();
+          setOpen(open);
+        }}
+        open={open}
+      >
+        <CredenzaContent>
+          <CredenzaHeader>
+            <CredenzaTitle>{t("Invite to team")}</CredenzaTitle>
+            <CredenzaDescription>
+              {t(
+                "You are about to invite the following Team members are you sure you want to continue",
+              )}
+            </CredenzaDescription>
+          </CredenzaHeader>
+          <CredenzaBody className="my-4 flex flex-col space-y-2">
+            {emails
+              .filter((x) => Boolean(x))
+              .map((email) => (
+                <div
+                  className="m-0 flex justify-between rounded-md border p-3"
+                  key={email.key}
+                >
+                  {email.value}
+
+                  <LuMail
+                    className={cn(
+                      "text-green-600 fade-in-0",
+                      !successes.includes(email.value) && "hidden",
+                    )}
+                  />
+                </div>
+              ))}
+          </CredenzaBody>
+          <CredenzaFooter className="justify-end">
+            <Button
+              disabled={mutation.isPending || successes.length > 0}
+              loading={mutation.isPending}
+              onClick={() => {
+                const values = {
+                  teamId: user.activeTeamId,
+                  to: emails.map((x) => x.value).filter((x) => Boolean(x)),
+                };
+                const parsed = ZInviteInputSchema.safeParse(values);
+                if (!parsed.success) {
+                  return toast.error(parsed.error.errors[0]?.message);
+                }
+                mutation.mutate(values);
+              }}
+            >
+              {mutation.isPending ? t("Sending") : t("Confirm")}
+            </Button>
+          </CredenzaFooter>
+        </CredenzaContent>
+      </Credenza>
       <Card className="w-full text-left">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardDescription>
@@ -169,70 +219,21 @@ export default function TeamInviteCardClient({
           <CardDescription className="text-xs italic">
             {t("Only the owner of the team can invite new members")}
           </CardDescription>
-          <Credenza
-            onOpenChange={(open) => {
-              if (!open) return closeDialog();
-              setOpen(open);
+          <Button
+            type="button"
+            disabled={!emails.some((x) => x.value.length) || !canEditPage}
+            onClick={() => {
+              if (
+                emails.length > 0 &&
+                emails.filter((x) => Boolean(x)).length > 0
+              )
+                setOpen(true);
             }}
-            open={open}
           >
-            <Button
-              type="submit"
-              disabled={!emails.some((x) => x.value.length) || !canEditPage}
-            >
-              {t("Invite")}
-            </Button>
-            <CredenzaContent>
-              <CredenzaHeader>
-                <CredenzaTitle>{t("Invite to team")}</CredenzaTitle>
-                <CredenzaDescription>
-                  {t(
-                    "You are about to invite the following Team members are you sure you want to continue",
-                  )}
-                </CredenzaDescription>
-              </CredenzaHeader>
-              <CredenzaBody className="my-4 flex flex-col space-y-2">
-                {emails
-                  .filter((x) => Boolean(x))
-                  .map((email) => (
-                    <div
-                      className="m-0 flex justify-between rounded-md border p-3"
-                      key={Math.random()}
-                    >
-                      {email.value}
-
-                      <LuMail
-                        className={cn(
-                          "text-green-600 fade-in-0",
-                          !successes.includes(email.value) && "hidden",
-                        )}
-                      />
-                    </div>
-                  ))}
-              </CredenzaBody>
-              <CredenzaFooter className="justify-end">
-                <Button
-                  disabled={mutation.isPending || successes.length > 0}
-                  loading={mutation.isPending}
-                  onClick={() => {
-                    const values = {
-                      teamId: user.activeTeamId,
-                      to: emails.map((x) => x.value).filter((x) => Boolean(x)),
-                    };
-                    const parsed = ZInviteInputSchema.safeParse(values);
-                    if (!parsed.success) {
-                      return toast.error(parsed.error.errors[0]?.message);
-                    }
-                    mutation.mutate(values);
-                  }}
-                >
-                  {mutation.isPending ? t("Sending") : t("Confirm")}
-                </Button>
-              </CredenzaFooter>
-            </CredenzaContent>
-          </Credenza>
+            {t("Invite")}
+          </Button>
         </CardFooter>
       </Card>
-    </form>
+    </>
   );
 }
