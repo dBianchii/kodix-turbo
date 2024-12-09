@@ -11,7 +11,6 @@ import { LuLock } from "react-icons/lu";
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
-import { getErrorMessage } from "@kdx/shared";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
@@ -85,7 +84,7 @@ export function ShiftsBigCalendar({
   });
 
   const handleEventChange = useCallback(
-    (args: EventInteractionArgs<ShiftEvent>) => {
+    async (args: EventInteractionArgs<ShiftEvent>) => {
       const old = query.data.find((shift) => shift.id === args.event.id);
       const overlappingShifts = query.data.filter(
         (shift) =>
@@ -107,18 +106,11 @@ export function ShiftsBigCalendar({
         old?.startAt.getTime() !== dayjs(args.start).toDate().getTime() ||
         old.endAt.getTime() !== dayjs(args.end).toDate().getTime()
       )
-        toast.promise(
-          mutation.mutateAsync({
-            id: args.event.id,
-            startAt: dayjs(args.start).toDate(),
-            endAt: dayjs(args.end).toDate(),
-          }),
-          {
-            loading: t("Updating"),
-            success: t("Updated"),
-            error: getErrorMessage,
-          },
-        );
+        await mutation.mutateAsync({
+          id: args.event.id,
+          startAt: dayjs(args.start).toDate(),
+          endAt: dayjs(args.end).toDate(),
+        });
       return args;
     },
     [query.data, mutation, t],

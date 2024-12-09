@@ -190,9 +190,8 @@ export function EditCareTaskCredenza({
                               <div className="flex flex-row gap-2">
                                 <DateTimePicker24h
                                   date={field.value ?? undefined}
-                                  setDate={(newDate) =>
-                                    field.onChange(newDate ?? new Date())
-                                  }
+                                  setDate={(newDate) => field.onChange(newDate)}
+                                  showClearButton
                                 />
                               </div>
                             </FormControl>
@@ -228,7 +227,11 @@ export function EditCareTaskCredenza({
                       <AlertNoShiftsOrNotYours task={task} user={user} />
                     </div>
                     <CredenzaFooter className="mt-6 justify-end">
-                      <Button disabled={mutation.isPending} type="submit">
+                      <Button
+                        loading={mutation.isPending}
+                        disabled={!form.formState.isDirty}
+                        type="submit"
+                      >
                         {t("Save")}
                       </Button>
                     </CredenzaFooter>

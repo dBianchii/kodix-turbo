@@ -1,7 +1,11 @@
 import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 
 import type { RouterOutputs } from "@kdx/api";
+import type { TEditCareShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import dayjs from "@kdx/dayjs";
+import { getErrorMessage } from "@kdx/shared";
+import { toast } from "@kdx/ui/toast";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
@@ -16,7 +20,8 @@ export const useCareShiftsData = (
 
 export const useEditCareShift = () => {
   const utils = api.useUtils();
-  return api.app.kodixCare.editCareShift.useMutation({
+  const t = useTranslations();
+  const mutation = api.app.kodixCare.editCareShift.useMutation({
     onMutate: async (newShift) => {
       await utils.app.kodixCare.getAllCareShifts.cancel();
       const previousData = utils.app.kodixCare.getAllCareShifts.getData();
@@ -49,6 +54,17 @@ export const useEditCareShift = () => {
       void utils.app.kodixCare.getAllCareShifts.invalidate();
     },
   });
+
+  const mutateAsync = async (values: TEditCareShiftInputSchema) =>
+    await toast
+      .promise(mutation.mutateAsync(values), {
+        loading: t("Updating"),
+        success: t("Updated"),
+        error: getErrorMessage,
+      })
+      .unwrap();
+
+  return { ...mutation, mutateAsync };
 };
 
 export const useShiftOverlap = ({
