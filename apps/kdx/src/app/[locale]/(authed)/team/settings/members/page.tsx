@@ -10,6 +10,7 @@ import { redirect } from "~/i18n/routing";
 import { InviteDataTable } from "./_components/edit-team-members/invites/data-table-invite";
 import { DataTableMembers } from "./_components/edit-team-members/members/data-table-members";
 import TeamInviteCard from "./_components/invite/team-invite-card";
+import { ReloadMembersButton } from "./_components/reload-members-button";
 
 export default async function SettingsMembersPage() {
   const { user } = await auth();
@@ -34,10 +35,13 @@ export default async function SettingsMembersPage() {
       </div>
       <TeamInviteCard user={user} canEditPage={canEditPage} />
       <Tabs defaultValue="members">
-        <TabsList className="">
-          <TabsTrigger value="members">{t("Members")}</TabsTrigger>
-          <TabsTrigger value="invites">{t("Invites")}</TabsTrigger>
-        </TabsList>
+        <div className="flex flex-row gap-2">
+          <TabsList className="">
+            <TabsTrigger value="members">{t("Members")}</TabsTrigger>
+            <TabsTrigger value="invites">{t("Invites")}</TabsTrigger>
+          </TabsList>
+          <ReloadMembersButton />
+        </div>
         <TabsContent value="members">
           <Suspense
             fallback={
