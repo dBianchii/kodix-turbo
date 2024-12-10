@@ -1,24 +1,21 @@
-import { getLocale, getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
-import { auth } from "@kdx/auth";
-
-import { Link, redirect } from "~/i18n/routing";
+import { Link } from "~/i18n/routing";
 import { ProviderButtons } from "../_components/provider-buttons";
+import { RedirectIfLoggedIn } from "../signin/_components/redirect-if-logged-in";
 import { PasswordSignupForm } from "./_components/password-signup-form";
 
 export default async function SignUpPage(props: {
   searchParams?: Promise<Record<string, string | undefined>>;
+  params: Promise<{ locale: string }>;
 }) {
+  const locale = (await props.params).locale;
+  setRequestLocale(locale);
   const searchParams = await props.searchParams;
-  const { user } = await auth();
-  if (user)
-    return redirect({
-      href: searchParams?.callbackUrl ?? "/",
-      locale: await getLocale(),
-    });
   const t = await getTranslations();
   return (
     <div className="container my-auto flex max-w-2xl">
+      <RedirectIfLoggedIn />
       <div className="flex w-full flex-col rounded-xl bg-card md:border">
         <div className="space-y-6 p-4 py-16 md:p-12">
           <h1 className="text-3xl font-bold">

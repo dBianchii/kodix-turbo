@@ -5,7 +5,6 @@ import { appRepository } from "@kdx/db/repositories";
 import { todoAppId } from "@kdx/shared";
 
 import type { TIsTeamOwnerProcedureContext } from "../../procedures";
-import { invalidateUpstashCache } from "../../../sdks/upstash";
 
 interface InstallAppOptions {
   ctx: TIsTeamOwnerProcedureContext;
@@ -34,10 +33,6 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
   await appRepository.installAppForTeam({
     appId: input.appId,
     userId: ctx.auth.user.id,
-    teamId: ctx.auth.user.activeTeamId,
-  });
-
-  await invalidateUpstashCache("apps", {
     teamId: ctx.auth.user.activeTeamId,
   });
 };

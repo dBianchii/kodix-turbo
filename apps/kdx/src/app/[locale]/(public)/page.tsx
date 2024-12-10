@@ -1,4 +1,4 @@
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { LuChevronRight } from "react-icons/lu";
 
 import { cn } from "@kdx/ui";
@@ -10,9 +10,16 @@ import { StaticHeader } from "../_components/header/static-header";
 import { HeroBento } from "../_components/hero-bento";
 import { HeroLamp } from "../_components/hero-lamp";
 
-// export const dynamic = "error"; //? If any dynamic functions are used, next.js will throw an error if the page is not generated statically
+export const dynamic = "error"; //? If any dynamic functions are used, next.js will throw an error if the page is not generated statically
 
-export default async function HomePage() {
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const locale = (await params).locale;
+  setRequestLocale(locale);
+
   const t = await getTranslations();
 
   return (

@@ -79,9 +79,9 @@ async function validateSessionToken(token: string): Promise<AuthResponse> {
 export async function invalidateSession(sessionId: string) {
   await authRepository.deleteSession(sessionId);
 }
-
+const SESSION_COOKIE_NAME = "session";
 export async function setSessionTokenCookie(token: string, expiresAt: Date) {
-  (await cookies()).set("session", token, {
+  (await cookies()).set(SESSION_COOKIE_NAME, token, {
     httpOnly: true,
     sameSite: "lax",
     secure: env.NODE_ENV === "production",
@@ -91,7 +91,7 @@ export async function setSessionTokenCookie(token: string, expiresAt: Date) {
 }
 
 export async function deleteSessionTokenCookie() {
-  (await cookies()).set("session", "", {
+  (await cookies()).set(SESSION_COOKIE_NAME, "", {
     httpOnly: true,
     sameSite: "lax",
     secure: env.NODE_ENV === "production",
