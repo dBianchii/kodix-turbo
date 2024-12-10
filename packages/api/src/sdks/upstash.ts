@@ -1,7 +1,6 @@
 import { Redis } from "@upstash/redis";
 
-import type { apps, teams, users } from "@kdx/db/schema";
-import type { AppPermissionId } from "@kdx/shared";
+import type { users } from "@kdx/db/schema";
 
 import type { getCareTaskCompositeId } from "../internal/calendarAndCareTaskCentral";
 
@@ -11,29 +10,6 @@ const redis = new Redis({
 });
 
 interface KeysMapping {
-  apps: {
-    tags: {
-      teamId: typeof teams.$inferSelect.id | undefined; //? If teamId isn't provided, it will refer to all existant apps
-    };
-    value: {
-      id: typeof apps.$inferSelect.id;
-      installed: boolean;
-    }[];
-  };
-
-  permissions: {
-    tags: {
-      userId: typeof users.$inferSelect.id;
-      permissionId: AppPermissionId;
-      teamId: typeof teams.$inferSelect.id;
-    };
-    value:
-      | {
-          permissionId: string;
-        }
-      | undefined;
-  };
-
   careTasksUsersNotifs: {
     tags: {
       userId: typeof users.$inferSelect.id;

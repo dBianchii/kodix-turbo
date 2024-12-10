@@ -12,7 +12,6 @@ import { getAppName } from "@kdx/locales/next-intl/server-hooks";
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "./procedures";
-import { getUpstashCache, setUpstashCache } from "../sdks/upstash";
 import { getInstalledHandler } from "./routers/app/getInstalled.handler";
 import { t } from "./trpc";
 
@@ -45,47 +44,25 @@ export const appPermissionMiddleware = (permissionId: AppPermissionId) =>
   experimental_standaloneMiddleware<{
     ctx: TProtectedProcedureContext;
   }>().create(async ({ ctx, next }) => {
-    let foundPermission = await getUpstashCache("permissions", {
-      userId: ctx.auth.user.id,
-      teamId: ctx.auth.user.activeTeamId,
-      permissionId,
-    });
-
-    if (foundPermission === null) {
-      const [permission] = await db
-        .select({ permissionId: appPermissionsToTeamAppRoles.appPermissionId })
-        .from(teamAppRoles)
-        .innerJoin(
-          teamAppRolesToUsers,
-          eq(teamAppRolesToUsers.teamAppRoleId, teamAppRoles.id),
-        )
-        .innerJoin(
-          appPermissionsToTeamAppRoles,
-          eq(appPermissionsToTeamAppRoles.teamAppRoleId, teamAppRoles.id),
-        )
-        .where(
-          and(
-            eq(teamAppRolesToUsers.userId, ctx.auth.user.id),
-            eq(teamAppRoles.teamId, ctx.auth.user.activeTeamId),
-            eq(appPermissionsToTeamAppRoles.appPermissionId, permissionId),
-          ),
-        );
-
-      if (permission)
-        //TODO: REVISE sending "undefined" or "null" to upstash
-        await setUpstashCache("permissions", {
-          variableKeys: {
-            userId: ctx.auth.user.id,
-            teamId: ctx.auth.user.activeTeamId,
-            permissionId,
-          },
-          value: permission,
-        });
-
-      foundPermission = permission;
-    }
-
-    if (!foundPermission) {
+    const [permission] = await db
+      .select({ permissionId: appPermissionsToTeamAppRoles.appPermissionId })
+      .from(teamAppRoles)
+      .innerJoin(
+        teamAppRolesToUsers,
+        eq(teamAppRolesToUsers.teamAppRoleId, teamAppRoles.id),
+      )
+      .innerJoin(
+        appPermissionsToTeamAppRoles,
+        eq(appPermissionsToTeamAppRoles.teamAppRoleId, teamAppRoles.id),
+      )
+      .where(
+        and(
+          eq(teamAppRolesToUsers.userId, ctx.auth.user.id),
+          eq(teamAppRoles.teamId, ctx.auth.user.activeTeamId),
+          eq(appPermissionsToTeamAppRoles.appPermissionId, permissionId),
+        ),
+      );
+    if (!permission) {
       throw new TRPCError({
         code: "FORBIDDEN",
         message: ctx.t(
