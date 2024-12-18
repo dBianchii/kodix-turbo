@@ -18,7 +18,7 @@ import {
   CredenzaTitle,
   CredenzaTrigger,
 } from "@kdx/ui/credenza";
-import { DateTimePicker24h } from "@kdx/ui/date-n-time/date-time-picker-24h";
+import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
   Form,
   FormControl,
@@ -129,9 +129,9 @@ export function CreateEventDialogButton() {
                           <FormLabel>{t("From")}</FormLabel>
                           <FormControl>
                             <div className="flex flex-row gap-2">
-                              <DateTimePicker24h
-                                date={field.value}
-                                setDate={field.onChange}
+                              <DateTimePicker
+                                value={field.value}
+                                onChange={field.onChange}
                               />
                             </div>
                           </FormControl>

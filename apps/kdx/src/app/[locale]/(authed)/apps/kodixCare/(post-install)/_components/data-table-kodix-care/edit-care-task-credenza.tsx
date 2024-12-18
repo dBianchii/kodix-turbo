@@ -1,5 +1,5 @@
 import type { CareTask } from "node_modules/@kdx/api/src/internal/calendarAndCareTaskCentral";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useFormatter, useTranslations } from "next-intl";
 import {
@@ -16,14 +16,14 @@ import { kodixCareAppId } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { Alert, AlertDescription, AlertTitle } from "@kdx/ui/alert";
 import { Button } from "@kdx/ui/button";
+import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
-  Credenza,
-  CredenzaContent,
-  CredenzaFooter,
-  CredenzaHeader,
-  CredenzaTitle,
-} from "@kdx/ui/credenza";
-import { DateTimePicker24h } from "@kdx/ui/date-n-time/date-time-picker-24h";
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@kdx/ui/dialog";
 import {
   Form,
   FormControl,
@@ -90,7 +90,12 @@ export function EditCareTaskCredenza({
       doneAt: true,
     }),
     defaultValues,
+    disabled: mutation.isPending,
   });
+
+  useEffect(() => {
+    form.reset(defaultValues);
+  }, [defaultValues, form]);
 
   const handleCloseOrOpen = (open: boolean) => {
     form.reset(defaultValues);
@@ -101,148 +106,147 @@ export function EditCareTaskCredenza({
   const format = useFormatter();
 
   return (
-    <>
-      <Credenza open={open} onOpenChange={handleCloseOrOpen}>
-        <CredenzaContent
-          className={cn({
-            "max-w-[900px]": isLogView,
-          })}
-        >
-          <CredenzaHeader>
-            <div ref={parent2} className="flex flex-row items-center">
-              {isLogView && (
-                <Button
-                  size={"sm"}
-                  variant={"ghost"}
-                  className="mr-2"
-                  onClick={() => {
-                    setIsLogView(false);
-                  }}
-                >
-                  <LuArrowLeft className="size-3" />
-                </Button>
-              )}
-              {isLogView ? (
-                <CredenzaTitle>{t("Logs")}</CredenzaTitle>
-              ) : (
-                <CredenzaTitle key={"somekey"}>
-                  {t("apps.kodixCare.Edit task")}
-                </CredenzaTitle>
-              )}
-            </div>
-          </CredenzaHeader>
-          <div className="overflow-hidden">
-            <div
-              ref={parent}
-              className={cn(
-                "h-[600px] flex-grow transition-all duration-300 ease-in-out",
-              )}
-            >
-              {isLogView ? (
-                <LogsView careTaskId={task.id} />
-              ) : (
-                <Form {...form}>
-                  <form
-                    onSubmit={form.handleSubmit((values) => {
-                      mutation.mutate({
-                        id: values.id,
-                        details: values.details,
-                        doneAt: values.doneAt,
-                      });
-                      handleCloseOrOpen(false);
-                    })}
-                  >
-                    <div className="mt-6 flex flex-col gap-2 rounded-md border p-4 text-foreground/80">
-                      <div className="flex gap-2">
-                        <span className="text-sm font-semibold">
-                          {task.title ?? ""}
-                        </span>
-                        {task.type === "CRITICAL" && (
-                          <LuAlertCircle className="size-3 text-orange-400" />
-                        )}
-                        <Button
-                          className="ml-auto"
-                          variant={"outline"}
-                          size={"sm"}
-                          type="button"
-                          onClick={() => setIsLogView(true)}
-                        >
-                          <LuScrollText className="mr-2 size-3" />
-                          {t("Logs")}
-                        </Button>
-                      </div>
-                      <span className="line-clamp-3 text-xs font-semibold">
-                        {task.description ?? ""}
-                      </span>
-                      <span className="flex text-xs font-semibold">
-                        <LuCalendar className="mr-2 size-3 text-muted-foreground" />
-                        {format.dateTime(task.date, "shortWithHours")}
-                      </span>
-                    </div>
-                    <div className="grid gap-4 py-4">
-                      <FormField
-                        control={form.control}
-                        name="doneAt"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{t("Done at")}</FormLabel>
-                            <FormControl>
-                              <div className="flex flex-row gap-2">
-                                <DateTimePicker24h
-                                  date={field.value ?? undefined}
-                                  setDate={(newDate) => field.onChange(newDate)}
-                                  showClearButton
-                                />
-                              </div>
-                            </FormControl>
-                            <FormMessage className="w-full" />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="details"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{t("Details")}</FormLabel>
-                            <FormControl>
-                              <Textarea
-                                autoFocus
-                                placeholder={`${t("apps.kodixCare.Any information")}...`}
-                                className="w-full"
-                                rows={6}
-                                {...field}
-                                onChange={(e) => {
-                                  field.onChange(e.target.value);
-                                }}
-                                value={field.value ?? undefined}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                    <div ref={parent3}>
-                      <AlertNoShiftsOrNotYours task={task} user={user} />
-                    </div>
-                    <CredenzaFooter className="mt-6 justify-end">
-                      <Button
-                        loading={mutation.isPending}
-                        disabled={!form.formState.isDirty}
-                        type="submit"
-                      >
-                        {t("Save")}
-                      </Button>
-                    </CredenzaFooter>
-                  </form>
-                </Form>
-              )}
-            </div>
+    <Dialog open={open} onOpenChange={handleCloseOrOpen}>
+      <DialogContent
+        className={cn({
+          "max-w-[900px]": isLogView,
+        })}
+      >
+        <DialogHeader>
+          <div ref={parent2} className="flex flex-row items-center">
+            {isLogView && (
+              <Button
+                size={"sm"}
+                variant={"ghost"}
+                className="mr-2"
+                onClick={() => {
+                  setIsLogView(false);
+                }}
+              >
+                <LuArrowLeft className="size-3" />
+              </Button>
+            )}
+            {isLogView ? (
+              <DialogTitle>{t("Logs")}</DialogTitle>
+            ) : (
+              <DialogTitle key={"somekey"}>
+                {t("apps.kodixCare.Edit task")}
+              </DialogTitle>
+            )}
           </div>
-        </CredenzaContent>
-      </Credenza>
-    </>
+        </DialogHeader>
+        <div className="overflow-hidden">
+          <div
+            ref={parent}
+            className={cn(
+              "h-[600px] flex-grow transition-all duration-300 ease-in-out",
+            )}
+          >
+            {isLogView ? (
+              <LogsView careTaskId={task.id} />
+            ) : (
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(async (values) => {
+                    await mutation.mutateAsync({
+                      id: values.id,
+                      details: values.details,
+                      doneAt: values.doneAt,
+                    });
+                    handleCloseOrOpen(false);
+                  })}
+                >
+                  <div className="mt-6 flex flex-col gap-2 rounded-md border p-4 text-foreground/80">
+                    <div className="flex gap-2">
+                      <span className="text-sm font-semibold">
+                        {task.title ?? ""}
+                      </span>
+                      {task.type === "CRITICAL" && (
+                        <LuAlertCircle className="size-3 text-orange-400" />
+                      )}
+                      <Button
+                        className="ml-auto"
+                        variant={"outline"}
+                        size={"sm"}
+                        type="button"
+                        onClick={() => setIsLogView(true)}
+                      >
+                        <LuScrollText className="mr-2 size-3" />
+                        {t("Logs")}
+                      </Button>
+                    </div>
+                    <span className="line-clamp-3 text-xs font-semibold">
+                      {task.description ?? ""}
+                    </span>
+                    <span className="flex text-xs font-semibold">
+                      <LuCalendar className="mr-2 size-3 text-muted-foreground" />
+                      {format.dateTime(task.date, "shortWithHours")}
+                    </span>
+                  </div>
+                  <div className="grid gap-4 py-4">
+                    <FormField
+                      control={form.control}
+                      name="doneAt"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t("Done at")}</FormLabel>
+                          <FormControl>
+                            <div className="flex flex-row gap-2">
+                              <DateTimePicker
+                                value={field.value ?? undefined}
+                                onChange={(newDate) =>
+                                  field.onChange(newDate ?? null)
+                                }
+                                clearable
+                              />
+                            </div>
+                          </FormControl>
+                          <FormMessage className="w-full" />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="details"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t("Details")}</FormLabel>
+                          <FormControl>
+                            <Textarea
+                              placeholder={`${t("apps.kodixCare.Any information")}...`}
+                              className="w-full"
+                              rows={6}
+                              {...field}
+                              onChange={(e) => {
+                                field.onChange(e.target.value);
+                              }}
+                              value={field.value ?? undefined}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div ref={parent3}>
+                    <AlertNoShiftsOrNotYours task={task} user={user} />
+                  </div>
+                  <DialogFooter className="mt-6 justify-end">
+                    <Button
+                      loading={mutation.isPending}
+                      disabled={!form.formState.isDirty}
+                      type="submit"
+                    >
+                      {t("Save")}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </Form>
+            )}
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 

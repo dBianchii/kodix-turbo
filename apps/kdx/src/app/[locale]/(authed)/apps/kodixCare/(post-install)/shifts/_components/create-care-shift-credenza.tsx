@@ -15,7 +15,7 @@ import {
   CredenzaTitle,
   CredenzaTrigger,
 } from "@kdx/ui/credenza";
-import { DateTimePicker24h } from "@kdx/ui/date-n-time/date-time-picker-24h";
+import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
   Form,
   FormControl,
@@ -190,9 +190,9 @@ export function CreateShiftCredenzaButton({
                       <FormLabel>{t("Start")}</FormLabel>
                       <FormControl>
                         <div className="flex flex-row gap-2">
-                          <DateTimePicker24h
-                            date={field.value}
-                            setDate={(newDate) =>
+                          <DateTimePicker
+                            value={field.value}
+                            onChange={(newDate) =>
                               field.onChange(newDate ?? new Date())
                             }
                           />
@@ -211,9 +211,9 @@ export function CreateShiftCredenzaButton({
                       <FormLabel>{t("End")}</FormLabel>
                       <FormControl>
                         <div className="flex flex-row gap-2">
-                          <DateTimePicker24h
-                            date={field.value}
-                            setDate={(newDate) =>
+                          <DateTimePicker
+                            value={field.value}
+                            onChange={(newDate) =>
                               field.onChange(newDate ?? new Date())
                             }
                           />

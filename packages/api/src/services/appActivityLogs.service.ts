@@ -5,6 +5,7 @@ import type { appActivityLogs } from "@kdx/db/schema";
 import type { ServerSideT } from "@kdx/locales";
 import type { KodixAppId } from "@kdx/shared";
 import dayjs from "@kdx/dayjs";
+import { db as _db } from "@kdx/db/client";
 import { appRepository } from "@kdx/db/repositories";
 import { ZNanoId } from "@kdx/validators";
 
@@ -38,9 +39,12 @@ const diffSchema = editNewDeleteDiffSchema;
 // Schema for the top-level array of diffs
 const deepDiffSchema = z.array(diffSchema);
 
-export async function logActivity(input: typeof appActivityLogs.$inferInsert) {
+export async function logActivity(
+  input: typeof appActivityLogs.$inferInsert,
+  db = _db,
+) {
   deepDiffSchema.parse(input.diff);
-  await appRepository.createAppActivityLog(input);
+  await appRepository.createAppActivityLog(input, db);
 }
 
 const formatSide = (
