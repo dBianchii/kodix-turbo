@@ -3,7 +3,7 @@
 import type { DateRange } from "react-day-picker";
 import * as React from "react";
 import { useSearchParams } from "next/navigation";
-import { addDays, datefnsFormat } from "date-fns";
+import { addDays, format as datefnsFormat } from "date-fns";
 import { useFormatter, useTranslations } from "next-intl";
 import { LuCalendar } from "react-icons/lu";
 
