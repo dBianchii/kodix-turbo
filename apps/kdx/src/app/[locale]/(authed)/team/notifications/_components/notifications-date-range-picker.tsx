@@ -3,7 +3,7 @@
 import type { DateRange } from "react-day-picker";
 import * as React from "react";
 import { useSearchParams } from "next/navigation";
-import { addDays, format } from "date-fns";
+import { addDays, datefnsFormat } from "date-fns";
 import { useFormatter, useTranslations } from "next-intl";
 import { LuCalendar } from "react-icons/lu";
 
@@ -109,13 +109,13 @@ export function NotificationsDateRangePicker({
   React.useEffect(() => {
     const newSearchParams = new URLSearchParams(searchParams);
     if (date?.from) {
-      newSearchParams.set("from", format(date.from, "yyyy-MM-dd"));
+      newSearchParams.set("from", datefnsFormat(date.from, "yyyy-MM-dd"));
     } else {
       newSearchParams.delete("from");
     }
 
     if (date?.to) {
-      newSearchParams.set("to", format(date.to, "yyyy-MM-dd"));
+      newSearchParams.set("to", datefnsFormat(date.to, "yyyy-MM-dd"));
     } else {
       newSearchParams.delete("to");
     }

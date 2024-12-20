@@ -60,10 +60,12 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        IconLeft: ({ ...props }) => <ChevronLeft className="size-4" />,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        IconRight: ({ ...props }) => <ChevronRight className="size-4" />,
+        Chevron: (props) => {
+          if (props.orientation === "left")
+            return <ChevronLeft className="size-4" />;
+
+          return <ChevronRight className="size-4" />;
+        },
       }}
       {...props}
     />

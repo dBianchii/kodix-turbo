@@ -1,3 +1,4 @@
+import { unstable_after as after } from "next/server";
 import { TRPCError } from "@trpc/server";
 import deepDiff from "deep-diff";
 
@@ -98,27 +99,34 @@ export const editCareTaskHandler = async ({
       },
       tx,
     );
-    const newCareTask = await careTaskRepository.findCareTaskById(
-      {
-        id: input.id,
-        teamId: ctx.auth.user.activeTeamId,
-      },
-      tx,
-    );
-    if (!newCareTask)
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: ctx.t("api.Care task not found"),
-      });
-    const diff = deepDiff(oldCareTask, newCareTask);
-    await logActivity({
-      appId: kodixCareAppId,
-      diff,
-      tableName: "careTask",
-      teamId: ctx.auth.user.activeTeamId,
-      type: "update",
-      userId: ctx.auth.user.id,
-      rowId: input.id,
+
+    after(async () => {
+      const newCareTask = await careTaskRepository.findCareTaskById(
+        {
+          id: input.id,
+          teamId: ctx.auth.user.activeTeamId,
+        },
+        tx,
+      );
+      if (!newCareTask)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: ctx.t("api.Care task not found"),
+        });
+      const diff = deepDiff(oldCareTask, newCareTask);
+
+      await logActivity(
+        {
+          appId: kodixCareAppId,
+          diff,
+          tableName: "careTask",
+          teamId: ctx.auth.user.activeTeamId,
+          type: "update",
+          userId: ctx.auth.user.id,
+          rowId: input.id,
+        },
+        tx,
+      );
     });
   });
 };
