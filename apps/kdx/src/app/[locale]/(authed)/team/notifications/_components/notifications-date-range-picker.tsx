@@ -16,7 +16,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
 import { usePathname, useRouter } from "~/i18n/routing";
 
 interface NotificationsDateRangePickerProps
-  extends React.ComponentPropsWithoutRef<typeof PopoverContent> {
+  extends React.ComponentProps<typeof PopoverContent> {
   /**
    * The selected date range.
    * @default undefined
