@@ -3,12 +3,7 @@ import { index, mysqlTable, unique } from "drizzle-orm/mysql-core";
 import { createInsertSchema } from "drizzle-zod";
 
 import { NANOID_SIZE } from "../nanoid";
-import {
-  appPermissionsToTeamAppRoles,
-  apps,
-  appsToTeams,
-  appTeamConfigs,
-} from "./apps";
+import { apps, appsToTeams, appTeamConfigs } from "./apps";
 import { eventMasters } from "./apps/calendar";
 import { careShifts, careTasks } from "./apps/kodixCare";
 import { todos } from "./apps/todos";
@@ -16,6 +11,7 @@ import { users } from "./users";
 import {
   DEFAULTLENGTH,
   nanoidPrimaryKey,
+  roleEnum,
   teamIdReferenceCascadeDelete,
 } from "./utils";
 
@@ -89,16 +85,12 @@ export const teamAppRoles = mysqlTable(
   "teamAppRole",
   (t) => ({
     id: nanoidPrimaryKey(t),
+    teamId: teamIdReferenceCascadeDelete(t),
     appId: t
       .varchar({ length: NANOID_SIZE })
       .notNull()
       .references(() => apps.id, { onDelete: "cascade" }),
-    teamId: teamIdReferenceCascadeDelete(t),
-    appRoleDefaultId: t
-      .varchar({
-        length: NANOID_SIZE, //? References a hardcoded default role id and not anything in db. See appRoleDefaults_tree.ts
-      })
-      .notNull(),
+    role: roleEnum(t),
   }),
   (table) => {
     return {
@@ -118,7 +110,6 @@ export const teamAppRolesRelations = relations(
       fields: [teamAppRoles.teamId],
       references: [teams.id],
     }),
-    AppPermissionsToTeamAppRoles: many(appPermissionsToTeamAppRoles),
     TeamAppRolesToUsers: many(teamAppRolesToUsers),
   }),
 );

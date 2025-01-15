@@ -9,6 +9,7 @@
       "default": "./src/index.ts"
     },
     "./utils": "./src/utils.ts",
+    "./get-user-permissions": "./src/authorization/get-user-permission.ts",
     "./env": "./env.ts"
   },
   "scripts": {
@@ -18,6 +19,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@casl/ability": "^6.7.3",
     "@kdx/db": "workspace:*",
     "@kdx/react-email": "workspace:*",
     "@kdx/shared": "workspace:*",
