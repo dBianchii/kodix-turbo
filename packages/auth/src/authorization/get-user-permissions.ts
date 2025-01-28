@@ -1,17 +1,17 @@
-import type { KodixAppId } from "@kdx/shared";
+import type { KodixCareRole } from "@kdx/db/constants";
 
+import type { AppsWithPermissions } from ".";
 import type { User } from "../config";
-import type { KodixCareRoles } from "./roles";
 import { defineAbilityFor } from ".";
 
-export function getUserPermissionsForApp(
+export function getUserPermissionsForApp<T extends AppsWithPermissions>(
   user: User,
-  appId: KodixAppId,
-  userRoles: KodixCareRoles,
+  appId: T,
+  userRoles: KodixCareRole[],
 ) {
   const ability = defineAbilityFor({
     appId,
-    role: userRoles,
+    roles: userRoles,
     user: user,
   });
 

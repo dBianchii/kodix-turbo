@@ -7,23 +7,15 @@ import type {
   KodixAppId,
   kodixCareAppId,
 } from "@kdx/shared";
-import {
-  appIdToAdminRole_defaultIdMap,
-  appIdToAppTeamConfigSchema,
-  todoAppId,
-} from "@kdx/shared";
+import { appIdToAppTeamConfigSchema, todoAppId } from "@kdx/shared";
 
-import type { zAppPermissionToTeamAppRoleCreateMany } from "../_zodSchemas/appPermissionsToTeamAppRolesSchemas";
 import type { appIdToUserAppTeamConfigSchemaUpdate } from "../_zodSchemas/userAppTeamConfigs";
 import type { Drizzle } from "../../client";
 import { appIdToUserAppTeamConfigSchema } from "../_zodSchemas/userAppTeamConfigs";
 import { db as _db } from "../../client";
-import { appRoles_defaultTree } from "../../constants";
 import { nanoid } from "../../nanoid";
 import {
   appActivityLogs,
-  appPermissions,
-  appPermissionsToTeamAppRoles,
   apps,
   appsToTeams,
   appTeamConfigs,
@@ -118,46 +110,6 @@ export async function findAppTeamConfigs(
   }));
 
   return parsedTeamConfigs;
-}
-
-export async function findAppPermissionById(permissionId: string, db = _db) {
-  return db.query.appPermissions.findFirst({
-    where: (appPermissions, { eq }) => eq(appPermissions.id, permissionId),
-    columns: { editable: true },
-  });
-}
-
-export async function createManyAppPermissionToRoleAssociations(
-  db: Drizzle,
-  data: z.infer<typeof zAppPermissionToTeamAppRoleCreateMany>,
-) {
-  await db.insert(appPermissionsToTeamAppRoles).values(data);
-}
-
-export async function removePermissionFromRole(
-  db: Drizzle,
-  {
-    permissionId,
-    appId,
-  }: {
-    permissionId: string;
-    appId: string;
-  },
-) {
-  await db.delete(appPermissionsToTeamAppRoles).where(
-    inArray(
-      appPermissionsToTeamAppRoles.appPermissionId,
-      db
-        .select({ id: appPermissions.id })
-        .from(appPermissions)
-        .where(
-          and(
-            eq(appPermissions.id, permissionId),
-            eq(appPermissions.appId, appId),
-          ),
-        ),
-    ),
-  );
 }
 
 export async function upsertAppTeamConfig(
@@ -322,37 +274,24 @@ export async function installAppForTeam(
     });
 
     //? 1. Get the default app roles for the app and create them
-    const appRoleDefaultForApp = appRoles_defaultTree[appId];
-    const toCreateDefaultAppRoles = appRoleDefaultForApp.appRoleDefaults.map(
-      (defaultAppRole) => ({
+
+    //TODO: also add the other roles!!
+
+    const defaultRole = "ADMIN";
+    const [teamAppRole] = await tx
+      .insert(teamAppRoles)
+      .values({
         id: nanoid(),
         appId: appId,
-        appRoleDefaultId: defaultAppRole.id,
         teamId: teamId,
-      }),
-    ) satisfies (typeof teamAppRoles.$inferInsert)[];
+        role: defaultRole,
+      })
+      .$returningId();
+    if (!teamAppRole) throw new Error("Failed to create default app role");
 
-    await tx.insert(teamAppRoles).values(toCreateDefaultAppRoles);
-
-    //? 2. Connect the permissions to the newly created roles if any   exists
-    const toAddPermissions = toCreateDefaultAppRoles.flatMap((role) =>
-      (appRoleDefaultForApp.appPermissions ?? []).map((permission) => ({
-        appPermissionId: permission.id,
-        teamAppRoleId: role.id,
-      })),
-    ) satisfies (typeof appPermissionsToTeamAppRoles.$inferInsert)[];
-
-    if (toAddPermissions.length > 0)
-      await tx.insert(appPermissionsToTeamAppRoles).values(toAddPermissions);
-
-    //?3. Add the user to the admin role for the app
-    const adminRoleForApp = toCreateDefaultAppRoles.find(
-      (role) => role.appRoleDefaultId === appIdToAdminRole_defaultIdMap[appId],
-    );
-    if (!adminRoleForApp) throw new Error("Admin role not found"); //Each app should have a designated admin role
-
+    //?2. Add the user to the admin role for the app
     await tx.insert(teamAppRolesToUsers).values({
-      teamAppRoleId: adminRoleForApp.id,
+      teamAppRoleId: teamAppRole.id,
       userId: userId,
     });
   });

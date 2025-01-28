@@ -2,6 +2,7 @@ import { relations } from "drizzle-orm";
 import { index, mysqlTable, unique } from "drizzle-orm/mysql-core";
 import { createInsertSchema } from "drizzle-zod";
 
+import type { AllAppRoles } from "../constants";
 import { NANOID_SIZE } from "../nanoid";
 import { apps, appsToTeams, appTeamConfigs } from "./apps";
 import { eventMasters } from "./apps/calendar";
@@ -11,7 +12,6 @@ import { users } from "./users";
 import {
   DEFAULTLENGTH,
   nanoidPrimaryKey,
-  roleEnum,
   teamIdReferenceCascadeDelete,
 } from "./utils";
 
@@ -90,7 +90,10 @@ export const teamAppRoles = mysqlTable(
       .varchar({ length: NANOID_SIZE })
       .notNull()
       .references(() => apps.id, { onDelete: "cascade" }),
-    role: roleEnum(t),
+    role: t
+      .varchar("role", { length: DEFAULTLENGTH })
+      .$type<AllAppRoles>()
+      .notNull(),
   }),
   (table) => {
     return {

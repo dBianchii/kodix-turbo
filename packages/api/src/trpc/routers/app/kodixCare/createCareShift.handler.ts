@@ -4,11 +4,10 @@ import { diff } from "deep-diff";
 import type { TCreateCareShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import { db } from "@kdx/db/client";
 import { kodixCareRepository } from "@kdx/db/repositories";
-import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 import { logActivity } from "../../../../services/appActivityLogs.service";
-import { getMyRolesHandler } from "../../team/appRole/getMyRoles.handler";
 import { assertNoOverlappingShiftsForThisCaregiver } from "./_kodixCare.permissions";
 
 interface CreateCareShiftOptions {
@@ -20,25 +19,25 @@ export const createCareShiftHandler = async ({
   ctx,
   input,
 }: CreateCareShiftOptions) => {
-  if (input.careGiverId !== ctx.auth.user.id) {
-    const roles = await getMyRolesHandler({
-      ctx,
-      input: { appId: kodixCareAppId },
-    });
+  // if (input.careGiverId !== ctx.auth.user.id) {
+  //   const roles = await getMyRolesHandler({
+  //     ctx,
+  //     input: { appId: kodixCareAppId },
+  //   });
 
-    if (
-      !roles.some(
-        (role) => role.appRoleDefaultId === kodixCareRoleDefaultIds.admin,
-      )
-    ) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: ctx.t(
-          "api.Only admins can create shifts for other caregivers",
-        ),
-      });
-    }
-  }
+  //   if (
+  //     !roles.some(
+  //       (role) => role.appRoleDefaultId === kodixCareRoleDefaultIds.admin,
+  //     )
+  //   ) {
+  //     throw new TRPCError({
+  //       code: "UNAUTHORIZED",
+  //       message: ctx.t(
+  //         "api.Only admins can create shifts for other caregivers",
+  //       ),
+  //     });
+  //   }
+  // }
 
   const overlappingShifts = await kodixCareRepository.findOverlappingShifts({
     start: input.startAt,

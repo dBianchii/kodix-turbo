@@ -9,7 +9,7 @@
       "default": "./src/index.ts"
     },
     "./utils": "./src/utils.ts",
-    "./get-user-permissions": "./src/authorization/get-user-permission.ts",
+    "./get-user-permissions": "./src/authorization/get-user-permissions.ts",
     "./env": "./env.ts"
   },
   "scripts": {

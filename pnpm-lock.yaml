@@ -475,6 +475,9 @@ importers:
 
   packages/api:
     dependencies:
+      '@casl/ability':
+        specifier: ^6.7.3
+        version: 6.7.3
       '@kdx/auth':
         specifier: workspace:*
         version: link:../auth
@@ -1110,7 +1113,7 @@ importers:
         version: 7.37.2(eslint@9.15.0(jiti@2.3.3))
       eslint-plugin-react-compiler:
         specifier: beta
-        version: 19.0.0-beta-63e3235-20250105(eslint@9.15.0(jiti@2.3.3))
+        version: 19.0.0-beta-decd7b8-20250118(eslint@9.15.0(jiti@2.3.3))
       eslint-plugin-react-hooks:
         specifier: ^5.0.0
         version: 5.0.0(eslint@9.15.0(jiti@2.3.3))
@@ -7624,8 +7627,8 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9
 
-  eslint-plugin-react-compiler@19.0.0-beta-63e3235-20250105:
-    resolution: {integrity: sha512-Smts5x+u+rRopr0926jCXFPkS8D8hFJexDvTW41V0Xu/xHgd4pnGWiJQRBsvTEARzOdJ6NdlmYs4n+O4Thn2iA==}
+  eslint-plugin-react-compiler@19.0.0-beta-decd7b8-20250118:
+    resolution: {integrity: sha512-qfs+Xo+VcYPbbVLI2tCP+KBGwm0oksAhjFJO1GwOvP+4b18LLcPZu7xopRhUTOaNd+nn1vOp9EQLZC1wMNxSrQ==}
     engines: {node: ^14.17.0 || ^16.0.0 || >= 18.0.0}
     peerDependencies:
       eslint: '>=7'
@@ -20136,7 +20139,7 @@ snapshots:
       safe-regex-test: 1.0.3
       string.prototype.includes: 2.0.1
 
-  eslint-plugin-react-compiler@19.0.0-beta-63e3235-20250105(eslint@9.15.0(jiti@2.3.3)):
+  eslint-plugin-react-compiler@19.0.0-beta-decd7b8-20250118(eslint@9.15.0(jiti@2.3.3)):
     dependencies:
       '@babel/core': 7.26.0
       '@babel/parser': 7.26.2
