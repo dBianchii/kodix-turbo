@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 
 import { teamRepository } from "@kdx/db/repositories";
 
+import { getRepositoriesForTeams } from "./getRepositoriesForTeams";
 import { t } from "./trpc";
 
 //? This file should ONLY EXPORT procedures and their context types. Do not export anything else from this file because they are read by @kdx/trpc-cli
@@ -37,6 +38,7 @@ export const protectedProcedure = publicProcedure.use(({ ctx, next }) => {
       ...ctx,
       // infers the `user` and `session` as non-nullable
       auth: ctx.auth,
+      repositories: getRepositoriesForTeams([ctx.auth.user.activeTeamId]),
     },
   });
 });
