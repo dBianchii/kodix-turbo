@@ -47,7 +47,6 @@ export const appRelations = relations(apps, ({ many, one }) => ({
   }),
   AppTeamConfigs: many(appTeamConfigs),
   TeamAppRoles: many(teamAppRoles),
-  AppPermissions: many(appPermissions),
 }));
 export const appSchema = createInsertSchema(apps);
 
@@ -81,34 +80,6 @@ export const appsToTeamsRelations = relations(appsToTeams, ({ one }) => ({
     references: [teams.id],
   }),
 }));
-
-export const appPermissions = mysqlTable(
-  "appPermission",
-  (t) => ({
-    id: nanoidPrimaryKey(t),
-    appId: t
-      .varchar({ length: NANOID_SIZE })
-      .notNull()
-      .references(() => apps.id, { onDelete: "cascade", onUpdate: "cascade" }),
-    editable: t.boolean().default(true).notNull(),
-  }),
-  (table) => {
-    return {
-      appIdIdx: index("appId_idx").on(table.appId),
-    };
-  },
-);
-export const appPermissionsRelations = relations(
-  appPermissions,
-  ({ many, one }) => ({
-    App: one(apps, {
-      fields: [appPermissions.appId],
-      references: [apps.id],
-    }),
-    AppPermissionsToTeamAppRoles: many(appPermissionsToTeamAppRoles),
-  }),
-);
-export const appPermissionSchema = createInsertSchema(appPermissions);
 
 export const appTeamConfigs = mysqlTable(
   "appTeamConfig",
@@ -144,47 +115,6 @@ export const appTeamConfigsRelations = relations(appTeamConfigs, ({ one }) => ({
   }),
 }));
 export const appTeamConfigSchema = createInsertSchema(appTeamConfigs);
-
-export const appPermissionsToTeamAppRoles = mysqlTable(
-  "_appPermissionToTeamAppRole",
-  (t) => ({
-    appPermissionId: t
-      .varchar({ length: NANOID_SIZE })
-      .notNull()
-      .references(() => appPermissions.id, { onDelete: "cascade" }),
-    teamAppRoleId: t
-      .varchar({ length: NANOID_SIZE })
-      .notNull()
-      .references(() => teamAppRoles.id, { onDelete: "cascade" }),
-  }),
-  (table) => {
-    return {
-      appPermissionIdIdx: index("appPermissionId_idx").on(
-        table.appPermissionId,
-      ),
-      teamAppRoleIdIdx: index("teamAppRoleId_idx").on(table.teamAppRoleId),
-      unique_appPermissionId_teamAppRoleId: unique(
-        "unique_appPermissionId_teamAppRoleId",
-      ).on(table.appPermissionId, table.teamAppRoleId),
-    };
-  },
-);
-export const appPermissionsToTeamAppRolesRelations = relations(
-  appPermissionsToTeamAppRoles,
-  ({ one }) => ({
-    AppPermission: one(appPermissions, {
-      fields: [appPermissionsToTeamAppRoles.appPermissionId],
-      references: [appPermissions.id],
-    }),
-    TeamAppRole: one(teamAppRoles, {
-      fields: [appPermissionsToTeamAppRoles.teamAppRoleId],
-      references: [teamAppRoles.id],
-    }),
-  }),
-);
-export const appPermissionToTeamAppRoleSchema = createInsertSchema(
-  appPermissionsToTeamAppRoles,
-);
 
 export const userAppTeamConfigs = mysqlTable(
   "userAppTeamConfig",

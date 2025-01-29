@@ -27,3 +27,8 @@ export const nanoidPrimaryKey = (t: THelper) =>
     .primaryKey();
 
 export const typeEnum = (t: THelper) => t.mysqlEnum(["NORMAL", "CRITICAL"]);
+
+const rolesForAllApps = ["ADMIN"] as const;
+const kodixCareRoles = ["CAREGIVER", "PATIENT"] as const;
+export const roleEnum = (t: THelper) =>
+  t.mysqlEnum([...rolesForAllApps, ...kodixCareRoles]);

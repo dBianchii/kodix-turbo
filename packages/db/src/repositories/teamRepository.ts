@@ -1,8 +1,7 @@
 import type { z } from "zod";
-import { and, asc, eq, inArray, not } from "drizzle-orm";
+import { and, eq, inArray, not } from "drizzle-orm";
 
 import type { KodixAppId } from "@kdx/shared";
-import { appIdToAdminRole_defaultIdMap } from "@kdx/shared";
 
 import type { Drizzle, DrizzleTransaction } from "../client";
 import type { Update } from "./_types";
@@ -11,7 +10,6 @@ import type { zTeamAppRoleToUserCreateMany } from "./_zodSchemas/teamAppRoleToUs
 import type { zTeamCreate, zTeamUpdate } from "./_zodSchemas/teamSchemas";
 import { db as _db } from "../client";
 import {
-  appPermissions,
   invitations,
   teamAppRoles,
   teamAppRolesToUsers,
@@ -146,45 +144,6 @@ export async function findAllTeamsWithAppInstalled(appId: string, db = _db) {
   return allTeamIdsWithKodixCareInstalled;
 }
 
-export async function findAppPermissionsForTeam(
-  {
-    teamId,
-    appId,
-  }: {
-    teamId: string;
-    appId: string;
-  },
-  db = _db,
-) {
-  const teamAppRolesIdsForTeamIdQuery = db
-    .select({ id: teamAppRoles.id })
-    .from(teamAppRoles)
-    .where(eq(teamAppRoles.teamId, teamId));
-
-  const permissions = await db.query.appPermissions.findMany({
-    where: (appPermission, { eq, and }) => and(eq(appPermission.appId, appId)),
-    orderBy: asc(appPermissions.editable),
-    with: {
-      AppPermissionsToTeamAppRoles: {
-        where: (appPermissionToTeamAppRole, { inArray }) =>
-          inArray(
-            appPermissionToTeamAppRole.teamAppRoleId,
-            teamAppRolesIdsForTeamIdQuery,
-          ),
-        with: {
-          TeamAppRole: {
-            columns: {
-              id: true,
-            },
-          },
-        },
-      },
-    },
-  });
-
-  return permissions;
-}
-
 export async function getUsersWithRoles(
   {
     teamId,
@@ -222,7 +181,7 @@ export async function getUsersWithRoles(
         with: {
           TeamAppRole: {
             columns: {
-              appRoleDefaultId: true,
+              role: true,
               id: true,
             },
           },
@@ -316,9 +275,7 @@ export async function findAdminTeamAppRolesForApp(
   const adminTeamAppRolesForApp = await db
     .select({ id: teamAppRoles.id })
     .from(teamAppRoles)
-    .where(
-      eq(teamAppRoles.appRoleDefaultId, appIdToAdminRole_defaultIdMap[appId]),
-    );
+    .where(and(eq(teamAppRoles.appId, appId), eq(teamAppRoles.role, "ADMIN")));
   return adminTeamAppRolesForApp;
 }
 
@@ -337,7 +294,7 @@ export async function findManyTeamAppRolesByTeamAndApp(
       and(eq(role.teamId, teamId), eq(role.appId, appId)),
     columns: {
       id: true,
-      appRoleDefaultId: true,
+      role: true,
     },
   });
 }
@@ -368,7 +325,7 @@ export async function findManyTeamAppRolesByTeamAndAppAndUser(
         ),
       ),
     columns: {
-      appRoleDefaultId: true,
+      role: true,
     },
   });
 }

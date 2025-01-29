@@ -5,11 +5,10 @@ import type { careShifts } from "@kdx/db/schema";
 import type { TEditCareShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import { db } from "@kdx/db/client";
 import { kodixCareRepository } from "@kdx/db/repositories";
-import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 import { logActivity } from "../../../../services/appActivityLogs.service";
-import { getMyRolesHandler } from "../../team/appRole/getMyRoles.handler";
 import { assertNoOverlappingShiftsForThisCaregiver } from "./_kodixCare.permissions";
 
 interface EditCareShiftOptions {
@@ -38,23 +37,23 @@ export const editCareShiftHandler = async ({
         message: ctx.t("api.Cannot edit finished shifts"),
       });
 
-  const currentUserIsShiftsCaregiver =
-    ctx.auth.user.id === oldShift.caregiverId;
+  // const currentUserIsShiftsCaregiver =
+  //   ctx.auth.user.id === oldShift.caregiverId;
 
-  if (!currentUserIsShiftsCaregiver) {
-    const myRoles = await getMyRolesHandler({
-      ctx,
-      input: { appId: kodixCareAppId },
-    });
+  // if (!currentUserIsShiftsCaregiver) {
+  //   const myRoles = await getMyRolesHandler({
+  //     ctx,
+  //     input: { appId: kodixCareAppId },
+  //   });
 
-    if (
-      !myRoles.some((x) => x.appRoleDefaultId === kodixCareRoleDefaultIds.admin)
-    )
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: ctx.t("api.Only admins can edit shifts for other caregivers"),
-      });
-  }
+  //   if (
+  //     !myRoles.some((x) => x.appRoleDefaultId === kodixCareRoleDefaultIds.admin)
+  //   )
+  //     throw new TRPCError({
+  //       code: "FORBIDDEN",
+  //       message: ctx.t("api.Only admins can edit shifts for other caregivers"),
+  //     });
+  // }
 
   if (input.startAt && input.endAt) {
     const overlappingShifts = await kodixCareRepository.findOverlappingShifts({

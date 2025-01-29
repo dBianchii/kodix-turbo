@@ -1,1 +1,4 @@
-export { appRoles_defaultTree } from "../scripts/seed/appRolesDefault_tree";
+export type GlobalAppRole = "ADMIN";
+export type KodixCareRole = GlobalAppRole | "CAREGIVER";
+
+export type AllAppRoles = GlobalAppRole | KodixCareRole;

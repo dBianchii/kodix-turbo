@@ -6,11 +6,10 @@ import type { careTasks } from "@kdx/db/schema";
 import type { TEditCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
 import { db } from "@kdx/db/client";
 import { careTaskRepository } from "@kdx/db/repositories";
-import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
 import { logActivity } from "../../../../../services/appActivityLogs.service";
-import { getMyRolesHandler } from "../../../team/appRole/getMyRoles.handler";
 
 interface EditCareTaskOptions {
   ctx: TProtectedProcedureContext;
@@ -35,27 +34,27 @@ export const editCareTaskHandler = async ({
     details: input.details,
   };
 
-  if (oldCareTask.doneByUserId) {
-    const taskWasDoneByCurrentUser =
-      oldCareTask.doneByUserId === ctx.auth.user.id;
-    if (!taskWasDoneByCurrentUser) {
-      const myRoles = await getMyRolesHandler({
-        ctx,
-        input: { appId: kodixCareAppId },
-      });
-      const amIAnAdmin = myRoles.some(
-        (x) => x.appRoleDefaultId === kodixCareRoleDefaultIds.admin,
-      );
-      if (!amIAnAdmin) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: ctx.t(
-            "api.Only admins can edit tasks that were done by others",
-          ),
-        });
-      }
-    }
-  }
+  // if (oldCareTask.doneByUserId) {
+  //   const taskWasDoneByCurrentUser =
+  //     oldCareTask.doneByUserId === ctx.auth.user.id;
+  //   if (!taskWasDoneByCurrentUser) {
+  //     const myRoles = await getMyRolesHandler({
+  //       ctx,
+  //       input: { appId: kodixCareAppId },
+  //     });
+  //     const amIAnAdmin = myRoles.some(
+  //       (x) => x.appRoleDefaultId === kodixCareRoleDefaultIds.admin,
+  //     );
+  //     if (!amIAnAdmin) {
+  //       throw new TRPCError({
+  //         code: "FORBIDDEN",
+  //         message: ctx.t(
+  //           "api.Only admins can edit tasks that were done by others",
+  //         ),
+  //       });
+  //     }
+  //   }
+  // }
   // const isEditingDetails = input.details !== undefined;
   // if (isEditingDetails) {
   //   const roles = await db

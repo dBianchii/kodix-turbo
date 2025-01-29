@@ -2,13 +2,9 @@ import { relations } from "drizzle-orm";
 import { index, mysqlTable, unique } from "drizzle-orm/mysql-core";
 import { createInsertSchema } from "drizzle-zod";
 
+import type { AllAppRoles } from "../constants";
 import { NANOID_SIZE } from "../nanoid";
-import {
-  appPermissionsToTeamAppRoles,
-  apps,
-  appsToTeams,
-  appTeamConfigs,
-} from "./apps";
+import { apps, appsToTeams, appTeamConfigs } from "./apps";
 import { eventMasters } from "./apps/calendar";
 import { careShifts, careTasks } from "./apps/kodixCare";
 import { todos } from "./apps/todos";
@@ -89,15 +85,14 @@ export const teamAppRoles = mysqlTable(
   "teamAppRole",
   (t) => ({
     id: nanoidPrimaryKey(t),
+    teamId: teamIdReferenceCascadeDelete(t),
     appId: t
       .varchar({ length: NANOID_SIZE })
       .notNull()
       .references(() => apps.id, { onDelete: "cascade" }),
-    teamId: teamIdReferenceCascadeDelete(t),
-    appRoleDefaultId: t
-      .varchar({
-        length: NANOID_SIZE, //? References a hardcoded default role id and not anything in db. See appRoleDefaults_tree.ts
-      })
+    role: t
+      .varchar("role", { length: DEFAULTLENGTH })
+      .$type<AllAppRoles>()
       .notNull(),
   }),
   (table) => {
@@ -118,7 +113,6 @@ export const teamAppRolesRelations = relations(
       fields: [teamAppRoles.teamId],
       references: [teams.id],
     }),
-    AppPermissionsToTeamAppRoles: many(appPermissionsToTeamAppRoles),
     TeamAppRolesToUsers: many(teamAppRolesToUsers),
   }),
 );
