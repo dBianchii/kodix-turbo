@@ -59,9 +59,7 @@ export async function getAllCareGivers(teamId: string, db = _db) {
   );
 
   return users.filter((user) =>
-    user.TeamAppRolesToUsers.some(
-      (relation) => relation.TeamAppRole.role === "CAREGIVER",
-    ),
+    user.UserTeamAppRoles.some((role) => role.role === "CAREGIVER"),
   );
 }
 

@@ -1,19 +1,40 @@
-import type { KodixCareRole } from "@kdx/db/constants";
+import type { AppRole, KodixAppId } from "@kdx/shared";
+import { teamRepository } from "@kdx/db/repositories";
 
-import type { AppsWithPermissions } from ".";
-import type { User } from "../config";
-import { defineAbilityFor } from ".";
+import type { User } from "./models/user";
+import { defineAbilityForUserAndApp, defineAbilityForUserAndTeam } from ".";
 
-export function getUserPermissionsForApp<T extends AppsWithPermissions>(
-  user: User,
-  appId: T,
-  userRoles: KodixCareRole[],
-) {
-  const ability = defineAbilityFor({
+export function getUserPermissionsForApp<T extends KodixAppId>({
+  user,
+  appId,
+  userRoles,
+}: {
+  user: User;
+  appId: T;
+  userRoles: AppRole[];
+}) {
+  const ability = defineAbilityForUserAndApp({
     appId,
     roles: userRoles,
-    user: user,
+    user,
   });
+
+  return ability;
+}
+
+export async function getUserPermissionsForTeam({
+  user,
+  teamId,
+}: {
+  user: User;
+  teamId: string;
+}) {
+  const team = await teamRepository.findTeamById(teamId);
+  if (!team) {
+    throw new Error("Team not found");
+  }
+
+  const ability = defineAbilityForUserAndTeam({ team, user });
 
   return ability;
 }

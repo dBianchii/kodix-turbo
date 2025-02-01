@@ -32,7 +32,6 @@ export default async function RolesForAppPage(props: {
 
 async function UserAppRolesTable({ appId }: { appId: KodixAppId }) {
   const initialUsers = await api.team.appRole.getUsersWithRoles({ appId });
-  const allAppRoles = await api.team.appRole.getAll({ appId });
   const t = await getTranslations();
   return (
     <div className="flex flex-col gap-8">
@@ -45,11 +44,7 @@ async function UserAppRolesTable({ appId }: { appId: KodixAppId }) {
         <h1 className="font-semibold text-muted-foreground">
           {t("Edit name roles", { name: getAppName(t, appId) })}
         </h1>
-        <DataTableUserAppRoles
-          initialUsers={initialUsers}
-          appId={appId}
-          allAppRoles={allAppRoles}
-        />
+        <DataTableUserAppRoles initialUsers={initialUsers} appId={appId} />
       </div>
     </div>
   );

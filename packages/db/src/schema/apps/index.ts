@@ -3,7 +3,7 @@ import { index, mysqlTable, unique } from "drizzle-orm/mysql-core";
 import { createInsertSchema } from "drizzle-zod";
 
 import { NANOID_SIZE } from "../../nanoid";
-import { teamAppRoles, teams } from "../teams";
+import { teams, userTeamAppRoles } from "../teams";
 import { users } from "../users";
 import {
   DEFAULTLENGTH,
@@ -46,7 +46,7 @@ export const appRelations = relations(apps, ({ many, one }) => ({
     references: [devPartners.id],
   }),
   AppTeamConfigs: many(appTeamConfigs),
-  TeamAppRoles: many(teamAppRoles),
+  UserTeamAppRoles: many(userTeamAppRoles),
 }));
 export const appSchema = createInsertSchema(apps);
 

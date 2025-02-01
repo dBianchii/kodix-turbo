@@ -1,5 +1,3 @@
-import { TRPCError } from "@trpc/server";
-
 import type { TRemoveUserSchema } from "@kdx/validators/trpc/team";
 import { db } from "@kdx/db/client";
 import { nanoid } from "@kdx/db/nanoid";
@@ -13,15 +11,15 @@ interface RemoveUserOptions {
 }
 
 export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
-  const isUserTryingToRemoveSelfFromTeam = input.userId === ctx.auth.user.id;
-  if (isUserTryingToRemoveSelfFromTeam) {
-    throw new TRPCError({
-      message: ctx.t(
-        "api.You cannot remove yourself from a team you are an owner of Delete this team instead",
-      ),
-      code: "FORBIDDEN",
-    });
-  }
+  // const isUserTryingToRemoveSelfFromTeam = input.userId === ctx.auth.user.id;
+  // if (isUserTryingToRemoveSelfFromTeam) {
+  //   throw new TRPCError({
+  //     message: ctx.t(
+  //       "api.You cannot remove yourself from a team you are an owner of Delete this team instead",
+  //     ),
+  //     code: "FORBIDDEN",
+  //   });
+  // }
 
   let otherTeam =
     await teamRepository.findAnyOtherTeamAssociatedWithUserThatIsNotTeamId({
@@ -55,9 +53,12 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
     });
 
     //Remove the user association from the team's apps
-    await teamRepository.removeUserAssociationsFromTeamAppRolesByTeamId(tx, {
-      teamId: ctx.auth.user.activeTeamId,
-      userId: input.userId,
-    });
+    await teamRepository.removeUserAssociationsFromUserTeamAppRolesByTeamId(
+      {
+        teamId: ctx.auth.user.activeTeamId,
+        userId: input.userId,
+      },
+      tx,
+    );
   });
 };

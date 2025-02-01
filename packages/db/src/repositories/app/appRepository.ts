@@ -13,16 +13,14 @@ import type { appIdToUserAppTeamConfigSchemaUpdate } from "../_zodSchemas/userAp
 import type { Drizzle } from "../../client";
 import { appIdToUserAppTeamConfigSchema } from "../_zodSchemas/userAppTeamConfigs";
 import { db as _db } from "../../client";
-import { nanoid } from "../../nanoid";
 import {
   appActivityLogs,
   apps,
   appsToTeams,
   appTeamConfigs,
-  teamAppRoles,
-  teamAppRolesToUsers,
   teams,
   userAppTeamConfigs,
+  userTeamAppRoles,
 } from "../../schema";
 import { appIdToSchemas } from "../../utils";
 
@@ -273,25 +271,11 @@ export async function installAppForTeam(
       teamId: teamId,
     });
 
-    //? 1. Get the default app roles for the app and create them
-
-    //TODO: also add the other roles!!
-
-    const defaultRole = "ADMIN";
-    const [teamAppRole] = await tx
-      .insert(teamAppRoles)
-      .values({
-        id: nanoid(),
-        appId: appId,
-        teamId: teamId,
-        role: defaultRole,
-      })
-      .$returningId();
-    if (!teamAppRole) throw new Error("Failed to create default app role");
-
-    //?2. Add the user to the admin role for the app
-    await tx.insert(teamAppRolesToUsers).values({
-      teamAppRoleId: teamAppRole.id,
+    //? Make the user an admin for the app
+    await tx.insert(userTeamAppRoles).values({
+      appId: appId,
+      teamId: teamId,
+      role: "ADMIN",
       userId: userId,
     });
   });
@@ -311,8 +295,13 @@ export async function uninstallAppForTeam(
     .delete(appsToTeams)
     .where(and(eq(appsToTeams.appId, appId), eq(appsToTeams.teamId, teamId)));
   await db
-    .delete(teamAppRoles)
-    .where(and(eq(teamAppRoles.appId, appId), eq(teamAppRoles.teamId, teamId)));
+    .delete(userTeamAppRoles)
+    .where(
+      and(
+        eq(userTeamAppRoles.appId, appId),
+        eq(userTeamAppRoles.teamId, teamId),
+      ),
+    );
   await db
     .delete(appTeamConfigs)
     .where(

@@ -1,6 +1,6 @@
 import { experimental_standaloneMiddleware, TRPCError } from "@trpc/server";
 
-import type { AppPermissionId, KodixAppId } from "@kdx/shared";
+import type { KodixAppId } from "@kdx/shared";
 import { getAppName } from "@kdx/locales/next-intl/server-hooks";
 import { kodixCareAppId } from "@kdx/shared";
 
@@ -33,7 +33,7 @@ const appInstalledMiddlewareFactory = (appId: KodixAppId) =>
 export const kodixCareInstalledMiddleware =
   appInstalledMiddlewareFactory(kodixCareAppId);
 
-export const appPermissionMiddleware = (_permissionId: AppPermissionId) =>
+export const appPermissionMiddleware = (_permissionId: string) =>
   experimental_standaloneMiddleware<{
     ctx: TProtectedProcedureContext;
   }>().create(async ({ ctx, next }) => {

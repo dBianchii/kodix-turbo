@@ -2,7 +2,8 @@ import { relations } from "drizzle-orm";
 import { index, mysqlTable, unique } from "drizzle-orm/mysql-core";
 import { createInsertSchema } from "drizzle-zod";
 
-import type { AllAppRoles } from "../constants";
+import type { AppRole } from "@kdx/shared";
+
 import { NANOID_SIZE } from "../nanoid";
 import { apps, appsToTeams, appTeamConfigs } from "./apps";
 import { eventMasters } from "./apps/calendar";
@@ -40,7 +41,7 @@ export const teamsRelations = relations(teams, ({ many, one }) => ({
   }),
   UsersToTeams: many(usersToTeams),
   AppsToTeams: many(appsToTeams),
-  TeamAppRoles: many(teamAppRoles),
+  UserTeamAppRoles: many(userTeamAppRoles),
   AppTeamConfigs: many(appTeamConfigs),
   CareShifts: many(careShifts),
   CareTasks: many(careTasks),
@@ -81,10 +82,14 @@ export const usersToTeamsRelations = relations(usersToTeams, ({ one }) => ({
   }),
 }));
 
-export const teamAppRoles = mysqlTable(
-  "teamAppRole",
+export const userTeamAppRoles = mysqlTable(
+  "userTeamAppRole",
   (t) => ({
     id: nanoidPrimaryKey(t),
+    userId: t
+      .varchar({ length: NANOID_SIZE })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
     teamId: teamIdReferenceCascadeDelete(t),
     appId: t
       .varchar({ length: NANOID_SIZE })
@@ -92,69 +97,39 @@ export const teamAppRoles = mysqlTable(
       .references(() => apps.id, { onDelete: "cascade" }),
     role: t
       .varchar("role", { length: DEFAULTLENGTH })
-      .$type<AllAppRoles>()
+      .$type<AppRole>()
       .notNull(),
   }),
   (table) => {
     return {
-      appIdIdx: index("appId_idx").on(table.appId),
-      teamIdIdx: index("teamId_idx").on(table.teamId),
-    };
-  },
-);
-export const teamAppRolesRelations = relations(
-  teamAppRoles,
-  ({ one, many }) => ({
-    App: one(apps, {
-      fields: [teamAppRoles.appId],
-      references: [apps.id],
-    }),
-    Team: one(teams, {
-      fields: [teamAppRoles.teamId],
-      references: [teams.id],
-    }),
-    TeamAppRolesToUsers: many(teamAppRolesToUsers),
-  }),
-);
-
-export const teamAppRolesToUsers = mysqlTable(
-  "_teamAppRoleToUser",
-  (t) => ({
-    teamAppRoleId: t
-      .varchar({ length: NANOID_SIZE })
-      .notNull()
-      .references(() => teamAppRoles.id, { onDelete: "cascade" }),
-    userId: t
-      .varchar({ length: NANOID_SIZE })
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-  }),
-  (table) => {
-    return {
-      teamAppRoleIdIdx: index("teamAppRoleId_idx").on(table.teamAppRoleId),
       userIdIdx: index("userId_idx").on(table.userId),
+      teamIdIdx: index("teamId_idx").on(table.teamId),
+      appIdIdx: index("appId_idx").on(table.appId),
 
-      unique_teamAppRoleId_userId: unique("unique_teamAppRoleId_userId").on(
-        table.teamAppRoleId,
-        table.userId,
-      ),
+      unique_userId_teamId_appId_role: unique(
+        "unique_userId_teamId_appId_role",
+      ).on(table.userId, table.teamId, table.appId, table.role),
     };
   },
 );
-export const teamAppRolesToUsersRelations = relations(
-  teamAppRolesToUsers,
+export const userTeamAppRolesRelations = relations(
+  userTeamAppRoles,
   ({ one }) => ({
-    TeamAppRole: one(teamAppRoles, {
-      fields: [teamAppRolesToUsers.teamAppRoleId],
-      references: [teamAppRoles.id],
-    }),
     User: one(users, {
-      fields: [teamAppRolesToUsers.userId],
+      fields: [userTeamAppRoles.userId],
       references: [users.id],
     }),
+    Team: one(teams, {
+      fields: [userTeamAppRoles.teamId],
+      references: [teams.id],
+    }),
+    App: one(apps, {
+      fields: [userTeamAppRoles.appId],
+      references: [apps.id],
+    }),
   }),
 );
-export const teamAppRoleToUserSchema = createInsertSchema(teamAppRolesToUsers);
+export const userTeamAppRolesSchema = createInsertSchema(userTeamAppRoles);
 
 export const invitations = mysqlTable(
   "invitation",

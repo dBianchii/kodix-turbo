@@ -1,6 +1,7 @@
-import { TRPCError } from "@trpc/server";
+import { ForbiddenError } from "@casl/ability";
 
 import type { TUpdateUserAssociationInputSchema } from "@kdx/validators/trpc/team/appRole";
+import { getUserPermissionsForTeam } from "@kdx/auth/get-user-permissions";
 import { db } from "@kdx/db/client";
 import { teamRepository } from "@kdx/db/repositories";
 
@@ -14,28 +15,16 @@ export const updateUserAssociationHandler = async ({
   ctx,
   input,
 }: UpdateUserAssociationOptions) => {
+  const ability = await getUserPermissionsForTeam({
+    teamId: ctx.auth.user.activeTeamId,
+    user: ctx.auth.user,
+  });
+  ForbiddenError.from(ability).throwUnlessCan("update", {
+    __typename: "UserTeamAppRole",
+    role: "ADMIN",
+  });
+
   await db.transaction(async (tx) => {
-    if (input.userId === ctx.auth.user.id) {
-      //need to detect if they are sending the admin role to prevent removing themselves
-      const adminTeamAppRolesForApp =
-        await teamRepository.findAdminTeamAppRolesForApp(tx, {
-          appId: input.appId,
-        });
-
-      if (
-        !adminTeamAppRolesForApp.some((x) =>
-          input.teamAppRoleIds.includes(x.id),
-        )
-      )
-        throw new TRPCError({
-          message: ctx.t(
-            "api.You cannot remove yourself from the Administrator role",
-          ),
-          code: "BAD_REQUEST",
-        });
-    }
-
-    // await teamRepository
     await teamRepository.removeUserAssociationsFromTeamAppRolesByTeamIdAndAppId(
       tx,
       {
@@ -45,14 +34,16 @@ export const updateUserAssociationHandler = async ({
       },
     );
 
-    if (input.teamAppRoleIds.length)
+    if (input.roles.length)
       // If there are any teamAppRoleIds to connect, insert them after deletion
       await teamRepository.associateManyAppRolesToUsers(
-        tx,
-        input.teamAppRoleIds.map((appRoleId) => ({
+        input.roles.map((role) => ({
           userId: input.userId,
-          teamAppRoleId: appRoleId,
+          role,
+          teamId: ctx.auth.user.activeTeamId,
+          appId: input.appId,
         })),
+        tx,
       );
   });
 };

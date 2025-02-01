@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import type { KodixAppId } from "@kdx/shared";
+import { allRoles } from "@kdx/shared";
 
 import { ZNanoId } from "../../..";
 
@@ -11,15 +12,14 @@ export type TGetUsersWithRolesInputSchema = z.infer<
   typeof ZGetUsersWithRolesInputSchema
 >;
 
-export const ZGetAllInputSchema = z.object({
-  appId: z.custom<KodixAppId>(),
-});
-export type TGetAllInputSchema = z.infer<typeof ZGetAllInputSchema>;
-
+const literals = allRoles.map((x) => z.literal(x)) as [
+  z.ZodLiteral<"ADMIN">,
+  z.ZodLiteral<"CAREGIVER">, //TODO: This looks alwful
+];
 export const ZUpdateUserAssociationInputSchema = z.object({
   userId: ZNanoId, //User to update
   appId: z.custom<KodixAppId>(), //Which app teamAppRoleIds belong to.
-  teamAppRoleIds: z.array(ZNanoId), //teamAppRoleIds to connect
+  roles: z.array(z.union(literals)), //teamAppRoleIds to connect
 });
 export type TUpdateUserAssociationInputSchema = z.infer<
   typeof ZUpdateUserAssociationInputSchema
