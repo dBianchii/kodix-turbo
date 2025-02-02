@@ -37,11 +37,6 @@ async function UserAppRolesTable({ appId }: { appId: KodixAppId }) {
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-2">
         <h1 className="font-semibold text-muted-foreground">
-          {t("Define the role of each user")}
-        </h1>
-      </div>
-      <div className="flex flex-col gap-2">
-        <h1 className="font-semibold text-muted-foreground">
           {t("Edit name roles", { name: getAppName(t, appId) })}
         </h1>
         <DataTableUserAppRoles initialUsers={initialUsers} appId={appId} />

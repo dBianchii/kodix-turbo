@@ -12,7 +12,7 @@ import type { RouterOutputs } from "@kdx/api";
 import type { AppRole, KodixAppId } from "@kdx/shared";
 import type { FixedColumnsType } from "@kdx/ui/data-table/data-table";
 import { useAppRoleNames } from "@kdx/locales/next-intl/hooks";
-import { allRoles } from "@kdx/shared";
+import { allRoles, typedObjectEntries } from "@kdx/shared";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { DataTable } from "@kdx/ui/data-table/data-table";
 import { MultiSelect } from "@kdx/ui/multi-select";
@@ -47,34 +47,31 @@ export function DataTableUserAppRoles({
       async onMutate(newValues) {
         // Cancel any outgoing refetches
         // (so they don't overwrite our optimistic update)
-        // await utils.team.appRole.getUsersWithRoles.cancel();
-        // // Snapshot the previous value
+        await utils.team.appRole.getUsersWithRoles.cancel();
+        // Snapshot the previous value
         const previousUsers = utils.team.appRole.getUsersWithRoles.getData();
-        // // Optimistically update to the new value
-        // utils.team.appRole.getUsersWithRoles.setData({ appId }, (old) => {
-        //   const teamAppRolesToUpdate = allAppRoles.filter((role) =>
-        //     newValues.teamAppRoleIds.includes(role.id),
-        //   );
-
-        //   const updatedUsers = old?.map((user) => {
-        //     if (user.id === newValues.userId) {
-        //       return {
-        //         ...user,
-        //         TeamAppRolesToUsers: teamAppRolesToUpdate.map((x) => ({
-        //           teamAppRoleId: x.id,
-        //           userId: user.id,
-        //           TeamAppRole: {
-        //             appRoleDefaultId: x.appRoleDefaultId,
-        //             id: x.id,
-        //           },
-        //         })),
-        //       };
-        //     }
-        //     return user;
-        //   });
-
-        //   return updatedUsers;
-        // });
+        // Optimistically update to the new value
+        utils.team.appRole.getUsersWithRoles.setData({ appId }, (old) => {
+          if (!old) return old;
+          return old.map((user) => {
+            if (user.id === newValues.userId) {
+              return {
+                ...user,
+                UserTeamAppRoles: user.UserTeamAppRoles.filter(
+                  (role) => !Object.hasOwn(newValues.roles, role.role),
+                ).concat(
+                  typedObjectEntries(newValues.roles)
+                    .filter(([, isActive]) => isActive)
+                    .map(([role]) => ({
+                      role: role,
+                      userId: newValues.userId,
+                    })),
+                ),
+              };
+            }
+            return user;
+          });
+        });
 
         // Return a context object with the snapshotted value
         return { previousUsers };
@@ -137,9 +134,35 @@ export function DataTableUserAppRoles({
                 }))}
                 selected={selected}
                 onChange={(newValues: string[]) => {
+                  const rolesUnion = [
+                    ...new Set([...selected, ...newValues]),
+                  ] as AppRole[];
+
+                  const updatedRoles = rolesUnion.reduce(
+                    (acc, role) => {
+                      // If the role was selected but is no longer selected, mark it as false.
+                      if (
+                        selected.includes(role) &&
+                        !newValues.includes(role)
+                      ) {
+                        acc[role] = false;
+                      }
+                      // If the role was not selected before but is now selected, mark it as true.
+                      else if (
+                        !selected.includes(role) &&
+                        newValues.includes(role)
+                      ) {
+                        acc[role] = true;
+                      }
+                      // If the role was selected and is still selected, we do nothing.
+                      return acc;
+                    },
+                    {} as Record<AppRole, boolean>,
+                  );
+
                   updateUserAssociation({
                     userId: info.cell.row.original.id,
-                    roles: newValues as AppRole[],
+                    roles: updatedRoles,
                     appId,
                   });
                 }}

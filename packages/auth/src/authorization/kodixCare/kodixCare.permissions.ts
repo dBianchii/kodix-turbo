@@ -17,8 +17,6 @@ type PermissionsByRole = (
 export const kodixCarePermissions: Record<KodixCareRole, PermissionsByRole> = {
   ADMIN(user, { can }) {
     can("delete", "CareTask");
-    can("delete", "CareTask");
-    can("delete", "CareTask");
   },
   CAREGIVER(user, { can, cannot }) {
     can("delete", "CareTask", {

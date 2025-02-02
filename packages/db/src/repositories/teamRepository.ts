@@ -1,5 +1,7 @@
 import type { z } from "zod";
-import { and, eq, not } from "drizzle-orm";
+import { and, eq, inArray, not } from "drizzle-orm";
+
+import type { AppRole } from "@kdx/shared";
 
 import type { Drizzle, DrizzleTransaction } from "../client";
 import type { Update } from "./_types";
@@ -241,14 +243,20 @@ export async function removeUserAssociationsFromUserTeamAppRolesByTeamId(
     );
 }
 
-export async function removeUserAssociationsFromTeamAppRolesByTeamIdAndAppId(
+export async function removeUserAssociationsFromTeamAppRolesByTeamIdAndAppIdAndRoles(
+  {
+    teamId,
+    userId,
+    appId,
+    roles,
+  }: { teamId: string; userId: string; appId: string; roles: AppRole[] },
   db = _db,
-  { teamId, userId, appId }: { teamId: string; userId: string; appId: string },
 ) {
   return db
     .delete(userTeamAppRoles)
     .where(
       and(
+        inArray(userTeamAppRoles.role, roles),
         eq(userTeamAppRoles.userId, userId),
         eq(userTeamAppRoles.teamId, teamId),
         eq(userTeamAppRoles.appId, appId),

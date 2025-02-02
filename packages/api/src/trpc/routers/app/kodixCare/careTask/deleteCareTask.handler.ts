@@ -34,11 +34,11 @@ export const deleteCareTaskHandler = async ({
     userId: ctx.auth.user.id,
   });
 
-  const ability = getUserPermissionsForApp(
-    ctx.auth.user,
-    kodixCareAppId,
-    userRoles.map((x) => x.role),
-  );
+  const ability = getUserPermissionsForApp({
+    appId: kodixCareAppId,
+    user: ctx.auth.user,
+    userRoles: userRoles.map((x) => x.role),
+  });
   ForbiddenError.from(ability).throwUnlessCan("delete", {
     __typename: "CareTask",
     createdFromCalendar: careTask.createdFromCalendar,
