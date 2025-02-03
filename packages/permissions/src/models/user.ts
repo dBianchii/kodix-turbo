@@ -1,4 +1,4 @@
-import type { User as AuthUser } from "../../config";
+import type { User as AuthUser } from "@kdx/auth";
 
 type User = Pick<AuthUser, "id">;
 

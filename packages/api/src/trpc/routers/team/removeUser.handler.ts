@@ -1,3 +1,5 @@
+import { ForbiddenError } from "@casl/ability";
+
 import type { TRemoveUserSchema } from "@kdx/validators/trpc/team";
 import { db } from "@kdx/db/client";
 import { nanoid } from "@kdx/db/nanoid";
@@ -11,15 +13,15 @@ interface RemoveUserOptions {
 }
 
 export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
-  // const isUserTryingToRemoveSelfFromTeam = input.userId === ctx.auth.user.id;
-  // if (isUserTryingToRemoveSelfFromTeam) {
-  //   throw new TRPCError({
-  //     message: ctx.t(
-  //       "api.You cannot remove yourself from a team you are an owner of Delete this team instead",
-  //     ),
-  //     code: "FORBIDDEN",
-  //   });
-  // }
+  const { services } = ctx;
+  const permissions = await services.permissions.getUserPermissionsForTeam({
+    teamId: ctx.auth.user.activeTeamId,
+    user: ctx.auth.user,
+  });
+  ForbiddenError.from(permissions).throwUnlessCan("RemoveFromTeam", {
+    __typename: "User",
+    id: input.userId,
+  });
 
   let otherTeam =
     await teamRepository.findAnyOtherTeamAssociatedWithUserThatIsNotTeamId({

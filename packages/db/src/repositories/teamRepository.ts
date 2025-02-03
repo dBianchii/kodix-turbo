@@ -154,7 +154,7 @@ export async function findUserRolesByTeamIdAndAppId(
   },
   db = _db,
 ) {
-  return db.query.userTeamAppRoles.findMany({
+  const roles = await db.query.userTeamAppRoles.findMany({
     where: (userTeamAppRoles, { eq, and }) =>
       and(
         eq(userTeamAppRoles.teamId, teamId),
@@ -165,6 +165,7 @@ export async function findUserRolesByTeamIdAndAppId(
       role: true,
     },
   });
+  return roles.map(({ role }) => role);
 }
 
 export async function getUsersWithRoles(

@@ -1,7 +1,6 @@
 import { ForbiddenError } from "@casl/ability";
 
 import type { TUpdateUserAssociationInputSchema } from "@kdx/validators/trpc/team/appRole";
-import { getUserPermissionsForTeam } from "@kdx/auth/get-user-permissions";
 import { db } from "@kdx/db/client";
 import { teamRepository } from "@kdx/db/repositories";
 import { typedObjectEntries } from "@kdx/shared";
@@ -17,15 +16,17 @@ export const updateUserAssociationHandler = async ({
   ctx,
   input,
 }: UpdateUserAssociationOptions) => {
+  const { services } = ctx;
+
   const toRemoveRoles = typedObjectEntries(input.roles).filter(
     ([_, value]) => !value,
   );
-  const ability = await getUserPermissionsForTeam({
+  const permission = await services.permissions.getUserPermissionsForTeam({
     teamId: ctx.auth.user.activeTeamId,
     user: ctx.auth.user,
   });
   for (const [role] of toRemoveRoles)
-    ForbiddenError.from(ability).throwUnlessCan("delete", {
+    ForbiddenError.from(permission).throwUnlessCan("delete", {
       __typename: "UserTeamAppRole",
       role,
       userId: input.userId,
@@ -35,8 +36,10 @@ export const updateUserAssociationHandler = async ({
     ([_, value]) => value,
   );
 
+  if (!toAddRoles.length && !toRemoveRoles.length) return;
+
   await db.transaction(async (tx) => {
-    if (toRemoveRoles.length) {
+    if (toRemoveRoles.length)
       await teamRepository.removeUserAssociationsFromTeamAppRolesByTeamIdAndAppIdAndRoles(
         {
           appId: input.appId,
@@ -46,7 +49,7 @@ export const updateUserAssociationHandler = async ({
         },
         tx,
       );
-    }
+
     if (toAddRoles.length)
       // If there are any teamAppRoleIds to connect, insert them after deletion
       await teamRepository.associateManyAppRolesToUsers(
@@ -56,6 +59,7 @@ export const updateUserAssociationHandler = async ({
           teamId: ctx.auth.user.activeTeamId,
           appId: input.appId,
         })),
+        tx,
       );
   });
 };

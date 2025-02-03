@@ -1,6 +1,7 @@
 import type { CreateAbility } from "@casl/ability";
 import { AbilityBuilder, createMongoAbility } from "@casl/ability";
 
+import type { ServerSideT } from "@kdx/locales";
 import type { AppRole, KodixAppId } from "@kdx/shared";
 import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
 
@@ -8,20 +9,24 @@ import type { KodixCareMongoAbility } from "./kodixCare/kodixCare.permissions";
 import type { Team } from "./models/team";
 import type { User } from "./models/user";
 import type { TeamAbility } from "./team/team.permissions";
-import { kodixCarePermissions } from "./kodixCare/kodixCare.permissions";
-import { teamPermissions } from "./team/team.permissions";
+import { kodixCarePermissionsFactory } from "./kodixCare/kodixCare.permissions";
+import { teamPermissionsFactory } from "./team/team.permissions";
 
-const appIdToPermissions = {
-  [kodixCareAppId]: kodixCarePermissions,
-  [todoAppId]: null,
-  [calendarAppId]: null,
+const appIdToPermissionsFactory = {
+  [kodixCareAppId]: kodixCarePermissionsFactory,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  [todoAppId]: ({ t: _ }: { t: ServerSideT }) => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  [calendarAppId]: ({ t: _ }: { t: ServerSideT }) => {},
 };
 
 export function defineAbilityForUserAndApp<T extends KodixAppId>({
+  t,
   user,
   appId,
   roles,
 }: {
+  t: ServerSideT;
   user: User;
   appId: T;
   roles: AppRole[];
@@ -30,7 +35,7 @@ export function defineAbilityForUserAndApp<T extends KodixAppId>({
     createMongoAbility as CreateAbility<KodixCareMongoAbility>,
   );
 
-  const appPermissions = appIdToPermissions[appId];
+  const appPermissions = appIdToPermissionsFactory[appId]({ t });
   if (appPermissions)
     roles.forEach((role) => {
       appPermissions[role](user, appBuilder);
@@ -51,15 +56,17 @@ export function defineAbilityForUserAndApp<T extends KodixAppId>({
 export function defineAbilityForUserAndTeam({
   user,
   team,
+  t,
 }: {
   user: User;
   team: Team;
+  t: ServerSideT;
 }) {
   const teamBuilder = new AbilityBuilder(
     createMongoAbility as CreateAbility<TeamAbility>,
   );
 
-  teamPermissions({ team, user })(teamBuilder);
+  teamPermissionsFactory({ team, user, t })(teamBuilder);
 
   const teamAbility = teamBuilder.build({
     detectSubjectType(subject) {
@@ -72,3 +79,5 @@ export function defineAbilityForUserAndTeam({
 
   return teamAbility;
 }
+
+export type { KodixCareMongoAbility, TeamAbility };

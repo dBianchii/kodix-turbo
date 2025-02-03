@@ -2,7 +2,6 @@ import { ForbiddenError } from "@casl/ability";
 import { TRPCError } from "@trpc/server";
 
 import type { TDeleteCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
-import { getUserPermissionsForApp } from "@kdx/auth/get-user-permissions";
 import { careTaskRepository, teamRepository } from "@kdx/db/repositories";
 import { kodixCareAppId } from "@kdx/shared";
 
@@ -17,6 +16,7 @@ export const deleteCareTaskHandler = async ({
   ctx,
   input,
 }: DeleteCareTaskOptions) => {
+  const { services } = ctx;
   const careTask = await careTaskRepository.findCareTaskById({
     id: input.id,
     teamId: ctx.auth.user.activeTeamId,
@@ -34,7 +34,7 @@ export const deleteCareTaskHandler = async ({
     userId: ctx.auth.user.id,
   });
 
-  const ability = getUserPermissionsForApp({
+  const ability = services.permissions.getUserPermissionsForApp({
     appId: kodixCareAppId,
     user: ctx.auth.user,
     userRoles: userRoles.map((x) => x.role),
