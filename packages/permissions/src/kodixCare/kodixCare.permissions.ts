@@ -3,11 +3,13 @@ import type { AbilityBuilder, MongoAbility } from "@casl/ability";
 import type { IsomorficT } from "@kdx/locales";
 import type { AppRole, kodixCareAppId } from "@kdx/shared";
 
-import type { Delete, Edit } from "../actions";
+import type { Create, Delete, Edit } from "../actions";
 import type { User } from "../models/user";
 import type { CareShift, CareTask } from "./kodixCare.subjects";
 
-type KodixCareAbilities = [Delete, CareTask] | [Delete | Edit, CareShift];
+type KodixCareAbilities =
+  | [Delete | Create, CareTask]
+  | [Delete | Edit, CareShift];
 
 export type KodixCareMongoAbility = MongoAbility<KodixCareAbilities>;
 type KodixCareRole = AppRole<typeof kodixCareAppId>;
@@ -22,24 +24,28 @@ export const kodixCarePermissionsFactory = ({
   t: IsomorficT;
 }): Record<KodixCareRole, PermissionsByRole> => ({
   ADMIN(user, { can }) {
-    can("delete", "CareTask");
-    can("delete", "CareShift");
-    can("edit", "CareShift");
+    can("Create", "CareTask");
+    can("Delete", "CareTask");
+
+    can("Delete", "CareShift");
+    can("Edit", "CareShift");
   },
   CAREGIVER(user, { can, cannot }) {
-    can("delete", "CareTask", {
+    can("Create", "CareTask");
+
+    can("Delete", "CareTask", {
       createdBy: {
         $eq: user.id,
       },
     });
-    cannot("delete", "CareTask", {
+    cannot("Delete", "CareTask", {
       createdFromCalendar: {
         $eq: true,
       },
     }).because(t("api.Only admins can delete a task created from calendar"));
 
-    can("delete", "CareShift");
-    cannot("delete", "CareShift", {
+    can("Delete", "CareShift");
+    cannot("Delete", "CareShift", {
       createdById: {
         $ne: user.id,
       },
@@ -49,12 +55,12 @@ export const kodixCarePermissionsFactory = ({
       ),
     );
 
-    can("edit", "CareShift", {
+    can("Edit", "CareShift", {
       caregiverId: {
         $eq: user.id,
       },
     });
-    cannot("edit", "CareShift", {
+    cannot("Edit", "CareShift", {
       caregiverId: {
         $ne: user.id,
       },

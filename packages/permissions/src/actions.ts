@@ -1,2 +1,3 @@
-export type Delete = "delete";
-export type Edit = "edit";
+export type Delete = "Delete";
+export type Edit = "Edit";
+export type Create = "Create";

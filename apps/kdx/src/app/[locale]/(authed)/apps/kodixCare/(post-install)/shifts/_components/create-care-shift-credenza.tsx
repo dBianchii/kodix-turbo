@@ -46,8 +46,8 @@ const useMyRoles = () => {
 
   const shouldAutoSelectMyself = useMemo(
     () =>
-      !getMyRolesQuery.data?.some((x) => x.role === "ADMIN") &&
-      getMyRolesQuery.data?.some((x) => x.role === "CAREGIVER"),
+      !getMyRolesQuery.data?.some((r) => r === "ADMIN") &&
+      getMyRolesQuery.data?.some((r) => r === "CAREGIVER"),
     [getMyRolesQuery.data],
   );
   return { getMyRolesQuery, shouldAutoSelectMyself };
@@ -229,9 +229,8 @@ export function CreateShiftCredenzaButton({
                     <div className="flex flex-row gap-2">
                       <Select
                         disabled={
-                          !getMyRolesQuery.data?.some(
-                            (x) => x.role === "ADMIN",
-                          ) || getMyRolesQuery.isFetching
+                          !getMyRolesQuery.data?.some((x) => x === "ADMIN") ||
+                          getMyRolesQuery.isFetching
                         }
                         {...field}
                         onValueChange={field.onChange}
