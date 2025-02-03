@@ -1,3 +1,4 @@
+import { ForbiddenError } from "@casl/ability";
 import { TRPCError } from "@trpc/server";
 import { diff } from "deep-diff";
 
@@ -17,18 +18,27 @@ export const createCareTaskHandler = async ({
   ctx,
   input,
 }: CreateCareTaskOptions) => {
+  const { services } = ctx;
+  const ability = await services.permissions.getUserPermissionsForApp({
+    user: ctx.auth.user,
+    appId: kodixCareAppId,
+  });
+  ForbiddenError.from(ability).throwUnlessCan("Create", "CareTask");
+
   const [created] = await careTaskRepository.createCareTask({
     ...input,
     teamId: ctx.auth.user.activeTeamId,
     createdBy: ctx.auth.user.id,
     createdFromCalendar: false,
   });
+
   if (!created) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: "Failed to create care task",
     });
   }
+
   const careTaskInserted = await careTaskRepository.findCareTaskById({
     id: created.id,
     teamId: ctx.auth.user.activeTeamId,

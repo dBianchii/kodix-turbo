@@ -7,30 +7,20 @@ import type {
   KodixAppId,
   kodixCareAppId,
 } from "@kdx/shared";
-import {
-  appIdToAdminRole_defaultIdMap,
-  appIdToAppTeamConfigSchema,
-  todoAppId,
-} from "@kdx/shared";
+import { appIdToAppTeamConfigSchema, todoAppId } from "@kdx/shared";
 
-import type { zAppPermissionToTeamAppRoleCreateMany } from "../_zodSchemas/appPermissionsToTeamAppRolesSchemas";
 import type { appIdToUserAppTeamConfigSchemaUpdate } from "../_zodSchemas/userAppTeamConfigs";
 import type { Drizzle } from "../../client";
 import { appIdToUserAppTeamConfigSchema } from "../_zodSchemas/userAppTeamConfigs";
 import { db as _db } from "../../client";
-import { appRoles_defaultTree } from "../../constants";
-import { nanoid } from "../../nanoid";
 import {
   appActivityLogs,
-  appPermissions,
-  appPermissionsToTeamAppRoles,
   apps,
   appsToTeams,
   appTeamConfigs,
-  teamAppRoles,
-  teamAppRolesToUsers,
   teams,
   userAppTeamConfigs,
+  userTeamAppRoles,
 } from "../../schema";
 import { appIdToSchemas } from "../../utils";
 
@@ -118,46 +108,6 @@ export async function findAppTeamConfigs(
   }));
 
   return parsedTeamConfigs;
-}
-
-export async function findAppPermissionById(permissionId: string, db = _db) {
-  return db.query.appPermissions.findFirst({
-    where: (appPermissions, { eq }) => eq(appPermissions.id, permissionId),
-    columns: { editable: true },
-  });
-}
-
-export async function createManyAppPermissionToRoleAssociations(
-  db: Drizzle,
-  data: z.infer<typeof zAppPermissionToTeamAppRoleCreateMany>,
-) {
-  await db.insert(appPermissionsToTeamAppRoles).values(data);
-}
-
-export async function removePermissionFromRole(
-  db: Drizzle,
-  {
-    permissionId,
-    appId,
-  }: {
-    permissionId: string;
-    appId: string;
-  },
-) {
-  await db.delete(appPermissionsToTeamAppRoles).where(
-    inArray(
-      appPermissionsToTeamAppRoles.appPermissionId,
-      db
-        .select({ id: appPermissions.id })
-        .from(appPermissions)
-        .where(
-          and(
-            eq(appPermissions.id, permissionId),
-            eq(appPermissions.appId, appId),
-          ),
-        ),
-    ),
-  );
 }
 
 export async function upsertAppTeamConfig(
@@ -321,38 +271,11 @@ export async function installAppForTeam(
       teamId: teamId,
     });
 
-    //? 1. Get the default app roles for the app and create them
-    const appRoleDefaultForApp = appRoles_defaultTree[appId];
-    const toCreateDefaultAppRoles = appRoleDefaultForApp.appRoleDefaults.map(
-      (defaultAppRole) => ({
-        id: nanoid(),
-        appId: appId,
-        appRoleDefaultId: defaultAppRole.id,
-        teamId: teamId,
-      }),
-    ) satisfies (typeof teamAppRoles.$inferInsert)[];
-
-    await tx.insert(teamAppRoles).values(toCreateDefaultAppRoles);
-
-    //? 2. Connect the permissions to the newly created roles if any   exists
-    const toAddPermissions = toCreateDefaultAppRoles.flatMap((role) =>
-      (appRoleDefaultForApp.appPermissions ?? []).map((permission) => ({
-        appPermissionId: permission.id,
-        teamAppRoleId: role.id,
-      })),
-    ) satisfies (typeof appPermissionsToTeamAppRoles.$inferInsert)[];
-
-    if (toAddPermissions.length > 0)
-      await tx.insert(appPermissionsToTeamAppRoles).values(toAddPermissions);
-
-    //?3. Add the user to the admin role for the app
-    const adminRoleForApp = toCreateDefaultAppRoles.find(
-      (role) => role.appRoleDefaultId === appIdToAdminRole_defaultIdMap[appId],
-    );
-    if (!adminRoleForApp) throw new Error("Admin role not found"); //Each app should have a designated admin role
-
-    await tx.insert(teamAppRolesToUsers).values({
-      teamAppRoleId: adminRoleForApp.id,
+    //? Make the user an admin for the app
+    await tx.insert(userTeamAppRoles).values({
+      appId: appId,
+      teamId: teamId,
+      role: "ADMIN",
       userId: userId,
     });
   });
@@ -372,8 +295,13 @@ export async function uninstallAppForTeam(
     .delete(appsToTeams)
     .where(and(eq(appsToTeams.appId, appId), eq(appsToTeams.teamId, teamId)));
   await db
-    .delete(teamAppRoles)
-    .where(and(eq(teamAppRoles.appId, appId), eq(teamAppRoles.teamId, teamId)));
+    .delete(userTeamAppRoles)
+    .where(
+      and(
+        eq(userTeamAppRoles.appId, appId),
+        eq(userTeamAppRoles.teamId, teamId),
+      ),
+    );
   await db
     .delete(appTeamConfigs)
     .where(

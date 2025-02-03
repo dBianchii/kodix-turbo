@@ -1,16 +1,9 @@
 import { useTranslations } from "next-intl";
 
-import type { AppPermissionId, KodixAppId } from "@kdx/shared";
-import {
-  calendarAppId,
-  calendarRoleDefaultIds,
-  kodixCareAppId,
-  kodixCareRoleDefaultIds,
-  todoAppId,
-  todoRoleDefaultIds,
-} from "@kdx/shared";
+import type { KodixAppId } from "@kdx/shared";
+import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
 
-import { appIdToName, appPermissionIdToName } from "./internal";
+import { appIdToName } from "./internal";
 
 export const useAppName = (appId: KodixAppId | undefined) => {
   const t = useTranslations();
@@ -29,20 +22,12 @@ export const useAppDescription = (appId: KodixAppId) => {
   return appIdToDescription[appId];
 };
 
-export const useAppRoleDefaultNames = () => {
+export const useAppRoleNames = () => {
   const t = useTranslations();
   const appRoleDefaultIdToName = {
-    [todoRoleDefaultIds.admin]: t("Admin"),
-    [calendarRoleDefaultIds.admin]: t("Admin"),
-    [kodixCareRoleDefaultIds.admin]: t("Admin"),
-    [kodixCareRoleDefaultIds.patient]: t("Patient"),
-    [kodixCareRoleDefaultIds.careGiver]: t("Care Giver"),
+    ["ADMIN"]: t("Admin"),
+    ["CAREGIVER"]: t("Care Giver"),
   };
 
   return appRoleDefaultIdToName;
-};
-
-export const useAppPermissionName = (appPermissionId: AppPermissionId) => {
-  const t = useTranslations();
-  return t(appPermissionIdToName[appPermissionId]);
 };

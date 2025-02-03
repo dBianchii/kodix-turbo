@@ -17,7 +17,7 @@
     "db:seed": "turbo -F @kdx/db seed",
     "db:drop": "turbo -F @kdx/db drop",
     "dev": "turbo watch dev studio --continue",
-    "dev:kdx": "turbo watch dev -F @kdx/kdx...",
+    "dev:kdx": "turbo watch dev studio -F @kdx/kdx...",
     "dev:email": "turbo watch dev -F @kdx/react-email...",
     "dev:upstash": "turbo watch dev -F @kdx/upstash-dev...",
     "format": "turbo run format --continue -- --cache --cache-location .cache/.prettiercache",
