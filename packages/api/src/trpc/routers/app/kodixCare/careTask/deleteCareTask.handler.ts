@@ -2,7 +2,7 @@ import { ForbiddenError } from "@casl/ability";
 import { TRPCError } from "@trpc/server";
 
 import type { TDeleteCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
-import { careTaskRepository, teamRepository } from "@kdx/db/repositories";
+import { careTaskRepository } from "@kdx/db/repositories";
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
@@ -28,18 +28,11 @@ export const deleteCareTaskHandler = async ({
     });
   }
 
-  const userRoles = await teamRepository.findUserRolesByTeamIdAndAppId({
-    appId: kodixCareAppId,
-    teamId: ctx.auth.user.activeTeamId,
-    userId: ctx.auth.user.id,
-  });
-
-  const ability = services.permissions.getUserPermissionsForApp({
+  const ability = await services.permissions.getUserPermissionsForApp({
     appId: kodixCareAppId,
     user: ctx.auth.user,
-    userRoles: userRoles.map((x) => x.role),
   });
-  ForbiddenError.from(ability).throwUnlessCan("delete", {
+  ForbiddenError.from(ability).throwUnlessCan("Delete", {
     __typename: "CareTask",
     createdFromCalendar: careTask.createdFromCalendar,
     createdBy: careTask.createdBy,

@@ -26,7 +26,7 @@ export const updateUserAssociationHandler = async ({
     user: ctx.auth.user,
   });
   for (const [role] of toRemoveRoles)
-    ForbiddenError.from(permission).throwUnlessCan("delete", {
+    ForbiddenError.from(permission).throwUnlessCan("Delete", {
       __typename: "UserTeamAppRole",
       role,
       userId: input.userId,

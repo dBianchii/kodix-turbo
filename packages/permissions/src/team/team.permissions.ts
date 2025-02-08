@@ -16,8 +16,8 @@ export const teamPermissionsFactory =
   ({ team, user, t }: { team: Team; user: User; t: IsomorficT }) =>
   ({ can, cannot }: AbilityBuilder<TeamAbility>) => {
     if (team.ownerId === user.id) {
-      can("delete", "UserTeamAppRole");
-      cannot("delete", "UserTeamAppRole", {
+      can("Delete", "UserTeamAppRole");
+      cannot("Delete", "UserTeamAppRole", {
         userId: {
           $eq: user.id,
         },

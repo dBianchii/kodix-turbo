@@ -37,7 +37,7 @@ export const kodixCarePermissionsFactory = ({
       createdBy: {
         $eq: user.id,
       },
-    });
+    }).because(t("api.Only admins and the creator can delete a task"));
     cannot("Delete", "CareTask", {
       createdFromCalendar: {
         $eq: true,

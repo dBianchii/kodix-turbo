@@ -43,7 +43,7 @@ export const editCareShiftHandler = async ({
     user: ctx.auth.user,
     appId: kodixCareAppId,
   });
-  ForbiddenError.from(permissions).throwUnlessCan("edit", {
+  ForbiddenError.from(permissions).throwUnlessCan("Edit", {
     __typename: "CareShift",
     ...oldShift,
   });

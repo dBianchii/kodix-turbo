@@ -2,7 +2,7 @@ import { ForbiddenError } from "@casl/ability";
 import { TRPCError } from "@trpc/server";
 
 import type { TDeleteCareShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
-import { kodixCareRepository, teamRepository } from "@kdx/db/repositories";
+import { kodixCareRepository } from "@kdx/db/repositories";
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
@@ -28,17 +28,11 @@ export const deleteCareShiftHandler = async ({
     });
   }
 
-  const roles = await teamRepository.findUserRolesByTeamIdAndAppId({
-    teamId: ctx.auth.user.activeTeamId,
-    appId: kodixCareAppId,
-    userId: ctx.auth.user.id,
-  });
-  const permissions = services.permissions.getUserPermissionsForApp({
+  const ability = await services.permissions.getUserPermissionsForApp({
     appId: kodixCareAppId,
     user: ctx.auth.user,
-    userRoles: roles,
   });
-  ForbiddenError.from(permissions).throwUnlessCan("delete", {
+  ForbiddenError.from(ability).throwUnlessCan("Delete", {
     __typename: "CareShift",
     ...careShift,
   });
