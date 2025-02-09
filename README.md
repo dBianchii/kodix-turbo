@@ -12,12 +12,11 @@ Kodix's main monorepo. It uses [Turborepo](https://turborepo.org) and contains:
   └─ Recommended extensions and settings for VSCode users
 apps
   ├─ care-expo
-  |   ├─ Expo SDK 51 app for Care
-  |   ├─ React Native using React 18
+  |   ├─ React Native using React 19
   |   ├─ Navigation using Expo Router
   |   └─ Typesafe API calls using tRPC
   └─ kdx
-      └─ Main Next.js 14 app where tRPC endpoint is served from the @kdx/api package
+      └─ Main Next.js 15 app where tRPC endpoint is served from the @kdx/api package
 packages
   ├─ api
   |   └─ tRPC v11 router definition
@@ -64,7 +63,7 @@ Make sure you have pnpm installed globally. If not, you can install it by runnin
 npm i -g pnpm
 ```
 
-Node 20.11.0 is recommended. You can use nvm (recommended) to manage your node versions. To use the correct node version, run:
+Make sure you are using the specified node version in .nvmrc. You can use nvm (recommended) to manage your node versions. To use the correct node version, run:
 
 ```bash
 nvm use
@@ -80,12 +79,16 @@ pnpm i
 # There is an `.env.example` in the root directory you can use for reference, although you need to fill in the correct values yourself
 cp .env.example .env
 
+# Start the main kdx app
+pnpm dev:kdx
+
 # Push the Drizzle schema to the database
 pnpm db:push
 
-```
+# Seed the running database
+pnpm db:seed
 
-In order to get the upstash-dev dockerfile to run with no complaints, run `sudo usermod -aG docker $USER` and then log out and back in.
+```
 
 ### 2. Most helpful commands
 
@@ -105,7 +108,7 @@ pnpm typecheck
 # Start the main kdx app
 pnpm dev:kdx
 
-# Start Drizzle Studio
+# Start Drizzle Studio independently
 pnpm db:studio
 
 # Pushing the Drizzle schema to the database
