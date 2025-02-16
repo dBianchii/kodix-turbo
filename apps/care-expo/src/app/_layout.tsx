@@ -7,34 +7,24 @@ import "@bacons/text-decoder/install";
 import type { FontSource } from "expo-font";
 import React, { useEffect, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useFonts } from "expo-font";
-import { PortalProvider, Spinner, TamaguiProvider } from "tamagui";
-import tamaguiConfig from "tamagui.config";
-import { IntlProvider } from "use-intl";
-
-/* prettier-ignore-start */ //!Do not format formatjs imports!
-import "@formatjs/intl-getcanonicallocales/polyfill";
-import "@formatjs/intl-locale/polyfill";
-import "@formatjs/intl-pluralrules/polyfill";
-import "@formatjs/intl-relativetimeformat/polyfill";
-import "@formatjs/intl-pluralrules/locale-data/en";
-import "@formatjs/intl-pluralrules/locale-data/pt";
-import "@formatjs/intl-relativetimeformat/locale-data/en";
-import "@formatjs/intl-relativetimeformat/locale-data/pt";
-
-/* prettier-ignore-end */
-
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useFonts } from "expo-font";
 import {
   Toast,
   ToastProvider,
   ToastViewport,
   useToastState,
 } from "@tamagui/toast";
+import { PortalProvider, Spinner, TamaguiProvider } from "tamagui";
+import tamaguiConfig from "tamagui.config";
+import { IntlProvider } from "use-intl";
 
 import { en, pt_BR } from "@kdx/locales/messages/care-expo";
 
 import { RootSafeAreaView } from "~/components/safe-area-view";
+
+import "~/polyfills/intl";
+
 import { TRPCProvider } from "~/utils/api";
 import { useAuth } from "~/utils/auth";
 
