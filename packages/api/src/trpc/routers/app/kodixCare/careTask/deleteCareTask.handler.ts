@@ -38,15 +38,6 @@ export const deleteCareTaskHandler = async ({
     createdBy: careTask.createdBy,
   });
 
-  // if (
-  //   careTask.createdBy !== ctx.auth.user.id &&
-  //   !userRoles.some((x) => x.appRoleDefaultId === kodixCareRoleDefaultIds.admin)
-  // )
-  //   throw new TRPCError({
-  //     code: "FORBIDDEN",
-  //     message: ctx.t("api.Only admins and the creator can delete a task"),
-  //   });
-
   await careTaskRepository.deleteCareTaskById({
     id: input.id,
     teamId: ctx.auth.user.activeTeamId,

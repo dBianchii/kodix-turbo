@@ -4,7 +4,6 @@ import { LuLoader2, LuLock, LuTrash, LuUnlock } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
-import { kodixCareRoleDefaultIds } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import {
   AlertDialog,
@@ -74,9 +73,7 @@ export function EditCareShiftCredenza({
   careGivers: RouterOutputs["app"]["kodixCare"]["getAllCaregivers"];
 }) {
   const t = useTranslations();
-  const userIsAdmin = myRoles.some(
-    (x) => x.appRoleDefaultId === kodixCareRoleDefaultIds.admin,
-  );
+  const userIsAdmin = myRoles.some((x) => x === "ADMIN");
   const canEdit = careShift.caregiverId === user.id || userIsAdmin;
   const canEditCareGiver = userIsAdmin;
 

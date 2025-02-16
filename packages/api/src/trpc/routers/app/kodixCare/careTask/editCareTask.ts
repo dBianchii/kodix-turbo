@@ -34,56 +34,6 @@ export const editCareTaskHandler = async ({
     details: input.details,
   };
 
-  // if (oldCareTask.doneByUserId) {
-  //   const taskWasDoneByCurrentUser =
-  //     oldCareTask.doneByUserId === ctx.auth.user.id;
-  //   if (!taskWasDoneByCurrentUser) {
-  //     const myRoles = await getMyRolesHandler({
-  //       ctx,
-  //       input: { appId: kodixCareAppId },
-  //     });
-  //     const amIAnAdmin = myRoles.some(
-  //       (x) => x.appRoleDefaultId === kodixCareRoleDefaultIds.admin,
-  //     );
-  //     if (!amIAnAdmin) {
-  //       throw new TRPCError({
-  //         code: "FORBIDDEN",
-  //         message: ctx.t(
-  //           "api.Only admins can edit tasks that were done by others",
-  //         ),
-  //       });
-  //     }
-  //   }
-  // }
-  // const isEditingDetails = input.details !== undefined;
-  // if (isEditingDetails) {
-  //   const roles = await db
-  //     .select({
-  //       appRoleDefaultId: teamAppRoles.appRoleDefaultId,
-  //     })
-  //     .from(teamAppRoles)
-  //     .where(
-  //       and(
-  //         eq(teamAppRolesToUsers.userId, ctx.auth.user.id),
-  //         eq(teamAppRoles.teamId, ctx.auth.user.activeTeamId),
-  //         eq(teamAppRoles.appId, kodixCareAppId),
-  //       ),
-  //     )
-  //     .innerJoin(
-  //       teamAppRolesToUsers,
-  //       eq(teamAppRolesToUsers.teamAppRoleId, teamAppRoles.id),
-  //     );
-
-  //   if (
-  //     careTask.createdBy !== ctx.auth.user.id &&
-  //     !roles.some((x) => x.appRoleDefaultId === kodixCareRoleDefaultIds.admin)
-  //   )
-  //     throw new TRPCError({
-  //       code: "FORBIDDEN",
-  //       message: ctx.t("api.Only admins and the creator can delete a task"),
-  //     });
-  // }
-
   const isEditingDoneAt = input.doneAt !== undefined;
   if (isEditingDoneAt) {
     set.doneAt = input.doneAt;

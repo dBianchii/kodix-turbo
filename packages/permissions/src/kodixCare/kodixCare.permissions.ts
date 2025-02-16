@@ -9,7 +9,7 @@ import type { CareShift, CareTask } from "./kodixCare.subjects";
 
 type KodixCareAbilities =
   | [Delete | Create, CareTask]
-  | [Delete | Edit, CareShift];
+  | [Delete | Edit | Create, CareShift];
 
 export type KodixCareMongoAbility = MongoAbility<KodixCareAbilities>;
 type KodixCareRole = AppRole<typeof kodixCareAppId>;
@@ -29,6 +29,7 @@ export const kodixCarePermissionsFactory = ({
 
     can("Delete", "CareShift");
     can("Edit", "CareShift");
+    can("Create", "CareShift");
   },
   CAREGIVER(user, { can, cannot }) {
     can("Create", "CareTask");
@@ -65,5 +66,9 @@ export const kodixCarePermissionsFactory = ({
         $ne: user.id,
       },
     }).because(t("api.Only admins can edit shifts for other caregivers"));
+
+    can("Create", "CareShift", {
+      caregiverId: user.id,
+    }).because(t("api.Only admins can create shifts for other caregivers"));
   },
 });
