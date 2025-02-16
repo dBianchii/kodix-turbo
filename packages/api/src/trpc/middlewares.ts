@@ -33,40 +33,6 @@ const appInstalledMiddlewareFactory = (appId: KodixAppId) =>
 export const kodixCareInstalledMiddleware =
   appInstalledMiddlewareFactory(kodixCareAppId);
 
-export const appPermissionMiddleware = (_permissionId: string) =>
-  experimental_standaloneMiddleware<{
-    ctx: TProtectedProcedureContext;
-  }>().create(async ({ ctx, next }) => {
-    // const [permission] = await db
-    //   .select({ permissionId: appPermissionsToTeamAppRoles.appPermissionId })
-    //   .from(teamAppRoles)
-    //   .innerJoin(
-    //     teamAppRolesToUsers,
-    //     eq(teamAppRolesToUsers.teamAppRoleId, teamAppRoles.id),
-    //   )
-    //   .innerJoin(
-    //     appPermissionsToTeamAppRoles,
-    //     eq(appPermissionsToTeamAppRoles.teamAppRoleId, teamAppRoles.id),
-    //   )
-    //   .where(
-    //     and(
-    //       eq(teamAppRolesToUsers.userId, ctx.auth.user.id),
-    //       eq(teamAppRoles.teamId, ctx.auth.user.activeTeamId),
-    //       eq(appPermissionsToTeamAppRoles.appPermissionId, permissionId),
-    //     ),
-    //   );
-    // if (!permission) {
-    //   throw new TRPCError({
-    //     code: "FORBIDDEN",
-    //     message: ctx.t(
-    //       "api.You dont have permission to do this Contact a team administrator if you believe this is an error",
-    //     ),
-    //   });
-    // }
-
-    return next({ ctx });
-  });
-
 /**
  * Same middleware as what is returned by `appInstalledMiddlewareFactory` but does it dynamically based on appId input.
  * This requires the input to have a `appId` as a property.

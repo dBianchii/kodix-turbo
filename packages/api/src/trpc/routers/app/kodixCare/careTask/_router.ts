@@ -33,11 +33,9 @@ export const careTaskRouter = {
     .mutation(unlockMoreTasksHandler),
   createCareTask: protectedProcedure
     .use(kodixCareInstalledMiddleware)
-    // .use(appPermissionMiddleware(PKodixCare_CanCreateCareTask))
     .input(T(ZCreateCareTaskInputSchema))
     .mutation(createCareTaskHandler),
   deleteCareTask: protectedProcedure
-    // .use(appPermissionMiddleware(PKodixCare_CanDeleteCareTask))
     .input(ZDeleteCareTaskInputSchema)
     .mutation(deleteCareTaskHandler),
   syncCareTasksFromCalendar: protectedProcedure
