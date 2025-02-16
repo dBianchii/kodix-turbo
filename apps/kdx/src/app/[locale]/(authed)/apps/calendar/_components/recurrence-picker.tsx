@@ -183,7 +183,7 @@ export function RecurrencePicker({
                   <LuCheck
                     className={cn(
                       "mr-2 size-4",
-                      until ?? interval > 1 ? "opacity-100" : "opacity-0",
+                      (until ?? interval > 1) ? "opacity-100" : "opacity-0",
                     )}
                   />
                   {t("Custom")}...

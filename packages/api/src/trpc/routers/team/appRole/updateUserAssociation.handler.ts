@@ -1,8 +1,9 @@
-import { TRPCError } from "@trpc/server";
+import { ForbiddenError } from "@casl/ability";
 
 import type { TUpdateUserAssociationInputSchema } from "@kdx/validators/trpc/team/appRole";
 import { db } from "@kdx/db/client";
 import { teamRepository } from "@kdx/db/repositories";
+import { typedObjectEntries } from "@kdx/shared";
 
 import type { TIsTeamOwnerProcedureContext } from "../../../procedures";
 
@@ -10,49 +11,55 @@ interface UpdateUserAssociationOptions {
   ctx: TIsTeamOwnerProcedureContext;
   input: TUpdateUserAssociationInputSchema;
 }
+
 export const updateUserAssociationHandler = async ({
   ctx,
   input,
 }: UpdateUserAssociationOptions) => {
+  const { services } = ctx;
+
+  const toRemoveRoles = typedObjectEntries(input.roles).filter(
+    ([_, value]) => !value,
+  );
+  const permission = await services.permissions.getUserPermissionsForTeam({
+    teamId: ctx.auth.user.activeTeamId,
+    user: ctx.auth.user,
+  });
+  for (const [role] of toRemoveRoles)
+    ForbiddenError.from(permission).throwUnlessCan("Delete", {
+      __typename: "UserTeamAppRole",
+      role,
+      userId: input.userId,
+    });
+
+  const toAddRoles = typedObjectEntries(input.roles).filter(
+    ([_, value]) => value,
+  );
+
+  if (!toAddRoles.length && !toRemoveRoles.length) return;
+
   await db.transaction(async (tx) => {
-    if (input.userId === ctx.auth.user.id) {
-      //need to detect if they are sending the admin role to prevent removing themselves
-      const adminTeamAppRolesForApp =
-        await teamRepository.findAdminTeamAppRolesForApp(tx, {
+    if (toRemoveRoles.length)
+      await teamRepository.removeUserAssociationsFromTeamAppRolesByTeamIdAndAppIdAndRoles(
+        {
           appId: input.appId,
-        });
+          teamId: ctx.auth.user.activeTeamId,
+          userId: input.userId,
+          roles: toRemoveRoles.map(([role]) => role),
+        },
+        tx,
+      );
 
-      if (
-        !adminTeamAppRolesForApp.some((x) =>
-          input.teamAppRoleIds.includes(x.id),
-        )
-      )
-        throw new TRPCError({
-          message: ctx.t(
-            "api.You cannot remove yourself from the Administrator role",
-          ),
-          code: "BAD_REQUEST",
-        });
-    }
-
-    // await teamRepository
-    await teamRepository.removeUserAssociationsFromTeamAppRolesByTeamIdAndAppId(
-      tx,
-      {
-        appId: input.appId,
-        teamId: ctx.auth.user.activeTeamId,
-        userId: input.userId,
-      },
-    );
-
-    if (input.teamAppRoleIds.length)
+    if (toAddRoles.length)
       // If there are any teamAppRoleIds to connect, insert them after deletion
       await teamRepository.associateManyAppRolesToUsers(
-        tx,
-        input.teamAppRoleIds.map((appRoleId) => ({
+        toAddRoles.map(([role]) => ({
           userId: input.userId,
-          teamAppRoleId: appRoleId,
+          role,
+          teamId: ctx.auth.user.activeTeamId,
+          appId: input.appId,
         })),
+        tx,
       );
   });
 };

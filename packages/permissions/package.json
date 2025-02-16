@@ -1,0 +1,34 @@
+{
+  "name": "@kdx/permissions",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "dev": "tsc",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+  },
+  "devDependencies": {
+    "@kdx/auth": "workspace:*",
+    "@kdx/db": "workspace:*",
+    "@kdx/eslint-config": "workspace:*",
+    "@kdx/locales": "workspace:*",
+    "@kdx/prettier-config": "workspace:*",
+    "@kdx/tsconfig": "workspace:*",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  },
+  "prettier": "@kdx/prettier-config",
+  "dependencies": {
+    "@casl/ability": "^6.7.3",
+    "@kdx/shared": "workspace:*"
+  }
+}

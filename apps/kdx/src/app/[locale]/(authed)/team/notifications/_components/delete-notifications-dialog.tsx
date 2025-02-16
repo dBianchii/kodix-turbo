@@ -23,8 +23,7 @@ import { toast } from "@kdx/ui/toast";
 
 import { deleteNotificationsAction } from "../_actions/deleteNotificationsAction";
 
-interface DeleteTasksDialogProps
-  extends React.ComponentPropsWithoutRef<typeof Credenza> {
+interface DeleteTasksDialogProps extends React.ComponentProps<typeof Credenza> {
   notifications: Row<
     RouterOutputs["user"]["getNotifications"]["data"][number]
   >[];

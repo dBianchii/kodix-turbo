@@ -43,7 +43,6 @@ import { Button, buttonVariants } from "@kdx/ui/button";
 import { Checkbox } from "@kdx/ui/checkbox";
 import {
   Credenza,
-  CredenzaBody,
   CredenzaClose,
   CredenzaContent,
   CredenzaDescription,
@@ -54,7 +53,15 @@ import {
 } from "@kdx/ui/credenza";
 import { DataTableColumnHeader } from "@kdx/ui/data-table/data-table-column-header";
 import { DataTableViewOptions } from "@kdx/ui/data-table/data-table-view-options";
-import { DateTimePicker24h } from "@kdx/ui/date-n-time/date-time-picker-24h";
+import { DateTimePicker } from "@kdx/ui/date-time-picker";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@kdx/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -95,6 +102,7 @@ import { Link } from "~/i18n/routing";
 import { api } from "~/trpc/react";
 import { DateTimeSelectorWithLeftAndRightArrows } from "./date-time-selector-with-left-and-right-buttons";
 import { EditCareTaskCredenza } from "./edit-care-task-credenza";
+import { useSaveCareTaskMutation } from "./hooks";
 
 type CareTaskOrCalendarTask =
   RouterOutputs["app"]["kodixCare"]["careTask"]["getCareTasks"][number];
@@ -149,54 +157,10 @@ export default function DataTableKodixCare({ user }: { user: User }) {
     setUnlockMoreTasksCredenzaOpenWithDate,
   } = useCareTaskStore();
 
-  const utils = api.useUtils();
   const [deleteTaskOpen, setDeleteTaskOpen] = useState(false);
 
   const query = api.app.kodixCare.careTask.getCareTasks.useQuery(input);
-  const saveCareTaskMutation =
-    api.app.kodixCare.careTask.editCareTask.useMutation({
-      onMutate: async (editedCareTask) => {
-        // Cancel any outgoing refetches
-        // (so they don't overwrite our optimistic update)
-        await utils.app.kodixCare.careTask.getCareTasks.cancel();
-        // Snapshot the previous value
-        const previousCareTasks =
-          utils.app.kodixCare.careTask.getCareTasks.getData();
-
-        // Optimistically update to the new value
-        utils.app.kodixCare.careTask.getCareTasks.setData(input, (prev) => {
-          return prev?.map((x) => {
-            if (x.id === editedCareTask.id) {
-              if (editedCareTask.doneAt !== undefined)
-                x.doneAt = editedCareTask.doneAt;
-              if (editedCareTask.details !== undefined)
-                x.details = editedCareTask.details;
-            }
-
-            return x;
-          });
-        });
-
-        // Return a context object with the snapshotted value
-        return { previousCareTasks };
-      },
-      // If the mutation fails,
-      // use the context returned from onMutate to roll back
-      onError: (err, __, context) => {
-        utils.app.kodixCare.careTask.getCareTasks.setData(
-          input,
-          context?.previousCareTasks,
-        );
-        trpcErrorToastDefault(err);
-      },
-      // Always refetch after error or success:
-      onSettled: () => {
-        void utils.app.kodixCare.careTask.getCareTasks.invalidate();
-        void utils.app.getAppActivityLogs.invalidate({
-          tableNames: ["careTask"],
-        });
-      },
-    });
+  const saveCareTaskMutation = useSaveCareTaskMutation();
 
   const isCareTask = (id: CareTaskOrCalendarTask["id"]): id is string => !!id;
   const t = useTranslations();
@@ -617,14 +581,14 @@ function AddCareTaskCredenzaButton() {
   }, [open, form]);
 
   return (
-    <Credenza open={open} onOpenChange={setOpen}>
-      <CredenzaTrigger asChild>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
         <Button size={"sm"}>
           <LuPlus className="mr-2" />
           {t("apps.kodixCare.Add task")}
         </Button>
-      </CredenzaTrigger>
-      <CredenzaContent>
+      </DialogTrigger>
+      <DialogContent>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit((values) => {
@@ -632,10 +596,10 @@ function AddCareTaskCredenzaButton() {
               setOpen(false);
             })}
           >
-            <CredenzaHeader>
-              <CredenzaTitle>{t("apps.kodixCare.Add task")}</CredenzaTitle>
-            </CredenzaHeader>
-            <CredenzaBody className="grid gap-4 py-4">
+            <DialogHeader>
+              <DialogTitle>{t("apps.kodixCare.Add task")}</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
               <FormField
                 control={form.control}
                 name="title"
@@ -659,9 +623,9 @@ function AddCareTaskCredenzaButton() {
                     <FormLabel>{t("Date")}</FormLabel>
                     <FormControl>
                       <div className="flex flex-row gap-2">
-                        <DateTimePicker24h
-                          date={field.value}
-                          setDate={(newDate) =>
+                        <DateTimePicker
+                          value={field.value}
+                          onChange={(newDate) =>
                             field.onChange(newDate ?? new Date())
                           }
                           // disabledDate={(date) => {
@@ -746,16 +710,16 @@ function AddCareTaskCredenzaButton() {
                   </FormItem>
                 )}
               />
-            </CredenzaBody>
-            <CredenzaFooter className="mt-6 justify-end">
+            </div>
+            <DialogFooter className="mt-6 justify-end">
               <Button disabled={mutation.isPending} type="submit">
                 {t("Save")}
               </Button>
-            </CredenzaFooter>
+            </DialogFooter>
           </form>
         </Form>
-      </CredenzaContent>
-    </Credenza>
+      </DialogContent>
+    </Dialog>
   );
 }
 

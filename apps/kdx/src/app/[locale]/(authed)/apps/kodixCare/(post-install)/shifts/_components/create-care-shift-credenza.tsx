@@ -3,7 +3,7 @@ import { useTranslations } from "next-intl";
 import { LuArrowRight, LuLoader2, LuPlus } from "react-icons/lu";
 
 import type { User } from "@kdx/auth";
-import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Button } from "@kdx/ui/button";
 import {
@@ -15,7 +15,7 @@ import {
   CredenzaTitle,
   CredenzaTrigger,
 } from "@kdx/ui/credenza";
-import { DateTimePicker24h } from "@kdx/ui/date-n-time/date-time-picker-24h";
+import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
   Form,
   FormControl,
@@ -46,12 +46,8 @@ const useMyRoles = () => {
 
   const shouldAutoSelectMyself = useMemo(
     () =>
-      !getMyRolesQuery.data?.some(
-        (x) => x.appRoleDefaultId === kodixCareRoleDefaultIds.admin,
-      ) &&
-      getMyRolesQuery.data?.some(
-        (x) => x.appRoleDefaultId === kodixCareRoleDefaultIds.careGiver,
-      ),
+      !getMyRolesQuery.data?.some((r) => r === "ADMIN") &&
+      getMyRolesQuery.data?.some((r) => r === "CAREGIVER"),
     [getMyRolesQuery.data],
   );
   return { getMyRolesQuery, shouldAutoSelectMyself };
@@ -190,9 +186,9 @@ export function CreateShiftCredenzaButton({
                       <FormLabel>{t("Start")}</FormLabel>
                       <FormControl>
                         <div className="flex flex-row gap-2">
-                          <DateTimePicker24h
-                            date={field.value}
-                            setDate={(newDate) =>
+                          <DateTimePicker
+                            value={field.value}
+                            onChange={(newDate) =>
                               field.onChange(newDate ?? new Date())
                             }
                           />
@@ -211,9 +207,9 @@ export function CreateShiftCredenzaButton({
                       <FormLabel>{t("End")}</FormLabel>
                       <FormControl>
                         <div className="flex flex-row gap-2">
-                          <DateTimePicker24h
-                            date={field.value}
-                            setDate={(newDate) =>
+                          <DateTimePicker
+                            value={field.value}
+                            onChange={(newDate) =>
                               field.onChange(newDate ?? new Date())
                             }
                           />
@@ -233,11 +229,8 @@ export function CreateShiftCredenzaButton({
                     <div className="flex flex-row gap-2">
                       <Select
                         disabled={
-                          !getMyRolesQuery.data?.some(
-                            (x) =>
-                              x.appRoleDefaultId ===
-                              kodixCareRoleDefaultIds.admin,
-                          ) || getMyRolesQuery.isFetching
+                          !getMyRolesQuery.data?.some((x) => x === "ADMIN") ||
+                          getMyRolesQuery.isFetching
                         }
                         {...field}
                         onValueChange={field.onChange}

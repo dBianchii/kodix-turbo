@@ -1,11 +1,11 @@
+import { ForbiddenError } from "@casl/ability";
 import { TRPCError } from "@trpc/server";
 
 import type { TDeleteCareShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import { kodixCareRepository } from "@kdx/db/repositories";
-import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
-import { getMyRolesHandler } from "../../team/appRole/getMyRoles.handler";
 
 interface DeleteCareShiftOptions {
   ctx: TProtectedProcedureContext;
@@ -16,6 +16,7 @@ export const deleteCareShiftHandler = async ({
   ctx,
   input,
 }: DeleteCareShiftOptions) => {
+  const { services } = ctx;
   const careShift = await kodixCareRepository.getCareShiftById({
     id: input.id,
     teamId: ctx.auth.user.activeTeamId,
@@ -27,23 +28,14 @@ export const deleteCareShiftHandler = async ({
     });
   }
 
-  if (careShift.createdById !== ctx.auth.user.id) {
-    const myRoles = await getMyRolesHandler({
-      ctx,
-      input: { appId: kodixCareAppId },
-    });
-    const isAdmin = myRoles.some(
-      (role) => role.appRoleDefaultId === kodixCareRoleDefaultIds.admin,
-    );
-    if (!isAdmin) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: ctx.t(
-          "api.This shift was not originally created by you ask your team manager to delete it",
-        ),
-      });
-    }
-  }
+  const ability = await services.permissions.getUserPermissionsForApp({
+    appId: kodixCareAppId,
+    user: ctx.auth.user,
+  });
+  ForbiddenError.from(ability).throwUnlessCan("Delete", {
+    __typename: "CareShift",
+    ...careShift,
+  });
 
   await kodixCareRepository.deleteCareShiftById({
     id: input.id,

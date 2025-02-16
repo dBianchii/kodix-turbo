@@ -5,7 +5,7 @@ import { createInsertSchema } from "drizzle-zod";
 import { nanoid, NANOID_SIZE } from "../nanoid";
 import { userAppTeamConfigs } from "./apps";
 import { todos } from "./apps/todos";
-import { invitations, teamAppRolesToUsers, teams, usersToTeams } from "./teams";
+import { invitations, teams, usersToTeams, userTeamAppRoles } from "./teams";
 import {
   DEFAULTLENGTH,
   nanoidPrimaryKey,
@@ -39,7 +39,7 @@ export const usersRelations = relations(users, ({ many, one }) => ({
   Sessions: many(sessions),
   UsersToTeams: many(usersToTeams),
   Todos: many(todos),
-  TeamAppRolesToUsers: many(teamAppRolesToUsers),
+  UserTeamAppRoles: many(userTeamAppRoles),
   ExpoTokens: many(expoTokens),
   UserAppTeamConfigs: many(userAppTeamConfigs),
 }));

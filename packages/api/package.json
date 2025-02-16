@@ -22,10 +22,12 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
+    "@casl/ability": "^6.7.3",
     "@kdx/auth": "workspace:*",
     "@kdx/dayjs": "workspace:*",
     "@kdx/db": "workspace:*",
     "@kdx/locales": "workspace:*",
+    "@kdx/permissions": "workspace:*",
     "@kdx/react-email": "workspace:*",
     "@kdx/shared": "workspace:*",
     "@kdx/validators": "workspace:*",

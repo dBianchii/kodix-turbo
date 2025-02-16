@@ -4,10 +4,15 @@ import React from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 
-export const AvatarWrapper = React.forwardRef<
-  React.ElementRef<typeof Avatar>,
-  React.ComponentProps<typeof AvatarImage> & { fallback?: React.ReactNode }
->(({ src, fallback, className, ...props }, ref) => (
+export const AvatarWrapper = ({
+  ref,
+  src,
+  fallback,
+  className,
+  ...props
+}: React.ComponentProps<typeof AvatarImage> & {
+  fallback?: React.ReactNode;
+}) => (
   <Avatar ref={ref} className={className}>
     <AvatarImage src={src} {...props} />
     {fallback && (
@@ -23,4 +28,4 @@ export const AvatarWrapper = React.forwardRef<
       </AvatarFallback>
     )}
   </Avatar>
-));
+);

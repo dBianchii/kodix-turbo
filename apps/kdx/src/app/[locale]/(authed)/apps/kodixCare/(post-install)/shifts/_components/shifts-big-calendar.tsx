@@ -18,6 +18,7 @@ import "./rbc-styles.css";
 
 import { useLocale } from "next-intl";
 
+import type { Locales } from "@kdx/locales";
 import { useDebounce } from "@kdx/ui/hooks/use-debounce";
 import { toast } from "@kdx/ui/toast";
 
@@ -74,7 +75,7 @@ export function ShiftsBigCalendar({
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   const t = useTranslations();
-  const locale = useLocale();
+  const locale = useLocale() as Locales;
 
   const query = useCareShiftsData(use(initialShifts));
   const mutation = useEditCareShift();

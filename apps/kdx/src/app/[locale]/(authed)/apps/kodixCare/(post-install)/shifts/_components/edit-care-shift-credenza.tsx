@@ -4,7 +4,6 @@ import { LuLoader2, LuLock, LuTrash, LuUnlock } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
-import { kodixCareRoleDefaultIds } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import {
   AlertDialog,
@@ -27,7 +26,7 @@ import {
   CredenzaHeader,
   CredenzaTitle,
 } from "@kdx/ui/credenza";
-import { DateTimePicker24h } from "@kdx/ui/date-n-time/date-time-picker-24h";
+import { DateTimePicker } from "@kdx/ui/date-time-picker";
 import {
   Dialog,
   DialogContent,
@@ -74,9 +73,7 @@ export function EditCareShiftCredenza({
   careGivers: RouterOutputs["app"]["kodixCare"]["getAllCaregivers"];
 }) {
   const t = useTranslations();
-  const userIsAdmin = myRoles.some(
-    (x) => x.appRoleDefaultId === kodixCareRoleDefaultIds.admin,
-  );
+  const userIsAdmin = myRoles.some((x) => x === "ADMIN");
   const canEdit = careShift.caregiverId === user.id || userIsAdmin;
   const canEditCareGiver = userIsAdmin;
 
@@ -241,10 +238,10 @@ export function EditCareShiftCredenza({
                             <FormLabel>{t("Start")}</FormLabel>
                             <FormControl>
                               <div className="flex flex-row gap-2">
-                                <DateTimePicker24h
-                                  disabled={!canEdit}
-                                  date={field.value}
-                                  setDate={(newDate) =>
+                                <DateTimePicker
+                                  disabled={isLocked || !canEdit}
+                                  value={field.value}
+                                  onChange={(newDate) =>
                                     field.onChange(newDate ?? new Date())
                                   }
                                 />
@@ -262,11 +259,13 @@ export function EditCareShiftCredenza({
                             <FormLabel>{t("Check in")}</FormLabel>
                             <FormControl>
                               <div className="flex flex-row gap-2">
-                                <DateTimePicker24h
+                                <DateTimePicker
                                   disabled={isLocked || !canEdit}
-                                  date={field.value}
-                                  setDate={(newDate) => field.onChange(newDate)}
-                                  showClearButton
+                                  value={field.value ?? undefined}
+                                  onChange={(newDate) =>
+                                    field.onChange(newDate ?? null)
+                                  }
+                                  clearable
                                 />
                               </div>
                             </FormControl>
@@ -285,10 +284,10 @@ export function EditCareShiftCredenza({
                             <FormLabel>{t("End")}</FormLabel>
                             <FormControl>
                               <div className="flex flex-row gap-2">
-                                <DateTimePicker24h
+                                <DateTimePicker
                                   disabled={isLocked || !canEdit}
-                                  date={field.value}
-                                  setDate={(newDate) =>
+                                  value={field.value}
+                                  onChange={(newDate) =>
                                     field.onChange(newDate ?? new Date())
                                   }
                                 />
@@ -306,11 +305,13 @@ export function EditCareShiftCredenza({
                             <FormLabel>{t("Check out")}</FormLabel>
                             <FormControl>
                               <div className="flex flex-row gap-2">
-                                <DateTimePicker24h
+                                <DateTimePicker
                                   disabled={isLocked || !canEdit}
-                                  showClearButton
-                                  date={field.value}
-                                  setDate={(newDate) => field.onChange(newDate)}
+                                  clearable
+                                  value={field.value ?? undefined}
+                                  onChange={(newDate) =>
+                                    field.onChange(newDate ?? null)
+                                  }
                                 />
                               </div>
                             </FormControl>

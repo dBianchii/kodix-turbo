@@ -1,11 +1,9 @@
+import { ForbiddenError } from "@casl/ability";
 import { TRPCError } from "@trpc/server";
 
 import type { TDeleteCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
-import { and, eq } from "@kdx/db";
-import { db } from "@kdx/db/client";
 import { careTaskRepository } from "@kdx/db/repositories";
-import { teamAppRoles, teamAppRolesToUsers } from "@kdx/db/schema";
-import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
 
@@ -18,6 +16,7 @@ export const deleteCareTaskHandler = async ({
   ctx,
   input,
 }: DeleteCareTaskOptions) => {
+  const { services } = ctx;
   const careTask = await careTaskRepository.findCareTaskById({
     id: input.id,
     teamId: ctx.auth.user.activeTeamId,
@@ -29,45 +28,15 @@ export const deleteCareTaskHandler = async ({
     });
   }
 
-  const userRoles = await db
-    .select({
-      appRoleDefaultId: teamAppRoles.appRoleDefaultId,
-    })
-    .from(teamAppRoles)
-    .where(
-      and(
-        eq(teamAppRolesToUsers.userId, ctx.auth.user.id),
-        eq(teamAppRoles.teamId, ctx.auth.user.activeTeamId),
-        eq(teamAppRoles.appId, kodixCareAppId),
-      ),
-    )
-    .innerJoin(
-      teamAppRolesToUsers,
-      eq(teamAppRolesToUsers.teamAppRoleId, teamAppRoles.id),
-    );
-
-  if (careTask.createdFromCalendar) {
-    if (
-      !userRoles.some(
-        (x) => x.appRoleDefaultId === kodixCareRoleDefaultIds.admin,
-      )
-    )
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: ctx.t(
-          "api.Only admins can delete a task created from calendar",
-        ),
-      });
-  }
-
-  if (
-    careTask.createdBy !== ctx.auth.user.id &&
-    !userRoles.some((x) => x.appRoleDefaultId === kodixCareRoleDefaultIds.admin)
-  )
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: ctx.t("api.Only admins and the creator can delete a task"),
-    });
+  const ability = await services.permissions.getUserPermissionsForApp({
+    appId: kodixCareAppId,
+    user: ctx.auth.user,
+  });
+  ForbiddenError.from(ability).throwUnlessCan("Delete", {
+    __typename: "CareTask",
+    createdFromCalendar: careTask.createdFromCalendar,
+    createdBy: careTask.createdBy,
+  });
 
   await careTaskRepository.deleteCareTaskById({
     id: input.id,
