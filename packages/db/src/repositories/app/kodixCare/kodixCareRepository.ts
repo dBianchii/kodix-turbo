@@ -1,7 +1,7 @@
 import type { z } from "zod";
 import { and, eq, gt, gte, lt, lte } from "drizzle-orm";
 
-import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared";
 
 import type { Update } from "../../_types";
 import type {
@@ -59,11 +59,7 @@ export async function getAllCareGivers(teamId: string, db = _db) {
   );
 
   return users.filter((user) =>
-    user.TeamAppRolesToUsers.some(
-      (relation) =>
-        relation.TeamAppRole.appRoleDefaultId ===
-        kodixCareRoleDefaultIds.careGiver,
-    ),
+    user.UserTeamAppRoles.some((role) => role.role === "CAREGIVER"),
   );
 }
 

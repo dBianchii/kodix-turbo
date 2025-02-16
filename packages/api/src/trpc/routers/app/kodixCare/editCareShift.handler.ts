@@ -1,3 +1,4 @@
+import { ForbiddenError } from "@casl/ability";
 import { TRPCError } from "@trpc/server";
 import { diff } from "deep-diff";
 
@@ -5,11 +6,10 @@ import type { careShifts } from "@kdx/db/schema";
 import type { TEditCareShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import { db } from "@kdx/db/client";
 import { kodixCareRepository } from "@kdx/db/repositories";
-import { kodixCareAppId, kodixCareRoleDefaultIds } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 import { logActivity } from "../../../../services/appActivityLogs.service";
-import { getMyRolesHandler } from "../../team/appRole/getMyRoles.handler";
 import { assertNoOverlappingShiftsForThisCaregiver } from "./_kodixCare.permissions";
 
 interface EditCareShiftOptions {
@@ -21,6 +21,7 @@ export const editCareShiftHandler = async ({
   ctx,
   input,
 }: EditCareShiftOptions) => {
+  const { services } = ctx;
   const oldShift = await kodixCareRepository.getCareShiftById({
     id: input.id,
     teamId: ctx.auth.user.activeTeamId,
@@ -38,23 +39,14 @@ export const editCareShiftHandler = async ({
         message: ctx.t("api.Cannot edit finished shifts"),
       });
 
-  const currentUserIsShiftsCaregiver =
-    ctx.auth.user.id === oldShift.caregiverId;
-
-  if (!currentUserIsShiftsCaregiver) {
-    const myRoles = await getMyRolesHandler({
-      ctx,
-      input: { appId: kodixCareAppId },
-    });
-
-    if (
-      !myRoles.some((x) => x.appRoleDefaultId === kodixCareRoleDefaultIds.admin)
-    )
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: ctx.t("api.Only admins can edit shifts for other caregivers"),
-      });
-  }
+  const permissions = await services.permissions.getUserPermissionsForApp({
+    user: ctx.auth.user,
+    appId: kodixCareAppId,
+  });
+  ForbiddenError.from(permissions).throwUnlessCan("Edit", {
+    __typename: "CareShift",
+    ...oldShift,
+  });
 
   if (input.startAt && input.endAt) {
     const overlappingShifts = await kodixCareRepository.findOverlappingShifts({

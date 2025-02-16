@@ -170,7 +170,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
               count:
                 input.count !== undefined
                   ? input.count
-                  : oldRule.options.count ?? undefined,
+                  : (oldRule.options.count ?? undefined),
               byweekday: input.weekdays ?? oldRule.options.byweekday,
             }).toString(),
           },
@@ -225,7 +225,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
           count:
             input.count !== undefined
               ? input.count
-              : oldRule.options.count ?? undefined,
+              : (oldRule.options.count ?? undefined),
           byweekday: input.weekdays ?? oldRule.options.byweekday,
         }).toString(),
         title: input.title ?? oldMaster.title,
@@ -301,7 +301,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
           count:
             input.count !== undefined
               ? input.count
-              : oldRule.options.count ?? undefined,
+              : (oldRule.options.count ?? undefined),
           byweekday: input.weekdays ?? oldRule.options.byweekday,
         }).toString();
       })();

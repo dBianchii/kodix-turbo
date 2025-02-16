@@ -9,7 +9,7 @@ interface GetMyRolesOptions {
 }
 
 export const getMyRolesHandler = async ({ ctx, input }: GetMyRolesOptions) => {
-  const roles = await teamRepository.findManyTeamAppRolesByTeamAndAppAndUser({
+  const roles = await teamRepository.findUserRolesByTeamIdAndAppId({
     appId: input.appId,
     userId: ctx.auth.user.id,
     teamId: ctx.auth.user.activeTeamId,

@@ -1,10 +1,6 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 
 import {
-  PKodixCare_CanCreateCareTask,
-  PKodixCare_CanDeleteCareTask,
-} from "@kdx/shared";
-import {
   ZCreateCareTaskInputSchema,
   ZDeleteCareTaskInputSchema,
   ZEditCareTaskInputSchema,
@@ -13,10 +9,7 @@ import {
 } from "@kdx/validators/trpc/app/kodixCare/careTask";
 
 import { T } from "../../../../../utils/locales";
-import {
-  appPermissionMiddleware,
-  kodixCareInstalledMiddleware,
-} from "../../../../middlewares";
+import { kodixCareInstalledMiddleware } from "../../../../middlewares";
 import { protectedProcedure } from "../../../../procedures";
 import { createCareTaskHandler } from "./createCareTask.handler";
 import { deleteCareTaskHandler } from "./deleteCareTask.handler";
@@ -40,11 +33,9 @@ export const careTaskRouter = {
     .mutation(unlockMoreTasksHandler),
   createCareTask: protectedProcedure
     .use(kodixCareInstalledMiddleware)
-    .use(appPermissionMiddleware(PKodixCare_CanCreateCareTask))
     .input(T(ZCreateCareTaskInputSchema))
     .mutation(createCareTaskHandler),
   deleteCareTask: protectedProcedure
-    .use(appPermissionMiddleware(PKodixCare_CanDeleteCareTask))
     .input(ZDeleteCareTaskInputSchema)
     .mutation(deleteCareTaskHandler),
   syncCareTasksFromCalendar: protectedProcedure
