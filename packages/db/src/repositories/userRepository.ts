@@ -4,10 +4,10 @@ import { eq } from "drizzle-orm";
 import type { Drizzle } from "../client";
 import type { Update } from "./_types";
 import type { zUserCreate, zUserUpdate } from "./_zodSchemas/userSchemas";
-import { db } from "../client";
+import { db as _db } from "../client";
 import { users, usersToTeams } from "../schema";
 
-export async function findUserByEmail(email: string) {
+export async function findUserByEmail(email: string, db = _db) {
   return db.query.users.findFirst({
     columns: {
       passwordHash: true, //! Bad: Exposing passwordHash sometimes when not needed
@@ -19,7 +19,7 @@ export async function findUserByEmail(email: string) {
   });
 }
 
-export async function findUserById(id: string) {
+export async function findUserById(id: string, db = _db) {
   return await db.query.users.findFirst({
     where: (users, { eq }) => eq(users.id, id),
     columns: {
@@ -36,7 +36,7 @@ export async function findUserById(id: string) {
   });
 }
 
-export async function findManyUsersByIds(ids: string[]) {
+export async function findManyUsersByIds(ids: string[], db = _db) {
   return await db.query.users.findMany({
     where: (users, { inArray }) => inArray(users.id, ids),
     columns: {
@@ -65,6 +65,29 @@ export async function moveUserToTeam(
 ) {
   //TODO: Enforce user is allowed to do it!!!
   await updateUser(db, { id: userId, input: { activeTeamId: newTeamId } });
+}
+
+export async function findInvitationByIdAndEmail(
+  {
+    id,
+    email,
+  }: {
+    id: string;
+    email: string;
+  },
+  db = _db,
+) {
+  return db.query.invitations.findFirst({
+    where: (invitation, { and, eq }) =>
+      and(eq(invitation.id, id), eq(invitation.email, email)),
+    with: {
+      Team: {
+        columns: {
+          id: true,
+        },
+      },
+    },
+  });
 }
 
 export async function moveUserToTeamAndAssociateToTeam(

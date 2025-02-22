@@ -1,6 +1,5 @@
-import type { SQLWrapper } from "drizzle-orm";
 import type { z } from "zod";
-import { and, eq, gte, inArray, isNull } from "drizzle-orm";
+import { eq, gte, isNull } from "drizzle-orm";
 
 import type { Update } from "../../_types";
 import type {
@@ -10,6 +9,7 @@ import type {
 } from "../../_zodSchemas/careTaskSchemas";
 import { db as _db } from "../../../client";
 import { careTasks } from "../../../schema";
+import { assertTeamIdInList, createWithinTeamsForTable } from "../../utils";
 
 interface CareTask {
   id: typeof careTasks.$inferSelect.id;
@@ -25,16 +25,8 @@ interface CareTask {
   eventMasterId: string | null;
 }
 
-export function CareTaskRepository(teamIds: string[]) {
-  function withinTeams(...sqls: (SQLWrapper | undefined)[]) {
-    const teamExpression =
-      teamIds.length === 1
-        ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          eq(careTasks.teamId, teamIds[0]!)
-        : inArray(careTasks.teamId, teamIds);
-    if (!sqls.length) return teamExpression;
-    return and(teamExpression, ...sqls);
-  }
+export function careTaskRepositoryFactory(teamIds: string[]) {
+  const withinTeams = createWithinTeamsForTable(teamIds, careTasks);
 
   async function findCareTasksFromTo(
     {
@@ -124,7 +116,7 @@ export function CareTaskRepository(teamIds: string[]) {
     careTask: z.infer<typeof zCareTaskCreate>,
     db = _db,
   ) {
-    //TODO: Should we check if the teamId is in the teamIds before inserting?
+    assertTeamIdInList(careTask, teamIds);
     return db.insert(careTasks).values(careTask).$returningId();
   }
 
@@ -132,7 +124,8 @@ export function CareTaskRepository(teamIds: string[]) {
     data: z.infer<typeof zCareTaskCreateMany>,
     db = _db,
   ) {
-    //TODO: Should we check if the teamId is in the teamIds before inserting?
+    for (const task of data) assertTeamIdInList(task, teamIds);
+
     await db.insert(careTasks).values(data);
   }
 

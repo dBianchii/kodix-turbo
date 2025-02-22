@@ -1,9 +1,12 @@
 import { rrulestr } from "rrule";
 
-import type { CareTaskRepository } from "@kdx/db/repositories";
+import type {
+  appRepositoryFactory,
+  careTaskRepositoryFactory,
+} from "@kdx/db/repositories";
 import type { careTasks, eventMasters } from "@kdx/db/schema";
 import dayjs from "@kdx/dayjs";
-import { appRepository, calendarRepository } from "@kdx/db/repositories";
+import { calendarRepository } from "@kdx/db/repositories";
 import { kodixCareAppId } from "@kdx/shared";
 
 export interface CalendarTask {
@@ -33,9 +36,9 @@ export interface CareTask {
   eventMasterId: string | null;
 }
 
-export function CalendarAndCareTaskService(
-  careTaskRepository: ReturnType<typeof CareTaskRepository>,
-  appRepository: ReturnType<typeof appRepository>,
+export function calendarAndCareTaskServiceFactory(
+  careTaskRepository: ReturnType<typeof careTaskRepositoryFactory>,
+  appRepository: ReturnType<typeof appRepositoryFactory>,
 ) {
   function getCalendarTaskCompositeId(compound: {
     eventMasterId: string;
@@ -189,7 +192,6 @@ export function CalendarAndCareTaskService(
       }),
       appRepository.findAppTeamConfigs({
         appId: kodixCareAppId,
-        teamIds,
       }),
     ]);
 

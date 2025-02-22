@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { getLocale } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
-import { teamRepository, userRepository } from "@kdx/db/repositories";
+import { userRepository } from "@kdx/db/repositories";
 
 import { redirect } from "~/i18n/routing";
 import { api } from "~/trpc/server";
