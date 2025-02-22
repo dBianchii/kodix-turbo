@@ -22,16 +22,16 @@ if (!process.env.MYSQL_URL) {
 const globalForDb = globalThis as unknown as {
   conn: Pool | undefined;
 };
-const url = new URL(process.env.MYSQL_URL);
+export const dbURl = new URL(process.env.MYSQL_URL);
 
 const conn =
   globalForDb.conn ??
   createPool({
-    host: url.host.split(":")[0],
-    user: url.username,
-    database: url.pathname.slice(1),
-    password: url.password,
-    port: Number(url.port),
+    host: dbURl.host.split(":")[0],
+    user: dbURl.username,
+    database: dbURl.pathname.slice(1),
+    password: dbURl.password,
+    port: Number(dbURl.port),
   });
 if (process.env.NODE_ENV !== "production") globalForDb.conn = conn;
 

@@ -1,13 +1,18 @@
+import { reset } from "drizzle-seed";
+import ora from "ora";
+
 import {
   calendarAppId,
   KDX_PRODUCTION_URL,
   kdxPartnerId,
   kodixCareAppId,
   todoAppId,
+  typedObjectKeys,
 } from "@kdx/shared";
 
 import { buildConflictUpdateColumns } from "../src";
 import { db } from "../src/client";
+import * as schema from "../src/schema";
 import { apps, devPartners } from "../src/schema";
 
 const _devPartners: (typeof devPartners.$inferInsert)[] = [
@@ -33,10 +38,8 @@ export const _apps: (typeof apps.$inferInsert)[] = [
   },
 ];
 
-async function main() {
-  console.log("🌱 Seeding...");
-
-  await db.transaction(async (tx) => {
+const runSeed = () =>
+  db.transaction(async (tx) => {
     if (!_devPartners[0]) throw new Error("No devPartners!");
     if (!_apps[0]) throw new Error("No apps!");
 
@@ -56,20 +59,36 @@ async function main() {
         set: buildConflictUpdateColumns(apps, typedObjectKeys(_apps[0])),
       });
   });
-}
 
-const typedObjectKeys = <T extends Record<string, unknown>>(obj: T) =>
-  Object.keys(obj) as (keyof T)[];
+async function main() {
+  const dbResetSpinner = ora(`🧨 Resetting database...`).start();
+  try {
+    await reset(db, schema);
+  } catch (error: unknown) {
+    dbResetSpinner.fail(
+      `Failed to reset database: ${(error as Error).message}`,
+    );
+    throw error;
+  }
+  dbResetSpinner.succeed("💥 Database reset!");
+
+  const seedingSpinner = ora("🌱 Seeding...").start();
+
+  try {
+    await runSeed();
+  } catch (error: unknown) {
+    seedingSpinner.fail(`Failed to seed: ${(error as Error).message}`);
+    throw error;
+  }
+
+  seedingSpinner.succeed(`🌲 Fully seeded!`);
+}
 
 main()
   .then(() => {
-    console.log("🌳 Fully seeded!");
     process.exit(0);
   })
   .catch((e) => {
     console.error(e);
     process.exit(1);
-  })
-  .finally(() => {
-    // void db.$disconnect();
   });
