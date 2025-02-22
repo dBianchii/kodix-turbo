@@ -34,11 +34,17 @@ export const getSuccessesAndErrors = <T>(
 };
 
 /**
- * @description A typesafe Object.entries. That's all
+ * @description A typesafe Object.entries
  */
 export const typedObjectEntries = <T extends object>(
   obj: T,
 ): [keyof T, T[keyof T]][] => Object.entries(obj) as [keyof T, T[keyof T]][];
+
+/**
+ * @description A typesafe Object.keys
+ */
+export const typedObjectKeys = <T extends Record<string, unknown>>(obj: T) =>
+  Object.keys(obj) as (keyof T)[];
 
 /**
  * @description Gets the error message

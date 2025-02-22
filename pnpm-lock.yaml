@@ -315,9 +315,6 @@ importers:
       '@kdx/dayjs':
         specifier: workspace:*
         version: link:../../packages/dayjs
-      '@kdx/db-dev':
-        specifier: workspace:*
-        version: link:../../packages/db-dev
       '@kdx/locales':
         specifier: workspace:*
         version: link:../../packages/locales
@@ -430,6 +427,9 @@ importers:
       '@kdx/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@kdx/db-dev':
+        specifier: workspace:*
+        version: link:../../packages/db-dev
       '@kdx/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint
@@ -719,9 +719,15 @@ importers:
       drizzle-kit:
         specifier: ^0.28.1
         version: 0.28.1
+      drizzle-seed:
+        specifier: ^0.3.1
+        version: 0.3.1(drizzle-orm@0.36.3(@opentelemetry/api@1.8.0)(@types/react@19.0.1)(mysql2@3.10.0)(react@19.0.0))
       eslint:
         specifier: 'catalog:'
         version: 9.15.0(jiti@2.3.3)
+      ora:
+        specifier: ^8.0.1
+        version: 8.0.1
       prettier:
         specifier: 'catalog:'
         version: 3.3.3
@@ -1150,13 +1156,13 @@ importers:
         version: 7.37.2(eslint@9.15.0(jiti@2.3.3))
       eslint-plugin-react-compiler:
         specifier: beta
-        version: 19.0.0-beta-30d8a17-20250209(eslint@9.15.0(jiti@2.3.3))
+        version: 19.0.0-beta-21e868a-20250216(eslint@9.15.0(jiti@2.3.3))
       eslint-plugin-react-hooks:
         specifier: ^5.0.0
         version: 5.0.0(eslint@9.15.0(jiti@2.3.3))
       eslint-plugin-turbo:
-        specifier: ^2.3.1
-        version: 2.3.1(eslint@9.15.0(jiti@2.3.3))
+        specifier: ^2.4.2
+        version: 2.4.2(eslint@9.15.0(jiti@2.3.3))(turbo@2.4.2)
       typescript-eslint:
         specifier: ^8.15.0
         version: 8.15.0(eslint@9.15.0(jiti@2.3.3))(typescript@5.5.4)
@@ -7416,6 +7422,14 @@ packages:
       sqlite3:
         optional: true
 
+  drizzle-seed@0.3.1:
+    resolution: {integrity: sha512-F/0lgvfOAsqlYoHM/QAGut4xXIOXoE5VoAdv2FIl7DpGYVXlAzKuJO+IphkKUFK3Dz+rFlOsQLnMNrvoQ0cx7g==}
+    peerDependencies:
+      drizzle-orm: '>=0.36.4'
+    peerDependenciesMeta:
+      drizzle-orm:
+        optional: true
+
   drizzle-zod@0.5.1:
     resolution: {integrity: sha512-C/8bvzUH/zSnVfwdSibOgFjLhtDtbKYmkbPbUCq46QZyZCH6kODIMSOgZ8R7rVjoI+tCj3k06MRJMDqsIeoS4A==}
     peerDependencies:
@@ -7655,8 +7669,8 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9
 
-  eslint-plugin-react-compiler@19.0.0-beta-30d8a17-20250209:
-    resolution: {integrity: sha512-D2wohyvsW27KSQV8IhyjL9UhYKs4f7Y8WPIuNOeiYylOaredvb2vW/AAE2m36BWLsn3Q9xRYz1UZj2AXR15w/g==}
+  eslint-plugin-react-compiler@19.0.0-beta-21e868a-20250216:
+    resolution: {integrity: sha512-LstAv6tKgZylMmJniWxQL9TOY9kwRddLnvBsoTbRsgUDROL5bsg0k5XHMaNJLyX8cxh4iafQ/WxAw5shNUf3GQ==}
     engines: {node: ^14.17.0 || ^16.0.0 || >= 18.0.0}
     peerDependencies:
       eslint: '>=7'
@@ -7673,10 +7687,11 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9.7
 
-  eslint-plugin-turbo@2.3.1:
-    resolution: {integrity: sha512-M5MBYBkcQsv11MFHJ+6WpzLpiTBx0OApeUMAHlO4L0eHqQxY03GrmHXjXfozqB+9HwGrW9fqihBzVRllyixJDA==}
+  eslint-plugin-turbo@2.4.2:
+    resolution: {integrity: sha512-67IZtvOFaWDnUmYMV3luRIE1kqL+ok5MxPEsIPUqH2vQggML7jmZFZx/P9jhXAoFH+pViEz5QEzDa2DBLHqzQg==}
     peerDependencies:
       eslint: '>6.6.0'
+      turbo: '>2.0.0'
 
   eslint-scope@8.2.0:
     resolution: {integrity: sha512-PHlWUfG6lvPc3yvP5A4PNyBL1W8fkDUccmI21JUu/+GKZBoH/W5u6usENXUrWFRsyoW5ACUjFGgAFQp5gUlb/A==}
@@ -10368,6 +10383,9 @@ packages:
   punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
+
+  pure-rand@6.1.0:
+    resolution: {integrity: sha512-bVWawvoZoBYpp6yIoQtQXHZjmz35RSVHnUOTefl8Vcjr8snTPY1wnpSPMWekcFwbxI6gtmT7rSYPFvz71ldiOA==}
 
   qrcode-terminal@0.11.0:
     resolution: {integrity: sha512-Uu7ii+FQy4Qf82G4xu7ShHhjhGahEpCWc3x8UavY3CTcWV+ufmmCtwkr7ZKsX42jdL0kr1B5FKUeqJvAn51jzQ==}
@@ -19724,6 +19742,12 @@ snapshots:
       mysql2: 3.10.0
       react: 19.0.0
 
+  drizzle-seed@0.3.1(drizzle-orm@0.36.3(@opentelemetry/api@1.8.0)(@types/react@19.0.1)(mysql2@3.10.0)(react@19.0.0)):
+    dependencies:
+      pure-rand: 6.1.0
+    optionalDependencies:
+      drizzle-orm: 0.36.3(@opentelemetry/api@1.8.0)(@types/react@19.0.1)(mysql2@3.10.0)(react@19.0.0)
+
   drizzle-zod@0.5.1(drizzle-orm@0.36.3(@opentelemetry/api@1.8.0)(@types/react@19.0.1)(mysql2@3.10.0)(react@19.0.0))(zod@3.23.8):
     dependencies:
       drizzle-orm: 0.36.3(@opentelemetry/api@1.8.0)(@types/react@19.0.1)(mysql2@3.10.0)(react@19.0.0)
@@ -20155,7 +20179,7 @@ snapshots:
       safe-regex-test: 1.0.3
       string.prototype.includes: 2.0.1
 
-  eslint-plugin-react-compiler@19.0.0-beta-30d8a17-20250209(eslint@9.15.0(jiti@2.3.3)):
+  eslint-plugin-react-compiler@19.0.0-beta-21e868a-20250216(eslint@9.15.0(jiti@2.3.3)):
     dependencies:
       '@babel/core': 7.26.0
       '@babel/parser': 7.26.2
@@ -20193,10 +20217,11 @@ snapshots:
       string.prototype.matchall: 4.0.11
       string.prototype.repeat: 1.0.0
 
-  eslint-plugin-turbo@2.3.1(eslint@9.15.0(jiti@2.3.3)):
+  eslint-plugin-turbo@2.4.2(eslint@9.15.0(jiti@2.3.3))(turbo@2.4.2):
     dependencies:
       dotenv: 16.0.3
       eslint: 9.15.0(jiti@2.3.3)
+      turbo: 2.4.2
 
   eslint-scope@8.2.0:
     dependencies:
@@ -23457,6 +23482,8 @@ snapshots:
   punycode@1.4.1: {}
 
   punycode@2.3.1: {}
+
+  pure-rand@6.1.0: {}
 
   qrcode-terminal@0.11.0: {}
 

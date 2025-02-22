@@ -10,13 +10,8 @@
     "build": "turbo run build",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo run clean",
-    "db:push": "turbo -F @kdx/db push",
-    "db:studio": "turbo -F @kdx/db studio",
-    "db:generate": "turbo -F @kdx/db generate-m",
-    "db:migrate": "turbo -F @kdx/db migrate",
-    "db:seed": "turbo -F @kdx/db seed",
-    "db:drop": "turbo -F @kdx/db drop",
-    "dev": "turbo watch dev studio --continue",
+    "db:push": "turbo @kdx/db#push",
+    "db:seed": "turbo --continue @kdx/db-dev#dev @kdx/db#seed",
     "dev:kdx": "turbo watch dev studio -F @kdx/kdx...",
     "dev:email": "turbo watch dev -F @kdx/react-email...",
     "format": "turbo run format --continue -- --cache --cache-location .cache/.prettiercache",
@@ -26,7 +21,6 @@
     "lint:ws": "pnpm dlx sherif@latest",
     "postinstall": "pnpm lint:ws",
     "typecheck": "turbo run typecheck",
-    "ui-add": "turbo run ui-add",
     "trpc:new": "pnpm -F trpc-cli start"
   },
   "devDependencies": {
