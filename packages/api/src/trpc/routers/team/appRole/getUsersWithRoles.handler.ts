@@ -1,5 +1,4 @@
 import type { TGetUsersWithRolesInputSchema } from "@kdx/validators/trpc/team/appRole";
-import { teamRepository } from "@kdx/db/repositories";
 
 import type { TIsTeamOwnerProcedureContext } from "../../../procedures";
 
@@ -12,9 +11,9 @@ export const getUsersWithRolesHandler = async ({
   ctx,
   input,
 }: GetUsersWithRolesOptions) => {
+  const { teamRepository } = ctx.repositories;
   const users = await teamRepository.getUsersWithRoles({
     appId: input.appId,
-    teamId: ctx.auth.user.activeTeamId,
   });
 
   return users;

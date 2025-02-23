@@ -26,7 +26,7 @@ interface CareTask {
 }
 
 export function careTaskRepositoryFactory(teamIds: string[]) {
-  const withinTeams = createWithinTeamsForTable(teamIds, careTasks);
+  const withinTeamsCareTask = createWithinTeamsForTable(teamIds, careTasks);
 
   async function findCareTasksFromTo(
     {
@@ -44,7 +44,7 @@ export function careTaskRepositoryFactory(teamIds: string[]) {
   ) {
     const careTasks: CareTask[] = await db.query.careTasks.findMany({
       where: (careTask, { gte, lte }) =>
-        withinTeams(
+        withinTeamsCareTask(
           onlyCritical ? eq(careTask.type, "CRITICAL") : undefined,
           onlyNotDone ? isNull(careTask.doneAt) : undefined,
           gte(careTask.date, dateStart),
@@ -69,20 +69,18 @@ export function careTaskRepositoryFactory(teamIds: string[]) {
   }
   async function findCareTaskById(id: string, db = _db) {
     return db.query.careTasks.findFirst({
-      where: (careTask, { eq }) => withinTeams(eq(careTask.id, id)),
+      where: (careTask, { eq }) => withinTeamsCareTask(eq(careTask.id, id)),
     });
   }
 
   async function deleteCareTaskById(id: string, db = _db) {
-    await db.delete(careTasks).where(withinTeams(eq(careTasks.id, id)));
+    await db.delete(careTasks).where(withinTeamsCareTask(eq(careTasks.id, id)));
   }
 
   async function deleteManyCareTasksThatCameFromCalendarWithDateHigherOrEqualThan(
     {
-      teamId,
       date,
     }: {
-      teamId: string;
       date: Date;
     },
     db = _db,
@@ -90,8 +88,7 @@ export function careTaskRepositoryFactory(teamIds: string[]) {
     await db
       .delete(careTasks)
       .where(
-        withinTeams(
-          eq(careTasks.teamId, teamId),
+        withinTeamsCareTask(
           eq(careTasks.createdFromCalendar, true),
           gte(careTasks.date, date),
         ),
@@ -99,7 +96,7 @@ export function careTaskRepositoryFactory(teamIds: string[]) {
   }
 
   async function deleteAllCareTasksForTeam(db = _db) {
-    await db.delete(careTasks).where(withinTeams());
+    await db.delete(careTasks).where(withinTeamsCareTask());
   }
 
   async function updateCareTask(
@@ -109,7 +106,7 @@ export function careTaskRepositoryFactory(teamIds: string[]) {
     await db
       .update(careTasks)
       .set(input)
-      .where(withinTeams(eq(careTasks.id, id)));
+      .where(withinTeamsCareTask(eq(careTasks.id, id)));
   }
 
   async function createCareTask(

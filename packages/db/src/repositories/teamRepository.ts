@@ -3,10 +3,9 @@ import { and, eq, inArray, not } from "drizzle-orm";
 
 import type { AppRole } from "@kdx/shared";
 
-import type { Drizzle, DrizzleTransaction } from "../client";
 import type { Update } from "./_types";
 import type { zInvitationCreateMany } from "./_zodSchemas/invitationSchemas";
-import type { zTeamCreate, zTeamUpdate } from "./_zodSchemas/teamSchemas";
+import type { zTeamUpdate } from "./_zodSchemas/teamSchemas";
 import { db as _db } from "../client";
 import {
   invitations,
@@ -35,23 +34,6 @@ export function teamRepositoryFactory(teamIds: string[]) {
     teamIds,
     invitations,
   );
-
-  async function createTeamAndAssociateUser(
-    db: DrizzleTransaction,
-    userId: string,
-    team: z.infer<typeof zTeamCreate>,
-  ) {
-    if (team.id && !teamIds.includes(team.id))
-      throw new Error(`Team ID ${team.id} is not allowed.`);
-
-    const [createdTeam] = await db.insert(teams).values(team).$returningId();
-    if (!createdTeam) throw new Error("Failed to create team");
-
-    await db.insert(usersToTeams).values({
-      userId: userId,
-      teamId: createdTeam.id,
-    });
-  }
 
   async function findTeamById(db = _db) {
     return await db.query.teams.findFirst({
@@ -153,13 +135,11 @@ export function teamRepositoryFactory(teamIds: string[]) {
 
   async function getUsersWithRoles(
     {
-      teamId,
       appId,
     }: {
-      teamId: string;
       appId: string;
     },
-    db: Drizzle = _db,
+    db = _db,
   ) {
     return db.query.users.findMany({
       where: (users, { inArray }) =>
@@ -173,10 +153,7 @@ export function teamRepositoryFactory(teamIds: string[]) {
       with: {
         UserTeamAppRoles: {
           where: (userTeamAppRoles, { eq }) =>
-            withinTeamsUserTeamAppRoles(
-              eq(userTeamAppRoles.appId, appId),
-              eq(userTeamAppRoles.teamId, teamId),
-            ),
+            withinTeamsUserTeamAppRoles(eq(userTeamAppRoles.appId, appId)),
           columns: {
             role: true,
             userId: true,
@@ -192,14 +169,8 @@ export function teamRepositoryFactory(teamIds: string[]) {
     });
   }
 
-  async function removeUserFromTeam(db = _db, userId: string) {
-    return db
-      .delete(usersToTeams)
-      .where(withinTeamsUsersToTeams(eq(usersToTeams.userId, userId)));
-  }
-
-  async function deleteTeam(db: Drizzle, id: string) {
-    await db.delete(teams).where(eq(teams.id, id));
+  async function deleteTeam(db = _db) {
+    return db.delete(teams).where(withinTeams());
   }
 
   async function removeUserAssociationsFromUserTeamAppRolesByTeamId(
@@ -259,15 +230,9 @@ export function teamRepositoryFactory(teamIds: string[]) {
     await db.insert(invitations).values(data);
   }
 
-  async function findInvitationByEmail(email: string, db = _db) {
-    return db.query.invitations.findFirst({
-      where: (invitation, { eq }) => eq(invitation.email, email),
-    });
-  }
-
-  async function findManyInvitationsByTeamId(teamId: string, db = _db) {
+  async function findManyInvitationsByTeamId(db = _db) {
     return db.query.invitations.findMany({
-      where: (invitation, { eq }) => eq(invitation.teamId, teamId),
+      where: withinTeamsInvitations(),
       columns: {
         id: true,
         email: true,
@@ -275,38 +240,7 @@ export function teamRepositoryFactory(teamIds: string[]) {
     });
   }
 
-  async function findManyInvitationsByEmail(email: string, db = _db) {
-    return db.query.invitations.findMany({
-      where: (invitation, { eq }) => eq(invitation.email, email),
-      columns: {
-        id: true,
-      },
-      with: {
-        Team: {
-          columns: {
-            id: true,
-            name: true,
-          },
-        },
-        InvitedBy: {
-          columns: {
-            id: true,
-            name: true,
-            image: true,
-          },
-        },
-      },
-    });
-  }
-
-  async function findInvitationByIdAndTeamId(
-    {
-      id,
-    }: {
-      id: string;
-    },
-    db = _db,
-  ) {
+  async function findInvitationByIdAndTeamId(id: string, db = _db) {
     return db.query.invitations.findFirst({
       where: (invitation, { eq }) =>
         withinTeamsInvitations(eq(invitation.id, id)),
@@ -314,31 +248,29 @@ export function teamRepositoryFactory(teamIds: string[]) {
   }
 
   async function updateTeamById(
-    { input }: Update<typeof zTeamUpdate>,
+    { input, id }: Update<typeof zTeamUpdate>,
     db = _db,
   ) {
-    return db.update(teams).set(input).where(withinTeams());
+    return db
+      .update(teams)
+      .set(input)
+      .where(withinTeams(eq(teams.id, id)));
   }
 
   return {
-    createTeamAndAssociateUser,
     findTeamById,
     findTeamWithUsersAndInvitations,
     findAnyOtherTeamAssociatedWithUserThatIsNotTeamId,
     findTeamsByUserId,
     findUserRolesByTeamIdAndAppId,
     getUsersWithRoles,
-    removeUserFromTeam,
     deleteTeam,
     removeUserAssociationsFromUserTeamAppRolesByTeamId,
     removeUserAssociationsFromTeamAppRolesByTeamIdAndAppIdAndRoles,
     associateManyAppRolesToUsers,
     findAllTeamMembers,
     createManyInvitations,
-    findInvitationByEmail,
     findManyInvitationsByTeamId,
-    findManyInvitationsByEmail,
-    findInvitationById,
     findInvitationByIdAndTeamId,
     updateTeamById,
   };

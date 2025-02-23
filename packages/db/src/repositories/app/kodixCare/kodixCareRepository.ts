@@ -55,7 +55,6 @@ export function kodixCareRepositoryFactory(
     const users = await teamRepository.getUsersWithRoles(
       {
         appId: kodixCareAppId,
-        teamId,
       },
       db,
     );

@@ -1,14 +1,17 @@
 import { rrulestr } from "rrule";
 
+import type { Drizzle } from "@kdx/db/client";
 import type {
   appRepositoryFactory,
   careTaskRepositoryFactory,
 } from "@kdx/db/repositories";
 import type { careTasks, eventMasters } from "@kdx/db/schema";
 import dayjs from "@kdx/dayjs";
-import { calendarRepository } from "@kdx/db/repositories";
 import { kodixCareAppId } from "@kdx/shared";
 
+import type { calendarRepositoryFactory } from "../../../db/src/repositories/app/calendar/calendarRepository";
+
+const tomorrowEndOfDay = dayjs.utc().add(1, "day").endOf("day").toDate();
 export interface CalendarTask {
   title: string | undefined;
   description: string | undefined;
@@ -36,10 +39,69 @@ export interface CareTask {
   eventMasterId: string | null;
 }
 
-export function calendarAndCareTaskServiceFactory(
-  careTaskRepository: ReturnType<typeof careTaskRepositoryFactory>,
-  appRepository: ReturnType<typeof appRepositoryFactory>,
-) {
+export function calendarAndCareTaskServiceFactory({
+  careTaskRepository,
+  appRepository,
+  calendarRepository,
+}: {
+  careTaskRepository: ReturnType<typeof careTaskRepositoryFactory>;
+  appRepository: ReturnType<typeof appRepositoryFactory>;
+  calendarRepository: ReturnType<typeof calendarRepositoryFactory>;
+}) {
+  const getCareTaskCompositeId = (compound: {
+    id: string | null;
+    eventMasterId: string | null;
+    selectedTimeStamp: Date;
+  }) => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    if (!compound.eventMasterId) return compound.id!;
+    return getCalendarTaskCompositeId({
+      eventMasterId: compound.eventMasterId,
+      selectedTimeStamp: compound.selectedTimeStamp,
+    });
+  };
+
+  async function cloneCalendarTasksToCareTasks({
+    tx,
+    start,
+    end = tomorrowEndOfDay,
+    teamId,
+  }: {
+    tx: Drizzle;
+    start: Date;
+    end?: Date;
+    teamId: string;
+  }) {
+    const calendarTasks = await getCalendarTasks({
+      dateStart: start,
+      dateEnd: end,
+      teamIds: [teamId],
+    });
+
+    if (calendarTasks.length > 0)
+      await careTaskRepository.createManyCareTasks(
+        calendarTasks.map((calendarTask) => ({
+          teamId: teamId,
+          title: calendarTask.title,
+          description: calendarTask.description,
+          date: calendarTask.date,
+          eventMasterId: calendarTask.eventMasterId,
+          doneByUserId: null,
+          type: calendarTask.type,
+          createdBy: calendarTask.createdBy,
+          createdFromCalendar: true,
+        })),
+        tx,
+      );
+
+    await appRepository.upsertAppTeamConfig({
+      appId: kodixCareAppId,
+      config: {
+        clonedCareTasksUntil: end,
+      },
+    });
+  }
+
   function getCalendarTaskCompositeId(compound: {
     eventMasterId: string;
     selectedTimeStamp: Date;
@@ -235,6 +297,8 @@ export function calendarAndCareTaskServiceFactory(
   }
 
   return {
+    getCareTaskCompositeId,
+    cloneCalendarTasksToCareTasks,
     getCalendarTasks,
     getCareTasks,
     getCalendarTaskCompositeId,

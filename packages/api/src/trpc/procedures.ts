@@ -1,6 +1,7 @@
 import type { inferProcedureBuilderResolverOptions } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 
+import { initializeServices } from "../services";
 import { initializeRepositoriesForTeams } from "./initializeRepositories";
 import { t } from "./trpc";
 
@@ -31,14 +32,22 @@ export const protectedProcedure = publicProcedure.use(({ ctx, next }) => {
   if (!ctx.auth.user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
+
+  const repositories = initializeRepositoriesForTeams([
+    ctx.auth.user.activeTeamId,
+  ]);
+
   return next({
     ctx: {
       ...ctx,
       // infers the `user` and `session` as non-nullable
       auth: ctx.auth,
-      repositories: initializeRepositoriesForTeams([
-        ctx.auth.user.activeTeamId,
-      ]),
+      services: initializeServices({
+        t: ctx.t,
+        repositories,
+        publicRepositories: ctx.publicRepositories,
+      }),
+      repositories,
     },
   });
 });

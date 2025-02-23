@@ -1,5 +1,3 @@
-import { kodixCareRepository } from "@kdx/db/repositories";
-
 import type { TProtectedProcedureContext } from "../../../procedures";
 
 interface GetAllCaregiversOptions {
@@ -9,5 +7,6 @@ interface GetAllCaregiversOptions {
 export const getAllCaregiversHandler = async ({
   ctx,
 }: GetAllCaregiversOptions) => {
+  const { kodixCareRepository } = ctx.repositories;
   return await kodixCareRepository.getAllCareGivers(ctx.auth.user.activeTeamId);
 };

@@ -1,12 +1,12 @@
 import { TRPCError } from "@trpc/server";
 
-import { teamRepository } from "@kdx/db/repositories";
-
 import type { TProtectedProcedureContext } from "../../procedures";
 
 export const assertCanUserDeleteAccount = async (
   ctx: TProtectedProcedureContext,
 ) => {
+  const { teamRepository } = ctx.repositories;
+
   const teams = await teamRepository.findTeamsByUserId(ctx.auth.user.id);
   if (!teams[0]) {
     throw new TRPCError({

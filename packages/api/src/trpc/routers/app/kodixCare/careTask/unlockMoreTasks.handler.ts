@@ -6,7 +6,6 @@ import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
 import { getConfigHandler } from "../../getConfig.handler";
-import { cloneCalendarTasksToCareTasks } from "../utils";
 
 interface UnlockMoreTasksInputOptions {
   ctx: TProtectedProcedureContext;
@@ -17,6 +16,7 @@ export const unlockMoreTasksHandler = async ({
   ctx,
   input,
 }: UnlockMoreTasksInputOptions) => {
+  const { calendarAndCareTaskService } = ctx.services;
   const clonedCareTasksUntil = (
     await getConfigHandler({
       ctx,
@@ -45,10 +45,10 @@ export const unlockMoreTasksHandler = async ({
       ),
     });
 
-  await cloneCalendarTasksToCareTasks({
+  await calendarAndCareTaskService.cloneCalendarTasksToCareTasks({
     tx: db,
     start: clonedCareTasksUntil,
     end: input.selectedTimestamp,
-    ctx,
+    teamId: ctx.auth.user.activeTeamId,
   });
 };

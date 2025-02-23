@@ -99,11 +99,9 @@ export function appRepositoryFactory(teamIds: string[]) {
   async function upsertAppTeamConfig(
     {
       appId,
-      teamId,
       config,
     }: {
       appId: AppIdsWithUserAppTeamConfig;
-      teamId: string;
       config: Partial<
         z.infer<
           (typeof appIdToAppTeamConfigSchema)[typeof kodixCareAppId] //TODO: make dynamic based on app
@@ -135,26 +133,31 @@ export function appRepositoryFactory(teamIds: string[]) {
 
     //new record. We need to validate the whole config without partial()
     const parsedInput = configSchema.parse(config);
-    await db.insert(appTeamConfigs).values({
-      config: parsedInput,
-      teamId: teamId,
-      appId: appId,
-    });
+    await db.insert(appTeamConfigs).values(
+      teamIds.map((teamId) => ({
+        config: parsedInput,
+        teamId: teamId,
+        appId: appId,
+      })),
+    );
   }
 
   async function findUserAppTeamConfigs(
     {
       appId,
       userIds,
+      teamIds,
     }: {
       appId: AppIdsWithUserAppTeamConfig;
       userIds: string[];
+      teamIds: string[];
     },
     db = _db,
   ) {
     const result = await db.query.userAppTeamConfigs.findMany({
       where: (userAppTeamConfigs, { eq }) =>
-        withinTeamsUserAppTeamConfig(
+        and(
+          inArray(userAppTeamConfigs.teamId, teamIds),
           eq(userAppTeamConfigs.appId, appId),
           inArray(userAppTeamConfigs.userId, userIds),
         ),
@@ -271,12 +274,12 @@ export function appRepositoryFactory(teamIds: string[]) {
   }
 
   async function uninstallAppForTeam(
-    db: Drizzle,
     {
       appId,
     }: {
       appId: KodixAppId;
     },
+    db = _db,
   ) {
     if (teamIds.length > 1)
       throw new Error("uninstallAppForTeam can only be used for a single team");

@@ -1,5 +1,4 @@
 import type { TCheckEmailForRegisterInputSchema } from "@kdx/validators/trpc/app/kodixCare";
-import { userRepository } from "@kdx/db/repositories";
 
 import type { TPublicProcedureContext } from "../../../procedures";
 
@@ -12,12 +11,12 @@ export const checkEmailForRegisterHandler = async ({
   ctx,
   input,
 }: CheckEmailForRegisterOptions) => {
-  const { publicRepositories } = ctx;
+  const { publicUserRepository, publicTeamRepository } = ctx.publicRepositories;
 
-  const user = await userRepository.findUserByEmail(input.email);
+  const user = await publicUserRepository.findUserByEmail(input.email);
   if (user) return { status: "already registered" as const };
 
-  const invite = await asdssadewf.findInvitationByEmail(input.email);
+  const invite = await publicTeamRepository.findInvitationByEmail(input.email);
   if (!invite) return { status: "not invited" as const };
 
   const inviteLink = {

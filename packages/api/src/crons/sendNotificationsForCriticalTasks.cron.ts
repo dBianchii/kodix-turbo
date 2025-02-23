@@ -2,16 +2,15 @@ import ms from "ms";
 import groupBy from "object.groupby";
 
 import dayjs from "@kdx/dayjs";
-import { appRepository, teamRepository } from "@kdx/db/repositories";
 import WarnDelayedCriticalTasks from "@kdx/react-email/warn-delayed-critical-tasks";
 import { getSuccessesAndErrors, kodixCareAppId } from "@kdx/shared";
 
-import {
-  getCareTaskCompositeId,
-  getCareTasks,
-} from "../internal/calendarAndCareTaskCentral";
-import { sendNotifications } from "../internal/notificationCenter";
 import { getUpstashCache, setUpstashCache } from "../sdks/upstash";
+import { initializeServices } from "../services";
+import {
+  initializePublicRepositories,
+  initializeRepositoriesForTeams,
+} from "../trpc/initializeRepositories";
 import { verifiedQstashCron } from "./_utils";
 
 const MILLISECONDS_TO_BE_LATE = ms("1h");
@@ -24,8 +23,22 @@ export const sendNotificationsForCriticalTasks = verifiedQstashCron(
   async ({ ctx }) => {
     console.time("sendNotificationsForCriticalTasks");
 
+    const publicRepositories = initializePublicRepositories();
+
     const allTeamIdsWithKodixCareInstalled =
-      await teamRepository.findAllTeamsWithAppInstalled(kodixCareAppId);
+      await publicRepositories.publicAppRepository.findAllTeamsWithAppInstalled(
+        kodixCareAppId,
+      );
+
+    const repositories = initializeRepositoriesForTeams(
+      allTeamIdsWithKodixCareInstalled.map((x) => x.teamId),
+    );
+    const { calendarAndCareTaskService, notificationService } =
+      initializeServices({
+        t: ctx.t,
+        publicRepositories,
+        repositories,
+      });
 
     const start = dayjs
       .utc()
@@ -37,7 +50,7 @@ export const sendNotificationsForCriticalTasks = verifiedQstashCron(
       .toDate();
 
     const criticalNotDoneLateCareTasks = (
-      await getCareTasks({
+      await calendarAndCareTaskService.getCareTasks({
         dateStart: start,
         dateEnd: end,
         teamIds: allTeamIdsWithKodixCareInstalled.map((x) => x.teamId),
@@ -54,7 +67,7 @@ export const sendNotificationsForCriticalTasks = verifiedQstashCron(
       criticalNotDoneLateCareTasks.map((x) => x.teamId);
 
     const userConfigsWithEnabledNotif = (
-      await appRepository.findUserAppTeamConfigs({
+      await repositories.appRepository.findUserAppTeamConfigs({
         appId: kodixCareAppId,
         teamIds: teamsWithCriticalNotDoneLateCareTasks,
         userIds: usersWithinTheTeams,
@@ -92,11 +105,12 @@ export const sendNotificationsForCriticalTasks = verifiedQstashCron(
     const sentNotificationStatusPromises =
       criticalNotDoneLateCareTasksWithTeamAndUsers.flatMap((careTask) =>
         careTask.Team.userIds.map((userId) => {
-          const careTaskCompositeId = getCareTaskCompositeId({
-            eventMasterId: careTask.eventMasterId,
-            id: careTask.id,
-            selectedTimeStamp: careTask.date,
-          });
+          const careTaskCompositeId =
+            calendarAndCareTaskService.getCareTaskCompositeId({
+              eventMasterId: careTask.eventMasterId,
+              id: careTask.id,
+              selectedTimeStamp: careTask.date,
+            });
 
           return getUpstashCache("careTasksUsersNotifs", {
             careTaskCompositeId,
@@ -114,7 +128,7 @@ export const sendNotificationsForCriticalTasks = verifiedQstashCron(
           !notificationStatuses.some(
             (x) =>
               x.value?.careTaskCompositeId === //?Check if it exists and also if it's the same care task
-              getCareTaskCompositeId({
+              calendarAndCareTaskService.getCareTaskCompositeId({
                 eventMasterId: careTask.eventMasterId,
                 id: careTask.id,
                 selectedTimeStamp: careTask.date,
@@ -126,7 +140,7 @@ export const sendNotificationsForCriticalTasks = verifiedQstashCron(
     for (const careTask of criticalNotDoneLateCareTasksWithTeamAndUsersNotYetSent) {
       for (const userId of careTask.Team.userIds) {
         promises.push(
-          sendNotifications({
+          notificationService.sendNotifications({
             teamId: careTask.Team.teamId,
             channels: [
               {
@@ -139,7 +153,7 @@ export const sendNotificationsForCriticalTasks = verifiedQstashCron(
           }),
         );
         promises.push(
-          sendNotifications({
+          notificationService.sendNotifications({
             teamId: careTask.Team.teamId,
             channels: [
               {
@@ -154,11 +168,12 @@ export const sendNotificationsForCriticalTasks = verifiedQstashCron(
             userId,
           }),
         );
-        const careTaskCompositeId = getCareTaskCompositeId({
-          eventMasterId: careTask.eventMasterId,
-          id: careTask.id,
-          selectedTimeStamp: careTask.date,
-        });
+        const careTaskCompositeId =
+          calendarAndCareTaskService.getCareTaskCompositeId({
+            eventMasterId: careTask.eventMasterId,
+            id: careTask.id,
+            selectedTimeStamp: careTask.date,
+          });
         promises.push(
           setUpstashCache("careTasksUsersNotifs", {
             variableKeys: {

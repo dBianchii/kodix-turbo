@@ -2,8 +2,6 @@ import { Redis } from "@upstash/redis";
 
 import type { users } from "@kdx/db/schema";
 
-import type { getCareTaskCompositeId } from "../internal/calendarAndCareTaskCentral";
-
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL,
   token: process.env.UPSTASH_REDIS_REST_TOKEN,
@@ -13,11 +11,11 @@ interface KeysMapping {
   careTasksUsersNotifs: {
     tags: {
       userId: typeof users.$inferSelect.id;
-      careTaskCompositeId: ReturnType<typeof getCareTaskCompositeId>;
+      careTaskCompositeId: string;
     };
     value: {
       userId: typeof users.$inferSelect.id;
-      careTaskCompositeId: ReturnType<typeof getCareTaskCompositeId>;
+      careTaskCompositeId: string;
       date: string;
     };
   };

@@ -1,6 +1,4 @@
 import type { TChangeNameInputSchema } from "@kdx/validators/trpc/user";
-import { db } from "@kdx/db/client";
-import { userRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 
@@ -10,7 +8,8 @@ interface ChangeNameOptions {
 }
 
 export const changeNameHandler = async ({ ctx, input }: ChangeNameOptions) => {
-  await userRepository.updateUser(db, {
+  const { publicUserRepository } = ctx.publicRepositories;
+  await publicUserRepository.updateUser({
     id: ctx.auth.user.id,
     input: { name: input.name },
   });

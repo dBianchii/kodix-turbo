@@ -5,7 +5,6 @@ import type { invitations } from "@kdx/db/schema";
 import type { TInviteInputSchema } from "@kdx/validators/trpc/team/invitation";
 import { db } from "@kdx/db/client";
 import { nanoid } from "@kdx/db/nanoid";
-import { teamRepository } from "@kdx/db/repositories";
 import TeamInvite from "@kdx/react-email/team-invite";
 import {
   getBaseUrl,
@@ -22,10 +21,8 @@ interface InviteOptions {
 }
 
 export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
-  const team = await teamRepository.findTeamWithUsersAndInvitations({
-    teamId: input.teamId,
-    email: input.to,
-  });
+  const { teamRepository } = ctx.repositories;
+  const team = await teamRepository.findTeamWithUsersAndInvitations(input.to);
 
   if (!team)
     throw new TRPCError({

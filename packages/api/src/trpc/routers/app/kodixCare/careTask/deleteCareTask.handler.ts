@@ -2,7 +2,6 @@ import { ForbiddenError } from "@casl/ability";
 import { TRPCError } from "@trpc/server";
 
 import type { TDeleteCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
-import { careTaskRepository } from "@kdx/db/repositories";
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
@@ -16,11 +15,9 @@ export const deleteCareTaskHandler = async ({
   ctx,
   input,
 }: DeleteCareTaskOptions) => {
-  const { services } = ctx;
-  const careTask = await careTaskRepository.findCareTaskById({
-    id: input.id,
-    teamId: ctx.auth.user.activeTeamId,
-  });
+  const { permissionsService } = ctx.services;
+  const { careTaskRepository } = ctx.repositories;
+  const careTask = await careTaskRepository.findCareTaskById(input.id);
   if (!careTask) {
     throw new TRPCError({
       code: "NOT_FOUND",
@@ -28,7 +25,7 @@ export const deleteCareTaskHandler = async ({
     });
   }
 
-  const ability = await services.permissions.getUserPermissionsForApp({
+  const ability = await permissionsService.getUserPermissionsForApp({
     appId: kodixCareAppId,
     user: ctx.auth.user,
   });
@@ -38,8 +35,5 @@ export const deleteCareTaskHandler = async ({
     createdBy: careTask.createdBy,
   });
 
-  await careTaskRepository.deleteCareTaskById({
-    id: input.id,
-    teamId: ctx.auth.user.activeTeamId,
-  });
+  await careTaskRepository.deleteCareTaskById(input.id);
 };

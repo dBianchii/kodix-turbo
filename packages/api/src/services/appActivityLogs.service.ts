@@ -1,12 +1,12 @@
 import type { getFormatter } from "next-intl/server";
 import { z } from "zod";
 
+import type { appRepositoryFactory } from "@kdx/db/repositories";
 import type { appActivityLogs } from "@kdx/db/schema";
 import type { ServerSideT } from "@kdx/locales";
 import type { KodixAppId } from "@kdx/shared";
 import dayjs from "@kdx/dayjs";
 import { db as _db } from "@kdx/db/client";
-import { appRepository } from "@kdx/db/repositories";
 import { ZNanoId } from "@kdx/validators";
 
 const baseDiffSchema = z.object({
@@ -39,114 +39,123 @@ const diffSchema = editNewDeleteDiffSchema;
 // Schema for the top-level array of diffs
 const deepDiffSchema = z.array(diffSchema);
 
-export async function logActivity(
-  input: typeof appActivityLogs.$inferInsert,
-  db = _db,
-) {
-  deepDiffSchema.parse(input.diff);
-  await appRepository.createAppActivityLog(input, db);
-}
-
-const formatSide = (
-  value: z.infer<typeof valueSchema>,
-  path: string,
-  log: {
-    User: {
-      name: string;
-    };
-  },
-  format: Awaited<ReturnType<typeof getFormatter>>,
-  t: ServerSideT,
-) => {
-  if (value === null) return t("api.appActivityLogs.null");
-
-  if (typeof value === "string")
-    if (dayjs(value).isValid())
-      return format.dateTime(new Date(value), "shortWithHours");
-
-  if (ZNanoId.safeParse(value).success && path.includes("UserId"))
-    return log.User.name;
-
-  return value;
-};
-
-const PATHS_TO_REMOVE = ["updatedAt"];
-export async function getAppActivityLogs({
-  t,
-  format,
-  tableNames,
-  rowId,
-  teamId,
-  appId,
-  page,
-  pageSize,
+export function appActivityLogsServiceFactory({
+  appRepository,
 }: {
-  t: ServerSideT;
-  format: Awaited<ReturnType<typeof getFormatter>>;
-  tableNames?: (typeof appActivityLogs.$inferSelect.tableName)[];
-  rowId?: string;
-  teamId: string;
-  appId: KodixAppId;
-  page: number;
-  pageSize: number;
+  appRepository: ReturnType<typeof appRepositoryFactory>;
 }) {
-  const logs = await appRepository.findManyAppActivityLogs({
-    appId: appId,
-    page,
+  async function logActivity(
+    input: typeof appActivityLogs.$inferInsert,
+    db = _db,
+  ) {
+    deepDiffSchema.parse(input.diff);
+    await appRepository.createAppActivityLog(input, db);
+  }
+
+  async function getAppActivityLogs({
+    t,
+    format,
     tableNames,
     rowId,
+    appId,
+    page,
     pageSize,
-    teamId,
-  });
+  }: {
+    t: ServerSideT;
+    format: Awaited<ReturnType<typeof getFormatter>>;
+    tableNames?: (typeof appActivityLogs.$inferSelect.tableName)[];
+    rowId?: string;
+    appId: KodixAppId;
+    page: number;
+    pageSize: number;
+  }) {
+    const formatSide = (
+      value: z.infer<typeof valueSchema>,
+      path: string,
+      log: {
+        User: {
+          name: string;
+        };
+      },
+      format: Awaited<ReturnType<typeof getFormatter>>,
+      t: ServerSideT,
+    ) => {
+      if (value === null) return t("api.appActivityLogs.null");
 
-  const logsWithMessage = logs.map((log) => {
-    const diffs = deepDiffSchema.parse(log.diff);
-    if (log.type === "create") {
-      return {
-        ...log,
-        message: `${t("api.appActivityLogs.created")} ${JSON.stringify(
-          diffs.reduce(
-            (acc, diff) => ({
-              ...acc,
-              [diff.path.join(".")]: diff.rhs,
-            }),
-            {},
-          ),
-        )}`,
-      };
-    }
+      if (typeof value === "string")
+        if (dayjs(value).isValid())
+          return format.dateTime(new Date(value), "shortWithHours");
 
-    const messageParts: string[] = [];
-    for (const diff of diffs) {
-      const fullPath = diff.path.join(".");
-      // Remove paths that are not relevant to the user
-      if (PATHS_TO_REMOVE.some((path) => diff.path.includes(path))) continue;
+      if (ZNanoId.safeParse(value).success && path.includes("UserId"))
+        return log.User.name;
 
-      const lhs = formatSide(diff.lhs, fullPath, log, format, t);
-      const rhs = formatSide(diff.rhs, fullPath, log, format, t);
+      return value;
+    };
 
-      //@ts-expect-error It might not be set
-      const translatedPath = t(`api.appActivityLogs.${fullPath}`);
-      const isTranslated = !translatedPath.includes("api.appActivityLogs");
-      const pathMessage = `[${isTranslated ? translatedPath : fullPath}]`;
+    const PATHS_TO_REMOVE = ["updatedAt"];
 
-      if (!lhs) {
-        messageParts.push(
-          `${t("api.appActivityLogs.inserted at")} ${pathMessage} ${JSON.stringify(rhs)}`,
-        );
-        continue;
+    const logs = await appRepository.findManyAppActivityLogs({
+      appId: appId,
+      page,
+      tableNames,
+      rowId,
+      pageSize,
+    });
+
+    const logsWithMessage = logs.map((log) => {
+      const diffs = deepDiffSchema.parse(log.diff);
+      if (log.type === "create") {
+        return {
+          ...log,
+          message: `${t("api.appActivityLogs.created")} ${JSON.stringify(
+            diffs.reduce(
+              (acc, diff) => ({
+                ...acc,
+                [diff.path.join(".")]: diff.rhs,
+              }),
+              {},
+            ),
+          )}`,
+        };
       }
 
-      messageParts.push(
-        `${t("api.appActivityLogs.updated")} ${pathMessage} ${t("api.appActivityLogs.from")} ${JSON.stringify(lhs)} ${t("api.appActivityLogs.to")} ${JSON.stringify(rhs)}`,
-      );
-    }
+      const messageParts: string[] = [];
+      for (const diff of diffs) {
+        const fullPath = diff.path.join(".");
+        // Remove paths that are not relevant to the user
+        if (PATHS_TO_REMOVE.some((path) => diff.path.includes(path))) continue;
 
-    return {
-      ...log,
-      message: `${messageParts.join(", ")}`,
-    };
-  });
+        const lhs = formatSide(diff.lhs, fullPath, log, format, t);
+        const rhs = formatSide(diff.rhs, fullPath, log, format, t);
 
-  return logsWithMessage;
+        //@ts-expect-error It might not be set
+        const translatedPath = t(`api.appActivityLogs.${fullPath}`);
+        const isTranslated = !translatedPath.includes("api.appActivityLogs");
+        const pathMessage = `[${isTranslated ? translatedPath : fullPath}]`;
+
+        if (!lhs) {
+          messageParts.push(
+            `${t("api.appActivityLogs.inserted at")} ${pathMessage} ${JSON.stringify(rhs)}`,
+          );
+          continue;
+        }
+
+        messageParts.push(
+          `${t("api.appActivityLogs.updated")} ${pathMessage} ${t("api.appActivityLogs.from")} ${JSON.stringify(lhs)} ${t("api.appActivityLogs.to")} ${JSON.stringify(rhs)}`,
+        );
+      }
+
+      return {
+        ...log,
+        message: `${messageParts.join(", ")}`,
+      };
+    });
+
+    return logsWithMessage;
+  }
+
+  return {
+    logActivity,
+    getAppActivityLogs,
+  };
 }

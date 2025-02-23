@@ -1,4 +1,4 @@
-import type { SQL, SQLWrapper } from "drizzle-orm";
+import type { SQLWrapper } from "drizzle-orm";
 import type { MySqlTable } from "drizzle-orm/mysql-core";
 import { and, eq, inArray } from "drizzle-orm";
 
@@ -14,7 +14,8 @@ export const createWithinTeams = (teamIds: string[]) => {
 
     if (!sqls.length) return teamExpression;
 
-    return and(teamExpression, ...sqls);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return and(teamExpression, ...sqls)!;
   };
 
   return withinTeams;
