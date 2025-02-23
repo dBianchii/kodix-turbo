@@ -1,4 +1,4 @@
-import type { CareTask } from "node_modules/@kdx/api/src/internal/calendarAndCareTaskCentral";
+import type { CareTask } from "node_modules/@kdx/api/src/services/calendarAndCareTask.service";
 import { useEffect, useMemo, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useFormatter, useTranslations } from "next-intl";
