@@ -2,10 +2,10 @@ import { Suspense } from "react";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
-import { teamRepository } from "@kdx/db/repositories";
 
 import { AppSwitcher } from "~/app/[locale]/_components/app-switcher";
 import { redirect } from "~/i18n/routing";
+import { api } from "~/trpc/server";
 
 export default async function RolesLayout({
   children,
@@ -15,9 +15,9 @@ export default async function RolesLayout({
   const { user } = await auth();
   if (!user) return redirect({ href: "/", locale: await getLocale() });
 
-  const team = await teamRepository.findTeamById(user.activeTeamId);
+  const team = await api.team.getActiveTeam();
 
-  if (team?.ownerId !== user.id)
+  if (team.ownerId !== user.id)
     redirect({
       href: "/team/settings",
       locale: await getLocale(),
