@@ -57,7 +57,6 @@
   },
   "devDependencies": {
     "@kdx/db": "workspace:*",
-    "@kdx/db-dev": "workspace:*",
     "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tailwind-config": "workspace:*",

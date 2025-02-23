@@ -11,14 +11,12 @@ export const getAllHandler = async ({
   ctx,
   input,
 }: GetAllCalendarTasksOptions) => {
-  const { calendarAndCareTaskService: calendarAndCareTaskServiceFactory } =
-    ctx.services;
+  const { calendarAndCareTaskService } = ctx.services;
 
-  const calendarTasks =
-    await calendarAndCareTaskServiceFactory.getCalendarTasks({
-      dateStart: input.dateStart,
-      dateEnd: input.dateEnd,
-      teamIds: [ctx.auth.user.activeTeamId],
-    });
+  const calendarTasks = await calendarAndCareTaskService.getCalendarTasks({
+    dateStart: input.dateStart,
+    dateEnd: input.dateEnd,
+    teamIds: [ctx.auth.user.activeTeamId],
+  });
   return calendarTasks;
 };
