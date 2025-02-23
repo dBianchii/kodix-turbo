@@ -1,5 +1,5 @@
 {
-  "$schema": "https://turborepo.org/schema.json",
+  "$schema": "./node_modules/turbo/schema.json",
   "ui": "tui",
   "tasks": {
     "topo": {
@@ -7,7 +7,21 @@
     },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".cache/tsbuildinfo.json", "dist/**"]
+      "outputs": [".cache/tsbuildinfo.json", "dist/**"],
+      "env": [
+        "MYSQL_URL",
+        "AUTH_GOOGLE_CLIENT_ID",
+        "AUTH_GOOGLE_CLIENT_SECRET",
+        "RESEND_API_KEY",
+        "NEXT_PUBLIC_POSTHOG_HOST",
+        "NEXT_PUBLIC_POSTHOG_KEY",
+        "UPSTASH_REDIS_REST_URL",
+        "UPSTASH_REDIS_REST_TOKEN",
+        "DISABLE_UPSTASH_CACHE",
+        "PORT",
+        "QSTASH_CURRENT_SIGNING_KEY",
+        "QSTASH_NEXT_SIGNING_KEY"
+      ]
     },
     "dev": {
       "dependsOn": ["^dev"],
@@ -40,39 +54,10 @@
       "cache": false,
       "persistent": true
     },
-    "generate-m": {
-      "cache": false,
-      "interactive": true
-    },
-    "migrate": {
-      "cache": false,
-      "interactive": true
-    },
-    "drop": {
-      "cache": false
-    },
     "seed": {
       "cache": false
-    },
-    "ui-add": {
-      "cache": false,
-      "interactive": true
     }
   },
-  "globalEnv": [
-    "MYSQL_URL",
-    "AUTH_GOOGLE_CLIENT_ID",
-    "AUTH_GOOGLE_CLIENT_SECRET",
-    "RESEND_API_KEY",
-    "NEXT_PUBLIC_POSTHOG_HOST",
-    "NEXT_PUBLIC_POSTHOG_KEY",
-    "UPSTASH_REDIS_REST_URL",
-    "UPSTASH_REDIS_REST_TOKEN",
-    "DISABLE_UPSTASH_CACHE",
-    "PORT",
-    "QSTASH_CURRENT_SIGNING_KEY",
-    "QSTASH_NEXT_SIGNING_KEY"
-  ],
   "globalPassThroughEnv": [
     "NODE_ENV",
     "CI",
