@@ -44,7 +44,7 @@
     "generate-nanoid": "pnpm tsx ./scripts/generate-nanoid",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
     "wait-for-db": "while ! nc -z localhost 3306; do sleep 1; done",
-    "with-env": "dotenv -e ../../.env --"
+    "with-env": "dotenv -e ../../apps/kdx/.vercel/.env.development.local --"
   },
   "dependencies": {
     "@kdx/dayjs": "workspace:*",
