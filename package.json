@@ -2,7 +2,7 @@
   "name": "kodix-turbo",
   "private": true,
   "engines": {
-    "node": ">=20.18.1",
+    "node": "20.18.1",
     "pnpm": "^9.14.2"
   },
   "packageManager": "pnpm@9.14.2",
@@ -21,6 +21,8 @@
     "lint:ws": "pnpm dlx sherif@latest",
     "postinstall": "pnpm lint:ws",
     "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "test:watch": "turbo run test:watch",
     "trpc:new": "pnpm -F trpc-cli start"
   },
   "devDependencies": {
@@ -28,7 +30,8 @@
     "@turbo/gen": "^2.4.2",
     "prettier": "catalog:",
     "turbo": "^2.4.2",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "^3.0.6"
   },
   "prettier": "@kdx/prettier-config",
   "pnpm": {
