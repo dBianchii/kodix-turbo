@@ -6,7 +6,6 @@ import { argon2Config } from "@kdx/auth";
 import { createDbSessionAndCookie, createUser } from "@kdx/auth/utils";
 import { db } from "@kdx/db/client";
 import { nanoid } from "@kdx/db/nanoid";
-import { userRepository } from "@kdx/db/repositories";
 
 import type { TPublicProcedureContext } from "../../procedures";
 import { captureProductAnalytic } from "../../../services/productAnalytics.service";
@@ -20,7 +19,8 @@ export const signupWithPasswordHandler = async ({
   ctx,
   input,
 }: SignupWithPasswordOptions) => {
-  const registered = await userRepository.findUserByEmail(input.email);
+  const { publicUserRepository, publicTeamRepository } = ctx.publicRepositories;
+  const registered = await publicUserRepository.findUserByEmail(input.email);
 
   if (registered) {
     throw new TRPCError({
@@ -41,6 +41,8 @@ export const signupWithPasswordHandler = async ({
       invite: input.invite,
       passwordHash: passwordHash,
       tx,
+      publicUserRepository,
+      publicTeamRepository,
     });
   });
 

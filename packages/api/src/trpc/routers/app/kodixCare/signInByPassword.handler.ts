@@ -5,7 +5,6 @@ import { validateUserEmailAndPassword } from "@kdx/auth";
 import { createDbSessionAndCookie } from "@kdx/auth/utils";
 import { and, eq } from "@kdx/db";
 import { db } from "@kdx/db/client";
-import { userRepository } from "@kdx/db/repositories";
 import { appsToTeams, teams, usersToTeams } from "@kdx/db/schema";
 import { kodixCareAppId } from "@kdx/shared";
 
@@ -18,7 +17,9 @@ interface SignInByPasswordOptions {
 
 export const signInByPasswordHandler = async ({
   input,
+  ctx,
 }: SignInByPasswordOptions) => {
+  const { publicUserRepository } = ctx.publicRepositories;
   const { id: userId, activeTeamId } = await validateUserEmailAndPassword({
     email: input.email,
     password: input.password,
@@ -47,11 +48,14 @@ export const signInByPasswordHandler = async ({
 
   if (!_teams.some((team) => team.id === activeTeamId)) {
     //If none of the KodixCare teams are the active team, we need to switch the active team
-    await userRepository.moveUserToTeam(db, {
-      userId,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      newTeamId: _teams[0]!.id,
-    });
+    await publicUserRepository.moveUserToTeam(
+      {
+        userId,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        newTeamId: _teams[0]!.id,
+      },
+      db,
+    );
   }
 
   const sessionId = await createDbSessionAndCookie({ userId });

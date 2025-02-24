@@ -427,9 +427,6 @@ importers:
       '@kdx/db':
         specifier: workspace:*
         version: link:../../packages/db
-      '@kdx/db-dev':
-        specifier: workspace:*
-        version: link:../../packages/db-dev
       '@kdx/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint

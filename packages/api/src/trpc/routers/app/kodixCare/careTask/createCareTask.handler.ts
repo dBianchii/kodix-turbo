@@ -3,11 +3,9 @@ import { TRPCError } from "@trpc/server";
 import { diff } from "deep-diff";
 
 import type { TCreateCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
-import { careTaskRepository } from "@kdx/db/repositories";
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
-import { logActivity } from "../../../../../services/appActivityLogs.service";
 
 interface CreateCareTaskOptions {
   ctx: TProtectedProcedureContext;
@@ -18,8 +16,9 @@ export const createCareTaskHandler = async ({
   ctx,
   input,
 }: CreateCareTaskOptions) => {
-  const { services } = ctx;
-  const ability = await services.permissions.getUserPermissionsForApp({
+  const { permissionsService, appActivityLogsService } = ctx.services;
+  const { careTaskRepository } = ctx.repositories;
+  const ability = await permissionsService.getUserPermissionsForApp({
     user: ctx.auth.user,
     appId: kodixCareAppId,
   });
@@ -39,12 +38,11 @@ export const createCareTaskHandler = async ({
     });
   }
 
-  const careTaskInserted = await careTaskRepository.findCareTaskById({
-    id: created.id,
-    teamId: ctx.auth.user.activeTeamId,
-  });
+  const careTaskInserted = await careTaskRepository.findCareTaskById(
+    created.id,
+  );
 
-  await logActivity({
+  await appActivityLogsService.logActivity({
     appId: kodixCareAppId,
     teamId: ctx.auth.user.activeTeamId,
     tableName: "careTask",

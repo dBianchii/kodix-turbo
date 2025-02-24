@@ -1,14 +1,20 @@
 import type { User } from "@kdx/auth";
+import type { teamRepositoryFactory } from "@kdx/db/repositories";
 import type { ServerSideT } from "@kdx/locales";
 import type { KodixCareMongoAbility } from "@kdx/permissions";
 import type { KodixAppId } from "@kdx/shared";
-import { teamRepository } from "@kdx/db/repositories";
 import {
   defineAbilityForUserAndApp,
   defineAbilityForUserAndTeam,
 } from "@kdx/permissions";
 
-export const permissionsServiceFactory = ({ t }: { t: ServerSideT }) => {
+export const permissionsServiceFactory = ({
+  t,
+  teamRepository,
+}: {
+  t: ServerSideT;
+  teamRepository: ReturnType<typeof teamRepositoryFactory>;
+}) => {
   async function getUserPermissionsForApp<T extends KodixAppId>({
     user,
     appId,
@@ -17,7 +23,6 @@ export const permissionsServiceFactory = ({ t }: { t: ServerSideT }) => {
     appId: T;
   }): Promise<KodixCareMongoAbility> {
     const roles = await teamRepository.findUserRolesByTeamIdAndAppId({
-      teamId: user.activeTeamId,
       appId,
       userId: user.id,
     });
@@ -30,14 +35,8 @@ export const permissionsServiceFactory = ({ t }: { t: ServerSideT }) => {
     });
   }
 
-  async function getUserPermissionsForTeam({
-    user,
-    teamId,
-  }: {
-    user: User;
-    teamId: string;
-  }) {
-    const team = await teamRepository.findTeamById(teamId);
+  async function getUserPermissionsForTeam({ user }: { user: User }) {
+    const team = await teamRepository.findTeamById();
     if (!team) {
       throw new Error("Team not found");
     }

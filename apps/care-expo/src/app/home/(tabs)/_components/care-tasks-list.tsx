@@ -1,3 +1,4 @@
+import type { CareTask } from "node_modules/@kdx/api/dist/api/src/services/calendarAndCareTask.service";
 import React, { useEffect, useMemo, useState } from "react";
 import { Alert, FlatList, Keyboard, TouchableOpacity } from "react-native";
 import Swipeable from "react-native-gesture-handler/Swipeable";
@@ -39,7 +40,6 @@ import {
   ZEditCareTaskInputSchema,
 } from "@kdx/validators/trpc/app/kodixCare/careTask";
 
-import type { CareTask } from "../../../../../../../packages/db/src/repositories/app/kodixCare/careTaskRepository";
 import type { RouterOutputs } from "~/utils/api";
 import { DateTimePicker } from "~/components/date-time-picker";
 import {

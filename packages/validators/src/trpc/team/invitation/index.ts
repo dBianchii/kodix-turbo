@@ -18,7 +18,6 @@ export const ZDeleteInputSchema = z.object({
 export type TDeleteInputSchema = z.infer<typeof ZDeleteInputSchema>;
 
 export const ZInviteInputSchema = z.object({
-  teamId: ZNanoId,
   to: z
     .string()
     .email()

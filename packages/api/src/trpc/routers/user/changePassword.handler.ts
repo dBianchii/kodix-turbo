@@ -4,7 +4,6 @@ import { TRPCError } from "@trpc/server";
 import type { TChangePasswordInputSchema } from "@kdx/validators/trpc/user";
 import { argon2Config } from "@kdx/auth";
 import { db } from "@kdx/db/client";
-import { authRepository, userRepository } from "@kdx/db/repositories";
 
 import type { TPublicProcedureContext } from "../../procedures";
 
@@ -17,9 +16,9 @@ export const changePasswordHandler = async ({
   ctx,
   input,
 }: ChangePasswordOptions) => {
-  const existingToken = await authRepository.findResetPasswordTokenByToken(
-    input.token,
-  );
+  const { publicAuthRepository, publicUserRepository } = ctx.publicRepositories;
+  const existingToken =
+    await publicAuthRepository.findResetPasswordTokenByToken(input.token);
 
   if (!existingToken) {
     throw new TRPCError({
@@ -38,10 +37,16 @@ export const changePasswordHandler = async ({
 
   const hashed = await hash(input.password, argon2Config);
   await db.transaction(async (tx) => {
-    await authRepository.deleteTokenAndDeleteExpiredTokens(tx, input.token);
-    await userRepository.updateUser(tx, {
-      id: existingToken.userId,
-      input: { passwordHash: hashed },
-    });
+    await publicAuthRepository.deleteTokenAndDeleteExpiredTokens(
+      tx,
+      input.token,
+    );
+    await publicUserRepository.updateUser(
+      {
+        id: existingToken.userId,
+        input: { passwordHash: hashed },
+      },
+      tx,
+    );
   });
 };

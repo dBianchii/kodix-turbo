@@ -1,7 +1,6 @@
 import type { TGetCareTasksInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
-import { getCareTasks } from "../../../../../internal/calendarAndCareTaskCentral";
 
 interface GetCareTasksOptions {
   ctx: TProtectedProcedureContext;
@@ -12,7 +11,7 @@ export const getCareTasksHandler = async ({
   ctx,
   input,
 }: GetCareTasksOptions) => {
-  const careTasks = await getCareTasks({
+  const careTasks = await ctx.services.calendarAndCareTaskService.getCareTasks({
     dateStart: input.dateStart,
     dateEnd: input.dateEnd,
     teamIds: [ctx.auth.user.activeTeamId],

@@ -2,7 +2,10 @@
 //? It's to avoid circular dependencies / duplicated code for db calls that need to be here in @kdx/auth
 
 import type { Drizzle, DrizzleTransaction } from "@kdx/db/client";
-import { teamRepository, userRepository } from "@kdx/db/repositories";
+import type {
+  public_teamRepositoryFactory,
+  public_userRepositoryFactory,
+} from "@kdx/db/repositories";
 
 import {
   createSession,
@@ -18,6 +21,8 @@ export async function createUser({
   email,
   image,
   tx,
+  publicUserRepository,
+  publicTeamRepository,
   passwordHash,
 }: {
   invite?: string;
@@ -27,25 +32,42 @@ export async function createUser({
   email: string;
   image?: string;
   passwordHash?: string;
+  publicUserRepository: ReturnType<typeof public_userRepositoryFactory>;
+  publicTeamRepository: ReturnType<typeof public_teamRepositoryFactory>;
   tx: DrizzleTransaction;
 }) {
-  await userRepository.createUser(tx, {
-    id: userId,
-    name: name,
-    activeTeamId: teamId,
-    email: email,
-    image: image,
-    passwordHash: passwordHash,
-  });
+  await publicUserRepository.createUser(
+    {
+      id: userId,
+      name: name,
+      activeTeamId: teamId,
+      email: email,
+      image: image,
+      passwordHash: passwordHash,
+    },
+    tx,
+  );
+
   if (invite) {
-    await acceptInvite({ invite, userId, email, db: tx });
-  } else {
-    await teamRepository.createTeamAndAssociateUser(tx, userId, {
+    await acceptInvite({
+      invite,
+      userId,
+      email,
+      db: tx,
+      publicUserRepository,
+    });
+    return;
+  }
+
+  await publicTeamRepository.createTeamAndAssociateUser(
+    userId,
+    {
       id: teamId,
       ownerId: userId,
       name: `Personal Team`,
-    });
-  }
+    },
+    tx,
+  );
 }
 
 export async function acceptInvite({
@@ -53,25 +75,33 @@ export async function acceptInvite({
   userId,
   email,
   db,
+  publicUserRepository,
 }: {
   invite: string;
   userId: string;
   email: string;
   db: Drizzle;
+  publicUserRepository: ReturnType<typeof public_userRepositoryFactory>;
 }) {
-  const invitation = await teamRepository.findInvitationByIdAndEmail({
+  const invitation = await publicUserRepository.findInvitationByIdAndEmail({
     id: invite,
     email,
   });
 
   if (!invitation) throw new Error("No invitation found");
 
-  await userRepository.moveUserToTeamAndAssociateToTeam(db, {
-    userId,
-    teamId: invitation.Team.id,
+  await db.transaction(async (tx) => {
+    await Promise.allSettled([
+      publicUserRepository.moveUserToTeamAndAssociateToTeam(
+        {
+          userId,
+          teamId: invitation.Team.id,
+        },
+        tx,
+      ),
+      publicUserRepository.deleteInvitationById(invite, tx),
+    ]);
   });
-
-  await teamRepository.deleteInvitationById(db, invite);
 }
 
 export async function createDbSessionAndCookie({ userId }: { userId: string }) {

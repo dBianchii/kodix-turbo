@@ -5,11 +5,9 @@ import deepDiff from "deep-diff";
 import type { careTasks } from "@kdx/db/schema";
 import type { TEditCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
 import { db } from "@kdx/db/client";
-import { careTaskRepository } from "@kdx/db/repositories";
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
-import { logActivity } from "../../../../../services/appActivityLogs.service";
 
 interface EditCareTaskOptions {
   ctx: TProtectedProcedureContext;
@@ -20,10 +18,9 @@ export const editCareTaskHandler = async ({
   ctx,
   input,
 }: EditCareTaskOptions) => {
-  const oldCareTask = await careTaskRepository.findCareTaskById({
-    id: input.id,
-    teamId: ctx.auth.user.activeTeamId,
-  });
+  const { appActivityLogsService } = ctx.services;
+  const { careTaskRepository } = ctx.repositories;
+  const oldCareTask = await careTaskRepository.findCareTaskById(input.id);
   if (!oldCareTask)
     throw new TRPCError({
       code: "NOT_FOUND",
@@ -51,10 +48,7 @@ export const editCareTaskHandler = async ({
 
     after(async () => {
       const newCareTask = await careTaskRepository.findCareTaskById(
-        {
-          id: input.id,
-          teamId: ctx.auth.user.activeTeamId,
-        },
+        input.id,
         tx,
       );
       if (!newCareTask)
@@ -64,7 +58,7 @@ export const editCareTaskHandler = async ({
         });
       const diff = deepDiff(oldCareTask, newCareTask);
 
-      await logActivity(
+      await appActivityLogsService.logActivity(
         {
           appId: kodixCareAppId,
           diff,

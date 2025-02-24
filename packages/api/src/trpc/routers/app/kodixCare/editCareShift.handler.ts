@@ -5,11 +5,9 @@ import { diff } from "deep-diff";
 import type { careShifts } from "@kdx/db/schema";
 import type { TEditCareShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import { db } from "@kdx/db/client";
-import { kodixCareRepository } from "@kdx/db/repositories";
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
-import { logActivity } from "../../../../services/appActivityLogs.service";
 import { assertNoOverlappingShiftsForThisCaregiver } from "./_kodixCare.permissions";
 
 interface EditCareShiftOptions {
@@ -21,11 +19,10 @@ export const editCareShiftHandler = async ({
   ctx,
   input,
 }: EditCareShiftOptions) => {
-  const { services } = ctx;
-  const oldShift = await kodixCareRepository.getCareShiftById({
-    id: input.id,
-    teamId: ctx.auth.user.activeTeamId,
-  });
+  const { permissionsService, appActivityLogsService } = ctx.services;
+
+  const { kodixCareRepository } = ctx.repositories;
+  const oldShift = await kodixCareRepository.getCareShiftById(input.id);
   if (!oldShift)
     throw new TRPCError({
       code: "NOT_FOUND",
@@ -39,7 +36,7 @@ export const editCareShiftHandler = async ({
         message: ctx.t("api.Cannot edit finished shifts"),
       });
 
-  const permissions = await services.permissions.getUserPermissionsForApp({
+  const permissions = await permissionsService.getUserPermissionsForApp({
     user: ctx.auth.user,
     appId: kodixCareAppId,
   });
@@ -81,13 +78,7 @@ export const editCareShiftHandler = async ({
       },
       tx,
     );
-    const newShift = await kodixCareRepository.getCareShiftById(
-      {
-        id: input.id,
-        teamId: ctx.auth.user.activeTeamId,
-      },
-      tx,
-    );
+    const newShift = await kodixCareRepository.getCareShiftById(input.id, tx);
     if (!newShift)
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
@@ -96,7 +87,7 @@ export const editCareShiftHandler = async ({
 
     const changes = diff(oldShift, newShift);
     if (changes?.length)
-      await logActivity({
+      await appActivityLogsService.logActivity({
         appId: kodixCareAppId,
         userId: ctx.auth.user.id,
         teamId: ctx.auth.user.activeTeamId,

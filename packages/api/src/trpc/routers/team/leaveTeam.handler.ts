@@ -2,7 +2,6 @@ import { TRPCError } from "@trpc/server";
 
 import type { TLeaveTeamInputSchema } from "@kdx/validators/trpc/team";
 import { db } from "@kdx/db/client";
-import { teamRepository, userRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 
@@ -12,7 +11,9 @@ interface LeaveTeamOptions {
 }
 
 export const leaveTeamHandler = async ({ ctx, input }: LeaveTeamOptions) => {
-  const team = await teamRepository.findTeamById(input.teamId);
+  const { teamRepository } = ctx.repositories;
+  const { publicUserRepository } = ctx.publicRepositories;
+  const team = await teamRepository.findTeamById();
 
   if (!team)
     throw new TRPCError({
@@ -30,7 +31,6 @@ export const leaveTeamHandler = async ({ ctx, input }: LeaveTeamOptions) => {
 
   const otherTeam =
     await teamRepository.findAnyOtherTeamAssociatedWithUserThatIsNotTeamId({
-      teamId: ctx.auth.user.activeTeamId,
       userId: ctx.auth.user.id,
     });
 
@@ -44,21 +44,23 @@ export const leaveTeamHandler = async ({ ctx, input }: LeaveTeamOptions) => {
   }
 
   await db.transaction(async (tx) => {
-    await userRepository.moveUserToTeam(tx, {
-      userId: ctx.auth.user.id,
-      newTeamId: otherTeam.id,
-    });
+    await publicUserRepository.moveUserToTeam(
+      {
+        userId: ctx.auth.user.id,
+        newTeamId: otherTeam.id,
+      },
+      tx,
+    );
 
     //Remove the user from the team
-    await teamRepository.removeUserFromTeam(tx, {
-      teamId: input.teamId,
-      userId: ctx.auth.user.id,
-    });
+    await publicUserRepository.removeUserFromTeam(
+      { userId: ctx.auth.user.id, teamId: input.teamId },
+      tx,
+    );
 
     //Remove the user association from the team's apps
     await teamRepository.removeUserAssociationsFromUserTeamAppRolesByTeamId(
       {
-        teamId: input.teamId,
         userId: ctx.auth.user.id,
       },
       tx,

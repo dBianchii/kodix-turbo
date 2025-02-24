@@ -1,8 +1,8 @@
 import type { inferProcedureBuilderResolverOptions } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 
-import { teamRepository } from "@kdx/db/repositories";
-
+import { initializeServices } from "../services";
+import { initializeRepositoriesForTeams } from "./initializeRepositories";
 import { t } from "./trpc";
 
 //? This file should ONLY EXPORT procedures and their context types. Do not export anything else from this file because they are read by @kdx/trpc-cli
@@ -32,11 +32,22 @@ export const protectedProcedure = publicProcedure.use(({ ctx, next }) => {
   if (!ctx.auth.user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
+
+  const repositories = initializeRepositoriesForTeams([
+    ctx.auth.user.activeTeamId,
+  ]);
+
   return next({
     ctx: {
       ...ctx,
       // infers the `user` and `session` as non-nullable
       auth: ctx.auth,
+      services: initializeServices({
+        t: ctx.t,
+        repositories,
+        publicRepositories: ctx.publicRepositories,
+      }),
+      repositories,
     },
   });
 });
@@ -46,7 +57,8 @@ export type TProtectedProcedureContext = inferProcedureBuilderResolverOptions<
 
 export const isTeamOwnerProcedure = protectedProcedure.use(
   async ({ ctx, next }) => {
-    const team = await teamRepository.findTeamById(ctx.auth.user.activeTeamId);
+    const { teamRepository } = ctx.repositories;
+    const team = await teamRepository.findTeamById();
 
     if (!team)
       throw new TRPCError({
