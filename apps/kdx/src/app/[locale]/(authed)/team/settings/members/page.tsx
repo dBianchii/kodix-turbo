@@ -2,11 +2,11 @@ import { Suspense } from "react";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
+import { teamRepository } from "@kdx/db/repositories";
 import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@kdx/ui/tabs";
 
 import { redirect } from "~/i18n/routing";
-import { api } from "~/trpc/server";
 import { InviteDataTable } from "./_components/edit-team-members/invites/data-table-invite";
 import { DataTableMembers } from "./_components/edit-team-members/members/data-table-members";
 import TeamInviteCard from "./_components/invite/team-invite-card";
@@ -18,8 +18,9 @@ export default async function SettingsMembersPage() {
 
   const t = await getTranslations();
 
-  const currentTeam = await api.team.getActiveTeam();
+  const currentTeam = await teamRepository.findTeamById(user.activeTeamId);
 
+  if (!currentTeam) throw new Error("No team found");
   const canEditPage = currentTeam.ownerId === user.id;
 
   return (
@@ -32,7 +33,7 @@ export default async function SettingsMembersPage() {
           {t("settings.Invite members to your team and remove active members")}
         </p>
       </div>
-      <TeamInviteCard canEditPage={canEditPage} />
+      <TeamInviteCard user={user} canEditPage={canEditPage} />
       <Tabs defaultValue="members">
         <div className="flex flex-row gap-2">
           <TabsList className="">

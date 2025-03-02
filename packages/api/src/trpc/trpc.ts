@@ -12,8 +12,8 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 
 import type { AuthResponse } from "../../../auth/src/config";
+import { initializeServices } from "../services";
 import { getLocaleBasedOnCookie } from "../utils/locales";
-import { initializePublicRepositories } from "./initializeRepositories";
 
 /**
  * 1. CONTEXT
@@ -39,11 +39,11 @@ export const createTRPCContext = async (opts: {
   const locale = await getLocaleBasedOnCookie();
   const t = await getTranslations({ locale });
   const format = await getFormatter({ locale });
-  const publicRepositories = initializePublicRepositories();
+  const services = initializeServices({ t });
 
   return {
-    publicRepositories,
     format,
+    services,
     t,
     auth,
     token: authToken,

@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { LuMail } from "react-icons/lu";
 import { RxMinusCircled, RxPlusCircled } from "react-icons/rx";
 
+import type { User } from "@kdx/auth";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import {
@@ -34,8 +35,10 @@ import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { api } from "~/trpc/react";
 
 export default function TeamInviteCardClient({
+  user,
   canEditPage,
 }: {
+  user: User;
   canEditPage: boolean;
 }) {
   const utils = api.useUtils();
@@ -126,6 +129,7 @@ export default function TeamInviteCardClient({
               loading={mutation.isPending}
               onClick={() => {
                 const values = {
+                  teamId: user.activeTeamId,
                   to: emails.map((x) => x.value).filter((x) => Boolean(x)),
                 };
                 const parsed = ZInviteInputSchema.safeParse(values);

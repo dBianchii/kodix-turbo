@@ -1,5 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
+import { appRepository } from "@kdx/db/repositories";
+
 import type { TPublicProcedureContext } from "../../procedures";
 
 interface GetAllOptions {
@@ -7,8 +9,7 @@ interface GetAllOptions {
 }
 
 export const getAllHandler = async ({ ctx }: GetAllOptions) => {
-  const { publicAppRepository } = ctx.publicRepositories;
-  const _apps = await publicAppRepository.findInstalledAppsByTeamId(
+  const _apps = await appRepository.findInstalledAppsByTeamId(
     ctx.auth.user?.activeTeamId,
   );
 

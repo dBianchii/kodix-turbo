@@ -3,8 +3,10 @@ import { RRule, rrulestr } from "rrule";
 
 import type { TCancelInputSchema } from "@kdx/validators/trpc/app/calendar";
 import { db } from "@kdx/db/client";
+import { calendarRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
+import { deleteEventMasterById } from "../../../../../../db/src/repositories/app/calendar/calendarRepository";
 
 interface CancelOptions {
   ctx: TProtectedProcedureContext;
@@ -12,7 +14,6 @@ interface CancelOptions {
 }
 
 export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
-  const { calendarRepository } = ctx.repositories;
   if (input.exclusionDefinition === "single") {
     if (input.eventExceptionId) {
       await db.transaction(async (tx) => {
@@ -53,6 +54,7 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
     await db.transaction(async (tx) => {
       if (input.eventExceptionId) {
         await calendarRepository.deleteEventExceptionsHigherThanDate(tx, {
+          teamId: ctx.auth.user.activeTeamId,
           date: input.date,
           eventExceptionId: input.eventExceptionId,
         });
@@ -60,6 +62,7 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
 
       const eventMaster = await calendarRepository.findEventMasterById(tx, {
         id: input.eventMasterId,
+        teamId: ctx.auth.user.activeTeamId,
       });
       if (!eventMaster)
         throw new TRPCError({
@@ -78,6 +81,7 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
 
       return await calendarRepository.updateEventMasterById(tx, {
         id: input.eventMasterId,
+        teamId: ctx.auth.user.activeTeamId,
         input: {
           dateUntil: penultimateOccurence,
           rule: new RRule(options).toString(),
@@ -86,7 +90,7 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
     });
     return;
   } else {
-    await calendarRepository.deleteEventMasterById(db, input.eventMasterId);
+    await deleteEventMasterById(db, input.eventMasterId);
 
     return;
   }

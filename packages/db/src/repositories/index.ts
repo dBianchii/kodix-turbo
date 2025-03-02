@@ -1,9 +1,10 @@
-export { careTaskRepositoryFactory } from "./app/kodixCare/careTaskRepository";
-export { public_appRepositoryFactory } from "./app/public_appRepository";
-export { public_userRepositoryFactory } from "./public_userRepoitory";
-export { public_teamRepositoryFactory } from "./public_teamRepository";
-export { public_authRepositoryFactory } from "./public_authRepository";
-export { public_notificationsRepositoryFactory } from "./public_notificationsRepository";
-export { appRepositoryFactory } from "./app/appRepository";
-export { teamRepositoryFactory } from "./teamRepository";
-export { kodixCareRepositoryFactory } from "./app/kodixCare/kodixCareRepository";
+export * as appRepository from "./app/appRepository";
+export * as authRepository from "./authRepository";
+export * as notificationRepository from "./notificationRepository";
+export * as teamRepository from "./teamRepository";
+export * as userRepository from "./userRepository";
+
+export * as careTaskRepository from "./app/kodixCare/careTaskRepository";
+export * as kodixCareRepository from "./app/kodixCare/kodixCareRepository";
+
+export * as calendarRepository from "./app/calendar/calendarRepository";

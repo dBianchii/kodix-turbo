@@ -1,7 +1,7 @@
 "use client";
 
 import type { SortingState, VisibilityState } from "@tanstack/react-table";
-import type { CareTask } from "node_modules/@kdx/api/src/services/calendarAndCareTask.service";
+import type { CareTask } from "node_modules/@kdx/api/src/internal/calendarAndCareTaskCentral";
 import { useEffect, useMemo, useState } from "react";
 import {
   createColumnHelper,

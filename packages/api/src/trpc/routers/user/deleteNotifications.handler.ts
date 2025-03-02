@@ -1,4 +1,5 @@
 import type { TDeleteNotificationsInputSchema } from "@kdx/validators/trpc/user";
+import { notificationRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 
@@ -11,9 +12,8 @@ export const deleteNotificationsHandler = async ({
   ctx,
   input,
 }: DeleteNotificationsOptions) => {
-  const { publicNotificationsRepository } = ctx.publicRepositories;
-  await publicNotificationsRepository.deleteUserNotifications({
+  await notificationRepository.deleteUserNotificationsWithinTeams({
     userId: ctx.auth.user.id,
-    ids: input.ids,
+    teamIds: input.ids,
   });
 };

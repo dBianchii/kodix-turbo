@@ -1,4 +1,5 @@
 import type { TSaveUserAppTeamConfigInputSchema } from "@kdx/validators/trpc/app";
+import { appRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 
@@ -11,10 +12,10 @@ export const saveUserAppTeamConfigHandler = async ({
   ctx,
   input,
 }: SaveUserAppTeamConfigOptions) => {
-  const { appRepository } = ctx.repositories;
   await appRepository.upsertUserAppTeamConfigs({
     userId: ctx.auth.user.id,
     appId: input.appId,
+    teamId: ctx.auth.user.activeTeamId,
     input: input.config,
   });
 };

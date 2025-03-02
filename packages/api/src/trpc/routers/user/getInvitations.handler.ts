@@ -1,3 +1,5 @@
+import { teamRepository } from "@kdx/db/repositories";
+
 import type { TProtectedProcedureContext } from "../../procedures";
 
 interface GetInvitationsOptions {
@@ -5,8 +7,7 @@ interface GetInvitationsOptions {
 }
 
 export const getInvitationsHandler = async ({ ctx }: GetInvitationsOptions) => {
-  const { publicUserRepository } = ctx.publicRepositories;
-  const invitations = await publicUserRepository.findManyInvitationsByEmail(
+  const invitations = await teamRepository.findManyInvitationsByEmail(
     ctx.auth.user.email,
   );
 

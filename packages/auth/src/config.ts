@@ -7,10 +7,7 @@ import {
 } from "@oslojs/encoding";
 
 import type { sessions, users } from "@kdx/db/schema";
-import {
-  public_authRepositoryFactory,
-  public_userRepositoryFactory,
-} from "@kdx/db/repositories";
+import { authRepository, userRepository } from "@kdx/db/repositories";
 
 import { env } from "../env";
 import * as discordProvider from "./providers/discord";
@@ -50,13 +47,11 @@ export async function createSession(token: string, userId: string) {
     ipAddress: heads.get("X-Forwarded-For") ?? "127.0.0.1",
     userAgent: heads.get("user-agent"),
   };
-  await public_authRepositoryFactory().createSession(session);
+  await authRepository.createSession(session);
   return session;
 }
 
 async function validateSessionToken(token: string): Promise<AuthResponse> {
-  const authRepository = public_authRepositoryFactory();
-
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
   const result = await authRepository.findUserTeamBySessionId({ sessionId });
 
@@ -82,7 +77,7 @@ async function validateSessionToken(token: string): Promise<AuthResponse> {
 }
 
 export async function invalidateSession(sessionId: string) {
-  await public_authRepositoryFactory().deleteSession(sessionId);
+  await authRepository.deleteSession(sessionId);
 }
 const SESSION_COOKIE_NAME = "session";
 export async function setSessionTokenCookie(token: string, expiresAt: Date) {
@@ -123,8 +118,7 @@ export async function validateUserEmailAndPassword({
   email: string;
   password: string;
 }) {
-  const publicUserRepository = public_userRepositoryFactory();
-  const existingUser = await publicUserRepository.findUserByEmail(email);
+  const existingUser = await userRepository.findUserByEmail(email);
   if (!existingUser) {
     // NOTE:
     // Returning immediately allows malicious actors to figure out valid usernames from response times,

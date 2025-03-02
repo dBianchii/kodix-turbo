@@ -5,8 +5,10 @@ import type { TEditInputSchema } from "@kdx/validators/trpc/app/calendar";
 import dayjs from "@kdx/dayjs";
 import { db } from "@kdx/db/client";
 import { nanoid } from "@kdx/db/nanoid";
+import { calendarRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
+import { findEventMasterById } from "../../../../../../db/src/repositories/app/calendar/calendarRepository";
 
 interface EditOptions {
   ctx: TProtectedProcedureContext;
@@ -14,8 +16,6 @@ interface EditOptions {
 }
 
 export const editHandler = async ({ ctx, input }: EditOptions) => {
-  const { calendarRepository } = ctx.repositories;
-
   //!! TODO: REVISE SECURITY!!
   if (input.editDefinition === "single") {
     //* Havemos description, title, from e selectedTimestamp.
@@ -29,6 +29,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
 
       await calendarRepository.updateEventExceptionById(db, {
         id: input.eventExceptionId,
+        teamId: ctx.auth.user.activeTeamId,
         input: {
           newDate: input.from,
           title: input.title,
@@ -44,6 +45,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
     //* Se estamos aqui, o usuário enviou o masterId. Vamos procurar no eventMaster uma ocorrência do RRULE que bate com o selectedTimestamp.
     const eventMaster = await calendarRepository.findEventMasterById(db, {
       id: input.eventMasterId,
+      teamId: ctx.auth.user.activeTeamId,
     });
 
     if (!eventMaster)
@@ -127,6 +129,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
 
       const oldMaster = await calendarRepository.findEventMasterById(tx, {
         id: input.eventMasterId,
+        teamId: ctx.auth.user.activeTeamId,
       });
       if (!oldMaster)
         throw new TRPCError({
@@ -152,6 +155,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
         //! NO SPLIT REQUIRED BECAUSE ITS THE FIRST OCCURANCE! !!
         await calendarRepository.updateEventMasterById(tx, {
           id: input.eventMasterId,
+          teamId: ctx.auth.user.activeTeamId,
           input: {
             title: input.title,
             description: input.description,
@@ -193,6 +197,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
 
       await calendarRepository.updateEventMasterById(tx, {
         id: input.eventMasterId,
+        teamId: ctx.auth.user.activeTeamId,
         input: {
           dateUntil: previousOccurence,
           rule: new RRule({
@@ -234,6 +239,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
           {
             eventMasterId: oldMaster.id,
             date: input.selectedTimestamp,
+            teamId: ctx.auth.user.activeTeamId,
             input: {
               title: input.title ? null : undefined,
               description: input.description ? null : undefined,
@@ -266,10 +272,10 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
 
         if (!shouldUpdateRule) return undefined;
 
-        const foundEventMasterForPreviousRule =
-          await calendarRepository.findEventMasterById(tx, {
-            id: input.eventMasterId,
-          });
+        const foundEventMasterForPreviousRule = await findEventMasterById(tx, {
+          id: input.eventMasterId,
+          teamId: ctx.auth.user.activeTeamId,
+        });
 
         if (!foundEventMasterForPreviousRule)
           throw new TRPCError({
@@ -302,6 +308,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
 
       await calendarRepository.updateEventMasterById(tx, {
         id: input.eventMasterId,
+        teamId: ctx.auth.user.activeTeamId,
         input: {
           title: input.title,
           type: input.type,

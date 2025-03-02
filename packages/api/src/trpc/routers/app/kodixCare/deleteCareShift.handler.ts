@@ -2,6 +2,7 @@ import { ForbiddenError } from "@casl/ability";
 import { TRPCError } from "@trpc/server";
 
 import type { TDeleteCareShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
+import { kodixCareRepository } from "@kdx/db/repositories";
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
@@ -15,9 +16,11 @@ export const deleteCareShiftHandler = async ({
   ctx,
   input,
 }: DeleteCareShiftOptions) => {
-  const { permissionsService } = ctx.services;
-  const { kodixCareRepository } = ctx.repositories;
-  const careShift = await kodixCareRepository.getCareShiftById(input.id);
+  const { services } = ctx;
+  const careShift = await kodixCareRepository.getCareShiftById({
+    id: input.id,
+    teamId: ctx.auth.user.activeTeamId,
+  });
   if (!careShift) {
     throw new TRPCError({
       code: "NOT_FOUND",
@@ -25,7 +28,7 @@ export const deleteCareShiftHandler = async ({
     });
   }
 
-  const ability = await permissionsService.getUserPermissionsForApp({
+  const ability = await services.permissions.getUserPermissionsForApp({
     appId: kodixCareAppId,
     user: ctx.auth.user,
   });
@@ -34,5 +37,8 @@ export const deleteCareShiftHandler = async ({
     ...careShift,
   });
 
-  await kodixCareRepository.deleteCareShiftById(input.id);
+  await kodixCareRepository.deleteCareShiftById({
+    id: input.id,
+    teamId: ctx.auth.user.activeTeamId,
+  });
 };

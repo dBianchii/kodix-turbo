@@ -2,8 +2,14 @@ import { TRPCError } from "@trpc/server";
 
 import type { TDeleteTeamInputSchema } from "@kdx/validators/trpc/team";
 import { db } from "@kdx/db/client";
+import {
+  careTaskRepository,
+  teamRepository,
+  userRepository,
+} from "@kdx/db/repositories";
 
 import type { TIsTeamOwnerProcedureContext } from "../../procedures";
+import { findTeamById } from "../../../../../db/src/repositories/teamRepository";
 
 interface DeleteTeamOptions {
   ctx: TIsTeamOwnerProcedureContext;
@@ -11,9 +17,7 @@ interface DeleteTeamOptions {
 }
 
 export const deleteTeamHandler = async ({ ctx, input }: DeleteTeamOptions) => {
-  const { teamRepository, careTaskRepository } = ctx.repositories;
-  const { publicUserRepository } = ctx.publicRepositories;
-  const team = await teamRepository.findTeamById();
+  const team = await findTeamById(input.teamId);
 
   if (!team)
     throw new TRPCError({
@@ -41,6 +45,7 @@ export const deleteTeamHandler = async ({ ctx, input }: DeleteTeamOptions) => {
   const otherTeam =
     await teamRepository.findAnyOtherTeamAssociatedWithUserThatIsNotTeamId({
       userId: ctx.auth.user.id,
+      teamId: input.teamId,
     });
 
   if (!otherTeam) {
@@ -54,16 +59,13 @@ export const deleteTeamHandler = async ({ ctx, input }: DeleteTeamOptions) => {
 
   await db.transaction(async (tx) => {
     //Move the user to the other team
-    await publicUserRepository.moveUserToTeam(
-      {
-        userId: ctx.auth.user.id,
-        newTeamId: otherTeam.id,
-      },
-      tx,
-    );
+    await userRepository.moveUserToTeam(tx, {
+      userId: ctx.auth.user.id,
+      newTeamId: otherTeam.id,
+    });
 
     //Remove the team
-    await careTaskRepository.deleteAllCareTasksForTeam(tx);
-    await teamRepository.deleteTeam(tx); //! Should delete many other tables based on referential actions
+    await careTaskRepository.deleteAllCareTasksForTeam(tx, input.teamId);
+    await teamRepository.deleteTeam(tx, input.teamId); //! Should delete many other tables based on referential actions
   });
 };

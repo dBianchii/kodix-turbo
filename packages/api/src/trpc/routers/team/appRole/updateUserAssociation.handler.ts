@@ -2,6 +2,7 @@ import { ForbiddenError } from "@casl/ability";
 
 import type { TUpdateUserAssociationInputSchema } from "@kdx/validators/trpc/team/appRole";
 import { db } from "@kdx/db/client";
+import { teamRepository } from "@kdx/db/repositories";
 import { typedObjectEntries } from "@kdx/shared";
 
 import type { TIsTeamOwnerProcedureContext } from "../../../procedures";
@@ -15,13 +16,13 @@ export const updateUserAssociationHandler = async ({
   ctx,
   input,
 }: UpdateUserAssociationOptions) => {
-  const { permissionsService } = ctx.services;
-  const { teamRepository } = ctx.repositories;
+  const { services } = ctx;
 
   const toRemoveRoles = typedObjectEntries(input.roles).filter(
     ([_, value]) => !value,
   );
-  const permission = await permissionsService.getUserPermissionsForTeam({
+  const permission = await services.permissions.getUserPermissionsForTeam({
+    teamId: ctx.auth.user.activeTeamId,
     user: ctx.auth.user,
   });
   for (const [role] of toRemoveRoles)
@@ -42,6 +43,7 @@ export const updateUserAssociationHandler = async ({
       await teamRepository.removeUserAssociationsFromTeamAppRolesByTeamIdAndAppIdAndRoles(
         {
           appId: input.appId,
+          teamId: ctx.auth.user.activeTeamId,
           userId: input.userId,
           roles: toRemoveRoles.map(([role]) => role),
         },

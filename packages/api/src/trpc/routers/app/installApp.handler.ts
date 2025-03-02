@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import type { TInstallAppInputSchema } from "@kdx/validators/trpc/app";
+import { appRepository } from "@kdx/db/repositories";
 import { todoAppId } from "@kdx/shared";
 
 import type { TIsTeamOwnerProcedureContext } from "../../procedures";
@@ -11,8 +12,6 @@ interface InstallAppOptions {
 }
 
 export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
-  const { appRepository } = ctx.repositories;
-
   if (input.appId === todoAppId)
     //TODO: stinky
     throw new TRPCError({
@@ -22,6 +21,7 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
 
   const installed = await appRepository.findInstalledApp({
     appId: input.appId,
+    teamId: ctx.auth.user.activeTeamId,
   });
 
   if (installed)
@@ -33,5 +33,6 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
   await appRepository.installAppForTeam({
     appId: input.appId,
     userId: ctx.auth.user.id,
+    teamId: ctx.auth.user.activeTeamId,
   });
 };

@@ -15,6 +15,5 @@ export const acceptHandler = async ({ ctx, input }: AcceptOptions) => {
     userId: ctx.auth.user.id,
     email: ctx.auth.user.email,
     db: db,
-    publicUserRepository: ctx.publicRepositories.publicUserRepository,
   });
 };

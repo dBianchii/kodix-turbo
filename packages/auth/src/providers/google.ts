@@ -1,6 +1,6 @@
 import { Google } from "arctic";
 
-import { public_authRepositoryFactory } from "@kdx/db/repositories";
+import { authRepository } from "@kdx/db/repositories";
 import { getBaseUrl } from "@kdx/shared";
 
 import { env } from "../../env";
@@ -46,11 +46,10 @@ export const handleCallback = async (code: string, codeVerifier: string) => {
   );
   const googleUser = (await response.json()) as GoogleUser;
 
-  const existingAccount =
-    await public_authRepositoryFactory().findAccountByProviderUserId({
-      providerId: "google",
-      providerUserId: googleUser.id,
-    });
+  const existingAccount = await authRepository.findAccountByProviderUserId({
+    providerId: "google",
+    providerUserId: googleUser.id,
+  });
 
   if (existingAccount) return existingAccount.userId;
 

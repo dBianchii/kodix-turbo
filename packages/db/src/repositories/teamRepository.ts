@@ -3,9 +3,10 @@ import { and, eq, inArray, not } from "drizzle-orm";
 
 import type { AppRole } from "@kdx/shared";
 
+import type { Drizzle, DrizzleTransaction } from "../client";
 import type { Update } from "./_types";
 import type { zInvitationCreateMany } from "./_zodSchemas/invitationSchemas";
-import type { zTeamUpdate } from "./_zodSchemas/teamSchemas";
+import type { zTeamCreate, zTeamUpdate } from "./_zodSchemas/teamSchemas";
 import { db as _db } from "../client";
 import {
   invitations,
@@ -14,264 +15,375 @@ import {
   usersToTeams,
   userTeamAppRoles,
 } from "../schema";
-import {
-  assertTeamIdInList,
-  createWithinTeams,
-  createWithinTeamsForTable,
-} from "./utils";
 
-export function teamRepositoryFactory(teamIds: string[]) {
-  const withinTeams = createWithinTeams(teamIds);
-  const withinTeamsUsersToTeams = createWithinTeamsForTable(
-    teamIds,
-    usersToTeams,
-  );
-  const withinTeamsUserTeamAppRoles = createWithinTeamsForTable(
-    teamIds,
-    userTeamAppRoles,
-  );
-  const withinTeamsInvitations = createWithinTeamsForTable(
-    teamIds,
-    invitations,
-  );
+export async function createTeamAndAssociateUser(
+  db: DrizzleTransaction,
+  userId: string,
+  team: z.infer<typeof zTeamCreate>,
+) {
+  const [createdTeam] = await db.insert(teams).values(team).$returningId();
+  if (!createdTeam) throw new Error("Failed to create team");
 
-  async function findTeamById(db = _db) {
-    return await db.query.teams.findFirst({
-      where: withinTeams(),
-      with: {
-        UsersToTeams: {
-          columns: {
-            userId: true,
-          },
+  await db.insert(usersToTeams).values({
+    userId: userId,
+    teamId: createdTeam.id,
+  });
+}
+
+export async function findTeamById(teamId: string, db = _db) {
+  return await db.query.teams.findFirst({
+    where: (team, { eq }) => eq(team.id, teamId),
+    with: {
+      UsersToTeams: {
+        columns: {
+          userId: true,
         },
       },
-      columns: { id: true, ownerId: true, name: true },
-    });
-  }
+    },
+    columns: { id: true, ownerId: true, name: true },
+  });
+}
 
-  async function findTeamWithUsersAndInvitations(email: string[], db = _db) {
-    const team = await db.query.teams.findFirst({
-      where: withinTeams(),
-      columns: {
-        name: true,
-        id: true,
-      },
-      with: {
-        UsersToTeams: {
-          with: {
-            User: {
-              columns: {
-                email: true,
-              },
+export async function findTeamWithUsersAndInvitations(
+  {
+    teamId,
+    email,
+  }: {
+    teamId: string;
+    email: string[];
+  },
+  db = _db,
+) {
+  const team = await db.query.teams.findFirst({
+    where: (teams, { and, eq }) => and(eq(teams.id, teamId)),
+    columns: {
+      name: true,
+      id: true,
+    },
+    with: {
+      UsersToTeams: {
+        with: {
+          User: {
+            columns: {
+              email: true,
             },
           },
         },
-        Invitations: {
-          where: (invitations, { inArray }) =>
-            inArray(invitations.email, email),
-          columns: {
-            email: true,
+      },
+      Invitations: {
+        where: (invitations, { inArray }) => inArray(invitations.email, email),
+        columns: {
+          email: true,
+        },
+      },
+    },
+  });
+
+  return team;
+}
+
+export async function findAnyOtherTeamAssociatedWithUserThatIsNotTeamId(
+  {
+    userId,
+    teamId,
+  }: {
+    userId: string;
+    teamId: string;
+  },
+  db = _db,
+) {
+  const [otherTeam] = await db
+    .select({ id: teams.id })
+    .from(teams)
+    .innerJoin(usersToTeams, eq(teams.id, usersToTeams.teamId))
+    .where(and(not(eq(teams.id, teamId)), eq(usersToTeams.userId, userId)));
+  return otherTeam;
+}
+
+export async function findTeamsByUserId(userId: string, db = _db) {
+  return db.query.teams.findMany({
+    with: {
+      UsersToTeams: true,
+    },
+    where: (teams, { exists }) =>
+      exists(
+        db
+          .select()
+          .from(usersToTeams)
+          .where(
+            and(
+              eq(usersToTeams.teamId, teams.id),
+              eq(usersToTeams.userId, userId),
+            ),
+          ),
+      ),
+  });
+}
+
+export async function findAllTeamsWithAppInstalled(appId: string, db = _db) {
+  const allTeamIdsWithKodixCareInstalled = await db.query.appsToTeams.findMany({
+    where: (appsToTeams, { eq }) => eq(appsToTeams.appId, appId),
+    columns: {
+      teamId: true,
+    },
+    with: {
+      Team: {
+        with: {
+          UsersToTeams: {
+            columns: {
+              userId: true,
+            },
           },
         },
       },
-    });
-
-    return team;
-  }
-
-  async function findAnyOtherTeamAssociatedWithUserThatIsNotTeamId(
-    {
-      userId,
-    }: {
-      userId: string;
     },
-    db = _db,
-  ) {
-    const [otherTeam] = await db
-      .select({ id: teams.id })
-      .from(teams)
-      .innerJoin(usersToTeams, eq(teams.id, usersToTeams.teamId))
-      .where(and(not(withinTeams()), eq(usersToTeams.userId, userId)));
-    return otherTeam;
-  }
+  });
 
-  async function findTeamsByUserId(userId: string, db = _db) {
-    return db.query.teams.findMany({
-      with: {
-        UsersToTeams: true,
-      },
-      where: (_, { exists }) =>
-        exists(
-          db
-            .select()
-            .from(usersToTeams)
-            .where(withinTeamsUsersToTeams(eq(usersToTeams.userId, userId))),
-        ),
-    });
-  }
+  return allTeamIdsWithKodixCareInstalled;
+}
 
-  async function findUserRolesByTeamIdAndAppId(
-    {
-      appId,
-      userId,
-    }: {
-      appId: string;
-      userId: string;
+export async function findUserRolesByTeamIdAndAppId(
+  {
+    teamId,
+    appId,
+    userId,
+  }: {
+    teamId: string;
+    appId: string;
+    userId: string;
+  },
+  db = _db,
+) {
+  const roles = await db.query.userTeamAppRoles.findMany({
+    where: (userTeamAppRoles, { eq, and }) =>
+      and(
+        eq(userTeamAppRoles.teamId, teamId),
+        eq(userTeamAppRoles.appId, appId),
+        eq(userTeamAppRoles.userId, userId),
+      ),
+    columns: {
+      role: true,
     },
-    db = _db,
-  ) {
-    const roles = await db.query.userTeamAppRoles.findMany({
-      where: (userTeamAppRoles, { eq }) =>
-        withinTeamsUserTeamAppRoles(
-          eq(userTeamAppRoles.appId, appId),
-          eq(userTeamAppRoles.userId, userId),
-        ),
-      columns: {
-        role: true,
-      },
-    });
-    return roles.map(({ role }) => role);
-  }
+  });
+  return roles.map(({ role }) => role);
+}
 
-  async function getUsersWithRoles(
-    {
-      appId,
-    }: {
-      appId: string;
-    },
-    db = _db,
-  ) {
-    return db.query.users.findMany({
-      where: (users, { inArray }) =>
-        inArray(
-          users.id,
-          db
-            .select({ id: usersToTeams.userId })
-            .from(usersToTeams)
-            .where(withinTeamsUsersToTeams()),
-        ),
-      with: {
-        UserTeamAppRoles: {
-          where: (userTeamAppRoles, { eq }) =>
-            withinTeamsUserTeamAppRoles(eq(userTeamAppRoles.appId, appId)),
-          columns: {
-            role: true,
-            userId: true,
-          },
+export async function getUsersWithRoles(
+  {
+    teamId,
+    appId,
+  }: {
+    teamId: string;
+    appId: string;
+  },
+  db: Drizzle = _db,
+) {
+  return db.query.users.findMany({
+    where: (users, { eq, inArray }) =>
+      inArray(
+        users.id,
+        db
+          .select({ id: usersToTeams.userId })
+          .from(usersToTeams)
+          .where(eq(usersToTeams.teamId, teamId)),
+      ),
+    with: {
+      UserTeamAppRoles: {
+        where: (userTeamAppRoles, { eq, and }) =>
+          and(
+            eq(userTeamAppRoles.appId, appId),
+            eq(userTeamAppRoles.teamId, teamId),
+          ),
+        columns: {
+          role: true,
+          userId: true,
         },
       },
-      columns: {
-        id: true,
-        name: true,
-        email: true,
-        image: true,
+    },
+    columns: {
+      id: true,
+      name: true,
+      email: true,
+      image: true,
+    },
+  });
+}
+
+export async function removeUserFromTeam(
+  db = _db,
+  {
+    teamId,
+    userId,
+  }: {
+    teamId: string;
+    userId: string;
+  },
+) {
+  return db
+    .delete(usersToTeams)
+    .where(
+      and(eq(usersToTeams.teamId, teamId), eq(usersToTeams.userId, userId)),
+    );
+}
+
+export async function deleteTeam(db: Drizzle, id: string) {
+  await db.delete(teams).where(eq(teams.id, id));
+}
+
+export async function removeUserAssociationsFromUserTeamAppRolesByTeamId(
+  { teamId, userId }: { teamId: string; userId: string },
+  db = _db,
+) {
+  return db
+    .delete(userTeamAppRoles)
+    .where(
+      and(
+        eq(userTeamAppRoles.userId, userId),
+        eq(userTeamAppRoles.teamId, teamId),
+      ),
+    );
+}
+
+export async function removeUserAssociationsFromTeamAppRolesByTeamIdAndAppIdAndRoles(
+  {
+    teamId,
+    userId,
+    appId,
+    roles,
+  }: { teamId: string; userId: string; appId: string; roles: AppRole[] },
+  db = _db,
+) {
+  return db
+    .delete(userTeamAppRoles)
+    .where(
+      and(
+        inArray(userTeamAppRoles.role, roles),
+        eq(userTeamAppRoles.userId, userId),
+        eq(userTeamAppRoles.teamId, teamId),
+        eq(userTeamAppRoles.appId, appId),
+      ),
+    );
+}
+
+export async function associateManyAppRolesToUsers(
+  data: (typeof userTeamAppRoles.$inferInsert)[],
+  db = _db,
+) {
+  await db.insert(userTeamAppRoles).values(data);
+}
+
+export async function findAllTeamMembers(teamId: string, db = _db) {
+  return await db
+    .select({
+      id: users.id,
+      email: users.email,
+      name: users.name,
+      image: users.image,
+    })
+    .from(users)
+    .innerJoin(usersToTeams, eq(usersToTeams.userId, users.id))
+    .where(eq(usersToTeams.teamId, teamId));
+}
+
+export async function findInvitationByIdAndEmail(
+  {
+    id,
+    email,
+  }: {
+    id: string;
+    email: string;
+  },
+  db = _db,
+) {
+  return db.query.invitations.findFirst({
+    where: (invitation, { and, eq }) =>
+      and(eq(invitation.id, id), eq(invitation.email, email)),
+    with: {
+      Team: {
+        columns: {
+          id: true,
+        },
       },
-    });
-  }
+    },
+  });
+}
 
-  async function deleteTeam(db = _db) {
-    return db.delete(teams).where(withinTeams());
-  }
+export async function createManyInvitations(
+  db = _db,
+  data: z.infer<typeof zInvitationCreateMany>,
+) {
+  await db.insert(invitations).values(data);
+}
 
-  async function removeUserAssociationsFromUserTeamAppRolesByTeamId(
-    { userId }: { userId: string },
-    db = _db,
-  ) {
-    return db
-      .delete(userTeamAppRoles)
-      .where(withinTeamsUserTeamAppRoles(eq(userTeamAppRoles.userId, userId)));
-  }
+export async function findInvitationByEmail(email: string, db = _db) {
+  return db.query.invitations.findFirst({
+    where: (invitation, { eq }) => eq(invitation.email, email),
+  });
+}
 
-  async function removeUserAssociationsFromTeamAppRolesByTeamIdAndAppIdAndRoles(
-    {
-      userId,
-      appId,
-      roles,
-    }: { userId: string; appId: string; roles: AppRole[] },
-    db = _db,
-  ) {
-    return db
-      .delete(userTeamAppRoles)
-      .where(
-        withinTeamsUserTeamAppRoles(
-          inArray(userTeamAppRoles.role, roles),
-          eq(userTeamAppRoles.userId, userId),
-          eq(userTeamAppRoles.appId, appId),
-        ),
-      );
-  }
+export async function findManyInvitationsByTeamId(teamId: string, db = _db) {
+  return db.query.invitations.findMany({
+    where: (invitation, { eq }) => eq(invitation.teamId, teamId),
+    columns: {
+      id: true,
+      email: true,
+    },
+  });
+}
 
-  async function associateManyAppRolesToUsers(
-    data: (typeof userTeamAppRoles.$inferInsert)[],
-    db = _db,
-  ) {
-    for (const item of data) assertTeamIdInList(item, teamIds);
-    await db.insert(userTeamAppRoles).values(data);
-  }
-
-  async function findAllTeamMembers(teamId: string, db = _db) {
-    return await db
-      .select({
-        id: users.id,
-        email: users.email,
-        name: users.name,
-        image: users.image,
-      })
-      .from(users)
-      .innerJoin(usersToTeams, eq(usersToTeams.userId, users.id))
-      .where(withinTeamsUsersToTeams());
-  }
-
-  async function createManyInvitations(
-    db = _db,
-    data: z.infer<typeof zInvitationCreateMany>,
-  ) {
-    for (const item of data) assertTeamIdInList(item, teamIds);
-    await db.insert(invitations).values(data);
-  }
-
-  async function findManyInvitationsByTeamId(db = _db) {
-    return db.query.invitations.findMany({
-      where: withinTeamsInvitations(),
-      columns: {
-        id: true,
-        email: true,
+export async function findManyInvitationsByEmail(email: string, db = _db) {
+  return db.query.invitations.findMany({
+    where: (invitation, { eq }) => eq(invitation.email, email),
+    columns: {
+      id: true,
+    },
+    with: {
+      Team: {
+        columns: {
+          id: true,
+          name: true,
+        },
       },
-    });
-  }
+      InvitedBy: {
+        columns: {
+          id: true,
+          name: true,
+          image: true,
+        },
+      },
+    },
+  });
+}
 
-  async function findInvitationByIdAndTeamId(id: string, db = _db) {
-    return db.query.invitations.findFirst({
-      where: (invitation, { eq }) =>
-        withinTeamsInvitations(eq(invitation.id, id)),
-    });
-  }
+export async function findInvitationById(id: string, db = _db) {
+  return db.query.invitations.findFirst({
+    where: (invitation, { eq }) => eq(invitation.id, id),
+  });
+}
 
-  async function updateTeamById(
-    { input, id }: Update<typeof zTeamUpdate>,
-    db = _db,
-  ) {
-    return db
-      .update(teams)
-      .set(input)
-      .where(withinTeams(eq(teams.id, id)));
-  }
+export async function findInvitationByIdAndTeamId(
+  {
+    id,
+    teamId,
+  }: {
+    id: string;
+    teamId: string;
+  },
+  db = _db,
+) {
+  return db.query.invitations.findFirst({
+    where: (invitation, { and, eq }) =>
+      and(eq(invitation.id, id), eq(invitation.teamId, teamId)),
+  });
+}
 
-  return {
-    findTeamById,
-    findTeamWithUsersAndInvitations,
-    findAnyOtherTeamAssociatedWithUserThatIsNotTeamId,
-    findTeamsByUserId,
-    findUserRolesByTeamIdAndAppId,
-    getUsersWithRoles,
-    deleteTeam,
-    removeUserAssociationsFromUserTeamAppRolesByTeamId,
-    removeUserAssociationsFromTeamAppRolesByTeamIdAndAppIdAndRoles,
-    associateManyAppRolesToUsers,
-    findAllTeamMembers,
-    createManyInvitations,
-    findManyInvitationsByTeamId,
-    findInvitationByIdAndTeamId,
-    updateTeamById,
-  };
+export async function deleteInvitationById(db = _db, id: string) {
+  await db.delete(invitations).where(eq(invitations.id, id));
+}
+
+export async function updateTeamById(
+  { id, input }: Update<typeof zTeamUpdate>,
+  db = _db,
+) {
+  return db.update(teams).set(input).where(eq(teams.id, id));
 }

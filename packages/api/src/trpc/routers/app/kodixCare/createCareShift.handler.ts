@@ -4,9 +4,11 @@ import { diff } from "deep-diff";
 
 import type { TCreateCareShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import { db } from "@kdx/db/client";
+import { kodixCareRepository } from "@kdx/db/repositories";
 import { kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
+import { logActivity } from "../../../../services/appActivityLogs.service";
 import { assertNoOverlappingShiftsForThisCaregiver } from "./_kodixCare.permissions";
 
 interface CreateCareShiftOptions {
@@ -18,10 +20,9 @@ export const createCareShiftHandler = async ({
   ctx,
   input,
 }: CreateCareShiftOptions) => {
-  const { permissionsService, appActivityLogsService } = ctx.services;
-  const { kodixCareRepository } = ctx.repositories;
+  const { services } = ctx;
 
-  const ability = await permissionsService.getUserPermissionsForApp({
+  const ability = await services.permissions.getUserPermissionsForApp({
     appId: kodixCareAppId,
     user: ctx.auth.user,
   });
@@ -57,7 +58,7 @@ export const createCareShiftHandler = async ({
       });
     }
 
-    await appActivityLogsService.logActivity({
+    await logActivity({
       appId: kodixCareAppId,
       teamId: ctx.auth.user.activeTeamId,
       userId: ctx.auth.user.id,
