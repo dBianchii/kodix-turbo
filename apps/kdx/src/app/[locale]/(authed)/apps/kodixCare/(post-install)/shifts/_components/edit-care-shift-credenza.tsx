@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { LuLoader2, LuLock, LuTrash, LuUnlock } from "react-icons/lu";
 
@@ -55,7 +56,7 @@ import { toast } from "@kdx/ui/toast";
 import { ZEditCareShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 import { useCareShiftsData, useEditCareShift, useShiftOverlap } from "./hooks";
 import { WarnOverlappingShifts } from "./warn-overlapping-shifts";
 
@@ -72,6 +73,7 @@ export function EditCareShiftCredenza({
   myRoles: RouterOutputs["team"]["appRole"]["getMyRoles"];
   careGivers: RouterOutputs["app"]["kodixCare"]["getAllCaregivers"];
 }) {
+  const api = useTRPC();
   const t = useTranslations();
   const userIsAdmin = myRoles.some((x) => x === "ADMIN");
   const canEdit = careShift.caregiverId === user.id || userIsAdmin;
@@ -96,19 +98,23 @@ export function EditCareShiftCredenza({
       notes: careShift.notes ?? undefined,
     },
   });
-  const utils = api.useUtils();
-  const deleteCareShiftMutation = api.app.kodixCare.deleteCareShift.useMutation(
-    {
+  const queryClient = useQueryClient();
+  const deleteCareShiftMutation = useMutation(
+    api.app.kodixCare.deleteCareShift.mutationOptions({
       onSuccess: () => {
         setCareShift(null);
         toast.success(t("Shift deleted"));
       },
       onError: (err) => trpcErrorToastDefault(err),
       onSettled: () => {
-        void utils.app.kodixCare.getAllCareShifts.invalidate();
-        void utils.app.kodixCare.findOverlappingShifts.invalidate();
+        void queryClient.invalidateQueries(
+          api.app.kodixCare.getAllCareShifts.pathFilter(),
+        );
+        void queryClient.invalidateQueries(
+          api.app.kodixCare.findOverlappingShifts.pathFilter(),
+        );
       },
-    },
+    }),
   );
 
   const { startAt, endAt } = form.watch();

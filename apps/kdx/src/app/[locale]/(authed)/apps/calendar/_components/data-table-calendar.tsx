@@ -2,6 +2,7 @@
 
 import type { ColumnFiltersState } from "@tanstack/react-table";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createColumnHelper,
   flexRender,
@@ -54,7 +55,7 @@ import {
 } from "@kdx/ui/table";
 
 import { DatePicker } from "~/app/[locale]/_components/date-picker";
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 import { CancelationDialog } from "./cancel-event-dialog";
 import { EditEventDialog } from "./edit-event-dialog";
 
@@ -83,6 +84,7 @@ const columnHelper = createColumnHelper<CalendarTask>();
 const useCalendarData = (
   initialData: RouterOutputs["app"]["calendar"]["getAll"],
 ) => {
+  const api = useTRPC();
   const [selectedDay, setSelectedDay] = useState(new Date());
   const inputForQuery = useMemo(
     () => ({
@@ -91,17 +93,25 @@ const useCalendarData = (
     }),
     [selectedDay],
   );
-  const utils = api.useUtils();
-  const getAllQuery = api.app.calendar.getAll.useQuery(inputForQuery, {
-    initialData: initialData,
-    staleTime: 10,
-  });
-  const { mutate: nukeEvents } = api.app.calendar.nuke.useMutation({
-    onSuccess() {
-      void utils.app.calendar.getAll.invalidate();
-      void utils.app.kodixCare.careTask.getCareTasks.invalidate();
-    },
-  });
+  const queryClient = useQueryClient();
+  const getAllQuery = useQuery(
+    api.app.calendar.getAll.queryOptions(inputForQuery, {
+      initialData: initialData,
+      staleTime: 10,
+    }),
+  );
+  const { mutate: nukeEvents } = useMutation(
+    api.app.calendar.nuke.mutationOptions({
+      onSuccess() {
+        void queryClient.invalidateQueries(
+          api.app.calendar.getAll.pathFilter(),
+        );
+        void queryClient.invalidateQueries(
+          api.app.kodixCare.careTask.getCareTasks.pathFilter(),
+        );
+      },
+    }),
+  );
 
   return {
     selectedDay,

@@ -1,6 +1,7 @@
 import type { CareTask } from "node_modules/@kdx/api/src/internal/calendarAndCareTaskCentral";
 import { useEffect, useMemo, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { useQuery } from "@tanstack/react-query";
 import { useFormatter, useTranslations } from "next-intl";
 import {
   LuAlertCircle,
@@ -44,7 +45,7 @@ import {
 import { Textarea } from "@kdx/ui/textarea";
 import { ZEditCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
 
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 
 export function EditCareTaskCredenza({
   user,
@@ -257,8 +258,9 @@ function AlertNoShiftsOrNotYours({
   task: CareTask;
   user: User;
 }) {
-  const overlappingShiftsQuery =
-    api.app.kodixCare.findOverlappingShifts.useQuery(
+  const api = useTRPC();
+  const overlappingShiftsQuery = useQuery(
+    api.app.kodixCare.findOverlappingShifts.queryOptions(
       {
         start: task.date,
         end: task.date,
@@ -266,7 +268,8 @@ function AlertNoShiftsOrNotYours({
       {
         refetchOnWindowFocus: "always",
       },
-    );
+    ),
+  );
 
   const atLeastOneShiftExists = !!overlappingShiftsQuery.data?.length;
   const isAtLeastOneOfTheOverlappingShiftsMine =
@@ -299,11 +302,14 @@ function AlertNoShiftsOrNotYours({
 }
 
 function LogsView({ careTaskId }: { careTaskId: string }) {
-  const getAppActivityLogsQuery = api.app.getAppActivityLogs.useQuery({
-    appId: kodixCareAppId,
-    tableNames: ["careTask"],
-    rowId: careTaskId,
-  });
+  const api = useTRPC();
+  const getAppActivityLogsQuery = useQuery(
+    api.app.getAppActivityLogs.queryOptions({
+      appId: kodixCareAppId,
+      tableNames: ["careTask"],
+      rowId: careTaskId,
+    }),
+  );
   const t = useTranslations();
   const format = useFormatter();
   if (getAppActivityLogsQuery.isLoading)

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { LuMail } from "react-icons/lu";
 import { RxMinusCircled, RxPlusCircled } from "react-icons/rx";
@@ -32,7 +33,7 @@ import { toast } from "@kdx/ui/toast";
 import { ZInviteInputSchema } from "@kdx/validators/trpc/team/invitation";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 
 export default function TeamInviteCardClient({
   user,
@@ -41,39 +42,46 @@ export default function TeamInviteCardClient({
   user: User;
   canEditPage: boolean;
 }) {
-  const utils = api.useUtils();
+  const api = useTRPC();
+  const queryClient = useQueryClient();
   const [emails, setEmails] = useState([{ key: 0, value: "" }]); //key is used to work with formkit
   const [successes, setSuccesses] = useState<string[]>([]);
 
   const t = useTranslations();
 
-  const mutation = api.team.invitation.invite.useMutation({
-    onSuccess: ({ successes, failures }) => {
-      if (successes.length > 0) {
-        toast.success(
-          successes.length
-            ? t("Invitations sent to people", { people: successes.join(", ") })
-            : t("Invitations sent"),
-        );
-      }
-      if (failures.length > 0)
-        toast.error(
-          t("Failed to send invitation to people", {
-            people: failures.join(", "),
-          }),
-        );
-      setSuccesses(successes);
-      setEmails([{ key: 0, value: "" }]);
+  const mutation = useMutation(
+    api.team.invitation.invite.mutationOptions({
+      onSuccess: ({ successes, failures }) => {
+        if (successes.length > 0) {
+          toast.success(
+            successes.length
+              ? t("Invitations sent to people", {
+                  people: successes.join(", "),
+                })
+              : t("Invitations sent"),
+          );
+        }
+        if (failures.length > 0)
+          toast.error(
+            t("Failed to send invitation to people", {
+              people: failures.join(", "),
+            }),
+          );
+        setSuccesses(successes);
+        setEmails([{ key: 0, value: "" }]);
 
-      setTimeout(() => {
-        closeDialog();
-      }, 2000);
-    },
-    onError: (e) => trpcErrorToastDefault(e),
-    onSettled: () => {
-      void utils.team.invitation.getAll.invalidate();
-    },
-  });
+        setTimeout(() => {
+          closeDialog();
+        }, 2000);
+      },
+      onError: (e) => trpcErrorToastDefault(e),
+      onSettled: () => {
+        void queryClient.invalidateQueries(
+          api.team.invitation.getAll.pathFilter(),
+        );
+      },
+    }),
+  );
 
   const closeDialog = () => {
     //TODO: Keep the emails that were unsuccessful

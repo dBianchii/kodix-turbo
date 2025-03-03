@@ -1,5 +1,6 @@
 "use client";
 
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { MdNotificationsActive } from "react-icons/md";
 
@@ -17,39 +18,50 @@ import {
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { useRouter } from "~/i18n/routing";
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 
 export function NotificationsPopoverClient({
   initialNotifications,
 }: {
   initialNotifications: RouterOutputs["user"]["getInvitations"];
 }) {
+  const api = useTRPC();
   const t = useTranslations();
-  const query = api.user.getInvitations.useQuery(undefined, {
-    initialData: initialNotifications,
-  });
+  const query = useQuery(
+    api.user.getInvitations.queryOptions(undefined, {
+      initialData: initialNotifications,
+    }),
+  );
   const router = useRouter();
-  const utils = api.useUtils();
-  const acceptMutation = api.team.invitation.accept.useMutation({
-    onSuccess: () => {
-      toast.success(t("header.Invitation accepted"));
-      void utils.user.getInvitations.invalidate();
-      router.refresh();
-    },
-    onError: (error) => {
-      trpcErrorToastDefault(error);
-    },
-  });
-  const declineMutation = api.team.invitation.decline.useMutation({
-    onSuccess: () => {
-      toast.success(t("Invitation declined"));
-      void utils.user.getInvitations.invalidate();
-      router.refresh();
-    },
-    onError: (error) => {
-      trpcErrorToastDefault(error);
-    },
-  });
+  const queryClient = useQueryClient();
+  const acceptMutation = useMutation(
+    api.team.invitation.accept.mutationOptions({
+      onSuccess: () => {
+        toast.success(t("header.Invitation accepted"));
+        void queryClient.invalidateQueries(
+          api.user.getInvitations.pathFilter(),
+        );
+        router.refresh();
+      },
+      onError: (error) => {
+        trpcErrorToastDefault(error);
+      },
+    }),
+  );
+  const declineMutation = useMutation(
+    api.team.invitation.decline.mutationOptions({
+      onSuccess: () => {
+        toast.success(t("Invitation declined"));
+        void queryClient.invalidateQueries(
+          api.user.getInvitations.pathFilter(),
+        );
+        router.refresh();
+      },
+      onError: (error) => {
+        trpcErrorToastDefault(error);
+      },
+    }),
+  );
 
   if (!query.data.length) return null;
 

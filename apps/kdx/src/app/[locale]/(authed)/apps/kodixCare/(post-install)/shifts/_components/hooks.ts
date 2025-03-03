@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 import type { RouterOutputs } from "@kdx/api";
@@ -8,52 +9,70 @@ import { getErrorMessage } from "@kdx/shared";
 import { toast } from "@kdx/ui/toast";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 
 export const useCareShiftsData = (
   initialShifts: RouterOutputs["app"]["kodixCare"]["getAllCareShifts"],
 ) => {
-  return api.app.kodixCare.getAllCareShifts.useQuery(undefined, {
-    initialData: initialShifts,
-  });
+  const api = useTRPC();
+  return useQuery(
+    api.app.kodixCare.getAllCareShifts.queryOptions(undefined, {
+      initialData: initialShifts,
+    }),
+  );
 };
 
 export const useEditCareShift = () => {
-  const utils = api.useUtils();
+  const api = useTRPC();
+  const queryClient = useQueryClient();
   const t = useTranslations();
-  const mutation = api.app.kodixCare.editCareShift.useMutation({
-    onMutate: async (newShift) => {
-      await utils.app.kodixCare.getAllCareShifts.cancel();
-      const previousData = utils.app.kodixCare.getAllCareShifts.getData();
-      utils.app.kodixCare.getAllCareShifts.setData(undefined, (old) =>
-        old?.map((shift) =>
-          shift.id === newShift.id
-            ? {
-                ...shift,
-                startAt: newShift.startAt
-                  ? new Date(newShift.startAt)
-                  : shift.startAt,
-                endAt: newShift.endAt ? new Date(newShift.endAt) : shift.endAt,
-              }
-            : shift,
-        ),
-      );
-      return { previousData };
-    },
-    onError: (err, _newShift, context) => {
-      trpcErrorToastDefault(err);
-      if (context?.previousData) {
-        utils.app.kodixCare.getAllCareShifts.setData(
-          undefined,
-          context.previousData,
+  const mutation = useMutation(
+    api.app.kodixCare.editCareShift.mutationOptions({
+      onMutate: async (newShift) => {
+        await queryClient.cancelQueries(
+          api.app.kodixCare.getAllCareShifts.pathFilter(),
         );
-      }
-    },
-    onSettled: () => {
-      void utils.app.kodixCare.findOverlappingShifts.invalidate();
-      void utils.app.kodixCare.getAllCareShifts.invalidate();
-    },
-  });
+        const previousData = queryClient.getQueryData(
+          api.app.kodixCare.getAllCareShifts.queryKey(),
+        );
+        queryClient.setQueryData(
+          api.app.kodixCare.getAllCareShifts.queryKey(),
+          (old) =>
+            old?.map((shift) =>
+              shift.id === newShift.id
+                ? {
+                    ...shift,
+                    startAt: newShift.startAt
+                      ? new Date(newShift.startAt)
+                      : shift.startAt,
+                    endAt: newShift.endAt
+                      ? new Date(newShift.endAt)
+                      : shift.endAt,
+                  }
+                : shift,
+            ),
+        );
+        return { previousData };
+      },
+      onError: (err, _newShift, context) => {
+        trpcErrorToastDefault(err);
+        if (context?.previousData) {
+          queryClient.setQueryData(
+            api.app.kodixCare.getAllCareShifts.queryKey(),
+            context.previousData,
+          );
+        }
+      },
+      onSettled: () => {
+        void queryClient.invalidateQueries(
+          api.app.kodixCare.findOverlappingShifts.pathFilter(),
+        );
+        void queryClient.invalidateQueries(
+          api.app.kodixCare.getAllCareShifts.pathFilter(),
+        );
+      },
+    }),
+  );
 
   const mutateAsync = async (values: TEditCareShiftInputSchema) =>
     await toast
@@ -76,18 +95,21 @@ export const useShiftOverlap = ({
   endAt: Date | undefined;
   excludeId?: string;
 }) => {
-  const query = api.app.kodixCare.findOverlappingShifts.useQuery(
-    {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      start: startAt!,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      end: endAt!,
-    },
-    {
-      enabled: Boolean(
-        startAt && endAt && dayjs(startAt).isBefore(dayjs(endAt)),
-      ),
-    },
+  const api = useTRPC();
+  const query = useQuery(
+    api.app.kodixCare.findOverlappingShifts.queryOptions(
+      {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        start: startAt!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        end: endAt!,
+      },
+      {
+        enabled: Boolean(
+          startAt && endAt && dayjs(startAt).isBefore(dayjs(endAt)),
+        ),
+      },
+    ),
   );
 
   const overlappingShifts = useMemo(

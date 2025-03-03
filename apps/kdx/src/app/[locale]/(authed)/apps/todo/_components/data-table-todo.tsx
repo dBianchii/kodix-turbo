@@ -3,6 +3,7 @@
 
 import type { ColumnFiltersState, RowData } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createColumnHelper,
   flexRender,
@@ -29,7 +30,7 @@ import { Table, TableBody, TableCell, TableRow } from "@kdx/ui/table";
 import type { Priority } from "./priority-popover";
 import { DatePickerWithPresets } from "~/app/[locale]/_components/date-picker-with-presets";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 import { AssigneePopover } from "./assignee-popover";
 import { CreateTaskDialogButton } from "./create-task-dialog-button";
 import {
@@ -57,15 +58,18 @@ export function DataTableTodo({
 }: {
   initialData: RouterOutputs["app"]["todo"]["getAll"];
 }) {
+  const api = useTRPC();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   // const { data: team } = api.team.getActiveTeam.useQuery();
   // const team = {
   //   Users: [{ id: "THIS_WAS_REMOVED_LOL", name: "asdas", image: "asd" }],
   // };
 
-  const todosQuery = api.app.todo.getAll.useQuery(undefined, {
-    initialData,
-  });
+  const todosQuery = useQuery(
+    api.app.todo.getAll.queryOptions(undefined, {
+      initialData,
+    }),
+  );
 
   const columns = [
     columnHelper.display({
@@ -96,28 +100,30 @@ export function DataTableTodo({
           if (value) setPriority(value);
         }, [value]);
 
-        const utils = api.useUtils();
-        const { mutate: updateTodo } = api.app.todo.update.useMutation({
-          async onMutate(newData) {
-            if (!newData.priority) return;
+        const queryClient = useQueryClient();
+        const { mutate: updateTodo } = useMutation(
+          api.app.todo.update.mutationOptions({
+            async onMutate(newData) {
+              if (!newData.priority) return;
 
-            // Cancel outgoing fetches (so they don't overwrite our optimistic update)
-            await utils.app.todo.getAll.cancel();
+              // Cancel outgoing fetches (so they don't overwrite our optimistic update)
+              await queryClient.cancelQueries(api.app.todo.getAll.pathFilter());
 
-            // Get the previous data, so we can rollback later
-            const prevData = priority;
-            // Optimistically update to the new value
-            setPriority(newData.priority as Priority);
-            return { prevData };
-          },
-          onError(err, newTodo, ctx) {
-            if (!ctx?.prevData) return;
+              // Get the previous data, so we can rollback later
+              const prevData = priority;
+              // Optimistically update to the new value
+              setPriority(newData.priority as Priority);
+              return { prevData };
+            },
+            onError(err, newTodo, ctx) {
+              if (!ctx?.prevData) return;
 
-            trpcErrorToastDefault(err);
-            // If the mutation fails, use the context-value from onMutate
-            setPriority(ctx.prevData);
-          },
-        });
+              trpcErrorToastDefault(err);
+              // If the mutation fails, use the context-value from onMutate
+              setPriority(ctx.prevData);
+            },
+          }),
+        );
 
         function handlePriorityChange(newPriority: Priority) {
           updateTodo({ id: info.row.original.id, priority: newPriority });
@@ -148,28 +154,29 @@ export function DataTableTodo({
           if (value) setStatus(value);
         }, [value]);
 
-        const utils = api.useUtils();
-        const { mutate: updateTodo } = api.app.todo.update.useMutation({
-          async onMutate(newData) {
-            if (!newData.status) return;
+        const { mutate: updateTodo } = useMutation(
+          api.app.todo.update.mutationOptions({
+            async onMutate(newData) {
+              if (!newData.status) return;
 
-            // Cancel outgoing fetches (so they don't overwrite our optimistic update)
-            await utils.app.todo.getAll.cancel();
+              // Cancel outgoing fetches (so they don't overwrite our optimistic update)
+              await queryClient.cancelQueries(api.app.todo.getAll.pathFilter());
 
-            // Get the previous data, so we can rollback later
-            const prevData = status;
-            // Optimistically update to the new value
-            setStatus(newData.status);
-            return { prevData };
-          },
-          onError(err, newTodo, ctx) {
-            if (!ctx?.prevData) return;
+              // Get the previous data, so we can rollback later
+              const prevData = status;
+              // Optimistically update to the new value
+              setStatus(newData.status);
+              return { prevData };
+            },
+            onError(err, newTodo, ctx) {
+              if (!ctx?.prevData) return;
 
-            trpcErrorToastDefault(err);
-            // If the mutation fails, use the context-value from onMutate
-            setStatus(ctx.prevData);
-          },
-        });
+              trpcErrorToastDefault(err);
+              // If the mutation fails, use the context-value from onMutate
+              setStatus(ctx.prevData);
+            },
+          }),
+        );
 
         function handleStatusChange(newStatus: Status) {
           updateTodo({ id: info.row.original.id, status: newStatus });
@@ -200,24 +207,25 @@ export function DataTableTodo({
           if (value) setDueDate(value);
         }, [value]);
 
-        const utils = api.useUtils();
-        const { mutate: updateTodo } = api.app.todo.update.useMutation({
-          async onMutate(newData) {
-            // Cancel outgoing fetches (so they don't overwrite our optimistic update)
-            await utils.app.todo.getAll.cancel();
+        const { mutate: updateTodo } = useMutation(
+          api.app.todo.update.mutationOptions({
+            async onMutate(newData) {
+              // Cancel outgoing fetches (so they don't overwrite our optimistic update)
+              await queryClient.cancelQueries(api.app.todo.getAll.pathFilter());
 
-            // Get the previous data, so we can rollback later
-            const prevData = dueDate;
-            // Optimistically update to the new value
-            setDueDate(newData.dueDate ?? undefined);
-            return { prevData };
-          },
-          onError(err, newTodo, ctx) {
-            trpcErrorToastDefault(err);
-            // If the mutation fails, use the context-value from onMutate
-            setDueDate(ctx?.prevData ?? undefined);
-          },
-        });
+              // Get the previous data, so we can rollback later
+              const prevData = dueDate;
+              // Optimistically update to the new value
+              setDueDate(newData.dueDate ?? undefined);
+              return { prevData };
+            },
+            onError(err, newTodo, ctx) {
+              trpcErrorToastDefault(err);
+              // If the mutation fails, use the context-value from onMutate
+              setDueDate(ctx?.prevData ?? undefined);
+            },
+          }),
+        );
 
         function handleDueDateChange(newDueDate: Date | undefined | null) {
           updateTodo({ id: info.row.original.id, dueDate: newDueDate });
@@ -242,26 +250,27 @@ export function DataTableTodo({
           if (value) setAssignedToUserId(value.id);
         }, [value]);
 
-        const utils = api.useUtils();
-        const { mutate: updateTodo } = api.app.todo.update.useMutation({
-          async onMutate(newData) {
-            // Cancel outgoing fetches (so they don't overwrite our optimistic update)
-            await utils.app.todo.getAll.cancel();
+        const { mutate: updateTodo } = useMutation(
+          api.app.todo.update.mutationOptions({
+            async onMutate(newData) {
+              // Cancel outgoing fetches (so they don't overwrite our optimistic update)
+              await queryClient.cancelQueries(api.app.todo.getAll.pathFilter());
 
-            // Get the previous data, so we can rollback later
-            const prevData = assignedToUserId;
-            // Optimistically update to the new value
-            setAssignedToUserId(newData.assignedToUserId ?? "");
-            return { prevData };
-          },
-          onError(err, newTodo, ctx) {
-            if (!ctx?.prevData) return;
+              // Get the previous data, so we can rollback later
+              const prevData = assignedToUserId;
+              // Optimistically update to the new value
+              setAssignedToUserId(newData.assignedToUserId ?? "");
+              return { prevData };
+            },
+            onError(err, newTodo, ctx) {
+              if (!ctx?.prevData) return;
 
-            trpcErrorToastDefault(err);
-            // If the mutation fails, use the context-value from onMutate
-            setAssignedToUserId(ctx.prevData);
-          },
-        });
+              trpcErrorToastDefault(err);
+              // If the mutation fails, use the context-value from onMutate
+              setAssignedToUserId(ctx.prevData);
+            },
+          }),
+        );
 
         function handleAssignedToUserChange(
           newAssignedToUserId: string | null,

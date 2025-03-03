@@ -1,5 +1,6 @@
 "use client";
 
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createColumnHelper,
   flexRender,
@@ -36,28 +37,35 @@ import {
 } from "@kdx/ui/tooltip";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 
 const columnHelper =
   createColumnHelper<RouterOutputs["team"]["invitation"]["getAll"][number]>();
 
 export function InviteDataTable({ canEditPage }: { canEditPage: boolean }) {
-  const { data } = api.team.invitation.getAll.useQuery(undefined, {
-    refetchOnMount: true,
-  });
+  const api = useTRPC();
+  const { data } = useQuery(
+    api.team.invitation.getAll.queryOptions(undefined, {
+      refetchOnMount: true,
+    }),
+  );
   const t = useTranslations();
-  const utils = api.useUtils();
-  const { mutate } = api.team.invitation.delete.useMutation({
-    onSuccess: () => {
-      toast.success(t("Invite deleted"));
-    },
-    onError: (e) => {
-      trpcErrorToastDefault(e);
-    },
-    onSettled: () => {
-      void utils.team.invitation.getAll.invalidate();
-    },
-  });
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation(
+    api.team.invitation.delete.mutationOptions({
+      onSuccess: () => {
+        toast.success(t("Invite deleted"));
+      },
+      onError: (e) => {
+        trpcErrorToastDefault(e);
+      },
+      onSettled: () => {
+        void queryClient.invalidateQueries(
+          api.team.invitation.getAll.pathFilter(),
+        );
+      },
+    }),
+  );
 
   const columns = [
     columnHelper.accessor("inviteEmail", {

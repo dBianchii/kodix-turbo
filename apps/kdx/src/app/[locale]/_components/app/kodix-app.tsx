@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { LuTrash } from "react-icons/lu";
 import { RxDotsHorizontal } from "react-icons/rx";
@@ -45,7 +46,7 @@ import {
   trpcErrorToastDefault,
 } from "~/helpers/miscelaneous";
 import { Link, useRouter } from "~/i18n/routing";
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 
 export function KodixApp({
   id,
@@ -56,32 +57,39 @@ export function KodixApp({
   installed: boolean;
   user: User | null;
 }) {
+  const api = useTRPC();
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  const utils = api.useUtils();
+  const queryClient = useQueryClient();
   const t = useTranslations();
-  const installAppMutation = api.app.installApp.useMutation({
-    onSuccess: () => {
-      void utils.app.getAll.invalidate();
-      void utils.app.getInstalled.invalidate();
-      router.refresh();
-      toast.success(`${t("App")} ${appName} ${t("installed").toLowerCase()}`);
-    },
-    onError: (err) => {
-      trpcErrorToastDefault(err);
-    },
-  });
-  const uninstallAppMutation = api.app.uninstallApp.useMutation({
-    onSuccess: () => {
-      setOpen(false);
-      void utils.app.getAll.invalidate();
-      router.refresh();
-      toast.success(`${t("App")} ${appName} ${t("uninstalled").toLowerCase()}`);
-    },
-    onError: (err) => {
-      trpcErrorToastDefault(err);
-    },
-  });
+  const installAppMutation = useMutation(
+    api.app.installApp.mutationOptions({
+      onSuccess: () => {
+        void queryClient.invalidateQueries(api.app.getAll.pathFilter());
+        void queryClient.invalidateQueries(api.app.getInstalled.pathFilter());
+        router.refresh();
+        toast.success(`${t("App")} ${appName} ${t("installed").toLowerCase()}`);
+      },
+      onError: (err) => {
+        trpcErrorToastDefault(err);
+      },
+    }),
+  );
+  const uninstallAppMutation = useMutation(
+    api.app.uninstallApp.mutationOptions({
+      onSuccess: () => {
+        setOpen(false);
+        void queryClient.invalidateQueries(api.app.getAll.pathFilter());
+        router.refresh();
+        toast.success(
+          `${t("App")} ${appName} ${t("uninstalled").toLowerCase()}`,
+        );
+      },
+      onError: (err) => {
+        trpcErrorToastDefault(err);
+      },
+    }),
+  );
 
   const appShouldGoToOnboarding = id === kodixCareAppId;
 

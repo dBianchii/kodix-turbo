@@ -1,5 +1,6 @@
 "use client";
 
+import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 import { getErrorMessage } from "@kdx/shared";
@@ -27,7 +28,7 @@ import { toast } from "@kdx/ui/toast";
 import { ZLeaveTeamInputSchema } from "@kdx/validators/trpc/team";
 
 import { useRouter } from "~/i18n/routing";
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 
 export function LeaveTeamCardClient({
   teamId,
@@ -36,6 +37,7 @@ export function LeaveTeamCardClient({
   teamId: string;
   teamName: string;
 }) {
+  const api = useTRPC();
   const t = useTranslations();
 
   const form = useForm({
@@ -46,12 +48,14 @@ export function LeaveTeamCardClient({
   });
 
   const router = useRouter();
-  const mutation = api.team.leaveTeam.useMutation({
-    onSuccess: () => {
-      router.push("/team");
-      router.refresh();
-    },
-  });
+  const mutation = useMutation(
+    api.team.leaveTeam.mutationOptions({
+      onSuccess: () => {
+        router.push("/team");
+        router.refresh();
+      },
+    }),
+  );
 
   return (
     <Card className="w-full text-left">

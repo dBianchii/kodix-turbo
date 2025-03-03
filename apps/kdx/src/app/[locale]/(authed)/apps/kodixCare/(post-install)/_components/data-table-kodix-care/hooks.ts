@@ -1,23 +1,30 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 import type { TEditCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
 import { getErrorMessage } from "@kdx/shared";
 import { toast } from "@kdx/ui/toast";
 
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 
 export const useSaveCareTaskMutation = () => {
-  const utils = api.useUtils();
+  const api = useTRPC();
+  const queryClient = useQueryClient();
   const t = useTranslations();
-  const saveCareTaskMutation =
-    api.app.kodixCare.careTask.editCareTask.useMutation({
+  const saveCareTaskMutation = useMutation(
+    api.app.kodixCare.careTask.editCareTask.mutationOptions({
       onSettled: () => {
-        void utils.app.kodixCare.careTask.getCareTasks.invalidate();
-        void utils.app.getAppActivityLogs.invalidate({
-          tableNames: ["careTask"],
-        });
+        void queryClient.invalidateQueries(
+          api.app.kodixCare.careTask.getCareTasks.pathFilter(),
+        );
+        void queryClient.invalidateQueries(
+          api.app.getAppActivityLogs.queryFilter({
+            tableNames: ["careTask"],
+          }),
+        );
       },
-    });
+    }),
+  );
 
   const mutateAsync = (values: TEditCareTaskInputSchema) =>
     toast

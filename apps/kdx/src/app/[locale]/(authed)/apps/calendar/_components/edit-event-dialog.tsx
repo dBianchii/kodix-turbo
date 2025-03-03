@@ -1,5 +1,6 @@
 import type { Frequency } from "rrule";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { LuAlertCircle } from "react-icons/lu";
 import { RRule, Weekday } from "rrule";
@@ -32,7 +33,7 @@ import {
 } from "@kdx/ui/tooltip";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 import { RecurrencePicker } from "./recurrence-picker";
 
 export function EditEventDialog({
@@ -44,20 +45,27 @@ export function EditEventDialog({
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const utils = api.useUtils();
+  const api = useTRPC();
+  const queryClient = useQueryClient();
   const [personalizedRecurrenceOpen, setPersonalizedRecurrenceOpen] =
     useState(false);
   const [editDefinitionOpen, setEditDefinitionOpen] = useState(false);
-  const mutation = api.app.calendar.edit.useMutation({
-    onSuccess: () => {
-      setOpen(false);
-      setEditDefinitionOpen(false);
-      setPersonalizedRecurrenceOpen(false);
-      void utils.app.calendar.getAll.invalidate();
-      void utils.app.kodixCare.careTask.getCareTasks.invalidate();
-    },
-    onError: (e) => trpcErrorToastDefault(e),
-  });
+  const mutation = useMutation(
+    api.app.calendar.edit.mutationOptions({
+      onSuccess: () => {
+        setOpen(false);
+        setEditDefinitionOpen(false);
+        setPersonalizedRecurrenceOpen(false);
+        void queryClient.invalidateQueries(
+          api.app.calendar.getAll.pathFilter(),
+        );
+        void queryClient.invalidateQueries(
+          api.app.kodixCare.careTask.getCareTasks.pathFilter(),
+        );
+      },
+      onError: (e) => trpcErrorToastDefault(e),
+    }),
+  );
 
   const defaultCalendarTask = useMemo(() => {
     return {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { LuChevronLeft } from "react-icons/lu";
 import { RxDotsHorizontal } from "react-icons/rx";
@@ -21,7 +22,7 @@ import { toast } from "@kdx/ui/toast";
 import { DeleteTeamConfirmationDialog } from "~/app/[locale]/(authed)/team/settings/general/_components/delete-team-confirmation-dialog";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { useRouter } from "~/i18n/routing";
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 import { switchTeamAction } from "./actions";
 
 export default function EditUserTeamsTableClient({
@@ -159,17 +160,20 @@ function LeaveOrDeleteTeamDropdown({
   teamName: string;
   user: User;
 }) {
+  const api = useTRPC();
   const t = useTranslations();
-  const utils = api.useUtils();
+  const queryClient = useQueryClient();
   const router = useRouter();
-  const leaveTeamMutation = api.team.leaveTeam.useMutation({
-    onSuccess: () => {
-      toast.success(t("account.You have left the team"));
-      void utils.team.getAllUsers.invalidate();
-      router.refresh();
-    },
-    onError: (e) => trpcErrorToastDefault(e),
-  });
+  const leaveTeamMutation = useMutation(
+    api.team.leaveTeam.mutationOptions({
+      onSuccess: () => {
+        toast.success(t("account.You have left the team"));
+        void queryClient.invalidateQueries(api.team.getAllUsers.pathFilter());
+        router.refresh();
+      },
+      onError: (e) => trpcErrorToastDefault(e),
+    }),
+  );
   const [open, setOpen] = useState(false);
 
   return (

@@ -1,5 +1,6 @@
 "use client";
 
+import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 import { getErrorMessage } from "@kdx/shared";
@@ -25,7 +26,7 @@ import { toast } from "@kdx/ui/toast";
 import { ZUpdateInputSchema } from "@kdx/validators/trpc/team";
 
 import { useRouter } from "~/i18n/routing";
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 
 export function EditTeamNameCardClient({
   teamId,
@@ -36,6 +37,7 @@ export function EditTeamNameCardClient({
   teamName: string;
   canEdit: boolean;
 }) {
+  const api = useTRPC();
   const t = useTranslations();
 
   const form = useForm({
@@ -47,11 +49,13 @@ export function EditTeamNameCardClient({
   });
 
   const router = useRouter();
-  const mutation = api.team.update.useMutation({
-    onSuccess: () => {
-      router.refresh();
-    },
-  });
+  const mutation = useMutation(
+    api.team.update.mutationOptions({
+      onSuccess: () => {
+        router.refresh();
+      },
+    }),
+  );
 
   return (
     <Card className="w-full text-left">
