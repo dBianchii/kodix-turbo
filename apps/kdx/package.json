@@ -30,6 +30,7 @@
     "@trpc/client": "catalog:",
     "@trpc/react-query": "catalog:",
     "@trpc/server": "catalog:",
+    "@trpc/tanstack-react-query": "catalog:",
     "@upstash/redis": "^1.31.6",
     "@vercel/analytics": "^1.2.2",
     "@vercel/speed-insights": "^1.0.10",
