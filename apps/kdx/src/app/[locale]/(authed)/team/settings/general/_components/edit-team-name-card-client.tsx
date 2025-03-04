@@ -37,7 +37,7 @@ export function EditTeamNameCardClient({
   teamName: string;
   canEdit: boolean;
 }) {
-  const api = useTRPC();
+  const trpc = useTRPC();
   const t = useTranslations();
 
   const form = useForm({
@@ -50,7 +50,7 @@ export function EditTeamNameCardClient({
 
   const router = useRouter();
   const mutation = useMutation(
-    api.team.update.mutationOptions({
+    trpc.team.update.mutationOptions({
       onSuccess: () => {
         router.refresh();
       },

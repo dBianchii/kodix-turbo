@@ -41,9 +41,9 @@ import { useShiftOverlap } from "./hooks";
 import { WarnOverlappingShifts } from "./warn-overlapping-shifts";
 
 const useMyRoles = () => {
-  const api = useTRPC();
+  const trpc = useTRPC();
   const getMyRolesQuery = useQuery(
-    api.team.appRole.getMyRoles.queryOptions({
+    trpc.team.appRole.getMyRoles.queryOptions({
       appId: kodixCareAppId,
     }),
   );
@@ -95,30 +95,30 @@ export function CreateShiftCredenzaButton({
   ) => void;
   user: User;
 }) {
-  const api = useTRPC();
+  const trpc = useTRPC();
   const queryClient = useQueryClient();
   const t = useTranslations();
 
   const [showOverlapWarning, setShowOverlapWarning] = useState(false);
   const getAllCaregiversQuery = useQuery(
-    api.app.kodixCare.getAllCaregivers.queryOptions(undefined, {
+    trpc.app.kodixCare.getAllCaregivers.queryOptions(undefined, {
       enabled: !!open,
     }),
   );
   const { getMyRolesQuery } = useMyRoles();
 
   const mutation = useMutation(
-    api.app.kodixCare.createCareShift.mutationOptions({
+    trpc.app.kodixCare.createCareShift.mutationOptions({
       onSuccess: () => {
         setOpen(false);
       },
       onError: trpcErrorToastDefault,
       onSettled: () => {
         void queryClient.invalidateQueries(
-          api.app.kodixCare.getAllCareShifts.pathFilter(),
+          trpc.app.kodixCare.getAllCareShifts.pathFilter(),
         );
         void queryClient.invalidateQueries(
-          api.app.kodixCare.findOverlappingShifts.pathFilter(),
+          trpc.app.kodixCare.findOverlappingShifts.pathFilter(),
         );
       },
     }),

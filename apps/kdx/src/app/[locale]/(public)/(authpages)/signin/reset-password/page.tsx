@@ -32,7 +32,7 @@ import { useTRPC } from "~/trpc/react";
 export default function ForgotPasswordPage(props: {
   searchParams: Promise<{ token: string }>;
 }) {
-  const api = useTRPC();
+  const trpc = useTRPC();
   const searchParams = use(props.searchParams);
   const t = useTranslations();
 
@@ -49,7 +49,7 @@ export default function ForgotPasswordPage(props: {
   });
 
   const mutation = useMutation(
-    api.user.changePassword.mutationOptions({
+    trpc.user.changePassword.mutationOptions({
       onError: (err) => {
         trpcErrorToastDefault(err);
       },

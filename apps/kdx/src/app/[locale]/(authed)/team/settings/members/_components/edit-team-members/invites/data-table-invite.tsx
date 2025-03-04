@@ -43,16 +43,16 @@ const columnHelper =
   createColumnHelper<RouterOutputs["team"]["invitation"]["getAll"][number]>();
 
 export function InviteDataTable({ canEditPage }: { canEditPage: boolean }) {
-  const api = useTRPC();
+  const trpc = useTRPC();
   const { data } = useQuery(
-    api.team.invitation.getAll.queryOptions(undefined, {
+    trpc.team.invitation.getAll.queryOptions(undefined, {
       refetchOnMount: true,
     }),
   );
   const t = useTranslations();
   const queryClient = useQueryClient();
   const { mutate } = useMutation(
-    api.team.invitation.delete.mutationOptions({
+    trpc.team.invitation.delete.mutationOptions({
       onSuccess: () => {
         toast.success(t("Invite deleted"));
       },
@@ -61,7 +61,7 @@ export function InviteDataTable({ canEditPage }: { canEditPage: boolean }) {
       },
       onSettled: () => {
         void queryClient.invalidateQueries(
-          api.team.invitation.getAll.pathFilter(),
+          trpc.team.invitation.getAll.pathFilter(),
         );
       },
     }),

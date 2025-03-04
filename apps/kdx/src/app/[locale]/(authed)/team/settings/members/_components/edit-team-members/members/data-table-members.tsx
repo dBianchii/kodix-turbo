@@ -50,16 +50,16 @@ export function DataTableMembers({
   user: User;
   canEditPage: boolean;
 }) {
-  const api = useTRPC();
-  const { data } = useQuery(api.team.getAllUsers.queryOptions(undefined));
+  const trpc = useTRPC();
+  const { data } = useQuery(trpc.team.getAllUsers.queryOptions(undefined));
 
   const queryClient = useQueryClient();
   const t = useTranslations();
   const { mutate } = useMutation(
-    api.team.removeUser.mutationOptions({
+    trpc.team.removeUser.mutationOptions({
       onSuccess: () => {
         toast.success(t("User removed from team"));
-        void queryClient.invalidateQueries(api.team.getAllUsers.pathFilter());
+        void queryClient.invalidateQueries(trpc.team.getAllUsers.pathFilter());
       },
       onError: (e) => trpcErrorToastDefault(e),
     }),

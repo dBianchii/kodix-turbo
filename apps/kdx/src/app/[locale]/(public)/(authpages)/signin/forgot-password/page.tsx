@@ -28,14 +28,14 @@ import { Link } from "~/i18n/routing";
 import { useTRPC } from "~/trpc/react";
 
 export default function ForgotPasswordPage() {
-  const api = useTRPC();
+  const trpc = useTRPC();
   const form = useForm({
     schema: ZSendResetPasswordEmailInputSchema,
   });
   const t = useTranslations();
 
   const mutation = useMutation(
-    api.user.sendResetPasswordEmail.mutationOptions({
+    trpc.user.sendResetPasswordEmail.mutationOptions({
       onError: (err) => {
         trpcErrorToastDefault(err);
       },

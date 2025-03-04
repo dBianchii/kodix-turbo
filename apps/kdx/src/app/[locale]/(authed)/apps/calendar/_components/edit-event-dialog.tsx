@@ -45,22 +45,22 @@ export function EditEventDialog({
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const api = useTRPC();
+  const trpc = useTRPC();
   const queryClient = useQueryClient();
   const [personalizedRecurrenceOpen, setPersonalizedRecurrenceOpen] =
     useState(false);
   const [editDefinitionOpen, setEditDefinitionOpen] = useState(false);
   const mutation = useMutation(
-    api.app.calendar.edit.mutationOptions({
+    trpc.app.calendar.edit.mutationOptions({
       onSuccess: () => {
         setOpen(false);
         setEditDefinitionOpen(false);
         setPersonalizedRecurrenceOpen(false);
         void queryClient.invalidateQueries(
-          api.app.calendar.getAll.pathFilter(),
+          trpc.app.calendar.getAll.pathFilter(),
         );
         void queryClient.invalidateQueries(
-          api.app.kodixCare.careTask.getCareTasks.pathFilter(),
+          trpc.app.kodixCare.careTask.getCareTasks.pathFilter(),
         );
       },
       onError: (e) => trpcErrorToastDefault(e),

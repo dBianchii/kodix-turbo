@@ -8,17 +8,17 @@ import { toast } from "@kdx/ui/toast";
 import { useTRPC } from "~/trpc/react";
 
 export const useSaveCareTaskMutation = () => {
-  const api = useTRPC();
+  const trpc = useTRPC();
   const queryClient = useQueryClient();
   const t = useTranslations();
   const saveCareTaskMutation = useMutation(
-    api.app.kodixCare.careTask.editCareTask.mutationOptions({
+    trpc.app.kodixCare.careTask.editCareTask.mutationOptions({
       onSettled: () => {
         void queryClient.invalidateQueries(
-          api.app.kodixCare.careTask.getCareTasks.pathFilter(),
+          trpc.app.kodixCare.careTask.getCareTasks.pathFilter(),
         );
         void queryClient.invalidateQueries(
-          api.app.getAppActivityLogs.queryFilter({
+          trpc.app.getAppActivityLogs.queryFilter({
             tableNames: ["careTask"],
           }),
         );

@@ -40,7 +40,7 @@ import { useRouter } from "~/i18n/routing";
 import { useTRPC } from "~/trpc/react";
 
 export function DeleteAccountCard() {
-  const api = useTRPC();
+  const trpc = useTRPC();
   const t = useTranslations();
 
   const confirmationNeeded = t("Delete my account");
@@ -52,7 +52,7 @@ export function DeleteAccountCard() {
 
   const router = useRouter();
   const mutation = useMutation(
-    api.user.deleteAccount.mutationOptions({
+    trpc.user.deleteAccount.mutationOptions({
       onSuccess: () => {
         router.push("/");
         router.refresh();

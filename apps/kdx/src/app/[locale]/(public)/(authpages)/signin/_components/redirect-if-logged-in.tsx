@@ -7,10 +7,10 @@ import { useRouter } from "~/i18n/routing";
 import { useTRPC } from "~/trpc/react";
 
 export function RedirectIfLoggedIn() {
-  const api = useTRPC();
+  const trpc = useTRPC();
   const router = useRouter();
   const logged = useQuery(
-    api.auth.getSession.queryOptions(undefined, {
+    trpc.auth.getSession.queryOptions(undefined, {
       refetchOnMount: true,
     }),
   );

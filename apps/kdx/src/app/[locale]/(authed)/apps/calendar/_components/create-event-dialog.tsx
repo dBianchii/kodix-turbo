@@ -39,7 +39,7 @@ import { useTRPC } from "~/trpc/react";
 import { RecurrencePicker } from "./recurrence-picker";
 
 export function CreateEventDialogButton() {
-  const api = useTRPC();
+  const trpc = useTRPC();
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
 
@@ -71,13 +71,13 @@ export function CreateEventDialogButton() {
   }, [open, form]);
 
   const mutation = useMutation(
-    api.app.calendar.create.mutationOptions({
+    trpc.app.calendar.create.mutationOptions({
       onSuccess: () => {
         void queryClient.invalidateQueries(
-          api.app.calendar.getAll.pathFilter(),
+          trpc.app.calendar.getAll.pathFilter(),
         );
         void queryClient.invalidateQueries(
-          api.app.kodixCare.careTask.getCareTasks.pathFilter(),
+          trpc.app.kodixCare.careTask.getCareTasks.pathFilter(),
         );
         form.reset();
         setOpen(false);

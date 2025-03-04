@@ -58,7 +58,7 @@ export function DataTableTodo({
 }: {
   initialData: RouterOutputs["app"]["todo"]["getAll"];
 }) {
-  const api = useTRPC();
+  const trpc = useTRPC();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   // const { data: team } = api.team.getActiveTeam.useQuery();
   // const team = {
@@ -66,7 +66,7 @@ export function DataTableTodo({
   // };
 
   const todosQuery = useQuery(
-    api.app.todo.getAll.queryOptions(undefined, {
+    trpc.app.todo.getAll.queryOptions(undefined, {
       initialData,
     }),
   );
@@ -102,12 +102,14 @@ export function DataTableTodo({
 
         const queryClient = useQueryClient();
         const { mutate: updateTodo } = useMutation(
-          api.app.todo.update.mutationOptions({
+          trpc.app.todo.update.mutationOptions({
             async onMutate(newData) {
               if (!newData.priority) return;
 
               // Cancel outgoing fetches (so they don't overwrite our optimistic update)
-              await queryClient.cancelQueries(api.app.todo.getAll.pathFilter());
+              await queryClient.cancelQueries(
+                trpc.app.todo.getAll.pathFilter(),
+              );
 
               // Get the previous data, so we can rollback later
               const prevData = priority;
@@ -157,12 +159,14 @@ export function DataTableTodo({
         const queryClient = useQueryClient();
 
         const { mutate: updateTodo } = useMutation(
-          api.app.todo.update.mutationOptions({
+          trpc.app.todo.update.mutationOptions({
             async onMutate(newData) {
               if (!newData.status) return;
 
               // Cancel outgoing fetches (so they don't overwrite our optimistic update)
-              await queryClient.cancelQueries(api.app.todo.getAll.pathFilter());
+              await queryClient.cancelQueries(
+                trpc.app.todo.getAll.pathFilter(),
+              );
 
               // Get the previous data, so we can rollback later
               const prevData = status;
@@ -212,10 +216,12 @@ export function DataTableTodo({
         const queryClient = useQueryClient();
 
         const { mutate: updateTodo } = useMutation(
-          api.app.todo.update.mutationOptions({
+          trpc.app.todo.update.mutationOptions({
             async onMutate(newData) {
               // Cancel outgoing fetches (so they don't overwrite our optimistic update)
-              await queryClient.cancelQueries(api.app.todo.getAll.pathFilter());
+              await queryClient.cancelQueries(
+                trpc.app.todo.getAll.pathFilter(),
+              );
 
               // Get the previous data, so we can rollback later
               const prevData = dueDate;
@@ -257,10 +263,12 @@ export function DataTableTodo({
         const queryClient = useQueryClient();
 
         const { mutate: updateTodo } = useMutation(
-          api.app.todo.update.mutationOptions({
+          trpc.app.todo.update.mutationOptions({
             async onMutate(newData) {
               // Cancel outgoing fetches (so they don't overwrite our optimistic update)
-              await queryClient.cancelQueries(api.app.todo.getAll.pathFilter());
+              await queryClient.cancelQueries(
+                trpc.app.todo.getAll.pathFilter(),
+              );
 
               // Get the previous data, so we can rollback later
               const prevData = assignedToUserId;

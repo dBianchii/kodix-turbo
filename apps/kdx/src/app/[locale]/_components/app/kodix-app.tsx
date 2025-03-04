@@ -57,16 +57,16 @@ export function KodixApp({
   installed: boolean;
   user: User | null;
 }) {
-  const api = useTRPC();
+  const trpc = useTRPC();
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const queryClient = useQueryClient();
   const t = useTranslations();
   const installAppMutation = useMutation(
-    api.app.installApp.mutationOptions({
+    trpc.app.installApp.mutationOptions({
       onSuccess: () => {
-        void queryClient.invalidateQueries(api.app.getAll.pathFilter());
-        void queryClient.invalidateQueries(api.app.getInstalled.pathFilter());
+        void queryClient.invalidateQueries(trpc.app.getAll.pathFilter());
+        void queryClient.invalidateQueries(trpc.app.getInstalled.pathFilter());
         router.refresh();
         toast.success(`${t("App")} ${appName} ${t("installed").toLowerCase()}`);
       },
@@ -76,10 +76,10 @@ export function KodixApp({
     }),
   );
   const uninstallAppMutation = useMutation(
-    api.app.uninstallApp.mutationOptions({
+    trpc.app.uninstallApp.mutationOptions({
       onSuccess: () => {
         setOpen(false);
-        void queryClient.invalidateQueries(api.app.getAll.pathFilter());
+        void queryClient.invalidateQueries(trpc.app.getAll.pathFilter());
         router.refresh();
         toast.success(
           `${t("App")} ${appName} ${t("uninstalled").toLowerCase()}`,

@@ -12,9 +12,9 @@ import { I18nPicker } from "./i18n-picker";
 import { Logo } from "./logo";
 
 export function StaticHeader() {
-  const api = useTRPC();
+  const trpc = useTRPC();
   const t = useTranslations();
-  useQuery(api.auth.getSession.queryOptions());
+  useQuery(trpc.auth.getSession.queryOptions());
 
   return (
     <header className="border-b py-2">

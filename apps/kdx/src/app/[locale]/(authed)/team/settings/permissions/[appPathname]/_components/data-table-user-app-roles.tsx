@@ -33,11 +33,11 @@ export function DataTableUserAppRoles({
   initialUsers: RouterOutputs["team"]["appRole"]["getUsersWithRoles"];
   appId: KodixAppId;
 }) {
-  const api = useTRPC();
+  const trpc = useTRPC();
   const queryClient = useQueryClient();
   const appRoleDefaultNames = useAppRoleNames();
   const { data } = useQuery(
-    api.team.appRole.getUsersWithRoles.queryOptions(
+    trpc.team.appRole.getUsersWithRoles.queryOptions(
       { appId },
       {
         refetchOnMount: false,
@@ -47,20 +47,20 @@ export function DataTableUserAppRoles({
   );
 
   const { mutate: updateUserAssociation } = useMutation(
-    api.team.appRole.updateUserAssociation.mutationOptions({
+    trpc.team.appRole.updateUserAssociation.mutationOptions({
       async onMutate(newValues) {
         // Cancel any outgoing refetches
         // (so they don't overwrite our optimistic update)
         await queryClient.cancelQueries(
-          api.team.appRole.getUsersWithRoles.pathFilter(),
+          trpc.team.appRole.getUsersWithRoles.pathFilter(),
         );
         // Snapshot the previous value
         const previousUsers = queryClient.getQueryData(
-          api.team.appRole.getUsersWithRoles.queryKey(),
+          trpc.team.appRole.getUsersWithRoles.queryKey(),
         );
         // Optimistically update to the new value
         queryClient.setQueryData(
-          api.team.appRole.getUsersWithRoles.queryKey({ appId }),
+          trpc.team.appRole.getUsersWithRoles.queryKey({ appId }),
           (old) => {
             if (!old) return old;
             return old.map((user) => {
@@ -89,14 +89,14 @@ export function DataTableUserAppRoles({
       },
       onSuccess() {
         void queryClient.invalidateQueries(
-          api.team.appRole.getUsersWithRoles.pathFilter(),
+          trpc.team.appRole.getUsersWithRoles.pathFilter(),
         );
       },
       onError(err, _, context) {
         // If the mutation fails,
         // use the context returned from onMutate to roll back
         queryClient.setQueryData(
-          api.team.appRole.getUsersWithRoles.queryKey({ appId }),
+          trpc.team.appRole.getUsersWithRoles.queryKey({ appId }),
           context?.previousUsers,
         );
         trpcErrorToastDefault(err);
@@ -104,7 +104,7 @@ export function DataTableUserAppRoles({
       onSettled() {
         // Always refetch after error or success:
         void queryClient.invalidateQueries(
-          api.team.appRole.getUsersWithRoles.pathFilter(),
+          trpc.team.appRole.getUsersWithRoles.pathFilter(),
         );
       },
     }),

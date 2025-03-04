@@ -84,7 +84,7 @@ const columnHelper = createColumnHelper<CalendarTask>();
 const useCalendarData = (
   initialData: RouterOutputs["app"]["calendar"]["getAll"],
 ) => {
-  const api = useTRPC();
+  const trpc = useTRPC();
   const [selectedDay, setSelectedDay] = useState(new Date());
   const inputForQuery = useMemo(
     () => ({
@@ -95,19 +95,19 @@ const useCalendarData = (
   );
   const queryClient = useQueryClient();
   const getAllQuery = useQuery(
-    api.app.calendar.getAll.queryOptions(inputForQuery, {
+    trpc.app.calendar.getAll.queryOptions(inputForQuery, {
       initialData: initialData,
       staleTime: 10,
     }),
   );
   const { mutate: nukeEvents } = useMutation(
-    api.app.calendar.nuke.mutationOptions({
+    trpc.app.calendar.nuke.mutationOptions({
       onSuccess() {
         void queryClient.invalidateQueries(
-          api.app.calendar.getAll.pathFilter(),
+          trpc.app.calendar.getAll.pathFilter(),
         );
         void queryClient.invalidateQueries(
-          api.app.kodixCare.careTask.getCareTasks.pathFilter(),
+          trpc.app.kodixCare.careTask.getCareTasks.pathFilter(),
         );
       },
     }),

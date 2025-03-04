@@ -42,7 +42,7 @@ export default function TeamInviteCardClient({
   user: User;
   canEditPage: boolean;
 }) {
-  const api = useTRPC();
+  const trpc = useTRPC();
   const queryClient = useQueryClient();
   const [emails, setEmails] = useState([{ key: 0, value: "" }]); //key is used to work with formkit
   const [successes, setSuccesses] = useState<string[]>([]);
@@ -50,7 +50,7 @@ export default function TeamInviteCardClient({
   const t = useTranslations();
 
   const mutation = useMutation(
-    api.team.invitation.invite.mutationOptions({
+    trpc.team.invitation.invite.mutationOptions({
       onSuccess: ({ successes, failures }) => {
         if (successes.length > 0) {
           toast.success(
@@ -77,7 +77,7 @@ export default function TeamInviteCardClient({
       onError: (e) => trpcErrorToastDefault(e),
       onSettled: () => {
         void queryClient.invalidateQueries(
-          api.team.invitation.getAll.pathFilter(),
+          trpc.team.invitation.getAll.pathFilter(),
         );
       },
     }),

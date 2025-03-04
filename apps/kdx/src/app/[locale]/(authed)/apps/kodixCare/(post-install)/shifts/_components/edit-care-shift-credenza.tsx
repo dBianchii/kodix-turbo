@@ -73,7 +73,7 @@ export function EditCareShiftCredenza({
   myRoles: RouterOutputs["team"]["appRole"]["getMyRoles"];
   careGivers: RouterOutputs["app"]["kodixCare"]["getAllCaregivers"];
 }) {
-  const api = useTRPC();
+  const trpc = useTRPC();
   const t = useTranslations();
   const userIsAdmin = myRoles.some((x) => x === "ADMIN");
   const canEdit = careShift.caregiverId === user.id || userIsAdmin;
@@ -100,7 +100,7 @@ export function EditCareShiftCredenza({
   });
   const queryClient = useQueryClient();
   const deleteCareShiftMutation = useMutation(
-    api.app.kodixCare.deleteCareShift.mutationOptions({
+    trpc.app.kodixCare.deleteCareShift.mutationOptions({
       onSuccess: () => {
         setCareShift(null);
         toast.success(t("Shift deleted"));
@@ -108,10 +108,10 @@ export function EditCareShiftCredenza({
       onError: (err) => trpcErrorToastDefault(err),
       onSettled: () => {
         void queryClient.invalidateQueries(
-          api.app.kodixCare.getAllCareShifts.pathFilter(),
+          trpc.app.kodixCare.getAllCareShifts.pathFilter(),
         );
         void queryClient.invalidateQueries(
-          api.app.kodixCare.findOverlappingShifts.pathFilter(),
+          trpc.app.kodixCare.findOverlappingShifts.pathFilter(),
         );
       },
     }),

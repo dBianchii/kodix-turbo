@@ -25,21 +25,21 @@ export function NotificationsPopoverClient({
 }: {
   initialNotifications: RouterOutputs["user"]["getInvitations"];
 }) {
-  const api = useTRPC();
+  const trpc = useTRPC();
   const t = useTranslations();
   const query = useQuery(
-    api.user.getInvitations.queryOptions(undefined, {
+    trpc.user.getInvitations.queryOptions(undefined, {
       initialData: initialNotifications,
     }),
   );
   const router = useRouter();
   const queryClient = useQueryClient();
   const acceptMutation = useMutation(
-    api.team.invitation.accept.mutationOptions({
+    trpc.team.invitation.accept.mutationOptions({
       onSuccess: () => {
         toast.success(t("header.Invitation accepted"));
         void queryClient.invalidateQueries(
-          api.user.getInvitations.pathFilter(),
+          trpc.user.getInvitations.pathFilter(),
         );
         router.refresh();
       },
@@ -49,11 +49,11 @@ export function NotificationsPopoverClient({
     }),
   );
   const declineMutation = useMutation(
-    api.team.invitation.decline.mutationOptions({
+    trpc.team.invitation.decline.mutationOptions({
       onSuccess: () => {
         toast.success(t("Invitation declined"));
         void queryClient.invalidateQueries(
-          api.user.getInvitations.pathFilter(),
+          trpc.user.getInvitations.pathFilter(),
         );
         router.refresh();
       },

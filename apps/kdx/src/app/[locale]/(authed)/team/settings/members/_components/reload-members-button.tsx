@@ -10,7 +10,7 @@ import { Button } from "@kdx/ui/button";
 import { useTRPC } from "~/trpc/react";
 
 export function ReloadMembersButton() {
-  const api = useTRPC();
+  const trpc = useTRPC();
   const queryClient = useQueryClient();
   const [isPending, startTransition] = useTransition();
 
@@ -21,9 +21,9 @@ export function ReloadMembersButton() {
       onClick={() => {
         startTransition(async () => {
           await Promise.allSettled([
-            queryClient.invalidateQueries(api.team.getAllUsers.pathFilter()),
+            queryClient.invalidateQueries(trpc.team.getAllUsers.pathFilter()),
             queryClient.invalidateQueries(
-              api.team.invitation.getAll.pathFilter(),
+              trpc.team.invitation.getAll.pathFilter(),
             ),
           ]);
         });

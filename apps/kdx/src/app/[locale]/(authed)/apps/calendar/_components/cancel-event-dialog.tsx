@@ -30,20 +30,20 @@ export function CancelationDialog({
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const api = useTRPC();
+  const trpc = useTRPC();
   const [radioValue, setRadioValue] = useState<
     "all" | "thisAndFuture" | "single"
   >("single");
 
   const queryClient = useQueryClient();
   const mutation = useMutation(
-    api.app.calendar.cancel.mutationOptions({
+    trpc.app.calendar.cancel.mutationOptions({
       onSuccess: () => {
         void queryClient.invalidateQueries(
-          api.app.calendar.getAll.pathFilter(),
+          trpc.app.calendar.getAll.pathFilter(),
         );
         void queryClient.invalidateQueries(
-          api.app.kodixCare.careTask.getCareTasks.pathFilter(),
+          trpc.app.kodixCare.careTask.getCareTasks.pathFilter(),
         );
         setOpen(false);
       },

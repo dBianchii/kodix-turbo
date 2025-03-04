@@ -160,15 +160,15 @@ function LeaveOrDeleteTeamDropdown({
   teamName: string;
   user: User;
 }) {
-  const api = useTRPC();
+  const trpc = useTRPC();
   const t = useTranslations();
   const queryClient = useQueryClient();
   const router = useRouter();
   const leaveTeamMutation = useMutation(
-    api.team.leaveTeam.mutationOptions({
+    trpc.team.leaveTeam.mutationOptions({
       onSuccess: () => {
         toast.success(t("account.You have left the team"));
-        void queryClient.invalidateQueries(api.team.getAllUsers.pathFilter());
+        void queryClient.invalidateQueries(trpc.team.getAllUsers.pathFilter());
         router.refresh();
       },
       onError: (e) => trpcErrorToastDefault(e),

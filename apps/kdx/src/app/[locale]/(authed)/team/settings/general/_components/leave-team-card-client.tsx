@@ -37,7 +37,7 @@ export function LeaveTeamCardClient({
   teamId: string;
   teamName: string;
 }) {
-  const api = useTRPC();
+  const trpc = useTRPC();
   const t = useTranslations();
 
   const form = useForm({
@@ -49,7 +49,7 @@ export function LeaveTeamCardClient({
 
   const router = useRouter();
   const mutation = useMutation(
-    api.team.leaveTeam.mutationOptions({
+    trpc.team.leaveTeam.mutationOptions({
       onSuccess: () => {
         router.push("/team");
         router.refresh();

@@ -40,7 +40,7 @@ export function DeleteTeamConfirmationDialog({
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const api = useTRPC();
+  const trpc = useTRPC();
   const t = useTranslations();
   const deleteMyTeamString = t("delete my team");
 
@@ -58,7 +58,7 @@ export function DeleteTeamConfirmationDialog({
 
   const router = useRouter();
   const mutation = useMutation(
-    api.team.deleteTeam.mutationOptions({
+    trpc.team.deleteTeam.mutationOptions({
       onSuccess: () => {
         router.push("/team");
         router.refresh();

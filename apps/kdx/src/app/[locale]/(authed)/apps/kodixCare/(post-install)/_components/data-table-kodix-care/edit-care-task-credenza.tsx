@@ -257,9 +257,9 @@ function AlertNoShiftsOrNotYours({
   task: CareTask;
   user: User;
 }) {
-  const api = useTRPC();
+  const trpc = useTRPC();
   const overlappingShiftsQuery = useQuery(
-    api.app.kodixCare.findOverlappingShifts.queryOptions(
+    trpc.app.kodixCare.findOverlappingShifts.queryOptions(
       {
         start: task.date,
         end: task.date,
@@ -301,9 +301,9 @@ function AlertNoShiftsOrNotYours({
 }
 
 function LogsView({ careTaskId }: { careTaskId: string }) {
-  const api = useTRPC();
+  const trpc = useTRPC();
   const getAppActivityLogsQuery = useQuery(
-    api.app.getAppActivityLogs.queryOptions({
+    trpc.app.getAppActivityLogs.queryOptions({
       appId: kodixCareAppId,
       tableNames: ["careTask"],
       rowId: careTaskId,

@@ -39,7 +39,7 @@ import { StatusPopover } from "./status-popover";
 type Status = typeof todos.$inferInsert.status;
 
 export function CreateTaskDialogButton() {
-  const api = useTRPC();
+  const trpc = useTRPC();
   function handleCreateTask() {
     createTask({
       title,
@@ -54,9 +54,9 @@ export function CreateTaskDialogButton() {
 
   const queryClient = useQueryClient();
   const { mutate: createTask } = useMutation(
-    api.app.todo.create.mutationOptions({
+    trpc.app.todo.create.mutationOptions({
       onSuccess: () => {
-        void queryClient.invalidateQueries(api.app.todo.getAll.pathFilter());
+        void queryClient.invalidateQueries(trpc.app.todo.getAll.pathFilter());
       },
     }),
   );
