@@ -1,6 +1,7 @@
 import type { CareTask } from "node_modules/@kdx/api/src/internal/calendarAndCareTaskCentral";
 import { useEffect, useMemo, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { useQuery } from "@tanstack/react-query";
 import { useFormatter, useTranslations } from "next-intl";
 import {
   LuAlertCircle,
@@ -44,7 +45,8 @@ import {
 import { Textarea } from "@kdx/ui/textarea";
 import { ZEditCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
 
-import { api } from "~/trpc/react";
+import type { useSaveCareTaskMutation } from "./hooks";
+import { useTRPC } from "~/trpc/react";
 
 export function EditCareTaskCredenza({
   user,
@@ -55,9 +57,7 @@ export function EditCareTaskCredenza({
 }: {
   user: User;
   task: CareTask;
-  mutation: ReturnType<
-    typeof api.app.kodixCare.careTask.editCareTask.useMutation
-  >;
+  mutation: ReturnType<typeof useSaveCareTaskMutation>;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
@@ -257,8 +257,9 @@ function AlertNoShiftsOrNotYours({
   task: CareTask;
   user: User;
 }) {
-  const overlappingShiftsQuery =
-    api.app.kodixCare.findOverlappingShifts.useQuery(
+  const trpc = useTRPC();
+  const overlappingShiftsQuery = useQuery(
+    trpc.app.kodixCare.findOverlappingShifts.queryOptions(
       {
         start: task.date,
         end: task.date,
@@ -266,7 +267,8 @@ function AlertNoShiftsOrNotYours({
       {
         refetchOnWindowFocus: "always",
       },
-    );
+    ),
+  );
 
   const atLeastOneShiftExists = !!overlappingShiftsQuery.data?.length;
   const isAtLeastOneOfTheOverlappingShiftsMine =
@@ -299,11 +301,14 @@ function AlertNoShiftsOrNotYours({
 }
 
 function LogsView({ careTaskId }: { careTaskId: string }) {
-  const getAppActivityLogsQuery = api.app.getAppActivityLogs.useQuery({
-    appId: kodixCareAppId,
-    tableNames: ["careTask"],
-    rowId: careTaskId,
-  });
+  const trpc = useTRPC();
+  const getAppActivityLogsQuery = useQuery(
+    trpc.app.getAppActivityLogs.queryOptions({
+      appId: kodixCareAppId,
+      tableNames: ["careTask"],
+      rowId: careTaskId,
+    }),
+  );
   const t = useTranslations();
   const format = useFormatter();
   if (getAppActivityLogsQuery.isLoading)

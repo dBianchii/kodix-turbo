@@ -1,5 +1,6 @@
 "use client";
 
+import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { z } from "zod";
 
@@ -36,9 +37,10 @@ import { Input } from "@kdx/ui/input";
 import { toast } from "@kdx/ui/toast";
 
 import { useRouter } from "~/i18n/routing";
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 
 export function DeleteAccountCard() {
+  const trpc = useTRPC();
   const t = useTranslations();
 
   const confirmationNeeded = t("Delete my account");
@@ -49,12 +51,14 @@ export function DeleteAccountCard() {
   });
 
   const router = useRouter();
-  const mutation = api.user.deleteAccount.useMutation({
-    onSuccess: () => {
-      router.push("/");
-      router.refresh();
-    },
-  });
+  const mutation = useMutation(
+    trpc.user.deleteAccount.mutationOptions({
+      onSuccess: () => {
+        router.push("/");
+        router.refresh();
+      },
+    }),
+  );
 
   return (
     <Card className="w-full border-destructive text-left">

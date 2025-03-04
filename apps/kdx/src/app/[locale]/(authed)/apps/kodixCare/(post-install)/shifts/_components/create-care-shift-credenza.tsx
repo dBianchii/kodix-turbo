@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { LuArrowRight, LuLoader2, LuPlus } from "react-icons/lu";
 
@@ -35,14 +36,17 @@ import {
 import { ZCreateCareShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 import { useShiftOverlap } from "./hooks";
 import { WarnOverlappingShifts } from "./warn-overlapping-shifts";
 
 const useMyRoles = () => {
-  const getMyRolesQuery = api.team.appRole.getMyRoles.useQuery({
-    appId: kodixCareAppId,
-  });
+  const trpc = useTRPC();
+  const getMyRolesQuery = useQuery(
+    trpc.team.appRole.getMyRoles.queryOptions({
+      appId: kodixCareAppId,
+    }),
+  );
 
   const shouldAutoSelectMyself = useMemo(
     () =>
@@ -91,28 +95,34 @@ export function CreateShiftCredenzaButton({
   ) => void;
   user: User;
 }) {
-  const utils = api.useUtils();
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
   const t = useTranslations();
 
   const [showOverlapWarning, setShowOverlapWarning] = useState(false);
-  const getAllCaregiversQuery = api.app.kodixCare.getAllCaregivers.useQuery(
-    undefined,
-    {
+  const getAllCaregiversQuery = useQuery(
+    trpc.app.kodixCare.getAllCaregivers.queryOptions(undefined, {
       enabled: !!open,
-    },
+    }),
   );
   const { getMyRolesQuery } = useMyRoles();
 
-  const mutation = api.app.kodixCare.createCareShift.useMutation({
-    onSuccess: () => {
-      setOpen(false);
-    },
-    onError: trpcErrorToastDefault,
-    onSettled: () => {
-      void utils.app.kodixCare.getAllCareShifts.invalidate();
-      void utils.app.kodixCare.findOverlappingShifts.invalidate();
-    },
-  });
+  const mutation = useMutation(
+    trpc.app.kodixCare.createCareShift.mutationOptions({
+      onSuccess: () => {
+        setOpen(false);
+      },
+      onError: trpcErrorToastDefault,
+      onSettled: () => {
+        void queryClient.invalidateQueries(
+          trpc.app.kodixCare.getAllCareShifts.pathFilter(),
+        );
+        void queryClient.invalidateQueries(
+          trpc.app.kodixCare.findOverlappingShifts.pathFilter(),
+        );
+      },
+    }),
+  );
 
   const { form, startAt, endAt } = useCreateShiftForm({
     userId: user.id,

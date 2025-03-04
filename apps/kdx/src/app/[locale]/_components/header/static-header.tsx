@@ -1,18 +1,20 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 import { buttonVariants } from "@kdx/ui/button";
 
 import { Link } from "~/i18n/routing";
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 import MaxWidthWrapper from "../max-width-wrapper";
 import { I18nPicker } from "./i18n-picker";
 import { Logo } from "./logo";
 
 export function StaticHeader() {
+  const trpc = useTRPC();
   const t = useTranslations();
-  api.auth.getSession.useQuery();
+  useQuery(trpc.auth.getSession.queryOptions());
 
   return (
     <header className="border-b py-2">

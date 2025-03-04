@@ -9,7 +9,7 @@ import { IconKodixApp } from "~/app/[locale]/_components/app/kodix-icon";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { getAppUrl } from "~/helpers/miscelaneous";
 import { Link, redirect } from "~/i18n/routing";
-import { api } from "~/trpc/server";
+import { trpc } from "~/trpc/server";
 import { CustomKodixIcon } from "../../_components/app/custom-kodix-icon";
 
 interface CustomApp {
@@ -93,7 +93,7 @@ function AppsSectionSkeleton({ customApps }: { customApps: CustomApp[] }) {
 }
 
 async function AppsSection({ customApps }: { customApps: CustomApp[] }) {
-  const apps = await api.app.getInstalled();
+  const apps = await trpc.app.getInstalled();
 
   return (
     <div className="grid grid-cols-4 items-center gap-4 md:grid-cols-6 lg:grid-cols-11">

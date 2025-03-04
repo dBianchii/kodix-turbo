@@ -5,16 +5,16 @@ import { revalidatePath } from "next/cache";
 import { kodixCareAppId, kodixCareConfigSchema } from "@kdx/shared";
 
 import { action } from "~/helpers/safe-action/safe-action";
-import { api } from "~/trpc/server";
+import { trpc } from "~/trpc/server";
 
 export const finishKodixCareOnboardingAction = action
   .schema(kodixCareConfigSchema)
   .action(async ({ parsedInput }) => {
-    await api.app.saveConfig({
+    await trpc.app.saveConfig({
       appId: kodixCareAppId,
       config: parsedInput,
     });
-    await api.app.installApp({
+    await trpc.app.installApp({
       appId: kodixCareAppId,
     });
     revalidatePath("/", "layout");

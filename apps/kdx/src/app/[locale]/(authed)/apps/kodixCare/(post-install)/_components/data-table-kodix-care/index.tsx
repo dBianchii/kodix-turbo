@@ -3,6 +3,7 @@
 import type { SortingState, VisibilityState } from "@tanstack/react-table";
 import type { CareTask } from "node_modules/@kdx/api/src/internal/calendarAndCareTaskCentral";
 import { useEffect, useMemo, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createColumnHelper,
   flexRender,
@@ -99,7 +100,7 @@ import { ZCreateCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/c
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { Link } from "~/i18n/routing";
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 import { DateTimeSelectorWithLeftAndRightArrows } from "./date-time-selector-with-left-and-right-buttons";
 import { EditCareTaskCredenza } from "./edit-care-task-credenza";
 import { useSaveCareTaskMutation } from "./hooks";
@@ -148,6 +149,7 @@ export const useCareTaskStore = create<{
 }));
 
 export default function DataTableKodixCare({ user }: { user: User }) {
+  const trpc = useTRPC();
   const {
     input,
     setEditDetailsOpen,
@@ -159,7 +161,9 @@ export default function DataTableKodixCare({ user }: { user: User }) {
 
   const [deleteTaskOpen, setDeleteTaskOpen] = useState(false);
 
-  const query = api.app.kodixCare.careTask.getCareTasks.useQuery(input);
+  const query = useQuery(
+    trpc.app.kodixCare.careTask.getCareTasks.queryOptions(input),
+  );
   const saveCareTaskMutation = useSaveCareTaskMutation();
 
   const isCareTask = (id: CareTaskOrCalendarTask["id"]): id is string => !!id;
@@ -445,16 +449,21 @@ function DeleteCareTaskAlertDialog({
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
+  const trpc = useTRPC();
   const t = useTranslations();
 
-  const utils = api.useUtils();
+  const queryClient = useQueryClient();
 
-  const mutation = api.app.kodixCare.careTask.deleteCareTask.useMutation({
-    onError: trpcErrorToastDefault,
-    onSettled: () => {
-      void utils.app.kodixCare.careTask.getCareTasks.invalidate();
-    },
-  });
+  const mutation = useMutation(
+    trpc.app.kodixCare.careTask.deleteCareTask.mutationOptions({
+      onError: trpcErrorToastDefault,
+      onSettled: () => {
+        void queryClient.invalidateQueries(
+          trpc.app.kodixCare.careTask.getCareTasks.pathFilter(),
+        );
+      },
+    }),
+  );
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
@@ -489,19 +498,23 @@ function DeleteCareTaskAlertDialog({
 }
 
 function SyncTasksFromCalendarCredenzaButton() {
+  const trpc = useTRPC();
   const [syncCredenzaOpen, setSyncCredenzaOpen] = useState(false);
 
-  const utils = api.useUtils();
-  const syncCareTasksFromCalendarMutation =
-    api.app.kodixCare.careTask.syncCareTasksFromCalendar.useMutation({
+  const queryClient = useQueryClient();
+  const syncCareTasksFromCalendarMutation = useMutation(
+    trpc.app.kodixCare.careTask.syncCareTasksFromCalendar.mutationOptions({
       onSuccess: () => {
-        void utils.app.kodixCare.invalidate();
+        void queryClient.invalidateQueries(trpc.app.kodixCare.pathFilter());
       },
       onError: trpcErrorToastDefault,
       onSettled: () => {
-        void utils.app.kodixCare.careTask.getCareTasks.invalidate();
+        void queryClient.invalidateQueries(
+          trpc.app.kodixCare.careTask.getCareTasks.pathFilter(),
+        );
       },
-    });
+    }),
+  );
   const t = useTranslations();
   return (
     <Credenza open={syncCredenzaOpen} onOpenChange={setSyncCredenzaOpen}>
@@ -553,9 +566,10 @@ function SyncTasksFromCalendarCredenzaButton() {
 }
 
 function AddCareTaskCredenzaButton() {
+  const trpc = useTRPC();
   const [open, setOpen] = useState(false);
 
-  const utils = api.useUtils();
+  const queryClient = useQueryClient();
   const t = useTranslations();
 
   const form = useForm({
@@ -566,15 +580,19 @@ function AddCareTaskCredenzaButton() {
       description: "",
     },
   });
-  const mutation = api.app.kodixCare.careTask.createCareTask.useMutation({
-    onError: trpcErrorToastDefault,
-    onSettled: () => {
-      void utils.app.kodixCare.careTask.getCareTasks.invalidate();
-    },
-    onSuccess: () => {
-      setOpen(false);
-    },
-  });
+  const mutation = useMutation(
+    trpc.app.kodixCare.careTask.createCareTask.mutationOptions({
+      onError: trpcErrorToastDefault,
+      onSettled: () => {
+        void queryClient.invalidateQueries(
+          trpc.app.kodixCare.careTask.getCareTasks.pathFilter(),
+        );
+      },
+      onSuccess: () => {
+        setOpen(false);
+      },
+    }),
+  );
 
   useEffect(() => {
     form.reset();
@@ -724,14 +742,19 @@ function AddCareTaskCredenzaButton() {
 }
 
 function UnlockMoreTasksCredenza() {
-  const utils = api.useUtils();
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
   const t = useTranslations();
-  const mutation = api.app.kodixCare.careTask.unlockMoreTasks.useMutation({
-    onError: trpcErrorToastDefault,
-    onSuccess: () => {
-      void utils.app.kodixCare.careTask.getCareTasks.invalidate();
-    },
-  });
+  const mutation = useMutation(
+    trpc.app.kodixCare.careTask.unlockMoreTasks.mutationOptions({
+      onError: trpcErrorToastDefault,
+      onSuccess: () => {
+        void queryClient.invalidateQueries(
+          trpc.app.kodixCare.careTask.getCareTasks.pathFilter(),
+        );
+      },
+    }),
+  );
 
   const {
     unlockMoreTasksCredenzaWithDateOpen,

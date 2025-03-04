@@ -1,4 +1,4 @@
-import { api } from "~/trpc/server";
+import { trpc } from "~/trpc/server";
 import { AppSwitcherClient } from "./app-switcher-client";
 
 export async function AppSwitcher({
@@ -10,7 +10,7 @@ export async function AppSwitcher({
   hideAddMoreApps?: boolean;
   hrefPrefix?: string;
 }) {
-  const apps = await api.app.getInstalled();
+  const apps = await trpc.app.getInstalled();
 
   return (
     <AppSwitcherClient

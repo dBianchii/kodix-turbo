@@ -1,15 +1,17 @@
 "use client";
 
 import { useTransition } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { LuRefreshCw } from "react-icons/lu";
 
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 
 export function ReloadMembersButton() {
-  const utils = api.useUtils();
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
   const [isPending, startTransition] = useTransition();
 
   return (
@@ -19,8 +21,10 @@ export function ReloadMembersButton() {
       onClick={() => {
         startTransition(async () => {
           await Promise.allSettled([
-            utils.team.getAllUsers.invalidate(),
-            utils.team.invitation.getAll.invalidate(),
+            queryClient.invalidateQueries(trpc.team.getAllUsers.pathFilter()),
+            queryClient.invalidateQueries(
+              trpc.team.invitation.getAll.pathFilter(),
+            ),
           ]);
         });
       }}

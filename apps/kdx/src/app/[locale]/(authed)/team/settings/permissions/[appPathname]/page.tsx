@@ -8,7 +8,7 @@ import { getAppName } from "@kdx/locales/next-intl/server-hooks";
 import type { AppPathnames } from "~/helpers/miscelaneous";
 import { appIdToPathname, appPathnameToAppId } from "~/helpers/miscelaneous";
 import { redirect } from "~/i18n/routing";
-import { api } from "~/trpc/server";
+import { trpc } from "~/trpc/server";
 import { DataTableUserAppRoles } from "./_components/data-table-user-app-roles";
 
 export default async function RolesForAppPage(props: {
@@ -31,7 +31,7 @@ export default async function RolesForAppPage(props: {
 }
 
 async function UserAppRolesTable({ appId }: { appId: KodixAppId }) {
-  const initialUsers = await api.team.appRole.getUsersWithRoles({ appId });
+  const initialUsers = await trpc.team.appRole.getUsersWithRoles({ appId });
   const t = await getTranslations();
   return (
     <div className="flex flex-col gap-8">

@@ -1,5 +1,6 @@
 "use client";
 
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createColumnHelper,
   flexRender,
@@ -37,7 +38,7 @@ import {
 } from "@kdx/ui/tooltip";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 
 const columnHelper =
   createColumnHelper<RouterOutputs["team"]["getAllUsers"][number]>();
@@ -49,17 +50,20 @@ export function DataTableMembers({
   user: User;
   canEditPage: boolean;
 }) {
-  const { data } = api.team.getAllUsers.useQuery(undefined);
+  const trpc = useTRPC();
+  const { data } = useQuery(trpc.team.getAllUsers.queryOptions(undefined));
 
-  const utils = api.useUtils();
+  const queryClient = useQueryClient();
   const t = useTranslations();
-  const { mutate } = api.team.removeUser.useMutation({
-    onSuccess: () => {
-      toast.success(t("User removed from team"));
-      void utils.team.getAllUsers.invalidate();
-    },
-    onError: (e) => trpcErrorToastDefault(e),
-  });
+  const { mutate } = useMutation(
+    trpc.team.removeUser.mutationOptions({
+      onSuccess: () => {
+        toast.success(t("User removed from team"));
+        void queryClient.invalidateQueries(trpc.team.getAllUsers.pathFilter());
+      },
+      onError: (e) => trpcErrorToastDefault(e),
+    }),
+  );
 
   const columns = [
     columnHelper.accessor("name", {

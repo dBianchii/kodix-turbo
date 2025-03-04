@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { LuAlertCircle, LuPlus } from "react-icons/lu";
 import { RRule, Weekday } from "rrule";
@@ -34,12 +35,13 @@ import { Textarea } from "@kdx/ui/textarea";
 import { ZCreateInputSchema } from "@kdx/validators/trpc/app/calendar";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 import { RecurrencePicker } from "./recurrence-picker";
 
 export function CreateEventDialogButton() {
+  const trpc = useTRPC();
   const [open, setOpen] = useState(false);
-  const utils = api.useUtils();
+  const queryClient = useQueryClient();
 
   const [personalizedRecurrenceOpen, setPersonalizedRecurrenceOpen] =
     useState(false);
@@ -68,15 +70,21 @@ export function CreateEventDialogButton() {
     form.reset();
   }, [open, form]);
 
-  const mutation = api.app.calendar.create.useMutation({
-    onSuccess: () => {
-      void utils.app.calendar.getAll.invalidate();
-      void utils.app.kodixCare.careTask.getCareTasks.invalidate();
-      form.reset();
-      setOpen(false);
-    },
-    onError: (e) => trpcErrorToastDefault(e),
-  });
+  const mutation = useMutation(
+    trpc.app.calendar.create.mutationOptions({
+      onSuccess: () => {
+        void queryClient.invalidateQueries(
+          trpc.app.calendar.getAll.pathFilter(),
+        );
+        void queryClient.invalidateQueries(
+          trpc.app.kodixCare.careTask.getCareTasks.pathFilter(),
+        );
+        form.reset();
+        setOpen(false);
+      },
+      onError: (e) => trpcErrorToastDefault(e),
+    }),
+  );
 
   const t = useTranslations();
 

@@ -7,7 +7,7 @@ import { auth } from "@kdx/auth";
 import { KodixApp } from "~/app/[locale]/_components/app/kodix-app";
 import { KodixAppSkeleton } from "~/app/[locale]/_components/app/kodix-app-skeleton";
 import { Link, redirect } from "~/i18n/routing";
-import { api } from "~/trpc/server";
+import { trpc } from "~/trpc/server";
 
 export default async function SettingsAppsPage() {
   const { user } = await auth();
@@ -37,7 +37,7 @@ export default async function SettingsAppsPage() {
 }
 
 async function Apps() {
-  const apps = await api.app.getInstalled();
+  const apps = await trpc.app.getInstalled();
   const { user } = await auth();
   const t = await getTranslations();
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useFormatter, useTranslations } from "next-intl";
 import { HiUserCircle } from "react-icons/hi";
 import { LuPlus, LuX } from "react-icons/lu";
@@ -26,7 +27,7 @@ import {
   DatePickerIcon,
   DatePickerWithPresets,
 } from "~/app/[locale]/_components/date-picker-with-presets";
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 import { AssigneePopover } from "./assignee-popover";
 import {
   PriorityIcon,
@@ -38,6 +39,7 @@ import { StatusPopover } from "./status-popover";
 type Status = typeof todos.$inferInsert.status;
 
 export function CreateTaskDialogButton() {
+  const trpc = useTRPC();
   function handleCreateTask() {
     createTask({
       title,
@@ -50,12 +52,14 @@ export function CreateTaskDialogButton() {
     setOpen(false);
   }
 
-  const utils = api.useUtils();
-  const { mutate: createTask } = api.app.todo.create.useMutation({
-    onSuccess: () => {
-      void utils.app.todo.getAll.invalidate();
-    },
-  });
+  const queryClient = useQueryClient();
+  const { mutate: createTask } = useMutation(
+    trpc.app.todo.create.mutationOptions({
+      onSuccess: () => {
+        void queryClient.invalidateQueries(trpc.app.todo.getAll.pathFilter());
+      },
+    }),
+  );
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");

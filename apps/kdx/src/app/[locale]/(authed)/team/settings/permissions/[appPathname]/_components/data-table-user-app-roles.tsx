@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -18,7 +19,7 @@ import { DataTable } from "@kdx/ui/data-table/data-table";
 import { MultiSelect } from "@kdx/ui/multi-select";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 
 const columnHelper =
   createColumnHelper<
@@ -32,67 +33,82 @@ export function DataTableUserAppRoles({
   initialUsers: RouterOutputs["team"]["appRole"]["getUsersWithRoles"];
   appId: KodixAppId;
 }) {
-  const utils = api.useUtils();
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
   const appRoleDefaultNames = useAppRoleNames();
-  const { data } = api.team.appRole.getUsersWithRoles.useQuery(
-    { appId },
-    {
-      refetchOnMount: false,
-      initialData: initialUsers,
-    },
+  const { data } = useQuery(
+    trpc.team.appRole.getUsersWithRoles.queryOptions(
+      { appId },
+      {
+        refetchOnMount: false,
+        initialData: initialUsers,
+      },
+    ),
   );
 
-  const { mutate: updateUserAssociation } =
-    api.team.appRole.updateUserAssociation.useMutation({
+  const { mutate: updateUserAssociation } = useMutation(
+    trpc.team.appRole.updateUserAssociation.mutationOptions({
       async onMutate(newValues) {
         // Cancel any outgoing refetches
         // (so they don't overwrite our optimistic update)
-        await utils.team.appRole.getUsersWithRoles.cancel();
+        await queryClient.cancelQueries(
+          trpc.team.appRole.getUsersWithRoles.pathFilter(),
+        );
         // Snapshot the previous value
-        const previousUsers = utils.team.appRole.getUsersWithRoles.getData();
+        const previousUsers = queryClient.getQueryData(
+          trpc.team.appRole.getUsersWithRoles.queryKey(),
+        );
         // Optimistically update to the new value
-        utils.team.appRole.getUsersWithRoles.setData({ appId }, (old) => {
-          if (!old) return old;
-          return old.map((user) => {
-            if (user.id === newValues.userId) {
-              return {
-                ...user,
-                UserTeamAppRoles: user.UserTeamAppRoles.filter(
-                  (role) => !Object.hasOwn(newValues.roles, role.role),
-                ).concat(
-                  typedObjectEntries(newValues.roles)
-                    .filter(([, isActive]) => isActive)
-                    .map(([role]) => ({
-                      role: role,
-                      userId: newValues.userId,
-                    })),
-                ),
-              };
-            }
-            return user;
-          });
-        });
+        queryClient.setQueryData(
+          trpc.team.appRole.getUsersWithRoles.queryKey({ appId }),
+          (old) => {
+            if (!old) return old;
+            return old.map((user) => {
+              if (user.id === newValues.userId) {
+                return {
+                  ...user,
+                  UserTeamAppRoles: user.UserTeamAppRoles.filter(
+                    (role) => !Object.hasOwn(newValues.roles, role.role),
+                  ).concat(
+                    typedObjectEntries(newValues.roles)
+                      .filter(([, isActive]) => isActive)
+                      .map(([role]) => ({
+                        role: role,
+                        userId: newValues.userId,
+                      })),
+                  ),
+                };
+              }
+              return user;
+            });
+          },
+        );
 
         // Return a context object with the snapshotted value
         return { previousUsers };
       },
       onSuccess() {
-        void utils.team.appRole.getUsersWithRoles.invalidate();
+        void queryClient.invalidateQueries(
+          trpc.team.appRole.getUsersWithRoles.pathFilter(),
+        );
       },
       onError(err, _, context) {
         // If the mutation fails,
         // use the context returned from onMutate to roll back
-        utils.team.appRole.getUsersWithRoles.setData(
-          { appId },
+        queryClient.setQueryData(
+          trpc.team.appRole.getUsersWithRoles.queryKey({ appId }),
           context?.previousUsers,
         );
         trpcErrorToastDefault(err);
       },
       onSettled() {
         // Always refetch after error or success:
-        void utils.team.appRole.getUsersWithRoles.invalidate();
+        void queryClient.invalidateQueries(
+          trpc.team.appRole.getUsersWithRoles.pathFilter(),
+        );
       },
-    });
+    }),
+  );
   const t = useTranslations();
 
   const columns = useMemo(

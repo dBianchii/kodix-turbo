@@ -1,5 +1,6 @@
 "use client";
 
+import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@kdx/ui/button";
@@ -24,19 +25,22 @@ import { ZSendResetPasswordEmailInputSchema } from "@kdx/validators/trpc/user";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { Link } from "~/i18n/routing";
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 
 export default function ForgotPasswordPage() {
+  const trpc = useTRPC();
   const form = useForm({
     schema: ZSendResetPasswordEmailInputSchema,
   });
   const t = useTranslations();
 
-  const mutation = api.user.sendResetPasswordEmail.useMutation({
-    onError: (err) => {
-      trpcErrorToastDefault(err);
-    },
-  });
+  const mutation = useMutation(
+    trpc.user.sendResetPasswordEmail.mutationOptions({
+      onError: (err) => {
+        trpcErrorToastDefault(err);
+      },
+    }),
+  );
 
   return (
     <section className="mx-auto flex flex-1 flex-col items-center justify-center px-6 py-8 lg:py-0">

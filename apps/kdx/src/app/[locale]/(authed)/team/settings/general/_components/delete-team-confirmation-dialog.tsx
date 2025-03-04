@@ -1,3 +1,4 @@
+import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { z } from "zod";
 
@@ -26,7 +27,7 @@ import { toast } from "@kdx/ui/toast";
 import { ZDeleteTeamInputSchema } from "@kdx/validators/trpc/team";
 
 import { useRouter } from "~/i18n/routing";
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 
 export function DeleteTeamConfirmationDialog({
   teamName,
@@ -39,6 +40,7 @@ export function DeleteTeamConfirmationDialog({
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const trpc = useTRPC();
   const t = useTranslations();
   const deleteMyTeamString = t("delete my team");
 
@@ -55,12 +57,14 @@ export function DeleteTeamConfirmationDialog({
   });
 
   const router = useRouter();
-  const mutation = api.team.deleteTeam.useMutation({
-    onSuccess: () => {
-      router.push("/team");
-      router.refresh();
-    },
-  });
+  const mutation = useMutation(
+    trpc.team.deleteTeam.mutationOptions({
+      onSuccess: () => {
+        router.push("/team");
+        router.refresh();
+      },
+    }),
+  );
 
   return (
     <AlertDialog

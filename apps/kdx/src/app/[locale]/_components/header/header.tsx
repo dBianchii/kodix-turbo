@@ -6,7 +6,7 @@ import { buttonVariants } from "@kdx/ui/button";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { Link } from "~/i18n/routing";
-import { api } from "~/trpc/server";
+import { trpc } from "~/trpc/server";
 import { AppSwitcher } from "../app-switcher";
 import { I18nPicker } from "./i18n-picker";
 import { Logo } from "./logo";
@@ -66,7 +66,7 @@ async function NotificationsPopover() {
   const { user } = await auth();
   if (!user) return null;
 
-  const initialNotifications = await api.user.getInvitations();
+  const initialNotifications = await trpc.user.getInvitations();
   if (!initialNotifications.length) return null;
 
   return (
