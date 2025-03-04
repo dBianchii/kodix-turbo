@@ -14,11 +14,11 @@ import {
 import { addDays } from "date-fns";
 import { useFormatter, useTranslations } from "next-intl";
 import {
-  LuAlertCircle,
   LuCalendar,
   LuChevronLeft,
   LuChevronRight,
-  LuLoader2,
+  LuCircleAlert,
+  LuLoaderCircle,
   LuPencil,
   LuText,
   LuTrash,
@@ -212,14 +212,14 @@ const useTable = ({
       columnHelper.accessor("type", {
         header: ({ column }) => (
           <DataTableColumnHeader column={column}>
-            <LuAlertCircle className="mr-2 size-4 text-orange-400" />
+            <LuCircleAlert className="mr-2 size-4 text-orange-400" />
             {t("Critical")}
           </DataTableColumnHeader>
         ),
         cell: (ctx) => (
           <div>
             {ctx.getValue() === "CRITICAL" ? (
-              <LuAlertCircle className="ml-4 size-4 text-orange-400" />
+              <LuCircleAlert className="ml-4 size-4 text-orange-400" />
             ) : null}
           </div>
         ),
@@ -367,7 +367,7 @@ export function DataTable({
                 <TableRow>
                   <TableCell colSpan={columnLength} className="h-24">
                     <div className="flex h-full items-center justify-center">
-                      <LuLoader2 className="h-6 w-6 animate-spin" />
+                      <LuLoaderCircle className="h-6 w-6 animate-spin" />
                     </div>
                   </TableCell>
                 </TableRow>

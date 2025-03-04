@@ -33,7 +33,10 @@
         "base64": "Base64 inválido",
         "duration": "Duração inválida",
         "startsWith": "Entrada inválida: deve iniciar com \"{startsWith}\"",
-        "endsWith": "Entrada inválida: deve terminar com \"{endsWith}\""
+        "endsWith": "Entrada inválida: deve terminar com \"{endsWith}\"",
+        "cidr": "CIDR inválido",
+        "jwt": "JWT inválido",
+        "base64url": "URL Base64 inválido"
       },
       "too_small": {
         "array": {
@@ -115,7 +118,10 @@
       "time": "time",
       "ip": "ip",
       "base64": "base64",
-      "duration": "duration"
+      "duration": "duration",
+      "cidr": "cidr",
+      "jwt": "jwt",
+      "base64url": "base64url"
     },
     "types": {
       "function": "function",

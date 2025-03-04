@@ -1,4 +1,3 @@
-import type { NextRequest } from "next/server";
 import { headers } from "next/headers";
 import { Receiver } from "@upstash/qstash";
 import { getTranslations } from "next-intl/server";
@@ -27,11 +26,11 @@ export const verifiedQstashCron =
       req,
       ctx,
     }: {
-      req: NextRequest;
+      req: Request;
       ctx: TCronJobContext;
     }) => Promise<Response>,
   ) =>
-  async (req: NextRequest) => {
+  async (req: Request) => {
     const ctx = await createCronJobCtx();
 
     //? Allow running cron jobs locally, for development purposes

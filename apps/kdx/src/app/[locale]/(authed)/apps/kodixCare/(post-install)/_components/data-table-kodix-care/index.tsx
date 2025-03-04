@@ -13,11 +13,11 @@ import {
 } from "@tanstack/react-table";
 import { useFormatter, useTranslations } from "next-intl";
 import {
-  LuAlertCircle,
   LuArrowLeftRight,
   LuCalendar,
   LuCheck,
-  LuLoader2,
+  LuCircleAlert,
+  LuLoaderCircle,
   LuLock,
   LuPlus,
   LuText,
@@ -248,14 +248,14 @@ export default function DataTableKodixCare({ user }: { user: User }) {
       columnHelper.accessor("type", {
         header: ({ column }) => (
           <DataTableColumnHeader column={column}>
-            <LuAlertCircle className="mr-2 size-4 text-orange-400" />
+            <LuCircleAlert className="mr-2 size-4 text-orange-400" />
             {t("Critical")}
           </DataTableColumnHeader>
         ),
         cell: (ctx) => (
           <div className="flex max-w-sm items-center justify-center">
             {ctx.getValue() === "CRITICAL" ? (
-              <LuAlertCircle className="mr-2 size-4 text-orange-400" />
+              <LuCircleAlert className="mr-2 size-4 text-orange-400" />
             ) : null}
           </div>
         ),
@@ -428,7 +428,7 @@ export default function DataTableKodixCare({ user }: { user: User }) {
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24">
                   <div className="flex h-full items-center justify-center">
-                    <LuLoader2 className="h-6 w-6 animate-spin" />
+                    <LuLoaderCircle className="h-6 w-6 animate-spin" />
                   </div>
                 </TableCell>
               </TableRow>
@@ -674,7 +674,7 @@ function AddCareTaskCredenzaButton() {
                         />
                       </FormControl>
                       <FormLabel className="flex gap-1">
-                        <LuAlertCircle
+                        <LuCircleAlert
                           className={cn(
                             "text-muted-foreground transition-colors",
                             {

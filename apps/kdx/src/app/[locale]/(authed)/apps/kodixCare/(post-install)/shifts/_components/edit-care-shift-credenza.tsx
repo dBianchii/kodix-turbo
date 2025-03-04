@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { LuLoader2, LuLock, LuTrash, LuUnlock } from "react-icons/lu";
+import { LuLoaderCircle, LuLock, LuLockOpen, LuTrash } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
@@ -425,7 +425,7 @@ export function EditCareShiftCredenza({
                   {deleteCareShiftMutation.isPending ? (
                     <>
                       <LuTrash className="mr-2 size-4" />
-                      <LuLoader2 className="mr-2 size-4 animate-spin" />
+                      <LuLoaderCircle className="mr-2 size-4 animate-spin" />
                     </>
                   ) : (
                     <>
@@ -444,7 +444,7 @@ export function EditCareShiftCredenza({
               >
                 {isChecking || mutation.isPending ? (
                   <>
-                    <LuLoader2 className="mr-2 size-4 animate-spin" />
+                    <LuLoaderCircle className="mr-2 size-4 animate-spin" />
                     {isChecking ? t("Checking") : t("Saving")}...
                   </>
                 ) : (
@@ -491,7 +491,7 @@ function ConfirmFinishShiftAlert({
           </Button>
           <Button onClick={() => onConfirm({ finish: true })}>
             {isSubmitting ? (
-              <LuLoader2 className="mr-2 size-4 animate-spin" />
+              <LuLoaderCircle className="mr-2 size-4 animate-spin" />
             ) : (
               t("Yes")
             )}
@@ -512,7 +512,7 @@ function Lock({
   const query = useCareShiftsData([]);
   const mutation = useEditCareShift();
   const t = useTranslations();
-  const LockIcon = isLocked ? LuLock : LuUnlock;
+  const LockIcon = isLocked ? LuLock : LuLockOpen;
 
   return (
     <AlertDialog>
@@ -524,7 +524,7 @@ function Lock({
           type="button"
         >
           {query.isFetching || mutation.isPending ? (
-            <LuLoader2 className="size-5 animate-spin" />
+            <LuLoaderCircle className="size-5 animate-spin" />
           ) : (
             <LockIcon className="size-5" />
           )}
@@ -532,7 +532,7 @@ function Lock({
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader className="flex flex-row items-center gap-2">
-          <LuUnlock className="mt-2 size-5 text-muted-foreground" />
+          <LuLockOpen className="mt-2 size-5 text-muted-foreground" />
           <AlertDialogTitle>{t("Unlock shift")}</AlertDialogTitle>
         </AlertDialogHeader>
         <AlertDialogDescription>

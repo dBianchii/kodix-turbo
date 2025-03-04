@@ -146,16 +146,16 @@ export async function sendNotifications({
   const toDeleteExpoPushTokens: string[] = [];
   for (const ticket of tickets) {
     if (ticket.status === "error") {
-      if (ticket.expoPushToken) {
+      if (ticket.details?.expoPushToken) {
         sentMessages = sentMessages.filter(
-          (x) => x.expoToken !== ticket.expoPushToken,
+          (x) => x.expoToken !== ticket.details?.expoPushToken,
         );
       }
 
       // https://docs.expo.io/push-notifications/sending-notifications/#individual-errors
       if (ticket.details?.error === "DeviceNotRegistered") {
-        if (ticket.expoPushToken)
-          toDeleteExpoPushTokens.push(ticket.expoPushToken);
+        if (ticket.details.expoPushToken)
+          toDeleteExpoPushTokens.push(ticket.details.expoPushToken);
 
         continue;
       }
