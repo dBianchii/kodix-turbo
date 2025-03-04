@@ -37,6 +37,10 @@
   "pnpm": {
     "patchedDependencies": {
       "metro@0.80.9": "patches/metro@0.80.9.patch"
+    },
+    "overrides": {
+      "@types/react": "19.0.10",
+      "@types/react-dom": "19.0.4"
     }
   }
 }
