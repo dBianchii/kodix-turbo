@@ -1,4 +1,4 @@
-import type { NextRequest, NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { headers } from "next/headers";
 import { Receiver } from "@upstash/qstash";
 import { getTranslations } from "next-intl/server";
@@ -25,19 +25,17 @@ export const verifiedQstashCron =
   (
     handler: ({
       req,
-      res,
       ctx,
     }: {
       req: NextRequest;
-      res: NextResponse;
       ctx: TCronJobContext;
     }) => Promise<Response>,
   ) =>
-  async (req: NextRequest, res: NextResponse) => {
+  async (req: NextRequest) => {
     const ctx = await createCronJobCtx();
 
     //? Allow running cron jobs locally, for development purposes
-    if (env.NODE_ENV !== "production") return handler({ req, res, ctx });
+    if (env.NODE_ENV !== "production") return handler({ req, ctx });
 
     const qStashSignature = (await headers()).get("Upstash-Signature");
     if (!qStashSignature)
@@ -50,5 +48,5 @@ export const verifiedQstashCron =
     if (!isValid)
       return Response.json({ error: "Unauthorized" }, { status: 401 });
 
-    return handler({ req, res, ctx });
+    return handler({ req, ctx });
   };
