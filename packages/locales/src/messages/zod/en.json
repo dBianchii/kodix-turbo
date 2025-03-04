@@ -33,7 +33,10 @@
         "base64": "Invalid {validation}",
         "duration": "Invalid {validation}",
         "startsWith": "Invalid input: must start with \"{startsWith}\"",
-        "endsWith": "Invalid input: must end with \"{endsWith}\""
+        "endsWith": "Invalid input: must end with \"{endsWith}\"",
+        "cidr": "Invalid CIDR",
+        "jwt": "Invalid JWT",
+        "base64url": "Invalid Base64 URL"
       },
       "too_small": {
         "array": {
@@ -115,7 +118,10 @@
       "time": "time",
       "ip": "ip",
       "base64": "base64",
-      "duration": "duration"
+      "duration": "duration",
+      "cidr": "cidr",
+      "jwt": "jwt",
+      "base64url": "base64url"
     },
     "types": {
       "function": "function",

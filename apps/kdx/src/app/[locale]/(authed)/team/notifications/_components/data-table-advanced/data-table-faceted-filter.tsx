@@ -1,6 +1,6 @@
 import type { Column } from "@tanstack/react-table";
 import { useTranslations } from "next-intl";
-import { LuCheck, LuPlusCircle } from "react-icons/lu";
+import { LuCheck, LuCirclePlus } from "react-icons/lu";
 
 import { cn } from "@kdx/ui";
 import { Badge } from "@kdx/ui/badge";
@@ -36,7 +36,7 @@ export function DataTableFacetedFilter<TData, TValue>({
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline" size="sm" className="h-8 border-dashed">
-          <LuPlusCircle className="mr-2 size-4" />
+          <LuCirclePlus className="mr-2 size-4" />
           {title}
           {selectedValues.size > 0 && (
             <>

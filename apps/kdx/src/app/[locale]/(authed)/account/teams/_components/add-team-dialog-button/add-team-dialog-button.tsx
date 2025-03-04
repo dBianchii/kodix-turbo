@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useAction } from "next-safe-action/hooks";
-import { LuPlusCircle } from "react-icons/lu";
+import { LuCirclePlus } from "react-icons/lu";
 
 import { getErrorMessage } from "@kdx/shared";
 import { cn } from "@kdx/ui";
@@ -43,7 +43,7 @@ export function AddTeamDialogButton({
       {children ?? (
         <CredenzaTrigger asChild>
           <Button size={"sm"} className={cn(className)}>
-            <LuPlusCircle className="mr-2 size-5" />
+            <LuCirclePlus className="mr-2 size-5" />
             {t("Create new team")}
           </Button>
         </CredenzaTrigger>

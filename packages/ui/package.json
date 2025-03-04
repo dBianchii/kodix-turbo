@@ -57,7 +57,6 @@
     "clsx": "^2.1.1",
     "cmdk": "^0.2.1",
     "embla-carousel-react": "8.0.0-rc22",
-    "framer-motion": "^11.11.17",
     "lucide-react": "^0.453.0",
     "next-themes": "^0.3.0",
     "react-day-picker": "^9.4.4",

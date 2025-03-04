@@ -35,8 +35,9 @@
   },
   "prettier": "@kdx/prettier-config",
   "pnpm": {
-    "patchedDependencies": {
-      "metro@0.80.9": "patches/metro@0.80.9.patch"
+    "overrides": {
+      "@types/react": "catalog:react19",
+      "@types/react-dom": "catalog:react19"
     }
   }
 }

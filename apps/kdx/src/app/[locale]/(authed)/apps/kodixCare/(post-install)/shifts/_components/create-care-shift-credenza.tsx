@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { LuArrowRight, LuLoader2, LuPlus } from "react-icons/lu";
+import { LuArrowRight, LuLoaderCircle, LuPlus } from "react-icons/lu";
 
 import type { User } from "@kdx/auth";
 import { kodixCareAppId } from "@kdx/shared";
@@ -291,7 +291,7 @@ export function CreateShiftCredenzaButton({
               <Button disabled={isChecking || mutation.isPending} type="submit">
                 {isChecking || mutation.isPending ? (
                   <>
-                    <LuLoader2 className="mr-2 size-4 animate-spin" />
+                    <LuLoaderCircle className="mr-2 size-4 animate-spin" />
                     {isChecking ? t("Checking") : t("Saving")}...
                   </>
                 ) : (
