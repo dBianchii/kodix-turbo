@@ -6,7 +6,7 @@ import { auth } from "@kdx/auth";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { Navigation } from "~/app/[locale]/_components/navigation";
 import { redirect } from "~/i18n/routing";
-import { api } from "~/trpc/server";
+import { trpc } from "~/trpc/server";
 import { ShouldRender } from "./general/_components/client-should-render";
 
 export default async function SettingsLayout({
@@ -17,7 +17,7 @@ export default async function SettingsLayout({
   const { user } = await auth();
   if (!user) return redirect({ href: "/", locale: await getLocale() });
 
-  const team = await api.team.getActiveTeam();
+  const team = await trpc.team.getActiveTeam();
   const t = await getTranslations();
 
   const navItems = [

@@ -4,7 +4,7 @@ import type { KodixAppId } from "@kdx/shared";
 import { auth } from "@kdx/auth";
 
 import { redirect } from "~/i18n/routing";
-import { api } from "~/trpc/server";
+import { trpc } from "~/trpc/server";
 
 /**
  * @description Checks if user is logged in and has this app on current team. If not, redirects to /apps
@@ -23,7 +23,7 @@ export const redirectIfAppNotInstalled = async ({
       href: "/",
       locale: await getLocaleBasedOnCookie(),
     });
-  const installedApps = await api.app.getInstalled();
+  const installedApps = await trpc.app.getInstalled();
 
   if (!installedApps.some((x) => x.id === appId))
     return redirect({

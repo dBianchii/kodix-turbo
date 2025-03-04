@@ -45,6 +45,7 @@ import {
 import { Textarea } from "@kdx/ui/textarea";
 import { ZEditCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
 
+import type { useSaveCareTaskMutation } from "./hooks";
 import { useTRPC } from "~/trpc/react";
 
 export function EditCareTaskCredenza({
@@ -56,9 +57,7 @@ export function EditCareTaskCredenza({
 }: {
   user: User;
   task: CareTask;
-  mutation: ReturnType<
-    typeof api.app.kodixCare.careTask.editCareTask.useMutation
-  >;
+  mutation: ReturnType<typeof useSaveCareTaskMutation>;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {

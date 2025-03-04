@@ -7,7 +7,7 @@ import { H1 } from "@kdx/ui/typography";
 import { IconKodixApp } from "~/app/[locale]/_components/app/kodix-icon";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
-import { api } from "~/trpc/server";
+import { trpc } from "~/trpc/server";
 import { CreateTaskDialogButton } from "./_components/create-task-dialog-button";
 import { DataTableTodo } from "./_components/data-table-todo";
 
@@ -16,7 +16,7 @@ export default async function TodoPage() {
     appId: todoAppId,
   });
 
-  const initialData = await api.app.todo.getAll();
+  const initialData = await trpc.app.todo.getAll();
   const t = await getTranslations();
   return (
     <MaxWidthWrapper>

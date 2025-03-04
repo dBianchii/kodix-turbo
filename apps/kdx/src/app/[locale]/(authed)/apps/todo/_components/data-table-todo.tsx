@@ -154,6 +154,8 @@ export function DataTableTodo({
           if (value) setStatus(value);
         }, [value]);
 
+        const queryClient = useQueryClient();
+
         const { mutate: updateTodo } = useMutation(
           api.app.todo.update.mutationOptions({
             async onMutate(newData) {
@@ -207,6 +209,8 @@ export function DataTableTodo({
           if (value) setDueDate(value);
         }, [value]);
 
+        const queryClient = useQueryClient();
+
         const { mutate: updateTodo } = useMutation(
           api.app.todo.update.mutationOptions({
             async onMutate(newData) {
@@ -249,6 +253,8 @@ export function DataTableTodo({
         useEffect(() => {
           if (value) setAssignedToUserId(value.id);
         }, [value]);
+
+        const queryClient = useQueryClient();
 
         const { mutate: updateTodo } = useMutation(
           api.app.todo.update.mutationOptions({

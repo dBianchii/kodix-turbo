@@ -5,13 +5,13 @@ import { auth } from "@kdx/auth";
 import { H1, Lead } from "@kdx/ui/typography";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
-import { api } from "~/trpc/server";
+import { trpc } from "~/trpc/server";
 import { AppCardSkeleton } from "../../_components/app/kodix-app";
 import { KodixApps } from "./_components/kodix-apps";
 
 export default async function AppsPage() {
   const t = await getTranslations();
-  const apps = api.app.getAll();
+  const apps = trpc.app.getAll();
   const authResponse = auth();
 
   return (

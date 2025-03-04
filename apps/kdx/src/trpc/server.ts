@@ -18,4 +18,4 @@ const createContext = cache(async () => {
   });
 });
 
-export const api = createCaller(createContext);
+export const trpc = createCaller(createContext);

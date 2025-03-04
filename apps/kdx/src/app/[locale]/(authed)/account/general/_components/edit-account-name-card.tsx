@@ -13,7 +13,7 @@ import {
 import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
 
-import { api } from "~/trpc/server";
+import { trpc } from "~/trpc/server";
 import { SubmitButton } from "./submit-button";
 
 export async function EditAccountNameCard({ name }: { name?: string | null }) {
@@ -25,7 +25,7 @@ export async function EditAccountNameCard({ name }: { name?: string | null }) {
       action={async (values) => {
         "use server";
 
-        await api.user.changeName({
+        await trpc.user.changeName({
           name: values.get("name") as string,
         });
         revalidatePath("/account/general");
