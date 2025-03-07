@@ -1,5 +1,5 @@
 import { useFormatter, useTranslations } from "next-intl";
-import { LuLoader2 } from "react-icons/lu";
+import { LuLoaderCircle } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
@@ -73,7 +73,7 @@ export function WarnOverlappingShifts({
           >
             {isSubmitting ? (
               <>
-                <LuLoader2 className="mr-2 size-4 animate-spin" />
+                <LuLoaderCircle className="mr-2 size-4 animate-spin" />
                 {t("Saving")}...
               </>
             ) : (

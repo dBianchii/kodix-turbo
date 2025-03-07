@@ -1,4 +1,3 @@
-import { isRedirectError } from "next/dist/client/components/redirect";
 import { z } from "zod";
 
 import { KDX_PRODUCTION_URL, KDX_VERCEL_PROJECT_NAME } from "./constants";
@@ -59,7 +58,6 @@ export function getErrorMessage(err: unknown) {
     return errors.join("\n");
   }
   if (err instanceof Error) return err.message;
-  if (isRedirectError(err)) throw err;
 
   return unknownError;
 }

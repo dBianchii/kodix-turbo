@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useAction } from "next-safe-action/hooks";
-import { LuArrowRight, LuLoader2 } from "react-icons/lu";
+import { LuArrowRight, LuLoaderCircle } from "react-icons/lu";
 
 import { kodixCareConfigSchema } from "@kdx/shared";
 import { Button } from "@kdx/ui/button";
@@ -102,7 +102,7 @@ export default function OnboardingCard() {
                 />
               )}
               {isExecuting && (
-                <LuLoader2 className="ml-2 size-4 animate-spin" />
+                <LuLoaderCircle className="ml-2 size-4 animate-spin" />
               )}
             </Button>
           </CardFooter>

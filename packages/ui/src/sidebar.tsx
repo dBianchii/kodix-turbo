@@ -2,6 +2,7 @@
 
 import type { VariantProps } from "class-variance-authority";
 import * as React from "react";
+import { use } from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { cva } from "class-variance-authority";
@@ -47,7 +48,7 @@ interface SidebarContext {
 const SidebarContext = React.createContext<SidebarContext | null>(null);
 
 function useSidebar() {
-  const context = React.useContext(SidebarContext);
+  const context = use(SidebarContext);
   if (!context) {
     throw new Error("useSidebar must be used within a Sidebar.");
   }

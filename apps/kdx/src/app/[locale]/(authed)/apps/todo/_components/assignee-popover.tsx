@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 import { useState } from "react";
 import { HiUserCircle } from "react-icons/hi";
 

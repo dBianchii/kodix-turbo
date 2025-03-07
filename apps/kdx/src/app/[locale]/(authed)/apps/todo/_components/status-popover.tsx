@@ -1,7 +1,7 @@
 import { useState } from "react";
 import {
   LuCheck,
-  LuCheckCircle,
+  LuCircleCheck,
   LuCircleOff,
   LuCircleSlash,
 } from "react-icons/lu";
@@ -118,7 +118,7 @@ export function StatusIcon({
   switch (status) {
     case "TODO":
       return (
-        <LuCheckCircle className={cn("size-4 text-foreground", className)} />
+        <LuCircleCheck className={cn("size-4 text-foreground", className)} />
       );
     case "INPROGRESS":
       return (
