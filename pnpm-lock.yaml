@@ -511,7 +511,7 @@ importers:
         specifier: 'catalog:'
         version: 11.0.0-rc.824(typescript@5.8.2)
       '@upstash/qstash':
-        specifier: ^2.7.12
+        specifier: ^2.7.22
         version: 2.7.22
       '@upstash/redis':
         specifier: ^1.31.6
