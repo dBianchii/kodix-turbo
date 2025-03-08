@@ -33,7 +33,7 @@
     "@kdx/validators": "workspace:*",
     "@node-rs/argon2": "^1.8.3",
     "@react-email/render": "0.0.13",
-    "@trpc/server": "catalog:",
+    "@trpc/server": "catalog:trpc-rc",
     "@upstash/qstash": "^2.7.12",
     "@upstash/redis": "^1.31.6",
     "deep-diff": "^1.0.2",
@@ -62,7 +62,7 @@
     "typescript": "catalog:"
   },
   "peerDependencies": {
-    "next": "^15.0.4",
+    "next": "catalog:next",
     "next-intl": "^3.25.1"
   },
   "prettier": "@kdx/prettier-config"

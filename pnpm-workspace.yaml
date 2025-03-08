@@ -11,13 +11,17 @@ catalog:
   zod: ^3.23.8
   tailwindcss: ^3.4.15
   "@tanstack/react-query": ^5.66.5
-  "@trpc/client": ^11.0.0-rc.772
-  "@trpc/tanstack-react-query": ^11.0.0-rc.772
-  "@trpc/react-query": ^11.0.0-rc.772
-  "@trpc/server": ^11.0.0-rc.772
   "@types/node": ^20.17.6
 
 catalogs:
+  next:
+    "next": ^15.0.4
+    "@next/eslint-plugin-next": "^15.0.3"
+  trpc-rc:
+    "@trpc/client": ^11.0.0-rc.772
+    "@trpc/tanstack-react-query": ^11.0.0-rc.772
+    "@trpc/react-query": ^11.0.0-rc.772
+    "@trpc/server": ^11.0.0-rc.772
   react19:
     react: ^19.0.0
     react-dom: ^19.0.0

@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@eslint/compat": "^1.2.3",
-    "@next/eslint-plugin-next": "^15.0.3",
+    "@next/eslint-plugin-next": "catalog:next",
     "@typescript-eslint/eslint-plugin": "^8.15.0",
     "eslint-plugin-drizzle": "^0.2.3",
     "eslint-plugin-import": "^2.31.0",

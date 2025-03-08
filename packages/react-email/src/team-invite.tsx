@@ -17,8 +17,8 @@ import {
 import type { IsomorficT } from "@kdx/locales";
 import { getBaseUrl } from "@kdx/shared";
 
-import type { TMock } from "../utils";
-import { tMock } from "../utils";
+import type { TMock } from "./utils";
+import { tMock } from "./utils";
 
 const baseUrl = getBaseUrl();
 
