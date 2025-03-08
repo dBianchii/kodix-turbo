@@ -14,17 +14,17 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@eslint/compat": "^1.2.3",
+    "@eslint/compat": "catalog:",
     "@next/eslint-plugin-next": "catalog:next",
-    "@typescript-eslint/eslint-plugin": "^8.15.0",
-    "eslint-plugin-drizzle": "^0.2.3",
-    "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-jsx-a11y": "^6.10.2",
-    "eslint-plugin-react": "^7.37.2",
+    "@typescript-eslint/eslint-plugin": "catalog:",
+    "eslint-plugin-drizzle": "catalog:",
+    "eslint-plugin-import": "catalog:",
+    "eslint-plugin-jsx-a11y": "catalog:",
+    "eslint-plugin-react": "catalog:",
     "eslint-plugin-react-compiler": "beta",
-    "eslint-plugin-react-hooks": "^5.0.0",
-    "eslint-plugin-turbo": "^2.4.2",
-    "typescript-eslint": "^8.15.0"
+    "eslint-plugin-react-hooks": "catalog:react",
+    "eslint-plugin-turbo": "catalog:turbo",
+    "typescript-eslint": "catalog:"
   },
   "devDependencies": {
     "@kdx/prettier-config": "workspace:*",

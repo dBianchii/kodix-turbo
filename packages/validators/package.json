@@ -70,7 +70,7 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "drizzle-zod": "^0.5.1",
+    "drizzle-zod": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
@@ -83,7 +83,7 @@
     "@kdx/tsconfig": "workspace:*",
     "eslint": "catalog:",
     "prettier": "catalog:",
-    "rrule": "^2.8.1",
+    "rrule": "catalog:",
     "typescript": "catalog:"
   },
   "prettier": "@kdx/prettier-config"
