@@ -13,7 +13,7 @@
     "db:push": "turbo @kdx/db#push",
     "db:seed": "turbo --continue @kdx/db-dev#dev @kdx/db#seed",
     "dev:kdx": "turbo watch dev studio -F @kdx/kdx... @kdx/db-dev#dev",
-    "dev:email": "turbo watch dev -F @kdx/react-email...",
+    "dev:email": "turbo dev -F @kdx/react-email...",
     "format": "turbo run format --continue -- --cache --cache-location .cache/.prettiercache",
     "format:fix": "turbo run format --continue -- --write --cache --cache-location .cache/.prettiercache",
     "lint": "turbo run lint --continue -- --cache --cache-location .cache/.eslintcache",
@@ -35,6 +35,10 @@
   },
   "prettier": "@kdx/prettier-config",
   "pnpm": {
+    "overrides": {
+      "react": "catalog:react19",
+      "react-dom": "catalog:react19"
+    },
     "patchedDependencies": {
       "metro@0.80.9": "patches/metro@0.80.9.patch"
     }

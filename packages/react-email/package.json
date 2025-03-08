@@ -11,9 +11,9 @@
     "./reset-password": "./src/emails/reset-password.tsx"
   },
   "scripts": {
-    "email:build": "email build --dir='src'",
+    "build": "email build --dir='src'",
     "export": "email export --dir='src'",
-    "email:dev": "pnpm dlx react-email@latest dev --dir='src'",
+    "dev": "pnpx react-email dev --dir='src'",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "lint": "eslint",
     "format": "prettier --check . --ignore-path ../../.gitignore",
@@ -22,9 +22,9 @@
   "dependencies": {
     "@kdx/locales": "workspace:*",
     "@kdx/shared": "workspace:*",
-    "@react-email/components": "^0.0.30",
+    "@react-email/components": "^0.0.33",
     "react": "catalog:react19",
-    "react-email": "3.0.4"
+    "react-email": "3.0.7"
   },
   "devDependencies": {
     "@kdx/eslint-config": "workspace:*",

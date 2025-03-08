@@ -40,7 +40,9 @@
       "dependsOn": ["^topo", "^build"],
       "outputs": [".cache/tsbuildinfo.json"]
     },
-    "test": {},
+    "test": {
+      "dependsOn": ["^topo"]
+    },
     "test:watch": {
       "cache": false,
       "persistent": true
