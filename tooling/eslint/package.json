@@ -22,8 +22,8 @@
     "eslint-plugin-jsx-a11y": "catalog:",
     "eslint-plugin-react": "catalog:",
     "eslint-plugin-react-compiler": "beta",
-    "eslint-plugin-react-hooks": "catalog:",
-    "eslint-plugin-turbo": "catalog:",
+    "eslint-plugin-react-hooks": "catalog:react",
+    "eslint-plugin-turbo": "catalog:turbo",
     "typescript-eslint": "catalog:"
   },
   "devDependencies": {

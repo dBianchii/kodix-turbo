@@ -33,11 +33,11 @@
     "@kdx/validators": "workspace:*",
     "@node-rs/argon2": "catalog:",
     "@react-email/render": "catalog:",
-    "@trpc/server": "catalog:trpc-rc",
+    "@trpc/server": "catalog:trpc",
     "@upstash/qstash": "catalog:",
     "@upstash/redis": "catalog:",
     "deep-diff": "catalog:",
-    "expo-server-sdk": "catalog:",
+    "expo-server-sdk": "catalog:expo",
     "ms": "catalog:",
     "object.groupby": "catalog:",
     "posthog-node": "catalog:",
@@ -55,14 +55,14 @@
     "@types/ms": "catalog:",
     "@types/node": "catalog:",
     "@types/object.groupby": "catalog:",
-    "@types/react": "catalog:react19",
-    "@types/react-dom": "catalog:react19",
+    "@types/react": "catalog:react",
+    "@types/react-dom": "catalog:react",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"
   },
   "peerDependencies": {
-    "next": "catalog:next15",
+    "next": "catalog:next",
     "next-intl": "catalog:"
   },
   "prettier": "@kdx/prettier-config"

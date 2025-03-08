@@ -22,7 +22,7 @@
     "@kdx/locales": "workspace:*",
     "@kdx/shared": "workspace:*",
     "@react-email/components": "catalog:",
-    "react": "catalog:react19",
+    "react": "catalog:react",
     "react-email": "catalog:"
   },
   "devDependencies": {
@@ -30,7 +30,7 @@
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
     "@types/node": "catalog:",
-    "@types/react": "catalog:react19",
+    "@types/react": "catalog:react",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"

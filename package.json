@@ -27,20 +27,17 @@
   },
   "devDependencies": {
     "@kdx/prettier-config": "workspace:*",
-    "@turbo/gen": "catalog:",
+    "@turbo/gen": "catalog:turbo",
     "prettier": "catalog:",
-    "turbo": "catalog:",
+    "turbo": "catalog:turbo",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
   "prettier": "@kdx/prettier-config",
   "pnpm": {
     "overrides": {
-      "react": "catalog:react19",
-      "react-dom": "catalog:react19"
-    },
-    "patchedDependencies": {
-      "metro@0.80.9": "patches/metro@0.80.9.patch"
+      "react": "catalog:react",
+      "react-dom": "catalog:react"
     }
   }
 }

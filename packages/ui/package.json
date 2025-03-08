@@ -74,17 +74,17 @@
     "@kdx/prettier-config": "workspace:*",
     "@kdx/shared": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "@types/react": "catalog:react19",
-    "@types/react-dom": "catalog:react19",
+    "@types/react": "catalog:react",
+    "@types/react-dom": "catalog:react",
     "cobe": "catalog:",
     "eslint": "catalog:",
     "prettier": "catalog:",
-    "react": "catalog:react19",
+    "react": "catalog:react",
     "react-spring": "catalog:",
     "typescript": "catalog:"
   },
   "peerDependencies": {
-    "react": "catalog:react19",
+    "react": "catalog:react",
     "zod": "catalog:"
   },
   "prettier": "@kdx/prettier-config"
