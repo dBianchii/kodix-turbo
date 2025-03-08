@@ -116,7 +116,6 @@ catalog:
   "@types/ms": ^0.7.34
   "@types/node": ^20.17.6
   "@types/object.groupby": ^1.0.4
-
   "@typescript-eslint/eslint-plugin": ^8.15.0
   "@upstash/qstash": ^2.7.12
   "@upstash/redis": ^1.31.6
