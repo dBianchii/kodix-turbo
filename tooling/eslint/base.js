@@ -1,7 +1,7 @@
 /// <reference types="./types.d.ts" />
 
 import * as path from "node:path";
-// import { includeIgnoreFile } from "@eslint/compat";
+import { includeIgnoreFile } from "@eslint/compat";
 import eslint from "@eslint/js";
 import drizzlePlugin from "eslint-plugin-drizzle";
 import importPlugin from "eslint-plugin-import";
@@ -54,7 +54,7 @@ export const enforceDrizzleWhere = tseslint.config({
 
 export default tseslint.config(
   // Ignore files not tracked by VCS and any config files
-  // includeIgnoreFile(path.join(import.meta.dirname, "../../.gitignore")),
+  includeIgnoreFile(path.join(import.meta.dirname, "../../.gitignore")),
   { ignores: ["**/*.config.*", "dist"] },
   {
     files: ["**/*.js", "**/*.ts", "**/*.tsx"],
