@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@kdx/dayjs": "workspace:*",
-    "zod": "^3.23.8"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@kdx/eslint-config": "workspace:*",
