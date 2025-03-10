@@ -55,7 +55,7 @@ export function KodixCareSideBar() {
   return (
     <Sidebar
       collapsible={isMobile ? "offcanvas" : "none"}
-      className="hidden min-h-[calc(100dvh-55px)] border-r bg-background md:flex"
+      className="bg-background hidden min-h-[calc(100dvh-55px)] border-r md:flex"
     >
       <SidebarContent>
         <SidebarGroup>

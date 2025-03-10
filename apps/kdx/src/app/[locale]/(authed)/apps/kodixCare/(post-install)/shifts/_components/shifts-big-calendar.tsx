@@ -225,7 +225,7 @@ export function ShiftsBigCalendar({
                   src={event.image ?? ""}
                   fallback={event.Caregiver.name}
                 />
-                <span className="text-sm text-primary-foreground">
+                <span className="text-primary-foreground text-sm">
                   {event.title}
                 </span>
               </div>

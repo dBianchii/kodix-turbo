@@ -7,22 +7,22 @@ import { Loader2 } from "lucide-react";
 import { cn } from ".";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+  "focus-visible:ring-ring inline-flex items-center justify-center rounded-md text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-1 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
+          "bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs",
         destructive:
-          "bg-destructive text-destructive-foreground shadow-2xs hover:bg-destructive/90",
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-2xs",
         outline:
-          "border border-input bg-background shadow-2xs hover:bg-accent hover:text-accent-foreground",
+          "border-input bg-background hover:bg-accent hover:text-accent-foreground border shadow-2xs",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-2xs hover:bg-secondary/80",
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-2xs",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         orange:
-          "bg-orange-600 text-destructive-foreground shadow-2xs hover:bg-orange-600/90", //TODO: Create orange CSS variable!
+          "text-destructive-foreground bg-orange-600 shadow-2xs hover:bg-orange-600/90", //TODO: Create orange CSS variable!
       },
       size: {
         default: "h-9 px-4 py-2",

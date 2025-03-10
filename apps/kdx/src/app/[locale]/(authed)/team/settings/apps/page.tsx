@@ -19,7 +19,7 @@ export default async function SettingsAppsPage() {
         <h2 className="text-center text-2xl font-bold md:text-left">
           {t("Apps")}
         </h2>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           {t("settings.Manage your apps")}
         </p>
       </div>
@@ -44,13 +44,13 @@ async function Apps() {
   if (!apps.length)
     return (
       <Link href={"/apps"}>
-        <div className="group flex h-64 flex-col rounded-xl outline-dashed outline-2 outline-muted-foreground/50">
+        <div className="group outline-muted-foreground/50 flex h-64 flex-col rounded-xl outline-2 outline-dashed">
           <div className="mx-auto my-auto flex flex-col items-center justify-center">
             <LuPlusCircle
-              className="text-muted-foreground/80 transition-all group-hover:translate-y-[-4px] group-hover:text-muted-foreground"
+              className="text-muted-foreground/80 group-hover:text-muted-foreground transition-all group-hover:translate-y-[-4px]"
               size={32}
             />
-            <p className="font-medium text-muted-foreground/80">
+            <p className="text-muted-foreground/80 font-medium">
               {t("Add more apps")}
             </p>
           </div>

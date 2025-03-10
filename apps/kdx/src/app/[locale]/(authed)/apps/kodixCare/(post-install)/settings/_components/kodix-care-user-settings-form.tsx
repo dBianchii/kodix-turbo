@@ -61,7 +61,7 @@ export function KodixCareUserSettingsForm({
                 <FormLabel className="flex items-center gap-2">
                   <LuAlertCircle
                     className={cn(
-                      "size-5 text-muted-foreground transition-colors",
+                      "text-muted-foreground size-5 transition-colors",
                       {
                         "text-orange-500": field.value === true,
                       },

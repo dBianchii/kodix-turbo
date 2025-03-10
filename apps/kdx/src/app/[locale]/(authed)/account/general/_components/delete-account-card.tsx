@@ -61,7 +61,7 @@ export function DeleteAccountCard() {
   );
 
   return (
-    <Card className="w-full border-destructive text-left">
+    <Card className="border-destructive w-full text-left">
       <CardHeader>
         <CardTitle>{t("Delete account")}</CardTitle>
         <CardDescription>
@@ -73,7 +73,7 @@ export function DeleteAccountCard() {
           <div className="flex flex-col space-y-1.5"></div>
         </div>
       </CardContent>
-      <CardFooter className="flex justify-end border-t border-destructive bg-destructive/40 px-6 py-4">
+      <CardFooter className="border-destructive bg-destructive/40 flex justify-end border-t px-6 py-4">
         {/* <CardDescription>
               {t("Please use 32 characters at maximum")}
             </CardDescription> */}
@@ -107,7 +107,7 @@ export function DeleteAccountCard() {
                       "All data related to you will be permanently lost and cannot be recovered",
                     )}
                   </AlertDialogDescription>
-                  <div className="flex gap-2 rounded-md bg-destructive/40 p-3 text-sm text-red-400">
+                  <div className="bg-destructive/40 flex gap-2 rounded-md p-3 text-sm text-red-400">
                     <span className="font-bold">{t("Warning")}:</span>
                     <span>
                       {t("This action is not reversible please be certain")}

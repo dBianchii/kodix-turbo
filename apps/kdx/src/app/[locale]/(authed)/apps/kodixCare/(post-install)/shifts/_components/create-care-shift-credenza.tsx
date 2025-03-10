@@ -259,7 +259,7 @@ export function CreateShiftCredenzaButton({
                             />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent className="[&_*[role=option]>span]:end-2 [&_*[role=option]>span]:start-auto [&_*[role=option]]:pe-8 [&_*[role=option]]:ps-2">
+                        <SelectContent className="[&_*[role=option]]:ps-2 [&_*[role=option]]:pe-8 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:end-2">
                           {getAllCaregiversQuery.data?.map((user) => (
                             <SelectItem key={user.id} value={user.id}>
                               <span className="flex items-center gap-2">

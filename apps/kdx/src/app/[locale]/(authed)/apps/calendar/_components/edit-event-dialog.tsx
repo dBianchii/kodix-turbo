@@ -257,7 +257,7 @@ export function EditEventDialog({
                 {t("Critical task")}
               </Label>
             </div>
-            <p className="text-[0.8rem] text-muted-foreground">
+            <p className="text-muted-foreground text-[0.8rem]">
               {t("Is this task considered critical or important")}
             </p>
           </div>

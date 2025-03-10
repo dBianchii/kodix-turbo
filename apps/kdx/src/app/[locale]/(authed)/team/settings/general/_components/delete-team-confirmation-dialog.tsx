@@ -103,14 +103,14 @@ export function DeleteTeamConfirmationDialog({
                     "All data related to your team will be permanently lost and cannot be recovered",
                   )}
                 </AlertDialogDescription>
-                <div className="flex gap-2 rounded-md bg-destructive/40 p-3 text-sm text-red-400">
+                <div className="bg-destructive/40 flex gap-2 rounded-md p-3 text-sm text-red-400">
                   <span className="font-bold">{t("Warning")}:</span>
                   <span>
                     {t("This action is not reversible please be certain")}
                   </span>
                 </div>
               </AlertDialogHeader>
-              <div className="flex flex-col gap-4 bg-card/40 py-8">
+              <div className="bg-card/40 flex flex-col gap-4 py-8">
                 <FormField
                   control={form.control}
                   name="teamNameConfirmation"

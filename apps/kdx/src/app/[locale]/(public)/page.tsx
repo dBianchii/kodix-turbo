@@ -34,13 +34,13 @@ export default async function HomePage({
             from="rgba(120,119,198,0.3)"
           />
           <div className="relative h-full overflow-hidden py-8">
-            <div className="container z-10 flex flex-col">
+            <div className="z-10 container flex flex-col">
               <div className="mt-10 grid grid-cols-1">
                 <div className="flex flex-col items-center gap-6 pb-8 text-center">
-                  <h1 className="text-balance bg-linear-to-br from-black from-30% to-black/60 bg-clip-text py-6 text-5xl font-semibold leading-none tracking-tighter text-transparent dark:from-white dark:to-white sm:text-6xl md:text-7xl lg:text-7xl">
+                  <h1 className="bg-linear-to-br from-black from-30% to-black/60 bg-clip-text py-6 text-5xl leading-none font-semibold tracking-tighter text-balance text-transparent sm:text-6xl md:text-7xl lg:text-7xl dark:from-white dark:to-white">
                     {t("home.title")}
                   </h1>
-                  <p className="max-w-[64rem] text-balance text-xl text-muted-foreground md:text-xl">
+                  <p className="text-muted-foreground max-w-[64rem] text-xl text-balance md:text-xl">
                     {t("home.description")}
                   </p>
                   <div className="flex flex-col gap-4 lg:flex-row">
