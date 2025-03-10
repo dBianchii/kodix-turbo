@@ -21,7 +21,7 @@ export function CustomKodixIcon({
         alt={`${props.appName} icon`}
       />
       {renderText && (
-        <p className="line-clamp-1 text-sm text-muted-foreground">
+        <p className="text-muted-foreground line-clamp-1 text-sm">
           {props.appName}
         </p>
       )}

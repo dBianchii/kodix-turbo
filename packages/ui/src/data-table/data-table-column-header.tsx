@@ -43,7 +43,7 @@ export function DataTableColumnHeader<TData, TValue>({
             }
             variant="ghost"
             size="sm"
-            className="-ml-3 h-8 data-[state=open]:bg-accent"
+            className="data-[state=open]:bg-accent -ml-3 h-8"
           >
             <div className="flex flex-row">{children}</div>
             {column.getCanSort() && column.getIsSorted() === "desc" ? (
@@ -63,7 +63,7 @@ export function DataTableColumnHeader<TData, TValue>({
                 onClick={() => column.toggleSorting(false)}
               >
                 <ChevronUp
-                  className="mr-2 size-3.5 text-muted-foreground/70"
+                  className="text-muted-foreground/70 mr-2 size-3.5"
                   aria-hidden="true"
                 />
                 {t("Asc")}
@@ -73,7 +73,7 @@ export function DataTableColumnHeader<TData, TValue>({
                 onClick={() => column.toggleSorting(true)}
               >
                 <ChevronDown
-                  className="mr-2 size-3.5 text-muted-foreground/70"
+                  className="text-muted-foreground/70 mr-2 size-3.5"
                   aria-hidden="true"
                 />
                 {t("Desc")}
@@ -89,7 +89,7 @@ export function DataTableColumnHeader<TData, TValue>({
               onClick={() => column.toggleVisibility(false)}
             >
               <EyeOff
-                className="mr-2 size-3.5 text-muted-foreground/70"
+                className="text-muted-foreground/70 mr-2 size-3.5"
                 aria-hidden="true"
               />
               {t("Hide")}

@@ -30,13 +30,13 @@ export function DataTablePagination<TData>({
   const t = useTranslations();
   return (
     <div className="flex w-full flex-col-reverse items-center justify-between gap-4 overflow-auto p-1 sm:flex-row sm:gap-8">
-      <div className="flex-1 whitespace-nowrap text-sm text-muted-foreground">
+      <div className="text-muted-foreground flex-1 text-sm whitespace-nowrap">
         {table.getFilteredSelectedRowModel().rows.length} {t("of")}{" "}
         {table.getFilteredRowModel().rows.length} {t("rows selected")}
       </div>
       <div className="flex flex-col-reverse items-center gap-4 sm:flex-row sm:gap-6 lg:gap-8">
         <div className="flex items-center space-x-2">
-          <p className="whitespace-nowrap text-sm font-medium">
+          <p className="text-sm font-medium whitespace-nowrap">
             {t("Rows per page")}
           </p>
           <Select

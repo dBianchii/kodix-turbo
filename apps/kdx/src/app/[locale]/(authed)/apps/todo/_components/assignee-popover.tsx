@@ -46,7 +46,7 @@ export function AssigneePopover({
           </div>
         ) : (
           <div>
-            <HiUserCircle className="h-6 w-6 text-foreground/70" />
+            <HiUserCircle className="text-foreground/70 h-6 w-6" />
           </div>
         )}
       </PopoverTrigger>
