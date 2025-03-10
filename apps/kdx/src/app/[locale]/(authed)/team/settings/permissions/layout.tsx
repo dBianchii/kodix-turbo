@@ -4,8 +4,9 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { auth } from "@kdx/auth";
 import { teamRepository } from "@kdx/db/repositories";
 
-import { AppSwitcher } from "~/app/[locale]/_components/app-switcher";
+import { AppSwitcherClient } from "~/app/[locale]/_components/app-switcher/app-switcher-client";
 import { redirect } from "~/i18n/routing";
+import { trpc } from "~/trpc/server";
 
 export default async function RolesLayout({
   children,
@@ -29,7 +30,7 @@ export default async function RolesLayout({
         <h2 className="text-center text-2xl font-bold md:text-left">
           {t("Permissions")}
         </h2>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           {t(
             "settings.Define which role can make each action and define the roles of each member",
           )}
@@ -37,10 +38,11 @@ export default async function RolesLayout({
       </div>
       <Suspense>
         <div className="space-y-3">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             {t("Select your app to change its configurations")}
           </p>
-          <AppSwitcher
+          <AppSwitcherClient
+            appsPromise={trpc.app.getInstalled()}
             hrefPrefix="/team/settings/permissions/"
             hideAddMoreApps
             iconSize={28}

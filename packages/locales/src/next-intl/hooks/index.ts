@@ -3,10 +3,10 @@ import { useTranslations } from "next-intl";
 import type { KodixAppId } from "@kdx/shared";
 import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
 
+import type { ClientSideT } from "../..";
 import { appIdToName } from "./internal";
 
-export const useAppName = (appId: KodixAppId | undefined) => {
-  const t = useTranslations();
+export const getAppName = (appId: KodixAppId | undefined, t: ClientSideT) => {
   if (!appId) return "";
   return t(`${appIdToName[appId]}`);
 };

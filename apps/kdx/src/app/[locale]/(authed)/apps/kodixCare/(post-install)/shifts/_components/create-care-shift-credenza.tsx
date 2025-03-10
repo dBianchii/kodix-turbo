@@ -208,7 +208,7 @@ export function CreateShiftCredenzaButton({
                     </FormItem>
                   )}
                 />
-                <LuArrowRight className="mt-8 hidden size-6 flex-shrink-0 self-center md:mb-[14px] md:block" />
+                <LuArrowRight className="mt-8 hidden size-6 shrink-0 self-center md:mb-[14px] md:block" />
                 <FormField
                   control={form.control}
                   name="endAt"

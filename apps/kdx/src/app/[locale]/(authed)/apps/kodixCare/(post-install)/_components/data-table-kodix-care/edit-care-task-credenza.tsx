@@ -139,7 +139,7 @@ export function EditCareTaskCredenza({
           <div
             ref={parent}
             className={cn(
-              "h-[600px] flex-grow transition-all duration-300 ease-in-out",
+              "h-[600px] grow transition-all duration-300 ease-in-out",
             )}
           >
             {isLogView ? (

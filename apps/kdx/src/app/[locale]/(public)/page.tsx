@@ -37,7 +37,7 @@ export default async function HomePage({
             <div className="container z-10 flex flex-col">
               <div className="mt-10 grid grid-cols-1">
                 <div className="flex flex-col items-center gap-6 pb-8 text-center">
-                  <h1 className="text-balance bg-gradient-to-br from-black from-30% to-black/60 bg-clip-text py-6 text-5xl font-semibold leading-none tracking-tighter text-transparent dark:from-white dark:to-white sm:text-6xl md:text-7xl lg:text-7xl">
+                  <h1 className="text-balance bg-linear-to-br from-black from-30% to-black/60 bg-clip-text py-6 text-5xl font-semibold leading-none tracking-tighter text-transparent dark:from-white dark:to-white sm:text-6xl md:text-7xl lg:text-7xl">
                     {t("home.title")}
                   </h1>
                   <p className="max-w-[64rem] text-balance text-xl text-muted-foreground md:text-xl">

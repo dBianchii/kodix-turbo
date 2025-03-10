@@ -58,7 +58,7 @@ export function H4({ children, className }: ComponentProps<"h4">) {
 
 export function P({ children, className }: ComponentProps<"p">) {
   return (
-    <p className={cn("leading-7 [&:not(:first-child)]:mt-6", className)}>
+    <p className={cn("leading-7 not-first:mt-6", className)}>
       {children}
     </p>
   );

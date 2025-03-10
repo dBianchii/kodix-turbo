@@ -35,7 +35,7 @@ export function DataTableAdvancedFacetedFilter<TData, TValue>({
   const t = useTranslations();
   return (
     <Command className="p-1">
-      <div className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm [&_[cmdk-input-wrapper]]:border-0 [&_[cmdk-input-wrapper]]:px-0">
+      <div className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs [&_[cmdk-input-wrapper]]:border-0 [&_[cmdk-input-wrapper]]:px-0">
         <CommandInput
           placeholder={title}
           className="h-full border-0 pl-0 ring-0"

@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 import type { KodixAppId } from "@kdx/shared";
-import { useAppName } from "@kdx/locales/next-intl/hooks";
+import { getAppName } from "@kdx/locales/next-intl/hooks";
 
 import { getAppIconUrl } from "~/helpers/miscelaneous";
 
@@ -18,7 +19,8 @@ export function IconKodixApp({
   size?: number;
 }) {
   const appIconUrl = getAppIconUrl(props.appId);
-  const appName = useAppName(props.appId);
+  const t = useTranslations();
+  const appName = getAppName(props.appId, t);
 
   return (
     <div className="flex flex-col items-center">
@@ -29,7 +31,7 @@ export function IconKodixApp({
         alt={`${appName} icon`}
       />
       {renderText && (
-        <p className="line-clamp-1 text-sm text-muted-foreground">{appName}</p>
+        <p className="text-muted-foreground line-clamp-1 text-sm">{appName}</p>
       )}
     </div>
   );
