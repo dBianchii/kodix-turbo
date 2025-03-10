@@ -9,7 +9,7 @@ import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { User } from "@kdx/auth";
 import type { KodixAppId } from "@kdx/shared";
-import { useAppDescription } from "@kdx/locales/next-intl/hooks";
+import { getAppDescription, getAppName } from "@kdx/locales/next-intl/hooks";
 import { kodixCareAppId, todoAppId } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { Badge } from "@kdx/ui/badge";
@@ -95,8 +95,8 @@ export function KodixApp({
 
   const appurl = getAppUrl(id);
   const appIconUrl = getAppIconUrl(id);
-  const appName = "asdasd";
-  const appDescription = useAppDescription(id);
+  const appName = getAppName(id, t);
+  const appDescription = getAppDescription(id, t);
 
   if (id === todoAppId) return null;
 

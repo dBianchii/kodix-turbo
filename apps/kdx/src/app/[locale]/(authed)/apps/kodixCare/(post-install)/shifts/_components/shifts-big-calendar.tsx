@@ -56,7 +56,7 @@ const useSelectEvent = ({
   return { selectedEvent, setSelectedEventId, delayed };
 };
 
-export function ShiftsBigCalendar({
+export default function ShiftsBigCalendar({
   user,
   myRoles,
   initialShifts,
@@ -162,12 +162,7 @@ export function ShiftsBigCalendar({
                   .padStart(6, "0");
 
               // Function to desaturate color if event is finished
-              const adjustColorSaturation = (
-                color: string,
-                finishedByUserId: string | null,
-              ) => {
-                if (!finishedByUserId) return color;
-
+              const adjustColorSaturation = (color: string) => {
                 // Convert hex to RGB
                 const r = parseInt(color.slice(1, 3), 16);
                 const g = parseInt(color.slice(3, 5), 16);
@@ -183,12 +178,13 @@ export function ShiftsBigCalendar({
                 return `#${desaturatedR.toString(16).padStart(2, "0")}${desaturatedG.toString(16).padStart(2, "0")}${desaturatedB.toString(16).padStart(2, "0")}`;
               };
 
+              const maybeDesaturatedColor = event.finishedByUserId
+                ? adjustColorSaturation(baseBackgroundColor)
+                : baseBackgroundColor;
+
               return {
                 style: {
-                  backgroundColor: adjustColorSaturation(
-                    baseBackgroundColor,
-                    event.finishedByUserId,
-                  ),
+                  backgroundColor: maybeDesaturatedColor,
                 },
               };
             }) as EventPropGetter<ShiftEvent>

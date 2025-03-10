@@ -12,7 +12,7 @@ import { useTranslations } from "next-intl";
 import type { RouterOutputs } from "@kdx/api";
 import type { AppRole, KodixAppId } from "@kdx/shared";
 import type { FixedColumnsType } from "@kdx/ui/data-table/data-table";
-import { useAppRoleNames } from "@kdx/locales/next-intl/hooks";
+import { getAppRoleNames } from "@kdx/locales/next-intl/hooks";
 import { allRoles, typedObjectEntries } from "@kdx/shared";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { DataTable } from "@kdx/ui/data-table/data-table";
@@ -35,7 +35,9 @@ export function DataTableUserAppRoles({
 }) {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
-  const appRoleDefaultNames = useAppRoleNames();
+  const t = useTranslations();
+
+  const appRoleDefaultNames = getAppRoleNames(t);
   const { data } = useQuery(
     trpc.team.appRole.getUsersWithRoles.queryOptions(
       { appId },
@@ -109,7 +111,6 @@ export function DataTableUserAppRoles({
       },
     }),
   );
-  const t = useTranslations();
 
   const columns = useMemo(
     () =>
