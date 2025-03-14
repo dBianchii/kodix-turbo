@@ -5,15 +5,14 @@
   "type": "module",
   "exports": {
     "./constants": "./src/constants.ts",
-    "./team-invite": "./src/emails/team-invite.tsx",
-    "./warn-previous-shift-not-ended": "./src/emails/kodixCare/warn-previous-shift-not-ended.tsx",
-    "./warn-delayed-critical-tasks": "./src/emails/kodixCare/warn-delayed-critical-tasks.tsx",
-    "./reset-password": "./src/emails/reset-password.tsx"
+    "./team-invite": "./src/team-invite.tsx",
+    "./warn-previous-shift-not-ended": "./src/kodixCare/warn-previous-shift-not-ended.tsx",
+    "./warn-delayed-critical-tasks": "./src/kodixCare/warn-delayed-critical-tasks.tsx",
+    "./reset-password": "./src/reset-password.tsx"
   },
   "scripts": {
-    "email:build": "email build --dir='src'",
     "export": "email export --dir='src'",
-    "email:dev": "pnpm dlx react-email@latest dev --dir='src'",
+    "dev": "pnpx react-email dev --dir='src' --port=3003",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "lint": "eslint",
     "format": "prettier --check . --ignore-path ../../.gitignore",
@@ -22,16 +21,16 @@
   "dependencies": {
     "@kdx/locales": "workspace:*",
     "@kdx/shared": "workspace:*",
-    "@react-email/components": "^0.0.30",
-    "react": "catalog:react19",
-    "react-email": "3.0.4"
+    "@react-email/components": "catalog:",
+    "react": "catalog:react",
+    "react-email": "catalog:"
   },
   "devDependencies": {
     "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
     "@types/node": "catalog:",
-    "@types/react": "catalog:react19",
+    "@types/react": "catalog:react",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"

@@ -11,8 +11,8 @@ import {
 
 import type { IsomorficT } from "@kdx/locales";
 
-import type { TMock } from "../../utils";
-import { tMock } from "../../utils";
+import type { TMock } from "../utils";
+import { tMock } from "../utils";
 
 export default function WarnPreviousShiftNotEnded({
   personWhoEndedShiftName,

@@ -2,8 +2,8 @@ import { Body, Head, Html, Preview, Tailwind } from "@react-email/components";
 
 import type { IsomorficT } from "@kdx/locales";
 
-import type { TMock } from "../../utils";
-import { tMock } from "../../utils";
+import type { TMock } from "../utils";
+import { tMock } from "../utils";
 
 export default function WarnDelayedCriticalTasks({
   taskTitle = "Comer macarrão",

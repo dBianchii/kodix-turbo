@@ -28,7 +28,7 @@
   },
   "prettier": "@kdx/prettier-config",
   "dependencies": {
-    "@casl/ability": "^6.7.3",
+    "@casl/ability": "catalog:",
     "@kdx/shared": "workspace:*"
   }
 }

@@ -14,9 +14,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "postcss": "^8.4.49",
+    "postcss": "catalog:",
     "tailwindcss": "catalog:",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "catalog:"
   },
   "devDependencies": {
     "@kdx/eslint-config": "workspace:*",

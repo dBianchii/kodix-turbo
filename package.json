@@ -13,7 +13,7 @@
     "db:push": "turbo @kdx/db#push",
     "db:seed": "turbo --continue @kdx/db-dev#dev @kdx/db#seed",
     "dev:kdx": "turbo watch dev studio -F @kdx/kdx... @kdx/db-dev#dev",
-    "dev:email": "turbo watch dev -F @kdx/react-email...",
+    "dev:email": "turbo dev -F @kdx/react-email...",
     "format": "turbo run format --continue -- --cache --cache-location .cache/.prettiercache",
     "format:fix": "turbo run format --continue -- --write --cache --cache-location .cache/.prettiercache",
     "lint": "turbo run lint --continue -- --cache --cache-location .cache/.eslintcache",
@@ -27,17 +27,17 @@
   },
   "devDependencies": {
     "@kdx/prettier-config": "workspace:*",
-    "@turbo/gen": "^2.4.2",
+    "@turbo/gen": "catalog:turbo",
     "prettier": "catalog:",
-    "turbo": "^2.4.2",
+    "turbo": "catalog:turbo",
     "typescript": "catalog:",
-    "vitest": "^3.0.6"
+    "vitest": "catalog:"
   },
   "prettier": "@kdx/prettier-config",
   "pnpm": {
     "overrides": {
-      "@types/react": "catalog:react19",
-      "@types/react-dom": "catalog:react19"
+      "react": "catalog:react",
+      "react-dom": "catalog:react"
     }
   }
 }

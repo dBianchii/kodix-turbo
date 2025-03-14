@@ -22,7 +22,7 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@casl/ability": "^6.7.3",
+    "@casl/ability": "catalog:",
     "@kdx/auth": "workspace:*",
     "@kdx/dayjs": "workspace:*",
     "@kdx/db": "workspace:*",
@@ -31,19 +31,19 @@
     "@kdx/react-email": "workspace:*",
     "@kdx/shared": "workspace:*",
     "@kdx/validators": "workspace:*",
-    "@node-rs/argon2": "^1.8.3",
-    "@react-email/render": "0.0.13",
-    "@trpc/server": "catalog:",
-    "@upstash/qstash": "^2.7.22",
-    "@upstash/redis": "^1.31.6",
-    "deep-diff": "^1.0.2",
-    "expo-server-sdk": "^3.11.0",
-    "ms": "^2.1.3",
-    "object.groupby": "^1.0.3",
-    "posthog-node": "^4.3.1",
-    "resend": "^4.0.1",
-    "rrule": "^2.8.1",
-    "superjson": "2.2.1",
+    "@node-rs/argon2": "catalog:",
+    "@react-email/render": "catalog:",
+    "@trpc/server": "catalog:trpc",
+    "@upstash/qstash": "catalog:",
+    "@upstash/redis": "catalog:",
+    "deep-diff": "catalog:",
+    "expo-server-sdk": "catalog:expo",
+    "ms": "catalog:",
+    "object.groupby": "catalog:",
+    "posthog-node": "catalog:",
+    "resend": "catalog:",
+    "rrule": "catalog:",
+    "superjson": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
@@ -51,19 +51,19 @@
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tailwind-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "@types/deep-diff": "^1.0.5",
-    "@types/ms": "^0.7.34",
+    "@types/deep-diff": "catalog:",
+    "@types/ms": "catalog:",
     "@types/node": "catalog:",
-    "@types/object.groupby": "^1.0.4",
-    "@types/react": "catalog:react19",
-    "@types/react-dom": "catalog:react19",
+    "@types/object.groupby": "catalog:",
+    "@types/react": "catalog:react",
+    "@types/react-dom": "catalog:react",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"
   },
   "peerDependencies": {
-    "next": "^15.0.4",
-    "next-intl": "^3.25.1"
+    "next": "catalog:next",
+    "next-intl": "catalog:"
   },
   "prettier": "@kdx/prettier-config"
 }
