@@ -83,7 +83,7 @@ export default async function RootLayout(props: {
                 </div>
                 {/* UI Design Helpers */}
                 {env.NODE_ENV !== "production" && (
-                  <div className="fixed bottom-1 z-50 flex flex-row items-center space-x-1">
+                  <div className="fixed bottom-2 left-16 z-50 flex flex-row items-center space-x-1">
                     <ThemeToggle />
                     <TailwindIndicator />
                   </div>

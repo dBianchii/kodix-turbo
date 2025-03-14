@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { LuAlertCircle, LuPlus } from "react-icons/lu";
+import { LuCircleAlert, LuPlus } from "react-icons/lu";
 import { RRule, Weekday } from "rrule";
 
 import dayjs from "@kdx/dayjs";
@@ -164,7 +164,7 @@ export function CreateEventDialogButton() {
                           />
                         </FormControl>
                         <FormLabel className="flex gap-1">
-                          <LuAlertCircle
+                          <LuCircleAlert
                             className={cn(
                               "text-muted-foreground transition-colors",
                               {

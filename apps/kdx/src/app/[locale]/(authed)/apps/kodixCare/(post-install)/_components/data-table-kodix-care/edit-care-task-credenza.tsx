@@ -4,12 +4,12 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useQuery } from "@tanstack/react-query";
 import { useFormatter, useTranslations } from "next-intl";
 import {
-  LuAlertCircle,
-  LuAlertTriangle,
   LuArrowLeft,
   LuCalendar,
-  LuLoader2,
+  LuCircleAlert,
+  LuLoaderCircle,
   LuScrollText,
+  LuTriangleAlert,
 } from "react-icons/lu";
 
 import type { User } from "@kdx/auth";
@@ -162,7 +162,7 @@ export function EditCareTaskCredenza({
                         {task.title ?? ""}
                       </span>
                       {task.type === "CRITICAL" && (
-                        <LuAlertCircle className="size-3 text-orange-400" />
+                        <LuCircleAlert className="size-3 text-orange-400" />
                       )}
                       <Button
                         className="ml-auto"
@@ -293,7 +293,7 @@ function AlertNoShiftsOrNotYours({
 
   return (
     <Alert variant="warning">
-      <LuAlertTriangle className="h-4 w-4" />
+      <LuTriangleAlert className="h-4 w-4" />
       <AlertTitle>{t("Warning")}</AlertTitle>
       <AlertDescription>{text}</AlertDescription>
     </Alert>
@@ -314,7 +314,7 @@ function LogsView({ careTaskId }: { careTaskId: string }) {
   if (getAppActivityLogsQuery.isLoading)
     return (
       <div className="flex h-full items-center justify-center">
-        <LuLoader2 className="size-6 animate-spin" />
+        <LuLoaderCircle className="size-6 animate-spin" />
       </div>
     );
 

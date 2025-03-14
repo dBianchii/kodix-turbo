@@ -37,6 +37,7 @@
     "date-fns": "catalog:",
     "framer-motion": "catalog:",
     "geist": "catalog:",
+    "motion": "catalog:",
     "next": "catalog:next",
     "next-intl": "catalog:",
     "next-safe-action": "catalog:",
