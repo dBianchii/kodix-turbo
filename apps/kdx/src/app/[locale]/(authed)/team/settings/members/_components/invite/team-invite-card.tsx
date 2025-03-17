@@ -43,11 +43,13 @@ export default function TeamInviteCardClient({
   canEditPage: boolean;
 }) {
   const trpc = useTRPC();
+  const t = useTranslations();
   const queryClient = useQueryClient();
+
   const [emails, setEmails] = useState([{ key: 0, value: "" }]); //key is used to work with formkit
   const [successes, setSuccesses] = useState<string[]>([]);
-
-  const t = useTranslations();
+  const [parent] = useAutoAnimate();
+  const [open, setOpen] = useState(false);
 
   const mutation = useMutation(
     trpc.team.invitation.invite.mutationOptions({
@@ -89,10 +91,6 @@ export default function TeamInviteCardClient({
     setSuccesses([]);
     setOpen(false);
   };
-
-  const [parent] = useAutoAnimate();
-
-  const [open, setOpen] = useState(false);
 
   return (
     <>
