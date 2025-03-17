@@ -3,7 +3,7 @@
 import { use, useState } from "react";
 import { useTranslations } from "next-intl";
 import { IoApps } from "react-icons/io5";
-import { LuChevronsUpDown, LuPlusCircle } from "react-icons/lu";
+import { LuChevronsUpDown, LuCirclePlus } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
 import { getAppName } from "@kdx/locales/next-intl/hooks";
@@ -89,7 +89,7 @@ export function AppSwitcherClient({
             {!hideAddMoreApps && (
               <Link href={"/apps"}>
                 <CommandItem onSelect={() => setOpen(false)}>
-                  <LuPlusCircle className="size-4" />
+                  <LuCirclePlus className="size-4" />
                   <span className="ml-3">{t("Add more apps")}</span>
                 </CommandItem>
               </Link>

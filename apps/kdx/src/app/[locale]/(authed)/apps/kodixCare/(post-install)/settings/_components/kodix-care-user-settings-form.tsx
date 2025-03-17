@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useAction } from "next-safe-action/hooks";
-import { LuAlertCircle } from "react-icons/lu";
+import { LuCircleAlert } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
 import { kodixCareAppId } from "@kdx/shared";
@@ -59,7 +59,7 @@ export function KodixCareUserSettingsForm({
             <FormItem className="flex max-w-md flex-row items-center justify-between rounded-lg border p-3 shadow-xs">
               <div className="space-y-2">
                 <FormLabel className="flex items-center gap-2">
-                  <LuAlertCircle
+                  <LuCircleAlert
                     className={cn(
                       "text-muted-foreground size-5 transition-colors",
                       {

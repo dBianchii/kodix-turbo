@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { LuCog, LuHome, LuListChecks, LuPanelLeft } from "react-icons/lu";
+import { LuCog, LuHouse, LuListChecks, LuPanelLeft } from "react-icons/lu";
 
 import { kodixCareAppId } from "@kdx/shared";
 import { Button } from "@kdx/ui/button";
@@ -41,7 +41,7 @@ export function SideBarToggle() {
 export function KodixCareSideBar() {
   const t = useTranslations();
   const kodixCareNavItems = [
-    { href: "/apps/kodixCare", icon: LuHome, text: t("Main page") },
+    { href: "/apps/kodixCare", icon: LuHouse, text: t("Main page") },
     { href: "/apps/kodixCare/shifts", icon: LuListChecks, text: t("Shifts") },
     { href: "/apps/kodixCare/settings", icon: LuCog, text: t("Settings") },
   ];

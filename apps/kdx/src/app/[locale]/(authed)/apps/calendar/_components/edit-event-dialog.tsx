@@ -2,7 +2,7 @@ import type { Frequency } from "rrule";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { LuAlertCircle } from "react-icons/lu";
+import { LuCircleAlert } from "react-icons/lu";
 import { RRule, Weekday } from "rrule";
 
 import type { RouterInputs, RouterOutputs } from "@kdx/api";
@@ -249,7 +249,7 @@ export function EditEventDialog({
                 }
               />
               <Label className="flex items-center gap-1" htmlFor="critical">
-                <LuAlertCircle
+                <LuCircleAlert
                   className={cn("text-muted-foreground transition-colors", {
                     "text-orange-400": type === "CRITICAL",
                   })}
