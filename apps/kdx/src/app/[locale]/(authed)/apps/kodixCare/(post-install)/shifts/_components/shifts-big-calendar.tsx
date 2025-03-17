@@ -154,32 +154,37 @@ export default function ShiftsBigCalendar({
             ((event) => {
               if (view === "agenda") return {}; // No need to colorize in agenda view
 
-              // Base color generation logic remains the same
               const baseBackgroundColor =
                 "#" +
-                ((parseInt(event.caregiverId, 36) & 0x7f7f7f) + 0x606060)
+                ((parseInt(event.caregiverId, 36) & 0x8f8f8f) + 0x303030)
                   .toString(16)
                   .padStart(6, "0");
 
-              // Function to desaturate color if event is finished
-              const adjustColorSaturation = (color: string) => {
-                // Convert hex to RGB
+              // Function to lightly desaturate color if event is finished
+              const adjustColorSaturation = (
+                color: string,
+                mixStrength: number,
+              ) => {
                 const r = parseInt(color.slice(1, 3), 16);
                 const g = parseInt(color.slice(3, 5), 16);
                 const b = parseInt(color.slice(5, 7), 16);
 
-                // Desaturate by mixing with gray
-                const grayLevel = 200; // Adjust this value to control desaturation intensity
-                const desaturatedR = Math.round((r + grayLevel) / 2);
-                const desaturatedG = Math.round((g + grayLevel) / 2);
-                const desaturatedB = Math.round((b + grayLevel) / 2);
+                const grayLevel = 220;
+                const desaturatedR = Math.round(
+                  r * (1 - mixStrength) + grayLevel * mixStrength,
+                );
+                const desaturatedG = Math.round(
+                  g * (1 - mixStrength) + grayLevel * mixStrength,
+                );
+                const desaturatedB = Math.round(
+                  b * (1 - mixStrength) + grayLevel * mixStrength,
+                );
 
-                // Convert back to hex
                 return `#${desaturatedR.toString(16).padStart(2, "0")}${desaturatedG.toString(16).padStart(2, "0")}${desaturatedB.toString(16).padStart(2, "0")}`;
               };
 
               const maybeDesaturatedColor = event.finishedByUserId
-                ? adjustColorSaturation(baseBackgroundColor)
+                ? adjustColorSaturation(baseBackgroundColor, 0.5) // Less aggressive desaturation
                 : baseBackgroundColor;
 
               return {
