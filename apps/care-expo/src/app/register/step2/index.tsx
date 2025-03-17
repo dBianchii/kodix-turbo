@@ -1,4 +1,3 @@
-import React from "react";
 import { Keyboard } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { ArrowLeft } from "@tamagui/lucide-icons";

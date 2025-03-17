@@ -1,7 +1,7 @@
 "use client";
 
 import type { DateRange } from "react-day-picker";
-import * as React from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { addDays, format as datefnsFormat } from "date-fns";
 import { useFormatter, useTranslations } from "next-intl";
@@ -80,7 +80,7 @@ export function NotificationsDateRangePicker({
 
   placeholder = placeholder ?? t("Pick a date");
 
-  const [from, to] = React.useMemo(() => {
+  const [from, to] = useMemo(() => {
     let fromDay: Date | undefined = searchParams.get("from")
       ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         new Date(searchParams.get("from")!)
@@ -101,12 +101,12 @@ export function NotificationsDateRangePicker({
     return [fromDay, toDay];
   }, [dateRange, dayCount, searchParams]);
 
-  const [date, setDate] = React.useState<DateRange | undefined>({
+  const [date, setDate] = useState<DateRange | undefined>({
     from,
     to,
   });
   // Update query string
-  React.useEffect(() => {
+  useEffect(() => {
     const newSearchParams = new URLSearchParams(searchParams);
     if (date?.from) {
       newSearchParams.set("from", datefnsFormat(date.from, "yyyy-MM-dd"));

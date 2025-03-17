@@ -1,5 +1,5 @@
 import type { Table } from "@tanstack/react-table";
-import * as React from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { LuDownload, LuRotateCw, LuTrash, LuX } from "react-icons/lu";
 
@@ -28,11 +28,11 @@ export function DataTableNotificationsFloatingBar({
 }: DataTableNotificationsFloatingBarProps) {
   const rows = table.getFilteredSelectedRowModel().rows;
 
-  const [isPending, startTransition] = React.useTransition();
-  const [method, setMethod] = React.useState<"export" | "delete">();
+  const [isPending, startTransition] = useTransition();
+  const [method, setMethod] = useState<"export" | "delete">();
 
   // Clear selection on Escape key press
-  React.useEffect(() => {
+  useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
         table.toggleAllRowsSelected(false);

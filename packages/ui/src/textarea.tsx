@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import { cn } from ".";
 
 export type TextareaProps = React.ComponentProps<"textarea">;

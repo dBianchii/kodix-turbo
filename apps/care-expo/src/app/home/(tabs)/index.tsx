@@ -1,4 +1,3 @@
-import React from "react";
 import { useRouter } from "expo-router";
 import { H3, Spinner, Text, View } from "tamagui";
 

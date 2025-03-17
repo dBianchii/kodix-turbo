@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import {
   LuChevronDown,
@@ -38,9 +38,9 @@ export function DataTableFilterCombobox<TData>({
   onSelect,
   children,
 }: DataTableFilterComboboxProps<TData>) {
-  const [value, setValue] = React.useState("");
-  const [open, setOpen] = React.useState(false);
-  const [selectedOption, setSelectedOption] = React.useState<
+  const [value, setValue] = useState("");
+  const [open, setOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState<
     DataTableFilterOption<TData>
   >(options[0] ?? ({} as DataTableFilterOption<TData>));
   const t = useTranslations();

@@ -1,7 +1,7 @@
 "use client";
 
 import type { z } from "zod";
-import * as React from "react";
+import { useState } from "react";
 import { Check, ChevronsUpDown, PlusCircle, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -46,12 +46,12 @@ function MultiSelect({
   readonly,
   ...props
 }: MultiSelectProps) {
-  const [open, setOpen] = React.useState(false);
-  const [customOptions, setCustomOptions] = React.useState<OptionType[]>([]);
+  const [open, setOpen] = useState(false);
+  const [customOptions, setCustomOptions] = useState<OptionType[]>([]);
 
   options = [...customOptions, ...options];
 
-  const [commandInput, setCommandInput] = React.useState("");
+  const [commandInput, setCommandInput] = useState("");
 
   const handleUnselect = (item: string) => {
     if (customValues) {
@@ -69,7 +69,7 @@ function MultiSelect({
       parseErrorMessage = result.error.errors[0]?.message;
     }
   }
-  const [showParseError, setShowParseError] = React.useState(false);
+  const [showParseError, setShowParseError] = useState(false);
   const t = useTranslations();
 
   return (

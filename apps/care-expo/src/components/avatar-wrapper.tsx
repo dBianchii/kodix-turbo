@@ -1,5 +1,4 @@
 import type { AvatarProps } from "tamagui";
-import React from "react";
 import { Avatar, Text } from "tamagui";
 
 export function AvatarWrapper({

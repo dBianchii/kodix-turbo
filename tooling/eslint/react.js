@@ -15,6 +15,10 @@ export default [
       ...reactPlugin.configs["jsx-runtime"].rules,
       ...hooksPlugin.configs.recommended.rules,
       "react-compiler/react-compiler": "error",
+      "no-restricted-imports": [
+        "error",
+        { paths: [{ name: "react", importNames: ["default"] }] },
+      ],
     },
     languageOptions: {
       globals: {

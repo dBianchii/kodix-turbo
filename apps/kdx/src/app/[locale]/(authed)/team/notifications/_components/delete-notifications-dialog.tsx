@@ -1,7 +1,6 @@
 "use client";
 
 import type { Row } from "@tanstack/react-table";
-import * as React from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { LuTrash } from "react-icons/lu";
