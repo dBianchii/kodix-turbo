@@ -1,13 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { use, useState } from "react";
 import { useTranslations } from "next-intl";
 import { IoApps } from "react-icons/io5";
 import { LuChevronsUpDown, LuCirclePlus } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
-import type { KodixAppId } from "@kdx/shared";
-import { useAppName } from "@kdx/locales/next-intl/hooks";
+import { getAppName } from "@kdx/locales/next-intl/hooks";
 import { Button } from "@kdx/ui/button";
 import {
   Command,
@@ -31,16 +30,19 @@ export function AppSwitcherClient({
   iconSize = 20,
   hideAddMoreApps = false,
   hrefPrefix,
-  apps,
+  appsPromise,
 }: {
   iconSize?: number;
   hideAddMoreApps?: boolean;
   hrefPrefix?: string;
-  apps: RouterOutputs["app"]["getInstalled"];
+  appsPromise: Promise<RouterOutputs["app"]["getInstalled"]>;
 }) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const t = useTranslations();
+
+  const apps = use(appsPromise);
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -64,6 +66,8 @@ export function AppSwitcherClient({
               const link = hrefPrefix
                 ? `${hrefPrefix}/${appIdToPathname[app.id]}`
                 : getAppUrl(app.id);
+
+              const appName = getAppName(app.id, t);
               return (
                 <Link href={link} key={app.id} passHref>
                   <CommandItem
@@ -77,9 +81,7 @@ export function AppSwitcherClient({
                       renderText={false}
                       size={iconSize}
                     />
-                    <span className="ml-2">
-                      <AppName appId={app.id} />
-                    </span>
+                    <span className="ml-2">{appName}</span>
                   </CommandItem>
                 </Link>
               );
@@ -97,11 +99,6 @@ export function AppSwitcherClient({
       </PopoverContent>
     </Popover>
   );
-}
-
-function AppName({ appId }: { appId: KodixAppId }) {
-  //Had to create this component because of the rules of hooks
-  return useAppName(appId);
 }
 
 function CurrentAppIcon({
@@ -133,7 +130,8 @@ function CurrentAppName({ hrefPrefix = "/apps/" }: { hrefPrefix?: string }) {
   const currentAppPathname = pathname.split(hrefPrefix)[1]?.split("/")[0];
 
   const currentAppId = appPathnameToAppId[currentAppPathname as AppPathnames];
-  const appName = useAppName(currentAppId);
+  const t = useTranslations();
+  const appName = getAppName(currentAppId, t);
 
   if (pathname.includes(hrefPrefix)) {
     if (!currentAppPathname)

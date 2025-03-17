@@ -532,7 +532,7 @@ function Lock({
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader className="flex flex-row items-center gap-2">
-          <LuLockOpen className="mt-2 size-5 text-muted-foreground" />
+          <LuLock className="mt-2 size-5 text-muted-foreground" />
           <AlertDialogTitle>{t("Unlock shift")}</AlertDialogTitle>
         </AlertDialogHeader>
         <AlertDialogDescription>

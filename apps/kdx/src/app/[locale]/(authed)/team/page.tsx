@@ -52,11 +52,11 @@ export default async function TeamPage() {
   return (
     <MaxWidthWrapper className="flex flex-col">
       <div className="flex">
-        <span className="bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-xl font-bold">
+        <span className="bg-linear-to-r from-purple-400 to-pink-600 bg-clip-text text-xl font-bold">
           {user.activeTeamName}
         </span>
       </div>
-      <Separator className="mb-8 mt-1" />
+      <Separator className="mt-1 mb-8" />
       <Suspense fallback={<AppsSectionSkeleton customApps={customApps} />}>
         <AppsSection customApps={customApps} />
       </Suspense>
@@ -84,7 +84,7 @@ function AppsSectionSkeleton({ customApps }: { customApps: CustomApp[] }) {
       ))}
       {Array.from({ length: numberOfSkeletonApps }).map((_, i) => (
         <Skeleton
-          className="mb-2 h-[80px] w-[80px] rounded-xl bg-primary/5"
+          className="bg-primary/5 mb-2 h-[80px] w-[80px] rounded-xl"
           key={i}
         />
       ))}

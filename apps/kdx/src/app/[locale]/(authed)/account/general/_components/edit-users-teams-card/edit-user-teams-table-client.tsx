@@ -96,7 +96,7 @@ function CustomRow({
           <div className="flex flex-row">
             <span className="font-bold">{team.name}</span>{" "}
             {team.id === user.activeTeamId && (
-              <p className="ml-1 font-bold italic text-muted-foreground">
+              <p className="text-muted-foreground ml-1 font-bold italic">
                 {" "}
                 - {t("Current")}
               </p>

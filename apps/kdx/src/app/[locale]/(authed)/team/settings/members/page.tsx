@@ -29,7 +29,7 @@ export default async function SettingsMembersPage() {
         <h2 className="text-center text-2xl font-bold md:text-left">
           {t("Members")}
         </h2>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           {t("settings.Invite members to your team and remove active members")}
         </p>
       </div>

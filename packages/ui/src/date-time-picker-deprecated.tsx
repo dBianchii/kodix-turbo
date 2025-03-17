@@ -53,7 +53,7 @@ export function DateTimePicker({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" side={side}>
-        <div className="border-t border-border p-3">
+        <div className="border-border border-t p-3">
           <TimePicker
             setDate={setDate}
             date={date}

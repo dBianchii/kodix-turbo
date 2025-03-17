@@ -90,7 +90,7 @@
     "eslint": "catalog:",
     "metro": "catalog:",
     "prettier": "catalog:",
-    "tailwindcss": "catalog:",
+    "tailwindcss": "catalog:tailwindcss",
     "typescript": "catalog:"
   },
   "prettier": "@kdx/prettier-config"

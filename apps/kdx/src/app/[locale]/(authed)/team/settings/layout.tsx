@@ -46,7 +46,7 @@ export default async function SettingsLayout({
         <h1 className="text-lg font-bold">{t("Team Settings")}</h1>
         <div className="flex items-center">
           <LuChevronRight />
-          <p className="text-base text-muted-foreground">
+          <p className="text-muted-foreground text-base">
             {user.activeTeamName}
           </p>
         </div>

@@ -62,6 +62,7 @@
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tailwind-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
+    "@tailwindcss/postcss": "catalog:tailwindcss",
     "@types/node": "catalog:",
     "@types/react": "catalog:react",
     "@types/react-big-calendar": "catalog:react-big-calendar",
@@ -70,7 +71,7 @@
     "eslint": "catalog:",
     "jiti": "catalog:",
     "prettier": "catalog:",
-    "tailwindcss": "catalog:",
+    "tailwindcss": "catalog:tailwindcss",
     "typescript": "catalog:"
   },
   "prettier": "@kdx/prettier-config"
