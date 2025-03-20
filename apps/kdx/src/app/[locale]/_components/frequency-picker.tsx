@@ -1,7 +1,7 @@
 "use client";
 
 import type { Frequency } from "rrule";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { RRule } from "rrule";
 

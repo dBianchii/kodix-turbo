@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 import { cn } from "@kdx/ui";
 
 import { usePathname } from "~/i18n/routing";

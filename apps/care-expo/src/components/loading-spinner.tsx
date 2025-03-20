@@ -1,5 +1,5 @@
 import type { ComponentProps } from "react";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import Animated, {
   cancelAnimation,
   Easing,

@@ -1,4 +1,4 @@
-import * as React from "react";
+import { Fragment } from "react";
 import {
   Body,
   Container,
@@ -30,7 +30,7 @@ export default function ResetPassword({
       <Head />
       <Preview>{t("api.emails.Reset your password")}</Preview>
       <Tailwind>
-        <React.Fragment>
+        <Fragment>
           <Body className="mx-auto my-auto bg-white font-sans">
             <Container className="mx-auto my-[40px] w-[465px] rounded border border-solid border-[#eaeaea] p-[20px]">
               {/* <Section className="mt-[32px]">
@@ -68,7 +68,7 @@ export default function ResetPassword({
               </Text>
             </Container>
           </Body>
-        </React.Fragment>
+        </Fragment>
       </Tailwind>
     </Html>
   );

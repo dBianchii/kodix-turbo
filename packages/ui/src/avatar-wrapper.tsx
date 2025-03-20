@@ -1,7 +1,5 @@
 //? Not a ShadCN file. I added this to simplify the fallback
 
-import React from "react";
-
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 
 export const AvatarWrapper = ({

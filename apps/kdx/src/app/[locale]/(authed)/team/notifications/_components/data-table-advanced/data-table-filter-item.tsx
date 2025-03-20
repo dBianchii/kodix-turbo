@@ -1,5 +1,5 @@
 import type { Table } from "@tanstack/react-table";
-import * as React from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { LuTrash } from "react-icons/lu";
@@ -63,15 +63,15 @@ export function DataTableFilterItem<TData>({
       ? dataTableConfig.selectableOperators
       : dataTableConfig.comparisonOperators;
 
-  const [value, setValue] = React.useState(filterValues[0] ?? "");
+  const [value, setValue] = useState(filterValues[0] ?? "");
   const debounceValue = useDebounce(value, 500);
-  const [open, setOpen] = React.useState(defaultOpen);
-  const [selectedOperator, setSelectedOperator] = React.useState(
+  const [open, setOpen] = useState(defaultOpen);
+  const [selectedOperator, setSelectedOperator] = useState(
     operators.find((c) => c.value === filterOperator) ?? operators[0],
   );
 
   // Create query string
-  const createQueryString = React.useCallback(
+  const createQueryString = useCallback(
     (params: Record<string, string | number | null>) => {
       const newSearchParams = new URLSearchParams(searchParams.toString());
 
@@ -89,7 +89,7 @@ export function DataTableFilterItem<TData>({
   );
 
   // Update query string
-  React.useEffect(() => {
+  useEffect(() => {
     if (selectedOption.options.length > 0) {
       // key=value1.value2.value3~operator
       const newSearchParams = createQueryString({
