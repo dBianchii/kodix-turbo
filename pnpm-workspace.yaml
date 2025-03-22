@@ -14,10 +14,10 @@ catalogs:
     "@next/eslint-plugin-next": ^15.2.2
 
   trpc:
-    "@trpc/client": ^11.0.0-rc.772
-    "@trpc/tanstack-react-query": ^11.0.0-rc.772
-    "@trpc/react-query": ^11.0.0-rc.772
-    "@trpc/server": ^11.0.0-rc.772
+    "@trpc/client": ^11.0.0
+    "@trpc/tanstack-react-query": ^11.0.0
+    "@trpc/react-query": ^11.0.0
+    "@trpc/server": ^11.0.0
 
   react:
     react: ^19.0.0
