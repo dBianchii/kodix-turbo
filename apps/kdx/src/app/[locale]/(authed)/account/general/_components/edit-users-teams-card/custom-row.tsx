@@ -16,7 +16,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@kdx/ui/dropdown-menu";
-import { Table, TableBody, TableCell, TableRow } from "@kdx/ui/table";
+import { TableCell, TableRow } from "@kdx/ui/table";
 import { toast } from "@kdx/ui/toast";
 
 import { DeleteTeamConfirmationDialog } from "~/app/[locale]/(authed)/team/settings/general/_components/delete-team-confirmation-dialog";
@@ -25,45 +25,7 @@ import { useRouter } from "~/i18n/routing";
 import { useTRPC } from "~/trpc/react";
 import { switchTeamAction } from "./actions";
 
-export default function EditUserTeamsTableClient({
-  teams,
-  user,
-}: {
-  teams: RouterOutputs["team"]["getAll"];
-  user: User;
-}) {
-  const t = useTranslations();
-  const currentTeam = user.activeTeamId;
-  const sortedTeams = teams.sort((a, b) => {
-    if (a.id === currentTeam) return -1;
-    if (b.id === currentTeam) return 1;
-    return 0;
-  });
-  return (
-    <div className="rounded-md border">
-      <Table>
-        <TableBody>
-          {sortedTeams.length ? (
-            sortedTeams.map((team) => (
-              <CustomRow team={team} user={user} key={team.id} />
-            ))
-          ) : (
-            <TableRow>
-              <TableCell
-                colSpan={sortedTeams.length}
-                className="h-24 text-center"
-              >
-                {t("No results")}.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>
-  );
-}
-
-function CustomRow({
+export function CustomRow({
   team,
   user,
 }: {

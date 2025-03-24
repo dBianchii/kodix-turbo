@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createColumnHelper,
@@ -51,7 +52,13 @@ export function DataTableMembers({
   canEditPage: boolean;
 }) {
   const trpc = useTRPC();
-  const { data } = useQuery(trpc.team.getAllUsers.queryOptions(undefined));
+  const getAllUsersQuery = useQuery(
+    trpc.team.getAllUsers.queryOptions(undefined),
+  );
+  const data = useMemo(
+    () => getAllUsersQuery.data ?? [],
+    [getAllUsersQuery.data],
+  );
 
   const queryClient = useQueryClient();
   const t = useTranslations();
@@ -65,84 +72,87 @@ export function DataTableMembers({
     }),
   );
 
-  const columns = [
-    columnHelper.accessor("name", {
-      header: () => <div className="ml-2">User</div>,
-      cell: (info) => (
-        <div className="ml-2 flex flex-row gap-4">
-          <div className="flex flex-col">
-            <AvatarWrapper
-              className="h-8 w-8"
-              src={info.cell.row.original.image ?? ""}
-              fallback={info.getValue()}
-            />
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor("name", {
+        header: () => <div className="ml-2">User</div>,
+        cell: (info) => (
+          <div className="ml-2 flex flex-row gap-4">
+            <div className="flex flex-col">
+              <AvatarWrapper
+                className="h-8 w-8"
+                src={info.cell.row.original.image ?? ""}
+                fallback={info.getValue()}
+              />
+            </div>
+            <div className="flex flex-col items-start">
+              <span className="font-bold">{info.cell.row.original.name}</span>
+              <span className="text-xs text-muted-foreground">
+                {info.cell.row.original.email}
+              </span>
+            </div>
           </div>
-          <div className="flex flex-col items-start">
-            <span className="font-bold">{info.cell.row.original.name}</span>
-            <span className="text-xs text-muted-foreground">
-              {info.cell.row.original.email}
-            </span>
-          </div>
-        </div>
-      ),
-      enableSorting: false,
-      enableHiding: false,
-      enableResizing: true,
-    }),
-    columnHelper.display({
-      id: "actions",
-      cell: function Cell(info) {
-        if (info.row.original.id === user.id) return null;
+        ),
+        enableSorting: false,
+        enableHiding: false,
+        enableResizing: true,
+      }),
+      columnHelper.display({
+        id: "actions",
+        cell: function Cell(info) {
+          if (info.row.original.id === user.id) return null;
 
-        return (
-          <div className="flex justify-end">
-            <TooltipProvider>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="h-8 w-8 p-0">
-                    <span className="sr-only">{t("Open menu")}</span>
-                    <RxDotsHorizontal className="size-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div>
-                        <DropdownMenuItem
-                          disabled={!canEditPage}
-                          className="text-destructive"
-                          onSelect={() => {
-                            mutate({
-                              userId: info.row.original.id,
-                            });
-                          }}
-                        >
-                          {t("Remove")}
-                        </DropdownMenuItem>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent
-                      side="left"
-                      className={cn("bg-background", {
-                        hidden: canEditPage, // Only show tooltip if the user can't edit page
-                      })}
-                    >
-                      <p>
-                        {t("Only the owner of the team can remove members")}
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </TooltipProvider>
-          </div>
-        );
-      },
-    }),
-  ];
+          return (
+            <div className="flex justify-end">
+              <TooltipProvider>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="h-8 w-8 p-0">
+                      <span className="sr-only">{t("Open menu")}</span>
+                      <RxDotsHorizontal className="size-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div>
+                          <DropdownMenuItem
+                            disabled={!canEditPage}
+                            className="text-destructive"
+                            onSelect={() => {
+                              mutate({
+                                userId: info.row.original.id,
+                              });
+                            }}
+                          >
+                            {t("Remove")}
+                          </DropdownMenuItem>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent
+                        side="left"
+                        className={cn("bg-background", {
+                          hidden: canEditPage, // Only show tooltip if the user can't edit page
+                        })}
+                      >
+                        <p>
+                          {t("Only the owner of the team can remove members")}
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TooltipProvider>
+            </div>
+          );
+        },
+      }),
+    ],
+    [canEditPage, mutate, t, user.id],
+  );
 
   const table = useReactTable({
-    data: data ?? [],
+    data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     defaultColumn: {

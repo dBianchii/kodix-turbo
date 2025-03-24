@@ -11,13 +11,6 @@ export default async function KodixCarePage() {
 
   return (
     <main className="flex w-full flex-col gap-6 pl-4 pt-4 md:gap-1">
-      {/* <div className="flex w-full items-start border-b md:hidden">
-        <SidebarTrigger className="size-6 md:hidden" />
-      </div> */}
-      {/* <Suspense fallback={<ShiftSkeleton />}>
-        <CurrentShift user={user} />
-      </Suspense> */}
-
       <DataTableKodixCare user={user} />
     </main>
   );

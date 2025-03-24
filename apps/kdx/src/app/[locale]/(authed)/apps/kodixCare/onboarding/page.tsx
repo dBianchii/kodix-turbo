@@ -5,14 +5,14 @@ import { kodixCareAppId } from "@kdx/shared";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { redirect } from "~/i18n/routing";
-import { trpc } from "~/trpc/server";
+import { trpcCaller } from "~/trpc/server";
 import OnboardingCard from "./_components/onboarding-card";
 
 export default async function KodixCareOnboardingPage() {
   const { user } = await auth();
   if (!user) redirect({ href: "/", locale: await getLocale() });
 
-  const installed = await trpc.app.getInstalled();
+  const installed = await trpcCaller.app.getInstalled();
   if (installed.some((x) => x.id === kodixCareAppId))
     return redirect({
       href: "/apps/kodixCare",

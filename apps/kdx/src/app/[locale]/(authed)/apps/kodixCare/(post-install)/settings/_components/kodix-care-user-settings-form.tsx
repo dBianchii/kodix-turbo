@@ -1,5 +1,6 @@
 "use client";
 
+import { use } from "react";
 import { useTranslations } from "next-intl";
 import { useAction } from "next-safe-action/hooks";
 import { LuCircleAlert } from "react-icons/lu";
@@ -26,7 +27,7 @@ import { saveUserAppTeamConfig } from "./actions";
 export function KodixCareUserSettingsForm({
   config,
 }: {
-  config: RouterOutputs["app"]["getUserAppTeamConfig"];
+  config: Promise<RouterOutputs["app"]["getUserAppTeamConfig"]>;
 }) {
   const t = useTranslations();
 
@@ -34,7 +35,7 @@ export function KodixCareUserSettingsForm({
     schema: ZSaveUserAppTeamConfigInputSchema,
     defaultValues: {
       appId: kodixCareAppId,
-      config,
+      config: use(config),
     },
   });
 

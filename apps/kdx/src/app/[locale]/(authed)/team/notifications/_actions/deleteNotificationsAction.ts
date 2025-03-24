@@ -4,11 +4,11 @@ import { revalidatePath } from "next/cache";
 
 import type { TDeleteNotificationsInputSchema } from "@kdx/validators/trpc/user";
 
-import { trpc } from "~/trpc/server";
+import { trpcCaller } from "~/trpc/server";
 
 export const deleteNotificationsAction = async (
   input: TDeleteNotificationsInputSchema,
 ) => {
-  await trpc.user.deleteNotifications(input);
+  await trpcCaller.user.deleteNotifications(input);
   revalidatePath("/[locale]/team/notifications");
 };
