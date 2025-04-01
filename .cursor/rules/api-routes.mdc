@@ -1,0 +1,121 @@
+---
+description: Guidelines for creating new API routes and endpoints
+globs: apps/**/src/app/api/**/* packages/api/src/trpc/**/*
+alwaysApply: false
+---
+# Creating API Routes and Endpoints
+
+This project uses both Next.js API routes and tRPC for defining backend endpoints.
+
+## tRPC Endpoints (Recommended)
+
+tRPC is the preferred way to create type-safe API endpoints in this project.
+
+### Create a New tRPC Endpoint
+
+1. Create a new handler file in the appropriate router directory:
+```ts
+// packages/api/src/trpc/routers/[entity]/myEndpoint.handler.ts
+import type { MyProcedureContext } from "../../trpc";
+
+export const myEndpointHandler = async ({
+  input,
+  ctx,
+}: {
+  input: { /* input type */ };
+  ctx: MyProcedureContext;
+}) => {
+  // Access auth information
+  const { userId } = ctx.auth;
+  
+  // Access database repositories
+  const user = await ctx.db.userRepository.getUserById(userId);
+  
+  // Implement your logic
+  // ...
+  
+  // Return data
+  return {
+    success: true,
+    data: {
+      // your response data
+    },
+  };
+};
+```
+
+2. Add the handler to the router file:
+```ts
+// packages/api/src/trpc/routers/[entity]/_router.ts
+import { ZMyEndpointSchema } from "@kdx/validators/trpc/[entity]";
+import { myEndpointHandler } from "./myEndpoint.handler";
+
+export const entityRouter = {
+  // Existing endpoints...
+  
+  myEndpoint: protectedProcedure
+    .input(ZMyEndpointSchema)
+    .mutation(myEndpointHandler), // or .query() for read-only operations
+} satisfies TRPCRouterRecord;
+```
+
+3. Create a validation schema:
+```ts
+// packages/validators/src/trpc/[entity].ts
+import { z } from "zod";
+
+export const ZMyEndpointSchema = z.object({
+  // Define input parameters
+  id: z.string(),
+  // other fields...
+});
+
+export type TMyEndpointInput = z.infer<typeof ZMyEndpointSchema>;
+```
+
+## Next.js API Routes
+
+For specific cases where tRPC is not suitable (e.g., webhooks, file uploads), you can use Next.js API routes.
+
+### Create a Next.js API Route
+
+1. Create a new file in the API routes directory:
+```ts
+// apps/kdx/src/app/api/my-feature/route.ts
+import { NextResponse } from "next/server";
+import { auth } from "@kdx/auth";
+import { teamRepository } from "@kdx/db";
+
+export async function POST(request: Request) {
+  // Get auth session
+  const session = await auth();
+  if (!session?.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  
+  // Parse request body
+  const body = await request.json();
+  
+  // Process data
+  // ...
+  
+  // Return response
+  return NextResponse.json({ success: true });
+}
+
+export async function GET(request: Request) {
+  // Query parameters
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get("id");
+  
+  // Process request
+  // ...
+  
+  // Return response
+  return NextResponse.json({ data: /* your data */ });
+}
+
+// Add CORS headers for cross-origin requests
+import { OPTIONS } from "../../_enableCors";
+export { OPTIONS };
+```
