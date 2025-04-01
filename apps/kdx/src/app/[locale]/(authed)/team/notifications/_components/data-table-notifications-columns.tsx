@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { useFormatter, useTranslations } from "next-intl";
 import { LuExternalLink } from "react-icons/lu";
@@ -107,8 +107,7 @@ export function getColumns() {
     columnHelper.display({
       id: "actions",
       cell: function Cell({ row }) {
-        const [showDeleteTaskDialog, setShowDeleteTaskDialog] =
-          React.useState(false);
+        const [showDeleteTaskDialog, setShowDeleteTaskDialog] = useState(false);
         const t = useTranslations();
         return (
           <>

@@ -1,7 +1,6 @@
 "use client";
 
 import type { PopoverContentProps } from "@radix-ui/react-popover";
-import * as React from "react";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 

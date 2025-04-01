@@ -5,7 +5,7 @@ import { SplashScreen, Stack, useRouter, useSegments } from "expo-router";
 import "@bacons/text-decoder/install";
 
 import type { FontSource } from "expo-font";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useFonts } from "expo-font";

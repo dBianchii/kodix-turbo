@@ -1,7 +1,7 @@
 "use client";
 
 import type { Table } from "@tanstack/react-table";
-import * as React from "react";
+import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { LuChevronsUpDown, LuPlus } from "react-icons/lu";
@@ -31,7 +31,7 @@ export function DataTableAdvancedToolbar<TData>({
   const t = useTranslations();
   const searchParams = useSearchParams();
 
-  const options = React.useMemo<DataTableFilterOption<TData>[]>(() => {
+  const options = useMemo<DataTableFilterOption<TData>[]>(() => {
     return filterFields.map((field) => {
       return {
         id: crypto.randomUUID(),
@@ -42,7 +42,7 @@ export function DataTableAdvancedToolbar<TData>({
     });
   }, [filterFields]);
 
-  const initialSelectedOptions = React.useMemo(() => {
+  const initialSelectedOptions = useMemo(() => {
     return options
       .filter((option) => searchParams.has(option.value as string))
       .map((option) => {
@@ -60,13 +60,13 @@ export function DataTableAdvancedToolbar<TData>({
       });
   }, [options, searchParams]);
 
-  const [selectedOptions, setSelectedOptions] = React.useState<
+  const [selectedOptions, setSelectedOptions] = useState<
     DataTableFilterOption<TData>[]
   >(initialSelectedOptions);
-  const [openFilterBuilder, setOpenFilterBuilder] = React.useState(
+  const [openFilterBuilder, setOpenFilterBuilder] = useState(
     initialSelectedOptions.length > 0 || false,
   );
-  const [openCombobox, setOpenCombobox] = React.useState(false);
+  const [openCombobox, setOpenCombobox] = useState(false);
 
   function onFilterComboboxItemSelect() {
     setOpenFilterBuilder(true);

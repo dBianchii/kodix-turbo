@@ -8,7 +8,6 @@
 "use client";
 
 import type { Matcher } from "react-day-picker";
-import * as React from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   addHours,

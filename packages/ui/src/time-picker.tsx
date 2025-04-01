@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useRef } from "react";
 import { Clock } from "lucide-react";
 
 import type { TimePickerType } from "./time-picker-input/time-picker-utils";
@@ -20,9 +20,9 @@ export function TimePicker({
   granularity = "minutes",
   disabledDate,
 }: TimePickerDemoProps) {
-  const minuteRef = React.useRef<HTMLInputElement>(null);
-  const hourRef = React.useRef<HTMLInputElement>(null);
-  const secondRef = React.useRef<HTMLInputElement>(null);
+  const minuteRef = useRef<HTMLInputElement>(null);
+  const hourRef = useRef<HTMLInputElement>(null);
+  const secondRef = useRef<HTMLInputElement>(null);
 
   const setDateBasedOnDisabledDate = (newDate: Date | undefined) => {
     if (newDate && disabledDate?.(newDate)) return;

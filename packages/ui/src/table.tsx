@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import { cn } from ".";
 
 const Table = ({ className, ...props }: React.ComponentProps<"table">) => (

@@ -2,7 +2,8 @@
 "use client";
 
 //?Modified version of https://tie.openstatus.dev/
-import React from "react";
+import type { ComponentProps, KeyboardEvent } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import type { TimePickerType } from "./time-picker-utils";
 import { cn } from "../.";
@@ -13,7 +14,7 @@ import {
   setDateByType,
 } from "./time-picker-utils";
 
-export interface TimePickerInputProps extends React.ComponentProps<"input"> {
+export interface TimePickerInputProps extends ComponentProps<"input"> {
   picker: TimePickerType;
   date: Date | undefined;
   setDate: (date: Date | undefined) => void;
@@ -36,13 +37,13 @@ const TimePickerInput = ({
   onRightFocus,
   ...props
 }: TimePickerInputProps) => {
-  const [flag, setFlag] = React.useState<boolean>(false);
+  const [flag, setFlag] = useState<boolean>(false);
 
   /**
    * allow the user to enter the second digit within 2 seconds
    * otherwise start again with entering first digit
    */
-  React.useEffect(() => {
+  useEffect(() => {
     if (flag) {
       const timer = setTimeout(() => {
         setFlag(false);
@@ -52,12 +53,12 @@ const TimePickerInput = ({
     }
   }, [flag]);
 
-  const calculatedValue = React.useMemo(
+  const calculatedValue = useMemo(
     () => getDateByType(date, picker),
     [date, picker],
   );
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Tab") return;
     e.preventDefault();
     e.stopPropagation();

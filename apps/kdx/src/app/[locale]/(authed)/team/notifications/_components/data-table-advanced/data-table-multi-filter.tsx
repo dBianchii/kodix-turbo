@@ -1,7 +1,8 @@
 // eslint-disable-next-line react-compiler/react-compiler
 /* eslint-disable react-hooks/exhaustive-deps */
 import type { Table } from "@tanstack/react-table";
-import * as React from "react";
+import type { Dispatch, SetStateAction } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { LuAlignCenter, LuCopy, LuTrash } from "react-icons/lu";
@@ -37,9 +38,7 @@ interface DataTableMultiFilterProps<TData> {
   table: Table<TData>;
   allOptions: DataTableFilterOption<TData>[];
   options: DataTableFilterOption<TData>[];
-  setSelectedOptions: React.Dispatch<
-    React.SetStateAction<DataTableFilterOption<TData>[]>
-  >;
+  setSelectedOptions: Dispatch<SetStateAction<DataTableFilterOption<TData>[]>>;
   defaultOpen: boolean;
 }
 
@@ -51,10 +50,8 @@ export function DataTableMultiFilter<TData>({
   defaultOpen,
 }: DataTableMultiFilterProps<TData>) {
   const t = useTranslations();
-  const [open, setOpen] = React.useState(defaultOpen);
-  const [operator, setOperator] = React.useState(
-    dataTableConfig.logicalOperators[0],
-  );
+  const [open, setOpen] = useState(defaultOpen);
+  const [operator, setOperator] = useState(dataTableConfig.logicalOperators[0]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -136,10 +133,10 @@ export function MultiFilterRow<TData>({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = useState("");
   const debounceValue = useDebounce(value, 500);
 
-  const [selectedOption, setSelectedOption] = React.useState<
+  const [selectedOption, setSelectedOption] = useState<
     DataTableFilterOption<TData> | undefined
   >(options[0]);
 
@@ -147,17 +144,17 @@ export function MultiFilterRow<TData>({
     ? ["is", "is not"]
     : ["contains", "does not contain", "is", "is not"];
 
-  const [filterVariety, setFilterVariety] = React.useState(filterVarieties[0]);
+  const [filterVariety, setFilterVariety] = useState(filterVarieties[0]);
 
   // Update filter variety
-  React.useEffect(() => {
+  useEffect(() => {
     if (selectedOption?.options.length) {
       setFilterVariety("is");
     }
   }, [selectedOption?.options.length]);
 
   // Create query string
-  const createQueryString = React.useCallback(
+  const createQueryString = useCallback(
     (params: Record<string, string | number | null>) => {
       const newSearchParams = new URLSearchParams(searchParams.toString());
 
@@ -175,7 +172,7 @@ export function MultiFilterRow<TData>({
   );
 
   // Update query string
-  React.useEffect(() => {
+  useEffect(() => {
     if (debounceValue.length > 0) {
       router.push(
         `${pathname}?${createQueryString({
@@ -202,7 +199,7 @@ export function MultiFilterRow<TData>({
   }, [debounceValue, filterVariety, selectedOption?.value]);
 
   // Update operator query string
-  React.useEffect(() => {
+  useEffect(() => {
     if (operator?.value) {
       router.push(
         `${pathname}?${createQueryString({

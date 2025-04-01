@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import { cn } from ".";
 
 const Card = ({ className, ...props }: React.ComponentProps<"div">) => (
