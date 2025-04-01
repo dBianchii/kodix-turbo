@@ -88,12 +88,12 @@ function MultiSelect({
         >
           <div className="flex flex-wrap gap-1">
             {selected.map((item) => (
-              <Badge variant="secondary" key={item} className="mb-1 mr-1">
+              <Badge variant="secondary" key={item} className="mr-1 mb-1">
                 {options.find((option) => option.value === item)?.label}
                 <div
                   role="button"
                   tabIndex={0}
-                  className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                  className="ring-offset-background focus:ring-ring ml-1 rounded-full outline-hidden focus:ring-2 focus:ring-offset-2"
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       handleUnselect(item);
@@ -105,12 +105,12 @@ function MultiSelect({
                   }}
                   onClick={() => handleUnselect(item)}
                 >
-                  <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                  <X className="text-muted-foreground hover:text-foreground h-3 w-3" />
                 </div>
               </Badge>
             ))}
             {!selected.length && (
-              <span className="text-sm text-muted-foreground">
+              <span className="text-muted-foreground text-sm">
                 {emptyMessage ?? `${t("Select")}...`}
               </span>
             )}
@@ -179,7 +179,7 @@ function MultiSelect({
                 className="justify-between"
               >
                 <div className="flex">
-                  <PlusCircle className="mr-2 size-4 text-muted-foreground" />
+                  <PlusCircle className="text-muted-foreground mr-2 size-4" />
                   {t("Add")}
                   {"  "}
                   <span className="ml-1 text-sm">{commandInput}</span>
@@ -187,7 +187,7 @@ function MultiSelect({
                 {showParseError &&
                   parseErrorMessage &&
                   parseErrorMessage.length > 0 && (
-                    <p className="ml-6 text-xs text-destructive">
+                    <p className="text-destructive ml-6 text-xs">
                       {parseErrorMessage}
                     </p>
                   )}

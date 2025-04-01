@@ -43,11 +43,13 @@ export default function TeamInviteCardClient({
   canEditPage: boolean;
 }) {
   const trpc = useTRPC();
+  const t = useTranslations();
   const queryClient = useQueryClient();
+
   const [emails, setEmails] = useState([{ key: 0, value: "" }]); //key is used to work with formkit
   const [successes, setSuccesses] = useState<string[]>([]);
-
-  const t = useTranslations();
+  const [parent] = useAutoAnimate();
+  const [open, setOpen] = useState(false);
 
   const mutation = useMutation(
     trpc.team.invitation.invite.mutationOptions({
@@ -90,10 +92,6 @@ export default function TeamInviteCardClient({
     setOpen(false);
   };
 
-  const [parent] = useAutoAnimate();
-
-  const [open, setOpen] = useState(false);
-
   return (
     <>
       <Credenza
@@ -124,7 +122,7 @@ export default function TeamInviteCardClient({
 
                   <LuMail
                     className={cn(
-                      "text-green-600 fade-in-0",
+                      "fade-in-0 text-green-600",
                       !successes.includes(email.value) && "hidden",
                     )}
                   />
@@ -162,7 +160,7 @@ export default function TeamInviteCardClient({
           <Separator className="mb-6" />
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="email-0" className="mb-1 text-muted-foreground">
+              <Label htmlFor="email-0" className="text-muted-foreground mb-1">
                 {t("Email address")}
               </Label>
               <div ref={parent} className="space-y-2">

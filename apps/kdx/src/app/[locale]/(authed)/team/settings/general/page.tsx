@@ -22,7 +22,7 @@ export default async function SettingsGeneralPage() {
         <h2 className="text-center text-2xl font-bold md:text-left">
           {t("General")}
         </h2>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           {t(
             "settings.Change the name of your team and manage your participation",
           )}

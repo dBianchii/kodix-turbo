@@ -158,7 +158,7 @@ export function CreateTaskDialogButton() {
                       onClick={() => {
                         setDueDate(undefined);
                       }}
-                      className="ml-2 rounded-full transition-colors hover:bg-primary/90 hover:text-background"
+                      className="hover:bg-primary/90 hover:text-background ml-2 rounded-full transition-colors"
                     >
                       <LuX className="size-4" />
                     </span>

@@ -139,7 +139,7 @@ export function EditCareTaskCredenza({
           <div
             ref={parent}
             className={cn(
-              "h-[600px] flex-grow transition-all duration-300 ease-in-out",
+              "h-[600px] grow transition-all duration-300 ease-in-out",
             )}
           >
             {isLogView ? (
@@ -156,7 +156,7 @@ export function EditCareTaskCredenza({
                     handleCloseOrOpen(false);
                   })}
                 >
-                  <div className="mt-6 flex flex-col gap-2 rounded-md border p-4 text-foreground/80">
+                  <div className="text-foreground/80 mt-6 flex flex-col gap-2 rounded-md border p-4">
                     <div className="flex gap-2">
                       <span className="text-sm font-semibold">
                         {task.title ?? ""}
@@ -179,7 +179,7 @@ export function EditCareTaskCredenza({
                       {task.description ?? ""}
                     </span>
                     <span className="flex text-xs font-semibold">
-                      <LuCalendar className="mr-2 size-3 text-muted-foreground" />
+                      <LuCalendar className="text-muted-foreground mr-2 size-3" />
                       {format.dateTime(task.date, "shortWithHours")}
                     </span>
                   </div>

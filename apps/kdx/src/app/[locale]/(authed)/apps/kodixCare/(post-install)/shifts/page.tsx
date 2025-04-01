@@ -5,7 +5,7 @@ import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
 
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
 import { trpc } from "~/trpc/server";
-import { ShiftsBigCalendar } from "./_components/shifts-big-calendar";
+import ShiftsBigCalendar from "./_components/cc-shifts-big-calendar";
 
 export default async function ShiftsPage() {
   const user = await redirectIfAppNotInstalled({

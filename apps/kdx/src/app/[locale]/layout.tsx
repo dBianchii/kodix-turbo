@@ -8,7 +8,7 @@ import { TailwindIndicator } from "~/app/[locale]/_components/tailwind-indicator
 import { env } from "~/env";
 import { TRPCReactProvider } from "~/trpc/react";
 
-import "~/app/globals.css";
+import "@kdx/ui/globals.css";
 
 import { notFound } from "next/navigation";
 import { getMessages, setRequestLocale } from "next-intl/server";
@@ -61,7 +61,7 @@ export default async function RootLayout(props: {
       <CSPostHogProvider>
         <body
           className={cn(
-            "min-h-screen bg-background font-sans text-foreground antialiased",
+            "bg-background text-foreground min-h-screen font-sans antialiased",
             GeistSans.variable,
             GeistMono.variable,
           )}

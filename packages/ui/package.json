@@ -16,6 +16,7 @@
         "./src/*.ts"
       ]
     },
+    "./globals.css": "./globals.css",
     "./data-table/export": {
       "types": "./dist/src/data-table/export.d.ts",
       "default": "./src/data-table/export.ts"

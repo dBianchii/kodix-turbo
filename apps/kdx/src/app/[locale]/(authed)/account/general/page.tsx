@@ -24,7 +24,7 @@ export default async function GeneralAccountSettings() {
       </Suspense>
       <div className="flex flex-col gap-4">
         <div className="flex flex-row">
-          <h3 className="text-2xl font-semibold leading-none tracking-tight">
+          <h3 className="text-2xl leading-none font-semibold tracking-tight">
             {t("Teams")}
           </h3>
           <AddTeamDialogButton className="ml-auto max-w-fit" />
