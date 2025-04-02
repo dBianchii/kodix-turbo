@@ -25,6 +25,7 @@ export function DataTableNotifications({
 }) {
   const { data, pageCount } = use(notificationsPromise);
   const teams = use(allTeamsPromise);
+  const t = useTranslations();
 
   const columns = useMemo(
     () =>
@@ -33,8 +34,6 @@ export function DataTableNotifications({
       >,
     [],
   );
-
-  const t = useTranslations();
 
   const filterFields: DataTableFilterField<
     RouterOutputs["user"]["getNotifications"]["data"][number]

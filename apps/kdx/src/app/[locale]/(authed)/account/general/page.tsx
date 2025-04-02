@@ -8,7 +8,7 @@ import SettingsEditCardSkeleton from "../../team/settings/general/_components/ed
 import { AddTeamDialogButton } from "./_components/add-team-dialog-button/add-team-dialog-button";
 import { DeleteAccountCard } from "./_components/delete-account-card";
 import { EditAccountNameCard } from "./_components/edit-account-name-card";
-import { EditUserTeamsTable } from "./_components/edit-users-teams-card/edit-users-teams-table";
+import { EditUserTeamsTable } from "./_components/edit-users-teams-card";
 
 export default async function GeneralAccountSettings() {
   const { user } = await auth();

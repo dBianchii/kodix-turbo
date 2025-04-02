@@ -150,6 +150,8 @@ export const useCareTaskStore = create<{
 
 export default function DataTableKodixCare({ user }: { user: User }) {
   const trpc = useTRPC();
+  const t = useTranslations();
+  const format = useFormatter();
   const {
     input,
     setEditDetailsOpen,
@@ -159,17 +161,15 @@ export default function DataTableKodixCare({ user }: { user: User }) {
     setUnlockMoreTasksCredenzaOpenWithDate,
   } = useCareTaskStore();
 
+  const saveCareTaskMutation = useSaveCareTaskMutation();
   const [deleteTaskOpen, setDeleteTaskOpen] = useState(false);
 
   const query = useQuery(
     trpc.app.kodixCare.careTask.getCareTasks.queryOptions(input),
   );
-  const saveCareTaskMutation = useSaveCareTaskMutation();
+  const data = useMemo(() => query.data ?? [], [query.data]);
 
   const isCareTask = (id: CareTaskOrCalendarTask["id"]): id is string => !!id;
-  const t = useTranslations();
-  const format = useFormatter();
-
   const columns = useMemo(
     () => [
       columnHelper.accessor("title", {
@@ -306,8 +306,9 @@ export default function DataTableKodixCare({ user }: { user: User }) {
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+
   const table = useReactTable({
-    data: query.data ?? [],
+    data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,

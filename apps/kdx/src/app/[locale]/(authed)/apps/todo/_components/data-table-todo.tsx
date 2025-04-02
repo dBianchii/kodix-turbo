@@ -317,9 +317,6 @@ export function DataTableTodo({
     state: {
       columnFilters,
     },
-    // meta: {
-    //   team: team,
-    // },
   });
 
   return (

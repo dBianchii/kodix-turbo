@@ -40,7 +40,7 @@ import { useTRPC } from "~/trpc/react";
 import { useShiftOverlap } from "./hooks";
 import { WarnOverlappingShifts } from "./warn-overlapping-shifts";
 
-const useMyRoles = () => {
+export const useMyRoles = () => {
   const trpc = useTRPC();
   const getMyRolesQuery = useQuery(
     trpc.team.appRole.getMyRoles.queryOptions({

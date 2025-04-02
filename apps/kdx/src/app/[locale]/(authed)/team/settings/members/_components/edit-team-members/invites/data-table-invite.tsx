@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createColumnHelper,
@@ -44,7 +45,7 @@ const columnHelper =
 
 export function InviteDataTable({ canEditPage }: { canEditPage: boolean }) {
   const trpc = useTRPC();
-  const { data } = useQuery(
+  const getAllInvitationsQuery = useQuery(
     trpc.team.invitation.getAll.queryOptions(undefined, {
       refetchOnMount: true,
     }),
@@ -134,8 +135,13 @@ export function InviteDataTable({ canEditPage }: { canEditPage: boolean }) {
     }),
   ];
 
+  const data = useMemo(
+    () => getAllInvitationsQuery.data ?? [],
+    [getAllInvitationsQuery.data],
+  );
+
   const table = useReactTable({
-    data: data ?? [],
+    data: data,
     columns: columns,
     getCoreRowModel: getCoreRowModel(),
   });

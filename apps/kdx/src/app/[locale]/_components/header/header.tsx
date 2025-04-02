@@ -6,7 +6,7 @@ import { buttonVariants } from "@kdx/ui/button";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { Link } from "~/i18n/routing";
-import { trpc } from "~/trpc/server";
+import { trpcCaller } from "~/trpc/server";
 import { AppSwitcherClient } from "../app-switcher/app-switcher-client";
 import { I18nPicker } from "./i18n-picker";
 import { Logo } from "./logo";
@@ -55,7 +55,7 @@ async function LogoWithAppSwitcher() {
           >
             <path d="M16.88 3.549L7.12 20.451"></path>
           </svg>
-          <AppSwitcherClient appsPromise={trpc.app.getInstalled()} />
+          <AppSwitcherClient appsPromise={trpcCaller.app.getInstalled()} />
         </>
       )}
     </>
@@ -66,7 +66,7 @@ async function NotificationsPopover() {
   const { user } = await auth();
   if (!user) return null;
 
-  const initialNotifications = await trpc.user.getInvitations();
+  const initialNotifications = await trpcCaller.user.getInvitations();
   if (!initialNotifications.length) return null;
 
   return (
