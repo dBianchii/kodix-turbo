@@ -1,0 +1,10 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# next-intl and use-intl translations
+
+This project utilizes next-intl translations.
+
+## Importing next-intl and utilizing in server components:
