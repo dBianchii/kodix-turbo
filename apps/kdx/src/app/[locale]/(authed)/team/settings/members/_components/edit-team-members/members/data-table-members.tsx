@@ -52,9 +52,7 @@ export function DataTableMembers({
   canEditPage: boolean;
 }) {
   const trpc = useTRPC();
-  const getAllUsersQuery = useQuery(
-    trpc.team.getAllUsers.queryOptions(undefined),
-  );
+  const getAllUsersQuery = useQuery(trpc.team.getAllUsers.queryOptions());
   const data = useMemo(
     () => getAllUsersQuery.data ?? [],
     [getAllUsersQuery.data],
