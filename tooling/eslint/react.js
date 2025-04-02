@@ -14,6 +14,7 @@ export default [
     rules: {
       ...reactPlugin.configs["jsx-runtime"].rules,
       ...hooksPlugin.configs.recommended.rules,
+      "react/no-unused-prop-types": "warn",
       "react-compiler/react-compiler": "error",
       "no-restricted-imports": [
         "error",
