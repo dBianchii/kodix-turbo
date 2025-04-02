@@ -14,8 +14,8 @@ export function StaticHeader() {
 
   return (
     <header className="border-b py-2">
-      <MaxWidthWrapper className="max-w-screen-2xl">
-        <div className="mx-auto flex max-w-screen-2xl items-center">
+      <MaxWidthWrapper className="max-w-(--breakpoint-2xl)">
+        <div className="mx-auto flex max-w-(--breakpoint-2xl) items-center">
           <Logo redirect={"/"} />
 
           <div className="ml-auto flex items-center space-x-4">

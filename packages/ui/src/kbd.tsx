@@ -4,7 +4,7 @@ import { cva } from "class-variance-authority";
 import { cn } from ".";
 
 const kbdVariants = cva(
-  "select-none rounded border px-1.5 py-px font-mono text-[0.7rem] font-normal shadow-sm disabled:opacity-50",
+  "rounded-sm border px-1.5 py-px font-mono text-[0.7rem] font-normal shadow-2xs select-none disabled:opacity-50",
   {
     variants: {
       variant: {

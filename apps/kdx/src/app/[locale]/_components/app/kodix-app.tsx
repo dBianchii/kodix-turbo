@@ -9,7 +9,7 @@ import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { User } from "@kdx/auth";
 import type { KodixAppId } from "@kdx/shared";
-import { useAppDescription, useAppName } from "@kdx/locales/next-intl/hooks";
+import { getAppDescription, getAppName } from "@kdx/locales/next-intl/hooks";
 import { kodixCareAppId, todoAppId } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { Badge } from "@kdx/ui/badge";
@@ -95,8 +95,8 @@ export function KodixApp({
 
   const appurl = getAppUrl(id);
   const appIconUrl = getAppIconUrl(id);
-  const appName = useAppName(id);
-  const appDescription = useAppDescription(id);
+  const appName = getAppName(id, t);
+  const appDescription = getAppDescription(id, t);
 
   if (id === todoAppId) return null;
 
@@ -171,7 +171,7 @@ export function KodixApp({
               <DropdownMenuContent>
                 <CredenzaTrigger asChild>
                   <DropdownMenuItem>
-                    <LuTrash className="mr-2 size-4 text-destructive" />
+                    <LuTrash className="text-destructive mr-2 size-4" />
                     <span>{t("Uninstall from team")}</span>
                   </DropdownMenuItem>
                 </CredenzaTrigger>

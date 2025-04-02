@@ -28,7 +28,7 @@ export default async function RolesForAppPage(props: {
     <div className="mt-8 space-y-8 md:mt-0">
       <div className="flex flex-col gap-8">
         <div className="flex flex-col gap-2">
-          <h1 className="font-semibold text-muted-foreground">
+          <h1 className="text-muted-foreground font-semibold">
             {t("Edit name roles", { name: getAppName(t, appId) })}
           </h1>
           <DataTableUserAppRoles

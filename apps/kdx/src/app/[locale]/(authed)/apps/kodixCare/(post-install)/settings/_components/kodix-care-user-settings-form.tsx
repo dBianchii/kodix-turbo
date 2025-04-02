@@ -57,12 +57,12 @@ export function KodixCareUserSettingsForm({
           control={form.control}
           name="config.sendNotificationsForDelayedTasks"
           render={({ field }) => (
-            <FormItem className="flex max-w-md flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+            <FormItem className="flex max-w-md flex-row items-center justify-between rounded-lg border p-3 shadow-xs">
               <div className="space-y-2">
                 <FormLabel className="flex items-center gap-2">
                   <LuCircleAlert
                     className={cn(
-                      "size-5 text-muted-foreground transition-colors",
+                      "text-muted-foreground size-5 transition-colors",
                       {
                         "text-orange-500": field.value === true,
                       },

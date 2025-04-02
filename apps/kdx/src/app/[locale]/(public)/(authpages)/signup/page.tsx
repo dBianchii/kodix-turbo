@@ -16,7 +16,7 @@ export default async function SignUpPage(props: {
   return (
     <div className="container my-auto flex max-w-2xl">
       <RedirectIfLoggedIn />
-      <div className="flex w-full flex-col rounded-xl bg-card md:border">
+      <div className="bg-card flex w-full flex-col rounded-xl md:border">
         <div className="space-y-6 p-4 py-16 md:p-12">
           <h1 className="text-3xl font-bold">
             {t("Create your Kodix account")}
@@ -31,7 +31,7 @@ export default async function SignUpPage(props: {
                 <span className="w-full border-t" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">
+                <span className="bg-background text-muted-foreground px-2">
                   {t("Or continue with")}
                 </span>
               </div>
@@ -42,7 +42,7 @@ export default async function SignUpPage(props: {
                 invite={searchParams?.invite}
               />
             </div>
-            <div className="text-center text-sm text-muted-foreground">
+            <div className="text-muted-foreground text-center text-sm">
               {t("Already have an account")}{" "}
               <Link href="/signin" className="text-white underline">
                 {t("Sign in")}

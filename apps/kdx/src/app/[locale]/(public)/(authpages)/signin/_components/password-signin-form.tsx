@@ -69,7 +69,7 @@ export function PasswordSignInForm({ callbackUrl }: { callbackUrl?: string }) {
                 <FormLabel>{t("Your password")}</FormLabel>
                 <Link
                   href="/signin/forgot-password"
-                  className="text-sm text-primary"
+                  className="text-primary text-sm"
                 >
                   {t("Forgot password")}
                 </Link>

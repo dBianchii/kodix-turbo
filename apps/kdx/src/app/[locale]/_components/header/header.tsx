@@ -6,8 +6,8 @@ import { buttonVariants } from "@kdx/ui/button";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { Link } from "~/i18n/routing";
-import { trpcCaller } from "~/trpc/server";
-import { AppSwitcher } from "../app-switcher";
+import { trpc, trpcCaller } from "~/trpc/server";
+import { AppSwitcherClient } from "../app-switcher/app-switcher-client";
 import { I18nPicker } from "./i18n-picker";
 import { Logo } from "./logo";
 import { NotificationsPopoverClient } from "./notifications-popover-client";
@@ -16,8 +16,8 @@ import { UserProfileButton } from "./user-profile-button";
 export function Header() {
   return (
     <header className="border-b py-2">
-      <MaxWidthWrapper className="max-w-screen-2xl">
-        <div className="mx-auto flex max-w-screen-2xl items-center">
+      <MaxWidthWrapper className="max-w-(--breakpoint-2xl)">
+        <div className="mx-auto flex max-w-(--breakpoint-2xl) items-center">
           <Suspense fallback={<Logo redirect="/team" />}>
             <LogoWithAppSwitcher />
           </Suspense>
@@ -55,7 +55,7 @@ async function LogoWithAppSwitcher() {
           >
             <path d="M16.88 3.549L7.12 20.451"></path>
           </svg>
-          <AppSwitcher />
+          <AppSwitcherClient appsPromise={trpc.app.getInstalled()} />
         </>
       )}
     </>

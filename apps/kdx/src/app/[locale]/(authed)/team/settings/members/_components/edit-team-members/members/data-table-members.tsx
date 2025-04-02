@@ -87,7 +87,7 @@ export function DataTableMembers({
             </div>
             <div className="flex flex-col items-start">
               <span className="font-bold">{info.cell.row.original.name}</span>
-              <span className="text-xs text-muted-foreground">
+              <span className="text-muted-foreground text-xs">
                 {info.cell.row.original.email}
               </span>
             </div>

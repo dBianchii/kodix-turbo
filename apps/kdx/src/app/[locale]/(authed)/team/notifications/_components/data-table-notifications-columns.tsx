@@ -128,7 +128,7 @@ export function getColumns() {
                 <Button
                   aria-label="Open menu"
                   variant="ghost"
-                  className="flex size-8 p-0 data-[state=open]:bg-muted"
+                  className="data-[state=open]:bg-muted flex size-8 p-0"
                 >
                   <RxDotsHorizontal className="size-4" aria-hidden="true" />
                 </Button>

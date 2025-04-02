@@ -162,7 +162,7 @@ const useTable = ({
                     {t("apps.calendar.Edit event")}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setOpenCancelDialog(true)}>
-                    <LuTrash className="mr-2 size-4 text-destructive" />
+                    <LuTrash className="text-destructive mr-2 size-4" />
                     {t("apps.calendar.Delete event")}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -320,7 +320,7 @@ export function DataTable({ user }: { user: User }) {
           <div>
             {authorizedEmails.includes(user.email) && (
               <Button
-                className="ml-auto mr-2 self-end"
+                className="mr-2 ml-auto self-end"
                 onClick={() => nukeEvents()}
                 variant={"destructive"}
               >
@@ -384,7 +384,7 @@ export function DataTable({ user }: { user: User }) {
                           setOpenCancelDialog(true);
                         }}
                       >
-                        <LuTrash className="mr-2 size-4 text-destructive" />
+                        <LuTrash className="text-destructive mr-2 size-4" />
                         {t("Delete event")}
                       </ContextMenuItem>
                     </ContextMenuContent>
