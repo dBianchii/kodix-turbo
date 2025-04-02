@@ -58,11 +58,9 @@ const useSelectEvent = ({
 
 export default function ShiftsBigCalendar({
   user,
-  myRoles,
   careGivers,
 }: {
   user: User;
-  myRoles: Promise<RouterOutputs["team"]["appRole"]["getMyRoles"]>;
   careGivers: Promise<RouterOutputs["app"]["kodixCare"]["getAllCaregivers"]>;
 }) {
   const [open, setOpen] = useState<
@@ -138,7 +136,6 @@ export default function ShiftsBigCalendar({
       {selectedEvent && (
         <EditCareShiftCredenza
           careGivers={use(careGivers)}
-          myRoles={use(myRoles)}
           careShift={selectedEvent}
           setCareShift={setSelectedEventId}
           user={user}

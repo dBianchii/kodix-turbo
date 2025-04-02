@@ -41,11 +41,11 @@ export function CustomRow({
   return (
     <TableRow
       key={team.id}
-      onClick={async () => {
-        await switchTeamAction({
+      onClick={() =>
+        switchTeamAction({
           teamId: team.id,
-        });
-      }}
+        })
+      }
       className="cursor-pointer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -76,11 +76,7 @@ export function CustomRow({
           )}
         </div>
       </TableCell>
-      <TableCell
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-      >
+      <TableCell onClick={(e) => e.stopPropagation()}>
         <div className="flex justify-end space-x-4">
           <form
             onSubmit={(e) => {

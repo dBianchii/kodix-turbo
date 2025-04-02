@@ -6,7 +6,7 @@ import { teamRepository } from "@kdx/db/repositories";
 
 import { AppSwitcherClient } from "~/app/[locale]/_components/app-switcher/app-switcher-client";
 import { redirect } from "~/i18n/routing";
-import { trpc } from "~/trpc/server";
+import { trpcCaller } from "~/trpc/server";
 
 export default async function RolesLayout({
   children,
@@ -16,6 +16,7 @@ export default async function RolesLayout({
   const { user } = await auth();
   if (!user) return redirect({ href: "/", locale: await getLocale() });
 
+  const t = await getTranslations();
   const team = await teamRepository.findTeamById(user.activeTeamId);
 
   if (team?.ownerId !== user.id)
@@ -23,7 +24,7 @@ export default async function RolesLayout({
       href: "/team/settings",
       locale: await getLocale(),
     });
-  const t = await getTranslations();
+
   return (
     <div className="mt-8 space-y-6 md:mt-0">
       <div>
@@ -42,7 +43,7 @@ export default async function RolesLayout({
             {t("Select your app to change its configurations")}
           </p>
           <AppSwitcherClient
-            appsPromise={trpc.app.getInstalled()}
+            appsPromise={trpcCaller.app.getInstalled()}
             hrefPrefix="/team/settings/permissions/"
             hideAddMoreApps
             iconSize={28}

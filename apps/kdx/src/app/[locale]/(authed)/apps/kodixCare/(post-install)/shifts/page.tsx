@@ -14,19 +14,12 @@ export default async function ShiftsPage() {
 
   prefetch(trpc.app.kodixCare.getAllCareShifts.queryOptions());
   const careGiversPromise = trpcCaller.app.kodixCare.getAllCaregivers();
-  const myRolesPromise = trpcCaller.team.appRole.getMyRoles({
-    appId: kodixCareAppId,
-  });
 
   return (
     <main className="pt-4 md:p-4">
       <HydrateClient>
         <Suspense fallback={<DataTableSkeleton columnCount={4} rowCount={5} />}>
-          <ShiftsBigCalendar
-            user={user}
-            myRoles={myRolesPromise}
-            careGivers={careGiversPromise}
-          />
+          <ShiftsBigCalendar user={user} careGivers={careGiversPromise} />
         </Suspense>
       </HydrateClient>
     </main>

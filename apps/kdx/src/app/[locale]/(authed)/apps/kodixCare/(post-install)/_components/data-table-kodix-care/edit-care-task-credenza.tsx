@@ -259,15 +259,10 @@ function AlertNoShiftsOrNotYours({
 }) {
   const trpc = useTRPC();
   const overlappingShiftsQuery = useQuery(
-    trpc.app.kodixCare.findOverlappingShifts.queryOptions(
-      {
-        start: task.date,
-        end: task.date,
-      },
-      {
-        refetchOnWindowFocus: "always",
-      },
-    ),
+    trpc.app.kodixCare.findOverlappingShifts.queryOptions({
+      start: task.date,
+      end: task.date,
+    }),
   );
 
   const atLeastOneShiftExists = !!overlappingShiftsQuery.data?.length;
