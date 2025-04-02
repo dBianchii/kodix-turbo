@@ -1,11 +1,11 @@
 ---
 description: Guidelines for creating new API routes and endpoints
-globs: apps/**/src/app/api/**/* packages/api/src/trpc/**/*
+globs: packages/api/src/trpc/**/*.ts
 alwaysApply: false
 ---
 # Creating API Routes and Endpoints
 
-This project uses both Next.js API routes and tRPC for defining backend endpoints.
+This project uses tRPC for defining backend endpoints. We avoid using Next.JS endpoints, unless required for webhooks and external systems.
 
 ## tRPC Endpoints (Recommended)
 
@@ -13,7 +13,7 @@ tRPC is the preferred way to create type-safe API endpoints in this project.
 
 ### Create a New tRPC Endpoint
 
-1. Create a new handler file in the appropriate router directory:
+1. Create a new handler file in the appropriate router directory with the .handler.ts suffix:
 ```ts
 // packages/api/src/trpc/routers/[entity]/myEndpoint.handler.ts
 import type { MyProcedureContext } from "../../trpc";
@@ -26,10 +26,10 @@ export const myEndpointHandler = async ({
   ctx: MyProcedureContext;
 }) => {
   // Access auth information
-  const { userId } = ctx.auth;
+  const { userId } = ctx.auth.user.id;
   
   // Access database repositories
-  const user = await ctx.db.userRepository.getUserById(userId);
+  const user = await ctx.userRepository.getUserById(userId);
   
   // Implement your logic
   // ...
@@ -75,7 +75,7 @@ export type TMyEndpointInput = z.infer<typeof ZMyEndpointSchema>;
 
 ## Next.js API Routes
 
-For specific cases where tRPC is not suitable (e.g., webhooks, file uploads), you can use Next.js API routes.
+For specific cases where tRPC is not suitable (e.g., webhooks), you can use Next.js API routes.
 
 ### Create a Next.js API Route
 
@@ -114,8 +114,4 @@ export async function GET(request: Request) {
   // Return response
   return NextResponse.json({ data: /* your data */ });
 }
-
-// Add CORS headers for cross-origin requests
-import { OPTIONS } from "../../_enableCors";
-export { OPTIONS };
 ```

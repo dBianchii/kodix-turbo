@@ -1,6 +1,6 @@
 ---
 description: How to work with database repositories and models
-globs: packages/db/**/* packages/api/**/*
+globs: 
 alwaysApply: false
 ---
 # Database Access Patterns
