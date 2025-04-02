@@ -1,6 +1,6 @@
 ---
 description: Guidelines for using UI components from shadcn/ui and Radix
-globs: apps/**/* packages/ui/**/*
+globs: apps/kdx/src/**/*.ts
 alwaysApply: false
 ---
 # UI Components and Design System
@@ -20,33 +20,42 @@ import {
 } from "@kdx/ui";
 ```
 
-2. Do not import Radix UI components directly, unless adding new components to the UI package.
+2. Do not import Radix UI components directly.
 
 ## Using Shadcn/UI Components
 
 ### Dialog/Modal Windows
 ```tsx
-import { Button, Dialog } from "@kdx/ui";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  Button
+} from "@kdx/ui";
 
 export const MyComponent = () => {
   return (
     <Dialog>
-      <Dialog.Trigger asChild>
+      <DialogTrigger asChild>
         <Button>Open Dialog</Button>
-      </Dialog.Trigger>
-      <Dialog.Content>
-        <Dialog.Header>
-          <Dialog.Title>Dialog Title</Dialog.Title>
-          <Dialog.Description>Dialog description here.</Dialog.Description>
-        </Dialog.Header>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Dialog Title</DialogTitle>
+          <DialogDescription>Dialog description here.</DialogDescription>
+        </DialogHeader>
         {/* Dialog content */}
-        <Dialog.Footer>
+        <DialogFooter>
           <Button>Action</Button>
-        </Dialog.Footer>
-      </Dialog.Content>
+        </DialogFooter>
+      </DialogContent>
     </Dialog>
   );
-};
+}; 
 ```
 
 ### Form Components
