@@ -1,6 +1,6 @@
 ---
 description: How to implement data fetching with tRPC in the application
-globs: apps/kdx/src/**/* packages/api/src/**/* 
+globs: 
 alwaysApply: false
 ---
 # Data Fetching with tRPC
