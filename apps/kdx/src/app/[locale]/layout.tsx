@@ -66,7 +66,6 @@ export default async function RootLayout(props: {
             GeistMono.variable,
           )}
         >
-          <PostHogPageView />
           <SpeedInsights />
           <Analytics />
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
@@ -77,6 +76,7 @@ export default async function RootLayout(props: {
               duration={7000}
             />
             <CCNextIntlClientProvider messages={messages} locale={locale}>
+              <PostHogPageView />
               <TRPCReactProvider>
                 <div className="flex min-h-screen flex-col">
                   {props.children}
