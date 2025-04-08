@@ -14,12 +14,13 @@ export default [
     rules: {
       ...reactPlugin.configs["jsx-runtime"].rules,
       ...hooksPlugin.configs.recommended.rules,
-      "react/no-unused-prop-types": "warn",
       "react-compiler/react-compiler": "error",
       "no-restricted-imports": [
         "error",
         { paths: [{ name: "react", importNames: ["default"] }] },
       ],
+      "react/no-unused-prop-types": "warn",
+      "react/hook-use-state": "warn",
     },
     languageOptions: {
       globals: {
