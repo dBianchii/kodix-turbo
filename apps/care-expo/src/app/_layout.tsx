@@ -5,7 +5,7 @@ import { SplashScreen, Stack, useRouter, useSegments } from "expo-router";
 import "@bacons/text-decoder/install";
 
 import type { FontSource } from "expo-font";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useFonts } from "expo-font";
@@ -81,12 +81,12 @@ function MainLayout() {
   );
 }
 
+const locale = "pt-BR";
 export default function RootLayout() {
   const messages = {
     en,
     "pt-BR": pt_BR,
   };
-  const [locale, _setLocale] = useState<"en" | "pt-BR">("pt-BR");
   return (
     <TRPCProvider>
       <IntlProvider

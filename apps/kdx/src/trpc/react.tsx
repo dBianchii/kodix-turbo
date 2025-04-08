@@ -1,3 +1,4 @@
+/* eslint-disable react/hook-use-state */
 "use client";
 
 import type { QueryClient } from "@tanstack/react-query";
