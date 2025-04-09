@@ -8,7 +8,7 @@
  */
 import { initTRPC } from "@trpc/server";
 import { getFormatter, getTranslations } from "next-intl/server";
-import superjson from "superjson";
+import SuperJSON from "superjson";
 import { ZodError } from "zod";
 
 import type { AuthResponse } from "../../../auth/src/config";
@@ -57,7 +57,7 @@ export const createTRPCContext = async (opts: {
  * transformer
  */
 export const t = initTRPC.context<typeof createTRPCContext>().create({
-  transformer: superjson,
+  transformer: SuperJSON,
   errorFormatter: ({ shape, error }) => ({
     ...shape,
     data: {

@@ -90,7 +90,6 @@ export function EditCareTaskCredenza({
       doneAt: true,
     }),
     defaultValues,
-    disabled: mutation.isPending,
   });
 
   useEffect(() => {

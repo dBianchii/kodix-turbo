@@ -78,14 +78,14 @@ export default function ShiftsBigCalendar({
   const locale = useLocale() as Locales;
 
   const query = useCareShiftsData(use(initialShifts));
-  const mutation = useEditCareShift();
+  const { mutate } = useEditCareShift();
 
   const { selectedEvent, setSelectedEventId, delayed } = useSelectEvent({
     careShiftsData: query.data,
   });
 
   const handleEventChange = useCallback(
-    async (args: EventInteractionArgs<ShiftEvent>) => {
+    (args: EventInteractionArgs<ShiftEvent>) => {
       const old = query.data.find((shift) => shift.id === args.event.id);
       const overlappingShifts = query.data.filter(
         (shift) =>
@@ -107,14 +107,15 @@ export default function ShiftsBigCalendar({
         old?.startAt.getTime() !== dayjs(args.start).toDate().getTime() ||
         old.endAt.getTime() !== dayjs(args.end).toDate().getTime()
       )
-        await mutation.mutateAsync({
+        mutate({
           id: args.event.id,
           startAt: dayjs(args.start).toDate(),
           endAt: dayjs(args.end).toDate(),
         });
+
       return args;
     },
-    [query.data, mutation, t],
+    [query.data, mutate, t],
   );
 
   const calendarEvents = useMemo(
