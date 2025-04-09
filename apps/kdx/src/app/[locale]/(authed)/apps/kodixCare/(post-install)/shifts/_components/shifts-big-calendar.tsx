@@ -74,14 +74,14 @@ export default function ShiftsBigCalendar({
   const locale = useLocale() as Locales;
 
   const query = useCareShiftsData();
-  const mutation = useEditCareShift();
+  const { mutate } = useEditCareShift();
 
   const { selectedEvent, setSelectedEventId, delayed } = useSelectEvent({
     careShiftsData: query.data,
   });
 
   const handleEventChange = useCallback(
-    async (args: EventInteractionArgs<ShiftEvent>) => {
+    (args: EventInteractionArgs<ShiftEvent>) => {
       if (!query.data) return;
 
       const old = query.data.find((shift) => shift.id === args.event.id);
@@ -105,14 +105,15 @@ export default function ShiftsBigCalendar({
         old?.startAt.getTime() !== dayjs(args.start).toDate().getTime() ||
         old.endAt.getTime() !== dayjs(args.end).toDate().getTime()
       )
-        await mutation.mutateAsync({
+        mutate({
           id: args.event.id,
           startAt: dayjs(args.start).toDate(),
           endAt: dayjs(args.end).toDate(),
         });
+
       return args;
     },
-    [query.data, mutation, t],
+    [query.data, mutate, t],
   );
 
   const calendarEvents = useMemo(
@@ -215,6 +216,7 @@ export default function ShiftsBigCalendar({
           events={calendarEvents}
           components={{
             // @ts-expect-error react big calendar typesafety sucks
+            // eslint-disable-next-line react/no-unused-prop-types
             event: ({ event }: { event: ShiftEvent }) => (
               <div className="flex items-center gap-2 pl-3">
                 {event.finishedByUserId && <LuLock />}

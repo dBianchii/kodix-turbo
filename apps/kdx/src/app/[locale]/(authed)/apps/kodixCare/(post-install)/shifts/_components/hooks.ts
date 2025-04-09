@@ -1,11 +1,7 @@
 import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
 
-import type { TEditCareShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import dayjs from "@kdx/dayjs";
-import { getErrorMessage } from "@kdx/shared";
-import { toast } from "@kdx/ui/toast";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { useTRPC } from "~/trpc/react";
@@ -19,7 +15,6 @@ export const useCareShiftsData = () => {
 export const useEditCareShift = () => {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
-  const t = useTranslations();
   const mutation = useMutation(
     trpc.app.kodixCare.editCareShift.mutationOptions({
       onMutate: async (newShift) => {
@@ -68,16 +63,7 @@ export const useEditCareShift = () => {
     }),
   );
 
-  const mutateAsync = async (values: TEditCareShiftInputSchema) =>
-    await toast
-      .promise(mutation.mutateAsync(values), {
-        loading: t("Updating"),
-        success: t("Updated"),
-        error: getErrorMessage,
-      })
-      .unwrap();
-
-  return { ...mutation, mutateAsync };
+  return mutation;
 };
 
 export const useShiftOverlap = ({

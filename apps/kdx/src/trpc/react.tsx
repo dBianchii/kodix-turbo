@@ -1,3 +1,4 @@
+/* eslint-disable react/hook-use-state */
 "use client";
 
 import type { QueryClient } from "@tanstack/react-query";
@@ -31,6 +32,7 @@ const getQueryClient = () => {
 
 export const { TRPCProvider, useTRPC } = createTRPCContext<AppRouter>();
 
+const customConsole = { ...console, error: console.log };
 export function TRPCReactProvider(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
 
@@ -38,13 +40,14 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
     createTRPCClient<AppRouter>({
       links: [
         loggerLink({
+          console: customConsole,
           enabled: (op) =>
             env.NODE_ENV === "development" ||
             (op.direction === "down" && op.result instanceof Error),
         }),
         httpBatchStreamLink({
           transformer: SuperJSON,
-          url: getBaseUrl() + "/api/trpc",
+          url: `${getBaseUrl()}/api/trpc`,
           headers() {
             const headers = new Headers();
             headers.set("x-trpc-source", "nextjs-react");

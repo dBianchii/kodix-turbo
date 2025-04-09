@@ -19,6 +19,8 @@ export default [
         "error",
         { paths: [{ name: "react", importNames: ["default"] }] },
       ],
+      "react/no-unused-prop-types": "warn",
+      "react/hook-use-state": "warn",
     },
     languageOptions: {
       globals: {

@@ -12,7 +12,7 @@
   },
   "scripts": {
     "export": "email export --dir='src'",
-    "dev": "pnpx react-email dev --dir='src' --port=3003",
+    "dev:email": "pnpx react-email dev --dir='src' --port=3003",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "lint": "eslint",
     "format": "prettier --check . --ignore-path ../../.gitignore",

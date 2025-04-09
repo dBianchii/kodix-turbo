@@ -99,7 +99,6 @@ export function CustomRow({
           <LeaveOrDeleteTeamDropdown
             teamId={team.id}
             teamName={team.name}
-            user={user}
             isOwner={isOwner}
           />
         </div>
@@ -116,7 +115,6 @@ function LeaveOrDeleteTeamDropdown({
   isOwner: boolean;
   teamId: string;
   teamName: string;
-  user: User;
 }) {
   const trpc = useTRPC();
   const t = useTranslations();

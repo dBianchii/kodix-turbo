@@ -192,6 +192,7 @@ export function useDataTable<TData, TValue>({
     useState<ColumnFiltersState>(initialColumnFilters);
 
   // Handle server-side pagination
+  // eslint-disable-next-line react/hook-use-state
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: page - 1,
     pageSize: perPage,

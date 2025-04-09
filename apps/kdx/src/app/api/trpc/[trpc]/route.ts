@@ -3,6 +3,7 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { appRouter, createTRPCContext } from "@kdx/api";
 import { auth } from "@kdx/auth";
 
+import { env } from "~/env";
 import { OPTIONS, setCorsHeaders } from "../../_enableCors";
 
 export const runtime = "nodejs";
@@ -19,9 +20,14 @@ const handler = async (req: Request) => {
         auth: authResponse,
         headers: req.headers,
       }),
-    onError({ error, path }) {
-      console.error(`>>> tRPC Error on '${path}'`, error);
-    },
+    onError:
+      env.NODE_ENV === "development"
+        ? ({ path, error }) => {
+            console.error(
+              `❌ tRPC failed on ${path ?? "<no-path>"}: ${error.message}`,
+            );
+          }
+        : undefined,
   });
 
   setCorsHeaders(response);
