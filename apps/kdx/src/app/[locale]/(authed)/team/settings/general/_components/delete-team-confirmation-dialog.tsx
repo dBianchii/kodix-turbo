@@ -53,6 +53,8 @@ export function DeleteTeamConfirmationDialog({
     }),
     defaultValues: {
       teamId,
+      teamNameConfirmation: "",
+      verification: "",
     },
   });
 
@@ -110,7 +112,7 @@ export function DeleteTeamConfirmationDialog({
                   </span>
                 </div>
               </AlertDialogHeader>
-              <div className="bg-card/40 flex flex-col gap-4 py-8">
+              <div className="flex flex-col gap-4 py-8">
                 <FormField
                   control={form.control}
                   name="teamNameConfirmation"

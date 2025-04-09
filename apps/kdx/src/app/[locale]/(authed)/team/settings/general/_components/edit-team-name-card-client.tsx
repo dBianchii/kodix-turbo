@@ -61,15 +61,13 @@ export function EditTeamNameCardClient({
     <Card className="w-full text-left">
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit((data) => {
+          onSubmit={form.handleSubmit((data) =>
             toast.promise(mutation.mutateAsync(data), {
               loading: `${t("Saving")}...`,
               success: t("Team name saved successfully"),
-              error: (err) => {
-                return getErrorMessage(err);
-              },
-            });
-          })}
+              error: getErrorMessage,
+            }),
+          )}
         >
           <CardHeader>
             <CardTitle>{t("Team name")}</CardTitle>
@@ -84,15 +82,11 @@ export function EditTeamNameCardClient({
                     <FormItem>
                       <FormControl>
                         <Input
+                          {...field}
                           className={cn({
                             "cursor-not-allowed": !canEdit,
                           })}
                           placeholder="Acme"
-                          {...field}
-                          onChange={(e) => {
-                            void form.trigger("teamName");
-                            field.onChange(e);
-                          }}
                           disabled={!canEdit}
                         />
                       </FormControl>

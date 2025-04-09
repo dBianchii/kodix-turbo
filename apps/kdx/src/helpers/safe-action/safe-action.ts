@@ -4,11 +4,9 @@ import { ZodError } from "zod";
 
 import { auth } from "@kdx/auth";
 
-//? This is from https://next-safe-action.dev/docs/getting-started
 export const action = createSafeActionClient({
   defaultValidationErrorsShape: "flattened",
-  // Can also be an async function.
-  handleReturnedServerError(error) {
+  handleServerError: (error) => {
     let message = error.message;
 
     //? If the error came from within tRPC and not from the outer action, we can check if it's a ZodError and use the first issue's message.
@@ -18,11 +16,6 @@ export const action = createSafeActionClient({
         message = error.cause.issues[0]?.message ?? message;
 
     return message;
-  },
-  handleServerErrorLog(error) {
-    // We can, for example, also send the error to a dedicated logging system.
-    // reportToErrorHandlingSystem(e);
-    console.error(error);
   },
 });
 
