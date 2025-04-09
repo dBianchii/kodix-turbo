@@ -1,21 +1,15 @@
 import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import type { RouterOutputs } from "@kdx/api";
 import dayjs from "@kdx/dayjs";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { useTRPC } from "~/trpc/react";
 
-export const useCareShiftsData = (
-  initialShifts: RouterOutputs["app"]["kodixCare"]["getAllCareShifts"],
-) => {
+export const useCareShiftsData = () => {
   const trpc = useTRPC();
-  return useQuery(
-    trpc.app.kodixCare.getAllCareShifts.queryOptions(undefined, {
-      initialData: initialShifts,
-    }),
-  );
+  const query = useQuery(trpc.app.kodixCare.getAllCareShifts.queryOptions());
+  return query;
 };
 
 export const useEditCareShift = () => {

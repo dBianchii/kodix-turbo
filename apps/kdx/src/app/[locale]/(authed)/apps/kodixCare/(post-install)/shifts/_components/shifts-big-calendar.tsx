@@ -58,13 +58,9 @@ const useSelectEvent = ({
 
 export default function ShiftsBigCalendar({
   user,
-  myRoles,
-  initialShifts,
   careGivers,
 }: {
   user: User;
-  myRoles: Promise<RouterOutputs["team"]["appRole"]["getMyRoles"]>;
-  initialShifts: Promise<RouterOutputs["app"]["kodixCare"]["getAllCareShifts"]>;
   careGivers: Promise<RouterOutputs["app"]["kodixCare"]["getAllCaregivers"]>;
 }) {
   const [open, setOpen] = useState<
@@ -77,7 +73,7 @@ export default function ShiftsBigCalendar({
   const t = useTranslations();
   const locale = useLocale() as Locales;
 
-  const query = useCareShiftsData(use(initialShifts));
+  const query = useCareShiftsData();
   const { mutate } = useEditCareShift();
 
   const { selectedEvent, setSelectedEventId, delayed } = useSelectEvent({
@@ -86,6 +82,8 @@ export default function ShiftsBigCalendar({
 
   const handleEventChange = useCallback(
     (args: EventInteractionArgs<ShiftEvent>) => {
+      if (!query.data) return;
+
       const old = query.data.find((shift) => shift.id === args.event.id);
       const overlappingShifts = query.data.filter(
         (shift) =>
@@ -120,7 +118,7 @@ export default function ShiftsBigCalendar({
 
   const calendarEvents = useMemo(
     () =>
-      query.data.map(
+      query.data?.map(
         (shift) =>
           ({
             ...shift,
@@ -130,7 +128,7 @@ export default function ShiftsBigCalendar({
             start: dayjs(shift.startAt).toDate(),
             end: dayjs(shift.endAt).toDate(),
           }) as ShiftEvent,
-      ),
+      ) ?? [],
     [query.data],
   );
 
@@ -139,7 +137,6 @@ export default function ShiftsBigCalendar({
       {selectedEvent && (
         <EditCareShiftCredenza
           careGivers={use(careGivers)}
-          myRoles={use(myRoles)}
           careShift={selectedEvent}
           setCareShift={setSelectedEventId}
           user={user}
