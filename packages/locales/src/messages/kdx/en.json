@@ -79,7 +79,8 @@
       "Delete event": "Delete event",
       "Pick a date": "Pick a date",
       "Select a recurrence": "Select a recurrence",
-      "Custom recurrence": "Custom recurrence"
+      "Custom recurrence": "Custom recurrence",
+      "Repeat": "Repeat on"
     },
     "cupom": {
       "Cupom": "Cupom"

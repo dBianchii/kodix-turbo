@@ -781,7 +781,7 @@ function UnlockMoreTasksCredenza() {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="flex justify-between">
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{t("Cancel")}</AlertDialogCancel>
           <AlertDialogAction
             disabled={mutation.isPending}
             onClick={() => {

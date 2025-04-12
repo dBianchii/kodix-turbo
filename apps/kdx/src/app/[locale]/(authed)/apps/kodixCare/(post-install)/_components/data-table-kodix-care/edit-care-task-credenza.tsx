@@ -1,5 +1,5 @@
 import type { CareTask } from "node_modules/@kdx/api/src/internal/calendarAndCareTaskCentral";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useQuery } from "@tanstack/react-query";
 import { useFormatter, useTranslations } from "next-intl";
@@ -64,17 +64,12 @@ export function EditCareTaskCredenza({
   const [isLogView, setIsLogView] = useState(false);
   const t = useTranslations();
   const [parent] = useAutoAnimate({
-    duration: 300,
     easing: "ease-in-out",
   });
   const [parent2] = useAutoAnimate({
-    duration: 300,
     easing: "ease-in-out",
   });
-  const [parent3] = useAutoAnimate({
-    duration: 300,
-    easing: "ease-in-out",
-  });
+
   const defaultValues = useMemo(
     () => ({
       id: task.id,
@@ -92,58 +87,48 @@ export function EditCareTaskCredenza({
     defaultValues,
   });
 
-  useEffect(() => {
-    form.reset(defaultValues);
-  }, [defaultValues, form]);
-
   const handleCloseOrOpen = (open: boolean) => {
-    form.reset(defaultValues);
     setOpen(open);
     setIsLogView(false);
+    if (!open) {
+      form.reset(defaultValues);
+    }
   };
 
   const format = useFormatter();
 
   return (
     <Dialog open={open} onOpenChange={handleCloseOrOpen}>
-      <DialogContent
-        className={cn({
-          "max-w-[900px]": isLogView,
-        })}
-      >
+      <DialogContent>
         <DialogHeader>
           <div ref={parent2} className="flex flex-row items-center">
-            {isLogView && (
-              <Button
-                size={"sm"}
-                variant={"ghost"}
-                className="mr-2"
-                onClick={() => {
-                  setIsLogView(false);
-                }}
-              >
-                <LuArrowLeft className="size-3" />
-              </Button>
-            )}
-            {isLogView ? (
-              <DialogTitle>{t("Logs")}</DialogTitle>
+            {!isLogView ? (
+              <DialogTitle>{t("apps.kodixCare.Edit task")}</DialogTitle>
             ) : (
-              <DialogTitle key={"somekey"}>
-                {t("apps.kodixCare.Edit task")}
-              </DialogTitle>
+              <>
+                <Button
+                  size={"sm"}
+                  variant={"ghost"}
+                  className="mr-2"
+                  onClick={() => {
+                    setIsLogView(false);
+                  }}
+                >
+                  <LuArrowLeft className="size-3" />
+                </Button>
+                <DialogTitle>{t("Logs")}</DialogTitle>
+              </>
             )}
           </div>
         </DialogHeader>
-        <div className="overflow-hidden">
+        <div className={cn(isLogView && "overflow-auto")}>
           <div
             ref={parent}
             className={cn(
               "h-[600px] grow transition-all duration-300 ease-in-out",
             )}
           >
-            {isLogView ? (
-              <LogsView careTaskId={task.id} />
-            ) : (
+            {!isLogView ? (
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(async (values) => {
@@ -157,12 +142,14 @@ export function EditCareTaskCredenza({
                 >
                   <div className="text-foreground/80 mt-6 flex flex-col gap-2 rounded-md border p-4">
                     <div className="flex gap-2">
-                      <span className="text-sm font-semibold">
-                        {task.title ?? ""}
-                      </span>
-                      {task.type === "CRITICAL" && (
-                        <LuCircleAlert className="size-3 text-orange-400" />
-                      )}
+                      <div className="flex flex-row items-center gap-2">
+                        <span className="text-sm font-semibold">
+                          {task.title ?? null}
+                        </span>
+                        {task.type === "CRITICAL" && (
+                          <LuCircleAlert className="size-3 text-orange-400" />
+                        )}
+                      </div>
                       <Button
                         className="ml-auto"
                         variant={"outline"}
@@ -175,9 +162,9 @@ export function EditCareTaskCredenza({
                       </Button>
                     </div>
                     <span className="line-clamp-3 text-xs font-semibold">
-                      {task.description ?? ""}
+                      {task.description ?? null}
                     </span>
-                    <span className="flex text-xs font-semibold">
+                    <span className="flex items-center text-xs font-semibold">
                       <LuCalendar className="text-muted-foreground mr-2 size-3" />
                       {format.dateTime(task.date, "shortWithHours")}
                     </span>
@@ -227,9 +214,9 @@ export function EditCareTaskCredenza({
                       )}
                     />
                   </div>
-                  <div ref={parent3}>
-                    <AlertNoShiftsOrNotYours task={task} user={user} />
-                  </div>
+
+                  <AlertNoShiftsOrNotYours task={task} user={user} />
+
                   <DialogFooter className="mt-6 justify-end">
                     <Button
                       loading={mutation.isPending}
@@ -241,6 +228,8 @@ export function EditCareTaskCredenza({
                   </DialogFooter>
                 </form>
               </Form>
+            ) : (
+              <LogsView careTaskId={task.id} />
             )}
           </div>
         </div>
@@ -256,6 +245,10 @@ function AlertNoShiftsOrNotYours({
   task: CareTask;
   user: User;
 }) {
+  const [parent] = useAutoAnimate({
+    easing: "ease-in-out",
+  });
+
   const trpc = useTRPC();
   const overlappingShiftsQuery = useQuery(
     trpc.app.kodixCare.findOverlappingShifts.queryOptions({
@@ -286,11 +279,13 @@ function AlertNoShiftsOrNotYours({
       : "";
 
   return (
-    <Alert variant="warning">
-      <LuTriangleAlert className="h-4 w-4" />
-      <AlertTitle>{t("Warning")}</AlertTitle>
-      <AlertDescription>{text}</AlertDescription>
-    </Alert>
+    <div ref={parent}>
+      <Alert variant="warning">
+        <LuTriangleAlert className="h-4 w-4" />
+        <AlertTitle>{t("Warning")}</AlertTitle>
+        <AlertDescription>{text}</AlertDescription>
+      </Alert>
+    </div>
   );
 }
 
@@ -313,35 +308,33 @@ function LogsView({ careTaskId }: { careTaskId: string }) {
     );
 
   return (
-    <div className="flex h-full w-full justify-center">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>{t("Date")}</TableHead>
-            <TableHead>{t("User")}</TableHead>
-            <TableHead>{t("Message")}</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {getAppActivityLogsQuery.data?.length ? (
-            getAppActivityLogsQuery.data.map((log) => (
-              <TableRow key={log.id}>
-                <TableCell>
-                  {format.dateTime(log.loggedAt, "shortWithHours")}
-                </TableCell>
-                <TableCell>{log.User.name}</TableCell>
-                <TableCell>{log.message}</TableCell>
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={3} className="h-24 text-center">
-                {t("No results")}.
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>{t("Date")}</TableHead>
+          <TableHead>{t("User")}</TableHead>
+          <TableHead>{t("Message")}</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {getAppActivityLogsQuery.data?.length ? (
+          getAppActivityLogsQuery.data.map((log) => (
+            <TableRow key={log.id}>
+              <TableCell>
+                {format.dateTime(log.loggedAt, "shortWithHours")}
               </TableCell>
+              <TableCell>{log.User.name}</TableCell>
+              <TableCell>{log.message}</TableCell>
             </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={3} className="h-24 text-center">
+              {t("No results")}.
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
   );
 }
