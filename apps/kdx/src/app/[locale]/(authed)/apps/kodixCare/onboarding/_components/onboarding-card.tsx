@@ -27,7 +27,6 @@ import {
 import { Input } from "@kdx/ui/input";
 
 import { defaultSafeActionToastError } from "~/helpers/safe-action/default-action-error-toast";
-import { useRouter } from "~/i18n/routing";
 import { finishKodixCareOnboardingAction } from "../actions/onboardingActions";
 
 export default function OnboardingCard() {
@@ -38,15 +37,9 @@ export default function OnboardingCard() {
     },
   });
 
-  const router = useRouter();
   const t = useTranslations();
   const { execute, isExecuting } = useAction(finishKodixCareOnboardingAction, {
-    onError: (res) => {
-      defaultSafeActionToastError(res.error);
-    },
-    onSuccess: () => {
-      router.push(`/apps/kodixCare`);
-    },
+    onError: (res) => defaultSafeActionToastError(res.error),
   });
 
   return (

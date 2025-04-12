@@ -157,7 +157,7 @@ catalog:
   mysql2: ^3.9.2
   nanoid: ^5.0.7
   next-intl: ^3.25.1
-  next-safe-action: 7.1.4-experimental.1
+  next-safe-action: ^7.10.5
   next-themes: ^0.3.0
   object.groupby: ^1.0.3
   ora: ^8.0.1
