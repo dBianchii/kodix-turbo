@@ -1,10 +1,10 @@
 import { auth } from "@kdx/auth";
 
-import { trpc } from "~/trpc/server";
+import { trpcCaller } from "~/trpc/server";
 import EditUserTeamsTableClient from "./edit-user-teams-table-client";
 
 export async function EditUserTeamsTable() {
-  const teams = await trpc.team.getAll();
+  const teams = await trpcCaller.team.getAll();
 
   const { user } = await auth();
   if (!user) return null;

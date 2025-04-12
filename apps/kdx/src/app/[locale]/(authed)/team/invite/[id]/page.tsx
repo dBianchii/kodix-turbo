@@ -5,7 +5,7 @@ import { auth } from "@kdx/auth";
 import { teamRepository, userRepository } from "@kdx/db/repositories";
 
 import { redirect } from "~/i18n/routing";
-import { trpc } from "~/trpc/server";
+import { trpcCaller } from "~/trpc/server";
 
 export default async function InvitePage(props: {
   params: Promise<{ id: string }>;
@@ -32,7 +32,7 @@ export default async function InvitePage(props: {
   }
 
   if (user.email !== invitation.email) return notFound();
-  await trpc.team.invitation.accept({ invitationId });
+  await trpcCaller.team.invitation.accept({ invitationId });
 
   redirect({
     href: "/team",

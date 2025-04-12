@@ -11,7 +11,6 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { addDays } from "date-fns";
 import { useFormatter, useTranslations } from "next-intl";
 import {
   LuCalendar,
@@ -81,9 +80,7 @@ const useLeftAndRightKeyboardArrowClicks = () => {
 type CalendarTask = RouterOutputs["app"]["calendar"]["getAll"][number];
 const columnHelper = createColumnHelper<CalendarTask>();
 
-const useCalendarData = (
-  initialData: RouterOutputs["app"]["calendar"]["getAll"],
-) => {
+const useCalendarData = () => {
   const trpc = useTRPC();
   const [selectedDay, setSelectedDay] = useState(new Date());
   const inputForQuery = useMemo(
@@ -96,7 +93,6 @@ const useCalendarData = (
   const queryClient = useQueryClient();
   const getAllQuery = useQuery(
     trpc.app.calendar.getAll.queryOptions(inputForQuery, {
-      initialData: initialData,
       staleTime: 10,
     }),
   );
@@ -243,26 +239,22 @@ const useTable = ({
   return { table, columnLength: columns.length };
 };
 
-export function DataTable({
-  data,
-  user,
-}: {
-  data: CalendarTask[];
-  user: User;
-}) {
+export function DataTable({ user }: { user: User }) {
   const [calendarTask, setCalendarTask] = useState<CalendarTask | undefined>();
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
 
   const { getAllQuery, nukeEvents, selectedDay, setSelectedDay } =
-    useCalendarData(data);
+    useCalendarData();
+
+  const data = useMemo(() => getAllQuery.data ?? [], [getAllQuery.data]);
 
   const t = useTranslations();
 
   const { leftArrowRef, rightArrowRef } = useLeftAndRightKeyboardArrowClicks();
 
   const { table, columnLength } = useTable({
-    data: getAllQuery.data,
+    data,
     setCalendarTask,
     setOpenEditDialog,
     setOpenCancelDialog,
@@ -299,9 +291,11 @@ export function DataTable({
             <Button
               ref={leftArrowRef}
               variant="ghost"
-              onClick={() => {
-                setSelectedDay((prev) => addDays(prev, -1));
-              }}
+              onClick={() =>
+                setSelectedDay((prev) =>
+                  dayjs(prev).subtract(1, "day").toDate(),
+                )
+              }
               className="h-10 w-10 p-3"
             >
               <LuChevronLeft />
@@ -315,9 +309,9 @@ export function DataTable({
             <Button
               ref={rightArrowRef}
               variant="ghost"
-              onClick={() => {
-                setSelectedDay((prev) => addDays(prev, 1));
-              }}
+              onClick={() =>
+                setSelectedDay((prev) => dayjs(prev).add(1, "day").toDate())
+              }
               className="h-10 w-10 p-3"
             >
               <LuChevronRight />

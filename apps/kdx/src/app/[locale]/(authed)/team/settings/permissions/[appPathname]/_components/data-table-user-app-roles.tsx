@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { use, useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createColumnHelper,
@@ -27,10 +27,12 @@ const columnHelper =
   >();
 
 export function DataTableUserAppRoles({
-  initialUsers,
+  initialUsersPromise,
   appId,
 }: {
-  initialUsers: RouterOutputs["team"]["appRole"]["getUsersWithRoles"];
+  initialUsersPromise: Promise<
+    RouterOutputs["team"]["appRole"]["getUsersWithRoles"]
+  >;
   appId: KodixAppId;
 }) {
   const trpc = useTRPC();
@@ -42,8 +44,7 @@ export function DataTableUserAppRoles({
     trpc.team.appRole.getUsersWithRoles.queryOptions(
       { appId },
       {
-        refetchOnMount: false,
-        initialData: initialUsers,
+        initialData: use(initialUsersPromise),
       },
     ),
   );

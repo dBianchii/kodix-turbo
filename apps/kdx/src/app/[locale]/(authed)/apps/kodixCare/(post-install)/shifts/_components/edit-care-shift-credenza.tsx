@@ -57,6 +57,7 @@ import { ZEditCareShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { useTRPC } from "~/trpc/react";
+import { useMyRoles } from "./create-care-shift-credenza";
 import { useCareShiftsData, useEditCareShift, useShiftOverlap } from "./hooks";
 import { WarnOverlappingShifts } from "./warn-overlapping-shifts";
 
@@ -64,19 +65,18 @@ export function EditCareShiftCredenza({
   user,
   careShift,
   careGivers,
-  myRoles,
   setCareShift,
 }: {
   user: User;
   careShift: RouterOutputs["app"]["kodixCare"]["getAllCareShifts"][number];
   setCareShift: (shiftId: string | null) => void;
-  myRoles: RouterOutputs["team"]["appRole"]["getMyRoles"];
   careGivers: RouterOutputs["app"]["kodixCare"]["getAllCaregivers"];
 }) {
   const trpc = useTRPC();
   const t = useTranslations();
-  const userIsAdmin = myRoles.some((x) => x === "ADMIN");
-  const canEdit = careShift.caregiverId === user.id || userIsAdmin;
+  const { getMyRolesQuery } = useMyRoles();
+  const userIsAdmin = getMyRolesQuery.data?.some((x) => x === "ADMIN");
+  const canEdit = careShift.caregiverId === user.id || !!userIsAdmin;
   const canEditCareGiver = userIsAdmin;
 
   const [confirmFinishShiftAlertOpen, setConfirmFinishShiftAlertOpen] =
@@ -509,7 +509,7 @@ function Lock({
   isLocked: boolean;
   idCareShift: string;
 }) {
-  const query = useCareShiftsData([]);
+  const query = useCareShiftsData();
   const mutation = useEditCareShift();
   const t = useTranslations();
   const LockIcon = isLocked ? LuLock : LuLockOpen;

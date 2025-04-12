@@ -6,7 +6,7 @@ import { z } from "zod";
 
 import { action } from "~/helpers/safe-action/safe-action";
 import { redirect } from "~/i18n/routing";
-import { trpc } from "~/trpc/server";
+import { trpcCaller } from "~/trpc/server";
 
 export const switchTeamAction = action
   .schema(
@@ -16,7 +16,7 @@ export const switchTeamAction = action
     }),
   )
   .action(async ({ parsedInput }) => {
-    await trpc.user.switchActiveTeam(parsedInput);
+    await trpcCaller.user.switchActiveTeam(parsedInput);
     revalidatePath("/", "layout"); //IDK what this is doing exactly
     redirect({
       href: parsedInput.redirect ?? "/team",

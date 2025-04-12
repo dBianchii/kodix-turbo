@@ -4,7 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { kodixCareAppId } from "@kdx/shared";
 
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
-import { trpc } from "~/trpc/server";
+import { trpcCaller } from "~/trpc/server";
 import { KodixCareUserSettingsForm } from "./_components/kodix-care-user-settings-form";
 
 export default async function KodixCareSettingsPage() {
@@ -24,15 +24,12 @@ export default async function KodixCareSettingsPage() {
         <TabsContent value="account"></TabsContent>
       </Tabs> */}
       <Suspense>
-        <KodixCareUserSettingsFormServer />
+        <KodixCareUserSettingsForm
+          config={trpcCaller.app.getUserAppTeamConfig({
+            appId: kodixCareAppId,
+          })}
+        />
       </Suspense>
     </main>
   );
-}
-
-async function KodixCareUserSettingsFormServer() {
-  const config = await trpc.app.getUserAppTeamConfig({
-    appId: kodixCareAppId,
-  });
-  return <KodixCareUserSettingsForm config={config} />;
 }
