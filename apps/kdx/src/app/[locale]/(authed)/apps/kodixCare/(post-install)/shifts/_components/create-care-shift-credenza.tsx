@@ -36,6 +36,7 @@ import {
 import { ZCreateCareShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
+import { Link } from "~/i18n/routing";
 import { useTRPC } from "~/trpc/react";
 import { useShiftOverlap } from "./hooks";
 import { WarnOverlappingShifts } from "./warn-overlapping-shifts";
@@ -100,12 +101,6 @@ export function CreateShiftCredenzaButton({
   const t = useTranslations();
 
   const [showOverlapWarning, setShowOverlapWarning] = useState(false);
-  const getAllCaregiversQuery = useQuery(
-    trpc.app.kodixCare.getAllCaregivers.queryOptions(undefined, {
-      enabled: !!open,
-    }),
-  );
-  const { getMyRolesQuery } = useMyRoles();
 
   const mutation = useMutation(
     trpc.app.kodixCare.createCareShift.mutationOptions({
@@ -237,50 +232,14 @@ export function CreateShiftCredenzaButton({
                   <FormItem>
                     <FormLabel>{t("Caregiver")}</FormLabel>
                     <div className="flex flex-row gap-2">
-                      <Select
-                        disabled={
-                          !getMyRolesQuery.data?.some((x) => x === "ADMIN") ||
-                          getMyRolesQuery.isFetching
-                        }
-                        {...field}
-                        onValueChange={field.onChange}
-                      >
-                        <FormControl>
-                          <SelectTrigger
-                            id="select-40"
-                            className="h-auto ps-2 [&>span]:flex [&>span]:items-center [&>span]:gap-2 [&>span_img]:shrink-0"
-                          >
-                            <SelectValue
-                              placeholder={
-                                getMyRolesQuery.isLoading
-                                  ? "Loading..."
-                                  : t("Select a caregiver")
-                              }
-                            />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent className="[&_*[role=option]]:ps-2 [&_*[role=option]]:pe-8 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:end-2">
-                          {getAllCaregiversQuery.data?.map((user) => (
-                            <SelectItem key={user.id} value={user.id}>
-                              <span className="flex items-center gap-2">
-                                <AvatarWrapper
-                                  className="size-10 rounded-full"
-                                  fallback={user.name}
-                                  src={user.image ?? ""}
-                                  alt={user.name}
-                                  width={40}
-                                  height={40}
-                                />
-                                <span>
-                                  <span className="block font-medium">
-                                    {user.name}
-                                  </span>
-                                </span>
-                              </span>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <FormControl>
+                        <SelectCareGiver
+                          user={user}
+                          disabled={isChecking || mutation.isPending}
+                          value={field.value}
+                          onValueChange={(value) => field.onChange(value)}
+                        />
+                      </FormControl>
                     </div>
                     <FormMessage className="w-full" />
                   </FormItem>
@@ -303,5 +262,74 @@ export function CreateShiftCredenzaButton({
         </Form>
       </CredenzaContent>
     </Credenza>
+  );
+}
+
+function SelectCareGiver({
+  disabled,
+  value,
+  onValueChange,
+  user,
+}: {
+  disabled?: boolean;
+  value?: string;
+  onValueChange?: (value: string) => void;
+  user: User;
+}) {
+  const t = useTranslations();
+  const trpc = useTRPC();
+  const getMyRolesQuery = useQuery(
+    trpc.team.appRole.getMyRoles.queryOptions({
+      appId: kodixCareAppId,
+    }),
+  );
+  const activeTeamQuery = useQuery(trpc.team.getActiveTeam.queryOptions());
+  const getAllCaregiversQuery = useQuery(
+    trpc.app.kodixCare.getAllCaregivers.queryOptions(),
+  );
+
+  return (
+    <Select disabled={disabled} value={value} onValueChange={onValueChange}>
+      <SelectTrigger className="h-auto ps-2 [&>span]:flex [&>span]:items-center [&>span]:gap-2 [&>span_img]:shrink-0">
+        <SelectValue
+          placeholder={
+            getMyRolesQuery.isLoading ? "Loading..." : t("Select a caregiver")
+          }
+        />
+      </SelectTrigger>
+      <SelectContent className="[&_*[role=option]]:ps-2 [&_*[role=option]]:pe-8 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:end-2">
+        {getAllCaregiversQuery.data?.length === 0 ? (
+          <div className="text-muted-foreground text-md flex flex-col items-center justify-center gap-2 p-2">
+            {t("No caregivers found")}
+            {activeTeamQuery.data?.ownerId === user.id ? (
+              <Link
+                href="/team/settings/permissions/kodixCare"
+                className="text-primary text-sm hover:underline"
+              >
+                {t("Add caregivers")}
+              </Link>
+            ) : null}
+          </div>
+        ) : (
+          getAllCaregiversQuery.data?.map((user) => (
+            <SelectItem key={user.id} value={user.id}>
+              <span className="flex items-center gap-2">
+                <AvatarWrapper
+                  className="size-10 rounded-full"
+                  fallback={user.name}
+                  src={user.image ?? ""}
+                  alt={user.name}
+                  width={40}
+                  height={40}
+                />
+                <span>
+                  <span className="block font-medium">{user.name}</span>
+                </span>
+              </span>
+            </SelectItem>
+          ))
+        )}
+      </SelectContent>
+    </Select>
   );
 }

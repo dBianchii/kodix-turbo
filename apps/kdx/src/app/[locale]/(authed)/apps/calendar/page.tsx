@@ -11,7 +11,7 @@ import { CreateEventDialogButton } from "./_components/create-event-dialog";
 import { DataTable } from "./_components/data-table-calendar";
 
 export default async function CalendarPage() {
-  const user = await redirectIfAppNotInstalled({
+  await redirectIfAppNotInstalled({
     appId: calendarAppId,
   });
 
@@ -25,7 +25,7 @@ export default async function CalendarPage() {
         </div>
         <Separator className="my-4" />
         <CreateEventDialogButton />
-        <DataTable user={user} />
+        <DataTable />
       </main>
     </MaxWidthWrapper>
   );

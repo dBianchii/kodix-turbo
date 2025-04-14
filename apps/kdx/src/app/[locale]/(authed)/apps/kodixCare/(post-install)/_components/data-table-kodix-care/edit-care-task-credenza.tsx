@@ -69,6 +69,9 @@ export function EditCareTaskCredenza({
   const [parent2] = useAutoAnimate({
     easing: "ease-in-out",
   });
+  const [parent3] = useAutoAnimate({
+    easing: "ease-in-out",
+  });
 
   const defaultValues = useMemo(
     () => ({
@@ -214,9 +217,9 @@ export function EditCareTaskCredenza({
                       )}
                     />
                   </div>
-
-                  <AlertNoShiftsOrNotYours task={task} user={user} />
-
+                  <div ref={parent3}>
+                    <AlertNoShiftsOrNotYours task={task} user={user} />
+                  </div>
                   <DialogFooter className="mt-6 justify-end">
                     <Button
                       loading={mutation.isPending}
@@ -245,10 +248,6 @@ function AlertNoShiftsOrNotYours({
   task: CareTask;
   user: User;
 }) {
-  const [parent] = useAutoAnimate({
-    easing: "ease-in-out",
-  });
-
   const trpc = useTRPC();
   const overlappingShiftsQuery = useQuery(
     trpc.app.kodixCare.findOverlappingShifts.queryOptions({
@@ -279,13 +278,11 @@ function AlertNoShiftsOrNotYours({
       : "";
 
   return (
-    <div ref={parent}>
-      <Alert variant="warning">
-        <LuTriangleAlert className="h-4 w-4" />
-        <AlertTitle>{t("Warning")}</AlertTitle>
-        <AlertDescription>{text}</AlertDescription>
-      </Alert>
-    </div>
+    <Alert variant="warning">
+      <LuTriangleAlert className="h-4 w-4" />
+      <AlertTitle>{t("Warning")}</AlertTitle>
+      <AlertDescription>{text}</AlertDescription>
+    </Alert>
   );
 }
 

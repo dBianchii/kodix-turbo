@@ -55,7 +55,7 @@
 
   --radius: 0.5rem;
 
-  --sidebar-background: hsl(0 0% 98%);
+  --sidebar: hsl(0 0% 98%);
   --sidebar-foreground: hsl(240 5.3% 26.1%);
   --sidebar-primary: hsl(240 5.9% 10%);
   --sidebar-primary-foreground: hsl(0 0% 98%);
@@ -95,7 +95,7 @@
   --input: hsl(263 9% 18%);
   --ring: hsl(263 70% 40%);
 
-  --sidebar-background: hsl(240 5.9% 10%);
+  --sidebar: hsl(240 5.9% 10%);
   --sidebar-foreground: hsl(240 4.8% 95.9%);
   --sidebar-primary: hsl(224.3 76.3% 48%);
   --sidebar-primary-foreground: hsl(0 0% 100%);

@@ -4,6 +4,7 @@ import { use, useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createColumnHelper,
+  flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
@@ -15,8 +16,14 @@ import type { FixedColumnsType } from "@kdx/ui/data-table/data-table";
 import { getAppRoleNames } from "@kdx/locales/next-intl/hooks";
 import { allRoles, typedObjectEntries } from "@kdx/shared";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
-import { DataTable } from "@kdx/ui/data-table/data-table";
-import { MultiSelect } from "@kdx/ui/multi-select";
+import MultipleSelector from "@kdx/ui/origin-ui/multi-select";
+import {
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@kdx/ui/table";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { useTRPC } from "~/trpc/react";
@@ -143,32 +150,35 @@ export function DataTableUserAppRoles({
               .getValue()
               .map((userTeamAppRoles) => userTeamAppRoles.role);
 
-            return (
-              <MultiSelect
-                className="w-96"
-                options={allRoles.map((role) => ({
-                  label: appRoleDefaultNames[role],
-                  value: role,
-                }))}
-                selected={selected}
-                onChange={(newValues: string[]) => {
-                  const rolesUnion = [
-                    ...new Set([...selected, ...newValues]),
-                  ] as AppRole[];
+            const options = allRoles.map((role) => ({
+              label: appRoleDefaultNames[role],
+              value: role,
+            }));
 
+            return (
+              <MultipleSelector
+                hideClearAllButton
+                hidePlaceholderWhenSelected
+                onChange={(newValues) => {
+                  const rolesUnion = [
+                    ...new Set([
+                      ...selected,
+                      ...newValues.map((option) => option.value),
+                    ]),
+                  ] as AppRole[];
                   const updatedRoles = rolesUnion.reduce(
                     (acc, role) => {
                       // If the role was selected but is no longer selected, mark it as false.
                       if (
                         selected.includes(role) &&
-                        !newValues.includes(role)
+                        !newValues.some((option) => option.value === role)
                       ) {
                         acc[role] = false;
                       }
                       // If the role was not selected before but is now selected, mark it as true.
                       else if (
                         !selected.includes(role) &&
-                        newValues.includes(role)
+                        newValues.some((option) => option.value === role)
                       ) {
                         acc[role] = true;
                       }
@@ -177,13 +187,24 @@ export function DataTableUserAppRoles({
                     },
                     {} as Record<AppRole, boolean>,
                   );
-
                   updateUserAssociation({
                     userId: info.cell.row.original.id,
                     roles: updatedRoles,
                     appId,
                   });
                 }}
+                emptyIndicator={
+                  <p className="text-center text-sm">No results found</p>
+                }
+                defaultOptions={options}
+                placeholder={"Select roles"}
+                commandProps={{
+                  label: "Select frameworks",
+                }}
+                value={options.filter((option) =>
+                  selected.includes(option.value),
+                )}
+                options={options}
               />
             );
           },
@@ -200,5 +221,51 @@ export function DataTableUserAppRoles({
     getCoreRowModel: getCoreRowModel(),
   });
 
-  return <DataTable table={table} showPagination={false} />;
+  return (
+    <table className="w-full caption-bottom text-sm">
+      <TableHeader>
+        {table.getHeaderGroups().map((headerGroup) => (
+          <TableRow key={headerGroup.id}>
+            {headerGroup.headers.map((header) => {
+              return (
+                <TableHead key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                </TableHead>
+              );
+            })}
+          </TableRow>
+        ))}
+      </TableHeader>
+      <TableBody>
+        {table.getRowModel().rows.length ? (
+          table.getRowModel().rows.map((row) => (
+            <TableRow
+              key={row.id}
+              data-state={row.getIsSelected() && "selected"}
+            >
+              {row.getVisibleCells().map((cell) => (
+                <TableCell key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell
+              colSpan={table.getAllColumns().length}
+              className="h-24 text-center"
+            >
+              {t("No results found")}
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </table>
+  );
 }
