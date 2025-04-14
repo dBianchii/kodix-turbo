@@ -23,7 +23,8 @@
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "test:watch": "turbo run test:watch",
-    "trpc:new": "pnpm -F trpc-cli start"
+    "trpc:new": "pnpm -F trpc-cli start",
+    "vercel-link": "vercel switch kodix && vercel link --repo --yes && pnpm -r pull-vercel"
   },
   "devDependencies": {
     "@kdx/prettier-config": "workspace:*",
