@@ -82,7 +82,7 @@ export function CreateEventDialogButton() {
         form.reset();
         setOpen(false);
       },
-      onError: (e) => trpcErrorToastDefault(e),
+      onError: trpcErrorToastDefault,
     }),
   );
 
@@ -106,54 +106,48 @@ export function CreateEventDialogButton() {
               onSubmit={form.handleSubmit((values) => {
                 mutation.mutate(values);
               })}
-              className="space-y-8"
+              className="space-y-6"
             >
-              <div className="space-y-4">
-                <div className="flex flex-row">
-                  <FormField
-                    control={form.control}
-                    name="title"
-                    render={({ field }) => (
-                      <FormItem className="w-full">
-                        <FormLabel>{t("apps.calendar.Event title")}</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder={`${t("apps.calendar.Event title")}...`}
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage className="w-full" />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="flex flex-row">
-                  <div className="flex flex-col space-y-2">
-                    <FormField
-                      control={form.control}
-                      name="from"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{t("From")}</FormLabel>
-                          <FormControl>
-                            <div className="flex flex-row gap-2">
-                              <DateTimePicker
-                                value={field.value}
-                                onChange={field.onChange}
-                              />
-                            </div>
-                          </FormControl>
-                          <FormMessage className="w-full" />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </div>
+              <div className="space-y-6">
+                <FormField
+                  control={form.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("apps.calendar.Event title")}</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder={`${t("apps.calendar.Event title")}...`}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="from"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("From")}</FormLabel>
+                      <FormControl>
+                        <DateTimePicker
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
                 <FormField
                   control={form.control}
                   name="type"
                   render={({ field }) => (
-                    <FormItem className="py-3">
+                    <FormItem>
                       <div className="flex items-center gap-2">
                         <FormControl>
                           <Checkbox
@@ -163,7 +157,7 @@ export function CreateEventDialogButton() {
                             }
                           />
                         </FormControl>
-                        <FormLabel className="flex gap-1">
+                        <FormLabel className="flex items-center gap-1">
                           <LuCircleAlert
                             className={cn(
                               "text-muted-foreground transition-colors",
@@ -181,7 +175,8 @@ export function CreateEventDialogButton() {
                     </FormItem>
                   )}
                 />
-                <div className="flex flex-row">
+
+                <div className="space-y-2">
                   <RecurrencePicker
                     open={personalizedRecurrenceOpen}
                     setOpen={setPersonalizedRecurrenceOpen}
@@ -217,6 +212,7 @@ export function CreateEventDialogButton() {
                   name="description"
                   render={({ field }) => (
                     <FormItem>
+                      <FormLabel>{t("Description")}</FormLabel>
                       <FormControl>
                         <Textarea
                           placeholder={`${t("apps.calendar.Add description")}...`}
@@ -224,7 +220,7 @@ export function CreateEventDialogButton() {
                           rows={3}
                         />
                       </FormControl>
-                      <FormMessage className="w-full" />
+                      <FormMessage />
                     </FormItem>
                   )}
                 />

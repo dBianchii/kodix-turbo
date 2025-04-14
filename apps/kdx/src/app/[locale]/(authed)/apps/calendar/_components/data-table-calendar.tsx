@@ -2,7 +2,7 @@
 
 import type { ColumnFiltersState } from "@tanstack/react-table";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   createColumnHelper,
   flexRender,
@@ -25,9 +25,7 @@ import {
 import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
-import type { User } from "@kdx/auth";
 import dayjs from "@kdx/dayjs";
-import { authorizedEmails } from "@kdx/shared";
 import { Button } from "@kdx/ui/button";
 import {
   ContextMenu,
@@ -90,22 +88,9 @@ const useCalendarData = () => {
     }),
     [selectedDay],
   );
-  const queryClient = useQueryClient();
   const getAllQuery = useQuery(
     trpc.app.calendar.getAll.queryOptions(inputForQuery, {
       staleTime: 10,
-    }),
-  );
-  const { mutate: nukeEvents } = useMutation(
-    trpc.app.calendar.nuke.mutationOptions({
-      onSuccess() {
-        void queryClient.invalidateQueries(
-          trpc.app.calendar.getAll.pathFilter(),
-        );
-        void queryClient.invalidateQueries(
-          trpc.app.kodixCare.careTask.getCareTasks.pathFilter(),
-        );
-      },
     }),
   );
 
@@ -113,7 +98,6 @@ const useCalendarData = () => {
     selectedDay,
     setSelectedDay,
     getAllQuery,
-    nukeEvents,
   };
 };
 
@@ -239,13 +223,12 @@ const useTable = ({
   return { table, columnLength: columns.length };
 };
 
-export function DataTable({ user }: { user: User }) {
+export function DataTable() {
   const [calendarTask, setCalendarTask] = useState<CalendarTask | undefined>();
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
 
-  const { getAllQuery, nukeEvents, selectedDay, setSelectedDay } =
-    useCalendarData();
+  const { getAllQuery, selectedDay, setSelectedDay } = useCalendarData();
 
   const data = useMemo(() => getAllQuery.data ?? [], [getAllQuery.data]);
 
@@ -318,15 +301,6 @@ export function DataTable({ user }: { user: User }) {
             </Button>
           </div>
           <div>
-            {authorizedEmails.includes(user.email) && (
-              <Button
-                className="mr-2 ml-auto self-end"
-                onClick={() => nukeEvents()}
-                variant={"destructive"}
-              >
-                Nuke Events
-              </Button>
-            )}
             <Button
               className="ml-auto self-end"
               onClick={() => setSelectedDay(new Date())}

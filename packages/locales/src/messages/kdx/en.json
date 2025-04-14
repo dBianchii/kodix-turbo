@@ -79,7 +79,8 @@
       "Delete event": "Delete event",
       "Pick a date": "Pick a date",
       "Select a recurrence": "Select a recurrence",
-      "Custom recurrence": "Custom recurrence"
+      "Custom recurrence": "Custom recurrence",
+      "Repeat": "Repeat on"
     },
     "cupom": {
       "Cupom": "Cupom"
@@ -499,5 +500,7 @@
   "Please wait": "Please wait...",
   "There is no shift associated with this task Its recommended that you create a shift for this task": "There is no shift associated with this task. It is recommended that you create a shift so it can be completed",
   "This task is not associated with any of your shifts You can still edit it but its recommended that you create a shift for it": "You do not have a shift active for this task. \n We recommend you create one for better organization.",
-  "View logs": "View logs"
+  "View logs": "View logs",
+  "No caregivers found": "No caregivers found",
+  "Add caregivers": "Add caregivers"
 }

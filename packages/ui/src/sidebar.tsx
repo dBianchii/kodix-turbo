@@ -57,7 +57,7 @@ const SidebarContext = createContext<SidebarContext | null>(null);
 function useSidebar() {
   const context = use(SidebarContext);
   if (!context) {
-    throw new Error("useSidebar must be used within a Sidebar.");
+    throw new Error("useSidebar must be used within a SidebarProvider.");
   }
 
   return context;
@@ -87,15 +87,16 @@ const SidebarProvider = ({
   const open = openProp ?? _open;
   const setOpen = useCallback(
     (value: boolean | ((value: boolean) => boolean)) => {
+      const openState = typeof value === "function" ? value(open) : value;
       if (setOpenProp) {
-        return setOpenProp(typeof value === "function" ? value(open) : value);
+        setOpenProp(openState);
+      } else {
+        _setOpen(openState);
       }
-
-      _setOpen(value);
 
       // This sets the cookie to keep the sidebar state.
       // eslint-disable-next-line react-compiler/react-compiler
-      document.cookie = `${SIDEBAR_COOKIE_NAME}=${open}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+      document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
     },
     [setOpenProp, open],
   );
@@ -150,7 +151,7 @@ const SidebarProvider = ({
             } as CSSProperties
           }
           className={cn(
-            "group/sidebar-wrapper text-sidebar-foreground has-data-[variant=inset]:bg-sidebar flex min-h-svh w-full",
+            "group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar flex min-h-svh w-full",
             className,
           )}
           ref={ref}
@@ -222,7 +223,7 @@ const Sidebar = ({
   return (
     <div
       ref={ref}
-      className="group peer hidden md:block"
+      className="group peer text-sidebar-foreground hidden md:block"
       data-state={state}
       data-collapsible={state === "collapsed" ? collapsible : ""}
       data-variant={variant}

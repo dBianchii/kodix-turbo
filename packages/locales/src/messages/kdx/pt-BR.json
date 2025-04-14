@@ -79,7 +79,8 @@
       "Pick a date": "Escolha uma data",
       "Select a recurrence": "Selecione uma recorrência",
       "This and future events": "Este evento e futuros",
-      "This event": "Este evento"
+      "This event": "Este evento",
+      "Repeat": "Repetir a cada"
     },
     "cupom": {
       "Cupom": "Cupom"
@@ -500,5 +501,7 @@
   "Please wait": "Por favor espere...",
   "There is no shift associated with this task Its recommended that you create a shift for this task": "Não há nenhum turno associado a esta tarefa. \nÉ recomendado que você crie um turno para ela ser completada",
   "This task is not associated with any of your shifts You can still edit it but its recommended that you create a shift for it": "Você não tem um turno ativo para editar esta tarefa. \n Recomendamos criar um para melhor organização.",
-  "View logs": "Visualizar logs"
+  "View logs": "Visualizar logs",
+  "No caregivers found": "Nenhum cuidador encontrado",
+  "Add caregivers": "Adicionar cuidadores"
 }

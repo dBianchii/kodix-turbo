@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { LuCog, LuHouse, LuListChecks, LuPanelLeft } from "react-icons/lu";
 
@@ -48,10 +47,6 @@ export function KodixCareSideBar() {
   const pathname = usePathname();
   const { setOpenMobile, isMobile } = useSidebar();
 
-  useEffect(() => {
-    setOpenMobile(false);
-  }, [pathname, isMobile, setOpenMobile]);
-
   return (
     <Sidebar
       collapsible={isMobile ? "offcanvas" : "none"}
@@ -71,7 +66,11 @@ export function KodixCareSideBar() {
               </div>
               {kodixCareNavItems.map((item) => (
                 <SidebarMenuItem key={item.text}>
-                  <SidebarMenuButton asChild isActive={item.href === pathname}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={item.href === pathname}
+                    onClick={() => setOpenMobile(false)}
+                  >
                     <Link href={item.href}>
                       <item.icon />
                       <span>{item.text}</span>

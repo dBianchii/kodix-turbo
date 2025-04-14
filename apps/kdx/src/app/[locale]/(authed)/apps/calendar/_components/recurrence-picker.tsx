@@ -217,7 +217,7 @@ export function RecurrencePicker({
               />
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline">
                     <FrequencyToTxt
                       frequency={draftFrequency}
                       count={draftInterval}
@@ -226,11 +226,11 @@ export function RecurrencePicker({
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent
-                  className="w-300 p-0"
+                  className="w-fit p-0"
                   side="bottom"
                   align="start"
                 >
-                  <Command>
+                  <Command className="w-fit">
                     <CommandList>
                       <CommandGroup>
                         {freqs.map((freq, i) => (
@@ -264,10 +264,13 @@ export function RecurrencePicker({
             <div className="mt-2" ref={parent}>
               {draftFrequency === Frequency.WEEKLY && (
                 <div className={"flex-col"}>
-                  <span className={cn("mt-4")}>Repeat:</span>
-                  <div className="mt-2 flex-row space-x-1">
+                  <span className={cn("mt-4")}>
+                    {t("apps.calendar.Repeat")}
+                  </span>
+                  <div className="mt-2 flex flex-row gap-1">
                     {allWeekdays.map((weekday) => (
                       <Toggle
+                        variant="outline"
                         size={"sm"}
                         pressed={draftWeekdays?.some(
                           (dw) => dw.getJsWeekday() === weekday.getJsWeekday(),
@@ -301,7 +304,7 @@ export function RecurrencePicker({
                   className="mt-2 space-y-3"
                   defaultValue={draftUntil === undefined ? "1" : "0"}
                 >
-                  <span className="mt-4">{t("Ends")}:</span>
+                  <div className="mt-4">{t("Ends")}</div>
                   <div
                     className="flex items-center"
                     onClick={() => setDraftUntil(undefined)}
