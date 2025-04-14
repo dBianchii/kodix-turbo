@@ -233,7 +233,7 @@ export function CreateShiftCredenzaButton({
                     <FormLabel>{t("Caregiver")}</FormLabel>
                     <div className="flex flex-row gap-2">
                       <FormControl>
-                        <SelectCareGiver
+                        <SelectCaregiver
                           user={user}
                           disabled={isChecking || mutation.isPending}
                           value={field.value}
@@ -265,7 +265,7 @@ export function CreateShiftCredenzaButton({
   );
 }
 
-function SelectCareGiver({
+function SelectCaregiver({
   disabled,
   value,
   onValueChange,
