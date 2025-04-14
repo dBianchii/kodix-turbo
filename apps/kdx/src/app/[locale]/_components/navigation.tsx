@@ -65,17 +65,16 @@ function NavigationItem({
 
   return (
     <NavigationMenuItem>
-      <Link href={href} legacyBehavior passHref>
-        <NavigationMenuLink
-          active={pathname === href}
-          className={cn(
-            navigationMenuTriggerStyle(),
-            "justify-start text-center font-bold md:w-60",
-          )}
-        >
-          {children}
-        </NavigationMenuLink>
-      </Link>
+      <NavigationMenuLink
+        asChild
+        active={pathname === href}
+        className={cn(
+          navigationMenuTriggerStyle(),
+          "justify-start text-center font-bold md:w-60",
+        )}
+      >
+        <Link href={href}>{children}</Link>
+      </NavigationMenuLink>
     </NavigationMenuItem>
   );
 }
