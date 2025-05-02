@@ -39,7 +39,7 @@
     "dev": "tsc",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
-    "push": "pnpm wait-for-db pnpm with-env drizzle-kit push",
+    "push": "pnpm wait-for-db && pnpm with-env drizzle-kit push",
     "studio": "pnpm wait-for-db && pnpm with-env drizzle-kit studio",
     "seed": "pnpm wait-for-db && pnpm with-env tsx ./scripts/seed.ts",
     "generate-nanoid": "pnpm tsx ./scripts/generate-nanoid",
