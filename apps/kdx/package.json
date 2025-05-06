@@ -14,6 +14,7 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^1.3.21",
     "@formkit/auto-animate": "catalog:",
     "@kdx/api": "workspace:*",
     "@kdx/auth": "workspace:*",
@@ -33,6 +34,7 @@
     "@upstash/redis": "catalog:",
     "@vercel/analytics": "catalog:",
     "@vercel/speed-insights": "catalog:",
+    "ai": "^4.3.13",
     "arctic": "catalog:",
     "date-fns": "catalog:",
     "framer-motion": "catalog:",
@@ -42,6 +44,7 @@
     "next-intl": "catalog:",
     "next-safe-action": "catalog:",
     "next-themes": "catalog:",
+    "openai": "^4.29.0",
     "posthog-js": "catalog:",
     "react": "catalog:react",
     "react-big-calendar": "catalog:react-big-calendar",
