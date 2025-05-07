@@ -11,7 +11,7 @@
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo run clean",
     "db:push": "turbo @kdx/db-dev#dev @kdx/db#push",
-    "db:seed": "turbo --continue @kdx/db-dev#dev @kdx/db#seed",
+    "db:seed": "turbo @kdx/db-dev#dev @kdx/db#seed",
     "dev:kdx": "turbo watch dev studio -F @kdx/kdx... @kdx/db-dev#dev",
     "dev:email": "turbo dev -F @kdx/react-email...",
     "format": "turbo run format --continue -- --cache --cache-location .cache/.prettiercache",

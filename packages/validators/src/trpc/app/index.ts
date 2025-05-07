@@ -3,6 +3,7 @@ import { z } from "zod";
 import type { appActivityLogs } from "@kdx/db/schema";
 import type { KodixAppId } from "@kdx/shared";
 import {
+  agentAppId,
   calendarAppId,
   kodixCareAppId,
   kodixCareConfigSchema,
@@ -32,6 +33,7 @@ export const ZInstallAppInputSchema = z.object({
     z.literal(todoAppId),
     z.literal(calendarAppId),
     z.literal(kodixCareAppId),
+    z.literal(agentAppId),
   ]),
 });
 export type TInstallAppInputSchema = z.infer<typeof ZInstallAppInputSchema>;

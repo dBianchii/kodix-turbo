@@ -17,10 +17,14 @@ export const calendarAppId = "rglo4zodf341";
 //*  KodixCare *//
 export const kodixCareAppId = "1z50i9xblo4b";
 
+//* Agent Chat *//
+export const agentAppId = "az1x2c3bv4n5";
+
 export const appIdToRoles = {
   [kodixCareAppId]: [...commonRolesForAllApps, "CAREGIVER"] as const,
   [calendarAppId]: [...commonRolesForAllApps] as const,
   [todoAppId]: [...commonRolesForAllApps] as const,
+  [agentAppId]: [...commonRolesForAllApps] as const,
 };
 export const allRoles = [...new Set(Object.values(appIdToRoles).flat())];
 
@@ -30,7 +34,8 @@ export type AppRole<T extends KodixAppId = keyof typeof appIdToRoles> =
 export type KodixAppId =
   | typeof todoAppId
   | typeof calendarAppId
-  | typeof kodixCareAppId;
+  | typeof kodixCareAppId
+  | typeof agentAppId;
 
 export type AppIdsWithConfig = typeof kodixCareAppId; //? Some apps might not have config implemented
 export type AppIdsWithUserAppTeamConfig = typeof kodixCareAppId; //? Some apps might not have userAppTeamConfig implemented
