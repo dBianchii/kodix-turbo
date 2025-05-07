@@ -69,6 +69,7 @@ catalogs:
     "@tanstack/react-query-devtools": ^5.32.0
 
 catalog:
+  "@ai-sdk/openai": ^1.3.21
   "@bacons/text-decoder": ^0.0.0
   "@casl/ability": ^6.7.3
   "@clack/prompts": ^0.7.0

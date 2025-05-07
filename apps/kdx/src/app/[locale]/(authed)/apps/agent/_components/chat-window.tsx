@@ -121,7 +121,7 @@ export function ChatWindow() {
   return (
     <div className="flex h-full flex-col bg-[#121212]">
       {/* Área de mensagens com espaço no fim para o input "flutuar" */}
-      <div className="flex-1 space-y-3 overflow-y-auto px-4 pb-32 pt-6">
+      <div className="flex-1 space-y-3 overflow-y-auto px-4 pt-6 pb-32">
         {messages.map((msg, idx) => (
           <Message key={idx} role={msg.role} content={msg.content} />
         ))}

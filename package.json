@@ -23,7 +23,6 @@
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "test:watch": "turbo run test:watch",
-    "dev": "turbo run dev",
     "dev:agent": "turbo run dev --filter=@kdx/agent-chat",
     "trpc:new": "pnpm -F trpc-cli start"
   },
