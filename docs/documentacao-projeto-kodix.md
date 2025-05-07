@@ -241,6 +241,26 @@ O sistema implementa um modelo de permissões baseado em:
 - Validação de entradas com Zod
 - Operações de banco de dados tipadas e seguras
 
+## Autenticação no Kodix
+
+O sistema de autenticação do Kodix é projetado para ser seguro e flexível, suportando múltiplos provedores de autenticação e integrando-se perfeitamente com os subapps da plataforma. A autenticação é baseada em sessões de banco de dados e utiliza o Oslo (anteriormente conhecido como Lucia-auth) para gerenciar sessões e autenticações.
+
+### Como Funciona
+
+1. **Sessões de Banco de Dados**: As sessões são armazenadas no banco de dados, permitindo autenticação persistente e segura. Isso garante que os usuários possam retomar suas sessões de onde pararam, mesmo após fechar o navegador ou reiniciar o dispositivo.
+
+2. **Múltiplos Provedores de Autenticação**: O Kodix suporta autenticação através de diversos provedores, como Google, Facebook, e outros, facilitando o login dos usuários com suas contas existentes.
+
+3. **Integração com SubApps**: Cada subapp dentro do Kodix pode reutilizar o sistema de autenticação centralizado. Isso é feito através de middlewares tRPC que protegem as rotas e garantem que apenas usuários autenticados possam acessar funcionalidades específicas.
+
+4. **Tokens de Sessão**: A autenticação é gerida através de tokens de sessão, que são validados em cada requisição para garantir que o usuário ainda está autenticado.
+
+5. **Validação e Segurança**: Todas as entradas de autenticação são validadas usando Zod, garantindo que apenas dados válidos sejam processados. Além disso, as operações de banco de dados são tipadas e seguras, prevenindo injeções de SQL e outros ataques comuns.
+
+### Implementação nos SubApps
+
+Os subapps no Kodix utilizam o sistema de autenticação centralizado, o que significa que não precisam implementar suas próprias soluções de autenticação. Eles simplesmente configuram as rotas protegidas e utilizam os middlewares fornecidos para garantir que apenas usuários autenticados possam acessar suas funcionalidades.
+
 ## Fluxo de Desenvolvimento
 
 1. **Criação de novos recursos**:

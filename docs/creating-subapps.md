@@ -155,6 +155,91 @@ pnpm db:push
 pnpm db:seed
 ```
 
+### 6.4 CRUD e Repositórios
+
+Para garantir um padrão consistente de operações CRUD em novos SubApps, siga estes passos:
+
+1. Modelagem de schema (já definida em 6.1) e migration (6.2).
+2. Crie um arquivo de repositório em `packages/db/src/repositories/<model>.ts`:
+
+```ts
+import { db } from "../client";
+import { <modelTable> } from "../schema/apps/<model>";
+
+export const <Model>Repository = {
+  create: async (data: Omit<<ModelType>, "id" | "createdAt" | "updatedAt">) =>
+    await db.insert(<modelTable>).values(data).returning().execute(),
+  findById: async (id: string) =>
+    await db.select().from(<modelTable>).where(<modelTable>.id.eq(id)).limit(1).execute(),
+  findAll: async () =>
+    await db.select().from(<modelTable>).execute(),
+  update: async (id: string, data: Partial<<ModelType>>) =>
+    await db.update(<modelTable>).set(data).where(<modelTable>.id.eq(id)).returning().execute(),
+  delete: async (id: string) =>
+    await db.delete(<modelTable>).where(<modelTable>.id.eq(id)).execute(),
+};
+```
+
+3. Exporte o repositório em `packages/db/src/repositories/index.ts`.
+
+## 6.5 Integração com tRPC e Frontend
+
+### 6.5.1 Rotas tRPC
+
+Crie um roteador em `packages/api/src/trpc/routers/app/<model>.ts`:
+
+```ts
+import { z } from "zod";
+import { router, publicProcedure, protectedProcedure } from "../../trpc";
+import { <Model>Repository } from "@kdx/db/src/repositories/<model>";
+
+export const <Model>Router = router({
+  getAll: publicProcedure.query(async () => await <Model>Repository.findAll()),
+  getById: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input }) => await <Model>Repository.findById(input.id)),
+  create: protectedProcedure
+    .input(z.object({ /* campos */ }))
+    .mutation(async ({ input }) => await <Model>Repository.create(input)),
+  update: protectedProcedure
+    .input(z.object({ id: z.string(), /* campos */ }))
+    .mutation(async ({ input }) => await <Model>Repository.update(input.id, input)),
+  delete: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input }) => await <Model>Repository.delete(input.id)),
+});
+```
+
+Adicione o roteador em `packages/api/src/trpc/routers/app/index.ts`.
+
+### 6.5.2 Uso no Frontend
+
+No frontend, utilize os hooks gerados pelo tRPC:
+
+```ts
+const { data, isLoading } = api.app.<model>.getAll.useQuery();
+const createMutation = api.app.<model>.create.useMutation();
+```
+
+Em um componente Next.js:
+
+```tsx
+"use client";
+import React from "react";
+import { api } from "@kdx/api";
+
+export function <Model>List() {
+  const { data, isLoading } = api.app.<model>.getAll.useQuery();
+  return (
+    <div>
+      {isLoading ? "Carregando..." : data?.map(item => (
+        <div key={item.id}>{item.<field>}</div>
+      ))}
+    </div>
+  );
+}
+```
+
 ---
 
 ## 7. Internacionalização (i18n)
