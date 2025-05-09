@@ -84,6 +84,9 @@
     },
     "cupom": {
       "Cupom": "Cupom"
+    },
+    "agent": {
+      "appDescription": "Agent Chat é um app de chat com IA"
     }
   },
   "Updating": "Atualizando",
@@ -452,6 +455,7 @@
     "appName is not installed": "{appName} não está instalado"
   },
   "Calendar": "Calendário",
+  "Agent": "Agente",
   "Kodix Care": "Kodix Care",
   "Todo": "Todo",
   "You cannot unlock tasks that are scheduled for after tomorrow end of day": "Você não pode desbloquear tarefas agendadas para depois do final do dia de amanhã",

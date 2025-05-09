@@ -1,0 +1,351 @@
+> turbo run dev
+
+╭──────────────────────────────────────────────────────────────────────────╮
+│                                                                          │
+│                     Update available v2.4.4 ≫ v2.5.2                     │
+│    Changelog: https://github.com/vercel/turborepo/releases/tag/v2.5.2    │
+│             Run "npx @turbo/codemod@latest update" to update             │
+│                                                                          │
+│          Follow @turborepo for updates: https://x.com/turborepo          │
+╰──────────────────────────────────────────────────────────────────────────╯
+turbo 2.4.4
+
+• Packages in scope: @kdx/api, @kdx/auth, @kdx/care-expo, @kdx/dayjs, @kdx/db, @kdx/db-dev, @kdx/eslint-config, @kdx/github, @kdx/kdx, @kdx
+• Packages in scope: @kdx/api, @kdx/auth, @kdx/care-expo, @kdx/dayjs, @kdx/db, @kdx/db-dev, @kdx/eslint-config, @kdx/github, @kdx/kdx, @kdx/locales, @kdx/permissions, @kdx/prettier-config, @kdx/react-email, @kdx/shared, @kdx/tailwind-config, @kdx/testing, @kdx/trpc-cli, @kdx/ts
+• Packages in scope: @kdx/api, @kdx/auth, @kdx/care-expo, @kdx/dayjs, @kdx/db, @kdx/db-dev, @kdx/eslint-config, @kdx/github, @kdx/kdx, @kdx/locales, @kdx/permissions, @kdx/prettier-config, @kdx/react-email, @kdx/shared, @kdx/tailwind-config, @kdx/testing, @kdx/trpc-cli, @kdx/tsconfig, @kdx/ui, @kdx/validators, agent-chat
+• Running dev in 21 packages
+• Remote caching enabled
+┌ @kdx/shared#dev > cache bypass, force executing d8097c88516887cc 
+│ 
+│ 
+│ > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+│ > tsc
+└────>
+┌ @kdx/db#dev > cache bypass, force executing 3352f28c0f02822a 
+│ 
+│ 
+│ > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+│ > tsc
+└────>
+┌ @kdx/ui#dev > cache bypass, force executing 062ab503840ee1e9 
+│ 
+│ 
+│ > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+│ > tsc
+└────>
+┌ @kdx/validators#dev > cache bypass, force executing 286c8857f9939f09 
+    ...Finishing writing to cache...                                                                                 │ 
+│ 
+│ > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+│ > tsc
+└────>
+┌ @kdx/permissions#dev > cache bypass, force executing 0e7828d1ab919a31 
+│ 
+│ 
+│ > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permission
+│ s
+│ > tsc
+└────>
+┌ @kdx/api#dev > cache bypass, force executing 74a11cc8f9a3066b 
+│ 
+│ 
+│ > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+│ > tsc
+└────>
+┌ @kdx/kdx#dev > cache bypass, force executing 1f6ac2824f74f78b 
+│ 
+│ > @kdx/kdx@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/apps/kdx
+│ > pnpm with-env next dev --turbopack --port 3000
+│ 
+│ 
+│ > @kdx/kdx@0.1.0 with-env /Users/mahadevadas/Documents/Kodix/kodix-turbo/apps/kdx
+│ > dotenv -e ../../.env -- "next" "dev" "--turbopack" "--port" "3000"
+│ 
+│  ⨯ Failed to start server
+│ Error: listen EADDRINUSE: address already in use :::3000
+│     at <unknown> (Error: listen EADDRINUSE: address already in use :::3000)
+│     at new Promise (<anonymous>) {
+│   code: 'EADDRINUSE',
+│   errno: -48,
+│   syscall: 'listen',
+│   address: '::',
+│   port: 3000
+│ }
+└────>
+┌ agent-chat#dev > cache bypass, force executing 2b6173c1b8e4d6df 
+│ 
+│ 
+│ > agent-chat@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/apps/agent-chat
+│ > next dev
+│ 
+│    ▲ Next.js 15.3.1
+│    - Local:        http://localhost:3000
+│    - Network:      http://192.168.3.24:3000
+│    - Environments: .env.local
+│ 
+│  ✓ Starting...
+│  ✓ Ready in 1666ms
+│  ○ Compiling / ...
+│  ✓ Compiled / in 879ms (709 modules)
+│ InputBox render: disabled= false inputValue=  isButtonEnabled= false
+│  GET / 200 in 1049ms
+│  ✓ Compiled /api/agent in 447ms (759 modules)
+│ 🔵 [API] POST recebido
+│ 🟢 [API] Mensagens recebidas: [
+│   { role: 'assistant', content: 'Olá! Como posso ajudar?' },
+│   { role: 'user', content: 'quanto é 1+1?' }
+│ ]
+│ 🟢 [API] Última mensagem do usuário: quanto é 1+1?
+│ ✅ [API] OPENAI_API_KEY encontrada, processando...
+│ 🟢 [API] Stream criado com sucesso
+│ 🟢 [API] Iniciando stream de resposta
+│ 🟢 [API] Stream completo, fechando controller
+│  POST /api/agent 200 in 1488ms
+│ InputBox render: disabled= false inputValue=  isButtonEnabled= false
+│  GET / 200 in 88ms
+│ 🔵 [API] POST recebido
+│ 🟢 [API] Mensagens recebidas: [
+│   { role: 'assistant', content: 'Olá! Como posso ajudar?' },
+│   { role: 'user', content: 'Tá funcionando GPT?' }
+│ ]
+│ 🟢 [API] Última mensagem do usuário: Tá funcionando GPT?
+│ ✅ [API] OPENAI_API_KEY encontrada, processando...
+│ 🟢 [API] Stream criado com sucesso
+│ 🟢 [API] Iniciando stream de resposta
+│ 🟢 [API] Stream completo, fechando controller
+│  POST /api/agent 200 in 958ms
+│ 🔵 [API] POST recebido
+│ 🟢 [API] Mensagens recebidas: [
+│   { role: 'assistant', content: 'Olá! Como posso ajudar?' },
+│   { role: 'user', content: 'Tá funcionando GPT?' },
+│   {
+│     role: 'assistant',
+│     content: 'Sim, estou funcionando corretamente. Como posso ajudar você hoje?'
+│   },
+│   { role: 'user', content: 'De que forma?' }
+│ ]
+│ 🟢 [API] Última mensagem do usuário: De que forma?
+│ ✅ [API] OPENAI_API_KEY encontrada, processando...
+│ 🟢 [API] Stream criado com sucesso
+│ 🟢 [API] Iniciando stream de resposta
+│ 🟢 [API] Stream completo, fechando controller
+│  POST /api/agent 200 in 1355ms
+│ 🔵 [API] POST recebido
+│ 🟢 [API] Mensagens recebidas: [
+│   { role: 'assistant', content: 'Olá! Como posso ajudar?' },
+│   { role: 'user', content: 'Tá funcionando GPT?' },
+│   {
+│     role: 'assistant',
+│     content: 'Sim, estou funcionando corretamente. Como posso ajudar você hoje?'
+│   },
+│   { role: 'user', content: 'De que forma?' },
+│   {
+│     role: 'assistant',
+│     content: 'Posso responder a perguntas, fornecer informações, ajudar com tarefas simples, co
+│ nversar sobre diversos assuntos e muito mais. Se tiver alguma dúvida ou precisar de ajuda, é só
+│  me perguntar!'
+│   },
+│   { role: 'user', content: 'Quero saber se descança?' }
+│ ]
+│ 🟢 [API] Última mensagem do usuário: Quero saber se descança?
+│ ✅ [API] OPENAI_API_KEY encontrada, processando...
+│ 🟢 [API] Stream criado com sucesso
+│ 🟢 [API] Iniciando stream de resposta
+│ 🟢 [API] Stream completo, fechando controller
+│  POST /api/agent 200 in 837ms
+│ 🔵 [API] POST recebido
+│ 🟢 [API] Mensagens recebidas: [
+│   { role: 'assistant', content: 'Olá! Como posso ajudar?' },
+│   { role: 'user', content: 'Tá funcionando GPT?' },
+│   {
+│     role: 'assistant',
+│     content: 'Sim, estou funcionando corretamente. Como posso ajudar você hoje?'
+│   },
+│   { role: 'user', content: 'De que forma?' },
+│   {
+│     role: 'assistant',
+│     content: 'Posso responder a perguntas, fornecer informações, ajudar com tarefas simples, co
+│ nversar sobre diversos assuntos e muito mais. Se tiver alguma dúvida ou precisar de ajuda, é só
+│  me perguntar!'
+│   },
+│   { role: 'user', content: 'Quero saber se descança?' },
+│   {
+│     role: 'assistant',
+│     content: 'Como sou um programa de inteligência artificial, não preciso descansar como os se
+│ res humanos. Estou disponível 24 horas por dia, 7 dias por semana para ajudar no que precisar. 
+│ Posso continuar conversando ou responder a qualquer pergunta que você tiver. Como posso ajudar 
+│ você hoje?'
+│   },
+│   { role: 'user', content: '24 horas por dia? Por que?' }
+│ ]
+│ 🟢 [API] Última mensagem do usuário: 24 horas por dia? Por que?
+│ ✅ [API] OPENAI_API_KEY encontrada, processando...
+│ 🟢 [API] Stream criado com sucesso
+│ 🟢 [API] Iniciando stream de resposta
+│ 🟢 [API] Stream completo, fechando controller
+│  POST /api/agent 200 in 1187ms
+│  ✓ Compiled in 161ms (404 modules)
+└────>
+┌ @kdx/db-dev#dev > cache bypass, force executing 8283c0f9e5b1a186 
+│ 
+│ > @kdx/db-dev@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db-dev
+│ > trap 'docker compose stop' EXIT; docker compose up --build
+│ 
+│ [+] Running 3/3
+│  ✔ Container kodix-db-mysql-1                  Created                                    0.0s 
+│  ✔ Container kodix-db-serverless-redis-http-1  Created                                    0.0s 
+│  ✔ Container kodix-db-redis-1                  Created                                    0.0s 
+│ Attaching to mysql-1, redis-1, serverless-redis-http-1
+│ mysql-1                  | 2025-05-05 00:34:41+00:00 [Note] [Entrypoint]: Entrypoint script for
+│  MySQL Server 8.2.0-1.el8 started.
+│ redis-1                  | 1:C 05 May 2025 00:34:41.486 * oO0OoO0OoO0Oo Redis is starting oO0Oo
+│ O0OoO0Oo
+│ redis-1                  | 1:C 05 May 2025 00:34:41.486 * Redis version=7.4.3, bits=64, commit=
+│ 00000000, modified=0, pid=1, just started
+│ redis-1                  | 1:C 05 May 2025 00:34:41.486 # Warning: no config file specified, us
+│ ing the default config. In order to specify a config file use redis-server /path/to/redis.conf
+│ redis-1                  | 1:M 05 May 2025 00:34:41.487 * monotonic clock: POSIX clock_gettime
+│ redis-1                  | 1:M 05 May 2025 00:34:41.487 * Running mode=standalone, port=6379.
+│ redis-1                  | 1:M 05 May 2025 00:34:41.488 * Server initialized
+│ redis-1                  | 1:M 05 May 2025 00:34:41.488 * Loading RDB produced by version 7.4.3
+│ redis-1                  | 1:M 05 May 2025 00:34:41.488 * RDB age 262 seconds
+│ redis-1                  | 1:M 05 May 2025 00:34:41.488 * RDB memory usage when created 0.93 Mb
+│ redis-1                  | 1:M 05 May 2025 00:34:41.488 * Done loading RDB, keys loaded: 0, key
+│ s expired: 0.
+│ redis-1                  | 1:M 05 May 2025 00:34:41.488 * DB loaded from disk: 0.000 seconds
+│ redis-1                  | 1:M 05 May 2025 00:34:41.488 * Ready to accept connections tcp
+│ mysql-1                  | 2025-05-05 00:34:41+00:00 [Note] [Entrypoint]: Switching to dedicate
+│ d user 'mysql'
+│ mysql-1                  | 2025-05-05 00:34:41+00:00 [Note] [Entrypoint]: Entrypoint script for
+│  MySQL Server 8.2.0-1.el8 started.
+│ mysql-1                  | '/var/lib/mysql/mysql.sock' -> '/var/run/mysqld/mysqld.sock'
+│ mysql-1                  | 2025-05-05T00:34:41.838718Z 0 [System] [MY-015015] [Server] MySQL Se
+│ rver - start.
+│ mysql-1                  | 2025-05-05T00:34:42.038109Z 0 [Warning] [MY-011068] [Server] The syn
+│ tax '--skip-host-cache' is deprecated and will be removed in a future release. Please use SET G
+│ LOBAL host_cache_size=0 instead.
+│ mysql-1                  | 2025-05-05T00:34:42.041732Z 0 [System] [MY-010116] [Server] /usr/sbi
+│ n/mysqld (mysqld 8.2.0) starting as process 1
+│ mysql-1                  | 2025-05-05T00:34:42.050245Z 1 [System] [MY-013576] [InnoDB] InnoDB i
+│ nitialization has started.
+│ mysql-1                  | 2025-05-05T00:34:42.171667Z 1 [System] [MY-013577] [InnoDB] InnoDB i
+│ nitialization has ended.
+│ mysql-1                  | 2025-05-05T00:34:42.338086Z 0 [Warning] [MY-010068] [Server] CA cert
+│ ificate ca.pem is self signed.
+│ mysql-1                  | 2025-05-05T00:34:42.338107Z 0 [System] [MY-013602] [Server] Channel 
+│ mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+│ mysql-1                  | 2025-05-05T00:34:42.341782Z 0 [Warning] [MY-011810] [Server] Insecur
+│ e configuration for --pid-file: Location '/var/run/mysqld' in the path is accessible to all OS 
+│ users. Consider choosing a different directory.
+│ mysql-1                  | 2025-05-05T00:34:42.357406Z 0 [System] [MY-011323] [Server] X Plugin
+│  ready for connections. Bind-address: '::' port: 33060, socket: /var/run/mysqld/mysqlx.sock
+│ mysql-1                  | 2025-05-05T00:34:42.357492Z 0 [System] [MY-010931] [Server] /usr/sbi
+│ n/mysqld: ready for connections. Version: '8.2.0'  socket: '/var/run/mysqld/mysqld.sock'  port:
+│  3306  MySQL Community Server - GPL.
+│ serverless-redis-http-1  | Using port 80
+│ serverless-redis-http-1  | Token resolver started
+│ serverless-redis-http-1  | Loaded config from env. 1 entries.
+│ 
+│ 
+│ v View in Docker Desktop   o View Config   w Enable Watch
+└────>
+┌ @kdx/trpc-cli#dev > cache bypass, force executing bb254f541c321b74 
+│ 
+│ > @kdx/trpc-cli@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/trpc-cli
+│ > tsup --watch
+│ 
+│ CLI Building entry: src/index.ts
+│ CLI Using tsconfig: tsconfig.json
+│ CLI tsup v8.4.0
+│ CLI Using tsup config: /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/trpc-cli/tsup.co
+│ nfig.ts
+│ CLI Running in watch mode
+│ CLI Target: esnext
+│ CLI Cleaning output folder
+│ ESM Build start
+│ ESM dist/html-WBBCPYKD.js       178.54 KB
+│ ESM dist/postcss-NGKOGWXV.js    203.12 KB
+│ ESM dist/angular-IKNJ7IWU.js    106.26 KB
+│ ESM dist/acorn-WV64KU6X.js      178.43 KB
+│ ESM dist/babel-4G2RSW3H.js      389.62 KB
+│ ESM dist/glimmer-AEEGPG3G.js    166.88 KB
+│ ESM dist/graphql-IW7AVT3E.js    53.42 KB
+│ ESM dist/estree-PZBWD2NM.js     242.34 KB
+│ ESM dist/chunk-MLKGABMK.js      191.00 B
+│ ESM dist/index.js               783.04 KB
+│ ESM dist/typescript-VRBRFJPX.js 1007.09 KB
+│ ESM dist/markdown-AWMUK6WT.js   188.29 KB
+│ ESM dist/flow-BJ4372S7.js       1.08 MB
+│ ESM dist/yaml-C52AUJF3.js       162.84 KB
+│ ESM dist/meriyah-PLJT7SLG.js    165.75 KB
+│ ESM ⚡️ Build success in 260ms
+│ CLI Watching for changes in "."
+│ CLI Ignoring changes in "**/{.git,node_modules}/**" | "dist"
+│ Hello! Let's create your new trpc endpoint
+│ │
+│ ◆  Which router should your new endpoint be added to?
+│ │  ● app
+│ │  ○ app/calendar
+│ │  ○ app/kodixCare
+│ │  ○ app/kodixCare/careTask
+│ │  ○ app/todo
+│ │  ○ auth
+│ │  ○ team
+│ │  ○ team/appRole
+│ │  ○ team/invitation
+│ │  ○ user
+│ │  ○ user/notifications
+│ │  ○ (create new)
+│ └
+└────>
+┌ @kdx/care-expo#dev > cache bypass, force executing 3f8961d34a23de32 
+│ 
+│ > @kdx/care-expo@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/apps/care-expo
+│ > expo start
+│ 
+│ Starting project at /Users/mahadevadas/Documents/Kodix/kodix-turbo/apps/care-expo
+│ Using src/app as the root directory for Expo Router.
+│ Starting Metro Bundler
+│ ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+│ █ ▄▄▄▄▄ █████ ███ █▄██▄████ ▄▄▄▄▄ █
+│ █ █   █ █▀ ▀█▄▀ ▄█▀ ▄█ █ ▀█ █   █ █
+│ █ █▄▄▄█ █▄▄▄▄ ▀▄██▄█▄ █▀▄▀█ █▄▄▄█ █
+│ █▄▄▄▄▄▄▄█▄█ █ █▄▀ █▄█ █ █▄█▄▄▄▄▄▄▄█
+│ █ ▄▀▀▀ ▄ ▀ ▀ ▀ ▀▄█ ▀▀▄█  ▄███ ▄▀███
+│ █ █ █▀▄▄  ▀▄█▀▄▄ ██ ▀ ▄ ██  ▀  ▀ ▀█
+│ █  ▀▄▀▄▄█▄▄█▄▄█  ███▀█▀█ ▄█ ▄█▄▀▄▀█
+│ █ ▀██▀▀▄▀█▀▀▀▀██▄▄█▀▀▄█ ▀▄ ▀▄▄  █▀█
+│ █  ▀ ▀▀▄█ ▄▄▀▀▄▀ █▄█ ██ ▀█ ▀█▄▄▀▀▀█
+│ █▄ █▀█▄▄█▀▄█▄███  ▄▀▄ ▄█▄█▄█▀▀ ▀█▄█
+│ █ ▀▀ ▀▄▄█▀▄▀▀  █▄█▄█▀▄▀▀▀▄ █  ▀▀▀▄█
+│ █ █▄ ▀ ▄▄  ▄█▄██ ██ ▀▀▄ █▄██▄█▄  ██
+│ █▄▄▄▄█▄▄▄▀▄▀ ▀▀▄ ██ ▀ ██▄ ▄▄▄  ██ █
+│ █ ▄▄▄▄▄ █ ▀▀▀ ▄ ▄▄███▄██  █▄█    ▀█
+│ █ █   █ ██ █▀▀▄▀ █▄▄▀▀▀▄▀  ▄  ▀▀▄▄█
+│ █ █▄▄▄█ █▀▀▄ ▄█ ▄██▄▄█▄███ ▀█▄▀ █▄█
+│ █▄▄▄▄▄▄▄█▄▄▄▄▄▄█▄███▄██▄█▄▄▄▄▄▄█▄██
+│ 
+│ › Metro waiting on exp+care-expo://expo-development-client/?url=http%3A%2F%2F192.168.3.24%3A808
+│ 1
+│ › Scan the QR code above to open the project in a development build. Learn more:
+│ https://expo.fyi/start
+│ 
+│ › Web is waiting on http://localhost:8081
+│ 
+│ › Using development build
+│ › Press s │ switch to Expo Go
+│ 
+│ › Press a │ open Android
+│ › Press i │ open iOS simulator
+│ › Press w │ open web
+│ 
+│ › Press j │ open debugger
+│ › Press r │ reload app
+│ › Press m │ toggle menu
+│ › Press o │ open project code in your editor
+│ 
+│ › Press ? │ show all commands
+│ 
+│ Logs for your project will appear below. Press Ctrl+C to exit.
+└────>
+ ERROR  run failed: command  exited (1)

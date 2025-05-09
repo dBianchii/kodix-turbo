@@ -3,7 +3,13 @@ import type {
   TableConfig,
 } from "drizzle-orm/mysql-core";
 
-import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
+import type { KodixAppId } from "@kdx/shared";
+import {
+  agentAppId,
+  calendarAppId,
+  kodixCareAppId,
+  todoAppId,
+} from "@kdx/shared";
 
 import * as calendar from "./schema/apps/calendar";
 import * as kodixCare from "./schema/apps/kodixCare";
@@ -16,8 +22,12 @@ const withoutRelationsAndZodSchemas = <T>(obj: Record<string, T>) =>
     ),
   ) as Record<string, MySqlTableWithColumns<TableConfig>>;
 
-export const appIdToSchemas = {
+export const appIdToSchemas: Record<
+  KodixAppId,
+  Record<string, MySqlTableWithColumns<TableConfig>>
+> = {
   [kodixCareAppId]: withoutRelationsAndZodSchemas(kodixCare),
   [todoAppId]: withoutRelationsAndZodSchemas(todos),
   [calendarAppId]: withoutRelationsAndZodSchemas(calendar),
+  [agentAppId]: withoutRelationsAndZodSchemas({}),
 };
