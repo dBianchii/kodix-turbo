@@ -8,7 +8,7 @@ import { H1 } from "@kdx/ui/typography";
 import { IconKodixApp } from "~/app/[locale]/_components/app/kodix-icon";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
-import { ChatWindow } from "./_components/chat-window";
+import AgentLayout from "./_components/agent-layout";
 
 export default async function AgentPage() {
   const appId = agentAppId as unknown as KodixAppId;
@@ -23,7 +23,7 @@ export default async function AgentPage() {
           <H1>{t("Agent")}</H1>
         </div>
         <Separator className="my-4" />
-        <ChatWindow />
+        <AgentLayout />
       </main>
     </MaxWidthWrapper>
   );
