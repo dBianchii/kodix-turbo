@@ -55,8 +55,8 @@ export function ChatWindow() {
         let errorMessage = "Erro na resposta da API";
         try {
           const errorData = (await response.json()) as { error?: string };
-          errorMessage = errorData.error || `Erro ${response.status}`;
-        } catch (e) {
+          errorMessage = errorData.error ?? `Erro ${response.status}`;
+        } catch {
           errorMessage = `Erro ${response.status}`;
         }
         throw new Error(errorMessage);
@@ -100,15 +100,16 @@ export function ChatWindow() {
       if (!receivedText) {
         console.warn("⚠️ Nenhum texto foi recebido no stream");
       }
-    } catch (error: any) {
-      console.error("🔴 Erro ao enviar mensagem:", error);
-      setError(`Erro: ${error.message}`);
+    } catch (error) {
+      const err = error instanceof Error ? error : new Error(String(error));
+      console.error("🔴 Erro ao enviar mensagem:", err);
+      setError(`Erro: ${err.message}`);
       setMessages((prev) => {
         // Remove a mensagem do assistente vazia
         const withoutEmptyAgent = prev.slice(0, -1);
         const errorMessage: ChatMessage = {
           role: "agent",
-          content: `Ocorreu um erro: ${error.message}. Por favor, tente novamente.`,
+          content: `Ocorreu um erro: ${err.message}. Por favor, tente novamente.`,
         };
         return [...withoutEmptyAgent, errorMessage];
       });
