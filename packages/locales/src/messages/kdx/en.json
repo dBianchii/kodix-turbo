@@ -84,6 +84,10 @@
     },
     "cupom": {
       "Cupom": "Cupom"
+    },
+    "agent": {
+      "appDescription": "Agent Chat is an AI chat app",
+      "welcome-agent": "Welcome to the Kodix Agent"
     }
   },
   "Title": "Title",
@@ -452,6 +456,7 @@
     "Email already registered": "Email already registered"
   },
   "Calendar": "Calendar",
+  "Agent": "Agent",
   "Kodix Care": "Kodix Care",
   "Todo": "Todo",
   "You cannot unlock tasks that are scheduled for after tomorrow end of day": "You cannot unlock tasks that are scheduled for after tomorrow end of day",
