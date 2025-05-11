@@ -54,9 +54,9 @@ export function ChatWindow() {
       if (!response.ok) {
         let errorMessage = "Erro na resposta da API";
         try {
-          const errorData = (await response.json()) as { error?: string };
-          errorMessage = errorData.error ?? `Erro ${response.status}`;
-        } catch {
+          const errorData = await response.json();
+          errorMessage = errorData.error || `Erro ${response.status}`;
+        } catch (e) {
           errorMessage = `Erro ${response.status}`;
         }
         throw new Error(errorMessage);
@@ -100,16 +100,15 @@ export function ChatWindow() {
       if (!receivedText) {
         console.warn("⚠️ Nenhum texto foi recebido no stream");
       }
-    } catch (error) {
-      const err = error instanceof Error ? error : new Error(String(error));
-      console.error("🔴 Erro ao enviar mensagem:", err);
-      setError(`Erro: ${err.message}`);
+    } catch (error: any) {
+      console.error("🔴 Erro ao enviar mensagem:", error);
+      setError(`Erro: ${error.message}`);
       setMessages((prev) => {
         // Remove a mensagem do assistente vazia
         const withoutEmptyAgent = prev.slice(0, -1);
         const errorMessage: ChatMessage = {
           role: "agent",
-          content: `Ocorreu um erro: ${err.message}. Por favor, tente novamente.`,
+          content: `Ocorreu um erro: ${error.message}. Por favor, tente novamente.`,
         };
         return [...withoutEmptyAgent, errorMessage];
       });
@@ -120,29 +119,27 @@ export function ChatWindow() {
   }
 
   return (
-    <div className="absolute inset-0 flex flex-col bg-[#121212]">
-      {/* Container de mensagens com scroll e espaço extra na parte inferior para o input flutuante */}
-      <div className="flex-1 overflow-y-auto">
-        <div className="px-4 py-4 pb-32">
-          {messages.map((msg, idx) => (
-            <Message key={idx} role={msg.role} content={msg.content} />
-          ))}
-          {isLoading && (
-            <div className="flex justify-center">
-              <div className="text-sm text-gray-400">Digitando...</div>
-            </div>
-          )}
-          {error && (
-            <div className="flex justify-center">
-              <div className="text-sm text-red-500">{error}</div>
-            </div>
-          )}
-          <div ref={bottomRef} />
-        </div>
+    <div className="flex h-full flex-col bg-[#121212]">
+      {/* Área de mensagens com espaço no fim para o input "flutuar" */}
+      <div className="flex-1 space-y-3 overflow-y-auto px-4 pt-6 pb-32">
+        {messages.map((msg, idx) => (
+          <Message key={idx} role={msg.role} content={msg.content} />
+        ))}
+        {isLoading && (
+          <div className="flex justify-center">
+            <div className="text-sm text-gray-400">Digitando...</div>
+          </div>
+        )}
+        {error && (
+          <div className="flex justify-center">
+            <div className="text-sm text-red-500">{error}</div>
+          </div>
+        )}
+        <div ref={bottomRef} />
       </div>
 
-      {/* Campo de input flutuante */}
-      <div className="absolute right-0 bottom-6 left-0 px-4">
+      {/* Campo de input "flutuando" com margem no fundo */}
+      <div className="absolute bottom-6 left-0 w-full px-4">
         <div className="mx-auto max-w-3xl rounded-xl border border-gray-700 bg-[#1e1e1e] px-4 py-3 shadow-lg">
           <InputBox onSend={sendMessage} disabled={isLoading} />
         </div>

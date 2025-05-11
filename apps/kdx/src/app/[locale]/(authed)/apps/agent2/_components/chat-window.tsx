@@ -120,7 +120,7 @@ export function ChatWindow() {
   }
 
   return (
-    <div className="relative flex h-[calc(100vh-180px)] flex-col bg-[#121212]">
+    <div className="absolute inset-0 flex flex-col bg-[#121212]">
       {/* Container de mensagens com scroll e espaço extra na parte inferior para o input flutuante */}
       <div className="flex-1 overflow-y-auto">
         <div className="px-4 py-4 pb-32">
