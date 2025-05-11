@@ -86,7 +86,8 @@
       "Cupom": "Cupom"
     },
     "agent": {
-      "appDescription": "Agent Chat is an AI chat app"
+      "appDescription": "Agent Chat is an AI chat app",
+      "welcome-agent": "Welcome to the Kodix Agent"
     }
   },
   "Title": "Title",

@@ -86,7 +86,8 @@
       "Cupom": "Cupom"
     },
     "agent": {
-      "appDescription": "Agent Chat é um app de chat com IA"
+      "appDescription": "Agent Chat é um app de chat com IA",
+      "welcome-agent": "Bem-vindo ao Agente Kodix"
     }
   },
   "Updating": "Atualizando",

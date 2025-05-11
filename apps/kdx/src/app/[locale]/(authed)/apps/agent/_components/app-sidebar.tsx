@@ -1,16 +1,19 @@
 import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
+import { useTranslations } from "next-intl";
 
+import { agentAppId } from "@kdx/shared";
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from "@kdx/ui/sidebar";
+
+import { IconKodixApp } from "~/app/[locale]/_components/app/kodix-icon";
 
 // Menu items.
 const items = [
@@ -43,6 +46,7 @@ const items = [
 
 export function AppSidebar() {
   const { isMobile } = useSidebar();
+  const t = useTranslations();
   return (
     <Sidebar
       collapsible={isMobile ? "offcanvas" : "none"}
@@ -50,9 +54,12 @@ export function AppSidebar() {
     >
       <SidebarContent className="h-full">
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
+              <div className="flex items-end gap-2 py-2 font-semibold">
+                <IconKodixApp appId={agentAppId} renderText={false} size={35} />
+                <span className="text-lg">{t("Agent")}</span>
+              </div>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
