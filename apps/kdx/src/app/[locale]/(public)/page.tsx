@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { LuChevronRight } from "react-icons/lu";
 
+import { getBaseUrl } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { buttonVariants } from "@kdx/ui/button";
 import { RadialGradient } from "@kdx/ui/magic-ui/radial-gradient";
@@ -22,10 +23,13 @@ export default async function HomePage({
 
   const t = await getTranslations();
 
+  const url = getBaseUrl();
+
   return (
     <>
       <StaticHeader />
       <main className="flex-1">
+        The server url is {url}
         <section id="hero">
           <RadialGradient
             origin="top"
