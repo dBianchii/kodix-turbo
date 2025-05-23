@@ -2,6 +2,7 @@ import { reset } from "drizzle-seed";
 import ora from "ora";
 
 import {
+  agentAppId,
   calendarAppId,
   KDX_PRODUCTION_URL,
   kdxPartnerId,
@@ -34,6 +35,10 @@ export const _apps: (typeof apps.$inferInsert)[] = [
   },
   {
     id: kodixCareAppId,
+    devPartnerId: kdxPartnerId,
+  },
+  {
+    id: agentAppId,
     devPartnerId: kdxPartnerId,
   },
 ];
@@ -92,3 +97,17 @@ main()
     console.error(e);
     process.exit(1);
   });
+
+export const appIdToPathname = {
+  [kodixCareAppId]: "kodixCare",
+  [calendarAppId]: "calendar",
+  [todoAppId]: "todo",
+  [agentAppId]: "agent",
+} as const;
+
+export const appPathnameToAppId = {
+  kodixCare: kodixCareAppId,
+  calendar: calendarAppId,
+  todo: todoAppId,
+  agent: agentAppId,
+} as const;

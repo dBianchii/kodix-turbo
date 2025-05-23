@@ -2,6 +2,7 @@
   "Kodix Care": "Kodix Care",
   "Calendar": "Calendar",
   "Todo": "Todo",
+  "Agent": "Agent",
   "api": {
     "appActivityLogs": {
       "inserted at": "inserted at",
