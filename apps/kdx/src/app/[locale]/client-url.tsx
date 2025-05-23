@@ -5,7 +5,7 @@ import { Button } from "@kdx/ui/button";
 
 export const ClientUrl = () => {
   const handleTick = () => {
-    console.log(getBaseUrl);
+    console.log(getBaseUrl());
   };
 
   return (
