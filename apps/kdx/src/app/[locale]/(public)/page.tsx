@@ -10,6 +10,7 @@ import { Footer } from "../_components/footer";
 import { StaticHeader } from "../_components/header/static-header";
 import { HeroBento } from "../_components/hero-bento";
 import { HeroLamp } from "../_components/hero-lamp";
+import { ClientUrl } from "../client-url";
 
 export const dynamic = "error"; //? If any dynamic functions are used, next.js will throw an error if the page is not generated statically
 
@@ -30,6 +31,7 @@ export default async function HomePage({
       <StaticHeader />
       <main className="flex-1">
         The server url is {url}
+        <ClientUrl />
         <section id="hero">
           <RadialGradient
             origin="top"
