@@ -3,25 +3,13 @@ import { z } from "zod";
 /**
  * @description Base URL for the current environment.
  */
-// export const getBaseUrl = () => {
-//   if (typeof window !== "undefined") return window.location.origin;
-//   if (process.env.VERCEL_URL) {
-//     if (
-//       process.env.VERCEL_URL.includes(`${KDX_VERCEL_PROJECT_NAME}-`) &&
-//       process.env.VERCEL_ENV === "production"
-//     )
-//       return KDX_PRODUCTION_URL;
-//     return `https://${process.env.VERCEL_URL}`;
-//   }
-//   return `http://localhost:${process.env.PORT ?? 3000}`;
-// };
-
 export const getBaseUrl = () => {
   if (typeof window !== "undefined") {
     return window.location.origin;
   }
   if (process.env.VERCEL_URL) {
-    // If in a vercel environment, use the vercel url
+    if (process.env.VERCEL_ENV === "production")
+      return `https://${process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}`;
     return `https://${process.env.VERCEL_URL}`;
   }
   return `http://localhost:${process.env.PORT ?? 3000}`;
