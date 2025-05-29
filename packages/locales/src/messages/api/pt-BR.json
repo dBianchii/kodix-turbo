@@ -1,5 +1,6 @@
 {
   "Calendar": "Calendário",
+  "Chat": "Chat",
   "Kodix Care": "Kodix Care",
   "Todo": "Todo",
   "api": {
@@ -94,8 +95,7 @@
     "Only admins can edit tasks that were done by others": "Somente administradores podem editar tarefas realizadas por outras pessoas",
     "Only admins can delete shifts created by others": "Somente administradores podem excluir turnos criados por outras pessoas",
     "This shift was not originally created by you ask your team manager to delete it": "Este turno não foi criado originalmente por você, peça ao administrador da equipe para excluí-lo",
-    "updated": "atualizado",
-    "Agent": "Agente"
+    "updated": "atualizado"
   },
   "Updated": "Atualizado"
 }

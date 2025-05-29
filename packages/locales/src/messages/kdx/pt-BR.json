@@ -63,7 +63,13 @@
       }
     },
     "todo": {
-      "appDescription": "Todo é um app de anotações"
+      "appDescription": "Todo é um aplicativo simples para criar e gerenciar sua lista de tarefas",
+      "appName": "Todo"
+    },
+    "chat": {
+      "appDescription": "Chat é um aplicativo versátil de comunicação",
+      "appName": "Chat",
+      "welcome-chat": "Bem-vindo ao Chat Kodix"
     },
     "calendar": {
       "appDescription": "Calendário é um app de calendário",
@@ -84,10 +90,6 @@
     },
     "cupom": {
       "Cupom": "Cupom"
-    },
-    "agent": {
-      "appDescription": "Agent Chat é um app de chat com IA",
-      "welcome-agent": "Bem-vindo ao Agente Kodix"
     }
   },
   "Updating": "Atualizando",

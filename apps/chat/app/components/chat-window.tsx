@@ -41,7 +41,7 @@ export function ChatWindow() {
 
     try {
       console.log("🔄 Fazendo requisição para API...");
-      const response = await fetch("/api/agent", {
+      const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

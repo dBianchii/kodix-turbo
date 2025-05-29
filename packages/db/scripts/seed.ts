@@ -2,8 +2,8 @@ import { reset } from "drizzle-seed";
 import ora from "ora";
 
 import {
-  agentAppId,
   calendarAppId,
+  chatAppId,
   KDX_PRODUCTION_URL,
   kdxPartnerId,
   kodixCareAppId,
@@ -38,7 +38,7 @@ export const _apps: (typeof apps.$inferInsert)[] = [
     devPartnerId: kdxPartnerId,
   },
   {
-    id: agentAppId,
+    id: chatAppId,
     devPartnerId: kdxPartnerId,
   },
 ];
@@ -102,12 +102,12 @@ export const appIdToPathname = {
   [kodixCareAppId]: "kodixCare",
   [calendarAppId]: "calendar",
   [todoAppId]: "todo",
-  [agentAppId]: "agent",
+  [chatAppId]: "chat",
 } as const;
 
 export const appPathnameToAppId = {
   kodixCare: kodixCareAppId,
   calendar: calendarAppId,
   todo: todoAppId,
-  agent: agentAppId,
+  chat: chatAppId,
 } as const;

@@ -1,7 +1,7 @@
 import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import { agentAppId } from "@kdx/shared";
+import { chatAppId } from "@kdx/shared";
 import {
   Sidebar,
   SidebarContent,
@@ -57,8 +57,8 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               <div className="flex items-end gap-2 py-2 font-semibold">
-                <IconKodixApp appId={agentAppId} renderText={false} size={35} />
-                <span className="text-lg">{t("Agent")}</span>
+                <IconKodixApp appId={chatAppId} renderText={false} size={35} />
+                <span className="text-lg">{t("Chat")}</span>
               </div>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>

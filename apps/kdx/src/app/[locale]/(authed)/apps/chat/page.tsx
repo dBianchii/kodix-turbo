@@ -29,11 +29,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div className="mb-4 flex items-center gap-2">
             <SidebarTrigger className="md:hidden" />
             <h1 className="text-xl font-semibold">
-              {t("apps.agent.welcome-agent")}
+              {t("apps.chat.welcome-chat")}
             </h1>
           </div>
 
-          {/* <H1>{t("Agent")}</H1>
+          {/* <H1>{t("Chat")}</H1>
           <Separator className="my-4" />
           */}
 

@@ -39,16 +39,10 @@ export async function POST(req: Request) {
     console.log("✅ [API] OPENAI_API_KEY encontrada, processando...");
 
     try {
-      // Mapeamento de "agent" para "assistant" para compatibilidade com a OpenAI
-      const formattedMessages = messages.map((msg: Message) => ({
-        role: msg.role === "agent" ? "assistant" : msg.role,
-        content: msg.content,
-      }));
-
       // Usando a biblioteca AI.js para criar o stream
       const result = await streamText({
         model: openai("gpt-3.5-turbo"),
-        messages: formattedMessages,
+        messages: messages,
       });
 
       console.log("🟢 [API] Stream criado com sucesso");

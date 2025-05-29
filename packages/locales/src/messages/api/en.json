@@ -1,8 +1,9 @@
 {
-  "Kodix Care": "Kodix Care",
   "Calendar": "Calendar",
+  "Chat": "Chat",
+  "Kodix Care": "Kodix Care",
   "Todo": "Todo",
-  "Agent": "Agent",
+  "Password": "Password",
   "api": {
     "appActivityLogs": {
       "inserted at": "inserted at",

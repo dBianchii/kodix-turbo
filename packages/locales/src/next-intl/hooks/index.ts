@@ -1,7 +1,7 @@
 import type { KodixAppId } from "@kdx/shared";
 import {
-  agentAppId,
   calendarAppId,
+  chatAppId,
   kodixCareAppId,
   todoAppId,
 } from "@kdx/shared";
@@ -19,7 +19,7 @@ export const getAppDescription = (appId: KodixAppId, t: IsomorficT) => {
     [todoAppId]: t("apps.todo.appDescription"),
     [calendarAppId]: t("apps.calendar.appDescription"),
     [kodixCareAppId]: t("apps.kodixCare.appDescription"),
-    [agentAppId]: t("apps.agent.appDescription"),
+    [chatAppId]: t("apps.chat.appDescription"),
   };
   return appIdToDescription[appId];
 };

@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { InputBox } from "./input-box";
 import { Message } from "./message";
 
-type MessageRole = "agent" | "user";
+type MessageRole = "assistant" | "user";
 
 interface ChatMessage {
   role: MessageRole;
@@ -14,7 +14,7 @@ interface ChatMessage {
 
 export function ChatWindow() {
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: "agent", content: "Olá! Como posso te ajudar hoje?" },
+    { role: "assistant", content: "Olá! Como posso te ajudar hoje?" },
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -36,12 +36,12 @@ export function ChatWindow() {
 
     setMessages(updatedMessages);
 
-    const agentMessage: ChatMessage = { role: "agent", content: "" };
-    setMessages((prev) => [...prev, agentMessage]);
+    const assistantMessage: ChatMessage = { role: "assistant", content: "" };
+    setMessages((prev) => [...prev, assistantMessage]);
 
     try {
       console.log("🔄 Fazendo requisição para API...");
-      const response = await fetch("/api/agent", {
+      const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -84,16 +84,16 @@ export function ChatWindow() {
 
         setMessages((prev) => {
           if (prev.length === 0) {
-            return [{ role: "agent", content: chunk }];
+            return [{ role: "assistant", content: chunk }];
           }
 
           const others = prev.slice(0, -1);
           const lastMessage = prev[prev.length - 1];
-          const updatedAgentMessage: ChatMessage = {
-            role: "agent",
+          const updatedAssistantMessage: ChatMessage = {
+            role: "assistant",
             content: lastMessage ? lastMessage.content + chunk : chunk,
           };
-          return [...others, updatedAgentMessage];
+          return [...others, updatedAssistantMessage];
         });
       }
 
@@ -106,12 +106,12 @@ export function ChatWindow() {
       setError(`Erro: ${err.message}`);
       setMessages((prev) => {
         // Remove a mensagem do assistente vazia
-        const withoutEmptyAgent = prev.slice(0, -1);
+        const withoutEmptyAssistant = prev.slice(0, -1);
         const errorMessage: ChatMessage = {
-          role: "agent",
+          role: "assistant",
           content: `Ocorreu um erro: ${err.message}. Por favor, tente novamente.`,
         };
-        return [...withoutEmptyAgent, errorMessage];
+        return [...withoutEmptyAssistant, errorMessage];
       });
     } finally {
       console.log("🔄 Finalizando requisição");

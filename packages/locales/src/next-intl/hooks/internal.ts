@@ -1,6 +1,6 @@
 import {
-  agentAppId,
   calendarAppId,
+  chatAppId,
   kodixCareAppId,
   todoAppId,
 } from "@kdx/shared";
@@ -10,5 +10,5 @@ export const appIdToName = {
   [kodixCareAppId]: "Kodix Care",
   [calendarAppId]: "Calendar",
   [todoAppId]: "Todo",
-  [agentAppId]: "Agent",
+  [chatAppId]: "Chat",
 } as const;

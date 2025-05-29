@@ -5,8 +5,8 @@ import type {
 
 import type { KodixAppId } from "@kdx/shared";
 import {
-  agentAppId,
   calendarAppId,
+  chatAppId,
   kodixCareAppId,
   todoAppId,
 } from "@kdx/shared";
@@ -29,5 +29,5 @@ export const appIdToSchemas: Record<
   [kodixCareAppId]: withoutRelationsAndZodSchemas(kodixCare),
   [todoAppId]: withoutRelationsAndZodSchemas(todos),
   [calendarAppId]: withoutRelationsAndZodSchemas(calendar),
-  [agentAppId]: withoutRelationsAndZodSchemas({}),
+  [chatAppId]: withoutRelationsAndZodSchemas({}),
 };

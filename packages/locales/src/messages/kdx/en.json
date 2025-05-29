@@ -63,7 +63,8 @@
       }
     },
     "todo": {
-      "appDescription": "Todo is a note taking app"
+      "appDescription": "Todo is a simple app to create and manage your to-do list",
+      "appName": "Todo"
     },
     "calendar": {
       "appDescription": "Calendar is a calendar app",
@@ -85,9 +86,10 @@
     "cupom": {
       "Cupom": "Cupom"
     },
-    "agent": {
-      "appDescription": "Agent Chat is an AI chat app",
-      "welcome-agent": "Welcome to the Kodix Agent"
+    "chat": {
+      "appDescription": "Chat is a versatile communication app",
+      "appName": "Chat",
+      "welcome-chat": "Welcome to Kodix Chat"
     }
   },
   "Title": "Title",
