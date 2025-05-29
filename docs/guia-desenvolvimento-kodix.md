@@ -98,48 +98,16 @@ Mantenha uma estrutura de arquivos consistente dentro dos diretórios:
 
 ### Adicionando Novos Modelos de Dados
 
-1. **Defina o schema**:
+> **📚 Para um guia completo sobre banco de dados, consulte [banco-de-dados-kodix.md](./banco-de-dados-kodix.md)**
 
-   ```typescript
-   // Em packages/db/src/schema/apps/seuRecurso.ts
-   import { mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core";
+Resumo rápido:
 
-   import { createId } from "../utils";
+1. **Defina o schema** em `packages/db/src/schema/apps/seuRecurso.ts`
+2. **Exporte no index** em `packages/db/src/schema/apps/index.ts`
+3. **Crie repositórios** em `packages/db/src/repositories/seuRecurso.ts`
+4. **Aplique as alterações**: `pnpm db:push`
 
-   export const seuRecurso = mysqlTable("seuRecurso", {
-     id: varchar("id", { length: 30 }).primaryKey().$defaultFn(createId),
-     nome: varchar("nome", { length: 255 }).notNull(),
-     createdAt: timestamp("createdAt").defaultNow().notNull(),
-     updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-   });
-   ```
-
-2. **Adicione ao index.ts para exportação**:
-
-   ```typescript
-   // Em packages/db/src/schema/apps/index.ts
-   export * from "./seuRecurso";
-   ```
-
-3. **Crie repositórios para operações comuns**:
-
-   ```typescript
-   // Em packages/db/src/repositories/seuRecurso.ts
-   import { db } from "../client";
-   import { seuRecurso } from "../schema/apps/seuRecurso";
-
-   export const SeuRecursoRepository = {
-     create: async (data) => {
-       return db.insert(seuRecurso).values(data).execute();
-     },
-     // Adicione outros métodos...
-   };
-   ```
-
-4. **Aplique as alterações**:
-   ```bash
-   pnpm db:push
-   ```
+Para informações detalhadas sobre convenções, tipos de campos, relações e boas práticas, consulte o [Guia de Banco de Dados](./banco-de-dados-kodix.md).
 
 ### Adicionando Novos Endpoints tRPC
 
@@ -242,6 +210,7 @@ Mantenha uma estrutura de arquivos consistente dentro dos diretórios:
 2. **Carregamento lazy**: Importe componentes grandes com `dynamic` do Next.js
 3. **Otimização de imagens**: Use componentes `Image` do Next.js ou `Image` do Expo
 4. **Cache**: Utilize as configurações de staleTime e cacheTime do TanStack Query
+5. **Banco de Dados**: Consulte o [Guia de Banco de Dados](./banco-de-dados-kodix.md#índices-e-performance) para otimizações
 
 ### Segurança
 
@@ -288,6 +257,8 @@ Mantenha uma estrutura de arquivos consistente dentro dos diretórios:
 
 ### Problemas de Banco de Dados
 
+> **📚 Para troubleshooting completo de banco de dados, consulte [banco-de-dados-kodix.md#troubleshooting](./banco-de-dados-kodix.md#troubleshooting)**
+
 **Problema**: Erro "Column doesn't exist" após atualizar o schema
 **Solução**: Certifique-se de executar `pnpm db:push` para aplicar as alterações
 
@@ -307,6 +278,14 @@ Mantenha uma estrutura de arquivos consistente dentro dos diretórios:
 **Solução**: Certifique-se de executar turbo com a flag `dev` ativa ou reinstale dependências
 
 ## Recursos para Aprendizado
+
+### Documentação Interna
+
+- [Documentação Principal](./documentacao-projeto-kodix.md) - Visão geral do projeto
+- [Guia de Banco de Dados](./banco-de-dados-kodix.md) - Tudo sobre banco de dados
+- [Criando SubApps](./creating-subapps.md) - Como criar novos módulos
+
+### Documentação Externa
 
 - [Documentação do tRPC](https://trpc.io/docs)
 - [Documentação do Next.js](https://nextjs.org/docs)

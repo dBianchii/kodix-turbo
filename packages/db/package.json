@@ -42,6 +42,7 @@
     "push": "pnpm wait-for-db && pnpm with-env drizzle-kit push",
     "studio": "pnpm wait-for-db && pnpm with-env drizzle-kit studio",
     "seed": "pnpm wait-for-db && pnpm with-env tsx ./scripts/seed.ts",
+    "create-schema": "tsx ./scripts/create-schema.ts",
     "generate-nanoid": "pnpm tsx ./scripts/generate-nanoid",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
     "wait-for-db": "while ! nc -z localhost 3306; do sleep 1; done",

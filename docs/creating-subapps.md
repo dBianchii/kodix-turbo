@@ -128,7 +128,9 @@ appIdToUserAppTeamConfigSchema[notes] = notesUserConfigSchema;
 
 ## 6. Banco de Dados e ORM (Drizzle)
 
-### 6.1 Modelagem
+> **📚 Para um guia completo sobre banco de dados, consulte [banco-de-dados-kodix.md](./banco-de-dados-kodix.md)**
+
+### 6.1 Modelagem Rápida
 
 ```ts
 // packages/db/src/schema/apps/notes.ts
@@ -143,46 +145,34 @@ export const notes = mysqlTable("notes", {
 });
 ```
 
-### 6.2 Migration
+### 6.2 Aplicar Schema
 
 ```bash
 pnpm db:push
 ```
 
-### 6.3 Seed (Opcional)
-
-```bash
-pnpm db:seed
-```
-
-### 6.4 CRUD e Repositórios
-
-Para garantir um padrão consistente de operações CRUD em novos SubApps, siga estes passos:
-
-1. Modelagem de schema (já definida em 6.1) e migration (6.2).
-2. Crie um arquivo de repositório em `packages/db/src/repositories/<model>.ts`:
+### 6.3 Criar Repositório
 
 ```ts
+// packages/db/src/repositories/notes.ts
 import { db } from "../client";
-import { <modelTable> } from "../schema/apps/<model>";
+import { notes } from "../schema/apps/notes";
 
-export const <Model>Repository = {
-  create: async (data: Omit<<ModelType>, "id" | "createdAt" | "updatedAt">) =>
-    await db.insert(<modelTable>).values(data).returning().execute(),
-  findById: async (id: string) =>
-    await db.select().from(<modelTable>).where(<modelTable>.id.eq(id)).limit(1).execute(),
-  findAll: async () =>
-    await db.select().from(<modelTable>).execute(),
-  update: async (id: string, data: Partial<<ModelType>>) =>
-    await db.update(<modelTable>).set(data).where(<modelTable>.id.eq(id)).returning().execute(),
-  delete: async (id: string) =>
-    await db.delete(<modelTable>).where(<modelTable>.id.eq(id)).execute(),
+export const NotesRepository = {
+  create: async (data: { content: string }) => {
+    const [created] = await db.insert(notes).values(data).returning();
+    return created;
+  },
+  findAll: async () => {
+    return db.select().from(notes).execute();
+  },
+  // ... outros métodos
 };
 ```
 
-3. Exporte o repositório em `packages/db/src/repositories/index.ts`.
+> **💡 Dica**: Para padrões completos de CRUD, relações, índices e boas práticas, consulte o [Guia de Banco de Dados](./banco-de-dados-kodix.md).
 
-## 6.5 Integração com tRPC e Frontend
+### 6.4 Integração com tRPC
 
 ### 6.5.1 Rotas tRPC
 
@@ -526,5 +516,11 @@ pnpm test
 - [ ] Validar fluxo com pnpm dev:kdx
 - [ ] Confirmar traduções e registro de ID
 - [ ] Verificar migrations e seed
+
+## Recursos Adicionais
+
+- [Documentação Principal](./documentacao-projeto-kodix.md) - Visão geral do projeto
+- [Guia de Banco de Dados](./banco-de-dados-kodix.md) - Padrões e convenções de banco de dados
+- [Guia de Desenvolvimento](./guia-desenvolvimento-kodix.md) - Práticas gerais de desenvolvimento
 
 _Este guia fornece tudo o que é necessário para criar SubApps robustos, tipados e bem integrados ao ecossistema Kodix._

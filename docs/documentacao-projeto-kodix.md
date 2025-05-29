@@ -123,6 +123,27 @@ O monorepo está organizado em diversas seções:
 - ESLint e Prettier para formatação de código
 - Vitest para testes
 
+## Banco de Dados
+
+> **📚 Para um guia completo sobre banco de dados, consulte [banco-de-dados-kodix.md](./banco-de-dados-kodix.md)**
+
+O projeto utiliza **Drizzle ORM** com **MySQL** para gerenciamento de dados. Principais características:
+
+- **ORM Moderno**: Drizzle oferece type safety completo e performance otimizada
+- **Estrutura Organizada**: Schemas separados por domínio (auth, user, team, apps)
+- **Repositórios**: Camada de abstração para operações de banco de dados
+- **Migrações**: Sistema de migrações automático para desenvolvimento e produção
+
+### Comandos Essenciais de Banco de Dados
+
+```bash
+pnpm db:push      # Aplica schemas em desenvolvimento
+pnpm db:studio    # Interface visual para gerenciar dados
+pnpm db:seed      # Popula banco com dados de teste
+pnpm db:generate  # Gera migrações para produção
+pnpm db:migrate   # Aplica migrações em produção
+```
+
 ## Configuração do Ambiente
 
 ### Pré-requisitos
@@ -207,21 +228,24 @@ O projeto utiliza Drizzle ORM com MySQL para gerenciamento de dados. Os principa
 
 ### Usuários e Autenticação
 
-- Usuários com perfis e preferências
-- Sessões para autenticação persistente
-- Credenciais para diferentes provedores de login
+- **user**: Informações básicas do usuário
+- **session**: Sessões de autenticação ativas
+- **authenticator**: Credenciais de diferentes provedores
 
 ### Equipes e Organizações
 
-- Equipes para agrupar usuários
-- Membros de equipe com diferentes níveis de permissão
-- Convites para novas integrações de equipe
+- **team**: Grupos de usuários colaborando
+- **teamMember**: Associação usuário-equipe com roles
+- **teamInvite**: Convites pendentes para equipes
 
 ### Aplicativos
 
-- Módulo KodixCare para gestão de cuidados
-- Sistema de calendário com eventos e lembretes
-- Lista de tarefas (todos)
+- **Módulo KodixCare**: Gestão completa de cuidados de saúde
+- **Calendar**: Sistema de eventos e lembretes
+- **Todo**: Lista de tarefas com categorização
+- **Agent**: Chat com IA integrado
+
+> Para criar novos modelos e trabalhar com banco de dados, consulte o [Guia de Banco de Dados](./banco-de-dados-kodix.md).
 
 ## Estrutura de APIs
 
@@ -276,6 +300,14 @@ Os subapps no Kodix utilizam o sistema de autenticação centralizado, o que sig
    - Execute testes com `pnpm test`
 
 ## Recursos Adicionais
+
+### Documentação Interna
+
+- [Guia de Banco de Dados](./banco-de-dados-kodix.md) - Padrões e convenções para banco de dados
+- [Guia de Desenvolvimento](./guia-desenvolvimento-kodix.md) - Práticas de desenvolvimento
+- [Criando SubApps](./creating-subapps.md) - Como criar novos módulos
+
+### Documentação Externa
 
 - [Turborepo](https://turborepo.org) - Documentação do Turborepo
 - [Next.js](https://nextjs.org/docs) - Documentação do Next.js
