@@ -2,9 +2,29 @@
 
 ## Visão Geral
 
-O Kodix é uma plataforma de aplicativos construída sobre uma arquitetura de monorepo utilizando Turborepo. O projeto foi projetado para ser altamente escalável e de fácil manutenção, seguindo as melhores práticas de desenvolvimento de software moderno.
+O **Kodix** é uma plataforma de gestão de saúde modular e escalável, desenvolvida para facilitar o gerenciamento de consultas médicas, prontuários eletrônicos e relacionamento com pacientes. O projeto utiliza uma arquitetura de monorepo com tecnologias modernas para garantir performance, escalabilidade e facilidade de manutenção.
 
-## Estrutura do Projeto
+## Objetivos do Projeto
+
+### Principais Metas
+
+- **Digitalização de Processos**: Transformar processos manuais em fluxos digitais eficientes
+- **Centralização de Dados**: Unificar informações de pacientes, consultas e histórico médico
+- **Facilidade de Uso**: Interface intuitiva para profissionais de saúde e pacientes
+- **Escalabilidade**: Arquitetura preparada para crescimento e expansão
+- **Segurança**: Proteção de dados sensíveis seguindo melhores práticas
+
+### Benefícios Esperados
+
+- Redução de tempo administrativo
+- Melhoria na qualidade do atendimento
+- Facilidade no acompanhamento de tratamentos
+- Relatórios e análises automatizadas
+- Integração com sistemas externos
+
+## Arquitetura do Sistema
+
+### Estrutura do Monorepo
 
 O monorepo está organizado em diversas seções:
 

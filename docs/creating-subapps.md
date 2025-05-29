@@ -1,3 +1,33 @@
+# Criando Sub-aplicações no Projeto Kodix
+
+## Visão Geral
+
+Este guia detalha como criar novas sub-aplicações (SubApps) no monorepo Kodix. O sistema de SubApps permite expandir a funcionalidade da plataforma de forma modular e organizada.
+
+## Conceito de SubApps
+
+### O que são SubApps?
+
+SubApps são módulos independentes que estendem a funcionalidade principal do Kodix. Cada SubApp possui:
+
+- **Namespace próprio** para isolamento
+- **Rotas dedicadas** no sistema de roteamento
+- **Componentes específicos** para suas funcionalidades
+- **APIs próprias** via tRPC
+- **Schemas de banco** independentes (quando necessário)
+
+### Exemplos de SubApps
+
+- **Kodix Care** - Gestão clínica (já implementado)
+- **Kodix Agent** - IA Assistant
+- **Kodix Analytics** - Relatórios e dashboards
+- **Kodix Billing** - Faturamento e financeiro
+- **Kodix Pharmacy** - Gestão de farmácia
+
+## Estrutura de um SubApp
+
+### Anatomia Básica
+
 # Guia de Criação de SubApps no Kodix
 
 > Um guia completo e reorganizado para desenvolver SubApps no Kodix, cobrindo desde a conceitualização até a entrega com qualidade.

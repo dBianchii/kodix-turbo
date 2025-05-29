@@ -1,6 +1,47 @@
-# Guia de Desenvolvimento Kodix
+# Guia de Desenvolvimento - Projeto Kodix
 
-Este documento serve como guia para desenvolvedores que desejam contribuir com o projeto Kodix, explicando os padrões de desenvolvimento, fluxos de trabalho e melhores práticas.
+## Visão Geral
+
+Este documento serve como guia completo para desenvolvedores que trabalham no projeto Kodix, um sistema de gestão de saúde modular construído com tecnologias modernas.
+
+## Stack Tecnológico
+
+### Frontend
+
+- **React 19** - Biblioteca para construção de interfaces
+- **Next.js 15** - Framework React com App Router
+- **TypeScript** - Tipagem estática
+- **Tailwind CSS** - Framework de CSS utilitário
+- **Shadcn/ui** - Sistema de componentes
+- **Tamagui** - Interface para React Native
+- **React Hook Form** - Gerenciamento de formulários
+- **Framer Motion** - Animações
+- **next-intl** - Internacionalização
+
+### Backend
+
+- **tRPC v11** - APIs type-safe
+- **oslo** - Sistema de autenticação (anteriormente lucia-auth)
+- **Drizzle ORM** - ORM para banco de dados
+- **MySQL** - Banco de dados principal
+- **Vercel AI SDK** - Integração com LLMs
+
+### Mobile
+
+- **Expo** - Framework React Native
+- **React Native** - Desenvolvimento mobile multiplataforma
+- **Expo Router** - Sistema de navegação
+- **Tamagui** - Sistema de componentes para mobile
+
+### Infraestrutura
+
+- **Turbo** - Build system para monorepos
+- **PNPM** - Gerenciador de pacotes
+- **Vercel** - Plataforma de deploy
+- **Docker** - Containerização (desenvolvimento)
+- **GitHub Actions** - CI/CD
+
+## Estrutura do Projeto
 
 ## Primeiros Passos
 
@@ -293,3 +334,534 @@ Para informações detalhadas sobre convenções, tipos de campos, relações e 
 - [Documentação do TanStack Query](https://tanstack.com/query/latest/docs/react/overview)
 - [Documentação do Tailwind CSS](https://tailwindcss.com/docs)
 - [Documentação do Expo](https://docs.expo.dev)
+
+### Estrutura Avançada (Para SubApps Complexos)
+
+Este SubApp forneceria:
+
+- Dashboard de métricas em tempo real
+- Geração de relatórios customizados
+- Visualizações interativas
+- Exportação de dados
+- APIs para integração
+
+---
+
+Para mais detalhes sobre desenvolvimento, consulte o [Guia de Desenvolvimento](./guia-desenvolvimento-kodix.md).
+
+## Passo a Passo: Criando um SubApp
+
+### 1. Estrutura Inicial
+
+```bash
+# Criar diretório do SubApp
+mkdir packages/subapp-exemplo
+cd packages/subapp-exemplo
+
+# Criar estrutura básica
+mkdir -p src/{components,pages,hooks,utils,types}
+touch src/index.ts
+touch package.json
+touch tsconfig.json
+touch README.md
+```
+
+### 2. Configuração do package.json
+
+```json
+{
+  "name": "@kdx/subapp-exemplo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@kdx/ui": "workspace:*",
+    "@kdx/api": "workspace:*",
+    "@kdx/db": "workspace:*",
+    "react": "^18.2.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@kdx/eslint-config": "workspace:*",
+    "@kdx/typescript-config": "workspace:*",
+    "@types/react": "^18.2.45",
+    "typescript": "^5.3.3"
+  }
+}
+```
+
+### 3. Configuração do TypeScript
+
+```json
+{
+  "extends": "@kdx/typescript-config/react.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+### 4. Implementação Base
+
+#### src/index.ts
+
+```typescript
+// Exports principais do SubApp
+export * from "./components";
+export * from "./hooks";
+export * from "./utils";
+export * from "./types";
+
+// Configuração do SubApp
+export const subappConfig = {
+  name: "exemplo",
+  displayName: "Exemplo SubApp",
+  version: "0.1.0",
+  routes: [
+    {
+      path: "/exemplo",
+      component: "ExemploPage",
+    },
+    {
+      path: "/exemplo/settings",
+      component: "ExemploSettingsPage",
+    },
+  ],
+};
+```
+
+#### src/types/index.ts
+
+```typescript
+// Tipos específicos do SubApp
+export interface ExemploConfig {
+  enabled: boolean;
+  settings: {
+    apiKey?: string;
+    endpoint?: string;
+  };
+}
+
+export interface ExemploData {
+  id: string;
+  title: string;
+  description?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+```
+
+#### src/components/index.ts
+
+```typescript
+// Exports dos componentes
+export { ExemploPage } from "./exemplo-page";
+export { ExemploForm } from "./exemplo-form";
+export { ExemploList } from "./exemplo-list";
+```
+
+### 5. Componente Principal
+
+#### src/components/exemplo-page.tsx
+
+```typescript
+'use client';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@kdx/ui/card';
+import { Button } from '@kdx/ui/button';
+import { useExemplo } from '../hooks/use-exemplo';
+
+export function ExemploPage() {
+  const { data, isLoading, refetch } = useExemplo();
+
+  if (isLoading) {
+    return <div>Carregando...</div>;
+  }
+
+  return (
+    <div className="container mx-auto py-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Exemplo SubApp</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p>Esta é a página principal do SubApp Exemplo.</p>
+          <Button onClick={() => refetch()} className="mt-4">
+            Recarregar Dados
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+```
+
+### 6. Custom Hook
+
+#### src/hooks/use-exemplo.ts
+
+```typescript
+import { api } from "@kdx/api/react";
+
+export function useExemplo() {
+  const query = api.exemplo.getAll.useQuery();
+
+  return {
+    data: query.data,
+    isLoading: query.isLoading,
+    error: query.error,
+    refetch: query.refetch,
+  };
+}
+```
+
+## Integração com APIs (tRPC)
+
+### 1. Criar Router tRPC
+
+#### packages/api/src/router/exemplo.ts
+
+```typescript
+import { z } from "zod";
+
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
+
+export const exemploRouter = createTRPCRouter({
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    // Implemente a lógica...
+    return [];
+  }),
+
+  create: publicProcedure
+    .input(
+      z.object({
+        nome: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Implemente a lógica...
+      return { success: true };
+    }),
+});
+```
+
+### 2. Adicionar ao Router Principal
+
+#### packages/api/src/root.ts
+
+```typescript
+import { exemploRouter } from "./router/exemplo";
+
+export const appRouter = createTRPCRouter({
+  // Outros roteadores...
+  exemplo: exemploRouter,
+});
+```
+
+## Schemas de Banco de Dados
+
+### 1. Definir Schema
+
+#### packages/db/src/schema/exemplo.ts
+
+```typescript
+import { relations } from "drizzle-orm";
+import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+
+export const exemplo = pgTable("exemplo", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  title: text("title").notNull(),
+  description: text("description"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const exemploRelations = relations(exemplo, ({ many }) => ({
+  // Definir relações se necessário
+}));
+
+export type Exemplo = typeof exemplo.$inferSelect;
+export type NewExemplo = typeof exemplo.$inferInsert;
+```
+
+### 2. Adicionar ao Schema Principal
+
+#### packages/db/src/schema/index.ts
+
+```typescript
+export * from "./exemplo";
+```
+
+## Roteamento no Frontend
+
+### 1. Registrar Rotas
+
+#### apps/web/app/(dashboard)/exemplo/page.tsx
+
+```typescript
+import { ExemploPage } from '@kdx/subapp-exemplo';
+
+export default function Page() {
+  return <ExemploPage />;
+}
+```
+
+#### apps/web/app/(dashboard)/exemplo/settings/page.tsx
+
+```typescript
+import { ExemploSettingsPage } from '@kdx/subapp-exemplo';
+
+export default function SettingsPage() {
+  return <ExemploSettingsPage />;
+}
+```
+
+### 2. Adicionar ao Menu de Navegação
+
+#### apps/web/src/components/nav/main-nav.tsx
+
+```typescript
+const navigation = [
+  // ... outros itens
+  {
+    name: "Exemplo",
+    href: "/exemplo",
+    icon: ExampleIcon,
+    subItems: [
+      { name: "Dashboard", href: "/exemplo" },
+      { name: "Configurações", href: "/exemplo/settings" },
+    ],
+  },
+];
+```
+
+## Configuração e Permissões
+
+### 1. Sistema de Permissões
+
+#### src/config/permissions.ts
+
+```typescript
+export enum ExemploPermission {
+  READ = "exemplo:read",
+  WRITE = "exemplo:write",
+  DELETE = "exemplo:delete",
+  ADMIN = "exemplo:admin",
+}
+
+export const exemploPermissions = {
+  [ExemploPermission.READ]: "Visualizar exemplo",
+  [ExemploPermission.WRITE]: "Criar/editar exemplo",
+  [ExemploPermission.DELETE]: "Excluir exemplo",
+  [ExemploPermission.ADMIN]: "Administrar exemplo",
+};
+```
+
+### 2. Middleware de Proteção
+
+#### src/middleware/exemplo-auth.ts
+
+```typescript
+import { protectedProcedure } from "@kdx/api";
+
+import { ExemploPermission } from "../config/permissions";
+
+export const exemploProtectedProcedure = protectedProcedure.use(
+  async ({ ctx, next }) => {
+    if (!ctx.session?.user) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Não autorizado",
+      });
+    }
+
+    // Verificar permissões específicas
+    const hasPermission = await checkUserPermission(
+      ctx.session.user.id,
+      ExemploPermission.READ,
+    );
+
+    if (!hasPermission) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Sem permissão para acessar este recurso",
+      });
+    }
+
+    return next({ ctx });
+  },
+);
+```
+
+## Testes
+
+### 1. Testes de Componentes
+
+#### src/components/**tests**/exemplo-page.test.tsx
+
+```typescript
+import { render, screen } from '@testing-library/react';
+import { ExemploPage } from '../exemplo-page';
+
+// Mock do hook
+jest.mock('../hooks/use-exemplo', () => ({
+  useExemplo: () => ({
+    data: [],
+    isLoading: false,
+    error: null,
+    refetch: jest.fn(),
+  }),
+}));
+
+describe('ExemploPage', () => {
+  it('should render correctly', () => {
+    render(<ExemploPage />);
+
+    expect(screen.getByText('Exemplo SubApp')).toBeInTheDocument();
+    expect(screen.getByText('Recarregar Dados')).toBeInTheDocument();
+  });
+});
+```
+
+### 2. Testes de API
+
+#### src/api/**tests**/exemplo.test.ts
+
+```typescript
+import { createTRPCMsw } from "msw-trpc";
+
+import { appRouter } from "@kdx/api";
+
+const trpcMsw = createTRPCMsw(appRouter);
+
+describe("Exemplo API", () => {
+  it("should return empty array initially", async () => {
+    const caller = appRouter.createCaller({
+      session: null,
+      db: mockDb,
+    });
+
+    const result = await caller.exemplo.getAll();
+    expect(result).toEqual([]);
+  });
+});
+```
+
+## Deploy e CI/CD
+
+### 1. Adicionar ao turbo.json
+
+```json
+{
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}
+```
+
+### 2. Incluir no Build Pipeline
+
+#### .github/workflows/ci.yml
+
+```yaml
+- name: Build SubApps
+  run: pnpm build --filter="@kdx/subapp-*"
+
+- name: Test SubApps
+  run: pnpm test --filter="@kdx/subapp-*"
+```
+
+## Melhores Práticas
+
+### 1. Convenções de Nomenclatura
+
+- **Packages**: `@kdx/subapp-{nome}`
+- **Componentes**: `{Nome}Page`, `{Nome}Form`, etc.
+- **Hooks**: `use{Nome}`, `use{Nome}Api`
+- **Types**: `{Nome}Config`, `{Nome}Data`
+
+### 2. Estrutura de Arquivos
+
+- Mantenha arquivos pequenos (< 200 linhas)
+- Agrupe por funcionalidade, não por tipo
+- Use barrel exports (`index.ts`)
+- Documente APIs públicas
+
+### 3. Performance
+
+- Lazy load componentes pesados
+- Use React.memo quando apropriado
+- Otimize queries do banco
+- Implemente cache adequado
+
+### 4. Segurança
+
+- Valide todas as entradas
+- Implemente permissões granulares
+- Use middleware de autenticação
+- Sanitize dados sensíveis
+
+## Exemplo Completo: SubApp Analytics
+
+Para um exemplo prático e completo, vamos criar um SubApp de Analytics:
+
+### Estrutura Final
+
+```
+packages/subapp-analytics/
+├── src/
+│   ├── components/
+│   │   ├── dashboard/
+│   │   │   ├── analytics-dashboard.tsx
+│   │   │   ├── metrics-card.tsx
+│   │   │   └── charts/
+│   │   ├── reports/
+│   │   │   ├── report-generator.tsx
+│   │   │   └── report-viewer.tsx
+│   │   └── index.ts
+│   ├── hooks/
+│   │   ├── use-analytics.ts
+│   │   ├── use-metrics.ts
+│   │   └── index.ts
+│   ├── types/
+│   │   ├── analytics.ts
+│   │   └── index.ts
+│   └── index.ts
+├── package.json
+├── tsconfig.json
+└── README.md
+```
+
+Este SubApp forneceria:
+
+- Dashboard de métricas em tempo real
+- Geração de relatórios customizados
+- Visualizações interativas
+- Exportação de dados
+- APIs para integração
+
+---
+
+Para mais detalhes sobre desenvolvimento, consulte o [Guia de Desenvolvimento](./guia-desenvolvimento-kodix.md).

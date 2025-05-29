@@ -1,356 +1,476 @@
 # Funcionalidades do Kodix Care
 
-O Kodix Care é um aplicativo móvel desenvolvido com React Native e Expo, focado na gestão de cuidados para profissionais de saúde e pacientes. Este documento detalha as principais funcionalidades e integrações do sistema.
-
 ## Visão Geral
 
-O aplicativo Kodix Care foi criado para facilitar a comunicação entre profissionais de saúde e pacientes, permitindo agendamento de consultas, monitoramento de pacientes, registro de medicamentos e acompanhamento de tratamentos. A aplicação se integra com o backend principal através de APIs tRPC tipadas.
+O **Kodix Care** é o módulo principal de gestão clínica da plataforma Kodix, focado no gerenciamento completo do ciclo de atendimento ao paciente, desde o cadastro inicial até o acompanhamento pós-consulta.
+
+## Objetivos do Módulo
+
+- **Centralizar** informações de pacientes e profissionais
+- **Digitalizar** o processo de agendamento e consultas
+- **Modernizar** o sistema de prontuários eletrônicos
+- **Automatizar** fluxos administrativos
+- **Facilitar** o acompanhamento de tratamentos
 
 ## Funcionalidades Principais
 
-### Gestão de Pacientes
+### 1. Gestão de Pacientes
 
-- **Cadastro de Pacientes**: Dados pessoais, histórico médico, alergias e medicamentos
-- **Perfil do Paciente**: Visualização centralizada de informações do paciente
-- **Lista de Pacientes**: Visualização rápida com filtros e busca
-- **Histórico de Atendimentos**: Registro completo de todas as interações com o paciente
+#### 1.1 Cadastro de Pacientes
 
-### Agendamento
+**Objetivo**: Permitir o registro completo de novos pacientes no sistema.
 
-- **Calendário Integrado**: Visualização diária, semanal e mensal de compromissos
-- **Agendamento de Consultas**: Marcação de horários com profissionais específicos
-- **Lembretes Automáticos**: Notificações para profissionais e pacientes
-- **Reagendamento e Cancelamento**: Gestão flexível de compromissos
+**Campos Obrigatórios:**
 
-### Monitoramento de Saúde
+- Nome completo
+- Data de nascimento
+- Documento de identificação (CPF/RG)
+- Contato principal (telefone ou email)
 
-- **Registro de Sinais Vitais**: Pressão arterial, temperatura, batimentos cardíacos
-- **Acompanhamento de Medicamentos**: Registro de administração e doses
-- **Evolução do Paciente**: Registro de observações e progressos
-- **Gráficos e Tendências**: Visualização da evolução de parâmetros ao longo do tempo
+**Campos Opcionais:**
 
-### Comunicação
+- Email secundário
+- Telefone secundário
+- Endereço completo
+- Profissão
+- Estado civil
+- Convênio médico
+- Contato de emergência
 
-- **Chat Seguro**: Comunicação direta entre profissionais e pacientes
-- **Compartilhamento de Documentos**: Envio de resultados de exames e receitas
-- **Notificações Personalizadas**: Alertas para medicamentos, consultas e tarefas
-- **Integração com Email**: Envio de resumos e relatórios
+**Funcionalidades:**
 
-### Gestão de Equipes
+- Validação de dados em tempo real
+- Verificação de duplicatas por CPF/email
+- Upload de documentos (RG, CPF, comprovante de residência)
+- Geração automática de número de prontuário
+- Envio de email/SMS de boas-vindas
 
-- **Atribuição de Tarefas**: Distribuição de responsabilidades entre a equipe
-- **Histórico de Atividades**: Registro de todas as ações realizadas
-- **Permissões Personalizadas**: Controle de acesso por função e nível
-- **Colaboração**: Ferramentas para trabalho conjunto em casos complexos
+**Fluxo do Processo:**
 
-## Arquitetura Técnica
-
-### Estrutura da Aplicação
-
-O aplicativo Kodix Care é construído com:
-
-- **Expo SDK**: Framework para desenvolvimento React Native
-- **Expo Router**: Sistema de navegação baseado em arquivo
-- **Tamagui**: Biblioteca de componentes UI para React Native
-- **TanStack Query**: Gerenciamento de estado e cache de dados
-- **tRPC**: Comunicação tipada com o backend
-- **Zustand**: Gerenciamento de estado global
-
-### Integração com Backend
-
-O Kodix Care se comunica com o backend principal através de chamadas tRPC, que garantem segurança e tipagem completa:
-
-```typescript
-// Exemplo de chamada tRPC em um componente
-const { data: pacientes, isLoading } =
-  api.app.kodixCare.pacientes.listar.useQuery();
-const { mutate: registrarSinalVital } =
-  api.app.kodixCare.sinaisVitais.registrar.useMutation();
+```mermaid
+graph TD
+    A[Iniciar cadastro] --> B[Preencher dados básicos]
+    B --> C[Validar informações]
+    C --> D{Dados válidos?}
+    D -->|Não| B
+    D -->|Sim| E[Adicionar informações médicas]
+    E --> F[Configurar contatos]
+    F --> G[Revisar e confirmar]
+    G --> H[Salvar paciente]
+    H --> I[Enviar notificação]
 ```
 
-### Armazenamento Local
+#### 1.2 Busca e Filtros
 
-O aplicativo utiliza diversas estratégias de armazenamento local:
+**Critérios de Busca:**
 
-- **AsyncStorage**: Para dados não sensíveis e configurações
-- **Secure Store**: Para informações que requerem segurança adicional
-- **SQLite**: Para dados que precisam ser consultados offline
-- **Cache do TanStack Query**: Para otimização de desempenho
+- Nome (busca parcial)
+- CPF/documento
+- Telefone
+- Email
+- Número do prontuário
+- Data de nascimento
 
-### Sincronização Offline
+**Filtros Avançados:**
 
-O Kodix Care implementa uma estratégia de funcionamento offline que permite:
+- Faixa etária
+- Gênero
+- Status (ativo/inativo)
+- Data de cadastro
+- Última consulta
+- Convênio
 
-1. **Uso Offline**: Acesso a dados previamente sincronizados
-2. **Fila de Operações**: Armazenamento de ações realizadas offline
-3. **Sincronização Automática**: Envio de alterações quando a conexão é reestabelecida
-4. **Resolução de Conflitos**: Estratégias para resolver inconsistências
+#### 1.3 Perfil do Paciente
 
-## Guia de Implementação
+**Abas do Perfil:**
 
-### Adicionando Novos Registros de Saúde
+- **Dados Pessoais**: Informações básicas e contato
+- **Histórico Médico**: Consultas anteriores e diagnósticos
+- **Prontuários**: Documentos e registros médicos
+- **Agendamentos**: Consultas marcadas e históricas
+- **Financeiro**: Pagamentos e pendências
+- **Documentos**: Arquivos anexados
 
-Para implementar um novo tipo de registro de saúde (ex: glicemia):
+### 2. Sistema de Agendamentos
 
-1. **Banco de Dados**:
+#### 2.1 Criação de Agendamentos
 
-   ```typescript
-   // Em packages/db/src/schema/apps/kodixCare.ts
-   export const registrosGlicemia = mysqlTable("registrosGlicemia", {
-     id: varchar("id", { length: 30 }).primaryKey().$defaultFn(createId),
-     pacienteId: varchar("pacienteId", { length: 30 })
-       .notNull()
-       .references(() => pacientes.id, { onDelete: "cascade" }),
-     valor: int("valor").notNull(),
-     momento: timestamp("momento").defaultNow().notNull(),
-     observacoes: text("observacoes"),
-     registradoPor: varchar("registradoPor", { length: 30 })
-       .notNull()
-       .references(() => users.id),
-     createdAt: timestamp("createdAt").defaultNow().notNull(),
-     updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-   });
-   ```
+**Campos Obrigatórios:**
 
-2. **Validadores**:
+- Paciente
+- Profissional responsável
+- Data e horário
+- Tipo de consulta
+- Duração estimada
 
-   ```typescript
-   // Em packages/validators/src/app/kodixCare.ts
-   export const registroGlicemiaSchema = z.object({
-     pacienteId: z.string(),
-     valor: z.number().min(20).max(600),
-     momento: z.date().optional(),
-     observacoes: z.string().optional(),
-   });
-   ```
+**Tipos de Consulta:**
 
-3. **API tRPC**:
+- Consulta inicial
+- Retorno
+- Emergência
+- Exame
+- Procedimento
+- Telemedicina
 
-   ```typescript
-   // Em packages/api/src/trpc/routers/app/kodixCare.ts
-   export const kodixCareRouter = router({
-     // Outros endpoints...
+**Funcionalidades:**
 
-     registrosGlicemia: router({
-       registrar: protectedProcedure
-         .input(registroGlicemiaSchema)
-         .mutation(async ({ ctx, input }) => {
-           // Implementar lógica de inserção...
-         }),
+- Verificação de disponibilidade automática
+- Detecção de conflitos de horário
+- Sugestão de horários alternativos
+- Bloqueio de horários indisponíveis
+- Configuração de intervalos entre consultas
 
-       listarPorPaciente: protectedProcedure
-         .input(z.object({ pacienteId: z.string() }))
-         .query(async ({ ctx, input }) => {
-           // Implementar lógica de consulta...
-         }),
-     }),
-   });
-   ```
+#### 2.2 Gestão de Agenda
 
-4. **Componente de UI**:
+**Visualizações:**
 
-   ```typescript
-   // Em apps/care-expo/src/components/registros/RegistroGlicemia.tsx
-   import React from "react";
-   import { View, TextInput } from "react-native";
-   import { Button, Text } from "tamagui";
-   import { api } from "../../utils/api";
+- **Dia**: Vista detalhada por profissional
+- **Semana**: Visão geral semanal
+- **Mês**: Calendário mensal
+- **Lista**: Agendamentos em formato de lista
 
-   export function RegistroGlicemia({ pacienteId }) {
-     const [valor, setValor] = React.useState("");
-     const [observacoes, setObservacoes] = React.useState("");
+**Funcionalidades da Agenda:**
 
-     const { mutate, isLoading } = api.app.kodixCare.registrosGlicemia.registrar.useMutation({
-       onSuccess: () => {
-         // Limpar campos e mostrar feedback
-       },
-     });
+- Drag & drop para reagendamento
+- Código de cores por tipo de consulta
+- Notificações de lembretes
+- Bloqueio de horários para férias/folgas
+- Configuração de horários de atendimento
 
-     const handleSubmit = () => {
-       mutate({
-         pacienteId,
-         valor: Number(valor),
-         observacoes,
-       });
-     };
+#### 2.3 Status de Agendamentos
 
-     return (
-       <View>
-         <Text>Valor da Glicemia (mg/dL)</Text>
-         <TextInput
-           value={valor}
-           onChangeText={setValor}
-           keyboardType="numeric"
-         />
+**Status Possíveis:**
 
-         <Text>Observações</Text>
-         <TextInput
-           value={observacoes}
-           onChangeText={setObservacoes}
-           multiline
-         />
+- **Agendado**: Consulta marcada
+- **Confirmado**: Paciente confirmou presença
+- **Em Andamento**: Consulta iniciada
+- **Concluído**: Consulta finalizada
+- **Cancelado**: Cancelado pelo paciente/profissional
+- **Faltou**: Paciente não compareceu
 
-         <Button onPress={handleSubmit} disabled={isLoading}>
-           {isLoading ? "Salvando..." : "Salvar Registro"}
-         </Button>
-       </View>
-     );
-   }
-   ```
+**Transições de Status:**
 
-### Customização de Notificações
-
-O sistema de notificações do Kodix Care é altamente personalizável:
-
-1. **Configuração de Tipos de Notificação**:
-
-   ```typescript
-   // Em packages/db/src/schema/apps/kodixCare.ts
-   export const tiposNotificacaoCare = mysqlTable("tiposNotificacaoCare", {
-     id: varchar("id", { length: 30 }).primaryKey().$defaultFn(createId),
-     nome: varchar("nome", { length: 255 }).notNull(),
-     descricao: text("descricao"),
-     ativo: boolean("ativo").default(true).notNull(),
-   });
-
-   export const preferenciasNotificacaoUsuario = mysqlTable(
-     "preferenciasNotificacaoUsuario",
-     {
-       id: varchar("id", { length: 30 }).primaryKey().$defaultFn(createId),
-       userId: varchar("userId", { length: 30 })
-         .notNull()
-         .references(() => users.id, { onDelete: "cascade" }),
-       tipoNotificacaoId: varchar("tipoNotificacaoId", { length: 30 })
-         .notNull()
-         .references(() => tiposNotificacaoCare.id, { onDelete: "cascade" }),
-       receberEmail: boolean("receberEmail").default(true).notNull(),
-       receberPush: boolean("receberPush").default(true).notNull(),
-       receberSMS: boolean("receberSMS").default(false).notNull(),
-     },
-   );
-   ```
-
-2. **Implementação de Envio**:
-   ```typescript
-   // Em packages/api/src/services/notificacoes.ts
-   export const NotificacaoService = {
-     enviarNotificacao: async ({
-       userId,
-       tipoNotificacaoId,
-       titulo,
-       mensagem,
-       dados,
-     }) => {
-       // Verificar preferências do usuário
-       // Enviar notificações pelos canais habilitados
-     },
-
-     enviarNotificacaoPaciente: async ({
-       pacienteId,
-       tipoNotificacaoId,
-       titulo,
-       mensagem,
-       dados,
-     }) => {
-       // Lógica específica para pacientes
-     },
-   };
-   ```
-
-## Fluxos Principais
-
-### Fluxo de Atendimento
-
-1. **Agendamento**:
-
-   - Paciente ou profissional agenda consulta
-   - Sistema envia notificação de confirmação
-   - Lembretes são programados automaticamente
-
-2. **Check-in**:
-
-   - Paciente confirma presença pelo app ou é registrado pela recepção
-   - Histórico e dados do paciente são disponibilizados ao profissional
-   - Sala de espera virtual é atualizada
-
-3. **Atendimento**:
-
-   - Profissional registra observações e sinais vitais
-   - Prescrições e exames são cadastrados
-   - Próximos passos são definidos
-
-4. **Pós-atendimento**:
-   - Relatório é gerado e enviado ao paciente
-   - Acompanhamento é agendado se necessário
-   - Lembretes para medicamentos são configurados
-
-### Fluxo de Monitoramento
-
-1. **Configuração de Parâmetros**:
-
-   - Profissional define parâmetros a serem monitorados
-   - Frequência e valores de referência são estabelecidos
-   - Alertas são configurados para valores fora da normalidade
-
-2. **Registro de Dados**:
-
-   - Paciente ou cuidador registra medições regularmente
-   - Aplicativo apresenta gráficos de tendência
-   - Feedback imediato sobre valores registrados
-
-3. **Análise Profissional**:
-   - Profissional recebe relatórios periódicos
-   - Intervenções são realizadas quando necessário
-   - Ajustes no tratamento são documentados
-
-## Configurações Avançadas
-
-### Personalização por Tipo de Atendimento
-
-O Kodix Care pode ser configurado para diferentes especialidades médicas ou tipos de atendimento:
-
-```typescript
-// Em packages/db/src/schema/apps/kodixCare.ts
-export const especialidadesMedicas = mysqlTable("especialidadesMedicas", {
-  id: varchar("id", { length: 30 }).primaryKey().$defaultFn(createId),
-  nome: varchar("nome", { length: 255 }).notNull(),
-  camposPersonalizados: json("camposPersonalizados").$type<
-    {
-      nome: string;
-      tipo: "texto" | "numero" | "data" | "selecao";
-      opcoes?: string[];
-      obrigatorio: boolean;
-    }[]
-  >(),
-});
+```mermaid
+stateDiagram-v2
+    [*] --> Agendado
+    Agendado --> Confirmado
+    Agendado --> Cancelado
+    Confirmado --> EmAndamento
+    Confirmado --> Faltou
+    Confirmado --> Cancelado
+    EmAndamento --> Concluído
+    Cancelado --> [*]
+    Faltou --> [*]
+    Concluído --> [*]
 ```
 
-Cada especialidade pode ter formulários e fluxos personalizados, adaptando o aplicativo para diferentes necessidades clínicas.
+### 3. Prontuários Eletrônicos
 
-### Integração com Dispositivos
+#### 3.1 Estrutura do Prontuário
 
-O Kodix Care suporta integração com dispositivos médicos via:
+**Seções Principais:**
 
-1. **Bluetooth**: Para dispositivos próximos
-2. **API de Saúde**: Integração com Apple Health e Google Fit
-3. **Integração com IoT**: Para monitoramento contínuo remoto
+- **Anamnese**: Histórico médico e queixas atuais
+- **Exame Físico**: Resultados da avaliação clínica
+- **Diagnóstico**: Diagnósticos primários e secundários
+- **Prescrição**: Medicamentos e dosagens
+- **Procedimentos**: Procedimentos realizados
+- **Orientações**: Recomendações ao paciente
+- **Anexos**: Documentos e imagens
 
-## Segurança e Privacidade
+#### 3.2 Templates de Prontuário
 
-O Kodix Care segue rigorosos padrões de segurança para proteção de dados médicos:
+**Templates por Especialidade:**
 
-1. **Criptografia**: Dados sensíveis são criptografados em trânsito e em repouso
-2. **Autenticação Multifator**: Para acesso a informações sensíveis
-3. **Registros de Auditoria**: Todas as ações são registradas para fins de auditoria
-4. **Controle de Acesso**: Baseado em funções e contexto clínico
-5. **Anonimização**: Para relatórios e análises estatísticas
+- Clínica Geral
+- Cardiologia
+- Dermatologia
+- Pediatria
+- Ginecologia
+- Ortopedia
+- Psiquiatria
 
-## Próximos Passos e Desenvolvimento
+**Funcionalidades dos Templates:**
 
-### Roadmap de Funcionalidades
+- Campos pré-definidos por especialidade
+- Terminologia médica específica
+- Calculadoras integradas (IMC, superfície corporal)
+- Escalas de avaliação (dor, depressão)
+- Protocolos de atendimento
 
-- **Telemedicina**: Integração de consultas por vídeo
-- **Inteligência Artificial**: Assistentes para diagnóstico e sugestões
-- **Integração com Wearables**: Monitoramento contínuo de parâmetros
-- **Interoperabilidade**: Integração com sistemas hospitalares via HL7/FHIR
-- **Expansão Mobile**: Aplicativo para pacientes separado do aplicativo para profissionais
+#### 3.3 Histórico Médico
+
+**Visualização Cronológica:**
+
+- Timeline de consultas
+- Evolução de diagnósticos
+- Histórico de medicações
+- Resultados de exames
+- Internações e cirurgias
+
+**Funcionalidades:**
+
+- Busca por período
+- Filtros por tipo de registro
+- Exportação para PDF
+- Compartilhamento seguro
+- Assinatura digital
+
+### 4. Sistema de Notificações
+
+#### 4.1 Lembretes de Consulta
+
+**Canais de Notificação:**
+
+- Email
+- SMS
+- WhatsApp (integração futura)
+- Push notification (app mobile)
+
+**Configuração de Lembretes:**
+
+- 24 horas antes
+- 2 horas antes
+- 30 minutos antes
+- Personalização por paciente
+
+#### 4.2 Notificações para Profissionais
+
+**Tipos de Notificação:**
+
+- Novo agendamento
+- Cancelamento de consulta
+- Paciente aguardando
+- Prescrição vencendo
+- Follow-up necessário
+
+### 5. Relatórios e Analytics
+
+#### 5.1 Relatórios Operacionais
+
+**Relatórios Disponíveis:**
+
+- Agendamentos por período
+- Taxa de comparecimento
+- Tempo médio de consulta
+- Produtividade por profissional
+- Pacientes mais atendidos
+
+#### 5.2 Dashboards
+
+**Métricas em Tempo Real:**
+
+- Consultas do dia
+- Pacientes em espera
+- Taxa de ocupação
+- Faturamento diário
+- Alertas pendentes
+
+### 6. Integração com Sistemas Externos
+
+#### 6.1 Sistemas de Convênios
+
+**Funcionalidades:**
+
+- Verificação de elegibilidade
+- Autorização prévia
+- Faturamento automatizado
+- Guias de consulta
+
+#### 6.2 Laboratórios
+
+**Integração com Labs:**
+
+- Solicitação de exames
+- Recebimento de resultados
+- Anexação automática ao prontuário
+- Alertas de resultados críticos
+
+## Fluxos de Trabalho
+
+### Fluxo Completo de Atendimento
+
+```mermaid
+graph TD
+    A[Paciente liga/chega] --> B[Verificar cadastro]
+    B --> C{Já cadastrado?}
+    C -->|Não| D[Cadastrar paciente]
+    C -->|Sim| E[Buscar agenda]
+    D --> E
+    E --> F[Agendar consulta]
+    F --> G[Confirmar agendamento]
+    G --> H[Enviar lembretes]
+    H --> I[Check-in no dia]
+    I --> J[Iniciar consulta]
+    J --> K[Preencher prontuário]
+    K --> L[Prescrever medicamentos]
+    L --> M[Agendar retorno]
+    M --> N[Finalizar atendimento]
+```
+
+### Fluxo de Emergência
+
+```mermaid
+graph TD
+    A[Paciente em emergência] --> B[Triagem rápida]
+    B --> C[Buscar prontuário]
+    C --> D[Atendimento imediato]
+    D --> E[Registro de emergência]
+    E --> F[Prescrição/encaminhamento]
+    F --> G[Follow-up necessário]
+```
+
+## Permissões e Segurança
+
+### Níveis de Acesso
+
+#### Administrador
+
+- Acesso total ao sistema
+- Gerenciamento de usuários
+- Configurações globais
+- Relatórios administrativos
+
+#### Médico
+
+- Acesso a pacientes atribuídos
+- Criação e edição de prontuários
+- Prescrições médicas
+- Agendamento de consultas
+
+#### Enfermeiro
+
+- Visualização de prontuários
+- Registros de enfermagem
+- Triagem de pacientes
+- Administração de medicamentos
+
+#### Recepcionista
+
+- Cadastro de pacientes
+- Gerenciamento de agendas
+- Confirmação de consultas
+- Relatórios básicos
+
+#### Paciente (Portal do Paciente)
+
+- Visualização do próprio prontuário
+- Agendamento online
+- Acesso a resultados de exames
+- Histórico de consultas
+
+### Auditoria
+
+**Logs de Auditoria:**
+
+- Todas as ações são registradas
+- Identificação do usuário
+- Timestamp preciso
+- IP de origem
+- Dados modificados (antes/depois)
+
+## Configurações do Sistema
+
+### Parâmetros Globais
+
+**Configurações de Agendamento:**
+
+- Horário de funcionamento
+- Intervalo entre consultas
+- Duração padrão por tipo
+- Bloqueios automáticos
+- Feriados e fechamentos
+
+**Configurações de Notificação:**
+
+- Templates de email/SMS
+- Horários de envio
+- Frequência de lembretes
+- Canais ativos
+
+### Personalização por Clínica
+
+**Branding:**
+
+- Logo da clínica
+- Cores personalizadas
+- Cabeçalhos de documentos
+- Informações de contato
+
+**Workflow Específico:**
+
+- Campos obrigatórios customizados
+- Templates de prontuário específicos
+- Fluxos de aprovação
+- Integrações particulares
+
+## Integrações e APIs
+
+### APIs Disponíveis
+
+#### Pacientes API
+
+```typescript
+// Endpoints principais
+GET / api / patients; // Listar pacientes
+POST / api / patients; // Criar paciente
+GET / api / patients / { id }; // Buscar paciente
+PUT / api / patients / { id }; // Atualizar paciente
+DELETE / api / patients / { id }; // Excluir paciente
+```
+
+#### Agendamentos API
+
+```typescript
+// Endpoints principais
+GET / api / appointments; // Listar agendamentos
+POST / api / appointments; // Criar agendamento
+PUT / api / appointments / { id }; // Atualizar agendamento
+DELETE / api / appointments / { id }; // Cancelar agendamento
+```
+
+### Webhooks
+
+**Eventos Disponíveis:**
+
+- `patient.created` - Novo paciente cadastrado
+- `appointment.scheduled` - Nova consulta agendada
+- `appointment.cancelled` - Consulta cancelada
+- `appointment.completed` - Consulta finalizada
+- `prescription.created` - Nova prescrição
+
+## Roadmap de Funcionalidades
+
+### Próximas Versões
+
+#### v2.1 - Telemedicina
+
+- [ ] Videochamadas integradas
+- [ ] Prescrição digital
+- [ ] Assinatura eletrônica
+- [ ] Gravação de consultas
+
+#### v2.2 - IA Assistant
+
+- [ ] Sugestões de diagnóstico
+- [ ] Análise de sintomas
+- [ ] Lembretes inteligentes
+- [ ] Detecção de interações medicamentosas
+
+#### v2.3 - Mobile App
+
+- [ ] App para profissionais
+- [ ] App para pacientes
+- [ ] Sincronização offline
+- [ ] Notificações push
+
+#### v3.0 - Expansão
+
+- [ ] Módulo financeiro completo
+- [ ] Integração com laboratórios
+- [ ] Portal do paciente avançado
+- [ ] Analytics predictivos
+
+---
+
+Para implementação técnica, consulte o [Guia de Desenvolvimento](./guia-desenvolvimento-kodix.md) e a [Documentação de Banco de Dados](./banco-de-dados-kodix.md).

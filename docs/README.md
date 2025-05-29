@@ -1,28 +1,37 @@
-# 📚 Documentação Kodix
+# Documentação do Projeto Kodix
 
-Bem-vindo à documentação do projeto Kodix! Este diretório contém toda a documentação técnica necessária para entender, desenvolver e contribuir com o projeto.
+Este diretório contém toda a documentação técnica e funcional do projeto Kodix.
 
-## 📖 Documentação Principal
+## Estrutura da Documentação
 
-### Começando
+### Documentação Técnica
 
-- **[Documentação do Projeto](./documentacao-projeto-kodix.md)** - Visão geral completa do projeto, arquitetura e configuração inicial
-- **[Guia de Desenvolvimento](./guia-desenvolvimento-kodix.md)** - Padrões de código, fluxos de trabalho e melhores práticas
+- **[Guia de Desenvolvimento](./guia-desenvolvimento-kodix.md)** - Configuração do ambiente e práticas de desenvolvimento
+- **[Banco de Dados](./banco-de-dados-kodix.md)** - Esquemas, migrações e estrutura do banco de dados
+- **[Criando Sub-aplicações](./creating-subapps.md)** - Como criar e configurar novas sub-aplicações no monorepo
 
-### Desenvolvimento de Funcionalidades
+### Documentação Funcional
 
-- **[Guia de Banco de Dados](./banco-de-dados-kodix.md)** 🆕 - Guia completo sobre schemas, repositórios, migrações e padrões de banco de dados
-- **[Criando SubApps](./creating-subapps.md)** - Tutorial passo a passo para criar novos módulos/SubApps
-- **[Funcionalidades Kodix Care](./funcionalidades-kodix-care.md)** - Documentação específica do módulo de cuidados de saúde
+- **[Documentação do Projeto](./documentacao-projeto-kodix.md)** - Visão geral do projeto e arquitetura
+- **[Funcionalidades Kodix Care](./funcionalidades-kodix-care.md)** - Especificações das funcionalidades do módulo Care
 
-### Documentação de SubApps
+### Recursos Técnicos
 
-#### Agent (Chat com IA)
+- **[VercelAI LLMs](./VercelAI-llms.txt)** - Referência técnica para integração com LLMs
 
-- **[Visão Geral](./subapp-agent-kodix.md)** - Introdução ao SubApp Agent
-- **[Guia de Desenvolvimento](./subapp-agent-guia-desenvolvimento.md)** - Como desenvolver e expandir o Agent
-- **[Documentação Técnica](./subapp-agent-kodix-documentacao.md)** - Detalhes técnicos de implementação
-- **[Persistência de Conversas](./subapp-agent-kodix-persistencia-conversas.md)** - Como as conversas são armazenadas
+## Como Contribuir
+
+1. Mantenha a documentação atualizada com as mudanças no código
+2. Use markdown consistente e formatação padronizada
+3. Adicione exemplos práticos sempre que possível
+4. Revise a documentação regularmente para garantir precisão
+
+## Convenções
+
+- Nomes de arquivos em kebab-case
+- Títulos em português brasileiro
+- Exemplos de código com sintaxe destacada
+- Links relativos para navegação interna
 
 ## 🚀 Quick Start
 

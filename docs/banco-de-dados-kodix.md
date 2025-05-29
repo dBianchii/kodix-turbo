@@ -1,853 +1,421 @@
-# Guia de Banco de Dados - Kodix
+# Banco de Dados - Projeto Kodix
 
-> Documentação completa sobre padrões, convenções e melhores práticas para trabalhar com banco de dados no projeto Kodix.
+## Visão Geral
 
-## Sumário
+O projeto Kodix utiliza PostgreSQL como banco de dados principal, gerenciado através do Prisma ORM. Esta documentação detalha a estrutura, relacionamentos e práticas recomendadas para o banco de dados.
 
-1. [Visão Geral](#visão-geral)
-2. [Estrutura de Arquivos](#estrutura-de-arquivos)
-3. [Convenções de Nomenclatura](#convenções-de-nomenclatura)
-4. [Criando Novos Schemas](#criando-novos-schemas)
-5. [Tipos de Campos](#tipos-de-campos)
-6. [Relações entre Tabelas](#relações-entre-tabelas)
-7. [Repositórios](#repositórios)
-8. [Migrações](#migrações)
-9. [Seeds](#seeds)
-10. [Índices e Performance](#índices-e-performance)
-11. [Validações](#validações)
-12. [Exemplos Práticos](#exemplos-práticos)
-13. [Comandos Úteis](#comandos-úteis)
-14. [Troubleshooting](#troubleshooting)
+## Configuração
 
----
+### Variáveis de Ambiente
 
-## 1. Visão Geral
+```env
+# Banco de dados
+DATABASE_URL="postgresql://usuario:senha@localhost:5432/kodix_db"
 
-O Kodix utiliza **Drizzle ORM** com **MySQL** como banco de dados principal. Esta escolha oferece:
+# Para desenvolvimento local
+POSTGRES_USER=kodix_user
+POSTGRES_PASSWORD=sua_senha
+POSTGRES_DB=kodix_dev
 
-- **Type Safety**: Tipagem completa do TypeScript
-- **Performance**: Queries otimizadas e sem overhead
-- **Developer Experience**: API intuitiva e migrações automáticas
-- **Flexibilidade**: Suporte para queries complexas quando necessário
-
-### Stack de Banco de Dados
-
-- **ORM**: Drizzle ORM
-- **Database**: MySQL 8.0+
-- **Client**: mysql2
-- **IDs**: nanoid (30 caracteres)
-- **Timestamps**: UTC com `timestamp`
-
----
-
-## 2. Estrutura de Arquivos
-
-```
-packages/db/
-├── src/
-│   ├── client.ts              # Cliente do banco de dados
-│   ├── schema/                # Definições de tabelas
-│   │   ├── index.ts          # Export central
-│   │   ├── auth/             # Tabelas de autenticação
-│   │   ├── team/             # Tabelas de equipes
-│   │   ├── user/             # Tabelas de usuários
-│   │   └── apps/             # Tabelas dos SubApps
-│   │       ├── index.ts
-│   │       ├── kodixCare.ts
-│   │       ├── calendar.ts
-│   │       └── todo.ts
-│   ├── repositories/          # Camada de repositórios
-│   │   ├── index.ts
-│   │   └── [model].ts
-│   └── utils.ts              # Utilitários (createId, etc)
-├── scripts/
-│   ├── seed.ts               # Script de seed
-│   └── migrations/           # Migrações customizadas
-└── drizzle.config.ts         # Configuração do Drizzle
+# Para testes
+DATABASE_URL_TEST="postgresql://usuario:senha@localhost:5432/kodix_test"
 ```
 
----
+### Setup Local com Docker
 
-## 3. Convenções de Nomenclatura
+```yaml
+# docker-compose.yml
+version: "3.8"
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
-### Tabelas
-
-- **Nome**: camelCase singular (ex: `user`, `teamMember`, `careTask`)
-- **Prefixo por contexto**: Opcional para SubApps (ex: `careTask`, `calendarEvent`)
-
-### Campos
-
-- **IDs**: Sempre `id` (não `userId`, `taskId`)
-- **Timestamps**: `createdAt`, `updatedAt`, `deletedAt`
-- **Foreign Keys**: `[tabela]Id` (ex: `userId`, `teamId`)
-- **Booleanos**: Prefixo `is` ou `has` (ex: `isActive`, `hasNotifications`)
-- **Enums**: SCREAMING_SNAKE_CASE
-
-### Exemplos de Nomenclatura
-
-```ts
-// ✅ BOM
-export const user = mysqlTable("user", {
-  id: varchar("id", { length: 30 }).primaryKey(),
-  email: varchar("email", { length: 255 }).notNull().unique(),
-  isActive: boolean("isActive").default(true),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-});
-
-// ❌ EVITAR
-export const users = mysqlTable("users", {
-  user_id: varchar("user_id", { length: 30 }).primaryKey(),
-  user_email: varchar("user_email", { length: 255 }),
-  active: boolean("active"),
-  created: timestamp("created"),
-});
+volumes:
+  postgres_data:
 ```
 
----
+## Estrutura do Schema
 
-## 4. Criando Novos Schemas
+### Modelos Principais
 
-### 4.1 Estrutura Básica
+#### User (Usuário)
 
-```ts
-// packages/db/src/schema/apps/notes.ts
-import {
-  boolean,
-  int,
-  mysqlTable,
-  text,
-  timestamp,
-  varchar,
-} from "drizzle-orm/mysql-core";
+```prisma
+model User {
+  id                String   @id @default(cuid())
+  email             String   @unique
+  name              String?
+  emailVerified     DateTime?
+  image             String?
+  role              Role     @default(USER)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
-import { createId } from "../utils";
+  // Relacionamentos
+  accounts          Account[]
+  sessions          Session[]
+  patients          Patient[]
+  appointments      Appointment[]
 
-export const note = mysqlTable("note", {
-  // IDs sempre primeiro
-  id: varchar("id", { length: 30 }).primaryKey().$defaultFn(createId),
+  @@map("users")
+}
 
-  // Foreign keys
-  userId: varchar("userId", { length: 30 })
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-  teamId: varchar("teamId", { length: 30 }).references(() => team.id, {
-    onDelete: "set null",
-  }),
-
-  // Campos de dados
-  title: varchar("title", { length: 255 }).notNull(),
-  content: text("content"),
-  priority: int("priority").default(0),
-  isArchived: boolean("isArchived").default(false).notNull(),
-
-  // Timestamps sempre por último
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-});
+enum Role {
+  USER
+  ADMIN
+  DOCTOR
+  NURSE
+  RECEPTIONIST
+}
 ```
 
-### 4.2 Usando o Script Utilitário (Recomendado)
+#### Patient (Paciente)
 
-Para facilitar a criação de novos schemas seguindo os padrões do projeto, use o script `create-schema`:
+```prisma
+model Patient {
+  id                String   @id @default(cuid())
+  name              String
+  email             String?  @unique
+  phone             String?
+  cpf               String?  @unique
+  dateOfBirth       DateTime?
+  gender            Gender?
+  address           String?
+  emergencyContact  String?
+  medicalHistory    String?
+  allergies         String?
+  medications       String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relacionamentos
+  createdBy         String
+  creator           User     @relation(fields: [createdBy], references: [id])
+  appointments      Appointment[]
+  medicalRecords    MedicalRecord[]
+
+  @@map("patients")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  PREFER_NOT_TO_SAY
+}
+```
+
+#### Appointment (Consulta)
+
+```prisma
+model Appointment {
+  id                String            @id @default(cuid())
+  dateTime          DateTime
+  duration          Int               @default(30) // em minutos
+  status            AppointmentStatus @default(SCHEDULED)
+  type              AppointmentType   @default(CONSULTATION)
+  notes             String?
+  symptoms          String?
+  diagnosis         String?
+  treatment         String?
+  followUpDate      DateTime?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  // Relacionamentos
+  patientId         String
+  patient           Patient           @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  doctorId          String
+  doctor            User              @relation(fields: [doctorId], references: [id])
+  medicalRecords    MedicalRecord[]
+
+  @@map("appointments")
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum AppointmentType {
+  CONSULTATION
+  FOLLOW_UP
+  EMERGENCY
+  ROUTINE_CHECKUP
+  VACCINATION
+  PROCEDURE
+}
+```
+
+#### MedicalRecord (Prontuário)
+
+```prisma
+model MedicalRecord {
+  id                String   @id @default(cuid())
+  title             String
+  content           String
+  type              RecordType
+  attachments       String[] // URLs dos arquivos
+  isPrivate         Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relacionamentos
+  patientId         String
+  patient           Patient     @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  appointmentId     String?
+  appointment       Appointment? @relation(fields: [appointmentId], references: [id])
+  createdById       String
+  createdBy         User        @relation(fields: [createdById], references: [id])
+
+  @@map("medical_records")
+}
+
+enum RecordType {
+  CONSULTATION_NOTES
+  PRESCRIPTION
+  LAB_RESULTS
+  IMAGING
+  VACCINATION_RECORD
+  PROCEDURE_NOTES
+  DISCHARGE_SUMMARY
+}
+```
+
+### Relacionamentos
+
+```mermaid
+erDiagram
+    User ||--o{ Patient : creates
+    User ||--o{ Appointment : attends
+    Patient ||--o{ Appointment : has
+    Patient ||--o{ MedicalRecord : owns
+    Appointment ||--o{ MedicalRecord : generates
+    User ||--o{ MedicalRecord : creates
+```
+
+## Migrações
+
+### Comandos Prisma
 
 ```bash
-# Para criar um schema geral
-pnpm --filter @kdx/db create-schema userSettings
+# Gerar migração
+pnpm prisma migrate dev --name nome_da_migracao
 
-# Para criar um schema de SubApp
-pnpm --filter @kdx/db create-schema note --app
+# Aplicar migrações
+pnpm prisma migrate deploy
+
+# Reset do banco (desenvolvimento)
+pnpm prisma migrate reset
+
+# Gerar client
+pnpm prisma generate
+
+# Visualizar dados
+pnpm prisma studio
 ```
 
-O script automaticamente:
+### Exemplo de Migração
 
-- ✅ Cria o arquivo de schema com a estrutura padrão
-- ✅ Cria o repositório correspondente com métodos CRUD
-- ✅ Usa as convenções de nomenclatura corretas
-- ✅ Inclui campos essenciais (id, timestamps)
-- ✅ Adiciona imports necessários
-- ✅ Gera tipos TypeScript
+```sql
+-- CreateTable
+CREATE TABLE "patients" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "email" TEXT,
+    "phone" TEXT,
+    "cpf" TEXT,
+    "date_of_birth" TIMESTAMP(3),
+    "gender" "Gender",
+    "address" TEXT,
+    "emergency_contact" TEXT,
+    "medical_history" TEXT,
+    "allergies" TEXT,
+    "medications" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+    "created_by" TEXT NOT NULL,
 
-Após executar o script:
-
-1. Ajuste os campos do schema conforme necessário
-2. Adicione os exports nos arquivos index.ts
-3. Execute `pnpm db:push` para aplicar ao banco
-
-### 4.3 Exportar o Schema
-
-```ts
-// packages/db/src/schema/apps/index.ts
-export * from "./notes";
-export * from "./kodixCare";
-// ... outros schemas
-```
-
-### 4.4 Tipos TypeScript
-
-O Drizzle gera automaticamente os tipos:
-
-```ts
-import { InferInsertModel, InferSelectModel } from "drizzle-orm";
-
-import { note } from "../schema/apps/notes";
-
-// Tipo para SELECT
-export type Note = InferSelectModel<typeof note>;
-
-// Tipo para INSERT
-export type NewNote = InferInsertModel<typeof note>;
-```
-
----
-
-## 5. Tipos de Campos
-
-### 5.1 Campos Comuns
-
-```ts
-// IDs - sempre varchar(30) com nanoid
-id: varchar("id", { length: 30 }).primaryKey().$defaultFn(createId),
-
-// Strings curtas
-name: varchar("name", { length: 255 }).notNull(),
-
-// Textos longos
-description: text("description"),
-
-// Números
-quantity: int("quantity").default(0),
-price: decimal("price", { precision: 10, scale: 2 }),
-
-// Booleanos
-isActive: boolean("isActive").default(true).notNull(),
-
-// Datas
-birthDate: date("birthDate"),
-appointmentTime: datetime("appointmentTime"),
-
-// Timestamps
-createdAt: timestamp("createdAt").defaultNow().notNull(),
-updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-deletedAt: timestamp("deletedAt"), // Para soft delete
-
-// Enums
-status: mysqlEnum("status", ["PENDING", "ACTIVE", "COMPLETED", "CANCELLED"])
-  .default("PENDING")
-  .notNull(),
-
-// JSON
-metadata: json("metadata").$type<{ key: string; value: any }>(),
-```
-
-### 5.2 Constraints e Validações
-
-```ts
-// Unique
-email: varchar("email", { length: 255 }).unique().notNull(),
-
-// Check constraints
-age: int("age").notNull(),
-// Adicionar depois: sql`CHECK (age >= 0 AND age <= 150)`
-
-// Índices compostos (definir após a tabela)
-export const userIndex = index("user_email_idx").on(user.email);
-```
-
----
-
-## 6. Relações entre Tabelas
-
-### 6.1 One-to-Many
-
-```ts
-// Um usuário tem muitas tarefas
-export const task = mysqlTable("task", {
-  id: varchar("id", { length: 30 }).primaryKey().$defaultFn(createId),
-  userId: varchar("userId", { length: 30 })
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-  title: varchar("title", { length: 255 }).notNull(),
-});
-
-// Relações (opcional, para queries)
-export const userRelations = relations(user, ({ many }) => ({
-  tasks: many(task),
-}));
-
-export const taskRelations = relations(task, ({ one }) => ({
-  user: one(user, {
-    fields: [task.userId],
-    references: [user.id],
-  }),
-}));
-```
-
-### 6.2 Many-to-Many
-
-```ts
-// Tabela de junção
-export const userTeam = mysqlTable(
-  "userTeam",
-  {
-    userId: varchar("userId", { length: 30 })
-      .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
-    teamId: varchar("teamId", { length: 30 })
-      .notNull()
-      .references(() => team.id, { onDelete: "cascade" }),
-    role: mysqlEnum("role", ["MEMBER", "ADMIN"]).default("MEMBER"),
-    joinedAt: timestamp("joinedAt").defaultNow().notNull(),
-  },
-  (table) => ({
-    pk: primaryKey(table.userId, table.teamId),
-  }),
+    CONSTRAINT "patients_pkey" PRIMARY KEY ("id")
 );
 ```
 
-### 6.3 One-to-One
+## Seeds e Dados Iniciais
 
-```ts
-export const userProfile = mysqlTable("userProfile", {
-  userId: varchar("userId", { length: 30 })
-    .primaryKey()
-    .references(() => user.id, { onDelete: "cascade" }),
-  bio: text("bio"),
-  avatarUrl: varchar("avatarUrl", { length: 500 }),
-});
-```
+```typescript
+// prisma/seed.ts
+import { PrismaClient, Role } from "@prisma/client";
 
----
+const prisma = new PrismaClient();
 
-## 7. Repositórios
-
-### 7.1 Estrutura Padrão
-
-```ts
-// packages/db/src/repositories/note.ts
-import { and, desc, eq, isNull } from "drizzle-orm";
-
-import type { NewNote, Note } from "../types";
-import { db } from "../client";
-import { note } from "../schema/apps/notes";
-
-export const NoteRepository = {
-  // CREATE
-  create: async (data: NewNote) => {
-    const [created] = await db.insert(note).values(data).returning();
-    return created;
-  },
-
-  // READ
-  findById: async (id: string) => {
-    const [found] = await db
-      .select()
-      .from(note)
-      .where(eq(note.id, id))
-      .limit(1);
-    return found;
-  },
-
-  findByUser: async (
-    userId: string,
-    options?: {
-      includeArchived?: boolean;
-      limit?: number;
-      offset?: number;
+async function main() {
+  // Criar usuário admin
+  const admin = await prisma.user.upsert({
+    where: { email: "admin@kodix.com" },
+    update: {},
+    create: {
+      email: "admin@kodix.com",
+      name: "Administrador",
+      role: Role.ADMIN,
     },
-  ) => {
-    const conditions = [eq(note.userId, userId)];
-    if (!options?.includeArchived) {
-      conditions.push(eq(note.isArchived, false));
-    }
+  });
 
-    return db
-      .select()
-      .from(note)
-      .where(and(...conditions))
-      .orderBy(desc(note.createdAt))
-      .limit(options?.limit ?? 50)
-      .offset(options?.offset ?? 0);
-  },
-
-  // UPDATE
-  update: async (id: string, data: Partial<Omit<Note, "id" | "createdAt">>) => {
-    const [updated] = await db
-      .update(note)
-      .set(data)
-      .where(eq(note.id, id))
-      .returning();
-    return updated;
-  },
-
-  // DELETE
-  delete: async (id: string) => {
-    await db.delete(note).where(eq(note.id, id));
-  },
-
-  // Soft Delete
-  archive: async (id: string) => {
-    return NoteRepository.update(id, { isArchived: true });
-  },
-
-  // Queries complexas
-  getStats: async (userId: string) => {
-    const result = await db
-      .select({
-        total: sql<number>`count(*)`,
-        archived: sql<number>`sum(case when ${note.isArchived} then 1 else 0 end)`,
-      })
-      .from(note)
-      .where(eq(note.userId, userId));
-
-    return result[0];
-  },
-};
-```
-
-### 7.2 Exportar Repositório
-
-```ts
-// packages/db/src/repositories/index.ts
-export * from "./user";
-export * from "./team";
-export * from "./note";
-// ... outros repositórios
-```
-
----
-
-## 8. Migrações
-
-### 8.1 Aplicar Schemas
-
-```bash
-# Desenvolvimento - aplica mudanças diretamente
-pnpm db:push
-
-# Produção - gera SQL de migração
-pnpm db:generate
-pnpm db:migrate
-```
-
-### 8.2 Migração Manual
-
-```ts
-// packages/db/scripts/migrations/add-note-tags.ts
-import { sql } from "drizzle-orm";
-
-import { db } from "../../src/client";
-
-async function migrate() {
-  await db.execute(sql`
-    CREATE TABLE noteTag (
-      noteId VARCHAR(30) NOT NULL,
-      tag VARCHAR(50) NOT NULL,
-      PRIMARY KEY (noteId, tag),
-      FOREIGN KEY (noteId) REFERENCES note(id) ON DELETE CASCADE
-    )
-  `);
-
-  console.log("✅ Tabela noteTag criada");
+  // Criar dados de exemplo para desenvolvimento
+  if (process.env.NODE_ENV === "development") {
+    // Pacientes de exemplo
+    await prisma.patient.createMany({
+      data: [
+        {
+          name: "João Silva",
+          email: "joao@example.com",
+          phone: "11999999999",
+          cpf: "123.456.789-00",
+          createdBy: admin.id,
+        },
+        // ... mais pacientes
+      ],
+    });
+  }
 }
 
-migrate().catch(console.error);
-```
-
----
-
-## 9. Seeds
-
-### 9.1 Estrutura de Seed
-
-```ts
-// packages/db/scripts/seed.ts
-import { db } from "../src/client";
-import { note, team, user } from "../src/schema";
-import { createId } from "../src/utils";
-
-async function seed() {
-  console.log("🌱 Iniciando seed...");
-
-  // Criar usuário de teste
-  const [testUser] = await db
-    .insert(user)
-    .values({
-      id: createId(),
-      email: "test@kodix.com",
-      name: "Usuário Teste",
-    })
-    .returning();
-
-  // Criar time
-  const [testTeam] = await db
-    .insert(team)
-    .values({
-      id: createId(),
-      name: "Time Teste",
-      ownerId: testUser.id,
-    })
-    .returning();
-
-  // Criar notas
-  const notes = Array.from({ length: 10 }, (_, i) => ({
-    id: createId(),
-    userId: testUser.id,
-    teamId: testTeam.id,
-    title: `Nota ${i + 1}`,
-    content: `Conteúdo da nota ${i + 1}`,
-  }));
-
-  await db.insert(note).values(notes);
-
-  console.log("✅ Seed concluído!");
-}
-
-seed()
+main()
   .catch((e) => {
-    console.error("❌ Erro no seed:", e);
+    console.error(e);
     process.exit(1);
   })
-  .finally(() => process.exit(0));
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
 ```
 
----
+## Práticas Recomendadas
 
-## 10. Índices e Performance
+### Performance
 
-### 10.1 Definindo Índices
+1. **Índices**
 
-```ts
-import { index, uniqueIndex } from "drizzle-orm/mysql-core";
+```prisma
+model Patient {
+  // ...
+  @@index([email])
+  @@index([cpf])
+  @@index([createdAt])
+}
+```
 
-export const note = mysqlTable(
-  "note",
-  {
-    // ... campos
+2. **Paginação**
+
+```typescript
+// Usar cursor-based pagination para datasets grandes
+const patients = await prisma.patient.findMany({
+  take: 20,
+  skip: page * 20,
+  orderBy: { createdAt: "desc" },
+});
+```
+
+3. **Seleção de campos**
+
+```typescript
+// Selecionar apenas campos necessários
+const patients = await prisma.patient.findMany({
+  select: {
+    id: true,
+    name: true,
+    email: true,
   },
-  (table) => ({
-    // Índice simples
-    userIdIdx: index("user_id_idx").on(table.userId),
-
-    // Índice composto
-    userTeamIdx: index("user_team_idx").on(table.userId, table.teamId),
-
-    // Índice único
-    slugIdx: uniqueIndex("slug_idx").on(table.slug),
-  }),
-);
+});
 ```
 
-### 10.2 Boas Práticas de Performance
+### Segurança
 
-```ts
-// ✅ BOM - Usar select específico
-const notes = await db
-  .select({
-    id: note.id,
-    title: note.title,
-  })
-  .from(note)
-  .where(eq(note.userId, userId));
+1. **Validação de entrada**
 
-// ❌ EVITAR - Select *
-const notes = await db.select().from(note);
-
-// ✅ BOM - Paginação
-const notes = await db
-  .select()
-  .from(note)
-  .limit(20)
-  .offset(page * 20);
-
-// ✅ BOM - Usar prepared statements
-const getNoteById = db
-  .select()
-  .from(note)
-  .where(eq(note.id, sql.placeholder("id")))
-  .prepare();
-
-const result = await getNoteById.execute({ id: noteId });
-```
-
----
-
-## 11. Validações
-
-### 11.1 Validação com Zod
-
-```ts
-// packages/validators/src/schemas/note.ts
+```typescript
 import { z } from "zod";
 
-export const createNoteSchema = z.object({
-  title: z.string().min(1).max(255),
-  content: z.string().optional(),
-  teamId: z.string().length(30).optional(),
-  priority: z.number().int().min(0).max(5).default(0),
+const patientSchema = z.object({
+  name: z.string().min(2).max(100),
+  email: z.string().email().optional(),
+  cpf: z
+    .string()
+    .regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)
+    .optional(),
 });
-
-export const updateNoteSchema = createNoteSchema.partial();
-
-export type CreateNoteInput = z.infer<typeof createNoteSchema>;
-export type UpdateNoteInput = z.infer<typeof updateNoteSchema>;
 ```
 
-### 11.2 Uso no Repositório
+2. **Auditoria**
 
-```ts
-import { createNoteSchema } from "@kdx/validators";
+```prisma
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String
+  table     String
+  recordId  String
+  oldData   Json?
+  newData   Json?
+  userId    String
+  timestamp DateTime @default(now())
 
-export const NoteRepository = {
-  create: async (data: unknown) => {
-    // Validar entrada
-    const validated = createNoteSchema.parse(data);
-
-    const [created] = await db.insert(note).values(validated).returning();
-
-    return created;
-  },
-};
+  user User @relation(fields: [userId], references: [id])
+}
 ```
 
----
-
-## 12. Exemplos Práticos
-
-### 12.1 SubApp Completo - Sistema de Tarefas
-
-```ts
-// 1. Schema
-// packages/db/src/schema/apps/taskManager.ts
-export const taskList = mysqlTable("taskList", {
-  id: varchar("id", { length: 30 }).primaryKey().$defaultFn(createId),
-  teamId: varchar("teamId", { length: 30 })
-    .notNull()
-    .references(() => team.id, { onDelete: "cascade" }),
-  name: varchar("name", { length: 255 }).notNull(),
-  color: varchar("color", { length: 7 }).default("#3B82F6"),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-});
-
-export const task = mysqlTable(
-  "task",
-  {
-    id: varchar("id", { length: 30 }).primaryKey().$defaultFn(createId),
-    listId: varchar("listId", { length: 30 })
-      .notNull()
-      .references(() => taskList.id, { onDelete: "cascade" }),
-    assigneeId: varchar("assigneeId", { length: 30 }).references(
-      () => user.id,
-      { onDelete: "set null" },
-    ),
-    title: varchar("title", { length: 255 }).notNull(),
-    description: text("description"),
-    priority: mysqlEnum("priority", [
-      "LOW",
-      "MEDIUM",
-      "HIGH",
-      "URGENT",
-    ]).default("MEDIUM"),
-    status: mysqlEnum("status", [
-      "TODO",
-      "IN_PROGRESS",
-      "DONE",
-      "CANCELLED",
-    ]).default("TODO"),
-    dueDate: timestamp("dueDate"),
-    completedAt: timestamp("completedAt"),
-    createdAt: timestamp("createdAt").defaultNow().notNull(),
-    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-  },
-  (table) => ({
-    listIdx: index("list_idx").on(table.listId),
-    assigneeIdx: index("assignee_idx").on(table.assigneeId),
-    statusIdx: index("status_idx").on(table.status),
-  }),
-);
-
-// 2. Repositório
-// packages/db/src/repositories/task.ts
-export const TaskRepository = {
-  createList: async (data: NewTaskList) => {
-    const [created] = await db.insert(taskList).values(data).returning();
-    return created;
-  },
-
-  createTask: async (data: NewTask) => {
-    const [created] = await db.insert(task).values(data).returning();
-    return created;
-  },
-
-  getTasksByList: async (listId: string, status?: TaskStatus) => {
-    const conditions = [eq(task.listId, listId)];
-    if (status) conditions.push(eq(task.status, status));
-
-    return db
-      .select({
-        task: task,
-        assignee: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-        },
-      })
-      .from(task)
-      .leftJoin(user, eq(task.assigneeId, user.id))
-      .where(and(...conditions))
-      .orderBy(
-        sql`FIELD(${task.priority}, 'URGENT', 'HIGH', 'MEDIUM', 'LOW')`,
-        task.createdAt,
-      );
-  },
-
-  updateTaskStatus: async (taskId: string, status: TaskStatus) => {
-    const updates: any = { status };
-    if (status === "DONE") {
-      updates.completedAt = new Date();
-    }
-
-    const [updated] = await db
-      .update(task)
-      .set(updates)
-      .where(eq(task.id, taskId))
-      .returning();
-
-    return updated;
-  },
-
-  getTaskStats: async (teamId: string) => {
-    return db
-      .select({
-        status: task.status,
-        count: sql<number>`count(*)`,
-      })
-      .from(task)
-      .innerJoin(taskList, eq(task.listId, taskList.id))
-      .where(eq(taskList.teamId, teamId))
-      .groupBy(task.status);
-  },
-};
-```
-
-### 12.2 Transações
-
-```ts
-export const TaskRepository = {
-  moveTask: async (taskId: string, newListId: string) => {
-    return db.transaction(async (tx) => {
-      // Verificar se a lista existe
-      const [list] = await tx
-        .select()
-        .from(taskList)
-        .where(eq(taskList.id, newListId))
-        .limit(1);
-
-      if (!list) {
-        throw new Error("Lista não encontrada");
-      }
-
-      // Mover tarefa
-      const [moved] = await tx
-        .update(task)
-        .set({ listId: newListId })
-        .where(eq(task.id, taskId))
-        .returning();
-
-      // Registrar no log
-      await tx.insert(activityLog).values({
-        action: "TASK_MOVED",
-        entityId: taskId,
-        metadata: { from: moved.listId, to: newListId },
-      });
-
-      return moved;
-    });
-  },
-};
-```
-
----
-
-## 13. Comandos Úteis
+### Backup e Recuperação
 
 ```bash
-# Desenvolvimento
-pnpm db:push          # Aplica schemas ao banco
-pnpm db:seed          # Popula com dados de teste
-pnpm db:studio        # Interface visual do Drizzle
-pnpm --filter @kdx/db create-schema <nome>  # Cria novo schema e repositório
+# Backup
+pg_dump $DATABASE_URL > backup_$(date +%Y%m%d_%H%M%S).sql
 
-# Produção
-pnpm db:generate      # Gera arquivos de migração
-pnpm db:migrate       # Aplica migrações
-pnpm db:rollback      # Reverter última migração
-
-# Manutenção
-pnpm db:check         # Verifica integridade
-pnpm db:optimize      # Otimiza tabelas
+# Restauração
+psql $DATABASE_URL < backup_file.sql
 ```
 
----
+## Monitoramento
 
-## 14. Troubleshooting
+### Métricas importantes
 
-### Problemas Comuns
+- Tempo de resposta das queries
+- Conexões ativas
+- Tamanho do banco de dados
+- Queries lentas
 
-**1. "Column doesn't exist"**
+### Logs
 
-```bash
-# Solução: Aplicar schemas
-pnpm db:push
-```
-
-**2. "Cannot add foreign key constraint"**
-
-```ts
-// Verificar ordem de criação das tabelas
-// Tabela referenciada deve existir primeiro
-```
-
-**3. "Data truncated for column"**
-
-```ts
-// Aumentar tamanho do varchar
-title: varchar("title", { length: 500 }); // Era 255
-```
-
-**4. Performance lenta**
-
-```ts
-// Adicionar índices apropriados
-userIdIdx: index("user_id_idx").on(table.userId),
-```
-
-### Debug de Queries
-
-```ts
-// Habilitar logging
-import { drizzle } from "drizzle-orm/mysql2";
-import { createConnection } from "mysql2";
-
-const connection = await createConnection({
-  // ... config
+```typescript
+// Configuração de logs no Prisma
+const prisma = new PrismaClient({
+  log: [
+    {
+      emit: "event",
+      level: "query",
+    },
+    {
+      emit: "stdout",
+      level: "error",
+    },
+  ],
 });
 
-export const db = drizzle(connection, {
-  logger: true, // Mostra SQL no console
+prisma.$on("query", (e) => {
+  console.log("Query: " + e.query);
+  console.log("Params: " + e.params);
+  console.log("Duration: " + e.duration + "ms");
 });
 ```
 
 ---
 
-## Resumo de Boas Práticas
-
-1. **Sempre use `createId()`** para gerar IDs
-2. **Inclua `createdAt` e `updatedAt`** em todas as tabelas
-3. **Use transações** para operações múltiplas
-4. **Crie índices** para campos de busca frequente
-5. **Valide com Zod** antes de inserir dados
-6. **Use repositórios** para encapsular lógica
-7. **Documente relações complexas** com comentários
-8. **Teste migrações** em ambiente de desenvolvimento primeiro
-
-Este guia fornece uma base sólida para trabalhar com banco de dados no Kodix, mantendo consistência e facilitando a manutenção do código.
+Esta documentação deve ser atualizada sempre que houver mudanças no schema do banco de dados.
