@@ -69,3 +69,39 @@ export const ZGetAppActivityLogsInputSchema = z.object({
 export type TGetAppActivityLogsInputSchema = z.infer<
   typeof ZGetAppActivityLogsInputSchema
 >;
+
+// Export AI Studio validators
+export {
+  criarAiModelSchema,
+  atualizarAiModelSchema,
+  buscarAiModelsSchema,
+  criarAiLibrarySchema,
+  atualizarAiLibrarySchema,
+  buscarAiLibrariesSchema,
+  criarAiAgentSchema,
+  atualizarAiAgentSchema,
+  buscarAiAgentsSchema,
+  criarAiModelTokenSchema,
+  atualizarAiModelTokenSchema,
+  buscarTokenPorModeloSchema,
+  removerTokenPorModeloSchema,
+  idSchema as aiStudioIdSchema,
+} from "./ai-studio";
+
+// Export Chat validators
+export {
+  criarChatFolderSchema,
+  atualizarChatFolderSchema,
+  buscarChatFoldersSchema,
+  criarChatSessionSchema,
+  atualizarChatSessionSchema,
+  buscarChatSessionsSchema,
+  criarChatMessageSchema,
+  atualizarChatMessageSchema,
+  buscarChatMessagesSchema,
+  enviarMensagemSchema,
+  iniciarNovaConversa,
+  duplicarSessaoSchema,
+  idSchema as chatIdSchema,
+  sessionIdSchema,
+} from "./chat";

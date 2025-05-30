@@ -14,7 +14,7 @@ import { ChatWindow } from "./_components/chat-window";
   */
 }
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function ChatPage() {
   const t = useTranslations();
 
   return (
@@ -41,9 +41,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div className="relative flex-1">
             <ChatWindow />
           </div>
-
-          {/* Children opcionais abaixo do chat */}
-          {children}
         </div>
       </div>
     </SidebarProvider>

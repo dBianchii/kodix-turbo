@@ -1,7 +1,7 @@
 "use client";
 
 interface MessageProps {
-  role: "assistant" | "user";
+  role: "assistant" | "user" | "agent";
   content: string;
 }
 

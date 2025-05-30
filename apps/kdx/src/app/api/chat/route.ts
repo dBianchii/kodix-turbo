@@ -42,7 +42,7 @@ export async function POST(req: Request) {
       // Usando a biblioteca AI.js para criar o stream
       const result = await streamText({
         model: openai("gpt-3.5-turbo"),
-        messages: messages,
+        messages,
       });
 
       console.log("🟢 [API] Stream criado com sucesso");
@@ -67,6 +67,7 @@ export async function POST(req: Request) {
 
             // Se não recebeu nenhum chunk, informa erro de conexão
             if (!receivedAnyChunk) {
+              //console.error("❌ [API] Nenhum chunk recebido");
               controller.enqueue(
                 new TextEncoder().encode(
                   "Sem conexão. Verifique sua internet e tente novamente.",

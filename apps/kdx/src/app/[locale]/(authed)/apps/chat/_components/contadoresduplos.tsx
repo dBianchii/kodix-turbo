@@ -10,7 +10,7 @@ function PlacarComBotao({ titulo }: { titulo: string }) {
   const [contagem, setContagem] = useState(0);
 
   const incrementar = () => {
-    setContagem((prev) => prev + 1); 
+    setContagem((prev) => prev + 1);
     setContagem((prev) => prev + 1);
   };
 

@@ -16,7 +16,9 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "../../procedures";
+import { aiStudioRouter } from "./ai-studio/_router";
 import { calendarRouter } from "./calendar/_router";
+import { chatRouter } from "./chat/_router";
 import { getAllHandler } from "./getAll.handler";
 import { getAppActivityLogsHandler } from "./getAppActivityLogs.handler";
 import { getConfigHandler } from "./getConfig.handler";
@@ -30,7 +32,9 @@ import { todoRouter } from "./todo/_router";
 import { uninstallAppHandler } from "./uninstallApp.handler";
 
 export const appRouter = {
+  aiStudio: aiStudioRouter,
   calendar: calendarRouter,
+  chat: chatRouter,
   kodixCare: kodixCareRouter,
   todo: todoRouter,
   getAll: publicProcedure.query(getAllHandler),
