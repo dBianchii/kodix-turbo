@@ -6,6 +6,7 @@ import {
   mysqlTable,
   text,
   timestamp,
+  unique,
   varchar,
 } from "drizzle-orm/mysql-core";
 
@@ -100,8 +101,8 @@ export const aiModelToken = mysqlTable(
     teamIdx: index("ai_model_token_team_idx").on(table.teamId),
     modelIdx: index("ai_model_token_model_idx").on(table.modelId),
     createdAtIdx: index("ai_model_token_created_at_idx").on(table.createdAt),
-    // Índice único para evitar duplicatas
-    uniqueTeamModel: index("ai_model_token_unique_team_model").on(
+    // Constraint única para evitar múltiplos tokens por team/modelo
+    uniqueTeamModel: unique("ai_model_token_team_model_unique").on(
       table.teamId,
       table.modelId,
     ),

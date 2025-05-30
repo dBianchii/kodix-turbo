@@ -1,10 +1,10 @@
-# Criando Sub-aplicações no Projeto Kodix
+# Guia de Criação de SubApps no Kodix
 
-## Visão Geral
+> **🔄 ATUALIZADO:** Baseado na implementação real do AI Studio
 
 Este guia detalha como criar novas sub-aplicações (SubApps) no monorepo Kodix. O sistema de SubApps permite expandir a funcionalidade da plataforma de forma modular e organizada.
 
-## Conceito de SubApps
+## Visão Geral
 
 ### O que são SubApps?
 
@@ -22,118 +22,38 @@ SubApps são módulos independentes que estendem a funcionalidade principal do K
 - **Calendar** - Sistema de calendário unificado (`calendar`)
 - **Todo** - Lista de tarefas (`todo`)
 - **Chat** - Sistema de comunicação (`chat`)
+- **AI Studio** - Gestão de agentes IA (`aiStudio`)
 
-## Estrutura de um SubApp
+## Fluxo de Trabalho End-to-End
 
-### Anatomia Básica
-
-# Guia de Criação de SubApps no Kodix
-
-> Um guia completo e reorganizado para desenvolver SubApps no Kodix, cobrindo desde a conceitualização até a entrega com qualidade.
-
-## Sumário
-
-1. [Introdução](#introdução)
-2. [Visão Arquitetural](#visão-arquitetural)
-3. [Fluxo de Trabalho End-to-End](#fluxo-de-trabalho-end-to-end)
-4. [Pré-requisitos](#pré-requisitos)
-5. [Registrar SubApp no Shared](#registrar-subapp-no-shared)
-6. [Banco de Dados e ORM (Drizzle)](#banco-de-dados-e-orm-drizzle)
-7. [Internacionalização (i18n)](#internacionalização-i18n)
-8. [Tipos Compartilhados](#tipos-compartilhados)
-9. [Frontend (Next.js)](#frontend-nextjs)
-10. [Endpoint API](#endpoint-api)
-11. [Registro de Rota e Navegação](#registro-de-rota-e-navegação)
-12. [Testes Automatizados](#testes-automatizados)
-13. [Tratamento de Erros](#tratamento-de-erros)
-14. [Boas Práticas](#boas-práticas)
-15. [Comandos Úteis](#comandos-úteis)
-16. [Próximos Passos](#próximos-passos)
-17. [Checklist de Finalização](#checklist-de-finalização)
+1. **Registrar ID e roles** no pacote `@kdx/shared`
+2. **Adicionar ícone** em `apps/kdx/public/appIcons/<pathname>.png`
+3. **Registrar mapeamento** em `apps/kdx/src/helpers/miscelaneous/index.ts`
+4. **Modelar schema** com Drizzle ORM + `pnpm db:push`
+5. **Adicionar traduções** em `packages/locales/src/messages/kdx/`
+6. **Criar routers tRPC** com estrutura adequada
+7. **Implementar Frontend** com padrões corretos
+8. **Atualizar validators** em `packages/validators/src/trpc/app/index.ts`
+9. **Escrever testes** automatizados
 
 ---
 
-## 1. Introdução
+## 1. Registrar SubApp no Shared
 
-### 1.1 O que é um SubApp?
-
-No Kodix, um **SubApp** é um módulo independente que se integra à plataforma principal, reutilizando autenticação, roles, design system e infraestrutura compartilhada.
-
-**Exemplos Implementados:**
-
-- **KodixCare** (gestão de cuidados médicos)
-- **Calendar** (calendário unificado)
-- **Todo** (lista de tarefas)
-- **Chat** (sistema de comunicação)
-
-### 1.2 Benefícios de um SubApp
-
-- Modularidade e deploy independente
-- Reuso de infraestrutura e componentes
-- Experiência de usuário consistente
-- Facilidade de manutenção e escalabilidade
-
----
-
-## 2. Visão Arquitetural
-
-```text
-             +-------------+    tRPC/API     +-------------+    SQL    +------------+
-             |   Frontend  | <-------------> |    API      | <------> |  Database  |
-             |  (Next.js)  |    procedures   | (tRPC)      |   Drizzle |  (MySQL)   |
-             +-------------+                 +-------------+           +------------+
-                    ^             useTranslations()     ^
-                    |                                      |
-                    v                                      v
-             +-------------+                       shared types/roles/config
-             | next-intl   |<-- mapeamento de chaves -->  @kdx/shared
-             | (i18n Hooks)|
-             +-------------+
-```
-
----
-
-## 3. Fluxo de Trabalho End-to-End (Exemplo: SubApp "Notes")
-
-1. **Registrar ID e roles** no pacote `@kdx/shared`.
-   - **Ícone:** adicione o arquivo de ícone em `apps/kdx/public/appIcons/<pathname>.png`
-   - **Mapeamento:** registre em `apps/kdx/src/helpers/miscelaneous/index.ts` (objeto `appIdToPathname`)
-2. **Modelar schema** com Drizzle ORM + `pnpm db:push`.
-3. **Adicionar traduções** (JSON) em `packages/locales/src/messages/kdx/`.
-4. **Implementar Frontend** em `apps/kdx/src/app/[locale]/(authed)/apps/<pathname>/`
-5. **Criar routers tRPC** em `packages/api/src/trpc/routers/app/<pathname>/`
-6. **Criar endpoints API** (se necessário) em `apps/kdx/src/app/api/<pathname>/`
-7. **Atualizar validators** em `packages/validators/src/trpc/app/index.ts`
-8. **Escrever testes** automatizados
-9. **Validar** logs, tratamento de erros e cobertura
-
----
-
-## 4. Pré-requisitos
-
-- Node.js ≥ 20.18.1, PNPM ≥ 9.14.2
-- Clonar e instalar dependências: `pnpm install`
-- Copiar `.env.example` → `.env` (configurar `MYSQL_URL`, `OPENAI_API_KEY`, etc.)
-- MySQL configurado e acessível via `MYSQL_URL`
-
----
-
-## 5. Registrar SubApp no Shared
-
-**Exemplo (Notes):** ID `notesAppId`
+**Exemplo (AI Studio):**
 
 ```ts
 // packages/shared/src/db.ts
 
-//* Notes *//
-export const notesAppId = "n8xm2k9vl3p1";
+//* AI Studio *//
+export const aiStudioAppId = "ai_studio_123";
 
 export const appIdToRoles = {
   [kodixCareAppId]: [...commonRolesForAllApps, "CAREGIVER"] as const,
   [calendarAppId]: [...commonRolesForAllApps] as const,
   [todoAppId]: [...commonRolesForAllApps] as const,
   [chatAppId]: [...commonRolesForAllApps] as const,
-  [notesAppId]: [...commonRolesForAllApps] as const,
+  [aiStudioAppId]: [...commonRolesForAllApps] as const,
 };
 
 export type KodixAppId =
@@ -141,431 +61,441 @@ export type KodixAppId =
   | typeof calendarAppId
   | typeof kodixCareAppId
   | typeof chatAppId
-  | typeof notesAppId;
+  | typeof aiStudioAppId;
 ```
 
-### 5.1 Registrar Mapeamento de Pathname
+### Registrar Mapeamento de Pathname
 
 ```ts
 // apps/kdx/src/helpers/miscelaneous/index.ts
-import {
-  calendarAppId,
-  chatAppId,
-  kodixCareAppId,
-  notesAppId, // Adicionar import
-  todoAppId,
-} from "@kdx/shared";
-
 export const appIdToPathname = {
   [kodixCareAppId]: "kodixCare",
   [calendarAppId]: "calendar",
   [todoAppId]: "todo",
   [chatAppId]: "chat",
-  [notesAppId]: "notes", // Adicionar mapeamento
+  [aiStudioAppId]: "aiStudio", // Adicionar
 } as const;
-```
-
-### 5.2 Esquema de Configurações (Opcional)
-
-```ts
-// packages/shared/src/db.ts
-export const notesConfigSchema = z.object({
-  defaultCategory: z.string().optional(),
-  autoSave: z.boolean().default(true),
-});
-
-export const notesUserAppTeamConfigSchema = z.object({
-  enableNotifications: z.boolean().optional(),
-});
-
-export const appIdToAppTeamConfigSchema = {
-  [kodixCareAppId]: kodixCareConfigSchema,
-  [notesAppId]: notesConfigSchema, // Adicionar se necessário
-};
-
-export const appIdToUserAppTeamConfigSchema = {
-  [kodixCareAppId]: kodixCareUserAppTeamConfigSchema,
-  [notesAppId]: notesUserAppTeamConfigSchema, // Adicionar se necessário
-};
 ```
 
 ---
 
-## 6. Banco de Dados e ORM (Drizzle)
+## 2. Banco de Dados e Schema
 
-> **📚 Para um guia completo sobre banco de dados, consulte [banco-de-dados-kodix.md](./banco-de-dados-kodix.md)**
-
-### 6.1 Modelagem Rápida
+### 2.1 Modelagem (Exemplo AI Studio)
 
 ```ts
-// packages/db/src/schema/apps/notes.ts
+// packages/db/src/schema/apps/ai-studio.ts
 import { relations } from "drizzle-orm";
-import { mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import {
+  boolean,
+  datetime,
+  json,
+  mysqlTable,
+  text,
+  unique,
+  varchar,
+} from "drizzle-orm/mysql-core";
 
 import { users } from "../auth";
 import { teams } from "../team";
 import { createId } from "../utils";
 
-export const notes = mysqlTable("notes", {
+export const aiModels = mysqlTable("ai_model", {
   id: varchar("id", { length: 30 }).primaryKey().$defaultFn(createId),
-  title: varchar("title", { length: 255 }).notNull(),
-  content: text("content"),
-  userId: varchar("userId", { length: 30 }).notNull(),
-  teamId: varchar("teamId", { length: 30 }).notNull(),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  name: varchar("name", { length: 100 }).notNull(),
+  provider: varchar("provider", { length: 50 }).notNull(),
+  config: json("config"),
+  enabled: boolean("enabled").default(true).notNull(),
 });
 
-export const notesRelations = relations(notes, ({ one }) => ({
-  user: one(users, {
-    fields: [notes.userId],
+export const aiModelTokens = mysqlTable(
+  "ai_model_token",
+  {
+    id: varchar("id", { length: 30 }).primaryKey().$defaultFn(createId),
+    teamId: varchar("teamId", { length: 30 }).notNull(),
+    modelId: varchar("modelId", { length: 30 }).notNull(),
+    token: text("token").notNull(),
+    createdAt: datetime("createdAt").defaultNow().notNull(),
+  },
+  (table) => ({
+    // ⚠️ IMPORTANTE: Unique constraint para evitar tokens duplicados
+    unique: unique("ai_model_token_team_model_unique").on(
+      table.teamId,
+      table.modelId,
+    ),
+  }),
+);
+
+export const aiLibraries = mysqlTable("ai_library", {
+  id: varchar("id", { length: 30 }).primaryKey().$defaultFn(createId),
+  teamId: varchar("teamId", { length: 30 }).notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  files: json("files"),
+  createdAt: datetime("createdAt").defaultNow().notNull(),
+});
+
+export const aiAgents = mysqlTable("ai_agent", {
+  id: varchar("id", { length: 30 }).primaryKey().$defaultFn(createId),
+  teamId: varchar("teamId", { length: 30 }).notNull(),
+  createdById: varchar("createdById", { length: 30 }).notNull(),
+  name: varchar("name", { length: 100 }).notNull(),
+  instructions: text("instructions").notNull(),
+  libraryId: varchar("libraryId", { length: 30 }),
+  createdAt: datetime("createdAt").defaultNow().notNull(),
+  updatedAt: datetime("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+// Relations
+export const aiModelTokensRelations = relations(aiModelTokens, ({ one }) => ({
+  team: one(teams, { fields: [aiModelTokens.teamId], references: [teams.id] }),
+  model: one(aiModels, {
+    fields: [aiModelTokens.modelId],
+    references: [aiModels.id],
+  }),
+}));
+
+export const aiLibrariesRelations = relations(aiLibraries, ({ one }) => ({
+  team: one(teams, { fields: [aiLibraries.teamId], references: [teams.id] }),
+}));
+
+export const aiAgentsRelations = relations(aiAgents, ({ one }) => ({
+  team: one(teams, { fields: [aiAgents.teamId], references: [teams.id] }),
+  createdBy: one(users, {
+    fields: [aiAgents.createdById],
     references: [users.id],
   }),
-  team: one(teams, {
-    fields: [notes.teamId],
-    references: [teams.id],
+  library: one(aiLibraries, {
+    fields: [aiAgents.libraryId],
+    references: [aiLibraries.id],
   }),
 }));
 ```
 
-### 6.2 Aplicar Schema
+### 2.2 Aplicar Schema
 
 ```bash
 pnpm db:push
 ```
 
-### 6.3 Criar Repositório (Opcional)
+---
+
+## 3. tRPC Routers - Estrutura Correta
+
+### 3.1 Router Principal
 
 ```ts
-// packages/db/src/repositories/notes.ts
-import { and, eq } from "drizzle-orm";
-
-import { db } from "../client";
-import { notes } from "../schema/apps/notes";
-
-export const NotesRepository = {
-  create: async (data: {
-    title: string;
-    content?: string;
-    userId: string;
-    teamId: string;
-  }) => {
-    const [created] = await db.insert(notes).values(data).returning();
-    return created;
-  },
-
-  findByTeam: async (teamId: string) => {
-    return db.select().from(notes).where(eq(notes.teamId, teamId));
-  },
-
-  findById: async (id: string, teamId: string) => {
-    const [note] = await db
-      .select()
-      .from(notes)
-      .where(and(eq(notes.id, id), eq(notes.teamId, teamId)));
-    return note;
-  },
-
-  update: async (
-    id: string,
-    teamId: string,
-    data: Partial<typeof notes.$inferInsert>,
-  ) => {
-    const [updated] = await db
-      .update(notes)
-      .set({ ...data, updatedAt: new Date() })
-      .where(and(eq(notes.id, id), eq(notes.teamId, teamId)))
-      .returning();
-    return updated;
-  },
-
-  delete: async (id: string, teamId: string) => {
-    await db
-      .delete(notes)
-      .where(and(eq(notes.id, id), eq(notes.teamId, teamId)));
-  },
-};
-```
-
-### 6.4 Integração com tRPC
-
-### 6.4.1 Rotas tRPC
-
-Crie um roteador em `packages/api/src/trpc/routers/app/notes/`:
-
-```ts
-// packages/api/src/trpc/routers/app/notes/_router.ts
+// packages/api/src/trpc/routers/app/aiStudio/_router.ts
 import { router } from "../../../trpc";
-import { createHandler } from "./create.handler";
-import { deleteHandler } from "./delete.handler";
-import { getAllHandler } from "./getAll.handler";
-import { getByIdHandler } from "./getById.handler";
-import { updateHandler } from "./update.handler";
+import { buscarAiAgentsHandler } from "./buscarAiAgents.handler";
+import { buscarAiLibrariesHandler } from "./buscarAiLibraries.handler";
+import { buscarAiModelsHandler } from "./buscarAiModels.handler";
+import { buscarTokensPorModeloHandler } from "./buscarTokensPorModelo.handler";
+import { criarAiAgentHandler } from "./criarAiAgent.handler";
+import { criarAiLibraryHandler } from "./criarAiLibrary.handler";
+import { criarAiModelHandler } from "./criarAiModel.handler";
+import { criarTokenPorModeloHandler } from "./criarTokenPorModelo.handler";
 
-export const notesRouter = router({
-  create: createHandler,
-  getAll: getAllHandler,
-  getById: getByIdHandler,
-  update: updateHandler,
-  delete: deleteHandler,
+// ... outros imports
+
+export const aiStudioRouter = router({
+  // Models
+  buscarAiModels: buscarAiModelsHandler,
+  criarAiModel: criarAiModelHandler,
+  atualizarAiModel: atualizarAiModelHandler,
+  excluirAiModel: excluirAiModelHandler,
+
+  // Tokens
+  buscarTokensPorModelo: buscarTokensPorModeloHandler,
+  criarTokenPorModelo: criarTokenPorModeloHandler,
+  atualizarAiModelToken: atualizarAiModelTokenHandler,
+  removerTokenPorModelo: removerTokenPorModeloHandler,
+
+  // Libraries
+  buscarAiLibraries: buscarAiLibrariesHandler,
+  criarAiLibrary: criarAiLibraryHandler,
+  atualizarAiLibrary: atualizarAiLibraryHandler,
+  excluirAiLibrary: excluirAiLibraryHandler,
+
+  // Agents
+  buscarAiAgents: buscarAiAgentsHandler,
+  criarAiAgent: criarAiAgentHandler,
+  atualizarAiAgent: atualizarAiAgentHandler,
+  excluirAiAgent: excluirAiAgentHandler,
 });
 ```
 
+### 3.2 Handler Exemplo
+
 ```ts
-// packages/api/src/trpc/routers/app/notes/create.handler.ts
+// packages/api/src/trpc/routers/app/aiStudio/criarAiModel.handler.ts
 import { z } from "zod";
 
-import { NotesRepository } from "@kdx/db/repositories/notes";
+import { aiModels } from "@kdx/db/schema/apps/ai-studio";
 
 import { protectedProcedure } from "../../../procedures";
 
-export const createHandler = protectedProcedure
+export const criarAiModelHandler = protectedProcedure
   .input(
     z.object({
-      title: z.string().min(1).max(255),
-      content: z.string().optional(),
+      name: z.string().min(1),
+      provider: z.string().min(1),
+      enabled: z.boolean().default(true),
+      config: z.any().optional(),
     }),
   )
   .mutation(async ({ input, ctx }) => {
-    return await NotesRepository.create({
-      ...input,
-      userId: ctx.user.id,
-      teamId: ctx.user.activeTeamId,
-    });
+    const [created] = await ctx.db
+      .insert(aiModels)
+      .values({
+        name: input.name,
+        provider: input.provider,
+        enabled: input.enabled,
+        config: input.config,
+      })
+      .returning();
+
+    return created;
   });
 ```
 
-Adicione o roteador em `packages/api/src/trpc/routers/app/_router.ts`:
+### 3.3 Registrar no App Router
 
 ```ts
 // packages/api/src/trpc/routers/app/_router.ts
 import { router } from "../../trpc";
+import { aiStudioRouter } from "./aiStudio/_router";
+
 // ... outros imports
-import { notesRouter } from "./notes/_router";
 
 export const appRouter = router({
-  // ... outros routers
-  notes: notesRouter,
+  kodixCare: kodixCareRouter,
+  calendar: calendarRouter,
+  todo: todoRouter,
+  chat: chatRouter,
+  aiStudio: aiStudioRouter, // Adicionar aqui
 });
 ```
 
-### 6.4.2 Uso no Frontend
-
-```tsx
-"use client";
-
-import React from "react";
-
-import { api } from "~/trpc/react";
-
-export function NotesList() {
-  const { data: notes, isLoading } = api.app.notes.getAll.useQuery();
-  const createMutation = api.app.notes.create.useMutation();
-
-  if (isLoading) return <div>Carregando...</div>;
-
-  return (
-    <div>
-      {notes?.map((note) => (
-        <div key={note.id}>
-          <h3>{note.title}</h3>
-          <p>{note.content}</p>
-        </div>
-      ))}
-    </div>
-  );
-}
-```
-
 ---
 
-## 7. Internacionalização (i18n)
+## 4. Frontend - Padrões Corretos
 
-### 7.1 Traduções
-
-```jsonc
-// packages/locales/src/messages/kdx/pt-BR.json
-{
-  "apps": {
-    "notes": {
-      "appName": "Notas",
-      "appDescription": "Gerencie suas notas e anotações",
-      "createNote": "Criar Nota",
-      "editNote": "Editar Nota",
-      "deleteNote": "Excluir Nota",
-      "noteTitle": "Título da Nota",
-      "noteContent": "Conteúdo",
-      "noNotesFound": "Nenhuma nota encontrada",
-    },
-  },
-}
-```
-
-```jsonc
-// packages/locales/src/messages/kdx/en.json
-{
-  "apps": {
-    "notes": {
-      "appName": "Notes",
-      "appDescription": "Manage your notes and annotations",
-      "createNote": "Create Note",
-      "editNote": "Edit Note",
-      "deleteNote": "Delete Note",
-      "noteTitle": "Note Title",
-      "noteContent": "Content",
-      "noNotesFound": "No notes found",
-    },
-  },
-}
-```
-
-### 7.2 Mapeamento e Hooks
-
-```ts
-// packages/locales/src/next-intl/internal/appIdToName.ts
-import { notesAppId } from "@kdx/shared";
-
-export const appIdToName: Record<KodixAppId, string> = {
-  [kodixCareAppId]: "apps.kodixCare.appName",
-  [calendarAppId]: "apps.calendar.appName",
-  [todoAppId]: "apps.todo.appName",
-  [chatAppId]: "apps.chat.appName",
-  [notesAppId]: "apps.notes.appName", // Adicionar
-} as const;
-
-export const getAppDescription = (appId: KodixAppId, t: IsomorficT) => {
-  const descMap: Record<KodixAppId, string> = {
-    [kodixCareAppId]: t("apps.kodixCare.appDescription"),
-    [calendarAppId]: t("apps.calendar.appDescription"),
-    [todoAppId]: t("apps.todo.appDescription"),
-    [chatAppId]: t("apps.chat.appDescription"),
-    [notesAppId]: t("apps.notes.appDescription"), // Adicionar
-  };
-  return descMap[appId] || "";
-};
-```
-
----
-
-## 8. Tipos Compartilhados
-
-```ts
-// packages/shared/src/types/notes.ts
-export interface Note {
-  id: string;
-  title: string;
-  content?: string;
-  userId: string;
-  teamId: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface CreateNoteInput {
-  title: string;
-  content?: string;
-}
-
-export interface UpdateNoteInput {
-  id: string;
-  title?: string;
-  content?: string;
-}
-```
-
-```ts
-// packages/shared/src/types/index.ts
-export * from "./notes";
-```
-
----
-
-## 9. Frontend (Next.js App Router)
-
-### 9.1 Estrutura de Pastas
+### 4.1 Estrutura de Pastas
 
 ```
-apps/kdx/src/app/[locale]/(authed)/apps/notes/
-├── page.tsx                    # Página principal
+apps/kdx/src/app/[locale]/(authed)/apps/aiStudio/
+├── page.tsx                           # Página principal
 ├── _components/
-│   ├── notes-list.tsx         # Lista de notas
-│   ├── note-card.tsx          # Card individual
-│   ├── create-note-dialog.tsx # Dialog de criação
-│   └── note-editor.tsx        # Editor de nota
+│   ├── main-nav.tsx                  # Navegação por tabs
+│   └── sections/
+│       ├── models-section.tsx        # Seção de modelos
+│       ├── tokens-section.tsx        # Seção de tokens
+│       ├── agents-section.tsx        # Seção de agentes
+│       └── libraries-section.tsx     # Seção de bibliotecas
 ```
 
-### 9.2 Página Principal
+### 4.2 Página Principal com Tabs
 
 ```tsx
-// apps/kdx/src/app/[locale]/(authed)/apps/notes/page.tsx
+// apps/kdx/src/app/[locale]/(authed)/apps/aiStudio/page.tsx
 import { getTranslations } from "next-intl/server";
 
-import { notesAppId } from "@kdx/shared";
+import { aiStudioAppId } from "@kdx/shared";
 import { Separator } from "@kdx/ui/separator";
 import { H1 } from "@kdx/ui/typography";
 
 import { IconKodixApp } from "~/app/[locale]/_components/app/kodix-icon";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
-import { CreateNoteDialog } from "./_components/create-note-dialog";
-import { NotesList } from "./_components/notes-list";
+import { MainNav } from "./_components/main-nav";
 
-export default async function NotesPage() {
-  await redirectIfAppNotInstalled({
-    appId: notesAppId,
-  });
-
+export default async function AiStudioPage() {
+  await redirectIfAppNotInstalled({ appId: aiStudioAppId });
   const t = await getTranslations();
 
   return (
     <MaxWidthWrapper>
       <main className="pt-6">
         <div className="flex items-center space-x-4">
-          <IconKodixApp appId={notesAppId} renderText={false} />
-          <H1>{t("apps.notes.appName")}</H1>
+          <IconKodixApp appId={aiStudioAppId} renderText={false} />
+          <H1>{t("apps.aiStudio.appName")}</H1>
         </div>
         <Separator className="my-4" />
-        <CreateNoteDialog />
-        <NotesList />
+        <MainNav />
       </main>
     </MaxWidthWrapper>
   );
 }
 ```
 
-### 9.3 Componentes Básicos
+### 4.3 Navegação por Tabs
 
 ```tsx
-// apps/kdx/src/app/[locale]/(authed)/apps/notes/_components/notes-list.tsx
+// apps/kdx/src/app/[locale]/(authed)/apps/aiStudio/_components/main-nav.tsx
 "use client";
 
-import React from "react";
-import { useTranslations } from "next-intl";
+import { useState } from "react";
 
-import { api } from "~/trpc/react";
-import { NoteCard } from "./note-card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@kdx/ui/tabs";
 
-export function NotesList() {
-  const t = useTranslations();
-  const { data: notes, isLoading } = api.app.notes.getAll.useQuery();
+import { AgentsSection } from "./sections/agents-section";
+import { LibrariesSection } from "./sections/libraries-section";
+import { ModelsSection } from "./sections/models-section";
+import { TokensSection } from "./sections/tokens-section";
 
-  if (isLoading) {
-    return <div className="py-8 text-center">Carregando...</div>;
-  }
+export function MainNav() {
+  return (
+    <Tabs defaultValue="models" className="space-y-6">
+      <TabsList className="grid w-full grid-cols-4">
+        <TabsTrigger value="models">Modelos</TabsTrigger>
+        <TabsTrigger value="tokens">Tokens</TabsTrigger>
+        <TabsTrigger value="agents">Agentes</TabsTrigger>
+        <TabsTrigger value="libraries">Bibliotecas</TabsTrigger>
+      </TabsList>
 
-  if (!notes || notes.length === 0) {
-    return (
-      <div className="py-8 text-center text-muted-foreground">
-        {t("apps.notes.noNotesFound")}
-      </div>
-    );
-  }
+      <TabsContent value="models">
+        <ModelsSection />
+      </TabsContent>
+      <TabsContent value="tokens">
+        <TokensSection />
+      </TabsContent>
+      <TabsContent value="agents">
+        <AgentsSection />
+      </TabsContent>
+      <TabsContent value="libraries">
+        <LibrariesSection />
+      </TabsContent>
+    </Tabs>
+  );
+}
+```
+
+### 4.4 Seção Exemplo - Padrão Correto
+
+```tsx
+// apps/kdx/src/app/[locale]/(authed)/apps/aiStudio/_components/sections/models-section.tsx
+"use client";
+
+import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { Button } from "@kdx/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@kdx/ui/dialog";
+import { toast } from "@kdx/ui/toast";
+
+import { useTRPC } from "~/trpc/react";
+
+// ⚠️ PADRÃO CORRETO: TanStack Query + useTRPC
+const createModelSchema = z.object({
+  name: z.string().min(1, "Nome é obrigatório"),
+  provider: z.string().min(1, "Provedor é obrigatório"),
+  enabled: z.boolean().default(true),
+  config: z.string().optional(),
+});
+
+type CreateModelFormData = z.infer<typeof createModelSchema>;
+
+export function ModelsSection() {
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+  const [showCreateForm, setShowCreateForm] = useState(false);
+
+  // ⚠️ PADRÃO CORRETO: useQuery do TanStack Query
+  const modelsQuery = useQuery(
+    trpc.app.aiStudio.buscarAiModels.queryOptions({
+      limite: 50,
+      pagina: 1,
+    }),
+  );
+
+  const models = modelsQuery.data?.models || [];
+  const isLoading = modelsQuery.isLoading;
+
+  // ⚠️ PADRÃO CORRETO: React Hook Form
+  const createForm = useForm<CreateModelFormData>({
+    resolver: zodResolver(createModelSchema),
+    defaultValues: {
+      name: "",
+      provider: "",
+      enabled: true,
+      config: "",
+    },
+  });
+
+  // ⚠️ PADRÃO CORRETO: useMutation do TanStack Query
+  const createModelMutation = useMutation(
+    trpc.app.aiStudio.criarAiModel.mutationOptions({
+      onSuccess: () => {
+        // Invalidar queries relacionadas
+        queryClient.invalidateQueries(
+          trpc.app.aiStudio.buscarAiModels.pathFilter(),
+        );
+        toast.success("Modelo criado com sucesso!");
+        setShowCreateForm(false);
+        createForm.reset();
+      },
+      onError: (error) => {
+        toast.error(error.message || "Erro ao criar modelo");
+      },
+    }),
+  );
+
+  const handleCreateSubmit = (data: CreateModelFormData) => {
+    let configJson = null;
+    if (data.config?.trim()) {
+      try {
+        configJson = JSON.parse(data.config);
+      } catch (error) {
+        toast.error("Configuração JSON inválida");
+        return;
+      }
+    }
+
+    createModelMutation.mutate({
+      name: data.name,
+      provider: data.provider,
+      enabled: data.enabled,
+      config: configJson,
+    });
+  };
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {notes.map((note) => (
-        <NoteCard key={note.id} note={note} />
-      ))}
+    <div className="space-y-6">
+      {/* Header com botão de criar */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">Modelos de IA</h2>
+          <p className="text-muted-foreground">
+            Gerencie os modelos de IA disponíveis
+          </p>
+        </div>
+        <Button onClick={() => setShowCreateForm(true)}>Criar Modelo</Button>
+      </div>
+
+      {/* Tabela ou cards com dados */}
+      {isLoading ? (
+        <div>Carregando...</div>
+      ) : (
+        <div>{/* Renderizar modelos */}</div>
+      )}
+
+      {/* Modal de criação */}
+      <Dialog open={showCreateForm} onOpenChange={setShowCreateForm}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Criar Novo Modelo</DialogTitle>
+          </DialogHeader>
+          {/* Form de criação */}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
@@ -573,358 +503,212 @@ export function NotesList() {
 
 ---
 
-## 10. Endpoint API (Opcional)
+## 5. Internacionalização
 
-Para casos que necessitam de endpoints REST específicos:
+### 5.1 Traduções Estruturadas
+
+```jsonc
+// packages/locales/src/messages/kdx/pt-BR.json
+{
+  "apps": {
+    "aiStudio": {
+      "appName": "AI Studio",
+      "appDescription": "Gerencie seus agentes de IA e configurações",
+      "models": {
+        "title": "Modelos de IA",
+        "description": "Gerencie os modelos de IA disponíveis",
+        "create": "Criar Modelo",
+        "edit": "Editar Modelo",
+        "delete": "Excluir Modelo",
+        "noModels": "Nenhum modelo encontrado",
+        "enabled": "Ativo",
+        "disabled": "Inativo",
+      },
+      "tokens": {
+        "title": "Tokens de Acesso",
+        "description": "Gerencie os tokens de acesso aos modelos",
+        "create": "Adicionar Token",
+        "edit": "Editar Token",
+        "delete": "Remover Token",
+        "noTokens": "Nenhum token configurado",
+      },
+      // ... outras seções
+    },
+  },
+}
+```
+
+### 5.2 Mapeamento de Nomes
 
 ```ts
-// apps/kdx/src/app/api/notes/route.ts
-import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
-
-import { getServerAuthSession } from "@kdx/auth";
-import { NotesRepository } from "@kdx/db/repositories/notes";
-
-import { OPTIONS, setCorsHeaders } from "../_enableCors";
-
-const createNoteSchema = z.object({
-  title: z.string().min(1).max(255),
-  content: z.string().optional(),
-});
-
-export async function POST(req: NextRequest) {
-  try {
-    const session = await getServerAuthSession();
-    if (!session?.user) {
-      const response = NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 },
-      );
-      setCorsHeaders(response);
-      return response;
-    }
-
-    const body = await req.json();
-    const { title, content } = createNoteSchema.parse(body);
-
-    const note = await NotesRepository.create({
-      title,
-      content,
-      userId: session.user.id,
-      teamId: session.user.activeTeamId,
-    });
-
-    const response = NextResponse.json(note);
-    setCorsHeaders(response);
-    return response;
-  } catch (error) {
-    console.error("Error creating note:", error);
-    const response = NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
-    setCorsHeaders(response);
-    return response;
-  }
-}
-
-export async function GET(req: NextRequest) {
-  try {
-    const session = await getServerAuthSession();
-    if (!session?.user) {
-      const response = NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 },
-      );
-      setCorsHeaders(response);
-      return response;
-    }
-
-    const notes = await NotesRepository.findByTeam(session.user.activeTeamId);
-
-    const response = NextResponse.json(notes);
-    setCorsHeaders(response);
-    return response;
-  } catch (error) {
-    console.error("Error fetching notes:", error);
-    const response = NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
-    setCorsHeaders(response);
-    return response;
-  }
-}
-
-export { OPTIONS };
+// packages/locales/src/next-intl/internal/appIdToName.ts
+export const appIdToName: Record<KodixAppId, string> = {
+  [kodixCareAppId]: "apps.kodixCare.appName",
+  [calendarAppId]: "apps.calendar.appName",
+  [todoAppId]: "apps.todo.appName",
+  [chatAppId]: "apps.chat.appName",
+  [aiStudioAppId]: "apps.aiStudio.appName", // Adicionar
+} as const;
 ```
 
 ---
 
-## 11. Atualizar Validators
+## 6. Validators
 
 ```ts
 // packages/validators/src/trpc/app/index.ts
-import { z } from "zod";
-
-import {
-  calendarAppId,
-  chatAppId,
-  kodixCareAppId,
-  notesAppId, // Adicionar import
-  todoAppId,
-} from "@kdx/shared";
-
 export const ZInstallAppInputSchema = z.object({
   appId: z.enum([
     kodixCareAppId,
     calendarAppId,
     todoAppId,
     chatAppId,
-    notesAppId, // Adicionar aqui
-  ]),
-});
-
-export const ZUninstallAppInputSchema = z.object({
-  appId: z.enum([
-    kodixCareAppId,
-    calendarAppId,
-    todoAppId,
-    chatAppId,
-    notesAppId, // Adicionar aqui
+    aiStudioAppId, // Adicionar
   ]),
 });
 ```
 
 ---
 
-## 12. Testes Automatizados
+## 7. Principais Correções do Guia
+
+### ❌ Problemas Anteriores
+
+1. **TanStack Query incorreto**: Uso de `api.app.xxx.useQuery()` em vez de `useQuery(trpc.app.xxx.queryOptions())`
+2. **Estrutura tRPC inadequada**: Faltava organização por handlers separados
+3. **Frontend patterns**: Componentes muito simplificados
+4. **Validação**: Schemas Zod mal estruturados
+5. **Error handling**: Tratamento de erros inadequado
+
+### ✅ Padrões Corretos
+
+1. **TanStack Query**: `useQuery(trpc.app.xxx.queryOptions())` e `useMutation(trpc.app.xxx.mutationOptions())`
+2. **tRPC Structure**: Handlers separados, router organizado
+3. **React Hook Form**: Validação adequada com Zod
+4. **Components**: Estrutura por seções com tabs
+5. **Error handling**: Toast notifications e validação
+
+---
+
+## 8. Problemas Comuns e Soluções
+
+### 8.1 SelectItem com Value Vazio
+
+**❌ Erro Comum:**
 
 ```tsx
-// apps/kdx/src/__tests__/apps/notes/notes-list.test.tsx
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
+<SelectItem value="">Nenhuma opção</SelectItem>
+```
 
-import { NotesList } from "~/app/[locale]/(authed)/apps/notes/_components/notes-list";
+**Error:** `A <Select.Item /> must have a value prop that is not an empty string`
 
-// Mock do tRPC
-jest.mock("~/trpc/react", () => ({
-  api: {
-    app: {
-      notes: {
-        getAll: {
-          useQuery: jest.fn(() => ({
-            data: [{ id: "1", title: "Test Note", content: "Test content" }],
-            isLoading: false,
-          })),
-        },
-      },
-    },
-  },
-}));
+**✅ Solução:**
 
-describe("NotesList", () => {
-  it("deve renderizar lista de notas", () => {
-    const queryClient = new QueryClient();
+```tsx
+// Use um valor específico em vez de string vazia
+<SelectItem value="none">Nenhuma opção</SelectItem>;
 
-    render(
-      <QueryClientProvider client={queryClient}>
-        <NotesList />
-      </QueryClientProvider>,
-    );
-
-    expect(screen.getByText("Test Note")).toBeInTheDocument();
+// Trate adequadamente no submit
+const handleSubmit = (data: FormData) => {
+  mutation.mutate({
+    ...data,
+    optionalField:
+      data.optionalField === "none" ? undefined : data.optionalField,
   });
+};
+
+// Configure o valor padrão
+const form = useForm({
+  defaultValues: {
+    optionalField: "none", // em vez de ""
+  },
 });
+```
+
+### 8.2 TanStack Query com tRPC
+
+**❌ Erro Comum:**
+
+```tsx
+const { data } = api.app.myRouter.myQuery.useQuery();
+```
+
+**✅ Solução:**
+
+```tsx
+const query = useQuery(trpc.app.myRouter.myQuery.queryOptions(params));
+```
+
+### 8.3 Unique Constraints no Schema
+
+**❌ Problema:** Permitir registros duplicados
+
+**✅ Solução:**
+
+```ts
+export const myTable = mysqlTable(
+  "my_table",
+  {
+    // ... campos
+  },
+  (table) => ({
+    unique: unique("my_table_unique_constraint").on(table.field1, table.field2),
+  }),
+);
+```
+
+### 8.4 Error Handling em Mutations
+
+**❌ Básico:**
+
+```tsx
+const mutation = useMutation(trpc.app.create.mutationOptions());
+```
+
+**✅ Completo:**
+
+```tsx
+const mutation = useMutation(
+  trpc.app.create.mutationOptions({
+    onSuccess: () => {
+      queryClient.invalidateQueries(trpc.app.list.pathFilter());
+      toast.success("Criado com sucesso!");
+      form.reset();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Erro ao criar");
+    },
+  }),
+);
 ```
 
 ---
 
-## 13. Tratamento de Erros e Validação
+## Checklist de Implementação
+
+### Backend
+
+- [ ] Schema do banco criado com relations corretas
+- [ ] Unique constraints para evitar duplicações
+- [ ] tRPC handlers implementados
+- [ ] Validação de input com Zod
 
 ### Frontend
 
-```tsx
-"use client";
-
-import { useState } from "react";
-import { useTranslations } from "next-intl";
-
-import { toast } from "@kdx/ui/toast";
-
-import { api } from "~/trpc/react";
-
-export function CreateNoteForm() {
-  const t = useTranslations();
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-
-  const utils = api.useUtils();
-  const createMutation = api.app.notes.create.useMutation({
-    onSuccess: () => {
-      toast.success(t("apps.notes.noteCreated"));
-      setTitle("");
-      setContent("");
-      utils.app.notes.getAll.invalidate();
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    createMutation.mutate({ title, content });
-  };
-
-  return <form onSubmit={handleSubmit}>{/* Form fields */}</form>;
-}
-```
-
-### Backend (tRPC)
-
-```ts
-// packages/api/src/trpc/routers/app/notes/create.handler.ts
-import { TRPCError } from "@trpc/server";
-import { z } from "zod";
-
-import { NotesRepository } from "@kdx/db/repositories/notes";
-
-import { protectedProcedure } from "../../../procedures";
-
-export const createHandler = protectedProcedure
-  .input(
-    z.object({
-      title: z
-        .string()
-        .min(1, "Título é obrigatório")
-        .max(255, "Título muito longo"),
-      content: z.string().optional(),
-    }),
-  )
-  .mutation(async ({ input, ctx }) => {
-    try {
-      return await NotesRepository.create({
-        ...input,
-        userId: ctx.user.id,
-        teamId: ctx.user.activeTeamId,
-      });
-    } catch (error) {
-      console.error("Error creating note:", error);
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Erro ao criar nota",
-      });
-    }
-  });
-```
-
----
-
-## 14. Boas Práticas
-
-### 14.1 Estrutura de Código
-
-- **Arquivos pequenos** (≤ 300 linhas)
-- **Componentes reutilizáveis** na pasta `_components`
-- **Tipagem forte** com TypeScript
-- **Separação de responsabilidades** (UI, lógica, dados)
-
-### 14.2 Padrões de Nomenclatura
-
-- **Pastas**: kebab-case (`notes`, `kodix-care`)
-- **Arquivos**: kebab-case (`notes-list.tsx`, `create-note-dialog.tsx`)
-- **Componentes**: PascalCase (`NotesList`, `CreateNoteDialog`)
-- **Variáveis**: camelCase (`notesAppId`, `createMutation`)
-
-### 14.3 Performance
-
-- Use `"use client"` apenas quando necessário
-- Implemente loading states
-- Use React.memo para componentes pesados
-- Otimize queries com `enabled` e `staleTime`
-
-### 14.4 Acessibilidade
-
-- Use componentes do `@kdx/ui`
-- Implemente navegação por teclado
-- Adicione labels e aria-labels apropriados
-- Teste com screen readers
-
----
-
-## 15. Comandos Úteis
-
-```bash
-# Desenvolvimento
-pnpm install
-pnpm dev:kdx
-
-# Banco de dados
-pnpm db:push
-pnpm db:seed
-pnpm db:studio
-
-# Qualidade de código
-pnpm lint:fix
-pnpm format:fix
-pnpm typecheck
-
-# Testes
-pnpm test
-pnpm test:watch
-pnpm test:coverage
-```
-
----
-
-## 16. Próximos Passos
-
-1. **Configurações avançadas**: Implementar schemas de config específicos
-2. **Permissões granulares**: Definir roles específicos do SubApp
-3. **Analytics**: Integrar tracking de eventos
-4. **Templates CLI**: Criar gerador automático de SubApps
-5. **Documentação**: Adicionar Storybook para componentes
-
----
-
-## 17. Checklist de Finalização
-
-### Código
-
-- [ ] `pnpm typecheck` sem erros
-- [ ] `pnpm lint:fix` e `pnpm format:fix` executados
-- [ ] `pnpm test` com coverage adequado
-- [ ] Validar fluxo completo com `pnpm dev:kdx`
+- [ ] TanStack Query com queryOptions corretos
+- [ ] React Hook Form com validação
+- [ ] Componentes organizados por seções
+- [ ] Loading states e error handling
+- [ ] Toast notifications
 
 ### Configuração
 
-- [ ] ID único registrado em `@kdx/shared`
-- [ ] Pathname mapeado em `appIdToPathname`
-- [ ] Ícone adicionado em `public/appIcons/`
-- [ ] Traduções em pt-BR e en
+- [ ] ID registrado no shared
+- [ ] Pathname mapeado
+- [ ] Traduções adicionadas
 - [ ] Validators atualizados
+- [ ] Ícone adicionado
 
-### Funcionalidade
+---
 
-- [ ] Página principal funcionando
-- [ ] Componentes renderizando corretamente
-- [ ] tRPC procedures funcionando
-- [ ] Tratamento de erros implementado
-- [ ] Loading states implementados
-
-### Qualidade
-
-- [ ] Testes unitários escritos
-- [ ] Acessibilidade verificada
-- [ ] Performance otimizada
-- [ ] Documentação atualizada
-
-## Recursos Adicionais
-
-- [Documentação Principal](./documentacao-projeto-kodix.md) - Visão geral do projeto
-- [Guia de Banco de Dados](./banco-de-dados-kodix.md) - Padrões e convenções de banco de dados
-- [Guia de Implementação Frontend](./guia-implementacao-frontend-kodix.md) - Padrões de desenvolvimento frontend
-- [Guia de Desenvolvimento](./guia-desenvolvimento-kodix.md) - Práticas gerais de desenvolvimento
-
-_Este guia fornece tudo o que é necessário para criar SubApps robustos, tipados e bem integrados ao ecossistema Kodix._
+_Este guia foi corrigido baseado na implementação real do AI Studio, garantindo padrões consistentes e funcionais._

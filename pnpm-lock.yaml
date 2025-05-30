@@ -563,30 +563,6 @@ importers:
         specifier: 'catalog:'
         version: 3.0.7(@types/node@22.13.9)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.39.0)(yaml@2.7.0)
 
-  apps/agent-chat:
-    dependencies:
-      '@ai-sdk/openai':
-        specifier: ^1.3.21
-        version: 1.3.21(zod@3.24.2)
-      '@ai-sdk/react':
-        specifier: ^1.2.11
-        version: 1.2.11(react@19.1.0)(zod@3.24.2)
-      ai:
-        specifier: ^4.3.13
-        version: 4.3.13(react@19.1.0)(zod@3.24.2)
-      next:
-        specifier: latest
-        version: 15.3.2(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      openai:
-        specifier: ^4.29.0
-        version: 4.97.0(ws@8.18.1)(zod@3.24.2)
-      react:
-        specifier: ^19.1.0
-        version: 19.1.0
-      react-dom:
-        specifier: ^19.1.0
-        version: 19.1.0(react@19.1.0)
-
   apps/care-expo:
     dependencies:
       '@bacons/text-decoder':

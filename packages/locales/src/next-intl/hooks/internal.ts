@@ -1,4 +1,5 @@
 import {
+  aiStudioAppId,
   calendarAppId,
   chatAppId,
   kodixCareAppId,
@@ -11,4 +12,5 @@ export const appIdToName = {
   [calendarAppId]: "Calendar",
   [todoAppId]: "Todo",
   [chatAppId]: "Chat",
+  [aiStudioAppId]: "AI Studio",
 } as const;

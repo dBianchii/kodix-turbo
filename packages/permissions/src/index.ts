@@ -4,6 +4,7 @@ import { AbilityBuilder, createMongoAbility } from "@casl/ability";
 import type { ServerSideT } from "@kdx/locales";
 import type { AppRole, KodixAppId } from "@kdx/shared";
 import {
+  aiStudioAppId,
   calendarAppId,
   chatAppId,
   kodixCareAppId,
@@ -25,6 +26,8 @@ const appIdToPermissionsFactory = {
   [calendarAppId]: ({ t: _ }: { t: ServerSideT }) => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   [chatAppId]: ({ t: _ }: { t: ServerSideT }) => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  [aiStudioAppId]: ({ t: _ }: { t: ServerSideT }) => {},
 };
 
 export function defineAbilityForUserAndApp<T extends KodixAppId>({

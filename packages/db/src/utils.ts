@@ -5,12 +5,14 @@ import type {
 
 import type { KodixAppId } from "@kdx/shared";
 import {
+  aiStudioAppId,
   calendarAppId,
   chatAppId,
   kodixCareAppId,
   todoAppId,
 } from "@kdx/shared";
 
+import * as aiStudio from "./schema/apps/ai-studio";
 import * as calendar from "./schema/apps/calendar";
 import * as kodixCare from "./schema/apps/kodixCare";
 import * as todos from "./schema/apps/todos";
@@ -30,4 +32,5 @@ export const appIdToSchemas: Record<
   [todoAppId]: withoutRelationsAndZodSchemas(todos),
   [calendarAppId]: withoutRelationsAndZodSchemas(calendar),
   [chatAppId]: withoutRelationsAndZodSchemas({}),
+  [aiStudioAppId]: withoutRelationsAndZodSchemas(aiStudio),
 };

@@ -3,6 +3,7 @@ import type { TRPCClientErrorLike } from "@trpc/client";
 import type { AppRouter } from "@kdx/api";
 import type { KodixAppId } from "@kdx/shared";
 import {
+  aiStudioAppId,
   calendarAppId,
   chatAppId,
   getErrorMessage,
@@ -36,6 +37,7 @@ export const appIdToPathname = {
   [calendarAppId]: "calendar",
   [todoAppId]: "todo",
   [chatAppId]: "chat",
+  [aiStudioAppId]: "aiStudio",
 } as const;
 export type AppPathnames =
   (typeof appIdToPathname)[keyof typeof appIdToPathname];

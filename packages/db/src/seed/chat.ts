@@ -136,8 +136,8 @@ export async function seedChatWithTeam(teamId: string, userId: string) {
         title: "Como configurar a API do sistema?",
         teamId: teamId,
         userId: userId,
-        aiModelId: defaultModel?.id,
-        chatFolderId: createdFolders.find((f) => f.name?.includes("Suporte"))
+        aiModelId: defaultModel?.id!,
+        chatFolderId: createdFolders.find((f) => f?.name.includes("Suporte"))
           ?.id,
         aiAgentId: supportAgent?.id,
       },
@@ -145,9 +145,9 @@ export async function seedChatWithTeam(teamId: string, userId: string) {
         title: "Implementação de novas features",
         teamId: teamId,
         userId: userId,
-        aiModelId: defaultModel?.id,
+        aiModelId: defaultModel?.id!,
         chatFolderId: createdFolders.find((f) =>
-          f.name?.includes("Desenvolvimento"),
+          f?.name.includes("Desenvolvimento"),
         )?.id,
         // Sem agente - desenvolvimento livre
       },
@@ -155,9 +155,9 @@ export async function seedChatWithTeam(teamId: string, userId: string) {
         title: "Análise da documentação do projeto",
         teamId: teamId,
         userId: userId,
-        aiModelId: defaultModel?.id,
+        aiModelId: defaultModel?.id!,
         chatFolderId: createdFolders.find((f) =>
-          f.name?.includes("Documentação"),
+          f?.name.includes("Documentação"),
         )?.id,
         aiAgentId: documentAgent?.id,
       },
@@ -165,15 +165,15 @@ export async function seedChatWithTeam(teamId: string, userId: string) {
         title: "Brainstorming de ideias",
         teamId: teamId,
         userId: userId,
-        aiModelId: defaultModel?.id,
-        chatFolderId: createdFolders.find((f) => f.name?.includes("Geral"))?.id,
+        aiModelId: defaultModel?.id!,
+        chatFolderId: createdFolders.find((f) => f?.name.includes("Geral"))?.id,
         aiAgentId: generalAgent?.id,
       },
       {
         title: "Teste de integração com IA",
         teamId: teamId,
         userId: userId,
-        aiModelId: availableModels[1]?.id || defaultModel?.id, // Segundo modelo se disponível
+        aiModelId: availableModels[1]?.id || defaultModel?.id!, // Segundo modelo se disponível
         // Sem pasta específica
       },
     ];
@@ -214,7 +214,7 @@ export async function seedChatWithTeam(teamId: string, userId: string) {
 
     // Sessão 1: Suporte Técnico - API Configuration
     const supportSession = createdSessions.find((s) =>
-      s.title?.includes("configurar"),
+      s?.title.includes("configurar"),
     );
     if (supportSession?.id) {
       const supportMessages = [
@@ -288,7 +288,7 @@ Precisa de ajuda com algum endpoint específico?`,
 
     // Sessão 2: Desenvolvimento - Features
     const devSession = createdSessions.find((s) =>
-      s.title?.includes("Implementação"),
+      s?.title.includes("Implementação"),
     );
     if (devSession?.id) {
       const devMessages = [
@@ -339,7 +339,7 @@ Que tipo de relatórios você precisa implementar?`,
 
     // Sessão 3: Documentação
     const docSession = createdSessions.find((s) =>
-      s.title?.includes("documentação"),
+      s?.title.includes("documentação"),
     );
     if (docSession?.id) {
       try {
@@ -384,7 +384,7 @@ Qual seção específica você gostaria de analisar primeiro?`,
 
     // Sessão 4: Brainstorming
     const brainstormSession = createdSessions.find((s) =>
-      s.title?.includes("Brainstorming"),
+      s?.title.includes("Brainstorming"),
     );
     if (brainstormSession?.id) {
       try {
@@ -430,7 +430,7 @@ Qual área você gostaria de explorar mais?`,
     }
 
     // Sessão 5: Teste Simples
-    const testSession = createdSessions.find((s) => s.title?.includes("Teste"));
+    const testSession = createdSessions.find((s) => s?.title.includes("Teste"));
     if (testSession?.id) {
       try {
         await chatRepository.ChatMessageRepository.create({

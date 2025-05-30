@@ -20,11 +20,15 @@ export const kodixCareAppId = "1z50i9xblo4b";
 //* Chat *//
 export const chatAppId = "az1x2c3bv4n5";
 
+//* AI Studio *//
+export const aiStudioAppId = "ai9x7m2k5p1s";
+
 export const appIdToRoles = {
   [kodixCareAppId]: [...commonRolesForAllApps, "CAREGIVER"] as const,
   [calendarAppId]: [...commonRolesForAllApps] as const,
   [todoAppId]: [...commonRolesForAllApps] as const,
   [chatAppId]: [...commonRolesForAllApps] as const,
+  [aiStudioAppId]: [...commonRolesForAllApps] as const,
 };
 export const allRoles = [...new Set(Object.values(appIdToRoles).flat())];
 
@@ -35,7 +39,8 @@ export type KodixAppId =
   | typeof todoAppId
   | typeof calendarAppId
   | typeof kodixCareAppId
-  | typeof chatAppId;
+  | typeof chatAppId
+  | typeof aiStudioAppId;
 
 export type AppIdsWithConfig = typeof kodixCareAppId; //? Some apps might not have config implemented
 export type AppIdsWithUserAppTeamConfig = typeof kodixCareAppId; //? Some apps might not have userAppTeamConfig implemented

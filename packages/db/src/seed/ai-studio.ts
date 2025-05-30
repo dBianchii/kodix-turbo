@@ -326,12 +326,12 @@ INSTRUÇÕES PRINCIPAIS:
 
 CONTEXTO DA EMPRESA:
 - Nome: ${team.name}
-- Descrição: ${team.description || "Empresa focada em soluções tecnológicas"}
+- Descrição: Empresa focada em soluções tecnológicas
 
 BASE DE CONHECIMENTO:
 Use as informações da documentação técnica e FAQ para responder dúvidas dos usuários.`,
         libraryId: createdLibraries.find(
-          (lib) => lib.name === "Base de Conhecimento",
+          (lib) => lib?.name === "Base de Conhecimento",
         )?.id,
       },
       {
@@ -359,7 +359,7 @@ FORMATO DE RESPOSTA:
 ⚠️ **Pontos de Atenção**
 ✅ **Próximos Passos**`,
         libraryId: createdLibraries.find(
-          (lib) => lib.name === "Documentação Técnica",
+          (lib) => lib?.name === "Documentação Técnica",
         )?.id,
       },
       {
@@ -387,7 +387,7 @@ ABORDAGEM:
 - Ofereça alternativas quando possível
 - Seja proativo em sugerir melhorias`,
         libraryId: createdLibraries.find(
-          (lib) => lib.name === "Biblioteca de Treinamento",
+          (lib) => lib?.name === "Biblioteca de Treinamento",
         )?.id,
       },
     ];
