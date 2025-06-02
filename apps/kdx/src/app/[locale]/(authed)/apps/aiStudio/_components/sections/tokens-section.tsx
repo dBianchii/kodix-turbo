@@ -3,11 +3,20 @@
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Key, MoreHorizontal, Pencil, Plus, Trash2 } from "lucide-react";
+import {
+  AlertTriangle,
+  Key,
+  MoreHorizontal,
+  Pencil,
+  Plus,
+  Shield,
+  Trash2,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Alert, AlertDescription } from "@kdx/ui/alert";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -51,7 +60,6 @@ import {
   FormMessage,
 } from "@kdx/ui/form";
 import { Input } from "@kdx/ui/input";
-import { Label } from "@kdx/ui/label";
 import {
   Select,
   SelectContent,
@@ -73,7 +81,7 @@ import { useTRPC } from "~/trpc/react";
 
 // Schema de validação para o formulário de criação
 const createTokenSchema = z.object({
-  modelId: z.string().min(1, "Selecione um modelo"),
+  providerId: z.string().min(1, "Selecione um provedor"),
   token: z.string().min(1, "Token é obrigatório"),
 });
 
@@ -96,23 +104,26 @@ export function TokensSection() {
   const [tokenToEdit, setTokenToEdit] = useState<any>(null);
 
   // Queries
-  const tokensQuery = useQuery(trpc.app.aiStudio.buscarTokens.queryOptions());
-  const modelsQuery = useQuery(
-    trpc.app.aiStudio.buscarAiModels.queryOptions({
+  const tokensQuery = useQuery(
+    trpc.app.aiStudio.findAiTeamProviderTokens.queryOptions(),
+  );
+
+  const providersQuery = useQuery(
+    trpc.app.aiStudio.findAiProviders.queryOptions({
       limite: 50,
-      pagina: 1,
+      offset: 0,
     }),
   );
 
   const tokens = tokensQuery.data || [];
-  const models = modelsQuery.data?.models || [];
+  const providers = providersQuery.data || [];
   const isLoading = tokensQuery.isLoading;
 
   // Form setup para criação
   const createForm = useForm<CreateTokenFormData>({
     resolver: zodResolver(createTokenSchema),
     defaultValues: {
-      modelId: "",
+      providerId: "",
       token: "",
     },
   });
@@ -127,49 +138,50 @@ export function TokensSection() {
 
   // Mutations
   const createTokenMutation = useMutation(
-    trpc.app.aiStudio.criarAiModelToken.mutationOptions({
+    trpc.app.aiStudio.createAiTeamProviderToken.mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries(
-          trpc.app.aiStudio.buscarTokens.pathFilter(),
+          trpc.app.aiStudio.findAiTeamProviderTokens.pathFilter(),
         );
         toast.success("Token criado com sucesso!");
         setShowCreateForm(false);
         createForm.reset();
       },
-      onError: (error) => {
+      onError: (error: any) => {
+        console.error("Erro ao criar token:", error);
         toast.error(error.message || "Erro ao criar token");
       },
     }),
   );
 
   const updateTokenMutation = useMutation(
-    trpc.app.aiStudio.atualizarAiModelToken.mutationOptions({
+    trpc.app.aiStudio.updateAiTeamProviderToken.mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries(
-          trpc.app.aiStudio.buscarTokens.pathFilter(),
+          trpc.app.aiStudio.findAiTeamProviderTokens.pathFilter(),
         );
         toast.success("Token atualizado com sucesso!");
         setShowEditForm(false);
         setTokenToEdit(null);
         editForm.reset();
       },
-      onError: (error) => {
+      onError: (error: any) => {
         toast.error(error.message || "Erro ao atualizar token");
       },
     }),
   );
 
   const deleteTokenMutation = useMutation(
-    trpc.app.aiStudio.removerTokenPorModelo.mutationOptions({
+    trpc.app.aiStudio.removeTokenByProvider.mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries(
-          trpc.app.aiStudio.buscarTokens.pathFilter(),
+          trpc.app.aiStudio.findAiTeamProviderTokens.pathFilter(),
         );
         toast.success("Token removido com sucesso!");
         setShowDeleteDialog(false);
         setTokenToDelete(null);
       },
-      onError: (error) => {
+      onError: (error: any) => {
         toast.error(error.message || "Erro ao remover token");
       },
     }),
@@ -177,7 +189,7 @@ export function TokensSection() {
 
   const handleCreateSubmit = (data: CreateTokenFormData) => {
     createTokenMutation.mutate({
-      modelId: data.modelId,
+      providerId: data.providerId,
       token: data.token,
     });
   };
@@ -214,9 +226,9 @@ export function TokensSection() {
   };
 
   const handleDeleteConfirm = () => {
-    if (tokenToDelete?.model?.id) {
+    if (tokenToDelete?.providerId) {
       deleteTokenMutation.mutate({
-        modelId: tokenToDelete.model.id,
+        providerId: tokenToDelete.providerId,
       });
     }
   };
@@ -226,30 +238,47 @@ export function TokensSection() {
     setTokenToDelete(null);
   };
 
+  // Função para mascarar o token
+  const maskToken = (token: string) => {
+    if (token.length <= 8) return token;
+    return token.substring(0, 8) + "..." + token.substring(token.length - 4);
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">
-            {t("apps.aiStudio.tokens.title")}
+            Tokens de Acesso
           </h2>
           <p className="text-muted-foreground">
-            {t("apps.aiStudio.tokens.description")}
+            Gerencie tokens de API para cada provedor de IA
           </p>
         </div>
         <Button onClick={() => setShowCreateForm(true)}>
           <Plus className="mr-2 h-4 w-4" />
-          {t("apps.aiStudio.tokens.create")}
+          Adicionar Token
         </Button>
       </div>
+
+      {/* Aviso de Segurança */}
+      <Alert>
+        <Shield className="h-4 w-4" />
+        <AlertDescription>
+          <strong>Segurança:</strong> Os tokens são criptografados e apenas
+          visíveis durante a criação. Mantenha seus tokens seguros e não os
+          compartilhe.
+        </AlertDescription>
+      </Alert>
 
       {/* DataTable */}
       <Card>
         <CardHeader>
-          <CardTitle>{t("apps.aiStudio.tokens.title")}</CardTitle>
+          <CardTitle>Tokens Configurados</CardTitle>
           <CardDescription>
-            Gerencie os tokens de acesso aos modelos de IA por equipe
+            Configure tokens de API por provedor para habilitar o acesso aos
+            modelos de IA
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -263,22 +292,24 @@ export function TokensSection() {
                 <Key className="text-muted-foreground h-6 w-6" />
               </div>
               <h3 className="mb-2 text-lg font-semibold">
-                {t("apps.aiStudio.tokens.noTokens")}
+                Nenhum token configurado
               </h3>
               <p className="text-muted-foreground mb-4">
-                Adicione tokens para habilitar o acesso aos modelos
+                Configure tokens de API para provedores como OpenAI, Anthropic,
+                Google para habilitar o uso dos modelos de IA
               </p>
               <Button onClick={() => setShowCreateForm(true)}>
                 <Plus className="mr-2 h-4 w-4" />
-                {t("apps.aiStudio.tokens.create")}
+                Configurar Primeiro Token
               </Button>
             </div>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Modelo</TableHead>
+                  <TableHead>Provedor</TableHead>
                   <TableHead>Token</TableHead>
+                  <TableHead>Status</TableHead>
                   <TableHead>Criado em</TableHead>
                   <TableHead className="w-[70px]">Ações</TableHead>
                 </TableRow>
@@ -287,13 +318,27 @@ export function TokensSection() {
                 {tokens.map((token: any) => (
                   <TableRow key={token.id}>
                     <TableCell className="font-medium">
-                      {token.model.name}
+                      <div className="flex items-center gap-2">
+                        <div className="bg-primary/10 rounded p-1">
+                          <Key className="h-3 w-3" />
+                        </div>
+                        {token.provider?.name || "N/A"}
+                      </div>
                     </TableCell>
                     <TableCell className="font-mono text-xs">
-                      {token.token.substring(0, 20)}...
+                      {maskToken(token.token)}
                     </TableCell>
                     <TableCell>
-                      {new Date(token.createdAt).toLocaleDateString()}
+                      <Badge
+                        variant="default"
+                        className="bg-green-100 text-green-800"
+                      >
+                        <Shield className="mr-1 h-3 w-3" />
+                        Configurado
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      {new Date(token.createdAt).toLocaleDateString("pt-BR")}
                     </TableCell>
                     <TableCell>
                       <DropdownMenu>
@@ -307,14 +352,14 @@ export function TokensSection() {
                             onClick={() => handleEditClick(token)}
                           >
                             <Pencil className="mr-2 h-4 w-4" />
-                            {t("apps.aiStudio.tokens.edit")}
+                            Editar Token
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-destructive"
                             onClick={() => handleDeleteClick(token)}
                           >
                             <Trash2 className="mr-2 h-4 w-4" />
-                            {t("apps.aiStudio.tokens.delete")}
+                            Remover Token
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -331,9 +376,10 @@ export function TokensSection() {
       <Dialog open={showCreateForm} onOpenChange={setShowCreateForm}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Adicionar Token de Acesso</DialogTitle>
+            <DialogTitle>Adicionar Token de API</DialogTitle>
             <DialogDescription>
-              Adicione um token de acesso para um modelo de IA específico.
+              Configure um token de API para acessar os modelos do provedor
+              selecionado.
             </DialogDescription>
           </DialogHeader>
 
@@ -344,29 +390,29 @@ export function TokensSection() {
             >
               <FormField
                 control={createForm.control}
-                name="modelId"
+                name="providerId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Modelo</FormLabel>
+                    <FormLabel>Provedor *</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Selecione um modelo" />
+                          <SelectValue placeholder="Selecione o provedor" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {models.map((model: any) => (
-                          <SelectItem key={model.id} value={model.id}>
-                            {model.name} ({model.provider})
+                        {providers.map((provider: any) => (
+                          <SelectItem key={provider.id} value={provider.id}>
+                            {provider.name}
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                     <FormDescription>
-                      Escolha o modelo para o qual você está adicionando o token
+                      Escolha o provedor de IA para configurar o token
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -378,17 +424,26 @@ export function TokensSection() {
                 name="token"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Token de Acesso</FormLabel>
+                    <FormLabel>Token da API *</FormLabel>
                     <FormControl>
-                      <Input placeholder="sk-..." type="password" {...field} />
+                      <Input type="password" placeholder="sk-..." {...field} />
                     </FormControl>
                     <FormDescription>
-                      Cole aqui seu token de API (ex: sk-... para OpenAI)
+                      Token de API do provedor (será criptografado)
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
+              <Alert>
+                <Shield className="h-4 w-4" />
+                <AlertDescription>
+                  <strong>Segurança:</strong> O token será criptografado e
+                  armazenado com segurança. Apenas você poderá visualizar o
+                  token completo durante esta criação.
+                </AlertDescription>
+              </Alert>
 
               <DialogFooter>
                 <Button
@@ -401,8 +456,8 @@ export function TokensSection() {
                 </Button>
                 <Button type="submit" disabled={createTokenMutation.isPending}>
                   {createTokenMutation.isPending
-                    ? "Salvando..."
-                    : "Salvar Token"}
+                    ? "Configurando..."
+                    : "Configurar Token"}
                 </Button>
               </DialogFooter>
             </form>
@@ -414,10 +469,9 @@ export function TokensSection() {
       <Dialog open={showEditForm} onOpenChange={setShowEditForm}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Editar Token de Acesso</DialogTitle>
+            <DialogTitle>Editar Token</DialogTitle>
             <DialogDescription>
-              Atualize o token de acesso para o modelo "
-              {tokenToEdit?.model?.name}".
+              Atualize o token do provedor "{tokenToEdit?.provider?.name}".
             </DialogDescription>
           </DialogHeader>
 
@@ -426,29 +480,29 @@ export function TokensSection() {
               onSubmit={editForm.handleSubmit(handleEditSubmit)}
               className="space-y-4"
             >
-              <div className="rounded-lg border p-3">
-                <Label className="text-sm font-medium">Modelo</Label>
-                <p className="text-muted-foreground text-sm">
-                  {tokenToEdit?.model?.name} ({tokenToEdit?.model?.provider})
-                </p>
-              </div>
-
               <FormField
                 control={editForm.control}
                 name="token"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Novo Token de Acesso</FormLabel>
+                    <FormLabel>Novo Token da API *</FormLabel>
                     <FormControl>
-                      <Input placeholder="sk-..." type="password" {...field} />
+                      <Input type="password" placeholder="sk-..." {...field} />
                     </FormControl>
                     <FormDescription>
-                      Cole aqui o novo token de API
+                      Novo token de API do provedor (será criptografado)
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
+              <Alert>
+                <AlertTriangle className="h-4 w-4" />
+                <AlertDescription>
+                  O token anterior será substituído e não poderá ser recuperado.
+                </AlertDescription>
+              </Alert>
 
               <DialogFooter>
                 <Button
@@ -474,11 +528,15 @@ export function TokensSection() {
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
+            <AlertDialogTitle>Confirmar Remoção</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja remover o token de acesso para o modelo "
-              {tokenToDelete?.model?.name}"? Esta ação não pode ser desfeita e
-              você não conseguirá usar este modelo até adicionar um novo token.
+              Tem certeza que deseja remover o token do provedor "
+              {tokenToDelete?.provider?.name}"?
+              <br />
+              <br />
+              <strong>Esta ação não pode ser desfeita</strong> e impedirá o
+              acesso aos modelos deste provedor até que um novo token seja
+              configurado.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

@@ -17,6 +17,7 @@ export function KodixApps({
 }) {
   const apps = use(appsPromise);
   const { user } = use(authPromise);
+
   return apps.map((app) => (
     <div key={app.id}>
       <KodixApp

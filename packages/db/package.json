@@ -46,7 +46,15 @@
     "generate-nanoid": "pnpm tsx ./scripts/generate-nanoid",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
     "wait-for-db": "while ! nc -z localhost 3306; do sleep 1; done",
-    "with-env": "dotenv -e ../../.env --"
+    "with-env": "dotenv -e ../../.env --",
+    "db:seed": "tsx ./src/seed/index.ts",
+    "db:seed:ai-studio": "pnpm with-env tsx ./src/seed/ai-studio.ts",
+    "db:test:ai-provider": "pnpm with-env tsx ./scripts/test-ai-provider.ts",
+    "db:apply:ai-provider-schema": "pnpm with-env tsx ./scripts/apply-ai-provider-schema.ts",
+    "db:migrate:ai-provider": "pnpm with-env tsx ./scripts/migrate-ai-provider.ts",
+    "db:rollback:ai-provider": "pnpm with-env tsx ./scripts/rollback-ai-provider.ts",
+    "db:encrypt-tokens": "pnpm with-env tsx ./scripts/encrypt-existing-tokens.ts",
+    "db:add-default-column": "pnpm with-env tsx ./scripts/add-is-default-column.ts"
   },
   "dependencies": {
     "@kdx/dayjs": "workspace:*",

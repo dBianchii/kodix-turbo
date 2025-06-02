@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 
 import { aiStudioAppId } from "@kdx/shared";
@@ -9,9 +10,28 @@ import { SidebarProvider, SidebarTrigger } from "@kdx/ui/sidebar";
 import { AiStudioContent } from "./_components/ai-studio-content";
 import { AppSidebar } from "./_components/app-sidebar";
 
-export default function AiStudioPage() {
+function AiStudioPageContent() {
   const t = useTranslations();
-  const [activeSection, setActiveSection] = useState("agents");
+  const searchParams = useSearchParams();
+  const [activeSection, setActiveSection] = useState("tokens");
+
+  // Suporte para navegação via URL params (ex: ?section=tokens)
+  useEffect(() => {
+    const section = searchParams.get("section");
+    if (
+      section &&
+      [
+        "providers",
+        "models",
+        "tokens",
+        "enabled-models",
+        "agents",
+        "libraries",
+      ].includes(section)
+    ) {
+      setActiveSection(section);
+    }
+  }, [searchParams]);
 
   return (
     <SidebarProvider className="min-h-[calc(100dvh-55px)] items-start">
@@ -39,5 +59,21 @@ export default function AiStudioPage() {
         </div>
       </div>
     </SidebarProvider>
+  );
+}
+
+export default function AiStudioPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex h-[calc(100dvh-55px)] items-center justify-center bg-[#121212] text-white">
+          <div className="text-center">
+            <div className="text-lg">Carregando AI Studio...</div>
+          </div>
+        </div>
+      }
+    >
+      <AiStudioPageContent />
+    </Suspense>
   );
 }

@@ -11,7 +11,9 @@ import { KodixApps } from "./_components/kodix-apps";
 
 export default async function AppsPage() {
   const t = await getTranslations();
+
   const apps = trpcCaller.app.getAll();
+
   const authResponse = auth();
 
   return (
@@ -27,15 +29,9 @@ export default async function AppsPage() {
             <AppCardSkeleton key={index} />
           ))}
         >
-          <Wait />
           <KodixApps appsPromise={apps} authPromise={authResponse} />
         </Suspense>
       </div>
     </MaxWidthWrapper>
   );
-}
-
-async function Wait() {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  return null;
 }

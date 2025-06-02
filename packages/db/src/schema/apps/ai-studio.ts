@@ -19,13 +19,31 @@ import {
   teamIdReferenceCascadeDelete,
 } from "../utils";
 
+// AI Provider - Provedores de IA (OpenAI, Anthropic, etc.)
+export const aiProvider = mysqlTable(
+  "ai_provider",
+  (t) => ({
+    id: nanoidPrimaryKey(t),
+    name: t.varchar({ length: 100 }).notNull(),
+    baseUrl: t.text(),
+    createdAt: t.timestamp().defaultNow().notNull(),
+  }),
+  (table) => ({
+    nameIdx: index("ai_provider_name_idx").on(table.name),
+    createdAtIdx: index("ai_provider_created_at_idx").on(table.createdAt),
+  }),
+);
+
 // AI Model - Modelos de IA disponíveis no sistema
 export const aiModel = mysqlTable(
   "ai_model",
   (t) => ({
     id: nanoidPrimaryKey(t),
     name: t.varchar({ length: 100 }).notNull(),
-    provider: t.varchar({ length: 50 }).notNull(),
+    providerId: t
+      .varchar({ length: NANOID_SIZE })
+      .notNull()
+      .references(() => aiProvider.id),
     config: t.json(),
     enabled: t.boolean().default(true).notNull(),
     createdAt: t.timestamp().defaultNow().notNull(),
@@ -33,8 +51,9 @@ export const aiModel = mysqlTable(
   }),
   (table) => ({
     nameIdx: index("ai_model_name_idx").on(table.name),
-    providerIdx: index("ai_model_provider_idx").on(table.provider),
+    providerIdx: index("ai_model_provider_idx").on(table.providerId),
     enabledIdx: index("ai_model_enabled_idx").on(table.enabled),
+    createdAtIdx: index("ai_model_created_at_idx").on(table.createdAt),
   }),
 );
 
@@ -83,26 +102,65 @@ export const aiAgent = mysqlTable(
   }),
 );
 
-// AI Model Token - Tokens de acesso por team e modelo
-export const aiModelToken = mysqlTable(
-  "ai_model_token",
+// AI Team Provider Token - Tokens de acesso por team e provider
+export const aiTeamProviderToken = mysqlTable(
+  "ai_team_provider_token",
+  (t) => ({
+    id: nanoidPrimaryKey(t),
+    teamId: teamIdReferenceCascadeDelete(t),
+    providerId: t
+      .varchar({ length: NANOID_SIZE })
+      .notNull()
+      .references(() => aiProvider.id),
+    token: t.text().notNull(),
+    createdAt: t.timestamp().defaultNow().notNull(),
+    updatedAt: t.timestamp().onUpdateNow(),
+  }),
+  (table) => ({
+    teamIdx: index("ai_team_provider_token_team_idx").on(table.teamId),
+    providerIdx: index("ai_team_provider_token_provider_idx").on(
+      table.providerId,
+    ),
+    createdAtIdx: index("ai_team_provider_token_created_at_idx").on(
+      table.createdAt,
+    ),
+    // Constraint única para evitar múltiplos tokens por team/provider
+    uniqueTeamProvider: unique(
+      "ai_team_provider_token_team_provider_unique",
+    ).on(table.teamId, table.providerId),
+  }),
+);
+
+// AI Team Model Config - Configurações de modelos por team
+export const aiTeamModelConfig = mysqlTable(
+  "ai_team_model_config",
   (t) => ({
     id: nanoidPrimaryKey(t),
     teamId: teamIdReferenceCascadeDelete(t),
     modelId: t
       .varchar({ length: NANOID_SIZE })
       .notNull()
-      .references(() => aiModel.id),
-    token: t.text().notNull(),
+      .references(() => aiModel.id, { onDelete: "cascade" }),
+    enabled: t.boolean().default(false).notNull(),
+    isDefault: t.boolean().default(false).notNull(),
+    priority: t.int().default(0),
+    config: t.json(),
     createdAt: t.timestamp().defaultNow().notNull(),
     updatedAt: t.timestamp().onUpdateNow(),
   }),
   (table) => ({
-    teamIdx: index("ai_model_token_team_idx").on(table.teamId),
-    modelIdx: index("ai_model_token_model_idx").on(table.modelId),
-    createdAtIdx: index("ai_model_token_created_at_idx").on(table.createdAt),
-    // Constraint única para evitar múltiplos tokens por team/modelo
-    uniqueTeamModel: unique("ai_model_token_team_model_unique").on(
+    teamIdx: index("ai_team_model_config_team_idx").on(table.teamId),
+    modelIdx: index("ai_team_model_config_model_idx").on(table.modelId),
+    enabledIdx: index("ai_team_model_config_enabled_idx").on(table.enabled),
+    isDefaultIdx: index("ai_team_model_config_is_default_idx").on(
+      table.isDefault,
+    ),
+    priorityIdx: index("ai_team_model_config_priority_idx").on(table.priority),
+    createdAtIdx: index("ai_team_model_config_created_at_idx").on(
+      table.createdAt,
+    ),
+    // Constraint única para evitar duplicatas team/model
+    uniqueTeamModel: unique("ai_team_model_config_team_model_unique").on(
       table.teamId,
       table.modelId,
     ),
@@ -110,8 +168,17 @@ export const aiModelToken = mysqlTable(
 );
 
 // Relacionamentos para AI Studio
-export const aiModelRelations = relations(aiModel, ({ many }) => ({
-  tokens: many(aiModelToken),
+export const aiProviderRelations = relations(aiProvider, ({ many }) => ({
+  models: many(aiModel),
+  tokens: many(aiTeamProviderToken),
+}));
+
+export const aiModelRelations = relations(aiModel, ({ one, many }) => ({
+  provider: one(aiProvider, {
+    fields: [aiModel.providerId],
+    references: [aiProvider.id],
+  }),
+  teamConfigs: many(aiTeamModelConfig),
 }));
 
 export const aiLibraryRelations = relations(aiLibrary, ({ one, many }) => ({
@@ -137,13 +204,30 @@ export const aiAgentRelations = relations(aiAgent, ({ one }) => ({
   }),
 }));
 
-export const aiModelTokenRelations = relations(aiModelToken, ({ one }) => ({
-  team: one(teams, {
-    fields: [aiModelToken.teamId],
-    references: [teams.id],
+export const aiTeamProviderTokenRelations = relations(
+  aiTeamProviderToken,
+  ({ one }) => ({
+    team: one(teams, {
+      fields: [aiTeamProviderToken.teamId],
+      references: [teams.id],
+    }),
+    provider: one(aiProvider, {
+      fields: [aiTeamProviderToken.providerId],
+      references: [aiProvider.id],
+    }),
   }),
-  model: one(aiModel, {
-    fields: [aiModelToken.modelId],
-    references: [aiModel.id],
+);
+
+export const aiTeamModelConfigRelations = relations(
+  aiTeamModelConfig,
+  ({ one }) => ({
+    team: one(teams, {
+      fields: [aiTeamModelConfig.teamId],
+      references: [teams.id],
+    }),
+    model: one(aiModel, {
+      fields: [aiTeamModelConfig.modelId],
+      references: [aiModel.id],
+    }),
   }),
-}));
+);

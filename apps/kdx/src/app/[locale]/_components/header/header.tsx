@@ -55,7 +55,11 @@ async function LogoWithAppSwitcher() {
           >
             <path d="M16.88 3.549L7.12 20.451"></path>
           </svg>
-          <AppSwitcherClient appsPromise={trpcCaller.app.getInstalled()} />
+          <AppSwitcherClient
+            appsPromise={
+              user ? trpcCaller.app.getInstalled() : Promise.resolve([])
+            }
+          />
         </>
       )}
     </>

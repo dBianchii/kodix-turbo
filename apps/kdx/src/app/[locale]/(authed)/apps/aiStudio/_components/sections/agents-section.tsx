@@ -109,16 +109,16 @@ export function AgentsSection() {
 
   // Queries
   const agentsQuery = useQuery(
-    trpc.app.aiStudio.buscarAiAgents.queryOptions({
+    trpc.app.aiStudio.findAiAgents.queryOptions({
       limite: 50,
-      pagina: 1,
+      offset: 0,
     }),
   );
 
   const librariesQuery = useQuery(
-    trpc.app.aiStudio.buscarAiLibraries.queryOptions({
-      limite: 50,
-      pagina: 1,
+    trpc.app.aiStudio.findAiLibraries.queryOptions({
+      limite: 100,
+      offset: 0,
     }),
   );
 
@@ -132,7 +132,7 @@ export function AgentsSection() {
     defaultValues: {
       name: "",
       instructions: "",
-      libraryId: "none",
+      libraryId: "",
     },
   });
 
@@ -142,55 +142,55 @@ export function AgentsSection() {
     defaultValues: {
       name: "",
       instructions: "",
-      libraryId: "none",
+      libraryId: "",
     },
   });
 
   // Mutations
   const createAgentMutation = useMutation(
-    trpc.app.aiStudio.criarAiAgent.mutationOptions({
+    trpc.app.aiStudio.createAiAgent.mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries(
-          trpc.app.aiStudio.buscarAiAgents.pathFilter(),
+          trpc.app.aiStudio.findAiAgents.pathFilter(),
         );
         toast.success("Agente criado com sucesso!");
         setShowCreateForm(false);
         createForm.reset();
       },
-      onError: (error) => {
+      onError: (error: any) => {
         toast.error(error.message || "Erro ao criar agente");
       },
     }),
   );
 
   const updateAgentMutation = useMutation(
-    trpc.app.aiStudio.atualizarAiAgent.mutationOptions({
+    trpc.app.aiStudio.updateAiAgent.mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries(
-          trpc.app.aiStudio.buscarAiAgents.pathFilter(),
+          trpc.app.aiStudio.findAiAgents.pathFilter(),
         );
         toast.success("Agente atualizado com sucesso!");
         setShowEditForm(false);
         setAgentToEdit(null);
         editForm.reset();
       },
-      onError: (error) => {
+      onError: (error: any) => {
         toast.error(error.message || "Erro ao atualizar agente");
       },
     }),
   );
 
   const deleteAgentMutation = useMutation(
-    trpc.app.aiStudio.excluirAiAgent.mutationOptions({
+    trpc.app.aiStudio.deleteAiAgent.mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries(
-          trpc.app.aiStudio.buscarAiAgents.pathFilter(),
+          trpc.app.aiStudio.findAiAgents.pathFilter(),
         );
         toast.success("Agente excluído com sucesso!");
         setShowDeleteDialog(false);
         setAgentToDelete(null);
       },
-      onError: (error) => {
+      onError: (error: any) => {
         toast.error(error.message || "Erro ao excluir agente");
       },
     }),
@@ -281,17 +281,17 @@ export function AgentsSection() {
         <CardContent>
           {isLoading ? (
             <div className="flex items-center justify-center py-8">
-              <div className="text-sm text-muted-foreground">Carregando...</div>
+              <div className="text-muted-foreground text-sm">Carregando...</div>
             </div>
           ) : !agents || agents.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-8 text-center">
-              <div className="mb-4 rounded-full bg-muted p-3">
-                <Bot className="h-6 w-6 text-muted-foreground" />
+              <div className="bg-muted mb-4 rounded-full p-3">
+                <Bot className="text-muted-foreground h-6 w-6" />
               </div>
               <h3 className="mb-2 text-lg font-semibold">
                 {t("apps.aiStudio.agents.noAgents")}
               </h3>
-              <p className="mb-4 text-muted-foreground">
+              <p className="text-muted-foreground mb-4">
                 Comece criando seu primeiro agente de IA
               </p>
               <Button onClick={() => setShowCreateForm(true)}>
@@ -320,7 +320,7 @@ export function AgentsSection() {
                       {agent.library ? (
                         <Badge variant="outline">{agent.library.name}</Badge>
                       ) : (
-                        <span className="text-sm text-muted-foreground">
+                        <span className="text-muted-foreground text-sm">
                           {t("apps.aiStudio.agents.noLibrary")}
                         </span>
                       )}

@@ -7,11 +7,14 @@ import type {
   KodixAppId,
   kodixCareAppId,
 } from "@kdx/shared";
-import { appIdToAppTeamConfigSchema, todoAppId } from "@kdx/shared";
+import {
+  appIdToAppTeamConfigSchema,
+  appIdToUserAppTeamConfigSchema,
+  todoAppId,
+} from "@kdx/shared";
 
 import type { appIdToUserAppTeamConfigSchemaUpdate } from "../_zodSchemas/userAppTeamConfigs";
 import type { Drizzle } from "../../client";
-import { appIdToUserAppTeamConfigSchema } from "../_zodSchemas/userAppTeamConfigs";
 import { db as _db } from "../../client";
 import {
   appActivityLogs,
@@ -119,9 +122,7 @@ export async function upsertAppTeamConfig(
     appId: AppIdsWithUserAppTeamConfig;
     teamId: string;
     config: Partial<
-      z.infer<
-        (typeof appIdToAppTeamConfigSchema)[typeof kodixCareAppId] //TODO: make dynamic based on app
-      >
+      z.infer<(typeof appIdToAppTeamConfigSchema)[AppIdsWithUserAppTeamConfig]>
     >;
   },
   db = _db,
@@ -206,7 +207,7 @@ export async function upsertUserAppTeamConfigs(
     userId: string;
     teamId: string;
     input: z.infer<
-      (typeof appIdToUserAppTeamConfigSchemaUpdate)[typeof kodixCareAppId] //TODO: make dynamic based on app
+      (typeof appIdToUserAppTeamConfigSchemaUpdate)[AppIdsWithUserAppTeamConfig]
     >;
   },
   db = _db,

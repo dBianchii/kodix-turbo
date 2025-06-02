@@ -32,6 +32,9 @@ const getQueryClient = () => {
 
 export const { TRPCProvider, useTRPC } = createTRPCContext<AppRouter>();
 
+// Export the api object for use in hooks
+export const api = useTRPC;
+
 const customConsole = { ...console, error: console.log };
 export function TRPCReactProvider(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient();

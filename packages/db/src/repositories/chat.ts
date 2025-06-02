@@ -32,7 +32,12 @@ export const ChatFolderRepository = {
           columns: { id: true, name: true, instructions: true },
         },
         aiModel: {
-          columns: { id: true, name: true, provider: true },
+          columns: { id: true, name: true, providerId: true },
+          with: {
+            provider: {
+              columns: { id: true, name: true },
+            },
+          },
         },
         sessions: {
           columns: { id: true, title: true, createdAt: true },
@@ -89,7 +94,12 @@ export const ChatFolderRepository = {
           columns: { id: true, name: true },
         },
         aiModel: {
-          columns: { id: true, name: true, provider: true },
+          columns: { id: true, name: true, providerId: true },
+          with: {
+            provider: {
+              columns: { id: true, name: true },
+            },
+          },
         },
         sessions: {
           columns: { id: true, title: true, createdAt: true },
@@ -172,7 +182,12 @@ export const ChatSessionRepository = {
           },
         },
         aiModel: {
-          columns: { id: true, name: true, provider: true, config: true },
+          columns: { id: true, name: true, providerId: true, config: true },
+          with: {
+            provider: {
+              columns: { id: true, name: true },
+            },
+          },
         },
         messages: {
           orderBy: [asc(chatMessage.createdAt)],
@@ -236,7 +251,12 @@ export const ChatSessionRepository = {
           columns: { id: true, name: true },
         },
         aiModel: {
-          columns: { id: true, name: true, provider: true },
+          columns: { id: true, name: true, providerId: true },
+          with: {
+            provider: {
+              columns: { id: true, name: true },
+            },
+          },
         },
         messages: {
           columns: {

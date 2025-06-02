@@ -34,3 +34,6 @@ export const appIdToSchemas: Record<
   [chatAppId]: withoutRelationsAndZodSchemas({}),
   [aiStudioAppId]: withoutRelationsAndZodSchemas(aiStudio),
 };
+
+// Export crypto utilities
+export { encryptToken, decryptToken } from "./utils/crypto";

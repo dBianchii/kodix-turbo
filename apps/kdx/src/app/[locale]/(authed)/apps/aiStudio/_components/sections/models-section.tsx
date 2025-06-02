@@ -72,33 +72,30 @@ import { toast } from "@kdx/ui/toast";
 
 import { useTRPC } from "~/trpc/react";
 
-// Schema de validação para o formulário de criação
+// Schema de validação para o formulário de criação de modelo
 const createModelSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
-  provider: z.string().min(1, "Provedor é obrigatório"),
-  enabled: z.boolean().default(true),
+  providerId: z.string().min(1, "Provedor é obrigatório"),
   config: z.string().optional(),
+  enabled: z.boolean().default(true),
 });
 
-// Schema de validação para o formulário de edição
+// Schema de validação para o formulário de edição de modelo
 const editModelSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
-  provider: z.string().min(1, "Provedor é obrigatório"),
-  enabled: z.boolean().default(true),
+  providerId: z.string().min(1, "Provedor é obrigatório"),
   config: z.string().optional(),
+  enabled: z.boolean().default(true),
+});
+
+// Schema para configuração de prioridade
+const priorityConfigSchema = z.object({
+  priority: z.number().min(0).max(999),
 });
 
 type CreateModelFormData = z.infer<typeof createModelSchema>;
 type EditModelFormData = z.infer<typeof editModelSchema>;
-
-const providerOptions = [
-  { value: "openai", label: "OpenAI" },
-  { value: "anthropic", label: "Anthropic" },
-  { value: "google", label: "Google" },
-  { value: "meta", label: "Meta" },
-  { value: "microsoft", label: "Microsoft" },
-  { value: "other", label: "Outro" },
-];
+type PriorityConfigFormData = z.infer<typeof priorityConfigSchema>;
 
 export function ModelsSection() {
   const t = useTranslations();
@@ -110,25 +107,34 @@ export function ModelsSection() {
   const [modelToDelete, setModelToDelete] = useState<any>(null);
   const [modelToEdit, setModelToEdit] = useState<any>(null);
 
-  // Queries
-  const modelsQuery = useQuery(
-    trpc.app.aiStudio.buscarAiModels.queryOptions({
+  // Queries para modelos do sistema (admin)
+  const systemModelsQuery = useQuery(
+    trpc.app.aiStudio.findModels.queryOptions({
       limite: 50,
-      pagina: 1,
+      offset: 0,
     }),
   );
 
-  const models = modelsQuery.data?.models || [];
-  const isLoading = modelsQuery.isLoading;
+  // Buscar providers para criação de novos modelos
+  const providersQuery = useQuery(
+    trpc.app.aiStudio.findAiProviders.queryOptions({
+      limite: 50,
+      offset: 0,
+    }),
+  );
+
+  const systemModels = systemModelsQuery.data || [];
+  const providers = providersQuery.data || [];
+  const isLoading = systemModelsQuery.isLoading;
 
   // Form setup para criação
   const createForm = useForm<CreateModelFormData>({
     resolver: zodResolver(createModelSchema),
     defaultValues: {
       name: "",
-      provider: "",
-      enabled: true,
+      providerId: "",
       config: "",
+      enabled: true,
     },
   });
 
@@ -137,62 +143,78 @@ export function ModelsSection() {
     resolver: zodResolver(editModelSchema),
     defaultValues: {
       name: "",
-      provider: "",
-      enabled: true,
+      providerId: "",
       config: "",
+      enabled: true,
     },
   });
 
-  // Mutations
+  // Mutation para habilitar/desabilitar modelo global individual
+  const toggleGlobalModelMutation = useMutation(
+    trpc.app.aiStudio.toggleGlobalModel.mutationOptions({
+      onSuccess: (data) => {
+        queryClient.invalidateQueries(
+          trpc.app.aiStudio.findModels.pathFilter(),
+        );
+        toast.success(data.message);
+      },
+      onError: (error: any) => {
+        toast.error(error.message || "Erro ao alterar modelo");
+      },
+    }),
+  );
+
+  // Mutations para modelos do sistema
   const createModelMutation = useMutation(
-    trpc.app.aiStudio.criarAiModel.mutationOptions({
+    trpc.app.aiStudio.createAiModel.mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries(
-          trpc.app.aiStudio.buscarAiModels.pathFilter(),
+          trpc.app.aiStudio.findModels.pathFilter(),
         );
         toast.success("Modelo criado com sucesso!");
         setShowCreateForm(false);
         createForm.reset();
       },
-      onError: (error) => {
+      onError: (error: any) => {
         toast.error(error.message || "Erro ao criar modelo");
       },
     }),
   );
 
   const updateModelMutation = useMutation(
-    trpc.app.aiStudio.atualizarAiModel.mutationOptions({
+    trpc.app.aiStudio.updateAiModel.mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries(
-          trpc.app.aiStudio.buscarAiModels.pathFilter(),
+          trpc.app.aiStudio.findModels.pathFilter(),
         );
         toast.success("Modelo atualizado com sucesso!");
         setShowEditForm(false);
         setModelToEdit(null);
         editForm.reset();
       },
-      onError: (error) => {
+      onError: (error: any) => {
         toast.error(error.message || "Erro ao atualizar modelo");
       },
     }),
   );
 
   const deleteModelMutation = useMutation(
-    trpc.app.aiStudio.excluirAiModel.mutationOptions({
+    trpc.app.aiStudio.deleteAiModel.mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries(
-          trpc.app.aiStudio.buscarAiModels.pathFilter(),
+          trpc.app.aiStudio.findModels.pathFilter(),
         );
         toast.success("Modelo excluído com sucesso!");
         setShowDeleteDialog(false);
         setModelToDelete(null);
       },
-      onError: (error) => {
+      onError: (error: any) => {
         toast.error(error.message || "Erro ao excluir modelo");
       },
     }),
   );
 
+  // Handlers para modelos do sistema
   const handleCreateSubmit = (data: CreateModelFormData) => {
     let configJson = null;
     if (data.config?.trim()) {
@@ -206,14 +228,14 @@ export function ModelsSection() {
 
     createModelMutation.mutate({
       name: data.name,
-      provider: data.provider,
-      enabled: data.enabled,
+      providerId: data.providerId,
       config: configJson,
+      enabled: data.enabled,
     });
   };
 
   const handleEditSubmit = (data: EditModelFormData) => {
-    if (!modelToEdit?.id) return;
+    if (!modelToEdit) return;
 
     let configJson = null;
     if (data.config?.trim()) {
@@ -228,9 +250,9 @@ export function ModelsSection() {
     updateModelMutation.mutate({
       id: modelToEdit.id,
       name: data.name,
-      provider: data.provider,
-      enabled: data.enabled,
+      providerId: data.providerId,
       config: configJson,
+      enabled: data.enabled,
     });
   };
 
@@ -247,13 +269,12 @@ export function ModelsSection() {
 
   const handleEditClick = (model: any) => {
     setModelToEdit(model);
-    editForm.setValue("name", model.name);
-    editForm.setValue("provider", model.provider);
-    editForm.setValue("enabled", model.enabled);
-    editForm.setValue(
-      "config",
-      model.config ? JSON.stringify(model.config, null, 2) : "",
-    );
+    editForm.reset({
+      name: model.name,
+      providerId: model.providerId,
+      config: model.config ? JSON.stringify(model.config, null, 2) : "",
+      enabled: model.enabled,
+    });
     setShowEditForm(true);
   };
 
@@ -263,11 +284,8 @@ export function ModelsSection() {
   };
 
   const handleDeleteConfirm = () => {
-    if (modelToDelete?.id) {
-      deleteModelMutation.mutate({
-        id: modelToDelete.id,
-      });
-    }
+    if (!modelToDelete) return;
+    deleteModelMutation.mutate({ id: modelToDelete.id });
   };
 
   const handleDeleteCancel = () => {
@@ -275,30 +293,37 @@ export function ModelsSection() {
     setModelToDelete(null);
   };
 
+  const handleToggleGlobalModel = (modelId: string, enabled: boolean) => {
+    toggleGlobalModelMutation.mutate({
+      modelId,
+      enabled,
+    });
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">
-            {t("apps.aiStudio.models.title")}
-          </h2>
+          <h2 className="text-2xl font-bold tracking-tight">Modelos de IA</h2>
           <p className="text-muted-foreground">
-            {t("apps.aiStudio.models.description")}
+            Gerencie todos os modelos de IA homologados no Kodix
           </p>
         </div>
-        <Button onClick={() => setShowCreateForm(true)}>
-          <Plus className="mr-2 h-4 w-4" />
-          {t("apps.aiStudio.models.create")}
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={() => setShowCreateForm(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            Criar Modelo
+          </Button>
+        </div>
       </div>
 
-      {/* DataTable */}
+      {/* Modelos do Sistema */}
       <Card>
         <CardHeader>
-          <CardTitle>{t("apps.aiStudio.models.title")}</CardTitle>
+          <CardTitle>Modelos Homologados</CardTitle>
           <CardDescription>
-            Gerencie os modelos de IA disponíveis no sistema
+            Todos os modelos de IA disponíveis no sistema Kodix
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -306,20 +331,20 @@ export function ModelsSection() {
             <div className="flex items-center justify-center py-8">
               <div className="text-muted-foreground text-sm">Carregando...</div>
             </div>
-          ) : !models || models.length === 0 ? (
+          ) : !systemModels || systemModels.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-8 text-center">
               <div className="bg-muted mb-4 rounded-full p-3">
                 <Brain className="text-muted-foreground h-6 w-6" />
               </div>
               <h3 className="mb-2 text-lg font-semibold">
-                {t("apps.aiStudio.models.noModels")}
+                Nenhum modelo encontrado
               </h3>
               <p className="text-muted-foreground mb-4">
                 Comece criando seu primeiro modelo de IA
               </p>
               <Button onClick={() => setShowCreateForm(true)}>
                 <Plus className="mr-2 h-4 w-4" />
-                {t("apps.aiStudio.models.create")}
+                Criar Modelo
               </Button>
             </div>
           ) : (
@@ -333,18 +358,25 @@ export function ModelsSection() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {models.map((model: any) => (
+                {systemModels.map((model: any) => (
                   <TableRow key={model.id}>
                     <TableCell className="font-medium">{model.name}</TableCell>
                     <TableCell className="capitalize">
-                      {model.provider}
+                      {model.provider?.name || model.providerId || "N/A"}
                     </TableCell>
                     <TableCell>
-                      <Badge variant={model.enabled ? "default" : "secondary"}>
-                        {model.enabled
-                          ? t("apps.aiStudio.models.enabled")
-                          : t("apps.aiStudio.models.disabled")}
-                      </Badge>
+                      <div className="flex items-center space-x-2">
+                        <Switch
+                          checked={model.enabled}
+                          onCheckedChange={(enabled) =>
+                            handleToggleGlobalModel(model.id, enabled)
+                          }
+                          disabled={toggleGlobalModelMutation.isPending}
+                        />
+                        <span className="text-muted-foreground text-sm">
+                          {model.enabled ? "Ativo" : "Inativo"}
+                        </span>
+                      </div>
                     </TableCell>
                     <TableCell>
                       <DropdownMenu>
@@ -358,14 +390,14 @@ export function ModelsSection() {
                             onClick={() => handleEditClick(model)}
                           >
                             <Pencil className="mr-2 h-4 w-4" />
-                            {t("apps.aiStudio.models.edit")}
+                            Editar
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-destructive"
                             onClick={() => handleDeleteClick(model)}
                           >
                             <Trash2 className="mr-2 h-4 w-4" />
-                            {t("apps.aiStudio.models.delete")}
+                            Excluir
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -412,7 +444,7 @@ export function ModelsSection() {
 
               <FormField
                 control={createForm.control}
-                name="provider"
+                name="providerId"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Provedor</FormLabel>
@@ -426,9 +458,9 @@ export function ModelsSection() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {providerOptions.map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
+                        {providers.map((option) => (
+                          <SelectItem key={option.id} value={option.id}>
+                            {option.name}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -437,27 +469,6 @@ export function ModelsSection() {
                       Empresa que fornece este modelo
                     </FormDescription>
                     <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={createForm.control}
-                name="enabled"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                    <div className="space-y-0.5">
-                      <FormLabel className="text-base">Modelo Ativo</FormLabel>
-                      <FormDescription>
-                        Se este modelo deve estar disponível para uso
-                      </FormDescription>
-                    </div>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
                   </FormItem>
                 )}
               />
@@ -480,6 +491,28 @@ export function ModelsSection() {
                       Configurações específicas do modelo em formato JSON
                     </FormDescription>
                     <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={createForm.control}
+                name="enabled"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base">Modelo Ativo</FormLabel>
+                      <FormDescription>
+                        Define se o modelo estará disponível globalmente no
+                        sistema
+                      </FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
                   </FormItem>
                 )}
               />
@@ -538,7 +571,7 @@ export function ModelsSection() {
 
               <FormField
                 control={editForm.control}
-                name="provider"
+                name="providerId"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Provedor</FormLabel>
@@ -552,9 +585,9 @@ export function ModelsSection() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {providerOptions.map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
+                        {providers.map((option) => (
+                          <SelectItem key={option.id} value={option.id}>
+                            {option.name}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -563,27 +596,6 @@ export function ModelsSection() {
                       Empresa que fornece este modelo
                     </FormDescription>
                     <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={editForm.control}
-                name="enabled"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                    <div className="space-y-0.5">
-                      <FormLabel className="text-base">Modelo Ativo</FormLabel>
-                      <FormDescription>
-                        Se este modelo deve estar disponível para uso
-                      </FormDescription>
-                    </div>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
                   </FormItem>
                 )}
               />
@@ -606,6 +618,28 @@ export function ModelsSection() {
                       Configurações específicas do modelo em formato JSON
                     </FormDescription>
                     <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={editForm.control}
+                name="enabled"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base">Modelo Ativo</FormLabel>
+                      <FormDescription>
+                        Define se o modelo estará disponível globalmente no
+                        sistema
+                      </FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
                   </FormItem>
                 )}
               />

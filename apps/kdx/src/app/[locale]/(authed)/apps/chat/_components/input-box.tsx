@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 interface InputBoxProps {
   onSend: (text: string) => void;
@@ -9,6 +10,7 @@ interface InputBoxProps {
 
 export function InputBox({ onSend, disabled = false }: InputBoxProps) {
   const [value, setValue] = useState("");
+  const t = useTranslations();
 
   function handleSend() {
     if (!value.trim() || disabled) return;
@@ -23,7 +25,7 @@ export function InputBox({ onSend, disabled = false }: InputBoxProps) {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && handleSend()}
-        placeholder="Digite sua mensagem..."
+        placeholder={t("apps.chat.messages.placeholder")}
         disabled={disabled}
       />
       <button
@@ -35,7 +37,7 @@ export function InputBox({ onSend, disabled = false }: InputBoxProps) {
         }`}
         disabled={disabled || !value.trim()}
       >
-        Enviar
+        {t("apps.chat.messages.send")}
       </button>
     </div>
   );

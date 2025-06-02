@@ -40,7 +40,7 @@ export const appRouter = {
   getAll: publicProcedure.query(getAllHandler),
   getConfig: protectedProcedure
     .input(ZGetConfigInput)
-    .use(appInstalledMiddleware)
+    // .use(appInstalledMiddleware) // Removido temporariamente para debug
     .query(getConfigHandler),
   getUserAppTeamConfig: protectedProcedure
     .input(ZGetUserAppTeamConfigInputSchema)
@@ -52,6 +52,7 @@ export const appRouter = {
     .mutation(installAppHandler),
   saveConfig: protectedProcedure
     .input(ZSaveConfigInput)
+    // .use(appInstalledMiddleware) // Removido temporariamente para debug
     .mutation(saveConfigHandler),
   uninstallApp: isTeamOwnerProcedure
     .input(ZUninstallAppInputSchema)

@@ -1,18 +1,153 @@
-import { and, asc, count, desc, eq, like } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, like, sql } from "drizzle-orm";
 
 import { db } from "../client";
 import {
   aiAgent,
   aiLibrary,
   aiModel,
-  aiModelToken,
+  aiProvider,
+  aiTeamModelConfig,
+  aiTeamProviderToken,
 } from "../schema/apps/ai-studio";
+import { chatFolder, chatSession } from "../schema/apps/chat";
+import { decryptToken, encryptToken } from "../utils";
+
+// Interface para tipar a resposta da API de chat completions
+interface ChatCompletionResponse {
+  choices: {
+    message: {
+      content: string;
+      role: string;
+    };
+    finish_reason: string;
+    index: number;
+  }[];
+  usage?: {
+    prompt_tokens: number;
+    completion_tokens: number;
+    total_tokens: number;
+  };
+  model: string;
+  id: string;
+  object: string;
+  created: number;
+}
+
+export const AiProviderRepository = {
+  // Criar novo provider
+  create: async (data: { name: string; baseUrl?: string }) => {
+    // Validar se provider já existe
+    const existingProvider = await AiProviderRepository.findByName(data.name);
+    if (existingProvider) {
+      throw new Error(`Provider com nome "${data.name}" já existe`);
+    }
+
+    const [result] = await db.insert(aiProvider).values(data).$returningId();
+    if (!result) throw new Error("Falha ao criar provider");
+    return AiProviderRepository.findById(result.id);
+  },
+
+  // Buscar por ID
+  findById: async (id: string) => {
+    return db.query.aiProvider.findFirst({
+      where: eq(aiProvider.id, id),
+      with: {
+        models: {
+          columns: { id: true, name: true, enabled: true },
+        },
+        tokens: {
+          columns: { id: true, teamId: true, createdAt: true },
+        },
+      },
+    });
+  },
+
+  // Buscar por nome
+  findByName: async (name: string) => {
+    return db.query.aiProvider.findFirst({
+      where: eq(aiProvider.name, name),
+      with: {
+        models: {
+          columns: { id: true, name: true, enabled: true },
+        },
+      },
+    });
+  },
+
+  // Listar providers
+  findMany: async (
+    params: {
+      limite?: number;
+      offset?: number;
+    } = {},
+  ) => {
+    const { limite = 50, offset = 0 } = params;
+
+    return db.query.aiProvider.findMany({
+      limit: limite,
+      offset,
+      orderBy: [asc(aiProvider.name)],
+      with: {
+        models: {
+          columns: { id: true, name: true, enabled: true },
+        },
+        tokens: {
+          columns: { id: true, teamId: true, createdAt: true },
+        },
+      },
+    });
+  },
+
+  // Atualizar provider
+  update: async (id: string, data: Partial<typeof aiProvider.$inferInsert>) => {
+    await db.update(aiProvider).set(data).where(eq(aiProvider.id, id));
+    return AiProviderRepository.findById(id);
+  },
+
+  // Excluir provider com validações
+  delete: async (id: string) => {
+    return db.transaction(async (tx) => {
+      // Verificar se há modelos usando este provider
+      const [modelsCount] = await tx
+        .select({ count: count() })
+        .from(aiModel)
+        .where(eq(aiModel.providerId, id));
+
+      if ((modelsCount?.count ?? 0) > 0) {
+        throw new Error(
+          `Não é possível excluir provider: ${modelsCount?.count ?? 0} modelos dependem dele`,
+        );
+      }
+
+      // Verificar se há tokens para este provider
+      const [tokensCount] = await tx
+        .select({ count: count() })
+        .from(aiTeamProviderToken)
+        .where(eq(aiTeamProviderToken.providerId, id));
+
+      if ((tokensCount?.count ?? 0) > 0) {
+        throw new Error(
+          `Não é possível excluir provider: ${tokensCount?.count ?? 0} tokens dependem dele`,
+        );
+      }
+
+      // Excluir provider
+      await tx.delete(aiProvider).where(eq(aiProvider.id, id));
+    });
+  },
+
+  // Adicionar método count
+  count: async () => {
+    const [result] = await db.select({ count: count() }).from(aiProvider);
+    return result?.count ?? 0;
+  },
+};
 
 export const AiModelRepository = {
   // Criar novo modelo
   create: async (data: {
     name: string;
-    provider: string;
+    providerId: string;
     config?: any;
     enabled?: boolean;
   }) => {
@@ -26,7 +161,9 @@ export const AiModelRepository = {
     return db.query.aiModel.findFirst({
       where: eq(aiModel.id, id),
       with: {
-        tokens: true,
+        provider: {
+          columns: { id: true, name: true, baseUrl: true },
+        },
       },
     });
   },
@@ -34,19 +171,19 @@ export const AiModelRepository = {
   // Listar modelos ativos
   findMany: async (params: {
     enabled?: boolean;
-    provider?: string;
+    providerId?: string;
     limite?: number;
     offset?: number;
   }) => {
-    const { enabled, provider, limite = 50, offset = 0 } = params;
+    const { enabled, providerId, limite = 50, offset = 0 } = params;
     const condicoes = [];
 
     if (enabled !== undefined) {
       condicoes.push(eq(aiModel.enabled, enabled));
     }
 
-    if (provider) {
-      condicoes.push(eq(aiModel.provider, provider));
+    if (providerId) {
+      condicoes.push(eq(aiModel.providerId, providerId));
     }
 
     return db.query.aiModel.findMany({
@@ -54,6 +191,30 @@ export const AiModelRepository = {
       limit: limite,
       offset,
       orderBy: [asc(aiModel.name)],
+      with: {
+        provider: {
+          columns: { id: true, name: true, baseUrl: true },
+        },
+      },
+    });
+  },
+
+  // Buscar modelos por provider (nome)
+  findByProviderName: async (providerName: string) => {
+    return db.query.aiModel.findMany({
+      where: eq(
+        aiModel.providerId,
+        db
+          .select({ id: aiProvider.id })
+          .from(aiProvider)
+          .where(eq(aiProvider.name, providerName))
+          .limit(1),
+      ),
+      with: {
+        provider: {
+          columns: { id: true, name: true, baseUrl: true },
+        },
+      },
     });
   },
 
@@ -68,7 +229,34 @@ export const AiModelRepository = {
 
   // Excluir modelo
   delete: async (id: string) => {
-    await db.delete(aiModel).where(eq(aiModel.id, id));
+    return db.transaction(async (tx) => {
+      // Verificar se há chat sessions usando este modelo
+      const [sessionsCount] = await tx
+        .select({ count: count() })
+        .from(chatSession)
+        .where(eq(chatSession.aiModelId, id));
+
+      if ((sessionsCount?.count ?? 0) > 0) {
+        throw new Error(
+          `Não é possível excluir modelo: ${sessionsCount?.count ?? 0} sessões de chat dependem dele`,
+        );
+      }
+
+      // Verificar se há chat folders usando este modelo
+      const [foldersCount] = await tx
+        .select({ count: count() })
+        .from(chatFolder)
+        .where(eq(chatFolder.aiModelId, id));
+
+      if ((foldersCount?.count ?? 0) > 0) {
+        throw new Error(
+          `Não é possível excluir modelo: ${foldersCount?.count ?? 0} pastas de chat dependem dele`,
+        );
+      }
+
+      // Excluir modelo
+      await tx.delete(aiModel).where(eq(aiModel.id, id));
+    });
   },
 };
 
@@ -280,20 +468,30 @@ export const AiAgentRepository = {
   },
 };
 
-export const AiModelTokenRepository = {
+export const AiTeamProviderTokenRepository = {
   // Criar token
-  create: async (data: { teamId: string; modelId: string; token: string }) => {
+  create: async (data: {
+    teamId: string;
+    providerId: string;
+    token: string;
+  }) => {
     try {
+      // Criptografar token antes de salvar
+      const encryptedToken = encryptToken(data.token);
+
       const [result] = await db
-        .insert(aiModelToken)
-        .values(data)
+        .insert(aiTeamProviderToken)
+        .values({
+          ...data,
+          token: encryptedToken,
+        })
         .$returningId();
       if (!result) throw new Error("Falha ao criar token");
-      return AiModelTokenRepository.findById(result.id);
+      return AiTeamProviderTokenRepository.findById(result.id);
     } catch (error: any) {
       // Tratar erro de unique constraint violation
       if (error.code === "ER_DUP_ENTRY") {
-        throw new Error("Token já existe para este modelo e equipe");
+        throw new Error("Token já existe para este provider e equipe");
       }
       throw error;
     }
@@ -301,67 +499,676 @@ export const AiModelTokenRepository = {
 
   // Buscar por ID
   findById: async (id: string) => {
-    return db.query.aiModelToken.findFirst({
-      where: eq(aiModelToken.id, id),
+    const result = await db.query.aiTeamProviderToken.findFirst({
+      where: eq(aiTeamProviderToken.id, id),
+      with: {
+        team: {
+          columns: { id: true, name: true },
+        },
+        provider: {
+          columns: { id: true, name: true, baseUrl: true },
+        },
+      },
+    });
+
+    if (!result) return null;
+
+    // Descriptografar token antes de retornar
+    return {
+      ...result,
+      token: decryptToken(result.token),
+    };
+  },
+
+  // Buscar token por team e provider
+  findByTeamAndProvider: async (teamId: string, providerId: string) => {
+    const result = await db.query.aiTeamProviderToken.findFirst({
+      where: and(
+        eq(aiTeamProviderToken.teamId, teamId),
+        eq(aiTeamProviderToken.providerId, providerId),
+      ),
+      with: {
+        provider: {
+          columns: { id: true, name: true, baseUrl: true },
+        },
+      },
+    });
+
+    if (!result) return null;
+
+    // Descriptografar token antes de retornar
+    return {
+      ...result,
+      token: decryptToken(result.token),
+    };
+  },
+
+  // Buscar token por team e provider name
+  findByTeamAndProviderName: async (teamId: string, providerName: string) => {
+    const provider = await AiProviderRepository.findByName(providerName);
+    if (!provider) {
+      return null;
+    }
+    return AiTeamProviderTokenRepository.findByTeamAndProvider(
+      teamId,
+      provider.id,
+    );
+  },
+
+  // Listar tokens por team
+  findByTeam: async (teamId: string) => {
+    const results = await db.query.aiTeamProviderToken.findMany({
+      where: eq(aiTeamProviderToken.teamId, teamId),
+      with: {
+        provider: {
+          columns: { id: true, name: true, baseUrl: true },
+        },
+      },
+      orderBy: [asc(aiTeamProviderToken.createdAt)],
+    });
+
+    // Descriptografar todos os tokens antes de retornar
+    return results.map((result) => ({
+      ...result,
+      token: decryptToken(result.token),
+    }));
+  },
+
+  // Atualizar token
+  update: async (id: string, token: string) => {
+    // Criptografar token antes de atualizar
+    const encryptedToken = encryptToken(token);
+
+    await db
+      .update(aiTeamProviderToken)
+      .set({ token: encryptedToken, updatedAt: new Date() })
+      .where(eq(aiTeamProviderToken.id, id));
+    return AiTeamProviderTokenRepository.findById(id);
+  },
+
+  // Excluir token
+  delete: async (id: string) => {
+    await db.delete(aiTeamProviderToken).where(eq(aiTeamProviderToken.id, id));
+  },
+
+  // Excluir por team e provider
+  deleteByTeamAndProvider: async (teamId: string, providerId: string) => {
+    await db
+      .delete(aiTeamProviderToken)
+      .where(
+        and(
+          eq(aiTeamProviderToken.teamId, teamId),
+          eq(aiTeamProviderToken.providerId, providerId),
+        ),
+      );
+  },
+};
+
+export const AiTeamModelConfigRepository = {
+  // Criar configuração do modelo
+  create: async (data: {
+    teamId: string;
+    modelId: string;
+    enabled?: boolean;
+    isDefault?: boolean;
+    priority?: number;
+    config?: any;
+  }) => {
+    try {
+      const [result] = await db
+        .insert(aiTeamModelConfig)
+        .values(data)
+        .$returningId();
+      if (!result) throw new Error("Falha ao criar configuração do modelo");
+      return AiTeamModelConfigRepository.findById(result.id);
+    } catch (error: any) {
+      // Tratar erro de unique constraint violation
+      if (error.code === "ER_DUP_ENTRY") {
+        throw new Error("Configuração já existe para este modelo e team");
+      }
+      throw error;
+    }
+  },
+
+  // Buscar por ID
+  findById: async (id: string) => {
+    return db.query.aiTeamModelConfig.findFirst({
+      where: eq(aiTeamModelConfig.id, id),
       with: {
         team: {
           columns: { id: true, name: true },
         },
         model: {
-          columns: { id: true, name: true, provider: true },
+          columns: { id: true, name: true, enabled: true },
+          with: {
+            provider: {
+              columns: { id: true, name: true, baseUrl: true },
+            },
+          },
         },
       },
     });
   },
 
-  // Buscar token por team e modelo
+  // Buscar configuração específica por team e modelo
   findByTeamAndModel: async (teamId: string, modelId: string) => {
-    return db.query.aiModelToken.findFirst({
+    return db.query.aiTeamModelConfig.findFirst({
       where: and(
-        eq(aiModelToken.teamId, teamId),
-        eq(aiModelToken.modelId, modelId),
+        eq(aiTeamModelConfig.teamId, teamId),
+        eq(aiTeamModelConfig.modelId, modelId),
       ),
       with: {
         model: {
-          columns: { id: true, name: true, provider: true },
+          columns: { id: true, name: true, enabled: true },
+          with: {
+            provider: {
+              columns: { id: true, name: true, baseUrl: true },
+            },
+          },
         },
       },
     });
   },
 
-  // Listar tokens por team
-  findByTeam: async (teamId: string) => {
-    return db.query.aiModelToken.findMany({
-      where: eq(aiModelToken.teamId, teamId),
+  // Listar configurações de modelos por team
+  findByTeam: async (params: {
+    teamId: string;
+    enabled?: boolean;
+    limite?: number;
+    offset?: number;
+  }) => {
+    const { teamId, enabled, limite = 50, offset = 0 } = params;
+    const condicoes = [eq(aiTeamModelConfig.teamId, teamId)];
+
+    if (enabled !== undefined) {
+      condicoes.push(eq(aiTeamModelConfig.enabled, enabled));
+    }
+
+    return db.query.aiTeamModelConfig.findMany({
+      where: and(...condicoes),
+      limit: limite,
+      offset,
+      orderBy: [
+        asc(aiTeamModelConfig.priority),
+        asc(aiTeamModelConfig.createdAt),
+      ],
       with: {
         model: {
-          columns: { id: true, name: true, provider: true, enabled: true },
+          columns: { id: true, name: true, enabled: true },
+          with: {
+            provider: {
+              columns: { id: true, name: true, baseUrl: true },
+            },
+          },
         },
       },
-      orderBy: [asc(aiModelToken.createdAt)],
     });
   },
 
-  // Atualizar token
-  update: async (id: string, token: string) => {
-    await db
-      .update(aiModelToken)
-      .set({ token, updatedAt: new Date() })
-      .where(eq(aiModelToken.id, id));
-    return AiModelTokenRepository.findById(id);
+  // Listar apenas modelos ativos por team
+  findActiveModelsByTeam: async (teamId: string) => {
+    return db.query.aiTeamModelConfig.findMany({
+      where: and(
+        eq(aiTeamModelConfig.teamId, teamId),
+        eq(aiTeamModelConfig.enabled, true),
+      ),
+      orderBy: [asc(aiTeamModelConfig.priority)],
+      with: {
+        model: {
+          with: {
+            provider: true,
+          },
+        },
+      },
+    });
   },
 
-  // Excluir token
+  // Toggle model activation for a team
+  toggleModel: async (teamId: string, modelId: string, enabled: boolean) => {
+    // Check if configuration already exists
+    const existing = await AiTeamModelConfigRepository.findByTeamAndModel(
+      teamId,
+      modelId,
+    );
+
+    if (existing) {
+      // If trying to disable and it's the default model, validate
+      if (!enabled && existing.isDefault) {
+        // Check if there are other enabled models
+        const enabledModels = await AiTeamModelConfigRepository.findByTeam({
+          teamId,
+          enabled: true,
+        });
+
+        // If there's only one enabled model (the current one), don't allow disabling
+        if (enabledModels.length <= 1) {
+          throw new Error(
+            "Cannot disable the only active model. Enable another model first.",
+          );
+        }
+
+        // If there are other models, user needs to choose a new default
+        throw new Error(
+          "This is the default model. Choose another model as default before disabling it.",
+        );
+      }
+
+      // If enabling a model, check if we need to set it as default
+      if (enabled) {
+        // Check if there's any default model for this team
+        const defaultModel =
+          await AiTeamModelConfigRepository.getDefaultModel(teamId);
+
+        if (!defaultModel) {
+          // No default model exists, set this one as default
+          return db.transaction(async (tx) => {
+            // Update the model to enabled
+            await tx
+              .update(aiTeamModelConfig)
+              .set({ enabled: true, isDefault: true, updatedAt: new Date() })
+              .where(eq(aiTeamModelConfig.id, existing.id));
+
+            return AiTeamModelConfigRepository.findById(existing.id);
+          });
+        }
+      }
+
+      // Update existing configuration
+      return AiTeamModelConfigRepository.update(existing.id, { enabled });
+    } else {
+      // Check if this is the first model being enabled for this team
+      const enabledCount = await AiTeamModelConfigRepository.countByTeam(
+        teamId,
+        true,
+      );
+      const isFirstEnabled = enabled && enabledCount === 0;
+
+      // Create new configuration
+      return AiTeamModelConfigRepository.create({
+        teamId,
+        modelId,
+        enabled,
+        isDefault: isFirstEnabled, // Mark as default if it's the first
+      });
+    }
+  },
+
+  // Definir modelo padrão
+  setDefaultModel: async (teamId: string, modelId: string) => {
+    // Verificar se o modelo está habilitado para este team
+    const modelConfig = await AiTeamModelConfigRepository.findByTeamAndModel(
+      teamId,
+      modelId,
+    );
+
+    if (!modelConfig?.enabled) {
+      throw new Error(
+        "Modelo deve estar habilitado para ser definido como padrão",
+      );
+    }
+
+    // Começar transação: remover isDefault de todos os outros modelos
+    await db.transaction(async (tx) => {
+      // Desmarcar todos os outros modelos como padrão
+      await tx
+        .update(aiTeamModelConfig)
+        .set({ isDefault: false, updatedAt: new Date() })
+        .where(eq(aiTeamModelConfig.teamId, teamId));
+
+      // Marcar o modelo específico como padrão
+      await tx
+        .update(aiTeamModelConfig)
+        .set({ isDefault: true, updatedAt: new Date() })
+        .where(
+          and(
+            eq(aiTeamModelConfig.teamId, teamId),
+            eq(aiTeamModelConfig.modelId, modelId),
+          ),
+        );
+    });
+
+    return AiTeamModelConfigRepository.findByTeamAndModel(teamId, modelId);
+  },
+
+  // Buscar modelo padrão do team
+  getDefaultModel: async (teamId: string) => {
+    return db.query.aiTeamModelConfig.findFirst({
+      where: and(
+        eq(aiTeamModelConfig.teamId, teamId),
+        eq(aiTeamModelConfig.enabled, true),
+        eq(aiTeamModelConfig.isDefault, true),
+      ),
+      with: {
+        model: {
+          with: {
+            provider: true,
+          },
+        },
+      },
+    });
+  },
+
+  // Definir prioridade dos modelos
+  setPriority: async (teamId: string, modelId: string, priority: number) => {
+    const existing = await AiTeamModelConfigRepository.findByTeamAndModel(
+      teamId,
+      modelId,
+    );
+
+    if (existing) {
+      return AiTeamModelConfigRepository.update(existing.id, { priority });
+    } else {
+      return AiTeamModelConfigRepository.create({
+        teamId,
+        modelId,
+        enabled: false,
+        priority,
+      });
+    }
+  },
+
+  // Reordenar todas as prioridades dos modelos de um team
+  reorderAllPriorities: async (teamId: string, orderedModelIds: string[]) => {
+    return db.transaction(async (tx) => {
+      // Para cada modelo na nova ordem, definir prioridade = índice
+      const updatePromises = orderedModelIds.map(async (modelId, index) => {
+        // Verificar se já existe configuração para este modelo
+        const existing = await tx.query.aiTeamModelConfig.findFirst({
+          where: and(
+            eq(aiTeamModelConfig.teamId, teamId),
+            eq(aiTeamModelConfig.modelId, modelId),
+          ),
+        });
+
+        if (existing) {
+          // Atualizar prioridade existente
+          await tx
+            .update(aiTeamModelConfig)
+            .set({ priority: index, updatedAt: new Date() })
+            .where(eq(aiTeamModelConfig.id, existing.id));
+        } else {
+          // Criar nova configuração com prioridade
+          await tx.insert(aiTeamModelConfig).values({
+            teamId,
+            modelId,
+            enabled: false,
+            priority: index,
+          });
+        }
+      });
+
+      await Promise.all(updatePromises);
+
+      // Retornar modelos atualizados
+      return AiTeamModelConfigRepository.findAvailableModelsByTeam(teamId);
+    });
+  },
+
+  // Atualizar configuração do modelo
+  update: async (
+    id: string,
+    data: Partial<typeof aiTeamModelConfig.$inferInsert>,
+  ) => {
+    await db
+      .update(aiTeamModelConfig)
+      .set({ ...data, updatedAt: new Date() })
+      .where(eq(aiTeamModelConfig.id, id));
+    return AiTeamModelConfigRepository.findById(id);
+  },
+
+  // Excluir configuração do modelo
   delete: async (id: string) => {
-    await db.delete(aiModelToken).where(eq(aiModelToken.id, id));
+    await db.delete(aiTeamModelConfig).where(eq(aiTeamModelConfig.id, id));
   },
 
   // Excluir por team e modelo
   deleteByTeamAndModel: async (teamId: string, modelId: string) => {
     await db
-      .delete(aiModelToken)
+      .delete(aiTeamModelConfig)
       .where(
-        and(eq(aiModelToken.teamId, teamId), eq(aiModelToken.modelId, modelId)),
+        and(
+          eq(aiTeamModelConfig.teamId, teamId),
+          eq(aiTeamModelConfig.modelId, modelId),
+        ),
       );
+  },
+
+  // Contar configurações por team
+  countByTeam: async (teamId: string, enabled?: boolean) => {
+    const condicoes = [eq(aiTeamModelConfig.teamId, teamId)];
+
+    if (enabled !== undefined) {
+      condicoes.push(eq(aiTeamModelConfig.enabled, enabled));
+    }
+
+    const [result] = await db
+      .select({ count: count() })
+      .from(aiTeamModelConfig)
+      .where(and(...condicoes));
+
+    return result?.count ?? 0;
+  },
+
+  // Buscar modelos disponíveis para um team (filtrando pelos que o team tem token do provider)
+  findAvailableModelsByTeam: async (teamId: string) => {
+    // Buscar tokens de provedores que o team possui
+    const teamTokens = await AiTeamProviderTokenRepository.findByTeam(teamId);
+    const providerIds = teamTokens.map((token) => token.providerId);
+
+    if (providerIds.length === 0) {
+      return []; // Team não tem tokens de nenhum provedor
+    }
+
+    // Buscar todos os modelos ativos globalmente primeiro
+    const allEnabledModels = await db.query.aiModel.findMany({
+      where: eq(aiModel.enabled, true),
+      with: {
+        provider: {
+          columns: { id: true, name: true, baseUrl: true },
+        },
+      },
+    });
+
+    // Filtrar apenas modelos dos provedores que o team tem token
+    const modelsWithTokens = allEnabledModels.filter((model) =>
+      providerIds.includes(model.providerId),
+    );
+
+    // Buscar configurações específicas do team para estes modelos
+    const modelIds = modelsWithTokens.map((model) => model.id);
+    let teamConfigs: any[] = [];
+
+    if (modelIds.length > 0) {
+      teamConfigs = await db.query.aiTeamModelConfig.findMany({
+        where: and(
+          eq(aiTeamModelConfig.teamId, teamId),
+          inArray(aiTeamModelConfig.modelId, modelIds),
+        ),
+      });
+    }
+
+    // Mapear modelos com suas configurações do team
+    const availableModels = modelsWithTokens.map((model) => {
+      const teamConfig = teamConfigs.find(
+        (config) => config.modelId === model.id,
+      );
+      return {
+        ...model,
+        teamConfig: teamConfig || null,
+      };
+    });
+
+    // Ordenar por prioridade (se configurado) e depois por nome
+    return availableModels.sort((a, b) => {
+      // Se ambos têm prioridade configurada, ordenar por prioridade
+      if (
+        a.teamConfig?.priority !== undefined &&
+        b.teamConfig?.priority !== undefined
+      ) {
+        return a.teamConfig.priority - b.teamConfig.priority;
+      }
+
+      // Se apenas A tem prioridade, A vem primeiro
+      if (
+        a.teamConfig?.priority !== undefined &&
+        b.teamConfig?.priority === undefined
+      ) {
+        return -1;
+      }
+
+      // Se apenas B tem prioridade, B vem primeiro
+      if (
+        a.teamConfig?.priority === undefined &&
+        b.teamConfig?.priority !== undefined
+      ) {
+        return 1;
+      }
+
+      // Se nenhum tem prioridade ou ambos são undefined/null, ordenar por nome
+      return a.name.localeCompare(b.name);
+    });
+  },
+
+  // Testar se um modelo está funcionando
+  testModel: async (
+    teamId: string,
+    modelId: string,
+    testPrompt = "Olá! Você está funcionando corretamente?",
+  ) => {
+    try {
+      console.log(
+        `🧪 [TEST_START] Iniciando teste do modelo ${modelId} para team ${teamId}`,
+      );
+
+      // 1. Verificar se o modelo está disponível para o team
+      const availableModels =
+        await AiTeamModelConfigRepository.findAvailableModelsByTeam(teamId);
+
+      console.log(
+        `📋 [TEST] Modelos disponíveis encontrados: ${availableModels.length}`,
+      );
+      availableModels.forEach((m) => {
+        console.log(
+          `   • ${m.name} (ID: ${m.id}) - Provider: ${m.provider.name}`,
+        );
+      });
+
+      const modelData = availableModels.find((m) => m.id === modelId);
+
+      if (!modelData) {
+        throw new Error(
+          `Modelo não encontrado ou não disponível para este time. Verifique se o token do provedor está configurado.`,
+        );
+      }
+
+      if (!modelData.provider) {
+        throw new Error("Dados do provedor não foram carregados");
+      }
+
+      console.log(
+        `✅ [TEST] Modelo encontrado: ${modelData.name} (Provider: ${modelData.provider.name})`,
+      );
+
+      // 2. Buscar token do provedor
+      const providerToken =
+        await AiTeamProviderTokenRepository.findByTeamAndProvider(
+          teamId,
+          modelData.providerId,
+        );
+
+      if (!providerToken?.token) {
+        throw new Error(
+          `❌ Token de API não configurado para o provedor ${modelData.provider.name}. Configure o token na seção "Tokens de Acesso" antes de testar o modelo.`,
+        );
+      }
+
+      console.log(
+        `🔑 [TEST] Token encontrado para o provedor ${modelData.provider.name}`,
+      );
+
+      // 3. Preparar configurações para o teste
+      const modelConfig = (modelData.config as any) || {};
+      const modelName = modelConfig.version || modelData.name;
+      const baseUrl = modelData.provider.baseUrl || "https://api.openai.com/v1";
+
+      console.log(`🚀 [TEST] Configurações:`);
+      console.log(`   • Modelo API: ${modelName}`);
+      console.log(`   • Base URL: ${baseUrl}`);
+      console.log(`   • Prompt: ${testPrompt}`);
+
+      // 4. Fazer uma chamada de teste usando fetch (similar ao chat stream)
+      const startTime = Date.now();
+      const testResponse = await fetch(`${baseUrl}/chat/completions`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${providerToken.token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: modelName,
+          messages: [
+            {
+              role: "user",
+              content: testPrompt,
+            },
+          ],
+          max_tokens: 50,
+          temperature: 0.7,
+        }),
+      });
+
+      const endTime = Date.now();
+      const latencyMs = endTime - startTime;
+
+      console.log(
+        `⏱️ [TEST] Resposta recebida em ${latencyMs}ms - Status: ${testResponse.status}`,
+      );
+
+      if (!testResponse.ok) {
+        const errorText = await testResponse.text();
+        console.error(
+          `❌ [TEST] Erro da API: ${testResponse.status} - ${errorText}`,
+        );
+        throw new Error(
+          `Erro na API do ${modelData.provider.name}: ${testResponse.status} - ${errorText}`,
+        );
+      }
+
+      const testResult = (await testResponse.json()) as ChatCompletionResponse;
+
+      if (!testResult.choices || testResult.choices.length === 0) {
+        throw new Error("Resposta da API não contém choices válidos");
+      }
+
+      const responseText =
+        testResult.choices[0]?.message?.content || "Sem resposta";
+
+      console.log(
+        `✅ [TEST_SUCCESS] Modelo funcionando: ${responseText.substring(0, 100)}...`,
+      );
+
+      return {
+        success: true,
+        modelName,
+        providerName: modelData.provider.name,
+        responseText,
+        usage: testResult.usage,
+        latencyMs,
+        testPrompt,
+        timestamp: new Date().toISOString(),
+      };
+    } catch (error: any) {
+      console.error(
+        `❌ [TEST_ERROR] Erro ao testar modelo ${modelId}:`,
+        error.message,
+      );
+
+      return {
+        success: false,
+        modelId,
+        error: error.message,
+        timestamp: new Date().toISOString(),
+      };
+    }
   },
 };

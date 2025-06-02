@@ -34,6 +34,7 @@ export const criarChatSessionSchema = z.object({
 export const atualizarChatSessionSchema = z.object({
   id: z.string(),
   title: z.string().min(1).max(255).optional(),
+  chatFolderId: z.string().optional(),
   aiAgentId: z.string().optional(),
   aiModelId: z.string().optional(),
 });
@@ -76,6 +77,12 @@ export const enviarMensagemSchema = z.object({
   chatSessionId: z.string().min(1, "ID da sessão é obrigatório"),
   content: z.string().min(1, "Conteúdo da mensagem é obrigatório"),
   useAgent: z.boolean().default(true),
+});
+
+export const autoCreateSessionWithMessageSchema = z.object({
+  firstMessage: z.string().min(1, "Primeira mensagem é obrigatória"),
+  useAgent: z.boolean().default(true),
+  generateTitle: z.boolean().default(true),
 });
 
 export const iniciarNovaConversa = z.object({
@@ -135,6 +142,9 @@ export type AtualizarChatMessageInput = z.infer<
 export type BuscarChatMessagesInput = z.infer<typeof buscarChatMessagesSchema>;
 
 export type EnviarMensagemInput = z.infer<typeof enviarMensagemSchema>;
+export type AutoCreateSessionWithMessageInput = z.infer<
+  typeof autoCreateSessionWithMessageSchema
+>;
 export type IniciarNovaConversaInput = z.infer<typeof iniciarNovaConversa>;
 export type DuplicarSessaoInput = z.infer<typeof duplicarSessaoSchema>;
 

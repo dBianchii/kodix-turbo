@@ -96,11 +96,11 @@ export function LibrariesSection() {
   const [libraryToDelete, setLibraryToDelete] = useState<any>(null);
   const [libraryToEdit, setLibraryToEdit] = useState<any>(null);
 
-  // Queries
+  // Query
   const librariesQuery = useQuery(
-    trpc.app.aiStudio.buscarAiLibraries.queryOptions({
+    trpc.app.aiStudio.findAiLibraries.queryOptions({
       limite: 50,
-      pagina: 1,
+      offset: 0,
     }),
   );
 
@@ -112,7 +112,6 @@ export function LibrariesSection() {
     resolver: zodResolver(createLibrarySchema),
     defaultValues: {
       name: "",
-      files: "",
     },
   });
 
@@ -121,55 +120,54 @@ export function LibrariesSection() {
     resolver: zodResolver(editLibrarySchema),
     defaultValues: {
       name: "",
-      files: "",
     },
   });
 
   // Mutations
   const createLibraryMutation = useMutation(
-    trpc.app.aiStudio.criarAiLibrary.mutationOptions({
+    trpc.app.aiStudio.createAiLibrary.mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries(
-          trpc.app.aiStudio.buscarAiLibraries.pathFilter(),
+          trpc.app.aiStudio.findAiLibraries.pathFilter(),
         );
         toast.success("Biblioteca criada com sucesso!");
         setShowCreateForm(false);
         createForm.reset();
       },
-      onError: (error) => {
+      onError: (error: any) => {
         toast.error(error.message || "Erro ao criar biblioteca");
       },
     }),
   );
 
   const updateLibraryMutation = useMutation(
-    trpc.app.aiStudio.atualizarAiLibrary.mutationOptions({
+    trpc.app.aiStudio.updateAiLibrary.mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries(
-          trpc.app.aiStudio.buscarAiLibraries.pathFilter(),
+          trpc.app.aiStudio.findAiLibraries.pathFilter(),
         );
         toast.success("Biblioteca atualizada com sucesso!");
         setShowEditForm(false);
         setLibraryToEdit(null);
         editForm.reset();
       },
-      onError: (error) => {
+      onError: (error: any) => {
         toast.error(error.message || "Erro ao atualizar biblioteca");
       },
     }),
   );
 
   const deleteLibraryMutation = useMutation(
-    trpc.app.aiStudio.excluirAiLibrary.mutationOptions({
+    trpc.app.aiStudio.deleteAiLibrary.mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries(
-          trpc.app.aiStudio.buscarAiLibraries.pathFilter(),
+          trpc.app.aiStudio.findAiLibraries.pathFilter(),
         );
         toast.success("Biblioteca excluída com sucesso!");
         setShowDeleteDialog(false);
         setLibraryToDelete(null);
       },
-      onError: (error) => {
+      onError: (error: any) => {
         toast.error(error.message || "Erro ao excluir biblioteca");
       },
     }),

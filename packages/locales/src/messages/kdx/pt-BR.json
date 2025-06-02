@@ -69,7 +69,67 @@
     "chat": {
       "appDescription": "Chat é um aplicativo versátil de comunicação",
       "appName": "Chat",
-      "welcome-chat": "Bem-vindo ao Chat Kodix"
+      "welcome-chat": "Bem-vindo ao Chat Kodix",
+      "folders": {
+        "title": "Pastas de Chat",
+        "create": "Nova Pasta",
+        "edit": "Editar Pasta",
+        "delete": "Excluir Pasta",
+        "noFolders": "Nenhuma pasta encontrada",
+        "folderName": "Nome da Pasta",
+        "created": "Pasta criada com sucesso",
+        "updated": "Pasta atualizada com sucesso",
+        "deleted": "Pasta excluída com sucesso",
+        "error": "Erro ao processar pasta"
+      },
+      "sessions": {
+        "title": "Sessões de Chat",
+        "create": "Novo Chat",
+        "edit": "Editar Chat",
+        "delete": "Excluir Chat",
+        "noSessions": "Nenhuma sessão encontrada",
+        "sessionTitle": "Título do Chat",
+        "selectFolder": "Selecione uma pasta",
+        "selectAgent": "Selecione um agente",
+        "selectModel": "Selecione um modelo",
+        "noFolder": "Sem pasta",
+        "noAgent": "Nenhum agente",
+        "modelRequired": "Modelo é obrigatório",
+        "created": "Sessão criada com sucesso",
+        "updated": "Sessão atualizada com sucesso",
+        "deleted": "Sessão excluída com sucesso",
+        "error": "Erro ao processar sessão"
+      },
+      "messages": {
+        "loading": "Carregando conversa...",
+        "error": "Erro ao carregar conversa",
+        "tryAgain": "Tentar novamente",
+        "placeholder": "Digite sua mensagem...",
+        "send": "Enviar",
+        "greeting": "Olá! Como posso te ajudar hoje?",
+        "typing": "Digitando...",
+        "errorOccurred": "Ocorreu um erro: {error}. Por favor, tente novamente.",
+        "selectConversation": "Selecione uma conversa ou crie uma nova"
+      },
+      "confirmDelete": {
+        "folder": "Tem certeza que deseja excluir a pasta \"{name}\"? Todas as sessões dentro desta pasta também serão excluídas.",
+        "session": "Tem certeza que deseja excluir a sessão \"{title}\"? Todo o histórico de mensagens será perdido."
+      },
+      "actions": {
+        "edit": "Editar",
+        "delete": "Excluir",
+        "cancel": "Cancelar",
+        "create": "Criar",
+        "creating": "Criando...",
+        "createFolder": "Criar Pasta",
+        "createChat": "Criar Chat",
+        "updating": "Atualizando...",
+        "update": "Atualizar",
+        "loadingFolders": "Carregando pastas...",
+        "loadingChats": "Carregando chats...",
+        "loadingSessions": "Carregando sessões...",
+        "moveToFolder": "Mover para pasta"
+      }
     },
     "calendar": {
       "appDescription": "Calendário é um app de calendário",
@@ -144,6 +204,20 @@
         "noModels": "Nenhum modelo encontrado",
         "confirmDelete": "Tem certeza que deseja excluir este modelo?"
       },
+      "providers": {
+        "title": "Provedores",
+        "description": "Gerencie os provedores de IA",
+        "create": "Criar Provedor",
+        "edit": "Editar Provedor",
+        "delete": "Excluir Provedor",
+        "name": "Nome do Provedor",
+        "baseUrl": "URL Base",
+        "created": "Provedor criado com sucesso",
+        "updated": "Provedor atualizado com sucesso",
+        "deleted": "Provedor excluído com sucesso",
+        "noProviders": "Nenhum provedor encontrado",
+        "confirmDelete": "Tem certeza que deseja excluir este provedor?"
+      },
       "tokens": {
         "title": "Tokens de Acesso",
         "description": "Gerencie os tokens de acesso aos modelos",
@@ -157,6 +231,60 @@
         "deleted": "Token removido com sucesso",
         "noTokens": "Nenhum token encontrado",
         "confirmDelete": "Tem certeza que deseja remover este token?"
+      },
+      "enabledModels": {
+        "title": "Modelos do Time",
+        "description": "Configure quais modelos de IA estão disponíveis para uso no seu time",
+        "noModels": "Nenhum modelo disponível",
+        "enabled": "Ativo",
+        "disabled": "Inativo",
+        "priority": "Prioridade",
+        "toggleSuccess": "Modelo atualizado com sucesso",
+        "prioritySuccess": "Prioridade definida com sucesso",
+        "modelsWithTokens": "Modelos com Tokens Configurados",
+        "enableDisableDescription": "Habilite ou desabilite modelos para uso do seu time e arraste para reordenar prioridades",
+        "tableHeaders": {
+          "model": "Modelo",
+          "provider": "Provedor",
+          "status": "Status",
+          "default": "Padrão",
+          "test": "Teste"
+        },
+        "actions": {
+          "test": "Testar",
+          "testing": "Testando...",
+          "enableToTest": "Habilite para testar",
+          "enableToSetDefault": "Habilite para usar como padrão"
+        },
+        "alerts": {
+          "modelsInfo": "Apenas modelos cujos provedores têm tokens configurados aparecem aqui. Configure tokens na seção \"Tokens de Acesso\" para liberar mais modelos.",
+          "defaultModelInfo": "O modelo padrão não pode ser desativado. Para desativar, primeiro defina outro modelo como padrão."
+        },
+        "errors": {
+          "cannotDisableDefault": "Não é possível desativar o modelo padrão. Defina outro modelo como padrão primeiro.",
+          "atleastOneModel": "Pelo menos um modelo deve estar ativo no time.",
+          "testFailed": "Erro ao testar modelo",
+          "tokenRequired": "Token não configurado. Configure o token do provedor na seção 'Tokens de Acesso'.",
+          "modelNotFound": "Modelo não disponível. Verifique se o token do provedor está configurado.",
+          "internalError": "Erro interno do servidor. Verifique os logs para mais detalhes.",
+          "reorderError": "Erro ao reordenar modelos",
+          "setDefaultError": "Erro ao definir modelo padrão",
+          "updateError": "Erro ao atualizar modelo"
+        },
+        "success": {
+          "testSuccess": "Modelo testado com sucesso! Latência: {latency}ms. Resposta: {response}...",
+          "priorityUpdated": "Prioridades atualizadas com sucesso!",
+          "defaultSet": "Modelo padrão definido com sucesso!",
+          "modelUpdated": "Modelo atualizado com sucesso!"
+        },
+        "status": {
+          "default": "(Padrão)",
+          "loading": "Carregando..."
+        },
+        "noModelsMessage": {
+          "title": "Nenhum modelo disponível",
+          "description": "Configure tokens de acesso para provedores na seção \"Tokens de Acesso\" para liberar modelos aqui"
+        }
       }
     }
   },

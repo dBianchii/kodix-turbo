@@ -66,10 +66,11 @@ async function verifySeedsApplied() {
       totalAgents += agents.length;
 
       // AI Tokens
-      const tokens = await aiStudioRepository.AiModelTokenRepository.findByTeam(
-        team.id,
-      );
-      console.log(`      🔑 ${tokens.length} tokens de modelo`);
+      const tokens =
+        await aiStudioRepository.AiTeamProviderTokenRepository.findByTeam(
+          team.id,
+        );
+      console.log(`      🔑 ${tokens.length} tokens de provedor`);
       totalTokens += tokens.length;
 
       // Chat Folders

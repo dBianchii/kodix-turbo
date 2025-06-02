@@ -89,7 +89,67 @@
     "chat": {
       "appDescription": "Chat is a versatile communication app",
       "appName": "Chat",
-      "welcome-chat": "Welcome to Kodix Chat"
+      "welcome-chat": "Welcome to Kodix Chat",
+      "folders": {
+        "title": "Chat Folders",
+        "create": "New Folder",
+        "edit": "Edit Folder",
+        "delete": "Delete Folder",
+        "noFolders": "No folders found",
+        "folderName": "Folder Name",
+        "created": "Folder created successfully",
+        "updated": "Folder updated successfully",
+        "deleted": "Folder deleted successfully",
+        "error": "Error processing folder"
+      },
+      "sessions": {
+        "title": "Chat Sessions",
+        "create": "New Chat",
+        "edit": "Edit Chat",
+        "delete": "Delete Chat",
+        "noSessions": "No sessions found",
+        "sessionTitle": "Chat Title",
+        "selectFolder": "Select a folder",
+        "selectAgent": "Select an agent",
+        "selectModel": "Select a model",
+        "noFolder": "No folder",
+        "noAgent": "No agent",
+        "modelRequired": "Model is required",
+        "created": "Session created successfully",
+        "updated": "Session updated successfully",
+        "deleted": "Session deleted successfully",
+        "error": "Error processing session"
+      },
+      "messages": {
+        "loading": "Loading conversation...",
+        "error": "Error loading conversation",
+        "tryAgain": "Try again",
+        "placeholder": "Type your message...",
+        "send": "Send",
+        "greeting": "Hello! How can I help you today?",
+        "typing": "Typing...",
+        "errorOccurred": "An error occurred: {error}. Please try again.",
+        "selectConversation": "Select a conversation or create a new one"
+      },
+      "confirmDelete": {
+        "folder": "Are you sure you want to delete the folder \"{name}\"? All sessions within this folder will also be deleted.",
+        "session": "Are you sure you want to delete the session \"{title}\"? All message history will be lost."
+      },
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete",
+        "cancel": "Cancel",
+        "create": "Create",
+        "creating": "Creating...",
+        "createFolder": "Create Folder",
+        "createChat": "Create Chat",
+        "updating": "Updating...",
+        "update": "Update",
+        "loadingFolders": "Loading folders...",
+        "loadingChats": "Loading chats...",
+        "loadingSessions": "Loading sessions...",
+        "moveToFolder": "Move to folder"
+      }
     },
     "aiStudio": {
       "appDescription": "AI Studio is the environment for managing intelligent agents, knowledge libraries and AI models",
@@ -144,6 +204,20 @@
         "noModels": "No models found",
         "confirmDelete": "Are you sure you want to delete this model?"
       },
+      "providers": {
+        "title": "Providers",
+        "description": "Manage AI providers",
+        "create": "Create Provider",
+        "edit": "Edit Provider",
+        "delete": "Delete Provider",
+        "name": "Provider Name",
+        "baseUrl": "Base URL",
+        "created": "Provider created successfully",
+        "updated": "Provider updated successfully",
+        "deleted": "Provider deleted successfully",
+        "noProviders": "No providers found",
+        "confirmDelete": "Are you sure you want to delete this provider?"
+      },
       "tokens": {
         "title": "Access Tokens",
         "description": "Manage access tokens for models",
@@ -157,6 +231,60 @@
         "deleted": "Token removed successfully",
         "noTokens": "No tokens found",
         "confirmDelete": "Are you sure you want to remove this token?"
+      },
+      "enabledModels": {
+        "title": "Team Models",
+        "description": "Configure which AI models are available for your team use",
+        "noModels": "No models available",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "priority": "Priority",
+        "toggleSuccess": "Model updated successfully",
+        "prioritySuccess": "Priority set successfully",
+        "modelsWithTokens": "Models with Configured Tokens",
+        "enableDisableDescription": "Enable or disable models for your team use and drag to reorder priorities",
+        "tableHeaders": {
+          "model": "Model",
+          "provider": "Provider",
+          "status": "Status",
+          "default": "Default",
+          "test": "Test"
+        },
+        "actions": {
+          "test": "Test",
+          "testing": "Testing...",
+          "enableToTest": "Enable to test",
+          "enableToSetDefault": "Enable to use as default"
+        },
+        "alerts": {
+          "modelsInfo": "Only models whose providers have configured tokens appear here. Configure tokens in the \"Access Tokens\" section to unlock more models.",
+          "defaultModelInfo": "The default model cannot be disabled. To disable, first set another model as default."
+        },
+        "errors": {
+          "cannotDisableDefault": "Cannot disable the default model. Set another model as default first.",
+          "atleastOneModel": "At least one model must be active in the team.",
+          "testFailed": "Error testing model",
+          "tokenRequired": "Token not configured. Configure the provider token in the 'Access Tokens' section.",
+          "modelNotFound": "Model not available. Check if the provider token is configured.",
+          "internalError": "Internal server error. Check logs for more details.",
+          "reorderError": "Error reordering models",
+          "setDefaultError": "Error setting default model",
+          "updateError": "Error updating model"
+        },
+        "success": {
+          "testSuccess": "Model tested successfully! Latency: {latency}ms. Response: {response}...",
+          "priorityUpdated": "Priorities updated successfully!",
+          "defaultSet": "Default model set successfully!",
+          "modelUpdated": "Model updated successfully!"
+        },
+        "status": {
+          "default": "(Default)",
+          "loading": "Loading..."
+        },
+        "noModelsMessage": {
+          "title": "No models available",
+          "description": "Configure access tokens for providers in the \"Access Tokens\" section to unlock models here"
+        }
       }
     }
   },

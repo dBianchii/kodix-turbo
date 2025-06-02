@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Bot, Brain, Database, Key } from "lucide-react";
+import { Bot, Brain, Building, Database, Key, Settings } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { aiStudioAppId } from "@kdx/shared";
@@ -10,6 +10,7 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -18,27 +19,41 @@ import {
 
 import { IconKodixApp } from "~/app/[locale]/_components/app/kodix-icon";
 
-// Seções do AI Studio
-const sections = [
+// Seções principais (mais usadas diariamente)
+const mainSections = [
+  {
+    id: "tokens",
+    title: "tokens",
+    icon: Key,
+  },
+  {
+    id: "enabled-models",
+    title: "enabledModels",
+    icon: Brain,
+  },
   {
     id: "agents",
-    title: "agents.title",
+    title: "agents",
     icon: Bot,
   },
   {
     id: "libraries",
-    title: "libraries.title",
+    title: "libraries",
     icon: Database,
+  },
+];
+
+// Configurações gerais (menos alteradas)
+const configSections = [
+  {
+    id: "providers",
+    title: "providers",
+    icon: Building,
   },
   {
     id: "models",
-    title: "models.title",
+    title: "models",
     icon: Brain,
-  },
-  {
-    id: "tokens",
-    title: "tokens.title",
-    icon: Key,
   },
 ];
 
@@ -48,7 +63,7 @@ interface AppSidebarProps {
 }
 
 export function AppSidebar({
-  activeSection = "agents",
+  activeSection = "tokens",
   onSectionChange,
 }: AppSidebarProps) {
   const { isMobile } = useSidebar();
@@ -60,21 +75,26 @@ export function AppSidebar({
       className="h-full w-60 shrink-0 border-r border-gray-800"
     >
       <SidebarContent className="h-full">
+        {/* Cabeçalho com ícone do app */}
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu>
-              {/* Cabeçalho com ícone do app */}
-              <div className="flex items-end gap-2 py-2 font-semibold">
-                <IconKodixApp
-                  appId={aiStudioAppId}
-                  renderText={false}
-                  size={35}
-                />
-                <span className="text-lg">{t("apps.aiStudio.appName")}</span>
-              </div>
+            <div className="flex items-end gap-2 py-2 font-semibold">
+              <IconKodixApp
+                appId={aiStudioAppId}
+                renderText={false}
+                size={35}
+              />
+              <span className="text-lg">{t("apps.aiStudio.appName")}</span>
+            </div>
+          </SidebarGroupContent>
+        </SidebarGroup>
 
-              {/* Itens do menu */}
-              {sections.map((section) => (
+        {/* Seção Principal */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Principal</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {mainSections.map((section) => (
                 <SidebarMenuItem key={section.id}>
                   <SidebarMenuButton
                     asChild
@@ -85,7 +105,36 @@ export function AppSidebar({
                       className="flex w-full items-center gap-2"
                     >
                       <section.icon className="h-5 w-5" />
-                      <span>{t(`apps.aiStudio.${section.title}` as any)}</span>
+                      <span>
+                        {t(`apps.aiStudio.${section.title}.title` as any)}
+                      </span>
+                    </button>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Seção de Configuração Geral */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Configuração Geral</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {configSections.map((section) => (
+                <SidebarMenuItem key={section.id}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={activeSection === section.id}
+                  >
+                    <button
+                      onClick={() => onSectionChange?.(section.id)}
+                      className="flex w-full items-center gap-2"
+                    >
+                      <section.icon className="h-5 w-5" />
+                      <span>
+                        {t(`apps.aiStudio.${section.title}.title` as any)}
+                      </span>
                     </button>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

@@ -8,94 +8,606 @@ export async function seedAiStudio() {
   try {
     console.log("🌱 Iniciando seed de AI Studio...");
 
-    // Criar modelos de IA exemplo
-    console.log("Creating AI Models...");
-    const models = [
+    // =============================
+    // 1. Criar providers de IA
+    // =============================
+    console.log("Creating AI Providers...");
+
+    const providers = [
+      // Principais providers comerciais
       {
-        name: "GPT-4",
-        provider: "OpenAI",
-        config: {
-          maxTokens: 4096,
-          temperature: 0.7,
-          description: "Modelo GPT-4 da OpenAI para tarefas gerais",
-          apiUrl: "https://api.openai.com/v1/chat/completions",
-          version: "gpt-4",
-        },
-        enabled: true,
+        name: "OpenAI",
+        baseUrl: "https://api.openai.com/v1",
       },
       {
-        name: "Claude 3.5 Sonnet",
-        provider: "Anthropic",
-        config: {
-          maxTokens: 8192,
-          temperature: 0.5,
-          description: "Modelo Claude 3.5 Sonnet da Anthropic",
-          apiUrl: "https://api.anthropic.com/v1/messages",
-          version: "claude-3-5-sonnet-20241022",
-        },
-        enabled: true,
+        name: "Anthropic",
+        baseUrl: "https://api.anthropic.com/v1",
       },
       {
-        name: "Gemini Pro",
-        provider: "Google",
-        config: {
-          maxTokens: 2048,
-          temperature: 0.8,
-          description: "Modelo Gemini Pro do Google",
-          apiUrl:
-            "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent",
-          version: "gemini-pro",
-        },
-        enabled: true,
+        name: "Google",
+        baseUrl: "https://generativelanguage.googleapis.com/v1",
+      },
+
+      // Providers emergentes
+      {
+        name: "Mistral AI",
+        baseUrl: "https://api.mistral.ai/v1",
       },
       {
-        name: "Llama 2",
-        provider: "Meta",
-        config: {
-          maxTokens: 4096,
-          temperature: 0.6,
-          description: "Modelo Llama 2 da Meta (open source)",
-          apiUrl: "https://api.together.xyz/inference",
-          version: "meta-llama/Llama-2-70b-chat-hf",
-        },
-        enabled: false, // Desabilitado por padrão
+        name: "Cohere",
+        baseUrl: "https://api.cohere.ai/v1",
+      },
+      {
+        name: "Perplexity",
+        baseUrl: "https://api.perplexity.ai",
+      },
+      {
+        name: "xAI",
+        baseUrl: "https://api.x.ai/v1",
+      },
+
+      // Providers open source / self-hosted
+      {
+        name: "Hugging Face",
+        baseUrl: "https://api-inference.huggingface.co/v1",
+      },
+      {
+        name: "Together AI",
+        baseUrl: "https://api.together.xyz/v1",
+      },
+      {
+        name: "Anyscale",
+        baseUrl: "https://api.endpoints.anyscale.com/v1",
+      },
+      {
+        name: "Fireworks AI",
+        baseUrl: "https://api.fireworks.ai/inference/v1",
+      },
+
+      // Providers locais/custom
+      {
+        name: "Ollama",
+        baseUrl: "http://localhost:11434/api",
+      },
+      {
+        name: "LM Studio",
+        baseUrl: "http://localhost:1234/v1",
+      },
+      {
+        name: "Groq",
+        baseUrl: "https://api.groq.com/openai/v1",
+      },
+
+      // Azure e outras clouds
+      {
+        name: "Azure OpenAI",
+        baseUrl: "https://{resource}.openai.azure.com/openai/deployments",
+      },
+      {
+        name: "AWS Bedrock",
+        baseUrl: "https://bedrock-runtime.{region}.amazonaws.com",
       },
     ];
 
-    const createdModels = [];
-    for (const modelData of models) {
+    const createdProviders: any[] = [];
+    for (const providerData of providers) {
       try {
-        const existingModel =
-          await aiStudioRepository.AiModelRepository.findMany({
-            provider: modelData.provider,
-            limite: 1,
-            offset: 0,
-          });
-
-        if (existingModel.length === 0) {
-          const model =
-            await aiStudioRepository.AiModelRepository.create(modelData);
-          createdModels.push(model);
-          console.log(
-            `✅ Modelo criado: ${modelData.name} (${modelData.provider})`,
+        // Verificar se o provider já existe
+        const existingProvider =
+          await aiStudioRepository.AiProviderRepository.findByName(
+            providerData.name,
           );
+
+        if (existingProvider) {
+          createdProviders.push(existingProvider);
+          console.log(`✓ Provider "${providerData.name}" já existe`);
         } else {
-          console.log(`⚠️  Modelo ${modelData.name} já existe`);
-          createdModels.push(existingModel[0]);
+          const provider =
+            await aiStudioRepository.AiProviderRepository.create(providerData);
+          if (provider) {
+            createdProviders.push(provider);
+            console.log(`✅ Provider criado: ${provider.name}`);
+          }
         }
       } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : "Erro desconhecido";
-        console.log(
-          `⚠️  Erro ao criar modelo ${modelData.name}: ${errorMessage}`,
-        );
+        console.error(`❌ Erro ao criar provider ${providerData.name}:`, error);
       }
     }
 
-    console.log(
-      `✅ Seeds de AI Studio concluídos! ${createdModels.length} modelos disponíveis.`,
-    );
-    return { models: createdModels };
+    // =============================
+    // 2. Criar modelos de IA
+    // =============================
+    console.log("Creating AI Models...");
+
+    // Buscar providers criados para associar aos modelos
+    const findProvider = (name: string) =>
+      createdProviders.find((p: any) => p.name === name);
+
+    const openaiProvider = findProvider("OpenAI");
+    const anthropicProvider = findProvider("Anthropic");
+    const googleProvider = findProvider("Google");
+    const mistralProvider = findProvider("Mistral AI");
+    const cohereProvider = findProvider("Cohere");
+    const perplexityProvider = findProvider("Perplexity");
+    const xaiProvider = findProvider("xAI");
+    const huggingfaceProvider = findProvider("Hugging Face");
+    const togetherProvider = findProvider("Together AI");
+    const groqProvider = findProvider("Groq");
+    const ollamaProvider = findProvider("Ollama");
+
+    const models = [
+      // ========== OpenAI Models ==========
+      {
+        name: "gpt-4o",
+        providerId: openaiProvider?.id,
+        config: {
+          maxTokens: 4096,
+          temperature: 0.7,
+          description: "GPT-4o mais recente da OpenAI com melhor performance",
+          version: "gpt-4o",
+          pricing: { input: 0.005, output: 0.015 },
+        },
+        enabled: false,
+      },
+      {
+        name: "gpt-4o-mini",
+        providerId: openaiProvider?.id,
+        config: {
+          maxTokens: 4096,
+          temperature: 0.7,
+          description: "Versão mini do GPT-4o mais econômica",
+          version: "gpt-4o-mini",
+          pricing: { input: 0.00015, output: 0.0006 },
+        },
+        enabled: false,
+      },
+      {
+        name: "gpt-4o-audio-preview",
+        providerId: openaiProvider?.id,
+        config: {
+          maxTokens: 4096,
+          temperature: 0.7,
+          description: "GPT-4o com capacidades de áudio (preview)",
+          version: "gpt-4o-audio-preview",
+          pricing: { input: 0.005, output: 0.015 },
+        },
+        enabled: false,
+      },
+      {
+        name: "gpt-4-turbo",
+        providerId: openaiProvider?.id,
+        config: {
+          maxTokens: 4096,
+          temperature: 0.7,
+          description: "GPT-4 Turbo com dados até abril 2024",
+          version: "gpt-4-turbo",
+          pricing: { input: 0.01, output: 0.03 },
+        },
+        enabled: false,
+      },
+      {
+        name: "gpt-4",
+        providerId: openaiProvider?.id,
+        config: {
+          maxTokens: 4096,
+          temperature: 0.7,
+          description: "GPT-4 clássico para tarefas complexas",
+          version: "gpt-4",
+          pricing: { input: 0.03, output: 0.06 },
+        },
+        enabled: false,
+      },
+      {
+        name: "gpt-3.5-turbo",
+        providerId: openaiProvider?.id,
+        config: {
+          maxTokens: 4096,
+          temperature: 0.7,
+          description: "GPT-3.5 Turbo rápido e econômico",
+          version: "gpt-3.5-turbo",
+          pricing: { input: 0.001, output: 0.002 },
+        },
+        enabled: false,
+      },
+      {
+        name: "gpt-4.1",
+        providerId: openaiProvider?.id,
+        config: {
+          maxTokens: 1000000,
+          temperature: 0.7,
+          description: "GPT-4.1 flagship com contexto de 1M tokens",
+          version: "gpt-4.1",
+          pricing: { input: 0.002, output: 0.008 },
+        },
+        enabled: false,
+      },
+      {
+        name: "gpt-4.1-mini",
+        providerId: openaiProvider?.id,
+        config: {
+          maxTokens: 1000000,
+          temperature: 0.7,
+          description: "GPT-4.1 Mini com contexto de 1M tokens",
+          version: "gpt-4.1-mini",
+          pricing: { input: 0.0003, output: 0.0012 },
+        },
+        enabled: false,
+      },
+      {
+        name: "gpt-4.1-nano",
+        providerId: openaiProvider?.id,
+        config: {
+          maxTokens: 1000000,
+          temperature: 0.7,
+          description: "GPT-4.1 Nano ultra eficiente com contexto de 1M tokens",
+          version: "gpt-4.1-nano",
+          pricing: { input: 0.0001, output: 0.0004 },
+        },
+        enabled: false,
+      },
+      {
+        name: "o1",
+        providerId: openaiProvider?.id,
+        config: {
+          maxTokens: 32768,
+          temperature: 0.8,
+          description: "O1 modelo de raciocínio avançado da OpenAI",
+          version: "o1",
+          pricing: { input: 0.015, output: 0.06 },
+        },
+        enabled: false,
+      },
+      {
+        name: "o1-mini",
+        providerId: openaiProvider?.id,
+        config: {
+          maxTokens: 32768,
+          temperature: 0.8,
+          description: "O1 Mini modelo de raciocínio mais eficiente",
+          version: "o1-mini",
+          pricing: { input: 0.003, output: 0.012 },
+        },
+        enabled: false,
+      },
+      {
+        name: "o1-preview",
+        providerId: openaiProvider?.id,
+        config: {
+          maxTokens: 32768,
+          temperature: 0.8,
+          description: "O1 Preview versão prévia do modelo de raciocínio",
+          version: "o1-preview",
+          pricing: { input: 0.015, output: 0.06 },
+        },
+        enabled: false,
+      },
+      {
+        name: "o3",
+        providerId: openaiProvider?.id,
+        config: {
+          maxTokens: 32768,
+          temperature: 0.8,
+          description: "O3 modelo de raciocínio mais avançado",
+          version: "o3",
+          pricing: { input: 0.02, output: 0.08 },
+        },
+        enabled: false,
+      },
+      {
+        name: "o3-mini",
+        providerId: openaiProvider?.id,
+        config: {
+          maxTokens: 200000,
+          temperature: 0.8,
+          description: "O3 Mini modelo de raciocínio eficiente",
+          version: "o3-mini",
+          pricing: { input: 0.004, output: 0.016 },
+        },
+        enabled: false,
+      },
+      {
+        name: "o4-mini",
+        providerId: openaiProvider?.id,
+        config: {
+          maxTokens: 200000,
+          temperature: 0.8,
+          description: "O4 Mini próxima geração de raciocínio",
+          version: "o4-mini",
+          pricing: { input: 0.005, output: 0.02 },
+        },
+        enabled: false,
+      },
+      {
+        name: "chatgpt-4o-latest",
+        providerId: openaiProvider?.id,
+        config: {
+          maxTokens: 4096,
+          temperature: 0.7,
+          description: "ChatGPT-4o mais recente otimizado para conversação",
+          version: "chatgpt-4o-latest",
+          pricing: { input: 0.005, output: 0.015 },
+        },
+        enabled: false,
+      },
+
+      // ========== Anthropic Models ==========
+      {
+        name: "Claude 3.5 Sonnet",
+        providerId: anthropicProvider?.id,
+        config: {
+          maxTokens: 8192,
+          temperature: 0.5,
+          description: "Claude 3.5 Sonnet com melhor raciocínio",
+          version: "claude-3-5-sonnet-20241022",
+          pricing: { input: 0.003, output: 0.015 },
+        },
+        enabled: false,
+      },
+      {
+        name: "Claude 3.5 Haiku",
+        providerId: anthropicProvider?.id,
+        config: {
+          maxTokens: 8192,
+          temperature: 0.5,
+          description: "Claude 3.5 Haiku mais rápido e barato",
+          version: "claude-3-5-haiku-20241022",
+          pricing: { input: 0.0008, output: 0.004 },
+        },
+        enabled: false,
+      },
+      {
+        name: "Claude 3 Opus",
+        providerId: anthropicProvider?.id,
+        config: {
+          maxTokens: 4096,
+          temperature: 0.5,
+          description: "Claude 3 Opus para tarefas complexas",
+          version: "claude-3-opus-20240229",
+          pricing: { input: 0.015, output: 0.075 },
+        },
+        enabled: false,
+      },
+
+      // ========== Google Models ==========
+      {
+        name: "Gemini 1.5 Pro",
+        providerId: googleProvider?.id,
+        config: {
+          maxTokens: 8192,
+          temperature: 0.8,
+          description: "Gemini 1.5 Pro com contexto de 2M tokens",
+          version: "gemini-1.5-pro",
+          pricing: { input: 0.00125, output: 0.005 },
+        },
+        enabled: false,
+      },
+      {
+        name: "Gemini 1.5 Flash",
+        providerId: googleProvider?.id,
+        config: {
+          maxTokens: 8192,
+          temperature: 0.8,
+          description: "Gemini 1.5 Flash mais rápido",
+          version: "gemini-1.5-flash",
+          pricing: { input: 0.000075, output: 0.0003 },
+        },
+        enabled: false,
+      },
+      {
+        name: "Gemini Pro",
+        providerId: googleProvider?.id,
+        config: {
+          maxTokens: 2048,
+          temperature: 0.8,
+          description: "Gemini Pro clássico",
+          version: "gemini-pro",
+          pricing: { input: 0.0005, output: 0.0015 },
+        },
+        enabled: false,
+      },
+
+      // ========== Mistral AI Models ==========
+      {
+        name: "Mistral Large",
+        providerId: mistralProvider?.id,
+        config: {
+          maxTokens: 8192,
+          temperature: 0.7,
+          description: "Mistral Large modelo flagship",
+          version: "mistral-large-latest",
+          pricing: { input: 0.004, output: 0.012 },
+        },
+        enabled: false,
+      },
+      {
+        name: "Mistral 7B",
+        providerId: mistralProvider?.id,
+        config: {
+          maxTokens: 4096,
+          temperature: 0.7,
+          description: "Mistral 7B open source",
+          version: "open-mistral-7b",
+          pricing: { input: 0.00025, output: 0.00025 },
+        },
+        enabled: false,
+      },
+      {
+        name: "Mixtral 8x7B",
+        providerId: mistralProvider?.id,
+        config: {
+          maxTokens: 4096,
+          temperature: 0.7,
+          description: "Mixtral 8x7B mixture of experts",
+          version: "open-mixtral-8x7b",
+          pricing: { input: 0.0007, output: 0.0007 },
+        },
+        enabled: false,
+      },
+
+      // ========== Cohere Models ==========
+      {
+        name: "Command R+",
+        providerId: cohereProvider?.id,
+        config: {
+          maxTokens: 4096,
+          temperature: 0.6,
+          description: "Command R+ da Cohere para RAG",
+          version: "command-r-plus",
+          pricing: { input: 0.003, output: 0.015 },
+        },
+        enabled: false,
+      },
+      {
+        name: "Command R",
+        providerId: cohereProvider?.id,
+        config: {
+          maxTokens: 4096,
+          temperature: 0.6,
+          description: "Command R da Cohere",
+          version: "command-r",
+          pricing: { input: 0.0005, output: 0.0015 },
+        },
+        enabled: false,
+      },
+
+      // ========== Perplexity Models ==========
+      {
+        name: "Sonar Pro",
+        providerId: perplexityProvider?.id,
+        config: {
+          maxTokens: 4096,
+          temperature: 0.7,
+          description: "Perplexity Sonar Pro com busca web",
+          version: "llama-3.1-sonar-large-128k-online",
+          pricing: { input: 0.001, output: 0.001 },
+        },
+        enabled: false,
+      },
+
+      // ========== xAI Models ==========
+      {
+        name: "Grok Beta",
+        providerId: xaiProvider?.id,
+        config: {
+          maxTokens: 8192,
+          temperature: 0.7,
+          description: "Grok da xAI com acesso ao X/Twitter",
+          version: "grok-beta",
+          pricing: { input: 0.005, output: 0.015 },
+        },
+        enabled: false,
+      },
+
+      // ========== Groq Models (rápidos) ==========
+      {
+        name: "Llama 3 70B (Groq)",
+        providerId: groqProvider?.id,
+        config: {
+          maxTokens: 8192,
+          temperature: 0.6,
+          description: "Llama 3 70B otimizado no Groq (ultrarrápido)",
+          version: "llama3-70b-8192",
+          pricing: { input: 0.00059, output: 0.00079 },
+        },
+        enabled: false,
+      },
+      {
+        name: "Mixtral 8x7B (Groq)",
+        providerId: groqProvider?.id,
+        config: {
+          maxTokens: 4096,
+          temperature: 0.7,
+          description: "Mixtral 8x7B no Groq (ultrarrápido)",
+          version: "mixtral-8x7b-32768",
+          pricing: { input: 0.00024, output: 0.00024 },
+        },
+        enabled: false,
+      },
+
+      // ========== Local/Ollama Models ==========
+      {
+        name: "Llama 3.1 8B (Local)",
+        providerId: ollamaProvider?.id,
+        config: {
+          maxTokens: 8192,
+          temperature: 0.6,
+          description: "Llama 3.1 8B rodando localmente",
+          version: "llama3.1:8b",
+          pricing: { input: 0, output: 0 },
+        },
+        enabled: false,
+      },
+      {
+        name: "Qwen 2.5 7B (Local)",
+        providerId: ollamaProvider?.id,
+        config: {
+          maxTokens: 8192,
+          temperature: 0.7,
+          description: "Qwen 2.5 7B da Alibaba localmente",
+          version: "qwen2.5:7b",
+          pricing: { input: 0, output: 0 },
+        },
+        enabled: false,
+      },
+    ];
+
+    const createdModels: any[] = [];
+    for (const modelData of models) {
+      try {
+        if (!modelData.providerId) {
+          console.log(
+            `⚠️  Provider não encontrado para modelo ${modelData.name}, pulando...`,
+          );
+          continue;
+        }
+
+        // Verificar se o modelo já existe
+        const existingModels =
+          await aiStudioRepository.AiModelRepository.findMany({
+            providerId: modelData.providerId,
+          });
+
+        const existingModel = existingModels.find(
+          (m: any) => m.name === modelData.name,
+        );
+
+        if (existingModel) {
+          createdModels.push(existingModel);
+          console.log(`✓ Modelo "${modelData.name}" já existe`);
+        } else {
+          // Garantir que providerId não é undefined antes de criar
+          const model = await aiStudioRepository.AiModelRepository.create({
+            ...modelData,
+            providerId: modelData.providerId, // TypeScript sabe que não é undefined aqui
+          });
+          createdModels.push(model);
+          console.log(`✅ Modelo criado: ${model?.name || modelData.name}`);
+        }
+      } catch (error) {
+        console.error(`❌ Erro ao criar modelo ${modelData.name}:`, error);
+      }
+    }
+
+    console.log("\n📊 Resumo do Seed:");
+    console.log(`   • ${createdProviders.length} providers processados`);
+    console.log(`   • ${createdModels.length} modelos processados`);
+
+    // Contar por provider
+    const providerStats = createdProviders.map((provider: any) => {
+      const modelCount = models.filter(
+        (modelData: any) => modelData.providerId === provider.id,
+      ).length;
+      return { name: provider.name, models: modelCount };
+    });
+
+    console.log("\n📈 Modelos por Provider:");
+    providerStats.forEach((stat: any) => {
+      if (stat.models > 0) {
+        console.log(`   • ${stat.name}: ${stat.models} modelos`);
+      }
+    });
+
+    console.log("\n✅ Seed de AI Studio concluído com sucesso!");
   } catch (error) {
     console.error("❌ Erro durante o seed de AI Studio:", error);
     throw error;
@@ -106,198 +618,155 @@ export async function seedAiStudioWithTeam(teamId: string, userId?: string) {
   try {
     console.log(`🌱 Iniciando seed de AI Studio para team ${teamId}...`);
 
-    // Verificar se o team existe
-    const team = await db.query.teams.findFirst({
-      where: eq(teams.id, teamId),
-    });
-
-    if (!team) {
-      throw new Error(`Team com ID ${teamId} não encontrado`);
-    }
-
-    // Buscar um usuário do team se não fornecido
-    let createdById = userId;
-    if (!createdById) {
-      const teamOwner = await db.query.users.findFirst({
-        where: eq(users.id, team.ownerId),
+    // Buscar providers existentes
+    const providersResult =
+      await aiStudioRepository.AiProviderRepository.findMany({
+        limite: 100,
+        offset: 0,
       });
 
-      if (!teamOwner) {
-        throw new Error(`Owner do team ${teamId} não encontrado`);
-      }
-
-      createdById = teamOwner.id;
-    }
-
-    // Buscar modelos existentes
-    const models = await aiStudioRepository.AiModelRepository.findMany({
-      enabled: true,
-      limite: 10,
-      offset: 0,
-    });
-
-    if (models.length === 0) {
+    if (providersResult.length === 0) {
       console.log(
-        "⚠️  Nenhum modelo encontrado. Execute primeiro seedAiStudio()",
+        "⚠️  Nenhum provider encontrado. Execute o seed geral primeiro.",
       );
       return;
     }
 
-    console.log(`📦 ${models.length} modelos disponíveis para uso`);
+    console.log(`📋 Encontrados ${providersResult.length} providers`);
 
-    // Criar tokens para os modelos (exemplo)
-    console.log("Creating AI Model Tokens...");
+    // Usar o primeiro usuário da team se não especificado
+    let createdById = userId;
+    if (!createdById) {
+      const teamUsers = await db
+        .select()
+        .from(users)
+        .innerJoin(teams, eq(teams.id, teamId))
+        .limit(1);
+
+      if (teamUsers.length > 0) {
+        createdById = teamUsers[0]!.user.id;
+      } else {
+        console.log("⚠️  Nenhum usuário encontrado para a team");
+        return;
+      }
+    }
+
+    // =============================
+    // 1. Criar tokens de exemplo
+    // =============================
+    console.log("Creating AI Provider Tokens...");
+
     const tokenExamples = [
-      { modelName: "GPT-4", token: "sk-example-gpt4-token-replace-with-real" },
       {
-        modelName: "Claude 3.5 Sonnet",
-        token: "sk-ant-example-claude-token-replace-with-real",
+        providerName: "OpenAI",
+        token: "sk-example-openai-token-replace-with-real",
       },
       {
-        modelName: "Gemini Pro",
-        token: "AIzaSy-example-gemini-token-replace-with-real",
+        providerName: "Anthropic",
+        token: "sk-ant-example-anthropic-token-replace-with-real",
+      },
+      {
+        providerName: "Google",
+        token: "AIzaSy-example-google-token-replace-with-real",
       },
     ];
 
     let tokensCreated = 0;
     for (const tokenData of tokenExamples) {
-      const model = models.find((m) => m.name === tokenData.modelName);
-      if (model) {
+      const provider = providersResult.find(
+        (p: any) => p.name === tokenData.providerName,
+      );
+      if (provider) {
         try {
-          // Verificar se já existe token para este modelo/team
+          // Verificar se o token já existe
           const existingToken =
-            await aiStudioRepository.AiModelTokenRepository.findByTeamAndModel(
+            await aiStudioRepository.AiTeamProviderTokenRepository.findByTeamAndProvider(
               teamId,
-              model.id,
+              provider.id,
             );
 
           if (!existingToken) {
-            await aiStudioRepository.AiModelTokenRepository.create({
-              modelId: model.id,
+            await aiStudioRepository.AiTeamProviderTokenRepository.create({
+              teamId,
+              providerId: provider.id,
               token: tokenData.token,
-              teamId: teamId,
             });
             tokensCreated++;
-            console.log(`✅ Token criado para modelo: ${model.name}`);
+            console.log(`✅ Token criado para provider: ${provider.name}`);
           } else {
-            console.log(`⚠️  Token já existe para modelo: ${model.name}`);
+            console.log(`⚠️  Token já existe para provider: ${provider.name}`);
           }
         } catch (error) {
           const errorMessage =
             error instanceof Error ? error.message : "Erro desconhecido";
           console.log(
-            `⚠️  Erro ao criar token para ${model.name}: ${errorMessage}`,
+            `⚠️  Erro ao criar token para ${provider.name}: ${errorMessage}`,
           );
         }
       }
     }
 
-    // Criar bibliotecas de IA exemplo
+    // =============================
+    // 3. Criar bibliotecas de IA exemplo
+    // =============================
     console.log("Creating AI Libraries...");
+
     const libraries = [
       {
-        name: "Documentação Técnica",
-        teamId: teamId,
+        name: "Biblioteca Técnica",
         files: {
           documents: [
             {
-              name: "manual-api.pdf",
-              type: "pdf",
-              size: 1024000,
-              uploadedAt: new Date(),
-            },
-            {
-              name: "guia-usuario.docx",
-              type: "docx",
-              size: 512000,
-              uploadedAt: new Date(),
-            },
-            {
-              name: "changelog.md",
+              name: "guia-desenvolvimento.md",
               type: "markdown",
-              size: 128000,
-              uploadedAt: new Date(),
+              url: "https://example.com/docs/dev-guide.md",
+              description: "Guia de desenvolvimento da equipe",
+            },
+            {
+              name: "api-reference.json",
+              type: "json",
+              url: "https://example.com/docs/api.json",
+              description: "Referência da API",
             },
           ],
-          totalSize: 1664000,
-          lastUpdated: new Date(),
-          documentsCount: 3,
         },
       },
       {
         name: "Base de Conhecimento",
-        teamId: teamId,
         files: {
           documents: [
             {
-              name: "faq.txt",
-              type: "txt",
-              size: 256000,
-              uploadedAt: new Date(),
-            },
-            {
-              name: "procedimentos.md",
+              name: "faq.md",
               type: "markdown",
-              size: 128000,
-              uploadedAt: new Date(),
-            },
-            {
-              name: "troubleshooting.json",
-              type: "json",
-              size: 64000,
-              uploadedAt: new Date(),
+              url: "https://example.com/faq.md",
+              description: "Perguntas frequentes",
             },
           ],
-          totalSize: 448000,
-          lastUpdated: new Date(),
-          documentsCount: 3,
-        },
-      },
-      {
-        name: "Biblioteca de Treinamento",
-        teamId: teamId,
-        files: {
-          documents: [
-            {
-              name: "exemplos-conversa.txt",
-              type: "txt",
-              size: 512000,
-              uploadedAt: new Date(),
-            },
-            {
-              name: "prompts-sistema.md",
-              type: "markdown",
-              size: 256000,
-              uploadedAt: new Date(),
-            },
-          ],
-          totalSize: 768000,
-          lastUpdated: new Date(),
-          documentsCount: 2,
         },
       },
     ];
 
-    const createdLibraries = [];
+    let librariesCreated = 0;
     for (const libraryData of libraries) {
       try {
-        // Verificar se biblioteca já existe
+        // Verificar se já existe biblioteca com este nome
         const existingLibraries =
           await aiStudioRepository.AiLibraryRepository.findByTeam({
-            teamId: teamId,
+            teamId,
             busca: libraryData.name,
             limite: 1,
             offset: 0,
           });
 
         if (existingLibraries.length === 0) {
-          const library =
-            await aiStudioRepository.AiLibraryRepository.create(libraryData);
-          createdLibraries.push(library);
+          await aiStudioRepository.AiLibraryRepository.create({
+            ...libraryData,
+            teamId: teamId,
+          });
+          librariesCreated++;
           console.log(`✅ Biblioteca criada: ${libraryData.name}`);
         } else {
-          console.log(`⚠️  Biblioteca ${libraryData.name} já existe`);
-          createdLibraries.push(existingLibraries[0]);
+          console.log(`⚠️  Biblioteca já existe: ${libraryData.name}`);
         }
       } catch (error) {
         const errorMessage =
@@ -308,110 +777,62 @@ export async function seedAiStudioWithTeam(teamId: string, userId?: string) {
       }
     }
 
-    // Criar agentes de IA exemplo
+    // =============================
+    // 4. Criar agentes de IA exemplo
+    // =============================
     console.log("Creating AI Agents...");
+
+    // Buscar uma biblioteca criada para associar
+    const teamLibraries =
+      await aiStudioRepository.AiLibraryRepository.findByTeam({
+        teamId,
+        limite: 1,
+        offset: 0,
+      });
+
     const agents = [
       {
-        name: "Assistente de Suporte Técnico",
-        teamId: teamId,
-        createdById: createdById,
-        instructions: `Você é um assistente especializado em suporte técnico da empresa ${team.name}.
-
-INSTRUÇÕES PRINCIPAIS:
-- Seja sempre educado, claro e objetivo
-- Use a base de conhecimento para fornecer respostas precisas
-- Se não souber algo, admita e sugira onde o usuário pode encontrar a informação
-- Mantenha um tom profissional mas amigável
-- Sempre pergunte se o usuário precisa de mais alguma coisa
-
-CONTEXTO DA EMPRESA:
-- Nome: ${team.name}
-- Descrição: Empresa focada em soluções tecnológicas
-
-BASE DE CONHECIMENTO:
-Use as informações da documentação técnica e FAQ para responder dúvidas dos usuários.`,
-        libraryId: createdLibraries.find(
-          (lib) => lib?.name === "Base de Conhecimento",
-        )?.id,
+        name: "Assistente de Desenvolvimento",
+        instructions:
+          "Você é um assistente especializado em desenvolvimento de software. Ajude com código, debugging, arquitetura e melhores práticas.",
+        libraryId: teamLibraries[0]?.id,
       },
       {
-        name: "Analista de Documentação",
-        teamId: teamId,
-        createdById: createdById,
-        instructions: `Você é um especialista em análise de documentos técnicos para ${team.name}.
-
-ESPECIALIDADES:
-- Análise detalhada de documentos PDF, Word e Markdown
-- Extração de informações importantes
-- Criação de resumos executivos
-- Identificação de pontos-chave e action items
-
-COMO PROCEDER:
-1. Leia o documento completo
-2. Identifique os pontos principais
-3. Extraia informações técnicas relevantes
-4. Forneça um resumo estruturado
-5. Sugira próximos passos quando aplicável
-
-FORMATO DE RESPOSTA:
-📋 **Resumo Executivo**
-🔍 **Pontos Principais**
-⚠️ **Pontos de Atenção**
-✅ **Próximos Passos**`,
-        libraryId: createdLibraries.find(
-          (lib) => lib?.name === "Documentação Técnica",
-        )?.id,
+        name: "Assistente de Documentação",
+        instructions:
+          "Você é especialista em criar e revisar documentação técnica. Ajude a escrever docs claras e bem estruturadas.",
+        libraryId: teamLibraries[0]?.id,
       },
       {
         name: "Assistente Geral",
-        teamId: teamId,
-        createdById: createdById,
-        instructions: `Você é um assistente geral versátil para a equipe da ${team.name}.
-
-CARACTERÍSTICAS:
-- Polivalente e adaptável a diferentes situações
-- Tom profissional mas amigável
-- Foco em produtividade e eficiência
-- Conhecimento geral sobre negócios e tecnologia
-
-ÁREAS DE ATUAÇÃO:
-- Suporte geral a usuários
-- Esclarecimento de dúvidas básicas
-- Orientação sobre processos
-- Apoio em tarefas administrativas
-- Facilitação de comunicação entre equipes
-
-ABORDAGEM:
-- Ouça atentamente o que o usuário precisa
-- Forneça respostas claras e diretas
-- Ofereça alternativas quando possível
-- Seja proativo em sugerir melhorias`,
-        libraryId: createdLibraries.find(
-          (lib) => lib?.name === "Biblioteca de Treinamento",
-        )?.id,
+        instructions:
+          "Você é um assistente geral que pode ajudar com diversas tarefas do dia a dia da equipe.",
+        libraryId: undefined, // Sem biblioteca
       },
     ];
 
-    const createdAgents = [];
+    let agentsCreated = 0;
     for (const agentData of agents) {
       try {
-        // Verificar se agente já existe
+        // Verificar se já existe agente com este nome
         const existingAgents =
           await aiStudioRepository.AiAgentRepository.findByTeam({
-            teamId: teamId,
+            teamId,
             busca: agentData.name,
             limite: 1,
             offset: 0,
           });
 
         if (existingAgents.length === 0) {
-          const agent =
-            await aiStudioRepository.AiAgentRepository.create(agentData);
-          createdAgents.push(agent);
+          await aiStudioRepository.AiAgentRepository.create({
+            ...agentData,
+            teamId: teamId,
+            createdById: createdById,
+          });
+          agentsCreated++;
           console.log(`✅ Agente criado: ${agentData.name}`);
         } else {
-          console.log(`⚠️  Agente ${agentData.name} já existe`);
-          createdAgents.push(existingAgents[0]);
+          console.log(`⚠️  Agente já existe: ${agentData.name}`);
         }
       } catch (error) {
         const errorMessage =
@@ -422,19 +843,27 @@ ABORDAGEM:
       }
     }
 
-    console.log(`✅ Seeds de AI Studio para team concluídos!`);
-    console.log(`   - ${tokensCreated} tokens criados`);
-    console.log(`   - ${createdLibraries.length} bibliotecas disponíveis`);
-    console.log(`   - ${createdAgents.length} agentes disponíveis`);
+    console.log(`📊 Resumo para team ${teamId}:`);
+    console.log(`   ✓ ${tokensCreated} tokens criados`);
+    console.log(`   ✓ ${librariesCreated} bibliotecas criadas`);
+    console.log(`   ✓ ${agentsCreated} agentes criados`);
 
-    return {
-      tokens: tokensCreated,
-      libraries: createdLibraries,
-      agents: createdAgents,
-      availableModels: models,
-    };
+    console.log("✅ Seed de AI Studio para team concluído com sucesso!");
   } catch (error) {
-    console.error("❌ Erro durante o seed de AI Studio com team:", error);
+    console.error(`❌ Erro durante o seed de AI Studio para team:`, error);
     throw error;
   }
+}
+
+// Executar o seed quando o arquivo for rodado diretamente
+if (import.meta.url === `file://${process.argv[1]}`) {
+  seedAiStudio()
+    .then(() => {
+      console.log("✅ Seed concluído com sucesso!");
+      process.exit(0);
+    })
+    .catch((error) => {
+      console.error("❌ Erro durante o seed:", error);
+      process.exit(1);
+    });
 }

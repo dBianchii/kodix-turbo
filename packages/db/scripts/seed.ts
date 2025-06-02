@@ -102,27 +102,20 @@ async function seedAiModulesForExistingTeams() {
         console.log(`\n🏢 Processando team: ${team.name} (${team.id})`);
 
         // Seed AI Studio para este team
-        const aiStudioResult = await seedAiStudioWithTeam(
-          team.id,
-          team.ownerId,
-        );
-        if (aiStudioResult) {
-          processedTeams++;
-          console.log(`✅ AI Studio configurado para ${team.name}`);
+        await seedAiStudioWithTeam(team.id, team.ownerId);
+        processedTeams++;
+        console.log(`✅ AI Studio configurado para ${team.name}`);
 
-          // Seed Chat para este team
-          try {
-            const chatResult = await seedChatWithTeam(team.id, team.ownerId);
-            if (chatResult) {
-              processedChats++;
-              console.log(`✅ Chat configurado para ${team.name}`);
-            }
-          } catch (chatError) {
-            console.log(
-              `⚠️  Erro ao configurar chat para ${team.name}:`,
-              chatError,
-            );
-          }
+        // Seed Chat para este team
+        try {
+          await seedChatWithTeam(team.id, team.ownerId);
+          processedChats++;
+          console.log(`✅ Chat configurado para ${team.name}`);
+        } catch (chatError) {
+          console.log(
+            `⚠️  Erro ao configurar chat para ${team.name}:`,
+            chatError,
+          );
         }
       } catch (teamError) {
         console.log(`⚠️  Erro ao processar team ${team.name}:`, teamError);
@@ -167,9 +160,9 @@ async function main() {
   // Seed AI Studio data (global models)
   const aiStudioSpinner = ora("🤖 Seeding AI Studio models...").start();
   try {
-    const aiResult = await seedAiStudio();
+    await seedAiStudio();
     aiStudioSpinner.succeed(
-      `🤖 AI Studio seeded! ${aiResult.models.length || 0} models available`,
+      `🤖 AI Studio seeded! Providers and models created successfully`,
     );
   } catch (error: unknown) {
     aiStudioSpinner.fail(

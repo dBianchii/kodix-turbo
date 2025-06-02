@@ -59,7 +59,14 @@ export const sendNotificationsForCriticalTasks = verifiedQstashCron(
         teamIds: teamsWithCriticalNotDoneLateCareTasks,
         userIds: usersWithinTheTeams,
       })
-    ).filter((x) => !!x.config?.sendNotificationsForDelayedTasks);
+    ).filter((x) => {
+      // Verificar se o config tem a propriedade sendNotificationsForDelayedTasks (é do KodixCare)
+      return !!(
+        x.config &&
+        "sendNotificationsForDelayedTasks" in x.config &&
+        x.config.sendNotificationsForDelayedTasks
+      );
+    });
 
     const usersWithConfigsThatNeedToBeNotifiedGroupedByTeamId = groupBy(
       userConfigsWithEnabledNotif,
