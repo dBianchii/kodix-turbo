@@ -77,7 +77,7 @@ import {
 } from "@kdx/ui/table";
 import { toast } from "@kdx/ui/toast";
 
-import { useTRPC } from "~/trpc/react";
+import { api } from "~/trpc/react";
 
 // Schema de validação para o formulário de criação
 const createTokenSchema = z.object({
@@ -95,7 +95,6 @@ type EditTokenFormData = z.infer<typeof editTokenSchema>;
 
 export function TokensSection() {
   const t = useTranslations();
-  const trpc = useTRPC();
   const queryClient = useQueryClient();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
@@ -103,17 +102,13 @@ export function TokensSection() {
   const [tokenToDelete, setTokenToDelete] = useState<any>(null);
   const [tokenToEdit, setTokenToEdit] = useState<any>(null);
 
-  // Queries
-  const tokensQuery = useQuery(
-    trpc.app.aiStudio.findAiTeamProviderTokens.queryOptions(),
-  );
+  // ✅ CORRIGIDO: Usar api hooks diretamente
+  const tokensQuery = api.app.aiStudio.findAiTeamProviderTokens.useQuery();
 
-  const providersQuery = useQuery(
-    trpc.app.aiStudio.findAiProviders.queryOptions({
-      limite: 50,
-      offset: 0,
-    }),
-  );
+  const providersQuery = api.app.aiStudio.findAiProviders.useQuery({
+    limite: 50,
+    offset: 0,
+  });
 
   const tokens = tokensQuery.data || [];
   const providers = providersQuery.data || [];
@@ -136,13 +131,11 @@ export function TokensSection() {
     },
   });
 
-  // Mutations
-  const createTokenMutation = useMutation(
-    trpc.app.aiStudio.createAiTeamProviderToken.mutationOptions({
+  // ✅ CORRIGIDO: Usar api mutations diretamente
+  const createTokenMutation =
+    api.app.aiStudio.createAiTeamProviderToken.useMutation({
       onSuccess: () => {
-        queryClient.invalidateQueries(
-          trpc.app.aiStudio.findAiTeamProviderTokens.pathFilter(),
-        );
+        tokensQuery.refetch();
         toast.success("Token criado com sucesso!");
         setShowCreateForm(false);
         createForm.reset();
@@ -151,15 +144,12 @@ export function TokensSection() {
         console.error("Erro ao criar token:", error);
         toast.error(error.message || "Erro ao criar token");
       },
-    }),
-  );
+    });
 
-  const updateTokenMutation = useMutation(
-    trpc.app.aiStudio.updateAiTeamProviderToken.mutationOptions({
+  const updateTokenMutation =
+    api.app.aiStudio.updateAiTeamProviderToken.useMutation({
       onSuccess: () => {
-        queryClient.invalidateQueries(
-          trpc.app.aiStudio.findAiTeamProviderTokens.pathFilter(),
-        );
+        tokensQuery.refetch();
         toast.success("Token atualizado com sucesso!");
         setShowEditForm(false);
         setTokenToEdit(null);
@@ -168,15 +158,12 @@ export function TokensSection() {
       onError: (error: any) => {
         toast.error(error.message || "Erro ao atualizar token");
       },
-    }),
-  );
+    });
 
-  const deleteTokenMutation = useMutation(
-    trpc.app.aiStudio.removeTokenByProvider.mutationOptions({
+  const deleteTokenMutation =
+    api.app.aiStudio.removeTokenByProvider.useMutation({
       onSuccess: () => {
-        queryClient.invalidateQueries(
-          trpc.app.aiStudio.findAiTeamProviderTokens.pathFilter(),
-        );
+        tokensQuery.refetch();
         toast.success("Token removido com sucesso!");
         setShowDeleteDialog(false);
         setTokenToDelete(null);
@@ -184,8 +171,7 @@ export function TokensSection() {
       onError: (error: any) => {
         toast.error(error.message || "Erro ao remover token");
       },
-    }),
-  );
+    });
 
   const handleCreateSubmit = (data: CreateTokenFormData) => {
     createTokenMutation.mutate({

@@ -50,7 +50,7 @@ import {
 } from "@kdx/ui/table";
 import { toast } from "@kdx/ui/toast";
 
-import { useTRPC } from "~/trpc/react";
+import { api } from "~/trpc/react";
 
 // Componente sortable para cada linha da tabela
 interface SortableTableRowProps {
@@ -60,9 +60,9 @@ interface SortableTableRowProps {
   onSetDefault: (modelId: string) => void;
   isToggling: boolean;
   isReordering: boolean;
-  isTestingModel: string | null;
+  isTestingModel: boolean;
   isSettingDefault: boolean;
-  testResults: Record<string, any>;
+  testResults: any;
   defaultModelId: string | null;
 }
 
@@ -170,25 +170,25 @@ function SortableTableRow({
                 variant="outline"
                 size="sm"
                 onClick={() => onTest(model)}
-                disabled={isTestingModel === model.id || isReordering}
+                disabled={isTestingModel || isReordering}
                 className="h-8"
               >
-                {isTestingModel === model.id ? (
+                {isTestingModel ? (
                   <Loader2 className="h-3 w-3 animate-spin" />
                 ) : (
                   <TestTube className="h-3 w-3" />
                 )}
-                {isTestingModel === model.id
+                {isTestingModel
                   ? t("apps.aiStudio.enabledModels.actions.testing")
                   : t("apps.aiStudio.enabledModels.actions.test")}
               </Button>
-              {testResults[model.id] && (
+              {testResults && testResults.modelId === model.id && (
                 <div className="flex items-center space-x-1">
-                  {testResults[model.id].success ? (
+                  {testResults.success ? (
                     <div className="flex items-center space-x-1">
                       <CheckCircle className="h-4 w-4 text-green-500" />
                       <span className="text-xs font-medium text-green-600">
-                        {testResults[model.id].latencyMs}ms
+                        {testResults.latencyMs}ms
                       </span>
                     </div>
                   ) : (
@@ -196,9 +196,9 @@ function SortableTableRow({
                       <XCircle className="h-4 w-4 text-red-500" />
                       <span
                         className="max-w-[100px] truncate text-xs text-red-600"
-                        title={testResults[model.id].error}
+                        title={testResults.error}
                       >
-                        {testResults[model.id].error?.includes("Token")
+                        {testResults.error?.includes("Token")
                           ? t(
                               "apps.aiStudio.enabledModels.errors.tokenRequired",
                             )
@@ -222,18 +222,93 @@ function SortableTableRow({
 
 export function EnabledModelsSection() {
   const t = useTranslations();
-  const trpc = useTRPC();
   const queryClient = useQueryClient();
 
-  // Estado para indicar quando está reordenando
   const [isReordering, setIsReordering] = useState(false);
-
-  // Estados para gerenciar testes
-  const [isTestingModel, setIsTestingModel] = useState<string | null>(null);
-  const [testResults, setTestResults] = useState<Record<string, any>>({});
-
-  // Estados para gerenciar modelo padrão
+  const [showTestDialog, setShowTestDialog] = useState(false);
+  const [testingModel, setTestingModel] = useState<any>(null);
+  const [testPrompt, setTestPrompt] = useState("Olá, como você está?");
+  const [testResponse, setTestResponse] = useState<any>(null);
+  const [isTestingModel, setIsTestingModel] = useState(false);
   const [isSettingDefault, setIsSettingDefault] = useState(false);
+
+  // ✅ CORRIGIDO: Usar api hooks diretamente
+  const { data: models, isLoading } =
+    api.app.aiStudio.findAvailableModels.useQuery();
+
+  const { data: defaultModel } = api.app.aiStudio.getDefaultModel.useQuery();
+
+  // ✅ CORRIGIDO: Usar api mutations diretamente
+  const toggleModelMutation = api.app.aiStudio.toggleModel.useMutation({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["app", "aiStudio"] });
+      toast.success("Modelo atualizado com sucesso!");
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Erro ao atualizar modelo");
+    },
+  });
+
+  const reorderModelsMutation =
+    api.app.aiStudio.reorderModelsPriority.useMutation({
+      onMutate: () => {
+        setIsReordering(true);
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["app", "aiStudio"] });
+        toast.success("Prioridade dos modelos atualizada!");
+      },
+      onError: (error: any) => {
+        toast.error(error.message || "Erro ao reordenar modelos");
+      },
+      onSettled: () => {
+        setIsReordering(false);
+      },
+    });
+
+  const testModelMutation = api.app.aiStudio.testModel.useMutation({
+    onMutate: (variables: { modelId: string; testPrompt?: string }) => {
+      console.log(
+        "Testing model:",
+        variables.modelId,
+        "with prompt:",
+        variables.testPrompt,
+      );
+      setIsTestingModel(true);
+    },
+    onSuccess: (data, variables) => {
+      // Include modelId in the response for proper identification
+      setTestResponse({
+        ...data,
+        modelId: variables.modelId,
+      });
+      toast.success("Teste do modelo realizado!");
+    },
+    onError: (error: any) => {
+      console.error("Error testing model:", error);
+      toast.error(error.message || "Erro ao testar modelo");
+    },
+    onSettled: () => {
+      setIsTestingModel(false);
+    },
+  });
+
+  const setDefaultModelMutation = api.app.aiStudio.setDefaultModel.useMutation({
+    onMutate: () => {
+      setIsSettingDefault(true);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["app", "aiStudio"] });
+      toast.success("Modelo padrão definido!");
+    },
+    onError: (error: any) => {
+      console.error("Error setting default model:", error);
+      toast.error(error.message || "Erro ao definir modelo padrão");
+    },
+    onSettled: () => {
+      setIsSettingDefault(false);
+    },
+  });
 
   // Setup sensors for drag & drop
   const sensors = useSensors(
@@ -244,323 +319,6 @@ export function EnabledModelsSection() {
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    }),
-  );
-
-  // Query to fetch available models
-  const { data: models, isLoading } = useQuery(
-    trpc.app.aiStudio.findAvailableModels.queryOptions(),
-  );
-
-  // Query to fetch default model
-  const { data: defaultModel } = useQuery(
-    trpc.app.aiStudio.getDefaultModel.queryOptions(),
-  );
-
-  // Mutations to manage team models
-  const toggleModelMutation = useMutation(
-    trpc.app.aiStudio.toggleModel.mutationOptions({
-      onMutate: async (variables) => {
-        // Cancel ongoing queries to avoid conflicts
-        await queryClient.cancelQueries(
-          trpc.app.aiStudio.findAvailableModels.pathFilter(),
-        );
-        await queryClient.cancelQueries(
-          trpc.app.aiStudio.getDefaultModel.pathFilter(),
-        );
-
-        // Snapshot of previous state
-        const previousModels = queryClient.getQueryData(
-          trpc.app.aiStudio.findAvailableModels.queryOptions().queryKey,
-        );
-        const previousDefaultModel = queryClient.getQueryData(
-          trpc.app.aiStudio.getDefaultModel.queryOptions().queryKey,
-        );
-
-        // Optimistic update for available models
-        queryClient.setQueryData(
-          trpc.app.aiStudio.findAvailableModels.queryOptions().queryKey,
-          (old: any) => {
-            if (!old) return old;
-            return old.map((model: any) =>
-              model.id === variables.modelId
-                ? {
-                    ...model,
-                    teamConfig: {
-                      ...model.teamConfig,
-                      enabled: variables.enabled,
-                    },
-                  }
-                : model,
-            );
-          },
-        );
-
-        // If enabling a model and there's no current default, optimistically set this as default
-        if (variables.enabled && !previousDefaultModel?.modelId) {
-          queryClient.setQueryData(
-            trpc.app.aiStudio.getDefaultModel.queryOptions().queryKey,
-            (old: any) => ({
-              ...old,
-              modelId: variables.modelId,
-            }),
-          );
-        }
-
-        return { previousModels, previousDefaultModel };
-      },
-      onError: (err, variables, context) => {
-        // Rollback optimistic update in case of error
-        if (context?.previousModels) {
-          queryClient.setQueryData(
-            trpc.app.aiStudio.findAvailableModels.queryOptions().queryKey,
-            context.previousModels,
-          );
-        }
-
-        if (context?.previousDefaultModel) {
-          queryClient.setQueryData(
-            trpc.app.aiStudio.getDefaultModel.queryOptions().queryKey,
-            context.previousDefaultModel,
-          );
-        }
-
-        console.error("❌ [FRONTEND] Error updating model:", err);
-
-        // Check for specific error types
-        if (
-          err.message.includes("padrão") ||
-          err.message.includes("default") ||
-          err.message.includes("cannot disable") ||
-          err.message.includes("não pode ser desativado")
-        ) {
-          toast.error(
-            t("apps.aiStudio.enabledModels.errors.cannotDisableDefault"),
-          );
-        } else if (err.message.includes("pelo menos um modelo")) {
-          toast.error(t("apps.aiStudio.enabledModels.errors.atleastOneModel"));
-        } else {
-          toast.error(
-            t("apps.aiStudio.enabledModels.errors.updateError") +
-              `: ${err.message || ""}`,
-          );
-        }
-      },
-      onSuccess: () => {
-        queryClient.invalidateQueries(
-          trpc.app.aiStudio.findAvailableModels.pathFilter(),
-        );
-        // Also invalidate the default model query to reflect automatic default assignment
-        queryClient.invalidateQueries(
-          trpc.app.aiStudio.getDefaultModel.pathFilter(),
-        );
-        toast.success(t("apps.aiStudio.enabledModels.success.modelUpdated"));
-      },
-    }),
-  );
-
-  // Mutation to reorder models via drag & drop - using reorderModelsPriority
-  const reorderModelsMutation = useMutation(
-    trpc.app.aiStudio.reorderModelsPriority.mutationOptions({
-      onMutate: async (variables) => {
-        // Indicate that it's reordering
-        setIsReordering(true);
-
-        // Cancel ongoing queries to avoid conflicts
-        await queryClient.cancelQueries(
-          trpc.app.aiStudio.findAvailableModels.pathFilter(),
-        );
-
-        // Snapshot of previous state for rollback if needed
-        const previousModels = queryClient.getQueryData(
-          trpc.app.aiStudio.findAvailableModels.queryOptions().queryKey,
-        );
-
-        // Optimistic update: reorder models locally
-        queryClient.setQueryData(
-          trpc.app.aiStudio.findAvailableModels.queryOptions().queryKey,
-          (old: any) => {
-            if (!old || !Array.isArray(old)) return old;
-
-            // Create new order based on provided IDs
-            const reorderedModels = variables.orderedModelIds
-              .map((modelId, index) => {
-                const model = old.find((m: any) => m.id === modelId);
-                if (!model) return null;
-
-                // Update priority in teamConfig
-                return {
-                  ...model,
-                  teamConfig: {
-                    ...model.teamConfig,
-                    priority: index,
-                  },
-                };
-              })
-              .filter(Boolean); // Remove nulls
-
-            return reorderedModels;
-          },
-        );
-
-        return { previousModels };
-      },
-      onError: (err, variables, context) => {
-        // Stop loading indicator
-        setIsReordering(false);
-
-        // Rollback on error
-        if (context?.previousModels) {
-          queryClient.setQueryData(
-            trpc.app.aiStudio.findAvailableModels.queryOptions().queryKey,
-            context.previousModels,
-          );
-        }
-        toast.error(t("apps.aiStudio.enabledModels.errors.reorderError"));
-      },
-      onSuccess: () => {
-        // Stop loading indicator
-        setIsReordering(false);
-
-        // Invalidate queries to ensure synchronization with the server
-        queryClient.invalidateQueries(
-          trpc.app.aiStudio.findAvailableModels.pathFilter(),
-        );
-        toast.success(t("apps.aiStudio.enabledModels.success.priorityUpdated"));
-      },
-    }),
-  );
-
-  // Mutation to test models
-  const testModelMutation = useMutation(
-    trpc.app.aiStudio.testModel.mutationOptions({
-      onMutate: async (variables: { modelId: string; testPrompt?: string }) => {
-        console.log(
-          `🧪 [FRONTEND] Starting test of model ${variables.modelId}`,
-        );
-        setIsTestingModel(variables.modelId);
-      },
-      onError: (
-        err: any,
-        variables: { modelId: string; testPrompt?: string },
-      ) => {
-        console.error("❌ [FRONTEND] Test error:", err);
-        setIsTestingModel(null);
-        setTestResults((prev) => ({
-          ...prev,
-          [variables.modelId]: {
-            success: false,
-            error: err.message,
-            timestamp: new Date().toISOString(),
-          },
-        }));
-
-        // More specific error messages
-        if (err.message.includes("Token")) {
-          toast.error(t("apps.aiStudio.enabledModels.errors.tokenRequired"));
-        } else if (err.message.includes("Modelo não encontrado")) {
-          toast.error(t("apps.aiStudio.enabledModels.errors.modelNotFound"));
-        } else if (
-          err.message.includes("500") ||
-          err.message.includes("Internal Server Error")
-        ) {
-          toast.error(t("apps.aiStudio.enabledModels.errors.internalError"));
-        } else {
-          toast.error(
-            t("apps.aiStudio.enabledModels.errors.testFailed") +
-              `: ${err.message}`,
-          );
-        }
-      },
-      onSuccess: (
-        data: any,
-        variables: { modelId: string; testPrompt?: string },
-      ) => {
-        console.log("✅ [FRONTEND] Test completed successfully:", data);
-        setIsTestingModel(null);
-        setTestResults((prev) => ({
-          ...prev,
-          [variables.modelId]: data,
-        }));
-
-        if (data.success) {
-          toast.success(
-            t("apps.aiStudio.enabledModels.success.testSuccess", {
-              latency: data.latencyMs,
-              response: data.responseText?.substring(0, 50),
-            }),
-          );
-        } else {
-          toast.error(
-            t("apps.aiStudio.enabledModels.errors.testFailed") +
-              `: ${data.error}`,
-          );
-        }
-      },
-    }),
-  );
-
-  // Mutation to set default model
-  const setDefaultModelMutation = useMutation(
-    trpc.app.aiStudio.setDefaultModel.mutationOptions({
-      onMutate: async (variables) => {
-        setIsSettingDefault(true);
-        console.log(
-          `🎯 [FRONTEND] Setting default model: ${variables.modelId}`,
-        );
-
-        // Cancel ongoing queries to avoid conflicts
-        await queryClient.cancelQueries(
-          trpc.app.aiStudio.getDefaultModel.pathFilter(),
-        );
-
-        // Snapshot of previous state for rollback if needed
-        const previousDefaultModel = queryClient.getQueryData(
-          trpc.app.aiStudio.getDefaultModel.queryOptions().queryKey,
-        );
-
-        // Optimistic update: set the new default model immediately
-        queryClient.setQueryData(
-          trpc.app.aiStudio.getDefaultModel.queryOptions().queryKey,
-          (old: any) => {
-            if (!old) return old;
-            return { ...old, modelId: variables.modelId };
-          },
-        );
-
-        return { previousDefaultModel };
-      },
-      onError: (err: any, variables, context) => {
-        setIsSettingDefault(false);
-        console.error("❌ [FRONTEND] Error setting default model:", err);
-
-        // Rollback on error
-        if (context?.previousDefaultModel) {
-          queryClient.setQueryData(
-            trpc.app.aiStudio.getDefaultModel.queryOptions().queryKey,
-            context.previousDefaultModel,
-          );
-        }
-
-        toast.error(
-          t("apps.aiStudio.enabledModels.errors.setDefaultError") +
-            `: ${err.message || ""}`,
-        );
-      },
-      onSuccess: (data: any, variables) => {
-        setIsSettingDefault(false);
-        console.log("✅ [FRONTEND] Default model set:", data);
-
-        // Invalidate queries to ensure server synchronization
-        queryClient.invalidateQueries(
-          trpc.app.aiStudio.findAvailableModels.pathFilter(),
-        );
-        queryClient.invalidateQueries(
-          trpc.app.aiStudio.getDefaultModel.pathFilter(),
-        );
-
-        toast.success(t("apps.aiStudio.enabledModels.success.defaultSet"));
-      },
     }),
   );
 
@@ -739,7 +497,7 @@ export function EnabledModelsSection() {
                           isReordering={isReordering}
                           isTestingModel={isTestingModel}
                           isSettingDefault={isSettingDefault}
-                          testResults={testResults}
+                          testResults={testResponse}
                           defaultModelId={defaultModel?.modelId || null}
                         />
                       ))}

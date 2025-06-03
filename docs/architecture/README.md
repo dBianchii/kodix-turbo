@@ -4,6 +4,8 @@
 
 Esta seção contém **guias técnicos** e **padrões de desenvolvimento** para o projeto Kodix.
 
+> 🎯 **FONTE ÚNICA DE VERDADE**: Para padrões arquiteturais oficiais, consulte **[Architecture Standards](./ARCHITECTURE_STANDARDS.md)** - documento consolidado com todos os padrões do projeto.
+
 ## 🏗️ Guias Principais
 
 ### **📚 Guias de Desenvolvimento**

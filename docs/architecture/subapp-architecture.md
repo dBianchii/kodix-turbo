@@ -13,18 +13,60 @@ Este documento consolida **todos os aspectos arquiteturais** dos SubApps no Kodi
 
 **Antes de trabalhar com SubApps**, leia esta seção sobre problemas críticos identificados:
 
-### ⚠️ **TeamId Context Loss (2024-12-19)**
+### ⚠️ **TeamId Context Loss (2024-12-19)** ✅ RESOLVIDO
 
 **Problema Crítico:** Chat app falhava com erro 412 "Nenhum modelo de IA disponível" devido à falta de contexto `teamId` em chamadas entre apps.
 
-**✅ Solução Implementada:** Migração de `teamId` para `userId` com resolução interna de contexto:
+**✅ Solução Implementada:** Migração completa do padrão HTTP (`callAiStudioEndpoint`) para **Service Layer** pragmático:
 
 ```typescript
-// ❌ PROBLEMA ANTERIOR - Passar teamId complexo de gerenciar
+// ❌ REMOVIDO - Comunicação HTTP problemática
 await callAiStudioEndpoint("getModel", teamId, params, headers);
 
-// ✅ SOLUÇÃO ATUAL - Passar userId, SubApp resolve contexto
-await callAiStudioEndpoint("getModel", userId, params, headers);
+// ✅ ATUAL - Service Layer com type safety
+await AiStudioService.getModelById({
+  modelId,
+  teamId: ctx.auth.user.activeTeamId,
+  requestingApp: chatAppId,
+});
+```
+
+### 🔄 **Status da Implementação Service Layer**
+
+**✅ IMPLEMENTADOS:**
+
+- `AiStudioService` - Completo e em uso pelo Chat app
+- Validação de `teamId` e isolamento por team
+- Logging de auditoria para rastreamento
+
+**🔄 PENDENTES:**
+
+- `CalendarService` - Para comunicação com KodixCare
+- `KodixCareService` - Para funcionalidades expostas
+- `TodoService` - Para integrações futuras
+
+**📋 TODO para Desenvolvedores:**
+
+```typescript
+// packages/api/src/internal/services/calendar.service.ts - PENDENTE
+export class CalendarService {
+  static async getTasksByDateRange({
+    teamId,
+    dateStart,
+    dateEnd,
+    requestingApp,
+  }) {
+    // Implementar seguindo padrão AiStudioService
+  }
+}
+
+// Usar no KodixCare:
+const tasks = await CalendarService.getTasksByDateRange({
+  teamId: ctx.auth.user.activeTeamId,
+  dateStart,
+  dateEnd,
+  requestingApp: kodixCareAppId,
+});
 ```
 
 ### 🐛 **Erros Comuns na Migração teamId → userId**
@@ -39,42 +81,29 @@ const model = await callAiStudioEndpoint(
   { modelId: session.aiModelId },
 );
 
-// ✅ CORRETO - Usar userId do contexto autenticado
-const model = await callAiStudioEndpoint(
-  "getModel",
-  ctx.auth.user.id, // ✅ CORRETO - userId do usuário autenticado
-  { modelId: session.aiModelId },
-);
+// ✅ CORRETO - Usar Service Layer com contexto adequado
+const model = await AiStudioService.getModelById({
+  modelId: session.aiModelId,
+  teamId: ctx.auth.user.activeTeamId, // ✅ CORRETO - teamId do contexto autenticado
+  requestingApp: chatAppId,
+});
 ```
 
-**Checklist para Migração:**
+**Checklist para Nova Implementação:**
 
-- [ ] Verificar todas as chamadas `callAiStudioEndpoint`
-- [ ] Substituir `session.teamId` por `ctx.auth.user.id`
-- [ ] Substituir `teamId` parâmetro por `userId` em helpers
-- [ ] Testar comunicação entre SubApps após mudanças
+- [ ] Usar Service Layer (não HTTP) para comunicação entre SubApps
+- [ ] Implementar service seguindo padrão `AiStudioService`
+- [ ] Validar `teamId` obrigatoriamente em todos os métodos
+- [ ] Adicionar logging de auditoria
+- [ ] Testar isolamento de team adequadamente
 
-### **🎯 Por que `userId` é melhor que `teamId`:**
+### **🎯 Por que Service Layer é melhor que HTTP:**
 
-1. **🔒 Responsabilidade Única:** Cada SubApp gerencia seu próprio contexto de team
-2. **🚀 Simplicidade:** SubApp remetente não precisa gerenciar contexto de team
-3. **🔄 Consistência:** Usa a mesma lógica de autenticação que já existe
-4. **🛡️ Segurança:** Validação baseada no usuário autenticado é mais robusta
-5. **📦 Isolamento:** Cada SubApp resolve contexto do team internalmente
-
-```typescript
-// ❌ PROBLEMÁTICO - Abordagem teamId (complexa e acoplada)
-const response = await fetch(
-  `/api/ai-studio/integration?action=getModel&teamId=${teamId}`,
-);
-// Problema: SubApp remetente precisa gerenciar teamId
-
-// ✅ MELHOR - Abordagem userId (simples e desacoplada)
-const response = await fetch(
-  `/api/ai-studio/integration?action=getModel&userId=${userId}`,
-);
-// AI Studio resolve: const teamId = session.user.activeTeamId;
-```
+1. **🔒 Performance:** Sem overhead de HTTP desnecessário
+2. **🚀 Type Safety:** Interfaces TypeScript tipadas
+3. **🔄 Simplicidade:** Sem necessidade de gerenciar headers/auth manualmente
+4. **🛡️ Segurança:** Validação baseada em service methods é mais robusta
+5. **📦 Manutenibilidade:** Contratos de API claramente definidos em TypeScript
 
 ---
 
@@ -88,7 +117,7 @@ SubApps são módulos independentes que estendem a funcionalidade principal do K
 - **Rotas dedicadas** no sistema de roteamento
 - **APIs específicas** via tRPC
 - **Configurações por team** via AppTeamConfig
-- **Comunicação via HTTP** (nunca acesso direto a repositórios)
+- **Comunicação via Service Layer** para interoperabilidade segura
 
 ### **SubApps Implementados**
 
@@ -103,55 +132,198 @@ SubApps são módulos independentes que estendem a funcionalidade principal do K
 
 ---
 
-## 🔒 **Regras de Isolamento ENTRE SubApps**
+## 🔒 **Regras de Comunicação ENTRE SubApps**
 
-### **🚨 Regra Fundamental: Isolamento Total Entre SubApps**
+### **🎯 Princípio Fundamental: Isolamento Lógico com Service Layer**
 
-**NUNCA** permitido acesso direto **de um SubApp para outro SubApp**:
+O Kodix adota **isolamento lógico** entre SubApps através de **Service Layer**, garantindo:
+
+- **Performance**: Sem overhead de HTTP desnecessário
+- **Type Safety**: Interfaces TypeScript tipadas
+- **Team Isolation**: Validação obrigatória de `teamId`
+- **Auditabilidade**: Controle de acessos cross-app
+
+### **✅ Padrão RECOMENDADO: Service Layer**
+
+#### **1. Acesso via Services (NÃO repositórios diretos)**
 
 ```typescript
-// ❌ PROIBIDO - SubApp "Chat" acessando diretamente repositório do SubApp "AI Studio"
+// ❌ PROIBIDO - Acesso direto a repositórios de outros SubApps
 import { aiStudioRepository } from "@kdx/db/repositories";
 
 export const chatRouter = {
   someEndpoint: protectedProcedure.query(async ({ ctx }) => {
-    // ❌ VIOLAÇÃO: SubApp Chat não pode acessar diretamente dados do SubApp AI Studio
+    // ❌ VIOLAÇÃO: SubApp Chat acessando diretamente repositório do SubApp AI Studio
     const model = await aiStudioRepository.AiModelRepository.findById(modelId);
+  }),
+};
+
+// ✅ CORRETO - SubApp Chat acessando AI Studio via Service Layer
+import { AiStudioService } from "../../../internal/services/ai-studio.service";
+
+export const chatRouter = {
+  someEndpoint: protectedProcedure.query(async ({ ctx }) => {
+    // ✅ CORRETO: Acesso via service com isolamento e validação
+    const model = await AiStudioService.getModelById({
+      modelId,
+      teamId: ctx.auth.user.activeTeamId,
+      requestingApp: chatAppId, // Para auditoria opcional
+    });
   }),
 };
 ```
 
-**SEMPRE** obrigatório - **Comunicação entre SubApps APENAS via HTTP**:
+#### **2. Estrutura do Service Layer**
 
 ```typescript
-// ✅ CORRETO - SubApp Chat se comunicando com SubApp AI Studio via HTTP
-async function callAiStudioEndpoint(
-  action: string,
-  userId: string, // ✅ MELHOR: Enviar userId - cada SubApp resolve seu contexto
-  params?: Record<string, string>,
-  headers?: Record<string, string>,
-): Promise<any> {
-  const baseUrl = process.env.KODIX_API_URL || "http://localhost:3000";
-  const searchParams = new URLSearchParams({
-    action,
-    userId, // ✅ SubApp receptor resolve teamId internamente
-    ...(params || {}),
-  });
+// packages/api/src/internal/services/base.service.ts
+export interface ServiceContext {
+  teamId: string;
+  requestingApp: KodixAppId;
+  userId?: string;
+}
 
-  const response = await fetch(
-    `${baseUrl}/api/ai-studio/integration?${searchParams}`,
-    {
-      headers: {
-        Authorization: headers?.Authorization, // ✅ Forward auth
-        "Content-Type": "application/json",
-        ...headers,
-      },
-    },
-  );
+export abstract class BaseService {
+  protected static validateTeamAccess(teamId: string) {
+    if (!teamId) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "teamId is required for cross-app access",
+      });
+    }
+  }
 
-  return response.json();
+  protected static logAccess(action: string, context: ServiceContext) {
+    // Logging opcional para auditoria
+    console.log(
+      `🔄 [${this.name}] ${action} by ${context.requestingApp} for team: ${context.teamId}`,
+    );
+  }
+}
+
+// packages/api/src/internal/services/ai-studio.service.ts
+export class AiStudioService extends BaseService {
+  static async getModelById({
+    modelId,
+    teamId,
+    requestingApp,
+  }: {
+    modelId: string;
+    teamId: string;
+    requestingApp: KodixAppId;
+  }) {
+    this.validateTeamAccess(teamId);
+    this.logAccess("getModelById", { teamId, requestingApp });
+
+    const model = await aiStudioRepository.AiModelRepository.findById(modelId);
+
+    // Validar que o modelo pertence ao team
+    if (!model || model.teamId !== teamId) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Model not found or access denied",
+      });
+    }
+
+    return model;
+  }
+
+  static async getAvailableModels({
+    teamId,
+    requestingApp,
+  }: {
+    teamId: string;
+    requestingApp: KodixAppId;
+  }) {
+    this.validateTeamAccess(teamId);
+    this.logAccess("getAvailableModels", { teamId, requestingApp });
+
+    return await aiStudioRepository.AiTeamModelConfigRepository.findAvailableModelsByTeam(
+      teamId,
+    );
+  }
+}
+
+// packages/api/src/internal/services/calendar.service.ts
+export class CalendarService extends BaseService {
+  static async getTasksByDateRange({
+    teamId,
+    dateStart,
+    dateEnd,
+    onlyCritical = false,
+    requestingApp,
+  }: {
+    teamId: string;
+    dateStart: Date;
+    dateEnd: Date;
+    onlyCritical?: boolean;
+    requestingApp: KodixAppId;
+  }) {
+    this.validateTeamAccess(teamId);
+    this.logAccess("getTasksByDateRange", { teamId, requestingApp });
+
+    return await getCalendarTasks({
+      teamIds: [teamId],
+      dateStart,
+      dateEnd,
+      onlyCritical,
+    });
+  }
 }
 ```
+
+#### **3. Usando Services nos SubApps**
+
+```typescript
+// packages/api/src/trpc/routers/app/kodixCare/utils/index.ts
+import { CalendarService } from "../../../internal/services/calendar.service";
+
+export async function cloneCalendarTasksToCareTasks({
+  tx,
+  start,
+  end,
+  ctx,
+}: {
+  tx: Drizzle;
+  start: Date;
+  end?: Date;
+  ctx: TProtectedProcedureContext;
+}) {
+  // ✅ Acesso via service com isolamento de team
+  const calendarTasks = await CalendarService.getTasksByDateRange({
+    teamId: ctx.auth.user.activeTeamId,
+    dateStart: start,
+    dateEnd: end,
+    requestingApp: kodixCareAppId,
+  });
+
+  // ... resto da implementação
+}
+```
+
+### **🔄 Quando Usar HTTP vs Service Layer**
+
+| Cenário                                    | Método Recomendado | Justificativa                       |
+| ------------------------------------------ | ------------------ | ----------------------------------- |
+| **SubApp → SubApp (mesmo processo)**       | ✅ Service Layer   | Performance, type safety            |
+| **SubApp → API Externa**                   | ✅ HTTP            | Necessário para comunicação externa |
+| **Frontend → Backend**                     | ✅ tRPC            | Padrão estabelecido                 |
+| **Server → Server (diferentes processos)** | ✅ HTTP            | Necessário para isolamento real     |
+
+### **📋 Regras de Implementação**
+
+#### **✅ PERMITIDO**
+
+- Acesso via Service Layer entre SubApps
+- Validação obrigatória de `teamId`
+- Type safety com interfaces TypeScript
+- Logging opcional para auditoria
+
+#### **❌ PROIBIDO**
+
+- Acesso direto a repositórios de outros SubApps
+- Bypass de validação de `teamId`
+- Importação de handlers de outros SubApps sem service layer
 
 ### **Sistema de Dependências Entre SubApps**
 
@@ -503,38 +675,123 @@ console.log(`✅ [${CONSUMER}] Received from ${TARGET}: ${result}`);
 
 ---
 
-## 🧪 **Testing - Isolamento Entre SubApps**
+## 🧪 **Testing - Comunicação Entre SubApps**
 
-### **Testes de Isolamento Entre SubApps**
+### **Testes de Service Layer**
 
 ```typescript
-describe("SubApp Isolation Between Apps", () => {
-  it("should not allow SubApp to access other SubApp repositories directly", async () => {
-    // Verificar que SubApp Chat não importa repositórios do SubApp AI Studio
+describe("SubApp Service Layer", () => {
+  it("should enforce team isolation in service calls", async () => {
+    const team1Id = "team-1";
+    const team2Id = "team-2";
+
+    // Criar modelo para team1
+    const model = await aiStudioRepository.AiModelRepository.create({
+      name: "Test Model",
+      teamId: team1Id,
+      // ... outros campos
+    });
+
+    // Team1 deve conseguir acessar
+    const result1 = await AiStudioService.getModelById({
+      modelId: model.id,
+      teamId: team1Id,
+      requestingApp: chatAppId,
+    });
+    expect(result1).toBeDefined();
+
+    // Team2 não deve conseguir acessar
+    await expect(
+      AiStudioService.getModelById({
+        modelId: model.id,
+        teamId: team2Id,
+        requestingApp: chatAppId,
+      }),
+    ).rejects.toThrow("Model not found or access denied");
+  });
+
+  it("should validate required teamId in service calls", async () => {
+    await expect(
+      CalendarService.getTasksByDateRange({
+        teamId: "", // ❌ teamId vazio
+        dateStart: new Date(),
+        dateEnd: new Date(),
+        requestingApp: kodixCareAppId,
+      }),
+    ).rejects.toThrow("teamId is required for cross-app access");
+  });
+
+  it("should not allow direct repository access between SubApps", async () => {
+    // Verificar que SubApp Chat não importa repositórios de outros SubApps
     const chatRouterCode = await fs.readFile("chat/_router.ts", "utf8");
     expect(chatRouterCode).not.toContain("aiStudioRepository");
+    expect(chatRouterCode).not.toContain("calendarRepository");
   });
 
-  it("should forward teamId in cross-SubApp HTTP calls", async () => {
-    const fetchSpy = jest.spyOn(global, "fetch");
-
-    // SubApp Chat chamando SubApp AI Studio
-    await callAiStudioEndpoint("getModel", "team123", { modelId: "123" });
-
-    expect(fetchSpy).toHaveBeenCalledWith(
-      expect.stringContaining("teamId=team123"),
-      expect.any(Object),
+  it("should enforce service layer communication", async () => {
+    // Verificar que SubApps usam services, não handlers diretos
+    const kodixCareUtilsCode = await fs.readFile(
+      "kodixCare/utils/index.ts",
+      "utf8",
     );
+
+    // ✅ Deve usar services
+    expect(kodixCareUtilsCode).toContain("CalendarService");
+
+    // ❌ Não deve importar handlers diretos
+    expect(kodixCareUtilsCode).not.toContain("import { getAllHandler }");
+  });
+});
+```
+
+### **Testes de Integração Cross-App**
+
+```typescript
+describe("Cross-App Integration", () => {
+  it("should maintain data consistency between Calendar and KodixCare", async () => {
+    const teamId = "test-team";
+    const dateStart = new Date("2024-01-01");
+    const dateEnd = new Date("2024-01-31");
+
+    // Criar eventos no Calendar
+    await calendarRepository.createEventMaster({
+      title: "Test Event",
+      teamId,
+      rule: "FREQ=DAILY;COUNT=5",
+      // ... outros campos
+    });
+
+    // Buscar via CalendarService
+    const calendarTasks = await CalendarService.getTasksByDateRange({
+      teamId,
+      dateStart,
+      dateEnd,
+      requestingApp: kodixCareAppId,
+    });
+
+    expect(calendarTasks.length).toBeGreaterThan(0);
+    expect(calendarTasks[0].teamId).toBe(teamId);
   });
 
-  it("should enforce HTTP-only communication between SubApps", async () => {
-    // Verificar que não há acesso direto a banco entre SubApps
-    const chatEndpoints = await getAllChatEndpoints();
+  it("should sync calendar tasks to care tasks correctly", async () => {
+    const ctx = createMockContext({ teamId: "test-team" });
 
-    chatEndpoints.forEach((endpoint) => {
-      expect(endpoint.dependencies).not.toContain("aiStudioRepository");
-      expect(endpoint.dependencies).not.toContain("calendarRepository");
+    // Simular sincronização
+    await cloneCalendarTasksToCareTasks({
+      tx: mockTransaction,
+      start: new Date("2024-01-01"),
+      end: new Date("2024-01-31"),
+      ctx,
     });
+
+    // Verificar que care tasks foram criadas
+    const careTasks = await careTaskRepository.findCareTasksFromTo({
+      teamIds: [ctx.auth.user.activeTeamId],
+      dateStart: new Date("2024-01-01"),
+      dateEnd: new Date("2024-01-31"),
+    });
+
+    expect(careTasks.some((task) => task.createdFromCalendar)).toBe(true);
   });
 });
 ```
@@ -548,7 +805,7 @@ describe("AppTeamConfig - Team Isolation", () => {
       auth: { user: { activeTeamId: "team1" } },
     });
     const team2Caller = createCaller({
-      auth: { user: { activeTeamId: "team2" } } },
+      auth: { user: { activeTeamId: "team2" } },
     });
 
     await team1Caller.app.saveConfig({
@@ -564,7 +821,7 @@ describe("AppTeamConfig - Team Isolation", () => {
 
 ---
 
-## 📋 **Checklist de Compliance - Isolamento Entre SubApps**
+## 📋 **Checklist de Compliance - Comunicação Entre SubApps**
 
 ### **Antes de Criar Novo SubApp**
 
@@ -573,17 +830,26 @@ describe("AppTeamConfig - Team Isolation", () => {
 - [ ] **Dependências entre SubApps** declaradas em `appDependencies`
 - [ ] **Ícone** adicionado em `public/appIcons/`
 - [ ] **Traduções** em pt-BR e en
-- [ ] **Isolamento entre SubApps** respeitado (sem imports diretos de outros SubApps)
-- [ ] **teamId** validado em todos os endpoints
+- [ ] **Services criados** para funcionalidades que outros SubApps precisam acessar
+- [ ] **teamId** validado em todos os endpoints e services
 
 ### **Antes de Deploy**
 
-- [ ] **Nenhum import** de repositórios de outros SubApps
-- [ ] **Endpoints HTTP** para integrações entre SubApps
-- [ ] **Autenticação** em todos endpoints de integração entre SubApps
-- [ ] **Logs** adicionados para monitoramento de comunicação entre SubApps
-- [ ] **Testes** de isolamento entre SubApps e integração HTTP
+- [ ] **Nenhum import direto** de repositórios de outros SubApps
+- [ ] **Service Layer implementado** para comunicação cross-app
+- [ ] **Validação de teamId** em todos os services
+- [ ] **Type safety** com interfaces TypeScript
+- [ ] **Testes** de isolamento de team nos services
+- [ ] **Testes de integração** cross-app funcionando
 - [ ] **Dependências entre SubApps** testadas em ambiente dev
+
+### **Service Layer Checklist**
+
+- [ ] **BaseService** estendido com validação de teamId
+- [ ] **Interfaces tipadas** para parâmetros de entrada
+- [ ] **Logging opcional** implementado para auditoria
+- [ ] **Tratamento de erros** adequado com TRPCError
+- [ ] **Documentação** dos métodos disponíveis no service
 
 ---
 
@@ -599,5 +865,5 @@ describe("AppTeamConfig - Team Isolation", () => {
 **🎯 IMPORTANTE**: Esta é a **fonte única de verdade** para arquitetura de SubApps. Sempre consulte este documento ao trabalhar com SubApps para garantir conformidade com os padrões estabelecidos.
 
 **Last Updated:** 2024-12-19  
-**Critical Issues:** TeamId context loss, inter-app dependencies  
+**Mudanças Recentes:** Migração de isolamento HTTP para Service Layer pragmático  
 **Next Review:** 2025-01-19

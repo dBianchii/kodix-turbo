@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Bot, MoreHorizontal, Pencil, Plus, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
@@ -69,7 +69,7 @@ import {
 import { Textarea } from "@kdx/ui/textarea";
 import { toast } from "@kdx/ui/toast";
 
-import { useTRPC } from "~/trpc/react";
+import { api } from "~/trpc/react";
 
 // Schema de validação para o formulário de criação
 const createAgentSchema = z.object({
@@ -99,7 +99,6 @@ interface Agent {
 
 export function AgentsSection() {
   const t = useTranslations();
-  const trpc = useTRPC();
   const queryClient = useQueryClient();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
@@ -107,20 +106,16 @@ export function AgentsSection() {
   const [agentToDelete, setAgentToDelete] = useState<any>(null);
   const [agentToEdit, setAgentToEdit] = useState<any>(null);
 
-  // Queries
-  const agentsQuery = useQuery(
-    trpc.app.aiStudio.findAiAgents.queryOptions({
-      limite: 50,
-      offset: 0,
-    }),
-  );
+  // ✅ CORRIGIDO: Usar api hooks diretamente
+  const agentsQuery = api.app.aiStudio.findAiAgents.useQuery({
+    limite: 50,
+    offset: 0,
+  });
 
-  const librariesQuery = useQuery(
-    trpc.app.aiStudio.findAiLibraries.queryOptions({
-      limite: 100,
-      offset: 0,
-    }),
-  );
+  const librariesQuery = api.app.aiStudio.findAiLibraries.useQuery({
+    limite: 100,
+    offset: 0,
+  });
 
   const agents = agentsQuery.data?.agents || [];
   const libraries = librariesQuery.data?.libraries || [];
@@ -146,55 +141,43 @@ export function AgentsSection() {
     },
   });
 
-  // Mutations
-  const createAgentMutation = useMutation(
-    trpc.app.aiStudio.createAiAgent.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries(
-          trpc.app.aiStudio.findAiAgents.pathFilter(),
-        );
-        toast.success("Agente criado com sucesso!");
-        setShowCreateForm(false);
-        createForm.reset();
-      },
-      onError: (error: any) => {
-        toast.error(error.message || "Erro ao criar agente");
-      },
-    }),
-  );
+  // ✅ CORRIGIDO: Usar api mutations diretamente
+  const createAgentMutation = api.app.aiStudio.createAiAgent.useMutation({
+    onSuccess: () => {
+      agentsQuery.refetch();
+      toast.success("Agente criado com sucesso!");
+      setShowCreateForm(false);
+      createForm.reset();
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Erro ao criar agente");
+    },
+  });
 
-  const updateAgentMutation = useMutation(
-    trpc.app.aiStudio.updateAiAgent.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries(
-          trpc.app.aiStudio.findAiAgents.pathFilter(),
-        );
-        toast.success("Agente atualizado com sucesso!");
-        setShowEditForm(false);
-        setAgentToEdit(null);
-        editForm.reset();
-      },
-      onError: (error: any) => {
-        toast.error(error.message || "Erro ao atualizar agente");
-      },
-    }),
-  );
+  const updateAgentMutation = api.app.aiStudio.updateAiAgent.useMutation({
+    onSuccess: () => {
+      agentsQuery.refetch();
+      toast.success("Agente atualizado com sucesso!");
+      setShowEditForm(false);
+      setAgentToEdit(null);
+      editForm.reset();
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Erro ao atualizar agente");
+    },
+  });
 
-  const deleteAgentMutation = useMutation(
-    trpc.app.aiStudio.deleteAiAgent.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries(
-          trpc.app.aiStudio.findAiAgents.pathFilter(),
-        );
-        toast.success("Agente excluído com sucesso!");
-        setShowDeleteDialog(false);
-        setAgentToDelete(null);
-      },
-      onError: (error: any) => {
-        toast.error(error.message || "Erro ao excluir agente");
-      },
-    }),
-  );
+  const deleteAgentMutation = api.app.aiStudio.deleteAiAgent.useMutation({
+    onSuccess: () => {
+      agentsQuery.refetch();
+      toast.success("Agente excluído com sucesso!");
+      setShowDeleteDialog(false);
+      setAgentToDelete(null);
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Erro ao excluir agente");
+    },
+  });
 
   const handleCreateSubmit = (data: CreateAgentFormData) => {
     createAgentMutation.mutate({

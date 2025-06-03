@@ -669,7 +669,7 @@ await logActivity({
   rowId: created.id,
   diff: diff({}, careTaskInserted),
   userId: ctx.auth.user.id,
-  type: "create", // "create" | "update" | "delete"
+  type: "create" | "update" | "delete",
 });
 ```
 
@@ -802,6 +802,400 @@ Gera automaticamente:
 
 ---
 
-**Última atualização:** 2024-12-20  
-**Versão tRPC:** 10.x  
-**Compatibilidade:** Next.js 14+, React 18+
+**Última atualização:** 2024-12-21  
+**Versão tRPC:** 11.x  
+**Compatibilidade:** Next.js 15+, React 19+
+
+## 🔗 **Comunicação Entre SubApps via Service Layer**
+
+### **Padrão de Integração Cross-App**
+
+Para comunicação entre SubApps, o Kodix utiliza **Service Layer** interno, oferecendo:
+
+- **Type Safety**: Interfaces TypeScript completas
+- **Performance**: Sem overhead de HTTP
+- **Team Isolation**: Validação automática de `teamId`
+- **Auditabilidade**: Logging integrado de acessos
+
+### **Exemplo: Chat ↔ AI Studio**
+
+#### **Service Layer Implementation**
+
+```typescript
+// packages/api/src/internal/services/ai-studio.service.ts
+import { TRPCError } from "@trpc/server";
+
+import type { KodixAppId } from "@kdx/shared";
+import { aiStudioRepository } from "@kdx/db/repositories";
+
+export class AiStudioService {
+  private static validateTeamAccess(teamId: string) {
+    if (!teamId) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "teamId is required for cross-app access",
+      });
+    }
+  }
+
+  private static logAccess(
+    action: string,
+    params: { teamId: string; requestingApp: KodixAppId },
+  ) {
+    console.log(
+      `🔄 [AiStudioService] ${action} by ${params.requestingApp} for team: ${params.teamId}`,
+    );
+  }
+
+  static async getModelById({
+    modelId,
+    teamId,
+    requestingApp,
+  }: {
+    modelId: string;
+    teamId: string;
+    requestingApp: KodixAppId;
+  }) {
+    this.validateTeamAccess(teamId);
+    this.logAccess("getModelById", { teamId, requestingApp });
+
+    const model = await aiStudioRepository.AiModelRepository.findById(modelId);
+
+    if (!model) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Model not found",
+      });
+    }
+
+    // Verificar acesso do team via configuration
+    const teamConfig =
+      await aiStudioRepository.AiTeamModelConfigRepository.findByTeamAndModel(
+        teamId,
+        modelId,
+      );
+
+    if (!teamConfig?.enabled) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Model not available for this team",
+      });
+    }
+
+    return model;
+  }
+
+  static async getAvailableModels({
+    teamId,
+    requestingApp,
+  }: {
+    teamId: string;
+    requestingApp: KodixAppId;
+  }) {
+    this.validateTeamAccess(teamId);
+    this.logAccess("getAvailableModels", { teamId, requestingApp });
+
+    return await aiStudioRepository.AiTeamModelConfigRepository.findAvailableModelsByTeam(
+      teamId,
+    );
+  }
+}
+```
+
+#### **Uso no tRPC Router (Chat)**
+
+```typescript
+// packages/api/src/trpc/routers/app/chat/_router.ts
+import { chatAppId } from "@kdx/shared";
+
+import { AiStudioService } from "../../../../internal/services/ai-studio.service";
+
+export const chatRouter = {
+  getPreferredModel: protectedProcedure.query(async ({ ctx }) => {
+    const teamId = ctx.auth.user.activeTeamId;
+
+    // ✅ Service Layer call com context preservation
+    const availableModels = await AiStudioService.getAvailableModels({
+      teamId,
+      requestingApp: chatAppId,
+    });
+
+    if (availableModels.length === 0) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message:
+          "Nenhum modelo de IA disponível. Configure modelos no AI Studio.",
+      });
+    }
+
+    return availableModels[0]; // Retorna primeiro modelo disponível
+  }),
+
+  autoCreateSessionWithMessage: protectedProcedure
+    .input(createChatSessionSchema)
+    .mutation(async ({ ctx, input }) => {
+      const teamId = ctx.auth.user.activeTeamId;
+
+      // ✅ Buscar modelo via Service Layer
+      const model = await AiStudioService.getModelById({
+        modelId: input.modelId,
+        teamId,
+        requestingApp: chatAppId,
+      });
+
+      // ✅ Buscar token do provider via Service Layer
+      const providerToken = await AiStudioService.getProviderToken({
+        providerId: model.providerId,
+        teamId,
+        requestingApp: chatAppId,
+      });
+
+      // Criar sessão de chat com modelo validado
+      return await chatRepository.createSession({
+        ...input,
+        teamId,
+        modelId: model.id,
+        createdById: ctx.auth.user.id,
+      });
+    }),
+} satisfies TRPCRouterRecord;
+```
+
+### **Padrões de Middleware para Cross-App**
+
+#### **Middleware de Dependências**
+
+```typescript
+// packages/api/src/trpc/middlewares.ts
+const appWithDependenciesInstalledMiddlewareFactory = (appId: KodixAppId) =>
+  experimental_standaloneMiddleware<{
+    ctx: TProtectedProcedureContext;
+  }>().create(async ({ ctx, next }) => {
+    const installedApps = await getInstalledHandler({ ctx });
+    const installedAppIds = installedApps.map((app) => app.id);
+
+    // Verificar app principal
+    if (!installedAppIds.includes(appId)) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: ctx.t("api.appName is not installed", {
+          app: getAppName(ctx.t, appId),
+        }),
+      });
+    }
+
+    // Verificar dependências via Service Layer
+    const dependencies = getAppDependencies(appId);
+    const missingDependencies = dependencies.filter(
+      (depId) => !installedAppIds.includes(depId),
+    );
+
+    if (missingDependencies.length > 0) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Required dependencies not installed",
+      });
+    }
+
+    return next({ ctx });
+  });
+
+// Middleware específico para Chat (requer AI Studio)
+export const chatWithDependenciesMiddleware =
+  appWithDependenciesInstalledMiddlewareFactory(chatAppId);
+```
+
+#### **Uso de Middleware Cross-App**
+
+```typescript
+// Router Chat com verificação de dependências
+export const chatRouter = {
+  createSession: protectedProcedure
+    .use(chatWithDependenciesMiddleware) // ✅ Valida que AI Studio está instalado
+    .input(createSessionSchema)
+    .mutation(async ({ ctx, input }) => {
+      // AI Studio está garantidamente disponível aqui
+      const model = await AiStudioService.getModelById({
+        modelId: input.modelId,
+        teamId: ctx.auth.user.activeTeamId,
+        requestingApp: chatAppId,
+      });
+
+      // ... resto da implementação
+    }),
+} satisfies TRPCRouterRecord;
+```
+
+### **Tratamento de Erros Cross-App**
+
+#### **Error Handling Pattern**
+
+```typescript
+// Handler com propagação de erros de Service Layer
+export const createChatSessionHandler = async ({
+  ctx,
+  input,
+}: CreateChatSessionOptions) => {
+  try {
+    // Service call pode lançar TRPCError
+    const model = await AiStudioService.getModelById({
+      modelId: input.modelId,
+      teamId: ctx.auth.user.activeTeamId,
+      requestingApp: chatAppId,
+    });
+
+    return await chatRepository.createSession({
+      ...input,
+      modelId: model.id,
+      teamId: ctx.auth.user.activeTeamId,
+    });
+  } catch (error) {
+    // ✅ TRPCError do Service Layer é propagado automaticamente
+    if (error instanceof TRPCError) {
+      throw error;
+    }
+
+    // ✅ Errors não esperados são tratados genericamente
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Failed to create chat session",
+      cause: error,
+    });
+  }
+};
+```
+
+### **Testing Cross-App Communication**
+
+#### **Service Layer Mocking**
+
+```typescript
+// tests/services/ai-studio.service.test.ts
+import { jest } from "@jest/globals";
+
+import { AiStudioService } from "../../src/internal/services/ai-studio.service";
+
+// Mock do service para testes isolados
+jest.mock("../../src/internal/services/ai-studio.service", () => ({
+  AiStudioService: {
+    getModelById: jest.fn(),
+    getAvailableModels: jest.fn(),
+    getProviderToken: jest.fn(),
+  },
+}));
+
+describe("Chat → AI Studio Integration", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("should handle service layer calls correctly", async () => {
+    // Mock do retorno do service
+    const mockModel = {
+      id: "model-123",
+      name: "Test Model",
+      providerId: "openai",
+    };
+
+    (AiStudioService.getModelById as jest.Mock).mockResolvedValue(mockModel);
+
+    // Test do handler que usa o service
+    const result = await createChatSessionHandler({
+      ctx: mockContext,
+      input: { modelId: "model-123", title: "Test Chat" },
+    });
+
+    // Verificar que service foi chamado corretamente
+    expect(AiStudioService.getModelById).toHaveBeenCalledWith({
+      modelId: "model-123",
+      teamId: mockContext.auth.user.activeTeamId,
+      requestingApp: chatAppId,
+    });
+
+    expect(result.modelId).toBe("model-123");
+  });
+
+  it("should propagate service layer errors correctly", async () => {
+    // Mock de erro do service
+    (AiStudioService.getModelById as jest.Mock).mockRejectedValue(
+      new TRPCError({
+        code: "NOT_FOUND",
+        message: "Model not available for this team",
+      }),
+    );
+
+    // Verificar que erro é propagado
+    await expect(
+      createChatSessionHandler({
+        ctx: mockContext,
+        input: { modelId: "invalid-model", title: "Test Chat" },
+      }),
+    ).rejects.toThrow("Model not available for this team");
+  });
+});
+```
+
+### **🎯 Boas Práticas Cross-App**
+
+#### **✅ DO (Faça)**
+
+1. **Use Service Layer para comunicação entre SubApps**
+
+   ```typescript
+   // ✅ CORRETO
+   const result = await AiStudioService.getModelById({
+     teamId,
+     modelId,
+     requestingApp,
+   });
+   ```
+
+2. **Valide dependências com middlewares**
+
+   ```typescript
+   // ✅ CORRETO
+   .use(chatWithDependenciesMiddleware)
+   ```
+
+3. **Propague erros de Service Layer**
+
+   ```typescript
+   // ✅ CORRETO - TRPCError é propagado automaticamente
+   if (error instanceof TRPCError) throw error;
+   ```
+
+4. **Log acessos cross-app para auditoria**
+   ```typescript
+   // ✅ CORRETO - Service faz log automaticamente
+   console.log(`🔄 [AiStudioService] ${action} by ${requestingApp}`);
+   ```
+
+#### **❌ DON'T (Não faça)**
+
+1. **Não acesse repositórios de outros SubApps diretamente**
+
+   ```typescript
+   // ❌ ERRADO
+   import { aiStudioRepository } from "@kdx/db/repositories";
+
+   const model = await aiStudioRepository.AiModelRepository.findById(id);
+   ```
+
+2. **Não pule validação de teamId**
+
+   ```typescript
+   // ❌ ERRADO - Sem isolamento de team
+   const models = await getModelsFromOtherApp();
+   ```
+
+3. **Não use HTTP para comunicação interna**
+   ```typescript
+   // ❌ ERRADO - HTTP desnecessário entre SubApps
+   const response = await fetch("/api/ai-studio/models");
+   ```
+
+---
+
+**Última atualização:** 2024-12-21  
+**Versão tRPC:** 11.x  
+**Compatibilidade:** Next.js 15+, React 19+

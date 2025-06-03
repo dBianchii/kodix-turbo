@@ -53,7 +53,7 @@ export * from "./seuRecurso";
 ### 2.1 Hook para Listagem
 
 ```typescript
-// apps/kdx/src/hooks/useSeuRecurso.ts
+// apps/kdx/src/hooks/use-seu-recurso.ts
 import { useMemo, useState } from "react";
 
 import type { SeuRecursoFilters } from "@kdx/shared/types";
@@ -197,7 +197,7 @@ export function useSeuRecursoItem(id: string) {
 ### 3.1 Componente Card Individual
 
 ```typescript
-// apps/kdx/src/app/(authenticated)/seu-recurso/components/SeuRecursoCard.tsx
+// apps/kdx/src/app/[locale]/(authed)/apps/seu-recurso/_components/seu-recurso-card.tsx
 "use client";
 
 import { useState } from "react";
@@ -375,7 +375,7 @@ export function SeuRecursoCard({
 ### 3.2 Skeleton de Carregamento
 
 ```typescript
-// apps/kdx/src/app/(authenticated)/seu-recurso/components/SeuRecursoSkeleton.tsx
+// apps/kdx/src/app/[locale]/(authed)/apps/seu-recurso/_components/seu-recurso-skeleton.tsx
 import { Card, CardContent, CardHeader } from "@kdx/ui/card";
 import { Skeleton } from "@kdx/ui/skeleton";
 
@@ -422,11 +422,11 @@ export function SeuRecursoSkeleton({ count = 3 }: SeuRecursoSkeletonProps) {
 ### 3.3 Componente de Listagem Principal
 
 ```typescript
-// apps/kdx/src/app/(authenticated)/seu-recurso/components/SeuRecursoLista.tsx
+// apps/kdx/src/app/[locale]/(authed)/apps/seu-recurso/_components/seu-recurso-lista.tsx
 "use client";
 
 import { useState } from "react";
-import { useSeuRecursoList } from "~/hooks/useSeuRecurso";
+import { useSeuRecursoList } from "~/hooks/use-seu-recurso";
 import { Button } from "@kdx/ui/button";
 import { Input } from "@kdx/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@kdx/ui/card";
@@ -446,8 +446,8 @@ import {
   SlidersHorizontal,
   X
 } from "lucide-react";
-import { SeuRecursoCard } from "./SeuRecursoCard";
-import { SeuRecursoSkeleton } from "./SeuRecursoSkeleton";
+import { SeuRecursoCard } from "./seu-recurso-card";
+import { SeuRecursoSkeleton } from "./seu-recurso-skeleton";
 
 interface SeuRecursoListaProps {
   onNovo?: () => void;
@@ -703,7 +703,7 @@ export function SeuRecursoLista({ onNovo, onEditar, onVisualizar }: SeuRecursoLi
 ### 3.4 Formulário de Criação/Edição
 
 ```typescript
-// apps/kdx/src/app/(authenticated)/seu-recurso/components/SeuRecursoForm.tsx
+// apps/kdx/src/app/[locale]/(authed)/apps/seu-recurso/_components/seu-recurso-form.tsx
 "use client";
 
 import { useEffect } from "react";
@@ -946,7 +946,7 @@ export function SeuRecursoForm({
 ### 3.5 Modal/Dialog de Visualização
 
 ```typescript
-// apps/kdx/src/app/(authenticated)/seu-recurso/components/SeuRecursoDialog.tsx
+// apps/kdx/src/app/[locale]/(authed)/apps/seu-recurso/_components/seu-recurso-dialog.tsx
 "use client";
 
 import {
@@ -968,7 +968,7 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { useSeuRecursoItem } from "~/hooks/useSeuRecurso";
+import { useSeuRecursoItem } from "~/hooks/use-seu-recurso";
 import { Skeleton } from "@kdx/ui/skeleton";
 
 interface SeuRecursoDialogProps {
@@ -1116,13 +1116,13 @@ export function SeuRecursoDialog({
 ### 4.1 Página Principal
 
 ```typescript
-// apps/kdx/src/app/(authenticated)/seu-recurso/page.tsx
+// apps/kdx/src/app/[locale]/(authed)/apps/seu-recurso/page.tsx
 "use client";
 
 import { useState } from "react";
-import { SeuRecursoLista } from "./components/SeuRecursoLista";
-import { SeuRecursoForm } from "./components/SeuRecursoForm";
-import { SeuRecursoDialog } from "./components/SeuRecursoDialog";
+import { SeuRecursoLista } from "./_components/seu-recurso-lista";
+import { SeuRecursoForm } from "./_components/seu-recurso-form";
+import { SeuRecursoDialog } from "./_components/seu-recurso-dialog";
 import {
   Sheet,
   SheetContent,
@@ -1201,25 +1201,13 @@ export default function SeuRecursoPage() {
 ### 4.2 Layout da Seção (Opcional)
 
 ```typescript
-// apps/kdx/src/app/(authenticated)/seu-recurso/layout.tsx
+// apps/kdx/src/app/[locale]/(authed)/apps/seu-recurso/layout.tsx
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Recursos - Kodix",
   description: "Gerencie seus recursos e categorias",
 };
-
-export default function SeuRecursoLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-      {children}
-    </div>
-  );
-}
 ```
 
 ## 📊 **5. Estados de UI e UX**

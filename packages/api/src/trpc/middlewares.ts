@@ -57,6 +57,72 @@ export const appInstalledMiddleware = experimental_standaloneMiddleware<{
 });
 
 /**
+ * 🎯 MIDDLEWARE ESPECÍFICO: Chat requer AI Studio (Padrão tRPC tradicional)
+ * Middleware tradicional que valida se o Chat e suas dependências estão instaladas
+ * Segue os padrões documentados em trpc-patterns.md
+ */
+export const chatWithDependenciesMiddleware = t.middleware(
+  async ({ ctx, next }) => {
+    // Verificar se o contexto é de um usuário autenticado (seguindo padrão do protectedProcedure)
+    if (!ctx.auth.user) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Authentication required",
+      });
+    }
+
+    const installedApps = await getInstalledHandler({
+      ctx: ctx as TProtectedProcedureContext,
+    });
+    const installedAppIds = installedApps.map((app) => app.id);
+
+    // Verificar se o Chat está instalado
+    if (!installedAppIds.includes(chatAppId)) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: ctx.t("api.appName is not installed", {
+          app: getAppName(ctx.t, chatAppId),
+        }),
+      });
+    }
+
+    // Verificar se todas as dependências do Chat estão instaladas
+    const dependencies = getAppDependencies(chatAppId);
+    const missingDependencies = dependencies.filter(
+      (depId) => !installedAppIds.includes(depId),
+    );
+
+    if (missingDependencies.length > 0) {
+      const missingAppNames = missingDependencies
+        .map((depId) => getAppName(ctx.t, depId))
+        .join(", ");
+
+      console.error(
+        `❌ [CHAT_DEPENDENCIES] Chat app missing dependencies: ${missingDependencies.join(", ")}`,
+      );
+
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: `Missing required dependencies: ${missingAppNames}`,
+      });
+    }
+
+    console.log(
+      `✅ [CHAT_DEPENDENCIES] All dependencies validated for team: ${ctx.auth.user.activeTeamId}`,
+    );
+
+    // Seguir padrão do protectedProcedure - retornar contexto garantindo que auth.user não é null
+    return next({
+      ctx: {
+        ...ctx,
+        // infers the `user` and `session` as non-nullable
+        auth: ctx.auth,
+      },
+    });
+  },
+);
+
+/**
  * 🎯 NOVO: Middleware para validar se todas as dependências de um app estão instaladas
  * Este middleware verifica se um app específico e todas suas dependências estão instaladas
  */
@@ -100,13 +166,6 @@ const appWithDependenciesInstalledMiddlewareFactory = (appId: KodixAppId) =>
 
     return next({ ctx });
   });
-
-/**
- * 🎯 MIDDLEWARE ESPECÍFICO: Chat requer AI Studio
- * Use este middleware em endpoints do Chat que precisam do AI Studio
- */
-export const chatWithDependenciesMiddleware =
-  appWithDependenciesInstalledMiddlewareFactory(chatAppId);
 
 /**
  * 🎯 MIDDLEWARE DINÂMICO: Valida dependências baseado no input

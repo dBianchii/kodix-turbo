@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Database,
   MoreHorizontal,
@@ -69,7 +69,7 @@ import {
 import { Textarea } from "@kdx/ui/textarea";
 import { toast } from "@kdx/ui/toast";
 
-import { useTRPC } from "~/trpc/react";
+import { api } from "~/trpc/react";
 
 // Schema de validação para o formulário de criação
 const createLibrarySchema = z.object({
@@ -88,7 +88,6 @@ type EditLibraryFormData = z.infer<typeof editLibrarySchema>;
 
 export function LibrariesSection() {
   const t = useTranslations();
-  const trpc = useTRPC();
   const queryClient = useQueryClient();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
@@ -96,13 +95,11 @@ export function LibrariesSection() {
   const [libraryToDelete, setLibraryToDelete] = useState<any>(null);
   const [libraryToEdit, setLibraryToEdit] = useState<any>(null);
 
-  // Query
-  const librariesQuery = useQuery(
-    trpc.app.aiStudio.findAiLibraries.queryOptions({
-      limite: 50,
-      offset: 0,
-    }),
-  );
+  // ✅ CORRIGIDO: Usar api hooks diretamente
+  const librariesQuery = api.app.aiStudio.findAiLibraries.useQuery({
+    limite: 50,
+    offset: 0,
+  });
 
   const libraries = librariesQuery.data?.libraries || [];
   const isLoading = librariesQuery.isLoading;
@@ -112,6 +109,7 @@ export function LibrariesSection() {
     resolver: zodResolver(createLibrarySchema),
     defaultValues: {
       name: "",
+      files: undefined,
     },
   });
 
@@ -120,94 +118,63 @@ export function LibrariesSection() {
     resolver: zodResolver(editLibrarySchema),
     defaultValues: {
       name: "",
+      files: undefined,
     },
   });
 
-  // Mutations
-  const createLibraryMutation = useMutation(
-    trpc.app.aiStudio.createAiLibrary.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries(
-          trpc.app.aiStudio.findAiLibraries.pathFilter(),
-        );
-        toast.success("Biblioteca criada com sucesso!");
-        setShowCreateForm(false);
-        createForm.reset();
-      },
-      onError: (error: any) => {
-        toast.error(error.message || "Erro ao criar biblioteca");
-      },
-    }),
-  );
+  // ✅ CORRIGIDO: Usar api mutations diretamente
+  const createLibraryMutation = api.app.aiStudio.createAiLibrary.useMutation({
+    onSuccess: () => {
+      librariesQuery.refetch();
+      toast.success("Biblioteca criada com sucesso!");
+      setShowCreateForm(false);
+      createForm.reset();
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Erro ao criar biblioteca");
+    },
+  });
 
-  const updateLibraryMutation = useMutation(
-    trpc.app.aiStudio.updateAiLibrary.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries(
-          trpc.app.aiStudio.findAiLibraries.pathFilter(),
-        );
-        toast.success("Biblioteca atualizada com sucesso!");
-        setShowEditForm(false);
-        setLibraryToEdit(null);
-        editForm.reset();
-      },
-      onError: (error: any) => {
-        toast.error(error.message || "Erro ao atualizar biblioteca");
-      },
-    }),
-  );
+  const updateLibraryMutation = api.app.aiStudio.updateAiLibrary.useMutation({
+    onSuccess: () => {
+      librariesQuery.refetch();
+      toast.success("Biblioteca atualizada com sucesso!");
+      setShowEditForm(false);
+      setLibraryToEdit(null);
+      editForm.reset();
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Erro ao atualizar biblioteca");
+    },
+  });
 
-  const deleteLibraryMutation = useMutation(
-    trpc.app.aiStudio.deleteAiLibrary.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries(
-          trpc.app.aiStudio.findAiLibraries.pathFilter(),
-        );
-        toast.success("Biblioteca excluída com sucesso!");
-        setShowDeleteDialog(false);
-        setLibraryToDelete(null);
-      },
-      onError: (error: any) => {
-        toast.error(error.message || "Erro ao excluir biblioteca");
-      },
-    }),
-  );
+  const deleteLibraryMutation = api.app.aiStudio.deleteAiLibrary.useMutation({
+    onSuccess: () => {
+      librariesQuery.refetch();
+      toast.success("Biblioteca excluída com sucesso!");
+      setShowDeleteDialog(false);
+      setLibraryToDelete(null);
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Erro ao excluir biblioteca");
+    },
+  });
 
   const handleCreateSubmit = (data: CreateLibraryFormData) => {
-    let filesJson = null;
-    if (data.files?.trim()) {
-      try {
-        filesJson = JSON.parse(data.files);
-      } catch (error) {
-        toast.error("Dados de arquivos JSON inválidos");
-        return;
-      }
-    }
-
     createLibraryMutation.mutate({
       name: data.name,
-      files: filesJson,
+      files: data.files,
     });
   };
 
   const handleEditSubmit = (data: EditLibraryFormData) => {
-    if (!libraryToEdit?.id) return;
-
-    let filesJson = null;
-    if (data.files?.trim()) {
-      try {
-        filesJson = JSON.parse(data.files);
-      } catch (error) {
-        toast.error("Dados de arquivos JSON inválidos");
-        return;
-      }
+    if (libraryToEdit?.id) {
+      updateLibraryMutation.mutate({
+        id: libraryToEdit.id,
+        name: data.name,
+        files: data.files,
+      });
     }
-
-    updateLibraryMutation.mutate({
-      id: libraryToEdit.id,
-      name: data.name,
-      files: filesJson,
-    });
   };
 
   const handleCreateCancel = () => {
@@ -224,10 +191,6 @@ export function LibrariesSection() {
   const handleEditClick = (library: any) => {
     setLibraryToEdit(library);
     editForm.setValue("name", library.name);
-    editForm.setValue(
-      "files",
-      library.files ? JSON.stringify(library.files, null, 2) : "",
-    );
     setShowEditForm(true);
   };
 

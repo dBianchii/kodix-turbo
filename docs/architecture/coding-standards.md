@@ -6,17 +6,17 @@ Este documento define os padrões de código, convenções e melhores práticas 
 
 ### File & Directory Names
 
-- **Components & Pages**: Use kebab-case (e.g., `user-profile.tsx`)
-- **Hooks**: Use camelCase starting with "use" (e.g., `useUserData.ts`)
-- **Utils & Helpers**: Use kebab-case (e.g., `format-date.ts`)
-- **Types**: Use PascalCase (e.g., `UserProfile.ts`)
+- **Components & Pages**: Use kebab-case (e.g., `chat-window.tsx`, `model-selector.tsx`)
+- **Hooks**: Use kebab-case starting with "use" (e.g., `use-user-data.ts`, `use-chat-session.ts`)
+- **Utils & Helpers**: Use kebab-case (e.g., `format-date.ts`, `api-helpers.ts`)
+- **Types**: Use kebab-case (e.g., `user-profile.ts`, `chat-types.ts`)
 
 ### Code Naming
 
-- **React Components**: PascalCase (e.g., `UserProfile`)
-- **Functions & Variables**: camelCase (e.g., `getUserData`)
-- **Constants**: SCREAMING_SNAKE_CASE (e.g., `MAX_ATTEMPTS`)
-- **TypeScript Interfaces**: PascalCase (e.g., `UserInterface`)
+- **React Components**: PascalCase (e.g., `UserProfile`, `ChatWindow`)
+- **Functions & Variables**: camelCase (e.g., `getUserData`, `chatSessions`)
+- **Constants**: SCREAMING_SNAKE_CASE (e.g., `MAX_ATTEMPTS`, `API_BASE_URL`)
+- **TypeScript Interfaces**: PascalCase (e.g., `UserInterface`, `ChatMessage`)
 - **Database Schemas**: camelCase for tables and columns
 
 ## 🗂️ File Structure Standards
@@ -444,136 +444,3 @@ export async function getUsers(page = 1, limit = 20) {
   });
 }
 ```
-
-## 📝 Documentation Standards
-
-### Code Comments
-
-```typescript
-/**
- * Calculates the total price including tax and discounts
- * @param items - Array of items to calculate total for
- * @param taxRate - Tax rate as decimal (e.g., 0.08 for 8%)
- * @param discountCode - Optional discount code to apply
- * @returns Object containing subtotal, tax, discount, and total
- */
-export function calculateOrderTotal(
-  items: OrderItem[],
-  taxRate: number,
-  discountCode?: string,
-): OrderTotal {
-  // Implementation...
-}
-
-// ✅ Good: Explain complex business logic
-// Calculate compound interest using the formula: A = P(1 + r/n)^(nt)
-// where P = principal, r = annual rate, n = compounds per year, t = time in years
-const futureValue =
-  principal *
-  Math.pow(1 + annualRate / compoundsPerYear, compoundsPerYear * years);
-```
-
-### README Files
-
-```markdown
-# Package Name
-
-Brief description of what this package does.
-
-## Installation
-
-\`\`\`bash
-pnpm add @kdx/package-name
-\`\`\`
-
-## Usage
-
-\`\`\`typescript
-import { ComponentName } from '@kdx/package-name';
-
-function MyComponent() {
-return <ComponentName prop="value" />;
-}
-\`\`\`
-
-## API Reference
-
-### ComponentName
-
-Props:
-
-- `prop` (string): Description of the prop
-- `optionalProp` (number, optional): Description of optional prop
-
-## Contributing
-
-See [coding standards](../../docs/architecture/coding-standards.md)
-```
-
-## 🔄 Git Standards
-
-### Commit Messages
-
-```bash
-# ✅ Good: Use conventional commits
-feat(auth): add OAuth2 Google provider
-fix(ui): resolve button disabled state styling
-docs(api): update tRPC router documentation
-refactor(db): optimize user queries with indexes
-
-# ❌ Avoid: Vague commit messages
-git commit -m "fix stuff"
-git commit -m "update"
-git commit -m "wip"
-```
-
-### Branch Naming
-
-```bash
-# ✅ Good: Descriptive branch names
-feature/user-authentication
-fix/database-connection-timeout
-refactor/api-error-handling
-docs/update-development-guide
-
-# ❌ Avoid: Unclear branch names
-fix-bug
-new-feature
-update
-```
-
-## 📊 Code Review Standards
-
-### Review Checklist
-
-- [ ] Code follows naming conventions
-- [ ] No hardcoded values (use constants/config)
-- [ ] Proper error handling implemented
-- [ ] Security considerations addressed
-- [ ] Performance implications considered
-- [ ] Tests included for new functionality
-- [ ] Documentation updated if needed
-- [ ] Accessibility standards met (for UI changes)
-
-### Review Comments
-
-```markdown
-# ✅ Good: Constructive feedback
-
-Consider extracting this logic into a custom hook for reusability.
-
-This query could benefit from an index on the `created_at` column for better performance.
-
-# ✅ Good: Suggest specific improvements
-
-Instead of `any`, consider using a more specific type like `User | null`.
-
-# ❌ Avoid: Non-constructive comments
-
-This is wrong.
-Bad code.
-```
-
----
-
-_This document should be updated as the project evolves and new patterns emerge._

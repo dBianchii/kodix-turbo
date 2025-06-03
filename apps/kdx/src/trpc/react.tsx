@@ -10,7 +10,7 @@ import {
   httpBatchStreamLink,
   loggerLink,
 } from "@trpc/client";
-import { createTRPCContext } from "@trpc/tanstack-react-query";
+import { createTRPCReact } from "@trpc/react-query";
 import SuperJSON from "superjson";
 
 import type { AppRouter } from "@kdx/api";
@@ -30,17 +30,18 @@ const getQueryClient = () => {
   }
 };
 
-export const { TRPCProvider, useTRPC } = createTRPCContext<AppRouter>();
+// Create the tRPC React hooks and provider
+export const api = createTRPCReact<AppRouter>();
 
-// Export the api object for use in hooks
-export const api = useTRPC;
+// Export useTRPC as an alias for api for backward compatibility
+export const useTRPC = api;
 
 const customConsole = { ...console, error: console.log };
 export function TRPCReactProvider(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
 
   const [trpcClient] = useState(() =>
-    createTRPCClient<AppRouter>({
+    api.createClient({
       links: [
         loggerLink({
           console: customConsole,
@@ -63,10 +64,10 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
+      <api.Provider client={trpcClient} queryClient={queryClient}>
         <ReactQueryDevtools initialIsOpen={false} />
         {props.children}
-      </TRPCProvider>
+      </api.Provider>
     </QueryClientProvider>
   );
 }

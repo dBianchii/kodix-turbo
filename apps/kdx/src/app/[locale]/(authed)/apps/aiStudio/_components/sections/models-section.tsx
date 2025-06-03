@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Brain, MoreHorizontal, Pencil, Plus, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
@@ -70,7 +70,7 @@ import {
 import { Textarea } from "@kdx/ui/textarea";
 import { toast } from "@kdx/ui/toast";
 
-import { useTRPC } from "~/trpc/react";
+import { api } from "~/trpc/react";
 
 // Schema de validação para o formulário de criação de modelo
 const createModelSchema = z.object({
@@ -99,7 +99,6 @@ type PriorityConfigFormData = z.infer<typeof priorityConfigSchema>;
 
 export function ModelsSection() {
   const t = useTranslations();
-  const trpc = useTRPC();
   const queryClient = useQueryClient();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
@@ -107,21 +106,16 @@ export function ModelsSection() {
   const [modelToDelete, setModelToDelete] = useState<any>(null);
   const [modelToEdit, setModelToEdit] = useState<any>(null);
 
-  // Queries para modelos do sistema (admin)
-  const systemModelsQuery = useQuery(
-    trpc.app.aiStudio.findModels.queryOptions({
-      limite: 50,
-      offset: 0,
-    }),
-  );
+  // ✅ CORRIGIDO: Usar api hooks diretamente
+  const systemModelsQuery = api.app.aiStudio.findModels.useQuery({
+    limite: 50,
+    offset: 0,
+  });
 
-  // Buscar providers para criação de novos modelos
-  const providersQuery = useQuery(
-    trpc.app.aiStudio.findAiProviders.queryOptions({
-      limite: 50,
-      offset: 0,
-    }),
-  );
+  const providersQuery = api.app.aiStudio.findAiProviders.useQuery({
+    limite: 50,
+    offset: 0,
+  });
 
   const systemModels = systemModelsQuery.data || [];
   const providers = providersQuery.data || [];
@@ -149,70 +143,54 @@ export function ModelsSection() {
     },
   });
 
-  // Mutation para habilitar/desabilitar modelo global individual
-  const toggleGlobalModelMutation = useMutation(
-    trpc.app.aiStudio.toggleGlobalModel.mutationOptions({
+  // ✅ CORRIGIDO: Usar api mutations diretamente
+  const toggleGlobalModelMutation =
+    api.app.aiStudio.toggleGlobalModel.useMutation({
       onSuccess: (data) => {
-        queryClient.invalidateQueries(
-          trpc.app.aiStudio.findModels.pathFilter(),
-        );
+        systemModelsQuery.refetch();
         toast.success(data.message);
       },
       onError: (error: any) => {
         toast.error(error.message || "Erro ao alterar modelo");
       },
-    }),
-  );
+    });
 
-  // Mutations para modelos do sistema
-  const createModelMutation = useMutation(
-    trpc.app.aiStudio.createAiModel.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries(
-          trpc.app.aiStudio.findModels.pathFilter(),
-        );
-        toast.success("Modelo criado com sucesso!");
-        setShowCreateForm(false);
-        createForm.reset();
-      },
-      onError: (error: any) => {
-        toast.error(error.message || "Erro ao criar modelo");
-      },
-    }),
-  );
+  const createModelMutation = api.app.aiStudio.createAiModel.useMutation({
+    onSuccess: () => {
+      systemModelsQuery.refetch();
+      toast.success("Modelo criado com sucesso!");
+      setShowCreateForm(false);
+      createForm.reset();
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Erro ao criar modelo");
+    },
+  });
 
-  const updateModelMutation = useMutation(
-    trpc.app.aiStudio.updateAiModel.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries(
-          trpc.app.aiStudio.findModels.pathFilter(),
-        );
-        toast.success("Modelo atualizado com sucesso!");
-        setShowEditForm(false);
-        setModelToEdit(null);
-        editForm.reset();
-      },
-      onError: (error: any) => {
-        toast.error(error.message || "Erro ao atualizar modelo");
-      },
-    }),
-  );
+  const updateModelMutation = api.app.aiStudio.updateAiModel.useMutation({
+    onSuccess: () => {
+      systemModelsQuery.refetch();
+      toast.success("Modelo atualizado com sucesso!");
+      setShowEditForm(false);
+      setModelToEdit(null);
+      editForm.reset();
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Erro ao atualizar modelo");
+    },
+  });
 
-  const deleteModelMutation = useMutation(
-    trpc.app.aiStudio.deleteAiModel.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries(
-          trpc.app.aiStudio.findModels.pathFilter(),
-        );
-        toast.success("Modelo excluído com sucesso!");
-        setShowDeleteDialog(false);
-        setModelToDelete(null);
-      },
-      onError: (error: any) => {
-        toast.error(error.message || "Erro ao excluir modelo");
-      },
-    }),
-  );
+  const deleteModelMutation = api.app.aiStudio.deleteAiModel.useMutation({
+    onSuccess: () => {
+      systemModelsQuery.refetch();
+      toast.success("Modelo excluído com sucesso!");
+      setShowDeleteDialog(false);
+      setModelToDelete(null);
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Erro ao excluir modelo");
+    },
+  });
 
   // Handlers para modelos do sistema
   const handleCreateSubmit = (data: CreateModelFormData) => {

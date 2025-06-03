@@ -382,6 +382,8 @@ export * from "./seuRecurso";
 
 ## 🔗 **3. Criar Endpoints tRPC**
 
+> ⚠️ **IMPORTANTE**: Para comunicação entre SubApps, use **Service Layer** em vez de endpoints HTTP. Consulte [SubApp Architecture](./subapp-architecture.md) para padrões de comunicação cross-app.
+
 ### 3.1 Definir Validadores
 
 ```typescript
@@ -862,7 +864,108 @@ const recursos = await db
 2. **Configure Permissions**: Definir roles específicos se necessário
 3. **Add Tests**: Implementar testes unitários e de integração
 
-## 📖 **10. Related Documentation**
+## 🔗 **10. Service Layer para Comunicação Cross-App**
+
+### **Quando Criar Service Layer**
+
+Se seu SubApp precisa ser acessado por outros SubApps, implemente um Service Layer:
+
+```typescript
+// packages/api/src/internal/services/seu-recurso.service.ts
+import { TRPCError } from "@trpc/server";
+
+import type { KodixAppId } from "@kdx/shared";
+import { SeuRecursoRepository } from "@kdx/db/repositories/seuRecurso";
+
+export class SeuRecursoService {
+  private static validateTeamAccess(teamId: string) {
+    if (!teamId) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "teamId is required for cross-app access",
+      });
+    }
+  }
+
+  private static logAccess(
+    action: string,
+    params: { teamId: string; requestingApp: KodixAppId },
+  ) {
+    console.log(
+      `🔄 [SeuRecursoService] ${action} by ${params.requestingApp} for team: ${params.teamId}`,
+    );
+  }
+
+  static async getRecursoById({
+    recursoId,
+    teamId,
+    requestingApp,
+  }: {
+    recursoId: string;
+    teamId: string;
+    requestingApp: KodixAppId;
+  }) {
+    this.validateTeamAccess(teamId);
+    this.logAccess("getRecursoById", { teamId, requestingApp });
+
+    const recurso = await SeuRecursoRepository.findById(recursoId);
+
+    if (!recurso || recurso.equipeId !== teamId) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Recurso not found or access denied",
+      });
+    }
+
+    return recurso;
+  }
+
+  static async getAvailableRecursos({
+    teamId,
+    requestingApp,
+  }: {
+    teamId: string;
+    requestingApp: KodixAppId;
+  }) {
+    this.validateTeamAccess(teamId);
+    this.logAccess("getAvailableRecursos", { teamId, requestingApp });
+
+    return await SeuRecursoRepository.findMany({
+      equipeId: teamId,
+      ativo: true,
+    });
+  }
+}
+```
+
+### **Uso do Service Layer em Outros SubApps**
+
+```typescript
+// packages/api/src/trpc/routers/app/outroSubApp/_router.ts
+import { outroSubAppId } from "@kdx/shared";
+
+import { SeuRecursoService } from "../../../../internal/services/seu-recurso.service";
+
+export const outroSubAppRouter = {
+  usarRecurso: protectedProcedure
+    .input(z.object({ recursoId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      // ✅ Usar Service Layer para acessar outro SubApp
+      const recurso = await SeuRecursoService.getRecursoById({
+        recursoId: input.recursoId,
+        teamId: ctx.auth.user.activeTeamId,
+        requestingApp: outroSubAppId,
+      });
+
+      // Usar o recurso na lógica do seu SubApp
+      return await processarComRecurso(recurso);
+    }),
+} satisfies TRPCRouterRecord;
+```
+
+> 📚 **Referência Completa**: Para padrões completos de Service Layer, consulte [SubApp Architecture](./subapp-architecture.md#-comunicação-entre-subapps-via-service-layer).
+
+## 📖 **11. Related Documentation**
 
 - [Frontend Development Guide](./frontend-guide.md)
 - [Project Documentation](../project/overview.md)
