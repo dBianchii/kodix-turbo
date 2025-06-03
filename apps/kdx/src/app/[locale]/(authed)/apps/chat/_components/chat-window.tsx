@@ -119,6 +119,9 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // ✅ Usar utils do tRPC para invalidações corretas
+  const utils = api.useUtils();
+
   async function sendMessage(text: string) {
     if (isLoading || !sessionId) return;
 
@@ -242,8 +245,9 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
 
       // Invalidar cache das mensagens para recarregar do banco
       if (sessionId && currentSessionIdRef.current === currentSessionId) {
-        queryClient.invalidateQueries({
-          queryKey: ["chat", "messages", sessionId],
+        // ✅ Invalidar usando tRPC utils em vez de queryClient manual
+        utils.app.chat.buscarMensagensTest.invalidate({
+          chatSessionId: sessionId,
         });
       }
     } catch (error) {
@@ -253,8 +257,9 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
         // ✅ CORREÇÃO: Sempre invalidar cache mesmo quando cancelado
         if (sessionId) {
           console.log("🔄 Invalidando cache após cancelamento do stream");
-          queryClient.invalidateQueries({
-            queryKey: ["chat", "messages", sessionId],
+          // ✅ Usar tRPC utils
+          utils.app.chat.buscarMensagensTest.invalidate({
+            chatSessionId: sessionId,
           });
         }
         return;
@@ -286,8 +291,9 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
         console.log(
           "🔄 Invalidando cache no finally para garantir sincronização",
         );
-        queryClient.invalidateQueries({
-          queryKey: ["chat", "messages", sessionId],
+        // ✅ Usar tRPC utils
+        utils.app.chat.buscarMensagensTest.invalidate({
+          chatSessionId: sessionId,
         });
       }
 

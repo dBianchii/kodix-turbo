@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Bot, Info } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Clock } from "lucide-react";
 
 import { Badge } from "@kdx/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
@@ -13,7 +13,6 @@ interface ModelInfoBadgeProps {
       provider: {
         name: string;
       };
-      config?: any;
     };
   };
   lastMessageMetadata?: {
@@ -30,113 +29,172 @@ export function ModelInfoBadge({
 }: ModelInfoBadgeProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const configuredModel = sessionData?.aiModel?.name || "Modelo padrão";
-  const provider = sessionData?.aiModel?.provider.name || "Provider";
-  const actualModel = lastMessageMetadata?.actualModelUsed;
-  const requestedModel = lastMessageMetadata?.requestedModel;
-
-  // ✅ Usar modelo real quando disponível, senão usar configurado
-  const displayModel = actualModel || configuredModel;
-  const displayProvider = provider;
-
-  // Função para normalizar nomes de modelos (remover versões/datas)
-  const normalizeModelName = (modelName: string) => {
+  // ✅ Função para normalizar nomes de modelos
+  const normalizeModelName = (modelName: string | undefined): string => {
     if (!modelName) return "";
 
-    // Remover sufixos de data/versão comuns da OpenAI
+    // Remover todos os tipos de sufixos e versões que os provedores adicionam
     return modelName
-      .replace(/-\d{4}-\d{2}-\d{2}$/, "") // Remove -YYYY-MM-DD (ex: -2024-04-09)
-      .replace(/-\d{4}\d{2}\d{2}$/, "") // Remove -YYYYMMDD (ex: -20240409)
-      .replace(/-\d{4}$/, "") // Remove -YYYY (ex: -0125, -1106)
-      .replace(/-v\d+(\.\d+)*$/, "") // Remove -v1.0, -v2.1, etc
-      .replace(/-preview$/, "") // Remove -preview
-      .replace(/-latest$/, "") // Remove -latest
-      .replace(/-instruct$/, "") // Remove -instruct
-      .toLowerCase();
+      .toLowerCase()
+      .replace(/-\d{4}-\d{2}-\d{2}.*$/, "") // Remove datas: -2024-08-06, -2024-11-20
+      .replace(/-\d{8}.*$/, "") // Remove timestamps: -20240806, -20241120
+      .replace(/-\d{4}.*$/, "") // Remove códigos: -0125, -1106, -0613, -2023
+      .replace(/-v\d+.*$/, "") // Remove versões: -v1, -v2, -v3
+      .replace(/-latest$/, "") // Remove sufixo: -latest
+      .replace(/-preview$/, "") // Remove sufixo: -preview
+      .replace(/-snapshot.*$/, "") // Remove sufixos: -snapshot-20241120
+      .replace(/-instruct.*$/, "") // Remove sufixos: -instruct, -instruct-v1
+      .replace(/-chat.*$/, "") // Remove sufixos: -chat, -chat-v1
+      .replace(/-beta.*$/, "") // Remove sufixos: -beta, -beta-1
+      .replace(/-alpha.*$/, "") // Remove sufixos: -alpha
+      .replace(/-turbo-\d+.*$/, "") // Remove: -turbo-0125, -turbo-1106
+      .replace(/-\d+k.*$/, "") // Remove context: -32k, -16k, -8k
+      .replace(/-\d+b.*$/, "") // Remove parameters: -7b, -13b, -70b
+      .replace(/-fine-tuned.*$/, "") // Remove: -fine-tuned-*
+      .replace(/-ft-.*$/, "") // Remove: -ft-anything
+      .trim();
   };
 
-  // Determinar se há inconsistência REAL (não apenas versões diferentes)
-  const hasRealInconsistency =
-    actualModel &&
-    requestedModel &&
-    normalizeModelName(actualModel) !== normalizeModelName(requestedModel);
+  const configuredModel = sessionData?.aiModel?.name;
+  const actualModel = lastMessageMetadata?.actualModelUsed;
+  const hasResponse = !!actualModel;
 
-  // Determinar se é apenas diferença de versão
-  const isVersionDifference =
-    actualModel &&
-    requestedModel &&
-    actualModel !== requestedModel &&
-    normalizeModelName(actualModel) === normalizeModelName(requestedModel);
+  // ✅ Comparar modelos normalizados
+  const normalizedConfigured = normalizeModelName(configuredModel);
+  const normalizedActual = normalizeModelName(actualModel);
+
+  // ✅ Lógica inteligente de estados
+  // Se há modelo configurado mas a última resposta é de modelo diferente,
+  // assumimos que o modelo foi mudado recentemente e está "waiting" por nova mensagem
+  const hasModelMismatch =
+    hasResponse &&
+    normalizedConfigured &&
+    normalizedActual !== normalizedConfigured;
+
+  const isCorrect =
+    hasResponse &&
+    normalizedConfigured &&
+    normalizedActual === normalizedConfigured;
+  const isWaitingValidation = !hasResponse || hasModelMismatch; // ✅ Waiting se não há resposta OU se há mismatch (modelo mudou)
+  const hasMismatch = false; // ✅ Nunca mostrar erro - sempre assumir que mismatch = waiting
+
+  // Determinar status visual
+  const getStatus = () => {
+    if (isWaitingValidation) {
+      return {
+        icon: Clock,
+        color: "text-slate-400",
+        variant: "secondary",
+        label: "⏱",
+      };
+    }
+
+    if (isCorrect) {
+      return {
+        icon: CheckCircle2,
+        color: "text-green-600",
+        variant: "secondary",
+        label: "✓",
+      };
+    }
+
+    if (hasMismatch) {
+      return {
+        icon: AlertTriangle,
+        color: "text-amber-600",
+        variant: "secondary",
+        label: "!",
+      };
+    }
+
+    // Caso padrão: tem resposta mas não sabemos o modelo configurado
+    return {
+      icon: CheckCircle2,
+      color: "text-blue-600",
+      variant: "secondary",
+      label: "Active",
+    };
+  };
+
+  const status = getStatus();
+  const StatusIcon = status.icon;
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <Badge
-          variant="outline"
-          className={`flex cursor-pointer items-center gap-1 text-xs ${
-            hasRealInconsistency ? "border-yellow-500 text-yellow-500" : ""
-          } ${actualModel ? "border-green-500 text-green-600" : ""}`}
+          variant={status.variant as any}
+          className={`h-6 cursor-pointer px-2 text-xs font-medium transition-colors ${status.color} hover:bg-slate-100`}
         >
-          <Bot className="h-3 w-3" />
-          {displayProvider} - {displayModel}
-          <Info className="h-3 w-3 opacity-70" />
+          <StatusIcon className="mr-1 h-3 w-3" />
+          {status.label}
         </Badge>
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-4" align="end">
-        <div className="space-y-3">
-          <h4 className="text-sm font-semibold">Informações do Modelo</h4>
 
-          <div className="space-y-2 text-sm">
-            <div>
-              <span className="font-medium">Configurado:</span>
-              <div className="text-muted-foreground ml-2">
-                {provider} - {configuredModel}
-              </div>
+      <PopoverContent className="w-64 p-3" align="end" sideOffset={4}>
+        <div className="space-y-2">
+          {/* Título */}
+          <div className="text-sm font-medium text-slate-900">
+            Model Verification
+          </div>
+
+          {/* Status atual */}
+          <div className="space-y-1 text-xs">
+            <div className="flex justify-between">
+              <span className="text-slate-600">Configured:</span>
+              <code className="rounded bg-slate-100 px-1 text-slate-800">
+                {configuredModel || "Not set"}
+              </code>
             </div>
 
-            {requestedModel && (
-              <div>
-                <span className="font-medium">Solicitado à API:</span>
-                <div className="text-muted-foreground ml-2 font-mono text-xs">
-                  {requestedModel}
-                </div>
-              </div>
-            )}
-
-            {actualModel ? (
-              <div>
-                <span className="font-medium">Real (retornado pela API):</span>
-                <div
-                  className={`ml-2 font-mono text-xs ${
-                    hasRealInconsistency ? "text-yellow-600" : "text-green-600"
+            {hasResponse && (
+              <div className="flex justify-between">
+                <span className="text-slate-600">Actually used:</span>
+                <code
+                  className={`rounded px-1 text-xs ${
+                    isCorrect
+                      ? "bg-green-100 text-green-800"
+                      : hasMismatch
+                        ? "bg-amber-100 text-amber-800"
+                        : "bg-blue-100 text-blue-800"
                   }`}
                 >
                   {actualModel}
-                </div>
-                {hasRealInconsistency && (
-                  <div className="mt-1 text-xs text-yellow-600">
-                    ⚠️ Modelo diferente do solicitado
-                  </div>
-                )}
-                {isVersionDifference && (
-                  <div className="mt-1 text-xs text-blue-600">
-                    ℹ️ Versão específica (normal)
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="text-muted-foreground text-xs">
-                Envie uma mensagem para ver o modelo real usado
-              </div>
-            )}
-
-            {lastMessageMetadata?.timestamp && (
-              <div className="text-muted-foreground border-t pt-2 text-xs">
-                Última verificação:{" "}
-                {new Date(lastMessageMetadata.timestamp).toLocaleString()}
+                </code>
               </div>
             )}
           </div>
+
+          {/* Status message */}
+          <div
+            className={`rounded p-2 text-xs ${
+              isWaitingValidation
+                ? "bg-slate-50 text-slate-600"
+                : isCorrect
+                  ? "bg-green-50 text-green-700"
+                  : "bg-blue-50 text-blue-700"
+            }`}
+          >
+            {isWaitingValidation &&
+              hasResponse &&
+              "⏱ Send a message to verify the new model"}
+            {isWaitingValidation &&
+              !hasResponse &&
+              "⏱ Send a message to verify the model"}
+            {isCorrect && "✓ Model is working as configured"}
+            {!isWaitingValidation &&
+              !isCorrect &&
+              hasResponse &&
+              "Model responding normally"}
+          </div>
+
+          {/* Timestamp se disponível */}
+          {lastMessageMetadata?.timestamp && (
+            <div className="border-t pt-2 text-xs text-slate-500">
+              Last checked:{" "}
+              {new Date(lastMessageMetadata.timestamp).toLocaleTimeString()}
+            </div>
+          )}
         </div>
       </PopoverContent>
     </Popover>

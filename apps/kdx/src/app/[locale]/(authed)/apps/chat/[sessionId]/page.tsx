@@ -35,74 +35,42 @@ export default function ChatSessionPage() {
     { enabled: !!sessionId },
   );
 
-  // ✅ TEMPORARIAMENTE COMENTADO - Buscar última mensagem para obter metadata do modelo real usado
+  // ✅ Buscar última mensagem para obter metadata do modelo real usado
   // @ts-ignore - Ignorando temporariamente erro de TypeScript do tRPC
-  // const messagesQuery = api.app.chat.buscarMensagensTest.useQuery(
-  //   { chatSessionId: sessionId, limite: 1, pagina: 1 },
-  //   { enabled: !!sessionId },
-  // );
+  const messagesQuery = api.app.chat.buscarMensagensTest.useQuery(
+    {
+      chatSessionId: sessionId,
+      limite: 1,
+      pagina: 1,
+      ordem: "desc", // ✅ Buscar mensagem mais recente primeiro
+    },
+    { enabled: !!sessionId },
+  );
 
-  // ✅ TEMPORARIAMENTE COMENTADO - Extrair metadata da última mensagem
-  // const lastMessage = messagesQuery.data?.mensagens?.[0];
-  // const lastMessageMetadata = lastMessage?.metadata ? {
-  //   actualModelUsed: lastMessage.metadata.model,
-  //   requestedModel: lastMessage.metadata.requestedModel || lastMessage.metadata.model,
-  //   providerId: lastMessage.metadata.providerId,
-  //   timestamp: lastMessage.createdAt,
-  // } : undefined;
-  const lastMessageMetadata = undefined;
+  // ✅ Extrair metadata da última mensagem
+  const lastMessage = messagesQuery.data?.messages?.[0];
+  const lastMessageMetadata = lastMessage?.metadata
+    ? {
+        actualModelUsed: lastMessage.metadata.actualModelUsed,
+        requestedModel: lastMessage.metadata.requestedModel,
+        providerId: lastMessage.metadata.providerId,
+        timestamp: lastMessage.createdAt,
+      }
+    : undefined;
 
-  // ✅ Utils para invalidação manual
-  const utils = api.useUtils();
-
-  // ✅ Mutation para atualizar modelo da sessão com optimistic updates
+  // ✅ Mutation para atualizar modelo da sessão
   // @ts-ignore - Ignorando temporariamente erro de TypeScript do tRPC
   const updateSessionMutation = api.app.chat.atualizarSession.useMutation({
-    onMutate: async (variables) => {
-      // ✅ Optimistic update - cancela queries em andamento
-      await utils.app.chat.buscarSession.cancel({ sessionId });
-
-      // ✅ Snapshot do estado anterior
-      const previousSession = utils.app.chat.buscarSession.getData({
-        sessionId,
-      });
-
-      // ✅ Atualiza otimisticamente o cache
-      if (previousSession) {
-        utils.app.chat.buscarSession.setData(
-          { sessionId },
-          {
-            ...previousSession,
-            aiModelId: variables.aiModelId,
-          },
-        );
-      }
-
-      console.log(
-        `⚡ [OPTIMISTIC] Atualizando modelo instantaneamente: ${variables.aiModelId}`,
-      );
-
-      return { previousSession };
-    },
     onSuccess: () => {
       toast.success("Modelo atualizado com sucesso!");
+      // ✅ Invalidar queries para atualizar dados
+      sessionQuery.refetch();
+      messagesQuery.refetch(); // ✅ Também refazer busca de mensagens
       console.log("✅ [CHAT] Modelo da sessão confirmado no servidor");
     },
-    onError: (error: any, variables, context) => {
-      // ✅ Reverter optimistic update em caso de erro
-      if (context?.previousSession) {
-        utils.app.chat.buscarSession.setData(
-          { sessionId },
-          context.previousSession,
-        );
-      }
-
+    onError: (error: any) => {
       toast.error("Erro ao atualizar modelo: " + error.message);
       console.error("❌ [CHAT] Erro ao atualizar modelo da sessão:", error);
-    },
-    onSettled: () => {
-      // ✅ Invalidar e refetch para garantir sincronização
-      utils.app.chat.buscarSession.invalidate({ sessionId });
     },
   });
 
@@ -122,10 +90,15 @@ export default function ChatSessionPage() {
     selectedModelId,
   ]);
 
-  const handleSessionSelect = (newSessionId: string) => {
-    setSelectedSessionId(newSessionId);
-    // Navegar para a nova sessão usando router
-    router.push(`/apps/chat/${newSessionId}`);
+  const handleSessionSelect = (newSessionId: string | undefined) => {
+    if (newSessionId) {
+      setSelectedSessionId(newSessionId);
+      // Navegar para a nova sessão usando router
+      router.push(`/apps/chat/${newSessionId}`);
+    } else {
+      // ✅ Navegar para a página principal quando for "Novo Chat"
+      router.push("/apps/chat");
+    }
   };
 
   const handleModelSelect = (modelId: string) => {

@@ -345,12 +345,31 @@ export async function autoCreateSessionWithMessageHandler({
           aiResponse.choices?.[0]?.message?.content ||
           "Desculpe, não consegui gerar uma resposta.";
 
-        // Salvar resposta da IA
+        // ✅ Extrair modelo retornado pela API
+        const actualModelUsed = aiResponse.model || modelName;
+
+        // ✅ Criar metadata com informações do modelo
+        const messageMetadata = {
+          requestedModel: modelName,
+          actualModelUsed: actualModelUsed,
+          providerId: preferredModel.providerId,
+          providerName: preferredModel.provider?.name,
+          usage: aiResponse.usage || null,
+          timestamp: new Date().toISOString(),
+        };
+
+        console.log(
+          `🔍 [AUTO_CREATE_METADATA] Salvando metadata:`,
+          messageMetadata,
+        );
+
+        // Salvar resposta da IA com metadata
         aiMessage = await chatRepository.ChatMessageRepository.create({
           chatSessionId: session.id,
           senderRole: "ai",
           content: aiContent,
           status: "ok",
+          metadata: messageMetadata,
         });
 
         console.log("✅ [AUTO_CREATE] Resposta da IA processada");

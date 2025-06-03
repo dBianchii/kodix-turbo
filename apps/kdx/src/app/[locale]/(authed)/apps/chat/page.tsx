@@ -56,16 +56,6 @@ export default function ChatPage() {
   // ✅ Hook para gerenciar configurações do Chat no team
   const { saveLastSelectedModel, isSaving, config } = useChatConfig();
 
-  // ✅ Debug logs do useChatConfig
-  useEffect(() => {
-    console.log("🔧 [CHAT] Estado do useChatConfig:", {
-      isSaving,
-      config,
-      lastSelectedModelId: config.lastSelectedModelId,
-      hasConfig: !!config,
-    });
-  }, [isSaving, config]);
-
   // ✅ Carregar modelo preferido (para quando não há sessão selecionada)
   const {
     modelId: preferredModelId,
@@ -75,26 +65,6 @@ export default function ChatPage() {
     refetch: refetchPreferredModel,
   } = useChatPreferredModel();
 
-  // ✅ Debug logs
-  useEffect(() => {
-    console.log("🔧 [CHAT] Estado do modelo preferido:", {
-      preferredModelId,
-      isReady,
-      isLoading,
-      error: preferredError,
-      selectedSessionId,
-      configLastSelected: config.lastSelectedModelId,
-      shouldUseConfig: !selectedSessionId && config.lastSelectedModelId,
-    });
-  }, [
-    preferredModelId,
-    isReady,
-    isLoading,
-    preferredError,
-    selectedSessionId,
-    config.lastSelectedModelId,
-  ]);
-
   // ✅ Buscar dados da sessão para obter o modelo da sessão selecionada
   // @ts-ignore - Ignorando temporariamente erro de TypeScript do tRPC
   const sessionQuery = api.app.chat.buscarSession.useQuery(
@@ -102,22 +72,28 @@ export default function ChatPage() {
     { enabled: !!selectedSessionId },
   );
 
-  // ✅ TEMPORARIAMENTE COMENTADO - Buscar última mensagem para obter metadata do modelo real usado (só quando há sessão)
+  // ✅ Buscar última mensagem para obter metadata do modelo real usado (só quando há sessão)
   // @ts-ignore - Ignorando temporariamente erro de TypeScript do tRPC
-  // const messagesQuery = api.app.chat.buscarMensagensTest.useQuery(
-  //   { chatSessionId: selectedSessionId!, limite: 1, pagina: 1 },
-  //   { enabled: !!selectedSessionId },
-  // );
+  const messagesQuery = api.app.chat.buscarMensagensTest.useQuery(
+    {
+      chatSessionId: selectedSessionId!,
+      limite: 1,
+      pagina: 1,
+      ordem: "desc", // ✅ Buscar mensagem mais recente primeiro
+    },
+    { enabled: !!selectedSessionId },
+  );
 
-  // ✅ TEMPORARIAMENTE COMENTADO - Extrair metadata da última mensagem
-  // const lastMessage = messagesQuery.data?.mensagens?.[0];
-  // const lastMessageMetadata = lastMessage?.metadata ? {
-  //   actualModelUsed: lastMessage.metadata.model,
-  //   requestedModel: lastMessage.metadata.requestedModel || lastMessage.metadata.model,
-  //   providerId: lastMessage.metadata.providerId,
-  //   timestamp: lastMessage.createdAt,
-  // } : undefined;
-  const lastMessageMetadata = undefined;
+  // ✅ Extrair metadata da última mensagem
+  const lastMessage = messagesQuery.data?.messages?.[0];
+  const lastMessageMetadata = lastMessage?.metadata
+    ? {
+        actualModelUsed: lastMessage.metadata.actualModelUsed,
+        requestedModel: lastMessage.metadata.requestedModel,
+        providerId: lastMessage.metadata.providerId,
+        timestamp: lastMessage.createdAt,
+      }
+    : undefined;
 
   // ✅ Mutation para atualizar modelo da sessão (quando há sessão selecionada)
   // @ts-ignore - Ignorando temporariamente erro de TypeScript do tRPC
@@ -126,6 +102,7 @@ export default function ChatPage() {
       toast.success("Modelo da sessão atualizado com sucesso!");
       // Invalidar queries para atualizar dados
       sessionQuery.refetch();
+      messagesQuery.refetch(); // ✅ Também refazer busca de mensagens
     },
     onError: (error: any) => {
       toast.error("Erro ao atualizar modelo: " + error.message);
