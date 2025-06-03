@@ -28,6 +28,8 @@ await callAiStudioEndpoint("getModels", teamId, params, headers);
 
 ---
 
+---
+
 ## 🎯 Architecture Rules
 
 ### File Organization
