@@ -35,7 +35,26 @@ export async function POST(request: NextRequest) {
     console.log(`   • ID: ${session.id}`);
     console.log(`   • Título: ${session.title}`);
     console.log(`   • aiModelId: ${session.aiModelId || "❌ NULL/UNDEFINED"}`);
+    console.log(`   • aiAgentId: ${session.aiAgentId || "❌ NULL/UNDEFINED"}`);
     console.log(`   • teamId: ${session.teamId}`);
+
+    // Carregar agente se existir na sessão
+    let agent = null;
+    if (session.aiAgentId) {
+      agent = await aiStudioRepository.AiAgentRepository.findById(
+        session.aiAgentId,
+      );
+      if (agent) {
+        console.log(`🤖 [DEBUG] Agente carregado: ${agent.name}`);
+        console.log(
+          `📝 [DEBUG] Instruções do agente: ${agent.instructions.substring(0, 100)}...`,
+        );
+      } else {
+        console.log(
+          `❌ [DEBUG] Agente com ID ${session.aiAgentId} não encontrado`,
+        );
+      }
+    }
 
     // Criar mensagem do usuário
     const userMessage = await chatRepository.ChatMessageRepository.create({
@@ -93,11 +112,20 @@ export async function POST(request: NextRequest) {
     const userLocale = detectUserLocale(request);
 
     // System prompts multilíngues
-    const systemPrompts = {
+    const baseSystemPrompts = {
       "pt-BR":
         "Você é um assistente útil e responde sempre em português brasileiro. Seja claro, objetivo e mantenha um tom profissional e amigável.",
       en: "You are a helpful assistant and always respond in English. Be clear, objective, and maintain a professional and friendly tone.",
     };
+
+    // Construir system prompt considerando instruções do agente
+    let systemPrompt =
+      baseSystemPrompts[userLocale] || baseSystemPrompts["pt-BR"];
+
+    if (agent?.instructions) {
+      console.log("🤖 [API] Incluindo instruções do agente no system prompt");
+      systemPrompt = `${agent.instructions}\n\n${systemPrompt}`;
+    }
 
     // Adicionar system prompt no idioma correto se não existir
     const hasSystemPrompt = allMessages.some(
@@ -106,9 +134,11 @@ export async function POST(request: NextRequest) {
     if (!hasSystemPrompt) {
       formattedMessages.push({
         role: "system",
-        content: systemPrompts[userLocale] || systemPrompts["pt-BR"],
+        content: systemPrompt,
       });
-      console.log(`🌍 [API] System prompt adicionado em: ${userLocale}`);
+      console.log(
+        `🌍 [API] System prompt adicionado em: ${userLocale}${agent ? " (com instruções do agente)" : ""}`,
+      );
     }
 
     for (const msg of allMessages) {

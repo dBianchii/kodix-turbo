@@ -29,6 +29,50 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
   const queryClient = useQueryClient();
   const t = useTranslations();
 
+  // ✅ NOVO: Controle de cancelamento de stream
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const currentSessionIdRef = useRef<string | undefined>(sessionId);
+
+  // ✅ NOVO: Atualizar referência da sessão atual
+  useEffect(() => {
+    currentSessionIdRef.current = sessionId;
+  }, [sessionId]);
+
+  // ✅ NOVO: Cancelar stream ativo ao mudar de sessão
+  useEffect(() => {
+    return () => {
+      // Cancelar qualquer stream ativo quando o componente for desmontado ou sessionId mudar
+      if (abortControllerRef.current) {
+        console.log("🚫 Cancelando stream ativo ao mudar sessão");
+        abortControllerRef.current.abort();
+        abortControllerRef.current = null;
+      }
+    };
+  }, [sessionId]);
+
+  // ✅ NOVO: Limpar estados ao mudar de sessão
+  useEffect(() => {
+    if (sessionId) {
+      // Cancelar stream ativo ao mudar de sessão
+      if (abortControllerRef.current) {
+        console.log(
+          "🔄 Mudança de sessão detectada, cancelando stream anterior",
+        );
+        abortControllerRef.current.abort();
+        abortControllerRef.current = null;
+      }
+      // Limpar estados de loading e erro
+      setIsLoading(false);
+      setError(null);
+
+      // ✅ CORREÇÃO: Invalidar cache ao mudar de sessão
+      console.log(`🔄 Invalidando cache ao mudar para sessão: ${sessionId}`);
+      queryClient.invalidateQueries({
+        queryKey: ["chat", "messages", sessionId],
+      });
+    }
+  }, [sessionId, queryClient]);
+
   // ✅ CORRIGIDO: Usar tRPC hooks como no app-sidebar
   const messagesQuery = api.app.chat.buscarMensagensTest.useQuery(
     {
@@ -40,6 +84,10 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
     {
       enabled: !!sessionId,
       refetchOnWindowFocus: false,
+      // ✅ NOVO: Configurações para garantir dados frescos
+      staleTime: 0, // Sempre considerar dados como stale
+      gcTime: 5 * 60 * 1000, // 5 minutos de cache
+      refetchOnMount: true, // Sempre refetch ao montar
     },
   );
 
@@ -78,6 +126,16 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
     setIsLoading(true);
     setError(null);
 
+    // ✅ NOVO: Cancelar stream anterior se existir
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    // ✅ NOVO: Criar novo AbortController para este stream
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+    const currentSessionId = sessionId; // Capturar sessionId atual
+
     const userMessage: ChatMessage = { role: "user", content: text };
 
     // Adicionar mensagem do usuário imediatamente
@@ -99,6 +157,8 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
           content: text,
           useAgent: true,
         }),
+        // ✅ NOVO: Adicionar signal para cancelamento
+        signal: abortController.signal,
       });
 
       console.log("📥 Resposta recebida, status:", response.status);
@@ -127,6 +187,18 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
       let receivedText = "";
 
       while (true) {
+        // ✅ NOVO: Verificar se foi cancelado ou sessão mudou
+        if (abortController.signal.aborted) {
+          console.log("🚫 Stream cancelado");
+          break;
+        }
+
+        // ✅ NOVO: Verificar se ainda estamos na mesma sessão
+        if (currentSessionIdRef.current !== currentSessionId) {
+          console.log("🔄 Sessão mudou durante o stream, cancelando");
+          break;
+        }
+
         const { done, value } = await reader.read();
         if (done) {
           console.log("✅ Stream concluído");
@@ -138,19 +210,25 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
           const chunk = decoder.decode(value, { stream: true });
           receivedText += chunk;
 
-          setMessages((prev) => {
-            if (prev.length === 0) {
-              return [{ role: "assistant", content: chunk }];
-            }
+          // ✅ NOVO: Verificar novamente antes de atualizar o estado
+          if (
+            currentSessionIdRef.current === currentSessionId &&
+            !abortController.signal.aborted
+          ) {
+            setMessages((prev) => {
+              if (prev.length === 0) {
+                return [{ role: "assistant", content: chunk }];
+              }
 
-            const others = prev.slice(0, -1);
-            const lastMessage = prev[prev.length - 1];
-            const updatedAssistantMessage: ChatMessage = {
-              role: "assistant",
-              content: lastMessage ? lastMessage.content + chunk : chunk,
-            };
-            return [...others, updatedAssistantMessage];
-          });
+              const others = prev.slice(0, -1);
+              const lastMessage = prev[prev.length - 1];
+              const updatedAssistantMessage: ChatMessage = {
+                role: "assistant",
+                content: lastMessage ? lastMessage.content + chunk : chunk,
+              };
+              return [...others, updatedAssistantMessage];
+            });
+          }
         } catch (decodeError) {
           console.warn("⚠️ Erro ao decodificar chunk, ignorando:", decodeError);
           // Continuar o streaming mesmo se um chunk específico falhar
@@ -163,29 +241,65 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
       }
 
       // Invalidar cache das mensagens para recarregar do banco
-      if (sessionId) {
+      if (sessionId && currentSessionIdRef.current === currentSessionId) {
         queryClient.invalidateQueries({
           queryKey: ["chat", "messages", sessionId],
         });
       }
     } catch (error) {
+      // ✅ NOVO: Ignorar erros de cancelamento
+      if (error instanceof DOMException && error.name === "AbortError") {
+        console.log("🚫 Request cancelado pelo usuário");
+        // ✅ CORREÇÃO: Sempre invalidar cache mesmo quando cancelado
+        if (sessionId) {
+          console.log("🔄 Invalidando cache após cancelamento do stream");
+          queryClient.invalidateQueries({
+            queryKey: ["chat", "messages", sessionId],
+          });
+        }
+        return;
+      }
+
       const err = error instanceof Error ? error : new Error(String(error));
       console.error("🔴 Erro ao enviar mensagem:", err);
-      setError(`${t("apps.chat.messages.error")}: ${err.message}`);
-      setMessages((prev) => {
-        // Remove a mensagem do assistente vazia
-        const withoutEmptyAssistant = prev.slice(0, -1);
-        const errorMessage: ChatMessage = {
-          role: "assistant",
-          content: t("apps.chat.messages.errorOccurred", {
-            error: err.message,
-          }),
-        };
-        return [...withoutEmptyAssistant, errorMessage];
-      });
+
+      // ✅ NOVO: Só mostrar erro se ainda estamos na mesma sessão
+      if (currentSessionIdRef.current === currentSessionId) {
+        setError(`${t("apps.chat.messages.error")}: ${err.message}`);
+        setMessages((prev) => {
+          // Remove a mensagem do assistente vazia
+          const withoutEmptyAssistant = prev.slice(0, -1);
+          const errorMessage: ChatMessage = {
+            role: "assistant",
+            content: t("apps.chat.messages.errorOccurred", {
+              error: err.message,
+            }),
+          };
+          return [...withoutEmptyAssistant, errorMessage];
+        });
+      }
     } finally {
       console.log("🔄 Finalizando requisição");
-      setIsLoading(false);
+
+      // ✅ CORREÇÃO: Sempre invalidar cache para garantir sincronização
+      if (sessionId) {
+        console.log(
+          "🔄 Invalidando cache no finally para garantir sincronização",
+        );
+        queryClient.invalidateQueries({
+          queryKey: ["chat", "messages", sessionId],
+        });
+      }
+
+      // ✅ NOVO: Só atualizar estado se ainda estamos na mesma sessão
+      if (currentSessionIdRef.current === currentSessionId) {
+        setIsLoading(false);
+      }
+
+      // ✅ NOVO: Limpar referência do AbortController
+      if (abortControllerRef.current === abortController) {
+        abortControllerRef.current = null;
+      }
     }
   }
 

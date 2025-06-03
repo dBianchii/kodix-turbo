@@ -26,6 +26,7 @@ Esta seção contém **guias técnicos** e **padrões de desenvolvimento** para 
 ### **📋 Padrões e Convenções**
 
 - **[Coding Standards](./coding-standards.md)** - Padrões de código e convenções
+- **[SubApp Documentation Guide](./subapp-documentation-guide.md)** - 📚 **CONSOLIDADO!** Guia completo de documentação para SubApps
 - **[Internationalization](./internationalization-i18n.md)** - Setup de i18n e traduções
 - **[Workflows](./workflows.md)** - Git workflows e processos
 
@@ -60,15 +61,16 @@ Esta seção contém **guias técnicos** e **padrões de desenvolvimento** para 
 
 ## 📋 Referência Rápida
 
-| Objetivo                    | Documento                                                      |
-| --------------------------- | -------------------------------------------------------------- |
-| **Setup de ambiente**       | [Development Setup](./development-setup.md)                    |
-| **Trabalhar com SubApps**   | [SubApp Architecture](./subapp-architecture.md) **🚨 CRÍTICO** |
-| **Desenvolver backend**     | [Backend Guide](./backend-guide.md)                            |
-| **Desenvolver frontend**    | [Frontend Guide](./frontend-guide.md)                          |
-| **Padrões de código**       | [Coding Standards](./coding-standards.md)                      |
-| **Setup de traduções**      | [Internationalization](./internationalization-i18n.md)         |
-| **Ver scripts disponíveis** | [Scripts Reference](./scripts-reference.md)                    |
+| Objetivo                    | Documento                                                                         |
+| --------------------------- | --------------------------------------------------------------------------------- |
+| **Setup de ambiente**       | [Development Setup](./development-setup.md)                                       |
+| **Trabalhar com SubApps**   | [SubApp Architecture](./subapp-architecture.md) **🚨 CRÍTICO**                    |
+| **Documentar SubApps**      | [SubApp Documentation Guide](./subapp-documentation-guide.md) **📚 CONSOLIDADO!** |
+| **Desenvolver backend**     | [Backend Guide](./backend-guide.md)                                               |
+| **Desenvolver frontend**    | [Frontend Guide](./frontend-guide.md)                                             |
+| **Padrões de código**       | [Coding Standards](./coding-standards.md)                                         |
+| **Setup de traduções**      | [Internationalization](./internationalization-i18n.md)                            |
+| **Ver scripts disponíveis** | [Scripts Reference](./scripts-reference.md)                                       |
 
 ---
 

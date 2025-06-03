@@ -1,3 +1,25 @@
+/**
+ * 💬 CHAT SUBAPP - Página Principal
+ *
+ * 📚 DOCUMENTAÇÃO:
+ * - Arquitetura SubApp: @docs/architecture/subapp-architecture.md
+ * - Chat Overview: @docs/subapps/chat/README.md
+ * - Chat Features: @docs/subapps/chat/Chat_Session_Edit_Feature.md
+ * - Team Config: @docs/subapps/chat/Chat_Team_Config_System.md
+ * - Preferred Model: @docs/subapps/chat/Chat_Preferred_Model_Endpoint.md
+ * - Streaming: @docs/subapps/chat/Chat_Streaming_Implementation.md
+ *
+ * 🔗 SUBPASTA DOCUMENTAÇÃO: docs/subapps/chat/
+ *
+ * 🎯 FUNCIONALIDADES:
+ * - Conversas em tempo real com streaming
+ * - Sessões persistentes com histórico
+ * - Múltiplos provedores de IA (OpenAI, Anthropic, Google, etc.)
+ * - Edição de mensagens
+ * - Configurações por team com modelo padrão persistente
+ * - Interface responsiva estilo ChatGPT
+ */
+
 "use client";
 
 import { useEffect, useState } from "react";

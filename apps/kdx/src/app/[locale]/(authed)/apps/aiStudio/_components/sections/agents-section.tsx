@@ -183,7 +183,10 @@ export function AgentsSection() {
     createAgentMutation.mutate({
       name: data.name,
       instructions: data.instructions,
-      libraryId: data.libraryId === "none" ? undefined : data.libraryId,
+      libraryId:
+        data.libraryId === "none" || data.libraryId === "" || !data.libraryId
+          ? undefined
+          : data.libraryId,
     });
   };
 
@@ -194,7 +197,10 @@ export function AgentsSection() {
       id: agentToEdit.id,
       name: data.name,
       instructions: data.instructions,
-      libraryId: data.libraryId === "none" ? undefined : data.libraryId,
+      libraryId:
+        data.libraryId === "none" || data.libraryId === "" || !data.libraryId
+          ? undefined
+          : data.libraryId,
     });
   };
 
