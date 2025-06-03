@@ -35,6 +35,10 @@ export function ModelInfoBadge({
   const actualModel = lastMessageMetadata?.actualModelUsed;
   const requestedModel = lastMessageMetadata?.requestedModel;
 
+  // ✅ Usar modelo real quando disponível, senão usar configurado
+  const displayModel = actualModel || configuredModel;
+  const displayProvider = provider;
+
   // Função para normalizar nomes de modelos (remover versões/datas)
   const normalizeModelName = (modelName: string) => {
     if (!modelName) return "";
@@ -71,10 +75,10 @@ export function ModelInfoBadge({
           variant="outline"
           className={`flex cursor-pointer items-center gap-1 text-xs ${
             hasRealInconsistency ? "border-yellow-500 text-yellow-500" : ""
-          }`}
+          } ${actualModel ? "border-green-500 text-green-600" : ""}`}
         >
           <Bot className="h-3 w-3" />
-          {provider} - {configuredModel}
+          {displayProvider} - {displayModel}
           <Info className="h-3 w-3 opacity-70" />
         </Badge>
       </PopoverTrigger>

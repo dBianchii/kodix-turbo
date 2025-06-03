@@ -5,12 +5,11 @@ import { toast } from "sonner";
 import type { chatConfigSchema } from "@kdx/shared";
 import { chatAppId } from "@kdx/shared";
 
-import { useTRPC } from "~/trpc/react";
+import { api } from "~/trpc/react";
 
 type ChatConfig = z.infer<typeof chatConfigSchema>;
 
 export function useChatConfig() {
-  const trpc = useTRPC();
   const queryClient = useQueryClient();
 
   console.log("🔧 [useChatConfig] Hook inicializado");
@@ -20,11 +19,13 @@ export function useChatConfig() {
     data: config,
     isLoading,
     error,
-  } = useQuery({
-    ...trpc.app.getConfig.queryOptions({ appId: chatAppId }),
-    staleTime: 5 * 60 * 1000, // 5 minutos
-    refetchOnWindowFocus: false,
-  });
+  } = api.app.getConfig.useQuery(
+    { appId: chatAppId },
+    {
+      staleTime: 5 * 60 * 1000, // 5 minutos
+      refetchOnWindowFocus: false,
+    },
+  );
 
   console.log("📊 [useChatConfig] Query state:", { config, isLoading, error });
 
@@ -54,27 +55,30 @@ export function useChatConfig() {
   console.log("🔀 [useChatConfig] Merged config:", mergedConfig);
 
   // Mutation para salvar configuração
-  const saveConfigMutation = useMutation(
-    trpc.app.saveConfig.mutationOptions({
-      onSuccess: (data) => {
-        queryClient.invalidateQueries(trpc.app.getConfig.pathFilter());
-        console.log("✅ [useChatConfig] Chat config saved successfully", data);
-        toast.success("Configuração salva com sucesso!");
-      },
-      onError: (error: any) => {
-        console.error("❌ [useChatConfig] Error saving chat config:", error);
-        console.error("❌ [useChatConfig] Error details:", {
-          message: error.message,
-          code: error.code,
-          data: error.data,
-          shape: error.shape,
-        });
-        toast.error(
-          `Erro ao salvar configurações: ${error.message || "Erro desconhecido"}`,
-        );
-      },
-    }),
-  );
+  const saveConfigMutation = api.app.saveConfig.useMutation({
+    onSuccess: (data: any) => {
+      queryClient.invalidateQueries({
+        queryKey: [
+          ["app", "getConfig"],
+          { input: { appId: chatAppId }, type: "query" },
+        ],
+      });
+      console.log("✅ [useChatConfig] Chat config saved successfully", data);
+      toast.success("Configuração salva com sucesso!");
+    },
+    onError: (error: any) => {
+      console.error("❌ [useChatConfig] Error saving chat config:", error);
+      console.error("❌ [useChatConfig] Error details:", {
+        message: error.message,
+        code: error.code,
+        data: error.data,
+        shape: error.shape,
+      });
+      toast.error(
+        `Erro ao salvar configurações: ${error.message || "Erro desconhecido"}`,
+      );
+    },
+  });
 
   // Função para salvar configuração completa
   const saveConfig = (newConfig: Partial<ChatConfig>) => {

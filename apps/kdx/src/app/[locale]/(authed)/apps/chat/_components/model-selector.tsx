@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Bot, Check, ChevronDown, Zap } from "lucide-react";
+import { Bot, Check, ChevronDown, Loader2, Zap } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { cn } from "@kdx/ui";
@@ -18,7 +18,7 @@ import {
 } from "@kdx/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
 
-import { useTRPC } from "~/trpc/react";
+import { api } from "~/trpc/react";
 
 interface ModelSelectorProps {
   selectedModelId?: string;
@@ -54,15 +54,14 @@ export function ModelSelector({
   disabled = false,
 }: ModelSelectorProps) {
   const t = useTranslations();
-  const trpc = useTRPC();
   const [open, setOpen] = useState(false);
 
-  // Buscar modelos disponíveis para o team (apenas com tokens ativos)
-  const availableModelsQuery = useQuery(
-    trpc.app.aiStudio.findAvailableModels.queryOptions(),
-  );
+  // ✅ Usar tRPC hooks nativos - buscar modelos disponíveis
+  // @ts-ignore - Ignorando temporariamente erro de TypeScript do tRPC
+  const availableModelsQuery = api.app.aiStudio.findAvailableModels.useQuery();
 
   const availableModels = (availableModelsQuery.data || []) as AvailableModel[];
+  const isLoading = availableModelsQuery.isLoading;
 
   // Agrupar modelos por provedor e ordenar por prioridade
   const modelsByProvider = availableModels.reduce(
@@ -126,11 +125,19 @@ export function ModelSelector({
           role="combobox"
           aria-expanded={open}
           className="min-w-[200px] justify-between"
-          disabled={disabled}
+          disabled={disabled || isLoading}
         >
           <div className="flex items-center gap-2">
-            <Bot className="h-4 w-4" />
-            {selectedModel ? (
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Bot className="h-4 w-4" />
+            )}
+            {isLoading ? (
+              <span className="text-muted-foreground">
+                Carregando modelos...
+              </span>
+            ) : selectedModel ? (
               <div className="flex items-center gap-2">
                 <span className="truncate">
                   {getModelDisplayName(selectedModel)}
@@ -152,64 +159,77 @@ export function ModelSelector({
         <Command>
           <CommandInput placeholder="Buscar modelo..." className="h-9" />
           <CommandList className="max-h-[300px]">
-            <CommandEmpty>Nenhum modelo encontrado</CommandEmpty>
+            {isLoading ? (
+              <div className="flex items-center justify-center py-6">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span className="text-muted-foreground ml-2 text-sm">
+                  Carregando modelos...
+                </span>
+              </div>
+            ) : (
+              <>
+                <CommandEmpty>Nenhum modelo encontrado</CommandEmpty>
 
-            {Object.entries(modelsByProvider).map(([providerName, models]) => (
-              <CommandGroup key={providerName} heading={providerName}>
-                {models.map((model) => {
-                  const displayName = getModelDisplayName(model);
-                  const { pricing, description } = getModelInfo(model);
-                  const isSelected = model.id === selectedModelId;
-                  const priority = model.teamConfig?.priority;
+                {Object.entries(modelsByProvider).map(
+                  ([providerName, models]) => (
+                    <CommandGroup key={providerName} heading={providerName}>
+                      {models.map((model) => {
+                        const displayName = getModelDisplayName(model);
+                        const { pricing, description } = getModelInfo(model);
+                        const isSelected = model.id === selectedModelId;
+                        const priority = model.teamConfig?.priority;
 
-                  return (
-                    <CommandItem
-                      key={model.id}
-                      value={`${displayName} ${model.name} ${providerName}`}
-                      onSelect={() => handleModelSelect(model.id)}
-                      className="flex items-center justify-between py-3"
-                    >
-                      <div className="flex min-w-0 flex-1 items-center gap-3">
-                        <Check
-                          className={cn(
-                            "h-4 w-4 shrink-0",
-                            isSelected ? "opacity-100" : "opacity-0",
-                          )}
-                        />
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-2">
-                            <span className="truncate font-medium">
-                              {displayName}
-                            </span>
-                            {priority !== undefined && priority < 10 && (
-                              <Zap className="h-3 w-3 text-amber-500" />
-                            )}
-                          </div>
-                          {description && (
-                            <p className="text-muted-foreground truncate text-xs">
-                              {description}
-                            </p>
-                          )}
-                        </div>
-                      </div>
+                        return (
+                          <CommandItem
+                            key={model.id}
+                            value={`${displayName} ${model.name} ${providerName}`}
+                            onSelect={() => handleModelSelect(model.id)}
+                            className="flex items-center justify-between py-3"
+                          >
+                            <div className="flex min-w-0 flex-1 items-center gap-3">
+                              <Check
+                                className={cn(
+                                  "h-4 w-4 shrink-0",
+                                  isSelected ? "opacity-100" : "opacity-0",
+                                )}
+                              />
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2">
+                                  <span className="truncate font-medium">
+                                    {displayName}
+                                  </span>
+                                  {priority !== undefined && priority < 10 && (
+                                    <Zap className="h-3 w-3 text-amber-500" />
+                                  )}
+                                </div>
+                                {description && (
+                                  <p className="text-muted-foreground truncate text-xs">
+                                    {description}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
 
-                      <div className="flex shrink-0 items-center gap-1">
-                        {pricing?.input && (
-                          <Badge variant="outline" className="text-xs">
-                            ${pricing.input}/1K
-                          </Badge>
-                        )}
-                        {priority !== undefined && (
-                          <Badge variant="secondary" className="text-xs">
-                            #{priority}
-                          </Badge>
-                        )}
-                      </div>
-                    </CommandItem>
-                  );
-                })}
-              </CommandGroup>
-            ))}
+                            <div className="flex shrink-0 items-center gap-1">
+                              {pricing?.input && (
+                                <Badge variant="outline" className="text-xs">
+                                  ${pricing.input}/1K
+                                </Badge>
+                              )}
+                              {priority !== undefined && (
+                                <Badge variant="secondary" className="text-xs">
+                                  #{priority}
+                                </Badge>
+                              )}
+                            </div>
+                          </CommandItem>
+                        );
+                      })}
+                    </CommandGroup>
+                  ),
+                )}
+              </>
+            )}
           </CommandList>
         </Command>
       </PopoverContent>

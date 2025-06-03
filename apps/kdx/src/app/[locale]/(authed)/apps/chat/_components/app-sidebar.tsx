@@ -68,7 +68,7 @@ import { api } from "~/trpc/react";
 
 interface AppSidebarProps {
   selectedSessionId?: string;
-  onSessionSelect?: (sessionId: string) => void;
+  onSessionSelect?: (sessionId: string | undefined) => void;
 }
 
 export function AppSidebar({
@@ -389,7 +389,7 @@ export function AppSidebar({
                   <Button
                     size="sm"
                     variant="ghost"
-                    onClick={() => setShowCreateSession(true)}
+                    onClick={() => onSessionSelect?.(undefined)}
                     disabled={models.length === 0}
                     title={
                       models.length === 0
@@ -418,13 +418,7 @@ export function AppSidebar({
                   <Button
                     size="sm"
                     className="flex-1"
-                    onClick={() => {
-                      setSessionTitle("");
-                      setSelectedAgent("none");
-                      setSelectedModel("");
-                      setSelectedFolderId("none");
-                      setShowCreateSession(true);
-                    }}
+                    onClick={() => onSessionSelect?.(undefined)}
                     disabled={models.length === 0}
                     title={
                       models.length === 0
@@ -1005,7 +999,7 @@ interface FolderItemProps {
   onToggle: () => void;
   onEdit: () => void;
   onDelete: () => void;
-  onSessionSelect?: (sessionId: string) => void;
+  onSessionSelect?: (sessionId: string | undefined) => void;
   onEditSession: (session: any) => void;
   onDeleteSession: (session: any) => void;
 }
