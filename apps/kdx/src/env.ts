@@ -6,7 +6,7 @@ import { env as authEnv } from "@kdx/auth/env";
 
 const requiredInProductionOnly = (string: string | undefined) =>
   !!string || process.env.NODE_ENV !== "production";
-
+//test
 export const env = createEnv({
   extends: [authEnv, vercel()],
   shared: {
