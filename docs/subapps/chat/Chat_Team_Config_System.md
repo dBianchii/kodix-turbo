@@ -4,6 +4,28 @@
 
 O **Chat Team Configuration System** é um sistema avançado de configurações personalizáveis por equipe no Chat App do Kodix. Permite que cada team tenha suas próprias configurações, incluindo o salvamento automático do último modelo de IA selecionado.
 
+**📚 DOCUMENTAÇÃO GERAL:** Este documento detalha a implementação específica do Chat. Para visão geral completa do sistema de configurações (team + usuário), consulte:
+
+**👉 [Sistema de Configurações de SubApps](../../architecture/subapp-configurations-system.md)**
+
+## 🎯 **Configurações Disponíveis no Chat**
+
+### **✅ Configurações de Team** (`appTeamConfig`) - **IMPLEMENTADO**
+
+- Último modelo selecionado por toda a equipe
+- Configurações de IA padrão (tokens, temperatura)
+- Preferências de interface da equipe
+- Comportamentos automáticos
+
+### **⏳ Configurações de Usuário** (`userAppTeamConfig`) - **SCHEMA DEFINIDO**
+
+- Preferências pessoais de modelo
+- Configurações de notificação individuais
+- Tema pessoal (claro/escuro/auto)
+- Tamanho de fonte e modo compacto
+
+**💡 Nota:** As configurações de usuário já têm schema definido, mas ainda não possuem interface implementada.
+
 ## 🏗️ **Arquitetura do Sistema**
 
 ### **Componentes Principais**
@@ -24,7 +46,9 @@ O **Chat Team Configuration System** é um sistema avançado de configurações 
 
 ### **Base: Sistema AppTeamConfig**
 
-O Chat utiliza o sistema **AppTeamConfig** existente no Kodix, seguindo o padrão documentado em `docs/architecture/subapp-team-config.md`.
+O Chat utiliza o sistema **AppTeamConfig** existente no Kodix, seguindo o padrão documentado em:
+
+**👉 [Sistema de Configurações de SubApps](../../architecture/subapp-configurations-system.md)**
 
 ## ⚙️ **Schema de Configuração**
 
@@ -428,7 +452,7 @@ describe("Chat Team Config", () => {
 
 ## 🔗 **Recursos Relacionados**
 
-- **[Sistema AppTeamConfig](../../architecture/subapp-team-config.md)** - Documentação base do sistema
+- **[Sistema de Configurações de SubApps](../../architecture/subapp-configurations-system.md)** - Documentação completa do sistema
 - **[Chat README](./README.md)** - Documentação geral do Chat
 - **[AI Studio](../ai-studio/README.md)** - Gestão de modelos de IA
 - **[Model Selector Component](../../components/model-selector.md)** - Componente de seleção
@@ -456,4 +480,4 @@ console.error("❌ Error saving chat config:", error);
 
 ---
 
-_Este sistema é parte fundamental da personalização por team no Kodix Chat. Para dúvidas ou melhorias, consulte a documentação base do AppTeamConfig._
+_Este sistema é parte fundamental da personalização por team no Kodix Chat. Para dúvidas ou melhorias, consulte a [documentação completa do sistema de configurações](../../architecture/subapp-configurations-system.md)._

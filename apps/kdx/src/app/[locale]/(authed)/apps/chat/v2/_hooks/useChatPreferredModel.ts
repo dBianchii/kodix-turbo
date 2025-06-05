@@ -1,54 +1,92 @@
 import { api } from "~/trpc/react";
+import { useChatUserConfig } from "./useChatUserConfig";
 
 /**
- * Hook para buscar o modelo preferido do team seguindo hierarquia de prioridade:
- * 1ª Prioridade: lastSelectedModelId do Chat Team Config
+ * Hook para buscar o modelo preferido do usuário seguindo hierarquia de prioridade:
+ * 1ª Prioridade: preferredModelId do usuário (via useChatUserConfig)
  * 2ª Prioridade: Modelo padrão do AI Studio (via Service Layer)
  * 3ª Prioridade: Primeiro modelo ativo disponível (via Service Layer)
  *
- * ✅ Implementação respeitando isolamento lógico entre subapps
- * Chat ──Service Layer──> AI Studio Repository ──> Database
+ * ✅ CORRIGIDO: Agora usa useChatUserConfig com escopo de USUÁRIO, não team
+ * Chat ──useChatUserConfig──> userAppTeamConfig ──> Fallback para AI Studio
  */
 export function useChatPreferredModel() {
+  // ✅ USAR useChatUserConfig como fonte principal (configurações de USUÁRIO)
+  const {
+    config,
+    isLoading: isConfigLoading,
+    getPreferredModelId,
+  } = useChatUserConfig();
+
+  // ✅ Fallback para API do Chat apenas se não houver modelo no config de usuário
   // @ts-ignore - Ignorando temporariamente erro de TypeScript do tRPC
-  const query = api.app.chat.getPreferredModel.useQuery(undefined, {
+  const fallbackQuery = api.app.chat.getPreferredModel.useQuery(undefined, {
     staleTime: 5 * 60 * 1000, // Cache por 5 minutos
     refetchOnWindowFocus: false,
+    enabled: !isConfigLoading && !getPreferredModelId(), // Só buscar se não há modelo no config do usuário
     onSuccess: (data: any) => {
-      console.log("✅ [CHAT] Modelo preferido carregado:", data);
+      console.log("✅ [CHAT] Modelo fallback carregado:", data);
     },
     onError: (error: any) => {
-      console.error("❌ [CHAT] Erro ao carregar modelo preferido:", error);
+      console.error("❌ [CHAT] Erro ao carregar modelo fallback:", error);
     },
   });
 
-  const preferredModel = query.data;
-  const isLoading = query.isLoading;
-  const error = query.error;
-  const refetch = query.refetch;
+  // ✅ Determinar o modelo a usar com prioridade
+  const modelFromUserConfig = getPreferredModelId();
+  const modelFromFallback = fallbackQuery.data?.modelId;
+
+  const finalModelId = modelFromUserConfig || modelFromFallback;
+  const source = modelFromUserConfig
+    ? "user_config"
+    : fallbackQuery.data?.source || "unknown";
+
+  console.log("🔄 [useChatPreferredModel] Determinando modelo:", {
+    modelFromUserConfig,
+    modelFromFallback,
+    finalModelId,
+    source,
+    isConfigLoading,
+  });
+
+  const isLoading =
+    isConfigLoading || (!modelFromUserConfig && fallbackQuery.isLoading);
+  const error = fallbackQuery.error;
+  const refetch = () => {
+    // Invalidar ambas as fontes
+    fallbackQuery.refetch();
+  };
 
   return {
-    preferredModel,
+    preferredModel: finalModelId
+      ? {
+          modelId: finalModelId,
+          model: fallbackQuery.data?.model || null,
+          source,
+          teamConfig: fallbackQuery.data?.teamConfig || null,
+          userConfig: config, // ✅ NOVO: Incluir config de usuário
+        }
+      : null,
     isLoading,
     error,
     refetch,
 
     // Helpers para facilitar o uso
-    modelId: preferredModel?.modelId,
-    model: preferredModel?.model,
-    source: preferredModel?.source,
+    modelId: finalModelId,
+    model: fallbackQuery.data?.model || null,
+    source,
 
-    // Verificações úteis
-    isFromChatConfig: preferredModel?.source === "chat_config",
-    isFromAiStudio: preferredModel?.source === "ai_studio_default",
-    isFallback: preferredModel?.source === "first_available",
+    // ✅ Verificações úteis atualizadas
+    isFromUserConfig: source === "user_config", // NOVO
+    isFromAiStudio: source === "ai_studio_default",
+    isFallback: source === "first_available",
 
     // Informações adicionais
-    hasTeamConfig: !!preferredModel?.teamConfig,
-    hasChatConfig: !!preferredModel?.config,
+    hasTeamConfig: !!fallbackQuery.data?.teamConfig,
+    hasUserConfig: !!config, // ✅ NOVO
 
     // Status helpers
-    isReady: !isLoading && !!preferredModel?.modelId,
+    isReady: !isLoading && !!finalModelId,
     hasError: !!error,
   };
 }

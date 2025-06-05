@@ -65,6 +65,7 @@ import { toast } from "@kdx/ui/toast";
 
 import { IconKodixApp } from "~/app/[locale]/_components/app/kodix-icon";
 import { api } from "~/trpc/react";
+import { useChatUserConfig } from "../_hooks/useChatUserConfig";
 
 interface AppSidebarProps {
   selectedSessionId?: string;
@@ -78,6 +79,9 @@ export function AppSidebar({
   const { isMobile } = useSidebar();
   const t = useTranslations();
   const utils = api.useUtils();
+
+  // ✅ CORRIGIDO: Hook para salvar configurações PESSOAIS do usuário (não team)
+  const { savePreferredModel } = useChatUserConfig();
 
   // Estados para modais
   const [showCreateFolder, setShowCreateFolder] = useState(false);
@@ -183,8 +187,12 @@ export function AppSidebar({
   });
 
   const updateSessionMutation = api.app.chat.atualizarSession.useMutation({
-    onSuccess: () => {
+    onSuccess: (data: any) => {
+      console.log("✅ [SIDEBAR] updateSessionMutation SUCCESS:", data);
       utils.app.chat.listarSessions.invalidate();
+      utils.app.chat.buscarSession.invalidate();
+      // ✅ IMPORTANTE: Invalidar também as mensagens para refletir mudança do modelo
+      utils.app.chat.buscarMensagensTest.invalidate();
       toast.success(t("apps.chat.sessions.updated"));
       setShowEditSession(false);
       setEditingSession(null);
@@ -193,8 +201,13 @@ export function AppSidebar({
       setSelectedAgent("none");
       setSelectedModel("");
       setSelectedFolderId("none");
+
+      console.log(
+        "🔄 [SIDEBAR] Queries invalidadas - interface será atualizada",
+      );
     },
     onError: (error: any) => {
+      console.error("❌ [SIDEBAR] updateSessionMutation ERROR:", error);
       toast.error(error.message || t("apps.chat.sessions.error"));
     },
   });
@@ -218,6 +231,7 @@ export function AppSidebar({
   const moveSessionMutation = api.app.chat.atualizarSession.useMutation({
     onSuccess: () => {
       utils.app.chat.listarSessions.invalidate();
+      utils.app.chat.buscarSession.invalidate();
       toast.success("Sessão movida com sucesso!");
       setShowMoveSession(false);
       setMovingSession(null);
@@ -282,21 +296,52 @@ export function AppSidebar({
     setShowEditSession(true);
   };
 
-  const handleUpdateSession = () => {
+  const handleUpdateSession = async () => {
     if (
       editingSession &&
       sessionTitle.trim() &&
       selectedModel &&
       models.length > 0
     ) {
-      updateSessionMutation.mutate({
-        id: editingSession.id,
-        title: sessionTitle.trim(),
-        chatFolderId:
-          selectedFolderId === "none" ? undefined : selectedFolderId,
-        aiAgentId: selectedAgent === "none" ? undefined : selectedAgent,
-        aiModelId: selectedModel,
+      console.log("🔄 [SIDEBAR] handleUpdateSession chamado:", {
+        sessionId: editingSession.id,
+        newModelId: selectedModel,
+        originalModelId: editingSession.aiModelId,
       });
+
+      try {
+        // ✅ SEMPRE salvar modelo como preferido no team config - PRIMEIRO
+        console.log(
+          `🔄 [SIDEBAR] Salvando modelo preferido nas configurações do usuário: ${editingSession.aiModelId} → ${selectedModel}`,
+        );
+
+        // ✅ AGUARDAR o save ser finalizado
+        await savePreferredModel(selectedModel);
+        console.log("✅ [SIDEBAR] Modelo preferido salvo com sucesso!");
+
+        // ✅ DEPOIS atualizar a sessão
+        updateSessionMutation.mutate({
+          id: editingSession.id,
+          title: sessionTitle.trim(),
+          chatFolderId:
+            selectedFolderId === "none" ? undefined : selectedFolderId,
+          aiAgentId: selectedAgent === "none" ? undefined : selectedAgent,
+          aiModelId: selectedModel,
+        });
+
+        console.log("✅ [SIDEBAR] Session update mutation chamado!");
+      } catch (error) {
+        console.error("❌ [SIDEBAR] Erro ao salvar modelo preferido:", error);
+        // Continuar com update da sessão mesmo se der erro no save
+        updateSessionMutation.mutate({
+          id: editingSession.id,
+          title: sessionTitle.trim(),
+          chatFolderId:
+            selectedFolderId === "none" ? undefined : selectedFolderId,
+          aiAgentId: selectedAgent === "none" ? undefined : selectedAgent,
+          aiModelId: selectedModel,
+        });
+      }
     }
   };
 

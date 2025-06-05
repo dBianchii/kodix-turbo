@@ -6,7 +6,6 @@ import {
   aiStudioAppId,
   calendarAppId,
   chatAppId,
-  chatConfigSchema,
   chatUserAppTeamConfigSchema,
   kodixCareAppId,
   kodixCareConfigSchema,
@@ -44,16 +43,10 @@ export const ZInstallAppInputSchema = z.object({
 });
 export type TInstallAppInputSchema = z.infer<typeof ZInstallAppInputSchema>;
 
-export const ZSaveConfigInput = z.union([
-  z.object({
-    appId: z.literal(kodixCareAppId),
-    config: kodixCareConfigSchema.partial(),
-  }),
-  z.object({
-    appId: z.literal(chatAppId),
-    config: chatConfigSchema.partial(),
-  }),
-]); //TODO: make dynamic based on app
+export const ZSaveConfigInput = z.object({
+  appId: z.literal(kodixCareAppId),
+  config: kodixCareConfigSchema.partial(),
+}); //TODO: make dynamic based on app when we have more apps with team config
 export type TSaveConfigInput = z.infer<typeof ZSaveConfigInput>;
 
 export const ZUninstallAppInputSchema = z.object({

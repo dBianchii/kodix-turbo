@@ -9,67 +9,68 @@ import { AiStudioService } from "../../../../internal/services/ai-studio.service
 // Helper para buscar modelo preferido seguindo hierarquia usando Service Layer
 export async function getPreferredModelHelper(
   teamId: string,
+  userId: string,
   requestingApp: typeof chatAppId,
 ): Promise<{
-  source: "chat_config" | "ai_studio_default" | "first_available";
+  source: "user_config" | "ai_studio_default" | "first_available";
   modelId: string;
   model: any;
   config?: any;
   teamConfig?: any;
 }> {
-  // 1ª Prioridade: Verificar lastSelectedModelId no Chat Team Config
+  // ✅ 1ª Prioridade: Verificar preferredModelId nas configurações de USUÁRIO
   try {
-    const chatConfigs = await appRepository.findAppTeamConfigs({
+    const userConfigs = await appRepository.findUserAppTeamConfigs({
       appId: chatAppId,
       teamIds: [teamId],
+      userIds: [userId],
     });
 
-    const chatConfig = chatConfigs.find(
-      (config: any) => config.teamId === teamId,
-    );
-    const lastSelectedModelId = chatConfig
-      ? (chatConfig.config as any)?.lastSelectedModelId
+    const userConfig = userConfigs[0]; // Só haverá um config por usuário/app/team
+    const preferredModelId = userConfig
+      ? (userConfig.config as any)?.preferredModelId
       : null;
 
-    if (lastSelectedModelId) {
+    if (preferredModelId) {
       console.log(
-        "✅ [PREFERRED_MODEL] Encontrado lastSelectedModelId:",
-        lastSelectedModelId,
+        "✅ [PREFERRED_MODEL] Encontrado preferredModelId no User Config:",
+        preferredModelId,
       );
 
       try {
-        // ✅ USAR SERVICE LAYER ao invés de HTTP
         const model = await AiStudioService.getModelById({
-          modelId: lastSelectedModelId,
+          modelId: preferredModelId,
           teamId,
           requestingApp,
         });
 
         if (model) {
-          console.log("✅ [PREFERRED_MODEL] Modelo encontrado:", model.name);
+          console.log(
+            "✅ [PREFERRED_MODEL] Modelo encontrado (User Config):",
+            model.name,
+          );
           return {
-            source: "chat_config",
+            source: "user_config",
             modelId: model.id,
             model,
-            config: chatConfig?.config,
+            config: userConfig?.config,
           };
         }
       } catch (error) {
         console.log(
-          "⚠️ [PREFERRED_MODEL] lastSelectedModelId inválido, continuando para próximo fallback",
+          "⚠️ [PREFERRED_MODEL] preferredModelId do User Config inválido, continuando para AI Studio",
         );
       }
     }
   } catch (error) {
     console.log(
-      "⚠️ [PREFERRED_MODEL] Erro ao buscar chat config, continuando para AI Studio:",
+      "⚠️ [PREFERRED_MODEL] Erro ao buscar User Config, continuando para AI Studio:",
       error,
     );
   }
 
-  // 2ª Prioridade: Buscar modelo padrão no AI Studio via Service Layer
+  // ✅ 2ª Prioridade: Buscar modelo padrão no AI Studio via Service Layer
   try {
-    // ✅ USAR SERVICE LAYER ao invés de HTTP
     const defaultModelConfig = await AiStudioService.getDefaultModel({
       teamId,
       requestingApp,
@@ -94,9 +95,8 @@ export async function getPreferredModelHelper(
     );
   }
 
-  // 3ª Prioridade: Buscar primeiro modelo ativo disponível via Service Layer
+  // ✅ 3ª Prioridade: Buscar primeiro modelo ativo disponível via Service Layer
   try {
-    // ✅ USAR SERVICE LAYER ao invés de HTTP
     const availableModels = await AiStudioService.getAvailableModels({
       teamId,
       requestingApp,
@@ -137,14 +137,17 @@ export async function getPreferredModelHandler({
   ctx: TProtectedProcedureContext;
 }) {
   const teamId = ctx.auth.user.activeTeamId;
+  const userId = ctx.auth.user.id;
 
   try {
     console.log(
-      "🎯 [PREFERRED_MODEL] Buscando modelo preferido para team:",
+      "🎯 [PREFERRED_MODEL] Buscando modelo preferido para user:",
+      userId,
+      "team:",
       teamId,
     );
 
-    const result = await getPreferredModelHelper(teamId, chatAppId);
+    const result = await getPreferredModelHelper(teamId, userId, chatAppId);
 
     console.log(
       `✅ [PREFERRED_MODEL] Modelo encontrado via ${result.source}:`,

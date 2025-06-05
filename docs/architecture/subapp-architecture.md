@@ -357,104 +357,29 @@ const chatProtectedProcedure = protectedProcedure.use(
 
 ## ⚙️ **Sistema de Configurações por Team**
 
-### **AppTeamConfig Overview**
+**📖 DOCUMENTAÇÃO COMPLETA:** Para informações detalhadas sobre o sistema de configurações (team e usuário), consulte:
 
-Sistema que permite configurações específicas por **aplicativo** e por **equipe**:
+**👉 [Sistema de Configurações de SubApps](./subapp-configurations-system.md)**
 
-```typescript
-// Schema exemplo para AI Studio
-export const aiStudioConfigSchema = z.object({
-  modelSettings: z.object({
-    defaultModel: z.string().optional(),
-    maxTokens: z.number().min(100).max(8000).default(2000),
-    temperature: z.number().min(0).max(2).default(0.7),
-  }),
-  permissions: z.object({
-    allowModelSwitching: z.boolean().default(true),
-    allowTemperatureAdjustment: z.boolean().default(false),
-  }),
-});
+### **Resumo Rápido**
 
-// Mapeamento global
-export const appIdToAppTeamConfigSchema = {
-  [aiStudioAppId]: aiStudioConfigSchema,
-  [chatAppId]: chatConfigSchema,
-  // ... outros apps
-};
-```
+O Kodix oferece **dois tipos de configurações** para SubApps:
 
-### **Estrutura de Banco**
+- **🏢 Team Config** (`appTeamConfig`) - Configurações compartilhadas por toda a equipe
+- **👤 User Config** (`userAppTeamConfig`) - Configurações pessoais de cada usuário
+
+### **Exemplo Básico de Uso**
 
 ```typescript
-export const appTeamConfigs = mysqlTable(
-  "appTeamConfig",
-  (t) => ({
-    id: nanoidPrimaryKey(t),
-    config: t.json().notNull(),
-    appId: t.varchar({ length: NANOID_SIZE }).notNull(),
-    teamId: teamIdReferenceCascadeDelete(t),
-  }),
-  (table) => ({
-    // Uma configuração por app/team
-    unique_appId_teamId: unique("unique_appId_teamId").on(
-      table.appId,
-      table.teamId,
-    ),
-  }),
-);
+// Configuração de Time
+const { config, saveConfig } = useAppTeamConfig(meuAppId);
+
+// Configuração de Usuário
+const { config: userConfig, saveConfig: saveUserConfig } =
+  useUserAppTeamConfig(meuAppId);
 ```
 
-### **API de Configurações**
-
-```typescript
-// Buscar configuração do team
-export const getConfigHandler = protectedProcedure
-  .input(z.object({ appId: z.string() }))
-  .query(async ({ input, ctx }) => {
-    const [config] = await appRepository.findAppTeamConfigs({
-      appId: input.appId,
-      teamIds: [ctx.auth.user.activeTeamId],
-    });
-
-    return config?.config || getDefaultConfig(input.appId);
-  });
-
-// Salvar configuração
-export const saveConfigHandler = protectedProcedure
-  .input(z.object({ appId: z.string(), config: z.any() }))
-  .mutation(async ({ input, ctx }) => {
-    await appRepository.upsertAppTeamConfig({
-      appId: input.appId,
-      teamId: ctx.auth.user.activeTeamId,
-      config: input.config,
-    });
-  });
-```
-
-### **Hook Frontend**
-
-```typescript
-export function useAppTeamConfig(appId: AppIdsWithConfig) {
-  const { data: config, isLoading } = api.app.getConfig.useQuery({ appId });
-
-  const saveConfigMutation = useMutation(
-    api.app.saveConfig.mutationOptions({
-      onSuccess: () => {
-        utils.app.getConfig.invalidate({ appId });
-        toast.success("Configurações salvas!");
-      },
-    }),
-  );
-
-  return {
-    config,
-    isLoading,
-    saveConfig: (newConfig: any) =>
-      saveConfigMutation.mutate({ appId, config: newConfig }),
-    isSaving: saveConfigMutation.isLoading,
-  };
-}
-```
+**📚 Para implementação completa, schemas, endpoints e exemplos detalhados, consulte o documento especializado.**
 
 ---
 

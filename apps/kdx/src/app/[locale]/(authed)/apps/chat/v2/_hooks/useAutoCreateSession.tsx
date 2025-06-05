@@ -33,6 +33,7 @@ export function useAutoCreateSession(options?: UseAutoCreateSessionOptions) {
   // ✅ Usar apenas autoCreateSessionWithMessage que sabemos que existe
   // @ts-ignore - Ignorando temporariamente erro de TypeScript do tRPC
   const autoCreateMutation =
+    // @ts-ignore - Ignorando temporariamente erro de TypeScript do tRPC
     api.app.chat.autoCreateSessionWithMessage.useMutation({
       onSuccess: (result: any) => {
         console.log("✅ [CHAT] autoCreateSessionWithMessage sucesso:", result);

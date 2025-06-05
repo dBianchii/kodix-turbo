@@ -77,35 +77,17 @@ export const kodixCareConfigSchema = z.object({
 
 /**
  * @description Schema for validating chat app team config
+ * ✅ SIMPLIFICADO: Apenas configurações realmente compartilhadas pela equipe
+ * A maioria foi migrada para chatUserAppTeamConfigSchema (configurações pessoais)
  */
 export const chatConfigSchema = z.object({
-  // Modelo padrão selecionado pelo team
-  lastSelectedModelId: z.string().optional(),
-
-  // Configurações de IA padrão
-  aiSettings: z
+  // Configurações que fazem sentido por TEAM (muito poucas)
+  teamSettings: z
     .object({
-      maxTokens: z.number().min(100).max(8000).default(2000),
-      temperature: z.number().min(0).max(2).default(0.7),
-      enableStreaming: z.boolean().default(true),
-    })
-    .default({}),
-
-  // Configurações de interface
-  uiSettings: z
-    .object({
-      showModelInHeader: z.boolean().default(true),
-      autoSelectModel: z.boolean().default(true),
-      defaultChatTitle: z.string().default("Nova Conversa"),
-    })
-    .default({}),
-
-  // Configurações de comportamento
-  behaviorSettings: z
-    .object({
-      rememberLastModel: z.boolean().default(true),
-      autoSaveConversations: z.boolean().default(true),
-      enableTypingIndicator: z.boolean().default(true),
+      // Exemplo: limites organizacionais, políticas da empresa
+      maxSessionsPerUser: z.number().min(1).max(100).default(50),
+      allowModelSwitching: z.boolean().default(true),
+      organizationName: z.string().optional(),
     })
     .default({}),
 });
@@ -116,23 +98,45 @@ export const kodixCareUserAppTeamConfigSchema = z.object({
 
 /**
  * @description Schema for validating chat app user config
+ * ✅ CORRIGIDO: Agora contém TODAS as configurações pessoais do usuário
  */
 export const chatUserAppTeamConfigSchema = z.object({
-  // Preferências pessoais do usuário
+  // ✅ MIGRADO: Preferências pessoais do usuário (era Team)
   personalSettings: z
     .object({
-      preferredModelId: z.string().optional(),
+      preferredModelId: z.string().optional(), // Era lastSelectedModelId no team
       enableNotifications: z.boolean().default(true),
       notificationSound: z.boolean().default(false),
+      rememberLastModel: z.boolean().default(true), // MIGRADO do team
     })
     .default({}),
 
-  // Configurações de UI pessoais
+  // ✅ MIGRADO: Configurações de IA pessoais (era Team)
+  aiSettings: z
+    .object({
+      maxTokens: z.number().min(100).max(8000).default(2000),
+      temperature: z.number().min(0).max(2).default(0.7),
+      enableStreaming: z.boolean().default(true),
+    })
+    .default({}),
+
+  // ✅ MIGRADO: Configurações de UI pessoais (era Team)
   uiPreferences: z
     .object({
       chatTheme: z.enum(["light", "dark", "auto"]).default("auto"),
       fontSize: z.enum(["small", "medium", "large"]).default("medium"),
       compactMode: z.boolean().default(false),
+      showModelInHeader: z.boolean().default(true), // MIGRADO do team
+      autoSelectModel: z.boolean().default(true), // MIGRADO do team
+      defaultChatTitle: z.string().default("Nova Conversa"), // MIGRADO do team
+    })
+    .default({}),
+
+  // ✅ MIGRADO: Configurações de comportamento pessoais (era Team)
+  behaviorSettings: z
+    .object({
+      autoSaveConversations: z.boolean().default(true),
+      enableTypingIndicator: z.boolean().default(true),
     })
     .default({}),
 });

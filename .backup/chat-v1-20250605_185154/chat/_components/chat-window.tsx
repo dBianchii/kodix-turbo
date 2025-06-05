@@ -3,14 +3,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { AlertCircle, Loader2, MessageCircle, RefreshCw } from "lucide-react";
 import { useTranslations } from "next-intl";
-
-import { Alert, AlertDescription } from "@kdx/ui/alert";
-import { Button } from "@kdx/ui/button";
-import { Card } from "@kdx/ui/card";
-import { ScrollArea } from "@kdx/ui/scroll-area";
-import { Separator } from "@kdx/ui/separator";
 
 import { api } from "~/trpc/react";
 import { InputBox } from "./input-box";
@@ -320,12 +313,12 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
   if (sessionId && messagesQuery.isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <Card className="bg-slate-900/50 p-8 backdrop-blur-sm">
-          <div className="flex flex-col items-center space-y-4 text-center">
-            <Loader2 className="h-8 w-8 animate-spin text-purple-400" />
-            <p className="text-slate-300">{t("apps.chat.messages.loading")}</p>
-          </div>
-        </Card>
+        <div className="text-center">
+          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-b-2 border-white"></div>
+          <p className="text-muted-foreground">
+            {t("apps.chat.messages.loading")}
+          </p>
+        </div>
       </div>
     );
   }
@@ -334,24 +327,15 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
   if (sessionId && messagesQuery.error) {
     return (
       <div className="flex h-full items-center justify-center">
-        <Card className="bg-slate-900/50 p-8 backdrop-blur-sm">
-          <div className="flex flex-col items-center space-y-4 text-center">
-            <AlertCircle className="h-8 w-8 text-red-400" />
-            <Alert variant="destructive" className="border-0">
-              <AlertDescription>
-                {t("apps.chat.messages.error")}
-              </AlertDescription>
-            </Alert>
-            <Button
-              onClick={() => messagesQuery.refetch()}
-              variant="outline"
-              className="border-purple-600 bg-purple-600/20 text-purple-300 hover:bg-purple-600/30"
-            >
-              <RefreshCw className="mr-2 h-4 w-4" />
-              {t("apps.chat.messages.tryAgain")}
-            </Button>
-          </div>
-        </Card>
+        <div className="text-center">
+          <p className="mb-4 text-red-400">{t("apps.chat.messages.error")}</p>
+          <button
+            onClick={() => messagesQuery.refetch()}
+            className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          >
+            {t("apps.chat.messages.tryAgain")}
+          </button>
+        </div>
       </div>
     );
   }
@@ -359,22 +343,19 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
   if (!sessionId) {
     return (
       <div className="flex h-full items-center justify-center">
-        <Card className="bg-slate-900/50 p-8 backdrop-blur-sm">
-          <div className="flex flex-col items-center space-y-4 text-center">
-            <MessageCircle className="h-12 w-12 text-slate-500" />
-            <p className="text-slate-400">
-              {t("apps.chat.messages.selectConversation")}
-            </p>
-          </div>
-        </Card>
+        <div className="text-center">
+          <p className="text-muted-foreground">
+            {t("apps.chat.messages.selectConversation")}
+          </p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="absolute inset-0 flex flex-col">
-      {/* Container de mensagens modernizado com ScrollArea */}
-      <ScrollArea className="flex-1 bg-gradient-to-b from-slate-900/50 to-slate-800/50">
+    <div className="absolute inset-0 flex flex-col bg-[#121212]">
+      {/* Container de mensagens com scroll e espaço extra na parte inferior para o input flutuante */}
+      <div className="flex-1 overflow-y-auto">
         <div className="px-4 py-4 pb-32">
           {messages.map((msg, idx) => (
             <Message
@@ -383,47 +364,27 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
               content={msg.content}
             />
           ))}
-
-          {/* Loading indicator com Shadcn */}
           {isLoading && (
-            <div className="flex justify-center py-4">
-              <Card className="bg-slate-800/50 px-4 py-2 backdrop-blur-sm">
-                <div className="flex items-center space-x-2">
-                  <Loader2 className="h-4 w-4 animate-spin text-purple-400" />
-                  <span className="text-sm text-slate-300">
-                    {t("apps.chat.messages.typing")}
-                  </span>
-                </div>
-              </Card>
+            <div className="flex justify-center">
+              <div className="text-sm text-gray-400">
+                {t("apps.chat.messages.typing")}
+              </div>
             </div>
           )}
-
-          {/* Error display com Shadcn Alert */}
           {error && (
-            <div className="flex justify-center py-4">
-              <Alert
-                variant="destructive"
-                className="max-w-md border-0 bg-red-900/50"
-              >
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription className="text-sm">{error}</AlertDescription>
-              </Alert>
+            <div className="flex justify-center">
+              <div className="text-sm text-red-500">{error}</div>
             </div>
           )}
-
           <div ref={bottomRef} />
         </div>
-      </ScrollArea>
+      </div>
 
-      <Separator className="bg-slate-700/50" />
-
-      {/* Campo de input modernizado com Card */}
+      {/* Campo de input flutuante */}
       <div className="absolute right-0 bottom-6 left-0 px-4">
-        <Card className="mx-auto max-w-3xl border-purple-600/20 bg-slate-900/90 shadow-xl backdrop-blur-sm">
-          <div className="p-4">
-            <InputBox onSend={sendMessage} disabled={isLoading} />
-          </div>
-        </Card>
+        <div className="mx-auto max-w-3xl rounded-xl border border-gray-700 bg-[#1e1e1e] px-4 py-3 shadow-lg">
+          <InputBox onSend={sendMessage} disabled={isLoading} />
+        </div>
       </div>
     </div>
   );

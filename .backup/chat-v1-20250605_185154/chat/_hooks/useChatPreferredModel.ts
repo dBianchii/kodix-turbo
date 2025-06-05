@@ -1,5 +1,5 @@
 import { api } from "~/trpc/react";
-import { useChatUserConfig } from "./useChatUserConfig";
+import { useChatUserConfig } from "../v2/_hooks/useChatUserConfig";
 
 /**
  * Hook para buscar o modelo preferido do usuário seguindo hierarquia de prioridade:
@@ -7,7 +7,7 @@ import { useChatUserConfig } from "./useChatUserConfig";
  * 2ª Prioridade: Modelo padrão do AI Studio (via Service Layer)
  * 3ª Prioridade: Primeiro modelo ativo disponível (via Service Layer)
  *
- * ✅ CORRIGIDO: Agora usa useChatUserConfig com escopo de USUÁRIO, não team
+ * ✅ CORRIGIDO: Agora usa useChatUserConfig como fonte principal (configurações de USUÁRIO), não team
  * Chat ──useChatUserConfig──> userAppTeamConfig ──> Fallback para AI Studio
  */
 export function useChatPreferredModel() {

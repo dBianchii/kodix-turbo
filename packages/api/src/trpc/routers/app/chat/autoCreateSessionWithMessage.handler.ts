@@ -10,67 +10,94 @@ import { AiStudioService } from "../../../../internal/services/ai-studio.service
 // Helper para buscar modelo preferido seguindo hierarquia usando Service Layer
 async function getPreferredModelHelper(
   teamId: string,
+  userId: string,
   requestingApp: typeof chatAppId,
 ): Promise<{
-  source: "chat_config" | "ai_studio_default" | "first_available";
+  source: "user_config" | "ai_studio_default" | "first_available";
   modelId: string;
   model: any;
   config?: any;
   teamConfig?: any;
 }> {
-  // 1ª Prioridade: Verificar lastSelectedModelId no Chat Team Config
+  // ✅ 1ª Prioridade: Verificar preferredModelId nas configurações de USUÁRIO
   try {
-    const chatConfigs = await appRepository.findAppTeamConfigs({
-      appId: chatAppId,
-      teamIds: [teamId],
+    console.log("🔍 [PREFERRED_MODEL] Buscando User Config para:", {
+      teamId,
+      userId,
     });
 
-    const chatConfig = chatConfigs.find(
-      (config: any) => config.teamId === teamId,
-    );
-    const lastSelectedModelId = chatConfig
-      ? (chatConfig.config as any)?.lastSelectedModelId
+    const userConfigs = await appRepository.findUserAppTeamConfigs({
+      appId: chatAppId,
+      teamIds: [teamId],
+      userIds: [userId],
+    });
+
+    console.log("📊 [PREFERRED_MODEL] User configs encontrados:", {
+      count: userConfigs.length,
+      configs: userConfigs.map((c) => ({
+        id: c.id,
+        config: c.config,
+        hasConfig: !!c.config,
+        hasPersonalSettings: !!(c.config as any)?.personalSettings,
+        preferredModelId: (c.config as any)?.personalSettings?.preferredModelId,
+      })),
+    });
+
+    const userConfig = userConfigs[0]; // Só haverá um config por usuário/app/team
+    const preferredModelId = userConfig
+      ? (userConfig.config as any)?.personalSettings?.preferredModelId
       : null;
 
-    if (lastSelectedModelId) {
+    console.log("🎯 [PREFERRED_MODEL] Extracted preferredModelId:", {
+      preferredModelId,
+      hasUserConfig: !!userConfig,
+      fullConfig: userConfig?.config,
+    });
+
+    if (preferredModelId) {
       console.log(
-        "✅ [PREFERRED_MODEL] Encontrado lastSelectedModelId:",
-        lastSelectedModelId,
+        "✅ [PREFERRED_MODEL] Encontrado preferredModelId no User Config:",
+        preferredModelId,
       );
 
       try {
-        // ✅ NOVO: Usar Service Layer ao invés de HTTP
         const model = await AiStudioService.getModelById({
-          modelId: lastSelectedModelId,
+          modelId: preferredModelId,
           teamId,
           requestingApp,
         });
 
         if (model) {
-          console.log("✅ [PREFERRED_MODEL] Modelo encontrado:", model.name);
+          console.log(
+            "✅ [PREFERRED_MODEL] Modelo encontrado (User Config):",
+            model.name,
+          );
           return {
-            source: "chat_config",
+            source: "user_config",
             modelId: model.id,
             model,
-            config: chatConfig?.config,
+            config: userConfig?.config,
           };
         }
       } catch (error) {
         console.log(
-          "⚠️ [PREFERRED_MODEL] lastSelectedModelId inválido, continuando para próximo fallback",
+          "⚠️ [PREFERRED_MODEL] preferredModelId do User Config inválido, continuando para AI Studio",
         );
       }
+    } else {
+      console.log(
+        "❌ [PREFERRED_MODEL] Nenhum preferredModelId encontrado no User Config",
+      );
     }
   } catch (error) {
     console.log(
-      "⚠️ [PREFERRED_MODEL] Erro ao buscar chat config, continuando para AI Studio:",
+      "⚠️ [PREFERRED_MODEL] Erro ao buscar User Config, continuando para AI Studio:",
       error,
     );
   }
 
-  // 2ª Prioridade: Buscar modelo padrão no AI Studio via Service Layer
+  // ✅ 2ª Prioridade: Buscar modelo padrão no AI Studio via Service Layer
   try {
-    // ✅ NOVO: Usar Service Layer ao invés de HTTP
     const defaultModelConfig = await AiStudioService.getDefaultModel({
       teamId,
       requestingApp,
@@ -95,9 +122,8 @@ async function getPreferredModelHelper(
     );
   }
 
-  // 3ª Prioridade: Buscar primeiro modelo ativo disponível via Service Layer
+  // ✅ 3ª Prioridade: Buscar primeiro modelo ativo disponível via Service Layer
   try {
-    // ✅ NOVO: Usar Service Layer ao invés de HTTP
     const availableModels = await AiStudioService.getAvailableModels({
       teamId,
       requestingApp,
@@ -156,6 +182,7 @@ export async function autoCreateSessionWithMessageHandler({
       // Chamar getPreferredModel internamente
       const preferredModelResult = await getPreferredModelHelper(
         teamId,
+        userId,
         chatAppId,
       );
 

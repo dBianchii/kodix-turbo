@@ -30,6 +30,7 @@ import { Button } from "@kdx/ui/button";
 import { SidebarProvider, SidebarTrigger } from "@kdx/ui/sidebar";
 import { toast } from "@kdx/ui/toast";
 
+import { useChatConfig } from "~/hooks/useChatConfig";
 import { api } from "~/trpc/react";
 import { AppSidebar } from "./_components/app-sidebar";
 import { ChatWindow } from "./_components/chat-window";
@@ -37,7 +38,6 @@ import { ModelInfoBadge } from "./_components/model-info-badge";
 import { ModelSelector } from "./_components/model-selector";
 import { QuickChatInput } from "./_components/quick-chat-input";
 import { useChatPreferredModel } from "./_hooks/useChatPreferredModel";
-import { useChatUserConfig } from "./_hooks/useChatUserConfig";
 
 {
   /*
@@ -55,8 +55,8 @@ export default function ChatPage() {
     undefined,
   );
 
-  // ✅ CORRIGIDO: Hook para gerenciar configurações PESSOAIS do usuário (não team)
-  const { savePreferredModel, isSaving, config } = useChatUserConfig();
+  // ✅ Hook para gerenciar configurações do Chat no team
+  const { saveLastSelectedModel, isSaving, config } = useChatConfig();
 
   // ✅ Carregar modelo preferido (para quando não há sessão selecionada)
   const {
@@ -160,51 +160,32 @@ export default function ChatPage() {
       hasSession: !!selectedSessionId,
     });
 
-    // ✅ SEMPRE salvar modelo como preferido no team config - PRIMEIRO
-    console.log(
-      `🔄 [CHAT] Salvando modelo preferido nas configurações do usuário: ${previousModelId} → ${modelId}`,
-    );
-    console.log("🔄 [CHAT] Chamando savePreferredModel...");
-
-    savePreferredModel(modelId);
-
-    console.log("🔄 [CHAT] savePreferredModel foi chamado!");
-
-    // ✅ DEPOIS atualizar a sessão se existir
     if (selectedSessionId) {
-      console.log(
-        "📝 [CHAT] Sessão selecionada - atualizando modelo da sessão...",
-      );
-      console.log("📝 [CHAT] Mutation payload:", {
-        id: selectedSessionId,
-        aiModelId: modelId,
-      });
-
+      // ✅ Atualizar modelo da sessão atual no banco
       updateSessionMutation.mutate({
         id: selectedSessionId,
         aiModelId: modelId,
       });
-
       console.log(
-        `🔄 [CHAT] updateSessionMutation.mutate() chamado para sessão ${selectedSessionId}: ${previousModelId} → ${modelId}`,
+        `🔄 [CHAT] Atualizando modelo da sessão ${selectedSessionId}: ${previousModelId} → ${modelId}`,
       );
-      console.log("📊 [CHAT] updateSessionMutation status:", {
-        isPending: updateSessionMutation.isPending,
-        isError: updateSessionMutation.isError,
-        error: updateSessionMutation.error,
-        isSuccess: updateSessionMutation.isSuccess,
-      });
     } else {
+      // ✅ Salvar modelo como preferido no team config
       console.log(
-        "ℹ️ [CHAT] Nenhuma sessão selecionada - apenas salvando modelo preferido",
+        `🔄 [CHAT] Salvando modelo preferido no team config: ${previousModelId} → ${modelId}`,
       );
-    }
+      console.log("🔄 [CHAT] Chamando saveLastSelectedModel...");
 
-    // ✅ Forçar atualização do modelo preferido após salvar
-    setTimeout(() => {
-      console.log("🔄 [CHAT] Refazendo fetch do modelo preferido...");
-      refetchPreferredModel();
-    }, 1000);
+      saveLastSelectedModel(modelId);
+
+      console.log("🔄 [CHAT] saveLastSelectedModel foi chamado!");
+
+      // ✅ Forçar atualização do modelo preferido após salvar
+      setTimeout(() => {
+        console.log("🔄 [CHAT] Refazendo fetch do modelo preferido...");
+        refetchPreferredModel();
+      }, 1000);
+    }
   };
 
   return (
@@ -262,10 +243,7 @@ export default function ChatPage() {
               <ChatWindow sessionId={selectedSessionId} />
             ) : (
               <div className="flex h-full items-center justify-center">
-                <QuickChatInput
-                  onSessionCreated={handleSessionSelect}
-                  selectedModelId={selectedModelId}
-                />
+                <QuickChatInput onSessionCreated={handleSessionSelect} />
               </div>
             )}
           </div>
