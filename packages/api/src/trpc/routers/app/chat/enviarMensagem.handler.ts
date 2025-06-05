@@ -138,12 +138,28 @@ export async function enviarMensagemHandler({
           aiResponse.choices?.[0]?.message?.content ||
           "Desculpe, não consegui gerar uma resposta.";
 
-        // Salvar resposta da IA
+        // ✅ Extrair modelo retornado pela API
+        const actualModelUsed = aiResponse.model || modelName;
+
+        // ✅ Criar metadata com informações do modelo
+        const messageMetadata = {
+          requestedModel: modelName,
+          actualModelUsed: actualModelUsed,
+          providerId: model.providerId,
+          providerName: model.provider.name,
+          usage: aiResponse.usage || null,
+          timestamp: new Date().toISOString(),
+        };
+
+        console.log(`🔍 [METADATA] Salvando metadata:`, messageMetadata);
+
+        // Salvar resposta da IA com metadata
         const aiMessage = await chatRepository.ChatMessageRepository.create({
           chatSessionId: input.chatSessionId,
           senderRole: "ai",
           content: aiContent,
           status: "ok",
+          metadata: messageMetadata,
         });
 
         return {

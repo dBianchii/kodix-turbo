@@ -10,6 +10,8 @@ import {
   aiTeamProviderToken,
 } from "../schema/apps/ai-studio";
 import { chatFolder, chatSession } from "../schema/apps/chat";
+import { teams } from "../schema/teams";
+import { users } from "../schema/users";
 import { decryptToken, encryptToken } from "../utils";
 
 // Interface para tipar a resposta da API de chat completions
@@ -350,9 +352,91 @@ export const AiAgentRepository = {
     instructions: string; // Obrigatório conforme o plano
     libraryId?: string;
   }) => {
-    const [result] = await db.insert(aiAgent).values(data).$returningId();
-    if (!result) throw new Error("Falha ao criar agente");
-    return AiAgentRepository.findById(result.id);
+    console.log("[AiAgentRepository.create] Starting creation with data:", {
+      name: data.name,
+      teamId: data.teamId,
+      createdById: data.createdById,
+      instructionsLength: data.instructions.length,
+      libraryId: data.libraryId || "undefined",
+    });
+
+    try {
+      // Verificar se o team existe
+      const teamExists = await db.query.teams.findFirst({
+        where: eq(teams.id, data.teamId),
+        columns: { id: true },
+      });
+      console.log("[AiAgentRepository.create] Team exists:", !!teamExists);
+
+      // Verificar se o user existe
+      const userExists = await db.query.users.findFirst({
+        where: eq(users.id, data.createdById),
+        columns: { id: true },
+      });
+      console.log("[AiAgentRepository.create] User exists:", !!userExists);
+
+      // Verificar se a library existe (se fornecida)
+      if (data.libraryId && data.libraryId.trim() !== "") {
+        const libraryExists = await db.query.aiLibrary.findFirst({
+          where: eq(aiLibrary.id, data.libraryId),
+          columns: { id: true },
+        });
+        console.log(
+          "[AiAgentRepository.create] Library exists:",
+          !!libraryExists,
+        );
+
+        if (!libraryExists) {
+          throw new Error(`Biblioteca com ID ${data.libraryId} não encontrada`);
+        }
+      }
+
+      // Limpar libraryId se for string vazia ou inválida
+      const cleanedData = {
+        ...data,
+        libraryId:
+          data.libraryId && data.libraryId.trim() !== ""
+            ? data.libraryId
+            : undefined,
+      };
+
+      console.log("[AiAgentRepository.create] Cleaned data:", {
+        ...cleanedData,
+        instructionsLength: cleanedData.instructions.length,
+      });
+
+      console.log("[AiAgentRepository.create] Attempting database insert...");
+      const [result] = await db
+        .insert(aiAgent)
+        .values(cleanedData)
+        .$returningId();
+      console.log("[AiAgentRepository.create] Insert result:", result);
+
+      if (!result) {
+        console.error("[AiAgentRepository.create] No result from insert");
+        throw new Error("Falha ao criar agente");
+      }
+
+      console.log(
+        "[AiAgentRepository.create] Finding created agent by ID:",
+        result.id,
+      );
+      const createdAgent = await AiAgentRepository.findById(result.id);
+      console.log("[AiAgentRepository.create] Created agent:", createdAgent);
+
+      return createdAgent;
+    } catch (error: any) {
+      console.error("[AiAgentRepository.create] Error occurred:", error);
+      console.error("[AiAgentRepository.create] Error details:", {
+        name: error?.name,
+        message: error?.message,
+        code: error?.code,
+        errno: error?.errno,
+        sqlState: error?.sqlState,
+        sqlMessage: error?.sqlMessage,
+      });
+      throw error;
+    }
   },
 
   // Buscar por ID

@@ -1,53 +1,142 @@
-# Chat - Documentação
+# Chat
 
-O **Chat** é o sistema de conversação com IA do Kodix, permitindo interações inteligentes e personalizadas com diferentes modelos de linguagem.
+## 📖 Visão Geral
 
-## 📋 Documentação Disponível
+O **Chat** é o sistema de conversação com IA do Kodix, oferecendo experiência completa de comunicação em tempo real com múltiplos modelos de linguagem. Construído com streaming visual avançado, gerenciamento de sessões persistentes e integração profunda com o AI Studio, seguindo as **Kodix AI Coding Rules**.
 
-### Funcionalidades Core
+## 🚀 Início Rápido
 
-- **[Chat Session Edit Feature](./Chat_Session_Edit_Feature.md)** - Implementação da funcionalidade de edição de sessões de chat
-- **[Chat Team Configuration System](./Chat_Team_Config_System.md)** - Sistema de configurações por equipe e salvamento do último modelo selecionado
+### 1. Executar o Projeto
 
-### Streaming e Performance
-
-- **[Kodix Chat Real Streaming Restoration](./Kodix_Chat_Real_Streaming_Restoration.md)** - Restauração do streaming em tempo real
-- **[Kodix Chat Streaming Implementation](./Kodix_Chat_Streaming_Implementation.md)** - Implementação do sistema de streaming
-
-### Resolução de Problemas
-
-- **[Kodix Chat Error Resolution](./Kodix_Chat_Error_Resolution.md)** - Resolução de erros no sistema de chat
-- **[Kodix Chat Fixes AI Architecture](./Kodix_Chat_Fixes_AI_Architecture.md)** - Correções na arquitetura de IA do chat
-
-## 💬 Sobre o Chat
-
-O sistema de Chat oferece:
-
-- **Conversas em Tempo Real**: Streaming de respostas com diferentes modelos de IA
-- **Sessões Persistentes**: Histórico e gerenciamento de conversas
-- **Múltiplos Provedores**: Suporte a OpenAI, Anthropic, Google, etc.
-- **Edição de Mensagens**: Capacidade de editar e reenviar mensagens
-- **Interface Responsiva**: Experiência otimizada em diferentes dispositivos
-- **Configurações por Team**: Cada equipe pode ter suas próprias configurações e modelos padrão
-
-## 🚀 Localização no Código
-
-```
-apps/kdx/src/app/[locale]/(authed)/apps/chat/
+```bash
+# Executar todo o monorepo
+pnpm dev:kdx
 ```
 
-## 🔧 Principais Componentes
+### 2. Acessar Chat
 
-- **Chat Window**: Interface principal de conversação
-- **Message Components**: Renderização de mensagens
-- **App Sidebar**: Navegação e histórico de sessões
-- **Streaming Handler**: Gerenciamento de responses em tempo real
-- **Model Selector**: Seleção de modelos de IA com persistência por team
-- **Team Config System**: Sistema de configurações personalizáveis por equipe
+1. Faça login na aplicação
+2. Navegue para `/apps/chat`
+3. O sistema carregará automaticamente o modelo preferido do seu team
+4. Digite uma mensagem para iniciar uma nova conversa
+5. Use o seletor de modelos para trocar entre diferentes IAs
+6. Organize conversas em pastas via sidebar
 
-## 📚 **Documentação Relacionada**
+## 🔧 Funcionalidades Principais
 
-- **[Chat Team Config System](./Chat_Team_Config_System.md)** - Sistema específico de configurações por team do Chat
-- **[AppTeamConfig Overview](../../architecture/subapp-architecture.md#sistema-de-configurações-por-team)** - Sistema base de configurações por team
-- **[AI Studio Integration](../ai-studio/)** - Documentação da integração com AI Studio para agentes e modelos
-- **[Backend Development Guide](../../architecture/backend-guide.md)** - Padrões de desenvolvimento backend
+### 💬 Sistema de Conversação Avançado
+
+- **Streaming Visual**: Efeito de digitação em tempo real com `useTypingEffect`
+- **Múltiplos Provedores**: OpenAI, Anthropic, Google, Azure, Mistral, xAI
+- **Sessões Persistentes**: Histórico completo de conversas com metadata
+- **Interface ChatGPT-like**: UX familiar e responsiva
+
+### 🤖 Integração Inteligente com IA
+
+- **Seleção Dinâmica**: Interface para escolha entre 21+ modelos
+- **Agentes Personalizados**: Uso de agentes criados no AI Studio
+- **Hierarquia de Modelos**: Sistema de prioridade automática (Team Config → AI Studio Default → Primeiro Disponível)
+- **Fallback Inteligente**: Modelo padrão automático para sessões sem configuração
+
+### 🗂️ Organização e Gerenciamento
+
+- **Pastas Hierárquicas**: Sistema completo de organização de conversas
+- **Edição de Sessões**: Alteração de título, modelo, agente e pasta
+- **Busca de Modelos**: Pesquisa rápida e filtros no seletor
+- **Títulos Inteligentes**: Geração automática baseada no conteúdo
+
+### ⚙️ Configuração por Team
+
+- **Team Configuration**: Configurações isoladas via AppTeamConfig
+- **Modelo Persistente**: Último modelo selecionado salvo automaticamente
+- **Configurações de IA**: Parâmetros personalizáveis (tokens, temperatura, streaming)
+- **Configurações de UX**: Interface adaptável por preferências do team
+
+## 📚 Documentação Completa
+
+### **Para Desenvolvedores**
+
+- **[⚡ Chat Streaming Implementation](./Chat_Streaming_Implementation.md)** - Implementação técnica do streaming visual
+- **[📝 Chat Session Edit Feature](./Chat_Session_Edit_Feature.md)** - Sistema completo de edição de sessões
+- **[🔧 Chat Development Guide](./Chat_Development_Guide.md)** - Guia completo para desenvolvedores
+- **[📋 Chat API Reference](./Chat_API_Reference.md)** - Referência completa dos endpoints backend
+
+### **Para Setup e Configuração**
+
+- **[⚙️ Chat Team Configuration System](./Chat_Team_Config_System.md)** - Sistema de configurações por equipe
+- **[🧪 Chat Testing Guide](./Chat_Testing_Guide.md)** - Estratégias de teste específicas
+
+### **Para Planejamento e Roadmap**
+
+- **[🚀 Chat Performance Optimization](./Chat_Performance_Guide.md)** - Otimizações e melhores práticas
+- **[📋 Chat Frontend Compliance Plan](./planning/Chat_Frontend_Compliance_Plan.md)** - Roadmap de melhorias UX/UI
+
+## 🔗 Integração com AI Studio
+
+- **Service Layer**: Comunicação via `AiStudioService` seguindo padrões arquiteturais
+- **Modelos Dinâmicos**: Busca e utiliza modelos configurados em tempo real
+- **Agentes Personalizados**: Integração completa com sistema de agentes
+- **Tokens Seguros**: Usa tokens criptografados com validação automática
+- **Configurações Sincronizadas**: Respeita configurações de provider e modelo
+
+## 🔒 Segurança e Isolamento
+
+- **Isolamento por Team**: Todas as conversas isoladas por `teamId` com validação rigorosa
+- **AppTeamConfig**: Configurações isoladas via sistema oficial do Kodix
+- **Streaming Seguro**: Validação de acesso em tempo real durante conversas
+- **Criptografia**: Tokens de API com AES-256-GCM via AI Studio
+- **Validação de Sessão**: Verificação de ownership em todas as operações
+
+## 🚀 Roadmap / Funcionalidades Futuras
+
+### **Em Desenvolvimento**
+
+- **🔍 Busca Avançada**: Pesquisa full-text em conversas e mensagens
+- **✏️ Edição de Mensagens**: Capacidade de editar e reenviar mensagens
+- **📋 Duplicação de Sessões**: Templates e clonagem de conversas
+
+### **Planejado**
+
+- **🔄 Streaming Real**: Server-Sent Events direto das APIs de IA
+- **📊 Analytics**: Métricas de uso por team, modelo e agente
+- **🎨 Temas Personalizáveis**: Dark/Light mode e UI customizável
+- **📱 PWA Mobile**: Experiência nativa otimizada para mobile
+
+## 🛠️ Arquitetura Técnica
+
+### **Frontend Stack**
+
+- **React + Next.js 14**: App Router com TypeScript
+- **tRPC**: Type-safe APIs com React Query
+- **Streaming**: Custom hooks com `useTypingEffect`
+- **UI/UX**: Shadcn/UI components com Tailwind CSS
+
+### **Backend Stack**
+
+- **Service Layer**: `AiStudioService` para comunicação entre SubApps
+- **Streaming Endpoint**: `/api/chat/stream` para respostas em tempo real
+- **Database**: MySQL com Drizzle ORM
+- **Team Config**: Sistema AppTeamConfig para isolamento
+
+### **Integrações**
+
+- **AI Providers**: OpenAI, Anthropic, Google, Azure via AI Studio
+- **Authentication**: NextAuth.js com validação por team
+- **Real-time**: ReadableStream para streaming de respostas
+- **Caching**: React Query com invalidação inteligente
+
+## 🔗 Links Relacionados
+
+- **[Arquitetura Geral](../../architecture/README.md)** - Arquitetura do monorepo
+- **[SubApp Architecture](../../architecture/subapp-architecture.md)** - Padrões de SubApps
+- **[AI Studio Integration](../ai-studio/)** - Documentação da integração com AI Studio
+- **[Backend Guide](../../architecture/backend-guide.md)** - Padrões de backend
+- **[Frontend Guide](../../architecture/frontend-guide.md)** - Padrões de frontend
+
+## 📚 Recursos Relacionados
+
+- **[📐 SubApp Architecture Guide](../../architecture/subapp-architecture.md)** - Padrões e processo de criação de SubApps
+- **[🤖 AI Development Guide](../ai-studio/AI_Development_Guide.md)** - Guia específico para desenvolvimento de features de IA
+- **[🔧 Backend Development Guide](../../architecture/backend-guide.md)** - Padrões gerais de desenvolvimento backend
+- **[🎨 Frontend Development Guide](../../architecture/frontend-guide.md)** - Padrões de desenvolvimento frontend
+- **[🗄️ Database Documentation](../../database/)** - Documentação de schemas e migrations

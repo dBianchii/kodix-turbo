@@ -1,3 +1,25 @@
+/**
+ * 🤖 AI STUDIO SUBAPP - Página Principal
+ *
+ * 📚 DOCUMENTAÇÃO:
+ * - Arquitetura SubApp: @docs/architecture/subapp-architecture.md
+ * - AI Studio Overview: @docs/subapps/ai-studio/README.md
+ * - Guia de Desenvolvimento: @docs/subapps/ai-studio/development-guide.md
+ * - Referência da API: @docs/subapps/ai-studio/api-reference.md
+ * - Configuração Inicial: @docs/subapps/ai-studio/configuracao-inicial.md
+ * - Detalhes Técnicos: @docs/subapps/ai-studio/technical-details.md
+ *
+ * 🔗 SUBPASTA DOCUMENTAÇÃO: docs/subapps/ai-studio/
+ *
+ * 🎯 FUNCIONALIDADES:
+ * - Gestão de provedores de IA (OpenAI, Anthropic, Google, Azure)
+ * - Gerenciamento de modelos e configurações
+ * - Criação e edição de agentes personalizados
+ * - Tokens de API com criptografia AES-256-GCM
+ * - Configurações isoladas por team
+ * - Interface modular e escalável
+ */
+
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
