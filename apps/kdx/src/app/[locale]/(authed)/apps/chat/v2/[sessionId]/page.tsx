@@ -95,11 +95,11 @@ export default function ChatSessionPage() {
   const handleSessionSelect = (newSessionId: string | undefined) => {
     if (newSessionId) {
       setSelectedSessionId(newSessionId);
-      // Navegar para a nova sessão usando router
-      router.push(`/apps/chat/${newSessionId}`);
+      // Navegar para a nova sessão usando router na v2
+      router.push(`/apps/chat/v2/${newSessionId}`);
     } else {
-      // ✅ Navegar para a página principal quando for "Novo Chat"
-      router.push("/apps/chat");
+      // ✅ Navegar para a página principal da v2 quando for "Novo Chat"
+      router.push("/apps/chat/v2");
     }
   };
 
@@ -122,7 +122,7 @@ export default function ChatSessionPage() {
 
   return (
     <SidebarProvider className="min-h-[calc(100dvh-55px)] items-start">
-      <div className="flex h-[calc(100dvh-55px)] w-full overflow-x-hidden bg-[#121212] text-white">
+      <div className="flex h-[calc(100dvh-55px)] w-full overflow-x-hidden bg-gradient-to-br from-[#0f172a] to-[#1e293b] text-white">
         {/* Sidebar */}
         <AppSidebar
           selectedSessionId={selectedSessionId}
@@ -132,7 +132,7 @@ export default function ChatSessionPage() {
         {/* Conteúdo principal */}
         <div className="flex flex-1 flex-col">
           {/* Cabeçalho com ModelSelector e ModelInfoBadge - estilo ChatGPT */}
-          <div className="flex items-center justify-between border-b border-gray-700 px-4 py-3">
+          <div className="flex items-center justify-between border-b border-blue-700/50 bg-slate-800/50 px-4 py-3 backdrop-blur-sm">
             <div className="flex items-center gap-4">
               <SidebarTrigger className="md:hidden" />
               <ModelSelector
@@ -141,15 +141,18 @@ export default function ChatSessionPage() {
                 disabled={updateSessionMutation.isPending}
               />
             </div>
-            <h1 className="text-lg font-medium">{t("apps.chat.appName")}</h1>
+            <h1 className="text-lg font-medium">
+              {t("apps.chat.appName")}{" "}
+              <span className="text-sm text-blue-400">v2</span>
+            </h1>
             <div className="flex items-center gap-2">
-              <Link href={`/apps/chat/v2/${sessionId}`}>
+              <Link href={`/apps/chat/${sessionId}`}>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-blue-600 bg-blue-600 text-xs text-white hover:bg-blue-700"
+                  className="border-gray-600 bg-gray-600 text-xs text-white hover:bg-gray-700"
                 >
-                  Try v2 🚀
+                  Back to v1
                 </Button>
               </Link>
               {sessionQuery.data && (

@@ -190,7 +190,7 @@ export default function ChatPage() {
 
   return (
     <SidebarProvider className="min-h-[calc(100dvh-55px)] items-start">
-      <div className="flex h-[calc(100dvh-55px)] w-full overflow-x-hidden bg-[#121212] text-white">
+      <div className="flex h-[calc(100dvh-55px)] w-full overflow-x-hidden bg-gradient-to-br from-[#0f172a] to-[#1e293b] text-white">
         {/* Sidebar ‑– assume largura interna definida pelo componente */}
         <AppSidebar
           selectedSessionId={selectedSessionId}
@@ -200,7 +200,7 @@ export default function ChatPage() {
         {/* Conteúdo principal */}
         <div className="flex flex-1 flex-col">
           {/* Cabeçalho com ModelSelector e ModelInfoBadge - estilo ChatGPT */}
-          <div className="flex items-center justify-between border-b border-gray-700 px-4 py-3">
+          <div className="flex items-center justify-between border-b border-blue-700/50 bg-slate-800/50 px-4 py-3 backdrop-blur-sm">
             <div className="flex items-center gap-4">
               <SidebarTrigger className="md:hidden" />
               <ModelSelector
@@ -214,19 +214,14 @@ export default function ChatPage() {
                 }
               />
             </div>
-            <h1 className="text-lg font-medium">
-              {selectedSessionId
-                ? t("apps.chat.appName")
-                : t("apps.chat.welcome-chat")}
-            </h1>
             <div className="flex items-center gap-2">
-              <Link href="/apps/chat/v2">
+              <Link href="/apps/chat">
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-blue-600 bg-blue-600 text-xs text-white hover:bg-blue-700"
+                  className="border-gray-600 bg-gray-600 text-xs text-white hover:bg-gray-700"
                 >
-                  Try v2 🚀
+                  Back to v1
                 </Button>
               </Link>
               {selectedSessionId && sessionQuery.data && (
