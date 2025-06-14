@@ -17,10 +17,7 @@ export const getConfigHandler = async ({ ctx, input }: GetConfigOptions) => {
   });
 
   if (!teamConfig) {
-    throw new TRPCError({
-      code: "NOT_FOUND",
-      message: ctx.t("api.No appTeamConfig found"),
-    });
+    return null;
   }
 
   return teamConfig.config;

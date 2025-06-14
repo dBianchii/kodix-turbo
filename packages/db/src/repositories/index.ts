@@ -8,3 +8,7 @@ export * as careTaskRepository from "./app/kodixCare/careTaskRepository";
 export * as kodixCareRepository from "./app/kodixCare/kodixCareRepository";
 
 export * as calendarRepository from "./app/calendar/calendarRepository";
+
+// AI Studio & Chat repositories
+export * as aiStudioRepository from "./ai-studio";
+export * as chatRepository from "./chat";

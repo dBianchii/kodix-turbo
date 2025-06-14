@@ -2,15 +2,17 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { LuTrash } from "react-icons/lu";
+import { LuInfo, LuTrash } from "react-icons/lu";
 import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { User } from "@kdx/auth";
 import type { KodixAppId } from "@kdx/shared";
 import { getAppDescription, getAppName } from "@kdx/locales/next-intl/hooks";
-import { kodixCareAppId, todoAppId } from "@kdx/shared";
+import { getAppDependencies, kodixCareAppId, todoAppId } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { Badge } from "@kdx/ui/badge";
 import { Button, buttonVariants } from "@kdx/ui/button";
@@ -39,13 +41,22 @@ import {
 } from "@kdx/ui/dropdown-menu";
 import { Skeleton } from "@kdx/ui/skeleton";
 import { toast } from "@kdx/ui/toast";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@kdx/ui/tooltip";
 
 import {
   getAppIconUrl,
   getAppUrl,
   trpcErrorToastDefault,
 } from "~/helpers/miscelaneous";
-import { Link, useRouter } from "~/i18n/routing";
+import {
+  Link as RoutingLink,
+  useRouter as useRoutingRouter,
+} from "~/i18n/routing";
 import { useTRPC } from "~/trpc/react";
 
 export function KodixApp({
@@ -59,16 +70,32 @@ export function KodixApp({
 }) {
   const trpc = useTRPC();
   const [open, setOpen] = useState(false);
-  const router = useRouter();
+  const router = useRoutingRouter();
   const queryClient = useQueryClient();
   const t = useTranslations();
+
+  const dependencies = getAppDependencies(id);
+  const hasDependencies = dependencies.length > 0;
+
   const installAppMutation = useMutation(
     trpc.app.installApp.mutationOptions({
       onSuccess: () => {
         void queryClient.invalidateQueries(trpc.app.getAll.pathFilter());
         void queryClient.invalidateQueries(trpc.app.getInstalled.pathFilter());
         router.refresh();
-        toast.success(`${t("App")} ${appName} ${t("installed").toLowerCase()}`);
+
+        if (hasDependencies) {
+          const dependencyNames = dependencies
+            .map((depId: KodixAppId) => getAppName(depId, t))
+            .join(", ");
+          toast.success(
+            `${t("App")} ${appName} ${t("installed").toLowerCase()} (com dependências: ${dependencyNames})`,
+          );
+        } else {
+          toast.success(
+            `${t("App")} ${appName} ${t("installed").toLowerCase()}`,
+          );
+        }
       },
       onError: (err) => {
         trpcErrorToastDefault(err);
@@ -121,6 +148,15 @@ export function KodixApp({
       <CardContent className="grow">
         <CardDescription className="line-clamp-3">
           {appDescription}
+
+          {!installed && hasDependencies && (
+            <div className="text-muted-foreground mt-2 border-t pt-2 text-xs">
+              <strong>Requer:</strong>{" "}
+              {dependencies
+                .map((depId: KodixAppId) => getAppName(depId, t))
+                .join(", ")}
+            </div>
+          )}
         </CardDescription>
       </CardContent>
       <CardFooter className="flex justify-between border-t px-6 py-4">

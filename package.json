@@ -13,7 +13,11 @@
     "db:push": "turbo @kdx/db-dev#dev @kdx/db#push",
     "db:seed": "turbo @kdx/db-dev#dev @kdx/db#seed",
     "dev:kdx": "turbo watch dev studio -F @kdx/kdx... @kdx/db-dev#dev",
-    "dev:email": "turbo dev -F @kdx/react-email...",
+    "dev:api": "turbo run dev --filter=@kdx/api...",
+    "dev:care": "turbo run dev --filter=@kdx/care-expo",
+    "dev:chat": "turbo run dev --filter=@kdx/chat",
+    "dev:db": "turbo run dev --filter=@kdx/db",
+    "dev:email": "turbo run dev --filter=@kdx/react-email",
     "format": "turbo run format --continue -- --cache --cache-location .cache/.prettiercache",
     "format:fix": "turbo run format --continue -- --write --cache --cache-location .cache/.prettiercache",
     "lint": "turbo run lint --continue -- --cache --cache-location .cache/.eslintcache",
@@ -39,5 +43,10 @@
       "react": "catalog:react",
       "react-dom": "catalog:react"
     }
+  },
+  "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2"
   }
 }

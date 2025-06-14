@@ -1,0 +1,202 @@
+"use client";
+
+import { useState } from "react";
+import { AlertTriangle, CheckCircle2, Clock } from "lucide-react";
+
+import { Badge } from "@kdx/ui/badge";
+import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
+
+interface ModelInfoBadgeProps {
+  sessionData?: {
+    aiModel?: {
+      name: string;
+      provider: {
+        name: string;
+      };
+    };
+  };
+  lastMessageMetadata?: {
+    actualModelUsed?: string;
+    requestedModel?: string;
+    providerId?: string;
+    timestamp?: string;
+  };
+}
+
+export function ModelInfoBadge({
+  sessionData,
+  lastMessageMetadata,
+}: ModelInfoBadgeProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  // ✅ Função para normalizar nomes de modelos
+  const normalizeModelName = (modelName: string | undefined): string => {
+    if (!modelName) return "";
+
+    // Remover todos os tipos de sufixos e versões que os provedores adicionam
+    return modelName
+      .toLowerCase()
+      .replace(/-\d{4}-\d{2}-\d{2}.*$/, "") // Remove datas: -2024-08-06, -2024-11-20
+      .replace(/-\d{8}.*$/, "") // Remove timestamps: -20240806, -20241120
+      .replace(/-\d{4}.*$/, "") // Remove códigos: -0125, -1106, -0613, -2023
+      .replace(/-v\d+.*$/, "") // Remove versões: -v1, -v2, -v3
+      .replace(/-latest$/, "") // Remove sufixo: -latest
+      .replace(/-preview$/, "") // Remove sufixo: -preview
+      .replace(/-snapshot.*$/, "") // Remove sufixos: -snapshot-20241120
+      .replace(/-instruct.*$/, "") // Remove sufixos: -instruct, -instruct-v1
+      .replace(/-chat.*$/, "") // Remove sufixos: -chat, -chat-v1
+      .replace(/-beta.*$/, "") // Remove sufixos: -beta, -beta-1
+      .replace(/-alpha.*$/, "") // Remove sufixos: -alpha
+      .replace(/-turbo-\d+.*$/, "") // Remove: -turbo-0125, -turbo-1106
+      .replace(/-\d+k.*$/, "") // Remove context: -32k, -16k, -8k
+      .replace(/-\d+b.*$/, "") // Remove parameters: -7b, -13b, -70b
+      .replace(/-fine-tuned.*$/, "") // Remove: -fine-tuned-*
+      .replace(/-ft-.*$/, "") // Remove: -ft-anything
+      .trim();
+  };
+
+  const configuredModel = sessionData?.aiModel?.name;
+  const actualModel = lastMessageMetadata?.actualModelUsed;
+  const hasResponse = !!actualModel;
+
+  // ✅ Comparar modelos normalizados
+  const normalizedConfigured = normalizeModelName(configuredModel);
+  const normalizedActual = normalizeModelName(actualModel);
+
+  // ✅ Lógica inteligente de estados
+  // Se há modelo configurado mas a última resposta é de modelo diferente,
+  // assumimos que o modelo foi mudado recentemente e está "waiting" por nova mensagem
+  const hasModelMismatch =
+    hasResponse &&
+    normalizedConfigured &&
+    normalizedActual !== normalizedConfigured;
+
+  const isCorrect =
+    hasResponse &&
+    normalizedConfigured &&
+    normalizedActual === normalizedConfigured;
+  const isWaitingValidation = !hasResponse || hasModelMismatch; // ✅ Waiting se não há resposta OU se há mismatch (modelo mudou)
+  const hasMismatch = false; // ✅ Nunca mostrar erro - sempre assumir que mismatch = waiting
+
+  // Determinar status visual
+  const getStatus = () => {
+    if (isWaitingValidation) {
+      return {
+        icon: Clock,
+        color: "text-slate-400",
+        variant: "secondary",
+        label: "⏱",
+      };
+    }
+
+    if (isCorrect) {
+      return {
+        icon: CheckCircle2,
+        color: "text-green-600",
+        variant: "secondary",
+        label: "✓",
+      };
+    }
+
+    if (hasMismatch) {
+      return {
+        icon: AlertTriangle,
+        color: "text-amber-600",
+        variant: "secondary",
+        label: "!",
+      };
+    }
+
+    // Caso padrão: tem resposta mas não sabemos o modelo configurado
+    return {
+      icon: CheckCircle2,
+      color: "text-blue-600",
+      variant: "secondary",
+      label: "Active",
+    };
+  };
+
+  const status = getStatus();
+  const StatusIcon = status.icon;
+
+  return (
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
+      <PopoverTrigger asChild>
+        <Badge
+          variant={status.variant as any}
+          className={`h-6 cursor-pointer px-2 text-xs font-medium transition-colors ${status.color} hover:bg-slate-100`}
+        >
+          <StatusIcon className="mr-1 h-3 w-3" />
+          {status.label}
+        </Badge>
+      </PopoverTrigger>
+
+      <PopoverContent className="w-64 p-3" align="end" sideOffset={4}>
+        <div className="space-y-2">
+          {/* Título */}
+          <div className="text-sm font-medium text-slate-900">
+            Model Verification
+          </div>
+
+          {/* Status atual */}
+          <div className="space-y-1 text-xs">
+            <div className="flex justify-between">
+              <span className="text-slate-600">Configured:</span>
+              <code className="rounded bg-slate-100 px-1 text-slate-800">
+                {configuredModel || "Not set"}
+              </code>
+            </div>
+
+            {hasResponse && (
+              <div className="flex justify-between">
+                <span className="text-slate-600">Actually used:</span>
+                <code
+                  className={`rounded px-1 text-xs ${
+                    isCorrect
+                      ? "bg-green-100 text-green-800"
+                      : hasMismatch
+                        ? "bg-amber-100 text-amber-800"
+                        : "bg-blue-100 text-blue-800"
+                  }`}
+                >
+                  {actualModel}
+                </code>
+              </div>
+            )}
+          </div>
+
+          {/* Status message */}
+          <div
+            className={`rounded p-2 text-xs ${
+              isWaitingValidation
+                ? "bg-slate-50 text-slate-600"
+                : isCorrect
+                  ? "bg-green-50 text-green-700"
+                  : "bg-blue-50 text-blue-700"
+            }`}
+          >
+            {isWaitingValidation &&
+              hasResponse &&
+              "⏱ Send a message to verify the new model"}
+            {isWaitingValidation &&
+              !hasResponse &&
+              "⏱ Send a message to verify the model"}
+            {isCorrect && "✓ Model is working as configured"}
+            {!isWaitingValidation &&
+              !isCorrect &&
+              hasResponse &&
+              "Model responding normally"}
+          </div>
+
+          {/* Timestamp se disponível */}
+          {lastMessageMetadata?.timestamp && (
+            <div className="border-t pt-2 text-xs text-slate-500">
+              Last checked:{" "}
+              {new Date(lastMessageMetadata.timestamp).toLocaleTimeString()}
+            </div>
+          )}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}

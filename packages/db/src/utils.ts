@@ -3,8 +3,16 @@ import type {
   TableConfig,
 } from "drizzle-orm/mysql-core";
 
-import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
+import type { KodixAppId } from "@kdx/shared";
+import {
+  aiStudioAppId,
+  calendarAppId,
+  chatAppId,
+  kodixCareAppId,
+  todoAppId,
+} from "@kdx/shared";
 
+import * as aiStudio from "./schema/apps/ai-studio";
 import * as calendar from "./schema/apps/calendar";
 import * as kodixCare from "./schema/apps/kodixCare";
 import * as todos from "./schema/apps/todos";
@@ -16,8 +24,16 @@ const withoutRelationsAndZodSchemas = <T>(obj: Record<string, T>) =>
     ),
   ) as Record<string, MySqlTableWithColumns<TableConfig>>;
 
-export const appIdToSchemas = {
+export const appIdToSchemas: Record<
+  KodixAppId,
+  Record<string, MySqlTableWithColumns<TableConfig>>
+> = {
   [kodixCareAppId]: withoutRelationsAndZodSchemas(kodixCare),
   [todoAppId]: withoutRelationsAndZodSchemas(todos),
   [calendarAppId]: withoutRelationsAndZodSchemas(calendar),
+  [chatAppId]: withoutRelationsAndZodSchemas({}),
+  [aiStudioAppId]: withoutRelationsAndZodSchemas(aiStudio),
 };
+
+// Export crypto utilities
+export { encryptToken, decryptToken } from "./utils/crypto";

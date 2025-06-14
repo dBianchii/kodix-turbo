@@ -51,5 +51,13 @@
     "**/_components/**/**.tsx": "${filename} - Component",
     "**/_components/**/index.tsx": "${dirname} - Component",
     "**/crons/**.ts": "${filename} - CronJob"
-  }
+  },
+  // Cursor AI specific settings
+  "cursor.defaultContext": [
+    ".cursorrules",
+    ".cursor-rules/kodix-rules.md",
+    "docs/README.md"
+  ],
+  "cursor.chat.autoLoadContext": true,
+  "cursor.chat.defaultInstructions": "Always follow project rules in .cursorrules and .cursor-rules/kodix-rules.md"
 }

@@ -35,7 +35,7 @@ export function KodixCareUserSettingsForm({
     schema: ZSaveUserAppTeamConfigInputSchema,
     defaultValues: {
       appId: kodixCareAppId,
-      config: use(config),
+      config: use(config) as { sendNotificationsForDelayedTasks?: boolean },
     },
   });
 
@@ -48,7 +48,7 @@ export function KodixCareUserSettingsForm({
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit((values) => {
+        onSubmit={form.handleSubmit((values: any) => {
           execute(values);
         })}
         className="w-full space-y-6"

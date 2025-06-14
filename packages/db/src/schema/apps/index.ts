@@ -210,3 +210,9 @@ export const appActivityLogsRelations = relations(
     }),
   }),
 );
+
+// AI Studio exports
+export * from "./ai-studio";
+
+// Chat App exports
+export * from "./chat";

@@ -54,7 +54,8 @@ export default function Config() {
 
       <NotificationSettingsForm
         initialSendNotificationsForDelayedTasks={
-          !!getUserAppTeamConfigQuery.data.sendNotificationsForDelayedTasks
+          !!(getUserAppTeamConfigQuery.data as any)
+            ?.sendNotificationsForDelayedTasks
         }
       />
     </View>

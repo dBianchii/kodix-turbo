@@ -17,14 +17,27 @@ export const unlockMoreTasksHandler = async ({
   ctx,
   input,
 }: UnlockMoreTasksInputOptions) => {
-  const clonedCareTasksUntil = (
-    await getConfigHandler({
-      ctx,
-      input: {
-        appId: kodixCareAppId,
-      },
-    })
-  ).clonedCareTasksUntil;
+  const config = await getConfigHandler({
+    ctx,
+    input: {
+      appId: kodixCareAppId,
+    },
+  });
+
+  // Type assertion para garantir que é config do KodixCare
+  const kodixCareConfig = config as {
+    patientName: string;
+    clonedCareTasksUntil?: Date | undefined;
+  } | null;
+
+  if (!kodixCareConfig) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: ctx.t("api.No active shift"),
+    });
+  }
+
+  const clonedCareTasksUntil = kodixCareConfig.clonedCareTasksUntil;
 
   const isFirstShiftEver = !clonedCareTasksUntil;
 

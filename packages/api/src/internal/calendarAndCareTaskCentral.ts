@@ -214,7 +214,12 @@ export async function getCareTasks({
           if (!cfgForThisCt) return true; //? Shouldn't ever happen.
           //TODO: add sentry log here if it happens
 
-          const clonedCareTasksUntil = cfgForThisCt.config.clonedCareTasksUntil;
+          // Type assertion para garantir que é config do KodixCare
+          const kodixCareConfig = cfgForThisCt.config as {
+            patientName: string;
+            clonedCareTasksUntil?: Date | undefined;
+          };
+          const clonedCareTasksUntil = kodixCareConfig.clonedCareTasksUntil;
           if (!clonedCareTasksUntil) return true;
 
           return dayjs(ct.date).isAfter(clonedCareTasksUntil);

@@ -1,13 +1,18 @@
 import { z } from "zod";
 
-import { kodixCareAppId } from "@kdx/shared";
+import {
+  chatAppId,
+  chatUserAppTeamConfigSchema,
+  kodixCareAppId,
+  kodixCareUserAppTeamConfigSchema,
+} from "@kdx/shared";
 
-const kodixCareUserAppTeamConfigSchema = z.object({
-  sendNotificationsForDelayedTasks: z.boolean().optional(),
-});
 export const appIdToUserAppTeamConfigSchema = {
   [kodixCareAppId]: kodixCareUserAppTeamConfigSchema,
+  [chatAppId]: chatUserAppTeamConfigSchema,
 };
+
 export const appIdToUserAppTeamConfigSchemaUpdate = {
   [kodixCareAppId]: kodixCareUserAppTeamConfigSchema.deepPartial(),
+  [chatAppId]: chatUserAppTeamConfigSchema.deepPartial(),
 };
