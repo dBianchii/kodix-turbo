@@ -49,19 +49,26 @@ export function Message({
             className={cn(
               "rounded-2xl shadow-sm",
               role === "user"
-                ? "bg-muted/50 border-border border px-4 py-3" // Mensagem do usuário: cinza sutil
-                : "bg-slate-900/50 px-0 py-3", // Mensagem do assistente: cinza escuro sem borda
+                ? "bg-primary text-primary-foreground px-4 py-3" // Mensagem do usuário: padding normal
+                : "bg-muted/50 border-border border px-0 py-3", // Mensagem do assistente: sem padding lateral
             )}
           >
+            {/* Role Label - apenas para assistente */}
+            {role === "assistant" && (
+              <div className="text-muted-foreground mb-2 px-4 text-xs font-medium">
+                Assistant
+              </div>
+            )}
+
             {/* Message Content */}
             <div
               className={cn(
                 "prose prose-xl max-w-none text-lg",
                 role === "user"
-                  ? "dark:prose-invert" // Tema escuro padrão para usuário
+                  ? "prose-invert" // Texto branco para mensagens do usuário
                   : "dark:prose-invert", // Tema escuro padrão para assistente
                 role === "user"
-                  ? "" // Cor de texto padrão para mensagens do usuário
+                  ? "text-primary-foreground" // Texto branco para mensagens do usuário
                   : "px-4", // Assistente: padding apenas no conteúdo
               )}
             >

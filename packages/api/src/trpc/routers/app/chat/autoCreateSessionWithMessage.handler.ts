@@ -35,7 +35,8 @@ async function getPreferredModelHelper(
     console.log("📊 [PREFERRED_MODEL] User configs encontrados:", {
       count: userConfigs.length,
       configs: userConfigs.map((c) => ({
-        id: c.id,
+        userId: c.userId,
+        teamId: c.teamId,
         config: c.config,
         hasConfig: !!c.config,
         hasPersonalSettings: !!(c.config as any)?.personalSettings,

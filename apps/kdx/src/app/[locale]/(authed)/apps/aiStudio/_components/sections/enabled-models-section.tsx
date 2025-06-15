@@ -224,6 +224,9 @@ export function EnabledModelsSection() {
   const t = useTranslations();
   const queryClient = useQueryClient();
 
+  // ✅ Adicionar utils para invalidação correta
+  const utils = api.useUtils();
+
   const [isReordering, setIsReordering] = useState(false);
   const [showTestDialog, setShowTestDialog] = useState(false);
   const [testingModel, setTestingModel] = useState<any>(null);
@@ -241,7 +244,11 @@ export function EnabledModelsSection() {
   // ✅ CORRIGIDO: Usar api mutations diretamente
   const toggleModelMutation = api.app.aiStudio.toggleModel.useMutation({
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["app", "aiStudio"] });
+      // ✅ Invalidar queries específicas usando utils (padrão correto)
+      void utils.app.aiStudio.findAvailableModels.invalidate();
+      void utils.app.aiStudio.getDefaultModel.invalidate();
+      // ✅ Invalidação adicional para garantir atualização
+      void utils.app.aiStudio.invalidate();
       toast.success("Modelo atualizado com sucesso!");
     },
     onError: (error: any) => {
@@ -255,7 +262,11 @@ export function EnabledModelsSection() {
         setIsReordering(true);
       },
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["app", "aiStudio"] });
+        // ✅ Invalidar queries específicas usando utils (padrão correto)
+        void utils.app.aiStudio.findAvailableModels.invalidate();
+        void utils.app.aiStudio.getDefaultModel.invalidate();
+        // ✅ Invalidação adicional para garantir atualização
+        void utils.app.aiStudio.invalidate();
         toast.success("Prioridade dos modelos atualizada!");
       },
       onError: (error: any) => {
@@ -298,7 +309,11 @@ export function EnabledModelsSection() {
       setIsSettingDefault(true);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["app", "aiStudio"] });
+      // ✅ Invalidar queries específicas usando utils (padrão correto)
+      void utils.app.aiStudio.findAvailableModels.invalidate();
+      void utils.app.aiStudio.getDefaultModel.invalidate();
+      // ✅ Invalidação adicional para garantir atualização
+      void utils.app.aiStudio.invalidate();
       toast.success("Modelo padrão definido!");
     },
     onError: (error: any) => {
@@ -399,16 +414,7 @@ export function EnabledModelsSection() {
         </div>
       </div>
 
-      {/* Informative alert */}
-      <Alert>
-        <Info className="h-4 w-4" />
-        <AlertDescription>
-          <strong>{t("apps.aiStudio.enabledModels.noModels")}:</strong>{" "}
-          {t("apps.aiStudio.enabledModels.alerts.modelsInfo")}
-        </AlertDescription>
-      </Alert>
-
-      {/* Default model alert */}
+      {/* Default model alert - só aparece quando há um modelo padrão */}
       {defaultModel?.modelId && (
         <Alert>
           <Info className="h-4 w-4" />
@@ -449,6 +455,14 @@ export function EnabledModelsSection() {
               <p className="text-muted-foreground mb-4">
                 {t("apps.aiStudio.enabledModels.noModelsMessage.description")}
               </p>
+              {/* Alert informativo - só aparece quando não há modelos */}
+              <Alert className="max-w-md">
+                <Info className="h-4 w-4" />
+                <AlertDescription>
+                  <strong>{t("apps.aiStudio.enabledModels.noModels")}:</strong>{" "}
+                  {t("apps.aiStudio.enabledModels.alerts.modelsInfo")}
+                </AlertDescription>
+              </Alert>
             </div>
           ) : (
             <DndContext

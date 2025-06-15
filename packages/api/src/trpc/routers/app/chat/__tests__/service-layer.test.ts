@@ -69,7 +69,11 @@ describe("Chat Service Layer Integration", () => {
       const { appRepository } = await import("@kdx/db/repositories");
       (appRepository.findAppTeamConfigs as any).mockResolvedValue([]);
 
-      const result = await getPreferredModelHelper("team-123", chatAppId);
+      const result = await getPreferredModelHelper(
+        "team-123",
+        "user-123",
+        chatAppId,
+      );
 
       // Verificar que AiStudioService foi chamado corretamente
       expect(AiStudioService.getDefaultModel).toHaveBeenCalledWith({
@@ -98,7 +102,7 @@ describe("Chat Service Layer Integration", () => {
 
       // Deve lançar erro quando nenhum modelo é encontrado
       await expect(
-        getPreferredModelHelper("team-123", chatAppId),
+        getPreferredModelHelper("team-123", "user-123", chatAppId),
       ).rejects.toThrow("Nenhum modelo de IA disponível");
     });
 
@@ -113,7 +117,7 @@ describe("Chat Service Layer Integration", () => {
       (appRepository.findAppTeamConfigs as any).mockResolvedValue([]);
 
       try {
-        await getPreferredModelHelper("team-456", chatAppId);
+        await getPreferredModelHelper("team-456", "user-456", chatAppId);
       } catch (error) {
         // Erro esperado
       }
@@ -293,7 +297,7 @@ describe("Chat Service Layer Integration", () => {
       const { appRepository } = await import("@kdx/db/repositories");
       (appRepository.findAppTeamConfigs as any).mockResolvedValue([]);
 
-      await getPreferredModelHelper(testTeamId, chatAppId);
+      await getPreferredModelHelper(testTeamId, "test-user-789", chatAppId);
 
       // Verificar que teamId correto foi usado
       expect(AiStudioService.getDefaultModel).toHaveBeenCalledWith(

@@ -213,7 +213,7 @@ export async function seedAiStudio() {
         name: "gpt-4.1",
         providerId: openaiProvider?.id,
         config: {
-          maxTokens: 1000000,
+          maxTokens: 32768,
           temperature: 0.7,
           description: "GPT-4.1 flagship com contexto de 1M tokens",
           version: "gpt-4.1",
@@ -225,7 +225,7 @@ export async function seedAiStudio() {
         name: "gpt-4.1-mini",
         providerId: openaiProvider?.id,
         config: {
-          maxTokens: 1000000,
+          maxTokens: 32768,
           temperature: 0.7,
           description: "GPT-4.1 Mini com contexto de 1M tokens",
           version: "gpt-4.1-mini",
@@ -237,7 +237,7 @@ export async function seedAiStudio() {
         name: "gpt-4.1-nano",
         providerId: openaiProvider?.id,
         config: {
-          maxTokens: 1000000,
+          maxTokens: 32768,
           temperature: 0.7,
           description: "GPT-4.1 Nano ultra eficiente com contexto de 1M tokens",
           version: "gpt-4.1-nano",

@@ -376,8 +376,7 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
       {/* Chat Area - Usando ScrollArea como na V3 */}
       <div className="min-h-0 flex-1">
         <ScrollArea className="h-full">
-          {/* Container para margem do chat window */}
-          <div className="px-4 py-4 md:px-8 lg:px-40">
+          <div className="py-4">
             {messages.map((msg, idx) => (
               <div
                 key={msg.id || idx}
@@ -434,7 +433,7 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
 
       {/* Input Area - Fixo no bottom como no V3 */}
       <div className="bg-background border-t p-4">
-        <div className="mx-auto max-w-4xl">
+        <div className="mx-auto max-w-3xl">
           <InputBox onSend={sendMessage} disabled={isLoading} />
         </div>
       </div>
