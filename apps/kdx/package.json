@@ -30,6 +30,7 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tooltip": "^1.2.7",
     "@t3-oss/env-nextjs": "catalog:",
+    "@tailwindcss/typography": "^0.5.16",
     "@tanstack/react-query": "catalog:tanstack-query",
     "@tanstack/react-query-devtools": "catalog:tanstack-query",
     "@tanstack/react-table": "catalog:",

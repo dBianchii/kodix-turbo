@@ -976,7 +976,7 @@ export function AppSidebar({
                 </p>
               </div>
             ) : (
-              <div>
+              <div className="space-y-2">
                 <Label htmlFor="targetFolderSelect">Pasta de Destino</Label>
                 <Select
                   value={targetFolderId}

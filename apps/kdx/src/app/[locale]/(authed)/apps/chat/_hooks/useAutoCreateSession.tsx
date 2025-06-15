@@ -56,8 +56,12 @@ export function useAutoCreateSession(options?: UseAutoCreateSessionOptions) {
         if (result?.session?.id) {
           const sessionId = result.session.id;
           toast.success("Chat iniciado com sucesso!");
-          router.push(`/apps/chat/${sessionId}`);
+          // ✅ Primeiro chama o callback para atualizar estado local
           options?.onSuccess?.(sessionId);
+          // ✅ Pequeno delay para garantir que o estado foi atualizado
+          setTimeout(() => {
+            console.log("🔄 [CHAT] Redirecionando para sessão:", sessionId);
+          }, 100);
         }
         setIsCreating(false);
       },

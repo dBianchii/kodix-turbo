@@ -7,11 +7,17 @@ export async function POST(request: NextRequest) {
   try {
     console.log("🔵 [API] POST streaming recebido");
 
-    const { chatSessionId, content, useAgent = true } = await request.json();
+    const {
+      chatSessionId,
+      content,
+      useAgent = true,
+      skipUserMessage = false,
+    } = await request.json();
     console.log("🟢 [API] Dados recebidos:", {
       chatSessionId,
       content,
       useAgent,
+      skipUserMessage,
     });
 
     if (!chatSessionId || !content) {
@@ -56,15 +62,51 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Criar mensagem do usuário
-    const userMessage = await chatRepository.ChatMessageRepository.create({
-      chatSessionId: session.id,
-      senderRole: "user",
-      content,
-      status: "ok",
-    });
+    // ✅ CORREÇÃO: Criar mensagem do usuário apenas se não for skipUserMessage
+    let userMessage;
+    let recentMessages: any[] | null = null;
 
-    console.log("✅ [API] Mensagem do usuário criada");
+    if (skipUserMessage) {
+      console.log(
+        "🔄 [API] Pulando criação de mensagem do usuário (skipUserMessage=true)",
+      );
+      // Buscar a mensagem mais recente do usuário com o mesmo conteúdo
+      recentMessages = await chatRepository.ChatMessageRepository.findBySession(
+        {
+          chatSessionId: session.id,
+          limite: 5,
+          offset: 0,
+          ordem: "desc",
+        },
+      );
+
+      userMessage = recentMessages.find(
+        (msg: any) => msg.senderRole === "user" && msg.content === content,
+      );
+
+      if (!userMessage) {
+        console.warn(
+          "⚠️ [API] Mensagem do usuário não encontrada, criando nova",
+        );
+        userMessage = await chatRepository.ChatMessageRepository.create({
+          chatSessionId: session.id,
+          senderRole: "user",
+          content,
+          status: "ok",
+        });
+      } else {
+        console.log("✅ [API] Mensagem do usuário encontrada:", userMessage.id);
+      }
+    } else {
+      // Comportamento normal: criar nova mensagem do usuário
+      userMessage = await chatRepository.ChatMessageRepository.create({
+        chatSessionId: session.id,
+        senderRole: "user",
+        content,
+        status: "ok",
+      });
+      console.log("✅ [API] Mensagem do usuário criada");
+    }
 
     if (!useAgent) {
       return NextResponse.json({
@@ -73,16 +115,28 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Buscar histórico de mensagens
-    const messages = await chatRepository.ChatMessageRepository.findBySession({
-      chatSessionId: session.id,
-      limite: 20,
-      offset: 0,
-      ordem: "asc",
-    });
+    // ✅ CORREÇÃO: Buscar histórico de mensagens ou reutilizar se já carregadas
+    let messages;
+    if (skipUserMessage && recentMessages) {
+      // Se já carregamos mensagens para buscar a do usuário, reutilizar e ordenar
+      messages = recentMessages.reverse(); // Inverter para ordem cronológica
+    } else {
+      // Buscar histórico normalmente
+      messages = await chatRepository.ChatMessageRepository.findBySession({
+        chatSessionId: session.id,
+        limite: 20,
+        offset: 0,
+        ordem: "asc",
+      });
+    }
 
-    // Incluir a nova mensagem do usuário
-    const allMessages = [...messages, userMessage];
+    // ✅ CORREÇÃO: Incluir mensagem do usuário apenas se não estiver já incluída
+    const userMessageExists = messages.some(
+      (msg: any) => msg.id === userMessage?.id,
+    );
+    const allMessages = userMessageExists
+      ? messages
+      : [...messages, userMessage];
 
     // Formatar mensagens para o formato da OpenAI
     const formattedMessages: { role: string; content: string }[] = [];

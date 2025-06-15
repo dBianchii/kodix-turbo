@@ -79,10 +79,10 @@ export function QuickChatInput({
         );
       }
 
-      // ✅ Criar a sessão (agora o backend encontrará o modelo correto)
+      // ✅ Criar a sessão SEM IA para redirecionamento imediato
       await createSessionWithMessage({
         firstMessage: message.trim(),
-        useAgent: true,
+        useAgent: false, // ✅ Não processar IA agora - será feito pelo ChatWindow
         generateTitle: true,
       });
 
@@ -98,7 +98,7 @@ export function QuickChatInput({
         );
         await createSessionWithMessage({
           firstMessage: message.trim(),
-          useAgent: true,
+          useAgent: false, // ✅ Não processar IA no fallback também
           generateTitle: true,
         });
         setMessage("");

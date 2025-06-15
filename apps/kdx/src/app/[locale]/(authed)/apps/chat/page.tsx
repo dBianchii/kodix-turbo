@@ -32,10 +32,9 @@ import { toast } from "@kdx/ui/toast";
 
 import { api } from "~/trpc/react";
 import { AppSidebar } from "./_components/app-sidebar";
-import { ChatWindow } from "./_components/chat-window";
 import { ModelInfoBadge } from "./_components/model-info-badge";
 import { ModelSelector } from "./_components/model-selector";
-import { QuickChatInput } from "./_components/quick-chat-input";
+import { UnifiedChatWindow } from "./_components/unified-chat-window";
 import { useChatPreferredModel } from "./_hooks/useChatPreferredModel";
 import { useChatUserConfig } from "./_hooks/useChatUserConfig";
 
@@ -146,7 +145,16 @@ export default function ChatPage() {
   }, [selectedModelId]);
 
   const handleSessionSelect = (sessionId: string | undefined) => {
+    console.log("🔄 [CHAT] handleSessionSelect chamado:", sessionId);
     setSelectedSessionId(sessionId);
+
+    // ✅ Se é uma nova sessão criada pelo QuickChatInput, processar primeira resposta da IA
+    if (sessionId) {
+      console.log(
+        "🤖 [CHAT] Nova sessão criada, processando primeira resposta da IA...",
+      );
+      // A resposta da IA será processada pelo ChatWindow via streaming
+    }
   };
 
   const handleModelSelect = (modelId: string) => {
@@ -253,17 +261,11 @@ export default function ChatPage() {
           */}
 
           {/* Área do chat cresce para preencher o espaço restante */}
-          <div className="relative flex-1 p-4">
-            {selectedSessionId ? (
-              <ChatWindow sessionId={selectedSessionId} />
-            ) : (
-              <div className="flex h-full items-center justify-center">
-                <QuickChatInput
-                  onSessionCreated={handleSessionSelect}
-                  selectedModelId={selectedModelId}
-                />
-              </div>
-            )}
+          <div className="relative flex-1">
+            <UnifiedChatWindow
+              sessionId={selectedSessionId}
+              onNewSession={handleSessionSelect}
+            />
           </div>
         </div>
       </div>
