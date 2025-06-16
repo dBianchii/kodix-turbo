@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
@@ -11,7 +10,7 @@ import { toast } from "@kdx/ui/toast";
 
 import { api } from "~/trpc/react";
 import { AppSidebar } from "../_components/app-sidebar";
-import { ChatWindow } from "../_components/chat-window";
+import { ChatWindow } from "../_components/chat-window-session";
 import { ModelInfoBadge } from "../_components/model-info-badge";
 import { ModelSelector } from "../_components/model-selector";
 import { useChatPreferredModel } from "../_hooks/useChatPreferredModel";
@@ -143,15 +142,6 @@ export default function ChatSessionPage() {
             </div>
             <h1 className="text-lg font-medium">{t("apps.chat.appName")}</h1>
             <div className="flex items-center gap-2">
-              <Link href={`/apps/chat/v2/${sessionId}`}>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-blue-600 bg-blue-600 text-xs text-white hover:bg-blue-700"
-                >
-                  Try v2 🚀
-                </Button>
-              </Link>
               {sessionQuery.data && (
                 <ModelInfoBadge
                   sessionData={sessionQuery.data}

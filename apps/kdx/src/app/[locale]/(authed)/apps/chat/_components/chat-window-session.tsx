@@ -373,58 +373,71 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
 
   return (
     <div className="absolute inset-0 flex flex-col">
-      {/* Container de mensagens modernizado com ScrollArea */}
-      <ScrollArea className="flex-1 bg-gradient-to-b from-slate-900/50 to-slate-800/50">
-        <div className="px-4 py-4 pb-32">
-          {messages.map((msg, idx) => (
-            <Message
-              key={msg.id || idx}
-              role={msg.role}
-              content={msg.content}
-            />
-          ))}
-
-          {/* Loading indicator com Shadcn */}
-          {isLoading && (
-            <div className="flex justify-center py-4">
-              <Card className="bg-slate-800/50 px-4 py-2 backdrop-blur-sm">
-                <div className="flex items-center space-x-2">
-                  <Loader2 className="h-4 w-4 animate-spin text-purple-400" />
-                  <span className="text-sm text-slate-300">
-                    {t("apps.chat.messages.typing")}
-                  </span>
-                </div>
-              </Card>
-            </div>
-          )}
-
-          {/* Error display com Shadcn Alert */}
-          {error && (
-            <div className="flex justify-center py-4">
-              <Alert
-                variant="destructive"
-                className="max-w-md border-0 bg-red-900/50"
+      {/* Chat Area */}
+      <div className="min-h-0 flex-1">
+        <ScrollArea className="h-full">
+          {/* Container para margem do chat window */}
+          <div className="px-4 py-4 md:px-8 lg:px-40">
+            {messages.map((msg, idx) => (
+              <div
+                key={msg.id || idx}
+                className={
+                  msg.role === "user"
+                    ? "flex justify-end px-0" // Usuário: limitado e com padding
+                    : "px-0" // Assistente: sem margens laterais - usa 100% da largura
+                }
               >
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription className="text-sm">{error}</AlertDescription>
-              </Alert>
-            </div>
-          )}
+                <Message
+                  role={msg.role}
+                  content={msg.content}
+                  isStreaming={
+                    msg.role === "assistant" &&
+                    idx === messages.length - 1 &&
+                    isLoading
+                  }
+                />
+              </div>
+            ))}
 
-          <div ref={bottomRef} />
-        </div>
-      </ScrollArea>
+            {/* Loading indicator quando não há mensagens */}
+            {isLoading && messages.length === 0 && (
+              <div className="flex justify-end px-0">
+                <div className="flex justify-center py-8">
+                  <div className="flex items-center space-x-2">
+                    <Loader2 className="text-primary h-4 w-4 animate-spin" />
+                    <span className="text-muted-foreground text-sm">
+                      {t("apps.chat.messages.typing")}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
 
-      <Separator className="bg-slate-700/50" />
+            {/* Error display */}
+            {error && (
+              <div className="flex justify-end px-0">
+                <div className="flex justify-center py-8">
+                  <Alert variant="destructive" className="max-w-md">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription className="text-sm">
+                      {error}
+                    </AlertDescription>
+                  </Alert>
+                </div>
+              </div>
+            )}
 
-      {/* Campo de input modernizado com Card */}
-      <div className="absolute right-0 bottom-6 left-0 px-4">
-        <Card className="mx-auto max-w-3xl border-purple-600/20 bg-slate-900/90 shadow-xl backdrop-blur-sm">
-          <div className="p-4">
-            <InputBox onSend={sendMessage} disabled={isLoading} />
+            <div ref={bottomRef} className="h-8" />
           </div>
-        </Card>
+        </ScrollArea>
+      </div>
+
+      {/* Input Area */}
+      <div className="bg-background border-t p-4">
+        <div className="mx-auto max-w-4xl">
+          <InputBox onSend={sendMessage} disabled={isLoading} />
+        </div>
       </div>
     </div>
   );
-} 
+}

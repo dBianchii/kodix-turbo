@@ -23,7 +23,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@kdx/ui/button";
@@ -32,9 +31,9 @@ import { toast } from "@kdx/ui/toast";
 
 import { api } from "~/trpc/react";
 import { AppSidebar } from "./_components/app-sidebar";
+import { ChatWindow } from "./_components/chat-window";
 import { ModelInfoBadge } from "./_components/model-info-badge";
 import { ModelSelector } from "./_components/model-selector";
-import { UnifiedChatWindow } from "./_components/unified-chat-window";
 import { useChatPreferredModel } from "./_hooks/useChatPreferredModel";
 import { useChatUserConfig } from "./_hooks/useChatUserConfig";
 
@@ -148,7 +147,7 @@ export default function ChatPage() {
     console.log("🔄 [CHAT] handleSessionSelect chamado:", sessionId);
     setSelectedSessionId(sessionId);
 
-    // ✅ Se é uma nova sessão criada pelo QuickChatInput, processar primeira resposta da IA
+    // ✅ Se é uma nova sessão criada, processar primeira resposta da IA
     if (sessionId) {
       console.log(
         "🤖 [CHAT] Nova sessão criada, processando primeira resposta da IA...",
@@ -242,11 +241,6 @@ export default function ChatPage() {
               />
             </div>
             <div className="flex items-center gap-2">
-              <Link href="/apps/chat/v2">
-                <Button variant="outline" size="sm" className="text-xs">
-                  Try v2 🚀
-                </Button>
-              </Link>
               {selectedSessionId && sessionQuery.data && (
                 <ModelInfoBadge
                   sessionData={sessionQuery.data}
@@ -262,7 +256,7 @@ export default function ChatPage() {
 
           {/* Área do chat cresce para preencher o espaço restante */}
           <div className="relative flex-1">
-            <UnifiedChatWindow
+            <ChatWindow
               sessionId={selectedSessionId}
               onNewSession={handleSessionSelect}
             />
