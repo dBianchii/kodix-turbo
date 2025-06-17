@@ -16,7 +16,9 @@ import { AppSidebar } from "../_components/app-sidebar";
 import { ChatWindow } from "../_components/chat-window";
 import { ModelInfoBadge } from "../_components/model-info-badge";
 import { ModelSelector } from "../_components/model-selector";
+import { TokenUsageBadge } from "../_components/token-usage-badge";
 import { useChatPreferredModel } from "../_hooks/useChatPreferredModel";
+import { useTokenUsage } from "../_hooks/useTokenUsage";
 
 export default function ChatSessionPage() {
   const t = useTranslations();
@@ -25,6 +27,9 @@ export default function ChatSessionPage() {
   const sessionId = params.sessionId as string;
   const trpc = useTRPC();
   const queryClient = useQueryClient();
+
+  // 🔍 DEBUG: Log inicial para verificar se a página está carregando
+  console.log("🟢 [CHAT_SESSION] Página carregada, sessionId:", sessionId);
 
   const [selectedSessionId, setSelectedSessionId] = useState<string>(sessionId);
   const [selectedModelId, setSelectedModelId] = useState<string | undefined>(
@@ -55,6 +60,22 @@ export default function ChatSessionPage() {
     ),
   );
 
+  // ✅ Buscar todas as mensagens para calcular tokens
+  const allMessagesQuery = useQuery(
+    trpc.app.chat.buscarMensagensTest.queryOptions(
+      {
+        chatSessionId: sessionId,
+        limite: 100, // Reduzir limite para evitar erro "too_big"
+        pagina: 1,
+        ordem: "asc", // ✅ Ordem cronológica para cálculo de tokens
+      },
+      {
+        enabled: !!sessionId,
+        retry: 2, // Tentar 2 vezes em caso de erro
+      },
+    ),
+  );
+
   // ✅ Extrair metadata da última mensagem
   const lastMessage = messagesQuery.data?.messages?.[0];
   const lastMessageMetadata = lastMessage?.metadata
@@ -65,6 +86,35 @@ export default function ChatSessionPage() {
         timestamp: lastMessage.createdAt,
       }
     : undefined;
+
+  // ✅ Calcular uso de tokens
+  const modelName = sessionQuery.data?.aiModel?.name || "";
+  const messages = allMessagesQuery.data?.messages || [];
+
+  // 🔍 DEBUG: Teste manual de cálculo de tokens
+  const testTokens = messages.reduce((total, msg) => {
+    return total + Math.ceil((msg.content || "").length / 4);
+  }, 0);
+
+  const tokenUsage = useTokenUsage(messages, modelName);
+
+  // 🔍 DEBUG: Log para verificar dados
+  console.log("🔥 [TOKEN_DEBUG] DADOS:", {
+    sessionId,
+    modelName,
+    messagesCount: messages.length,
+    testTokensManual: testTokens,
+    tokenUsageResult: tokenUsage,
+    isLoading: allMessagesQuery.isLoading,
+    hasError: !!allMessagesQuery.error,
+  });
+
+  // Log mais detalhado das mensagens
+  if (messages.length > 0) {
+    console.log("📝 [TOKEN_DEBUG] MENSAGENS:", messages.slice(0, 3));
+  } else {
+    console.log("❌ [TOKEN_DEBUG] NENHUMA MENSAGEM ENCONTRADA");
+  }
 
   // ✅ Mutation para atualizar modelo da sessão
   const updateSessionMutation = useMutation(
@@ -83,6 +133,27 @@ export default function ChatSessionPage() {
       onError: trpcErrorToastDefault,
     }),
   );
+
+  // 🔍 DEBUG: useEffect para logs em tempo real
+  useEffect(() => {
+    console.log("🔄 [TOKEN_DEBUG] DADOS ATUALIZADOS:", {
+      sessionId,
+      modelName,
+      messagesCount: messages.length,
+      testTokensManual: testTokens,
+      tokenUsageResult: tokenUsage,
+      isLoading: allMessagesQuery.isLoading,
+      hasError: !!allMessagesQuery.error,
+    });
+  }, [
+    sessionId,
+    modelName,
+    messages.length,
+    testTokens,
+    tokenUsage,
+    allMessagesQuery.isLoading,
+    allMessagesQuery.error,
+  ]);
 
   // Atualizar modelo selecionado baseado na sessão atual
   useEffect(() => {
@@ -151,6 +222,12 @@ export default function ChatSessionPage() {
             </div>
             <h1 className="text-lg font-medium">{t("apps.chat.appName")}</h1>
             <div className="flex items-center gap-2">
+              {sessionQuery.data && (
+                <TokenUsageBadge
+                  usedTokens={tokenUsage.usedTokens}
+                  maxTokens={tokenUsage.maxTokens}
+                />
+              )}
               {sessionQuery.data && (
                 <ModelInfoBadge
                   sessionData={sessionQuery.data}

@@ -37,8 +37,10 @@ import { AppSidebar } from "./_components/app-sidebar";
 import { ChatWindow } from "./_components/chat-window";
 import { ModelInfoBadge } from "./_components/model-info-badge";
 import { ModelSelector } from "./_components/model-selector";
+import { TokenUsageBadge } from "./_components/token-usage-badge";
 import { useChatPreferredModel } from "./_hooks/useChatPreferredModel";
 import { useChatUserConfig } from "./_hooks/useChatUserConfig";
+import { useTokenUsage } from "./_hooks/useTokenUsage";
 
 {
   /*
@@ -91,6 +93,22 @@ export default function ChatPage() {
     ),
   );
 
+  // ✅ Buscar todas as mensagens para calcular tokens
+  const allMessagesQuery = useQuery(
+    trpc.app.chat.buscarMensagensTest.queryOptions(
+      {
+        chatSessionId: selectedSessionId!,
+        limite: 100, // Reduzir limite para evitar erro "too_big"
+        pagina: 1,
+        ordem: "asc", // ✅ Ordem cronológica para cálculo de tokens
+      },
+      {
+        enabled: !!selectedSessionId,
+        retry: 2, // Tentar 2 vezes em caso de erro
+      },
+    ),
+  );
+
   // ✅ Extrair metadata da última mensagem
   const lastMessage = messagesQuery.data?.messages?.[0];
 
@@ -102,6 +120,34 @@ export default function ChatPage() {
         timestamp: lastMessage.createdAt.toISOString(),
       }
     : undefined;
+
+  // ✅ Calcular uso de tokens
+  const modelName = sessionQuery.data?.aiModel?.name || "";
+  const messages = allMessagesQuery.data?.messages || [];
+
+  // 🔍 DEBUG: Teste manual de cálculo de tokens
+  const testTokens = messages.reduce((total, msg) => {
+    return total + Math.ceil((msg.content || "").length / 4);
+  }, 0);
+
+  const tokenUsage = useTokenUsage(messages, modelName);
+
+  // 🔍 DEBUG: Log para verificar dados
+  console.log("🔍 [TOKEN_DEBUG] Dados para cálculo de tokens:", {
+    selectedSessionId,
+    modelName,
+    messagesCount: messages.length,
+    allMessagesLoading: allMessagesQuery.isLoading,
+    allMessagesError: allMessagesQuery.error,
+    testTokensManual: testTokens,
+    tokenUsage,
+    rawMessages: messages,
+    messagesPreview: messages.map((m) => ({
+      role: m.senderRole,
+      contentLength: m.content?.length || 0,
+      contentPreview: (m.content || "").substring(0, 50) + "...",
+    })),
+  });
 
   // ✅ Mutation para atualizar sessão
   const updateSessionMutation = useMutation(
@@ -249,6 +295,14 @@ export default function ChatPage() {
               />
             </div>
             <div className="flex items-center gap-2">
+              {selectedSessionId &&
+                sessionQuery.data &&
+                tokenUsage.maxTokens > 0 && (
+                  <TokenUsageBadge
+                    usedTokens={tokenUsage.usedTokens}
+                    maxTokens={tokenUsage.maxTokens}
+                  />
+                )}
               {selectedSessionId && sessionQuery.data && (
                 <ModelInfoBadge
                   sessionData={sessionQuery.data}

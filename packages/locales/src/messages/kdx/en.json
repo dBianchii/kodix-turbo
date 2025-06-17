@@ -159,6 +159,13 @@
         "loadingSessions": "Loading sessions...",
         "moveToFolder": "Move to folder"
       },
+      "tokenUsage": {
+        "tooltip": "{used}/{total} tokens",
+        "low": "Low token usage",
+        "medium": "Moderate token usage",
+        "high": "High token usage - near limit",
+        "exceeded": "Token limit exceeded"
+      },
       "errors": {
         "createSession": "Error creating session: {error}"
       },

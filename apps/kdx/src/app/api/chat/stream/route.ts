@@ -408,11 +408,134 @@ export async function POST(request: NextRequest) {
       `🎯 [API] Modelo: ${modelName}, Mensagens: ${formattedMessages.length}`,
     );
 
-    // Preparar payload para OpenAI
-    const payload = {
+    // 🎯 GESTÃO INTELIGENTE DE TOKENS
+    const estimateTokens = (text: string): number => {
+      // Estimativa mais precisa: ~4 caracteres = 1 token para inglês/português
+      // Adicionar overhead para formatação JSON e estrutura da mensagem
+      return Math.ceil(text.length / 3.5) + 10; // +10 tokens para overhead da estrutura
+    };
+
+    // Separar mensagens por tipo para gestão inteligente
+    const systemMessages = formattedMessages.filter((m) => m.role === "system");
+    const conversationMessages = formattedMessages.filter(
+      (m) => m.role !== "system",
+    );
+
+    // Calcular tokens das mensagens system (SEMPRE preservadas)
+    const systemTokens = systemMessages.reduce(
+      (total, msg) => total + estimateTokens(msg.content),
+      0,
+    );
+
+    // Calcular limite disponível para conversa (70% do total, reservando 30% para resposta)
+    const maxInputTokens = Math.floor(maxTokens * 0.7);
+    const availableForConversation = maxInputTokens - systemTokens - 100; // -100 tokens de margem de segurança
+
+    console.log(`🎯 [TOKEN_MANAGEMENT] Limite total do modelo: ${maxTokens}`);
+    console.log(
+      `🎯 [TOKEN_MANAGEMENT] Limite para input: ${maxInputTokens} (70%)`,
+    );
+    console.log(
+      `🎯 [TOKEN_MANAGEMENT] Tokens system (preservados): ${systemTokens}`,
+    );
+    console.log(
+      `🎯 [TOKEN_MANAGEMENT] Disponível para conversa: ${availableForConversation}`,
+    );
+
+    // Calcular tokens da conversa atual
+    const conversationTokens = conversationMessages.reduce(
+      (total, msg) => total + estimateTokens(msg.content),
+      0,
+    );
+
+    console.log(
+      `🎯 [TOKEN_MANAGEMENT] Tokens da conversa atual: ${conversationTokens}`,
+    );
+
+    // Se exceder o limite, truncar mensagens antigas (mas manter as mais recentes)
+    let finalConversationMessages = conversationMessages;
+
+    if (conversationTokens > availableForConversation) {
+      console.log(
+        `⚠️ [TOKEN_MANAGEMENT] Limite excedido! Truncando histórico...`,
+      );
+
+      finalConversationMessages = [];
+      let accumulatedTokens = 0;
+
+      // Sempre manter a última mensagem (geralmente do usuário)
+      if (conversationMessages.length > 0) {
+        const lastMessage =
+          conversationMessages[conversationMessages.length - 1]!;
+        const lastMessageTokens = estimateTokens(lastMessage.content);
+        finalConversationMessages.push(lastMessage);
+        accumulatedTokens += lastMessageTokens;
+        console.log(
+          `🎯 [TOKEN_MANAGEMENT] Última mensagem preservada: ${lastMessageTokens} tokens`,
+        );
+      }
+
+      // Adicionar mensagens anteriores de trás para frente até atingir o limite
+      for (let i = conversationMessages.length - 2; i >= 0; i--) {
+        const msg = conversationMessages[i];
+        if (!msg) continue; // Pular se mensagem for undefined
+        const msgTokens = estimateTokens(msg.content);
+
+        if (accumulatedTokens + msgTokens <= availableForConversation) {
+          finalConversationMessages.unshift(msg); // Adicionar no início para manter ordem
+          accumulatedTokens += msgTokens;
+        } else {
+          console.log(
+            `🎯 [TOKEN_MANAGEMENT] Mensagem ${i} removida para economizar tokens`,
+          );
+          break;
+        }
+      }
+
+      const removedCount =
+        conversationMessages.length - finalConversationMessages.length;
+      console.log(
+        `✅ [TOKEN_MANAGEMENT] Histórico truncado: ${removedCount} mensagens removidas`,
+      );
+      console.log(
+        `✅ [TOKEN_MANAGEMENT] Tokens finais da conversa: ${accumulatedTokens}`,
+      );
+    }
+
+    // Reconstruir array final: System messages primeiro, depois conversa truncada
+    const finalFormattedMessages = [
+      ...systemMessages,
+      ...finalConversationMessages,
+    ];
+
+    // Validação final
+    const totalFinalTokens = finalFormattedMessages.reduce(
+      (total, msg) => total + estimateTokens(msg.content),
+      0,
+    );
+
+    console.log(
+      `🎯 [TOKEN_MANAGEMENT] Total final de tokens: ${totalFinalTokens}/${maxInputTokens}`,
+    );
+    console.log(
+      `🎯 [TOKEN_MANAGEMENT] Mensagens finais: ${finalFormattedMessages.length} (${systemMessages.length} system + ${finalConversationMessages.length} conversa)`,
+    );
+
+    if (totalFinalTokens > maxInputTokens) {
+      console.warn(
+        `⚠️ [TOKEN_MANAGEMENT] AVISO: Ainda excedendo limite! ${totalFinalTokens} > ${maxInputTokens}`,
+      );
+    } else {
+      console.log(
+        `✅ [TOKEN_MANAGEMENT] Dentro do limite! ${totalFinalTokens} <= ${maxInputTokens}`,
+      );
+    }
+
+    // Usar mensagens finais otimizadas
+    const optimizedPayload = {
       model: modelName,
-      messages: formattedMessages,
-      max_tokens: maxTokens,
+      messages: finalFormattedMessages,
+      max_tokens: Math.floor(maxTokens * 0.3), // 30% reservado para resposta
       temperature: temperature,
       stream: true,
     };
@@ -424,7 +547,7 @@ export async function POST(request: NextRequest) {
         Authorization: `Bearer ${providerToken.token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(optimizedPayload),
     });
 
     // 🔧 FIX: Tratamento específico de erros da OpenAI

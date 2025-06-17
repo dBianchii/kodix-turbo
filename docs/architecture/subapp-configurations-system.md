@@ -516,3 +516,7 @@ export const appInstalledMiddleware = t.middleware(
 ---
 
 _Este sistema é a base para personalização flexível de qualquer SubApp no Kodix. Para dúvidas ou implementação, consulte os exemplos práticos do Kodix Care e Chat._
+
+- SEMPRE apresente estratégias/abordagens antes de implementar código
+- Obtenha aprovação explícita do usuário antes de qualquer mudança
+- Nunca codifique diretamente sem discutir alternativas primeiro

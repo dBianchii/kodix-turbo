@@ -148,6 +148,13 @@
         "loadingChats": "Carregando chats...",
         "loadingSessions": "Carregando sessões...",
         "moveToFolder": "Mover para pasta"
+      },
+      "tokenUsage": {
+        "tooltip": "{used}/{total} tokens",
+        "low": "Uso baixo de tokens",
+        "medium": "Uso moderado de tokens",
+        "high": "Uso alto de tokens - próximo do limite",
+        "exceeded": "Limite de tokens excedido"
       }
     },
     "calendar": {
