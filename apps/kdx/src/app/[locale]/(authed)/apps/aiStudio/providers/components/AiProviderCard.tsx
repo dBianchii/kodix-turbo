@@ -116,7 +116,7 @@ export function AiProviderCard({
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => setShowDeleteDialog(true)}
-                  className="text-destructive"
+                  className="text-muted-foreground"
                 >
                   <Trash2 className="mr-2 h-4 w-4" />
                   Excluir

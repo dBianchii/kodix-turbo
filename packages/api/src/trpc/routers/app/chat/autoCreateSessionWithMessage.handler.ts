@@ -37,10 +37,7 @@ async function getPreferredModelHelper(
       configs: userConfigs.map((c) => ({
         userId: c.userId,
         teamId: c.teamId,
-        config: c.config,
         hasConfig: !!c.config,
-        hasPersonalSettings: !!(c.config as any)?.personalSettings,
-        preferredModelId: (c.config as any)?.personalSettings?.preferredModelId,
       })),
     });
 
@@ -309,110 +306,9 @@ export async function autoCreateSessionWithMessageHandler({
 
     console.log("✅ [AUTO_CREATE] Primeira mensagem criada");
 
-    // 5. Se useAgent, processar resposta da IA
-    let aiMessage = null;
-    if (input.useAgent) {
-      try {
-        // Buscar token do provider via HTTP
-        const providerToken = await AiStudioService.getProviderToken({
-          providerId: preferredModel.providerId,
-          teamId,
-          requestingApp: chatAppId,
-        });
-
-        if (!providerToken.token) {
-          throw new Error(
-            `Token não configurado para o provider ${preferredModel.provider?.name || "provider"}`,
-          );
-        }
-
-        // Configurar API baseada no provider
-        const baseUrl =
-          preferredModel.provider?.baseUrl || "https://api.openai.com/v1";
-        const apiUrl = `${baseUrl}/chat/completions`;
-
-        // Usar configurações do modelo
-        const modelConfig = (preferredModel.config || {}) as {
-          version?: string;
-          maxTokens?: number;
-          temperature?: number;
-        };
-        const modelName = modelConfig.version || preferredModel.name;
-        const maxTokens = modelConfig.maxTokens || 500;
-        const temperature = modelConfig.temperature || 0.7;
-
-        // Fazer chamada para IA
-        const response = await fetch(apiUrl, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${providerToken.token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            model: modelName,
-            messages: [
-              {
-                role: "user",
-                content: input.firstMessage,
-              },
-            ],
-            max_tokens: maxTokens,
-            temperature: temperature,
-          }),
-        });
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(
-            `Erro na API do ${preferredModel.provider?.name || "provider"}: ${response.status} - ${errorText}`,
-          );
-        }
-
-        const aiResponse = (await response.json()) as any;
-        const aiContent =
-          aiResponse.choices?.[0]?.message?.content ||
-          "Desculpe, não consegui gerar uma resposta.";
-
-        // ✅ Extrair modelo retornado pela API
-        const actualModelUsed = aiResponse.model || modelName;
-
-        // ✅ Criar metadata com informações do modelo
-        const messageMetadata = {
-          requestedModel: modelName,
-          actualModelUsed: actualModelUsed,
-          providerId: preferredModel.providerId,
-          providerName: preferredModel.provider?.name,
-          usage: aiResponse.usage || null,
-          timestamp: new Date().toISOString(),
-        };
-
-        console.log(
-          `🔍 [AUTO_CREATE_METADATA] Salvando metadata:`,
-          messageMetadata,
-        );
-
-        // Salvar resposta da IA com metadata
-        aiMessage = await chatRepository.ChatMessageRepository.create({
-          chatSessionId: session.id,
-          senderRole: "ai",
-          content: aiContent,
-          status: "ok",
-          metadata: messageMetadata,
-        });
-
-        console.log("✅ [AUTO_CREATE] Resposta da IA processada");
-      } catch (aiError) {
-        console.error("⚠️ [AUTO_CREATE] Erro ao processar com IA:", aiError);
-
-        // Salvar mensagem de erro da IA
-        aiMessage = await chatRepository.ChatMessageRepository.create({
-          chatSessionId: session.id,
-          senderRole: "ai",
-          content: `Erro: ${aiError instanceof Error ? aiError.message : "Erro ao processar mensagem"}`,
-          status: "error",
-        });
-      }
-    }
+    // 5. ✅ CORREÇÃO: Não processar IA aqui para navegação rápida
+    // A IA será processada via streaming no frontend
+    const aiMessage = null;
 
     console.log(
       "🎉 [AUTO_CREATE] Sessão criada com sucesso!",

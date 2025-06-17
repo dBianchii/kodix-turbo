@@ -55,22 +55,25 @@ export * from "./seuRecurso";
 ```typescript
 // apps/kdx/src/hooks/use-seu-recurso.ts
 import { useMemo, useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import type { SeuRecursoFilters } from "@kdx/shared/types";
 
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 
 export function useSeuRecursoList(initialFilters: SeuRecursoFilters = {}) {
   const [filtros, setFiltros] = useState<SeuRecursoFilters>(initialFilters);
   const [pagina, setPagina] = useState(1);
   const limite = 20;
+  const trpc = useTRPC();
 
-  const { data, isLoading, error, refetch, isFetching } =
-    api.app.seuRecurso.listar.useQuery({
+  const { data, isLoading, error, refetch, isFetching } = useQuery(
+    trpc.app.seuRecurso.listar.queryOptions({
       ...filtros,
       pagina,
       limite,
-    });
+    }),
+  );
 
   const recursos = useMemo(() => data?.recursos ?? [], [data]);
   const paginacao = useMemo(() => data?.paginacao, [data]);
@@ -115,7 +118,8 @@ export function useSeuRecursoForm(
   onSuccess?: (recurso: any) => void,
   defaultValues?: Partial<SeuRecursoFormData>,
 ) {
-  const utils = api.useUtils();
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
 
   const form = useForm<SeuRecursoFormData>({
     resolver: zodResolver(criarSeuRecursoSchema),
@@ -127,27 +131,35 @@ export function useSeuRecursoForm(
     },
   });
 
-  const createMutation = api.app.seuRecurso.criar.useMutation({
-    onSuccess: (data) => {
-      form.reset();
-      utils.app.seuRecurso.listar.invalidate();
-      onSuccess?.(data);
-    },
-  });
+  const createMutation = useMutation(
+    trpc.app.seuRecurso.criar.mutationOptions({
+      onSuccess: (data) => {
+        form.reset();
+        queryClient.invalidateQueries(trpc.app.seuRecurso.listar.pathFilter());
+        onSuccess?.(data);
+      },
+    }),
+  );
 
-  const updateMutation = api.app.seuRecurso.atualizar.useMutation({
-    onSuccess: (data) => {
-      utils.app.seuRecurso.listar.invalidate();
-      utils.app.seuRecurso.buscarPorId.invalidate({ id: data.id });
-      onSuccess?.(data);
-    },
-  });
+  const updateMutation = useMutation(
+    trpc.app.seuRecurso.atualizar.mutationOptions({
+      onSuccess: (data) => {
+        queryClient.invalidateQueries(trpc.app.seuRecurso.listar.pathFilter());
+        queryClient.invalidateQueries(
+          trpc.app.seuRecurso.buscarPorId.pathFilter({ id: data.id }),
+        );
+        onSuccess?.(data);
+      },
+    }),
+  );
 
-  const deleteMutation = api.app.seuRecurso.excluir.useMutation({
-    onSuccess: () => {
-      utils.app.seuRecurso.listar.invalidate();
-    },
-  });
+  const deleteMutation = useMutation(
+    trpc.app.seuRecurso.excluir.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries(trpc.app.seuRecurso.listar.pathFilter());
+      },
+    }),
+  );
 
   const handleSubmit = (data: SeuRecursoFormData, id?: string) => {
     if (id) {
@@ -160,9 +172,9 @@ export function useSeuRecursoForm(
   return {
     form,
     handleSubmit,
-    isCreating: createMutation.isLoading,
-    isUpdating: updateMutation.isLoading,
-    isDeleting: deleteMutation.isLoading,
+    isCreating: createMutation.isPending,
+    isUpdating: updateMutation.isPending,
+    isDeleting: deleteMutation.isPending,
     createError: createMutation.error,
     updateError: updateMutation.error,
     deleteError: deleteMutation.error,
@@ -176,12 +188,16 @@ export function useSeuRecursoForm(
 ```typescript
 // apps/kdx/src/hooks/useSeuRecurso.ts (continuação)
 export function useSeuRecursoItem(id: string) {
+  const trpc = useTRPC();
+
   const {
     data: recurso,
     isLoading,
     error,
     refetch,
-  } = api.app.seuRecurso.buscarPorId.useQuery({ id }, { enabled: !!id });
+  } = useQuery(
+    trpc.app.seuRecurso.buscarPorId.queryOptions({ id }, { enabled: !!id }),
+  );
 
   return {
     recurso,
@@ -709,7 +725,7 @@ export function SeuRecursoLista({ onNovo, onEditar, onVisualizar }: SeuRecursoLi
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 import { criarSeuRecursoSchema } from "@kdx/validators/trpc/app/seuRecurso";
 import { Button } from "@kdx/ui/button";
 import { Input } from "@kdx/ui/input";
@@ -748,6 +764,7 @@ export function SeuRecursoForm({
   onCancel
 }: SeuRecursoFormProps) {
   const isEditing = !!recursoId;
+  const trpc = useTRPC();
 
   const form = useForm<SeuRecursoFormData>({
     resolver: zodResolver(criarSeuRecursoSchema),
@@ -759,32 +776,35 @@ export function SeuRecursoForm({
   });
 
   // Buscar dados do recurso se estiver editando
-  const { data: recurso, isLoading: loadingRecurso } = api.app.seuRecurso.buscarPorId.useQuery(
-    { id: recursoId! },
-    { enabled: isEditing }
+  const { data: recurso, isLoading: loadingRecurso } = useQuery(
+    trpc.app.seuRecurso.buscarPorId.queryOptions({ id: recursoId! }, { enabled: isEditing })
   );
 
   // Buscar categorias disponíveis
-  const { data: categorias = [] } = api.app.categoria.listar.useQuery();
+  const { data: categorias = [] } = useQuery(trpc.app.categoria.listar.queryOptions());
 
   // Mutations
-  const utils = api.useUtils();
+  const queryClient = useQueryClient();
 
-  const createMutation = api.app.seuRecurso.criar.useMutation({
-    onSuccess: (data) => {
-      form.reset();
-      utils.app.seuRecurso.listar.invalidate();
-      onSuccess?.(data);
-    },
-  });
+  const createMutation = useMutation(
+    trpc.app.seuRecurso.criar.mutationOptions({
+      onSuccess: (data) => {
+        form.reset();
+        queryClient.invalidateQueries(trpc.app.seuRecurso.listar.pathFilter());
+        onSuccess?.(data);
+      },
+    })
+  );
 
-  const updateMutation = api.app.seuRecurso.atualizar.useMutation({
-    onSuccess: (data) => {
-      utils.app.seuRecurso.listar.invalidate();
-      utils.app.seuRecurso.buscarPorId.invalidate({ id: data.id });
-      onSuccess?.(data);
-    },
-  });
+  const updateMutation = useMutation(
+    trpc.app.seuRecurso.atualizar.mutationOptions({
+      onSuccess: (data) => {
+        queryClient.invalidateQueries(trpc.app.seuRecurso.listar.pathFilter());
+        queryClient.invalidateQueries(trpc.app.seuRecurso.buscarPorId.pathFilter({ id: data.id }));
+        onSuccess?.(data);
+      },
+    })
+  );
 
   // Preencher formulário quando carregar dados para edição
   useEffect(() => {
@@ -805,7 +825,7 @@ export function SeuRecursoForm({
     }
   };
 
-  const isLoading = createMutation.isLoading || updateMutation.isLoading;
+  const isLoading = createMutation.isPending || updateMutation.isPending;
   const error = createMutation.error || updateMutation.error;
 
   if (loadingRecurso) {
@@ -1300,60 +1320,71 @@ export function EmptyState({
 import { toast } from "@kdx/ui/use-toast";
 
 // Adicionar ao useSeuRecursoForm
-const createMutation = api.app.seuRecurso.criar.useMutation({
-  onSuccess: (data) => {
-    form.reset();
-    utils.app.seuRecurso.listar.invalidate();
-    toast({
-      title: "Recurso criado com sucesso!",
-      description: `O recurso "${data.nome}" foi criado.`,
-    });
-    onSuccess?.(data);
-  },
-  onError: (error) => {
-    toast({
-      title: "Erro ao criar recurso",
-      description: error.message,
-      variant: "destructive",
-    });
-  },
-});
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
 
-const updateMutation = api.app.seuRecurso.atualizar.useMutation({
-  onSuccess: (data) => {
-    utils.app.seuRecurso.listar.invalidate();
-    utils.app.seuRecurso.buscarPorId.invalidate({ id: data.id });
-    toast({
-      title: "Recurso atualizado!",
-      description: `As alterações foram salvas.`,
-    });
-    onSuccess?.(data);
-  },
-  onError: (error) => {
-    toast({
-      title: "Erro ao atualizar recurso",
-      description: error.message,
-      variant: "destructive",
-    });
-  },
-});
+  const createMutation = useMutation(
+    trpc.app.seuRecurso.criar.mutationOptions({
+      onSuccess: (data) => {
+        form.reset();
+        queryClient.invalidateQueries(trpc.app.seuRecurso.listar.pathFilter());
+        toast({
+          title: "Recurso criado com sucesso!",
+          description: `O recurso "${data.nome}" foi criado.`,
+        });
+        onSuccess?.(data);
+      },
+      onError: (error) => {
+        toast({
+          title: "Erro ao criar recurso",
+          description: error.message,
+          variant: "destructive",
+        });
+      },
+    })
+  );
 
-const deleteMutation = api.app.seuRecurso.excluir.useMutation({
-  onSuccess: () => {
-    utils.app.seuRecurso.listar.invalidate();
-    toast({
-      title: "Recurso excluído",
-      description: "O recurso foi removido com sucesso.",
-    });
-  },
-  onError: (error) => {
-    toast({
-      title: "Erro ao excluir recurso",
-      description: error.message,
-      variant: "destructive",
-    });
-  },
-});
+  const updateMutation = useMutation(
+    trpc.app.seuRecurso.atualizar.mutationOptions({
+      onSuccess: (data) => {
+        queryClient.invalidateQueries(trpc.app.seuRecurso.listar.pathFilter());
+        queryClient.invalidateQueries(
+          trpc.app.seuRecurso.buscarPorId.pathFilter({ id: data.id })
+        );
+        toast({
+          title: "Recurso atualizado!",
+          description: `As alterações foram salvas.`,
+        });
+        onSuccess?.(data);
+      },
+      onError: (error) => {
+        toast({
+          title: "Erro ao atualizar recurso",
+          description: error.message,
+          variant: "destructive",
+        });
+      },
+    })
+  );
+
+  const deleteMutation = useMutation(
+    trpc.app.seuRecurso.excluir.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries(trpc.app.seuRecurso.listar.pathFilter());
+        toast({
+          title: "Recurso excluído",
+          description: "O recurso foi removido com sucesso.",
+        });
+      },
+      onError: (error) => {
+        toast({
+          title: "Erro ao excluir recurso",
+          description: error.message,
+          variant: "destructive",
+        });
+      },
+    })
+  );
 
 // apps/kdx/src/hooks/useDebounce.ts
 import { useEffect, useState } from "react";

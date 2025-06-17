@@ -68,7 +68,6 @@ export function CreateTaskDialogButton() {
   const [priority, setPriority] = useState<Priority>(0);
   const [assignedToUserId, setAssignedToUserId] = useState<string | null>("");
 
-  // const { data: team } = api.team.getActiveTeam.useQuery();
   const team = {
     Users: [{ id: "THIS_WAS_REMOVED_LOL", name: "asdas", image: "asd" }],
   };

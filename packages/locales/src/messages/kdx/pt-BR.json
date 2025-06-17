@@ -103,13 +103,32 @@
       "messages": {
         "loading": "Carregando conversa...",
         "error": "Erro ao carregar conversa",
+        "errorTitle": "Erro de Sessão",
+        "retry": "Tentar Novamente",
         "tryAgain": "Tentar novamente",
         "placeholder": "Digite sua mensagem...",
         "send": "Enviar",
         "greeting": "Olá! Como posso te ajudar hoje?",
         "typing": "Digitando...",
         "errorOccurred": "Ocorreu um erro: {error}. Por favor, tente novamente.",
-        "selectConversation": "Selecione uma conversa ou crie uma nova"
+        "selectConversation": "Selecione uma conversa ou crie uma nova",
+        "sessionCreationError": "Erro ao criar sessão",
+        "stop": "Parar",
+        "save": "Salvar",
+        "cancel": "Cancelar",
+        "delete": "Excluir",
+        "confirm": "Confirmar",
+        "add": "Adicionar"
+      },
+      "errors": {
+        "createSession": "Erro ao criar sessão: {error}"
+      },
+      "placeholders": {
+        "newMessage": "Digite sua mensagem...",
+        "newConversation": "Digite sua mensagem para começar uma nova conversa..."
+      },
+      "labels": {
+        "newChat": "Nova Conversa"
       },
       "confirmDelete": {
         "folder": "Tem certeza que deseja excluir a pasta \"{name}\"? Todas as sessões dentro desta pasta também serão excluídas.",

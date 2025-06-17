@@ -17,6 +17,34 @@ Esta é a referência completa de todos os scripts disponíveis no monorepo Kodi
 
 ## 🚀 Scripts de Desenvolvimento
 
+### 🐳 Docker Services (EXECUTE PRIMEIRO!)
+
+> **⚠️ IMPORTANTE**: No projeto Kodix, Docker e servidor são **executados coordenadamente**. O comando `pnpm dev:kdx` inicia **AMBOS automaticamente**.
+
+```bash
+# 🚀 MODO RECOMENDADO: Execução coordenada
+pnpm dev:kdx
+# ↳ Inicia: Next.js + MySQL + Redis + todos os serviços
+# ↳ Para: Todos os serviços param juntos (Ctrl+C)
+
+# 🔧 MODO MANUAL: Controle independente dos serviços
+cd packages/db-dev
+docker-compose up -d         # Start all services
+docker-compose ps            # Check service status
+docker-compose logs mysql    # View MySQL logs
+docker-compose stop          # Stop services
+docker-compose down          # Stop and remove containers
+
+# Reset completo (CUIDADO: apaga dados!)
+docker-compose down -v
+
+# Verificar se tudo está funcionando coordenadamente
+cd ../..
+./scripts/check-coordinated-services.sh
+```
+
+**💡 Por que isso acontece:** O `pnpm dev:kdx` usa Turbo para coordenar múltiplos processos simultaneamente, incluindo Docker e Next.js.
+
 ### Iniciar Aplicações
 
 ```bash
@@ -201,13 +229,16 @@ pnpm lint:fix
 
 # Verificar tipagem TypeScript
 pnpm typecheck
+
+# Verificar arquitetura tRPC
+pnpm check:trpc
 ```
 
 ### Manutenção Completa
 
 ```bash
 # Workflow completo de manutenção
-pnpm lint:fix && pnpm format:fix && pnpm typecheck && pnpm build
+pnpm lint:fix && pnpm format:fix && pnpm typecheck && pnpm check:trpc && pnpm build
 ```
 
 ---
@@ -386,9 +417,18 @@ pnpm clean:workspaces && pnpm i
 # Erro: "Port already in use"
 lsof -ti:3000 | xargs kill -9
 
-# Erro: "Database connection failed"
-brew services restart mysql
-pnpm wait-for-db
+# 🐳 Erro: "Database connection failed" (MAIS COMUM)
+# 1. Verificar se Docker está rodando
+cd packages/db-dev && docker-compose ps
+
+# 2. Iniciar serviços se necessário
+docker-compose up -d
+
+# 3. Aguardar MySQL estar pronto
+docker-compose logs mysql | grep "ready for connections"
+
+# 4. Verificar conexão
+mysql -h localhost -u root -ppassword -e "SHOW DATABASES;"
 
 # Erro: "Turbo cache issues"
 pnpm turbo clean
@@ -404,12 +444,34 @@ pnpm db:push
 
 ```bash
 # ⚠️ CUIDADO: Remove tudo e reinstala
+
+# 1. Parar e remover containers Docker (apaga dados!)
+cd packages/db-dev
+docker-compose down -v
+
+# 2. Limpar dependências Node
+cd ../..
 pnpm clean:workspaces
 rm -rf node_modules
 rm pnpm-lock.yaml
+
+# 3. Reinstalar tudo
 pnpm i
+
+# 4. Reiniciar serviços Docker
+cd packages/db-dev
+docker-compose up -d
+cd ../..
+
+# 5. Aguardar MySQL inicializar
+sleep 10
+
+# 6. Configurar banco
 pnpm db:push
 pnpm db:seed
+
+# 7. Testar
+pnpm dev:kdx
 ```
 
 ---
@@ -470,13 +532,16 @@ pnpm web
 ### "Primeira vez configurando o projeto"
 
 ```bash
-nvm use                  # Usar versão correta do Node
-pnpm i                   # Instalar dependências
-cp .env.example .env     # Configurar ambiente
+nvm use                          # Usar versão correta do Node
+pnpm i                           # Instalar dependências
+cp .env.example .env             # Configurar ambiente
 # (Editar .env com suas configurações)
-pnpm db:push            # Aplicar schema
-pnpm db:seed            # Popular dados
-pnpm dev:kdx            # Iniciar desenvolvimento
+cd packages/db-dev               # IMPORTANTE: Iniciar Docker primeiro
+docker-compose up -d             # Iniciar MySQL e serviços
+cd ../..                         # Voltar para root
+pnpm db:push                     # Aplicar schema
+pnpm db:seed                     # Popular dados
+pnpm dev:kdx                     # Iniciar desenvolvimento
 ```
 
 ### "Trabalhando em uma nova feature"
@@ -516,7 +581,12 @@ pnpm dev:kdx            # Testar aplicação
 ### Comandos Mais Usados
 
 ```bash
-pnpm dev:kdx           # Desenvolvimento diário
+# 🔄 Serviços Coordenados (RECOMENDADO!)
+pnpm dev:kdx                                # Iniciar TUDO: servidor + Docker
+./scripts/check-coordinated-services.sh     # Verificar status completo
+
+# 🚀 Desenvolvimento diário
+pnpm dev:kdx           # Aplicação principal
 pnpm db:studio         # Ver banco de dados
 pnpm lint:fix          # Antes de commit
 pnpm build             # Para produção

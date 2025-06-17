@@ -123,13 +123,22 @@
       "messages": {
         "loading": "Loading conversation...",
         "error": "Error loading conversation",
+        "errorTitle": "Session Error",
+        "retry": "Try Again",
         "tryAgain": "Try again",
         "placeholder": "Type your message...",
         "send": "Send",
         "greeting": "Hello! How can I help you today?",
         "typing": "Typing...",
         "errorOccurred": "An error occurred: {error}. Please try again.",
-        "selectConversation": "Select a conversation or create a new one"
+        "selectConversation": "Select a conversation or create a new one",
+        "sessionCreationError": "Session creation error",
+        "stop": "Stop",
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "confirm": "Confirm",
+        "add": "Add"
       },
       "confirmDelete": {
         "folder": "Are you sure you want to delete the folder \"{name}\"? All sessions within this folder will also be deleted.",
@@ -149,6 +158,16 @@
         "loadingChats": "Loading chats...",
         "loadingSessions": "Loading sessions...",
         "moveToFolder": "Move to folder"
+      },
+      "errors": {
+        "createSession": "Error creating session: {error}"
+      },
+      "placeholders": {
+        "newMessage": "Type your message...",
+        "newConversation": "Type your message to start a new conversation..."
+      },
+      "labels": {
+        "newChat": "New Conversation"
       }
     },
     "aiStudio": {

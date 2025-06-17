@@ -1,7 +1,10 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-import { aiStudioRepository, chatRepository } from "@kdx/db/repositories";
+import { chatAppId } from "@kdx/shared";
+
+import { AiStudioService } from "../../../../../../../packages/api/src/internal/services/ai-studio.service";
+import { ChatService } from "../../../../../../../packages/api/src/internal/services/chat.service";
 
 export async function POST(request: NextRequest) {
   try {
@@ -28,8 +31,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Verificar se a sessão existe
-    const session =
-      await chatRepository.ChatSessionRepository.findById(chatSessionId);
+    const session = await ChatService.findSessionById(chatSessionId);
     if (!session) {
       return NextResponse.json(
         { error: "Sessão não encontrada" },
@@ -44,22 +46,13 @@ export async function POST(request: NextRequest) {
     console.log(`   • aiAgentId: ${session.aiAgentId || "❌ NULL/UNDEFINED"}`);
     console.log(`   • teamId: ${session.teamId}`);
 
-    // Carregar agente se existir na sessão
-    let agent = null;
+    // ✅ TEMPORÁRIO: Agente será removido do fluxo de streaming por enquanto
+    // TODO: Implementar getAgentById no AiStudioService
+    const agent = null;
     if (session.aiAgentId) {
-      agent = await aiStudioRepository.AiAgentRepository.findById(
-        session.aiAgentId,
+      console.log(
+        `⚠️ [DEBUG] Agente ${session.aiAgentId} será ignorado no streaming por enquanto`,
       );
-      if (agent) {
-        console.log(`🤖 [DEBUG] Agente carregado: ${agent.name}`);
-        console.log(
-          `📝 [DEBUG] Instruções do agente: ${agent.instructions.substring(0, 100)}...`,
-        );
-      } else {
-        console.log(
-          `❌ [DEBUG] Agente com ID ${session.aiAgentId} não encontrado`,
-        );
-      }
     }
 
     // ✅ CORREÇÃO: Criar mensagem do usuário apenas se não for skipUserMessage
@@ -71,14 +64,12 @@ export async function POST(request: NextRequest) {
         "🔄 [API] Pulando criação de mensagem do usuário (skipUserMessage=true)",
       );
       // Buscar a mensagem mais recente do usuário com o mesmo conteúdo
-      recentMessages = await chatRepository.ChatMessageRepository.findBySession(
-        {
-          chatSessionId: session.id,
-          limite: 5,
-          offset: 0,
-          ordem: "desc",
-        },
-      );
+      recentMessages = await ChatService.findMessagesBySession({
+        chatSessionId: session.id,
+        limite: 5,
+        offset: 0,
+        ordem: "desc",
+      });
 
       userMessage = recentMessages.find(
         (msg: any) => msg.senderRole === "user" && msg.content === content,
@@ -88,7 +79,7 @@ export async function POST(request: NextRequest) {
         console.warn(
           "⚠️ [API] Mensagem do usuário não encontrada, criando nova",
         );
-        userMessage = await chatRepository.ChatMessageRepository.create({
+        userMessage = await ChatService.createMessage({
           chatSessionId: session.id,
           senderRole: "user",
           content,
@@ -99,7 +90,7 @@ export async function POST(request: NextRequest) {
       }
     } else {
       // Comportamento normal: criar nova mensagem do usuário
-      userMessage = await chatRepository.ChatMessageRepository.create({
+      userMessage = await ChatService.createMessage({
         chatSessionId: session.id,
         senderRole: "user",
         content,
@@ -122,7 +113,7 @@ export async function POST(request: NextRequest) {
       messages = recentMessages.reverse(); // Inverter para ordem cronológica
     } else {
       // Buscar histórico normalmente
-      messages = await chatRepository.ChatMessageRepository.findBySession({
+      messages = await ChatService.findMessagesBySession({
         chatSessionId: session.id,
         limite: 20,
         offset: 0,
@@ -172,14 +163,11 @@ export async function POST(request: NextRequest) {
       en: "You are a helpful assistant and always respond in English. Be clear, objective, and maintain a professional and friendly tone.",
     };
 
-    // Construir system prompt considerando instruções do agente
-    let systemPrompt =
+    // Construir system prompt (agente temporariamente desabilitado)
+    const systemPrompt =
       baseSystemPrompts[userLocale] || baseSystemPrompts["pt-BR"];
 
-    if (agent?.instructions) {
-      console.log("🤖 [API] Incluindo instruções do agente no system prompt");
-      systemPrompt = `${agent.instructions}\n\n${systemPrompt}`;
-    }
+    // TODO: Incluir instruções do agente quando getAgentById for implementado no AiStudioService
 
     // Adicionar system prompt no idioma correto se não existir
     const hasSystemPrompt = allMessages.some(
@@ -190,9 +178,7 @@ export async function POST(request: NextRequest) {
         role: "system",
         content: systemPrompt,
       });
-      console.log(
-        `🌍 [API] System prompt adicionado em: ${userLocale}${agent ? " (com instruções do agente)" : ""}`,
-      );
+      console.log(`🌍 [API] System prompt adicionado em: ${userLocale}`);
     }
 
     for (const msg of allMessages) {
@@ -215,16 +201,21 @@ export async function POST(request: NextRequest) {
     console.log("🎯 [DEBUG] Verificando modelo da sessão...");
     if (session.aiModelId) {
       console.log(`🔍 [DEBUG] Buscando modelo com ID: ${session.aiModelId}`);
-      model = await aiStudioRepository.AiModelRepository.findById(
-        session.aiModelId,
-      );
-      if (model) {
+      try {
+        model = await AiStudioService.getModelById({
+          modelId: session.aiModelId,
+          teamId: session.teamId,
+          requestingApp: chatAppId,
+        });
+        if (model) {
+          console.log(
+            `✅ [DEBUG] Modelo encontrado: ${model.name} (Provider: ${model.provider.name})`,
+          );
+        }
+      } catch (error) {
         console.log(
-          `✅ [DEBUG] Modelo encontrado: ${model.name} (Provider: ${model.provider.name})`,
-        );
-      } else {
-        console.log(
-          `❌ [DEBUG] Modelo com ID ${session.aiModelId} não encontrado no banco`,
+          `❌ [DEBUG] Modelo com ID ${session.aiModelId} não encontrado:`,
+          error,
         );
       }
     } else {
@@ -237,12 +228,11 @@ export async function POST(request: NextRequest) {
         "⚠️ [API] Sessão sem modelo configurado, buscando modelo padrão...",
       );
 
-      // Buscar primeiro modelo disponível do OpenAI
-      const availableModels =
-        await aiStudioRepository.AiModelRepository.findMany({
-          enabled: true,
-          limite: 1,
-        });
+      // ✅ CORREÇÃO: Buscar modelos disponíveis via Service Layer
+      const availableModels = await AiStudioService.getAvailableModels({
+        teamId: session.teamId,
+        requestingApp: chatAppId,
+      });
 
       console.log(
         `🔍 [DEBUG] Modelos disponíveis encontrados: ${availableModels.length}`,
@@ -260,7 +250,7 @@ export async function POST(request: NextRequest) {
       );
 
       // Atualizar a sessão com o modelo padrão
-      await chatRepository.ChatSessionRepository.update(session.id, {
+      await ChatService.updateSession(session.id, {
         aiModelId: model.id,
       });
 
@@ -287,14 +277,14 @@ export async function POST(request: NextRequest) {
       throw new Error("Dados do provider não foram carregados corretamente");
     }
 
-    // Buscar token do provider
-    const providerToken =
-      await aiStudioRepository.AiTeamProviderTokenRepository.findByTeamAndProvider(
-        session.teamId,
-        model.providerId,
-      );
+    // ✅ CORREÇÃO: Buscar token do provider via Service Layer
+    const providerToken = await AiStudioService.getProviderToken({
+      providerId: model.providerId,
+      teamId: session.teamId,
+      requestingApp: chatAppId,
+    });
 
-    if (!providerToken?.token) {
+    if (!providerToken.token) {
       throw new Error(
         `Token não configurado para o provider ${model.provider.name || "provider"}. Configure um token no AI Studio.`,
       );
@@ -436,99 +426,92 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log("🟢 [API] Stream da IA obtido, iniciando transmissão");
+    if (!response.body) {
+      throw new Error("A resposta da API de streaming não contém um corpo.");
+    }
 
-    let fullContent = "";
-    let actualModelUsed = ""; // Capturar o modelo real da API
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder("utf-8");
 
-    // Criar ReadableStream para transmitir ao frontend
     const stream = new ReadableStream({
       async start(controller) {
-        const reader = response.body?.getReader();
-        const decoder = new TextDecoder();
-
-        if (!reader) {
-          controller.close();
-          return;
-        }
+        let receivedText = "";
+        const currentSessionId = session.id;
 
         try {
           while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
+            if (request.signal.aborted) {
+              console.log("🔴 [API] Request abortado pelo cliente");
+              break;
+            }
 
-            const chunk = decoder.decode(value);
-            const lines = chunk.split("\n");
+            const { done, value } = await reader.read();
+            if (done) {
+              // ✅ Criar metadata com informações do modelo
+              const messageMetadata = {
+                requestedModel: modelName,
+                actualModelUsed: modelName, // Para streaming, assumimos que o modelo usado é o solicitado
+                providerId: model.providerId,
+                providerName: model.provider.name,
+                usage: null, // Streaming não retorna usage info
+                timestamp: new Date().toISOString(),
+              };
+
+              console.log(`🔍 [METADATA] Salvando metadata:`, messageMetadata);
+
+              // Quando o stream do provedor termina, salvamos a mensagem completa com metadata.
+              await ChatService.createMessage({
+                chatSessionId: currentSessionId,
+                senderRole: "assistant",
+                content: receivedText,
+                status: "ok",
+                metadata: messageMetadata,
+              });
+              console.log(
+                "✅ [API] Mensagem final da IA salva no banco com metadata",
+              );
+              break; // Finaliza o loop.
+            }
+
+            const chunk = decoder.decode(value, { stream: true });
+            const lines = chunk.split("\n\n");
 
             for (const line of lines) {
               if (line.startsWith("data: ")) {
                 const data = line.slice(6).trim();
 
                 if (data === "[DONE]") {
-                  break;
+                  // O provedor sinalizou o fim do stream.
+                  // O 'done' do reader.read() vai ser true na próxima iteração.
+                  continue;
                 }
 
                 try {
                   const parsed = JSON.parse(data);
-
-                  // Capturar o modelo real usado pela API
-                  if (parsed.model && !actualModelUsed) {
-                    actualModelUsed = parsed.model;
-                    console.log(
-                      `🎯 [API] Modelo real usado pela OpenAI: ${actualModelUsed}`,
-                    );
-                  }
-
                   const delta = parsed.choices?.[0]?.delta?.content;
 
                   if (delta) {
-                    fullContent += delta;
-
-                    // Criar encoder para transmitir ao frontend
-                    const encoder = new TextEncoder();
-                    const encodedChunk = encoder.encode(delta);
-
-                    // Enviar chunk para o frontend
-                    controller.enqueue(encodedChunk);
+                    receivedText += delta;
+                    controller.enqueue(new TextEncoder().encode(delta));
                   }
                 } catch (parseError) {
-                  // Ignorar erros de parsing
+                  // Ignora linhas que não são JSON válido.
                   continue;
                 }
               }
             }
           }
-
-          console.log("🟢 [API] Streaming concluído, salvando mensagem");
-
-          // Salvar resposta completa da IA no banco
-          const safeContent =
-            fullContent || "Desculpe, não consegui gerar uma resposta.";
-
-          const savedMessage =
-            await chatRepository.ChatMessageRepository.create({
-              chatSessionId: session.id,
-              senderRole: "ai",
-              content: safeContent,
-              status: "ok",
-              metadata: {
-                actualModelUsed: actualModelUsed || modelName,
-                requestedModel: modelName,
-                providerId: model.providerId,
-                timestamp: new Date().toISOString(),
-              },
-            });
-
-          console.log(
-            `✅ [API] Mensagem salva com metadata do modelo: ${actualModelUsed}`,
-          );
-
-          controller.close();
         } catch (error) {
           console.error("🔴 [API] Erro no streaming:", error);
-          controller.close();
+          controller.enqueue(
+            new TextEncoder().encode(
+              `Error: ${error instanceof Error ? error.message : "Erro desconhecido"}`,
+            ),
+          );
         } finally {
+          controller.close();
           reader.releaseLock();
+          console.log("🔵 [API] Conexão de streaming fechada");
         }
       },
     });

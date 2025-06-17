@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AlertCircle, Loader2, MessageCircle, RefreshCw } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -12,7 +12,7 @@ import { Card } from "@kdx/ui/card";
 import { ScrollArea } from "@kdx/ui/scroll-area";
 import { Separator } from "@kdx/ui/separator";
 
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 import { InputBox } from "./input-box";
 import { Message } from "./message";
 
@@ -80,22 +80,26 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
     }
   }, [sessionId, queryClient]);
 
-  // ✅ CORRIGIDO: Usar tRPC hooks como no app-sidebar
-  const messagesQuery = api.app.chat.buscarMensagensTest.useQuery(
-    {
-      chatSessionId: sessionId!,
-      limite: 100,
-      pagina: 1,
-      ordem: "asc",
-    },
-    {
-      enabled: !!sessionId,
-      refetchOnWindowFocus: false,
-      // ✅ NOVO: Configurações para garantir dados frescos
-      staleTime: 0, // Sempre considerar dados como stale
-      gcTime: 5 * 60 * 1000, // 5 minutos de cache
-      refetchOnMount: true, // Sempre refetch ao montar
-    },
+  // ✅ CORRIGIDO: Usar padrão useTRPC
+  const trpc = useTRPC();
+
+  const messagesQuery = useQuery(
+    trpc.app.chat.buscarMensagensTest.queryOptions(
+      {
+        chatSessionId: sessionId!,
+        limite: 100,
+        pagina: 1,
+        ordem: "asc",
+      },
+      {
+        enabled: !!sessionId,
+        refetchOnWindowFocus: false,
+        // ✅ NOVO: Configurações para garantir dados frescos
+        staleTime: 0, // Sempre considerar dados como stale
+        gcTime: 5 * 60 * 1000, // 5 minutos de cache
+        refetchOnMount: true, // Sempre refetch ao montar
+      },
+    ),
   );
 
   // Atualizar mensagens quando os dados chegarem
@@ -126,8 +130,7 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // ✅ Usar utils do tRPC para invalidações corretas
-  const utils = api.useUtils();
+  // ✅ Usar queryClient para invalidações corretas
 
   async function sendMessage(text: string) {
     if (isLoading || !sessionId) return;
@@ -252,10 +255,12 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
 
       // Invalidar cache das mensagens para recarregar do banco
       if (sessionId && currentSessionIdRef.current === currentSessionId) {
-        // ✅ Invalidar usando tRPC utils em vez de queryClient manual
-        utils.app.chat.buscarMensagensTest.invalidate({
-          chatSessionId: sessionId,
-        });
+        // ✅ Invalidar usando queryClient (padrão tRPC v11)
+        queryClient.invalidateQueries(
+          trpc.app.chat.buscarMensagensTest.pathFilter({
+            chatSessionId: sessionId,
+          }),
+        );
       }
     } catch (error) {
       // ✅ NOVO: Ignorar erros de cancelamento
@@ -264,10 +269,12 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
         // ✅ CORREÇÃO: Sempre invalidar cache mesmo quando cancelado
         if (sessionId) {
           console.log("🔄 Invalidando cache após cancelamento do stream");
-          // ✅ Usar tRPC utils
-          utils.app.chat.buscarMensagensTest.invalidate({
-            chatSessionId: sessionId,
-          });
+          // ✅ Usar queryClient (padrão tRPC v11)
+          queryClient.invalidateQueries(
+            trpc.app.chat.buscarMensagensTest.pathFilter({
+              chatSessionId: sessionId,
+            }),
+          );
         }
         return;
       }
@@ -298,10 +305,12 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
         console.log(
           "🔄 Invalidando cache no finally para garantir sincronização",
         );
-        // ✅ Usar tRPC utils
-        utils.app.chat.buscarMensagensTest.invalidate({
-          chatSessionId: sessionId,
-        });
+        // ✅ Usar queryClient (padrão tRPC v11)
+        queryClient.invalidateQueries(
+          trpc.app.chat.buscarMensagensTest.pathFilter({
+            chatSessionId: sessionId,
+          }),
+        );
       }
 
       // ✅ NOVO: Só atualizar estado se ainda estamos na mesma sessão

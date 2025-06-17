@@ -60,10 +60,6 @@ export function DataTableTodo({
 }) {
   const trpc = useTRPC();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  // const { data: team } = api.team.getActiveTeam.useQuery();
-  // const team = {
-  //   Users: [{ id: "THIS_WAS_REMOVED_LOL", name: "asdas", image: "asd" }],
-  // };
 
   const todosQuery = useQuery(
     trpc.app.todo.getAll.queryOptions(undefined, {

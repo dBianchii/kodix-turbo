@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AlertCircle, Loader2, MessageCircle, RefreshCw } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -12,7 +12,7 @@ import { Card } from "@kdx/ui/card";
 import { ScrollArea } from "@kdx/ui/scroll-area";
 import { Separator } from "@kdx/ui/separator";
 
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 import { useAutoCreateSession } from "../_hooks/useAutoCreateSession";
 import { InputBox } from "./input-box";
 import { Message } from "./message";
@@ -32,16 +32,15 @@ interface ChatWindowProps {
   onNewSession?: (sessionId: string) => void;
 }
 
-export function ChatWindow({
-  sessionId,
-  onNewSession,
-}: ChatWindowProps) {
+export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
   const t = useTranslations();
+  const trpc = useTRPC();
 
   // ✅ NOVO: Detectar se é nova conversa
   const isNewConversation = !sessionId;
@@ -49,12 +48,11 @@ export function ChatWindow({
   // ✅ NOVO: Hook para criar nova sessão
   const { createSessionWithMessage, isCreating } = useAutoCreateSession({
     onSuccess: (newSessionId) => {
-      console.log("🎉 [CHAT] Nova sessão criada:", newSessionId);
       onNewSession?.(newSessionId);
     },
     onError: (error) => {
-      console.error("❌ [CHAT] Erro ao criar sessão:", error);
-      setError(`Erro ao criar sessão: ${error.message}`);
+      console.error("❌ [UNIFIED_CHAT] Erro ao criar sessão:", error);
+      setError(t("apps.chat.errors.createSession", { error: error.message }));
     },
   });
 
@@ -72,7 +70,6 @@ export function ChatWindow({
     return () => {
       // Cancelar qualquer stream ativo quando o componente for desmontado ou sessionId mudar
       if (abortControllerRef.current) {
-        console.log("🚫 Cancelando stream ativo ao mudar sessão");
         abortControllerRef.current.abort();
         abortControllerRef.current = null;
       }
@@ -84,9 +81,6 @@ export function ChatWindow({
     if (sessionId) {
       // Cancelar stream ativo ao mudar de sessão
       if (abortControllerRef.current) {
-        console.log(
-          "🔄 Mudança de sessão detectada, cancelando stream anterior",
-        );
         abortControllerRef.current.abort();
         abortControllerRef.current = null;
       }
@@ -95,29 +89,32 @@ export function ChatWindow({
       setError(null);
 
       // ✅ CORREÇÃO: Invalidar cache ao mudar de sessão
-      console.log(`🔄 Invalidando cache ao mudar para sessão: ${sessionId}`);
       queryClient.invalidateQueries({
-        queryKey: ["chat", "messages", sessionId],
+        queryKey: trpc.app.chat.buscarMensagensTest.queryKey({
+          chatSessionId: sessionId,
+        }),
       });
     }
   }, [sessionId, queryClient]);
 
   // ✅ CORRIGIDO: Usar tRPC hooks como no app-sidebar
-  const messagesQuery = api.app.chat.buscarMensagensTest.useQuery(
-    {
-      chatSessionId: sessionId!,
-      limite: 100,
-      pagina: 1,
-      ordem: "asc",
-    },
-    {
-      enabled: !!sessionId,
-      refetchOnWindowFocus: false,
-      // ✅ NOVO: Configurações para garantir dados frescos
-      staleTime: 0, // Sempre considerar dados como stale
-      gcTime: 5 * 60 * 1000, // 5 minutos de cache
-      refetchOnMount: true, // Sempre refetch ao montar
-    },
+  const messagesQuery = useQuery(
+    trpc.app.chat.buscarMensagensTest.queryOptions(
+      {
+        chatSessionId: sessionId!,
+        limite: 100,
+        pagina: 1,
+        ordem: "asc",
+      },
+      {
+        enabled: !!sessionId,
+        refetchOnWindowFocus: false,
+        // ✅ NOVO: Configurações para garantir dados frescos
+        staleTime: 0, // Sempre considerar dados como stale
+        gcTime: 5 * 60 * 1000, // 5 minutos de cache
+        refetchOnMount: true, // Sempre refetch ao montar
+      },
+    ),
   );
 
   // Atualizar mensagens quando os dados chegarem
@@ -144,9 +141,6 @@ export function ChatWindow({
         formattedMessages[0].role === "user" &&
         !isLoading
       ) {
-        console.log(
-          "🤖 [CHAT] Detectada nova sessão com apenas mensagem do usuário, processando resposta da IA...",
-        );
         const userMessage = formattedMessages[0].content;
         // Pequeno delay para garantir que a UI foi atualizada
         setTimeout(() => {
@@ -169,14 +163,17 @@ export function ChatWindow({
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // ✅ Usar utils do tRPC para invalidações corretas
-  const utils = api.useUtils();
+  // ✅ NOVO: Focar no input ao selecionar uma sessão
+  useEffect(() => {
+    if (!isNewConversation && !messagesQuery.isLoading) {
+      inputRef.current?.focus();
+    }
+  }, [sessionId, isNewConversation, messagesQuery.isLoading]);
 
   // ✅ CORREÇÃO: Função para lidar com nova mensagem (nova conversa)
   const handleNewMessage = async (message: string) => {
     if (isCreating) return;
 
-    console.log("🚀 [CHAT] Criando nova sessão com mensagem:", message);
     setError(null);
 
     try {
@@ -186,7 +183,7 @@ export function ChatWindow({
         generateTitle: true,
       });
     } catch (error) {
-      console.error("❌ [CHAT] Erro ao criar nova sessão:", error);
+      console.error("❌ [UNIFIED_CHAT] Erro ao criar nova sessão:", error);
     }
   };
 
@@ -199,10 +196,6 @@ export function ChatWindow({
   async function sendMessageForNewSession(text: string) {
     if (isLoading || !sessionId) return;
 
-    console.log(
-      "🤖 [NEW_SESSION] Processando IA para nova sessão:",
-      text.slice(0, 50) + "...",
-    );
     setIsLoading(true);
     setError(null);
 
@@ -222,9 +215,6 @@ export function ChatWindow({
     setMessages((prev) => [...prev, assistantMessage]);
 
     try {
-      console.log(
-        "🔄 [NEW_SESSION] Fazendo requisição para API de streaming...",
-      );
       const response = await fetch("/api/chat/stream", {
         method: "POST",
         headers: {
@@ -238,11 +228,6 @@ export function ChatWindow({
         }),
         signal: abortController.signal,
       });
-
-      console.log(
-        "📥 [NEW_SESSION] Resposta recebida, status:",
-        response.status,
-      );
 
       if (!response.ok) {
         let errorMessage = t("apps.chat.messages.error");
@@ -264,25 +249,19 @@ export function ChatWindow({
       const reader = response.body.getReader();
       const decoder = new TextDecoder("utf-8");
 
-      console.log("🔄 [NEW_SESSION] Iniciando leitura do stream");
       let receivedText = "";
 
       while (true) {
         if (abortController.signal.aborted) {
-          console.log("🚫 [NEW_SESSION] Stream cancelado");
           break;
         }
 
         if (currentSessionIdRef.current !== currentSessionId) {
-          console.log(
-            "🔄 [NEW_SESSION] Sessão mudou durante o stream, cancelando",
-          );
           break;
         }
 
         const { done, value } = await reader.read();
         if (done) {
-          console.log("✅ [NEW_SESSION] Stream concluído");
           break;
         }
 
@@ -323,19 +302,19 @@ export function ChatWindow({
 
       // Invalidar cache das mensagens para recarregar do banco
       if (sessionId && currentSessionIdRef.current === currentSessionId) {
-        utils.app.chat.buscarMensagensTest.invalidate({
-          chatSessionId: sessionId,
+        await queryClient.invalidateQueries({
+          queryKey: trpc.app.chat.buscarMensagensTest.queryKey({
+            chatSessionId: sessionId,
+          }),
         });
       }
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") {
-        console.log("🚫 [NEW_SESSION] Request cancelado pelo usuário");
         if (sessionId) {
-          console.log(
-            "🔄 [NEW_SESSION] Invalidando cache após cancelamento do stream",
-          );
-          utils.app.chat.buscarMensagensTest.invalidate({
-            chatSessionId: sessionId,
+          await queryClient.invalidateQueries({
+            queryKey: trpc.app.chat.buscarMensagensTest.queryKey({
+              chatSessionId: sessionId,
+            }),
           });
         }
         return;
@@ -358,14 +337,11 @@ export function ChatWindow({
         });
       }
     } finally {
-      console.log("🔄 [NEW_SESSION] Finalizando processamento da IA");
-
       if (sessionId) {
-        console.log(
-          "🔄 [NEW_SESSION] Invalidando cache no finally para garantir sincronização",
-        );
-        utils.app.chat.buscarMensagensTest.invalidate({
-          chatSessionId: sessionId,
+        await queryClient.invalidateQueries({
+          queryKey: trpc.app.chat.buscarMensagensTest.queryKey({
+            chatSessionId: sessionId,
+          }),
         });
       }
 
@@ -382,7 +358,6 @@ export function ChatWindow({
   async function sendMessage(text: string) {
     if (isLoading || !sessionId) return;
 
-    console.log("📤 Enviando mensagem:", text);
     setIsLoading(true);
     setError(null);
 
@@ -412,7 +387,6 @@ export function ChatWindow({
     setMessages((prev) => [...prev, assistantMessage]);
 
     try {
-      console.log("🔄 Fazendo requisição para API de streaming...");
       const response = await fetch("/api/chat/stream", {
         method: "POST",
         headers: {
@@ -426,8 +400,6 @@ export function ChatWindow({
         // ✅ NOVO: Adicionar signal para cancelamento
         signal: abortController.signal,
       });
-
-      console.log("📥 Resposta recebida, status:", response.status);
 
       if (!response.ok) {
         let errorMessage = t("apps.chat.messages.error");
@@ -449,25 +421,21 @@ export function ChatWindow({
       const reader = response.body.getReader();
       const decoder = new TextDecoder("utf-8");
 
-      console.log("🔄 Iniciando leitura do stream");
       let receivedText = "";
 
       while (true) {
         // ✅ NOVO: Verificar se foi cancelado ou sessão mudou
         if (abortController.signal.aborted) {
-          console.log("🚫 Stream cancelado");
           break;
         }
 
         // ✅ NOVO: Verificar se ainda estamos na mesma sessão
         if (currentSessionIdRef.current !== currentSessionId) {
-          console.log("🔄 Sessão mudou durante o stream, cancelando");
           break;
         }
 
         const { done, value } = await reader.read();
         if (done) {
-          console.log("✅ Stream concluído");
           break;
         }
 
@@ -509,20 +477,20 @@ export function ChatWindow({
       // Invalidar cache das mensagens para recarregar do banco
       if (sessionId && currentSessionIdRef.current === currentSessionId) {
         // ✅ Invalidar usando tRPC utils em vez de queryClient manual
-        utils.app.chat.buscarMensagensTest.invalidate({
-          chatSessionId: sessionId,
+        await queryClient.invalidateQueries({
+          queryKey: trpc.app.chat.buscarMensagensTest.queryKey({
+            chatSessionId: sessionId,
+          }),
         });
       }
     } catch (error) {
       // ✅ NOVO: Ignorar erros de cancelamento
       if (error instanceof DOMException && error.name === "AbortError") {
-        console.log("🚫 Request cancelado pelo usuário");
-        // ✅ CORREÇÃO: Sempre invalidar cache mesmo quando cancelado
         if (sessionId) {
-          console.log("🔄 Invalidando cache após cancelamento do stream");
-          // ✅ Usar tRPC utils
-          utils.app.chat.buscarMensagensTest.invalidate({
-            chatSessionId: sessionId,
+          await queryClient.invalidateQueries({
+            queryKey: trpc.app.chat.buscarMensagensTest.queryKey({
+              chatSessionId: sessionId,
+            }),
           });
         }
         return;
@@ -547,16 +515,11 @@ export function ChatWindow({
         });
       }
     } finally {
-      console.log("🔄 Finalizando requisição");
-
-      // ✅ CORREÇÃO: Sempre invalidar cache para garantir sincronização
       if (sessionId) {
-        console.log(
-          "🔄 Invalidando cache no finally para garantir sincronização",
-        );
-        // ✅ Usar tRPC utils
-        utils.app.chat.buscarMensagensTest.invalidate({
-          chatSessionId: sessionId,
+        await queryClient.invalidateQueries({
+          queryKey: trpc.app.chat.buscarMensagensTest.queryKey({
+            chatSessionId: sessionId,
+          }),
         });
       }
 
@@ -590,9 +553,10 @@ export function ChatWindow({
         <div className="bg-background border-t p-4">
           <div className="mx-auto max-w-4xl">
             <InputBox
+              ref={inputRef}
               onSend={handleNewMessage}
               disabled={isCreating}
-              placeholder="Digite sua mensagem para começar uma nova conversa..."
+              placeholder={t("apps.chat.placeholders.newConversation")}
             />
           </div>
         </div>
@@ -716,7 +680,7 @@ export function ChatWindow({
       {/* Input Area - Fixo no bottom como no ChatWindow original */}
       <div className="bg-background border-t p-4">
         <div className="mx-auto max-w-4xl">
-          <InputBox onSend={sendMessage} disabled={isLoading} />
+          <InputBox ref={inputRef} onSend={sendMessage} disabled={isLoading} />
         </div>
       </div>
     </div>

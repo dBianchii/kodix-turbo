@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   AlertTriangle,
   Building,
@@ -72,7 +72,7 @@ import {
 } from "@kdx/ui/table";
 import { toast } from "@kdx/ui/toast";
 
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 
 // Schema de validação para o formulário de criação
 const createProviderSchema = z.object({
@@ -97,6 +97,7 @@ type EditProviderFormData = z.infer<typeof editProviderSchema>;
 
 export function ProvidersSection() {
   const t = useTranslations();
+  const trpc = useTRPC();
   const queryClient = useQueryClient();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
@@ -104,11 +105,13 @@ export function ProvidersSection() {
   const [providerToDelete, setProviderToDelete] = useState<any>(null);
   const [providerToEdit, setProviderToEdit] = useState<any>(null);
 
-  // ✅ CORRIGIDO: Usar api hooks diretamente
-  const providersQuery = api.app.aiStudio.findAiProviders.useQuery({
-    limite: 50,
-    offset: 0,
-  });
+  // ✅ CORRIGIDO: Usar padrão useTRPC
+  const providersQuery = useQuery(
+    trpc.app.aiStudio.findAiProviders.queryOptions({
+      limite: 50,
+      offset: 0,
+    }),
+  );
 
   const providers = providersQuery.data || [];
   const isLoading = providersQuery.isLoading;
@@ -131,43 +134,55 @@ export function ProvidersSection() {
     },
   });
 
-  // ✅ CORRIGIDO: Usar api mutations diretamente
-  const createProviderMutation = api.app.aiStudio.createAiProvider.useMutation({
-    onSuccess: () => {
-      providersQuery.refetch();
-      toast.success("Provider criado com sucesso!");
-      setShowCreateForm(false);
-      createForm.reset();
-    },
-    onError: (error: any) => {
-      toast.error(error.message || "Erro ao criar provider");
-    },
-  });
+  // ✅ CORRIGIDO: Usar padrão useTRPC com useMutation
+  const createProviderMutation = useMutation(
+    trpc.app.aiStudio.createAiProvider.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries(
+          trpc.app.aiStudio.findAiProviders.pathFilter(),
+        );
+        toast.success("Provider criado com sucesso!");
+        setShowCreateForm(false);
+        createForm.reset();
+      },
+      onError: (error: any) => {
+        toast.error(error.message || "Erro ao criar provider");
+      },
+    }),
+  );
 
-  const updateProviderMutation = api.app.aiStudio.updateAiProvider.useMutation({
-    onSuccess: () => {
-      providersQuery.refetch();
-      toast.success("Provider atualizado com sucesso!");
-      setShowEditForm(false);
-      setProviderToEdit(null);
-      editForm.reset();
-    },
-    onError: (error: any) => {
-      toast.error(error.message || "Erro ao atualizar provider");
-    },
-  });
+  const updateProviderMutation = useMutation(
+    trpc.app.aiStudio.updateAiProvider.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries(
+          trpc.app.aiStudio.findAiProviders.pathFilter(),
+        );
+        toast.success("Provider atualizado com sucesso!");
+        setShowEditForm(false);
+        setProviderToEdit(null);
+        editForm.reset();
+      },
+      onError: (error: any) => {
+        toast.error(error.message || "Erro ao atualizar provider");
+      },
+    }),
+  );
 
-  const deleteProviderMutation = api.app.aiStudio.deleteAiProvider.useMutation({
-    onSuccess: () => {
-      providersQuery.refetch();
-      toast.success("Provider excluído com sucesso!");
-      setShowDeleteDialog(false);
-      setProviderToDelete(null);
-    },
-    onError: (error: any) => {
-      toast.error(error.message || "Erro ao excluir provider");
-    },
-  });
+  const deleteProviderMutation = useMutation(
+    trpc.app.aiStudio.deleteAiProvider.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries(
+          trpc.app.aiStudio.findAiProviders.pathFilter(),
+        );
+        toast.success("Provider excluído com sucesso!");
+        setShowDeleteDialog(false);
+        setProviderToDelete(null);
+      },
+      onError: (error: any) => {
+        toast.error(error.message || "Erro ao excluir provider");
+      },
+    }),
+  );
 
   const handleCreateSubmit = (data: CreateProviderFormData) => {
     createProviderMutation.mutate({
@@ -359,7 +374,7 @@ export function ProvidersSection() {
                             Editar Provider
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            className="text-destructive"
+                            className="text-muted-foreground"
                             onClick={() => handleDeleteClick(provider)}
                           >
                             <Trash2 className="mr-2 h-4 w-4" />

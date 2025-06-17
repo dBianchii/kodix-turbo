@@ -18,7 +18,7 @@ import {
 } from "@kdx/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
 
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 
 interface ModelSelectorProps {
   selectedModelId?: string;
@@ -56,12 +56,33 @@ export function ModelSelector({
   const t = useTranslations();
   const [open, setOpen] = useState(false);
 
-  // ✅ Usar tRPC hooks nativos - buscar modelos disponíveis
-  // @ts-ignore - Ignorando temporariamente erro de TypeScript do tRPC
-  const availableModelsQuery = api.app.aiStudio.findAvailableModels.useQuery();
+  // ✅ CORRIGIDO: Usar arquitetura useTRPC configurada
+  const trpc = useTRPC();
+  const availableModelsQuery = useQuery(
+    trpc.app.aiStudio.findAvailableModels.queryOptions(),
+  );
 
-  const availableModels = (availableModelsQuery.data || []) as AvailableModel[];
+  // ✅ CORRIGIDO: Filtrar apenas modelos que o team explicitamente marcou como habilitados
+  const availableModels = (availableModelsQuery.data?.filter(
+    (model: any) => model.teamConfig?.enabled === true,
+  ) || []) as AvailableModel[];
+
   const isLoading = availableModelsQuery.isLoading;
+
+  // Debug: log dos modelos disponíveis
+  console.log(
+    "🔍 [MODEL_SELECTOR] Modelos carregados do backend:",
+    availableModelsQuery.data?.length || 0,
+  );
+  console.log(
+    "🔍 [MODEL_SELECTOR] Modelos habilitados pelo team:",
+    availableModels.length,
+  );
+  availableModels.forEach((model: any) => {
+    console.log(
+      `   ✅ ${model.name} (ID: ${model.id}) - priority: ${model.teamConfig?.priority || "não definida"}`,
+    );
+  });
 
   // Agrupar modelos por provedor e ordenar por prioridade
   const modelsByProvider = availableModels.reduce(

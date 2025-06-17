@@ -57,7 +57,7 @@ import {
   Link as RoutingLink,
   useRouter as useRoutingRouter,
 } from "~/i18n/routing";
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 
 export function KodixApp({
   id,
@@ -72,44 +72,53 @@ export function KodixApp({
   const router = useRoutingRouter();
   const queryClient = useQueryClient();
   const t = useTranslations();
+  const trpc = useTRPC();
 
   const dependencies = getAppDependencies(id);
   const hasDependencies = dependencies.length > 0;
 
-  const installAppMutation = api.app.installApp.useMutation({
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: [["app", "getAll"]] });
-      void queryClient.invalidateQueries({
-        queryKey: [["app", "getInstalled"]],
-      });
-      router.refresh();
+  const installAppMutation = useMutation(
+    trpc.app.installApp.mutationOptions({
+      onSuccess: () => {
+        void queryClient.invalidateQueries({ queryKey: [["app", "getAll"]] });
+        void queryClient.invalidateQueries({
+          queryKey: [["app", "getInstalled"]],
+        });
+        router.refresh();
 
-      if (hasDependencies) {
-        const dependencyNames = dependencies
-          .map((depId: KodixAppId) => getAppName(depId, t))
-          .join(", ");
+        if (hasDependencies) {
+          const dependencyNames = dependencies
+            .map((depId: KodixAppId) => getAppName(depId, t))
+            .join(", ");
+          toast.success(
+            `${t("App")} ${appName} ${t("installed").toLowerCase()} (com dependências: ${dependencyNames})`,
+          );
+        } else {
+          toast.success(
+            `${t("App")} ${appName} ${t("installed").toLowerCase()}`,
+          );
+        }
+      },
+      onError: (err: any) => {
+        trpcErrorToastDefault(err);
+      },
+    }),
+  );
+  const uninstallAppMutation = useMutation(
+    trpc.app.uninstallApp.mutationOptions({
+      onSuccess: () => {
+        setOpen(false);
+        void queryClient.invalidateQueries({ queryKey: [["app", "getAll"]] });
+        router.refresh();
         toast.success(
-          `${t("App")} ${appName} ${t("installed").toLowerCase()} (com dependências: ${dependencyNames})`,
+          `${t("App")} ${appName} ${t("uninstalled").toLowerCase()}`,
         );
-      } else {
-        toast.success(`${t("App")} ${appName} ${t("installed").toLowerCase()}`);
-      }
-    },
-    onError: (err: any) => {
-      trpcErrorToastDefault(err);
-    },
-  });
-  const uninstallAppMutation = api.app.uninstallApp.useMutation({
-    onSuccess: () => {
-      setOpen(false);
-      void queryClient.invalidateQueries({ queryKey: [["app", "getAll"]] });
-      router.refresh();
-      toast.success(`${t("App")} ${appName} ${t("uninstalled").toLowerCase()}`);
-    },
-    onError: (err: any) => {
-      trpcErrorToastDefault(err);
-    },
-  });
+      },
+      onError: (err: any) => {
+        trpcErrorToastDefault(err);
+      },
+    }),
+  );
 
   const appShouldGoToOnboarding = id === kodixCareAppId;
 

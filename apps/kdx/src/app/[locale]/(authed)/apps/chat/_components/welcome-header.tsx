@@ -13,12 +13,11 @@ export function WelcomeHeader() {
       </div>
 
       <h1 className="mb-3 text-3xl font-bold tracking-tight">
-        Bem-vindo ao Chat Kodix
+        {t("apps.chat.welcome-chat")}
       </h1>
 
       <p className="text-muted-foreground max-w-md text-lg">
-        Como posso ajudá-lo hoje? Digite sua mensagem para começar uma nova
-        conversa.
+        {t("apps.chat.messages.greeting")}
       </p>
     </div>
   );

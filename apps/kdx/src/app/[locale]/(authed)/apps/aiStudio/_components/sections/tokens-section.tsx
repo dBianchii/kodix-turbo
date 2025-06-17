@@ -77,7 +77,7 @@ import {
 } from "@kdx/ui/table";
 import { toast } from "@kdx/ui/toast";
 
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 
 // Schema de validação para o formulário de criação
 const createTokenSchema = z.object({
@@ -95,6 +95,7 @@ type EditTokenFormData = z.infer<typeof editTokenSchema>;
 
 export function TokensSection() {
   const t = useTranslations();
+  const trpc = useTRPC();
   const queryClient = useQueryClient();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
@@ -102,13 +103,17 @@ export function TokensSection() {
   const [tokenToDelete, setTokenToDelete] = useState<any>(null);
   const [tokenToEdit, setTokenToEdit] = useState<any>(null);
 
-  // ✅ CORRIGIDO: Usar api hooks diretamente
-  const tokensQuery = api.app.aiStudio.findAiTeamProviderTokens.useQuery();
+  // ✅ CORRIGIDO: Usar padrão useTRPC
+  const tokensQuery = useQuery(
+    trpc.app.aiStudio.findAiTeamProviderTokens.queryOptions(),
+  );
 
-  const providersQuery = api.app.aiStudio.findAiProviders.useQuery({
-    limite: 50,
-    offset: 0,
-  });
+  const providersQuery = useQuery(
+    trpc.app.aiStudio.findAiProviders.queryOptions({
+      limite: 50,
+      offset: 0,
+    }),
+  );
 
   const tokens = tokensQuery.data || [];
   const providers = providersQuery.data || [];
@@ -131,11 +136,13 @@ export function TokensSection() {
     },
   });
 
-  // ✅ CORRIGIDO: Usar api mutations diretamente
-  const createTokenMutation =
-    api.app.aiStudio.createAiTeamProviderToken.useMutation({
+  // ✅ CORRIGIDO: Usar padrão useTRPC com useMutation
+  const createTokenMutation = useMutation(
+    trpc.app.aiStudio.createAiTeamProviderToken.mutationOptions({
       onSuccess: () => {
-        tokensQuery.refetch();
+        queryClient.invalidateQueries(
+          trpc.app.aiStudio.findAiTeamProviderTokens.pathFilter(),
+        );
         toast.success("Token criado com sucesso!");
         setShowCreateForm(false);
         createForm.reset();
@@ -144,12 +151,15 @@ export function TokensSection() {
         console.error("Erro ao criar token:", error);
         toast.error(error.message || "Erro ao criar token");
       },
-    });
+    }),
+  );
 
-  const updateTokenMutation =
-    api.app.aiStudio.updateAiTeamProviderToken.useMutation({
+  const updateTokenMutation = useMutation(
+    trpc.app.aiStudio.updateAiTeamProviderToken.mutationOptions({
       onSuccess: () => {
-        tokensQuery.refetch();
+        queryClient.invalidateQueries(
+          trpc.app.aiStudio.findAiTeamProviderTokens.pathFilter(),
+        );
         toast.success("Token atualizado com sucesso!");
         setShowEditForm(false);
         setTokenToEdit(null);
@@ -158,12 +168,15 @@ export function TokensSection() {
       onError: (error: any) => {
         toast.error(error.message || "Erro ao atualizar token");
       },
-    });
+    }),
+  );
 
-  const deleteTokenMutation =
-    api.app.aiStudio.removeTokenByProvider.useMutation({
+  const deleteTokenMutation = useMutation(
+    trpc.app.aiStudio.removeTokenByProvider.mutationOptions({
       onSuccess: () => {
-        tokensQuery.refetch();
+        queryClient.invalidateQueries(
+          trpc.app.aiStudio.findAiTeamProviderTokens.pathFilter(),
+        );
         toast.success("Token removido com sucesso!");
         setShowDeleteDialog(false);
         setTokenToDelete(null);
@@ -171,7 +184,8 @@ export function TokensSection() {
       onError: (error: any) => {
         toast.error(error.message || "Erro ao remover token");
       },
-    });
+    }),
+  );
 
   const handleCreateSubmit = (data: CreateTokenFormData) => {
     createTokenMutation.mutate({
@@ -341,7 +355,7 @@ export function TokensSection() {
                             Editar Token
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            className="text-destructive"
+                            className="text-muted-foreground"
                             onClick={() => handleDeleteClick(token)}
                           >
                             <Trash2 className="mr-2 h-4 w-4" />

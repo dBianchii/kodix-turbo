@@ -57,9 +57,12 @@ CREATE TABLE userAppTeamConfig (
 
 ```typescript
 // Endpoint: app.getConfig
-api.app.getConfig.useQuery({
-  appId: "az1x2c3bv4n5", // chatAppId
-});
+const trpc = useTRPC();
+const query = useQuery(
+  trpc.app.getConfig.queryOptions({
+    appId: "az1x2c3bv4n5", // chatAppId
+  }),
+);
 
 // Handler
 export const getConfigHandler = async ({ ctx, input }) => {
@@ -76,16 +79,19 @@ export const getConfigHandler = async ({ ctx, input }) => {
 
 ```typescript
 // Endpoint: app.saveConfig
-api.app.saveConfig.useMutation({
-  appId: "az1x2c3bv4n5", // chatAppId
-  config: {
-    lastSelectedModelId: "gpt-4o-2024-11-20",
-    aiSettings: {
-      maxTokens: 2000,
-      temperature: 0.7,
+const trpc = useTRPC();
+const mutation = useMutation(
+  trpc.app.saveConfig.mutationOptions({
+    appId: "az1x2c3bv4n5", // chatAppId
+    config: {
+      lastSelectedModelId: "gpt-4o-2024-11-20",
+      aiSettings: {
+        maxTokens: 2000,
+        temperature: 0.7,
+      },
     },
-  },
-});
+  }),
+);
 
 // Handler
 export const saveConfigHandler = async ({ ctx, input }) => {
@@ -103,9 +109,12 @@ export const saveConfigHandler = async ({ ctx, input }) => {
 
 ```typescript
 // Endpoint: app.getUserAppTeamConfig
-api.app.getUserAppTeamConfig.useQuery({
-  appId: "1z50i9xblo4b", // kodixCareAppId
-});
+const trpc = useTRPC();
+const query = useQuery(
+  trpc.app.getUserAppTeamConfig.queryOptions({
+    appId: "1z50i9xblo4b", // kodixCareAppId
+  }),
+);
 
 // Handler
 export const getUserAppTeamConfigHandler = async ({ ctx, input }) => {
@@ -123,12 +132,15 @@ export const getUserAppTeamConfigHandler = async ({ ctx, input }) => {
 
 ```typescript
 // Endpoint: app.saveUserAppTeamConfig
-api.app.saveUserAppTeamConfig.useMutation({
-  appId: "1z50i9xblo4b", // kodixCareAppId
-  config: {
-    sendNotificationsForDelayedTasks: true,
-  },
-});
+const trpc = useTRPC();
+const mutation = useMutation(
+  trpc.app.saveUserAppTeamConfig.mutationOptions({
+    appId: "1z50i9xblo4b", // kodixCareAppId
+    config: {
+      sendNotificationsForDelayedTasks: true,
+    },
+  }),
+);
 
 // Handler
 export const saveUserAppTeamConfigHandler = async ({ ctx, input }) => {
@@ -296,17 +308,21 @@ export type AppIdsWithUserAppTeamConfig =
 ```typescript
 // hooks/useAppTeamConfig.ts
 export function useAppTeamConfig(appId: AppIdsWithConfig) {
-  const { data: config, isLoading } = api.app.getConfig.useQuery({ appId });
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
 
-  const saveConfigMutation = api.app.saveConfig.useMutation({
-    onSuccess: () => {
-      queryClient.invalidateQueries([
-        ["app", "getConfig"],
-        { input: { appId } },
-      ]);
-      toast.success("Configurações da equipe salvas!");
-    },
-  });
+  const { data: config, isLoading } = useQuery(
+    trpc.app.getConfig.queryOptions({ appId }),
+  );
+
+  const saveConfigMutation = useMutation(
+    trpc.app.saveConfig.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries(trpc.app.getConfig.pathFilter({ appId }));
+        toast.success("Configurações da equipe salvas!");
+      },
+    }),
+  );
 
   return {
     config,
@@ -323,19 +339,23 @@ export function useAppTeamConfig(appId: AppIdsWithConfig) {
 ```typescript
 // hooks/useUserAppTeamConfig.ts
 export function useUserAppTeamConfig(appId: AppIdsWithUserAppTeamConfig) {
-  const { data: config, isLoading } = api.app.getUserAppTeamConfig.useQuery({
-    appId,
-  });
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
 
-  const saveConfigMutation = api.app.saveUserAppTeamConfig.useMutation({
-    onSuccess: () => {
-      queryClient.invalidateQueries([
-        ["app", "getUserAppTeamConfig"],
-        { input: { appId } },
-      ]);
-      toast.success("Suas configurações foram salvas!");
-    },
-  });
+  const { data: config, isLoading } = useQuery(
+    trpc.app.getUserAppTeamConfig.queryOptions({ appId }),
+  );
+
+  const saveConfigMutation = useMutation(
+    trpc.app.saveUserAppTeamConfig.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries(
+          trpc.app.getUserAppTeamConfig.pathFilter({ appId }),
+        );
+        toast.success("Suas configurações foram salvas!");
+      },
+    }),
+  );
 
   return {
     config,

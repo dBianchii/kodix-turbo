@@ -1,4 +1,6 @@
-import { api } from "~/trpc/react";
+import { useQuery } from "@tanstack/react-query";
+
+import { useTRPC } from "~/trpc/react";
 import { useChatUserConfig } from "./useChatUserConfig";
 
 /**
@@ -11,6 +13,8 @@ import { useChatUserConfig } from "./useChatUserConfig";
  * Chat ──useChatUserConfig──> userAppTeamConfig ──> Fallback para AI Studio
  */
 export function useChatPreferredModel() {
+  const trpc = useTRPC();
+
   // ✅ USAR useChatUserConfig como fonte principal (configurações de USUÁRIO)
   const {
     config,
@@ -18,53 +22,32 @@ export function useChatPreferredModel() {
     getPreferredModelId,
   } = useChatUserConfig();
 
-  // ✅ Fallback para API do Chat apenas se não houver modelo no config de usuário
-  // @ts-ignore - Ignorando temporariamente erro de TypeScript do tRPC
-  const fallbackQuery = api.app.chat.getPreferredModel.useQuery(undefined, {
-    staleTime: 5 * 60 * 1000, // Cache por 5 minutos
-    refetchOnWindowFocus: false,
-    enabled: !isConfigLoading && !getPreferredModelId(), // Só buscar se não há modelo no config do usuário
-    onSuccess: (data: any) => {
-      console.log("✅ [CHAT] Modelo fallback carregado:", data);
-    },
-    onError: (error: any) => {
-      console.error("❌ [CHAT] Erro ao carregar modelo fallback:", error);
-    },
-  });
-
-  // ✅ Determinar o modelo a usar com prioridade
+  // ✅ Simplificado: usar apenas config do usuário por enquanto
   const modelFromUserConfig = getPreferredModelId();
-  const modelFromFallback = fallbackQuery.data?.modelId;
-
-  const finalModelId = modelFromUserConfig || modelFromFallback;
-  const source = modelFromUserConfig
-    ? "user_config"
-    : fallbackQuery.data?.source || "unknown";
+  const finalModelId = modelFromUserConfig;
+  const source = modelFromUserConfig ? "user_config" : "none";
 
   console.log("🔄 [useChatPreferredModel] Determinando modelo:", {
     modelFromUserConfig,
-    modelFromFallback,
     finalModelId,
     source,
     isConfigLoading,
   });
 
-  const isLoading =
-    isConfigLoading || (!modelFromUserConfig && fallbackQuery.isLoading);
-  const error = fallbackQuery.error;
+  const isLoading = isConfigLoading;
+  const error = null;
   const refetch = () => {
-    // Invalidar ambas as fontes
-    fallbackQuery.refetch();
+    // Nada para refetch por enquanto
   };
 
   return {
     preferredModel: finalModelId
       ? {
           modelId: finalModelId,
-          model: fallbackQuery.data?.model || null,
+          model: null,
           source,
-          teamConfig: fallbackQuery.data?.teamConfig || null,
-          userConfig: config, // ✅ NOVO: Incluir config de usuário
+          teamConfig: null,
+          userConfig: config,
         }
       : null,
     isLoading,
@@ -73,20 +56,20 @@ export function useChatPreferredModel() {
 
     // Helpers para facilitar o uso
     modelId: finalModelId,
-    model: fallbackQuery.data?.model || null,
+    model: null,
     source,
 
     // ✅ Verificações úteis atualizadas
-    isFromUserConfig: source === "user_config", // NOVO
-    isFromAiStudio: source === "ai_studio_default",
-    isFallback: source === "first_available",
+    isFromUserConfig: source === "user_config",
+    isFromAiStudio: false,
+    isFallback: false,
 
     // Informações adicionais
-    hasTeamConfig: !!fallbackQuery.data?.teamConfig,
-    hasUserConfig: !!config, // ✅ NOVO
+    hasTeamConfig: false,
+    hasUserConfig: !!config,
 
     // Status helpers
     isReady: !isLoading && !!finalModelId,
-    hasError: !!error,
+    hasError: false,
   };
 }

@@ -2,6 +2,8 @@
 
 Este guia detalha como configurar o ambiente de desenvolvimento para o projeto Kodix.
 
+> **🚨 ATENÇÃO**: O projeto usa **Docker** para serviços locais (MySQL, Redis). **SEMPRE inicie os serviços Docker antes** de trabalhar no projeto para evitar erros de conexão e perda de tempo em debug.
+
 ## 🏗️ Technology Stack
 
 ### Frontend
@@ -55,6 +57,139 @@ nvm use
 npm i -g pnpm
 ```
 
+**Docker**: Para desenvolvimento local
+
+```bash
+# Verificar se Docker está instalado
+docker --version
+docker-compose --version
+```
+
+## 🐳 Docker para Desenvolvimento Local
+
+> **💡 IMPORTANTE**: O projeto Kodix usa **Docker** para serviços de desenvolvimento local (MySQL, Redis, etc.). Isto simplifica o setup e evita problemas de configuração.
+
+> **⚠️ CARACTERÍSTICA DO PROJETO**: No Kodix, Docker e servidor Next.js são **executados coordenadamente**. Quando você roda `pnpm dev:kdx`, ambos iniciam juntos e param juntos automaticamente.
+
+### **🔄 Como o Sistema Funciona**
+
+O comando `pnpm dev:kdx` executa **simultaneamente**:
+
+- **Servidor Next.js** (`@kdx/kdx`)
+- **Serviços Docker** (`@kdx/db-dev`)
+
+**Por isso que o Docker "só roda quando o servidor roda"** - eles são coordenados pelo Turbo!
+
+```bash
+# Este comando inicia AMBOS automaticamente
+pnpm dev:kdx
+# ↳ Inicia: Next.js + MySQL + Redis
+
+# Quando você para (Ctrl+C), AMBOS param automaticamente
+```
+
+### **📋 Opções de Execução**
+
+#### **1. Modo Coordenado (Recomendado para desenvolvimento)**
+
+```bash
+# Inicia servidor + Docker juntos
+pnpm dev:kdx
+# ✅ Tudo sincronizado automaticamente
+```
+
+#### **2. Modo Independente (Para debug específico)**
+
+```bash
+# Opção A: Só Docker
+cd packages/db-dev
+docker-compose up -d
+
+# Opção B: Só servidor (depois do Docker)
+cd apps/kdx
+pnpm dev
+```
+
+### Serviços Docker Disponíveis
+
+O projeto inclui configurações Docker em `packages/db-dev/docker-compose.yml`:
+
+- **MySQL 8.0** - Banco principal na porta `3306`
+- **Redis** - Cache (se configurado)
+- **Outros serviços** conforme necessário
+
+### Iniciando Serviços Docker
+
+```bash
+# Iniciar todos os serviços de desenvolvimento
+cd packages/db-dev
+docker-compose up -d
+
+# Verificar se os serviços estão rodando
+docker-compose ps
+
+# Ver logs dos serviços (se necessário)
+docker-compose logs mysql
+```
+
+### Verificação Rápida
+
+```bash
+# Verificar se MySQL está acessível
+mysql -h localhost -u root -ppassword -e "SHOW DATABASES;"
+
+# Ou verificar conexão via script
+./scripts/check-server-simple.sh
+```
+
+### Parar Serviços Docker
+
+```bash
+# Parar serviços (preserva dados)
+cd packages/db-dev
+docker-compose stop
+
+# Parar e remover containers (limpa tudo)
+docker-compose down
+
+# Remover volumes também (CUIDADO: apaga dados!)
+docker-compose down -v
+```
+
+## ⚠️ Troubleshooting Docker
+
+### Problemas Comuns
+
+**Error: "MySQL connection refused"**
+
+```bash
+# 1. Verificar se Docker está rodando
+docker ps
+
+# 2. Iniciar serviços se não estiverem rodando
+cd packages/db-dev && docker-compose up -d
+
+# 3. Aguardar MySQL inicializar (pode levar alguns segundos)
+docker-compose logs mysql | grep "ready for connections"
+```
+
+**Error: "Port 3306 already in use"**
+
+```bash
+# Verificar que está usando MySQL local em vez do Docker
+brew services stop mysql  # macOS
+sudo systemctl stop mysql # Linux
+
+# Ou configurar porta diferente no docker-compose.yml
+```
+
+**Error: "Database 'kodix' doesn't exist"**
+
+```bash
+# Aplicar schema após Docker iniciar
+pnpm db:push
+```
+
 ### Environment Setup
 
 1. **Install dependencies**
@@ -70,25 +205,48 @@ npm i -g pnpm
    # Edit .env with your configuration
    ```
 
-3. **Start main application**
+3. **Start Docker services**
 
    ```bash
-   pnpm dev:kdx
+   # Iniciar MySQL e outros serviços via Docker
+   cd packages/db-dev
+   docker-compose up -d
+   cd ../..
    ```
 
 4. **Setup database**
+
    ```bash
    pnpm db:push    # Apply schema
    pnpm db:seed    # Add sample data
    ```
 
+5. **Start main application**
+
+   ```bash
+   pnpm dev:kdx
+   ```
+
 ### Essential Commands
 
 ```bash
+# 🐳 Docker Services (IMPORTANTE: Executar primeiro!)
+cd packages/db-dev
+docker-compose up -d         # Start all services
+docker-compose ps            # Check service status
+docker-compose logs mysql    # View MySQL logs
+docker-compose stop          # Stop services
+docker-compose down          # Stop and remove containers
+
 # 🚀 Development
 pnpm dev:kdx        # Start web app
 pnpm dev:care       # Start mobile app
 pnpm db:studio      # Database visual interface
+
+# 🗄️ Database
+pnpm db:push        # Apply schema changes
+pnpm db:seed        # Populate with test data
+pnpm db:migrate     # Run migrations (production)
 
 # 🧹 Maintenance
 pnpm lint:fix       # Fix linting issues
@@ -194,9 +352,20 @@ lsof -ti:3000 | xargs kill -9
 **Error: "Database connection failed"**
 
 ```bash
-# Check MySQL service
-brew services start mysql
-# Verify connection string in .env
+# 1. PRIMEIRO: Verificar se serviços Docker estão rodando
+cd packages/db-dev && docker-compose ps
+
+# 2. Se não estiverem rodando, iniciar:
+docker-compose up -d
+
+# 3. Aguardar MySQL estar pronto
+docker-compose logs mysql | tail -20
+
+# 4. Verificar variáveis de ambiente
+grep MYSQL_URL .env
+
+# 5. Testar conexão direta
+mysql -h localhost -u root -ppassword -e "SHOW DATABASES;"
 ```
 
 **Error: "tRPC procedure not found"**
@@ -222,6 +391,40 @@ pnpm dev:kdx
 ```bash
 # Use project references
 pnpm typecheck --build
+```
+
+### Reset Completo (Last Resort)
+
+```bash
+# ⚠️ CUIDADO: Reset completo do ambiente de desenvolvimento
+
+# 1. Parar serviços Docker
+cd packages/db-dev
+docker-compose down -v  # Remove containers E volumes (apaga dados!)
+
+# 2. Limpar dependências
+cd ../..
+pnpm clean:workspaces
+rm -rf node_modules
+rm pnpm-lock.yaml
+
+# 3. Reinstalar dependências
+pnpm i
+
+# 4. Reiniciar Docker e banco
+cd packages/db-dev
+docker-compose up -d
+cd ../..
+
+# 5. Aguardar MySQL estar pronto
+sleep 10
+
+# 6. Aplicar schema e seed
+pnpm db:push
+pnpm db:seed
+
+# 7. Verificar se tudo está funcionando
+pnpm dev:kdx
 ```
 
 ## 📚 Próximos Passos

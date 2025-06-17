@@ -1,11 +1,11 @@
 import type { z } from "zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import type { chatUserAppTeamConfigSchema } from "@kdx/shared";
 import { chatAppId } from "@kdx/shared";
 
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 
 type ChatUserConfig = z.infer<typeof chatUserAppTeamConfigSchema>;
 
@@ -20,6 +20,7 @@ type ChatUserConfig = z.infer<typeof chatUserAppTeamConfigSchema>;
  * - Comportamentos pessoais
  */
 export function useChatUserConfig() {
+  const trpc = useTRPC();
   const queryClient = useQueryClient();
 
   console.log("🔧 [useChatUserConfig] Hook inicializado - Escopo USUÁRIO");
@@ -29,12 +30,14 @@ export function useChatUserConfig() {
     data: rawConfig,
     isLoading,
     error,
-  } = api.app.getUserAppTeamConfig.useQuery(
-    { appId: chatAppId },
-    {
-      staleTime: 5 * 60 * 1000, // 5 minutos
-      refetchOnWindowFocus: false,
-    },
+  } = useQuery(
+    trpc.app.getUserAppTeamConfig.queryOptions(
+      { appId: chatAppId },
+      {
+        staleTime: 5 * 60 * 1000, // 5 minutos
+        refetchOnWindowFocus: false,
+      },
+    ),
   );
 
   // ✅ CORREÇÃO: Cast para o tipo correto do chat
@@ -79,33 +82,35 @@ export function useChatUserConfig() {
   console.log("🔀 [useChatUserConfig] Merged user config:", mergedConfig);
 
   // ✅ Mutation para salvar configuração de USUÁRIO
-  const saveConfigMutation = api.app.saveUserAppTeamConfig.useMutation({
-    onSuccess: (data: any) => {
-      queryClient.invalidateQueries({
-        queryKey: [
-          ["app", "getUserAppTeamConfig"],
-          { input: { appId: chatAppId }, type: "query" },
-        ],
-      });
-      console.log(
-        "✅ [useChatUserConfig] User config saved successfully",
-        data,
-      );
-      toast.success("Configurações pessoais salvas!");
-    },
-    onError: (error: any) => {
-      console.error("❌ [useChatUserConfig] Error saving user config:", error);
-      console.error("❌ [useChatUserConfig] Error details:", {
-        message: error.message,
-        code: error.code,
-        data: error.data,
-        shape: error.shape,
-      });
-      toast.error(
-        `Erro ao salvar configurações: ${error.message || "Erro desconhecido"}`,
-      );
-    },
-  });
+  const saveConfigMutation = useMutation(
+    trpc.app.saveUserAppTeamConfig.mutationOptions({
+      onSuccess: (data: any) => {
+        queryClient.invalidateQueries(
+          trpc.app.getUserAppTeamConfig.pathFilter(),
+        );
+        console.log(
+          "✅ [useChatUserConfig] User config saved successfully",
+          data,
+        );
+        toast.success("Configurações pessoais salvas!");
+      },
+      onError: (error: any) => {
+        console.error(
+          "❌ [useChatUserConfig] Error saving user config:",
+          error,
+        );
+        console.error("❌ [useChatUserConfig] Error details:", {
+          message: error.message,
+          code: error.code,
+          data: error.data,
+          shape: error.shape,
+        });
+        toast.error(
+          `Erro ao salvar configurações: ${error.message || "Erro desconhecido"}`,
+        );
+      },
+    }),
+  );
 
   // Função para salvar configuração completa
   const saveConfig = (newConfig: Partial<ChatUserConfig>) => {

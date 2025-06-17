@@ -1,8 +1,8 @@
 // @ts-nocheck - Chat tRPC router has type definition issues that need to be resolved at the router level
 "use client";
 
-import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ChevronDown,
   ChevronRight,
@@ -64,7 +64,7 @@ import {
 import { toast } from "@kdx/ui/toast";
 
 import { IconKodixApp } from "~/app/[locale]/_components/app/kodix-icon";
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 import { useChatUserConfig } from "../_hooks/useChatUserConfig";
 
 interface AppSidebarProps {
@@ -78,7 +78,8 @@ export function AppSidebar({
 }: AppSidebarProps) {
   const { isMobile } = useSidebar();
   const t = useTranslations();
-  const utils = api.useUtils();
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
 
   // ✅ CORRIGIDO: Hook para salvar configurações PESSOAIS do usuário (não team)
   const { savePreferredModel } = useChatUserConfig();
@@ -104,143 +105,213 @@ export function AppSidebar({
   const [movingSession, setMovingSession] = useState<any>(null);
   const [selectedFolderId, setSelectedFolderId] = useState<string>("none");
   const [targetFolderId, setTargetFolderId] = useState<string>("none");
-  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(
-    new Set(),
+  // Estado das pastas expandidas com persistência no localStorage
+  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("chat-expanded-folders");
+        return saved ? new Set(JSON.parse(saved)) : new Set();
+      } catch {
+        return new Set();
+      }
+    }
+    return new Set();
+  });
+
+  // ✅ CORRIGIDO: Queries reais usando arquitetura tRPC correta
+  const foldersQuery = useQuery(
+    trpc.app.chat.buscarChatFolders.queryOptions({
+      limite: 50,
+      pagina: 1,
+    }),
   );
 
-  // Queries
-  const foldersQuery = api.app.chat.buscarChatFolders.useQuery({
-    limite: 50,
-    pagina: 1,
-  });
-
   // Query para buscar todas as sessões (vamos filtrar no frontend)
-  const allSessionsQuery = api.app.chat.listarSessions.useQuery({
-    limite: 100,
-    pagina: 1,
-  });
+  const allSessionsQuery = useQuery(
+    trpc.app.chat.listarSessions.queryOptions({
+      limite: 100,
+      pagina: 1,
+    }),
+  );
 
-  const agentsQuery = api.app.aiStudio.findAiAgents.useQuery({
-    limite: 50,
-    offset: 0,
-  });
+  const agentsQuery = useQuery(
+    trpc.app.aiStudio.findAiAgents.queryOptions({
+      limite: 50,
+      offset: 0,
+    }),
+  );
 
   // Filtrar apenas modelos habilitados para o time (com prioridade ordenada)
-  const modelsQuery = api.app.aiStudio.findAvailableModels.useQuery();
+  const modelsQuery = useQuery(
+    trpc.app.aiStudio.findAvailableModels.queryOptions(),
+  );
 
-  // Mutations
-  const createFolderMutation = api.app.chat.criarChatFolder.useMutation({
-    onSuccess: () => {
-      utils.app.chat.buscarChatFolders.invalidate();
-      toast.success(t("apps.chat.folders.created"));
-      setShowCreateFolder(false);
-      setFolderName("");
-    },
-    onError: (error: any) => {
-      toast.error(error.message || t("apps.chat.folders.error"));
-    },
-  });
-
-  const updateFolderMutation = api.app.chat.atualizarChatFolder.useMutation({
-    onSuccess: () => {
-      utils.app.chat.buscarChatFolders.invalidate();
-      toast.success(t("apps.chat.folders.updated"));
-      setShowEditFolder(false);
-      setEditingFolder(null);
-      setFolderName("");
-    },
-    onError: (error: any) => {
-      toast.error(error.message || t("apps.chat.folders.error"));
-    },
-  });
-
-  const deleteFolderMutation = api.app.chat.excluirChatFolder.useMutation({
-    onSuccess: () => {
-      utils.app.chat.buscarChatFolders.invalidate();
-      utils.app.chat.listarSessions.invalidate();
-      toast.success(t("apps.chat.folders.deleted"));
-      setShowDeleteFolder(false);
-      setDeletingFolder(null);
-    },
-    onError: (error: any) => {
-      toast.error(error.message || t("apps.chat.folders.error"));
-    },
-  });
-
-  const createSessionMutation = api.app.chat.criarSession.useMutation({
-    onSuccess: (newSession: any) => {
-      utils.app.chat.listarSessions.invalidate();
-      toast.success(t("apps.chat.sessions.created"));
-      setShowCreateSession(false);
-      if (newSession) {
-        onSessionSelect?.(newSession.id);
+  // Persistir estado das pastas expandidas no localStorage
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem(
+          "chat-expanded-folders",
+          JSON.stringify(Array.from(expandedFolders)),
+        );
+      } catch (error) {
+        console.warn("Erro ao salvar pastas expandidas:", error);
       }
-      // Reset form
-      setSessionTitle("");
-      setSelectedAgent("none");
-      setSelectedModel("");
-      setSelectedFolderId("none");
-    },
-    onError: (error: any) => {
-      toast.error(error.message || t("apps.chat.sessions.error"));
-    },
-  });
+    }
+  }, [expandedFolders]);
 
-  const updateSessionMutation = api.app.chat.atualizarSession.useMutation({
-    onSuccess: (data: any) => {
-      console.log("✅ [SIDEBAR] updateSessionMutation SUCCESS:", data);
-      utils.app.chat.listarSessions.invalidate();
-      utils.app.chat.buscarSession.invalidate();
-      // ✅ IMPORTANTE: Invalidar também as mensagens para refletir mudança do modelo
-      utils.app.chat.buscarMensagensTest.invalidate();
-      toast.success(t("apps.chat.sessions.updated"));
-      setShowEditSession(false);
-      setEditingSession(null);
-      // Reset form states
-      setSessionTitle("");
-      setSelectedAgent("none");
-      setSelectedModel("");
-      setSelectedFolderId("none");
+  // Processar dados das queries
+  const folders = foldersQuery.data?.folders || [];
+  const allSessions = allSessionsQuery.data?.sessions || [];
+  const agents = agentsQuery.data?.agents || [];
 
-      console.log(
-        "🔄 [SIDEBAR] Queries invalidadas - interface será atualizada",
+  // Auto-expandir pasta que contém a sessão selecionada
+  useEffect(() => {
+    if (selectedSessionId && allSessions.length > 0) {
+      const selectedSession = allSessions.find(
+        (session: any) => session.id === selectedSessionId,
       );
-    },
-    onError: (error: any) => {
-      console.error("❌ [SIDEBAR] updateSessionMutation ERROR:", error);
-      toast.error(error.message || t("apps.chat.sessions.error"));
-    },
-  });
 
-  const deleteSessionMutation = api.app.chat.excluirSession.useMutation({
-    onSuccess: () => {
-      utils.app.chat.listarSessions.invalidate();
-      toast.success(t("apps.chat.sessions.deleted"));
-      setShowDeleteSession(false);
-      setDeletingSession(null);
-      // Desselecionar sessão se for a que foi deletada
-      if (selectedSessionId === deletingSession?.id) {
-        onSessionSelect?.(undefined as any);
+      if (selectedSession?.chatFolderId) {
+        setExpandedFolders((prev) => {
+          const newExpanded = new Set(prev);
+          newExpanded.add(selectedSession.chatFolderId);
+          return newExpanded;
+        });
       }
-    },
-    onError: (error: any) => {
-      toast.error(error.message || t("apps.chat.sessions.error"));
-    },
-  });
+    }
+  }, [selectedSessionId, allSessions]);
 
-  const moveSessionMutation = api.app.chat.atualizarSession.useMutation({
-    onSuccess: () => {
-      utils.app.chat.listarSessions.invalidate();
-      utils.app.chat.buscarSession.invalidate();
-      toast.success("Sessão movida com sucesso!");
-      setShowMoveSession(false);
-      setMovingSession(null);
-      setTargetFolderId("none");
-    },
-    onError: (error: any) => {
-      toast.error(error.message || "Erro ao mover sessão");
-    },
-  });
+  // ✅ CORRIGIDO: Mutations reais usando arquitetura tRPC correta
+  const createFolderMutation = useMutation(
+    trpc.app.chat.criarChatFolder.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries(
+          trpc.app.chat.buscarChatFolders.pathFilter(),
+        );
+        toast.success(t("apps.chat.folders.created"));
+        setShowCreateFolder(false);
+        setFolderName("");
+      },
+      onError: (error: any) => {
+        toast.error(error.message || t("apps.chat.folders.error"));
+      },
+    }),
+  );
+
+  const updateFolderMutation = useMutation(
+    trpc.app.chat.atualizarChatFolder.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries(
+          trpc.app.chat.buscarChatFolders.pathFilter(),
+        );
+        toast.success(t("apps.chat.folders.updated"));
+        setShowEditFolder(false);
+        setEditingFolder(null);
+        setFolderName("");
+      },
+      onError: (error: any) => {
+        toast.error(error.message || t("apps.chat.folders.error"));
+      },
+    }),
+  );
+
+  const deleteFolderMutation = useMutation(
+    trpc.app.chat.excluirChatFolder.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries(
+          trpc.app.chat.buscarChatFolders.pathFilter(),
+        );
+        queryClient.invalidateQueries(
+          trpc.app.chat.listarSessions.pathFilter(),
+        );
+        toast.success(t("apps.chat.folders.deleted"));
+        setShowDeleteFolder(false);
+        setDeletingFolder(null);
+      },
+      onError: (error: any) => {
+        toast.error(error.message || t("apps.chat.folders.error"));
+      },
+    }),
+  );
+
+  const createSessionMutation = useMutation(
+    trpc.app.chat.criarSession.mutationOptions({
+      onSuccess: (data: any) => {
+        queryClient.invalidateQueries(
+          trpc.app.chat.listarSessions.pathFilter(),
+        );
+        toast.success(t("apps.chat.sessions.created"));
+        setShowCreateSession(false);
+        setSessionTitle("");
+        setSelectedAgent("none");
+        setSelectedModel("");
+        setSelectedFolderId("none");
+        // Selecionar a nova sessão criada
+        onSessionSelect?.(data.id);
+      },
+      onError: (error: any) => {
+        toast.error(error.message || t("apps.chat.sessions.error"));
+      },
+    }),
+  );
+
+  const updateSessionMutation = useMutation(
+    trpc.app.chat.atualizarSession.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries(
+          trpc.app.chat.listarSessions.pathFilter(),
+        );
+        toast.success(t("apps.chat.sessions.updated"));
+        setShowEditSession(false);
+        setEditingSession(null);
+        setSessionTitle("");
+        setSelectedAgent("none");
+        setSelectedModel("");
+        setSelectedFolderId("none");
+      },
+      onError: (error: any) => {
+        toast.error(error.message || t("apps.chat.sessions.error"));
+      },
+    }),
+  );
+
+  const deleteSessionMutation = useMutation(
+    trpc.app.chat.excluirSession.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries(
+          trpc.app.chat.listarSessions.pathFilter(),
+        );
+        toast.success(t("apps.chat.sessions.deleted"));
+        setShowDeleteSession(false);
+        setDeletingSession(null);
+        // Se a sessão deletada era a selecionada, limpar seleção
+        if (deletingSession?.id === selectedSessionId) {
+          onSessionSelect?.(undefined);
+        }
+      },
+      onError: (error: any) => {
+        toast.error(error.message || t("apps.chat.sessions.error"));
+      },
+    }),
+  );
+
+  const moveSessionMutation = useMutation(
+    trpc.app.chat.moverSession.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries(
+          trpc.app.chat.listarSessions.pathFilter(),
+        );
+        toast.success(t("apps.chat.sessions.updated"));
+        setShowMoveSession(false);
+        setMovingSession(null);
+        setTargetFolderId("none");
+      },
+      onError: (error: any) => {
+        toast.error(error.message || t("apps.chat.sessions.error"));
+      },
+    }),
+  );
 
   // Handlers
   const handleCreateFolder = () => {
@@ -382,15 +453,10 @@ export function AppSidebar({
     setExpandedFolders(newExpanded);
   };
 
-  // @ts-expect-error - Type inference issue: folders property should exist based on router definition
-  const folders = foldersQuery.data?.folders || [];
-  // @ts-expect-error - Type inference issue: sessions property should exist based on router definition
-  const allSessions = allSessionsQuery.data?.sessions || [];
   // Filtrar sessões que não têm pasta atribuída
   const sessionsWithoutFolder = allSessions.filter(
     (session: any) => !session.chatFolderId,
   );
-  const agents = agentsQuery.data?.agents || [];
 
   // Filtrar apenas modelos habilitados para o time (com prioridade ordenada)
   const models =
@@ -1060,13 +1126,16 @@ function FolderItem({
   onEditSession,
   onDeleteSession,
 }: FolderItemProps) {
-  const utils = api.useUtils();
+  const trpc = useTRPC();
 
-  const sessionsQuery = api.app.chat.listarSessions.useQuery({
-    chatFolderId: folder.id,
-    limite: 50,
-    pagina: 1,
-  });
+  // ✅ CORRIGIDO: Query real das sessões da pasta
+  const sessionsQuery = useQuery(
+    trpc.app.chat.listarSessions.queryOptions({
+      chatFolderId: folder.id,
+      limite: 50,
+      pagina: 1,
+    }),
+  );
 
   const sessions = sessionsQuery.data?.sessions || [];
 
@@ -1102,7 +1171,10 @@ function FolderItem({
               <Pencil className="mr-2 h-4 w-4" />
               Editar
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={onDelete} className="text-destructive">
+            <DropdownMenuItem
+              onClick={onDelete}
+              className="text-muted-foreground"
+            >
               <Trash2 className="mr-2 h-4 w-4" />
               Excluir
             </DropdownMenuItem>
@@ -1160,7 +1232,7 @@ function FolderItem({
                         e.stopPropagation();
                         onDeleteSession(session);
                       }}
-                      className="text-destructive"
+                      className="text-muted-foreground"
                     >
                       <Trash2 className="mr-2 h-4 w-4" />
                       Excluir

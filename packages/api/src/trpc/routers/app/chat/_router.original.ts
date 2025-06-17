@@ -369,55 +369,6 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  moverSession: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        chatFolderId: z.string(),
-      }),
-    )
-    .mutation(async ({ input, ctx }) => {
-      try {
-        const session = await chatRepository.ChatSessionRepository.findById(
-          input.id,
-        );
-        if (!session || session.teamId !== ctx.auth.user.activeTeamId) {
-          throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "Sessão de chat não encontrada",
-          });
-        }
-
-        // Verificar se a pasta existe
-        const folder = await chatRepository.ChatFolderRepository.findById(
-          input.chatFolderId,
-        );
-        if (!folder || folder.teamId !== ctx.auth.user.activeTeamId) {
-          throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "Pasta de chat não encontrada",
-          });
-        }
-
-        const updatedSession =
-          await chatRepository.ChatSessionRepository.update(input.id, {
-            chatFolderId: input.chatFolderId,
-          });
-        return updatedSession;
-      } catch (error) {
-        if (error instanceof TRPCError) {
-          throw error;
-        }
-
-        console.error("Erro ao mover sessão de chat:", error);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Erro ao mover sessão de chat",
-          cause: error,
-        });
-      }
-    }),
-
   // ===============================
   // CHAT MESSAGE ENDPOINTS
   // ===============================
@@ -661,4 +612,4 @@ export const chatRouter: TRPCRouterRecord = {
     .mutation(async ({ input, ctx }) => {
       return autoCreateSessionWithMessageHandler({ input, ctx });
     }),
-};
+} satisfies TRPCRouterRecord;

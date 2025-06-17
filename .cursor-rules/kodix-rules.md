@@ -8,25 +8,75 @@ alwaysApply: false
 
 ## 🚨 **CRITICAL - INTER-APP DEPENDENCIES**
 
-### ⚠️ MANDATORY: TeamId Context in Cross-App Calls
+### ⚠️ MANDATORY: Service Layer Communication Between SubApps
 
 **BEFORE** implementing ANY communication between SubApps (Chat ↔ AI Studio, etc.):
 
-1. **READ:** `docs/architecture/inter-app-dependencies.md` **FIRST**
-2. **ALWAYS** include `teamId` in cross-app API calls
-3. **ALWAYS** forward authentication headers
-4. **NEVER** call external app endpoints without proper context
+1. **READ:** `docs/architecture/subapp-architecture.md` **FIRST**
+2. **READ:** `docs/architecture/subapp-inter-dependencies.md` for detailed patterns
+3. **ALWAYS** use Service Layer (NOT HTTP calls) for cross-app communication
+4. **ALWAYS** validate `teamId` in service methods
+5. **NEVER** access repositories of other SubApps directly
 
 **Example of CORRECT pattern:**
 
 ```typescript
-await callAiStudioEndpoint("getModels", teamId, params, headers);
-//                                      ^^^^^^ REQUIRED
+// ✅ CORRECT - Service Layer communication
+import { AiStudioService } from "../../../../internal/services/ai-studio.service";
+
+const model = await AiStudioService.getModelById({
+  modelId,
+  teamId: ctx.auth.user.activeTeamId,
+  requestingApp: chatAppId,
+});
 ```
 
-**Critical Bug Fixed (2024-12-19):** Chat app was failing with "No models available" because `teamId` wasn't being forwarded to AI Studio, breaking team data isolation.
+**Example of FORBIDDEN pattern:**
+
+```typescript
+// ❌ FORBIDDEN - Direct repository access
+import { aiStudioRepository } from "@kdx/db/repositories";
+
+const model = await aiStudioRepository.AiModelRepository.findById(modelId);
+
+// ❌ FORBIDDEN - HTTP calls between SubApps (legacy pattern)
+await callAiStudioEndpoint("getModels", teamId, params, headers);
+```
+
+**Critical Migration Completed (2024-12-20):** All cross-app communication migrated from HTTP to Service Layer for better performance, type safety, and team isolation.
 
 ---
+
+## 🚨 **CRITICAL - NO MOCK DATA POLICY**
+
+### ⚠️ MANDATORY: Real Data Only
+
+**BEFORE** implementing ANY feature:
+
+1. **NEVER** use mock data in development or production code
+2. **ALWAYS** implement real tRPC queries and mutations
+3. **EXPLICIT AUTHORIZATION REQUIRED** before using any mock data
+4. **REMOVE** all mock implementations before code review
+
+**Mock data is ONLY allowed for:**
+
+- Unit tests
+- Storybook components
+- Temporary debugging (with explicit approval)
+
+**Example of FORBIDDEN pattern:**
+
+```typescript
+// ❌ FORBIDDEN - Mock data in development
+const sessionQuery = { data: { mockData: true } };
+```
+
+**Example of CORRECT pattern:**
+
+```typescript
+// ✅ CORRECT - Real tRPC query
+const sessionQuery = useQuery(trpc.app.chat.buscarSession.queryOptions(...));
+```
 
 ---
 
@@ -38,6 +88,7 @@ await callAiStudioEndpoint("getModels", teamId, params, headers);
 - Shared code goes in `packages/`
 - Database schemas in `packages/db/schemas/`
 - Validators in `packages/validators/`
+- Service Layer in `packages/api/src/internal/services/`
 
 ### Naming Conventions
 
@@ -62,10 +113,17 @@ _components/
 ```
 packages/api/src/trpc/routers/
 ├── app/               # App-specific routers
-│   ├── chat/         # Chat-related endpoints
-│   ├── ai-studio/    # AI Studio endpoints
+│   ├── _router.ts     # Main app router
+│   ├── chat/          # Chat-related endpoints
+│   ├── aiStudio/      # AI Studio endpoints
+│   ├── kodixCare/     # Kodix Care endpoints
 │   └── ...
-└── public/           # Public endpoints
+├── internal/
+│   └── services/      # Service Layer for cross-app communication
+│       ├── ai-studio.service.ts
+│       ├── calendar.service.ts
+│       └── ...
+└── public/            # Public endpoints
 ```
 
 ## 🗄️ Database Rules
@@ -89,6 +147,147 @@ packages/api/src/trpc/routers/
 - **ALWAYS** filter by `teamId` in queries
 - **NEVER** expose data from other teams
 - Use team-scoped repositories
+
+## 🔧 **tRPC v11 Architecture Rules (CRITICAL)**
+
+### **⚠️ MANDATORY: Web App Pattern Only**
+
+The Kodix project uses **tRPC v11** with a specific pattern for the web app, based on the working implementation from commit `92a76e90`.
+
+> **⚠️ IMPORTANT:** The pattern used in `care-expo` (mobile app) is still under study and **should NOT be considered** as architectural reference. These rules focus exclusively on the validated and functional web pattern.
+
+### **✅ CORRECT Pattern - Web App (Next.js)**
+
+```typescript
+// Import pattern for Web App (apps/kdx/)
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+import { useTRPC } from "~/trpc/react";
+
+// Usage in components
+const trpc = useTRPC();
+const mutation = useMutation(trpc.app.method.mutationOptions());
+const query = useQuery(trpc.app.method.queryOptions());
+const queryClient = useQueryClient();
+queryClient.invalidateQueries(trpc.app.method.pathFilter());
+```
+
+### **❌ FORBIDDEN Patterns**
+
+```typescript
+// ❌ NEVER USE - Wrong import in web app
+import { api } from "~/trpc/react";
+
+// ❌ NEVER USE - Direct methods in web app
+const mutation = trpc.app.method.useMutation();
+const query = trpc.app.method.useQuery();
+```
+
+### **🚨 CRITICAL RULE: Web App Validation**
+
+**BEFORE** writing ANY tRPC code:
+
+1. **Web App (apps/kdx/)**: ALWAYS use `useTRPC()` pattern
+2. **NEVER** use `import { api }` pattern in web app
+3. **ALWAYS** run `pnpm check:trpc` before commit (must show 0 problems)
+
+**Validation Command:**
+
+```bash
+# Must return 0 problems for web app
+pnpm check:trpc
+```
+
+**Architecture Base:** Commit `92a76e90` (kodix-care-web)
+
+## 🔗 **Service Layer Rules (CRITICAL)**
+
+### **⚠️ MANDATORY: Cross-App Communication via Service Layer**
+
+**BEFORE** implementing communication between SubApps:
+
+1. **CREATE** service class in `packages/api/src/internal/services/`
+2. **EXTEND** BaseService with team validation
+3. **VALIDATE** `teamId` in all service methods
+4. **LOG** service calls for audit trail
+5. **USE** TypeScript interfaces for type safety
+
+### **✅ Service Layer Implementation Pattern**
+
+```typescript
+// packages/api/src/internal/services/my-subapp.service.ts
+export class MySubAppService {
+  private static validateTeamAccess(teamId: string) {
+    if (!teamId) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "teamId is required for cross-app access",
+      });
+    }
+  }
+
+  static async getResourceById({
+    resourceId,
+    teamId,
+    requestingApp,
+  }: {
+    resourceId: string;
+    teamId: string;
+    requestingApp: KodixAppId;
+  }) {
+    this.validateTeamAccess(teamId);
+
+    // Log for audit trail
+    console.log(
+      `🔄 [MySubAppService] getResourceById by ${requestingApp} for team: ${teamId}`,
+    );
+
+    const resource = await mySubAppRepository.findById(resourceId);
+
+    if (!resource || resource.teamId !== teamId) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Resource not found or access denied",
+      });
+    }
+
+    return resource;
+  }
+}
+```
+
+### **✅ Using Service Layer in SubApps**
+
+```typescript
+// In another SubApp's router/handler
+import { MySubAppService } from "../../../../internal/services/my-subapp.service";
+
+export const someHandler = async ({ ctx, input }) => {
+  const resource = await MySubAppService.getResourceById({
+    resourceId: input.resourceId,
+    teamId: ctx.auth.user.activeTeamId,
+    requestingApp: currentSubAppId,
+  });
+
+  // Use resource in your SubApp logic
+  return processWithResource(resource);
+};
+```
+
+### **❌ FORBIDDEN Cross-App Patterns**
+
+```typescript
+// ❌ NEVER - Direct repository access to other SubApps
+import { otherSubAppRepository } from "@kdx/db/repositories";
+
+// ❌ NEVER - Import handlers from other SubApps
+import { otherSubAppHandler } from "../otherSubApp/handler";
+
+const data = await otherSubAppRepository.findById(id);
+
+// ❌ NEVER - HTTP calls between SubApps in same process
+await fetch("/api/other-subapp/endpoint");
+```
 
 ## 🔐 Authentication & Authorization
 
@@ -145,12 +344,25 @@ packages/api/src/trpc/routers/
 - Provide meaningful error messages to users
 - Log errors with sufficient context
 
+### Data & Mocking Rules
+
+- **NEVER** use mock data in production or development code
+- **ALWAYS** use real tRPC queries and mutations
+- **ALWAYS** implement proper loading and error states
+- **EXPLICIT AUTHORIZATION REQUIRED** before using any mock data
+- Mock data is **ONLY** allowed for:
+  - Unit tests
+  - Storybook components
+  - Temporary debugging (with explicit approval)
+- Remove all mock implementations before code review
+- Use proper tRPC architecture patterns consistently
+
 ### Testing
 
 - Write unit tests for business logic
 - Write integration tests for cross-app functionality
 - Test error scenarios and edge cases
-- Mock external dependencies properly
+- Mock external dependencies properly in tests only
 
 ## 🔄 Development Workflow
 
@@ -193,9 +405,9 @@ packages/api/src/trpc/routers/
 
 ---
 
-**Last Updated:** 2024-12-19  
-**Critical Issues Documented:** Inter-app dependencies, teamId context loss  
-**Next Review:** 2025-01-19
+**Last Updated:** 2024-12-21  
+**Critical Updates:** Service Layer patterns, cross-app communication, architecture alignment  
+**Next Review:** 2025-01-21
 
 ## Kodix AI Coding Rules
 

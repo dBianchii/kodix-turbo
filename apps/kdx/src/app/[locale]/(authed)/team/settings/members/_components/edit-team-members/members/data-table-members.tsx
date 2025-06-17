@@ -116,7 +116,7 @@ export function DataTableMembers({
                         <div>
                           <DropdownMenuItem
                             disabled={!canEditPage}
-                            className="text-destructive"
+                            className="text-muted-foreground"
                             onSelect={() => {
                               mutate({
                                 userId: info.row.original.id,

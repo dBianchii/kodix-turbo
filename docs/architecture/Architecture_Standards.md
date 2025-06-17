@@ -127,6 +127,100 @@ export class MySubAppService {
 - ✅ **OBRIGATÓRIO**: Validação de `teamId` em todos os services
 - ✅ **RECOMENDADO**: Logging de auditoria
 
+## 🔧 **Padrões tRPC v11 (CRÍTICO)**
+
+### **⚠️ IMPORTANTE: Padrão Web App**
+
+O projeto Kodix usa **tRPC v11** com um padrão específico para o web app, baseado na implementação funcional do commit `92a76e90`.
+
+> **⚠️ IMPORTANTE:** O padrão utilizado no `care-expo` (mobile app) ainda está em estudo e **não deve ser considerado** como referência arquitetural. Esta seção foca exclusivamente no padrão web validado e funcional.
+
+### **✅ Padrão CORRETO - Web App (Next.js)**
+
+```typescript
+// apps/kdx/src/trpc/react.tsx
+import { createTRPCClient, httpBatchStreamLink } from "@trpc/client";
+import { createTRPCContext } from "@trpc/tanstack-react-query";
+
+export const { TRPCProvider, useTRPC } = createTRPCContext<AppRouter>();
+
+// Uso nos componentes Web
+const trpc = useTRPC();
+const mutation = useMutation(trpc.app.installApp.mutationOptions());
+const query = useQuery(trpc.app.getAll.queryOptions());
+const queryClient = useQueryClient();
+queryClient.invalidateQueries(trpc.app.getAll.pathFilter());
+```
+
+### **❌ Padrões PROIBIDOS**
+
+```typescript
+// ❌ NUNCA USE - Import incorreto no web app
+import { api } from "~/trpc/react";
+
+// ❌ NUNCA USE - Métodos diretos no web app
+const mutation = trpc.app.method.useMutation();
+const query = trpc.app.method.useQuery();
+```
+
+### **🔄 Migração de Código Incorreto**
+
+Se encontrar código incorreto no web app, migre:
+
+```typescript
+// ❌ ANTES (incorreto)
+import { api } from "~/trpc/react";
+const mutation = api.app.method.useMutation();
+
+// ✅ DEPOIS (correto)
+import { useTRPC } from "~/trpc/react";
+import { useMutation } from "@tanstack/react-query";
+
+const trpc = useTRPC();
+const mutation = useMutation(trpc.app.method.mutationOptions());
+```
+
+### **🛡️ Ferramentas de Validação**
+
+Para garantir conformidade com a arquitetura tRPC v11:
+
+#### **1. Script de Verificação Automática**
+
+```bash
+# Verificar problemas tRPC no web app
+pnpm check:trpc
+
+# Deve retornar 0 problemas para web app
+# Resultado esperado: ✅ 0 imports incorretos no web app
+```
+
+#### **2. Regra ESLint Customizada**
+
+```javascript
+// packages/eslint-config/eslint-rules/no-api-import.js
+// Detecta e sugere correções para imports incorretos
+```
+
+#### **3. Regras de Arquitetura Atualizadas**
+
+```markdown
+# .cursor-rules/kodix-rules.md
+
+## 🔧 tRPC v11 Architecture Rules (CRITICAL)
+
+- Web App: SEMPRE use `useTRPC()` pattern
+- NUNCA use `import { api }` pattern no web app
+```
+
+#### **4. Validação Obrigatória**
+
+```bash
+# Antes de qualquer commit
+pnpm check:trpc  # Deve mostrar 0 problemas
+
+# Arquitetura baseada no commit 92a76e90 (kodix-care-web)
+```
+
 ## 🏗️ **Estrutura de SubApps**
 
 ### **IDs de SubApps**

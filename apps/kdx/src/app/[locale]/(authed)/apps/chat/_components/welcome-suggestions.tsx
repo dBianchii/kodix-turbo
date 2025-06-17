@@ -8,6 +8,7 @@ import {
   MessageSquare,
   Zap,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@kdx/ui/button";
 import { Card } from "@kdx/ui/card";
@@ -19,31 +20,33 @@ interface WelcomeSuggestionsProps {
 export function WelcomeSuggestions({
   onSuggestionClick,
 }: WelcomeSuggestionsProps) {
+  const t = useTranslations();
+
   const suggestions = [
     {
       icon: Code,
-      title: "Ajuda com Código",
-      description: "Explique um conceito técnico ou revise meu código",
+      title: "Code Help",
+      description: "Explain a technical concept or review my code",
       prompt:
-        "Preciso de ajuda com programação. Pode me explicar um conceito ou revisar meu código?",
+        "I need help with programming. Can you explain a concept or review my code?",
     },
     {
       icon: FileText,
-      title: "Revisão de Texto",
-      description: "Melhore a escrita e gramática do meu texto",
-      prompt: "Pode revisar e melhorar este texto para mim?",
+      title: "Text Review",
+      description: "Improve the writing and grammar of my text",
+      prompt: "Can you review and improve this text for me?",
     },
     {
       icon: Lightbulb,
-      title: "Brainstorm de Ideias",
-      description: "Gere ideias criativas para meu projeto",
-      prompt: "Vamos fazer um brainstorm de ideias criativas para meu projeto",
+      title: "Brainstorm Ideas",
+      description: "Generate creative ideas for my project",
+      prompt: "Let's brainstorm creative ideas for my project",
     },
     {
       icon: BookOpen,
-      title: "Explicar Conceitos",
-      description: "Explique tópicos complexos de forma simples",
-      prompt: "Pode explicar um conceito complexo de forma simples e didática?",
+      title: "Explain Concepts",
+      description: "Explain complex topics in a simple way",
+      prompt: "Can you explain a complex concept in a simple and didactic way?",
     },
   ];
 
@@ -51,7 +54,7 @@ export function WelcomeSuggestions({
     <div className="mx-auto w-full max-w-4xl px-4">
       <div className="mb-6 text-center">
         <p className="text-muted-foreground text-sm">
-          Ou experimente uma dessas sugestões:
+          Or try one of these suggestions:
         </p>
       </div>
 

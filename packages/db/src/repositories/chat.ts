@@ -264,6 +264,7 @@ export const ChatSessionRepository = {
             senderRole: true,
             content: true,
             createdAt: true,
+            metadata: true, // ✅ Incluir metadata
           },
           orderBy: [desc(chatMessage.createdAt)],
           limit: 1, // Apenas a última mensagem para preview

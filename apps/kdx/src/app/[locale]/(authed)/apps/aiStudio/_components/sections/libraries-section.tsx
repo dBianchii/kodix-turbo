@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Database,
   MoreHorizontal,
@@ -69,7 +69,7 @@ import {
 import { Textarea } from "@kdx/ui/textarea";
 import { toast } from "@kdx/ui/toast";
 
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 
 // Schema de validação para o formulário de criação
 const createLibrarySchema = z.object({
@@ -88,6 +88,7 @@ type EditLibraryFormData = z.infer<typeof editLibrarySchema>;
 
 export function LibrariesSection() {
   const t = useTranslations();
+  const trpc = useTRPC();
   const queryClient = useQueryClient();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
@@ -95,11 +96,13 @@ export function LibrariesSection() {
   const [libraryToDelete, setLibraryToDelete] = useState<any>(null);
   const [libraryToEdit, setLibraryToEdit] = useState<any>(null);
 
-  // ✅ CORRIGIDO: Usar api hooks diretamente
-  const librariesQuery = api.app.aiStudio.findAiLibraries.useQuery({
-    limite: 50,
-    offset: 0,
-  });
+  // ✅ CORRIGIDO: Usar padrão useTRPC
+  const librariesQuery = useQuery(
+    trpc.app.aiStudio.findAiLibraries.queryOptions({
+      limite: 50,
+      offset: 0,
+    }),
+  );
 
   const libraries = librariesQuery.data?.libraries || [];
   const isLoading = librariesQuery.isLoading;
@@ -122,43 +125,55 @@ export function LibrariesSection() {
     },
   });
 
-  // ✅ CORRIGIDO: Usar api mutations diretamente
-  const createLibraryMutation = api.app.aiStudio.createAiLibrary.useMutation({
-    onSuccess: () => {
-      librariesQuery.refetch();
-      toast.success("Biblioteca criada com sucesso!");
-      setShowCreateForm(false);
-      createForm.reset();
-    },
-    onError: (error: any) => {
-      toast.error(error.message || "Erro ao criar biblioteca");
-    },
-  });
+  // ✅ CORRIGIDO: Usar padrão useTRPC com useMutation
+  const createLibraryMutation = useMutation(
+    trpc.app.aiStudio.createAiLibrary.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries(
+          trpc.app.aiStudio.findAiLibraries.pathFilter(),
+        );
+        toast.success("Biblioteca criada com sucesso!");
+        setShowCreateForm(false);
+        createForm.reset();
+      },
+      onError: (error: any) => {
+        toast.error(error.message || "Erro ao criar biblioteca");
+      },
+    }),
+  );
 
-  const updateLibraryMutation = api.app.aiStudio.updateAiLibrary.useMutation({
-    onSuccess: () => {
-      librariesQuery.refetch();
-      toast.success("Biblioteca atualizada com sucesso!");
-      setShowEditForm(false);
-      setLibraryToEdit(null);
-      editForm.reset();
-    },
-    onError: (error: any) => {
-      toast.error(error.message || "Erro ao atualizar biblioteca");
-    },
-  });
+  const updateLibraryMutation = useMutation(
+    trpc.app.aiStudio.updateAiLibrary.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries(
+          trpc.app.aiStudio.findAiLibraries.pathFilter(),
+        );
+        toast.success("Biblioteca atualizada com sucesso!");
+        setShowEditForm(false);
+        setLibraryToEdit(null);
+        editForm.reset();
+      },
+      onError: (error: any) => {
+        toast.error(error.message || "Erro ao atualizar biblioteca");
+      },
+    }),
+  );
 
-  const deleteLibraryMutation = api.app.aiStudio.deleteAiLibrary.useMutation({
-    onSuccess: () => {
-      librariesQuery.refetch();
-      toast.success("Biblioteca excluída com sucesso!");
-      setShowDeleteDialog(false);
-      setLibraryToDelete(null);
-    },
-    onError: (error: any) => {
-      toast.error(error.message || "Erro ao excluir biblioteca");
-    },
-  });
+  const deleteLibraryMutation = useMutation(
+    trpc.app.aiStudio.deleteAiLibrary.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries(
+          trpc.app.aiStudio.findAiLibraries.pathFilter(),
+        );
+        toast.success("Biblioteca excluída com sucesso!");
+        setShowDeleteDialog(false);
+        setLibraryToDelete(null);
+      },
+      onError: (error: any) => {
+        toast.error(error.message || "Erro ao excluir biblioteca");
+      },
+    }),
+  );
 
   const handleCreateSubmit = (data: CreateLibraryFormData) => {
     createLibraryMutation.mutate({
@@ -304,7 +319,7 @@ export function LibrariesSection() {
                             {t("apps.aiStudio.libraries.edit")}
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            className="text-destructive"
+                            className="text-muted-foreground"
                             onClick={() => handleDeleteClick(library)}
                           >
                             <Trash2 className="mr-2 h-4 w-4" />

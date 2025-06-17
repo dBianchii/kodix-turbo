@@ -19,6 +19,12 @@ Este documento consolida **todos os aspectos arquiteturais** dos SubApps:
 
 **Problemas críticos documentados** incluem soluções para falhas de contexto (`teamId`, autenticação) que podem quebrar funcionalidades entre apps.
 
+### ⚠️ NO MOCK DATA POLICY
+
+**CRÍTICO:** Não use dados mock em desenvolvimento ou produção. Sempre implemente queries tRPC reais. Autorização explícita necessária para qualquer uso de mock.
+
+📖 **Detalhes completos:** `.cursor-rules/kodix-rules.md` - Seção "NO MOCK DATA POLICY"
+
 ---
 
 ## 📋 Estrutura da Documentação

@@ -50,7 +50,7 @@ import {
 } from "@kdx/ui/table";
 import { toast } from "@kdx/ui/toast";
 
-import { api } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 
 // Componente sortable para cada linha da tabela
 interface SortableTableRowProps {
@@ -222,10 +222,8 @@ function SortableTableRow({
 
 export function EnabledModelsSection() {
   const t = useTranslations();
+  const trpc = useTRPC();
   const queryClient = useQueryClient();
-
-  // ✅ Adicionar utils para invalidação correta
-  const utils = api.useUtils();
 
   const [isReordering, setIsReordering] = useState(false);
   const [showTestDialog, setShowTestDialog] = useState(false);
@@ -235,38 +233,45 @@ export function EnabledModelsSection() {
   const [isTestingModel, setIsTestingModel] = useState(false);
   const [isSettingDefault, setIsSettingDefault] = useState(false);
 
-  // ✅ CORRIGIDO: Usar api hooks diretamente
-  const { data: models, isLoading } =
-    api.app.aiStudio.findAvailableModels.useQuery();
+  // ✅ CORRIGIDO: Usar padrão useTRPC
+  const { data: models, isLoading } = useQuery(
+    trpc.app.aiStudio.findAvailableModels.queryOptions(),
+  );
 
-  const { data: defaultModel } = api.app.aiStudio.getDefaultModel.useQuery();
+  const { data: defaultModel } = useQuery(
+    trpc.app.aiStudio.getDefaultModel.queryOptions(),
+  );
 
-  // ✅ CORRIGIDO: Usar api mutations diretamente
-  const toggleModelMutation = api.app.aiStudio.toggleModel.useMutation({
-    onSuccess: () => {
-      // ✅ Invalidar queries específicas usando utils (padrão correto)
-      void utils.app.aiStudio.findAvailableModels.invalidate();
-      void utils.app.aiStudio.getDefaultModel.invalidate();
-      // ✅ Invalidação adicional para garantir atualização
-      void utils.app.aiStudio.invalidate();
-      toast.success("Modelo atualizado com sucesso!");
-    },
-    onError: (error: any) => {
-      toast.error(error.message || "Erro ao atualizar modelo");
-    },
-  });
+  // ✅ CORRIGIDO: Usar padrão useTRPC com useMutation
+  const toggleModelMutation = useMutation(
+    trpc.app.aiStudio.toggleModel.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries(
+          trpc.app.aiStudio.findAvailableModels.pathFilter(),
+        );
+        queryClient.invalidateQueries(
+          trpc.app.aiStudio.getDefaultModel.pathFilter(),
+        );
+        toast.success("Modelo atualizado com sucesso!");
+      },
+      onError: (error: any) => {
+        toast.error(error.message || "Erro ao atualizar modelo");
+      },
+    }),
+  );
 
-  const reorderModelsMutation =
-    api.app.aiStudio.reorderModelsPriority.useMutation({
+  const reorderModelsMutation = useMutation(
+    trpc.app.aiStudio.reorderModelsPriority.mutationOptions({
       onMutate: () => {
         setIsReordering(true);
       },
       onSuccess: () => {
-        // ✅ Invalidar queries específicas usando utils (padrão correto)
-        void utils.app.aiStudio.findAvailableModels.invalidate();
-        void utils.app.aiStudio.getDefaultModel.invalidate();
-        // ✅ Invalidação adicional para garantir atualização
-        void utils.app.aiStudio.invalidate();
+        queryClient.invalidateQueries(
+          trpc.app.aiStudio.findAvailableModels.pathFilter(),
+        );
+        queryClient.invalidateQueries(
+          trpc.app.aiStudio.getDefaultModel.pathFilter(),
+        );
         toast.success("Prioridade dos modelos atualizada!");
       },
       onError: (error: any) => {
@@ -275,55 +280,61 @@ export function EnabledModelsSection() {
       onSettled: () => {
         setIsReordering(false);
       },
-    });
+    }),
+  );
 
-  const testModelMutation = api.app.aiStudio.testModel.useMutation({
-    onMutate: (variables: { modelId: string; testPrompt?: string }) => {
-      console.log(
-        "Testing model:",
-        variables.modelId,
-        "with prompt:",
-        variables.testPrompt,
-      );
-      setIsTestingModel(true);
-    },
-    onSuccess: (data, variables) => {
-      // Include modelId in the response for proper identification
-      setTestResponse({
-        ...data,
-        modelId: variables.modelId,
-      });
-      toast.success("Teste do modelo realizado!");
-    },
-    onError: (error: any) => {
-      console.error("Error testing model:", error);
-      toast.error(error.message || "Erro ao testar modelo");
-    },
-    onSettled: () => {
-      setIsTestingModel(false);
-    },
-  });
+  const testModelMutation = useMutation(
+    trpc.app.aiStudio.testModel.mutationOptions({
+      onMutate: (variables: { modelId: string; testPrompt?: string }) => {
+        console.log(
+          "Testing model:",
+          variables.modelId,
+          "with prompt:",
+          variables.testPrompt,
+        );
+        setIsTestingModel(true);
+      },
+      onSuccess: (data, variables) => {
+        // Include modelId in the response for proper identification
+        setTestResponse({
+          ...data,
+          modelId: variables.modelId,
+        });
+        toast.success("Teste do modelo realizado!");
+      },
+      onError: (error: any) => {
+        console.error("Error testing model:", error);
+        toast.error(error.message || "Erro ao testar modelo");
+      },
+      onSettled: () => {
+        setIsTestingModel(false);
+      },
+    }),
+  );
 
-  const setDefaultModelMutation = api.app.aiStudio.setDefaultModel.useMutation({
-    onMutate: () => {
-      setIsSettingDefault(true);
-    },
-    onSuccess: () => {
-      // ✅ Invalidar queries específicas usando utils (padrão correto)
-      void utils.app.aiStudio.findAvailableModels.invalidate();
-      void utils.app.aiStudio.getDefaultModel.invalidate();
-      // ✅ Invalidação adicional para garantir atualização
-      void utils.app.aiStudio.invalidate();
-      toast.success("Modelo padrão definido!");
-    },
-    onError: (error: any) => {
-      console.error("Error setting default model:", error);
-      toast.error(error.message || "Erro ao definir modelo padrão");
-    },
-    onSettled: () => {
-      setIsSettingDefault(false);
-    },
-  });
+  const setDefaultModelMutation = useMutation(
+    trpc.app.aiStudio.setDefaultModel.mutationOptions({
+      onMutate: () => {
+        setIsSettingDefault(true);
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries(
+          trpc.app.aiStudio.findAvailableModels.pathFilter(),
+        );
+        queryClient.invalidateQueries(
+          trpc.app.aiStudio.getDefaultModel.pathFilter(),
+        );
+        toast.success("Modelo padrão definido!");
+      },
+      onError: (error: any) => {
+        console.error("Error setting default model:", error);
+        toast.error(error.message || "Erro ao definir modelo padrão");
+      },
+      onSettled: () => {
+        setIsSettingDefault(false);
+      },
+    }),
+  );
 
   // Setup sensors for drag & drop
   const sensors = useSensors(
