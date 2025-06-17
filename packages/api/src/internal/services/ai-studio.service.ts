@@ -1,7 +1,9 @@
 import { TRPCError } from "@trpc/server";
 
 import type { KodixAppId } from "@kdx/shared";
+import { db } from "@kdx/db/client";
 import { aiStudioRepository } from "@kdx/db/repositories";
+import { aiStudioAppId, aiStudioConfigSchema, chatAppId } from "@kdx/shared";
 
 export interface AiStudioServiceParams {
   teamId: string;
@@ -175,5 +177,67 @@ export class AiStudioService {
     );
 
     return token;
+  }
+
+  /**
+   * Busca instruções globais do team
+   * Usado por outros SubApps como Chat
+   */
+  static async getTeamInstructions({
+    teamId,
+    requestingApp,
+  }: {
+    teamId: string;
+    requestingApp: KodixAppId;
+  }) {
+    this.validateTeamAccess(teamId);
+    this.logAccess("getTeamInstructions", { teamId, requestingApp });
+
+    // Buscar config diretamente do banco usando query
+    const teamConfig = await db.query.appTeamConfigs.findFirst({
+      where: (appTeamConfig, { eq, and }) =>
+        and(
+          eq(appTeamConfig.appId, aiStudioAppId),
+          eq(appTeamConfig.teamId, teamId),
+        ),
+      columns: {
+        config: true,
+      },
+    });
+    if (!teamConfig?.config) {
+      console.log(
+        `⚠️ [AiStudioService] No team config found for team: ${teamId}`,
+      );
+      return null;
+    }
+
+    // Parse config usando schema
+    const parsedConfig = aiStudioConfigSchema.parse(teamConfig.config);
+
+    if (!parsedConfig.teamInstructions?.enabled) {
+      console.log(
+        `⚠️ [AiStudioService] No team instructions enabled for team: ${teamId}`,
+      );
+      return null;
+    }
+
+    const { content, appliesTo } = parsedConfig.teamInstructions;
+
+    // Verificar se aplica ao app solicitante
+    if (appliesTo === "chat" && requestingApp !== chatAppId) {
+      console.log(
+        `⚠️ [AiStudioService] Team instructions only apply to chat app, requested by: ${requestingApp}`,
+      );
+      return null;
+    }
+
+    console.log(
+      `✅ [AiStudioService] Team instructions found for team: ${teamId}`,
+    );
+
+    return {
+      content,
+      appliesTo,
+    };
   }
 }

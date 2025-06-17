@@ -1082,9 +1082,17 @@ export const AiTeamModelConfigRepository = {
       };
     });
 
-    // Ordenar por prioridade (se configurado) e depois por nome
+    // Ordenar por provedor (alfabeticamente), depois por prioridade, mantendo ordem fixa
     return availableModels.sort((a, b) => {
-      // Se ambos têm prioridade configurada, ordenar por prioridade
+      // 1. Primeiro ordenar por provedor (ordem alfabética)
+      const providerComparison = (a.provider.name || "").localeCompare(
+        b.provider.name || "",
+      );
+      if (providerComparison !== 0) {
+        return providerComparison;
+      }
+
+      // 2. Dentro do mesmo provedor, ordenar por prioridade (se configurado)
       if (
         a.teamConfig?.priority !== undefined &&
         b.teamConfig?.priority !== undefined
@@ -1108,7 +1116,7 @@ export const AiTeamModelConfigRepository = {
         return 1;
       }
 
-      // Se nenhum tem prioridade ou ambos são undefined/null, ordenar por nome
+      // 3. Por último, ordenar por nome do modelo (ordem fixa independente do status)
       return a.name.localeCompare(b.name);
     });
   },

@@ -51,6 +51,7 @@ import {
   FormMessage,
 } from "@kdx/ui/form";
 import { Input } from "@kdx/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
 import {
   Select,
   SelectContent,
@@ -71,6 +72,74 @@ import { Textarea } from "@kdx/ui/textarea";
 import { toast } from "@kdx/ui/toast";
 
 import { useTRPC } from "~/trpc/react";
+
+// Componente para mostrar preços com tooltip
+interface PriceBadgeProps {
+  model: any;
+}
+
+function PriceBadge({ model }: PriceBadgeProps) {
+  const config = model.config;
+  const pricing = config?.pricing;
+  const description = config?.description;
+
+  if (!pricing?.input) {
+    return <span className="text-muted-foreground text-xs">N/A</span>;
+  }
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Badge
+          variant="outline"
+          className="hover:bg-muted cursor-pointer text-xs"
+        >
+          ${pricing.input}/1K
+        </Badge>
+      </PopoverTrigger>
+      <PopoverContent className="w-64 p-3" align="center" sideOffset={4}>
+        <div className="space-y-2">
+          {/* Título */}
+          <div className="text-sm font-medium text-slate-900">{model.name}</div>
+
+          {/* Descrição se disponível */}
+          {description && (
+            <p className="text-xs text-slate-600">{description}</p>
+          )}
+
+          {/* Preços detalhados */}
+          <div className="space-y-1 text-xs">
+            <div className="flex justify-between">
+              <span className="text-slate-600">Input:</span>
+              <code className="rounded bg-green-100 px-1 text-green-800">
+                ${pricing.input}/1K tokens
+              </code>
+            </div>
+
+            {pricing.output && (
+              <div className="flex justify-between">
+                <span className="text-slate-600">Output:</span>
+                <code className="rounded bg-blue-100 px-1 text-blue-800">
+                  ${pricing.output}/1K tokens
+                </code>
+              </div>
+            )}
+          </div>
+
+          {/* Configurações adicionais se disponíveis */}
+          {(config?.maxTokens || config?.temperature) && (
+            <div className="border-t pt-2 text-xs text-slate-500">
+              {config?.maxTokens && <div>Max tokens: {config.maxTokens}</div>}
+              {config?.temperature && (
+                <div>Temperature: {config.temperature}</div>
+              )}
+            </div>
+          )}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
 
 // Schema de validação para o formulário de criação de modelo
 const createModelSchema = z.object({
@@ -122,7 +191,21 @@ export function ModelsSection() {
     }),
   );
 
-  const systemModels = systemModelsQuery.data || [];
+  const systemModels = (systemModelsQuery.data || []).sort((a: any, b: any) => {
+    // Primeiro ordenar por provedor
+    const providerA = (a.provider?.name || a.providerId || "").toLowerCase();
+    const providerB = (b.provider?.name || b.providerId || "").toLowerCase();
+
+    if (providerA !== providerB) {
+      return providerA.localeCompare(providerB);
+    }
+
+    // Se os provedores são iguais, ordenar por nome do modelo
+    const nameA = (a.name || "").toLowerCase();
+    const nameB = (b.name || "").toLowerCase();
+
+    return nameA.localeCompare(nameB);
+  });
   const providers = providersQuery.data || [];
   const isLoading = systemModelsQuery.isLoading;
 
@@ -349,8 +432,9 @@ export function ModelsSection() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Nome</TableHead>
                   <TableHead>Provedor</TableHead>
+                  <TableHead>Nome</TableHead>
+                  <TableHead>Preço</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="w-[70px]">Ações</TableHead>
                 </TableRow>
@@ -358,9 +442,12 @@ export function ModelsSection() {
               <TableBody>
                 {systemModels.map((model: any) => (
                   <TableRow key={model.id}>
-                    <TableCell className="font-medium">{model.name}</TableCell>
                     <TableCell className="capitalize">
                       {model.provider?.name || model.providerId || "N/A"}
+                    </TableCell>
+                    <TableCell className="font-medium">{model.name}</TableCell>
+                    <TableCell>
+                      <PriceBadge model={model} />
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center space-x-2">

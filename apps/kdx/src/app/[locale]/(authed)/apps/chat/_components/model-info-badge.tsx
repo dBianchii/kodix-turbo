@@ -36,6 +36,7 @@ export function ModelInfoBadge({
     // Remover todos os tipos de sufixos e versões que os provedores adicionam
     return modelName
       .toLowerCase()
+      .replace(/\./g, "-") // Converter pontos em hífens: claude-3.5-haiku -> claude-3-5-haiku
       .replace(/-\d{4}-\d{2}-\d{2}.*$/, "") // Remove datas: -2024-08-06, -2024-11-20
       .replace(/-\d{8}.*$/, "") // Remove timestamps: -20240806, -20241120
       .replace(/-\d{4}.*$/, "") // Remove códigos: -0125, -1106, -0613, -2023

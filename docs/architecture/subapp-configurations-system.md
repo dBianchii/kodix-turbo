@@ -22,6 +22,11 @@ Ambos os sistemas garantem **isolamento completo** por `teamId` e `appId`, permi
 
 ## 🗄️ Estrutura de Banco de Dados
 
+> 🎯 **CRÍTICO**: Todas as configurações dos SubApps são armazenadas em campos JSON `config` nas tabelas existentes. **NÃO crie tabelas separadas** - use sempre o sistema existente via schemas Zod em `packages/shared/src/db.ts`:
+>
+> - **🏢 Configurações de Time**: `appTeamConfig.config` (compartilhadas por toda equipe)
+> - **👤 Configurações de Usuário**: `userAppTeamConfig.config` (específicas de cada usuário)
+
 ### **Tabela `appTeamConfig`** - Configurações de Time
 
 ```sql

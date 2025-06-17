@@ -1171,10 +1171,7 @@ function FolderItem({
               <Pencil className="mr-2 h-4 w-4" />
               Editar
             </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={onDelete}
-              className="text-muted-foreground"
-            >
+            <DropdownMenuItem onClick={onDelete} className="text-destructive">
               <Trash2 className="mr-2 h-4 w-4" />
               Excluir
             </DropdownMenuItem>
@@ -1232,7 +1229,7 @@ function FolderItem({
                         e.stopPropagation();
                         onDeleteSession(session);
                       }}
-                      className="text-muted-foreground"
+                      className="text-destructive"
                     >
                       <Trash2 className="mr-2 h-4 w-4" />
                       Excluir

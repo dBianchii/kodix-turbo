@@ -119,20 +119,33 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
 
   // Atualizar mensagens quando os dados chegarem
   useEffect(() => {
-    if (isNewConversation) {
-      // Se é nova conversa, não mostrar mensagens
-      setMessages([]);
+    if (!sessionId || messagesQuery.isLoading) {
       return;
     }
 
     const data = messagesQuery.data;
     if (data?.messages) {
-      const formattedMessages = data.messages.map((msg: any) => ({
+      // 🎯 FILTRAR mensagens system - não devem aparecer na interface
+      const visibleMessages = data.messages.filter(
+        (msg: any) => msg.senderRole !== "system",
+      );
+
+      const formattedMessages = visibleMessages.map((msg: any) => ({
         role: (msg.senderRole === "user" ? "user" : "assistant") as MessageRole,
         content: msg.content,
         id: msg.id,
       }));
       setMessages(formattedMessages);
+
+      console.log(
+        `🔍 [CHAT_WINDOW] Total mensagens no banco: ${data.messages.length}`,
+      );
+      console.log(
+        `🎯 [CHAT_WINDOW] Mensagens system filtradas: ${data.messages.length - visibleMessages.length}`,
+      );
+      console.log(
+        `✅ [CHAT_WINDOW] Mensagens visíveis: ${visibleMessages.length}`,
+      );
 
       // ✅ CORREÇÃO: Auto-processar primeira resposta da IA se há apenas mensagem do usuário
       // Isso acontece quando uma nova sessão é criada com useAgent: false e depois redirecionada

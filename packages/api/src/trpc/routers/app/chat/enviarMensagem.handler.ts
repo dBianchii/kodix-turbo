@@ -6,6 +6,7 @@ import { chatAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 import { AiStudioService } from "../../../../internal/services/ai-studio.service";
+import { ChatService } from "../../../../internal/services/chat.service";
 
 export async function enviarMensagemHandler({
   input,
@@ -24,6 +25,48 @@ export async function enviarMensagemHandler({
         code: "NOT_FOUND",
         message: "Sessão de chat não encontrada",
       });
+    }
+
+    // 🎯 NOVO: Verificar e criar instruções do time se necessário
+    const hasSystemInstructions = await ChatService.hasSystemInstructions(
+      input.chatSessionId,
+    );
+
+    if (!hasSystemInstructions) {
+      try {
+        // Buscar instruções do time via AI Studio Service
+        const teamInstructions = await AiStudioService.getTeamInstructions({
+          teamId: session.teamId,
+          requestingApp: chatAppId,
+        });
+
+        if (teamInstructions?.content?.trim()) {
+          console.log(
+            `🎯 [TEAM_INSTRUCTIONS] Criando instruções para sessão: ${input.chatSessionId}`,
+          );
+
+          // Criar mensagem system como primeira mensagem da sessão
+          await ChatService.createSystemMessage({
+            chatSessionId: input.chatSessionId,
+            content: teamInstructions.content,
+            metadata: {
+              type: "team_instructions",
+              appliesTo: teamInstructions.appliesTo,
+              createdAt: new Date().toISOString(),
+            },
+          });
+
+          console.log(
+            `✅ [TEAM_INSTRUCTIONS] Instruções criadas com sucesso para sessão: ${input.chatSessionId}`,
+          );
+        }
+      } catch (error) {
+        // Log do erro mas não falha o envio da mensagem
+        console.warn(
+          `⚠️ [TEAM_INSTRUCTIONS] Erro ao criar instruções para sessão ${input.chatSessionId}:`,
+          error,
+        );
+      }
     }
 
     // Criar mensagem do usuário
@@ -54,11 +97,23 @@ export async function enviarMensagemHandler({
         for (const msg of allMessages) {
           if (msg?.content) {
             formattedMessages.push({
-              role: msg.senderRole === "user" ? "user" : "assistant",
+              role:
+                msg.senderRole === "user"
+                  ? "user"
+                  : msg.senderRole === "system"
+                    ? "system"
+                    : "assistant",
               content: msg.content,
             });
           }
         }
+
+        console.log(
+          `🔍 [FORMATTED_MESSAGES] Total de mensagens formatadas: ${formattedMessages.length}`,
+        );
+        console.log(
+          `🎯 [SYSTEM_MESSAGES] Mensagens system: ${formattedMessages.filter((m) => m.role === "system").length}`,
+        );
 
         // Buscar modelo para obter o provider
         if (!session.aiModelId) {

@@ -30,6 +30,7 @@ import {
 import { useTranslations } from "next-intl";
 
 import { Alert, AlertDescription } from "@kdx/ui/alert";
+import { Badge } from "@kdx/ui/badge";
 import { Button } from "@kdx/ui/button";
 import {
   Card,
@@ -38,6 +39,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@kdx/ui/card";
+import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@kdx/ui/radio-group";
 import { Switch } from "@kdx/ui/switch";
 import {
@@ -51,6 +53,74 @@ import {
 import { toast } from "@kdx/ui/toast";
 
 import { useTRPC } from "~/trpc/react";
+
+// Componente para mostrar preços com tooltip
+interface PriceBadgeProps {
+  model: any;
+}
+
+function PriceBadge({ model }: PriceBadgeProps) {
+  const config = model.config;
+  const pricing = config?.pricing;
+  const description = config?.description;
+
+  if (!pricing?.input) {
+    return <span className="text-muted-foreground text-xs">N/A</span>;
+  }
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Badge
+          variant="outline"
+          className="hover:bg-muted cursor-pointer text-xs"
+        >
+          ${pricing.input}/1K
+        </Badge>
+      </PopoverTrigger>
+      <PopoverContent className="w-64 p-3" align="center" sideOffset={4}>
+        <div className="space-y-2">
+          {/* Título */}
+          <div className="text-sm font-medium text-slate-900">{model.name}</div>
+
+          {/* Descrição se disponível */}
+          {description && (
+            <p className="text-xs text-slate-600">{description}</p>
+          )}
+
+          {/* Preços detalhados */}
+          <div className="space-y-1 text-xs">
+            <div className="flex justify-between">
+              <span className="text-slate-600">Input:</span>
+              <code className="rounded bg-green-100 px-1 text-green-800">
+                ${pricing.input}/1K tokens
+              </code>
+            </div>
+
+            {pricing.output && (
+              <div className="flex justify-between">
+                <span className="text-slate-600">Output:</span>
+                <code className="rounded bg-blue-100 px-1 text-blue-800">
+                  ${pricing.output}/1K tokens
+                </code>
+              </div>
+            )}
+          </div>
+
+          {/* Configurações adicionais se disponíveis */}
+          {(config?.maxTokens || config?.temperature) && (
+            <div className="border-t pt-2 text-xs text-slate-500">
+              {config?.maxTokens && <div>Max tokens: {config.maxTokens}</div>}
+              {config?.temperature && (
+                <div>Temperature: {config.temperature}</div>
+              )}
+            </div>
+          )}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
 
 // Componente sortable para cada linha da tabela
 interface SortableTableRowProps {
@@ -124,6 +194,9 @@ function SortableTableRow({
         {model.provider?.name || "N/A"}
       </TableCell>
       <TableCell>
+        <PriceBadge model={model} />
+      </TableCell>
+      <TableCell>
         <div className="flex items-center space-x-2">
           <Switch
             checked={model.teamConfig?.enabled || false}
@@ -148,23 +221,19 @@ function SortableTableRow({
       </TableCell>
       <TableCell className="py-4">
         <div className="flex min-h-[2rem] items-center">
-          {model.teamConfig?.enabled ? (
+          {model.teamConfig?.enabled && (
             <RadioGroupItem
               value={model.id}
               checked={defaultModelId === model.id}
               disabled={isSettingDefault || isReordering}
               className="cursor-pointer"
             />
-          ) : (
-            <span className="text-muted-foreground text-xs">
-              {t("apps.aiStudio.enabledModels.actions.enableToSetDefault")}
-            </span>
           )}
         </div>
       </TableCell>
       <TableCell>
         <div className="flex items-center space-x-2">
-          {model.teamConfig?.enabled ? (
+          {model.teamConfig?.enabled && (
             <>
               <Button
                 variant="outline"
@@ -209,10 +278,6 @@ function SortableTableRow({
                 </div>
               )}
             </>
-          ) : (
-            <span className="text-muted-foreground text-sm">
-              {t("apps.aiStudio.enabledModels.actions.enableToTest")}
-            </span>
           )}
         </div>
       </TableCell>
@@ -230,7 +295,7 @@ export function EnabledModelsSection() {
   const [testingModel, setTestingModel] = useState<any>(null);
   const [testPrompt, setTestPrompt] = useState("Olá, como você está?");
   const [testResponse, setTestResponse] = useState<any>(null);
-  const [isTestingModel, setIsTestingModel] = useState(false);
+  const [testingModelId, setTestingModelId] = useState<string | null>(null);
   const [isSettingDefault, setIsSettingDefault] = useState(false);
 
   // ✅ CORRIGIDO: Usar padrão useTRPC
@@ -292,7 +357,7 @@ export function EnabledModelsSection() {
           "with prompt:",
           variables.testPrompt,
         );
-        setIsTestingModel(true);
+        setTestingModelId(variables.modelId);
       },
       onSuccess: (data, variables) => {
         // Include modelId in the response for proper identification
@@ -307,7 +372,7 @@ export function EnabledModelsSection() {
         toast.error(error.message || "Erro ao testar modelo");
       },
       onSettled: () => {
-        setIsTestingModel(false);
+        setTestingModelId(null);
       },
     }),
   );
@@ -495,6 +560,9 @@ export function EnabledModelsSection() {
                         {t("apps.aiStudio.enabledModels.tableHeaders.provider")}
                       </TableHead>
                       <TableHead>
+                        {t("apps.aiStudio.enabledModels.tableHeaders.price")}
+                      </TableHead>
+                      <TableHead>
                         {t("apps.aiStudio.enabledModels.tableHeaders.status")}
                       </TableHead>
                       <TableHead>
@@ -520,7 +588,7 @@ export function EnabledModelsSection() {
                           onSetDefault={handleSetDefault}
                           isToggling={toggleModelMutation.isPending}
                           isReordering={isReordering}
-                          isTestingModel={isTestingModel}
+                          isTestingModel={testingModelId === model.id}
                           isSettingDefault={isSettingDefault}
                           testResults={testResponse}
                           defaultModelId={defaultModel?.modelId || null}

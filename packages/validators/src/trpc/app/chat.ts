@@ -52,7 +52,7 @@ export const buscarChatSessionsSchema = z.object({
 // Chat Message schemas
 export const criarChatMessageSchema = z.object({
   chatSessionId: z.string(),
-  senderRole: z.enum(["user", "ai", "human_operator"]),
+  senderRole: z.enum(["user", "ai", "human_operator", "system"]),
   content: z.string().min(1, "Conteúdo é obrigatório"),
   metadata: z.record(z.unknown()).optional(),
   status: z.enum(["ok", "error", "pending"]).default("ok"),

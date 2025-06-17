@@ -154,45 +154,38 @@ export async function POST(request: NextRequest) {
       return "pt-BR";
     };
 
+    // 🎯 NOVO: Verificar se há Team Instructions na sessão
+    const hasTeamInstructions = allMessages.some(
+      (msg) =>
+        msg?.senderRole === "system" &&
+        msg?.metadata?.type === "team_instructions",
+    );
+
+    // 🌍 LOCALIZAÇÃO: System prompt baseado no idioma do usuário
     const userLocale = detectUserLocale(request);
-
-    // System prompts multilíngues
-    const baseSystemPrompts = {
-      "pt-BR":
-        "Você é um assistente útil e responde sempre em português brasileiro. Seja claro, objetivo e mantenha um tom profissional e amigável.",
-      en: "You are a helpful assistant and always respond in English. Be clear, objective, and maintain a professional and friendly tone.",
-    };
-
-    // Construir system prompt (agente temporariamente desabilitado)
     const systemPrompt =
-      baseSystemPrompts[userLocale] || baseSystemPrompts["pt-BR"];
+      userLocale === "pt-BR"
+        ? "Você é um assistente útil e responde sempre em português brasileiro."
+        : "You are a helpful assistant and always respond in English.";
 
     // TODO: Incluir instruções do agente quando getAgentById for implementado no AiStudioService
 
-    // Adicionar system prompt no idioma correto se não existir
-    const hasSystemPrompt = allMessages.some(
-      (msg) => msg?.senderRole === "system",
-    );
-    if (!hasSystemPrompt) {
-      formattedMessages.push({
-        role: "system",
-        content: systemPrompt,
-      });
-      console.log(`🌍 [API] System prompt adicionado em: ${userLocale}`);
-    }
-
-    for (const msg of allMessages) {
-      if (msg?.content) {
+    // 🎯 NOVO: Só adicionar system prompt se não há Team Instructions
+    if (!hasTeamInstructions) {
+      const hasSystemPrompt = allMessages.some(
+        (msg) => msg?.senderRole === "system",
+      );
+      if (!hasSystemPrompt) {
         formattedMessages.push({
-          role:
-            msg.senderRole === "user"
-              ? "user"
-              : msg.senderRole === "system"
-                ? "system"
-                : "assistant",
-          content: msg.content,
+          role: "system",
+          content: systemPrompt,
         });
+        console.log(`🌍 [API] System prompt adicionado em: ${userLocale}`);
       }
+    } else {
+      console.log(
+        `🎯 [API] Team Instructions detectadas, pulando system prompt padrão`,
+      );
     }
 
     // Buscar modelo e provider
@@ -305,8 +298,9 @@ export async function POST(request: NextRequest) {
       modelName: string,
       configMaxTokens?: number,
     ) => {
-      // Limites conhecidos para diferentes modelos da OpenAI
+      // Limites conhecidos para diferentes modelos
       const modelLimits: Record<string, number> = {
+        // OpenAI models
         "gpt-4": 8192,
         "gpt-4-turbo": 4096,
         "gpt-4-turbo-preview": 4096,
@@ -314,6 +308,16 @@ export async function POST(request: NextRequest) {
         "gpt-4o-mini": 16384,
         "gpt-3.5-turbo": 4096,
         "gpt-3.5-turbo-16k": 16384,
+        // Anthropic Claude models
+        "claude-3-haiku": 4096,
+        "claude-3-sonnet": 4096,
+        "claude-3-opus": 4096,
+        "claude-3-5-haiku": 8192,
+        "claude-3-5-sonnet": 8192,
+        // Generic patterns
+        claude: 4096,
+        haiku: 4096,
+        sonnet: 4096,
       };
 
       // Encontrar limite baseado no nome do modelo (normalizado)
@@ -322,26 +326,70 @@ export async function POST(request: NextRequest) {
         .replace(/-\d{4}-\d{2}-\d{2}$/, "")
         .replace(/-\d{4}$/, "");
 
-      const modelLimit = modelLimits[normalizedModelName];
+      // Tentar match exato primeiro
+      let modelLimit = modelLimits[normalizedModelName];
+
+      // Se não encontrou, tentar match parcial
+      if (!modelLimit) {
+        for (const [pattern, limit] of Object.entries(modelLimits)) {
+          if (normalizedModelName.includes(pattern)) {
+            modelLimit = limit;
+            break;
+          }
+        }
+      }
+
+      console.log(
+        `🎯 [TOKEN_LIMIT] Modelo: ${modelName} → Normalizado: ${normalizedModelName} → Limite: ${modelLimit || "não encontrado"}`,
+      );
 
       // Se há configuração no modelo, usar o menor entre config e limite do modelo
       if (configMaxTokens && modelLimit) {
-        return Math.min(configMaxTokens, modelLimit);
+        const finalLimit = Math.min(configMaxTokens, modelLimit);
+        console.log(
+          `🎯 [TOKEN_LIMIT] Usando limite configurado: ${finalLimit} (config: ${configMaxTokens}, modelo: ${modelLimit})`,
+        );
+        return finalLimit;
       }
 
       // Se só há limite do modelo, usar ele
       if (modelLimit) {
+        console.log(`🎯 [TOKEN_LIMIT] Usando limite do modelo: ${modelLimit}`);
         return modelLimit;
       }
 
-      // Se só há config, usar no máximo 4096 como padrão seguro
+      // Se só há config, usar ela (sem limite máximo arbitrário)
       if (configMaxTokens) {
-        return Math.min(configMaxTokens, 4096);
+        console.log(`🎯 [TOKEN_LIMIT] Usando configuração: ${configMaxTokens}`);
+        return configMaxTokens;
       }
 
-      // Fallback seguro
-      return 1000;
+      // Fallback mais generoso para modelos desconhecidos
+      const fallbackLimit = 4096;
+      console.log(`🎯 [TOKEN_LIMIT] Usando fallback: ${fallbackLimit}`);
+      return fallbackLimit;
     };
+
+    for (const msg of allMessages) {
+      if (msg?.content) {
+        formattedMessages.push({
+          role:
+            msg.senderRole === "user"
+              ? "user"
+              : msg.senderRole === "system"
+                ? "system"
+                : "assistant",
+          content: msg.content,
+        });
+      }
+    }
+
+    console.log(
+      `🔍 [API] Total de mensagens formatadas: ${formattedMessages.length}`,
+    );
+    console.log(
+      `🎯 [API] Mensagens system: ${formattedMessages.filter((m) => m.role === "system").length}`,
+    );
 
     const maxTokens = getMaxTokensForModel(modelName, modelConfig.maxTokens);
     const temperature = modelConfig.temperature || 0.7;
@@ -462,7 +510,7 @@ export async function POST(request: NextRequest) {
               // Quando o stream do provedor termina, salvamos a mensagem completa com metadata.
               await ChatService.createMessage({
                 chatSessionId: currentSessionId,
-                senderRole: "assistant",
+                senderRole: "ai",
                 content: receivedText,
                 status: "ok",
                 metadata: messageMetadata,

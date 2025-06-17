@@ -1,8 +1,12 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
+import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 
+import { db } from "@kdx/db/client";
 import { aiStudioRepository } from "@kdx/db/repositories";
+import { appTeamConfigs } from "@kdx/db/schema";
+import { aiStudioAppId, aiStudioConfigSchema } from "@kdx/shared";
 import {
   // AI Agent
   atualizarAiAgentSchema,
@@ -335,4 +339,97 @@ export const aiStudioRouter = {
       });
     }
   }),
+
+  // =============================================================================
+  // TEAM INSTRUCTIONS
+  // =============================================================================
+
+  getTeamInstructions: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      const teamConfig = await db.query.appTeamConfigs.findFirst({
+        where: (appTeamConfig, { eq, and }) =>
+          and(
+            eq(appTeamConfig.appId, aiStudioAppId),
+            eq(appTeamConfig.teamId, ctx.auth.user.activeTeamId),
+          ),
+        columns: {
+          config: true,
+        },
+      });
+
+      if (!teamConfig?.config) {
+        // Retornar configuração padrão se não existir
+        return aiStudioConfigSchema.parse({});
+      }
+
+      return aiStudioConfigSchema.parse(teamConfig.config);
+    } catch (error: any) {
+      console.error("[AI_STUDIO_ROUTER] getTeamInstructions:", error);
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to get team instructions",
+      });
+    }
+  }),
+
+  updateTeamInstructions: protectedProcedure
+    .input(
+      z.object({
+        content: z.string(),
+        enabled: z.boolean(),
+        appliesTo: z.enum(["chat", "all"]),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        // Buscar config existente
+        const existingConfig = await db.query.appTeamConfigs.findFirst({
+          where: (appTeamConfig, { eq, and }) =>
+            and(
+              eq(appTeamConfig.appId, aiStudioAppId),
+              eq(appTeamConfig.teamId, ctx.auth.user.activeTeamId),
+            ),
+          columns: {
+            config: true,
+          },
+        });
+
+        const currentConfig = existingConfig?.config
+          ? aiStudioConfigSchema.parse(existingConfig.config)
+          : aiStudioConfigSchema.parse({});
+
+        const newConfig = aiStudioConfigSchema.parse({
+          ...currentConfig,
+          teamInstructions: input,
+        });
+
+        if (existingConfig) {
+          // Atualizar existente
+          await db
+            .update(appTeamConfigs)
+            .set({ config: newConfig })
+            .where(
+              and(
+                eq(appTeamConfigs.appId, aiStudioAppId),
+                eq(appTeamConfigs.teamId, ctx.auth.user.activeTeamId),
+              ),
+            );
+        } else {
+          // Criar novo
+          await db.insert(appTeamConfigs).values({
+            appId: aiStudioAppId,
+            teamId: ctx.auth.user.activeTeamId,
+            config: newConfig,
+          });
+        }
+
+        return { success: true };
+      } catch (error: any) {
+        console.error("[AI_STUDIO_ROUTER] updateTeamInstructions:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to update team instructions",
+        });
+      }
+    }),
 } satisfies TRPCRouterRecord;

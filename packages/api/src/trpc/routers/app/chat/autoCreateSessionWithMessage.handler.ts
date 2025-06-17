@@ -6,6 +6,7 @@ import { chatAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 import { AiStudioService } from "../../../../internal/services/ai-studio.service";
+import { ChatService } from "../../../../internal/services/chat.service";
 
 // Helper para buscar modelo preferido seguindo hierarquia usando Service Layer
 async function getPreferredModelHelper(
@@ -295,6 +296,40 @@ export async function autoCreateSessionWithMessageHandler({
     }
 
     console.log("✅ [AUTO_CREATE] Sessão criada:", session.id);
+
+    // 🎯 NOVO: Criar Team Instructions se configuradas
+    try {
+      const teamInstructions = await AiStudioService.getTeamInstructions({
+        teamId,
+        requestingApp: chatAppId,
+      });
+
+      if (teamInstructions?.content?.trim()) {
+        console.log(
+          `🎯 [AUTO_CREATE] Criando Team Instructions para sessão: ${session.id}`,
+        );
+
+        await ChatService.createSystemMessage({
+          chatSessionId: session.id,
+          content: teamInstructions.content,
+          metadata: {
+            type: "team_instructions",
+            appliesTo: teamInstructions.appliesTo,
+            createdAt: new Date().toISOString(),
+          },
+        });
+
+        console.log(
+          `✅ [AUTO_CREATE] Team Instructions criadas para sessão: ${session.id}`,
+        );
+      }
+    } catch (error) {
+      // Log do erro mas não falha a criação da sessão
+      console.warn(
+        `⚠️ [AUTO_CREATE] Erro ao criar Team Instructions para sessão ${session.id}:`,
+        error,
+      );
+    }
 
     // 4. Criar primeira mensagem do usuário
     const userMessage = await chatRepository.ChatMessageRepository.create({

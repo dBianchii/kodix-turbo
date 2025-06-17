@@ -45,6 +45,10 @@ export async function seedAiStudio() {
         name: "xAI",
         baseUrl: "https://api.x.ai/v1",
       },
+      {
+        name: "DeepSeek",
+        baseUrl: "https://api.deepseek.com/v1",
+      },
 
       // Providers open source / self-hosted
       {
@@ -130,6 +134,7 @@ export async function seedAiStudio() {
     const cohereProvider = findProvider("Cohere");
     const perplexityProvider = findProvider("Perplexity");
     const xaiProvider = findProvider("xAI");
+    const deepseekProvider = findProvider("DeepSeek");
     const huggingfaceProvider = findProvider("Hugging Face");
     const togetherProvider = findProvider("Together AI");
     const groqProvider = findProvider("Groq");
@@ -329,10 +334,66 @@ export async function seedAiStudio() {
         },
         enabled: false,
       },
+      {
+        name: "o3-pro",
+        providerId: openaiProvider?.id,
+        config: {
+          maxTokens: 65536,
+          temperature: 0.7,
+          description: "OpenAI o3 Pro - modelo de raciocínio mais avançado",
+          version: "o3-pro",
+          pricing: { input: 0.02, output: 0.08 },
+        },
+        enabled: false,
+      },
 
       // ========== Anthropic Models ==========
+      // Claude 4 Generation (Latest - May 2025)
       {
-        name: "Claude 3.5 Sonnet",
+        name: "claude-4-opus",
+        providerId: anthropicProvider?.id,
+        config: {
+          maxTokens: 32000,
+          temperature: 0.5,
+          description:
+            "Claude Opus 4 - Modelo mais capaz e inteligente da Anthropic",
+          version: "claude-opus-4-20250514",
+          pricing: { input: 0.015, output: 0.075 },
+        },
+        enabled: false,
+      },
+      {
+        name: "claude-4-sonnet",
+        providerId: anthropicProvider?.id,
+        config: {
+          maxTokens: 64000,
+          temperature: 0.5,
+          description:
+            "Claude Sonnet 4 - Alto desempenho com raciocínio excepcional",
+          version: "claude-sonnet-4-20250514",
+          pricing: { input: 0.003, output: 0.015 },
+        },
+        enabled: false,
+      },
+
+      // Claude 3.7 Generation (February 2025)
+      {
+        name: "claude-3.7-sonnet",
+        providerId: anthropicProvider?.id,
+        config: {
+          maxTokens: 64000,
+          temperature: 0.5,
+          description:
+            "Claude Sonnet 3.7 - Modelo mais inteligente com pensamento estendido",
+          version: "claude-3-7-sonnet-20250219",
+          pricing: { input: 0.003, output: 0.015 },
+        },
+        enabled: false,
+      },
+
+      // Claude 3.5 Generation (Stable)
+      {
+        name: "claude-3.5-sonnet",
         providerId: anthropicProvider?.id,
         config: {
           maxTokens: 8192,
@@ -344,7 +405,7 @@ export async function seedAiStudio() {
         enabled: false,
       },
       {
-        name: "Claude 3.5 Haiku",
+        name: "claude-3.5-haiku",
         providerId: anthropicProvider?.id,
         config: {
           maxTokens: 8192,
@@ -355,8 +416,10 @@ export async function seedAiStudio() {
         },
         enabled: false,
       },
+
+      // Claude 3 Generation (Legacy)
       {
-        name: "Claude 3 Opus",
+        name: "claude-3-opus",
         providerId: anthropicProvider?.id,
         config: {
           maxTokens: 4096,
@@ -367,10 +430,73 @@ export async function seedAiStudio() {
         },
         enabled: false,
       },
+      {
+        name: "claude-3-sonnet",
+        providerId: anthropicProvider?.id,
+        config: {
+          maxTokens: 4096,
+          temperature: 0.5,
+          description: "Claude 3 Sonnet balanceado",
+          version: "claude-3-sonnet-20240229",
+          pricing: { input: 0.003, output: 0.015 },
+        },
+        enabled: false,
+      },
+      {
+        name: "claude-3-haiku",
+        providerId: anthropicProvider?.id,
+        config: {
+          maxTokens: 4096,
+          temperature: 0.5,
+          description: "Claude 3 Haiku rápido e compacto",
+          version: "claude-3-haiku-20240307",
+          pricing: { input: 0.00025, output: 0.00125 },
+        },
+        enabled: false,
+      },
 
       // ========== Google Models ==========
+      // Gemini 2.5 Generation (Latest)
       {
-        name: "Gemini 1.5 Pro",
+        name: "gemini-2.5-pro",
+        providerId: googleProvider?.id,
+        config: {
+          maxTokens: 65536,
+          temperature: 0.8,
+          description: "Gemini 2.5 Pro - modelo mais avançado com raciocínio",
+          version: "gemini-2.5-pro",
+          pricing: { input: 0.003, output: 0.015 },
+        },
+        enabled: false,
+      },
+      {
+        name: "gemini-2.5-flash",
+        providerId: googleProvider?.id,
+        config: {
+          maxTokens: 65536,
+          temperature: 0.8,
+          description:
+            "Gemini 2.5 Flash - melhor custo-benefício com raciocínio",
+          version: "gemini-2.5-flash",
+          pricing: { input: 0.00075, output: 0.003 },
+        },
+        enabled: false,
+      },
+      {
+        name: "gemini-2.5-flash-preview-05-20",
+        providerId: googleProvider?.id,
+        config: {
+          maxTokens: 65536,
+          temperature: 0.8,
+          description: "Gemini 2.5 Flash Preview - versão experimental",
+          version: "gemini-2.5-flash-preview-05-20",
+          pricing: { input: 0.00075, output: 0.003 },
+        },
+        enabled: false,
+      },
+      // Gemini 1.5 Generation (Stable)
+      {
+        name: "gemini-1.5-pro",
         providerId: googleProvider?.id,
         config: {
           maxTokens: 8192,
@@ -382,7 +508,7 @@ export async function seedAiStudio() {
         enabled: false,
       },
       {
-        name: "Gemini 1.5 Flash",
+        name: "gemini-1.5-flash",
         providerId: googleProvider?.id,
         config: {
           maxTokens: 8192,
@@ -394,7 +520,7 @@ export async function seedAiStudio() {
         enabled: false,
       },
       {
-        name: "Gemini Pro",
+        name: "gemini-pro",
         providerId: googleProvider?.id,
         config: {
           maxTokens: 2048,
@@ -408,7 +534,7 @@ export async function seedAiStudio() {
 
       // ========== Mistral AI Models ==========
       {
-        name: "Mistral Large",
+        name: "mistral-large",
         providerId: mistralProvider?.id,
         config: {
           maxTokens: 8192,
@@ -420,7 +546,7 @@ export async function seedAiStudio() {
         enabled: false,
       },
       {
-        name: "Mistral 7B",
+        name: "mistral-7b",
         providerId: mistralProvider?.id,
         config: {
           maxTokens: 4096,
@@ -432,7 +558,7 @@ export async function seedAiStudio() {
         enabled: false,
       },
       {
-        name: "Mixtral 8x7B",
+        name: "mixtral-8x7b",
         providerId: mistralProvider?.id,
         config: {
           maxTokens: 4096,
@@ -446,7 +572,7 @@ export async function seedAiStudio() {
 
       // ========== Cohere Models ==========
       {
-        name: "Command R+",
+        name: "command-r-plus",
         providerId: cohereProvider?.id,
         config: {
           maxTokens: 4096,
@@ -458,7 +584,7 @@ export async function seedAiStudio() {
         enabled: false,
       },
       {
-        name: "Command R",
+        name: "command-r",
         providerId: cohereProvider?.id,
         config: {
           maxTokens: 4096,
@@ -472,7 +598,7 @@ export async function seedAiStudio() {
 
       // ========== Perplexity Models ==========
       {
-        name: "Sonar Pro",
+        name: "sonar-pro",
         providerId: perplexityProvider?.id,
         config: {
           maxTokens: 4096,
@@ -486,7 +612,7 @@ export async function seedAiStudio() {
 
       // ========== xAI Models ==========
       {
-        name: "Grok Beta",
+        name: "grok-beta",
         providerId: xaiProvider?.id,
         config: {
           maxTokens: 8192,
@@ -497,10 +623,60 @@ export async function seedAiStudio() {
         },
         enabled: false,
       },
+      {
+        name: "grok-3-beta",
+        providerId: xaiProvider?.id,
+        config: {
+          maxTokens: 8192,
+          temperature: 0.7,
+          description: "Grok 3 Beta - modelo mais avançado da xAI",
+          version: "grok-3-beta",
+          pricing: { input: 0.01, output: 0.03 },
+        },
+        enabled: false,
+      },
+      {
+        name: "grok-3-mini",
+        providerId: xaiProvider?.id,
+        config: {
+          maxTokens: 8192,
+          temperature: 0.7,
+          description: "Grok 3 Mini - versão rápida e eficiente",
+          version: "grok-3-mini-beta",
+          pricing: { input: 0.002, output: 0.006 },
+        },
+        enabled: false,
+      },
+
+      // ========== DeepSeek Models ==========
+      {
+        name: "deepseek-r1-0528",
+        providerId: deepseekProvider?.id,
+        config: {
+          maxTokens: 8192,
+          temperature: 0.7,
+          description: "DeepSeek R1 - modelo de raciocínio avançado",
+          version: "deepseek-r1-0528",
+          pricing: { input: 0.0014, output: 0.0028 },
+        },
+        enabled: false,
+      },
+      {
+        name: "deepseek-v3.1",
+        providerId: deepseekProvider?.id,
+        config: {
+          maxTokens: 8192,
+          temperature: 0.7,
+          description: "DeepSeek V3.1 - modelo geral avançado",
+          version: "deepseek-v3.1",
+          pricing: { input: 0.0014, output: 0.0028 },
+        },
+        enabled: false,
+      },
 
       // ========== Groq Models (rápidos) ==========
       {
-        name: "Llama 3 70B (Groq)",
+        name: "llama-3-70b-groq",
         providerId: groqProvider?.id,
         config: {
           maxTokens: 8192,
@@ -512,7 +688,7 @@ export async function seedAiStudio() {
         enabled: false,
       },
       {
-        name: "Mixtral 8x7B (Groq)",
+        name: "mixtral-8x7b-groq",
         providerId: groqProvider?.id,
         config: {
           maxTokens: 4096,
@@ -526,7 +702,7 @@ export async function seedAiStudio() {
 
       // ========== Local/Ollama Models ==========
       {
-        name: "Llama 3.1 8B (Local)",
+        name: "llama-3.1-8b",
         providerId: ollamaProvider?.id,
         config: {
           maxTokens: 8192,
@@ -538,7 +714,7 @@ export async function seedAiStudio() {
         enabled: false,
       },
       {
-        name: "Qwen 2.5 7B (Local)",
+        name: "qwen-2.5-7b",
         providerId: ollamaProvider?.id,
         config: {
           maxTokens: 8192,

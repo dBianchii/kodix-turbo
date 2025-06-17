@@ -42,7 +42,10 @@ export type KodixAppId =
   | typeof chatAppId
   | typeof aiStudioAppId;
 
-export type AppIdsWithConfig = typeof kodixCareAppId | typeof chatAppId; //? Some apps might not have config implemented
+export type AppIdsWithConfig =
+  | typeof kodixCareAppId
+  | typeof chatAppId
+  | typeof aiStudioAppId; //? Some apps might not have config implemented
 export type AppIdsWithUserAppTeamConfig =
   | typeof kodixCareAppId
   | typeof chatAppId; //? Some apps might not have userAppTeamConfig implemented
@@ -141,10 +144,24 @@ export const chatUserAppTeamConfigSchema = z.object({
     .default({}),
 });
 
+/**
+ * @description Schema for validating AI Studio app team config
+ */
+export const aiStudioConfigSchema = z.object({
+  teamInstructions: z
+    .object({
+      content: z.string().default(""),
+      enabled: z.boolean().default(false),
+      appliesTo: z.enum(["chat", "all"]).default("chat"),
+    })
+    .default({}),
+});
+
 //TODO: Maybe move this getAppTeamConfigSchema elsewhere
 export const appIdToAppTeamConfigSchema = {
   [kodixCareAppId]: kodixCareConfigSchema,
   [chatAppId]: chatConfigSchema,
+  [aiStudioAppId]: aiStudioConfigSchema,
 };
 
 //TODO: Maybe move this getAppTeamConfigSchema elsewhere

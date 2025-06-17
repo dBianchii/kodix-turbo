@@ -237,6 +237,28 @@
         "noProviders": "No providers found",
         "confirmDelete": "Are you sure you want to delete this provider?"
       },
+      "teamInstructions": {
+        "title": "Team Instructions",
+        "description": "Configure global instructions that will be applied to all team conversations",
+        "content": "Instructions Content",
+        "contentPlaceholder": "Ex: Always be polite and casual. Respond in Portuguese...",
+        "enabled": "Enable Instructions",
+        "appliesTo": "Apply to",
+        "appliesToOptions": {
+          "chat": "Chat Only",
+          "all": "All Apps"
+        },
+        "save": "Save Instructions",
+        "saving": "Saving...",
+        "saved": "Instructions saved successfully",
+        "error": "Error saving instructions",
+        "noInstructions": "No instructions configured",
+        "instructionsDisabled": "Instructions disabled",
+        "helpText": "Global instructions will be automatically applied at the beginning of all team conversations in Chat.",
+        "preview": "Preview",
+        "previewText": "How instructions will appear to AI:",
+        "currentStatus": "Current Status"
+      },
       "tokens": {
         "title": "Access Tokens",
         "description": "Manage access tokens for models",
@@ -265,6 +287,7 @@
         "tableHeaders": {
           "model": "Model",
           "provider": "Provider",
+          "price": "Price",
           "status": "Status",
           "default": "Default",
           "test": "Test"

@@ -237,6 +237,28 @@
         "noProviders": "Nenhum provedor encontrado",
         "confirmDelete": "Tem certeza que deseja excluir este provedor?"
       },
+      "teamInstructions": {
+        "title": "Instruções do Time",
+        "description": "Configure instruções globais que serão aplicadas em todas as conversas do time",
+        "content": "Conteúdo das Instruções",
+        "contentPlaceholder": "Ex: Seja sempre educado e casual. Responda em português brasileiro...",
+        "enabled": "Habilitar Instruções",
+        "appliesTo": "Aplicar a",
+        "appliesToOptions": {
+          "chat": "Apenas Chat",
+          "all": "Todos os Apps"
+        },
+        "save": "Salvar Instruções",
+        "saving": "Salvando...",
+        "saved": "Instruções salvas com sucesso",
+        "error": "Erro ao salvar instruções",
+        "noInstructions": "Nenhuma instrução configurada",
+        "instructionsDisabled": "Instruções desabilitadas",
+        "helpText": "As instruções globais serão automaticamente aplicadas no início de todas as conversas do time no Chat.",
+        "preview": "Prévia",
+        "previewText": "Como as instruções aparecerão para a IA:",
+        "currentStatus": "Status Atual"
+      },
       "tokens": {
         "title": "Tokens de Acesso",
         "description": "Gerencie os tokens de acesso aos modelos",
@@ -265,6 +287,7 @@
         "tableHeaders": {
           "model": "Modelo",
           "provider": "Provedor",
+          "price": "Preço",
           "status": "Status",
           "default": "Padrão",
           "test": "Teste"

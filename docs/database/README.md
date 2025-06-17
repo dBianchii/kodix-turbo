@@ -13,6 +13,15 @@ Set up the MySQL database from scratch
 - Schema application and seeds
 - Troubleshooting guide
 
+### [Seeds Guide](./seeds-guide.md) ⚠️ **CRITICAL**
+
+**READ FIRST!** Understand the difference between destructive and safe seeds
+
+- Destructive vs Safe seeds
+- When to use each type
+- Avoiding data loss
+- Adding new AI models safely
+
 ### [Development Workflow](./development-workflow.md)
 
 Work efficiently with branches and schema changes
@@ -127,21 +136,23 @@ pnpm db:migrate      # Apply to production
 
 ## 🆘 Need Help?
 
-| Situation                               | Document                                            |
-| --------------------------------------- | --------------------------------------------------- |
-| Setting up project for the first time   | [Getting Started](./getting-started.md)             |
-| Working on branches with schema changes | [Development Workflow](./development-workflow.md)   |
-| View/edit data in database              | [Drizzle Studio](./drizzle-studio.md)               |
-| Understanding structure of a table      | [Schema Reference](./schema-reference.md)           |
-| Deploying schema changes                | [Production Migrations](./production-migrations.md) |
+| Situation                               | Document                                              |
+| --------------------------------------- | ----------------------------------------------------- |
+| **⚠️ Need to run seeds or add models**  | **[Seeds Guide](./seeds-guide.md)** - **READ FIRST!** |
+| Setting up project for the first time   | [Getting Started](./getting-started.md)               |
+| Working on branches with schema changes | [Development Workflow](./development-workflow.md)     |
+| View/edit data in database              | [Drizzle Studio](./drizzle-studio.md)                 |
+| Understanding structure of a table      | [Schema Reference](./schema-reference.md)             |
+| Deploying schema changes                | [Production Migrations](./production-migrations.md)   |
 
 ## 🎓 Learning Path
 
 ### **👶 Beginner (First time on project)**
 
-1. [Getting Started](./getting-started.md) - Set everything up
-2. [Drizzle Studio](./drizzle-studio.md) - Explore data visually
-3. [Schema Reference](./schema-reference.md) - Understand structure
+1. **[Seeds Guide](./seeds-guide.md)** - ⚠️ **Critical: Understand seeds FIRST!**
+2. [Getting Started](./getting-started.md) - Set everything up
+3. [Drizzle Studio](./drizzle-studio.md) - Explore data visually
+4. [Schema Reference](./schema-reference.md) - Understand structure
 
 ### **👩‍💻 Regular Development**
 

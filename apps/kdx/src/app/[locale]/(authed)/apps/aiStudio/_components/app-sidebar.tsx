@@ -1,7 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Bot, Brain, Building, Database, Key, Settings } from "lucide-react";
+import {
+  Bot,
+  Brain,
+  Building,
+  Database,
+  Key,
+  MessageSquare,
+  Settings,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { aiStudioAppId } from "@kdx/shared";
@@ -21,6 +29,11 @@ import { IconKodixApp } from "~/app/[locale]/_components/app/kodix-icon";
 
 // Seções principais (mais usadas diariamente)
 const mainSections = [
+  {
+    id: "team-instructions",
+    title: "teamInstructions",
+    icon: MessageSquare,
+  },
   {
     id: "tokens",
     title: "tokens",

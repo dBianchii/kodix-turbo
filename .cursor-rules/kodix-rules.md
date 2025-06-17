@@ -80,6 +80,43 @@ const sessionQuery = useQuery(trpc.app.chat.buscarSession.queryOptions(...));
 
 ---
 
+## 🚨 **CRITICAL - STRATEGY-FIRST APPROACH**
+
+### ⚠️ MANDATORY: Always Discuss Strategy Before Implementation
+
+**BEFORE** implementing ANY solution or code changes:
+
+1. **ALWAYS** present multiple strategy options to the user
+2. **NEVER** start coding without discussing the approach first
+3. **ALWAYS** ask "Which approach do you prefer?" before implementation
+4. **WAIT** for user approval of the chosen strategy
+
+**Example of CORRECT workflow:**
+
+```
+1. User asks: "How can we update model pricing?"
+2. AI presents: "Here are 3 strategies: Manual Script, Auto-Cron, Admin Interface"
+3. AI asks: "Which approach would you prefer?"
+4. User chooses: "Let's go with Manual Script"
+5. AI implements: Only then start coding the chosen solution
+```
+
+**Example of FORBIDDEN workflow:**
+
+```
+1. User asks: "How can we update model pricing?"
+2. AI immediately starts: Creating files and implementing code
+```
+
+**This ensures:**
+
+- Better alignment with user needs
+- Avoid unnecessary rework
+- More collaborative development process
+- Strategic thinking before tactical execution
+
+---
+
 ## 🎯 Architecture Rules
 
 ### File Organization

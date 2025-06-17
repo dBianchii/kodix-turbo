@@ -43,6 +43,7 @@ function AiStudioPageContent() {
     if (
       section &&
       [
+        "team-instructions",
         "providers",
         "models",
         "tokens",
