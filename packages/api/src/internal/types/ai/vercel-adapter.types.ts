@@ -4,7 +4,7 @@ export interface ChatStreamParams {
   modelId: string;
   teamId: string;
   messages: {
-    senderRole: "user" | "ai";
+    senderRole: "user" | "ai" | "system";
     content: string;
   }[];
   temperature?: number;

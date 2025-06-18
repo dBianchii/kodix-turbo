@@ -94,7 +94,7 @@ docs/
 ├── subapps/                            # 📱 SubApps Principais (Core do Sistema)
 │   ├── README.md                       # Índice dos SubApps
 │   ├── ai-studio/                      # 🤖 AI Studio (com toda documentação de IA)
-│   ├── chat/                           # 💬 Sistema de Chat
+│   ├── chat/                           # 💬 Sistema de Chat ✅ Vercel AI SDK Ativo
 │   ├── todo/                           # 📝 Sistema de Tarefas
 │   ├── calendar/                       # 📅 Sistema de Calendário
 │   ├── cupom/                          # 🎫 Gestão de Cupons

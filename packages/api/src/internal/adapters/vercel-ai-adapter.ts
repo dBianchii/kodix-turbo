@@ -1,3 +1,4 @@
+import { createAnthropic } from "@ai-sdk/anthropic";
 import { createOpenAI } from "@ai-sdk/openai";
 import { streamText } from "ai";
 
@@ -159,7 +160,7 @@ export class VercelAIAdapter {
 
       if (msg.senderRole === "user") {
         role = "user";
-      } else if (msg.senderRole === "ai" || msg.senderRole === "assistant") {
+      } else if (msg.senderRole === "ai") {
         role = "assistant";
       } else if (msg.senderRole === "system") {
         role = "system";
@@ -217,7 +218,7 @@ export class VercelAIAdapter {
       modelConfig.provider.name,
     );
 
-    // FASE 1: Suporte apenas OpenAI (conservador)
+    // SUBETAPA 6: Suporte para OpenAI e Anthropic
     const providerName = modelConfig.provider.name.toLowerCase();
 
     if (providerName === "openai") {
@@ -236,9 +237,25 @@ export class VercelAIAdapter {
 
       // Retornar modelo específico
       return openaiProvider(modelName);
+    } else if (providerName === "anthropic") {
+      const modelName =
+        (modelConfig.config as any)?.version || modelConfig.name;
+      console.log(
+        "🔧 [VERCEL-ADAPTER] Configurando Anthropic com modelo:",
+        modelName,
+      );
+
+      // Criar instância do provider Anthropic
+      const anthropicProvider = createAnthropic({
+        apiKey: providerToken.token,
+        baseURL: modelConfig.provider.baseUrl || undefined,
+      });
+
+      // Retornar modelo específico
+      return anthropicProvider(modelName);
     } else {
       throw new Error(
-        `🚧 Provider ${modelConfig.provider.name} ainda não suportado no adapter. Apenas OpenAI na Fase 1.`,
+        `🚧 Provider ${modelConfig.provider.name} ainda não suportado no adapter. Suportados: OpenAI, Anthropic.`,
       );
     }
   }

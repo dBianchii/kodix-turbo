@@ -55,9 +55,10 @@ pnpm dev:kdx
 ### Integração com SubApps
 
 - **Service Layer**: APIs seguras para outros SubApps
-- **Chat Integration**: Fornece modelos e agentes para o Chat
+- **Chat Integration**: Fornece modelos e agentes para o Chat via Vercel AI SDK
 - **Configuração Centralizada**: Um lugar para gerenciar toda IA
 - **Métricas Unificadas**: Acompanhe uso através dos SubApps
+- **Vercel AI SDK**: Integração moderna e otimizada com providers
 
 ## 📚 Documentação Completa
 
@@ -82,10 +83,11 @@ pnpm dev:kdx
 
 ## 🔗 Integração com Outros SubApps
 
-- **Chat**: Fornece modelos e configurações de IA
+- **Chat**: Fornece modelos e configurações de IA via Vercel AI SDK
 - **Future Apps**: Base para qualquer app que precise de IA
 - **Service Layer**: Comunicação segura via `AiStudioService`
 - **Configurações Compartilhadas**: Gerenciamento centralizado
+- **Tecnologia Moderna**: Integração através do Vercel AI SDK para máxima performance
 
 ## 🔒 Segurança
 
