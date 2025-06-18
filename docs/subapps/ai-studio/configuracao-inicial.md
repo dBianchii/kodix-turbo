@@ -1,8 +1,8 @@
-# Configuração Inicial - AI Studio
+# Configuration Guide - AI Studio SubApp
 
 ## 📋 Visão Geral
 
-O AI Studio incluiu dados iniciais (seed) com os principais provedores de IA e modelos mais populares do mercado, permitindo uso imediato sem configuração manual.
+Este guia cobre a configuração inicial do AI Studio, incluindo setup de provedores, modelos e tokens. O sistema vem com dados pré-configurados (seed) dos principais provedores de IA.
 
 ## 🏢 Provedores Incluídos
 

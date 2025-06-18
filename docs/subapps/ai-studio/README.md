@@ -1,8 +1,8 @@
-# AI Studio
+# AI Studio SubApp
 
 ## 📖 Visão Geral
 
-O **AI Studio** é um módulo completo para gerenciamento de provedores de IA, modelos, agentes e tokens de API. Construído com arquitetura modular escalável e seguindo as **Kodix AI Coding Rules**.
+O **AI Studio** é o centro de controle para todas as integrações de Inteligência Artificial do Kodix. Permite gerenciar provedores, modelos, agentes e tokens de API de forma centralizada, fornecendo uma infraestrutura robusta para outros SubApps que precisam de capacidades de IA.
 
 ## 🚀 Início Rápido
 
@@ -17,65 +17,91 @@ pnpm dev:kdx
 
 1. Faça login na aplicação
 2. Navegue para `/apps/aiStudio`
-3. Configure seus primeiro provedor em **Provedores**
+3. Configure seu primeiro provedor em **Provedores**
 4. Adicione tokens de API em **Tokens**
-5. Configure modelos em **Modelos**
-6. Crie agentes em **Agentes**
+5. Ative modelos desejados em **Modelos**
+6. Crie agentes personalizados em **Agentes**
 
 ## 🔧 Funcionalidades Principais
 
-### 🏢 Provedores de IA
+### Gestão de Provedores
 
-- **Suporte**: OpenAI, Anthropic, Google, Azure
-- **Gestão**: Criar, listar, editar, excluir provedores
-- **Configuração**: URLs personalizadas, versões de API
+- **Múltiplos Provedores**: Suporte para OpenAI, Anthropic, Google, Azure e mais
+- **Configuração Flexível**: URLs customizadas e versões de API
+- **Controle Centralizado**: Ative/desative provedores por equipe
+- **Expansibilidade**: Adicione novos provedores facilmente
 
-### 🧠 Modelos de IA
+### Gerenciamento de Modelos
 
-- **Organização**: Modelos vinculados a provedores
-- **Configuração**: Parâmetros específicos por modelo
-- **Controle**: Ativar/desativar modelos por equipe
+- **Catálogo Completo**: Modelos pré-configurados dos principais provedores
+- **Configuração Granular**: Ajuste parâmetros como temperatura e tokens
+- **Priorização**: Defina ordem de preferência dos modelos
+- **Controle de Acesso**: Ative modelos específicos por equipe
 
-### 👤 Agentes IA
+### Sistema de Agentes
 
-- **Personalização**: Prompts de sistema customizáveis
-- **Configuração**: Modelos específicos por agente
-- **Gestão**: Criação e edição de assistentes
+- **Assistentes Personalizados**: Crie agentes com personalidades específicas
+- **Prompts Customizados**: Configure instruções de sistema detalhadas
+- **Associação Flexível**: Vincule agentes a modelos específicos
+- **Reutilização**: Compartilhe agentes entre aplicações
 
-### 🔐 Tokens de API
+### Segurança de Tokens
 
-- **Segurança**: Criptografia AES-256-GCM
-- **Organização**: Tokens por equipe e provedor
-- **Gestão**: Criação, edição e remoção segura
+- **Criptografia Forte**: AES-256-GCM para todos os tokens
+- **Isolamento Total**: Tokens separados por equipe
+- **Gestão Segura**: Tokens nunca expostos após criação
+- **Rotação Facilitada**: Atualize tokens sem impactar serviços
+
+### Integração com SubApps
+
+- **Service Layer**: APIs seguras para outros SubApps
+- **Chat Integration**: Fornece modelos e agentes para o Chat
+- **Configuração Centralizada**: Um lugar para gerenciar toda IA
+- **Métricas Unificadas**: Acompanhe uso através dos SubApps
 
 ## 📚 Documentação Completa
 
-### **Para Desenvolvedores**
+### **Arquitetura e Implementação**
 
-- **[🔧 Guia de Desenvolvimento](./development-guide.md)** - Padrões, estruturas e como desenvolver
-- **[📋 Referência da API](./api-reference.md)** - Documentação completa das APIs
-- **[🧪 Guia de Testes](./testing-guide.md)** - Estratégias e exemplos de testes
+- **[📱 Frontend Architecture](./frontend-architecture.md)** - Estrutura e componentes da interface
+- **[⚙️ Backend Architecture](./backend-architecture.md)** - APIs e processamento server-side
+- **[🔐 Security Implementation](./security-implementation.md)** - Criptografia e isolamento
 
-### **Para Setup e Configuração**
+### **Funcionalidades Específicas**
 
-- **[⚙️ Configuração Inicial](./configuracao-inicial.md)** - Setup e dados iniciais
-- **[🏗️ Detalhes Técnicos](./technical-details.md)** - Implementação específica e detalhes técnicos
+- **[🏢 Provider Management](./provider-management.md)** - Sistema de provedores de IA
+- **[🧠 Model Configuration](./model-configuration.md)** - Configuração e gestão de modelos
+- **[👤 Agent System](./agent-system.md)** - Criação e gestão de agentes
+- **[🔑 Token Security](./token-security.md)** - Sistema de tokens criptografados
+
+### **Guias e Referências**
+
+- **[📋 API Reference](./api-reference.md)** - Documentação completa das APIs
+- **[⚙️ Configuration Guide](./configuracao-inicial.md)** - Setup inicial e configuração
+- **[⚠️ Known Issues](./known-issues.md)** - Problemas conhecidos e soluções
+
+## 🔗 Integração com Outros SubApps
+
+- **Chat**: Fornece modelos e configurações de IA
+- **Future Apps**: Base para qualquer app que precise de IA
+- **Service Layer**: Comunicação segura via `AiStudioService`
+- **Configurações Compartilhadas**: Gerenciamento centralizado
 
 ## 🔒 Segurança
 
-- **Criptografia AES-256-GCM** para todos os tokens de API
-- **Isolamento por equipe** - recursos isolados por `teamId`
-- **Validação automática** de acesso em todas as operações
+- **Isolamento por Team**: Cada equipe tem seus próprios recursos
+- **Criptografia End-to-End**: Tokens sempre protegidos
+- **Validação Automática**: Verificação de acesso em todas operações
+- **Auditoria**: Logs de todas as ações críticas
 
 ## 🔗 Links Relacionados
 
 - **[Arquitetura Geral](../../architecture/README.md)** - Arquitetura do monorepo
-- **[Backend Guide](../../architecture/backend-guide.md)** - Padrões de backend
-- **[Coding Standards](../../architecture/coding-standards.md)** - Padrões de código
+- **[SubApp Architecture](../../architecture/subapp-architecture.md)** - Padrões de SubApps
+- **[Chat SubApp](../chat/README.md)** - Principal consumidor do AI Studio
 
 ## 📚 Recursos Relacionados
 
 - **[📐 SubApp Architecture Guide](../../architecture/subapp-architecture.md)** - Padrões e processo de criação de SubApps
-- **[🧠 AI Development Guide](./AI_Development_Guide.md)** - Guia específico para desenvolvimento de features de IA
 - **[🔧 Backend Development Guide](../../architecture/backend-guide.md)** - Padrões gerais de desenvolvimento backend
-- **[🗄️ Database Documentation](../../database/)** - Documentação de schemas e migrations
+- **[🎨 Frontend Development Guide](../../architecture/frontend-guide.md)** - Padrões de desenvolvimento frontend
