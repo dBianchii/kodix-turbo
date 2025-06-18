@@ -49,6 +49,22 @@ Frontend → tRPC → Adapter Layer → Vercel AI SDK → Provider APIs → Resp
 Frontend → tRPC → Vercel AI SDK Direto → Provider APIs
 ```
 
+## 📋 Status da Implementação
+
+### ✅ **Subetapas Concluídas:**
+
+1. **✅ Subetapa 1: Setup e Preparação** - Vercel AI SDK instalado e estrutura criada
+2. **✅ Subetapa 2: Adapter Base** - Adapter skeleton funcionando com mock
+3. **✅ Subetapa 3: Integração Opcional** - Feature flag, ChatService expandido e endpoint experimental
+
+### 🔄 **Próximas Subetapas:**
+
+4. **🔄 Subetapa 4: Implementação Real** - Fazer adapter usar Vercel AI SDK de verdade
+5. **⏳ Subetapa 5: Fallback Automático** - Sistema de fallback para máxima confiabilidade
+6. **⏳ Subetapa 6: Substituição Gradual** - Migração opcional do sistema principal
+
+---
+
 ## 📋 Implementação Detalhada
 
 ### 1. Adapter Principal
