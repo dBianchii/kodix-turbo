@@ -18,5 +18,6 @@ export interface ChatStreamResponse {
     model?: string;
     usage?: any;
     finishReason?: string;
+    error?: string; // Para casos de fallback
   };
 }

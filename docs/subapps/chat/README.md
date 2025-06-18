@@ -74,7 +74,10 @@ pnpm dev:kdx
 
 ### **Evolução e Migração**
 
-- **[🚀 Vercel AI SDK Migration](./vercel-ai-sdk-migration.md)** - Estratégia de migração para Vercel AI SDK
+- **[🚀 Vercel AI SDK Migration](./vercel-ai-sdk-migration.md)** - Estratégia de migração para Vercel AI SDK ✅ **4/6 Subetapas Concluídas**
+- **[📋 Subetapas Detalhadas](./vercel-ai-sdk-migration-steps.md)** - Implementação passo a passo
+- **[📊 Subetapa 4 Report](./subetapa-4-report.md)** - Relatório da conclusão da integração real
+- **[📋 Decisão Estratégica](./decisao-estrategica-fallback.md)** - Cancelamento do fallback automático
 
 ### **Problemas e Soluções**
 

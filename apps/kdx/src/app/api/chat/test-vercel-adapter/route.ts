@@ -45,10 +45,19 @@ export async function POST(request: NextRequest) {
 
     // 🆕 Modo Mock - pula verificação de sessão
     let session = null;
+    let sessionMessages = messages; // Usar mensagens do request por padrão
+
     if (mockMode) {
       console.log(
         "🎭 [TEST-ADAPTER] Modo MOCK ativado - pulando verificação de sessão",
       );
+      // Em mock mode, se não há mensagens, criar uma básica
+      if (sessionMessages.length === 0) {
+        sessionMessages = [
+          { senderRole: "user", content: "Hello, this is a test message" },
+        ];
+        console.log("🎭 [TEST-ADAPTER] Criando mensagem mock para teste");
+      }
     } else {
       // Verificar se a sessão existe (usando método atual)
       session = await ChatService.findSessionById(chatSessionId);
@@ -63,6 +72,25 @@ export async function POST(request: NextRequest) {
       }
 
       console.log("✅ [TEST-ADAPTER] Sessão encontrada:", session.id);
+
+      // Buscar mensagens reais da sessão
+      const realMessages = await ChatService.findMessagesBySession({
+        chatSessionId: session.id,
+        limite: 20,
+        offset: 0,
+        ordem: "asc",
+      });
+
+      console.log(
+        "✅ [TEST-ADAPTER] Mensagens da sessão:",
+        realMessages.length,
+      );
+
+      // Converter para formato esperado pelo adapter
+      sessionMessages = realMessages.map((msg: any) => ({
+        senderRole: msg.senderRole,
+        content: msg.content,
+      }));
     }
 
     // Tentar usar o adapter experimental
@@ -77,7 +105,7 @@ export async function POST(request: NextRequest) {
         content,
         modelId: modelId || session?.aiModelId || "mock-model",
         teamId,
-        messages,
+        messages: sessionMessages,
         temperature,
         maxTokens,
         tools,
