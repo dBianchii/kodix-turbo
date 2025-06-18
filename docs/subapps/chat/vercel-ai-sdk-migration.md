@@ -446,18 +446,18 @@ A implementação preserva totalmente o investimento atual enquanto abre portas 
 
 ### **📈 Progresso das Subetapas**
 
-| **Etapa**                          | **Status**       | **Validação**                          |
-| ---------------------------------- | ---------------- | -------------------------------------- |
-| 1. Setup e Preparação              | ✅ CONCLUÍDA     | Dependências instaladas, TypeScript OK |
-| 2. Adapter Base                    | ✅ CONCLUÍDA     | Estrutura criada, testes passando      |
-| 3. Feature Flag System             | ✅ CONCLUÍDA     | Endpoint teste funcionando             |
-| 4. **Vercel AI SDK Real**          | ✅ **CONCLUÍDA** | **Stream real com OpenAI funcionando** |
-| 5. Monitoramento e Observabilidade | ⏳ PRÓXIMA       | Métricas, Logs, Alertas                |
-| 6. Migração Gradual                | ⏳ PLANEJADA     | Teste A/B, Rollout Controlado          |
+| **Etapa**                              | **Status**       | **Validação**                           |
+| -------------------------------------- | ---------------- | --------------------------------------- |
+| 1. Setup e Preparação                  | ✅ CONCLUÍDA     | Dependências instaladas, TypeScript OK  |
+| 2. Adapter Base                        | ✅ CONCLUÍDA     | Estrutura criada, testes passando       |
+| 3. Feature Flag System                 | ✅ CONCLUÍDA     | Endpoint teste funcionando              |
+| 4. Vercel AI SDK Real                  | ✅ CONCLUÍDA     | Stream real com OpenAI funcionando      |
+| 5. **Monitoramento e Observabilidade** | ✅ **CONCLUÍDA** | **Métricas, Logs, Alertas funcionando** |
+| 6. Migração Gradual                    | ⏳ PRÓXIMA       | Teste A/B, Rollout Controlado           |
 
 ### **🎯 Próximos Passos Imediatos**
 
-**Subetapa 5: Monitoramento e Observabilidade** - Implementar sistema completo de métricas, logs estruturados e alertas para garantir visibilidade total do desempenho em produção.
+**Subetapa 6: Migração Gradual com A/B Testing** - Implementar rollout controlado e gradual do Vercel AI SDK usando sistema de teste A/B com métricas comparativas.
 
 ### **📋 DECISÃO ESTRATÉGICA DOCUMENTADA**
 

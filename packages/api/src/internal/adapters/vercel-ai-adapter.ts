@@ -3,18 +3,31 @@ import { streamText } from "ai";
 
 import { chatAppId } from "@kdx/shared";
 
+import type { ChatMetrics } from "../monitoring/vercel-ai-metrics";
 import type {
   ChatStreamParams,
   ChatStreamResponse,
 } from "../types/ai/vercel-adapter.types";
+import { VercelAIMetrics } from "../monitoring/vercel-ai-metrics";
 import { AiStudioService } from "../services/ai-studio.service";
 
 export class VercelAIAdapter {
   /**
    * 🚀 REAL IMPLEMENTATION: Usa Vercel AI SDK de verdade
    * Com fallback para mock em caso de erro
+   * 📊 SUBETAPA 5: Agora com monitoramento completo
    */
   async streamResponse(params: ChatStreamParams): Promise<ChatStreamResponse> {
+    const startTime = Date.now();
+    const chunkCount = 0;
+    let firstChunkTime: number | undefined;
+    const tokensUsed = 0;
+    let actualModel: string | undefined;
+    const success = false;
+    let errorType: string | undefined;
+    let errorMessage: string | undefined;
+    let fallbackUsed = false;
+
     console.log("🧪 [VERCEL-ADAPTER] Iniciando stream com SDK real...");
 
     // 🎭 DETECÇÃO DE MOCK MODE: Se modelId for "mock-model", usar mock direto
@@ -22,7 +35,33 @@ export class VercelAIAdapter {
       console.log(
         "🎭 [VERCEL-ADAPTER] Mock mode detectado - usando mock direto",
       );
-      return this.getMockResponse(params, new Error("Mock mode ativado"));
+
+      const mockResponse = this.getMockResponse(
+        params,
+        new Error("Mock mode ativado"),
+      );
+
+      // Registrar métricas para mock mode
+      this.recordMetrics({
+        timestamp: new Date(),
+        sessionId: params.chatSessionId,
+        modelId: params.modelId,
+        teamId: params.teamId,
+        responseTime: Date.now() - startTime,
+        firstChunkTime: 0,
+        totalChunks: 1,
+        throughput: 0,
+        tokensUsed: 0,
+        success: true,
+        provider: "vercel-ai-sdk",
+        actualModel: "mock-intentional",
+        fallbackUsed: false,
+        messageCount: params.messages.length,
+        temperature: params.temperature,
+        maxTokens: params.maxTokens,
+      });
+
+      return mockResponse;
     }
 
     try {
@@ -52,9 +91,58 @@ export class VercelAIAdapter {
       console.log("✅ [VERCEL-ADAPTER] streamText executado com sucesso");
 
       // 4. Adaptar resposta para formato atual
-      return this.adaptResponse(result);
+      const response = this.adaptResponse(result);
+
+      // 📊 Registrar métricas de sucesso
+      this.recordMetrics({
+        timestamp: new Date(),
+        sessionId: params.chatSessionId,
+        modelId: params.modelId,
+        teamId: params.teamId,
+        responseTime: Date.now() - startTime,
+        totalChunks: 1, // Placeholder por enquanto
+        throughput: 0,
+        tokensUsed: 0, // Será implementado depois
+        success: true,
+        provider: "vercel-ai-sdk",
+        fallbackUsed: false,
+        messageCount: params.messages.length,
+        temperature: params.temperature,
+        maxTokens: params.maxTokens,
+      });
+
+      return response;
     } catch (error) {
       console.error("🔴 [VERCEL-ADAPTER] Erro no SDK, usando fallback:", error);
+
+      // Capturar detalhes do erro para métricas
+      errorType =
+        error instanceof Error ? error.constructor.name : "UnknownError";
+      errorMessage =
+        error instanceof Error ? error.message : "Erro desconhecido";
+      fallbackUsed = true;
+
+      // Registrar métricas de erro
+      this.recordMetrics({
+        timestamp: new Date(),
+        sessionId: params.chatSessionId,
+        modelId: params.modelId,
+        teamId: params.teamId,
+        responseTime: Date.now() - startTime,
+        firstChunkTime,
+        totalChunks: 0,
+        throughput: 0,
+        tokensUsed: 0,
+        success: false,
+        errorType,
+        errorMessage,
+        provider: "vercel-ai-sdk",
+        actualModel: actualModel || "unknown",
+        fallbackUsed: true,
+        messageCount: params.messages.length,
+        temperature: params.temperature,
+        maxTokens: params.maxTokens,
+      });
 
       // FALLBACK PARA MOCK (segurança máxima)
       return this.getMockResponse(params, error);
@@ -200,6 +288,17 @@ export class VercelAIAdapter {
         finishReason: vercelResult.finishReason || "stop",
       },
     };
+  }
+
+  /**
+   * 📊 Registrar métricas de uma interação
+   */
+  private recordMetrics(metrics: ChatMetrics): void {
+    try {
+      VercelAIMetrics.recordChatInteraction(metrics);
+    } catch (error) {
+      console.error("🔴 [METRICS] Erro ao registrar métricas:", error);
+    }
   }
 
   /**

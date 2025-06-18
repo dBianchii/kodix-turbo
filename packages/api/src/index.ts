@@ -31,3 +31,12 @@ type RouterOutputs = inferRouterOutputs<AppRouter>;
 
 export { createTRPCContext, appRouter, createCaller };
 export type { AppRouter, RouterInputs, RouterOutputs };
+
+// 📊 Exportações do sistema de monitoramento
+export { VercelAIMetrics } from "./internal/monitoring/vercel-ai-metrics";
+export { AlertSystem } from "./internal/monitoring/alerts";
+export type {
+  ChatMetrics,
+  MetricsSummary,
+} from "./internal/monitoring/vercel-ai-metrics";
+export type { Alert, AlertRule } from "./internal/monitoring/alerts";
