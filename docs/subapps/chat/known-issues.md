@@ -2,7 +2,7 @@
 
 ## ⚠️ Problemas Conhecidos
 
-Este documento lista os problemas conhecidos do Chat e suas soluções temporárias.
+Este documento lista os problemas conhecidos do Chat e suas soluções temporárias. O sistema utiliza arquitetura híbrida (Vercel AI SDK + Legacy fallback).
 
 ## 🔴 Problemas Críticos
 
@@ -76,9 +76,71 @@ Este documento lista os problemas conhecidos do Chat e suas soluções temporár
 
 **Status**: Feature em desenvolvimento.
 
+## 🔧 Problemas do Sistema Híbrido
+
+### 6. Fallback Frequente para Sistema Legacy
+
+**Sintoma**: Sistema usa legacy mesmo com Vercel AI SDK habilitado.
+
+**Causa**: Erros no Vercel AI SDK causam fallback automático.
+
+**Diagnóstico**:
+
+```bash
+# Verificar taxa de fallback
+grep -c "fallback para sistema atual" logs/app.log
+
+# Verificar erros do Vercel AI SDK
+grep "🔴 \[MIGRATION\]" logs/app.log
+```
+
+**Workaround**:
+
+- Verificar configuração de tokens no AI Studio
+- Confirmar que modelos estão ativos
+- Verificar conectividade com providers
+
+**Status**: Monitoramento ativo - fallback é comportamento esperado.
+
+### 7. Headers Inconsistentes
+
+**Sintoma**: Header `X-Powered-By` aparece/desaparece entre requisições.
+
+**Causa**: Sistema híbrido alterna entre Vercel AI SDK e Legacy.
+
+**Identificação**:
+
+```bash
+# Verificar qual sistema está ativo
+curl -I http://localhost:3000/api/chat/stream | grep "X-Powered-By"
+
+# Vercel AI SDK ativo: X-Powered-By: Vercel-AI-SDK
+# Legacy ativo: (sem header)
+```
+
+**Status**: Comportamento esperado do sistema híbrido.
+
+### 8. Feature Flag Não Funciona
+
+**Sintoma**: `ENABLE_VERCEL_AI_ADAPTER=false` não desabilita Vercel AI SDK.
+
+**Causa**: Variável de ambiente não carregada ou servidor não reiniciado.
+
+**Solução**:
+
+```bash
+# Verificar variável
+echo $ENABLE_VERCEL_AI_ADAPTER
+
+# Reiniciar servidor
+pnpm dev:kdx
+```
+
+**Status**: Configuração - não é bug.
+
 ## 🟢 Problemas Menores
 
-### 6. Título Automático Genérico
+### 9. Título Automático Genérico
 
 **Sintoma**: Sessões criadas com títulos como "Nova Conversa".
 
@@ -91,7 +153,7 @@ Este documento lista os problemas conhecidos do Chat e suas soluções temporár
 
 **Status**: Feature planejada.
 
-### 7. Markdown Parcial
+### 10. Markdown Parcial
 
 **Sintoma**: Alguns elementos markdown não são renderizados.
 
@@ -104,7 +166,7 @@ Este documento lista os problemas conhecidos do Chat e suas soluções temporár
 
 **Status**: Melhoria planejada.
 
-### 8. Mobile: Teclado Cobre Input
+### 11. Mobile: Teclado Cobre Input
 
 **Sintoma**: Em alguns dispositivos móveis, o teclado cobre o campo de input.
 
@@ -119,7 +181,7 @@ Este documento lista os problemas conhecidos do Chat e suas soluções temporár
 
 ## 🔧 Problemas de Integração
 
-### 9. Token Expirado do Provider
+### 12. Token Expirado do Provider
 
 **Sintoma**: Erro 401 ao enviar mensagem.
 
@@ -133,7 +195,7 @@ Este documento lista os problemas conhecidos do Chat e suas soluções temporár
 
 **Status**: Melhorias na UX de erro planejadas.
 
-### 10. Modelo Não Disponível
+### 13. Modelo Não Disponível
 
 **Sintoma**: Modelo selecionado não funciona.
 
@@ -147,9 +209,24 @@ Este documento lista os problemas conhecidos do Chat e suas soluções temporár
 
 **Status**: Validação em tempo real planejada.
 
+### 14. Provider Não Suportado pelo Vercel AI SDK
+
+**Sintoma**: Erro "Provider X not supported" mesmo com token válido.
+
+**Causa**: Vercel AI SDK ainda não suporta o provider, sistema usa legacy automaticamente.
+
+**Identificação**:
+
+```bash
+# Verificar logs de provider
+grep "Provider.*not supported" logs/app.log
+```
+
+**Status**: Comportamento esperado - fallback automático funciona.
+
 ## 📊 Problemas de Performance
 
-### 11. Lentidão com Muitas Sessões
+### 15. Lentidão com Muitas Sessões
 
 **Sintoma**: Interface fica lenta com 50+ sessões.
 
@@ -162,7 +239,7 @@ Este documento lista os problemas conhecidos do Chat e suas soluções temporár
 
 **Status**: Virtualização da lista planejada.
 
-### 12. Delay no Primeiro Token
+### 16. Delay no Primeiro Token
 
 **Sintoma**: Demora para começar a mostrar resposta.
 
@@ -175,17 +252,58 @@ Este documento lista os problemas conhecidos do Chat e suas soluções temporár
 
 **Status**: Otimizações em andamento.
 
+### 17. Diferença de Performance Entre Sistemas
+
+**Sintoma**: Vercel AI SDK às vezes mais lento que sistema legacy.
+
+**Causa**: Overhead da camada de adaptação.
+
+**Monitoramento**:
+
+```bash
+# Comparar tempos de resposta
+grep -E "POST.*stream.*in.*ms" logs/app.log
+```
+
+**Status**: Otimização do adapter em andamento.
+
+## 🔍 Debugging do Sistema Híbrido
+
+### Comandos Úteis
+
+```bash
+# Verificar qual sistema está ativo
+grep -E "\[MIGRATION\]|\[LEGACY\]" logs/app.log | tail -10
+
+# Verificar taxa de fallback
+grep -c "fallback para sistema atual" logs/app.log
+
+# Verificar feature flag
+grep "VERCEL_AI_ADAPTER" logs/app.log | tail -5
+
+# Status geral
+curl -s -I http://localhost:3000/api/chat/stream | grep -E "HTTP|X-Powered-By"
+```
+
+### Identificação de Problemas
+
+1. **Sistema sempre usa Legacy**: Verificar feature flag
+2. **Fallbacks frequentes**: Verificar tokens e modelos
+3. **Performance degradada**: Comparar sistemas via logs
+4. **Erros de provider**: Verificar configuração no AI Studio
+
 ## 🐛 Como Reportar Novos Problemas
 
 ### Informações Necessárias
 
 1. **Descrição clara** do problema
-2. **Passos para reproduzir**
-3. **Comportamento esperado** vs atual
-4. **Screenshots** se aplicável
-5. **Console logs** (F12 > Console)
-6. **Modelo de IA** sendo usado
-7. **Navegador e OS**
+2. **Sistema ativo** (Vercel AI SDK ou Legacy)
+3. **Passos para reproduzir**
+4. **Logs relevantes** (incluir `[MIGRATION]` ou `[LEGACY]`)
+5. **Headers HTTP** se aplicável
+6. **Feature flag status**: `ENABLE_VERCEL_AI_ADAPTER`
+7. **Modelo de IA** sendo usado
+8. **Navegador e OS**
 
 ### Onde Reportar
 
@@ -206,3 +324,8 @@ Este documento lista os problemas conhecidos do Chat e suas soluções temporár
 - Problemas marcados como "Em desenvolvimento" têm PRs abertas
 - Problemas "Planejados" estão no roadmap do próximo quarter
 - Workarounds são soluções temporárias até fix definitivo
+- **Sistema híbrido**: Fallbacks são comportamento esperado, não bugs
+
+---
+
+**🎉 Sistema híbrido robusto: Vercel AI SDK como principal + Fallback automático para máxima confiabilidade!**

@@ -2,7 +2,7 @@
 
 ## 📖 Visão Geral
 
-O **Chat** é o sistema de conversação inteligente do Kodix que permite interações em tempo real com modelos de IA. Consome recursos gerenciados pelo AI Studio para oferecer uma experiência fluida de chat com assistentes artificiais.
+O **Chat** é o sistema de conversação inteligente do Kodix que permite interações em tempo real com modelos de IA. Utiliza o **Vercel AI SDK** como engine principal, com sistema legacy como fallback, consumindo recursos gerenciados pelo AI Studio.
 
 ## 🚀 Início Rápido
 
@@ -34,7 +34,8 @@ pnpm dev:kdx
 ### Conversação em Tempo Real
 
 - **Streaming de Respostas**: Respostas fluidas com texto aparecendo progressivamente
-- **Vercel AI SDK**: Sistema moderno de IA com suporte otimizado a múltiplos providers
+- **Vercel AI SDK**: Sistema moderno de IA como engine principal
+- **Sistema Híbrido**: Fallback automático para sistema legacy se necessário
 - **Histórico Persistente**: Todas as conversas são salvas e organizadas por sessão
 - **Contexto Mantido**: O chat mantém o contexto completo da conversa
 - **Markdown Support**: Renderização de código, listas e formatação
@@ -62,11 +63,44 @@ pnpm dev:kdx
 
 ### Tecnologia Avançada
 
-- **Vercel AI SDK**: Integração moderna com providers de IA
-- **Multi-Provider**: Suporte nativo a OpenAI, Anthropic e futuros providers
-- **Fallback Automático**: Sistema de backup para máxima confiabilidade
-- **Controle Granular**: Feature flags para controle de rollout
-- **Monitoramento**: Métricas e logs detalhados para observabilidade
+- **Vercel AI SDK**: Engine principal com suporte otimizado a múltiplos providers
+- **Sistema Híbrido**: Fallback automático para máxima confiabilidade
+- **Multi-Provider**: Suporte nativo a OpenAI, Anthropic via Vercel AI SDK
+- **Controle Granular**: Feature flag para controle do sistema
+- **Monitoramento**: Logs detalhados para observabilidade
+
+## 🎛️ Sistema Híbrido
+
+### Arquitetura Atual
+
+```
+Frontend → tRPC → Feature Flag → [Vercel AI SDK | Sistema Legacy] → Response
+```
+
+### Controle via Feature Flag
+
+```bash
+# Vercel AI SDK (Padrão - Ativo)
+ENABLE_VERCEL_AI_ADAPTER=true
+
+# Sistema Legacy (Fallback)
+ENABLE_VERCEL_AI_ADAPTER=false
+```
+
+### Identificação do Sistema
+
+- **Header HTTP**: `X-Powered-By: Vercel-AI-SDK` (quando Vercel AI ativo)
+- **Logs**: `[MIGRATION]` para Vercel AI, `[LEGACY]` para sistema antigo
+- **Metadata**: Mensagens marcadas com informação do sistema usado
+
+### Fallback Automático
+
+Em caso de erro no Vercel AI SDK:
+
+1. Sistema detecta a falha
+2. Automaticamente usa sistema legacy
+3. Logs registram o fallback
+4. Usuário não percebe a mudança
 
 ## 📚 Documentação Completa
 
@@ -82,14 +116,11 @@ pnpm dev:kdx
 - **[💬 Session Management](./session-management.md)** - Sistema de gerenciamento de sessões
 - **[💾 Message Persistence](./message-persistence.md)** - Armazenamento e recuperação de mensagens
 
-### **Evolução e Migração**
+### **Status da Migração**
 
-- **[🚀 Vercel AI SDK Migration](./vercel-ai-sdk-migration.md)** - Estratégia de migração para Vercel AI SDK ✅ **MIGRAÇÃO CONCLUÍDA**
-- **[📋 Subetapas Detalhadas](./vercel-ai-sdk-migration-steps.md)** - Implementação passo a passo
-- **[📊 Status Final](./vercel-ai-migration-final-status.md)** - Status final e operacional da migração
-- **[📊 Subetapa 4 Report](./subetapa-4-report.md)** - Relatório da conclusão da integração real
-- **[📊 Subetapa 5 Report](./subetapa-5-report.md)** - Relatório da conclusão do monitoramento
-- **[📋 Decisão Estratégica](./decisao-estrategica-fallback.md)** - Cancelamento do fallback automático
+- **✅ Sistema Híbrido Operacional** - Vercel AI SDK ativo com fallback legacy
+- **[📋 Plano de Remoção Legacy](./legacy-removal-plan.md)** - Plano futuro para eliminar sistema antigo
+- **[📚 Arquivo Histórico](./archive/)** - Documentos da migração arquivados
 
 ### **Problemas e Soluções**
 
@@ -122,6 +153,50 @@ const models = await AiStudioService.getAvailableModels({
 - **Sem Exposição de Tokens**: Tokens de API nunca chegam ao frontend
 - **Validação de Acesso**: Verificação de permissões em todas as operações
 
+## 🔍 Debugging e Troubleshooting
+
+### Verificação de Status
+
+```bash
+# Verificar qual sistema está ativo
+curl -X POST http://localhost:3000/api/chat/stream \
+  -H "Content-Type: application/json" \
+  -d '{"chatSessionId": "SESSION_ID", "content": "test"}' \
+  -I | grep "X-Powered-By"
+
+# Se Vercel AI SDK ativo:
+# X-Powered-By: Vercel-AI-SDK
+```
+
+### Logs Importantes
+
+```bash
+# Logs do Vercel AI SDK
+grep "\[MIGRATION\]" logs/app.log
+
+# Logs do sistema legacy
+grep "\[LEGACY\]" logs/app.log
+
+# Verificar feature flag
+grep "VERCEL_AI_ADAPTER" logs/app.log
+```
+
+### Problemas Comuns
+
+1. **Feature Flag Desabilitada**
+
+   - Verificar `ENABLE_VERCEL_AI_ADAPTER=true` no `.env`
+   - Reiniciar servidor se necessário
+
+2. **Modelo Não Encontrado**
+
+   - Verificar configuração no AI Studio
+   - Confirmar que modelo está ativo para o team
+
+3. **Token Inválido**
+   - Verificar tokens no AI Studio
+   - Confirmar criptografia e descriptografia
+
 ## 🔗 Links Relacionados
 
 - **[AI Studio](../ai-studio/README.md)** - **PRÉ-REQUISITO** para configurar modelos e tokens
@@ -133,3 +208,7 @@ const models = await AiStudioService.getAvailableModels({
 - **[📐 SubApp Architecture Guide](../../architecture/subapp-architecture.md)** - Padrões e processo de criação de SubApps
 - **[🔧 Backend Development Guide](../../architecture/backend-guide.md)** - Padrões gerais de desenvolvimento backend
 - **[🎨 Frontend Development Guide](../../architecture/frontend-guide.md)** - Padrões de desenvolvimento frontend
+
+---
+
+**🎉 O Chat SubApp opera com sistema híbrido: Vercel AI SDK como principal + Sistema Legacy como fallback!**

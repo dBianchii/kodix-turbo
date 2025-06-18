@@ -2,7 +2,7 @@
 
 ## ⚙️ Visão Geral
 
-O backend do Chat é construído com tRPC para APIs type-safe e um endpoint HTTP dedicado para streaming. A arquitetura prioriza performance e integração segura com o AI Studio.
+O backend do Chat é construído com tRPC para APIs type-safe e um endpoint HTTP dedicado para streaming. A arquitetura utiliza um **sistema híbrido** com Vercel AI SDK como engine principal e sistema legacy como fallback, priorizando performance e integração segura com o AI Studio.
 
 ## 🏗️ Estrutura de APIs
 
@@ -27,12 +27,13 @@ export const chatRouter = {
 } satisfies TRPCRouterRecord;
 ```
 
-### Endpoint de Streaming
+### Endpoint de Streaming Híbrido
 
 - **Rota**: `/api/chat/stream`
 - **Método**: POST
 - **Autenticação**: Via cookies de sessão
 - **Protocolo**: Server-Sent Events (SSE)
+- **Sistema**: Híbrido (Vercel AI SDK + Legacy Fallback)
 
 ## 🗄️ Modelo de Dados
 
@@ -71,7 +72,7 @@ CREATE TABLE chatMessage (
 );
 ```
 
-## 🔄 Fluxo de Processamento
+## 🔄 Fluxo de Processamento Híbrido
 
 ### 1. Criação de Sessão
 
@@ -95,41 +96,162 @@ O fluxo de envio envolve múltiplas etapas:
 
 1. **Validação**: Verifica sessão e permissões
 2. **Persistência**: Salva mensagem do usuário
-3. **Streaming**: Inicia resposta da IA
-4. **Finalização**: Salva resposta completa
+3. **Decisão de Sistema**: Vercel AI SDK ou Legacy
+4. **Streaming**: Inicia resposta da IA
+5. **Finalização**: Salva resposta completa
 
-### 3. Streaming de Resposta
+### 3. Streaming Híbrido de Resposta
 
 ```typescript
-// Endpoint de streaming simplificado
+// Endpoint de streaming híbrido
 export async function POST(request: NextRequest) {
   // 1. Validar sessão e autenticação
   const { chatSessionId, content } = await request.json();
   const session = await ChatService.findSessionById(chatSessionId);
 
-  // 2. Buscar modelo e configurações
+  // 2. DECISÃO DE SISTEMA: Vercel AI SDK vs Legacy
+  if (FEATURE_FLAGS.VERCEL_AI_ADAPTER) {
+    console.log("🚀 [MIGRATION] Usando Vercel AI SDK via adapter");
+
+    try {
+      // 3A. VERCEL AI SDK (Sistema Principal)
+      const adapter = new VercelAIAdapter();
+      const result = await adapter.streamResponse({
+        chatSessionId: session.id,
+        content,
+        modelId: session.aiModelId,
+        teamId: session.teamId,
+        messages: formattedMessages,
+        temperature: 0.7,
+        maxTokens: 4000,
+      });
+
+      return new NextResponse(result.stream, {
+        headers: {
+          "Content-Type": "text/plain; charset=utf-8",
+          "Cache-Control": "no-cache",
+          "X-Powered-By": "Vercel-AI-SDK", // Identificação
+        },
+      });
+    } catch (error) {
+      console.error("🔴 [MIGRATION] Erro no Vercel AI SDK, fallback:", error);
+      // Continua para sistema legacy automaticamente
+    }
+  }
+
+  // 3B. SISTEMA LEGACY (Fallback ou quando flag desabilitada)
+  console.log("🔄 [LEGACY] Usando sistema atual de streaming");
+
+  // Buscar modelo e configurações via AI Studio
   const model = await AiStudioService.getModelById({
     modelId: session.aiModelId,
     teamId: session.teamId,
     requestingApp: chatAppId,
   });
 
-  // 3. Buscar token do provider
   const token = await AiStudioService.getProviderToken({
     providerId: model.providerId,
     teamId: session.teamId,
     requestingApp: chatAppId,
   });
 
-  // 4. Configurar streaming
-  const stream = await createStreamingResponse({
+  // Configurar streaming direto com provider
+  const stream = await createLegacyStreamingResponse({
     model,
     messages: formattedMessages,
     token: token.token,
   });
 
-  return new Response(stream);
+  return new Response(stream, {
+    headers: {
+      "Content-Type": "text/plain; charset=utf-8",
+      "Cache-Control": "no-cache",
+      // Sem header X-Powered-By (identifica sistema legacy)
+    },
+  });
 }
+```
+
+## 🔧 Sistema Híbrido: Vercel AI SDK + Legacy
+
+### VercelAIAdapter (Sistema Principal)
+
+```typescript
+// packages/api/src/internal/adapters/vercel-ai-adapter.ts
+export class VercelAIAdapter {
+  async streamResponse(params: ChatStreamParams): Promise<ChatStreamResponse> {
+    // 1. Buscar modelo via AI Studio
+    const model = await this.getVercelModel(params.modelId, params.teamId);
+
+    // 2. Executar streaming com Vercel AI SDK
+    const result = await streamText({
+      model,
+      messages: this.adaptInputParams(params).messages,
+      temperature: params.temperature || 0.7,
+      maxTokens: params.maxTokens || 4000,
+    });
+
+    // 3. Adaptar resposta para formato atual
+    return this.adaptResponse(result);
+  }
+
+  private async getVercelModel(modelId: string, teamId: string) {
+    const modelConfig = await AiStudioService.getModelById({
+      modelId,
+      teamId,
+      requestingApp: chatAppId,
+    });
+
+    const providerToken = await AiStudioService.getProviderToken({
+      providerId: modelConfig.providerId,
+      teamId,
+      requestingApp: chatAppId,
+    });
+
+    // Suporte a múltiplos providers via Vercel AI SDK
+    switch (modelConfig.provider.name.toLowerCase()) {
+      case "openai":
+        return openai(modelConfig.name, {
+          apiKey: providerToken.token,
+          baseURL: modelConfig.provider.baseUrl,
+        });
+
+      case "anthropic":
+        return anthropic(modelConfig.name, {
+          apiKey: providerToken.token,
+        });
+
+      default:
+        throw new Error(`Provider ${modelConfig.provider.name} não suportado`);
+    }
+  }
+}
+```
+
+### Sistema Legacy (Fallback)
+
+```typescript
+// Sistema legacy mantido como fallback
+const createLegacyStreamingResponse = async ({ model, messages, token }) => {
+  const apiUrl = `${model.provider.baseUrl}/chat/completions`;
+
+  const response = await fetch(apiUrl, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: model.name,
+      messages: messages,
+      stream: true,
+      temperature: 0.7,
+      max_tokens: 4000,
+    }),
+  });
+
+  return response.body; // Stream direto do provider
+};
 ```
 
 ## 🔐 Segurança e Isolamento
@@ -255,17 +377,19 @@ const systemPrompt =
 
 ### Otimizações Implementadas
 
-- **Streaming Real-time**: Resposta aparece progressivamente
+- **Streaming Híbrido**: Vercel AI SDK (principal) + Legacy (fallback)
 - **Paginação**: Mensagens carregadas sob demanda
 - **Cache**: Modelos disponíveis são cacheados
 - **Índices**: Queries otimizadas com índices apropriados
+- **Fallback Transparente**: Zero downtime em caso de problemas
 
 ### Métricas Monitoradas
 
 - Tempo de resposta do primeiro token
 - Taxa de sucesso/erro das APIs
+- Taxa de fallback (Vercel AI SDK → Legacy)
 - Uso de tokens por sessão
-- Latência do streaming
+- Latência do streaming por sistema
 
 ## 🔧 Tratamento de Erros
 
@@ -290,19 +414,24 @@ if (response.status === 404) {
 
 ### Recovery Strategies
 
-1. **Modelo não disponível**: Fallback para modelo padrão via AI Studio
-2. **Token expirado**: Redirecionar para configuração no AI Studio
-3. **Limite excedido**: Sugerir truncar contexto ou trocar modelo
+1. **Vercel AI SDK falha**: Fallback automático para sistema legacy
+2. **Modelo não disponível**: Fallback para modelo padrão via AI Studio
+3. **Token expirado**: Redirecionar para configuração no AI Studio
+4. **Limite excedido**: Sugerir truncar contexto ou trocar modelo
 
 ## 📝 Logs e Auditoria
 
-### Logs de Debugging
+### Logs de Sistema Híbrido
 
 ```typescript
-console.log("🔵 [API] POST streaming recebido");
-console.log("🟢 [API] Dados recebidos:", { chatSessionId, content });
-console.log("🎯 [DEBUG] Usando modelo:", model.name);
-console.log("✅ [API] Mensagem salva com metadata");
+// Vercel AI SDK ativo
+console.log("🚀 [MIGRATION] Usando Vercel AI SDK via adapter");
+
+// Sistema legacy (fallback)
+console.log("🔄 [LEGACY] Usando sistema atual de streaming");
+
+// Fallback automático
+console.error("🔴 [MIGRATION] Erro no Vercel AI SDK, fallback:", error);
 ```
 
 ### Metadata de Mensagens
@@ -313,8 +442,9 @@ Cada mensagem salva metadata relevante:
 {
   "requestedModel": "gpt-4",
   "actualModelUsed": "gpt-4",
-  "providerId": "provider_123",
-  "providerName": "OpenAI",
+  "providerId": "vercel-ai-sdk", // ou provider específico
+  "providerName": "Vercel AI SDK", // ou "OpenAI", "Anthropic"
+  "migration": "subetapa-6", // Identificação do sistema híbrido
   "usage": {
     "promptTokens": 150,
     "completionTokens": 200,
@@ -328,8 +458,15 @@ Cada mensagem salva metadata relevante:
 
 ### Planejadas
 
-- [ ] Suporte a múltiplos agentes
+- [ ] Remoção gradual do sistema legacy
+- [ ] Suporte a múltiplos agentes via Vercel AI SDK
+- [ ] Tools/Functions integration
+- [ ] Structured output capabilities
+- [ ] Métricas detalhadas de fallback
 - [ ] Cache de respostas comuns
 - [ ] Compressão de histórico
-- [ ] Métricas detalhadas de uso
 - [ ] Webhooks para integrações
+
+---
+
+**🎉 Backend híbrido robusto: Vercel AI SDK como principal + Sistema legacy como fallback confiável!**
