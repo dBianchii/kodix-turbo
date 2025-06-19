@@ -1,21 +1,17 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { VercelAIAdapter } from "../../../../internal/adapters/vercel-ai-adapter";
-
-// Mock do VercelAIAdapter
-vi.mock("../../../../internal/adapters/vercel-ai-adapter", () => ({
-  VercelAIAdapter: vi.fn().mockImplementation(() => ({
-    streamAndSave: vi.fn(),
-    streamResponse: vi.fn(),
-  })),
-}));
+// Criar mock simples do adapter
+const mockAdapter = {
+  streamAndSave: vi.fn(),
+  streamResponse: vi.fn(),
+};
 
 describe("Chat Streaming Tests - Sistema Único", () => {
-  let adapter: VercelAIAdapter;
+  let adapter: any;
 
   beforeEach(() => {
     vi.clearAllMocks();
-    adapter = new VercelAIAdapter();
+    adapter = mockAdapter;
   });
 
   describe("🌊 Streaming com Auto-Save", () => {
@@ -24,7 +20,7 @@ describe("Chat Streaming Tests - Sistema Único", () => {
       let finalContent = "";
 
       // Mock do streamAndSave com simulação realista
-      (adapter.streamAndSave as any).mockImplementation(
+      adapter.streamAndSave.mockImplementation(
         async (params: any, saveCallback: Function) => {
           // Simular chunks de streaming
           const streamChunks = ["Hello", " from", " AI", "!"];
@@ -92,7 +88,7 @@ describe("Chat Streaming Tests - Sistema Único", () => {
     it("deve lidar com stream interrompido graciosamente", async () => {
       let saveCallbackCalled = false;
 
-      (adapter.streamAndSave as any).mockImplementation(
+      adapter.streamAndSave.mockImplementation(
         async (params: any, saveCallback: Function) => {
           // Simular stream que para no meio
           const partialContent = "Hello from";
@@ -141,7 +137,7 @@ describe("Chat Streaming Tests - Sistema Único", () => {
       const streamResults: string[] = [];
 
       // Mock para múltiplos streams
-      (adapter.streamAndSave as any).mockImplementation(
+      adapter.streamAndSave.mockImplementation(
         async (params: any, saveCallback: Function) => {
           const sessionId = params.chatSessionId;
           const content = `Response for ${sessionId}`;
@@ -197,7 +193,7 @@ describe("Chat Streaming Tests - Sistema Único", () => {
       let firstChunkTime = 0;
       const startTime = Date.now();
 
-      (adapter.streamAndSave as any).mockImplementation(
+      adapter.streamAndSave.mockImplementation(
         async (params: any, saveCallback: Function) => {
           return {
             stream: new ReadableStream({
@@ -237,7 +233,7 @@ describe("Chat Streaming Tests - Sistema Único", () => {
       const largeContent = "A".repeat(10000); // 10KB de texto
       let processedSize = 0;
 
-      (adapter.streamAndSave as any).mockImplementation(
+      adapter.streamAndSave.mockImplementation(
         async (params: any, saveCallback: Function) => {
           await saveCallback(largeContent, {
             providerId: "vercel-ai-sdk",
@@ -291,7 +287,7 @@ describe("Chat Streaming Tests - Sistema Único", () => {
     it("deve recuperar de erros de rede durante streaming", async () => {
       let retryCount = 0;
 
-      (adapter.streamAndSave as any).mockImplementation(
+      adapter.streamAndSave.mockImplementation(
         async (params: any, saveCallback: Function) => {
           retryCount++;
 
@@ -353,7 +349,7 @@ describe("Chat Streaming Tests - Sistema Único", () => {
     it("deve lidar com erros no callback de save", async () => {
       let streamCompleted = false;
 
-      (adapter.streamAndSave as any).mockImplementation(
+      adapter.streamAndSave.mockImplementation(
         async (params: any, saveCallback: Function) => {
           try {
             await saveCallback("Content", {});
@@ -398,7 +394,7 @@ describe("Chat Streaming Tests - Sistema Único", () => {
 
   describe("🎯 Casos Específicos", () => {
     it("deve lidar com mensagens vazias", async () => {
-      (adapter.streamAndSave as any).mockImplementation(
+      adapter.streamAndSave.mockImplementation(
         async (params: any, saveCallback: Function) => {
           // Simular resposta vazia
           await saveCallback("", {
@@ -438,7 +434,7 @@ describe("Chat Streaming Tests - Sistema Único", () => {
     it("deve processar caracteres especiais corretamente", async () => {
       const specialContent = "Hello 🌟 世界 🚀 Ñoño";
 
-      (adapter.streamAndSave as any).mockImplementation(
+      adapter.streamAndSave.mockImplementation(
         async (params: any, saveCallback: Function) => {
           await saveCallback(specialContent, {
             providerId: "vercel-ai-sdk",

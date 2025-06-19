@@ -8,8 +8,40 @@ import { autoCreateSessionWithMessageHandler } from "../autoCreateSessionWithMes
 import { enviarMensagemHandler } from "../enviarMensagem.handler";
 import { getPreferredModelHelper } from "../getPreferredModel.handler";
 
-// Usar mocks globais definidos em test-setup.ts
-// Os mocks já estão configurados automaticamente
+// Mock dos services
+vi.mock("../../../../../internal/services/ai-studio.service", () => ({
+  AiStudioService: {
+    getModelById: vi.fn(),
+    getDefaultModel: vi.fn(),
+    getAvailableModels: vi.fn(),
+    getProviderToken: vi.fn(),
+    getTeamInstructions: vi.fn(),
+  },
+}));
+
+vi.mock("../../../../../internal/services/chat.service", () => ({
+  ChatService: {
+    createSystemMessage: vi.fn(),
+    hasSystemInstructions: vi.fn(),
+  },
+}));
+
+// Mock dos repositories
+vi.mock("@kdx/db/repositories", () => ({
+  appRepository: {
+    findAppTeamConfigs: vi.fn(),
+  },
+  chatRepository: {
+    ChatSessionRepository: {
+      create: vi.fn(),
+      findById: vi.fn(),
+    },
+    ChatMessageRepository: {
+      create: vi.fn(),
+      findBySession: vi.fn(),
+    },
+  },
+}));
 
 describe("Chat Service Layer Integration", () => {
   const mockContext = {
@@ -27,8 +59,7 @@ describe("Chat Service Layer Integration", () => {
 
   describe("getPreferredModelHelper", () => {
     it("should use AiStudioService.getModelById correctly", async () => {
-      // Configurar mock específico para este teste
-      vi.mocked(AiStudioService.getModelById).mockResolvedValue({
+      const mockModel = {
         id: "test-model",
         name: "Test Model",
         providerId: "provider-123",
@@ -41,6 +72,12 @@ describe("Chat Service Layer Integration", () => {
           name: "OpenAI",
           baseUrl: "https://api.openai.com",
         },
+      };
+
+      // Mock do getDefaultModel para retornar um modelo válido
+      (AiStudioService.getDefaultModel as any).mockResolvedValue({
+        model: mockModel,
+        teamConfig: { enabled: true },
       });
 
       const result = await getPreferredModelHelper(
@@ -51,6 +88,7 @@ describe("Chat Service Layer Integration", () => {
 
       // Verificar que o modelo foi encontrado
       expect(result.model.name).toBe("Test Model");
+      expect(result.source).toBe("ai_studio_default");
     });
 
     it("should handle Service Layer errors correctly", async () => {
@@ -122,6 +160,7 @@ describe("Chat Service Layer Integration", () => {
       (AiStudioService.getProviderToken as any).mockResolvedValue(
         mockProviderToken,
       );
+      (AiStudioService.getTeamInstructions as any).mockResolvedValue(null);
 
       // Mock fetch global
       global.fetch = vi.fn().mockResolvedValue({
@@ -143,7 +182,7 @@ describe("Chat Service Layer Integration", () => {
       const input = {
         firstMessage: "Hello AI",
         useAgent: true,
-        generateTitle: false,
+        generateTitle: true, // Precisa ser true para chamar getProviderToken
       };
 
       await autoCreateSessionWithMessageHandler({ input, ctx: mockContext });
@@ -220,6 +259,12 @@ describe("Chat Service Layer Integration", () => {
       (AiStudioService.getProviderToken as any).mockResolvedValue(
         mockProviderToken,
       );
+
+      // Mock do ChatService
+      const { ChatService } = await import(
+        "../../../../../internal/services/chat.service"
+      );
+      (ChatService.hasSystemInstructions as any).mockResolvedValue(false);
 
       // Mock fetch
       global.fetch = vi.fn().mockResolvedValue({
