@@ -1,5 +1,5 @@
 export const FEATURE_FLAGS = {
-  VERCEL_AI_ADAPTER: process.env.ENABLE_VERCEL_AI_ADAPTER === "true",
+  // Outras feature flags podem ser adicionadas aqui no futuro
 } as const;
 
 // Type helper para garantir type safety

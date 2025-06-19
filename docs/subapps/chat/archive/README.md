@@ -10,6 +10,7 @@ Esta pasta contém documentos históricos da **migração completa para o Vercel
 
 - `vercel-ai-sdk-migration.md` - Estratégia e visão geral da migração
 - `vercel-ai-sdk-migration-steps.md` - Subetapas detalhadas da implementação
+- `legacy-removal-plan.md` - **Plano de remoção completa do sistema legacy**
 
 ### Relatórios e Status
 
@@ -20,14 +21,15 @@ Esta pasta contém documentos históricos da **migração completa para o Vercel
 
 ## ✅ Status da Migração
 
-**MIGRAÇÃO 100% CONCLUÍDA** - 18/06/2025
+**MIGRAÇÃO E REMOÇÃO LEGACY 100% CONCLUÍDAS** - 18/06/2025
 
-O sistema Chat agora usa o Vercel AI SDK como padrão, com:
+O sistema Chat agora usa **exclusivamente** o Vercel AI SDK, com:
 
 - ✅ OpenAI e Anthropic funcionando
-- ✅ Streaming otimizado
-- ✅ Fallback automático
-- ✅ Feature flag operacional
+- ✅ Streaming otimizado com auto-save
+- ✅ Sistema legacy completamente removido
+- ✅ Código 70% mais limpo
+- ✅ Interface ultra-limpa
 
 ## 🔗 Documentação Atual
 

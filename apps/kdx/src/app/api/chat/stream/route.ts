@@ -3,9 +3,8 @@ import { NextResponse } from "next/server";
 
 import { chatAppId } from "@kdx/shared";
 
-// 🚀 SUBETAPA 6: Importar VercelAIAdapter para migração
+// 🚀 Importar VercelAIAdapter para sistema único
 import { VercelAIAdapter } from "../../../../../../../packages/api/src/internal/adapters/vercel-ai-adapter";
-import { FEATURE_FLAGS } from "../../../../../../../packages/api/src/internal/config/feature-flags";
 import { AiStudioService } from "../../../../../../../packages/api/src/internal/services/ai-studio.service";
 import { ChatService } from "../../../../../../../packages/api/src/internal/services/chat.service";
 
@@ -132,774 +131,146 @@ export async function POST(request: NextRequest) {
       ? messages
       : [...messages, userMessage];
 
-    // 🚀 SUBETAPA 6: MIGRAÇÃO PARA VERCEL AI SDK
-    // Verificar se deve usar o novo adapter ou sistema atual
-    if (FEATURE_FLAGS.VERCEL_AI_ADAPTER) {
-      console.log("🚀 [MIGRATION] Usando Vercel AI SDK via adapter");
+    // 🚀 SISTEMA VERCEL AI SDK (único sistema)
+    console.log("🚀 [VERCEL_AI] Usando Vercel AI SDK");
 
-      try {
-        // Detectar idioma do usuário de forma mais robusta
-        const detectUserLocale = (request: NextRequest): "pt-BR" | "en" => {
-          const cookieLocale = request.cookies.get("NEXT_LOCALE")?.value;
-          if (cookieLocale === "pt-BR" || cookieLocale === "en") {
-            return cookieLocale;
-          }
-          const pathname = request.nextUrl.pathname;
-          if (pathname.startsWith("/pt-BR")) return "pt-BR";
-          if (pathname.startsWith("/en")) return "en";
-          const acceptLanguage = request.headers.get("accept-language") || "";
-          if (acceptLanguage.includes("pt")) return "pt-BR";
-          if (acceptLanguage.includes("en")) return "en";
-          return "pt-BR";
-        };
-
-        // Verificar se há Team Instructions na sessão
-        const hasTeamInstructions = allMessages.some(
-          (msg) =>
-            msg?.senderRole === "system" &&
-            msg?.metadata?.type === "team_instructions",
-        );
-
-        // System prompt baseado no idioma do usuário
-        const userLocale = detectUserLocale(request);
-        const systemPrompt =
-          userLocale === "pt-BR"
-            ? "Você é um assistente útil e responde sempre em português brasileiro."
-            : "You are a helpful assistant and always respond in English.";
-
-        // Preparar mensagens para o adapter
-        const formattedMessages: {
-          senderRole: "user" | "ai" | "system";
-          content: string;
-        }[] = [];
-
-        // Só adicionar system prompt se não há Team Instructions
-        if (!hasTeamInstructions) {
-          const hasSystemPrompt = allMessages.some(
-            (msg) => msg?.senderRole === "system",
-          );
-          if (!hasSystemPrompt) {
-            formattedMessages.push({
-              senderRole: "system",
-              content: systemPrompt,
-            });
-            console.log(`🌍 [API] System prompt adicionado em: ${userLocale}`);
-          }
-        } else {
-          console.log(
-            `🎯 [API] Team Instructions detectadas, pulando system prompt padrão`,
-          );
+    try {
+      // Detectar idioma do usuário de forma mais robusta
+      const detectUserLocale = (request: NextRequest): "pt-BR" | "en" => {
+        const cookieLocale = request.cookies.get("NEXT_LOCALE")?.value;
+        if (cookieLocale === "pt-BR" || cookieLocale === "en") {
+          return cookieLocale;
         }
+        const pathname = request.nextUrl.pathname;
+        if (pathname.startsWith("/pt-BR")) return "pt-BR";
+        if (pathname.startsWith("/en")) return "en";
+        const acceptLanguage = request.headers.get("accept-language") || "";
+        if (acceptLanguage.includes("pt")) return "pt-BR";
+        if (acceptLanguage.includes("en")) return "en";
+        return "pt-BR";
+      };
 
-        // Adicionar todas as mensagens existentes
-        allMessages.forEach((msg: any) => {
+      // Verificar se há Team Instructions na sessão
+      const hasTeamInstructions = allMessages.some(
+        (msg) =>
+          msg?.senderRole === "system" &&
+          msg?.metadata?.type === "team_instructions",
+      );
+
+      // System prompt baseado no idioma do usuário
+      const userLocale = detectUserLocale(request);
+      const systemPrompt =
+        userLocale === "pt-BR"
+          ? "Você é um assistente útil e responde sempre em português brasileiro."
+          : "You are a helpful assistant and always respond in English.";
+
+      // Preparar mensagens para o adapter
+      const formattedMessages: {
+        senderRole: "user" | "ai" | "system";
+        content: string;
+      }[] = [];
+
+      // Só adicionar system prompt se não há Team Instructions
+      if (!hasTeamInstructions) {
+        const hasSystemPrompt = allMessages.some(
+          (msg) => msg?.senderRole === "system",
+        );
+        if (!hasSystemPrompt) {
           formattedMessages.push({
-            senderRole: msg.senderRole,
-            content: msg.content,
+            senderRole: "system",
+            content: systemPrompt,
           });
+          console.log(`🌍 [API] System prompt adicionado em: ${userLocale}`);
+        }
+      } else {
+        console.log(
+          `🎯 [API] Team Instructions detectadas, pulando system prompt padrão`,
+        );
+      }
+
+      // Adicionar todas as mensagens existentes
+      allMessages.forEach((msg: any) => {
+        formattedMessages.push({
+          senderRole: msg.senderRole,
+          content: msg.content,
         });
+      });
 
-        // Buscar modelo da sessão
-        let modelId = session.aiModelId;
-        if (!modelId) {
-          console.log(
-            "⚠️ [API] Sessão sem modelo configurado, buscando modelo padrão...",
-          );
-
-          const availableModels = await AiStudioService.getAvailableModels({
+      // Buscar modelo da sessão ou usar padrão
+      let model;
+      if (session.aiModelId) {
+        try {
+          model = await AiStudioService.getModelById({
+            modelId: session.aiModelId,
             teamId: session.teamId,
             requestingApp: chatAppId,
           });
-
-          if (availableModels.length === 0) {
-            throw new Error(
-              "Nenhum modelo de IA disponível. Configure um modelo no AI Studio.",
-            );
-          }
-
-          const defaultModel = availableModels[0]!;
-          modelId = defaultModel.id;
-
-          // Atualizar a sessão com o modelo padrão
-          await ChatService.updateSession(session.id, {
-            aiModelId: modelId,
-          });
-
-          console.log(`⚠️ [DEBUG] Usando modelo padrão: ${defaultModel.name}`);
+        } catch (error) {
+          console.log(
+            `❌ [DEBUG] Modelo com ID ${session.aiModelId} não encontrado:`,
+            error,
+          );
         }
+      }
 
-        // Usar VercelAIAdapter
-        const adapter = new VercelAIAdapter();
-        const adapterResponse = await adapter.streamResponse({
-          chatSessionId: session.id,
-          content,
-          modelId: modelId,
-          teamId: session.teamId,
-          messages: formattedMessages,
-          temperature: 0.7,
-          maxTokens: 4000,
-        });
-
+      // Se não encontrou modelo, usar modelo padrão
+      if (!model) {
         console.log(
-          "✅ [MIGRATION] Adapter response obtida, processando stream...",
+          "⚠️ [API] Sessão sem modelo configurado, buscando modelo padrão...",
         );
-
-        // Processar o stream do adapter e salvar mensagem final
-        const stream = new ReadableStream({
-          async start(controller) {
-            let receivedText = "";
-            const currentSessionId = session.id;
-
-            try {
-              const reader = adapterResponse.stream.getReader();
-
-              while (true) {
-                if (request.signal.aborted) {
-                  console.log("🔴 [API] Request abortado pelo cliente");
-                  break;
-                }
-
-                const { done, value } = await reader.read();
-                if (done) {
-                  // Criar metadata com informações do modelo
-                  const messageMetadata = {
-                    requestedModel: modelId,
-                    actualModelUsed: adapterResponse.metadata.model || modelId,
-                    providerId: "vercel-ai-sdk",
-                    providerName: "Vercel AI SDK",
-                    usage: adapterResponse.metadata.usage,
-                    finishReason: adapterResponse.metadata.finishReason,
-                    timestamp: new Date().toISOString(),
-                    migration: "subetapa-6", // Marcar como migração
-                  };
-
-                  console.log(
-                    `🔍 [METADATA] Salvando metadata:`,
-                    messageMetadata,
-                  );
-
-                  // Salvar mensagem completa
-                  await ChatService.createMessage({
-                    chatSessionId: currentSessionId,
-                    senderRole: "ai",
-                    content: receivedText,
-                    status: "ok",
-                    metadata: messageMetadata,
-                  });
-
-                  console.log(
-                    "✅ [API] Mensagem final da IA salva no banco com metadata (Vercel AI SDK)",
-                  );
-                  break;
-                }
-
-                // Decodificar chunk
-                const chunk = new TextDecoder().decode(value, { stream: true });
-                if (chunk) {
-                  receivedText += chunk;
-                  controller.enqueue(new TextEncoder().encode(chunk));
-                }
-              }
-            } catch (error) {
-              console.error("🔴 [API] Erro no streaming do adapter:", error);
-              controller.enqueue(
-                new TextEncoder().encode(
-                  `Error: ${error instanceof Error ? error.message : "Erro desconhecido"}`,
-                ),
-              );
-            } finally {
-              controller.close();
-              console.log(
-                "🔵 [API] Conexão de streaming fechada (Vercel AI SDK)",
-              );
-            }
-          },
-        });
-
-        const headers: HeadersInit = {
-          "Content-Type": "text/plain; charset=utf-8",
-          "Cache-Control": "no-cache",
-          "X-Powered-By": "Vercel-AI-SDK", // Identificar que está usando o novo sistema
-        };
-
-        return new NextResponse(stream, { headers });
-      } catch (adapterError) {
-        console.error(
-          "🔴 [MIGRATION] Erro no Vercel AI SDK, fallback para sistema atual:",
-          adapterError,
-        );
-        // Em caso de erro, continuar com o sistema atual (fallback seguro)
-      }
-    }
-
-    // 🔄 SISTEMA ATUAL (fallback ou quando feature flag desabilitada)
-    console.log("🔄 [LEGACY] Usando sistema atual de streaming");
-
-    // Formatar mensagens para o formato da OpenAI
-    const formattedMessages: { role: string; content: string }[] = [];
-
-    // Detectar idioma do usuário de forma mais robusta
-    const detectUserLocale = (request: NextRequest): "pt-BR" | "en" => {
-      // 1. Verificar cookie NEXT_LOCALE (usado pelo next-intl)
-      const cookieLocale = request.cookies.get("NEXT_LOCALE")?.value;
-      if (cookieLocale === "pt-BR" || cookieLocale === "en") {
-        return cookieLocale;
-      }
-
-      // 2. Verificar pathname do request
-      const pathname = request.nextUrl.pathname;
-      if (pathname.startsWith("/pt-BR")) return "pt-BR";
-      if (pathname.startsWith("/en")) return "en";
-
-      // 3. Verificar Accept-Language header
-      const acceptLanguage = request.headers.get("accept-language") || "";
-      if (acceptLanguage.includes("pt")) return "pt-BR";
-      if (acceptLanguage.includes("en")) return "en";
-
-      // 4. Fallback para português (locale padrão)
-      return "pt-BR";
-    };
-
-    // 🎯 NOVO: Verificar se há Team Instructions na sessão
-    const hasTeamInstructions = allMessages.some(
-      (msg) =>
-        msg?.senderRole === "system" &&
-        msg?.metadata?.type === "team_instructions",
-    );
-
-    // 🌍 LOCALIZAÇÃO: System prompt baseado no idioma do usuário
-    const userLocale = detectUserLocale(request);
-    const systemPrompt =
-      userLocale === "pt-BR"
-        ? "Você é um assistente útil e responde sempre em português brasileiro."
-        : "You are a helpful assistant and always respond in English.";
-
-    // TODO: Incluir instruções do agente quando getAgentById for implementado no AiStudioService
-
-    // 🎯 NOVO: Só adicionar system prompt se não há Team Instructions
-    if (!hasTeamInstructions) {
-      const hasSystemPrompt = allMessages.some(
-        (msg) => msg?.senderRole === "system",
-      );
-      if (!hasSystemPrompt) {
-        formattedMessages.push({
-          role: "system",
-          content: systemPrompt,
-        });
-        console.log(`🌍 [API] System prompt adicionado em: ${userLocale}`);
-      }
-    } else {
-      console.log(
-        `🎯 [API] Team Instructions detectadas, pulando system prompt padrão`,
-      );
-    }
-
-    // Buscar modelo e provider
-    let model;
-
-    console.log("🎯 [DEBUG] Verificando modelo da sessão...");
-    if (session.aiModelId) {
-      console.log(`🔍 [DEBUG] Buscando modelo com ID: ${session.aiModelId}`);
-      try {
-        model = await AiStudioService.getModelById({
-          modelId: session.aiModelId,
+        const availableModels = await AiStudioService.getAvailableModels({
           teamId: session.teamId,
           requestingApp: chatAppId,
         });
-        if (model) {
-          console.log(
-            `✅ [DEBUG] Modelo encontrado: ${model.name} (Provider: ${model.provider.name})`,
+
+        if (availableModels.length === 0) {
+          throw new Error(
+            "Nenhum modelo de IA disponível. Configure um modelo no AI Studio.",
           );
         }
-      } catch (error) {
-        console.log(
-          `❌ [DEBUG] Modelo com ID ${session.aiModelId} não encontrado:`,
-          error,
-        );
-      }
-    } else {
-      console.log("❌ [DEBUG] Sessão não possui aiModelId definido");
-    }
 
-    // Se não encontrou modelo ou sessão não tem modelo configurado, usar modelo padrão
-    if (!model) {
-      console.log(
-        "⚠️ [API] Sessão sem modelo configurado, buscando modelo padrão...",
-      );
+        model = availableModels[0]!;
+        console.log(`⚠️ [DEBUG] Usando modelo padrão: ${model.name}`);
 
-      // ✅ CORREÇÃO: Buscar modelos disponíveis via Service Layer
-      const availableModels = await AiStudioService.getAvailableModels({
-        teamId: session.teamId,
-        requestingApp: chatAppId,
-      });
-
-      console.log(
-        `🔍 [DEBUG] Modelos disponíveis encontrados: ${availableModels.length}`,
-      );
-
-      if (availableModels.length === 0) {
-        throw new Error(
-          "Nenhum modelo de IA disponível. Configure um modelo no AI Studio.",
-        );
-      }
-
-      model = availableModels[0]!;
-      console.log(
-        `⚠️ [DEBUG] Usando modelo padrão: ${model.name} (Provider: ${model.provider.name})`,
-      );
-
-      // Atualizar a sessão com o modelo padrão
-      await ChatService.updateSession(session.id, {
-        aiModelId: model.id,
-      });
-
-      console.log(
-        `✅ [API] Sessão atualizada com modelo padrão: ${model.name}`,
-      );
-    } else {
-      console.log(
-        `🎯 [DEBUG] Usando modelo selecionado da sessão: ${model.name} (Provider: ${model.provider.name})`,
-      );
-    }
-
-    // Verificar se temos um modelo válido após todas as tentativas
-    if (!model) {
-      throw new Error("Não foi possível obter um modelo válido");
-    }
-
-    if (!model.providerId) {
-      throw new Error("Modelo não possui provider configurado");
-    }
-
-    // Verificar se o provider está carregado
-    if (!model.provider) {
-      throw new Error("Dados do provider não foram carregados corretamente");
-    }
-
-    // ✅ CORREÇÃO: Buscar token do provider via Service Layer
-    const providerToken = await AiStudioService.getProviderToken({
-      providerId: model.providerId,
-      teamId: session.teamId,
-      requestingApp: chatAppId,
-    });
-
-    if (!providerToken.token) {
-      throw new Error(
-        `Token não configurado para o provider ${model.provider.name || "provider"}. Configure um token no AI Studio.`,
-      );
-    }
-
-    console.log("✅ [API] Configurações obtidas, iniciando streaming...");
-
-    // Configurar API baseada no provider
-    const baseUrl = model.provider.baseUrl || "https://api.openai.com/v1";
-    const apiUrl = `${baseUrl}/chat/completions`;
-
-    // Usar configurações do modelo
-    const modelConfig = (model.config as any) || {};
-    const modelName = modelConfig.version || model.name;
-
-    // Validação inteligente de max_tokens baseada no modelo
-    const getMaxTokensForModel = (
-      modelName: string,
-      configMaxTokens?: number,
-    ) => {
-      // Limites conhecidos para diferentes modelos
-      const modelLimits: Record<string, number> = {
-        // OpenAI models
-        "gpt-4": 8192,
-        "gpt-4-turbo": 4096,
-        "gpt-4-turbo-preview": 4096,
-        "gpt-4o": 4096,
-        "gpt-4o-mini": 16384,
-        "gpt-3.5-turbo": 4096,
-        "gpt-3.5-turbo-16k": 16384,
-        // Anthropic Claude models
-        "claude-3-haiku": 4096,
-        "claude-3-sonnet": 4096,
-        "claude-3-opus": 4096,
-        "claude-3-5-haiku": 8192,
-        "claude-3-5-sonnet": 8192,
-        // Generic patterns
-        claude: 4096,
-        haiku: 4096,
-        sonnet: 4096,
-      };
-
-      // Encontrar limite baseado no nome do modelo (normalizado)
-      const normalizedModelName = modelName
-        .toLowerCase()
-        .replace(/-\d{4}-\d{2}-\d{2}$/, "")
-        .replace(/-\d{4}$/, "");
-
-      // Tentar match exato primeiro
-      let modelLimit = modelLimits[normalizedModelName];
-
-      // Se não encontrou, tentar match parcial
-      if (!modelLimit) {
-        for (const [pattern, limit] of Object.entries(modelLimits)) {
-          if (normalizedModelName.includes(pattern)) {
-            modelLimit = limit;
-            break;
-          }
-        }
-      }
-
-      console.log(
-        `🎯 [TOKEN_LIMIT] Modelo: ${modelName} → Normalizado: ${normalizedModelName} → Limite: ${modelLimit || "não encontrado"}`,
-      );
-
-      // Se há configuração no modelo, usar o menor entre config e limite do modelo
-      if (configMaxTokens && modelLimit) {
-        const finalLimit = Math.min(configMaxTokens, modelLimit);
-        console.log(
-          `🎯 [TOKEN_LIMIT] Usando limite configurado: ${finalLimit} (config: ${configMaxTokens}, modelo: ${modelLimit})`,
-        );
-        return finalLimit;
-      }
-
-      // Se só há limite do modelo, usar ele
-      if (modelLimit) {
-        console.log(`🎯 [TOKEN_LIMIT] Usando limite do modelo: ${modelLimit}`);
-        return modelLimit;
-      }
-
-      // Se só há config, usar ela (sem limite máximo arbitrário)
-      if (configMaxTokens) {
-        console.log(`🎯 [TOKEN_LIMIT] Usando configuração: ${configMaxTokens}`);
-        return configMaxTokens;
-      }
-
-      // Fallback mais generoso para modelos desconhecidos
-      const fallbackLimit = 4096;
-      console.log(`🎯 [TOKEN_LIMIT] Usando fallback: ${fallbackLimit}`);
-      return fallbackLimit;
-    };
-
-    for (const msg of allMessages) {
-      if (msg?.content) {
-        formattedMessages.push({
-          role:
-            msg.senderRole === "user"
-              ? "user"
-              : msg.senderRole === "system"
-                ? "system"
-                : "assistant",
-          content: msg.content,
+        await ChatService.updateSession(session.id, {
+          aiModelId: model.id,
         });
       }
-    }
 
-    console.log(
-      `🔍 [API] Total de mensagens formatadas: ${formattedMessages.length}`,
-    );
-    console.log(
-      `🎯 [API] Mensagens system: ${formattedMessages.filter((m) => m.role === "system").length}`,
-    );
-
-    const maxTokens = getMaxTokensForModel(modelName, modelConfig.maxTokens);
-    const temperature = modelConfig.temperature || 0.7;
-
-    console.log(
-      `🟢 [API] Usando modelo: ${modelName} (Provider: ${model.provider.name})`,
-    );
-    console.log(`🎯 [API] Max tokens ajustado: ${maxTokens}`);
-
-    if (!modelName) {
-      throw new Error("Nome do modelo não configurado corretamente");
-    }
-
-    console.log("🟢 [API] Preparando payload para OpenAI");
-    console.log(
-      `🎯 [API] Modelo: ${modelName}, Mensagens: ${formattedMessages.length}`,
-    );
-
-    // 🎯 GESTÃO INTELIGENTE DE TOKENS
-    const estimateTokens = (text: string): number => {
-      // Estimativa mais precisa: ~4 caracteres = 1 token para inglês/português
-      // Adicionar overhead para formatação JSON e estrutura da mensagem
-      return Math.ceil(text.length / 3.5) + 10; // +10 tokens para overhead da estrutura
-    };
-
-    // Separar mensagens por tipo para gestão inteligente
-    const systemMessages = formattedMessages.filter((m) => m.role === "system");
-    const conversationMessages = formattedMessages.filter(
-      (m) => m.role !== "system",
-    );
-
-    // Calcular tokens das mensagens system (SEMPRE preservadas)
-    const systemTokens = systemMessages.reduce(
-      (total, msg) => total + estimateTokens(msg.content),
-      0,
-    );
-
-    // Calcular limite disponível para conversa (70% do total, reservando 30% para resposta)
-    const maxInputTokens = Math.floor(maxTokens * 0.7);
-    const availableForConversation = maxInputTokens - systemTokens - 100; // -100 tokens de margem de segurança
-
-    console.log(`🎯 [TOKEN_MANAGEMENT] Limite total do modelo: ${maxTokens}`);
-    console.log(
-      `🎯 [TOKEN_MANAGEMENT] Limite para input: ${maxInputTokens} (70%)`,
-    );
-    console.log(
-      `🎯 [TOKEN_MANAGEMENT] Tokens system (preservados): ${systemTokens}`,
-    );
-    console.log(
-      `🎯 [TOKEN_MANAGEMENT] Disponível para conversa: ${availableForConversation}`,
-    );
-
-    // Calcular tokens da conversa atual
-    const conversationTokens = conversationMessages.reduce(
-      (total, msg) => total + estimateTokens(msg.content),
-      0,
-    );
-
-    console.log(
-      `🎯 [TOKEN_MANAGEMENT] Tokens da conversa atual: ${conversationTokens}`,
-    );
-
-    // Se exceder o limite, truncar mensagens antigas (mas manter as mais recentes)
-    let finalConversationMessages = conversationMessages;
-
-    if (conversationTokens > availableForConversation) {
-      console.log(
-        `⚠️ [TOKEN_MANAGEMENT] Limite excedido! Truncando histórico...`,
+      // Criar adapter e processar streaming com auto-save
+      const adapter = new VercelAIAdapter();
+      const response = await adapter.streamAndSave(
+        {
+          chatSessionId: session.id,
+          content,
+          modelId: model.id,
+          teamId: session.teamId,
+          messages: formattedMessages,
+        },
+        async (content: string, metadata: any) => {
+          // Callback para salvar mensagem da IA
+          await ChatService.createMessage({
+            chatSessionId: session.id,
+            senderRole: "ai",
+            content,
+            status: "ok",
+            metadata,
+          });
+        },
       );
 
-      finalConversationMessages = [];
-      let accumulatedTokens = 0;
+      // Interface ultra-limpa: apenas retornar o stream
+      const headers: HeadersInit = {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "no-cache",
+        "X-Powered-By": "Vercel-AI-SDK", // Identificar que está usando o Vercel AI SDK
+      };
 
-      // Sempre manter a última mensagem (geralmente do usuário)
-      if (conversationMessages.length > 0) {
-        const lastMessage =
-          conversationMessages[conversationMessages.length - 1]!;
-        const lastMessageTokens = estimateTokens(lastMessage.content);
-        finalConversationMessages.push(lastMessage);
-        accumulatedTokens += lastMessageTokens;
-        console.log(
-          `🎯 [TOKEN_MANAGEMENT] Última mensagem preservada: ${lastMessageTokens} tokens`,
-        );
-      }
-
-      // Adicionar mensagens anteriores de trás para frente até atingir o limite
-      for (let i = conversationMessages.length - 2; i >= 0; i--) {
-        const msg = conversationMessages[i];
-        if (!msg) continue; // Pular se mensagem for undefined
-        const msgTokens = estimateTokens(msg.content);
-
-        if (accumulatedTokens + msgTokens <= availableForConversation) {
-          finalConversationMessages.unshift(msg); // Adicionar no início para manter ordem
-          accumulatedTokens += msgTokens;
-        } else {
-          console.log(
-            `🎯 [TOKEN_MANAGEMENT] Mensagem ${i} removida para economizar tokens`,
-          );
-          break;
-        }
-      }
-
-      const removedCount =
-        conversationMessages.length - finalConversationMessages.length;
-      console.log(
-        `✅ [TOKEN_MANAGEMENT] Histórico truncado: ${removedCount} mensagens removidas`,
-      );
-      console.log(
-        `✅ [TOKEN_MANAGEMENT] Tokens finais da conversa: ${accumulatedTokens}`,
-      );
+      return new NextResponse(response.stream, { headers });
+    } catch (error) {
+      console.error("🔴 [VERCEL_AI] Erro no Vercel AI SDK:", error);
+      throw error; // Re-throw para ser capturado pelo catch geral
     }
-
-    // Reconstruir array final: System messages primeiro, depois conversa truncada
-    const finalFormattedMessages = [
-      ...systemMessages,
-      ...finalConversationMessages,
-    ];
-
-    // Validação final
-    const totalFinalTokens = finalFormattedMessages.reduce(
-      (total, msg) => total + estimateTokens(msg.content),
-      0,
-    );
-
-    console.log(
-      `🎯 [TOKEN_MANAGEMENT] Total final de tokens: ${totalFinalTokens}/${maxInputTokens}`,
-    );
-    console.log(
-      `🎯 [TOKEN_MANAGEMENT] Mensagens finais: ${finalFormattedMessages.length} (${systemMessages.length} system + ${finalConversationMessages.length} conversa)`,
-    );
-
-    if (totalFinalTokens > maxInputTokens) {
-      console.warn(
-        `⚠️ [TOKEN_MANAGEMENT] AVISO: Ainda excedendo limite! ${totalFinalTokens} > ${maxInputTokens}`,
-      );
-    } else {
-      console.log(
-        `✅ [TOKEN_MANAGEMENT] Dentro do limite! ${totalFinalTokens} <= ${maxInputTokens}`,
-      );
-    }
-
-    // Usar mensagens finais otimizadas
-    const optimizedPayload = {
-      model: modelName,
-      messages: finalFormattedMessages,
-      max_tokens: Math.floor(maxTokens * 0.3), // 30% reservado para resposta
-      temperature: temperature,
-      stream: true,
-    };
-
-    // Fazer chamada para API com streaming
-    const response = await fetch(apiUrl, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${providerToken.token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(optimizedPayload),
-    });
-
-    // 🔧 FIX: Tratamento específico de erros da OpenAI
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`❌ [API] OpenAI API Error:`, {
-        status: response.status,
-        statusText: response.statusText,
-        errorText: errorText.substring(0, 500), // Limitar tamanho do log
-        modelName,
-        baseUrl,
-        providerId: model.providerId,
-        teamId: session.teamId,
-      });
-
-      // Verificar se é erro de autenticação (token inválido no banco)
-      if (response.status === 401) {
-        throw new Error(
-          `Token da OpenAI inválido ou expirado para este team. Acesse o AI Studio > Configurações > Providers e verifique/atualize o token da OpenAI. (Status: ${response.status})`,
-        );
-      }
-
-      // Verificar se é erro de quota/billing
-      if (response.status === 429) {
-        throw new Error(
-          `Limite de uso da OpenAI excedido. Verifique sua conta OpenAI ou configure um novo token no AI Studio. (Status: ${response.status})`,
-        );
-      }
-
-      // Verificar se é erro de modelo não encontrado
-      if (response.status === 404 && errorText.includes("model")) {
-        throw new Error(
-          `Modelo "${modelName}" não encontrado na OpenAI. Verifique se o modelo está disponível para sua conta ou configure um modelo diferente no AI Studio. (Status: ${response.status})`,
-        );
-      }
-
-      // Verificar se é erro de permissão
-      if (response.status === 403) {
-        throw new Error(
-          `Sem permissão para usar o modelo "${modelName}" com o token configurado. Verifique suas permissões na OpenAI ou atualize o token no AI Studio. (Status: ${response.status})`,
-        );
-      }
-
-      // Erro genérico com orientação específica do AI Studio
-      throw new Error(
-        `Erro na API da OpenAI: ${response.status} - ${response.statusText}. Verifique a configuração do token no AI Studio > Configurações > Providers. ${errorText ? `Detalhes: ${errorText.substring(0, 200)}...` : ""}`,
-      );
-    }
-
-    if (!response.body) {
-      throw new Error("A resposta da API de streaming não contém um corpo.");
-    }
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder("utf-8");
-
-    const stream = new ReadableStream({
-      async start(controller) {
-        let receivedText = "";
-        const currentSessionId = session.id;
-
-        try {
-          while (true) {
-            if (request.signal.aborted) {
-              console.log("🔴 [API] Request abortado pelo cliente");
-              break;
-            }
-
-            const { done, value } = await reader.read();
-            if (done) {
-              // ✅ Criar metadata com informações do modelo
-              const messageMetadata = {
-                requestedModel: modelName,
-                actualModelUsed: modelName, // Para streaming, assumimos que o modelo usado é o solicitado
-                providerId: model.providerId,
-                providerName: model.provider.name,
-                usage: null, // Streaming não retorna usage info
-                timestamp: new Date().toISOString(),
-              };
-
-              console.log(`🔍 [METADATA] Salvando metadata:`, messageMetadata);
-
-              // Quando o stream do provedor termina, salvamos a mensagem completa com metadata.
-              await ChatService.createMessage({
-                chatSessionId: currentSessionId,
-                senderRole: "ai",
-                content: receivedText,
-                status: "ok",
-                metadata: messageMetadata,
-              });
-              console.log(
-                "✅ [API] Mensagem final da IA salva no banco com metadata",
-              );
-              break; // Finaliza o loop.
-            }
-
-            const chunk = decoder.decode(value, { stream: true });
-            const lines = chunk.split("\n\n");
-
-            for (const line of lines) {
-              if (line.startsWith("data: ")) {
-                const data = line.slice(6).trim();
-
-                if (data === "[DONE]") {
-                  // O provedor sinalizou o fim do stream.
-                  // O 'done' do reader.read() vai ser true na próxima iteração.
-                  continue;
-                }
-
-                try {
-                  const parsed = JSON.parse(data);
-                  const delta = parsed.choices?.[0]?.delta?.content;
-
-                  if (delta) {
-                    receivedText += delta;
-                    controller.enqueue(new TextEncoder().encode(delta));
-                  }
-                } catch (parseError) {
-                  // Ignora linhas que não são JSON válido.
-                  continue;
-                }
-              }
-            }
-          }
-        } catch (error) {
-          console.error("🔴 [API] Erro no streaming:", error);
-          controller.enqueue(
-            new TextEncoder().encode(
-              `Error: ${error instanceof Error ? error.message : "Erro desconhecido"}`,
-            ),
-          );
-        } finally {
-          controller.close();
-          reader.releaseLock();
-          console.log("🔵 [API] Conexão de streaming fechada");
-        }
-      },
-    });
-
-    // Se criou uma nova sessão, incluir o ID no header
-    const headers: HeadersInit = {
-      "Content-Type": "text/plain; charset=utf-8",
-      "Cache-Control": "no-cache",
-    };
-
-    return new NextResponse(stream, { headers });
   } catch (error) {
     console.error("🔴 [API] Erro no endpoint de streaming:", error);
     return NextResponse.json(

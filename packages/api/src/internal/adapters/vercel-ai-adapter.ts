@@ -42,6 +42,44 @@ export class VercelAIAdapter {
   }
 
   /**
+   * 🎯 INTERFACE ULTRA-LIMPA: Stream + Auto-Save
+   * Método completo que faz streaming E salva automaticamente no banco
+   * Toda complexidade encapsulada no backend
+   */
+  async streamAndSave(
+    params: ChatStreamParams,
+    saveMessageCallback: (content: string, metadata: any) => Promise<void>,
+  ): Promise<ChatStreamResponse> {
+    console.log("🚀 [CHAT] Iniciando stream com auto-save");
+
+    try {
+      // 1. Formatar mensagens para Vercel AI SDK
+      const messages = this.formatMessages(params.messages);
+
+      // 2. Obter modelo configurado
+      const model = await this.getVercelModel(params.modelId, params.teamId);
+
+      // 3. Executar streamText do Vercel AI SDK
+      const result = await streamText({
+        model,
+        messages,
+        temperature: params.temperature || 0.7,
+        maxTokens: params.maxTokens || 4000,
+      });
+
+      // 4. Retornar stream com auto-save integrado
+      return this.formatResponseWithSave(
+        result,
+        params.modelId,
+        saveMessageCallback,
+      );
+    } catch (error) {
+      console.error("🔴 [CHAT] Erro no Vercel AI SDK com auto-save:", error);
+      throw error;
+    }
+  }
+
+  /**
    * Formata mensagens para o Vercel AI SDK
    */
   private formatMessages(messages: ChatStreamParams["messages"]) {
@@ -124,6 +162,72 @@ export class VercelAIAdapter {
             ),
           );
         } finally {
+          controller.close();
+        }
+      },
+    });
+
+    return {
+      stream,
+      metadata: {
+        model: vercelResult.response?.modelId || "vercel-ai-sdk",
+        usage: vercelResult.usage || null,
+        finishReason: vercelResult.finishReason || "stop",
+      },
+    };
+  }
+
+  /**
+   * 🎯 NOVA FUNÇÃO: Formata resposta COM auto-save integrado
+   * Toda complexidade de streaming + persistência encapsulada
+   */
+  private formatResponseWithSave(
+    vercelResult: any,
+    modelId: string,
+    saveMessageCallback: (content: string, metadata: any) => Promise<void>,
+  ): ChatStreamResponse {
+    let accumulatedText = "";
+
+    const stream = new ReadableStream({
+      async start(controller) {
+        try {
+          for await (const chunk of vercelResult.textStream) {
+            // Acumular texto para salvamento posterior
+            accumulatedText += chunk;
+
+            // Enviar chunk para o cliente
+            controller.enqueue(new TextEncoder().encode(chunk));
+          }
+        } catch (streamError) {
+          console.error("🔴 [CHAT] Erro no stream:", streamError);
+          const errorMessage = `\n\n[Erro no stream: ${streamError instanceof Error ? streamError.message : "Erro desconhecido"}]`;
+          accumulatedText += errorMessage;
+          controller.enqueue(new TextEncoder().encode(errorMessage));
+        } finally {
+          // 💾 AUTO-SAVE: Salvar mensagem completa no banco via callback
+          if (accumulatedText.trim()) {
+            try {
+              const messageMetadata = {
+                requestedModel: modelId,
+                actualModelUsed: vercelResult.response?.modelId || modelId,
+                providerId: "vercel-ai-sdk",
+                providerName: "Vercel AI SDK",
+                usage: vercelResult.usage || null,
+                finishReason: vercelResult.finishReason || "stop",
+                timestamp: new Date().toISOString(),
+              };
+
+              await saveMessageCallback(accumulatedText, messageMetadata);
+
+              console.log(
+                "✅ [CHAT] Mensagem da IA salva automaticamente no banco",
+              );
+            } catch (saveError) {
+              console.error("🔴 [CHAT] Erro ao salvar mensagem:", saveError);
+              // Não interromper o stream por erro de salvamento
+            }
+          }
+
           controller.close();
         }
       },

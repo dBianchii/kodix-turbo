@@ -1,11 +1,6 @@
 import { chatRepository } from "@kdx/db/repositories";
 
-import { VercelAIAdapter } from "../adapters/vercel-ai-adapter";
-import { FEATURE_FLAGS } from "../config/feature-flags";
-
 export class ChatService {
-  private static vercelAdapter = new VercelAIAdapter();
-
   static async findSessionById(sessionId: string) {
     return chatRepository.ChatSessionRepository.findById(sessionId);
   }
@@ -73,38 +68,5 @@ export class ChatService {
     }>,
   ) {
     return chatRepository.ChatSessionRepository.update(sessionId, data);
-  }
-
-  static async streamResponseWithAdapter(params: {
-    chatSessionId: string;
-    content: string;
-    modelId?: string;
-    teamId: string;
-    messages: {
-      senderRole: "user" | "ai";
-      content: string;
-    }[];
-    temperature?: number;
-    maxTokens?: number;
-    tools?: any[];
-  }) {
-    if (!FEATURE_FLAGS.VERCEL_AI_ADAPTER) {
-      throw new Error(
-        "🚫 Vercel AI Adapter not enabled. Set ENABLE_VERCEL_AI_ADAPTER=true to use this feature.",
-      );
-    }
-
-    console.log("🧪 [EXPERIMENTAL] Using Vercel AI Adapter");
-
-    return await this.vercelAdapter.streamResponse({
-      chatSessionId: params.chatSessionId,
-      content: params.content,
-      modelId: params.modelId || "default",
-      teamId: params.teamId,
-      messages: params.messages,
-      temperature: params.temperature,
-      maxTokens: params.maxTokens,
-      tools: params.tools,
-    });
   }
 }
