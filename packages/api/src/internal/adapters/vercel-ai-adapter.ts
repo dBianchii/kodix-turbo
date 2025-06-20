@@ -16,14 +16,15 @@ export class VercelAIAdapter {
    * Versão simplificada sem complexidade desnecessária
    */
   async streamResponse(params: ChatStreamParams): Promise<ChatStreamResponse> {
-    console.log("🚀 [CHAT] Iniciando stream com Vercel AI SDK");
-
     try {
       // 1. Formatar mensagens para Vercel AI SDK
       const messages = this.formatMessages(params.messages);
 
       // 2. Obter modelo configurado
-      const model = await this.getVercelModel(params.modelId, params.teamId);
+      const { model } = await this.getVercelModel(
+        params.modelId,
+        params.teamId,
+      );
 
       // 3. Executar streamText do Vercel AI SDK
       const result = await streamText({
@@ -36,7 +37,6 @@ export class VercelAIAdapter {
       // 4. Retornar stream no formato esperado
       return this.formatResponse(result);
     } catch (error) {
-      console.error("🔴 [CHAT] Erro no Vercel AI SDK:", error);
       throw error; // Re-throw para que o erro seja tratado no nível superior
     }
   }
@@ -50,14 +50,15 @@ export class VercelAIAdapter {
     params: ChatStreamParams,
     saveMessageCallback: (content: string, metadata: any) => Promise<void>,
   ): Promise<ChatStreamResponse> {
-    console.log("🚀 [CHAT] Iniciando stream com auto-save");
-
     try {
       // 1. Formatar mensagens para Vercel AI SDK
       const messages = this.formatMessages(params.messages);
 
-      // 2. Obter modelo configurado
-      const model = await this.getVercelModel(params.modelId, params.teamId);
+      // 2. Obter modelo configurado com nome legível
+      const { model, modelName } = await this.getVercelModel(
+        params.modelId,
+        params.teamId,
+      );
 
       // 3. Executar streamText do Vercel AI SDK
       const result = await streamText({
@@ -71,10 +72,10 @@ export class VercelAIAdapter {
       return this.formatResponseWithSave(
         result,
         params.modelId,
+        modelName,
         saveMessageCallback,
       );
     } catch (error) {
-      console.error("🔴 [CHAT] Erro no Vercel AI SDK com auto-save:", error);
       throw error;
     }
   }
@@ -128,7 +129,10 @@ export class VercelAIAdapter {
         apiKey: providerToken.token,
         baseURL: modelConfig.provider.baseUrl || undefined,
       });
-      return openaiProvider(modelName);
+      return {
+        model: openaiProvider(modelName),
+        modelName: modelName,
+      };
     }
 
     if (providerName === "anthropic") {
@@ -136,7 +140,10 @@ export class VercelAIAdapter {
         apiKey: providerToken.token,
         baseURL: modelConfig.provider.baseUrl || undefined,
       });
-      return anthropicProvider(modelName);
+      return {
+        model: anthropicProvider(modelName),
+        modelName: modelName,
+      };
     }
 
     throw new Error(
@@ -155,7 +162,6 @@ export class VercelAIAdapter {
             controller.enqueue(new TextEncoder().encode(chunk));
           }
         } catch (streamError) {
-          console.error("🔴 [CHAT] Erro no stream:", streamError);
           controller.enqueue(
             new TextEncoder().encode(
               `\n\n[Erro no stream: ${streamError instanceof Error ? streamError.message : "Erro desconhecido"}]`,
@@ -184,6 +190,7 @@ export class VercelAIAdapter {
   private formatResponseWithSave(
     vercelResult: any,
     modelId: string,
+    modelName: string,
     saveMessageCallback: (content: string, metadata: any) => Promise<void>,
   ): ChatStreamResponse {
     let accumulatedText = "";
@@ -199,7 +206,6 @@ export class VercelAIAdapter {
             controller.enqueue(new TextEncoder().encode(chunk));
           }
         } catch (streamError) {
-          console.error("🔴 [CHAT] Erro no stream:", streamError);
           const errorMessage = `\n\n[Erro no stream: ${streamError instanceof Error ? streamError.message : "Erro desconhecido"}]`;
           accumulatedText += errorMessage;
           controller.enqueue(new TextEncoder().encode(errorMessage));
@@ -208,8 +214,8 @@ export class VercelAIAdapter {
           if (accumulatedText.trim()) {
             try {
               const messageMetadata = {
-                requestedModel: modelId,
-                actualModelUsed: vercelResult.response?.modelId || modelId,
+                requestedModel: modelName,
+                actualModelUsed: vercelResult.response?.modelId || modelName,
                 providerId: "vercel-ai-sdk",
                 providerName: "Vercel AI SDK",
                 usage: vercelResult.usage || null,
@@ -218,12 +224,7 @@ export class VercelAIAdapter {
               };
 
               await saveMessageCallback(accumulatedText, messageMetadata);
-
-              console.log(
-                "✅ [CHAT] Mensagem da IA salva automaticamente no banco",
-              );
             } catch (saveError) {
-              console.error("🔴 [CHAT] Erro ao salvar mensagem:", saveError);
               // Não interromper o stream por erro de salvamento
             }
           }

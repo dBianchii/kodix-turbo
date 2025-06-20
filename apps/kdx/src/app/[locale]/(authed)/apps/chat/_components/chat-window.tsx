@@ -337,17 +337,35 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
       console.error("🔴 [NEW_SESSION] Erro ao processar resposta da IA:", err);
 
       if (currentSessionIdRef.current === currentSessionId) {
-        setError(`${t("apps.chat.messages.error")}: ${err.message}`);
-        setMessages((prev) => {
-          const withoutEmptyAssistant = prev.slice(0, -1);
-          const errorMessage: ChatMessage = {
-            role: "assistant",
-            content: t("apps.chat.messages.errorOccurred", {
-              error: err.message,
-            }),
-          };
-          return [...withoutEmptyAssistant, errorMessage];
-        });
+        // ✅ Verificar se é mensagem de fallback do sistema
+        if (
+          err.message.includes("Provedor de IA temporariamente indisponível") ||
+          err.message.includes("Rate limit atingido") ||
+          err.message.includes("Serviço de IA temporariamente indisponível")
+        ) {
+          // ✅ Mostrar mensagem do sistema de fallback como resposta do assistente
+          setMessages((prev) => {
+            const withoutEmptyAssistant = prev.slice(0, -1);
+            const fallbackMessage: ChatMessage = {
+              role: "assistant",
+              content: err.message,
+            };
+            return [...withoutEmptyAssistant, fallbackMessage];
+          });
+        } else {
+          // ✅ Erro regular - mostrar notificação de erro
+          setError(`${t("apps.chat.messages.error")}: ${err.message}`);
+          setMessages((prev) => {
+            const withoutEmptyAssistant = prev.slice(0, -1);
+            const errorMessage: ChatMessage = {
+              role: "assistant",
+              content: t("apps.chat.messages.errorOccurred", {
+                error: err.message,
+              }),
+            };
+            return [...withoutEmptyAssistant, errorMessage];
+          });
+        }
       }
     } finally {
       if (sessionId) {
@@ -360,6 +378,10 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
 
       if (currentSessionIdRef.current === currentSessionId) {
         setIsLoading(false);
+        // ✅ NOVO: Focar no input quando streaming terminar
+        setTimeout(() => {
+          inputRef.current?.focus();
+        }, 100);
       }
 
       if (abortControllerRef.current === abortController) {
@@ -514,18 +536,35 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
 
       // ✅ NOVO: Só mostrar erro se ainda estamos na mesma sessão
       if (currentSessionIdRef.current === currentSessionId) {
-        setError(`${t("apps.chat.messages.error")}: ${err.message}`);
-        setMessages((prev) => {
-          // Remove a mensagem do assistente vazia
-          const withoutEmptyAssistant = prev.slice(0, -1);
-          const errorMessage: ChatMessage = {
-            role: "assistant",
-            content: t("apps.chat.messages.errorOccurred", {
-              error: err.message,
-            }),
-          };
-          return [...withoutEmptyAssistant, errorMessage];
-        });
+        // ✅ Verificar se é mensagem de fallback do sistema
+        if (
+          err.message.includes("Provedor de IA temporariamente indisponível") ||
+          err.message.includes("Rate limit atingido") ||
+          err.message.includes("Serviço de IA temporariamente indisponível")
+        ) {
+          // ✅ Mostrar mensagem do sistema de fallback como resposta do assistente
+          setMessages((prev) => {
+            const withoutEmptyAssistant = prev.slice(0, -1);
+            const fallbackMessage: ChatMessage = {
+              role: "assistant",
+              content: err.message,
+            };
+            return [...withoutEmptyAssistant, fallbackMessage];
+          });
+        } else {
+          // ✅ Erro regular - mostrar notificação de erro
+          setError(`${t("apps.chat.messages.error")}: ${err.message}`);
+          setMessages((prev) => {
+            const withoutEmptyAssistant = prev.slice(0, -1);
+            const errorMessage: ChatMessage = {
+              role: "assistant",
+              content: t("apps.chat.messages.errorOccurred", {
+                error: err.message,
+              }),
+            };
+            return [...withoutEmptyAssistant, errorMessage];
+          });
+        }
       }
     } finally {
       if (sessionId) {
@@ -539,6 +578,10 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
       // ✅ NOVO: Só atualizar estado se ainda estamos na mesma sessão
       if (currentSessionIdRef.current === currentSessionId) {
         setIsLoading(false);
+        // ✅ NOVO: Focar no input quando streaming terminar
+        setTimeout(() => {
+          inputRef.current?.focus();
+        }, 100);
       }
 
       // ✅ NOVO: Limpar referência do AbortController

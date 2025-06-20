@@ -154,7 +154,12 @@
         "low": "Uso baixo de tokens",
         "medium": "Uso moderado de tokens",
         "high": "Uso alto de tokens - próximo do limite",
-        "exceeded": "Limite de tokens excedido"
+        "exceeded": "Limite de tokens excedido",
+        "title": "Uso de Tokens",
+        "used": "Tokens usados",
+        "limit": "Limite",
+        "percentage": "Porcentagem",
+        "status": "Status"
       }
     },
     "calendar": {

@@ -29,7 +29,6 @@ export default function ChatSessionPage() {
   const queryClient = useQueryClient();
 
   // 🔍 DEBUG: Log inicial para verificar se a página está carregando
-  console.log("🟢 [CHAT_SESSION] Página carregada, sessionId:", sessionId);
 
   const [selectedSessionId, setSelectedSessionId] = useState<string>(sessionId);
   const [selectedModelId, setSelectedModelId] = useState<string | undefined>(
@@ -99,22 +98,6 @@ export default function ChatSessionPage() {
   const tokenUsage = useTokenUsage(messages, modelName);
 
   // 🔍 DEBUG: Log para verificar dados
-  console.log("🔥 [TOKEN_DEBUG] DADOS:", {
-    sessionId,
-    modelName,
-    messagesCount: messages.length,
-    testTokensManual: testTokens,
-    tokenUsageResult: tokenUsage,
-    isLoading: allMessagesQuery.isLoading,
-    hasError: !!allMessagesQuery.error,
-  });
-
-  // Log mais detalhado das mensagens
-  if (messages.length > 0) {
-    console.log("📝 [TOKEN_DEBUG] MENSAGENS:", messages.slice(0, 3));
-  } else {
-    console.log("❌ [TOKEN_DEBUG] NENHUMA MENSAGEM ENCONTRADA");
-  }
 
   // ✅ Mutation para atualizar modelo da sessão
   const updateSessionMutation = useMutation(
@@ -128,32 +111,12 @@ export default function ChatSessionPage() {
         queryClient.invalidateQueries(
           trpc.app.chat.buscarMensagensTest.pathFilter(),
         );
-        console.log("✅ [CHAT] Modelo da sessão confirmado no servidor");
       },
       onError: trpcErrorToastDefault,
     }),
   );
 
   // 🔍 DEBUG: useEffect para logs em tempo real
-  useEffect(() => {
-    console.log("🔄 [TOKEN_DEBUG] DADOS ATUALIZADOS:", {
-      sessionId,
-      modelName,
-      messagesCount: messages.length,
-      testTokensManual: testTokens,
-      tokenUsageResult: tokenUsage,
-      isLoading: allMessagesQuery.isLoading,
-      hasError: !!allMessagesQuery.error,
-    });
-  }, [
-    sessionId,
-    modelName,
-    messages.length,
-    testTokens,
-    tokenUsage,
-    allMessagesQuery.isLoading,
-    allMessagesQuery.error,
-  ]);
 
   // Atualizar modelo selecionado baseado na sessão atual
   useEffect(() => {
@@ -193,10 +156,6 @@ export default function ChatSessionPage() {
       id: sessionId,
       aiModelId: modelId,
     });
-
-    console.log(
-      `🔄 [CHAT] Atualizando modelo da sessão ${sessionId}: ${previousModelId} → ${modelId}`,
-    );
   };
 
   return (
@@ -220,7 +179,6 @@ export default function ChatSessionPage() {
                 disabled={updateSessionMutation.isPending}
               />
             </div>
-            <h1 className="text-lg font-medium">{t("apps.chat.appName")}</h1>
             <div className="flex items-center gap-2">
               {sessionQuery.data && (
                 <TokenUsageBadge

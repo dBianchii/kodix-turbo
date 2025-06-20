@@ -33,6 +33,7 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
   const t = useTranslations();
 
@@ -331,6 +332,10 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
       // ✅ NOVO: Só atualizar estado se ainda estamos na mesma sessão
       if (currentSessionIdRef.current === currentSessionId) {
         setIsLoading(false);
+        // ✅ NOVO: Focar no input quando streaming terminar
+        setTimeout(() => {
+          inputRef.current?.focus();
+        }, 100);
       }
 
       // ✅ NOVO: Limpar referência do AbortController
@@ -459,7 +464,7 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
       {/* Input Area */}
       <div className="bg-background border-t p-4">
         <div className="mx-auto max-w-4xl">
-          <InputBox onSend={sendMessage} disabled={isLoading} />
+          <InputBox ref={inputRef} onSend={sendMessage} disabled={isLoading} />
         </div>
       </div>
     </div>

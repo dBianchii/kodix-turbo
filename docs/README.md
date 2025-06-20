@@ -36,6 +36,7 @@ Este documento consolida **todos os aspectos arquiteturais** dos SubApps:
 ### 📱 SubApps Principais
 
 - **[SubApps do Kodix](./subapps/)** - Funcionalidades principais da aplicação web (AI Studio, Chat, Calendar, etc.)
+  - **Chat**: Sistema de conversação com IA ✅ **Recentemente atualizado** com token usage badge, auto-focus e interface otimizada
 
 ### 📲 Aplicações Móveis
 
@@ -94,7 +95,7 @@ docs/
 ├── subapps/                            # 📱 SubApps Principais (Core do Sistema)
 │   ├── README.md                       # Índice dos SubApps
 │   ├── ai-studio/                      # 🤖 AI Studio (com toda documentação de IA)
-│   ├── chat/                           # 💬 Sistema de Chat ✅ Vercel AI SDK Ativo
+│   ├── chat/                           # 💬 Sistema de Chat ✅ Vercel AI SDK + UX Otimizada
 │   ├── todo/                           # 📝 Sistema de Tarefas
 │   ├── calendar/                       # 📅 Sistema de Calendário
 │   ├── cupom/                          # 🎫 Gestão de Cupons

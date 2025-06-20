@@ -294,6 +294,8 @@ export default function ChatPage() {
                 }
               />
             </div>
+            {/* Espaço vazio para remover o título "Chat" */}
+            <div></div>
             <div className="flex items-center gap-2">
               {selectedSessionId &&
                 sessionQuery.data &&

@@ -39,6 +39,8 @@ pnpm dev:kdx
 - **Histórico Persistente**: Todas as conversas são salvas e organizadas por sessão
 - **Contexto Mantido**: O chat mantém o contexto completo da conversa
 - **Markdown Support**: Renderização de código, listas e formatação
+- **Auto-Focus Inteligente**: Cursor retorna automaticamente ao input após streaming
+- **Token Usage Visibility**: Badge interativo mostrando uso de tokens em tempo real
 
 ### Gestão de Sessões
 
@@ -60,6 +62,9 @@ pnpm dev:kdx
 - **Tema Escuro**: Interface moderna com tema escuro por padrão
 - **Atalhos de Teclado**: Navegação rápida e eficiente
 - **Sidebar Colapsável**: Lista de sessões sempre acessível
+- **Token Usage Badge**: Popover detalhado com informações de consumo de tokens
+- **Interface Limpa**: Título "Chat" removido para design mais minimalista
+- **Auto-Focus**: Input focado automaticamente após resposta da IA
 
 ### Tecnologia Avançada
 
@@ -104,6 +109,7 @@ Frontend → tRPC → VercelAIAdapter → Vercel AI SDK → Provider APIs → Au
 
 - **[💬 Session Management](./session-management.md)** - Sistema de gerenciamento de sessões
 - **[💾 Message Persistence](./message-persistence.md)** - Armazenamento e recuperação de mensagens
+- **[🌍 Translation Keys](./translation-keys.md)** - Chaves de tradução e suporte multilíngue
 
 ### **Histórico da Migração**
 
@@ -190,8 +196,18 @@ grep "\[CHAT\]" logs/app.log
    - Confirmar configuração no AI Studio
 
 4. **Streaming Interrompido**
+
    - Verificar conexão de rede
    - Consultar logs do VercelAIAdapter
+
+5. **Token Usage Badge Não Aparece**
+
+   - Verificar se as traduções estão disponíveis
+   - Confirmar chaves `tokenUsage.*` em `locales/kdx/[pt-BR|en].json`
+
+6. **Auto-focus Não Funciona**
+   - Verificar se input ref está corretamente configurado
+   - Confirmar que streaming completou sem mudança de sessão
 
 ## 💡 Implementação Técnica
 
@@ -230,6 +246,8 @@ const response = await adapter.streamAndSave(
 - **Performance otimizada** - sem overhead de compatibilidade
 - **Auto-save integrado** - streaming e persistência unificados
 - **Interface ultra-limpa** - complexidade encapsulada no backend
+- **UX Otimizada** - Auto-focus e feedback visual de token usage
+- **Debugging Limpo** - Código de debug removido para produção
 
 ## 🚀 Performance
 
@@ -255,19 +273,34 @@ const response = await adapter.streamAndSave(
 
 ```
 apps/kdx/src/app/api/chat/
-├── stream/route.ts              # Endpoint principal (272 linhas)
+├── stream/route.ts              # Endpoint principal (285 linhas, otimizado)
 ├── monitoring/route.ts          # Monitoramento do sistema
 └── route.ts                     # Endpoint básico
 
 packages/api/src/internal/
 ├── adapters/
-│   └── vercel-ai-adapter.ts     # Adapter único do Vercel AI SDK
+│   └── vercel-ai-adapter.ts     # Adapter único do Vercel AI SDK (código limpo)
 ├── services/
 │   ├── chat.service.ts          # Service layer do Chat
 │   └── ai-studio.service.ts     # Integração com AI Studio
 └── types/
     └── ai/
         └── vercel-adapter.types.ts  # Tipos do adapter
+
+Chat Components (apps/kdx/src/app/[locale]/(authed)/apps/chat/):
+├── _components/
+│   ├── token-usage-badge.tsx    # ✅ NOVO: Badge com Popover de token usage
+│   ├── chat-window.tsx          # ✅ UPDATED: Auto-focus implementado
+│   └── chat-window-session.tsx  # ✅ UPDATED: Auto-focus implementado
+├── [sessionId]/page.tsx         # ✅ UPDATED: Interface limpa sem título
+└── page.tsx                     # Página principal
+
+Locales (packages/locales/src/messages/kdx/):
+├── pt-BR.json                   # ✅ UPDATED: Novas chaves tokenUsage.*
+└── en.json                      # ✅ UPDATED: Novas chaves tokenUsage.*
+
+Documentação (docs/subapps/chat/):
+└── vercel-ai-standards-migration-plan.md  # ✅ NOVO: Plano futuro de padronização
 ```
 
 ### Comandos Úteis

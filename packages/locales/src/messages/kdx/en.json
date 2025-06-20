@@ -164,7 +164,12 @@
         "low": "Low token usage",
         "medium": "Moderate token usage",
         "high": "High token usage - near limit",
-        "exceeded": "Token limit exceeded"
+        "exceeded": "Token limit exceeded",
+        "title": "Token Usage",
+        "used": "Tokens used",
+        "limit": "Limit",
+        "percentage": "Percentage",
+        "status": "Status"
       },
       "errors": {
         "createSession": "Error creating session: {error}"
