@@ -142,8 +142,8 @@ export default function ChatSessionPage() {
       // DEBUG
       console.log("🔍 [SESSION_PAGE] Navegando para sessão:", newSessionId);
 
-      // Navegar usando apenas o sessionId
-      router.push(newSessionId);
+      // Navegar usando caminho absoluto para evitar duplicação
+      router.push(`/apps/chat/${newSessionId}`);
 
       // Fallback se o router não funcionar
       setTimeout(() => {
@@ -162,8 +162,8 @@ export default function ChatSessionPage() {
       // ✅ Navegar para a página principal quando for "Novo Chat"
       console.log("🔍 [SESSION_PAGE] Navegando para página principal");
 
-      // Navegar para o diretório pai (remover o sessionId)
-      router.push("."); // Volta para /apps/chat
+      // Navegar para a página principal usando caminho absoluto
+      router.push("/apps/chat");
 
       // Fallback
       setTimeout(() => {

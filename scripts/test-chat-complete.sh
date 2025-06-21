@@ -176,6 +176,18 @@ run_test_suite "timing" \
     "Post-Navigation Timing Tests" \
     "frontend"
 
+# 11. Testes de Padrões de Navegação
+run_test_suite "navigation" \
+    "$FRONTEND_TEST_DIR/integration/navigation-patterns.test.ts" \
+    "Navigation Patterns Tests" \
+    "frontend"
+
+# 12. Testes de Sincronização de Títulos
+run_test_suite "title-sync" \
+    "$FRONTEND_TEST_DIR/integration/title-sync.test.ts" \
+    "Title Synchronization Tests" \
+    "frontend"
+
 echo ""
 echo "=============================================================="
 echo -e "${BLUE}📊 RELATÓRIO FINAL COMPLETO - CHAT SUBAPP${NC}"
@@ -191,7 +203,7 @@ fi
 echo ""
 log_info "RESUMO GERAL:"
 echo "🔧 Backend Suites: 5"
-echo "🎨 Frontend Suites: 5"
+echo "🎨 Frontend Suites: 7"
 echo "📊 Total de Suites: $TOTAL_SUITES"
 echo "📈 Total de Testes Individuais: $TOTAL_INDIVIDUAL_TESTS"
 echo ""

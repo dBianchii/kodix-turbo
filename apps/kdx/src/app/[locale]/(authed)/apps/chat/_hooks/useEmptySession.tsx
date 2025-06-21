@@ -85,35 +85,11 @@ export function useEmptySession(options?: UseEmptySessionOptions) {
             window.location.href,
           );
 
-          // Usar caminho absoluto - como funcionava no commit 0916e276
-          router.push(targetUrl);
-
-          // Fallback: Se não navegar em 500ms, usar window.location
-          setTimeout(() => {
-            const currentPath = window.location.pathname;
-            console.log("🔍 [EMPTY_SESSION] Verificando navegação...");
-            console.log("🔍 [EMPTY_SESSION] Path atual:", currentPath);
-
-            // Se ainda estiver na mesma página, forçar navegação
-            if (!currentPath.includes(sessionId)) {
-              console.log(
-                "⚠️ [EMPTY_SESSION] Router não funcionou, usando window.location",
-              );
-
-              // Construir URL correta baseada no path atual
-              const pathParts = currentPath.split("/");
-              const locale = pathParts[1]; // pt-BR, en, etc
-
-              // Verificar se já estamos em /apps/chat
-              const basePath = `/${locale}/apps/chat`;
-
-              // Construir URL completa
-              const fullUrl = `${basePath}/${sessionId}`;
-              console.log("🔍 [EMPTY_SESSION] Navegando para:", fullUrl);
-
-              window.location.href = fullUrl;
-            }
-          }, 500);
+          // ✅ CORREÇÃO: Deixar a navegação para o callback onSuccess
+          // Isso evita navegações duplas que causam duplicação de URLs
+          console.log(
+            "🔄 [EMPTY_SESSION] Delegando navegação para onSuccess callback",
+          );
 
           options?.onSuccess?.(sessionId);
         }

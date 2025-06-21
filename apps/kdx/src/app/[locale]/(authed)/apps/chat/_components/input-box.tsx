@@ -77,7 +77,7 @@ export const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
           onKeyDown={handleKeyDown}
           placeholder={placeholder ?? t("apps.chat.messages.placeholder")}
           disabled={disabled}
-          className="focus:ring-primary/20 min-h-[52px] rounded-xl pr-12 text-base focus:ring-2"
+          className="min-h-[52px] rounded-xl pr-12 text-base focus:ring-2 focus:ring-primary/20"
         />
         <Button
           onClick={isStreaming && onStop ? onStop : handleSend}
@@ -85,7 +85,7 @@ export const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
           size="icon"
           variant={isStreaming ? "secondary" : "default"}
           className={cn(
-            "absolute top-1/2 right-2 h-8 w-8 -translate-y-1/2 rounded-lg transition-all duration-200",
+            "absolute right-2 top-1/2 h-8 w-8 -translate-y-1/2 rounded-lg transition-all duration-200",
             isStreaming && "bg-muted hover:bg-muted/80",
           )}
         >

@@ -1234,7 +1234,7 @@ export const metadata: Metadata = {
 
 ### 5.1 Estados de Carregamento
 
-```typescript
+````typescript
 // apps/kdx/src/app/(authenticated)/seu-recurso/components/SeuRecursoStates.tsx
 import { Card, CardContent } from "@kdx/ui/card";
 import { Button } from "@kdx/ui/button";
@@ -1831,4 +1831,140 @@ export function validateForm(data: Record<string, any>, rules: Record<string, Fu
     errors,
   };
 }
+
+## 🧭 Padrões de Navegação e Roteamento
+
+### Navegação Internacionalizada
+
+O sistema Kodix usa **next-intl** com roteamento internacionalizado. Sempre use os utilitários corretos:
+
+```typescript
+// ✅ CORRETO: Usar router internacionalizado
+import { useRouter } from "~/i18n/routing";
+
+const router = useRouter();
+router.push("/apps/chat/session-id"); // Automaticamente adiciona locale
+
+// ❌ INCORRETO: Usar router do Next.js diretamente
+import { useRouter } from "next/navigation";
+````
+
+### Navegação Absoluta vs Relativa
+
+**SEMPRE use caminhos absolutos** para evitar duplicação de URLs:
+
+```typescript
+// ✅ CORRETO: Caminhos absolutos
+router.push("/apps/chat/session-id");
+router.push("/apps/todo");
+router.push("/apps/calendar");
+
+// ❌ INCORRETO: Caminhos relativos (podem causar duplicação)
+router.push("session-id"); // Pode resultar em /apps/apps/chat/
+router.push("."); // Comportamento inconsistente
+router.push("../other-page"); // Dependente do contexto atual
+```
+
+### Padrões de Navegação por Contexto
+
+#### 1. Navegação entre Sessões de Chat
+
+```typescript
+// ✅ PADRÃO RECOMENDADO
+const handleSessionSelect = (sessionId: string) => {
+  router.push(`/apps/chat/${sessionId}`);
+};
+
+// ✅ PADRÃO PARA NOVA SESSÃO
+const handleNewSession = (sessionId: string) => {
+  // Evitar navegações duplas - deixar para um único ponto
+  onNewSession?.(sessionId); // Delegar para callback
+};
+```
+
+#### 2. Navegação com Fallback
+
+```typescript
+// ✅ PADRÃO COM FALLBACK PARA PROBLEMAS DE ROUTER
+const navigateToSession = (sessionId: string) => {
+  const targetUrl = `/apps/chat/${sessionId}`;
+  router.push(targetUrl);
+
+  // Fallback se router falhar (raro, mas pode acontecer)
+  setTimeout(() => {
+    const currentPath = window.location.pathname;
+    if (!currentPath.includes(sessionId)) {
+      const pathParts = currentPath.split("/");
+      const locale = pathParts[1]; // pt-BR, en, etc
+      window.location.href = `/${locale}/apps/chat/${sessionId}`;
+    }
+  }, 500);
+};
+```
+
+### Problemas Comuns e Soluções
+
+#### ❌ Problema: URLs Duplicadas
+
+```typescript
+// PROBLEMA: Navegações duplas causam /apps/apps/chat/
+useEmptySession({
+  onSuccess: (sessionId) => {
+    router.push(`/apps/chat/${sessionId}`); // 1ª navegação
+    onNewSession?.(sessionId); // Chama callback que navega novamente
+  },
+});
+```
+
+```typescript
+// ✅ SOLUÇÃO: Delegar navegação para um único ponto
+useEmptySession({
+  onSuccess: (sessionId) => {
+    // Apenas chama callback, não navega aqui
+    onNewSession?.(sessionId);
+  },
+});
+
+// Navegação acontece no callback do componente pai
+const handleNewSession = (sessionId: string) => {
+  router.push(`/apps/chat/${sessionId}`);
+};
+```
+
+#### ❌ Problema: Context de Roteamento Incorreto
+
+```typescript
+// PROBLEMA: Router relativo em contexto errado
+router.push("."); // Pode não voltar para onde esperamos
+```
+
+```typescript
+// ✅ SOLUÇÃO: Sempre especificar destino absoluto
+router.push("/apps/chat"); // Destino explícito e previsível
+```
+
+### Boas Práticas
+
+1. **✅ Use sempre caminhos absolutos** iniciando com `/`
+2. **✅ Use o router internacionalizado** de `~/i18n/routing`
+3. **✅ Evite navegações duplas** - centralize em um ponto
+4. **✅ Teste navegação** em diferentes contextos de URL
+5. **✅ Use fallbacks** apenas quando necessário
+6. **✅ Documente comportamentos especiais** de navegação
+
+### Debugging de Navegação
+
+```typescript
+// 🔍 DEBUGGING: Adicionar logs para identificar problemas
+const handleNavigation = (sessionId: string) => {
+  console.log("🔍 [NAV] Current path:", window.location.pathname);
+  console.log("🔍 [NAV] Target:", `/apps/chat/${sessionId}`);
+
+  router.push(`/apps/chat/${sessionId}`);
+
+  // Verificar se navegação funcionou
+  setTimeout(() => {
+    console.log("🔍 [NAV] After navigation:", window.location.pathname);
+  }, 100);
+};
 ```

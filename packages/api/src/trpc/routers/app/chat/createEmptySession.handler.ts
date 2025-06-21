@@ -26,9 +26,10 @@ export async function createEmptySessionHandler({
 
     // 1. Buscar primeiro modelo disponível (simplificado)
     let aiModelId: string;
+    let availableModels: any; // Declarar no escopo superior
 
     try {
-      const availableModels = await AiStudioService.getAvailableModels({
+      availableModels = await AiStudioService.getAvailableModels({
         teamId,
         requestingApp: chatAppId,
       });
@@ -101,6 +102,104 @@ export async function createEmptySessionHandler({
         `⚠️ [CREATE_EMPTY] Erro ao criar Team Instructions para sessão ${session.id}:`,
         error,
       );
+    }
+
+    // 🤖 Gerar título automaticamente se solicitado e houver firstMessage
+    if (input.generateTitle && input.metadata?.firstMessage) {
+      console.log("🤖 [CREATE_EMPTY] Gerando título automático...");
+
+      // Executar em background para não bloquear a resposta
+      setImmediate(async () => {
+        try {
+          const firstModel = availableModels[0];
+          if (!firstModel) return;
+
+          // Buscar token do provider
+          const providerToken = await AiStudioService.getProviderToken({
+            providerId: firstModel.providerId,
+            teamId,
+            requestingApp: chatAppId,
+          });
+
+          if (providerToken.token) {
+            // Configurar API baseada no provider
+            const baseUrl =
+              firstModel.provider?.baseUrl || "https://api.openai.com/v1";
+            const apiUrl = `${baseUrl}/chat/completions`;
+
+            const modelConfig = (firstModel.config || {}) as {
+              version?: string;
+              maxTokens?: number;
+              temperature?: number;
+            };
+            const modelName = modelConfig.version || firstModel.name;
+
+            // Prompt para gerar título
+            const titlePrompt = [
+              {
+                role: "system",
+                content:
+                  "Você é um assistente especializado em criar títulos concisos. Crie um título curto (máximo 50 caracteres) que capture a essência da mensagem do usuário. Responda apenas com o título, sem aspas ou formatação adicional.",
+              },
+              {
+                role: "user",
+                content: `Crie um título para esta conversa: "${input.metadata?.firstMessage}"`,
+              },
+            ];
+
+            const response = await fetch(apiUrl, {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${providerToken.token}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                model: modelName,
+                messages: titlePrompt,
+                max_tokens: 20,
+                temperature: 0.7,
+              }),
+            });
+
+            if (response.ok) {
+              const aiResponse = (await response.json()) as any;
+              const generatedTitle =
+                aiResponse.choices?.[0]?.message?.content?.trim();
+
+              if (generatedTitle && generatedTitle.length <= 50) {
+                // Atualizar título da sessão
+                await chatRepository.ChatSessionRepository.update(session.id, {
+                  title: generatedTitle,
+                });
+                console.log("✅ [CREATE_EMPTY] Título gerado:", generatedTitle);
+              }
+            }
+          }
+        } catch (error) {
+          console.warn("⚠️ [CREATE_EMPTY] Erro ao gerar título:", error);
+
+          // Fallback: usar primeiros 50 caracteres da mensagem
+          try {
+            const firstMessage = input.metadata?.firstMessage;
+            if (firstMessage && typeof firstMessage === "string") {
+              let fallbackTitle = firstMessage.slice(0, 50);
+              if (firstMessage.length > 50) {
+                fallbackTitle += "...";
+              }
+
+              await chatRepository.ChatSessionRepository.update(session.id, {
+                title: fallbackTitle,
+              });
+              console.log(
+                "✅ [CREATE_EMPTY] Título fallback usado:",
+                fallbackTitle,
+              );
+            }
+          } catch (fallbackError) {
+            console.error("❌ [CREATE_EMPTY] Erro no fallback:", fallbackError);
+          }
+        }
+      });
     }
 
     console.log(

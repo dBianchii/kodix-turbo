@@ -16,6 +16,7 @@ import { Separator } from "@kdx/ui/separator";
 import { useTRPC } from "~/trpc/react";
 import { useEmptySession } from "../_hooks/useEmptySession";
 import { useSessionWithMessages } from "../_hooks/useSessionWithMessages";
+import { useTitleSync } from "../_hooks/useTitleSync";
 import { InputBox } from "./input-box";
 import { Message } from "./message";
 import { WelcomeHeader } from "./welcome-header";
@@ -58,21 +59,8 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
     },
   });
 
-  // 🤖 Hook para gerar título da sessão
-  const generateTitleMutation = useMutation(
-    utils.app.chat.generateSessionTitle.mutationOptions({
-      onSuccess: (data) => {
-        console.log("✅ [GENERATE_TITLE] Título gerado:", data.title);
-        // Invalidar queries para atualizar a lista de sessões
-        queryClient.invalidateQueries(
-          utils.app.chat.listarSessions.pathFilter(),
-        );
-      },
-      onError: (error) => {
-        console.error("❌ [GENERATE_TITLE] Erro ao gerar título:", error);
-      },
-    }),
-  );
+  // ✅ CONSOLIDAÇÃO BACKEND: Hook de geração de título removido
+  // Título será gerado automaticamente pelo backend via AiStudioService
 
   // 🚀 FASE 2 - DIA 6-7: Hook para buscar sessão com mensagens formatadas
   const {
@@ -115,8 +103,16 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
     },
   });
 
-  // 🚀 FASE 2 - DIA 6-7: REMOVIDA toda sincronização manual
-  // O initialMessages do useChat já carrega o histórico automaticamente!
+  // 🔄 TÍTULO SYNC: Hook para sincronização automática de títulos
+  // Hook para sincronização automática de títulos com padrão Assistant-UI
+  const { syncNow } = useTitleSync({
+    sessionId,
+    enabled: true,
+    pollInterval: 5000, // 5 segundos
+    messageCount: messages.length,
+    isFirstConversation: messages.length === 2 && !isLoading, // User + primeira resposta IA
+    onFirstMessageComplete: messages.length === 2 && !isLoading, // IA terminou primeira resposta
+  });
 
   // 🚀 FASE 3 - FINAL: ENVIO PÓS-NAVEGAÇÃO (sempre ativo)
   useEffect(() => {
@@ -160,23 +156,10 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
       // Limpar mensagem pendente
       sessionStorage.removeItem(`pending-message-${sessionId}`);
 
-      // 🤖 Gerar título após enviar primeira mensagem
-      if (session?.title?.startsWith("Chat ")) {
-        console.log("🤖 [GENERATE_TITLE] Gerando título para nova sessão...");
-        generateTitleMutation.mutate({
-          sessionId: sessionId,
-          firstMessage: pendingMessage,
-        });
-      }
+      // ✅ CONSOLIDAÇÃO BACKEND: Título será gerado automaticamente pelo backend
+      // Removida duplicação - centralizado no endpoint /api/assistant e handlers
     }
-  }, [
-    sessionId,
-    messages.length,
-    isLoadingSession,
-    initialMessages,
-    append,
-    session?.title,
-  ]);
+  }, [sessionId, messages.length, isLoadingSession, initialMessages, append]);
 
   // ✅ REMOVIDO: Auto-processamento não é mais necessário
   // O novo fluxo usa envio pós-navegação que é mais limpo e confiável

@@ -16,8 +16,23 @@ export default defineConfig({
       CI: "true",
     },
     globals: true,
-    environment: "node",
-    setupFiles: ["./packages/api/src/test-setup.ts"],
+    // Configuração de ambiente baseada no arquivo
+    environment: "jsdom", // Mudança para jsdom por padrão
+    environmentMatchGlobs: [
+      // Backend tests usam node
+      ["packages/api/**/*.test.ts", "node"],
+      ["packages/db/**/*.test.ts", "node"],
+      ["packages/auth/**/*.test.ts", "node"],
+      // Frontend tests usam jsdom
+      ["apps/kdx/**/*.test.ts", "jsdom"],
+      ["apps/kdx/**/*.test.tsx", "jsdom"],
+      ["packages/ui/**/*.test.ts", "jsdom"],
+      ["packages/ui/**/*.test.tsx", "jsdom"],
+    ],
+    setupFiles: [
+      "./packages/api/src/test-setup.ts", // Setup para backend
+      "./apps/kdx/src/test-setup.ts", // Setup para frontend
+    ],
     // Timeout maior para testes que fazem mocking pesado
     testTimeout: 10000,
     // Isolar cada teste
