@@ -154,10 +154,16 @@ export default function ChatPage() {
     trpc.app.chat.atualizarSession.mutationOptions({
       onSuccess: () => {
         toast.success("Modelo da sessão atualizado com sucesso!");
-        // Invalidar queries relacionadas
+
+        // ✅ CORREÇÃO: Invalidação inteligente com delay
+        // Invalidar sessão imediatamente (não afeta mensagens)
         queryClient.invalidateQueries(trpc.app.chat.buscarSession.pathFilter());
-        queryClient.invalidateQueries(
-          trpc.app.chat.buscarMensagensTest.pathFilter(),
+
+        // ✅ SOLUÇÃO: NÃO invalidar mensagens para evitar conflito com streaming
+        // O useChat hook já gerencia as mensagens localmente
+        // A invalidação de sessão é suficiente para outras funcionalidades
+        console.log(
+          "🔄 [CHAT] Sessão invalidada - mensagens mantidas pelo useChat",
         );
       },
       onError: trpcErrorToastDefault,
@@ -270,7 +276,7 @@ export default function ChatPage() {
 
   return (
     <SidebarProvider className="min-h-[calc(100dvh-55px)] items-start">
-      <div className="bg-background flex h-[calc(100dvh-55px)] w-full overflow-x-hidden">
+      <div className="flex h-[calc(100dvh-55px)] w-full overflow-x-hidden bg-background">
         {/* Sidebar ‑– assume largura interna definida pelo componente */}
         <AppSidebar
           selectedSessionId={selectedSessionId}
@@ -280,7 +286,7 @@ export default function ChatPage() {
         {/* Conteúdo principal */}
         <div className="flex flex-1 flex-col">
           {/* Cabeçalho com ModelSelector e ModelInfoBadge - estilo ChatGPT */}
-          <div className="border-border bg-card flex items-center justify-between border-b px-4 py-3">
+          <div className="flex items-center justify-between border-b border-border bg-card px-4 py-3">
             <div className="flex items-center gap-4">
               <SidebarTrigger className="md:hidden" />
               <ModelSelector
@@ -319,7 +325,7 @@ export default function ChatPage() {
           */}
 
           {/* Área do chat cresce para preencher o espaço restante */}
-          <div className="relative flex-1">
+          <div className="min-h-0 flex-1 overflow-hidden">
             <ChatWindow
               sessionId={selectedSessionId}
               onNewSession={handleSessionSelect}

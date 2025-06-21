@@ -76,25 +76,25 @@ pnpm dev:kdx
 
 ## 🏗️ Arquitetura Atual
 
-### Sistema Único e Limpo
+### Sistema 100% Nativo
 
 ```
-Frontend → tRPC → VercelAIAdapter → Vercel AI SDK → Provider APIs → Auto-Save
+Frontend → tRPC → Vercel AI SDK (Native) → Provider APIs → Auto-Save (onFinish)
 ```
 
 ### Identificação do Sistema
 
-- **Header HTTP**: `X-Powered-By: Vercel-AI-SDK`
-- **Logs**: `🚀 [VERCEL_AI]` para todas as operações
-- **Metadata**: Mensagens marcadas com `providerId: "vercel-ai-sdk"`
+- **Header HTTP**: `X-Powered-By: Vercel-AI-SDK-Native`
+- **Logs**: `🚀 [VERCEL_AI_NATIVE]` para todas as operações
+- **Metadata**: Mensagens marcadas com `providerId: "vercel-ai-sdk-native"`
 
 ### Fluxo de Processamento
 
 1. **Requisição** chega no endpoint `/api/chat/stream`
-2. **VercelAIAdapter** processa via Vercel AI SDK
-3. **Streaming** envia chunks em tempo real
-4. **Auto-Save** salva mensagem automaticamente
-5. **Resposta** completa retornada ao cliente
+2. **streamText()** nativo do Vercel AI SDK
+3. **Streaming** via `toDataStreamResponse()` padrão
+4. **Auto-Save** via callback `onFinish` nativo
+5. **Error Handling** via callback `onError` nativo
 
 ## 📚 Documentação Completa
 
@@ -108,6 +108,7 @@ Frontend → tRPC → VercelAIAdapter → Vercel AI SDK → Provider APIs → Au
 ### **Funcionalidades Específicas**
 
 - **[💬 Session Management](./session-management.md)** - Sistema de gerenciamento de sessões
+- **[🔄 Session & Message Flow](./session-message-flow.md)** - **NOVO**: Arquitetura de fluxo de sessões e mensagens
 - **[💾 Message Persistence](./message-persistence.md)** - Armazenamento e recuperação de mensagens
 - **[🌍 Translation Keys](./translation-keys.md)** - Chaves de tradução e suporte multilíngue
 
@@ -211,43 +212,50 @@ grep "\[CHAT\]" logs/app.log
 
 ## 💡 Implementação Técnica
 
-### VercelAIAdapter
+### Native Vercel AI SDK
 
-O adapter encapsula toda a complexidade do Vercel AI SDK:
+100% implementação nativa com lifecycle callbacks:
 
 ```typescript
-// Interface ultra-limpa no endpoint
-const adapter = new VercelAIAdapter();
-const response = await adapter.streamAndSave(
-  {
-    chatSessionId: session.id,
-    content,
-    modelId: model.id,
-    teamId: session.teamId,
-    messages: formattedMessages,
-  },
-  async (content: string, metadata: any) => {
-    // Auto-save callback
+// Native streamText with built-in callbacks
+const result = streamText({
+  model: vercelModel,
+  messages: formattedMessages,
+  temperature: 0.7,
+  maxTokens: 4000,
+  // ✅ Native onFinish callback for auto-save
+  onFinish: async ({ text, usage, finishReason }) => {
     await ChatService.createMessage({
       chatSessionId: session.id,
       senderRole: "ai",
-      content,
+      content: text,
       status: "ok",
-      metadata,
+      metadata: {
+        usage,
+        finishReason,
+        migrationStatus: "native-implementation",
+      },
     });
   },
-);
+  // ✅ Native onError callback
+  onError: (error) => {
+    console.error("Stream error:", error);
+  },
+});
+
+// Native response format
+return result.toDataStreamResponse();
 ```
 
-### Benefícios da Arquitetura Atual
+### Benefícios da Migração Nativa
 
-- **Código 70% mais limpo** no endpoint principal
-- **Manutenção simplificada** - apenas um caminho de código
-- **Performance otimizada** - sem overhead de compatibilidade
-- **Auto-save integrado** - streaming e persistência unificados
-- **Interface ultra-limpa** - complexidade encapsulada no backend
-- **UX Otimizada** - Auto-focus e feedback visual de token usage
-- **Debugging Limpo** - Código de debug removido para produção
+- **100% Compatibilidade** - Segue todos os padrões oficiais do Vercel AI SDK
+- **Performance Máxima** - Sem camadas de abstração customizadas
+- **Lifecycle Callbacks Nativos** - `onFinish` e `onError` integrados
+- **Observabilidade Completa** - Token usage e métricas nativas
+- **Future-Proof** - Compatível com todas as features futuras do SDK
+- **Error Handling Robusto** - Tratamento de erros padrão do SDK
+- **Response Format Nativo** - `toDataStreamResponse()` oficial
 
 ## 🚀 Performance
 
@@ -273,19 +281,19 @@ const response = await adapter.streamAndSave(
 
 ```
 apps/kdx/src/app/api/chat/
-├── stream/route.ts              # Endpoint principal (285 linhas, otimizado)
+├── stream/route.ts              # ✅ MIGRADO: 100% native Vercel AI SDK
 ├── monitoring/route.ts          # Monitoramento do sistema
 └── route.ts                     # Endpoint básico
 
 packages/api/src/internal/
 ├── adapters/
-│   └── vercel-ai-adapter.ts     # Adapter único do Vercel AI SDK (código limpo)
+│   └── vercel-ai-adapter.ts     # ⚠️ LEGACY: Para remoção (não mais usado)
 ├── services/
 │   ├── chat.service.ts          # Service layer do Chat
 │   └── ai-studio.service.ts     # Integração com AI Studio
 └── types/
     └── ai/
-        └── vercel-adapter.types.ts  # Tipos do adapter
+        └── vercel-adapter.types.ts  # ⚠️ LEGACY: Para remoção
 
 Chat Components (apps/kdx/src/app/[locale]/(authed)/apps/chat/):
 ├── _components/
@@ -353,12 +361,14 @@ pnpm test packages/api/src/internal/adapters/
 
 ---
 
-**🎉 O Chat SubApp agora opera exclusivamente com Vercel AI SDK - Sistema único, limpo e otimizado!**
+**🎉 O Chat SubApp agora opera com 100% padrões nativos do Vercel AI SDK!**
 
-**📊 Benefícios Alcançados:**
+**📊 Benefícios da Migração Completa:**
 
-- ✅ Código 70% mais limpo
-- ✅ Manutenção drasticamente reduzida
-- ✅ Performance otimizada
-- ✅ Auto-save integrado
-- ✅ Interface ultra-limpa
+- ✅ **100% Compatibilidade Nativa** - Implementação oficial do Vercel AI SDK
+- ✅ **Lifecycle Callbacks Integrados** - `onFinish` e `onError` nativos
+- ✅ **Response Format Padrão** - `toDataStreamResponse()` oficial
+- ✅ **Performance Máxima** - Sem overhead de adaptadores customizados
+- ✅ **Future-Proof** - Compatível com todas as features futuras
+- ✅ **Observabilidade Completa** - Token usage e métricas nativas
+- ✅ **Error Handling Robusto** - Tratamento de erros padrão do SDK

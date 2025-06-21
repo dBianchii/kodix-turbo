@@ -138,7 +138,10 @@
         "cancel": "Cancel",
         "delete": "Delete",
         "confirm": "Confirm",
-        "add": "Add"
+        "add": "Add",
+        "emptyTitle": "No messages yet",
+        "emptyDescription": "Start a conversation by typing a message",
+        "generating": "Generating response..."
       },
       "confirmDelete": {
         "folder": "Are you sure you want to delete the folder \"{name}\"? All sessions within this folder will also be deleted.",
@@ -157,7 +160,9 @@
         "loadingFolders": "Loading folders...",
         "loadingChats": "Loading chats...",
         "loadingSessions": "Loading sessions...",
-        "moveToFolder": "Move to folder"
+        "moveToFolder": "Move to folder",
+        "retry": "Try Again",
+        "stop": "Stop"
       },
       "tokenUsage": {
         "tooltip": "{used}/{total} tokens",
@@ -176,7 +181,9 @@
       },
       "placeholders": {
         "newMessage": "Type your message...",
-        "newConversation": "Type your message to start a new conversation..."
+        "newConversation": "Type your message to start a new conversation...",
+        "typeMessage": "Type your message...",
+        "streaming": "Please wait, generating response..."
       },
       "labels": {
         "newChat": "New Conversation"

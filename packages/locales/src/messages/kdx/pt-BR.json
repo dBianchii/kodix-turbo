@@ -118,14 +118,19 @@
         "cancel": "Cancelar",
         "delete": "Excluir",
         "confirm": "Confirmar",
-        "add": "Adicionar"
+        "add": "Adicionar",
+        "emptyTitle": "Nenhuma mensagem ainda",
+        "emptyDescription": "Comece uma conversa digitando uma mensagem",
+        "generating": "Gerando resposta..."
       },
       "errors": {
         "createSession": "Erro ao criar sessão: {error}"
       },
       "placeholders": {
         "newMessage": "Digite sua mensagem...",
-        "newConversation": "Digite sua mensagem para começar uma nova conversa..."
+        "newConversation": "Digite sua mensagem para começar uma nova conversa...",
+        "typeMessage": "Digite sua mensagem...",
+        "streaming": "Aguarde, gerando resposta..."
       },
       "labels": {
         "newChat": "Nova Conversa"
@@ -147,7 +152,9 @@
         "loadingFolders": "Carregando pastas...",
         "loadingChats": "Carregando chats...",
         "loadingSessions": "Carregando sessões...",
-        "moveToFolder": "Mover para pasta"
+        "moveToFolder": "Mover para pasta",
+        "retry": "Tentar Novamente",
+        "stop": "Parar"
       },
       "tokenUsage": {
         "tooltip": "{used}/{total} tokens",

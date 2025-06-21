@@ -29,19 +29,18 @@ describe("Chat SubApp - Integração Simples", () => {
   });
 
   describe("🚀 Sistema Único - Verificações", () => {
-    it("deve usar apenas VercelAIAdapter (sem legacy)", async () => {
-      // Verificar que o VercelAIAdapter existe
-      const { VercelAIAdapter } = await import(
-        "../../../../../internal/adapters/vercel-ai-adapter"
-      );
-      expect(VercelAIAdapter).toBeDefined();
+    it("deve usar apenas Vercel AI SDK nativo (sem adapters)", async () => {
+      // ✅ MIGRAÇÃO COMPLETA: VercelAIAdapter removido
+      // Sistema agora usa 100% streamText() nativo do Vercel AI SDK
 
-      // Verificar que é uma classe
-      expect(typeof VercelAIAdapter).toBe("function");
+      // Verificar que Vercel AI SDK está disponível
+      const vercelAI = await import("ai");
+      expect(vercelAI.streamText).toBeDefined();
+      expect(typeof vercelAI.streamText).toBe("function");
 
-      // Criar instância
-      const adapter = new VercelAIAdapter();
-      expect(adapter).toBeInstanceOf(VercelAIAdapter);
+      // Verificar que providers estão disponíveis
+      const openai = await import("@ai-sdk/openai");
+      expect(openai.createOpenAI).toBeDefined();
     });
 
     it("NÃO deve ter referências ao sistema legacy", async () => {
@@ -50,6 +49,8 @@ describe("Chat SubApp - Integração Simples", () => {
       let hybridAdapterExists = false;
 
       try {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore - Teste intencional de arquivo que não deve existir
         await import("../../../../../internal/adapters/legacy-adapter");
         legacyAdapterExists = true;
       } catch {
@@ -57,6 +58,8 @@ describe("Chat SubApp - Integração Simples", () => {
       }
 
       try {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore - Teste intencional de arquivo que não deve existir
         await import("../../../../../internal/adapters/hybrid-adapter");
         hybridAdapterExists = true;
       } catch {

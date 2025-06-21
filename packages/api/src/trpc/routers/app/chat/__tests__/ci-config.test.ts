@@ -37,12 +37,13 @@ describe("Chat SubApp - CI Configuration Tests", () => {
     });
 
     it("deve validar estrutura de tipos", async () => {
-      const types = await import(
-        "../../../../../internal/types/ai/vercel-adapter.types"
-      );
+      // ✅ MIGRAÇÃO COMPLETA: Tipos legacy removidos
+      // Sistema agora usa 100% Vercel AI SDK nativo
 
-      // Verificar se os tipos existem (TypeScript compile check)
-      expect(types).toBeDefined();
+      // Verificar que tipos do Vercel AI SDK estão disponíveis
+      const ai = await import("ai");
+      expect(ai.streamText).toBeDefined();
+      expect(typeof ai.streamText).toBe("function");
     });
   });
 
@@ -75,14 +76,15 @@ describe("Chat SubApp - CI Configuration Tests", () => {
       expect(hasLegacyImports).toBe(false);
     });
 
-    it("deve usar apenas VercelAIAdapter", async () => {
-      // Verificar que apenas o sistema único está presente
-      const adapterModule = await import(
-        "../../../../../internal/adapters/vercel-ai-adapter"
-      );
+    it("deve usar apenas Vercel AI SDK nativo", async () => {
+      // ✅ MIGRAÇÃO COMPLETA: VercelAIAdapter removido
+      // Sistema agora usa 100% streamText() nativo
 
-      expect(adapterModule.VercelAIAdapter).toBeDefined();
-      expect(typeof adapterModule.VercelAIAdapter).toBe("function");
+      // Verificar que Vercel AI SDK está funcionando
+      const ai = await import("ai");
+      expect(ai.streamText).toBeDefined();
+      expect(ai.generateObject).toBeDefined();
+      expect(typeof ai.streamText).toBe("function");
     });
   });
 

@@ -1,24 +1,108 @@
 import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
+import { createAnthropic } from "@ai-sdk/anthropic";
+import { createOpenAI } from "@ai-sdk/openai";
+import { streamText } from "ai";
 
 import { chatAppId } from "@kdx/shared";
 
-// 🚀 Importar VercelAIAdapter para sistema único
-import { VercelAIAdapter } from "../../../../../../../packages/api/src/internal/adapters/vercel-ai-adapter";
 import { AiStudioService } from "../../../../../../../packages/api/src/internal/services/ai-studio.service";
 import { ChatService } from "../../../../../../../packages/api/src/internal/services/chat.service";
 
+// Helper function to create Vercel AI SDK models
+async function getVercelModel(modelId: string, teamId: string) {
+  // Get model configuration
+  const modelConfig = await AiStudioService.getModelById({
+    modelId,
+    teamId,
+    requestingApp: chatAppId,
+  });
+
+  // Get provider token
+  const providerToken = await AiStudioService.getProviderToken({
+    providerId: modelConfig.providerId,
+    teamId,
+    requestingApp: chatAppId,
+  });
+
+  // Create provider based on type
+  const providerName = modelConfig.provider.name.toLowerCase();
+  const modelName = (modelConfig.config as any)?.version || modelConfig.name;
+
+  if (providerName === "openai") {
+    const openaiProvider = createOpenAI({
+      apiKey: providerToken.token,
+      baseURL: modelConfig.provider.baseUrl || undefined,
+    });
+    return {
+      model: openaiProvider(modelName),
+      modelName: modelName,
+    };
+  }
+
+  if (providerName === "anthropic") {
+    const anthropicProvider = createAnthropic({
+      apiKey: providerToken.token,
+      baseURL: modelConfig.provider.baseUrl || undefined,
+    });
+    return {
+      model: anthropicProvider(modelName),
+      modelName: modelName,
+    };
+  }
+
+  throw new Error(
+    `Provider ${modelConfig.provider.name} not supported. Supported: OpenAI, Anthropic.`,
+  );
+}
+
 export async function POST(request: NextRequest) {
   try {
-    console.log("🔵 [API] POST streaming recebido");
+    console.log("🔥 [API] ========================================");
+    console.log("🔥 [API] STREAMING ENDPOINT CALLED");
+    console.log("🔥 [API] ========================================");
 
-    const {
-      chatSessionId,
-      content,
-      useAgent = true,
-      skipUserMessage = false,
-    } = await request.json();
-    console.log("🟢 [API] Dados recebidos:", {
+    const body = await request.json();
+    console.log(
+      "🔍 [DEBUG] Request body received:",
+      JSON.stringify(body, null, 2),
+    );
+
+    // ✅ FIXO: Aceitar tanto formato useChat quanto formato customizado
+    let chatSessionId;
+    let content;
+    let useAgent;
+    let skipUserMessage;
+
+    if (body.messages && Array.isArray(body.messages)) {
+      // Formato useChat do Vercel AI SDK
+      console.log("📱 [API] Formato useChat detectado");
+      chatSessionId = body.chatSessionId;
+      useAgent = body.useAgent ?? true;
+      skipUserMessage = body.skipUserMessage ?? false;
+
+      // Extrair última mensagem do usuário
+      const lastUserMessage = body.messages
+        .filter((msg: any) => msg.role === "user")
+        .pop();
+
+      content = lastUserMessage?.content;
+
+      if (!content) {
+        return Response.json(
+          { error: "No user message found in messages array" },
+          { status: 400 },
+        );
+      }
+    } else {
+      // Formato customizado original
+      console.log("🔧 [API] Formato customizado detectado");
+      chatSessionId = body.chatSessionId;
+      content = body.content;
+      useAgent = body.useAgent ?? true;
+      skipUserMessage = body.skipUserMessage ?? false;
+    }
+
+    console.log("🟢 [API] Data extracted:", {
       chatSessionId,
       content,
       useAgent,
@@ -26,46 +110,43 @@ export async function POST(request: NextRequest) {
     });
 
     if (!chatSessionId || !content) {
-      return NextResponse.json(
-        { error: "Parâmetros inválidos" },
+      return Response.json(
+        { error: "Invalid parameters: chatSessionId and content are required" },
         { status: 400 },
       );
     }
 
-    // Verificar se a sessão existe
+    // Check if session exists
     const session = await ChatService.findSessionById(chatSessionId);
     if (!session) {
-      return NextResponse.json(
-        { error: "Sessão não encontrada" },
-        { status: 404 },
-      );
+      return Response.json({ error: "Session not found" }, { status: 404 });
     }
 
-    console.log("🔍 [DEBUG] Dados da sessão:");
+    console.log("🔍 [DEBUG] Session data:");
     console.log(`   • ID: ${session.id}`);
-    console.log(`   • Título: ${session.title}`);
+    console.log(`   • Title: ${session.title}`);
     console.log(`   • aiModelId: ${session.aiModelId || "❌ NULL/UNDEFINED"}`);
     console.log(`   • aiAgentId: ${session.aiAgentId || "❌ NULL/UNDEFINED"}`);
     console.log(`   • teamId: ${session.teamId}`);
 
-    // ✅ TEMPORÁRIO: Agente será removido do fluxo de streaming por enquanto
-    // TODO: Implementar getAgentById no AiStudioService
+    // ✅ TEMPORARY: Agent will be removed from streaming flow for now
+    // TODO: Implement getAgentById in AiStudioService
     const agent = null;
     if (session.aiAgentId) {
       console.log(
-        `⚠️ [DEBUG] Agente ${session.aiAgentId} será ignorado no streaming por enquanto`,
+        `⚠️ [DEBUG] Agent ${session.aiAgentId} will be ignored in streaming for now`,
       );
     }
 
-    // ✅ CORREÇÃO: Criar mensagem do usuário apenas se não for skipUserMessage
+    // ✅ CORRECTION: Create user message only if not skipUserMessage
     let userMessage;
     let recentMessages: any[] | null = null;
 
     if (skipUserMessage) {
       console.log(
-        "🔄 [API] Pulando criação de mensagem do usuário (skipUserMessage=true)",
+        "🔄 [API] Skipping user message creation (skipUserMessage=true)",
       );
-      // Buscar a mensagem mais recente do usuário com o mesmo conteúdo
+      // Search for the most recent user message with the same content
       recentMessages = await ChatService.findMessagesBySession({
         chatSessionId: session.id,
         limite: 5,
@@ -78,9 +159,7 @@ export async function POST(request: NextRequest) {
       );
 
       if (!userMessage) {
-        console.warn(
-          "⚠️ [API] Mensagem do usuário não encontrada, criando nova",
-        );
+        console.warn("⚠️ [API] User message not found, creating new one");
         userMessage = await ChatService.createMessage({
           chatSessionId: session.id,
           senderRole: "user",
@@ -88,33 +167,33 @@ export async function POST(request: NextRequest) {
           status: "ok",
         });
       } else {
-        console.log("✅ [API] Mensagem do usuário encontrada:", userMessage.id);
+        console.log("✅ [API] User message found:", userMessage.id);
       }
     } else {
-      // Comportamento normal: criar nova mensagem do usuário
+      // Normal behavior: create new user message
       userMessage = await ChatService.createMessage({
         chatSessionId: session.id,
         senderRole: "user",
         content,
         status: "ok",
       });
-      console.log("✅ [API] Mensagem do usuário criada");
+      console.log("✅ [API] User message created");
     }
 
     if (!useAgent) {
-      return NextResponse.json({
+      return Response.json({
         userMessage,
         sessionId: session.id,
       });
     }
 
-    // ✅ CORREÇÃO: Buscar histórico de mensagens ou reutilizar se já carregadas
+    // ✅ CORRECTION: Get message history or reuse if already loaded
     let messages;
     if (skipUserMessage && recentMessages) {
-      // Se já carregamos mensagens para buscar a do usuário, reutilizar e ordenar
-      messages = recentMessages.reverse(); // Inverter para ordem cronológica
+      // If we already loaded messages to search for user message, reuse and sort
+      messages = recentMessages.reverse(); // Reverse to chronological order
     } else {
-      // Buscar histórico normalmente
+      // Get history normally
       messages = await ChatService.findMessagesBySession({
         chatSessionId: session.id,
         limite: 20,
@@ -123,7 +202,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // ✅ CORREÇÃO: Incluir mensagem do usuário apenas se não estiver já incluída
+    // ✅ CORRECTION: Include user message only if not already included
     const userMessageExists = messages.some(
       (msg: any) => msg.id === userMessage?.id,
     );
@@ -131,11 +210,13 @@ export async function POST(request: NextRequest) {
       ? messages
       : [...messages, userMessage];
 
-    // 🚀 SISTEMA VERCEL AI SDK (único sistema)
-    console.log("🚀 [VERCEL_AI] Usando Vercel AI SDK");
+    // 🚀 NATIVE VERCEL AI SDK IMPLEMENTATION
+    console.log(
+      "🚀 [VERCEL_AI_NATIVE] Using 100% native Vercel AI SDK standards",
+    );
 
     try {
-      // Detectar idioma do usuário de forma mais robusta
+      // Detect user language more robustly
       const detectUserLocale = (request: NextRequest): "pt-BR" | "en" => {
         const cookieLocale = request.cookies.get("NEXT_LOCALE")?.value;
         if (cookieLocale === "pt-BR" || cookieLocale === "en") {
@@ -150,53 +231,62 @@ export async function POST(request: NextRequest) {
         return "pt-BR";
       };
 
-      // Verificar se há Team Instructions na sessão
+      // Check if there are Team Instructions in the session
       const hasTeamInstructions = allMessages.some(
         (msg) =>
           msg?.senderRole === "system" &&
           msg?.metadata?.type === "team_instructions",
       );
 
-      // System prompt baseado no idioma do usuário
+      // System prompt based on user language - FORMATO MARKDOWN
       const userLocale = detectUserLocale(request);
       const systemPrompt =
         userLocale === "pt-BR"
-          ? "Você é um assistente útil e responde sempre em português brasileiro."
-          : "You are a helpful assistant and always respond in English.";
+          ? "Você é um assistente útil e responde sempre em português brasileiro. Use formatação Markdown para suas respostas (não HTML). Use **negrito**, *itálico*, # títulos, listas com - ou 1., blocos de código com ```."
+          : "You are a helpful assistant and always respond in English. Use Markdown formatting for your responses (not HTML). Use **bold**, *italic*, # headings, lists with - or 1., code blocks with ```.";
 
-      // Preparar mensagens para o adapter
+      // Format messages for Vercel AI SDK
       const formattedMessages: {
-        senderRole: "user" | "ai" | "system";
+        role: "user" | "assistant" | "system";
         content: string;
       }[] = [];
 
-      // Só adicionar system prompt se não há Team Instructions
+      // Only add system prompt if there are no Team Instructions
       if (!hasTeamInstructions) {
         const hasSystemPrompt = allMessages.some(
           (msg) => msg?.senderRole === "system",
         );
         if (!hasSystemPrompt) {
           formattedMessages.push({
-            senderRole: "system",
+            role: "system",
             content: systemPrompt,
           });
-          console.log(`🌍 [API] System prompt adicionado em: ${userLocale}`);
+          console.log(`🌍 [API] System prompt added in: ${userLocale}`);
         }
       } else {
         console.log(
-          `🎯 [API] Team Instructions detectadas, pulando system prompt padrão`,
+          `🎯 [API] Team Instructions detected, skipping default system prompt`,
         );
       }
 
-      // Adicionar todas as mensagens existentes
+      // Add all existing messages
       allMessages.forEach((msg: any) => {
+        const role =
+          msg.senderRole === "user"
+            ? ("user" as const)
+            : msg.senderRole === "ai"
+              ? ("assistant" as const)
+              : msg.senderRole === "system"
+                ? ("system" as const)
+                : ("user" as const);
+
         formattedMessages.push({
-          senderRole: msg.senderRole,
+          role,
           content: msg.content,
         });
       });
 
-      // Buscar modelo da sessão ou usar padrão
+      // Get model from session or use default
       let model;
       if (session.aiModelId) {
         try {
@@ -207,16 +297,16 @@ export async function POST(request: NextRequest) {
           });
         } catch (error) {
           console.log(
-            `❌ [DEBUG] Modelo com ID ${session.aiModelId} não encontrado:`,
+            `❌ [DEBUG] Model with ID ${session.aiModelId} not found:`,
             error,
           );
         }
       }
 
-      // Se não encontrou modelo, usar modelo padrão
+      // If no model found, use default model
       if (!model) {
         console.log(
-          "⚠️ [API] Sessão sem modelo configurado, buscando modelo padrão...",
+          "⚠️ [API] Session without configured model, searching for default...",
         );
         const availableModels = await AiStudioService.getAvailableModels({
           teamId: session.teamId,
@@ -225,58 +315,106 @@ export async function POST(request: NextRequest) {
 
         if (availableModels.length === 0) {
           throw new Error(
-            "Nenhum modelo de IA disponível. Configure um modelo no AI Studio.",
+            "No AI models available. Configure a model in AI Studio.",
           );
         }
 
         model = availableModels[0]!;
-        console.log(`⚠️ [DEBUG] Usando modelo padrão: ${model.name}`);
+        console.log(`⚠️ [DEBUG] Using default model: ${model.name}`);
 
         await ChatService.updateSession(session.id, {
           aiModelId: model.id,
         });
       }
 
-      // Criar adapter e processar streaming com auto-save
-      const adapter = new VercelAIAdapter();
-      const response = await adapter.streamAndSave(
-        {
-          chatSessionId: session.id,
-          content,
-          modelId: model.id,
-          teamId: session.teamId,
-          messages: formattedMessages,
-        },
-        async (content: string, metadata: any) => {
-          // Callback para salvar mensagem da IA
-          await ChatService.createMessage({
-            chatSessionId: session.id,
-            senderRole: "ai",
-            content,
-            status: "ok",
-            metadata,
-          });
-        },
+      // Get Vercel AI SDK native model
+      const { model: vercelModel, modelName } = await getVercelModel(
+        model.id,
+        session.teamId,
       );
 
-      // Interface ultra-limpa: apenas retornar o stream
-      const headers: HeadersInit = {
-        "Content-Type": "text/plain; charset=utf-8",
-        "Cache-Control": "no-cache",
-        "X-Powered-By": "Vercel-AI-SDK", // Identificar que está usando o Vercel AI SDK
-      };
+      // 🎯 NATIVE VERCEL AI SDK STREAMING WITH LIFECYCLE CALLBACKS
+      const result = streamText({
+        model: vercelModel,
+        messages: formattedMessages,
+        temperature: 0.7,
+        maxTokens: 4000,
+        // ✅ NATIVE onFinish callback for auto-save
+        onFinish: async ({ text, usage, finishReason }) => {
+          console.log("✅ [VERCEL_AI_NATIVE] Stream finished:", {
+            tokens: usage.totalTokens,
+            reason: finishReason,
+            textLength: text.length,
+          });
 
-      return new NextResponse(response.stream, { headers });
+          try {
+            // Auto-save AI message with native metadata
+            await ChatService.createMessage({
+              chatSessionId: session.id,
+              senderRole: "ai",
+              content: text,
+              status: "ok",
+              metadata: {
+                requestedModel: modelName,
+                actualModelUsed: modelName,
+                providerId: "vercel-ai-sdk-native",
+                providerName: "Vercel AI SDK Native",
+                usage: usage || null,
+                finishReason: finishReason || "stop",
+                timestamp: new Date().toISOString(),
+                migrationStatus: "native-implementation",
+              },
+            });
+            console.log(
+              "💾 [VERCEL_AI_NATIVE] Message auto-saved successfully",
+            );
+          } catch (saveError) {
+            console.error("🔴 [VERCEL_AI_NATIVE] Auto-save error:", saveError);
+            // Don't throw error to avoid interrupting stream
+          }
+        },
+        // ✅ NATIVE onError callback for robust error handling
+        onError: (error) => {
+          console.error("🔴 [VERCEL_AI_NATIVE] Stream error:", {
+            error: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+            sessionId: session.id,
+            modelId: model.id,
+          });
+          // Error will be handled by the outer try/catch
+        },
+      });
+
+      // 🚀 CORREÇÃO FINAL: Usar toDataStreamResponse oficial do Vercel AI SDK
+      console.log(
+        "🎯 [VERCEL_AI_NATIVE] Returning toDataStreamResponse for useChat compatibility",
+      );
+
+      // 🚀 SOLUÇÃO OFICIAL: Headers específicos para resolver problemas de streaming
+      return result.toDataStreamResponse({
+        headers: {
+          "X-Powered-By": "Vercel-AI-SDK-Native",
+          "X-Migration-Status": "Complete-Native-Implementation",
+          "X-Stream-Protocol": "data-stream-native",
+          // ✅ SOLUÇÃO DOCUMENTADA: Headers para resolver streaming buffering
+          "Transfer-Encoding": "chunked",
+          Connection: "keep-alive",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "X-Accel-Buffering": "no", // Nginx: desabilita buffering
+        },
+      });
     } catch (error) {
-      console.error("🔴 [VERCEL_AI] Erro no Vercel AI SDK:", error);
-      throw error; // Re-throw para ser capturado pelo catch geral
+      console.error(
+        "🔴 [VERCEL_AI_NATIVE] Native implementation error:",
+        error,
+      );
+      throw error; // Re-throw to be caught by general catch
     }
   } catch (error) {
-    console.error("🔴 [API] Erro no endpoint de streaming:", error);
-    return NextResponse.json(
+    console.error("🔴 [API] Streaming endpoint error:", error);
+    return Response.json(
       {
-        error:
-          error instanceof Error ? error.message : "Erro interno do servidor",
+        error: error instanceof Error ? error.message : "Internal server error",
       },
       { status: 500 },
     );

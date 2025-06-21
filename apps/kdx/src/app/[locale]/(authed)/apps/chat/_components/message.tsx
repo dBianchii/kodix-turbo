@@ -36,12 +36,7 @@ const useCopyToClipboard = ({
 
 // Componente de markdown otimizado
 const MarkdownText = memo(({ content }: { content: string }) => {
-  // ✅ DEBUG: Log para verificar o conteúdo
-  console.log("🔍 [MarkdownText] Renderizando conteúdo:", {
-    content,
-    length: content.length,
-    type: typeof content,
-  });
+  // ✅ Renderização otimizada de markdown
 
   return (
     <ReactMarkdown
@@ -187,13 +182,14 @@ const MarkdownText = memo(({ content }: { content: string }) => {
         pre: ({ className, ...props }) => (
           <pre
             className={cn(
-              "bg-muted/50 text-foreground mb-4 overflow-x-auto rounded-lg border p-4",
+              "bg-muted/50 text-foreground mb-4 overflow-x-auto rounded-lg border p-4 font-mono text-sm",
               className,
             )}
             {...props}
           />
         ),
         code: ({ className, inline, children, ...props }: any) => {
+          // ✅ CORREÇÃO: Inline code vs code blocks
           if (inline) {
             return (
               <code
@@ -208,11 +204,9 @@ const MarkdownText = memo(({ content }: { content: string }) => {
             );
           }
 
+          // Code blocks (dentro de <pre>)
           return (
-            <code
-              className={cn("text-foreground font-mono text-sm", className)}
-              {...props}
-            >
+            <code className={cn("font-mono text-sm", className)} {...props}>
               {children}
             </code>
           );
@@ -232,13 +226,7 @@ export function Message({
   isStreaming,
   className,
 }: MessageProps) {
-  // ✅ DEBUG: Log para verificar props
-  console.log("🔍 [Message] Renderizando mensagem:", {
-    role,
-    content: content.substring(0, 100) + "...",
-    contentLength: content.length,
-    isStreaming,
-  });
+  // ✅ Renderização otimizada de mensagens
 
   return (
     <div
@@ -250,16 +238,14 @@ export function Message({
     >
       <div
         className={cn(
-          "relative max-w-[85%] rounded-lg px-4 py-3",
+          "relative rounded-lg px-4 py-3",
           role === "user"
-            ? "bg-primary text-primary-foreground"
-            : "bg-muted/50 text-foreground",
+            ? "bg-primary text-primary-foreground max-w-[85%]"
+            : "bg-muted/50 text-foreground w-full",
         )}
       >
         {role === "assistant" ? (
-          <div className="prose prose-sm max-w-none">
-            <MarkdownText content={content} />
-          </div>
+          <MarkdownText content={content} />
         ) : (
           <div className="text-foreground whitespace-pre-wrap">{content}</div>
         )}

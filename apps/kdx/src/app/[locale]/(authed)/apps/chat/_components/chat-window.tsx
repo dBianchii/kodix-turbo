@@ -1,7 +1,8 @@
 // @ts-nocheck - Chat tRPC router has type definition issues that need to be resolved at the router level
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { useChat } from "@ai-sdk/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AlertCircle, Loader2, MessageCircle, RefreshCw } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -19,28 +20,20 @@ import { Message } from "./message";
 import { WelcomeHeader } from "./welcome-header";
 import { WelcomeSuggestions } from "./welcome-suggestions";
 
-type MessageRole = "assistant" | "user";
-
-interface ChatMessage {
-  role: MessageRole;
-  content: string;
-  id?: string;
-}
-
 interface ChatWindowProps {
   sessionId?: string;
   onNewSession?: (sessionId: string) => void;
 }
 
 export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
   const t = useTranslations();
   const trpc = useTRPC();
+
+  // 🚨 CORREÇÃO: Flag para evitar loop infinito no auto-envio
+  const autoSentRef = useRef<Set<string>>(new Set());
 
   // ✅ NOVO: Detectar se é nova conversa
   const isNewConversation = !sessionId;
@@ -52,52 +45,57 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
     },
     onError: (error) => {
       console.error("❌ [UNIFIED_CHAT] Erro ao criar sessão:", error);
-      setError(t("apps.chat.errors.createSession", { error: error.message }));
     },
   });
 
-  // ✅ NOVO: Controle de cancelamento de stream
-  const abortControllerRef = useRef<AbortController | null>(null);
-  const currentSessionIdRef = useRef<string | undefined>(sessionId);
+  // 🚀 MIGRAÇÃO: useChat hook oficial do Vercel AI SDK
+  const {
+    messages,
+    input,
+    handleInputChange,
+    handleSubmit,
+    isLoading,
+    error,
+    reload,
+    stop,
+    setMessages,
+    append,
+  } = useChat({
+    api: "/api/chat/stream",
+    body: {
+      chatSessionId: sessionId,
+      useAgent: true,
+    },
+    // 🚀 CONFIGURAÇÃO SIMPLIFICADA: Remover configurações que podem interferir
+    // Deixar o Vercel AI SDK usar configurações padrão para máxima compatibilidade
+    // ✅ STREAMING: Configuração limpa para máxima performance
+    onFinish: (message) => {
+      console.log("✅ [VERCEL_AI_NATIVE] Chat finished:", message);
 
-  // ✅ NOVO: Atualizar referência da sessão atual
-  useEffect(() => {
-    currentSessionIdRef.current = sessionId;
-  }, [sessionId]);
+      // ✅ CORREÇÃO: Não invalidar queries para evitar piscada
+      // O auto-save já salvou a mensagem no backend
+      // Aguardar um pouco antes de permitir nova sincronização para garantir estabilidade
 
-  // ✅ NOVO: Cancelar stream ativo ao mudar de sessão
-  useEffect(() => {
-    return () => {
-      // Cancelar qualquer stream ativo quando o componente for desmontado ou sessionId mudar
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-        abortControllerRef.current = null;
-      }
-    };
-  }, [sessionId]);
+      // Auto-focus no input após terminar
+      setTimeout(() => {
+        inputRef.current?.focus();
 
-  // ✅ NOVO: Limpar estados ao mudar de sessão
-  useEffect(() => {
-    if (sessionId) {
-      // Cancelar stream ativo ao mudar de sessão
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-        abortControllerRef.current = null;
-      }
-      // Limpar estados de loading e erro
-      setIsLoading(false);
-      setError(null);
+        // ✅ OPCIONAL: Re-sincronizar após delay para garantir consistência
+        // Apenas se necessário - o auto-save já deveria ter salvado
+        setTimeout(() => {
+          console.log(
+            "🔄 [CHAT_WINDOW] Permitindo re-sincronização pós-streaming",
+          );
+          // A próxima execução do useEffect de sincronização será permitida
+        }, 1000);
+      }, 100);
+    },
+    onError: (error) => {
+      console.error("🔴 [VERCEL_AI_NATIVE] Chat error:", error);
+    },
+  });
 
-      // ✅ CORREÇÃO: Invalidar cache ao mudar de sessão
-      queryClient.invalidateQueries({
-        queryKey: trpc.app.chat.buscarMensagensTest.queryKey({
-          chatSessionId: sessionId,
-        }),
-      });
-    }
-  }, [sessionId, queryClient]);
-
-  // ✅ CORRIGIDO: Usar tRPC hooks como no app-sidebar
+  // ✅ CORRIGIDO: Usar tRPC hooks para buscar mensagens existentes
   const messagesQuery = useQuery(
     trpc.app.chat.buscarMensagensTest.queryOptions(
       {
@@ -109,17 +107,30 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
       {
         enabled: !!sessionId,
         refetchOnWindowFocus: false,
-        // ✅ NOVO: Configurações para garantir dados frescos
-        staleTime: 0, // Sempre considerar dados como stale
-        gcTime: 5 * 60 * 1000, // 5 minutos de cache
-        refetchOnMount: true, // Sempre refetch ao montar
+        staleTime: 0,
+        gcTime: 5 * 60 * 1000,
+        refetchOnMount: true,
       },
     ),
   );
 
-  // Atualizar mensagens quando os dados chegarem
+  // ✅ SINCRONIZAÇÃO ULTRA-CONSERVADORA: Apenas para carregamento inicial
   useEffect(() => {
     if (!sessionId || messagesQuery.isLoading) {
+      return; // Não sincronizar se não há sessão ou ainda carregando
+    }
+
+    // ✅ PROTEÇÃO CRÍTICA: NUNCA sincronizar durante streaming
+    if (isLoading) {
+      console.log("⚡ [CHAT_WINDOW] Pulando sincronização - streaming ativo");
+      return;
+    }
+
+    // ✅ PROTEÇÃO CRÍTICA: NUNCA sincronizar se já há mensagens do useChat
+    if (messages.length > 0) {
+      console.log(
+        "⚡ [CHAT_WINDOW] Pulando sincronização - useChat já tem mensagens",
+      );
       return;
     }
 
@@ -131,11 +142,18 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
       );
 
       const formattedMessages = visibleMessages.map((msg: any) => ({
-        role: (msg.senderRole === "user" ? "user" : "assistant") as MessageRole,
-        content: msg.content,
         id: msg.id,
+        role: msg.senderRole === "user" ? "user" : "assistant",
+        content: msg.content,
       }));
-      setMessages(formattedMessages);
+
+      // ✅ SINCRONIZAÇÃO APENAS NO CARREGAMENTO INICIAL
+      if (formattedMessages.length > 0) {
+        console.log(
+          `🔄 [CHAT_WINDOW] Carregamento inicial - sincronizando ${formattedMessages.length} mensagens`,
+        );
+        setMessages(formattedMessages);
+      }
 
       console.log(
         `🔍 [CHAT_WINDOW] Total mensagens no banco: ${data.messages.length}`,
@@ -143,34 +161,50 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
       console.log(
         `🎯 [CHAT_WINDOW] Mensagens system filtradas: ${data.messages.length - visibleMessages.length}`,
       );
-      console.log(
-        `✅ [CHAT_WINDOW] Mensagens visíveis: ${visibleMessages.length}`,
-      );
+      console.log(`✅ [CHAT_WINDOW] Mensagens no useChat: ${messages.length}`);
 
-      // ✅ CORREÇÃO: Auto-processar primeira resposta da IA se há apenas mensagem do usuário
-      // Isso acontece quando uma nova sessão é criada com useAgent: false e depois redirecionada
+      // 🚀 CORREÇÃO: Auto-enviar primeira mensagem se houver apenas mensagem do usuário
+      const hasOnlyUserMessage =
+        formattedMessages.length === 1 && formattedMessages[0]?.role === "user";
+
+      const userMessage = formattedMessages[0];
+      const messageKey = `${sessionId}-${userMessage?.id}`;
+
       if (
-        formattedMessages.length === 1 &&
-        formattedMessages[0].role === "user" &&
-        !isLoading
+        hasOnlyUserMessage &&
+        userMessage &&
+        !autoSentRef.current.has(messageKey)
       ) {
-        const userMessage = formattedMessages[0].content;
-        // Pequeno delay para garantir que a UI foi atualizada
+        console.log(
+          "🎯 [AUTO_SEND] Detectada nova sessão com apenas mensagem do usuário, enviando para IA...",
+        );
+
+        // Marcar como enviado ANTES de enviar para evitar loop
+        autoSentRef.current.add(messageKey);
+
+        // Pequeno delay para garantir que o useChat foi sincronizado
         setTimeout(() => {
-          // ✅ CORREÇÃO: Usar sendMessage com flag especial para evitar duplicação
-          sendMessageForNewSession(userMessage);
-        }, 500);
+          console.log(
+            "📤 [AUTO_SEND] Enviando mensagem automaticamente:",
+            userMessage.content,
+          );
+
+          // Usar append do useChat para adicionar a mensagem e processar IA
+          append({
+            role: "user",
+            content: userMessage.content,
+          });
+        }, 100);
       }
-    } else if (sessionId && data?.messages?.length === 0) {
-      // Se há sessão mas não há mensagens, mostrar mensagem de boas-vindas
-      setMessages([
-        {
-          role: "assistant",
-          content: t("apps.chat.messages.greeting"),
-        },
-      ]);
     }
-  }, [messagesQuery.data, sessionId, t, isNewConversation]);
+  }, [
+    messagesQuery.data,
+    sessionId,
+    setMessages,
+    append,
+    isLoading,
+    messages.length,
+  ]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -183,16 +217,21 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
     }
   }, [sessionId, isNewConversation, messagesQuery.isLoading]);
 
-  // ✅ CORREÇÃO: Função para lidar com nova mensagem (nova conversa)
+  // 🚨 CORREÇÃO: Limpar flag quando sessão muda (mas não as mensagens)
+  useEffect(() => {
+    // Limpar flags antigas quando trocar de sessão
+    autoSentRef.current.clear();
+    console.log(`🔄 [CHAT_WINDOW] Mudança de sessão detectada: ${sessionId}`);
+  }, [sessionId]);
+
+  // ✅ NOVO: Função para lidar com nova mensagem (nova conversa)
   const handleNewMessage = async (message: string) => {
     if (isCreating) return;
-
-    setError(null);
 
     try {
       await createSessionWithMessage({
         firstMessage: message,
-        useAgent: false, // ✅ CORREÇÃO: Criar sessão sem IA para fazer streaming visual
+        useAgent: false,
         generateTitle: true,
       });
     } catch (error) {
@@ -200,403 +239,25 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
     }
   };
 
-  // ✅ NOVO: Função para lidar com sugestões
   const handleSuggestionClick = (suggestion: string) => {
     handleNewMessage(suggestion);
   };
 
-  // ✅ CORREÇÃO: Função para processar IA em nova sessão (sem duplicar mensagem do usuário)
-  async function sendMessageForNewSession(text: string) {
-    if (isLoading || !sessionId) return;
+  // 🚀 MIGRAÇÃO: Handler usando useChat para sessões existentes
+  const handleExistingSessionSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
 
-    setIsLoading(true);
-    setError(null);
-
-    // ✅ Cancelar stream anterior se existir
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-
-    // ✅ Criar novo AbortController para este stream
-    const abortController = new AbortController();
-    abortControllerRef.current = abortController;
-    const currentSessionId = sessionId; // Capturar sessionId atual
-
-    // ✅ CORREÇÃO: NÃO adicionar mensagem do usuário (ela já existe no banco)
-    // Adicionar apenas mensagem vazia da IA para o streaming
-    const assistantMessage: ChatMessage = { role: "assistant", content: "" };
-    setMessages((prev) => [...prev, assistantMessage]);
-
-    try {
-      const response = await fetch("/api/chat/stream", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          chatSessionId: sessionId,
-          content: text,
-          useAgent: true,
-          skipUserMessage: true, // ✅ NOVO: Flag para não criar mensagem do usuário
-        }),
-        signal: abortController.signal,
-      });
-
-      if (!response.ok) {
-        let errorMessage = t("apps.chat.messages.error");
-        try {
-          const errorData = (await response.json()) as { error?: string };
-          errorMessage =
-            errorData.error ??
-            `${t("apps.chat.messages.error")} ${response.status}`;
-        } catch {
-          errorMessage = `${t("apps.chat.messages.error")} ${response.status}`;
-        }
-        throw new Error(errorMessage);
-      }
-
-      if (!response.body) {
-        throw new Error(t("apps.chat.messages.error"));
-      }
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder("utf-8");
-
-      let receivedText = "";
-
-      while (true) {
-        if (abortController.signal.aborted) {
-          break;
-        }
-
-        if (currentSessionIdRef.current !== currentSessionId) {
-          break;
-        }
-
-        const { done, value } = await reader.read();
-        if (done) {
-          break;
-        }
-
-        try {
-          const chunk = decoder.decode(value, { stream: true });
-          receivedText += chunk;
-
-          if (
-            currentSessionIdRef.current === currentSessionId &&
-            !abortController.signal.aborted
-          ) {
-            setMessages((prev) => {
-              if (prev.length === 0) {
-                return [{ role: "assistant", content: chunk }];
-              }
-
-              const others = prev.slice(0, -1);
-              const lastMessage = prev[prev.length - 1];
-              const updatedAssistantMessage: ChatMessage = {
-                role: "assistant",
-                content: lastMessage ? lastMessage.content + chunk : chunk,
-              };
-              return [...others, updatedAssistantMessage];
-            });
-          }
-        } catch (decodeError) {
-          console.warn(
-            "⚠️ [NEW_SESSION] Erro ao decodificar chunk, ignorando:",
-            decodeError,
-          );
-          continue;
-        }
-      }
-
-      if (!receivedText) {
-        console.warn("⚠️ [NEW_SESSION] Nenhum texto foi recebido no stream");
-      }
-
-      // Invalidar cache das mensagens para recarregar do banco
-      if (sessionId && currentSessionIdRef.current === currentSessionId) {
-        await queryClient.invalidateQueries({
-          queryKey: trpc.app.chat.buscarMensagensTest.queryKey({
-            chatSessionId: sessionId,
-          }),
-        });
-      }
-    } catch (error) {
-      if (error instanceof DOMException && error.name === "AbortError") {
-        if (sessionId) {
-          await queryClient.invalidateQueries({
-            queryKey: trpc.app.chat.buscarMensagensTest.queryKey({
-              chatSessionId: sessionId,
-            }),
-          });
-        }
-        return;
-      }
-
-      const err = error instanceof Error ? error : new Error(String(error));
-      console.error("🔴 [NEW_SESSION] Erro ao processar resposta da IA:", err);
-
-      if (currentSessionIdRef.current === currentSessionId) {
-        // ✅ Verificar se é mensagem de fallback do sistema
-        if (
-          err.message.includes("Provedor de IA temporariamente indisponível") ||
-          err.message.includes("Rate limit atingido") ||
-          err.message.includes("Serviço de IA temporariamente indisponível")
-        ) {
-          // ✅ Mostrar mensagem do sistema de fallback como resposta do assistente
-          setMessages((prev) => {
-            const withoutEmptyAssistant = prev.slice(0, -1);
-            const fallbackMessage: ChatMessage = {
-              role: "assistant",
-              content: err.message,
-            };
-            return [...withoutEmptyAssistant, fallbackMessage];
-          });
-        } else {
-          // ✅ Erro regular - mostrar notificação de erro
-          setError(`${t("apps.chat.messages.error")}: ${err.message}`);
-          setMessages((prev) => {
-            const withoutEmptyAssistant = prev.slice(0, -1);
-            const errorMessage: ChatMessage = {
-              role: "assistant",
-              content: t("apps.chat.messages.errorOccurred", {
-                error: err.message,
-              }),
-            };
-            return [...withoutEmptyAssistant, errorMessage];
-          });
-        }
-      }
-    } finally {
-      if (sessionId) {
-        await queryClient.invalidateQueries({
-          queryKey: trpc.app.chat.buscarMensagensTest.queryKey({
-            chatSessionId: sessionId,
-          }),
-        });
-      }
-
-      if (currentSessionIdRef.current === currentSessionId) {
-        setIsLoading(false);
-        // ✅ NOVO: Focar no input quando streaming terminar
-        setTimeout(() => {
-          inputRef.current?.focus();
-        }, 100);
-      }
-
-      if (abortControllerRef.current === abortController) {
-        abortControllerRef.current = null;
-      }
-    }
-  }
-
-  async function sendMessage(text: string) {
-    if (isLoading || !sessionId) return;
-
-    setIsLoading(true);
-    setError(null);
-
-    // ✅ NOVO: Cancelar stream anterior se existir
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-
-    // ✅ NOVO: Criar novo AbortController para este stream
-    const abortController = new AbortController();
-    abortControllerRef.current = abortController;
-    const currentSessionId = sessionId; // Capturar sessionId atual
-
-    const userMessage: ChatMessage = { role: "user", content: text };
-
-    // ✅ NOVO: Só adicionar mensagem do usuário se ela não existir já
-    const userMessageExists = messages.some(
-      (msg) => msg.role === "user" && msg.content === text,
-    );
-    if (!userMessageExists) {
-      // Adicionar mensagem do usuário imediatamente
-      setMessages((prev) => [...prev, userMessage]);
-    }
-
-    // Adicionar mensagem vazia da IA para o streaming
-    const assistantMessage: ChatMessage = { role: "assistant", content: "" };
-    setMessages((prev) => [...prev, assistantMessage]);
-
-    try {
-      const response = await fetch("/api/chat/stream", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          chatSessionId: sessionId,
-          content: text,
-          useAgent: true,
-        }),
-        // ✅ NOVO: Adicionar signal para cancelamento
-        signal: abortController.signal,
-      });
-
-      if (!response.ok) {
-        let errorMessage = t("apps.chat.messages.error");
-        try {
-          const errorData = (await response.json()) as { error?: string };
-          errorMessage =
-            errorData.error ??
-            `${t("apps.chat.messages.error")} ${response.status}`;
-        } catch {
-          errorMessage = `${t("apps.chat.messages.error")} ${response.status}`;
-        }
-        throw new Error(errorMessage);
-      }
-
-      if (!response.body) {
-        throw new Error(t("apps.chat.messages.error"));
-      }
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder("utf-8");
-
-      let receivedText = "";
-
-      while (true) {
-        // ✅ NOVO: Verificar se foi cancelado ou sessão mudou
-        if (abortController.signal.aborted) {
-          break;
-        }
-
-        // ✅ NOVO: Verificar se ainda estamos na mesma sessão
-        if (currentSessionIdRef.current !== currentSessionId) {
-          break;
-        }
-
-        const { done, value } = await reader.read();
-        if (done) {
-          break;
-        }
-
-        // 🔧 FIX: Decode seguro com tratamento de Unicode
-        try {
-          const chunk = decoder.decode(value, { stream: true });
-          receivedText += chunk;
-
-          // ✅ NOVO: Verificar novamente antes de atualizar o estado
-          if (
-            currentSessionIdRef.current === currentSessionId &&
-            !abortController.signal.aborted
-          ) {
-            setMessages((prev) => {
-              if (prev.length === 0) {
-                return [{ role: "assistant", content: chunk }];
-              }
-
-              const others = prev.slice(0, -1);
-              const lastMessage = prev[prev.length - 1];
-              const updatedAssistantMessage: ChatMessage = {
-                role: "assistant",
-                content: lastMessage ? lastMessage.content + chunk : chunk,
-              };
-              return [...others, updatedAssistantMessage];
-            });
-          }
-        } catch (decodeError) {
-          console.warn("⚠️ Erro ao decodificar chunk, ignorando:", decodeError);
-          // Continuar o streaming mesmo se um chunk específico falhar
-          continue;
-        }
-      }
-
-      if (!receivedText) {
-        console.warn("⚠️ Nenhum texto foi recebido no stream");
-      }
-
-      // Invalidar cache das mensagens para recarregar do banco
-      if (sessionId && currentSessionIdRef.current === currentSessionId) {
-        // ✅ Invalidar usando tRPC utils em vez de queryClient manual
-        await queryClient.invalidateQueries({
-          queryKey: trpc.app.chat.buscarMensagensTest.queryKey({
-            chatSessionId: sessionId,
-          }),
-        });
-      }
-    } catch (error) {
-      // ✅ NOVO: Ignorar erros de cancelamento
-      if (error instanceof DOMException && error.name === "AbortError") {
-        if (sessionId) {
-          await queryClient.invalidateQueries({
-            queryKey: trpc.app.chat.buscarMensagensTest.queryKey({
-              chatSessionId: sessionId,
-            }),
-          });
-        }
-        return;
-      }
-
-      const err = error instanceof Error ? error : new Error(String(error));
-      console.error("🔴 Erro ao enviar mensagem:", err);
-
-      // ✅ NOVO: Só mostrar erro se ainda estamos na mesma sessão
-      if (currentSessionIdRef.current === currentSessionId) {
-        // ✅ Verificar se é mensagem de fallback do sistema
-        if (
-          err.message.includes("Provedor de IA temporariamente indisponível") ||
-          err.message.includes("Rate limit atingido") ||
-          err.message.includes("Serviço de IA temporariamente indisponível")
-        ) {
-          // ✅ Mostrar mensagem do sistema de fallback como resposta do assistente
-          setMessages((prev) => {
-            const withoutEmptyAssistant = prev.slice(0, -1);
-            const fallbackMessage: ChatMessage = {
-              role: "assistant",
-              content: err.message,
-            };
-            return [...withoutEmptyAssistant, fallbackMessage];
-          });
-        } else {
-          // ✅ Erro regular - mostrar notificação de erro
-          setError(`${t("apps.chat.messages.error")}: ${err.message}`);
-          setMessages((prev) => {
-            const withoutEmptyAssistant = prev.slice(0, -1);
-            const errorMessage: ChatMessage = {
-              role: "assistant",
-              content: t("apps.chat.messages.errorOccurred", {
-                error: err.message,
-              }),
-            };
-            return [...withoutEmptyAssistant, errorMessage];
-          });
-        }
-      }
-    } finally {
-      if (sessionId) {
-        await queryClient.invalidateQueries({
-          queryKey: trpc.app.chat.buscarMensagensTest.queryKey({
-            chatSessionId: sessionId,
-          }),
-        });
-      }
-
-      // ✅ NOVO: Só atualizar estado se ainda estamos na mesma sessão
-      if (currentSessionIdRef.current === currentSessionId) {
-        setIsLoading(false);
-        // ✅ NOVO: Focar no input quando streaming terminar
-        setTimeout(() => {
-          inputRef.current?.focus();
-        }, 100);
-      }
-
-      // ✅ NOVO: Limpar referência do AbortController
-      if (abortControllerRef.current === abortController) {
-        abortControllerRef.current = null;
-      }
-    }
-  }
+    console.log("📤 [VERCEL_AI_NATIVE] Enviando mensagem:", input);
+    handleSubmit(e);
+  };
 
   // ✅ NOVO: Renderização condicional baseada no modo
   if (isNewConversation) {
     return (
       <div className="flex h-full flex-col">
-        {/* Header com boas-vindas */}
-        <div className="flex flex-1 flex-col">
+        {/* Header com boas-vindas - área expansível */}
+        <div className="flex min-h-0 flex-1 flex-col">
           <div className="flex flex-1 items-center justify-center">
             <div className="mx-auto w-full max-w-4xl px-4">
               <WelcomeHeader />
@@ -606,23 +267,24 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
         </div>
 
         {/* Input fixo no bottom */}
-        <div className="bg-background border-t p-4">
+        <div className="bg-background flex-shrink-0 border-t p-4">
           <div className="mx-auto max-w-4xl">
             <InputBox
               ref={inputRef}
               onSend={handleNewMessage}
               disabled={isCreating}
               placeholder={t("apps.chat.placeholders.newConversation")}
+              isStreaming={isCreating}
             />
           </div>
         </div>
 
         {/* Mostrar erro se houver */}
         {error && (
-          <div className="p-4">
+          <div className="flex-shrink-0 p-4">
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{error}</AlertDescription>
+              <AlertDescription>{error.message}</AlertDescription>
             </Alert>
           </div>
         )}
@@ -664,7 +326,7 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
                 size="sm"
               >
                 <RefreshCw className="mr-2 h-4 w-4" />
-                {t("apps.chat.messages.retry")}
+                {t("apps.chat.actions.retry")}
               </Button>
             </div>
           </div>
@@ -673,72 +335,81 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
     );
   }
 
-  // ✅ MODO CONVERSA NORMAL
+  // ✅ MODO CONVERSA NORMAL - Layout com absolute positioning para altura fixa
   return (
     <div className="absolute inset-0 flex flex-col">
-      {/* Chat Area - Usando ScrollArea como no ChatWindow original */}
-      <div className="min-h-0 flex-1">
-        <ScrollArea className="h-full">
-          {/* Container para margem do chat window */}
-          <div className="px-4 py-4 md:px-8 lg:px-16">
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                className={
-                  message.role === "user" ? "flex justify-end px-0" : "px-0"
-                }
-              >
-                <Message
-                  role={message.role}
-                  content={message.content}
-                  isStreaming={
-                    message.role === "assistant" &&
-                    index === messages.length - 1 &&
-                    isLoading
-                  }
-                />
-              </div>
-            ))}
-
-            {/* Loading indicator quando não há mensagens */}
-            {isLoading && messages.length === 0 && (
-              <div className="flex justify-end px-0">
-                <div className="flex justify-center py-8">
-                  <div className="flex items-center space-x-2">
-                    <Loader2 className="text-primary h-4 w-4 animate-spin" />
-                    <span className="text-muted-foreground text-sm">
-                      {t("apps.chat.messages.typing")}
-                    </span>
+      {/* Chat Area - área que cresce */}
+      <div className="min-h-0 flex-1 overflow-y-auto">
+        {/* Container para margem do chat window */}
+        <div className="px-4 py-4 md:px-8 lg:px-16">
+          {messages.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <MessageCircle className="text-muted-foreground mb-4 h-12 w-12" />
+              <h3 className="mb-2 text-lg font-semibold">
+                {t("apps.chat.messages.emptyTitle")}
+              </h3>
+              <p className="text-muted-foreground">
+                {t("apps.chat.messages.emptyDescription")}
+              </p>
+            </div>
+          ) : (
+            <>
+              {messages.map((message, index) => (
+                <div key={message.id || index}>
+                  <div
+                    className={
+                      message.role === "user" ? "flex justify-end px-0" : "px-0"
+                    }
+                  >
+                    <Message
+                      role={message.role}
+                      content={message.content}
+                      isStreaming={false} // Não mais necessário
+                    />
                   </div>
                 </div>
-              </div>
-            )}
-
-            {/* Error display */}
-            {error && (
-              <div className="flex justify-end px-0">
-                <div className="flex justify-center py-8">
-                  <Alert variant="destructive" className="max-w-md">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription className="text-sm">
-                      {error}
-                    </AlertDescription>
-                  </Alert>
-                </div>
-              </div>
-            )}
-
-            <div ref={bottomRef} className="h-8" />
-          </div>
-        </ScrollArea>
-      </div>
-
-      {/* Input Area - Fixo no bottom como no ChatWindow original */}
-      <div className="bg-background border-t p-4">
-        <div className="mx-auto max-w-4xl">
-          <InputBox ref={inputRef} onSend={sendMessage} disabled={isLoading} />
+              ))}
+            </>
+          )}
+          <div ref={bottomRef} />
         </div>
       </div>
+
+      <Separator />
+
+      {/* Input area - altura fixa no bottom */}
+      <div className="bg-background flex-shrink-0 p-4">
+        <div className="mx-auto max-w-4xl">
+          <form onSubmit={handleExistingSessionSubmit}>
+            <InputBox
+              ref={inputRef}
+              value={input}
+              onChange={handleInputChange}
+              onSend={(message) => {
+                if (!message.trim() || isLoading) return;
+                const syntheticEvent = {
+                  preventDefault: () => {},
+                } as React.FormEvent;
+                append({ role: "user", content: message });
+              }}
+              disabled={isLoading}
+              placeholder={t("apps.chat.placeholders.typeMessage")}
+              isStreaming={isLoading}
+              onStop={stop}
+            />
+          </form>
+        </div>
+      </div>
+
+      {/* Mostrar erro se houver */}
+      {error && (
+        <div className="flex-shrink-0 p-4">
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{error.message}</AlertDescription>
+          </Alert>
+        </div>
+      )}
     </div>
   );
 }
