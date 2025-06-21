@@ -142,6 +142,7 @@ export {
   enviarMensagemSchema,
   autoCreateSessionWithMessageSchema,
   createEmptySessionSchema,
+  generateSessionTitleSchema,
   iniciarNovaConversa,
   duplicarSessaoSchema,
   idSchema as chatIdSchema,
@@ -163,6 +164,7 @@ export {
   type EnviarMensagemInput,
   type AutoCreateSessionWithMessageInput,
   type CreateEmptySessionInput,
+  type GenerateSessionTitleInput,
   type IniciarNovaConversaInput,
 } from "./chat";
 

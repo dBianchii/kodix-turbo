@@ -86,9 +86,14 @@ export const autoCreateSessionWithMessageSchema = z.object({
 });
 
 export const createEmptySessionSchema = z.object({
-  title: z.string().min(1, "Título é obrigatório").max(255).optional(),
+  title: z.string().min(1).max(255).optional(),
   generateTitle: z.boolean().default(false),
   metadata: z.record(z.unknown()).optional(),
+});
+
+export const generateSessionTitleSchema = z.object({
+  sessionId: z.string().uuid(),
+  firstMessage: z.string().min(1),
 });
 
 export const iniciarNovaConversa = z.object({
@@ -152,6 +157,9 @@ export type AutoCreateSessionWithMessageInput = z.infer<
   typeof autoCreateSessionWithMessageSchema
 >;
 export type CreateEmptySessionInput = z.infer<typeof createEmptySessionSchema>;
+export type GenerateSessionTitleInput = z.infer<
+  typeof generateSessionTitleSchema
+>;
 export type IniciarNovaConversaInput = z.infer<typeof iniciarNovaConversa>;
 export type DuplicarSessaoInput = z.infer<typeof duplicarSessaoSchema>;
 

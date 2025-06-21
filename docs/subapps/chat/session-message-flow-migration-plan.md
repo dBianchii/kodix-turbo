@@ -6,11 +6,14 @@ Este documento detalha o plano completo para migrar o sistema atual de gerenciam
 
 **Objetivo Principal:** Eliminar complexidade, duplicações e bugs através de uma arquitetura simples e robusta.
 
-**Duração Estimada:** 2 semanas ⚡ **OTIMIZADA**
+**Duração Estimada:**
+
+- FASES 1-4: 2 semanas ✅ **CONCLUÍDAS**
+- FASE 5: 1 semana adicional 🚀 **RECOMENDADA**
 
 **Impacto:** Alto (mudança arquitetural significativa)
 
-> **📝 CONTEXTO ATUALIZADO:** Como o app é novo e não possui usuários ativos em produção, a migração foi simplificada para focar na finalização técnica sem necessidade de rollout gradual ou testes A/B.
+> **📝 CONTEXTO ATUALIZADO:** Como o app é novo e não possui usuários ativos em produção, a migração foi simplificada para focar na finalização técnica sem necessidade de rollout gradual ou testes A/B. A FASE 5 é recomendada para implementar completamente o padrão Assistant-UI e resolver definitivamente a geração automática de títulos.
 
 ## 🎯 Objetivos da Migração
 
@@ -810,6 +813,252 @@ useEffect(() => {
    - ✅ Layout responsivo sem overlapping
    - ✅ Componentes otimizados com `React.memo`
 
+### FASE 5: Implementação Completa Assistant-UI (5 dias) 🚀 **NOVA**
+
+> **🎯 Objetivo:** Migrar completamente para o padrão Assistant-UI com `useAssistant` hook, mantendo 100% das funcionalidades atuais e seguindo a arquitetura thread-first oficial.
+
+#### 📋 Justificativa
+
+Embora o sistema atual funcione bem com `useChat`, a implementação completa do Assistant-UI trará:
+
+1. **Geração Automática de Títulos** - Integrada ao ciclo de vida das threads
+2. **Gerenciamento de Estado Superior** - Thread-first nativo
+3. **Compatibilidade Futura** - Alinhamento total com roadmap do Assistant-UI
+4. **Performance Otimizada** - Menos re-renders e melhor gestão de memória
+5. **Developer Experience** - APIs mais intuitivas e menos código
+
+#### 🏗️ Arquitetura Alvo Assistant-UI
+
+```mermaid
+graph TD
+    subgraph "Arquitetura Assistant-UI Completa"
+        A[AssistantRuntimeProvider] --> B[Thread Management]
+        B --> C[useAssistant Hook]
+        C --> D[Automatic Title Generation]
+        D --> E[Streaming & Persistence]
+
+        F[Thread Context]
+        G[Message State]
+        H[Tool Calls]
+        I[Error Boundaries]
+    end
+```
+
+#### Dia 17-18: Preparação e Configuração
+
+**Objetivos:**
+
+- [ ] Instalar dependências adicionais do Assistant-UI se necessário
+- [ ] Criar `AssistantProvider` wrapper
+- [ ] Configurar Thread Runtime
+- [ ] Manter compatibilidade com componentes atuais
+
+**Implementação Proposta:**
+
+```typescript
+// _providers/assistant-provider.tsx
+import { AssistantRuntimeProvider } from '@assistant-ui/react';
+import { useLocalRuntime } from '@assistant-ui/react';
+
+export function ChatAssistantProvider({ children }: { children: React.ReactNode }) {
+  const runtime = useLocalRuntime({
+    api: "/api/assistant", // Novo endpoint compatível
+    onNewThread: async () => {
+      // Criar thread vazia no backend
+      const { thread } = await createEmptyThread();
+      return thread.id;
+    },
+    onTitleGeneration: async (threadId: string, firstMessage: string) => {
+      // Gerar título automaticamente
+      const { title } = await generateThreadTitle({ threadId, firstMessage });
+      return title;
+    },
+  });
+
+  return (
+    <AssistantRuntimeProvider runtime={runtime}>
+      {children}
+    </AssistantRuntimeProvider>
+  );
+}
+```
+
+#### Dia 19: Migrar ChatWindow para useAssistant
+
+**Objetivos:**
+
+- [ ] Substituir `useChat` por `useAssistant`
+- [ ] Adaptar lógica de mensagens
+- [ ] Preservar Welcome Screen e layout atual
+- [ ] Manter renderização de Markdown
+
+**Implementação Proposta:**
+
+```typescript
+// _components/chat-window.tsx
+import { useAssistant } from '@assistant-ui/react';
+
+export function ChatWindow({ sessionId }: ChatWindowProps) {
+  const {
+    thread,
+    messages,
+    input,
+    handleInputChange,
+    handleSubmit,
+    isLoading,
+    error,
+    switchToThread,
+    createThread,
+  } = useAssistant();
+
+  // Preservar lógica de nova conversa
+  const handleNewMessage = async (message: string) => {
+    const threadId = await createThread();
+    await switchToThread(threadId);
+    // Mensagem será enviada automaticamente
+    handleSubmit({ content: message });
+  };
+
+  // Welcome Screen preservado
+  if (!sessionId) {
+    return (
+      <div className="flex h-full flex-col">
+        <div className="flex min-h-0 flex-1 flex-col">
+          <div className="flex flex-1 items-center justify-center">
+            <div className="mx-auto w-full max-w-4xl px-4">
+              <WelcomeHeader />
+              <WelcomeSuggestions onSuggestionClick={handleNewMessage} />
+            </div>
+          </div>
+        </div>
+        {/* Input preservado */}
+      </div>
+    );
+  }
+
+  // Layout de conversa preservado
+  return (
+    <div className="flex h-full flex-col p-4">
+      {/* Mensagens com Markdown preservado */}
+      {messages.map((message) => (
+        <Message
+          key={message.id}
+          role={message.role}
+          content={message.content}
+          // ReactMarkdown continua funcionando
+        />
+      ))}
+      {/* Input area preservada */}
+    </div>
+  );
+}
+```
+
+#### Dia 20: Backend Adapter para Assistant-UI
+
+**Objetivos:**
+
+- [ ] Criar endpoint `/api/assistant` compatível
+- [ ] Adaptar respostas para formato Assistant-UI
+- [ ] Integrar geração de títulos
+- [ ] Manter compatibilidade com banco atual
+
+**Implementação Proposta:**
+
+```typescript
+// app/api/assistant/route.ts
+import { AssistantResponse } from "@assistant-ui/react";
+
+export async function POST(req: Request) {
+  const { threadId, message } = await req.json();
+
+  // Adaptar para formato atual do backend
+  const response = await chatService.processMessage({
+    sessionId: threadId,
+    content: message.content,
+    useAgent: true,
+  });
+
+  // Gerar título se for primeira mensagem
+  if (isFirstMessage(threadId)) {
+    await generateAndSaveTitle(threadId, message.content);
+  }
+
+  return AssistantResponse({
+    messages: response.messages,
+    threadId: response.sessionId,
+  });
+}
+```
+
+#### Dia 21: Testes e Validação Final
+
+**Checklist de Validação:**
+
+- [ ] ✅ Welcome Screen funcionando identicamente
+- [ ] ✅ Markdown rendering preservado (ReactMarkdown + remarkGfm)
+- [ ] ✅ Layout responsivo sem quebras
+- [ ] ✅ Streaming visual mantido
+- [ ] ✅ Geração de títulos automática funcionando
+- [ ] ✅ Histórico de mensagens preservado
+- [ ] ✅ Performance igual ou melhor
+- [ ] ✅ Todos os testes passando (9/9 suites)
+
+**Testes Específicos:**
+
+```typescript
+// __tests__/assistant-ui-migration.test.ts
+describe("Assistant-UI Migration", () => {
+  it("should preserve all existing functionality", () => {
+    // Welcome Screen
+    // Markdown rendering
+    // Message layout
+    // Streaming behavior
+    // Title generation
+  });
+
+  it("should generate titles automatically", async () => {
+    const { thread } = await createNewThread();
+    await sendMessage("Como fazer um bolo?");
+
+    // Título deve ser gerado automaticamente
+    expect(thread.title).not.toBe("Chat DD/MM/YYYY");
+    expect(thread.title).toContain("bolo");
+  });
+});
+```
+
+#### 🛡️ Garantias de Não-Quebra
+
+1. **Componentes Preservados:**
+
+   - `WelcomeHeader` - Sem mudanças
+   - `WelcomeSuggestions` - Sem mudanças
+   - `Message` com ReactMarkdown - Sem mudanças
+   - Layout flexbox - Sem mudanças
+
+2. **Funcionalidades Mantidas:**
+
+   - ✅ Streaming visual em tempo real
+   - ✅ Auto-save no backend
+   - ✅ Navegação entre sessões
+   - ✅ Histórico de conversas
+   - ✅ Markdown com tabelas, listas, código
+
+3. **Melhorias Adicionais:**
+   - ✅ Geração automática de títulos
+   - ✅ Melhor gestão de estado
+   - ✅ Menos código para manter
+   - ✅ APIs mais intuitivas
+
+#### 📊 Métricas de Sucesso FASE 5
+
+- **Funcionalidade**: 100% preservada
+- **Performance**: ≥ atual
+- **Código**: -30% adicional de redução
+- **Manutenibilidade**: Score 9/10
+- **Títulos**: 100% gerados automaticamente
+
 ## 🔧 Detalhes Técnicos
 
 ### Mudanças nos Componentes
@@ -986,23 +1235,45 @@ O sistema está **pronto para produção** com:
 
 Para alcançar 100% do padrão Assistant-UI:
 
-1. Implementar Thread Context Provider
-2. Adicionar Error Boundaries
-3. Implementar Retry Automático
-4. Criar Composable Hooks
-5. Otimizar com Lazy Loading
+1. **Migrar para `useAssistant`**
+
+### Evolução (FASE 5 - Recomendada) 🚀
+
+Para implementar completamente o padrão Assistant-UI e resolver definitivamente a geração automática de títulos:
+
+1. **Migrar para `useAssistant`** - Hook oficial do Assistant-UI
+2. **Implementar AssistantRuntimeProvider** - Gerenciamento thread-first nativo
+3. **Geração Automática de Títulos** - Integrada ao ciclo de vida
+4. **Backend Adapter** - Compatibilidade com formato Assistant-UI
+5. **Preservar 100% das funcionalidades** - Sem breaking changes
+
+**Benefícios da FASE 5:**
+
+- ✅ Títulos gerados automaticamente sem lógica adicional
+- ✅ Arquitetura 100% alinhada com Assistant-UI
+- ✅ Menos código e maior manutenibilidade
+- ✅ Preparado para futuras features do Assistant-UI
+- ✅ Performance otimizada com menos re-renders
 
 ## 📝 Conclusão
 
-A migração foi **concluída com sucesso**, alcançando todos os objetivos principais:
+A migração das FASES 1-4 foi **concluída com sucesso**, alcançando todos os objetivos principais:
 
 1. ✅ **Bugs eliminados** - Zero duplicação, streaming estável
 2. ✅ **Código simplificado** - 70% menos complexidade
 3. ✅ **UX melhorada** - Fluxo único e intuitivo
-4. ✅ **Padrões modernos** - Vercel AI SDK + Assistant-UI
+4. ✅ **Padrões modernos** - Vercel AI SDK compatível
 5. ✅ **Produção ready** - Sistema estável e testado
 
-A FASE 5 (opcional) levaria o sistema ao estado ideal do Assistant-UI, mas o sistema atual já está **100% funcional e pronto para uso**.
+**FASE 5 (Recomendada)** levaria o sistema ao estado ideal do Assistant-UI:
+
+- 🎯 **Implementação completa do padrão thread-first**
+- 🤖 **Geração automática de títulos nativa**
+- 🚀 **100% alinhado com Assistant-UI**
+- 💡 **Código ainda mais simples e manutenível**
+- ⚡ **Performance otimizada**
+
+O sistema atual já está **100% funcional**, mas a FASE 5 resolveria definitivamente a questão dos títulos e proporcionaria uma base ainda mais sólida para o futuro.
 
 ---
 
@@ -1010,3 +1281,8 @@ A FASE 5 (opcional) levaria o sistema ao estado ideal do Assistant-UI, mas o sis
 **Última atualização:** Janeiro 2025  
 **Responsável:** Time de Engenharia Chat  
 **Status:** FASES 1-4 Concluídas | Sistema em Produção | FASE 5 Opcional
+
+**Status:**
+
+- FASES 1-4: ✅ Concluídas | Sistema em Produção
+- FASE 5: 🚀 Recomendada | Implementação Assistant-UI Completa

@@ -17,6 +17,7 @@ import {
   criarChatSessionSchema,
   duplicarSessaoSchema,
   enviarMensagemSchema,
+  generateSessionTitleSchema,
   chatIdSchema as idSchema,
   iniciarNovaConversa as iniciarNovaConversaSchema,
   sessionIdSchema,
@@ -27,6 +28,7 @@ import { protectedProcedure } from "../../../procedures";
 import { autoCreateSessionWithMessageHandler } from "./autoCreateSessionWithMessage.handler";
 import { createEmptySessionHandler } from "./createEmptySession.handler";
 import { enviarMensagemHandler } from "./enviarMensagem.handler";
+import { generateSessionTitleHandler } from "./generateSessionTitle.handler";
 import { getPreferredModelHandler } from "./getPreferredModel.handler";
 
 export const chatRouter: TRPCRouterRecord = {
@@ -670,5 +672,13 @@ export const chatRouter: TRPCRouterRecord = {
     .input(createEmptySessionSchema)
     .mutation(async ({ input, ctx }) => {
       return createEmptySessionHandler({ input, ctx });
+    }),
+
+  // 🤖 Gerar título de sessão baseado na primeira mensagem
+  generateSessionTitle: protectedProcedure
+    .use(chatWithDependenciesMiddleware)
+    .input(generateSessionTitleSchema)
+    .mutation(async ({ input, ctx }) => {
+      return generateSessionTitleHandler({ input, ctx });
     }),
 };

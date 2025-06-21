@@ -3,7 +3,7 @@
 
 import { useEffect, useRef } from "react";
 import { useChat } from "@ai-sdk/react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AlertCircle, Loader2, MessageCircle, RefreshCw } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -31,7 +31,7 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
   const t = useTranslations();
-  const trpc = useTRPC();
+  const utils = useTRPC();
 
   // 🚨 FASE 1 - DIA 2: REMOVENDO AUTO-ENVIO - Flag comentada
   // const autoSentRef = useRef<Set<string>>(new Set());
@@ -52,6 +52,22 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
       console.error("❌ [EMPTY_SESSION] Erro ao criar sessão:", error);
     },
   });
+
+  // 🤖 Hook para gerar título da sessão
+  const generateTitleMutation = useMutation(
+    utils.app.chat.generateSessionTitle.mutationOptions({
+      onSuccess: (data) => {
+        console.log("✅ [GENERATE_TITLE] Título gerado:", data.title);
+        // Invalidar queries para atualizar a lista de sessões
+        queryClient.invalidateQueries(
+          utils.app.chat.listarSessions.pathFilter(),
+        );
+      },
+      onError: (error) => {
+        console.error("❌ [GENERATE_TITLE] Erro ao gerar título:", error);
+      },
+    }),
+  );
 
   // 🚀 FASE 2 - DIA 6-7: Hook para buscar sessão com mensagens formatadas
   const {
@@ -118,8 +134,17 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
 
       // Limpar mensagem pendente
       sessionStorage.removeItem(`pending-message-${sessionId}`);
+
+      // 🤖 Gerar título após enviar primeira mensagem
+      if (session?.title?.startsWith("Chat ")) {
+        console.log("🤖 [GENERATE_TITLE] Gerando título para nova sessão...");
+        generateTitleMutation.mutate({
+          sessionId: sessionId,
+          firstMessage: pendingMessage,
+        });
+      }
     }
-  }, [sessionId, messages.length, isLoading, append]);
+  }, [sessionId, messages.length, isLoading, append, session?.title]);
 
   // ✅ REMOVIDO: Auto-processamento não é mais necessário
   // O novo fluxo usa envio pós-navegação que é mais limpo e confiável
@@ -159,7 +184,7 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
     try {
       await createEmptySession({
         title: `Chat ${new Date().toLocaleDateString()}`,
-        generateTitle: true,
+        generateTitle: true, // Flag para indicar que queremos gerar título
         metadata: {
           firstMessage: message, // Salvar para referência
           createdAt: new Date().toISOString(),
