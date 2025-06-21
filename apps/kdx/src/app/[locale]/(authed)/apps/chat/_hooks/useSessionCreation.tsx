@@ -120,7 +120,7 @@ export function useSessionCreation(options?: UseSessionCreationOptions) {
         });
 
         if (featureFlag.enabled) {
-          // 🚀 NOVO FLUXO: createEmptySession + auto-processamento
+          // 🚀 NOVO FLUXO: createEmptySession + envio pós-navegação
           console.log(
             "🆕 [SESSION_CREATION] Usando NOVO fluxo (createEmptySession)",
           );
@@ -129,7 +129,17 @@ export function useSessionCreation(options?: UseSessionCreationOptions) {
             input.firstMessage.slice(0, 50) + "...",
           );
 
-          // Criar sessão vazia
+          // 🔄 FASE 3 - DIA 12: Salvar mensagem para envio pós-navegação
+          const tempSessionId = `temp-${Date.now()}`;
+          sessionStorage.setItem(
+            `pending-message-${tempSessionId}`,
+            input.firstMessage,
+          );
+          console.log(
+            "💾 [SESSION_CREATION] Mensagem salva para envio pós-navegação",
+          );
+
+          // Criar sessão vazia (createEmptySession não retorna valor, usa callback)
           await createEmptySession({
             title: input.generateTitle
               ? undefined
@@ -143,8 +153,11 @@ export function useSessionCreation(options?: UseSessionCreationOptions) {
             },
           });
 
+          // Nota: A transferência da mensagem pendente será feita no callback onSuccess
+          // do useEmptySession, que tem acesso ao sessionId da sessão criada
+
           // Nota: A mensagem será enviada automaticamente no ChatWindow
-          // via auto-processamento inteligente usando initialMessages
+          // via detecção de mensagem pendente pós-navegação
         } else {
           // 📛 FLUXO ATUAL: autoCreateSessionWithMessage
           console.log(

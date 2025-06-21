@@ -14,7 +14,7 @@ import { ScrollArea } from "@kdx/ui/scroll-area";
 import { Separator } from "@kdx/ui/separator";
 
 import { useTRPC } from "~/trpc/react";
-import { useAutoCreateSession } from "../_hooks/useAutoCreateSession";
+import { useSessionCreation } from "../_hooks/useSessionCreation";
 import { useSessionWithMessages } from "../_hooks/useSessionWithMessages";
 import { InputBox } from "./input-box";
 import { Message } from "./message";
@@ -39,15 +39,22 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
   // ✅ NOVO: Detectar se é nova conversa
   const isNewConversation = !sessionId;
 
-  // ✅ NOVO: Hook para criar nova sessão
-  const { createSessionWithMessage, isCreating } = useAutoCreateSession({
-    onSuccess: (newSessionId) => {
-      onNewSession?.(newSessionId);
-    },
-    onError: (error) => {
-      console.error("❌ [UNIFIED_CHAT] Erro ao criar sessão:", error);
-    },
-  });
+  // 🔄 FASE 3 - DIA 11: Hook de abstração para criar nova sessão
+  const { createSession, isCreating, isUsingNewFlow, debugInfo } =
+    useSessionCreation({
+      onSuccess: (newSessionId) => {
+        console.log(
+          "✅ [SESSION_CREATION] Sessão criada com sucesso:",
+          newSessionId,
+        );
+        console.log("🔧 [SESSION_CREATION] Fluxo usado:", debugInfo.flow);
+        onNewSession?.(newSessionId);
+      },
+      onError: (error) => {
+        console.error("❌ [SESSION_CREATION] Erro ao criar sessão:", error);
+        console.log("🔧 [SESSION_CREATION] Debug info:", debugInfo);
+      },
+    });
 
   // 🚀 FASE 2 - DIA 6-7: Hook para buscar sessão com mensagens formatadas
   const {
@@ -93,15 +100,48 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
   // 🚀 FASE 2 - DIA 6-7: REMOVIDA toda sincronização manual
   // O initialMessages do useChat já carrega o histórico automaticamente!
 
+  // 🔄 FASE 3 - DIA 12: ENVIO PÓS-NAVEGAÇÃO para novo fluxo
+  useEffect(() => {
+    // Verificar se há mensagem pendente do novo fluxo
+    const pendingMessage = sessionStorage.getItem(
+      `pending-message-${sessionId}`,
+    );
+
+    if (
+      sessionId &&
+      pendingMessage &&
+      isUsingNewFlow &&
+      messages.length === 0 &&
+      !isLoading
+    ) {
+      console.log(
+        "📤 [POST_NAVIGATION] Enviando mensagem pendente:",
+        pendingMessage.slice(0, 50) + "...",
+      );
+
+      // Enviar mensagem pendente via append
+      append({
+        role: "user",
+        content: pendingMessage,
+      });
+
+      // Limpar mensagem pendente
+      sessionStorage.removeItem(`pending-message-${sessionId}`);
+    }
+  }, [sessionId, isUsingNewFlow, messages.length, isLoading, append]);
+
   // 🎯 AUTO-PROCESSAMENTO INTELIGENTE: Reprocessar última mensagem (Assistant-UI pattern)
+  // APENAS para fluxo atual (antigo)
   useEffect(() => {
     // Condições para auto-processamento inteligente:
     // 1. Tem sessionId (não é nova conversa)
     // 2. initialMessages tem exatamente 1 mensagem do usuário
     // 3. useChat também tem exatamente 1 mensagem (sincronizado)
     // 4. Não está fazendo streaming
+    // 5. NÃO está usando novo fluxo (para evitar conflito)
     if (
       sessionId &&
+      !isUsingNewFlow &&
       initialMessages.length === 1 &&
       initialMessages[0]?.role === "user" &&
       messages.length === 1 &&
@@ -109,7 +149,7 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
       !isLoading
     ) {
       console.log(
-        "🎯 [AUTO_PROCESS_SMART] Nova sessão detectada, reprocessando última mensagem...",
+        "🎯 [AUTO_PROCESS_SMART] Nova sessão detectada (fluxo atual), reprocessando última mensagem...",
       );
       console.log(
         "📝 [AUTO_PROCESS_SMART] Mensagem:",
@@ -121,7 +161,7 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
       // Baseado em: https://ai-sdk.dev/docs/reference/ai-sdk-ui/use-chat#reload
       reload();
     }
-  }, [sessionId, initialMessages, messages, isLoading, reload]);
+  }, [sessionId, isUsingNewFlow, initialMessages, messages, isLoading, reload]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -143,18 +183,21 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
   }, [sessionId]);
   */
 
-  // ✅ NOVO: Função para lidar com nova mensagem (nova conversa)
+  // 🔄 FASE 3 - DIA 11: Função adaptada para usar abstração
   const handleNewMessage = async (message: string) => {
     if (isCreating) return;
 
+    console.log("🚀 [SESSION_CREATION] Iniciando criação de sessão...");
+    console.log("🎛️ [SESSION_CREATION] Usando novo fluxo:", isUsingNewFlow);
+
     try {
-      await createSessionWithMessage({
+      await createSession({
         firstMessage: message,
-        useAgent: false,
+        useAgent: true, // Habilitar agente para processamento automático
         generateTitle: true,
       });
     } catch (error) {
-      console.error("❌ [UNIFIED_CHAT] Erro ao criar nova sessão:", error);
+      console.error("❌ [SESSION_CREATION] Erro ao criar nova sessão:", error);
     }
   };
 
@@ -188,6 +231,16 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
         {/* Input fixo no bottom */}
         <div className="bg-background flex-shrink-0 border-t p-4">
           <div className="mx-auto max-w-4xl">
+            {/* 🔧 FASE 3: Indicador de fluxo (apenas em desenvolvimento) */}
+            {process.env.NODE_ENV === "development" && (
+              <div className="mb-2 text-center">
+                <span className="bg-muted text-muted-foreground rounded px-2 py-1 text-xs">
+                  🎛️ {isUsingNewFlow ? "NOVO FLUXO" : "FLUXO ATUAL"} | Feature
+                  Flag: {debugInfo?.featureFlag?.enabled ? "ON" : "OFF"}
+                </span>
+              </div>
+            )}
+
             <InputBox
               ref={inputRef}
               onSend={handleNewMessage}
