@@ -85,6 +85,12 @@ export const autoCreateSessionWithMessageSchema = z.object({
   generateTitle: z.boolean().default(true),
 });
 
+export const createEmptySessionSchema = z.object({
+  title: z.string().min(1, "Título é obrigatório").max(255).optional(),
+  generateTitle: z.boolean().default(false),
+  metadata: z.record(z.unknown()).optional(),
+});
+
 export const iniciarNovaConversa = z.object({
   title: z.string().min(1, "Título é obrigatório").max(255),
   aiModelId: z.string().min(1, "Modelo de IA é obrigatório"),
@@ -145,6 +151,7 @@ export type EnviarMensagemInput = z.infer<typeof enviarMensagemSchema>;
 export type AutoCreateSessionWithMessageInput = z.infer<
   typeof autoCreateSessionWithMessageSchema
 >;
+export type CreateEmptySessionInput = z.infer<typeof createEmptySessionSchema>;
 export type IniciarNovaConversaInput = z.infer<typeof iniciarNovaConversa>;
 export type DuplicarSessaoInput = z.infer<typeof duplicarSessaoSchema>;
 

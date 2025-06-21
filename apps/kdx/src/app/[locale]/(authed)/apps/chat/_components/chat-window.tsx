@@ -32,8 +32,8 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
   const t = useTranslations();
   const trpc = useTRPC();
 
-  // 🚨 CORREÇÃO: Flag para evitar loop infinito no auto-envio
-  const autoSentRef = useRef<Set<string>>(new Set());
+  // 🚨 FASE 1 - DIA 2: REMOVENDO AUTO-ENVIO - Flag comentada
+  // const autoSentRef = useRef<Set<string>>(new Set());
 
   // ✅ NOVO: Detectar se é nova conversa
   const isNewConversation = !sessionId;
@@ -114,10 +114,12 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
     ),
   );
 
-  // ✅ SINCRONIZAÇÃO ULTRA-CONSERVADORA: Apenas para carregamento inicial
+  // 🚨 FASE 1 - DIA 3: SINCRONIZAÇÃO SIMPLIFICADA - Apenas no mount inicial
+  const hasSyncedRef = useRef(false);
+
   useEffect(() => {
-    if (!sessionId || messagesQuery.isLoading) {
-      return; // Não sincronizar se não há sessão ou ainda carregando
+    if (!sessionId || messagesQuery.isLoading || hasSyncedRef.current) {
+      return; // Não sincronizar se não há sessão, ainda carregando, ou já sincronizou
     }
 
     // ✅ PROTEÇÃO CRÍTICA: NUNCA sincronizar durante streaming
@@ -126,7 +128,7 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
       return;
     }
 
-    // ✅ PROTEÇÃO CRÍTICA: NUNCA sincronizar se já há mensagens do useChat
+    // ✅ PROTEÇÃO: Sincronizar apenas se useChat não tem mensagens
     if (messages.length > 0) {
       console.log(
         "⚡ [CHAT_WINDOW] Pulando sincronização - useChat já tem mensagens",
@@ -153,6 +155,7 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
           `🔄 [CHAT_WINDOW] Carregamento inicial - sincronizando ${formattedMessages.length} mensagens`,
         );
         setMessages(formattedMessages);
+        hasSyncedRef.current = true; // Marcar como sincronizado
       }
 
       console.log(
@@ -163,7 +166,8 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
       );
       console.log(`✅ [CHAT_WINDOW] Mensagens no useChat: ${messages.length}`);
 
-      // 🚀 CORREÇÃO: Auto-enviar primeira mensagem se houver apenas mensagem do usuário
+      // 🚨 FASE 1 - DIA 2: REMOVENDO AUTO-ENVIO - Lógica comentada
+      /*
       const hasOnlyUserMessage =
         formattedMessages.length === 1 && formattedMessages[0]?.role === "user";
 
@@ -196,15 +200,17 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
           });
         }, 100);
       }
+      */
     }
-  }, [
-    messagesQuery.data,
-    sessionId,
-    setMessages,
-    append,
-    isLoading,
-    messages.length,
-  ]);
+  }, [messagesQuery.data, sessionId, setMessages, isLoading, messages.length]);
+
+  // 🚨 FASE 1 - DIA 3: Reset da flag quando sessão muda
+  useEffect(() => {
+    hasSyncedRef.current = false;
+    console.log(
+      `🔄 [CHAT_WINDOW] Reset flag de sincronização para sessão: ${sessionId}`,
+    );
+  }, [sessionId]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -217,12 +223,14 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
     }
   }, [sessionId, isNewConversation, messagesQuery.isLoading]);
 
-  // 🚨 CORREÇÃO: Limpar flag quando sessão muda (mas não as mensagens)
+  // 🚨 FASE 1 - DIA 2: REMOVENDO AUTO-ENVIO - useEffect comentado
+  /*
   useEffect(() => {
     // Limpar flags antigas quando trocar de sessão
     autoSentRef.current.clear();
     console.log(`🔄 [CHAT_WINDOW] Mudança de sessão detectada: ${sessionId}`);
   }, [sessionId]);
+  */
 
   // ✅ NOVO: Função para lidar com nova mensagem (nova conversa)
   const handleNewMessage = async (message: string) => {

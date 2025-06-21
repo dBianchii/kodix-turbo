@@ -11,6 +11,7 @@ import {
   buscarChatFoldersSchema,
   buscarChatMessagesSchema,
   buscarChatSessionsSchema,
+  createEmptySessionSchema,
   criarChatFolderSchema,
   criarChatMessageSchema,
   criarChatSessionSchema,
@@ -24,6 +25,7 @@ import {
 import { chatWithDependenciesMiddleware } from "../../../middlewares";
 import { protectedProcedure } from "../../../procedures";
 import { autoCreateSessionWithMessageHandler } from "./autoCreateSessionWithMessage.handler";
+import { createEmptySessionHandler } from "./createEmptySession.handler";
 import { enviarMensagemHandler } from "./enviarMensagem.handler";
 import { getPreferredModelHandler } from "./getPreferredModel.handler";
 
@@ -660,5 +662,13 @@ export const chatRouter: TRPCRouterRecord = {
     .input(autoCreateSessionWithMessageSchema)
     .mutation(async ({ input, ctx }) => {
       return autoCreateSessionWithMessageHandler({ input, ctx });
+    }),
+
+  // 🚀 FASE 2: Novo endpoint para criar sessão vazia
+  createEmptySession: protectedProcedure
+    .use(chatWithDependenciesMiddleware)
+    .input(createEmptySessionSchema)
+    .mutation(async ({ input, ctx }) => {
+      return createEmptySessionHandler({ input, ctx });
     }),
 };

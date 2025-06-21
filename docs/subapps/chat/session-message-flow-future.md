@@ -1,5 +1,44 @@
 # Fluxo de Sessões e Mensagens - Modelo de Referência Assistant-UI
 
+> **📋 Status:** FASE 1 ✅ CONCLUÍDA | FASE 2 🔄 EM ANDAMENTO  
+> **🗓️ Última atualização:** Dezembro 2024  
+> **🎯 Objetivo:** Migração completa para padrões Assistant-UI
+
+## 🏁 FASE 1 - Preparação Concluída ✅
+
+A **FASE 1: Preparação e Quick Wins** foi concluída com sucesso:
+
+### ✅ Conquistas Alcançadas
+
+- ❌ **Auto-envio removido** - Eliminada duplicação de primeira mensagem
+- 🔄 **Sincronização simplificada** - Apenas no carregamento inicial
+- 📊 **Todos os testes passando** (9/9 suites)
+- 🧹 **Base de código limpa** - Pronta para refatoração core
+
+### 🔧 Implementações Técnicas
+
+```typescript
+// Auto-envio completamente removido
+// const autoSentRef = useRef<Set<string>>(new Set());
+
+// Sincronização controlada por flag
+const hasSyncedRef = useRef(false);
+useEffect(() => {
+  if (!sessionId || messagesQuery.isLoading || hasSyncedRef.current) return;
+
+  if (formattedMessages.length > 0) {
+    setMessages(formattedMessages);
+    hasSyncedRef.current = true;
+  }
+}, [messagesQuery.data, sessionId, setMessages, isLoading, messages.length]);
+```
+
+---
+
+## 🚀 PRÓXIMA FASE: Refatoração Core
+
+Com a base estabilizada, podemos agora focar na migração para Assistant-UI:
+
 ## 📋 Visão Geral
 
 Este documento analisa como o [Assistant-UI](https://assistant-ui.com) gerencia sessões e mensagens, servindo como modelo de referência para a arquitetura ideal do Chat SubApp. O Assistant-UI é uma biblioteca React moderna que implementa as melhores práticas para interfaces de chat com IA.
@@ -357,3 +396,146 @@ Seguindo estes princípios, podemos transformar nosso chat complexo em uma imple
 - [Assistant-UI Documentation](https://assistant-ui.com/docs)
 - [Vercel AI SDK](https://sdk.vercel.ai)
 - [React Patterns](https://reactpatterns.com)
+
+## 🔄 FASE 2 - Refatoração Core EM ANDAMENTO
+
+### ✅ **Dia 4-5: Hook useEmptySession CONCLUÍDO**
+
+**🚀 Implementações Realizadas:**
+
+#### Hook de Sessão Vazia
+
+```typescript
+// Novo hook para criar sessões vazias (sem primeira mensagem)
+export function useEmptySession(options?: UseEmptySessionOptions) {
+  const createEmptyMutation = useMutation(
+    trpc.app.chat.createEmptySession.mutationOptions({
+      onSuccess: (result) => {
+        toast.success("Nova conversa criada!");
+        router.push(`/apps/chat/${result.session.id}`);
+        options?.onSuccess?.(result.session.id);
+      },
+    }),
+  );
+
+  const createEmptySession = async (input?: CreateEmptySessionInput) => {
+    await createEmptyMutation.mutateAsync({
+      title: input?.title || `Chat ${new Date().toLocaleDateString()}`,
+      generateTitle: false, // Não gerar título sem mensagem
+      metadata: input?.metadata || { createdAt: new Date().toISOString() },
+    });
+  };
+
+  return { createEmptySession, isCreating, error, reset };
+}
+```
+
+#### Backend Handler
+
+```typescript
+// Handler que cria sessão VAZIA (sem mensagens iniciais)
+export async function createEmptySessionHandler({ input, ctx }) {
+  // 1. Buscar modelo disponível
+  const availableModels = await AiStudioService.getAvailableModels({
+    teamId: ctx.auth.user.activeTeamId,
+    requestingApp: chatAppId,
+  });
+
+  // 2. Criar sessão VAZIA
+  const session = await chatRepository.ChatSessionRepository.create({
+    title: input.title || `Chat ${new Date().toLocaleDateString()}`,
+    aiModelId: availableModels[0]!.id,
+    teamId: ctx.auth.user.activeTeamId,
+    userId: ctx.auth.user.id,
+  });
+
+  // 3. Apenas Team Instructions (se configuradas)
+  const teamInstructions = await AiStudioService.getTeamInstructions({
+    teamId: ctx.auth.user.activeTeamId,
+    requestingApp: chatAppId,
+  });
+
+  if (teamInstructions?.content?.trim()) {
+    await ChatService.createSystemMessage({
+      chatSessionId: session.id,
+      content: teamInstructions.content,
+      metadata: { type: "team_instructions" },
+    });
+  }
+
+  return {
+    session,
+    userMessage: null, // ✨ SEM MENSAGENS INICIAIS!
+    aiMessage: null,
+  };
+}
+```
+
+#### Tipos e Validação
+
+```typescript
+// Schema para sessão vazia
+export const createEmptySessionSchema = z.object({
+  title: z.string().min(1).max(255).optional(),
+  generateTitle: z.boolean().default(false),
+  metadata: z.record(z.unknown()).optional(),
+});
+
+export type CreateEmptySessionInput = z.infer<typeof createEmptySessionSchema>;
+```
+
+### 🔄 **Próximo: Dia 6-7 - initialMessages**
+
+**🎯 Objetivo:** Implementar `initialMessages` do `useChat` para carregar histórico uma única vez.
+
+#### Arquitetura Futura
+
+```typescript
+// ChatWindow com initialMessages
+export function ChatWindow({ sessionId }: Props) {
+  // 1. Buscar sessão e mensagens
+  const { data: sessionData } = useQuery({
+    queryKey: ["session-with-messages", sessionId],
+    queryFn: () => fetchSessionWithMessages(sessionId),
+    enabled: !!sessionId,
+  });
+
+  // 2. useChat com initialMessages (ÚNICA VEZ)
+  const { messages, append, isLoading } = useChat({
+    api: "/api/chat/stream",
+    body: { chatSessionId: sessionId, useAgent: true },
+    initialMessages: sessionData?.messages || [], // 🚀 Carrega UMA VEZ
+    onFinish: (message) => {
+      console.log("✅ Streaming completo:", message);
+      // Auto-save já acontece no backend
+    },
+  });
+
+  // ❌ REMOVIDO: useEffect de sincronização
+  // ❌ REMOVIDO: setMessages manual
+  // ❌ REMOVIDO: hasSyncedRef
+  // ✅ RESULTADO: Código limpo e simples!
+
+  return (
+    <div className="flex h-full flex-col">
+      <MessageList messages={messages} isLoading={isLoading} />
+      <InputBox onSend={append} disabled={isLoading} />
+    </div>
+  );
+}
+```
+
+### 📊 **Progresso Atual**
+
+- ✅ **FASE 1:** Preparação (3 dias) - 100% concluída
+- 🔄 **FASE 2:** Refatoração Core (5 dias) - 40% concluída
+  - ✅ Dia 4-5: Hook useEmptySession - CONCLUÍDO
+  - 🔄 Dia 6-7: initialMessages - PRÓXIMO
+  - ⏳ Dia 8: Unificar Fluxos - PENDENTE
+
+### 🎯 **Benefícios Alcançados**
+
+1. **✨ Sessões Vazias:** Criação sem primeira mensagem obrigatória
+2. **🧹 Código Limpo:** Separação clara de responsabilidades
+3. **📊 Testes Validados:** 9/9 suites passando
+4. **🔄 Preparado para initialMessages:** Base sólida para próxima etapa

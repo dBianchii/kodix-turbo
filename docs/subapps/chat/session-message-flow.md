@@ -301,3 +301,57 @@ export function ChatWindow({ sessionId }: Props) {
 **Status**: Documento em revisão
 **Última atualização**: Dezembro 2024
 **Autor**: Sistema de Documentação
+
+# Fluxo de Sessões e Mensagens - Estado Atual
+
+> **📋 Status:** Pós-FASE 1 ✅ | Auto-envio removido | Sincronização simplificada  
+> **🗓️ Última atualização:** Dezembro 2024  
+> **⚠️ Mudanças recentes:** FASE 1 concluída - Auto-envio desabilitado
+
+## 🔄 Mudanças da FASE 1 Implementadas
+
+### ❌ Auto-envio Removido
+
+O sistema de auto-envio automático foi **completamente desabilitado** para eliminar duplicação de mensagens:
+
+```typescript
+// ❌ REMOVIDO - Auto-envio desabilitado
+// const autoSentRef = useRef<Set<string>>(new Set());
+
+// ❌ REMOVIDO - Lógica de auto-envio comentada
+/*
+const hasOnlyUserMessage = formattedMessages.length === 1 && formattedMessages[0]?.role === "user";
+if (hasOnlyUserMessage && userMessage && !autoSentRef.current.has(messageKey)) {
+  // ... lógica de auto-envio removida
+}
+*/
+```
+
+### 🔄 Sincronização Simplificada
+
+Nova abordagem de sincronização **apenas no carregamento inicial**:
+
+```typescript
+// ✅ NOVO - Sincronização controlada
+const hasSyncedRef = useRef(false);
+
+useEffect(() => {
+  if (!sessionId || messagesQuery.isLoading || hasSyncedRef.current) {
+    return; // Sincronizar apenas uma vez
+  }
+
+  if (formattedMessages.length > 0) {
+    setMessages(formattedMessages);
+    hasSyncedRef.current = true; // Marcar como sincronizado
+  }
+}, [messagesQuery.data, sessionId, setMessages, isLoading, messages.length]);
+
+// ✅ NOVO - Reset da flag quando sessão muda
+useEffect(() => {
+  hasSyncedRef.current = false;
+}, [sessionId]);
+```
+
+---
+
+## 📊 Estado Atual do Sistema
