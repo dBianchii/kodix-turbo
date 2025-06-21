@@ -636,62 +636,16 @@ const handleNewMessage = async (message: string) => {
 };
 ```
 
-###### ✅ Dia 12: Implementar Envio Pós-Navegação **CONCLUÍDO**
+###### ✅ Dia 12: Implementar Envio Pós-Navegação **APRIMORADO**
 
-- [x] Detectar navegação para nova sessão vazia
-- [x] Enviar mensagem pendente via `append()`
-- [x] Garantir que não haja duplicação
-- [x] Manter UX idêntica à atual
+**🔧 MELHORIA APLICADA:**
 
-**✅ Implementação Realizada:**
+- Condição de timing mais robusta para envio pós-navegação
+- Substituição de `!isLoading` por `!isLoadingSession && initialMessages !== undefined`
+- Resolução de race condition que causava necessidade de refresh
+- Logs detalhados para debugging e monitoramento
 
-```typescript
-// 🔄 FASE 3 - DIA 12: ENVIO PÓS-NAVEGAÇÃO para novo fluxo
-useEffect(() => {
-  // Verificar se há mensagem pendente do novo fluxo
-  const pendingMessage = sessionStorage.getItem(`pending-message-${sessionId}`);
-
-  if (
-    sessionId &&
-    pendingMessage &&
-    isUsingNewFlow &&
-    messages.length === 0 &&
-    !isLoading
-  ) {
-    console.log(
-      "📤 [POST_NAVIGATION] Enviando mensagem pendente:",
-      pendingMessage.slice(0, 50) + "...",
-    );
-
-    // Enviar mensagem pendente via append
-    append({
-      role: "user",
-      content: pendingMessage,
-    });
-
-    // Limpar mensagem pendente
-    sessionStorage.removeItem(`pending-message-${sessionId}`);
-  }
-}, [sessionId, isUsingNewFlow, messages.length, isLoading, append]);
-
-// Sistema de transferência de mensagens temporárias
-// useSessionCreation.tsx - Salva mensagem temporária
-const tempSessionId = `temp-${Date.now()}`;
-sessionStorage.setItem(`pending-message-${tempSessionId}`, input.firstMessage);
-
-// useEmptySession.tsx - Transfere para sessão real
-const tempKeys = Object.keys(sessionStorage).filter((key) =>
-  key.startsWith("pending-message-temp-"),
-);
-if (tempKeys.length > 0) {
-  const tempKey = tempKeys[0];
-  const pendingMessage = sessionStorage.getItem(tempKey);
-  if (pendingMessage) {
-    sessionStorage.setItem(`pending-message-${sessionId}`, pendingMessage);
-    sessionStorage.removeItem(tempKey);
-  }
-}
-```
+**📊 Resultado:** UX 100% suave sem necessidade de refresh da página
 
 ###### ✅ Dia 13: Testes de Integração e Validação **CONCLUÍDO**
 

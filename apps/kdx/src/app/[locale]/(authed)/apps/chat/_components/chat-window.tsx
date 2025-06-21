@@ -125,11 +125,31 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
       `pending-message-${sessionId}`,
     );
 
-    if (sessionId && pendingMessage && messages.length === 0 && !isLoading) {
+    // 🔧 CORREÇÃO: Condição mais robusta para timing
+    // - Sessão existe
+    // - Há mensagem pendente
+    // - Não há mensagens no useChat (nova sessão)
+    // - initialMessages carregou (não mais loading session)
+    // - Removido !isLoading para evitar race condition
+    if (
+      sessionId &&
+      pendingMessage &&
+      messages.length === 0 &&
+      !isLoadingSession &&
+      initialMessages !== undefined
+    ) {
       console.log(
         "📤 [POST_NAVIGATION] Enviando mensagem pendente:",
         pendingMessage.slice(0, 50) + "...",
       );
+      console.log("🔧 [POST_NAVIGATION] Condições:", {
+        sessionId: !!sessionId,
+        pendingMessage: !!pendingMessage,
+        messagesLength: messages.length,
+        isLoadingSession,
+        initialMessagesLoaded: initialMessages !== undefined,
+        isLoading,
+      });
 
       // Enviar mensagem pendente via append
       append({
@@ -149,7 +169,14 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
         });
       }
     }
-  }, [sessionId, messages.length, isLoading, append, session?.title]);
+  }, [
+    sessionId,
+    messages.length,
+    isLoadingSession,
+    initialMessages,
+    append,
+    session?.title,
+  ]);
 
   // ✅ REMOVIDO: Auto-processamento não é mais necessário
   // O novo fluxo usa envio pós-navegação que é mais limpo e confiável

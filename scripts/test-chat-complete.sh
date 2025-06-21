@@ -170,6 +170,12 @@ run_test_suite "hooks" \
     "Hook Logic Tests" \
     "frontend"
 
+# 10. Testes de Timing (Post-Navigation)
+run_test_suite "timing" \
+    "$FRONTEND_TEST_DIR/integration/post-navigation-timing.test.ts" \
+    "Post-Navigation Timing Tests" \
+    "frontend"
+
 echo ""
 echo "=============================================================="
 echo -e "${BLUE}📊 RELATÓRIO FINAL COMPLETO - CHAT SUBAPP${NC}"
@@ -185,7 +191,7 @@ fi
 echo ""
 log_info "RESUMO GERAL:"
 echo "🔧 Backend Suites: 5"
-echo "🎨 Frontend Suites: 4"
+echo "🎨 Frontend Suites: 5"
 echo "📊 Total de Suites: $TOTAL_SUITES"
 echo "📈 Total de Testes Individuais: $TOTAL_INDIVIDUAL_TESTS"
 echo ""
