@@ -32,6 +32,7 @@ import { SidebarProvider, SidebarTrigger } from "@kdx/ui/sidebar";
 import { toast } from "@kdx/ui/toast";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
+import { useRouter } from "~/i18n/routing";
 import { useTRPC } from "~/trpc/react";
 import { AppSidebar } from "./_components/app-sidebar";
 import { ChatWindow } from "./_components/chat-window";
@@ -52,6 +53,7 @@ import { useTokenUsage } from "./_hooks/useTokenUsage";
 export default function ChatPage() {
   const t = useTranslations();
   const trpc = useTRPC();
+  const router = useRouter();
   const queryClient = useQueryClient();
   const [selectedSessionId, setSelectedSessionId] = useState<
     string | undefined
@@ -207,12 +209,29 @@ export default function ChatPage() {
     console.log("🔄 [CHAT] handleSessionSelect chamado:", sessionId);
     setSelectedSessionId(sessionId);
 
-    // ✅ Se é uma nova sessão criada, processar primeira resposta da IA
+    // ✅ Se é uma nova sessão criada, navegar para a página da sessão
     if (sessionId) {
       console.log(
-        "🤖 [CHAT] Nova sessão criada, processando primeira resposta da IA...",
+        "🤖 [CHAT] Nova sessão criada, navegando para página da sessão...",
       );
-      // A resposta da IA será processada pelo ChatWindow via streaming
+
+      // Navegar usando caminho absoluto - como funcionava no commit 0916e276
+      router.push(`/apps/chat/${sessionId}`);
+
+      // Fallback se o router não funcionar
+      setTimeout(() => {
+        const currentPath = window.location.pathname;
+        if (!currentPath.includes(sessionId)) {
+          console.log(
+            "⚠️ [CHAT_PAGE] Router não funcionou, usando window.location",
+          );
+          const pathParts = currentPath.split("/");
+          const locale = pathParts[1];
+          const fullUrl = `/${locale}/apps/chat/${sessionId}`;
+          console.log("🔍 [CHAT_PAGE] Fallback navegando para:", fullUrl);
+          window.location.href = fullUrl;
+        }
+      }, 500);
     }
   };
 
@@ -276,7 +295,7 @@ export default function ChatPage() {
 
   return (
     <SidebarProvider className="min-h-[calc(100dvh-55px)] items-start">
-      <div className="flex h-[calc(100dvh-55px)] w-full overflow-x-hidden bg-background">
+      <div className="bg-background flex h-[calc(100dvh-55px)] w-full overflow-x-hidden">
         {/* Sidebar ‑– assume largura interna definida pelo componente */}
         <AppSidebar
           selectedSessionId={selectedSessionId}
@@ -286,7 +305,7 @@ export default function ChatPage() {
         {/* Conteúdo principal */}
         <div className="flex flex-1 flex-col">
           {/* Cabeçalho com ModelSelector e ModelInfoBadge - estilo ChatGPT */}
-          <div className="flex items-center justify-between border-b border-border bg-card px-4 py-3">
+          <div className="border-border bg-card flex items-center justify-between border-b px-4 py-3">
             <div className="flex items-center gap-4">
               <SidebarTrigger className="md:hidden" />
               <ModelSelector

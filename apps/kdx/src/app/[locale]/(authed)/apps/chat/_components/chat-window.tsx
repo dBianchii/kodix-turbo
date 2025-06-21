@@ -27,6 +27,11 @@ interface ChatWindowProps {
 }
 
 export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
+  console.log(
+    "🚨 [CHAT_WINDOW] Renderizando ChatWindow com sessionId:",
+    sessionId,
+  );
+
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
@@ -171,6 +176,8 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
 
   // 🚀 FASE 3 - FINAL: Função simplificada para novo fluxo
   const handleNewMessage = async (message: string) => {
+    console.log("🚨 [CHAT_WINDOW] handleNewMessage chamado com:", message);
+
     if (isCreating) return;
 
     console.log("🚀 [EMPTY_SESSION] Iniciando criação de sessão vazia...");

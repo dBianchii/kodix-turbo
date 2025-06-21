@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
@@ -11,6 +11,7 @@ import { SidebarProvider, SidebarTrigger } from "@kdx/ui/sidebar";
 import { toast } from "@kdx/ui/toast";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
+import { useRouter } from "~/i18n/routing";
 import { useTRPC } from "~/trpc/react";
 import { AppSidebar } from "../_components/app-sidebar";
 import { ChatWindow } from "../_components/chat-window";
@@ -137,11 +138,45 @@ export default function ChatSessionPage() {
   const handleSessionSelect = (newSessionId: string | undefined) => {
     if (newSessionId) {
       setSelectedSessionId(newSessionId);
-      // Navegar para a nova sessão usando router
-      router.push(`/apps/chat/${newSessionId}`);
+
+      // DEBUG
+      console.log("🔍 [SESSION_PAGE] Navegando para sessão:", newSessionId);
+
+      // Navegar usando apenas o sessionId
+      router.push(newSessionId);
+
+      // Fallback se o router não funcionar
+      setTimeout(() => {
+        const currentPath = window.location.pathname;
+        if (!currentPath.includes(newSessionId)) {
+          console.log(
+            "⚠️ [SESSION_PAGE] Router não funcionou, usando window.location",
+          );
+          const pathParts = currentPath.split("/");
+          const locale = pathParts[1];
+          const fullUrl = `/${locale}/apps/chat/${newSessionId}`;
+          window.location.href = fullUrl;
+        }
+      }, 500);
     } else {
       // ✅ Navegar para a página principal quando for "Novo Chat"
-      router.push("/apps/chat");
+      console.log("🔍 [SESSION_PAGE] Navegando para página principal");
+
+      // Navegar para o diretório pai (remover o sessionId)
+      router.push("."); // Volta para /apps/chat
+
+      // Fallback
+      setTimeout(() => {
+        const currentPath = window.location.pathname;
+        if (currentPath.includes("/chat/")) {
+          console.log(
+            "⚠️ [SESSION_PAGE] Router não funcionou para home, usando window.location",
+          );
+          const pathParts = currentPath.split("/");
+          const locale = pathParts[1];
+          window.location.href = `/${locale}/apps/chat`;
+        }
+      }, 500);
     }
   };
 
