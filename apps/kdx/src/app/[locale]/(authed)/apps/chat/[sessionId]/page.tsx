@@ -196,7 +196,7 @@ export default function ChatSessionPage() {
           </div>
 
           {/* Área do chat */}
-          <div className="relative flex-1 p-4">
+          <div className="flex flex-1 flex-col overflow-hidden">
             <ChatWindow
               sessionId={selectedSessionId}
               onNewSession={(newSessionId) => {

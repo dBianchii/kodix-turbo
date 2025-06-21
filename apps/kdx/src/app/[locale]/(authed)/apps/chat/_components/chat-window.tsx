@@ -15,6 +15,7 @@ import { Separator } from "@kdx/ui/separator";
 
 import { useTRPC } from "~/trpc/react";
 import { useAutoCreateSession } from "../_hooks/useAutoCreateSession";
+import { useSessionWithMessages } from "../_hooks/useSessionWithMessages";
 import { InputBox } from "./input-box";
 import { Message } from "./message";
 import { WelcomeHeader } from "./welcome-header";
@@ -48,6 +49,13 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
     },
   });
 
+  // 🚀 FASE 2 - DIA 6-7: Hook para buscar sessão com mensagens formatadas
+  const {
+    session,
+    initialMessages,
+    isLoading: isLoadingSession,
+  } = useSessionWithMessages(sessionId);
+
   // 🚀 MIGRAÇÃO: useChat hook oficial do Vercel AI SDK
   const {
     messages,
@@ -66,28 +74,15 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
       chatSessionId: sessionId,
       useAgent: true,
     },
-    // 🚀 CONFIGURAÇÃO SIMPLIFICADA: Remover configurações que podem interferir
-    // Deixar o Vercel AI SDK usar configurações padrão para máxima compatibilidade
+    // 🚀 FASE 2 - DIA 6-7: Carregar histórico apenas uma vez
+    initialMessages: initialMessages || [],
     // ✅ STREAMING: Configuração limpa para máxima performance
     onFinish: (message) => {
       console.log("✅ [VERCEL_AI_NATIVE] Chat finished:", message);
 
-      // ✅ CORREÇÃO: Não invalidar queries para evitar piscada
-      // O auto-save já salvou a mensagem no backend
-      // Aguardar um pouco antes de permitir nova sincronização para garantir estabilidade
-
       // Auto-focus no input após terminar
       setTimeout(() => {
         inputRef.current?.focus();
-
-        // ✅ OPCIONAL: Re-sincronizar após delay para garantir consistência
-        // Apenas se necessário - o auto-save já deveria ter salvado
-        setTimeout(() => {
-          console.log(
-            "🔄 [CHAT_WINDOW] Permitindo re-sincronização pós-streaming",
-          );
-          // A próxima execução do useEffect de sincronização será permitida
-        }, 1000);
       }, 100);
     },
     onError: (error) => {
@@ -95,122 +90,38 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
     },
   });
 
-  // ✅ CORRIGIDO: Usar tRPC hooks para buscar mensagens existentes
-  const messagesQuery = useQuery(
-    trpc.app.chat.buscarMensagensTest.queryOptions(
-      {
-        chatSessionId: sessionId!,
-        limite: 100,
-        pagina: 1,
-        ordem: "asc",
-      },
-      {
-        enabled: !!sessionId,
-        refetchOnWindowFocus: false,
-        staleTime: 0,
-        gcTime: 5 * 60 * 1000,
-        refetchOnMount: true,
-      },
-    ),
-  );
+  // 🚀 FASE 2 - DIA 6-7: REMOVIDA toda sincronização manual
+  // O initialMessages do useChat já carrega o histórico automaticamente!
 
-  // 🚨 FASE 1 - DIA 3: SINCRONIZAÇÃO SIMPLIFICADA - Apenas no mount inicial
-  const hasSyncedRef = useRef(false);
-
+  // 🎯 AUTO-PROCESSAMENTO INTELIGENTE: Reprocessar última mensagem (Assistant-UI pattern)
   useEffect(() => {
-    if (!sessionId || messagesQuery.isLoading || hasSyncedRef.current) {
-      return; // Não sincronizar se não há sessão, ainda carregando, ou já sincronizou
-    }
-
-    // ✅ PROTEÇÃO CRÍTICA: NUNCA sincronizar durante streaming
-    if (isLoading) {
-      console.log("⚡ [CHAT_WINDOW] Pulando sincronização - streaming ativo");
-      return;
-    }
-
-    // ✅ PROTEÇÃO: Sincronizar apenas se useChat não tem mensagens
-    if (messages.length > 0) {
+    // Condições para auto-processamento inteligente:
+    // 1. Tem sessionId (não é nova conversa)
+    // 2. initialMessages tem exatamente 1 mensagem do usuário
+    // 3. useChat também tem exatamente 1 mensagem (sincronizado)
+    // 4. Não está fazendo streaming
+    if (
+      sessionId &&
+      initialMessages.length === 1 &&
+      initialMessages[0]?.role === "user" &&
+      messages.length === 1 &&
+      messages[0]?.role === "user" &&
+      !isLoading
+    ) {
       console.log(
-        "⚡ [CHAT_WINDOW] Pulando sincronização - useChat já tem mensagens",
-      );
-      return;
-    }
-
-    const data = messagesQuery.data;
-    if (data?.messages) {
-      // 🎯 FILTRAR mensagens system - não devem aparecer na interface
-      const visibleMessages = data.messages.filter(
-        (msg: any) => msg.senderRole !== "system",
-      );
-
-      const formattedMessages = visibleMessages.map((msg: any) => ({
-        id: msg.id,
-        role: msg.senderRole === "user" ? "user" : "assistant",
-        content: msg.content,
-      }));
-
-      // ✅ SINCRONIZAÇÃO APENAS NO CARREGAMENTO INICIAL
-      if (formattedMessages.length > 0) {
-        console.log(
-          `🔄 [CHAT_WINDOW] Carregamento inicial - sincronizando ${formattedMessages.length} mensagens`,
-        );
-        setMessages(formattedMessages);
-        hasSyncedRef.current = true; // Marcar como sincronizado
-      }
-
-      console.log(
-        `🔍 [CHAT_WINDOW] Total mensagens no banco: ${data.messages.length}`,
+        "🎯 [AUTO_PROCESS_SMART] Nova sessão detectada, reprocessando última mensagem...",
       );
       console.log(
-        `🎯 [CHAT_WINDOW] Mensagens system filtradas: ${data.messages.length - visibleMessages.length}`,
+        "📝 [AUTO_PROCESS_SMART] Mensagem:",
+        initialMessages[0].content.slice(0, 50) + "...",
       );
-      console.log(`✅ [CHAT_WINDOW] Mensagens no useChat: ${messages.length}`);
 
-      // 🚨 FASE 1 - DIA 2: REMOVENDO AUTO-ENVIO - Lógica comentada
-      /*
-      const hasOnlyUserMessage =
-        formattedMessages.length === 1 && formattedMessages[0]?.role === "user";
-
-      const userMessage = formattedMessages[0];
-      const messageKey = `${sessionId}-${userMessage?.id}`;
-
-      if (
-        hasOnlyUserMessage &&
-        userMessage &&
-        !autoSentRef.current.has(messageKey)
-      ) {
-        console.log(
-          "🎯 [AUTO_SEND] Detectada nova sessão com apenas mensagem do usuário, enviando para IA...",
-        );
-
-        // Marcar como enviado ANTES de enviar para evitar loop
-        autoSentRef.current.add(messageKey);
-
-        // Pequeno delay para garantir que o useChat foi sincronizado
-        setTimeout(() => {
-          console.log(
-            "📤 [AUTO_SEND] Enviando mensagem automaticamente:",
-            userMessage.content,
-          );
-
-          // Usar append do useChat para adicionar a mensagem e processar IA
-          append({
-            role: "user",
-            content: userMessage.content,
-          });
-        }, 100);
-      }
-      */
+      // ✅ SOLUÇÃO ASSISTANT-UI: Usar reload() ao invés de append()
+      // reload() reprocessa a última mensagem sem duplicar
+      // Baseado em: https://ai-sdk.dev/docs/reference/ai-sdk-ui/use-chat#reload
+      reload();
     }
-  }, [messagesQuery.data, sessionId, setMessages, isLoading, messages.length]);
-
-  // 🚨 FASE 1 - DIA 3: Reset da flag quando sessão muda
-  useEffect(() => {
-    hasSyncedRef.current = false;
-    console.log(
-      `🔄 [CHAT_WINDOW] Reset flag de sincronização para sessão: ${sessionId}`,
-    );
-  }, [sessionId]);
+  }, [sessionId, initialMessages, messages, isLoading, reload]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -218,10 +129,10 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
 
   // ✅ NOVO: Focar no input ao selecionar uma sessão
   useEffect(() => {
-    if (!isNewConversation && !messagesQuery.isLoading) {
+    if (!isNewConversation && !isLoadingSession) {
       inputRef.current?.focus();
     }
-  }, [sessionId, isNewConversation, messagesQuery.isLoading]);
+  }, [sessionId, isNewConversation, isLoadingSession]);
 
   // 🚨 FASE 1 - DIA 2: REMOVENDO AUTO-ENVIO - useEffect comentado
   /*
@@ -301,7 +212,7 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
   }
 
   // Loading state for initial load
-  if (sessionId && messagesQuery.isLoading) {
+  if (sessionId && isLoadingSession) {
     return (
       <div className="flex h-full items-center justify-center">
         <Card className="bg-slate-900/50 p-8 backdrop-blur-sm">
@@ -315,7 +226,7 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
   }
 
   // Error state
-  if (messagesQuery.error) {
+  if (session === null) {
     return (
       <div className="flex h-full items-center justify-center p-4">
         <Card className="w-full max-w-md p-6">
@@ -326,10 +237,10 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
                 {t("apps.chat.messages.errorTitle")}
               </h3>
               <p className="text-muted-foreground mb-4 text-sm">
-                {messagesQuery.error.message}
+                {t("apps.chat.messages.error")}
               </p>
               <Button
-                onClick={() => messagesQuery.refetch()}
+                onClick={() => window.location.reload()}
                 variant="outline"
                 size="sm"
               >
@@ -343,13 +254,13 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
     );
   }
 
-  // ✅ MODO CONVERSA NORMAL - Layout com absolute positioning para altura fixa
+  // ✅ MODO CONVERSA NORMAL - Layout flexbox para altura fixa
   return (
-    <div className="absolute inset-0 flex flex-col">
+    <div className="flex h-full flex-col p-4">
       {/* Chat Area - área que cresce */}
       <div className="min-h-0 flex-1 overflow-y-auto">
         {/* Container para margem do chat window */}
-        <div className="px-4 py-4 md:px-8 lg:px-16">
+        <div className="px-0 py-4 md:px-4 lg:px-8">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <MessageCircle className="text-muted-foreground mb-4 h-12 w-12" />
