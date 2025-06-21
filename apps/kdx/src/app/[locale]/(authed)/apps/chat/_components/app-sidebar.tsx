@@ -1,7 +1,7 @@
 // @ts-nocheck - Chat tRPC router has type definition issues that need to be resolved at the router level
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ChevronDown,
@@ -466,15 +466,39 @@ export function AppSidebar({
 
   // Debug: log dos modelos disponíveis
   console.log(
-    "🔍 [SIDEBAR] Modelos carregados:",
+    "🔍 [CHAT_SIDEBAR] Modelos carregados:",
     modelsQuery.data?.length || 0,
   );
-  console.log("🔍 [SIDEBAR] Modelos filtrados:", models.length);
+  console.log("🔍 [CHAT_SIDEBAR] Modelos filtrados:", models.length);
   models.forEach((model: any) => {
     console.log(
       `   • ${model.name} (ID: ${model.id}) - teamConfig: ${model.teamConfig ? `enabled=${model.teamConfig.enabled}` : "null"}`,
     );
   });
+
+  // ✅ OTIMIZAÇÃO: Memoizar filtros para evitar re-criação
+  const filterOptions = useMemo(
+    () => ({
+      all: "Todas as conversas",
+      today: "Hoje",
+      yesterday: "Ontem",
+      thisWeek: "Esta semana",
+      older: "Mais antigas",
+    }),
+    [],
+  );
+
+  // ✅ OTIMIZAÇÃO: Memoizar função de filtro para evitar re-criação
+  const handleFilterChange = useCallback((newFilter: string) => {
+    setSelectedFilter(newFilter);
+    // Lógica adicional de filtro se necessário
+  }, []);
+
+  // ✅ OTIMIZAÇÃO: Memoizar função de seleção de modelo
+  const handleModelSelect = useCallback((modelId: string) => {
+    // Lógica de seleção de modelo
+    console.log("🔄 [CHAT_SIDEBAR] Modelo selecionado:", modelId);
+  }, []);
 
   return (
     <>

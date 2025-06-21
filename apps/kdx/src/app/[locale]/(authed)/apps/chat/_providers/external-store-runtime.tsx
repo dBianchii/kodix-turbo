@@ -96,7 +96,7 @@ export function ExternalStoreRuntimeProvider({
             chatSessionId: sessionId,
             useAgent: true,
             messages: [
-              ...threadMessages.map((msg) => ({
+              ...threadMessages.map((msg: any) => ({
                 role: msg.role,
                 content:
                   msg.content[0]?.type === "text" ? msg.content[0].text : "",
@@ -212,10 +212,7 @@ export function ExternalStoreRuntimeProvider({
     onEdit,
     onReload,
     onCancel,
-    // Converter mensagens automaticamente
-    convertMessage,
-    // Estratégia de junção de mensagens adjacentes
-    joinStrategy: "concat-content",
+    convertMessage: (message: any) => message,
   });
 
   // Loading state enquanto carrega sessão

@@ -70,7 +70,7 @@ describe("🧪 POST-NAVIGATION TIMING - Prevenção de Regressões", () => {
       const shouldSend =
         sessionId &&
         pendingMessage &&
-        messagesLength === 0 &&
+        (messagesLength as number) === 0 &&
         !isLoadingSession &&
         initialMessagesLoaded;
 
@@ -90,7 +90,7 @@ describe("🧪 POST-NAVIGATION TIMING - Prevenção de Regressões", () => {
       const shouldSend =
         sessionId &&
         pendingMessage &&
-        messagesLength === 0 &&
+        (messagesLength as number) === 0 &&
         !isLoadingSession &&
         initialMessagesLoaded;
 
@@ -109,7 +109,7 @@ describe("🧪 POST-NAVIGATION TIMING - Prevenção de Regressões", () => {
       const shouldSend =
         sessionId &&
         pendingMessage &&
-        messagesLength === 0 && // ❌ Falha aqui
+        (messagesLength as number) === 0 && // ❌ Falha aqui
         !isLoadingSession &&
         initialMessagesLoaded;
 
@@ -128,7 +128,7 @@ describe("🧪 POST-NAVIGATION TIMING - Prevenção de Regressões", () => {
       const shouldSend = Boolean(
         sessionId &&
           pendingMessage && // ❌ Falha aqui (null)
-          messagesLength === 0 &&
+          (messagesLength as number) === 0 &&
           !isLoadingSession &&
           initialMessagesLoaded,
       );
@@ -209,7 +209,7 @@ describe("🧪 POST-NAVIGATION TIMING - Prevenção de Regressões", () => {
       const shouldSend =
         sessionId &&
         userMessage &&
-        0 === 0 && // Nova sessão
+        (0 as number) === 0 && // Nova sessão
         !false && // Sessão carregada
         true; // initialMessages carregou
       expect(shouldSend).toBe(true);

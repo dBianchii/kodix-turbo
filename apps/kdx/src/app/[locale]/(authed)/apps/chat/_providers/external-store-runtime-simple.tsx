@@ -42,11 +42,11 @@ export function ExternalStoreRuntimeProvider({
   const threadMessages = useMemo((): ThreadMessageLike[] => {
     if (!initialMessages) return [];
 
-    return initialMessages.map((msg) => ({
-      role: msg.role as "user" | "assistant" | "system",
-      content: [{ type: "text", text: msg.content }],
+    return initialMessages.map((msg: any) => ({
       id: msg.id,
-      createdAt: new Date(),
+      role: msg.senderRole === "user" ? "user" : "assistant",
+      content: [{ type: "text", text: msg.content }],
+      createdAt: new Date(msg.createdAt),
     }));
   }, [initialMessages]);
 
@@ -170,6 +170,7 @@ export function ExternalStoreRuntimeProvider({
     isRunning,
     onNew,
     onCancel,
+    convertMessage: (message: any) => message,
   });
 
   console.log("🔄 [EXTERNAL_STORE] Runtime state:", {

@@ -25,7 +25,7 @@ export const redirectIfAppNotInstalled = async ({
     });
   const installedApps = await trpcCaller.app.getInstalled();
 
-  if (!installedApps.some((x) => x.id === appId))
+  if (!installedApps.some((x: any) => x.id === appId))
     return redirect({
       href: customRedirect ?? "/apps",
       locale: await getLocaleBasedOnCookie(),

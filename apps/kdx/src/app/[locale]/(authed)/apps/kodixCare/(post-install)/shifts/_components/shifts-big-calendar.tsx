@@ -147,9 +147,15 @@ export default function ShiftsBigCalendar({
       </div>
       <div className="mt-4">
         <DnDCalendar
-          // @ts-expect-error react big calendar typesafety sucks
+          localizer={localizer}
+          events={calendarEvents}
+          step={60}
+          showMultiDayTimes
+          defaultDate={new Date()}
+          defaultView={view}
+          views={[view, "day"]}
           eventPropGetter={
-            ((event) => {
+            ((event: any) => {
               if (view === "agenda") return {}; // No need to colorize in agenda view
 
               const baseBackgroundColor =
@@ -190,7 +196,7 @@ export default function ShiftsBigCalendar({
                   backgroundColor: maybeDesaturatedColor,
                 },
               };
-            }) as EventPropGetter<ShiftEvent>
+            }) as any
           }
           messages={{
             allDay: "Dia Inteiro",
@@ -208,47 +214,21 @@ export default function ShiftsBigCalendar({
           }}
           scrollToTime={new Date()} // Scroll to current time
           culture={locale}
-          localizer={localizer}
-          style={{ height: 630, width: "100%" }}
-          view={view}
-          views={["month", "week", "day", "agenda"]}
           onView={setView}
-          events={calendarEvents}
-          components={{
-            // @ts-expect-error react big calendar typesafety sucks
-            // eslint-disable-next-line react/no-unused-prop-types
-            event: ({ event }: { event: ShiftEvent }) => (
-              <div className="flex items-center gap-2 pl-3">
-                {event.finishedByUserId && <LuLock />}
-                <AvatarWrapper
-                  className="pointer-events-none size-5"
-                  src={event.image ?? ""}
-                  fallback={event.Caregiver.name}
-                />
-                <span className="text-primary-foreground text-sm">
-                  {event.title}
-                </span>
-              </div>
-            ),
-          }}
-          date={selectedDate}
           onNavigate={setSelectedDate}
-          // @ts-expect-error react big calendar typesafety sucks
-          onEventDrop={handleEventChange}
-          // @ts-expect-error react big calendar typesafety sucks
-          onEventResize={handleEventChange}
-          onSelectSlot={(date) => {
+          onEventDrop={handleEventChange as any}
+          onEventResize={handleEventChange as any}
+          onSelectSlot={(date: any) => {
             if (delayed) return; //! Hack. There was a bug that caused this to be fired if edit is open
             setOpen({
               preselectedStart: date.start,
               preselectedEnd: date.end,
             });
           }}
-          draggableAccessor={() => true}
-          // @ts-expect-error react big calendar typesafety sucks
-          onSelectEvent={(event: ShiftEvent) => setSelectedEventId(event.id)}
+          onSelectEvent={(event: any) => setSelectedEventId(event.id)}
           selectable
           resizable
+          style={{ height: 630, width: "100%" }}
         />
       </div>
     </>

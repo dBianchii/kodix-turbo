@@ -23,11 +23,10 @@
 // @ts-nocheck - Chat tRPC router has type definition issues that need to be resolved at the router level
 "use client";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
-import { Button } from "@kdx/ui/button";
 import { SidebarProvider, SidebarTrigger } from "@kdx/ui/sidebar";
 import { toast } from "@kdx/ui/toast";
 
@@ -50,14 +49,20 @@ import { useTokenUsage } from "./_hooks/useTokenUsage";
   */
 }
 
-export default function ChatPage() {
+export default function ChatPage({
+  params,
+}: {
+  params: Promise<{ locale: string; sessionId?: string }>;
+}) {
+  const resolvedParams = use(params);
+  const { locale, sessionId } = resolvedParams;
+  const router = useRouter();
   const t = useTranslations();
   const trpc = useTRPC();
-  const router = useRouter();
   const queryClient = useQueryClient();
   const [selectedSessionId, setSelectedSessionId] = useState<
     string | undefined
-  >(undefined);
+  >(sessionId);
   const [selectedModelId, setSelectedModelId] = useState<string | undefined>(
     undefined,
   );
@@ -162,7 +167,6 @@ export default function ChatPage() {
         queryClient.invalidateQueries(trpc.app.chat.buscarSession.pathFilter());
 
         // ✅ SOLUÇÃO: NÃO invalidar mensagens para evitar conflito com streaming
-        // O useChat hook já gerencia as mensagens localmente
         // A invalidação de sessão é suficiente para outras funcionalidades
         console.log(
           "🔄 [CHAT] Sessão invalidada - mensagens mantidas pelo useChat",
@@ -205,35 +209,24 @@ export default function ChatPage() {
     console.log("🎯 [CHAT] selectedModelId atualizado:", selectedModelId);
   }, [selectedModelId]);
 
+  // ✅ THREAD-FIRST: Função para lidar com nova sessão criada
   const handleSessionSelect = (sessionId: string | undefined) => {
     console.log("🔄 [CHAT] handleSessionSelect chamado:", sessionId);
     setSelectedSessionId(sessionId);
 
-    // ✅ Se é uma nova sessão criada, navegar para a página da sessão
+    // ✅ THREAD-FIRST: Navegar para a sessão criada
     if (sessionId) {
-      console.log(
-        "🤖 [CHAT] Nova sessão criada, navegando para página da sessão...",
-      );
-
-      // Navegar usando caminho absoluto - como funcionava no commit 0916e276
+      console.log("🚀 [CHAT] Navegando para sessão:", sessionId);
       router.push(`/apps/chat/${sessionId}`);
-
-      // Fallback se o router não funcionar
-      setTimeout(() => {
-        const currentPath = window.location.pathname;
-        if (!currentPath.includes(sessionId)) {
-          console.log(
-            "⚠️ [CHAT_PAGE] Router não funcionou, usando window.location",
-          );
-          const pathParts = currentPath.split("/");
-          const locale = pathParts[1];
-          const fullUrl = `/${locale}/apps/chat/${sessionId}`;
-          console.log("🔍 [CHAT_PAGE] Fallback navegando para:", fullUrl);
-          window.location.href = fullUrl;
-        }
-      }, 500);
     }
   };
+
+  // ✅ THREAD-FIRST: Sincronizar sessionId da URL com estado local
+  useEffect(() => {
+    if (sessionId !== selectedSessionId) {
+      setSelectedSessionId(sessionId);
+    }
+  }, [sessionId, selectedSessionId]);
 
   const handleModelSelect = (modelId: string) => {
     const previousModelId = selectedModelId;

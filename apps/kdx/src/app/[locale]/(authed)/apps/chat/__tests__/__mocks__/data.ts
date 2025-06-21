@@ -59,6 +59,7 @@ export const mockAIModel = {
   maxTokens: 8192,
   supportsStreaming: true,
   capabilities: ["text", "code", "analysis"],
+  teamId: "team-123",
 };
 
 export const mockAIProvider = {
@@ -177,16 +178,18 @@ export const mockChatMessages = [
 ];
 
 export const mockAIModels = [
-  createMockModel({ id: "gpt-4", name: "GPT-4" }),
+  createMockModel({ id: "gpt-4", name: "GPT-4", teamId: "team-123" }),
   createMockModel({
     id: "gpt-3.5-turbo",
     name: "GPT-3.5 Turbo",
     enabled: false,
+    teamId: "team-123",
   }),
   createMockModel({
     id: "claude-3",
     name: "Claude 3",
     providerId: "anthropic",
+    teamId: "team-123",
   }),
 ];
 

@@ -1,6 +1,13 @@
-import { vi } from "vitest";
+import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { mockUser, mockTeam, mockSession, mockChatSession } from "./__mocks__/data";
+import { vi } from "vitest";
+
+import {
+  mockChatSession,
+  mockSession,
+  mockTeam,
+  mockUser,
+} from "./__mocks__/data";
 
 // Test helpers para Chat SubApp
 export const setupChatTests = () => {
@@ -28,7 +35,7 @@ export const createTestQueryClient = () =>
     defaultOptions: {
       queries: {
         retry: false,
-        cacheTime: 0,
+        gcTime: 0,
       },
       mutations: {
         retry: false,
@@ -40,9 +47,8 @@ export const createTestQueryClient = () =>
 export const createQueryWrapper = () => {
   const queryClient = createTestQueryClient();
 
-  return ({ children }: { children: React.ReactNode }) => (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-  );
+  return ({ children }: { children: React.ReactNode }) =>
+    React.createElement(QueryClientProvider, { client: queryClient }, children);
 };
 
 // Mock para tRPC utils
@@ -89,7 +95,7 @@ export const createMockTRPCUtils = () => ({
 // Utility para simular streaming
 export const createMockStream = (chunks: string[]) => {
   let chunkIndex = 0;
-  
+
   return {
     async *[Symbol.asyncIterator]() {
       for (const chunk of chunks) {
@@ -112,7 +118,7 @@ export const createMockStream = (chunks: string[]) => {
 // Utility para testar performance
 export const measureTestPerformance = async (
   fn: () => Promise<any>,
-  maxDuration: number = 1000
+  maxDuration = 1000,
 ) => {
   const start = performance.now();
   const result = await fn();
@@ -147,7 +153,7 @@ export const createMockLocalStorage = () => {
 export const createMockSessionStorage = () => createMockLocalStorage();
 
 // Utility para aguardar atualizações assíncronas
-export const waitForAsync = (ms: number = 0) =>
+export const waitForAsync = (ms = 0) =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
 // Mock para WebSocket (se usado em streaming)
@@ -168,7 +174,10 @@ export const createMockWebSocket = () => {
 };
 
 // Utility para simular eventos de teclado
-export const createKeyboardEvent = (key: string, options?: KeyboardEventInit) => {
+export const createKeyboardEvent = (
+  key: string,
+  options?: KeyboardEventInit,
+) => {
   return new KeyboardEvent("keydown", {
     key,
     bubbles: true,
@@ -255,12 +264,12 @@ export const setupDOMAPIMocks = () => {
 export const cleanupAfterTest = () => {
   vi.clearAllMocks();
   vi.clearAllTimers();
-  
+
   // Reset DOM mocks if needed
   if (window.localStorage && vi.isMockFunction(window.localStorage.clear)) {
     window.localStorage.clear();
   }
-  
+
   if (window.sessionStorage && vi.isMockFunction(window.sessionStorage.clear)) {
     window.sessionStorage.clear();
   }
@@ -271,4 +280,4 @@ export const debugTest = (label: string, data?: any) => {
   if (process.env.NODE_ENV === "test" && process.env.DEBUG_TESTS) {
     console.log(`[TEST DEBUG] ${label}:`, data);
   }
-}; 
+};

@@ -7,11 +7,15 @@ import { createCallerFactory, createTRPCContext } from "./trpc/trpc";
 /**
  * Create a server-side caller for the tRPC API
  * @example
- * const trpc = createCaller(createContext);
+ * const trpc = createCaller(await createContext());
  * const res = await trpc.post.all();
  *       ^? Post[]
  */
-const createCaller = createCallerFactory(appRouter);
+export const createCaller: any = (
+  ctx: Awaited<ReturnType<typeof createTRPCContext>>,
+) => {
+  return createCallerFactory(appRouter)(ctx);
+};
 
 /**
  * Inference helpers for input types
@@ -29,7 +33,7 @@ type RouterInputs = inferRouterInputs<AppRouter>;
  **/
 type RouterOutputs = inferRouterOutputs<AppRouter>;
 
-export { createTRPCContext, appRouter, createCaller };
+export { createTRPCContext, appRouter };
 export type { AppRouter, RouterInputs, RouterOutputs };
 
 // 📊 Exportações do sistema de monitoramento

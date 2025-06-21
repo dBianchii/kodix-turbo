@@ -20,6 +20,96 @@ Este documento estabelece os **padrões arquiteturais oficiais** do projeto Kodi
 **Node.js:** `20.18.1`  
 **pnpm:** `^9.14.2`
 
+## 🔧 **Gerenciamento de Versão do Node.js (CRÍTICO)**
+
+### **Padrão Oficial: nvm + .nvmrc**
+
+O projeto Kodix usa `nvm` como gerenciador oficial de versões do Node.js:
+
+```bash
+# Setup inicial (uma vez)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+source ~/.zshrc
+
+# Usar versão do projeto (sempre)
+nvm use  # Lê automaticamente o .nvmrc
+```
+
+### **⚠️ Problemas Comuns e Soluções**
+
+#### **Warning: "Unsupported engine"**
+
+```bash
+# ❌ Problema comum:
+WARN Unsupported engine: wanted: {"node":"20.18.1"} (current: {"node":"v20.11.1"})
+
+# ✅ Diagnóstico:
+which node          # Ver qual Node.js está ativo
+echo $PATH          # Verificar ordem de precedência
+
+# ✅ Solução:
+nvm use 20.18.1     # Ativar versão correta
+```
+
+#### **Conflito de Múltiplas Instalações**
+
+```bash
+# ❌ Cenário comum: Node.js instalado via múltiplas fontes
+/opt/homebrew/bin/node        # Homebrew
+/usr/local/bin/node          # Instalação manual
+~/.nvm/versions/node/...     # nvm
+~/Library/pnpm/nodejs/...    # pnpm env
+
+# ✅ Solução: Usar apenas nvm
+brew uninstall node          # Remover Homebrew
+nvm use                      # Ativar nvm
+```
+
+#### **PATH Priority Issues**
+
+```bash
+# ❌ PATH com ordem incorreta
+export PATH="/opt/homebrew/bin:$HOME/.nvm/versions/node/..."
+#           ↑ Homebrew tem prioridade sobre nvm
+
+# ✅ Correção automática via nvm
+nvm use  # Ajusta PATH automaticamente
+```
+
+### **🛠️ Comandos de Verificação**
+
+```bash
+# Verificar ambiente atual
+node --version              # Deve mostrar v20.18.1
+which node                 # Deve apontar para nvm
+nvm current                # Confirmar versão ativa
+
+# Troubleshooting
+nvm list                   # Ver versões instaladas
+nvm alias default 20.18.1 # Definir padrão
+```
+
+### **📋 Checklist de Setup Correto**
+
+- [ ] `nvm` instalado e configurado
+- [ ] `nvm use` executa sem erros
+- [ ] `node --version` retorna `v20.18.1`
+- [ ] `pnpm dev:kdx` roda sem warnings de engine
+- [ ] PATH aponta para nvm, não Homebrew
+
+### **🎯 Integração com pnpm**
+
+O projeto usa pnpm como gerenciador de pacotes, mas **nvm para versões do Node.js**:
+
+```bash
+# ✅ Padrão correto
+nvm use        # Gerenciar versão do Node.js
+pnpm install   # Gerenciar dependências
+
+# ❌ Evitar misturar gerenciadores
+pnpm env use   # Pode causar conflitos de PATH
+```
+
 ## 🗂️ **Estrutura de Arquivos**
 
 ### **Rotas de SubApps**
@@ -310,6 +400,21 @@ pnpm db:seed          # Popular dados de teste
 pnpm db:migrate       # Aplicar migrations (prod)
 ```
 
+### **Drizzle Studio**
+
+```bash
+# Método 1: Via package específico (Recomendado)
+cd packages/db && pnpm studio
+
+# Método 2: Via comando coordenado
+pnpm dev:kdx          # Inclui Drizzle Studio automaticamente
+
+# Acesso
+https://local.drizzle.studio
+```
+
+**⚠️ IMPORTANTE**: O Drizzle Studio roda em `https://local.drizzle.studio`, **não** em `localhost:4983`.
+
 ### **Qualidade**
 
 ```bash
@@ -319,7 +424,94 @@ pnpm typecheck        # Verificar tipos
 pnpm build            # Build completo
 ```
 
+## 🔧 **Troubleshooting Rápido**
+
+### **🚨 Problemas Mais Comuns**
+
+#### **1. Warning "Unsupported engine"**
+
+```bash
+# ❌ Problema
+WARN Unsupported engine: wanted: {"node":"20.18.1"}
+
+# ✅ Solução
+nvm use
+```
+
+#### **2. Comando "db:studio" não encontrado**
+
+```bash
+# ❌ Problema
+ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL Command "db:studio" not found
+
+# ✅ Soluções
+pnpm dev:kdx                    # Opção 1: Comando completo
+cd packages/db && pnpm studio  # Opção 2: Package específico
+
+# ✅ Acesso correto
+https://local.drizzle.studio    # URL correta (não localhost:4983)
+```
+
+#### **3. tRPC Import Incorreto**
+
+```bash
+# ❌ Verificar problemas
+pnpm check:trpc
+
+# ✅ Deve retornar
+✅ 0 imports incorretos no web app
+```
+
+#### **4. Docker/MySQL Connection Failed**
+
+```bash
+# ❌ Diagnóstico
+docker ps | grep mysql
+
+# ✅ Solução
+cd packages/db-dev && docker-compose up -d
+pnpm db:push
+```
+
+#### **5. Drizzle Studio 404 ou "wait-for-db"**
+
+```bash
+# ❌ Problema: Studio fica aguardando ou retorna 404
+
+# ✅ Diagnóstico
+docker ps | grep mysql           # Verificar se MySQL está rodando
+nc -z localhost 3306            # Testar conectividade
+
+# ✅ Solução completa
+cd packages/db-dev && docker-compose up -d  # 1. Iniciar Docker
+sleep 5                                     # 2. Aguardar MySQL
+cd ../db && pnpm studio                     # 3. Iniciar Studio
+# 4. Acessar: https://local.drizzle.studio
+```
+
+### **⚡ Comandos de Verificação Rápida**
+
+```bash
+# Ambiente completo
+node --version        # v20.18.1
+nvm current          # 20.18.1
+pnpm --version       # 9.14.2
+docker --version     # Docker version X.X.X
+
+# Projeto funcional
+pnpm check:trpc      # ✅ 0 problemas
+pnpm dev:kdx         # ✅ Sem warnings
+```
+
 ## 📋 **Checklist de Conformidade**
+
+### **Para Setup Inicial**
+
+- [ ] `nvm` instalado e configurado
+- [ ] Node.js v20.18.1 ativo (`nvm use`)
+- [ ] Docker rodando (`docker ps`)
+- [ ] tRPC sem problemas (`pnpm check:trpc`)
+- [ ] Projeto inicia sem warnings (`pnpm dev:kdx`)
 
 ### **Para Novos SubApps**
 

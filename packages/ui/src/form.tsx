@@ -24,18 +24,14 @@ import {
 import { cn } from ".";
 import { Label } from "./label";
 
-const useForm = <
-  TOut extends FieldValues,
-  TDef extends ZodTypeDef,
-  TIn extends FieldValues,
->(
-  props: Omit<UseFormProps<TIn>, "resolver"> & {
-    schema: ZodType<TOut, TDef, TIn>;
+const useForm = <TSchema extends ZodType<any, any, any>>(
+  props: Omit<UseFormProps<TSchema["_input"]>, "resolver"> & {
+    schema: TSchema;
   },
 ) => {
-  const form = __useForm<TIn, unknown, TOut>({
+  const form = __useForm<TSchema["_input"], any, TSchema["_output"]>({
     ...props,
-    resolver: zodResolver(props.schema, undefined),
+    resolver: zodResolver(props.schema),
   });
   return form;
 };

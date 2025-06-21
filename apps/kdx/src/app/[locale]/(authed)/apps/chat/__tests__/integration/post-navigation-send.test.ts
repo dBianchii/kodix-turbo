@@ -105,7 +105,7 @@ describe("Post-Navigation Send - Novo Fluxo", () => {
         sessionStorage.getItem(`pending-message-${sessionId}`),
       );
       const isNewFlow = Boolean(isUsingNewFlow);
-      const hasNoMessages = messagesLength === 0;
+      const hasNoMessages = (messagesLength as number) === 0;
       const isNotLoading = !isLoading;
 
       const shouldSendMessage =
@@ -132,7 +132,7 @@ describe("Post-Navigation Send - Novo Fluxo", () => {
         sessionStorage.getItem(`pending-message-${sessionId}`),
       );
       const isNewFlow = Boolean(isUsingNewFlow);
-      const hasNoMessages = messagesLength === 0;
+      const hasNoMessages = (messagesLength as number) === 0;
       const isNotLoading = !isLoading;
 
       const shouldSendMessage =
@@ -159,7 +159,7 @@ describe("Post-Navigation Send - Novo Fluxo", () => {
         sessionStorage.getItem(`pending-message-${sessionId}`),
       );
       const isNewFlow = Boolean(isUsingNewFlow);
-      const hasNoMessages = messagesLength === 0;
+      const hasNoMessages = (messagesLength as number) === 0;
       const isNotLoading = !isLoading;
 
       const shouldSendMessage =

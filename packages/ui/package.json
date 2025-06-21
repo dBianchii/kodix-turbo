@@ -83,6 +83,7 @@
     "prettier": "catalog:",
     "react": "catalog:react",
     "react-spring": "catalog:",
+    "tailwindcss": "catalog:tailwindcss",
     "typescript": "catalog:"
   },
   "peerDependencies": {

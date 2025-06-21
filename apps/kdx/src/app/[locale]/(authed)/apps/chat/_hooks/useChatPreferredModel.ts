@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { useTRPC } from "~/trpc/react";
@@ -11,6 +12,8 @@ import { useChatUserConfig } from "./useChatUserConfig";
  *
  * ✅ CORRIGIDO: Agora usa useChatUserConfig com escopo de USUÁRIO, não team
  * Chat ──useChatUserConfig──> userAppTeamConfig ──> Fallback para AI Studio
+ *
+ * ✅ OTIMIZADO: Memoização agressiva para reduzir re-renders
  */
 export function useChatPreferredModel() {
   const trpc = useTRPC();
@@ -22,54 +25,79 @@ export function useChatPreferredModel() {
     getPreferredModelId,
   } = useChatUserConfig();
 
-  // ✅ Simplificado: usar apenas config do usuário por enquanto
-  const modelFromUserConfig = getPreferredModelId();
-  const finalModelId = modelFromUserConfig;
-  const source = modelFromUserConfig ? "user_config" : "none";
+  // ✅ OTIMIZAÇÃO: Memoizar valores derivados para evitar re-cálculos
+  const derivedValues = useMemo(() => {
+    const modelFromUserConfig = getPreferredModelId();
+    const finalModelId = modelFromUserConfig;
+    const source = modelFromUserConfig ? "user_config" : "none";
 
-  console.log("🔄 [useChatPreferredModel] Determinando modelo:", {
-    modelFromUserConfig,
-    finalModelId,
-    source,
-    isConfigLoading,
-  });
+    if (process.env.NODE_ENV === "development") {
+      console.log("🔄 [CHAT_PREFERRED_MODEL] Determinando modelo:", {
+        modelFromUserConfig,
+        finalModelId,
+        source,
+        isConfigLoading,
+      });
+    }
 
-  const isLoading = isConfigLoading;
-  const error = null;
-  const refetch = () => {
+    return {
+      modelFromUserConfig,
+      finalModelId,
+      source,
+    };
+  }, [getPreferredModelId, isConfigLoading]);
+
+  // ✅ OTIMIZAÇÃO: Memoizar função refetch (mesmo que não faça nada)
+  const refetch = useCallback(() => {
     // Nada para refetch por enquanto
-  };
+  }, []);
 
-  return {
-    preferredModel: finalModelId
+  // ✅ OTIMIZAÇÃO: Memoizar objeto preferredModel para evitar re-criação
+  const preferredModel = useMemo(() => {
+    return derivedValues.finalModelId
       ? {
-          modelId: finalModelId,
+          modelId: derivedValues.finalModelId,
           model: null,
-          source,
+          source: derivedValues.source,
           teamConfig: null,
           userConfig: config,
         }
-      : null,
-    isLoading,
-    error,
-    refetch,
+      : null;
+  }, [derivedValues.finalModelId, derivedValues.source, config]);
 
-    // Helpers para facilitar o uso
-    modelId: finalModelId,
-    model: null,
-    source,
+  // ✅ OTIMIZAÇÃO: Memoizar objeto de retorno completo
+  return useMemo(
+    () => ({
+      preferredModel,
+      isLoading: isConfigLoading,
+      error: null,
+      refetch,
 
-    // ✅ Verificações úteis atualizadas
-    isFromUserConfig: source === "user_config",
-    isFromAiStudio: false,
-    isFallback: false,
+      // Helpers para facilitar o uso - memoizados
+      modelId: derivedValues.finalModelId,
+      model: null,
+      source: derivedValues.source,
 
-    // Informações adicionais
-    hasTeamConfig: false,
-    hasUserConfig: !!config,
+      // ✅ Verificações úteis atualizadas - memoizadas
+      isFromUserConfig: derivedValues.source === "user_config",
+      isFromAiStudio: false,
+      isFallback: false,
 
-    // Status helpers
-    isReady: !isLoading && !!finalModelId,
-    hasError: false,
-  };
+      // Informações adicionais - memoizadas
+      hasTeamConfig: false,
+      hasUserConfig: !!config,
+
+      // Status helpers - memoizados
+      isReady: !isConfigLoading && !!derivedValues.finalModelId,
+      hasError: false,
+    }),
+    [
+      preferredModel,
+      isConfigLoading,
+      refetch,
+      derivedValues.finalModelId,
+      derivedValues.source,
+      config,
+    ],
+  );
 }

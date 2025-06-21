@@ -119,7 +119,7 @@ describe("🌐 jsdom Examples - Browser APIs em Testes", () => {
       expect(messages.length).toBe(2);
 
       const input = document.querySelector(".chat-input")!;
-      expect(input?.placeholder).toBe("Digite...");
+      expect((input as HTMLInputElement)?.placeholder).toBe("Digite...");
     });
 
     it("deve usar getElementById e getElementsByClassName", () => {

@@ -26,6 +26,7 @@ Esta seção contém **guias técnicos** e **padrões de desenvolvimento** para 
 ### **📋 Padrões e Convenções**
 
 - **[Coding Standards](./coding-standards.md)** - Padrões de código e convenções
+- **[Debug & Logging Standards](./debug-logging-standards.md)** - 🔍 **NOVO!** Sistema unificado de debug com prefixos por módulo
 - **[SubApp Documentation Guide](./subapp-documentation-guide.md)** - 📚 **CONSOLIDADO!** Guia completo de documentação para SubApps
 - **[Internationalization](./internationalization-i18n.md)** - Setup de i18n e traduções
 - **[Workflows](./workflows.md)** - Git workflows e processos
@@ -69,6 +70,7 @@ Esta seção contém **guias técnicos** e **padrões de desenvolvimento** para 
 | **Desenvolver backend**     | [Backend Guide](./backend-guide.md)                                               |
 | **Desenvolver frontend**    | [Frontend Guide](./frontend-guide.md)                                             |
 | **Padrões de código**       | [Coding Standards](./coding-standards.md)                                         |
+| **Sistema de debug**        | [Debug & Logging Standards](./debug-logging-standards.md) 🔍 **FILTRAGEM FÁCIL!** |
 | **Setup de traduções**      | [Internationalization](./internationalization-i18n.md)                            |
 | **Ver scripts disponíveis** | [Scripts Reference](./scripts-reference.md)                                       |
 

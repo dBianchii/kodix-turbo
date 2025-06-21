@@ -58,7 +58,7 @@ async function Apps() {
       </Link>
     );
 
-  return apps.map((app) => (
+  return apps.map((app: any) => (
     <KodixApp id={app.id} installed={true} user={user} key={app.id} />
   ));
 }

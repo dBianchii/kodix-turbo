@@ -132,6 +132,19 @@
         "typeMessage": "Digite sua mensagem...",
         "streaming": "Aguarde, gerando resposta..."
       },
+      "newConversation": "Nova Conversa",
+      "startNewChat": "Comece uma nova conversa",
+      "startNewChatDescription": "Digite sua primeira mensagem para começar",
+      "suggestions": "Sugestões",
+      "typeFirstMessage": "Digite sua primeira mensagem...",
+      "errorCreatingSession": "Erro ao criar sessão",
+      "loadingSession": "Carregando sessão...",
+      "errorLoadingSession": "Erro ao carregar sessão",
+      "sessionNotFound": "Sessão não encontrada",
+      "retry": "Tentar novamente",
+      "untitledChat": "Chat sem título",
+      "typeMessage": "Digite sua mensagem...",
+      "errorSendingMessage": "Erro ao enviar mensagem",
       "labels": {
         "newChat": "Nova Conversa"
       },

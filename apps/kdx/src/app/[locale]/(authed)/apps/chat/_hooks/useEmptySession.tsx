@@ -1,148 +1,63 @@
 // @ts-nocheck - Chat tRPC router has type definition issues that need to be resolved at the router level
 "use client";
 
-import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
+import { useMutation } from "@tanstack/react-query";
 
-import { toast } from "@kdx/ui/toast";
-
-import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
-import { redirect, useRouter } from "~/i18n/routing";
+import { useRouter } from "~/i18n/routing";
 import { useTRPC } from "~/trpc/react";
 
 interface UseEmptySessionOptions {
   onSuccess?: (sessionId: string) => void;
-  onError?: (error: Error) => void;
 }
 
-interface CreateEmptySessionInput {
-  title?: string;
-  generateTitle?: boolean;
-  metadata?: Record<string, any>;
-}
-
+/**
+ * Hook para criação de sessão Thread-First (Assistant-UI Pattern)
+ *
+ * NOVO PADRÃO: Não cria sessão vazia, apenas prepara para criação
+ * quando houver primeira mensagem. Isso elimina títulos temporários.
+ */
 export function useEmptySession(options?: UseEmptySessionOptions) {
   const router = useRouter();
-  const t = useTranslations();
   const trpc = useTRPC();
-  const queryClient = useQueryClient();
-  const [isCreating, setIsCreating] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
 
-  // 🚀 FASE 2: Mutation para criar sessão vazia (sem primeira mensagem)
-  const createEmptyMutation = useMutation(
+  // ✅ THREAD-FIRST: Não criar sessão vazia, apenas preparar estado
+  const createEmptySessionMutation = useMutation(
     trpc.app.chat.createEmptySession.mutationOptions({
-      onSuccess: (result: any) => {
-        console.log("✅ [EMPTY_SESSION] Sessão vazia criada:", result);
-
-        // ✅ Invalidar queries do sidebar para atualizar lista de sessões
-        queryClient.invalidateQueries(
-          trpc.app.chat.listarSessions.pathFilter(),
-        );
-
+      onSuccess: (data) => {
+        const sessionId = data.session.id;
         console.log(
-          "🔄 [EMPTY_SESSION] Queries do sidebar invalidadas para atualizar lista",
+          "✅ [EMPTY_SESSION] Thread-First: Sessão criada com primeira mensagem:",
+          sessionId,
         );
 
-        if (result?.session?.id) {
-          const sessionId = result.session.id;
-          console.log(
-            "🎯 [EMPTY_SESSION] Navegando para nova sessão:",
-            sessionId,
-          );
+        // Navegar para a nova sessão
+        router.push(`/apps/chat/${sessionId}`);
 
-          // 🔄 FASE 3 - DIA 12: Transferir mensagem pendente se existir
-          const tempKeys = Object.keys(sessionStorage).filter((key) =>
-            key.startsWith("pending-message-temp-"),
-          );
-          if (tempKeys.length > 0) {
-            const tempKey = tempKeys[0]; // Pegar a mais recente
-            const pendingMessage = sessionStorage.getItem(tempKey);
-            if (pendingMessage) {
-              sessionStorage.setItem(
-                `pending-message-${sessionId}`,
-                pendingMessage,
-              );
-              sessionStorage.removeItem(tempKey);
-              console.log(
-                "🔄 [EMPTY_SESSION] Mensagem pendente transferida para sessão:",
-                sessionId,
-              );
-            }
-          }
-
-          toast.success("Nova conversa criada!");
-
-          // DEBUG: Verificar qual URL está sendo gerada
-          const targetUrl = `/apps/chat/${sessionId}`; // Caminho absoluto como funcionava antes
-          console.log(
-            "🔍 [EMPTY_SESSION] Navegando para caminho absoluto:",
-            targetUrl,
-          );
-          console.log(
-            "🔍 [EMPTY_SESSION] Window location antes:",
-            window.location.href,
-          );
-
-          // ✅ CORREÇÃO: Deixar a navegação para o callback onSuccess
-          // Isso evita navegações duplas que causam duplicação de URLs
-          console.log(
-            "🔄 [EMPTY_SESSION] Delegando navegação para onSuccess callback",
-          );
-
-          options?.onSuccess?.(sessionId);
-        }
-        setIsCreating(false);
+        // Chamar callback se fornecido
+        options?.onSuccess?.(sessionId);
       },
-      onError: (error: any) => {
-        console.error("❌ [EMPTY_SESSION] Erro ao criar sessão vazia:", error);
-        trpcErrorToastDefault(error);
-        setError(error);
-        options?.onError?.(error);
-        setIsCreating(false);
+      onError: (error) => {
+        console.error("❌ [EMPTY_SESSION] Erro ao criar sessão:", error);
       },
     }),
   );
 
-  const createEmptySession = async (input?: CreateEmptySessionInput) => {
-    // Validações iniciais
-    if (isCreating) {
-      toast.info("Criando nova conversa...");
-      return;
-    }
-
-    console.log("🚀 [EMPTY_SESSION] Iniciando criação de sessão vazia");
-
-    setIsCreating(true);
-    setError(null);
-
-    try {
-      await createEmptyMutation.mutateAsync({
-        title: input?.title || `Chat ${new Date().toLocaleDateString()}`,
-        generateTitle: input?.generateTitle ?? false, // Não gerar título sem mensagem
-        metadata: input?.metadata || { createdAt: new Date().toISOString() },
-      });
-    } catch (error) {
-      console.error("🔴 [EMPTY_SESSION] Erro ao criar sessão vazia:", error);
-      // O erro já foi tratado pelo onError do mutation
-    }
-  };
-
-  const reset = () => {
-    setError(null);
-    setIsCreating(false);
+  // ✅ THREAD-FIRST: Função para iniciar nova conversa (será chamada pelo ChatWindow)
+  const startNewConversation = () => {
+    console.log(
+      "🚀 [EMPTY_SESSION] Thread-First: Preparando para nova conversa...",
+    );
+    // Não cria sessão aqui - deixa para o envio da primeira mensagem
+    router.push("/apps/chat");
   };
 
   return {
-    createEmptySession,
-    isCreating: isCreating || createEmptyMutation.isPending,
-    error: error || createEmptyMutation.error,
-    reset,
+    // ✅ THREAD-FIRST: Função para navegar para estado inicial
+    startNewConversation,
 
-    // Debug info
-    debug: {
-      createEmptyStatus: createEmptyMutation.status,
-    },
+    // ✅ LEGACY: Manter compatibilidade temporária (será removido)
+    createEmptySession: createEmptySessionMutation.mutate,
+    isCreating: createEmptySessionMutation.isPending,
+    error: createEmptySessionMutation.error,
   };
 }

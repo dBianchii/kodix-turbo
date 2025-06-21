@@ -35,11 +35,17 @@
     "check:trpc": "./scripts/check-trpc-imports.sh"
   },
   "devDependencies": {
+    "@ai-sdk/anthropic": "^1.2.12",
+    "@ai-sdk/openai": "^1.3.22",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "@kdx/prettier-config": "workspace:*",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@turbo/gen": "catalog:turbo",
+    "ai": "^4.3.13",
     "jsdom": "^26.1.0",
     "prettier": "catalog:",
     "turbo": "catalog:turbo",
@@ -50,15 +56,8 @@
   "pnpm": {
     "overrides": {
       "react": "catalog:react",
-      "react-dom": "catalog:react"
+      "react-dom": "catalog:react",
+      "marked": "^4.3.0"
     }
-  },
-  "dependencies": {
-    "@ai-sdk/anthropic": "^1.2.12",
-    "@ai-sdk/openai": "^1.3.22",
-    "@dnd-kit/core": "^6.3.1",
-    "@dnd-kit/sortable": "^10.0.0",
-    "@dnd-kit/utilities": "^3.2.2",
-    "ai": "^4.3.13"
   }
 }
