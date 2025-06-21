@@ -401,50 +401,208 @@ useEffect(() => {
 - ✅ **ZERO duplicação** de mensagens
 - ✅ Streaming funcionando perfeitamente
 
-### FASE 3: Backend e Integração (4 dias)
+### FASE 3: Backend e Integração - REDESENHADA (8 dias)
 
-#### Dia 9-10: Atualizar Backend
+> **⚠️ IMPORTANTE:** Esta fase foi redesenhada para garantir migração segura e incremental, preservando todas as funcionalidades existentes.
 
-- [ ] Criar endpoint `/api/chat/sessions` (POST)
-- [ ] Modificar `autoCreateSessionWithMessage`
-- [ ] Ajustar lógica de auto-save
-- [ ] Atualizar documentação da API
+#### 🎯 Objetivos da FASE 3
 
-**Código Exemplo - Endpoint de Sessão Vazia:**
+1. **Migrar gradualmente** de `autoCreateSessionWithMessage` para `createEmptySession`
+2. **Preservar 100%** das funcionalidades e layout atuais
+3. **Manter compatibilidade** com Vercel AI SDK e Assistant-UI
+4. **Garantir** que renderização de Markdown continue funcionando
+5. **Zero breaking changes** durante a migração
+
+#### 📋 Sub-fases de Implementação
+
+##### SUB-FASE 3.1: Preparação e Análise (2 dias)
+
+###### Dia 9: Análise de Impacto e Testes
+
+- [ ] Mapear todos os usos de `autoCreateSessionWithMessage`
+- [ ] Criar testes de regressão para funcionalidades críticas
+- [ ] Documentar comportamento atual do fluxo de criação
+- [ ] Validar renderização de Markdown em todos os cenários
+
+**Checklist de Validação:**
 
 ```typescript
-// api/chat/sessions/route.ts
-export async function POST(req: Request) {
-  const { title, metadata } = await req.json();
-
-  const session = await ChatService.createSession({
-    title: title || `Chat ${new Date().toLocaleDateString()}`,
-    metadata,
-    // Sem mensagens iniciais!
+// Testes de regressão essenciais
+describe("Chat Regression Tests", () => {
+  it("should preserve markdown rendering", () => {
+    // Testar **bold**, *italic*, `code`, etc.
   });
 
-  return Response.json({
-    sessionId: session.id,
-    createdAt: session.createdAt,
+  it("should maintain layout integrity", () => {
+    // Verificar posicionamento de mensagens
+    // Verificar scroll behavior
+    // Verificar input box
   });
+
+  it("should preserve welcome screen", () => {
+    // Verificar WelcomeHeader
+    // Verificar WelcomeSuggestions
+  });
+});
+```
+
+###### Dia 10: Criar Feature Flag e Abstração
+
+- [ ] Implementar feature flag para migração gradual
+- [ ] Criar abstração para escolher entre fluxos
+- [ ] Preparar métricas de comparação
+- [ ] Configurar A/B testing (opcional)
+
+**Implementação do Feature Flag:**
+
+```typescript
+// hooks/useSessionCreation.tsx
+export function useSessionCreation() {
+  const featureFlag = useFeatureFlag("use-empty-session-flow");
+
+  const { createSessionWithMessage } = useAutoCreateSession();
+  const { createEmptySession } = useEmptySession();
+
+  const createSession = async (message: string) => {
+    if (featureFlag.enabled) {
+      // Novo fluxo: criar sessão vazia + append
+      const sessionId = await createEmptySession();
+      // Navegação acontece automaticamente
+      // Mensagem será enviada após navegação via useChat
+    } else {
+      // Fluxo atual: manter comportamento existente
+      await createSessionWithMessage({
+        firstMessage: message,
+        useAgent: false,
+        generateTitle: true,
+      });
+    }
+  };
+
+  return { createSession };
 }
 ```
 
-#### Dia 11-12: Testes de Integração
+##### SUB-FASE 3.2: Implementação Gradual (3 dias)
 
-- [ ] Criar suite completa de testes E2E
-- [ ] Testar migração de sessões antigas
-- [ ] Validar performance com múltiplas sessões
-- [ ] Testar edge cases e erros
+###### Dia 11: Adaptar ChatWindow para Novo Fluxo
 
-### FASE 4: Otimização e Polish (3 dias)
+- [ ] Modificar `handleNewMessage` para usar abstração
+- [ ] Garantir que `WelcomeHeader` e `WelcomeSuggestions` continuem funcionando
+- [ ] Preservar comportamento de auto-processamento
+- [ ] Manter compatibilidade com `reload()`
 
-#### Dia 13: Performance
+**Adaptação Segura:**
+
+```typescript
+// ChatWindow.tsx - Adaptação incremental
+const handleNewMessage = async (message: string) => {
+  if (isCreating) return;
+
+  try {
+    if (featureFlag.useEmptySession) {
+      // Novo fluxo
+      setLocalPendingMessage(message); // Guardar para enviar após navegação
+      await createEmptySession();
+    } else {
+      // Fluxo atual preservado
+      await createSessionWithMessage({
+        firstMessage: message,
+        useAgent: false,
+        generateTitle: true,
+      });
+    }
+  } catch (error) {
+    console.error("❌ Erro ao criar sessão:", error);
+  }
+};
+```
+
+###### Dia 12: Implementar Envio Pós-Navegação
+
+- [ ] Detectar navegação para nova sessão vazia
+- [ ] Enviar mensagem pendente via `append()`
+- [ ] Garantir que não haja duplicação
+- [ ] Manter UX idêntica à atual
+
+**Envio Inteligente:**
+
+```typescript
+// Hook para gerenciar mensagem pendente
+useEffect(() => {
+  if (sessionId && localPendingMessage && messages.length === 0 && !isLoading) {
+    // Enviar mensagem pendente
+    append({
+      role: "user",
+      content: localPendingMessage,
+    });
+    setLocalPendingMessage(null);
+  }
+}, [sessionId, localPendingMessage, messages, append, isLoading]);
+```
+
+###### Dia 13: Testes de Integração e Validação
+
+- [ ] Executar suite completa de testes
+- [ ] Validar fluxo com feature flag ON/OFF
+- [ ] Testar edge cases (conexão lenta, erros, etc.)
+- [ ] Verificar métricas de performance
+
+##### SUB-FASE 3.3: Otimização e Rollout (3 dias)
+
+###### Dia 14: Otimizar Novo Fluxo
+
+- [ ] Remover código redundante (com feature flag ON)
+- [ ] Otimizar transições entre telas
+- [ ] Implementar cache de sessões vazias (opcional)
+- [ ] Melhorar feedback visual durante criação
+
+###### Dia 15: Rollout Gradual
+
+- [ ] Ativar feature flag para 10% dos usuários
+- [ ] Monitorar métricas e erros
+- [ ] Coletar feedback
+- [ ] Ajustar conforme necessário
+
+###### Dia 16: Finalização e Documentação
+
+- [ ] Expandir rollout para 100%
+- [ ] Atualizar documentação
+- [ ] Criar guia de migração
+- [ ] Preparar para remoção do código antigo (FASE 4)
+
+#### 🛡️ Garantias de Segurança
+
+1. **Feature Flag**: Permite rollback instantâneo
+2. **Testes de Regressão**: Garantem funcionalidades preservadas
+3. **Migração Gradual**: Reduz risco de breaking changes
+4. **Monitoramento**: Detecta problemas rapidamente
+5. **Código Paralelo**: Mantém ambos fluxos funcionando
+
+#### 📊 Métricas de Validação
+
+- [ ] **Renderização Markdown**: 100% compatível
+- [ ] **Layout**: 0 mudanças visuais
+- [ ] **Performance**: ≤ tempo atual de criação
+- [ ] **Erros**: 0 novos erros introduzidos
+- [ ] **UX**: Comportamento idêntico ao atual
+
+#### 🚨 Pontos de Atenção
+
+1. **Markdown**: ReactMarkdown com remarkGfm deve continuar funcionando
+2. **Auto-processamento**: `reload()` deve funcionar em ambos fluxos
+3. **Welcome Screen**: Componentes devem permanecer intactos
+4. **Navegação**: Transição deve ser suave como atual
+
+### FASE 4: Otimização e Polish (5 dias)
+
+#### Dia 17-18: Performance e Otimizações
 
 - [ ] Implementar lazy loading de histórico
-- [ ] Adicionar paginação virtual
-- [ ] Otimizar re-renders
-- [ ] Implementar memoização
+- [ ] Adicionar paginação virtual para conversas longas
+- [ ] Otimizar re-renders com React.memo
+- [ ] Implementar memoização de cálculos pesados
+- [ ] Cache de sessões recentes
 
 **Código Exemplo - Lazy Loading:**
 
@@ -462,19 +620,29 @@ const { messages, append, isLoading } = useChat({
 });
 ```
 
-#### Dia 14: Error Handling
+#### Dia 19: Error Handling Robusto
 
-- [ ] Implementar error boundaries
-- [ ] Adicionar retry automático
-- [ ] Melhorar mensagens de erro
-- [ ] Criar fallbacks graceful
+- [ ] Implementar error boundaries para toda aplicação
+- [ ] Adicionar retry automático com backoff exponencial
+- [ ] Melhorar mensagens de erro (user-friendly)
+- [ ] Criar fallbacks graceful para cada componente
+- [ ] Sistema de notificação de erros não-intrusivo
 
-#### Dia 15: Documentação e Deploy
+#### Dia 20: Limpeza e Remoção de Código Antigo
 
-- [ ] Atualizar toda documentação
-- [ ] Criar guia de migração
-- [ ] Preparar release notes
-- [ ] Deploy em staging
+- [ ] Remover `autoCreateSessionWithMessage` (com feature flag 100%)
+- [ ] Limpar código comentado e não utilizado
+- [ ] Refatorar duplicações identificadas
+- [ ] Otimizar imports e dependências
+
+#### Dia 21: Documentação Final e Deploy
+
+- [ ] Atualizar toda documentação técnica
+- [ ] Criar guia de migração para desenvolvedores
+- [ ] Documentar novas APIs e hooks
+- [ ] Preparar release notes detalhadas
+- [ ] Deploy em staging para validação final
+- [ ] Preparar plano de rollback se necessário
 
 ## 🔧 Detalhes Técnicos
 
@@ -614,18 +782,27 @@ Nenhuma mudança estrutural necessária. Apenas comportamental:
 
 ## 📝 Conclusão
 
-Esta migração representa uma mudança significativa mas necessária para a sustentabilidade do Chat SubApp. Seguindo este plano detalhado, podemos:
+Esta migração representa uma mudança significativa mas necessária para a sustentabilidade do Chat SubApp. Seguindo este plano detalhado e redesenhado, podemos:
 
-1. **Eliminar** todos os bugs conhecidos
-2. **Simplificar** drasticamente o código
-3. **Melhorar** a experiência do usuário
-4. **Alinhar** com melhores práticas (Assistant-UI)
-5. **Preparar** para futuras features
+1. **Eliminar** todos os bugs conhecidos de forma segura
+2. **Simplificar** drasticamente o código sem quebrar funcionalidades
+3. **Melhorar** a experiência do usuário mantendo o layout atual
+4. **Alinhar** com melhores práticas (Assistant-UI e Vercel AI SDK)
+5. **Preparar** para futuras features com arquitetura sólida
 
-**Próximo Passo:** Aprovar plano e iniciar Fase 1
+**Cronograma Total Atualizado:**
+
+- ✅ **FASE 1:** 3 dias (CONCLUÍDA)
+- ✅ **FASE 2:** 5 dias (CONCLUÍDA)
+- 🔄 **FASE 3:** 8 dias (Redesenhada com sub-fases)
+- 📅 **FASE 4:** 5 dias
+- **Total:** 21 dias úteis
+
+**Próximo Passo:** Iniciar SUB-FASE 3.1 - Preparação e Análise
 
 ---
 
 **Documento criado em:** Dezembro 2024  
+**Última atualização:** Janeiro 2025  
 **Responsável:** Time de Engenharia Chat  
-**Status:** Aguardando Aprovação
+**Status:** FASE 1-2 Concluídas | FASE 3 Pronta para Iniciar
