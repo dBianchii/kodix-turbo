@@ -627,7 +627,7 @@ const handleNewMessage = async (message: string) => {
   try {
     await createSession({
       firstMessage: message,
-      useAgent: true, // Habilitar agente para processamento automático
+      useAgent: true,
       generateTitle: true,
     });
   } catch (error) {
@@ -1225,10 +1225,406 @@ O sistema atual já está **100% funcional**, mas a FASE 5 resolveria definitiva
 
 ---
 
+## 🚨 FASE 5 REVISADA: Implementação Assistant-UI com Multi-Provider
+
+### 📋 Descoberta Crítica
+
+Após investigação detalhada, descobrimos que:
+
+1. **`useAssistant` é ESPECÍFICO para OpenAI Assistants API**
+
+   - Requer arquitetura de threads/runs
+   - Não suporta múltiplos providers diretamente
+   - Projetado para casos específicos do OpenAI
+
+2. **Para Multi-Provider + Assistant-UI, devemos usar `useChat`**
+   - Suporta TODOS os providers (OpenAI, Anthropic, Google, etc.)
+   - Mantém compatibilidade com AiStudioService
+   - Permite implementar padrões Assistant-UI manualmente
+
+### 🎯 Nova Estratégia: Assistant-UI Pattern com useChat
+
+#### Objetivo Principal
+
+Implementar os **padrões e benefícios do Assistant-UI** mantendo compatibilidade total com múltiplos providers através do `useChat`.
+
+#### Benefícios Esperados
+
+- ✅ **Multi-Provider**: Funciona com qualquer modelo via AiStudioService
+- ✅ **Thread-First**: Implementação manual do padrão
+- ✅ **Geração Automática de Títulos**: Via hooks customizados
+- ✅ **Streaming Otimizado**: Nativo do useChat
+- ✅ **100% Compatível**: Com arquitetura atual
+
+### 📐 Arquitetura Proposta
+
+```mermaid
+graph TD
+    subgraph "Frontend - Assistant-UI Pattern"
+        A[ChatAssistantProvider] --> B[Thread Management]
+        B --> C[useChat Hook]
+        C --> D[Custom Title Generation]
+        D --> E[Message Persistence]
+    end
+
+    subgraph "Backend - Multi-Provider"
+        F[/api/chat/stream] --> G[AiStudioService]
+        G --> H[Provider Router]
+        H --> I[OpenAI/Anthropic/Google]
+    end
+
+    C --> F
+    E --> J[TRPC Repository]
+```
+
+### 🔧 Plano de Implementação Detalhado
+
+#### SUB-FASE 5.1: Preparação e Análise (2 dias)
+
+**Dia 1: Análise e Design**
+
+- [ ] Documentar padrões Assistant-UI essenciais
+- [ ] Mapear funcionalidades do useAssistant para useChat
+- [ ] Criar design de componentes thread-first
+- [ ] Definir estratégia de migração incremental
+
+**Dia 2: Configuração Base**
+
+- [ ] Criar `ChatThreadProvider` customizado
+- [ ] Implementar gerenciamento de threads local
+- [ ] Configurar sistema de IDs únicos
+- [ ] Preparar testes unitários
+
+#### SUB-FASE 5.2: Thread Management (3 dias)
+
+**Dia 3: Thread State Management**
+
+```typescript
+// _providers/chat-thread-provider.tsx
+interface Thread {
+  id: string;
+  title: string;
+  messages: Message[];
+  metadata: Record<string, any>;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export function ChatThreadProvider({ children }: Props) {
+  const [threads, setThreads] = useState<Thread[]>([]);
+  const [activeThreadId, setActiveThreadId] = useState<string>();
+
+  // Thread-first operations
+  const createThread = async () => {
+    const thread = {
+      id: generateId(),
+      title: `Chat ${new Date().toLocaleDateString()}`,
+      messages: [],
+      metadata: {},
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    setThreads((prev) => [...prev, thread]);
+    setActiveThreadId(thread.id);
+
+    // Persist to backend
+    await createEmptySession(thread);
+
+    return thread;
+  };
+
+  // ... resto da implementação
+}
+```
+
+**Dia 4: Message Handling com useChat**
+
+```typescript
+// _hooks/useThreadChat.tsx
+export function useThreadChat(threadId: string) {
+  const { thread, updateThread } = useThreadContext();
+
+  // useChat com configuração thread-aware
+  const {
+    messages,
+    append,
+    reload,
+    stop,
+    isLoading,
+    input,
+    setInput,
+    handleInputChange,
+    handleSubmit: originalSubmit,
+  } = useChat({
+    api: "/api/chat/stream",
+    id: threadId,
+    initialMessages: thread?.messages || [],
+    body: {
+      chatSessionId: threadId,
+      useAgent: true,
+      // Incluir metadata da thread
+      threadMetadata: thread?.metadata,
+    },
+    onFinish: async (message) => {
+      // Atualizar thread local
+      updateThread(threadId, {
+        messages: [...messages, message],
+        updatedAt: new Date(),
+      });
+
+      // Gerar título se primeira mensagem
+      if (messages.length === 1) {
+        await generateThreadTitle(threadId, message.content);
+      }
+    },
+  });
+
+  // Wrapper para handleSubmit com thread awareness
+  const handleSubmit = (e: React.FormEvent) => {
+    if (!thread) {
+      createThread().then(() => originalSubmit(e));
+    } else {
+      originalSubmit(e);
+    }
+  };
+
+  return {
+    thread,
+    messages,
+    append,
+    reload,
+    stop,
+    isLoading,
+    input,
+    setInput,
+    handleInputChange,
+    handleSubmit,
+  };
+}
+```
+
+**Dia 5: Sincronização Backend**
+
+- [ ] Adaptar repositórios TRPC para modelo thread-first
+- [ ] Implementar sincronização bidirecional
+- [ ] Adicionar cache otimista
+- [ ] Configurar invalidação inteligente
+
+#### SUB-FASE 5.3: Title Generation System (2 dias)
+
+**Dia 6: Auto Title Generation**
+
+```typescript
+// _services/title-generation.service.ts
+export async function generateThreadTitle(
+  threadId: string,
+  firstMessage: string,
+) {
+  try {
+    const { title } = await generateObject({
+      model: await getPreferredModel(),
+      schema: z.object({
+        title: z.string().max(50).describe("Título conciso da conversa"),
+      }),
+      prompt: `Gere um título curto para uma conversa que começa com: "${firstMessage}"`,
+      system: "Você é um assistente que cria títulos concisos e descritivos.",
+    });
+
+    // Atualizar no contexto local
+    updateThread(threadId, { title });
+
+    // Persistir no backend
+    await updateSessionTitle(threadId, title);
+
+    return title;
+  } catch (error) {
+    console.error("[TITLE_GEN] Erro:", error);
+    return null;
+  }
+}
+```
+
+**Dia 7: UI Components Assistant-UI Style**
+
+```typescript
+// _components/chat-assistant-ui.tsx
+export function ChatAssistantUI() {
+  const { threads, activeThread, createThread } = useThreadContext();
+  const chat = useThreadChat(activeThread?.id);
+
+  return (
+    <div className="flex h-full">
+      {/* Sidebar com threads */}
+      <ThreadSidebar
+        threads={threads}
+        activeId={activeThread?.id}
+        onNewThread={createThread}
+      />
+
+      {/* Área principal */}
+      <div className="flex-1">
+        {!activeThread ? (
+          <WelcomeScreen onStart={createThread} />
+        ) : (
+          <ThreadView {...chat} />
+        )}
+      </div>
+    </div>
+  );
+}
+```
+
+#### SUB-FASE 5.4: Testing & Optimization (3 dias)
+
+**Dia 8: Testes Unitários**
+
+- [ ] Testes para ThreadProvider
+- [ ] Testes para useThreadChat
+- [ ] Testes para geração de títulos
+- [ ] Testes de sincronização
+
+**Dia 9: Testes de Integração**
+
+- [ ] Fluxo completo nova conversa
+- [ ] Switching entre threads
+- [ ] Persistência e recuperação
+- [ ] Performance com múltiplas threads
+
+**Dia 10: Otimizações**
+
+- [ ] Lazy loading de threads antigas
+- [ ] Virtualização de mensagens longas
+- [ ] Debounce de atualizações
+- [ ] Cache strategies
+
+#### SUB-FASE 5.5: Migração e Deploy (2 dias)
+
+**Dia 11: Migração de Dados**
+
+```typescript
+// scripts/migrate-to-threads.ts
+async function migrateSessionsToThreads() {
+  const sessions = await getAllSessions();
+
+  for (const session of sessions) {
+    const thread = {
+      id: session.id,
+      title: session.title,
+      messages: await getSessionMessages(session.id),
+      metadata: {
+        migratedAt: new Date(),
+        originalCreatedAt: session.createdAt,
+        modelId: session.aiModelId,
+      },
+    };
+
+    await createThread(thread);
+  }
+}
+```
+
+**Dia 12: Deploy Gradual**
+
+- [ ] Deploy em staging
+- [ ] Testes com equipe interna
+- [ ] Monitoramento de métricas
+- [ ] Deploy em produção
+
+### 🛡️ Garantias de Compatibilidade
+
+1. **Backend Inalterado**
+
+   - Endpoints `/api/chat/stream` continuam funcionando
+   - TRPC repositories compatíveis
+   - Sem breaking changes na API
+
+2. **Multi-Provider Preservado**
+
+   - AiStudioService continua central
+   - Switching de modelos funcional
+   - Tokens e configurações mantidos
+
+3. **UI/UX Preservada**
+
+   - Welcome Screen idêntica
+   - Markdown rendering intacto
+   - Layout responsivo mantido
+   - Componentes shadcn/ui
+
+4. **Testes Continuam Passando**
+   - Suite atual compatível
+   - Novos testes adicionados
+   - Coverage aumentado
+
+### 📊 Métricas de Sucesso
+
+| Métrica              | Atual           | Meta FASE 5              |
+| -------------------- | --------------- | ------------------------ |
+| Tempo criação sessão | 200ms           | < 100ms                  |
+| Título automático    | Manual/Delay    | < 2s automático          |
+| Switch entre threads | N/A             | < 50ms                   |
+| Mensagens por thread | Ilimitado       | Paginado (50/página)     |
+| Memory footprint     | 100MB (1k msgs) | 20MB (cache inteligente) |
+
+### 🚀 Benefícios Finais
+
+1. **Developer Experience**
+
+   - API simples e intuitiva
+   - Padrões claros e documentados
+   - Fácil extensão e customização
+
+2. **User Experience**
+
+   - Interface thread-first natural
+   - Títulos gerados instantaneamente
+   - Performance otimizada
+
+3. **Manutenibilidade**
+
+   - Código organizado por domínio
+   - Testes abrangentes
+   - Documentação completa
+
+4. **Escalabilidade**
+   - Pronto para milhares de threads
+   - Cache e paginação inteligentes
+   - Backend otimizado
+
+### ⚠️ Pontos de Atenção
+
+1. **Migração de Dados**
+
+   - Backup obrigatório antes
+   - Script de rollback pronto
+   - Monitoramento durante migração
+
+2. **Performance Initial Load**
+
+   - Implementar skeleton screens
+   - Carregar threads progressivamente
+   - Priorizar thread ativa
+
+3. **Sincronização Complexa**
+   - Conflitos de edição simultânea
+   - Estratégia de resolução clara
+   - Feedback visual de sync status
+
+### 🎯 Conclusão FASE 5 Revisada
+
+A implementação revisada mantém todos os benefícios do Assistant-UI enquanto preserva a compatibilidade total com múltiplos providers. Usando `useChat` como base e implementando os padrões thread-first manualmente, conseguimos o melhor dos dois mundos.
+
+**Tempo estimado:** 15 dias úteis
+**Risco:** Médio (mitigado por implementação incremental)
+**ROI:** Alto (UX significativamente melhorada)
+
+---
+
 **Documento criado em:** Dezembro 2024  
 **Última atualização:** Janeiro 2025  
 **Responsável:** Time de Engenharia Chat  
-**Status:** FASES 1-4 Concluídas | Sistema em Produção | FASE 5 Opcional
+**Status:** FASES 1-4 Concluídas | FASE 5 Revisada e Planejada
 
 **Status:**
 

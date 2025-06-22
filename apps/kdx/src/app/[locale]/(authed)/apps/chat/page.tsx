@@ -18,6 +18,8 @@
  * - Edição de mensagens
  * - Configurações por team com modelo padrão persistente
  * - Interface responsiva estilo ChatGPT
+ *
+ * 🚀 FASE 5: Implementação completa Assistant-UI
  */
 
 // @ts-nocheck - Chat tRPC router has type definition issues that need to be resolved at the router level
@@ -34,13 +36,14 @@ import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { useRouter } from "~/i18n/routing";
 import { useTRPC } from "~/trpc/react";
 import { AppSidebar } from "./_components/app-sidebar";
-import { ChatWindow } from "./_components/chat-window";
+import { ChatWindowAssistant } from "./_components/chat-window-assistant";
 import { ModelInfoBadge } from "./_components/model-info-badge";
 import { ModelSelector } from "./_components/model-selector";
 import { TokenUsageBadge } from "./_components/token-usage-badge";
 import { useChatPreferredModel } from "./_hooks/useChatPreferredModel";
 import { useChatUserConfig } from "./_hooks/useChatUserConfig";
 import { useTokenUsage } from "./_hooks/useTokenUsage";
+import { ChatAssistantProvider } from "./_providers/assistant-provider";
 
 {
   /*
@@ -336,12 +339,14 @@ export default function ChatPage({
           <Separator className="my-4" />
           */}
 
-          {/* Área do chat cresce para preencher o espaço restante */}
+          {/* 🚀 FASE 5: Área do chat com Assistant-UI ativo */}
           <div className="min-h-0 flex-1 overflow-hidden">
-            <ChatWindow
-              sessionId={selectedSessionId}
-              onNewSession={handleSessionSelect}
-            />
+            <ChatAssistantProvider>
+              <ChatWindowAssistant
+                sessionId={selectedSessionId}
+                onNewSession={handleSessionSelect}
+              />
+            </ChatAssistantProvider>
           </div>
         </div>
       </div>

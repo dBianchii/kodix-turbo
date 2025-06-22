@@ -14,12 +14,13 @@ import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { useRouter } from "~/i18n/routing";
 import { useTRPC } from "~/trpc/react";
 import { AppSidebar } from "../_components/app-sidebar";
-import { ChatWindow } from "../_components/chat-window";
+import { ChatWindowAssistant } from "../_components/chat-window-assistant";
 import { ModelInfoBadge } from "../_components/model-info-badge";
 import { ModelSelector } from "../_components/model-selector";
 import { TokenUsageBadge } from "../_components/token-usage-badge";
 import { useChatPreferredModel } from "../_hooks/useChatPreferredModel";
 import { useTokenUsage } from "../_hooks/useTokenUsage";
+import { ChatAssistantProvider } from "../_providers/assistant-provider";
 
 export default function ChatSessionPage() {
   const t = useTranslations();
@@ -230,18 +231,20 @@ export default function ChatSessionPage() {
             </div>
           </div>
 
-          {/* Área do chat */}
+          {/* 🚀 FASE 5: Área do chat com Assistant-UI */}
           <div className="flex flex-1 flex-col overflow-hidden">
-            <ChatWindow
-              sessionId={selectedSessionId}
-              onNewSession={(newSessionId) => {
-                console.log(
-                  "🎯 [SESSION_PAGE] Nova sessão criada:",
-                  newSessionId,
-                );
-                handleSessionSelect(newSessionId);
-              }}
-            />
+            <ChatAssistantProvider>
+              <ChatWindowAssistant
+                sessionId={selectedSessionId}
+                onNewSession={(newSessionId) => {
+                  console.log(
+                    "🎯 [SESSION_PAGE] Nova sessão criada:",
+                    newSessionId,
+                  );
+                  handleSessionSelect(newSessionId);
+                }}
+              />
+            </ChatAssistantProvider>
           </div>
         </div>
       </div>
