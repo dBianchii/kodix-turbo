@@ -16,23 +16,35 @@ export default defineConfig({
       CI: "true",
     },
     globals: true,
-    // Configuração de ambiente baseada no arquivo
-    environment: "jsdom", // Mudança para jsdom por padrão
+    // 🔧 CORREÇÃO: Ambiente padrão para Node.js (backend)
+    environment: "node",
+
+    // 🔧 CORREÇÃO: Configuração específica por ambiente
     environmentMatchGlobs: [
-      // Backend tests usam node
+      // Backend tests usam ambiente node (SEM window object)
       ["packages/api/**/*.test.ts", "node"],
       ["packages/db/**/*.test.ts", "node"],
       ["packages/auth/**/*.test.ts", "node"],
-      // Frontend tests usam jsdom
+      ["packages/shared/**/*.test.ts", "node"],
+      ["packages/validators/**/*.test.ts", "node"],
+      ["packages/permissions/**/*.test.ts", "node"],
+      ["packages/locales/**/*.test.ts", "node"],
+
+      // Frontend tests usam jsdom (COM window object)
       ["apps/kdx/**/*.test.ts", "jsdom"],
       ["apps/kdx/**/*.test.tsx", "jsdom"],
+      ["apps/care-expo/**/*.test.ts", "jsdom"],
+      ["apps/care-expo/**/*.test.tsx", "jsdom"],
       ["packages/ui/**/*.test.ts", "jsdom"],
       ["packages/ui/**/*.test.tsx", "jsdom"],
     ],
+
+    // 🔧 CORREÇÃO: Setup files específicos
     setupFiles: [
-      "./packages/api/src/test-setup.ts", // Setup para backend
-      "./apps/kdx/src/test-setup.ts", // Setup para frontend
+      "./packages/api/src/test-setup.ts", // Backend (Node.js)
+      "./apps/kdx/src/test-setup.ts", // Frontend (jsdom) - será usado apenas para testes jsdom
     ],
+
     // Timeout maior para testes que fazem mocking pesado
     testTimeout: 10000,
     // Isolar cada teste

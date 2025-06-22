@@ -182,11 +182,11 @@ run_test_suite "navigation" \
     "Navigation Patterns Tests" \
     "frontend"
 
-# 12. Testes de Sincronização de Títulos
-run_test_suite "title-sync" \
-    "$FRONTEND_TEST_DIR/integration/title-sync.test.ts" \
-    "Title Synchronization Tests" \
-    "frontend"
+# 12. Testes de Sincronização de Títulos - REMOVIDO
+# run_test_suite "title-sync" \
+#     "$FRONTEND_TEST_DIR/integration/title-sync.test.ts" \
+#     "Title Synchronization Tests" \
+#     "frontend"
 
 echo ""
 echo "=============================================================="

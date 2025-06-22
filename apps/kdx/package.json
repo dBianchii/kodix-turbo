@@ -16,9 +16,10 @@
   "dependencies": {
     "@ai-sdk/openai": "catalog:",
     "@ai-sdk/react": "^1.2.12",
-    "@assistant-ui/react": "^0.10.23",
-    "@assistant-ui/react-markdown": "^0.10.4",
-    "@assistant-ui/styles": "^0.1.11",
+    "@assistant-ui/react": "^0.10.24",
+    "@assistant-ui/react-ai-sdk": "^0.10.14",
+    "@assistant-ui/react-markdown": "^0.10.5",
+    "@assistant-ui/styles": "^0.1.13",
     "@formkit/auto-animate": "catalog:",
     "@kdx/api": "workspace:*",
     "@kdx/auth": "workspace:*",

@@ -1,9 +1,14 @@
 /**
- * Setup global para testes
+ * Setup global para testes de BACKEND
  * Configura mocks básicos para evitar conexões reais com banco de dados
+ * 🔧 CORREÇÃO: Específico para ambiente Node.js (sem window object)
  */
 
 import { vi } from "vitest";
+
+console.log(
+  "🧪 [BACKEND-SETUP] Configurando ambiente Node.js para testes de backend",
+);
 
 // Mock básico do console para evitar spam nos testes
 const originalConsole = console;

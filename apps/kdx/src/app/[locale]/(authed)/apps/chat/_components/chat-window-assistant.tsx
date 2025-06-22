@@ -1,15 +1,12 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { useAssistant } from "@ai-sdk/react";
+import React, { useState } from "react";
 import { Loader2 } from "lucide-react";
 
 import { Button } from "@kdx/ui/button";
 import { Input } from "@kdx/ui/input";
 import { ScrollArea } from "@kdx/ui/scroll-area";
-import { toast } from "@kdx/ui/toast";
 
-import { useRouter } from "~/i18n/routing";
 import { Message } from "./message";
 import { WelcomeHeader } from "./welcome-header";
 import { WelcomeSuggestions } from "./welcome-suggestions";
@@ -23,56 +20,56 @@ export function ChatWindowAssistant({
   sessionId,
   onNewSession,
 }: ChatWindowAssistantProps) {
-  const router = useRouter();
+  const [messages, setMessages] = useState<
+    { id: string; role: string; content: string }[]
+  >([]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Hook do Assistant-UI (usando @ai-sdk/react)
-  const {
-    status,
-    messages,
-    input,
-    submitMessage,
-    handleInputChange,
-    error,
-    threadId,
-  } = useAssistant({
-    api: "/api/assistant",
-    threadId: sessionId || undefined,
-  });
-
-  // Redirecionar quando uma nova thread for criada
-  useEffect(() => {
-    if (threadId && !sessionId) {
-      console.log("🚀 [ASSISTANT-UI] Nova thread criada:", threadId);
-      router.push(`/apps/chat/${threadId}`);
-      onNewSession?.(threadId);
-    }
-  }, [threadId, sessionId, router, onNewSession]);
-
-  // Mostrar erro se houver
-  useEffect(() => {
-    if (error) {
-      console.error("❌ [ASSISTANT-UI] Erro:", error);
-      toast.error(error.message || "Erro ao processar mensagem");
-    }
-  }, [error]);
-
-  // Handler para nova mensagem (Welcome Screen)
+  // 🚀 ASSISTANT-UI: Handler para nova mensagem (Welcome Screen)
   const handleNewMessage = async (message: string) => {
-    if (status !== "awaiting_message") return;
+    console.log("🚀 [ASSISTANT-UI] Enviando nova mensagem:", message);
 
-    console.log("🚀 [ASSISTANT-UI] Enviando nova mensagem...");
+    // Adicionar mensagem do usuário
+    const userMessage = {
+      id: Date.now().toString(),
+      role: "user",
+      content: message,
+    };
 
-    // Definir o input e submeter
-    handleInputChange({ target: { value: message } } as any);
+    setMessages([userMessage]);
+    setIsLoading(true);
 
-    // Pequeno delay para garantir que o input foi atualizado
-    setTimeout(() => {
-      submitMessage();
-    }, 10);
+    try {
+      // Aqui vamos integrar com o AssistantProvider posteriormente
+      // Por agora, simular resposta
+      setTimeout(() => {
+        const assistantMessage = {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          content:
+            "Esta é uma resposta simulada. Em breve será conectada ao Assistant-UI.",
+        };
+        setMessages((prev) => [...prev, assistantMessage]);
+        setIsLoading(false);
+      }, 1000);
+    } catch (error) {
+      console.error("❌ [ASSISTANT-UI] Erro:", error);
+      setIsLoading(false);
+    }
   };
 
-  // Welcome Screen
-  if (!sessionId && !threadId) {
+  // 🚀 ASSISTANT-UI: Handler para submit do form
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (input.trim() && !isLoading) {
+      handleNewMessage(input);
+      setInput("");
+    }
+  };
+
+  // 🚀 ASSISTANT-UI: Welcome Screen preservado
+  if (!sessionId && messages.length === 0) {
     return (
       <div className="flex h-full flex-col">
         <div className="flex min-h-0 flex-1 flex-col">
@@ -84,19 +81,23 @@ export function ChatWindowAssistant({
           </div>
         </div>
         <div className="border-t px-4 py-4">
-          <form onSubmit={submitMessage} className="flex gap-2">
+          <form onSubmit={handleSubmit} className="flex gap-2">
             <Input
               value={input}
-              onChange={handleInputChange}
+              onChange={(e) => setInput(e.target.value)}
               placeholder="Digite sua mensagem..."
-              disabled={status !== "awaiting_message"}
+              disabled={isLoading}
               className="flex-1"
             />
-            <Button
-              type="submit"
-              disabled={status !== "awaiting_message" || !input.trim()}
-            >
-              Enviar
+            <Button type="submit" disabled={isLoading || !input.trim()}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Enviando...
+                </>
+              ) : (
+                "Enviar"
+              )}
             </Button>
           </form>
         </div>
@@ -104,7 +105,7 @@ export function ChatWindowAssistant({
     );
   }
 
-  // Chat Interface
+  // 🚀 ASSISTANT-UI: Interface de Chat preservada
   return (
     <div className="flex h-full flex-col">
       <ScrollArea className="flex-1 p-4">
@@ -113,12 +114,10 @@ export function ChatWindowAssistant({
             <Message
               key={message.id}
               role={message.role === "user" ? "user" : "assistant"}
-              content={
-                message.role !== "data" ? message.content : "Dados do sistema"
-              }
+              content={message.content}
             />
           ))}
-          {status === "in_progress" && (
+          {isLoading && (
             <div className="text-muted-foreground flex items-center gap-2">
               <Loader2 className="h-4 w-4 animate-spin" />
               <span>Pensando...</span>
@@ -128,19 +127,23 @@ export function ChatWindowAssistant({
       </ScrollArea>
 
       <div className="border-t px-4 py-4">
-        <form onSubmit={submitMessage} className="flex gap-2">
+        <form onSubmit={handleSubmit} className="flex gap-2">
           <Input
             value={input}
-            onChange={handleInputChange}
+            onChange={(e) => setInput(e.target.value)}
             placeholder="Digite sua mensagem..."
-            disabled={status !== "awaiting_message"}
+            disabled={isLoading}
             className="flex-1"
           />
-          <Button
-            type="submit"
-            disabled={status !== "awaiting_message" || !input.trim()}
-          >
-            Enviar
+          <Button type="submit" disabled={isLoading || !input.trim()}>
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Enviando...
+              </>
+            ) : (
+              "Enviar"
+            )}
           </Button>
         </form>
       </div>
