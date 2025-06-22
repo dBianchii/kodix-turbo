@@ -2,7 +2,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
@@ -23,14 +22,13 @@ interface CreateSessionInput {
 }
 
 export function useAutoCreateSession(options?: UseAutoCreateSessionOptions) {
-  const router = useRouter();
   const t = useTranslations();
   const trpc = useTRPC();
   const queryClient = useQueryClient();
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  // ✅ Usar autoCreateSessionWithMessage real com padrão correto
+  // ✅ NAVEGAÇÃO CENTRALIZADA: Usar autoCreateSessionWithMessage sem router.push
   const autoCreateMutation = useMutation(
     trpc.app.chat.autoCreateSessionWithMessage.mutationOptions({
       onSuccess: (result: any) => {
@@ -47,9 +45,13 @@ export function useAutoCreateSession(options?: UseAutoCreateSessionOptions) {
 
         if (result?.session?.id) {
           const sessionId = result.session.id;
-          console.log("🎯 [CHAT] Navegando para nova sessão:", sessionId);
+          console.log(
+            "🎯 [CHAT] Sessão criada, notificando componente pai:",
+            sessionId,
+          );
           toast.success("Chat iniciado com sucesso!");
-          router.push(`/apps/chat/${sessionId}`);
+
+          // ✅ NAVEGAÇÃO CENTRALIZADA: Apenas chamar callback - não navegar aqui
           options?.onSuccess?.(sessionId);
         }
         setIsCreating(false);

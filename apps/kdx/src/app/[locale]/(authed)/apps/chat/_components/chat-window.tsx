@@ -170,7 +170,7 @@ function EmptyThreadState({
       </div>
 
       {/* Input de Mensagem */}
-      <div className="border-t p-4">
+      <div className="border-t px-[10%] py-4">
         <MessageInput
           ref={inputRef}
           onSendMessage={handleFirstMessage}
@@ -477,14 +477,20 @@ function ActiveChatWindow({
       <Separator />
 
       {/* Input */}
-      <div className="p-4">
+      <div className="px-[10%] py-4">
         <form onSubmit={handleSubmit} className="space-y-2">
           <MessageInput
             ref={inputRef}
             value={input}
             onChange={handleInputChange}
             onSendMessage={(message) => {
-              // handleSubmit já será chamado pelo form
+              // ✅ CORREÇÃO: Simular submit do form quando Enter é pressionado
+              const fakeEvent = new Event("submit", {
+                bubbles: true,
+                cancelable: true,
+              }) as any;
+              fakeEvent.preventDefault = () => {};
+              handleSubmit(fakeEvent);
             }}
             disabled={isLoadingChat}
             placeholder={t("apps.chat.typeMessage")}

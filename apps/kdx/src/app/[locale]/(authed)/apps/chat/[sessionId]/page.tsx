@@ -14,13 +14,12 @@ import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { useRouter } from "~/i18n/routing";
 import { useTRPC } from "~/trpc/react";
 import { AppSidebar } from "../_components/app-sidebar";
-import { ChatWindowAssistant } from "../_components/chat-window-assistant";
+import { ChatWindow } from "../_components/chat-window";
 import { ModelInfoBadge } from "../_components/model-info-badge";
 import { ModelSelector } from "../_components/model-selector";
 import { TokenUsageBadge } from "../_components/token-usage-badge";
 import { useChatPreferredModel } from "../_hooks/useChatPreferredModel";
 import { useTokenUsage } from "../_hooks/useTokenUsage";
-import { ChatAssistantProvider } from "../_providers/assistant-provider";
 
 export default function ChatSessionPage() {
   const t = useTranslations();
@@ -139,45 +138,14 @@ export default function ChatSessionPage() {
   const handleSessionSelect = (newSessionId: string | undefined) => {
     if (newSessionId) {
       setSelectedSessionId(newSessionId);
-
-      // DEBUG
       console.log("🔍 [SESSION_PAGE] Navegando para sessão:", newSessionId);
 
-      // Navegar usando caminho absoluto para evitar duplicação
+      // ✅ NAVEGAÇÃO CENTRALIZADA: Usar router.push simples e direto
       router.push(`/apps/chat/${newSessionId}`);
-
-      // Fallback se o router não funcionar
-      setTimeout(() => {
-        const currentPath = window.location.pathname;
-        if (!currentPath.includes(newSessionId)) {
-          console.log(
-            "⚠️ [SESSION_PAGE] Router não funcionou, usando window.location",
-          );
-          const pathParts = currentPath.split("/");
-          const locale = pathParts[1];
-          const fullUrl = `/${locale}/apps/chat/${newSessionId}`;
-          window.location.href = fullUrl;
-        }
-      }, 500);
     } else {
       // ✅ Navegar para a página principal quando for "Novo Chat"
       console.log("🔍 [SESSION_PAGE] Navegando para página principal");
-
-      // Navegar para a página principal usando caminho absoluto
       router.push("/apps/chat");
-
-      // Fallback
-      setTimeout(() => {
-        const currentPath = window.location.pathname;
-        if (currentPath.includes("/chat/")) {
-          console.log(
-            "⚠️ [SESSION_PAGE] Router não funcionou para home, usando window.location",
-          );
-          const pathParts = currentPath.split("/");
-          const locale = pathParts[1];
-          window.location.href = `/${locale}/apps/chat`;
-        }
-      }, 500);
     }
   };
 
@@ -231,20 +199,18 @@ export default function ChatSessionPage() {
             </div>
           </div>
 
-          {/* 🚀 FASE 5: Área do chat com Assistant-UI */}
+          {/* Área do chat */}
           <div className="flex flex-1 flex-col overflow-hidden">
-            <ChatAssistantProvider>
-              <ChatWindowAssistant
-                sessionId={selectedSessionId}
-                onNewSession={(newSessionId) => {
-                  console.log(
-                    "🎯 [SESSION_PAGE] Nova sessão criada:",
-                    newSessionId,
-                  );
-                  handleSessionSelect(newSessionId);
-                }}
-              />
-            </ChatAssistantProvider>
+            <ChatWindow
+              sessionId={selectedSessionId}
+              onNewSession={(newSessionId) => {
+                console.log(
+                  "🎯 [SESSION_PAGE] Nova sessão criada:",
+                  newSessionId,
+                );
+                handleSessionSelect(newSessionId);
+              }}
+            />
           </div>
         </div>
       </div>
