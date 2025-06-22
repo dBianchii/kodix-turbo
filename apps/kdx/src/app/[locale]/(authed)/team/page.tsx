@@ -110,7 +110,7 @@ async function AppsSection({ customApps }: { customApps: CustomApp[] }) {
           />
         </Link>
       ))}
-      {apps.map((app) => (
+      {apps.map((app: any) => (
         <Link
           key={app.id}
           href={getAppUrl(app.id)}

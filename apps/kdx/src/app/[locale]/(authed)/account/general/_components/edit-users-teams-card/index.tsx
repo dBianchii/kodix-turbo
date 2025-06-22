@@ -14,10 +14,10 @@ export async function EditUserTeamsTable() {
 
   const t = await getTranslations();
   const currentTeam = user.activeTeamId;
-  const sortedTeams = teams.sort((a, b) => {
+  const sortedTeams = teams.sort((a: any, b: any) => {
     if (a.id === currentTeam) return -1;
     if (b.id === currentTeam) return 1;
-    return 0;
+    return a.name.localeCompare(b.name);
   });
 
   return (
@@ -25,7 +25,7 @@ export async function EditUserTeamsTable() {
       <Table>
         <TableBody>
           {sortedTeams.length ? (
-            sortedTeams.map((team) => (
+            sortedTeams.map((team: any) => (
               <CustomRow team={team} user={user} key={team.id} />
             ))
           ) : (

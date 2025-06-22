@@ -26,7 +26,7 @@ export default function EditNamePage() {
   const form = useForm({
     schema: ZChangeNameInputSchema(t),
     defaultValues: {
-      name: user?.name ?? undefined,
+      name: user?.name ?? "",
     },
   });
 

@@ -27,11 +27,14 @@ export function SheetModal({
       return true;
     };
 
-    BackHandler.addEventListener("hardwareBackPress", handleBackButton);
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      handleBackButton,
+    );
     return () => {
-      BackHandler.removeEventListener("hardwareBackPress", handleBackButton);
+      backHandler.remove();
     };
-  });
+  }, [setOpen]);
 
   return (
     <Sheet

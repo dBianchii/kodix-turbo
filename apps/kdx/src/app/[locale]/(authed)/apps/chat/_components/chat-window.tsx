@@ -43,6 +43,7 @@ function EmptyThreadState({
 }: {
   onNewSession?: (sessionId: string) => void;
 }) {
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const t = useTranslations();
   const trpc = useTRPC();
   const queryClient = useQueryClient();
@@ -110,6 +111,14 @@ function EmptyThreadState({
     [],
   );
 
+  // ✅ RESTAURADO v0916e276: Auto-focus inicial
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      inputRef.current?.focus();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="flex h-full flex-col">
       {/* Header */}
@@ -163,6 +172,7 @@ function EmptyThreadState({
       {/* Input de Mensagem */}
       <div className="border-t p-4">
         <MessageInput
+          ref={inputRef}
           onSendMessage={handleFirstMessage}
           disabled={createSessionWithMessageMutation.isPending}
           placeholder={t("apps.chat.typeFirstMessage")}
@@ -194,7 +204,7 @@ function ActiveChatWindow({
   onNewSession?: (sessionId: string) => void;
 }) {
   const bottomRef = useRef<HTMLDivElement | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const queryClient = useQueryClient();
   const t = useTranslations();
   const trpc = useTRPC();
@@ -290,6 +300,14 @@ function ActiveChatWindow({
         console.log("✅ [CHAT_WINDOW] Mensagem concluída:", message);
       }
 
+      // ✅ RESTAURADO v0916e276: Auto-focus após streaming
+      setTimeout(() => {
+        inputRef.current?.focus();
+        if (process.env.NODE_ENV === "development") {
+          console.log("🎯 [CHAT_WINDOW] Auto-focus aplicado após streaming");
+        }
+      }, 100);
+
       // ✅ CORREÇÃO: Aguardar backend processar antes de refetch
       setTimeout(async () => {
         if (process.env.NODE_ENV === "development") {
@@ -325,6 +343,7 @@ function ActiveChatWindow({
     isLoading: isLoadingChat,
     error: chatError,
     setMessages,
+    stop,
   } = useChat({
     api: "/api/chat/stream", // ✅ CORREÇÃO: Usar endpoint que aceita formato padrão
     initialMessages: dbMessages || [],
@@ -461,6 +480,7 @@ function ActiveChatWindow({
       <div className="p-4">
         <form onSubmit={handleSubmit} className="space-y-2">
           <MessageInput
+            ref={inputRef}
             value={input}
             onChange={handleInputChange}
             onSendMessage={(message) => {
@@ -469,6 +489,8 @@ function ActiveChatWindow({
             disabled={isLoadingChat}
             placeholder={t("apps.chat.typeMessage")}
             isLoading={isLoadingChat}
+            isStreaming={isLoadingChat}
+            onStop={stop}
           />
 
           {chatError && (

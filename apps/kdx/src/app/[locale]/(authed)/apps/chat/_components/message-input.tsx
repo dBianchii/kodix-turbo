@@ -1,10 +1,11 @@
 "use client";
 
 import type { KeyboardEvent } from "react";
-import { useRef, useState } from "react";
-import { Loader2, Send } from "lucide-react";
+import { forwardRef, useRef, useState } from "react";
+import { Loader2, Send, Square } from "lucide-react";
 import { useTranslations } from "next-intl";
 
+import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import { Textarea } from "@kdx/ui/textarea";
 
@@ -15,88 +16,115 @@ interface MessageInputProps {
   disabled?: boolean;
   placeholder?: string;
   isLoading?: boolean;
+  isStreaming?: boolean;
+  onStop?: () => void;
 }
 
-export function MessageInput({
-  value,
-  onChange,
-  onSendMessage,
-  disabled = false,
-  placeholder,
-  isLoading = false,
-}: MessageInputProps) {
-  const [internalValue, setInternalValue] = useState("");
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const t = useTranslations();
+export const MessageInput = forwardRef<HTMLTextAreaElement, MessageInputProps>(
+  function MessageInput(
+    {
+      value,
+      onChange,
+      onSendMessage,
+      disabled = false,
+      placeholder,
+      isLoading = false,
+      isStreaming = false,
+      onStop,
+    },
+    ref,
+  ) {
+    const [internalValue, setInternalValue] = useState("");
+    const internalRef = useRef<HTMLTextAreaElement>(null);
+    const t = useTranslations();
 
-  // Usar valor controlado ou interno
-  const currentValue = value !== undefined ? value : internalValue;
+    // ✅ RESTAURADO v0916e276: Usar ref externo ou interno
+    const textareaRef = ref || internalRef;
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    if (onChange) {
-      onChange(e);
-    } else {
-      setInternalValue(e.target.value);
-    }
-  };
+    // Usar valor controlado ou interno
+    const currentValue = value !== undefined ? value : internalValue;
 
-  const handleSend = () => {
-    const message = currentValue.trim();
-    if (!message || disabled || isLoading) return;
+    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      if (onChange) {
+        onChange(e);
+      } else {
+        setInternalValue(e.target.value);
+      }
+    };
 
-    onSendMessage(message);
+    const handleSend = () => {
+      const message = currentValue.trim();
+      if (!message || disabled || isLoading) return;
 
-    // Limpar apenas se for valor interno
-    if (value === undefined) {
-      setInternalValue("");
-    }
-  };
+      onSendMessage(message);
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
-  };
+      // Limpar apenas se for valor interno
+      if (value === undefined) {
+        setInternalValue("");
+      }
+    };
 
-  // Auto-resize textarea
-  const adjustTextareaHeight = () => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-    }
-  };
+    // ✅ RESTAURADO v0916e276: Controle de teclas com streaming
+    const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        if (isStreaming && onStop) {
+          onStop();
+        } else {
+          handleSend();
+        }
+      }
+    };
 
-  return (
-    <div className="flex items-end gap-2">
-      <div className="flex-1">
-        <Textarea
-          ref={textareaRef}
-          value={currentValue}
-          onChange={(e) => {
-            handleChange(e);
-            adjustTextareaHeight();
-          }}
-          onKeyDown={handleKeyDown}
-          placeholder={placeholder || t("apps.chat.placeholders.typeMessage")}
-          disabled={disabled || isLoading}
-          className="max-h-32 min-h-[44px] resize-none"
-          rows={1}
-        />
+    // Auto-resize textarea
+    const adjustTextareaHeight = () => {
+      const textarea = textareaRef as React.RefObject<HTMLTextAreaElement>;
+      if (textarea.current) {
+        textarea.current.style.height = "auto";
+        textarea.current.style.height = `${textarea.current.scrollHeight}px`;
+      }
+    };
+
+    // ✅ RESTAURADO v0916e276: Lógica de habilitação do botão
+    const canSend = currentValue.trim() && !disabled;
+
+    return (
+      <div className="flex items-end gap-2">
+        <div className="flex-1">
+          <Textarea
+            ref={textareaRef}
+            value={currentValue}
+            onChange={(e) => {
+              handleChange(e);
+              adjustTextareaHeight();
+            }}
+            onKeyDown={handleKeyDown}
+            placeholder={placeholder || t("apps.chat.placeholders.typeMessage")}
+            disabled={disabled || isLoading}
+            className="max-h-32 min-h-[44px] resize-none"
+            rows={1}
+          />
+        </div>
+
+        <Button
+          onClick={isStreaming && onStop ? onStop : handleSend}
+          disabled={isStreaming ? false : !canSend}
+          size="icon"
+          variant={isStreaming ? "secondary" : "default"}
+          className={cn(
+            "h-11 w-11 flex-shrink-0 transition-all duration-200",
+            isStreaming && "bg-muted hover:bg-muted/80",
+          )}
+        >
+          {isLoading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : isStreaming ? (
+            <Square className="h-4 w-4" />
+          ) : (
+            <Send className="h-4 w-4" />
+          )}
+        </Button>
       </div>
-
-      <Button
-        onClick={handleSend}
-        disabled={!currentValue.trim() || disabled || isLoading}
-        size="icon"
-        className="h-11 w-11 flex-shrink-0"
-      >
-        {isLoading ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-        ) : (
-          <Send className="h-4 w-4" />
-        )}
-      </Button>
-    </div>
-  );
-}
+    );
+  },
+);

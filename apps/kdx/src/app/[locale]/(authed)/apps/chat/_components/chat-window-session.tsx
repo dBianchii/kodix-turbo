@@ -33,7 +33,7 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const queryClient = useQueryClient();
   const t = useTranslations();
 

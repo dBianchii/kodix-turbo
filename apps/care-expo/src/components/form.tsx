@@ -21,15 +21,14 @@ import {
 import { Label, Paragraph, Text, View } from "tamagui";
 
 const useForm = <
-  TOut extends FieldValues,
-  TDef extends ZodTypeDef,
-  TIn extends FieldValues,
+  TFieldValues extends FieldValues = FieldValues,
+  TContext = any,
 >(
-  props: Omit<UseFormProps<TIn>, "resolver"> & {
-    schema: ZodType<TOut, TDef, TIn>;
+  props: Omit<UseFormProps<TFieldValues, TContext>, "resolver"> & {
+    schema: ZodType<TFieldValues, any, any>;
   },
 ) => {
-  const form = __useForm<TIn, unknown, TOut>({
+  const form = __useForm<TFieldValues, TContext>({
     ...props,
     resolver: zodResolver(props.schema, undefined),
   });

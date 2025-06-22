@@ -13,7 +13,7 @@ export default async function KodixCareOnboardingPage() {
   if (!user) redirect({ href: "/", locale: await getLocale() });
 
   const installed = await trpcCaller.app.getInstalled();
-  if (installed.some((x) => x.id === kodixCareAppId))
+  if (installed.some((x: any) => x.id === kodixCareAppId))
     return redirect({
       href: "/apps/kodixCare",
       locale: await getLocale(),

@@ -1,25 +1,25 @@
 "use client";
 
-import { forwardRef, useState } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import { Send, Square } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
-import { Input } from "@kdx/ui/input";
+import { Textarea } from "@kdx/ui/textarea";
 
 interface InputBoxProps {
   onSend: (message: string) => void;
   disabled?: boolean;
   placeholder?: string;
   value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  // ✅ NOVO: Props para streaming
+  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  // ✅ Props para streaming (baseado na v0916e276)
   isStreaming?: boolean;
   onStop?: () => void;
 }
 
-export const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
+export const InputBox = forwardRef<HTMLTextAreaElement, InputBoxProps>(
   (
     {
       onSend,
@@ -33,8 +33,13 @@ export const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
     ref,
   ) => {
     const [localValue, setLocalValue] = useState("");
+    const internalRef = useRef<HTMLTextAreaElement>(null);
     const t = useTranslations();
 
+    // ✅ RESTAURADO v0916e276: Usar ref externo ou interno
+    const textareaRef = ref || internalRef;
+
+    // ✅ RESTAURADO v0916e276: Suporte a modo controlado e não-controlado
     const inputValue = value !== undefined ? value : localValue;
     const handleChange = onChange || ((e) => setLocalValue(e.target.value));
 
@@ -42,7 +47,7 @@ export const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
       if (!inputValue.trim() || disabled) return;
       onSend(inputValue);
 
-      // ✅ CORREÇÃO: Limpar input em ambos os modos (controlado e não-controlado)
+      // ✅ RESTAURADO v0916e276: Limpar input em ambos os modos
       if (value === undefined) {
         // Modo não-controlado: limpar estado local
         setLocalValue("");
@@ -50,12 +55,13 @@ export const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
         // Modo controlado: simular evento para limpar via onChange
         const clearEvent = {
           target: { value: "" },
-        } as React.ChangeEvent<HTMLInputElement>;
+        } as React.ChangeEvent<HTMLTextAreaElement>;
         handleChange(clearEvent);
       }
     }
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // ✅ RESTAURADO v0916e276: Controle de teclas com streaming
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
         if (isStreaming && onStop) {
@@ -66,26 +72,38 @@ export const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
       }
     };
 
+    // ✅ RESTAURADO v0916e276: Auto-resize textarea
+    useEffect(() => {
+      const textarea = textareaRef as React.RefObject<HTMLTextAreaElement>;
+      if (textarea.current) {
+        textarea.current.style.height = "auto";
+        textarea.current.style.height = `${textarea.current.scrollHeight}px`;
+      }
+    }, [inputValue, textareaRef]);
+
+    // ✅ RESTAURADO v0916e276: Lógica de habilitação do botão
     const canSend = inputValue.trim() && !disabled;
 
     return (
-      <div className="relative">
-        <Input
-          ref={ref}
-          value={inputValue}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-          placeholder={placeholder ?? t("apps.chat.messages.placeholder")}
-          disabled={disabled}
-          className="min-h-[52px] rounded-xl pr-12 text-base focus:ring-2 focus:ring-primary/20"
-        />
+      <div className="flex items-end gap-3">
+        <div className="flex-1">
+          <Textarea
+            ref={textareaRef}
+            value={inputValue}
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+            placeholder={placeholder ?? t("apps.chat.messages.placeholder")}
+            disabled={disabled}
+            className="max-h-[200px] min-h-[40px] resize-none"
+            rows={1}
+          />
+        </div>
         <Button
           onClick={isStreaming && onStop ? onStop : handleSend}
           disabled={isStreaming ? false : !canSend}
-          size="icon"
-          variant={isStreaming ? "secondary" : "default"}
+          size="sm"
           className={cn(
-            "absolute right-2 top-1/2 h-8 w-8 -translate-y-1/2 rounded-lg transition-all duration-200",
+            "h-10 w-10 shrink-0 transition-all duration-200",
             isStreaming && "bg-muted hover:bg-muted/80",
           )}
         >
