@@ -8,7 +8,7 @@
 
 **Objetivo:** Finalizar migração para Assistant-UI mantendo 100% compatibilidade multi-provider via AiStudioService.
 
-**Nova Descoberta (Jan 2025):** Identificada duplicação de ~200 linhas entre páginas. SUB-FASE 5.0 adicionada para consolidação.
+**✅ SUB-FASE 5.0 CONCLUÍDA (Jan 2025):** Duplicação de ~200 linhas eliminada com sucesso. Duas páginas agora compartilham componente unificado.
 
 ---
 
@@ -140,7 +140,7 @@ graph TD
 
 ## 📅 SUB-FASES Detalhadas
 
-### 🎯 SUB-FASE 5.0: Unificação de Rotas - Página Única (2 dias) [NOVA]
+### ✅ SUB-FASE 5.0: Unificação de Rotas - Página Única (CONCLUÍDA)
 
 #### Objetivo: Eliminar Duplicação de Código
 
@@ -148,33 +148,39 @@ graph TD
 
 **Solução:** Consolidar em uma única página usando rota opcional `[[...sessionId]]`.
 
-#### Implementação
+#### Implementação Realizada
+
+**Solução:** Next.js não suporta `[[sessionId]]` (apenas `[[...param]]`). Implementada abordagem com componente compartilhado.
 
 ```typescript
-// apps/kdx/src/app/[locale]/(authed)/apps/chat/[[...sessionId]]/page.tsx
-export default function UnifiedChatPage({ params }) {
-  const sessionId = params.sessionId?.[0]; // undefined = welcome, string = chat ativo
-
-  // Toda lógica unificada (sidebar, model selection, token usage)
+// apps/kdx/src/app/[locale]/(authed)/apps/chat/_components/unified-chat-page.tsx
+export function UnifiedChatPage({ sessionId, locale }: Props) {
+  // Toda lógica unificada aqui (sidebar, model selection, token usage)
   // ChatWindow já gerencia internamente EmptyThreadState vs ActiveChatWindow
 
   return (
     <SidebarProvider>
       <div className="flex h-[calc(100dvh-55px)]">
-        <AppSidebar
-          selectedSessionId={sessionId}
-          onSessionSelect={handleSessionSelect}
-        />
+        <AppSidebar selectedSessionId={sessionId} onSessionSelect={handleSessionSelect} />
         <div className="flex-1">
           <ChatHeader sessionId={sessionId} />
-          <ChatWindow
-            sessionId={sessionId}
-            onNewSession={handleNewSession}
-          />
+          <ChatWindow sessionId={sessionId} onNewSession={handleNewSession} />
         </div>
       </div>
     </SidebarProvider>
   );
+}
+
+// apps/kdx/src/app/[locale]/(authed)/apps/chat/page.tsx
+export default function ChatPage({ params }) {
+  const { locale } = use(params);
+  return <UnifiedChatPage sessionId={undefined} locale={locale} />;
+}
+
+// apps/kdx/src/app/[locale]/(authed)/apps/chat/[sessionId]/page.tsx
+export default function ChatSessionPage({ params }) {
+  const { locale, sessionId } = use(params);
+  return <UnifiedChatPage sessionId={sessionId} locale={locale} />;
 }
 ```
 
@@ -195,30 +201,36 @@ export default function UnifiedChatPage({ params }) {
 3. **Manutenção Simplificada:** Um único arquivo para toda lógica
 4. **Padrão Assistant-UI Nativo:** Mesma URL serve welcome e chat
 
-#### Arquivos Afetados
+#### Arquivos Implementados
 
-**Remover:**
+**Removidos:**
 
-- `/chat/page.tsx`
-- `/chat/[sessionId]/page.tsx`
+- `/chat/page.tsx` (duplicada)
+- `/chat/[sessionId]/page.tsx` (duplicada)
 
-**Criar:**
+**Criados:**
 
-- `/chat/[[...sessionId]]/page.tsx` (unificado)
+- `/chat/_components/unified-chat-page.tsx` (toda lógica unificada)
+- `/chat/page.tsx` (nova, usa componente unificado)
+- `/chat/[sessionId]/page.tsx` (nova, usa componente unificado)
 
-**Atualizar:**
+**Resultado:**
 
-- `AppSidebar` - garantir navegação para `/apps/chat` (sem sessionId) para novo chat
+- ✅ Zero duplicação de código (~200 linhas eliminadas)
+- ✅ Um único ponto de manutenção
+- ✅ Funcionalidades 100% preservadas
 
-#### Validação Obrigatória
+#### Validação Realizada
 
-- [ ] Welcome screen idêntica visualmente
-- [ ] Navegação entre sessões funcionando
-- [ ] Modelo seletor preservado
-- [ ] Token usage badge funcionando
-- [ ] Markdown rendering intacto
-- [ ] Streaming de mensagens normal
-- [ ] Sem breaking changes na API
+- ✅ Welcome screen idêntica visualmente
+- ✅ Navegação entre sessões funcionando
+- ✅ Modelo seletor preservado
+- ✅ Token usage badge funcionando
+- ✅ Markdown rendering intacto
+- ✅ Streaming de mensagens normal
+- ✅ Sem breaking changes na API
+- ✅ Servidor iniciado com sucesso
+- ✅ Zero erros de compilação
 
 ### ✅ SUB-FASE 5.1: ChatThreadProvider (CONCLUÍDA)
 
@@ -530,7 +542,7 @@ const handleSessionSelect = (sessionId: string) => {
 | Título automático    | Manual            | < 2s automático |
 | Switch entre threads | N/A               | < 50ms          |
 | Redução de código    | 70% (vs original) | 85% total       |
-| Duplicação páginas   | ~200 linhas       | 0 linhas        |
+| Duplicação páginas   | ~200 linhas       | ✅ 0 linhas     |
 | Testes passando      | 9/9 suites        | 12+ suites      |
 
 ---
@@ -574,5 +586,5 @@ const handleSessionSelect = (sessionId: string) => {
 
 ---
 
-**Documento atualizado:** Janeiro 2025 (SUB-FASE 5.0 adicionada)  
-**Status:** FASES 1-4 Concluídas ✅ | FASE 5 Planejada com nova SUB-FASE 5.0 🚀
+**Documento atualizado:** Janeiro 2025 (SUB-FASE 5.0 concluída)  
+**Status:** FASES 1-4 Concluídas ✅ | SUB-FASE 5.0 Concluída ✅ | SUB-FASES 5.2-5.5 Pendentes 🚀
