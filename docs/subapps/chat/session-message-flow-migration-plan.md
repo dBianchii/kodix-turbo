@@ -8,6 +8,8 @@
 
 **Objetivo:** Finalizar migração para Assistant-UI mantendo 100% compatibilidade multi-provider via AiStudioService.
 
+**Nova Descoberta (Jan 2025):** Identificada duplicação de ~200 linhas entre páginas. SUB-FASE 5.0 adicionada para consolidação.
+
 ---
 
 ## ✅ Estado Atual do Sistema
@@ -137,6 +139,86 @@ graph TD
 ---
 
 ## 📅 SUB-FASES Detalhadas
+
+### 🎯 SUB-FASE 5.0: Unificação de Rotas - Página Única (2 dias) [NOVA]
+
+#### Objetivo: Eliminar Duplicação de Código
+
+**Problema Identificado:** Duplicação de ~200 linhas entre `/chat/page.tsx` e `/chat/[sessionId]/page.tsx`.
+
+**Solução:** Consolidar em uma única página usando rota opcional `[[...sessionId]]`.
+
+#### Implementação
+
+```typescript
+// apps/kdx/src/app/[locale]/(authed)/apps/chat/[[...sessionId]]/page.tsx
+export default function UnifiedChatPage({ params }) {
+  const sessionId = params.sessionId?.[0]; // undefined = welcome, string = chat ativo
+
+  // Toda lógica unificada (sidebar, model selection, token usage)
+  // ChatWindow já gerencia internamente EmptyThreadState vs ActiveChatWindow
+
+  return (
+    <SidebarProvider>
+      <div className="flex h-[calc(100dvh-55px)]">
+        <AppSidebar
+          selectedSessionId={sessionId}
+          onSessionSelect={handleSessionSelect}
+        />
+        <div className="flex-1">
+          <ChatHeader sessionId={sessionId} />
+          <ChatWindow
+            sessionId={sessionId}
+            onNewSession={handleNewSession}
+          />
+        </div>
+      </div>
+    </SidebarProvider>
+  );
+}
+```
+
+#### Garantias de Compatibilidade
+
+- ✅ **Layout Preservado:** Mantém estrutura visual idêntica
+- ✅ **Vercel AI SDK:** Continua usando `useChat` nativo
+- ✅ **Assistant-UI Pattern:** URL única para welcome e chat (thread-first)
+- ✅ **ReactMarkdown:** Renderização preservada em `<Message />`
+- ✅ **AiStudioService:** Integração mantida via endpoints existentes
+- ✅ **shadcn/ui:** Todos componentes UI preservados
+- ✅ **TRPC Standards:** Segue `Architecture_Standards.md`
+
+#### Benefícios
+
+1. **Redução de Código:** -200 linhas (elimina duplicação completa)
+2. **UX Melhorada:** Transições mais suaves sem recarregar página
+3. **Manutenção Simplificada:** Um único arquivo para toda lógica
+4. **Padrão Assistant-UI Nativo:** Mesma URL serve welcome e chat
+
+#### Arquivos Afetados
+
+**Remover:**
+
+- `/chat/page.tsx`
+- `/chat/[sessionId]/page.tsx`
+
+**Criar:**
+
+- `/chat/[[...sessionId]]/page.tsx` (unificado)
+
+**Atualizar:**
+
+- `AppSidebar` - garantir navegação para `/apps/chat` (sem sessionId) para novo chat
+
+#### Validação Obrigatória
+
+- [ ] Welcome screen idêntica visualmente
+- [ ] Navegação entre sessões funcionando
+- [ ] Modelo seletor preservado
+- [ ] Token usage badge funcionando
+- [ ] Markdown rendering intacto
+- [ ] Streaming de mensagens normal
+- [ ] Sem breaking changes na API
 
 ### ✅ SUB-FASE 5.1: ChatThreadProvider (CONCLUÍDA)
 
@@ -447,7 +529,8 @@ const handleSessionSelect = (sessionId: string) => {
 | Tempo criação thread | 200ms             | < 100ms         |
 | Título automático    | Manual            | < 2s automático |
 | Switch entre threads | N/A               | < 50ms          |
-| Redução de código    | 70% (vs original) | 80% total       |
+| Redução de código    | 70% (vs original) | 85% total       |
+| Duplicação páginas   | ~200 linhas       | 0 linhas        |
 | Testes passando      | 9/9 suites        | 12+ suites      |
 
 ---
@@ -485,11 +568,11 @@ const handleSessionSelect = (sessionId: string) => {
 
 **Prioridade:** Recomendada para finalizar a visão arquitetural completa.
 
-**Tempo Estimado:** 12 dias úteis
+**Tempo Estimado:** 14 dias úteis (incluindo SUB-FASE 5.0)
 **Risco:** Baixo (implementação incremental + rollback plan)
-**ROI:** Alto (UX superior + código mais limpo)
+**ROI:** Alto (UX superior + código mais limpo + eliminação de duplicação)
 
 ---
 
-**Documento atualizado:** Janeiro 2025  
-**Status:** FASES 1-4 Concluídas ✅ | FASE 5 Planejada 🚀
+**Documento atualizado:** Janeiro 2025 (SUB-FASE 5.0 adicionada)  
+**Status:** FASES 1-4 Concluídas ✅ | FASE 5 Planejada com nova SUB-FASE 5.0 🚀
