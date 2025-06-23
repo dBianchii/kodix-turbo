@@ -1,4 +1,47 @@
-# Chat SubApp
+# 💬 Chat Subapp Documentation
+
+Documentação centralizada do sistema de chat multi-provider com Assistant-UI do Kodix.
+
+## 📚 Índice Principal
+
+### 🏗️ Arquitetura
+
+- [**Backend Architecture**](./backend-architecture.md) - Sistema TRPC + Multi-Provider
+- [**Frontend Architecture**](./frontend-architecture.md) - Next.js 15 + Vercel AI SDK
+- [**Session Management**](./session-management.md) - Fluxo de sessões e mensagens
+
+### 🚀 Implementação
+
+- [**Streaming Implementation**](./streaming-implementation.md) - SSE + Real-time
+- [**Vercel AI Integration**](./vercel-ai-integration.md) - SDK e hooks
+- [**Translation Keys**](./translation-keys.md) - i18n completo
+
+### 🧪 Testing & CI
+
+- [**CI Testing Guide**](./ci-testing.md) - Testes automatizados
+- [**Known Issues**](./known-issues.md) - Problemas conhecidos
+
+### 📋 Planos & Evolução
+
+- [**🎯 Assistant-UI Evolution Plan**](./assistant-ui-evolution-plan.md) - **PLANO ATUAL DE EVOLUÇÃO**
+
+  - Estado atual consolidado
+  - Lições críticas aprendidas
+  - Roadmap SUB-FASES 5.2-5.5
+  - Arquitetura alvo final
+
+- [**📜 Migration History Unified**](./migration-history-unified.md) - **HISTÓRICO CONSOLIDADO**
+  - Resumo da jornada Nov 2024 - Jan 2025
+  - Lições aprendidas essenciais
+  - Referências técnicas preservadas
+  - Template de migração validado
+
+### 📁 Arquivo Histórico
+
+- [Archive](./archive/) - Documentos históricos detalhados
+  - Session Message Flow Migration (FASES 1-5.1)
+  - Troubleshooting Welcome Screen (correções detalhadas)
+  - Outros documentos de referência
 
 ## 📖 Visão Geral
 
