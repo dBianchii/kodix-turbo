@@ -10,6 +10,10 @@ Esta pasta contém **documentos de planejamento, histórico e melhorias** do Cha
 
 - [**Assistant UI Evolution Plan**](./assistant-ui-evolution-plan.md) - Plano de evolução para Assistant-UI nativo
 
+### **Melhorias e Debugging**
+
+- [**Model Info Badge Debugging Plan**](./model-info-badge-debugging-plan.md) - Plano de debugging e correção incremental para o ModelInfoBadge
+
 ### **Histórico de Mudanças**
 
 - [**Migration History Unified**](./migration-history-unified.md) - Histórico completo das migrações realizadas

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AlertTriangle, CheckCircle2, Clock } from "lucide-react";
 
 import { Badge } from "@kdx/ui/badge";
@@ -28,6 +28,26 @@ export function ModelInfoBadge({
   lastMessageMetadata,
 }: ModelInfoBadgeProps) {
   const [isOpen, setIsOpen] = useState(false);
+
+  // ✅ FASE 1.1: Log de montagem do componente
+  useEffect(() => {
+    console.log("[MODEL_INFO_BADGE] Componente montado:", {
+      timestamp: new Date().toISOString(),
+      hasSessionData: !!sessionData,
+      hasLastMessageMetadata: !!lastMessageMetadata,
+    });
+  }, []);
+
+  // ✅ FASE 1.1: Logs detalhados de props recebidas
+  useEffect(() => {
+    console.log("[MODEL_INFO_BADGE] Props recebidas:", {
+      sessionData: sessionData?.aiModel?.name,
+      lastMessageMetadata: lastMessageMetadata?.actualModelUsed,
+      timestamp: lastMessageMetadata?.timestamp,
+      sessionDataFull: sessionData,
+      lastMessageMetadataFull: lastMessageMetadata,
+    });
+  }, [sessionData, lastMessageMetadata]);
 
   // ✅ Função para normalizar nomes de modelos
   const normalizeModelName = (modelName: string | undefined): string => {
@@ -79,6 +99,31 @@ export function ModelInfoBadge({
   const isWaitingValidation = !hasResponse || hasModelMismatch; // ✅ Waiting se não há resposta OU se há mismatch (modelo mudou)
   const hasMismatch = false; // ✅ Nunca mostrar erro - sempre assumir que mismatch = waiting
 
+  // ✅ FASE 1.1: Logs de normalização e estados
+  useEffect(() => {
+    console.log("[MODEL_INFO_BADGE] Normalização:", {
+      configuredModel,
+      actualModel,
+      normalizedConfigured,
+      normalizedActual,
+      hasModelMismatch,
+      isCorrect,
+      isWaitingValidation,
+      hasResponse,
+      hasMismatch,
+    });
+  }, [
+    configuredModel,
+    actualModel,
+    normalizedConfigured,
+    normalizedActual,
+    hasModelMismatch,
+    isCorrect,
+    isWaitingValidation,
+    hasResponse,
+    hasMismatch,
+  ]);
+
   // Determinar status visual
   const getStatus = () => {
     if (isWaitingValidation) {
@@ -119,6 +164,72 @@ export function ModelInfoBadge({
 
   const status = getStatus();
   const StatusIcon = status.icon;
+
+  // ✅ FASE 1.1: Log de mudanças de status
+  useEffect(() => {
+    console.log("[MODEL_INFO_BADGE] Status changed:", {
+      isWaitingValidation,
+      isCorrect,
+      hasModelMismatch,
+      statusLabel: status.label,
+      statusColor: status.color,
+      timestamp: new Date().toISOString(),
+    });
+  }, [
+    isWaitingValidation,
+    isCorrect,
+    hasModelMismatch,
+    status.label,
+    status.color,
+  ]);
+
+  // ✅ FASE 1.3: Identificar fonte do problema
+  useEffect(() => {
+    // Debug de props vazias
+    if (!sessionData) {
+      console.warn("[MODEL_INFO_BADGE] sessionData is undefined");
+    }
+    if (!lastMessageMetadata) {
+      console.warn("[MODEL_INFO_BADGE] lastMessageMetadata is undefined");
+    }
+
+    // Debug de normalização problemática
+    if (configuredModel && actualModel) {
+      const originalMatch = configuredModel === actualModel;
+      const normalizedMatch = normalizedConfigured === normalizedActual;
+
+      if (originalMatch !== normalizedMatch) {
+        console.warn("[MODEL_INFO_BADGE] Normalização alterou resultado:", {
+          originalMatch,
+          normalizedMatch,
+          configuredModel,
+          actualModel,
+          normalizedConfigured,
+          normalizedActual,
+        });
+      }
+    }
+
+    // Debug de timing issues
+    const timeSinceLastMessage = lastMessageMetadata?.timestamp
+      ? Date.now() - new Date(lastMessageMetadata.timestamp).getTime()
+      : null;
+
+    if (timeSinceLastMessage && timeSinceLastMessage > 60000) {
+      // > 1 minuto
+      console.warn("[MODEL_INFO_BADGE] Dados antigos detectados:", {
+        timeSinceLastMessage: `${Math.round(timeSinceLastMessage / 1000)}s`,
+        lastMessageTimestamp: lastMessageMetadata?.timestamp,
+      });
+    }
+  }, [
+    sessionData,
+    lastMessageMetadata,
+    configuredModel,
+    actualModel,
+    normalizedConfigured,
+    normalizedActual,
+  ]);
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -194,6 +305,52 @@ export function ModelInfoBadge({
             <div className="border-t pt-2 text-xs text-slate-500">
               Last checked:{" "}
               {new Date(lastMessageMetadata.timestamp).toLocaleTimeString()}
+            </div>
+          )}
+
+          {/* ✅ FASE 1.2: Seção de debug no popover (apenas em desenvolvimento) */}
+          {process.env.NODE_ENV === "development" && (
+            <div className="mt-2 border-t pt-2 text-xs text-slate-500">
+              <details>
+                <summary className="cursor-pointer hover:text-slate-700">
+                  Debug Info
+                </summary>
+                <div className="mt-2 space-y-2">
+                  <div className="rounded bg-slate-50 p-2 text-xs">
+                    <div className="mb-1 font-medium">Raw Data:</div>
+                    <pre className="text-xs whitespace-pre-wrap">
+                      {JSON.stringify(
+                        {
+                          sessionData,
+                          lastMessageMetadata,
+                          normalizedConfigured,
+                          normalizedActual,
+                          hasModelMismatch,
+                          isCorrect,
+                          isWaitingValidation,
+                          hasResponse,
+                          hasMismatch,
+                        },
+                        null,
+                        2,
+                      )}
+                    </pre>
+                  </div>
+                  <div className="rounded bg-blue-50 p-2 text-xs">
+                    <div className="mb-1 font-medium">Status Calculation:</div>
+                    <div className="space-y-1">
+                      <div>hasResponse: {String(hasResponse)}</div>
+                      <div>normalizedConfigured: "{normalizedConfigured}"</div>
+                      <div>normalizedActual: "{normalizedActual}"</div>
+                      <div>hasModelMismatch: {String(hasModelMismatch)}</div>
+                      <div>isCorrect: {String(isCorrect)}</div>
+                      <div>
+                        isWaitingValidation: {String(isWaitingValidation)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </details>
             </div>
           )}
         </div>
