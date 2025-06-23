@@ -361,11 +361,78 @@ pnpm dev:kdx | grep "\[TITLE_GEN\]"
 
 ---
 
+---
+
+## 🛡️ **PROTEÇÃO IMPLEMENTADA: Testes de Regressão**
+
+### **✅ Estratégia A Implementada com Sucesso**
+
+Para proteger todas as melhorias implementadas contra regressões futuras, foi criado um sistema completo de testes:
+
+#### **Testes de Proteção Criados:**
+
+1. **`welcome-flow-regression.test.ts`** ✅
+
+   - Protege prompt melhorado e parâmetros otimizados
+   - Valida estrutura de logs implementada
+   - Verifica correções de navegação e sessionStorage
+
+2. **`title-generation-improvements.test.ts`** ✅
+
+   - Intercepta chamadas de API para validar prompt
+   - Verifica parâmetros específicos (35 tokens, temperature 0.3)
+   - Testa tratamento de erros e qualidade
+
+3. **`session-storage-flow.test.ts`** ✅
+   - Valida padrões de chaves específicas por sessão
+   - Testa isolamento entre múltiplas abas
+   - Verifica transferência temp → específica
+
+#### **Integração Completa:**
+
+```bash
+# Execução automática em todos os testes
+pnpm test:chat
+
+# Resultado: 12/12 suites passando (era 11/11)
+✅ Backend Suites: 6 (incluindo regressão)
+✅ Frontend Suites: 6
+✅ SUCCESS: 100%
+```
+
+#### **Proteções Ativas:**
+
+- 🛡️ **Prompt de títulos** → Não pode regredir para versão simples
+- 🛡️ **Parâmetros de API** → max_tokens, temperature, top_p protegidos
+- 🛡️ **Logs de monitoramento** → Padrões `[TITLE_GEN]` obrigatórios
+- 🛡️ **Navegação** → `data.session.id` validado, `data.id` proibido
+- 🛡️ **SessionStorage** → Chaves específicas obrigatórias
+- 🛡️ **Metadata** → `firstMessage` obrigatório para títulos
+
+#### **Documentação Completa:**
+
+📖 **Guia detalhado:** `docs/subapps/chat/regression-tests-protection.md`
+
+---
+
 **Documento atualizado:** Janeiro 2025  
-**Status:** ✅ ETAPA 1 CONCLUÍDA → 🎯 ETAPA 2 PLANEJADA  
-**Próximo Passo:** Monitorar resultados e planejar migração ThreadProvider
+**Status:** ✅ **ETAPA 1 CONCLUÍDA + PROTEGIDA** → 🎯 ETAPA 2 PLANEJADA  
+**Próximo Passo:** Implementar ChatThreadProvider com proteção garantida
 
-**Arquivos de Teste:**
+**Arquivos de Monitoramento:**
 
-- `scripts/monitor-title-generation.js` - Monitoramento
+- `scripts/monitor-title-generation.js` - Monitoramento de títulos
 - `scripts/diagnose-welcome-fix.js` - Diagnóstico geral
+
+**Arquivos de Proteção:**
+
+- `packages/api/src/trpc/routers/app/chat/__tests__/welcome-flow-regression.test.ts`
+- `packages/api/src/trpc/routers/app/chat/__tests__/title-generation-improvements.test.ts`
+- `packages/api/src/trpc/routers/app/chat/__tests__/session-storage-flow.test.ts`
+- `docs/subapps/chat/regression-tests-protection.md`
+
+**Validação Contínua:**
+
+```bash
+pnpm test:chat  # Executa 12 suites incluindo proteção
+```

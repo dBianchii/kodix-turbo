@@ -140,43 +140,49 @@ run_test_suite "simple" \
     "Simple Integration Tests" \
     "backend"
 
+# 6. Testes de Regressão - Welcome Flow
+run_test_suite "welcome-regression" \
+    "$BACKEND_TEST_DIR/welcome-flow-regression.test.ts" \
+    "Welcome Flow Regression Tests" \
+    "backend"
+
 echo ""
 echo "=============================================================="
 echo -e "${YELLOW}🎨 EXECUTANDO TESTES DO FRONTEND${NC}"
 echo "=============================================================="
 
 # FRONTEND TESTS
-# 6. Testes de Service Layer (Frontend)
+# 7. Testes de Service Layer (Frontend)
 run_test_suite "service-layer-fe" \
     "$FRONTEND_TEST_DIR/integration/service-layer.test.ts" \
     "Service Layer Integration (Frontend)" \
     "frontend"
 
-# 7. Testes de API Structure
+# 8. Testes de API Structure
 run_test_suite "api" \
     "$FRONTEND_TEST_DIR/integration/api.test.ts" \
     "API Structure Tests" \
     "frontend"
 
-# 8. Testes de Componentes
+# 9. Testes de Componentes
 run_test_suite "components" \
     "$FRONTEND_TEST_DIR/components/model-selector.test.tsx" \
     "Component Logic Tests" \
     "frontend"
 
-# 9. Testes de Hooks
+# 10. Testes de Hooks
 run_test_suite "hooks" \
     "$FRONTEND_TEST_DIR/hooks/useChatPreferredModel.test.ts" \
     "Hook Logic Tests" \
     "frontend"
 
-# 10. Testes de Timing (Post-Navigation)
+# 11. Testes de Timing (Post-Navigation)
 run_test_suite "timing" \
     "$FRONTEND_TEST_DIR/integration/post-navigation-timing.test.ts" \
     "Post-Navigation Timing Tests" \
     "frontend"
 
-# 11. Testes de Padrões de Navegação
+# 12. Testes de Padrões de Navegação
 run_test_suite "navigation" \
     "$FRONTEND_TEST_DIR/integration/navigation-patterns.test.ts" \
     "Navigation Patterns Tests" \
