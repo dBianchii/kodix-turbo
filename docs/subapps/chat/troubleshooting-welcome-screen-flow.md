@@ -229,11 +229,13 @@ pnpm dev:kdx | grep "\[TITLE_GEN\]"
 
 ---
 
-### **🎯 ETAPA 2: Migração Arquitetural (PLANEJADA)**
+### **🎯 ETAPA 2: Migração Arquitetural - ESTRATÉGIA 1 (PLANEJADA)**
 
-**Objetivo:** Migrar para ChatThreadProvider para arquitetura mais robusta.
+**Objetivo:** Migrar para ChatThreadProvider usando abordagem gradual e segura.
 
-**Tempo Estimado:** 1-2 dias
+**Tempo Estimado:** 2-3 horas (4 sub-etapas)
+
+**Estratégia Escolhida:** **ESTRATÉGIA 1 - Migração Gradual** ⭐ (Recomendada)
 
 **Benefícios Esperados:**
 
@@ -241,8 +243,217 @@ pnpm dev:kdx | grep "\[TITLE_GEN\]"
 - 🎯 Gerenciamento de estado mais robusto
 - 🎯 Preparação para funcionalidades avançadas
 - 🎯 Melhor testabilidade
+- ✅ Zero breaking changes durante migração
+- ✅ Rollback fácil a qualquer momento
+- ✅ Validação por etapas
 
-**Status:** 📋 Planejado para próxima sprint
+**Status:** 📋 Documentado e pronto para implementação
+
+---
+
+## 📋 **ETAPA 2 - Plano Detalhado: Migração Gradual**
+
+### **🎯 Visão Geral da Migração**
+
+**Estado Atual:**
+
+- `UnifiedChatPage` → `ChatWindow` → `useChat` diretamente
+- `sessionStorage` para mensagens pendentes (funcional)
+- Navegação centralizada (robusta)
+
+**Estado Final:**
+
+- `UnifiedChatPage` → `ChatThreadProvider` → `useThreadChat` → `useChat`
+- Thread state management (sem sessionStorage)
+- Navegação via thread context
+
+### **🚀 Sub-Etapas da Migração**
+
+#### **📋 Sub-Etapa 2.1: Wrapper ChatThreadProvider (30 min)**
+
+**Objetivo:** Adicionar ChatThreadProvider em volta do UnifiedChatPage sem quebrar nada.
+
+**Implementação:**
+
+```typescript
+// apps/kdx/src/app/[locale]/(authed)/apps/chat/layout.tsx (NOVO)
+import { ChatThreadProvider } from "./_providers/chat-thread-provider";
+
+export default function ChatLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <ChatThreadProvider>
+      {children}
+    </ChatThreadProvider>
+  );
+}
+```
+
+**Validação:**
+
+- ✅ Sistema atual continua funcionando
+- ✅ ChatThreadProvider ativo em background
+- ✅ Nenhuma funcionalidade quebrada
+
+#### **📋 Sub-Etapa 2.2: Migrar ChatWindow para useThreadChat (45 min)**
+
+**Objetivo:** Substituir useChat por useThreadChat mantendo compatibilidade.
+
+**Implementação:**
+
+```typescript
+// apps/kdx/src/app/[locale]/(authed)/apps/chat/_components/chat-window.tsx
+// ANTES: useChat diretamente
+// DEPOIS: useThreadChat (que usa useChat internamente)
+
+import { useThreadChat } from "../_hooks/useThreadChat";
+
+function ActiveChatWindow({ sessionId }: Props) {
+  // ✅ MIGRAÇÃO: useChat → useThreadChat
+  const chat = useThreadChat({
+    threadId: sessionId,
+    onFinish: (message) => {
+      // Auto-save já gerenciado pelo useThreadChat
+    },
+  });
+
+  // ✅ COMPATIBILIDADE: Mesma interface, funcionalidade aprimorada
+  const { messages, append, isLoading, handleSubmit } = chat;
+
+  // Resto do componente permanece igual
+}
+```
+
+**Validação:**
+
+- ✅ Streaming funcionando
+- ✅ Mensagens persistindo
+- ✅ Títulos sendo gerados
+- ✅ Navegação normal
+
+#### **📋 Sub-Etapa 2.3: Substituir sessionStorage por Thread State (30 min)**
+
+**Objetivo:** Eliminar sessionStorage usando thread context.
+
+**Implementação:**
+
+```typescript
+// apps/kdx/src/app/[locale]/(authed)/apps/chat/_components/chat-window.tsx
+function EmptyThreadState({ onNewSession }: Props) {
+  const { createThread } = useThreadContext();
+
+  const handleFirstMessage = async (message: string) => {
+    // ✅ MIGRAÇÃO: sessionStorage → thread context
+    const newThread = await createThread({
+      generateTitle: true,
+      firstMessage: message.trim(),
+      metadata: {
+        createdAt: new Date().toISOString(),
+      },
+    });
+
+    // ✅ Navegação automática via thread context
+    onNewSession?.(newThread.id);
+  };
+
+  // Resto do componente permanece igual
+}
+```
+
+**Validação:**
+
+- ✅ Mensagens não precisam de sessionStorage
+- ✅ Thread state gerencia tudo
+- ✅ Sem conflitos entre abas
+- ✅ Navegação mais robusta
+
+#### **📋 Sub-Etapa 2.4: Cleanup e Otimizações (30 min)**
+
+**Objetivo:** Remover código desnecessário e otimizar performance.
+
+**Implementação:**
+
+```typescript
+// Remover:
+// - sessionStorage.setItem/getItem calls
+// - Lógica de transferência de mensagens pendentes
+// - Estados temporários desnecessários
+
+// Adicionar:
+// - Logs de migração bem-sucedida
+// - Validação de thread state
+// - Performance optimizations
+```
+
+**Validação:**
+
+- ✅ Código mais limpo
+- ✅ Performance igual ou melhor
+- ✅ Logs de debug atualizados
+- ✅ Sem código morto
+
+### **🧪 Protocolo de Validação por Sub-Etapa**
+
+**Após cada sub-etapa:**
+
+1. ✅ Executar `pnpm test:chat` (deve manter 12/12)
+2. ✅ Testar welcome screen manualmente
+3. ✅ Testar navegação entre sessões
+4. ✅ Testar geração de títulos
+5. ✅ Testar múltiplas abas
+6. ✅ Verificar logs no console
+
+**Em caso de problema:**
+
+- 🔄 Rollback imediato da sub-etapa
+- 🔍 Investigar causa raiz
+- 🛠️ Corrigir e tentar novamente
+
+### **🛡️ Plano de Rollback**
+
+**Se algo der errado:**
+
+```bash
+# Rollback completo para estado atual
+git checkout HEAD -- apps/kdx/src/app/[locale]/(authed)/apps/chat/
+
+# Ou rollback por sub-etapa
+git checkout HEAD -- apps/kdx/src/app/[locale]/(authed)/apps/chat/layout.tsx  # Sub-etapa 2.1
+git checkout HEAD -- apps/kdx/src/app/[locale]/(authed)/apps/chat/_components/chat-window.tsx  # Sub-etapa 2.2
+```
+
+### **📊 Métricas de Sucesso**
+
+| Métrica                    | Antes (ETAPA 1) | Meta (ETAPA 2) |
+| -------------------------- | --------------- | -------------- |
+| Tempo criação thread       | ~200ms          | ~100ms         |
+| Conflitos sessionStorage   | 0 (corrigido)   | 0 (eliminado)  |
+| Robustez navegação         | Alta            | Muito Alta     |
+| Linhas de código           | Atual           | -15% (cleanup) |
+| Testes passando            | 12/12           | 12/12+         |
+| Performance welcome screen | Atual           | +10% (thread)  |
+
+### **🎯 Benefícios Pós-Migração**
+
+**Técnicos:**
+
+- 🎯 Thread-first architecture completa
+- 🎯 Estado centralizado e robusto
+- 🎯 Eliminação total de sessionStorage
+- 🎯 Preparação para funcionalidades avançadas
+
+**UX:**
+
+- 🎯 Navegação mais fluida
+- 🎯 Sem conflitos entre abas
+- 🎯 Performance otimizada
+- 🎯 Experiência mais consistente
+
+**Desenvolvimento:**
+
+- 🎯 Código mais limpo e manutenível
+- 🎯 Melhor testabilidade
+- 🎯 Arquitetura mais escalável
+- 🎯 Debugging mais fácil
 
 ---
 
@@ -416,8 +627,8 @@ pnpm test:chat
 ---
 
 **Documento atualizado:** Janeiro 2025  
-**Status:** ✅ **ETAPA 1 CONCLUÍDA + PROTEGIDA** → 🎯 ETAPA 2 PLANEJADA  
-**Próximo Passo:** Implementar ChatThreadProvider com proteção garantida
+**Status:** ✅ **ETAPA 1 CONCLUÍDA + PROTEGIDA** → 📋 **ETAPA 2 DOCUMENTADA** → 🚀 **PRONTO PARA IMPLEMENTAÇÃO**  
+**Próximo Passo:** Executar Sub-Etapa 2.1 (ChatThreadProvider Wrapper) - 30 minutos
 
 **Arquivos de Monitoramento:**
 
