@@ -2,11 +2,26 @@
 
 ## 📚 Sobre Esta Pasta
 
-Esta pasta contém documentos históricos da **migração completa para o Vercel AI SDK** que foi realizada com sucesso.
+Esta pasta contém documentos históricos da **migração completa para o Vercel AI SDK** e do **Welcome Screen Flow**.
 
 ## 📋 Documentos Arquivados
 
-### Documentos Principais da Migração
+### 🚀 Migração Vercel AI SDK (Janeiro 2025) - RECÉM ARQUIVADOS
+
+- `vercel-ai-integration.md` - ❌ DESATUALIZADO: Documentava VercelAIAdapter (removido)
+- `vercel-ai-standards-migration-plan.md` - ❌ DESATUALIZADO: Plano de migração já completa
+- `vercel-ai-migration-completed.md` - ❌ DESATUALIZADO: Status incorreto da implementação
+
+> **📋 SUBSTITUTO:** [`../vercel-ai-native-implementation.md`](../vercel-ai-native-implementation.md) - Documentação atual e precisa
+
+### 🔧 Welcome Screen Flow (Janeiro 2025) - RECÉM ARQUIVADOS
+
+- `troubleshooting-welcome-screen-flow.md` - ✅ HISTÓRICO: Correções implementadas
+- `session-message-flow-migration-plan.md` - ✅ HISTÓRICO: Migração completa
+
+> **📋 SUBSTITUTO:** [`../migration-history-unified.md`](../migration-history-unified.md) - Histórico consolidado
+
+### Documentos Históricos da Migração Original
 
 - `vercel-ai-sdk-migration.md` - Estratégia e visão geral da migração
 - `vercel-ai-sdk-migration-steps.md` - Subetapas detalhadas da implementação
@@ -21,22 +36,32 @@ Esta pasta contém documentos históricos da **migração completa para o Vercel
 
 ## ✅ Status da Migração
 
-**MIGRAÇÃO E REMOÇÃO LEGACY 100% CONCLUÍDAS** - 18/06/2025
+**MIGRAÇÃO E IMPLEMENTAÇÃO NATIVA 100% CONCLUÍDAS** - Janeiro 2025
 
-O sistema Chat agora usa **exclusivamente** o Vercel AI SDK, com:
+O sistema Chat agora usa **implementação 100% nativa** do Vercel AI SDK, com:
 
-- ✅ OpenAI e Anthropic funcionando
-- ✅ Streaming otimizado com auto-save
-- ✅ Sistema legacy completamente removido
-- ✅ Código 70% mais limpo
-- ✅ Interface ultra-limpa
+- ✅ `streamText()` + `toDataStreamResponse()` nativos
+- ✅ `useChat` hook oficial no frontend
+- ✅ Lifecycle callbacks nativos (`onFinish`, `onError`)
+- ✅ VercelAIAdapter completamente removido
+- ✅ Código 62% mais limpo
+- ✅ Performance otimizada
+
+## ⚠️ Aviso Importante
+
+**Documentos movidos em Janeiro 2025** podem conter informações **DESATUALIZADAS** sobre:
+
+- VercelAIAdapter (não existe mais)
+- Arquitetura híbrida (agora é 100% nativa)
+- Planos de migração (já implementados)
 
 ## 🔗 Documentação Atual
 
 Para informações atuais sobre o sistema, consulte:
 
 - [Chat README](../README.md)
-- [Vercel AI Integration](../vercel-ai-integration.md)
+- [Vercel AI Native Implementation](../vercel-ai-native-implementation.md)
+- [Migration History Unified](../migration-history-unified.md)
 
 ---
 

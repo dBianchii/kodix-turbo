@@ -12,8 +12,8 @@ Documentação centralizada do sistema de chat multi-provider com Assistant-UI d
 
 ### 🚀 Implementação
 
+- [**Vercel AI Native**](./vercel-ai-native-implementation.md) - Implementação 100% nativa
 - [**Streaming Implementation**](./streaming-implementation.md) - SSE + Real-time
-- [**Vercel AI Integration**](./vercel-ai-integration.md) - SDK e hooks
 - [**Translation Keys**](./translation-keys.md) - i18n completo
 
 ### 🧪 Testing & CI
