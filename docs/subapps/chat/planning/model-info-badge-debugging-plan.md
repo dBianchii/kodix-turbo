@@ -1,605 +1,444 @@
-# 🔍 Model Info Badge - Plano de Debugging e Correção Incremental
+# 🔧 Model Info Badge - Plano de Correção Segura
 
 **📅 Data:** Janeiro 2025  
-**🎯 Objetivo:** Identificar e corrigir problemas de atualização no ModelInfoBadge  
-**⚙️ Modo:** Desenvolvimento incremental com debugging avançado
+**🎯 Objetivo:** Implementar correção do Model Info Badge de forma incremental e segura  
+**📚 Baseado em:** [Lições Aprendidas](./model-info-badge-lessons-learned.md)  
+**⚠️ Prioridade:** Zero breaking changes - correção gradual
 
-## 🚨 Problema Relatado
+## 🚨 Problema Identificado
 
-O componente `ModelInfoBadge` não está atualizando corretamente. Precisa identificar:
+**Situação Atual:**
 
-- Se o badge não muda de cor/estado
-- Se os dados no popover estão incorretos
-- Se não atualiza após trocar modelo
-- Se não detecta quando modelo foi usado
+- ✅ Badge funciona inicialmente (mostra ✓ verde)
+- ❌ Após mudança de modelo via ModelSelector + nova mensagem
+- ❌ Badge não atualiza para ✓ verde (requer refresh manual)
+- 🔄 Force re-fetch implementado, mas não resolve completamente
 
-## 📋 Estratégia 4: Debugging Avançado + Correção Incremental
+**Causa Raiz (baseada nas lições):**
 
-### **Fase 1: Análise e Debugging** ⏱️ 30min ✅ **CONCLUÍDA**
+- **Race condition** entre `useChat.onFinish` e atualização de `lastMessageMetadata`
+- **Missing callback chain** para notificar badge quando streaming termina
+- **Timing issue** - badge calcula status antes dos dados serem atualizados
 
-#### 1.1 Adicionar Logs Detalhados ✅ **IMPLEMENTADO**
+## 📐 Análise da Arquitetura Atual
 
-```typescript
-// ✅ Logs de props recebidas
-console.log("[MODEL_INFO_BADGE] Props recebidas:", {
-  sessionData: sessionData?.aiModel?.name,
-  lastMessageMetadata: lastMessageMetadata?.actualModelUsed,
-  timestamp: lastMessageMetadata?.timestamp,
-});
+### **Fluxo de Dados Identificado:**
 
-// ✅ Logs de normalização
-console.log("[MODEL_INFO_BADGE] Normalização:", {
-  configuredModel,
-  actualModel,
-  normalizedConfigured,
-  normalizedActual,
-  hasModelMismatch,
-  isCorrect,
-  isWaitingValidation,
-});
+```mermaid
+graph TD
+    A[ModelSelector] --> B[handleModelSelect]
+    B --> C[updateSessionMutation]
+    C --> D[Force Re-fetch]
+    D --> E[sessionQuery.refetch]
+    E --> F[messagesQuery.refetch]
+    F --> G[ModelInfoBadge re-render]
+
+    H[User sends message] --> I[useChat streaming]
+    I --> J[handleChatFinish]
+    J --> K[syncNow + refetchSession]
+    K --> L[??? Badge should update ???]
 ```
 
-#### 1.2 Mostrar Dados Brutos no Popover ✅ **IMPLEMENTADO**
+### **Problema Identificado:**
 
-```typescript
-// Adicionar seção de debug no popover
-{process.env.NODE_ENV === 'development' && (
-  <div className="border-t pt-2 mt-2 text-xs text-slate-500">
-    <details>
-      <summary>Debug Info</summary>
-      <pre className="text-xs mt-1">
-        {JSON.stringify({
-          sessionData,
-          lastMessageMetadata,
-          normalizedConfigured,
-          normalizedActual,
-          hasModelMismatch,
-          isCorrect
-        }, null, 2)}
-      </pre>
-    </details>
-  </div>
-)}
+- ❌ **Gap**: Não há conexão entre `handleChatFinish` e `ModelInfoBadge`
+- ❌ **Timing**: Badge calcula status antes de `lastMessageMetadata` ser atualizada
+- ❌ **Missing callback**: Badge não sabe quando streaming terminou
+
+## 🎯 Estratégia de Correção: Callback Chain Pattern
+
+**Baseado nas lições aprendidas:** Implementar **callback chain** para notificar badge quando streaming termina.
+
+### **Fluxo da Solução:**
+
+```mermaid
+graph TD
+    A[useChat.onFinish] --> B[handleChatFinish]
+    B --> C[onStreamingFinished callback]
+    C --> D[UnifiedChatPage handler]
+    D --> E[Force badge update]
+    E --> F[Badge re-calculates status]
+    F --> G[✅ Green badge instantly]
 ```
 
-#### 1.3 Identificar Fonte do Problema
+## 📋 Plano de Implementação - 5 Etapas Seguras
 
-- [x] **Props não chegam**: `sessionData` ou `lastMessageMetadata` undefined ✅ **IMPLEMENTADO**
-- [x] **Normalização incorreta**: Lógica de `normalizeModelName` muito agressiva ✅ **IMPLEMENTADO**
-- [x] **Estado não atualiza**: Componente não re-renderiza quando props mudam ✅ **IMPLEMENTADO**
-- [x] **Cache desatualizado**: `lastMessageMetadata` com dados antigos ✅ **IMPLEMENTADO**
-- [x] **Timing issues**: Badge atualiza antes dos dados chegarem ✅ **IMPLEMENTADO**
+### **ETAPA 1: Preparação e Logs de Debug** ⏱️ 15min
 
-### **Fase 2: Correções Incrementais** ⏱️ 45min
+_Objetivo: Adicionar observabilidade sem quebrar nada_
 
-#### 2.1 Otimizações de Performance
+#### 1.1 Adicionar Callback Props (Interface Only)
 
 ```typescript
-// ✅ Memoizar cálculos pesados
-const normalizedConfigured = useMemo(
-  () => normalizeModelName(configuredModel),
-  [configuredModel],
-);
+// unified-chat-page.tsx - APENAS interface, sem implementação
+interface UnifiedChatPageProps {
+  sessionId?: string;
+  locale: string;
+  // ✅ ETAPA 1: Adicionar prop opcional (não quebra nada)
+  onStreamingFinished?: () => void;
+}
 
-const normalizedActual = useMemo(
-  () => normalizeModelName(actualModel),
-  [actualModel],
-);
-
-// ✅ Memoizar status para evitar recálculos
-const status = useMemo(() => {
-  return getStatus();
-}, [isWaitingValidation, isCorrect, hasMismatch, hasResponse]);
+// chat-window.tsx - APENAS interface
+interface ChatWindowProps {
+  sessionId?: string;
+  onNewSession?: (sessionId: string) => void;
+  // ✅ ETAPA 1: Adicionar prop opcional
+  onStreamingFinished?: () => void;
+}
 ```
 
-#### 2.2 Adicionar useEffect para Debug
+#### 1.2 Logs de Monitoramento
 
 ```typescript
-// ✅ Debug de mudanças de props
+// model-info-badge.tsx - Adicionar logs específicos
 useEffect(() => {
-  console.log("[MODEL_INFO_BADGE] Props changed:", {
-    sessionData: sessionData?.aiModel?.name,
-    lastMessage: lastMessageMetadata?.actualModelUsed,
-    timestamp: new Date().toISOString(),
-  });
-}, [sessionData, lastMessageMetadata]);
-
-// ✅ Debug de mudanças de estado
-useEffect(() => {
-  console.log("[MODEL_INFO_BADGE] Status changed:", {
-    isWaitingValidation,
-    isCorrect,
-    hasModelMismatch,
-    status: status.label,
-  });
-}, [isWaitingValidation, isCorrect, hasModelMismatch, status]);
-```
-
-#### 2.3 Simplificar Lógica de Estado (se necessário)
-
-```typescript
-// ✅ Estados mais simples e claros
-const getSimpleStatus = () => {
-  // Sem resposta = aguardando
-  if (!hasResponse) {
-    return { icon: Clock, color: "text-slate-400", label: "⏱" };
-  }
-
-  // Com resposta = verificado (mesmo que modelos sejam diferentes)
-  return { icon: CheckCircle2, color: "text-green-600", label: "✓" };
-};
-```
-
-### **Fase 3: Validação e Testes** ⏱️ 30min
-
-#### 3.1 Cenários de Teste
-
-- [ ] **Sessão nova**: Badge deve mostrar "waiting"
-- [ ] **Primeira mensagem**: Badge deve mudar para "verified" após resposta
-- [ ] **Troca de modelo**: Badge deve voltar para "waiting"
-- [ ] **Nova mensagem**: Badge deve voltar para "verified"
-- [ ] **Navegação entre sessões**: Badge deve atualizar corretamente
-
-#### 3.2 Logs de Validação
-
-```typescript
-// ✅ Log de cenários críticos
-const logScenario = (scenario: string) => {
-  console.log(`[MODEL_INFO_BADGE] Cenário: ${scenario}`, {
+  console.log("[MODEL_INFO_BADGE] ETAPA_1 - Estado atual:", {
     configuredModel,
     actualModel,
-    hasResponse,
-    status: status.label,
+    hasModelMismatch,
+    isCorrect,
+    shouldUpdate: hasModelMismatch && !isCorrect,
     timestamp: new Date().toISOString(),
   });
-};
+}, [configuredModel, actualModel, hasModelMismatch, isCorrect]);
 ```
 
-### **Fase 4: Correções Específicas** ⏱️ 45min
+**✅ Validação ETAPA 1:**
 
-#### 4.1 Problema: Props Não Chegam
-
-```typescript
-// ✅ Fallbacks e validações
-const safeSessionData = sessionData || {};
-const safeLastMessage = lastMessageMetadata || {};
-
-// ✅ Debug de props vazias
-if (!sessionData) {
-  console.warn("[MODEL_INFO_BADGE] sessionData is undefined");
-}
-if (!lastMessageMetadata) {
-  console.warn("[MODEL_INFO_BADGE] lastMessageMetadata is undefined");
-}
-```
-
-#### 4.2 Problema: Cache Desatualizado
-
-```typescript
-// ✅ Forçar key prop no componente pai
-<ModelInfoBadge
-  key={`${sessionId}-${lastMessage?.id}`}
-  sessionData={sessionQuery.data}
-  lastMessageMetadata={lastMessageMetadata}
-/>
-```
-
-#### 4.3 Problema: Normalização Excessiva
-
-```typescript
-// ✅ Normalização mais conservadora
-const simpleNormalize = (modelName: string | undefined): string => {
-  if (!modelName) return "";
-
-  // Apenas lowercase e remover sufixos de data mais comuns
-  return modelName
-    .toLowerCase()
-    .replace(/-\d{4}-\d{2}-\d{2}.*$/, "") // Remove datas
-    .replace(/-\d{8}.*$/, "") // Remove timestamps
-    .trim();
-};
-```
-
-#### 4.4 Problema: Timing Issues
-
-```typescript
-// ✅ Aguardar dados estabilizarem
-const [isStable, setIsStable] = useState(false);
-
-useEffect(() => {
-  const timer = setTimeout(() => {
-    setIsStable(true);
-  }, 100);
-
-  return () => clearTimeout(timer);
-}, [sessionData, lastMessageMetadata]);
-
-// Só calcular status quando dados estão estáveis
-const status = useMemo(() => {
-  if (!isStable) {
-    return { icon: Clock, color: "text-slate-400", label: "⏱" };
-  }
-  return getStatus();
-}, [isStable /* outras dependências */]);
-```
-
-## 🎯 Implementação Passo a Passo
-
-### **Passo 1: Adicionar Debugging**
-
-1. Adicionar logs detalhados no componente
-2. Adicionar seção de debug no popover
-3. Testar em diferentes cenários
-4. Identificar onde está falhando
-
-### **Passo 2: Correção Específica**
-
-1. Aplicar correção baseada no problema encontrado
-2. Manter logs para validar correção
-3. Testar novamente todos os cenários
-
-### **Passo 3: Otimização**
-
-1. Adicionar memoização se necessário
-2. Simplificar lógica se estiver muito complexa
-3. Remover logs de produção
-
-### **Passo 4: Validação Final**
-
-1. Testar fluxo completo: nova sessão → primeira mensagem → troca modelo → nova mensagem
-2. Verificar navegação entre sessões
-3. Confirmar que badge sempre reflete estado correto
-
-## 🔧 Ferramentas de Debug
-
-### **Console Logs Estruturados**
-
-```typescript
-const debugLog = (phase: string, data: any) => {
-  if (process.env.NODE_ENV === "development") {
-    console.log(`[MODEL_INFO_BADGE:${phase}]`, {
-      timestamp: new Date().toISOString(),
-      ...data,
-    });
-  }
-};
-```
-
-### **Debug Panel no Popover**
-
-```typescript
-const DebugPanel = ({ data }: { data: any }) => (
-  <div className="border-t mt-2 pt-2 text-xs">
-    <details>
-      <summary className="cursor-pointer text-slate-500">Debug Info</summary>
-      <div className="mt-2 space-y-1">
-        {Object.entries(data).map(([key, value]) => (
-          <div key={key} className="flex justify-between">
-            <span className="text-slate-600">{key}:</span>
-            <code className="text-slate-800 bg-slate-100 px-1 rounded">
-              {String(value)}
-            </code>
-          </div>
-        ))}
-      </div>
-    </details>
-  </div>
-);
-```
-
-### **Estado de Debug Global**
-
-```typescript
-// Para debugging mais avançado
-const useModelInfoDebug = () => {
-  const [debugHistory, setDebugHistory] = useState<any[]>([]);
-
-  const addDebugEntry = (entry: any) => {
-    setDebugHistory((prev) => [
-      ...prev.slice(-10),
-      {
-        ...entry,
-        timestamp: new Date().toISOString(),
-      },
-    ]);
-  };
-
-  return { debugHistory, addDebugEntry };
-};
-```
-
-## 🎯 Critérios de Sucesso
-
-- [ ] Badge atualiza corretamente em todos os cenários
-- [ ] Dados no popover sempre corretos e atualizados
-- [ ] Performance mantida (sem re-renders excessivos)
-- [ ] Logs de debug ajudam a identificar problemas futuros
-- [ ] Código mais robusto e fácil de debugar
-
-## 📝 Próximos Passos
-
-1. **Implementar Fase 1** - Adicionar debugging completo
-2. **Executar testes** - Identificar problema específico
-3. **Aplicar correção** - Baseada no problema encontrado
-4. **Validar solução** - Testar todos os cenários
-5. **Documentar achados** - Para futuras referências
+- Código compila sem erros
+- Props opcionais não quebram nada
+- Logs mostram estado atual do badge
 
 ---
 
-## 🎉 **RESULTADO ALCANÇADO - SUCESSO COMPLETO!**
+### **ETAPA 2: Implementar Callback Chain** ⏱️ 20min
 
-### ✅ **FASE 1 e 2 IMPLEMENTADAS COM SUCESSO**
+_Objetivo: Conectar useChat.onFinish ao badge_
 
-**Problema Identificado e Resolvido:**
+#### 2.1 Implementar Handler no UnifiedChatPage
 
-- ❌ **Causa Raiz**: `lastMessageMetadata` estava undefined inicialmente
-- ✅ **Solução**: Logs detalhados identificaram o problema
-- ✅ **Normalização Funcionando**: `claude-3-haiku-20240307` → `claude-3-haiku` ✓
-- ✅ **Badge Correto**: Mostra ✓ verde quando modelos coincidem
+```typescript
+// unified-chat-page.tsx
+export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
+  // ✅ ETAPA 2: Handler para streaming finished
+  const handleStreamingFinished = useCallback(() => {
+    console.log("🎉 [UNIFIED_CHAT] ETAPA_2 - Streaming finished, atualizando badge");
 
-**Logs de Sucesso (Verificados):**
+    // Force re-fetch específico para badge
+    if (selectedSessionId) {
+      setTimeout(() => {
+        messagesQuery.refetch();
+        console.log("✅ [UNIFIED_CHAT] ETAPA_2 - Badge data refreshed");
+      }, 100); // Pequeno delay para garantir que backend processou
+    }
+  }, [selectedSessionId, messagesQuery]);
 
+  return (
+    // ... código existente ...
+    <ChatWindow
+      sessionId={selectedSessionId}
+      onNewSession={handleSessionSelect}
+      onStreamingFinished={handleStreamingFinished} // ✅ ETAPA 2: Passar callback
+    />
+  );
+}
 ```
-[MODEL_INFO_BADGE] Normalização:
-- configuredModel: "claude-3-haiku"
-- actualModel: "claude-3-haiku-20240307"
-- normalizedConfigured: "claude-3-haiku"
-- normalizedActual: "claude-3-haiku"
-- isCorrect: true ✅
-- statusLabel: "✓"
-- statusColor: "text-green-600"
+
+#### 2.2 Propagar Callback no ChatWindow
+
+```typescript
+// chat-window.tsx - ActiveChatWindow
+function ActiveChatWindow({
+  sessionId,
+  onNewSession,
+  onStreamingFinished, // ✅ ETAPA 2: Receber callback
+}: {
+  sessionId: string;
+  onNewSession?: (sessionId: string) => void;
+  onStreamingFinished?: () => void; // ✅ ETAPA 2: Tipar callback
+}) {
+  // ✅ ETAPA 2: Modificar handleChatFinish existente
+  const handleChatFinish = useCallback(
+    async (message: any) => {
+      if (process.env.NODE_ENV === "development") {
+        console.log("✅ [ACTIVE_CHAT] ETAPA_2 - Mensagem concluída:", message);
+      }
+
+      // ✅ ETAPA 2: Notificar badge que streaming terminou
+      onStreamingFinished?.();
+
+      // Auto-focus após streaming (código existente)
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
+
+      // Código existente de sincronização
+      setTimeout(async () => {
+        await syncNow();
+        refetchSession();
+        queryClient.invalidateQueries(
+          trpc.app.chat.listarSessions.pathFilter(),
+        );
+      }, 1500);
+    },
+    [
+      syncNow,
+      refetchSession,
+      queryClient,
+      trpc.app.chat.listarSessions,
+      onStreamingFinished,
+    ], // ✅ ETAPA 2: Adicionar dep
+  );
+
+  // useChat permanece igual, só o callback que mudou
+}
 ```
 
-**Performance Otimizada:**
+**✅ Validação ETAPA 2:**
 
-- ✅ `useMemo` para status calculation
-- ✅ `useEffect` para debug tracking
-- ✅ Debug panel apenas em desenvolvimento
-- ✅ Sistema robusto de debugging implementado
-
-**ModelInfoBadge agora funciona perfeitamente com sistema robusto de debugging para manutenção futura!**
+- Callback é chamado quando streaming termina
+- Logs mostram "Streaming finished" no console
+- Badge ainda pode não atualizar (esperado)
 
 ---
 
-## 🚨 **NOVO PROBLEMA IDENTIFICADO - JANEIRO 2025**
+### **ETAPA 3: Forçar Re-render do Badge** ⏱️ 15min
 
-### **❌ Problema:** Badge não atualiza após mudança de modelo
+_Objetivo: Garantir que badge recalcula quando callback é chamado_
 
-**Cenário reproduzido:**
-
-1. ✅ Badge funciona inicialmente
-2. ❌ Usuário muda modelo via ModelSelector
-3. ❌ Usuário digita nova mensagem
-4. ❌ Badge não atualiza para refletir novo modelo
-
-### **🔍 FASE 5: Investigação de Atualização Pós-Mudança**
-
-#### **5.1 Hipóteses do Problema**
-
-1. **Cache de Query não invalida**: `lastMessageMetadata` fica com dados antigos
-2. **Timing de Invalidação**: Badge atualiza antes da nova mensagem ser salva
-3. **Props não propagam**: `sessionData` não reflete novo modelo
-4. **Memoização excessiva**: `useMemo` impede re-cálculo
-5. **Race condition**: Múltiplas atualizações simultâneas
-
-#### **5.2 Plano de Debugging Específico**
+#### 3.1 Adicionar Trigger State no UnifiedChatPage
 
 ```typescript
-// ✅ FASE 5.1: Logs específicos para mudança de modelo
-useEffect(() => {
-  console.log("[MODEL_INFO_BADGE] FASE 5 - Modelo mudou:", {
-    sessionDataModelId: sessionData?.aiModel?.id,
-    sessionDataModelName: sessionData?.aiModel?.name,
-    lastMessageModel: lastMessageMetadata?.actualModelUsed,
-    lastMessageTimestamp: lastMessageMetadata?.timestamp,
-    shouldShowWaiting:
-      !lastMessageMetadata ||
-      sessionData?.aiModel?.name !== lastMessageMetadata?.actualModelUsed,
-    timestamp: new Date().toISOString(),
-  });
-}, [sessionData?.aiModel, lastMessageMetadata]);
+// unified-chat-page.tsx
+export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
+  // ✅ ETAPA 3: Estado para forçar re-render do badge
+  const [badgeUpdateTrigger, setBadgeUpdateTrigger] = useState(0);
 
-// ✅ FASE 5.2: Log de invalidação de cache
-useEffect(() => {
-  console.log("[MODEL_INFO_BADGE] FASE 5 - Cache invalidado:", {
-    lastMessageId: lastMessageMetadata?.messageId,
-    lastMessageTimestamp: lastMessageMetadata?.timestamp,
-    cacheAge: lastMessageMetadata?.timestamp
-      ? Date.now() - new Date(lastMessageMetadata.timestamp).getTime()
-      : "N/A",
-  });
-}, [lastMessageMetadata]);
+  const handleStreamingFinished = useCallback(() => {
+    console.log("🎉 [UNIFIED_CHAT] ETAPA_3 - Streaming finished, triggering badge update");
+
+    // ✅ ETAPA 3: Incrementar trigger para forçar re-render
+    setBadgeUpdateTrigger(prev => prev + 1);
+
+    // Force re-fetch (código da ETAPA 2)
+    if (selectedSessionId) {
+      setTimeout(() => {
+        messagesQuery.refetch();
+        console.log("✅ [UNIFIED_CHAT] ETAPA_3 - Badge data refreshed");
+      }, 100);
+    }
+  }, [selectedSessionId, messagesQuery]);
+
+  return (
+    // ... código existente ...
+    {/* Model Info Badge - apenas quando há sessão */}
+    {selectedSessionId && sessionQuery.data && (
+      <ModelInfoBadge
+        key={`model-info-${selectedSessionId}-${selectedModelId}-${sessionQuery.data.aiModelId}-${badgeUpdateTrigger}`} // ✅ ETAPA 3: Incluir trigger na key
+        sessionData={sessionQuery.data}
+        lastMessageMetadata={lastMessageMetadata}
+      />
+    )}
+  );
+}
 ```
 
-#### **5.3 Correções Propostas**
+**✅ Validação ETAPA 3:**
 
-**Opção A: Forçar Re-fetch após Mudança de Modelo**
+- Badge re-monta quando trigger muda
+- Logs mostram re-cálculo de status
+- Badge deve começar a atualizar corretamente
+
+---
+
+### **ETAPA 4: Otimizar Timing e Performance** ⏱️ 15min
+
+_Objetivo: Ajustar delays e memoização_
+
+#### 4.1 Ajustar Timing no Callback Chain
 
 ```typescript
-// No UnifiedChatPage após handleModelSelect
-const handleModelSelect = (modelId: string) => {
-  // ... código existente ...
+// unified-chat-page.tsx
+const handleStreamingFinished = useCallback(() => {
+  console.log(
+    "🎉 [UNIFIED_CHAT] ETAPA_4 - Streaming finished, optimized timing",
+  );
 
-  // ✅ FASE 5: Forçar invalidação do badge
+  // ✅ ETAPA 4: Timing otimizado baseado nas lições
   setTimeout(() => {
-    queryClient.invalidateQueries(
-      trpc.app.chat.buscarMensagensTest.pathFilter(),
-    );
-  }, 500);
-};
-```
+    // Primeiro: atualizar trigger para re-render imediato
+    setBadgeUpdateTrigger((prev) => prev + 1);
 
-**Opção B: Key Prop Dinâmica**
-
-```typescript
-// No UnifiedChatPage
-<ModelInfoBadge
-  key={`${selectedSessionId}-${selectedModelId}-${lastMessage?.id}`}
-  sessionData={sessionQuery.data}
-  lastMessageMetadata={lastMessageMetadata}
-/>
-```
-
-**Opção C: Estado de "Model Changed"**
-
-```typescript
-// No ModelInfoBadge
-const [modelJustChanged, setModelJustChanged] = useState(false);
-
-useEffect(() => {
-  const prevModel = sessionData?.aiModel?.name;
-  if (prevModel && prevModel !== configuredModel) {
-    setModelJustChanged(true);
-    // Reset após nova mensagem
-    const timer = setTimeout(() => setModelJustChanged(false), 10000);
-    return () => clearTimeout(timer);
-  }
-}, [sessionData?.aiModel?.name]);
-
-// Forçar "waiting" quando modelo acabou de mudar
-const isWaitingValidation =
-  !hasResponse || hasModelMismatch || modelJustChanged;
-```
-
-#### **5.4 Implementação da Correção**
-
-**Estratégia Recomendada: Combinação A + B**
-
-1. **Invalidação Inteligente**: Forçar re-fetch após mudança
-2. **Key Prop Dinâmica**: Garantir re-render do componente
-3. **Logs de Monitoramento**: Validar que correção funciona
-
-### **🎯 FASE 5: Plano de Execução**
-
-#### **Passo 1: Implementar Logs de Debugging (5min)**
-
-- Adicionar logs específicos para mudança de modelo
-- Monitorar propagação de props após mudança
-
-#### **Passo 2: Implementar Correção (10min)**
-
-- Opção A: Invalidação forçada no `handleModelSelect`
-- Opção B: Key prop dinâmica no badge
-
-#### **Passo 3: Testar Cenário Completo (10min)**
-
-- Mudar modelo via ModelSelector
-- Enviar nova mensagem
-- Verificar se badge atualiza corretamente
-
-#### **Passo 4: Validar Solução (5min)**
-
-- Confirmar logs mostram atualização
-- Verificar badge reflete estado correto
-- Testar múltiplas mudanças consecutivas
-
-### **✅ Critérios de Sucesso - Fase 5**
-
-- [ ] Badge mostra "⏱ waiting" imediatamente após mudança de modelo
-- [ ] Badge atualiza para "✓ verified" após nova mensagem com novo modelo
-- [ ] Logs mostram propagação correta de dados
-- [ ] Funciona em múltiplas mudanças consecutivas
-- [ ] Performance mantida (sem re-renders excessivos)
-
-## ✅ **FASE 5: Correção do Problema Pós-Mudança de Modelo** ⏱️ 30min
-
-> **PROBLEMA IDENTIFICADO**: Badge não atualiza após usuário mudar modelo via ModelSelector e enviar nova mensagem
-
-### **IMPLEMENTAÇÃO CONCLUÍDA** ✅
-
-**Status**: 🟢 **IMPLEMENTADO**
-**Data**: $(date)
-**Estratégia**: Combinação A + B (Force re-fetch + Dynamic key)
-
-#### **5.1 Force Re-fetch (Implementado)** ✅
-
-```typescript
-// ✅ IMPLEMENTADO em unified-chat-page.tsx
-const handleModelSelect = (modelId: string) => {
-  // ... código existente ...
-
-  if (selectedSessionId) {
-    // ✅ FASE 5.1: Force re-fetch após mudança de modelo
-    console.log("🔄 [PHASE_5.1] Force re-fetch após mudança de modelo");
-
-    // Invalidar e re-fetch da sessão para atualizar dados
-    queryClient.invalidateQueries(
-      trpc.app.chat.buscarSession.pathFilter({ sessionId: selectedSessionId }),
-    );
-
-    // Invalidar mensagens para pegar metadata atualizada
-    queryClient.invalidateQueries(
-      trpc.app.chat.buscarMensagensTest.pathFilter({
-        chatSessionId: selectedSessionId,
-      }),
-    );
-
-    // Re-fetch imediato para garantir dados atualizados
+    // Segundo: re-fetch dados após pequeno delay
     setTimeout(() => {
-      sessionQuery.refetch();
       messagesQuery.refetch();
-      console.log("✅ [PHASE_5.1] Re-fetch executado com sucesso");
-    }, 500);
-  }
-};
+      console.log(
+        "✅ [UNIFIED_CHAT] ETAPA_4 - Badge data refreshed with optimized timing",
+      );
+    }, 200); // ✅ Delay otimizado baseado nas lições
+  }, 50); // ✅ Delay mínimo para garantir que useChat processou
+}, [selectedSessionId, messagesQuery]);
 ```
 
-#### **5.2 Dynamic Key Prop (Implementado)** ✅
+#### 4.2 Memoizar Callback para Performance
 
 ```typescript
-// ✅ IMPLEMENTADO em unified-chat-page.tsx
-<ModelInfoBadge
-  key={`model-info-${selectedSessionId}-${selectedModelId}-${sessionQuery.data.aiModelId}`}
-  sessionData={sessionQuery.data}
-  lastMessageMetadata={lastMessageMetadata}
-/>
-```
+// chat-window.tsx
+const handleChatFinish = useCallback(
+  async (message: any) => {
+    if (process.env.NODE_ENV === "development") {
+      console.log(
+        "✅ [ACTIVE_CHAT] ETAPA_4 - Mensagem concluída (optimized):",
+        message,
+      );
+    }
 
-#### **5.3 Logs de Monitoramento (Implementado)** ✅
+    // ✅ ETAPA 4: Callback imediato (sem delay)
+    onStreamingFinished?.();
 
-```typescript
-// ✅ IMPLEMENTADO em model-info-badge.tsx
-useEffect(
-  () => {
-    console.log("[MODEL_INFO_BADGE] FASE 5.3 - Monitoramento pós-mudança:", {
-      configuredModel,
-      actualModel,
-      normalizedConfigured,
-      normalizedActual,
-      hasModelMismatch,
-      isCorrect,
-      isWaitingValidation,
-      hasResponse,
-      shouldShowWaiting: !hasResponse || hasModelMismatch,
-      componentKey: `${sessionData?.aiModel?.name}-${lastMessageMetadata?.actualModelUsed}`,
-      timestamp: new Date().toISOString(),
-    });
+    // Auto-focus e sync (código existente com timing ajustado)
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 100);
+
+    // ✅ ETAPA 4: Timing otimizado para sync
+    setTimeout(async () => {
+      await syncNow();
+      refetchSession();
+      queryClient.invalidateQueries(trpc.app.chat.listarSessions.pathFilter());
+    }, 1000); // ✅ Reduzido de 1500ms para 1000ms
   },
   [
-    /* deps */
+    syncNow,
+    refetchSession,
+    queryClient,
+    trpc.app.chat.listarSessions,
+    onStreamingFinished,
   ],
 );
 ```
 
-### **Como Validar a Correção** 🧪
+**✅ Validação ETAPA 4:**
 
-1. **Abrir sessão existente** com mensagens
-2. **Mudar modelo** via ModelSelector
-3. **Verificar logs** no console:
-   ```
-   🔄 [PHASE_5.1] Force re-fetch após mudança de modelo
-   ✅ [PHASE_5.1] Re-fetch executado com sucesso
-   [MODEL_INFO_BADGE] FASE 5.3 - Monitoramento pós-mudança
-   ```
-4. **Observar badge** deve mostrar ⏱ (waiting) imediatamente
-5. **Enviar mensagem** e verificar se badge atualiza para ✓ (correct)
+- Badge atualiza mais rapidamente
+- Performance mantida
+- Timing otimizado baseado nas lições
 
-### **Critérios de Sucesso** ✅
+---
 
-- [x] Badge mostra ⏱ imediatamente após mudança de modelo
-- [x] Badge atualiza para ✓ após nova mensagem ser enviada
-- [x] Logs confirmam re-fetch e remount do componente
-- [x] Sem necessidade de refresh manual da página
-- [x] Funciona consistentemente em múltiplas mudanças
+### **ETAPA 5: Cleanup e Logs de Produção** ⏱️ 10min
+
+_Objetivo: Remover logs de debug e validar solução final_
+
+#### 5.1 Remover Logs de Debug
+
+```typescript
+// model-info-badge.tsx - Manter apenas logs essenciais
+useEffect(() => {
+  if (process.env.NODE_ENV === "development") {
+    console.log("[MODEL_INFO_BADGE] Status atualizado:", {
+      isCorrect,
+      isWaitingValidation,
+      statusLabel: status.label,
+    });
+  }
+}, [isCorrect, isWaitingValidation, status.label]);
+```
+
+#### 5.2 Validação Final
+
+```typescript
+// unified-chat-page.tsx - Log de sucesso final
+const handleStreamingFinished = useCallback(() => {
+  if (process.env.NODE_ENV === "development") {
+    console.log("🎉 [MODEL_INFO_BADGE] Correção aplicada com sucesso!");
+  }
+
+  // Código otimizado da ETAPA 4
+  setTimeout(() => {
+    setBadgeUpdateTrigger((prev) => prev + 1);
+    setTimeout(() => {
+      messagesQuery.refetch();
+    }, 200);
+  }, 50);
+}, [selectedSessionId, messagesQuery]);
+```
+
+**✅ Validação ETAPA 5:**
+
+- Badge funciona perfeitamente
+- Logs limpos para produção
+- Zero breaking changes confirmado
+
+## 🔒 Garantias de Segurança
+
+### **Anti-Breaking Changes:**
+
+1. **Props opcionais** - não quebra componentes existentes
+2. **Callback chain** - apenas adiciona funcionalidade
+3. **Backward compatibility** - funciona sem callbacks
+4. **Gradual rollout** - cada etapa é validável independentemente
+
+### **Rollback Plan:**
+
+- **ETAPA 1-2:** Remover props opcionais
+- **ETAPA 3-4:** Remover trigger state
+- **ETAPA 5:** Reverter para estado anterior
+
+### **Monitoring:**
+
+- Logs estruturados em cada etapa
+- Validação de funcionamento em cada step
+- Performance tracking
+
+## 📊 Critérios de Sucesso
+
+### **Funcionais:**
+
+- [ ] Badge mostra ⏱ quando modelo é mudado
+- [ ] Badge mostra ✓ instantaneamente após streaming terminar
+- [ ] Sem necessidade de refresh manual
+- [ ] Funciona em múltiplas mudanças consecutivas
+
+### **Técnicos:**
+
+- [ ] Zero breaking changes
+- [ ] Performance mantida ou melhorada
+- [ ] Logs limpos em produção
+- [ ] Código bem documentado
+
+### **UX:**
+
+- [ ] Feedback visual imediato
+- [ ] Transições suaves
+- [ ] Confiança na interface restaurada
+
+## 🚀 Execução
+
+### **Ordem de Implementação:**
+
+1. **ETAPA 1** → Validar → Commit
+2. **ETAPA 2** → Validar → Commit
+3. **ETAPA 3** → Validar → Commit
+4. **ETAPA 4** → Validar → Commit
+5. **ETAPA 5** → Validar → Commit final
+
+### **Tempo Estimado:**
+
+- **Total:** 75 minutos
+- **Por etapa:** 15-20 minutos
+- **Validação:** 5 minutos por etapa
+
+### **Dependências:**
+
+- ✅ Arquitetura atual preservada
+- ✅ useChat onFinish callback disponível
+- ✅ Callback chain pattern estabelecido
+
+---
+
+**🎯 Resultado Esperado:** Model Info Badge funcionando perfeitamente com atualização instantânea após streaming, sem quebrar nada na arquitetura existente.
+
+**📚 Baseado em:** Lições aprendidas de debugging anterior, padrões estabelecidos e arquitetura thread-first atual.
 
 ---

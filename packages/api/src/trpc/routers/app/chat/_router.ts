@@ -232,30 +232,59 @@ export const chatRouter: TRPCRouterRecord = {
     .mutation(async ({ input, ctx }) => {
       const { id, ...dadosAtualizacao } = input;
 
+      // ✅ ESTRATÉGIA 3 - LOGS DE DEBUGGING BACKEND
+      console.log("🔄 [BACKEND] atualizarSession ENTRADA:", {
+        id,
+        dadosAtualizacao,
+        userId: ctx.auth.user.id,
+        activeTeamId: ctx.auth.user.activeTeamId,
+        timestamp: new Date().toISOString(),
+      });
+
       try {
         const sessionExistente =
           await chatRepository.ChatSessionRepository.findById(id);
+
+        console.log("🔍 [BACKEND] Sessão existente:", {
+          found: !!sessionExistente,
+          sessionTeamId: sessionExistente?.teamId,
+          userActiveTeamId: ctx.auth.user.activeTeamId,
+          hasPermission:
+            sessionExistente?.teamId === ctx.auth.user.activeTeamId,
+        });
+
         if (
           !sessionExistente ||
           sessionExistente.teamId !== ctx.auth.user.activeTeamId
         ) {
+          console.log("❌ [BACKEND] Sessão não encontrada ou sem permissão");
           throw new TRPCError({
             code: "NOT_FOUND",
             message: "Sessão de chat não encontrada",
           });
         }
 
+        console.log("📝 [BACKEND] Executando update no banco...");
         const session = await chatRepository.ChatSessionRepository.update(
           id,
           dadosAtualizacao,
         );
+
+        console.log("✅ [BACKEND] Update executado com sucesso:", {
+          sessionId: session?.id,
+          newAiModelId: session?.aiModelId,
+          title: session?.title,
+          updatedAt: session?.updatedAt,
+        });
+
         return session;
       } catch (error) {
         if (error instanceof TRPCError) {
+          console.log("❌ [BACKEND] TRPCError:", error.message);
           throw error;
         }
 
-        console.error("Erro ao atualizar sessão de chat:", error);
+        console.error("❌ [BACKEND] Erro ao atualizar sessão de chat:", error);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Erro ao atualizar sessão de chat",

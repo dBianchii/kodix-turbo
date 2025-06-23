@@ -1,306 +1,277 @@
-# 🔧 Model Selector - Plano de Checagem e Correção
+# 🔧 Model Selector - Plano de Sincronização de Queries
 
 **📅 Data:** Janeiro 2025  
-**🎯 Objetivo:** Identificar e corrigir problemas no ModelSelector  
-**⚙️ Modo:** Debugging incremental com análise completa
+**🎯 Objetivo:** Resolver problema de sincronização entre ModelSelector e AppSidebar  
+**⚙️ Modo:** Correção incremental sem breaking changes
 
-## 🚨 Problemas Identificados
+## 🚨 Problema Identificado
 
-### **1. Incompatibilidade de Props**
+### **Root Cause: Invalidação de Queries Incompleta**
 
-- ❌ **ModelSelector** espera: `selectedModelId`, `onModelSelect`
-- ❌ **UnifiedChatPage** passa: `selectedModelId`, `onModelSelect`
-- ✅ **Compatível** mas há divergência na implementação interna
+O problema não está no ModelSelector em si, mas na **sincronização de queries** entre componentes:
 
-### **2. Lógica de Valor Conflitante**
+1. **UnifiedChatPage** → `handleModelSelect` → Invalida `buscarSession` e `buscarMensagensTest`
+2. **AppSidebar** → Usa query `listarSessions` para mostrar sessões na sidebar
+3. **Resultado**: Sidebar não atualiza porque `listarSessions` não é invalidada
 
-- ❌ **ModelSelector** usa `value` interno + `getPreferredModelId()`
-- ❌ **UnifiedChatPage** passa `selectedModelId` mas usa props diferentes
-- ⚠️ **Resultado**: Valor não sincroniza corretamente
+```mermaid
+graph TD
+    A[ModelSelector] --> B[handleModelSelect]
+    B --> C[updateSessionMutation]
+    C --> D[Invalida buscarSession ✅]
+    C --> E[Invalida buscarMensagensTest ✅]
+    C --> F[❌ NÃO invalida listarSessions]
 
-### **3. Callbacks Duplos**
+    G[AppSidebar] --> H[Query listarSessions]
+    H --> I[❌ Dados desatualizados]
+```
 
-- ❌ **ModelSelector** chama `onValueChange` + `savePreferredModel`
-- ❌ **UnifiedChatPage** chama `savePreferredModel` no `handleModelSelect`
-- ⚠️ **Resultado**: Salvamento duplo ou conflitante
+### **Análise da Arquitetura Atual**
 
-## 📋 Plano de Debugging - 4 Fases
+Baseado em `@architecture-overview.md`, o sistema usa:
 
-### **Fase 1: Análise e Logging** ⏱️ 20min
+- **Frontend**: Thread-first com invalidação inteligente de queries
+- **Backend**: tRPC com isolamento por team
+- **Queries**: TanStack Query com cache granular
 
-#### 1.1 Adicionar Logs Detalhados
+**O problema está na granularidade da invalidação.**
+
+## 📋 Plano de Correção - 3 Etapas Seguras
+
+### **ETAPA 1: Análise e Diagnóstico** ⏱️ 15min
+
+_Confirmar o diagnóstico sem mudanças no código_
+
+#### 1.1 Verificar Queries Usadas
 
 ```typescript
-// ✅ Props recebidas
-console.log("[MODEL_SELECTOR] Props recebidas:", {
-  value,
-  selectedModelId: value, // UnifiedChatPage passa como selectedModelId
-  onValueChange: !!onValueChange,
-  disabled,
-  timestamp: new Date().toISOString(),
+// ✅ Verificar que queries cada componente usa
+console.log("🔍 [DIAGNOSIS] Queries em uso:");
+console.log("UnifiedChatPage:", {
+  buscarSession: "✅ Invalidada",
+  buscarMensagensTest: "✅ Invalidada",
+  listarSessions: "❌ NÃO invalidada",
 });
-
-// ✅ Estado interno calculado
-console.log("[MODEL_SELECTOR] Estado calculado:", {
-  availableModelsCount: availableModels?.length || 0,
-  processedModelsCount: processedModels.length,
-  preferredModelId: getPreferredModelId(),
-  currentModelId: currentModel?.id,
-  currentModelName: currentModel?.name,
-});
-
-// ✅ Seleção de modelo
-console.log("[MODEL_SELECTOR] handleSelect chamado:", {
-  selectedModelId: modelId,
-  previousModelId: currentModel?.id,
-  hasOnValueChange: !!onValueChange,
-  willSavePreference: true,
+console.log("AppSidebar:", {
+  listarSessions: "🎯 QUERY PRINCIPAL",
+  buscarChatFolders: "Secundária",
 });
 ```
 
-#### 1.2 Seção de Debug no Popover
+#### 1.2 Confirmar Fluxo de Invalidação
 
 ```typescript
-{/* Debug panel (apenas desenvolvimento) */}
-{process.env.NODE_ENV === 'development' && (
-  <div className="border-t pt-2 mt-2 text-xs text-slate-500">
-    <details>
-      <summary>Debug - Model Selector</summary>
-      <div className="mt-2 space-y-1 text-xs">
-        <div>Props value: {value || 'undefined'}</div>
-        <div>Preferred ID: {getPreferredModelId() || 'undefined'}</div>
-        <div>Current Model: {currentModel?.name || 'none'}</div>
-        <div>Available: {processedModels.length}</div>
-        <div>Has onValueChange: {String(!!onValueChange)}</div>
-      </div>
-    </details>
-  </div>
-)}
-```
-
-#### 1.3 Identificar Problemas Específicos
-
-- [ ] **Props não chegam**: `value` undefined
-- [ ] **Modelos não carregam**: `processedModels` vazio
-- [ ] **Seleção não funciona**: `onValueChange` não chama
-- [ ] **Preferência não salva**: erro no `savePreferredModel`
-- [ ] **UI não atualiza**: estado não sincroniza
-
-### **Fase 2: Correção de Interface** ⏱️ 30min
-
-#### 2.1 Padronizar Props Interface
-
-```typescript
-interface ModelSelectorProps {
-  selectedModelId?: string; // ✅ Renomear de 'value'
-  onModelSelect?: (modelId: string) => void; // ✅ Renomear de 'onValueChange'
-  disabled?: boolean;
-  placeholder?: string;
-  className?: string;
-}
-```
-
-#### 2.2 Simplificar Lógica de Valor
-
-```typescript
-// ✅ Usar selectedModelId diretamente (sem getPreferredModelId interno)
-const currentModel = useMemo(() => {
-  return processedModels.find((model: any) => model.id === selectedModelId);
-}, [selectedModelId, processedModels]);
-```
-
-#### 2.3 Remover Salvamento Duplo
-
-```typescript
-const handleSelect = useCallback(
-  async (modelId: string) => {
-    console.log("[MODEL_SELECTOR] Seleção:", modelId);
-
-    // ✅ Apenas chamar callback - deixar salvamento para o pai
-    onModelSelect?.(modelId);
-
-    // ✅ Remover savePreferredModel daqui (UnifiedChatPage já faz)
-  },
-  [onModelSelect],
-);
-```
-
-### **Fase 3: Correção no UnifiedChatPage** ⏱️ 25min
-
-#### 3.1 Corrigir Props Passadas
-
-```typescript
-<ModelSelector
-  selectedModelId={selectedModelId}  // ✅ Prop correta
-  onModelSelect={handleModelSelect}  // ✅ Callback correto
-  disabled={
-    selectedSessionId
-      ? updateSessionMutation.isPending
-      : isSaving || isLoading
-  }
-/>
-```
-
-#### 3.2 Validar handleModelSelect
-
-```typescript
+// ✅ Adicionar logs temporários no handleModelSelect
 const handleModelSelect = (modelId: string) => {
-  console.log("[UNIFIED_CHAT] handleModelSelect:", {
+  console.log("🔄 [DIAGNOSIS] handleModelSelect iniciado:", {
     modelId,
-    previousModelId: selectedModelId,
     selectedSessionId,
-    hasSession: !!selectedSessionId,
+    willInvalidate: ["buscarSession", "buscarMensagensTest"],
+    missing: ["listarSessions"], // ⚠️ Esta é a query que falta
   });
 
-  // ✅ Atualizar estado local primeiro
+  // ... resto do código
+};
+```
+
+#### 1.3 Testar Hipótese
+
+- [ ] Fazer mudança de modelo
+- [ ] Verificar que sidebar não atualiza
+- [ ] Fazer refresh manual
+- [ ] Confirmar que sidebar atualiza após refresh
+- [ ] **Conclusão**: Query `listarSessions` não está sendo invalidada
+
+### **ETAPA 2: Correção da Invalidação** ⏱️ 20min
+
+_Adicionar invalidação da query missing_
+
+#### 2.1 Estratégia Escolhida: **Invalidação Específica Coordenada**
+
+**Por que esta estratégia:**
+
+- ✅ Não quebra nada existente
+- ✅ Performance otimizada (só invalida o necessário)
+- ✅ Compatível com arquitetura thread-first atual
+- ✅ Mantém isolamento por team
+
+#### 2.2 Implementação da Correção
+
+```typescript
+// ✅ CORREÇÃO: Adicionar invalidação da query listarSessions
+const handleModelSelect = (modelId: string) => {
   setSelectedModelId(modelId);
 
   if (selectedSessionId) {
-    // ✅ Sessão: atualizar modelo da sessão
+    // ✅ Tem sessão: atualizar modelo da sessão
     updateSessionMutation.mutate({
       id: selectedSessionId,
       aiModelId: modelId,
     });
+
+    // ✅ CORREÇÃO: Invalidar TODAS as queries relacionadas
+    queryClient.invalidateQueries(
+      trpc.app.chat.buscarSession.pathFilter({
+        sessionId: selectedSessionId,
+      }),
+    );
+
+    queryClient.invalidateQueries(
+      trpc.app.chat.buscarMensagensTest.pathFilter({
+        chatSessionId: selectedSessionId,
+      }),
+    );
+
+    // 🎯 NOVA: Invalidar query da sidebar
+    queryClient.invalidateQueries(trpc.app.chat.listarSessions.pathFilter());
+
+    // ✅ Re-fetch para garantir dados atualizados
+    setTimeout(() => {
+      sessionQuery.refetch();
+      messagesQuery.refetch();
+    }, 500);
   } else {
-    // ✅ Sem sessão: salvar como preferido
+    // ✅ Sem sessão: salvar como modelo preferido
     savePreferredModel(modelId);
+
+    setTimeout(() => {
+      refetchPreferredModel();
+    }, 1000);
   }
 };
 ```
 
-### **Fase 4: Validação e Testes** ⏱️ 15min
-
-#### 4.1 Cenários de Teste
-
-- [ ] **Seleção com sessão**: Deve atualizar modelo da sessão
-- [ ] **Seleção sem sessão**: Deve salvar como preferido
-- [ ] **Mudança de sessão**: Deve carregar modelo da nova sessão
-- [ ] **Erro na API**: Deve mostrar erro e reverter seleção
-- [ ] **Loading states**: Deve desabilitar durante operações
-
-#### 4.2 Logs de Validação
+#### 2.3 Correção Coordenada no updateSessionMutation
 
 ```typescript
-// ✅ Validar sincronização
-useEffect(() => {
-  console.log("[MODEL_SELECTOR] Validation:", {
-    propsValue: selectedModelId,
-    currentModelId: currentModel?.id,
-    isInSync: selectedModelId === currentModel?.id,
-    timestamp: new Date().toISOString(),
-  });
-}, [selectedModelId, currentModel?.id]);
-```
+// ✅ CORREÇÃO: Também no mutation success callback
+const updateSessionMutation = useMutation(
+  trpc.app.chat.atualizarSession.mutationOptions({
+    onSuccess: () => {
+      toast.success("Modelo da sessão atualizado com sucesso!");
 
-#### 4.3 Checklist Final
+      // ✅ ORIGINAL: Invalidação existente
+      if (selectedSessionId) {
+        queryClient.invalidateQueries(trpc.app.chat.buscarSession.pathFilter());
+      }
 
-- [ ] Props interface padronizada
-- [ ] Valor sincroniza corretamente
-- [ ] Seleção funciona sem duplicação
-- [ ] Loading states funcionam
-- [ ] Erro handling implementado
-- [ ] Logs removidos (produção)
+      // 🎯 NOVA: Invalidar sidebar também
+      queryClient.invalidateQueries(trpc.app.chat.listarSessions.pathFilter());
 
-## 🎯 Problemas Específicos Detectados
-
-### **A. Interface Props Inconsistente**
-
-```typescript
-// ❌ ATUAL (ModelSelector)
-interface ModelSelectorProps {
-  value?: string;
-  onValueChange?: (value: string) => void;
-}
-
-// ✅ ESPERADO (UnifiedChatPage)
-<ModelSelector
-  selectedModelId={selectedModelId}
-  onModelSelect={handleModelSelect}
-/>
-```
-
-### **B. Lógica de Valor Complexa**
-
-```typescript
-// ❌ ATUAL - Múltiplas fontes de verdade
-const currentModel = useMemo(() => {
-  const modelId = value || getPreferredModelId(); // ⚠️ Confuso
-  return processedModels.find((model: any) => model.id === modelId);
-}, [value, getPreferredModelId, processedModels]);
-
-// ✅ CORRIGIDO - Fonte única
-const currentModel = useMemo(() => {
-  return processedModels.find((model: any) => model.id === selectedModelId);
-}, [selectedModelId, processedModels]);
-```
-
-### **C. Callback Duplo**
-
-```typescript
-// ❌ ATUAL - Salvamento duplo
-const handleSelect = useCallback(
-  async (modelId: string) => {
-    onValueChange?.(modelId); // UnifiedChatPage vai salvar
-    await savePreferredModel(modelId); // ⚠️ Salvamento duplo!
-  },
-  [onValueChange, savePreferredModel],
-);
-
-// ✅ CORRIGIDO - Responsabilidade única
-const handleSelect = useCallback(
-  async (modelId: string) => {
-    onModelSelect?.(modelId); // Apenas notificar pai
-  },
-  [onModelSelect],
+      console.log(
+        "🔄 [UNIFIED_CHAT] Mutation success - todas queries invalidadas",
+      );
+    },
+    onError: trpcErrorToastDefault,
+  }),
 );
 ```
 
-## 🔍 Root Cause Analysis
+### **ETAPA 3: Validação e Otimização** ⏱️ 10min
 
-### **Causa Raiz 1: Evolução de Interface**
+_Testar e garantir que funciona_
 
-- **Origem**: ModelSelector criado com interface genérica (`value`, `onValueChange`)
-- **Evolução**: UnifiedChatPage usa interface específica (`selectedModelId`, `onModelSelect`)
-- **Resultado**: Incompatibilidade de props
+#### 3.1 Cenários de Teste
 
-### **Causa Raiz 2: Responsabilidades Mistas**
+- [ ] **Teste 1**: Mudar modelo com sessão selecionada
 
-- **ModelSelector**: Tenta gerenciar preferências + seleção
-- **UnifiedChatPage**: Também gerencia preferências + sessões
-- **Resultado**: Lógica duplicada e conflitante
+  - ✅ Sidebar deve atualizar imediatamente
+  - ✅ ModelSelector deve mostrar novo modelo
+  - ✅ Session deve salvar no backend
 
-### **Causa Raiz 3: Estado Distribuído**
+- [ ] **Teste 2**: Mudar modelo sem sessão
 
-- **getPreferredModelId()**: Hook interno que pode estar desatualizado
-- **selectedModelId**: State do UnifiedChatPage
-- **Resultado**: Fontes de verdade conflitantes
+  - ✅ Deve salvar como preferido
+  - ✅ Não deve afetar sidebar
 
-## 📊 Impacto da Correção
+- [ ] **Teste 3**: Navegar entre sessões
+  - ✅ ModelSelector deve mostrar modelo correto
+  - ✅ Sidebar deve manter dados atualizados
 
-### **Antes da Correção:**
+#### 3.2 Performance Check
 
-- ❌ Props incompatíveis
-- ❌ Salvamento duplo
-- ❌ Estado inconsistente
-- ❌ Debugging difícil
+```typescript
+// ✅ Verificar que não há invalidação excessiva
+console.log("📊 [PERFORMANCE] Queries invalidadas:", {
+  buscarSession: "Necessária ✅",
+  buscarMensagensTest: "Necessária ✅",
+  listarSessions: "Necessária ✅ (era missing)",
+  outras: "❌ Não devem ser invalidadas",
+});
+```
 
-### **Depois da Correção:**
+#### 3.3 Cleanup dos Logs
 
-- ✅ Interface padronizada
-- ✅ Responsabilidade única
-- ✅ Estado consistente
-- ✅ Debugging facilitado
-- ✅ Performance melhorada
+```typescript
+// ✅ Remover todos os logs de debug adicionados
+// ✅ Manter apenas logs essenciais de produção
+```
+
+## 🎯 Implementação Segura
+
+### **Mudanças Mínimas Necessárias**
+
+**Arquivo**: `apps/kdx/src/app/[locale]/(authed)/apps/chat/_components/unified-chat-page.tsx`
+
+**Linhas a modificar**: ~200-220 (função `handleModelSelect`)
+
+**Mudança**: Adicionar 3 linhas de invalidação de query
+
+### **Compatibilidade Garantida**
+
+- ✅ **Zero breaking changes**
+- ✅ **Mantém arquitetura thread-first**
+- ✅ **Preserva isolamento por team**
+- ✅ **Compatível com tRPC patterns**
+- ✅ **Não afeta performance significativamente**
+
+### **Rollback Plan**
+
+Se houver problemas:
+
+1. Remover as 3 linhas adicionadas
+2. Sistema volta ao estado anterior
+3. Sidebar volta a não atualizar (problema original)
+
+## 📊 Análise de Impacto
+
+### **Antes da Correção**
+
+- ❌ Sidebar não atualiza após mudança de modelo
+- ❌ Necessário refresh para ver mudanças
+- ❌ UX inconsistente
+
+### **Depois da Correção**
+
+- ✅ Sidebar atualiza automaticamente
+- ✅ Sincronização em tempo real
+- ✅ UX consistente e fluida
+- ✅ Performance mantida
+
+### **Queries Invalidadas (Após Correção)**
+
+```typescript
+// Quando modelo é alterado em uma sessão:
+queryClient.invalidateQueries("buscarSession"); // ✅ Dados da sessão
+queryClient.invalidateQueries("buscarMensagensTest"); // ✅ Mensagens
+queryClient.invalidateQueries("listarSessions"); // 🎯 NOVA - Lista sidebar
+```
 
 ## 🚀 Próximos Passos
 
-1. **Implementar Fase 1** - Adicionar logs e debug
-2. **Analisar logs** - Identificar problema específico
-3. **Implementar Fase 2** - Corrigir interface
-4. **Implementar Fase 3** - Corrigir UnifiedChatPage
-5. **Implementar Fase 4** - Validar e testar
-6. **Remover logs** - Limpar código para produção
+1. **Implementar ETAPA 1** - Confirmar diagnóstico
+2. **Implementar ETAPA 2** - Aplicar correção
+3. **Implementar ETAPA 3** - Validar funcionamento
+4. **Monitorar** - Verificar que não há regressões
 
 ---
 
-**🎉 Resultado Esperado:** ModelSelector funcionando perfeitamente com interface padronizada e responsabilidades claras.
+**🎉 Resultado Esperado:**
+
+- Sidebar atualiza automaticamente quando modelo é alterado
+- Sincronização perfeita entre todos os componentes
+- Zero breaking changes na arquitetura existente
+
+**⚡ Tempo Total Estimado:** 45 minutos
+
+**🔒 Garantia de Segurança:** Mudanças mínimas e reversíveis

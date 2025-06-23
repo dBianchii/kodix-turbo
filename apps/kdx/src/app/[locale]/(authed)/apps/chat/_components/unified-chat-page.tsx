@@ -147,8 +147,13 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
           );
         }
 
+        // 🎯 NOVA: Invalidar sidebar também
+        queryClient.invalidateQueries(
+          trpc.app.chat.listarSessions.pathFilter(),
+        );
+
         console.log(
-          "🔄 [UNIFIED_CHAT] Mutation success - sessão/preferência atualizada",
+          "🔄 [UNIFIED_CHAT] Mutation success - todas queries invalidadas",
         );
       },
       onError: trpcErrorToastDefault,
@@ -209,55 +214,71 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
 
   // ✅ Função para lidar com seleção de modelo
   const handleModelSelect = (modelId: string) => {
-    const previousModelId = selectedModelId;
-    setSelectedModelId(modelId);
-
-    console.log("🔄 [UNIFIED_CHAT] handleModelSelect chamado:", {
-      modelId,
-      previousModelId,
-      selectedSessionId,
-      hasSession: !!selectedSessionId,
+    console.log("🔍 [DIAGNOSIS] Queries em uso:");
+    console.log("UnifiedChatPage:", {
+      buscarSession: "✅ Invalidada",
+      buscarMensagensTest: "✅ Invalidada",
+      listarSessions: "❌ NÃO invalidada",
     });
+    console.log("AppSidebar:", {
+      listarSessions: "🎯 QUERY PRINCIPAL",
+      buscarChatFolders: "Secundária",
+    });
+
+    console.log("🔄 [DIAGNOSIS] handleModelSelect iniciado:", {
+      modelId,
+      selectedSessionId,
+      willInvalidate: ["buscarSession", "buscarMensagensTest"],
+      missing: ["listarSessions"], // ⚠️ Esta é a query que falta
+    });
+
+    // ✅ Atualizar estado local primeiro
+    setSelectedModelId(modelId);
 
     if (selectedSessionId) {
       // ✅ Tem sessão: atualizar modelo da sessão
-      console.log("📝 [UNIFIED_CHAT] Atualizando modelo da sessão...");
       updateSessionMutation.mutate({
         id: selectedSessionId,
         aiModelId: modelId,
       });
 
-      // ✅ FASE 5.1: Force re-fetch após mudança de modelo
-      console.log("🔄 [PHASE_5.1] Force re-fetch após mudança de modelo");
+      // ✅ Invalidar e re-fetch para atualizar dados
+      console.log("🔄 [CORREÇÃO] Invalidando queries CORRIGIDAS:", {
+        buscarSession: "✅ SERÁ invalidada",
+        buscarMensagensTest: "✅ SERÁ invalidada",
+        listarSessions: "✅ SERÁ invalidada - CORRIGIDO!",
+      });
 
-      // Invalidar e re-fetch da sessão para atualizar dados
       queryClient.invalidateQueries(
         trpc.app.chat.buscarSession.pathFilter({
           sessionId: selectedSessionId,
         }),
       );
 
-      // Invalidar mensagens para pegar metadata atualizada
       queryClient.invalidateQueries(
         trpc.app.chat.buscarMensagensTest.pathFilter({
           chatSessionId: selectedSessionId,
         }),
       );
 
-      // Re-fetch imediato para garantir dados atualizados
+      // 🎯 NOVA: Invalidar query da sidebar
+      queryClient.invalidateQueries(trpc.app.chat.listarSessions.pathFilter());
+
+      console.log(
+        "✅ [CORREÇÃO] Query listarSessions invalidada - sidebar deve atualizar!",
+      );
+
+      // Re-fetch para garantir dados atualizados
       setTimeout(() => {
         sessionQuery.refetch();
         messagesQuery.refetch();
-        console.log("✅ [PHASE_5.1] Re-fetch executado com sucesso");
       }, 500);
     } else {
       // ✅ Sem sessão: salvar como modelo preferido
-      console.log("📝 [UNIFIED_CHAT] Salvando modelo preferido...");
       savePreferredModel(modelId);
 
-      // ✅ Forçar atualização do modelo preferido após salvar
+      // ✅ Atualizar modelo preferido após salvar
       setTimeout(() => {
-        console.log("🔄 [UNIFIED_CHAT] Refazendo fetch do modelo preferido...");
         refetchPreferredModel();
       }, 1000);
     }
@@ -265,7 +286,7 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
 
   return (
     <SidebarProvider className="min-h-[calc(100dvh-55px)] items-start">
-      <div className="flex h-[calc(100dvh-55px)] w-full overflow-x-hidden bg-background">
+      <div className="bg-background flex h-[calc(100dvh-55px)] w-full overflow-x-hidden">
         {/* Sidebar - assume largura interna definida pelo componente */}
         <AppSidebar
           selectedSessionId={selectedSessionId}
@@ -275,7 +296,7 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
         {/* Conteúdo principal */}
         <div className="flex flex-1 flex-col">
           {/* Cabeçalho com ModelSelector e badges - estilo ChatGPT */}
-          <div className="flex items-center justify-between border-b border-border bg-card px-4 py-3">
+          <div className="border-border bg-card flex items-center justify-between border-b px-4 py-3">
             <div className="flex items-center gap-4">
               {/* ✅ ETAPA 4.1: Renderizar SidebarTrigger apenas no cliente */}
               {isClient && <SidebarTrigger className="md:hidden" />}
