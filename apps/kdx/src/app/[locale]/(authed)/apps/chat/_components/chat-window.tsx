@@ -16,6 +16,8 @@ import { Separator } from "@kdx/ui/separator";
 import { useTRPC } from "~/trpc/react";
 import { useSessionWithMessages } from "../_hooks/useSessionWithMessages";
 import { useTitleSync } from "../_hooks/useTitleSync";
+// ✅ SUB-ETAPA 2.2 REVISADA: Importar thread context (opcional)
+import { useThreadContext } from "../_providers/chat-thread-provider";
 import { ChatMessages } from "./chat-messages";
 import { MessageInput } from "./message-input";
 
@@ -47,7 +49,7 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
         suppressHydrationWarning
       >
         <div className="text-center">
-          <div className="mx-auto mb-4 h-8 w-8 animate-pulse rounded bg-muted" />
+          <div className="bg-muted mx-auto mb-4 h-8 w-8 animate-pulse rounded" />
           <p className="text-muted-foreground">Carregando...</p>
         </div>
       </div>
@@ -183,8 +185,8 @@ function EmptyThreadState({
       {/* Conteúdo Central */}
       <div className="flex flex-1 items-center justify-center p-8">
         <div className="max-w-md space-y-6 text-center">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-            <MessageCircle className="h-8 w-8 text-primary" />
+          <div className="bg-primary/10 mx-auto flex h-16 w-16 items-center justify-center rounded-full">
+            <MessageCircle className="text-primary h-8 w-8" />
           </div>
 
           <div className="space-y-2">
@@ -198,7 +200,7 @@ function EmptyThreadState({
 
           {/* Sugestões de exemplo (opcional) */}
           <div className="space-y-2">
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               {t("apps.chat.suggestions")}:
             </p>
             <div className="flex flex-wrap justify-center gap-2">
@@ -264,6 +266,10 @@ function ActiveChatWindow({
   const t = useTranslations();
   const trpc = useTRPC();
 
+  // ✅ SUB-ETAPA 2.2 REVISADA: Thread context opcional (não quebra hidratação)
+  const threadContext = useThreadContext();
+  const { switchToThread, activeThreadId } = threadContext || {};
+
   // ✅ THREAD-FIRST: Modelo padrão (pode ser passado como prop futuramente)
   const selectedModelId = "claude-3-5-haiku-20241022";
 
@@ -286,15 +292,35 @@ function ActiveChatWindow({
     refetch: refetchSession,
   } = useSessionWithMessages(sessionId, sessionOptions);
 
+  // ✅ SUB-ETAPA 2.2 REVISADA: Sincronização opcional com thread context
+  useEffect(() => {
+    if (switchToThread && sessionId && sessionId !== activeThreadId) {
+      console.log("🔄 [SUB_ETAPA_2.2_REV] Sincronizando thread opcional:", {
+        sessionId,
+        activeThreadId,
+      });
+      switchToThread(sessionId);
+    }
+  }, [sessionId, activeThreadId, switchToThread]);
+
   // ✅ DEBUG: Log quando ActiveChatWindow monta
   useEffect(() => {
     console.log("🚀 [FLOW_TRACE] 4. ActiveChatWindow montado:", {
       sessionId,
+      activeThreadId,
       isLoadingSession,
       hasSession: !!session,
       dbMessagesLength: dbMessages?.length || 0,
+      hasThreadContext: !!threadContext,
     });
-  }, []);
+  }, [
+    sessionId,
+    activeThreadId,
+    isLoadingSession,
+    session,
+    dbMessages,
+    threadContext,
+  ]);
 
   // ✅ THREAD-FIRST: Refetch quando sessionId mudar para nova sessão
   // ✅ CORREÇÃO: Condições de guarda rigorosas para prevenir loop infinito
@@ -558,11 +584,11 @@ function ActiveChatWindow({
       <div className="flex h-full items-center justify-center">
         <Card className="max-w-md p-6">
           <div className="text-center">
-            <AlertCircle className="mx-auto mb-4 h-12 w-12 text-destructive" />
+            <AlertCircle className="text-destructive mx-auto mb-4 h-12 w-12" />
             <h3 className="mb-2 text-lg font-semibold">
               {t("apps.chat.errorLoadingSession")}
             </h3>
-            <p className="mb-4 text-muted-foreground">
+            <p className="text-muted-foreground mb-4">
               {sessionError.message || t("apps.chat.sessionNotFound")}
             </p>
             <Button onClick={() => refetchSession()} variant="outline">
