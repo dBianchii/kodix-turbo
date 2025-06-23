@@ -82,7 +82,11 @@ function EmptyThreadState({
   const trpc = useTRPC();
   const queryClient = useQueryClient();
 
-  // ✅ SOLUÇÃO ROBUSTA: Usar createEmptySession e passar mensagem via sessionStorage
+  // ✅ SUB-ETAPA 2.3: Thread context para substituir sessionStorage
+  const threadContext = useThreadContext();
+  const { createThread, setPendingMessage } = threadContext || {};
+
+  // ✅ SOLUÇÃO ROBUSTA: Usar createEmptySession (mantido para compatibilidade)
   const createEmptySessionMutation = useMutation(
     trpc.app.chat.createEmptySession.mutationOptions({
       onSuccess: (data: any) => {
@@ -93,21 +97,29 @@ function EmptyThreadState({
           title: data.session.title,
         });
 
-        // ✅ CORREÇÃO 1.3: Transferir mensagem pendente para chave específica da sessão
-        const pendingMessage = sessionStorage.getItem("pending-message-temp");
-        if (pendingMessage && sessionId) {
-          sessionStorage.setItem(
-            `pending-message-${sessionId}`,
-            pendingMessage,
-          );
-          sessionStorage.removeItem("pending-message-temp");
+        // ✅ SUB-ETAPA 2.3: Transferir mensagem usando thread context ou sessionStorage
+        if (threadContext && setPendingMessage) {
           console.log(
-            "🔄 [FLOW_TRACE_V3] 3. Mensagem transferida para sessão:",
-            {
-              sessionId,
-              messagePreview: pendingMessage.slice(0, 30) + "...",
-            },
+            "🎯 [SUB_ETAPA_2.3] Thread context disponível - mensagem já gerenciada",
           );
+          // Thread context já gerencia a mensagem pendente automaticamente
+        } else {
+          // Fallback para sessionStorage (comportamento original)
+          const pendingMessage = sessionStorage.getItem("pending-message-temp");
+          if (pendingMessage && sessionId) {
+            sessionStorage.setItem(
+              `pending-message-${sessionId}`,
+              pendingMessage,
+            );
+            sessionStorage.removeItem("pending-message-temp");
+            console.log(
+              "🔄 [SUB_ETAPA_2.3] Fallback: Mensagem transferida via sessionStorage:",
+              {
+                sessionId,
+                messagePreview: pendingMessage.slice(0, 30) + "...",
+              },
+            );
+          }
         }
 
         // Notificar componente pai para navegar
@@ -124,7 +136,7 @@ function EmptyThreadState({
     }),
   );
 
-  // ✅ OTIMIZAÇÃO: Memoizar função para enviar primeira mensagem
+  // ✅ SUB-ETAPA 2.3: Função otimizada com thread context
   const handleFirstMessage = useCallback(
     async (message: string) => {
       const trimmedMessage = message.trim();
@@ -133,12 +145,24 @@ function EmptyThreadState({
       if (createEmptySessionMutation.isPending) return;
 
       console.log(
-        "🚀 [FLOW_TRACE_V3] 1. Salvando mensagem pendente e criando sessão...",
-        { message: trimmedMessage.slice(0, 50) + "..." },
+        "🚀 [SUB_ETAPA_2.3] 1. Salvando mensagem pendente e criando sessão...",
+        {
+          message: trimmedMessage.slice(0, 50) + "...",
+          hasThreadContext: !!threadContext,
+          method: threadContext ? "thread-context" : "sessionStorage",
+        },
       );
 
-      // ✅ CORREÇÃO 1.3: Usar chave temporária antes de ter sessionId
-      sessionStorage.setItem("pending-message-temp", trimmedMessage);
+      // ✅ SUB-ETAPA 2.3: Usar thread context quando disponível, sessionStorage como fallback
+      if (setPendingMessage) {
+        console.log(
+          "🎯 [SUB_ETAPA_2.3] Usando thread context para mensagem pendente",
+        );
+        setPendingMessage(trimmedMessage);
+      } else {
+        console.log("🔄 [SUB_ETAPA_2.3] Fallback: usando sessionStorage");
+        sessionStorage.setItem("pending-message-temp", trimmedMessage);
+      }
 
       // ✅ CORREÇÃO 1.2: Passar firstMessage no metadata para geração de título
       createEmptySessionMutation.mutate({
@@ -149,7 +173,7 @@ function EmptyThreadState({
         },
       });
     },
-    [createEmptySessionMutation],
+    [createEmptySessionMutation, threadContext, setPendingMessage],
   );
 
   // ✅ OTIMIZAÇÃO: Memoizar sugestões para evitar re-criação
@@ -516,17 +540,27 @@ function ActiveChatWindow({
     isClient, // ✅ ETAPA 4: Incluir guard de hidratação
   ]);
 
-  // ✅ SOLUÇÃO ROBUSTA: Ler mensagem pendente do sessionStorage específico da sessão
+  // ✅ SUB-ETAPA 2.3: Lógica unificada - thread context + sessionStorage fallback
   useEffect(() => {
     // ✅ ETAPA 4: GUARDA DE HIDRATAÇÃO - Só executar no cliente
     if (!isClient) {
       return;
     }
 
-    // ✅ CORREÇÃO 1.3: Usar chave específica da sessão
-    const pendingMessage = sessionStorage.getItem(
-      `pending-message-${sessionId}`,
-    );
+    let pendingMessage: string | null = null;
+    let source = "none";
+
+    // ✅ SUB-ETAPA 2.3: Tentar obter mensagem do thread context primeiro
+    if (threadContext?.getPendingMessage) {
+      pendingMessage = threadContext.getPendingMessage();
+      source = "thread-context";
+    }
+
+    // ✅ Fallback para sessionStorage se thread context não disponível
+    if (!pendingMessage) {
+      pendingMessage = sessionStorage.getItem(`pending-message-${sessionId}`);
+      source = "sessionStorage";
+    }
 
     // Condições para enviar:
     // 1. Há uma mensagem pendente.
@@ -541,10 +575,11 @@ function ActiveChatWindow({
       messages.length === 0
     ) {
       console.log(
-        "🚀 [FLOW_TRACE_V3] 4. Mensagem pendente encontrada, enviando via append()...",
+        "🚀 [SUB_ETAPA_2.3] 4. Mensagem pendente encontrada, enviando via append()...",
         {
           content: pendingMessage.slice(0, 30) + "...",
           sessionId,
+          source,
         },
       );
 
@@ -553,10 +588,27 @@ function ActiveChatWindow({
         content: pendingMessage,
       });
 
-      // ✅ CORREÇÃO 1.3: Limpar chave específica da sessão
-      sessionStorage.removeItem(`pending-message-${sessionId}`);
+      // ✅ SUB-ETAPA 2.3: Limpar mensagem pendente da fonte correta
+      if (source === "thread-context" && threadContext?.clearPendingMessage) {
+        threadContext.clearPendingMessage();
+        console.log(
+          "🎯 [SUB_ETAPA_2.3] Mensagem pendente limpa do thread context",
+        );
+      } else if (source === "sessionStorage") {
+        sessionStorage.removeItem(`pending-message-${sessionId}`);
+        console.log(
+          "🔄 [SUB_ETAPA_2.3] Mensagem pendente limpa do sessionStorage",
+        );
+      }
     }
-  }, [sessionId, isClient, isLoadingChat, messages.length, append]);
+  }, [
+    sessionId,
+    isClient,
+    isLoadingChat,
+    messages.length,
+    append,
+    threadContext,
+  ]);
 
   // Auto-scroll para o final
   useEffect(() => {
