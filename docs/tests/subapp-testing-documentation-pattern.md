@@ -2,7 +2,7 @@
 
 ## 📖 Visão Geral
 
-Este documento define o **padrão para documentar testes específicos** de cada SubApp no Kodix, seguindo o modelo bem-sucedido estabelecido pelo Chat SubApp com seu documento `ci-testing.md`.
+Este documento define o **padrão para documentar testes específicos** de cada SubApp no Kodix, seguindo o modelo bem-sucedido estabelecido pelo Chat SubApp com seu documento `testing-complete.md`.
 
 ## 🎯 Objetivo do Padrão
 
@@ -21,7 +21,7 @@ Este documento define o **padrão para documentar testes específicos** de cada 
 ```
 docs/subapps/[subapp-name]/
 ├── README.md                    # Visão geral do SubApp
-├── ci-testing.md               # 📋 DOCUMENTO DE TESTES (este padrão)
+├── testing-complete.md          # 📋 DOCUMENTO DE TESTES (este padrão)
 ├── backend-architecture.md     # Arquitetura específica
 └── (outros docs específicos)
 ```
@@ -68,9 +68,9 @@ docs/subapps/[subapp-name]/
 
 ### Documento de Referência
 
-O Chat SubApp possui o documento `docs/subapps/chat/ci-testing.md` que serve como **exemplo perfeito** deste padrão:
+O Chat SubApp possui o documento `docs/subapps/chat/testing-complete.md` que serve como **exemplo perfeito** deste padrão:
 
-**📍 Localização**: `docs/subapps/chat/ci-testing.md`
+**📍 Localização**: `docs/subapps/chat/testing-complete.md`
 
 ### Características que Fazem Dele um Exemplo de Sucesso
 

@@ -4,41 +4,24 @@ Documentação centralizada do sistema de chat multi-provider com Assistant-UI d
 
 ## 📚 Índice Principal
 
-### 🏗️ Arquitetura
+### 🏗️ Arquitetura & Implementação
 
-- [**Backend Architecture**](./backend-architecture.md) - Sistema TRPC + Multi-Provider
-- [**Frontend Architecture**](./frontend-architecture.md) - Next.js 15 + Vercel AI SDK
-- [**Session Management**](./session-management.md) - Fluxo de sessões e mensagens
-
-### 🚀 Implementação
-
-- [**Vercel AI Native**](./vercel-ai-native-implementation.md) - Implementação 100% nativa
-- [**Streaming Implementation**](./streaming-implementation.md) - SSE + Real-time
-- [**Translation Keys**](./translation-keys.md) - i18n completo
+- [**Architecture Overview**](./architecture-overview.md) - **DOCUMENTO ÚNICO**: Arquitetura completa (Frontend + Backend + Implementação)
 
 ### 🧪 Testing & CI
 
-- [**CI Testing Guide**](./ci-testing.md) - Testes automatizados
-- [**Known Issues**](./known-issues.md) - Problemas conhecidos
+- [**Testing Complete**](./testing-complete.md) - **NOVO**: Suíte completa de testes (CI + Anti-regressão)
 
-### 📋 Planos & Evolução
+### 📋 Planning & Histórico
 
-- [**🎯 Assistant-UI Evolution Plan**](./assistant-ui-evolution-plan.md) - **PLANO ATUAL DE EVOLUÇÃO**
-
-  - Estado atual consolidado
-  - Lições críticas aprendidas
-  - Roadmap SUB-FASES 5.2-5.5
-  - Arquitetura alvo final
-
-- [**📜 Migration History Unified**](./migration-history-unified.md) - **HISTÓRICO CONSOLIDADO**
-  - Resumo da jornada Nov 2024 - Jan 2025
-  - Lições aprendidas essenciais
-  - Referências técnicas preservadas
-  - Template de migração validado
+- [**📁 Planning Documents**](./planning/) - Planejamento futuro e histórico de mudanças
 
 ### 📁 Arquivo Histórico
 
 - [Archive](./archive/) - Documentos históricos detalhados
+  - **session-management.md** - Gestão de sessões (versão anterior)
+  - **session-message-flow.md** - Fluxo de mensagens (problemas resolvidos)
+  - **session-message-flow-future.md** - Implementação concluída (migração completa)
   - Session Message Flow Migration (FASES 1-5.1)
   - Troubleshooting Welcome Screen (correções detalhadas)
   - Outros documentos de referência
@@ -141,19 +124,10 @@ Frontend → tRPC → Vercel AI SDK (Native) → Provider APIs → Auto-Save (on
 
 ## 📚 Documentação Completa
 
-### **Arquitetura e Implementação**
+### **Arquitetura Completa**
 
-- **[📱 Frontend Architecture](./frontend-architecture.md)** - Estrutura e componentes da interface
-- **[⚙️ Backend Architecture](./backend-architecture.md)** - APIs e processamento server-side
-- **[🔄 Streaming Implementation](./streaming-implementation.md)** - Como funciona o streaming em tempo real
-- **[🚀 Vercel AI Integration](./vercel-ai-integration.md)** - Integração com Vercel AI SDK ✅ **ÚNICO SISTEMA**
-
-### **Funcionalidades Específicas**
-
-- **[💬 Session Management](./session-management.md)** - Sistema de gerenciamento de sessões
-- **[🔄 Session & Message Flow](./session-message-flow.md)** - **NOVO**: Arquitetura de fluxo de sessões e mensagens
+- **[🏗️ Architecture Overview](./architecture-overview.md)** - **DOCUMENTO ÚNICO**: Arquitetura completa (Frontend + Backend + Implementação + Sessões)
 - **[💾 Message Persistence](./message-persistence.md)** - Armazenamento e recuperação de mensagens
-- **[🌍 Translation Keys](./translation-keys.md)** - Chaves de tradução e suporte multilíngue
 
 ### **Histórico da Migração**
 
@@ -415,3 +389,40 @@ pnpm test packages/api/src/internal/adapters/
 - ✅ **Future-Proof** - Compatível com todas as features futuras
 - ✅ **Observabilidade Completa** - Token usage e métricas nativas
 - ✅ **Error Handling Robusto** - Tratamento de erros padrão do SDK
+
+## 📋 Histórico de Consolidação
+
+### ✅ **Estratégia 1 Implementada**: Consolidação Máxima (Concluída)
+
+**🎯 Objetivo**: Eliminar redundâncias e criar documentação única e eficiente.
+
+#### **Documentos Consolidados/Removidos**
+
+- ❌ **`session-architecture.md`** → Consolidado em `architecture-overview.md`
+- ❌ **`technical-implementation.md`** → Consolidado em `architecture-overview.md`
+- ❌ **`consolidation-summary.md`** → Arquivo temporário removido
+- ❌ **`translation-keys.md`** → Desnecessário (traduções explícitas no código)
+
+#### **Documentos Organizados**
+
+- 📁 **`assistant-ui-evolution-plan.md`** → Movido para `planning/`
+- 📁 **`migration-history-unified.md`** → Movido para `planning/`
+
+#### **Resultado Final**
+
+- ✅ **3 documentos técnicos ativos** (redução de 67%)
+- ✅ **2 documentos de planning organizados** em pasta específica
+- ✅ **Zero duplicação** de conteúdo
+- ✅ **Documento único** `architecture-overview.md` como referência completa
+- ✅ **Estrutura limpa** e navegação simplificada
+- ✅ **Separação clara** entre documentação técnica e planning
+
+#### **Benefícios Alcançados**
+
+1. **Manutenibilidade**: Um único local para arquitetura completa
+2. **Clareza**: Desenvolvedores sabem exatamente onde encontrar informações
+3. **Consistência**: Eliminação de informações conflitantes
+4. **Eficiência**: Menos documentos para manter atualizados
+5. **Navegação**: Estrutura mais simples e intuitiva
+
+**📚 Referência única**: [Architecture Overview](./architecture-overview.md) - Contém toda arquitetura, implementação e detalhes técnicos.
