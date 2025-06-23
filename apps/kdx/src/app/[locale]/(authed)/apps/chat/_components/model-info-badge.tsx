@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AlertTriangle, CheckCircle2, Clock } from "lucide-react";
 
 import { Badge } from "@kdx/ui/badge";
@@ -124,8 +124,15 @@ export function ModelInfoBadge({
     hasMismatch,
   ]);
 
-  // Determinar status visual
-  const getStatus = () => {
+  // ✅ FASE 2.1: Performance otimizada com useMemo
+  const memoizedStatus = useMemo(() => {
+    console.log("[MODEL_INFO_BADGE] Recalculando status:", {
+      hasResponse,
+      isCorrect,
+      isWaitingValidation,
+      hasMismatch,
+    });
+
     if (isWaitingValidation) {
       return {
         icon: Clock,
@@ -153,16 +160,16 @@ export function ModelInfoBadge({
       };
     }
 
-    // Caso padrão: tem resposta mas não sabemos o modelo configurado
     return {
       icon: CheckCircle2,
       color: "text-blue-600",
       variant: "secondary",
       label: "Active",
     };
-  };
+  }, [hasResponse, isCorrect, isWaitingValidation, hasMismatch]);
 
-  const status = getStatus();
+  // ✅ FASE 2.1: Usar status memoizado para performance
+  const status = memoizedStatus;
   const StatusIcon = status.icon;
 
   // ✅ FASE 1.1: Log de mudanças de status
@@ -183,6 +190,15 @@ export function ModelInfoBadge({
     status.color,
   ]);
 
+  // ✅ FASE 2.2: useEffect para debug de mudanças
+  useEffect(() => {
+    console.log("[MODEL_INFO_BADGE] FASE 2 - Props mudaram:", {
+      sessionDataName: sessionData?.aiModel?.name,
+      lastMessageActual: lastMessageMetadata?.actualModelUsed,
+      timestamp: new Date().toISOString(),
+    });
+  }, [sessionData, lastMessageMetadata]);
+
   // ✅ FASE 1.3: Identificar fonte do problema
   useEffect(() => {
     // Debug de props vazias
@@ -190,7 +206,9 @@ export function ModelInfoBadge({
       console.warn("[MODEL_INFO_BADGE] sessionData is undefined");
     }
     if (!lastMessageMetadata) {
-      console.warn("[MODEL_INFO_BADGE] lastMessageMetadata is undefined");
+      console.warn(
+        "[MODEL_INFO_BADGE] lastMessageMetadata is undefined - PROBLEMA IDENTIFICADO!",
+      );
     }
 
     // Debug de normalização problemática
