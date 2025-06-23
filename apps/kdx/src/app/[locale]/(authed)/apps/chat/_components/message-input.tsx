@@ -54,8 +54,20 @@ export const MessageInput = forwardRef<HTMLTextAreaElement, MessageInputProps>(
 
     const handleSend = () => {
       const message = currentValue.trim();
-      if (!message || disabled || isLoading) return;
+      console.log("🔍 [DEBUG_INPUT] handleSend chamado com:", message);
+      console.log(
+        "🔍 [DEBUG_INPUT] disabled:",
+        disabled,
+        "isLoading:",
+        isLoading,
+      );
 
+      if (!message || disabled || isLoading) {
+        console.log("❌ [DEBUG_INPUT] Enviou cancelado");
+        return;
+      }
+
+      console.log("✅ [DEBUG_INPUT] Chamando onSendMessage");
       onSendMessage(message);
 
       // Limpar apenas se for valor interno
