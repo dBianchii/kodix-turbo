@@ -338,6 +338,7 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
             <ChatWindow
               sessionId={selectedSessionId}
               onNewSession={handleSessionSelect}
+              selectedModelId={selectedModelId} // ✅ NOVO: Passar modelo selecionado
             />
           </div>
         </div>

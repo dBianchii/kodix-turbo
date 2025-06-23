@@ -23,31 +23,69 @@ export async function createEmptySessionHandler({
       "🚀 [CREATE_EMPTY] Iniciando criação de sessão vazia para team:",
       teamId,
     );
+    console.log("🔍 [CREATE_EMPTY] aiModelId explícito:", input.aiModelId);
 
-    // 1. Buscar primeiro modelo disponível (simplificado)
+    // 1. Determinar modelo a usar (explícito ou primeiro disponível)
     let aiModelId: string;
-    let availableModels: any; // Declarar no escopo superior
+    let availableModels: any;
 
-    try {
-      availableModels = await AiStudioService.getAvailableModels({
-        teamId,
-        requestingApp: chatAppId,
-      });
+    if (input.aiModelId) {
+      // ✅ NOVO: Validar modelo explícito primeiro
+      try {
+        const explicitModel = await AiStudioService.getModelById({
+          modelId: input.aiModelId,
+          teamId,
+          requestingApp: chatAppId,
+        });
 
-      if (availableModels && availableModels.length > 0) {
-        const firstModel = availableModels[0];
-        aiModelId = firstModel!.id;
-        console.log("✅ [CREATE_EMPTY] Modelo encontrado:", firstModel?.name);
-      } else {
-        throw new Error("Nenhum modelo disponível");
+        if (explicitModel) {
+          aiModelId = input.aiModelId;
+          console.log(
+            "✅ [CREATE_EMPTY] Modelo explícito validado:",
+            explicitModel.name,
+          );
+        } else {
+          throw new Error("Modelo explícito inválido");
+        }
+      } catch (error) {
+        console.warn(
+          "⚠️ [CREATE_EMPTY] Modelo explícito inválido, usando fallback",
+        );
+        // Fallback para buscar primeiro modelo disponível
+        availableModels = await AiStudioService.getAvailableModels({
+          teamId,
+          requestingApp: chatAppId,
+        });
+        const firstModel = availableModels?.[0];
+        if (firstModel) {
+          aiModelId = firstModel.id;
+        } else {
+          throw new Error("Nenhum modelo disponível");
+        }
       }
-    } catch (error) {
-      console.error("❌ [CREATE_EMPTY] Erro ao buscar modelo:", error);
-      throw new TRPCError({
-        code: "PRECONDITION_FAILED",
-        message:
-          "Nenhum modelo de IA disponível. Configure modelos no AI Studio.",
-      });
+    } else {
+      // Fallback original: buscar primeiro modelo disponível
+      try {
+        availableModels = await AiStudioService.getAvailableModels({
+          teamId,
+          requestingApp: chatAppId,
+        });
+
+        if (availableModels && availableModels.length > 0) {
+          const firstModel = availableModels[0];
+          aiModelId = firstModel!.id;
+          console.log("✅ [CREATE_EMPTY] Modelo encontrado:", firstModel?.name);
+        } else {
+          throw new Error("Nenhum modelo disponível");
+        }
+      } catch (error) {
+        console.error("❌ [CREATE_EMPTY] Erro ao buscar modelo:", error);
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message:
+            "Nenhum modelo de IA disponível. Configure modelos no AI Studio.",
+        });
+      }
     }
 
     // 2. Definir título da sessão

@@ -81,12 +81,14 @@ export const enviarMensagemSchema = z.object({
 
 export const autoCreateSessionWithMessageSchema = z.object({
   firstMessage: z.string().min(1, "Primeira mensagem é obrigatória"),
+  aiModelId: z.string().optional(), // ✅ NOVO: Aceitar modelo explícito
   useAgent: z.boolean().default(true),
   generateTitle: z.boolean().default(true),
 });
 
 export const createEmptySessionSchema = z.object({
   title: z.string().min(1).max(255).optional(),
+  aiModelId: z.string().optional(), // ✅ NOVO: Aceitar modelo explícito
   generateTitle: z.boolean().default(false),
   metadata: z.record(z.unknown()).optional(),
 });

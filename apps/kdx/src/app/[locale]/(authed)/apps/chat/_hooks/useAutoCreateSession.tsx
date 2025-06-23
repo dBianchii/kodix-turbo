@@ -17,6 +17,7 @@ interface UseAutoCreateSessionOptions {
 
 interface CreateSessionInput {
   firstMessage: string;
+  aiModelId?: string; // ✅ NOVO: Aceitar modelo explícito
   useAgent?: boolean;
   generateTitle?: boolean;
 }
@@ -78,6 +79,7 @@ export function useAutoCreateSession(options?: UseAutoCreateSessionOptions) {
       return;
     }
 
+    console.log("🚀 [CHAT] Criando sessão com modelo:", input.aiModelId);
     console.log(
       "🚀 [CHAT] Iniciando criação de sessão:",
       input.firstMessage.slice(0, 30) + "...",
@@ -89,6 +91,7 @@ export function useAutoCreateSession(options?: UseAutoCreateSessionOptions) {
     try {
       await autoCreateMutation.mutateAsync({
         firstMessage: input.firstMessage,
+        aiModelId: input.aiModelId, // ✅ NOVO: Passar modelo explícito
         useAgent: input.useAgent ?? true,
         generateTitle: input.generateTitle ?? true,
       });

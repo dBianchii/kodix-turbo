@@ -23,9 +23,14 @@ import { MessageInput } from "./message-input";
 interface ChatWindowProps {
   sessionId?: string;
   onNewSession?: (sessionId: string) => void;
+  selectedModelId?: string; // ✅ NOVO: Modelo selecionado na welcome screen
 }
 
-export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
+export function ChatWindow({
+  sessionId,
+  onNewSession,
+  selectedModelId,
+}: ChatWindowProps) {
   // ✅ SUB-ETAPA 2.4: Hook para prevenir problemas de hidratação
   const [isClient, setIsClient] = useState(false);
 
@@ -62,7 +67,12 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
 
   // Thread-first architecture: mostrar tela inicial ou chat ativo
   if (!sessionId) {
-    return <EmptyThreadState onNewSession={onNewSession} />;
+    return (
+      <EmptyThreadState
+        onNewSession={onNewSession}
+        selectedModelId={selectedModelId}
+      />
+    );
   }
 
   return <ActiveChatWindow sessionId={sessionId} onNewSession={onNewSession} />;
@@ -74,8 +84,10 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
  */
 function EmptyThreadState({
   onNewSession,
+  selectedModelId,
 }: {
   onNewSession?: (sessionId: string) => void;
+  selectedModelId?: string; // ✅ NOVO: Modelo selecionado na welcome screen
 }) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const t = useTranslations();
@@ -152,13 +164,19 @@ function EmptyThreadState({
       // Criar sessão com título automático
       createEmptySessionMutation.mutate({
         generateTitle: true,
+        aiModelId: selectedModelId, // ✅ NOVO: Usar modelo selecionado
         metadata: {
           firstMessage: trimmedMessage,
           createdAt: new Date().toISOString(),
         },
       });
     },
-    [createEmptySessionMutation, threadContext, setPendingMessage],
+    [
+      createEmptySessionMutation,
+      threadContext,
+      setPendingMessage,
+      selectedModelId,
+    ],
   );
 
   // ✅ SUB-ETAPA 2.4: Sugestões memoizadas

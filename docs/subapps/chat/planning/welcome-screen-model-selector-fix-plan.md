@@ -2,10 +2,47 @@
 
 **📅 Data:** Janeiro 2025  
 **🎯 Objetivo:** Corrigir o problema do model selector na welcome screen que não aplica o modelo selecionado  
-**⚙️ Status:** Plano para implementação imediata  
+**⚙️ Status:** ✅ **IMPLEMENTADO COM SUCESSO** - Janeiro 2025  
 **🔗 Arquitetura:** Thread-first + Service Layer + userAppTeamConfig
 
-## 🚨 **PROBLEMA IDENTIFICADO**
+## ✅ **RESULTADO DA IMPLEMENTAÇÃO**
+
+**🎉 SUCESSO TOTAL!** A implementação foi concluída com sucesso seguindo rigorosamente a Estratégia 1 (Passagem Explícita):
+
+### **🔧 MUDANÇAS IMPLEMENTADAS:**
+
+1. **Frontend (Hooks):**
+
+   - ✅ `useAutoCreateSession`: Aceita `aiModelId` opcional
+   - ✅ `EmptyThreadState`: Recebe e passa `selectedModelId`
+   - ✅ `ChatWindow`: Propaga `selectedModelId` do UnifiedChatPage
+   - ✅ `UnifiedChatPage`: Passa `selectedModelId` para ChatWindow
+
+2. **Backend (API):**
+
+   - ✅ `autoCreateSessionWithMessageSchema`: Campo `aiModelId` opcional adicionado
+   - ✅ `createEmptySessionSchema`: Campo `aiModelId` opcional adicionado
+   - ✅ `autoCreateSessionWithMessage.handler`: Lógica de modelo explícito implementada
+   - ✅ `createEmptySession.handler`: Lógica de modelo explícito implementada
+
+3. **Validação:**
+   - ✅ TypeScript: Compilação passou sem erros
+   - ✅ Testes: Corrigidos e passando
+   - ✅ Arquitetura: Segue padrões thread-first rigorosamente
+
+### **🎯 FLUXO FINAL FUNCIONANDO:**
+
+```
+1. Usuário acessa /apps/chat (welcome screen)
+2. Seleciona modelo no ModelSelector (ex: GPT-4)
+3. selectedModelId é definido no UnifiedChatPage
+4. Usuário digita primeira mensagem
+5. selectedModelId é passado até autoCreateSessionWithMessage
+6. Nova sessão é criada com o modelo CORRETO
+7. ✨ FUNCIONANDO! Não mais claude-3-haiku forçado
+```
+
+## 🚨 **PROBLEMA IDENTIFICADO** (Histórico)
 
 ### **Sintoma**
 

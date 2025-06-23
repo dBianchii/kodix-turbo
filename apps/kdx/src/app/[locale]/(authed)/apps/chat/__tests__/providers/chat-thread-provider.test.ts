@@ -496,9 +496,9 @@ describe("ChatThreadProvider Logic", () => {
       const result = convertMessages(dbMessages);
 
       expect(result.length).toBe(2); // System message filtered
-      expect(result[0].role).toBe("user");
-      expect(result[1].role).toBe("assistant");
-      expect(result[0].content).toBe("User message");
+      expect(result[0]?.role).toBe("user");
+      expect(result[1]?.role).toBe("assistant");
+      expect(result[0]?.content).toBe("User message");
     });
   });
 });

@@ -172,33 +172,71 @@ export async function autoCreateSessionWithMessageHandler({
       "🚀 [AUTO_CREATE] Iniciando auto-criação de sessão para team:",
       teamId,
     );
+    console.log("🔍 [AUTO_CREATE] aiModelId explícito:", input.aiModelId);
 
-    // 1. Buscar modelo preferido
+    // 1. Determinar modelo a usar (explícito ou preferido)
     let preferredModel;
     let aiModelId: string;
 
-    try {
-      // Chamar getPreferredModel internamente
-      const preferredModelResult = await getPreferredModelHelper(
-        teamId,
-        userId,
-        chatAppId,
-      );
+    if (input.aiModelId) {
+      // ✅ NOVO: Validar modelo explícito primeiro
+      try {
+        const explicitModel = await AiStudioService.getModelById({
+          modelId: input.aiModelId,
+          teamId,
+          requestingApp: chatAppId,
+        });
 
-      preferredModel = preferredModelResult.model;
-      aiModelId = preferredModelResult.modelId;
+        if (explicitModel) {
+          preferredModel = explicitModel;
+          aiModelId = input.aiModelId;
+          console.log(
+            "✅ [AUTO_CREATE] Modelo explícito validado:",
+            preferredModel.name,
+          );
+        } else {
+          throw new Error("Modelo explícito inválido");
+        }
+      } catch (error) {
+        console.warn(
+          "⚠️ [AUTO_CREATE] Modelo explícito inválido, usando fallback",
+        );
+        // Fallback para getPreferredModelHelper
+        const fallback = await getPreferredModelHelper(
+          teamId,
+          userId,
+          chatAppId,
+        );
+        preferredModel = fallback.model;
+        aiModelId = fallback.modelId;
+      }
+    } else {
+      // Fallback original: buscar modelo preferido
+      try {
+        const preferredModelResult = await getPreferredModelHelper(
+          teamId,
+          userId,
+          chatAppId,
+        );
 
-      console.log(
-        "✅ [AUTO_CREATE] Modelo preferido encontrado:",
-        preferredModel.name,
-      );
-    } catch (error) {
-      console.error("❌ [AUTO_CREATE] Erro ao buscar modelo preferido:", error);
-      throw new TRPCError({
-        code: "PRECONDITION_FAILED",
-        message:
-          "Nenhum modelo de IA disponível. Configure modelos no AI Studio.",
-      });
+        preferredModel = preferredModelResult.model;
+        aiModelId = preferredModelResult.modelId;
+
+        console.log(
+          "✅ [AUTO_CREATE] Modelo preferido encontrado:",
+          preferredModel.name,
+        );
+      } catch (error) {
+        console.error(
+          "❌ [AUTO_CREATE] Erro ao buscar modelo preferido:",
+          error,
+        );
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message:
+            "Nenhum modelo de IA disponível. Configure modelos no AI Studio.",
+        });
+      }
     }
 
     // 2. Gerar título automaticamente (se habilitado)
