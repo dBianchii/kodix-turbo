@@ -13,6 +13,7 @@ Esta pasta contém **documentos de planejamento, histórico e melhorias** do Cha
 ### **Melhorias e Debugging**
 
 - [**Model Info Badge Debugging Plan**](./model-info-badge-debugging-plan.md) - Plano de debugging e correção incremental para o ModelInfoBadge
+- [**Model Selector Debugging Plan**](./model-selector-debugging-plan.md) - Plano de checagem e correção para problemas no ModelSelector
 
 ### **Histórico de Mudanças**
 

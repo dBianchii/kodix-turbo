@@ -199,6 +199,34 @@ export function ModelInfoBadge({
     });
   }, [sessionData, lastMessageMetadata]);
 
+  // ✅ FASE 5.3: Monitoramento específico para correção do problema
+  useEffect(() => {
+    console.log("[MODEL_INFO_BADGE] FASE 5.3 - Monitoramento pós-mudança:", {
+      configuredModel,
+      actualModel,
+      normalizedConfigured,
+      normalizedActual,
+      hasModelMismatch,
+      isCorrect,
+      isWaitingValidation,
+      hasResponse,
+      shouldShowWaiting: !hasResponse || hasModelMismatch,
+      componentKey: `${sessionData?.aiModel?.name}-${lastMessageMetadata?.actualModelUsed}`,
+      timestamp: new Date().toISOString(),
+    });
+  }, [
+    configuredModel,
+    actualModel,
+    normalizedConfigured,
+    normalizedActual,
+    hasModelMismatch,
+    isCorrect,
+    isWaitingValidation,
+    hasResponse,
+    sessionData,
+    lastMessageMetadata,
+  ]);
+
   // ✅ FASE 1.3: Identificar fonte do problema
   useEffect(() => {
     // Debug de props vazias
@@ -336,7 +364,7 @@ export function ModelInfoBadge({
                 <div className="mt-2 space-y-2">
                   <div className="rounded bg-slate-50 p-2 text-xs">
                     <div className="mb-1 font-medium">Raw Data:</div>
-                    <pre className="text-xs whitespace-pre-wrap">
+                    <pre className="whitespace-pre-wrap text-xs">
                       {JSON.stringify(
                         {
                           sessionData,

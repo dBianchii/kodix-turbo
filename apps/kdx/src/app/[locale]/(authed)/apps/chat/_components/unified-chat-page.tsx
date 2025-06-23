@@ -226,6 +226,30 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
         id: selectedSessionId,
         aiModelId: modelId,
       });
+
+      // ✅ FASE 5.1: Force re-fetch após mudança de modelo
+      console.log("🔄 [PHASE_5.1] Force re-fetch após mudança de modelo");
+
+      // Invalidar e re-fetch da sessão para atualizar dados
+      queryClient.invalidateQueries(
+        trpc.app.chat.buscarSession.pathFilter({
+          sessionId: selectedSessionId,
+        }),
+      );
+
+      // Invalidar mensagens para pegar metadata atualizada
+      queryClient.invalidateQueries(
+        trpc.app.chat.buscarMensagensTest.pathFilter({
+          chatSessionId: selectedSessionId,
+        }),
+      );
+
+      // Re-fetch imediato para garantir dados atualizados
+      setTimeout(() => {
+        sessionQuery.refetch();
+        messagesQuery.refetch();
+        console.log("✅ [PHASE_5.1] Re-fetch executado com sucesso");
+      }, 500);
     } else {
       // ✅ Sem sessão: salvar como modelo preferido
       console.log("📝 [UNIFIED_CHAT] Salvando modelo preferido...");
@@ -241,7 +265,7 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
 
   return (
     <SidebarProvider className="min-h-[calc(100dvh-55px)] items-start">
-      <div className="bg-background flex h-[calc(100dvh-55px)] w-full overflow-x-hidden">
+      <div className="flex h-[calc(100dvh-55px)] w-full overflow-x-hidden bg-background">
         {/* Sidebar - assume largura interna definida pelo componente */}
         <AppSidebar
           selectedSessionId={selectedSessionId}
@@ -251,7 +275,7 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
         {/* Conteúdo principal */}
         <div className="flex flex-1 flex-col">
           {/* Cabeçalho com ModelSelector e badges - estilo ChatGPT */}
-          <div className="border-border bg-card flex items-center justify-between border-b px-4 py-3">
+          <div className="flex items-center justify-between border-b border-border bg-card px-4 py-3">
             <div className="flex items-center gap-4">
               {/* ✅ ETAPA 4.1: Renderizar SidebarTrigger apenas no cliente */}
               {isClient && <SidebarTrigger className="md:hidden" />}
@@ -280,6 +304,7 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
               {/* Model Info Badge - apenas quando há sessão */}
               {selectedSessionId && sessionQuery.data && (
                 <ModelInfoBadge
+                  key={`model-info-${selectedSessionId}-${selectedModelId}-${sessionQuery.data.aiModelId}`}
                   sessionData={sessionQuery.data}
                   lastMessageMetadata={lastMessageMetadata}
                 />

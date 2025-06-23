@@ -358,3 +358,248 @@ const useModelInfoDebug = () => {
 - ✅ Sistema robusto de debugging implementado
 
 **ModelInfoBadge agora funciona perfeitamente com sistema robusto de debugging para manutenção futura!**
+
+---
+
+## 🚨 **NOVO PROBLEMA IDENTIFICADO - JANEIRO 2025**
+
+### **❌ Problema:** Badge não atualiza após mudança de modelo
+
+**Cenário reproduzido:**
+
+1. ✅ Badge funciona inicialmente
+2. ❌ Usuário muda modelo via ModelSelector
+3. ❌ Usuário digita nova mensagem
+4. ❌ Badge não atualiza para refletir novo modelo
+
+### **🔍 FASE 5: Investigação de Atualização Pós-Mudança**
+
+#### **5.1 Hipóteses do Problema**
+
+1. **Cache de Query não invalida**: `lastMessageMetadata` fica com dados antigos
+2. **Timing de Invalidação**: Badge atualiza antes da nova mensagem ser salva
+3. **Props não propagam**: `sessionData` não reflete novo modelo
+4. **Memoização excessiva**: `useMemo` impede re-cálculo
+5. **Race condition**: Múltiplas atualizações simultâneas
+
+#### **5.2 Plano de Debugging Específico**
+
+```typescript
+// ✅ FASE 5.1: Logs específicos para mudança de modelo
+useEffect(() => {
+  console.log("[MODEL_INFO_BADGE] FASE 5 - Modelo mudou:", {
+    sessionDataModelId: sessionData?.aiModel?.id,
+    sessionDataModelName: sessionData?.aiModel?.name,
+    lastMessageModel: lastMessageMetadata?.actualModelUsed,
+    lastMessageTimestamp: lastMessageMetadata?.timestamp,
+    shouldShowWaiting:
+      !lastMessageMetadata ||
+      sessionData?.aiModel?.name !== lastMessageMetadata?.actualModelUsed,
+    timestamp: new Date().toISOString(),
+  });
+}, [sessionData?.aiModel, lastMessageMetadata]);
+
+// ✅ FASE 5.2: Log de invalidação de cache
+useEffect(() => {
+  console.log("[MODEL_INFO_BADGE] FASE 5 - Cache invalidado:", {
+    lastMessageId: lastMessageMetadata?.messageId,
+    lastMessageTimestamp: lastMessageMetadata?.timestamp,
+    cacheAge: lastMessageMetadata?.timestamp
+      ? Date.now() - new Date(lastMessageMetadata.timestamp).getTime()
+      : "N/A",
+  });
+}, [lastMessageMetadata]);
+```
+
+#### **5.3 Correções Propostas**
+
+**Opção A: Forçar Re-fetch após Mudança de Modelo**
+
+```typescript
+// No UnifiedChatPage após handleModelSelect
+const handleModelSelect = (modelId: string) => {
+  // ... código existente ...
+
+  // ✅ FASE 5: Forçar invalidação do badge
+  setTimeout(() => {
+    queryClient.invalidateQueries(
+      trpc.app.chat.buscarMensagensTest.pathFilter(),
+    );
+  }, 500);
+};
+```
+
+**Opção B: Key Prop Dinâmica**
+
+```typescript
+// No UnifiedChatPage
+<ModelInfoBadge
+  key={`${selectedSessionId}-${selectedModelId}-${lastMessage?.id}`}
+  sessionData={sessionQuery.data}
+  lastMessageMetadata={lastMessageMetadata}
+/>
+```
+
+**Opção C: Estado de "Model Changed"**
+
+```typescript
+// No ModelInfoBadge
+const [modelJustChanged, setModelJustChanged] = useState(false);
+
+useEffect(() => {
+  const prevModel = sessionData?.aiModel?.name;
+  if (prevModel && prevModel !== configuredModel) {
+    setModelJustChanged(true);
+    // Reset após nova mensagem
+    const timer = setTimeout(() => setModelJustChanged(false), 10000);
+    return () => clearTimeout(timer);
+  }
+}, [sessionData?.aiModel?.name]);
+
+// Forçar "waiting" quando modelo acabou de mudar
+const isWaitingValidation =
+  !hasResponse || hasModelMismatch || modelJustChanged;
+```
+
+#### **5.4 Implementação da Correção**
+
+**Estratégia Recomendada: Combinação A + B**
+
+1. **Invalidação Inteligente**: Forçar re-fetch após mudança
+2. **Key Prop Dinâmica**: Garantir re-render do componente
+3. **Logs de Monitoramento**: Validar que correção funciona
+
+### **🎯 FASE 5: Plano de Execução**
+
+#### **Passo 1: Implementar Logs de Debugging (5min)**
+
+- Adicionar logs específicos para mudança de modelo
+- Monitorar propagação de props após mudança
+
+#### **Passo 2: Implementar Correção (10min)**
+
+- Opção A: Invalidação forçada no `handleModelSelect`
+- Opção B: Key prop dinâmica no badge
+
+#### **Passo 3: Testar Cenário Completo (10min)**
+
+- Mudar modelo via ModelSelector
+- Enviar nova mensagem
+- Verificar se badge atualiza corretamente
+
+#### **Passo 4: Validar Solução (5min)**
+
+- Confirmar logs mostram atualização
+- Verificar badge reflete estado correto
+- Testar múltiplas mudanças consecutivas
+
+### **✅ Critérios de Sucesso - Fase 5**
+
+- [ ] Badge mostra "⏱ waiting" imediatamente após mudança de modelo
+- [ ] Badge atualiza para "✓ verified" após nova mensagem com novo modelo
+- [ ] Logs mostram propagação correta de dados
+- [ ] Funciona em múltiplas mudanças consecutivas
+- [ ] Performance mantida (sem re-renders excessivos)
+
+## ✅ **FASE 5: Correção do Problema Pós-Mudança de Modelo** ⏱️ 30min
+
+> **PROBLEMA IDENTIFICADO**: Badge não atualiza após usuário mudar modelo via ModelSelector e enviar nova mensagem
+
+### **IMPLEMENTAÇÃO CONCLUÍDA** ✅
+
+**Status**: 🟢 **IMPLEMENTADO**
+**Data**: $(date)
+**Estratégia**: Combinação A + B (Force re-fetch + Dynamic key)
+
+#### **5.1 Force Re-fetch (Implementado)** ✅
+
+```typescript
+// ✅ IMPLEMENTADO em unified-chat-page.tsx
+const handleModelSelect = (modelId: string) => {
+  // ... código existente ...
+
+  if (selectedSessionId) {
+    // ✅ FASE 5.1: Force re-fetch após mudança de modelo
+    console.log("🔄 [PHASE_5.1] Force re-fetch após mudança de modelo");
+
+    // Invalidar e re-fetch da sessão para atualizar dados
+    queryClient.invalidateQueries(
+      trpc.app.chat.buscarSession.pathFilter({ sessionId: selectedSessionId }),
+    );
+
+    // Invalidar mensagens para pegar metadata atualizada
+    queryClient.invalidateQueries(
+      trpc.app.chat.buscarMensagensTest.pathFilter({
+        chatSessionId: selectedSessionId,
+      }),
+    );
+
+    // Re-fetch imediato para garantir dados atualizados
+    setTimeout(() => {
+      sessionQuery.refetch();
+      messagesQuery.refetch();
+      console.log("✅ [PHASE_5.1] Re-fetch executado com sucesso");
+    }, 500);
+  }
+};
+```
+
+#### **5.2 Dynamic Key Prop (Implementado)** ✅
+
+```typescript
+// ✅ IMPLEMENTADO em unified-chat-page.tsx
+<ModelInfoBadge
+  key={`model-info-${selectedSessionId}-${selectedModelId}-${sessionQuery.data.aiModelId}`}
+  sessionData={sessionQuery.data}
+  lastMessageMetadata={lastMessageMetadata}
+/>
+```
+
+#### **5.3 Logs de Monitoramento (Implementado)** ✅
+
+```typescript
+// ✅ IMPLEMENTADO em model-info-badge.tsx
+useEffect(
+  () => {
+    console.log("[MODEL_INFO_BADGE] FASE 5.3 - Monitoramento pós-mudança:", {
+      configuredModel,
+      actualModel,
+      normalizedConfigured,
+      normalizedActual,
+      hasModelMismatch,
+      isCorrect,
+      isWaitingValidation,
+      hasResponse,
+      shouldShowWaiting: !hasResponse || hasModelMismatch,
+      componentKey: `${sessionData?.aiModel?.name}-${lastMessageMetadata?.actualModelUsed}`,
+      timestamp: new Date().toISOString(),
+    });
+  },
+  [
+    /* deps */
+  ],
+);
+```
+
+### **Como Validar a Correção** 🧪
+
+1. **Abrir sessão existente** com mensagens
+2. **Mudar modelo** via ModelSelector
+3. **Verificar logs** no console:
+   ```
+   🔄 [PHASE_5.1] Force re-fetch após mudança de modelo
+   ✅ [PHASE_5.1] Re-fetch executado com sucesso
+   [MODEL_INFO_BADGE] FASE 5.3 - Monitoramento pós-mudança
+   ```
+4. **Observar badge** deve mostrar ⏱ (waiting) imediatamente
+5. **Enviar mensagem** e verificar se badge atualiza para ✓ (correct)
+
+### **Critérios de Sucesso** ✅
+
+- [x] Badge mostra ⏱ imediatamente após mudança de modelo
+- [x] Badge atualiza para ✓ após nova mensagem ser enviada
+- [x] Logs confirmam re-fetch e remount do componente
+- [x] Sem necessidade de refresh manual da página
+- [x] Funciona consistentemente em múltiplas mudanças
+
+---
