@@ -188,7 +188,13 @@ run_test_suite "navigation" \
     "Navigation Patterns Tests" \
     "frontend"
 
-# 12. Testes de Sincronização de Títulos - REMOVIDO
+# 13. Testes de Armazenamento Híbrido (SUB-ETAPA 2.3)
+run_test_suite "hybrid-storage" \
+    "$FRONTEND_TEST_DIR/integration/hybrid-message-storage.test.ts" \
+    "Hybrid Message Storage Tests (Thread Context + sessionStorage)" \
+    "frontend"
+
+# Testes de Sincronização de Títulos - REMOVIDO
 # run_test_suite "title-sync" \
 #     "$FRONTEND_TEST_DIR/integration/title-sync.test.ts" \
 #     "Title Synchronization Tests" \

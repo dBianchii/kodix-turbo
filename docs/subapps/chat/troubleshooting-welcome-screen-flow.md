@@ -745,10 +745,30 @@ pnpm test:chat
 - `packages/api/src/trpc/routers/app/chat/__tests__/welcome-flow-regression.test.ts`
 - `packages/api/src/trpc/routers/app/chat/__tests__/title-generation-improvements.test.ts`
 - `packages/api/src/trpc/routers/app/chat/__tests__/session-storage-flow.test.ts`
+- `apps/kdx/src/app/[locale]/(authed)/apps/chat/__tests__/integration/hybrid-message-storage.test.ts` ✅ **NOVO**
 - `docs/subapps/chat/regression-tests-protection.md`
 
 **Validação Contínua:**
 
 ```bash
-pnpm test:chat  # Executa 12 suites incluindo proteção
+pnpm test:chat  # Executa 13 suites incluindo proteção (era 12)
 ```
+
+## 🧪 **Novo Teste Crítico Adicionado (Janeiro 2025)**
+
+### **✅ Teste de Armazenamento Híbrido (SUB-ETAPA 2.3)**
+
+**Arquivo:** `hybrid-message-storage.test.ts`
+
+**Protege:**
+
+- ✅ Thread context como método principal
+- ✅ sessionStorage como fallback robusto
+- ✅ Limpeza inteligente da fonte correta
+- ✅ Compatibilidade com múltiplas sessões
+- ✅ Tratamento de edge cases e concorrência
+- ✅ Migração gradual sessionStorage → thread context
+
+**Cobertura:** 15 cenários de teste incluindo casos extremos
+
+**Resultado:** ✅ **PASSOU** - Sistema híbrido protegido contra regressões
