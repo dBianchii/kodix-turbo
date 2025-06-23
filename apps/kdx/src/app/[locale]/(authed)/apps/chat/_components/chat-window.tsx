@@ -25,10 +25,34 @@ interface ChatWindowProps {
 }
 
 export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
+  // ✅ ETAPA 4.2: Hook para prevenir problemas de hidratação
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   console.log(
     "🔍 [DEBUG_CHATWINDOW] ChatWindow renderizado com sessionId:",
     sessionId,
+    "isClient:",
+    isClient,
   );
+
+  // ✅ ETAPA 4.2: Aguardar hidratação no cliente antes de renderizar
+  if (!isClient) {
+    return (
+      <div
+        className="flex h-full items-center justify-center"
+        suppressHydrationWarning
+      >
+        <div className="text-center">
+          <div className="mx-auto mb-4 h-8 w-8 animate-pulse rounded bg-muted" />
+          <p className="text-muted-foreground">Carregando...</p>
+        </div>
+      </div>
+    );
+  }
 
   // ✅ THREAD-FIRST: Se não há sessionId, mostrar tela inicial zerada
   if (!sessionId) {
@@ -56,52 +80,43 @@ function EmptyThreadState({
   const trpc = useTRPC();
   const queryClient = useQueryClient();
 
-  // ✅ OTIMIZAÇÃO: Memoizar mutation options
-  const mutationOptions = useMemo(
-    () => ({
+  // ✅ SOLUÇÃO ROBUSTA: Usar createEmptySession e passar mensagem via sessionStorage
+  const createEmptySessionMutation = useMutation(
+    trpc.app.chat.createEmptySession.mutationOptions({
       onSuccess: (data: any) => {
-        const sessionId = data.session?.id;
-        console.log("🚀 [FLOW_TRACE] 2. Sessão criada com sucesso:", {
+        // ✅ CORREÇÃO 1.1: Acessar data.session.id em vez de data.id
+        const sessionId = data.session.id;
+        console.log("🚀 [FLOW_TRACE_V3] 2. Sessão vazia criada com sucesso:", {
           sessionId,
-          hasMessage: !!data.message,
-          messageContent: data.message?.content?.slice(0, 50),
-          messageId: data.message?.id,
+          title: data.session.title,
         });
 
-        // ✅ CORREÇÃO: Invalidar todas as queries relacionadas
-        queryClient.invalidateQueries(
-          trpc.app.chat.listarSessions.pathFilter(),
-        );
-        queryClient.invalidateQueries(
-          trpc.app.chat.buscarMensagensTest.pathFilter(),
-        );
-        queryClient.invalidateQueries(trpc.app.chat.buscarSession.pathFilter());
+        // ✅ CORREÇÃO 1.3: Transferir mensagem pendente para chave específica da sessão
+        const pendingMessage = sessionStorage.getItem("pending-message-temp");
+        if (pendingMessage && sessionId) {
+          sessionStorage.setItem(
+            `pending-message-${sessionId}`,
+            pendingMessage,
+          );
+          sessionStorage.removeItem("pending-message-temp");
+          console.log(
+            "🔄 [FLOW_TRACE_V3] 3. Mensagem transferida para sessão:",
+            {
+              sessionId,
+              messagePreview: pendingMessage.slice(0, 30) + "...",
+            },
+          );
+        }
 
         // Notificar componente pai para navegar
         if (sessionId) {
-          console.log("🚀 [FLOW_TRACE] 3. Navegando para sessão:", sessionId);
           onNewSession?.(sessionId);
         }
       },
-    }),
-    [queryClient, trpc, onNewSession],
-  );
-
-  // ✅ THREAD-FIRST: Mutation para criar sessão COM primeira mensagem
-  const createSessionWithMessageMutation = useMutation(
-    trpc.app.chat.autoCreateSessionWithMessage.mutationOptions({
-      ...mutationOptions,
       onError: (error) => {
-        console.error("❌ [DEBUG] Erro na mutation:", error);
-      },
-      onMutate: (variables) => {
-        console.log(
-          "🚀 [FLOW_TRACE] 1. Iniciando criação de sessão com mensagem:",
-          {
-            message: variables.firstMessage?.slice(0, 50),
-            useAgent: variables.useAgent,
-            generateTitle: variables.generateTitle,
-          },
+        console.error(
+          "❌ [DEBUG] Erro na mutation de criar sessão vazia:",
+          error,
         );
       },
     }),
@@ -110,28 +125,29 @@ function EmptyThreadState({
   // ✅ OTIMIZAÇÃO: Memoizar função para enviar primeira mensagem
   const handleFirstMessage = useCallback(
     async (message: string) => {
-      console.log("🔍 [EMPTY_STATE] handleFirstMessage chamado com:", message);
+      const trimmedMessage = message.trim();
+      if (!trimmedMessage) return;
 
-      if (!message.trim()) {
-        console.log("❌ [EMPTY_STATE] Mensagem vazia, cancelando");
-        return;
-      }
+      if (createEmptySessionMutation.isPending) return;
 
-      // ✅ CORREÇÃO: Verificar se já está processando para evitar duplicação
-      if (createSessionWithMessageMutation.isPending) {
-        console.log("⚠️ [EMPTY_STATE] Mutation já em andamento, ignorando");
-        return;
-      }
+      console.log(
+        "🚀 [FLOW_TRACE_V3] 1. Salvando mensagem pendente e criando sessão...",
+        { message: trimmedMessage.slice(0, 50) + "..." },
+      );
 
-      console.log("🚀 [EMPTY_STATE] Enviando primeira mensagem:", message);
+      // ✅ CORREÇÃO 1.3: Usar chave temporária antes de ter sessionId
+      sessionStorage.setItem("pending-message-temp", trimmedMessage);
 
-      createSessionWithMessageMutation.mutate({
-        firstMessage: message.trim(),
-        useAgent: true,
-        generateTitle: true, // Gerar título baseado na mensagem
+      // ✅ CORREÇÃO 1.2: Passar firstMessage no metadata para geração de título
+      createEmptySessionMutation.mutate({
+        generateTitle: true,
+        metadata: {
+          firstMessage: trimmedMessage,
+          createdAt: new Date().toISOString(),
+        },
       });
     },
-    [createSessionWithMessageMutation],
+    [createEmptySessionMutation],
   );
 
   // ✅ OTIMIZAÇÃO: Memoizar sugestões para evitar re-criação
@@ -167,8 +183,8 @@ function EmptyThreadState({
       {/* Conteúdo Central */}
       <div className="flex flex-1 items-center justify-center p-8">
         <div className="max-w-md space-y-6 text-center">
-          <div className="bg-primary/10 mx-auto flex h-16 w-16 items-center justify-center rounded-full">
-            <MessageCircle className="text-primary h-8 w-8" />
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+            <MessageCircle className="h-8 w-8 text-primary" />
           </div>
 
           <div className="space-y-2">
@@ -182,7 +198,7 @@ function EmptyThreadState({
 
           {/* Sugestões de exemplo (opcional) */}
           <div className="space-y-2">
-            <p className="text-muted-foreground text-sm">
+            <p className="text-sm text-muted-foreground">
               {t("apps.chat.suggestions")}:
             </p>
             <div className="flex flex-wrap justify-center gap-2">
@@ -192,7 +208,7 @@ function EmptyThreadState({
                   variant="outline"
                   size="sm"
                   onClick={() => handleFirstMessage(suggestion)}
-                  disabled={createSessionWithMessageMutation.isPending}
+                  disabled={createEmptySessionMutation.isPending}
                 >
                   {suggestion}
                 </Button>
@@ -207,16 +223,16 @@ function EmptyThreadState({
         <MessageInput
           ref={inputRef}
           onSendMessage={handleFirstMessage}
-          disabled={createSessionWithMessageMutation.isPending}
+          disabled={createEmptySessionMutation.isPending}
           placeholder={t("apps.chat.typeFirstMessage")}
-          isLoading={createSessionWithMessageMutation.isPending}
+          isLoading={createEmptySessionMutation.isPending}
         />
 
-        {createSessionWithMessageMutation.error && (
+        {createEmptySessionMutation.error && (
           <Alert variant="destructive" className="mt-2">
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
-              {createSessionWithMessageMutation.error.message ||
+              {createEmptySessionMutation.error.message ||
                 t("apps.chat.errorCreatingSession")}
             </AlertDescription>
           </Alert>
@@ -474,74 +490,47 @@ function ActiveChatWindow({
     isClient, // ✅ ETAPA 4: Incluir guard de hidratação
   ]);
 
-  // ✅ ETAPA 3: Flag de Controle para prevenir duplicação
-  const [hasAutoTriggered, setHasAutoTriggered] = useState(false);
-  const [processedSessionId, setProcessedSessionId] = useState<string | null>(
-    null,
-  );
-
-  // ✅ Reset flag quando mudar de sessão
-  useEffect(() => {
-    if (sessionId !== processedSessionId) {
-      setHasAutoTriggered(false);
-      setProcessedSessionId(sessionId || null);
-    }
-  }, [sessionId, processedSessionId]);
-
-  // ✅ ETAPA 2 + 3 + 4: Auto-trigger com controle de duplicação e hidratação
+  // ✅ SOLUÇÃO ROBUSTA: Ler mensagem pendente do sessionStorage específico da sessão
   useEffect(() => {
     // ✅ ETAPA 4: GUARDA DE HIDRATAÇÃO - Só executar no cliente
     if (!isClient) {
       return;
     }
 
-    // ✅ GUARDA PRINCIPAL: Não executar se já foi processado
-    if (hasAutoTriggered) {
-      return;
-    }
+    // ✅ CORREÇÃO 1.3: Usar chave específica da sessão
+    const pendingMessage = sessionStorage.getItem(
+      `pending-message-${sessionId}`,
+    );
 
-    // ✅ GUARDA: Só executar se todas as condições estão corretas
-    const shouldAutoTrigger =
-      messages.length === 1 && // Exatamente uma mensagem
-      messages[0]?.role === "user" && // É mensagem do usuário
-      !messages.some((m) => m.role === "assistant") && // Sem resposta do assistente
-      !isLoadingChat && // Não está carregando
-      !isLoadingSession && // Sessão carregada
-      input === "" && // Input vazio (problema identificado)
-      sessionId && // Sessão válida
-      sessionId !== "new"; // Não é sessão nova
-
-    if (shouldAutoTrigger) {
+    // Condições para enviar:
+    // 1. Há uma mensagem pendente.
+    // 2. O chat não está carregando/enviando.
+    // 3. A sessão atual está carregada e não é 'new'.
+    // 4. NÃO há mensagens na UI do useChat (garante que só executa uma vez).
+    if (
+      pendingMessage &&
+      !isLoadingChat &&
+      sessionId &&
+      sessionId !== "new" &&
+      messages.length === 0
+    ) {
       console.log(
-        "🚀 [FLOW_TRACE] 7. Auto-trigger iniciado para primeira mensagem:",
+        "🚀 [FLOW_TRACE_V3] 4. Mensagem pendente encontrada, enviando via append()...",
         {
-          messageContent: messages[0].content.slice(0, 50),
+          content: pendingMessage.slice(0, 30) + "...",
           sessionId,
-          inputEmpty: input === "",
-          hasAutoTriggered,
-          isClient,
         },
       );
 
-      // ✅ MARCAR COMO PROCESSADO ANTES de fazer append
-      setHasAutoTriggered(true);
-
-      // ✅ SOLUÇÃO: Usar append() em vez de handleSubmit()
       append({
         role: "user",
-        content: messages[0].content,
+        content: pendingMessage,
       });
+
+      // ✅ CORREÇÃO 1.3: Limpar chave específica da sessão
+      sessionStorage.removeItem(`pending-message-${sessionId}`);
     }
-  }, [
-    messages,
-    isLoadingChat,
-    isLoadingSession,
-    input,
-    sessionId,
-    append,
-    hasAutoTriggered, // ✅ Incluir flag nas dependências
-    isClient, // ✅ ETAPA 4: Incluir guard de hidratação
-  ]);
+  }, [sessionId, isClient, isLoadingChat, messages.length, append]);
 
   // Auto-scroll para o final
   useEffect(() => {
@@ -569,11 +558,11 @@ function ActiveChatWindow({
       <div className="flex h-full items-center justify-center">
         <Card className="max-w-md p-6">
           <div className="text-center">
-            <AlertCircle className="text-destructive mx-auto mb-4 h-12 w-12" />
+            <AlertCircle className="mx-auto mb-4 h-12 w-12 text-destructive" />
             <h3 className="mb-2 text-lg font-semibold">
               {t("apps.chat.errorLoadingSession")}
             </h3>
-            <p className="text-muted-foreground mb-4">
+            <p className="mb-4 text-muted-foreground">
               {sessionError.message || t("apps.chat.sessionNotFound")}
             </p>
             <Button onClick={() => refetchSession()} variant="outline">

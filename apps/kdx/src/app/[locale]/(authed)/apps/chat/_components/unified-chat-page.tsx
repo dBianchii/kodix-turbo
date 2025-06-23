@@ -46,6 +46,12 @@ interface UnifiedChatPageProps {
 }
 
 export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
+  // ✅ ETAPA 4.1: Hook para prevenir problemas de hidratação
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   const router = useRouter();
   const t = useTranslations();
   const trpc = useTRPC();
@@ -247,7 +253,8 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
           {/* Cabeçalho com ModelSelector e badges - estilo ChatGPT */}
           <div className="border-border bg-card flex items-center justify-between border-b px-4 py-3">
             <div className="flex items-center gap-4">
-              <SidebarTrigger className="md:hidden" />
+              {/* ✅ ETAPA 4.1: Renderizar SidebarTrigger apenas no cliente */}
+              {isClient && <SidebarTrigger className="md:hidden" />}
               <ModelSelector
                 selectedModelId={selectedModelId}
                 onModelSelect={handleModelSelect}

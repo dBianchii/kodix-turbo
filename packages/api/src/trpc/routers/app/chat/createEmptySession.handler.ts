@@ -114,6 +114,13 @@ export async function createEmptySessionHandler({
           const firstModel = availableModels[0];
           if (!firstModel) return;
 
+          // ✅ LOG: Modelo usado para geração de título
+          console.log("🤖 [TITLE_GEN] Modelo selecionado:", {
+            name: firstModel.name,
+            provider: firstModel.provider?.name,
+            modelId: firstModel.id,
+          });
+
           // Buscar token do provider
           const providerToken = await AiStudioService.getProviderToken({
             providerId: firstModel.providerId,
@@ -134,16 +141,32 @@ export async function createEmptySessionHandler({
             };
             const modelName = modelConfig.version || firstModel.name;
 
-            // Prompt para gerar título
+            // ✅ PROMPT MELHORADO: Mais específico e com exemplos
             const titlePrompt = [
               {
                 role: "system",
-                content:
-                  "Você é um assistente especializado em criar títulos concisos. Crie um título curto (máximo 50 caracteres) que capture a essência da mensagem do usuário. Responda apenas com o título, sem aspas ou formatação adicional.",
+                content: `Você é um especialista em criar títulos concisos e informativos para conversas.
+
+REGRAS:
+- Máximo 45 caracteres
+- Capture o TEMA PRINCIPAL da mensagem
+- Use linguagem natural e clara
+- Sem aspas, pontos ou formatação
+- Foque no ASSUNTO, não na ação
+
+EXEMPLOS:
+- "Como fazer um bolo de chocolate?" → "Receita de Bolo de Chocolate"
+- "Explique machine learning" → "Introdução ao Machine Learning"
+- "Problemas no código Python" → "Debug de Código Python"
+- "Dicas de investimento" → "Estratégias de Investimento"
+
+Responda APENAS com o título.`,
               },
               {
                 role: "user",
-                content: `Crie um título para esta conversa: "${input.metadata?.firstMessage}"`,
+                content: `Mensagem: "${input.metadata?.firstMessage}"
+
+Título:`,
               },
             ];
 
@@ -156,8 +179,10 @@ export async function createEmptySessionHandler({
               body: JSON.stringify({
                 model: modelName,
                 messages: titlePrompt,
-                max_tokens: 20,
-                temperature: 0.7,
+                max_tokens: 35, // ✅ AUMENTADO: de 20 para 35 tokens
+                temperature: 0.3, // ✅ REDUZIDO: mais consistente, menos criativo
+                top_p: 0.9, // ✅ ADICIONADO: melhor qualidade
+                frequency_penalty: 0.1, // ✅ ADICIONADO: evita repetições
               }),
             });
 
@@ -166,13 +191,44 @@ export async function createEmptySessionHandler({
               const generatedTitle =
                 aiResponse.choices?.[0]?.message?.content?.trim();
 
+              // ✅ LOG: Monitorar uso de tokens e qualidade
+              const usage = aiResponse.usage;
+              console.log("📊 [TITLE_GEN] Estatísticas:", {
+                title: generatedTitle,
+                titleLength: generatedTitle?.length || 0,
+                tokensUsed: usage?.total_tokens || 0,
+                promptTokens: usage?.prompt_tokens || 0,
+                completionTokens: usage?.completion_tokens || 0,
+                model: modelName,
+                firstMessage:
+                  typeof input.metadata?.firstMessage === "string"
+                    ? input.metadata.firstMessage.slice(0, 50) + "..."
+                    : "N/A",
+              });
+
               if (generatedTitle && generatedTitle.length <= 50) {
                 // Atualizar título da sessão
                 await chatRepository.ChatSessionRepository.update(session.id, {
                   title: generatedTitle,
                 });
-                console.log("✅ [CREATE_EMPTY] Título gerado:", generatedTitle);
+                console.log(
+                  "✅ [TITLE_GEN] Título aplicado com sucesso:",
+                  generatedTitle,
+                );
+              } else {
+                console.warn(
+                  "⚠️ [TITLE_GEN] Título inválido (muito longo ou vazio):",
+                  {
+                    title: generatedTitle,
+                    length: generatedTitle?.length,
+                  },
+                );
               }
+            } else {
+              console.error("❌ [TITLE_GEN] Erro na API:", {
+                status: response.status,
+                statusText: response.statusText,
+              });
             }
           }
         } catch (error) {
