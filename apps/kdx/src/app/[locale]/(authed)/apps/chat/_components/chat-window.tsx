@@ -16,7 +16,6 @@ import { Separator } from "@kdx/ui/separator";
 import { useTRPC } from "~/trpc/react";
 import { useSessionWithMessages } from "../_hooks/useSessionWithMessages";
 import { useTitleSync } from "../_hooks/useTitleSync";
-// ✅ SUB-ETAPA 2.2 REVISADA: Importar thread context (opcional)
 import { useThreadContext } from "../_providers/chat-thread-provider";
 import { ChatMessages } from "./chat-messages";
 import { MessageInput } from "./message-input";
@@ -27,21 +26,26 @@ interface ChatWindowProps {
 }
 
 export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
-  // ✅ ETAPA 4.2: Hook para prevenir problemas de hidratação
+  // ✅ SUB-ETAPA 2.4: Hook para prevenir problemas de hidratação
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
+
+    // ✅ SUB-ETAPA 2.4: Log de migração concluída (apenas uma vez)
+    if (process.env.NODE_ENV === "development") {
+      console.log(
+        "🎉 [MIGRATION_COMPLETE] Thread-first architecture ativa com fallbacks robustos",
+      );
+    }
   }, []);
 
-  console.log(
-    "🔍 [DEBUG_CHATWINDOW] ChatWindow renderizado com sessionId:",
-    sessionId,
-    "isClient:",
-    isClient,
-  );
+  // ✅ SUB-ETAPA 2.4: Log otimizado - apenas em desenvolvimento
+  if (process.env.NODE_ENV === "development" && sessionId) {
+    console.log("🎯 [CHAT_WINDOW] Renderizado:", { sessionId, isClient });
+  }
 
-  // ✅ ETAPA 4.2: Aguardar hidratação no cliente antes de renderizar
+  // Aguardar hidratação no cliente antes de renderizar
   if (!isClient) {
     return (
       <div
@@ -56,33 +60,29 @@ export function ChatWindow({ sessionId, onNewSession }: ChatWindowProps) {
     );
   }
 
-  // ✅ THREAD-FIRST: Se não há sessionId, mostrar tela inicial zerada
+  // Thread-first architecture: mostrar tela inicial ou chat ativo
   if (!sessionId) {
-    console.log("✅ [DEBUG_CHATWINDOW] Renderizando EmptyThreadState");
     return <EmptyThreadState onNewSession={onNewSession} />;
   }
 
-  // ✅ THREAD-FIRST: Se há sessionId, usar o componente normal
-  console.log("✅ [DEBUG_CHATWINDOW] Renderizando ActiveChatWindow");
   return <ActiveChatWindow sessionId={sessionId} onNewSession={onNewSession} />;
 }
 
 /**
- * ✅ THREAD-FIRST: Tela inicial zerada (sem sessão criada)
- * Inspirado no padrão Assistant-UI
+ * ✅ SUB-ETAPA 2.4: Tela inicial thread-first (Assistant-UI pattern)
+ * Integração completa com ChatThreadProvider
  */
 function EmptyThreadState({
   onNewSession,
 }: {
   onNewSession?: (sessionId: string) => void;
 }) {
-  console.log("🔍 [DEBUG_EMPTY] EmptyThreadState renderizado");
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const t = useTranslations();
   const trpc = useTRPC();
   const queryClient = useQueryClient();
 
-  // ✅ SUB-ETAPA 2.3: Thread context para substituir sessionStorage
+  // ✅ SUB-ETAPA 2.4: Thread context integrado (método principal)
   const threadContext = useThreadContext();
   const { createThread, setPendingMessage } = threadContext || {};
 
@@ -90,21 +90,21 @@ function EmptyThreadState({
   const createEmptySessionMutation = useMutation(
     trpc.app.chat.createEmptySession.mutationOptions({
       onSuccess: (data: any) => {
-        // ✅ CORREÇÃO 1.1: Acessar data.session.id em vez de data.id
         const sessionId = data.session.id;
-        console.log("🚀 [FLOW_TRACE_V3] 2. Sessão vazia criada com sucesso:", {
-          sessionId,
-          title: data.session.title,
-        });
 
-        // ✅ SUB-ETAPA 2.3: Transferir mensagem usando thread context ou sessionStorage
+        // ✅ SUB-ETAPA 2.4: Log otimizado
+        if (process.env.NODE_ENV === "development") {
+          console.log("✅ [EMPTY_THREAD] Sessão criada:", {
+            sessionId,
+            title: data.session.title,
+          });
+        }
+
+        // ✅ SUB-ETAPA 2.4: Gerenciar mensagem pendente (thread context ou sessionStorage)
         if (threadContext && setPendingMessage) {
-          console.log(
-            "🎯 [SUB_ETAPA_2.3] Thread context disponível - mensagem já gerenciada",
-          );
-          // Thread context já gerencia a mensagem pendente automaticamente
+          // Thread context já gerencia automaticamente
         } else {
-          // Fallback para sessionStorage (comportamento original)
+          // Fallback: transferir via sessionStorage
           const pendingMessage = sessionStorage.getItem("pending-message-temp");
           if (pendingMessage && sessionId) {
             sessionStorage.setItem(
@@ -112,31 +112,21 @@ function EmptyThreadState({
               pendingMessage,
             );
             sessionStorage.removeItem("pending-message-temp");
-            console.log(
-              "🔄 [SUB_ETAPA_2.3] Fallback: Mensagem transferida via sessionStorage:",
-              {
-                sessionId,
-                messagePreview: pendingMessage.slice(0, 30) + "...",
-              },
-            );
           }
         }
 
-        // Notificar componente pai para navegar
+        // Navegar para a nova sessão
         if (sessionId) {
           onNewSession?.(sessionId);
         }
       },
       onError: (error) => {
-        console.error(
-          "❌ [DEBUG] Erro na mutation de criar sessão vazia:",
-          error,
-        );
+        console.error("❌ [EMPTY_THREAD] Erro ao criar sessão:", error);
       },
     }),
   );
 
-  // ✅ SUB-ETAPA 2.3: Função otimizada com thread context
+  // ✅ SUB-ETAPA 2.4: Função otimizada - thread context + sessionStorage fallback
   const handleFirstMessage = useCallback(
     async (message: string) => {
       const trimmedMessage = message.trim();
@@ -144,27 +134,22 @@ function EmptyThreadState({
 
       if (createEmptySessionMutation.isPending) return;
 
-      console.log(
-        "🚀 [SUB_ETAPA_2.3] 1. Salvando mensagem pendente e criando sessão...",
-        {
+      // ✅ SUB-ETAPA 2.4: Log otimizado para desenvolvimento
+      if (process.env.NODE_ENV === "development") {
+        console.log("🚀 [EMPTY_THREAD] Criando sessão:", {
           message: trimmedMessage.slice(0, 50) + "...",
-          hasThreadContext: !!threadContext,
           method: threadContext ? "thread-context" : "sessionStorage",
-        },
-      );
+        });
+      }
 
-      // ✅ SUB-ETAPA 2.3: Usar thread context quando disponível, sessionStorage como fallback
+      // ✅ SUB-ETAPA 2.4: Thread context primeiro, sessionStorage como fallback
       if (setPendingMessage) {
-        console.log(
-          "🎯 [SUB_ETAPA_2.3] Usando thread context para mensagem pendente",
-        );
         setPendingMessage(trimmedMessage);
       } else {
-        console.log("🔄 [SUB_ETAPA_2.3] Fallback: usando sessionStorage");
         sessionStorage.setItem("pending-message-temp", trimmedMessage);
       }
 
-      // ✅ CORREÇÃO 1.2: Passar firstMessage no metadata para geração de título
+      // Criar sessão com título automático
       createEmptySessionMutation.mutate({
         generateTitle: true,
         metadata: {
@@ -176,7 +161,7 @@ function EmptyThreadState({
     [createEmptySessionMutation, threadContext, setPendingMessage],
   );
 
-  // ✅ OTIMIZAÇÃO: Memoizar sugestões para evitar re-criação
+  // ✅ SUB-ETAPA 2.4: Sugestões memoizadas
   const suggestions = useMemo(
     () => [
       "Como você pode me ajudar?",
@@ -186,7 +171,7 @@ function EmptyThreadState({
     [],
   );
 
-  // ✅ RESTAURADO v0916e276: Auto-focus inicial
+  // Auto-focus inicial
   useEffect(() => {
     const timer = setTimeout(() => {
       inputRef.current?.focus();
@@ -269,7 +254,8 @@ function EmptyThreadState({
 }
 
 /**
- * ✅ THREAD-FIRST: Chat ativo com sessão existente
+ * ✅ SUB-ETAPA 2.4: Chat ativo com thread context integrado
+ * Arquitetura thread-first com fallbacks robustos
  */
 function ActiveChatWindow({
   sessionId,
@@ -278,26 +264,27 @@ function ActiveChatWindow({
   sessionId: string;
   onNewSession?: (sessionId: string) => void;
 }) {
-  // ✅ ETAPA 4: Hook para prevenir problemas de hidratação
+  // Hook para prevenir problemas de hidratação
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
+
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const queryClient = useQueryClient();
   const t = useTranslations();
   const trpc = useTRPC();
 
-  // ✅ SUB-ETAPA 2.2 REVISADA: Thread context opcional (não quebra hidratação)
+  // ✅ SUB-ETAPA 2.4: Thread context integrado
   const threadContext = useThreadContext();
   const { switchToThread, activeThreadId } = threadContext || {};
 
-  // ✅ THREAD-FIRST: Modelo padrão (pode ser passado como prop futuramente)
+  // Modelo padrão
   const selectedModelId = "claude-3-5-haiku-20241022";
 
-  // ✅ OTIMIZAÇÃO: Memoizar options para useSessionWithMessages
+  // ✅ SUB-ETAPA 2.4: Options memoizadas para performance
   const sessionOptions = useMemo(
     () => ({
       enabled: true,
@@ -316,85 +303,77 @@ function ActiveChatWindow({
     refetch: refetchSession,
   } = useSessionWithMessages(sessionId, sessionOptions);
 
-  // ✅ SUB-ETAPA 2.2 REVISADA: Sincronização opcional com thread context
+  // ✅ SUB-ETAPA 2.4: Sincronização com thread context
   useEffect(() => {
     if (switchToThread && sessionId && sessionId !== activeThreadId) {
-      console.log("🔄 [SUB_ETAPA_2.2_REV] Sincronizando thread opcional:", {
-        sessionId,
-        activeThreadId,
-      });
+      if (process.env.NODE_ENV === "development") {
+        console.log("🔄 [ACTIVE_CHAT] Sincronizando thread:", {
+          sessionId,
+          activeThreadId,
+        });
+      }
       switchToThread(sessionId);
     }
   }, [sessionId, activeThreadId, switchToThread]);
 
-  // ✅ DEBUG: Log quando ActiveChatWindow monta
+  // ✅ SUB-ETAPA 2.4: Log de montagem (apenas desenvolvimento)
   useEffect(() => {
-    console.log("🚀 [FLOW_TRACE] 4. ActiveChatWindow montado:", {
-      sessionId,
-      activeThreadId,
-      isLoadingSession,
-      hasSession: !!session,
-      dbMessagesLength: dbMessages?.length || 0,
-      hasThreadContext: !!threadContext,
-    });
-  }, [
-    sessionId,
-    activeThreadId,
-    isLoadingSession,
-    session,
-    dbMessages,
-    threadContext,
-  ]);
+    if (process.env.NODE_ENV === "development") {
+      console.log("🚀 [ACTIVE_CHAT] Montado:", {
+        sessionId,
+        hasSession: !!session,
+        messagesCount: dbMessages?.length || 0,
+        hasThreadContext: !!threadContext,
+      });
+    }
+  }, [sessionId, session, dbMessages, threadContext]);
 
-  // ✅ THREAD-FIRST: Refetch quando sessionId mudar para nova sessão
-  // ✅ CORREÇÃO: Condições de guarda rigorosas para prevenir loop infinito
+  // ✅ SUB-ETAPA 2.4: Refetch inteligente com guards anti-loop
   const [hasInitialized, setHasInitialized] = useState(false);
   const [lastSessionId, setLastSessionId] = useState<string | null>(null);
 
   useEffect(() => {
-    // ✅ GUARDA 1: Só executar se sessionId for válido e diferente
+    // Guard 1: Validar sessionId
     if (!sessionId || sessionId === "new") {
       setHasInitialized(false);
       setLastSessionId(null);
       return;
     }
 
-    // ✅ GUARDA 2: Só executar se sessionId realmente mudou
+    // Guard 2: Verificar mudança real
     if (sessionId === lastSessionId) {
       return;
     }
 
-    // ✅ GUARDA 3: Prevenir múltiplas execuções simultâneas
+    // Guard 3: Prevenir execuções simultâneas
     if (hasInitialized && sessionId === lastSessionId) {
       return;
     }
 
-    console.log(
-      "🚀 [FLOW_TRACE] 5. Detectada nova sessão, fazendo refetch:",
-      sessionId,
-    );
+    if (process.env.NODE_ENV === "development") {
+      console.log("🔄 [ACTIVE_CHAT] Nova sessão detectada:", sessionId);
+    }
 
-    // ✅ CORREÇÃO: Marcar como inicializado ANTES do refetch
+    // Marcar como inicializado e fazer refetch
     setHasInitialized(true);
     setLastSessionId(sessionId);
 
-    // ✅ CORREÇÃO: Usar timeout para evitar execução síncrona
     const timer = setTimeout(() => {
       refetchSession();
-    }, 100); // Timeout menor para melhor UX
+    }, 100);
 
     return () => {
       clearTimeout(timer);
     };
   }, [sessionId, refetchSession, hasInitialized, lastSessionId]);
 
-  // Hook de sincronização de título (simplificado)
+  // Hook de sincronização de título
   const { syncNow } = useTitleSync({
     sessionId,
     enabled: true,
   });
 
-  // ✅ OTIMIZAÇÃO: Memoizar body do useChat para evitar re-criação
+  // ✅ SUB-ETAPA 2.4: Body memoizado para performance
   const chatBody = useMemo(
     () => ({
       chatSessionId: sessionId,
@@ -404,48 +383,36 @@ function ActiveChatWindow({
     [sessionId, selectedModelId],
   );
 
-  // ✅ OTIMIZAÇÃO: Memoizar função onFinish para evitar re-criação
+  // ✅ SUB-ETAPA 2.4: Callback otimizado onFinish
   const handleChatFinish = useCallback(
     async (message: any) => {
       if (process.env.NODE_ENV === "development") {
-        console.log("✅ [CHAT_WINDOW] Mensagem concluída:", message);
+        console.log("✅ [ACTIVE_CHAT] Mensagem concluída:", message);
       }
 
-      // ✅ RESTAURADO v0916e276: Auto-focus após streaming
+      // Auto-focus após streaming
       setTimeout(() => {
         inputRef.current?.focus();
-        if (process.env.NODE_ENV === "development") {
-          console.log("🎯 [CHAT_WINDOW] Auto-focus aplicado após streaming");
-        }
       }, 100);
 
-      // ✅ CORREÇÃO: Aguardar backend processar antes de refetch
+      // Aguardar processamento backend e sincronizar
       setTimeout(async () => {
-        if (process.env.NODE_ENV === "development") {
-          console.log("🔄 [CHAT_WINDOW] Fazendo refetch após processamento");
-        }
-
-        // Sincronizar título após nova mensagem
         await syncNow();
-
-        // Atualizar dados da sessão
         refetchSession();
-
-        // Invalidar queries do sidebar
         queryClient.invalidateQueries(
           trpc.app.chat.listarSessions.pathFilter(),
         );
-      }, 1500); // Tempo maior para garantir processamento
+      }, 1500);
     },
     [syncNow, refetchSession, queryClient, trpc.app.chat.listarSessions],
   );
 
-  // ✅ OTIMIZAÇÃO: Memoizar função onError para evitar re-criação
+  // ✅ SUB-ETAPA 2.4: Callback otimizado onError
   const handleChatError = useCallback((error: any) => {
-    console.error("❌ [CHAT_WINDOW] Erro no chat:", error);
+    console.error("❌ [ACTIVE_CHAT] Erro no chat:", error);
   }, []);
 
-  // ✅ THREAD-FIRST: Chat hook do Vercel AI com endpoint correto
+  // ✅ SUB-ETAPA 2.4: useChat configurado com thread-first architecture
   const {
     messages,
     input,
@@ -457,27 +424,25 @@ function ActiveChatWindow({
     stop,
     append,
   } = useChat({
-    api: "/api/chat/stream", // ✅ CORREÇÃO: Usar endpoint que aceita formato padrão
+    api: "/api/chat/stream",
     initialMessages: dbMessages || [],
     body: chatBody,
     onFinish: handleChatFinish,
     onError: handleChatError,
-    // ✅ THREAD-FIRST: Configurações para melhor sincronização
     keepLastMessageOnError: true,
   });
 
-  // ✅ DEBUG: Log do useChat para investigar problema
+  // ✅ SUB-ETAPA 2.4: Log de estado (apenas desenvolvimento)
   useEffect(() => {
-    console.log("🔍 [DEBUG_USECHAT] Estado do useChat:", {
-      messagesLength: messages.length,
-      inputValue: input,
-      isLoading: isLoadingChat,
-      hasError: !!chatError,
-      sessionId,
-      dbMessagesLength: dbMessages?.length || 0,
-      hasInitialMessages: !!(dbMessages && dbMessages.length > 0),
-    });
-  }, [messages, input, isLoadingChat, chatError, sessionId, dbMessages]);
+    if (process.env.NODE_ENV === "development") {
+      console.log("📊 [ACTIVE_CHAT] Estado:", {
+        messages: messages.length,
+        input: input.slice(0, 20) + (input.length > 20 ? "..." : ""),
+        isLoading: isLoadingChat,
+        hasError: !!chatError,
+      });
+    }
+  }, [messages.length, input, isLoadingChat, chatError]);
 
   // ✅ THREAD-FIRST: Sincronização otimizada das mensagens
   // ✅ CORREÇÃO: Condições de guarda para prevenir loop infinito na sincronização
@@ -540,9 +505,9 @@ function ActiveChatWindow({
     isClient, // ✅ ETAPA 4: Incluir guard de hidratação
   ]);
 
-  // ✅ SUB-ETAPA 2.3: Lógica unificada - thread context + sessionStorage fallback
+  // ✅ SUB-ETAPA 2.4: Lógica híbrida - thread context + sessionStorage fallback
   useEffect(() => {
-    // ✅ ETAPA 4: GUARDA DE HIDRATAÇÃO - Só executar no cliente
+    // Guard: só executar no cliente
     if (!isClient) {
       return;
     }
@@ -550,23 +515,19 @@ function ActiveChatWindow({
     let pendingMessage: string | null = null;
     let source = "none";
 
-    // ✅ SUB-ETAPA 2.3: Tentar obter mensagem do thread context primeiro
+    // Tentar thread context primeiro
     if (threadContext?.getPendingMessage) {
       pendingMessage = threadContext.getPendingMessage();
       source = "thread-context";
     }
 
-    // ✅ Fallback para sessionStorage se thread context não disponível
+    // Fallback para sessionStorage
     if (!pendingMessage) {
       pendingMessage = sessionStorage.getItem(`pending-message-${sessionId}`);
       source = "sessionStorage";
     }
 
-    // Condições para enviar:
-    // 1. Há uma mensagem pendente.
-    // 2. O chat não está carregando/enviando.
-    // 3. A sessão atual está carregada e não é 'new'.
-    // 4. NÃO há mensagens na UI do useChat (garante que só executa uma vez).
+    // Enviar mensagem pendente se disponível
     if (
       pendingMessage &&
       !isLoadingChat &&
@@ -574,31 +535,23 @@ function ActiveChatWindow({
       sessionId !== "new" &&
       messages.length === 0
     ) {
-      console.log(
-        "🚀 [SUB_ETAPA_2.3] 4. Mensagem pendente encontrada, enviando via append()...",
-        {
+      if (process.env.NODE_ENV === "development") {
+        console.log("🚀 [ACTIVE_CHAT] Enviando mensagem pendente:", {
           content: pendingMessage.slice(0, 30) + "...",
-          sessionId,
           source,
-        },
-      );
+        });
+      }
 
       append({
         role: "user",
         content: pendingMessage,
       });
 
-      // ✅ SUB-ETAPA 2.3: Limpar mensagem pendente da fonte correta
+      // Limpar mensagem da fonte correta
       if (source === "thread-context" && threadContext?.clearPendingMessage) {
         threadContext.clearPendingMessage();
-        console.log(
-          "🎯 [SUB_ETAPA_2.3] Mensagem pendente limpa do thread context",
-        );
       } else if (source === "sessionStorage") {
         sessionStorage.removeItem(`pending-message-${sessionId}`);
-        console.log(
-          "🔄 [SUB_ETAPA_2.3] Mensagem pendente limpa do sessionStorage",
-        );
       }
     }
   }, [
@@ -680,12 +633,12 @@ function ActiveChatWindow({
       <div className="px-[10%] py-4">
         <form
           onSubmit={(e) => {
-            console.log(
-              "🚀 [FLOW_TRACE] 7. Form submit manual - input:",
-              input,
-              "messages:",
-              messages.length,
-            );
+            if (process.env.NODE_ENV === "development") {
+              console.log("📤 [ACTIVE_CHAT] Enviando:", {
+                input: input.slice(0, 30) + (input.length > 30 ? "..." : ""),
+                messagesCount: messages.length,
+              });
+            }
             handleSubmit(e);
           }}
           className="space-y-2"
@@ -695,11 +648,7 @@ function ActiveChatWindow({
             value={input}
             onChange={handleInputChange}
             onSendMessage={(message) => {
-              console.log(
-                "🚀 [DEBUG_SUBMIT] onSendMessage chamado com:",
-                message,
-              );
-              // ✅ CORREÇÃO: Simular submit do form quando Enter é pressionado
+              // Simular submit do form quando Enter é pressionado
               const fakeEvent = new Event("submit", {
                 bubbles: true,
                 cancelable: true,
