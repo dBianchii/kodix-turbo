@@ -108,13 +108,6 @@ export async function enviarMensagemHandler({
           }
         }
 
-        console.log(
-          `🔍 [FORMATTED_MESSAGES] Total de mensagens formatadas: ${formattedMessages.length}`,
-        );
-        console.log(
-          `🎯 [SYSTEM_MESSAGES] Mensagens system: ${formattedMessages.filter((m) => m.role === "system").length}`,
-        );
-
         // Buscar modelo para obter o provider
         if (!session.aiModelId) {
           throw new Error("Sessão não possui modelo de IA configurado");
@@ -157,10 +150,6 @@ export async function enviarMensagemHandler({
         const modelName = modelConfig.version || model.name;
         const maxTokens = modelConfig.maxTokens || 500;
         const temperature = modelConfig.temperature || 0.7;
-
-        console.log(
-          `🟢 [ENVIAR_MENSAGEM] Usando modelo: ${modelName} (Provider: ${model.provider.name})`,
-        );
 
         if (!modelName) {
           throw new Error("Nome do modelo não configurado corretamente");
@@ -205,8 +194,6 @@ export async function enviarMensagemHandler({
           usage: aiResponse.usage || null,
           timestamp: new Date().toISOString(),
         };
-
-        console.log(`🔍 [METADATA] Salvando metadata:`, messageMetadata);
 
         // Salvar resposta da IA com metadata
         const aiMessage = await chatRepository.ChatMessageRepository.create({

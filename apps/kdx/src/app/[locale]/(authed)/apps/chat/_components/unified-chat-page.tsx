@@ -152,9 +152,7 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
           trpc.app.chat.listarSessions.pathFilter(),
         );
 
-        console.log(
-          "🔄 [UNIFIED_CHAT] Mutation success - todas queries invalidadas",
-        );
+        // Mutation success - log removed for performance
       },
       onError: trpcErrorToastDefault,
     }),
@@ -169,25 +167,15 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
 
   // ✅ Atualizar modelo selecionado baseado na sessão ou modelo preferido
   useEffect(() => {
-    console.log("🔄 [UNIFIED_CHAT] useEffect - Atualizando selectedModelId:", {
-      selectedSessionId,
-      sessionModelId: sessionQuery.data?.aiModelId,
-      isReady,
-      preferredModelId,
-      currentSelectedModelId: selectedModelId,
-    });
+    // Model ID update monitoring - log removed for performance
 
     if (selectedSessionId && sessionQuery.data?.aiModelId) {
       // ✅ Prioridade 1: Modelo da sessão selecionada
-      console.log(
-        `🔧 [UNIFIED_CHAT] Usando modelo da sessão: ${sessionQuery.data.aiModelId}`,
-      );
+      // Using session model - log removed for performance
       setSelectedModelId(sessionQuery.data.aiModelId);
     } else if (!selectedSessionId && isReady && preferredModelId) {
       // ✅ Prioridade 2: Modelo preferido quando não há sessão
-      console.log(
-        `🔧 [UNIFIED_CHAT] Usando modelo preferido: ${preferredModelId}`,
-      );
+      // Using preferred model - log removed for performance
       setSelectedModelId(preferredModelId);
     }
   }, [
@@ -199,15 +187,15 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
 
   // ✅ NAVEGAÇÃO CENTRALIZADA: Função para lidar com seleção de sessão
   const handleSessionSelect = (sessionId: string | undefined) => {
-    console.log("🔄 [UNIFIED_CHAT] handleSessionSelect chamado:", sessionId);
+    // Session selection - log removed for performance
     setSelectedSessionId(sessionId);
 
     // ✅ Navegar para a sessão ou página principal
     if (sessionId) {
-      console.log("🚀 [UNIFIED_CHAT] Navegando para sessão:", sessionId);
+      // Navigating to session - log removed for performance
       router.push(`/apps/chat/${sessionId}`);
     } else {
-      console.log("🚀 [UNIFIED_CHAT] Navegando para página principal");
+      // Navigating to main page - log removed for performance
       router.push("/apps/chat");
     }
   };

@@ -47,7 +47,7 @@ export function ChatWindow({
 
   // ✅ SUB-ETAPA 2.4: Log otimizado - apenas em desenvolvimento
   if (process.env.NODE_ENV === "development" && sessionId) {
-    console.log("🎯 [CHAT_WINDOW] Renderizado:", { sessionId, isClient });
+    // Render monitoring - log removed for performance
   }
 
   // Aguardar hidratação no cliente antes de renderizar
@@ -58,7 +58,7 @@ export function ChatWindow({
         suppressHydrationWarning
       >
         <div className="text-center">
-          <div className="bg-muted mx-auto mb-4 h-8 w-8 animate-pulse rounded" />
+          <div className="mx-auto mb-4 h-8 w-8 animate-pulse rounded bg-muted" />
           <p className="text-muted-foreground">Carregando...</p>
         </div>
       </div>
@@ -212,8 +212,8 @@ function EmptyThreadState({
       {/* Conteúdo Central */}
       <div className="flex flex-1 items-center justify-center p-8">
         <div className="max-w-md space-y-6 text-center">
-          <div className="bg-primary/10 mx-auto flex h-16 w-16 items-center justify-center rounded-full">
-            <MessageCircle className="text-primary h-8 w-8" />
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+            <MessageCircle className="h-8 w-8 text-primary" />
           </div>
 
           <div className="space-y-2">
@@ -227,7 +227,7 @@ function EmptyThreadState({
 
           {/* Sugestões de exemplo (opcional) */}
           <div className="space-y-2">
-            <p className="text-muted-foreground text-sm">
+            <p className="text-sm text-muted-foreground">
               {t("apps.chat.suggestions")}:
             </p>
             <div className="flex flex-wrap justify-center gap-2">
@@ -337,12 +337,7 @@ function ActiveChatWindow({
   // ✅ SUB-ETAPA 2.4: Log de montagem (apenas desenvolvimento)
   useEffect(() => {
     if (process.env.NODE_ENV === "development") {
-      console.log("🚀 [ACTIVE_CHAT] Montado:", {
-        sessionId,
-        hasSession: !!session,
-        messagesCount: dbMessages?.length || 0,
-        hasThreadContext: !!threadContext,
-      });
+      // Component mount monitoring - log removed for performance
     }
   }, [sessionId, session, dbMessages, threadContext]);
 
@@ -554,10 +549,7 @@ function ActiveChatWindow({
       messages.length === 0
     ) {
       if (process.env.NODE_ENV === "development") {
-        console.log("🚀 [ACTIVE_CHAT] Enviando mensagem pendente:", {
-          content: pendingMessage.slice(0, 30) + "...",
-          source,
-        });
+        // Pending message send - log removed for performance
       }
 
       append({
@@ -607,11 +599,11 @@ function ActiveChatWindow({
       <div className="flex h-full items-center justify-center">
         <Card className="max-w-md p-6">
           <div className="text-center">
-            <AlertCircle className="text-destructive mx-auto mb-4 h-12 w-12" />
+            <AlertCircle className="mx-auto mb-4 h-12 w-12 text-destructive" />
             <h3 className="mb-2 text-lg font-semibold">
               {t("apps.chat.errorLoadingSession")}
             </h3>
-            <p className="text-muted-foreground mb-4">
+            <p className="mb-4 text-muted-foreground">
               {sessionError.message || t("apps.chat.sessionNotFound")}
             </p>
             <Button onClick={() => refetchSession()} variant="outline">

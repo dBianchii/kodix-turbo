@@ -17,11 +17,6 @@ export async function generateSessionTitleHandler({
   const userId = ctx.auth.user.id;
 
   try {
-    console.log(
-      "🤖 [GENERATE_TITLE] Gerando título para sessão:",
-      input.sessionId,
-    );
-
     // 1. Verificar se a sessão existe e pertence ao usuário
     const session = await chatRepository.ChatSessionRepository.findById(
       input.sessionId,
@@ -43,10 +38,6 @@ export async function generateSessionTitleHandler({
 
     // 2. Se já tem um título personalizado (não é o padrão), não gerar novo
     if (!session.title.startsWith("Chat ")) {
-      console.log(
-        "✅ [GENERATE_TITLE] Sessão já tem título personalizado:",
-        session.title,
-      );
       return { title: session.title };
     }
 
@@ -73,8 +64,6 @@ export async function generateSessionTitleHandler({
 
     // 4. Gerar título usando IA
     try {
-      console.log("🤖 [GENERATE_TITLE] Usando modelo:", preferredModel.name);
-
       // Buscar token do provider
       const providerToken = await AiStudioService.getProviderToken({
         providerId: preferredModel.providerId,
@@ -134,10 +123,6 @@ export async function generateSessionTitleHandler({
             title: generatedTitle,
           });
 
-          console.log(
-            "✅ [GENERATE_TITLE] Título gerado e atualizado:",
-            generatedTitle,
-          );
           return { title: generatedTitle };
         }
       }
@@ -155,7 +140,6 @@ export async function generateSessionTitleHandler({
       title: fallbackTitle,
     });
 
-    console.log("✅ [GENERATE_TITLE] Título fallback usado:", fallbackTitle);
     return { title: fallbackTitle };
   } catch (error: any) {
     console.error("❌ [GENERATE_TITLE] Erro:", error);

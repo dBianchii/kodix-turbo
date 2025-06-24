@@ -31,22 +31,12 @@ export function ModelInfoBadge({
 
   // ✅ FASE 1.1: Log de montagem do componente
   useEffect(() => {
-    console.log("[MODEL_INFO_BADGE] Componente montado:", {
-      timestamp: new Date().toISOString(),
-      hasSessionData: !!sessionData,
-      hasLastMessageMetadata: !!lastMessageMetadata,
-    });
+    // Component mounted - log removed for performance
   }, []);
 
   // ✅ FASE 1.1: Logs detalhados de props recebidas
   useEffect(() => {
-    console.log("[MODEL_INFO_BADGE] Props recebidas:", {
-      sessionData: sessionData?.aiModel?.name,
-      lastMessageMetadata: lastMessageMetadata?.actualModelUsed,
-      timestamp: lastMessageMetadata?.timestamp,
-      sessionDataFull: sessionData,
-      lastMessageMetadataFull: lastMessageMetadata,
-    });
+    // Props monitoring - log removed for performance
   }, [sessionData, lastMessageMetadata]);
 
   // ✅ Função para normalizar nomes de modelos
@@ -101,17 +91,7 @@ export function ModelInfoBadge({
 
   // ✅ FASE 1.1: Logs de normalização e estados
   useEffect(() => {
-    console.log("[MODEL_INFO_BADGE] Normalização:", {
-      configuredModel,
-      actualModel,
-      normalizedConfigured,
-      normalizedActual,
-      hasModelMismatch,
-      isCorrect,
-      isWaitingValidation,
-      hasResponse,
-      hasMismatch,
-    });
+    // Normalization monitoring - log removed for performance
   }, [
     configuredModel,
     actualModel,
@@ -126,12 +106,7 @@ export function ModelInfoBadge({
 
   // ✅ FASE 2.1: Performance otimizada com useMemo
   const memoizedStatus = useMemo(() => {
-    console.log("[MODEL_INFO_BADGE] Recalculando status:", {
-      hasResponse,
-      isCorrect,
-      isWaitingValidation,
-      hasMismatch,
-    });
+    // Status calculation - log removed for performance
 
     if (isWaitingValidation) {
       return {
@@ -174,14 +149,7 @@ export function ModelInfoBadge({
 
   // ✅ FASE 1.1: Log de mudanças de status
   useEffect(() => {
-    console.log("[MODEL_INFO_BADGE] Status changed:", {
-      isWaitingValidation,
-      isCorrect,
-      hasModelMismatch,
-      statusLabel: status.label,
-      statusColor: status.color,
-      timestamp: new Date().toISOString(),
-    });
+    // Status change monitoring - log removed for performance
   }, [
     isWaitingValidation,
     isCorrect,
@@ -192,28 +160,12 @@ export function ModelInfoBadge({
 
   // ✅ FASE 2.2: useEffect para debug de mudanças
   useEffect(() => {
-    console.log("[MODEL_INFO_BADGE] FASE 2 - Props mudaram:", {
-      sessionDataName: sessionData?.aiModel?.name,
-      lastMessageActual: lastMessageMetadata?.actualModelUsed,
-      timestamp: new Date().toISOString(),
-    });
+    // Props change monitoring - log removed for performance
   }, [sessionData, lastMessageMetadata]);
 
   // ✅ FASE 5.3: Monitoramento específico para correção do problema
   useEffect(() => {
-    console.log("[MODEL_INFO_BADGE] FASE 5.3 - Monitoramento pós-mudança:", {
-      configuredModel,
-      actualModel,
-      normalizedConfigured,
-      normalizedActual,
-      hasModelMismatch,
-      isCorrect,
-      isWaitingValidation,
-      hasResponse,
-      shouldShowWaiting: !hasResponse || hasModelMismatch,
-      componentKey: `${sessionData?.aiModel?.name}-${lastMessageMetadata?.actualModelUsed}`,
-      timestamp: new Date().toISOString(),
-    });
+    // Post-change monitoring - log removed for performance
   }, [
     configuredModel,
     actualModel,
@@ -364,7 +316,7 @@ export function ModelInfoBadge({
                 <div className="mt-2 space-y-2">
                   <div className="rounded bg-slate-50 p-2 text-xs">
                     <div className="mb-1 font-medium">Raw Data:</div>
-                    <pre className="whitespace-pre-wrap text-xs">
+                    <pre className="text-xs whitespace-pre-wrap">
                       {JSON.stringify(
                         {
                           sessionData,

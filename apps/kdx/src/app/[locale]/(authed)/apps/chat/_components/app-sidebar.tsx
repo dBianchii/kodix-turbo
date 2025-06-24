@@ -464,18 +464,6 @@ export function AppSidebar({
       (model: any) => !model.teamConfig || model.teamConfig.enabled === true,
     ) || [];
 
-  // Debug: log dos modelos disponíveis
-  console.log(
-    "🔍 [CHAT_SIDEBAR] Modelos carregados:",
-    modelsQuery.data?.length || 0,
-  );
-  console.log("🔍 [CHAT_SIDEBAR] Modelos filtrados:", models.length);
-  models.forEach((model: any) => {
-    console.log(
-      `   • ${model.name} (ID: ${model.id}) - teamConfig: ${model.teamConfig ? `enabled=${model.teamConfig.enabled}` : "null"}`,
-    );
-  });
-
   // ✅ OTIMIZAÇÃO: Memoizar filtros para evitar re-criação
   const filterOptions = useMemo(
     () => ({
@@ -497,7 +485,6 @@ export function AppSidebar({
   // ✅ OTIMIZAÇÃO: Memoizar função de seleção de modelo
   const handleModelSelect = useCallback((modelId: string) => {
     // Lógica de seleção de modelo
-    console.log("🔄 [CHAT_SIDEBAR] Modelo selecionado:", modelId);
   }, []);
 
   return (

@@ -32,11 +32,6 @@ export async function getPreferredModelHelper(
       : null;
 
     if (preferredModelId) {
-      console.log(
-        "✅ [PREFERRED_MODEL] Encontrado preferredModelId no User Config:",
-        preferredModelId,
-      );
-
       try {
         const model = await AiStudioService.getModelById({
           modelId: preferredModelId,
@@ -45,10 +40,6 @@ export async function getPreferredModelHelper(
         });
 
         if (model) {
-          console.log(
-            "✅ [PREFERRED_MODEL] Modelo encontrado (User Config):",
-            model.name,
-          );
           return {
             source: "user_config",
             modelId: model.id,
@@ -77,10 +68,6 @@ export async function getPreferredModelHelper(
     });
 
     if (defaultModelConfig.model) {
-      console.log(
-        "✅ [PREFERRED_MODEL] Modelo padrão do AI Studio encontrado:",
-        defaultModelConfig.model.name,
-      );
       return {
         source: "ai_studio_default",
         modelId: defaultModelConfig.model.id,
@@ -107,10 +94,6 @@ export async function getPreferredModelHelper(
     );
 
     if (firstActiveModel) {
-      console.log(
-        "🔄 [PREFERRED_MODEL] Usando primeiro modelo ativo como fallback:",
-        firstActiveModel.name,
-      );
       return {
         source: "first_available",
         modelId: firstActiveModel.id,
@@ -140,19 +123,7 @@ export async function getPreferredModelHandler({
   const userId = ctx.auth.user.id;
 
   try {
-    console.log(
-      "🎯 [PREFERRED_MODEL] Buscando modelo preferido para user:",
-      userId,
-      "team:",
-      teamId,
-    );
-
     const result = await getPreferredModelHelper(teamId, userId, chatAppId);
-
-    console.log(
-      `✅ [PREFERRED_MODEL] Modelo encontrado via ${result.source}:`,
-      result.model.name,
-    );
 
     return result;
   } catch (error: any) {

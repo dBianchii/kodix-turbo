@@ -22,24 +22,10 @@ async function getPreferredModelHelper(
 }> {
   // ✅ 1ª Prioridade: Verificar preferredModelId nas configurações de USUÁRIO
   try {
-    console.log("🔍 [PREFERRED_MODEL] Buscando User Config para:", {
-      teamId,
-      userId,
-    });
-
     const userConfigs = await appRepository.findUserAppTeamConfigs({
       appId: chatAppId,
       teamIds: [teamId],
       userIds: [userId],
-    });
-
-    console.log("📊 [PREFERRED_MODEL] User configs encontrados:", {
-      count: userConfigs.length,
-      configs: userConfigs.map((c) => ({
-        userId: c.userId,
-        teamId: c.teamId,
-        hasConfig: !!c.config,
-      })),
     });
 
     const userConfig = userConfigs[0]; // Só haverá um config por usuário/app/team
@@ -47,18 +33,7 @@ async function getPreferredModelHelper(
       ? (userConfig.config as any)?.personalSettings?.preferredModelId
       : null;
 
-    console.log("🎯 [PREFERRED_MODEL] Extracted preferredModelId:", {
-      preferredModelId,
-      hasUserConfig: !!userConfig,
-      fullConfig: userConfig?.config,
-    });
-
     if (preferredModelId) {
-      console.log(
-        "✅ [PREFERRED_MODEL] Encontrado preferredModelId no User Config:",
-        preferredModelId,
-      );
-
       try {
         const model = await AiStudioService.getModelById({
           modelId: preferredModelId,
@@ -67,10 +42,6 @@ async function getPreferredModelHelper(
         });
 
         if (model) {
-          console.log(
-            "✅ [PREFERRED_MODEL] Modelo encontrado (User Config):",
-            model.name,
-          );
           return {
             source: "user_config",
             modelId: model.id,
@@ -172,7 +143,6 @@ export async function autoCreateSessionWithMessageHandler({
       "🚀 [AUTO_CREATE] Iniciando auto-criação de sessão para team:",
       teamId,
     );
-    console.log("🔍 [AUTO_CREATE] aiModelId explícito:", input.aiModelId);
 
     // 1. Determinar modelo a usar (explícito ou preferido)
     let preferredModel;
@@ -221,11 +191,6 @@ export async function autoCreateSessionWithMessageHandler({
 
         preferredModel = preferredModelResult.model;
         aiModelId = preferredModelResult.modelId;
-
-        console.log(
-          "✅ [AUTO_CREATE] Modelo preferido encontrado:",
-          preferredModel.name,
-        );
       } catch (error) {
         console.error(
           "❌ [AUTO_CREATE] Erro ao buscar modelo preferido:",
@@ -244,8 +209,6 @@ export async function autoCreateSessionWithMessageHandler({
 
     if (input.generateTitle) {
       try {
-        console.log("🤖 [AUTO_CREATE] Gerando título automático...");
-
         // Buscar token do provider via HTTP
         const providerToken = await AiStudioService.getProviderToken({
           providerId: preferredModel.providerId,
@@ -301,7 +264,6 @@ export async function autoCreateSessionWithMessageHandler({
 
             if (generatedTitle && generatedTitle.length <= 50) {
               title = generatedTitle;
-              console.log("✅ [AUTO_CREATE] Título gerado:", title);
             }
           }
         }
@@ -332,8 +294,6 @@ export async function autoCreateSessionWithMessageHandler({
         message: "Erro ao criar sessão de chat",
       });
     }
-
-    console.log("✅ [AUTO_CREATE] Sessão criada:", session.id);
 
     // 🎯 NOVO: Criar Team Instructions se configuradas
     try {
@@ -377,18 +337,9 @@ export async function autoCreateSessionWithMessageHandler({
       status: "ok",
     });
 
-    console.log("✅ [AUTO_CREATE] Primeira mensagem criada");
-
     // 5. ✅ CORREÇÃO: Não processar IA aqui para navegação rápida
     // A IA será processada via streaming no frontend
     const aiMessage = null;
-
-    console.log(
-      "🎉 [AUTO_CREATE] Sessão criada com sucesso!",
-      session.id,
-      "- Título:",
-      title,
-    );
 
     return {
       session,

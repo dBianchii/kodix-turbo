@@ -68,23 +68,12 @@ export function useTokenUsage(
 ): TokenUsageResult {
   return useMemo(() => {
     // 🔍 DEBUG: Log dentro do hook
-    console.log("🔍 [useTokenUsage] Hook chamado com:", {
-      messagesLength: messages.length,
-      modelName,
-      messagesPreview: messages.slice(0, 2).map((m) => ({
-        content: (m.content || "").substring(0, 30) + "...",
-        contentLength: (m.content || "").length,
-      })),
-    });
+    // Hook initialization - log removed for performance
 
     // Calcular tokens baseado nas mensagens
     const usedTokens = messages.reduce((total, message) => {
       const tokens = estimateTokens(message.content || "");
-      console.log("🔍 [useTokenUsage] Calculando tokens para mensagem:", {
-        contentLength: (message.content || "").length,
-        tokens,
-        total: total + tokens,
-      });
+      // Token calculation per message - log removed for performance
       return total + tokens;
     }, 0);
 
@@ -95,11 +84,7 @@ export function useTokenUsage(
     const percentage =
       maxTokens > 0 ? Math.min((usedTokens / maxTokens) * 100, 100) : 0;
 
-    console.log("🔍 [useTokenUsage] Resultado final:", {
-      usedTokens,
-      maxTokens,
-      percentage,
-    });
+    // Final result calculation - log removed for performance
 
     return {
       usedTokens,
