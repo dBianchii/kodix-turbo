@@ -18,9 +18,5 @@ interface ChatLayoutProps {
 }
 
 export default function ChatLayout({ children }: ChatLayoutProps) {
-  console.log(
-    "🎯 [SUB_ETAPA_2.1] ChatLayout renderizado com ChatThreadProvider",
-  );
-
   return <ChatThreadProvider>{children}</ChatThreadProvider>;
 }

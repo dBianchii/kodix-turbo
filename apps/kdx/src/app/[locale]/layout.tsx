@@ -65,6 +65,7 @@ export default async function RootLayout(props: {
             GeistSans.variable,
             GeistMono.variable,
           )}
+          suppressHydrationWarning
         >
           <SpeedInsights />
           <Analytics />

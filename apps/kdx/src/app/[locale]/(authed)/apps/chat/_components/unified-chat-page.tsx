@@ -21,7 +21,7 @@
 // @ts-nocheck - Chat tRPC router has type definition issues that need to be resolved at the router level
 "use client";
 
-import { useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
@@ -77,15 +77,19 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
     refetch: refetchPreferredModel,
   } = useChatPreferredModel();
 
-  // ✅ Buscar dados da sessão selecionada (apenas quando há sessão)
+  // ✅ Buscar dados da sessão selecionada com cache otimizado
   const sessionQuery = useQuery(
     trpc.app.chat.buscarSession.queryOptions(
       { sessionId: selectedSessionId! },
-      { enabled: !!selectedSessionId },
+      {
+        enabled: !!selectedSessionId,
+        staleTime: 30 * 1000, // 30 segundos
+        gcTime: 2 * 60 * 1000, // 2 minutos
+      },
     ),
   );
 
-  // ✅ Buscar mensagens da sessão selecionada (apenas quando há sessão)
+  // ✅ Buscar mensagens da sessão selecionada com cache
   const messagesQuery = useQuery(
     trpc.app.chat.buscarMensagensTest.queryOptions(
       {
@@ -94,11 +98,15 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
         pagina: 1,
         ordem: "desc",
       },
-      { enabled: !!selectedSessionId },
+      {
+        enabled: !!selectedSessionId,
+        staleTime: 15 * 1000, // 15 segundos
+        gcTime: 60 * 1000, // 1 minuto
+      },
     ),
   );
 
-  // ✅ Buscar todas as mensagens para calcular tokens
+  // ✅ Buscar todas as mensagens para calcular tokens com cache
   const allMessagesQuery = useQuery(
     trpc.app.chat.buscarMensagensTest.queryOptions(
       {
@@ -110,24 +118,37 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
       {
         enabled: !!selectedSessionId,
         retry: 2, // Tentar 2 vezes em caso de erro
+        staleTime: 30 * 1000, // 30 segundos
+        gcTime: 2 * 60 * 1000, // 2 minutos
       },
     ),
   );
 
-  // ✅ Extrair metadata da última mensagem
-  const lastMessage = messagesQuery.data?.messages?.[0];
-  const lastMessageMetadata = lastMessage?.metadata
-    ? {
-        actualModelUsed: lastMessage.metadata.actualModelUsed,
-        requestedModel: lastMessage.metadata.requestedModel,
-        providerId: lastMessage.metadata.providerId,
-        timestamp: lastMessage.createdAt.toISOString(),
-      }
-    : undefined;
+  // ✅ Extrair metadata da última mensagem (memoizado)
+  const lastMessage = useMemo(() => {
+    return messagesQuery.data?.messages?.[0];
+  }, [messagesQuery.data?.messages]);
 
-  // ✅ Calcular uso de tokens
-  const modelName = sessionQuery.data?.aiModel?.name || "";
-  const messages = allMessagesQuery.data?.messages || [];
+  const lastMessageMetadata = useMemo(() => {
+    return lastMessage?.metadata
+      ? {
+          actualModelUsed: lastMessage.metadata.actualModelUsed,
+          requestedModel: lastMessage.metadata.requestedModel,
+          providerId: lastMessage.metadata.providerId,
+          timestamp: lastMessage.createdAt.toISOString(),
+        }
+      : undefined;
+  }, [lastMessage]);
+
+  // ✅ Calcular uso de tokens (memoizado)
+  const modelName = useMemo(() => {
+    return sessionQuery.data?.aiModel?.name || "";
+  }, [sessionQuery.data?.aiModel?.name]);
+
+  const messages = useMemo(() => {
+    return allMessagesQuery.data?.messages || [];
+  }, [allMessagesQuery.data?.messages]);
+
   const tokenUsage = useTokenUsage(messages, modelName);
 
   // ✅ Mutation para atualizar sessão (apenas quando há sessão)

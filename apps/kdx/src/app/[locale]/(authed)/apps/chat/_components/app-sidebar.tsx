@@ -126,24 +126,42 @@ export function AppSidebar({
     }),
   );
 
-  // Query para buscar todas as sessões (vamos filtrar no frontend)
+  // Query para buscar todas as sessões com cache otimizado
   const allSessionsQuery = useQuery(
-    trpc.app.chat.listarSessions.queryOptions({
-      limite: 100,
-      pagina: 1,
-    }),
+    trpc.app.chat.listarSessions.queryOptions(
+      {
+        limite: 100,
+        pagina: 1,
+      },
+      {
+        staleTime: 2 * 60 * 1000, // 2 minutos
+        gcTime: 5 * 60 * 1000, // 5 minutos
+        refetchOnWindowFocus: false,
+      },
+    ),
   );
 
   const agentsQuery = useQuery(
-    trpc.app.aiStudio.findAiAgents.queryOptions({
-      limite: 50,
-      offset: 0,
-    }),
+    trpc.app.aiStudio.findAiAgents.queryOptions(
+      {
+        limite: 50,
+        offset: 0,
+      },
+      {
+        staleTime: 5 * 60 * 1000, // 5 minutos - agentes mudam pouco
+        gcTime: 10 * 60 * 1000, // 10 minutos
+        refetchOnWindowFocus: false,
+      },
+    ),
   );
 
-  // Filtrar apenas modelos habilitados para o time (com prioridade ordenada)
+  // Filtrar apenas modelos habilitados para o time com cache agressivo
   const modelsQuery = useQuery(
-    trpc.app.aiStudio.findAvailableModels.queryOptions(),
+    trpc.app.aiStudio.findAvailableModels.queryOptions(undefined, {
+      staleTime: 5 * 60 * 1000, // 5 minutos - modelos mudam pouco
+      gcTime: 10 * 60 * 1000, // 10 minutos
+      refetchOnWindowFocus: false,
+    }),
   );
 
   // Persistir estado das pastas expandidas no localStorage

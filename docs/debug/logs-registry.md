@@ -130,6 +130,7 @@ _(Nenhum log órfão identificado atualmente)_
 - **Logs aguardando remoção:** 0
 - **Logs críticos permanentes:** 0
 - **Última revisão:** 2025-01-24
+- **Última remoção:** 2025-01-24 - SUB_ETAPA_2.1 ChatLayout (otimização concluída)
 
 ---
 
