@@ -24,17 +24,7 @@ export function useChatUserConfig() {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
 
-  // ✅ OTIMIZAÇÃO: Log apenas uma vez na inicialização
-  const logInitialization = useCallback(() => {
-    if (process.env.NODE_ENV === "development") {
-      console.log("🔧 [CHAT_USER_CONFIG] Hook inicializado - Escopo USUÁRIO");
-    }
-  }, []);
-
-  // Executar log apenas uma vez
-  useMemo(() => {
-    logInitialization();
-  }, [logInitialization]);
+  // Hook initialization without verbose logging
 
   // ✅ Buscar configuração atual do USUÁRIO (não team)
   const {
@@ -99,12 +89,6 @@ export function useChatUserConfig() {
         queryClient.invalidateQueries(
           trpc.app.getUserAppTeamConfig.pathFilter(),
         );
-        if (process.env.NODE_ENV === "development") {
-          console.log(
-            "✅ [useChatUserConfig] User config saved successfully",
-            data,
-          );
-        }
         toast.success("Configurações pessoais salvas!");
       },
       onError: (error: any) => {
@@ -130,13 +114,6 @@ export function useChatUserConfig() {
   // ✅ OTIMIZAÇÃO: Memoizar função saveConfig para evitar re-criação
   const saveConfig = useCallback(
     (newConfig: Partial<ChatUserConfig>) => {
-      if (process.env.NODE_ENV === "development") {
-        console.log(
-          "💾 [useChatUserConfig] saveConfig called with:",
-          newConfig,
-        );
-      }
-
       // Merge inteligente preservando estrutura aninhada
       const configToSave: ChatUserConfig = {
         personalSettings: {
@@ -172,14 +149,6 @@ export function useChatUserConfig() {
   // ✅ OTIMIZAÇÃO: Memoizar função savePreferredModel
   const savePreferredModel = useCallback(
     async (modelId: string) => {
-      if (process.env.NODE_ENV === "development") {
-        console.log("🔄 [useChatUserConfig] savePreferredModel INICIADO:", {
-          modelId,
-          currentConfig: config,
-          hasConfig: !!config,
-        });
-      }
-
       const newConfig = {
         ...config,
         personalSettings: {
@@ -192,15 +161,6 @@ export function useChatUserConfig() {
       };
 
       const result = await saveConfig(newConfig);
-
-      if (process.env.NODE_ENV === "development") {
-        console.log("✅ [useChatUserConfig] savePreferredModel FINALIZADO:", {
-          modelId,
-          success: result !== null && result !== undefined,
-          savedConfig: newConfig,
-        });
-      }
-
       return result;
     },
     [config, saveConfig],
@@ -208,26 +168,12 @@ export function useChatUserConfig() {
 
   // ✅ OTIMIZAÇÃO: Memoizar função getPreferredModelId para evitar re-criação
   const getPreferredModelId = useCallback(() => {
-    const result = mergedConfig.personalSettings.preferredModelId;
-    if (process.env.NODE_ENV === "development") {
-      console.log(
-        "🔍 [CHAT_USER_CONFIG] getPreferredModelId returning:",
-        result,
-      );
-    }
-    return result;
+    return mergedConfig.personalSettings.preferredModelId;
   }, [mergedConfig.personalSettings.preferredModelId]);
 
   // ✅ OTIMIZAÇÃO: Memoizar função shouldAutoSelectModel
   const shouldAutoSelectModel = useCallback(() => {
-    const result = mergedConfig.uiPreferences.autoSelectModel !== false;
-    if (process.env.NODE_ENV === "development") {
-      console.log(
-        "🔍 [CHAT_USER_CONFIG] shouldAutoSelectModel returning:",
-        result,
-      );
-    }
-    return result;
+    return mergedConfig.uiPreferences.autoSelectModel !== false;
   }, [mergedConfig.uiPreferences.autoSelectModel]);
 
   // ✅ OTIMIZAÇÃO: Memoizar objeto de retorno para evitar re-renders

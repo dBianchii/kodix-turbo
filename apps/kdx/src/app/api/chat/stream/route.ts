@@ -57,15 +57,7 @@ async function getVercelModel(modelId: string, teamId: string) {
 
 export async function POST(request: NextRequest) {
   try {
-    console.log("🔥 [API] ========================================");
-    console.log("🔥 [API] STREAMING ENDPOINT CALLED");
-    console.log("🔥 [API] ========================================");
-
     const body = await request.json();
-    console.log(
-      "🔍 [DEBUG] Request body received:",
-      JSON.stringify(body, null, 2),
-    );
 
     // ✅ FIXO: Aceitar tanto formato useChat quanto formato customizado
     let chatSessionId;
@@ -75,7 +67,6 @@ export async function POST(request: NextRequest) {
 
     if (body.messages && Array.isArray(body.messages)) {
       // Formato useChat do Vercel AI SDK
-      console.log("📱 [API] Formato useChat detectado");
       chatSessionId = body.chatSessionId;
       useAgent = body.useAgent ?? true;
       skipUserMessage = body.skipUserMessage ?? false;
@@ -95,19 +86,11 @@ export async function POST(request: NextRequest) {
       }
     } else {
       // Formato customizado original
-      console.log("🔧 [API] Formato customizado detectado");
       chatSessionId = body.chatSessionId;
       content = body.content;
       useAgent = body.useAgent ?? true;
       skipUserMessage = body.skipUserMessage ?? false;
     }
-
-    console.log("🟢 [API] Data extracted:", {
-      chatSessionId,
-      content,
-      useAgent,
-      skipUserMessage,
-    });
 
     if (!chatSessionId || !content) {
       return Response.json(
@@ -121,13 +104,6 @@ export async function POST(request: NextRequest) {
     if (!session) {
       return Response.json({ error: "Session not found" }, { status: 404 });
     }
-
-    console.log("🔍 [DEBUG] Session data:");
-    console.log(`   • ID: ${session.id}`);
-    console.log(`   • Title: ${session.title}`);
-    console.log(`   • aiModelId: ${session.aiModelId || "❌ NULL/UNDEFINED"}`);
-    console.log(`   • aiAgentId: ${session.aiAgentId || "❌ NULL/UNDEFINED"}`);
-    console.log(`   • teamId: ${session.teamId}`);
 
     // ✅ TEMPORARY: Agent will be removed from streaming flow for now
     // TODO: Implement getAgentById in AiStudioService
@@ -166,8 +142,6 @@ export async function POST(request: NextRequest) {
           content,
           status: "ok",
         });
-      } else {
-        console.log("✅ [API] User message found:", userMessage.id);
       }
     } else {
       // Normal behavior: create new user message
@@ -177,7 +151,6 @@ export async function POST(request: NextRequest) {
         content,
         status: "ok",
       });
-      console.log("✅ [API] User message created");
     }
 
     if (!useAgent) {
@@ -211,10 +184,6 @@ export async function POST(request: NextRequest) {
       : [...messages, userMessage];
 
     // 🚀 NATIVE VERCEL AI SDK IMPLEMENTATION
-    console.log(
-      "🚀 [VERCEL_AI_NATIVE] Using 100% native Vercel AI SDK standards",
-    );
-
     try {
       // Detect user language more robustly
       const detectUserLocale = (request: NextRequest): "pt-BR" | "en" => {
@@ -261,12 +230,7 @@ export async function POST(request: NextRequest) {
             role: "system",
             content: systemPrompt,
           });
-          console.log(`🌍 [API] System prompt added in: ${userLocale}`);
         }
-      } else {
-        console.log(
-          `🎯 [API] Team Instructions detected, skipping default system prompt`,
-        );
       }
 
       // Add all existing messages
@@ -296,18 +260,12 @@ export async function POST(request: NextRequest) {
             requestingApp: chatAppId,
           });
         } catch (error) {
-          console.log(
-            `❌ [DEBUG] Model with ID ${session.aiModelId} not found:`,
-            error,
-          );
+          // Model not found, continue to default selection
         }
       }
 
       // If no model found, use default model
       if (!model) {
-        console.log(
-          "⚠️ [API] Session without configured model, searching for default...",
-        );
         const availableModels = await AiStudioService.getAvailableModels({
           teamId: session.teamId,
           requestingApp: chatAppId,

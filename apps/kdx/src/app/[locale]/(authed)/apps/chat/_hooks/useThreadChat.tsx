@@ -92,8 +92,6 @@ export function useThreadChat(
 
   const handleChatFinish = useCallback(
     async (message: Message) => {
-      console.log("✅ [THREAD_CHAT] Mensagem concluída:", message);
-
       if (!activeThreadId) return;
 
       try {
@@ -115,9 +113,6 @@ export function useThreadChat(
         if (userMessages.length === 1) {
           const firstUserMessage = userMessages[0];
           if (firstUserMessage) {
-            console.log(
-              "🤖 [THREAD_CHAT] Gerando título para primeira mensagem",
-            );
             await generateThreadTitle(activeThreadId, firstUserMessage.content);
             options?.onTitleGenerated?.(activeThread?.title || "");
           }
@@ -132,8 +127,6 @@ export function useThreadChat(
             queryClient.invalidateQueries({
               queryKey: ["app", "chat", "listarSessions"],
             });
-
-            console.log("🔄 [THREAD_CHAT] Thread sincronizada após mensagem");
           } catch (error) {
             console.error("❌ [THREAD_CHAT] Erro na sincronização:", error);
           }
@@ -200,13 +193,6 @@ export function useThreadChat(
     if (currentThreadId !== previousThreadId) {
       hasSyncedRef.current = false;
       previousThreadIdRef.current = currentThreadId;
-
-      if (currentThreadId) {
-        console.log(
-          "🔄 [THREAD_CHAT] Thread mudou, sincronizando:",
-          currentThreadId,
-        );
-      }
     }
 
     // Sincronizar mensagens da thread local com useChat
@@ -221,7 +207,6 @@ export function useThreadChat(
 
       // Só sincronizar se as mensagens forem diferentes
       if (threadMessages.length !== chatMessages.length) {
-        console.log("🔄 [THREAD_CHAT] Sincronizando mensagens da thread local");
         setMessages(threadMessages);
         hasSyncedRef.current = true;
       }
@@ -232,8 +217,6 @@ export function useThreadChat(
 
   const createNewThread = useCallback(
     async (firstMessage?: string) => {
-      console.log("🚀 [THREAD_CHAT] Criando nova thread:", firstMessage);
-
       try {
         const newThread = await createThread({
           generateTitle: true,
@@ -248,7 +231,6 @@ export function useThreadChat(
           );
         }
 
-        console.log("✅ [THREAD_CHAT] Nova thread criada:", newThread.id);
         return newThread;
       } catch (error) {
         console.error("❌ [THREAD_CHAT] Erro ao criar thread:", error);
@@ -260,8 +242,6 @@ export function useThreadChat(
 
   const switchThread = useCallback(
     (threadId: string) => {
-      console.log("🔄 [THREAD_CHAT] Mudando para thread:", threadId);
-
       // Reset sync state
       hasSyncedRef.current = false;
 
@@ -275,7 +255,6 @@ export function useThreadChat(
     async (firstMessage: string) => {
       if (!activeThreadId) return;
 
-      console.log("🤖 [THREAD_CHAT] Gerando título:", firstMessage);
       await generateThreadTitle(activeThreadId, firstMessage);
     },
     [activeThreadId, generateThreadTitle],
@@ -284,7 +263,6 @@ export function useThreadChat(
   const syncFromDB = useCallback(async () => {
     if (!activeThreadId) return;
 
-    console.log("🔄 [THREAD_CHAT] Sincronizando do DB");
     await syncThreadFromDB(activeThreadId);
     hasSyncedRef.current = false; // Forçar re-sync
   }, [activeThreadId, syncThreadFromDB]);
@@ -297,7 +275,6 @@ export function useThreadChat(
 
       // Se não há thread ativa, criar uma nova
       if (!activeThreadId) {
-        console.log("🚀 [THREAD_CHAT] Criando thread para nova mensagem");
         createNewThread(input.trim()).then(() => {
           // Mensagem será enviada automaticamente via sessionStorage
         });
@@ -326,11 +303,6 @@ export function useThreadChat(
       !isLoading &&
       !hasSyncedRef.current
     ) {
-      console.log(
-        "📨 [THREAD_CHAT] Enviando mensagem pendente:",
-        pendingMessage,
-      );
-
       // Enviar mensagem pendente
       append({
         role: "user",

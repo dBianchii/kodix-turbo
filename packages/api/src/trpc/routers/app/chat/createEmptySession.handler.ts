@@ -19,12 +19,6 @@ export async function createEmptySessionHandler({
   const userId = ctx.auth.user.id;
 
   try {
-    console.log(
-      "🚀 [CREATE_EMPTY] Iniciando criação de sessão vazia para team:",
-      teamId,
-    );
-    console.log("🔍 [CREATE_EMPTY] aiModelId explícito:", input.aiModelId);
-
     // 1. Determinar modelo a usar (explícito ou primeiro disponível)
     let aiModelId: string;
     let availableModels: any;
@@ -40,10 +34,6 @@ export async function createEmptySessionHandler({
 
         if (explicitModel) {
           aiModelId = input.aiModelId;
-          console.log(
-            "✅ [CREATE_EMPTY] Modelo explícito validado:",
-            explicitModel.name,
-          );
         } else {
           throw new Error("Modelo explícito inválido");
         }
@@ -74,7 +64,6 @@ export async function createEmptySessionHandler({
         if (availableModels && availableModels.length > 0) {
           const firstModel = availableModels[0];
           aiModelId = firstModel!.id;
-          console.log("✅ [CREATE_EMPTY] Modelo encontrado:", firstModel?.name);
         } else {
           throw new Error("Nenhum modelo disponível");
         }
@@ -106,8 +95,6 @@ export async function createEmptySessionHandler({
       });
     }
 
-    console.log("✅ [CREATE_EMPTY] Sessão vazia criada:", session.id);
-
     // 🎯 Criar Team Instructions se configuradas
     try {
       const teamInstructions = await AiStudioService.getTeamInstructions({
@@ -116,10 +103,6 @@ export async function createEmptySessionHandler({
       });
 
       if (teamInstructions?.content?.trim()) {
-        console.log(
-          `🎯 [CREATE_EMPTY] Criando Team Instructions para sessão: ${session.id}`,
-        );
-
         await ChatService.createSystemMessage({
           chatSessionId: session.id,
           content: teamInstructions.content,
@@ -129,10 +112,6 @@ export async function createEmptySessionHandler({
             createdAt: new Date().toISOString(),
           },
         });
-
-        console.log(
-          `✅ [CREATE_EMPTY] Team Instructions criadas para sessão: ${session.id}`,
-        );
       }
     } catch (error) {
       // Log do erro mas não falha a criação da sessão
@@ -144,20 +123,11 @@ export async function createEmptySessionHandler({
 
     // 🤖 Gerar título automaticamente se solicitado e houver firstMessage
     if (input.generateTitle && input.metadata?.firstMessage) {
-      console.log("🤖 [CREATE_EMPTY] Gerando título automático...");
-
       // Executar em background para não bloquear a resposta
       setImmediate(async () => {
         try {
           const firstModel = availableModels[0];
           if (!firstModel) return;
-
-          // ✅ LOG: Modelo usado para geração de título
-          console.log("🤖 [TITLE_GEN] Modelo selecionado:", {
-            name: firstModel.name,
-            provider: firstModel.provider?.name,
-            modelId: firstModel.id,
-          });
 
           // Buscar token do provider
           const providerToken = await AiStudioService.getProviderToken({
@@ -229,30 +199,11 @@ Título:`,
               const generatedTitle =
                 aiResponse.choices?.[0]?.message?.content?.trim();
 
-              // ✅ LOG: Monitorar uso de tokens e qualidade
-              const usage = aiResponse.usage;
-              console.log("📊 [TITLE_GEN] Estatísticas:", {
-                title: generatedTitle,
-                titleLength: generatedTitle?.length || 0,
-                tokensUsed: usage?.total_tokens || 0,
-                promptTokens: usage?.prompt_tokens || 0,
-                completionTokens: usage?.completion_tokens || 0,
-                model: modelName,
-                firstMessage:
-                  typeof input.metadata?.firstMessage === "string"
-                    ? input.metadata.firstMessage.slice(0, 50) + "..."
-                    : "N/A",
-              });
-
               if (generatedTitle && generatedTitle.length <= 50) {
                 // Atualizar título da sessão
                 await chatRepository.ChatSessionRepository.update(session.id, {
                   title: generatedTitle,
                 });
-                console.log(
-                  "✅ [TITLE_GEN] Título aplicado com sucesso:",
-                  generatedTitle,
-                );
               } else {
                 console.warn(
                   "⚠️ [TITLE_GEN] Título inválido (muito longo ou vazio):",
@@ -284,10 +235,6 @@ Título:`,
               await chatRepository.ChatSessionRepository.update(session.id, {
                 title: fallbackTitle,
               });
-              console.log(
-                "✅ [CREATE_EMPTY] Título fallback usado:",
-                fallbackTitle,
-              );
             }
           } catch (fallbackError) {
             console.error("❌ [CREATE_EMPTY] Erro no fallback:", fallbackError);
@@ -295,13 +242,6 @@ Título:`,
         }
       });
     }
-
-    console.log(
-      "🎉 [CREATE_EMPTY] Sessão vazia criada com sucesso!",
-      session.id,
-      "- Título:",
-      title,
-    );
 
     return {
       session,
