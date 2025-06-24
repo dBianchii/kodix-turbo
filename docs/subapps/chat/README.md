@@ -4,6 +4,8 @@ Documentação centralizada do sistema de chat multi-provider com Assistant-UI d
 
 ## 📚 Índice Principal
 
+> **🔒 Política de Logs do Kodix:** [Política Consolidada de Debug e Logs (OBRIGATÓRIO)](../../debug/kodix-logs-policy.md)
+
 ### 🏗️ Arquitetura & Implementação
 
 - [**Architecture Overview**](./architecture-overview.md) - **DOCUMENTO ÚNICO**: Arquitetura completa (Frontend + Backend + Implementação)
