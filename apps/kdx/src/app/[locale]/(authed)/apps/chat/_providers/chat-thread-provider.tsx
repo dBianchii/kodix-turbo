@@ -6,6 +6,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -104,6 +105,8 @@ export function ChatThreadProvider({
     initialThreadId,
   );
   const [isLoadingThreads, setIsLoadingThreads] = useState(false);
+
+  // Hydration debugging removed - issue was in ThemeToggle component
 
   // ===== DEPENDENCIES =====
 

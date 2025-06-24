@@ -16,5 +16,7 @@ export default function ChatSessionPage({
 }) {
   const { locale, sessionId } = use(params);
 
+  // Hydration debugging removed - issue was in ThemeToggle component
+
   return <UnifiedChatPage sessionId={sessionId} locale={locale} />;
 }

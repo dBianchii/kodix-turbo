@@ -73,6 +73,8 @@ export function ChatWindow({
     );
   }
 
+  // Hydration debugging removed - issue was in ThemeToggle component
+
   return <ActiveChatWindow sessionId={sessionId} onNewSession={onNewSession} />;
 }
 

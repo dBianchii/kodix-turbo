@@ -250,6 +250,8 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
     }
   };
 
+  // Hydration debugging removed - issue was in ThemeToggle component
+
   return (
     <SidebarProvider className="min-h-[calc(100dvh-55px)] items-start">
       <div className="bg-background flex h-[calc(100dvh-55px)] w-full overflow-x-hidden">
