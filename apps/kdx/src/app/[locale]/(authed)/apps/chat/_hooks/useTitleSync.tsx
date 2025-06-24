@@ -23,11 +23,11 @@ export function useTitleSync({
   // ✅ THREAD-FIRST: Função simples para invalidar queries
   const syncNow = useCallback(async () => {
     if (!sessionId || !enabled) {
-      console.log("⚠️ [TITLE_SYNC] Sync ignorado - sessionId ou enabled falso");
+      // Title sync ignored - log removed for performance
       return;
     }
 
-    console.log("🔄 [TITLE_SYNC] Invalidando queries para sessão:", sessionId);
+    // Invalidating queries for session - log removed for performance
 
     try {
       // Invalidar query da sessão específica
@@ -40,7 +40,7 @@ export function useTitleSync({
         queryKey: ["app", "chat", "listarSessions"],
       });
 
-      console.log("✅ [TITLE_SYNC] Queries invalidadas com sucesso");
+      // Title sync queries invalidated - log removed for performance
     } catch (error) {
       console.error("❌ [TITLE_SYNC] Erro na sincronização:", error);
     }

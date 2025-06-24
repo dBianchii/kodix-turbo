@@ -248,7 +248,7 @@ export function ChatThreadProvider({
   );
 
   const switchToThread = useCallback((threadId: string) => {
-    console.log("🔄 [THREAD_PROVIDER] Mudando para thread:", threadId);
+    // Switching to thread - log removed for performance
     setActiveThreadId(threadId);
   }, []);
 

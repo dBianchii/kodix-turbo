@@ -202,23 +202,7 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
 
   // ✅ Função para lidar com seleção de modelo
   const handleModelSelect = (modelId: string) => {
-    console.log("🔍 [DIAGNOSIS] Queries em uso:");
-    console.log("UnifiedChatPage:", {
-      buscarSession: "✅ Invalidada",
-      buscarMensagensTest: "✅ Invalidada",
-      listarSessions: "❌ NÃO invalidada",
-    });
-    console.log("AppSidebar:", {
-      listarSessions: "🎯 QUERY PRINCIPAL",
-      buscarChatFolders: "Secundária",
-    });
-
-    console.log("🔄 [DIAGNOSIS] handleModelSelect iniciado:", {
-      modelId,
-      selectedSessionId,
-      willInvalidate: ["buscarSession", "buscarMensagensTest"],
-      missing: ["listarSessions"], // ⚠️ Esta é a query que falta
-    });
+    // Model selection diagnosis - logs removed for performance
 
     // ✅ Atualizar estado local primeiro
     setSelectedModelId(modelId);
@@ -231,11 +215,7 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
       });
 
       // ✅ Invalidar e re-fetch para atualizar dados
-      console.log("🔄 [CORREÇÃO] Invalidando queries CORRIGIDAS:", {
-        buscarSession: "✅ SERÁ invalidada",
-        buscarMensagensTest: "✅ SERÁ invalidada",
-        listarSessions: "✅ SERÁ invalidada - CORRIGIDO!",
-      });
+      // Query invalidation - log removed for performance
 
       queryClient.invalidateQueries(
         trpc.app.chat.buscarSession.pathFilter({
@@ -252,9 +232,7 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
       // 🎯 NOVA: Invalidar query da sidebar
       queryClient.invalidateQueries(trpc.app.chat.listarSessions.pathFilter());
 
-      console.log(
-        "✅ [CORREÇÃO] Query listarSessions invalidada - sidebar deve atualizar!",
-      );
+      // Sidebar query invalidated - log removed for performance
 
       // Re-fetch para garantir dados atualizados
       setTimeout(() => {

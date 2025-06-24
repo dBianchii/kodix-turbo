@@ -67,15 +67,13 @@ export function useSessionWithMessages(
 
     if (!messages.length) {
       if (process.env.NODE_ENV === "development") {
-        console.log("⚠️ [FORMAT_MESSAGES] Nenhuma mensagem para formatar");
+        // No messages to format - log removed for performance
       }
       return [];
     }
 
     if (process.env.NODE_ENV === "development") {
-      console.log(
-        `🔍 [CHAT_FORMAT_MESSAGES] Formatando ${messages.length} mensagens para sessionId: ${sessionId}`,
-      );
+      // Formatting messages - log removed for performance
     }
 
     // Filtrar mensagens system - não devem aparecer no useChat
@@ -84,9 +82,7 @@ export function useSessionWithMessages(
     );
 
     if (process.env.NODE_ENV === "development") {
-      console.log(
-        `🎯 [CHAT_FORMAT_MESSAGES] Mensagens visíveis após filtrar system: ${visibleMessages.length}`,
-      );
+      // Visible messages after filtering - log removed for performance
     }
 
     const formatted = visibleMessages.map((msg: any) => ({
@@ -96,7 +92,7 @@ export function useSessionWithMessages(
     }));
 
     if (process.env.NODE_ENV === "development") {
-      console.log(`✅ [CHAT_FORMAT_MESSAGES] Mensagens formatadas:`, formatted);
+      // Formatted messages - log removed for performance
     }
     return formatted;
   }, [messagesQuery.data?.messages, sessionId]);
@@ -110,9 +106,7 @@ export function useSessionWithMessages(
     // ✅ GUARDA 1: Prevenir múltiplos refetch simultâneos
     if (isRefetching) {
       if (process.env.NODE_ENV === "development") {
-        console.log(
-          "⚠️ [CHAT_SESSION_HOOK] Refetch já em andamento, ignorando",
-        );
+        // Refetch already in progress - log removed for performance
       }
       return;
     }
@@ -122,18 +116,13 @@ export function useSessionWithMessages(
     if (now - lastRefetchTime < 1000) {
       // Mínimo 1s entre refetch
       if (process.env.NODE_ENV === "development") {
-        console.log(
-          "⚠️ [CHAT_SESSION_HOOK] Refetch muito frequente, ignorando",
-        );
+        // Refetch too frequent - log removed for performance
       }
       return;
     }
 
     if (process.env.NODE_ENV === "development") {
-      console.log(
-        "🔄 [CHAT_SESSION_HOOK] Refetch solicitado para sessionId:",
-        sessionId,
-      );
+      // Refetch requested for session - log removed for performance
     }
 
     setIsRefetching(true);
@@ -155,13 +144,9 @@ export function useSessionWithMessages(
   useMemo(() => {
     if (process.env.NODE_ENV === "development") {
       if (isLoading) {
-        console.log(
-          `🔄 [CHAT_SESSION_HOOK] Carregando dados para sessionId: ${sessionId}`,
-        );
+        // Loading session data - log removed for performance
       } else if (sessionQuery.data && messagesQuery.data) {
-        console.log(
-          `✅ [CHAT_SESSION_HOOK] Dados carregados - SessionId: ${sessionId}, Messages: ${initialMessages.length}`,
-        );
+        // Session data loaded - log removed for performance
       }
     }
   }, [

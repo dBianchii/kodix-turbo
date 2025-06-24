@@ -39,9 +39,7 @@ export function ChatWindow({
 
     // ✅ SUB-ETAPA 2.4: Log de migração concluída (apenas uma vez)
     if (process.env.NODE_ENV === "development") {
-      console.log(
-        "🎉 [MIGRATION_COMPLETE] Thread-first architecture ativa com fallbacks robustos",
-      );
+      // Migration complete - log removed for performance
     }
   }, []);
 
@@ -58,7 +56,7 @@ export function ChatWindow({
         suppressHydrationWarning
       >
         <div className="text-center">
-          <div className="mx-auto mb-4 h-8 w-8 animate-pulse rounded bg-muted" />
+          <div className="bg-muted mx-auto mb-4 h-8 w-8 animate-pulse rounded" />
           <p className="text-muted-foreground">Carregando...</p>
         </div>
       </div>
@@ -106,10 +104,7 @@ function EmptyThreadState({
 
         // ✅ SUB-ETAPA 2.4: Log otimizado
         if (process.env.NODE_ENV === "development") {
-          console.log("✅ [EMPTY_THREAD] Sessão criada:", {
-            sessionId,
-            title: data.session.title,
-          });
+          // Session created - log removed for performance
         }
 
         // ✅ SUB-ETAPA 2.4: Gerenciar mensagem pendente (thread context ou sessionStorage)
@@ -148,10 +143,7 @@ function EmptyThreadState({
 
       // ✅ SUB-ETAPA 2.4: Log otimizado para desenvolvimento
       if (process.env.NODE_ENV === "development") {
-        console.log("🚀 [EMPTY_THREAD] Criando sessão:", {
-          message: trimmedMessage.slice(0, 50) + "...",
-          method: threadContext ? "thread-context" : "sessionStorage",
-        });
+        // Creating session - log removed for performance
       }
 
       // ✅ SUB-ETAPA 2.4: Thread context primeiro, sessionStorage como fallback
@@ -212,8 +204,8 @@ function EmptyThreadState({
       {/* Conteúdo Central */}
       <div className="flex flex-1 items-center justify-center p-8">
         <div className="max-w-md space-y-6 text-center">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-            <MessageCircle className="h-8 w-8 text-primary" />
+          <div className="bg-primary/10 mx-auto flex h-16 w-16 items-center justify-center rounded-full">
+            <MessageCircle className="text-primary h-8 w-8" />
           </div>
 
           <div className="space-y-2">
@@ -227,7 +219,7 @@ function EmptyThreadState({
 
           {/* Sugestões de exemplo (opcional) */}
           <div className="space-y-2">
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               {t("apps.chat.suggestions")}:
             </p>
             <div className="flex flex-wrap justify-center gap-2">
@@ -325,10 +317,7 @@ function ActiveChatWindow({
   useEffect(() => {
     if (switchToThread && sessionId && sessionId !== activeThreadId) {
       if (process.env.NODE_ENV === "development") {
-        console.log("🔄 [ACTIVE_CHAT] Sincronizando thread:", {
-          sessionId,
-          activeThreadId,
-        });
+        // Thread synchronization - log removed for performance
       }
       switchToThread(sessionId);
     }
@@ -364,7 +353,7 @@ function ActiveChatWindow({
     }
 
     if (process.env.NODE_ENV === "development") {
-      console.log("🔄 [ACTIVE_CHAT] Nova sessão detectada:", sessionId);
+      // New session detected - log removed for performance
     }
 
     // Marcar como inicializado e fazer refetch
@@ -400,7 +389,7 @@ function ActiveChatWindow({
   const handleChatFinish = useCallback(
     async (message: any) => {
       if (process.env.NODE_ENV === "development") {
-        console.log("✅ [ACTIVE_CHAT] Mensagem concluída:", message);
+        // Message completed - log removed for performance
       }
 
       // Auto-focus após streaming
@@ -448,12 +437,7 @@ function ActiveChatWindow({
   // ✅ SUB-ETAPA 2.4: Log de estado (apenas desenvolvimento)
   useEffect(() => {
     if (process.env.NODE_ENV === "development") {
-      console.log("📊 [ACTIVE_CHAT] Estado:", {
-        messages: messages.length,
-        input: input.slice(0, 20) + (input.length > 20 ? "..." : ""),
-        isLoading: isLoadingChat,
-        hasError: !!chatError,
-      });
+      // State monitoring - log removed for performance
     }
   }, [messages.length, input, isLoadingChat, chatError]);
 
@@ -483,12 +467,7 @@ function ActiveChatWindow({
     }
 
     if (dbMessages && dbMessages.length > 0) {
-      console.log("🚀 [FLOW_TRACE] 6. Mensagens carregadas do banco:", {
-        count: dbMessages.length,
-        firstMessage: dbMessages[0]?.content?.slice(0, 50),
-        lastMessage: dbMessages[dbMessages.length - 1]?.role,
-        hasAssistantReply: dbMessages.some((m) => m.role === "assistant"),
-      });
+      // Messages loaded from DB - log removed for performance
 
       // ✅ CORREÇÃO: Atualizar tracking ANTES da sincronização
       setLastDbMessagesLength(currentLength);
@@ -497,10 +476,7 @@ function ActiveChatWindow({
       // ✅ CORREÇÃO: Sempre sincronizar com banco, mesmo se useChat já tem mensagens
       setMessages(dbMessages);
     } else if (sessionId && sessionId !== "new") {
-      console.log(
-        "⚠️ [FLOW_TRACE] Nenhuma mensagem encontrada no banco para sessão:",
-        sessionId,
-      );
+      // No messages found in DB for session - log removed for performance
 
       // ✅ CORREÇÃO: Atualizar tracking mesmo quando vazio
       setLastDbMessagesLength(0);
@@ -599,11 +575,11 @@ function ActiveChatWindow({
       <div className="flex h-full items-center justify-center">
         <Card className="max-w-md p-6">
           <div className="text-center">
-            <AlertCircle className="mx-auto mb-4 h-12 w-12 text-destructive" />
+            <AlertCircle className="text-destructive mx-auto mb-4 h-12 w-12" />
             <h3 className="mb-2 text-lg font-semibold">
               {t("apps.chat.errorLoadingSession")}
             </h3>
-            <p className="mb-4 text-muted-foreground">
+            <p className="text-muted-foreground mb-4">
               {sessionError.message || t("apps.chat.sessionNotFound")}
             </p>
             <Button onClick={() => refetchSession()} variant="outline">
@@ -644,10 +620,7 @@ function ActiveChatWindow({
         <form
           onSubmit={(e) => {
             if (process.env.NODE_ENV === "development") {
-              console.log("📤 [ACTIVE_CHAT] Enviando:", {
-                input: input.slice(0, 30) + (input.length > 30 ? "..." : ""),
-                messagesCount: messages.length,
-              });
+              // Sending message - log removed for performance
             }
             handleSubmit(e);
           }}

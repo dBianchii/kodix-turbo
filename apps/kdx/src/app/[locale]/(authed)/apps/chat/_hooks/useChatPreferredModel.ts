@@ -32,12 +32,7 @@ export function useChatPreferredModel() {
     const source = modelFromUserConfig ? "user_config" : "none";
 
     if (process.env.NODE_ENV === "development") {
-      console.log("🔄 [CHAT_PREFERRED_MODEL] Determinando modelo:", {
-        modelFromUserConfig,
-        finalModelId,
-        source,
-        isConfigLoading,
-      });
+      // Model determination - log removed for performance
     }
 
     return {

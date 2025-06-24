@@ -183,12 +183,10 @@ export function ModelInfoBadge({
   useEffect(() => {
     // Debug de props vazias
     if (!sessionData) {
-      console.warn("[MODEL_INFO_BADGE] sessionData is undefined");
+      // Session data undefined - log removed for performance
     }
     if (!lastMessageMetadata) {
-      console.warn(
-        "[MODEL_INFO_BADGE] lastMessageMetadata is undefined - PROBLEMA IDENTIFICADO!",
-      );
+      // Last message metadata undefined - log removed for performance
     }
 
     // Debug de normalização problemática
@@ -197,14 +195,7 @@ export function ModelInfoBadge({
       const normalizedMatch = normalizedConfigured === normalizedActual;
 
       if (originalMatch !== normalizedMatch) {
-        console.warn("[MODEL_INFO_BADGE] Normalização alterou resultado:", {
-          originalMatch,
-          normalizedMatch,
-          configuredModel,
-          actualModel,
-          normalizedConfigured,
-          normalizedActual,
-        });
+        // Model normalization changed result - log removed for performance
       }
     }
 
@@ -215,10 +206,7 @@ export function ModelInfoBadge({
 
     if (timeSinceLastMessage && timeSinceLastMessage > 60000) {
       // > 1 minuto
-      console.warn("[MODEL_INFO_BADGE] Dados antigos detectados:", {
-        timeSinceLastMessage: `${Math.round(timeSinceLastMessage / 1000)}s`,
-        lastMessageTimestamp: lastMessageMetadata?.timestamp,
-      });
+      // Old data detected - log removed for performance
     }
   }, [
     sessionData,
