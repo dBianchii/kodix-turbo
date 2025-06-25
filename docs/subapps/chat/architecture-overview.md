@@ -491,6 +491,31 @@ const { messages } = useChat({ api: "/api/chat/stream" });
 // ❌ useAssistant - Apenas OpenAI Assistants API
 ```
 
+### 4. **Centralização de Lógica de Dados** 🔴 CRÍTICO
+
+A duplicação de lógica de busca de dados (data-fetching) deve ser evitada a todo custo. Componentes não devem recriar chamadas `useQuery` que já existem em hooks centralizados.
+
+**Problema Real Encontrado (Otimização Fase 2):**
+
+```typescript
+// ❌ ANTES: Componente recriando a query com configurações conflitantes
+// no chat-window-session.tsx
+const messagesQuery = useQuery(
+  trpc.app.chat.getMessages.queryOptions(
+    {
+      /* ... */
+    },
+    { staleTime: 0, refetchOnMount: true }, // Conflitava com cache agressivo do hook
+  ),
+);
+
+// ✅ DEPOIS: Componente consome o hook centralizado
+// no chat-window-session.tsx
+const { initialMessages, isLoading } = useSessionWithMessages(sessionId);
+```
+
+**Aprendizado:** A centralização em hooks (como `useSessionWithMessages`) garante uma **única fonte de verdade** para configurações de cache, `staleTime` e lógica de busca, prevenindo bugs de UI e inconsistências de dados.
+
 ## 🎯 Padrões de Qualidade de Código
 
 ### Convenções de Nomenclatura
