@@ -154,26 +154,26 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
   // ✅ Mutation para atualizar sessão (apenas quando há sessão)
   const updateSessionMutation = useMutation(
     trpc.app.chat.atualizarSession.mutationOptions({
-      onSuccess: () => {
-        toast.success(
-          selectedSessionId
-            ? "Modelo da sessão atualizado com sucesso!"
-            : "Modelo preferido atualizado com sucesso!",
+      onSuccess: (updatedSession) => {
+        toast.success("Modelo da sessão atualizado com sucesso!");
+
+        // ✅ Optimistic Update: Manually update the session list cache
+        queryClient.setQueryData(
+          trpc.app.chat.listarSessions.queryKey,
+          (oldData: { sessions: { id: string }[] } | undefined) => {
+            if (!oldData) return oldData;
+            return {
+              ...oldData,
+              sessions: oldData.sessions.map((session) =>
+                session.id === updatedSession.id
+                  ? { ...session, ...updatedSession }
+                  : session,
+              ),
+            };
+          },
         );
-
-        // ✅ Invalidação inteligente
-        if (selectedSessionId) {
-          queryClient.invalidateQueries(
-            trpc.app.chat.buscarSession.pathFilter(),
-          );
-        }
-
-        // 🎯 NOVA: Invalidar sidebar também
-        queryClient.invalidateQueries(
-          trpc.app.chat.listarSessions.pathFilter(),
-        );
-
-        // Mutation success - log removed for performance
+        // Invalidate other specific queries as needed, but avoid invalidating the whole list.
+        queryClient.invalidateQueries(trpc.app.chat.buscarSession.pathFilter());
       },
       onError: trpcErrorToastDefault,
     }),
