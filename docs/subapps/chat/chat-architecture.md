@@ -518,6 +518,33 @@ const { initialMessages, isLoading } = useSessionWithMessages(sessionId);
 
 **Aprendizado:** A centralização em hooks (como `useSessionWithMessages`) garante uma **única fonte de verdade** para configurações de cache, `staleTime` e lógica de busca, prevenindo bugs de UI e inconsistências de dados.
 
+### 5. **Atualizações Otimistas para Listas** 🔴 OBRIGATÓRIO
+
+Para otimizar a performance ao atualizar um item em uma lista grande (como a lista de sessões na sidebar), deve-se usar uma **atualização otimista** com `queryClient.setQueryData` em vez de uma invalidação completa com `queryClient.invalidateQueries`.
+
+**Problema Real Encontrado (Otimização da Sidebar):**
+
+```typescript
+// ❌ ANTES: Invalidação completa causando re-render de toda a lista e lentidão
+queryClient.invalidateQueries(trpc.app.chat.listarSessions.pathFilter());
+
+// ✅ DEPOIS: Atualização cirúrgica e instantânea no cache local
+queryClient.setQueryData(
+  trpc.app.chat.listarSessions.queryKey,
+  (oldData: any) => {
+    if (!oldData) return oldData;
+    return {
+      ...oldData,
+      sessions: oldData.sessions.map((session: any) =>
+        session.id === updatedSession.id ? updatedSession : session,
+      ),
+    };
+  },
+);
+```
+
+**Aprendizado:** A invalidação completa é custosa e deve ser evitada para pequenas atualizações. `setQueryData` oferece uma experiência de usuário instantânea e evita chamadas de rede desnecessárias.
+
 ## 🎯 Padrões de Qualidade de Código
 
 ### Convenções de Nomenclatura
