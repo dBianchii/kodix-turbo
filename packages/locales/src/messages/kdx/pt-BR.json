@@ -98,7 +98,11 @@
         "created": "Sessão criada com sucesso",
         "updated": "Sessão atualizada com sucesso",
         "deleted": "Sessão excluída com sucesso",
-        "error": "Erro ao processar sessão"
+        "error": "Erro ao processar sessão",
+        "editDescription": "Faça alterações na sua sessão aqui. Clique em salvar quando terminar.",
+        "sessionTitle": "Título da Sessão",
+        "selectFolder": "Selecionar Pasta",
+        "noFolder": "Nenhuma Pasta"
       },
       "messages": {
         "loading": "Carregando conversa...",

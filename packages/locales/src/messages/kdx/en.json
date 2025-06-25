@@ -118,7 +118,8 @@
         "created": "Session created successfully",
         "updated": "Session updated successfully",
         "deleted": "Session deleted successfully",
-        "error": "Error processing session"
+        "error": "Error processing session",
+        "editDescription": "Make changes to your session here. Click save when you're done."
       },
       "messages": {
         "loading": "Loading conversation...",

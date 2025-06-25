@@ -274,25 +274,35 @@ export function AppSidebar({
     }),
   );
 
-  const updateSessionMutation = useMutation(
-    trpc.app.chat.atualizarSession.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries(
-          trpc.app.chat.listarSessions.pathFilter(),
-        );
-        toast.success(t("apps.chat.sessions.updated"));
-        setShowEditSession(false);
-        setEditingSession(null);
-        setSessionTitle("");
-        setSelectedAgent("none");
-        setSelectedModel("");
-        setSelectedFolderId("none");
-      },
-      onError: (error: any) => {
-        toast.error(error.message || t("apps.chat.sessions.error"));
-      },
-    }),
-  );
+  const updateSessionMutation = useMutation({
+    mutationFn: trpc.app.chat.atualizarSession.mutate,
+    onSuccess: (data) => {
+      // Otimização: Atualização otimista com setQueryData
+      queryClient.setQueryData(
+        trpc.app.chat.listarSessions.queryKey,
+        (oldData: { sessions: any[] } | undefined) => {
+          if (!oldData) return oldData;
+          return {
+            ...oldData,
+            sessions: oldData.sessions.map((session) =>
+              session.id === data.id ? { ...session, ...data } : session,
+            ),
+          };
+        },
+      );
+
+      toast.success(t("apps.chat.sessions.updated"));
+      setShowEditSession(false);
+      setEditingSession(null);
+      setSessionTitle("");
+      setSelectedAgent("none");
+      setSelectedModel("");
+      setSelectedFolderId("none");
+    },
+    onError: (error: any) => {
+      toast.error(error.message || t("apps.chat.sessions.error"));
+    },
+  });
 
   const deleteSessionMutation = useMutation(
     trpc.app.chat.excluirSession.mutationOptions({
@@ -893,6 +903,9 @@ export function AppSidebar({
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>{t("apps.chat.sessions.edit")}</DialogTitle>
+            <AlertDialogDescription>
+              {t("apps.chat.sessions.editDescription")}
+            </AlertDialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div>
