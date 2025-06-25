@@ -172,8 +172,13 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
             };
           },
         );
+
         // Invalidate other specific queries as needed, but avoid invalidating the whole list.
-        queryClient.invalidateQueries(trpc.app.chat.buscarSession.pathFilter());
+        queryClient.invalidateQueries(
+          trpc.app.chat.buscarSession.pathFilter({
+            sessionId: updatedSession.id,
+          }),
+        );
       },
       onError: trpcErrorToastDefault,
     }),
@@ -260,7 +265,7 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
 
   return (
     <SidebarProvider className="min-h-[calc(100dvh-55px)] items-start">
-      <div className="bg-background flex h-[calc(100dvh-55px)] w-full overflow-x-hidden">
+      <div className="flex h-[calc(100dvh-55px)] w-full overflow-x-hidden bg-background">
         {/* Sidebar - assume largura interna definida pelo componente */}
         <AppSidebar
           selectedSessionId={selectedSessionId}
@@ -270,7 +275,7 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
         {/* Conteúdo principal */}
         <div className="flex flex-1 flex-col">
           {/* Cabeçalho com ModelSelector e badges - estilo ChatGPT */}
-          <div className="border-border bg-card flex items-center justify-between border-b px-4 py-3">
+          <div className="flex items-center justify-between border-b border-border bg-card px-4 py-3">
             <div className="flex items-center gap-4">
               {/* ✅ ETAPA 4.1: Renderizar SidebarTrigger apenas no cliente */}
               {isClient && <SidebarTrigger className="md:hidden" />}

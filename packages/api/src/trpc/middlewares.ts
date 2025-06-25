@@ -1,3 +1,4 @@
+import { ForbiddenError } from "@casl/ability";
 import { experimental_standaloneMiddleware, TRPCError } from "@trpc/server";
 
 import type { KodixAppId } from "@kdx/shared";
@@ -8,15 +9,27 @@ import type { TProtectedProcedureContext } from "./procedures";
 import { getInstalledHandler } from "./routers/app/getInstalled.handler";
 import { t } from "./trpc";
 
+const getTotalMs = (start: [number, number]) => {
+  const end = process.hrtime(start);
+  return (end[0] * 1000000000 + end[1]) / 1000000;
+};
+
 /**
  *  Helper/factory that returns a reusable middleware that checks if a certain app is installed for the current team
  */
 const appInstalledMiddlewareFactory = (appId: KodixAppId) =>
-  experimental_standaloneMiddleware<{
-    ctx: TProtectedProcedureContext;
-  }>().create(async ({ ctx, next }) => {
+  t.middleware(async ({ ctx, next }) => {
+    const start = process.hrtime();
+
+    console.log(`[APP_INSTALL_MIDDLEWARE_PERF] Checking for app: ${appId}`);
+
+    const getInstalledStart = process.hrtime();
     //? By using the `getInstalledHandler`, we can use cached data, improving performance
     const apps = await getInstalledHandler({ ctx });
+    const getInstalledMs = getTotalMs(getInstalledStart);
+    console.log(
+      `[APP_INSTALL_MIDDLEWARE_PERF] getInstalledHandler took ${getInstalledMs.toFixed(2)}ms`,
+    );
 
     if (!apps.some((app) => app.id === appId)) {
       throw new TRPCError({
@@ -27,7 +40,19 @@ const appInstalledMiddlewareFactory = (appId: KodixAppId) =>
       });
     }
 
-    return next({ ctx });
+    const nextStart = process.hrtime();
+    const result = await next({ ctx });
+    const nextMs = getTotalMs(nextStart);
+    console.log(
+      `[APP_INSTALL_MIDDLEWARE_PERF] next() took ${nextMs.toFixed(2)}ms`,
+    );
+
+    const totalMs = getTotalMs(start);
+    console.log(
+      `[APP_INSTALL_MIDDLEWARE_PERF] Middleware for ${appId} took ${totalMs.toFixed(2)}ms`,
+    );
+
+    return result;
   });
 
 export const kodixCareInstalledMiddleware =
@@ -219,19 +244,17 @@ export const appWithDependenciesInstalledMiddleware =
  * You can remove this if you don't like it, but it can help catch unwanted waterfalls by simulating
  * network latency that would occur in production but not in local development.
  */
-export const timingMiddleware = t.middleware(async ({ next, path }) => {
-  const start = Date.now();
-
-  if (t._config.isDev) {
-    // artificial delay in dev 100-500ms
-    const waitMs = Math.floor(Math.random() * 400) + 100;
-    await new Promise((resolve) => setTimeout(resolve, waitMs));
-  }
-
+export const timingMiddleware = t.middleware(async ({ path, next }) => {
+  const start = process.hrtime();
   const result = await next();
+  const totalMs = getTotalMs(start);
 
-  const end = Date.now();
-  console.log(`[TRPC] ${path} took ${end - start}ms to execute`);
+  console.log(`[TRPC_PERF] ${path} took ${totalMs.toFixed(2)}ms to execute`);
+  if (totalMs > 1000) {
+    console.warn(
+      `[TRPC_PERF_WARN] ${path} took ${totalMs.toFixed(2)}ms to execute`,
+    );
+  }
 
   return result;
 });

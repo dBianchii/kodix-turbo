@@ -31,6 +31,7 @@ import { Button } from "@kdx/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -273,8 +274,7 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
 
   const updateSessionMutation = useMutation({
     mutationFn: trpc.app.chat.atualizarSession.mutate,
-    onSuccess: (data) => {
-      // Otimização: Atualização otimista com setQueryData
+    onSuccess: (updatedData) => {
       queryClient.setQueryData(
         trpc.app.chat.listarSessions.queryKey,
         (oldData: { sessions: any[] } | undefined) => {
@@ -282,19 +282,22 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
           return {
             ...oldData,
             sessions: oldData.sessions.map((session) =>
-              session.id === data.id ? { ...session, ...data } : session,
+              session.id === updatedData.id
+                ? { ...session, ...updatedData } // Merge para manter todos os campos
+                : session,
             ),
           };
         },
       );
 
+      // Invalida a query específica da sessão para ter dados frescos na próxima visita
+      queryClient.invalidateQueries(
+        trpc.app.chat.buscarSession.pathFilter({ id: updatedData.id }),
+      );
+
       toast.success(t("apps.chat.sessions.updated"));
       setShowEditSession(false);
       setEditingSession(null);
-      setSessionTitle("");
-      setSelectedAgent("none");
-      setSelectedModel("");
-      setSelectedFolderId("none");
     },
     onError: (error: any) => {
       toast.error(error.message || t("apps.chat.sessions.error"));
@@ -392,52 +395,25 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
     setShowEditSession(true);
   };
 
-  const handleUpdateSession = async () => {
+  const handleUpdateSession = () => {
     if (
       editingSession &&
       sessionTitle.trim() &&
       selectedModel &&
       models.length > 0
     ) {
-      console.log("🔄 [SIDEBAR] handleUpdateSession chamado:", {
-        sessionId: editingSession.id,
-        newModelId: selectedModel,
-        originalModelId: editingSession.aiModelId,
+      updateSessionMutation.mutate({
+        id: editingSession.id,
+        title: sessionTitle.trim(),
+        chatFolderId:
+          selectedFolderId === "none" ? undefined : selectedFolderId,
+        aiAgentId: selectedAgent === "none" ? undefined : selectedAgent,
+        aiModelId: selectedModel,
       });
-
-      try {
-        // ✅ SEMPRE salvar modelo como preferido no team config - PRIMEIRO
-        console.log(
-          `🔄 [SIDEBAR] Salvando modelo preferido nas configurações do usuário: ${editingSession.aiModelId} → ${selectedModel}`,
-        );
-
-        // ✅ AGUARDAR o save ser finalizado
-        await savePreferredModel(selectedModel);
-        console.log("✅ [SIDEBAR] Modelo preferido salvo com sucesso!");
-
-        // ✅ DEPOIS atualizar a sessão
-        updateSessionMutation.mutate({
-          id: editingSession.id,
-          title: sessionTitle.trim(),
-          chatFolderId:
-            selectedFolderId === "none" ? undefined : selectedFolderId,
-          aiAgentId: selectedAgent === "none" ? undefined : selectedAgent,
-          aiModelId: selectedModel,
-        });
-
-        console.log("✅ [SIDEBAR] Session update mutation chamado!");
-      } catch (error) {
-        console.error("❌ [SIDEBAR] Erro ao salvar modelo preferido:", error);
-        // Continuar com update da sessão mesmo se der erro no save
-        updateSessionMutation.mutate({
-          id: editingSession.id,
-          title: sessionTitle.trim(),
-          chatFolderId:
-            selectedFolderId === "none" ? undefined : selectedFolderId,
-          aiAgentId: selectedAgent === "none" ? undefined : selectedAgent,
-          aiModelId: selectedModel,
-        });
-      }
+    } else {
+      console.warn(
+        "[CHAT_SIDEBAR_DEBUG] Condições para atualização não foram satisfeitas. A mutação não será chamada.",
+      );
     }
   };
 
@@ -897,15 +873,15 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
 
       {/* Edit Session Modal */}
       <Dialog open={showEditSession} onOpenChange={setShowEditSession}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>{t("apps.chat.sessions.edit")}</DialogTitle>
-            <AlertDialogDescription>
+            <DialogDescription>
               {t("apps.chat.sessions.editDescription")}
-            </AlertDialogDescription>
+            </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
-            <div>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
               <Label htmlFor="editSessionTitle">
                 {t("apps.chat.sessions.sessionTitle")}
               </Label>
@@ -917,7 +893,7 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
               />
             </div>
 
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="editFolderSelect">
                 {t("apps.chat.sessions.selectFolder")}
               </Label>
@@ -943,7 +919,7 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
               </Select>
             </div>
 
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="editAgentSelect">
                 {t("apps.chat.sessions.selectAgent")}
               </Label>
@@ -966,7 +942,7 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
               </Select>
             </div>
 
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="editModelSelect">
                 {t("apps.chat.sessions.selectModel")}
               </Label>
