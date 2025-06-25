@@ -56,36 +56,6 @@
 - Migração "big bang" sem fallbacks
 - Assumir estruturas de dados sem validar
 
-### 2. **Hidratação React em SSR**
-
-**Problema encontrado:**
-
-```typescript
-// ❌ Causou hydration mismatch
-const { messages } = useThreadChat(sessionId);
-
-// ✅ Solução: thread context opcional
-const threadContext = useThreadContext();
-const { switchToThread } = threadContext || {};
-```
-
-**Aprendizado:** Sempre implementar de forma opcional primeiro.
-
-### 3. **Navegação em Apps Complexas**
-
-**Problema crítico resolvido:**
-
-```typescript
-// ❌ Múltiplos router.push causavam /apps/apps/chat
-useEffect(() => router.push(...)); // Em hook
-onClick={() => router.push(...));  // Em handler
-
-// ✅ Solução: ponto único de controle
-const handleSessionSelect = (sessionId: string) => {
-  router.push(`/apps/chat/${sessionId}`);
-};
-```
-
 ## 🏗️ Arquitetura Migrada
 
 ### FASE 1-4: Fundação (✅ Concluídas)
@@ -251,20 +221,6 @@ useChat({
   top_p: 0.9,
   frequency_penalty: 0.1,
 }
-```
-
-### Padrões Arquiteturais
-
-```typescript
-// Thread-First com Fallback
-const threadContext = useThreadContext();
-const message =
-  threadContext?.getPendingMessage() || sessionStorage.getItem(key);
-
-// Navegação Centralizada
-const navigate = (id: string) => {
-  router.push(`/apps/chat/${id}`);
-};
 ```
 
 ---
