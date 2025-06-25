@@ -21,24 +21,34 @@ if (!process.env.MYSQL_URL) {
  */
 const globalForDb = globalThis as unknown as {
   conn: Pool | undefined;
+  db: MySql2Database<typeof schema> | undefined;
 };
 export const dbURl = new URL(process.env.MYSQL_URL);
 
-const conn =
-  globalForDb.conn ??
-  createPool({
+function getConnectionPool() {
+  if (globalForDb.conn) {
+    return globalForDb.conn;
+  }
+
+  const connectionPool = createPool({
     host: dbURl.host.split(":")[0],
     user: dbURl.username,
     database: dbURl.pathname.slice(1),
     password: dbURl.password,
     port: Number(dbURl.port),
   });
-if (process.env.NODE_ENV !== "production") globalForDb.conn = conn;
+
+  globalForDb.conn = connectionPool;
+  return connectionPool;
+}
+
+const pool = getConnectionPool();
 
 // TODO: Remove typecasting once https://github.com/drizzle-team/drizzle-orm/issues/3282 is resolved
-export const db = drizzle(conn, { schema, mode: "default" }) as MySql2Database<
-  typeof schema
->;
+export const db =
+  globalForDb.db ??
+  (drizzle(pool, { schema, mode: "default" }) as MySql2Database<typeof schema>);
+if (process.env.NODE_ENV !== "production") globalForDb.db = db;
 
 export type Drizzle = typeof db;
 

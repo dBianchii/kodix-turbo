@@ -334,23 +334,33 @@ export async function findManyInvitationsByTeamId(teamId: string, db = _db) {
 
 export async function findManyInvitationsByEmail(email: string, db = _db) {
   const invitedBy = alias(users, "invitedBy");
-  return db
+  const results = await db
     .select({
-      id: invitations.id,
-      Team: {
-        id: teams.id,
-        name: teams.name,
-      },
-      InvitedBy: {
-        id: invitedBy.id,
-        name: invitedBy.name,
-        image: invitedBy.image,
-      },
+      invitationId: invitations.id,
+      teamId: teams.id,
+      teamName: teams.name,
+      invitedById: invitedBy.id,
+      invitedByName: invitedBy.name,
+      invitedByImage: invitedBy.image,
     })
     .from(invitations)
     .innerJoin(teams, eq(invitations.teamId, teams.id))
     .innerJoin(invitedBy, eq(invitations.invitedById, invitedBy.id))
     .where(eq(invitations.email, email));
+
+  // Manual mapping to the required nested structure
+  return results.map((r) => ({
+    id: r.invitationId,
+    Team: {
+      id: r.teamId,
+      name: r.teamName,
+    },
+    InvitedBy: {
+      id: r.invitedById,
+      name: r.invitedByName,
+      image: r.invitedByImage,
+    },
+  }));
 }
 
 export async function findInvitationById(id: string, db = _db) {

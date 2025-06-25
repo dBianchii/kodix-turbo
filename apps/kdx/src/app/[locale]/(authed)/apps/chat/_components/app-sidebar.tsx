@@ -1,7 +1,7 @@
 // @ts-nocheck - Chat tRPC router has type definition issues that need to be resolved at the router level
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ChevronDown,
@@ -72,10 +72,7 @@ interface AppSidebarProps {
   onSessionSelect?: (sessionId: string | undefined) => void;
 }
 
-export function AppSidebar({
-  selectedSessionId,
-  onSessionSelect,
-}: AppSidebarProps) {
+function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
   const { isMobile } = useSidebar();
   const t = useTranslations();
   const trpc = useTRPC();
@@ -1286,3 +1283,6 @@ function FolderItem({
     </div>
   );
 }
+
+const MemoizedAppSidebar = memo(AppSidebar);
+export { MemoizedAppSidebar as AppSidebar };

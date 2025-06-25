@@ -8,6 +8,13 @@
       "when": 1748867836689,
       "tag": "0000_short_stepford_cuckoos",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1750872876777,
+      "tag": "0001_normal_triton",
+      "breakpoints": true
     }
   ]
 }

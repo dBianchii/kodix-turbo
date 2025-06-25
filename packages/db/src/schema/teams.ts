@@ -148,6 +148,7 @@ export const invitations = mysqlTable(
     return {
       invitedByIdIdx: index("invitedById_idx").on(table.invitedById),
       teamIdIdx: index("teamId_idx").on(table.teamId),
+      emailIdx: index("email_idx").on(table.email),
     };
   },
 );

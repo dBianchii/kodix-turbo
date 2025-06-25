@@ -1,7 +1,7 @@
 // @ts-nocheck - Chat tRPC router has type definition issues that need to be resolved at the router level
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AlertCircle, Loader2, MessageCircle, RefreshCw } from "lucide-react";
@@ -19,6 +19,8 @@ import { useTitleSync } from "../_hooks/useTitleSync";
 import { useThreadContext } from "../_providers/chat-thread-provider";
 import { ChatMessages } from "./chat-messages";
 import { MessageInput } from "./message-input";
+import { ChatPanel } from "./chat-panel";
+import { EmptyThreadState } from "./empty-thread-state";
 
 interface ChatWindowProps {
   sessionId?: string;
@@ -26,7 +28,7 @@ interface ChatWindowProps {
   selectedModelId?: string; // ✅ NOVO: Modelo selecionado na welcome screen
 }
 
-export function ChatWindow({
+function ChatWindow({
   sessionId,
   onNewSession,
   selectedModelId,
@@ -661,3 +663,6 @@ function ActiveChatWindow({
     </div>
   );
 }
+
+const MemoizedChatWindow = memo(ChatWindow);
+export { MemoizedChatWindow as ChatWindow };
