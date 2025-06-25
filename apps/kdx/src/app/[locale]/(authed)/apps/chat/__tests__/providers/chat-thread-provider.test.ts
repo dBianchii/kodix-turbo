@@ -19,7 +19,7 @@ const mockTrpc = {
       buscarSession: {
         query: vi.fn(),
       },
-      buscarMensagensTest: {
+      getMessages: {
         query: vi.fn(),
       },
       listarSessions: {

@@ -74,9 +74,8 @@ export const atualizarChatMessageSchema = z.object({
   metadata: z.any().optional(),
 });
 
-// ❌ DEPRECATED - Aliases temporários para migração (remover após ETAPA 5)
-export const buscarChatMessagesSchema = getMessagesSchema; // Alias temporário
-export const buscarMensagensSchema = getMessagesSchema; // Alias temporário
+// ✅ Schema de compatibilidade mantido para outros endpoints que podem usar
+export const buscarChatMessagesSchema = getMessagesSchema;
 
 // Schemas para ações especiais
 export const enviarMensagemSchema = z.object({
@@ -156,9 +155,8 @@ export type AtualizarChatMessageInput = z.infer<
   typeof atualizarChatMessageSchema
 >;
 
-// ❌ DEPRECATED - Tipos temporários para migração (remover após ETAPA 5)
-export type BuscarChatMessagesInput = GetMessagesInput; // Alias temporário
-export type BuscarMensagensInput = GetMessagesInput; // Alias temporário
+// ✅ Tipo de compatibilidade mantido para outros endpoints que podem usar
+export type BuscarChatMessagesInput = GetMessagesInput;
 
 export type EnviarMensagemInput = z.infer<typeof enviarMensagemSchema>;
 export type AutoCreateSessionWithMessageInput = z.infer<

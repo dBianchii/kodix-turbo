@@ -50,12 +50,12 @@ export function useSessionWithMessages(
   );
 
   const messagesQuery = useQuery(
-    trpc.app.chat.buscarMensagensTest.queryOptions(
+    trpc.app.chat.getMessages.queryOptions(
       {
         chatSessionId: sessionId!,
-        limite: 100,
-        pagina: 1,
-        ordem: "asc",
+        limit: 100,
+        page: 1,
+        order: "asc",
       },
       messagesQueryOptions,
     ),

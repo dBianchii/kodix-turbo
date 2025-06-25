@@ -352,15 +352,13 @@ export function ChatThreadProvider({
         });
 
         const messagesData = await queryClient.fetchQuery({
-          queryKey: [
-            "app",
-            "chat",
-            "buscarMensagensTest",
-            { chatSessionId: threadId },
-          ],
+          queryKey: ["app", "chat", "getMessages", { chatSessionId: threadId }],
           queryFn: () =>
-            trpc.app.chat.buscarMensagensTest.query({
+            trpc.app.chat.getMessages.query({
               chatSessionId: threadId,
+              limit: 100,
+              page: 1,
+              order: "asc",
             }),
         });
 

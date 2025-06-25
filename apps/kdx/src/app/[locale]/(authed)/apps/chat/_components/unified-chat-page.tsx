@@ -91,12 +91,12 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
 
   // ✅ Buscar mensagens da sessão selecionada com cache
   const messagesQuery = useQuery(
-    trpc.app.chat.buscarMensagensTest.queryOptions(
+    trpc.app.chat.getMessages.queryOptions(
       {
         chatSessionId: selectedSessionId!,
-        limite: 1,
-        pagina: 1,
-        ordem: "desc",
+        limit: 1,
+        page: 1,
+        order: "desc",
       },
       {
         enabled: !!selectedSessionId,
@@ -108,12 +108,12 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
 
   // ✅ Buscar todas as mensagens para calcular tokens com cache
   const allMessagesQuery = useQuery(
-    trpc.app.chat.buscarMensagensTest.queryOptions(
+    trpc.app.chat.getMessages.queryOptions(
       {
         chatSessionId: selectedSessionId!,
-        limite: 100, // Reduzir limite para evitar erro "too_big"
-        pagina: 1,
-        ordem: "asc", // ✅ Ordem cronológica para cálculo de tokens
+        limit: 100, // Reduzir limite para evitar erro "too_big"
+        page: 1,
+        order: "asc", // ✅ Ordem cronológica para cálculo de tokens
       },
       {
         enabled: !!selectedSessionId,
@@ -245,7 +245,7 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
       );
 
       queryClient.invalidateQueries(
-        trpc.app.chat.buscarMensagensTest.pathFilter({
+        trpc.app.chat.getMessages.pathFilter({
           chatSessionId: selectedSessionId,
         }),
       );

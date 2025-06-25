@@ -85,12 +85,12 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
   const trpc = useTRPC();
 
   const messagesQuery = useQuery(
-    trpc.app.chat.buscarMensagensTest.queryOptions(
+    trpc.app.chat.getMessages.queryOptions(
       {
         chatSessionId: sessionId!,
-        limite: 100,
-        pagina: 1,
-        ordem: "asc",
+        limit: 100,
+        page: 1,
+        order: "asc",
       },
       {
         enabled: !!sessionId,
@@ -273,7 +273,7 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
       if (sessionId && currentSessionIdRef.current === currentSessionId) {
         // ✅ Invalidar usando queryClient (padrão tRPC v11)
         queryClient.invalidateQueries(
-          trpc.app.chat.buscarMensagensTest.pathFilter({
+          trpc.app.chat.getMessages.pathFilter({
             chatSessionId: sessionId,
           }),
         );
@@ -287,7 +287,7 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
           console.log("🔄 Invalidando cache após cancelamento do stream");
           // ✅ Usar queryClient (padrão tRPC v11)
           queryClient.invalidateQueries(
-            trpc.app.chat.buscarMensagensTest.pathFilter({
+            trpc.app.chat.getMessages.pathFilter({
               chatSessionId: sessionId,
             }),
           );
@@ -323,7 +323,7 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
         );
         // ✅ Usar queryClient (padrão tRPC v11)
         queryClient.invalidateQueries(
-          trpc.app.chat.buscarMensagensTest.pathFilter({
+          trpc.app.chat.getMessages.pathFilter({
             chatSessionId: sessionId,
           }),
         );

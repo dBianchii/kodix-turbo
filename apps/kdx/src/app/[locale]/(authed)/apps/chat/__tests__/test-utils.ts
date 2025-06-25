@@ -62,7 +62,7 @@ export const createMockTRPCUtils = () => ({
       buscarSession: {
         useQuery: vi.fn(),
       },
-      buscarMensagensTest: {
+      getMessages: {
         useQuery: vi.fn(),
       },
       enviarMensagem: {

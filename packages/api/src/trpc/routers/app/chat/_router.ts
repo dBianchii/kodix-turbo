@@ -18,6 +18,7 @@ import {
   duplicarSessaoSchema,
   enviarMensagemSchema,
   generateSessionTitleSchema,
+  getMessagesSchema,
   chatIdSchema as idSchema,
   iniciarNovaConversa as iniciarNovaConversaSchema,
   sessionIdSchema,
@@ -428,6 +429,60 @@ export const chatRouter: TRPCRouterRecord = {
   // CHAT MESSAGE ENDPOINTS
   // ===============================
 
+  // ✅ NOVO - Endpoint padrão em inglês (conforme arquitetura)
+  getMessages: protectedProcedure
+    .input(getMessagesSchema)
+    .query(async ({ input, ctx }) => {
+      try {
+        // Verificar se a sessão existe e pertence ao usuário/team
+        const session = await chatRepository.ChatSessionRepository.findById(
+          input.chatSessionId,
+        );
+        if (!session || session.teamId !== ctx.auth.user.activeTeamId) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Chat session not found",
+          });
+        }
+
+        const { limit, page, order } = input;
+        const offset = (page - 1) * limit;
+
+        const [messages, total] = await Promise.all([
+          chatRepository.ChatMessageRepository.findBySession({
+            chatSessionId: input.chatSessionId,
+            limite: limit, // Manter compatibilidade com repository
+            offset,
+            ordem: order, // Manter compatibilidade com repository
+          }),
+          chatRepository.ChatMessageRepository.countBySession(
+            input.chatSessionId,
+          ),
+        ]);
+
+        return {
+          messages,
+          pagination: {
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / limit),
+          },
+        };
+      } catch (error) {
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+
+        console.error("🔴 [CHAT_API] Error fetching messages:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Error fetching messages",
+          cause: error,
+        });
+      }
+    }),
+
   // ✅ REFATORADO: Usar handler separado com Service Layer
   enviarMensagem: protectedProcedure
     .use(chatWithDependenciesMiddleware)
@@ -468,59 +523,6 @@ export const chatRouter: TRPCRouterRecord = {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Erro ao atualizar mensagem",
-          cause: error,
-        });
-      }
-    }),
-
-  buscarMensagensTest: protectedProcedure
-    .input(buscarChatMessagesSchema)
-    .query(async ({ input, ctx }) => {
-      try {
-        // Verificar se a sessão existe e pertence ao usuário/team
-        const session = await chatRepository.ChatSessionRepository.findById(
-          input.chatSessionId,
-        );
-        if (!session || session.teamId !== ctx.auth.user.activeTeamId) {
-          throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "Sessão de chat não encontrada",
-          });
-        }
-
-        const { limite, pagina, ...filtros } = input;
-        const offset = (pagina - 1) * limite;
-
-        const [messages, total] = await Promise.all([
-          chatRepository.ChatMessageRepository.findBySession({
-            chatSessionId: input.chatSessionId,
-            limite,
-            offset,
-            ordem: filtros.ordem,
-          }),
-          chatRepository.ChatMessageRepository.countBySession(
-            input.chatSessionId,
-          ),
-        ]);
-
-        return {
-          messages,
-          paginacao: {
-            total,
-            pagina,
-            limite,
-            totalPaginas: Math.ceil(total / limite),
-          },
-        };
-      } catch (error) {
-        if (error instanceof TRPCError) {
-          throw error;
-        }
-
-        console.error("Erro ao buscar mensagens:", error);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Erro ao buscar mensagens",
           cause: error,
         });
       }

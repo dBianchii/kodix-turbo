@@ -135,7 +135,7 @@ export function ExternalStoreRuntimeProvider({
             queryKey: ["app", "chat", "buscarSession"],
           }),
           queryClient.invalidateQueries({
-            queryKey: ["app", "chat", "buscarMensagensTest"],
+            queryKey: ["app", "chat", "getMessages"],
           }),
           queryClient.invalidateQueries({
             queryKey: ["app", "chat", "listarSessions"],
