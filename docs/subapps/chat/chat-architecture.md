@@ -480,6 +480,8 @@ const { switchToThread } = threadContext || {};
 
 // ❌ EVITAR mudanças drásticas em hooks críticos
 // Causa: Hydration mismatches
+
+**Exemplo Prático (Resolvido):** Um erro de hidratação persistente foi causado pela extensão de navegador ColorZilla, que injeta o atributo `cz-shortcut-listen="true"` no `<body>`. A solução foi adicionar `suppressHydrationWarning` ao `<body>` no `RootLayout`, uma estratégia válida para lidar com atributos incontroláveis de scripts de terceiros.
 ```
 
 ### 3. **Multi-Provider Compatibility** 🔴 IMPORTANTE
@@ -577,7 +579,7 @@ Para garantir a estabilidade do sistema durante futuras evoluções, o seguinte 
 4.  **Cleanup:**
     - Apenas após a validação completa e um período de estabilização, remover o código legado, os wrappers e as feature flags.
 
-## �� Referências
+## 🎯 Referências
 
 - **[Histórico de Migração](./planning/migration-history-unified.md)** - Lições aprendidas e padrões validados
 - **[Plano de Evolução](./planning/assistant-ui-evolution-plan.md)** - Roadmap SUB-FASES futuras
