@@ -316,8 +316,39 @@ export const chatRouter = {
         userId: ctx.auth.user.id,
       });
     }),
+
+  // Mensagens - Endpoint refatorado (Dez 2024)
+  getMessages: protectedProcedure
+    .input(
+      z.object({
+        chatSessionId: z.string(),
+        limit: z.number().min(1).max(100).default(20),
+        page: z.number().min(1).default(1),
+        order: z.enum(["asc", "desc"]).default("desc"),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      return await ChatService.getMessagesPaginated({
+        ...input,
+        teamId: ctx.auth.user.activeTeamId,
+      });
+    }),
 } satisfies TRPCRouterRecord;
 ```
+
+#### Padrões de Nomenclatura Estabelecidos
+
+O Chat SubApp segue rigorosamente a convenção de nomenclatura em **inglês** para todos os endpoints tRPC:
+
+- ✅ **Inglês**: `getMessages`, `createEmptySession`, `getPreferredModel`
+- ❌ **Evitar**: Nomes em português ou com sufixos de teste
+
+**Histórico de Refatoração (Dez 2024):**
+
+- Migração completa de `buscarMensagensTest` → `getMessages`
+- 11 componentes/hooks migrados
+- Zero breaking changes
+- 100% dos testes mantidos funcionais
 
 ## 🗄️ Data Layer
 
@@ -441,6 +472,48 @@ const { messages } = useChat({ api: "/api/chat/stream" });
 
 // ❌ useAssistant - Apenas OpenAI Assistants API
 ```
+
+## 🎯 Padrões de Qualidade de Código
+
+### Convenções de Nomenclatura
+
+1. **Endpoints tRPC**: Sempre em inglês, camelCase
+
+   - ✅ `getMessages`, `createSession`, `updateModel`
+   - ❌ `buscarMensagens`, `criarSessao`, `getMessagesTest`
+
+2. **Campos de Schema**: Inglês consistente
+
+   - ✅ `limit`, `page`, `order`, `teamId`
+   - ❌ `limite`, `pagina`, `ordem`, `equipeId`
+
+3. **Componentes React**: PascalCase descritivo
+   - ✅ `ChatWindow`, `ModelSelector`, `TokenUsageBadge`
+   - ❌ `Chat`, `ModelInfo`, `TokenBadge`
+
+### Melhores Práticas de Implementação
+
+1. **Migração Incremental**: Sempre com aliases temporários
+
+   ```typescript
+   // Fase 1: Criar novo schema
+   export const getMessagesSchema = z.object({...});
+   export const buscarMensagensSchema = getMessagesSchema; // Alias temporário
+
+   // Fase 2: Migrar componentes gradualmente
+   // Fase 3: Remover aliases após validação completa
+   ```
+
+2. **Validação Contínua**: Testes em cada etapa
+
+   - Baseline antes da migração
+   - Testes após cada componente migrado
+   - Validação final de integração
+
+3. **Zero Breaking Changes**: Prioridade máxima
+   - Manter compatibilidade durante migração
+   - Deprecar antes de remover
+   - Documentar mudanças claramente
 
 ## 🔗 Referências
 
