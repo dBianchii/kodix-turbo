@@ -411,6 +411,24 @@ const validateTeamAccess = async (sessionId: string, teamId: string) => {
 
 ### Frontend Optimizations
 
+#### Cache Agressivo de Queries (Padrão Otimizado)
+
+O `useSessionWithMessages` implementa uma estratégia de cache agressiva para minimizar chamadas à API, com `staleTime` de 5 minutos, melhorando significativamente a performance percebida ao navegar entre chats.
+
+```typescript
+// Exemplo de configuração em useSessionWithMessages.tsx
+const messagesQueryOptions = useMemo(
+  () => ({
+    enabled: !!sessionId,
+    staleTime: 5 * 60 * 1000, // 5 minutos
+    gcTime: 10 * 60 * 1000, // 10 minutos
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  }),
+  [sessionId],
+);
+```
+
 #### Memoização Agressiva
 
 ```typescript

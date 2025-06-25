@@ -23,8 +23,8 @@ export function useSessionWithMessages(
   const sessionQueryOptions = useMemo(
     () => ({
       enabled: !!sessionId && (options?.enabled ?? true),
-      staleTime: options?.staleTime ?? 30 * 1000, // ✅ OTIMIZAÇÃO: 30s para reduzir requests
-      gcTime: options?.gcTime ?? 5 * 60 * 1000,
+      staleTime: options?.staleTime ?? 5 * 60 * 1000, // 5 minutos
+      gcTime: options?.gcTime ?? 10 * 60 * 1000, // 10 minutos
       refetchOnMount: false, // ✅ OTIMIZAÇÃO: Não refetch desnecessário
       refetchOnWindowFocus: false,
     }),
@@ -34,8 +34,8 @@ export function useSessionWithMessages(
   const messagesQueryOptions = useMemo(
     () => ({
       enabled: !!sessionId && (options?.enabled ?? true),
-      staleTime: options?.staleTime ?? 30 * 1000, // ✅ OTIMIZAÇÃO: 30s para reduzir requests
-      gcTime: options?.gcTime ?? 5 * 60 * 1000,
+      staleTime: options?.staleTime ?? 5 * 60 * 1000, // 5 minutos
+      gcTime: options?.gcTime ?? 10 * 60 * 1000, // 10 minutos
       refetchOnMount: false, // ✅ OTIMIZAÇÃO: Não refetch desnecessário
       refetchOnWindowFocus: false,
     }),

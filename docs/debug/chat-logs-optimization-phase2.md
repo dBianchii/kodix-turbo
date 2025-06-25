@@ -1,7 +1,7 @@
 # Plano de Otimização Adicional - Chat SubApp (Fase 2)
 
 **Data:** Janeiro 2025  
-**Status:** Estratégia 4 - Análise Profunda + Correção Arquitetural  
+**Status:** 🚧 **Em Andamento - Etapa 3**
 **Localização:** `/docs/debug/chat-logs-optimization-phase2.md`  
 **Política:** [Política Consolidada de Debug e Logs](./kodix-logs-policy.md)
 
@@ -15,220 +15,149 @@ Resolver os problemas remanescentes identificados nos logs do Chat SubApp atrav�
 
 ## 🚨 Problemas Identificados (Logs Reais)
 
-### **1. Queries tRPC Duplicadas (CRÍTICO)**
+### **1. Queries tRPC Duplicadas (CRÍTICO)** - ✅ RESOLVIDO
 
 ```
-loggerLink-ineCN1PO.mjs:79  >> query #157 app.chat.buscarSession Object
 loggerLink-ineCN1PO.mjs:79  >> query #158 app.chat.buscarMensagensTest Object
-loggerLink-ineCN1PO.mjs:79  >> query #159 app.chat.buscarMensagensTest Object
-loggerLink-ineCN1PO.mjs:79  >> query #160 app.chat.buscarMensagensTest Object
 ```
 
-**Problema:** `buscarMensagensTest` sendo executada múltiplas vezes simultaneamente
+**Problema:** `buscarMensagensTest` sendo executada múltiplas vezes.
+**Solução:** Endpoint refatorado para `getMessages` e cache agressivo implementado.
 
-### **2. Logs tRPC Verbosos Excessivos**
+### **2. Logs tRPC Verbosos Excessivos** - ✅ RESOLVIDO
 
 ```
 loggerLink-ineCN1PO.mjs:79  << query #158 app.chat.buscarMensagensTest Object
-loggerLink-ineCN1PO.mjs:79  << query #160 app.chat.buscarMensagensTest Object
 ```
 
-**Problema:** Todos os requests/responses sendo logados
+**Problema:** Todos os requests/responses sendo logados.
+**Solução:** Logger configurado para exibir apenas erros em desenvolvimento.
 
-### **3. Vercel Analytics em Desenvolvimento**
+### **3. Vercel Analytics em Desenvolvimento** - ✅ RESOLVIDO
 
 ```
 script.debug.js:1 [Vercel Web Analytics] [pageview] http://localhost:3000/apps/chat/f8gb5yv6e3jz
 ```
 
-**Problema:** Analytics desnecessário em desenvolvimento
+**Problema:** Analytics desnecessário em desenvolvimento.
+**Solução:** Desabilitado em ambiente de desenvolvimento.
 
-### **4. Logs de Componentes Não Memoizados**
+### **4. Logs de Componentes Não Memoizados** - 🚧 EM ANÁLISE
 
 ```
 useSessionWithMessages.tsx:131  >> query #173 app.chat.buscarSession Object
 chat-window.tsx:406  >> query #175 app.chat.listarSessions Object
 ```
 
-**Problema:** Componentes fazendo queries desnecessárias
+**Problema:** Componentes fazendo queries desnecessárias.
+**Solução:** Cache agressivo implementado, `useSessionWithMessages` já estava memoizado. Próximo passo é analisar `chat-window.tsx`.
 
 ---
 
 ## 📋 Plano de Execução (Análise Profunda)
 
-### **ETAPA 1: Análise de Queries Duplicadas (20min)**
+### **ETAPA 1: Análise de Queries Duplicadas (20min)** - ✅ CONCLUÍDA
 
 #### **1.1 Investigar buscarMensagensTest**
 
-- [ ] Mapear todas as chamadas de `buscarMensagensTest`
-- [ ] Identificar componentes que fazem múltiplas chamadas
-- [ ] Verificar dependências que causam re-execução
-- [ ] Documentar padrão de duplicação
+- [x] Mapear todas as chamadas de `buscarMensagensTest`
+- [x] Identificar causa das duplicações
+- **Resultado:** Causa identificada e resolvida com a refatoração para `getMessages`.
 
-#### **1.2 Análise de Cache Inadequado**
-
-- [ ] Verificar configurações de staleTime atuais
-- [ ] Identificar queries sem cache otimizado
-- [ ] Mapear invalidation patterns problemáticos
-
-**🧪 Teste da Etapa 1:**
-
-```bash
-# Monitorar queries em tempo real
-# Acessar http://localhost:3000/apps/chat e contar queries
-# Meta: Identificar causa exata das duplicações
-```
-
-### **ETAPA 2: Configuração de Logs Mais Restritiva (15min)**
+### **ETAPA 2: Configuração de Logs Mais Restritiva (15min)** - ✅ CONCLUÍDA
 
 #### **2.1 Otimizar tRPC Logger**
 
-- [ ] Configurar loggerLink apenas para erros e requests > 2s
-- [ ] Desabilitar logs verbosos em desenvolvimento
-- [ ] Manter apenas logs críticos
+- [x] Configurar loggerLink apenas para erros
+- [x] Desabilitar logs verbosos em desenvolvimento
 
 #### **2.2 Desabilitar Vercel Analytics em Dev**
 
-- [ ] Configurar Analytics apenas para produção
-- [ ] Remover logs desnecessários de pageview
-- [ ] Manter funcionalidade intacta
+- [x] Configurar Analytics apenas para produção
+- [x] Remover logs desnecessários de pageview
 
-**🧪 Teste da Etapa 2:**
-
-```bash
-# Console deve ter < 3 logs por navegação
-# Verificar que Analytics não aparece em dev
-```
-
-### **ETAPA 3: Correção Arquitetural de Queries (30min)**
+### **ETAPA 3: Correção Arquitetural de Queries (30min)** - 🚧 EM ANDAMENTO
 
 #### **3.1 Implementar Cache Mais Agressivo**
 
-- [ ] Aumentar staleTime para `buscarMensagensTest` (2-5 minutos)
-- [ ] Implementar cache inteligente baseado em sessionId
-- [ ] Evitar refetch desnecessário em mudanças de rota
+- [x] Aumentar staleTime para `getMessages` e `buscarSession` (5 minutos)
+- [x] Evitar refetch desnecessário em `useSessionWithMessages`
 
 #### **3.2 Otimizar useSessionWithMessages**
 
-- [ ] Implementar memoização do hook
-- [ ] Evitar re-execução em renders desnecessários
-- [ ] Cache local para mensagens já carregadas
+- [x] Implementar memoização do hook -> **Status: JÁ IMPLEMENTADO**
+- [x] Evitar re-execução em renders desnecessários -> **Status: JÁ IMPLEMENTADO**
 
 #### **3.3 Corrigir chat-window.tsx**
 
-- [ ] Evitar múltiplas chamadas de `listarSessions`
+- [ ] Analisar e evitar múltiplas chamadas de `listarSessions`
 - [ ] Implementar debounce se necessário
-- [ ] Memoizar computações pesadas
-
-**🧪 Teste da Etapa 3:**
-
-```bash
-# Queries por navegação deve ser < 5
-# Verificar que mensagens não recarregam desnecessariamente
-```
 
 ### **ETAPA 4: Validação e Documentação (10min)**
 
-#### **4.1 Testes de Performance**
-
 - [ ] Medir queries por navegação (meta: < 5)
-- [ ] Verificar tempo de primeira mensagem
 - [ ] Validar que funcionalidade está preservada
-
-#### **4.2 Atualizar Documentação**
-
-- [ ] Registrar mudanças em logs-registry.md
-- [ ] Documentar configurações otimizadas
-- [ ] Atualizar plano de otimização principal
-
-**🧪 Teste da Etapa 4:**
-
-```bash
-# Executar testes completos
-pnpm test:chat  # Deve passar 13/13 suites
-```
+- [x] Atualizar documentação -> **EM ANDAMENTO**
 
 ---
 
 ## 🎯 Metas de Performance (Fase 2)
 
-### **Antes (Estado Atual)**
+### **Antes (Estado Original)**
 
-- **Queries por navegação:** 10-15 (ainda alto)
+- **Queries por navegação:** 15+
 - **Logs tRPC:** Todos requests/responses
 - **Analytics em dev:** Ativo e verboso
-- **Cache efficiency:** Baixa para mensagens
 
 ### **Depois (Meta Fase 2)**
 
-- **Queries por navegação:** < 5
-- **Logs tRPC:** Apenas erros e requests > 2s
+- **Queries por navegação:** < 5 (Próximo de ser atingido)
+- **Logs tRPC:** Apenas erros
 - **Analytics em dev:** Desabilitado
-- **Cache efficiency:** Alta para todas as queries
 
 ---
 
-## 🔧 Implementações Técnicas Específicas
+## 🔧 Implementações Técnicas Específicas (Atualizado)
 
 ### **Cache Agressivo para Mensagens**
 
 ```typescript
-// buscarMensagensTest com cache otimizado
-const messagesQuery = useQuery(
-  trpc.app.chat.buscarMensagensTest.queryOptions(
-    { sessionId },
-    {
-      staleTime: 5 * 60 * 1000, // 5 minutos
-      gcTime: 10 * 60 * 1000, // 10 minutos
-      refetchOnWindowFocus: false,
-      refetchOnMount: false, // Evitar refetch desnecessário
-    },
-  ),
+// useSessionWithMessages.tsx com cache otimizado
+const messagesQueryOptions = useMemo(
+  () => ({
+    enabled: !!sessionId,
+    staleTime: 5 * 60 * 1000, // 5 minutos
+    gcTime: 10 * 60 * 1000, // 10 minutos
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  }),
+  [sessionId],
 );
 ```
 
 ### **tRPC Logger Otimizado**
 
 ```typescript
-// Configuração mais restritiva
+// apps/kdx/src/trpc/react.tsx
 loggerLink({
-  enabled: (op) => {
-    return (
-      // Apenas erros
-      (op.direction === "down" && op.result instanceof Error) ||
-      // Ou requests muito lentos
-      (op.direction === "down" && op.elapsedMs > 2000)
-    );
-  },
+  enabled: (op) =>
+    process.env.NODE_ENV === "development" &&
+    typeof window !== "undefined" &&
+    op.direction === "down" &&
+    op.result instanceof Error,
 });
 ```
 
 ### **Vercel Analytics Condicional**
 
 ```typescript
-// Apenas em produção
-if (process.env.NODE_ENV === "production") {
-  // Inicializar Analytics
-}
-```
-
-### **Hook Memoizado**
-
-```typescript
-// useSessionWithMessages otimizado
-export const useSessionWithMessages = memo(function useSessionWithMessages(
-  sessionId: string,
-) {
-  const messagesQuery = useMemo(
-    () => trpc.app.chat.buscarMensagensTest.queryOptions({ sessionId }),
-    [sessionId],
-  );
-
-  return useQuery(messagesQuery, {
-    staleTime: 5 * 60 * 1000,
-    // ... outras configurações
-  });
-});
+// apps/kdx/src/app/[locale]/layout.tsx
+{process.env.NODE_ENV === "production" && (
+  <>
+    <SpeedInsights />
+    <Analytics />
+  </>
+)}
 ```
 
 ---
