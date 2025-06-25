@@ -285,10 +285,11 @@ const debouncedSearch = useMemo(
 
 ## 🔗 Referências
 
-- [Chat SubApp Architecture](../subapps/chat/architecture-overview.md)
+- [Chat SubApp Architecture](../subapps/chat/chat-architecture.md)
 - [Performance Optimization Guidelines](../architecture/performance-optimization.md)
 - [tRPC Patterns](../architecture/trpc-patterns.md)
 - [Política de Logs](./kodix-logs-policy.md)
+- [Chat SubApp Docs](../subapps/chat/README.md)
 
 ---
 
@@ -499,7 +500,7 @@ const debouncedSearch = useMemo(
 ### **🚀 Benefícios para o Monorepo**
 
 1. **Padrão de Referência:** Chat SubApp agora serve como modelo de performance para outros SubApps
-2. **Política de Logs Consolidada:** Sistema unificado aplicável a todo o monorepo
+2. **Política de Logs:** Sistema unificado aplicável a todos os SubApps
 3. **Estratégias de Cache:** Padrões replicáveis para otimização de queries tRPC
 4. **Memoização Inteligente:** Técnicas aplicáveis a componentes similares em outros SubApps
 

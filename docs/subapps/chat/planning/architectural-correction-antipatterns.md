@@ -80,7 +80,7 @@ function EmptyThreadState() {
 **Ignorar documentação existente:**
 
 - `@docs/subapps/chat/planning/migration-history-unified.md`
-- `@docs/subapps/chat/architecture-overview.md`
+- `@docs/subapps/chat/chat-architecture.md`
 
 **Violar princípios estabelecidos:**
 
@@ -213,7 +213,7 @@ export function useAutoCreateSession() {
 
 1. **Este documento** - Antipadrões a evitar
 2. **`@docs/subapps/chat/planning/migration-history-unified.md`** - Lições críticas
-3. **`@docs/subapps/chat/architecture-overview.md`** - Padrões estabelecidos
+3. **`@docs/subapps/chat/chat-architecture.md`** - Arquitetura de referência do SubApp
 4. **`@docs/subapps/chat/planning/assistant-ui-evolution-plan.md`** - Estado atual
 
 ---
@@ -221,3 +221,17 @@ export function useAutoCreateSession() {
 **📝 Status:** Antipadrões documentados  
 **🎯 Próximos passos:** Consultar este documento antes de QUALQUER correção arquitetural  
 **⚠️ Criticidade:** MÁXIMA - Violação pode quebrar sistema inteiro
+
+## 🎯 Processo Obrigatório de Correção Arquitetural
+
+1. **Identificar o antipadrão**: Comparar a implementação atual com as diretrizes do `@docs/architecture/Architecture_Standards.md`.
+2. **Consultar este documento**: Verificar se o problema já foi mapeado como um antipadrão.
+3. **Analisar a arquitetura oficial**: Revisar `@docs/subapps/chat/chat-architecture.md` para entender os padrões estabelecidos.
+4. **Planejar a correção**: Criar um plano de ação detalhado (ex: `@docs/subapps/chat/planning/refactoring-plan.md`).
+5. **Implementar de forma segura**: Seguir o padrão de migração incremental, com testes e validação contínua.
+
+- **[Histórico de Migração do Chat](./migration-history-unified.md)** - Lições aprendidas com migrações passadas
+- **[Padrões Arquiteturais Globais](../../architecture/Architecture_Standards.md)** - Regras gerais do monorepo
+- **[Arquitetura do Chat](./chat-architecture.md)** - Arquitetura de referência do SubApp
+- **[Padrões tRPC](../../architecture/trpc-patterns.md)** - Boas práticas de implementação de API
+- **[Service Layer](../../architecture/subapp-architecture.md)** - Padrão de comunicação entre SubApps

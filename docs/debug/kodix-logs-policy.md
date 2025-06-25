@@ -333,7 +333,7 @@ loggerLink({
 
 ### **Documentação de Arquitetura**
 
-- [Architecture Overview](../subapps/chat/architecture-overview.md)
+- [Chat Architecture](../subapps/chat/chat-architecture.md)
 - [Debug Logging Standards](../architecture/debug-logging-standards.md)
 - [Backend Guide](../architecture/backend-guide.md)
 - [SubApp Architecture](../architecture/subapp-architecture.md)

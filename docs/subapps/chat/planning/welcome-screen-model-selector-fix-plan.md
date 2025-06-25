@@ -479,5 +479,5 @@ Após implementação:
 **📚 Documentos Relacionados:**
 
 - `@architectural-correction-antipatterns.md` - Lições críticas seguidas
-- `@architecture-overview.md` - Arquitetura thread-first preservada
-- `@model-selector-debugging-plan.md` - Problema de sincronização resolvido
+- **`@docs/subapps/chat/chat-architecture.md`** - Arquitetura thread-first preservada
+- **`@docs/subapps/chat/planning/migration-history-unified.md`** - Lições de navegação centralizada

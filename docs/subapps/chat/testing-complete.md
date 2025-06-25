@@ -487,13 +487,19 @@ pnpm vitest run --coverage --reporter=html apps/kdx/src/app/**/chat/__tests__/
 
 ## 🔗 Recursos Relacionados
 
-### **Documentação Principal**
+### **📚 Referências**
 
-- **[README Principal](./README.md)** - Visão geral do Chat SubApp
-- **[Architecture Overview](./architecture-overview.md)** - Arquitetura completa do sistema
-- **[Architecture Overview](./architecture-overview.md)** - **DOCUMENTO ÚNICO**: Arquitetura completa (Frontend + Backend + Implementação + Sessões)
+#### **Documentação Principal**
 
-### **Arquivos de Teste**
+- **[Chat Architecture](./chat-architecture.md)** - Arquitetura completa do sistema
+- **[Chat README](./README.md)** - Visão geral e guias do SubApp
+
+#### **Documentação de Testes**
+
+- **[Chat Architecture](./chat-architecture.md)** - **DOCUMENTO ÚNICO**: Arquitetura completa (Frontend + Backend + Implementação + Sessões)
+- **[Message Persistence](./message-persistence.md)** - Armazenamento e recuperação de mensagens
+
+#### **Guias de Testes**
 
 - **[Frontend Tests README](<../../apps/kdx/src/app/[locale]/(authed)/apps/chat/__tests__/README.md>)** - Documentação detalhada dos testes frontend
 - **[Test Utils](<../../apps/kdx/src/app/[locale]/(authed)/apps/chat/__tests__/test-utils.ts>)** - Utilitários de teste

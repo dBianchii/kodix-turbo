@@ -8,7 +8,7 @@ Documentação centralizada do sistema de chat multi-provider com Assistant-UI d
 
 ### 🏗️ Arquitetura & Implementação
 
-- [**Architecture Overview**](./architecture-overview.md) - **DOCUMENTO ÚNICO**: Arquitetura completa (Frontend + Backend + Implementação)
+- [**Chat Architecture**](./chat-architecture.md) - **DOCUMENTO ÚNICO**: Arquitetura completa (Frontend + Backend + Implementação)
 
 ### 🧪 Testing & CI
 
@@ -128,7 +128,7 @@ Frontend → tRPC → Vercel AI SDK (Native) → Provider APIs → Auto-Save (on
 
 ### **Arquitetura Completa**
 
-- **[🏗️ Architecture Overview](./architecture-overview.md)** - **DOCUMENTO ÚNICO**: Arquitetura completa (Frontend + Backend + Implementação + Sessões)
+- **[🏗️ Chat Architecture](./chat-architecture.md)** - **DOCUMENTO ÚNICO**: Arquitetura completa (Frontend + Backend + Implementação + Sessões)
 - **[💾 Message Persistence](./message-persistence.md)** - Armazenamento e recuperação de mensagens
 
 ### **Histórico da Migração**
@@ -400,8 +400,8 @@ pnpm test packages/api/src/internal/adapters/
 
 #### **Documentos Consolidados/Removidos**
 
-- ❌ **`session-architecture.md`** → Consolidado em `architecture-overview.md`
-- ❌ **`technical-implementation.md`** → Consolidado em `architecture-overview.md`
+- ❌ **`session-architecture.md`** → Consolidado em `chat-architecture.md`
+- ❌ **`technical-implementation.md`** → Consolidado em `chat-architecture.md`
 - ❌ **`consolidation-summary.md`** → Arquivo temporário removido
 - ❌ **`translation-keys.md`** → Desnecessário (traduções explícitas no código)
 
@@ -415,7 +415,7 @@ pnpm test packages/api/src/internal/adapters/
 - ✅ **3 documentos técnicos ativos** (redução de 67%)
 - ✅ **2 documentos de planning organizados** em pasta específica
 - ✅ **Zero duplicação** de conteúdo
-- ✅ **Documento único** `architecture-overview.md` como referência completa
+- ✅ **Documento único** `chat-architecture.md` como referência completa
 - ✅ **Estrutura limpa** e navegação simplificada
 - ✅ **Separação clara** entre documentação técnica e planning
 
@@ -427,4 +427,4 @@ pnpm test packages/api/src/internal/adapters/
 4. **Eficiência**: Menos documentos para manter atualizados
 5. **Navegação**: Estrutura mais simples e intuitiva
 
-**📚 Referência única**: [Architecture Overview](./architecture-overview.md) - Contém toda arquitetura, implementação e detalhes técnicos.
+**📚 Referência única**: [Chat Architecture](./chat-architecture.md) - Contém toda arquitetura, implementação e detalhes técnicos.
