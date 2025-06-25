@@ -50,6 +50,15 @@ export const buscarChatSessionsSchema = z.object({
 });
 
 // Chat Message schemas
+
+// ✅ NOVO - Schema unificado em inglês (padrão arquitetural correto)
+export const getMessagesSchema = z.object({
+  chatSessionId: z.string().min(1, "Session ID is required"),
+  limit: z.number().min(1).max(100).default(50),
+  page: z.number().min(1).default(1),
+  order: z.enum(["asc", "desc"]).default("asc"),
+});
+
 export const criarChatMessageSchema = z.object({
   chatSessionId: z.string(),
   senderRole: z.enum(["user", "ai", "human_operator", "system"]),
@@ -65,12 +74,9 @@ export const atualizarChatMessageSchema = z.object({
   metadata: z.any().optional(),
 });
 
-export const buscarChatMessagesSchema = z.object({
-  chatSessionId: z.string().min(1, "ID da sessão é obrigatório"),
-  limite: z.number().min(1).max(100).default(50),
-  pagina: z.number().min(1).default(1),
-  ordem: z.enum(["asc", "desc"]).default("asc"),
-});
+// ❌ DEPRECATED - Aliases temporários para migração (remover após ETAPA 5)
+export const buscarChatMessagesSchema = getMessagesSchema; // Alias temporário
+export const buscarMensagensSchema = getMessagesSchema; // Alias temporário
 
 // Schemas para ações especiais
 export const enviarMensagemSchema = z.object({
@@ -129,11 +135,8 @@ export const buscarPorTeamSchema = z.object({
   ordem: z.enum(["asc", "desc"]).default("desc"),
 });
 
-export const buscarMensagensSchema = z.object({
-  chatSessionId: z.string(),
-  limite: z.number().min(1).max(100).default(50),
-  offset: z.number().min(0).default(0),
-});
+// ✅ NOVO - Tipos inferidos em inglês
+export type GetMessagesInput = z.infer<typeof getMessagesSchema>;
 
 // Exportar tipos inferidos
 export type CriarChatFolderInput = z.infer<typeof criarChatFolderSchema>;
@@ -152,7 +155,10 @@ export type CriarChatMessageInput = z.infer<typeof criarChatMessageSchema>;
 export type AtualizarChatMessageInput = z.infer<
   typeof atualizarChatMessageSchema
 >;
-export type BuscarChatMessagesInput = z.infer<typeof buscarChatMessagesSchema>;
+
+// ❌ DEPRECATED - Tipos temporários para migração (remover após ETAPA 5)
+export type BuscarChatMessagesInput = GetMessagesInput; // Alias temporário
+export type BuscarMensagensInput = GetMessagesInput; // Alias temporário
 
 export type EnviarMensagemInput = z.infer<typeof enviarMensagemSchema>;
 export type AutoCreateSessionWithMessageInput = z.infer<
@@ -166,4 +172,3 @@ export type IniciarNovaConversaInput = z.infer<typeof iniciarNovaConversa>;
 export type DuplicarSessaoInput = z.infer<typeof duplicarSessaoSchema>;
 
 export type BuscarPorTeamInput = z.infer<typeof buscarPorTeamSchema>;
-export type BuscarMensagensInput = z.infer<typeof buscarMensagensSchema>;
