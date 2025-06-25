@@ -31,29 +31,29 @@ export async function findInstalledAppsByTeamId(
   teamId: string | undefined,
   db = _db,
 ) {
-  const _apps = await db
+  if (!teamId) {
+    const allApps = await db
+      .select({ id: apps.id, installed: sql<boolean>`false` })
+      .from(apps);
+    return allApps.filter((app) => app.id !== todoAppId);
+  }
+
+  const query = await db
     .select({
       id: apps.id,
-      ...(teamId && {
-        installed: sql`EXISTS(SELECT 1 FROM ${appsToTeams} WHERE ${eq(
-          apps.id,
-          appsToTeams.appId,
-        )} AND ${eq(appsToTeams.teamId, teamId)})`, //? If user is logged in, we select 1 or 0
-      }),
+      installed:
+        sql<boolean>`case when ${appsToTeams.teamId} is not null then 1 else 0 end`.as(
+          "installed",
+        ),
     })
     .from(apps)
-    .then((res) => {
-      if (teamId)
-        return res.map((x) => ({
-          ...x,
-          installed: !!x.installed, //? And then we convert it to boolean. Javascript is amazing /s
-        }));
-      return res.map((x) => ({
-        ...x,
-        installed: false, //? If user is not logged in, we set it to false
-      }));
-    });
-  return _apps.filter((app) => app.id !== todoAppId); //TODO: stinky
+    .leftJoin(
+      appsToTeams,
+      and(eq(apps.id, appsToTeams.appId), eq(appsToTeams.teamId, teamId)),
+    )
+    .groupBy(apps.id);
+
+  return query.filter((app) => app.id !== todoAppId); //TODO: stinky
 }
 
 export async function createAppActivityLog(

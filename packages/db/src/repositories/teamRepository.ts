@@ -1,5 +1,6 @@
 import type { z } from "zod";
 import { and, eq, inArray, not } from "drizzle-orm";
+import { alias } from "drizzle-orm/mysql-core";
 
 import type { AppRole } from "@kdx/shared";
 
@@ -332,27 +333,24 @@ export async function findManyInvitationsByTeamId(teamId: string, db = _db) {
 }
 
 export async function findManyInvitationsByEmail(email: string, db = _db) {
-  return db.query.invitations.findMany({
-    where: (invitation, { eq }) => eq(invitation.email, email),
-    columns: {
-      id: true,
-    },
-    with: {
+  const invitedBy = alias(users, "invitedBy");
+  return db
+    .select({
+      id: invitations.id,
       Team: {
-        columns: {
-          id: true,
-          name: true,
-        },
+        id: teams.id,
+        name: teams.name,
       },
       InvitedBy: {
-        columns: {
-          id: true,
-          name: true,
-          image: true,
-        },
+        id: invitedBy.id,
+        name: invitedBy.name,
+        image: invitedBy.image,
       },
-    },
-  });
+    })
+    .from(invitations)
+    .innerJoin(teams, eq(invitations.teamId, teams.id))
+    .innerJoin(invitedBy, eq(invitations.invitedById, invitedBy.id))
+    .where(eq(invitations.email, email));
 }
 
 export async function findInvitationById(id: string, db = _db) {
