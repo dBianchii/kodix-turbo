@@ -207,69 +207,54 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
   ]);
 
   // ✅ NAVEGAÇÃO CENTRALIZADA: Função para lidar com seleção de sessão
-  const handleSessionSelect = (sessionId: string | undefined) => {
-    // Session selection - log removed for performance
-    setSelectedSessionId(sessionId);
+  const handleSessionSelect = useCallback(
+    (sessionId: string | undefined) => {
+      // Session selection - log removed for performance
+      setSelectedSessionId(sessionId);
 
-    // ✅ Navegar para a sessão ou página principal
-    if (sessionId) {
-      // Navigating to session - log removed for performance
-      router.push(`/apps/chat/${sessionId}`);
-    } else {
-      // Navigating to main page - log removed for performance
-      router.push("/apps/chat");
-    }
-  };
+      // ✅ Navegar para a sessão ou página principal
+      if (sessionId) {
+        // Navigating to session - log removed for performance
+        router.push(`/apps/chat/${sessionId}`);
+      } else {
+        // Navigating to main page - log removed for performance
+        router.push("/apps/chat");
+      }
+    },
+    [router],
+  );
 
   // ✅ Função para lidar com seleção de modelo
-  const handleModelSelect = (modelId: string) => {
-    // Model selection diagnosis - logs removed for performance
+  const handleModelSelect = useCallback(
+    (modelId: string) => {
+      // Model selection diagnosis - logs removed for performance
 
-    // ✅ Atualizar estado local primeiro
-    setSelectedModelId(modelId);
+      // ✅ Atualizar estado local primeiro
+      setSelectedModelId(modelId);
 
-    if (selectedSessionId) {
-      // ✅ Tem sessão: atualizar modelo da sessão
-      updateSessionMutation.mutate({
-        id: selectedSessionId,
-        aiModelId: modelId,
-      });
+      if (selectedSessionId) {
+        // ✅ Tem sessão: atualizar modelo da sessão
+        updateSessionMutation.mutate({
+          id: selectedSessionId,
+          aiModelId: modelId,
+        });
+      } else {
+        // ✅ Sem sessão: salvar como modelo preferido
+        savePreferredModel(modelId);
 
-      // ✅ Invalidar e re-fetch para atualizar dados
-      // Query invalidation - log removed for performance
-
-      queryClient.invalidateQueries(
-        trpc.app.chat.buscarSession.pathFilter({
-          sessionId: selectedSessionId,
-        }),
-      );
-
-      queryClient.invalidateQueries(
-        trpc.app.chat.getMessages.pathFilter({
-          chatSessionId: selectedSessionId,
-        }),
-      );
-
-      // 🎯 NOVA: Invalidar query da sidebar
-      queryClient.invalidateQueries(trpc.app.chat.listarSessions.pathFilter());
-
-      // Sidebar query invalidated - log removed for performance
-
-      // Re-fetch para garantir dados atualizados
-      setTimeout(() => {
-        sessionQuery.refetch();
-        messagesQuery.refetch();
-      }, 500);
-    } else {
-      // ✅ Sem sessão: salvar como modelo preferido
-      savePreferredModel(modelId);
-
-      // ✅ Atualizar modelo preferido após salvar
-      setTimeout(() => {
-        refetchPreferredModel();
-      }, 1000);
-    }
-  };
+        // ✅ Atualizar modelo preferido após salvar
+        setTimeout(() => {
+          refetchPreferredModel();
+        }, 1000);
+      }
+    },
+    [
+      selectedSessionId,
+      updateSessionMutation,
+      savePreferredModel,
+      refetchPreferredModel,
+    ],
+  );
 
   // Hydration debugging removed - issue was in ThemeToggle component
 

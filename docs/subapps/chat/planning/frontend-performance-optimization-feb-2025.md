@@ -6,54 +6,75 @@
 
 ## 1. Problem Statement & Lessons Learned
 
-Following successful backend optimizations (which reduced latency from ~2.8s to ~500ms), the Chat SubApp still exhibits significant client-side performance issues. The initial attempt to fix this with `React.memo` was insufficient.
+Following successful backend optimizations, the Chat SubApp still exhibits significant client-side performance issues. The initial attempt to fix this with `React.memo` was insufficient because the `props` passed to the memoized components (especially callback functions) were being recreated on every render, invalidating the memoization.
 
-- **Lessons Learned:**
-  1.  **Ineffective Memoization:** The `[Violation]` warnings persist because the props (especially `onSessionSelect` and other callbacks) passed to the memoized components are being recreated on every render of `UnifiedChatPage`, thus breaking the memoization.
-  2.  **Fragmented Data Fetching:** `UnifiedChatPage` directly calls multiple `useQuery` hooks. This goes against the established architectural pattern in `chat-architecture.md` which recommends centralizing data logic in dedicated hooks to avoid inconsistent or inefficient fetching.
-  3.  **Costly Re-renders:** A full `queryClient.invalidateQueries` on the session list (`listarSessions`) after an update can be slow if the list is long, forcing a full re-fetch and re-render of the sidebar. The architecture documents recommend using optimistic updates via `setQueryData` for better performance.
+- **Key Architectural Guideline:** The project's documentation, specifically `@docs/subapps/chat/planning/architectural-correction-antipatterns.md`, dictates a critical principle: **"Corrections should be surgical, not architectural."** Large-scale refactoring to fix performance issues is an anti-pattern.
 
-## 2. Chosen Strategy: Architectural Frontend Refactoring
+## 2. Chosen Strategy: Surgical Frontend Optimization
 
-Based on the lessons learned and the project's architecture documents (`@chat-architecture.md`), the new strategy is a deeper, more architectural refactoring of the frontend.
+Based on a deeper analysis of the architecture documents (`@chat-architecture.md`), a new, safer, and more aligned strategy is proposed. Instead of a large architectural refactoring, we will apply targeted, low-risk optimizations that are already established as best practices within the project.
 
-- **Phase 1: Stabilize Props with `useCallback`**: Wrap all callback functions passed as props (`handleSessionSelect`, `handleModelSelect`, etc.) in `useCallback` to ensure they have a stable identity between renders. This will make `React.memo` effective.
-- **Phase 2: Centralize Data Logic**: Create a new centralized hook, `useUnifiedChatState`, to encapsulate all the data-fetching logic (`useQuery` for sessions, messages, etc.) that is currently inside `UnifiedChatPage`. This component will then consume the hook, simplifying its code and adhering to the "Centralização de Lógica de Dados" pattern.
-- **Phase 3: Implement Optimistic Updates**: Refactor the sidebar update logic to use `queryClient.setQueryData` for instant UI feedback when a session title or model changes, avoiding costly re-fetches as prescribed by the "Atualizações Otimistas para Listas" pattern.
+- **Phase 1: Stabilize Props with `useCallback`**: This is the highest priority. We will wrap all callback functions passed as props in `useCallback` to ensure they have a stable identity. This will make the existing `React.memo` effective and is the most direct solution to the re-rendering problem.
+- **Phase 2: Implement Optimistic Updates**: We will replace costly `queryClient.invalidateQueries` calls with `queryClient.setQueryData` for session updates. This aligns with the "Atualizações Otimistas para Listas" pattern documented in the chat's architecture, providing instant UI feedback for the sidebar.
 
 - **Pros:**
-  - **Architecturally Correct:** Aligns the component with the established best practices in the project's documentation.
-  - **Highly Performant:** Addresses the root causes of re-renders, not just the symptoms.
-  - **Improved Maintainability:** Simplifies the `UnifiedChatPage` component, making it easier to understand and maintain.
+  - **Architecturally Correct & Safe:** Strictly follows the established patterns for _corrections_ and avoids risky, large-scale refactoring.
+  - **Highly Performant:** Addresses the root causes of re-renders (unstable props and slow data invalidation) directly.
+  - **Incremental and Verifiable:** Each step provides a clear benefit and can be validated independently.
 
 ## 3. Step-by-Step Action Plan
 
 ### Step 1: Stabilize Callbacks
 
 - **File:** `apps/kdx/src/app/[locale]/(authed)/apps/chat/_components/unified-chat-page.tsx`
-- **Action:** Wrap the `handleSessionSelect` and `handleModelSelect` functions in the `useCallback` hook with the correct dependency arrays.
+- **Action:** Wrap the `handleSessionSelect` and `handleModelSelect` functions in the `useCallback` hook with the correct dependency arrays. This is the primary fix for the performance issue.
 
-### Step 2: Centralize State and Data-Fetching Logic
+### Step 2: Implement Optimistic Updates for the Sidebar
 
-- **Action:** Create a new hook file `apps/kdx/src/app/[locale]/(authed)/apps/chat/_hooks/useUnifiedChatState.ts`.
-- **Logic:** Move all `useState`, `useEffect`, `useQuery`, `useMutation`, and memoized calculations from `UnifiedChatPage` into this new hook. The hook will return the necessary state and handlers to the component.
-- **Refactor:** Modify `UnifiedChatPage` to be a much simpler "presentational" component that gets all its data and logic from the `useUnifiedChatState` hook.
+- **File:** `apps/kdx/src/app/[locale]/(authed)/apps/chat/_components/unified-chat-page.tsx`
+- **Action:** Locate the `updateSessionMutation`. In its `onSuccess` callback, replace the `queryClient.invalidateQueries` for `listarSessions` with a `queryClient.setQueryData` call. This will manually and instantly update the specific session in the React Query cache, preventing a full re-fetch of the session list.
 
-### Step 3: Implement Optimistic Updates in Sidebar
+- **Proposed Implementation:**
 
-- **Action:** Locate the mutations that affect session data (e.g., `updateSessionMutation`).
-- **Refactor:** In the `onSuccess` or `onMutate` callbacks of these mutations, use `queryClient.setQueryData` to directly update the specific session in the `listarSessions` query cache. This will provide an instant UI update without a network round-trip.
+  ```typescript
+  const updateSessionMutation = useMutation(
+    trpc.app.chat.atualizarSession.mutationOptions({
+      onSuccess: (updatedSession) => {
+        toast.success("Modelo atualizado com sucesso!");
 
-### Step 4: Final Validation
+        // ✅ Optimistic Update: Manually update the session list cache
+        queryClient.setQueryData(
+          trpc.app.chat.listarSessions.queryKey,
+          (oldData: any) => {
+            if (!oldData) return oldData;
+            return {
+              ...oldData,
+              sessions: oldData.sessions.map((session: any) =>
+                session.id === updatedSession.id
+                  ? { ...session, ...updatedSession }
+                  : session,
+              ),
+            };
+          },
+        );
+        // Invalidate other specific queries as needed, but avoid invalidating the whole list.
+        queryClient.invalidateQueries(trpc.app.chat.buscarSession.pathFilter());
+      },
+      onError: trpcErrorToastDefault,
+    }),
+  );
+  ```
+
+### Step 3: Final Validation
 
 - **Action:** Run the application locally (`pnpm dev:kdx`).
 - **Procedure:**
   1. Open the browser's developer tools.
-  2. Navigate to the Chat SubApp and switch between sessions, change models, and edit session titles.
+  2. Navigate to the Chat SubApp and switch between sessions, then change the model of a session.
 - **Expected Outcome:**
-  - UI interactions should be instantaneous.
-  - All `[Violation]` warnings should be completely eliminated.
-  - The code in `UnifiedChatPage` will be cleaner and more aligned with the project's architecture.
+  - UI interactions (session switching, model selection) should be instantaneous.
+  - All `[Violation]` warnings in the console should be completely eliminated.
+  - The sidebar should update immediately after a model change without a noticeable loading state.
 
 ---
 
