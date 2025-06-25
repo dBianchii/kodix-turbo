@@ -67,8 +67,12 @@ export default async function RootLayout(props: {
           )}
           suppressHydrationWarning
         >
-          <SpeedInsights />
-          <Analytics />
+          {process.env.NODE_ENV === "production" && (
+            <>
+              <SpeedInsights />
+              <Analytics />
+            </>
+          )}
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <Toaster
               richColors
