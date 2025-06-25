@@ -62,7 +62,9 @@ Para mais informações:
 
 - `docs/apps/care-mobile/` - **Aplicação móvel** Kodix Care (React Native/Expo)
 - `docs/subapps/calendar/` - Sistema de agendamento (SubApp)
-- `docs/components/` - Componentes de UI e design system
+- `docs/architecture/` - Arquitetura geral, desenvolvimento backend e frontend
+- `docs/ui-catalog/` - Componentes de UI e design system
+- `docs/database/` - Esquemas de banco de dados
 - `docs/development-setup.md` - Configuração do ambiente
 - `docs/architecture/coding-standards.md` - Práticas de desenvolvimento
 - `docs/architecture/backend-guide.md` - Implementação backend

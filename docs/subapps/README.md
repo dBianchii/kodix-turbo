@@ -58,7 +58,7 @@ Versão web do módulo de gestão clínica
 
 1. **Para novos desenvolvedores**:
    - **Arquitetura**: Comece com os [Guias de Arquitetura](../architecture/) para entender padrões de desenvolvimento
-   - **UI/Components**: Veja o [Design System](../components/) para componentes específicos
+   - **UI/Components**: Veja o [Design System](../ui-catalog/) para componentes específicos
 2. **Para trabalhar com IA**: Consulte [AI Studio](./ai-studio/) e [Chat](./chat/)
 3. **Para funcionalidades específicas**: Acesse a documentação do subapp correspondente
 4. **Para desenvolvimento geral**: Veja a documentação em `docs/architecture/`
@@ -82,13 +82,13 @@ apps/kdx/src/app/[locale]/(authed)/apps/
 - **AI Studio ↔ Chat**: Modelos configurados no AI Studio são usados no Chat
 - **Calendar ↔ Kodix Care**: Agendamentos integrados com gestão clínica
 - **Todo ↔ Todos os SubApps**: Tarefas podem ser criadas a partir de qualquer funcionalidade
-- **Design System**: Componentes compartilhados entre todos os subapps (ver `docs/components/`)
+- **Design System**: Componentes compartilhados entre todos os subapps (ver `docs/ui-catalog/`)
 
 ## 📖 Documentação Relacionada
 
 Para contexto completo do projeto:
 
-- `docs/architecture/` - Arquitetura geral, desenvolvimento backend e frontend
-- `docs/components/` - Design system e componentes de UI
-- `docs/database/` - Esquemas de banco de dados
-- `docs/apps/care-mobile/` - Aplicação móvel separada
+- `docs/architecture/` - Padrões de arquitetura, frontend e backend
+- `docs/ui-catalog/` - Design system e componentes de UI
+- `docs/database/` - Documentação do banco de dados
+- `docs/subapps/` - Documentação específica por SubApp

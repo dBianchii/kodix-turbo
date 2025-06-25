@@ -137,7 +137,7 @@ AUTH_GOOGLE_CLIENT_SECRET="..."
 - **Backend**: [`docs/architecture/backend-guide.md`](docs/architecture/backend-guide.md)
 - **Frontend**: [`docs/architecture/frontend-guide.md`](docs/architecture/frontend-guide.md)
 - **Banco de Dados**: [`docs/database/`](docs/database/)
-- **Design System**: [`docs/components/`](docs/components/)
+- **Design System**: [`docs/ui-catalog/`](docs/ui-catalog/)
 
 ### 🎯 **Funcionalidades**
 
@@ -160,31 +160,34 @@ AUTH_GOOGLE_CLIENT_SECRET="..."
 - **Monorepo**: Turborepo, pnpm workspaces
 - **Deploy**: Vercel (web), Expo (mobile)
 
-## 📚 Documentação Completa
+## 📚 Documentação
 
-| Categoria            | Link                                       | Descrição                                |
-| -------------------- | ------------------------------------------ | ---------------------------------------- |
-| **📖 Índice Geral**  | [`docs/README.md`](docs/README.md)         | Navegação completa da documentação       |
-| **🏢 Projeto**       | [`docs/project/`](docs/project/)           | Conceitos, visão e contexto de negócio   |
-| **🏗️ Arquitetura**   | [`docs/architecture/`](docs/architecture/) | Setup, desenvolvimento, padrões técnicos |
-| **📱 SubApps**       | [`docs/subapps/`](docs/subapps/)           | Funcionalidades específicas              |
-| **🎨 Design System** | [`docs/components/`](docs/components/)     | Componentes e UI                         |
-| **🗄️ Database**      | [`docs/database/`](docs/database/)         | Schemas e patterns de DB                 |
+A documentação do Kodix está dividida nas seguintes áreas:
 
-## 🤝 Contribuindo
+| Recurso              | Localização                                | Descrição                          |
+| -------------------- | ------------------------------------------ | ---------------------------------- |
+| **🎨 Design System** | [`docs/ui-catalog/`](docs/ui-catalog/)     | Componentes e UI                   |
+| **⚙️ Arquitetura**   | [`docs/architecture/`](docs/architecture/) | Padrões e guias de desenvolvimento |
+| **📦 SubApps**       | [`docs/subapps/`](docs/subapps/)           | Documentação de features           |
+| **🗄️ Database**      | [`docs/database/`](docs/database/)         | Schemas e patterns de DB           |
 
-1. **Siga os guias**: [`docs/architecture/`](docs/architecture/)
-2. **Mantenha docs atualizadas**: [`docs/`](docs/)
-3. **Execute antes de commit**: `pnpm lint:fix && pnpm format:fix && pnpm typecheck`
+## 🚀 Começando
 
----
+Para começar a desenvolver com o Kodix, siga estas etapas:
 
-💡 **Dica**: Este README é seu ponto de partida. Para informações detalhadas, navegue pela [`documentação completa`](docs/) organizada por temas.
+1.  **Clone o repositório**: `git clone https://github.com/wcrbiamchi/kodix-turbo.git`
+2.  **Instale as dependências**: `pnpm install`
+3.  **Configure o ambiente**: Copie `.env.example` para `.env` e preencha as variáveis
+4.  **Inicie os serviços**: `pnpm dev:kdx`
 
-**📜 Referência**: Baseado em [create-t3-turbo](https://github.com/t3-oss/create-t3-turbo) (obrigado @juliusmarminge!)
+Para um guia detalhado, consulte a [Documentação de Setup de Desenvolvimento](./docs/architecture/development-setup.md).
 
-### 🏗️ Arquitetura e Desenvolvimento
+### Documentação por Área
 
-- **Architecture**: [`docs/architecture/`](docs/architecture/) - Arquitetura geral, frontend, backend
 - **SubApp**: [`docs/architecture/subapp-architecture.md`](docs/architecture/subapp-architecture.md) - Arquitetura completa de SubApps
 - **Database**: [`docs/database/`](docs/database/) - MySQL, Drizzle ORM, schemas, migrations
+- **Design System**: [`docs/ui-catalog/`](docs/ui-catalog/)
+
+## 🤝 Contribuição
+
+Obrigado por considerar contribuir com o Kodix! Consulte as diretrizes em [`CONTRIBUTING.md`](./CONTRIBUTING.md) para começar.

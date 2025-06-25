@@ -61,3 +61,25 @@ Para informações técnicas e implementação:
 ---
 
 _Esta documentação foca nos aspectos conceituais e de negócio. Para implementação técnica, consulte `docs/architecture/`._
+
+### 🎨 **Design System & Componentes**
+
+- **Descrição**: Biblioteca de componentes UI reutilizáveis, baseada em Shadcn/UI, Radix e Tailwind.
+- **Localização**: `@kdx/ui`
+- **Documentação**: Veja `docs/ui-catalog/` para componentes e UI
+
+## 🎯 **Princípios de Desenvolvimento**
+
+1.  **Código em Inglês, Documentação em Português**
+
+### Diagrama de Documentação
+
+1.  **Visão do Projeto**: `docs/project/`
+2.  **Design System**: `docs/ui-catalog/`
+3.  **Arquitetura Técnica**: `docs/architecture/`
+4.  **Banco de Dados**: `docs/database/`
+
+- `docs/architecture/` - Arquitetura geral, desenvolvimento backend e frontend
+- `docs/ui-catalog/` - Design system e componentes de UI
+- `docs/database/` - Documentação do banco de dados
+- `docs/apps/care-mobile/` - Aplicação móvel separada

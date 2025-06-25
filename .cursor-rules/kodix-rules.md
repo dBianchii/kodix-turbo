@@ -488,7 +488,7 @@ await fetch("/api/other-subapp/endpoint");
    - **SubApp features** → `docs/subapps/{appName}/`
    - **Mobile apps** → `docs/apps/{appName}/`
    - **Architecture docs** → `docs/architecture/`
-   - **Component docs** → `docs/components/`
+   - **Component docs** → `docs/ui-catalog/`
    - **Database docs** → `docs/database/`
 
    **d) Before creating any new documentation:**
