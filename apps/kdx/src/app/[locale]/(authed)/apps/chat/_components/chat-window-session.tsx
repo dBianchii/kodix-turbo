@@ -13,6 +13,7 @@ import { ScrollArea } from "@kdx/ui/scroll-area";
 import { Separator } from "@kdx/ui/separator";
 
 import { useTRPC } from "~/trpc/react";
+import { useSessionWithMessages } from "../_hooks/useSessionWithMessages";
 import { InputBox } from "./input-box";
 import { Message } from "./message";
 
@@ -36,6 +37,13 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const queryClient = useQueryClient();
   const t = useTranslations();
+  const {
+    initialMessages,
+    isLoading: isLoadingMessages,
+    isError,
+    error: messagesError,
+    refetch,
+  } = useSessionWithMessages(sessionId);
 
   // ✅ NOVO: Controle de cancelamento de stream
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -73,66 +81,31 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
       setIsLoading(false);
       setError(null);
 
-      // ✅ CORREÇÃO: Invalidar cache ao mudar de sessão
-      console.log(`🔄 Invalidando cache ao mudar para sessão: ${sessionId}`);
-      queryClient.invalidateQueries({
-        queryKey: ["chat", "messages", sessionId],
-      });
+      // ✅ CORREÇÃO: Invalidar cache ao mudar de sessão -> O hook já faz isso.
     }
   }, [sessionId, queryClient]);
 
   // ✅ CORRIGIDO: Usar padrão useTRPC
   const trpc = useTRPC();
 
-  const messagesQuery = useQuery(
-    trpc.app.chat.getMessages.queryOptions(
-      {
-        chatSessionId: sessionId!,
-        limit: 100,
-        page: 1,
-        order: "asc",
-      },
-      {
-        enabled: !!sessionId,
-        refetchOnWindowFocus: false,
-        // ✅ NOVO: Configurações para garantir dados frescos
-        staleTime: 0, // Sempre considerar dados como stale
-        gcTime: 5 * 60 * 1000, // 5 minutos de cache
-        refetchOnMount: true, // Sempre refetch ao montar
-      },
-    ),
-  );
-
-  // Atualizar mensagens quando os dados chegarem
+  // Atualizar mensagens quando os dados da query mudam (carregamento inicial)
   useEffect(() => {
-    const data = messagesQuery.data;
-    if (data?.messages) {
-      // 🎯 FILTRAR mensagens system - não devem aparecer na interface
-      const visibleMessages = data.messages.filter(
-        (msg: any) => msg.senderRole !== "system",
-      );
-
-      const formattedMessages = visibleMessages.map((msg: any) => ({
-        role: (msg.senderRole === "user" ? "user" : "assistant") as MessageRole,
-        content: msg.content,
-        id: msg.id,
-      }));
-      setMessages(formattedMessages);
-
-      console.log(
-        `🔍 [CHAT_SESSION] Total mensagens no banco: ${data.messages.length}`,
-      );
-      console.log(
-        `🎯 [CHAT_SESSION] Mensagens system filtradas: ${data.messages.length - visibleMessages.length}`,
-      );
-      console.log(
-        `✅ [CHAT_SESSION] Mensagens visíveis: ${visibleMessages.length}`,
-      );
+    if (
+      !isLoadingMessages &&
+      initialMessages &&
+      // Apenas atualiza se o estado local estiver vazio ou se a sessão mudou,
+      // para não sobrescrever o streaming em andamento.
+      (messages.length === 0 || currentSessionIdRef.current !== sessionId)
+    ) {
+      setMessages(initialMessages);
     } else if (!sessionId) {
-      // Se não há sessão, não mostrar mensagens
       setMessages([]);
-    } else if (sessionId && data?.messages?.length === 0) {
-      // Se há sessão mas não há mensagens, mostrar mensagem de boas-vindas
+    }
+  }, [initialMessages, sessionId, isLoadingMessages, messages.length]);
+
+  // Lida com a mensagem de boas-vindas para sessões vazias
+  useEffect(() => {
+    if (sessionId && !isLoadingMessages && initialMessages?.length === 0) {
       setMessages([
         {
           role: "assistant",
@@ -140,7 +113,7 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
         },
       ]);
     }
-  }, [messagesQuery.data, sessionId, t]);
+  }, [sessionId, isLoadingMessages, initialMessages, t]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -346,7 +319,7 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
   }
 
   // Loading state for initial load
-  if (sessionId && messagesQuery.isLoading) {
+  if (sessionId && isLoadingMessages) {
     return (
       <div className="flex h-full items-center justify-center">
         <Card className="bg-slate-900/50 p-8 backdrop-blur-sm">
@@ -360,7 +333,7 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
   }
 
   // Error state
-  if (sessionId && messagesQuery.error) {
+  if (sessionId && isError) {
     return (
       <div className="flex h-full items-center justify-center">
         <Card className="bg-slate-900/50 p-8 backdrop-blur-sm">
@@ -368,11 +341,11 @@ export function ChatWindow({ sessionId }: ChatWindowProps) {
             <AlertCircle className="h-8 w-8 text-red-400" />
             <Alert variant="destructive" className="border-0">
               <AlertDescription>
-                {t("apps.chat.messages.error")}
+                {messagesError?.message ?? t("apps.chat.messages.error")}
               </AlertDescription>
             </Alert>
             <Button
-              onClick={() => messagesQuery.refetch()}
+              onClick={() => refetch()}
               variant="outline"
               className="border-purple-600 bg-purple-600/20 text-purple-300 hover:bg-purple-600/30"
             >
