@@ -64,6 +64,7 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
   const [selectedModelId, setSelectedModelId] = useState<string | undefined>(
     undefined,
   );
+  const [badgeUpdateTrigger, setBadgeUpdateTrigger] = useState(0);
 
   // ✅ Hook para gerenciar configurações PESSOAIS do usuário (apenas quando não há sessão)
   const { savePreferredModel, isSaving, config } = useChatUserConfig();
@@ -106,24 +107,6 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
     ),
   );
 
-  // ✅ Buscar todas as mensagens para calcular tokens com cache
-  const allMessagesQuery = useQuery(
-    trpc.app.chat.getMessages.queryOptions(
-      {
-        chatSessionId: selectedSessionId!,
-        limit: 100, // Reduzir limite para evitar erro "too_big"
-        page: 1,
-        order: "asc", // ✅ Ordem cronológica para cálculo de tokens
-      },
-      {
-        enabled: !!selectedSessionId,
-        retry: 2, // Tentar 2 vezes em caso de erro
-        staleTime: 30 * 1000, // 30 segundos
-        gcTime: 2 * 60 * 1000, // 2 minutos
-      },
-    ),
-  );
-
   // ✅ Extrair metadata da última mensagem (memoizado)
   const lastMessage = useMemo(() => {
     return messagesQuery.data?.messages?.[0];
@@ -146,8 +129,8 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
   }, [sessionQuery.data?.aiModel?.name]);
 
   const messages = useMemo(() => {
-    return allMessagesQuery.data?.messages || [];
-  }, [allMessagesQuery.data?.messages]);
+    return messagesQuery.data?.messages || [];
+  }, [messagesQuery.data?.messages]);
 
   const tokenUsage = useTokenUsage(messages, modelName);
 
@@ -183,6 +166,11 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
       onError: trpcErrorToastDefault,
     }),
   );
+
+  const handleStreamingFinished = useCallback(() => {
+    void messagesQuery.refetch();
+    setBadgeUpdateTrigger((prev) => prev + 1);
+  }, [messagesQuery]);
 
   // ✅ Sincronizar sessionId da URL com estado local
   useEffect(() => {
@@ -265,7 +253,7 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
 
   return (
     <SidebarProvider className="min-h-[calc(100dvh-55px)] items-start">
-      <div className="flex h-[calc(100dvh-55px)] w-full overflow-x-hidden bg-background">
+      <div className="bg-background flex h-[calc(100dvh-55px)] w-full overflow-x-hidden">
         {/* Sidebar - assume largura interna definida pelo componente */}
         <AppSidebar
           selectedSessionId={selectedSessionId}
@@ -275,7 +263,7 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
         {/* Conteúdo principal */}
         <div className="flex flex-1 flex-col">
           {/* Cabeçalho com ModelSelector e badges - estilo ChatGPT */}
-          <div className="flex items-center justify-between border-b border-border bg-card px-4 py-3">
+          <div className="border-border bg-card flex items-center justify-between border-b px-4 py-3">
             <div className="flex items-center gap-4">
               {/* ✅ ETAPA 4.1: Renderizar SidebarTrigger apenas no cliente */}
               {isClient && <SidebarTrigger className="md:hidden" />}
@@ -304,7 +292,7 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
               {/* Model Info Badge - apenas quando há sessão */}
               {selectedSessionId && sessionQuery.data && (
                 <ModelInfoBadge
-                  key={`model-info-${selectedSessionId}-${selectedModelId}-${sessionQuery.data.aiModelId}`}
+                  key={`model-info-${selectedSessionId}-${selectedModelId}-${sessionQuery.data.aiModelId}-${badgeUpdateTrigger}`}
                   sessionData={sessionQuery.data}
                   lastMessageMetadata={lastMessageMetadata}
                 />
@@ -318,6 +306,7 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
               sessionId={selectedSessionId}
               onNewSession={handleSessionSelect}
               selectedModelId={selectedModelId} // ✅ NOVO: Passar modelo selecionado
+              onStreamingFinished={handleStreamingFinished}
             />
           </div>
         </div>

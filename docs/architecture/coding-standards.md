@@ -444,3 +444,30 @@ export async function getUsers(page = 1, limit = 20) {
   });
 }
 ```
+
+### Formulários e Modais
+
+1.  **Submissão com "Enter"**: Todos os formulários, especialmente os contidos em modais (`Dialog`), devem permitir a submissão através da tecla "Enter".
+
+    - **Implementação**: Envolva os campos de entrada e os botões em uma tag `<form>`. A ação principal (ex: "Criar", "Salvar") deve ter o atributo `type="submit"`. O botão de cancelamento deve ter `type="button"` para não submeter o formulário.
+    - **Exemplo**:
+      ```tsx
+      <DialogContent>
+        <form onSubmit={handleCreate}>
+          <DialogHeader>
+            <DialogTitle>Criar Item</DialogTitle>
+          </DialogHeader>
+          {/* ... input fields ... */}
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={closeModal}>
+              Cancelar
+            </Button>
+            <Button type="submit">Criar</Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+      ```
+
+2.  **Rótulos e Placeholders**:
+    - Para formulários complexos, use sempre `<Label>` para acessibilidade.
+    - Para formulários simples dentro de modais (como o de "Criar Pasta"), onde o título do modal já descreve a ação, é aceitável omitir o `<Label>` e usar apenas o `placeholder` no `<Input>`, para uma UI mais limpa.

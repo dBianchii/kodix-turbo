@@ -667,14 +667,16 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
       {/* Create Folder Modal */}
       <Dialog open={showCreateFolder} onOpenChange={setShowCreateFolder}>
         <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{t("apps.chat.folders.create")}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="folderName">
-                {t("apps.chat.folders.folderName")}
-              </Label>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleCreateFolder();
+            }}
+          >
+            <DialogHeader>
+              <DialogTitle>{t("apps.chat.folders.create")}</DialogTitle>
+            </DialogHeader>
+            <div className="py-4">
               <Input
                 id="folderName"
                 value={folderName}
@@ -682,37 +684,40 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
                 placeholder={t("apps.chat.folders.folderName")}
               />
             </div>
-          </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setShowCreateFolder(false)}
-            >
-              {t("apps.chat.actions.cancel")}
-            </Button>
-            <Button
-              onClick={handleCreateFolder}
-              disabled={!folderName.trim() || createFolderMutation.isPending}
-            >
-              {createFolderMutation.isPending
-                ? t("apps.chat.actions.creating")
-                : t("apps.chat.actions.createFolder")}
-            </Button>
-          </DialogFooter>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowCreateFolder(false)}
+              >
+                {t("apps.chat.actions.cancel")}
+              </Button>
+              <Button
+                type="submit"
+                disabled={!folderName.trim() || createFolderMutation.isPending}
+              >
+                {createFolderMutation.isPending
+                  ? t("apps.chat.actions.creating")
+                  : t("apps.chat.actions.createFolder")}
+              </Button>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
 
       {/* Edit Folder Modal */}
       <Dialog open={showEditFolder} onOpenChange={setShowEditFolder}>
         <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{t("apps.chat.folders.edit")}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="editFolderName">
-                {t("apps.chat.folders.folderName")}
-              </Label>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleUpdateFolder();
+            }}
+          >
+            <DialogHeader>
+              <DialogTitle>{t("apps.chat.folders.edit")}</DialogTitle>
+            </DialogHeader>
+            <div className="py-4">
               <Input
                 id="editFolderName"
                 value={folderName}
@@ -720,20 +725,24 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
                 placeholder={t("apps.chat.folders.folderName")}
               />
             </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowEditFolder(false)}>
-              {t("apps.chat.actions.cancel")}
-            </Button>
-            <Button
-              onClick={handleUpdateFolder}
-              disabled={!folderName.trim() || updateFolderMutation.isPending}
-            >
-              {updateFolderMutation.isPending
-                ? t("apps.chat.actions.updating")
-                : t("apps.chat.actions.update")}
-            </Button>
-          </DialogFooter>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowEditFolder(false)}
+              >
+                {t("apps.chat.actions.cancel")}
+              </Button>
+              <Button
+                type="submit"
+                disabled={!folderName.trim() || updateFolderMutation.isPending}
+              >
+                {updateFolderMutation.isPending
+                  ? t("apps.chat.actions.updating")
+                  : t("apps.chat.actions.update")}
+              </Button>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
 
@@ -1190,51 +1199,55 @@ function FolderItem({
             </div>
           ) : (
             sessions.map((session) => (
-              <div
-                key={session.id}
-                className={`group hover:bg-muted/50 flex cursor-pointer items-center justify-between rounded p-2 ${
-                  selectedSessionId === session.id ? "bg-muted" : ""
-                }`}
-                onClick={() => onSessionSelect?.(session.id)}
-              >
-                <div className="flex min-w-0 flex-1 items-center">
-                  <MessageSquare className="text-muted-foreground mr-2 h-3 w-3" />
-                  <span className="truncate text-sm">{session.title}</span>
-                </div>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <MoreHorizontal className="h-3 w-3" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onEditSession(session);
-                      }}
-                    >
-                      <Pencil className="mr-2 h-4 w-4" />
-                      Editar
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onDeleteSession(session);
-                      }}
-                      className="text-destructive"
-                    >
-                      <Trash2 className="mr-2 h-4 w-4" />
-                      Excluir
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
+              <SidebarMenuItem key={session.id}>
+                <SidebarMenuButton
+                  asChild
+                  isActive={selectedSessionId === session.id}
+                >
+                  <div
+                    className="group hover:bg-muted/50 flex cursor-pointer items-center justify-between rounded p-2"
+                    onClick={() => onSessionSelect?.(session.id)}
+                  >
+                    <div className="flex min-w-0 flex-1 items-center">
+                      <MessageSquare className="text-muted-foreground mr-2 h-3 w-3" />
+                      <span className="truncate text-sm">{session.title}</span>
+                    </div>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <MoreHorizontal className="h-3 w-3" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onEditSession(session);
+                          }}
+                        >
+                          <Pencil className="mr-2 h-4 w-4" />
+                          Editar
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onDeleteSession(session);
+                          }}
+                          className="text-destructive"
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Excluir
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             ))
           )}
         </div>

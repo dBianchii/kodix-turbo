@@ -25,12 +25,14 @@ interface ChatWindowProps {
   sessionId?: string;
   onNewSession?: (sessionId: string) => void;
   selectedModelId?: string; // ✅ NOVO: Modelo selecionado na welcome screen
+  onStreamingFinished?: () => void;
 }
 
 function ChatWindow({
   sessionId,
   onNewSession,
   selectedModelId,
+  onStreamingFinished,
 }: ChatWindowProps) {
   // ✅ SUB-ETAPA 2.4: Hook para prevenir problemas de hidratação
   const [isClient, setIsClient] = useState(false);
@@ -76,7 +78,13 @@ function ChatWindow({
 
   // Hydration debugging removed - issue was in ThemeToggle component
 
-  return <ActiveChatWindow sessionId={sessionId} onNewSession={onNewSession} />;
+  return (
+    <ActiveChatWindow
+      sessionId={sessionId}
+      onNewSession={onNewSession}
+      onStreamingFinished={onStreamingFinished}
+    />
+  );
 }
 
 /**
@@ -273,9 +281,11 @@ function EmptyThreadState({
 function ActiveChatWindow({
   sessionId,
   onNewSession,
+  onStreamingFinished,
 }: {
   sessionId: string;
   onNewSession?: (sessionId: string) => void;
+  onStreamingFinished?: () => void;
 }) {
   // Hook para prevenir problemas de hidratação
   const [isClient, setIsClient] = useState(false);
@@ -395,6 +405,8 @@ function ActiveChatWindow({
         // Message completed - log removed for performance
       }
 
+      onStreamingFinished?.();
+
       // Auto-focus após streaming
       setTimeout(() => {
         inputRef.current?.focus();
@@ -409,7 +421,13 @@ function ActiveChatWindow({
         );
       }, 1500);
     },
-    [syncNow, refetchSession, queryClient, trpc.app.chat.listarSessions],
+    [
+      syncNow,
+      refetchSession,
+      queryClient,
+      trpc.app.chat.listarSessions,
+      onStreamingFinished,
+    ],
   );
 
   // ✅ SUB-ETAPA 2.4: Callback otimizado onError
