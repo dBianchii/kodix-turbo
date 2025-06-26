@@ -23,9 +23,25 @@ const appInstalledMiddlewareFactory = (appId: KodixAppId) =>
 
     console.log(`[APP_INSTALL_MIDDLEWARE_PERF] Checking for app: ${appId}`);
 
+    // Verificar se o contexto tem usuário autenticado antes de chamar getInstalledHandler
+    if (!ctx.auth.user) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Authentication required",
+      });
+    }
+
     const getInstalledStart = process.hrtime();
     //? By using the `getInstalledHandler`, we can use cached data, improving performance
-    const apps = await getInstalledHandler({ ctx });
+    // Criar contexto protegido após validação de autenticação
+    const protectedCtx: TProtectedProcedureContext = {
+      ...ctx,
+      auth: {
+        user: ctx.auth.user!,
+        session: ctx.auth.session!,
+      },
+    };
+    const apps = await getInstalledHandler({ ctx: protectedCtx });
     const getInstalledMs = getTotalMs(getInstalledStart);
     console.log(
       `[APP_INSTALL_MIDDLEWARE_PERF] getInstalledHandler took ${getInstalledMs.toFixed(2)}ms`,
@@ -96,9 +112,15 @@ export const chatWithDependenciesMiddleware = t.middleware(
       });
     }
 
-    const installedApps = await getInstalledHandler({
-      ctx: ctx as TProtectedProcedureContext,
-    });
+    // Criar contexto protegido após validação de autenticação
+    const protectedCtx: TProtectedProcedureContext = {
+      ...ctx,
+      auth: {
+        user: ctx.auth.user!,
+        session: ctx.auth.session!,
+      },
+    };
+    const installedApps = await getInstalledHandler({ ctx: protectedCtx });
     const installedAppIds = installedApps.map((app) => app.id);
 
     // Verificar se o Chat está instalado

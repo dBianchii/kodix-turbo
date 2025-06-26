@@ -13,8 +13,12 @@ async function run() {
     .select({ value: count() })
     .from(appsToTeams);
 
-  console.log(`- Invitations table has ${invitationsCount.value} records.`);
-  console.log(`- AppsToTeams table has ${appsToTeamsCount.value} records.`);
+  console.log(
+    `- Invitations table has ${invitationsCount?.value ?? 0} records.`,
+  );
+  console.log(
+    `- AppsToTeams table has ${appsToTeamsCount?.value ?? 0} records.`,
+  );
 
   process.exit(0);
 }

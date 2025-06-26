@@ -8,6 +8,7 @@ import {
   ZUnlockMoreTasksInputSchema,
 } from "@kdx/validators/trpc/app/kodixCare/careTask";
 
+import type { TProtectedProcedureContext } from "../../../../procedures";
 import { T } from "../../../../../utils/locales";
 import { kodixCareInstalledMiddleware } from "../../../../middlewares";
 import { protectedProcedure } from "../../../../procedures";
@@ -22,23 +23,47 @@ export const careTaskRouter = {
   getCareTasks: protectedProcedure
     .input(ZGetCareTasksInputSchema)
     .use(kodixCareInstalledMiddleware)
-    .query(getCareTasksHandler),
+    .query(async ({ ctx, input }) => {
+      return getCareTasksHandler({
+        ctx: ctx as TProtectedProcedureContext,
+        input,
+      });
+    }),
   editCareTask: protectedProcedure
     .use(kodixCareInstalledMiddleware)
     .input(T(ZEditCareTaskInputSchema))
-    .mutation(editCareTaskHandler),
+    .mutation(async ({ ctx, input }) => {
+      return editCareTaskHandler({
+        ctx: ctx as TProtectedProcedureContext,
+        input,
+      });
+    }),
   unlockMoreTasks: protectedProcedure
     .use(kodixCareInstalledMiddleware)
     .input(ZUnlockMoreTasksInputSchema)
-    .mutation(unlockMoreTasksHandler),
+    .mutation(async ({ ctx, input }) => {
+      return unlockMoreTasksHandler({
+        ctx: ctx as TProtectedProcedureContext,
+        input,
+      });
+    }),
   createCareTask: protectedProcedure
     .use(kodixCareInstalledMiddleware)
     .input(T(ZCreateCareTaskInputSchema))
-    .mutation(createCareTaskHandler),
+    .mutation(async ({ ctx, input }) => {
+      return createCareTaskHandler({
+        ctx: ctx as TProtectedProcedureContext,
+        input,
+      });
+    }),
   deleteCareTask: protectedProcedure
     .input(ZDeleteCareTaskInputSchema)
     .mutation(deleteCareTaskHandler),
   syncCareTasksFromCalendar: protectedProcedure
     .use(kodixCareInstalledMiddleware)
-    .mutation(syncCareTasksFromCalendarHandler),
+    .mutation(async ({ ctx }) => {
+      return syncCareTasksFromCalendarHandler({
+        ctx: ctx as TProtectedProcedureContext,
+      });
+    }),
 } satisfies TRPCRouterRecord;

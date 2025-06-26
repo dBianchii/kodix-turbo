@@ -9,6 +9,7 @@ import {
   ZSignInByPasswordInputSchema,
 } from "@kdx/validators/trpc/app/kodixCare";
 
+import type { TProtectedProcedureContext } from "../../../procedures";
 import { T } from "../../../../utils/locales";
 import { kodixCareInstalledMiddleware } from "../../../middlewares";
 import { protectedProcedure, publicProcedure } from "../../../procedures";
@@ -35,10 +36,21 @@ export const kodixCareRouter = {
   createCareShift: protectedProcedure
     .use(kodixCareInstalledMiddleware)
     .input(T(ZCreateCareShiftInputSchema))
-    .mutation(createCareShiftHandler),
+    .mutation(async ({ ctx, input }) => {
+      // Type-safe wrapper que garante contexto correto
+      return createCareShiftHandler({
+        ctx: ctx as TProtectedProcedureContext,
+        input,
+      });
+    }),
   getAllCaregivers: protectedProcedure
     .use(kodixCareInstalledMiddleware)
-    .query(getAllCaregiversHandler),
+    .query(async ({ ctx }) => {
+      // Type-safe wrapper que garante contexto correto
+      return getAllCaregiversHandler({
+        ctx: ctx as TProtectedProcedureContext,
+      });
+    }),
   findOverlappingShifts: protectedProcedure
     .input(ZFindOverlappingShiftsInputSchema)
     .query(findOverlappingShiftsHandler),
