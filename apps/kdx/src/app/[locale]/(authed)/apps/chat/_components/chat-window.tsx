@@ -18,9 +18,8 @@ import { useSessionWithMessages } from "../_hooks/useSessionWithMessages";
 import { useTitleSync } from "../_hooks/useTitleSync";
 import { useThreadContext } from "../_providers/chat-thread-provider";
 import { ChatMessages } from "./chat-messages";
-import { MessageInput } from "./message-input";
 import { ChatPanel } from "./chat-panel";
-import { EmptyThreadState } from "./empty-thread-state";
+import { MessageInput } from "./message-input";
 
 interface ChatWindowProps {
   sessionId?: string;

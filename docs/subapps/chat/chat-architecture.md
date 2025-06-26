@@ -545,6 +545,40 @@ queryClient.setQueryData(
 
 **Aprendizado:** A invalidação completa é custosa e deve ser evitada para pequenas atualizações. `setQueryData` oferece uma experiência de usuário instantânea e evita chamadas de rede desnecessárias.
 
+### 6. **Invalidação de Múltiplas Queries para Sincronização de UI** 🔴 OBRIGATÓRIO
+
+Quando uma única mutação afeta diferentes partes da interface que são alimentadas por queries distintas, é crucial invalidar **todas** as queries relevantes para manter a consistência do estado da UI.
+
+**Problema Real Encontrado (Bug de Sincronização do ModelSelector):**
+
+Ao editar uma sessão de chat no modal (ex: alterando o modelo de IA), a `updateSessionMutation` invalidava apenas a query `listarSessions`. Isso atualizava a lista na sidebar, mas a janela de chat principal, que dependia da query `buscarSession`, continuava exibindo dados de cache desatualizados (o modelo antigo).
+
+```typescript
+// ❌ ANTES: Invalidação incompleta, causando UI dessincronizada
+onSuccess: () => {
+  // Apenas a lista de sessões era invalidada
+  queryClient.invalidateQueries(
+    trpc.app.chat.listarSessions.pathFilter(),
+  );
+  // O componente ModelSelector na tela principal não atualizava
+},
+
+// ✅ DEPOIS: Invalidação dupla e precisa garantindo a sincronia da UI
+onSuccess: (_data, variables) => {
+  // 1. Invalida a lista de sessões na sidebar (comportamento mantido)
+  void queryClient.invalidateQueries(
+    trpc.app.chat.listarSessions.pathFilter(),
+  );
+
+  // 2. Invalida a query da sessão ATIVA para atualizar a UI principal (correção)
+  void queryClient.invalidateQueries(
+    trpc.app.chat.buscarSession.pathFilter({ sessionId: variables.id }),
+  );
+},
+```
+
+**Aprendizado:** Uma mutação deve invalidar todas as queries cujos dados foram afetados, mesmo que essas queries alimentem componentes visualmente separados. Não fazer isso é uma causa comum de bugs de estado obsoleto (stale state).
+
 ## 🎯 Padrões de Qualidade de Código
 
 ### Convenções de Nomenclatura

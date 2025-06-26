@@ -41,9 +41,21 @@ Este arquivo registra **TODOS os logs de debug criados** no projeto Kodix, permi
 
 ## 📊 Logs Ativos
 
+### **🟢 LOGS TEMPORÁRIOS REMOVIDOS**
+
+### [DEBUG_EDIT_MODAL] Debug do Modal Editar Chat
+
+- **Arquivo:** `apps/kdx/src/app/[locale]/(authed)/apps/chat/_components/app-sidebar.tsx:440`
+- **Criado em:** 2025-01-26
+- **Responsável:** @KodixAgent
+- **Propósito:** Diagnosticar bug onde modal "Editar Chat" não salva alterações. Logs expandidos para incluir validação de mutation object, try/catch para capturar erros silenciosos, validação detalhada de parâmetros enviados (tipos e valores), e rastreamento completo da execução da updateSessionMutation.
+- **Contexto:** Bug identificado no commit 31b27299 onde modal fecha prematuramente. Problema resolvido com Estratégia 1 - Simplificação da mutation seguindo padrão das mutations funcionais.
+- **Status:** 🟢 Removido
+- **Removido em:** 2025-01-26 (problema resolvido com simplificação da mutation)
+
 ### **🟡 LOGS TEMPORÁRIOS ATIVOS**
 
-_(Nenhum log temporário registrado atualmente)_
+_(Nenhum log temporário ativo)_
 
 ### **🔴 LOGS CRÍTICOS DO SISTEMA**
 
@@ -129,8 +141,8 @@ _(Nenhum log órfão identificado atualmente)_
 - **Total de logs ativos:** 0
 - **Logs aguardando remoção:** 0
 - **Logs críticos permanentes:** 0
-- **Última revisão:** 2025-01-24
-- **Última remoção:** 2025-01-24 - SUB_ETAPA_2.1 ChatLayout (otimização concluída)
+- **Última revisão:** 2025-01-26
+- **Última correção:** 2025-01-26 - Modal Editar Chat Bug Fix RESOLVIDO (Estratégia 1 - Simplificação da mutation)
 
 ---
 

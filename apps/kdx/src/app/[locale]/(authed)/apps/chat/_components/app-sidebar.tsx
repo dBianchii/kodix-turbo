@@ -274,58 +274,19 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
 
   const updateSessionMutation = useMutation(
     trpc.app.chat.atualizarSession.mutationOptions({
-      // 1. Otimisticamente atualizar a UI antes da chamada da API
-      onMutate: async (newData) => {
-        // Cancelar queries pendentes para evitar sobrescrever a atualização otimista
-        await queryClient.cancelQueries({
-          queryKey: trpc.app.chat.listarSessions.queryKey,
-        });
-
-        // Salvar o estado anterior para rollback em caso de erro
-        const previousSessions = queryClient.getQueryData(
-          trpc.app.chat.listarSessions.queryKey,
+      onSuccess: (_data, variables) => {
+        void queryClient.invalidateQueries(
+          trpc.app.chat.listarSessions.pathFilter(),
         );
-
-        // Atualizar o cache com os novos dados que estão sendo enviados
-        queryClient.setQueryData(
-          trpc.app.chat.listarSessions.queryKey,
-          (old: any) => {
-            if (!old) return old;
-            return {
-              ...old,
-              sessions: old.sessions.map((session: any) =>
-                session.id === newData.id
-                  ? { ...session, ...newData }
-                  : session,
-              ),
-            };
-          },
+        void queryClient.invalidateQueries(
+          trpc.app.chat.buscarSession.pathFilter({ sessionId: variables.id }),
         );
+        toast.success(t("apps.chat.sessions.updated"));
         setShowEditSession(false);
         setEditingSession(null);
-        return { previousSessions };
       },
-      // 2. Em caso de erro, reverter para o estado anterior
-      onError: (err, newData, context) => {
-        if (context?.previousSessions) {
-          queryClient.setQueryData(
-            trpc.app.chat.listarSessions.queryKey,
-            context.previousSessions,
-          );
-        }
-        toast.error(err.message || t("apps.chat.sessions.error"));
-      },
-      // 3. Após sucesso ou erro, sempre invalidar para garantir consistência
-      onSettled: (data, error, variables) => {
-        queryClient.invalidateQueries({
-          queryKey: trpc.app.chat.listarSessions.queryKey,
-        });
-        queryClient.invalidateQueries({
-          queryKey: trpc.app.chat.buscarSession.queryKey({ id: variables.id }),
-        });
-      },
-      onSuccess: () => {
-        toast.success(t("apps.chat.sessions.updated"));
+      onError: (error: any) => {
+        toast.error(error.message || t("apps.chat.sessions.error"));
       },
     }),
   );
@@ -436,10 +397,6 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
         aiAgentId: selectedAgent === "none" ? undefined : selectedAgent,
         aiModelId: selectedModel,
       });
-    } else {
-      console.warn(
-        "[CHAT_SIDEBAR_DEBUG] Condições para atualização não foram satisfeitas. A mutação não será chamada.",
-      );
     }
   };
 
