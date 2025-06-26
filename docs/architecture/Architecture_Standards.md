@@ -387,10 +387,16 @@ export const myTable = mysqlTable(
 ### **Desenvolvimento**
 
 ```bash
-pnpm dev:kdx          # Aplicação web principal
+pnpm dev:kdx          # Aplicação web principal (OBRIGATÓRIO: usa Turbopack)
 pnpm dev:care         # Aplicação móvel
 pnpm db:studio        # Interface visual do banco
 ```
+
+#### **Uso Obrigatório do Turbopack**
+
+É **obrigatório** o uso do Turbopack para o desenvolvimento do app web (`pnpm dev:kdx`). O script já está configurado com a flag `--turbo`.
+
+**Motivo:** O bundler padrão (Webpack) demonstrou problemas crônicos de invalidação de cache em nosso monorepo, especificamente com dependências como `jiti`. Isso resulta em alterações no backend (APIs tRPC, repositórios) que não são refletidas no servidor de desenvolvimento, mesmo após reinicializações, causando bugs difíceis de diagnosticar. O Turbopack resolve este problema e oferece uma melhoria de performance significativa.
 
 ### **Banco de Dados**
 
