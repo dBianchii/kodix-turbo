@@ -579,6 +579,55 @@ onSuccess: (_data, variables) => {
 
 **Aprendizado:** Uma mutação deve invalidar todas as queries cujos dados foram afetados, mesmo que essas queries alimentem componentes visualmente separados. Não fazer isso é uma causa comum de bugs de estado obsoleto (stale state).
 
+### 7. **Comunicação Child-to-Parent com "Callback Chain"** 🔴 OBRIGATÓRIO
+
+Para sincronizar o estado entre componentes irmãos (ex: `ChatWindow` e `ModelInfoBadge`) que não se comunicam diretamente, o componente pai (`UnifiedChatPage`) deve atuar como mediador, implementando um padrão de "Callback Chain".
+
+**Problema Real Encontrado (Bug de Sincronização do ModelInfoBadge):**
+
+Após o término do streaming de uma mensagem no `ChatWindow`, o `ModelInfoBadge` (um componente irmão) precisava ser atualizado, mas não havia um canal de comunicação direto para notificá-lo do evento.
+
+```typescript
+// ❌ ANTES: Falta de comunicação entre componentes irmãos
+<UnifiedChatPage>
+  <ModelInfoBadge />  // Precisa saber quando o streaming no ChatWindow termina
+  <ChatWindow />      // Dispara o evento onFinish, mas o Badge não "ouve"
+</UnifiedChatPage>
+```
+
+**Solução: Padrão de Callback**
+
+O componente pai define um `callback` e o passa como `prop` para o componente filho que origina o evento. Quando o evento ocorre, o filho executa o callback, notificando o pai, que então pode atualizar seu estado e passar as novas informações para os outros filhos.
+
+```typescript
+// ✅ DEPOIS: Comunicação mediada pelo componente pai
+function UnifiedChatPage() {
+  const handleStreamingFinished = useCallback(() => {
+    // Lógica para atualizar o estado que alimenta o ModelInfoBadge
+    // Ex: invalidar queries, forçar re-render, etc.
+  }, []);
+
+  return (
+    <>
+      <ModelInfoBadge />
+      <ChatWindow onStreamingFinished={handleStreamingFinished} />
+    </>
+  );
+}
+
+function ChatWindow({ onStreamingFinished }) {
+  const { messages } = useChat({
+    onFinish: () => {
+      // Notifica o pai que o streaming terminou
+      onStreamingFinished?.();
+    },
+  });
+  // ...
+}
+```
+
+**Aprendizado:** O uso de callbacks passados por props é a maneira canônica no React de gerenciar o fluxo de dados "de baixo para cima" (child-to-parent), essencial para coordenar o estado entre componentes que não têm um relacionamento direto.
+
 ## 🎯 Padrões de Qualidade de Código
 
 ### Convenções de Nomenclatura
