@@ -43,6 +43,20 @@ Este arquivo registra **TODOS os logs de debug criados** no projeto Kodix, permi
 
 ### **🟡 LOGS TEMPORÁRIOS ATIVOS**
 
+### [CHAT_DEBUG] Diagnóstico do Modal de Edição de Sessão
+
+- **Arquivo:** `apps/kdx/src/app/[locale]/(authed)/apps/chat/_components/app-sidebar.tsx:325`
+- **Criado em:** 2025-07-26
+- **Responsável:** @KodixAgent
+- **Propósito:** Verificar o conteúdo de `updatedData` no callback `onSuccess` da `updateSessionMutation` para diagnosticar por que o modal de edição não fecha após a atualização.
+- **Contexto:** Após a correção da `updateSessionMutation`, o banco de dados é atualizado, mas a UI (modal) não reage.
+- **Status:** 🟡 Ativo
+- **Remoção prevista:** 2025-07-26 (imediatamente após o diagnóstico)
+
+### **🔴 LOGS CRÍTICOS DO SISTEMA**
+
+### **🟡 LOGS TEMPORÁRIOS ATIVOS**
+
 _(Nenhum log temporário registrado atualmente)_
 
 ### **🔴 LOGS CRÍTICOS DO SISTEMA**

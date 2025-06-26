@@ -311,8 +311,6 @@ export const ChatSessionRepository = {
       .update(chatSession)
       .set({ ...data, updatedAt: new Date() })
       .where(eq(chatSession.id, id));
-
-    return ChatSessionRepository.findById(id);
   },
 
   // Excluir sessão

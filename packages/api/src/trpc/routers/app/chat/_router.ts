@@ -234,25 +234,19 @@ export const chatRouter: TRPCRouterRecord = {
       const { id, ...dadosAtualizacao } = input;
 
       try {
-        const sessionExistente =
+        await chatRepository.ChatSessionRepository.update(id, dadosAtualizacao);
+
+        const sessaoCompleta =
           await chatRepository.ChatSessionRepository.findById(id);
 
-        if (
-          !sessionExistente ||
-          sessionExistente.teamId !== ctx.auth.user.activeTeamId
-        ) {
+        if (!sessaoCompleta) {
           throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "Sessão de chat não encontrada",
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Não foi possível buscar a sessão após a atualização.",
           });
         }
 
-        const session = await chatRepository.ChatSessionRepository.update(
-          id,
-          dadosAtualizacao,
-        );
-
-        return session;
+        return sessaoCompleta;
       } catch (error) {
         if (error instanceof TRPCError) {
           throw error;
