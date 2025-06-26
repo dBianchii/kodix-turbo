@@ -274,38 +274,58 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
 
   const updateSessionMutation = useMutation(
     trpc.app.chat.atualizarSession.mutationOptions({
-      onSuccess: (updatedData) => {
-        console.log(
-          "✅ [CHAT_DEBUG] Sessão atualizada com sucesso. Dados recebidos:",
-          updatedData,
+      // 1. Otimisticamente atualizar a UI antes da chamada da API
+      onMutate: async (newData) => {
+        // Cancelar queries pendentes para evitar sobrescrever a atualização otimista
+        await queryClient.cancelQueries({
+          queryKey: trpc.app.chat.listarSessions.queryKey,
+        });
+
+        // Salvar o estado anterior para rollback em caso de erro
+        const previousSessions = queryClient.getQueryData(
+          trpc.app.chat.listarSessions.queryKey,
         );
+
+        // Atualizar o cache com os novos dados que estão sendo enviados
         queryClient.setQueryData(
           trpc.app.chat.listarSessions.queryKey,
-          (oldData: { sessions: any[] } | undefined) => {
-            if (!oldData) return oldData;
+          (old: any) => {
+            if (!old) return old;
             return {
-              ...oldData,
-              sessions: oldData.sessions.map((session) =>
-                session.id === updatedData.id
-                  ? { ...session, ...updatedData } // Merge para manter todos os campos
+              ...old,
+              sessions: old.sessions.map((session: any) =>
+                session.id === newData.id
+                  ? { ...session, ...newData }
                   : session,
               ),
             };
           },
         );
-
-        // Invalida a query específica da sessão para ter dados frescos na próxima visita
-        queryClient.invalidateQueries(
-          trpc.app.chat.buscarSession.pathFilter({ id: updatedData.id }),
-        );
-
-        toast.success(t("apps.chat.sessions.updated"));
-        console.log("🐞 [CHAT_DEBUG] Tentando fechar o modal...");
         setShowEditSession(false);
         setEditingSession(null);
+        return { previousSessions };
       },
-      onError: (error: any) => {
-        toast.error(error.message || t("apps.chat.sessions.error"));
+      // 2. Em caso de erro, reverter para o estado anterior
+      onError: (err, newData, context) => {
+        if (context?.previousSessions) {
+          queryClient.setQueryData(
+            trpc.app.chat.listarSessions.queryKey,
+            context.previousSessions,
+          );
+        }
+        toast.error(err.message || t("apps.chat.sessions.error"));
+      },
+      // 3. Após sucesso ou erro, sempre invalidar para garantir consistência
+      onSettled: (data, error, variables) => {
+        queryClient.invalidateQueries({
+          queryKey: trpc.app.chat.listarSessions.queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: trpc.app.chat.buscarSession.queryKey({ id: variables.id }),
+        });
+      },
+      onSuccess: () => {
+        toast.success(t("apps.chat.sessions.updated"));
       },
     }),
   );
