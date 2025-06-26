@@ -272,37 +272,38 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
     }),
   );
 
-  const updateSessionMutation = useMutation({
-    mutationFn: trpc.app.chat.atualizarSession.mutate,
-    onSuccess: (updatedData) => {
-      queryClient.setQueryData(
-        trpc.app.chat.listarSessions.queryKey,
-        (oldData: { sessions: any[] } | undefined) => {
-          if (!oldData) return oldData;
-          return {
-            ...oldData,
-            sessions: oldData.sessions.map((session) =>
-              session.id === updatedData.id
-                ? { ...session, ...updatedData } // Merge para manter todos os campos
-                : session,
-            ),
-          };
-        },
-      );
+  const updateSessionMutation = useMutation(
+    trpc.app.chat.atualizarSession.mutationOptions({
+      onSuccess: (updatedData) => {
+        queryClient.setQueryData(
+          trpc.app.chat.listarSessions.queryKey,
+          (oldData: { sessions: any[] } | undefined) => {
+            if (!oldData) return oldData;
+            return {
+              ...oldData,
+              sessions: oldData.sessions.map((session) =>
+                session.id === updatedData.id
+                  ? { ...session, ...updatedData } // Merge para manter todos os campos
+                  : session,
+              ),
+            };
+          },
+        );
 
-      // Invalida a query específica da sessão para ter dados frescos na próxima visita
-      queryClient.invalidateQueries(
-        trpc.app.chat.buscarSession.pathFilter({ id: updatedData.id }),
-      );
+        // Invalida a query específica da sessão para ter dados frescos na próxima visita
+        queryClient.invalidateQueries(
+          trpc.app.chat.buscarSession.pathFilter({ id: updatedData.id }),
+        );
 
-      toast.success(t("apps.chat.sessions.updated"));
-      setShowEditSession(false);
-      setEditingSession(null);
-    },
-    onError: (error: any) => {
-      toast.error(error.message || t("apps.chat.sessions.error"));
-    },
-  });
+        toast.success(t("apps.chat.sessions.updated"));
+        setShowEditSession(false);
+        setEditingSession(null);
+      },
+      onError: (error: any) => {
+        toast.error(error.message || t("apps.chat.sessions.error"));
+      },
+    }),
+  );
 
   const deleteSessionMutation = useMutation(
     trpc.app.chat.excluirSession.mutationOptions({
@@ -559,18 +560,18 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
 
           {/* Folders Section */}
           <SidebarGroup>
-            <SidebarGroupLabel className="text-muted-foreground px-2 text-xs font-medium tracking-wider uppercase">
+            <SidebarGroupLabel className="px-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
               {t("apps.chat.folders.title")}
             </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 <div className="space-y-1">
                   {foldersQuery.isLoading ? (
-                    <div className="text-muted-foreground py-4 text-center text-sm">
+                    <div className="py-4 text-center text-sm text-muted-foreground">
                       {t("apps.chat.actions.loadingFolders")}
                     </div>
                   ) : folders.length === 0 ? (
-                    <div className="text-muted-foreground py-4 text-center text-sm">
+                    <div className="py-4 text-center text-sm text-muted-foreground">
                       {t("apps.chat.folders.noFolders")}
                     </div>
                   ) : (
@@ -596,18 +597,18 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
 
           {/* Sessions without folder Section */}
           <SidebarGroup>
-            <SidebarGroupLabel className="text-muted-foreground px-2 text-xs font-medium tracking-wider uppercase">
+            <SidebarGroupLabel className="px-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
               {t("apps.chat.sessions.title")}
             </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 <div className="space-y-1">
                   {allSessionsQuery.isLoading ? (
-                    <div className="text-muted-foreground py-4 text-center text-sm">
+                    <div className="py-4 text-center text-sm text-muted-foreground">
                       {t("apps.chat.actions.loadingChats")}
                     </div>
                   ) : sessionsWithoutFolder.length === 0 ? (
-                    <div className="text-muted-foreground py-4 text-center text-sm">
+                    <div className="py-4 text-center text-sm text-muted-foreground">
                       {t("apps.chat.sessions.noSessions")}
                     </div>
                   ) : (
@@ -618,11 +619,11 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
                           isActive={selectedSessionId === session.id}
                         >
                           <div
-                            className="group hover:bg-muted/50 flex cursor-pointer items-center justify-between rounded p-2"
+                            className="group flex cursor-pointer items-center justify-between rounded p-2 hover:bg-muted/50"
                             onClick={() => onSessionSelect?.(session.id)}
                           >
                             <div className="flex min-w-0 flex-1 items-center">
-                              <MessageSquare className="text-muted-foreground mr-2 h-4 w-4" />
+                              <MessageSquare className="mr-2 h-4 w-4 text-muted-foreground" />
                               <span className="truncate text-sm">
                                 {session.title}
                               </span>
@@ -814,7 +815,7 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
                     {t("apps.chat.sessions.noAgent")}
                   </SelectItem>
                   {agents.length === 0 ? (
-                    <div className="text-muted-foreground p-2 text-center text-sm">
+                    <div className="p-2 text-center text-sm text-muted-foreground">
                       {t("apps.aiStudio.agents.noAgents")}
                     </div>
                   ) : (
@@ -1041,18 +1042,18 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
             <DialogTitle>Mover para Pasta</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <p className="text-muted-foreground text-sm">
+            <p className="text-sm text-muted-foreground">
               Selecione a pasta para onde deseja mover a sessão "
               {movingSession?.title}":
             </p>
 
             {folders.length === 0 ? (
               <div className="py-4 text-center">
-                <Folder className="text-muted-foreground/50 mx-auto h-12 w-12" />
-                <p className="text-muted-foreground mt-2 text-sm">
+                <Folder className="mx-auto h-12 w-12 text-muted-foreground/50" />
+                <p className="mt-2 text-sm text-muted-foreground">
                   Nenhuma pasta disponível
                 </p>
-                <p className="text-muted-foreground text-xs">
+                <p className="text-xs text-muted-foreground">
                   Crie uma pasta primeiro para organizar seus chats
                 </p>
               </div>
@@ -1198,24 +1199,24 @@ function FolderItem({
       {isExpanded && (
         <div className="ml-6 space-y-1">
           {sessionsQuery.isLoading ? (
-            <div className="text-muted-foreground py-2 text-xs">
+            <div className="py-2 text-xs text-muted-foreground">
               Carregando sessões...
             </div>
           ) : sessions.length === 0 ? (
-            <div className="text-muted-foreground py-2 text-xs">
+            <div className="py-2 text-xs text-muted-foreground">
               Nenhuma sessão encontrada
             </div>
           ) : (
             sessions.map((session) => (
               <div
                 key={session.id}
-                className={`group hover:bg-muted/50 flex cursor-pointer items-center justify-between rounded p-2 ${
+                className={`group flex cursor-pointer items-center justify-between rounded p-2 hover:bg-muted/50 ${
                   selectedSessionId === session.id ? "bg-muted" : ""
                 }`}
                 onClick={() => onSessionSelect?.(session.id)}
               >
                 <div className="flex min-w-0 flex-1 items-center">
-                  <MessageSquare className="text-muted-foreground mr-2 h-3 w-3" />
+                  <MessageSquare className="mr-2 h-3 w-3 text-muted-foreground" />
                   <span className="truncate text-sm">{session.title}</span>
                 </div>
                 <DropdownMenu>
