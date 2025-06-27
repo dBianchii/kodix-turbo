@@ -1,4 +1,3 @@
-import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 
 import {
@@ -7,6 +6,7 @@ import {
 } from "@kdx/validators/trpc/app/todo";
 
 import { protectedProcedure } from "../../../procedures";
+import { t } from "../../../trpc";
 import { createHandler } from "./create.handler";
 import { getAllHandler } from "./getAll.handler";
 import { updateHandler } from "./update.handler";
@@ -18,7 +18,7 @@ const disabledTodo = () => {
   });
 };
 
-export const todoRouter = {
+export const todoRouter = t.router({
   create: protectedProcedure
     .use(disabledTodo)
     .input(ZCreateInputSchema)
@@ -28,4 +28,4 @@ export const todoRouter = {
     .use(disabledTodo)
     .input(ZUpdateInputSchema)
     .mutation(updateHandler),
-} satisfies TRPCRouterRecord;
+});

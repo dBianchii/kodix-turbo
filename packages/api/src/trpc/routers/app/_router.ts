@@ -16,6 +16,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "../../procedures";
+import { t } from "../../trpc";
 import { aiStudioRouter } from "./ai-studio/_router";
 import { calendarRouter } from "./calendar/_router";
 import { chatRouter } from "./chat/_router";
@@ -31,7 +32,7 @@ import { saveUserAppTeamConfigHandler } from "./saveUserAppTeamConfig.handler";
 import { todoRouter } from "./todo/_router";
 import { uninstallAppHandler } from "./uninstallApp.handler";
 
-export const appRouter = {
+export const appRouter = t.router({
   aiStudio: aiStudioRouter,
   calendar: calendarRouter,
   chat: chatRouter,
@@ -65,4 +66,4 @@ export const appRouter = {
     .input(ZGetAppActivityLogsInputSchema)
     .use(appInstalledMiddleware)
     .query(getAppActivityLogsHandler),
-} satisfies TRPCRouterRecord;
+});

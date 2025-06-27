@@ -54,8 +54,8 @@ export function ExternalStoreRuntimeProvider({
   // Converter mensagens para formato Assistant-UI
   const threadMessages = useMemo(() => {
     if (!initialMessages) return [];
-    return initialMessages.map(convertMessage);
-  }, [initialMessages, convertMessage]);
+    return (initialMessages as Message[]).map(convertMessage);
+  }, [initialMessages]);
 
   // Handler para novas mensagens
   const onNew = useCallback(

@@ -1,4 +1,3 @@
-import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -26,27 +25,19 @@ import {
 
 import { chatWithDependenciesMiddleware } from "../../../middlewares";
 import { protectedProcedure } from "../../../procedures";
+import { t } from "../../../trpc";
 import { autoCreateSessionWithMessageHandler } from "./autoCreateSessionWithMessage.handler";
 import { createEmptySessionHandler } from "./createEmptySession.handler";
 import { enviarMensagemHandler } from "./enviarMensagem.handler";
 import { generateSessionTitleHandler } from "./generateSessionTitle.handler";
 import { getPreferredModelHandler } from "./getPreferredModel.handler";
 
-export const chatRouter: TRPCRouterRecord = {
-  // ===============================
-  // TESTE SIMPLES
-  // ===============================
+export const chatRouter = t.router({
   testQuery: protectedProcedure
     .input(z.object({ test: z.string() }))
-    .query(async ({ input }) => {
-      return { message: `Test: ${input.test}` };
-    }),
+    .query(async ({ input }) => ({ message: `Test: ${input.test}` })),
 
-  // ===============================
-  // CHAT FOLDER ENDPOINTS
-  // ===============================
-
-  criarChatFolder: protectedProcedure
+  createChatFolder: protectedProcedure
     .input(criarChatFolderSchema)
     .mutation(async ({ input, ctx }) => {
       try {
@@ -66,7 +57,7 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  atualizarChatFolder: protectedProcedure
+  updateChatFolder: protectedProcedure
     .input(atualizarChatFolderSchema)
     .mutation(async ({ input, ctx }) => {
       const { id, ...dadosAtualizacao } = input;
@@ -103,7 +94,7 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  buscarChatFolders: protectedProcedure
+  findChatFolders: protectedProcedure
     .input(buscarChatFoldersSchema)
     .query(async ({ input, ctx }) => {
       try {
@@ -143,7 +134,7 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  buscarChatFolderPorId: protectedProcedure
+  findChatFolderById: protectedProcedure
     .input(idSchema)
     .query(async ({ input, ctx }) => {
       try {
@@ -173,7 +164,7 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  excluirChatFolder: protectedProcedure
+  deleteChatFolder: protectedProcedure
     .input(idSchema)
     .mutation(async ({ input, ctx }) => {
       try {
@@ -203,11 +194,7 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  // ===============================
-  // CHAT SESSION ENDPOINTS
-  // ===============================
-
-  criarSession: protectedProcedure
+  createSession: protectedProcedure
     .input(criarChatSessionSchema)
     .mutation(async ({ input, ctx }) => {
       try {
@@ -228,7 +215,7 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  atualizarSession: protectedProcedure
+  updateSession: protectedProcedure
     .input(atualizarChatSessionSchema)
     .mutation(async ({ input, ctx }) => {
       const { id, ...dadosAtualizacao } = input;
@@ -261,7 +248,7 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  listarSessions: protectedProcedure
+  findSessions: protectedProcedure
     .input(buscarChatSessionsSchema)
     .query(async ({ input, ctx }) => {
       try {
@@ -302,7 +289,7 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  buscarSession: protectedProcedure
+  findSession: protectedProcedure
     .input(sessionIdSchema)
     .query(async ({ input, ctx }) => {
       try {
@@ -340,7 +327,7 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  excluirSession: protectedProcedure
+  deleteSession: protectedProcedure
     .input(sessionIdSchema)
     .mutation(async ({ input, ctx }) => {
       try {
@@ -370,7 +357,7 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  moverSession: protectedProcedure
+  moveSession: protectedProcedure
     .input(
       z.object({
         id: z.string(),
@@ -419,11 +406,6 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  // ===============================
-  // CHAT MESSAGE ENDPOINTS
-  // ===============================
-
-  // ✅ NOVO - Endpoint padrão em inglês (conforme arquitetura)
   getMessages: protectedProcedure
     .input(getMessagesSchema)
     .query(async ({ input, ctx }) => {
@@ -477,15 +459,14 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  // ✅ REFATORADO: Usar handler separado com Service Layer
-  enviarMensagem: protectedProcedure
+  sendMessage: protectedProcedure
     .use(chatWithDependenciesMiddleware)
     .input(enviarMensagemSchema)
     .mutation(async ({ input, ctx }) => {
       return enviarMensagemHandler({ input, ctx });
     }),
 
-  atualizarMensagem: protectedProcedure
+  updateMessage: protectedProcedure
     .input(atualizarChatMessageSchema)
     .mutation(async ({ input, ctx }) => {
       const { id, ...dadosAtualizacao } = input;
@@ -522,7 +503,7 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  excluirMensagem: protectedProcedure
+  deleteMessage: protectedProcedure
     .input(idSchema)
     .mutation(async ({ input, ctx }) => {
       try {
@@ -555,11 +536,7 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  // ===============================
-  // SPECIAL CHAT OPERATIONS
-  // ===============================
-
-  iniciarNovaConversa: protectedProcedure
+  startNewConversation: protectedProcedure
     .input(iniciarNovaConversaSchema)
     .mutation(async ({ input, ctx }) => {
       const { primeiraMessage, ...sessionData } = input;
@@ -601,7 +578,7 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  duplicarSession: protectedProcedure
+  duplicateSession: protectedProcedure
     .input(duplicarSessaoSchema)
     .mutation(async ({ input, ctx }) => {
       try {
@@ -649,14 +626,12 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  // ✅ REFATORADO: Usar handler separado com Service Layer
   getPreferredModel: protectedProcedure
     .use(chatWithDependenciesMiddleware)
     .query(async ({ ctx }) => {
       return getPreferredModelHandler({ ctx });
     }),
 
-  // ✅ REFATORADO: Usar handler separado com Service Layer
   autoCreateSessionWithMessage: protectedProcedure
     .use(chatWithDependenciesMiddleware)
     .input(autoCreateSessionWithMessageSchema)
@@ -664,7 +639,6 @@ export const chatRouter: TRPCRouterRecord = {
       return autoCreateSessionWithMessageHandler({ input, ctx });
     }),
 
-  // 🚀 FASE 2: Novo endpoint para criar sessão vazia
   createEmptySession: protectedProcedure
     .use(chatWithDependenciesMiddleware)
     .input(createEmptySessionSchema)
@@ -672,11 +646,10 @@ export const chatRouter: TRPCRouterRecord = {
       return createEmptySessionHandler({ input, ctx });
     }),
 
-  // 🤖 Gerar título de sessão baseado na primeira mensagem
   generateSessionTitle: protectedProcedure
     .use(chatWithDependenciesMiddleware)
     .input(generateSessionTitleSchema)
     .mutation(async ({ input, ctx }) => {
       return generateSessionTitleHandler({ input, ctx });
     }),
-};
+});

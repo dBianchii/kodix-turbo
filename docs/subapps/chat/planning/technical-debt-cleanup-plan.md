@@ -8,7 +8,7 @@
 
 ### 1.1. O Problema
 
-O Chat SubApp acumula **585 problemas** de linting e TypeScript, um débito técnico crítico introduzido por mim durante refatorações anteriores.
+O Chat SubApp acumula atualmente **585 problemas** de linting e TypeScript, um débito técnico crítico introduzido por mim durante refatorações anteriores.
 
 ### 1.2. Diagnóstico da Causa Raiz (Pós-Análise)
 
