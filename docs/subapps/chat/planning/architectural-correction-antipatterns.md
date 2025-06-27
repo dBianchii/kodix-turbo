@@ -130,6 +130,46 @@ function EmptyThreadState() {
 3. **IDENTIFICAR**: Ponto exato da falha
 4. **CORRIGIR**: Apenas esse ponto específico
 
+## 🔴 **ANTIPADRÃO #6: Exportar Routers tRPC como Objetos Genéricos**
+
+### **❌ O QUE NÃO FAZER**
+
+```typescript
+// ❌ ANTIPADRÃO: Quebra inferência de tipos end-to-end
+import type { TRPCRouterRecord } from "@trpc/server";
+
+export const chatRouter = {
+  listarSessions: protectedProcedure.query(/*...*/),
+  buscarSession: protectedProcedure.query(/*...*/),
+  // ...
+} satisfies TRPCRouterRecord;
+```
+
+### **✅ O QUE FAZER**
+
+```typescript
+// ✅ CORRETO: Preserva cadeia completa de tipos
+import { t } from "../../trpc";
+
+export const chatRouter = t.router({
+  listarSessions: protectedProcedure.query(/*...*/),
+  buscarSession: protectedProcedure.query(/*...*/),
+  // ...
+});
+```
+
+### **IMPACTO DO ANTIPADRÃO**
+
+- 🚨 **585 erros de TypeScript** acumulados
+- 🚨 Necessidade de `// @ts-nocheck` em múltiplos arquivos
+- 🚨 Perda completa de type safety no frontend
+- 🚨 Impossibilidade de refatoração segura
+- 🚨 Débito técnico exponencial
+
+### **LIÇÃO CRÍTICA**
+
+A estrutura `t.router()` não é apenas uma convenção - ela é **fundamental** para o funcionamento correto do tRPC. Usar objetos genéricos quebra a inferência de tipos que é o principal benefício do tRPC.
+
 ## 📋 **CHECKLIST DE PREVENÇÃO**
 
 ### **ANTES de qualquer mudança:**
@@ -155,6 +195,18 @@ function EmptyThreadState() {
 - 🚨 Console mostra erros de hidratação
 - 🚨 Fluxo de criação de sessão muda drasticamente
 - 🚨 Hooks críticos são substituídos completamente
+- 🚨 Erros de TypeScript começam a se acumular
+- 🚨 Necessidade de adicionar `// @ts-nocheck` ou `// @ts-ignore`
+
+### **ESTRATÉGIA DE LIMPEZA DE DÉBITO TÉCNICO:**
+
+Quando encontrar acúmulo de erros de TypeScript:
+
+1. **PARE e analise a causa raiz** - Não adicione `@ts-nocheck`
+2. **Verifique estrutura dos routers** - Devem usar `t.router()`
+3. **Corrija de cima para baixo** - Backend primeiro, depois frontend
+4. **Valide por camada** - `pnpm typecheck` após cada correção
+5. **Documente lições aprendidas** - Evite repetir erros
 
 ## 🎯 **EXEMPLO: CORREÇÃO CORRETA DO PROBLEMA ORIGINAL**
 
@@ -215,6 +267,7 @@ export function useAutoCreateSession() {
 2. **`@docs/subapps/chat/planning/migration-history-unified.md`** - Lições críticas
 3. **`@docs/subapps/chat/chat-architecture.md`** - Arquitetura de referência do SubApp
 4. **`@docs/subapps/chat/planning/assistant-ui-evolution-plan.md`** - Estado atual
+5. **`@docs/architecture/trpc-patterns.md`** - Padrões corretos de tRPC
 
 ---
 

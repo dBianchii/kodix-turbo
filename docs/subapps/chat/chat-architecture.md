@@ -271,8 +271,11 @@ export async function POST(request: NextRequest) {
 #### Router Principal
 
 ```typescript
-// Chat Router com todas as operações
-export const chatRouter = {
+// ⚠️ CRÍTICO: Sempre usar t.router() para preservar inferência de tipos
+import { t } from "../../trpc";
+
+// ✅ CORRETO: Usar t.router() preserva a inferência de tipos end-to-end
+export const chatRouter = t.router({
   // Sessões
   listarSessions: protectedProcedure.query(async ({ ctx, input }) => {
     return await ChatService.findSessionsByTeam(ctx.auth.user.activeTeamId);
@@ -333,7 +336,10 @@ export const chatRouter = {
         teamId: ctx.auth.user.activeTeamId,
       });
     }),
-} satisfies TRPCRouterRecord;
+});
+
+// ❌ NUNCA: Exportar como TRPCRouterRecord quebra inferência de tipos
+// export const chatRouter = {...} satisfies TRPCRouterRecord;
 ```
 
 #### Padrões de Nomenclatura Estabelecidos
@@ -723,3 +729,11 @@ Para garantir a estabilidade do sistema durante futuras evoluções, o seguinte 
 - **Problema**: As "Instruções do Time" configuradas no AI Studio não eram aplicadas a novas sessões se um modelo de IA já viesse pré-selecionado da UI.
 - **Causa Raiz**: A lógica que busca e injeta as instruções estava incorretamente posicionada dentro de um fluxo condicional que só era executado quando nenhum `aiModelId` era fornecido.
 - **Solução**: O bloco de código que chama `AiStudioService.getTeamInstructions` foi movido para fora e para depois de toda a lógica de seleção de modelo, garantindo que ele seja **sempre executado** na criação de uma nova sessão.
+
+### 3. **Estrutura de Routers tRPC (CRÍTICO para TypeScript)**
+
+- **Problema**: 585 erros de TypeScript no Chat SubApp, causando necessidade de `// @ts-nocheck` em múltiplos arquivos.
+- **Causa Raiz**: Routers exportados como objetos genéricos (`satisfies TRPCRouterRecord`) em vez de instâncias de `t.router()`, quebrando a inferência de tipos end-to-end do tRPC.
+- **Solução**: Todos os routers foram refatorados para usar `export const router = t.router({...})`. Esta mudança estrutural eliminou todos os erros de tipo de uma vez.
+- **Impacto**: Zero erros de TypeScript, remoção de todos os `// @ts-nocheck`, código totalmente tipado e seguro.
+- **Lição Crítica**: SEMPRE usar `t.router()` para preservar a cadeia de tipos do tRPC. NUNCA exportar routers como objetos genéricos.
