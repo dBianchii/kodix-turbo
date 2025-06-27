@@ -51,7 +51,7 @@ A leitura deste documento é **obrigatória** para todos os desenvolvedores.
 ### **5. Proibição Estrita de `// @ts-nocheck`**
 
 - **Lição**: O comentário `// @ts-nocheck` é um anti-padrão perigoso que esconde problemas reais e leva a erros em tempo de execução.
-- **O Problema**: O uso de `@ts-nocheck` no `chat-thread-provider.tsx` mascarou 96 erros de tipo, que contribuíram para a instabilidade geral.
+- **O Problema**: O uso de `@ts-nocheck` em arquivos como `chat-thread-provider.tsx` mascarou dezenas de erros de tipo, que contribuíram para a instabilidade geral.
 - **Ação Preventiva**: `// @ts-nocheck` é **estritamente proibido**. O problema de tipo subjacente deve ser sempre investigado e corrigido na sua causa raiz. A regra de linter `@typescript-eslint/ban-ts-comment` deve ser tratada como um erro bloqueante.
 
 ---

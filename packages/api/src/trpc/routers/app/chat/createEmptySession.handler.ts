@@ -19,71 +19,41 @@ export async function createEmptySessionHandler({
   const userId = ctx.auth.user.id;
 
   try {
-    // 1. Determinar modelo a usar (explícito ou primeiro disponível)
-    let aiModelId: string;
-    let availableModels: any;
+    let modelToUse: any;
 
     if (input.aiModelId) {
-      // ✅ NOVO: Validar modelo explícito primeiro
       try {
         const explicitModel = await AiStudioService.getModelById({
           modelId: input.aiModelId,
           teamId,
           requestingApp: chatAppId,
         });
-
-        if (explicitModel) {
-          aiModelId = input.aiModelId;
-        } else {
-          throw new Error("Modelo explícito inválido");
-        }
+        modelToUse = explicitModel;
       } catch (error) {
-        console.warn(
-          "⚠️ [CREATE_EMPTY] Modelo explícito inválido, usando fallback",
-        );
-        // Fallback para buscar primeiro modelo disponível
-        availableModels = await AiStudioService.getAvailableModels({
-          teamId,
-          requestingApp: chatAppId,
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `O modelo selecionado não está disponível ou habilitado. Por favor, escolha outro.`,
         });
-        const firstModel = availableModels?.[0];
-        if (firstModel) {
-          aiModelId = firstModel.id;
-        } else {
-          throw new Error("Nenhum modelo disponível");
-        }
       }
     } else {
-      // Fallback original: buscar primeiro modelo disponível
-      try {
-        availableModels = await AiStudioService.getAvailableModels({
-          teamId,
-          requestingApp: chatAppId,
-        });
-
-        if (availableModels && availableModels.length > 0) {
-          const firstModel = availableModels[0];
-          aiModelId = firstModel!.id;
-        } else {
-          throw new Error("Nenhum modelo disponível");
-        }
-      } catch (error) {
-        console.error("❌ [CREATE_EMPTY] Erro ao buscar modelo:", error);
+      const availableModels = await AiStudioService.getAvailableModels({
+        teamId,
+        requestingApp: chatAppId,
+      });
+      if (!availableModels?.[0]) {
         throw new TRPCError({
           code: "PRECONDITION_FAILED",
           message:
             "Nenhum modelo de IA disponível. Configure modelos no AI Studio.",
         });
       }
+      modelToUse = availableModels[0];
     }
 
-    // 2. Definir título da sessão
     const title = input.title || `Chat ${new Date().toLocaleDateString()}`;
-
-    // 3. Criar sessão VAZIA (sem mensagens)
     const session = await chatRepository.ChatSessionRepository.create({
       title,
-      aiModelId,
+      aiModelId: modelToUse.id,
       teamId,
       userId,
     });
@@ -95,7 +65,6 @@ export async function createEmptySessionHandler({
       });
     }
 
-    // 🎯 Criar Team Instructions se configuradas
     try {
       const teamInstructions = await AiStudioService.getTeamInstructions({
         teamId,
@@ -114,22 +83,18 @@ export async function createEmptySessionHandler({
         });
       }
     } catch (error) {
-      // Log do erro mas não falha a criação da sessão
       console.warn(
         `⚠️ [CREATE_EMPTY] Erro ao criar Team Instructions para sessão ${session.id}:`,
         error,
       );
     }
 
-    // 🤖 Gerar título automaticamente se solicitado e houver firstMessage
     if (input.generateTitle && input.metadata?.firstMessage) {
-      // Executar em background para não bloquear a resposta
       setImmediate(async () => {
         try {
-          const firstModel = availableModels[0];
+          const firstModel = modelToUse;
           if (!firstModel) return;
 
-          // Buscar token do provider
           const providerToken = await AiStudioService.getProviderToken({
             providerId: firstModel.providerId,
             teamId,
@@ -137,7 +102,6 @@ export async function createEmptySessionHandler({
           });
 
           if (providerToken.token) {
-            // Configurar API baseada no provider
             const baseUrl =
               firstModel.provider?.baseUrl || "https://api.openai.com/v1";
             const apiUrl = `${baseUrl}/chat/completions`;
@@ -149,7 +113,6 @@ export async function createEmptySessionHandler({
             };
             const modelName = modelConfig.version || firstModel.name;
 
-            // ✅ PROMPT MELHORADO: Mais específico e com exemplos
             const titlePrompt = [
               {
                 role: "system",
@@ -187,10 +150,10 @@ Título:`,
               body: JSON.stringify({
                 model: modelName,
                 messages: titlePrompt,
-                max_tokens: 35, // ✅ AUMENTADO: de 20 para 35 tokens
-                temperature: 0.3, // ✅ REDUZIDO: mais consistente, menos criativo
-                top_p: 0.9, // ✅ ADICIONADO: melhor qualidade
-                frequency_penalty: 0.1, // ✅ ADICIONADO: evita repetições
+                max_tokens: 35,
+                temperature: 0.3,
+                top_p: 0.9,
+                frequency_penalty: 0.1,
               }),
             });
 
@@ -200,7 +163,6 @@ Título:`,
                 aiResponse.choices?.[0]?.message?.content?.trim();
 
               if (generatedTitle && generatedTitle.length <= 50) {
-                // Atualizar título da sessão
                 await chatRepository.ChatSessionRepository.update(session.id, {
                   title: generatedTitle,
                 });
@@ -223,7 +185,6 @@ Título:`,
         } catch (error) {
           console.warn("⚠️ [CREATE_EMPTY] Erro ao gerar título:", error);
 
-          // Fallback: usar primeiros 50 caracteres da mensagem
           try {
             const firstMessage = input.metadata?.firstMessage;
             if (firstMessage && typeof firstMessage === "string") {
@@ -245,7 +206,6 @@ Título:`,
 
     return {
       session,
-      // Sem mensagens iniciais!
       userMessage: null,
       aiMessage: null,
     };

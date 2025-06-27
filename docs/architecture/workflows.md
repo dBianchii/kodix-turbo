@@ -149,6 +149,17 @@ git push origin feature/user-profile-management
 # - Test plan and verification steps
 ```
 
+### 5. Validação Funcional e Visual (OBRIGATÓRIO)
+
+- **Princípio**: Testes automatizados não garantem a qualidade da experiência do usuário. Uma verificação manual dos fluxos impactados é obrigatória antes do merge.
+- **Ação**: O autor do PR (ou um revisor) deve navegar pela aplicação e executar manualmente os principais casos de uso afetados pela mudança.
+- **Exemplo Prático**: Se uma mudança foi feita na listagem de sessões do Chat, o revisor deve:
+  1. Abrir o Chat.
+  2. Verificar se a lista de sessões é renderizada corretamente.
+  3. Clicar em uma sessão para ver se as mensagens carregam.
+  4. Criar uma nova sessão.
+- **Checklist do PR**: Adicionar um item: `[ ] Realizei a validação funcional e visual dos fluxos impactados.`
+
 ## 📋 Pull Request Process
 
 ### PR Template

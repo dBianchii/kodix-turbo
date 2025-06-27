@@ -80,7 +80,7 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
 
   // ✅ Buscar dados da sessão selecionada com cache otimizado
   const sessionQuery = useQuery(
-    trpc.app.chat.buscarSession.queryOptions(
+    trpc.app.chat.findSession.queryOptions(
       { sessionId: selectedSessionId! },
       {
         enabled: !!selectedSessionId,
@@ -136,30 +136,22 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
 
   // ✅ Mutation para atualizar sessão (apenas quando há sessão)
   const updateSessionMutation = useMutation(
-    trpc.app.chat.atualizarSession.mutationOptions({
-      onSuccess: (updatedSession) => {
+    trpc.app.chat.updateSession.mutationOptions({
+      onSuccess: (updatedData) => {
         toast.success("Modelo da sessão atualizado com sucesso!");
 
         // ✅ Optimistic Update: Manually update the session list cache
         queryClient.setQueryData(
-          trpc.app.chat.listarSessions.queryKey,
-          (oldData: { sessions: { id: string }[] } | undefined) => {
-            if (!oldData) return oldData;
-            return {
-              ...oldData,
-              sessions: oldData.sessions.map((session) =>
-                session.id === updatedSession.id
-                  ? { ...session, ...updatedSession }
-                  : session,
-              ),
-            };
-          },
+          trpc.app.chat.findSession.pathFilter({
+            sessionId: updatedData.id,
+          }),
+          updatedData,
         );
 
         // Invalidate other specific queries as needed, but avoid invalidating the whole list.
         queryClient.invalidateQueries(
-          trpc.app.chat.buscarSession.pathFilter({
-            sessionId: updatedSession.id,
+          trpc.app.chat.findSession.pathFilter({
+            sessionId: updatedData.id,
           }),
         );
       },

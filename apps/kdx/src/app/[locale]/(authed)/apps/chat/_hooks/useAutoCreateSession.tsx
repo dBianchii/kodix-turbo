@@ -1,4 +1,3 @@
-// @ts-nocheck - Chat tRPC router has type definition issues that need to be resolved at the router level
 "use client";
 
 import { useState } from "react";
@@ -36,9 +35,7 @@ export function useAutoCreateSession(options?: UseAutoCreateSessionOptions) {
         console.log("✅ [CHAT] autoCreateSessionWithMessage sucesso:", result);
 
         // ✅ Invalidar queries do sidebar para atualizar lista de sessões
-        queryClient.invalidateQueries(
-          trpc.app.chat.listarSessions.pathFilter(),
-        );
+        queryClient.invalidateQueries(trpc.app.chat.findSessions.pathFilter());
 
         console.log(
           "🔄 [CHAT] Queries do sidebar invalidadas para atualizar lista",

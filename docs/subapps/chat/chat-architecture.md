@@ -709,3 +709,17 @@ Para garantir a estabilidade do sistema durante futuras evoluções, o seguinte 
 
 **Documento otimizado:** Janeiro 2025  
 **Redução:** ~65% do tamanho original mantendo informações essenciais
+
+## 🚨 Lições Críticas de Implementação (Aprendidas em Produção)
+
+### 1. **Troca Silenciosa de Modelo (BUG CRÍTICO CORRIGIDO)**
+
+- **Problema**: Ao selecionar um modelo desabilitado (ex: `o1-mini`) na "Welcome Screen", o sistema criava a sessão com um modelo de fallback (ex: `claude-3-haiku`) **sem notificar o usuário**.
+- **Causa Raiz**: A lógica no `createEmptySession.handler.ts` tinha um `try/catch` que, em caso de erro na validação do modelo explícito, silenciosamente buscava o próximo modelo disponível em vez de retornar um erro.
+- **Solução**: A lógica foi refatorada para **lançar um erro `BAD_REQUEST`** se o modelo selecionado pelo usuário for inválido ou desabilitado. Agora, a UI pode capturar esse erro e informar o usuário para escolher outro modelo, prevenindo a troca silenciosa.
+
+### 2. **Injeção de Instruções do Time**
+
+- **Problema**: As "Instruções do Time" configuradas no AI Studio não eram aplicadas a novas sessões se um modelo de IA já viesse pré-selecionado da UI.
+- **Causa Raiz**: A lógica que busca e injeta as instruções estava incorretamente posicionada dentro de um fluxo condicional que só era executado quando nenhum `aiModelId` era fornecido.
+- **Solução**: O bloco de código que chama `AiStudioService.getTeamInstructions` foi movido para fora e para depois de toda a lógica de seleção de modelo, garantindo que ele seja **sempre executado** na criação de uma nova sessão.

@@ -382,6 +382,21 @@ export * from "./seuRecurso";
 
 ## 🔗 **3. Criar Endpoints tRPC**
 
+### **🚨 Padrão Crítico: Construção de Routers com `t.router`**
+
+- **Regra**: **TODOS** os routers, em todos os níveis (sub-routers e o router principal), **DEVEM** ser construídos usando a função `t.router({...})`.
+- **Causa de Erros Graves**: A exportação de a router como um objeto TypeScript genérico (ex: `const seuRouter: TRPCRouterRecord = {...}`) **APAGA** as informações de tipo detalhadas de cada procedure. Isso quebra a inferência de tipos end-to-end e causa uma cascata de erros "unsafe" no frontend que são difíceis de diagnosticar.
+
+  ```diff
+  // ❌ ERRADO: Este padrão quebra a inferência de tipos.
+  - import type { TRPCRouterRecord } from "@trpc/server";
+  - export const seuRouter: TRPCRouterRecord = { /* ... */ };
+
+  // ✅ CORRETO: Este padrão preserva e propaga os tipos.
+  + import { t } from "../../trpc";
+  + export const seuRouter = t.router({ /* ... */ });
+  ```
+
 > ⚠️ **IMPORTANTE**: Para comunicação entre SubApps, use **Service Layer** em vez de endpoints HTTP. Consulte [SubApp Architecture](./subapp-architecture.md) para padrões de comunicação cross-app.
 
 ### 3.1 Definir Validadores

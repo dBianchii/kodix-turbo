@@ -15,20 +15,23 @@ interface UseSessionWithMessagesOptions {
 
 export function useSessionWithMessages(
   sessionId: string | undefined,
-  options?: UseSessionWithMessagesOptions,
+  options?: {
+    enabled?: boolean;
+    staleTime?: number;
+    gcTime?: number;
+  },
 ) {
   const trpc = useTRPC();
 
-  // ✅ OTIMIZAÇÃO: Memoizar query options para evitar re-criação
-  const sessionQueryOptions = useMemo(
-    () => ({
-      enabled: !!sessionId && (options?.enabled ?? true),
-      staleTime: options?.staleTime ?? 5 * 60 * 1000, // 5 minutos
-      gcTime: options?.gcTime ?? 10 * 60 * 1000, // 10 minutos
-      refetchOnMount: false, // ✅ OTIMIZAÇÃO: Não refetch desnecessário
-      refetchOnWindowFocus: false,
-    }),
-    [sessionId, options?.enabled, options?.staleTime, options?.gcTime],
+  const sessionQuery = useQuery(
+    trpc.app.chat.findSession.queryOptions(
+      { sessionId: sessionId! },
+      {
+        enabled: !!sessionId && (options?.enabled ?? true),
+        staleTime: options?.staleTime ?? 5 * 60 * 1000,
+        gcTime: options?.gcTime ?? 10 * 60 * 1000,
+      },
+    ),
   );
 
   const messagesQueryOptions = useMemo(
@@ -42,17 +45,10 @@ export function useSessionWithMessages(
     [sessionId, options?.enabled, options?.staleTime, options?.gcTime],
   );
 
-  const sessionQuery = useQuery(
-    trpc.app.chat.buscarSession.queryOptions(
-      { sessionId: sessionId! },
-      sessionQueryOptions,
-    ),
-  );
-
   const messagesQuery = useQuery(
     trpc.app.chat.getMessages.queryOptions(
       {
-        chatSessionId: sessionId!,
+        chatSessionId: sessionId,
         limit: 100,
         page: 1,
         order: "asc",

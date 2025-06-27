@@ -234,6 +234,21 @@ export const kodixCareInstalledMiddleware =
 
 ## 🎯 Padrões de Router
 
+### **🚨 Padrão Crítico: Construção com `t.router` para Preservar Tipos**
+
+- **Regra**: **TODOS** os routers, em todos os níveis (sub-routers e o router principal), **DEVEM** ser construídos usando a função `t.router({...})`.
+- **Causa de Erros Graves**: A exportação de um router como um objeto TypeScript genérico (ex: `const seuRouter: TRPCRouterRecord = {...}`) **APAGA** as informações de tipo detalhadas de cada procedure. Isso quebra a inferência de tipos end-to-end e causa uma cascata de erros "unsafe" no frontend que são difíceis de diagnosticar.
+
+  ```diff
+  // ❌ ERRADO: Este padrão quebra a inferência de tipos.
+  - import type { TRPCRouterRecord } from "@trpc/server";
+  - export const seuRouter: TRPCRouterRecord = { /* ... */ };
+
+  // ✅ CORRETO: Este padrão preserva e propaga os tipos.
+  + import { t } from "../../trpc";
+  + export const seuRouter = t.router({ /* ... */ });
+  ```
+
 ### Estrutura de Router do Kodix Care
 
 ```typescript
