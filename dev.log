@@ -1,0 +1,103 @@
+
+> kodix-turbo@ dev:kdx /Users/mahadevadas/Documents/Kodix/kodix-turbo
+> turbo watch dev studio -F @kdx/kdx... @kdx/db-dev#dev
+
+turbo 2.5.4
+
+• Packages in scope: @kdx/api, @kdx/auth, @kdx/dayjs, @kdx/db, @kdx/eslint-config, @kdx/kdx, @kdx/locales, @kdx/permissions, @kdx/prettier-config, @kdx/react-email, @kdx/shared, @kdx/tailwind-config, @kdx/tsconfig, @kdx/ui, @kdx/validators
+• Running dev, studio, @kdx/db-dev#dev in 15 packages
+• Remote caching disabled
+@kdx/shared:dev: cache bypass, force executing 828d726a526894dc
+@kdx/kdx:dev: cache bypass, force executing c6df93d856fab15d
+@kdx/db:studio: cache bypass, force executing cd5089159b2600c7
+@kdx/db-dev:dev: cache bypass, force executing 38eadc5db1ef109f
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/kdx:dev: 
+@kdx/kdx:dev: > @kdx/kdx@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/apps/kdx
+@kdx/kdx:dev: > pnpm with-env next dev --turbo --port 3000
+@kdx/kdx:dev: 
+@kdx/db:studio: 
+@kdx/db:studio: > @kdx/db@0.1.0 studio /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:studio: > pnpm wait-for-db && pnpm with-env drizzle-kit studio
+@kdx/db:studio: 
+@kdx/db-dev:dev: 
+@kdx/db-dev:dev: > @kdx/db-dev@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db-dev
+@kdx/db-dev:dev: > trap 'docker compose stop' EXIT; docker compose up --build
+@kdx/db-dev:dev: 
+@kdx/db-dev:dev:  Container kodix-db-mysql-1  Running
+@kdx/db-dev:dev:  Container kodix-db-serverless-redis-http-1  Running
+@kdx/db-dev:dev:  Container kodix-db-redis-1  Running
+@kdx/db-dev:dev: Attaching to mysql-1, redis-1, serverless-redis-http-1
+@kdx/db:studio: 
+@kdx/db:studio: > @kdx/db@0.1.0 wait-for-db /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:studio: > while ! nc -z localhost 3306; do sleep 1; done
+@kdx/db:studio: 
+@kdx/kdx:dev: 
+@kdx/kdx:dev: > @kdx/kdx@0.1.0 with-env /Users/mahadevadas/Documents/Kodix/kodix-turbo/apps/kdx
+@kdx/kdx:dev: > dotenv -e ../../.env -- "next" "dev" "--turbo" "--port" "3000"
+@kdx/kdx:dev: 
+@kdx/db:studio: Connection to localhost port 3306 [tcp/mysql] succeeded!
+@kdx/db:studio: 
+@kdx/db:studio: > @kdx/db@0.1.0 with-env /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:studio: > dotenv -e ../../.env -- "drizzle-kit" "studio"
+@kdx/db:studio: 
+@kdx/db:studio: No config path provided, using default 'drizzle.config.ts'
+@kdx/db:studio: Reading config file '/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/drizzle.config.ts'
+@kdx/db:dev: cache bypass, force executing 3eb8807e7e847e13
+@kdx/ui:dev: cache bypass, force executing 836bfd91f4f4f369
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/db:dev: 
+@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:dev: > tsc
+@kdx/db:dev: 
+@kdx/db:studio: 
+@kdx/db:studio:  Warning  Drizzle Studio is currently in Beta. If you find anything that is not working as expected or should be improved, feel free to create an issue on GitHub: https://github.com/drizzle-team/drizzle-kit-mirror/issues/new or write to us on Discord: https://discord.gg/WcRKz2FFxN
+@kdx/db:studio: 
+@kdx/db:studio: Drizzle Studio is up and running on https://local.drizzle.studio
+@kdx/kdx:dev:    ▲ Next.js 15.3.4 (Turbopack)
+@kdx/kdx:dev:    - Local:        http://localhost:3000
+@kdx/kdx:dev:    - Network:      http://192.168.3.50:3000
+@kdx/kdx:dev:    - Experiments (use with caution):
+@kdx/kdx:dev:      · turbo
+@kdx/kdx:dev: 
+@kdx/kdx:dev:  ✓ Starting...
+@kdx/kdx:dev:  ⚠ The config property `experimental.turbo` is deprecated. Move this setting to `config.turbopack` as Turbopack is now stable.
+@kdx/validators:dev: cache bypass, force executing 42319cfb279863e0
+@kdx/permissions:dev: cache bypass, force executing 30ebbda8aae1078c
+@kdx/kdx:dev:  ✓ Compiled middleware in 369ms
+@kdx/permissions:dev: 
+@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
+@kdx/permissions:dev: > tsc
+@kdx/permissions:dev: 
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/kdx:dev:  ✓ Ready in 1992ms
+@kdx/kdx:dev:  ⚠ Webpack is configured while Turbopack is not, which may cause problems.
+@kdx/kdx:dev:  ⚠ See instructions if you need t@kdx/db-dev:dev: redis-1                  | 1:signal-handler (1751059506) Received SIGTERM scheduling shutdown...
+@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:25:06.066 * User requested shutdown...
+@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:25:06.069 * Saving the final RDB snapshot before exiting.
+@kdx/db-dev:dev: mysql-1                  | 2025-06-27T21:25:06.063260Z 0 [System] [MY-013172] [Server] Received SHUTDOWN from user <via user signal>. Shutting down mysqld (Version: 8.2.0).
+@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:25:06.083 * DB saved on disk
+@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:25:06.084 # Redis is now ready to exit, bye bye...
+@kdx/db-dev:dev: serverless-redis-http-1  | 
+@kdx/db-dev:dev: serverless-redis-http-1  | 21:25:06.076 [notice] SIGTERM received - shutting down
+@kdx/db-dev:dev: serverless-redis-http-1  | 
+@kdx/db-dev:dev: @kdx/db-dev:dev: [Kredis-1 exited with code 0
+@kdx/db-dev:dev: mysql-1                  | 2025-06-27T21:25:06.859023Z 0 [System] [MY-010910] [Server] /usr/sbin/mysqld: Shutdown complete (mysqld 8.2.0)  MySQL Community Server - GPL.
+@kdx/db-dev:dev: mysql-1                  | 2025-06-27T21:25:06.873642Z 0 [System] [MY-015016] [Server] MySQL Server - end.
+@kdx/db-dev:dev: @kdx/db-dev:dev: [Kmysql-1 exited with code 0
+@kdx/db-dev:dev: @kdx/db-dev:dev: [Kserverless-redis-http-1 exited with code 0
+@kdx/db-dev:dev:  Container kodix-db-mysql-1  Stopping
+@kdx/db-dev:dev:  Container kodix-db-redis-1  Stopping
+@kdx/db-dev:dev:  Container kodix-db-serverless-redis-http-1  Stopping
+@kdx/db-dev:dev:  Container kodix-db-mysql-1  Stopped
+@kdx/db-dev:dev:  Container kodix-db-redis-1  Stopped
+@kdx/db-dev:dev:  Container kodix-db-serverless-redis-http-1  Stopped
