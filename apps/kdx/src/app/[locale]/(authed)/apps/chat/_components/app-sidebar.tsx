@@ -126,15 +126,14 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
 
   // Query para buscar todas as sessões com cache otimizado
   const allSessionsQuery = useQuery(
-    trpc.app.chat.listarSessions.queryOptions(
+    trpc.app.chat.findSessions.queryOptions(
       {
         limite: 100,
         pagina: 1,
       },
       {
-        staleTime: 2 * 60 * 1000, // 2 minutos
-        gcTime: 5 * 60 * 1000, // 5 minutos
-        refetchOnWindowFocus: false,
+        staleTime: 5 * 60 * 1000, // Cache de 5 minutos
+        gcTime: 10 * 60 * 1000, // Garbage collection de 10 minutos
       },
     ),
   );
@@ -176,15 +175,35 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
     }
   }, [expandedFolders]);
 
-  // Processar dados das queries
-  const folders = foldersQuery.data?.folders || [];
-  const allSessions = allSessionsQuery.data?.sessions || [];
-  const agents = agentsQuery.data?.agents || [];
+  const { data: foldersData } = foldersQuery;
+  const folders = useMemo(
+    () => foldersData?.folders ?? [],
+    [foldersData?.folders],
+  );
+
+  const sessions = useMemo(
+    () => allSessionsQuery.data?.sessions ?? [],
+    [allSessionsQuery.data?.sessions],
+  );
+
+  // Agrupar sessões por pasta
+  const groupedSessions = useMemo(() => {
+    const grouped: Record<string, any[]> = {};
+    sessions.forEach((session) => {
+      if (session.chatFolderId) {
+        if (!grouped[session.chatFolderId]) {
+          grouped[session.chatFolderId] = [];
+        }
+        grouped[session.chatFolderId].push(session);
+      }
+    });
+    return grouped;
+  }, [sessions]);
 
   // Auto-expandir pasta que contém a sessão selecionada
   useEffect(() => {
-    if (selectedSessionId && allSessions.length > 0) {
-      const selectedSession = allSessions.find(
+    if (selectedSessionId && sessions.length > 0) {
+      const selectedSession = sessions.find(
         (session: any) => session.id === selectedSessionId,
       );
 
@@ -196,7 +215,7 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
         });
       }
     }
-  }, [selectedSessionId, allSessions]);
+  }, [selectedSessionId, sessions]);
 
   // ✅ CORRIGIDO: Mutations reais usando arquitetura tRPC correta
   const createFolderMutation = useMutation(
@@ -354,7 +373,7 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
   };
 
   const handleCreateSession = () => {
-    if (sessionTitle.trim() && selectedModel && models.length > 0) {
+    if (sessionTitle.trim() && selectedModel && modelsQuery.data?.length > 0) {
       createSessionMutation.mutate({
         title: sessionTitle.trim(),
         chatFolderId:
@@ -379,7 +398,7 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
       editingSession &&
       sessionTitle.trim() &&
       selectedModel &&
-      models.length > 0
+      modelsQuery.data?.length > 0
     ) {
       updateSessionMutation.mutate({
         id: editingSession.id,
@@ -430,7 +449,7 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
   };
 
   // Filtrar sessões que não têm pasta atribuída
-  const sessionsWithoutFolder = allSessions.filter(
+  const sessionsWithoutFolder = sessions.filter(
     (session: any) => !session.chatFolderId,
   );
 
@@ -553,6 +572,7 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
                       <FolderItem
                         key={folder.id}
                         folder={folder}
+                        sessions={groupedSessions[folder.id] ?? []}
                         isExpanded={expandedFolders.has(folder.id)}
                         selectedSessionId={selectedSessionId}
                         onToggle={() => toggleFolder(folder.id)}
@@ -797,17 +817,11 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
                   <SelectItem value="none">
                     {t("apps.chat.sessions.noAgent")}
                   </SelectItem>
-                  {agents.length === 0 ? (
-                    <div className="text-muted-foreground p-2 text-center text-sm">
-                      {t("apps.aiStudio.agents.noAgents")}
-                    </div>
-                  ) : (
-                    agents.map((agent) => (
-                      <SelectItem key={agent.id} value={agent.id}>
-                        {agent.name}
-                      </SelectItem>
-                    ))
-                  )}
+                  {agentsQuery.data?.agents.map((agent) => (
+                    <SelectItem key={agent.id} value={agent.id}>
+                      {agent.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -823,7 +837,7 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
                   />
                 </SelectTrigger>
                 <SelectContent>
-                  {models.map((model) => (
+                  {modelsQuery.data?.map((model) => (
                     <SelectItem key={model.id} value={model.id}>
                       {model.name} ({model.provider.name || "Provider"})
                     </SelectItem>
@@ -917,7 +931,7 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
                   <SelectItem value="none">
                     {t("apps.chat.sessions.noAgent")}
                   </SelectItem>
-                  {agents.map((agent) => (
+                  {agentsQuery.data?.agents.map((agent) => (
                     <SelectItem key={agent.id} value={agent.id}>
                       {agent.name}
                     </SelectItem>
@@ -937,7 +951,7 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
                   />
                 </SelectTrigger>
                 <SelectContent>
-                  {models.map((model) => (
+                  {modelsQuery.data?.map((model) => (
                     <SelectItem key={model.id} value={model.id}>
                       {model.name} ({model.provider.name || "Provider"})
                     </SelectItem>
@@ -1104,6 +1118,7 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
 // Componente para item de pasta
 interface FolderItemProps {
   folder: any;
+  sessions: any[];
   isExpanded: boolean;
   selectedSessionId?: string;
   onToggle: () => void;
@@ -1116,6 +1131,7 @@ interface FolderItemProps {
 
 function FolderItem({
   folder,
+  sessions,
   isExpanded,
   selectedSessionId,
   onToggle,
@@ -1125,19 +1141,6 @@ function FolderItem({
   onEditSession,
   onDeleteSession,
 }: FolderItemProps) {
-  const trpc = useTRPC();
-
-  // ✅ CORRIGIDO: Query real das sessões da pasta
-  const sessionsQuery = useQuery(
-    trpc.app.chat.listarSessions.queryOptions({
-      chatFolderId: folder.id,
-      limite: 50,
-      pagina: 1,
-    }),
-  );
-
-  const sessions = sessionsQuery.data?.sessions || [];
-
   return (
     <div>
       <div className="group flex items-center justify-between">
@@ -1181,11 +1184,7 @@ function FolderItem({
       {/* Sessions list - only show when expanded */}
       {isExpanded && (
         <div className="ml-6 space-y-1">
-          {sessionsQuery.isLoading ? (
-            <div className="text-muted-foreground py-2 text-xs">
-              Carregando sessões...
-            </div>
-          ) : sessions.length === 0 ? (
+          {sessions.length === 0 ? (
             <div className="text-muted-foreground py-2 text-xs">
               Nenhuma sessão encontrada
             </div>

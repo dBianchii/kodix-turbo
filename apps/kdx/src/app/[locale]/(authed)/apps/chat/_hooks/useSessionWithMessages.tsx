@@ -5,7 +5,7 @@ import type { Message } from "@ai-sdk/react";
 import { useCallback, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-import { trpc } from "~/trpc/react";
+import { useTRPC } from "~/trpc/react";
 
 interface UseSessionWithMessagesOptions {
   enabled?: boolean;
@@ -14,16 +14,18 @@ interface UseSessionWithMessagesOptions {
 }
 
 export function useSessionWithMessages(
-  sessionId: string,
+  sessionId: string | undefined,
   options?: {
     enabled?: boolean;
     staleTime?: number;
     gcTime?: number;
   },
 ) {
+  const trpc = useTRPC();
+
   const sessionQuery = useQuery(
     trpc.app.chat.findSession.queryOptions(
-      { sessionId: sessionId },
+      { sessionId: sessionId! },
       {
         enabled: !!sessionId && options?.enabled,
         staleTime: options?.staleTime ?? 5 * 60 * 1000,
@@ -34,7 +36,7 @@ export function useSessionWithMessages(
   const messagesQuery = useQuery(
     trpc.app.chat.getMessages.queryOptions(
       {
-        chatSessionId: sessionId,
+        chatSessionId: sessionId!,
         limit: 100, // Hardcoded for now
         page: 1,
         order: "asc",
