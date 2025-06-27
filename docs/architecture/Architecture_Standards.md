@@ -634,6 +634,26 @@ pnpm dev:kdx         # ✅ Sem warnings
 3. **Crie exemplos** nos guias relevantes
 4. **Teste integração** com stack existente
 
+## 🚫 **Anti-Padrões Críticos (Práticas Proibidas)**
+
+### **1. Uso de `// @ts-nocheck`**
+
+- **Regra**: O uso do comentário `// @ts-nocheck` é **ESTRITAMENTE PROIBIDO** em todo o monorepo.
+- **Status**: 🔴 **PROIBIDO**
+- **Justificativa**: Este comentário desativa completamente a verificação de tipos do TypeScript em um arquivo, o que:
+
+  1.  **Esconde Erros Reais**: Impede a detecção de problemas de tipo que podem (e vão) levar a erros em tempo de execução.
+  2.  **Cria Débito Técnico**: Transforma um problema de tipo em um problema de lógica silencioso, tornando o debugging exponencialmente mais difícil.
+  3.  **Compromete a Segurança de Tipos**: Anula o principal benefício de se usar TypeScript.
+
+- **O que Fazer em Vez Disso**:
+
+  - **Corrija a Causa Raiz**: Investigue e resolva o problema de tipo subjacente. Isso pode envolver corrigir a lógica, ajustar tipos de dados ou refatorar uma função.
+  - **Use Type Guards**: Se uma variável pode ter múltiplos tipos, use `if (typeof x === 'string')` ou `if (x instanceof MyClass)` para garantir o tipo.
+  - **Último Recurso (`as any`)**: Em casos raríssimos e bem justificados (ex: interop com libs JS antigas), o uso de `as any` ou `as unknown as MyType` pode ser considerado, mas deve ser documentado com um comentário explicando o porquê, e ainda assim é preferível criar um tipo de declaração (`.d.ts`). `@ts-nocheck` nunca é a solução.
+
+- **Aplicação da Regra**: Pull Requests que contenham a adição de `@ts-nocheck` serão rejeitados. O linter já está configurado para avisar sobre isso (`@typescript-eslint/ban-ts-comment`), e a intenção é tratar este aviso como um erro bloqueante.
+
 ---
 
 **Versão:** 1.0  
