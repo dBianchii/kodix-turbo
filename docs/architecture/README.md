@@ -1,35 +1,39 @@
-# Arquitetura do Monorepo Kodix
+# Documentação de Arquitetura
 
 ## 📖 Visão Geral
 
-Este diretório contém toda a documentação de arquitetura, padrões e guias de desenvolvimento do projeto Kodix.
+Esta seção contém **guias técnicos** e **padrões de desenvolvimento** para o projeto Kodix.
 
-> **🎯 OBJETIVO:** Manter uma fonte única de verdade para decisões arquiteturais, garantindo consistência, qualidade e manutenibilidade em todo o monorepo.
+> 🎯 **FONTE ÚNICA DE VERDADE**: Para padrões arquiteturais oficiais, consulte **[Architecture Standards](./ARCHITECTURE_STANDARDS.md)** - documento consolidado com todos os padrões do projeto.
 
----
+## 🏗️ Guias Principais
 
-## 🚨 **Leitura Crítica Obrigatória**
+### **📚 Guias de Desenvolvimento**
 
-### **[>> 📖 Lições Aprendidas de Arquitetura <<](./lessons-learned.md)**
+- **[Development Setup](./development-setup.md)** - Setup do ambiente de desenvolvimento
+- **[Backend Guide](./backend-guide.md)** - Desenvolvimento backend com tRPC e Drizzle
+- **[Frontend Guide](./frontend-guide.md)** - Desenvolvimento frontend com Next.js e React
+- **[Scripts Reference](./scripts-reference.md)** - 📋 Referência completa de scripts do projeto
 
-**Este documento é o mais importante para prevenir erros.** Ele centraliza as falhas críticas que já ocorreram, suas causas raízes e, mais importante, as ações preventivas para garantir que não se repitam.
+### **🎯 SubApp Architecture**
 
-**A leitura e consulta deste documento são obrigatórias antes de iniciar qualquer desenvolvimento ou refatoração significativa.**
+- **[SubApp Architecture](./subapp-architecture.md)** - **🚨 FONTE ÚNICA DE VERDADE**
+  - 🏗️ Arquitetura e padrões fundamentais
+  - 🔒 Regras de isolamento entre apps (CRÍTICAS)
+  - ⚙️ Sistema de configurações por team (AppTeamConfig)
+  - 🚀 Processo completo de criação de novos SubApps
 
----
+### **📋 Padrões e Convenções**
 
-## 📚 Índice Principal
+- **[Coding Standards](./coding-standards.md)** - Padrões de código e convenções
+- **[Debug & Logging Standards](./debug-logging-standards.md)** - 🔍 **NOVO!** Sistema unificado de debug com prefixos por módulo
+- **[SubApp Documentation Guide](./subapp-documentation-guide.md)** - 📚 **CONSOLIDADO!** Guia completo de documentação para SubApps
+- **[Internationalization](./internationalization-i18n.md)** - Setup de i18n e traduções
+- **[Workflows](./workflows.md)** - Git workflows e processos
 
-| Documento                                                            | Descrição                                                                |
-| -------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| **[🚀 Padrões Arquiteturais Oficiais](./Architecture_Standards.md)** | **PONTO DE PARTIDA.** Padrões de tecnologias, arquivos, tRPC, e scripts. |
-| **[🏗️ Arquitetura de SubApps](./subapp-architecture.md)**            | Como SubApps são estruturados, se comunicam e são configurados.          |
-| **[⚙️ Configurações de SubApps](./subapp-configurations-system.md)** | Detalhes do sistema de configuração por time e usuário.                  |
-| **[↔️ Dependências Entre SubApps](./subapp-inter-dependencies.md)**  | Regras de comunicação e dependências entre os SubApps.                   |
-| **[📝 Guias de Desenvolvimento](./development-setup.md)**            | Guias para setup, backend, frontend, tRPC, etc.                          |
-| **[💾 Banco de Dados](../database/)**                                | Documentação completa sobre o schema, migrations e Drizzle.              |
-| **[🐛 Debug & Logs](../debug/)**                                     | Políticas e registros de logs para todo o monorepo.                      |
-| **[🧪 Testes](../tests/)**                                           | Estratégias e guias para testes de unidade, integração e E2E.            |
+### **🔗 Comunicação e Dependências**
+
+- **[SubApp Inter-Dependencies](./subapp-inter-dependencies.md)** - Padrões específicos para comunicação entre SubApps (legacy/específico)
 
 ## 🚀 Fluxos de Trabalho por Objetivo
 

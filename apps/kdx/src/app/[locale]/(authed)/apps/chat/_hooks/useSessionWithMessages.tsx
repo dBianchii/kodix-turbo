@@ -15,37 +15,49 @@ interface UseSessionWithMessagesOptions {
 
 export function useSessionWithMessages(
   sessionId: string | undefined,
-  options?: {
-    enabled?: boolean;
-    staleTime?: number;
-    gcTime?: number;
-  },
+  options?: UseSessionWithMessagesOptions,
 ) {
   const trpc = useTRPC();
 
+  // ✅ OTIMIZAÇÃO: Memoizar query options para evitar re-criação
+  const sessionQueryOptions = useMemo(
+    () => ({
+      enabled: !!sessionId && (options?.enabled ?? true),
+      staleTime: options?.staleTime ?? 5 * 60 * 1000, // 5 minutos
+      gcTime: options?.gcTime ?? 10 * 60 * 1000, // 10 minutos
+      refetchOnMount: false, // ✅ OTIMIZAÇÃO: Não refetch desnecessário
+      refetchOnWindowFocus: false,
+    }),
+    [sessionId, options?.enabled, options?.staleTime, options?.gcTime],
+  );
+
+  const messagesQueryOptions = useMemo(
+    () => ({
+      enabled: !!sessionId && (options?.enabled ?? true),
+      staleTime: options?.staleTime ?? 5 * 60 * 1000, // 5 minutos
+      gcTime: options?.gcTime ?? 10 * 60 * 1000, // 10 minutos
+      refetchOnMount: false, // ✅ OTIMIZAÇÃO: Não refetch desnecessário
+      refetchOnWindowFocus: false,
+    }),
+    [sessionId, options?.enabled, options?.staleTime, options?.gcTime],
+  );
+
   const sessionQuery = useQuery(
-    trpc.app.chat.findSession.queryOptions(
+    trpc.app.chat.buscarSession.queryOptions(
       { sessionId: sessionId! },
-      {
-        enabled: !!sessionId && options?.enabled,
-        staleTime: options?.staleTime ?? 5 * 60 * 1000,
-        gcTime: options?.gcTime ?? 10 * 60 * 1000,
-      },
+      sessionQueryOptions,
     ),
   );
+
   const messagesQuery = useQuery(
     trpc.app.chat.getMessages.queryOptions(
       {
         chatSessionId: sessionId!,
-        limit: 100, // Hardcoded for now
+        limit: 100,
         page: 1,
         order: "asc",
       },
-      {
-        enabled: !!sessionId && options?.enabled,
-        staleTime: options?.staleTime ?? 5 * 60 * 1000,
-        gcTime: options?.gcTime ?? 10 * 60 * 1000,
-      },
+      messagesQueryOptions,
     ),
   );
 
@@ -90,7 +102,7 @@ export function useSessionWithMessages(
   const [isRefetching, setIsRefetching] = useState(false);
   const [lastRefetchTime, setLastRefetchTime] = useState(0);
 
-  const refetch = useCallback(async () => {
+  const refetch = useCallback(() => {
     // ✅ GUARDA 1: Prevenir múltiplos refetch simultâneos
     if (isRefetching) {
       if (process.env.NODE_ENV === "development") {
@@ -116,7 +128,11 @@ export function useSessionWithMessages(
     setIsRefetching(true);
     setLastRefetchTime(now);
 
-    await Promise.all([sessionQuery.refetch(), messagesQuery.refetch()]);
+    Promise.all([sessionQuery.refetch(), messagesQuery.refetch()]).finally(
+      () => {
+        setIsRefetching(false);
+      },
+    );
   }, [sessionQuery, messagesQuery, sessionId, isRefetching, lastRefetchTime]);
 
   // ✅ OTIMIZAÇÃO: Memoizar estados derivados

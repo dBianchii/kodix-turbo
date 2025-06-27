@@ -2,11 +2,7 @@
 
 ## 📖 **Visão Geral**
 
-Este documento estabelece os **padrões arquiteturais oficiais** do projeto Kodix que devem ser seguidos em toda a documentação e implementação.
-
-> **⚠️ LEITURA CRÍTICA OBRIGATÓRIA:** Antes de prosseguir, consulte o documento **[>> 📖 Lições Aprendidas de Arquitetura <<](./lessons-learned.md)**. Ele contém análises de falhas passadas e ações preventivas que são cruciais para evitar a repetição de erros.
-
-Use este documento como referência única para manter consistência.
+Este documento estabelece os **padrões arquiteturais oficiais** do projeto Kodix que devem ser seguidos em toda a documentação e implementação. Use este documento como referência única para manter consistência.
 
 ## 🎯 **Versões de Tecnologias**
 
@@ -229,97 +225,6 @@ O projeto Kodix usa **tRPC v11** com um padrão específico para o web app, base
 
 > **⚠️ IMPORTANTE:** O padrão utilizado no `care-expo` (mobile app) ainda está em estudo e **não deve ser considerado** como referência arquitetural. Esta seção foca exclusivamente no padrão web validado e funcional.
 
-### **🚨 PROBLEMAS CRÍTICOS DE IMPORTS - LEITURA OBRIGATÓRIA**
-
-#### **❌ ERRO COMUM: Imports Inexistentes**
-
-**PROBLEMA CRÍTICO IDENTIFICADO:** Uso de imports que não existem no módulo `~/trpc/react`, causando build errors.
-
-```typescript
-// ❌ ERRO FATAL - Exports que NÃO EXISTEM
-// ❌ Export 'api' não existe
-
-// ✅ ÚNICO EXPORT VÁLIDO no Web App
-import { api, trpc, useTRPC } from "~/trpc/react"; // ❌ Export 'trpc' não existe
-
-// ✅ CORRETO - Único export válido
-```
-
-#### **🔍 COMO VERIFICAR OS EXPORTS DISPONÍVEIS**
-
-```typescript
-// apps/kdx/src/trpc/react.tsx - ÚNICOS EXPORTS VÁLIDOS
-export const { TRPCProvider, useTRPC } = createTRPCContext<AppRouter>();
-export function TRPCReactProvider(props: { children: React.ReactNode }) {
-  // ...
-}
-
-// RESUMO: Apenas 3 exports existem:
-// - TRPCProvider
-// - useTRPC
-// - TRPCReactProvider
-```
-
-#### **⚡ PADRÃO CORRETO OBRIGATÓRIO**
-
-```typescript
-// ✅ PADRÃO CORRETO - Web App (Next.js)
-import { useTRPC } from "~/trpc/react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-
-function MyComponent() {
-  const trpc = useTRPC(); // ✅ Hook correto
-  const queryClient = useQueryClient();
-
-  // ✅ Queries corretas
-  const query = useQuery(trpc.app.method.queryOptions());
-
-  // ✅ Mutations corretas
-  const mutation = useMutation(trpc.app.method.mutationOptions({
-    onSuccess: () => {
-      queryClient.invalidateQueries(trpc.app.method.pathFilter());
-    }
-  }));
-
-  return <div>{/* JSX */}</div>;
-}
-```
-
-#### **🚨 CHECKLIST DE VALIDAÇÃO ANTES DE COMMITAR**
-
-- [ ] **NUNCA usar** `import { trpc }` ou `import { api }`
-- [ ] **SEMPRE usar** `import { useTRPC }`
-- [ ] **SEMPRE chamar** `const trpc = useTRPC()` dentro do componente
-- [ ] **VERIFICAR** com `pnpm check:trpc` antes de commitar
-- [ ] **TESTAR** que o build funciona com `pnpm dev:kdx`
-
-#### **🛠️ SCRIPT DE VERIFICAÇÃO AUTOMÁTICA**
-
-```bash
-# OBRIGATÓRIO executar antes de qualquer commit
-pnpm check:trpc
-
-# Resultado esperado:
-# ✅ Todos os imports de tRPC estão corretos!
-```
-
-#### **📋 REGRAS DE MIGRAÇÃO DE CÓDIGO INCORRETO**
-
-Se encontrar código incorreto, migre seguindo este padrão:
-
-```typescript
-// ❌ ANTES (build error)
-import { trpc } from "~/trpc/react";
-const result = trpc.app.method.useQuery();
-
-// ✅ DEPOIS (funcionando)
-import { useTRPC } from "~/trpc/react";
-import { useQuery } from "@tanstack/react-query";
-
-const trpc = useTRPC();
-const result = useQuery(trpc.app.method.queryOptions());
-```
-
 ### **✅ Padrão CORRETO - Web App (Next.js)**
 
 ```typescript
@@ -341,11 +246,69 @@ queryClient.invalidateQueries(trpc.app.getAll.pathFilter());
 
 ```typescript
 // ❌ NUNCA USE - Import incorreto no web app
-import { api, trpc } from "~/trpc/react";
+import { api } from "~/trpc/react";
 
 // ❌ NUNCA USE - Métodos diretos no web app
 const mutation = trpc.app.method.useMutation();
 const query = trpc.app.method.useQuery();
+```
+
+### **🔄 Migração de Código Incorreto**
+
+Se encontrar código incorreto no web app, migre:
+
+```typescript
+// ❌ ANTES (incorreto)
+import { api } from "~/trpc/react";
+const mutation = api.app.method.useMutation();
+
+// ✅ DEPOIS (correto)
+import { useTRPC } from "~/trpc/react";
+import { useMutation } from "@tanstack/react-query";
+
+const trpc = useTRPC();
+const mutation = useMutation(trpc.app.method.mutationOptions());
+```
+
+### **🛡️ Ferramentas de Validação**
+
+Para garantir conformidade com a arquitetura tRPC v11:
+
+#### **1. Script de Verificação Automática**
+
+```bash
+# Verificar problemas tRPC no web app
+pnpm check:trpc
+
+# Deve retornar 0 problemas para web app
+# Resultado esperado: ✅ 0 imports incorretos no web app
+```
+
+#### **2. Regra ESLint Customizada**
+
+```javascript
+// packages/eslint-config/eslint-rules/no-api-import.js
+// Detecta e sugere correções para imports incorretos
+```
+
+#### **3. Regras de Arquitetura Atualizadas**
+
+```markdown
+# .cursor-rules/kodix-rules.md
+
+## 🔧 tRPC v11 Architecture Rules (CRITICAL)
+
+- Web App: SEMPRE use `useTRPC()` pattern
+- NUNCA use `import { api }` pattern no web app
+```
+
+#### **4. Validação Obrigatória**
+
+```bash
+# Antes de qualquer commit
+pnpm check:trpc  # Deve mostrar 0 problemas
+
+# Arquitetura baseada no commit 92a76e90 (kodix-care-web)
 ```
 
 ## 🏗️ **Estrutura de SubApps**
@@ -471,26 +434,7 @@ pnpm build            # Build completo
 
 ### **🚨 Problemas Mais Comuns**
 
-#### **1. Build Error: "Export 'trpc' doesn't exist" ou "Export 'api' doesn't exist"**
-
-```bash
-# ❌ Erro comum
-Export trpc doesn't exist in target module
-./apps/kdx/src/app/[locale]/(authed)/apps/chat/_hooks/useSessionWithMessages.tsx (8:1)
-
-# ✅ Diagnóstico
-grep -r "import.*{ trpc }.*from.*~/trpc/react" apps/ packages/
-grep -r "import.*{ api }.*from.*~/trpc/react" apps/ packages/
-
-# ✅ Solução
-# Substituir por: import { useTRPC } from "~/trpc/react";
-# E dentro do componente: const trpc = useTRPC();
-
-# ✅ Verificação
-pnpm check:trpc  # Deve mostrar: ✅ Todos os imports de tRPC estão corretos!
-```
-
-#### **2. Warning "Unsupported engine"**
+#### **1. Warning "Unsupported engine"**
 
 ```bash
 # ❌ Problema
@@ -500,7 +444,7 @@ WARN Unsupported engine: wanted: {"node":"20.18.1"}
 nvm use
 ```
 
-#### **3. Comando "db:studio" não encontrado**
+#### **2. Comando "db:studio" não encontrado**
 
 ```bash
 # ❌ Problema
@@ -514,7 +458,7 @@ cd packages/db && pnpm studio  # Opção 2: Package específico
 https://local.drizzle.studio    # URL correta (não localhost:4983)
 ```
 
-#### **4. tRPC Import Incorreto**
+#### **3. tRPC Import Incorreto**
 
 ```bash
 # ❌ Verificar problemas
@@ -524,7 +468,7 @@ pnpm check:trpc
 ✅ 0 imports incorretos no web app
 ```
 
-#### **5. Docker/MySQL Connection Failed**
+#### **4. Docker/MySQL Connection Failed**
 
 ```bash
 # ❌ Diagnóstico
@@ -535,7 +479,7 @@ cd packages/db-dev && docker-compose up -d
 pnpm db:push
 ```
 
-#### **6. Drizzle Studio 404 ou "wait-for-db"**
+#### **5. Drizzle Studio 404 ou "wait-for-db"**
 
 ```bash
 # ❌ Problema: Studio fica aguardando ou retorna 404
@@ -549,21 +493,6 @@ cd packages/db-dev && docker-compose up -d  # 1. Iniciar Docker
 sleep 5                                     # 2. Aguardar MySQL
 cd ../db && pnpm studio                     # 3. Iniciar Studio
 # 4. Acessar: https://local.drizzle.studio
-```
-
-#### **7. Build Error: Module Resolution Failed**
-
-```bash
-# ❌ Problema: Cannot resolve module '~/trpc/react'
-
-# ✅ Diagnóstico
-# Verificar se está no diretório correto do workspace
-pwd  # Deve estar em /path/to/kodix-turbo
-
-# ✅ Solução
-# Reiniciar TypeScript server
-# No VSCode: Cmd+Shift+P → "TypeScript: Restart TS Server"
-# Ou reiniciar pnpm dev:kdx
 ```
 
 ### **⚡ Comandos de Verificação Rápida**
@@ -633,26 +562,6 @@ pnpm dev:kdx         # ✅ Sem warnings
 2. **Atualize este documento**
 3. **Crie exemplos** nos guias relevantes
 4. **Teste integração** com stack existente
-
-## 🚫 **Anti-Padrões Críticos (Práticas Proibidas)**
-
-### **1. Uso de `// @ts-nocheck`**
-
-- **Regra**: O uso do comentário `// @ts-nocheck` é **ESTRITAMENTE PROIBIDO** em todo o monorepo.
-- **Status**: 🔴 **PROIBIDO**
-- **Justificativa**: Este comentário desativa completamente a verificação de tipos do TypeScript em um arquivo, o que:
-
-  1.  **Esconde Erros Reais**: Impede a detecção de problemas de tipo que podem (e vão) levar a erros em tempo de execução.
-  2.  **Cria Débito Técnico**: Transforma um problema de tipo em um problema de lógica silencioso, tornando o debugging exponencialmente mais difícil.
-  3.  **Compromete a Segurança de Tipos**: Anula o principal benefício de se usar TypeScript.
-
-- **O que Fazer em Vez Disso**:
-
-  - **Corrija a Causa Raiz**: Investigue e resolva o problema de tipo subjacente. Isso pode envolver corrigir a lógica, ajustar tipos de dados ou refatorar uma função.
-  - **Use Type Guards**: Se uma variável pode ter múltiplos tipos, use `if (typeof x === 'string')` ou `if (x instanceof MyClass)` para garantir o tipo.
-  - **Último Recurso (`as any`)**: Em casos raríssimos e bem justificados (ex: interop com libs JS antigas), o uso de `as any` ou `as unknown as MyType` pode ser considerado, mas deve ser documentado com um comentário explicando o porquê, e ainda assim é preferível criar um tipo de declaração (`.d.ts`). `@ts-nocheck` nunca é a solução.
-
-- **Aplicação da Regra**: Pull Requests que contenham a adição de `@ts-nocheck` serão rejeitados. O linter já está configurado para avisar sobre isso (`@typescript-eslint/ban-ts-comment`), e a intenção é tratar este aviso como um erro bloqueante.
 
 ---
 

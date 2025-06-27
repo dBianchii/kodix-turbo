@@ -46,7 +46,7 @@ export const chatRouter: TRPCRouterRecord = {
   // CHAT FOLDER ENDPOINTS
   // ===============================
 
-  createChatFolder: protectedProcedure
+  criarChatFolder: protectedProcedure
     .input(criarChatFolderSchema)
     .mutation(async ({ input, ctx }) => {
       try {
@@ -66,7 +66,7 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  updateChatFolder: protectedProcedure
+  atualizarChatFolder: protectedProcedure
     .input(atualizarChatFolderSchema)
     .mutation(async ({ input, ctx }) => {
       const { id, ...dadosAtualizacao } = input;
@@ -103,7 +103,7 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  findChatFolders: protectedProcedure
+  buscarChatFolders: protectedProcedure
     .input(buscarChatFoldersSchema)
     .query(async ({ input, ctx }) => {
       try {
@@ -143,7 +143,7 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  findChatFolderById: protectedProcedure
+  buscarChatFolderPorId: protectedProcedure
     .input(idSchema)
     .query(async ({ input, ctx }) => {
       try {
@@ -173,7 +173,7 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  deleteChatFolder: protectedProcedure
+  excluirChatFolder: protectedProcedure
     .input(idSchema)
     .mutation(async ({ input, ctx }) => {
       try {
@@ -207,7 +207,7 @@ export const chatRouter: TRPCRouterRecord = {
   // CHAT SESSION ENDPOINTS
   // ===============================
 
-  createSession: protectedProcedure
+  criarSession: protectedProcedure
     .input(criarChatSessionSchema)
     .mutation(async ({ input, ctx }) => {
       try {
@@ -228,7 +228,7 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  updateSession: protectedProcedure
+  atualizarSession: protectedProcedure
     .input(atualizarChatSessionSchema)
     .mutation(async ({ input, ctx }) => {
       const { id, ...dadosAtualizacao } = input;
@@ -261,7 +261,7 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  findSessions: protectedProcedure
+  listarSessions: protectedProcedure
     .input(buscarChatSessionsSchema)
     .query(async ({ input, ctx }) => {
       try {
@@ -302,7 +302,7 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  findSession: protectedProcedure
+  buscarSession: protectedProcedure
     .input(sessionIdSchema)
     .query(async ({ input, ctx }) => {
       try {
@@ -340,7 +340,7 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  deleteSession: protectedProcedure
+  excluirSession: protectedProcedure
     .input(sessionIdSchema)
     .mutation(async ({ input, ctx }) => {
       try {
@@ -370,7 +370,7 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  moveSession: protectedProcedure
+  moverSession: protectedProcedure
     .input(
       z.object({
         id: z.string(),
@@ -478,14 +478,14 @@ export const chatRouter: TRPCRouterRecord = {
     }),
 
   // ✅ REFATORADO: Usar handler separado com Service Layer
-  sendMessage: protectedProcedure
+  enviarMensagem: protectedProcedure
     .use(chatWithDependenciesMiddleware)
     .input(enviarMensagemSchema)
     .mutation(async ({ input, ctx }) => {
       return enviarMensagemHandler({ input, ctx });
     }),
 
-  updateMessage: protectedProcedure
+  atualizarMensagem: protectedProcedure
     .input(atualizarChatMessageSchema)
     .mutation(async ({ input, ctx }) => {
       const { id, ...dadosAtualizacao } = input;
@@ -522,7 +522,7 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  deleteMessage: protectedProcedure
+  excluirMensagem: protectedProcedure
     .input(idSchema)
     .mutation(async ({ input, ctx }) => {
       try {
@@ -559,7 +559,7 @@ export const chatRouter: TRPCRouterRecord = {
   // SPECIAL CHAT OPERATIONS
   // ===============================
 
-  startNewConversation: protectedProcedure
+  iniciarNovaConversa: protectedProcedure
     .input(iniciarNovaConversaSchema)
     .mutation(async ({ input, ctx }) => {
       const { primeiraMessage, ...sessionData } = input;
@@ -601,7 +601,7 @@ export const chatRouter: TRPCRouterRecord = {
       }
     }),
 
-  duplicateSession: protectedProcedure
+  duplicarSession: protectedProcedure
     .input(duplicarSessaoSchema)
     .mutation(async ({ input, ctx }) => {
       try {

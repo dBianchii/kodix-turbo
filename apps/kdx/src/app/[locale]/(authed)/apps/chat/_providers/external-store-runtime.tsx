@@ -13,23 +13,10 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useTRPC } from "~/trpc/react";
 import { useSessionWithMessages } from "../_hooks/useSessionWithMessages";
 
-const convertMessage = (message: Message): ThreadMessageLike => {
-  return {
-    role: message.role as "user" | "assistant" | "system",
-    content: [{ type: "text", text: message.content }],
-    id: message.id || `msg-${Date.now()}`,
-    createdAt: new Date(),
-  };
-};
-
 interface ExternalStoreRuntimeProviderProps {
   children: ReactNode;
   sessionId: string | undefined;
   onNewSession?: (sessionId: string) => void;
-}
-
-interface UseChatExternalStoreOptions {
-  sessionId: string | undefined;
 }
 
 /**
@@ -52,15 +39,23 @@ export function ExternalStoreRuntimeProvider({
     initialMessages,
     isLoading: isLoadingSession,
     refetch,
-  } = useSessionWithMessages(sessionId ?? "", {
-    enabled: !!sessionId,
-  });
+  } = useSessionWithMessages(sessionId);
 
   // Converter mensagens do formato AI SDK para ThreadMessageLike
+  const convertMessage = useCallback((message: Message): ThreadMessageLike => {
+    return {
+      role: message.role as "user" | "assistant" | "system",
+      content: [{ type: "text", text: message.content }],
+      id: message.id || `msg-${Date.now()}`,
+      createdAt: new Date(),
+    };
+  }, []);
+
+  // Converter mensagens para formato Assistant-UI
   const threadMessages = useMemo(() => {
     if (!initialMessages) return [];
     return initialMessages.map(convertMessage);
-  }, [initialMessages]);
+  }, [initialMessages, convertMessage]);
 
   // Handler para novas mensagens
   const onNew = useCallback(
@@ -230,49 +225,4 @@ export function ExternalStoreRuntimeProvider({
       {children}
     </AssistantRuntimeProvider>
   );
-}
-
-export function useChatExternalStore({
-  sessionId,
-}: UseChatExternalStoreOptions) {
-  // ✅ OTIMIZAÇÃO: Chamar o hook condicionalmente
-  const {
-    session,
-    initialMessages,
-    isLoading: isLoadingMessages,
-    isError,
-    error,
-    refetch,
-  } = useSessionWithMessages(sessionId, {
-    enabled: !!sessionId,
-  });
-
-  // Extrair o último ID de modelo usado na sessão (se houver)
-  const lastUsedModelId = useMemo(() => {
-    // ... existing code ...
-  }, [initialMessages]);
-
-  // ... rest of the existing code ...
-}
-
-export function useChatLogic(
-  sessionId: string | undefined,
-  options: {
-    onNewSession?: (sessionId: string) => void;
-  },
-) {
-  const {
-    session,
-    initialMessages,
-    isLoading: isLoadingSession,
-    refetch,
-  } = useSessionWithMessages(sessionId);
-
-  // Converter mensagens do formato AI SDK para ThreadMessageLike
-  const threadMessages = useMemo(() => {
-    if (!initialMessages) return [];
-    return initialMessages.map(convertMessage);
-  }, [initialMessages, convertMessage]);
-
-  // ... rest of the existing code ...
 }

@@ -17,47 +17,6 @@ interface ExternalStoreRuntimeProviderProps {
   onNewSession?: (sessionId: string) => void;
 }
 
-interface UseChatExternalStoreOptions {
-  sessionId: string | undefined;
-}
-
-export function useChatExternalStore(
-  sessionId: string | undefined,
-  options?: {
-    onNewSession?: (sessionId: string) => void;
-  },
-) {
-  const {
-    session,
-    initialMessages,
-    isLoading: isLoadingMessages,
-    isError,
-    error,
-    refetch,
-  } = useSessionWithMessages(sessionId);
-
-  // Extrair o último ID de modelo usado na sessão (se houver)
-  const lastUsedModelId = useMemo(() => {
-    if (
-      !session ||
-      !(session as any).models ||
-      (session as any).models.length === 0
-    )
-      return null;
-    return (session as any).models[(session as any).models.length - 1].id;
-  }, [session]);
-
-  return {
-    session,
-    initialMessages,
-    isLoading: isLoadingMessages,
-    isError,
-    error,
-    refetch,
-    lastUsedModelId,
-  };
-}
-
 /**
  * ExternalStoreRuntime Provider simplificado que integra Assistant-UI com React Query
  * Resolve automaticamente sincronização de títulos via invalidação de cache

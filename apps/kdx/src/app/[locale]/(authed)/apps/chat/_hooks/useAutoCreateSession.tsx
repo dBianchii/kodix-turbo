@@ -36,7 +36,9 @@ export function useAutoCreateSession(options?: UseAutoCreateSessionOptions) {
         console.log("✅ [CHAT] autoCreateSessionWithMessage sucesso:", result);
 
         // ✅ Invalidar queries do sidebar para atualizar lista de sessões
-        queryClient.invalidateQueries(trpc.app.chat.findSessions.pathFilter());
+        queryClient.invalidateQueries(
+          trpc.app.chat.listarSessions.pathFilter(),
+        );
 
         console.log(
           "🔄 [CHAT] Queries do sidebar invalidadas para atualizar lista",

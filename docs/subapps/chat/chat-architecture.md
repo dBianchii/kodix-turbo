@@ -274,11 +274,11 @@ export async function POST(request: NextRequest) {
 // Chat Router com todas as operações
 export const chatRouter = {
   // Sessões
-  findSessions: protectedProcedure.query(async ({ ctx, input }) => {
+  listarSessions: protectedProcedure.query(async ({ ctx, input }) => {
     return await ChatService.findSessionsByTeam(ctx.auth.user.activeTeamId);
   }),
 
-  findSession: protectedProcedure
+  buscarSession: protectedProcedure
     .input(z.object({ sessionId: z.string() }))
     .query(async ({ ctx, input }) => {
       return await ChatService.findSessionById(input.sessionId);
@@ -317,7 +317,7 @@ export const chatRouter = {
       });
     }),
 
-  // Mensagens - Endpoint refatorado (Janeiro 2025)
+  // Mensagens - Endpoint refatorado (Dez 2024)
   getMessages: protectedProcedure
     .input(
       z.object({
@@ -340,26 +340,15 @@ export const chatRouter = {
 
 O Chat SubApp segue rigorosamente a convenção de nomenclatura em **inglês** para todos os endpoints tRPC:
 
-- ✅ **Inglês**: `getMessages`, `createEmptySession`, `getPreferredModel`, `findSessions`, `findSession`
+- ✅ **Inglês**: `getMessages`, `createEmptySession`, `getPreferredModel`
 - ❌ **Evitar**: Nomes em português ou com sufixos de teste
 
-**Histórico de Refatoração (Janeiro 2025):**
+**Histórico de Refatoração (Dez 2024):**
 
-- Migração completa da nomenclatura portuguesa → inglesa
-- 14 endpoints renomeados seguindo padrões create*, find*, update*, delete*
-- Frontend completamente atualizado (componentes, hooks, providers)
-- Zero breaking changes - 13/13 testes passando
-- 100% conformidade com padrões arquiteturais do Kodix
-
-**Endpoints Refatorados:**
-
-- `listarSessions` → `findSessions`
-- `buscarSession` → `findSession`
-- `buscarMensagensTest` → `getMessages`
-- `criarChatFolder` → `createChatFolder`
-- `atualizarChatFolder` → `updateChatFolder`
-- `buscarChatFolders` → `findChatFolders`
-- E todos os outros endpoints do router
+- Migração completa de `buscarMensagensTest` → `getMessages`
+- 11 componentes/hooks migrados
+- Zero breaking changes
+- 100% dos testes mantidos funcionais
 
 ## 🗄️ Data Layer
 
