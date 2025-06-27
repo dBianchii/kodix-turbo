@@ -404,3 +404,117 @@ turbo 2.5.4
 @kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 51.80ms to execute
 @kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 52.34ms to execute
 @kdx/kdx:dev:  GET /api/trpc/app.chat.findChatFolders,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions,app.chat.findSession,app.chat.getMessages?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%224%22%3A%7B%22json%22%3A%7B%22sessionId%22%3A%2298t11jl2w676%22%7D%7D%2C%225%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%2298t11jl2w676%22%2C%22limit%22%3A1%2C%22page%22%3A1%2C%22order%22%3A%22desc%22%7D%7D%7D 200 in 198ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 26.25ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.chat.getMessages?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%2298t11jl2w676%22%2C%22limit%22%3A1%2C%22page%22%3A1%2C%22order%22%3A%22desc%22%7D%7D%7D 200 in 135ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findChatFolders took 73.93ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 75.29ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSession took 80.61ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 87.68ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 89.96ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 91.52ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.chat.findChatFolders,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions,app.chat.findSession,app.chat.getMessages?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%224%22%3A%7B%22json%22%3A%7B%22sessionId%22%3A%2298t11jl2w676%22%7D%7D%2C%225%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%2298t11jl2w676%22%2C%22limit%22%3A1%2C%22page%22%3A1%2C%22order%22%3A%22desc%22%7D%7D%7D 200 in 357ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findChatFolders took 70.46ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSession took 75.14ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 80.90ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 84.14ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 85.42ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 87.50ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.chat.findChatFolders,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions,app.chat.findSession,app.chat.getMessages?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%224%22%3A%7B%22json%22%3A%7B%22sessionId%22%3A%2298t11jl2w676%22%7D%7D%2C%225%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%2298t11jl2w676%22%2C%22limit%22%3A1%2C%22page%22%3A1%2C%22order%22%3A%22desc%22%7D%7D%7D 200 in 479ms
+@kdx/kdx:dev:  ○ Compiling /[locale]/apps/aiStudio ...
+@kdx/kdx:dev:  ✓ Compiled /[locale]/apps/aiStudio in 6.2s
+@kdx/kdx:dev:  GET /apps/aiStudio 200 in 6904ms
+@kdx/kdx:dev:  GET /apps/aiStudio 200 in 35ms
+@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 177ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAiTeamProviderTokens took 34.83ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAiProviders took 36.26ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiTeamProviderTokens,app.aiStudio.findAiProviders?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 225ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAiTeamProviderTokens took 22.89ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAiProviders took 23.68ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiTeamProviderTokens,app.aiStudio.findAiProviders?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 267ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findModels took 16.19ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findModels?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 97ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAiProviders took 7.24ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiProviders?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 85ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAiProviders took 19.30ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findModels took 21.37ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiProviders,app.aiStudio.findModels?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 197ms
