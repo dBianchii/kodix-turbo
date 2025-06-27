@@ -118,7 +118,7 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
 
   // ✅ CORRIGIDO: Queries reais usando arquitetura tRPC correta
   const foldersQuery = useQuery(
-    trpc.app.chat.buscarChatFolders.queryOptions({
+    trpc.app.chat.findChatFolders.queryOptions({
       limite: 50,
       pagina: 1,
     }),
@@ -200,10 +200,10 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
 
   // ✅ CORRIGIDO: Mutations reais usando arquitetura tRPC correta
   const createFolderMutation = useMutation(
-    trpc.app.chat.criarChatFolder.mutationOptions({
+    trpc.app.chat.createChatFolder.mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries(
-          trpc.app.chat.buscarChatFolders.pathFilter(),
+          trpc.app.chat.findChatFolders.pathFilter(),
         );
         toast.success(t("apps.chat.folders.created"));
         setShowCreateFolder(false);
@@ -216,10 +216,10 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
   );
 
   const updateFolderMutation = useMutation(
-    trpc.app.chat.atualizarChatFolder.mutationOptions({
+    trpc.app.chat.updateChatFolder.mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries(
-          trpc.app.chat.buscarChatFolders.pathFilter(),
+          trpc.app.chat.findChatFolders.pathFilter(),
         );
         toast.success(t("apps.chat.folders.updated"));
         setShowEditFolder(false);
@@ -233,14 +233,12 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
   );
 
   const deleteFolderMutation = useMutation(
-    trpc.app.chat.excluirChatFolder.mutationOptions({
+    trpc.app.chat.deleteChatFolder.mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries(
-          trpc.app.chat.buscarChatFolders.pathFilter(),
+          trpc.app.chat.findChatFolders.pathFilter(),
         );
-        queryClient.invalidateQueries(
-          trpc.app.chat.listarSessions.pathFilter(),
-        );
+        queryClient.invalidateQueries(trpc.app.chat.findSessions.pathFilter());
         toast.success(t("apps.chat.folders.deleted"));
         setShowDeleteFolder(false);
         setDeletingFolder(null);
@@ -252,11 +250,9 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
   );
 
   const createSessionMutation = useMutation(
-    trpc.app.chat.criarSession.mutationOptions({
+    trpc.app.chat.createSession.mutationOptions({
       onSuccess: (data: any) => {
-        queryClient.invalidateQueries(
-          trpc.app.chat.listarSessions.pathFilter(),
-        );
+        queryClient.invalidateQueries(trpc.app.chat.findSessions.pathFilter());
         toast.success(t("apps.chat.sessions.created"));
         setShowCreateSession(false);
         setSessionTitle("");
@@ -273,13 +269,13 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
   );
 
   const updateSessionMutation = useMutation(
-    trpc.app.chat.atualizarSession.mutationOptions({
+    trpc.app.chat.updateSession.mutationOptions({
       onSuccess: (_data, variables) => {
         void queryClient.invalidateQueries(
-          trpc.app.chat.listarSessions.pathFilter(),
+          trpc.app.chat.findSessions.pathFilter(),
         );
         void queryClient.invalidateQueries(
-          trpc.app.chat.buscarSession.pathFilter({ sessionId: variables.id }),
+          trpc.app.chat.findSession.pathFilter({ sessionId: variables.id }),
         );
         toast.success(t("apps.chat.sessions.updated"));
         setShowEditSession(false);
@@ -292,11 +288,9 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
   );
 
   const deleteSessionMutation = useMutation(
-    trpc.app.chat.excluirSession.mutationOptions({
+    trpc.app.chat.deleteSession.mutationOptions({
       onSuccess: () => {
-        queryClient.invalidateQueries(
-          trpc.app.chat.listarSessions.pathFilter(),
-        );
+        queryClient.invalidateQueries(trpc.app.chat.findSessions.pathFilter());
         toast.success(t("apps.chat.sessions.deleted"));
         setShowDeleteSession(false);
         setDeletingSession(null);
@@ -312,11 +306,9 @@ function AppSidebar({ selectedSessionId, onSessionSelect }: AppSidebarProps) {
   );
 
   const moveSessionMutation = useMutation(
-    trpc.app.chat.moverSession.mutationOptions({
+    trpc.app.chat.moveSession.mutationOptions({
       onSuccess: () => {
-        queryClient.invalidateQueries(
-          trpc.app.chat.listarSessions.pathFilter(),
-        );
+        queryClient.invalidateQueries(trpc.app.chat.findSessions.pathFilter());
         toast.success(t("apps.chat.sessions.updated"));
         setShowMoveSession(false);
         setMovingSession(null);

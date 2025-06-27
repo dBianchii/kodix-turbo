@@ -178,7 +178,7 @@ export function ChatThreadProvider({
 
         // 5. Invalidar queries para sincronização
         queryClient.invalidateQueries({
-          queryKey: ["app", "chat", "listarSessions"],
+          queryKey: ["app", "chat", "findSessions"],
         });
 
         console.log("✅ [THREAD_PROVIDER] Thread criada:", newThread.id);
@@ -238,7 +238,7 @@ export function ChatThreadProvider({
 
         // 4. Invalidar queries
         queryClient.invalidateQueries({
-          queryKey: ["app", "chat", "listarSessions"],
+          queryKey: ["app", "chat", "findSessions"],
         });
 
         console.log("✅ [THREAD_PROVIDER] Thread deletada:", threadId);
@@ -346,9 +346,10 @@ export function ChatThreadProvider({
       try {
         // Buscar dados atualizados do backend
         const sessionData = await queryClient.fetchQuery({
-          queryKey: ["app", "chat", "buscarSession", { sessionId: threadId }],
+          queryKey: trpc.app.chat.findSession.queryKey({ sessionId: threadId }),
           queryFn: () =>
-            trpc.app.chat.buscarSession.query({ sessionId: threadId }),
+            trpc.app.chat.findSession.query({ sessionId: threadId }),
+          staleTime: 5 * 60 * 1000, // 5 minutos
         });
 
         const messagesData = await queryClient.fetchQuery({
@@ -401,8 +402,8 @@ export function ChatThreadProvider({
     try {
       // Buscar lista de sessões
       const sessionsData = await queryClient.fetchQuery({
-        queryKey: ["app", "chat", "listarSessions"],
-        queryFn: () => trpc.app.chat.listarSessions.query(),
+        queryKey: ["app", "chat", "findSessions"],
+        queryFn: () => trpc.app.chat.findSessions.query(),
       });
 
       // Converter para threads
@@ -443,6 +444,23 @@ export function ChatThreadProvider({
     },
     [threads],
   );
+
+  const invalidateSessions = () => {
+    // Invalida a query que busca a lista de sessões
+    queryClient.invalidateQueries({
+      queryKey: ["app", "chat", "findSessions"],
+    });
+  };
+
+  // ✅ OTIMIZAÇÃO: Função de fetch otimizada e reutilizável
+  const fetchSessions = useCallback(async () => {
+    // Usa fetchQuery para não disparar um re-render, apenas busca os dados
+    return await queryClient.fetchQuery({
+      queryKey: ["app", "chat", "findSessions"],
+      queryFn: () => trpc.app.chat.findSessions.query(),
+      staleTime: 5 * 60 * 1000, // 5 minutos
+    });
+  }, [queryClient]);
 
   // ===== CONTEXT VALUE =====
 

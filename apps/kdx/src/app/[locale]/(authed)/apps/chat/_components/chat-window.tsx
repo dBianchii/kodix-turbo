@@ -416,16 +416,14 @@ function ActiveChatWindow({
       setTimeout(async () => {
         await syncNow();
         refetchSession();
-        queryClient.invalidateQueries(
-          trpc.app.chat.listarSessions.pathFilter(),
-        );
+        queryClient.invalidateQueries(trpc.app.chat.findSessions.pathFilter());
       }, 1500);
     },
     [
       syncNow,
       refetchSession,
       queryClient,
-      trpc.app.chat.listarSessions,
+      trpc.app.chat.findSessions,
       onStreamingFinished,
     ],
   );

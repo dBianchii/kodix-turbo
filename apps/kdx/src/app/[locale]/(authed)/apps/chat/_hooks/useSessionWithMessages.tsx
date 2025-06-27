@@ -5,7 +5,7 @@ import type { Message } from "@ai-sdk/react";
 import { useCallback, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-import { useTRPC } from "~/trpc/react";
+import { trpc } from "~/trpc/react";
 
 interface UseSessionWithMessagesOptions {
   enabled?: boolean;
@@ -14,50 +14,36 @@ interface UseSessionWithMessagesOptions {
 }
 
 export function useSessionWithMessages(
-  sessionId: string | undefined,
-  options?: UseSessionWithMessagesOptions,
+  sessionId: string,
+  options?: {
+    enabled?: boolean;
+    staleTime?: number;
+    gcTime?: number;
+  },
 ) {
-  const trpc = useTRPC();
-
-  // ✅ OTIMIZAÇÃO: Memoizar query options para evitar re-criação
-  const sessionQueryOptions = useMemo(
-    () => ({
-      enabled: !!sessionId && (options?.enabled ?? true),
-      staleTime: options?.staleTime ?? 5 * 60 * 1000, // 5 minutos
-      gcTime: options?.gcTime ?? 10 * 60 * 1000, // 10 minutos
-      refetchOnMount: false, // ✅ OTIMIZAÇÃO: Não refetch desnecessário
-      refetchOnWindowFocus: false,
-    }),
-    [sessionId, options?.enabled, options?.staleTime, options?.gcTime],
-  );
-
-  const messagesQueryOptions = useMemo(
-    () => ({
-      enabled: !!sessionId && (options?.enabled ?? true),
-      staleTime: options?.staleTime ?? 5 * 60 * 1000, // 5 minutos
-      gcTime: options?.gcTime ?? 10 * 60 * 1000, // 10 minutos
-      refetchOnMount: false, // ✅ OTIMIZAÇÃO: Não refetch desnecessário
-      refetchOnWindowFocus: false,
-    }),
-    [sessionId, options?.enabled, options?.staleTime, options?.gcTime],
-  );
-
   const sessionQuery = useQuery(
-    trpc.app.chat.buscarSession.queryOptions(
-      { sessionId: sessionId! },
-      sessionQueryOptions,
+    trpc.app.chat.findSession.queryOptions(
+      { sessionId: sessionId },
+      {
+        enabled: !!sessionId && options?.enabled,
+        staleTime: options?.staleTime ?? 5 * 60 * 1000,
+        gcTime: options?.gcTime ?? 10 * 60 * 1000,
+      },
     ),
   );
-
   const messagesQuery = useQuery(
     trpc.app.chat.getMessages.queryOptions(
       {
-        chatSessionId: sessionId!,
-        limit: 100,
+        chatSessionId: sessionId,
+        limit: 100, // Hardcoded for now
         page: 1,
         order: "asc",
       },
-      messagesQueryOptions,
+      {
+        enabled: !!sessionId && options?.enabled,
+        staleTime: options?.staleTime ?? 5 * 60 * 1000,
+        gcTime: options?.gcTime ?? 10 * 60 * 1000,
+      },
     ),
   );
 
@@ -102,7 +88,7 @@ export function useSessionWithMessages(
   const [isRefetching, setIsRefetching] = useState(false);
   const [lastRefetchTime, setLastRefetchTime] = useState(0);
 
-  const refetch = useCallback(() => {
+  const refetch = useCallback(async () => {
     // ✅ GUARDA 1: Prevenir múltiplos refetch simultâneos
     if (isRefetching) {
       if (process.env.NODE_ENV === "development") {
@@ -128,11 +114,7 @@ export function useSessionWithMessages(
     setIsRefetching(true);
     setLastRefetchTime(now);
 
-    Promise.all([sessionQuery.refetch(), messagesQuery.refetch()]).finally(
-      () => {
-        setIsRefetching(false);
-      },
-    );
+    await Promise.all([sessionQuery.refetch(), messagesQuery.refetch()]);
   }, [sessionQuery, messagesQuery, sessionId, isRefetching, lastRefetchTime]);
 
   // ✅ OTIMIZAÇÃO: Memoizar estados derivados
