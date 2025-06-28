@@ -81,3 +81,38 @@ sh ./scripts/check-dev-status.sh
 ```bash
 sh ./scripts/check-server-simple.sh
 ```
+
+---
+
+### 5. `check-log-errors.sh`
+
+**Propósito:** Verificar rapidamente se ocorreram erros nos logs de desenvolvimento.
+
+- **O que faz:** Executa `tail` para obter as últimas 200 linhas do `dev.log` e usa `grep` para filtrar apenas as linhas que contêm "error", "Error", "ERROR", "failed", "Failed", ou "FAILED".
+- **Modo de Operação:**
+  - `|| true` é usado para garantir que o script termine com um código de sucesso (0), mesmo que o `grep` não encontre nenhum erro. Isso evita que o fluxo de automação seja interrompido por um "não-erro".
+  - É a forma mais rápida de diagnosticar problemas de compilação ou execução após reiniciar o servidor.
+
+**Uso:**
+
+```bash
+sh ./scripts/check-log-errors.sh
+```
+
+---
+
+## ⚠️ Regras de Uso e Boas Práticas
+
+### **NÃO Encadear `sleep` com Scripts Aprovados**
+
+Para garantir que o fluxo de trabalho com o assistente de IA (Cursor) seja eficiente, é crucial **não encadear** comandos de espera como o `sleep` com os scripts de gerenciamento que já estão na lista de aprovação automática.
+
+- **❌ Incorreto:** `sleep 5 && sh ./scripts/check-dev-status.sh`
+
+  - **Motivo:** O comando combinado não está na lista de aprovação, exigindo uma intervenção manual do usuário e quebrando o fluxo de automação.
+
+- **✅ Correto:**
+  1. Executar `sleep 5` em um passo.
+  2. Executar `sh ./scripts/check-dev-status.sh` em um passo separado.
+
+Esta prática garante que cada comando aprovado possa ser executado de forma independente e sem interrupções.
