@@ -21,7 +21,7 @@ export const kodixCareAppId = "1z50i9xblo4b";
 export const chatAppId = "az1x2c3bv4n5";
 
 //* AI Studio *//
-export const aiStudioAppId = "ai9x7m2k5p1s";
+export const aiStudioAppId = "ai_studio_app_789";
 
 export const appIdToRoles = {
   [kodixCareAppId]: [...commonRolesForAllApps, "CAREGIVER"] as const,
@@ -43,12 +43,14 @@ export type KodixAppId =
   | typeof aiStudioAppId;
 
 export type AppIdsWithConfig =
+  | typeof todoAppId
   | typeof kodixCareAppId
   | typeof chatAppId
   | typeof aiStudioAppId; //? Some apps might not have config implemented
 export type AppIdsWithUserAppTeamConfig =
   | typeof kodixCareAppId
-  | typeof chatAppId; //? Some apps might not have userAppTeamConfig implemented
+  | typeof chatAppId
+  | typeof aiStudioAppId; //? Some apps might not have userAppTeamConfig implemented
 //-------------------------------  	Apps 	 -------------------------------//
 
 //* Helpers *//
@@ -157,17 +159,37 @@ export const aiStudioConfigSchema = z.object({
     .default({}),
 });
 
+export const aiStudioUserAppTeamConfigSchema = z.object({
+  userInstructions: z
+    .object({
+      content: z
+        .string()
+        .max(2500, "As instruções não podem exceder 2500 caracteres.")
+        .default(""),
+      enabled: z.boolean().default(true),
+    })
+    .default({}),
+});
+
 //TODO: Maybe move this getAppTeamConfigSchema elsewhere
-export const appIdToAppTeamConfigSchema = {
+export const appIdToAppTeamConfigSchema: Record<
+  AppIdsWithConfig,
+  z.ZodType<unknown>
+> = {
+  [todoAppId]: z.object({}),
   [kodixCareAppId]: kodixCareConfigSchema,
   [chatAppId]: chatConfigSchema,
   [aiStudioAppId]: aiStudioConfigSchema,
 };
 
 //TODO: Maybe move this getAppTeamConfigSchema elsewhere
-export const appIdToUserAppTeamConfigSchema = {
+export const appIdToUserAppTeamConfigSchema: Record<
+  AppIdsWithUserAppTeamConfig,
+  z.ZodType<unknown>
+> = {
   [kodixCareAppId]: kodixCareUserAppTeamConfigSchema,
   [chatAppId]: chatUserAppTeamConfigSchema,
+  [aiStudioAppId]: aiStudioUserAppTeamConfigSchema,
 };
 
 //-------------------------------  App Dependencies  -------------------------------//

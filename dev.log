@@ -278,229 +278,240 @@ turbo 2.5.4
 @kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
 @kdx/api:dev: > tsc
 @kdx/api:dev: 
-: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-2)
-@kdx/shared:dev: cache bypass, force executing afb89322bed834cd
+@kdx/shared:dev: cache bypass, force executing f5851ba752a565df
 @kdx/shared:dev: 
 @kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
 @kdx/shared:dev: > tsc
 @kdx/shared:dev: 
-@kdx/api:dev: cache bypass, force executing 9da429b72d69acef
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-o/_router.ts(407,27): error TS2551: Property 'upsertUserAppTeamConfig' does not exist on type 'typeof import("/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/src/repositories/app/appRepository")'. Did you mean 'upsertUserAppTeamConfigs'?
-@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(46,43): error TS2345: Argument of type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to parameter of type 'KodixAppId'.
-@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
-@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(107,7): error TS2322: Type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
-@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api:dev: cache bypass, force executing 320f86b5632ea0a8
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(14,44): error TS2307: Cannot find module '../../trpc' or its corresponding type declarations.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(28,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(44,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(78,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(78,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(106,66): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(126,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(126,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(145,27): error TS2551: Property 'upsertUserAppTeamConfig' does not exist on type 'typeof import("/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/src/repositories/app/appRepository")'. Did you mean 'upsertUserAppTeamConfigs'?
-@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(46,43): error TS2345: Argument of type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to parameter of type 'KodixAppId'.
-@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
-@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(107,7): error TS2322: Type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
-@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/shared:dev: cache bypass, force executing afb89322bed834cd
+@kdx/shared:dev: cache bypass, force executing 6f0fef63d7d654d4
 @kdx/shared:dev: 
 @kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/api:dev: cache bypass, force executing 9da429b72d69acef
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-s/app/ai-studio/_router.ts(277,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(302,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(302,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(320,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(320,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(335,54): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(353,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(368,16): error TS2304: Cannot find name 'aiStudioConfigSchema'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(371,14): error TS2304: Cannot find name 'aiStudioConfigSchema'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(383,16): error TS7006: Parameter 'opts' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(386,66): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(406,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(406,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/router@kdx/api:dev: cache bypass, force executing 320f86b5632ea0a8
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(14,44): error TS2307: Cannot find module '../../trpc' or its corresponding type declarations.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(28,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(44,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(78,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(78,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(106,66): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(126,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(126,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(145,27): error TS2551: Property 'upsertUserAppTeamConfig' does not exist on type 'typeof import("/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/src/repositories/app/appRepository")'. Did you mean 'upsertUserAppTeamConfigs'?
-@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(46,43): error TS2345: Argument of type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to parameter of type 'KodixAppId'.
-@kdx/api:dev:   Type '"ai9x7m2k5p1s"@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(14,44): error TS2307: Cannot find module '../../trpc' or its corresponding type declarations.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(28,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(44,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(78,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(78,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(106,66): error@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/shared:dev: cache bypass, force executing afb89322bed834cd
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/api:dev: cache bypass, force executing 9da429b72d69acef
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
- assignable to parameter of type 'KodixAppId'.
-@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
-@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(107,7): error TS2322: Type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
-@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: comma@kdx/shared:dev: cache bypass, force executing afb89322bed834cd
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/db:dev: cache bypass, force executing 6b174a21ea8c8956
-@kdx/ui:dev: cache bypass, force executing c30a32a592c8961b
+@kdx/shared@kdx/shared:dev: 
+@kdx/shared:@kdx/db:dev: cache bypass, force executing 9c1fbb10b6280397
+@kdx/ui:dev: cache bypass, force executing cccf7eca7130fc16
 @kdx/db:dev: 
 @kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
 @kdx/db:dev: > tsc
+@kdx/db:@kdx/db:dev: 
+@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:dev: > tsc
 @kdx/db:dev: 
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1@kdx/api:dev: cache bypass, force executing 9da429b72d69acef
+@kdx/u@kdx/api:dev: cache bypass, force executing 9569e3542adc8ffb
 @kdx/api:dev: 
 @kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
 @kdx/api:dev: > tsc
 @kdx/api:dev: 
-dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: cache bypass, force executing 48648bd1e402ff53
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kd@kdx/api:dev@kdx/api:dev: cache bypass, force executing 0761c61fb072a339
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
 @kdx/api:dev: > tsc
 @kdx/api:dev: 
-dev:dev:  Container kodix-db-serverless-redis-http-1  Stopping
-@kdx/db-dev:dev:  Container kodix-db-redis-1  Stopped
-@kdx/db#studio: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run studio exited (137)
-@kdx/shared:dev: cache bypass, force executing 6ae197b7d0449bbd
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/db:dev: cache bypass, force executing 394534e3bc0fc2bc
-@kdx/ui:dev: cache bypass, force executing 0ad35dc9b21b1def
+@kdx/api:dev: cache bypass, force executing 2c930c409e207692
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kd@kdx/api:dev@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, wh@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(14,44): error TS2307: Cannot find module '../../trpc' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(26,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(60,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(60,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(14,44): error TS2307: Cannot find module '../../trpc' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(26,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(60,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(60,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(78,27): error TS2551: Property 'upsertAppTeamConfigs' does not exist on type 'typeof import("/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/src/repositories/app/appRepository")'. Did you mean 'upsertAppTeamConfig'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(88,66): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(108,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(108,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(46,43): error TS2345: Argument of type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to parameter of type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(107,7): error TS2322: Type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(144,11): error TS2698: Spread types may only be created from object types.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+dObject<...>; }'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+v: > tsc
+@kdx/db:dev: 
 @kdx/ui:dev: 
 @kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
 @kdx/ui:dev: > tsc
 @kdx/ui:dev: 
+@kdx/api:dev: cache bypass, force executing 9569e3542adc8ffb
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: cache bypass, force executing 48648bd1e402ff53
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: cache bypass, force executing 0761c61fb072a339
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: cache bypass, force executing 2c930c409e207692
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(14,44): error TS2307: Cannot find module '../../trpc' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(26,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(60,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(60,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(78,27): error TS2551: Property 'upsertAppTeamConfigs' does not exist on type 'typeof import("/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/src/repositories/app/appRepository")'. Did you mean 'upsertAppTeamConfig'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(88,66): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(108,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(108,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(46,43): error TS2345: Argument of type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to parameter of type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(107,7): error TS2322: Type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(144,11): error TS2698: Spread types may only be created from object types.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+red@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/api:dev: cache bypass, force executing 9da429b72d69acef
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/shared:dev: cache bypass, force executing f5851ba752a565df
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/shared:dev: cache bypass, force executing 6f0fef63d7d654d4
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/db:dev: cache bypass, force executing 9c1fbb10b6280397
+@kdx/ui:dev: cache bypass, force executing cccf7eca7130fc16
 @kdx/db:dev: 
 @kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
 @kdx/db:dev: > tsc
 @kdx/db:dev: 
-@kdx/db:dev: src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
-@kdx/db:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/db:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/db#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api:dev: cache bypass, force executing ab3dbb845531067d
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/api:dev: cache bypass, force executing 9569e3542adc8ffb
 @kdx/api:dev: 
 @kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
 @kdx/api:dev: > tsc
 @kdx/api:dev: 
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(11,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'aiStudioUserAppTeamConfigSchema'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(36,34): error TS2307: Cannot find module '../../../../internal/services/appConfig.service' or its corresponding type declarations.
+@kdx/api:dev: cache bypass, force executing 48648bd1e402ff53
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: cache bypass, force executing 0761c61fb072a339
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: cache bypass, force executing 2c930c409e207692
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(14,44): error TS2307: Cannot find module '../../trpc' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(26,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(60,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(60,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(78,27): error TS2551: Property 'upsertAppTeamConfigs' does not exist on type 'typeof import("/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/src/repositories/app/appRepository")'. Did you mean 'upsertAppTeamConfig'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(88,66): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(108,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(108,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
 @kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(46,43): error TS2345: Argument of type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to parameter of type 'KodixAppId'.
 @kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
 @kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(107,7): error TS2322: Type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
 @kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(144,11): error TS2698: Spread types may only be created from object types.
 @kdx/api:dev: ../db/src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
 @kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
 @kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
 @kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api:dev: cache bypass, force executing 024d3c0ef39f4d3f
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(9,31): error TS2307: Cannot find module '@kdx/shared/constants' or its corresponding type declarations.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(11,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'aiStudioUserAppTeamConfigSchema'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(36,34): error TS2307: Cannot find module '../../../../internal/services/appConfig.service' or its corresponding type declarations.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(37,44): error TS2307: Cannot find module '../../trpc' or its corresponding type declarations.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(64,24): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(64,31): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(88,21): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(88,28): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(123,21): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(123,28): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(154,24): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(154,31): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(182,24): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(182,31): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(221,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(237,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(237,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(255,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(255,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(273,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(273,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(298,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(298,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(316,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(316,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(331,54): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(349,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(364,16): error TS2304: Cannot find name 'aiStudioConfigSchema'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(367,14): error TS2304: Cannot find name 'aiStudioConfigSchema'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(385,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(385,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(400,13): error TS2304: Cannot find name 'aiStudioConfigSchema'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(401,13): error TS2304: Cannot find name 'aiStudioConfigSchema'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(403,27): error TS2304: Cannot find name 'aiStudioConfigSchema'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(439,66): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(460,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(460,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(461,27): error TS2551: Property 'upsertUserAppTeamConfig' does not exist on type 'typeof import("/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/src/repositories/app/appRepository")'. Did you mean 'upsertUserAppTeamConfigs'?
+src/trpc/routers/app/ai-studio/_router.ts(60,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(60,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(78,27): error TS2551: Property 'upsertAppTeamConfigs' does not exist on type 'typeof import("/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/src/repositories/app/appRepository")'. Did you mean 'upsertAppTeamConfig'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(88,66): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(108,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(108,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
 @kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(46,43): error TS2345: Argument of type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to parameter of type 'KodixAppId'.
 @kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
 @kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(107,7): error TS2322: Type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
 @kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(144,11): error TS2698: Spread types may only be created from object types.
 @kdx/api:dev: ../db/src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
 @kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
 @kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
 @kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api:dev: cache bypass, force executing 6d2a066f06693eea
+ev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(46,8): error TS2307: Cannot find module './team-instructions' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(46,43): error TS2345: Argument of type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to parameter of type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(107,7): error TS2322: Type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(144,11): error TS2698: Spread types may only be created from object types.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 2c930c409e207692
 @kdx/api:dev: 
 @kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
 @kdx/api:dev: > tsc
 @kdx/api:dev: 
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(9,25): error TS2300: Duplicate identifier 'aiStudioUserAppTeamConfigSchema'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(11,3): error TS2300: Duplicate identifier 'aiStudioUserAppTeamConfigSchema'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(11,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'aiStudioUserAppTeamConfigSchema'.
+@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(14,44): error TS2307: Cannot find module '../../trpc' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(26,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(60,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(60,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(78,27): error TS2551: Property 'upsertAppTeamConfigs' does not exist on type 'typeof import("/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/src/repositories/app/appRepository")'. Did you mean 'upsertAppTeamConfig'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(88,66): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(108,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(108,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(46,43): error TS2345: Argument of type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to parameter of type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(107,7): error TS2322: Type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(144,11): error TS2698: Spread types may only be created from object types.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+v: src/trpc/routers/app/ai-studio/_router.ts(11,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'aiStudioUserAppTeamConfigSchema'.
 @kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(36,34): error TS2307: Cannot find module '../../../../internal/services/appConfig.service' or its corresponding type declarations.
 @kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(37,44): error TS2307: Cannot find module '../../trpc' or its corresponding type declarations.
 @kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(45,8): error TS2307: Cannot find module './team-instructions' or its corresponding type declarations.
@@ -633,3 +644,98 @@ dev:dev:  Container kodix-db-serverless-redis-http-1  Stopping
 @kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
 @kdx/api:dev: > tsc
 @kdx/api:dev: 
+@kdx/shared:dev: cache bypass, force executing f5851ba752a565df
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/shared:dev: src/db.ts(175,14): error TS2741: Property '"7mwag78tv8pa"' is missing in type '{ "1z50i9xblo4b": z.ZodObject<{ patientName: z.ZodString; clonedCareTasksUntil: z.ZodOptional<z.ZodEffects<z.ZodDate, Date, unknown>>; }, "strip", z.ZodTypeAny, { patientName: string; clonedCareTasksUntil?: Date | undefined; }, { ...; }>; az1x2c3bv4n5: z.ZodObject<...>; ai_studio_app_789: z.ZodObject<...>; }' but required in type 'Record<AppIdsWithConfig, ZodType<unknown, ZodTypeDef, unknown>>'.
+@kdx/shared:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/shared:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/shared#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/shared:dev: cache bypass, force executing 6f0fef63d7d654d4
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/db:dev: cache bypass, force executing 9c1fbb10b6280397
+@kdx/ui:dev: cache bypass, force executing cccf7eca7130fc16
+@kdx/db:dev: 
+@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:dev: > tsc
+@kdx/db:dev: 
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/db:dev: src/repositories/app/appRepository.ts(144,11): error TS2698: Spread types may only be created from object types.
+@kdx/db:dev: src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/db:dev: src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
+@kdx/db:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/db:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/db#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 9569e3542adc8ffb
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: cache bypass, force executing 48648bd1e402ff53
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(12,3): error TS2300: Duplicate identifier 'aiStudioUserAppTeamConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(15,3): error TS2300: Duplicate identifier 'aiStudioUserAppTeamConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(15,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'aiStudioUserAppTeamConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(46,43): error TS2345: Argument of type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to parameter of type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(107,7): error TS2322: Type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(144,11): error TS2698: Spread types may only be created from object types.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 0761c61fb072a339
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(46,8): error TS2307: Cannot find module './team-instructions' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(46,43): error TS2345: Argument of type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to parameter of type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(107,7): error TS2322: Type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(144,11): error TS2698: Spread types may only be created from object types.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 2c930c409e207692
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(14,44): error TS2307: Cannot find module '../../trpc' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(26,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(60,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(60,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(78,27): error TS2551: Property 'upsertAppTeamConfigs' does not exist on type 'typeof import("/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/src/repositories/app/appRepository")'. Did you mean 'upsertAppTeamConfig'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(88,66): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(108,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(108,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(46,43): error TS2345: Argument of type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to parameter of type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(107,7): error TS2322: Type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(144,11): error TS2698: Spread types may only be created from object types.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
