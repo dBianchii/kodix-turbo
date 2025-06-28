@@ -416,68 +416,137 @@ turbo 2.5.4
 @kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
 @kdx/api:dev: > tsc
 @kdx/api:dev: 
-a8aa27bdb69a4ec
+@kdx/shared:dev: cache bypass, force executing eb1ed64e94f0fbbd
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/db:dev: cache bypass, force executing f28bdf86a1f2c0c0
+@kdx/ui:dev: cache bypass, force executing ce77847ef40eb8fc
+@kdx/db:dev: 
+@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:dev: > tsc
+@kdx/db:dev: 
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/shared:dev: cache bypass, force executing a0b0322676d05d9c
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/db:dev: cache bypass, force executing 2452c2c77623c8f3
+@kdx/ui:dev: cache bypass, force executing 7ce50e0915aeebf1
+@kdx/db:dev: 
+@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:dev: > tsc
+@kdx/db:dev: 
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/shared:dev: cache bypass, force executing 6a226371c3645065
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/db:dev: cache bypass, force executing 421cac0a7d26cd40
+@kdx/ui:dev: cache bypass, force executing 1b527bad05a89889
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/db:dev: 
+@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:dev: > tsc
+@kdx/db:dev: 
+@kdx/db:dev: cache bypass, force executing cbae7b0d0be32765
+@kdx/db:dev: 
+@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:dev: > tsc
+@kdx/db:dev: 
+@kdx/db:dev: src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai9x7m2k5p1s' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/db:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/db:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/db#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/db:dev: cache bypass, force executing 79ce249ecc4d44b8
+@kdx/db:dev: 
+@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:dev: > tsc
+@kdx/db:dev: 
+@kdx/validators:dev: cache bypass, force executing 9a40a2a4dee15e8a
+@kdx/permissions:dev: cache bypass, force executing 29e358586a2e8a30
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/permissions:dev: 
+@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
+@kdx/permissions:dev: > tsc
+@kdx/permissions:dev: 
+@kdx/validators:dev: cache bypass, force executing e1abbda09d6280ab
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/api:dev: cache bypass, force executing e7aaea13d254b928
 @kdx/api:dev: 
 @kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
 @kdx/api:dev: > tsc
 @kdx/api:dev: 
-@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(22,26): error TS2339: Property 'protectedProcedure' does not exist on type 'TRPCRootObject<{ format: { dateTime: (value: number | Date, formatOrOptions?: DateTimeFormatOptions | "short" | "long" | "shortWithHours" | "medium" | "full" | "extensive" | undefined) => string; number: (value: number | bigint, formatOrOptions?: string | ... 1 more ... | undefined) => string; relativeTime: (date: n...'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(22,60): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(48,29): error TS2339: Property 'protectedProcedure' does not exist on type 'TRPCRootObject<{ format: { dateTime: (value: number | Date, formatOrOptions?: DateTimeFormatOptions | "short" | "long" | "shortWithHours" | "medium" | "full" | "extensive" | undefined) => string; number: (value: number | bigint, formatOrOptions?: string | ... 1 more ... | undefined) => string; relativeTime: (date: n...'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(56,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(56,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(77,9): error TS2353: Object literal may only specify known properties, and 'input' does not exist in type '{ appId: AppIdsWithUserAppTeamConfig; teamId: string; config: Partial<unknown>; }'.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(143,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(232,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/kdx:dev:  ✓ Compiled in 504ms
-@kdx/api:dev: cache bypass, force executing 4e80c723b1b1a38a
+@kdx/validators:dev: cache bypass, force executing a317ccb5d568079e
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/api:dev: cache bypass, force executing dd35b8ef99474a7b
+@kdx/validators:dev: cache bypass, force executing 5daf9b5a1af32b8b
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/api:dev: cache bypass, force executing 5feb76a360d5cdf4
 @kdx/api:dev: 
 @kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
 @kdx/api:dev: > tsc
 @kdx/api:dev: 
-@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(77,9): error TS2353: Object literal may only specify known properties, and 'input' does not exist in type '{ appId: AppIdsWithUserAppTeamConfig; teamId: string; config: Partial<unknown>; }'.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(143,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(232,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/kdx:dev:  ✓ Compiled in 401ms
-@kdx/api:dev: cache bypass, force executing 0ea4b6c4ab465af7
+@kdx/ui:dev: cache bypass, force executing 1f8ed2423650eaf0
+@kdx/validators:dev: cache bypass, force executing dfa80e092976025b
+@kdx/permissions:dev: cache bypass, force executing 9faa7edc749759e6
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/permissions:dev: 
+@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
+@kdx/permissions:dev: > tsc
+@kdx/permissions:dev: 
+@kdx/ui:dev: cache bypass, force executing 1d2c8c8b780c1aea
+@kdx/validators:dev: cache bypass, force executing 4a21d34a1ae24d8b
+@kdx/permissions:dev: cache bypass, force executing a5d321a7912d4873
+@kdx/permissions:dev: 
+@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
+@kdx/permissions:dev: > tsc
+@kdx/permissions:dev: 
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/api:dev: cache bypass, force executing 5e12a865fa5e7bdb
 @kdx/api:dev: 
 @kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
 @kdx/api:dev: > tsc
 @kdx/api:dev: 
-@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(143,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(232,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/kdx:dev:  GET / 200 in 340ms
-@kdx/kdx:dev:  ✓ Compiled /[locale]/team in 76ms
-@kdx/kdx:dev: >>> tRPC Request from rsc by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.getInstalled took 270.42ms to execute
-@kdx/kdx:dev: Error: MISSING_MESSAGE: Could not resolve `undefined` in messages for locale `pt-BR`.
-@kdx/kdx:dev:     at getAppName (../../packages/locales/src/next-intl/hooks/index.ts:15:9)
-@kdx/kdx:dev:     at eval (src/app/[locale]/_components/app-switcher/app-switcher-client.tsx:70:41)
-@kdx/kdx:dev:     at Array.map (<anonymous>)
+(<anonymous>)
 @kdx/kdx:dev:     at AppSwitcherClient (src/app/[locale]/_components/app-switcher/app-switcher-client.tsx:65:18)
 @kdx/kdx:dev:   13 | export const getAppName = (appId: KodixAppId | undefined, t: ClientSideT) => {
 @kdx/kdx:dev:   14 |   if (!appId) return "";
@@ -588,74 +657,23 @@ a8aa27bdb69a4ec
 @kdx/validators:dev: 
 @kdx/api:dev: cache bypass, force executing 6eef0e5f00eafc24
 @kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-cuments/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > t@kdx/validators:dev: cache bypass, force executing 51e2d9db6d22cc2e
-@kdx/permissions:dev: cache bypass, force executing 9a222d0361e9ba89
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/api:dev: cache bypass, force executing 6eef0e5f00eafc24
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/api:dev: cache bypass, force executing 6eef0e5f00eafc24
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-ers/app/ai-studio/_router.ts(76,9): error TS2353: Object literal may only specify known properties, and 'input' does not exist in type '{ appId: AppIdsWithUserAppTeamConfig; teamId: string; config: Partial<unknown>; }'.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(143,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(232,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api:dev: cache bypass, force executing 6a8aa27bdb69a4ec
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: cache bypass, force executing 4e80c723b1b1a38a
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: cache bypass, force executing 0ea4b6c4ab465af7
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(143,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(232,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/shared:dev: cache bypass, force executing afb89322bed834cd
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Doc@kdx/shared:dev: cache bypass, force executing eb1ed64e94f0fbbd
 @kdx/shared:dev: 
 @kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
 @kdx/shared:dev: > tsc
 @kdx/shared:dev: 
-@kdx/db:dev: cache bypass, force executing 6b174a21ea8c8956
-@kdx/ui:dev: cache bypass, force executing c30a32a592c8961b
+@kdx/shared:dev: cache bypass, force executing a0b0322676d05d9c
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/db:dev: cache bypass, force executing 2452c2c77623c8f3
+@kdx/ui:dev: cache bypass, force executing 7ce50e0915aeebf1
+@kdx/shared:dev: cache bypass, force executing 6a226371c3645065
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadev@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Ko@kdx/db:dev: cache bypass, force executing 421cac0a7d26cd40
+@kdx/ui:dev: cache bypass, force executing 1b527bad05a89889
 @kdx/db:dev: 
 @kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
 @kdx/db:dev: > tsc
@@ -664,72 +682,16 @@ ers/app/ai-studio/_router.ts(76,9): error TS2353: Object literal may only specif
 @kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
 @kdx/ui:dev: > tsc
 @kdx/ui:dev: 
-@kdx/validators:dev: cache bypass, force executing 51e2d9db6d22cc2e
-@kdx/permissions:dev: cache bypass, force executing 9a222d0361e9ba89
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/api:dev: cache bypass, force executing 6eef0e5f00eafc24
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-) => string; number: (value: number | bigint, formatOrOptions?: string | ... 1 more ... | undefined) => string; relativeTime: (date: n...'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(21,60): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(47,29): error TS2339: Property 'protectedProcedure' does not exist on type 'TRPCRootObject<{ format: { dateTime: (value: number | Date, formatOrOptions?: DateTimeFormatOptions | "short" | "long" | "shortWithHours" | "medium" | "full" | "extensive" | undefined) => string; number: (value: number | bigint, formatOrOptions?: string | ... 1 more ... | undefined) => string; relativeTime: (date: n...'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(55,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(55,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(76,9): error TS2353: Object literal may only specify known properties, and 'input' does not exist in type '{ appId: AppIdsWithUserAppTeamConfig; teamId: string; config: Partial<unknown>; }'.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(143,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(232,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api:dev: cache bypass, force executing 6a8aa27bdb69a4ec
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: cache bypass, force executing 4e80c723b1b1a38a
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: cache bypass, force executing 0ea4b6c4ab465af7
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(143,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(232,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/shared:dev: cache bypass, force executing afb89322bed834cd
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/db:dev: cache bypass, force executing 6b174a21ea8c8956
-@kdx/ui:dev: cache bypass, force executing c30a32a592c8961b
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
+@kdx/db:dev: cache bypass, force executing cbae7b0d0be32765
+@kdx/db:dev: 
+@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documen@kdx/db:dev: 
+@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/@kdx/db:dev: cache bypass, force executing 79ce249ecc4d44b8
 @kdx/db:dev: 
 @kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
 @kdx/db:dev: > tsc
 @kdx/db:dev: 
-@kdx/validators:dev: cache bypass, force executing 51e2d9db6d22cc2e
-@kdx/permissions:dev: cache bypass, force executing 9a222d0361e9ba89
+@kdx/validators:dev: cache bypass, force executing 9a40a2a4dee15e8a
+@kdx/permissions:dev: cache bypass, force executing 29e358586a2e8a30
 @kdx/validators:dev: 
 @kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
 @kdx/validators:dev: > tsc
@@ -738,40 +700,156 @@ ers/app/ai-studio/_router.ts(76,9): error TS2353: Object literal may only specif
 @kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
 @kdx/permissions:dev: > tsc
 @kdx/permissions:dev: 
-@kdx/api:dev: cache bypass, force executing 6eef0e5f00eafc24
+@kdx/validators:dev: cache bypass, force executing e1abbda09d6280ab
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /U@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-tu@kdx/validators:dev: cache bypass, force executing a317ccb5d568079e
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /U@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-tu@kdx/validators:dev: cache bypass, force executing 5daf9b5a1af32b8b
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/api:dev: cache bypass, force executing 5feb76a360d5cdf4
 @kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-force executing 0ea4b6c4ab465af7
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(143,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(232,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/shared:dev: cache bypass, force executing afb89322bed834cd
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/db:dev: cache bypass, force executing 6b174a21ea8c8956
-@kdx/ui:dev: cache bypass, force executing c30a32a592c8961b
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Docu@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Doc@kdx/ui:dev: cache bypass, force executing 1f8ed2423650eaf0
+@kdx/validators:dev: cache bypass, force executing dfa80e092976025b
+@kdx/permissions:dev: cache bypass, force executing 9faa7edc749759e6
+@kdx/permissions:dev: 
+@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
+@kdx/permissions:dev: > tsc
+@kdx/permissions:dev: 
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 @kdx/permissions:dev: 
+@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documen@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/@kdx/validators:dev: cache bypass, force executing 4a21d34a1ae24d8b
+@kdx/@kdx/ui:dev: cache bypass, force executing 1d2c8c8b780c1aea
+@kdx/validators:dev: cache bypass, force executing 4a21d34a1ae24@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documen@kdx/permissions:dev: 
+@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
+@kdx/permissions:dev: > tsc
+@kdx/permissions:dev: 
 @kdx/ui:dev: 
 @kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
 @kdx/ui:dev: > tsc
 @kdx/ui:dev: 
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:dev: > tsc
-@kdx/db:dev: 
-@kdx/validators:dev: cache bypass, force executing 51e2d9db6d22cc2e
-@kdx/permissions:dev: cache bypass, force executing 9a222d0361e9ba89
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-tu@kdx/api:dev: cache bypass, force executing 5e12a865fa5e7bdb
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Docu@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+
+@kdx/permissions:dev: cache bypass, force executing a5d321a7912d4873
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/permissions:dev: 
+@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
+@kdx/permissions:dev: > tsc
+@kdx/permissions:dev: 
+@kdx/api:dev: cache bypass, force executing 5e12a865fa5e7bdb
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+he bypass, force executing 5e12a865fa5e7bdb
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+59e6
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/permissions:dev: 
+@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
+@kdx/permissions:dev: > tsc
+@kdx/permissions:dev: 
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/ui:dev: cache bypass, force executing 1d2c8c8b780c1aea
+@kdx/validators:dev: cache bypass, force executing 4a21d34a1ae24d8b
+@kdx/permissions:dev: cache bypass, force executing a5d321a7912d4873
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/permissions:dev: 
+@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
+@kdx/permissions:dev: > tsc
+@kdx/permissions:dev: 
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/api:dev: cache bypass, force executing 5e12a865fa5e7bdb
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/kdx:dev:  ✓ Compiled /[locale] in 75ms
+@kdx/kdx:dev:  GET / 200 in 1105ms
+@kdx/kdx:dev:  GET / 200 in 586ms
+@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 85ms
+@kdx/kdx:dev:  ○ Compiling /[locale]/signin ...
+@kdx/kdx:dev:  ✓ Compiled /[locale]/signin in 853ms
+@kdx/kdx:dev:  GET /signin 200 in 1514ms
+@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 56ms
+he bypass, force executing e1abbda09d6280ab
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/validators:dev: cache bypass, force executing a317ccb5d568079e
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/validators:dev: cache bypass, force executing 5daf9b5a1af32b8b
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/api:dev: cache bypass, force executing 5feb76a360d5cdf4
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/ui:dev: cache bypass, force executing 1f8ed2423650eaf0
+@kdx/validators:dev: cache bypass, force executing dfa80e092976025b
+@kdx/permissions:dev: cache bypass, force executing 9faa7edc749759e6
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/permissions:dev: 
+@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
+@kdx/permissions:dev: > tsc
+@kdx/permissions:dev: 
+@kdx/ui:dev: cache bypass, force executing 1d2c8c8b780c1aea
+@kdx/validators:dev: cache bypass, force executing 4a21d34a1ae24d8b
+@kdx/permissions:dev: cache bypass, force executing a5d321a7912d4873
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
 @kdx/permissions:dev: 
 @kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
 @kdx/permissions:dev: > tsc
@@ -780,24 +858,176 @@ force executing 0ea4b6c4ab465af7
 @kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
 @kdx/validators:dev: > tsc
 @kdx/validators:dev: 
+@kdx/api:dev: cache bypass, force executing 5e12a865fa5e7bdb
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+s/Documents/Kodix/kodix-turbo/packages/permissions
+@kdx/permissions:dev: > tsc
+@kdx/permissions:dev: 
 @kdx/api:dev: cache bypass, force executing 6eef0e5f00eafc24
 @kdx/api:dev: 
 @kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
 @kdx/api:dev: > tsc
 @kdx/api:dev: 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @kdx/api:dev: cache bypass, force executing 3b3e70569f06d133
+@kdx/shared:dev: cache bypass, force executing eb1ed64e94f0fbbd
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/shared:dev: cache bypass, force executing a0b0322676d05d9c
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/db:dev: cache bypass, force executing 2452c2c77623c8f3
+@kdx/ui:dev: cache bypass, force executing 7ce50e0915aeebf1
+@kdx/shared:dev: cache bypass, force executing 6a226371c3645065
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/db:dev: cache bypass, force executing 421cac0a7d26cd40
+@kdx/ui:dev: cache bypass, force executing 1b527bad05a89889
+@kdx/db:dev: 
+@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:dev: > tsc
+@kdx/db:dev: 
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/db:dev: cache bypass, force executing cbae7b0d0be32765
+@kdx/db:dev: 
+@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:dev: > tsc
+@kdx/db:dev: 
+@kdx/db:dev: cache bypass, force executing 79ce249ecc4d44b8
+@kdx/db:dev: 
+@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:dev: > tsc
+@kdx/db:dev: 
+@kdx/validators:dev: cache bypass, force executing 9a40a2a4dee15e8a
+@kdx/permissions:dev: cache bypass, force executing 29e358586a2e8a30
+@kdx/permissions:dev: 
+@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
+@kdx/permissions:dev: > tsc
+@kdx/permissions:dev: 
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/validators:dev: cache bypass, force executing e1abbda09d6280ab
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/validators:dev: cache bypass, force executing a317ccb5d568079e
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/validators:dev: cache bypass, force executing 5daf9b5a1af32b8b
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/api:dev: cache bypass, force executing 5feb76a360d5cdf4
 @kdx/api:dev: 
 @kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
 @kdx/api:dev: > tsc
 @kdx/api:dev: 
-@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(27,38): error TS18047: 'ctx.auth.user' is possibly 'null'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(60,38): error TS18047: 'ctx.auth.user' is possibly 'null'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(75,17): error TS18047: 'ctx.auth.user' is possibly 'null'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(76,9): error TS2353: Object literal may only specify known properties, and 'input' does not exist in type '{ appId: AppIdsWithUserAppTeamConfig; teamId: string; config: Partial<unknown>; }'.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(143,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(232,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
+@kdx/validators:dev: cache bypass, force executing dfa80e092976025b
+@kdx/ui:dev: cache bypass, force executing 1f8ed2423650eaf0
+@kdx/permissions:dev: cache bypass, force executing 9faa7edc749759e6
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/permissions:dev: 
+@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
+@kdx/permissions:dev: > tsc
+@kdx/permissions:dev: 
+@kdx/ui:dev: cache bypass, force executing 1d2c8c8b780c1aea
+@kdx/validators:dev: cache bypass, force executing 4a21d34a1ae24d8b
+@kdx/permissions:dev: cache bypass, force executing a5d321a7912d4873
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/permissions:dev: 
+@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
+@kdx/permissions:dev: > tsc
+@kdx/permissions:dev: 
+@kdx/api:dev: cache bypass, force executing 5e12a865fa5e7bdb
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/validators:dev: cache bypass, force executing a317ccb5d568079e
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/validators:dev: cache bypass, force executing 5daf9b5a1af32b8b
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/api:dev: cache bypass, force executing 5feb76a360d5cdf4
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/ui:dev: cache bypass, force executing 1f8ed2423650eaf0
+@kdx/validators:dev: cache bypass, force executing dfa80e092976025b
+@kdx/permissions:dev: cache bypass, force executing 9faa7edc749759e6
+@kdx/permissions:dev: 
+@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
+@kdx/permissions:dev: > tsc
+@kdx/permissions:dev: 
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/validators:dev: cache bypass, force executing 4a21d34a1ae24d8b
+@kdx/ui:dev: cache bypass, force executing 1d2c8c8b780c1aea
+@kdx/permissions:dev: cache bypass, force executing a5d321a7912d4873
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/permissions:dev: 
+@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
+@kdx/permissions:dev: > tsc
+@kdx/permissions:dev: 
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/api:dev: cache bypass, force executing 5e12a865fa5e7bdb
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+types.
 @kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
 @kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
 @kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
@@ -893,7 +1123,155 @@ force executing 0ea4b6c4ab465af7
 @kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
 @kdx/api:dev: > tsc
 @kdx/api:dev: 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @kdx/api:dev: cache bypass, force executing 3b3e70569f06d133
+@kdx/shared:dev: cache bypass, force executing eb1ed64e94f0fbbd
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/db:dev: cache bypass, force executing f28bdf86a1f2c0c0
+@kdx/ui:dev: cache bypass, force executing ce77847ef40eb8fc
+@kdx/db:dev: 
+@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:dev: > tsc
+@kdx/db:dev: 
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/shared:dev: cache bypass, force executing a0b0322676d05d9c
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/db:dev: cache bypass, force executing 2452c2c77623c8f3
+@kdx/ui:dev: cache bypass, force executing 7ce50e0915aeebf1
+@kdx/db:dev: 
+@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:dev: > tsc
+@kdx/db:dev: 
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/shared:dev: cache bypass, force executing 6a226371c3645065
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/db:dev: cache bypass, force executing 421cac0a7d26cd40
+@kdx/ui:dev: cache bypass, force executing 1b527bad05a89889
+@kdx/db:dev: 
+@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:dev: > tsc
+@kdx/db:dev: 
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/db:dev: src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai9x7m2k5p1s' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/db:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/db:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/db#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/db:dev: cache bypass, force executing cbae7b0d0be32765
+@kdx/db:dev: 
+@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:dev: > tsc
+@kdx/db:dev: 
+@kdx/db:dev: src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai9x7m2k5p1s' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/db:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/db:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/db#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/db:dev: cache bypass, force executing 79ce249ecc4d44b8
+@kdx/db:dev: 
+@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:dev: > tsc
+@kdx/db:dev: 
+@kdx/validators:dev: cache bypass, force executing 9a40a2a4dee15e8a
+@kdx/permissions:dev: cache bypass, force executing 29e358586a2e8a30
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/permissions:dev: 
+@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
+@kdx/permissions:dev: > tsc
+@kdx/permissions:dev: 
+@kdx/api:dev: cache bypass, force executing b34def132bd06535
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/validators:dev: cache bypass, force executing e1abbda09d6280ab
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/api:dev: cache bypass, force executing e7aaea13d254b928
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/validators:dev: cache bypass, force executing a317ccb5d568079e
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/api:dev: cache bypass, force executing dd35b8ef99474a7b
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/validators:dev: cache bypass, force executing 5daf9b5a1af32b8b
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/api:dev: cache bypass, force executing 5feb76a360d5cdf4
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/validators:dev: cache bypass, force executing dfa80e092976025b
+@kdx/ui:dev: cache bypass, force executing 1f8ed2423650eaf0
+@kdx/permissions:dev: cache bypass, force executing 9faa7edc749759e6
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/permissions:dev: 
+@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
+@kdx/permissions:dev: > tsc
+@kdx/permissions:dev: 
+@kdx/api:dev: cache bypass, force executing 8ed6389bdc38b361
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/ui:dev: cache bypass, force executing 1d2c8c8b780c1aea
+@kdx/validators:dev: cache bypass, force executing 4a21d34a1ae24d8b
+@kdx/permissions:dev: cache bypass, force executing a5d321a7912d4873
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/permissions:dev: 
+@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
+@kdx/permissions:dev: > tsc
+@kdx/permissions:dev: 
+@kdx/api:dev: cache bypass, force executing 5e12a865fa5e7bdb
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @kdx/api:dev: cache bypass, force executing 3b3e70569f06d133
 @kdx/api:dev: 
 @kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
 @kdx/api:dev: > tsc
@@ -996,6 +1374,154 @@ force executing 0ea4b6c4ab465af7
 @kdx/validators:dev: > tsc
 @kdx/validators:dev: 
 @kdx/api:dev: cache bypass, force executing 6eef0e5f00eafc24
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/shared:dev: cache bypass, force executing eb1ed64e94f0fbbd
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/db:dev: cache bypass, force executing f28bdf86a1f2c0c0
+@kdx/ui:dev: cache bypass, force executing ce77847ef40eb8fc
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/db:dev: 
+@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:dev: > tsc
+@kdx/db:dev: 
+@kdx/shared:dev: cache bypass, force executing a0b0322676d05d9c
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/db:dev: cache bypass, force executing 2452c2c77623c8f3
+@kdx/ui:dev: cache bypass, force executing 7ce50e0915aeebf1
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/db:dev: 
+@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:dev: > tsc
+@kdx/db:dev: 
+@kdx/shared:dev: cache bypass, force executing 6a226371c3645065
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/db:dev: cache bypass, force executing 421cac0a7d26cd40
+@kdx/ui:dev: cache bypass, force executing 1b527bad05a89889
+@kdx/db:dev: 
+@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:dev: > tsc
+@kdx/db:dev: 
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/db:dev: src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai9x7m2k5p1s' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/db:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/db:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/db#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/db:dev: cache bypass, force executing cbae7b0d0be32765
+@kdx/db:dev: 
+@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:dev: > tsc
+@kdx/db:dev: 
+@kdx/db:dev: src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai9x7m2k5p1s' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/db:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/db:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/db#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/db:dev: cache bypass, force executing 79ce249ecc4d44b8
+@kdx/db:dev: 
+@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:dev: > tsc
+@kdx/db:dev: 
+@kdx/validators:dev: cache bypass, force executing 9a40a2a4dee15e8a
+@kdx/permissions:dev: cache bypass, force executing 29e358586a2e8a30
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/permissions:dev: 
+@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
+@kdx/permissions:dev: > tsc
+@kdx/permissions:dev: 
+@kdx/api:dev: cache bypass, force executing b34def132bd06535
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/validators:dev: cache bypass, force executing e1abbda09d6280ab
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/api:dev: cache bypass, force executing e7aaea13d254b928
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/validators:dev: cache bypass, force executing a317ccb5d568079e
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/api:dev: cache bypass, force executing dd35b8ef99474a7b
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/validators:dev: cache bypass, force executing 5daf9b5a1af32b8b
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/api:dev: cache bypass, force executing 5feb76a360d5cdf4
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/ui:dev: cache bypass, force executing 1f8ed2423650eaf0
+@kdx/validators:dev: cache bypass, force executing dfa80e092976025b
+@kdx/permissions:dev: cache bypass, force executing 9faa7edc749759e6
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/permissions:dev: 
+@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
+@kdx/permissions:dev: > tsc
+@kdx/permissions:dev: 
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/api:dev: cache bypass, force executing 8ed6389bdc38b361
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/ui:dev: cache bypass, force executing 1d2c8c8b780c1aea
+@kdx/validators:dev: cache bypass, force executing 4a21d34a1ae24d8b
+@kdx/permissions:dev: cache bypass, force executing a5d321a7912d4873
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/permissions:dev: 
+@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
+@kdx/permissions:dev: > tsc
+@kdx/permissions:dev: 
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/api:dev: cache bypass, force executing 5e12a865fa5e7bdb
 @kdx/api:dev: 
 @kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
 @kdx/api:dev: > tsc

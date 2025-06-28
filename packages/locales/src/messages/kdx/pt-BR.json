@@ -295,6 +295,19 @@
         "previewText": "Como as instruções aparecerão para a IA:",
         "currentStatus": "Status Atual"
       },
+      "userInstructions": {
+        "title": "Instruções Pessoais",
+        "description": "Configure como a IA deve se comportar especificamente para você. Estas instruções têm prioridade sobre as instruções do time.",
+        "content": "Suas instruções para a IA",
+        "contentPlaceholder": "Digite suas instruções personalizadas para a IA...",
+        "enabled": "Habilitar instruções pessoais",
+        "save": "Salvar Alterações",
+        "saving": "Salvando...",
+        "saved": "Instruções pessoais salvas com sucesso",
+        "error": "Erro ao salvar instruções pessoais",
+        "loadingConfig": "Carregando configurações...",
+        "helpText": "Suas instruções pessoais serão aplicadas automaticamente em todas as suas interações com a IA, sobrepondo as instruções do time."
+      },
       "tokens": {
         "title": "Tokens de Acesso",
         "description": "Gerencie os tokens de acesso aos modelos",

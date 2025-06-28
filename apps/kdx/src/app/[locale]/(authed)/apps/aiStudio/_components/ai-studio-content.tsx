@@ -7,6 +7,7 @@ import { ModelsSection } from "./sections/models-section";
 import { ProvidersSection } from "./sections/providers-section";
 import { TeamInstructionsSection } from "./sections/team-instructions-section";
 import { TokensSection } from "./sections/tokens-section";
+import { UserInstructionsSection } from "./sections/user-instructions-section";
 
 interface AiStudioContentProps {
   activeSection: string;
@@ -17,6 +18,8 @@ export function AiStudioContent({ activeSection }: AiStudioContentProps) {
     switch (activeSection) {
       case "team-instructions":
         return <TeamInstructionsSection />;
+      case "user-instructions":
+        return <UserInstructionsSection />;
       case "agents":
         return <AgentsSection />;
       case "libraries":

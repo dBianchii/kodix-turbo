@@ -279,6 +279,19 @@
         "previewText": "How instructions will appear to AI:",
         "currentStatus": "Current Status"
       },
+      "userInstructions": {
+        "title": "Personal Instructions",
+        "description": "Configure how AI should behave specifically for you. These instructions take priority over team instructions.",
+        "content": "Your instructions for AI",
+        "contentPlaceholder": "Type your personalized instructions for AI...",
+        "enabled": "Enable personal instructions",
+        "save": "Save Changes",
+        "saving": "Saving...",
+        "saved": "Personal instructions saved successfully",
+        "error": "Error saving personal instructions",
+        "loadingConfig": "Loading settings...",
+        "helpText": "Your personal instructions will be automatically applied to all your AI interactions, overriding team instructions."
+      },
       "tokens": {
         "title": "Access Tokens",
         "description": "Manage access tokens for models",

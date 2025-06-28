@@ -50,6 +50,7 @@ function AiStudioPageContent() {
         "enabled-models",
         "agents",
         "libraries",
+        "user-instructions",
       ].includes(section)
     ) {
       setActiveSection(section);

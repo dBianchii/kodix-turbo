@@ -4,6 +4,7 @@ import type { appActivityLogs } from "@kdx/db/schema";
 import type { KodixAppId } from "@kdx/shared";
 import {
   aiStudioAppId,
+  aiStudioUserAppTeamConfigSchema,
   calendarAppId,
   chatAppId,
   chatUserAppTeamConfigSchema,
@@ -18,7 +19,8 @@ import { ZNanoId } from "../..";
 export type AppIdsWithConfig = typeof kodixCareAppId | typeof chatAppId; //? Some apps might not have config implemented
 export type AppIdsWithUserAppTeamConfig =
   | typeof kodixCareAppId
-  | typeof chatAppId; //? Some apps might not have userAppTeamConfig implemented
+  | typeof chatAppId
+  | typeof aiStudioAppId; //? Some apps might not have userAppTeamConfig implemented
 
 export const ZGetConfigInput = z.object({
   appId: z.custom<AppIdsWithConfig>(),
@@ -62,6 +64,10 @@ export const ZSaveUserAppTeamConfigInputSchema = z.union([
   z.object({
     appId: z.literal(chatAppId),
     config: chatUserAppTeamConfigSchema.partial(),
+  }),
+  z.object({
+    appId: z.literal(aiStudioAppId),
+    config: aiStudioUserAppTeamConfigSchema.partial(),
   }),
 ]);
 export type TSaveUserAppTeamConfigInputSchema = z.infer<

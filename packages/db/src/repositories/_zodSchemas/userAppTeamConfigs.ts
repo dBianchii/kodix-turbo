@@ -1,6 +1,8 @@
 import { z } from "zod";
 
 import {
+  aiStudioAppId,
+  aiStudioUserAppTeamConfigSchema,
   chatAppId,
   chatUserAppTeamConfigSchema,
   kodixCareAppId,
@@ -10,9 +12,11 @@ import {
 export const appIdToUserAppTeamConfigSchema = {
   [kodixCareAppId]: kodixCareUserAppTeamConfigSchema,
   [chatAppId]: chatUserAppTeamConfigSchema,
+  [aiStudioAppId]: aiStudioUserAppTeamConfigSchema,
 };
 
 export const appIdToUserAppTeamConfigSchemaUpdate = {
   [kodixCareAppId]: kodixCareUserAppTeamConfigSchema.deepPartial(),
   [chatAppId]: chatUserAppTeamConfigSchema.deepPartial(),
+  [aiStudioAppId]: aiStudioUserAppTeamConfigSchema.deepPartial(),
 };

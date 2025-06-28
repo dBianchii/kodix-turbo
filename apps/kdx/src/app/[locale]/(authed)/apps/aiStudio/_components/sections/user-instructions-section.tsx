@@ -23,37 +23,57 @@ export function UserInstructionsSection() {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
   const [content, setContent] = useState("");
+  const [enabled, setEnabled] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
 
-  // Buscar configuração existente
-  const { data: config, isLoading } = useQuery(
-    trpc.app.getUserAppTeamConfig.queryOptions({ appId: aiStudioAppId }),
-  );
+  // Buscar configuração atual
+  const configQuery = useQuery({
+    ...trpc.app.getUserAppTeamConfig.queryOptions({ appId: aiStudioAppId }),
+  });
+
+  const config = configQuery.data;
+  const isLoading = configQuery.isLoading;
 
   // Mutation para salvar
-  const saveMutation = useMutation(
-    trpc.app.saveUserAppTeamConfig.mutationOptions({
+  const saveMutation = useMutation({
+    ...trpc.app.saveUserAppTeamConfig.mutationOptions({
       onSuccess: () => {
-        queryClient.invalidateQueries(
-          trpc.app.getUserAppTeamConfig.pathFilter({ appId: aiStudioAppId }),
-        );
-        toast.success(
-          "Suas instruções pessoais foram atualizadas com sucesso.",
-        );
+        queryClient.invalidateQueries({
+          queryKey: trpc.app.getUserAppTeamConfig.queryKey({
+            appId: aiStudioAppId,
+          }),
+        });
+        toast.success("Instruções pessoais salvas com sucesso!");
+        setIsDirty(false);
       },
-      onError: () => {
-        toast.error(
-          "Não foi possível salvar suas instruções. Tente novamente.",
-        );
+      onError: (error: any) => {
+        toast.error(`Erro ao salvar: ${error.message}`);
       },
     }),
-  );
+  });
 
-  // Atualizar estado quando carregar dados
+  // Carregar dados quando chegam do servidor
   useEffect(() => {
-    if (config?.userInstructions?.content) {
-      setContent(config.userInstructions.content);
+    // Type assertion para AI Studio config
+    const aiStudioConfig = config as {
+      userInstructions?: { content?: string; enabled?: boolean };
+    };
+    if (aiStudioConfig?.userInstructions) {
+      setContent(aiStudioConfig.userInstructions.content || "");
+      setEnabled(aiStudioConfig.userInstructions.enabled || false);
     }
   }, [config]);
+
+  // Marcar como alterado quando usuário digita
+  const handleContentChange = (value: string) => {
+    setContent(value);
+    setIsDirty(true);
+  };
+
+  const handleEnabledChange = (checked: boolean) => {
+    setEnabled(checked);
+    setIsDirty(true);
+  };
 
   const handleSave = () => {
     saveMutation.mutate({
@@ -61,43 +81,80 @@ export function UserInstructionsSection() {
       config: {
         userInstructions: {
           content,
-          enabled: true,
+          enabled,
         },
       },
     });
   };
 
+  if (isLoading) {
+    return (
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex items-center justify-center">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            <span className="ml-2">Carregando configurações...</span>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Minhas Instruções Pessoais de IA</CardTitle>
+        <CardTitle>Instruções Pessoais de IA</CardTitle>
         <CardDescription>
-          Estas instruções são suas e serão aplicadas a todas as interações com
-          a IA na plataforma, sobrepondo as instruções da equipe.
+          Configure como a IA deve se comportar especificamente para você. Estas
+          instruções têm prioridade sobre as instruções do time.
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <Textarea
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          placeholder="Digite suas instruções pessoais aqui..."
-          className="min-h-[200px]"
-          maxLength={2500}
-          disabled={isLoading || saveMutation.isPending}
-        />
-        <p className="mt-2 text-sm text-muted-foreground">
-          {content.length}/2500 caracteres
-        </p>
+      <CardContent className="space-y-4">
+        <div className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            id="enabled"
+            checked={enabled}
+            onChange={(e) => handleEnabledChange(e.target.checked)}
+            className="h-4 w-4"
+          />
+          <label htmlFor="enabled" className="text-sm font-medium">
+            Habilitar instruções pessoais
+          </label>
+        </div>
+
+        <div className="space-y-2">
+          <label htmlFor="content" className="text-sm font-medium">
+            Suas instruções para a IA:
+          </label>
+          <Textarea
+            id="content"
+            value={content}
+            onChange={(e) => handleContentChange(e.target.value)}
+            placeholder="Digite suas instruções personalizadas para a IA..."
+            className="min-h-[120px]"
+            maxLength={2500}
+            disabled={!enabled}
+          />
+          <div className="text-muted-foreground text-right text-xs">
+            {content.length}/2500 caracteres
+          </div>
+        </div>
       </CardContent>
       <CardFooter>
         <Button
           onClick={handleSave}
-          disabled={saveMutation.isPending || isLoading}
+          disabled={!isDirty || saveMutation.isPending}
+          className="ml-auto"
         >
-          {saveMutation.isPending && (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          {saveMutation.isPending ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Salvando...
+            </>
+          ) : (
+            "Salvar Alterações"
           )}
-          Salvar Instruções
         </Button>
       </CardFooter>
     </Card>

@@ -54,6 +54,74 @@ A leitura deste documento é **obrigatória** para todos os desenvolvedores.
 - **O Problema**: O uso de `@ts-nocheck` em arquivos como `chat-thread-provider.tsx` mascarou dezenas de erros de tipo, que contribuíram para a instabilidade geral.
 - **Ação Preventiva**: `// @ts-nocheck` é **estritamente proibido**. O problema de tipo subjacente deve ser sempre investigado e corrigido na sua causa raiz. A regra de linter `@typescript-eslint/ban-ts-comment` deve ser tratada como um erro bloqueante.
 
+### **6. Prevenção de Erros de TypeScript em Modificações Cross-Package**
+
+- **Lição**: Modificações que afetam múltiplos packages no monorepo requerem uma estratégia específica para evitar erros de tipo persistentes e problemas de compilação em cascata.
+- **O Problema**: Durante a implementação de novas features que modificam schemas compartilhados (como `AppIdsWithUserAppTeamConfig`), ocorrem erros de tipo que persistem mesmo após as correções, devido a problemas de cache e ordem de compilação.
+- **Sintomas Comuns**:
+  - Erro: "Spread types may only be created from object types" em operações de spread
+  - TypeScript não reconhece novos valores em union types
+  - Imports funcionam no IDE mas falham no build
+  - `pnpm typecheck` passa mas `pnpm build` falha
+- **Ações Preventivas**:
+
+  1. **Ordem Correta de Implementação e Build**:
+
+     ```bash
+     # Ordem obrigatória de modificação e build:
+     1. @kdx/shared (schemas e tipos base)
+     2. @kdx/validators (validações de input/output)
+     3. @kdx/db (repositórios e mapeamentos)
+     4. @kdx/api (endpoints tRPC)
+     5. Apps (frontend)
+
+     # Comando correto após cada modificação de tipo:
+     pnpm build --filter=@kdx/shared --filter=@kdx/validators --filter=@kdx/db
+     ```
+
+  2. **Verificação Incremental Obrigatória**:
+
+     ```bash
+     # Após CADA modificação de schema/tipo:
+     pnpm typecheck
+     # Se houver erros, NÃO continue com outras modificações
+     ```
+
+  3. **Limpeza de Cache do TypeScript**:
+
+     ```bash
+     # Se erros de tipo persistem após correções:
+     rm -rf node_modules/.cache
+     pnpm install
+     pnpm build --filter=@kdx/shared --force
+     ```
+
+  4. **Estratégia de Modificação Atômica**:
+
+     - Modifique UM package por vez
+     - Faça build do package modificado
+     - Verifique types antes de prosseguir
+     - Commite incrementalmente (facilita rollback)
+
+  5. **Padrão de Import Correto em tRPC**:
+
+     ```typescript
+     // ❌ ERRADO: Import de barril pode causar problemas
+     import { protectedProcedure, router } from "../../../trpc";
+
+     // ✅ CORRETO: Imports específicos
+     import { protectedProcedure } from "../../../procedures";
+     import { t } from "../../../trpc";
+     ```
+
+  6. **Validação Final Completa**:
+     ```bash
+     # Antes de considerar a feature completa:
+     pnpm clean && pnpm install && pnpm typecheck && pnpm build
+     ```
+
+- **Dica de Ouro**: Se você está modificando tipos que são usados em múltiplos packages, sempre faça um "build graph mental" antes de começar. Pergunte-se: "Quais packages dependem deste tipo?" e compile-os na ordem correta.
+
 ---
 
 Este documento deve ser o primeiro lugar a ser consultado ao encontrar um bug inesperado e o último a ser atualizado após a resolução, garantindo que o conhecimento da equipe evolua constantemente.

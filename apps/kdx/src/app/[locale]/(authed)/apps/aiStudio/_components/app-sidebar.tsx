@@ -9,6 +9,7 @@ import {
   Key,
   MessageSquare,
   Settings,
+  User,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -53,6 +54,15 @@ const mainSections = [
     id: "libraries",
     title: "libraries",
     icon: Database,
+  },
+];
+
+// Seções de personalização do usuário
+const personalizationSections = [
+  {
+    id: "user-instructions",
+    title: "userInstructions",
+    icon: User,
   },
 ];
 
@@ -108,6 +118,33 @@ export function AppSidebar({
           <SidebarGroupContent>
             <SidebarMenu>
               {mainSections.map((section) => (
+                <SidebarMenuItem key={section.id}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={activeSection === section.id}
+                  >
+                    <button
+                      onClick={() => onSectionChange?.(section.id)}
+                      className="flex w-full items-center gap-2"
+                    >
+                      <section.icon className="h-5 w-5" />
+                      <span>
+                        {t(`apps.aiStudio.${section.title}.title` as any)}
+                      </span>
+                    </button>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Seção de Personalização */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Personalização</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {personalizationSections.map((section) => (
                 <SidebarMenuItem key={section.id}>
                   <SidebarMenuButton
                     asChild
