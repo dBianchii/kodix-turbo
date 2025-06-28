@@ -2,7 +2,21 @@
 
 ## 📖 Visão Geral
 
-O **AI Studio** é o centro de controle para todas as integrações de Inteligência Artificial do Kodix. Permite gerenciar provedores, modelos, agentes e tokens de API de forma centralizada, fornecendo uma infraestrutura robusta para outros SubApps que precisam de capacidades de IA.
+O **AI Studio** é o centro de controle para todas as integrações de Inteligência Artificial do Kodix. Permite gerenciar provedores, modelos, agentes, bibliotecas e tokens de API de forma centralizada, fornecendo uma infraestrutura robusta para outros SubApps que precisam de capacidades de IA.
+
+## 🏗️ Arquitetura
+
+O sistema é construído com React/Next.js no frontend e tRPC v11 no backend, oferecendo uma experiência type-safe completa. A interface utiliza Sidebar navigation com seções organizadas para máxima usabilidade.
+
+### Componentes Principais
+
+- **Team Instructions**: Configurações globais da IA para toda equipe
+- **Tokens**: Gestão segura de chaves de API criptografadas
+- **Enabled Models**: Controle de modelos disponíveis por equipe
+- **Agents**: Sistema de assistentes personalizados
+- **Libraries**: Bibliotecas de conhecimento para contextualização
+- **Providers**: Configuração de provedores de IA
+- **Models**: Gestão global de modelos do sistema
 
 ## 🚀 Início Rápido
 
@@ -15,95 +29,114 @@ pnpm dev:kdx
 
 ### 2. Acessar AI Studio
 
-1. Faça login na aplicação
-2. Navegue para `/apps/aiStudio`
-3. Configure seu primeiro provedor em **Provedores**
-4. Adicione tokens de API em **Tokens**
-5. Ative modelos desejados em **Modelos**
-6. Crie agentes personalizados em **Agentes**
+Navegue para `/apps/aiStudio` e siga o fluxo de configuração:
 
-## 🔧 Funcionalidades Principais
+1. **Configurar Instruções da Equipe** → Comportamento global da IA
+2. **Adicionar Tokens** → Chaves de API dos provedores
+3. **Ativar Modelos** → Selecionar quais modelos usar
+4. **Criar Agentes** (opcional) → Assistentes especializados
+5. **Configurar Bibliotecas** (opcional) → Base de conhecimento
+
+## 📚 Documentação
+
+### 📖 [User Guide](./user-guide.md)
+
+Guia completo do usuário com:
+
+- **Configuração Inicial**: Passo a passo para nova equipe
+- **Gestão de Funcionalidades**: Como usar cada seção
+- **Troubleshooting**: Resolução de problemas comuns
+- **Manutenção**: Boas práticas de uso contínuo
+
+### ��️ [Architecture](./ai-studio-architecture.md)
+
+Documentação técnica com:
+
+- **Frontend Architecture**: Componentes, estado e fluxos
+- **Backend Architecture**: APIs, segurança e performance
+- **Integração**: Como frontend e backend se comunicam
+
+### 🔌 [API Reference](./api-reference.md)
+
+Referência completa das APIs tRPC:
+
+- **Endpoints**: Todos os métodos disponíveis
+- **Schemas**: Validações Zod e tipos
+- **Exemplos**: Código de uso prático
+
+## 🛠️ Features Principais
 
 ### Gestão de Provedores
 
-- **Múltiplos Provedores**: Suporte para OpenAI, Anthropic, Google, Azure e mais
-- **Configuração Flexível**: URLs customizadas e versões de API
-- **Controle Centralizado**: Ative/desative provedores por equipe
-- **Expansibilidade**: Adicione novos provedores facilmente
+- Suporte para OpenAI, Anthropic, Google AI, Azure OpenAI
+- Configuração de URLs customizadas e proxies
+- Isolamento completo por equipe
 
-### Gerenciamento de Modelos
+### Segurança Robusta
 
-- **Catálogo Completo**: Modelos pré-configurados dos principais provedores
-- **Configuração Granular**: Ajuste parâmetros como temperatura e tokens
-- **Priorização**: Defina ordem de preferência dos modelos
-- **Controle de Acesso**: Ative modelos específicos por equipe
+- Tokens criptografados com AES-256-GCM
+- Validação de permissões por team
+- Máscaramento automático na interface
 
-### Sistema de Agentes
+### Interface Intuitiva
 
-- **Assistentes Personalizados**: Crie agentes com personalidades específicas
-- **Prompts Customizados**: Configure instruções de sistema detalhadas
-- **Associação Flexível**: Vincule agentes a modelos específicos
-- **Reutilização**: Compartilhe agentes entre aplicações
+- Sidebar responsivo com navegação clara
+- Drag & drop para reordenação de prioridades
+- Feedback visual e loading states
 
-### Segurança de Tokens
+### Integração Seamless
 
-- **Criptografia Forte**: AES-256-GCM para todos os tokens
-- **Isolamento Total**: Tokens separados por equipe
-- **Gestão Segura**: Tokens nunca expostos após criação
-- **Rotação Facilitada**: Atualize tokens sem impactar serviços
+- Sincronização automática com Chat SubApp
+- Cache inteligente para performance
+- Type safety completo via tRPC
 
-### Integração com SubApps
+## 🔧 Configurações Essenciais
 
-- **Service Layer**: APIs seguras para outros SubApps
-- **Chat Integration**: Fornece modelos e agentes para o Chat via Vercel AI SDK
-- **Configuração Centralizada**: Um lugar para gerenciar toda IA
-- **Métricas Unificadas**: Acompanhe uso através dos SubApps
-- **Vercel AI SDK**: Integração moderna e otimizada com providers
+### Variáveis de Ambiente
 
-## 📚 Documentação Completa
+```bash
+# Criptografia (obrigatório)
+ENCRYPTION_KEY=your-32-character-encryption-key
 
-### **Arquitetura e Implementação**
+# Cache opcional para performance
+REDIS_URL=redis://localhost:6379
+```
 
-- **[📱 Frontend Architecture](./frontend-architecture.md)** - Estrutura e componentes da interface
-- **[⚙️ Backend Architecture](./backend-architecture.md)** - APIs e processamento server-side
-- **[🔐 Security Implementation](./security-implementation.md)** - Criptografia e isolamento
+### Permissões Necessárias
 
-### **Funcionalidades Específicas**
+O usuário precisa estar em um team ativo para acessar o AI Studio. Todas as operações respeitam o isolamento por equipe.
 
-- **[🏢 Provider Management](./provider-management.md)** - Sistema de provedores de IA
-- **[🧠 Model Configuration](./model-configuration.md)** - Configuração e gestão de modelos
-- **[👤 Agent System](./agent-system.md)** - Criação e gestão de agentes
-- **[🔑 Token Security](./token-security.md)** - Sistema de tokens criptografados
+## 🧪 Testing
 
-### **Guias e Referências**
+```bash
+# Executar testes do AI Studio (futuro)
+pnpm test:ai-studio
 
-- **[📋 API Reference](./api-reference.md)** - Documentação completa das APIs
-- **[⚙️ Configuration Guide](./configuracao-inicial.md)** - Setup inicial e configuração
-- **[⚠️ Known Issues](./known-issues.md)** - Problemas conhecidos e soluções
+# Verificar tipos
+pnpm typecheck
+```
 
-## 🔗 Integração com Outros SubApps
+## 📊 Monitoramento
 
-- **Chat**: Fornece modelos e configurações de IA via Vercel AI SDK
-- **Future Apps**: Base para qualquer app que precise de IA
-- **Service Layer**: Comunicação segura via `AiStudioService`
-- **Configurações Compartilhadas**: Gerenciamento centralizado
-- **Tecnologia Moderna**: Integração através do Vercel AI SDK para máxima performance
+O AI Studio inclui logging automático de:
 
-## 🔒 Segurança
+- Operações CRUD de recursos
+- Uso de tokens e modelos
+- Métricas de performance
 
-- **Isolamento por Team**: Cada equipe tem seus próprios recursos
-- **Criptografia End-to-End**: Tokens sempre protegidos
-- **Validação Automática**: Verificação de acesso em todas operações
-- **Auditoria**: Logs de todas as ações críticas
+## 🚀 Roadmap
 
-## 🔗 Links Relacionados
+- [ ] Upload real de arquivos para bibliotecas
+- [ ] Sistema de auditoria completo
+- [ ] Operações em lote para modelos
+- [ ] Validação JSON em tempo real
+- [ ] Controles touch-friendly para mobile
 
-- **[Arquitetura Geral](../../architecture/README.md)** - Arquitetura do monorepo
-- **[SubApp Architecture](../../architecture/subapp-architecture.md)** - Padrões de SubApps
-- **[Chat SubApp](../chat/README.md)** - Principal consumidor do AI Studio
+## 🤝 Contribuindo
 
-## 📚 Recursos Relacionados
+1. Consulte `docs/architecture/` para padrões gerais
+2. Siga as guidelines em `.cursor-rules/kodix-rules.md`
+3. Execute testes antes de commits
+4. Documente mudanças significativas
 
-- **[📐 SubApp Architecture Guide](../../architecture/subapp-architecture.md)** - Padrões e processo de criação de SubApps
-- **[🔧 Backend Development Guide](../../architecture/backend-guide.md)** - Padrões gerais de desenvolvimento backend
-- **[🎨 Frontend Development Guide](../../architecture/frontend-guide.md)** - Padrões de desenvolvimento frontend
+O AI Studio é a fundação de IA do Kodix - mantenha-o seguro, performático e fácil de usar.

@@ -16,23 +16,11 @@ Esta é a documentação completa das APIs do AI Studio. Todas as APIs seguem o 
 ### Estrutura de Resposta
 
 ```typescript
-// Sucesso - Lista com Paginação
-{
-  [entities]: Entity[],
-  pagination: {
-    total: number,
-    limit: number,
-    totalPages: number
-  },
-  success: boolean
-}
+// Lista simples ou array de entidades
+Entity[]
 
-// Sucesso - Operação Simples
-{
-  [entity]: Entity,
-  success: boolean,
-  message?: string
-}
+// Operação simples (sem wrapper padrão)
+Entity
 
 // Erro (tRPC padrão)
 {
@@ -43,11 +31,66 @@ Esta é a documentação completa das APIs do AI Studio. Todas as APIs seguem o 
 }
 ```
 
+## 🎯 Team Instructions API
+
+### `getTeamInstructions`
+
+Buscar instruções da equipe.
+
+**Método**: `query`
+
+**Entrada**: Nenhuma (usa teamId do contexto)
+
+**Resposta**:
+
+```typescript
+{
+  teamInstructions: {
+    content: string;
+    enabled: boolean;
+    appliesTo: "chat" | "all";
+  } | null;
+}
+```
+
+### `updateTeamInstructions`
+
+Atualizar instruções da equipe.
+
+**Método**: `mutation`
+
+**Schema de Entrada**:
+
+```typescript
+{
+  content: string;
+  enabled: boolean;
+  appliesTo: "chat" | "all";
+}
+```
+
 ## 🏢 Providers API
+
+### `findAiProviders`
+
+Listar provedores da equipe.
+
+**Método**: `query`
+
+**Schema de Entrada**:
+
+```typescript
+{
+  limite?: number;        // Padrão: 20
+  offset?: number;        // Padrão: 0
+}
+```
+
+**Resposta**: `Provider[]`
 
 ### `createAiProvider`
 
-Criar novo provedor de IA.
+Criar novo provedor.
 
 **Método**: `mutation`
 
@@ -56,86 +99,8 @@ Criar novo provedor de IA.
 ```typescript
 {
   name: string;           // 1-255 caracteres
-  type: "OPENAI" | "ANTHROPIC" | "GOOGLE" | "AZURE";
-  description?: string;   // Opcional
-  config?: {              // Opcional
-    baseUrl?: string;     // URL válida
-    version?: string;
-  };
+  baseUrl?: string;       // URL válida (opcional)
 }
-```
-
-**Resposta**:
-
-```typescript
-{
-  provider: {
-    id: string;
-    teamId: string;
-    name: string;
-    type: ProviderType;
-    enabled: boolean;
-    description?: string;
-    config?: Record<string, any>;
-    createdAt: Date;
-  };
-  success: true;
-}
-```
-
-**Exemplo**:
-
-```typescript
-const result = await trpc.app.aiStudio.createAiProvider.mutate({
-  name: "OpenAI Prod",
-  type: "OPENAI",
-  description: "Provedor principal",
-  config: {
-    baseUrl: "https://api.openai.com/v1",
-  },
-});
-```
-
-### `findAiProviders`
-
-Listar provedores com paginação e filtros.
-
-**Método**: `query`
-
-**Schema de Entrada**:
-
-```typescript
-{
-  limit?: number;         // Padrão: 20, Max: 100
-  offset?: number;        // Padrão: 0
-  name?: string;          // Filtro por nome
-  type?: ProviderType;    // Filtro por tipo
-  enabled?: boolean;      // Filtro por status
-}
-```
-
-**Resposta**:
-
-```typescript
-{
-  providers: Provider[];
-  pagination: {
-    total: number;
-    limit: number;
-    totalPages: number;
-  };
-  success: true;
-}
-```
-
-**Exemplo**:
-
-```typescript
-const { data } = trpc.app.aiStudio.findAiProviders.useQuery({
-  limit: 10,
-  type: "OPENAI",
-  enabled: true,
-});
 ```
 
 ### `updateAiProvider`
@@ -150,19 +115,7 @@ Atualizar provedor existente.
 {
   id: string;
   name?: string;
-  description?: string;
-  enabled?: boolean;
-  config?: Record<string, any>;
-}
-```
-
-**Resposta**:
-
-```typescript
-{
-  provider: Provider;
-  message: "Provider updated successfully";
-  success: true;
+  baseUrl?: string;
 }
 ```
 
@@ -180,18 +133,33 @@ Remover provedor.
 }
 ```
 
+## 🔐 Tokens API
+
+### `findAiTeamProviderTokens`
+
+Listar tokens da equipe.
+
+**Método**: `query`
+
+**Entrada**: Nenhuma (usa teamId do contexto)
+
 **Resposta**:
 
 ```typescript
 {
-  success: true;
-  message: "Provider deleted successfully";
+  id: string;
+  teamId: string;
+  providerId: string;
+  provider: Provider;
+  token: string; // Mascarado na resposta
+  createdAt: Date;
 }
+[];
 ```
 
-### `enableProviderModels`
+### `createAiTeamProviderToken`
 
-Habilitar todos os modelos de um provedor.
+Criar token para provedor.
 
 **Método**: `mutation`
 
@@ -200,6 +168,378 @@ Habilitar todos os modelos de um provedor.
 ```typescript
 {
   providerId: string;
+  token: string; // Será criptografado
+}
+```
+
+### `updateAiTeamProviderToken`
+
+Atualizar token existente.
+
+**Método**: `mutation`
+
+**Schema de Entrada**:
+
+```typescript
+{
+  id: string;
+  token: string;
+}
+```
+
+### `removeTokenByProvider`
+
+Remover token por provedor.
+
+**Método**: `mutation`
+
+**Schema de Entrada**:
+
+```typescript
+{
+  providerId: string;
+}
+```
+
+## 🧠 Enabled Models API
+
+### `findAvailableModels`
+
+Buscar modelos disponíveis para a equipe.
+
+**Método**: `query`
+
+**Entrada**: Nenhuma (usa teamId do contexto)
+
+**Resposta**:
+
+```typescript
+{
+  id: string;
+  name: string;
+  providerId: string;
+  provider: Provider;
+  teamConfig?: {
+    enabled: boolean;
+    priority?: number;
+  };
+  config?: {
+    pricing?: {
+      input: number;
+      output: number;
+    };
+    description?: string;
+    maxTokens?: number;
+    temperature?: number;
+  };
+}[]
+```
+
+### `getDefaultModel`
+
+Buscar modelo padrão da equipe.
+
+**Método**: `query`
+
+**Entrada**: Nenhuma
+
+**Resposta**:
+
+```typescript
+{
+  modelId: string;
+} | null
+```
+
+### `toggleModel`
+
+Ativar/desativar modelo para equipe.
+
+**Método**: `mutation`
+
+**Schema de Entrada**:
+
+```typescript
+{
+  modelId: string;
+  enabled: boolean;
+}
+```
+
+### `reorderModelsPriority`
+
+Reordenar prioridade dos modelos.
+
+**Método**: `mutation`
+
+**Schema de Entrada**:
+
+```typescript
+{
+  orderedModelIds: string[];
+}
+```
+
+### `testModel`
+
+Testar conectividade de um modelo.
+
+**Método**: `mutation`
+
+**Schema de Entrada**:
+
+```typescript
+{
+  modelId: string;
+  testPrompt?: string;
+}
+```
+
+**Resposta**:
+
+```typescript
+{
+  success: boolean;
+  latencyMs?: number;
+  error?: string;
+}
+```
+
+### `setDefaultModel`
+
+Definir modelo padrão.
+
+**Método**: `mutation`
+
+**Schema de Entrada**:
+
+```typescript
+{
+  modelId: string;
+}
+```
+
+## 👤 Agents API
+
+### `findAiAgents`
+
+Listar agentes da equipe.
+
+**Método**: `query`
+
+**Schema de Entrada**:
+
+```typescript
+{
+  limite?: number;        // Padrão: 20
+  offset?: number;        // Padrão: 0
+}
+```
+
+**Resposta**:
+
+```typescript
+{
+  agents: {
+    id: string;
+    name: string;
+    instructions: string;
+    libraryId?: string;
+    library?: {
+      name: string;
+    };
+    createdAt: Date;
+  }[];
+}
+```
+
+### `createAiAgent`
+
+Criar novo agente.
+
+**Método**: `mutation`
+
+**Schema de Entrada**:
+
+```typescript
+{
+  name: string;
+  instructions: string;
+  libraryId?: string;     // Opcional - biblioteca de conhecimento
+}
+```
+
+### `updateAiAgent`
+
+Atualizar agente.
+
+**Método**: `mutation`
+
+**Schema de Entrada**:
+
+```typescript
+{
+  id: string;
+  name?: string;
+  instructions?: string;
+  libraryId?: string;
+}
+```
+
+### `deleteAiAgent`
+
+Remover agente.
+
+**Método**: `mutation`
+
+**Schema de Entrada**:
+
+```typescript
+{
+  id: string;
+}
+```
+
+## 📚 Libraries API
+
+### `findAiLibraries`
+
+Listar bibliotecas da equipe.
+
+**Método**: `query`
+
+**Schema de Entrada**:
+
+```typescript
+{
+  limite?: number;        // Padrão: 20
+  offset?: number;        // Padrão: 0
+}
+```
+
+**Resposta**:
+
+```typescript
+{
+  libraries: {
+    id: string;
+    name: string;
+    files?: any[];          // Metadados dos arquivos em JSON
+    createdAt: Date;
+  }[];
+}
+```
+
+### `createAiLibrary`
+
+Criar nova biblioteca.
+
+**Método**: `mutation`
+
+**Schema de Entrada**:
+
+```typescript
+{
+  name: string;
+  files?: string;         // JSON string com metadados dos arquivos
+}
+```
+
+### `updateAiLibrary`
+
+Atualizar biblioteca.
+
+**Método**: `mutation`
+
+**Schema de Entrada**:
+
+```typescript
+{
+  id: string;
+  name?: string;
+  files?: string;
+}
+```
+
+### `deleteAiLibrary`
+
+Remover biblioteca.
+
+**Método**: `mutation`
+
+**Schema de Entrada**:
+
+```typescript
+{
+  id: string;
+}
+```
+
+## 🔧 System Models API
+
+### `findModels`
+
+Buscar modelos globais do sistema.
+
+**Método**: `query`
+
+**Schema de Entrada**:
+
+```typescript
+{
+  limite?: number;        // Padrão: 20
+  offset?: number;        // Padrão: 0
+}
+```
+
+**Resposta**: `Model[]`
+
+### `createAiModel`
+
+Criar novo modelo global.
+
+**Método**: `mutation`
+
+**Schema de Entrada**:
+
+```typescript
+{
+  name: string;
+  providerId: string;
+  config?: Record<string, any>;  // Configurações JSON
+  enabled?: boolean;             // Padrão: true
+}
+```
+
+### `updateAiModel`
+
+Atualizar modelo global.
+
+**Método**: `mutation`
+
+**Schema de Entrada**:
+
+```typescript
+{
+  id: string;
+  name?: string;
+  providerId?: string;
+  config?: Record<string, any>;
+  enabled?: boolean;
+}
+```
+
+### `deleteAiModel`
+
+Remover modelo global.
+
+**Método**: `mutation`
+
+**Schema de Entrada**:
+
+```typescript
+{
+  id: string;
 }
 ```
 
@@ -218,570 +558,99 @@ Ativar/desativar modelo globalmente.
 }
 ```
 
-## 🧠 Models API
-
-### `createAiModel`
-
-Criar novo modelo.
-
-**Método**: `mutation`
-
-**Schema de Entrada**:
-
-```typescript
-{
-  name: string;           // 1-255 caracteres
-  providerId: string;     // ID do provedor
-  maxTokens?: number;     // Limite de tokens
-  enabled?: boolean;      // Padrão: true
-  config?: Record<string, any>;
-}
-```
-
-**Resposta**:
-
-```typescript
-{
-  model: {
-    id: string;
-    teamId: string;
-    providerId: string;
-    name: string;
-    enabled: boolean;
-    maxTokens?: number;
-    config?: Record<string, any>;
-    createdAt: Date;
-  };
-  success: true;
-}
-```
-
-**Exemplo**:
-
-```typescript
-const result = await trpc.app.aiStudio.createAiModel.mutate({
-  name: "GPT-4",
-  providerId: "provider_123",
-  maxTokens: 8192,
-  config: {
-    temperature: 0.7,
-    top_p: 1.0,
-  },
-});
-```
-
-### `findAiModels`
-
-Buscar modelos com filtros.
-
-**Método**: `query`
-
-**Schema de Entrada**:
-
-```typescript
-{
-  limit?: number;         // Padrão: 20
-  offset?: number;        // Padrão: 0
-  providerId?: string;    // Filtro por provedor
-  name?: string;          // Filtro por nome
-  enabled?: boolean;      // Filtro por status
-}
-```
-
-**Resposta**:
-
-```typescript
-{
-  models: Model[];
-  pagination: PaginationInfo;
-  success: true;
-}
-```
-
-### `findAiModelById`
-
-Buscar modelo específico.
-
-**Método**: `query`
-
-**Schema de Entrada**:
-
-```typescript
-{
-  id: string;
-}
-```
-
-**Resposta**:
-
-```typescript
-{
-  model: Model;
-  success: true;
-}
-```
-
-### `updateAiModel`
-
-Atualizar modelo.
-
-**Método**: `mutation`
-
-**Schema de Entrada**:
-
-```typescript
-{
-  id: string;
-  name?: string;
-  maxTokens?: number;
-  enabled?: boolean;
-  config?: Record<string, any>;
-}
-```
-
-### `deleteAiModel`
-
-Remover modelo.
-
-**Método**: `mutation`
-
-**Schema de Entrada**:
-
-```typescript
-{
-  id: string;
-}
-```
-
-## 👤 Agents API
-
-### `createAiAgent`
-
-Criar novo agente.
-
-**Método**: `mutation`
-
-**Schema de Entrada**:
-
-```typescript
-{
-  name: string;           // 1-255 caracteres
-  modelId: string;        // ID do modelo
-  systemPrompt?: string;  // Prompt de sistema
-  enabled?: boolean;      // Padrão: true
-  config?: Record<string, any>;
-}
-```
-
-**Resposta**:
-
-```typescript
-{
-  agent: {
-    id: string;
-    teamId: string;
-    modelId: string;
-    name: string;
-    systemPrompt?: string;
-    enabled: boolean;
-    config?: Record<string, any>;
-    createdById: string;
-    createdAt: Date;
-  };
-  success: true;
-}
-```
-
-**Exemplo**:
-
-```typescript
-const result = await trpc.app.aiStudio.createAiAgent.mutate({
-  name: "Assistente de Código",
-  modelId: "model_123",
-  systemPrompt: "Você é um especialista em programação TypeScript.",
-  config: {
-    temperature: 0.3,
-    maxResponseTokens: 2000,
-  },
-});
-```
-
-### `findAiAgents`
-
-Listar agentes da equipe.
-
-**Método**: `query`
-
-**Schema de Entrada**:
-
-```typescript
-{
-  limit?: number;         // Padrão: 20
-  offset?: number;        // Padrão: 0
-  modelId?: string;       // Filtro por modelo
-  enabled?: boolean;      // Filtro por status
-}
-```
-
-**Resposta**:
-
-```typescript
-{
-  agents: Agent[];
-  pagination: PaginationInfo;
-  success: true;
-}
-```
-
-### `findAiAgentById`
-
-Buscar agente específico.
-
-**Método**: `query`
-
-**Schema de Entrada**:
-
-```typescript
-{
-  id: string;
-}
-```
-
-### `updateAiAgent`
-
-Atualizar agente.
-
-**Método**: `mutation`
-
-**Schema de Entrada**:
-
-```typescript
-{
-  id: string;
-  name?: string;
-  systemPrompt?: string;
-  enabled?: boolean;
-  config?: Record<string, any>;
-}
-```
-
-### `deleteAiAgent`
-
-Remover agente.
-
-**Método**: `mutation`
-
-**Schema de Entrada**:
-
-```typescript
-{
-  id: string;
-}
-```
-
-## 🔐 Tokens API
-
-### `createAiTeamProviderToken`
-
-Criar token de equipe para provedor.
-
-**Método**: `mutation`
-
-**Schema de Entrada**:
-
-```typescript
-{
-  providerId: string; // ID do provedor
-  token: string; // Token da API (será criptografado)
-}
-```
-
-**Resposta**:
-
-```typescript
-{
-  token: {
-    id: string;
-    teamId: string;
-    providerId: string;
-    // Token criptografado não é retornado
-    createdAt: Date;
-  }
-  success: true;
-}
-```
-
-**Exemplo**:
-
-```typescript
-const result = await trpc.app.aiStudio.createAiTeamProviderToken.mutate({
-  providerId: "provider_123",
-  token: "sk-...", // Token real da OpenAI
-});
-```
-
-### `findAiTeamProviderTokens`
-
-Listar tokens da equipe.
-
-**Método**: `query`
-
-**Schema de Entrada**:
-
-```typescript
-{
-  limit?: number;         // Padrão: 20
-  offset?: number;        // Padrão: 0
-}
-```
-
-**Resposta**:
-
-```typescript
-{
-  tokens: {
-    id: string;
-    teamId: string;
-    providerId: string;
-    provider: Provider; // Dados do provedor
-    createdAt: Date;
-    // Token criptografado não é incluído
-  }
-  [];
-  pagination: PaginationInfo;
-  success: true;
-}
-```
-
-### `findTokenByProvider`
-
-Buscar token por provedor.
-
-**Método**: `query`
-
-**Schema de Entrada**:
-
-```typescript
-{
-  providerId: string;
-}
-```
-
-**Resposta**:
-
-```typescript
-{
-  token: {
-    id: string;
-    teamId: string;
-    providerId: string;
-    createdAt: Date;
-  } | null;
-  success: true;
-}
-```
-
-### `updateAiTeamProviderToken`
-
-Atualizar token.
-
-**Método**: `mutation`
-
-**Schema de Entrada**:
-
-```typescript
-{
-  providerId: string; // Usado como identificador
-  token: string; // Novo token
-}
-```
-
-### `removeTokenByProvider`
-
-Remover token por provedor.
-
-**Método**: `mutation`
-
-**Schema de Entrada**:
-
-```typescript
-{
-  providerId: string;
-}
-```
-
-## ⚙️ Team Model Config API
-
-### `findAvailableModels`
-
-Buscar modelos disponíveis para a equipe.
-
-**Método**: `query`
-
-**Entrada**: Nenhuma (usa `teamId` do contexto)
-
-**Resposta**:
-
-```typescript
-{
-  models: {
-    id: string;
-    name: string;
-    providerId: string;
-    provider: Provider;
-    enabled: boolean;
-    priority?: number;
-  }[];
-  success: true;
-}
-```
-
-### `toggleModel`
-
-Ativar/desativar modelo para equipe.
-
-**Método**: `mutation`
-
-**Schema de Entrada**:
-
-```typescript
-{
-  modelId: string;
-  enabled: boolean;
-}
-```
-
-### `setModelPriority`
-
-Definir prioridade do modelo.
-
-**Método**: `mutation`
-
-**Schema de Entrada**:
-
-```typescript
-{
-  modelId: string;
-  priority: number; // 1-100
-}
-```
-
-## 🚨 Códigos de Erro
-
-### Códigos Comuns
-
-| Código                  | Descrição                  | Situação                  |
-| ----------------------- | -------------------------- | ------------------------- |
-| `BAD_REQUEST`           | Dados de entrada inválidos | Schema Zod falhou         |
-| `UNAUTHORIZED`          | Sem permissão              | `teamId` ausente          |
-| `NOT_FOUND`             | Recurso não encontrado     | ID inválido ou sem acesso |
-| `CONFLICT`              | Conflito de dados          | Nome duplicado            |
-| `INTERNAL_SERVER_ERROR` | Erro interno               | Falha no banco/sistema    |
-
-### Mensagens de Erro por Contexto
-
-**Providers**:
-
-- `"Provider name already exists"` - Nome duplicado
-- `"AI provider not found"` - ID inválido
-- `"Failed to create AI provider"` - Erro interno
-
-**Models**:
-
-- `"Model name already exists for this provider"` - Nome duplicado
-- `"AI model not found"` - ID inválido
-- `"Provider not found"` - `providerId` inválido
-
-**Agents**:
-
-- `"Agent name already exists"` - Nome duplicado
-- `"AI agent not found"` - ID inválido
-- `"Model not found"` - `modelId` inválido
-
-**Tokens**:
-
-- `"Token already exists for this provider"` - Token duplicado
-- `"Provider token not found"` - Não existe token
-- `"Failed to encrypt token"` - Erro de criptografia
-
 ## 🔧 Uso com React Query
 
-### Exemplo Completo
+### Exemplo Completo - Seção de Tokens
 
 ```tsx
 import { trpc } from "@/utils/trpc";
 
-function ProvidersPage() {
-  // Query para listar
-  const {
-    data: providersData,
-    isLoading,
-    error,
-  } = trpc.app.aiStudio.findAiProviders.useQuery({
-    limit: 20,
-    enabled: true,
-  });
+function TokensSection() {
+  // Query para listar tokens
+  const tokensQuery = useQuery(
+    trpc.app.aiStudio.findAiTeamProviderTokens.queryOptions(),
+  );
 
-  // Mutation para criar
-  const createMutation = trpc.app.aiStudio.createAiProvider.useMutation({
-    onSuccess: (data) => {
-      console.log("Criado:", data.provider);
-      // Invalidar cache
-      trpc.useContext().app.aiStudio.findAiProviders.invalidate();
-    },
-    onError: (error) => {
-      console.error("Erro:", error.message);
-    },
-  });
+  // Query para provedores (para dropdown)
+  const providersQuery = useQuery(
+    trpc.app.aiStudio.findAiProviders.queryOptions({
+      limite: 50,
+      offset: 0,
+    }),
+  );
 
-  // Mutation para atualizar
-  const updateMutation = trpc.app.aiStudio.updateAiProvider.useMutation({
-    onSuccess: () => {
-      trpc.useContext().app.aiStudio.findAiProviders.invalidate();
-    },
-  });
+  // Mutation para criar token
+  const createMutation = useMutation(
+    trpc.app.aiStudio.createAiTeamProviderToken.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries(
+          trpc.app.aiStudio.findAiTeamProviderTokens.pathFilter(),
+        );
+        toast.success("Token criado com sucesso!");
+      },
+      onError: (error: any) => {
+        toast.error(error.message || "Erro ao criar token");
+      },
+    }),
+  );
 
-  // Mutation para deletar
-  const deleteMutation = trpc.app.aiStudio.deleteAiProvider.useMutation({
-    onSuccess: () => {
-      trpc.useContext().app.aiStudio.findAiProviders.invalidate();
-    },
-  });
+  // Mutation para remover token
+  const deleteMutation = useMutation(
+    trpc.app.aiStudio.removeTokenByProvider.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries(
+          trpc.app.aiStudio.findAiTeamProviderTokens.pathFilter(),
+        );
+        toast.success("Token removido com sucesso!");
+      },
+    }),
+  );
 
-  const handleCreate = (data: CreateProviderInput) => {
+  const handleCreate = (data: { providerId: string; token: string }) => {
     createMutation.mutate(data);
   };
 
-  const handleUpdate = (id: string, data: UpdateProviderInput) => {
-    updateMutation.mutate({ id, ...data });
+  const handleDelete = (providerId: string) => {
+    deleteMutation.mutate({ providerId });
   };
 
-  const handleDelete = (id: string) => {
-    deleteMutation.mutate({ id });
-  };
+  // ... resto do componente
+}
+```
 
-  if (isLoading) return <div>Carregando...</div>;
-  if (error) return <div>Erro: {error.message}</div>;
+### Exemplo - Enabled Models com Drag & Drop
 
-  const { providers, pagination } = providersData || { providers: [] };
-
-  return (
-    <div>
-      {providers.map((provider) => (
-        <div key={provider.id}>
-          {provider.name}
-          <button
-            onClick={() =>
-              handleUpdate(provider.id, { enabled: !provider.enabled })
-            }
-          >
-            {provider.enabled ? "Desativar" : "Ativar"}
-          </button>
-          <button onClick={() => handleDelete(provider.id)}>Deletar</button>
-        </div>
-      ))}
-    </div>
+```tsx
+function EnabledModelsSection() {
+  const { data: models } = useQuery(
+    trpc.app.aiStudio.findAvailableModels.queryOptions(),
   );
+
+  const { data: defaultModel } = useQuery(
+    trpc.app.aiStudio.getDefaultModel.queryOptions(),
+  );
+
+  const reorderMutation = useMutation(
+    trpc.app.aiStudio.reorderModelsPriority.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries(
+          trpc.app.aiStudio.findAvailableModels.pathFilter(),
+        );
+        toast.success("Prioridade atualizada!");
+      },
+    }),
+  );
+
+  const testMutation = useMutation(
+    trpc.app.aiStudio.testModel.mutationOptions({
+      onSuccess: (data, variables) => {
+        // Resultado do teste
+        console.log(`Model ${variables.modelId} test:`, data);
+      },
+    }),
+  );
+
+  // ... handlers para drag & drop e teste
 }
 ```
 
@@ -793,13 +662,13 @@ Todas as APIs validam automaticamente:
 
 1. **Autenticação**: Usuário logado
 2. **Team ID**: Recurso pertence à equipe ativa
-3. **Permissões**: Acesso baseado na função do usuário
+3. **Isolamento**: Dados separados por equipe
 
 ### Criptografia
 
 - **Tokens**: Criptografados com AES-256-GCM
 - **Logs**: Tokens nunca aparecem em logs
-- **Respostas**: Tokens criptografados nunca são retornados
+- **Respostas**: Tokens sempre mascarados
 
 ### Rate Limiting
 
@@ -807,4 +676,4 @@ Todas as APIs validam automaticamente:
 - **Consultas**: 100 requests/minuto
 - **Atualizações**: 60 requests/minuto
 
-Esta referência fornece toda a informação necessária para integrar com as APIs do AI Studio de forma segura e eficiente.
+Esta referência documenta todas as APIs realmente implementadas no AI Studio, refletindo a arquitetura e funcionalidades atuais do sistema.
