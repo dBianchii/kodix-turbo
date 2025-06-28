@@ -68,53 +68,353 @@ turbo 2.5.4
 @kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.625 * <search> Enabled role change notification
 @kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.625 * <search> Cluster configuration: AUTO partitions, type: 0, coordinator timeout: 0ms
 @kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.626 * <search> Register write commands
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.626 * Module 'search' loaded from /usr/local/lib/redis/modules//redisearch.so
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.626 * <timeseries> RedisTimeSeries version 80001, git_sha=577bfa8b5909e7ee572f0b651399be8303dc6641
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.626 * <timeseries> Redis version found by RedisTimeSeries : 8.0.2 - oss
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.626 * <timeseries> Registering configuration options: [
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.626 * <timeseries> 	{ ts-compaction-policy   :              }
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.626 * <timeseries> 	{ ts-num-threads         :            3 }
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.626 * <timeseries> 	{ ts-retention-policy    :            0 }
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.626 * <timeseries> 	{ ts-duplicate-policy    :        block }
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.626 * <timeseries> 	{ ts-chunk-size-bytes    :         4096 }
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.626 * <timeseries> 	{ ts-encoding            :   compressed }
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.626 * <timeseries> 	{ ts-ignore-max-time-diff:            0 }
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.626 * <timeseries> 	{ ts-ignore-max-val-diff :     0.000000 }
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.626 * <timeseries> ]
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.627 * <timeseries> Detected redis oss
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.628 * Module 'timeseries' loaded from /usr/local/lib/redis/modules//redistimeseries.so
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.632 * <ReJSON> Created new data type 'ReJSON-RL'
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.635 * <ReJSON> version: 80001 git sha: unknown branch: unknown
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.635 * <ReJSON> Exported RedisJSON_V1 API
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.635 * <ReJSON> Exported RedisJSON_V2 API
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.635 * <ReJSON> Exported RedisJSON_V3 API
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.635 * <ReJSON> Exported RedisJSON_V4 API
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.635 * <ReJSON> Exported RedisJSON_V5 API
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.635 * <ReJSON> Enabled diskless replication
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.636 * <ReJSON> Initialized shared string cache, thread safe: false.
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.636 * Module 'ReJSON' loaded from /usr/local/lib/redis/modules//rejson.so
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.636 * <search> Acquired RedisJSON_V5 API
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.636 * Server initialized
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.636 * <search> Loading event starts
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.636 * <search> Enabled workers threadpool of size 4
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.636 * Loading RDB produced by version 8.0.2
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.636 * RDB age 125 seconds
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.636 * RDB memory usage when created 0.95 Mb
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.637 * Done loading RDB, keys loaded: 0, keys expired: 0.
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.637 * <search> Disabled workers threadpool of size 4
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.637 * <search> Loading event ends
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.637 * DB loaded from disk: 0.001 seconds
-@kdx/db-dev:dev: redis-1                  | 1:M 27 Jun 2025 21:41:20.637 * Ready to accept connections tcp
-@kdx/db-dev:dev: mysql-1                  | 2025-06-27 21:41:20+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
-@kdx/db-dev:dev: mysql-1                  | 2025-06-27 21:41:20+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.2.0-1.el8 started.
-@kdx/db-dev:dev: mysql-1                  | '/var/lib/mysql/mysql.sock' -> '/var/run/mysqld/mysqld.sock'
-@kdx/db:dev: cache bypass, force executing 3eb8807e7e847e13
-@kdx/ui:dev: cache bypass, force executing 836bfd91f4f4f369
-@kdx/db:studio: Connection to localhost port 3306 [tcp/mysql] succeeded!
-@kdx/db-dev:dev: mysql-1                  | 2025-06-27T21:41:20.949095Z 0 [System] [MY-015015] [Server] MySQL Server - start.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-27T21:41:21.181084Z 0 [Warning] [MY-011068] [Server] The syntax '--skip-host-cache' is deprecated and will be removed in a future release. Please use SET GLOBAL host_cache_size=0 instead.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-27T21:41:21.188620Z 0 [System] [MY-010116] [Server] /usr/sbin/mysqld (mysqld 8.2.0) starting as process 1
-@kdx/db-dev:dev: mysql-1                  | 2025-06-27T21:41:21.204060Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+@kdx/db-dev:d@kdx/shared:dev: cache bypass, force executing 6ae197b7d0449bbd
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/db:dev: cache bypass, force executing 394534e3bc0fc2bc
+@kdx/ui:dev: cache bypass, force executing 0ad35dc9b21b1def
+@kdx/db:dev: 
+@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:dev: > tsc
+@kdx/db:dev: 
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/db:dev: src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z5@kdx/db:dev: src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/db:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/db:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/db#dev: command (/U@kdx/api:dev: cache bypass, force executing ab3dbb845531067d
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kd@kdx/api:dev@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(11,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'aiStudioUserAppTeamConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(36,34): error TS2307: Cannot find module '../../../../internal/services/appConfig.service' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(46,43): error TS2345: Argument of type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to parameter of type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(107,7): error TS2322: Type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 024d3c0ef39f4d3f
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(9,31): error TS2307: Cannot find module '@kdx/shared/constants' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(11,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'aiStudioUserAppTeamConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(36,34): error TS2307: Cannot find module '../../../../internal/services/appConfig.service' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(37,44): error TS2307: Cannot find module '../../trpc' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(64,24): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(64,31): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(88,21): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(88,28): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(123,21): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(123,28): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(154,24): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(154,31): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(182,24): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(182,31): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(221,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(237,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(237,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(255,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(255,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(273,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(273,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(298,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(298,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(316,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(316,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(331,54): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(349,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(364,16): error TS2304: Cannot find name 'aiStudioConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(367,14): error TS2304: Cannot find name 'aiStudioConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(385,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(385,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(400,13): error TS2304: Cannot find name 'aiStudioConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(401,13): error TS2304: Cannot find name 'aiStudioConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(403,27): error TS2304: Cannot find name 'aiStudioConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(439,66): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(460,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(460,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(461,27): error TS2551: Property 'upsertUserAppTeamConfig' does not exist on type 'typeof import("/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/src/repositories/app/appRepository")'. Did you mean 'upsertUserAppTeamConfigs'?
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(46,43): error TS2345: Argument of type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to parameter of type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(107,7): error TS2322: Type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 6d2a066f06693eea
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kd@kdx/api:dev@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(9,25): error TS2300: Duplicate identifier 'aiStudioUserAppTeamConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(11,3): error TS2300: Duplicate identifier 'aiStudioUserAppTeamConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(11,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'aiStudioUserAppTeamConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(36,34): error TS2307: Cannot find module '../../../../internal/services/appConfig.service' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(37,44): error TS2307: Cannot find module '../../trpc' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(45,8): error TS2307: Cannot find module './team-instructions' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(68,24): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(68,31): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(92,21): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(92,28): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(127,21): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(127,28): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(158,24): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(158,31): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(186,24): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(186,31): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(225,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(241,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(241,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(259,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(259,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(277,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(277,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(302,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(302,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(320,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(320,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(335,54): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(353,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(368,16): error TS2304: Cannot find name 'aiStudioConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(371,14): error TS2304: Cannot find name 'aiStudioConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(383,16): error TS7006: Parameter 'opts' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(386,66): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(406,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(406,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(407,27): error TS2551: Property 'upsertUserAppTeamConfig' does not exist on type 'typeof import("/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/src/repositories/app/appRepository")'. Did you mean 'upsertUserAppTeamConfigs'?
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(46,43): error TS2345: Argument of type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to parameter of type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(107,7): error TS2322: Type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 867e30d73f5e8531
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kd@kdx/api:dev@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(9,25): error TS2300: Duplicate identifier 'aiStudioUserAppTeamConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(11,3): error TS2300: Duplicate identifier 'aiStudioUserAppTeamConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(11,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'aiStudioUserAppTeamConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(36,34): error TS2307: Cannot find module '../../../../internal/services/appC@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(9,25): error TS2300: Duplicate identifier 'aiStudioUserAppTeamConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(11,3): error TS2300: Duplicate identifier 'aiStudioUserAppTeamConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(11,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'aiStudioUserAppTeamConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(36,34): error TS2307: Cannot find module '../../../../internal/services/appConfig.service' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(37,44): error TS2307: Cannot find module '../../trpc' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(45,8): error TS2307: Cannot find module './team-instructions' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(68,24): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(68,31): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(92,21): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(92,28): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(127,21): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(127,28): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(158,24): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(158,31): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(186,24): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(186,31): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(225,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(241,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(241,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(259,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(259,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(277,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(277,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(302,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(302,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(320,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(320,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(335,54): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(353,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(368,16): error TS2304: Cannot find name 'aiStudioConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(371,14): error TS2304: Cannot find name 'aiStudioConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(383,16): error TS7006: Parameter 'opts' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(386,66): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(406,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(406,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(407,27): error TS2551: Property 'upsertUserAppTeamConfig' does not exist on type 'typeof import("/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/src/repositories/app/appRepository")'. Did you mean 'upsertUserAppTeamConfigs'?
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(46,43): error TS2345: Argument of type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to parameter of type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(107,7): error TS2322: Type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 320f86b5632ea0a8
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(14,44): error TS2307: Cannot find module '../../trpc' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(28,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(44,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(78,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(78,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(106,66): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(126,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(126,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(145,27): error TS2551: Property 'upsertUserAppTeamConfig' does not exist on type 'typeof import("/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/src/repositories/app/appRepository")'. Did you mean 'upsertUserAppTeamConfigs'?
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(46,43): error TS2345: Argument of type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to parameter of type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(107,7): error TS2322: Type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/shared:dev: cache bypass, force executing afb89322bed834cd
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/api:dev: cache bypass, force executing 9da429b72d69acef
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+2)
+@kdx/shared:dev: cache bypass, force executing afb89322bed834cd
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/api:dev: cache bypass, force executing 9da429b72d69acef
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+o/_router.ts(407,27): error TS2551: Property 'upsertUserAppTeamConfig' does not exist on type 'typeof import("/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/src/repositories/app/appRepository")'. Did you mean 'upsertUserAppTeamConfigs'?
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(46,43): error TS2345: Argument of type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to parameter of type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(107,7): error TS2322: Type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 320f86b5632ea0a8
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(14,44): error TS2307: Cannot find module '../../trpc' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(28,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(44,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(78,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(78,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(106,66): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(126,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(126,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(145,27): error TS2551: Property 'upsertUserAppTeamConfig' does not exist on type 'typeof import("/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/src/repositories/app/appRepository")'. Did you mean 'upsertUserAppTeamConfigs'?
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(46,43): error TS2345: Argument of type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to parameter of type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(107,7): error TS2322: Type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/shared:dev: cache bypass, force executing afb89322bed834cd
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/api:dev: cache bypass, force executing 9da429b72d69acef
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+s/app/ai-studio/_router.ts(277,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(302,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(302,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(320,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(320,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(335,54): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(353,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(368,16): error TS2304: Cannot find name 'aiStudioConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(371,14): error TS2304: Cannot find name 'aiStudioConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(383,16): error TS7006: Parameter 'opts' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(386,66): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(406,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(406,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/router@kdx/api:dev: cache bypass, force executing 320f86b5632ea0a8
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(14,44): error TS2307: Cannot find module '../../trpc' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(28,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(44,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(78,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(78,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(106,66): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(126,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(126,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(145,27): error TS2551: Property 'upsertUserAppTeamConfig' does not exist on type 'typeof import("/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/src/repositories/app/appRepository")'. Did you mean 'upsertUserAppTeamConfigs'?
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(46,43): error TS2345: Argument of type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to parameter of type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(14,44): error TS2307: Cannot find module '../../trpc' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(28,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(44,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(78,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(78,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(106,66): error@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/shared:dev: cache bypass, force executing afb89322bed834cd
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/api:dev: cache bypass, force executing 9da429b72d69acef
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+ assignable to parameter of type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(107,7): error TS2322: Type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: comma@kdx/shared:dev: cache bypass, force executing afb89322bed834cd
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/db:dev: cache bypass, force executing 6b174a21ea8c8956
+@kdx/ui:dev: cache bypass, force executing c30a32a592c8961b
+@kdx/db:dev: 
+@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:dev: > tsc
+@kdx/db:dev: 
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1@kdx/api:dev: cache bypass, force executing 9da429b72d69acef
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+dev:dev:  Container kodix-db-serverless-redis-http-1  Stopping
+@kdx/db-dev:dev:  Container kodix-db-redis-1  Stopped
+@kdx/db#studio: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run studio exited (137)
+@kdx/shared:dev: cache bypass, force executing 6ae197b7d0449bbd
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/db:dev: cache bypass, force executing 394534e3bc0fc2bc
+@kdx/ui:dev: cache bypass, force executing 0ad35dc9b21b1def
 @kdx/ui:dev: 
 @kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
 @kdx/ui:dev: > tsc
@@ -123,420 +423,213 @@ turbo 2.5.4
 @kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
 @kdx/db:dev: > tsc
 @kdx/db:dev: 
-@kdx/db-dev:dev: mysql-1                  | 2025-06-27T21:41:21.462191Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
-@kdx/db:studio: 
-@kdx/db:studio: > @kdx/db@0.1.0 with-env /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:studio: > dotenv -e ../../.env -- "drizzle-kit" "studio"
-@kdx/db:studio: 
-@kdx/kdx:dev:    ▲ Next.js 15.3.4 (Turbopack)
-@kdx/kdx:dev:    - Local:        http://localhost:3000
-@kdx/kdx:dev:    - Network:      http://192.168.3.50:3000
-@kdx/kdx:dev:    - Experiments (use with caution):
-@kdx/kdx:dev:      · turbo
-@kdx/kdx:dev: 
-@kdx/kdx:dev:  ✓ Starting...
-@kdx/kdx:dev:  ⚠ The config property `experimental.turbo` is deprecated. Move this setting to `config.turbopack` as Turbopack is now stable.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-27T21:41:22.126533Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-27T21:41:22.126593Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-27T21:41:22.130129Z 0 [Warning] [MY-011810] [Server] Insecure configuration for --pid-file: Location '/var/run/mysqld' in the path is accessible to all OS users. Consider choosing a different directory.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-27T21:41:22.161183Z 0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '8.2.0'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL Community Server - GPL.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-27T21:41:22.161202Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '::' port: 33060, socket: /var/run/mysqld/mysqlx.sock
-@kdx/db:studio: No config path provided, using default 'drizzle.config.ts'
-@kdx/db:studio: Reading config file '/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/drizzle.config.ts'
-@kdx/db:studio: 
-@kdx/db:studio:  Warning  Drizzle Studio is currently in Beta. If you find anything that is not working as expected or should be improved, feel free to create an issue on GitHub: https://github.com/drizzle-team/drizzle-kit-mirror/issues/new or write to us on Discord: https://discord.gg/WcRKz2FFxN
-@kdx/db:studio: 
-@kdx/db:studio: Drizzle Studio is up and running on https://local.drizzle.studio
-@kdx/kdx:dev:  ✓ Compiled middleware in 294ms
-@kdx/permissions:dev: cache bypass, force executing 30ebbda8aae1078c
-@kdx/validators:dev: cache bypass, force executing 42319cfb279863e0
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/kdx:dev:  ✓ Ready in 2.7s
-@kdx/kdx:dev:  ⚠ Webpack is configured while Turbopack is not, which may cause problems.
-@kdx/kdx:dev:  ⚠ See instructions if you need to configure Turbopack:
-@kdx/kdx:dev:   https://nextjs.org/docs/app/api-reference/next-config-js/turbo
-@kdx/kdx:dev: 
-@kdx/kdx:dev:  ○ Compiling /[locale] ...
-@kdx/db-dev:dev: serverless-redis-http-1  | Using port 80
-@kdx/db-dev:dev: serverless-redis-http-1  | Token resolver started
-@kdx/db-dev:dev: serverless-redis-http-1  | Loaded config from env. 1 entries.
-@kdx/api:dev: cache bypass, force executing e16871f4541d4bd0
+@kdx/db:dev: src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/db:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/db:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/db#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing ab3dbb845531067d
 @kdx/api:dev: 
 @kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
 @kdx/api:dev: > tsc
 @kdx/api:dev: 
-@kdx/kdx:dev:  ✓ Compiled /[locale] in 5.9s
-@kdx/kdx:dev:  GET / 200 in 152ms
-@kdx/kdx:dev:  GET / 200 in 107ms
-@kdx/kdx:dev:  ○ Compiling /[locale]/apps/chat/[sessionId] ...
-@kdx/kdx:dev:  ✓ Compiled /[locale]/apps/chat/[sessionId] in 3.6s
-@kdx/kdx:dev: >>> tRPC Request from rsc by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.getInstalled took 13.36ms to execute
-@kdx/kdx:dev: [TRPC_PERF] user.getInvitations took 13.28ms to execute
-@kdx/kdx:dev:  GET /apps/chat/ifg2vk8yqlh4 200 in 4885ms
-@kdx/kdx:dev:  ○ Compiling /api/trpc/[trpc] ...
-@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 1099ms
-@kdx/kdx:dev:  ✓ Compiled /api/trpc/[trpc] in 1705ms
-@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.getUserAppTeamConfig took 32.68ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAiAgents took 101.26ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findChatFolders took 102.67ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSession took 109.21ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 112.23ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 133.68ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 135.14ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAvailableModels took 137.11ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.getUserAppTeamConfig,app.chat.findChatFolders,app.chat.findSessions,app.aiStudio.findAiAgents,app.aiStudio.findAvailableModels,app.chat.findSession,app.chat.getMessages,app.chat.getMessages?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22appId%22%3A%22az1x2c3bv4n5%22%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22limite%22%3A100%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%2C%224%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%225%22%3A%7B%22json%22%3A%7B%22sessionId%22%3A%22ifg2vk8yqlh4%22%7D%7D%2C%226%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%22ifg2vk8yqlh4%22%2C%22limit%22%3A1%2C%22page%22%3A1%2C%22order%22%3A%22desc%22%7D%7D%2C%227%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%22ifg2vk8yqlh4%22%2C%22limit%22%3A100%2C%22page%22%3A1%2C%22order%22%3A%22asc%22%7D%7D%7D 200 in 2554ms
-@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 7.03ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 8.99ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 10.13ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.chat.findSessions,app.chat.findSessions,app.chat.findSessions?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%7D 200 in 43ms
-@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev:  GET /apps/chat/hr7f2el0yll7 200 in 89ms
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSession took 64.16ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 79.12ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 87.99ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.chat.findSession,app.chat.getMessages,app.chat.getMessages?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22sessionId%22%3A%22hr7f2el0yll7%22%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%22hr7f2el0yll7%22%2C%22limit%22%3A100%2C%22page%22%3A1%2C%22order%22%3A%22asc%22%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%22hr7f2el0yll7%22%2C%22limit%22%3A1%2C%22page%22%3A1%2C%22order%22%3A%22desc%22%7D%7D%7D 200 in 224ms
-@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 117ms
-@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev:  GET /apps/chat/n0j4zz8bb6z0 200 in 69ms
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSession took 28.53ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 38.37ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 42.99ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.chat.findSession,app.chat.getMessages,app.chat.getMessages?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22sessionId%22%3A%22n0j4zz8bb6z0%22%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%22n0j4zz8bb6z0%22%2C%22limit%22%3A100%2C%22page%22%3A1%2C%22order%22%3A%22asc%22%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%22n0j4zz8bb6z0%22%2C%22limit%22%3A1%2C%22page%22%3A1%2C%22order%22%3A%22desc%22%7D%7D%7D 200 in 121ms
-@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 51ms
-@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev:  GET /apps/chat/ygrkn1d903t7 200 in 37ms
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSession took 11.11ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 12.71ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 13.17ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.chat.findSession,app.chat.getMessages,app.chat.getMessages?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22sessionId%22%3A%22ygrkn1d903t7%22%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%22ygrkn1d903t7%22%2C%22limit%22%3A100%2C%22page%22%3A1%2C%22order%22%3A%22asc%22%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%22ygrkn1d903t7%22%2C%22limit%22%3A1%2C%22page%22%3A1%2C%22order%22%3A%22desc%22%7D%7D%7D 200 in 52ms
-@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 55ms
-@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev:  GET /apps/chat/n0j4zz8bb6z0 200 in 73ms
-@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 24.46ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.chat.getMessages?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%22n0j4zz8bb6z0%22%2C%22limit%22%3A1%2C%22page%22%3A1%2C%22order%22%3A%22desc%22%7D%7D%7D 200 in 102ms
-@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 44ms
-@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev:  GET /apps/chat/98t11jl2w676 200 in 50ms
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSession took 10.65ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 12.96ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 14.32ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.chat.findSession,app.chat.getMessages,app.chat.getMessages?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22sessionId%22%3A%2298t11jl2w676%22%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%2298t11jl2w676%22%2C%22limit%22%3A100%2C%22page%22%3A1%2C%22order%22%3A%22asc%22%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%2298t11jl2w676%22%2C%22limit%22%3A1%2C%22page%22%3A1%2C%22order%22%3A%22desc%22%7D%7D%7D 200 in 69ms
-@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 84ms
-@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findChatFolders took 10.20ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 12.26ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 13.16ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 13.70ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.chat.findSessions,app.chat.findSessions,app.chat.findSessions,app.chat.findChatFolders?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%7D 200 in 106ms
-@kdx/kdx:dev:  ○ Compiling /api/chat/stream ...
-@kdx/kdx:dev:  ✓ Compiled /api/chat/stream in 693ms
-@kdx/kdx:dev: 🔄 [AiStudioService] getModelById by az1x2c3bv4n5 for team: hr050hr1u25n
-@kdx/kdx:dev: ✅ [AiStudioService] Model found: claude-3-haiku for team: hr050hr1u25n
-@kdx/kdx:dev: 🔄 [AiStudioService] getModelById by az1x2c3bv4n5 for team: hr050hr1u25n
-@kdx/kdx:dev: ✅ [AiStudioService] Model found: claude-3-haiku for team: hr050hr1u25n
-@kdx/kdx:dev: 🔄 [AiStudioService] getProviderToken by az1x2c3bv4n5 for team: hr050hr1u25n
-@kdx/kdx:dev: ✅ [AiStudioService] Token found for provider cqc4lkp3d3b5 and team: hr050hr1u25n
-@kdx/kdx:dev: 🎯 [VERCEL_AI_NATIVE] Returning toDataStreamResponse for useChat compatibility
-@kdx/kdx:dev: ✅ [VERCEL_AI_NATIVE] Stream finished: { tokens: 854, reason: 'stop', textLength: 346 }
-@kdx/kdx:dev: 💾 [VERCEL_AI_NATIVE] Message auto-saved successfully
-@kdx/kdx:dev:  POST /api/chat/stream 200 in 2483ms
-@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 8.67ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.chat.getMessages?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%2298t11jl2w676%22%2C%22limit%22%3A1%2C%22page%22%3A1%2C%22order%22%3A%22desc%22%7D%7D%7D 200 in 48ms
-@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSession took 5.95ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.chat.findSession?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22sessionId%22%3A%2298t11jl2w676%22%7D%7D%7D 200 in 49ms
-@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 12.39ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 15.31ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 16.55ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 22.53ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.chat.findSessions,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A100%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%7D 200 in 77ms
-@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 60.97ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 67.53ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 79.51ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSession took 81.33ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 82.11ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 82.73ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.chat.findSession,app.chat.getMessages,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22sessionId%22%3A%2298t11jl2w676%22%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%2298t11jl2w676%22%2C%22limit%22%3A100%2C%22page%22%3A1%2C%22order%22%3A%22asc%22%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22limite%22%3A100%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%224%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%225%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%7D 200 in 113ms
-@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findChatFolders took 36.22ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 38.70ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSession took 44.51ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 48.34ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 51.80ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 52.34ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.chat.findChatFolders,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions,app.chat.findSession,app.chat.getMessages?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%224%22%3A%7B%22json%22%3A%7B%22sessionId%22%3A%2298t11jl2w676%22%7D%7D%2C%225%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%2298t11jl2w676%22%2C%22limit%22%3A1%2C%22page%22%3A1%2C%22order%22%3A%22desc%22%7D%7D%7D 200 in 198ms
-@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 26.25ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.chat.getMessages?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%2298t11jl2w676%22%2C%22limit%22%3A1%2C%22page%22%3A1%2C%22order%22%3A%22desc%22%7D%7D%7D 200 in 135ms
-@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findChatFolders took 73.93ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 75.29ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSession took 80.61ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 87.68ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 89.96ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 91.52ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.chat.findChatFolders,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions,app.chat.findSession,app.chat.getMessages?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%224%22%3A%7B%22json%22%3A%7B%22sessionId%22%3A%2298t11jl2w676%22%7D%7D%2C%225%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%2298t11jl2w676%22%2C%22limit%22%3A1%2C%22page%22%3A1%2C%22order%22%3A%22desc%22%7D%7D%7D 200 in 357ms
-@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findChatFolders took 70.46ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSession took 75.14ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 80.90ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 84.14ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 85.42ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 87.50ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.chat.findChatFolders,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions,app.chat.findSession,app.chat.getMessages?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%224%22%3A%7B%22json%22%3A%7B%22sessionId%22%3A%2298t11jl2w676%22%7D%7D%2C%225%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%2298t11jl2w676%22%2C%22limit%22%3A1%2C%22page%22%3A1%2C%22order%22%3A%22desc%22%7D%7D%7D 200 in 479ms
-@kdx/kdx:dev:  ○ Compiling /[locale]/apps/aiStudio ...
-@kdx/kdx:dev:  ✓ Compiled /[locale]/apps/aiStudio in 6.2s
-@kdx/kdx:dev:  GET /apps/aiStudio 200 in 6904ms
-@kdx/kdx:dev:  GET /apps/aiStudio 200 in 35ms
-@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 177ms
-@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAiTeamProviderTokens took 34.83ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAiProviders took 36.26ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiTeamProviderTokens,app.aiStudio.findAiProviders?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 225ms
-@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAiTeamProviderTokens took 22.89ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAiProviders took 23.68ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiTeamProviderTokens,app.aiStudio.findAiProviders?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 267ms
-@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findModels took 16.19ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findModels?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 97ms
-@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAiProviders took 7.24ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiProviders?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 85ms
-@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAiProviders took 19.30ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findModels took 21.37ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiProviders,app.aiStudio.findModels?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 197ms
-@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findModels took 8.94ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAiProviders took 13.89ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiProviders,app.aiStudio.findModels?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 123ms
-@kdx/db:studio: sh: line 1: 61313 Killed: 9               pnpm with-env drizzle-kit studio
-@kdx/db:studio:  ELIFECYCLE  Command failed with exit code 137.
-@kdx/db:studio: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run studio exited (137)
-@kdx/db-dev:dev: Gracefully stopping... (press Ctrl+C again to force)
-@kdx/db-dev:dev:  Container kodix-db-redis-1  Stopping
-@kdx/db-dev:dev:  Container kodix-db-mysql-1  Stopping
-@kdx/db-dev:dev:  Container kodix-db-serverless-redis-http-1  Stopping
-@kdx/db-dev:dev:  Container kodix-db-redis-1  Stopped
-@kdx/db#studio: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run studio exited (137)
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(11,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'aiStudioUserAppTeamConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(36,34): error TS2307: Cannot find module '../../../../internal/services/appConfig.service' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(46,43): error TS2345: Argument of type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to parameter of type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(107,7): error TS2322: Type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 024d3c0ef39f4d3f
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(9,31): error TS2307: Cannot find module '@kdx/shared/constants' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(11,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'aiStudioUserAppTeamConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(36,34): error TS2307: Cannot find module '../../../../internal/services/appConfig.service' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(37,44): error TS2307: Cannot find module '../../trpc' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(64,24): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(64,31): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(88,21): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(88,28): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(123,21): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(123,28): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(154,24): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(154,31): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(182,24): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(182,31): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(221,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(237,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(237,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(255,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(255,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(273,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(273,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(298,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(298,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(316,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(316,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(331,54): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(349,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(364,16): error TS2304: Cannot find name 'aiStudioConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(367,14): error TS2304: Cannot find name 'aiStudioConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(385,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(385,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(400,13): error TS2304: Cannot find name 'aiStudioConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(401,13): error TS2304: Cannot find name 'aiStudioConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(403,27): error TS2304: Cannot find name 'aiStudioConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(439,66): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(460,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(460,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(461,27): error TS2551: Property 'upsertUserAppTeamConfig' does not exist on type 'typeof import("/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/src/repositories/app/appRepository")'. Did you mean 'upsertUserAppTeamConfigs'?
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(46,43): error TS2345: Argument of type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to parameter of type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(107,7): error TS2322: Type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 6d2a066f06693eea
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(9,25): error TS2300: Duplicate identifier 'aiStudioUserAppTeamConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(11,3): error TS2300: Duplicate identifier 'aiStudioUserAppTeamConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(11,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'aiStudioUserAppTeamConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(36,34): error TS2307: Cannot find module '../../../../internal/services/appConfig.service' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(37,44): error TS2307: Cannot find module '../../trpc' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(45,8): error TS2307: Cannot find module './team-instructions' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(68,24): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(68,31): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(92,21): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(92,28): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(127,21): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(127,28): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(158,24): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(158,31): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(186,24): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(186,31): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(225,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(241,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(241,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(259,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(259,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(277,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(277,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(302,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(302,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(320,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(320,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(335,54): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(353,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(368,16): error TS2304: Cannot find name 'aiStudioConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(371,14): error TS2304: Cannot find name 'aiStudioConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(383,16): error TS7006: Parameter 'opts' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(386,66): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(406,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(406,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(407,27): error TS2551: Property 'upsertUserAppTeamConfig' does not exist on type 'typeof import("/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/src/repositories/app/appRepository")'. Did you mean 'upsertUserAppTeamConfigs'?
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(46,43): error TS2345: Argument of type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to parameter of type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(107,7): error TS2322: Type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 867e30d73f5e8531
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(9,25): error TS2300: Duplicate identifier 'aiStudioUserAppTeamConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(11,3): error TS2300: Duplicate identifier 'aiStudioUserAppTeamConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(11,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'aiStudioUserAppTeamConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(36,34): error TS2307: Cannot find module '../../../../internal/services/appConfig.service' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(37,44): error TS2307: Cannot find module '../../trpc' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(45,8): error TS2307: Cannot find module './team-instructions' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(68,24): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(68,31): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(92,21): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(92,28): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(127,21): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(127,28): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(158,24): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(158,31): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(186,24): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(186,31): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(225,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(241,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(241,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(259,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(259,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(277,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(277,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(302,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(302,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(320,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(320,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(335,54): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(353,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(368,16): error TS2304: Cannot find name 'aiStudioConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(371,14): error TS2304: Cannot find name 'aiStudioConfigSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(383,16): error TS7006: Parameter 'opts' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(386,66): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(406,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(406,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(407,27): error TS2551: Property 'upsertUserAppTeamConfig' does not exist on type 'typeof import("/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/src/repositories/app/appRepository")'. Did you mean 'upsertUserAppTeamConfigs'?
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(46,43): error TS2345: Argument of type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to parameter of type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(107,7): error TS2322: Type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 320f86b5632ea0a8
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(14,44): error TS2307: Cannot find module '../../trpc' or its corresponding type declarations.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(28,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(44,58): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(78,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(78,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(106,66): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(126,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(126,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(145,27): error TS2551: Property 'upsertUserAppTeamConfig' does not exist on type 'typeof import("/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/src/repositories/app/appRepository")'. Did you mean 'upsertUserAppTeamConfigs'?
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(46,43): error TS2345: Argument of type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to parameter of type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: src/trpc/routers/app/installApp.handler.ts(107,7): error TS2322: Type '"rglo4zodf341" | "1z50i9xblo4b" | "az1x2c3bv4n5" | "ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev:   Type '"ai9x7m2k5p1s"' is not assignable to type 'KodixAppId'.
+@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai_studio_app_789' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/shared:dev: cache bypass, force executing afb89322bed834cd
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/db:dev: cache bypass, force executing 6b174a21ea8c8956
+@kdx/ui:dev: cache bypass, force executing c30a32a592c8961b
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/db:dev: 
+@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:dev: > tsc
+@kdx/db:dev: 
+@kdx/api:dev: cache bypass, force executing 9da429b72d69acef
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 

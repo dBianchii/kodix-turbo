@@ -2,8 +2,8 @@
 
 **Data:** 2025-06-28  
 **Autor:** KodixAgent  
-**Status:** 🟡 Proposta
-**Escopo:** AI Studio, User Settings
+**Status:** 🟡 Proposta v2.0
+**Escopo:** AI Studio
 **Tipo:** Feature de Personalização do Usuário (Nível 3)
 **Documento Pai:** `docs/architecture/configuration-model.md`
 
@@ -11,15 +11,15 @@
 
 ## 1. Resumo Executivo
 
-Este plano detalha a implementação de uma nova funcionalidade que permite aos usuários finais definir suas próprias **instruções pessoais de IA**. Esta funcionalidade corresponde ao **Nível 3** do modelo de configuração hierárquica do Kodix.
+Este plano detalha a implementação de uma nova funcionalidade que permite aos usuários finais definir suas próprias **instruções pessoais de IA**. Esta funcionalidade corresponde ao **Nível 3** do modelo de configuração hierárquica do Kodix e será acessível através do **AI Studio**, consolidando todas as configurações de IA em um único local.
 
-O objetivo é criar uma seção nas configurações do usuário onde ele possa inserir um texto que será automaticamente adicionado a todos os seus prompts de IA, permitindo uma personalização profunda e uma experiência mais relevante.
+O objetivo é criar uma seção "Minhas Instruções" dentro do AI Studio, onde o usuário possa inserir um texto que será automaticamente adicionado a todos os seus prompts de IA, permitindo uma personalização profunda.
 
 ### Objetivos
 
 - ✅ Criar endpoints tRPC para que o usuário possa salvar e recuperar suas instruções pessoais.
 - ✅ Desenvolver um componente de UI (React) para o usuário editar suas instruções.
-- ✅ Integrar este componente na página de configurações do perfil do usuário.
+- ✅ **Integrar este componente em uma nova seção dedicada dentro do AI Studio.**
 - ✅ Garantir que o `PromptBuilderService` no backend inclua essas instruções com a precedência correta.
 
 ---
@@ -28,8 +28,8 @@ O objetivo é criar uma seção nas configurações do usuário onde ele possa i
 
 ```mermaid
 graph TD
-    subgraph "Frontend (User Settings)"
-        A[UI: UserInstructionsSettings] <-->|tRPC Query/Mutation| B{Endpoints tRPC}
+    subgraph "Frontend (AI Studio SubApp)"
+        A[UI: UserInstructionsSection] <-->|tRPC Query/Mutation| B{Endpoints tRPC}
     end
 
     subgraph "Backend"
@@ -48,8 +48,8 @@ graph TD
     style D fill:#fbe9e7,stroke:#333
 ```
 
-- **Armazenamento:** As instruções serão salvas na tabela `userAppTeamConfigs` dentro da coluna de configuração JSON, conforme já definido na arquitetura.
-- **Validação:** Será usado um schema Zod, como `aiStudioUserAppTeamConfigSchema`, para validar o input do usuário.
+- **Armazenamento:** As instruções serão salvas na tabela `userAppTeamConfigs`.
+- **Validação:** Será usado o schema `aiStudioUserAppTeamConfigSchema` para validar o input.
 
 ---
 
@@ -131,86 +131,46 @@ const promptParts = [
 return promptParts.join("\n\n---\n\n");
 ```
 
-### 3.3 Frontend - Componente de UI `UserInstructionsSettings`
+### 3.3 Frontend - Componente de UI `UserInstructionsSection`
 
-Um novo componente React para ser usado nas configurações do usuário.
+Um novo componente de seção a ser criado dentro do AI Studio.
 
 ```tsx
-// apps/kdx/src/app/[locale]/app/settings/_components/user-instructions-settings.tsx
+// **NOVO CAMINHO**: apps/kdx/src/app/[locale]/(authed)/apps/aiStudio/_components/sections/user-instructions-section.tsx
 
 "use client";
 
-import { useEffect, useState } from "react";
-import {
-  Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-  Label,
-  Textarea,
-} from "@kodix/ui";
-import { toast } from "sonner";
+// ... imports ...
 
-import { useTRPC } from "~/trpc/react";
-
-export function UserInstructionsSettings() {
-  const trpc = useTRPC();
-  const [content, setContent] = useState("");
-
-  const { data: instructions, isLoading } =
-    trpc.app.aiStudio.getUserPersonalInstructions.useQuery();
-
-  const mutation = trpc.app.aiStudio.saveUserPersonalInstructions.useMutation({
-    onSuccess: (data) => {
-      toast.success(data.message);
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
-  useEffect(() => {
-    if (instructions?.content) {
-      setContent(instructions.content);
-    }
-  }, [instructions]);
-
-  const handleSave = () => {
-    mutation.mutate({ content });
-  };
+export function UserInstructionsSection() {
+  // ... implementação do componente com Card, Textarea e botão Salvar ...
+  // A lógica interna do componente (useState, useQuery, useMutation) permanece a mesma.
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Minhas Instruções Pessoais de IA</CardTitle>
         <CardDescription>
-          Estas instruções serão adicionadas a todos os seus chats para
-          personalizar as respostas da IA de acordo com suas preferências.
+          Estas instruções são suas e serão aplicadas a todas as interações com
+          a IA na plataforma, sobrepondo as instruções da equipe.
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <Label htmlFor="user-instructions">Suas instruções</Label>
-        <Textarea
-          id="user-instructions"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          placeholder="Ex: Sempre me responda em um tom formal. Gosto de exemplos de código em TypeScript. Resuma textos longos em 3 pontos principais."
-          className="min-h-[200px]"
-          disabled={isLoading || mutation.isPending}
-        />
-      </CardContent>
-      <CardFooter>
-        <Button onClick={handleSave} disabled={isLoading || mutation.isPending}>
-          {mutation.isPending ? "Salvando..." : "Salvar Minhas Instruções"}
-        </Button>
-      </CardFooter>
+      // ... CardContent e CardFooter com Textarea e botão ...
     </Card>
   );
 }
 ```
+
+### 3.4 Frontend - Integração na UI do AI Studio
+
+1.  **Adicionar Navegação no Sidebar:**
+
+    - Editar `apps/kdx/src/app/[locale]/(authed)/apps/aiStudio/_components/app-sidebar.tsx`.
+    - Adicionar um novo item de menu, por exemplo, "Minhas Instruções", talvez em um novo grupo chamado "Personalização".
+
+2.  **Renderizar a Seção no Conteúdo Principal:**
+    - Editar `apps/kdx/src/app/[locale]/(authed)/apps/aiStudio/_components/ai-studio-content.tsx`.
+    - Adicionar um `case` no `switch` para renderizar o novo componente `UserInstructionsSection` quando o item de menu correspondente for clicado.
 
 ---
 
@@ -218,17 +178,18 @@ export function UserInstructionsSettings() {
 
 ### Backend (1 dia)
 
-- [ ] Atualizar `aiStudioUserAppTeamConfigSchema` em `@kodix/shared` se necessário.
-- [ ] Implementar os endpoints `getUserPersonalInstructions` e `saveUserPersonalInstructions` no tRPC.
+- [ ] Atualizar `aiStudioUserAppTeamConfigSchema` em `@kdx/shared`.
+- [ ] Implementar os endpoints `getUserPersonalInstructions` e `saveUserPersonalInstructions` no router do AI Studio.
 - [ ] Garantir que o `PromptBuilderService` consuma corretamente as instruções do usuário.
 - [ ] Adicionar testes de integração para os novos endpoints.
 
 ### Frontend (1 dia)
 
-- [ ] Criar o componente `UserInstructionsSettings`.
-- [ ] Integrar o componente na página de configurações do usuário (ex: `/app/settings/profile`).
+- [ ] Criar o componente `UserInstructionsSection` no caminho correto dentro do AI Studio.
+- [ ] **Adicionar um novo item de menu no `AppSidebar` do AI Studio.**
+- [ ] **Modificar `AiStudioContent` para renderizar a nova seção.**
 - [ ] Adicionar tratamento de estados (loading, error, success) e notificações (toast).
 
 ### Teste E2E (4 horas)
 
-- [ ] Testar o fluxo completo: Usuário salva instruções -> Inicia um novo chat -> Verifica se a IA responde de acordo com as instruções fornecidas.
+- [ ] Testar o fluxo completo: Usuário navega para a nova seção no AI Studio, salva instruções, inicia um chat e verifica se a IA responde de acordo com as instruções fornecidas.
