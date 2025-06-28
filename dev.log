@@ -628,3 +628,33 @@ turbo 2.5.4
 @kdx/kdx:dev: }
 @kdx/kdx:dev: [TRPC_PERF] app.chat.findChatFolders took 23.62ms to execute
 @kdx/kdx:dev:  GET /api/trpc/app.chat.findChatFolders?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%7D 200 in 272ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findChatFolders took 28.05ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 32.24ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 35.59ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 41.87ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.chat.findChatFolders,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%7D 200 in 299ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findChatFolders took 66.89ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 82.10ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 89.38ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 95.90ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.chat.findChatFolders,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%7D 200 in 575ms

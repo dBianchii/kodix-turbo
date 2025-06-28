@@ -630,18 +630,11 @@ const model = await AiStudioService.getModelById({
 });
 ```
 
-### Aplicação de Instruções
+## 🚀 Roadmap
 
-```typescript
-// System prompt hierárquico
-const systemPrompts = [
-  teamInstructions?.content, // Nível 2: Equipe
-  userInstructions?.content, // Nível 3: Usuário (maior precedência)
-  agentInstructions,
-]
-  .filter(Boolean)
-  .join("\n\n");
-```
+- [ ] **Implementar `PromptBuilderService`**: Criar um serviço centralizado para construir o prompt final da IA, combinando as instruções de Nível 1 (Plataforma), Nível 2 (Time) e Nível 3 (Usuário) na ordem de precedência correta.
+- [ ] Upload real de arquivos para bibliotecas
+- [ ] Sistema de auditoria completo
 
 ## 🧪 Tratamento de Erros
 
@@ -768,3 +761,36 @@ const config = {
 - **Erro de compilação** se API mudar
 
 Esta arquitetura fornece uma base sólida e escalável para o AI Studio, com separação clara de responsabilidades, segurança robusta e excelente experiência de desenvolvimento.
+
+## 2. Arquitetura da Solução
+
+```mermaid
+graph TD
+    subgraph "Frontend (AI Studio)"
+        A[UserInstructionsSection] --> B[Endpoints Genéricos tRPC]
+    end
+
+    subgraph "Backend (Existente)"
+        B --> C["app.getUserAppTeamConfig<br/>app.saveUserAppTeamConfig"]
+        C --> E[appRepository]
+        E --> D[(Database: userAppTeamConfigs)]
+    end
+
+    subgraph "Chat Flow (Outro SubApp)"
+        F[UI do Chat] --> G{/api/chat/stream}
+        G --> H[Backend do Chat]
+        H --> I(AiStudioService)
+        I --> J[Endpoints do AI Studio]
+        J --> K[Repositórios do AI Studio]
+        K --> L[(Database)]
+    end
+
+    style A fill:#e3f2fd,stroke:#333
+    style B fill:#90caf9,stroke:#333
+    style C fill:#81c784,stroke:#333
+    style I fill:#fff3e0,stroke:#333
+```
+
+---
+
+## 3. Implementação Detalhada
