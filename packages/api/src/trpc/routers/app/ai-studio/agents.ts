@@ -4,9 +4,9 @@ import { z } from "zod";
 
 import { aiStudioRepository } from "@kdx/db/repositories";
 import {
-  atualizarAiAgentSchema,
-  buscarAiAgentsSchema,
-  criarAiAgentSchema,
+  createAiAgentSchema,
+  findAiAgentsSchema,
+  updateAiAgentSchema,
 } from "@kdx/validators/trpc/app";
 
 import { protectedProcedure } from "../../../procedures";
@@ -18,7 +18,7 @@ const idSchema = z.object({
 
 export const aiAgentsRouter = {
   createAiAgent: protectedProcedure
-    .input(criarAiAgentSchema)
+    .input(createAiAgentSchema)
     .mutation(async ({ input, ctx }) => {
       try {
         const agent = await aiStudioRepository.AiAgentRepository.create({
@@ -38,7 +38,7 @@ export const aiAgentsRouter = {
     }),
 
   findAiAgents: protectedProcedure
-    .input(buscarAiAgentsSchema)
+    .input(findAiAgentsSchema)
     .query(async ({ input, ctx }) => {
       try {
         const { limite, offset } = input;
@@ -98,7 +98,7 @@ export const aiAgentsRouter = {
     }),
 
   updateAiAgent: protectedProcedure
-    .input(atualizarAiAgentSchema)
+    .input(updateAiAgentSchema)
     .mutation(async ({ input, ctx }) => {
       const { id, ...data } = input;
       try {

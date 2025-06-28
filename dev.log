@@ -381,3 +381,810 @@ turbo 2.5.4
 @kdx/kdx:dev: [TRPC_PERF] app.aiStudio.getDefaultModel took 3.49ms to execute
 @kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAvailableModels took 5.86ms to execute
 @kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAvailableModels,app.aiStudio.getDefaultModel?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 34ms
+@kdx/validators:dev: cache bypass, force executing 52a98a205965ff10
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/validators:dev: src/trpc/app/index.ts(129,3): error TS2724: '"./ai-studio"' has no exported member named 'criarAiAgentSchema'. Did you mean 'createAiAgentSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(130,3): error TS2724: '"./ai-studio"' has no exported member named 'atualizarAiAgentSchema'. Did you mean 'atualizarAiModelSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(131,3): error TS2724: '"./ai-studio"' has no exported member named 'buscarAiAgentsSchema'. Did you mean 'buscarAiModelsSchema'?
+@kdx/validators:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/validators:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/validators#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/kdx:dev:  ✓ Compiled in 756ms
+@kdx/validators:dev: cache bypass, force executing 6e2d7c77cc92072d
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/api:dev: cache bypass, force executing 36bcd3714aaf15ca
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/validators:dev: cache bypass, force executing 9f20d6fc8baecfcc
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/validators:dev: src/trpc/app/index.ts(93,3): error TS2724: '"./ai-studio"' has no exported member named 'criarAiProviderSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(94,3): error TS2305: Module '"./ai-studio"' has no exported member 'atualizarAiProviderSchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(95,3): error TS2724: '"./ai-studio"' has no exported member named 'buscarAiProvidersSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(98,3): error TS2724: '"./ai-studio"' has no exported member named 'criarAiModelSchema'. Did you mean 'createAiModelSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(99,3): error TS2305: Module '"./ai-studio"' has no exported member 'atualizarAiModelSchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(100,3): error TS2305: Module '"./ai-studio"' has no exported member 'buscarAiModelsSchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(103,3): error TS2724: '"./ai-studio"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(104,3): error TS2724: '"./ai-studio"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(105,3): error TS2305: Module '"./ai-studio"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(106,3): error TS2724: '"./ai-studio"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(109,3): error TS2724: '"./ai-studio"' has no exported member named 'criarAiTeamModelConfigSchema'. Did you mean 'createAiTeamModelConfigSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(110,3): error TS2724: '"./ai-studio"' has no exported member named 'atualizarAiTeamModelConfigSchema'. Did you mean 'createAiTeamModelConfigSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(116,3): error TS2724: '"./ai-studio"' has no exported member named 'buscarTeamModelConfigSchema'. Did you mean 'createAiTeamModelConfigSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(124,3): error TS2724: '"./ai-studio"' has no exported member named 'criarAiLibrarySchema'. Did you mean 'createAiLibrarySchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(125,3): error TS2305: Module '"./ai-studio"' has no exported member 'atualizarAiLibrarySchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(126,3): error TS2305: Module '"./ai-studio"' has no exported member 'buscarAiLibrariesSchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(129,3): error TS2724: '"./ai-studio"' has no exported member named 'criarAiAgentSchema'. Did you mean 'createAiAgentSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(130,3): error TS2305: Module '"./ai-studio"' has no exported member 'atualizarAiAgentSchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(131,3): error TS2305: Module '"./ai-studio"' has no exported member 'buscarAiAgentsSchema'.
+@kdx/validators:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/validators:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/validators#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/validators:dev: cache bypass, force executing 861941b9cb74bd1b
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/api:dev: cache bypass, force executing 358fd204010433ed
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(12,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiAgentSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(14,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiLibrarySchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(16,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamModelConfigSchema'. Did you mean 'createAiTeamModelConfigSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(18,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(19,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiAgentsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(20,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiLibrariesSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(21,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'buscarTeamModelConfigSchema'. Did you mean 'createAiTeamModelConfigSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(22,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(23,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiAgentSchema'. Did you mean 'createAiAgentSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(24,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiLibrarySchema'. Did you mean 'createAiLibrarySchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(25,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamModelConfigSchema'. Did you mean 'createAiTeamModelConfigSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(26,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(27,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiAgentSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(8,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiAgentsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiAgentSchema'. Did you mean 'createAiAgentSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiModelSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(8,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiModelsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiModelSchema'. Did you mean 'createAiModelSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(7,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiProviderSchema'. Did you mean 'atualizarChatFolderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'buscarAiProvidersSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiProviderSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 7666dbe97beb2603
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiAgentSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(8,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiAgentsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiAgentSchema'. Did you mean 'createAiAgentSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiModelSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(8,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiModelsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiModelSchema'. Did you mean 'createAiModelSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(7,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiProviderSchema'. Did you mean 'atualizarChatFolderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'buscarAiProvidersSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiProviderSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 7eca9947aaf59e87
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiModelSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(8,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiModelsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiModelSchema'. Did you mean 'createAiModelSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(7,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiProviderSchema'. Did you mean 'atualizarChatFolderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'buscarAiProvidersSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiProviderSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 9afff5912c7129db
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(7,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiProviderSchema'. Did you mean 'atualizarChatFolderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'buscarAiProvidersSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiProviderSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 22eeb00103a38752
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/kdx:dev:  ✓ Compiled in 1024ms
+@kdx/api:dev: cache bypass, force executing 401cbef35098397c
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           @kdx/validators:dev: cache bypass, force executing 52a98a205965ff10
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/validators:dev: src/trpc/app/index.ts(129,3): error TS2724: '"./ai-studio"' has no exported member named 'criarAiAgentSchema'. Did you mean 'createAiAgentSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(130,3): error TS2724: '"./ai-studio"' has no exported member named 'atualizarAiAgentSchema'. Did you mean 'atualizarAiModelSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(131,3): error TS2724: '"./ai-studio"' has no exported member named 'buscarAiAgentsSchema'. Did you mean 'buscarAiModelsSchema'?
+@kdx/validators:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/validators:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/validators#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/validators:dev: cache bypass, force executing 6e2d7c77cc92072d
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/api:dev: cache bypass, force executing 36bcd3714aaf15ca
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/validators:dev: cache bypass, force executing 9f20d6fc8baecfcc
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/validators:dev: src/trpc/app/index.ts(93,3): error TS2724: '"./ai-studio"' has no exported member named 'criarAiProviderSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(94,3): error TS2305: Module '"./ai-studio"' has no exported member 'atualizarAiProviderSchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(95,3): error TS2724: '"./ai-studio"' has no exported member named 'buscarAiProvidersSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(98,3): error TS2724: '"./ai-studio"' has no exported member named 'criarAiModelSchema'. Did you mean 'createAiModelSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(99,3): error TS2305: Module '"./ai-studio"' has no exported member 'atualizarAiModelSchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(100,3): error TS2305: Module '"./ai-studio"' has no exported member 'buscarAiModelsSchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(103,3): error TS2724: '"./ai-studio"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(104,3): error TS2724: '"./ai-studio"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(105,3): error TS2305: Module '"./ai-studio"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(106,3): error TS2724: '"./ai-studio"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(109,3): error TS2724: '"./ai-studio"' has no exported member named 'criarAiTeamModelConfigSchema'. Did you mean 'createAiTeamModelConfigSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(110,3): error TS2724: '"./ai-studio"' has no exported member named 'atualizarAiTeamModelConfigSchema'. Did you mean 'createAiTeamModelConfigSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(116,3): error TS2724: '"./ai-studio"' has no exported member named 'buscarTeamModelConfigSchema'. Did you mean 'createAiTeamModelConfigSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(124,3): error TS2724: '"./ai-studio"' has no exported member named 'criarAiLibrarySchema'. Did you mean 'createAiLibrarySchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(125,3): error TS2305: Module '"./ai-studio"' has no exported member 'atualizarAiLibrarySchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(126,3): error TS2305: Module '"./ai-studio"' has no exported member 'buscarAiLibrariesSchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(129,3): error TS2724: '"./ai-studio"' has no exported member named 'criarAiAgentSchema'. Did you mean 'createAiAgentSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(130,3): error TS2305: Module '"./ai-studio"' has no exported member 'atualizarAiAgentSchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(131,3): error TS2305: Module '"./ai-studio"' has no exported member 'buscarAiAgentsSchema'.
+@kdx/validators:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/validators:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/validators#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/validators:dev: cache bypass, force executing 861941b9cb74bd1b
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/api:dev: cache bypass, force executing 358fd204010433ed
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(12,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiAgentSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(14,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiLibrarySchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(16,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamModelConfigSchema'. Did you mean 'createAiTeamModelConfigSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(18,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(19,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiAgentsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(20,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiLibrariesSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(21,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'buscarTeamModelConfigSchema'. Did you mean 'createAiTeamModelConfigSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(22,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(23,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiAgentSchema'. Did you mean 'createAiAgentSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(24,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiLibrarySchema'. Did you mean 'createAiLibrarySchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(25,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamModelConfigSchema'. Did you mean 'createAiTeamModelConfigSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(26,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(27,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiAgentSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(8,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiAgentsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiAgentSchema'. Did you mean 'createAiAgentSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiModelSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(8,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiModelsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiModelSchema'. Did you mean 'createAiModelSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(7,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiProviderSchema'. Did you mean 'atualizarChatFolderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'buscarAiProvidersSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiProviderSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 7666dbe97beb2603
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiAgentSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(8,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiAgentsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiAgentSchema'. Did you mean 'createAiAgentSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiModelSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(8,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiModelsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiModelSchema'. Did you mean 'createAiModelSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(7,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiProviderSchema'. Did you mean 'atualizarChatFolderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'buscarAiProvidersSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiProviderSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 7eca9947aaf59e87
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiModelSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(8,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiModelsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiModelSchema'. Did you mean 'createAiModelSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(7,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiProviderSchema'. Did you mean 'atualizarChatFolderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'buscarAiProvidersSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiProviderSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 9afff5912c7129db
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(7,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiProviderSchema'. Did you mean 'atualizarChatFolderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'buscarAiProvidersSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiProviderSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 22eeb00103a38752
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 401cbef35098397c
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+'"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiAgentSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(8,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiAgentsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiAgentSchema'. Did you mean 'createAiAgentSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiModelSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(8,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiModelsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(9,3): error TS2724: '"@kdx/api:dev: cache bypass, force executing 7666dbe97beb2603
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiAgentSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(8,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiAgentsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiAgentSchema'. Did you mean 'createAiAgentSchema'?
+@kd@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiAgentSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(8,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no expor@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiAgentSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(8,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiAgentsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiAgentSchema'. Did you mean 'createAiAgentSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiModelSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(8,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiModelsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiModelSchema'. Did you mean 'createAiModelSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(7,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiProviderSchema'. Did you mean 'atualizarChatFolderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'buscarAiProvidersSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiProviderSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tok@kdx/api:dev: cache bypass, force executing 7eca9947aaf59e87
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiModelSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(8,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiModelsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiModelSchema'. Did you mean 'createAiModelSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(7,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiProviderSchema'. Did you mean 'atualizarChatFolderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'buscarAiProvidersSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiProviderSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 9afff5912c7129db
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(7,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiProviderSchema'. Did you mean 'atualizarChatFolderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'buscarAiProvidersSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiProviderSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 22eeb00103a38752
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByPr@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@k@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 401cbef35098397c
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+tudio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahad@kdx/api:dev: cache bypass, force executing 401cbef35098397c
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 401cbef35098397c
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+: error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 401cbef35098397c
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+oviders.ts(7,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiProviderSchema'. Did you mean 'atualizarChatFolderSchema'?
+@kdx/api:dev@kdx/api:dev: cache bypass, force executing 22eeb00103a38752
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 401cbef35098397c
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+pass, force executing 22eeb00103a38752
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 401cbef35098397c
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/validators/trpc/app"' has no exported member named 'criarAiProviderSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 9afff5912c7129db
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(7,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiProviderSchema'. Did you mean 'atualizarChatFolderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'buscarAiProvidersSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiProviderSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 22eeb00103a38752
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 401cbef35098397c
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 22eeb00103a38752
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 401cbef35098397c
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+ev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/validators:dev: src/trpc/app/index.ts(93,3): error TS2724: '"./ai-studio"' has no exported member named 'criarAiProviderSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(94,3): error TS2305: Module '"./ai-studio"' has no exported member 'atualizarAiProviderSchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(95,3): error TS2724: '"./ai-studio"' has no exported member named 'buscarAiProvidersSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(98,3): error TS2724: '"./ai-studio"' has no exported member named 'criarAiModelSchema'. Did you mean 'createAiModelSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(99,3): error TS2305: Module '"./ai-studio"' has no exported member 'atualizarAiModelSchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(100,3): error TS2305: Module '"./ai-studio"' has no exported member 'buscarAiModelsSchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(103,3): error TS2724: '"./ai-studio"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(104,3): error TS2724: '"./ai-studio"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(105,3): error TS2305: Module '"./ai-studio"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(106,3): error TS2724: '"./ai-studio"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(109,3): error TS2724: '"./ai-studio"' has no exported member named 'criarAiTeamModelConfigSchema'. Did you mean 'createAiTeamModelConfigSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(110,3): error TS2724: '"./ai-studio"' has no exported member named 'atualizarAiTeamModelConfigSchema'. Did you mean 'createAiTeamModelConfigSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(116,3): error TS2724: '"./ai-studio"' has no exported member named 'buscarTeamModelConfigSchema'. Did you mean 'createAiTeamModelConfigSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(124,3): error TS2724: '"./ai-studio"' has no exported member named 'criarAiLibrarySchema'. Did you mean 'createAiLibrarySchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(125,3): error TS2305: Module '"./ai-studio"' has no exported member 'atualizarAiLibrarySchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(126,3): error TS2305: Module '"./ai-studio"' has no exported member 'buscarAiLibrariesSchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(129,3): error TS2724: '"./ai-studio"' has no exported member named 'criarAiAgentSchema'. Did you mean 'createAiAgentSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(130,3): error TS2305: Module '"./ai-studio"' has no exported member 'atualizarAiAgentSchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(131,3): error TS2305: Module '"./ai-studio"' has no exported member 'buscarAiAgentsSchema'.
+@kdx/validators:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/validators:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/validators#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/validators:dev: cache bypass, force executing 861941b9cb74bd1b
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/api:dev: cache bypass, force executing 358fd204010433ed
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(12,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiAgentSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(14,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiLibrarySchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(16,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamModelConfigSchema'. Did you mean 'createAiTeamModelConfigSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(18,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(19,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiAgentsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(20,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiLibrariesSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(21,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'buscarTeamModelConfigSchema'. Did you mean 'createAiTeamModelConfigSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(22,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(23,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiAgentSchema'. Did you mean 'createAiAgentSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(24,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiLibrarySchema'. Did you mean 'createAiLibrarySchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(25,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamModelConfigSchema'. Did you mean 'createAiTeamModelConfigSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(26,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(27,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiAgentSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(8,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiAgentsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiAgentSchema'. Did you mean 'createAiAgentSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiModelSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(8,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiModelsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiModelSchema'. Did you mean 'createAiModelSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(7,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiProviderSchema'. Did you mean 'atualizarChatFolderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'buscarAiProvidersSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiProviderSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 7666dbe97beb2603
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiAgentSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(8,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiAgentsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiAgentSchema'. Did you mean 'createAiAgentSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiModelSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(8,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiModelsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiModelSchema'. Did you mean 'createAiModelSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(7,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiProviderSchema'. Did you mean 'atualizarChatFolderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'buscarAiProvidersSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiProviderSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 7eca9947aaf59e87
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiModelSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(8,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiModelsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiModelSchema'. Did you mean 'createAiModelSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(7,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiProviderSchema'. Did you mean 'atualizarChatFolderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'buscarAiProvidersSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiProviderSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 9afff5912c7129db
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(7,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiProviderSchema'. Did you mean 'atualizarChatFolderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'buscarAiProvidersSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiProviderSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 22eeb00103a38752
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 401cbef35098397c
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @kdx/validators:dev: cache bypass, force executing 52a98a205965ff10
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/validators:dev: src/trpc/app/index.ts(129,3): error TS2724: '"./ai-studio"' has no exported member named 'criarAiAgentSchema'. Did you mean 'createAiAgentSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(130,3): error TS2724: '"./ai-studio"' has no exported member named 'atualizarAiAgentSchema'. Did you mean 'atualizarAiModelSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(131,3): error TS2724: '"./ai-studio"' has no exported member named 'buscarAiAgentsSchema'. Did you mean 'buscarAiModelsSchema'?
+@kdx/validators:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/validators:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/validators#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/validators:dev: cache bypass, force executing 6e2d7c77cc92072d
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/api:dev: cache bypass, force executing 36bcd3714aaf15ca
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/validators:dev: cache bypass, force executing 9f20d6fc8baecfcc
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/validators:dev: src/trpc/app/index.ts(93,3): error TS2724: '"./ai-studio"' has no exported member named 'criarAiProviderSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(94,3): error TS2305: Module '"./ai-studio"' has no exported member 'atualizarAiProviderSchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(95,3): error TS2724: '"./ai-studio"' has no exported member named 'buscarAiProvidersSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(98,3): error TS2724: '"./ai-studio"' has no exported member named 'criarAiModelSchema'. Did you mean 'createAiModelSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(99,3): error TS2305: Module '"./ai-studio"' has no exported member 'atualizarAiModelSchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(100,3): error TS2305: Module '"./ai-studio"' has no exported member 'buscarAiModelsSchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(103,3): error TS2724: '"./ai-studio"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(104,3): error TS2724: '"./ai-studio"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(105,3): error TS2305: Module '"./ai-studio"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(106,3): error TS2724: '"./ai-studio"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(109,3): error TS2724: '"./ai-studio"' has no exported member named 'criarAiTeamModelConfigSchema'. Did you mean 'createAiTeamModelConfigSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(110,3): error TS2724: '"./ai-studio"' has no exported member named 'atualizarAiTeamModelConfigSchema'. Did you mean 'createAiTeamModelConfigSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(116,3): error TS2724: '"./ai-studio"' has no exported member named 'buscarTeamModelConfigSchema'. Did you mean 'createAiTeamModelConfigSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(124,3): error TS2724: '"./ai-studio"' has no exported member named 'criarAiLibrarySchema'. Did you mean 'createAiLibrarySchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(125,3): error TS2305: Module '"./ai-studio"' has no exported member 'atualizarAiLibrarySchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(126,3): error TS2305: Module '"./ai-studio"' has no exported member 'buscarAiLibrariesSchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(129,3): error TS2724: '"./ai-studio"' has no exported member named 'criarAiAgentSchema'. Did you mean 'createAiAgentSchema'?
+@kdx/validators:dev: src/trpc/app/index.ts(130,3): error TS2305: Module '"./ai-studio"' has no exported member 'atualizarAiAgentSchema'.
+@kdx/validators:dev: src/trpc/app/index.ts(131,3): error TS2305: Module '"./ai-studio"' has no exported member 'buscarAiAgentsSchema'.
+@kdx/validators:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/validators:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/validators#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/validators:dev: cache bypass, force executing 861941b9cb74bd1b
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/api:dev: cache bypass, force executing 358fd204010433ed
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(12,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiAgentSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(14,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiLibrarySchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(16,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamModelConfigSchema'. Did you mean 'createAiTeamModelConfigSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(18,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(19,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiAgentsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(20,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiLibrariesSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(21,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'buscarTeamModelConfigSchema'. Did you mean 'createAiTeamModelConfigSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(22,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(23,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiAgentSchema'. Did you mean 'createAiAgentSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(24,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiLibrarySchema'. Did you mean 'createAiLibrarySchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(25,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamModelConfigSchema'. Did you mean 'createAiTeamModelConfigSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(26,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(27,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiAgentSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(8,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiAgentsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiAgentSchema'. Did you mean 'createAiAgentSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiModelSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(8,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiModelsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiModelSchema'. Did you mean 'createAiModelSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(7,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiProviderSchema'. Did you mean 'atualizarChatFolderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'buscarAiProvidersSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiProviderSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 7666dbe97beb2603
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiAgentSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(8,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiAgentsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/agents.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiAgentSchema'. Did you mean 'createAiAgentSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiModelSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(8,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiModelsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiModelSchema'. Did you mean 'createAiModelSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(7,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiProviderSchema'. Did you mean 'atualizarChatFolderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'buscarAiProvidersSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiProviderSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 7eca9947aaf59e87
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'atualizarAiModelSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(8,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarAiModelsSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/models.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiModelSchema'. Did you mean 'createAiModelSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(7,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiProviderSchema'. Did you mean 'atualizarChatFolderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'buscarAiProvidersSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiProviderSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 9afff5912c7129db
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(7,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiProviderSchema'. Did you mean 'atualizarChatFolderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'buscarAiProvidersSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/providers.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiProviderSchema'. Did you mean 'createAiProviderSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 22eeb00103a38752
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(6,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'atualizarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(7,3): error TS2305: Module '"@kdx/validators/trpc/app"' has no exported member 'buscarTokenPorProviderSchema'.
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(8,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'criarAiTeamProviderTokenSchema'. Did you mean 'createAiTeamProviderTokenSchema'?
+@kdx/api:dev: src/trpc/routers/app/ai-studio/tokens.ts(9,3): error TS2724: '"@kdx/validators/trpc/app"' has no exported member named 'removerTokenPorProviderSchema'. Did you mean 'removeTokenByProviderSchema'?
+@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
+@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/api:dev: cache bypass, force executing 401cbef35098397c
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 

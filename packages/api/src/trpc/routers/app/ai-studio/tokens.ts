@@ -3,17 +3,17 @@ import { TRPCError } from "@trpc/server";
 
 import { aiStudioRepository } from "@kdx/db/repositories";
 import {
-  atualizarAiTeamProviderTokenSchema,
-  buscarTokenPorProviderSchema,
-  criarAiTeamProviderTokenSchema,
-  removerTokenPorProviderSchema,
+  createAiTeamProviderTokenSchema,
+  findTokenByProviderSchema,
+  removeTokenByProviderSchema,
+  updateAiTeamProviderTokenSchema,
 } from "@kdx/validators/trpc/app";
 
 import { protectedProcedure } from "../../../procedures";
 
 export const aiTokensRouter = {
   createAiTeamProviderToken: protectedProcedure
-    .input(criarAiTeamProviderTokenSchema)
+    .input(createAiTeamProviderTokenSchema)
     .mutation(async ({ input, ctx }) => {
       try {
         const token =
@@ -48,7 +48,7 @@ export const aiTokensRouter = {
   }),
 
   findTokenByProvider: protectedProcedure
-    .input(buscarTokenPorProviderSchema)
+    .input(findTokenByProviderSchema)
     .query(async ({ input, ctx }) => {
       try {
         return await aiStudioRepository.AiTeamProviderTokenRepository.findByTeamAndProvider(
@@ -66,7 +66,7 @@ export const aiTokensRouter = {
     }),
 
   updateAiTeamProviderToken: protectedProcedure
-    .input(atualizarAiTeamProviderTokenSchema)
+    .input(updateAiTeamProviderTokenSchema)
     .mutation(async ({ input, ctx }) => {
       const { id, token } = input;
       try {
@@ -101,7 +101,7 @@ export const aiTokensRouter = {
     }),
 
   removeTokenByProvider: protectedProcedure
-    .input(removerTokenPorProviderSchema)
+    .input(removeTokenByProviderSchema)
     .mutation(async ({ input, ctx }) => {
       try {
         await aiStudioRepository.AiTeamProviderTokenRepository.deleteByTeamAndProvider(

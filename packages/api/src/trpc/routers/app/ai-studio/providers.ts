@@ -4,11 +4,11 @@ import { z } from "zod";
 
 import { aiStudioRepository } from "@kdx/db/repositories";
 import {
-  atualizarAiProviderSchema,
-  buscarAiProvidersSchema,
-  criarAiProviderSchema,
+  createAiProviderSchema,
   enableProviderModelsSchema,
+  findAiProvidersSchema,
   toggleGlobalModelSchema,
+  updateAiProviderSchema,
 } from "@kdx/validators/trpc/app";
 
 import { protectedProcedure } from "../../../procedures";
@@ -20,7 +20,7 @@ const idSchema = z.object({
 
 export const aiProvidersRouter = {
   createAiProvider: protectedProcedure
-    .input(criarAiProviderSchema)
+    .input(createAiProviderSchema)
     .mutation(async ({ input }) => {
       try {
         const provider =
@@ -37,7 +37,7 @@ export const aiProvidersRouter = {
     }),
 
   findAiProviders: protectedProcedure
-    .input(buscarAiProvidersSchema)
+    .input(findAiProvidersSchema)
     .query(async ({ input }) => {
       try {
         const { limite, offset, ...filters } = input;
@@ -70,7 +70,7 @@ export const aiProvidersRouter = {
     }),
 
   updateAiProvider: protectedProcedure
-    .input(atualizarAiProviderSchema)
+    .input(updateAiProviderSchema)
     .mutation(async ({ input }) => {
       const { id, ...data } = input;
       try {

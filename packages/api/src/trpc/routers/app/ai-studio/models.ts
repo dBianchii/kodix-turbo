@@ -4,9 +4,9 @@ import { z } from "zod";
 
 import { aiStudioRepository } from "@kdx/db/repositories";
 import {
-  atualizarAiModelSchema,
-  buscarAiModelsSchema,
-  criarAiModelSchema,
+  createAiModelSchema,
+  findAiModelsSchema,
+  updateAiModelSchema,
 } from "@kdx/validators/trpc/app";
 
 import { protectedProcedure } from "../../../procedures";
@@ -18,7 +18,7 @@ const idSchema = z.object({
 
 export const aiModelsRouter = {
   createAiModel: protectedProcedure
-    .input(criarAiModelSchema)
+    .input(createAiModelSchema)
     .mutation(async ({ input }) => {
       try {
         const model = await aiStudioRepository.AiModelRepository.create(input);
@@ -34,7 +34,7 @@ export const aiModelsRouter = {
     }),
 
   findModels: protectedProcedure
-    .input(buscarAiModelsSchema)
+    .input(findAiModelsSchema)
     .query(async ({ input }) => {
       try {
         const { limite, offset, ...filters } = input;
@@ -78,7 +78,7 @@ export const aiModelsRouter = {
     }),
 
   updateAiModel: protectedProcedure
-    .input(atualizarAiModelSchema)
+    .input(updateAiModelSchema)
     .mutation(async ({ input }) => {
       const { id, ...data } = input;
       try {

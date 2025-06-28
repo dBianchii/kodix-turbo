@@ -8,28 +8,28 @@ import { aiStudioRepository } from "@kdx/db/repositories";
 import { appTeamConfigs } from "@kdx/db/schema";
 import { aiStudioAppId, aiStudioConfigSchema } from "@kdx/shared";
 import {
-  // AI Agent
-  atualizarAiAgentSchema,
-  // AI Library
-  atualizarAiLibrarySchema,
-  // AI Team Model Config
-  atualizarAiTeamModelConfigSchema,
-  // AI Team Provider Token
-  atualizarAiTeamProviderTokenSchema,
-  buscarAiAgentsSchema,
-  buscarAiLibrariesSchema,
-  buscarTeamModelConfigSchema,
-  buscarTokenPorProviderSchema,
-  criarAiAgentSchema,
-  criarAiLibrarySchema,
-  criarAiTeamModelConfigSchema,
-  criarAiTeamProviderTokenSchema,
-  removerTokenPorProviderSchema,
+  createAiAgentSchema,
+  createAiLibrarySchema,
+  createAiTeamModelConfigSchema,
+  createAiTeamProviderTokenSchema,
+  findAiAgentsSchema,
+  findAiLibrariesSchema,
+  findTeamModelConfigSchema,
+  findTokenByProviderSchema,
+  removeTokenByProviderSchema,
   reorderModelsPrioritySchema,
   setDefaultModelSchema,
   setModelPrioritySchema,
   teamModelIdSchema,
   toggleModelSchema,
+  // AI Agent
+  updateAiAgentSchema,
+  // AI Library
+  updateAiLibrarySchema,
+  // AI Team Model Config
+  updateAiTeamModelConfigSchema,
+  // AI Team Provider Token
+  updateAiTeamProviderTokenSchema,
 } from "@kdx/validators/trpc/app";
 
 import { protectedProcedure } from "../../../procedures";

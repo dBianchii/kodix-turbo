@@ -90,45 +90,45 @@ export type TGetAppActivityLogsInputSchema = z.infer<
 // Export AI Studio validators
 export {
   // AI Provider
-  criarAiProviderSchema,
-  atualizarAiProviderSchema,
-  buscarAiProvidersSchema,
+  createAiProviderSchema,
+  updateAiProviderSchema,
+  findAiProvidersSchema,
 
   // AI Model
-  criarAiModelSchema,
-  atualizarAiModelSchema,
-  buscarAiModelsSchema,
+  createAiModelSchema,
+  updateAiModelSchema,
+  findAiModelsSchema,
 
-  // AI Team Provider Token (novos)
-  criarAiTeamProviderTokenSchema,
-  atualizarAiTeamProviderTokenSchema,
-  buscarTokenPorProviderSchema,
-  removerTokenPorProviderSchema,
+  // AI Team Provider Token
+  createAiTeamProviderTokenSchema,
+  updateAiTeamProviderTokenSchema,
+  findTokenByProviderSchema,
+  removeTokenByProviderSchema,
 
-  // AI Team Model Config (novos)
-  criarAiTeamModelConfigSchema,
-  atualizarAiTeamModelConfigSchema,
+  // AI Team Model Config
+  createAiTeamModelConfigSchema,
+  updateAiTeamModelConfigSchema,
   toggleModelSchema,
   setDefaultModelSchema,
   setModelPrioritySchema,
   reorderModelsPrioritySchema,
   testModelSchema,
-  buscarTeamModelConfigSchema,
+  findTeamModelConfigSchema,
   teamModelIdSchema,
 
-  // Diagnóstico e correção (novos)
+  // Diagnóstico e correção
   enableProviderModelsSchema,
   toggleGlobalModelSchema,
 
   // AI Library
-  criarAiLibrarySchema,
-  atualizarAiLibrarySchema,
-  buscarAiLibrariesSchema,
+  createAiLibrarySchema,
+  updateAiLibrarySchema,
+  findAiLibrariesSchema,
 
   // AI Agent
-  criarAiAgentSchema,
-  atualizarAiAgentSchema,
-  buscarAiAgentsSchema,
+  createAiAgentSchema,
+  updateAiAgentSchema,
+  findAiAgentsSchema,
 
   // Common
   idSchema as aiStudioIdSchema,
