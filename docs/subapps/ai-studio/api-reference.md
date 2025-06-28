@@ -1,10 +1,32 @@
-git # Referência da API - AI Studio
+# Referência da API - AI Studio
 
 ## 📋 Visão Geral
 
 Esta é a documentação completa das APIs do AI Studio. Todas as APIs seguem o padrão tRPC com validação Zod e isolamento por `teamId`.
 
+> 🎯 **Referência de Arquitetura**: Para detalhes sobre a implementação do router, segurança e padrões de comunicação, consulte o [documento de arquitetura completo](./ai-studio-architecture.md).
+
 ## 🔧 Estrutura Base
+
+### Estrutura do Router (`_router.ts`)
+
+O router do AI Studio segue o padrão `t.router({...})` para garantir a inferência de tipos correta em todo o sistema.
+
+```typescript
+import { protectedProcedure } from "../../../../procedures";
+import { t } from "../../../../trpc";
+
+export const aiStudioRouter = t.router({
+  // Exemplo de endpoint
+  findAiProviders: protectedProcedure
+    .input(findProvidersSchema)
+    .query(async ({ ctx, input }) => {
+      // Lógica do handler...
+    }),
+
+  // ... todos os outros endpoints
+});
+```
 
 ### Padrões de Nomenclatura
 

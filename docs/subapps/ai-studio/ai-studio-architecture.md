@@ -352,7 +352,10 @@ const maskToken = (token: string) => {
 ### Router Principal (`_router.ts`)
 
 ```typescript
-export const aiStudioRouter = {
+import { protectedProcedure } from "../../../../procedures";
+import { t } from "../../../../trpc";
+
+export const aiStudioRouter = t.router({
   // Team Instructions
   getTeamInstructions: protectedProcedure.query(),
   updateTeamInstructions: protectedProcedure.mutation(),
@@ -395,7 +398,7 @@ export const aiStudioRouter = {
   updateAiModel: protectedProcedure.mutation(),
   deleteAiModel: protectedProcedure.mutation(),
   toggleGlobalModel: protectedProcedure.mutation(),
-} satisfies TRPCRouterRecord;
+});
 ```
 
 ### Organização Modular
@@ -587,14 +590,44 @@ const models = await findAvailableModels(teamId);
 await redis.set(cacheKey, JSON.stringify(models), "EX", 300); // 5 min
 ```
 
-## 🔄 Integração com Chat
+## 🔄 Integração com Outros SubApps
 
-### Fornecimento de Modelos
+### Padrão de Comunicação: Service Layer
+
+A comunicação entre o AI Studio e outros SubApps (como o Chat) segue o padrão de **Service Layer**, garantindo isolamento, segurança e type-safety. O `AiStudioService` é a porta de entrada para todas as funcionalidades do AI Studio que precisam ser consumidas por outros serviços.
+
+**NUNCA** acesse os repositórios do AI Studio diretamente de outro SubApp.
+
+### Exemplo: `AiStudioService`
 
 ```typescript
-// Chat busca modelos via endpoints tRPC
-const models = await trpc.app.aiStudio.findAvailableModels.query();
-const defaultModel = await trpc.app.aiStudio.getDefaultModel.query();
+// packages/api/src/internal/services/ai-studio.service.ts
+import { aiStudioRepository } from "@kdx/db/repositories";
+
+export class AiStudioService extends BaseService {
+  static async getModelById({ modelId, teamId, requestingApp }) {
+    this.validateTeamAccess(teamId);
+    this.logAccess("getModelById", { teamId, requestingApp });
+
+    const model = await aiStudioRepository.AiModelRepository.findById(modelId);
+
+    // ... validações adicionais
+    return model;
+  }
+}
+```
+
+### Exemplo: Consumo pelo Chat
+
+```typescript
+// No backend do SubApp de Chat
+import { AiStudioService } from "../../../../internal/services/ai-studio.service";
+
+const model = await AiStudioService.getModelById({
+  modelId: "some-model-id",
+  teamId: ctx.auth.user.activeTeamId,
+  requestingApp: chatAppId,
+});
 ```
 
 ### Aplicação de Instruções
