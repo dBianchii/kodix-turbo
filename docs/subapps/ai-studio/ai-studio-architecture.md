@@ -98,6 +98,14 @@ O AI Studio é construído com uma arquitetura moderna que combina React/Next.js
   - Editor JSON para configurações avançadas
   - Organização por provedor com ordenação
 
+#### `UserInstructionsSection`
+
+- **Localização**: `_components/sections/user-instructions-section.tsx`
+- **Funcionalidades**:
+  - Editor de instruções pessoais do usuário (Nível 3 de configuração)
+  - Salva e carrega configurações usando endpoints genéricos
+  - Tem prioridade sobre as instruções da equipe
+
 ## 🎨 Interface e UX
 
 ### Design System
@@ -478,6 +486,22 @@ export const aiStudioRouter = {
 }
 ```
 
+#### User Instructions (Nível de Usuário)
+
+```typescript
+{
+  userId: string;
+  teamId: string;
+  appId: "ai_studio_app_789";
+  config: {
+    userInstructions?: {
+      content: string; // Máximo 2500 caracteres
+      enabled: boolean;
+    }
+  }
+}
+```
+
 ## 🔐 Sistema de Segurança
 
 ### Criptografia de Tokens
@@ -578,8 +602,9 @@ const defaultModel = await trpc.app.aiStudio.getDefaultModel.query();
 ```typescript
 // System prompt hierárquico
 const systemPrompts = [
-  teamInstructions?.content, // Nível 1: Equipe
-  agentInstructions, // Nível 2: Agente específico
+  teamInstructions?.content, // Nível 2: Equipe
+  userInstructions?.content, // Nível 3: Usuário (maior precedência)
+  agentInstructions,
 ]
   .filter(Boolean)
   .join("\n\n");

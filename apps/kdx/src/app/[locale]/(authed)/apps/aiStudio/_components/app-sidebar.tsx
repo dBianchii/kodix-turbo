@@ -112,12 +112,12 @@ export function AppSidebar({
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Seção Principal */}
+        {/* Seção de Personalização */}
         <SidebarGroup>
-          <SidebarGroupLabel>Principal</SidebarGroupLabel>
+          <SidebarGroupLabel>Personalização</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {mainSections.map((section) => (
+              {personalizationSections.map((section) => (
                 <SidebarMenuItem key={section.id}>
                   <SidebarMenuButton
                     asChild
@@ -139,12 +139,12 @@ export function AppSidebar({
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Seção de Personalização */}
+        {/* Seção Principal */}
         <SidebarGroup>
-          <SidebarGroupLabel>Personalização</SidebarGroupLabel>
+          <SidebarGroupLabel>Principal</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {personalizationSections.map((section) => (
+              {mainSections.map((section) => (
                 <SidebarMenuItem key={section.id}>
                   <SidebarMenuButton
                     asChild

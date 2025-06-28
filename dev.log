@@ -7,26 +7,26 @@ turbo 2.5.4
 • Packages in scope: @kdx/api, @kdx/auth, @kdx/dayjs, @kdx/db, @kdx/eslint-config, @kdx/kdx, @kdx/locales, @kdx/permissions, @kdx/prettier-config, @kdx/react-email, @kdx/shared, @kdx/tailwind-config, @kdx/tsconfig, @kdx/ui, @kdx/validators
 • Running dev, studio, @kdx/db-dev#dev in 15 packages
 • Remote caching disabled
-@kdx/db:studio: cache bypass, force executing 5f7b305c0e4f832a
-@kdx/shared:dev: cache bypass, force executing bc5981bf84cbda28
-@kdx/kdx:dev: cache bypass, force executing 5e72755bd97b12a7
 @kdx/db-dev:dev: cache bypass, force executing 38eadc5db1ef109f
-@kdx/db:studio: 
-@kdx/db:studio: > @kdx/db@0.1.0 studio /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:studio: > pnpm wait-for-db && pnpm with-env drizzle-kit studio
-@kdx/db:studio: 
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/db-dev:dev: 
-@kdx/db-dev:dev: > @kdx/db-dev@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db-dev
-@kdx/db-dev:dev: > trap 'docker compose stop' EXIT; docker compose up --build
-@kdx/db-dev:dev: 
+@kdx/db:studio: cache bypass, force executing 0c9bb32df5c7bcef
+@kdx/kdx:dev: cache bypass, force executing 3f46daf7de6ccadb
+@kdx/shared:dev: cache bypass, force executing d952329bcb18598c
 @kdx/kdx:dev: 
 @kdx/kdx:dev: > @kdx/kdx@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/apps/kdx
 @kdx/kdx:dev: > pnpm with-env next dev --turbo --port 3000
 @kdx/kdx:dev: 
+@kdx/db-dev:dev: 
+@kdx/db-dev:dev: > @kdx/db-dev@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db-dev
+@kdx/db-dev:dev: > trap 'docker compose stop' EXIT; docker compose up --build
+@kdx/db-dev:dev: 
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/db:studio: 
+@kdx/db:studio: > @kdx/db@0.1.0 studio /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:studio: > pnpm wait-for-db && pnpm with-env drizzle-kit studio
+@kdx/db:studio: 
 @kdx/db:studio: 
 @kdx/db:studio: > @kdx/db@0.1.0 wait-for-db /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
 @kdx/db:studio: > while ! nc -z localhost 3306; do sleep 1; done
@@ -35,85 +35,23 @@ turbo 2.5.4
 @kdx/kdx:dev: > @kdx/kdx@0.1.0 with-env /Users/mahadevadas/Documents/Kodix/kodix-turbo/apps/kdx
 @kdx/kdx:dev: > dotenv -e ../../.env -- "next" "dev" "--turbo" "--port" "3000"
 @kdx/kdx:dev: 
-@kdx/db-dev:dev:  Container kodix-db-redis-1  Created
-@kdx/db-dev:dev:  Container kodix-db-mysql-1  Created
-@kdx/db-dev:dev:  Container kodix-db-serverless-redis-http-1  Created
-@kdx/db-dev:dev: Attaching to mysql-1, redis-1, serverless-redis-http-1
-@kdx/db-dev:dev: mysql-1                  | 2025-06-28 17:04:34+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.2.0-1.el8 started.
-@kdx/db-dev:dev: redis-1                  | Starting Redis Server
-@kdx/db-dev:dev: redis-1                  | 1:C 28 Jun 2025 17:04:34.467 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
-@kdx/db-dev:dev: redis-1                  | 1:C 28 Jun 2025 17:04:34.467 * Redis version=8.0.2, bits=64, commit=00000000, modified=1, pid=1, just started
-@kdx/db-dev:dev: redis-1                  | 1:C 28 Jun 2025 17:04:34.467 * Configuration loaded
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.468 * monotonic clock: POSIX clock_gettime
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.492 * Running mode=standalone, port=6379.
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.509 * <bf> RedisBloom version 8.0.1 (Git=unknown)
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.509 * <bf> Registering configuration options: [
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.511 * <bf> 	{ bf-error-rate       :      0.01 }
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.511 * <bf> 	{ bf-initial-size     :       100 }
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.511 * <bf> 	{ bf-expansion-factor :         2 }
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.511 * <bf> 	{ cf-bucket-size      :         2 }
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.511 * <bf> 	{ cf-initial-size     :      1024 }
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.511 * <bf> 	{ cf-max-iterations   :        20 }
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.511 * <bf> 	{ cf-expansion-factor :         1 }
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.511 * <bf> 	{ cf-max-expansions   :        32 }
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.511 * <bf> ]
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.515 * Module 'bf' loaded from /usr/local/lib/redis/modules//redisbloom.so
 @kdx/db:studio: Connection to localhost port 3306 [tcp/mysql] succeeded!
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.607 * <search> Redis version found by RedisSearch : 8.0.2 - oss
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.607 * <search> RediSearch version 8.0.1 (Git=5688fcc)
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.608 * <search> Low level api version 1 initialized successfully
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.609 * <search> gc: ON, prefix min length: 2, min word length to stem: 4, prefix max expansions: 200, query timeout (ms): 500, timeout policy: return, cursor read size: 1000, cursor max idle (ms): 300000, max doctable size: 1000000, max number of search results:  1000000, 
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.611 * <search> Initialized thread pools!
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.611 * <search> Disabled workers threadpool of size 0
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.612 * <search> Subscribe to config changes
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.612 * <search> Enabled role change notification
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.614 * <search> Cluster configuration: AUTO partitions, type: 0, coordinator timeout: 0ms
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.618 * <search> Register write commands
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.618 * Module 'search' loaded from /usr/local/lib/redis/modules//redisearch.so
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.626 * <timeseries> RedisTimeSeries version 80001, git_sha=577bfa8b5909e7ee572f0b651399be8303dc6641
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.628 * <timeseries> Redis version found by RedisTimeSeries : 8.0.2 - oss
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.629 * <timeseries> Registering configuration options: [
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.629 * <timeseries> 	{ ts-compaction-policy   :              }
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.629 * <timeseries> 	{ ts-num-threads         :            3 }
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.629 * <timeseries> 	{ ts-retention-policy    :            0 }
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.629 * <timeseries> 	{ ts-duplicate-policy    :        block }
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.629 * <timeseries> 	{ ts-chunk-size-bytes    :         4096 }
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.629 * <timeseries> 	{ ts-encoding            :   compressed }
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.629 * <timeseries> 	{ ts-ignore-max-time-diff:            0 }
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.629 * <timeseries> 	{ ts-ignore-max-val-diff :     0.000000 }
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.631 * <timeseries> ]
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.635 * <timeseries> Detected redis oss
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.644 * Module 'timeseries' loaded from /usr/local/lib/redis/modules//redistimeseries.so
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.656 * <ReJSON> Created new data type 'ReJSON-RL'
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.662 * <ReJSON> version: 80001 git sha: unknown branch: unknown
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.663 * <ReJSON> Exported RedisJSON_V1 API
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.663 * <ReJSON> Exported RedisJSON_V2 API
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.663 * <ReJSON> Exported RedisJSON_V3 API
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.663 * <ReJSON> Exported RedisJSON_V4 API
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.663 * <ReJSON> Exported RedisJSON_V5 API
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.663 * <ReJSON> Enabled diskless replication
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.665 * <ReJSON> Initialized shared string cache, thread safe: false.
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.668 * Module 'ReJSON' loaded from /usr/local/lib/redis/modules//rejson.so
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.668 * <search> Acquired RedisJSON_V5 API
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.672 * Server initialized
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.675 * <search> Loading event starts
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.675 * <search> Enabled workers threadpool of size 4
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.676 * Loading RDB produced by version 8.0.2
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.676 * RDB age 106 seconds
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.676 * RDB memory usage when created 0.95 Mb
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.676 * Done loading RDB, keys loaded: 0, keys expired: 0.
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.676 * <search> Disabled workers threadpool of size 4
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.676 * <search> Loading event ends
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.677 * DB loaded from disk: 0.004 seconds
-@kdx/db-dev:dev: redis-1                  | 1:M 28 Jun 2025 17:04:34.677 * Ready to accept connections tcp
-@kdx/db:dev: cache bypass, force executing b228d5cb4d29ce8f
-@kdx/ui:dev: cache bypass, force executing 4fdd339f0b379a1a
+@kdx/db-dev:dev:  Container kodix-db-redis-1  Running
+@kdx/db-dev:dev:  Container kodix-db-serverless-redis-http-1  Running
+@kdx/db-dev:dev:  Container kodix-db-mysql-1  Running
+@kdx/db-dev:dev: Attaching to mysql-1, redis-1, serverless-redis-http-1
 @kdx/db:studio: 
 @kdx/db:studio: > @kdx/db@0.1.0 with-env /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
 @kdx/db:studio: > dotenv -e ../../.env -- "drizzle-kit" "studio"
 @kdx/db:studio: 
-@kdx/db-dev:dev: mysql-1                  | 2025-06-28 17:04:34+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
-@kdx/db-dev:dev: mysql-1                  | 2025-06-28 17:04:34+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.2.0-1.el8 started.
+@kdx/db:studio: No config path provided, using default 'drizzle.config.ts'
+@kdx/db:studio: Reading config file '/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/drizzle.config.ts'
+@kdx/db:dev: cache bypass, force executing 8e16fef6a973ca08
+@kdx/ui:dev: cache bypass, force executing 92649c2edca398c3
+@kdx/db:studio: 
+@kdx/db:studio:  Warning  Drizzle Studio is currently in Beta. If you find anything that is not working as expected or should be improved, feel free to create an issue on GitHub: https://github.com/drizzle-team/drizzle-kit-mirror/issues/new or write to us on Discord: https://discord.gg/WcRKz2FFxN
+@kdx/db:studio: 
+@kdx/db:studio: Drizzle Studio is up and running on https://local.drizzle.studio
 @kdx/ui:dev: 
 @kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
 @kdx/ui:dev: > tsc
@@ -122,12 +60,6 @@ turbo 2.5.4
 @kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
 @kdx/db:dev: > tsc
 @kdx/db:dev: 
-@kdx/db:studio: No config path provided, using default 'drizzle.config.ts'
-@kdx/db:studio: Reading config file '/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/drizzle.config.ts'
-@kdx/db-dev:dev: mysql-1                  | '/var/lib/mysql/mysql.sock' -> '/var/run/mysqld/mysqld.sock'
-@kdx/db-dev:dev: mysql-1                  | 2025-06-28T17:04:35.596498Z 0 [System] [MY-015015] [Server] MySQL Server - start.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-28T17:04:36.467250Z 0 [Warning] [MY-011068] [Server] The syntax '--skip-host-cache' is deprecated and will be removed in a future release. Please use SET GLOBAL host_cache_size=0 instead.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-28T17:04:36.472340Z 0 [System] [MY-010116] [Server] /usr/sbin/mysqld (mysqld 8.2.0) starting as process 1
 @kdx/kdx:dev:    ▲ Next.js 15.3.4 (Turbopack)
 @kdx/kdx:dev:    - Local:        http://localhost:3000
 @kdx/kdx:dev:    - Network:      http://192.168.3.50:3000
@@ -136,455 +68,34 @@ turbo 2.5.4
 @kdx/kdx:dev: 
 @kdx/kdx:dev:  ✓ Starting...
 @kdx/kdx:dev:  ⚠ The config property `experimental.turbo` is deprecated. Move this setting to `config.turbopack` as Turbopack is now stable.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-28T17:04:36.511259Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
-@kdx/db:studio: Error: Connection lost: The server closed the connection.
-@kdx/db:studio:     at createConnectionPromise (/Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/mysql2/promise.js:19:31)
-@kdx/db:studio:     at connectToMySQL (/Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:76578:47)
-@kdx/db:studio:     at async drizzleForMySQL (/Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:85432:25)
-@kdx/db:studio:     at async Object.handler (/Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:88993:17)
-@kdx/db:studio:     at async run (/Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:87030:7) {
-@kdx/db:studio:   code: 'PROTOCOL_CONNECTION_LOST',
-@kdx/db:studio:   errno: undefined,
-@kdx/db:studio:   sqlState: undefined
-@kdx/db:studio: }
-@kdx/db-dev:dev: mysql-1                  | 2025-06-28T17:04:37.039506Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
-@kdx/db:dev: src/repositories/app/appRepository.ts(143,11): error TS2698: Spread types may only be created from object types.
-@kdx/db:dev: src/repositories/app/appRepository.ts(232,11): error TS2698: Spread types may only be created from object types.
-@kdx/db:dev: src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
-@kdx/db:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-28T17:04:37.370275Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-28T17:04:37.370310Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-28T17:04:37.373007Z 0 [Warning] [MY-011810] [Server] Insecure configuration for --pid-file: Location '/var/run/mysqld' in the path is accessible to all OS users. Consider choosing a different directory.
-@kdx/db:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/db-dev:dev: mysql-1                  | 2025-06-28T17:04:37.392427Z 0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '8.2.0'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL Community Server - GPL.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-28T17:04:37.392511Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '::' port: 33060, socket: /var/run/mysqld/mysqlx.sock
-@kdx/db#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/db-dev:dev: serverless-redis-http-1  | Using port 80
-@kdx/db-dev:dev: serverless-redis-http-1  | Token resolver started
-@kdx/db-dev:dev: serverless-redis-http-1  | Loaded config from env. 1 entries.
-@kdx/kdx:dev:  ✓ Compiled middleware in 128ms
-@kdx/kdx:dev:  ✓ Ready in 2.2s
+@kdx/kdx:dev:  ✓ Compiled middleware in 381ms
+@kdx/validators:dev: cache bypass, force executing 7d79adf016fa66c4
+@kdx/permissions:dev: cache bypass, force executing fbd042a2b17e2711
+@kdx/kdx:dev:  ✓ Ready in 2.1s
 @kdx/kdx:dev:  ⚠ Webpack is configured while Turbopack is not, which may cause problems.
 @kdx/kdx:dev:  ⚠ See instructions if you need to configure Turbopack:
 @kdx/kdx:dev:   https://nextjs.org/docs/app/api-reference/next-config-js/turbo
 @kdx/kdx:dev: 
+@kdx/permissions:dev: 
+@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
+@kdx/permissions:dev: > tsc
+@kdx/permissions:dev: 
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/api:dev: cache bypass, force executing 20e14de9c88e8a41
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
 @kdx/kdx:dev:  ○ Compiling /[locale] ...
-@kdx/kdx:dev:  ✓ Compiled /[locale] in 6.5s
-@kdx/kdx:dev:  GET / 200 in 142ms
-@kdx/kdx:dev:  GET / 200 in 293ms
-@kdx/kdx:dev:  GET / 200 in 181ms
-@kdx/kdx:dev:  ○ Compiling /manifest.webmanifest ...
-@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 678ms
-@kdx/kdx:dev:  ✓ Compiled /manifest.webmanifest in 3.1s
-@kdx/kdx:dev:  ⨯ ./packages/api/src/trpc/routers/app/ai-studio/_router.ts:9:1
-@kdx/kdx:dev: Export protectedProcedure doesn't exist in target module
-@kdx/kdx:dev: [0m [90m  7 |[39m [36mimport[39m { aiStudioAppId[33m,[39m aiStudioConfigSchema } [36mfrom[39m [32m"@kdx/shared"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m  8 |[39m[0m
-@kdx/kdx:dev: [0m[31m[1m>[22m[39m[90m  9 |[39m [36mimport[39m { protectedProcedure[33m,[39m router } [36mfrom[39m [32m"../../../trpc"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
-@kdx/kdx:dev: [0m [90m 10 |[39m [36mimport[39m { aiAgentsRouter } [36mfrom[39m [32m"./agents"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 11 |[39m [36mimport[39m { aiModelsRouter } [36mfrom[39m [32m"./models"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 12 |[39m [36mimport[39m { aiProvidersRouter } [36mfrom[39m [32m"./providers"[39m[33m;[39m[0m
-@kdx/kdx:dev: 
-@kdx/kdx:dev: The export protectedProcedure was not found in module [project]/packages/api/src/trpc/trpc.ts [app-rsc] (ecmascript).
-@kdx/kdx:dev: Did you mean to import t?
-@kdx/kdx:dev: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: ./packages/api/src/trpc/routers/app/ai-studio/_router.ts:9:1
-@kdx/kdx:dev: Export router doesn't exist in target module
-@kdx/kdx:dev: [0m [90m  7 |[39m [36mimport[39m { aiStudioAppId[33m,[39m aiStudioConfigSchema } [36mfrom[39m [32m"@kdx/shared"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m  8 |[39m[0m
-@kdx/kdx:dev: [0m[31m[1m>[22m[39m[90m  9 |[39m [36mimport[39m { protectedProcedure[33m,[39m router } [36mfrom[39m [32m"../../../trpc"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
-@kdx/kdx:dev: [0m [90m 10 |[39m [36mimport[39m { aiAgentsRouter } [36mfrom[39m [32m"./agents"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 11 |[39m [36mimport[39m { aiModelsRouter } [36mfrom[39m [32m"./models"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 12 |[39m [36mimport[39m { aiProvidersRouter } [36mfrom[39m [32m"./providers"[39m[33m;[39m[0m
-@kdx/kdx:dev: 
-@kdx/kdx:dev: The export router was not found in module [project]/packages/api/src/trpc/trpc.ts [app-rsc] (ecmascript).
-@kdx/kdx:dev: Did you mean to import createCallerFactory?
-@kdx/kdx:dev: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev:  ○ Compiling /_error ...
-@kdx/kdx:dev:  ✓ Compiled /_error in 1769ms
-@kdx/kdx:dev:  GET /signin 500 in 4480ms
-@kdx/kdx:dev:  ⨯ ./packages/api/src/trpc/routers/app/ai-studio/_router.ts:9:1
-@kdx/kdx:dev: Export protectedProcedure doesn't exist in target module
-@kdx/kdx:dev: [0m [90m  7 |[39m [36mimport[39m { aiStudioAppId[33m,[39m aiStudioConfigSchema } [36mfrom[39m [32m"@kdx/shared"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m  8 |[39m[0m
-@kdx/kdx:dev: [0m[31m[1m>[22m[39m[90m  9 |[39m [36mimport[39m { protectedProcedure[33m,[39m router } [36mfrom[39m [32m"../../../trpc"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
-@kdx/kdx:dev: [0m [90m 10 |[39m [36mimport[39m { aiAgentsRouter } [36mfrom[39m [32m"./agents"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 11 |[39m [36mimport[39m { aiModelsRouter } [36mfrom[39m [32m"./models"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 12 |[39m [36mimport[39m { aiProvidersRouter } [36mfrom[39m [32m"./providers"[39m[33m;[39m[0m
-@kdx/kdx:dev: 
-@kdx/kdx:dev: The export protectedProcedure was not found in module [project]/packages/api/src/trpc/trpc.ts [app-rsc] (ecmascript).
-@kdx/kdx:dev: Did you mean to import t?
-@kdx/kdx:dev: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: ./packages/api/src/trpc/routers/app/ai-studio/_router.ts:9:1
-@kdx/kdx:dev: Export router doesn't exist in target module
-@kdx/kdx:dev: [0m [90m  7 |[39m [36mimport[39m { aiStudioAppId[33m,[39m aiStudioConfigSchema } [36mfrom[39m [32m"@kdx/shared"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m  8 |[39m[0m
-@kdx/kdx:dev: [0m[31m[1m>[22m[39m[90m  9 |[39m [36mimport[39m { protectedProcedure[33m,[39m router } [36mfrom[39m [32m"../../../trpc"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
-@kdx/kdx:dev: [0m [90m 10 |[39m [36mimport[39m { aiAgentsRouter } [36mfrom[39m [32m"./agents"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 11 |[39m [36mimport[39m { aiModelsRouter } [36mfrom[39m [32m"./models"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 12 |[39m [36mimport[39m { aiProvidersRouter } [36mfrom[39m [32m"./providers"[39m[33m;[39m[0m
-@kdx/kdx:dev: 
-@kdx/kdx:dev: The export router was not found in module [project]/packages/api/src/trpc/trpc.ts [app-rsc] (ecmascript).
-@kdx/kdx:dev: Did you mean to import createCallerFactory?
-@kdx/kdx:dev: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev:  GET /signin 500 in 61ms
-@kdx/kdx:dev:  ✓ Compiled in 638ms
-@kdx/kdx:dev:  ✓ Compiled /[locale]/signin in 61ms
-@kdx/api:dev: cache bypass, force executing 3b3e70569f06d133
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/kdx:dev:  GET /signin 307 in 8069ms
+@kdx/kdx:dev:  ✓ Compiled /[locale] in 6.1s
+@kdx/kdx:dev:  ○ Compiling /[locale]/signin ...
+@kdx/kdx:dev:  ✓ Compiled /[locale]/signin in 3.6s
+@kdx/kdx:dev:  GET /signin 307 in 6172ms
 @kdx/kdx:dev:  ○ Compiling /[locale]/team ...
-@kdx/kdx:dev: TypeError: Cannot read properties of undefined (reading 'query')
-@kdx/kdx:dev:     at [project]/packages/api/src/trpc/routers/app/ai-studio/_router.ts [app-rsc] (ecmascript) (../../packages/api/src/trpc/routers/app/ai-studio/_router.ts:21:44)
-@kdx/kdx:dev:     at <unknown> (../../packages/api/src/trpc/routers/app/_router.ts:20:0)
-@kdx/kdx:dev:     at [project]/packages/api/src/trpc/routers/app/_router.ts [app-rsc] (ecmascript) (.next/server/chunks/ssr/packages_api_src_aad92195._.js:4601:1)
-@kdx/kdx:dev:     at <unknown> (../../packages/api/src/trpc/root.ts:1:0)
-@kdx/kdx:dev:     at [project]/packages/api/src/trpc/root.ts [app-rsc] (ecmascript) (.next/server/chunks/ssr/packages_api_src_aad92195._.js:6087:1)
-@kdx/kdx:dev:     at <unknown> (.next/server/chunks/ssr/packages_api_src_aad92195._.js:6756:164)
-@kdx/kdx:dev:     at [project]/packages/api/src/index.ts [app-rsc] (ecmascript) <module evaluation> (.next/server/chunks/ssr/packages_api_src_aad92195._.js:6754:1)
-@kdx/kdx:dev:     at <unknown> (src/trpc/server.tsx:8:0)
-@kdx/kdx:dev:     at [project]/apps/kdx/src/trpc/server.tsx [app-rsc] (ecmascript) (.next/server/chunks/ssr/apps_kdx_c1d8ee1d._.js:92:1)
-@kdx/kdx:dev:     at <unknown> (src/app/[locale]/(public)/(authpages)/signin/_components/actions.ts:7:0)
-@kdx/kdx:dev:     at [project]/apps/kdx/src/app/[locale]/(public)/(authpages)/signin/_components/actions.ts [app-rsc] (ecmascript) (.next/server/chunks/ssr/apps_kdx_c1d8ee1d._.js:191:1)
-@kdx/kdx:dev:     at <unknown> (.next/server/chunks/ssr/apps_kdx_c1d8ee1d._.js:252:232)
-@kdx/kdx:dev:     at [project]/apps/kdx/.next-internal/server/app/[locale]/(public)/(authpages)/signin/page/actions.js { ACTIONS_MODULE0 => "[project]/apps/kdx/src/app/[locale]/(public)/(authpages)/signin/_components/actions.ts [app-rsc] (ecmascript)" } [app-rsc] (server actions loader, ecmascript) <module evaluation> (.next/server/chunks/ssr/apps_kdx_c1d8ee1d._.js:250:1)
-@kdx/kdx:dev:     at <unknown> (.next/server/chunks/ssr/apps_kdx_c1d8ee1d._.js:286:519)
-@kdx/kdx:dev:     at [project]/apps/kdx/.next-internal/server/app/[locale]/(public)/(authpages)/signin/page/actions.js { ACTIONS_MODULE0 => "[project]/apps/kdx/src/app/[locale]/(public)/(authpages)/signin/_components/actions.ts [app-rsc] (ecmascript)" } [app-rsc] (server actions loader, ecmascript) (.next/server/chunks/ssr/apps_kdx_c1d8ee1d._.js:282:1)
-@kdx/kdx:dev:     at Object.<anonymous> (.next/server/app/[locale]/(public)/(authpages)/signin/page.js:41:9)
-@kdx/kdx:dev:   19 |   tokens: aiTokensRouter,
-@kdx/kdx:dev:   20 |
-@kdx/kdx:dev: > 21 |   getTeamInstructions: t.protectedProcedure.query(async ({ ctx }) => {
-@kdx/kdx:dev:      |                                            ^
-@kdx/kdx:dev:   22 |     try {
-@kdx/kdx:dev:   23 |       const teamConfig = await db.query.appTeamConfigs.findFirst({
-@kdx/kdx:dev:   24 |         where: (appTeamConfig, { eq, and }) =>
-@kdx/kdx:dev:  ⨯ unhandledRejection: TypeError: Cannot read properties of undefined (reading 'query')
-@kdx/kdx:dev:     at [project]/packages/api/src/trpc/routers/app/ai-studio/_router.ts [app-rsc] (ecmascript) (../../packages/api/src/trpc/routers/app/ai-studio/_router.ts:21:44)
-@kdx/kdx:dev:     at <unknown> (../../packages/api/src/trpc/routers/app/_router.ts:20:0)
-@kdx/kdx:dev:     at [project]/packages/api/src/trpc/routers/app/_router.ts [app-rsc] (ecmascript) (.next/server/chunks/ssr/packages_api_src_aad92195._.js:4601:1)
-@kdx/kdx:dev:     at <unknown> (../../packages/api/src/trpc/root.ts:1:0)
-@kdx/kdx:dev:     at [project]/packages/api/src/trpc/root.ts [app-rsc] (ecmascript) (.next/server/chunks/ssr/packages_api_src_aad92195._.js:6087:1)
-@kdx/kdx:dev:     at <unknown> (.next/server/chunks/ssr/packages_api_src_aad92195._.js:6756:164)
-@kdx/kdx:dev:     at [project]/packages/api/src/index.ts [app-rsc] (ecmascript) <module evaluation> (.next/server/chunks/ssr/packages_api_src_aad92195._.js:6754:1)
-@kdx/kdx:dev:     at <unknown> (src/trpc/server.tsx:8:0)
-@kdx/kdx:dev:     at [project]/apps/kdx/src/trpc/server.tsx [app-rsc] (ecmascript) (.next/server/chunks/ssr/apps_kdx_c1d8ee1d._.js:92:1)
-@kdx/kdx:dev:     at <unknown> (src/app/[locale]/(public)/(authpages)/signin/_components/actions.ts:7:0)
-@kdx/kdx:dev:     at [project]/apps/kdx/src/app/[locale]/(public)/(authpages)/signin/_components/actions.ts [app-rsc] (ecmascript) (.next/server/chunks/ssr/apps_kdx_c1d8ee1d._.js:191:1)
-@kdx/kdx:dev:     at <unknown> (.next/server/chunks/ssr/apps_kdx_c1d8ee1d._.js:252:232)
-@kdx/kdx:dev:     at [project]/apps/kdx/.next-internal/server/app/[locale]/(public)/(authpages)/signin/page/actions.js { ACTIONS_MODULE0 => "[project]/apps/kdx/src/app/[locale]/(public)/(authpages)/signin/_components/actions.ts [app-rsc] (ecmascript)" } [app-rsc] (server actions loader, ecmascript) <module evaluation> (.next/server/chunks/ssr/apps_kdx_c1d8ee1d._.js:250:1)
-@kdx/kdx:dev:     at <unknown> (.next/server/chunks/ssr/apps_kdx_c1d8ee1d._.js:286:519)
-@kdx/kdx:dev:     at [project]/apps/kdx/.next-internal/server/app/[locale]/(public)/(authpages)/signin/page/actions.js { ACTIONS_MODULE0 => "[project]/apps/kdx/src/app/[locale]/(public)/(authpages)/signin/_components/actions.ts [app-rsc] (ecmascript)" } [app-rsc] (server actions loader, ecmascript) (.next/server/chunks/ssr/apps_kdx_c1d8ee1d._.js:282:1)
-@kdx/kdx:dev:     at Object.<anonymous> (.next/server/app/[locale]/(public)/(authpages)/signin/page.js:41:9)
-@kdx/kdx:dev:   19 |   tokens: aiTokensRouter,
-@kdx/kdx:dev:   20 |
-@kdx/kdx:dev: > 21 |   getTeamInstructions: t.protectedProcedure.query(async ({ ctx }) => {
-@kdx/kdx:dev:      |                                            ^
-@kdx/kdx:dev:   22 |     try {
-@kdx/kdx:dev:   23 |       const teamConfig = await db.query.appTeamConfigs.findFirst({
-@kdx/kdx:dev:   24 |         where: (appTeamConfig, { eq, and }) =>
-@kdx/kdx:dev:  ⨯ unhandledRejection:  TypeError: Cannot read properties of undefined (reading 'query')
-@kdx/kdx:dev:     at [project]/packages/api/src/trpc/routers/app/ai-studio/_router.ts [app-rsc] (ecmascript) (../../packages/api/src/trpc/routers/app/ai-studio/_router.ts:21:44)
-@kdx/kdx:dev:     at <unknown> (../../packages/api/src/trpc/routers/app/_router.ts:20:0)
-@kdx/kdx:dev:     at [project]/packages/api/src/trpc/routers/app/_router.ts [app-rsc] (ecmascript) (.next/server/chunks/ssr/packages_api_src_aad92195._.js:4601:1)
-@kdx/kdx:dev:     at <unknown> (../../packages/api/src/trpc/root.ts:1:0)
-@kdx/kdx:dev:     at [project]/packages/api/src/trpc/root.ts [app-rsc] (ecmascript) (.next/server/chunks/ssr/packages_api_src_aad92195._.js:6087:1)
-@kdx/kdx:dev:     at <unknown> (.next/server/chunks/ssr/packages_api_src_aad92195._.js:6756:164)
-@kdx/kdx:dev:     at [project]/packages/api/src/index.ts [app-rsc] (ecmascript) <module evaluation> (.next/server/chunks/ssr/packages_api_src_aad92195._.js:6754:1)
-@kdx/kdx:dev:     at <unknown> (src/trpc/server.tsx:8:0)
-@kdx/kdx:dev:     at [project]/apps/kdx/src/trpc/server.tsx [app-rsc] (ecmascript) (.next/server/chunks/ssr/apps_kdx_c1d8ee1d._.js:92:1)
-@kdx/kdx:dev:     at <unknown> (src/app/[locale]/(public)/(authpages)/signin/_components/actions.ts:7:0)
-@kdx/kdx:dev:     at [project]/apps/kdx/src/app/[locale]/(public)/(authpages)/signin/_components/actions.ts [app-rsc] (ecmascript) (.next/server/chunks/ssr/apps_kdx_c1d8ee1d._.js:191:1)
-@kdx/kdx:dev:     at <unknown> (.next/server/chunks/ssr/apps_kdx_c1d8ee1d._.js:252:232)
-@kdx/kdx:dev:     at [project]/apps/kdx/.next-internal/server/app/[locale]/(public)/(authpages)/signin/page/actions.js { ACTIONS_MODULE0 => "[project]/apps/kdx/src/app/[locale]/(public)/(authpages)/signin/_components/actions.ts [app-rsc] (ecmascript)" } [app-rsc] (server actions loader, ecmascript) <module evaluation> (.next/server/chunks/ssr/apps_kdx_c1d8ee1d._.js:250:1)
-@kdx/kdx:dev:     at <unknown> (.next/server/chunks/ssr/apps_kdx_c1d8ee1d._.js:286:519)
-@kdx/kdx:dev:     at [project]/apps/kdx/.next-internal/server/app/[locale]/(public)/(authpages)/signin/page/actions.js { ACTIONS_MODULE0 => "[project]/apps/kdx/src/app/[locale]/(public)/(authpages)/signin/_components/actions.ts [app-rsc] (ecmascript)" } [app-rsc] (server actions loader, ecmascript) (.next/server/chunks/ssr/apps_kdx_c1d8ee1d._.js:282:1)
-@kdx/kdx:dev:     at Object.<anonymous> (.next/server/app/[locale]/(public)/(authpages)/signin/page.js:41:9)
-@kdx/kdx:dev:   19 |   tokens: aiTokensRouter,
-@kdx/kdx:dev:   20 |
-@kdx/kdx:dev: > 21 |   getTeamInstructions: t.protectedProcedure.query(async ({ ctx }) => {
-@kdx/kdx:dev:      |                                            ^
-@kdx/kdx:dev:   22 |     try {
-@kdx/kdx:dev:   23 |       const teamConfig = await db.query.appTeamConfigs.findFirst({
-@kdx/kdx:dev:   24 |         where: (appTeamConfig, { eq, and }) =>
-@kdx/api:dev: cache bypass, force executing e3b43b6803567b4a
-@kdx/kdx:dev:  GET /signin 307 in 1916ms
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/kdx:dev: /Users/mahad@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(21,26): error TS2339: Property 'protectedProcedure' does not exist on type 'TRPCRootObject<{ format: { dateTime: (value: number | Date, formatOrOptions?: DateTimeFormatOptions | "short" | "long" | "shortWithHours" | "medium" | "full" | "extensive" | undefined) => string; number: (value: number | bigint, formatOrOptions?: string | ... 1 more ... | undefined) => string; relativeTime: (date: n...'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(21,60): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(47,29): error TS2339: Property 'protectedProcedure' does not exist on type 'TRPCRootObject<{ format: { dateTime: (value: number | Date, formatOrOptions?: DateTimeFormatOptions | "short" | "long" | "shortWithHours" | "medium" | "full" | "extensive" | undefined) => string; number: (value: number | bigint, formatOrOptions?: string | ... 1 more ... | undefined) => string; relativeTime: (date: n...'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(55,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(55,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(76,9): error TS2353: Object literal may only specify known properties, and 'input' does not exist in type '{ appId: AppIdsWithUserAppTeamConfig; teamId: string; config: Partial<unknown>; }'.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(143,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(232,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api:dev: cache bypass, force executing 6a8aa27bdb69a4ec
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(22,26): error TS2339: Property 'protectedProcedure' does not exist on type 'TRPCRootObject<{ format: { dateTime: (value: number | Date, formatOrOptions?: DateTimeFormatOptions | "short" | "long" | "shortWithHours" | "medium" | "full" | "extensive" | undefined) => string; number: (value: number | bigint, formatOrOptions?: string | ... 1 more ... | undefined) => string; relativeTime: (date: n...'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(22,60): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(48,29): error TS2339: Property 'protectedProcedure' does not exist on type 'TRPCRootObject<{ format: { dateTime: (value: number | Date, formatOrOptions?: DateTimeFormatOptions | "short" | "long" | "shortWithHours" | "medium" | "full" | "extensive" | undefined) => string; number: (value: number | bigint, formatOrOptions?: string | ... 1 more ... | undefined) => string; relativeTime: (date: n...'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(56,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(56,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(77,9): error TS2353: Object literal may only specify known properties, and 'input' does not exist in type '{ appId: AppIdsWithUserAppTeamConfig; teamId: string; config: Partial<unknown>; }'.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(143,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(232,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api:dev: cache bypass, force executing 4e80c723b1b1a38a
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(77,9): error TS2353: Object literal may only specify known properties, and 'input' does not exist in type '{ appId: AppIdsWithUserAppTeamConfig; teamId: string; config: Partial<unknown>; }'.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(143,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(232,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api:dev: cache bypass, force executing 0ea4b6c4ab465af7
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(143,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(232,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/db:dev: cache bypass, force executing 187422d02956d482
-@kdx/shared:dev: cache bypass, force executing afb89322bed834cd
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/db:dev: cache bypass, force executing 6b174a21ea8c8956
-@kdx/ui:dev: cache bypass, force executing c30a32a592c8961b
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:dev: > tsc
-@kdx/db:dev: 
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/validators:dev: cache bypass, force executing 51e2d9db6d22cc2e
-@kdx/permissions:dev: cache bypass, force executing 9a222d0361e9ba89
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/api:dev: cache bypass, force executing 6eef0e5f00eafc24
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/shared:dev: cache bypass, force executing eb1ed64e94f0fbbd
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/db:dev: cache bypass, force executing f28bdf86a1f2c0c0
-@kdx/ui:dev: cache bypass, force executing ce77847ef40eb8fc
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:dev: > tsc
-@kdx/db:dev: 
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/shared:dev: cache bypass, force executing a0b0322676d05d9c
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/db:dev: cache bypass, force executing 2452c2c77623c8f3
-@kdx/ui:dev: cache bypass, force executing 7ce50e0915aeebf1
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:dev: > tsc
-@kdx/db:dev: 
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/shared:dev: cache bypass, force executing 6a226371c3645065
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/db:dev: cache bypass, force executing 421cac0a7d26cd40
-@kdx/ui:dev: cache bypass, force executing 1b527bad05a89889
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:dev: > tsc
-@kdx/db:dev: 
-@kdx/db:dev: cache bypass, force executing cbae7b0d0be32765
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:dev: > tsc
-@kdx/db:dev: 
-@kdx/db:dev: src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai9x7m2k5p1s' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
-@kdx/db:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/db:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/db#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/db:dev: cache bypass, force executing 79ce249ecc4d44b8
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:dev: > tsc
-@kdx/db:dev: 
-@kdx/validators:dev: cache bypass, force executing 9a40a2a4dee15e8a
-@kdx/permissions:dev: cache bypass, force executing 29e358586a2e8a30
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/validators:dev: cache bypass, force executing e1abbda09d6280ab
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/api:dev: cache bypass, force executing e7aaea13d254b928
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/validators:dev: cache bypass, force executing a317ccb5d568079e
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/api:dev: cache bypass, force executing dd35b8ef99474a7b
-@kdx/validators:dev: cache bypass, force executing 5daf9b5a1af32b8b
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/api:dev: cache bypass, force executing 5feb76a360d5cdf4
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/ui:dev: cache bypass, force executing 1f8ed2423650eaf0
-@kdx/validators:dev: cache bypass, force executing dfa80e092976025b
-@kdx/permissions:dev: cache bypass, force executing 9faa7edc749759e6
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/ui:dev: cache bypass, force executing 1d2c8c8b780c1aea
-@kdx/validators:dev: cache bypass, force executing 4a21d34a1ae24d8b
-@kdx/permissions:dev: cache bypass, force executing a5d321a7912d4873
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/api:dev: cache bypass, force executing 5e12a865fa5e7bdb
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-(<anonymous>)
-@kdx/kdx:dev:     at AppSwitcherClient (src/app/[locale]/_components/app-switcher/app-switcher-client.tsx:65:18)
-@kdx/kdx:dev:   13 | export const getAppName = (appId: KodixAppId | undefined, t: ClientSideT) => {
-@kdx/kdx:dev:   14 |   if (!appId) return "";
-@kdx/kdx:dev: > 15 |   return t(`${appIdToName[appId]}`);
-@kdx/kdx:dev:      |         ^
-@kdx/kdx:dev:   16 | };
-@kdx/kdx:dev:   17 |
-@kdx/kdx:dev:   18 | export const getAppDescription = (appId: KodixAppId, t: IsomorficT) => { {
-@kdx/kdx:dev:   code: 'MISSING_MESSAGE',
-@kdx/kdx:dev:   originalMessage: 'Could not resolve `undefined` in messages for locale `pt-BR`.'
-@kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] user.getInvitations took 449.74ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.getInstalled took 450.39ms to execute
-@kdx/kdx:dev: Error: MISSING_MESSAGE: Could not resolve `undefined` in messages for locale `pt-BR`.
-@kdx/kdx:dev:     at getAppName (../../packages/locales/src/next-intl/hooks/index.ts:15:9)
-@kdx/kdx:dev:     at IconKodixApp (src/app/[locale]/_components/app/kodix-icon.tsx:23:29)
-@kdx/kdx:dev:   13 | export const getAppName = (appId: KodixAppId | undefined, t: ClientSideT) => {
-@kdx/kdx:dev:   14 |   if (!appId) return "";
-@kdx/kdx:dev: > 15 |   return t(`${appIdToName[appId]}`);
-@kdx/kdx:dev:      |         ^
-@kdx/kdx:dev:   16 | };
-@kdx/kdx:dev:   17 |
-@kdx/kdx:dev:   18 | export const getAppDescription = (appId: KodixAppId, t: IsomorficT) => { {
-@kdx/kdx:dev:   code: 'MISSING_MESSAGE',
-@kdx/kdx:dev:   originalMessage: 'Could not resolve `undefined` in messages for locale `pt-BR`.'
-@kdx/kdx:dev: }
-@kdx/kdx:dev:  GET /team 200 in 2079ms
-@kdx/kdx:dev:  ○ Compiling /[locale]/[...rest] ...
-@kdx/kdx:dev:  ✓ Compiled /[locale]/[...rest] in 4.8s
-@kdx/kdx:dev:  GET /apps/undefined 200 in 500ms
-@kdx/kdx:dev:  GET /appIcons/undefined.png 404 in 5213ms
-@kdx/kdx:dev:  ⨯ The requested resource isn't a valid image for /appIcons/undefined.png received text/html; charset=utf-8
-@kdx/kdx:dev:  GET /appIcons/undefined.png 404 in 84ms
-@kdx/kdx:dev:  ⨯ The requested resource isn't a valid image for /appIcons/undefined.png received text/html; charset=utf-8
-@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 249ms
-@kdx/kdx:dev:  GET /appIcons/undefined.png 404 in 102ms
-@kdx/kdx:dev:  ⨯ The requested resource isn't a valid image for /appIcons/undefined.png received text/html; charset=utf-8
-@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 135ms
+@kdx/kdx:dev:  ✓ Compiled /[locale]/team in 2.8s
 @kdx/kdx:dev: >>> tRPC Request from rsc by {
 @kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
 @kdx/kdx:dev:   name: 'Mahadeva Das',
@@ -595,934 +106,278 @@ turbo 2.5.4
 @kdx/kdx:dev:   kodixAdmin: false,
 @kdx/kdx:dev:   activeTeamName: 'Personal Team'
 @kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.getInstalled took 13.94ms to execute
-@kdx/kdx:dev: [TRPC_PERF] user.getInvitations took 13.41ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.getInstalled took 15.12ms to execute
-@kdx/kdx:dev: Error: MISSING_MESSAGE: Could not resolve `undefined` in messages for locale `pt-BR`.
-@kdx/kdx:dev:     at getAppName (../../packages/locales/src/next-intl/hooks/index.ts:15:9)
-@kdx/kdx:dev:     at eval (src/app/[locale]/_components/app-switcher/app-switcher-client.tsx:70:41)
-@kdx/kdx:dev:     at Array.map (<anonymous>)
-@kdx/kdx:dev:     at AppSwitcherClient (src/app/[locale]/_components/app-switcher/app-switcher-client.tsx:65:18)
-@kdx/kdx:dev:   13 | export const getAppName = (appId: KodixAppId | undefined, t: ClientSideT) => {
-@kdx/kdx:dev:   14 |   if (!appId) return "";
-@kdx/kdx:dev: > 15 |   return t(`${appIdToName[appId]}`);
-@kdx/kdx:dev:      |         ^
-@kdx/kdx:dev:   16 | };
-@kdx/kdx:dev:   17 |
-@kdx/kdx:dev:   18 | export const getAppDescription = (appId: KodixAppId, t: IsomorficT) => { {
-@kdx/kdx:dev:   code: 'MISSING_MESSAGE',
-@kdx/kdx:dev:   originalMessage: 'Could not resolve `undefined` in messages for locale `pt-BR`.'
+@kdx/kdx:dev: [TRPC_PERF] app.getInstalled took 226.06ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.getInstalled took 248.55ms to execute
+@kdx/kdx:dev: [TRPC_PERF] user.getInvitations took 249.41ms to execute
+@kdx/kdx:dev:  GET /team 200 in 4228ms
+@kdx/kdx:dev:  ○ Compiling /manifest.webmanifest ...
+@kdx/kdx:dev:  ✓ Compiled /manifest.webmanifest in 788ms
+@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 876ms
+@kdx/kdx:dev:  GET / 200 in 242ms
+@kdx/kdx:dev:  ○ Compiling /[locale]/apps/aiStudio ...
+@kdx/kdx:dev:  ✓ Compiled /[locale]/apps/aiStudio in 4.9s
+@kdx/kdx:dev:  GET /apps/aiStudio 200 in 5756ms
+@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 269ms
+@kdx/kdx:dev:  ○ Compiling /api/trpc/[trpc] ...
+@kdx/kdx:dev:  ✓ Compiled /api/trpc/[trpc] in 3.1s
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
 @kdx/kdx:dev: }
-@kdx/kdx:dev: Error: MISSING_MESSAGE: Could not resolve `undefined` in messages for locale `pt-BR`.
-@kdx/kdx:dev:     at getAppName (../../packages/locales/src/next-intl/hooks/index.ts:15:9)
-@kdx/kdx:dev:     at IconKodixApp (src/app/[locale]/_components/app/kodix-icon.tsx:23:29)
-@kdx/kdx:dev:   13 | export const getAppName = (appId: KodixAppId | undefined, t: ClientSideT) => {
-@kdx/kdx:dev:   14 |   if (!appId) return "";
-@kdx/kdx:dev: > 15 |   return t(`${appIdToName[appId]}`);
-@kdx/kdx:dev:      |         ^
-@kdx/kdx:dev:   16 | };
-@kdx/kdx:dev:   17 |
-@kdx/kdx:dev:   18 | export const getAppDescription = (appId: KodixAppId, t: IsomorficT) => { {
-@kdx/kdx:dev:   code: 'MISSING_MESSAGE',
-@kdx/kdx:dev:   originalMessage: 'Could not resolve `undefined` in messages for locale `pt-BR`.'
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAiTeamProviderTokens took 68.20ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAiProviders took 69.27ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiTeamProviderTokens,app.aiStudio.findAiProviders?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 4063ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
 @kdx/kdx:dev: }
-@kdx/kdx:dev:  GET /team 200 in 231ms
-@kdx/kdx:dev:  GET /appIcons/undefined.png 404 in 148ms
-@kdx/kdx:dev:  ⨯ The requested resource isn't a valid image for /appIcons/undefined.@kdx/db:dev: cache bypass, force executing 187422d02956d482
-@kdx/shared:dev: cache bypass, force executing afb89322bed834cd
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/db:dev: cache bypass, force executing 6b174a21ea8c8956
-@kdx/ui:dev: cache bypass, force executing c30a32a592c8961b
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:dev: > tsc
-@kdx/db:dev: 
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/validators:dev: cache bypass, force executing 51e2d9db6d22cc2e
-@kdx/@kdx/validators:dev: cache bypass, force executing 51e2d9db6d22cc2e
-@kdx/permissions:dev: cache bypass, force executing 9a222d0361e9ba89
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/api:dev: cache bypass, force executing 6eef0e5f00eafc24
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Doc@kdx/shared:dev: cache bypass, force executing eb1ed64e94f0fbbd
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/shared:dev: cache bypass, force executing a0b0322676d05d9c
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/db:dev: cache bypass, force executing 2452c2c77623c8f3
-@kdx/ui:dev: cache bypass, force executing 7ce50e0915aeebf1
-@kdx/shared:dev: cache bypass, force executing 6a226371c3645065
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadev@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Ko@kdx/db:dev: cache bypass, force executing 421cac0a7d26cd40
-@kdx/ui:dev: cache bypass, force executing 1b527bad05a89889
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:dev: > tsc
-@kdx/db:dev: 
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/db:dev: cache bypass, force executing cbae7b0d0be32765
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documen@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/@kdx/db:dev: cache bypass, force executing 79ce249ecc4d44b8
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:dev: > tsc
-@kdx/db:dev: 
-@kdx/validators:dev: cache bypass, force executing 9a40a2a4dee15e8a
-@kdx/permissions:dev: cache bypass, force executing 29e358586a2e8a30
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/validators:dev: cache bypass, force executing e1abbda09d6280ab
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /U@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-tu@kdx/validators:dev: cache bypass, force executing a317ccb5d568079e
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /U@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-tu@kdx/validators:dev: cache bypass, force executing 5daf9b5a1af32b8b
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/api:dev: cache bypass, force executing 5feb76a360d5cdf4
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Docu@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Doc@kdx/ui:dev: cache bypass, force executing 1f8ed2423650eaf0
-@kdx/validators:dev: cache bypass, force executing dfa80e092976025b
-@kdx/permissions:dev: cache bypass, force executing 9faa7edc749759e6
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 @kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documen@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/@kdx/validators:dev: cache bypass, force executing 4a21d34a1ae24d8b
-@kdx/@kdx/ui:dev: cache bypass, force executing 1d2c8c8b780c1aea
-@kdx/validators:dev: cache bypass, force executing 4a21d34a1ae24@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documen@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-tu@kdx/api:dev: cache bypass, force executing 5e12a865fa5e7bdb
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Docu@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-
-@kdx/permissions:dev: cache bypass, force executing a5d321a7912d4873
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/api:dev: cache bypass, force executing 5e12a865fa5e7bdb
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-he bypass, force executing 5e12a865fa5e7bdb
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-59e6
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/ui:dev: cache bypass, force executing 1d2c8c8b780c1aea
-@kdx/validators:dev: cache bypass, force executing 4a21d34a1ae24d8b
-@kdx/permissions:dev: cache bypass, force executing a5d321a7912d4873
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/api:dev: cache bypass, force executing 5e12a865fa5e7bdb
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/kdx:dev:  ✓ Compiled /[locale] in 75ms
-@kdx/kdx:dev:  GET / 200 in 1105ms
-@kdx/kdx:dev:  GET / 200 in 586ms
-@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 85ms
-@kdx/kdx:dev:  ○ Compiling /[locale]/signin ...
-@kdx/kdx:dev:  ✓ Compiled /[locale]/signin in 853ms
-@kdx/kdx:dev:  GET /signin 200 in 1514ms
-@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 56ms
-he bypass, force executing e1abbda09d6280ab
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/validators:dev: cache bypass, force executing a317ccb5d568079e
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/validators:dev: cache bypass, force executing 5daf9b5a1af32b8b
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/api:dev: cache bypass, force executing 5feb76a360d5cdf4
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/ui:dev: cache bypass, force executing 1f8ed2423650eaf0
-@kdx/validators:dev: cache bypass, force executing dfa80e092976025b
-@kdx/permissions:dev: cache bypass, force executing 9faa7edc749759e6
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/ui:dev: cache bypass, force executing 1d2c8c8b780c1aea
-@kdx/validators:dev: cache bypass, force executing 4a21d34a1ae24d8b
-@kdx/permissions:dev: cache bypass, force executing a5d321a7912d4873
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/api:dev: cache bypass, force executing 5e12a865fa5e7bdb
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-s/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/api:dev: cache bypass, force executing 6eef0e5f00eafc24
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/shared:dev: cache bypass, force executing eb1ed64e94f0fbbd
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/shared:dev: cache bypass, force executing a0b0322676d05d9c
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/db:dev: cache bypass, force executing 2452c2c77623c8f3
-@kdx/ui:dev: cache bypass, force executing 7ce50e0915aeebf1
-@kdx/shared:dev: cache bypass, force executing 6a226371c3645065
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/db:dev: cache bypass, force executing 421cac0a7d26cd40
-@kdx/ui:dev: cache bypass, force executing 1b527bad05a89889
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:dev: > tsc
-@kdx/db:dev: 
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/db:dev: cache bypass, force executing cbae7b0d0be32765
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:dev: > tsc
-@kdx/db:dev: 
-@kdx/db:dev: cache bypass, force executing 79ce249ecc4d44b8
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:dev: > tsc
-@kdx/db:dev: 
-@kdx/validators:dev: cache bypass, force executing 9a40a2a4dee15e8a
-@kdx/permissions:dev: cache bypass, force executing 29e358586a2e8a30
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/validators:dev: cache bypass, force executing e1abbda09d6280ab
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/validators:dev: cache bypass, force executing a317ccb5d568079e
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/validators:dev: cache bypass, force executing 5daf9b5a1af32b8b
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/api:dev: cache bypass, force executing 5feb76a360d5cdf4
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/validators:dev: cache bypass, force executing dfa80e092976025b
-@kdx/ui:dev: cache bypass, force executing 1f8ed2423650eaf0
-@kdx/permissions:dev: cache bypass, force executing 9faa7edc749759e6
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/ui:dev: cache bypass, force executing 1d2c8c8b780c1aea
-@kdx/validators:dev: cache bypass, force executing 4a21d34a1ae24d8b
-@kdx/permissions:dev: cache bypass, force executing a5d321a7912d4873
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/api:dev: cache bypass, force executing 5e12a865fa5e7bdb
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/validators:dev: cache bypass, force executing a317ccb5d568079e
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/validators:dev: cache bypass, force executing 5daf9b5a1af32b8b
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/api:dev: cache bypass, force executing 5feb76a360d5cdf4
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/ui:dev: cache bypass, force executing 1f8ed2423650eaf0
-@kdx/validators:dev: cache bypass, force executing dfa80e092976025b
-@kdx/permissions:dev: cache bypass, force executing 9faa7edc749759e6
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/validators:dev: cache bypass, force executing 4a21d34a1ae24d8b
-@kdx/ui:dev: cache bypass, force executing 1d2c8c8b780c1aea
-@kdx/permissions:dev: cache bypass, force executing a5d321a7912d4873
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/api:dev: cache bypass, force executing 5e12a865fa5e7bdb
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-types.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api:dev: cache bypass, force executing e3b43b6803567b4a
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(21,26): error TS2339: Property 'protectedProcedure' does not exist on type 'TRPCRootObject<{ format: { dateTime: (value: number | Date, formatOrOptions?: DateTimeFormatOptions | "short" | "long" | "shortWithHours" | "medium" | "full" | "extensive" | undefined) => string; number: (value: number | bigint, formatOrOptions?: string | ... 1 more ... | undefined) => string; relativeTime: (date: n...'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(21,60): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(47,29): error TS2339: Property 'protectedProcedure' does not exist on type 'TRPCRootObject<{ format: { dateTime: (value: number | Date, formatOrOptions?: DateTimeFormatOptions | "short" | "long" | "shortWithHours" | "medium" | "full" | "extensive" | undefined) => string; number: (value: number | bigint, formatOrOptions?: string | ... 1 more ... | undefined) => string; relativeTime: (date: n...'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(55,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(55,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(76,9): error TS2353: Object literal may only specify known properties, and 'input' does not exist in type '{ appId: AppIdsWithUserAppTeamConfig; teamId: string; config: Partial<unknown>; }'.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(143,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(232,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api:dev: cache bypass, force executing 6a8aa27bdb69a4ec
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(22,26): error TS2339: Property 'protectedProcedure' does not exist on type 'TRPCRootObject<{ format: { dateTime: (value: number | Date, formatOrOptions?: DateTimeFormatOptions | "short" | "long" | "shortWithHours" | "medium" | "full" | "extensive" | undefined) => string; number: (value: number | bigint, formatOrOptions?: string | ... 1 more ... | undefined) => string; relativeTime: (date: n...'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(22,60): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(48,29): error TS2339: Property 'protectedProcedure' does not exist on type 'TRPCRootObject<{ format: { dateTime: (value: number | Date, formatOrOptions?: DateTimeFormatOptions | "short" | "long" | "shortWithHours" | "medium" | "full" | "extensive" | undefined) => string; number: (value: number | bigint, formatOrOptions?: string | ... 1 more ... | undefined) => string; relativeTime: (date: n...'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(56,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(56,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(77,9): error TS2353: Object literal may only specify known properties, and 'input' does not exist in type '{ appId: AppIdsWithUserAppTeamConfig; teamId: string; config: Partial<unknown>; }'.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(143,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(232,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api:dev: cache bypass, force executing 4e80c723b1b1a38a
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(77,9): error TS2353: Object literal may only specify known properties, and 'input' does not exist in type '{ appId: AppIdsWithUserAppTeamConfig; teamId: string; config: Partial<unknown>; }'.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(143,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(232,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api:dev: cache bypass, force executing 0ea4b6c4ab465af7
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(143,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(232,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/db:dev: cache bypass, force executing 187422d02956d482
-@kdx/shared:dev: cache bypass, force executing afb89322bed834cd
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/db:dev: cache bypass, force executing 6b174a21ea8c8956
-@kdx/ui:dev: cache bypass, force executing c30a32a592c8961b
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:dev: > tsc
-@kdx/db:dev: 
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/validators:dev: cache bypass, force executing 51e2d9db6d22cc2e
-@kdx/permissions:dev: cache bypass, force executing 9a222d0361e9ba89
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/api:dev: cache bypass, force executing 6eef0e5f00eafc24
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/shared:dev: cache bypass, force executing eb1ed64e94f0fbbd
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/db:dev: cache bypass, force executing f28bdf86a1f2c0c0
-@kdx/ui:dev: cache bypass, force executing ce77847ef40eb8fc
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:dev: > tsc
-@kdx/db:dev: 
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/shared:dev: cache bypass, force executing a0b0322676d05d9c
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/db:dev: cache bypass, force executing 2452c2c77623c8f3
-@kdx/ui:dev: cache bypass, force executing 7ce50e0915aeebf1
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:dev: > tsc
-@kdx/db:dev: 
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/shared:dev: cache bypass, force executing 6a226371c3645065
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/db:dev: cache bypass, force executing 421cac0a7d26cd40
-@kdx/ui:dev: cache bypass, force executing 1b527bad05a89889
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:dev: > tsc
-@kdx/db:dev: 
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/db:dev: src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai9x7m2k5p1s' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
-@kdx/db:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/db:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/db#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/db:dev: cache bypass, force executing cbae7b0d0be32765
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:dev: > tsc
-@kdx/db:dev: 
-@kdx/db:dev: src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai9x7m2k5p1s' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
-@kdx/db:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/db:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/db#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/db:dev: cache bypass, force executing 79ce249ecc4d44b8
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:dev: > tsc
-@kdx/db:dev: 
-@kdx/validators:dev: cache bypass, force executing 9a40a2a4dee15e8a
-@kdx/permissions:dev: cache bypass, force executing 29e358586a2e8a30
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/api:dev: cache bypass, force executing b34def132bd06535
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/validators:dev: cache bypass, force executing e1abbda09d6280ab
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/api:dev: cache bypass, force executing e7aaea13d254b928
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/validators:dev: cache bypass, force executing a317ccb5d568079e
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/api:dev: cache bypass, force executing dd35b8ef99474a7b
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/validators:dev: cache bypass, force executing 5daf9b5a1af32b8b
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/api:dev: cache bypass, force executing 5feb76a360d5cdf4
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/validators:dev: cache bypass, force executing dfa80e092976025b
-@kdx/ui:dev: cache bypass, force executing 1f8ed2423650eaf0
-@kdx/permissions:dev: cache bypass, force executing 9faa7edc749759e6
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/api:dev: cache bypass, force executing 8ed6389bdc38b361
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/ui:dev: cache bypass, force executing 1d2c8c8b780c1aea
-@kdx/validators:dev: cache bypass, force executing 4a21d34a1ae24d8b
-@kdx/permissions:dev: cache bypass, force executing a5d321a7912d4873
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/api:dev: cache bypass, force executing 5e12a865fa5e7bdb
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @kdx/api:dev: cache bypass, force executing 3b3e70569f06d133
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(27,38): error TS18047: 'ctx.auth.user' is possibly 'null'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(60,38): error TS18047: 'ctx.auth.user' is possibly 'null'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(75,17): error TS18047: 'ctx.auth.user' is possibly 'null'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(76,9): error TS2353: Object literal may only specify known properties, and 'input' does not exist in type '{ appId: AppIdsWithUserAppTeamConfig; teamId: string; config: Partial<unknown>; }'.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(143,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(232,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api:dev: cache bypass, force executing e3b43b6803567b4a
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(21,26): error TS2339: Property 'protectedProcedure' does not exist on type 'TRPCRootObject<{ format: { dateTime: (value: number | Date, formatOrOptions?: DateTimeFormatOptions | "short" | "long" | "shortWithHours" | "medium" | "full" | "extensive" | undefined) => string; number: (value: number | bigint, formatOrOptions?: string | ... 1 more ... | undefined) => string; relativeTime: (date: n...'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(21,60): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(47,29): error TS2339: Property 'protectedProcedure' does not exist on type 'TRPCRootObject<{ format: { dateTime: (value: number | Date, formatOrOptions?: DateTimeFormatOptions | "short" | "long" | "shortWithHours" | "medium" | "full" | "extensive" | undefined) => string; number: (value: number | bigint, formatOrOptions?: string | ... 1 more ... | undefined) => string; relativeTime: (date: n...'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(55,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(55,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(76,9): error TS2353: Object literal may only specify known properties, and 'input' does not exist in type '{ appId: AppIdsWithUserAppTeamConfig; teamId: string; config: Partial<unknown>; }'.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(143,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(232,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api:dev: cache bypass, force executing 6a8aa27bdb69a4ec
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(22,26): error TS2339: Property 'protectedProcedure' does not exist on type 'TRPCRootObject<{ format: { dateTime: (value: number | Date, formatOrOptions?: DateTimeFormatOptions | "short" | "long" | "shortWithHours" | "medium" | "full" | "extensive" | undefined) => string; number: (value: number | bigint, formatOrOptions?: string | ... 1 more ... | undefined) => string; relativeTime: (date: n...'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(22,60): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(48,29): error TS2339: Property 'protectedProcedure' does not exist on type 'TRPCRootObject<{ format: { dateTime: (value: number | Date, formatOrOptions?: DateTimeFormatOptions | "short" | "long" | "shortWithHours" | "medium" | "full" | "extensive" | undefined) => string; number: (value: number | bigint, formatOrOptions?: string | ... 1 more ... | undefined) => string; relativeTime: (date: n...'.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(56,24): error TS7031: Binding element 'ctx' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(56,29): error TS7031: Binding element 'input' implicitly has an 'any' type.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(77,9): error TS2353: Object literal may only specify known properties, and 'input' does not exist in type '{ appId: AppIdsWithUserAppTeamConfig; teamId: string; config: Partial<unknown>; }'.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(143,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(232,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api:dev: cache bypass, force executing 4e80c723b1b1a38a
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(77,9): error TS2353: Object literal may only specify known properties, and 'input' does not exist in type '{ appId: AppIdsWithUserAppTeamConfig; teamId: string; config: Partial<unknown>; }'.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(143,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(232,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api:dev: cache bypass, force executing 0ea4b6c4ab465af7
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/crons/sendNotificationsForCriticalTasks.cron.ts(66,47): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(143,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(232,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev: ../db/src/repositories/app/appRepository.ts(233,11): error TS2698: Spread types may only be created from object types.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/shared:dev: cache bypass, force executing afb89322bed834cd
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/db:dev: cache bypass, force executing 6b174a21ea8c8956
-@kdx/ui:dev: cache bypass, force executing c30a32a592c8961b
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:dev: > tsc
-@kdx/db:dev: 
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/validators:dev: cache bypass, force executing 51e2d9db6d22cc2e
-@kdx/permissions:dev: cache bypass, force executing 9a222d0361e9ba89
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/api:dev: cache bypass, force executing 6eef0e5f00eafc24
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/shared:dev: cache bypass, force executing eb1ed64e94f0fbbd
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/db:dev: cache bypass, force executing f28bdf86a1f2c0c0
-@kdx/ui:dev: cache bypass, force executing ce77847ef40eb8fc
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:dev: > tsc
-@kdx/db:dev: 
-@kdx/shared:dev: cache bypass, force executing a0b0322676d05d9c
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/db:dev: cache bypass, force executing 2452c2c77623c8f3
-@kdx/ui:dev: cache bypass, force executing 7ce50e0915aeebf1
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:dev: > tsc
-@kdx/db:dev: 
-@kdx/shared:dev: cache bypass, force executing 6a226371c3645065
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/db:dev: cache bypass, force executing 421cac0a7d26cd40
-@kdx/ui:dev: cache bypass, force executing 1b527bad05a89889
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:dev: > tsc
-@kdx/db:dev: 
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/db:dev: src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai9x7m2k5p1s' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
-@kdx/db:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/db:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/db#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/db:dev: cache bypass, force executing cbae7b0d0be32765
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:dev: > tsc
-@kdx/db:dev: 
-@kdx/db:dev: src/repositories/app/appRepository.ts(210,53): error TS2339: Property 'ai9x7m2k5p1s' does not exist on type '{ "1z50i9xblo4b": ZodObject<{ sendNotificationsForDelayedTasks: ZodOptional<ZodOptional<ZodBoolean>>; }, "strip", ZodTypeAny, { sendNotificationsForDelayedTasks?: boolean | undefined; }, { ...; }>; az1x2c3bv4n5: ZodObject<...>; }'.
-@kdx/db:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/db:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/db#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/db:dev: cache bypass, force executing 79ce249ecc4d44b8
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:dev: > tsc
-@kdx/db:dev: 
-@kdx/validators:dev: cache bypass, force executing 9a40a2a4dee15e8a
-@kdx/permissions:dev: cache bypass, force executing 29e358586a2e8a30
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/api:dev: cache bypass, force executing b34def132bd06535
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/validators:dev: cache bypass, force executing e1abbda09d6280ab
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/api:dev: cache bypass, force executing e7aaea13d254b928
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/validators:dev: cache bypass, force executing a317ccb5d568079e
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/api:dev: cache bypass, force executing dd35b8ef99474a7b
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/validators:dev: cache bypass, force executing 5daf9b5a1af32b8b
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/api:dev: cache bypass, force executing 5feb76a360d5cdf4
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/ui:dev: cache bypass, force executing 1f8ed2423650eaf0
-@kdx/validators:dev: cache bypass, force executing dfa80e092976025b
-@kdx/permissions:dev: cache bypass, force executing 9faa7edc749759e6
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/api:dev: cache bypass, force executing 8ed6389bdc38b361
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/ui:dev: cache bypass, force executing 1d2c8c8b780c1aea
-@kdx/validators:dev: cache bypass, force executing 4a21d34a1ae24d8b
-@kdx/permissions:dev: cache bypass, force executing a5d321a7912d4873
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/api:dev: cache bypass, force executing 5e12a865fa5e7bdb
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
+@kdx/kdx:dev: [TRPC_PERF] app.getUserAppTeamConfig took 13.48ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.getUserAppTeamConfig?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22appId%22%3A%22ai9x7m2k5p1s%22%7D%7D%7D 200 in 62ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.saveUserAppTeamConfig took 39.10ms to execute
+@kdx/kdx:dev:  POST /api/trpc/app.saveUserAppTeamConfig?batch=1 200 in 122ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.getUserAppTeamConfig took 4.81ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.getUserAppTeamConfig?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22appId%22%3A%22ai9x7m2k5p1s%22%7D%7D%7D 200 in 41ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAiProviders took 5.88ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiProviders?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 53ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.getUserAppTeamConfig took 10.83ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.getUserAppTeamConfig?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22appId%22%3A%22ai9x7m2k5p1s%22%7D%7D%7D 200 in 83ms
+@kdx/kdx:dev:  ✓ Compiled in 588ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.getUserAppTeamConfig took 9.67ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.getUserAppTeamConfig?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22appId%22%3A%22ai9x7m2k5p1s%22%7D%7D%7D 200 in 127ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.getTeamInstructions took 16.68ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.getTeamInstructions?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 137ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.getTeamInstructions took 5.98ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.getTeamInstructions?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 136ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAiTeamProviderTokens took 14.32ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAiProviders took 16.68ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiTeamProviderTokens,app.aiStudio.findAiProviders?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 114ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAvailableModels took 23.43ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.getDefaultModel took 28.82ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAvailableModels,app.aiStudio.getDefaultModel?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 62ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAiAgents took 18.41ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAiLibraries took 26.29ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiAgents,app.aiStudio.findAiLibraries?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22limite%22%3A100%2C%22offset%22%3A0%7D%7D%7D 200 in 62ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAiLibraries took 3.00ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiLibraries?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 33ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.toggleModel took 32.26ms to execute
+@kdx/kdx:dev:  POST /api/trpc/app.aiStudio.toggleModel?batch=1 200 in 115ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.getDefaultModel took 9.83ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAvailableModels took 11.15ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAvailableModels,app.aiStudio.getDefaultModel?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 41ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.toggleModel took 13.51ms to execute
+@kdx/kdx:dev:  POST /api/trpc/app.aiStudio.toggleModel?batch=1 200 in 49ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.getDefaultModel took 4.23ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAvailableModels took 7.02ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAvailableModels,app.aiStudio.getDefaultModel?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 34ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.toggleModel took 9.72ms to execute
+@kdx/kdx:dev:  POST /api/trpc/app.aiStudio.toggleModel?batch=1 200 in 40ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.getDefaultModel took 3.07ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAvailableModels took 6.40ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAvailableModels,app.aiStudio.getDefaultModel?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 32ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.toggleModel took 8.19ms to execute
+@kdx/kdx:dev:  POST /api/trpc/app.aiStudio.toggleModel?batch=1 200 in 36ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.getDefaultModel took 3.49ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAvailableModels took 5.86ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAvailableModels,app.aiStudio.getDefaultModel?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 34ms
