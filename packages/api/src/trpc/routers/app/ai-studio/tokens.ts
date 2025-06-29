@@ -1,4 +1,3 @@
-import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 
 import { aiStudioRepository } from "@kdx/db/repositories";
@@ -10,11 +9,12 @@ import {
 } from "@kdx/validators/trpc/app";
 
 import { protectedProcedure } from "../../../procedures";
+import { t } from "../../../trpc";
 
-export const aiTokensRouter = {
-  createAiTeamProviderToken: protectedProcedure
+export const aiTokensRouter = t.router({
+  create: protectedProcedure
     .input(createAiTeamProviderTokenSchema)
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ ctx, input }) => {
       try {
         const token =
           await aiStudioRepository.AiTeamProviderTokenRepository.create({
@@ -26,8 +26,7 @@ export const aiTokensRouter = {
         console.error("Error creating AI token:", error);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to create AI token",
-          cause: error,
+          message: "An unexpected error occurred",
         });
       }
     }),
@@ -118,4 +117,4 @@ export const aiTokensRouter = {
         });
       }
     }),
-} satisfies TRPCRouterRecord;
+});

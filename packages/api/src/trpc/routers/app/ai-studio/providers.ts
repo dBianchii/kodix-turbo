@@ -1,4 +1,3 @@
-import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -12,14 +11,15 @@ import {
 } from "@kdx/validators/trpc/app";
 
 import { protectedProcedure } from "../../../procedures";
+import { t } from "../../../trpc";
 
 // Simple ID schema
 const idSchema = z.object({
   id: z.string(),
 });
 
-export const aiProvidersRouter = {
-  createAiProvider: protectedProcedure
+export const aiProvidersRouter = t.router({
+  create: protectedProcedure
     .input(createAiProviderSchema)
     .mutation(async ({ input }) => {
       try {
@@ -69,7 +69,7 @@ export const aiProvidersRouter = {
       }
     }),
 
-  updateAiProvider: protectedProcedure
+  update: protectedProcedure
     .input(updateAiProviderSchema)
     .mutation(async ({ input }) => {
       const { id, ...data } = input;
@@ -89,21 +89,19 @@ export const aiProvidersRouter = {
       }
     }),
 
-  deleteAiProvider: protectedProcedure
-    .input(idSchema)
-    .mutation(async ({ input }) => {
-      try {
-        await aiStudioRepository.AiProviderRepository.delete(input.id);
-        return { success: true };
-      } catch (error) {
-        console.error("Error deleting AI provider:", error);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to delete AI provider",
-          cause: error,
-        });
-      }
-    }),
+  delete: protectedProcedure.input(idSchema).mutation(async ({ input }) => {
+    try {
+      await aiStudioRepository.AiProviderRepository.delete(input.id);
+      return { success: true };
+    } catch (error) {
+      console.error("Error deleting AI provider:", error);
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to delete AI provider",
+        cause: error,
+      });
+    }
+  }),
 
   // Enable all models from a provider globally
   enableProviderModels: protectedProcedure
@@ -159,4 +157,4 @@ export const aiProvidersRouter = {
         });
       }
     }),
-} satisfies TRPCRouterRecord;
+});

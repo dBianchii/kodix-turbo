@@ -12,10 +12,10 @@ export const commonRolesForAllApps = ["ADMIN"] as const;
 export const todoAppId = "7mwag78tv8pa";
 
 //* Calendar *//
-export const calendarAppId = "rglo4zodf341";
+export const calendarAppId = "calendar_app_321";
 
 //*  KodixCare *//
-export const kodixCareAppId = "1z50i9xblo4b";
+export const kodixCareAppId = "kodix_care_app_432";
 
 //* Chat *//
 export const chatAppId = "az1x2c3bv4n5";
@@ -23,13 +23,16 @@ export const chatAppId = "az1x2c3bv4n5";
 //* AI Studio *//
 export const aiStudioAppId = "ai9x7m2k5p1s";
 
+export const cupomAppId = "cupom_app_543";
+
 export const appIdToRoles = {
-  [kodixCareAppId]: [...commonRolesForAllApps, "CAREGIVER"] as const,
-  [calendarAppId]: [...commonRolesForAllApps] as const,
-  [todoAppId]: [...commonRolesForAllApps] as const,
-  [chatAppId]: [...commonRolesForAllApps] as const,
-  [aiStudioAppId]: [...commonRolesForAllApps] as const,
-};
+  [kodixCareAppId]: [...commonRolesForAllApps, "CAREGIVER"],
+  [calendarAppId]: [...commonRolesForAllApps],
+  [todoAppId]: [...commonRolesForAllApps],
+  [chatAppId]: [...commonRolesForAllApps],
+  [aiStudioAppId]: [...commonRolesForAllApps],
+  [cupomAppId]: [...commonRolesForAllApps],
+} as const;
 export const allRoles = [...new Set(Object.values(appIdToRoles).flat())];
 
 export type AppRole<T extends KodixAppId = keyof typeof appIdToRoles> =
@@ -40,7 +43,8 @@ export type KodixAppId =
   | typeof calendarAppId
   | typeof kodixCareAppId
   | typeof chatAppId
-  | typeof aiStudioAppId;
+  | typeof aiStudioAppId
+  | typeof cupomAppId;
 
 export type AppIdsWithConfig =
   | typeof kodixCareAppId
@@ -194,11 +198,12 @@ export const appIdToUserAppTeamConfigSchema = {
  * Formato: { [appId]: [array de dependências obrigatórias] }
  */
 export const appDependencies: Record<KodixAppId, KodixAppId[]> = {
-  [todoAppId]: [], // Todo não depende de nenhum app
-  [calendarAppId]: [], // Calendar não depende de nenhum app
-  [kodixCareAppId]: [calendarAppId], // Kodix Care depende do Calendar
-  [chatAppId]: [aiStudioAppId], // ✅ Chat DEPENDE do AI Studio
-  [aiStudioAppId]: [], // AI Studio não depende de nenhum app
+  [todoAppId]: [],
+  [calendarAppId]: [],
+  [kodixCareAppId]: [calendarAppId],
+  [chatAppId]: [aiStudioAppId],
+  [aiStudioAppId]: [],
+  [cupomAppId]: [],
 };
 
 /**
@@ -248,3 +253,29 @@ export function hasCircularDependencies(appId: KodixAppId): boolean {
 
   return hasCycle(appId);
 }
+
+export const appIds = [
+  todoAppId,
+  chatAppId,
+  aiStudioAppId,
+  calendarAppId,
+  kodixCareAppId,
+  cupomAppId,
+];
+export const kodixAppIds = [
+  todoAppId,
+  chatAppId,
+  aiStudioAppId,
+  calendarAppId,
+  kodixCareAppId,
+  cupomAppId,
+] as const;
+
+export const appNames = {
+  [todoAppId]: "Todo",
+  [chatAppId]: "Chat",
+  [aiStudioAppId]: "AI Studio",
+  [calendarAppId]: "Calendar",
+  [kodixCareAppId]: "Kodix Care",
+  [cupomAppId]: "Cupom",
+};

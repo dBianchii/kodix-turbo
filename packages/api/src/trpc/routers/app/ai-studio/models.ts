@@ -1,4 +1,3 @@
-import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -10,13 +9,14 @@ import {
 } from "@kdx/validators/trpc/app";
 
 import { protectedProcedure } from "../../../procedures";
+import { t } from "../../../trpc";
 
 // Simple ID schema
 const idSchema = z.object({
   id: z.string(),
 });
 
-export const aiModelsRouter = {
+export const aiModelsRouter = t.router({
   createAiModel: protectedProcedure
     .input(createAiModelSchema)
     .mutation(async ({ input }) => {
@@ -112,4 +112,4 @@ export const aiModelsRouter = {
         });
       }
     }),
-} satisfies TRPCRouterRecord;
+});
