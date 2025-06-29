@@ -7,6 +7,7 @@ import {
   aiStudioAppId,
   calendarAppId,
   chatAppId,
+  cupomAppId,
   kodixCareAppId,
   todoAppId,
 } from "@kdx/shared";
@@ -28,6 +29,8 @@ const appIdToPermissionsFactory = {
   [chatAppId]: ({ t: _ }: { t: ServerSideT }) => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   [aiStudioAppId]: ({ t: _ }: { t: ServerSideT }) => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  [cupomAppId]: ({ t: _ }: { t: ServerSideT }) => {},
 };
 
 export function defineAbilityForUserAndApp<T extends KodixAppId>({

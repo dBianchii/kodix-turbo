@@ -148,7 +148,25 @@ A leitura deste documento é **obrigatória** para todos os desenvolvedores.
   const finalRouter = t.mergeRouters(subRouterA, subRouterB, rootProcedures);
   ```
 
-### **8. Configuração Robusta de Testes (Vitest) no Monorepo**
+### **8. O Efeito Cascata de Constantes Globais (App IDs)**
+
+- **Lição**: Adicionar uma nova constante de ID global (ex: um novo `cupomAppId` em `@kdx/shared`) não é uma mudança isolada. É o início de uma cadeia de modificações necessárias em todo o monorepo.
+- **O Problema**: A adição de `cupomAppId` causou uma série de erros de compilação em múltiplos pacotes (`@kdx/db`, `@kdx/permissions`, `@kdx/locales`), pois diversos objetos de mapeamento (`appIdToSchemas`, `appIdToPermissionsFactory`, `appIdToName`, etc.) se tornaram incompletos e, portanto, inválidos do ponto de vista do TypeScript.
+- **Ação Preventiva**: Ao adicionar uma nova constante de ID que é parte de um tipo `union` (como `KodixAppId`), use a busca global do editor para encontrar **todas** as ocorrências do tipo e dos objetos de mapeamento relacionados (`Record<KodixAppId, ...>`). Atualize cada um deles antes de tentar compilar o projeto. Trate a adição de um ID como uma refatoração em todo o sistema, não como uma mudança em um único arquivo.
+
+### **9. Fluxo de Inicialização Robusto do Servidor**
+
+- **Lição**: Scripts que apenas verificam se uma porta está em uso (`check-dev-status.sh`) são insuficientes e podem levar a loops infinitos se o servidor falhar em compilar.
+- **O Problema**: O script `check-dev-status.sh` ficava "preso", aguardando um servidor que nunca iniciaria porque havia um erro de compilação em um pacote dependente que impedia o `pnpm dev:kdx` de concluir.
+- **Ação Preventiva**: Adotar um fluxo de inicialização em múltiplos estágios que prioriza a detecção de erros.
+  1.  `sh ./scripts/stop-dev.sh` (Garante um ambiente limpo)
+  2.  `sh ./scripts/start-dev-bg.sh` (Inicia em segundo plano)
+  3.  `sleep 5` (Aguarda a geração de logs)
+  4.  `sh ./scripts/check-log-errors.sh` (**Passo crítico: verifica erros de build primeiro**)
+  5.  `sh ./scripts/check-dev-status.sh` (Verifica se o servidor está rodando, **somente se não houver erros**)
+- **Referência:** Este fluxo agora está documentado em `docs/scripts/README.md`.
+
+### **10. Configuração Robusta de Testes (Vitest) no Monorepo**
 
 - **Lição**: A configuração de testes em um monorepo com Vitest possui particularidades que, se não tratadas corretamente, levam a erros de inicialização.
 - **O Problema 1**: Erro `Cannot find module ...` com caminhos duplicados (ex: `packages/api/packages/api/...`).

@@ -103,15 +103,16 @@ graph TD
       - Deixar o código preparado com comentários para futuramente incluir `TeamConfigService` e `UserConfigService`.
     - **Validação:** Executar `pnpm typecheck --filter=@kdx/api`.
 
-4.  **[ ] Integrar no `AiStudioService` e no Router:**
+4.  **[✅] Integrar no `AiStudioService` e Refatorar o Router:**
     - **Arquivo:** `packages/api/src/internal/services/ai-studio.service.ts`
     - **Ação:** Adicionar o método `getSystemPromptForChat` que chama o `PromptBuilderService`.
-    - **Arquivo:** `packages/api/src/trpc/routers/app/aiStudio/_router.ts`
+    - **Arquivo:** `packages/api/src/trpc/routers/app/aiStudio/_router.ts` e seus sub-routers.
     - **Ação Detalhada (Prevenção de Erros de Tipo):**
-      - **1. Análise:** Verifique se o `aiStudioRouter` existente já combina sub-routers (ex: `...aiAgentsRouter`).
-      - **2. Isolar Procedimentos:** Se houver uma mistura de sub-routers e procedures avulsos, crie um novo router (`const aiStudioRootRouter = t.router({...})`) contendo apenas os procedures avulsos e o novo `getSystemPromptForChat`.
-      - **3. Mesclar Routers:** Use `t.mergeRouters(aiStudioRootRouter, aiAgentsRouter, ...)` para combinar todos os routers de forma segura.
-      - **4. Proibição:** Não use spread syntax (`...`) para combinar routers dentro de `t.router({})`. Consulte a lição em `docs/architecture/lessons-learned.md`.
+      - **1. Refatorar Sub-Routers Dependentes:** Antes de modificar o router principal, foi necessário corrigir todos os sub-routers (`agents.ts`, `models.ts`, `providers.ts`, `tokens.ts`) para que usassem `t.router({})` em vez do antipadrão `satisfies TRPCRouterRecord`.
+      - **2. Extrair `aiLibrariesRouter`:** A lógica do router de bibliotecas, que estava no arquivo `_router.ts`, foi extraída para seu próprio arquivo, `libraries.ts`, seguindo o padrão modular.
+      - **3. Isolar Procedimentos no Router Principal:** No `_router.ts`, todos os procedures que não pertenciam a um sub-router foram agrupados em um `aiStudioMainRouter = t.router({...})`.
+      - **4. Mesclar Routers com `t.mergeRouters`:** Utilizar a função `t.mergeRouters()` para combinar de forma segura o `aiStudioMainRouter` e todos os sub-routers (`aiAgentsRouter`, `aiLibrariesRouter`, etc.), garantindo a correta inferência de tipos.
+      - **5. Adicionar Novo Endpoint:** O novo `getSystemPromptForChat` foi adicionado ao `aiStudioMainRouter`.
     - **Validação:** `pnpm typecheck --filter=@kdx/api`.
 
 ### Fase 2: Testes e Validação

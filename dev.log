@@ -7,39 +7,9 @@ turbo 2.5.4
 • Packages in scope: @kdx/api, @kdx/auth, @kdx/dayjs, @kdx/db, @kdx/eslint-config, @kdx/kdx, @kdx/locales, @kdx/permissions, @kdx/prettier-config, @kdx/react-email, @kdx/shared, @kdx/tailwind-config, @kdx/tsconfig, @kdx/ui, @kdx/validators
 • Running dev, studio, @kdx/db-dev#dev in 15 packages
 • Remote caching disabled
- WARNING  stale pid file at "/var/folders/tk/bfypnv4d3tjfttdphzc6p3t40000gp/T/turbod/a89c7e7f03fa7f41/turbod.pid"
-@kdx/shared:dev: cache bypass, force executing d952329bcb18598c
 @kdx/db-dev:dev: cache bypass, force executing 38eadc5db1ef109f
-@kdx/db:studio: cache bypass, force executing 0c9bb32df5c7bcef
-@kdx/kdx:dev: cache bypass, force executing 16bc3b67e9301cb3
-@kdx/kdx:dev: 
-@kdx/kdx:dev: > @kdx/kdx@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/apps/kdx
-@kdx/kdx:dev: > pnpm with-env next dev --turbo --port 3000
-@kdx/kdx:dev: 
-@kdx/db:studio: 
-@kdx/db:studio: > @kdx/db@0.1.0 studio /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:studio: > pnpm wait-for-db && pnpm with-env drizzle-kit studio
-@kdx/db:studio: 
-@kdx/db-dev:dev: 
-@kdx/db-dev:dev: > @kdx/db-dev@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db-dev
-@kdx/db-dev:dev: > trap 'docker compose stop' EXIT; docker compose up --build
-@kdx/db-dev:dev: 
-@kdx/db-dev:dev: unknown flag: --build
-@kdx/db-dev:dev: 
-@kdx/db-dev:dev: Usage:  docker [OPTIONS] COMMAND [ARG...]
-@kdx/db-dev:dev: 
-@kdx/db-dev:dev: Run 'docker --help' for more information
-@kdx/db-dev:dev:  Container kodix-db-mysql-1  Stopping
-@kdx/db-dev:dev:  Container kodix-db-serverless-redis-http-1  Stopping
-@kdx/db-dev:dev:  Container kodix-db-redis-1  Stopping
-@kdx/db-dev:dev:  Container kodix-db-mysql-1  Stopped
-@kdx/db-dev:dev:  Container kodix-db-serverless-redis-http-1  Stopped
-@kdx/db-dev:dev:  Container kodix-db-redis-1  Stopped
-@kdx/db-dev:dev:  ELIFECYCLE  Command failed with exit code 125.
-@kdx/db-dev:dev:  WARN   Local package.json exists, but node_modules missing, did you mean to install?
-@kdx/db-dev:dev: cache bypass, force executing 38eadc5db1ef109f
-@kdx/db:studio: cache bypass, force executing 0c9bb32df5c7bcef
-@kdx/shared:dev: cache bypass, force executing d952329bcb18598c
+@kdx/db:studio: cache bypass, force executing 11786487eda81c41
+@kdx/shared:dev: cache bypass, force executing 70ba22ca80458d67
 @kdx/kdx:dev: cache bypass, force executing 16bc3b67e9301cb3
 @kdx/db-dev:dev: 
 @kdx/db-dev:dev: > @kdx/db-dev@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db-dev
@@ -49,14 +19,19 @@ turbo 2.5.4
 @kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
 @kdx/shared:dev: > tsc
 @kdx/shared:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: > @kdx/kdx@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/apps/kdx
-@kdx/kdx:dev: > pnpm with-env next dev --turbo --port 3000
-@kdx/kdx:dev: 
 @kdx/db:studio: 
 @kdx/db:studio: > @kdx/db@0.1.0 studio /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
 @kdx/db:studio: > pnpm wait-for-db && pnpm with-env drizzle-kit studio
 @kdx/db:studio: 
+@kdx/kdx:dev: 
+@kdx/kdx:dev: > @kdx/kdx@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/apps/kdx
+@kdx/kdx:dev: > pnpm with-env next dev --turbo --port 3000
+@kdx/kdx:dev: 
+@kdx/db-dev:dev:  Network kodix-db_default  Creating
+@kdx/db-dev:dev:  Network kodix-db_default  Created
+@kdx/db-dev:dev:  Container kodix-db-mysql-1  Creating
+@kdx/db-dev:dev:  Container kodix-db-serverless-redis-http-1  Creating
+@kdx/db-dev:dev:  Container kodix-db-redis-1  Creating
 @kdx/db-dev:dev:  Container kodix-db-serverless-redis-http-1  Created
 @kdx/db-dev:dev:  Container kodix-db-redis-1  Created
 @kdx/db-dev:dev:  Container kodix-db-mysql-1  Created
@@ -70,103 +45,94 @@ turbo 2.5.4
 @kdx/kdx:dev: > dotenv -e ../../.env -- "next" "dev" "--turbo" "--port" "3000"
 @kdx/kdx:dev: 
 @kdx/db-dev:dev: redis-1                  | Starting Redis Server
-@kdx/db-dev:dev: mysql-1                  | 2025-06-29 21:27:57+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.2.0-1.el8 started.
-@kdx/db-dev:dev: redis-1                  | 1:C 29 Jun 2025 21:27:57.047 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
-@kdx/db-dev:dev: redis-1                  | 1:C 29 Jun 2025 21:27:57.047 * Redis version=8.0.2, bits=64, commit=00000000, modified=1, pid=1, just started
-@kdx/db-dev:dev: redis-1                  | 1:C 29 Jun 2025 21:27:57.047 * Configuration loaded
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.048 * monotonic clock: POSIX clock_gettime
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.054 * Running mode=standalone, port=6379.
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.056 * <bf> RedisBloom version 8.0.1 (Git=unknown)
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.056 * <bf> Registering configuration options: [
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.056 * <bf> 	{ bf-error-rate       :      0.01 }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.056 * <bf> 	{ bf-initial-size     :       100 }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.056 * <bf> 	{ bf-expansion-factor :         2 }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.056 * <bf> 	{ cf-bucket-size      :         2 }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.056 * <bf> 	{ cf-initial-size     :      1024 }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.056 * <bf> 	{ cf-max-iterations   :        20 }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.056 * <bf> 	{ cf-expansion-factor :         1 }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.056 * <bf> 	{ cf-max-expansions   :        32 }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.056 * <bf> ]
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.056 * Module 'bf' loaded from /usr/local/lib/redis/modules//redisbloom.so
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.059 * <search> Redis version found by RedisSearch : 8.0.2 - oss
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.059 * <search> RediSearch version 8.0.1 (Git=5688fcc)
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.059 * <search> Low level api version 1 initialized successfully
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.060 * <search> gc: ON, prefix min length: 2, min word length to stem: 4, prefix max expansions: 200, query timeout (ms): 500, timeout policy: return, cursor read size: 1000, cursor max idle (ms): 300000, max doctable size: 1000000, max number of search results:  1000000, 
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.060 * <search> Initialized thread pools!
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.060 * <search> Disabled workers threadpool of size 0
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.060 * <search> Subscribe to config changes
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.060 * <search> Enabled role change notification
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.060 * <search> Cluster configuration: AUTO partitions, type: 0, coordinator timeout: 0ms
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.060 * <search> Register write commands
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.060 * Module 'search' loaded from /usr/local/lib/redis/modules//redisearch.so
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.061 * <timeseries> RedisTimeSeries version 80001, git_sha=577bfa8b5909e7ee572f0b651399be8303dc6641
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.061 * <timeseries> Redis version found by RedisTimeSeries : 8.0.2 - oss
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.061 * <timeseries> Registering configuration options: [
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.061 * <timeseries> 	{ ts-compaction-policy   :              }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.061 * <timeseries> 	{ ts-num-threads         :            3 }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.061 * <timeseries> 	{ ts-retention-policy    :            0 }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.061 * <timeseries> 	{ ts-duplicate-policy    :        block }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.061 * <timeseries> 	{ ts-chunk-size-bytes    :         4096 }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.061 * <timeseries> 	{ ts-encoding            :   compressed }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.061 * <timeseries> 	{ ts-ignore-max-time-diff:            0 }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.061 * <timeseries> 	{ ts-ignore-max-val-diff :     0.000000 }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.061 * <timeseries> ]
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.061 * <timeseries> Detected redis oss
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.062 * Module 'timeseries' loaded from /usr/local/lib/redis/modules//redistimeseries.so
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.065 * <ReJSON> Created new data type 'ReJSON-RL'
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.065 * <ReJSON> version: 80001 git sha: unknown branch: unknown
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.065 * <ReJSON> Exported RedisJSON_V1 API
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.065 * <ReJSON> Exported RedisJSON_V2 API
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.065 * <ReJSON> Exported RedisJSON_V3 API
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.065 * <ReJSON> Exported RedisJSON_V4 API
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.065 * <ReJSON> Exported RedisJSON_V5 API
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.065 * <ReJSON> Enabled diskless replication
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.065 * <ReJSON> Initialized shared string cache, thread safe: false.
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.065 * Module 'ReJSON' loaded from /usr/local/lib/redis/modules//rejson.so
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.065 * <search> Acquired RedisJSON_V5 API
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.066 * Server initialized
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.066 * <search> Loading event starts
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.066 * <search> Enabled workers threadpool of size 4
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.066 * Loading RDB produced by version 8.0.2
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.066 * RDB age 137 seconds
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.066 * RDB memory usage when created 0.95 Mb
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.066 * Done loading RDB, keys loaded: 0, keys expired: 0.
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.066 * <search> Disabled workers threadpool of size 4
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.066 * <search> Loading event ends
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.066 * DB loaded from disk: 0.000 seconds
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 21:27:57.066 * Ready to accept connections tcp
-@kdx/db-dev:dev: mysql-1                  | 2025-06-29 21:27:57+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
-@kdx/db-dev:dev: mysql-1                  | 2025-06-29 21:27:57+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.2.0-1.el8 started.
+@kdx/db-dev:dev: mysql-1                  | 2025-06-29 22:07:46+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.2.0-1.el8 started.
+@kdx/db-dev:dev: redis-1                  | 1:C 29 Jun 2025 22:07:46.419 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+@kdx/db-dev:dev: redis-1                  | 1:C 29 Jun 2025 22:07:46.419 * Redis version=8.0.2, bits=64, commit=00000000, modified=1, pid=1, just started
+@kdx/db-dev:dev: redis-1                  | 1:C 29 Jun 2025 22:07:46.419 * Configuration loaded
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.419 * monotonic clock: POSIX clock_gettime
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.421 * Running mode=standalone, port=6379.
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.423 * <bf> RedisBloom version 8.0.1 (Git=unknown)
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.423 * <bf> Registering configuration options: [
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.423 * <bf> 	{ bf-error-rate       :      0.01 }
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.423 * <bf> 	{ bf-initial-size     :       100 }
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.423 * <bf> 	{ bf-expansion-factor :         2 }
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.423 * <bf> 	{ cf-bucket-size      :         2 }
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.423 * <bf> 	{ cf-initial-size     :      1024 }
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.423 * <bf> 	{ cf-max-iterations   :        20 }
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.423 * <bf> 	{ cf-expansion-factor :         1 }
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.423 * <bf> 	{ cf-max-expansions   :        32 }
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.423 * <bf> ]
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.423 * Module 'bf' loaded from /usr/local/lib/redis/modules//redisbloom.so
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.443 * <search> Redis version found by RedisSearch : 8.0.2 - oss
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.443 * <search> RediSearch version 8.0.1 (Git=5688fcc)
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.443 * <search> Low level api version 1 initialized successfully
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.443 * <search> gc: ON, prefix min length: 2, min word length to stem: 4, prefix max expansions: 200, query timeout (ms): 500, timeout policy: return, cursor read size: 1000, cursor max idle (ms): 300000, max doctable size: 1000000, max number of search results:  1000000, 
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.444 * <search> Initialized thread pools!
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.444 * <search> Disabled workers threadpool of size 0
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.445 * <search> Subscribe to config changes
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.445 * <search> Enabled role change notification
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.445 * <search> Cluster configuration: AUTO partitions, type: 0, coordinator timeout: 0ms
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.445 * <search> Register write commands
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.446 * Module 'search' loaded from /usr/local/lib/redis/modules//redisearch.so
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.448 * <timeseries> RedisTimeSeries version 80001, git_sha=577bfa8b5909e7ee572f0b651399be8303dc6641
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.449 * <timeseries> Redis version found by RedisTimeSeries : 8.0.2 - oss
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.449 * <timeseries> Registering configuration options: [
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.449 * <timeseries> 	{ ts-compaction-policy   :              }
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.449 * <timeseries> 	{ ts-num-threads         :            3 }
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.449 * <timeseries> 	{ ts-retention-policy    :            0 }
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.449 * <timeseries> 	{ ts-duplicate-policy    :        block }
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.449 * <timeseries> 	{ ts-chunk-size-bytes    :         4096 }
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.449 * <timeseries> 	{ ts-encoding            :   compressed }
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.449 * <timeseries> 	{ ts-ignore-max-time-diff:            0 }
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.449 * <timeseries> 	{ ts-ignore-max-val-diff :     0.000000 }
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.449 * <timeseries> ]
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.449 * <timeseries> Detected redis oss
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.450 * Module 'timeseries' loaded from /usr/local/lib/redis/modules//redistimeseries.so
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.456 * <ReJSON> Created new data type 'ReJSON-RL'
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.457 * <ReJSON> version: 80001 git sha: unknown branch: unknown
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.457 * <ReJSON> Exported RedisJSON_V1 API
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.457 * <ReJSON> Exported RedisJSON_V2 API
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.457 * <ReJSON> Exported RedisJSON_V3 API
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.457 * <ReJSON> Exported RedisJSON_V4 API
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.457 * <ReJSON> Exported RedisJSON_V5 API
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.457 * <ReJSON> Enabled diskless replication
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.458 * <ReJSON> Initialized shared string cache, thread safe: false.
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.458 * Module 'ReJSON' loaded from /usr/local/lib/redis/modules//rejson.so
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.458 * <search> Acquired RedisJSON_V5 API
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.458 * Server initialized
+@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.459 * Ready to accept connections tcp
+@kdx/db-dev:dev: mysql-1                  | 2025-06-29 22:07:46+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
+@kdx/db-dev:dev: mysql-1                  | 2025-06-29 22:07:46+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.2.0-1.el8 started.
 @kdx/db-dev:dev: mysql-1                  | '/var/lib/mysql/mysql.sock' -> '/var/run/mysqld/mysqld.sock'
-@kdx/db:dev: cache bypass, force executing 8e16fef6a973ca08
-@kdx/ui:dev: cache bypass, force executing 92649c2edca398c3
-@kdx/db-dev:dev: mysql-1                  | 2025-06-29T21:27:57.444010Z 0 [System] [MY-015015] [Server] MySQL Server - start.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-29T21:27:57.760337Z 0 [Warning] [MY-011068] [Server] The syntax '--skip-host-cache' is deprecated and will be removed in a future release. Please use SET GLOBAL host_cache_size=0 instead.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-29T21:27:57.762286Z 0 [System] [MY-010116] [Server] /usr/sbin/mysqld (mysqld 8.2.0) starting as process 1
-@kdx/db-dev:dev: mysql-1                  | 2025-06-29T21:27:57.770961Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-29T21:27:57.877504Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
-@kdx/db:studio: Connection to localhost port 3306 [tcp/mysql] succeeded!
-@kdx/db-dev:dev: mysql-1                  | 2025-06-29T21:27:58.003006Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-29T21:27:58.003030Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-29T21:27:58.004837Z 0 [Warning] [MY-011810] [Server] Insecure configuration for --pid-file: Location '/var/run/mysqld' in the path is accessible to all OS users. Consider choosing a different directory.
+@kdx/db:dev: cache bypass, force executing a1e230035d38b6bd
+@kdx/ui:dev: cache bypass, force executing 1f5e32a68bedabcd
+@kdx/db-dev:dev: mysql-1                  | 2025-06-29T22:07:46.776980Z 0 [System] [MY-015015] [Server] MySQL Server - start.
+@kdx/db-dev:dev: mysql-1                  | 2025-06-29T22:07:46.990767Z 0 [Warning] [MY-011068] [Server] The syntax '--skip-host-cache' is deprecated and will be removed in a future release. Please use SET GLOBAL host_cache_size=0 instead.
+@kdx/db-dev:dev: mysql-1                  | 2025-06-29T22:07:46.991884Z 0 [System] [MY-010116] [Server] /usr/sbin/mysqld (mysqld 8.2.0) starting as process 1
+@kdx/db-dev:dev: mysql-1                  | 2025-06-29T22:07:47.001819Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
 @kdx/ui:dev: 
 @kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
 @kdx/ui:dev: > tsc
 @kdx/ui:dev: 
-@kdx/db-dev:dev: mysql-1                  | 2025-06-29T21:27:58.065588Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '::' port: 33060, socket: /var/run/mysqld/mysqlx.sock
-@kdx/db-dev:dev: mysql-1                  | 2025-06-29T21:27:58.065657Z 0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '8.2.0'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL Community Server - GPL.
 @kdx/db:dev: 
 @kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
 @kdx/db:dev: > tsc
 @kdx/db:dev: 
+@kdx/db:studio: Connection to localhost port 3306 [tcp/mysql] succeeded!
+@kdx/db-dev:dev: mysql-1                  | 2025-06-29T22:07:47.181954Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
 @kdx/kdx:dev:    ▲ Next.js 15.3.4 (Turbopack)
 @kdx/kdx:dev:    - Local:        http://localhost:3000
-@kdx/kdx:dev:    - Network:      http://192.168.3.50:3000
+@kdx/kdx:dev:    - Network:      http://192.168.3.62:3000
 @kdx/kdx:dev:    - Experiments (use with caution):
 @kdx/kdx:dev:      · turbo
 @kdx/kdx:dev: 
 @kdx/kdx:dev:  ✓ Starting...
 @kdx/kdx:dev:  ⚠ The config property `experimental.turbo` is deprecated. Move this setting to `config.turbopack` as Turbopack is now stable.
+@kdx/db-dev:dev: mysql-1                  | 2025-06-29T22:07:47.434206Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+@kdx/db-dev:dev: mysql-1                  | 2025-06-29T22:07:47.434267Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+@kdx/db-dev:dev: mysql-1                  | 2025-06-29T22:07:47.437984Z 0 [Warning] [MY-011810] [Server] Insecure configuration for --pid-file: Location '/var/run/mysqld' in the path is accessible to all OS users. Consider choosing a different directory.
+@kdx/db-dev:dev: mysql-1                  | 2025-06-29T22:07:47.478981Z 0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '8.2.0'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL Community Server - GPL.
+@kdx/db-dev:dev: mysql-1                  | 2025-06-29T22:07:47.479095Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '::' port: 33060, socket: /var/run/mysqld/mysqlx.sock
 @kdx/db:studio: 
 @kdx/db:studio: > @kdx/db@0.1.0 with-env /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
 @kdx/db:studio: > dotenv -e ../../.env -- "drizzle-kit" "studio"
@@ -177,533 +143,348 @@ turbo 2.5.4
 @kdx/db:studio:  Warning  Drizzle Studio is currently in Beta. If you find anything that is not working as expected or should be improved, feel free to create an issue on GitHub: https://github.com/drizzle-team/drizzle-kit-mirror/issues/new or write to us on Discord: https://discord.gg/WcRKz2FFxN
 @kdx/db:studio: 
 @kdx/db:studio: Drizzle Studio is up and running on https://local.drizzle.studio
-@kdx/kdx:dev:  ○ Compiling middleware ...
-@kdx/kdx:dev:  ✓ Compiled middleware in 577ms
-@kdx/validators:dev: cache bypass, force executing c43949869078904f
-@kdx/permissions:dev: cache bypass, force executing fbd042a2b17e2711
+@kdx/validators:dev: cache bypass, force executing 0db5ec7b3a4f18aa
+@kdx/permissions:dev: cache bypass, force executing 6c8d0c80a9e09043
+@kdx/kdx:dev:  ✓ Compiled middleware in 300ms
 @kdx/db-dev:dev: serverless-redis-http-1  | Using port 80
 @kdx/db-dev:dev: serverless-redis-http-1  | Token resolver started
 @kdx/db-dev:dev: serverless-redis-http-1  | Loaded config from env. 1 entries.
-@kdx/kdx:dev:  ✓ Ready in 2.7s
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/permissions:dev: 
+@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
+@kdx/permissions:dev: > tsc
+@kdx/permissions:dev: 
+@kdx/kdx:dev:  ✓ Ready in 1770ms
 @kdx/kdx:dev:  ⚠ Webpack is configured while Turbopack is not, which may cause problems.
 @kdx/kdx:dev:  ⚠ See instructions if you need to configure Turbopack:
 @kdx/kdx:dev:   https://nextjs.org/docs/app/api-reference/next-config-js/turbo
 @kdx/kdx:dev: 
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
+@kdx/api:dev: cache bypass, force executing 77c7bae2f550540e
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
 @kdx/kdx:dev:  ○ Compiling /[locale] ...
-@kdx/api:dev: cache bypass, force executing 448a94e6a4c20f64
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/kdx:dev:  ✓ Compiled /[locale] in 6.9s
-@kdx/kdx:dev:  GET / 200 in 121ms
-@kdx/kdx:dev:  GET / 200 in 112ms
-@kdx/api:dev: cache bypass, force executing 5982ba40211ffb04
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: cache bypass, force executing b62f4d1badd46f25
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/db:dev: cache bypass, force executing 79ce249ecc4d44b8
-@kdx/shared:dev: cache bypass, force executing 6a226371c3645065
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/db:dev: cache bypass, force executing 5b6dd2c68ba7f9fa
-@kdx/ui:dev: cache bypass, force executing 7455a27f735d621f
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:dev: > tsc
-@kdx/db:dev: 
-@kdx/validators:dev: cache bypass, force executing da41963b989b70af
-@kdx/permissions:dev: cache bypass, force executing 3294a28ccfa23e19
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/api:dev: cache bypass, force executing 88975b1dd71078b6
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: cache bypass, force executing 7413c3197a81e8ce
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: cache bypass, force executing db2082ba14eb40d0
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/internal/services/platform.service.ts(78,11): error TS2353: Object literal may only specify known properties, and 'locale' does not exist in type '{ id?: boolean | undefined; name?: boolean | undefined; passwordHash?: boolean | undefined; email?: boolean | undefined; image?: boolean | undefined; activeTeamId?: boolean | undefined; kodixAdmin?: boolean | undefined; }'.
-@kdx/api:dev: src/internal/services/platform.service.ts(81,11): error TS2561: Object literal may only specify known properties, but 'activeTeam' does not exist in type '{ ActiveTeam?: true | { columns?: { id?: boolean | undefined; name?: boolean | undefined; createdAt?: boolean | undefined; updatedAt?: boolean | undefined; ownerId?: boolean | undefined; } | undefined; with?: { ...; } | undefined; extras?: Record<...> | ... 1 more ... | undefined; } | undefined; ... 7 more ...; User...'. Did you mean to write 'ActiveTeam'?
-@kdx/api:dev: src/internal/services/platform.service.ts(99,28): error TS2339: Property 'locale' does not exist on type '{ name: string; id: string; passwordHash: string | null; email: string; image: string | null; activeTeamId: string; kodixAdmin: boolean; }'.
-@kdx/api:dev: src/internal/services/platform.service.ts(100,24): error TS2551: Property 'activeTeam' does not exist on type '{ name: string; id: string; passwordHash: string | null; email: string; image: string | null; activeTeamId: string; kodixAdmin: boolean; }'. Did you mean 'activeTeamId'?
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api:dev: cache bypass, force executing 477330b84568396a
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/internal/services/platform.service.ts(98,28): error TS2339: Property 'locale' does not exist on type '{ name: string; id: string; email: string; ActiveTeam: { name: string; id: string; }; }'.
-@kdx/api:dev: src/internal/services/platform.service.ts(99,24): error TS2551: Property 'activeTeam' does not exist on type '{ name: string; id: string; email: string; ActiveTeam: { name: string; id: string; }; }'. Did you mean 'ActiveTeam'?
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api:dev: cache bypass, force executing 4f2f0511e4c7e996
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: cache bypass, force executing a9ac6c90881dda02
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: cache bypass, force executing e2df0dd13f158b8c
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: cache bypass, force executing 37e9a36300bf99af
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: cache bypass, force executing 6312067a6170450e
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: cache bypass, force executing e8333bd6501a9247
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(434,13): error TS2304: Cannot find name 'TRPCRouterRecord'.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api:dev: cache bypass, force executing 34d2cc279c3f8c3c
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(435,13): error TS2304: Cannot find name 'TRPCRouterRecord'.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api:dev: cache bypass, force executing e62f70fd192874e3
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(427,29): error TS1005: ')' expected.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/kdx:dev:  GET / 200 in 208ms
-@kdx/kdx:dev:  ○ Compiling /[locale]/[...rest] ...
-@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 1431ms
-@kdx/kdx:dev:  ✓ Compiled /[locale]/[...rest] in 4.1s
-@kdx/kdx:dev:  GET /.well-known/appspecific/com.chrome.devtools.json 404 in 4490ms
+@kdx/kdx:dev:  ✓ Compiled /[locale] in 4.8s
+@kdx/kdx:dev:  GET / 200 in 1762ms
+@kdx/kdx:dev:  GET / 200 in 107ms
+@kdx/kdx:dev:  GET / 200 in 144ms
+@kdx/kdx:dev:  ✓ Compiled /manifest.webmanifest in 284ms
+@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 328ms
 @kdx/kdx:dev:  ○ Compiling /[locale]/signin ...
-@kdx/kdx:dev:  ✓ Compiled /[locale]/signin in 2.6s
-@kdx/kdx:dev:  ⨯ ./packages/api/src/trpc/routers/app/ai-studio/_router.ts:427:29
-@kdx/kdx:dev: Parsing ecmascript source code failed
-@kdx/kdx:dev: [0m [90m 425 |[39m       }[0m
-@kdx/kdx:dev: [0m [90m 426 |[39m     })[33m,[39m[0m
-@kdx/kdx:dev: [0m[31m[1m>[22m[39m[90m 427 |[39m } satisfies [33mTRPCRouterRecord[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m     |[39m                             [31m[1m^[22m[39m[0m
-@kdx/kdx:dev: [0m [90m 428 |[39m[0m
-@kdx/kdx:dev: 
-@kdx/kdx:dev: Expected ',', got ';'
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: ./packages/api/src/trpc/routers/app/_router.ts:20:1
-@kdx/kdx:dev: Export aiStudioRouter doesn't exist in target module
-@kdx/kdx:dev: [0m [90m 18 |[39m } [36mfrom[39m [32m"../../procedures"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 19 |[39m [36mimport[39m { t } [36mfrom[39m [32m"../../trpc"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m[31m[1m>[22m[39m[90m 20 |[39m [36mimport[39m { aiStudioRouter } [36mfrom[39m [32m"./ai-studio/_router"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
-@kdx/kdx:dev: [0m [90m 21 |[39m [36mimport[39m { calendarRouter } [36mfrom[39m [32m"./calendar/_router"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 22 |[39m [36mimport[39m { chatRouter } [36mfrom[39m [32m"./chat/_router"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 23 |[39m [36mimport[39m { getAllHandler } [36mfrom[39m [32m"./getAll.handler"[39m[33m;[39m[0m
-@kdx/kdx:dev: 
-@kdx/kdx:dev: The export aiStudioRouter was not found in module [project]/packages/api/src/trpc/routers/app/ai-studio/_router.ts [app-rsc] (ecmascript).
-@kdx/kdx:dev: The module has no exports at all.
-@kdx/kdx:dev: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev:  ○ Compiling /_error ...
-@kdx/kdx:dev:  ✓ Compiled /_error in 783ms
-@kdx/kdx:dev:  GET /signin 500 in 3564ms
-@kdx/api:dev: cache bypass, force executing 84dccb145bcfc5f9
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: cache bypass, force executing c8784b9e9db4f165
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: cache bypass, force executing 245275eb2a73777c
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: cache bypass, force executing df64cac3bb2864d7
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(427,29): error TS1005: ')' expected.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/kdx:dev:  ⨯ ./packages/api/src/trpc/routers/app/ai-studio/_router.ts:21:1
-@kdx/kdx:dev: Module not found: Can't resolve '../../../internal/services/ai-studio.service'
-@kdx/kdx:dev: [0m [90m 19 |[39m } [36mfrom[39m [32m"@kdx/validators/trpc/app"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 20 |[39m[0m
-@kdx/kdx:dev: [0m[31m[1m>[22m[39m[90m 21 |[39m [36mimport[39m { [33mAiStudioService[39m } [36mfrom[39m [32m"../../../internal/services/ai-studio.service"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
-@kdx/kdx:dev: [0m [90m 22 |[39m [36mimport[39m { protectedProcedure } [36mfrom[39m [32m"../../../procedures"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 23 |[39m [36mimport[39m { t } [36mfrom[39m [32m"../../../trpc"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 24 |[39m [36mimport[39m { aiAgentsRouter } [36mfrom[39m [32m"./agents"[39m[33m;[39m[0m
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: https://nextjs.org/docs/messages/module-not-found
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev:  ⨯ ./packages/api/src/trpc/routers/app/ai-studio/_router.ts:21:1
-@kdx/kdx:dev: Module not found: Can't resolve '../../../internal/services/ai-studio.service'
-@kdx/kdx:dev: [0m [90m 19 |[39m } [36mfrom[39m [32m"@kdx/validators/trpc/app"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 20 |[39m[0m
-@kdx/kdx:dev: [0m[31m[1m>[22m[39m[90m 21 |[39m [36mimport[39m { [33mAiStudioService[39m } [36mfrom[39m [32m"../../../internal/services/ai-studio.service"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
-@kdx/kdx:dev: [0m [90m 22 |[39m [36mimport[39m { protectedProcedure } [36mfrom[39m [32m"../../../procedures"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 23 |[39m [36mimport[39m { t } [36mfrom[39m [32m"../../../trpc"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 24 |[39m [36mimport[39m { aiAgentsRouter } [36mfrom[39m [32m"./agents"[39m[33m;[39m[0m
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: https://nextjs.org/docs/messages/module-not-found
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev:  ⨯ ./packages/api/src/trpc/routers/app/ai-studio/_router.ts:25:1
-@kdx/kdx:dev: Module not found: Can't resolve './libraries'
-@kdx/kdx:dev: [0m [90m 23 |[39m [36mimport[39m { t } [36mfrom[39m [32m"../../../trpc"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 24 |[39m [36mimport[39m { aiAgentsRouter } [36mfrom[39m [32m"./agents"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m[31m[1m>[22m[39m[90m 25 |[39m [36mimport[39m { aiLibrariesRouter } [36mfrom[39m [32m"./libraries"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
-@kdx/kdx:dev: [0m [90m 26 |[39m [36mimport[39m { aiModelsRouter } [36mfrom[39m [32m"./models"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 27 |[39m [36mimport[39m { aiProvidersRouter } [36mfrom[39m [32m"./providers"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 28 |[39m [36mimport[39m { aiTokensRouter } [36mfrom[39m [32m"./tokens"[39m[33m;[39m[0m
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: https://nextjs.org/docs/messages/module-not-found
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev:  ⨯ ./packages/api/src/trpc/routers/app/ai-studio/_router.ts:25:1
-@kdx/kdx:dev: Module not found: Can't resolve './libraries'
-@kdx/kdx:dev: [0m [90m 23 |[39m [36mimport[39m { t } [36mfrom[39m [32m"../../../trpc"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 24 |[39m [36mimport[39m { aiAgentsRouter } [36mfrom[39m [32m"./agents"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m[31m[1m>[22m[39m[90m 25 |[39m [36mimport[39m { aiLibrariesRouter } [36mfrom[39m [32m"./libraries"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
-@kdx/kdx:dev: [0m [90m 26 |[39m [36mimport[39m { aiModelsRouter } [36mfrom[39m [32m"./models"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 27 |[39m [36mimport[39m { aiProvidersRouter } [36mfrom[39m [32m"./providers"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 28 |[39m [36mimport[39m { aiTokensRouter } [36mfrom[39m [32m"./tokens"[39m[33m;[39m[0m
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: https://nextjs.org/docs/messages/module-not-found
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/api:dev: cache bypass, force executing 08c9e36b6e370bab
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(11,3): error TS2724: '"@kdx/shared"' has no exported member named 'kodixAppId'. Did you mean 'KodixAppId'?
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(12,3): error TS2724: '"@kdx/shared"' has no exported member named 'kodixAppIds'. Did you mean 'KodixAppId'?
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(21,33): error TS2307: Cannot find module '../../../internal/services/ai-studio.service' or its corresponding type declarations.
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(25,35): error TS2307: Cannot find module './libraries' or its corresponding type declarations.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/kdx:dev:  ⨯ ./packages/api/src/trpc/routers/app/ai-studio/_router.ts:21:1
-@kdx/kdx:dev: Module not found: Can't resolve '../../../internal/services/ai-studio.service'
-@kdx/kdx:dev: [0m [90m 19 |[39m } [36mfrom[39m [32m"@kdx/validators/trpc/app"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 20 |[39m[0m
-@kdx/kdx:dev: [0m[31m[1m>[22m[39m[90m 21 |[39m [36mimport[39m { [33mAiStudioService[39m } [36mfrom[39m [32m"../../../internal/services/ai-studio.service"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
-@kdx/kdx:dev: [0m [90m 22 |[39m [36mimport[39m { protectedProcedure } [36mfrom[39m [32m"../../../procedures"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 23 |[39m [36mimport[39m { t } [36mfrom[39m [32m"../../../trpc"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 24 |[39m [36mimport[39m { aiAgentsRouter } [36mfrom[39m [32m"./agents"[39m[33m;[39m[0m
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: https://nextjs.org/docs/messages/module-not-found
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev:  ⨯ ./packages/api/src/trpc/routers/app/ai-studio/_router.ts:21:1
-@kdx/kdx:dev: Module not found: Can't resolve '../../../internal/services/ai-studio.service'
-@kdx/kdx:dev: [0m [90m 19 |[39m } [36mfrom[39m [32m"@kdx/validators/trpc/app"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 20 |[39m[0m
-@kdx/kdx:dev: [0m[31m[1m>[22m[39m[90m 21 |[39m [36mimport[39m { [33mAiStudioService[39m } [36mfrom[39m [32m"../../../internal/services/ai-studio.service"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
-@kdx/kdx:dev: [0m [90m 22 |[39m [36mimport[39m { protectedProcedure } [36mfrom[39m [32m"../../../procedures"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 23 |[39m [36mimport[39m { t } [36mfrom[39m [32m"../../../trpc"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 24 |[39m [36mimport[39m { aiAgentsRouter } [36mfrom[39m [32m"./agents"[39m[33m;[39m[0m
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: https://nextjs.org/docs/messages/module-not-found
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/api:dev: cache bypass, force executing 817482c28d5cefe9
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/kdx:dev:  ⨯ ./packages/api/src/trpc/routers/app/ai-studio/_router.ts:21:1
-@kdx/kdx:dev: Module not found: Can't resolve '../../../internal/services/ai-studio.service'
-@kdx/kdx:dev: [0m [90m 19 |[39m } [36mfrom[39m [32m"@kdx/validators/trpc/app"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 20 |[39m[0m
-@kdx/kdx:dev: [0m[31m[1m>[22m[39m[90m 21 |[39m [36mimport[39m { [33mAiStudioService[39m } [36mfrom[39m [32m"../../../internal/services/ai-studio.service"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
-@kdx/kdx:dev: [0m [90m 22 |[39m [36mimport[39m { protectedProcedure } [36mfrom[39m [32m"../../../procedures"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 23 |[39m [36mimport[39m { t } [36mfrom[39m [32m"../../../trpc"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 24 |[39m [36mimport[39m { aiAgentsRouter } [36mfrom[39m [32m"./agents"[39m[33m;[39m[0m
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: https://nextjs.org/docs/messages/module-not-found
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev:  ⨯ ./packages/api/src/trpc/routers/app/ai-studio/_router.ts:21:1
-@kdx/kdx:dev: Module not found: Can't resolve '../../../internal/services/ai-studio.service'
-@kdx/kdx:dev: [0m [90m 19 |[39m } [36mfrom[39m [32m"@kdx/validators/trpc/app"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 20 |[39m[0m
-@kdx/kdx:dev: [0m[31m[1m>[22m[39m[90m 21 |[39m [36mimport[39m { [33mAiStudioService[39m } [36mfrom[39m [32m"../../../internal/services/ai-studio.service"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
-@kdx/kdx:dev: [0m [90m 22 |[39m [36mimport[39m { protectedProcedure } [36mfrom[39m [32m"../../../procedures"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 23 |[39m [36mimport[39m { t } [36mfrom[39m [32m"../../../trpc"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 24 |[39m [36mimport[39m { aiAgentsRouter } [36mfrom[39m [32m"./agents"[39m[33m;[39m[0m
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: https://nextjs.org/docs/messages/module-not-found
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/api:dev: cache bypass, force executing f4c55cc9efef56c1
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(11,3): error TS2724: '"@kdx/shared"' has no exported member named 'kodixAppId'. Did you mean 'KodixAppId'?
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(12,3): error TS2724: '"@kdx/shared"' has no exported member named 'kodixAppIds'. Did you mean 'KodixAppId'?
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(21,33): error TS2307: Cannot find module '../../../internal/services/ai-studio.service' or its corresponding type declarations.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/kdx:dev:  ⨯ ./packages/api/src/trpc/routers/app/ai-studio/_router.ts:16:1
-@kdx/kdx:dev: Module not found: Can't resolve '../../../internal/services/ai-studio.service'
-@kdx/kdx:dev: [0m [90m 14 |[39m } [36mfrom[39m [32m"@kdx/validators/trpc/app"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 15 |[39m[0m
-@kdx/kdx:dev: [0m[31m[1m>[22m[39m[90m 16 |[39m [36mimport[39m { [33mAiStudioService[39m } [36mfrom[39m [32m"../../../internal/services/ai-studio.service"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
-@kdx/kdx:dev: [0m [90m 17 |[39m [36mimport[39m { protectedProcedure } [36mfrom[39m [32m"../../../procedures"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 18 |[39m [36mimport[39m { t } [36mfrom[39m [32m"../../../trpc"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 19 |[39m [36mimport[39m { aiAgentsRouter } [36mfrom[39m [32m"./agents"[39m[33m;[39m[0m
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: https://nextjs.org/docs/messages/module-not-found
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev:  ⨯ ./packages/api/src/trpc/routers/app/ai-studio/_router.ts:16:1
-@kdx/kdx:dev: Module not found: Can't resolve '../../../internal/services/ai-studio.service'
-@kdx/kdx:dev: [0m [90m 14 |[39m } [36mfrom[39m [32m"@kdx/validators/trpc/app"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 15 |[39m[0m
-@kdx/kdx:dev: [0m[31m[1m>[22m[39m[90m 16 |[39m [36mimport[39m { [33mAiStudioService[39m } [36mfrom[39m [32m"../../../internal/services/ai-studio.service"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
-@kdx/kdx:dev: [0m [90m 17 |[39m [36mimport[39m { protectedProcedure } [36mfrom[39m [32m"../../../procedures"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 18 |[39m [36mimport[39m { t } [36mfrom[39m [32m"../../../trpc"[39m[33m;[39m[0m
-@kdx/kdx:dev: [0m [90m 19 |[39m [36mimport[39m { aiAgentsRouter } [36mfrom[39m [32m"./agents"[39m[33m;[39m[0m
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: https://nextjs.org/docs/messages/module-not-found
-@kdx/kdx:dev: 
-@kdx/kdx:dev: 
-@kdx/api:dev: cache bypass, force executing d3e2665652f1bf44
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(8,47): error TS2724: '"@kdx/shared"' has no exported member named 'kodixAppIds'. Did you mean 'KodixAppId'?
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(16,33): error TS2307: Cannot find module '../../../internal/services/ai-studio.service' or its corresponding type declarations.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api:dev: cache bypass, force executing ef5a6ce21c10b671
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(8,47): error TS2724: '"@kdx/shared"' has no exported member named 'kodixAppIds'. Did you mean 'KodixAppId'?
-@kdx/api:dev: src/trpc/routers/app/ai-studio/_router.ts(39,9): error TS2322: Type 'unknown' is not assignable to type 'KodixAppId'.
-@kdx/api:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/api:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/api#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/kdx:dev:  ✓ Compiled in 448ms
-@kdx/kdx:dev:  ⚠ Fast Refresh had to perform a full reload when ./packages/shared/src/db.ts changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
-@kdx/kdx:dev:  ✓ Compiled /[locale] in 45ms
-@kdx/shared:dev: cache bypass, force executing b1fcee302764cb0a
-@kdx/kdx:dev:  ⨯ ReferenceError: cupomAppId is not defined
-@kdx/kdx:dev:     at [project]/packages/shared/src/db.ts [app-rsc] (ecmascript) (../../packages/shared/src/db.ts:258:2)
-@kdx/kdx:dev:     at [project]/packages/shared/src/index.ts [app-rsc] (ecmascript) <module evaluation> (.next/server/chunks/ssr/_c79cdbbe._.js:860:157)
-@kdx/kdx:dev:     at [project]/apps/kdx/src/app/[locale]/layout.tsx [app-rsc] (ecmascript) (src/app/[locale]/layout.tsx:16:0)
-@kdx/kdx:dev:     at [project]/apps/kdx/src/app/[locale]/layout.tsx [app-rsc] (ecmascript, Next.js server component) (.next/server/chunks/ssr/_bd3aac31._.js:14:47)
-@kdx/kdx:dev:     at [project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/[locale]/(public)/page { MODULE_0 => "[project]/node_modules/next/dist/client/components/not-found-error.js [app-rsc] (ecmascript, Next.js server component)", MODULE_1 => "[project]/node_modules/next/dist/client/components/forbidden-error.js [app-rsc] (ecmascript, Next.js server component)", MODULE_2 => "[project]/node_modules/next/dist/client/components/unauthorized-error.js [app-rsc] (ecmascript, Next.js server component)", MODULE_3 => "[project]/apps/kdx/src/app/[locale]/layout.tsx [app-rsc] (ecmascript, Next.js server component)", MODULE_4 => "[project]/apps/kdx/src/app/[locale]/not-found.tsx [app-rsc] (ecmascript, Next.js server component)", MODULE_5 => "[project]/apps/kdx/src/app/[locale]/(public)/layout.tsx [app-rsc] (ecmascript, Next.js server component)", MODULE_6 => "[project]/apps/kdx/src/app/[locale]/(public)/page.tsx [app-rsc] (ecmascript, Next.js server component)" } [app-rsc] (ecmascript) <module evaluation> (.next/server/chunks/ssr/_bd3aac31._.js:1351:211)
-@kdx/kdx:dev:     at [project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/[locale]/(public)/page { MODULE_0 => "[project]/node_modules/next/dist/client/components/not-found-error.js [app-rsc] (ecmascript, Next.js server component)", MODULE_1 => "[project]/node_modules/next/dist/client/components/forbidden-error.js [app-rsc] (ecmascript, Next.js server component)", MODULE_2 => "[project]/node_modules/next/dist/client/components/unauthorized-error.js [app-rsc] (ecmascript, Next.js server component)", MODULE_3 => "[project]/apps/kdx/src/app/[locale]/layout.tsx [app-rsc] (ecmascript, Next.js server component)", MODULE_4 => "[project]/apps/kdx/src/app/[locale]/not-found.tsx [app-rsc] (ecmascript, Next.js server component)", MODULE_5 => "[project]/apps/kdx/src/app/[locale]/(public)/layout.tsx [app-rsc] (ecmascript, Next.js server component)", MODULE_6 => "[project]/apps/kdx/src/app/[locale]/(public)/page.tsx [app-rsc] (ecmascript, Next.js server component)" } [app-rsc] (ecmascript) (.next/server/chunks/ssr/_bd3aac31._.js:1454:1610)
-@kdx/kdx:dev:     at Object.<anonymous> (.next/server/app/[locale]/(public)/page.js:18:9)
-@kdx/kdx:dev:   256 |   calendarAppId,
-@kdx/kdx:dev:   257 |   kodixCareAppId,
-@kdx/kdx:dev: > 258 |   cupomAppId,
-@kdx/kdx:dev:       |  ^
-@kdx/kdx:dev:   259 | ];
-@kdx/kdx:dev:   260 | export const kodixAppIds = [
-@kdx/kdx:dev:   261 |   todoAppId, {
-@kdx/kdx:dev:   page: '/pt-BR'
+@kdx/kdx:dev:  ✓ Compiled /[locale]/signin in 1593ms
+@kdx/kdx:dev:  GET /signin 200 in 2443ms
+@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 24ms
+@kdx/kdx:dev:  ○ Compiling /[locale]/team ...
+@kdx/kdx:dev:  ✓ Compiled /[locale]/team in 1954ms
+@kdx/kdx:dev: >>> tRPC Request from rsc by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
 @kdx/kdx:dev: }
-@kdx/kdx:dev:  GET / 500 in 449ms
-@kdx/kdx:dev:  ⨯ ReferenceError: cupomAppId is not defined
-@kdx/kdx:dev:     at [project]/packages/shared/src/db.ts [app-rsc] (ecmascript) (../../packages/shared/src/db.ts:258:2)
-@kdx/kdx:dev:     at [project]/packages/shared/src/index.ts [app-rsc] (ecmascript) <module evaluation> (.next/server/chunks/ssr/_c79cdbbe._.js:860:157)
-@kdx/kdx:dev:     at [project]/apps/kdx/src/app/[locale]/layout.tsx [app-rsc] (ecmascript) (src/app/[locale]/layout.tsx:16:0)
-@kdx/kdx:dev:     at [project]/apps/kdx/src/app/[locale]/layout.tsx [app-rsc] (ecmascript, Next.js server component) (.next/server/chunks/ssr/_bd3aac31._.js:14:47)
-@kdx/kdx:dev:     at [project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/[locale]/(public)/page { MODULE_0 => "[project]/node_modules/next/dist/client/components/not-found-error.js [app-rsc] (ecmascript, Next.js server component)", MODULE_1 => "[project]/node_modules/next/dist/client/components/forbidden-error.js [app-rsc] (ecmascript, Next.js server component)", MODULE_2 => "[project]/node_modules/next/dist/client/components/unauthorized-error.js [app-rsc] (ecmascript, Next.js server component)", MODULE_3 => "[project]/apps/kdx/src/app/[locale]/layout.tsx [app-rsc] (ecmascript, Next.js server component)", MODULE_4 => "[project]/apps/kdx/src/app/[locale]/not-found.tsx [app-rsc] (ecmascript, Next.js server component)", MODULE_5 => "[project]/apps/kdx/src/app/[locale]/(public)/layout.tsx [app-rsc] (ecmascript, Next.js server component)", MODULE_6 => "[project]/apps/kdx/src/app/[locale]/(public)/page.tsx [app-rsc] (ecmascript, Next.js server component)" } [app-rsc] (ecmascript) <module evaluation> (.next/server/chunks/ssr/_bd3aac31._.js:1351:211)
-@kdx/kdx:dev:     at [project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/[locale]/(public)/page { MODULE_0 => "[project]/node_modules/next/dist/client/components/not-found-error.js [app-rsc] (ecmascript, Next.js server component)", MODULE_1 => "[project]/node_modules/next/dist/client/components/forbidden-error.js [app-rsc] (ecmascript, Next.js server component)", MODULE_2 => "[project]/node_modules/next/dist/client/components/unauthorized-error.js [app-rsc] (ecmascript, Next.js server component)", MODULE_3 => "[project]/apps/kdx/src/app/[locale]/layout.tsx [app-rsc] (ecmascript, Next.js server component)", MODULE_4 => "[project]/apps/kdx/src/app/[locale]/not-found.tsx [app-rsc] (ecmascript, Next.js server component)", MODULE_5 => "[project]/apps/kdx/src/app/[locale]/(public)/layout.tsx [app-rsc] (ecmascript, Next.js server component)", MODULE_6 => "[project]/apps/kdx/src/app/[locale]/(public)/page.tsx [app-rsc] (ecmascript, Next.js server component)" } [app-rsc] (ecmascript) (.next/server/chunks/ssr/_bd3aac31._.js:1454:1610)
-@kdx/kdx:dev:     at Object.<anonymous> (.next/server/app/[locale]/(public)/page.js:18:9)
-@kdx/kdx:dev:   256 |   calendarAppId,
-@kdx/kdx:dev:   257 |   kodixCareAppId,
-@kdx/kdx:dev: > 258 |   cupomAppId,
-@kdx/kdx:dev:       |  ^
-@kdx/kdx:dev:   259 | ];
-@kdx/kdx:dev:   260 | export const kodixAppIds = [
-@kdx/kdx:dev:   261 |   todoAppId, {
-@kdx/kdx:dev:   page: '/pt-BR'
+@kdx/kdx:dev: [TRPC_PERF] user.getInvitations took 12.28ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.getInstalled took 12.87ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.getInstalled took 14.22ms to execute
+@kdx/kdx:dev:  GET /team 200 in 2815ms
+@kdx/kdx:dev: >>> tRPC Request from rsc by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
 @kdx/kdx:dev: }
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/kdx:dev:  GET / 500 in 392ms
-@kdx/kdx:dev:  GET / 200 in 61ms
-@kdx/kdx:dev:  ⨯ ReferenceError: cupomAppId is not defined
-@kdx/kdx:dev:     at [project]/packages/shared/src/db.ts [app-rsc] (ecmascript) (../../packages/shared/src/db.ts:258:2)
-@kdx/kdx:dev:     at [project]/packages/shared/src/index.ts [app-rsc] (ecmascript) <module evaluation> (.next/server/chunks/ssr/_c79cdbbe._.js:860:157)
-@kdx/kdx:dev:     at [project]/apps/kdx/src/app/[locale]/layout.tsx [app-rsc] (ecmascript) (src/app/[locale]/layout.tsx:16:0)
-@kdx/kdx:dev:     at [project]/apps/kdx/src/app/[locale]/layout.tsx [app-rsc] (ecmascript, Next.js server component) (.next/server/chunks/ssr/_bd3aac31._.js:14:47)
-@kdx/kdx:dev:     at [project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/[locale]/(public)/page { MODULE_0 => "[project]/node_modules/next/dist/client/components/not-found-error.js [app-rsc] (ecmascript, Next.js server component)", MODULE_1 => "[project]/node_modules/next/dist/client/components/forbidden-error.js [app-rsc] (ecmascript, Next.js server component)", MODULE_2 => "[project]/node_modules/next/dist/client/components/unauthorized-error.js [app-rsc] (ecmascript, Next.js server component)", MODULE_3 => "[project]/apps/kdx/src/app/[locale]/layout.tsx [app-rsc] (ecmascript, Next.js server component)", MODULE_4 => "[project]/apps/kdx/src/app/[locale]/not-found.tsx [app-rsc] (ecmascript, Next.js server component)", MODULE_5 => "[project]/apps/kdx/src/app/[locale]/(public)/layout.tsx [app-rsc] (ecmascript, Next.js server component)", MODULE_6 => "[project]/apps/kdx/src/app/[locale]/(public)/page.tsx [app-rsc] (ecmascript, Next.js server component)" } [app-rsc] (ecmascript) <module evaluation> (.next/server/chunks/ssr/_bd3aac31._.js:1351:211)
-@kdx/kdx:dev:     at [project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/[locale]/(public)/page { MODULE_0 => "[project]/node_modules/next/dist/client/components/not-found-error.js [app-rsc] (ecmascript, Next.js server component)", MODULE_1 => "[project]/node_modules/next/dist/client/components/forbidden-error.js [app-rsc] (ecmascript, Next.js server component)", MODULE_2 => "[project]/node_modules/next/dist/client/components/unauthorized-error.js [app-rsc] (ecmascript, Next.js server component)", MODULE_3 => "[project]/apps/kdx/src/app/[locale]/layout.tsx [app-rsc] (ecmascript, Next.js server component)", MODULE_4 => "[project]/apps/kdx/src/app/[locale]/not-found.tsx [app-rsc] (ecmascript, Next.js server component)", MODULE_5 => "[project]/apps/kdx/src/app/[locale]/(public)/layout.tsx [app-rsc] (ecmascript, Next.js server component)", MODULE_6 => "[project]/apps/kdx/src/app/[locale]/(public)/page.tsx [app-rsc] (ecmascript, Next.js server component)" } [app-rsc] (ecmascript) (.next/server/chunks/ssr/_bd3aac31._.js:1454:1610)
-@kdx/kdx:dev:     at Object.<anonymous> (.next/server/app/[locale]/(public)/page.js:18:9)
-@kdx/kdx:dev:   256 |   calendarAppId,
-@kdx/kdx:dev:   257 |   kodixCareAppId,
-@kdx/kdx:dev: > 258 |   cupomAppId,
-@kdx/kdx:dev:       |  ^
-@kdx/kdx:dev:   259 | ];
-@kdx/kdx:dev:   260 | export const kodixAppIds = [
-@kdx/kdx:dev:   261 |   todoAppId, {
-@kdx/kdx:dev:   page: '/pt-BR'
+@kdx/kdx:dev: [TRPC_PERF] app.getInstalled took 2.28ms to execute
+@kdx/kdx:dev: [TRPC_PERF] user.getInvitations took 2.53ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.getInstalled took 3.39ms to execute
+@kdx/kdx:dev:  GET /team 200 in 79ms
+@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 62ms
+@kdx/kdx:dev:  ○ Compiling /[locale]/apps/chat ...
+@kdx/kdx:dev:  ✓ Compiled /[locale]/apps/chat in 2.3s
+@kdx/kdx:dev:  GET /apps/chat 200 in 2766ms
+@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 52ms
+@kdx/kdx:dev:  ○ Compiling /api/trpc/[trpc] ...
+@kdx/kdx:dev:  ✓ Compiled /api/trpc/[trpc] in 1120ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
 @kdx/kdx:dev: }
-@kdx/kdx:dev:  ✓ Compiled /[locale]/[...rest] in 170ms
-@kdx/kdx:dev:  ⨯ Error [ReferenceError]: cupomAppId is not defined
-@kdx/kdx:dev:     at [project]/packages/shared/src/db.ts [app-edge-rsc] (ecmascript) (packages/shared/src/db.ts:258:2)
-@kdx/kdx:dev:     at [project]/packages/shared/src/index.ts [app-edge-rsc] (ecmascript) <module evaluation> (.next/server/edge/chunks/ssr/[root-of-the-server]__b1627e56._.js:916:165)
-@kdx/kdx:dev:   256 |   calendarAppId,
-@kdx/kdx:dev:   257 |   kodixCareAppId,
-@kdx/kdx:dev: > 258 |   cupomAppId,
-@kdx/kdx:dev:       |  ^
-@kdx/kdx:dev:   259 | ];
-@kdx/kdx:dev:   260 | export const kodixAppIds = [
-@kdx/kdx:dev:   261 |   todoAppId,
-@kdx/kdx:dev:  ⨯ Error [ReferenceError]: cupomAppId is not defined
-@kdx/kdx:dev:     at [project]/packages/shared/src/db.ts [app-edge-rsc] (ecmascript) (packages/shared/src/db.ts:258:2)
-@kdx/kdx:dev:     at [project]/packages/shared/src/index.ts [app-edge-rsc] (ecmascript) <module evaluation> (.next/server/edge/chunks/ssr/[root-of-the-server]__b1627e56._.js:916:165)
-@kdx/kdx:dev:   256 |   calendarAppId,
-@kdx/kdx:dev:   257 |   kodixCareAppId,
-@kdx/kdx:dev: > 258 |   cupomAppId,
-@kdx/kdx:dev:       |  ^
-@kdx/kdx:dev:   259 | ];
-@kdx/kdx:dev:   260 | export const kodixAppIds = [
-@kdx/kdx:dev:   261 |   todoAppId,
-@kdx/kdx:dev:  GET /.well-known/appspecific/com.chrome.devtools.json 500 in 1216ms
-@kdx/shared:dev: src/db.ts(258,3): error TS2304: Cannot find name 'cupomAppId'.
-@kdx/shared:dev: src/db.ts(266,3): error TS2304: Cannot find name 'cupomAppId'.
-@kdx/shared:dev: src/db.ts(275,4): error TS2304: Cannot find name 'cupomAppId'.
-@kdx/shared:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/shared:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/shared#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/kdx:dev:  ✓ Compiled in 434ms
-@kdx/shared:dev: cache bypass, force executing c94fce3b2f62bd85
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/shared:dev: src/db.ts(38,3): error TS2536: Type 'T' cannot be used to index type '{ kodix_care_app_432: readonly ["ADMIN", "CAREGIVER"]; calendar_app_321: readonly ["ADMIN"]; "7mwag78tv8pa": readonly ["ADMIN"]; az1x2c3bv4n5: readonly ["ADMIN"]; ai9x7m2k5p1s: readonly ["ADMIN"]; }'.
-@kdx/shared:dev: src/db.ts(38,3): error TS2536: Type 'number' cannot be used to index type '{ kodix_care_app_432: readonly ["ADMIN", "CAREGIVER"]; calendar_app_321: readonly ["ADMIN"]; "7mwag78tv8pa": readonly ["ADMIN"]; az1x2c3bv4n5: readonly ["ADMIN"]; ai9x7m2k5p1s: readonly ["ADMIN"]; }[T]'.
-@kdx/shared:dev: src/db.ts(199,14): error TS2741: Property 'cupom_app_543' is missing in type '{ "7mwag78tv8pa": never[]; calendar_app_321: never[]; kodix_care_app_432: "calendar_app_321"[]; az1x2c3bv4n5: "ai9x7m2k5p1s"[]; ai9x7m2k5p1s: never[]; }' but required in type 'Record<KodixAppId, KodixAppId[]>'.
-@kdx/shared:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/shared:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/shared#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/kdx:dev:  ✓ Compiled in 238ms
-@kdx/shared:dev: cache bypass, force executing d2003bec1c365088
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/db:dev: cache bypass, force executing b59a2f4d67b3c93a
-@kdx/ui:dev: cache bypass, force executing 41b30070fef7ab45
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
-@kdx/db:dev: 
-@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:dev: > tsc
-@kdx/db:dev: 
-@kdx/db:dev: src/utils.ts(27,14): error TS2741: Property 'cupom_app_543' is missing in type '{ kodix_care_app_432: Record<string, MySqlTableWithColumns<TableConfig>>; "7mwag78tv8pa": Record<string, MySqlTableWithColumns<TableConfig>>; calendar_app_321: Record<...>; az1x2c3bv4n5: Record<...>; ai9x7m2k5p1s: Record<...>; }' but required in type 'Record<KodixAppId, Record<string, MySqlTableWithColumns<TableConfig>>>'.
-@kdx/db:dev:  ELIFECYCLE  Command failed with exit code 2.
-@kdx/db:dev: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
-@kdx/db#dev: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run dev exited (2)
+@kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiAgents: No procedure found on path "app.aiStudio.findAiAgents"
+@kdx/kdx:dev: [TRPC_PERF] app.getUserAppTeamConfig took 17.37ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findChatFolders took 18.51ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAvailableModels took 24.56ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 34.68ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.getUserAppTeamConfig,app.chat.findChatFolders,app.chat.findSessions,app.aiStudio.findAiAgents,app.aiStudio.findAvailableModels?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22appId%22%3A%22az1x2c3bv4n5%22%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22limite%22%3A100%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%2C%224%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 1832ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 5.87ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 6.53ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 7.14ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.chat.findSessions,app.chat.findSessions,app.chat.findSessions?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%7D 200 in 32ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: ✅ [CHAT_DEPENDENCIES] All dependencies validated for team: hr050hr1u25n
+@kdx/kdx:dev: 🔄 [AiStudioService] getModelById by az1x2c3bv4n5 for team: hr050hr1u25n
+@kdx/kdx:dev: ✅ [AiStudioService] Model found: claude-3-haiku for team: hr050hr1u25n
+@kdx/kdx:dev: 🔄 [AiStudioService] getTeamInstructions by az1x2c3bv4n5 for team: hr050hr1u25n
+@kdx/kdx:dev: ✅ [AiStudioService] Team instructions found for team: hr050hr1u25n
+@kdx/kdx:dev: [TRPC_PERF] app.chat.createEmptySession took 37.29ms to execute
+@kdx/kdx:dev:  POST /api/trpc/app.chat.createEmptySession?batch=1 200 in 88ms
+@kdx/kdx:dev: 🔄 [AiStudioService] getProviderToken by az1x2c3bv4n5 for team: hr050hr1u25n
+@kdx/kdx:dev: ✅ [AiStudioService] Token found for provider cqc4lkp3d3b5 and team: hr050hr1u25n
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSession took 7.57ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 8.74ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 9.59ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.chat.findSession,app.chat.getMessages,app.chat.getMessages?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22sessionId%22%3A%22rdc6n1sp4ntq%22%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%22rdc6n1sp4ntq%22%2C%22limit%22%3A100%2C%22page%22%3A1%2C%22order%22%3A%22asc%22%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%22rdc6n1sp4ntq%22%2C%22limit%22%3A1%2C%22page%22%3A1%2C%22order%22%3A%22desc%22%7D%7D%7D 200 in 52ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiAgents: No procedure found on path "app.aiStudio.findAiAgents"
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiAgents?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 32ms
+@kdx/kdx:dev:  ○ Compiling /[locale]/apps/chat/[sessionId] ...
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiAgents: No procedure found on path "app.aiStudio.findAiAgents"
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiAgents?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 52ms
+@kdx/kdx:dev:  ✓ Compiled /[locale]/apps/chat/[sessionId] in 2.3s
+@kdx/kdx:dev:  GET /apps/chat/rdc6n1sp4ntq 200 in 2818ms
+@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 38ms
+@kdx/kdx:dev:  ✓ Compiled /api/chat/stream in 471ms
+@kdx/kdx:dev: 🔄 [AiStudioService] getModelById by az1x2c3bv4n5 for team: hr050hr1u25n
+@kdx/kdx:dev: ✅ [AiStudioService] Model found: claude-3-haiku for team: hr050hr1u25n
+@kdx/kdx:dev: 🔄 [AiStudioService] getModelById by az1x2c3bv4n5 for team: hr050hr1u25n
+@kdx/kdx:dev: ✅ [AiStudioService] Model found: claude-3-haiku for team: hr050hr1u25n
+@kdx/kdx:dev: 🔄 [AiStudioService] getProviderToken by az1x2c3bv4n5 for team: hr050hr1u25n
+@kdx/kdx:dev: ✅ [AiStudioService] Token found for provider cqc4lkp3d3b5 and team: hr050hr1u25n
+@kdx/kdx:dev: 🎯 [VERCEL_AI_NATIVE] Returning toDataStreamResponse for useChat compatibility
+@kdx/kdx:dev: ✅ [VERCEL_AI_NATIVE] Stream finished: { tokens: 89, reason: 'stop', textLength: 168 }
+@kdx/kdx:dev: 💾 [VERCEL_AI_NATIVE] Message auto-saved successfully
+@kdx/kdx:dev:  POST /api/chat/stream 200 in 1677ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 10.19ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.chat.getMessages?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%22rdc6n1sp4ntq%22%2C%22limit%22%3A1%2C%22page%22%3A1%2C%22order%22%3A%22desc%22%7D%7D%7D 200 in 52ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiAgents: No procedure found on path "app.aiStudio.findAiAgents"
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiAgents?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 46ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSession took 4.27ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.chat.findSession?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22sessionId%22%3A%22rdc6n1sp4ntq%22%7D%7D%7D 200 in 31ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 7.83ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 10.64ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 17.64ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 26.92ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.chat.findSessions,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A100%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%7D 200 in 51ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSession took 10.09ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 10.76ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 12.05ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 12.89ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 18.36ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 27.03ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.chat.findSession,app.chat.getMessages,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22sessionId%22%3A%22rdc6n1sp4ntq%22%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%22rdc6n1sp4ntq%22%2C%22limit%22%3A100%2C%22page%22%3A1%2C%22order%22%3A%22asc%22%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22limite%22%3A100%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%224%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%225%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%7D 200 in 52ms
+@kdx/kdx:dev:  ○ Compiling /[locale]/apps/aiStudio ...
+@kdx/kdx:dev:  ✓ Compiled /[locale]/apps/aiStudio in 2.2s
+@kdx/kdx:dev:  GET /apps/aiStudio 200 in 2784ms
+@kdx/kdx:dev:  GET /apps/aiStudio 200 in 65ms
+@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 114ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiTeamProviderTokens: No procedure found on path "app.aiStudio.findAiTeamProviderTokens"
+@kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiProviders: No procedure found on path "app.aiStudio.findAiProviders"
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiTeamProviderTokens,app.aiStudio.findAiProviders?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 135ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiTeamProviderTokens: No procedure found on path "app.aiStudio.findAiTeamProviderTokens"
+@kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiProviders: No procedure found on path "app.aiStudio.findAiProviders"
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiTeamProviderTokens,app.aiStudio.findAiProviders?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 51ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.getTeamInstructions took 3.01ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.getTeamInstructions?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 47ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.getUserAppTeamConfig took 4.81ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.getUserAppTeamConfig?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22appId%22%3A%22ai9x7m2k5p1s%22%7D%7D%7D 200 in 44ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.getUserAppTeamConfig took 6.35ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.getUserAppTeamConfig?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22appId%22%3A%22ai9x7m2k5p1s%22%7D%7D%7D 200 in 227ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.getTeamInstructions took 2.18ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.getTeamInstructions?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 51ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.getUserAppTeamConfig took 3.71ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.getUserAppTeamConfig?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22appId%22%3A%22ai9x7m2k5p1s%22%7D%7D%7D 200 in 174ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.getUserAppTeamConfig took 7.84ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.getUserAppTeamConfig?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22appId%22%3A%22ai9x7m2k5p1s%22%7D%7D%7D 200 in 259ms

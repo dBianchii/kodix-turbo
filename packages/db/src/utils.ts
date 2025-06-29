@@ -8,12 +8,14 @@ import {
   aiStudioAppId,
   calendarAppId,
   chatAppId,
+  cupomAppId,
   kodixCareAppId,
   todoAppId,
 } from "@kdx/shared";
 
 import * as aiStudio from "./schema/apps/ai-studio";
 import * as calendar from "./schema/apps/calendar";
+import * as chat from "./schema/apps/chat";
 import * as kodixCare from "./schema/apps/kodixCare";
 import * as todos from "./schema/apps/todos";
 
@@ -31,8 +33,9 @@ export const appIdToSchemas: Record<
   [kodixCareAppId]: withoutRelationsAndZodSchemas(kodixCare),
   [todoAppId]: withoutRelationsAndZodSchemas(todos),
   [calendarAppId]: withoutRelationsAndZodSchemas(calendar),
-  [chatAppId]: withoutRelationsAndZodSchemas({}),
+  [chatAppId]: withoutRelationsAndZodSchemas(chat),
   [aiStudioAppId]: withoutRelationsAndZodSchemas(aiStudio),
+  [cupomAppId]: withoutRelationsAndZodSchemas({}),
 };
 
 // Export crypto utilities

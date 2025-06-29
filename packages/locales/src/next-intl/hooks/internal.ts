@@ -2,6 +2,7 @@ import {
   aiStudioAppId,
   calendarAppId,
   chatAppId,
+  cupomAppId,
   kodixCareAppId,
   todoAppId,
 } from "@kdx/shared";
@@ -13,4 +14,5 @@ export const appIdToName = {
   [todoAppId]: "Todo",
   [chatAppId]: "Chat",
   [aiStudioAppId]: "AI Studio",
+  [cupomAppId]: "Cupom",
 } as const;

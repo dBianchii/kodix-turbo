@@ -12,6 +12,36 @@ A utilização desses scripts através do `sh ./scripts/<nome_do_script>.sh` foi
 
 ---
 
+## Fluxo de Trabalho Recomendado para Iniciar o Servidor
+
+Para evitar problemas onde o servidor falha ao iniciar devido a erros de compilação e o script `check-dev-status.sh` fica em um loop infinito, o seguinte fluxo de trabalho é **fortemente recomendado**:
+
+1.  **Parar o Ambiente Anterior:** Garanta que nenhuma porta esteja ocupada.
+    ```bash
+    sh ./scripts/stop-dev.sh
+    ```
+2.  **Iniciar em Segundo Plano:** Inicie o servidor, redirecionando os logs.
+    ```bash
+    sh ./scripts/start-dev-bg.sh
+    ```
+3.  **Aguardar a Geração de Logs:** Dê um breve momento para o processo de build começar.
+    ```bash
+    sleep 5
+    ```
+4.  **Verificar Erros de Inicialização (Passo Crítico):** Antes de verificar se o servidor está rodando, verifique se ocorreram erros durante a compilação.
+    ```bash
+    sh ./scripts/check-log-errors.sh
+    ```
+    Se este comando mostrar erros, o servidor não iniciou corretamente e os erros devem ser corrigidos antes de prosseguir.
+5.  **Verificar Status do Servidor:** Apenas se não houver erros nos logs, confirme que o servidor está pronto.
+    ```bash
+    sh ./scripts/check-dev-status.sh
+    ```
+
+Seguir esta sequência garante que problemas de compilação sejam detectados imediatamente, tornando o processo de desenvolvimento mais eficiente e menos propenso a erros.
+
+---
+
 ### 1. `start-dev-bg.sh`
 
 **Propósito:** Iniciar o ambiente de desenvolvimento completo em segundo plano.
