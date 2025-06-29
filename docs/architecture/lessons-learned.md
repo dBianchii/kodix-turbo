@@ -122,6 +122,50 @@ A leitura deste documento é **obrigatória** para todos os desenvolvedores.
 
 - **Dica de Ouro**: Se você está modificando tipos que são usados em múltiplos packages, sempre faça um "build graph mental" antes de começar. Pergunte-se: "Quais packages dependem deste tipo?" e compile-os na ordem correta.
 
+### **7. Composição de Routers tRPC com `mergeRouters`**
+
+- **Lição**: A tentativa de combinar múltiplos sub-routers dentro de um único `t.router({ ...routerA, ...routerB })` usando spread syntax (`...`) resulta em erros de tipo complexos (`TS2345: Argument of type '...' is not assignable to parameter of type 'CreateRouterOptions'`).
+- **O Problema**: O `t.router()` foi projetado para aceitar um objeto de _procedures_, não de _routers_. A sintaxe de spread funciona para mesclar objetos de procedures, mas falha ao tentar mesclar instâncias de routers completos, pois suas estruturas internas (`_def`) são incompatíveis.
+- **Ação Preventiva**: Use a função `t.mergeRouters(...routers)` para combinar múltiplos routers. Se você precisar adicionar procedures avulsos junto com sub-routers, agrupe os procedures avulsos em seu próprio `t.router` e depois mescle tudo.
+
+  ```typescript
+  // ❌ ANTES: Causa erro de tipo.
+  const finalRouter = t.router({
+    ...subRouterA,
+    ...subRouterB,
+    procedureC: protectedProcedure.query(() => {
+      /*...*/
+    }),
+  });
+
+  // ✅ DEPOIS: Padrão correto e seguro.
+  const rootProcedures = t.router({
+    procedureC: protectedProcedure.query(() => {
+      /*...*/
+    }),
+  });
+
+  const finalRouter = t.mergeRouters(subRouterA, subRouterB, rootProcedures);
+  ```
+
+### **8. Configuração Robusta de Testes (Vitest) no Monorepo**
+
+- **Lição**: A configuração de testes em um monorepo com Vitest possui particularidades que, se não tratadas corretamente, levam a erros de inicialização.
+- **O Problema 1**: Erro `Cannot find module ...` com caminhos duplicados (ex: `packages/api/packages/api/...`).
+  - **Causa Raiz**: `vitest.config.ts` na raiz do projeto usava caminhos relativos para `setupFiles`. O Vitest resolve esses caminhos a partir do diretório do pacote em teste, não da raiz, duplicando o caminho.
+  - **Ação Preventiva**: Sempre use caminhos absolutos para `setupFiles` na configuração raiz do Vitest.
+    ```typescript
+    // vitest.config.ts
+    import path from "path";
+    // ...
+    setupFiles: [
+      path.resolve(__dirname, "./packages/api/src/test-setup.ts"),
+    ],
+    ```
+- **O Problema 2**: Erro `ReferenceError: Cannot access '...' before initialization` ao usar `vi.mock`.
+  - **Causa Raiz**: `vi.mock` é "içado" (hoisted) para o topo do arquivo durante a compilação, sendo executado antes da declaração de outras variáveis no escopo do módulo. Se a fábrica do mock (`() => ({...})`) referencia uma variável declarada depois, ela ainda não foi inicializada.
+  - **Ação Preventiva**: Sempre declare as variáveis ou constantes que serão usadas dentro de uma fábrica de `vi.mock` **antes** da chamada ao `vi.mock`.
+
 ---
 
 Este documento deve ser o primeiro lugar a ser consultado ao encontrar um bug inesperado e o último a ser atualizado após a resolução, garantindo que o conhecimento da equipe evolua constantemente.

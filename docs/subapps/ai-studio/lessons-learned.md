@@ -23,14 +23,6 @@ Durante a evolução do AI Studio, identificamos padrões arquiteturais importan
   2. Registrar o `appId` e o schema nos mapeamentos corretos.
   3. Usar os endpoints tRPC genéricos existentes no frontend.
 
-### 2. 🚀 **Gerenciamento do Servidor de Desenvolvimento**
-
-- **Contexto**: Para evitar conflitos de porta e garantir que o servidor reinicie corretamente, é crucial usar os scripts de gerenciamento.
-- **Padrão Correto:**
-  - **Iniciar (do zero):** `pnpm dev:kdx` é o comando principal, que usa Turbopack e coordena todos os serviços, incluindo Docker.
-  - **Reiniciar (servidor já rodando):** Use `sh ./scripts/stop-dev.sh` seguido de `sh ./scripts/start-dev-bg.sh`. Isso garante que o processo anterior seja finalizado antes de iniciar um novo.
-- **Anti-Padrão**: Executar `pnpm dev:kdx` em um novo terminal sem parar o anterior geralmente causa o erro `PORT_OCCUPIED`.
-
 ### 3. 🔥 **Resolvendo Erros de TypeScript Persistentes (Cross-Package)**
 
 - **Problema:** Erros de tipo que não desaparecem mesmo após as correções no código.

@@ -106,62 +106,51 @@ graph TD
 4.  **[ ] Integrar no `AiStudioService` e no Router:**
     - **Arquivo:** `packages/api/src/internal/services/ai-studio.service.ts`
     - **Ação:** Adicionar o método `getSystemPromptForChat` que chama o `PromptBuilderService`.
-    - **Arquivo:** `packages/api/src/trpc/routers/app/aiStudio/_router.ts` (ou similar)
-    - **Ação:** Expor o novo método do `AiStudioService` através de um novo procedure no router do AI Studio, usando `t.router()` para garantir a integridade dos tipos.
+    - **Arquivo:** `packages/api/src/trpc/routers/app/aiStudio/_router.ts`
+    - **Ação Detalhada (Prevenção de Erros de Tipo):**
+      - **1. Análise:** Verifique se o `aiStudioRouter` existente já combina sub-routers (ex: `...aiAgentsRouter`).
+      - **2. Isolar Procedimentos:** Se houver uma mistura de sub-routers e procedures avulsos, crie um novo router (`const aiStudioRootRouter = t.router({...})`) contendo apenas os procedures avulsos e o novo `getSystemPromptForChat`.
+      - **3. Mesclar Routers:** Use `t.mergeRouters(aiStudioRootRouter, aiAgentsRouter, ...)` para combinar todos os routers de forma segura.
+      - **4. Proibição:** Não use spread syntax (`...`) para combinar routers dentro de `t.router({})`. Consulte a lição em `docs/architecture/lessons-learned.md`.
+    - **Validação:** `pnpm typecheck --filter=@kdx/api`.
 
 ### Fase 2: Testes e Validação
 
-1.  **[ ] Adicionar Testes de Unidade para `PlatformService`:**
+1.  **[ ] Preparar e Validar Ambiente de Teste (Vitest):**
 
-    - **Local:** `packages/api/src/__tests__/`
+    - **Ação:** Antes de escrever os testes, garanta que o ambiente está configurado corretamente.
+    - **Checklist de Prevenção:**
+      - **Caminhos Absolutos:** Verifique se `vitest.config.ts` usa `path.resolve(__dirname, ...)` para os `setupFiles`.
+      - **Hoisting do `vi.mock`:** Ao mockar, declare quaisquer variáveis usadas pela fábrica de mock **antes** da chamada `vi.mock`.
+
+2.  **[ ] Adicionar Testes de Unidade para `PlatformService`:**
+
+    - **Local:** `packages/api/src/__tests__/platform.service.test.ts`
     - **Cenários a Cobrir:**
       - Substituição correta de todas as variáveis quando o usuário existe.
       - Retorno do template puro quando o usuário não é encontrado.
       - Retorno de string vazia se `platformInstructions.enabled` for `false`.
       - Comportamento com um template que não possui variáveis.
+    - **Nota sobre Mocks Mutáveis:** Se um teste precisar modificar um valor de configuração mockado (ex: `enabled: false`), use uma variável `let` mutável para definir o objeto do mock fora da fábrica `vi.mock` para evitar erros de "propriedade somente leitura".
 
-2.  **[ ] Adicionar Testes de Integração para `PromptBuilderService`:**
-
+3.  **[ ] Adicionar Testes de Integração para `PromptBuilderService`:**
     - **Local:** `packages/api/src/__tests__/`
     - **Cenários a Cobrir:**
       - Garantir que ele chama corretamente o `PlatformService`.
       - Verificar se o formato da string final está correto (com separadores, quando as outras camadas forem adicionadas).
-
-3.  **[ ] Teste E2E Manual:**
-    - **Fluxo:** Iniciar o chat com um novo usuário.
-    - **Verificação:** Adicionar um `console.log` **temporário** e **registrado** no `logs-registry.md` dentro do `stream/route.ts` do chat para exibir o `systemPrompt` recebido do `AiStudioService`. Validar se as instruções da plataforma, com as variáveis do usuário substituídas, estão presentes.
-    - **Cleanup:** Remover o log temporário após a validação.
+    - **Verificação:** Adicionar um `console.log` **temporário** e **registrado** no `docs/debug/logs-registry.md` dentro do `stream/route.ts` do chat para exibir o `systemPrompt`. Validar se as instruções da plataforma, com as variáveis do usuário substituídas, estão presentes. O log deve ser enviado para o arquivo `dev`, não `dev.log`.
+    - **Guia de Troubleshooting (Se o servidor não iniciar):**
+      - **Sintoma:** Erro `EADDRINUSE` ou `Failed to connect to daemon`.
+      - **Causa:** Daemon do Turborepo em estado inconsistente.
+      - **Solução:**
+        1. `sh ./scripts/stop-dev.sh`
+        2. `pnpm dlx turbo daemon stop`
+        3. `sh ./scripts/start-dev-bg.sh`
+        4. `sh ./scripts/check-dev-status.sh` para confirmar que está `RUNNING`.
+      - **Cleanup:** Remover o log temporário após a validação.
 
 ---
 
 ## 5. 🔬 Estratégia de Testes Aprimorada
 
-- **Testes de Unidade:** Focados em `PlatformService` para validar a lógica de substituição de variáveis em isolamento.
-- **Testes de Integração:** Validar a interação entre `PromptBuilderService` e `PlatformService`, garantindo que o encadeamento de chamadas funcione.
-- **Teste E2E:** Um teste manual focado em verificar o resultado final no ponto de consumo mais crítico (o endpoint de stream do chat), usando logs temporários e controlados.
-
----
-
-## 6. ⚠️ Gerenciamento de Riscos (Baseado em Lições Aprendidas)
-
-- **Risco 1: Erros de Tipo Cross-Package.**
-
-  - **Mitigação:** Seguir estritamente a **Ordem de Modificação de Pacotes** e a **Validação Incremental** descritas nos Princípios Orientadores. Esta implementação está contida principalmente no pacote `@kdx/api`, minimizando este risco específico, mas o princípio é mantido.
-
-- **Risco 2: Quebra da Inferência de Tipos do tRPC.**
-
-  - **Mitigação:** A integração do novo endpoint no router do AI Studio usará `t.router({...})` explicitamente, conforme a lição aprendida em `docs/architecture/lessons-learned.md`.
-
-- **Risco 3: Lógica de Negócio Incorreta (Variáveis não substituídas).**
-
-  - **Mitigação:** A estratégia de testes de unidade focará especificamente nos diferentes cenários de substituição de variáveis e casos de borda (usuário não encontrado).
-
-- **Risco 4: Poluição de Logs.**
-  - **Mitigação:** Qualquer log de debug usado no teste E2E será temporário, terá um prefixo padronizado (ex: `[DEBUG_PLATFORM_INSTRUCTIONS]`) e será registrado em `docs/debug/logs-registry.md` com um plano de remoção.
-
----
-
-## 7. Estimativa de Tempo
-
-- **Backend e Testes de Unidade/Integração:** 1-2 dias (considerando a abordagem cuidadosa e as validações incrementais).
-- **Teste E2E e Cleanup:** 2-3 horas.
+- **Testes de Unidade:** Focados em `PlatformService`
