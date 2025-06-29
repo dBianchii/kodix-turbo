@@ -658,3 +658,219 @@ turbo 2.5.4
 @kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 89.38ms to execute
 @kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 95.90ms to execute
 @kdx/kdx:dev:  GET /api/trpc/app.chat.findChatFolders,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%7D 200 in 575ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findChatFolders took 112.83ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 116.34ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 117.78ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 118.85ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.chat.findChatFolders,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%7D 200 in 946ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findChatFolders took 56.69ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 72.94ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 75.19ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 76.02ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.chat.findChatFolders,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%7D 200 in 324ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findChatFolders took 20.71ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 23.32ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 27.56ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 33.91ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.chat.findChatFolders,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%7D 200 in 129ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findChatFolders took 31.94ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 35.79ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 49.54ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 59.89ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.chat.findChatFolders,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%7D 200 in 242ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findChatFolders took 107.78ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 109.65ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 119.66ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 129.41ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.chat.findChatFolders,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%7D 200 in 573ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findChatFolders took 25.55ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 30.12ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 30.87ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 31.59ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.chat.findChatFolders,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%7D 200 in 543ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findChatFolders took 24.46ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 32.35ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 45.77ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 47.29ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.chat.findChatFolders,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%7D 200 in 201ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findChatFolders took 17.80ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 19.64ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 20.71ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 22.84ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.chat.findChatFolders,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%7D 200 in 119ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findChatFolders took 20.98ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 23.27ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 25.70ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 29.09ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.chat.findChatFolders,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%7D 200 in 193ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findChatFolders took 33.72ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 37.67ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 39.24ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 40.50ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.chat.findChatFolders,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%7D 200 in 307ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findChatFolders took 225.19ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 418.14ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 456.93ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 460.72ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.chat.findChatFolders,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%7D 200 in 911ms
+@kdx/db:studio: Error: Can't add new command when connection is in closed state
+@kdx/db:studio:     at PromiseConnection.query (/Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/mysql2/lib/promise/connection.js:29:22)
+@kdx/db:studio:     at proxy (/Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:76599:44)
+@kdx/db:studio:     at /Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:85650:32
+@kdx/db:studio:     at dispatch (/Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:83349:27)
+@kdx/db:studio:     at /Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:83350:24
+@kdx/db:studio:     at /Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:82810:15
+@kdx/db:studio:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+@kdx/db:studio:     at async dispatch (/Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:83349:21)
+@kdx/db:studio:     at async cors2 (/Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:84386:9)
+@kdx/db:studio:     at async dispatch (/Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:83349:21) {
+@kdx/db:studio:   code: undefined,
+@kdx/db:studio:   errno: undefined,
+@kdx/db:studio:   sql: undefined,
+@kdx/db:studio:   sqlState: undefined,
+@kdx/db:studio:   sqlMessage: undefined
+@kdx/db:studio: }
+@kdx/db:studio: Error: Can't add new command when connection is in closed state
+@kdx/db:studio:     at PromiseConnection.query (/Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/mysql2/lib/promise/connection.js:29:22)
+@kdx/db:studio:     at proxy (/Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:76599:44)
+@kdx/db:studio:     at /Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:85650:32
+@kdx/db:studio:     at dispatch (/Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:83349:27)
+@kdx/db:studio:     at /Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:83350:24
+@kdx/db:studio:     at /Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:82810:15
+@kdx/db:studio:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+@kdx/db:studio:     at async dispatch (/Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:83349:21)
+@kdx/db:studio:     at async cors2 (/Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:84386:9)
+@kdx/db:studio:     at async dispatch (/Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:83349:21) {
+@kdx/db:studio:   code: undefined,
+@kdx/db:studio:   errno: undefined,
+@kdx/db:studio:   sql: undefined,
+@kdx/db:studio:   sqlState: undefined,
+@kdx/db:studio:   sqlMessage: undefined
+@kdx/db:studio: }
+@kdx/db:studio: Error: Can't add new command when connection is in closed state
+@kdx/db:studio:     at PromiseConnection.query (/Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/mysql2/lib/promise/connection.js:29:22)
+@kdx/db:studio:     at proxy (/Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:76599:44)
+@kdx/db:studio:     at /Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:85650:32
+@kdx/db:studio:     at dispatch (/Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:83349:27)
+@kdx/db:studio:     at /Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:83350:24
+@kdx/db:studio:     at /Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:82810:15
+@kdx/db:studio:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+@kdx/db:studio:     at async dispatch (/Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:83349:21)
+@kdx/db:studio:     at async cors2 (/Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:84386:9)
+@kdx/db:studio:     at async dispatch (/Users/mahadevadas/Documents/Kodix/kodix-turbo/node_modules/drizzle-kit/bin.cjs:83349:21) {
+@kdx/db:studio:   code: undefined,
+@kdx/db:studio:   errno: undefined,
+@kdx/db:studio:   sql: undefined,
+@kdx/db:studio:   sqlState: undefined,
+@kdx/db:studio:   sqlMessage: undefined
+@kdx/db:studio: }

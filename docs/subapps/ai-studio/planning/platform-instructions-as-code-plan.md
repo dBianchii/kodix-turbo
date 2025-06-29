@@ -1,19 +1,20 @@
-# Plano de Implementação: Instruções da Plataforma como Código
+# Plano de Implementação Robusto: Instruções da Plataforma como Código
 
-**Data:** 2025-06-28  
-**Autor:** KodixAgent  
-**Status:** 🟡 Proposta
+**Data:** 2025-06-28
+**Autor:** KodixAgent
+**Status:** 🟡 Proposta (Versão Revisada)
 **Escopo:** AI Studio - Backend
 **Tipo:** Configuração como Código (Nível 1)
 **Documento Pai:** `docs/architecture/configuration-model.md`
+**Documentos de Referência Críticos:** `docs/architecture/lessons-learned.md`, `docs/architecture/subapp-architecture.md`
 
 ---
 
 ## 1. Resumo Executivo
 
-Este plano descreve a implementação das **Instruções da Plataforma (Nível 1)**, conforme o modelo de configuração hierárquica. O objetivo é estabelecer uma configuração base de instruções de IA diretamente no código-fonte, que servirá como padrão para toda a plataforma.
+Este plano descreve a implementação segura e faseada das **Instruções da Plataforma (Nível 1)**. O objetivo é estabelecer uma configuração base de instruções de IA diretamente no código-fonte, que servirá como padrão para toda a plataforma.
 
-Esta implementação suportará o uso de **variáveis dinâmicas** (ex: `{{userName}}`) no template das instruções, que serão substituídas em tempo real pelo backend. Não haverá interface de usuário para esta funcionalidade.
+Esta versão revisada do plano incorpora as **lições aprendidas** do projeto para mitigar riscos conhecidos, como erros de tipo cross-package e inconsistências de implementação, garantindo uma execução estável e alinhada com a arquitetura.
 
 ### Objetivos
 
@@ -24,119 +25,143 @@ Esta implementação suportará o uso de **variáveis dinâmicas** (ex: `{{userN
 
 ---
 
-## 2. Arquitetura da Solução
+## 2. 🚦 Princípios Orientadores (Pre-flight Check)
 
-O fluxo é inteiramente contido no backend, iniciado por uma chamada da API do chat.
+Antes de iniciar, os seguintes princípios, baseados em lições aprendidas, são **obrigatórios**:
+
+1.  **Ordem de Modificação de Pacotes:** A modificação de código que atravessa múltiplos pacotes seguirá estritamente a ordem de dependência para evitar erros de tipo em cascata:
+
+    1.  `@kdx/shared` (se necessário para novos tipos)
+    2.  `@kdx/validators` (se schemas forem afetados)
+    3.  `@kdx/db` (se repositórios ou schemas de DB mudarem)
+    4.  `@kdx/api` (implementação de serviços e routers)
+    5.  `apps/kdx` (consumo no frontend)
+
+2.  **Validação Incremental:** Após modificar cada pacote, o comando `pnpm typecheck --filter=@kdx/NOME_DO_PACOTE` será executado. Nenhum trabalho prosseguirá para o próximo pacote se houver erros de tipo.
+
+3.  **Estrutura de Router tRPC:** Conforme a lição crítica em `docs/architecture/lessons-learned.md`, qualquer novo router ou modificação usará `t.router({...})` para preservar a inferência de tipos. A utilização de `satisfies TRPCRouterRecord` é proibida.
+
+4.  **Comunicação via Service Layer:** A nova lógica será exposta exclusivamente através do `AiStudioService` e seus serviços internos (`PlatformService`, `PromptBuilderService`), respeitando o isolamento entre SubApps.
+
+---
+
+## 3. Arquitetura da Solução
+
+O fluxo permanece contido no backend, mas a implementação seguirá uma ordem estrita para garantir a estabilidade.
 
 ```mermaid
 graph TD
     subgraph "Backend Processing"
         A[/api/chat/stream] --> B[PromptBuilderService]
         B --> C{PlatformService}
-        C -->|imports| D[/packages/subapp-ai-studio/src/config.ts]
-        C -->|gets user data| E[(DB: users)]
-        C -->|returns processed instructions| B
+        C -->|imports| D["ai-studio.config.ts<br/>(em @kdx/api)"]
+        C -->|lê dados do usuário| E[(DB: users)]
+        C -->|retorna instruções processadas| B
     end
 
     style D fill:#f3e5f5,stroke:#333
     style C fill:#fff3e0,stroke:#333
 ```
 
-- **Fonte da Verdade:** O arquivo `packages/subapp-ai-studio/src/config.ts` é a única fonte para o template de instruções da plataforma.
+- **Fonte da Verdade:** O arquivo `packages/api/src/internal/config/ai-studio.config.ts`.
 - **Lógica de Negócio:** Centralizada no `PlatformService` e orquestrada pelo `PromptBuilderService`.
 
 ---
 
-## 3. Implementação Detalhada
+## 4. Checklist de Implementação Detalhado
 
-### 3.1 Nível 1: Arquivo de Configuração
+### Fase 1: Configuração e Serviços Base (Backend)
 
-Criar o arquivo que conterá as configurações estáticas do AI Studio.
+#### **Pacote: `@kdx/api`**
 
-**Exemplo de Implementação (`packages/subapp-ai-studio/src/config.ts`):**
+1.  **[ ] Criar Arquivo de Configuração:**
 
-```typescript
-// O uso de 'as const' garante imutabilidade e tipos literais precisos.
-export const aiStudioConfig = {
-  platformInstructions: {
-    enabled: true,
-    template:
-      "Você é um assistente de IA da Kodix. Seu usuário se chama {{userName}}. Responda sempre em {{userLanguage}}.",
-  },
-  featureFlags: {
-    // ... outras flags do subapp
-  },
-} as const;
-```
+    - **Arquivo:** `packages/api/src/internal/config/ai-studio.config.ts`
+    - **Conteúdo:** Definir o objeto `aiStudioConfig` com `platformInstructions` e o template. Usar `as const` para imutabilidade.
+    - **Validação:** Executar `pnpm typecheck --filter=@kdx/api` para garantir que não há erros de sintaxe.
 
-### 3.2 Backend - Service Layer
+2.  **[ ] Implementar `PlatformService`:**
 
-O `PlatformService` será responsável por processar o template.
+    - **Arquivo:** `packages/api/src/internal/services/platform.service.ts`
+    - **Conteúdo:**
+      - Criar a classe `PlatformService`.
+      - Implementar o método estático `buildInstructionsForUser(userId: string)`.
+      - A lógica deve:
+        - Importar `aiStudioConfig` do novo arquivo de configuração.
+        - Ler o template.
+        - Buscar os dados do usuário no banco (`db.query.users.findFirst`).
+        - Substituir as variáveis dinâmicas (ex: `{{userName}}`, `{{userLanguage}}`).
+        - Lidar com o caso de usuário não encontrado (retornar o template com variáveis não substituídas).
+    - **Validação:** Executar `pnpm typecheck --filter=@kdx/api` novamente.
 
-```typescript
-// packages/api/src/internal/services/platform.service.ts
+3.  **[ ] Implementar `PromptBuilderService` (Estrutura Inicial):**
 
-import { db } from "@kodix/db";
-import { users } from "@kodix/db/schema";
-import { aiStudioConfig } from "@kodix/subapp-ai-studio/config";
-import { eq } from "drizzle-orm";
+    - **Arquivo:** `packages/api/src/internal/services/prompt-builder.service.ts`
+    - **Conteúdo:**
+      - Criar a classe `PromptBuilderService`.
+      - Implementar o método `buildFinalSystemPrompt`, que por enquanto apenas chamará `PlatformService.buildInstructionsForUser`.
+      - Deixar o código preparado com comentários para futuramente incluir `TeamConfigService` e `UserConfigService`.
+    - **Validação:** Executar `pnpm typecheck --filter=@kdx/api`.
 
-export class PlatformService {
-  private static getTemplate(): string {
-    if (aiStudioConfig.platformInstructions.enabled) {
-      return aiStudioConfig.platformInstructions.template;
-    }
-    return "";
-  }
+4.  **[ ] Integrar no `AiStudioService` e no Router:**
+    - **Arquivo:** `packages/api/src/internal/services/ai-studio.service.ts`
+    - **Ação:** Adicionar o método `getSystemPromptForChat` que chama o `PromptBuilderService`.
+    - **Arquivo:** `packages/api/src/trpc/routers/app/aiStudio/_router.ts` (ou similar)
+    - **Ação:** Expor o novo método do `AiStudioService` através de um novo procedure no router do AI Studio, usando `t.router()` para garantir a integridade dos tipos.
 
-  private static replaceVariables(
-    template: string,
-    data: Record<string, string>,
-  ): string {
-    let result = template;
-    for (const key in data) {
-      const regex = new RegExp(`{{${key}}}`, "g");
-      result = result.replace(regex, data[key] ?? "");
-    }
-    return result;
-  }
+### Fase 2: Testes e Validação
 
-  static async buildInstructionsForUser(userId: string): Promise<string> {
-    const template = this.getTemplate();
-    if (!template) return "";
+1.  **[ ] Adicionar Testes de Unidade para `PlatformService`:**
 
-    const user = await db.query.users.findFirst({
-      where: eq(users.id, userId),
-    });
-    if (!user) return template; // Retorna template puro se não achar o usuário
+    - **Local:** `packages/api/src/__tests__/`
+    - **Cenários a Cobrir:**
+      - Substituição correta de todas as variáveis quando o usuário existe.
+      - Retorno do template puro quando o usuário não é encontrado.
+      - Retorno de string vazia se `platformInstructions.enabled` for `false`.
+      - Comportamento com um template que não possui variáveis.
 
-    const contextData = {
-      userName: user.name ?? "Usuário",
-      userEmail: user.email,
-      userLanguage: user.language ?? "pt-BR",
-      // Adicionar mais variáveis conforme necessário
-    };
+2.  **[ ] Adicionar Testes de Integração para `PromptBuilderService`:**
 
-    return this.replaceVariables(template, contextData);
-  }
-}
-```
+    - **Local:** `packages/api/src/__tests__/`
+    - **Cenários a Cobrir:**
+      - Garantir que ele chama corretamente o `PlatformService`.
+      - Verificar se o formato da string final está correto (com separadores, quando as outras camadas forem adicionadas).
+
+3.  **[ ] Teste E2E Manual:**
+    - **Fluxo:** Iniciar o chat com um novo usuário.
+    - **Verificação:** Adicionar um `console.log` **temporário** e **registrado** no `logs-registry.md` dentro do `stream/route.ts` do chat para exibir o `systemPrompt` recebido do `AiStudioService`. Validar se as instruções da plataforma, com as variáveis do usuário substituídas, estão presentes.
+    - **Cleanup:** Remover o log temporário após a validação.
 
 ---
 
-## 4. Checklist de Implementação
+## 5. 🔬 Estratégia de Testes Aprimorada
 
-### Backend (1 dia)
+- **Testes de Unidade:** Focados em `PlatformService` para validar a lógica de substituição de variáveis em isolamento.
+- **Testes de Integração:** Validar a interação entre `PromptBuilderService` e `PlatformService`, garantindo que o encadeamento de chamadas funcione.
+- **Teste E2E:** Um teste manual focado em verificar o resultado final no ponto de consumo mais crítico (o endpoint de stream do chat), usando logs temporários e controlados.
 
-- [ ] Criar o arquivo `packages/subapp-ai-studio/src/config.ts`.
-- [ ] Implementar o `PlatformService` com a lógica de leitura e substituição de variáveis.
-- [ ] Integrar a chamada ao `PlatformService.buildInstructionsForUser` dentro do `PromptBuilderService`.
-- [ ] Adicionar testes de unidade para o `PlatformService`, cobrindo a substituição de variáveis e casos de usuário não encontrado.
+---
 
-### Frontend
+## 6. ⚠️ Gerenciamento de Riscos (Baseado em Lições Aprendidas)
 
-- [ ] Nenhuma tarefa. Esta implementação não possui interface de usuário.
+- **Risco 1: Erros de Tipo Cross-Package.**
 
-### Teste E2E (2 horas)
+  - **Mitigação:** Seguir estritamente a **Ordem de Modificação de Pacotes** e a **Validação Incremental** descritas nos Princípios Orientadores. Esta implementação está contida principalmente no pacote `@kdx/api`, minimizando este risco específico, mas o princípio é mantido.
 
-- [ ] Testar o fluxo de chat e verificar (via logs ou debug) se o prompt final enviado à IA contém as instruções da plataforma com as variáveis do usuário corretamente substituídas.
+- **Risco 2: Quebra da Inferência de Tipos do tRPC.**
+
+  - **Mitigação:** A integração do novo endpoint no router do AI Studio usará `t.router({...})` explicitamente, conforme a lição aprendida em `docs/architecture/lessons-learned.md`.
+
+- **Risco 3: Lógica de Negócio Incorreta (Variáveis não substituídas).**
+
+  - **Mitigação:** A estratégia de testes de unidade focará especificamente nos diferentes cenários de substituição de variáveis e casos de borda (usuário não encontrado).
+
+- **Risco 4: Poluição de Logs.**
+  - **Mitigação:** Qualquer log de debug usado no teste E2E será temporário, terá um prefixo padronizado (ex: `[DEBUG_PLATFORM_INSTRUCTIONS]`) e será registrado em `docs/debug/logs-registry.md` com um plano de remoção.
+
+---
+
+## 7. Estimativa de Tempo
+
+- **Backend e Testes de Unidade/Integração:** 1-2 dias (considerando a abordagem cuidadosa e as validações incrementais).
+- **Teste E2E e Cleanup:** 2-3 horas.

@@ -4,6 +4,23 @@
 
 O AI Studio é construído com uma arquitetura moderna que combina React/Next.js no frontend com tRPC v11 no backend, oferecendo uma experiência type-safe completa para gerenciamento de recursos de IA. A arquitetura é modular, escalável e focada em segurança com isolamento total por equipe.
 
+## 🎯 Princípios Arquiteturais: O AI Studio como "SubApp Core"
+
+O AI Studio não é apenas um SubApp; ele é classificado como um **SubApp Core**, o que estabelece um princípio arquitetural fundamental para todo o ecossistema Kodix.
+
+1.  **Centralizador de Lógica de IA (Ponte)**
+
+    - O AI Studio é o **único responsável** por toda a lógica de negócio, configuração e infraestrutura de Inteligência Artificial. Ele atua como uma ponte (bridge) entre as funcionalidades de IA e o resto da plataforma.
+
+2.  **Dependência Obrigatória para Funcionalidades de IA**
+
+    - Qualquer outro SubApp (como Chat, por exemplo) que precise consumir serviços de IA **deve, obrigatoriamente, depender do AI Studio**. A instalação do AI Studio é um pré-requisito técnico para habilitar essas funcionalidades.
+
+3.  **Comunicação Exclusiva via Service Layer**
+    - A comunicação de outros SubApps com o AI Studio deve ocorrer **exclusivamente através do `AiStudioService`**. Este serviço expõe de forma segura e controlada os recursos do AI Studio, garantindo o isolamento e a consistência.
+
+Essa abordagem centralizada previne a duplicação de lógica, garante uma experiência de IA unificada e cria um ponto único de gerenciamento e evolução para toda a infraestrutura de IA do Kodix.
+
 ---
 
 # 📱 Frontend Architecture
@@ -592,11 +609,13 @@ await redis.set(cacheKey, JSON.stringify(models), "EX", 300); // 5 min
 
 ## 🔄 Integração com Outros SubApps
 
-### Padrão de Comunicação: Service Layer
+### Padrão Obrigatório: Service Layer
 
-A comunicação entre o AI Studio e outros SubApps (como o Chat) segue o padrão de **Service Layer**, garantindo isolamento, segurança e type-safety. O `AiStudioService` é a porta de entrada para todas as funcionalidades do AI Studio que precisam ser consumidas por outros serviços.
+Conforme os **Princípios Arquiteturais** do AI Studio como **SubApp Core**, a comunicação de outros SubApps (como o Chat) **deve obrigatoriamente** seguir o padrão de **Service Layer**.
 
-**NUNCA** acesse os repositórios do AI Studio diretamente de outro SubApp.
+Esta é a única forma de comunicação permitida, garantindo isolamento, segurança e type-safety. O `AiStudioService` é a porta de entrada exclusiva para todas as funcionalidades do AI Studio que precisam ser consumidas por outros serviços.
+
+**REGRA CRÍTICA:** É estritamente **proibido** acessar os repositórios ou a lógica interna do AI Studio diretamente de outro SubApp. Toda interação deve passar pelo `AiStudioService`.
 
 ### Exemplo: `AiStudioService`
 
