@@ -1,4 +1,3 @@
-import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
@@ -33,21 +32,14 @@ import {
 } from "@kdx/validators/trpc/app";
 
 import { protectedProcedure } from "../../../procedures";
+import { t } from "../../../trpc";
 import { aiAgentsRouter } from "./agents";
 import { aiModelsRouter } from "./models";
 import { aiProvidersRouter } from "./providers";
 import { aiTokensRouter } from "./tokens";
 
-export const aiStudioRouter = {
-  // =============================================================================
-  // AI PROVIDERS
-  // =============================================================================
-  ...aiProvidersRouter,
-
-  // =============================================================================
-  // AI MODELS
-  // =============================================================================
-  ...aiModelsRouter,
+// Router com procedures avulsos (não sub-routers)
+const aiStudioMainRouter = t.router({
 
   // =============================================================================
   // AI LIBRARIES

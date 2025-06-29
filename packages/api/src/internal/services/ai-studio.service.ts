@@ -5,6 +5,8 @@ import { db } from "@kdx/db/client";
 import { aiStudioRepository } from "@kdx/db/repositories";
 import { aiStudioAppId, aiStudioConfigSchema, chatAppId } from "@kdx/shared";
 
+import { PromptBuilderService } from "./prompt-builder.service";
+
 export interface AiStudioServiceParams {
   teamId: string;
   requestingApp: KodixAppId;
@@ -239,5 +241,53 @@ export class AiStudioService {
       content,
       appliesTo,
     };
+  }
+
+  /**
+   * Constrói o prompt completo do sistema para chat
+   * Usado por outros SubApps como Chat para obter instruções finais
+   */
+  static async getSystemPromptForChat({
+    userId,
+    teamId,
+    requestingApp,
+  }: {
+    userId: string;
+    teamId: string;
+    requestingApp: KodixAppId;
+  }) {
+    this.validateTeamAccess(teamId);
+    this.logAccess("getSystemPromptForChat", { teamId, requestingApp });
+
+    try {
+      const systemPrompt = await PromptBuilderService.buildFinalSystemPrompt({
+        userId,
+        teamId,
+        requestingApp,
+      });
+
+      console.log(
+        `✅ [AiStudioService] System prompt built for chat (${systemPrompt.length} characters) - team: ${teamId}, user: ${userId}`,
+      );
+
+      return {
+        prompt: systemPrompt,
+        length: systemPrompt.length,
+        hasContent: systemPrompt.trim().length > 0,
+      };
+    } catch (error) {
+      console.error(
+        "❌ [AiStudioService] Error building system prompt:",
+        error,
+      );
+
+      // Retornar prompt vazio em caso de erro para não bloquear o chat
+      return {
+        prompt: "",
+        length: 0,
+        hasContent: false,
+        error: "Failed to build system prompt",
+      };
+    }
   }
 }
