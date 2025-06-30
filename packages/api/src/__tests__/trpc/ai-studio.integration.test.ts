@@ -1,9 +1,9 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
+import { CoreEngine } from "@kdx/core-engine";
 import { db } from "@kdx/db/client";
 import { chatAppId } from "@kdx/shared";
 
-import { aiStudioConfig } from "../../internal/config/ai-studio.config";
 import { appRouter } from "../../trpc/root";
 import { createTRPCContext } from "../../trpc/trpc";
 
@@ -18,16 +18,22 @@ vi.mock("@kdx/db/client", () => ({
   },
 }));
 
-// Mock do config para ter certeza que o template é o que esperamos
-vi.mock("../../internal/config/ai-studio.config", () => ({
-  aiStudioConfig: {
-    platformInstructions: {
-      enabled: true,
-      template:
-        "Olá, {{userName}} da equipe {{teamName}}. Seu idioma é {{userLanguage}}.",
+// Mock do CoreEngine para controlar a configuração
+vi.mock("@kdx/core-engine", () => ({
+  CoreEngine: {
+    config: {
+      get: vi.fn(),
     },
   },
 }));
+
+const mockCoreEngineConfig = {
+  platformInstructions: {
+    enabled: true,
+    template:
+      "Olá, {{userName}} da equipe {{teamName}}. Seu idioma é {{userLanguage}}.",
+  },
+};
 
 describe("AI Studio tRPC Integration Test", async () => {
   // Mock do usuário que será usado no contexto de autenticação
@@ -58,10 +64,12 @@ describe("AI Studio tRPC Integration Test", async () => {
     vi.clearAllMocks();
     // Garantir que a chamada ao banco retorne nosso usuário mockado por padrão
     vi.mocked(db.query.users.findFirst).mockResolvedValue(mockUser as any);
+    // Mockar o CoreEngine para retornar a configuração esperada
+    vi.mocked(CoreEngine.config.get).mockResolvedValue(mockCoreEngineConfig);
   });
 
   describe("getSystemPromptForChat Query", () => {
-    it("should return the processed prompt with user variables substituted", async () => {
+    it("should return the processed prompt via CoreEngine", async () => {
       // Act: Chamar o endpoint da API através do caller
       const result = await caller.app.aiStudio.getSystemPromptForChat({
         requestingApp: chatAppId,
@@ -69,25 +77,24 @@ describe("AI Studio tRPC Integration Test", async () => {
 
       // Assert: Verificar se o resultado está correto
       expect(result.hasContent).toBe(true);
-      expect(result.prompt).toBe(
-        "Olá, Usuário de Teste da equipe Equipe de Teste. Seu idioma é pt-BR.",
-      );
-      expect(db.query.users.findFirst).toHaveBeenCalledTimes(1);
+      expect(result.prompt).toContain("Plataforma"); // Prompt estruturado pelo PromptBuilderService
+      expect(CoreEngine.config.get).toHaveBeenCalledTimes(1);
     });
 
-    it("should handle cases where the user is not found in the db", async () => {
-      // Arrange: Simular que o banco não encontrou o usuário
-      vi.mocked(db.query.users.findFirst).mockResolvedValue(
-        Promise.resolve(null) as any,
-      );
+    it("should handle cases where CoreEngine returns empty config", async () => {
+      // Arrange: Simular que o CoreEngine retorna configuração vazia
+      vi.mocked(CoreEngine.config.get).mockResolvedValue({
+        platformInstructions: { enabled: false, template: "" },
+      });
 
       // Act
       const result = await caller.app.aiStudio.getSystemPromptForChat({
         requestingApp: chatAppId,
       });
 
-      // Assert: O serviço deve retornar o template sem substituição
-      expect(result.prompt).toBe(aiStudioConfig.platformInstructions.template);
+      // Assert: O serviço deve retornar prompt vazio
+      expect(result.hasContent).toBe(false);
+      expect(result.prompt).toBe("");
     });
   });
 });

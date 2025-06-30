@@ -1,0 +1,35 @@
+{
+  "name": "@kdx/core-engine",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "dev": "tsc",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+  },
+  "dependencies": {
+    "@kdx/db": "workspace:*",
+    "@kdx/shared": "workspace:*",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@kdx/eslint-config": "workspace:*",
+    "@kdx/prettier-config": "workspace:*",
+    "@kdx/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "eslint": "catalog:",
+    "typescript": "catalog:"
+  },
+  "prettier": "@kdx/prettier-config"
+}

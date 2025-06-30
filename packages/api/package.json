@@ -26,6 +26,7 @@
     "@aws-sdk/client-s3": "^3.583.0",
     "@casl/ability": "catalog:",
     "@kdx/auth": "workspace:*",
+    "@kdx/core-engine": "workspace:*",
     "@kdx/dayjs": "workspace:*",
     "@kdx/db": "workspace:*",
     "@kdx/locales": "workspace:*",

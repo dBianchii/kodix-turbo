@@ -1,8 +1,8 @@
 import { TRPCError } from "@trpc/server";
 
 import type { KodixAppId } from "@kdx/shared";
-
-import { PlatformService } from "./platform.service";
+import { CoreEngine } from "@kdx/core-engine";
+import { aiStudioAppId } from "@kdx/shared";
 
 /**
  * PromptBuilderService - Responsável por construir o prompt final do sistema
@@ -90,14 +90,24 @@ export class PromptBuilderService {
       // Coletar instruções de todas as camadas
       const instructions: (string | null)[] = [];
 
-      // 1. Instruções da Plataforma (Nível 1) - Implementado
+      // 1. Instruções da Plataforma (Nível 1) - Implementado via CoreEngine
       try {
-        const platformInstructions =
-          await PlatformService.buildInstructionsForUser(userId);
+        const coreConfig = await CoreEngine.config.get({
+          appId: aiStudioAppId,
+          teamId,
+          userId,
+        });
+
+        const platformInstructions = coreConfig?.platformInstructions?.enabled
+          ? coreConfig.platformInstructions.template
+          : null;
+
         instructions.push(platformInstructions);
 
         if (platformInstructions) {
-          console.log("✅ [PromptBuilderService] Platform instructions loaded");
+          console.log(
+            "✅ [PromptBuilderService] Platform instructions loaded via CoreEngine",
+          );
         } else {
           console.log(
             "⚠️ [PromptBuilderService] Platform instructions disabled or empty",
@@ -105,7 +115,7 @@ export class PromptBuilderService {
         }
       } catch (error) {
         console.error(
-          "❌ [PromptBuilderService] Error loading platform instructions:",
+          "❌ [PromptBuilderService] Error loading platform instructions via CoreEngine:",
           error,
         );
         instructions.push(null);
@@ -165,9 +175,9 @@ export class PromptBuilderService {
    */
   static getServiceInfo() {
     return {
-      platformService: {
+      coreEngine: {
         available: true,
-        config: PlatformService.getConfigInfo(),
+        description: "CoreEngine v1 - Configuration Service",
       },
       teamService: {
         available: false, // TODO: Implementar
