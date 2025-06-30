@@ -207,3 +207,13 @@ turbo 2.5.4
 @kdx/kdx:dev:  GET / 200 in 1989ms
 @kdx/kdx:dev:  GET / 200 in 128ms
 @kdx/kdx:dev:  GET / 200 in 114ms
+@kdx/core-engine:dev: cache bypass, force executing bf83f9757de3e79d
+@kdx/core-engine:dev: 
+@kdx/core-engine:dev: > @kdx/core-engine@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/core-engine
+@kdx/core-engine:dev: > tsc
+@kdx/core-engine:dev: 
+@kdx/api:dev: cache bypass, force executing 4e3a190e658a173b
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 

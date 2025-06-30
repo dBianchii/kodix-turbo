@@ -184,6 +184,18 @@ A leitura deste documento é **obrigatória** para todos os desenvolvedores.
   - **Causa Raiz**: `vi.mock` é "içado" (hoisted) para o topo do arquivo durante a compilação, sendo executado antes da declaração de outras variáveis no escopo do módulo. Se a fábrica do mock (`() => ({...})`) referencia uma variável declarada depois, ela ainda não foi inicializada.
   - **Ação Preventiva**: Sempre declare as variáveis ou constantes que serão usadas dentro de uma fábrica de `vi.mock` **antes** da chamada ao `vi.mock`.
 
+### **11. Estrutura de Pacotes vs. Automação e Hooks de Validação**
+
+- **Lição**: A criação manual ou automatizada de pacotes deve ser consistente com os hooks de validação do projeto (ex: `sherif` para ordenação de `package.json`).
+- **O Problema**: Ao criar o pacote `@kdx/core-engine` manualmente, o `pnpm install` falhou com um erro do `sherif` porque as dependências no `package.json` não estavam em ordem alfabética.
+- **Ação Preventiva**: Ao criar um novo pacote, garanta que todas as chaves nos arquivos de configuração, especialmente as `dependencies` e `devDependencies` no `package.json`, sigam a ordem alfabética exigida pelos linters do projeto. Isso se aplica tanto a geradores de código (`turbo gen`) quanto à criação manual.
+
+### **12. Resolução de Módulos em Workspace (Imports de Sub-path)**
+
+- **Lição**: Imports de sub-paths de pacotes do workspace (ex: `from "@kdx/db/repositories"`) são um anti-padrão perigoso. Eles podem funcionar no editor (devido à inteligência do VSCode), mas falham durante o build do TypeScript ou com o Turborepo.
+- **O Problema**: A tentativa de importar o `appRepository` de `@kdx/db/repositories` dentro do novo pacote `@kdx/core-engine` falhou, pois a configuração de `moduleResolution: "Bundler"` espera que os imports apontem apenas para o ponto de entrada definido no `exports` do `package.json` do pacote alvo.
+- **Ação Preventiva**: **TODOS** os imports entre pacotes do workspace **DEVEM** apontar para o ponto de entrada principal (ex: `from "@kdx/db"`). Para que isso funcione, o pacote alvo (`@kdx/db` neste caso) deve exportar explicitamente os membros desejados (como `appRepository`) em seu `index.ts` principal.
+
 ---
 
 Este documento deve ser o primeiro lugar a ser consultado ao encontrar um bug inesperado e o último a ser atualizado após a resolução, garantindo que o conhecimento da equipe evolua constantemente.
