@@ -2,7 +2,7 @@
 
 **Data:** 2025-07-01
 **Autor:** KodixAgent
-**Status:** ✅ **Executado com Desvios**
+**Status:** 🔴 **BLOQUEADO - Finalização da Fase 4 é pré-requisito para outras features**
 **Escopo:** Criação do pacote `core-engine` e seu `ConfigurationService`, guiado por lições aprendidas.
 **Documentos de Referência:**
 
@@ -21,6 +21,16 @@ A implementação seguiu o espírito do plano, mas a execução prática revelou
 3.  **Integração com DB:** A integração com o banco de dados no `ConfigurationService` foi temporariamente adiada (comentada no código) devido a problemas de resolução de módulos entre pacotes (`@kdx/core-engine` e `@kdx/db`).
 
 O plano abaixo foi atualizado para refletir o que **foi efetivamente executado**.
+
+---
+
+## 0.1. Análise Pós-Execução (Estado Atual)
+
+**Conclusão:** A Fase 3 foi concluída com sucesso, e o `CoreEngine` está sendo consumido pelo `PromptBuilderService`. No entanto, o `ConfigurationService` está **funcionalmente incompleto e é um bloqueador para outras tarefas**.
+
+- **O que funciona:** Retorna a configuração de Nível 1 (Plataforma).
+- **O que NÃO funciona:** A busca por configurações de Nível 2 (Time) e Nível 3 (Usuário) no banco de dados está desativada.
+- **Próximo Passo:** É mandatório e urgente executar a **Fase 4** para finalizar o serviço e habilitar a funcionalidade completa de configuração hierárquica, desbloqueando o progresso em outras áreas (como a integração de `system-prompt` no Chat).
 
 ---
 
@@ -126,6 +136,34 @@ _Objetivo: Conectar o `AI Studio` ao novo `CoreEngine` e remover o código legad
 5.  **[✅] Validação Final:**
     - **Ação:** Executados `pnpm typecheck --filter=@kdx/api --filter=@kdx/core-engine` e `pnpm test --filter=@kdx/api --filter=@kdx/core-engine` para garantir que a integração não quebrou nada nos pacotes envolvidos.
     - **Desvio do Plano:** A validação na raiz do projeto (`pnpm typecheck`) foi pulada pois identificou erros não relacionados em `@kdx/locales`, que estão fora do escopo desta tarefa.
+
+### **Fase 4: Finalização da Integração com DB (Pendente)**
+
+_Objetivo: Tornar o `ConfigurationService` totalmente funcional, habilitando a busca de configurações de Nível 2 (Time) и Nível 3 (Usuário)._
+
+1.  **[ ] Corrigir Resolução de Módulos:**
+
+    - **Ação:** Investigar e resolver os problemas de import entre `@kdx/core-engine` e `@kdx/db`.
+    - **Critério de Sucesso:** A importação `import { appRepository } from "@kdx/db";` deve funcionar dentro do `configuration.service.ts` sem erros de build.
+    - **Referência:** Lição Aprendida #12 - Resolução de Módulos em Workspace.
+
+2.  **[ ] Ativar Lógica de Busca no Banco de Dados:**
+
+    - **Arquivo:** `packages/core-engine/src/configuration/configuration.service.ts`.
+    - **Ação:** Descomentar e/ou implementar a lógica que chama `appRepository.findAppTeamConfigs` e `appRepository.findUserAppTeamConfigs` para buscar as configurações do time e do usuário.
+
+3.  **[ ] Atualizar Testes do `ConfigurationService`:**
+
+    - **Arquivo:** `packages/core-engine/src/configuration/__tests__/configuration.service.test.ts`.
+    - **Ação:**
+      - Refatorar os testes para mockar as chamadas ao `appRepository`.
+      - Adicionar novos casos de teste para validar a mesclagem correta dos 3 níveis de configuração.
+      - Garantir que os mocks correspondam perfeitamente aos schemas Zod e aos retornos do repositório.
+    - **Referência:** Lição Aprendida #14 - Precisão em Mocks de Testes.
+
+4.  **[ ] Validação Final do Pacote:**
+    - **Ação:** Executar `pnpm build --filter=@kdx/core-engine` e `pnpm test --filter=@kdx/core-engine`.
+    - **Critério de Sucesso:** O pacote deve ser compilado com sucesso e todos os testes (incluindo os novos) devem passar.
 
 ## 5. Documentação e Cleanup Final
 

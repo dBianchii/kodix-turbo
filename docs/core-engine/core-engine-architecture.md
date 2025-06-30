@@ -8,6 +8,17 @@
 
 O pacote `@kdx/core-engine` é o coração da lógica de negócio desacoplada da plataforma Kodix. Ele foi projetado para abrigar serviços fundamentais que podem ser consumidos por qualquer camada de API (seja a API principal, CLIs ou outros serviços futuros), garantindo a reutilização de código e uma clara separação de responsabilidades.
 
+## 1.1. ⚠️ Status da Implementação e Pré-requisitos
+
+**ESTADO ATUAL:** `Parcialmente Implementado`
+
+Embora a arquitetura aqui descrita represente o estado final desejado, a implementação atual do `ConfigurationService` está **incompleta**.
+
+- **Funcional:** O serviço pode buscar e mesclar a configuração de **Nível 1 (Plataforma)**.
+- **Pendente:** A integração com o banco de dados para buscar as configurações de **Nível 2 (Time)** e **Nível 3 (Usuário)** foi adiada.
+
+**PRÉ-REQUISITO CRÍTICO:** Qualquer funcionalidade em outros SubApps que dependa da configuração hierárquica completa (Níveis 1, 2 e 3) está **bloqueada** até que a **[Fase 4 do plano de implementação do Core Engine](./planning/core-engine-v1-config-plan.md)** seja concluída.
+
 ## 2. Serviço Principal: `ConfigurationService`
 
 O principal serviço atualmente implementado no Core Engine é o `ConfigurationService`.

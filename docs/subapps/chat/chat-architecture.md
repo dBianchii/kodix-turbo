@@ -8,7 +8,7 @@ O Chat SubApp implementa uma **arquitetura thread-first moderna** usando React +
 **Testes:** 13/13 suites passando  
 **Performance:** Otimizada (~200ms primeira mensagem)
 
-## ��️ Arquitetura Geral (Revisada)
+## 🎯 Arquitetura Geral (Revisada)
 
 ```mermaid
 graph TB
@@ -259,6 +259,8 @@ export async function POST(request: NextRequest) {
     },
   });
 }
+
+> **NOTA DE ARQUITETURA CRÍTICA:** O fluxo acima depende da chamada ao `PromptBuilderService` para obter o `systemPrompt` hierárquico. Esta funcionalidade, por sua vez, depende da finalização do `ConfigurationService` no `@kdx/core-engine`. Conforme documentado em `@core-engine-architecture.md`, esta implementação está pendente e é um pré-requisito para que as instruções de Nível 2 (Time) e Nível 3 (Usuário) sejam aplicadas.
 ```
 
 ### API Layer (tRPC)
