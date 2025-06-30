@@ -554,50 +554,48 @@ if (!resource || resource.teamId !== teamId) {
 }
 ```
 
-## 🧠 Lógica de Construção de Prompts
+## 🧠 Lógica de Construção de Prompts (Arquitetura Revisada)
 
-O AI Studio utiliza um sistema hierárquico para construir o prompt de sistema (`systemPrompt`) final que é enviado aos modelos de IA. Essa lógica é orquestrada pelo `PromptBuilderService`.
+O AI Studio utiliza um sistema hierárquico para construir o prompt de sistema (`systemPrompt`) final que é enviado aos modelos de IA. Essa lógica é orquestrada pelo `PromptBuilderService`, mas agora centralizada através do `ConfigurationService` do Core Engine.
 
-### Arquitetura do PromptBuilderService
+### Arquitetura com Core Engine
 
-O `PromptBuilderService` atua como um maestro, coordenando as saídas de outros serviços especializados para montar o prompt final, seguindo uma ordem de precedência.
+O `PromptBuilderService` foi refatorado para consumir o `ConfigurationService`, que agora é a **fonte única da verdade** para todas as configurações, abstraindo a complexidade de buscar e mesclar os diferentes níveis de instruções.
 
 ```mermaid
 graph TD
-    subgraph "AI Studio Core Logic"
-        A[AiStudioService] -->|pede prompt final| B(PromptBuilderService)
-        B -->|1. Pega instruções do Usuário| C[UserConfigService]
-        B -->|2. Pega instruções do Time| D[TeamConfigService]
-        B -->|3. Pega instruções da Plataforma| E[PlatformService]
-
-        C -->|retorna string| B
-        D -->|retorna string| B
-        E -->|retorna string| B
-
-        B -->|retorna prompt final| A
+    subgraph "Camada de API (@kdx/api)"
+        A[Endpoint /api/chat/stream] -->|chama| B(PromptBuilderService)
+        B --> |1. Pede config mesclada| C{"CoreEngine.config.get()"}
     end
 
-    subgraph "Data Sources"
-        F[(DB: userAppTeamConfigs)]
-        G[(DB: appTeamConfigs)]
-        H[/.../config/ai-studio.config.ts]
+    subgraph "Pacote Core Engine (@kdx/core-engine)"
+        C --> D[ConfigurationService]
+        D -->|a. Pega config de Plataforma| E["platform-configs/ai-studio.config.ts"]
+        D -->|b. Pega config do Time| F[(DB: appTeamConfigs)]
+        D -->|c. Pega config do Usuário| G[(DB: userAppTeamConfigs)]
+        D -->|d. Mescla tudo hierarquicamente| H[deepMerge Utility]
     end
 
-    C --> F
-    D --> G
-    E --> H
+    H -->|retorna config final| C
 
-    style B fill:#c8e6c9,stroke:#333
-    style A fill:#b39ddb,stroke:#333
+    subgraph "Frontend (Exemplo de Consumo)"
+        I[UserInstructionsSection] -->|usa| J[Endpoints Genéricos<br/>saveUserAppTeamConfig]
+        J --> D
+    end
+
+    style B fill:#c8e6c9,stroke:#333,color:#000
+    style C fill:#b39ddb,stroke:#333,color:#000
+    style D fill:#fff3e0,stroke:#333,color:#000
 ```
 
-- **Ponto de Entrada:** `AiStudioService`.
-- **Orquestrador:** `PromptBuilderService`.
-- **Executores:** `PlatformService`, `TeamConfigService`, `UserConfigService` (os dois últimos a serem implementados).
+- **Orquestrador:** `PromptBuilderService` (no `@kdx/api`).
+- **Fonte da Verdade:** `ConfigurationService` (no `@kdx/core-engine`).
+- **Fluxo:** O `PromptBuilderService` simplesmente chama `CoreEngine.config.get()` e recebe um objeto de configuração já mesclado e pronto para uso.
 
-### Ordem de Precedência
+### Ordem de Precedência (Inalterada)
 
-A ordem de combinação das instruções é crucial para dar mais poder ao usuário:
+A ordem em que o `ConfigurationService` mescla as instruções permanece a mesma, garantindo que as configurações mais específicas (do usuário) tenham prioridade:
 
 1.  **Nível 3: Instruções do Usuário** (maior prioridade)
 2.  **Nível 2: Instruções do Time**
@@ -646,7 +644,7 @@ const model = await AiStudioService.getModelById({
 
 ## 🚀 Roadmap
 
-- [✅] **Implementar `PromptBuilderService`**: Criar um serviço centralizado para construir o prompt final da IA, combinando as instruções de Nível 1 (Plataforma), Nível 2 (Time) e Nível 3 (Usuário) na ordem de precedência correta.
+- [✅] **Refatorar Lógica de Prompt**: A lógica de construção de prompts, antes no `PromptBuilderService`, foi refatorada e centralizada no `ConfigurationService` dentro do novo pacote `@kdx/core-engine`, seguindo um padrão arquitetural mais robusto.
 - [ ] Upload real de arquivos para bibliotecas
 - [ ] Sistema de auditoria completo
 
@@ -780,29 +778,23 @@ Esta arquitetura fornece uma base sólida e escalável para o AI Studio, com sep
 
 ```mermaid
 graph TD
-    subgraph "Frontend (AI Studio)"
-        A[UserInstructionsSection] --> B[Endpoints Genéricos tRPC]
+    subgraph "Fluxo de Consumo de Configuração (Ex: Chat)"
+        A[Chat Stream Endpoint] -->|1. Chama| B(AiStudioService)
+        B --> |2. Delega para| C{CoreEngine}
+        subgraph "@kdx/core-engine"
+            C -->|3. Executa| D[ConfigurationService]
+            D -->|Busca dados| E[(Database)]
+        end
     end
 
-    subgraph "Backend (Existente)"
-        B --> C["app.getUserAppTeamConfig<br/>app.saveUserAppTeamConfig"]
-        C --> E[appRepository]
-        E --> D[(Database: userAppTeamConfigs)]
+    subgraph "Fluxo de UI para Salvar Configuração (Ex: AI Studio)"
+        F[UserInstructionsSection] -->|Chama| G[Endpoint Genérico<br>saveUserAppTeamConfig]
+        G -->|Usa| H[appRepository]
+        H --> E
     end
 
-    subgraph "Chat Flow (Outro SubApp)"
-        F[UI do Chat] --> G{/api/chat/stream}
-        G --> H[Backend do Chat]
-        H --> I(AiStudioService)
-        I --> J[Endpoints do AI Studio]
-        J --> K[Repositórios do AI Studio]
-        K --> L[(Database)]
-    end
-
-    style A fill:#e3f2fd,stroke:#333
-    style B fill:#90caf9,stroke:#333
-    style C fill:#81c784,stroke:#333
-    style I fill:#fff3e0,stroke:#333
+    style C fill:#b39ddb,stroke:#333,color:#000
+    style D fill:#fff3e0,stroke:#333,color:#000
 ```
 
 ---

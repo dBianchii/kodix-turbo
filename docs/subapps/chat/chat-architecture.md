@@ -8,46 +8,32 @@ O Chat SubApp implementa uma **arquitetura thread-first moderna** usando React +
 **Testes:** 13/13 suites passando  
 **Performance:** Otimizada (~200ms primeira mensagem)
 
-## 🏗️ Arquitetura Geral
+## ��️ Arquitetura Geral (Revisada)
 
 ```mermaid
 graph TB
     subgraph "Frontend (React + Next.js)"
-        UI[UnifiedChatPage]
-        Sidebar[AppSidebar]
-        Chat[ChatWindow]
-        Thread[ChatThreadProvider]
-        Hooks[Custom Hooks]
+        UI[Chat UI] --> Hooks[useChat]
     end
 
-    subgraph "API Layer (tRPC)"
-        Router[Chat Router]
-        Handlers[Route Handlers]
-        Stream[/api/chat/stream]
+    subgraph "API Layer"
+        Hooks --> Stream["/api/chat/stream"]
     end
 
-    subgraph "Service Layer"
-        AiStudio[AI Studio Service]
-        ChatService[Chat Service]
-        Repos[Repositories]
+    subgraph "Service Orchestration"
+        Stream -->|1. Salva msg| ChatService[Chat Service]
+        Stream -->|2. Obtém config| AiStudioService[AI Studio Service]
+        AiStudioService -->|Delega| CoreEngine[Core Engine <br/> ConfigurationService]
     end
 
     subgraph "Data Layer"
-        DB[(Database)]
-        Models[AI Models]
-        Providers[AI Providers]
+        ChatService --> DB[(Database)]
+        CoreEngine --> DB
     end
 
-    UI --> Thread
-    Thread --> Hooks
-    Hooks --> Router
-    Router --> Handlers
-    Stream --> AiStudio
-    Handlers --> ChatService
-    ChatService --> Repos
-    Repos --> DB
-    AiStudio --> Models
-    Models --> Providers
+    AiStudioService -->|3. Retorna modelo e prompt| Stream
+    Stream -->|4. Inicia Stream| VercelAI[Vercel AI SDK]
+    VercelAI -->|Salva resposta via onFinish| ChatService
 ```
 
 ## 🎯 Frontend Architecture
@@ -198,10 +184,12 @@ import { createAnthropic } from "@ai-sdk/anthropic";
 import { createOpenAI } from "@ai-sdk/openai";
 import { streamText } from "ai";
 
+import { PromptBuilderService } from "../../../../internal/services/prompt-builder.service";
+
 export async function POST(request: NextRequest) {
   const { chatSessionId, content } = await request.json();
 
-  // 1. Validação e preparação
+  // 1. Validação e preparação da sessão
   const session = await ChatService.findSessionById(chatSessionId);
 
   // 2. Salvar mensagem do usuário
@@ -212,25 +200,32 @@ export async function POST(request: NextRequest) {
     status: "ok",
   });
 
-  // 3. Obter modelo via AI Studio Service
+  // 3. Obter modelo e token via AI Studio Service
   const model = await AiStudioService.getModelById({
     modelId: session.aiModelId,
     teamId: session.teamId,
     requestingApp: chatAppId,
   });
-
   const token = await AiStudioService.getProviderToken({
     providerId: model.providerId,
     teamId: session.teamId,
     requestingApp: chatAppId,
   });
 
-  // 4. Criar provider nativo
+  // 4. ✅ Obter o System Prompt hierárquico via Core Engine
+  const systemPrompt = await PromptBuilderService.getSystemPrompt({
+    appId: aiStudioAppId,
+    teamId: session.teamId,
+    userId: session.userId,
+  });
+
+  // 5. Criar provider nativo
   const vercelModel = createVercelModel(model, token);
 
-  // 5. 🎯 STREAMING NATIVO
+  // 6. 🎯 STREAMING NATIVO (com system prompt)
   const result = streamText({
     model: vercelModel,
+    system: systemPrompt,
     messages: formattedMessages,
     temperature: 0.7,
     maxTokens: 4000,
@@ -257,7 +252,7 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  // 6. Response nativa
+  // 7. Response nativa
   return result.toDataStreamResponse({
     headers: {
       "X-Powered-By": "Vercel-AI-SDK-Native",
