@@ -48,14 +48,6 @@ Guia completo do usuário com:
 - **Troubleshooting**: Resolução de problemas comuns
 - **Manutenção**: Boas práticas de uso contínuo
 
-### ��️ [Architecture](./ai-studio-architecture.md)
-
-Documentação técnica com:
-
-- **Frontend Architecture**: Componentes, estado e fluxos
-- **Backend Architecture**: APIs, segurança e performance
-- **Integração**: Como frontend e backend se comunicam
-
 ### 🔌 [API Reference](./api-reference.md)
 
 Referência completa das APIs tRPC:
@@ -115,6 +107,14 @@ pnpm test:ai-studio
 # Verificar tipos
 pnpm typecheck
 ```
+
+### 🧪 [Testing Complete](./testing-complete.md)
+
+Guia completo sobre a estratégia de testes do AI Studio, incluindo:
+
+- **Estratégia de Testes**: Foco em testes de integração de API
+- **Comandos**: Como executar os testes específicos do AI Studio
+- **Padrões**: Referência para os padrões de teste de backend
 
 ## 📊 Monitoramento
 

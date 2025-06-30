@@ -554,6 +554,57 @@ if (!resource || resource.teamId !== teamId) {
 }
 ```
 
+## 🧠 Lógica de Construção de Prompts
+
+O AI Studio utiliza um sistema hierárquico para construir o prompt de sistema (`systemPrompt`) final que é enviado aos modelos de IA. Essa lógica é orquestrada pelo `PromptBuilderService`.
+
+### Arquitetura do PromptBuilderService
+
+O `PromptBuilderService` atua como um maestro, coordenando as saídas de outros serviços especializados para montar o prompt final, seguindo uma ordem de precedência.
+
+```mermaid
+graph TD
+    subgraph "AI Studio Core Logic"
+        A[AiStudioService] -->|pede prompt final| B(PromptBuilderService)
+        B -->|1. Pega instruções do Usuário| C[UserConfigService]
+        B -->|2. Pega instruções do Time| D[TeamConfigService]
+        B -->|3. Pega instruções da Plataforma| E[PlatformService]
+
+        C -->|retorna string| B
+        D -->|retorna string| B
+        E -->|retorna string| B
+
+        B -->|retorna prompt final| A
+    end
+
+    subgraph "Data Sources"
+        F[(DB: userAppTeamConfigs)]
+        G[(DB: appTeamConfigs)]
+        H[/.../config/ai-studio.config.ts]
+    end
+
+    C --> F
+    D --> G
+    E --> H
+
+    style B fill:#c8e6c9,stroke:#333
+    style A fill:#b39ddb,stroke:#333
+```
+
+- **Ponto de Entrada:** `AiStudioService`.
+- **Orquestrador:** `PromptBuilderService`.
+- **Executores:** `PlatformService`, `TeamConfigService`, `UserConfigService` (os dois últimos a serem implementados).
+
+### Ordem de Precedência
+
+A ordem de combinação das instruções é crucial para dar mais poder ao usuário:
+
+1.  **Nível 3: Instruções do Usuário** (maior prioridade)
+2.  **Nível 2: Instruções do Time**
+3.  **Nível 1: Instruções da Plataforma** (menor prioridade)
+
+As instruções são concatenadas com um separador `---` para que o modelo de IA possa distinguir as diferentes fontes.
+
 ## 📊 Processamento de Dados
 
 ### Validação com Zod
@@ -580,62 +631,6 @@ const paginationSchema = z.object({
 });
 ```
 
-## 🚀 Performance
-
-### Otimizações de Query
-
-```typescript
-// Queries paralelas para melhor performance
-const [agents, libraries] = await Promise.all([
-  agentRepository.findByTeam(teamId, { limit, offset }),
-  libraryRepository.findByTeam(teamId),
-]);
-```
-
-### Cache de Configurações
-
-```typescript
-// Cache de modelos disponíveis por team
-const cacheKey = `ai-models:${teamId}`;
-const cached = await redis.get(cacheKey);
-
-if (cached) {
-  return JSON.parse(cached);
-}
-
-const models = await findAvailableModels(teamId);
-await redis.set(cacheKey, JSON.stringify(models), "EX", 300); // 5 min
-```
-
-## 🔄 Integração com Outros SubApps
-
-### Padrão Obrigatório: Service Layer
-
-Conforme os **Princípios Arquiteturais** do AI Studio como **SubApp Core**, a comunicação de outros SubApps (como o Chat) **deve obrigatoriamente** seguir o padrão de **Service Layer**.
-
-Esta é a única forma de comunicação permitida, garantindo isolamento, segurança e type-safety. O `AiStudioService` é a porta de entrada exclusiva para todas as funcionalidades do AI Studio que precisam ser consumidas por outros serviços.
-
-**REGRA CRÍTICA:** É estritamente **proibido** acessar os repositórios ou a lógica interna do AI Studio diretamente de outro SubApp. Toda interação deve passar pelo `AiStudioService`.
-
-### Exemplo: `AiStudioService`
-
-```typescript
-// packages/api/src/internal/services/ai-studio.service.ts
-import { aiStudioRepository } from "@kdx/db/repositories";
-
-export class AiStudioService extends BaseService {
-  static async getModelById({ modelId, teamId, requestingApp }) {
-    this.validateTeamAccess(teamId);
-    this.logAccess("getModelById", { teamId, requestingApp });
-
-    const model = await aiStudioRepository.AiModelRepository.findById(modelId);
-
-    // ... validações adicionais
-    return model;
-  }
-}
-```
-
 ### Exemplo: Consumo pelo Chat
 
 ```typescript
@@ -651,7 +646,7 @@ const model = await AiStudioService.getModelById({
 
 ## 🚀 Roadmap
 
-- [ ] **Implementar `PromptBuilderService`**: Criar um serviço centralizado para construir o prompt final da IA, combinando as instruções de Nível 1 (Plataforma), Nível 2 (Time) e Nível 3 (Usuário) na ordem de precedência correta.
+- [✅] **Implementar `PromptBuilderService`**: Criar um serviço centralizado para construir o prompt final da IA, combinando as instruções de Nível 1 (Plataforma), Nível 2 (Time) e Nível 3 (Usuário) na ordem de precedência correta.
 - [ ] Upload real de arquivos para bibliotecas
 - [ ] Sistema de auditoria completo
 

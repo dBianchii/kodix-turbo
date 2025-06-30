@@ -55,7 +55,15 @@ Este arquivo registra **TODOS os logs de debug criados** no projeto Kodix, permi
 
 ### **🟡 LOGS TEMPORÁRIOS ATIVOS**
 
-_(Nenhum log temporário ativo)_
+### [DEBUG_SYSTEM_PROMPT] Validação da Integração do System Prompt
+
+- **Arquivo:** `apps/kdx/src/app/api/chat/stream/route.ts`
+- **Criado em:** 2025-06-30
+- **Responsável:** @KodixAgent
+- **Propósito:** Verificar se o `systemPrompt` gerado pelo `AiStudioService` está sendo corretamente recebido e formatado no endpoint de streaming do Chat.
+- **Contexto:** Validação manual da Fase 2 do plano de integração do `system-prompt-integration-plan.md`, contornando problemas no ambiente de teste Vitest.
+- **Status:** 🟡 Ativo
+- **Remoção prevista:** 2025-07-01 (Após validação da feature)
 
 ### **🔴 LOGS CRÍTICOS DO SISTEMA**
 

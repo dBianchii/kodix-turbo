@@ -7,109 +7,152 @@ turbo 2.5.4
 • Packages in scope: @kdx/api, @kdx/auth, @kdx/dayjs, @kdx/db, @kdx/eslint-config, @kdx/kdx, @kdx/locales, @kdx/permissions, @kdx/prettier-config, @kdx/react-email, @kdx/shared, @kdx/tailwind-config, @kdx/tsconfig, @kdx/ui, @kdx/validators
 • Running dev, studio, @kdx/db-dev#dev in 15 packages
 • Remote caching disabled
-@kdx/db-dev:dev: cache bypass, force executing 38eadc5db1ef109f
-@kdx/db:studio: cache bypass, force executing 11786487eda81c41
-@kdx/shared:dev: cache bypass, force executing 70ba22ca80458d67
-@kdx/kdx:dev: cache bypass, force executing 16bc3b67e9301cb3
-@kdx/db-dev:dev: 
-@kdx/db-dev:dev: > @kdx/db-dev@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db-dev
-@kdx/db-dev:dev: > trap 'docker compose stop' EXIT; docker compose up --build
-@kdx/db-dev:dev: 
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/db:studio: 
-@kdx/db:studio: > @kdx/db@0.1.0 studio /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:studio: > pnpm wait-for-db && pnpm with-env drizzle-kit studio
-@kdx/db:studio: 
+ WARNING  stale pid file at "/var/folders/tk/bfypnv4d3tjfttdphzc6p3t40000gp/T/turbod/a89c7e7f03fa7f41/turbod.pid"
+@kdx/db:studio: cache bypass, force executing 2e7750a2d46df03a
+@kdx/kdx:dev: cache bypass, force executing d97c7c681a79ba49
+@kdx/shared:dev: cache bypass, force executing 73bf4d426cea651f
+@kdx/db-dev:dev: cache bypass, force executing 496d114a65b10edd
 @kdx/kdx:dev: 
 @kdx/kdx:dev: > @kdx/kdx@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/apps/kdx
 @kdx/kdx:dev: > pnpm with-env next dev --turbo --port 3000
 @kdx/kdx:dev: 
-@kdx/db-dev:dev:  Network kodix-db_default  Creating
-@kdx/db-dev:dev:  Network kodix-db_default  Created
-@kdx/db-dev:dev:  Container kodix-db-mysql-1  Creating
-@kdx/db-dev:dev:  Container kodix-db-serverless-redis-http-1  Creating
-@kdx/db-dev:dev:  Container kodix-db-redis-1  Creating
+@kdx/db:studio: 
+@kdx/db:studio: > @kdx/db@0.1.0 studio /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:studio: > pnpm wait-for-db && pnpm with-env drizzle-kit studio
+@kdx/db:studio: 
+@kdx/db-dev:dev: 
+@kdx/db-dev:dev: > @kdx/db-dev@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db-dev
+@kdx/db-dev:dev: > trap 'docker compose stop' EXIT; docker compose up --build
+@kdx/db-dev:dev: 
+@kdx/db-dev:dev: 
+@kdx/db-dev:dev:  Container kodix-db-redis-1  Stopping
+@kdx/db-dev:dev:  Container kodix-db-mysql-1  Stopping
+@kdx/db-dev:dev:  Container kodix-db-serverless-redis-http-1  Stopping
+@kdx/db-dev:dev:  Container kodix-db-mysql-1  Stopped
+@kdx/db-dev:dev:  Container kodix-db-serverless-redis-http-1  Stopped
+@kdx/db-dev:dev:  Container kodix-db-redis-1  Stopped
+@kdx/db-dev:dev:  ELIFECYCLE  Command failed with exit code 130.
+@kdx/db-dev:dev:  WARN   Local package.json exists, but node_modules missing, did you mean to install?
+@kdx/db:studio: cache bypass, force executing 2e7750a2d46df03a
+@kdx/kdx:dev: cache bypass, force executing d97c7c681a79ba49
+@kdx/shared:dev: cache bypass, force executing 73bf4d426cea651f
+@kdx/db-dev:dev: cache bypass, force executing 496d114a65b10edd
+@kdx/kdx:dev: 
+@kdx/kdx:dev: > @kdx/kdx@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/apps/kdx
+@kdx/kdx:dev: > pnpm with-env next dev --turbo --port 3000
+@kdx/kdx:dev: 
+@kdx/db:studio: 
+@kdx/db:studio: > @kdx/db@0.1.0 studio /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:studio: > pnpm wait-for-db && pnpm with-env drizzle-kit studio
+@kdx/db:studio: 
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/db-dev:dev: 
+@kdx/db-dev:dev: > @kdx/db-dev@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db-dev
+@kdx/db-dev:dev: > trap 'docker compose stop' EXIT; docker compose up --build
+@kdx/db-dev:dev: 
+@kdx/db-dev:dev:  Container kodix-db-mysql-1  Created
 @kdx/db-dev:dev:  Container kodix-db-serverless-redis-http-1  Created
 @kdx/db-dev:dev:  Container kodix-db-redis-1  Created
-@kdx/db-dev:dev:  Container kodix-db-mysql-1  Created
 @kdx/db-dev:dev: Attaching to mysql-1, redis-1, serverless-redis-http-1
+@kdx/db-dev:dev: mysql-1                  | 2025-06-30 01:52:23+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.2.0-1.el8 started.
+@kdx/db-dev:dev: redis-1                  | Starting Redis Server
+@kdx/db-dev:dev: redis-1                  | 1:C 30 Jun 2025 01:52:24.004 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+@kdx/db-dev:dev: redis-1                  | 1:C 30 Jun 2025 01:52:24.004 * Redis version=8.0.2, bits=64, commit=00000000, modified=1, pid=1, just started
+@kdx/db-dev:dev: redis-1                  | 1:C 30 Jun 2025 01:52:24.004 * Configuration loaded
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.004 * monotonic clock: POSIX clock_gettime
 @kdx/db:studio: 
 @kdx/db:studio: > @kdx/db@0.1.0 wait-for-db /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
 @kdx/db:studio: > while ! nc -z localhost 3306; do sleep 1; done
 @kdx/db:studio: 
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.006 * Running mode=standalone, port=6379.
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.007 * <bf> RedisBloom version 8.0.1 (Git=unknown)
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.007 * <bf> Registering configuration options: [
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.007 * <bf> 	{ bf-error-rate       :      0.01 }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.007 * <bf> 	{ bf-initial-size     :       100 }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.007 * <bf> 	{ bf-expansion-factor :         2 }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.007 * <bf> 	{ cf-bucket-size      :         2 }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.007 * <bf> 	{ cf-initial-size     :      1024 }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.007 * <bf> 	{ cf-max-iterations   :        20 }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.007 * <bf> 	{ cf-expansion-factor :         1 }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.007 * <bf> 	{ cf-max-expansions   :        32 }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.007 * <bf> ]
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.007 * Module 'bf' loaded from /usr/local/lib/redis/modules//redisbloom.so
 @kdx/kdx:dev: 
 @kdx/kdx:dev: > @kdx/kdx@0.1.0 with-env /Users/mahadevadas/Documents/Kodix/kodix-turbo/apps/kdx
 @kdx/kdx:dev: > dotenv -e ../../.env -- "next" "dev" "--turbo" "--port" "3000"
 @kdx/kdx:dev: 
-@kdx/db-dev:dev: redis-1                  | Starting Redis Server
-@kdx/db-dev:dev: mysql-1                  | 2025-06-29 22:07:46+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.2.0-1.el8 started.
-@kdx/db-dev:dev: redis-1                  | 1:C 29 Jun 2025 22:07:46.419 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
-@kdx/db-dev:dev: redis-1                  | 1:C 29 Jun 2025 22:07:46.419 * Redis version=8.0.2, bits=64, commit=00000000, modified=1, pid=1, just started
-@kdx/db-dev:dev: redis-1                  | 1:C 29 Jun 2025 22:07:46.419 * Configuration loaded
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.419 * monotonic clock: POSIX clock_gettime
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.421 * Running mode=standalone, port=6379.
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.423 * <bf> RedisBloom version 8.0.1 (Git=unknown)
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.423 * <bf> Registering configuration options: [
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.423 * <bf> 	{ bf-error-rate       :      0.01 }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.423 * <bf> 	{ bf-initial-size     :       100 }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.423 * <bf> 	{ bf-expansion-factor :         2 }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.423 * <bf> 	{ cf-bucket-size      :         2 }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.423 * <bf> 	{ cf-initial-size     :      1024 }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.423 * <bf> 	{ cf-max-iterations   :        20 }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.423 * <bf> 	{ cf-expansion-factor :         1 }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.423 * <bf> 	{ cf-max-expansions   :        32 }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.423 * <bf> ]
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.423 * Module 'bf' loaded from /usr/local/lib/redis/modules//redisbloom.so
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.443 * <search> Redis version found by RedisSearch : 8.0.2 - oss
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.443 * <search> RediSearch version 8.0.1 (Git=5688fcc)
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.443 * <search> Low level api version 1 initialized successfully
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.443 * <search> gc: ON, prefix min length: 2, min word length to stem: 4, prefix max expansions: 200, query timeout (ms): 500, timeout policy: return, cursor read size: 1000, cursor max idle (ms): 300000, max doctable size: 1000000, max number of search results:  1000000, 
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.444 * <search> Initialized thread pools!
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.444 * <search> Disabled workers threadpool of size 0
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.445 * <search> Subscribe to config changes
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.445 * <search> Enabled role change notification
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.445 * <search> Cluster configuration: AUTO partitions, type: 0, coordinator timeout: 0ms
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.445 * <search> Register write commands
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.446 * Module 'search' loaded from /usr/local/lib/redis/modules//redisearch.so
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.448 * <timeseries> RedisTimeSeries version 80001, git_sha=577bfa8b5909e7ee572f0b651399be8303dc6641
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.449 * <timeseries> Redis version found by RedisTimeSeries : 8.0.2 - oss
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.449 * <timeseries> Registering configuration options: [
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.449 * <timeseries> 	{ ts-compaction-policy   :              }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.449 * <timeseries> 	{ ts-num-threads         :            3 }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.449 * <timeseries> 	{ ts-retention-policy    :            0 }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.449 * <timeseries> 	{ ts-duplicate-policy    :        block }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.449 * <timeseries> 	{ ts-chunk-size-bytes    :         4096 }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.449 * <timeseries> 	{ ts-encoding            :   compressed }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.449 * <timeseries> 	{ ts-ignore-max-time-diff:            0 }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.449 * <timeseries> 	{ ts-ignore-max-val-diff :     0.000000 }
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.449 * <timeseries> ]
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.449 * <timeseries> Detected redis oss
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.450 * Module 'timeseries' loaded from /usr/local/lib/redis/modules//redistimeseries.so
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.456 * <ReJSON> Created new data type 'ReJSON-RL'
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.457 * <ReJSON> version: 80001 git sha: unknown branch: unknown
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.457 * <ReJSON> Exported RedisJSON_V1 API
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.457 * <ReJSON> Exported RedisJSON_V2 API
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.457 * <ReJSON> Exported RedisJSON_V3 API
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.457 * <ReJSON> Exported RedisJSON_V4 API
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.457 * <ReJSON> Exported RedisJSON_V5 API
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.457 * <ReJSON> Enabled diskless replication
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.458 * <ReJSON> Initialized shared string cache, thread safe: false.
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.458 * Module 'ReJSON' loaded from /usr/local/lib/redis/modules//rejson.so
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.458 * <search> Acquired RedisJSON_V5 API
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.458 * Server initialized
-@kdx/db-dev:dev: redis-1                  | 1:M 29 Jun 2025 22:07:46.459 * Ready to accept connections tcp
-@kdx/db-dev:dev: mysql-1                  | 2025-06-29 22:07:46+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
-@kdx/db-dev:dev: mysql-1                  | 2025-06-29 22:07:46+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.2.0-1.el8 started.
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.012 * <search> Redis version found by RedisSearch : 8.0.2 - oss
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.012 * <search> RediSearch version 8.0.1 (Git=5688fcc)
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.012 * <search> Low level api version 1 initialized successfully
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.012 * <search> gc: ON, prefix min length: 2, min word length to stem: 4, prefix max expansions: 200, query timeout (ms): 500, timeout policy: return, cursor read size: 1000, cursor max idle (ms): 300000, max doctable size: 1000000, max number of search results:  1000000, 
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.012 * <search> Initialized thread pools!
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.012 * <search> Disabled workers threadpool of size 0
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.012 * <search> Subscribe to config changes
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.012 * <search> Enabled role change notification
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.012 * <search> Cluster configuration: AUTO partitions, type: 0, coordinator timeout: 0ms
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.013 * <search> Register write commands
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.013 * Module 'search' loaded from /usr/local/lib/redis/modules//redisearch.so
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.013 * <timeseries> RedisTimeSeries version 80001, git_sha=577bfa8b5909e7ee572f0b651399be8303dc6641
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.013 * <timeseries> Redis version found by RedisTimeSeries : 8.0.2 - oss
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.013 * <timeseries> Registering configuration options: [
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.013 * <timeseries> 	{ ts-compaction-policy   :              }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.013 * <timeseries> 	{ ts-num-threads         :            3 }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.013 * <timeseries> 	{ ts-retention-policy    :            0 }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.013 * <timeseries> 	{ ts-duplicate-policy    :        block }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.013 * <timeseries> 	{ ts-chunk-size-bytes    :         4096 }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.013 * <timeseries> 	{ ts-encoding            :   compressed }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.013 * <timeseries> 	{ ts-ignore-max-time-diff:            0 }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.013 * <timeseries> 	{ ts-ignore-max-val-diff :     0.000000 }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.013 * <timeseries> ]
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.014 * <timeseries> Detected redis oss
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.014 * Module 'timeseries' loaded from /usr/local/lib/redis/modules//redistimeseries.so
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.016 * <ReJSON> Created new data type 'ReJSON-RL'
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.016 * <ReJSON> version: 80001 git sha: unknown branch: unknown
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.016 * <ReJSON> Exported RedisJSON_V1 API
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.016 * <ReJSON> Exported RedisJSON_V2 API
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.016 * <ReJSON> Exported RedisJSON_V3 API
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.016 * <ReJSON> Exported RedisJSON_V4 API
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.016 * <ReJSON> Exported RedisJSON_V5 API
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.016 * <ReJSON> Enabled diskless replication
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.017 * <ReJSON> Initialized shared string cache, thread safe: false.
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.017 * Module 'ReJSON' loaded from /usr/local/lib/redis/modules//rejson.so
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.017 * <search> Acquired RedisJSON_V5 API
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.017 * Server initialized
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.017 * <search> Loading event starts
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.017 * <search> Enabled workers threadpool of size 4
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.017 * Loading RDB produced by version 8.0.2
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.017 * RDB age 17 seconds
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.017 * RDB memory usage when created 0.95 Mb
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.017 * Done loading RDB, keys loaded: 0, keys expired: 0.
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.017 * <search> Disabled workers threadpool of size 4
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.017 * <search> Loading event ends
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.017 * DB loaded from disk: 0.000 seconds
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 01:52:24.017 * Ready to accept connections tcp
+@kdx/db:studio: Connection to localhost port 3306 [tcp/mysql] succeeded!
+@kdx/db-dev:dev: mysql-1                  | 2025-06-30 01:52:24+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
+@kdx/db-dev:dev: mysql-1                  | 2025-06-30 01:52:24+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.2.0-1.el8 started.
 @kdx/db-dev:dev: mysql-1                  | '/var/lib/mysql/mysql.sock' -> '/var/run/mysqld/mysqld.sock'
-@kdx/db:dev: cache bypass, force executing a1e230035d38b6bd
-@kdx/ui:dev: cache bypass, force executing 1f5e32a68bedabcd
-@kdx/db-dev:dev: mysql-1                  | 2025-06-29T22:07:46.776980Z 0 [System] [MY-015015] [Server] MySQL Server - start.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-29T22:07:46.990767Z 0 [Warning] [MY-011068] [Server] The syntax '--skip-host-cache' is deprecated and will be removed in a future release. Please use SET GLOBAL host_cache_size=0 instead.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-29T22:07:46.991884Z 0 [System] [MY-010116] [Server] /usr/sbin/mysqld (mysqld 8.2.0) starting as process 1
-@kdx/db-dev:dev: mysql-1                  | 2025-06-29T22:07:47.001819Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+@kdx/db:studio: 
+@kdx/db:studio: > @kdx/db@0.1.0 with-env /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:studio: > dotenv -e ../../.env -- "drizzle-kit" "studio"
+@kdx/db:studio: 
+@kdx/db-dev:dev: mysql-1                  | 2025-06-30T01:52:24.223527Z 0 [System] [MY-015015] [Server] MySQL Server - start.
+@kdx/db-dev:dev: mysql-1                  | 2025-06-30T01:52:24.401872Z 0 [Warning] [MY-011068] [Server] The syntax '--skip-host-cache' is deprecated and will be removed in a future release. Please use SET GLOBAL host_cache_size=0 instead.
+@kdx/db-dev:dev: mysql-1                  | 2025-06-30T01:52:24.402241Z 0 [System] [MY-010116] [Server] /usr/sbin/mysqld (mysqld 8.2.0) starting as process 1
+@kdx/db-dev:dev: mysql-1                  | 2025-06-30T01:52:24.406232Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+@kdx/db-dev:dev: mysql-1                  | 2025-06-30T01:52:24.500537Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+@kdx/db:studio: No config path provided, using default 'drizzle.config.ts'
+@kdx/db:studio: Reading config file '/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/drizzle.config.ts'
+@kdx/db:dev: cache bypass, force executing 707b2f9c9c4a865f
+@kdx/ui:dev: cache bypass, force executing 2f6f0d5b36cb7420
+@kdx/db-dev:dev: mysql-1                  | 2025-06-30T01:52:24.645970Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+@kdx/db-dev:dev: mysql-1                  | 2025-06-30T01:52:24.645991Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+@kdx/db-dev:dev: mysql-1                  | 2025-06-30T01:52:24.647447Z 0 [Warning] [MY-011810] [Server] Insecure configuration for --pid-file: Location '/var/run/mysqld' in the path is accessible to all OS users. Consider choosing a different directory.
+@kdx/db-dev:dev: mysql-1                  | 2025-06-30T01:52:24.662952Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '::' port: 33060, socket: /var/run/mysqld/mysqlx.sock
+@kdx/db-dev:dev: mysql-1                  | 2025-06-30T01:52:24.662971Z 0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '8.2.0'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL Community Server - GPL.
 @kdx/ui:dev: 
 @kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
 @kdx/ui:dev: > tsc
@@ -118,8 +161,10 @@ turbo 2.5.4
 @kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
 @kdx/db:dev: > tsc
 @kdx/db:dev: 
-@kdx/db:studio: Connection to localhost port 3306 [tcp/mysql] succeeded!
-@kdx/db-dev:dev: mysql-1                  | 2025-06-29T22:07:47.181954Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+@kdx/db:studio: 
+@kdx/db:studio:  Warning  Drizzle Studio is currently in Beta. If you find anything that is not working as expected or should be improved, feel free to create an issue on GitHub: https://github.com/drizzle-team/drizzle-kit-mirror/issues/new or write to us on Discord: https://discord.gg/WcRKz2FFxN
+@kdx/db:studio: 
+@kdx/db:studio: Drizzle Studio is up and running on https://local.drizzle.studio
 @kdx/kdx:dev:    ▲ Next.js 15.3.4 (Turbopack)
 @kdx/kdx:dev:    - Local:        http://localhost:3000
 @kdx/kdx:dev:    - Network:      http://192.168.3.62:3000
@@ -128,27 +173,17 @@ turbo 2.5.4
 @kdx/kdx:dev: 
 @kdx/kdx:dev:  ✓ Starting...
 @kdx/kdx:dev:  ⚠ The config property `experimental.turbo` is deprecated. Move this setting to `config.turbopack` as Turbopack is now stable.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-29T22:07:47.434206Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-29T22:07:47.434267Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-29T22:07:47.437984Z 0 [Warning] [MY-011810] [Server] Insecure configuration for --pid-file: Location '/var/run/mysqld' in the path is accessible to all OS users. Consider choosing a different directory.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-29T22:07:47.478981Z 0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '8.2.0'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL Community Server - GPL.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-29T22:07:47.479095Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '::' port: 33060, socket: /var/run/mysqld/mysqlx.sock
-@kdx/db:studio: 
-@kdx/db:studio: > @kdx/db@0.1.0 with-env /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:studio: > dotenv -e ../../.env -- "drizzle-kit" "studio"
-@kdx/db:studio: 
-@kdx/db:studio: No config path provided, using default 'drizzle.config.ts'
-@kdx/db:studio: Reading config file '/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/drizzle.config.ts'
-@kdx/db:studio: 
-@kdx/db:studio:  Warning  Drizzle Studio is currently in Beta. If you find anything that is not working as expected or should be improved, feel free to create an issue on GitHub: https://github.com/drizzle-team/drizzle-kit-mirror/issues/new or write to us on Discord: https://discord.gg/WcRKz2FFxN
-@kdx/db:studio: 
-@kdx/db:studio: Drizzle Studio is up and running on https://local.drizzle.studio
-@kdx/validators:dev: cache bypass, force executing 0db5ec7b3a4f18aa
-@kdx/permissions:dev: cache bypass, force executing 6c8d0c80a9e09043
-@kdx/kdx:dev:  ✓ Compiled middleware in 300ms
 @kdx/db-dev:dev: serverless-redis-http-1  | Using port 80
 @kdx/db-dev:dev: serverless-redis-http-1  | Token resolver started
 @kdx/db-dev:dev: serverless-redis-http-1  | Loaded config from env. 1 entries.
+@kdx/kdx:dev:  ✓ Compiled middleware in 183ms
+@kdx/validators:dev: cache bypass, force executing cb48479ac5d2af48
+@kdx/permissions:dev: cache bypass, force executing c33f9a9b1e5e44ab
+@kdx/kdx:dev:  ✓ Ready in 1233ms
+@kdx/kdx:dev:  ⚠ Webpack is configured while Turbopack is not, which may cause problems.
+@kdx/kdx:dev:  ⚠ See instructions if you need to configure Turbopack:
+@kdx/kdx:dev:   https://nextjs.org/docs/app/api-reference/next-config-js/turbo
+@kdx/kdx:dev: 
 @kdx/validators:dev: 
 @kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
 @kdx/validators:dev: > tsc
@@ -157,64 +192,17 @@ turbo 2.5.4
 @kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
 @kdx/permissions:dev: > tsc
 @kdx/permissions:dev: 
-@kdx/kdx:dev:  ✓ Ready in 1770ms
-@kdx/kdx:dev:  ⚠ Webpack is configured while Turbopack is not, which may cause problems.
-@kdx/kdx:dev:  ⚠ See instructions if you need to configure Turbopack:
-@kdx/kdx:dev:   https://nextjs.org/docs/app/api-reference/next-config-js/turbo
-@kdx/kdx:dev: 
-@kdx/api:dev: cache bypass, force executing 77c7bae2f550540e
+@kdx/api:dev: cache bypass, force executing ae1c2d469f3792e5
 @kdx/api:dev: 
 @kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
 @kdx/api:dev: > tsc
 @kdx/api:dev: 
 @kdx/kdx:dev:  ○ Compiling /[locale] ...
-@kdx/kdx:dev:  ✓ Compiled /[locale] in 4.8s
-@kdx/kdx:dev:  GET / 200 in 1762ms
-@kdx/kdx:dev:  GET / 200 in 107ms
-@kdx/kdx:dev:  GET / 200 in 144ms
-@kdx/kdx:dev:  ✓ Compiled /manifest.webmanifest in 284ms
-@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 328ms
-@kdx/kdx:dev:  ○ Compiling /[locale]/signin ...
-@kdx/kdx:dev:  ✓ Compiled /[locale]/signin in 1593ms
-@kdx/kdx:dev:  GET /signin 200 in 2443ms
-@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 24ms
-@kdx/kdx:dev:  ○ Compiling /[locale]/team ...
-@kdx/kdx:dev:  ✓ Compiled /[locale]/team in 1954ms
-@kdx/kdx:dev: >>> tRPC Request from rsc by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] user.getInvitations took 12.28ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.getInstalled took 12.87ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.getInstalled took 14.22ms to execute
-@kdx/kdx:dev:  GET /team 200 in 2815ms
-@kdx/kdx:dev: >>> tRPC Request from rsc by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.getInstalled took 2.28ms to execute
-@kdx/kdx:dev: [TRPC_PERF] user.getInvitations took 2.53ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.getInstalled took 3.39ms to execute
-@kdx/kdx:dev:  GET /team 200 in 79ms
-@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 62ms
-@kdx/kdx:dev:  ○ Compiling /[locale]/apps/chat ...
-@kdx/kdx:dev:  ✓ Compiled /[locale]/apps/chat in 2.3s
-@kdx/kdx:dev:  GET /apps/chat 200 in 2766ms
-@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 52ms
+@kdx/kdx:dev:  ✓ Compiled /[locale] in 4.5s
+@kdx/kdx:dev:  GET / 200 in 1764ms
+@kdx/kdx:dev:  GET / 200 in 106ms
 @kdx/kdx:dev:  ○ Compiling /api/trpc/[trpc] ...
-@kdx/kdx:dev:  ✓ Compiled /api/trpc/[trpc] in 1120ms
+@kdx/kdx:dev:  ✓ Compiled /api/trpc/[trpc] in 1518ms
 @kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
 @kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
 @kdx/kdx:dev:   name: 'Mahadeva Das',
@@ -225,72 +213,28 @@ turbo 2.5.4
 @kdx/kdx:dev:   kodixAdmin: false,
 @kdx/kdx:dev:   activeTeamName: 'Personal Team'
 @kdx/kdx:dev: }
-@kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiAgents: No procedure found on path "app.aiStudio.findAiAgents"
-@kdx/kdx:dev: [TRPC_PERF] app.getUserAppTeamConfig took 17.37ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findChatFolders took 18.51ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAvailableModels took 24.56ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 34.68ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.getUserAppTeamConfig,app.chat.findChatFolders,app.chat.findSessions,app.aiStudio.findAiAgents,app.aiStudio.findAvailableModels?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22appId%22%3A%22az1x2c3bv4n5%22%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22limite%22%3A100%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%2C%224%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 1832ms
-@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 5.87ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 6.53ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 7.14ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.chat.findSessions,app.chat.findSessions,app.chat.findSessions?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%7D 200 in 32ms
-@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev: ✅ [CHAT_DEPENDENCIES] All dependencies validated for team: hr050hr1u25n
-@kdx/kdx:dev: 🔄 [AiStudioService] getModelById by az1x2c3bv4n5 for team: hr050hr1u25n
-@kdx/kdx:dev: ✅ [AiStudioService] Model found: claude-3-haiku for team: hr050hr1u25n
-@kdx/kdx:dev: 🔄 [AiStudioService] getTeamInstructions by az1x2c3bv4n5 for team: hr050hr1u25n
-@kdx/kdx:dev: ✅ [AiStudioService] Team instructions found for team: hr050hr1u25n
-@kdx/kdx:dev: [TRPC_PERF] app.chat.createEmptySession took 37.29ms to execute
-@kdx/kdx:dev:  POST /api/trpc/app.chat.createEmptySession?batch=1 200 in 88ms
-@kdx/kdx:dev: 🔄 [AiStudioService] getProviderToken by az1x2c3bv4n5 for team: hr050hr1u25n
-@kdx/kdx:dev: ✅ [AiStudioService] Token found for provider cqc4lkp3d3b5 and team: hr050hr1u25n
-@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSession took 7.57ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 8.74ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 9.59ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.chat.findSession,app.chat.getMessages,app.chat.getMessages?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22sessionId%22%3A%22rdc6n1sp4ntq%22%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%22rdc6n1sp4ntq%22%2C%22limit%22%3A100%2C%22page%22%3A1%2C%22order%22%3A%22asc%22%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%22rdc6n1sp4ntq%22%2C%22limit%22%3A1%2C%22page%22%3A1%2C%22order%22%3A%22desc%22%7D%7D%7D 200 in 52ms
-@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiAgents: No procedure found on path "app.aiStudio.findAiAgents"
-@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiAgents?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 32ms
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findChatFolders took 30.90ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSession took 32.84ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 34.36ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 35.29ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 36.68ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 37.60ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.chat.findChatFolders,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions,app.chat.findSession,app.chat.getMessages?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%224%22%3A%7B%22json%22%3A%7B%22sessionId%22%3A%22rdc6n1sp4ntq%22%7D%7D%2C%225%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%22rdc6n1sp4ntq%22%2C%22limit%22%3A1%2C%22page%22%3A1%2C%22order%22%3A%22desc%22%7D%7D%7D 200 in 2499ms
 @kdx/kdx:dev:  ○ Compiling /[locale]/apps/chat/[sessionId] ...
+@kdx/kdx:dev:  ✓ Compiled /[locale]/apps/chat/[sessionId] in 2.9s
+@kdx/kdx:dev: >>> tRPC Request from rsc by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] user.getInvitations took 7.57ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.getInstalled took 11.08ms to execute
+@kdx/kdx:dev:  GET /apps/chat/rdc6n1sp4ntq 200 in 3879ms
 @kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
 @kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
 @kdx/kdx:dev:   name: 'Mahadeva Das',
@@ -302,21 +246,14 @@ turbo 2.5.4
 @kdx/kdx:dev:   activeTeamName: 'Personal Team'
 @kdx/kdx:dev: }
 @kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiAgents: No procedure found on path "app.aiStudio.findAiAgents"
-@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiAgents?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 52ms
-@kdx/kdx:dev:  ✓ Compiled /[locale]/apps/chat/[sessionId] in 2.3s
-@kdx/kdx:dev:  GET /apps/chat/rdc6n1sp4ntq 200 in 2818ms
-@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 38ms
-@kdx/kdx:dev:  ✓ Compiled /api/chat/stream in 471ms
-@kdx/kdx:dev: 🔄 [AiStudioService] getModelById by az1x2c3bv4n5 for team: hr050hr1u25n
-@kdx/kdx:dev: ✅ [AiStudioService] Model found: claude-3-haiku for team: hr050hr1u25n
-@kdx/kdx:dev: 🔄 [AiStudioService] getModelById by az1x2c3bv4n5 for team: hr050hr1u25n
-@kdx/kdx:dev: ✅ [AiStudioService] Model found: claude-3-haiku for team: hr050hr1u25n
-@kdx/kdx:dev: 🔄 [AiStudioService] getProviderToken by az1x2c3bv4n5 for team: hr050hr1u25n
-@kdx/kdx:dev: ✅ [AiStudioService] Token found for provider cqc4lkp3d3b5 and team: hr050hr1u25n
-@kdx/kdx:dev: 🎯 [VERCEL_AI_NATIVE] Returning toDataStreamResponse for useChat compatibility
-@kdx/kdx:dev: ✅ [VERCEL_AI_NATIVE] Stream finished: { tokens: 89, reason: 'stop', textLength: 168 }
-@kdx/kdx:dev: 💾 [VERCEL_AI_NATIVE] Message auto-saved successfully
-@kdx/kdx:dev:  POST /api/chat/stream 200 in 1677ms
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findChatFolders took 11.15ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSession took 13.47ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 15.99ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 18.89ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.getUserAppTeamConfig took 21.23ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 22.71ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAvailableModels took 66.49ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.getUserAppTeamConfig,app.chat.findChatFolders,app.chat.findSessions,app.aiStudio.findAiAgents,app.aiStudio.findAvailableModels,app.chat.findSession,app.chat.getMessages,app.chat.getMessages?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22appId%22%3A%22az1x2c3bv4n5%22%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22limite%22%3A100%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%2C%224%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%225%22%3A%7B%22json%22%3A%7B%22sessionId%22%3A%22rdc6n1sp4ntq%22%7D%7D%2C%226%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%22rdc6n1sp4ntq%22%2C%22limit%22%3A1%2C%22page%22%3A1%2C%22order%22%3A%22desc%22%7D%7D%2C%227%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%22rdc6n1sp4ntq%22%2C%22limit%22%3A100%2C%22page%22%3A1%2C%22order%22%3A%22asc%22%7D%7D%7D 200 in 180ms
 @kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
 @kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
 @kdx/kdx:dev:   name: 'Mahadeva Das',
@@ -327,8 +264,12 @@ turbo 2.5.4
 @kdx/kdx:dev:   kodixAdmin: false,
 @kdx/kdx:dev:   activeTeamName: 'Personal Team'
 @kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 10.19ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.chat.getMessages?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%22rdc6n1sp4ntq%22%2C%22limit%22%3A1%2C%22page%22%3A1%2C%22order%22%3A%22desc%22%7D%7D%7D 200 in 52ms
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 6.75ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 7.62ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 7.94ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.chat.findSessions,app.chat.findSessions,app.chat.findSessions?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%7D 200 in 93ms
+@kdx/kdx:dev:  ✓ Compiled /manifest.webmanifest in 372ms
+@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 405ms
 @kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
 @kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
 @kdx/kdx:dev:   name: 'Mahadeva Das',
@@ -340,7 +281,7 @@ turbo 2.5.4
 @kdx/kdx:dev:   activeTeamName: 'Personal Team'
 @kdx/kdx:dev: }
 @kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiAgents: No procedure found on path "app.aiStudio.findAiAgents"
-@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiAgents?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 46ms
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiAgents?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 26ms
 @kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
 @kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
 @kdx/kdx:dev:   name: 'Mahadeva Das',
@@ -351,8 +292,8 @@ turbo 2.5.4
 @kdx/kdx:dev:   kodixAdmin: false,
 @kdx/kdx:dev:   activeTeamName: 'Personal Team'
 @kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSession took 4.27ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.chat.findSession?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22sessionId%22%3A%22rdc6n1sp4ntq%22%7D%7D%7D 200 in 31ms
+@kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiAgents: No procedure found on path "app.aiStudio.findAiAgents"
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiAgents?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 45ms
 @kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
 @kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
 @kdx/kdx:dev:   name: 'Mahadeva Das',
@@ -363,33 +304,13 @@ turbo 2.5.4
 @kdx/kdx:dev:   kodixAdmin: false,
 @kdx/kdx:dev:   activeTeamName: 'Personal Team'
 @kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 7.83ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 10.64ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 17.64ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 26.92ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.chat.findSessions,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A100%2C%22pagina%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%7D 200 in 51ms
-@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
-@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
-@kdx/kdx:dev:   name: 'Mahadeva Das',
-@kdx/kdx:dev:   passwordHash: null,
-@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
-@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
-@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
-@kdx/kdx:dev:   kodixAdmin: false,
-@kdx/kdx:dev:   activeTeamName: 'Personal Team'
-@kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSession took 10.09ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 10.76ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 12.05ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.getMessages took 12.89ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 18.36ms to execute
-@kdx/kdx:dev: [TRPC_PERF] app.chat.findSessions took 27.03ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.chat.findSession,app.chat.getMessages,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions,app.chat.findSessions?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22sessionId%22%3A%22rdc6n1sp4ntq%22%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22chatSessionId%22%3A%22rdc6n1sp4ntq%22%2C%22limit%22%3A100%2C%22page%22%3A1%2C%22order%22%3A%22asc%22%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22limite%22%3A100%2C%22pagina%22%3A1%7D%7D%2C%223%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22om47lkh3f7f3%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%224%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%22cgvfqbyq489t%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%2C%225%22%3A%7B%22json%22%3A%7B%22chatFolderId%22%3A%225mdwclo0orez%22%2C%22limite%22%3A50%2C%22pagina%22%3A1%7D%7D%7D 200 in 52ms
+@kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiAgents: No procedure found on path "app.aiStudio.findAiAgents"
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiAgents?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 77ms
 @kdx/kdx:dev:  ○ Compiling /[locale]/apps/aiStudio ...
-@kdx/kdx:dev:  ✓ Compiled /[locale]/apps/aiStudio in 2.2s
-@kdx/kdx:dev:  GET /apps/aiStudio 200 in 2784ms
-@kdx/kdx:dev:  GET /apps/aiStudio 200 in 65ms
-@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 114ms
+@kdx/kdx:dev:  ✓ Compiled /[locale]/apps/aiStudio in 2.7s
+@kdx/kdx:dev:  GET /apps/aiStudio 200 in 3394ms
+@kdx/kdx:dev:  GET /apps/aiStudio 200 in 31ms
+@kdx/kdx:dev:  GET /manifest.webmanifest 200 in 85ms
 @kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
 @kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
 @kdx/kdx:dev:   name: 'Mahadeva Das',
@@ -402,7 +323,7 @@ turbo 2.5.4
 @kdx/kdx:dev: }
 @kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiTeamProviderTokens: No procedure found on path "app.aiStudio.findAiTeamProviderTokens"
 @kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiProviders: No procedure found on path "app.aiStudio.findAiProviders"
-@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiTeamProviderTokens,app.aiStudio.findAiProviders?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 135ms
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiTeamProviderTokens,app.aiStudio.findAiProviders?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 87ms
 @kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
 @kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
 @kdx/kdx:dev:   name: 'Mahadeva Das',
@@ -415,7 +336,7 @@ turbo 2.5.4
 @kdx/kdx:dev: }
 @kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiTeamProviderTokens: No procedure found on path "app.aiStudio.findAiTeamProviderTokens"
 @kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiProviders: No procedure found on path "app.aiStudio.findAiProviders"
-@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiTeamProviderTokens,app.aiStudio.findAiProviders?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 51ms
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiTeamProviderTokens,app.aiStudio.findAiProviders?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 24ms
 @kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
 @kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
 @kdx/kdx:dev:   name: 'Mahadeva Das',
@@ -426,7 +347,33 @@ turbo 2.5.4
 @kdx/kdx:dev:   kodixAdmin: false,
 @kdx/kdx:dev:   activeTeamName: 'Personal Team'
 @kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.getTeamInstructions took 3.01ms to execute
+@kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiTeamProviderTokens: No procedure found on path "app.aiStudio.findAiTeamProviderTokens"
+@kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiProviders: No procedure found on path "app.aiStudio.findAiProviders"
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiTeamProviderTokens,app.aiStudio.findAiProviders?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 42ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.getDefaultModel took 5.48ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAvailableModels took 7.52ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAvailableModels,app.aiStudio.getDefaultModel?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 32ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.getTeamInstructions took 6.35ms to execute
 @kdx/kdx:dev:  GET /api/trpc/app.aiStudio.getTeamInstructions?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 47ms
 @kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
 @kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
@@ -438,8 +385,8 @@ turbo 2.5.4
 @kdx/kdx:dev:   kodixAdmin: false,
 @kdx/kdx:dev:   activeTeamName: 'Personal Team'
 @kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.getUserAppTeamConfig took 4.81ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.getUserAppTeamConfig?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22appId%22%3A%22ai9x7m2k5p1s%22%7D%7D%7D 200 in 44ms
+@kdx/kdx:dev: [TRPC_PERF] app.getUserAppTeamConfig took 4.18ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.getUserAppTeamConfig?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22appId%22%3A%22ai9x7m2k5p1s%22%7D%7D%7D 200 in 41ms
 @kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
 @kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
 @kdx/kdx:dev:   name: 'Mahadeva Das',
@@ -450,8 +397,8 @@ turbo 2.5.4
 @kdx/kdx:dev:   kodixAdmin: false,
 @kdx/kdx:dev:   activeTeamName: 'Personal Team'
 @kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.getUserAppTeamConfig took 6.35ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.getUserAppTeamConfig?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22appId%22%3A%22ai9x7m2k5p1s%22%7D%7D%7D 200 in 227ms
+@kdx/kdx:dev: [TRPC_PERF] app.getUserAppTeamConfig took 15.94ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.getUserAppTeamConfig?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22appId%22%3A%22ai9x7m2k5p1s%22%7D%7D%7D 200 in 146ms
 @kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
 @kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
 @kdx/kdx:dev:   name: 'Mahadeva Das',
@@ -462,8 +409,8 @@ turbo 2.5.4
 @kdx/kdx:dev:   kodixAdmin: false,
 @kdx/kdx:dev:   activeTeamName: 'Personal Team'
 @kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.getTeamInstructions took 2.18ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.getTeamInstructions?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 51ms
+@kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiProviders: No procedure found on path "app.aiStudio.findAiProviders"
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiProviders?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 60ms
 @kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
 @kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
 @kdx/kdx:dev:   name: 'Mahadeva Das',
@@ -474,8 +421,8 @@ turbo 2.5.4
 @kdx/kdx:dev:   kodixAdmin: false,
 @kdx/kdx:dev:   activeTeamName: 'Personal Team'
 @kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.getUserAppTeamConfig took 3.71ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.getUserAppTeamConfig?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22appId%22%3A%22ai9x7m2k5p1s%22%7D%7D%7D 200 in 174ms
+@kdx/kdx:dev: [TRPC_PERF] app.getUserAppTeamConfig took 3.16ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.getUserAppTeamConfig?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22appId%22%3A%22ai9x7m2k5p1s%22%7D%7D%7D 200 in 39ms
 @kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
 @kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
 @kdx/kdx:dev:   name: 'Mahadeva Das',
@@ -486,5 +433,113 @@ turbo 2.5.4
 @kdx/kdx:dev:   kodixAdmin: false,
 @kdx/kdx:dev:   activeTeamName: 'Personal Team'
 @kdx/kdx:dev: }
-@kdx/kdx:dev: [TRPC_PERF] app.getUserAppTeamConfig took 7.84ms to execute
-@kdx/kdx:dev:  GET /api/trpc/app.getUserAppTeamConfig?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22appId%22%3A%22ai9x7m2k5p1s%22%7D%7D%7D 200 in 259ms
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.getTeamInstructions took 2.11ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.getTeamInstructions?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 42ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiTeamProviderTokens: No procedure found on path "app.aiStudio.findAiTeamProviderTokens"
+@kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiProviders: No procedure found on path "app.aiStudio.findAiProviders"
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiTeamProviderTokens,app.aiStudio.findAiProviders?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 40ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiTeamProviderTokens: No procedure found on path "app.aiStudio.findAiTeamProviderTokens"
+@kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiProviders: No procedure found on path "app.aiStudio.findAiProviders"
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiTeamProviderTokens,app.aiStudio.findAiProviders?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 30ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiTeamProviderTokens: No procedure found on path "app.aiStudio.findAiTeamProviderTokens"
+@kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiProviders: No procedure found on path "app.aiStudio.findAiProviders"
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiTeamProviderTokens,app.aiStudio.findAiProviders?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%7D 200 in 45ms
+@kdx/api:dev: cache bypass, force executing d558c1d48da61df2
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiProviders: No procedure found on path "app.aiStudio.findAiProviders"
+@kdx/kdx:dev: ❌ tRPC failed on app.aiStudio.findAiTeamProviderTokens: No procedure found on path "app.aiStudio.findAiTeamProviderTokens"
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAiProviders,app.aiStudio.findAiTeamProviderTokens?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22limite%22%3A50%2C%22offset%22%3A0%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 191ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.getTeamInstructions took 2.47ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.getTeamInstructions?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 38ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.getDefaultModel took 5.13ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAvailableModels took 7.76ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAvailableModels,app.aiStudio.getDefaultModel?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 40ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.getDefaultModel took 21.33ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAvailableModels took 26.58ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAvailableModels,app.aiStudio.getDefaultModel?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 283ms
+@kdx/kdx:dev: >>> tRPC Request from nextjs-react by {
+@kdx/kdx:dev:   id: 'nxbcvgvyqfa6',
+@kdx/kdx:dev:   name: 'Mahadeva Das',
+@kdx/kdx:dev:   passwordHash: null,
+@kdx/kdx:dev:   email: 'wcbianchi@gmail.com',
+@kdx/kdx:dev:   image: 'https://lh3.googleusercontent.com/a/ACg8ocLdqj9-AIFqsLQ5NgwNHKrA-cSjQAuWTrGG0HAs3qoN9M-niz2APg=s96-c',
+@kdx/kdx:dev:   activeTeamId: 'hr050hr1u25n',
+@kdx/kdx:dev:   kodixAdmin: false,
+@kdx/kdx:dev:   activeTeamName: 'Personal Team'
+@kdx/kdx:dev: }
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.getDefaultModel took 3.74ms to execute
+@kdx/kdx:dev: [TRPC_PERF] app.aiStudio.findAvailableModels took 17.29ms to execute
+@kdx/kdx:dev:  GET /api/trpc/app.aiStudio.findAvailableModels,app.aiStudio.getDefaultModel?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D 200 in 69ms

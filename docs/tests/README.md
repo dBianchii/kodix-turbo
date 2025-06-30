@@ -113,6 +113,22 @@ kodix-turbo/
 - **Escopo**: Carga e stress do sistema
 - **Métricas**: Latência, throughput, recursos
 
+## 🚀 Padrões de Teste da Arquitetura
+
+Para garantir consistência, o Kodix adota dois padrões principais de teste, cada um com um propósito específico.
+
+### **Padrão A: Teste Unitário de Frontend**
+
+- **Quando usar:** Para testar componentes de UI, hooks e lógica do lado do cliente de forma isolada.
+- **Estratégia:** Mocking de dependências externas (como chamadas de API) para focar puramente no comportamento do frontend.
+- **Guia Completo:** **[📄 Padrão de Teste Unitário de Frontend](./frontend-unit-testing-pattern.md)**
+
+### **Padrão B: Teste de Integração de API (Backend)**
+
+- **Quando usar:** Para validar a lógica de um endpoint tRPC de ponta a ponta, incluindo serviços e acesso a dados (mockado).
+- **Estratégia:** Utilização do `createCaller` do tRPC para invocar a API diretamente no ambiente de teste, sem a necessidade de um servidor HTTP.
+- **Guia Completo:** **[🧪 Padrão de Teste de Integração de API](./api-integration-testing-pattern.md)**
+
 ## 🔧 Configuração Base
 
 ### Vitest Workspace Configuration
@@ -528,6 +544,8 @@ Test Suites  9 passed (9 total) ✅ 100% SUCCESS
 - **[Performance Testing](./performance-testing-guide.md)** - Testes de carga e stress
 - **[Mock Strategies](./mock-strategies.md)** - Estratégias de mocking
 - **[CI Optimization](./ci-optimization-guide.md)** - Otimização do pipeline CI
+- **[Frontend Unit Testing Pattern](./frontend-unit-testing-pattern.md)** ⭐ - **Exemplo completo de implementação**
+- **[API Integration Testing Pattern](./api-integration-testing-pattern.md)** ⭐ - **Exemplo completo de implementação**
 
 ## 🎯 Checklist de Implementação
 

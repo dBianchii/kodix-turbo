@@ -19,9 +19,11 @@
     "dev": "tsc",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
+    "lint:fix": "eslint --fix",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.583.0",
     "@casl/ability": "catalog:",
     "@kdx/auth": "workspace:*",
     "@kdx/dayjs": "workspace:*",
@@ -59,6 +61,7 @@
     "@types/react-dom": "catalog:react",
     "eslint": "catalog:",
     "prettier": "catalog:",
+    "tsx": "^4.20.3",
     "typescript": "catalog:"
   },
   "peerDependencies": {

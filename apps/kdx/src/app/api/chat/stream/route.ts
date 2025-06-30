@@ -185,71 +185,6 @@ export async function POST(request: NextRequest) {
 
     // 🚀 NATIVE VERCEL AI SDK IMPLEMENTATION
     try {
-      // Detect user language more robustly
-      const detectUserLocale = (request: NextRequest): "pt-BR" | "en" => {
-        const cookieLocale = request.cookies.get("NEXT_LOCALE")?.value;
-        if (cookieLocale === "pt-BR" || cookieLocale === "en") {
-          return cookieLocale;
-        }
-        const pathname = request.nextUrl.pathname;
-        if (pathname.startsWith("/pt-BR")) return "pt-BR";
-        if (pathname.startsWith("/en")) return "en";
-        const acceptLanguage = request.headers.get("accept-language") || "";
-        if (acceptLanguage.includes("pt")) return "pt-BR";
-        if (acceptLanguage.includes("en")) return "en";
-        return "pt-BR";
-      };
-
-      // Check if there are Team Instructions in the session
-      const hasTeamInstructions = allMessages.some(
-        (msg) =>
-          msg?.senderRole === "system" &&
-          msg?.metadata?.type === "team_instructions",
-      );
-
-      // System prompt based on user language - FORMATO MARKDOWN
-      const userLocale = detectUserLocale(request);
-      const systemPrompt =
-        userLocale === "pt-BR"
-          ? "Você é um assistente útil e responde sempre em português brasileiro. Use formatação Markdown para suas respostas (não HTML). Use **negrito**, *itálico*, # títulos, listas com - ou 1., blocos de código com ```."
-          : "You are a helpful assistant and always respond in English. Use Markdown formatting for your responses (not HTML). Use **bold**, *italic*, # headings, lists with - or 1., code blocks with ```.";
-
-      // Format messages for Vercel AI SDK
-      const formattedMessages: {
-        role: "user" | "assistant" | "system";
-        content: string;
-      }[] = [];
-
-      // Only add system prompt if there are no Team Instructions
-      if (!hasTeamInstructions) {
-        const hasSystemPrompt = allMessages.some(
-          (msg) => msg?.senderRole === "system",
-        );
-        if (!hasSystemPrompt) {
-          formattedMessages.push({
-            role: "system",
-            content: systemPrompt,
-          });
-        }
-      }
-
-      // Add all existing messages
-      allMessages.forEach((msg: any) => {
-        const role =
-          msg.senderRole === "user"
-            ? ("user" as const)
-            : msg.senderRole === "ai"
-              ? ("assistant" as const)
-              : msg.senderRole === "system"
-                ? ("system" as const)
-                : ("user" as const);
-
-        formattedMessages.push({
-          role,
-          content: msg.content,
-        });
-      });
-
       // Get model from session or use default
       let model;
       if (session.aiModelId) {
@@ -290,6 +225,49 @@ export async function POST(request: NextRequest) {
         model.id,
         session.teamId,
       );
+
+      // Obtenha o prompt do sistema do AI Studio Service
+      const systemPromptResult = await AiStudioService.getSystemPromptForChat({
+        userId: session.userId,
+        teamId: session.teamId,
+        requestingApp: chatAppId,
+      });
+      const systemPrompt = systemPromptResult.prompt;
+
+      // LOG DE DEBUG TEMPORÁRIO
+      console.log(
+        `[DEBUG_SYSTEM_PROMPT] Prompt para a sessão ${session.id}:`,
+        systemPrompt,
+      );
+
+      // Formate as mensagens para o Vercel AI SDK
+      const formattedMessages: {
+        role: "user" | "assistant" | "system";
+        content: string;
+      }[] = [];
+
+      // Adicione o prompt do sistema, se existir
+      if (systemPrompt && systemPrompt.trim().length > 0) {
+        formattedMessages.push({
+          role: "system",
+          content: systemPrompt,
+        });
+      }
+
+      // Adicione todas as mensagens existentes
+      allMessages.forEach((msg: any) => {
+        const role =
+          msg.senderRole === "user"
+            ? ("user" as const)
+            : msg.senderRole === "ai"
+              ? ("assistant" as const)
+              : ("user" as const); // Mensagens de sistema antigas são tratadas como de usuário
+
+        formattedMessages.push({
+          role,
+          content: msg.content,
+        });
+      });
 
       // 🎯 NATIVE VERCEL AI SDK STREAMING WITH LIFECYCLE CALLBACKS
       const result = streamText({

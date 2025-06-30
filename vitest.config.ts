@@ -41,8 +41,8 @@ export default defineConfig({
 
     // 🔧 CORREÇÃO: Setup files específicos
     setupFiles: [
-      "./packages/api/src/test-setup.ts", // Backend (Node.js)
-      "./apps/kdx/src/test-setup.ts", // Frontend (jsdom) - será usado apenas para testes jsdom
+      path.resolve(__dirname, "./packages/api/src/test-setup.ts"), // Backend (Node.js)
+      path.resolve(__dirname, "./apps/kdx/src/test-setup.ts"), // Frontend (jsdom)
     ],
 
     // Timeout maior para testes que fazem mocking pesado
