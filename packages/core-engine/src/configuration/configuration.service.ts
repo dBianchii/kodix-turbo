@@ -1,6 +1,5 @@
-import type { KodixAppId } from "@kdx/shared";
-
-// TODO: Fix import - import { appRepository } from "@kdx/db";
+import type { AppIdsWithUserAppTeamConfig, KodixAppId } from "@kdx/shared";
+import { appRepository } from "@kdx/db";
 
 import { getPlatformConfig } from "./platform-configs";
 import { deepMerge } from "./utils/deep-merge";
@@ -16,24 +15,49 @@ import { deepMerge } from "./utils/deep-merge";
 export class ConfigurationService {
   /**
    * Obtém a configuração mesclada para um app específico
-   * TODO: Implementar integração com banco de dados após resolver import
    */
   async get(params: {
-    appId: KodixAppId;
+    appId: AppIdsWithUserAppTeamConfig;
     teamId: string;
     userId?: string;
   }): Promise<any> {
-    const { appId } = params;
+    const { appId, teamId, userId } = params;
 
     // 1. Configuração base da plataforma
     const platformConfig = getPlatformConfig(appId);
 
-    // TODO: Implementar busca no banco
-    // 2. Configuração do team (placeholder)
-    const teamConfig = {};
+    // 2. Configuração do team
+    let teamConfig = {};
+    try {
+      const [teamConfigResult] = await appRepository.findAppTeamConfigs({
+        appId,
+        teamIds: [teamId],
+      });
+      teamConfig = teamConfigResult?.config || {};
+    } catch (error) {
+      console.warn(
+        `[CORE_ENGINE] Failed to fetch team config for ${appId}:`,
+        error,
+      );
+    }
 
-    // 3. Configuração do usuário (placeholder)
-    const userConfig = {};
+    // 3. Configuração do usuário (se userId fornecido)
+    let userConfig = {};
+    if (userId) {
+      try {
+        const [userConfigResult] = await appRepository.findUserAppTeamConfigs({
+          appId,
+          teamIds: [teamId],
+          userIds: [userId],
+        });
+        userConfig = userConfigResult?.config || {};
+      } catch (error) {
+        console.warn(
+          `[CORE_ENGINE] Failed to fetch user config for ${appId}:`,
+          error,
+        );
+      }
+    }
 
     // 4. Merge hierárquico: platform <- team <- user
     let finalConfig = platformConfig;
@@ -52,20 +76,30 @@ export class ConfigurationService {
 
   /**
    * Obtém a configuração mesclada de plataforma + team (sem usuário)
-   * TODO: Implementar integração com banco de dados após resolver import
    */
   async getTeamLevel(params: {
-    appId: KodixAppId;
+    appId: AppIdsWithUserAppTeamConfig;
     teamId: string;
   }): Promise<any> {
-    const { appId } = params;
+    const { appId, teamId } = params;
 
     // Configuração base da plataforma
     const platformConfig = getPlatformConfig(appId);
 
-    // TODO: Implementar busca no banco
-    // Configuração do team (placeholder)
-    const teamConfig = {};
+    // Configuração do team
+    let teamConfig = {};
+    try {
+      const [teamConfigResult] = await appRepository.findAppTeamConfigs({
+        appId,
+        teamIds: [teamId],
+      });
+      teamConfig = teamConfigResult?.config || {};
+    } catch (error) {
+      console.warn(
+        `[CORE_ENGINE] Failed to fetch team config for ${appId}:`,
+        error,
+      );
+    }
 
     // Merge: platform <- team
     return deepMerge(platformConfig, teamConfig);

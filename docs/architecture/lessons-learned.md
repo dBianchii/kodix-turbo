@@ -196,6 +196,31 @@ A leitura deste documento é **obrigatória** para todos os desenvolvedores.
 - **O Problema**: A tentativa de importar o `appRepository` de `@kdx/db/repositories` dentro do novo pacote `@kdx/core-engine` falhou, pois a configuração de `moduleResolution: "Bundler"` espera que os imports apontem apenas para o ponto de entrada definido no `exports` do `package.json` do pacote alvo.
 - **Ação Preventiva**: **TODOS** os imports entre pacotes do workspace **DEVEM** apontar para o ponto de entrada principal (ex: `from "@kdx/db"`). Para que isso funcione, o pacote alvo (`@kdx/db` neste caso) deve exportar explicitamente os membros desejados (como `appRepository`) em seu `index.ts` principal.
 
+### **13. Configuração de Testes de Pacotes e Dependências de Desenvolvimento**
+
+- **Lição**: A ausência de um script de teste padronizado e de dependências de desenvolvimento explícitas (`devDependencies`) em um pacote pode levar a falhas de CI e a um fluxo de trabalho de teste inconsistente.
+- **O Problema**: Ao tentar testar o pacote `@kdx/core-engine`, o comando `pnpm test --filter=@kdx/core-engine` falhou porque o `package.json` não continha um script `test`, e `vitest` não estava listado como uma `devDependency`, exigindo o uso de `npx vitest`, que depende de uma instalação global ou no root.
+- **Ação Preventiva**: Para garantir que cada pacote seja autônomo e testável de forma padronizada, **TODOS** os pacotes que contêm testes **DEVEM**:
+  1.  Incluir `vitest` e outras dependências de teste relevantes (ex: `@vitest/coverage-v8`) em suas `devDependencies` no `package.json`.
+  2.  Definir um script `test` em seu `package.json`, padronizado como `"test": "vitest run"`.
+
+### **14. Precisão em Mocks de Testes com Tipagem Forte (Zod)**
+
+- **Lição**: Em um ecossistema com tipagem forte como o nosso, mockar dados para testes vai além de simplesmente simular uma função; é preciso garantir que a **estrutura e os tipos dos dados mockados** correspondam perfeitamente aos schemas Zod.
+- **O Problema**: Testes para o `ConfigurationService` falharam repetidamente com erros de tipo do Zod porque os objetos de mock para os repositórios não incluíam todas as propriedades obrigatórias (ex: `appliesTo` em um objeto de configuração) ou não correspondiam à estrutura de retorno esperada pelas funções do repositório.
+- **Ação Preventiva**: Ao escrever testes que mockam uma camada de dados:
+  1.  **Importe os schemas Zod** relevantes (`*ConfigSchema`) no arquivo de teste.
+  2.  **Use o schema para validar seu mock** ou, idealmente, use uma factory para gerar mocks a partir do schema, garantindo 100% de conformidade.
+  3.  **Verifique a estrutura de retorno completa**, não apenas o `config`. Se a função retorna `[{ config: {...}, teamId: '...' }]`, o mock deve ter essa estrutura exata.
+
+### **15. Análise de Erros de Ambiente vs. Erros de Código**
+
+- **Lição**: Nem todo erro exibido pelo `check-log-errors.sh` é bloqueante para a tarefa em questão. É crucial diferenciar entre **erros de compilação do código em que se está trabalhando** e **erros de serviços periféricos do ambiente** (ex: Docker, Redis).
+- **O Problema**: Um erro `exit code 125` do `@kdx/db-dev` (Docker) apareceu nos logs. Uma interpretação apressada poderia levar à interrupção da tarefa, assumindo que o ambiente estava quebrado.
+- **Ação Preventiva**: Ao analisar erros de log, siga este fluxo:
+  1.  **Identifique a Origem:** O log de erro vem do pacote que você está modificando ou de um serviço de suporte?
+  2.  **Verifique o Impacto Real:** Após o `check-log-errors.sh`, sempre continue o fluxo executando `sh ./scripts/check-dev-status.sh`. Se o servidor principal (`apps/kdx`) estiver `RUNNING`, o erro de ambiente provavelmente não é crítico para a sua tarefa e pode ser tratado separadamente.
+
 ---
 
 Este documento deve ser o primeiro lugar a ser consultado ao encontrar um bug inesperado e o último a ser atualizado após a resolução, garantindo que o conhecimento da equipe evolua constantemente.

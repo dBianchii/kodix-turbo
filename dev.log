@@ -7,19 +7,18 @@ turbo 2.5.4
 • Packages in scope: @kdx/api, @kdx/auth, @kdx/core-engine, @kdx/dayjs, @kdx/db, @kdx/eslint-config, @kdx/kdx, @kdx/locales, @kdx/permissions, @kdx/prettier-config, @kdx/react-email, @kdx/shared, @kdx/tailwind-config, @kdx/tsconfig, @kdx/ui, @kdx/validators
 • Running dev, studio, @kdx/db-dev#dev in 16 packages
 • Remote caching disabled
- WARNING  stale pid file at "/var/folders/tk/bfypnv4d3tjfttdphzc6p3t40000gp/T/turbod/a89c7e7f03fa7f41/turbod.pid"
 @kdx/kdx:dev: cache bypass, force executing 8f55c9ae87359485
-@kdx/db-dev:dev: cache bypass, force executing 496d114a65b10edd
-@kdx/db:studio: cache bypass, force executing 2e7750a2d46df03a
 @kdx/shared:dev: cache bypass, force executing 73bf4d426cea651f
-@kdx/kdx:dev: 
-@kdx/kdx:dev: > @kdx/kdx@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/apps/kdx
-@kdx/kdx:dev: > pnpm with-env next dev --turbo --port 3000
-@kdx/kdx:dev: 
+@kdx/db-dev:dev: cache bypass, force executing 496d114a65b10edd
+@kdx/db:studio: cache bypass, force executing ae270aa9a6baa1dc
 @kdx/db-dev:dev: 
 @kdx/db-dev:dev: > @kdx/db-dev@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db-dev
 @kdx/db-dev:dev: > trap 'docker compose stop' EXIT; docker compose up --build
 @kdx/db-dev:dev: 
+@kdx/kdx:dev: 
+@kdx/kdx:dev: > @kdx/kdx@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/apps/kdx
+@kdx/kdx:dev: > pnpm with-env next dev --turbo --port 3000
+@kdx/kdx:dev: 
 @kdx/db:studio: 
 @kdx/db:studio: > @kdx/db@0.1.0 studio /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
 @kdx/db:studio: > pnpm wait-for-db && pnpm with-env drizzle-kit studio
@@ -29,46 +28,134 @@ turbo 2.5.4
 @kdx/db-dev:dev: Usage:  docker [OPTIONS] COMMAND [ARG...]
 @kdx/db-dev:dev: 
 @kdx/db-dev:dev: Run 'docker --help' for more information
-@kdx/kdx:dev: cache bypass, force executing 8f55c9ae87359485
+@kdx/db-dev:dev:  Container kodix-db-redis-1  Stopping
+@kdx/db-dev:dev:  Container kodix-db-mysql-1  Stopping
+@kdx/db-dev:dev:  Container kodix-db-serverless-redis-http-1  Stopping
+@kdx/db-dev:dev:  Container kodix-db-mysql-1  Stopped
+@kdx/db-dev:dev:  Container kodix-db-serverless-redis-http-1  Stopped
+@kdx/db-dev:dev:  Container kodix-db-redis-1  Stopped
+@kdx/db-dev:dev:  ELIFECYCLE  Command failed with exit code 125.
+@kdx/db-dev:dev:  WARN   Local package.json exists, but node_modules missing, did you mean to install?
+@kdx/db:studio: cache bypass, force executing ae270aa9a6baa1dc
 @kdx/shared:dev: cache bypass, force executing 73bf4d426cea651f
+@kdx/kdx:dev: cache bypass, force executing 8f55c9ae87359485
 @kdx/db-dev:dev: cache bypass, force executing 496d114a65b10edd
-@kdx/db:studio: cache bypass, force executing 2e7750a2d46df03a
-@kdx/shared:dev: 
-@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
-@kdx/shared:dev: > tsc
-@kdx/shared:dev: 
-@kdx/kdx:dev: 
-@kdx/kdx:dev: > @kdx/kdx@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/apps/kdx
-@kdx/kdx:dev: > pnpm with-env next dev --turbo --port 3000
-@kdx/kdx:dev: 
-@kdx/db-dev:dev: 
-@kdx/db-dev:dev: > @kdx/db-dev@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db-dev
-@kdx/db-dev:dev: > trap 'docker compose stop' EXIT; docker compose up --build
-@kdx/db-dev:dev: 
 @kdx/db:studio: 
 @kdx/db:studio: > @kdx/db@0.1.0 studio /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
 @kdx/db:studio: > pnpm wait-for-db && pnpm with-env drizzle-kit studio
 @kdx/db:studio: 
 @kdx/kdx:dev: 
-@kdx/kdx:dev: > @kdx/kdx@0.1.0 with-env /Users/mahadevadas/Documents/Kodix/kodix-turbo/apps/kdx
-@kdx/kdx:dev: > dotenv -e ../../.env -- "next" "dev" "--turbo" "--port" "3000"
+@kdx/kdx:dev: > @kdx/kdx@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/apps/kdx
+@kdx/kdx:dev: > pnpm with-env next dev --turbo --port 3000
 @kdx/kdx:dev: 
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/db-dev:dev: 
+@kdx/db-dev:dev: > @kdx/db-dev@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db-dev
+@kdx/db-dev:dev: > trap 'docker compose stop' EXIT; docker compose up --build
+@kdx/db-dev:dev: 
+@kdx/db-dev:dev:  Container kodix-db-mysql-1  Created
+@kdx/db-dev:dev:  Container kodix-db-redis-1  Created
+@kdx/db-dev:dev:  Container kodix-db-serverless-redis-http-1  Created
+@kdx/db-dev:dev: Attaching to mysql-1, redis-1, serverless-redis-http-1
 @kdx/db:studio: 
 @kdx/db:studio: > @kdx/db@0.1.0 wait-for-db /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
 @kdx/db:studio: > while ! nc -z localhost 3306; do sleep 1; done
 @kdx/db:studio: 
-@kdx/db:dev: cache bypass, force executing 707b2f9c9c4a865f
+@kdx/kdx:dev: 
+@kdx/kdx:dev: > @kdx/kdx@0.1.0 with-env /Users/mahadevadas/Documents/Kodix/kodix-turbo/apps/kdx
+@kdx/kdx:dev: > dotenv -e ../../.env -- "next" "dev" "--turbo" "--port" "3000"
+@kdx/kdx:dev: 
+@kdx/db-dev:dev: mysql-1                  | 2025-06-30 20:33:51+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.2.0-1.el8 started.
+@kdx/db-dev:dev: redis-1                  | Starting Redis Server
+@kdx/db-dev:dev: redis-1                  | 1:C 30 Jun 2025 20:33:51.244 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+@kdx/db-dev:dev: redis-1                  | 1:C 30 Jun 2025 20:33:51.244 * Redis version=8.0.2, bits=64, commit=00000000, modified=1, pid=1, just started
+@kdx/db-dev:dev: redis-1                  | 1:C 30 Jun 2025 20:33:51.244 * Configuration loaded
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.244 * monotonic clock: POSIX clock_gettime
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.248 * Running mode=standalone, port=6379.
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.251 * <bf> RedisBloom version 8.0.1 (Git=unknown)
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.251 * <bf> Registering configuration options: [
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.251 * <bf> 	{ bf-error-rate       :      0.01 }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.251 * <bf> 	{ bf-initial-size     :       100 }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.251 * <bf> 	{ bf-expansion-factor :         2 }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.251 * <bf> 	{ cf-bucket-size      :         2 }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.251 * <bf> 	{ cf-initial-size     :      1024 }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.251 * <bf> 	{ cf-max-iterations   :        20 }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.251 * <bf> 	{ cf-expansion-factor :         1 }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.251 * <bf> 	{ cf-max-expansions   :        32 }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.251 * <bf> ]
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.251 * Module 'bf' loaded from /usr/local/lib/redis/modules//redisbloom.so
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.277 * <search> Redis version found by RedisSearch : 8.0.2 - oss
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.277 * <search> RediSearch version 8.0.1 (Git=5688fcc)
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.277 * <search> Low level api version 1 initialized successfully
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.277 * <search> gc: ON, prefix min length: 2, min word length to stem: 4, prefix max expansions: 200, query timeout (ms): 500, timeout policy: return, cursor read size: 1000, cursor max idle (ms): 300000, max doctable size: 1000000, max number of search results:  1000000, 
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.277 * <search> Initialized thread pools!
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.277 * <search> Disabled workers threadpool of size 0
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.278 * <search> Subscribe to config changes
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.278 * <search> Enabled role change notification
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.278 * <search> Cluster configuration: AUTO partitions, type: 0, coordinator timeout: 0ms
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.280 * <search> Register write commands
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.280 * Module 'search' loaded from /usr/local/lib/redis/modules//redisearch.so
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.281 * <timeseries> RedisTimeSeries version 80001, git_sha=577bfa8b5909e7ee572f0b651399be8303dc6641
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.281 * <timeseries> Redis version found by RedisTimeSeries : 8.0.2 - oss
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.281 * <timeseries> Registering configuration options: [
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.281 * <timeseries> 	{ ts-compaction-policy   :              }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.281 * <timeseries> 	{ ts-num-threads         :            3 }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.281 * <timeseries> 	{ ts-retention-policy    :            0 }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.281 * <timeseries> 	{ ts-duplicate-policy    :        block }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.281 * <timeseries> 	{ ts-chunk-size-bytes    :         4096 }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.281 * <timeseries> 	{ ts-encoding            :   compressed }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.281 * <timeseries> 	{ ts-ignore-max-time-diff:            0 }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.281 * <timeseries> 	{ ts-ignore-max-val-diff :     0.000000 }
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.282 * <timeseries> ]
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.283 * <timeseries> Detected redis oss
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.287 * Module 'timeseries' loaded from /usr/local/lib/redis/modules//redistimeseries.so
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.292 * <ReJSON> Created new data type 'ReJSON-RL'
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.293 * <ReJSON> version: 80001 git sha: unknown branch: unknown
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.293 * <ReJSON> Exported RedisJSON_V1 API
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.293 * <ReJSON> Exported RedisJSON_V2 API
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.293 * <ReJSON> Exported RedisJSON_V3 API
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.293 * <ReJSON> Exported RedisJSON_V4 API
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.293 * <ReJSON> Exported RedisJSON_V5 API
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.293 * <ReJSON> Enabled diskless replication
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.293 * <ReJSON> Initialized shared string cache, thread safe: false.
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.294 * Module 'ReJSON' loaded from /usr/local/lib/redis/modules//rejson.so
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.295 * <search> Acquired RedisJSON_V5 API
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.295 * Server initialized
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.296 * <search> Loading event starts
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.296 * <search> Enabled workers threadpool of size 4
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.297 * Loading RDB produced by version 8.0.2
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.297 * RDB age 23 seconds
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.297 * RDB memory usage when created 0.95 Mb
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.297 * Done loading RDB, keys loaded: 0, keys expired: 0.
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.297 * <search> Disabled workers threadpool of size 4
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.297 * <search> Loading event ends
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.297 * DB loaded from disk: 0.002 seconds
+@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 20:33:51.297 * Ready to accept connections tcp
+@kdx/db-dev:dev: mysql-1                  | 2025-06-30 20:33:51+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
+@kdx/db-dev:dev: mysql-1                  | 2025-06-30 20:33:51+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.2.0-1.el8 started.
+@kdx/db-dev:dev: mysql-1                  | '/var/lib/mysql/mysql.sock' -> '/var/run/mysqld/mysqld.sock'
+@kdx/db:dev: cache bypass, force executing 69f97a9a1859dce0
 @kdx/ui:dev: cache bypass, force executing 2f6f0d5b36cb7420
-@kdx/ui:dev: 
-@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
-@kdx/ui:dev: > tsc
-@kdx/ui:dev: 
 @kdx/db:dev: 
 @kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
 @kdx/db:dev: > tsc
 @kdx/db:dev: 
-@kdx/db-dev:dev:  redis Pulling 
-@kdx/db-dev:dev:  mysql Pulling 
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/db:studio: Connection to localhost port 3306 [tcp/mysql] succeeded!
+@kdx/db-dev:dev: mysql-1                  | 2025-06-30T20:33:51.715616Z 0 [System] [MY-015015] [Server] MySQL Server - start.
+@kdx/db-dev:dev: mysql-1                  | 2025-06-30T20:33:52.323918Z 0 [Warning] [MY-011068] [Server] The syntax '--skip-host-cache' is deprecated and will be removed in a future release. Please use SET GLOBAL host_cache_size=0 instead.
+@kdx/db-dev:dev: mysql-1                  | 2025-06-30T20:33:52.326623Z 0 [System] [MY-010116] [Server] /usr/sbin/mysqld (mysqld 8.2.0) starting as process 1
+@kdx/db:studio: 
+@kdx/db:studio: > @kdx/db@0.1.0 with-env /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:studio: > dotenv -e ../../.env -- "drizzle-kit" "studio"
+@kdx/db:studio: 
+@kdx/db-dev:dev: mysql-1                  | 2025-06-30T20:33:52.388579Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
 @kdx/kdx:dev:    ▲ Next.js 15.3.4 (Turbopack)
 @kdx/kdx:dev:    - Local:        http://localhost:3000
 @kdx/kdx:dev:    - Network:      http://192.168.3.62:3000
@@ -77,142 +164,57 @@ turbo 2.5.4
 @kdx/kdx:dev: 
 @kdx/kdx:dev:  ✓ Starting...
 @kdx/kdx:dev:  ⚠ The config property `experimental.turbo` is deprecated. Move this setting to `config.turbopack` as Turbopack is now stable.
-@kdx/validators:dev: cache bypass, force executing cb48479ac5d2af48
-@kdx/core-engine:dev: cache bypass, force executing 2869ebfa91cb13ca
-@kdx/permissions:dev: cache bypass, force executing c33f9a9b1e5e44ab
-@kdx/kdx:dev:  ✓ Compiled middleware in 339ms
-@kdx/permissions:dev: 
-@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
-@kdx/permissions:dev: > tsc
-@kdx/permissions:dev: 
-@kdx/core-engine:dev: 
-@kdx/core-engine:dev: > @kdx/core-engine@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/core-engine
-@kdx/core-engine:dev: > tsc
-@kdx/core-engine:dev: 
-@kdx/validators:dev: 
-@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
-@kdx/validators:dev: > tsc
-@kdx/validators:dev: 
-@kdx/kdx:dev:  ✓ Ready in 1948ms
-@kdx/kdx:dev:  ⚠ Webpack is configured while Turbopack is not, which may cause problems.
-@kdx/kdx:dev:  ⚠ See instructions if you need to configure Turbopack:
-@kdx/kdx:dev:   https://nextjs.org/docs/app/api-reference/next-config-js/turbo
-@kdx/kdx:dev: 
-@kdx/api:dev: cache bypass, force executing 8753b98d325990b5
-@kdx/api:dev: 
-@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
-@kdx/api:dev: > tsc
-@kdx/api:dev: 
-@kdx/db-dev:dev:  redis Pulled 
-@kdx/db-dev:dev:  mysql Pulled 
-@kdx/db-dev:dev:  Container kodix-db-serverless-redis-http-1  Created
-@kdx/db-dev:dev:  Container kodix-db-redis-1  Created
-@kdx/db-dev:dev:  Container kodix-db-mysql-1  Created
-@kdx/db-dev:dev: Attaching to mysql-1, redis-1, serverless-redis-http-1
-@kdx/db-dev:dev: redis-1                  | Starting Redis Server
-@kdx/db-dev:dev: mysql-1                  | 2025-06-30 15:14:54+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.2.0-1.el8 started.
-@kdx/db-dev:dev: redis-1                  | 1:C 30 Jun 2025 15:14:54.404 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
-@kdx/db-dev:dev: redis-1                  | 1:C 30 Jun 2025 15:14:54.404 * Redis version=8.0.2, bits=64, commit=00000000, modified=1, pid=1, just started
-@kdx/db-dev:dev: redis-1                  | 1:C 30 Jun 2025 15:14:54.404 * Configuration loaded
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.405 * monotonic clock: POSIX clock_gettime
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.407 * Running mode=standalone, port=6379.
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.411 * <bf> RedisBloom version 8.0.1 (Git=unknown)
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.411 * <bf> Registering configuration options: [
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.411 * <bf> 	{ bf-error-rate       :      0.01 }
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.411 * <bf> 	{ bf-initial-size     :       100 }
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.411 * <bf> 	{ bf-expansion-factor :         2 }
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.411 * <bf> 	{ cf-bucket-size      :         2 }
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.411 * <bf> 	{ cf-initial-size     :      1024 }
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.411 * <bf> 	{ cf-max-iterations   :        20 }
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.411 * <bf> 	{ cf-expansion-factor :         1 }
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.411 * <bf> 	{ cf-max-expansions   :        32 }
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.411 * <bf> ]
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.411 * Module 'bf' loaded from /usr/local/lib/redis/modules//redisbloom.so
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.430 * <search> Redis version found by RedisSearch : 8.0.2 - oss
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.430 * <search> RediSearch version 8.0.1 (Git=5688fcc)
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.431 * <search> Low level api version 1 initialized successfully
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.431 * <search> gc: ON, prefix min length: 2, min word length to stem: 4, prefix max expansions: 200, query timeout (ms): 500, timeout policy: return, cursor read size: 1000, cursor max idle (ms): 300000, max doctable size: 1000000, max number of search results:  1000000, 
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.432 * <search> Initialized thread pools!
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.432 * <search> Disabled workers threadpool of size 0
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.432 * <search> Subscribe to config changes
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.433 * <search> Enabled role change notification
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.433 * <search> Cluster configuration: AUTO partitions, type: 0, coordinator timeout: 0ms
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.434 * <search> Register write commands
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.434 * Module 'search' loaded from /usr/local/lib/redis/modules//redisearch.so
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.438 * <timeseries> RedisTimeSeries version 80001, git_sha=577bfa8b5909e7ee572f0b651399be8303dc6641
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.441 * <timeseries> Redis version found by RedisTimeSeries : 8.0.2 - oss
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.441 * <timeseries> Registering configuration options: [
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.441 * <timeseries> 	{ ts-compaction-policy   :              }
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.441 * <timeseries> 	{ ts-num-threads         :            3 }
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.441 * <timeseries> 	{ ts-retention-policy    :            0 }
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.441 * <timeseries> 	{ ts-duplicate-policy    :        block }
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.441 * <timeseries> 	{ ts-chunk-size-bytes    :         4096 }
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.441 * <timeseries> 	{ ts-encoding            :   compressed }
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.441 * <timeseries> 	{ ts-ignore-max-time-diff:            0 }
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.441 * <timeseries> 	{ ts-ignore-max-val-diff :     0.000000 }
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.441 * <timeseries> ]
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.442 * <timeseries> Detected redis oss
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.442 * Module 'timeseries' loaded from /usr/local/lib/redis/modules//redistimeseries.so
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.451 * <ReJSON> Created new data type 'ReJSON-RL'
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.453 * <ReJSON> version: 80001 git sha: unknown branch: unknown
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.453 * <ReJSON> Exported RedisJSON_V1 API
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.453 * <ReJSON> Exported RedisJSON_V2 API
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.453 * <ReJSON> Exported RedisJSON_V3 API
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.453 * <ReJSON> Exported RedisJSON_V4 API
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.453 * <ReJSON> Exported RedisJSON_V5 API
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.453 * <ReJSON> Enabled diskless replication
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.454 * <ReJSON> Initialized shared string cache, thread safe: false.
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.454 * Module 'ReJSON' loaded from /usr/local/lib/redis/modules//rejson.so
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.454 * <search> Acquired RedisJSON_V5 API
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.454 * Server initialized
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.454 * <search> Loading event starts
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.454 * <search> Enabled workers threadpool of size 4
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.455 * Loading RDB produced by version 8.0.2
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.455 * RDB age 675 seconds
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.455 * RDB memory usage when created 0.95 Mb
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.455 * Done loading RDB, keys loaded: 0, keys expired: 0.
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.455 * <search> Disabled workers threadpool of size 4
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.455 * <search> Loading event ends
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.455 * DB loaded from disk: 0.001 seconds
-@kdx/db-dev:dev: redis-1                  | 1:M 30 Jun 2025 15:14:54.455 * Ready to accept connections tcp
-@kdx/db-dev:dev: mysql-1                  | 2025-06-30 15:14:54+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
-@kdx/db-dev:dev: mysql-1                  | 2025-06-30 15:14:54+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.2.0-1.el8 started.
-@kdx/db-dev:dev: mysql-1                  | '/var/lib/mysql/mysql.sock' -> '/var/run/mysqld/mysqld.sock'
-@kdx/db-dev:dev: mysql-1                  | 2025-06-30T15:14:54.756204Z 0 [System] [MY-015015] [Server] MySQL Server - start.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-30T15:14:54.978010Z 0 [Warning] [MY-011068] [Server] The syntax '--skip-host-cache' is deprecated and will be removed in a future release. Please use SET GLOBAL host_cache_size=0 instead.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-30T15:14:54.978922Z 0 [System] [MY-010116] [Server] /usr/sbin/mysqld (mysqld 8.2.0) starting as process 1
-@kdx/db-dev:dev: mysql-1                  | 2025-06-30T15:14:54.992035Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-30T15:14:55.173231Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
-@kdx/db:studio: Connection to localhost port 3306 [tcp/mysql] succeeded!
-@kdx/db-dev:dev: mysql-1                  | 2025-06-30T15:14:55.304566Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-30T15:14:55.304585Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-30T15:14:55.307079Z 0 [Warning] [MY-011810] [Server] Insecure configuration for --pid-file: Location '/var/run/mysqld' in the path is accessible to all OS users. Consider choosing a different directory.
-@kdx/db-dev:dev: mysql-1                  | 2025-06-30T15:14:55.328071Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '::' port: 33060, socket: /var/run/mysqld/mysqlx.sock
-@kdx/db-dev:dev: mysql-1                  | 2025-06-30T15:14:55.328109Z 0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '8.2.0'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL Community Server - GPL.
-@kdx/db:studio: 
-@kdx/db:studio: > @kdx/db@0.1.0 with-env /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
-@kdx/db:studio: > dotenv -e ../../.env -- "drizzle-kit" "studio"
-@kdx/db:studio: 
+@kdx/db:studio: No config path provided, using default 'drizzle.config.ts'
+@kdx/db:studio: Reading config file '/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/drizzle.config.ts'
+@kdx/db-dev:dev: mysql-1                  | 2025-06-30T20:33:52.833086Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+@kdx/db-dev:dev: mysql-1                  | 2025-06-30T20:33:53.134237Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+@kdx/db-dev:dev: mysql-1                  | 2025-06-30T20:33:53.134266Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+@kdx/db-dev:dev: mysql-1                  | 2025-06-30T20:33:53.138529Z 0 [Warning] [MY-011810] [Server] Insecure configuration for --pid-file: Location '/var/run/mysqld' in the path is accessible to all OS users. Consider choosing a different directory.
+@kdx/db-dev:dev: mysql-1                  | 2025-06-30T20:33:53.197964Z 0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '8.2.0'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL Community Server - GPL.
+@kdx/db-dev:dev: mysql-1                  | 2025-06-30T20:33:53.197968Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '::' port: 33060, socket: /var/run/mysqld/mysqlx.sock
 @kdx/db-dev:dev: serverless-redis-http-1  | Using port 80
 @kdx/db-dev:dev: serverless-redis-http-1  | Token resolver started
 @kdx/db-dev:dev: serverless-redis-http-1  | Loaded config from env. 1 entries.
-@kdx/db:studio: No config path provided, using default 'drizzle.config.ts'
-@kdx/db:studio: Reading config file '/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/drizzle.config.ts'
+@kdx/validators:dev: cache bypass, force executing 03bbbd2fe17f9d0b
+@kdx/core-engine:dev: cache bypass, force executing 8fe79c0c58e5ba0b
+@kdx/permissions:dev: cache bypass, force executing 61512c982ad68b63
 @kdx/db:studio: 
 @kdx/db:studio:  Warning  Drizzle Studio is currently in Beta. If you find anything that is not working as expected or should be improved, feel free to create an issue on GitHub: https://github.com/drizzle-team/drizzle-kit-mirror/issues/new or write to us on Discord: https://discord.gg/WcRKz2FFxN
 @kdx/db:studio: 
 @kdx/db:studio: Drizzle Studio is up and running on https://local.drizzle.studio
-@kdx/kdx:dev:  ○ Compiling /[locale] ...
-@kdx/kdx:dev:  ✓ Compiled /[locale] in 5.7s
-@kdx/kdx:dev:  GET / 200 in 1989ms
-@kdx/kdx:dev:  GET / 200 in 128ms
-@kdx/kdx:dev:  GET / 200 in 114ms
-@kdx/core-engine:dev: cache bypass, force executing bf83f9757de3e79d
+@kdx/permissions:dev: 
+@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
+@kdx/permissions:dev: > tsc
+@kdx/permissions:dev: 
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
 @kdx/core-engine:dev: 
 @kdx/core-engine:dev: > @kdx/core-engine@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/core-engine
 @kdx/core-engine:dev: > tsc
 @kdx/core-engine:dev: 
-@kdx/api:dev: cache bypass, force executing 4e3a190e658a173b
+@kdx/kdx:dev:  ✓ Compiled middleware in 491ms
+@kdx/kdx:dev:  ✓ Ready in 2.3s
+@kdx/kdx:dev:  ⚠ Webpack is configured while Turbopack is not, which may cause problems.
+@kdx/kdx:dev:  ⚠ See instructions if you need to configure Turbopack:
+@kdx/kdx:dev:   https://nextjs.org/docs/app/api-reference/next-config-js/turbo
+@kdx/kdx:dev: 
+@kdx/api:dev: cache bypass, force executing 36d175026f7e7478
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/kdx:dev:  ○ Compiling /[locale] ...
+@kdx/kdx:dev:  ✓ Compiled /[locale] in 4.7s
+@kdx/kdx:dev:  GET / 200 in 1805ms
+@kdx/kdx:dev:  GET / 200 in 111ms
+@kdx/core-engine:dev: cache bypass, force executing 2f94e8ee956ab8d8
+@kdx/core-engine:dev: 
+@kdx/core-engine:dev: > @kdx/core-engine@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/core-engine
+@kdx/core-engine:dev: > tsc
+@kdx/core-engine:dev: 
+@kdx/api:dev: cache bypass, force executing 081e5536214fa7b1
 @kdx/api:dev: 
 @kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
 @kdx/api:dev: > tsc

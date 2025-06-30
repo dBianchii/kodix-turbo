@@ -30,3 +30,6 @@ export * from "drizzle-orm/expressions";
 
 export { alias } from "drizzle-orm/mysql-core";
 export * from "drizzle-orm/sql";
+
+// Expose repositories for consumption by other packages
+export * from "./repositories";
