@@ -221,6 +221,66 @@ A leitura deste documento é **obrigatória** para todos os desenvolvedores.
   1.  **Identifique a Origem:** O log de erro vem do pacote que você está modificando ou de um serviço de suporte?
   2.  **Verifique o Impacto Real:** Após o `check-log-errors.sh`, sempre continue o fluxo executando `sh ./scripts/check-dev-status.sh`. Se o servidor principal (`apps/kdx`) estiver `RUNNING`, o erro de ambiente provavelmente não é crítico para a sua tarefa e pode ser tratado separadamente.
 
+### **16. Chamadas de Service Layer a partir de Contextos não-tRPC (API Routes)**
+
+- **Lição**: Um Service Layer que depende de um contexto tRPC (`ctx`) não pode ser chamado diretamente de um endpoint Next.js API Route, pois este não possui o `ctx`.
+- **O Problema**: A tentativa de chamar `AiStudioService.getSystemPrompt(ctx, ...)` de dentro de `/api/chat/stream/route.ts` falhou porque a variável `ctx` não existia naquele escopo.
+- **Causa Raiz**: As API Routes do Next.js e os procedures do tRPC operam em contextos diferentes. O `ctx` do tRPC é construído por um middleware específico que não é executado em uma API Route padrão.
+- **Ação Preventiva**: Quando for necessário chamar um serviço dependente de `ctx` de fora de um procedure tRPC, o contexto deve ser reconstruído manualmente dentro do chamador. Isso envolve importar e usar as mesmas primitivas (`auth()`, `createTRPCContext`) que o tRPC usa para criar seu contexto original.
+
+  ```typescript
+  // ✅ CORRETO: Reconstruindo o contexto em uma API Route
+  import { auth } from "@kdx/auth";
+  import { createTRPCContext } from "@kdx/api";
+
+  export async function POST(request: NextRequest) {
+    // ...
+    const authResult = await auth();
+    const ctx = await createTRPCContext({
+      auth: authResult,
+      headers: request.headers,
+    });
+
+    // Agora o serviço pode ser chamado com o contexto correto
+    const result = await AiStudioService.getSystemPrompt({ ctx, params: {...} });
+    // ...
+  }
+  ```
+
+### **17. Interferência de Tipagem em Ambientes de Teste (Vitest)**
+
+- **Lição**: Constantes exportadas com `as const` podem, em alguns casos, ter seu tipo literal inferido como um `string` genérico dentro do ambiente de teste do Vitest, causando erros de tipo inesperados.
+- **O Problema**: A constante `chatAppId` (do tipo literal `"az1x2c3bv4n5"`) era passada para uma função que esperava o tipo `KodixAppId` (uma união de tipos literais). Embora o código estivesse correto, o Vitest acusava um erro de que `string` não era atribuível a `KodixAppId`.
+- **Causa Raiz**: O sistema de módulos ou o bundler do Vitest pode, em certas configurações, "perder" a informação do tipo literal durante o processo de transpilação/mocking, tratando a constante como uma `string` comum.
+- **Ação Preventiva**: Quando encontrar erros de tipo persistentes e aparentemente incorretos em testes, onde um valor literal não bate com um tipo `union` correspondente, use um type cast explícito (`as`) como uma solução pragmática para forçar o compilador a aceitar o tipo correto.
+
+  ```typescript
+  // ✅ SOLUÇÃO PRAGMÁTICA: Type cast no arquivo de teste
+  import type { KodixAppId } from "@kdx/shared";
+  import { chatAppId } from "@kdx/shared";
+
+  const mockParams = {
+    // ...
+    requestingApp: chatAppId as KodixAppId, // Força a tipagem correta
+  };
+  ```
+
+### **18. O Efeito Cascata de Refatorações e a Importância da Busca Global**
+
+- **Lição**: A remoção ou renomeação de uma função ou serviço frequentemente causa uma cascata de erros de compilação em locais inesperados do monorepo. Confiar apenas no compilador para encontrar todos os erros pode ser lento e ineficiente.
+- **O Problema**: Após refatorar e remover `getSystemPromptForChat` e `getTeamInstructions` do `AiStudioService`, o build falhou múltiplas vezes porque vários handlers e testes ainda continham chamadas para os métodos antigos.
+- **Causa Raiz**: Falha em identificar proativamente todos os pontos de uso (call sites) da funcionalidade que estava sendo refatorada antes de iniciar a remoção.
+- **Ação Preventiva**: Antes de remover ou renomear uma função exportada, **SEMPRE** execute uma busca global (usando a busca do editor ou `grep`) pelo nome da função. Analise cada ocorrência e inclua a atualização de todos os arquivos afetados no plano de refatoração. Isso transforma a descoberta de erros de reativa (esperar o build falhar) para proativa (mapear o impacto completo antecipadamente).
+
 ---
 
+<!-- Teste de edição atômica. -->
+
 Este documento deve ser o primeiro lugar a ser consultado ao encontrar um bug inesperado e o último a ser atualizado após a resolução, garantindo que o conhecimento da equipe evolua constantemente.
+
+<!-- Teste de edição atômica. -->
+
+### **19. Teste de Bloco Pequeno**
+
+- **Lição**: Testando a adição de um bloco pequeno de markdown.
+- **Ação Preventiva**: Dividir edições grandes em partes menores.

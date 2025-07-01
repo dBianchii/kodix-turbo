@@ -2,7 +2,7 @@
 
 **Data:** 2025-07-01
 **Autor:** KodixAgent
-**Status:** 🔴 **BLOQUEADO - Finalização da Fase 4 é pré-requisito para outras features**
+**Status:** 📖 **Histórico (Fases 1-3 Concluídas)**
 **Escopo:** Criação do pacote `core-engine` e seu `ConfigurationService`, guiado por lições aprendidas.
 **Documentos de Referência:**
 
@@ -137,15 +137,13 @@ _Objetivo: Conectar o `AI Studio` ao novo `CoreEngine` e remover o código legad
     - **Ação:** Executados `pnpm typecheck --filter=@kdx/api --filter=@kdx/core-engine` e `pnpm test --filter=@kdx/api --filter=@kdx/core-engine` para garantir que a integração não quebrou nada nos pacotes envolvidos.
     - **Desvio do Plano:** A validação na raiz do projeto (`pnpm typecheck`) foi pulada pois identificou erros não relacionados em `@kdx/locales`, que estão fora do escopo desta tarefa.
 
----
+### **Fase 4: Finalização da Integração com DB (Movido para Plano Dedicado)**
 
-### **Fase 4: Finalização da Integração com DB (Pendente)**
-
-**Plano de Execução Desmembrado:** A implementação detalhada para finalizar o `ConfigurationService` foi movida para um plano dedicado para garantir foco e clareza.
+**Plano de Execução Desmembrado:** Para manter a clareza e separar o registro histórico do trabalho ativo, a implementação detalhada para finalizar o `ConfigurationService` foi movida para um plano dedicado.
 
 - **👉 [Plano de Finalização do ConfigurationService](./finish-configuration-service-plan.md)**
 
-A conclusão deste plano é um pré-requisito para marcar o `CoreEngine` v1 como totalmente concluído.
+A conclusão daquele plano é um pré-requisito para marcar o `CoreEngine` v1 como totalmente concluído.
 
 ---
 
