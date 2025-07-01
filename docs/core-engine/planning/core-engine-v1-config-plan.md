@@ -137,38 +137,16 @@ _Objetivo: Conectar o `AI Studio` ao novo `CoreEngine` e remover o código legad
     - **Ação:** Executados `pnpm typecheck --filter=@kdx/api --filter=@kdx/core-engine` e `pnpm test --filter=@kdx/api --filter=@kdx/core-engine` para garantir que a integração não quebrou nada nos pacotes envolvidos.
     - **Desvio do Plano:** A validação na raiz do projeto (`pnpm typecheck`) foi pulada pois identificou erros não relacionados em `@kdx/locales`, que estão fora do escopo desta tarefa.
 
+---
+
 ### **Fase 4: Finalização da Integração com DB (Pendente)**
 
-_Objetivo: Tornar o `ConfigurationService` totalmente funcional, habilitando a busca de configurações de Nível 2 (Time) и Nível 3 (Usuário)._
+**Plano de Execução Desmembrado:** A implementação detalhada para finalizar o `ConfigurationService` foi movida para um plano dedicado para garantir foco e clareza.
 
-1.  **[ ] Corrigir Resolução de Módulos:**
+- **👉 [Plano de Finalização do ConfigurationService](./finish-configuration-service-plan.md)**
 
-    - **Ação:** Investigar e resolver os problemas de import entre `@kdx/core-engine` e `@kdx/db`.
-    - **Critério de Sucesso:** A importação `import { appRepository } from "@kdx/db";` deve funcionar dentro do `configuration.service.ts` sem erros de build.
-    - **Referência:** Lição Aprendida #12 - Resolução de Módulos em Workspace.
+A conclusão deste plano é um pré-requisito para marcar o `CoreEngine` v1 como totalmente concluído.
 
-2.  **[ ] Ativar Lógica de Busca no Banco de Dados:**
-
-    - **Arquivo:** `packages/core-engine/src/configuration/configuration.service.ts`.
-    - **Ação:** Descomentar e/ou implementar a lógica que chama `appRepository.findAppTeamConfigs` e `appRepository.findUserAppTeamConfigs` para buscar as configurações do time e do usuário.
-
-3.  **[ ] Atualizar Testes do `ConfigurationService`:**
-
-    - **Arquivo:** `packages/core-engine/src/configuration/__tests__/configuration.service.test.ts`.
-    - **Ação:**
-      - Refatorar os testes para mockar as chamadas ao `appRepository`.
-      - Adicionar novos casos de teste para validar a mesclagem correta dos 3 níveis de configuração.
-      - Garantir que os mocks correspondam perfeitamente aos schemas Zod e aos retornos do repositório.
-    - **Referência:** Lição Aprendida #14 - Precisão em Mocks de Testes.
-
-4.  **[ ] Validação Final do Pacote:**
-    - **Ação:** Executar `pnpm build --filter=@kdx/core-engine` e `pnpm test --filter=@kdx/core-engine`.
-    - **Critério de Sucesso:** O pacote deve ser compilado com sucesso e todos os testes (incluindo os novos) devem passar.
-
-## 5. Documentação e Cleanup Final
-
-- [✅] Atualizar o documento `ai-studio-architecture.md` para mostrar que o `AiStudioService` agora consome o `CoreEngine`.
-- [ ] Atualizar o `configuration-standardization-roadmap.md` marcando a Fase 1 como concluída.
-- [ ] Apagar o plano `@prompt-builder-service-plan.md` original.
+---
 
 Este plano aprimorado é mais detalhado, mitiga os riscos conhecidos do nosso monorepo e nos guiará de forma segura para a implementação da primeira peça do nosso Core Engine.
