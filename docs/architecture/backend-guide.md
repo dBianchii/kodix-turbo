@@ -674,6 +674,61 @@ export const appRouter = router({
 });
 ```
 
+### 3.4 Combinando Múltiplos Routers com `mergeRouters`
+
+- **Lição**: A tentativa de combinar múltiplos sub-routers dentro de um único `t.router({ ...routerA, ...routerB })` usando spread syntax (`...`) resulta em erros de tipo complexos (`TS2345: Argument of type '...' is not assignable to parameter of type 'CreateRouterOptions'`).
+- **O Problema**: O `t.router()` foi projetado para aceitar um objeto de _procedures_, não de _routers_. A sintaxe de spread falha ao tentar mesclar instâncias de routers completos, pois suas estruturas internas (`_def`) são incompatíveis.
+- **Ação Preventiva**: Use a função `t.mergeRouters(...routers)` para combinar múltiplos routers. Se você precisar adicionar procedures avulsos junto com sub-routers, agrupe os procedures avulsos em seu próprio `t.router` e depois mescle tudo.
+
+  ```typescript
+  // ❌ ANTES: Causa erro de tipo.
+  const finalRouter = t.router({
+    ...subRouterA,
+    ...subRouterB,
+    procedureC: protectedProcedure.query(() => {
+      /*...*/
+    }),
+  });
+
+  // ✅ DEPOIS: Padrão correto e seguro.
+  const rootProcedures = t.router({
+    procedureC: protectedProcedure.query(() => {
+      /*...*/
+    }),
+  });
+
+  const finalRouter = t.mergeRouters(subRouterA, subRouterB, rootProcedures);
+  ```
+
+### 3.5 Chamando Serviços de Contextos não-tRPC (ex: API Routes)
+
+- **Lição**: Um Service Layer que depende de um contexto tRPC (`ctx`) não pode ser chamado diretamente de um endpoint Next.js API Route, pois este não possui o `ctx`.
+- **O Problema**: A tentativa de chamar `AiStudioService.getSystemPrompt(ctx, ...)` de dentro de `/api/chat/stream/route.ts` falha porque a variável `ctx` não existe naquele escopo.
+- **Causa Raiz**: As API Routes do Next.js e os procedures do tRPC operam em contextos diferentes. O `ctx` do tRPC é construído por um middleware específico que não é executado em uma API Route padrão.
+- **Ação Preventiva**: Quando for necessário chamar um serviço dependente de `ctx` de fora de um procedure tRPC, o contexto deve ser reconstruído manualmente dentro do chamador. Isso envolve importar e usar as mesmas primitivas (`auth()`, `createTRPCContext`) que o tRPC usa para criar seu contexto original.
+
+  ```typescript
+  // ✅ CORRETO: Reconstruindo o contexto em uma API Route
+  import type { NextRequest } from "next/server";
+  import { auth } from "@kdx/auth";
+  import { createTRPCContext } from "@kdx/api";
+  import { AiStudioService } from "@kdx/api/internal/services";
+
+
+  export async function POST(request: NextRequest) {
+    // ...
+    const authResult = await auth();
+    const ctx = await createTRPCContext({
+      auth: authResult,
+      headers: request.headers,
+    });
+
+    // Agora o serviço pode ser chamado com o contexto correto
+    const result = await AiStudioService.getSystemPrompt({ ctx, params: {...} });
+    // ...
+  }
+  ```
+
 ## 🧪 **4. Adicionar Dados de Teste (Seed)**
 
 ### 4.1 Criar Seed

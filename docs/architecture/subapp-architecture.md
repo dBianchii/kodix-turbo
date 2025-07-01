@@ -325,6 +325,33 @@ export async function cloneCalendarTasksToCareTasks({
 - Bypass de validação de `teamId`
 - Importação de handlers de outros SubApps sem service layer
 
+### **Princípio "Fail-Fast" para Serviços**
+
+- **Lição**: Serviços de infraestrutura de baixo nível (como um Service Layer) não devem mascarar erros externos (ex: falha de conexão com o banco de dados) com blocos `try/catch` genéricos. Isso esconde problemas críticos e leva a bugs difíceis de diagnosticar na UI.
+- **Padrão Obrigatório**: Adotar uma estratégia "fail-fast". Serviços core devem lançar exceções quando suas dependências críticas (como o DB) falham. A responsabilidade de capturar essas exceções e traduzi-las em uma resposta amigável para o usuário (ex: um `toast` de erro) é da camada de API (o router tRPC), que está mais próxima do usuário e entende o contexto da requisição.
+
+  ```diff
+  // ❌ ANTES: Mascara o erro, dificultando o debug.
+  // Em `MyAwesomeService`
+  try {
+    const data = await myRepository.find(...);
+  } catch (error) {
+    return {}; // Problema crítico de DB é escondido.
+  }
+
+  // ✅ DEPOIS: Falha de forma explícita e transparente.
+  // Em `MyAwesomeService` (sem try/catch)
+  const data = await myRepository.find(...); // Erro de DB vai se propagar.
+
+  // Na camada de API (Router tRPC)
+  try {
+    const result = await MyAwesomeService.get(...);
+  } catch (error) {
+    // A camada de API decide como lidar com o erro.
+    throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", cause: error });
+  }
+  ```
+
 ### **Sistema de Dependências Entre SubApps**
 
 Dependências **entre SubApps** são declaradas explicitamente:

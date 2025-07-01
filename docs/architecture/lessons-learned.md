@@ -18,7 +18,7 @@ A leitura deste documento é **obrigatória** para todos os desenvolvedores.
 - **Lição**: Erros de inferência de tipo em cascata no frontend (como `Property 'mutate' does not exist` ou `Property 'queryOptions' is undefined`) são quase sempre sintoma de um problema na **estrutura do router no backend**.
 - **O Problema**: O cliente tRPC (`useTRPC`) não conseguia inferir os tipos corretos para os procedures do Chat, tratando-os como `any` ou `undefined` e causando mais de 500 erros de "unsafe" no frontend.
 - **Causa Raiz**: O `chatRouter` (e outros sub-routers) estava sendo exportado como um objeto TypeScript genérico (`TRPCRouterRecord`) em vez de ser construído com a função `t.router({...})` do tRPC. Isso apagava as informações de tipo detalhadas antes que chegassem ao router principal.
-- **Ação Preventiva**: **TODOS** os routers, em todos os níveis, devem ser construídos e exportados usando a função `t.router({...})`. O uso de tipos genéricos como `TRPCRouterRecord` é proibido, pois quebra a inferência de tipos end-to-end.
+- **Ação Preventiva**: **TODOS** os routers, em todos os níveis, devem ser construídos e exportados usando a função `t.router({...})`. O uso de tipos genéricos como `TRPCRouterRecord` é proibido, pois quebra a inferência de tipos end-to-end. (Este padrão está documentado oficialmente em **[Backend Development Guide](./backend-guide.md)**).
 
   ```diff
   // ❌ ANTES: Apaga os tipos detalhados.
@@ -52,11 +52,11 @@ A leitura deste documento é **obrigatória** para todos os desenvolvedores.
 
 - **Lição**: O comentário `// @ts-nocheck` é um anti-padrão perigoso que esconde problemas reais e leva a erros em tempo de execução.
 - **O Problema**: O uso de `@ts-nocheck` em arquivos como `chat-thread-provider.tsx` mascarou dezenas de erros de tipo, que contribuíram para a instabilidade geral.
-- **Ação Preventiva**: `// @ts-nocheck` é **estritamente proibido**. O problema de tipo subjacente deve ser sempre investigado e corrigido na sua causa raiz. A regra de linter `@typescript-eslint/ban-ts-comment` deve ser tratada como um erro bloqueante.
+- **Ação Preventiva**: `// @ts-nocheck` é **estritamente proibido**. O problema de tipo subjacente deve ser sempre investigado e corrigido na sua causa raiz. A regra de linter `@typescript-eslint/ban-ts-comment` deve ser tratada como um erro bloqueante. (Este padrão agora faz parte da **[Política de Type Safety](./Architecture_Standards.md#️-política-de-type-safety-tolerância-zero)**).
 
 ### **6. Prevenção de Erros de TypeScript em Modificações Cross-Package**
 
-- **Lição**: Modificações que afetam múltiplos packages no monorepo requerem uma estratégia específica para evitar erros de tipo persistentes e problemas de compilação em cascata.
+- **Lição**: Modificações que afetam múltiplos packages no monorepo requerem uma estratégia específica para evitar erros de tipo persistentes e problemas de compilação em cascata. (Este padrão agora está documentado oficialmente em **[Padrões de Desenvolvimento em Monorepo](./Architecture_Standards.md#️-padrões-de-desenvolvimento-em-monorepo-crítico)**).
 - **O Problema**: Durante a implementação de novas features que modificam schemas compartilhados (como `AppIdsWithUserAppTeamConfig`), ocorrem erros de tipo que persistem mesmo após as correções, devido a problemas de cache e ordem de compilação.
 - **Sintomas Comuns**:
   - Erro: "Spread types may only be created from object types" em operações de spread
@@ -126,7 +126,7 @@ A leitura deste documento é **obrigatória** para todos os desenvolvedores.
 
 - **Lição**: A tentativa de combinar múltiplos sub-routers dentro de um único `t.router({ ...routerA, ...routerB })` usando spread syntax (`...`) resulta em erros de tipo complexos (`TS2345: Argument of type '...' is not assignable to parameter of type 'CreateRouterOptions'`).
 - **O Problema**: O `t.router()` foi projetado para aceitar um objeto de _procedures_, não de _routers_. A sintaxe de spread funciona para mesclar objetos de procedures, mas falha ao tentar mesclar instâncias de routers completos, pois suas estruturas internas (`_def`) são incompatíveis.
-- **Ação Preventiva**: Use a função `t.mergeRouters(...routers)` para combinar múltiplos routers. Se você precisar adicionar procedures avulsos junto com sub-routers, agrupe os procedures avulsos em seu próprio `t.router` e depois mescle tudo.
+- **Ação Preventiva**: Use a função `t.mergeRouters(...routers)` para combinar múltiplos routers. Se você precisar adicionar procedures avulsos junto com sub-routers, agrupe os procedures avulsos em seu próprio `t.router` e depois mescle tudo. (Este padrão está documentado oficialmente em **[Backend Development Guide](./backend-guide.md)**).
 
   ```typescript
   // ❌ ANTES: Causa erro de tipo.
@@ -158,7 +158,7 @@ A leitura deste documento é **obrigatória** para todos os desenvolvedores.
 
 - **Lição**: Scripts que apenas verificam se uma porta está em uso (`check-dev-status.sh`) são insuficientes e podem levar a loops infinitos se o servidor falhar em compilar.
 - **O Problema**: O script `check-dev-status.sh` ficava "preso", aguardando um servidor que nunca iniciaria porque havia um erro de compilação em um pacote dependente que impedia o `pnpm dev:kdx` de concluir.
-- **Ação Preventiva**: Adotar um fluxo de inicialização em múltiplos estágios que prioriza a detecção de erros.
+- **Ação Preventiva**: Adotar um fluxo de inicialização em múltiplos estágios que prioriza a detecção de erros. (Este fluxo está documentado oficialmente em **[Scripts Reference](./scripts-reference.md#fluxo-de-inicialização-robusto-para-debug)**).
   1.  `sh ./scripts/stop-dev.sh` (Garante um ambiente limpo)
   2.  `sh ./scripts/start-dev-bg.sh` (Inicia em segundo plano)
   3.  `sleep 5` (Aguarda a geração de logs)
@@ -194,7 +194,7 @@ A leitura deste documento é **obrigatória** para todos os desenvolvedores.
 
 - **Lição**: Imports de sub-paths de pacotes do workspace (ex: `from "@kdx/db/repositories"`) são um anti-padrão perigoso. Eles podem funcionar no editor (devido à inteligência do VSCode), mas falham durante o build do TypeScript ou com o Turborepo.
 - **O Problema**: A tentativa de importar o `appRepository` de `@kdx/db/repositories` dentro do novo pacote `@kdx/core-engine` falhou, pois a configuração de `moduleResolution: "Bundler"` espera que os imports apontem apenas para o ponto de entrada definido no `exports` do `package.json` do pacote alvo.
-- **Ação Preventiva**: **TODOS** os imports entre pacotes do workspace **DEVEM** apontar para o ponto de entrada principal (ex: `from "@kdx/db"`). Para que isso funcione, o pacote alvo (`@kdx/db` neste caso) deve exportar explicitamente os membros desejados (como `appRepository`) em seu `index.ts` principal.
+- **Ação Preventiva**: **TODOS** os imports entre pacotes do workspace **DEVEM** apontar para o ponto de entrada principal (ex: `from "@kdx/db"`). Para que isso funcione, o pacote alvo (`@kdx/db` neste caso) deve exportar explicitamente os membros desejados (como `appRepository`) em seu `index.ts` principal. (Este padrão agora está documentado oficialmente em **[Padrões de Desenvolvimento em Monorepo](./Architecture_Standards.md#️-padrões-de-desenvolvimento-em-monorepo-crítico)**).
 
 ### **13. Configuração de Testes de Pacotes e Dependências de Desenvolvimento**
 
@@ -226,7 +226,7 @@ A leitura deste documento é **obrigatória** para todos os desenvolvedores.
 - **Lição**: Um Service Layer que depende de um contexto tRPC (`ctx`) não pode ser chamado diretamente de um endpoint Next.js API Route, pois este não possui o `ctx`.
 - **O Problema**: A tentativa de chamar `AiStudioService.getSystemPrompt(ctx, ...)` de dentro de `/api/chat/stream/route.ts` falhou porque a variável `ctx` não existia naquele escopo.
 - **Causa Raiz**: As API Routes do Next.js e os procedures do tRPC operam em contextos diferentes. O `ctx` do tRPC é construído por um middleware específico que não é executado em uma API Route padrão.
-- **Ação Preventiva**: Quando for necessário chamar um serviço dependente de `ctx` de fora de um procedure tRPC, o contexto deve ser reconstruído manualmente dentro do chamador. Isso envolve importar e usar as mesmas primitivas (`auth()`, `createTRPCContext`) que o tRPC usa para criar seu contexto original.
+- **Ação Preventiva**: Quando for necessário chamar um serviço dependente de `ctx` de fora de um procedure tRPC, o contexto deve ser reconstruído manualmente dentro do chamador. Isso envolve importar e usar as mesmas primitivas (`auth()`, `createTRPCContext`) que o tRPC usa para criar seu contexto original. (Este padrão está documentado oficialmente em **[Backend Development Guide](./backend-guide.md)**).
 
   ```typescript
   // ✅ CORRETO: Reconstruindo o contexto em uma API Route
@@ -272,19 +272,6 @@ A leitura deste documento é **obrigatória** para todos os desenvolvedores.
 - **Causa Raiz**: Falha em identificar proativamente todos os pontos de uso (call sites) da funcionalidade que estava sendo refatorada antes de iniciar a remoção.
 - **Ação Preventiva**: Antes de remover ou renomear uma função exportada, **SEMPRE** execute uma busca global (usando a busca do editor ou `grep`) pelo nome da função. Analise cada ocorrência e inclua a atualização de todos os arquivos afetados no plano de refatoração. Isso transforma a descoberta de erros de reativa (esperar o build falhar) para proativa (mapear o impacto completo antecipadamente).
 
----
-
-<!-- Teste de edição atômica. -->
-
-Este documento deve ser o primeiro lugar a ser consultado ao encontrar um bug inesperado e o último a ser atualizado após a resolução, garantindo que o conhecimento da equipe evolua constantemente.
-
-<!-- Teste de edição atômica. -->
-
-### **19. Teste de Bloco Pequeno**
-
-- **Lição**: Testando a adição de um bloco pequeno de markdown.
-- **Ação Preventiva**: Dividir edições grandes em partes menores.
-
 ### **20. O Princípio da "Exportação Antes do Consumo"**
 
 - **Lição**: Uma causa comum de falhas de compilação em cascata (`Cannot find module`) é tentar consumir uma funcionalidade de um pacote do workspace antes de garantir que ela foi devidamente exportada pelo ponto de entrada (`index.ts`) desse pacote.
@@ -305,7 +292,7 @@ Este documento deve ser o primeiro lugar a ser consultado ao encontrar um bug in
 
 - **Lição**: Serviços de infraestrutura de baixo nível (como o `ConfigurationService`) não devem mascarar erros externos (ex: falha de conexão com o banco de dados) com blocos `try/catch` genéricos. Isso esconde problemas críticos e leva a bugs difíceis de diagnosticar na UI.
 - **O Problema**: A implementação inicial do `ConfigurationService` usava `try/catch` para retornar um objeto vazio `{}` se a busca no banco de dados falhasse. Se o banco de dados estivesse offline, em vez de um erro claro de "Internal Server Error", a UI simplesmente se comportaria de forma estranha (ex: sem aplicar as configurações do usuário), sem nenhuma indicação do problema real.
-- **Ação Preventiva**: Adotar uma estratégia "fail-fast". Serviços core devem lançar exceções quando suas dependências críticas (como o DB) falham. A responsabilidade de capturar essas exceções e traduzi-las em uma resposta amigável para o usuário (ex: um `toast` de erro) é da camada de API (o router tRPC), que está mais próxima do usuário e entende o contexto da requisição.
+- **Ação Preventiva**: Adotar uma estratégia "fail-fast". Serviços core devem lançar exceções quando suas dependências críticas (como o DB) falham. A responsabilidade de capturar essas exceções e traduzi-las em uma resposta amigável para o usuário (ex: um `toast` de erro) é da camada de API (o router tRPC), que está mais próxima do usuário e entende o contexto da requisição. (Este princípio está documentado oficialmente em **[SubApp Architecture](./subapp-architecture.md#princípio-fail-fast-para-serviços)**).
 
   ```diff
   // ❌ ANTES: Mascara o erro, dificultando o debug.
@@ -328,3 +315,40 @@ Este documento deve ser o primeiro lugar a ser consultado ao encontrar um bug in
     throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", cause: error });
   }
   ```
+
+### **22. O Princípio da Re-Sincronização de Estado Pós-Falha**
+
+- **Lição**: Quando uma ferramenta automatizada de modificação de código (como `edit_file`) falha, não se deve assumir o estado do arquivo. Tentar "corrigir" o erro sem verificar o estado real pode levar a um loop de falhas.
+- **O Problema**: Em uma tarefa de refatoração, a primeira tentativa de `edit_file` falhou. As tentativas subsequentes para "remover" o código assumiram incorretamente que a primeira adição parcial tinha ocorrido, levando a mais falhas.
+- **Ação Preventiva**: Adotar um fluxo de trabalho resiliente:
+  1.  **PARE** após a falha. Não presuma nada.
+  2.  **RE-SINCRONIZE**: Execute `read_file` no arquivo alvo para obter o conteúdo 100% atualizado.
+  3.  **RE-AVALIE**: Analise o conteúdo real e determine a próxima ação correta.
+- **Regra de Ouro**: A fonte da verdade é sempre o estado atual do arquivo no disco, não o resultado esperado de uma ação anterior que falhou.
+
+### **23. O Princípio da "Exportação Antes do Consumo" no Build**
+
+- **Lição**: Modificar um pacote "provedor" (ex: `@kdx/db`) e imediatamente tentar consumir a nova funcionalidade em um pacote "consumidor" (ex: `@kdx/core-engine`) causará falhas de build, mesmo que o código-fonte pareça correto.
+- **O Problema**: O `typecheck` ou `test` do consumidor falha com `module not found` porque ele depende do **artefato compilado obsoleto** da dependência, não do código-fonte recém-modificado.
+- **Ação Preventiva**: O processo de modificação cross-package deve ser atômico e respeitar o processo de build: (Este padrão agora está documentado oficialmente em **[Padrões de Desenvolvimento em Monorepo](./Architecture_Standards.md#️-padrões-de-desenvolvimento-em-monorepo-crítico)**).
+  1.  Modifique o pacote provedor (ex: adicione um `export` em `@kdx/db`).
+  2.  **Execute `pnpm build --filter=<pacote-provedor>`**.
+  3.  SÓ ENTÃO, modifique o pacote consumidor para importar e usar a nova funcionalidade.
+
+### **24. Política de Catálogo para Dependências (`pnpm catalog`)**
+
+- **Lição**: Ao usar o recurso de catálogo do `pnpm`, adicionar uma dependência a um `package.json` com `versão: "catalog:"` não é suficiente.
+- **O Problema**: A execução de `pnpm install` falha com `ERR_PNPM_CATALOG_ENTRY_NOT_FOUND_FOR_SPEC` se a dependência não estiver definida no catálogo central.
+- **Ação Preventiva**: Ao adicionar uma nova dependência gerenciada por catálogo:
+  1.  Adicione a dependência ao `package.json` do pacote alvo.
+  2.  Adicione a dependência e sua versão exata à seção `catalog` do arquivo `pnpm-workspace.yaml`.
+
+### **25. O Contrato Forte como Pré-requisito para Testes Seguros**
+
+- **Lição**: É impossível escrever testes verdadeiramente `type-safe` (sem `as any` ou erros de linter `no-unsafe-assignment`) para uma função ou serviço que retorna `any`.
+- **O Problema**: Testes para um serviço que retornava `Promise<any>` estavam repletos de erros do ESLint, pois o compilador não podia fazer nenhuma garantia sobre a forma do objeto retornado, forçando acessos "inseguros".
+- **Ação Preventiva**: A refatoração de uma funcionalidade para ser `type-safe` deve seguir esta ordem:
+  1.  **Primeiro, fortaleça o contrato**: Altere a assinatura da função/serviço para retornar um tipo explícito e forte, eliminando `any`.
+  2.  **Segundo, alinhe os testes**: Reescreva os testes para que eles consumam e validem este novo contrato forte.
+  3.  **Terceiro, corrija a implementação**: Modifique a lógica da função para satisfazer o contrato e fazer os testes passarem.
+- **Regra de Ouro**: A segurança de tipos dos testes é um reflexo direto da segurança de tipos do código que está sendo testado.

@@ -10,11 +10,11 @@ Este documento registra as lições aprendidas especificamente durante o desenvo
 
 ## 2. Lições de Implementação
 
-### 2.1. Flexibilidade vs. Tipagem Estrita em Utilitários (`deepMerge`)
+### 2.1. Tipagem Forte Obrigatória em Utilitários (`deepMerge`)
 
-- **Lição:** Ao criar utilitários genéricos como `deepMerge`, que precisam lidar com uma variedade de estruturas de objetos (neste caso, diferentes schemas de configuração), uma abordagem excessivamente estrita com genéricos do TypeScript pode se tornar um obstáculo.
-- **O Problema:** A tentativa inicial de criar um `deepMerge` com tipagem 100% segura e genérica resultou em tipos complexos que eram difíceis de manter e quebravam facilmente com novos schemas de configuração.
-- **Solução Pragmática:** Para este caso de uso específico, relaxar a tipagem do `deepMerge` para `(target: any, source: any): any` foi uma decisão pragmática que simplificou o código e aumentou a flexibilidade. A segurança de tipo é garantida na camada de serviço (`ConfigurationService`) que consome o `deepMerge` e conhece os schemas Zod esperados.
+- **Lição:** Utilitários genéricos como `deepMerge` devem ser construídos com tipagem genérica forte (usando `<T>` e `<U>`) para preservar a segurança de tipos end-to-end.
+- **O Problema:** Uma implementação inicial do `deepMerge` com `(target: any, source: any): any` quebrou o contrato de tipos, forçando os serviços consumidores a também usar `any` e gerando uma cascata de erros `no-unsafe-assignment`.
+- **Solução Arquitetural:** A tipagem do `deepMerge` deve ser robusta, como `deepMerge<T, U>(target: T, source: U): T & U`. A segurança de tipos deve ser mantida em todas as camadas, desde os utilitários de mais baixo nível até os serviços de mais alto nível, alinhado com a nossa política de tolerância zero com `any`.
 
 ### 2.2. Resolução de Módulos e Testes de Integração (TDD)
 

@@ -217,6 +217,25 @@ export class MySubAppService {
 - ✅ **OBRIGATÓRIO**: Validação de `teamId` em todos os services
 - ✅ **RECOMENDADO**: Logging de auditoria
 
+## 🏗️ **Padrões de Desenvolvimento em Monorepo (CRÍTICO)**
+
+Esta seção aborda padrões de desenvolvimento que são essenciais para evitar erros comuns de compilação, cache e resolução de módulos em um ambiente de monorepo com Turborepo e pnpm.
+
+### **1. Resolução de Módulos: Proibição de Imports de Sub-path**
+
+- **Lição**: Imports de sub-paths de pacotes do workspace (ex: `from "@kdx/db/repositories"`) são um **anti-padrão perigoso**. Eles podem funcionar no editor (devido à inteligência do VSCode), mas falham durante o build do TypeScript ou com o Turborepo.
+- **Causa Raiz**: A configuração de `moduleResolution: "Bundler"` no TypeScript espera que os imports apontem apenas para o ponto de entrada principal definido na propriedade `exports` do `package.json` do pacote alvo.
+- **Ação Preventiva**: **TODOS** os imports entre pacotes do workspace **DEVEM** apontar para o ponto de entrada principal (ex: `from "@kdx/db"`). Para que isso funcione, o pacote alvo (`@kdx/db` neste caso) deve exportar explicitamente os membros desejados (como `appRepository`) em seu `index.ts` principal.
+
+### **2. Modificações Cross-Package: Ordem de Build Obrigatória**
+
+- **Lição**: Modificar tipos ou schemas em pacotes compartilhados (ex: `@kdx/shared`) e imediatamente tentar consumir a nova funcionalidade em um pacote "consumidor" (ex: `@kdx/api`) causará falhas de compilação e tipo, pois o consumidor depende do **artefato compilado obsoleto** da dependência.
+- **Ação Preventiva**: O processo de modificação cross-package deve ser atômico e respeitar o processo de build:
+  1.  **Modifique o pacote "provedor"** (ex: adicione um `export` em `@kdx/db` ou um tipo em `@kdx/shared`).
+  2.  **Compile o pacote provedor**: `pnpm build --filter=<pacote-provedor>`.
+  3.  **SÓ ENTÃO**, modifique o pacote "consumidor" para importar e usar a nova funcionalidade.
+  4.  **Em caso de erros persistentes**, limpe o cache (`pnpm turbo clean && rm -rf node_modules/.cache`) e repita o processo de build incremental.
+
 ## 🔧 **Padrões tRPC v11 (CRÍTICO)**
 
 ### **⚠️ IMPORTANTE: Padrão Web App**
@@ -570,3 +589,42 @@ pnpm dev:kdx         # ✅ Sem warnings
 **Próxima Revisão:** 2025-01-21
 
 **⚠️ IMPORTANTE**: Este é o documento de **fonte única de verdade** para padrões arquiteturais. Sempre consulte e atualize este documento ao fazer mudanças na arquitetura.
+
+## 🔧 tRPC v11 Architecture Rules (CRITICAL)
+
+- Web App: SEMPRE use `useTRPC()` pattern
+- NUNCA use `import { api }` pattern no web app
+
+### **🛡️ Política de Type Safety (Tolerância Zero)**
+
+- **Regra Fundamental**: O uso de `any` é **estritamente proibido** em todo o monorepo. Nenhuma tarefa será considerada concluída se introduzir erros de linter como `no-unsafe-assignment`, `no-unsafe-member-access` ou relacionados.
+- **Justificativa**: `any` desliga o compilador do TypeScript, eliminando a principal vantagem de usar a linguagem. Decisões "pragmáticas" que comprometem a segurança de tipos são inaceitáveis, pois introduzem bugs em tempo de execução, dificultam a refatoração e degradam a experiência de desenvolvimento (DX).
+- **Alternativas Permitidas**:
+  - `interface` ou `type` para estruturas de dados bem definidas.
+  - `z.infer<typeof seuSchema>` para inferir tipos a partir de schemas Zod.
+  - `unknown` combinado com type guards (como `instanceof`, `typeof`, ou validação com Zod) quando o tipo é verdadeiramente desconhecido na entrada.
+  - `Generics` (`<T>`) para criar funções e componentes reutilizáveis e type-safe.
+- **Diretriz Principal**: Na dúvida sobre a forma de um dado, a ação obrigatória é **parar e definir o tipo corretamente**, não usar `any` como um atalho. Nenhuma exceção será aceita.
+- **`@ts-nocheck`**: O uso do comentário `// @ts-nocheck` é igualmente **estritamente proibido**. Ele é um anti-padrão que mascara problemas reais, desliga as proteções do compilador e leva a erros em tempo de execução. O problema de tipo subjacente deve ser sempre investigado e corrigido na sua causa raiz.
+
+## 🗄️ **Banco de Dados**
+
+### **Schema Padrão**
+
+```typescript
+export const myTable = mysqlTable(
+  "my_table",
+  {
+    id: varchar("id", { length: 30 }).primaryKey().$defaultFn(createId),
+    name: varchar("name", { length: 100 }).notNull(),
+    teamId: varchar("team_id", { length: 30 }).notNull(),
+    createdById: varchar("created_by_id", { length: 30 }).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+  },
+  (table) => ({
+    teamIdx: index("team_idx").on(table.teamId),
+    createdByIdx: index("created_by_idx").on(table.createdById),
+  }),
+);
+```

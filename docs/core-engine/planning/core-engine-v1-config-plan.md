@@ -30,7 +30,7 @@ O plano abaixo foi atualizado para refletir o que **foi efetivamente executado**
 
 - **O que funciona:** Retorna a configuração de Nível 1 (Plataforma).
 - **O que NÃO funciona:** A busca por configurações de Nível 2 (Time) e Nível 3 (Usuário) no banco de dados está desativada.
-- **Próximo Passo:** É mandatório e urgente executar a **Fase 4** para finalizar o serviço e habilitar a funcionalidade completa de configuração hierárquica, desbloqueando o progresso em outras áreas (como a integração de `system-prompt` no Chat).
+- **Próximo Passo:** A Fase 4 foi concluída (com a ressalva da falha no `deepMerge`) através do plano `finish-configuration-service-plan.md`. O `CoreEngine` está pronto para a próxima fase de refatoração do `PromptBuilderService`.
 
 ---
 

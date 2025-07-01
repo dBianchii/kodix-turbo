@@ -70,7 +70,29 @@ pnpm dev:email
 
 # Database Studio (Drizzle)
 pnpm db:studio
-# Acessa: http://localhost:4983
+# Acessa: https://local.drizzle.studio
+```
+
+### Fluxo de Inicialização Robusto (Para Debug)
+
+- **Problema Comum**: O `pnpm dev:kdx` pode ficar em um loop infinito se houver um erro de compilação que impeça o servidor de iniciar. Scripts que apenas verificam a porta não detectam isso.
+- **Solução**: Usar um fluxo em múltiplos estágios que verifica erros de log **antes** de verificar o status do servidor.
+
+```bash
+# 1. Garante um ambiente limpo
+sh ./scripts/stop-dev.sh
+
+# 2. Inicia o servidor em segundo plano
+sh ./scripts/start-dev-bg.sh
+
+# 3. Aguarda a geração de logs
+sleep 5
+
+# 4. Verifica se há erros de compilação nos logs (PASSO CRÍTICO)
+sh ./scripts/check-log-errors.sh
+
+# 5. Apenas se não houver erros, verifica se o servidor está rodando
+sh ./scripts/check-dev-status.sh
 ```
 
 ### Desenvolvimento com Watch Mode
