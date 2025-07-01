@@ -284,3 +284,47 @@ Este documento deve ser o primeiro lugar a ser consultado ao encontrar um bug in
 
 - **Lição**: Testando a adição de um bloco pequeno de markdown.
 - **Ação Preventiva**: Dividir edições grandes em partes menores.
+
+### **20. O Princípio da "Exportação Antes do Consumo"**
+
+- **Lição**: Uma causa comum de falhas de compilação em cascata (`Cannot find module`) é tentar consumir uma funcionalidade de um pacote do workspace antes de garantir que ela foi devidamente exportada pelo ponto de entrada (`index.ts`) desse pacote.
+- **O Problema**: Um plano de implementação pode instruir a importação de `userAppTeamConfigRepository` de `@kdx/db` no pacote `@kdx/core-engine`. No entanto, se o `index.ts` do `@kdx/db/repositories` não exportar esse novo repositório, o build falhará, mesmo que o código pareça correto no editor.
+- **Ação Preventiva**: Qualquer plano de implementação que envolva comunicação entre pacotes deve seguir a ordem estrita de dependência. A **primeira ação** deve ser sempre no pacote "provedor" para garantir que a funcionalidade esteja disponível e exportada. A segunda ação é consumi-la no pacote "consumidor".
+
+  ```diff
+  // ❌ ANTES: Plano com ordem incorreta
+  // 1. Em @kdx/core-engine, importar `userAppTeamConfigRepository` de `@kdx/db`. (FALHA)
+  // 2. Em @kdx/db, exportar `userAppTeamConfigRepository`.
+
+  // ✅ DEPOIS: Plano à prova de falhas
+  // 1. Em @kdx/db, garantir que `userAppTeamConfigRepository` seja exportado via `index.ts`.
+  // 2. Em @kdx/core-engine, importar `userAppTeamConfigRepository` de `@kdx/db`. (SUCESSO)
+  ```
+
+### **21. O Princípio "Fail-Fast" para Serviços de Infraestrutura**
+
+- **Lição**: Serviços de infraestrutura de baixo nível (como o `ConfigurationService`) não devem mascarar erros externos (ex: falha de conexão com o banco de dados) com blocos `try/catch` genéricos. Isso esconde problemas críticos e leva a bugs difíceis de diagnosticar na UI.
+- **O Problema**: A implementação inicial do `ConfigurationService` usava `try/catch` para retornar um objeto vazio `{}` se a busca no banco de dados falhasse. Se o banco de dados estivesse offline, em vez de um erro claro de "Internal Server Error", a UI simplesmente se comportaria de forma estranha (ex: sem aplicar as configurações do usuário), sem nenhuma indicação do problema real.
+- **Ação Preventiva**: Adotar uma estratégia "fail-fast". Serviços core devem lançar exceções quando suas dependências críticas (como o DB) falham. A responsabilidade de capturar essas exceções e traduzi-las em uma resposta amigável para o usuário (ex: um `toast` de erro) é da camada de API (o router tRPC), que está mais próxima do usuário e entende o contexto da requisição.
+
+  ```diff
+  // ❌ ANTES: Mascara o erro, dificultando o debug.
+  // Em `ConfigurationService`
+  try {
+    const teamConfig = await appRepository.findAppTeamConfigs(...);
+  } catch (error) {
+    return {}; // Problema crítico de DB é escondido.
+  }
+
+  // ✅ DEPOIS: Falha de forma explícita e transparente.
+  // Em `ConfigurationService` (sem try/catch)
+  const teamConfig = await appRepository.findAppTeamConfigs(...); // Erro de DB vai se propagar.
+
+  // Na camada de API (Router tRPC)
+  try {
+    const config = await CoreEngine.config.get(...);
+  } catch (error) {
+    // A camada de API decide como lidar com o erro.
+    throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", cause: error });
+  }
+  ```
