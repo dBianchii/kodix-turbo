@@ -1,62 +1,61 @@
 {
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit",
-    "source.fixAll.biome": "explicit",
-    "source.organizeImports.biome": "explicit"
-  },
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true,
-  "eslint.rules.customizations": [{ "rule": "*", "severity": "warn" }],
-  "eslint.runtime": "node",
-  "eslint.workingDirectories": [
-    { "pattern": "apps/*/" },
-    { "pattern": "packages/*/" },
-    { "pattern": "tooling/*/" }
-  ],
-  "prettier.ignorePath": ".gitignore",
-  "tailwindCSS.experimental.configFile": "./packages/ui/globals.css",
-  "tailwindCSS.experimental.classRegex": [
-    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
-    ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
-  ],
-  "files.associations": {
-    "*.css": "tailwindcss"
-  },
-  "editor.quickSuggestions": {
-    "strings": "on"
-  },
-  "typescript.enablePromptUseWorkspaceTsdk": true,
-  "typescript.preferences.autoImportFileExcludePatterns": [
-    "next/router.d.ts",
-    "next/dist/client/router.d.ts",
-    "react-day-picker", //? prevent other auto-imports bc we use our own version of stuff
-    "react-hook-form",
-    "next-navigation"
-  ],
-  "typescript.tsdk": "node_modules/typescript/lib",
-  /*
-   * Note - add the following JSON to your User keybindings.json:
-   * { "key": "f5", "command": "workbench.action.debug.selectandstart", "when": "config.workspaceKeybindings.selectAndStartDebugging.enabled && debuggersAvailable && debugState == 'inactive'" }
-   * This will allow you to select the project to debug when you press F5, and only on this workspace.
-   */
-  "workspaceKeybindings.selectAndStartDebugging.enabled": true,
-  "i18n-ally.localesPaths": ["packages/locales/src/messages/**"],
-  "i18n-ally.pathMatcher": "{locale}.json",
-  "i18n-ally.editor.preferEditor": true,
-  "i18n-ally.enabledFrameworks": ["next-intl"],
-  "i18n-ally.keystyle": "nested",
-  "i18n-ally.extract.autoDetect": true,
-  "i18n-ally.sourceLanguage": "en",
-  "workbench.editor.customLabels.patterns": {
-    "**/app/**/page.tsx": "${dirname} - Page",
-    "**/app/**/layout.tsx": "${dirname} - Layout",
-    "**/_components/**/**.tsx": "${filename} - Component",
-    "**/_components/**/index.tsx": "${dirname} - Component",
-    "**/crons/**.ts": "${filename} - CronJob"
-  },
-  "[javascript][typescript][javascriptreact][typescriptreact][json][jsonc][css][graphql]": {
-    "editor.defaultFormatter": "biomejs.biome"
-  },
-  "editor.formatOnPaste": true,
-  "emmet.showExpandedAbbreviation": "never"
+	"editor.codeActionsOnSave": {
+		"source.fixAll.biome": "explicit",
+		"source.organizeImports.biome": "explicit"
+	},
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.formatOnSave": true,
+	"eslint.rules.customizations": [{ "rule": "*", "severity": "warn" }],
+	"eslint.runtime": "node",
+	"eslint.workingDirectories": [
+		{ "pattern": "apps/*/" },
+		{ "pattern": "packages/*/" },
+		{ "pattern": "tooling/*/" }
+	],
+	"prettier.ignorePath": ".gitignore",
+	"tailwindCSS.experimental.configFile": "./packages/ui/globals.css",
+	"tailwindCSS.experimental.classRegex": [
+		["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+		["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+	],
+	"files.associations": {
+		"*.css": "tailwindcss"
+	},
+	"editor.quickSuggestions": {
+		"strings": "on"
+	},
+	"typescript.enablePromptUseWorkspaceTsdk": true,
+	"typescript.preferences.autoImportFileExcludePatterns": [
+		"next/router.d.ts",
+		"next/dist/client/router.d.ts",
+		"react-day-picker", //? prevent other auto-imports bc we use our own version of stuff
+		"react-hook-form",
+		"next-navigation"
+	],
+	"typescript.tsdk": "node_modules/typescript/lib",
+	/*
+	 * Note - add the following JSON to your User keybindings.json:
+	 * { "key": "f5", "command": "workbench.action.debug.selectandstart", "when": "config.workspaceKeybindings.selectAndStartDebugging.enabled && debuggersAvailable && debugState == 'inactive'" }
+	 * This will allow you to select the project to debug when you press F5, and only on this workspace.
+	 */
+	"workspaceKeybindings.selectAndStartDebugging.enabled": true,
+	"i18n-ally.localesPaths": ["packages/locales/src/messages/**"],
+	"i18n-ally.pathMatcher": "{locale}.json",
+	"i18n-ally.editor.preferEditor": true,
+	"i18n-ally.enabledFrameworks": ["next-intl"],
+	"i18n-ally.keystyle": "nested",
+	"i18n-ally.extract.autoDetect": true,
+	"i18n-ally.sourceLanguage": "en",
+	"workbench.editor.customLabels.patterns": {
+		"**/app/**/page.tsx": "${dirname} - Page",
+		"**/app/**/layout.tsx": "${dirname} - Layout",
+		"**/_components/**/**.tsx": "${filename} - Component",
+		"**/_components/**/index.tsx": "${dirname} - Component",
+		"**/crons/**.ts": "${filename} - CronJob"
+	},
+	"[javascript][typescript][javascriptreact][typescriptreact][json][jsonc][css][graphql]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"editor.formatOnPaste": true,
+	"emmet.showExpandedAbbreviation": "never"
 }

@@ -1,0 +1,32 @@
+{
+	"$schema": "../../node_modules/@biomejs/biome/configuration_schema.json",
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "single"
+		}
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"style": {
+				"noRestrictedImports": {
+					"level": "on",
+					"options": {
+						"paths": {
+							"next/link": "Please import from `~/i18n/routing` instead.",
+							"next/navigation": {
+								"importNames": [
+									"redirect",
+									"permanentRedirect",
+									"useRouter",
+									"usePathname"
+								],
+								"message": "Please import from `~/i18n/routing` instead."
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
