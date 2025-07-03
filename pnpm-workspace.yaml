@@ -74,8 +74,8 @@ catalog:
   "@clack/prompts": ^0.7.0
   "@eslint/compat": ^1.2.3
   "@formkit/auto-animate": ^0.8.2
-  "@hookform/resolvers": ^5.1.1
   "@ianvs/prettier-plugin-sort-imports": ^4.4.0
+  "@hookform/resolvers": ^5.1.1
   "@motify/components": ^0.18.0
   "@node-rs/argon2": ^1.8.3
   "@oslojs/crypto": ^1.0.1
@@ -164,9 +164,9 @@ catalog:
   ora: ^8.0.1
   postcss: ^8.4.49
   posthog-js: ^1.149.0
+  prettier: ^3.5.3
+  prettier-plugin-tailwindcss: ^0.6.11
   posthog-node: ^4.3.1
-  prettier: ^3.3.2
-  prettier-plugin-tailwindcss: ^0.6.9
   react-day-picker: ^9.4.4
   react-email: 3.0.7
   react-hook-form: ^7.60.0

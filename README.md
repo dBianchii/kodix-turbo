@@ -39,10 +39,6 @@ packages
   └─ trpc-cli
       └─ CLI tool to automatically create new endpoints in @kdx/api with the correct boilerplate
 tooling
-  ├─ eslint
-  |   └─ shared, fine-grained, eslint presets
-  ├─ prettier
-  |   └─ shared prettier configuration
   ├─ tailwind
   |   └─ shared tailwind configuration
   └─ typescript

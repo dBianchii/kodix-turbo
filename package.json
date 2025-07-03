@@ -27,11 +27,13 @@
     "vercel-link": "vercel switch kodix && vercel link --repo --yes && pnpm -r pull-vercel"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.0.6",
     "@kdx/prettier-config": "workspace:*",
     "@turbo/gen": "catalog:turbo",
     "prettier": "catalog:",
     "turbo": "catalog:turbo",
     "typescript": "catalog:",
+    "ultracite": "5.0.29",
     "vitest": "catalog:"
   },
   "prettier": "@kdx/prettier-config",
