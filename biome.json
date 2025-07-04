@@ -1,53 +1,53 @@
 {
-	"$schema": "node_modules/@biomejs/biome/configuration_schema.json",
-	"extends": ["ultracite"],
-	"linter": {
-		"rules": {
-			"nursery": {
-				"useSortedClasses": "on"
-			},
-			"style": {
-				"useBlockStatements": "off"
-			},
-			"complexity": {
-				"noVoid": "off"
-			}
-		}
-	},
-	"javascript": {
-		"formatter": {
-			"quoteStyle": "double"
-		}
-	},
-	"assist": {
-		"actions": {
-			"source": {
-				"organizeImports": {
-					"level": "on",
-					"options": {
-						"groups": [
-							["react", "react/**", "react-native", "react-native/**"],
-							["next", "next/**"],
-							["expo", "expo/**"],
+  "$schema": "node_modules/@biomejs/biome/configuration_schema.json",
+  "extends": ["ultracite"],
+  "linter": {
+    "rules": {
+      "nursery": {
+        "useSortedClasses": "on"
+      },
+      "style": {
+        "useBlockStatements": "off"
+      },
+      "complexity": {
+        "noVoid": "off"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double"
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": [
+              ["react", "react/**", "react-native", "react-native/**"],
+              ["next", "next/**"],
+              ["expo", "expo/**"],
 
-							["**", "!@kdx/**", "!~/**", "!../**", "!./**"],
+              ["**", "!@kdx/**", "!~/**", "!../**", "!./**"],
 
-							":BLANK_LINE:",
+              ":BLANK_LINE:",
 
-							["@kdx/**", "~/**"],
+              ["@kdx/**", "~/**"],
 
-							":BLANK_LINE:",
+              ":BLANK_LINE:",
 
-							["../**", "./**"]
-						]
-					}
-				}
-			}
-		}
-	},
-	"vcs": {
-		"enabled": true,
-		"useIgnoreFile": true,
-		"clientKind": "git"
-	}
+              ["../**", "./**"]
+            ]
+          }
+        }
+      }
+    }
+  },
+  "vcs": {
+    "enabled": true,
+    "useIgnoreFile": true,
+    "clientKind": "git"
+  }
 }
