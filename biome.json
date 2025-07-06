@@ -1,6 +1,14 @@
 {
   "$schema": "node_modules/@biomejs/biome/configuration_schema.json",
   "extends": ["ultracite"],
+  "files": {
+    "includes": ["**", "!**/.vscode/**"]
+  },
+  "json": {
+    "parser": {
+      "allowComments": true
+    }
+  },
   "linter": {
     "rules": {
       "nursery": {
