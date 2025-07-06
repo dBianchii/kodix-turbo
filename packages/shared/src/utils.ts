@@ -4,7 +4,11 @@ import z from "zod/v4";
  * @description Base URL for the current environment.
  */
 export const getBaseUrl = () => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore - window is not defined in the server
   if (typeof window !== "undefined") {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore - window is not defined in the server
     return window.location.origin;
   }
   if (process.env.VERCEL_URL) {

@@ -9,7 +9,9 @@
     "build": "tsc",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "dev": "tsc",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@kdx/tsconfig": "workspace:*",

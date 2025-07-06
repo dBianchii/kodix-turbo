@@ -5,8 +5,9 @@ import * as SheetPrimitive from "@radix-ui/react-dialog";
 import { cva } from "class-variance-authority";
 import { X } from "lucide-react";
 
-import { cn } from "../.";
+
 import { useOverlayLifecycle_only_ui } from "./stores/use-overlay-store";
+import { cn } from ".";
 
 const Sheet = SheetPrimitive.Root;
 
