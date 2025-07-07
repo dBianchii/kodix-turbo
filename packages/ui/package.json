@@ -62,6 +62,7 @@
     "lucide-react": "catalog:",
     "motion": "catalog:",
     "next-themes": "catalog:",
+    "react": "catalog:react",
     "react-day-picker": "catalog:",
     "react-hook-form": "catalog:",
     "react-resizable-panels": "catalog:",
@@ -69,6 +70,7 @@
     "tailwind-merge": "catalog:",
     "tailwindcss-animate": "catalog:",
     "vaul": "catalog:",
+    "zod": "catalog:",
     "zustand": "catalog:"
   },
   "devDependencies": {
@@ -84,10 +86,6 @@
     "react": "catalog:react",
     "react-spring": "catalog:",
     "typescript": "catalog:"
-  },
-  "peerDependencies": {
-    "react": "catalog:react",
-    "zod": "catalog:"
   },
   "prettier": "@kdx/prettier-config"
 }

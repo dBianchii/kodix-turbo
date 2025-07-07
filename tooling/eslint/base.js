@@ -40,6 +40,7 @@ export const restrictEnvAccess = tseslint.config(
 
 export const enforceDrizzleWhere = tseslint.config({
   files: ["**/*.js", "**/*.ts", "**/*.tsx"],
+  plugins: { drizzle: drizzlePlugin },
   rules: {
     "drizzle/enforce-delete-with-where": [
       "error",
@@ -61,7 +62,6 @@ export default tseslint.config(
     plugins: {
       import: importPlugin,
       turbo: turboPlugin,
-      drizzle: drizzlePlugin,
     },
     extends: [
       eslint.configs.recommended,
