@@ -10,7 +10,7 @@ import { redirect } from "~/i18n/routing";
 import { trpcCaller } from "~/trpc/server";
 
 export const finishKodixCareOnboardingAction = action
-  .schema(kodixCareConfigSchema)
+  .inputSchema(kodixCareConfigSchema)
   .action(async ({ parsedInput }) => {
     await Promise.allSettled([
       trpcCaller.app.saveConfig({

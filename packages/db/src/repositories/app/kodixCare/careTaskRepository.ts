@@ -1,4 +1,4 @@
-import type { z } from "zod";
+import type { z } from "zod/v4";
 import { and, eq, gte, inArray, isNull } from "drizzle-orm";
 
 import type { Update } from "../../_types";

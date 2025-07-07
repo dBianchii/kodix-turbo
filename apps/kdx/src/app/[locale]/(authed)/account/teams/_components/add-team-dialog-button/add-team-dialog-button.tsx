@@ -85,7 +85,7 @@ export function AddTeamDialogButton({
                     setOpen(false);
 
                     router.refresh();
-                    if (res?.data)
+                    if (res.data)
                       return `${t("Team")} ${res.data.name} ${t("created")}`;
                   },
                 },

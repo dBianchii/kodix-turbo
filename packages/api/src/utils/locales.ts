@@ -1,4 +1,4 @@
-import type { z, ZodSchema } from "zod";
+import type { z, ZodType } from "zod/v4";
 import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
 
@@ -10,17 +10,17 @@ export const getLocaleBasedOnCookie = async () =>
   ((await cookies()).get("NEXT_LOCALE")?.value ??
     defaultLocale) as (typeof locales)[number];
 
-type SchemaGetterFromT<S extends ZodSchema> = (
+type SchemaGetterFromT<S extends ZodType> = (
   t: Awaited<ReturnType<typeof getTranslations>>,
 ) => S;
 
 export const T =
-  <S extends ZodSchema>(schemaGetter: SchemaGetterFromT<S>) =>
+  <S extends ZodType>(schemaGetter: SchemaGetterFromT<S>) =>
   async (input: unknown) => {
     const locale = await getLocaleBasedOnCookie();
     const t = await getTranslations({ locale });
 
-    await createI18nZodErrors({ locale });
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    createI18nZodErrors({ locale });
+     
     return schemaGetter(t).parse(input) as z.infer<S>;
   };

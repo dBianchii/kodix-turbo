@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import type { notifications } from "@kdx/db/schema";
 import type { IsomorficT } from "@kdx/locales";
@@ -46,7 +46,7 @@ export type TDeleteNotificationsInputSchema = z.infer<
 >;
 
 export const ZSignInByPasswordInputSchema = z.object({
-  email: z.string().email(),
+  email: z.email(),
   password: z.string().min(6).max(31),
 });
 export type TSignInByPasswordInputSchema = z.infer<
@@ -55,7 +55,7 @@ export type TSignInByPasswordInputSchema = z.infer<
 
 export const ZSignupWithPasswordInputSchema = z.object({
   name: z.string().min(3).max(31),
-  email: z.string().email(),
+  email: z.email(),
   password: z.string().min(6).max(255),
   invite: z.string().optional(),
 });
@@ -64,7 +64,7 @@ export type TSignupWithPasswordInputSchema = z.infer<
 >;
 
 export const ZSendResetPasswordEmailInputSchema = z.object({
-  email: z.string().email(),
+  email: z.email(),
 });
 export type TSendResetPasswordEmailInputSchema = z.infer<
   typeof ZSendResetPasswordEmailInputSchema

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import type { IsomorficT } from "@kdx/locales";
 import dayjs from "@kdx/dayjs";
@@ -21,7 +21,7 @@ export type TDoCheckoutForShiftInputSchema = z.infer<
 >;
 
 export const ZCheckEmailForRegisterInputSchema = z.object({
-  email: z.string().email(),
+  email: z.email(),
 });
 export type TCheckEmailForRegisterInputSchema = z.infer<
   typeof ZCheckEmailForRegisterInputSchema

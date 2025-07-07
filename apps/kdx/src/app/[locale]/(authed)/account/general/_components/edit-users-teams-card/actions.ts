@@ -9,7 +9,7 @@ import { redirect } from "~/i18n/routing";
 import { trpcCaller } from "~/trpc/server";
 
 export const switchTeamAction = action
-  .schema(
+  .inputSchema(
     z.object({
       teamId: z.string(),
       redirect: z.string().optional(),

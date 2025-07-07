@@ -1,5 +1,5 @@
 import { Frequency } from "rrule";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import type { eventMasters } from "@kdx/db/schema";
 import dayjs from "@kdx/dayjs";
@@ -12,16 +12,16 @@ export const ZCancelInputSchema = z
     eventExceptionId: z.string().optional(),
   })
   .and(
-    z.union([
+    z.discriminatedUnion("exclusionDefinition", [
       z.object({
         exclusionDefinition: z.literal("all"),
       }),
       z.object({
-        date: z.date().transform(adjustDateToMinute),
         exclusionDefinition: z.union([
           z.literal("thisAndFuture"),
           z.literal("single"),
         ]),
+        date: z.date().transform(adjustDateToMinute),
       }),
     ]),
   );
@@ -38,7 +38,7 @@ export const ZCreateInputSchema = z
       .optional(),
     interval: z.number().int().positive(),
     count: z.number().int().positive().optional(),
-    frequency: z.nativeEnum(Frequency),
+    frequency: z.enum(Frequency),
     weekdays: z.number().array().optional(),
     type: z.custom<typeof eventMasters.$inferSelect.type>().optional(),
   })
@@ -64,9 +64,11 @@ export const ZEditInputSchema = z
     type: z.custom<typeof eventMasters.$inferSelect.type>().optional(),
   })
   .and(
-    z.union([
+    z.discriminatedUnion("editDefinition", [
       z.object({
-        frequency: z.nativeEnum(Frequency).optional(),
+        editDefinition: z.enum(["thisAndFuture"]),
+
+        frequency: z.enum(Frequency).optional(),
         until: z
           .date()
           .transform((date) => dayjs(date).endOf("day").toDate())
@@ -75,11 +77,11 @@ export const ZEditInputSchema = z
         count: z.number().nullish().optional(),
         from: z.date().transform(adjustDateToMinute).optional(),
         weekdays: z.number().array().optional(),
-
-        editDefinition: z.enum(["thisAndFuture"]),
       }),
       z.object({
-        frequency: z.nativeEnum(Frequency).optional(),
+        editDefinition: z.literal("all"),
+
+        frequency: z.enum(Frequency).optional(),
         until: z
           .date()
           .transform((date) => dayjs(date).endOf("day").toDate())
@@ -95,13 +97,11 @@ export const ZEditInputSchema = z
             "Invalid time format. Should be HH:MM",
           )
           .optional(),
-
-        editDefinition: z.literal("all"),
       }),
       z.object({
-        from: z.date().transform(adjustDateToMinute).optional(),
-
         editDefinition: z.literal("single"),
+
+        from: z.date().transform(adjustDateToMinute).optional(),
       }),
     ]),
   );

@@ -140,7 +140,7 @@ export default function TeamInviteCardClient({
                 };
                 const parsed = ZInviteInputSchema.safeParse(values);
                 if (!parsed.success) {
-                  return toast.error(parsed.error.errors[0]?.message);
+                  return toast.error(parsed.error.message);
                 }
                 mutation.mutate(values);
               }}
