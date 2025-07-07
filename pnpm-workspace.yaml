@@ -74,7 +74,7 @@ catalog:
   "@clack/prompts": ^0.7.0
   "@eslint/compat": ^1.2.3
   "@formkit/auto-animate": ^0.8.2
-  "@hookform/resolvers": ^3.9.0
+  "@hookform/resolvers": ^5.1.1
   "@ianvs/prettier-plugin-sort-imports": ^4.4.0
   "@motify/components": ^0.18.0
   "@node-rs/argon2": ^1.8.3
@@ -107,7 +107,7 @@ catalog:
   "@react-native-google-signin/google-signin": ^12.2.1
   "@shopify/flash-list": 1.6.4
   "@t3-oss/env-core": ^0.9.2
-  "@t3-oss/env-nextjs": ^0.11.1
+  "@t3-oss/env-nextjs": ^0.13.6
   "@tamagui/babel-plugin": ^1.110.5
   "@tamagui/cli": ^1.110.5
   "@tamagui/config": ^1.110.5
@@ -120,7 +120,7 @@ catalog:
   "@types/ms": ^0.7.34
   "@types/node": ^20.17.6
   "@types/object.groupby": ^1.0.4
-  "@typescript-eslint/eslint-plugin": ^8.15.0
+  "@typescript-eslint/eslint-plugin": ^8.35.1
   "@upstash/qstash": ^2.7.12
   "@upstash/redis": ^1.31.6
   "@vercel/analytics": ^1.2.2
@@ -138,9 +138,9 @@ catalog:
   discord-api-types: ^0.37.91
   dotenv-cli: ^7.4.4
   drizzle-kit: ^0.28.1
-  drizzle-orm: ^0.36.3
+  drizzle-orm: ^0.44.2
   drizzle-seed: ^0.3.1
-  drizzle-zod: ^0.5.1
+  drizzle-zod: ^0.8.2
   embla-carousel-react: 8.0.0-rc22
   eslint: ^9.15.0
   eslint-plugin-drizzle: ^0.2.3
@@ -157,7 +157,7 @@ catalog:
   mysql2: ^3.9.2
   nanoid: ^5.0.7
   next-intl: ^3.25.1
-  next-safe-action: ^7.10.5
+  next-safe-action: ^8.0.7
   next-themes: ^0.3.0
   object.groupby: ^1.0.3
   ora: ^8.0.1
@@ -168,7 +168,7 @@ catalog:
   prettier-plugin-tailwindcss: ^0.6.9
   react-day-picker: ^9.4.4
   react-email: 3.0.7
-  react-hook-form: ^7.54.2
+  react-hook-form: ^7.60.0
   react-icons: ^5.3.0
   react-native: ~0.74.5
   react-native-css-interop: ~0.0.34
@@ -197,5 +197,5 @@ catalog:
   use-intl: ^3.20.0
   vaul: ^1.0.0
   vitest: ^3.0.6
-  zod: ^3.23.8
+  zod: ^3.25.74
   zustand: ^5.0.0

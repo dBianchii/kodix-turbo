@@ -8,7 +8,7 @@ import { action } from "~/helpers/safe-action/safe-action";
 import { trpcCaller } from "~/trpc/server";
 
 export const createTeamAction = action
-  .schema(ZCreateInputSchema)
+  .inputSchema(ZCreateInputSchema)
   .action(async ({ parsedInput }) => {
     const team = await trpcCaller.team.create(parsedInput);
     void trpcCaller.user.switchActiveTeam({ teamId: team.id });

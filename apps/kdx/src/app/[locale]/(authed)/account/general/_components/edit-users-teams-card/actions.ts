@@ -2,14 +2,14 @@
 
 import { revalidatePath } from "next/cache";
 import { getLocale } from "next-intl/server";
-import { z } from "zod";
+import z from "zod/v4";
 
 import { action } from "~/helpers/safe-action/safe-action";
 import { redirect } from "~/i18n/routing";
 import { trpcCaller } from "~/trpc/server";
 
 export const switchTeamAction = action
-  .schema(
+  .inputSchema(
     z.object({
       teamId: z.string(),
       redirect: z.string().optional(),

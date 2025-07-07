@@ -1,4 +1,4 @@
-import { z } from "zod";
+import z from "zod/v4";
 
 import { ZNanoId } from "../../..";
 
@@ -20,11 +20,10 @@ export type TDeleteInputSchema = z.infer<typeof ZDeleteInputSchema>;
 export const ZInviteInputSchema = z.object({
   teamId: ZNanoId,
   to: z
-    .string()
     .email()
     .min(1, { message: "At least one email is required in the 'to' field" })
     .or(
-      z.string().email().array().min(1, {
+      z.email().array().min(1, {
         message: "At least one email is required in the 'to' field",
       }),
     )

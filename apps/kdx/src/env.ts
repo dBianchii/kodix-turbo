@@ -1,6 +1,6 @@
 import { createEnv } from "@t3-oss/env-nextjs";
-import { vercel } from "@t3-oss/env-nextjs/presets";
-import { z } from "zod";
+import { vercel } from "@t3-oss/env-nextjs/presets-zod";
+import z from "zod/v4";
 
 import { env as authEnv } from "@kdx/auth/env";
 
@@ -26,7 +26,7 @@ export const env = createEnv({
     AWS_SMTP_PASSWORD: z.string().optional(),
 
     DISABLE_UPSTASH_CACHE: z.coerce.boolean().default(false),
-    UPSTASH_REDIS_REST_URL: z.string().url(),
+    UPSTASH_REDIS_REST_URL: z.url(),
     UPSTASH_REDIS_REST_TOKEN: z.string(),
 
     QSTASH_CURRENT_SIGNING_KEY: z

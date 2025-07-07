@@ -1,4 +1,4 @@
-import type React from "react";
+import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 
@@ -12,7 +12,7 @@ export default async function StaticLocaleLayout({
   children,
   params,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   params: Promise<{ locale: string }>;
 }) {
   const locale = (await params).locale;

@@ -1,4 +1,4 @@
-import type { z } from "zod";
+import type { z } from "zod/v4";
 import { and, eq, inArray, not } from "drizzle-orm";
 
 import type { AppRole } from "@kdx/shared";

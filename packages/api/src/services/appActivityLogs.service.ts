@@ -1,5 +1,5 @@
 import type { getFormatter } from "next-intl/server";
-import { z } from "zod";
+import z from "zod/v4";
 
 import type { appActivityLogs } from "@kdx/db/schema";
 import type { ServerSideT } from "@kdx/locales";

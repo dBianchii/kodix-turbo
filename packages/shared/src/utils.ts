@@ -1,4 +1,4 @@
-import { z } from "zod";
+import z from "zod/v4";
 
 /**
  * @description Base URL for the current environment.

@@ -9,7 +9,7 @@ import { redirect } from "~/i18n/routing";
 import { trpcCaller } from "~/trpc/server";
 
 export const signupAction = action
-  .schema(ZSignupWithPasswordInputSchema)
+  .inputSchema(ZSignupWithPasswordInputSchema)
   .action(async ({ parsedInput }) => {
     await trpcCaller.user.signupWithPassword(parsedInput);
     redirect({

@@ -4,7 +4,7 @@ import vm from "node:vm";
 import path from "path";
 import * as p from "@clack/prompts";
 import chalk from "chalk";
-import z from "zod";
+import z from "zod/v4";
 
 import { trpcCliConfig } from "../../config";
 import { logger } from "../utils/logger";
@@ -100,7 +100,7 @@ export const runCli = async () => {
             initialValue: "world",
             validate: (input) => {
               const result = ZSafeName.safeParse(input);
-              if (!result.success) return result.error.errors[0]!.message;
+              if (!result.success) return result.error.message;
             },
           });
       },
@@ -135,7 +135,7 @@ export const runCli = async () => {
           validate: (input) => {
             if (input.length > 0) {
               const result = ZSafeName.safeParse(input);
-              if (!result.success) return result.error.errors[0]!.message;
+              if (!result.success) return result.error.message;
             }
           },
         });
@@ -188,7 +188,7 @@ export const runCli = async () => {
 
                 // Extract the result from the sandbox
                 const schema = context.result as unknown;
-                if (!(schema instanceof z.ZodSchema))
+                if (!(schema instanceof z.ZodType))
                   return "Please provide a valid Zod schema";
               } catch {
                 return "Please provide a valid Zod schema";

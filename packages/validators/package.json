@@ -7,9 +7,9 @@
       "types": "./dist/validators/src/index.d.ts",
       "default": "./src/index.ts"
     },
-    "./useI18nZodErrors": {
-      "types": "./dist/validators/src/utils/useI18nZodErrors.d.ts",
-      "default": "./src/utils/useI18nZodErrors.ts"
+    "./use-i18n-zod-errors": {
+      "types": "./dist/validators/src/utils/use-i18n-zod-errors.d.ts",
+      "default": "./src/utils/use-i18n-zod-errors.ts"
     },
     "./zod-namespaces": {
       "types": "./dist/validators/src/utils/zod-namespaces.d.ts",

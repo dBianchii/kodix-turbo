@@ -1,15 +1,19 @@
-import baseConfig, { enforceDrizzleWhere } from "@kdx/eslint-config/base";
+import baseConfig, {
+  baseRestrictedImports,
+  enforceDrizzleWhere,
+} from "@kdx/eslint-config/base";
 
 /** @type {import('typescript-eslint').Config} */
 export default [
   ...baseConfig,
+  ...enforceDrizzleWhere,
   {
-    ignores: ["dist/**"],
     rules: {
       "no-restricted-imports": [
         "error",
         {
           paths: [
+            ...baseRestrictedImports,
             {
               name: "drizzle-orm/mysql-core",
               importNames: [
@@ -45,6 +49,4 @@ export default [
       ],
     },
   },
-  ...baseConfig,
-  ...enforceDrizzleWhere,
 ];

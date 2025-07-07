@@ -1,4 +1,4 @@
-import { z } from "zod";
+import z from "zod/v4";
 
 import { kodixCareAppId } from "@kdx/shared";
 
@@ -9,5 +9,5 @@ export const appIdToUserAppTeamConfigSchema = {
   [kodixCareAppId]: kodixCareUserAppTeamConfigSchema,
 };
 export const appIdToUserAppTeamConfigSchemaUpdate = {
-  [kodixCareAppId]: kodixCareUserAppTeamConfigSchema.deepPartial(),
+  [kodixCareAppId]: kodixCareUserAppTeamConfigSchema.partial(),
 };

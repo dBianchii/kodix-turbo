@@ -1,4 +1,4 @@
-import type { z } from "zod";
+import type { z } from "zod/v4";
 import { eq } from "drizzle-orm";
 
 import type { Drizzle } from "../client";

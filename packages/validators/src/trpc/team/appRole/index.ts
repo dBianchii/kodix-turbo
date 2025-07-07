@@ -1,4 +1,4 @@
-import { z } from "zod";
+import z from "zod/v4";
 
 import type { AppRole, KodixAppId } from "@kdx/shared";
 import { allRoles } from "@kdx/shared";
