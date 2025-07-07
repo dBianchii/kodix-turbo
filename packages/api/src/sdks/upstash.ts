@@ -1,12 +1,13 @@
 import { Redis } from "@upstash/redis";
 
 import type { users } from "@kdx/db/schema";
+import { env } from "@kdx/env";
 
 import type { getCareTaskCompositeId } from "../internal/calendarAndCareTaskCentral";
 
 const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+  url: env.UPSTASH_REDIS_REST_URL,
+  token: env.UPSTASH_REDIS_REST_TOKEN,
 });
 
 interface KeysMapping {
@@ -44,7 +45,7 @@ export const getUpstashCache = async <T extends keyof KeysMapping>(
   key: T,
   variableKeys: KeysMapping[T]["tags"],
 ) => {
-  if (process.env.DISABLE_UPSTASH_CACHE) return Promise.resolve(null);
+  if (env.DISABLE_UPSTASH_CACHE) return Promise.resolve(null);
   const constructedKey = constructKey(key, variableKeys);
   const result = (await redis.get(constructedKey)) as Promise<
     KeysMapping[T]["value"]
@@ -60,7 +61,7 @@ export const setUpstashCache = <T extends keyof KeysMapping>(
     ex?: number;
   },
 ) => {
-  if (process.env.DISABLE_UPSTASH_CACHE) return Promise.resolve("OK");
+  if (env.DISABLE_UPSTASH_CACHE) return Promise.resolve("OK");
   const { variableKeys, value, ex } = options;
   const constructedKey = constructKey(key, variableKeys);
   return redis.set(constructedKey, value, { ex: ex ?? 60 * 60 * 6 }); // 6 hours
@@ -70,7 +71,7 @@ export const invalidateUpstashCache = <T extends keyof KeysMapping>(
   key: T,
   variableKeys: KeysMapping[T]["tags"],
 ) => {
-  if (process.env.DISABLE_UPSTASH_CACHE) return Promise.resolve(0);
+  if (env.DISABLE_UPSTASH_CACHE) return Promise.resolve(0);
   const constructedKey = constructKey(key, variableKeys);
   return redis.del(constructedKey);
 };

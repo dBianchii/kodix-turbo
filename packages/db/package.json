@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "@kdx/dayjs": "workspace:*",
+    "@kdx/env": "workspace:*",
     "@kdx/shared": "workspace:*",
     "@t3-oss/env-core": "catalog:",
     "drizzle-orm": "catalog:",

@@ -1,3 +1,4 @@
+import { env } from "process";
 import { fileURLToPath } from "url";
 import { createJiti } from "jiti";
 import createNextIntlPlugin from "next-intl/plugin";
@@ -12,7 +13,7 @@ const config = {
   serverExternalPackages: ["@node-rs/argon2"],
   experimental: {
     serverActions:
-      process.env.NODE_ENV === "development"
+      env.NODE_ENV === "development"
         ? {
             allowedOrigins: ["localhost:3000"], //? useful for port forwarding
           }

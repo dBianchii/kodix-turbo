@@ -2,13 +2,11 @@ import { createEnv } from "@t3-oss/env-nextjs";
 import { vercel } from "@t3-oss/env-nextjs/presets-zod";
 import z from "zod/v4";
 
-import { env as authEnv } from "@kdx/auth/env";
-
 const requiredInProductionOnly = (string: string | undefined) =>
   !!string || process.env.NODE_ENV !== "production";
 
 export const env = createEnv({
-  extends: [authEnv, vercel()],
+  extends: [vercel()],
   shared: {
     NODE_ENV: z
       .enum(["development", "production", "test"])
@@ -19,6 +17,11 @@ export const env = createEnv({
    * This way you can ensure the app isn't built with invalid env vars.
    */
   server: {
+    NODE_ENV: z.enum(["development", "production"]).optional(),
+    AUTH_GOOGLE_CLIENT_ID: z.string(),
+    AUTH_GOOGLE_CLIENT_SECRET: z.string(),
+    AUTH_DISCORD_ID: z.string().optional(),
+    AUTH_DISCORD_SECRET: z.string().optional(),
     MYSQL_URL: z.string(),
 
     RESEND_API_KEY: z.string(),
