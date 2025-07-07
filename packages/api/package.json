@@ -1,6 +1,5 @@
 {
   "name": "@kdx/api",
-  "version": "0.1.0",
   "private": true,
   "type": "module",
   "exports": {
@@ -39,6 +38,8 @@
     "deep-diff": "catalog:",
     "expo-server-sdk": "catalog:expo",
     "ms": "catalog:",
+    "next": "catalog:next",
+    "next-intl": "catalog:",
     "object.groupby": "catalog:",
     "posthog-node": "catalog:",
     "resend": "catalog:",
@@ -60,10 +61,6 @@
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"
-  },
-  "peerDependencies": {
-    "next": "catalog:next",
-    "next-intl": "catalog:"
   },
   "prettier": "@kdx/prettier-config"
 }

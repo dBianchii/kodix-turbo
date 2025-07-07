@@ -1,7 +1,6 @@
 {
   "name": "@kdx/locales",
   "private": true,
-  "version": "0.1.0",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
@@ -18,7 +17,9 @@
   },
   "dependencies": {
     "@kdx/shared": "workspace:*",
-    "react": "catalog:react"
+    "next-intl": "catalog:",
+    "react": "catalog:react",
+    "use-intl": "catalog:"
   },
   "devDependencies": {
     "@kdx/eslint-config": "workspace:*",
@@ -29,10 +30,6 @@
     "prettier": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:"
-  },
-  "peerDependencies": {
-    "next-intl": "^3.25.1",
-    "use-intl": "^3.20.0"
   },
   "prettier": "@kdx/prettier-config"
 }

@@ -2,8 +2,11 @@ import reactPlugin from "eslint-plugin-react";
 import compilerPlugin from "eslint-plugin-react-compiler";
 import hooksPlugin from "eslint-plugin-react-hooks";
 
+import baseConfig from "./base.js";
+
 /** @type {Awaited<import('typescript-eslint').Config>} */
 export default [
+  ...baseConfig,
   {
     files: ["**/*.ts", "**/*.tsx"],
     plugins: {
