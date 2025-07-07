@@ -1,32 +1,33 @@
-
 import type { ZodErrorMap } from "zod/v4";
+import { useLocale } from "next-intl";
 import z from "zod/v4";
 import en from "zod/v4/locales/en.js";
 import pt from "zod/v4/locales/pt.js";
 
 // import { useTranslations as expo_useTranslations } from "use-intl";
 
-
 import type { Locales } from "@kdx/locales";
-import { useLocale } from "next-intl";
 
-const localeToZod: Record<Locales, () => {
-  localeError: ZodErrorMap;
-}> = {
+const localeToZod: Record<
+  Locales,
+  () => {
+    localeError: ZodErrorMap;
+  }
+> = {
   en: en,
   "pt-BR": pt,
-}
+};
 
 export const useI18nZodErrors = () => {
-  const locale = useLocale()
-  const zodLocale = localeToZod[locale as Locales]
-  
-  z.config(zodLocale())
+  const locale = useLocale();
+  const zodLocale = localeToZod[locale as Locales];
+
+  z.config(zodLocale());
 };
 
 export const createI18nZodErrors = ({ locale }: { locale: string }) => {
-  const zodLocale = localeToZod[locale as Locales]
-  z.config(zodLocale())
+  const zodLocale = localeToZod[locale as Locales];
+  z.config(zodLocale());
 };
 
 // export const expo_useI18nZodErrors = () => {

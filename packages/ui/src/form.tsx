@@ -25,13 +25,13 @@ import { cn } from ".";
 import { Label } from "./label";
 
 function useForm<TOut extends FieldValues, TIn extends FieldValues>(
-  props: Omit<UseFormProps<TIn, unknown, TOut>, 'resolver'> & {
+  props: Omit<UseFormProps<TIn, unknown, TOut>, "resolver"> & {
     schema: ZodType<TOut, TIn>;
-  }
+  },
 ) {
   const form = __useForm<TIn, unknown, TOut>({
     ...props,
-    resolver: zodResolver(props.schema, undefined)
+    resolver: zodResolver(props.schema, undefined),
   });
 
   return form;

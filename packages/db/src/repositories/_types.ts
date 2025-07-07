@@ -1,4 +1,4 @@
-import type { ZodObject, z } from "zod/v4";
+import type { z, ZodObject } from "zod/v4";
 
 export interface Update<T extends ZodObject> {
   id: string;

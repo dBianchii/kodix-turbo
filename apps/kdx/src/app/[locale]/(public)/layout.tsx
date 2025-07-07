@@ -1,9 +1,8 @@
-
+import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 
 import { routing } from "~/i18n/routing";
-import type { ReactNode } from "react";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));

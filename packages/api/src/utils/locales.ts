@@ -21,6 +21,6 @@ export const T =
     const t = await getTranslations({ locale });
 
     createI18nZodErrors({ locale });
-     
+
     return schemaGetter(t).parse(input) as z.infer<S>;
   };
