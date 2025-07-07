@@ -4,7 +4,7 @@ import { getTranslations } from "next-intl/server";
 
 import type { locales } from "@kdx/locales";
 import { defaultLocale } from "@kdx/locales";
-import { createI18nZodErrors } from "@kdx/validators/useI18nZodErrors";
+import { createI18nZodErrors } from "@kdx/validators/use-i18n-zod-errors";
 
 export const getLocaleBasedOnCookie = async () =>
   ((await cookies()).get("NEXT_LOCALE")?.value ??
