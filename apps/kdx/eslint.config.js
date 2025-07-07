@@ -15,7 +15,6 @@ export default [
   {
     rules: {
       "no-restricted-imports": [
-        //TODO: I was NOT able to move this rule to the base nextjsConfig. It was not working. I need to investigate why.
         "error",
         {
           name: "next/link",
