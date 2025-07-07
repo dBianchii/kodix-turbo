@@ -1,9 +1,4 @@
 import reactConfig from "@kdx/eslint-config/react";
 
 /** @type {import('typescript-eslint').Config} */
-export default [
-  {
-    ignores: [],
-  },
-  ...reactConfig,
-];
+export default reactConfig;

@@ -1,14 +1,14 @@
 import {
   enforceDrizzleWhere,
   restrictEnvAccess,
+  restrictEnvAccessRestrictedImports,
 } from "@kdx/eslint-config/base";
-import nextjsConfig from "@kdx/eslint-config/nextjs";
+import nextjsConfig, {
+  nextjsRestrictedImports,
+} from "@kdx/eslint-config/nextjs";
 
 /** @type {import('typescript-eslint').Config} */
 export default [
-  {
-    ignores: [".next/**"],
-  },
   ...nextjsConfig,
   ...restrictEnvAccess,
   ...enforceDrizzleWhere,
@@ -17,18 +17,10 @@ export default [
       "no-restricted-imports": [
         "error",
         {
-          name: "next/link",
-          message: "Please import from `~/i18n/routing` instead.",
-        },
-        {
-          name: "next/navigation",
-          importNames: [
-            "redirect",
-            "permanentRedirect",
-            "useRouter",
-            "usePathname",
+          paths: [
+            ...nextjsRestrictedImports,
+            ...restrictEnvAccessRestrictedImports,
           ],
-          message: "Please import from `~/i18n/routing` instead.",
         },
       ],
     },
