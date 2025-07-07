@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { getLocale } from "next-intl/server";
-import { z } from "zod/v4";
+import z from "zod/v4";
 
 import { action } from "~/helpers/safe-action/safe-action";
 import { redirect } from "~/i18n/routing";

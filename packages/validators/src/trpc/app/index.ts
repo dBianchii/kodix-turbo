@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import z from "zod/v4";
 
 import type { appActivityLogs } from "@kdx/db/schema";
 import type { KodixAppId } from "@kdx/shared";

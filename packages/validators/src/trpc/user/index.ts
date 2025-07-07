@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import z from "zod/v4";
 
 import type { notifications } from "@kdx/db/schema";
 import type { IsomorficT } from "@kdx/locales";

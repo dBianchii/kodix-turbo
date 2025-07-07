@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import z from "zod/v4";
 
 export const NANOID_REGEX = /^[0-9a-z]{12}$/;
 export const ZNanoId = z

@@ -1,6 +1,6 @@
 
 import type { ZodErrorMap } from "zod/v4";
-import { z } from "zod/v4";
+import z from "zod/v4";
 import en from "zod/v4/locales/en.js";
 import pt from "zod/v4/locales/pt.js";
 

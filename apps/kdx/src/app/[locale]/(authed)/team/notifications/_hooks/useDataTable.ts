@@ -20,7 +20,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { z } from "zod/v4";
+import z from "zod/v4";
 
 import { useDebounce } from "@kdx/ui/hooks/use-debounce";
 
