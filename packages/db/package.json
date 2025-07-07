@@ -38,13 +38,12 @@
     "dev": "tsc",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
-    "push": "pnpm wait-for-db && pnpm with-env drizzle-kit push",
-    "studio": "pnpm wait-for-db && pnpm with-env drizzle-kit studio",
-    "seed": "pnpm wait-for-db && pnpm with-env tsx ./scripts/seed.ts",
+    "push": "pnpm wait-for-db && pnpm drizzle-kit push",
+    "studio": "pnpm wait-for-db && pnpm drizzle-kit studio",
+    "seed": "pnpm wait-for-db && pnpm tsx ./scripts/seed.ts",
     "generate-nanoid": "pnpm tsx ./scripts/generate-nanoid",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
-    "wait-for-db": "while ! nc -z localhost 3306; do sleep 1; done",
-    "with-env": "dotenv -e ../../apps/kdx/.vercel/.env.development.local --"
+    "wait-for-db": "while ! nc -z localhost 3306; do sleep 1; done"
   },
   "dependencies": {
     "@kdx/dayjs": "workspace:*",
