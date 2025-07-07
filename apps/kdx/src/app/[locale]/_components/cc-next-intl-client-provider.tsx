@@ -4,7 +4,7 @@ import type { AbstractIntlMessages } from "next-intl";
 import { NextIntlClientProvider } from "next-intl";
 
 import { formats } from "@kdx/locales";
-import { useI18nZodErrors } from "@kdx/validators/useI18nZodErrors";
+import { useI18nZodErrors } from "@kdx/validators/use-i18n-zod-errors";
 import { formNs } from "@kdx/validators/zod-namespaces";
 
 export function CCNextIntlClientProvider({

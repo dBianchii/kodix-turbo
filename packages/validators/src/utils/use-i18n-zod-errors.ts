@@ -4,8 +4,6 @@ import z from "zod/v4";
 import en from "zod/v4/locales/en.js";
 import pt from "zod/v4/locales/pt.js";
 
-// import { useTranslations as expo_useTranslations } from "use-intl";
-
 import type { Locales } from "@kdx/locales";
 
 const localeToZod: Record<
