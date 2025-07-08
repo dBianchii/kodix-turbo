@@ -23,7 +23,6 @@
     "@node-rs/argon2": "catalog:",
     "@oslojs/crypto": "catalog:",
     "@oslojs/encoding": "catalog:",
-    "@t3-oss/env-nextjs": "catalog:",
     "discord-api-types": "catalog:",
     "next": "catalog:next",
     "react": "catalog:react",
