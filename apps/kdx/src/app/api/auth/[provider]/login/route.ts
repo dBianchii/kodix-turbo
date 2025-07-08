@@ -5,8 +5,7 @@ import { generateCodeVerifier, generateState } from "arctic";
 
 import type { Providers } from "@kdx/auth";
 import { providers } from "@kdx/auth";
-
-import { env } from "~/env";
+import { env } from "@kdx/env";
 
 const providersWithCodeVerifier = ["Google"];
 

@@ -2,8 +2,8 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 
 import { appRouter, createTRPCContext } from "@kdx/api";
 import { auth } from "@kdx/auth";
+import { env } from "@kdx/env";
 
-import { env } from "~/env";
 import { OPTIONS, setCorsHeaders } from "../../_enableCors";
 
 export const runtime = "nodejs";

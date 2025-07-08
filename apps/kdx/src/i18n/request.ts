@@ -4,7 +4,6 @@
 import { getRequestConfig } from "next-intl/server";
 
 import { formats } from "@kdx/locales";
-import { formNs } from "@kdx/validators/zod-namespaces";
 
 import { routing } from "./routing";
 
@@ -34,33 +33,10 @@ export default getRequestConfig(async ({ requestLocale }) => {
       ).default,
       ...(
         await import(
-          `../../../../packages/locales/src/messages/zod/${locale}.json`
-        )
-      ).default,
-      ...(
-        await import(
           `../../../../packages/locales/src/messages/validators/${locale}.json`
         )
       ).default,
     },
     formats: formats,
-    getMessageFallback({ namespace, key }) {
-      //TODO: unify it in a single place and not repeat it
-      const defaultFallback = `${namespace}.${key}`;
-      if (defaultFallback.startsWith(formNs)) return "missingTranslation";
-
-      return defaultFallback;
-    },
-    onError(err) {
-      //TODO: unify it in a single place and not repeat it
-      //TODO: Before, it was showing an error if it didnt find a translation. Now it is checking if the error is from the formNs and if it is, it will not show the error.
-      //TODO: This is a temporary solution, we need to find a better solution to handle this error.
-      if (err.originalMessage) {
-        const match = /`([^`]+)`/.exec(err.originalMessage);
-        const extracted = match ? match[1] : null;
-        if (extracted?.startsWith(formNs)) return;
-      }
-      console.error(err);
-    },
   };
 });
