@@ -17,7 +17,8 @@
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "yaml": "catalog:"
   },
   "prettier": "@kdx/prettier-config"
 }
