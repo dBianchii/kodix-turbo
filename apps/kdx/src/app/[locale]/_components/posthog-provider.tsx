@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import posthog from "posthog-js";
 import { PostHogProvider } from "posthog-js/react";
 
-import { env } from "~/env";
+import { env } from "@kdx/env";
 
 export function CSPostHogProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {

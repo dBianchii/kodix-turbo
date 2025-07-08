@@ -7,8 +7,7 @@
       "react-server": "./src/index.rsc.ts",
       "default": "./src/index.ts"
     },
-    "./utils": "./src/utils.ts",
-    "./env": "./env.ts"
+    "./utils": "./src/utils.ts"
   },
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",
@@ -18,12 +17,12 @@
   },
   "dependencies": {
     "@kdx/db": "workspace:*",
+    "@kdx/env": "workspace:*",
     "@kdx/react-email": "workspace:*",
     "@kdx/shared": "workspace:*",
     "@node-rs/argon2": "catalog:",
     "@oslojs/crypto": "catalog:",
     "@oslojs/encoding": "catalog:",
-    "@t3-oss/env-nextjs": "catalog:",
     "discord-api-types": "catalog:",
     "next": "catalog:next",
     "react": "catalog:react",

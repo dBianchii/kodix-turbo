@@ -1,8 +1,9 @@
 import type { NextFetchEvent, NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
+import { env } from "@kdx/env";
+
 import type { CustomMiddleware } from "./chain-middleware";
-import { env } from "~/env";
 
 export function withAuth(middleware: CustomMiddleware) {
   return async (request: NextRequest, event: NextFetchEvent) => {

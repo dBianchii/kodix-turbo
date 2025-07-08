@@ -2,8 +2,8 @@ import { headers } from "next/headers";
 import { Receiver } from "@upstash/qstash";
 import { getTranslations } from "next-intl/server";
 
-import { env } from "@kdx/auth/env";
 import { db } from "@kdx/db/client";
+import { env } from "@kdx/env";
 
 import { getLocaleBasedOnCookie } from "../utils/locales";
 
@@ -15,9 +15,9 @@ export type TCronJobContext = Awaited<ReturnType<typeof createCronJobCtx>>;
 
 const receiver = new Receiver({
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  currentSigningKey: process.env.QSTASH_CURRENT_SIGNING_KEY!,
+  currentSigningKey: env.QSTASH_CURRENT_SIGNING_KEY!,
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  nextSigningKey: process.env.QSTASH_NEXT_SIGNING_KEY!,
+  nextSigningKey: env.QSTASH_NEXT_SIGNING_KEY!,
 });
 
 export const verifiedQstashCron =

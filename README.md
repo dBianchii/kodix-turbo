@@ -75,9 +75,8 @@ nvm use
 # Install dependencies
 pnpm i
 
-# Configure environment variables
-# There is an `.env.example` in the root directory you can use for reference, although you need to fill in the correct values yourself
-cp .env.example .env
+# Configure environment variables (only Vercel users)
+pnpm vercel-link
 
 # Start the main kdx app
 pnpm dev:kdx

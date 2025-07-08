@@ -1,11 +1,10 @@
 import { FcGoogle } from "react-icons/fc";
 import { RxDiscordLogo } from "react-icons/rx";
 
+import { env } from "@kdx/env";
 import { getBaseUrl } from "@kdx/shared";
 import { cn } from "@kdx/ui";
 import { buttonVariants } from "@kdx/ui/button";
-
-import { env } from "~/env";
 
 const providers = [
   {

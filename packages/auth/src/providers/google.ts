@@ -1,9 +1,9 @@
 import { Google } from "arctic";
 
 import { authRepository } from "@kdx/db/repositories";
+import { env } from "@kdx/env";
 import { getBaseUrl } from "@kdx/shared";
 
-import { env } from "../../env";
 import createOrGetExistingUserForUnlinkedProviderAccount from "./utils/createOrGetExistingUserForUnlinkedProviderAccount";
 
 interface GoogleUser {

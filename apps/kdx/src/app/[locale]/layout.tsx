@@ -4,8 +4,9 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 
+import { env } from "@kdx/env";
+
 import { TailwindIndicator } from "~/app/[locale]/_components/tailwind-indicator";
-import { env } from "~/env";
 import { TRPCReactProvider } from "~/trpc/react";
 
 import "@kdx/ui/globals.css";

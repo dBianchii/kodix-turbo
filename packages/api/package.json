@@ -25,6 +25,7 @@
     "@kdx/auth": "workspace:*",
     "@kdx/dayjs": "workspace:*",
     "@kdx/db": "workspace:*",
+    "@kdx/env": "workspace:*",
     "@kdx/locales": "workspace:*",
     "@kdx/permissions": "workspace:*",
     "@kdx/react-email": "workspace:*",

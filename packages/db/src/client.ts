@@ -9,9 +9,11 @@ import type { Pool } from "mysql2/promise";
 import { drizzle } from "drizzle-orm/mysql2";
 import { createPool } from "mysql2/promise";
 
+import { env } from "@kdx/env";
+
 import * as schema from "./schema";
 
-if (!process.env.MYSQL_URL) {
+if (!env.MYSQL_URL) {
   throw new Error("Missing MYSQL_URL");
 }
 
@@ -22,7 +24,7 @@ if (!process.env.MYSQL_URL) {
 const globalForDb = globalThis as unknown as {
   conn: Pool | undefined;
 };
-export const dbURl = new URL(process.env.MYSQL_URL);
+export const dbURl = new URL(env.MYSQL_URL);
 
 const conn =
   globalForDb.conn ??
@@ -33,7 +35,7 @@ const conn =
     password: dbURl.password,
     port: Number(dbURl.port),
   });
-if (process.env.NODE_ENV !== "production") globalForDb.conn = conn;
+if (env.NODE_ENV !== "production") globalForDb.conn = conn;
 
 // TODO: Remove typecasting once https://github.com/drizzle-team/drizzle-orm/issues/3282 is resolved
 export const db = drizzle(conn, { schema, mode: "default" }) as MySql2Database<

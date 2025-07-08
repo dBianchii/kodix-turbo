@@ -1,18 +1,21 @@
-import { fileURLToPath } from "url";
+// eslint-disable-next-line no-restricted-imports
+import { env } from "process";
 import { createJiti } from "jiti";
 import createNextIntlPlugin from "next-intl/plugin";
 
-const withNextIntl = createNextIntlPlugin();
+const jiti = createJiti(import.meta.url);
 
 // Import env files to validate at build time. Use jiti so we can load .ts files in here.
-await createJiti(fileURLToPath(import.meta.url)).import("./src/env");
+await jiti.import("@kdx/env");
+
+const withNextIntl = createNextIntlPlugin();
 
 /** @type {import("next").NextConfig} */
 const config = {
   serverExternalPackages: ["@node-rs/argon2"],
   experimental: {
     serverActions:
-      process.env.NODE_ENV === "development"
+      env.NODE_ENV === "development"
         ? {
             allowedOrigins: ["localhost:3000"], //? useful for port forwarding
           }
