@@ -20,7 +20,8 @@
         "DISABLE_UPSTASH_CACHE",
         "PORT",
         "QSTASH_CURRENT_SIGNING_KEY",
-        "QSTASH_NEXT_SIGNING_KEY"
+        "QSTASH_NEXT_SIGNING_KEY",
+        "GOOGLE_SERVICES_JSON"
       ]
     },
     "dev": {
