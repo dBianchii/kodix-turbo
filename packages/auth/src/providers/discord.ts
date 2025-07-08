@@ -3,9 +3,9 @@ import { Discord } from "arctic";
 import { OAuth2Scopes } from "discord-api-types/v10";
 
 import { authRepository } from "@kdx/db/repositories";
+import { env } from "@kdx/env";
 import { getBaseUrl } from "@kdx/shared";
 
-import { env } from "../../env";
 import createOrGetExistingUserForUnlinkedProviderAccount from "./utils/createOrGetExistingUserForUnlinkedProviderAccount";
 
 const discord = new Discord(

@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@kdx/db": "workspace:*",
+    "@kdx/env": "workspace:*",
     "@kdx/react-email": "workspace:*",
     "@kdx/shared": "workspace:*",
     "@node-rs/argon2": "catalog:",

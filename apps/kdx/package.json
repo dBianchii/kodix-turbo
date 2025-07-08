@@ -10,7 +10,7 @@
     "lint": "eslint",
     "start": "pnpm next start --port 3000",
     "typecheck": "tsc --noEmit",
-    "pull-vercel": "vercel pull --yes"
+    "pull-vercel": "vercel env pull --yes"
   },
   "dependencies": {
     "@formkit/auto-animate": "catalog:",

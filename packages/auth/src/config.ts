@@ -8,8 +8,8 @@ import {
 
 import type { sessions, users } from "@kdx/db/schema";
 import { authRepository, userRepository } from "@kdx/db/repositories";
+import { env } from "@kdx/env";
 
-import { env } from "../env";
 import * as discordProvider from "./providers/discord";
 import * as googleProvider from "./providers/google";
 
