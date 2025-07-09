@@ -4,7 +4,7 @@ services:
     image: mysql:8.2
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: kodix-db
+      MYSQL_DATABASE: kodix
     ports:
       - "3306:3306"
     volumes:
