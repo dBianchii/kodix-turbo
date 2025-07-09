@@ -38,6 +38,10 @@ export const env = createEnv({
       .string()
       .optional()
       .refine(requiredInProductionOnly, { message: "Required in production" }),
+    ENCRYPTION_KEY: z.string().optional(),
+    OPENAI_API_KEY: z.string().optional(),
+    GOOGLE_API_KEY: z.string().optional(),
+    ANTHROPIC_API_KEY: z.string().optional(),
   },
   /**
    * Specify your client-side environment variables schema here.

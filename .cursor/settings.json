@@ -1,0 +1,24 @@
+{
+  "features": {
+    "customCommands": true
+  },
+  "commands": {
+    "directory": ".cursor/commands"
+  },
+  "features.customCommands": {
+    "enabled": true,
+    "commandsDirectory": ".cursor/commands"
+  },
+  "ai": {
+    "contextFiles": [
+      ".cursor/rules/README.md",
+      "docs/context-engineering/commands/generate-prp.md",
+      "docs/context-engineering/commands/execute-prp.md"
+    ],
+    "defaultContext": {
+      "rules": ".cursor/rules/",
+      "commands": "docs/context-engineering/commands/",
+      "documentation": "docs/"
+    }
+  }
+}
