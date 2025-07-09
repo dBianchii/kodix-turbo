@@ -1,30 +1,51 @@
 {
   "$schema": "node_modules/@biomejs/biome/configuration_schema.json",
   "extends": ["ultracite"],
-  "files": {
-    "includes": ["**", "!**/.vscode/**"]
-  },
+  "root": true,
   "json": {
     "parser": {
       "allowComments": true
     }
   },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double"
+    }
+  },
   "linter": {
     "rules": {
       "nursery": {
-        "useSortedClasses": "on"
+        "useSortedClasses": {
+          "level": "on",
+          "options": {
+            "functions": ["clsx", "cva", "cn"]
+          }
+        }
       },
       "style": {
-        "useBlockStatements": "off"
+        "useBlockStatements": "off",
+        "noRestrictedImports": {
+          "level": "on",
+          "options": {
+            "paths": {
+              "zod": "Please import from 'zod/v4' instead",
+              "next/link": "Please import from `~/i18n/routing` instead.",
+              "next/navigation": {
+                "importNames": [
+                  "redirect",
+                  "permanentRedirect",
+                  "useRouter",
+                  "usePathname"
+                ],
+                "message": "Please import from `~/i18n/routing` instead."
+              }
+            }
+          }
+        }
       },
       "complexity": {
         "noVoid": "off"
       }
-    }
-  },
-  "javascript": {
-    "formatter": {
-      "quoteStyle": "double"
     }
   },
   "assist": {
