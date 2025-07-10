@@ -1176,9 +1176,6 @@ importers:
       '@kdx/dayjs':
         specifier: workspace:*
         version: link:../dayjs
-      '@kdx/env':
-        specifier: workspace:*
-        version: link:../env
       '@kdx/shared':
         specifier: workspace:*
         version: link:../shared
