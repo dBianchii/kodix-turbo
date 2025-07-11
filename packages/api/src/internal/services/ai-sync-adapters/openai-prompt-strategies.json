@@ -1,0 +1,92 @@
+[
+  {
+    "modelId": "gpt-4o",
+    "strategy": {
+      "type": "gpt-advanced",
+      "agentSwitchTemplate": "hierarchical-default",
+      "assertiveness": "medium",
+      "contextualMemory": "high",
+      "specialHandling": ["priority-system", "role-override"]
+    }
+  },
+  {
+    "modelId": "gpt-4o-mini",
+    "strategy": {
+      "type": "gpt-standard",
+      "agentSwitchTemplate": "hierarchical-default",
+      "assertiveness": "medium",
+      "contextualMemory": "medium",
+      "specialHandling": ["priority-system"]
+    }
+  },
+  {
+    "modelId": "gpt-4-turbo",
+    "strategy": {
+      "type": "gpt-advanced",
+      "agentSwitchTemplate": "hierarchical-high",
+      "assertiveness": "high",
+      "contextualMemory": "high",
+      "specialHandling": ["priority-system", "role-override"]
+    }
+  },
+  {
+    "modelId": "gpt-4",
+    "strategy": {
+      "type": "gpt-standard",
+      "agentSwitchTemplate": "hierarchical-default",
+      "assertiveness": "medium",
+      "contextualMemory": "high",
+      "specialHandling": ["priority-system"]
+    }
+  },
+  {
+    "modelId": "gpt-3.5-turbo",
+    "strategy": {
+      "type": "gpt-lite",
+      "agentSwitchTemplate": "direct-simple",
+      "assertiveness": "low",
+      "contextualMemory": "medium",
+      "specialHandling": ["gentle-reset"]
+    }
+  },
+  {
+    "modelId": "o1",
+    "strategy": {
+      "type": "reasoning-model",
+      "agentSwitchTemplate": "reasoning-focused",
+      "assertiveness": "high",
+      "contextualMemory": "high",
+      "specialHandling": ["reasoning-chain", "step-by-step"]
+    }
+  },
+  {
+    "modelId": "o1-mini",
+    "strategy": {
+      "type": "reasoning-model",
+      "agentSwitchTemplate": "simple",
+      "assertiveness": "low",
+      "contextualMemory": "low",
+      "specialHandling": ["gentle-reset"]
+    }
+  },
+  {
+    "modelId": "o3",
+    "strategy": {
+      "type": "reasoning-model",
+      "agentSwitchTemplate": "reasoning-focused",
+      "assertiveness": "high",
+      "contextualMemory": "high",
+      "specialHandling": ["reasoning-chain", "step-by-step"]
+    }
+  },
+  {
+    "modelId": "o3-mini",
+    "strategy": {
+      "type": "reasoning-model",
+      "agentSwitchTemplate": "simple",
+      "assertiveness": "low",
+      "contextualMemory": "low",
+      "specialHandling": ["gentle-reset"]
+    }
+  }
+]
