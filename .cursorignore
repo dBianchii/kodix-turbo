@@ -1,0 +1,106 @@
+# ===============================================
+# CURSOR IGNORE - Kodix Monorepo
+# ===============================================
+# Este arquivo define quais pastas/arquivos o Cursor deve ignorar
+# durante análises de código, sugestões e contexto.
+
+# ===============================================
+# 📁 PASTAS DE BUILD E CACHE
+# ===============================================
+node_modules/
+.next/
+.turbo/
+dist/
+build/
+out/
+.cache/
+.temp/
+.tmp/
+
+# ===============================================
+# 📚 PASTAS DE ARQUIVO HISTÓRICO
+# ===============================================
+**/archive/
+archive/
+
+# ===============================================
+# 📊 DADOS E LOGS
+# ===============================================
+*.log
+logs/
+.pnpm-debug.log*
+.yarn-debug.log*
+.yarn-error.log*
+
+# ===============================================
+# 🔒 ARQUIVOS SENSÍVEIS
+# ===============================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+*.key
+*.cert
+
+# ===============================================
+# 🗄️ BANCO DE DADOS
+# ===============================================
+*.db
+*.sqlite
+*.sqlite3
+packages/db-dev/data/
+
+# ===============================================
+# 📦 DEPENDÊNCIAS E LOCKFILES
+# ===============================================
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# ===============================================
+# 🧪 TESTES E COVERAGE
+# ===============================================
+coverage/
+.nyc_output/
+junit.xml
+test-results/
+
+# ===============================================
+# 🎨 ASSETS GERADOS
+# ===============================================
+public/build/
+apps/*/public/build/
+*.map
+*.min.js
+*.min.css
+
+# ===============================================
+# 🔧 FERRAMENTAS DE DESENVOLVIMENTO
+# ===============================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ===============================================
+# 📱 MOBILE (Expo)
+# ===============================================
+apps/care-expo/.expo/
+apps/care-expo/dist/
+apps/care-expo/node_modules/
+
+# ===============================================
+# 🚫 ARQUIVOS ESPECÍFICOS A IGNORAR
+# ===============================================
+# Arquivos de configuração muito grandes
+turbo.json
+# Arquivos de debug temporários
+debug-*.ts
+debug-*.js
+# Cookies e sessões temporárias
+cookies.txt
+# Arquivos de teste muito específicos
+**/__tests__/**/*.temp.* 
