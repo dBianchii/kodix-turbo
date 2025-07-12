@@ -1,0 +1,26 @@
+{
+  "features": {
+    "customCommands": true
+  },
+  "commands": {
+    "directory": ".cursor/commands"
+  },
+  "features.customCommands": {
+    "enabled": true,
+    "commandsDirectory": ".cursor/commands"
+  },
+  "ai": {
+    "contextFiles": [
+      "docs/rules/PRIORITY-POLICIES.md",
+      "docs/rules/kodix-rules.md",
+      "docs/rules/kodix-prp-workflow.md",
+      "docs/context-engineering/commands/generate-prp.md",
+      "docs/context-engineering/commands/execute-prp.md"
+    ],
+    "defaultContext": {
+      "rules": "docs/rules/",
+      "commands": "docs/context-engineering/commands/",
+      "documentation": "docs/"
+    }
+  }
+}

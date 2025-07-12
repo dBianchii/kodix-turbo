@@ -1,0 +1,11 @@
+{
+  "extends": "@kdx/tsconfig/internal-package.json",
+  "include": [
+    "src",
+    "scripts",
+    "drizzle",
+    "check-models.js",
+    "enable-openai-models.js"
+  ],
+  "exclude": ["node_modules"]
+}

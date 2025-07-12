@@ -1,0 +1,239 @@
+"use client";
+
+import { memo } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+
+import { cn } from "@kdx/ui";
+
+interface MessageProps {
+  role: "user" | "assistant";
+  content: string;
+  isStreaming?: boolean;
+  className?: string;
+}
+
+// Componente de markdown otimizado
+const MarkdownText = memo(({ content }: { content: string }) => {
+  // ✅ Renderização otimizada de markdown
+
+  return (
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
+      components={{
+        h1: ({ className, ...props }) => (
+          <h1
+            className={cn("text-foreground mb-4 text-2xl font-bold", className)}
+            {...props}
+          />
+        ),
+        h2: ({ className, ...props }) => (
+          <h2
+            className={cn(
+              "text-foreground mb-3 text-xl font-semibold",
+              className,
+            )}
+            {...props}
+          />
+        ),
+        h3: ({ className, ...props }) => (
+          <h3
+            className={cn(
+              "text-foreground mb-3 text-lg font-semibold",
+              className,
+            )}
+            {...props}
+          />
+        ),
+        h4: ({ className, ...props }) => (
+          <h4
+            className={cn(
+              "text-foreground mb-2 text-base font-semibold",
+              className,
+            )}
+            {...props}
+          />
+        ),
+        h5: ({ className, ...props }) => (
+          <h5
+            className={cn(
+              "text-foreground mb-2 text-sm font-semibold",
+              className,
+            )}
+            {...props}
+          />
+        ),
+        h6: ({ className, ...props }) => (
+          <h6
+            className={cn(
+              "text-foreground mb-2 text-xs font-semibold",
+              className,
+            )}
+            {...props}
+          />
+        ),
+        p: ({ className, ...props }) => (
+          <p
+            className={cn(
+              "text-foreground mb-3 leading-relaxed last:mb-0",
+              className,
+            )}
+            {...props}
+          />
+        ),
+        a: ({ className, ...props }) => (
+          <a
+            className={cn(
+              "text-primary underline-offset-4 hover:underline",
+              className,
+            )}
+            target="_blank"
+            rel="noopener noreferrer"
+            {...props}
+          />
+        ),
+        blockquote: ({ className, ...props }) => (
+          <blockquote
+            className={cn(
+              "border-muted-foreground/50 text-muted-foreground border-l-4 pl-4 italic",
+              className,
+            )}
+            {...props}
+          />
+        ),
+        ul: ({ className, ...props }) => (
+          <ul
+            className={cn("text-foreground mb-3 ml-6 list-disc", className)}
+            {...props}
+          />
+        ),
+        ol: ({ className, ...props }) => (
+          <ol
+            className={cn("text-foreground mb-3 ml-6 list-decimal", className)}
+            {...props}
+          />
+        ),
+        li: ({ className, ...props }) => (
+          <li
+            className={cn("text-foreground leading-relaxed", className)}
+            {...props}
+          />
+        ),
+        hr: ({ className, ...props }) => (
+          <hr className={cn("border-muted my-4", className)} {...props} />
+        ),
+        table: ({ className, ...props }) => (
+          <table
+            className={cn(
+              "border-muted mb-4 w-full border-collapse border",
+              className,
+            )}
+            {...props}
+          />
+        ),
+        th: ({ className, ...props }) => (
+          <th
+            className={cn(
+              "border-muted bg-muted/50 text-foreground border px-4 py-2 text-left font-semibold",
+              className,
+            )}
+            {...props}
+          />
+        ),
+        td: ({ className, ...props }) => (
+          <td
+            className={cn(
+              "border-muted text-foreground border px-4 py-2",
+              className,
+            )}
+            {...props}
+          />
+        ),
+        tr: ({ className, ...props }) => (
+          <tr className={cn("border-muted border-b", className)} {...props} />
+        ),
+        sup: ({ className, ...props }) => (
+          <sup
+            className={cn("text-foreground text-xs", className)}
+            {...props}
+          />
+        ),
+        pre: ({ className, ...props }) => (
+          <pre
+            className={cn(
+              "bg-muted/50 text-foreground mb-4 overflow-x-auto rounded-lg border p-4 font-mono text-sm",
+              className,
+            )}
+            {...props}
+          />
+        ),
+        code: ({
+          className,
+          inline,
+          children,
+          ...props
+        }: React.ComponentProps<"code"> & { inline?: boolean }) => {
+          // ✅ CORREÇÃO: Inline code vs code blocks
+          if (inline) {
+            return (
+              <code
+                className={cn(
+                  "bg-muted text-foreground rounded px-1.5 py-0.5 font-mono text-sm",
+                  className,
+                )}
+                {...props}
+              >
+                {children}
+              </code>
+            );
+          }
+
+          // Code blocks (dentro de <pre>)
+          return (
+            <code className={cn("font-mono text-sm", className)} {...props}>
+              {children}
+            </code>
+          );
+        },
+      }}
+    >
+      {content}
+    </ReactMarkdown>
+  );
+});
+
+MarkdownText.displayName = "MarkdownText";
+
+export function Message({
+  role,
+  content,
+  isStreaming: _isStreaming,
+  className,
+}: MessageProps) {
+  // ✅ Renderização otimizada de mensagens
+
+  return (
+    <div
+      className={cn(
+        "group relative mb-6 flex w-full",
+        role === "user" ? "justify-end" : "justify-start",
+        className,
+      )}
+    >
+      <div
+        className={cn(
+          "relative mx-4 rounded-lg px-4 py-3",
+          role === "user"
+            ? "bg-primary text-primary-foreground max-w-[85%]"
+            : "bg-muted/50 text-foreground w-full",
+        )}
+      >
+        {role === "assistant" ? (
+          <MarkdownText content={content} />
+        ) : (
+          <div className="text-foreground whitespace-pre-wrap">{content}</div>
+        )}
+      </div>
+    </div>
+  );
+}

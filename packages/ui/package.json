@@ -1,0 +1,94 @@
+{
+  "name": "@kdx/ui",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "types": "./dist/src/*.d.ts",
+      "default": [
+        "./src/*.tsx",
+        "./src/*.ts"
+      ]
+    },
+    "./globals.css": "./globals.css",
+    "./data-table/export": {
+      "types": "./dist/src/data-table/export.d.ts",
+      "default": "./src/data-table/export.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "dev": "tsc",
+    "lint": "eslint",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "catalog:",
+    "@kdx/locales": "workspace:*",
+    "@radix-ui/react-alert-dialog": "catalog:",
+    "@radix-ui/react-avatar": "catalog:",
+    "@radix-ui/react-checkbox": "catalog:",
+    "@radix-ui/react-context-menu": "catalog:",
+    "@radix-ui/react-dialog": "catalog:",
+    "@radix-ui/react-dropdown-menu": "catalog:",
+    "@radix-ui/react-label": "catalog:",
+    "@radix-ui/react-navigation-menu": "catalog:",
+    "@radix-ui/react-popover": "catalog:",
+    "@radix-ui/react-radio-group": "catalog:",
+    "@radix-ui/react-scroll-area": "catalog:",
+    "@radix-ui/react-select": "catalog:",
+    "@radix-ui/react-separator": "catalog:",
+    "@radix-ui/react-slot": "catalog:",
+    "@radix-ui/react-switch": "catalog:",
+    "@radix-ui/react-tabs": "catalog:",
+    "@radix-ui/react-toast": "catalog:",
+    "@radix-ui/react-toggle": "catalog:",
+    "@radix-ui/react-tooltip": "catalog:",
+    "@radix-ui/react-visually-hidden": "catalog:",
+    "@tanstack/react-table": "catalog:",
+    "class-variance-authority": "catalog:",
+    "clsx": "catalog:",
+    "cmdk": "catalog:",
+    "embla-carousel-react": "catalog:",
+    "framer-motion": "catalog:",
+    "lucide-react": "catalog:",
+    "motion": "catalog:",
+    "next-themes": "catalog:",
+    "react-day-picker": "catalog:",
+    "react-hook-form": "catalog:",
+    "react-resizable-panels": "catalog:",
+    "sonner": "catalog:",
+    "tailwind-merge": "catalog:",
+    "tailwindcss-animate": "catalog:",
+    "vaul": "catalog:",
+    "zustand": "catalog:"
+  },
+  "devDependencies": {
+    "@kdx/eslint-config": "workspace:*",
+    "@kdx/prettier-config": "workspace:*",
+    "@kdx/shared": "workspace:*",
+    "@kdx/tsconfig": "workspace:*",
+    "@types/react": "catalog:react",
+    "@types/react-dom": "catalog:react",
+    "cobe": "catalog:",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "react": "catalog:react",
+    "react-spring": "catalog:",
+    "tailwindcss": "catalog:tailwindcss",
+    "typescript": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:react",
+    "zod": "catalog:"
+  },
+  "prettier": "@kdx/prettier-config"
+}

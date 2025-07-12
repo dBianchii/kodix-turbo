@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "baseUrl": ".",
+    "paths": {
+      "@kdx/api": ["./packages/api/src"],
+      "@kdx/auth": ["./packages/auth/src"],
+      "@kdx/db": ["./packages/db/src"],
+      "@kdx/locales": ["./packages/locales/src"],
+      "@kdx/permissions": ["./packages/permissions/src"],
+      "@kdx/shared": ["./packages/shared/src/index.ts"],
+      "@kdx/ui/*": ["./packages/ui/src/*"],
+      "@kdx/validators": ["./packages/validators/src"]
+    },
+    "incremental": true,
+    "disableSourceOfProjectReferenceRedirect": true,
+    "tsBuildInfoFile": "${configDir}/.cache/tsbuildinfo.json",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "checkJs": true,
+    "module": "Preserve",
+    "moduleResolution": "Bundler",
+    "noEmit": true
+  },
+  "exclude": ["node_modules", "build", "dist", ".next", ".expo"]
+}

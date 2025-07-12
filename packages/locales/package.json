@@ -1,0 +1,38 @@
+{
+  "name": "@kdx/locales",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./next-intl/hooks": "./src/next-intl/hooks/index.ts",
+    "./next-intl/server-hooks": "./src/next-intl/hooks/server-hooks.ts",
+    "./use-intl": "./src/use-intl/index.ts",
+    "./messages/care-expo": "./src/messages/_exports/care-expo.ts"
+  },
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+  },
+  "dependencies": {
+    "@kdx/shared": "workspace:*",
+    "react": "catalog:react"
+  },
+  "devDependencies": {
+    "@kdx/eslint-config": "workspace:*",
+    "@kdx/prettier-config": "workspace:*",
+    "@kdx/tsconfig": "workspace:*",
+    "@types/react": "catalog:react",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:"
+  },
+  "peerDependencies": {
+    "next-intl": "^3.25.1",
+    "use-intl": "^3.20.0"
+  },
+  "prettier": "@kdx/prettier-config"
+}

@@ -1,0 +1,124 @@
+
+> kodix-turbo@ dev:kdx /Users/mahadevadas/Documents/Kodix/kodix-turbo
+> turbo watch dev studio -F @kdx/kdx... @kdx/db-dev#dev
+
+turbo 2.5.4
+
+• Packages in scope: @kdx/api, @kdx/auth, @kdx/dayjs, @kdx/db, @kdx/eslint-config, @kdx/kdx, @kdx/locales, @kdx/permissions, @kdx/prettier-config, @kdx/react-email, @kdx/shared, @kdx/tailwind-config, @kdx/tsconfig, @kdx/ui, @kdx/validators
+• Running dev, studio, @kdx/db-dev#dev in 15 packages
+• Remote caching disabled
+@kdx/db-dev:dev: cache bypass, force executing 704e151e21a31214
+@kdx/db:studio: cache bypass, force executing 1c284904c93bb846
+@kdx/shared:dev: cache bypass, force executing c8bb20ce8ac03967
+@kdx/kdx:dev: cache bypass, force executing 5205f6147aa6405d
+@kdx/db-dev:dev: 
+@kdx/db-dev:dev: > @kdx/db-dev@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db-dev
+@kdx/db-dev:dev: > trap 'docker compose stop' EXIT; docker compose up --build
+@kdx/db-dev:dev: 
+@kdx/db:studio: 
+@kdx/db:studio: > @kdx/db@0.1.0 studio /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:studio: > pnpm wait-for-db && pnpm with-env drizzle-kit studio
+@kdx/db:studio: 
+@kdx/shared:dev: 
+@kdx/shared:dev: > @kdx/shared@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/shared
+@kdx/shared:dev: > tsc
+@kdx/shared:dev: 
+@kdx/kdx:dev: 
+@kdx/kdx:dev: > @kdx/kdx@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/apps/kdx
+@kdx/kdx:dev: > pnpm with-env next dev --turbo --port 3000
+@kdx/kdx:dev: 
+@kdx/db:studio: 
+@kdx/db:studio: > @kdx/db@0.1.0 wait-for-db /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:studio: > while ! nc -z localhost 3306; do sleep 1; done
+@kdx/db:studio: 
+@kdx/db:studio: Connection to localhost port 3306 [tcp/mysql] succeeded!
+@kdx/kdx:dev: 
+@kdx/kdx:dev: > @kdx/kdx@0.1.0 with-env /Users/mahadevadas/Documents/Kodix/kodix-turbo/apps/kdx
+@kdx/kdx:dev: > dotenv -e ../../.env -- "next" "dev" "--turbo" "--port" "3000"
+@kdx/kdx:dev: 
+@kdx/db-dev:dev:  Container kodix-db-serverless-redis-http-1  Running
+@kdx/db-dev:dev:  Container kodix-db-mysql-1  Running
+@kdx/db-dev:dev:  Container kodix-db-redis-1  Running
+@kdx/db-dev:dev: Attaching to mysql-1, redis-1, serverless-redis-http-1
+@kdx/db:studio: 
+@kdx/db:studio: > @kdx/db@0.1.0 with-env /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:studio: > dotenv -e ../../.env -- "drizzle-kit" "studio"
+@kdx/db:studio: 
+@kdx/db:studio: No config path provided, using default 'drizzle.config.ts'
+@kdx/db:studio: Reading config file '/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db/drizzle.config.ts'
+@kdx/db:dev: cache bypass, force executing 7f1cdab8e8916c3b
+@kdx/ui:dev: cache bypass, force executing 436a0fdc0a7e007d
+@kdx/db:dev: 
+@kdx/db:dev: > @kdx/db@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db
+@kdx/db:dev: > tsc
+@kdx/db:dev: 
+@kdx/ui:dev: 
+@kdx/ui:dev: > @kdx/ui@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/ui
+@kdx/ui:dev: > tsc
+@kdx/ui:dev: 
+@kdx/db:studio: 
+@kdx/db:studio:  Warning  Drizzle Studio is currently in Beta. If you find anything that is not working as expected or should be improved, feel free to create an issue on GitHub: https://github.com/drizzle-team/drizzle-kit-mirror/issues/new or write to us on Discord: https://discord.gg/WcRKz2FFxN
+@kdx/db:studio: node:events:496
+@kdx/db:studio:       throw er; // Unhandled 'error' event
+@kdx/db:studio:       ^
+@kdx/db:studio: 
+@kdx/db:studio: Error: listen EADDRINUSE: address already in use 127.0.0.1:4983
+@kdx/db:studio:     at Server.setupListenHandle [as _listen2] (node:net:1908:16)
+@kdx/db:studio:     at listenInCluster (node:net:1965:12)
+@kdx/db:studio:     at doListen (node:net:2139:7)
+@kdx/db:studio:     at process.processTicksAndRejections (node:internal/process/task_queues:83:21)
+@kdx/db:studio: Emitted 'error' event on Server instance at:
+@kdx/db:studio:     at emitErrorNT (node:net:1944:8)
+@kdx/db:studio:     at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+@kdx/db:studio:   code: 'EADDRINUSE',
+@kdx/db:studio:   errno: -48,
+@kdx/db:studio:   syscall: 'listen',
+@kdx/db:studio:   address: '127.0.0.1',
+@kdx/db:studio:   port: 4983
+@kdx/db:studio: }
+@kdx/db:studio: 
+@kdx/db:studio: Node.js v20.18.1
+@kdx/db:studio:  ELIFECYCLE  Command failed with exit code 1.
+@kdx/db:studio:  ELIFECYCLE  Command failed with exit code 1.
+@kdx/db:studio: ERROR: command finished with error: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run studio exited (1)
+@kdx/db-dev:dev: Gracefully stopping... (press Ctrl+C again to force)
+@kdx/kdx:dev: [?25h
+@kdx/db-dev:dev:  Container kodix-db-serverless-redis-http-1  Stopping
+@kdx/db-dev:dev:  Container kodix-db-mysql-1  Stopping
+@kdx/db-dev:dev:  Container kodix-db-redis-1  Stopping
+@kdx/db-dev:dev:  Container kodix-db-redis-1  Stopped
+@kdx/db#studio: command (/Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/db) /Users/mahadevadas/.nvm/versions/node/v20.18.1/bin/pnpm run studio exited (1)
+@kdx/validators:dev: cache bypass, force executing 7b1c0e1612503f66
+@kdx/permissions:dev: cache bypass, force executing 823dac10437bb23a
+@kdx/permissions:dev: 
+@kdx/permissions:dev: > @kdx/permissions@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/permissions
+@kdx/permissions:dev: > tsc
+@kdx/permissions:dev: 
+@kdx/validators:dev: 
+@kdx/validators:dev: > @kdx/validators@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/validators
+@kdx/validators:dev: > tsc
+@kdx/validators:dev: 
+@kdx/api:dev: cache bypass, force executing b0204d8aeff202f7
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: cache bypass, force executing 78c3bc125a2e8614
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: cache bypass, force executing bec0f6e0c975cb1d
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+@kdx/api:dev: cache bypass, force executing 78c3bc125a2e8614
+@kdx/api:dev: 
+@kdx/api:dev: > @kdx/api@0.1.0 dev /Users/mahadevadas/Documents/Kodix/kodix-turbo/packages/api
+@kdx/api:dev: > tsc
+@kdx/api:dev: 
+ WARNING  could not start shutdown, exiting
+  x Watch interrupted due to signal.
+
+ ELIFECYCLE  Command failed.

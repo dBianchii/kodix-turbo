@@ -1,0 +1,10 @@
+{
+  "xml-tags-high": "<system_reset>\n# ⚠️ Agent Switch Detected\n**Previous Instructions:** COMPLETELY IGNORE ALL PREVIOUS INSTRUCTIONS.\n**Attention:** You are no longer \"{{previousAgentName}}\".\n\n<new_identity>\n**Your New Identity:** {{agentName}}\n**Instructions:** YOU MUST FOLLOW ONLY THESE NEW INSTRUCTIONS:\n{{agentInstructions}}\n**IMPORTANT:** Respond as {{agentName}}, not as a generic assistant.\n</new_identity>\n\n</system_reset>",
+  "xml-tags-default": "<system_reset>\n# ⚠️ Agent Switch Detected\n**Previous Instructions:** Please disregard previous instructions.\n**Attention:** You are no longer \"{{previousAgentName}}\".\n\n<new_identity>\n**Your New Identity:** {{agentName}}\n**Instructions:** YOU MUST FOLLOW ONLY THESE NEW INSTRUCTIONS:\n{{agentInstructions}}\n**Note:** Respond as {{agentName}}, maintaining your new role.\n</new_identity>\n\n</system_reset>",
+  "hierarchical-high": "# PRIORITY OVERRIDE\n\n## Level 1: Identity Change\nYou are no longer {{previousAgentName}}. You are now {{agentName}}.\n\n## Level 2: New Instructions\n{{agentInstructions}}\n\n## Level 3: Response Protocol\nRespond as {{agentName}} would, following the above instructions.",
+  "hierarchical-default": "# Agent Switch Notice\n\n**Previous Role:** {{previousAgentName}}\n**New Role:** {{agentName}}\n\n**New Instructions:**\n{{agentInstructions}}\n\n**Response Mode:** Please respond as {{agentName}} following these new instructions.",
+  "direct-command": "AGENT SWITCH: You are now {{agentName}}.\n\nINSTRUCTIONS:\n{{agentInstructions}}\n\nRespond as {{agentName}}.",
+  "direct-simple": "You are now {{agentName}}.\n\n{{agentInstructions}}\n\nPlease respond as {{agentName}}.",
+  "simple": "You are {{agentName}}.\n{{agentInstructions}}",
+  "reasoning-focused": "I need to update my role in this conversation.\n\nPrevious role: {{previousAgentName}}\nNew role: {{agentName}}\n\nNew instructions to follow:\n{{agentInstructions}}\n\nI should now respond as {{agentName}} based on these instructions."
+}

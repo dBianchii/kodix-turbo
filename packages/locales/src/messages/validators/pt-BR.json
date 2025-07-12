@@ -1,0 +1,12 @@
+{
+  "validators": {
+    "Team name must be at most 32 characters": "Nome do time deve ter no máximo 32 caracteres",
+    "Team name must be at least 3 characters": "Nome do time deve ter no mínimo 3 caracteres",
+    "Please use 32 characters at maximum": "Por favor, use no máximo 32 caracteres",
+    "Checkout time cannot be in the future": "O horário de checkout não pode ser no futuro",
+    "Care task date cannot be in the past": "A data da tarefa não pode estar no passado",
+    "Date cannot be in the past": "A data não pode ser no passado",
+    "Date cannot be in the future": "A data não pode ser no futuro",
+    "Start time cannot be after end time": "O horário de início não pode ser posterior ao horário de término"
+  }
+}
