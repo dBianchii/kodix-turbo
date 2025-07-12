@@ -1,12 +1,55 @@
-# Kodix AI Assistant Rules
+# Gemini CLI Rules
 
-This document contains the complete set of rules, policies, and workflows for AI assistants working in the Kodix repository. All assistants must adhere to these guidelines at all times.
+This document contains rules and guidelines specific to the Gemini CLI assistant.
+
+---
+
+## Tool Usage
+
+- **`list_directory`**: Use to explore the file system.
+- **`read_file`**: Use to read the content of a file.
+- **`search_file_content`**: Use to find specific content within files.
+- **`glob`**: Use to find files matching a pattern.
+- **`replace`**: Use for targeted text replacements.
+- **`write_file`**: Use to create new files or overwrite existing ones.
+- **`run_shell_command`**: Use to execute shell commands.
+- **`save_memory`**: Use to remember facts across sessions.
+- **`google_web_search`**: Use to search the web.
+
+---
+
+## File Operations
+
+- For small, targeted changes, prefer `replace` over `write_file`.
+- When using `replace`, always read the file first to get the exact `old_string`.
+- For creating new files or making large changes, use `write_file`.
+
+---
+
+## Shell Commands
+
+- Use `run_shell_command` to execute project scripts like `pnpm test`, `pnpm lint`, etc.
+- Be cautious with commands that modify the file system.
+
+---
+
+## PRP Workflow
+
+- Use `read_file` to read the PRP document.
+- Use the available tools to implement the requirements.
+- Refer to the universal rules for the PRP process.
+
+---
+
+# Universal AI Assistant Rules
+
+This document contains **shared behavior and context engineering rules** that apply to **all AI assistants** working in the Kodix repository, regardless of the specific platform (Cursor, Claude Code, Gemini CLI, etc.).
+
+These rules focus on **WHAT** needs to be done rather than **HOW** to implement it with specific tools.
 
 ---
 
 # 🚨 PRIORITY POLICIES
-
-<!-- AI-METADATA: category:critical-rules priority:HIGHEST enforce:ALWAYS last-updated:2025-01-06 -->
 
 **ALL AI ASSISTANTS MUST READ AND ENFORCE BEFORE ANY TASK**
 
@@ -31,7 +74,7 @@ Strict adherence to `docs/eslint/kodix-eslint-coding-rules.md`:
 - `useTRPC()` pattern (NEVER `import { api }`)
 - Never `@ts-nocheck`
 - Never `any` without validation
-- `Promise.allSettled` (NEVER `Promise.all`)
+- Prefer `Promise.allSettled` over `Promise.all` to prevent silent failures. Use `Promise.all` only when fast-failing is the explicit desired behavior.
 - Validated env vars (NEVER direct `process.env`)
 - Organize imports with `import type`
 - Database operations need WHERE clause
@@ -44,28 +87,29 @@ ENGLISH only for tRPC endpoints. Patterns: `create*`, `find*`, `update*`, `delet
 
 ### Debug Protocol ⏱ 2024-07-02
 
-1. Reflect 5-7 causes → reduce to 1-2
-2. Add logs for data tracking
-3. Use browser tools: `getConsoleLogs`, `getConsoleErrors`, `getNetworkLogs`
-4. Get server logs
-5. Deep reflection
-6. More logs if unclear
-7. Remove temp logs after fix
+Universal debugging approach (use tool-specific implementations):
+
+1. **Reflect** 5-7 causes → reduce to 1-2
+2. **Add logs** for data tracking
+3. **Browser analysis** - Use available browser debugging tools
+4. **Server logs** - Check backend logs and errors
+5. **Deep reflection** - Analyze root causes
+6. **More logs if unclear** - Add targeted logging
+7. **Remove temp logs** after fix
 
 ### Logging Policy ⏱ 2024-07-02
 
-Mandatory: Follow `docs/debug/kodix-logs-policy.md`. Register temp logs in `logs-registry.md`.
+**Mandatory**: Follow `docs/debug/kodix-logs-policy.md`. Register temporary logs in `logs-registry.md`.
 
-### Browser Tools ⏱ 2024-07-02
+### Browser Debugging ⏱ 2024-07-02
 
-1. Ask user to perform browser action
-2. Wait confirmation
-3. Use MCP tools
-   Exception: Playwright MCP allows direct actions.
+**Universal Principle**: Always verify frontend issues with browser tools before backend investigation.
+
+**Implementation**: Use your AI assistant's available browser debugging capabilities (console logs, network analysis, DOM inspection, etc.).
 
 ### Model Logging ⏱ 2024-07-02
 
-Model Selector logs working: `selectedModelId="2w0uijcrljpq"` (gpt-4.1-mini). Test selection for update/callback issues.
+Model Selector logs working: `selectedModelId="2w0uijcrljpq"` (gpt-4.1-mini). Test selection for update/callback issues using available debugging tools.
 
 ## 3. Development Workflow 🟠 HIGH
 
@@ -101,15 +145,17 @@ Use pnpm. Node.js: `pnpm env use`, Volta, fnm, Homebrew.
 
 ## 4. Monorepo Management 🟠 HIGH
 
-### File Edit Strategy ⏱ 2024-07-02
+### File Operations Strategy ⏱ 2024-07-02
 
-`edit_file` unstable for multi-file/cross-package operations.
+**Universal Principle**: Use appropriate editing strategy based on complexity:
 
-- **Level 1:** Single file, no deps → `edit_file` + verify
-- **Level 2:** Complex single file → Complete content + verify
-- **Level 3:** Multi-file/cross-package → Manual code blocks
+- **Simple Changes**: Single file, no dependencies → Use basic file editing
+- **Complex Changes**: Large files or complex logic → Use comprehensive editing approach
+- **Multi-file Changes**: Cross-package operations → Use systematic multi-file approach
 
-### User Config ⏱ 2024-07-02
+**Implementation**: Use your AI assistant's available file editing capabilities according to these principles.
+
+### User Configuration ⏱ 2024-07-02
 
 Use existing endpoints: `app.getUserAppTeamConfig`, `app.saveUserAppTeamConfig`.
 Steps: Define schema → Add `appId` → Register schema → Use endpoints.
@@ -146,29 +192,23 @@ Centralized Navigation Strategy resolved duplicate URLs. Lesson: Centralize navi
 
 ## 6. Environment & Tools 🟡 MEDIUM
 
-### Dev Environment ⏱ 2024-07-02
+### Development Environment ⏱ 2024-07-02
 
-MANDATORY script flow:
+The primary command for development is `pnpm dev:kdx`. This command uses Turborepo to coordinate and run both the Next.js application and the required Docker services (like MySQL and Redis) simultaneously.
 
-1. `sh ./scripts/stop-dev.sh`
-2. `sh ./scripts/start-dev-bg.sh`
-3. `sleep 5`
-4. `sh ./scripts/check-log-errors.sh`
-5. `sh ./scripts/check-dev-status.sh`
-   NEVER chain commands. NEVER direct `pnpm dev:kdx`.
+- **To start everything**: Run `pnpm dev:kdx` from the root.
+- **To manage services manually** (for debugging): Use `docker-compose` commands inside `packages/db-dev/`.
 
-### Browser Tools ⏱ 2024-07-02
+Refer to the `docs/architecture/development-setup.md` for more details.
 
-Strategy 1 (MCP) chosen: console logs, network requests, screenshots, DOM analysis, audits, Next.js support.
-
-### Database ⏱ 2024-07-02
+### Database Access ⏱ 2024-07-02
 
 Drizzle Studio: https://local.drizzle.studio
 
 1. `cd packages/db-dev && docker-compose up -d`
 2. `cd packages/db && pnpm studio`
 
-### Build ⏱ 2024-07-02
+### Build Process ⏱ 2024-07-02
 
 Don't use `pnpm build`. Use `pnpm dev:kdx` + TypeScript checking.
 
@@ -176,27 +216,40 @@ Don't use `pnpm build`. Use `pnpm dev:kdx` + TypeScript checking.
 
 From root: `pnpm eslint apps/kdx/` (not `--filter`).
 
-## 7. Documentation 🟢 STANDARD
+## 7. Documentation Standards 🟢 STANDARD
+
+### Context Engineering Principles ⏱ 2025-01-06
+
+**All context must live in structured `.md` files**:
+
+- Use semantic markers for AI comprehension
+- Follow progressive disclosure patterns
+- Maintain cross-tool compatibility
+- Structure information hierarchically
 
 ### Guidelines ⏱ 2024-07-02
 
-Concise, succinct, information-rich. Use lists, tables, Mermaid, bold. English only.
+Concise, succinct, information-rich. Use lists, tables, diagrams, bold formatting. English only.
 
 ### File Management ⏱ 2024-07-02
 
 Update `README.md` when adding `.md` files to `docs/` subdirectories.
 
-### Mermaid Rules ⏱ 2024-07-02
+### Diagram Standards ⏱ 2024-07-02
 
-1. Subgraph IDs mandatory: `subgraph ID ["Title"]`
-2. Link nodes only (not subgraphs)
-3. Define nodes in subgraphs
-4. Double quotes for texts
-5. Avoid special chars in IDs
+When creating diagrams:
+
+1. Use clear, descriptive labels
+2. Follow consistent formatting
+3. Include proper node definitions
+4. Use double quotes for text
+5. Avoid special characters in IDs
 
 ### Timestamps ⏱ 2024-07-02
 
-Use `mcp_date-time-tools_currentDateTimeAndTimezone` before defining dates.
+**Universal Principle**: Always get current date/time before defining dates in documentation.
+
+**Implementation**: Use your AI assistant's available date/time tools to ensure accuracy.
 
 ## 8. Language Policy 🟢 STANDARD
 
@@ -237,52 +290,15 @@ Enforcement:
 
 ---
 
-## Quick Checklist
+## 🎯 PRP Workflow Rules
 
-- [ ] Read HIGHEST PRIORITY policies
-- [ ] Understand timestamps
-- [ ] Apply priority order
-- [ ] Never skip without permission
+### Universal Commands
 
-## Common Violations
+This project uses Product Requirements Prompt (PRP) workflow with two universal commands that work in any AI assistant:
 
-1. Using `any` type
-2. Direct monorepo edits
-3. Skipping debug protocol
-4. Creating docs without planning
-5. Ignoring ESLint errors
+#### `/generate-prp` - Generate a Product Requirements Prompt
 
-## Timeline
-
-- **2024-07-02**: Initial policies
-- **2024-07-27**: TypeScript resolution
-- **2025-01-06**: Priority reorganization
-
-## Enforcement
-
-Failure results in: task rejection, review failure, delays, technical debt.
-
-**ALL POLICIES MANDATORY UNLESS USER OVERRIDE**
-
-<!-- AI-INSTRUCTIONS: Load and reference first -->
-<!-- REQUIRED-BY: [all-ai-assistants, all-development-tasks] -->
-<!-- PRIORITY: MAXIMUM -->
-
----
-
-# Kodix PRP Workflow Rules
-
-## 🎯 PRP Commands
-
-This project uses Product Requirements Prompt (PRP) workflow with two universal commands that work in any AI assistant (Cursor, Claude Code, Windsurf, etc.):
-
-### `/generate-prp` - Generate a Product Requirements Prompt
-
-**Usage**:
-
-```
-/generate-prp [feature description or INITIAL.md file]
-```
+**Usage**: `/generate-prp [feature description or INITIAL.md file]`
 
 **What it does**:
 
@@ -291,19 +307,9 @@ This project uses Product Requirements Prompt (PRP) workflow with two universal 
 3. Reviews architecture and standards
 4. Generates a comprehensive PRP document
 
-**Example**:
+#### `/execute-prp` - Execute a PRP Implementation
 
-```
-/generate-prp Add dark mode toggle to settings
-```
-
-### `/execute-prp` - Execute a PRP Implementation
-
-**Usage**:
-
-```
-/execute-prp [path to PRP document]
-```
+**Usage**: `/execute-prp [path to PRP document]`
 
 **What it does**:
 
@@ -313,13 +319,7 @@ This project uses Product Requirements Prompt (PRP) workflow with two universal 
 4. Runs tests and quality checks
 5. Ensures all acceptance criteria are met
 
-**Example**:
-
-```
-/execute-prp docs/subapps/settings/prp/dark-mode-toggle.md
-```
-
-## 📋 PRP Workflow Process
+### PRP Workflow Process
 
 ```mermaid
 graph LR
@@ -332,16 +332,16 @@ graph LR
     G --> H[Ready to Ship]
 ```
 
-## 🔧 Implementation Instructions
+### Implementation Instructions
 
 When you see these commands:
 
-1. **Read the command definition**: Check `.cursor/commands/[command-name].md`
+1. **Read the command definition**: Check `docs/context-engineering/commands/[command-name].md`
 2. **Follow the instructions**: Each command file contains step-by-step instructions
 3. **Execute as if running the command**: Perform all the steps described
 4. **Provide feedback**: Show progress and results as specified
 
-## 📁 Command Definitions
+### Command Definitions
 
 The actual command logic is defined in:
 
@@ -349,42 +349,6 @@ The actual command logic is defined in:
 - `docs/context-engineering/commands/execute-prp.md` - PRP execution logic
 
 These are **instruction files** for AI assistants, not executable scripts. They work universally across all AI coding assistants.
-
-## ⚡ Quick Reference
-
-### Creating a Feature Request
-
-Create an `INITIAL.md` file with:
-
-```markdown
-## FEATURE:
-
-[What you want to build]
-
-## CONTEXT:
-
-[Why it's needed]
-
-## USERS:
-
-[Who will use it]
-
-## STACK:
-
-[Technologies involved]
-
-## EXAMPLES:
-
-[Reference existing code]
-
-## DOCUMENTATION:
-
-[Relevant docs/APIs]
-
-## OTHER CONSIDERATIONS:
-
-[Important details]
-```
 
 ### PRP Storage Locations
 
@@ -398,7 +362,7 @@ docs/
 └── apps/[name]/prp/         # App-specific features
 ```
 
-## 🚨 Important Kodix Rules for PRPs
+### Important Kodix Rules for PRPs
 
 1. **No Mock Data**: Always real implementations
 2. **i18n Required**: No hardcoded strings ever
@@ -407,26 +371,37 @@ docs/
 5. **Patterns**: Follow existing Kodix patterns
 6. **Quality**: Run all checks (lint, types, tests)
 
-## 🎯 Benefits
+---
 
-- **Structured Development**: Clear specifications before coding
-- **Quality Assurance**: Built-in testing and validation
-- **Pattern Consistency**: Follows Kodix architecture
-- **Time Savings**: 50% faster than ad-hoc development
-- **Documentation**: Every feature is documented
+## Quick Checklist
 
-## 📚 Examples
+- [ ] Read HIGHEST PRIORITY policies
+- [ ] Understand timestamps
+- [ ] Apply priority order
+- [ ] Never skip without permission
 
-See example INITIAL file: `docs/context-engineering/prp/INITIAL-example.md`
-See example PRP template: `docs/context-engineering/prp/templates/prp-base.md`
+## Common Violations
 
-## 🔄 Universal Compatibility
+1. Using `any` type
+2. Direct monorepo edits without strategy
+3. Skipping debug protocol
+4. Creating docs without planning
+5. Ignoring ESLint errors
 
-These commands work in:
+## Timeline
 
-- ✅ Cursor
-- ✅ Claude Code
-- ✅ Windsurf
-- ✅ Any AI assistant that supports custom commands
+- **2024-07-02**: Initial policies
+- **2024-07-27**: TypeScript resolution
+- **2025-01-06**: Cross-AI assistant compatibility
 
-The commands are tool-agnostic markdown instructions, not platform-specific scripts.
+## Enforcement
+
+Failure results in: task rejection, review failure, delays, technical debt.
+
+**ALL POLICIES MANDATORY UNLESS USER OVERRIDE**
+
+---
+
+**Last Updated**: 2025-01-06  
+**Scope**: All AI Assistants  
+**Dependencies**: None (this is the foundation)
