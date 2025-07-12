@@ -49,6 +49,54 @@ parallel_calls([
 ]);
 ```
 
+### Command Guidelines
+
+# 🛠️ Terminal Command Guidelines for AI
+
+To ensure commands are auto-executed in Cursor without manual approval, **avoid using compound shell commands** with pipes (`|`), redirections (`>`, `2>&1`), or `&&` in a single line.
+
+Cursor does not automatically approve these chained commands, even in YOLO mode with a command allowlist.
+
+---
+
+## ✅ What to do
+
+**Always prefer breaking complex shell commands into individual simple steps**, like this:
+
+```bash
+# Step 1: Run typecheck and save output to a file
+pnpm typecheck --filter=@kdx/kdx > output.txt
+
+# Step 2: Filter relevant lines using grep
+grep -E "(Found [0-9]+ errors|error TS[0-9]+)" output.txt > filtered.txt
+
+# Step 3: Count the number of matching lines
+wc -l < filtered.txt
+```
+
+---
+
+## ❌ What NOT to do
+
+Avoid using chained commands like this:
+
+```bash
+pnpm typecheck --filter=@kdx/kdx 2>&1 | grep -E "(Found [0-9]+ errors|error TS[0-9]+)" | wc -l
+```
+
+Even if `pnpm`, `grep`, and `wc` are in the command allowlist, this compound form **will pause execution and request approval**.
+
+---
+
+## 💡 Tip
+
+If absolutely necessary, consider creating reusable `.sh` scripts and allow those explicitly in your command allowlist.
+
+````
+
+Se quiser, posso também gerar esse arquivo diretamente como download ou te ajudar a incluir isso na pasta `.cursor/rules/`. Deseja?
+
+
 #### Context Window Management
 
 - **Priority Loading**: `.cursor/rules/README.md` loads first via settings.json
@@ -66,7 +114,7 @@ parallel_calls([
 3. mcp_browser-tools_getConsoleErrors()
 4. mcp_browser-tools_getConsoleLogs()
 5. mcp_browser-tools_getNetworkErrorLogs()
-```
+````
 
 #### Debugging Scenarios
 

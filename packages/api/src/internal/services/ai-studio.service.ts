@@ -1,5 +1,9 @@
 import { readFileSync } from "fs";
 import { join } from "path";
+import { createAnthropic } from "@ai-sdk/anthropic";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { createOpenAI } from "@ai-sdk/openai";
+import { streamText } from "ai";
 
 import type { KodixAppId } from "@kdx/shared";
 import { db } from "@kdx/db/client";
@@ -11,8 +15,7 @@ import {
   chatAppId,
 } from "@kdx/shared";
 
-// Importar ChatService para buscar sessão
-import { ChatService } from "./chat.service";
+// ChatService is imported but used in commented code for future reference
 import { EntityNotFoundError, ValidationError } from "./errors";
 
 // Use __dirname para Node.js environments
@@ -31,7 +34,7 @@ const PROMPT_TEMPLATES = (() => {
       string,
       string
     >;
-  } catch (error) {
+  } catch (_error) {
     console.warn(
       "Could not load prompt-templates.json, using inline templates",
     );
@@ -60,7 +63,8 @@ interface PromptStrategyConfig {
   strategy: PromptStrategy;
 }
 
-interface TemplateParams {
+// Template parameters interface - kept for future use
+interface _TemplateParams {
   agentName: string;
   agentInstructions: string;
   previousAgentName?: string;
@@ -143,8 +147,8 @@ export class AiStudioService {
     if (teamConfigResult?.config) {
       try {
         teamConfig = aiStudioConfigSchema.parse(teamConfigResult.config);
-      } catch (error) {
-        console.error("Failed to parse AI Studio TEAM config:", error);
+      } catch (_error) {
+        console.error("Failed to parse AI Studio TEAM config:", _error);
       }
     }
 
@@ -154,8 +158,8 @@ export class AiStudioService {
         userConfig = aiStudioUserAppTeamConfigSchema.parse(
           userConfigResult.config,
         );
-      } catch (error) {
-        console.error("Failed to parse AI Studio USER config:", error);
+      } catch (_error) {
+        console.error("Failed to parse AI Studio USER config:", _error);
       }
     }
 
@@ -718,10 +722,10 @@ export class AiStudioService {
           specialHandling: ["direct-instructions"],
         };
       }
-    } catch (error) {
+    } catch (_error) {
       console.error(
         `❌ [AI_STUDIO_DIAGNOSTIC] Error loading prompt strategy for provider ${provider}:`,
-        error,
+        _error,
       );
     }
 
@@ -733,5 +737,169 @@ export class AiStudioService {
       contextualMemory: "medium",
       specialHandling: [],
     };
+  }
+
+  /**
+   * Creates AI provider instances for Vercel AI SDK
+   * Centralizes provider creation logic
+   */
+  private static async createAIProvider(
+    model: any,
+    token: string,
+  ): Promise<{ provider: any; modelName: string }> {
+    const providerName = model.provider.name.toLowerCase();
+    const modelConfig = model.config;
+    const modelName =
+      modelConfig?.modelId || modelConfig?.version || model.displayName;
+
+    switch (providerName) {
+      case "openai":
+        return {
+          provider: createOpenAI({
+            apiKey: token,
+            baseURL: model.provider.baseUrl || undefined,
+          })(modelName),
+          modelName,
+        };
+
+      case "anthropic":
+        return {
+          provider: createAnthropic({
+            apiKey: token,
+            baseURL: model.provider.baseUrl || undefined,
+          })(modelName),
+          modelName,
+        };
+
+      case "google":
+        return {
+          provider: createGoogleGenerativeAI({
+            apiKey: token,
+          })(modelName),
+          modelName,
+        };
+
+      default:
+        throw new Error(`Provider ${model.provider.name} not supported`);
+    }
+  }
+
+  /**
+   * Centralized streaming method for AI chat responses
+   * Encapsulates all Vercel AI SDK logic
+   */
+  static async streamChatResponse({
+    messages,
+    sessionId,
+    userId,
+    teamId,
+    modelId,
+    temperature = 0.7,
+    maxTokens = 4000,
+    onMessageSave,
+    onError,
+  }: {
+    messages: { role: "user" | "assistant" | "system"; content: string }[];
+    sessionId: string;
+    userId: string;
+    teamId: string;
+    modelId?: string;
+    temperature?: number;
+    maxTokens?: number;
+    onMessageSave?: (message: any) => Promise<void>;
+    onError?: (error: Error) => void;
+  }) {
+    try {
+      // 1. Get or determine model
+      let model;
+      if (modelId) {
+        model = await this.getModelById({
+          modelId,
+          teamId,
+          requestingApp: chatAppId,
+        });
+      } else {
+        const availableModels = await this.getAvailableModels({
+          teamId,
+          requestingApp: chatAppId,
+        });
+        if (availableModels.length === 0) {
+          throw new Error("No AI models available");
+        }
+        model = availableModels[0]!;
+      }
+
+      // 2. Get provider token
+      const providerToken = await this.getProviderToken({
+        providerId: model.providerId,
+        teamId,
+        requestingApp: chatAppId,
+      });
+
+      // 3. Create provider instance
+      const { provider: vercelModel, modelName } = await this.createAIProvider(
+        model,
+        providerToken.token,
+      );
+
+      // 4. Get system prompt (includes agent instructions if applicable)
+      const systemPrompt = await this.getSystemPrompt({
+        teamId,
+        userId,
+        sessionId,
+      });
+
+      // 5. Format messages with system prompt
+      const formattedMessages = systemPrompt
+        ? [{ role: "system" as const, content: systemPrompt }, ...messages]
+        : messages;
+
+      // 6. Execute streaming with Vercel AI SDK
+      const result = streamText({
+        model: vercelModel,
+        messages: formattedMessages,
+        temperature,
+        maxTokens,
+        onFinish: async ({ text, usage, finishReason }) => {
+          // Build metadata
+          const metadata = {
+            requestedModel: modelName,
+            actualModelUsed: modelName,
+            providerId: model.providerId,
+            providerName: model.provider.name,
+            usage: usage || null,
+            finishReason: finishReason || "stop",
+            timestamp: new Date().toISOString(),
+          };
+
+          // Call the save callback if provided
+          if (onMessageSave) {
+            await onMessageSave({
+              content: text,
+              metadata,
+            });
+          }
+        },
+        onError: (error) => {
+          console.error("[AiStudioService] Stream error:", error);
+          if (onError) {
+            onError(error instanceof Error ? error : new Error(String(error)));
+          }
+        },
+      });
+
+      // 7. Return the stream with proper headers
+      return result.toDataStreamResponse({
+        headers: {
+          "Transfer-Encoding": "chunked",
+          Connection: "keep-alive",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "X-Accel-Buffering": "no",
+        },
+      });
+    } catch (error) {
+      console.error("[AiStudioService] streamChatResponse error:", error);
+      throw error;
+    }
   }
 }

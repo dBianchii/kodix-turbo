@@ -8,6 +8,19 @@ import importPlugin from "eslint-plugin-import";
 import turboPlugin from "eslint-plugin-turbo";
 import tseslint from "typescript-eslint";
 
+export const baseRestrictedImports = [
+  { name: "zod", message: 'Import from "zod/v4" instead' },
+];
+
+export const restrictEnvAccessRestrictedImports = [
+  {
+    name: "process",
+    importNames: ["env"],
+    message:
+      "Use `import { env } from '~/env'` instead to ensure validated types.",
+  },
+];
+
 /**
  * All packages that leverage t3-env should use this rule
  */
@@ -27,12 +40,7 @@ export const restrictEnvAccess = tseslint.config(
       ],
       "no-restricted-imports": [
         "error",
-        {
-          name: "process",
-          importNames: ["env"],
-          message:
-            "Use `import { env } from '~/env'` instead to ensure validated types.",
-        },
+        { paths: restrictEnvAccessRestrictedImports },
       ],
     },
   },
@@ -40,6 +48,7 @@ export const restrictEnvAccess = tseslint.config(
 
 export const enforceDrizzleWhere = tseslint.config({
   files: ["**/*.js", "**/*.ts", "**/*.tsx"],
+  plugins: { drizzle: drizzlePlugin },
   rules: {
     "drizzle/enforce-delete-with-where": [
       "error",
@@ -55,13 +64,12 @@ export const enforceDrizzleWhere = tseslint.config({
 export default tseslint.config(
   // Ignore files not tracked by VCS and any config files
   includeIgnoreFile(path.join(import.meta.dirname, "../../.gitignore")),
-  { ignores: ["**/*.config.*", "dist"] },
+  { ignores: ["**/eslint.config.*", "dist"] },
   {
     files: ["**/*.js", "**/*.ts", "**/*.tsx"],
     plugins: {
       import: importPlugin,
       turbo: turboPlugin,
-      drizzle: drizzlePlugin,
     },
     extends: [
       eslint.configs.recommended,
@@ -95,6 +103,7 @@ export default tseslint.config(
       //* --- Added by me bellow this line --- *//
 
       "one-var": ["error", "never"],
+      "no-restricted-imports": ["warn", ...baseRestrictedImports],
       "no-restricted-syntax": [
         "error",
         {

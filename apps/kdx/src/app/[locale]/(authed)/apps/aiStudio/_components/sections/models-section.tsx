@@ -325,7 +325,7 @@ export function ModelsSection() {
     }
 
     createModelMutation.mutate({
-      displayName: data.displayName,
+      displayName: data.name,
       providerId: data.providerId,
       config: configJson,
       enabled: data.enabled,
@@ -347,7 +347,7 @@ export function ModelsSection() {
 
     updateModelMutation.mutate({
       id: modelToEdit.id,
-      name: data.name,
+      displayName: data.name,
       providerId: data.providerId,
       config: configJson,
       enabled: data.enabled,
@@ -542,7 +542,7 @@ export function ModelsSection() {
             >
               <FormField
                 control={createForm.control}
-                name="displayName"
+                name="name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Nome do Modelo</FormLabel>

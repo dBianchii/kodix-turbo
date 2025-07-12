@@ -1,10 +1,26 @@
-import baseConfig, { enforceDrizzleWhere } from "@kdx/eslint-config/base";
+import baseConfig, {
+  baseRestrictedImports,
+  enforceDrizzleWhere,
+  restrictEnvAccess,
+  restrictEnvAccessRestrictedImports,
+} from "@kdx/eslint-config/base";
 
 /** @type {import('typescript-eslint').Config} */
 export default [
-  {
-    ignores: ["dist/**"],
-  },
   ...baseConfig,
+  ...restrictEnvAccess,
   ...enforceDrizzleWhere,
+  {
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            ...baseRestrictedImports,
+            ...restrictEnvAccessRestrictedImports,
+          ],
+        },
+      ],
+    },
+  },
 ];

@@ -1,7 +1,6 @@
 {
   "name": "@kdx/eslint-config",
   "private": true,
-  "version": "0.3.0",
   "type": "module",
   "exports": {
     "./base": "./base.js",
@@ -21,7 +20,7 @@
     "eslint-plugin-import": "catalog:",
     "eslint-plugin-jsx-a11y": "catalog:",
     "eslint-plugin-react": "catalog:",
-    "eslint-plugin-react-compiler": "beta",
+    "eslint-plugin-react-compiler": "catalog:",
     "eslint-plugin-react-hooks": "catalog:react",
     "eslint-plugin-turbo": "catalog:turbo",
     "typescript-eslint": "catalog:"

@@ -1,8 +1,4 @@
 import type { NextRequest } from "next/server";
-import { createAnthropic } from "@ai-sdk/anthropic";
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
-import { createOpenAI } from "@ai-sdk/openai";
-import { streamText } from "ai";
 
 import { auth } from "@kdx/auth";
 import { chatAppId } from "@kdx/shared";
@@ -10,65 +6,39 @@ import { chatAppId } from "@kdx/shared";
 import { AiStudioService } from "../../../../../../../packages/api/src/internal/services/ai-studio.service";
 import { ChatService } from "../../../../../../../packages/api/src/internal/services/chat.service";
 
-// Helper function to create Vercel AI SDK models
-async function getVercelModel(modelId: string, teamId: string) {
-  const modelConfig = await AiStudioService.getModelById({
-    modelId,
-    teamId,
-    requestingApp: chatAppId,
-  });
+interface RequestBody {
+  chatSessionId: string;
+  messages?: {
+    role: "user" | "assistant" | "system";
+    content: string;
+  }[];
+}
 
-  const providerToken = await AiStudioService.getProviderToken({
-    providerId: modelConfig.providerId,
-    teamId,
-    requestingApp: chatAppId,
-  });
+interface Message {
+  senderRole: "user" | "ai";
+  content: string;
+}
 
-  const providerName = modelConfig.provider.name.toLowerCase();
-  const modelName =
-    (modelConfig.config as any)?.modelId ||
-    (modelConfig.config as any)?.version ||
-    modelConfig.displayName;
-
-  if (providerName === "openai") {
-    const openaiProvider = createOpenAI({
-      apiKey: providerToken.token,
-      baseURL: modelConfig.provider.baseUrl || undefined,
-    });
-    return { model: openaiProvider(modelName), modelName };
-  }
-
-  if (providerName === "anthropic") {
-    const anthropicProvider = createAnthropic({
-      apiKey: providerToken.token,
-      baseURL: modelConfig.provider.baseUrl || undefined,
-    });
-    return { model: anthropicProvider(modelName), modelName };
-  }
-
-  if (providerName === "google") {
-    const googleProvider = createGoogleGenerativeAI({
-      apiKey: providerToken.token,
-    });
-    return { model: googleProvider(modelName), modelName };
-  }
-
-  throw new Error(`Provider ${modelConfig.provider.name} not supported.`);
+interface MessageData {
+  content: string;
+  metadata: Record<string, unknown>;
 }
 
 export async function POST(request: NextRequest) {
   try {
     const authSession = await auth();
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!authSession?.user) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { id: userId, activeTeamId: teamId } = authSession.user;
-    const body = await request.json();
+
+    const body = (await request.json()) as RequestBody;
 
     const chatSessionId = body.chatSessionId;
     const lastUserMessage = body.messages
-      ?.filter((msg: any) => msg.role === "user")
+      ?.filter((msg) => msg.role === "user")
       .pop();
     const content = lastUserMessage?.content;
 
@@ -113,7 +83,7 @@ export async function POST(request: NextRequest) {
       formattedMessages.push({ role: "system", content: systemPrompt });
     }
 
-    messages.forEach((msg: any) => {
+    (messages as Message[]).forEach((msg) => {
       // Defensively check for valid content before adding to the history.
       // This prevents errors if a message with null/empty content exists in the database.
       if (typeof msg.content === "string" && msg.content.trim() !== "") {
@@ -124,66 +94,36 @@ export async function POST(request: NextRequest) {
       }
     });
 
-    const modelId =
-      session.aiModelId ||
-      (
-        await AiStudioService.getAvailableModels({
-          teamId,
-          requestingApp: chatAppId,
-        })
-      )[0]!.id;
+    const availableModels = await AiStudioService.getAvailableModels({
+      teamId,
+      requestingApp: chatAppId,
+    });
+
+    const modelId = session.aiModelId || availableModels[0]?.id;
+
+    if (!modelId) {
+      return Response.json({ error: "No models available" }, { status: 500 });
+    }
 
     if (!session.aiModelId) {
       await ChatService.updateSession(session.id, { aiModelId: modelId });
     }
 
-    const { model: vercelModel, modelName } = await getVercelModel(
-      modelId,
-      teamId,
-    );
-
-    const result = streamText({
-      model: vercelModel,
+    // Use centralized AiStudioService
+    return AiStudioService.streamChatResponse({
       messages: formattedMessages,
-      temperature: 0.7,
-      maxTokens: 4000,
-      onFinish: async ({ text, usage, finishReason }) => {
+      sessionId: session.id,
+      userId,
+      teamId,
+      modelId: session.aiModelId || modelId,
+      onMessageSave: async (messageData: MessageData) => {
         await ChatService.createMessage({
           chatSessionId: session.id,
           senderRole: "ai",
-          content: text,
+          content: messageData.content,
           status: "ok",
-          metadata: {
-            requestedModel: modelName,
-            actualModelUsed: modelName,
-            providerId: (
-              await AiStudioService.getModelById({
-                modelId,
-                teamId,
-                requestingApp: chatAppId,
-              })
-            ).providerId,
-            providerName: (
-              await AiStudioService.getModelById({
-                modelId,
-                teamId,
-                requestingApp: chatAppId,
-              })
-            ).provider.name,
-            usage: usage || null,
-            finishReason: finishReason || "stop",
-            timestamp: new Date().toISOString(),
-          },
+          metadata: messageData.metadata,
         });
-      },
-    });
-
-    return result.toDataStreamResponse({
-      headers: {
-        "Transfer-Encoding": "chunked",
-        Connection: "keep-alive",
-        "Cache-Control": "no-cache, no-store, must-revalidate",
-        "X-Accel-Buffering": "no",
       },
     });
   } catch (error) {
