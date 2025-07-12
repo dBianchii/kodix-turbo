@@ -26,6 +26,7 @@ pnpm lint
 # Verificar e corrigir automaticamente
 pnpm lint:fix
 
-# Verificar um pacote específico
-pnpm -F <package-name> lint
+# Verificar um pacote específico (NÃO use --filter)
+pnpm eslint packages/api/
+pnpm eslint apps/kdx/
 ```

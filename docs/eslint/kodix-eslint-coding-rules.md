@@ -216,8 +216,9 @@ pnpm lint:fix
 # Verificar tRPC especificamente
 pnpm check:trpc
 
-# Verificar um pacote específico
-pnpm -F <package-name> lint
+# Verificar um pacote específico (NÃO use --filter)
+pnpm eslint packages/api/
+pnpm eslint apps/kdx/
 ```
 
 ### Resultados Esperados

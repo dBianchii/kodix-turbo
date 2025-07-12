@@ -130,9 +130,6 @@ pnpm db:push
 
 # Visualizar dados
 pnpm db:studio
-
-# Gerar migration para produção (quando necessário)
-pnpm db:generate
 ```
 
 ## 🏪 **2. Criar Repositórios (Camada de Acesso a Dados)**
@@ -839,17 +836,8 @@ pnpm db:seed --only=seuRecurso
 # Aplicar mudanças do schema (desenvolvimento)
 pnpm db:push
 
-# Gerar migration (produção)
-pnpm db:generate
-
-# Aplicar migrations (produção)
-pnpm db:migrate
-
 # Visualizar dados
 pnpm db:studio
-
-# Resetar banco (cuidado!)
-pnpm db:reset
 
 # Executar seeds
 pnpm db:seed
@@ -859,10 +847,10 @@ pnpm db:seed
 
 ```bash
 # Iniciar ambiente de desenvolvimento
-pnpm dev
+pnpm dev:kdx
 
 # Verificar tipos TypeScript
-pnpm type-check
+pnpm typecheck
 
 # Executar testes
 pnpm test
@@ -1006,8 +994,9 @@ export class SeuRecursoService {
 import { outroSubAppId } from "@kdx/shared";
 
 import { SeuRecursoService } from "../../../../internal/services/seu-recurso.service";
+import { protectedProcedure, router } from "../../../../trpc";
 
-export const outroSubAppRouter = {
+export const outroSubAppRouter = router({
   usarRecurso: protectedProcedure
     .input(z.object({ recursoId: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -1021,7 +1010,7 @@ export const outroSubAppRouter = {
       // Usar o recurso na lógica do seu SubApp
       return await processarComRecurso(recurso);
     }),
-} satisfies TRPCRouterRecord;
+});
 ```
 
 > 📚 **Referência Completa**: Para padrões completos de Service Layer, consulte [SubApp Architecture](./subapp-architecture.md#-comunicação-entre-subapps-via-service-layer).
@@ -1030,7 +1019,6 @@ export const outroSubAppRouter = {
 
 - [Service Layer Patterns](./service-layer-patterns.md) - **NOVO**: Padrões de implementação de serviços.
 - [Frontend Development Guide](./frontend-guide.md)
-- [Project Documentation](../project/overview.md)
 - [Development Setup](./development-setup.md)
 
 ---

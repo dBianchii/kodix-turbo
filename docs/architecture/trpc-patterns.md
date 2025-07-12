@@ -255,7 +255,30 @@ export const kodixCareInstalledMiddleware =
 // packages/api/src/trpc/routers/app/kodixCare/_router.ts
 import type { TRPCRouterRecord } from "@trpc/server";
 
-export const kodixCareRouter = {
+import {
+  ZCheckEmailForRegisterInputSchema,
+  ZDeleteCareShiftInputSchema,
+  ZEditCareShiftInputSchema,
+  ZFindOverlappingShiftsInputSchema,
+  ZSignInByPasswordInputSchema,
+} from "@kdx/validators/trpc/app/kodixCare";
+import { ZCreateCareShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare/careShift";
+
+import { kodixCareInstalledMiddleware } from "../../middlewares";
+import { protectedProcedure, publicProcedure, router } from "../../trpc";
+import { careTaskRouter } from "./careTask/_router";
+import {
+  checkEmailForRegisterHandler,
+  createCareShiftHandler,
+  deleteCareShiftHandler,
+  editCareShiftHandler,
+  findOverlappingShiftsHandler,
+  getAllCaregiversHandler,
+  getAllCareShiftsHandler,
+  signInByPasswordHandler,
+} from "./handlers";
+
+export const kodixCareRouter = router({
   careTask: careTaskRouter, // Sub-router aninhado
 
   // Endpoints públicos
@@ -292,14 +315,24 @@ export const kodixCareRouter = {
   deleteCareShift: protectedProcedure
     .input(ZDeleteCareShiftInputSchema)
     .mutation(deleteCareShiftHandler),
-} satisfies TRPCRouterRecord;
+});
 ```
 
 ### Sub-Router (careTask)
 
 ```typescript
 // packages/api/src/trpc/routers/app/kodixCare/careTask/_router.ts
-export const careTaskRouter = {
+import { kodixCareInstalledMiddleware } from "../../../middlewares";
+import { protectedProcedure, router } from "../../../trpc";
+import {
+  createCareTaskHandler,
+  deleteCareTaskHandler,
+  editCareTaskHandler,
+  getCareTasksHandler,
+  syncCareTasksFromCalendarHandler,
+} from "./handlers";
+
+export const careTaskRouter = router({
   getCareTasks: protectedProcedure
     .input(ZGetCareTasksInputSchema)
     .use(kodixCareInstalledMiddleware)
@@ -323,7 +356,7 @@ export const careTaskRouter = {
   syncCareTasksFromCalendar: protectedProcedure
     .use(kodixCareInstalledMiddleware)
     .mutation(syncCareTasksFromCalendarHandler),
-} satisfies TRPCRouterRecord;
+});
 ```
 
 ## 📋 Padrões de Handler
@@ -406,6 +439,15 @@ export const createCareShiftHandler = async ({
 
 ```typescript
 // apps/kdx/src/app/.../hooks.ts
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
+import { toast } from "sonner";
+
+import { getErrorMessage } from "@kdx/shared";
+import { TEditCareTaskInputSchema } from "@kdx/validators";
+
+import { useTRPC } from "~/trpc/react";
+
 export const useSaveCareTaskMutation = () => {
   const trpc = useTRPC(); // ✅ Hook correto para web
   const queryClient = useQueryClient();
@@ -444,6 +486,13 @@ export const useSaveCareTaskMutation = () => {
 
 ```typescript
 // Uso em componente React (Web)
+import { useMemo } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { User } from "@kdx/auth";
+import { useTranslations } from "next-intl";
+import { useTRPC } from "~/trpc/react";
+import { useSaveCareTaskMutation } from "./hooks";
+
 export default function DataTableKodixCare({ user }: { user: User }) {
   const trpc = useTRPC(); // ✅ Hook correto
   const t = useTranslations();

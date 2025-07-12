@@ -106,8 +106,7 @@ cd packages/db-dev
 docker-compose up -d
 
 # Opção B: Só servidor (depois do Docker)
-cd apps/kdx
-pnpm dev
+pnpm dev:kdx
 ```
 
 ### Serviços Docker Disponíveis
@@ -246,16 +245,15 @@ pnpm db:studio      # Database visual interface
 # 🗄️ Database
 pnpm db:push        # Apply schema changes
 pnpm db:seed        # Populate with test data
-pnpm db:migrate     # Run migrations (production)
 
 # 🧹 Maintenance
 pnpm lint:fix       # Fix linting issues
 pnpm format:fix     # Format code
 pnpm typecheck      # Check types
+pnpm check:trpc     # Check tRPC patterns
 
 # ⚡ Tools
 pnpm trpc:new       # Generate new tRPC endpoint
-pnpm ui:add         # Add shadcn component
 pnpm turbo gen init # Create new @kdx package
 ```
 
@@ -313,10 +311,9 @@ pnpm db:studio
 
 ### Creating a New Feature
 
-1. **Read project context**: `../project/overview.md`
-2. **Check coding standards**: `./coding-standards.md`
-3. **Follow implementation guides**: `./backend-guide.md` or `./frontend-guide.md`
-4. **Test your changes**: `pnpm test`
+1. **Check coding standards**: `./coding-standards.md`
+2. **Follow implementation guides**: `./backend-guide.md` or `./frontend-guide.md`
+3. **Test your changes**: `pnpm test`
 
 ### Working with the Monorepo
 
@@ -327,7 +324,9 @@ pnpm --filter @kdx/api dev
 
 # Run commands across all packages
 pnpm build --filter="@kdx/*"
-pnpm lint --filter="./apps/*"
+
+# Lint specific package
+pnpm eslint apps/kdx/
 ```
 
 ## 🔍 Troubleshooting

@@ -87,13 +87,13 @@ graph TD
 
 ```bash
 # OBRIGATÓRIO: Executar lint específico no arquivo/componente
-pnpm lint --filter=@kdx/kdx -- --rule '@typescript-eslint/no-unused-vars: error' --rule 'unused-imports/no-unused-imports: error'
+pnpm eslint apps/kdx/ --rule '@typescript-eslint/no-unused-vars: error' --rule 'unused-imports/no-unused-imports: error'
 
 # Salvar resultado completo para análise
-pnpm lint --filter=@kdx/kdx > lint-errors-full.txt 2>&1
+pnpm eslint apps/kdx/ > lint-errors-full.txt 2>&1
 
 # Contar total de erros
-pnpm lint --filter=@kdx/kdx | grep -E "error|warning" | wc -l
+pnpm eslint apps/kdx/ | grep -E "error|warning" | wc -l
 ```
 
 #### **0.5.2 Categorização de Erros**
@@ -466,7 +466,8 @@ pnpm typecheck
 pnpm lint --fix
 
 # Verificação específica do pacote
-pnpm lint --filter=@kdx/<nome-do-pacote>
+pnpm eslint apps/kdx/
+pnpm eslint packages/db/
 ```
 
 #### **🆕 4.2 Verificação de Erros Específicos (Lição Aprendida)**
@@ -831,7 +832,7 @@ Durante a correção, se você encontrar qualquer um destes sinais, **PARE** e r
 
 Uma tarefa de correção de lint só é considerada "concluída" quando:
 
-- [ ] O comando `pnpm lint --filter=@kdx/<package>` passa com zero erros.
+- [ ] O comando `pnpm eslint <caminho-do-pacote>` passa com zero erros.
 - [ ] O comando `pnpm typecheck --filter=@kdx/<package>` passa com zero erros.
 - [ ] Todos os testes relevantes para o pacote modificado continuam passando.
 - [ ] O código novo ou refatorado segue 100% das regras em `kodix-eslint-coding-rules.md`.

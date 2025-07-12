@@ -36,7 +36,7 @@ Component/
 ### Page Structure (Next.js)
 
 ```
-app/(authenticated)/route/
+apps/kdx/src/app/[locale]/(authed)/apps/{subapp-name}/
 ├── page.tsx               # Main page component
 ├── layout.tsx             # Layout (if needed)
 ├── loading.tsx            # Loading UI
@@ -296,7 +296,7 @@ function sanitizeHtml(input: string): string {
 ```typescript
 // ✅ Good: Use tRPC middleware for protected routes
 export const protectedProcedure = publicProcedure.use(async ({ ctx, next }) => {
-  if (!ctx.session?.user) {
+  if (!ctx.auth.user) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
       message: "Not authenticated",
@@ -306,14 +306,14 @@ export const protectedProcedure = publicProcedure.use(async ({ ctx, next }) => {
   return next({
     ctx: {
       ...ctx,
-      user: ctx.session.user,
+      auth: ctx.auth,
     },
   });
 });
 
 // ✅ Good: Check permissions granularly
 export const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
-  if (!ctx.user.roles.includes("ADMIN")) {
+  if (!ctx.auth.user.roles.includes("ADMIN")) {
     throw new TRPCError({
       code: "FORBIDDEN",
       message: "Admin access required",
@@ -390,8 +390,8 @@ export const users = mysqlTable("users", {
   id: varchar("id", { length: 30 }).primaryKey().$defaultFn(createId),
   email: varchar("email", { length: 255 }).notNull().unique(),
   name: varchar("name", { length: 255 }).notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
 });
 
 // ✅ Good: Proper relationships

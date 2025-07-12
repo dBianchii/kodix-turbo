@@ -16,10 +16,7 @@ Before starting ANY development task, the AI assistant MUST:
 
 ### 1. Load Priority Documents (In Order)
 
-- [ ] Load `docs/rules/PRIORITY-POLICIES.md` **FIRST**
-- [ ] Load `docs/rules/kodix-rules.md`
-- [ ] Load `docs/rules/kodix-prp-workflow.md`
-- [ ] Load tool-specific configuration (if any)
+- [ ] Load `docs/rules/README.md` **FIRST**. This is the single source of truth for all project rules and policies.
 
 ### 2. Verify Policy Understanding
 
@@ -91,12 +88,11 @@ A properly configured AI should immediately reference specific policies with tim
 
 ## 🔗 Configuration Points
 
-Ensure these files reference PRIORITY-POLICIES.md:
+Ensure these files reference `docs/rules/README.md`:
 
-- ✅ `docs/CLAUDE.md` - Universal reference
-- ✅ `docs/rules/kodix-rules.md` - Main rules
+- ✅ `docs/ai-assistants/claude-code/CLAUDE.md` (if used) - Universal reference
 - ✅ `.cursor/rules/README.md` - Cursor reference
-- ✅ `.cursor/settings.json` - Cursor context files
+- ✅ `GEMINI.md` (if used) - Gemini CLI reference
 - ✅ Future AI tool configurations
 
 <!-- REQUIRED-BY: [all-ai-assistants] -->

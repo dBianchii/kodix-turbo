@@ -9,7 +9,7 @@ dependencies: [universal-principles.md]
 
 ## 🎯 Quick Summary
 
-Universal context engineering principles and tool-specific setup guides for AI-assisted development in the Kodix monorepo.
+Universal context engineering principles and tool-specific setup guides for AI-assisted development in the Kodix monorepo. **All AI assistants must follow the new modular rules structure**.
 
 ## 📋 Overview
 
@@ -17,7 +17,19 @@ This directory establishes **universal principles** for AI-assisted development 
 
 ### 🚨 Critical First Step
 
-Before implementing any AI assistant, ensure it loads **[Priority Policies](../rules/PRIORITY-POLICIES.md)** first. These time-stamped policies override all other rules and must be followed by all AI assistants. Use the **[Validation Checklist](./VALIDATION-CHECKLIST.md)** to verify proper policy loading.
+Before implementing any AI assistant, ensure it loads the **[Universal AI Rules](../rules/universal-ai-rules.md)** first. These time-stamped policies override all other rules and must be followed by all AI assistants. Use the **[Validation Checklist](./VALIDATION-CHECKLIST.md)** to verify proper policy loading.
+
+### 🔄 New Modular Rules Structure
+
+**IMPORTANT**: The rules system has been restructured for cross-AI assistant compatibility:
+
+- **[Universal AI Rules](../rules/universal-ai-rules.md)** - Core principles that apply to ALL AI assistants
+- **[Assistant-Specific Rules](../rules/)** - Tool-specific implementation details:
+  - `cursor-rules.md` - Cursor IDE specific patterns
+  - `gemini-rules.md` - Gemini CLI specific patterns
+  - Additional files for other AI assistants
+
+**Integration Pattern**: Every AI assistant must read Universal Rules first, then apply their specific implementation rules.
 
 ### Core Philosophy
 
@@ -41,16 +53,6 @@ Core principles that apply to ALL AI assistants:
 - **Progressive Disclosure**: Layered information architecture
 - **Cross-Tool Compatibility**: Patterns that work everywhere
 
-### **[Universal Setup Patterns](./setup-patterns.md)** 🔧 **IMPLEMENTATION GUIDE**
-
-Standard setup and integration patterns:
-
-- **Universal Setup Pattern**: Step-by-step integration process
-- **Configuration Templates**: Standard config for any AI tool
-- **[Rules Integration Guide](./rules-integration-guide.md)**: How to sync universal rules with a new assistant.
-- **Cross-Tool Migration**: Moving between AI assistants
-- **Quality Validation**: Ensuring consistent performance
-
 ### Key Universal Concepts
 
 1. **Memory & Context**: All AI assistants work better with structured documentation
@@ -60,13 +62,16 @@ Standard setup and integration patterns:
 
 ## 🔧 Tool-Specific Configurations
 
-Each AI assistant requires minimal tool-specific setup:
+Each AI assistant requires minimal tool-specific setup and follows the modular rules structure:
 
 ### Currently Supported
 
 - **[Cursor](./cursor/)** - Memory prioritization and `.mdc` configuration
+  - **Rules**: [`docs/rules/cursor-rules.md`](../rules/cursor-rules.md)
 - **[Claude Code](./claude-code/)** - Terminal-based AI with `CLAUDE.md` optimization
+  - **Rules**: To be created as `docs/rules/claude-rules.md`
 - **[Gemini CLI](./gemini-cli/)** - Google's development assistant
+  - **Rules**: [`docs/rules/gemini-rules.md`](../rules/gemini-rules.md)
 
 ### Planned Support
 
@@ -79,13 +84,14 @@ Each AI assistant requires minimal tool-specific setup:
 
 **All core knowledge belongs here:**
 
+- **[Universal AI Rules](../rules/universal-ai-rules.md)** - Shared behavior for all AI assistants
 - Architecture decisions and patterns
 - Feature specifications and implementation guides
 - Code examples and best practices
 - Business logic and project knowledge
 - Development workflows and standards
 
-### Tool-Specific (`/docs/ai-assistants/[tool]/`)
+### Tool-Specific (`/docs/ai-assistants/[tool]/` + `/docs/rules/[tool]-rules.md`)
 
 **Only minimal differences:**
 
@@ -93,6 +99,7 @@ Each AI assistant requires minimal tool-specific setup:
 - Tool-specific configuration files
 - Unique features or limitations
 - Integration validation steps
+- **Tool-specific rule implementations**
 
 ## 📊 Integration Pattern
 
@@ -100,43 +107,50 @@ Every AI assistant follows this universal pattern:
 
 ```mermaid
 graph TD
-    A["AI Assistant"] --> B["Universal Principles"]
-    B --> C["Structured Documentation"]
-    C --> D["Tool-Specific Config"]
-    D --> E["Optimized AI Assistance"]
+    A["AI Assistant"] --> B["Universal AI Rules"]
+    B --> C["Tool-Specific Rules"]
+    C --> D["Structured Documentation"]
+    D --> E["Tool-Specific Config"]
+    E --> F["Optimized AI Assistance"]
 
     style B fill:#4CAF50,stroke:#333,stroke-width:2px
+    style C fill:#2196F3,stroke:#333,stroke-width:2px
 ```
 
 ### Standard Setup Process
 
-1. **Read Universal Principles**: Understand core concepts
-2. **Reference Universal Docs**: Point AI to `/docs` directory
-3. **Apply Tool-Specific Config**: Minimal customization
-4. **Validate Integration**: Ensure proper context loading
+1. **Read Universal AI Rules**: Load `docs/rules/universal-ai-rules.md`
+2. **Apply Tool-Specific Rules**: Load `docs/rules/[tool]-rules.md`
+3. **Reference Universal Docs**: Point AI to `/docs` directory
+4. **Apply Tool-Specific Config**: Minimal customization
+5. **Validate Integration**: Ensure proper context loading
 
 ## 🚀 Quick Start
 
 ### For New AI Tools
 
 1. **Study Universal Principles**: Read `universal-principles.md`
-2. **Create Tool Directory**: `docs/ai-assistants/[tool-name]/`
-3. **Follow Integration Pattern**: Use standard setup template
-4. **Document Only Differences**: Avoid duplicating universal knowledge
+2. **Create Tool-Specific Rules**: Create `docs/rules/[tool]-rules.md`
+3. **Create Tool Directory**: `docs/ai-assistants/[tool-name]/`
+4. **Follow Integration Pattern**: Use standard setup template
+5. **Document Only Differences**: Avoid duplicating universal knowledge
 
 ### For Existing Tools
 
-1. **Validate Universal Compliance**: Check against principles
-2. **Remove Duplicated Knowledge**: Keep only tool-specific content
-3. **Update References**: Point to universal documentation
-4. **Test Cross-Tool Consistency**: Ensure same quality
+1. **Validate Universal Compliance**: Check against `universal-ai-rules.md`
+2. **Create Tool-Specific Rules**: Extract tool-specific patterns
+3. **Remove Duplicated Knowledge**: Keep only tool-specific content
+4. **Update References**: Point to universal documentation
+5. **Test Cross-Tool Consistency**: Ensure same quality
 
 ## 📚 Key Resources
 
 ### Universal Documentation
 
+- **[Universal AI Rules](../rules/universal-ai-rules.md)** - **START HERE** - Core rules for all AI assistants
+- **[Rules Index](../rules/README.md)** - Complete rules system overview
 - **[Universal Principles](./universal-principles.md)** - Core concepts for all AI tools
-- **[Rules Integration Guide](./rules-integration-guide.md)** - How to sync universal rules with a new assistant
+- **[Sync Rules Manually](./sync-rules-manually.md)** - How to sync rules with AI assistants
 - **[VALIDATION CHECKLIST](./VALIDATION-CHECKLIST.md)** - Ensure policies are loaded
 - **[Context Engineering](../context-engineering/)** - Advanced strategies
 - **[Documentation Patterns](../context-engineering/standards/)** - Writing standards
@@ -151,6 +165,7 @@ graph TD
 
 ### For Tool Integration
 
+- **Follow Modular Rules**: Universal rules first, then tool-specific
 - **Minimize Tool-Specific Content**: Keep universal knowledge in `/docs`
 - **Reference Don't Duplicate**: Link to universal docs instead of copying
 - **Focus on Setup**: Emphasize configuration and integration
@@ -163,7 +178,13 @@ graph TD
 - **Provide Rich Context**: Include examples and cross-references
 - **Maintain Standards**: Follow established patterns
 
+## 🔄 Rules Synchronization
+
+When the universal rules are updated, use the **[Sync Rules Manually](./sync-rules-manually.md)** process to propagate changes to all AI assistants.
+
+**Critical**: The source of truth is now the modular rules system in `docs/rules/`, not a single file.
+
 <!-- AI-RELATED: [universal-principles.md, context-engineering/README.md] -->
-<!-- DEPENDS-ON: [universal-principles.md] -->
+<!-- DEPENDS-ON: [universal-principles.md, ../rules/universal-ai-rules.md] -->
 <!-- REQUIRED-BY: [all-ai-assistant-tools] -->
 <!-- SEE-ALSO: [docs/README.md] -->

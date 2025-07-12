@@ -17,7 +17,7 @@ Este documento estabelece os **padrões arquiteturais oficiais** do projeto Kodi
 }
 ```
 
-**Node.js:** `20.18.1`  
+**Node.js:** `22.15.0`  
 **pnpm:** `^9.14.2`
 
 ## 🔧 **Gerenciamento de Versão do Node.js (CRÍTICO)**
@@ -41,14 +41,14 @@ nvm use  # Lê automaticamente o .nvmrc
 
 ```bash
 # ❌ Problema comum:
-WARN Unsupported engine: wanted: {"node":"20.18.1"} (current: {"node":"v20.11.1"})
+WARN Unsupported engine: wanted: {"node":"22.15.0"} (current: {"node":"v20.11.1"})
 
 # ✅ Diagnóstico:
 which node          # Ver qual Node.js está ativo
 echo $PATH          # Verificar ordem de precedência
 
 # ✅ Solução:
-nvm use 20.18.1     # Ativar versão correta
+nvm use 22.15.0     # Ativar versão correta
 ```
 
 #### **Conflito de Múltiplas Instalações**
@@ -80,20 +80,20 @@ nvm use  # Ajusta PATH automaticamente
 
 ```bash
 # Verificar ambiente atual
-node --version              # Deve mostrar v20.18.1
+node --version              # Deve mostrar v22.15.0
 which node                 # Deve apontar para nvm
 nvm current                # Confirmar versão ativa
 
 # Troubleshooting
 nvm list                   # Ver versões instaladas
-nvm alias default 20.18.1 # Definir padrão
+nvm alias default 22.15.0 # Definir padrão
 ```
 
 ### **📋 Checklist de Setup Correto**
 
 - [ ] `nvm` instalado e configurado
 - [ ] `nvm use` executa sem erros
-- [ ] `node --version` retorna `v20.18.1`
+- [ ] `node --version` retorna `v22.15.0`
 - [ ] `pnpm dev:kdx` roda sem warnings de engine
 - [ ] PATH aponta para nvm, não Homebrew
 
@@ -236,8 +236,8 @@ export const { TRPCProvider, useTRPC } = createTRPCContext<AppRouter>();
 
 // Uso nos componentes Web
 const trpc = useTRPC();
-const mutation = useMutation(trpc.app.installApp.mutationOptions());
 const query = useQuery(trpc.app.getAll.queryOptions());
+const mutation = useMutation(trpc.app.installApp.mutationOptions());
 const queryClient = useQueryClient();
 queryClient.invalidateQueries(trpc.app.getAll.pathFilter());
 ```
@@ -294,7 +294,7 @@ pnpm check:trpc
 #### **3. Regras de Arquitetura Atualizadas**
 
 ```markdown
-# docs/rules/kodix-rules.md
+# docs/eslint/kodix-eslint-coding-rules.md
 
 ## 🔧 tRPC v11 Architecture Rules (CRITICAL)
 
@@ -403,7 +403,6 @@ pnpm db:studio        # Interface visual do banco
 ```bash
 pnpm db:push          # Aplicar schema (dev)
 pnpm db:seed          # Popular dados de teste
-pnpm db:migrate       # Aplicar migrations (prod)
 ```
 
 ### **Drizzle Studio**
@@ -438,7 +437,7 @@ pnpm build            # Build completo
 
 ```bash
 # ❌ Problema
-WARN Unsupported engine: wanted: {"node":"20.18.1"}
+WARN Unsupported engine: wanted: {"node":"22.15.0"}
 
 # ✅ Solução
 nvm use
@@ -499,8 +498,8 @@ cd ../db && pnpm studio                     # 3. Iniciar Studio
 
 ```bash
 # Ambiente completo
-node --version        # v20.18.1
-nvm current          # 20.18.1
+node --version        # v22.15.0
+nvm current          # 22.15.0
 pnpm --version       # 9.14.2
 docker --version     # Docker version X.X.X
 
@@ -514,7 +513,7 @@ pnpm dev:kdx         # ✅ Sem warnings
 ### **Para Setup Inicial**
 
 - [ ] `nvm` instalado e configurado
-- [ ] Node.js v20.18.1 ativo (`nvm use`)
+- [ ] Node.js v22.15.0 ativo (`nvm use`)
 - [ ] Docker rodando (`docker ps`)
 - [ ] tRPC sem problemas (`pnpm check:trpc`)
 - [ ] Projeto inicia sem warnings (`pnpm dev:kdx`)
@@ -585,7 +584,9 @@ import { useTRPC } from "~/trpc/react";
 function MyComponent() {
   const trpc = useTRPC(); // Hook obtém o cliente com o contexto correto
 
-  const allSessionsQuery = trpc.app.chat.getAllSessions.useQuery();
+  const allSessionsQuery = useQuery(
+    trpc.app.chat.getAllSessions.queryOptions(),
+  );
   // ...
 }
 ```

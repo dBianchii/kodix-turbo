@@ -160,8 +160,9 @@ export const chatRouter = {
 
 // ✅ CORRETO - SubApp Chat acessando AI Studio via Service Layer
 import { AiStudioService } from "../../../internal/services/ai-studio.service";
+import { router, protectedProcedure } from "../../../trpc";
 
-export const chatRouter = {
+export const chatRouter = router({
   someEndpoint: protectedProcedure.query(async ({ ctx }) => {
     // ✅ CORRETO: Acesso via service com isolamento e validação
     const model = await AiStudioService.getModelById({
@@ -170,7 +171,7 @@ export const chatRouter = {
       requestingApp: chatAppId, // Para auditoria opcional
     });
   }),
-};
+});
 ```
 
 #### **2. Estrutura do Service Layer**
@@ -359,7 +360,7 @@ const chatProtectedProcedure = protectedProcedure.use(
 
 **📖 DOCUMENTAÇÃO COMPLETA:** Para informações detalhadas sobre o sistema de configurações (team e usuário), consulte:
 
-**👉 [Sistema de Configurações de SubApps](./subapp-configurations-system.md)**
+**👉 [Modelo de Configuração Hierárquica](./configuration-model.md)**
 
 ### **Resumo Rápido**
 
@@ -430,8 +431,8 @@ export const meuRecurso = mysqlTable("meu_recurso", {
   name: varchar("name", { length: 100 }).notNull(),
   teamId: varchar("teamId", { length: 30 }).notNull(),
   createdById: varchar("createdById", { length: 30 }).notNull(),
-  createdAt: datetime("createdAt").defaultNow().notNull(),
-  updatedAt: datetime("updatedAt").defaultNow().onUpdateNow().notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
 });
 ```
 
@@ -780,7 +781,6 @@ describe("AppTeamConfig - Team Isolation", () => {
 
 ## 📚 **Recursos Relacionados**
 
-- **[Service Layer Patterns](./service-layer-patterns.md)** - **NOVO**: Padrões de implementação de serviços.
 - **[Backend Development Guide](./backend-guide.md)** - Padrões backend
 - **[Frontend Development Guide](./frontend-guide.md)** - Padrões frontend
 - **[Database Documentation](../database/)** - Schemas e migrations

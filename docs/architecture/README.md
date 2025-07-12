@@ -51,14 +51,14 @@ Esta seção contém **guias técnicos** e **padrões de desenvolvimento** para 
 ### **Para Criar Nova Funcionalidade**
 
 1. **OBRIGATÓRIO**: Leia [SubApp Architecture](./subapp-architecture.md) se envolver SubApps
-2. Use [Backend Guide](./backend-guide.md) para APIs
+2. Use [Backend Guide](./backend-guide.md) para APIs e Banco de Dados
 3. Use [Frontend Guide](./frontend-guide.md) para interfaces
 4. Consulte [SubApp Architecture](./subapp-architecture.md) se for criar novos módulos
 
 ### **Para Trabalhar com Banco de Dados**
 
-1. Veja [Database Documentation](../database/) para schemas e migrations
-2. Use [Backend Guide](./backend-guide.md) para repositórios e queries
+1. Consulte a seção "Definição do Schema de Banco de Dados" no [Backend Guide](./backend-guide.md)
+2. Use o [Backend Guide](./backend-guide.md) para repositórios e queries
 
 ### **Para Setup de Ambiente**
 
@@ -88,6 +88,3 @@ Esta seção contém **guias técnicos** e **padrões de desenvolvimento** para 
 - **SubApp Architecture** é a **fonte única de verdade** para tudo relacionado a SubApps
 - **Sempre consulte** a documentação antes de implementar novas funcionalidades
 - **Mantenha** a documentação atualizada ao fazer mudanças significativas
-
-- [Backend Guide](./backend-guide.md): Padrões de desenvolvimento para o backend.
-- [Coding Standards](./coding-standards.md): Normas de codificação e estilo.

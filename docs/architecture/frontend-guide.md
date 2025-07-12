@@ -55,7 +55,7 @@ export * from "./seuRecurso";
 ```typescript
 // apps/kdx/src/hooks/use-seu-recurso.ts
 import { useMemo, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import type { SeuRecursoFilters } from "@kdx/shared/types";
 
@@ -725,6 +725,7 @@ export function SeuRecursoLista({ onNovo, onEditar, onVisualizar }: SeuRecursoLi
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTRPC } from "~/trpc/react";
 import { criarSeuRecursoSchema } from "@kdx/validators/trpc/app/seuRecurso";
 import { Button } from "@kdx/ui/button";
@@ -1235,7 +1236,7 @@ export const metadata: Metadata = {
 ### 5.1 Estados de Carregamento
 
 ````typescript
-// apps/kdx/src/app/(authenticated)/seu-recurso/components/SeuRecursoStates.tsx
+// apps/kdx/src/app/[locale]/(authed)/apps/seu-recurso/_components/SeuRecursoStates.tsx
 import { Card, CardContent } from "@kdx/ui/card";
 import { Button } from "@kdx/ui/button";
 import { Loader2, AlertCircle, RefreshCw, Plus } from "lucide-react";
@@ -1534,15 +1535,15 @@ import { useSeuRecursoList } from "../useSeuRecurso";
 
 // Mock do tRPC
 jest.mock("~/trpc/react", () => ({
-  api: {
+  useTRPC: () => ({
     app: {
       seuRecurso: {
         listar: {
-          useQuery: jest.fn(),
+          queryOptions: jest.fn(),
         },
       },
     },
-  },
+  }),
 }));
 
 describe("useSeuRecursoList", () => {
