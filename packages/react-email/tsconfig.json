@@ -1,0 +1,9 @@
+{
+  "extends": "@kdx/tsconfig/internal-package.json",
+  "compilerOptions": {
+    "lib": ["ES2022", "dom", "dom.iterable"],
+    "jsx": "preserve"
+  },
+  "include": ["*.ts", "src"],
+  "exclude": ["node_modules"]
+}

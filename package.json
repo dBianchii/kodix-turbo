@@ -1,0 +1,64 @@
+{
+  "name": "kodix-turbo",
+  "private": true,
+  "engines": {
+    "node": "22.15.0",
+    "pnpm": "^9.14.2"
+  },
+  "packageManager": "pnpm@9.14.2",
+  "scripts": {
+    "build": "turbo run build",
+    "clean": "git clean -xdf node_modules",
+    "clean:workspaces": "turbo run clean",
+    "db:push": "bash scripts/db-push-safe.sh",
+    "db:seed": "turbo @kdx/db-dev#dev @kdx/db#seed",
+    "db:studio": "turbo run studio --filter=@kdx/db",
+    "dev:kdx": "turbo watch dev studio -F @kdx/kdx... @kdx/db-dev#dev",
+    "dev:api": "turbo run dev --filter=@kdx/api...",
+    "dev:care": "turbo run dev --filter=@kdx/care-expo",
+    "dev:chat": "turbo run dev --filter=@kdx/chat",
+    "dev:db": "turbo run dev --filter=@kdx/db",
+    "dev:email": "turbo run dev --filter=@kdx/react-email",
+    "format": "turbo run format --continue -- --cache --cache-location .cache/.prettiercache",
+    "format:fix": "turbo run format --continue -- --write --cache --cache-location .cache/.prettiercache",
+    "lint": "turbo run lint --continue -- --cache --cache-location .cache/.eslintcache",
+    "lint:fix": "turbo run lint --continue -- --fix --cache --cache-location .cache/.eslintcache",
+    "lint:ws": "pnpm dlx sherif@latest",
+    "postinstall": "pnpm lint:ws",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "test:watch": "turbo run test:watch",
+    "test:chat": "bash \"scripts/test-chat-complete.sh\"",
+    "test:chat:coverage": "bash \"scripts/test-chat-complete.sh\" --coverage",
+    "test:chat:watch": "pnpm vitest \"packages/api/src/trpc/routers/app/chat/__tests__/**/*.test.ts\" \"apps/kdx/src/app/[locale]/(authed)/apps/chat/__tests__/**/*.test.{ts,tsx}\" --watch",
+    "test:chat:ui": "pnpm vitest ui \"packages/api/src/trpc/routers/app/chat/__tests__\" \"apps/kdx/src/app/[locale]/(authed)/apps/chat/__tests__\"",
+    "trpc:new": "pnpm -F trpc-cli start",
+    "check:trpc": "./scripts/check-trpc-imports.sh"
+  },
+  "devDependencies": {
+    "@ai-sdk/anthropic": "^1.2.12",
+    "@ai-sdk/openai": "^1.3.22",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
+    "@kdx/prettier-config": "workspace:*",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@turbo/gen": "catalog:turbo",
+    "ai": "^4.3.13",
+    "jsdom": "^26.1.0",
+    "prettier": "catalog:",
+    "turbo": "catalog:turbo",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "prettier": "@kdx/prettier-config",
+  "pnpm": {
+    "overrides": {
+      "react": "catalog:react",
+      "react-dom": "catalog:react",
+      "marked": "^4.3.0"
+    }
+  }
+}

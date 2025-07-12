@@ -1,0 +1,178 @@
+[
+  {
+    "modelId": "gemini-2.5-pro",
+    "pricing": {
+      "input": "1.25",
+      "output": "10.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gemini-2.5-pro-preview-05-06",
+    "pricing": {
+      "input": "1.25",
+      "output": "10.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gemini-2.5-pro-preview-03-25",
+    "pricing": {
+      "input": "1.25",
+      "output": "10.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gemini-2.5-flash",
+    "pricing": {
+      "input": "0.30",
+      "output": "2.50",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gemini-2.5-flash-preview-04-17",
+    "pricing": {
+      "input": "0.30",
+      "output": "2.50",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gemini-2.5-flash-preview-05-20",
+    "pricing": {
+      "input": "0.30",
+      "output": "2.50",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gemini-2.5-flash-lite",
+    "pricing": {
+      "input": "0.10",
+      "output": "0.40",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gemini-2.5-flash-lite-preview-06-17",
+    "pricing": {
+      "input": "0.10",
+      "output": "0.40",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gemini-2.0-flash",
+    "pricing": {
+      "input": "0.10",
+      "output": "0.40",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gemini-2.0-flash-experimental",
+    "pricing": {
+      "input": "0.10",
+      "output": "0.40",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gemini-2.0-flash-lite",
+    "pricing": {
+      "input": "0.075",
+      "output": "0.30",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gemini-2.0-flash-lite-preview",
+    "pricing": {
+      "input": "0.075",
+      "output": "0.30",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gemini-2.0-flash-lite-preview-02-05",
+    "pricing": {
+      "input": "0.075",
+      "output": "0.30",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gemini-2.0-pro-experimental-02-05",
+    "pricing": {
+      "input": "1.25",
+      "output": "5.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gemini-2.0-pro-experimental",
+    "pricing": {
+      "input": "1.25",
+      "output": "5.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gemini-1.5-pro",
+    "pricing": {
+      "input": "1.25",
+      "output": "5.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gemini-1.5-pro-latest",
+    "pricing": {
+      "input": "1.25",
+      "output": "5.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gemini-1.5-flash",
+    "pricing": {
+      "input": "0.075",
+      "output": "0.30",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gemini-1.5-flash-latest",
+    "pricing": {
+      "input": "0.075",
+      "output": "0.30",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gemini-1.5-flash-8b",
+    "pricing": {
+      "input": "0.0375",
+      "output": "0.15",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gemini-1.5-flash-8b-latest",
+    "pricing": {
+      "input": "0.0375",
+      "output": "0.15",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gemini-1.0-pro",
+    "pricing": {
+      "input": "0.50",
+      "output": "1.50",
+      "unit": "per_million_tokens"
+    }
+  }
+]

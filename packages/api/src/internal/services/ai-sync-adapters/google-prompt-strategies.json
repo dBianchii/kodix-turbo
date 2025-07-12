@@ -1,0 +1,230 @@
+[
+  {
+    "modelId": "gemini-2.5-pro",
+    "strategy": {
+      "type": "google-advanced",
+      "agentSwitchTemplate": "direct-command",
+      "assertiveness": "medium",
+      "contextualMemory": "high",
+      "specialHandling": ["command-structure", "role-assignment"]
+    }
+  },
+  {
+    "modelId": "gemini-2.5-pro-preview-05-06",
+    "strategy": {
+      "type": "google-advanced",
+      "agentSwitchTemplate": "direct-command",
+      "assertiveness": "medium",
+      "contextualMemory": "high",
+      "specialHandling": ["command-structure", "role-assignment"]
+    }
+  },
+  {
+    "modelId": "gemini-2.5-pro-preview-03-25",
+    "strategy": {
+      "type": "google-advanced",
+      "agentSwitchTemplate": "direct-command",
+      "assertiveness": "medium",
+      "contextualMemory": "high",
+      "specialHandling": ["command-structure", "role-assignment"]
+    }
+  },
+  {
+    "modelId": "gemini-2.5-flash",
+    "strategy": {
+      "type": "google-standard",
+      "agentSwitchTemplate": "direct-simple",
+      "assertiveness": "medium",
+      "contextualMemory": "medium",
+      "specialHandling": ["direct-instructions"]
+    }
+  },
+  {
+    "modelId": "gemini-2.5-flash-preview-04-17",
+    "strategy": {
+      "type": "google-standard",
+      "agentSwitchTemplate": "direct-simple",
+      "assertiveness": "medium",
+      "contextualMemory": "medium",
+      "specialHandling": ["direct-instructions"]
+    }
+  },
+  {
+    "modelId": "gemini-2.5-flash-preview-05-20",
+    "strategy": {
+      "type": "google-standard",
+      "agentSwitchTemplate": "direct-simple",
+      "assertiveness": "medium",
+      "contextualMemory": "medium",
+      "specialHandling": ["direct-instructions"]
+    }
+  },
+  {
+    "modelId": "gemini-2.5-flash-lite",
+    "strategy": {
+      "type": "google-lite",
+      "agentSwitchTemplate": "simple",
+      "assertiveness": "low",
+      "contextualMemory": "low",
+      "specialHandling": ["minimal-context"]
+    }
+  },
+  {
+    "modelId": "gemini-2.5-flash-lite-preview-06-17",
+    "strategy": {
+      "type": "google-lite",
+      "agentSwitchTemplate": "simple",
+      "assertiveness": "low",
+      "contextualMemory": "low",
+      "specialHandling": ["minimal-context"]
+    }
+  },
+  {
+    "modelId": "gemini-2.0-flash",
+    "strategy": {
+      "type": "google-standard",
+      "agentSwitchTemplate": "direct-simple",
+      "assertiveness": "medium",
+      "contextualMemory": "medium",
+      "specialHandling": ["direct-instructions"]
+    }
+  },
+  {
+    "modelId": "gemini-2.0-flash-experimental",
+    "strategy": {
+      "type": "google-standard",
+      "agentSwitchTemplate": "direct-simple",
+      "assertiveness": "medium",
+      "contextualMemory": "medium",
+      "specialHandling": ["direct-instructions", "experimental-features"]
+    }
+  },
+  {
+    "modelId": "gemini-2.0-flash-lite",
+    "strategy": {
+      "type": "google-lite",
+      "agentSwitchTemplate": "simple",
+      "assertiveness": "low",
+      "contextualMemory": "low",
+      "specialHandling": ["minimal-context"]
+    }
+  },
+  {
+    "modelId": "gemini-2.0-flash-lite-preview",
+    "strategy": {
+      "type": "google-lite",
+      "agentSwitchTemplate": "simple",
+      "assertiveness": "low",
+      "contextualMemory": "low",
+      "specialHandling": ["minimal-context"]
+    }
+  },
+  {
+    "modelId": "gemini-2.0-flash-lite-preview-02-05",
+    "strategy": {
+      "type": "google-lite",
+      "agentSwitchTemplate": "simple",
+      "assertiveness": "low",
+      "contextualMemory": "low",
+      "specialHandling": ["minimal-context"]
+    }
+  },
+  {
+    "modelId": "gemini-2.0-pro-experimental-02-05",
+    "strategy": {
+      "type": "google-advanced",
+      "agentSwitchTemplate": "direct-command",
+      "assertiveness": "medium",
+      "contextualMemory": "high",
+      "specialHandling": [
+        "command-structure",
+        "role-assignment",
+        "experimental-features"
+      ]
+    }
+  },
+  {
+    "modelId": "gemini-2.0-pro-experimental",
+    "strategy": {
+      "type": "google-advanced",
+      "agentSwitchTemplate": "direct-command",
+      "assertiveness": "medium",
+      "contextualMemory": "high",
+      "specialHandling": [
+        "command-structure",
+        "role-assignment",
+        "experimental-features"
+      ]
+    }
+  },
+  {
+    "modelId": "gemini-1.5-pro",
+    "strategy": {
+      "type": "google-advanced",
+      "agentSwitchTemplate": "direct-command",
+      "assertiveness": "medium",
+      "contextualMemory": "high",
+      "specialHandling": ["command-structure", "role-assignment"]
+    }
+  },
+  {
+    "modelId": "gemini-1.5-pro-latest",
+    "strategy": {
+      "type": "google-advanced",
+      "agentSwitchTemplate": "direct-command",
+      "assertiveness": "medium",
+      "contextualMemory": "high",
+      "specialHandling": ["command-structure", "role-assignment"]
+    }
+  },
+  {
+    "modelId": "gemini-1.5-flash",
+    "strategy": {
+      "type": "google-standard",
+      "agentSwitchTemplate": "direct-simple",
+      "assertiveness": "medium",
+      "contextualMemory": "medium",
+      "specialHandling": ["direct-instructions"]
+    }
+  },
+  {
+    "modelId": "gemini-1.5-flash-latest",
+    "strategy": {
+      "type": "google-standard",
+      "agentSwitchTemplate": "direct-simple",
+      "assertiveness": "medium",
+      "contextualMemory": "medium",
+      "specialHandling": ["direct-instructions"]
+    }
+  },
+  {
+    "modelId": "gemini-1.5-flash-8b",
+    "strategy": {
+      "type": "google-lite",
+      "agentSwitchTemplate": "simple",
+      "assertiveness": "low",
+      "contextualMemory": "low",
+      "specialHandling": ["minimal-context", "efficient-processing"]
+    }
+  },
+  {
+    "modelId": "gemini-1.5-flash-8b-latest",
+    "strategy": {
+      "type": "google-lite",
+      "agentSwitchTemplate": "simple",
+      "assertiveness": "low",
+      "contextualMemory": "low",
+      "specialHandling": ["minimal-context", "efficient-processing"]
+    }
+  },
+  {
+    "modelId": "gemini-1.0-pro",
+    "strategy": {
+      "type": "google-legacy",
+      "agentSwitchTemplate": "simple",
+      "assertiveness": "low",
+      "contextualMemory": "medium",
+      "specialHandling": ["legacy-compatibility"]
+    }
+  }
+]

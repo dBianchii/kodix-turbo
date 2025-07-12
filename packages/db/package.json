@@ -1,0 +1,84 @@
+{
+  "name": "@kdx/db",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    },
+    "./repositories": {
+      "types": "./dist/repositories/index.d.ts",
+      "default": "./src/repositories/index.ts"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "default": "./src/client.ts"
+    },
+    "./schema": {
+      "types": "./dist/schema/index.d.ts",
+      "default": "./src/schema/index.ts"
+    },
+    "./constants": {
+      "types": "./dist/constants.d.ts",
+      "default": "./src/constants.ts"
+    },
+    "./nanoid": {
+      "types": "./dist/nanoid.d.ts",
+      "default": "./src/nanoid.ts"
+    },
+    "./utils": {
+      "types": "./dist/utils.d.ts",
+      "default": "./src/utils.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "dev": "tsc",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "push": "pnpm wait-for-db && pnpm with-env drizzle-kit push",
+    "studio": "pnpm wait-for-db && pnpm with-env drizzle-kit studio",
+    "seed": "pnpm wait-for-db && pnpm with-env tsx ./scripts/seed.ts",
+    "create-schema": "tsx ./scripts/create-schema.ts",
+    "generate-nanoid": "pnpm tsx ./scripts/generate-nanoid",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
+    "wait-for-db": "while ! nc -z localhost 3306; do sleep 1; done",
+    "with-env": "dotenv -e ../../.env --",
+    "db:seed": "tsx ./src/seed/index.ts",
+    "db:seed:ai-studio": "pnpm with-env tsx ./src/seed/ai-studio.ts",
+    "db:test:ai-provider": "pnpm with-env tsx ./scripts/test-ai-provider.ts",
+    "db:apply:ai-provider-schema": "pnpm with-env tsx ./scripts/apply-ai-provider-schema.ts",
+    "db:migrate:ai-provider": "pnpm with-env tsx ./scripts/migrate-ai-provider.ts",
+    "db:rollback:ai-provider": "pnpm with-env tsx ./scripts/rollback-ai-provider.ts",
+    "db:encrypt-tokens": "pnpm with-env tsx ./scripts/encrypt-existing-tokens.ts",
+    "db:add-default-column": "pnpm with-env tsx ./scripts/add-is-default-column.ts"
+  },
+  "dependencies": {
+    "@kdx/dayjs": "workspace:*",
+    "@kdx/shared": "workspace:*",
+    "@t3-oss/env-core": "catalog:",
+    "drizzle-orm": "catalog:",
+    "mysql2": "catalog:",
+    "nanoid": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@kdx/eslint-config": "workspace:*",
+    "@kdx/prettier-config": "workspace:*",
+    "@kdx/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "dotenv": "^17.1.0",
+    "dotenv-cli": "catalog:",
+    "drizzle-kit": "catalog:",
+    "drizzle-seed": "catalog:",
+    "eslint": "catalog:",
+    "ora": "catalog:",
+    "prettier": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:"
+  },
+  "prettier": "@kdx/prettier-config"
+}

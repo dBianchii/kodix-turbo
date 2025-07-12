@@ -1,0 +1,258 @@
+[
+  {
+    "modelId": "gpt-4o",
+    "pricing": {
+      "input": "5.00",
+      "output": "15.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gpt-4o-2024-08-06",
+    "pricing": {
+      "input": "2.50",
+      "output": "10.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gpt-4o-2024-05-13",
+    "pricing": {
+      "input": "5.00",
+      "output": "15.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gpt-4o-mini",
+    "pricing": {
+      "input": "0.15",
+      "output": "0.60",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gpt-4o-mini-2024-07-18",
+    "pricing": {
+      "input": "0.15",
+      "output": "0.60",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gpt-4-turbo",
+    "pricing": {
+      "input": "10.00",
+      "output": "30.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gpt-4-turbo-2024-04-09",
+    "pricing": {
+      "input": "10.00",
+      "output": "30.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gpt-4-turbo-preview",
+    "pricing": {
+      "input": "10.00",
+      "output": "30.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gpt-4-vision-preview",
+    "pricing": {
+      "input": "10.00",
+      "output": "30.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gpt-4",
+    "pricing": {
+      "input": "30.00",
+      "output": "60.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gpt-3.5-turbo",
+    "pricing": {
+      "input": "0.50",
+      "output": "1.50",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gpt-3.5-turbo-0125",
+    "pricing": {
+      "input": "0.50",
+      "output": "1.50",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "o1-mini",
+    "pricing": {
+      "input": "1.10",
+      "output": "4.40",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "o1-mini-2025-02-27",
+    "pricing": {
+      "input": "1.10",
+      "output": "4.40",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "o1-preview",
+    "pricing": {
+      "input": "12.50",
+      "output": "25.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "o1-preview-2025-02-27",
+    "pricing": {
+      "input": "12.50",
+      "output": "25.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "o1",
+    "pricing": {
+      "input": "25.00",
+      "output": "50.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "o1-2025-02-27",
+    "pricing": {
+      "input": "25.00",
+      "output": "50.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "o1-pro",
+    "pricing": {
+      "input": "50.00",
+      "output": "100.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "o1-pro-2025-02-27",
+    "pricing": {
+      "input": "50.00",
+      "output": "100.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "o3-mini",
+    "pricing": {
+      "input": "1.10",
+      "output": "4.40",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "o3-mini-2025-04-16",
+    "pricing": {
+      "input": "1.10",
+      "output": "4.40",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gpt-4.1-nano",
+    "pricing": {
+      "input": "0.20",
+      "output": "0.80",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gpt-4.1-nano-2025-02-27",
+    "pricing": {
+      "input": "0.20",
+      "output": "0.80",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gpt-4.1-mini",
+    "pricing": {
+      "input": "0.50",
+      "output": "2.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gpt-4.1-mini-2025-02-27",
+    "pricing": {
+      "input": "0.50",
+      "output": "2.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gpt-4.1",
+    "pricing": {
+      "input": "2.00",
+      "output": "8.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gpt-4.1-2025-02-27",
+    "pricing": {
+      "input": "2.00",
+      "output": "8.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gpt-4.5-preview",
+    "pricing": {
+      "input": "75.00",
+      "output": "150.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "gpt-4.5-preview-2025-02-27",
+    "pricing": {
+      "input": "75.00",
+      "output": "150.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "o4-mini",
+    "pricing": {
+      "input": "1.10",
+      "output": "4.40",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "o4-mini-2025-04-16",
+    "pricing": {
+      "input": "1.10",
+      "output": "4.40",
+      "unit": "per_million_tokens"
+    }
+  }
+]

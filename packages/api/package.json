@@ -1,0 +1,69 @@
+{
+  "name": "@kdx/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/api/src/index.d.ts",
+      "default": "./src/index.ts"
+    },
+    "./crons/*": {
+      "types": "./dist/api/src/crons/*.ts",
+      "default": "./src/crons/*.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "dev": "tsc",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+  },
+  "dependencies": {
+    "@casl/ability": "catalog:",
+    "@kdx/auth": "workspace:*",
+    "@kdx/dayjs": "workspace:*",
+    "@kdx/db": "workspace:*",
+    "@kdx/locales": "workspace:*",
+    "@kdx/permissions": "workspace:*",
+    "@kdx/react-email": "workspace:*",
+    "@kdx/shared": "workspace:*",
+    "@kdx/validators": "workspace:*",
+    "@node-rs/argon2": "catalog:",
+    "@react-email/render": "catalog:",
+    "@trpc/server": "catalog:trpc",
+    "@upstash/qstash": "catalog:",
+    "@upstash/redis": "catalog:",
+    "deep-diff": "catalog:",
+    "expo-server-sdk": "catalog:expo",
+    "ms": "catalog:",
+    "object.groupby": "catalog:",
+    "posthog-node": "catalog:",
+    "resend": "catalog:",
+    "rrule": "catalog:",
+    "superjson": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@kdx/eslint-config": "workspace:*",
+    "@kdx/prettier-config": "workspace:*",
+    "@kdx/tailwind-config": "workspace:*",
+    "@kdx/tsconfig": "workspace:*",
+    "@types/deep-diff": "catalog:",
+    "@types/ms": "catalog:",
+    "@types/node": "catalog:",
+    "@types/object.groupby": "catalog:",
+    "@types/react": "catalog:react",
+    "@types/react-dom": "catalog:react",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:next",
+    "next-intl": "catalog:"
+  },
+  "prettier": "@kdx/prettier-config"
+}

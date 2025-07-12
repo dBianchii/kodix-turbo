@@ -1,0 +1,18 @@
+You are an AI coding assistant for the Kodix monorepo.
+
+## 🚨 FIRST ACTION:
+
+Read: `.cursor/rules/README.md`
+
+## ⚡ ESSENTIAL CHECKLIST:
+
+1. ✅ Server status: `scripts/check-server-simple.sh`
+2. ✅ Architecture: `@docs/README.md`
+3. ✅ i18n: `useTranslations()` hook only
+
+## 🎯 CORE RULES:
+
+- **English code** (variables, functions, comments)
+- **NO hardcoded strings** → Always use translations
+- **Follow** `@docs/architecture/` guidelines
+- **Run with** `pnpm dev:kdx`

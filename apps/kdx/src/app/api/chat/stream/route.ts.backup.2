@@ -1,0 +1,500 @@
+import type { NextRequest } from "next/server";
+import { createAnthropic } from "@ai-sdk/anthropic";
+import { createOpenAI } from "@ai-sdk/openai";
+import { streamText } from "ai";
+
+import { auth } from "@kdx/auth";
+import { chatAppId } from "@kdx/shared";
+
+import { AiStudioService } from "../../../../../../../packages/api/src/internal/services/ai-studio.service";
+import { ChatService } from "../../../../../../../packages/api/src/internal/services/chat.service";
+
+// Helper function to create Vercel AI SDK models
+async function getVercelModel(modelId: string, teamId: string) {
+  // Get model configuration
+  const modelConfig = await AiStudioService.getModelById({
+    modelId,
+    teamId,
+    requestingApp: chatAppId,
+  });
+
+  // Get provider token
+  const providerToken = await AiStudioService.getProviderToken({
+    providerId: modelConfig.providerId,
+    teamId,
+    requestingApp: chatAppId,
+  });
+
+  // Create provider based on type
+  const providerName = modelConfig.provider.name.toLowerCase();
+
+  // ✅ FIX: Usar a 'version' do config para compatibilidade com Vercel AI SDK.
+  // O SDK da Anthropic e outros provedores geralmente esperam o nome exato da versão.
+  const modelName = (modelConfig.config as any)?.version || modelConfig.name;
+
+  if (providerName === "openai") {
+    const openaiProvider = createOpenAI({
+      apiKey: providerToken.token,
+      baseURL: modelConfig.provider.baseUrl || undefined,
+    });
+    return {
+      model: openaiProvider(modelName),
+      modelName: modelName,
+    };
+  }
+
+  if (providerName === "anthropic") {
+    const anthropicProvider = createAnthropic({
+      apiKey: providerToken.token,
+      baseURL: modelConfig.provider.baseUrl || undefined,
+    });
+    return {
+      model: anthropicProvider(modelName),
+      modelName: modelName,
+    };
+  }
+
+  throw new Error(
+    `Provider ${modelConfig.provider.name} not supported. Supported: OpenAI, Anthropic.`,
+  );
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    // ✅ AUTENTICAÇÃO: Verificar se usuário está autenticado
+    const authSession = await auth();
+    if (!authSession?.user) {
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { id: userId, activeTeamId: teamId } = authSession.user;
+
+    const body = await request.json();
+
+    // 🔍 DEBUG: Log completo da requisição
+    console.log("🔵 [STREAM_API] POST recebido:", {
+      url: request.url,
+      method: request.method,
+      userId,
+      teamId,
+      timestamp: new Date().toISOString(),
+    });
+
+    // ✅ FIXO: Aceitar tanto formato useChat quanto formato customizado
+    let chatSessionId;
+    let content;
+    let useAgent;
+    let skipUserMessage;
+
+    if (body.messages && Array.isArray(body.messages)) {
+      // Formato useChat do Vercel AI SDK
+      console.log("🔍 [STREAM_API] Formato detectado: useChat (Vercel AI SDK)");
+      chatSessionId = body.chatSessionId;
+      useAgent = body.useAgent ?? true;
+      skipUserMessage = body.skipUserMessage ?? false;
+
+      // Extrair última mensagem do usuário
+      const lastUserMessage = body.messages
+        .filter((msg: any) => msg.role === "user")
+        .pop();
+
+      content = lastUserMessage?.content;
+
+      console.log("🔍 [STREAM_API] Mensagem extraída:", {
+        content,
+        totalMessages: body.messages.length,
+        userMessages: body.messages.filter((m: any) => m.role === "user")
+          .length,
+      });
+
+      if (!content) {
+        console.error("❌ [STREAM_API] Nenhuma mensagem do usuário encontrada");
+        return Response.json(
+          { error: "No user message found in messages array" },
+          { status: 400 },
+        );
+      }
+    } else {
+      // Formato customizado original
+      console.log("🔍 [STREAM_API] Formato detectado: customizado");
+      chatSessionId = body.chatSessionId;
+      content = body.content;
+      useAgent = body.useAgent ?? true;
+      skipUserMessage = body.skipUserMessage ?? false;
+    }
+
+    console.log("🔍 [STREAM_API] Parâmetros processados:", {
+      chatSessionId,
+      content:
+        content?.substring(0, 100) + (content?.length > 100 ? "..." : ""),
+      useAgent,
+      skipUserMessage,
+    });
+
+    if (!chatSessionId || !content) {
+      console.error("❌ [STREAM_API] Parâmetros inválidos:", {
+        chatSessionId,
+        content,
+      });
+      return Response.json(
+        { error: "Invalid parameters: chatSessionId and content are required" },
+        { status: 400 },
+      );
+    }
+
+    // Check if session exists
+    const session = await ChatService.findSessionById(chatSessionId);
+    if (!session) {
+      return Response.json({ error: "Session not found" }, { status: 404 });
+    }
+
+    // ✅ AGENTE INTEGRADO: Agente agora é incluído via AiStudioService.getSystemPrompt
+    if (session.aiAgentId || session.activeAgentId) {
+      const agentId = session.activeAgentId || session.aiAgentId;
+    }
+
+    // ✅ CORRECTION: Create user message only if not skipUserMessage
+    let userMessage;
+    let recentMessages: any[] | null = null;
+
+    if (skipUserMessage) {
+      console.log(
+        "🔄 [API] Skipping user message creation (skipUserMessage=true)",
+      );
+      // Search for the most recent user message with the same content
+      recentMessages = await ChatService.findMessagesBySession({
+        chatSessionId: session.id,
+        limite: 5,
+        offset: 0,
+        ordem: "desc",
+      });
+
+      userMessage = recentMessages.find(
+        (msg: any) => msg.senderRole === "user" && msg.content === content,
+      );
+
+      if (!userMessage) {
+        console.warn("⚠️ [API] User message not found, creating new one");
+        userMessage = await ChatService.createMessage({
+          chatSessionId: session.id,
+          senderRole: "user",
+          content,
+          status: "ok",
+        });
+      }
+    } else {
+      // Normal behavior: create new user message
+      userMessage = await ChatService.createMessage({
+        chatSessionId: session.id,
+        senderRole: "user",
+        content,
+        status: "ok",
+      });
+    }
+
+    if (!useAgent) {
+      return Response.json({
+        userMessage,
+        sessionId: session.id,
+      });
+    }
+
+    // ✅ CORRECTION: Get message history or reuse if already loaded
+    let messages;
+    if (skipUserMessage && recentMessages) {
+      // If we already loaded messages to search for user message, reuse and sort
+      messages = recentMessages.reverse(); // Reverse to chronological order
+    } else {
+      // Get history normally
+      messages = await ChatService.findMessagesBySession({
+        chatSessionId: session.id,
+        limite: 20,
+        offset: 0,
+        ordem: "asc",
+      });
+    }
+
+    // ✅ CORRECTION: Include user message only if not already included
+    const userMessageExists = messages.some(
+      (msg: any) => msg.id === userMessage?.id,
+    );
+    const allMessages = userMessageExists
+      ? messages
+      : [...messages, userMessage];
+
+    // 🚀 NATIVE VERCEL AI SDK IMPLEMENTATION
+    try {
+      // Detect user language more robustly
+      const detectUserLocale = (request: NextRequest): "pt-BR" | "en" => {
+        const cookieLocale = request.cookies.get("NEXT_LOCALE")?.value;
+        if (cookieLocale === "pt-BR" || cookieLocale === "en") {
+          return cookieLocale;
+        }
+        const pathname = request.nextUrl.pathname;
+        if (pathname.startsWith("/pt-BR")) return "pt-BR";
+        if (pathname.startsWith("/en")) return "en";
+        const acceptLanguage = request.headers.get("accept-language") || "";
+        if (acceptLanguage.includes("pt")) return "pt-BR";
+        if (acceptLanguage.includes("en")) return "en";
+        return "pt-BR";
+      };
+
+      // ✅ SISTEMA DE PROMPTS ORQUESTRADO: Usar AiStudioService.getSystemPrompt
+      // Isso inclui automaticamente: Plataforma + Time + Usuário + Agente (se ativo)
+      console.log("🎯 [STREAM_API] Buscando system prompt orquestrado...");
+      console.log("🔍 [DEBUG_AGENT] Dados da sessão para system prompt:", {
+        sessionId: session.id,
+        activeAgentId: session.activeAgentId,
+        aiAgentId: session.aiAgentId,
+        teamId,
+        userId,
+      });
+
+      let systemPrompt: string | null = null;
+      try {
+        systemPrompt = await AiStudioService.getSystemPrompt({
+          teamId,
+          userId,
+          sessionId: session.id, // ✅ CRUCIAL: Passar sessionId para incluir agente ativo
+        });
+
+        console.log("📋 [STREAM_API] System prompt obtido:", {
+          sessionId: session.id,
+          activeAgentId: session.activeAgentId,
+          systemPromptLength: systemPrompt?.length || 0,
+          systemPromptPreview: systemPrompt?.substring(0, 200) + "...",
+          containsAgentTag:
+            systemPrompt?.includes("<agent_instructions>") || false,
+        });
+
+        console.log(
+          `🎯 [STREAM_API] System prompt recebido com ${systemPrompt.length} caracteres`,
+        );
+        console.log(
+          `🎯 [STREAM_API] Primeiros 200 caracteres do prompt: ${systemPrompt.substring(0, 200)}...`,
+        );
+
+        // Verificar se há instruções de agente no prompt
+        const hasAgentInstructions = systemPrompt.includes("PRIORIDADE ALTA");
+        console.log(
+          `🎯 [STREAM_API] Prompt contém instruções de agente? ${hasAgentInstructions ? "SIM" : "NÃO"}`,
+        );
+      } catch (error) {
+        console.warn(
+          "⚠️ [STREAM_API] Erro ao obter system prompt orquestrado:",
+          error,
+        );
+        // Fallback para prompt básico se houver erro
+        const userLocale = detectUserLocale(request);
+        systemPrompt =
+          userLocale === "pt-BR"
+            ? "Você é um assistente útil e responde sempre em português brasileiro."
+            : "You are a helpful assistant and always respond in English.";
+      }
+
+      // Format messages for Vercel AI SDK
+      const formattedMessages: {
+        role: "user" | "assistant" | "system";
+        content: string;
+      }[] = [];
+
+      // ✅ SEMPRE ADICIONAR SYSTEM PROMPT ORQUESTRADO
+      // O AiStudioService já gerencia a hierarquia e precedência
+      if (systemPrompt) {
+        formattedMessages.push({
+          role: "system",
+          content: systemPrompt,
+        });
+      }
+
+      // Add all existing messages
+      allMessages.forEach((msg: any) => {
+        const role =
+          msg.senderRole === "user"
+            ? ("user" as const)
+            : msg.senderRole === "ai"
+              ? ("assistant" as const)
+              : msg.senderRole === "system"
+                ? ("system" as const)
+                : ("user" as const);
+
+        formattedMessages.push({
+          role,
+          content: msg.content,
+        });
+      });
+
+      // Get model from session or use default
+      let model;
+      if (session.aiModelId) {
+        console.log(
+          "🔍 [STREAM_API] Tentando carregar modelo da sessão:",
+          session.aiModelId,
+        );
+        try {
+          model = await AiStudioService.getModelById({
+            modelId: session.aiModelId,
+            teamId: session.teamId,
+            requestingApp: chatAppId,
+          });
+        } catch (error) {
+          // Model not found, continue to default selection
+        }
+      }
+
+      // If no model found, use default model
+      if (!model) {
+        console.log("🔍 [STREAM_API] Buscando modelo padrão...");
+        const availableModels = await AiStudioService.getAvailableModels({
+          teamId: session.teamId,
+          requestingApp: chatAppId,
+        });
+
+        if (availableModels.length === 0) {
+          throw new Error(
+            "No AI models available. Configure a model in AI Studio.",
+          );
+        }
+
+        model = availableModels[0]!;
+
+        await ChatService.updateSession(session.id, {
+          aiModelId: model.id,
+        });
+      }
+
+      // Get Vercel AI SDK native model
+      console.log("🔍 [STREAM_API] Criando modelo Vercel AI SDK...");
+      console.log("🔍 [DEBUG_MODEL] Dados do modelo:", {
+        modelId: model.id,
+        modelName: model.name,
+        providerName: model.provider?.name,
+        providerBaseUrl: model.provider?.baseUrl,
+        modelConfig: model.config,
+      });
+
+      const { model: vercelModel, modelName } = await getVercelModel(
+        model.id,
+        session.teamId,
+      );
+      console.log("✅ [STREAM_API] Modelo Vercel criado:", modelName);
+      console.log(
+        "🔍 [DEBUG_MODEL] Provider detectado:",
+        model.provider?.name?.toLowerCase(),
+      );
+
+      // 🎯 NATIVE VERCEL AI SDK STREAMING WITH LIFECYCLE CALLBACKS
+      console.log("🔍 [STREAM_API] Iniciando streamText com:", {
+        modelName,
+        messagesCount: formattedMessages.length,
+        temperature: 0.7,
+        maxTokens: 4000,
+      });
+
+      const result = streamText({
+        model: vercelModel,
+        messages: formattedMessages,
+        temperature: 0.7,
+        maxTokens: 4000,
+        // ✅ NATIVE onFinish callback for auto-save
+        onFinish: async ({ text, usage, finishReason }) => {
+          console.log("✅ [VERCEL_AI_NATIVE] Stream finished:", {
+            tokens: usage.totalTokens,
+            reason: finishReason,
+            textLength: text.length,
+            modelName,
+            providerName: model.provider?.name,
+            sessionId: session.id,
+            hasActiveAgent: !!(session.activeAgentId || session.aiAgentId),
+            agentId: session.activeAgentId || session.aiAgentId,
+          });
+
+          try {
+            // Auto-save AI message with native metadata
+            await ChatService.createMessage({
+              chatSessionId: session.id,
+              senderRole: "ai",
+              content: text,
+              status: "ok",
+              metadata: {
+                requestedModel: modelName,
+                actualModelUsed: modelName,
+                providerId: model.providerId,
+                providerName: model.provider?.name || "Unknown",
+                usage: usage || null,
+                finishReason: finishReason || "stop",
+                timestamp: new Date().toISOString(),
+                migrationStatus: "native-implementation",
+                agentId: session.activeAgentId || session.aiAgentId,
+                systemPromptUsed: systemPrompt ? "orchestrated" : "fallback",
+              },
+            });
+            console.log(
+              "💾 [VERCEL_AI_NATIVE] Message auto-saved successfully with agent metadata",
+            );
+          } catch (saveError) {
+            console.error("🔴 [VERCEL_AI_NATIVE] Auto-save error:", saveError);
+            // Don't throw error to avoid interrupting stream
+          }
+        },
+        // ✅ NATIVE onError callback for robust error handling
+        onError: (error) => {
+          console.error("🔴 [VERCEL_AI_NATIVE] Stream error:", {
+            error: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+            sessionId: session.id,
+            modelId: model.id,
+          });
+          // Error will be handled by the outer try/catch
+        },
+      });
+
+      // 🚀 CORREÇÃO FINAL: Usar toDataStreamResponse oficial do Vercel AI SDK
+      console.log(
+        "🎯 [VERCEL_AI_NATIVE] Returning toDataStreamResponse for useChat compatibility",
+      );
+
+      // 🚀 SOLUÇÃO OFICIAL: Headers específicos para resolver problemas de streaming
+      return result.toDataStreamResponse({
+        headers: {
+          "X-Powered-By": "Vercel-AI-SDK-Native",
+          "X-Migration-Status": "Complete-Native-Implementation",
+          "X-Stream-Protocol": "data-stream-native",
+          // ✅ SOLUÇÃO DOCUMENTADA: Headers para resolver streaming buffering
+          "Transfer-Encoding": "chunked",
+          Connection: "keep-alive",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "X-Accel-Buffering": "no", // Nginx: desabilita buffering
+        },
+      });
+    } catch (error) {
+      console.error(
+        "🔴 [VERCEL_AI_NATIVE] Native implementation error:",
+        error,
+      );
+      // Incluir mais detalhes do erro na resposta para debug no frontend
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      const errorStack = error instanceof Error ? error.stack : undefined;
+      return Response.json(
+        {
+          error: `Native implementation error: ${errorMessage}`,
+          stack: errorStack,
+        },
+        { status: 500 },
+      );
+    }
+  } catch (error) {
+    console.error("🔴 [API] Streaming endpoint error:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Internal server error";
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    return Response.json(
+      {
+        error: errorMessage,
+        stack: errorStack,
+      },
+      { status: 500 },
+    );
+  }
+}
