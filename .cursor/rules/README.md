@@ -2,13 +2,13 @@
 
 **Scope**: Cursor AI Assistant  
 **Last Updated**: 2025-01-06  
-**Dependencies**: [Universal AI Assistant Rules](../docs/rules/universal-ai-rules.md)
+**Dependencies**: [Universal AI Assistant Rules](../../docs/rules-ai/rules/universal-ai-rules.md)
 
 ---
 
 ## 🔗 Universal Rules Foundation
 
-**REQUIRED READING**: All Cursor users must first read and understand the [Universal AI Assistant Rules](../docs/rules/universal-ai-rules.md).
+**REQUIRED READING**: All Cursor users must first read and understand the [Universal AI Assistant Rules](../../docs/rules-ai/rules/universal-ai-rules.md).
 
 This document contains ONLY Cursor-specific implementations of those universal principles.
 
@@ -16,7 +16,7 @@ This document contains ONLY Cursor-specific implementations of those universal p
 
 ## 🛠️ Cursor Tool Implementations
 
-### File Operations Strategy ⏱ 2024-07-02
+### File Operations Strategy
 
 #### edit_file vs search_replace Decision Matrix
 
@@ -33,7 +33,7 @@ This document contains ONLY Cursor-specific implementations of those universal p
 - **Level 2:** Complex single file → Complete content + verify
 - **Level 3:** Multi-file/cross-package → Manual code blocks
 
-### Parallel Tool Call Patterns ⏱ 2024-07-02
+### Parallel Tool Call Patterns
 
 #### Information Gathering Examples
 
@@ -59,7 +59,7 @@ parallel_calls([
 - **Discovery Pattern**: Use `codebase_search` for exploration, `read_file` for details
 - **Progressive Disclosure**: Load overview → specific implementation → edge cases
 
-### MCP Browser Tools ⏱ 2024-07-02
+### MCP Browser Tools
 
 #### Console Debugging Workflow
 
@@ -90,7 +90,7 @@ getNetworkErrorLogs() → identify failed requests
 takeScreenshot() → UI state verification
 ```
 
-### Timestamps ⏱ 2024-07-02
+### Timestamps
 
 **Always use before defining dates:**
 
@@ -106,6 +106,7 @@ await mcp_date_time_tools_currentDateTimeAndTimezone();
 run_terminal_cmd("pnpm dev:kdx")          # Development
 run_terminal_cmd("pnpm typecheck")        # Validation
 run_terminal_cmd("pnpm eslint apps/kdx/") # Linting
+run_terminal_cmd("cd packages/db-dev && docker-compose up -d") # Database
 ```
 
 ### Memory & Context Tools
@@ -116,6 +117,8 @@ update_memory({
   title: "Component Pattern Discovery",
   content: "Button component uses compound pattern with hooks",
 });
+
+// Memory automatically available in context
 ```
 
 ---

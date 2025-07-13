@@ -1,6 +1,21 @@
+<!-- AI-METADATA:
+category: methodology
+complexity: intermediate
+updated: 2025-07-13
+claude-ready: true
+priority: high
+token-optimized: true
+audience: developers
+ai-context-weight: important
+-->
+
 # 2. Key Strategies for Context Management
 
+<!-- AI-CONTEXT-BOUNDARY: start -->
+
 Effective context engineering is not just about what you put in the context window, but also what you leave out, what you summarize, and how you structure it. At Kodix, we use four key strategies to manage the context lifecycle for our AI agents.
+
+> **Current Implementation Status**: These strategies represent the conceptual framework. Actual implementation varies by AI assistant and use case.
 
 ---
 
@@ -9,10 +24,11 @@ Effective context engineering is not just about what you put in the context wind
 The context window is finite and expensive. The "Write" strategy involves saving information outside of the immediate context window to a more permanent or persistent location. This prevents context loss and builds a foundation for long-term memory.
 
 - **Purpose:** To prevent loss of important information, build memory across sessions, and create a "scratchpad" for complex, multi-step tasks.
-- **Key Techniques:**
-  - **Scratchpads:** For a given task, the agent can "write down" its plan, intermediate thoughts, or partial results to a temporary location (like a state object or a temp file). This allows it to refer back to its own work without cluttering the main conversation history.
-  - **Long-Term Memory:** The agent identifies key pieces of information (e.g., a new user preference, a decision on an architectural pattern) and saves them to a persistent database. This information can then be selectively retrieved in future sessions.
-  - **Knowledge Base Updates:** In some cases, the agent can be empowered to suggest or even directly make updates to the official knowledge base (our `/docs` files), effectively contributing to its own future context.
+- **Current Implementation:**
+  - **Documentation Updates:** AI assistants can create and update documentation files, effectively persisting context for future use
+  - **PRP System:** The PRP workflow saves feature specifications and implementation details as structured documents
+  - **TODO Lists:** AI assistants use todo tracking to maintain task state across a session
+  - **Planned:** Database-backed long-term memory for user preferences and project decisions
 
 ---
 
@@ -21,11 +37,11 @@ The context window is finite and expensive. The "Write" strategy involves saving
 Once information is written down, we need an intelligent way to pull it back into the context window at the right moment. The "Select" strategy is about dynamically retrieving the most relevant pieces of information for the current task. This is the core of a dynamic RAG (Retrieval-Augmented Generation) system.
 
 - **Purpose:** To provide the agent with just-in-time, relevant information without overloading the context window with irrelevant data.
-- **Key Techniques:**
-  - **Semantic Search:** Using embeddings to find relevant documents or code snippets from our knowledge base based on the meaning of the user's query.
-  - **Keyword & File Search:** For when the agent knows exactly what it's looking for (e.g., `grep_search` for a function name, `file_search` for a specific file).
-  - **Memory Retrieval:** Querying the long-term memory store for facts or summaries related to the current user or task.
-  - **Tool Selection (RAG on Tools):** If an agent has a large number of tools, a retrieval step can be used to select only the most relevant tools for the current task, simplifying the model's decision-making process.
+- **Current Implementation:**
+  - **File Search:** AI assistants use tools like `Grep`, `Glob`, and `Read` to find relevant code and documentation
+  - **Documentation RAG:** The `/docs` directory serves as a searchable knowledge base
+  - **Context Loading:** Strategic loading of rule files (CLAUDE.md) and relevant documentation
+  - **Planned:** Vector database integration for semantic search across the entire codebase
 
 ---
 
@@ -66,4 +82,7 @@ Some tasks are too complex for a single agent with a single context window. The 
         style D fill:#cce5ff,stroke:#005c99,stroke-width:2px
     ```
 
-  - **Sandboxed Environments:** For tasks like running code, a dedicated, isolated environment (like a Docker container or a browser sandbox) is used. The main agent's context only needs to contain the code to be executed and the final result, not all the intermediate steps of the execution itself. This is highly effective for isolating token-heavy operations.
+  - **Task Isolation:** Complex tasks are broken down using the Task tool, which creates isolated execution contexts
+  - **PRP Phases:** The PRP workflow naturally isolates planning (generate-prp) from execution (execute-prp) phases
+
+<!-- AI-CONTEXT-BOUNDARY: end -->

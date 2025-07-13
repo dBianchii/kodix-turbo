@@ -1,5 +1,5 @@
 # PRP: [Feature Name]
-
+<!-- AI-CONTEXT-PRIORITY: always-include="false" summary-threshold="medium" -->
 <!-- AI-METADATA:
 category: prp
 feature: [kebab-case-feature-name]
@@ -107,7 +107,7 @@ created: [YYYY-MM-DD]
 
 - Components to use: [list components]
 
-## 🧪 Testing Requirements
+## 🧪 🧪 Testing Requirements
 
 ### Unit Tests
 
@@ -160,6 +160,10 @@ created: [YYYY-MM-DD]
 
 ## 📚 References
 
-- [Kodix SubApp Architecture](/docs/architecture/subapp-architecture.md)
+- <!-- AI-LINK: type="dependency" importance="high" -->
+<!-- AI-CONTEXT-REF: importance="high" type="architecture" -->
+[Kodix SubApp Architecture](/docs/architecture/subapp-architecture.md)
+<!-- /AI-CONTEXT-REF -->
+<!-- /AI-LINK -->
 - [Relevant existing implementation]
 - [External documentation if applicable]

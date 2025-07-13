@@ -1,3 +1,16 @@
+<!-- AI-METADATA:
+<!-- AI-CONTEXT-PRIORITY: always-include="false" summary-threshold="medium" -->category: automation
+complexity: intermediate
+updated: 2025-07-12
+claude-ready: true
+phase: 4
+priority: medium
+token-optimized: true
+audience: all
+ai-context-weight: important
+last-ai-review: 2025-07-12
+-->
+
 # Execute PRP Command
 
 When the user types `/execute-prp` followed by a PRP file path:
@@ -18,7 +31,10 @@ Read the specified PRP document and extract all sections:
 
 Using the TodoWrite tool, create a structured task list:
 
+<!-- AI-CODE-BLOCK: typescript-example -->
+<!-- AI-CODE-OPTIMIZATION: language="typescript" context="kodix-patterns" -->
 ```typescript
+// AI-CONTEXT: TypeScript implementation following Kodix patterns
 // Example task structure
 {
   todos: [
@@ -38,6 +54,8 @@ Using the TodoWrite tool, create a structured task list:
   ];
 }
 ```
+<!-- /AI-CODE-OPTIMIZATION -->
+<!-- /AI-CODE-BLOCK -->
 
 ## Step 3: Execute Implementation
 
@@ -59,7 +77,10 @@ Based on the task requirements:
 
 After each code change, run appropriate checks:
 
+<!-- AI-CODE-BLOCK: shell-command -->
+<!-- AI-CODE-OPTIMIZATION: language="bash" context="kodix-development" -->
 ```bash
+# AI-CONTEXT: Shell command for Kodix development
 # Linting
 pnpm eslint [files]
 
@@ -69,6 +90,8 @@ pnpm typecheck
 # Tests (if applicable)
 pnpm test [test-files]
 ```
+<!-- /AI-CODE-OPTIMIZATION -->
+<!-- /AI-CODE-BLOCK -->
 
 ### 3.4 Fix Issues
 
@@ -89,7 +112,10 @@ After implementing all tasks:
 
 ### 4.1 Run Full Validation
 
+<!-- AI-CODE-BLOCK: shell-command -->
+<!-- AI-CODE-OPTIMIZATION: language="bash" context="kodix-development" -->
 ```bash
+# AI-CONTEXT: Shell command for Kodix development
 # Full linting
 pnpm eslint
 
@@ -99,14 +125,19 @@ pnpm typecheck
 # Run all tests
 pnpm test
 ```
+<!-- /AI-CODE-OPTIMIZATION -->
+<!-- /AI-CODE-BLOCK -->
 
 ### 4.2 Verify Acceptance Criteria
 
 Check each acceptance criterion from the PRP:
 
 ```
+<!-- AI-PROGRESS: completed="true" verified="true" -->
 ✅ User can [action] - Verified in [component/file]
+<!-- AI-PROGRESS: completed="true" verified="true" -->
 ✅ System [behavior] - Implemented in [service/handler]
+<!-- AI-PROGRESS: completed="true" verified="true" -->
 ✅ Data is [state] - Confirmed in [test/validation]
 ```
 
@@ -125,6 +156,7 @@ Provide a comprehensive summary:
 ```
 📊 PRP Execution Complete: [Feature Name]
 
+<!-- AI-PROGRESS: completed="true" verified="true" -->
 ✅ Implementation Summary:
 - Files created: [count]
 - Files modified: [count]
@@ -136,6 +168,7 @@ Provide a comprehensive summary:
 - Backend: [list main endpoints]
 - Tests: [list test files]
 
+<!-- AI-PROGRESS: completed="true" verified="true" -->
 ✅ Acceptance Criteria Met:
 - [✓] Criterion 1
 - [✓] Criterion 2

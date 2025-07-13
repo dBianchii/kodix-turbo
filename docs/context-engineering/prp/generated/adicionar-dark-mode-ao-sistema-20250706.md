@@ -1,5 +1,5 @@
 # PRP: Adicionar dark mode ao sistema
-
+<!-- AI-CONTEXT-PRIORITY: always-include="false" summary-threshold="medium" -->
 <!-- AI-METADATA:
 category: prp
 feature: adicionar-dark-mode-ao-sistema
@@ -114,7 +114,7 @@ Todos os usuários do Kodix
 
 - Components to use: [list components]
 
-## 🧪 Testing Requirements
+## 🧪 🧪 Testing Requirements
 
 ### Unit Tests
 
@@ -167,6 +167,10 @@ Todos os usuários do Kodix
 
 ## 📚 References
 
-- [Kodix SubApp Architecture](/docs/architecture/subapp-architecture.md)
+- <!-- AI-LINK: type="dependency" importance="high" -->
+<!-- AI-CONTEXT-REF: importance="high" type="architecture" -->
+[Kodix SubApp Architecture](/docs/architecture/subapp-architecture.md)
+<!-- /AI-CONTEXT-REF -->
+<!-- /AI-LINK -->
 - [Relevant existing implementation]
 - [External documentation if applicable]

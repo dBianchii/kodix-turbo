@@ -1,0 +1,62 @@
+name: Documentation Validation
+
+on:
+  push:
+    paths:
+      - 'docs/**'
+      - 'scripts/validate-*.sh'
+  pull_request:
+    paths:
+      - 'docs/**'
+      - 'scripts/validate-*.sh'
+
+jobs:
+  validate-docs:
+    runs-on: ubuntu-latest
+    name: Validate Documentation Quality
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22.15.0'
+        cache: 'pnpm'
+        
+    - name: Install dependencies
+      run: |
+        npm install -g pnpm
+        pnpm install --frozen-lockfile
+        
+    - name: Install validation tools
+      run: |
+        npm install -g markdown-link-check
+        npm install -g markdownlint-cli
+        
+    - name: Run documentation validation
+      run: |
+        echo "🔍 Running documentation validation..."
+        ./scripts/validate-docs.sh
+        
+    - name: Run code examples validation
+      run: |
+        echo "🔍 Running code examples validation..."
+        ./scripts/validate-code-examples.sh
+        
+    - name: Check markdown lint
+      run: |
+        echo "🔍 Running markdown linting..."
+        markdownlint docs/ --ignore docs/node_modules/ --ignore docs/docs_plan/
+        
+    - name: Validate external links
+      run: |
+        echo "🔍 Checking external links..."
+        find docs/ -name "*.md" -not -path "*/node_modules/*" -not -path "*/docs_plan/*" | head -20 | xargs markdown-link-check --config .markdown-link-check.json || true
+        
+    - name: Report validation results
+      if: always()
+      run: |
+        echo "📊 Documentation validation completed"
+        echo "Check the logs above for any issues that need attention"

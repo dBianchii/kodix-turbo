@@ -1,5 +1,5 @@
 # Kodix Documentation Patterns for Context Engineering
-
+<!-- AI-CONTEXT-PRIORITY: always-include="false" summary-threshold="medium" -->
 <!-- AI-CONTEXT: Core Documentation Standards -->
 <!-- AI-PRIORITY: CRITICAL -->
 
@@ -7,8 +7,11 @@
 
 This guide defines standard patterns for writing AI-optimized documentation in the Kodix project, ensuring both human readability and machine comprehension.
 
-## 📋 Overview
+## 🔍 📋 Overview
 
+<!-- AI-COMPRESS: strategy="summary" max-tokens="150" -->
+**Quick Summary**: Key points for rapid AI context understanding.
+<!-- /AI-COMPRESS -->
 Context-engineered documentation follows specific patterns that enable AI tools to understand, navigate, and utilize information effectively. These patterns are designed to work with current tools (Cursor) and scale to future AI assistants.
 
 ### Core Principles
@@ -37,8 +40,11 @@ dependencies: [list, of, dependencies]
 
 [One-line description for AI quick reference]
 
-## 📋 Overview
+## 🔍 📋 Overview
 
+<!-- AI-COMPRESS: strategy="summary" max-tokens="150" -->
+**Quick Summary**: Key points for rapid AI context understanding.
+<!-- /AI-COMPRESS -->
 [2-3 paragraph overview with key concepts highlighted]
 
 ### Key Concepts
@@ -47,7 +53,7 @@ dependencies: [list, of, dependencies]
 - **Concept 2**: Brief explanation
 - **Concept 3**: Brief explanation
 
-## 🏗️ Architecture
+## 🏗️ 🏗️ Architecture
 
 <!-- AI-CONTEXT: Technical Architecture -->
 
@@ -59,7 +65,7 @@ dependencies: [list, of, dependencies]
 
 [Step-by-step implementation details]
 
-## 🧩 Examples
+## 📋 🧩 Examples
 
 <!-- AI-EXAMPLES: Practical Usage -->
 
@@ -127,9 +133,14 @@ dependencies: [list, of, dependencies]
 
 ### Example
 
+<!-- AI-CODE-BLOCK: typescript-example -->
+<!-- AI-CODE-OPTIMIZATION: language="typescript" context="kodix-patterns" -->
 ```typescript
+// AI-CONTEXT: TypeScript implementation following Kodix patterns
 // Annotated example showing the concept
 ```
+<!-- /AI-CODE-OPTIMIZATION -->
+<!-- /AI-CODE-BLOCK -->
 ````
 
 ````
@@ -160,7 +171,7 @@ Expected result: [What should happen]
 
 ### Pattern 3: Troubleshooting Section
 ```markdown
-## Troubleshooting
+## 🔧 Troubleshooting
 
 <!-- AI-CONTEXT: Problem-Solution Pairs -->
 
@@ -175,22 +186,32 @@ Expected result: [What should happen]
 3. If still failing, [escalation]
 
 **Code Example**:
+<!-- AI-CODE-BLOCK: typescript-example -->
+<!-- AI-CODE-OPTIMIZATION: language="typescript" context="kodix-patterns" -->
 ```typescript
+// AI-CONTEXT: TypeScript implementation following Kodix patterns
 // Solution implementation
 ````
+<!-- /AI-CODE-OPTIMIZATION -->
+<!-- /AI-CODE-BLOCK -->
 
 ````
 
 ### Pattern 4: API Documentation
 ```markdown
-## API: [Function/Endpoint Name]
+## 🔗 API: [Function/Endpoint Name]
 
 <!-- AI-CONTEXT: API Reference -->
 
 ### Signature
+<!-- AI-CODE-BLOCK: typescript-example -->
+<!-- AI-CODE-OPTIMIZATION: language="typescript" context="kodix-patterns" -->
 ```typescript
+// AI-CONTEXT: TypeScript implementation following Kodix patterns
 function functionName(param1: Type1, param2: Type2): ReturnType
 ````
+<!-- /AI-CODE-OPTIMIZATION -->
+<!-- /AI-CODE-BLOCK -->
 
 ### Parameters
 
@@ -206,10 +227,15 @@ function functionName(param1: Type1, param2: Type2): ReturnType
 
 ### Example Usage
 
+<!-- AI-CODE-BLOCK: typescript-example -->
+<!-- AI-CODE-OPTIMIZATION: language="typescript" context="kodix-patterns" -->
 ```typescript
+// AI-CONTEXT: TypeScript implementation following Kodix patterns
 // Real-world usage example
 const result = await functionName(value1, value2);
 ```
+<!-- /AI-CODE-OPTIMIZATION -->
+<!-- /AI-CODE-BLOCK -->
 
 ````
 
@@ -223,12 +249,17 @@ const result = await functionName(value1, value2);
 <!-- AI-STACK: nextjs -->
 
 ### App Router Implementation
+<!-- AI-CODE-BLOCK: typescript-example -->
+<!-- AI-CODE-OPTIMIZATION: language="typescript" context="kodix-patterns" -->
 ```typescript
+// AI-CONTEXT: TypeScript implementation following Kodix patterns
 // app/path/page.tsx
 export default async function Page() {
   // Implementation
 }
 ````
+<!-- /AI-CODE-OPTIMIZATION -->
+<!-- /AI-CODE-BLOCK -->
 
 ### Key Considerations
 
@@ -246,7 +277,10 @@ export default async function Page() {
 <!-- AI-STACK: trpc -->
 
 ### Router Definition
+<!-- AI-CODE-BLOCK: typescript-example -->
+<!-- AI-CODE-OPTIMIZATION: language="typescript" context="kodix-patterns" -->
 ```typescript
+// AI-CONTEXT: TypeScript implementation following Kodix patterns
 export const featureRouter = router({
   methodName: protectedProcedure
     .input(z.object({
@@ -257,12 +291,19 @@ export const featureRouter = router({
     }),
 });
 ````
+<!-- /AI-CODE-OPTIMIZATION -->
+<!-- /AI-CODE-BLOCK -->
 
 ### Client Usage
 
+<!-- AI-CODE-BLOCK: typescript-example -->
+<!-- AI-CODE-OPTIMIZATION: language="typescript" context="kodix-patterns" -->
 ```typescript
+// AI-CONTEXT: TypeScript implementation following Kodix patterns
 const { mutate } = api.feature.methodName.useMutation();
 ```
+<!-- /AI-CODE-OPTIMIZATION -->
+<!-- /AI-CODE-BLOCK -->
 
 ```
 
