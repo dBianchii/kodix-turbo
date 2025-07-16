@@ -1,0 +1,1027 @@
+{
+  "generatedAt": "2025-07-16T21:25:54.980Z",
+  "totalModels": 23,
+  "models": [
+    {
+      "modelId": "claude-opus-4-20250514",
+      "name": "Claude Opus 4",
+      "displayName": "Claude Opus 4",
+      "provider": "anthropic",
+      "pricing": {
+        "unit": "per_million_tokens",
+        "input": "15.00",
+        "output": "75.00"
+      },
+      "version": "4",
+      "maxTokens": 200000,
+      "contextWindow": 200000,
+      "status": "active",
+      "description": "",
+      "modelFamily": "claude",
+      "modelType": "text",
+      "modalities": [
+        "text"
+      ],
+      "releaseDate": "2025-05-14",
+      "inputFormat": [
+        "text"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools"
+      ]
+    },
+    {
+      "modelId": "claude-sonnet-4-20250514",
+      "name": "Claude Sonnet 4",
+      "displayName": "Claude Sonnet 4",
+      "provider": "anthropic",
+      "pricing": {
+        "unit": "per_million_tokens",
+        "input": "3.00",
+        "output": "15.00"
+      },
+      "version": "4",
+      "maxTokens": 200000,
+      "contextWindow": 200000,
+      "status": "active",
+      "description": "",
+      "modelFamily": "claude",
+      "modelType": "text",
+      "modalities": [
+        "text"
+      ],
+      "releaseDate": "2025-05-14",
+      "inputFormat": [
+        "text"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools"
+      ]
+    },
+    {
+      "modelId": "claude-3-5-haiku-20241022",
+      "name": "Claude Haiku 3.5",
+      "displayName": "Claude Haiku 3.5",
+      "provider": "anthropic",
+      "pricing": {
+        "unit": "per_million_tokens",
+        "input": "0.80",
+        "output": "4.00"
+      },
+      "version": "3",
+      "maxTokens": 200000,
+      "contextWindow": 200000,
+      "status": "active",
+      "description": "",
+      "modelFamily": "claude-3.5",
+      "modelType": "multimodal",
+      "modalities": [
+        "text",
+        "vision"
+      ],
+      "trainingDataCutoff": "2024-04",
+      "releaseDate": "2024-10-22",
+      "inputFormat": [
+        "text",
+        "image",
+        "vision"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "vision",
+        "image_analysis"
+      ]
+    },
+    {
+      "modelId": "gemini-2.5-pro",
+      "name": "Gemini 2.5 Pro",
+      "displayName": "Gemini 2.5 Pro",
+      "provider": "google",
+      "description": "Stable release (June 17th, 2025) of Gemini 2.5 Pro",
+      "version": "2.5",
+      "maxTokens": 1048576,
+      "contextWindow": 1048576,
+      "status": "active",
+      "modelFamily": "gemini",
+      "modelType": "multimodal",
+      "modalities": [
+        "text",
+        "vision",
+        "multimodal"
+      ],
+      "inputFormat": [
+        "text",
+        "image",
+        "video",
+        "audio"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "web_search",
+        "grounding",
+        "vision",
+        "image_analysis",
+        "video_analysis"
+      ],
+      "pricing": {
+        "unit": "per_million_tokens",
+        "input": "2.50",
+        "output": "10.00"
+      }
+    },
+    {
+      "modelId": "gemini-2.5-flash",
+      "name": "Gemini 2.5 Flash",
+      "displayName": "Gemini 2.5 Flash",
+      "provider": "google",
+      "description": "Stable version of Gemini 2.5 Flash, our mid-size multimodal model that supports up to 1 million tokens, released in June of 2025.",
+      "version": "001",
+      "maxTokens": 1048576,
+      "contextWindow": 1048576,
+      "status": "active",
+      "modelFamily": "gemini",
+      "modelType": "multimodal",
+      "modalities": [
+        "text",
+        "vision"
+      ],
+      "inputFormat": [
+        "text",
+        "image",
+        "video",
+        "audio"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "web_search",
+        "grounding",
+        "vision",
+        "image_analysis",
+        "video_analysis"
+      ],
+      "pricing": {
+        "unit": "per_million_tokens",
+        "input": "0.075",
+        "output": "0.30"
+      }
+    },
+    {
+      "modelId": "gemini-2.0-flash",
+      "name": "Gemini 2.0 Flash",
+      "displayName": "Gemini 2.0 Flash",
+      "provider": "google",
+      "description": "Gemini 2.0 Flash",
+      "version": "2.0",
+      "maxTokens": 1048576,
+      "contextWindow": 1048576,
+      "status": "active",
+      "modelFamily": "gemini-2.0",
+      "modelType": "multimodal",
+      "modalities": [
+        "text",
+        "vision"
+      ],
+      "trainingDataCutoff": "2024-08",
+      "releaseDate": "2024-12-11",
+      "inputFormat": [
+        "text",
+        "image",
+        "video",
+        "audio"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "web_search",
+        "grounding",
+        "vision",
+        "image_analysis",
+        "video_analysis"
+      ],
+      "pricing": {
+        "unit": "per_million_tokens",
+        "input": "0.10",
+        "output": "0.40"
+      }
+    },
+    {
+      "modelId": "gpt-4o",
+      "name": "Gpt 4o",
+      "displayName": "Gpt 4o",
+      "provider": "openai",
+      "maxTokens": 128000,
+      "contextWindow": 128000,
+      "status": "active",
+      "description": "",
+      "version": "",
+      "modelFamily": "gpt-4o",
+      "modelType": "multimodal",
+      "modalities": [
+        "text",
+        "vision"
+      ],
+      "trainingDataCutoff": "2023-10",
+      "releaseDate": "2024-05-13",
+      "inputFormat": [
+        "text",
+        "image",
+        "vision"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter",
+        "vision",
+        "image_analysis"
+      ],
+      "pricing": {
+        "unit": "per_million_tokens",
+        "input": "2.50",
+        "output": "10.00"
+      }
+    },
+    {
+      "modelId": "chatgpt-4o-latest",
+      "name": "Chatgpt 4o Latest",
+      "displayName": "Chatgpt 4o Latest",
+      "provider": "openai",
+      "status": "active",
+      "description": "",
+      "version": "",
+      "modelFamily": "gpt-4o",
+      "modelType": "multimodal",
+      "modalities": [
+        "text",
+        "vision"
+      ],
+      "trainingDataCutoff": "2023-10",
+      "releaseDate": "2024-05-13",
+      "inputFormat": [
+        "text",
+        "image",
+        "vision"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter",
+        "vision",
+        "image_analysis"
+      ],
+      "pricing": {
+        "unit": "per_million_tokens",
+        "input": "2.50",
+        "output": "10.00"
+      }
+    },
+    {
+      "modelId": "gpt-4.1",
+      "name": "Gpt 4.1",
+      "displayName": "Gpt 4.1",
+      "provider": "openai",
+      "status": "active",
+      "description": "",
+      "version": "",
+      "modelFamily": "gpt-4",
+      "modelType": "text",
+      "modalities": [
+        "text"
+      ],
+      "trainingDataCutoff": "2023-04",
+      "releaseDate": "2025-01-31",
+      "inputFormat": [
+        "text"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ],
+      "pricing": {
+        "unit": "per_million_tokens",
+        "input": "10.00",
+        "output": "30.00"
+      }
+    },
+    {
+      "modelId": "gpt-4.1-mini",
+      "name": "Gpt 4.1 Mini",
+      "displayName": "Gpt 4.1 Mini",
+      "provider": "openai",
+      "status": "active",
+      "description": "",
+      "version": "",
+      "modelFamily": "gpt-4",
+      "modelType": "text",
+      "modalities": [
+        "text"
+      ],
+      "trainingDataCutoff": "2023-04",
+      "releaseDate": "2025-01-31",
+      "inputFormat": [
+        "text"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ],
+      "pricing": {
+        "unit": "per_million_tokens",
+        "input": "0.15",
+        "output": "0.60"
+      }
+    },
+    {
+      "modelId": "gpt-4.1-nano",
+      "name": "Gpt 4.1 Nano",
+      "displayName": "Gpt 4.1 Nano",
+      "provider": "openai",
+      "status": "active",
+      "description": "",
+      "version": "",
+      "modelFamily": "gpt-4",
+      "modelType": "text",
+      "modalities": [
+        "text"
+      ],
+      "trainingDataCutoff": "2023-04",
+      "releaseDate": "2025-01-31",
+      "inputFormat": [
+        "text"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ],
+      "pricing": {
+        "unit": "per_million_tokens",
+        "input": "0.15",
+        "output": "0.60"
+      }
+    },
+    {
+      "modelId": "gpt-4-turbo",
+      "name": "Gpt 4 Turbo",
+      "displayName": "Gpt 4 Turbo",
+      "provider": "openai",
+      "maxTokens": 128000,
+      "contextWindow": 128000,
+      "status": "active",
+      "description": "",
+      "version": "",
+      "modelFamily": "gpt-4",
+      "modelType": "multimodal",
+      "modalities": [
+        "text",
+        "vision"
+      ],
+      "trainingDataCutoff": "2023-04",
+      "releaseDate": "2024-04-09",
+      "inputFormat": [
+        "text",
+        "image",
+        "vision"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter",
+        "vision",
+        "image_analysis"
+      ],
+      "pricing": {
+        "unit": "per_million_tokens",
+        "input": "10.00",
+        "output": "30.00"
+      }
+    },
+    {
+      "modelId": "gpt-4",
+      "name": "Gpt 4",
+      "displayName": "Gpt 4",
+      "provider": "openai",
+      "maxTokens": 8192,
+      "contextWindow": 8192,
+      "status": "active",
+      "description": "",
+      "version": "",
+      "modelFamily": "gpt-4",
+      "modelType": "text",
+      "modalities": [
+        "text"
+      ],
+      "trainingDataCutoff": "2023-04",
+      "inputFormat": [
+        "text"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ],
+      "pricing": {
+        "unit": "per_million_tokens",
+        "input": "30.00",
+        "output": "60.00"
+      }
+    },
+    {
+      "modelId": "gpt-3.5-turbo",
+      "name": "Gpt 3.5 Turbo",
+      "displayName": "Gpt 3.5 Turbo",
+      "provider": "openai",
+      "maxTokens": 16385,
+      "contextWindow": 16385,
+      "status": "active",
+      "description": "",
+      "version": "",
+      "modelFamily": "gpt-3.5",
+      "modelType": "text",
+      "modalities": [
+        "text"
+      ],
+      "trainingDataCutoff": "2021-09",
+      "inputFormat": [
+        "text"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools"
+      ],
+      "pricing": {
+        "unit": "per_million_tokens",
+        "input": "0.50",
+        "output": "1.50"
+      }
+    },
+    {
+      "modelId": "gpt-3.5-turbo-instruct",
+      "name": "Gpt 3.5 Turbo Instruct",
+      "displayName": "Gpt 3.5 Turbo Instruct",
+      "provider": "openai",
+      "status": "active",
+      "description": "",
+      "version": "",
+      "modelFamily": "gpt-3.5",
+      "modelType": "text",
+      "modalities": [
+        "text"
+      ],
+      "trainingDataCutoff": "2021-09",
+      "inputFormat": [
+        "text"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [],
+      "pricing": {
+        "unit": "per_million_tokens",
+        "input": "0.50",
+        "output": "1.50"
+      }
+    },
+    {
+      "modelId": "o1-pro",
+      "name": "O1 Pro",
+      "displayName": "O1 Pro",
+      "provider": "openai",
+      "status": "active",
+      "description": "",
+      "version": "",
+      "modelFamily": "o1",
+      "modelType": "reasoning",
+      "modalities": [
+        "text",
+        "reasoning"
+      ],
+      "inputFormat": [
+        "text",
+        "code",
+        "math"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ],
+      "pricing": {
+        "unit": "per_million_tokens",
+        "input": "15.00",
+        "output": "60.00"
+      }
+    },
+    {
+      "modelId": "o1",
+      "name": "O1",
+      "displayName": "O1",
+      "provider": "openai",
+      "status": "active",
+      "description": "",
+      "version": "",
+      "modelFamily": "o1",
+      "modelType": "reasoning",
+      "modalities": [
+        "text",
+        "reasoning"
+      ],
+      "inputFormat": [
+        "text",
+        "code",
+        "math"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ],
+      "pricing": {
+        "unit": "per_million_tokens",
+        "input": "15.00",
+        "output": "60.00"
+      }
+    },
+    {
+      "modelId": "o1-mini",
+      "name": "O1 Mini",
+      "displayName": "O1 Mini",
+      "provider": "openai",
+      "status": "active",
+      "description": "",
+      "version": "",
+      "modelFamily": "o1",
+      "modelType": "reasoning",
+      "modalities": [
+        "text",
+        "reasoning"
+      ],
+      "releaseDate": "2024-09-12",
+      "inputFormat": [
+        "text",
+        "code",
+        "math"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ],
+      "pricing": {
+        "unit": "per_million_tokens",
+        "input": "1.10",
+        "output": "4.40"
+      }
+    },
+    {
+      "modelId": "o3-mini",
+      "name": "O3 Mini",
+      "displayName": "O3 Mini",
+      "provider": "openai",
+      "status": "active",
+      "description": "",
+      "version": "",
+      "modelType": "reasoning",
+      "modalities": [
+        "text"
+      ],
+      "inputFormat": [
+        "text",
+        "code",
+        "math"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ],
+      "pricing": {
+        "unit": "per_million_tokens",
+        "input": "1.10",
+        "output": "4.40"
+      }
+    },
+    {
+      "modelId": "o4-mini",
+      "name": "O4 Mini",
+      "displayName": "O4 Mini",
+      "provider": "openai",
+      "status": "active",
+      "description": "",
+      "version": "",
+      "modelType": "reasoning",
+      "modalities": [
+        "text"
+      ],
+      "inputFormat": [
+        "text",
+        "code",
+        "math"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ],
+      "pricing": {
+        "unit": "per_million_tokens",
+        "input": "1.10",
+        "output": "4.40"
+      }
+    },
+    {
+      "modelId": "grok-4-0709",
+      "name": "Grok 4 0709",
+      "displayName": "Grok 4 0709",
+      "provider": "xai",
+      "maxTokens": 128000,
+      "contextWindow": 128000,
+      "status": "active",
+      "description": "",
+      "version": "",
+      "modelFamily": "grok-4",
+      "modelType": "multimodal",
+      "modalities": [
+        "text",
+        "vision"
+      ],
+      "trainingDataCutoff": "2024-10",
+      "releaseDate": "2024-07-09",
+      "inputFormat": [
+        "text",
+        "image",
+        "vision"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "web_search",
+        "real_time_data",
+        "code_interpreter",
+        "x_integration",
+        "live_search",
+        "vision",
+        "image_analysis"
+      ],
+      "pricing": {
+        "unit": "per_million_tokens",
+        "input": "3.00",
+        "output": "15.00"
+      }
+    },
+    {
+      "modelId": "grok-3",
+      "name": "Grok 3",
+      "displayName": "Grok 3",
+      "provider": "xai",
+      "maxTokens": 128000,
+      "contextWindow": 128000,
+      "status": "active",
+      "description": "",
+      "version": "",
+      "modelFamily": "grok-3",
+      "modelType": "multimodal",
+      "modalities": [
+        "text",
+        "vision"
+      ],
+      "trainingDataCutoff": "2024-08",
+      "releaseDate": "2024-11-01",
+      "inputFormat": [
+        "text",
+        "image",
+        "vision"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "web_search",
+        "real_time_data",
+        "code_interpreter",
+        "x_integration",
+        "live_search",
+        "vision",
+        "image_analysis"
+      ],
+      "pricing": {
+        "unit": "per_million_tokens",
+        "input": "3.00",
+        "output": "15.00"
+      }
+    },
+    {
+      "modelId": "grok-3-mini",
+      "name": "Grok 3 Mini",
+      "displayName": "Grok 3 Mini",
+      "provider": "xai",
+      "status": "active",
+      "description": "",
+      "version": "",
+      "modelFamily": "grok-3",
+      "modelType": "multimodal",
+      "modalities": [
+        "text",
+        "vision"
+      ],
+      "trainingDataCutoff": "2024-08",
+      "releaseDate": "2024-11-01",
+      "inputFormat": [
+        "text",
+        "image",
+        "vision"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "web_search",
+        "real_time_data",
+        "code_interpreter",
+        "x_integration",
+        "live_search",
+        "vision",
+        "image_analysis"
+      ],
+      "pricing": {
+        "unit": "per_million_tokens",
+        "input": "0.30",
+        "output": "0.50"
+      }
+    }
+  ]
+}

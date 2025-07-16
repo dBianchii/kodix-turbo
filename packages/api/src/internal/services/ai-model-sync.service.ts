@@ -50,7 +50,8 @@ export class AiModelSyncService {
     const currentFileDir = dirname(fileURLToPath(import.meta.url));
     const supportedProvidersPath = join(
       currentFileDir,
-      "ai-sync-adapters",
+      "ai-model-sync-adapter",
+      "config",
       "supported-providers.json",
     );
 
@@ -146,7 +147,7 @@ export class AiModelSyncService {
       const currentFileDir = dirname(fileURLToPath(import.meta.url));
       const syncedModelsPath = join(
         currentFileDir,
-        "ai-sync-adapters",
+        "ai-model-sync-adapter",
         "synced-models.json",
       );
 

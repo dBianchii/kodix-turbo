@@ -18,19 +18,19 @@ const mockGoogleFetchModels = vi.fn();
 const mockAnthropicFetchModels = vi.fn();
 
 // Mock the adapters
-vi.mock("../ai-sync-adapters/providers/openai/openai-adapter", () => ({
+vi.mock("../ai-model-sync-adapter/sync/providers/openai/openai-adapter", () => ({
   OpenAIAdapter: vi.fn().mockImplementation(() => ({
     fetchModels: mockOpenAIFetchModels,
   })),
 }));
 
-vi.mock("../ai-sync-adapters/providers/google/google-adapter", () => ({
+vi.mock("../ai-model-sync-adapter/sync/providers/google/google-adapter", () => ({
   GoogleAdapter: vi.fn().mockImplementation(() => ({
     fetchModels: mockGoogleFetchModels,
   })),
 }));
 
-vi.mock("../ai-sync-adapters/providers/anthropic/anthropic-adapter", () => ({
+vi.mock("../ai-model-sync-adapter/sync/providers/anthropic/anthropic-adapter", () => ({
   AnthropicAdapter: vi.fn().mockImplementation(() => ({
     fetchModels: mockAnthropicFetchModels,
   })),

@@ -1,0 +1,10 @@
+{"generatedAt":"2025-07-16T21:25:53.700Z","provider":"Anthropic","totalModels":8,"models":[
+  {"modelId":"claude-opus-4-20250514"},
+  {"modelId":"claude-sonnet-4-20250514"},
+  {"modelId":"claude-3-7-sonnet-20250219"},
+  {"modelId":"claude-3-5-sonnet-20241022"},
+  {"modelId":"claude-3-5-haiku-20241022"},
+  {"modelId":"claude-3-5-sonnet-20240620"},
+  {"modelId":"claude-3-haiku-20240307"},
+  {"modelId":"claude-3-opus-20240229"}
+]}

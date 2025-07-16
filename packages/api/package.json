@@ -20,7 +20,7 @@
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
-    "models-sync": "npx tsx src/internal/services/ai-sync-adapters/update/models-sync-provider.dev.ts",
+    "models-sync": "npx tsx src/internal/services/ai-model-sync-adapter/sync/models-sync-provider.dev.ts",
     "sync-models-to-db": "npx tsx src/internal/services/sync-models-to-db.dev.ts"
   },
   "dependencies": {

@@ -16,9 +16,9 @@ import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 import { config } from "dotenv";
 
-import { AnthropicAdapter } from "./internal/services/ai-sync-adapters/providers/anthropic/anthropic-adapter";
-import { GoogleAdapter } from "./internal/services/ai-sync-adapters/providers/google/google-adapter";
-import { OpenAIAdapter } from "./internal/services/ai-sync-adapters/providers/openai/openai-adapter";
+import { AnthropicAdapter } from "./internal/services/ai-model-sync-adapter/sync/providers/anthropic/anthropic-adapter";
+import { GoogleAdapter } from "./internal/services/ai-model-sync-adapter/sync/providers/google/google-adapter";
+import { OpenAIAdapter } from "./internal/services/ai-model-sync-adapter/sync/providers/openai/openai-adapter";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

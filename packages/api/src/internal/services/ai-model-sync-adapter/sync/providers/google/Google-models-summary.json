@@ -1,0 +1,8 @@
+{"generatedAt":"2025-07-16T21:25:53.469Z","provider":"Google","totalModels":6,"models":[
+  {"modelId":"gemini-2.5-flash"},
+  {"modelId":"gemini-2.5-pro"},
+  {"modelId":"gemini-2.0-flash"},
+  {"modelId":"gemini-2.0-flash-001"},
+  {"modelId":"gemini-2.0-flash-lite-001"},
+  {"modelId":"gemini-2.0-flash-lite"}
+]}

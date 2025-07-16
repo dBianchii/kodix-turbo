@@ -1,0 +1,280 @@
+{
+  "generatedAt": "2025-07-16T21:25:53.469Z",
+  "provider": "Google",
+  "totalModels": 6,
+  "models": [
+    {
+      "modelId": "gemini-2.5-flash",
+      "name": "Gemini 2.5 Flash",
+      "displayName": "Gemini 2.5 Flash",
+      "provider": "google",
+      "description": "Stable version of Gemini 2.5 Flash, our mid-size multimodal model that supports up to 1 million tokens, released in June of 2025.",
+      "version": "001",
+      "maxTokens": 1048576,
+      "contextWindow": 1048576,
+      "status": "active",
+      "modelFamily": "gemini",
+      "modelType": "multimodal",
+      "modalities": [
+        "text",
+        "vision"
+      ],
+      "inputFormat": [
+        "text",
+        "image",
+        "video",
+        "audio"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "web_search",
+        "grounding",
+        "vision",
+        "image_analysis",
+        "video_analysis"
+      ]
+    },
+    {
+      "modelId": "gemini-2.5-pro",
+      "name": "Gemini 2.5 Pro",
+      "displayName": "Gemini 2.5 Pro",
+      "provider": "google",
+      "description": "Stable release (June 17th, 2025) of Gemini 2.5 Pro",
+      "version": "2.5",
+      "maxTokens": 1048576,
+      "contextWindow": 1048576,
+      "status": "active",
+      "modelFamily": "gemini",
+      "modelType": "multimodal",
+      "modalities": [
+        "text",
+        "vision",
+        "multimodal"
+      ],
+      "inputFormat": [
+        "text",
+        "image",
+        "video",
+        "audio"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "web_search",
+        "grounding",
+        "vision",
+        "image_analysis",
+        "video_analysis"
+      ]
+    },
+    {
+      "modelId": "gemini-2.0-flash",
+      "name": "Gemini 2.0 Flash",
+      "displayName": "Gemini 2.0 Flash",
+      "provider": "google",
+      "description": "Gemini 2.0 Flash",
+      "version": "2.0",
+      "maxTokens": 1048576,
+      "contextWindow": 1048576,
+      "status": "active",
+      "modelFamily": "gemini-2.0",
+      "modelType": "multimodal",
+      "modalities": [
+        "text",
+        "vision"
+      ],
+      "trainingDataCutoff": "2024-08",
+      "releaseDate": "2024-12-11",
+      "inputFormat": [
+        "text",
+        "image",
+        "video",
+        "audio"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "web_search",
+        "grounding",
+        "vision",
+        "image_analysis",
+        "video_analysis"
+      ]
+    },
+    {
+      "modelId": "gemini-2.0-flash-001",
+      "name": "Gemini 2.0 Flash 001",
+      "displayName": "Gemini 2.0 Flash 001",
+      "provider": "google",
+      "description": "Stable version of Gemini 2.0 Flash, our fast and versatile multimodal model for scaling across diverse tasks, released in January of 2025.",
+      "version": "2.0",
+      "maxTokens": 1048576,
+      "contextWindow": 1048576,
+      "status": "active",
+      "modelFamily": "gemini-2.0",
+      "modelType": "multimodal",
+      "modalities": [
+        "text",
+        "vision"
+      ],
+      "trainingDataCutoff": "2024-08",
+      "releaseDate": "2024-12-11",
+      "inputFormat": [
+        "text",
+        "image",
+        "video",
+        "audio"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "web_search",
+        "grounding",
+        "vision",
+        "image_analysis",
+        "video_analysis"
+      ]
+    },
+    {
+      "modelId": "gemini-2.0-flash-lite-001",
+      "name": "Gemini 2.0 Flash-Lite 001",
+      "displayName": "Gemini 2.0 Flash-Lite 001",
+      "provider": "google",
+      "description": "Stable version of Gemini 2.0 Flash-Lite",
+      "version": "2.0",
+      "maxTokens": 1048576,
+      "contextWindow": 1048576,
+      "status": "active",
+      "modelFamily": "gemini-2.0",
+      "modelType": "multimodal",
+      "modalities": [
+        "text",
+        "vision"
+      ],
+      "trainingDataCutoff": "2024-08",
+      "releaseDate": "2024-12-11",
+      "inputFormat": [
+        "text",
+        "image",
+        "video",
+        "audio"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "web_search",
+        "grounding",
+        "vision",
+        "image_analysis",
+        "video_analysis"
+      ]
+    },
+    {
+      "modelId": "gemini-2.0-flash-lite",
+      "name": "Gemini 2.0 Flash-Lite",
+      "displayName": "Gemini 2.0 Flash-Lite",
+      "provider": "google",
+      "description": "Gemini 2.0 Flash-Lite",
+      "version": "2.0",
+      "maxTokens": 1048576,
+      "contextWindow": 1048576,
+      "status": "active",
+      "modelFamily": "gemini-2.0",
+      "modelType": "multimodal",
+      "modalities": [
+        "text",
+        "vision"
+      ],
+      "trainingDataCutoff": "2024-08",
+      "releaseDate": "2024-12-11",
+      "inputFormat": [
+        "text",
+        "image",
+        "video",
+        "audio"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "web_search",
+        "grounding",
+        "vision",
+        "image_analysis",
+        "video_analysis"
+      ]
+    }
+  ]
+}
