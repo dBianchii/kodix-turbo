@@ -1,24 +1,80 @@
-# ⚙️ Kodix Core Service
+<!-- AI-METADATA:
+category: overview
+complexity: basic
+updated: 2025-07-13
+claude-ready: true
+priority: high
+token-optimized: true
+audience: all
+ai-context-weight: important
+-->
 
-## 📖 Visão Geral
+# ⚙️ Kodix Core Services
 
-Esta seção documenta a arquitetura e o planejamento do **Core Service** da plataforma Kodix. O Core Service representa a evolução arquitetural para centralizar o acesso às entidades e lógicas de negócio fundamentais do sistema (usuários, times, permissões, configurações) através de um gateway único e seguro.
+## 📖 Overview
 
-Diferente da [documentação de arquitetura geral](../architecture/README.md), que foca nos _padrões técnicos_, esta seção concentra-se nos planos de implementação e na documentação específica da iniciativa do `CoreService`.
+This section documents the architecture, implementation, and planning of **Core Services** in the Kodix platform. Core Services represent the foundational business logic layer that manages platform-wide entities like users, teams, permissions, apps, notifications, and configurations.
+
+**Current State**: Core Services exist as a conceptual layer implemented through repository patterns, service abstractions, and tRPC APIs, providing production-ready functionality across all SubApps.
+
+**Future Vision**: Evolution toward a centralized CoreService gateway that provides unified access to all core platform functionality.
 
 ---
 
-## 🚀 Planejamento Arquitetural
+## 🎯 Core Documentation
 
-A implementação do Core Service seguirá uma abordagem incremental. Os documentos a seguir detalham a visão de longo prazo e o plano de ação para o primeiro componente.
+### 📋 **[Core Services Overview](./core-services-overview.md)**
+**The definitive guide to Core Services in Kodix**
 
-1.  **[Proposta de Arquitetura: `CoreService`](./planning/future-core-service.md)**
+- Complete analysis of current implementations vs conceptual design
+- Production-ready service catalog with maturity assessments
+- Architecture patterns and integration points
+- Future roadmap and centralization strategy
 
-    - **Propósito:** Descreve a visão de longo prazo para um `CoreService` completo, que atuará como o único gateway para todas as entidades e lógicas de negócio centrais da plataforma.
+### 🏗️ **Individual Core Services**
 
-2.  **[Plano de Implementação: `PlatformConfigRepository`](../../database/planning/platform-config-repository-plan.md)**
-    - **Propósito:** Detalha o primeiro passo pragmático em nossa jornada: a criação de um repositório focado em prover configurações de plataforma a partir de arquivos estáticos. Embora seja um repositório (`@kdx/db`), sua criação valida o padrão de isolamento de fontes de dados que será consumido pelo futuro `CoreService` (`@kdx/api`).
+1. **[User and Team Management](./01-user-and-team-management/README.md)**
+   - User lifecycle, team management, invitation system
+   - **Status**: ✅ Production Ready
+
+2. **[Permissions Management](./02-permissions-management/README.md)**
+   - Role-based access control, app-level and team-level permissions
+   - **Status**: ✅ Production Ready
+
+3. **[App Management](./03-app-management/README.md)**
+   - SubApp lifecycle, installation, configuration management
+   - **Status**: ✅ Production Ready
+
+4. **[Notification Center](./04-notification-center/README.md)**
+   - Notification creation, delivery, push token management
+   - **Status**: ✅ Production Ready (Basic)
+
+5. **[Configuration System](./05-configuration-system/README.md)**
+   - Team-level and user-level app configurations
+   - **Status**: ✅ Production Ready
 
 ---
 
-**Nota:** Este diretório é a fonte de verdade para a **visão arquitetural** do Core Service. Os planos de implementação para componentes específicos serão localizados nos diretórios de documentação dos pacotes correspondentes (ex: `docs/database/` para repositórios, `docs/api/` para futuros serviços).
+## 🚀 Future Planning
+
+### **[Future Core Service Architecture](./planning/future-core-service.md)**
+- Centralized CoreService gateway design
+- Migration strategy from current distributed approach
+- Implementation roadmap and benefits analysis
+
+### **[Lessons Learned](./lessons-learned.md)**
+- Implementation insights and best practices
+- Type safety patterns and Promise handling
+- Performance optimization strategies
+
+---
+
+## 🔗 Related Documentation
+
+- **[Platform Architecture](../architecture/README.md)** - Overall system design patterns
+- **[SubApp Documentation](../subapps/README.md)** - SubApp integration with Core Services
+- **[Development Standards](../documentation-standards/README.md)** - Documentation and coding standards
+
+---
+
+**Note**: This directory serves as the source of truth for Core Services architecture. Implementation-specific documentation is located within respective package directories (e.g., `packages/db/` for repositories, `packages/api/` for services).

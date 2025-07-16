@@ -1,3 +1,16 @@
+<!-- AI-METADATA:
+<!-- AI-CONTEXT-PRIORITY: always-include="false" summary-threshold="medium" -->category: reference
+complexity: intermediate
+updated: 2025-07-12
+claude-ready: true
+phase: 4
+priority: medium
+token-optimized: true
+audience: all
+ai-context-weight: important
+last-ai-review: 2025-07-12
+-->
+
 # Proposta de Arquitetura: Centralização com `CoreService`
 
 **Autor:** @KodixAgent & @User
@@ -74,7 +87,10 @@ graph TD
 
 ### Estrutura de Código Proposta
 
+<!-- AI-CODE-BLOCK: typescript-example -->
+<!-- AI-CODE-OPTIMIZATION: language="typescript" context="kodix-patterns" -->
 ```typescript
+// AI-CONTEXT: TypeScript implementation following Kodix patterns
 // Localização: packages/api/src/core-service/core.service.ts
 
 import type { AppId, AppTeamConfig, Team, User } from "@kdx/db/schema";
@@ -124,6 +140,8 @@ export class CoreService {
 
 export const coreService = new CoreService();
 ```
+<!-- /AI-CODE-OPTIMIZATION -->
+<!-- /AI-CODE-BLOCK -->
 
 ---
 
@@ -135,7 +153,10 @@ Este exemplo prático ilustra como o `AiStudioService` seria refatorado.
 
 O serviço acessa `db.query` diretamente para buscar uma configuração.
 
+<!-- AI-CODE-BLOCK: typescript-example -->
+<!-- AI-CODE-OPTIMIZATION: language="typescript" context="kodix-patterns" -->
 ```typescript
+// AI-CONTEXT: TypeScript implementation following Kodix patterns
 // packages/api/src/internal/services/ai-studio.service.ts (VERSÃO ATUAL)
 import { db } from "@kdx/db/client";
 
@@ -155,12 +176,17 @@ export class AiStudioService {
   }
 }
 ```
+<!-- /AI-CODE-OPTIMIZATION -->
+<!-- /AI-CODE-BLOCK -->
 
 #### **Depois (Com o `CoreService`)**
 
 O serviço delega a busca de configuração para o `coreService`.
 
+<!-- AI-CODE-BLOCK: typescript-example -->
+<!-- AI-CODE-OPTIMIZATION: language="typescript" context="kodix-patterns" -->
 ```typescript
+// AI-CONTEXT: TypeScript implementation following Kodix patterns
 // packages/api/src/internal/services/ai-studio.service.ts (VERSÃO PROPOSTA)
 import { coreService } from '../../core-service/core.service'; // Nova dependência
 
@@ -176,6 +202,8 @@ export class AiStudioService {
   }
 }
 ```
+<!-- /AI-CODE-OPTIMIZATION -->
+<!-- /AI-CODE-BLOCK -->
 
 ---
 
@@ -213,5 +241,5 @@ Se esta proposta for aceita, as seguintes regras se tornam mandatórias:
 3.  Criar a estrutura `packages/api/src/core-service/` e implementar as regras de ESLint.
 4.  Implementar a primeira versão do `CoreService` com os métodos-ponte essenciais.
 5.  Refatorar um único serviço (ex: `AiStudioService`) como Prova de Conceito (POC).
-6.  Atualizar a documentação de arquitetura (`backend-guide.md`, etc.) para refletir as novas regras.
+6.  Atualizar a documentação de arquitetura (`../../../architecture/backend/backend-guide.md`, etc.) para refletir as novas regras.
 7.  Planejar a refatoração gradual dos demais serviços.

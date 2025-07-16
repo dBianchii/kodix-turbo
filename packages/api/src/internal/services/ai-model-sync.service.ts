@@ -1,53 +1,96 @@
-import { eq } from "@kdx/db";
+import { existsSync, readFileSync } from "fs";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
+
+import { and, eq } from "@kdx/db";
 import { db } from "@kdx/db/client";
 import { aiModel, aiProvider } from "@kdx/db/schema";
 
-import { env } from "../../env";
-import { AnthropicAdapter } from "./ai-sync-adapters/anthropic-adapter";
-import { GoogleAdapter } from "./ai-sync-adapters/google-adapter";
-import { OpenAIAdapter } from "./ai-sync-adapters/openai-adapter";
-
-export interface ModelPricing {
-  input: string;
-  output: string;
-  unit: "per_million_tokens";
-}
 
 export interface NormalizedModel {
   modelId: string;
   name: string;
   displayName?: string;
   maxTokens?: number;
-  pricing?: ModelPricing;
+  pricing?: {
+    input: string;
+    output: string;
+    unit: "per_million_tokens";
+  };
   version?: string;
   description?: string;
   status?: "active" | "archived";
-  databaseId?: string; // Optional database ID for existing models
+  databaseId?: string;
+  originalData?: any; // Preserve the complete JSON from synced-models.json
 }
 
 export interface ModelSyncDiff {
   providerId: string;
   timestamp: Date;
-  newModels: NormalizedModel[];
+  newModels: any[]; // Direct originalData objects
   updatedModels: {
     existing: NormalizedModel;
-    updated: NormalizedModel;
+    updated: any; // Direct originalData object
   }[];
   archivedModels: NormalizedModel[];
 }
 
-export type SupportedProvider = "openai" | "google" | "anthropic";
+interface SupportedProviderConfig {
+  name: string; // Database name (e.g., "OpenAI")
+  base_url: string; // API URL
+  sync_name: string; // Lowercase name used in synced-models.json (e.g., "openai")
+}
+
+interface SupportedProvidersData {
+  providers: SupportedProviderConfig[];
+}
 
 export class AiModelSyncService {
-  async syncWithProvider(
-    providerId: SupportedProvider,
-  ): Promise<ModelSyncDiff> {
+  private getSupportedProviders(): SupportedProvidersData {
+    const currentFileDir = dirname(fileURLToPath(import.meta.url));
+    const supportedProvidersPath = join(
+      currentFileDir,
+      "ai-sync-adapters",
+      "supported-providers.json",
+    );
+
+    if (!existsSync(supportedProvidersPath)) {
+      throw new Error(
+        `supported-providers.json not found at ${supportedProvidersPath}. This file is required for provider validation.`,
+      );
+    }
+
+    return JSON.parse(readFileSync(supportedProvidersPath, "utf-8"));
+  }
+
+  private findProviderBySync(syncName: string): SupportedProviderConfig | null {
+    const supportedProviders = this.getSupportedProviders();
+    return (
+      supportedProviders.providers.find((p) => p.sync_name === syncName) || null
+    );
+  }
+
+  async syncWithProvider(providerId: string): Promise<ModelSyncDiff> {
     try {
-      // 1. Find the actual provider ID from the database
+      // 1. Validate provider against supported-providers.json
+      const providerConfig = this.findProviderBySync(providerId);
+      if (!providerConfig) {
+        const supportedProviders = this.getSupportedProviders();
+        const supportedSyncNames = supportedProviders.providers.map(
+          (p) => p.sync_name,
+        );
+        throw new Error(
+          `Unsupported provider: ${providerId}. Supported providers: ${supportedSyncNames.join(", ")}`,
+        );
+      }
+
+      // 2. Find the actual provider ID from the database
+      const dbProviderName = providerConfig.name;
+
       const provider = await db
         .select({ id: aiProvider.id })
         .from(aiProvider)
-        .where(eq(aiProvider.name, providerId))
+        .where(eq(aiProvider.name, dbProviderName))
         .limit(1);
 
       if (!provider.length || !provider[0]) {
@@ -57,19 +100,17 @@ export class AiModelSyncService {
       }
 
       const actualProviderId = provider[0].id;
-      console.log(
-        `[DEBUG] Found provider '${providerId}' with database ID: ${actualProviderId}`,
-      );
 
-      // 2. Invoke the appropriate adapter based on providerId
+      // 3. Load models from synced-models.json (pre-approved Kodix data)
       const freshModels = await this.fetchFreshModels(providerId);
 
-      // 3. Fetch existing models from the database for this provider
+      // 4. Fetch existing models from the database for this provider
       const existingModels = await db
         .select({
           id: aiModel.id,
           providerId: aiModel.providerId,
           name: aiModel.displayName,
+          universalModelId: aiModel.universalModelId,
           enabled: aiModel.enabled,
           status: aiModel.status,
           config: aiModel.config,
@@ -79,7 +120,7 @@ export class AiModelSyncService {
         .from(aiModel)
         .where(eq(aiModel.providerId, actualProviderId));
 
-      // 4. Compare fresh data with existing data
+      // 5. Compare fresh data with existing data
       const diff = this.generateDiff(
         actualProviderId,
         freshModels,
@@ -97,40 +138,75 @@ export class AiModelSyncService {
   }
 
   private async fetchFreshModels(
-    providerId: SupportedProvider,
+    providerId: string,
   ): Promise<NormalizedModel[]> {
-    switch (providerId) {
-      case "openai": {
-        const apiKey = env.OPENAI_API_KEY;
-        if (!apiKey) {
-          throw new Error("OPENAI_API_KEY is not configured");
-        }
-        const adapter = new OpenAIAdapter(apiKey);
-        return adapter.fetchModels();
+    try {
+      // Read from synced-models.json - the single source of truth for Kodix
+      // Use import.meta.url to get the correct path relative to this file
+      const currentFileDir = dirname(fileURLToPath(import.meta.url));
+      const syncedModelsPath = join(
+        currentFileDir,
+        "ai-sync-adapters",
+        "synced-models.json",
+      );
+
+      if (!existsSync(syncedModelsPath)) {
+        throw new Error(
+          `synced-models.json not found at ${syncedModelsPath}. This file is required for model synchronization.`,
+        );
       }
 
-      case "google": {
-        const apiKey = env.GOOGLE_API_KEY;
-        if (!apiKey) {
-          throw new Error("GOOGLE_API_KEY is not configured");
-        }
-        const adapter = new GoogleAdapter(apiKey);
-        return adapter.fetchModels();
+      const syncedModelsData = JSON.parse(
+        readFileSync(syncedModelsPath, "utf-8"),
+      );
+
+      if (!syncedModelsData.models || !Array.isArray(syncedModelsData.models)) {
+        throw new Error(
+          `Invalid synced-models.json format. Expected 'models' array.`,
+        );
       }
 
-      case "anthropic": {
-        const apiKey = env.ANTHROPIC_API_KEY;
-        if (!apiKey) {
-          throw new Error("ANTHROPIC_API_KEY is not configured");
-        }
-        const adapter = new AnthropicAdapter(apiKey);
-        return adapter.fetchModels();
-      }
+      // Filter models by provider
+      const providerModels = syncedModelsData.models.filter(
+        (model: any) => model.provider === providerId,
+      );
 
-      default:
-        throw new Error(`Unsupported provider: ${String(providerId)}`);
+      // Convert to NormalizedModel format with originalData
+      const normalizedModels: NormalizedModel[] = providerModels.map(
+        (model: any) => ({
+          modelId: model.modelId,
+          name: model.name,
+          displayName: model.displayName || model.name,
+          maxTokens: model.maxTokens,
+          pricing: model.pricing
+            ? {
+                input: String(model.pricing.input),
+                output: String(model.pricing.output),
+                unit: "per_million_tokens" as const,
+              }
+            : undefined,
+          version: model.version,
+          description: model.description,
+          status: model.status || "active",
+          originalData: model, // Preserve the complete JSON from synced-models.json
+        }),
+      );
+
+      console.log(
+        `[AiModelSyncService] Loaded ${normalizedModels.length} models for ${providerId} from synced-models.json (pre-approved Kodix data)`,
+      );
+      return normalizedModels;
+    } catch (error) {
+      console.error(
+        `[AiModelSyncService] Error reading synced-models.json for ${providerId}:`,
+        error,
+      );
+      throw new Error(
+        `Failed to load models for ${providerId} from synced-models.json. This is the only approved source for model data in Kodix. ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
+
 
   private generateDiff(
     providerId: string,
@@ -139,6 +215,7 @@ export class AiModelSyncService {
       id: string;
       providerId: string;
       name: string;
+      universalModelId: string;
       enabled: boolean;
       status: "active" | "archived";
       config: unknown;
@@ -146,30 +223,14 @@ export class AiModelSyncService {
       updatedAt: Date | null;
     }[],
   ): ModelSyncDiff {
-    console.log(`[DEBUG] Starting sync diff for provider: ${providerId}`);
-    console.log(`[DEBUG] Fresh models from API: ${freshModels.length}`);
-    freshModels.forEach((model) => {
-      console.log(`[DEBUG] Fresh model: ${model.modelId} (${model.name})`);
-    });
-
     const freshModelMap = new Map(freshModels.map((m) => [m.modelId, m]));
 
-    // Create a map using the model name as the key since there's no modelId field
+    // Create a map using the universalModelId as the key (the actual unique identifier)
     const existingModelMap = new Map<string, (typeof existingModels)[0]>();
 
-    console.log(`[DEBUG] Existing models in DB: ${existingModels.length}`);
-    // Parse the config to extract modelId
+    // Use universalModelId for mapping
     for (const model of existingModels) {
-      const config = model.config as {
-        modelId?: string;
-        version?: string;
-      } | null;
-      // Use modelId from config first (the actual unique identifier), then fallback to version, then name
-      const modelId = config?.modelId ?? config?.version ?? model.name;
-      console.log(
-        `[DEBUG] Existing model: ${model.name} -> modelId: ${modelId}`,
-      );
-      existingModelMap.set(modelId, model);
+      existingModelMap.set(model.universalModelId, model);
     }
 
     const newModels: NormalizedModel[] = [];
@@ -226,101 +287,23 @@ export class AiModelSyncService {
       const existingModel = existingModelMap.get(modelId);
 
       if (!existingModel) {
-        // This is a new model
-        newModels.push(freshModel);
+        // This is a new model - use originalData to preserve exact JSON key order
+        newModels.push(freshModel.originalData);
       } else {
-        // Check if the model needs updating and merge new fields
-        const existingConfig = existingModel.config as {
-          modelId?: string;
-          pricing?: ModelPricing;
-          maxTokens?: number;
-          version?: string;
-          description?: string;
-          displayName?: string;
-          temperature?: number;
-          [key: string]: any; // Allow other fields
-        };
-
-        // Check for explicit deprecation (adapter sets status to "archived")
-        const hasStatusChange =
-          freshModel.status === "archived" && existingModel.status === "active";
-
-        // Create merged config with new fields from fresh model
-        const mergedConfig = {
-          ...existingConfig,
-          modelId: existingConfig.modelId ?? freshModel.modelId, // Preserve existing modelId
-          pricing: freshModel.pricing ?? existingConfig.pricing,
-          maxTokens: freshModel.maxTokens ?? existingConfig.maxTokens,
-          version: freshModel.version ?? existingConfig.version,
-          description: freshModel.description ?? existingConfig.description,
-          displayName: freshModel.displayName ?? existingConfig.displayName,
-        };
-
-        // Add any new fields from fresh model that don't exist in existing config
-        Object.keys(freshModel).forEach((key) => {
-          if (
-            key !== "modelId" &&
-            key !== "name" &&
-            key !== "status" &&
-            key !== "databaseId"
-          ) {
-            const freshValue = (freshModel as any)[key];
-            if (freshValue !== undefined && !(key in existingConfig)) {
-              (mergedConfig as any)[key] = freshValue;
-            }
-          }
-        });
-
-        // Check if there are actual changes to apply
-        const needsUpdate =
-          freshModel.name !== existingModel.name ||
-          JSON.stringify(mergedConfig.pricing) !==
-            JSON.stringify(existingConfig.pricing) ||
-          mergedConfig.maxTokens !== existingConfig.maxTokens ||
-          mergedConfig.version !== existingConfig.version ||
-          mergedConfig.description !== existingConfig.description ||
-          mergedConfig.displayName !== existingConfig.displayName ||
-          hasStatusChange ||
-          JSON.stringify(mergedConfig) !== JSON.stringify(existingConfig);
+        // Check if the model has been updated - simple comparison using originalData
+        const needsUpdate = JSON.stringify(existingModel.config) !== JSON.stringify(freshModel.originalData);
 
         if (needsUpdate) {
-          console.log(`[DEBUG] Merging model ${freshModel.modelId}:`);
-          console.log(`[DEBUG] - Existing config:`, existingConfig);
-          console.log(`[DEBUG] - Fresh model:`, freshModel);
-          console.log(`[DEBUG] - Merged config:`, mergedConfig);
-
           updatedModels.push({
             existing: {
-              modelId: existingConfig.modelId ?? existingModel.name,
+              modelId: existingModel.universalModelId,
               name: existingModel.name,
-              displayName: existingConfig.displayName ?? existingModel.name,
-              pricing: existingConfig.pricing
-                ? {
-                    input: String(existingConfig.pricing.input),
-                    output: String(existingConfig.pricing.output),
-                    unit: "per_million_tokens" as const,
-                  }
-                : undefined,
-              maxTokens: existingConfig.maxTokens,
-              version: existingConfig.version,
-              description: existingConfig.description,
+              displayName: existingModel.name,
               status: existingModel.status,
-              databaseId: existingModel.id, // Add database ID for updates
+              databaseId: existingModel.id,
             },
-            updated: {
-              ...freshModel,
-              // Use merged config values for the update
-              pricing: mergedConfig.pricing,
-              maxTokens: mergedConfig.maxTokens,
-              version: mergedConfig.version,
-              description: mergedConfig.description,
-              displayName: mergedConfig.displayName,
-            },
+            updated: freshModel.originalData,
           });
-        } else {
-          console.log(
-            `[DEBUG] No changes needed for model ${freshModel.modelId}`,
-          );
         }
       }
     }
@@ -328,45 +311,23 @@ export class AiModelSyncService {
     // Find archived models (exist in DB but not in fresh data - implicit deprecation)
     for (const [modelId, existingModel] of existingModelMap) {
       if (!freshModelMap.has(modelId) && existingModel.status === "active") {
-        const existingConfig = existingModel.config as {
-          modelId?: string;
-          pricing?: ModelPricing;
-          maxTokens?: number;
-          version?: string;
-          description?: string;
-          displayName?: string;
-        };
-
         archivedModels.push({
-          modelId: existingConfig.modelId ?? existingModel.name,
+          modelId: existingModel.universalModelId,
           name: existingModel.name,
-          displayName: existingConfig.displayName ?? existingModel.name,
-          pricing: existingConfig.pricing
-            ? {
-                input: String(existingConfig.pricing.input),
-                output: String(existingConfig.pricing.output),
-                unit: "per_million_tokens" as const,
-              }
-            : undefined,
-          maxTokens: existingConfig.maxTokens,
-          version: existingConfig.version,
-          description: existingConfig.description,
+          displayName: existingModel.name,
           status: "archived",
         });
       }
     }
 
-    console.log(`[DEBUG] Sync results for ${providerId}:`);
-    console.log(`[DEBUG] - New models: ${newModels.length}`);
-    console.log(`[DEBUG] - Updated models: ${updatedModels.length}`);
-    console.log(`[DEBUG] - Archived models: ${archivedModels.length}`);
-
-    if (archivedModels.length > 0) {
-      console.log(`[DEBUG] Models to be archived:`);
-      archivedModels.forEach((model) => {
-        console.log(`[DEBUG] - ${model.name} (${model.modelId})`);
-      });
-    }
+    console.log(`[AiModelSyncService] Sync results for ${providerId}:`);
+    console.log(`[AiModelSyncService] - New models: ${newModels.length}`);
+    console.log(
+      `[AiModelSyncService] - Updated models: ${updatedModels.length}`,
+    );
+    console.log(
+      `[AiModelSyncService] - Archived models: ${archivedModels.length}`,
+    );
 
     return {
       providerId,
@@ -375,5 +336,185 @@ export class AiModelSyncService {
       updatedModels,
       archivedModels,
     };
+  }
+
+  async archiveModelsFromUnsupportedProviders(): Promise<{
+    archivedCount: number;
+    supportedProviders: string[];
+  }> {
+    try {
+      const supportedProviders = this.getSupportedProviders();
+      const supportedProviderNames = supportedProviders.providers.map(
+        (p) => p.name,
+      );
+
+      console.log(
+        `[AiModelSyncService] Supported providers: ${supportedProviderNames.join(", ")}`,
+      );
+
+      // Find all providers in database
+      const allProviders = await db
+        .select({ id: aiProvider.id, name: aiProvider.name })
+        .from(aiProvider);
+
+      // Find providers that are not in the supported list
+      const unsupportedProviders = allProviders.filter(
+        (provider) => !supportedProviderNames.includes(provider.name),
+      );
+
+      if (unsupportedProviders.length === 0) {
+        console.log(
+          `[AiModelSyncService] All providers in database are supported`,
+        );
+        return {
+          archivedCount: 0,
+          supportedProviders: supportedProviderNames,
+        };
+      }
+
+      console.log(
+        `[AiModelSyncService] Found ${unsupportedProviders.length} unsupported providers:`,
+        unsupportedProviders.map((p) => p.name),
+      );
+
+      let totalArchivedCount = 0;
+
+      // Archive models from unsupported providers
+      for (const provider of unsupportedProviders) {
+        const modelsToArchive = await db
+          .select({ id: aiModel.id, displayName: aiModel.displayName })
+          .from(aiModel)
+          .where(
+            and(
+              eq(aiModel.providerId, provider.id),
+              eq(aiModel.status, "active"),
+            ),
+          );
+
+        if (modelsToArchive.length > 0) {
+          await db
+            .update(aiModel)
+            .set({ status: "archived", updatedAt: new Date() })
+            .where(
+              and(
+                eq(aiModel.providerId, provider.id),
+                eq(aiModel.status, "active"),
+              ),
+            );
+
+          console.log(
+            `[AiModelSyncService] Archived ${modelsToArchive.length} models from unsupported provider: ${provider.name}`,
+          );
+          totalArchivedCount += modelsToArchive.length;
+        }
+      }
+
+      return {
+        archivedCount: totalArchivedCount,
+        supportedProviders: supportedProviderNames,
+      };
+    } catch (error) {
+      console.error(
+        `[AiModelSyncService] Error archiving models from unsupported providers:`,
+        error,
+      );
+      throw error;
+    }
+  }
+
+  async applySync(diff: ModelSyncDiff): Promise<{
+    modelsProcessed: number;
+    modelsCreated: number;
+    modelsUpdated: number;
+    modelsArchived: number;
+    errors: string[];
+  }> {
+    const { providerId, newModels, updatedModels, archivedModels } = diff;
+
+    console.log(
+      `[AiModelSyncService] Applying sync for provider: ${providerId}`,
+    );
+    console.log(
+      `[AiModelSyncService] - New models to create: ${newModels.length}`,
+    );
+    console.log(
+      `[AiModelSyncService] - Models to update: ${updatedModels.length}`,
+    );
+    console.log(
+      `[AiModelSyncService] - Models to archive: ${archivedModels.length}`,
+    );
+
+    const result = {
+      modelsProcessed: 0,
+      modelsCreated: 0,
+      modelsUpdated: 0,
+      modelsArchived: 0,
+      errors: [] as string[],
+    };
+
+    // Apply new models
+    for (const model of newModels) {
+      try {
+        await db.insert(aiModel).values({
+          providerId,
+          displayName: model.displayName || model.name,
+          universalModelId: model.modelId,
+          status: model.status || "active",
+          enabled: model.status !== "archived",
+          config: JSON.stringify(model), // Store as JSON string to preserve key order
+          originalConfig: JSON.stringify(model),
+        });
+        result.modelsCreated++;
+        result.modelsProcessed++;
+      } catch (error) {
+        result.errors.push(`Failed to create model ${model.modelId}: ${error instanceof Error ? error.message : "Unknown error"}`);
+      }
+    }
+
+    // Apply updates to existing models
+    for (const { existing, updated } of updatedModels) {
+      try {
+        await db
+          .update(aiModel)
+          .set({
+            displayName: updated.displayName || updated.name,
+            status: updated.status || "active",
+            enabled: updated.status !== "archived",
+            config: JSON.stringify(updated), // Store as JSON string to preserve key order
+            originalConfig: JSON.stringify(updated),
+            updatedAt: new Date(),
+          })
+          .where(eq(aiModel.id, existing.databaseId!));
+        result.modelsUpdated++;
+        result.modelsProcessed++;
+      } catch (error) {
+        result.errors.push(`Failed to update model ${updated.modelId}: ${error instanceof Error ? error.message : "Unknown error"}`);
+      }
+    }
+
+    // Archive models that are no longer in the provider's list
+    for (const model of archivedModels) {
+      try {
+        await db
+          .update(aiModel)
+          .set({
+            status: "archived",
+            enabled: false,
+            updatedAt: new Date(),
+          })
+          .where(
+            and(
+              eq(aiModel.universalModelId, model.modelId),
+              eq(aiModel.providerId, providerId),
+            ),
+          );
+        result.modelsArchived++;
+        result.modelsProcessed++;
+      } catch (error) {
+        result.errors.push(`Failed to archive model ${model.modelId}: ${error instanceof Error ? error.message : "Unknown error"}`);
+      }
+    }
+
+    return result;
   }
 }

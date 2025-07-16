@@ -1,94 +1,131 @@
-# SubApps do Kodix
+<!-- AI-METADATA:
+<!-- AI-CONTEXT-PRIORITY: always-include="false" summary-threshold="medium" -->category: subapp
+complexity: basic
+updated: 2025-07-12
+claude-ready: true
+phase: 4
+priority: medium
+token-optimized: true
+audience: all
+ai-context-weight: important
+last-ai-review: 2025-07-12
+-->
 
-Esta seção contém toda a documentação dos **SubApps do Kodix**, que são as funcionalidades principais da aplicação web. Cada subapp oferece um conjunto específico de funcionalidades integradas.
+# Kodix SubApps
 
-## 📱 SubApps Disponíveis
+This section contains documentation for **Kodix SubApps** - modular features within the main Kodix web platform that share runtime and integrate seamlessly with core platform services.
+
+## 📱 Available SubApps
 
 ### 🤖 [AI Studio](./ai-studio/)
 
-Ambiente de desenvolvimento e gerenciamento de modelos de IA
+AI development environment and model management platform
 
-- Configuração de provedores (OpenAI, Anthropic, Google)
-- Testes e monitoramento de modelos
-- Gerenciamento de tokens e custos
-- Documentação completa de IA incluída
+- AI provider configuration (OpenAI, Anthropic, Google)
+- Model testing and monitoring
+- Token and cost management
+- Comprehensive AI documentation
 
 ### 💬 [Chat](./chat/)
 
-Sistema de conversação inteligente com IA
+Real-time intelligent conversation system
 
-- Streaming em tempo real
-- Múltiplos provedores de IA
-- Sessões persistentes e editáveis
-- Integração com AI Studio
+- Real-time streaming communication
+- Multiple AI provider integration
+- Persistent and editable sessions
+- AI Studio integration
 
 ### 📝 [Todo](./todo/)
 
-Sistema de gerenciamento de tarefas
+Task and project management system
 
-- Organização e priorização
-- Colaboração em equipe
-- Integração com outros módulos
+- Organization and prioritization
+- Team collaboration features
+- Integration with other modules
 
 ### 📅 [Calendar](./calendar/)
 
-Sistema de agendamento e calendário
+Scheduling and calendar management system
 
-- Múltiplas visualizações
-- Eventos recorrentes
-- Integração com Kodix Care
+- Multiple calendar views
+- Recurring events support
+- Kodix Care integration
 
 ### 🎫 [Cupom](./cupom/)
 
-Gestão de cupons e promoções
+Coupon and promotion management
 
-- Criação de descontos
-- Regras de aplicação
-- Relatórios de performance
+- Discount creation and management
+- Application rules configuration
+- Performance reporting
 
 ### 🏥 [Kodix Care Web](./kodix-care-web/)
 
-Versão web do módulo de gestão clínica
+Web version of clinical management module
 
-- Prontuários eletrônicos
-- Gestão de pacientes
-- Sincronização com app móvel
+- Electronic health records
+- Patient management
+- Mobile app synchronization
 
-## 🚀 Como Usar Esta Documentação
+## 🚀 How to Use This Documentation
 
-1. **Para novos desenvolvedores**:
-   - **Arquitetura**: Comece com os [Guias de Arquitetura](../architecture/) para entender padrões de desenvolvimento
-   - **UI/Components**: Veja o [Design System](../ui-catalog/) para componentes específicos
-2. **Para trabalhar com IA**: Consulte [AI Studio](./ai-studio/) e [Chat](./chat/)
-3. **Para funcionalidades específicas**: Acesse a documentação do subapp correspondente
-4. **Para desenvolvimento geral**: Veja a documentação em `docs/architecture/`
+1. **For new developers**:
+   - **Architecture**: Start with <!-- AI-LINK: type="dependency" importance="high" -->
+<!-- AI-LINK: type="related" importance="medium" -->
+<!-- AI-CONTEXT-REF: importance="high" type="architecture" -->
+<!-- AI-CONTEXT-REF: importance="medium" type="guide" -->
+[Architecture Guides](../architecture/)
+<!-- /AI-CONTEXT-REF -->
+<!-- /AI-CONTEXT-REF -->
+<!-- /AI-LINK -->
+<!-- /AI-LINK --> to understand development patterns
+   - **UI/Components**: See [Design System](../ui-design/) for specific components
+2. **For AI work**: Consult [AI Studio](./ai-studio/) and [Chat](./chat/)
+3. **For specific features**: Access the corresponding subapp documentation
+4. **For general development**: See documentation in [Development](../development/)
 
-## 🏗️ Arquitetura dos SubApps
+## 🏗️ 🏗️ SubApps Architecture
 
 ```
 apps/kdx/src/app/[locale]/(authed)/apps/
 ├── aiStudio/        # 🤖 AI Studio
-├── chat/           # 💬 Sistema de Chat
+├── chat/           # 💬 Chat System
 ├── kodixCare/      # 🏥 Kodix Care Web
-├── todo/           # 📝 Gerenciamento de Tarefas
-├── calendar/       # 📅 Sistema de Calendário
-└── cupom/          # 🎫 Gestão de Cupons
+├── todo/           # 📝 Task Management
+├── calendar/       # 📅 Calendar System
+└── cupom/          # 🎫 Coupon Management
 ```
 
-## 🔗 Integração entre SubApps
+## 🎯 SubApps vs Applications
 
-### Principais Integrações
+### SubApps (This Section)
+- **Definition**: Modular features within main Kodix platform
+- **Characteristics**: Shared runtime, integrated within main web app
+- **Examples**: AI Studio, Chat, Calendar, Todo
 
-- **AI Studio ↔ Chat**: Modelos configurados no AI Studio são usados no Chat
-- **Calendar ↔ Kodix Care**: Agendamentos integrados com gestão clínica
-- **Todo ↔ Todos os SubApps**: Tarefas podem ser criadas a partir de qualquer funcionalidade
-- **Design System**: Componentes compartilhados entre todos os subapps (ver `docs/ui-catalog/`)
+### Applications (See [Applications](../applications/))
+- **Definition**: Complete, standalone applications
+- **Characteristics**: Independent deployment, separate infrastructure
+- **Examples**: Mobile apps, separate web applications
 
-## 📖 Documentação Relacionada
+## 🔗 SubApp Integration
 
-Para contexto completo do projeto:
+### Key Integrations
 
-- `docs/architecture/` - Padrões de arquitetura, frontend e backend
-- `docs/ui-catalog/` - Design system e componentes de UI
-- `docs/database/` - Documentação do banco de dados
-- `docs/subapps/` - Documentação específica por SubApp
+- **AI Studio ↔ Chat**: Models configured in AI Studio are used in Chat
+- **Calendar ↔ Kodix Care**: Scheduling integrated with clinical management
+- **Todo ↔ All SubApps**: Tasks can be created from any functionality
+- **Design System**: Components shared between all subapps (see [UI Design](../ui-design/))
+
+## 📖 Related Documentation
+
+For complete project context:
+
+- <!-- AI-LINK: type="dependency" importance="high" -->
+<!-- AI-CONTEXT-REF: importance="high" type="architecture" -->
+[Architecture](../architecture/)
+<!-- /AI-CONTEXT-REF -->
+<!-- /AI-LINK --> - Architecture patterns, frontend and backend
+- [UI Design](../ui-design/) - Design system and UI components
+- [Infrastructure](../infrastructure/) - Database and infrastructure documentation
+- [Development](../development/) - Development tools and workflows

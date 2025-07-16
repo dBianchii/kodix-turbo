@@ -1,4 +1,4 @@
-import type { TRPCClientError } from "@trpc/client";
+import type { TRPCClientErrorLike } from "@trpc/client";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
@@ -37,7 +37,7 @@ export function useFolderModals() {
         setShowCreateFolder(false);
         setFolderName("");
       },
-      onError: (error: any) => {
+      onError: (error: TRPCClientErrorLike<AppRouter>) => {
         toast.error(error.message || t("apps.chat.folders.error"));
       },
     }),
@@ -54,7 +54,7 @@ export function useFolderModals() {
         setEditingFolder(null);
         setFolderName("");
       },
-      onError: (error: any) => {
+      onError: (error: TRPCClientErrorLike<AppRouter>) => {
         toast.error(error.message || t("apps.chat.folders.error"));
       },
     }),
@@ -73,7 +73,7 @@ export function useFolderModals() {
         setShowDeleteFolder(false);
         setDeletingFolder(null);
       },
-      onError: (error: any) => {
+      onError: (error: TRPCClientErrorLike<AppRouter>) => {
         toast.error(error.message || t("apps.chat.folders.error"));
       },
     }),

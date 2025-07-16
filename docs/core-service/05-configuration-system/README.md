@@ -1,3 +1,16 @@
+<!-- AI-METADATA:
+<!-- AI-CONTEXT-PRIORITY: always-include="false" summary-threshold="medium" -->category: overview
+complexity: basic
+updated: 2025-07-12
+claude-ready: true
+phase: 4
+priority: medium
+token-optimized: true
+audience: all
+ai-context-weight: important
+last-ai-review: 2025-07-12
+-->
+
 # 5. Sistema de Configuração
 
 Esta área do Core Engine fornece a capacidade de personalizar a experiência do Kodix.

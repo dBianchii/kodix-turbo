@@ -1,13 +1,13 @@
 # Cursor Implementation Guide
 
 **Scope**: Cursor AI Assistant
-**Dependencies**: [Universal AI Assistant Rules](../../docs/rules/universal-ai-rules.md)
+**Dependencies**: [Universal AI Assistant Rules](../../docs/rules-ai/rules/universal-ai-rules.md)
 
 ---
 
 ## 🔗 Universal Rules Foundation
 
-**REQUIRED**: All Cursor users must follow the [Universal AI Assistant Rules](../../docs/rules/universal-ai-rules.md) first. This document only adds Cursor-specific implementation details.
+**REQUIRED**: All Cursor users must follow the [Universal AI Assistant Rules](../../docs/rules-ai/rules/universal-ai-rules.md) first. This document only adds Cursor-specific implementation details.
 
 ---
 
@@ -226,5 +226,5 @@ Model Selector logs working: `selectedModelId="2w0uijcrljpq"` (gpt-4.1-mini). Te
 ---
 
 **Last Updated**: 2025-01-06  
-**Dependencies**: [Universal AI Assistant Rules](../../docs/rules/universal-ai-rules.md)  
+**Dependencies**: [Universal AI Assistant Rules](../../docs/rules-ai/rules/universal-ai-rules.md)  
 **Tool Version**: Cursor v0.x+

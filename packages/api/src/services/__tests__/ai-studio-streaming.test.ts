@@ -328,7 +328,7 @@ describe("AI Studio Streaming - Regression Tests", () => {
         vi.mocked(createOpenAI).mockImplementation(mockCreateOpenAI);
 
         // Test the provider creation logic
-        const result = await AiStudioService["createAIProvider"](
+        const result = await AiStudioService.createAIProvider(
           mockModel,
           "sk-test-token",
         );
@@ -350,7 +350,7 @@ describe("AI Studio Streaming - Regression Tests", () => {
         const mockCreateAnthropic = vi.fn().mockReturnValue(vi.fn());
         vi.mocked(createAnthropic).mockImplementation(mockCreateAnthropic);
 
-        const result = await AiStudioService["createAIProvider"](
+        const result = await AiStudioService.createAIProvider(
           mockModel,
           "sk-ant-token",
         );
@@ -374,7 +374,7 @@ describe("AI Studio Streaming - Regression Tests", () => {
           mockCreateGoogle,
         );
 
-        const result = await AiStudioService["createAIProvider"](
+        const result = await AiStudioService.createAIProvider(
           mockModel,
           "google-token",
         );
@@ -393,7 +393,7 @@ describe("AI Studio Streaming - Regression Tests", () => {
         };
 
         await expect(
-          AiStudioService["createAIProvider"](mockModel, "test-token"),
+          AiStudioService.createAIProvider(mockModel, "test-token"),
         ).rejects.toThrow("Provider UnsupportedProvider not supported");
       });
     });

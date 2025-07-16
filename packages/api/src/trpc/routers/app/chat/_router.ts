@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { getTranslations } from "next-intl/server";
 
 import { aiStudioRepository, chatRepository } from "@kdx/db/repositories";
 import {
@@ -23,7 +24,12 @@ import {
   sessionIdSchema,
 } from "@kdx/validators/trpc/app";
 
-import { ChatService } from "../../../../internal/services/chat.service";
+import { AiStudioService } from "../../../../internal/services/ai-studio.service";
+import {
+  AgentImmutabilityError,
+  ChatService,
+} from "../../../../internal/services/chat.service";
+import { getLocaleBasedOnCookie } from "../../../../utils/locales";
 import { chatWithDependenciesMiddleware } from "../../../middlewares";
 import { protectedProcedure } from "../../../procedures";
 import { t } from "../../../trpc";
@@ -229,58 +235,31 @@ export const chatRouter = t.router({
         const sessaoAtual =
           await chatRepository.ChatSessionRepository.findById(id);
         if (!sessaoAtual || sessaoAtual.teamId !== ctx.auth.user.activeTeamId) {
+          const locale = await getLocaleBasedOnCookie();
+          const apiTranslations = await getTranslations({ locale, namespace: "api" });
+          
           throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "Sessão de chat não encontrada",
+            code: "NOT_FOUND", 
+            message: apiTranslations("Session not found"),
           });
         }
 
-        // 🎯 NOVO: Sincronizar activeAgentId quando aiAgentId for alterado
-        const dadosCompletos = { ...dadosAtualizacao };
-
-        if (
-          dadosAtualizacao.aiAgentId !== undefined &&
-          dadosAtualizacao.aiAgentId !== sessaoAtual.aiAgentId
-        ) {
-          // Sincronizar activeAgentId com aiAgentId
-          dadosCompletos.activeAgentId = dadosAtualizacao.aiAgentId;
-          // Limpar o override do modelo da sessão para usar o do agente (ou default)
-          dadosCompletos.aiModelId = undefined;
-
-          // Registrar no histórico se há mudança de agente
-          if (dadosAtualizacao.aiAgentId) {
-            try {
-              // Buscar nome do agente para o histórico
-              const agent = await aiStudioRepository.AiAgentRepository.findById(
-                dadosAtualizacao.aiAgentId,
-              );
-
-              if (agent && agent.teamId === ctx.auth.user.activeTeamId) {
-                const agentHistory = sessaoAtual.agentHistory || [];
-                const newEntry = {
-                  agentId: dadosAtualizacao.aiAgentId,
-                  agentName: agent.name,
-                  switchedAt: new Date().toISOString(),
-                  messageCount: 0, // Será atualizado quando mensagens forem enviadas
-                };
-
-                dadosCompletos.agentHistory = [...agentHistory, newEntry];
-
-                console.log(
-                  `🔄 [UPDATE_SESSION] Agent switched to: ${agent.name} for session: ${id}`,
-                );
-              }
-            } catch (error) {
-              console.warn(
-                `⚠️ [UPDATE_SESSION] Erro ao buscar agente para histórico:`,
-                error,
-              );
-            }
-          } else {
-            // Se aiAgentId for null, limpar activeAgentId também
-            dadosCompletos.activeAgentId = null;
+        // Reject any attempt to change agent after initial assignment
+        if (dadosAtualizacao.aiAgentId !== undefined) {
+          // Allow initial agent assignment (when no agent is set)
+          if (sessaoAtual.aiAgentId && dadosAtualizacao.aiAgentId !== sessaoAtual.aiAgentId) {
+            const locale = await getLocaleBasedOnCookie();
+            const apiTranslations = await getTranslations({ locale, namespace: "api" });
+            
+            throw new TRPCError({
+              code: "FORBIDDEN",
+              message: apiTranslations("Agent cannot be changed after initial assignment"),
+              cause: "AGENT_CHANGE_NOT_ALLOWED",
+            });
           }
         }
+
+        const dadosCompletos = { ...dadosAtualizacao };
 
         await chatRepository.ChatSessionRepository.update(id, dadosCompletos);
 
@@ -600,83 +579,4 @@ export const chatRouter = t.router({
       return generateSessionTitleHandler({ input, ctx });
     }),
 
-  // Agent Switching Endpoints
-  switchAgent: protectedProcedure
-    .input(
-      z.object({
-        sessionId: z.string(),
-        agentId: z.string(),
-        reason: z.enum(["user_switch", "auto_suggestion", "system_default"]),
-      }),
-    )
-    .mutation(async ({ input, ctx }) => {
-      try {
-        const result = await ChatService.switchAgent({
-          sessionId: input.sessionId,
-          agentId: input.agentId,
-          reason: input.reason,
-          teamId: ctx.auth.user.activeTeamId,
-        });
-
-        return result;
-      } catch (error) {
-        console.error("Erro ao trocar agente:", error);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message:
-            error instanceof Error ? error.message : "Erro ao trocar agente",
-          cause: error,
-        });
-      }
-    }),
-
-  getAvailableAgents: protectedProcedure
-    .input(
-      z.object({
-        sessionId: z.string(),
-      }),
-    )
-    .query(async ({ input, ctx }) => {
-      try {
-        const agents = await ChatService.getAvailableAgents(
-          input.sessionId,
-          ctx.auth.user.activeTeamId,
-        );
-
-        return agents;
-      } catch (error) {
-        console.error("Erro ao buscar agentes disponíveis:", error);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message:
-            error instanceof Error ? error.message : "Erro ao buscar agentes",
-          cause: error,
-        });
-      }
-    }),
-
-  getAgentHistory: protectedProcedure
-    .input(
-      z.object({
-        sessionId: z.string(),
-      }),
-    )
-    .query(async ({ input, ctx }) => {
-      try {
-        const history = await ChatService.getAgentHistory(
-          input.sessionId,
-          ctx.auth.user.activeTeamId,
-        );
-
-        return history;
-      } catch (error) {
-        console.error("Erro ao buscar histórico de agentes:", error);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message:
-            error instanceof Error ? error.message : "Erro ao buscar histórico",
-          cause: error,
-        });
-      }
-    }),
 });

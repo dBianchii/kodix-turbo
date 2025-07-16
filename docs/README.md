@@ -1,194 +1,227 @@
-# Kodix Project Documentation
-
 <!-- AI-METADATA:
-category: reference
-stack: general
-complexity: basic
-dependencies: []
+<!-- AI-CONTEXT-PRIORITY: always-include="false" summary-threshold="medium" -->category: overview
+
+complexity: intermediate
+updated: 2025-07-12
+claude-ready: true
+phase: 4
+priority: medium
+token-optimized: true
+audience: all
+ai-context-weight: important
+last-ai-review: 2025-07-12
 -->
 
-<!-- AI-CONTEXT: Documentation Index -->
-<!-- AI-PRIORITY: CRITICAL -->
+# Kodix Documentation Hub
 
-## 🎯 Quick Summary
+Welcome to the Kodix documentation ecosystem - your central resource for understanding, developing, and maintaining the Kodix platform and its applications.
 
-Central hub for all Kodix project documentation, providing structured access to technical guides, architecture patterns, and development resources optimized for both human and AI comprehension.
+## 🎯 Quick Navigation
 
-## 📋 Overview
+### For Developers
 
-This directory contains all the technical and functional documentation for the Kodix project. The documentation follows **context engineering principles** to ensure optimal understanding by both developers and AI assistants.
+- **[Getting Started](./core/getting-started/)** - Set up your development environment
+- \*\*<!-- AI-LINK: type="dependency" importance="high" -->
+  <!-- AI-CONTEXT-REF: importance="high" type="architecture" -->
+  [Architecture](./architecture/)
+  <!-- /AI-CONTEXT-REF -->
+  <!-- /AI-LINK -->** - System design and technical standards
+- **[Development](./development/)** - Development tools, testing, and workflows
+- **[SubApps](./subapps/)** - Feature-specific documentation for modular components
 
-### Documentation Philosophy
+### For Platform Users
 
-- **Context-Aware**: Structured for AI tool comprehension
-- **Progressive Disclosure**: Information layered from overview to details
-- **Cross-Referenced**: Explicit relationships between concepts
-- **Stack-Specific**: Tailored to our Next.js/tRPC/Drizzle stack
+- **[Core Platform](./core/)** - Platform overview and API reference
+- **[Applications](./applications/)** - Standalone applications (mobile, web)
+- **[AI Assistants](./rules-ai/)** - AI-powered development tools
 
-## 🚨 **CRITICAL - READ FIRST**
+### For DevOps & Infrastructure
 
-<!-- AI-PRIORITY: CRITICAL -->
+- **[Infrastructure](./infrastructure/)** - Deployment, monitoring, and security
+- **[UI Design](./ui-design/)** - Design system and component catalog
 
-### ⚠️ SubApp Architecture
+## 📁 Documentation Structure
 
-**IMPORTANT:** Before working with SubApps, you **must** read:
+### Core Platform (`/core/`)
 
-📖 **[SubApp Architecture](./architecture/subapp-architecture.md)** - **SINGLE SOURCE OF TRUTH**
+Central platform documentation including overview, getting started guides, and API references.
 
-This document consolidates **all architectural aspects** of SubApps:
+### Architecture (`/architecture/`)
 
-- 🏗️ Fundamental **Architecture and Patterns**
-- 🔒 **Isolation and Communication** between apps (critical rules)
-- ⚙️ **Per-Team Configurations** (AppTeamConfig)
-- 🚀 **Creating New SubApps** (complete process)
+Technical standards, design patterns, and architectural decisions that govern the entire Kodix ecosystem.
 
-**Documented critical issues** include solutions for context failures (`teamId`, authentication) that can break functionality between apps.
+### Applications (`/applications/`)
 
-### ⚠️ NO MOCK DATA POLICY
+**Complete, standalone applications** with independent runtime and infrastructure:
 
-**CRITICAL:** Do not use mock data in development or production. Always implement real tRPC queries. Explicit authorization is required for any use of mock data.
+- **Mobile Apps**: Native mobile applications (care-mobile)
+- **Web Apps**: Separate web applications with independent deployment
 
-📖 **Full details:** `docs/rules/kodix-rules.md` - "NO MOCK DATA POLICY" Section
+### SubApps (`/subapps/`)
+
+**Modular features** within the main Kodix web platform with shared runtime:
+
+- **[AI Studio](./subapps/ai-studio/)** - AI-powered content and automation tools
+- **[Chat](./subapps/chat/)** - Real-time communication features
+- **[Calendar](./subapps/calendar/)** - Scheduling and calendar management
+- **[Todo](./subapps/todo/)** - Task and project management
+- **[Cupom](./subapps/cupom/)** - Coupon and discount management
+- **[Kodix Care Web](./subapps/kodix-care-web/)** - Healthcare management interface
+
+### Development (`/development/`)
+
+Development tools and workflows:
+
+- **[Setup](./development/setup/)** - Development environment configuration
+- **[Testing](./development/testing/)** - Testing strategies and documentation
+- **[Debugging](./development/debugging/)** - Debugging tools and procedures
+- **[Linting](./development/linting/)** - Code quality and linting standards
+- **[Workflows](./development/workflows/)** - Development processes and CI/CD
+
+### Infrastructure (`/infrastructure/`)
+
+Platform infrastructure and operations:
+
+- **[Database](./infrastructure/database/)** - Database management and schemas
+- **[Deployment](./infrastructure/deployment/)** - Deployment procedures and environments
+- **[Monitoring](./infrastructure/monitoring/)** - System monitoring and observability
+- **[Security](./infrastructure/security/)** - Security policies and procedures
+
+### AI Assistants (`/rules-ai/`)
+
+AI-powered development tools and context engineering for enhanced productivity.
+
+### Documentation Standards (`/documentation-standards/`)
+
+**Central standards and guidelines** for creating, maintaining, and evolving documentation:
+
+- **[Writing Rules](./documentation-standards/writing-rules.md)** - Content style and format standards
+- **[Folder Structure](./documentation-standards/folder-structure.md)** - Directory organization guidelines
+- **[AI Assistant Compatibility](./documentation-standards/ai-assistant-compatibility.md)** - Cross-AI optimization standards
+- **[Architecture Documentation](./documentation-standards/core-architecture-docs.md)** - Technical documentation patterns
+- **[How to Update Documentation](./documentation-standards/how-to-update-docs.md)** - Maintenance workflows
+- **[Script Standards](./documentation-standards/scripts.md)** - Documentation automation and tooling standards
+
+### Context Engineering (`/context-engineering/`)
+
+Advanced documentation strategies and AI-first development methodologies.
+
+### UI Design (`/ui-design/`)
+
+Design system, component catalog, and UI/UX guidelines.
+
+## 🚀 Getting Started
+
+### New Developers
+
+1. Start with **[Core Platform Overview](./core/platform-overview/)**
+2. Follow **[Development Setup](./development/setup/)**
+3. Review \*\*<!-- AI-LINK: type="dependency" importance="high" -->
+   <!-- AI-LINK: type="dependency" importance="high" -->
+   <!-- AI-CONTEXT-REF: importance="high" type="architecture" -->
+   <!-- AI-CONTEXT-REF: importance="high" type="standards" -->
+   [Architecture Standards](./architecture/standards/architecture-standards.md)
+   <!-- /AI-CONTEXT-REF -->
+   <!-- /AI-CONTEXT-REF -->
+   <!-- /AI-LINK -->
+   <!-- /AI-LINK -->**
+4. Explore relevant **[SubApp Documentation](./subapps/)**
+
+### New Contributors
+
+1. Read \*\*<!-- AI-LINK: type="dependency" importance="high" -->
+   <!-- AI-LINK: type="dependency" importance="high" -->
+   <!-- AI-CONTEXT-REF: importance="high" type="architecture" -->
+   <!-- AI-CONTEXT-REF: importance="high" type="standards" -->
+   [Architecture Standards](./architecture/standards/architecture-standards.md)
+   <!-- /AI-CONTEXT-REF -->
+   <!-- /AI-CONTEXT-REF -->
+   <!-- /AI-LINK -->
+   <!-- /AI-LINK -->**
+2. Review **[Development Workflows](./development/workflows/)**
+3. Understand \*\*<!-- AI-LINK: type="related" importance="medium" -->
+   <!-- AI-CONTEXT-REF: importance="medium" type="guide" -->
+   [Testing Guidelines](./development/testing/)
+   <!-- /AI-CONTEXT-REF -->
+   <!-- /AI-LINK -->**
+4. Follow \*\*<!-- AI-LINK: type="dependency" importance="high" -->
+   <!-- AI-CONTEXT-REF: importance="high" type="standards" -->
+   [Code Quality Standards](./development/linting/)
+   <!-- /AI-CONTEXT-REF -->
+   <!-- /AI-LINK -->**
+
+### DevOps Engineers
+
+1. Review **[Infrastructure Overview](./infrastructure/)**
+2. Study **[Deployment Procedures](./infrastructure/deployment/)**
+3. Configure **[Monitoring](./infrastructure/monitoring/)**
+4. Implement \*\*<!-- AI-LINK: type="dependency" importance="high" -->
+   <!-- AI-CONTEXT-REF: importance="high" type="standards" -->
+   [Security Standards](./infrastructure/security/)
+   <!-- /AI-CONTEXT-REF -->
+   <!-- /AI-LINK -->**
+
+## 🎯 Apps vs SubApps
+
+### Applications
+
+- **Definition**: Complete, standalone applications
+- **Characteristics**: Independent deployment, separate repositories/packages
+- **Examples**: Mobile apps, separate web applications
+- **Location**: `/docs/applications/`
+
+### SubApps
+
+- **Definition**: Modular features within main Kodix platform
+- **Characteristics**: Shared runtime, integrated within main web app
+- **Examples**: AI Studio, Chat, Calendar, Todo
+- **Location**: `/docs/subapps/`
+
+## 📋 Documentation Standards
+
+### Naming Conventions
+
+- **Files**: kebab-case (e.g., `architecture-standards.md`)
+- **Folders**: kebab-case (e.g., `ai-studio/`, `getting-started/`)
+- **Language**: English for technical documentation
+
+### File Structure
+
+- Every directory must have a `README.md` file
+- Use progressive disclosure (overview → details)
+- Include clear cross-references and navigation
+- Follow established semantic markers for AI comprehension
+
+### Maintenance
+
+- Keep documentation current with code changes
+- Review and update quarterly
+- Use version control for all changes
+- Follow ownership boundaries by team
+
+## 🔗 Key Resources
+
+- \*\*<!-- AI-LINK: type="dependency" importance="high" -->
+  <!-- AI-LINK: type="dependency" importance="high" -->
+  <!-- AI-CONTEXT-REF: importance="high" type="architecture" -->
+  <!-- AI-CONTEXT-REF: importance="high" type="standards" -->
+  [Architecture Standards](./architecture/standards/architecture-standards.md)
+  <!-- /AI-CONTEXT-REF -->
+  <!-- /AI-CONTEXT-REF -->
+  <!-- /AI-LINK -->
+  <!-- /AI-LINK -->** - Technical foundation
+- **[Universal AI Rules](./rules-ai/rules/universal-ai-rules.md)** - AI assistant guidelines
+- **[Context Engineering](./context-engineering/)** - Advanced documentation strategies
+- **[Development Setup](./development/setup/)** - Getting your environment ready
+
+## 📞 Support & Contribution
+
+- **Issues**: Report documentation issues through the project's issue tracker
+- **Contributions**: Follow the development workflow for documentation updates
+- **Questions**: Reach out to the respective team owners for each section
 
 ---
 
-## 📋 Documentation Structure
-
-<!-- AI-CONTEXT: Navigation Guide -->
-
-### 🏢 Project and Concepts
-
-- **[Kodix Project](./project/)** - Concepts, vision, goals, and business context of the project
-
-### 📱 Main SubApps
-
-- **[Kodix SubApps](./subapps/)** - Main features of the web application (AI Studio, Chat, Calendar, etc.)
-  - **Chat**: AI conversation system ✅ **Recently updated** with token usage badge, auto-focus, and optimized interface
-
-### 📲 Mobile Applications
-
-- **[Kodix Care - Mobile Application](./apps/care-mobile/)** - Documentation for the mobile application (React Native/Expo)
-
-### 🏗️ Architecture and Development
-
-- **[Architecture](./architecture/)** - Development guides, backend/frontend implementation, technical standards
-- **[Context Engineering](./context-engineering/)** - 🧠 **NEW!** Guides on how to build and manage AI context.
-- **[AI Assistants](./ai-assistants/)** - 🤖 **NEW!** Tool-specific setup for Cursor, Claude Code, Gemini CLI, etc.
-- **🚨 [SubApp Architecture](./architecture/subapp-architecture.md)** - **CRITICAL:** Complete SubApp architecture
-
-### 🎨 Components and Design System
-
-- **[Components](./components/)** - Design system, UI components, and component library
-
-### 🗄️ Database
-
-- **[Database](./database/)** - MySQL database documentation, schemas, migrations, and Drizzle ORM
-
-### 📚 References and External Resources
-
-- **[References](./references/)** - Third-party documentation, external APIs, and reference materials
-
-## 🚀 Quick Start
-
-<!-- AI-CONTEXT: Task-Based Navigation -->
-
-1. **New to the project?**
-   - Start with the [Project Overview](./project/overview.md)
-2. **Developing a feature?**
-   - Read the [Development Setup](./architecture/development-setup.md)
-   - Use the [Scripts Reference](./architecture/scripts-reference.md) 📋 **NEW!**
-   - **🚨 REQUIRED:** [SubApp Architecture](./architecture/subapp-architecture.md) if it involves SubApps
-3. **Working on the backend?**
-   - Consult the [Backend Guide](./architecture/backend-guide.md)
-4. **Working on the frontend?**
-   - See the [Frontend Guide](./architecture/frontend-guide.md)
-5. **Working with the database?**
-   - Start with [Getting Started](./database/getting-started.md) for initial setup
-   - Consult [Schema Reference](./database/schema-reference.md) for technical structure
-   - Use [Development Workflow](./database/development-workflow.md) for daily workflow
-6. **Creating a new SubApp?**
-   - Follow the **[SubApp Architecture](./architecture/subapp-architecture.md)** tutorial ("Creating New SubApps" section)
-7. **Working with UI/Components?**
-   - See the [Design System](./components/)
-8. **Working on main features?**
-   - See the [SubApps documentation](./subapps/)
-9. **Working on the mobile application?**
-   - Consult the [Kodix Care documentation](./apps/care-mobile/)
-
-## 📁 Complete Documentation Structure
-
-<!-- AI-CONTEXT: Directory Structure -->
-
-```
-docs/
-├── README.md                           # This file
-├── project/                            # 🏢 Concepts and Business Vision
-│   ├── README.md                       # Index of conceptual documentation
-│   └── overview.md                     # Overview, goals, and context
-├── subapps/                            # 📱 Main SubApps (Core System)
-│   ├── README.md                       # SubApps Index
-│   ├── ai-studio/                      # 🤖 AI Studio (with all AI documentation)
-│   ├── chat/                           # 💬 Chat System ✅ Vercel AI SDK + Optimized UX
-│   ├── todo/                           # 📝 Task System
-│   ├── calendar/                       # 📅 Calendar System
-│   ├── cupom/                          # 🎫 Coupon Management
-│   └── kodix-care-web/                 # 🏥 Kodix Care Web
-├── architecture/                       # 🏗️ Architecture and Technical Development
-│   ├── README.md                       # Index of technical documentation
-│   ├── subapp-architecture.md          # 🚨 CRITICAL: Complete SubApp Architecture
-│   ├── subapp-inter-dependencies.md    # 🔗 Communication between SubApps (legacy/specific)
-│   ├── development-setup.md            # Environment and tools setup
-│   ├── coding-standards.md             # Code standards and conventions
-│   ├── backend-guide.md                # Backend development
-│   ├── frontend-guide.md               # Frontend development
-│   └── workflows.md                    # Git, CI/CD, deployment
-├── context-engineering/                # 🧠 Context Engineering
-│   ├── README.md                       # Guide to building AI context
-│   ├── kodix-documentation-upgrade-plan.md  # Strategic upgrade roadmap
-│   └── standards/                      # Documentation patterns and guidelines
-│       └── documentation-patterns.md   # Core patterns for all docs
-├── components/                         # 🎨 Components and Design System
-│   ├── README.md                       # Design system index
-│   ├── index.md                        # General component index
-│   ├── component-examples.md           # Practical component examples
-│   └── guia-shadcn-sidebar.md          # Specific Shadcn sidebar guide
-├── database/                           # 🗄️ MySQL Database + Drizzle ORM
-│   ├── README.md                       # Database documentation index
-│   ├── getting-started.md              # MySQL database setup from scratch
-│   ├── development-workflow.md         # Daily workflow with branches and schema
-│   ├── drizzle-studio.md               # Visual interface for data exploration
-│   ├── production-migrations.md        # Safe deployment of changes
-│   └── schema-reference.md             # Complete technical schema documentation
-├── apps/                               # 📲 Separate Applications
-│   └── care-mobile/                    # Mobile application
-│       ├── README.md                   # Care documentation index
-│       └── funcionalidades-kodix-care.md # Care Features
-├── rules/                              # 📐 Priority Policies and Standards
-│   ├── PRIORITY-POLICIES.md            # ⚠️ MUST READ FIRST
-│   ├── kodix-rules.md                  # Main project rules
-│   ├── policies/                       # Detailed priority policies
-│   │   ├── code-quality.md             # 🔴 HIGHEST: Zero tolerance for `any`
-│   │   ├── debugging-logging.md        # 🔴 HIGHEST: Debug protocols
-│   │   ├── development-workflow.md     # 🟠 HIGH: Planning requirements
-│   │   ├── monorepo-management.md      # 🟠 HIGH: File edit strategies
-│   │   ├── architecture-decisions.md   # 🟡 MEDIUM: ADR requirements
-│   │   ├── environment-tools.md        # 🟡 MEDIUM: Dev environment
-│   │   └── documentation.md            # 🟢 STANDARD: Doc practices
-│   └── README.md                       # Rules documentation hub
-└── references/                         # 📚 References and External Resources
-    ├── README.md                       # References Index
-    └── VercelAI-llms.txt               # Vercel AI LLMs Reference
-```
-
-## 🎯 Navigation by Feature
-
-<!-- AI-CONTEXT: Feature-Based Index -->
-
-### For Concepts and Business
-
-- **Product Vision**: `project/overview.md`
-
-<!-- AI-RELATED: [architecture/README.md, subapps/README.md, context-engineering/README.md] -->
-<!-- DEPENDS-ON: [] -->
-<!-- REQUIRED-BY: [all-documentation] -->
-<!-- SEE-ALSO: [docs/rules/kodix-rules.md] -->
+**Last Updated**: 2025-07-12  
+**Maintained By**: Kodix Documentation Team  
+**Structure Version**: 2.0 (Phase 1 Complete)

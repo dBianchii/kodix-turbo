@@ -49,7 +49,8 @@ export const aiModel = mysqlTable(
     status: mysqlEnum("status", ["active", "archived"])
       .default("active")
       .notNull(),
-    config: t.json(),
+    config: t.text(),
+    originalConfig: t.text("original_config"),
     enabled: t.boolean().default(true).notNull(),
     createdAt: t.timestamp().defaultNow().notNull(),
     updatedAt: t.timestamp().onUpdateNow(),

@@ -1,240 +1,299 @@
 # AI Sync Adapters
 
-This directory contains adapters for synchronizing AI models from different providers (OpenAI, Google, Anthropic) with the Kodix platform.
+Synchronizes AI models from multiple providers (OpenAI, Google, Anthropic, xAI) with unified pricing management.
 
-## 🎯 Quick Start
+## 🚀 Quick Start
 
-For updating provider configurations, use the **unified approach**:
+**Need to sync models fast?** → **[How-To-Sync.md](./How-To-Sync.md)** - 3-step fast reference guide
 
-- **📘 Complete Guide**: [`update-guide.md`](./update-guide.md) - Unified process for both pricing and strategies
-- **💰 Pricing Only**: [`update-pricing.md`](./update-pricing.md) - Detailed pricing update instructions
-- **🧠 Strategies Only**: [`update-strategies.md`](./update-strategies.md) - Detailed strategy update instructions
+**Want to update pricing?** → **[update/pricing-ai-script.md](./update/pricing-ai-script.md)** - AI pricing update script
 
-## 📚 Overview
-
-Each provider has two types of configurations:
-
-### 🔧 Technical Components
-
-- **Adapter**: TypeScript class that fetches models from the provider's API
-- **Pricing JSON**: Static pricing data for models
-- **Prompt Strategies JSON**: Model-specific prompt engineering strategies
-- **Prompt Templates JSON**: Centralized agent switching prompt templates
-
-### 📖 Documentation
-
-- **Pricing Documentation**: Provider-specific pricing update instructions
-- **Strategies Documentation**: Provider-specific strategy update instructions
-- **Research Guide**: Methodology for researching optimal strategies
+**Want to understand the system?** → Continue reading this README for complete documentation
 
 ## 📁 File Structure
 
-```
+```info
 ai-sync-adapters/
-├── README.md                           # This file - main documentation
-├── update-guide.md                     # Unified update process
-├── update-pricing.md                   # Pricing-specific updates
-├── update-strategies.md                # Strategy-specific updates
-├── prompt-templates.json               # Centralized prompt templates
-├── anthropic-adapter.ts                # Anthropic API synchronization
-├── anthropic-pricing.json              # Anthropic model pricing data
-├── anthropic-pricing.md                # Anthropic pricing documentation
-├── anthropic-prompt-strategies.json    # Anthropic prompt strategies
-├── anthropic-prompt-strategies.md      # Anthropic strategy documentation
-├── google-adapter.ts                   # Google API synchronization
-├── google-pricing.json                 # Google model pricing data
-├── google-pricing.md                   # Google pricing documentation
-├── google-prompt-strategies.json       # Google prompt strategies
-├── google-prompt-strategies.md         # Google strategy documentation
-├── openai-adapter.ts                   # OpenAI API synchronization
-├── openai-pricing.json                 # OpenAI model pricing data
-├── openai-pricing.md                   # OpenAI pricing documentation
-├── openai-prompt-strategies.json       # OpenAI prompt strategies
-└── openai-prompt-strategies.md         # OpenAI strategy documentation
+├── README.md                    # This file - complete documentation
+├── How-To-Sync.md              # ⚡ Fast sync reference guide
+├── supported-providers.json     # 👤 Manual: Provider configuration
+├── supported-models.json        # 👤 Manual: Curated model list
+├── synced-models.json           # 🤖 Auto: Generated unified model data
+├── synced-price.json            # 🤖 Auto: Pricing sync status report
+├── update/
+│   ├── models-sync-provider.dev.ts  # Model sync script
+│   └── pricing-ai-script.md     # 👤 Manual: AI pricing update guide
+└── providers/
+    ├── openai/
+    │   ├── openai-adapter.ts        # Provider adapter
+    │   ├── openai-pricing.md        # 👤 Manual: Pricing documentation
+    │   ├── openai-pricing.json      # 👤 Manual: Pricing configuration
+    │   ├── openai-models.json       # 🤖 Auto: Technical specs
+    │   └── openai-models-summary.json # 🤖 Auto: Model IDs only
+    ├── google/
+    │   ├── google-adapter.ts         # Provider adapter
+    │   ├── google-pricing.md         # 👤 Manual: Pricing documentation
+    │   ├── google-pricing.json       # 👤 Manual: Pricing configuration
+    │   ├── google-models.json        # 🤖 Auto: Technical specs
+    │   └── google-models-summary.json # 🤖 Auto: Model IDs only
+    ├── anthropic/
+    │   ├── anthropic-adapter.ts      # Provider adapter
+    │   ├── anthropic-pricing.md      # 👤 Manual: Pricing documentation
+    │   ├── anthropic-pricing.json    # 👤 Manual: Pricing configuration
+    │   ├── anthropic-models.json     # 🤖 Auto: Technical specs
+    │   └── anthropic-models-summary.json # 🤖 Auto: Model IDs only
+    └── xai/
+        ├── xai-adapter.ts           # Provider adapter
+        ├── xai-pricing.md           # 👤 Manual: Pricing documentation
+        ├── xai-pricing.json         # 👤 Manual: Pricing configuration
+        ├── xai-models.json          # 🤖 Auto: Technical specs
+        └── xai-models-summary.json  # 🤖 Auto: Model IDs only
 ```
 
-## 🎯 Core Components
+**Legend:**
+- 👤 **Manual**: Files you edit manually
+- 🤖 **Auto**: Files generated by sync scripts
 
-### Prompt Templates (`prompt-templates.json`)
+## 🔄 How to Sync
 
-Centralized repository of all prompt templates used for agent switching across different AI providers. Each template is identified by a key and contains placeholders for dynamic content.
+### Two Types of Syncing
 
-**Essential Templates:**
+#### 1. Model Sync (Technical Data)
+Syncs model specifications and technical details from provider APIs:
 
-- `xml-tags-high`: Aggressive XML-structured template for high-capability models
-- `xml-tags-default`: Standard XML-structured template for Claude models
-- `hierarchical-high`: Priority-based template for advanced GPT models
-- `hierarchical-default`: Standard hierarchical template for GPT models
-- `direct-command`: Command-style template for Gemini models
-- `direct-simple`: Simple direct template for standard models
-- `simple`: Minimal template for lightweight models
-- `reasoning-focused`: Specialized template for O-series reasoning models
+```bash
+pnpm run --filter @kdx/api models-sync
+```
 
-## 🚀 How to Update Configurations
+**What it does**:
+- Fetches latest models from each provider's API
+- Updates `[provider]-models.json` with technical specifications
+- Updates `[provider]-models-summary.json` with model IDs
+- Generates unified `synced-models.json` with pricing applied
+- Only syncs models listed in `supported-models.json`
 
-### Recommended Approach
+#### 2. Pricing Sync (Business Data)
+Updates pricing information based on official provider pricing pages:
 
-**Use the unified guide for best results:**
+```bash
+# Follow the AI script instructions:
+# See: update/pricing-ai-script.md
+```
 
-1. **📘 Start here**: [`update-guide.md`](./update-guide.md) - Complete process for updating both pricing and strategies
-2. **🎯 Follow the checklist**: Ensures consistency and validation
-3. **🧪 Test thoroughly**: Both pricing display and agent switching functionality
+**What it does**:
+- Updates `[provider]-pricing.json` files based on official pricing
+- Creates `synced-price.json` status report
+- Ensures all models have current pricing information
 
-### Alternative: Specific Updates
+## 📋 Configuration Files
 
-If you only need to update one type of configuration:
+### Files You Must Configure Manually
 
-- **💰 Pricing only**: [`update-pricing.md`](./update-pricing.md)
-- **🧠 Strategies only**: [`update-strategies.md`](./update-strategies.md)
-
-### Provider Resources
-
-| Provider      | Pricing Guide                                    | Strategy Guide                                                       | Official Page                                                                 |
-| ------------- | ------------------------------------------------ | -------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| **Anthropic** | [`anthropic-pricing.md`](./anthropic-pricing.md) | [`anthropic-prompt-strategies.md`](./anthropic-prompt-strategies.md) | [docs.anthropic.com](https://docs.anthropic.com/en/docs/about-claude/pricing) |
-| **OpenAI**    | [`openai-pricing.md`](./openai-pricing.md)       | [`openai-prompt-strategies.md`](./openai-prompt-strategies.md)       | [openai.com/api/pricing](https://openai.com/api/pricing/)                     |
-| **Google**    | [`google-pricing.md`](./google-pricing.md)       | [`google-prompt-strategies.md`](./google-prompt-strategies.md)       | [ai.google.dev/pricing](https://ai.google.dev/pricing)                        |
-
-## ⚡ Quick Examples
-
-### Adding a New Model
+#### `supported-providers.json`
+**Purpose**: Defines which AI providers to sync from.
+**You must**: Add/remove providers manually.
 
 ```json
-// 1. Add to {provider}-pricing.json
 {
-  "modelId": "new-model-2025-01-01",
+  "providers": [
+    {
+      "name": "OpenAI",
+      "base_url": "https://api.openai.com",
+      "sync_name": "openai"
+    },
+    {
+      "name": "Google", 
+      "base_url": "https://generativelanguage.googleapis.com",
+      "sync_name": "google"
+    }
+  ]
+}
+```
+
+#### `supported-models.json`
+**Purpose**: Curated list of models to include in the platform.
+**You must**: Add new models manually when they become available.
+
+```json
+[
+  {"modelId": "gpt-4o"},
+  {"modelId": "gpt-4o-mini"},
+  {"modelId": "claude-3-5-sonnet-20241022"},
+  {"modelId": "gemini-1.5-pro"}
+]
+```
+
+⚠️ **Important**: Only models in this list will be synced and available in the platform.
+
+### Files Generated Automatically
+
+#### `synced-models.json`
+**Purpose**: Unified model data with pricing applied.
+**Generated by**: `pnpm run --filter @kdx/api models-sync`
+
+Contains complete model information:
+- Technical specifications from provider APIs
+- Pricing from `[provider]-pricing.json` files
+- Only includes models from `supported-models.json`
+
+#### `synced-price.json`
+**Purpose**: Status report of last pricing sync.
+**Generated by**: Following `update/pricing-ai-script.md`
+
+```json
+{
+  "lastSyncDate": "2025-07-15 03:30:00",
+  "providers": [
+    {
+      "provider": "openai",
+      "syncDate": "2025-07-15 03:30:00", 
+      "status": "success",
+      "modelsUpdated": 19,
+      "notes": "Added pricing for gpt-4o-mini, o1-preview..."
+    }
+  ]
+}
+```
+
+## 🎯 Complete Sync Workflow
+
+### Step 1: Configure Base Files (Manual)
+1. Update `supported-providers.json` with desired providers
+2. Update `supported-models.json` with models you want to support
+3. Ensure API keys are set in root `.env` file:
+   ```bash
+   OPENAI_API_KEY=sk-...
+   GOOGLE_API_KEY=AIza...
+   ANTHROPIC_API_KEY=sk-ant-...
+   XAI_API_KEY=xai-...
+   ```
+
+### Step 2: Update Pricing (Manual - AI Assisted)
+Follow the AI script: `update/pricing-ai-script.md`
+
+This will:
+- Update all `providers/[provider]/[provider]-pricing.json` files
+- Create `synced-price.json` status report
+
+### Step 3: Sync Models (Automated)
+```bash
+pnpm run --filter @kdx/api models-sync
+```
+
+This will:
+- Fetch latest model data from provider APIs
+- Apply pricing from pricing JSON files
+- Generate unified `synced-models.json`
+- Update individual provider model files
+
+### Step 4: Verify and Test
+1. Check `synced-models.json` contains expected models with pricing
+2. Test in AI Studio UI to ensure models appear correctly
+3. Build API if needed: `pnpm build --filter @kdx/api`
+
+## 🔧 Pricing System
+
+### Provider-Specific Pricing Files
+Each provider has a manually configured pricing file:
+
+```json
+[
+  {
+    "modelId": "exact-model-id-from-api",
+    "pricing": {
+      "input": "2.50",
+      "output": "10.00", 
+      "unit": "per_million_tokens"
+    }
+  }
+]
+```
+
+**Important**: 
+- Model IDs must match exactly what the provider API returns
+- Prices must be strings (e.g., "2.50" not 2.50)
+- Unit must always be "per_million_tokens"
+
+### Pricing Update Process
+Use the AI script in `update/pricing-ai-script.md`:
+
+1. Reads provider pricing documentation
+2. Visits official pricing pages  
+3. Updates pricing JSON files
+4. Creates sync status report
+
+**Fallback**: If no pricing is found, defaults to $1.00 input / $3.00 output per million tokens.
+
+## 🔧 Troubleshooting
+
+### Model sync fails
+- Check API keys in root `.env` file
+- Verify provider URLs in `supported-providers.json`
+- Check network connectivity
+- Ensure provider has credits/quota available
+
+### Missing models
+- Ensure model is listed in `supported-models.json`
+- Check if API key has correct permissions
+- Verify model is available in provider's API
+- Check console output for errors
+
+### Missing pricing
+- Ensure model has pricing in `providers/[provider]/[provider]-pricing.json`
+- Run pricing update using `update/pricing-ai-script.md`
+- Check that model ID matches exactly between pricing file and API
+
+### Pricing discrepancies
+- Use AI script to update pricing from official sources
+- Verify model IDs match exactly
+- Check `synced-price.json` for last update status
+
+## 🚀 Advanced Usage
+
+### Adding a New Provider
+1. Follow `providers/ADD-NEW-PROVIDER-GUIDE.md`
+2. Add to `supported-providers.json`
+3. Create provider folder with adapter and pricing files
+4. Test sync process
+
+### Adding New Models
+1. Add model ID to `supported-models.json`
+2. Update provider's pricing file if needed
+3. Run model sync to fetch technical specs
+4. Verify model appears in `synced-models.json`
+
+### Custom Pricing Overrides
+Edit `synced-models.json` manually after sync (will be overwritten on next sync):
+
+```json
+{
+  "modelId": "custom-model",
+  "name": "Custom Model", 
+  "provider": "openai",
   "pricing": {
-    "input": "2.00",
-    "output": "8.00",
+    "input": "5.00",
+    "output": "15.00",
     "unit": "per_million_tokens"
   }
 }
-
-// 2. Add to {provider}-prompt-strategies.json
-{
-  "modelId": "new-model-2025-01-01",
-  "strategy": {
-    "type": "provider-advanced",
-    "agentSwitchTemplate": "hierarchical-high", // Reference to a template in prompt-templates.json
-    "assertiveness": "medium",
-    "contextualMemory": "high",
-    "specialHandling": ["relevant-features"]
-  }
-}
 ```
 
-### Testing Process
+## 📋 Validation Checklist
 
-```bash
-# 1. Build API
-pnpm build --filter @kdx/api
+After sync completion:
 
-# 2. Start development environment
-sh scripts/start-dev-bg.sh
+- [ ] `synced-models.json` exists with pricing for all supported models
+- [ ] `synced-price.json` shows successful pricing sync
+- [ ] Provider model files contain technical specs
+- [ ] All models from `supported-models.json` appear in unified data
+- [ ] Pricing appears correctly in AI Studio UI
+- [ ] Model sync completed without errors
 
-# 3. Test in AI Studio UI:
-#    - Trigger provider sync
-#    - Verify pricing displays
-#    - Test agent switching
-```
+---
 
-## Prompt Templates
+**Architecture Summary:**
 
-The `prompt-templates.json` file is a centralized repository for agent switch prompts. Instead of hardcoding prompts in the service layer, this file provides a clean, maintainable way to manage different prompt styles.
-
-- **Centralized**: All prompt templates are in one place.
-- **Reusable**: Strategies in `*-prompt-strategies.json` files refer to templates by their key (e.g., `"xml-tags-high"`).
-- **Maintainable**: Easy to update, add, or A/B test new prompt styles.
-
-### Prompt Strategies (`*-prompt-strategies.json`)
-
-Configuration files that define how each AI model should handle agent switching. Each strategy maps a model to a specific template and behavioral parameters.
-
-**Strategy Structure:**
-
-```json
-{
-  "modelId": "model-name",
-  "strategy": {
-    "type": "provider-category",
-    "agentSwitchTemplate": "template-key",
-    "assertiveness": "low|medium|high",
-    "contextualMemory": "low|medium|high",
-    "specialHandling": ["feature1", "feature2"]
-  }
-}
-```
-
-**Key Fields:**
-
-- `agentSwitchTemplate`: References a template key from `prompt-templates.json`
-- `assertiveness`: How forceful the agent switch instructions should be
-- `contextualMemory`: How much conversation history influences responses
-- `specialHandling`: Provider-specific features or behavioral modifiers
-
-### Usage
-
-The strategies are automatically loaded by the `AiStudioService` when building agent switch prompts. The service reads the strategy, finds the corresponding template from `prompt-templates.json`, and constructs the final prompt.
-
-```typescript
-// 1. Get strategy for the model
-const strategy = this.getPromptStrategy(modelName);
-// 2. Build prompt using the template referenced in the strategy
-const prompt = this.buildAgentSwitchPrompt({ strategy, ... });
-```
-
-### Provider-Specific Files
-
-- **Anthropic**: `anthropic-prompt-strategies.json` + `anthropic-prompt-strategies.md`
-- **OpenAI**: `openai-prompt-strategies.json` + `openai-prompt-strategies.md`
-- **Google**: `google-prompt-strategies.json` + `google-prompt-strategies.md`
-
-### Updating Strategies
-
-When adding new models or updating existing ones:
-
-1. Determine the model's behavioral characteristics
-2. Test the model's response to different prompt styles from `prompt-templates.json`
-3. Update the appropriate JSON file with the optimal strategy
-4. Document any model-specific quirks in the provider's markdown file
-
-## 📋 Important Notes
-
-### Model Synchronization
-
-- **Sync must be triggered from AI Studio UI** - no command-line utility available
-- Both pricing and strategies sync together automatically
-- Changes take effect immediately after successful sync
-
-### Model ID Consistency
-
-- **Critical**: `modelId` must be identical in both pricing and strategy files
-- Must match exactly what the provider's API returns
-- Mismatched IDs result in missing data or sync failures
-
-### Understanding Model IDs in Kodix
-
-It is crucial to understand the difference between the identifiers for a model:
-
-- **`universalModelId` (string)**: This is the **public-facing ID** from the provider (e.g., `"gpt-4o"`, `"claude-3-5-sonnet-20240620"`). **This is the ID that MUST be used as the key in the `pricing` and `strategies` JSON files.** It is what links a model in our system to its configuration.
-- **`name` (string)**: This is a **display name or alias** used internally within Kodix for presentation purposes in the UI. It can be renamed by users and should **NEVER** be used as a key for looking up strategies or pricing. It is for display only.
-- **`id` (cuid)**: This is the **internal primary key** for the model in the Kodix database (`aiModels` table). It is a unique UUID generated by our system and should **NEVER** be used in the configuration files.
-
-The `AiStudioService` uses the internal `id` to fetch the model from the database, retrieves its `universalModelId`, and then uses the `universalModelId` to look up the correct pricing and strategy from the JSON files.
-
-### Data Format Requirements
-
-- **Pricing**: Prices must be strings (`"2.50"`), unit must be `"per_million_tokens"`
-- **Strategies**: Use only valid types/templates for each provider
-- **Both**: Maintain consistent JSON formatting
-
-## 🔗 Complete Documentation
-
-- **📘 [`update-guide.md`](./update-guide.md)** - Unified update process (recommended)
-- **💰 [`update-pricing.md`](./update-pricing.md)** - Detailed pricing instructions
-- **🧠 [`update-strategies.md`](./update-strategies.md)** - Detailed strategy instructions
-- **🔬 [`PROMPT_STRATEGY_RESEARCH.md`](./PROMPT_STRATEGY_RESEARCH.md)** - Research methodology
-
-## 📞 Contact
-
-For questions about pricing updates, prompt strategies, or adapter functionality, refer to the main Kodix documentation or contact the development team.
+- **Configuration**: Manual files control what gets synced
+- **Model Data**: Automated fetch from provider APIs
+- **Pricing**: Manual configuration with AI-assisted updates
+- **Output**: Unified JSON files for platform consumption

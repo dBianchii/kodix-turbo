@@ -2,17 +2,26 @@
 
 <!-- AI-METADATA:
 category: guide
-stack: general
 complexity: basic
-dependencies: []
+updated: 2025-07-13
+claude-ready: true
+priority: critical
+token-optimized: true
+audience: developers
+ai-context-weight: critical
 -->
+
+<!-- AI-CONTEXT-BOUNDARY: start -->
 
 ## 🎯 Quick Summary
 
 The PRP system is a universal workflow for transforming feature requests into working code through structured documentation and AI-assisted implementation.
 
-## 📋 Overview
+## 🔍 📋 Overview
 
+<!-- AI-COMPRESS: strategy="summary" max-tokens="150" -->
+**Quick Summary**: Key points for rapid AI context understanding.
+<!-- /AI-COMPRESS -->
 The PRP (Product Requirements Prompt) system provides a structured approach to feature development that works with any AI coding assistant. Instead of "vibe coding" or ad-hoc development, PRPs ensure consistent, high-quality implementations through comprehensive specifications.
 
 ### Why PRPs?
@@ -196,7 +205,7 @@ The PRP system is designed to work with any AI assistant:
 - ✅ **Windsurf**: Configure custom commands
 - ✅ **Any AI Assistant**: Just reference the command files
 
-## 📚 Templates and Examples
+## 📋 📚 Templates and Examples
 
 ### INITIAL.md Template
 
@@ -267,7 +276,7 @@ When using PRPs in the Kodix monorepo:
 - **Team Alignment**: Clear specifications reduce miscommunication
 - **Continuous Improvement**: System improves with each use
 
-## 🚨 Troubleshooting
+## 🔧 🚨 Troubleshooting
 
 ### Common Issues
 
@@ -292,11 +301,17 @@ When using PRPs in the Kodix monorepo:
 ## 📚 Related Resources
 
 - [Context Engineering Intro](https://github.com/coleam00/context-engineering-intro) - Original inspiration
-- [Universal AI Principles](../../ai-assistants/universal-principles.md) - Core concepts
-- [Kodix Architecture](../../architecture/) - Project patterns
+- [Context Engineering Guide](../README.md) - Core concepts
+- <!-- AI-LINK: type="dependency" importance="high" -->
+<!-- AI-CONTEXT-REF: importance="high" type="architecture" -->
+[Kodix Architecture](../../architecture/)
+<!-- /AI-CONTEXT-REF -->
+<!-- /AI-LINK --> - Project patterns
 - [Development Workflow](../../architecture/development-workflow.md) - Dev practices
 
-<!-- AI-RELATED: [../README.md, ../../ai-assistants/universal-principles.md] -->
-<!-- DEPENDS-ON: [context-engineering-principles] -->
-<!-- REQUIRED-BY: [development-workflow] -->
-<!-- SEE-ALSO: [templates/prp-base.md, INITIAL-example.md] -->
+<!-- AI-CONTEXT-BOUNDARY: end -->
+
+---
+
+**Last Updated**: 2025-07-13  
+**Next**: [Universal Commands](../commands/README.md)

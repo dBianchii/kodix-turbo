@@ -12,7 +12,6 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const action = searchParams.get("action") || "status";
 
-    console.log(`📊 [MONITORING] Endpoint acessado - action: ${action}`);
 
     switch (action) {
       case "status":

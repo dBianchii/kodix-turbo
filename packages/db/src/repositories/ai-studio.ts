@@ -35,6 +35,56 @@ interface ChatCompletionResponse {
   created: number;
 }
 
+// Helper function to validate and suggest Google model names
+function validateGoogleModelName(modelName: string): {
+  isValid: boolean;
+  suggestion?: string;
+} {
+  // Common Google model patterns
+  const validPatterns = [
+    /^gemini-\d+\.\d+-pro$/,
+    /^gemini-\d+\.\d+-flash$/,
+    /^gemini-\d+\.\d+-pro-\d+$/,
+    /^gemini-\d+\.\d+-flash-\d+$/,
+    /^gemini-exp-\d+$/,
+  ];
+
+  // Check if it matches any valid pattern
+  const isValid = validPatterns.some((pattern) => pattern.test(modelName));
+
+  if (!isValid) {
+    // Common mistakes and suggestions
+    if (modelName.includes("2.5") || modelName.includes("2.0")) {
+      return {
+        isValid: false,
+        suggestion:
+          "Try 'gemini-1.5-pro' or 'gemini-1.5-flash' instead. Note: Gemini 2.x models might need different naming.",
+      };
+    }
+
+    if (modelName.includes("pro") && !modelName.includes("gemini")) {
+      return {
+        isValid: false,
+        suggestion:
+          "Model name should start with 'gemini-'. Try 'gemini-1.5-pro'.",
+      };
+    }
+
+    if (
+      modelName.toLowerCase().includes("gemini") &&
+      !modelName.includes("-")
+    ) {
+      return {
+        isValid: false,
+        suggestion:
+          "Google models need version numbers. Try 'gemini-1.5-pro' or 'gemini-1.5-flash'.",
+      };
+    }
+  }
+
+  return { isValid };
+}
+
 export const AiProviderRepository = {
   // Criar novo provider
   create: async (data: { name: string; baseUrl?: string }) => {
@@ -178,6 +228,28 @@ export const AiModelRepository = {
     });
   },
 
+  // Buscar por ID com config original preservado
+  findByIdWithOriginalConfig: async (id: string) => {
+    const result = await db
+      .select({
+        id: aiModel.id,
+        displayName: aiModel.displayName,
+        universalModelId: aiModel.universalModelId,
+        providerId: aiModel.providerId,
+        status: aiModel.status,
+        config: aiModel.config,
+        originalConfig: aiModel.originalConfig, // Raw JSON string with preserved order
+        enabled: aiModel.enabled,
+        createdAt: aiModel.createdAt,
+        updatedAt: aiModel.updatedAt,
+      })
+      .from(aiModel)
+      .where(eq(aiModel.id, id))
+      .limit(1);
+
+    return result[0] || null;
+  },
+
   // Listar modelos ativos
   findMany: async (params: {
     enabled?: boolean;
@@ -212,6 +284,49 @@ export const AiModelRepository = {
         },
       },
     });
+  },
+
+  // Listar modelos com config original preservado
+  findManyWithOriginalConfig: async (params: {
+    enabled?: boolean;
+    providerId?: string;
+    status?: "active" | "archived";
+    limite?: number;
+    offset?: number;
+  }) => {
+    const { enabled, providerId, status, limite = 50, offset = 0 } = params;
+    const condicoes = [];
+
+    if (enabled !== undefined) {
+      condicoes.push(eq(aiModel.enabled, enabled));
+    }
+
+    if (providerId) {
+      condicoes.push(eq(aiModel.providerId, providerId));
+    }
+
+    if (status) {
+      condicoes.push(eq(aiModel.status, status));
+    }
+
+    return db
+      .select({
+        id: aiModel.id,
+        displayName: aiModel.displayName,
+        universalModelId: aiModel.universalModelId,
+        providerId: aiModel.providerId,
+        status: aiModel.status,
+        config: aiModel.config,
+        originalConfig: aiModel.originalConfig, // Raw JSON string with preserved order
+        enabled: aiModel.enabled,
+        createdAt: aiModel.createdAt,
+        updatedAt: aiModel.updatedAt,
+      })
+      .from(aiModel)
+      .where(condicoes.length > 0 ? and(...condicoes) : undefined)
+      .limit(limite)
+      .offset(offset)
+      .orderBy(asc(aiModel.displayName));
   },
 
   // Buscar modelos por provider (nome)
@@ -289,6 +404,50 @@ export const AiModelRepository = {
       // Excluir modelo
       await tx.delete(aiModel).where(eq(aiModel.id, id));
     });
+  },
+
+  // Buscar modelo por universalModelId
+  findByUniversalModelId: async (universalModelId: string) => {
+    return db.query.aiModel.findFirst({
+      where: eq(aiModel.universalModelId, universalModelId),
+      with: {
+        provider: {
+          columns: { id: true, name: true, baseUrl: true },
+        },
+      },
+    });
+  },
+
+  // Upsert modelo (update if exists, create if not)
+  upsert: async (data: {
+    displayName: string;
+    universalModelId: string;
+    providerId: string;
+    config?: any;
+    enabled?: boolean;
+    status?: "active" | "archived";
+  }) => {
+    const existingModel = await AiModelRepository.findByUniversalModelId(
+      data.universalModelId,
+    );
+
+    if (existingModel) {
+      // Update existing model
+      const updateData = {
+        ...data,
+        updatedAt: new Date(),
+      };
+      await db
+        .update(aiModel)
+        .set(updateData)
+        .where(eq(aiModel.universalModelId, data.universalModelId));
+      return AiModelRepository.findById(existingModel.id);
+    } else {
+      // Create new model
+      const [result] = await db.insert(aiModel).values(data).$returningId();
+      if (!result) throw new Error("Falha ao criar modelo");
+      return AiModelRepository.findById(result.id);
+    }
   },
 };
 
@@ -382,28 +541,18 @@ export const AiAgentRepository = {
     instructions: string; // Obrigatório conforme o plano
     libraryId?: string;
   }) => {
-    console.log("[AiAgentRepository.create] Starting creation with data:", {
-      name: data.name,
-      teamId: data.teamId,
-      createdById: data.createdById,
-      instructionsLength: data.instructions.length,
-      libraryId: data.libraryId || "undefined",
-    });
-
     try {
       // Verificar se o team existe
       const teamExists = await db.query.teams.findFirst({
         where: eq(teams.id, data.teamId),
         columns: { id: true },
       });
-      console.log("[AiAgentRepository.create] Team exists:", !!teamExists);
 
       // Verificar se o user existe
       const userExists = await db.query.users.findFirst({
         where: eq(users.id, data.createdById),
         columns: { id: true },
       });
-      console.log("[AiAgentRepository.create] User exists:", !!userExists);
 
       // Verificar se a library existe (se fornecida)
       if (data.libraryId && data.libraryId.trim() !== "") {
@@ -411,10 +560,6 @@ export const AiAgentRepository = {
           where: eq(aiLibrary.id, data.libraryId),
           columns: { id: true },
         });
-        console.log(
-          "[AiAgentRepository.create] Library exists:",
-          !!libraryExists,
-        );
 
         if (!libraryExists) {
           throw new Error(`Biblioteca com ID ${data.libraryId} não encontrada`);
@@ -430,29 +575,17 @@ export const AiAgentRepository = {
             : undefined,
       };
 
-      console.log("[AiAgentRepository.create] Cleaned data:", {
-        ...cleanedData,
-        instructionsLength: cleanedData.instructions.length,
-      });
-
-      console.log("[AiAgentRepository.create] Attempting database insert...");
       const [result] = await db
         .insert(aiAgent)
         .values(cleanedData)
         .$returningId();
-      console.log("[AiAgentRepository.create] Insert result:", result);
 
       if (!result) {
         console.error("[AiAgentRepository.create] No result from insert");
         throw new Error("Falha ao criar agente");
       }
 
-      console.log(
-        "[AiAgentRepository.create] Finding created agent by ID:",
-        result.id,
-      );
       const createdAgent = await AiAgentRepository.findById(result.id);
-      console.log("[AiAgentRepository.create] Created agent:", createdAgent);
 
       return createdAgent;
     } catch (error: any) {
@@ -1159,22 +1292,9 @@ export const AiTeamModelConfigRepository = {
     testPrompt = "Olá! Você está funcionando corretamente?",
   ) => {
     try {
-      console.log(
-        `🧪 [TEST_START] Iniciando teste do modelo ${modelId} para team ${teamId}`,
-      );
-
       // 1. Verificar se o modelo está disponível para o team
       const availableModels =
         await AiTeamModelConfigRepository.findAvailableModelsByTeam(teamId);
-
-      console.log(
-        `📋 [TEST] Modelos disponíveis encontrados: ${availableModels.length}`,
-      );
-      availableModels.forEach((m) => {
-        console.log(
-          `   • ${m.displayName} (ID: ${m.id}) - Provider: ${m.provider.name}`,
-        );
-      });
 
       const modelData = availableModels.find((m) => m.id === modelId);
 
@@ -1187,10 +1307,6 @@ export const AiTeamModelConfigRepository = {
       if (!modelData.provider) {
         throw new Error("Dados do provedor não foram carregados");
       }
-
-      console.log(
-        `✅ [TEST] Modelo encontrado: ${modelData.displayName} (Provider: ${modelData.provider.name})`,
-      );
 
       // 2. Buscar token do provedor
       const providerToken =
@@ -1205,94 +1321,232 @@ export const AiTeamModelConfigRepository = {
         );
       }
 
-      console.log(
-        `🔑 [TEST] Token encontrado para o provedor ${modelData.provider.name}`,
-      );
-
       // 3. Preparar configurações para o teste
       const modelConfig = (modelData.config as any) || {};
       const modelName =
         modelConfig.modelId || modelConfig.version || modelData.displayName;
       const baseUrl = modelData.provider.baseUrl || "https://api.openai.com/v1";
 
-      console.log(`🚀 [TEST] Configurações:`);
-      console.log(`   • Modelo API: ${modelName}`);
-      console.log(`   • Base URL: ${baseUrl}`);
-      console.log(`   • Prompt: ${testPrompt}`);
-
-      // 4. Fazer uma chamada de teste usando fetch (similar ao chat stream)
+      // 4. Fazer uma chamada de teste usando configuração específica por provider
       const startTime = Date.now();
-      const testResponse = await fetch(`${baseUrl}/chat/completions`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${providerToken.token}`,
+      const providerName = modelData.provider.name.toLowerCase();
+
+      // Configure request based on provider
+      let requestUrl = `${baseUrl}/chat/completions`;
+      let requestHeaders: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+      let requestBody: any = {
+        model: modelName,
+        messages: [
+          {
+            role: "user",
+            content: testPrompt,
+          },
+        ],
+        max_tokens: 50,
+        temperature: 0.7,
+      };
+
+      // Provider-specific configurations
+      if (providerName === "google") {
+        // Validate Google model name and provide suggestions
+        const validation = validateGoogleModelName(modelName);
+        if (!validation.isValid) {
+          console.warn(
+            `⚠️ [TEST] Google model name validation failed: ${modelName}`,
+          );
+          if (validation.suggestion) {
+            console.warn(`💡 [TEST] Suggestion: ${validation.suggestion}`);
+          }
+        }
+
+        requestUrl = `${baseUrl}/models/${modelName}:generateContent`;
+        requestHeaders = {
           "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+          "x-goog-api-key": providerToken.token,
+        };
+        requestBody = {
+          contents: [
+            {
+              parts: [
+                {
+                  text: testPrompt,
+                },
+              ],
+            },
+          ],
+          generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 1000,
+          },
+        };
+      } else if (providerName === "anthropic") {
+        requestUrl = `${baseUrl}/messages`;
+        requestHeaders = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${providerToken.token}`,
+          "anthropic-version": "2023-06-01",
+        };
+        requestBody = {
           model: modelName,
+          max_tokens: 50,
           messages: [
             {
               role: "user",
               content: testPrompt,
             },
           ],
-          max_tokens: 50,
-          temperature: 0.7,
-        }),
+        };
+      } else if (providerName === "xai") {
+        requestUrl = `${baseUrl}/chat/completions`;
+        requestHeaders = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${providerToken.token}`,
+        };
+        // XAI uses standard OpenAI format
+      } else {
+        // Default to OpenAI format
+        requestHeaders = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${providerToken.token}`,
+        };
+      }
+
+      // Create AbortController for timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
+      const testResponse = await fetch(requestUrl, {
+        method: "POST",
+        headers: requestHeaders,
+        body: JSON.stringify(requestBody),
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       const endTime = Date.now();
       const latencyMs = endTime - startTime;
 
-      console.log(
-        `⏱️ [TEST] Resposta recebida em ${latencyMs}ms - Status: ${testResponse.status}`,
-      );
-
       if (!testResponse.ok) {
         const errorText = await testResponse.text();
         console.error(
-          `❌ [TEST] Erro da API: ${testResponse.status} - ${errorText}`,
+          `❌ [TEST] API Error: ${testResponse.status} - ${errorText}`,
         );
+
+        // Create detailed error message
+        const errorDetails = {
+          provider: modelData.provider.name,
+          model: modelName,
+          status: testResponse.status,
+          statusText: testResponse.statusText,
+          endpoint: requestUrl,
+          error: errorText,
+          debugInfo: {
+            baseUrl,
+            providerName,
+            modelId: modelData.id,
+            hasToken: !!providerToken.token,
+            tokenPrefix: providerToken.token.substring(0, 8) + "...",
+          },
+        };
+
         throw new Error(
-          `Erro na API do ${modelData.provider.name}: ${testResponse.status} - ${errorText}`,
+          `API Error [${testResponse.status}]: ${errorText}\n\nDebug Info:\n${JSON.stringify(errorDetails, null, 2)}`,
         );
       }
 
-      const testResult = (await testResponse.json()) as ChatCompletionResponse;
+      const testResult = (await testResponse.json()) as any;
 
-      if (!testResult.choices || testResult.choices.length === 0) {
-        throw new Error("Resposta da API não contém choices válidos");
+      let responseText = "";
+      let usage = null;
+
+      // Parse response based on provider
+      if (providerName === "google") {
+        // Google Gemini format
+        if (testResult.candidates && testResult.candidates.length > 0) {
+          const candidate = testResult.candidates[0];
+
+          if (candidate.content?.parts && candidate.content.parts.length > 0) {
+            responseText =
+              candidate.content.parts[0].text || "No response text";
+          } else {
+          }
+        } else {
+        }
+
+        if (testResult.usageMetadata) {
+          usage = {
+            promptTokens: testResult.usageMetadata.promptTokenCount || 0,
+            completionTokens:
+              testResult.usageMetadata.candidatesTokenCount || 0,
+            totalTokens: testResult.usageMetadata.totalTokenCount || 0,
+          };
+        }
+      } else if (providerName === "anthropic") {
+        // Anthropic format
+        if (testResult.content && testResult.content.length > 0) {
+          responseText = testResult.content[0].text || "No response text";
+        }
+
+        if (testResult.usage) {
+          usage = {
+            promptTokens: testResult.usage.input_tokens || 0,
+            completionTokens: testResult.usage.output_tokens || 0,
+            totalTokens:
+              (testResult.usage.input_tokens || 0) +
+              (testResult.usage.output_tokens || 0),
+          };
+        }
+      } else {
+        // OpenAI/XAI format
+        if (!testResult.choices || testResult.choices.length === 0) {
+          throw new Error("API response doesn't contain valid choices");
+        }
+
+        responseText =
+          testResult.choices[0]?.message?.content || "No response text";
+        usage = testResult.usage;
       }
 
-      const responseText =
-        testResult.choices[0]?.message?.content || "Sem resposta";
+      if (!responseText) {
+        throw new Error("Unable to extract response text from API response");
+      }
 
-      console.log(
-        `✅ [TEST_SUCCESS] Modelo funcionando: ${responseText.substring(0, 100)}...`,
-      );
-
-      return {
+      const successResult = {
         success: true,
         modelName,
         providerName: modelData.provider.name,
         responseText,
-        usage: testResult.usage,
+        usage,
         latencyMs,
         testPrompt,
         timestamp: new Date().toISOString(),
       };
+
+      return successResult;
     } catch (error: any) {
       console.error(
         `❌ [TEST_ERROR] Erro ao testar modelo ${modelId}:`,
         error.message,
       );
 
-      return {
+      let errorMessage = error.message;
+
+      // Handle timeout errors specifically
+      if (error.name === "AbortError") {
+        errorMessage = `Timeout: O modelo ${modelId} não respondeu em 30 segundos. Isso pode indicar que o modelo está sobrecarregado ou há problemas de rede. Tente novamente em alguns minutos.`;
+      }
+
+      const errorResult = {
         success: false,
         modelId,
-        error: error.message,
+        error: errorMessage,
         timestamp: new Date().toISOString(),
       };
+
+      return errorResult;
     }
   },
 };

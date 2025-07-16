@@ -1,0 +1,265 @@
+{
+  "generatedAt": "2025-07-16T13:15:38.332Z",
+  "provider": "XAI",
+  "totalModels": 6,
+  "models": [
+    {
+      "modelId": "grok-2-1212",
+      "name": "Grok 2 1212",
+      "displayName": "Grok 2 1212",
+      "modelFamily": "grok-2",
+      "provider": "xai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text"
+      ],
+      "trainingDataCutoff": "2024-06",
+      "releaseDate": "2024-08-15",
+      "modelType": "text",
+      "inputFormat": [
+        "text"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "web_search",
+        "real_time_data",
+        "x_integration",
+        "live_search"
+      ]
+    },
+    {
+      "modelId": "grok-3",
+      "name": "Grok 3",
+      "displayName": "Grok 3",
+      "modelFamily": "grok-3",
+      "provider": "xai",
+      "version": "",
+      "maxTokens": 128000,
+      "contextWindow": 128000,
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text",
+        "vision"
+      ],
+      "trainingDataCutoff": "2024-08",
+      "releaseDate": "2024-11-01",
+      "modelType": "multimodal",
+      "inputFormat": [
+        "text",
+        "image",
+        "vision"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "web_search",
+        "real_time_data",
+        "code_interpreter",
+        "x_integration",
+        "live_search"
+      ]
+    },
+    {
+      "modelId": "grok-3-fast",
+      "name": "Grok 3 Fast",
+      "displayName": "Grok 3 Fast",
+      "modelFamily": "grok-3",
+      "provider": "xai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text",
+        "vision"
+      ],
+      "trainingDataCutoff": "2024-08",
+      "releaseDate": "2024-11-01",
+      "modelType": "multimodal",
+      "inputFormat": [
+        "text",
+        "image",
+        "vision"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "web_search",
+        "real_time_data",
+        "code_interpreter",
+        "x_integration",
+        "live_search"
+      ]
+    },
+    {
+      "modelId": "grok-3-mini",
+      "name": "Grok 3 Mini",
+      "displayName": "Grok 3 Mini",
+      "modelFamily": "grok-3",
+      "provider": "xai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text",
+        "vision"
+      ],
+      "trainingDataCutoff": "2024-08",
+      "releaseDate": "2024-11-01",
+      "modelType": "multimodal",
+      "inputFormat": [
+        "text",
+        "image",
+        "vision"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "web_search",
+        "real_time_data",
+        "code_interpreter",
+        "x_integration",
+        "live_search"
+      ]
+    },
+    {
+      "modelId": "grok-3-mini-fast",
+      "name": "Grok 3 Mini Fast",
+      "displayName": "Grok 3 Mini Fast",
+      "modelFamily": "grok-3",
+      "provider": "xai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text",
+        "vision"
+      ],
+      "trainingDataCutoff": "2024-08",
+      "releaseDate": "2024-11-01",
+      "modelType": "multimodal",
+      "inputFormat": [
+        "text",
+        "image",
+        "vision"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "web_search",
+        "real_time_data",
+        "code_interpreter",
+        "x_integration",
+        "live_search"
+      ]
+    },
+    {
+      "modelId": "grok-4-0709",
+      "name": "Grok 4 0709",
+      "displayName": "Grok 4 0709",
+      "modelFamily": "grok-4",
+      "provider": "xai",
+      "version": "",
+      "maxTokens": 128000,
+      "contextWindow": 128000,
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text",
+        "vision"
+      ],
+      "trainingDataCutoff": "2024-10",
+      "releaseDate": "2024-07-09",
+      "modelType": "multimodal",
+      "inputFormat": [
+        "text",
+        "image",
+        "vision"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "web_search",
+        "real_time_data",
+        "code_interpreter",
+        "x_integration",
+        "live_search"
+      ]
+    }
+  ]
+}

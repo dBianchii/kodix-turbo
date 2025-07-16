@@ -57,9 +57,6 @@ export function ExternalStoreRuntimeProvider({
   const onNew = useCallback(
     async (message: AppendMessage) => {
       if (!sessionId) {
-        console.warn(
-          "⚠️ [EXTERNAL_STORE] Tentativa de enviar mensagem sem sessionId",
-        );
         return;
       }
 
@@ -75,10 +72,6 @@ export function ExternalStoreRuntimeProvider({
         throw new Error("Formato de mensagem não suportado");
       }
 
-      console.log(
-        "💬 [EXTERNAL_STORE] Nova mensagem:",
-        input.slice(0, 50) + "...",
-      );
       setIsRunning(true);
 
       try {
@@ -122,14 +115,8 @@ export function ExternalStoreRuntimeProvider({
 
             const chunk = decoder.decode(value, { stream: true });
             // Processar chunk se necessário
-            // console.log(
-            //   "📡 [EXTERNAL_STORE] Chunk recebido:",
-            //   chunk.slice(0, 100),
-            // );
           }
         }
-
-        console.log("✅ [EXTERNAL_STORE] Mensagem processada com sucesso");
 
         // 🔄 INVALIDAÇÃO AUTOMÁTICA: Forçar re-fetch das queries
         // Isso automaticamente sincroniza títulos atualizados
@@ -145,14 +132,9 @@ export function ExternalStoreRuntimeProvider({
           }),
         ]);
 
-        console.log(
-          "🔄 [EXTERNAL_STORE] Cache invalidado - títulos sincronizados",
-        );
-
         // Refetch local para atualizar estado imediatamente
         await refetch();
       } catch (error) {
-        console.error("❌ [EXTERNAL_STORE] Erro ao processar mensagem:", error);
         if (error instanceof Error) {
           throw error;
         }
@@ -166,7 +148,6 @@ export function ExternalStoreRuntimeProvider({
 
   // Handler para cancelar geração
   const onCancel = useCallback(async () => {
-    console.log("🛑 [EXTERNAL_STORE] Cancelando geração");
     setIsRunning(false);
   }, []);
 
@@ -177,14 +158,6 @@ export function ExternalStoreRuntimeProvider({
     onNew,
     onCancel,
     convertMessage: (message: ThreadMessageLike) => message,
-  });
-
-  console.log("🔄 [EXTERNAL_STORE] Runtime state:", {
-    sessionId,
-    messagesCount: threadMessages.length,
-    isLoading: isLoadingSession,
-    isRunning,
-    sessionTitle: session?.title ?? "Sem título",
   });
 
   return (

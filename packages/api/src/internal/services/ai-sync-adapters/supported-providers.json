@@ -1,0 +1,24 @@
+{
+  "providers": [
+    {
+      "name": "OpenAI",
+      "base_url": "https://api.openai.com",
+      "sync_name": "openai"
+    },
+    {
+      "name": "Google",
+      "base_url": "https://generativelanguage.googleapis.com",
+      "sync_name": "google"
+    },
+    {
+      "name": "Anthropic",
+      "base_url": "https://api.anthropic.com",
+      "sync_name": "anthropic"
+    },
+    {
+      "name": "XAI",
+      "base_url": "https://api.x.ai/v1",
+      "sync_name": "xai"
+    }
+  ]
+}

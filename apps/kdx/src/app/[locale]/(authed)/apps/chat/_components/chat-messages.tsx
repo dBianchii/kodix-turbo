@@ -1,25 +1,50 @@
 "use client";
 
 import type { Message } from "@ai-sdk/react";
+import { useEffect } from "react";
 import { MessageCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 
+import { useThinkingState } from "../_hooks/useThinkingState";
 import { Message as MessageComponent } from "./message";
+import { ThinkingIndicator } from "./thinking-indicator";
 
 interface ChatMessagesProps {
   messages: Message[];
   isLoading?: boolean;
-  isError?: boolean;
   bottomRef?: React.RefObject<HTMLDivElement | null>;
+  onThinkingStateChange?: (isThinking: boolean) => void;
 }
 
 export function ChatMessages({
   messages,
   isLoading,
-  isError,
   bottomRef,
+  onThinkingStateChange,
 }: ChatMessagesProps) {
   const t = useTranslations();
+
+  // Use thinking state hook to manage thinking indicator
+  const lastMessage = messages[messages.length - 1];
+  const isActuallyStreaming = Boolean(
+    isLoading &&
+      lastMessage?.role === "assistant" &&
+      lastMessage?.content &&
+      lastMessage.content.length > 0,
+  );
+
+  const { isThinking, thinkingDuration, isDelayed } = useThinkingState({
+    isLoading: Boolean(isLoading),
+    isStreaming: isActuallyStreaming,
+    messageCount: messages.length,
+  });
+
+  // Notify parent when thinking state changes for auto-scroll
+  useEffect(() => {
+    if (onThinkingStateChange) {
+      onThinkingStateChange(isThinking);
+    }
+  }, [isThinking, onThinkingStateChange]);
 
   if (messages.length === 0) {
     return (
@@ -48,6 +73,15 @@ export function ChatMessages({
           </div>
         </div>
       ))}
+
+      {/* Show thinking indicator when AI is processing but hasn't started streaming */}
+      <ThinkingIndicator
+        isThinking={isThinking}
+        isStreaming={isActuallyStreaming}
+        thinkingDuration={thinkingDuration}
+        isDelayed={isDelayed}
+      />
+
       {bottomRef && <div ref={bottomRef} />}
     </div>
   );

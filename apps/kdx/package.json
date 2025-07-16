@@ -17,6 +17,7 @@
     "@ai-sdk/google": "^1.2.22",
     "@ai-sdk/openai": "catalog:",
     "@ai-sdk/react": "^1.2.12",
+    "@ai-sdk/xai": "catalog:",
     "@assistant-ui/react": "^0.10.24",
     "@assistant-ui/react-ai-sdk": "^0.10.14",
     "@assistant-ui/react-markdown": "^0.10.5",

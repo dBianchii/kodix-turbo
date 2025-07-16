@@ -140,7 +140,6 @@ export function ChatThreadProvider({
 
   const createThread = useCallback(
     async (options?: CreateThreadOptions): Promise<Thread> => {
-      console.log("🚀 [THREAD_PROVIDER] Criando nova thread:", options);
 
       try {
         const sessionData = await createEmptySessionMutation.mutateAsync({
@@ -176,7 +175,6 @@ export function ChatThreadProvider({
           queryKey: trpc.app.chat.findSessions.queryKey(),
         });
 
-        console.log("✅ [THREAD_PROVIDER] Thread criada:", newThread.id);
         return newThread;
       } catch (error) {
         console.error("❌ [THREAD_PROVIDER] Erro ao criar thread:", error);
@@ -192,11 +190,6 @@ export function ChatThreadProvider({
 
   const updateThread = useCallback(
     (threadId: string, updates: Partial<Thread>) => {
-      console.log(
-        "🔄 [THREAD_PROVIDER] Atualizando thread:",
-        threadId,
-        updates,
-      );
 
       setThreads((prev) =>
         prev.map((thread) =>
@@ -219,7 +212,6 @@ export function ChatThreadProvider({
 
   const deleteThread = useCallback(
     async (threadId: string) => {
-      console.log("🗑️ [THREAD_PROVIDER] Deletando thread:", threadId);
 
       try {
         await deleteSessionMutation.mutateAsync({ sessionId: threadId });
@@ -234,7 +226,6 @@ export function ChatThreadProvider({
           queryKey: trpc.app.chat.findSessions.queryKey(),
         });
 
-        console.log("✅ [THREAD_PROVIDER] Thread deletada:", threadId);
       } catch (error) {
         console.error("❌ [THREAD_PROVIDER] Erro ao deletar thread:", error);
         throw new Error("Failed to delete thread");
@@ -257,10 +248,6 @@ export function ChatThreadProvider({
 
   const appendMessage = useCallback(
     (threadId: string, message: Message) => {
-      console.log(
-        "📝 [THREAD_PROVIDER] Adicionando mensagem à thread:",
-        threadId,
-      );
       const existingThread = threads.find((t) => t.id === threadId);
       if (!existingThread) return;
 
@@ -299,7 +286,6 @@ export function ChatThreadProvider({
 
   const generateThreadTitle = useCallback(
     async (threadId: string, firstMessage: string) => {
-      console.log("🤖 [THREAD_PROVIDER] Gerando título para thread:", threadId);
       const existingThread = threads.find((t) => t.id === threadId);
       if (!existingThread) return;
 
@@ -318,7 +304,6 @@ export function ChatThreadProvider({
           metadata: { ...existingThread.metadata, isGeneratingTitle: false },
         });
 
-        console.log("✅ [THREAD_PROVIDER] Título gerado:", result.title);
       } catch (error) {
         console.error("❌ [THREAD_PROVIDER] Erro ao gerar título:", error);
         const fallbackTitle =
@@ -345,7 +330,6 @@ export function ChatThreadProvider({
 
   const syncThreadFromDB = useCallback(
     async (threadId: string) => {
-      console.log("🔄 [THREAD_PROVIDER] Sincronizando thread do DB:", threadId);
 
       try {
         // ✅ SOLUÇÃO: Criar funções auxiliares que não dependem do contexto React
@@ -441,7 +425,6 @@ export function ChatThreadProvider({
           updatedAt: sessionData ? new Date(sessionData.updatedAt) : new Date(),
         });
 
-        console.log("✅ [THREAD_PROVIDER] Thread sincronizada:", threadId);
       } catch (error) {
         console.error(
           "❌ [THREAD_PROVIDER] Erro ao sincronizar thread:",
@@ -453,7 +436,6 @@ export function ChatThreadProvider({
   );
 
   const syncAllThreads = useCallback(async () => {
-    console.log("🔄 [THREAD_PROVIDER] Sincronizando todas as threads");
     setIsLoadingThreads(true);
 
     try {
@@ -500,10 +482,6 @@ export function ChatThreadProvider({
       }));
 
       setThreads(syncedThreads);
-      console.log(
-        "✅ [THREAD_PROVIDER] Todas as threads sincronizadas:",
-        syncedThreads.length,
-      );
     } catch (error) {
       console.error("❌ [THREAD_PROVIDER] Erro ao sincronizar threads:", error);
     } finally {

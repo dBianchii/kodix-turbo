@@ -22,33 +22,56 @@ import { MessageInput } from "./message-input";
  * ✅ SUB-ETAPA 2.4: Chat ativo com thread context integrado
  * Arquitetura thread-first com fallbacks robustos
  */
-export function ActiveChatWindow({
-  sessionId,
-  onStreamingFinished,
-}: {
+interface ActiveChatWindowProps {
   sessionId: string;
+  onNewSession?: (sessionId: string) => void;
   onStreamingFinished?: () => void;
-}) {
-  // Hook para prevenir problemas de hidratação
+  selectedModelId?: string;
+}
+
+export const ActiveChatWindow = memo(function ActiveChatWindow({
+  sessionId,
+  onNewSession,
+  onStreamingFinished,
+  selectedModelId,
+}: ActiveChatWindowProps) {
+  // Client side state
   const [isClient, setIsClient] = useState(false);
   const [friendlyError, setFriendlyError] = useState<string | null>(null);
 
+  // Refs
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+  const [isThinking, setIsThinking] = useState(false);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const queryClient = useQueryClient();
+
+  // ✅ SUB-ETAPA 2.1: Use selected model ID (no fallback to hard-coded model)
+  const modelId = selectedModelId;
+
+  // Hook para prevenir problemas de hidratação
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  const bottomRef = useRef<HTMLDivElement | null>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
-  const queryClient = useQueryClient();
   const t = useTranslations("apps.chat");
   const trpc = useTRPC();
+
+  // Early return if no model is selected
+  if (!modelId) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <div className="text-center">
+          <p className="text-muted-foreground">
+            Please select a model to start chatting
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   // ✅ SUB-ETAPA 2.4: Thread context integrado
   const threadContext = useThreadContext();
   const { switchToThread, activeThreadId } = threadContext;
-
-  // Modelo padrão
-  const selectedModelId = "claude-3-5-haiku-20241022";
 
   // ✅ SUB-ETAPA 2.4: Options memoizadas para performance
   const sessionOptions = useMemo(
@@ -75,16 +98,6 @@ export function ActiveChatWindow({
       switchToThread(sessionId);
     }
   }, [sessionId, activeThreadId, switchToThread]);
-
-  // ✅ SUB-ETAPA 2.4: Log de montagem (apenas desenvolvimento)
-  useEffect(() => {
-    console.log("🔄 [ACTIVE_CHAT] Component mounted/updated:", {
-      sessionId,
-      session: session?.id,
-      messagesCount: initialMessages?.length,
-      threadContext: !!threadContext,
-    });
-  }, [sessionId, session, initialMessages, threadContext]);
 
   // ✅ SUB-ETAPA 2.4: Refetch inteligente com guards anti-loop
   const [hasInitialized, setHasInitialized] = useState(false);
@@ -131,10 +144,10 @@ export function ActiveChatWindow({
   const chatBody = useMemo(
     () => ({
       chatSessionId: sessionId,
-      selectedModelId,
+      selectedModelId: modelId,
       useAgent: true,
     }),
-    [sessionId, selectedModelId],
+    [sessionId, modelId],
   );
 
   // ✅ SUB-ETAPA 2.4: Callback otimizado onFinish
@@ -170,7 +183,6 @@ export function ActiveChatWindow({
   // ✅ SUB-ETAPA 2.4: Callback otimizado onError
   const handleChatError = useCallback(
     (error: Error) => {
-      console.error("❌ [ACTIVE_CHAT] Erro no chat:", error);
       try {
         const errorJson = JSON.parse(error.message);
         if (errorJson.error) {
@@ -216,10 +228,26 @@ export function ActiveChatWindow({
   const handleSendMessage = useCallback(
     (_message: string) => {
       // O hook useChat não precisa do texto, ele usa o `input` interno
-      // Apenas chamamos o evento de submit
-      handleSubmit(
-        new Event("submit") as unknown as React.FormEvent<HTMLFormElement>,
-      );
+      // Criamos um evento sintético adequado para React
+      const syntheticEvent = {
+        preventDefault: () => {},
+        stopPropagation: () => {},
+        currentTarget: null,
+        target: null,
+        type: "submit",
+        bubbles: false,
+        cancelable: false,
+        defaultPrevented: false,
+        eventPhase: 0,
+        isTrusted: false,
+        timeStamp: Date.now(),
+        nativeEvent: new Event("submit"),
+        isDefaultPrevented: () => false,
+        isPropagationStopped: () => false,
+        persist: () => {},
+      } as unknown as React.FormEvent<HTMLFormElement>;
+
+      handleSubmit(syntheticEvent);
     },
     [handleSubmit],
   );
@@ -314,7 +342,7 @@ export function ActiveChatWindow({
     if (bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages]);
+  }, [messages, isThinking]);
 
   useEffect(() => {
     if (!isLoadingChat) {
@@ -356,8 +384,8 @@ export function ActiveChatWindow({
               <ChatMessages
                 messages={messages}
                 isLoading={isLoadingChat}
-                isError={!!chatError}
                 bottomRef={bottomRef}
+                onThinkingStateChange={setIsThinking}
               />
             ) : (
               !isLoadingSession && (
@@ -412,6 +440,4 @@ export function ActiveChatWindow({
       </div>
     </div>
   );
-}
-
-export const MemoizedActiveChatWindow = memo(ActiveChatWindow);
+});

@@ -19,7 +19,9 @@
     "dev": "tsc",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
+    "models-sync": "npx tsx src/internal/services/ai-sync-adapters/update/models-sync-provider.dev.ts",
+    "sync-models-to-db": "npx tsx src/internal/services/sync-models-to-db.dev.ts"
   },
   "dependencies": {
     "@casl/ability": "catalog:",

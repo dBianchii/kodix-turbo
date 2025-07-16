@@ -54,16 +54,13 @@ export function ExternalStoreRuntimeProvider({
   // Converter mensagens para formato Assistant-UI
   const threadMessages = useMemo(() => {
     if (!initialMessages) return [];
-    return (initialMessages).map(convertMessage);
+    return initialMessages.map(convertMessage);
   }, [initialMessages]);
 
   // Handler para novas mensagens
   const onNew = useCallback(
     async (message: AppendMessage) => {
       if (!sessionId) {
-        console.warn(
-          "⚠️ [EXTERNAL_STORE] Tentativa de enviar mensagem sem sessionId",
-        );
         return;
       }
 
@@ -78,10 +75,6 @@ export function ExternalStoreRuntimeProvider({
       } else {
         throw new Error("Apenas mensagens de texto são suportadas");
       }
-      console.log(
-        "💬 [EXTERNAL_STORE] Nova mensagem:",
-        input.slice(0, 50) + "...",
-      );
 
       setIsRunning(true);
 
@@ -146,7 +139,6 @@ export function ExternalStoreRuntimeProvider({
           }
         }
 
-        console.log("✅ [EXTERNAL_STORE] Mensagem processada com sucesso");
 
         // 🔄 INVALIDAÇÃO AUTOMÁTICA: Forçar re-fetch das queries
         // Isso automaticamente sincroniza títulos atualizados
@@ -162,9 +154,6 @@ export function ExternalStoreRuntimeProvider({
           }),
         ]);
 
-        console.log(
-          "🔄 [EXTERNAL_STORE] Cache invalidado - títulos sincronizados",
-        );
 
         // Refetch local para atualizar estado imediatamente
         await refetch();
@@ -181,7 +170,6 @@ export function ExternalStoreRuntimeProvider({
   // Handler para edição de mensagens
   const onEdit = useCallback(
     async (message: AppendMessage) => {
-      console.log("✏️ [EXTERNAL_STORE] Editando mensagem:", message);
       // Implementar lógica de edição se necessário
       await onNew(message);
     },
@@ -191,7 +179,6 @@ export function ExternalStoreRuntimeProvider({
   // Handler para recarregar mensagens
   const onReload = useCallback(
     async (parentId: string | null) => {
-      console.log("🔄 [EXTERNAL_STORE] Recarregando mensagem:", parentId);
       // Implementar lógica de reload se necessário
       await refetch();
     },
@@ -200,7 +187,6 @@ export function ExternalStoreRuntimeProvider({
 
   // Handler para cancelar geração
   const onCancel = useCallback(async () => {
-    console.log("🛑 [EXTERNAL_STORE] Cancelando geração");
     setIsRunning(false);
   }, []);
 
@@ -217,7 +203,6 @@ export function ExternalStoreRuntimeProvider({
 
   // Loading state enquanto carrega sessão
   if (isLoadingSession) {
-    console.log("⏳ [EXTERNAL_STORE] Carregando sessão...");
   }
 
   return (

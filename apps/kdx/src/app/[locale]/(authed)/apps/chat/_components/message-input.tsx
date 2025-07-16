@@ -91,7 +91,10 @@ export const MessageInput = forwardRef<HTMLTextAreaElement, MessageInputProps>(
     const canSend = currentValue.trim() && !disabled;
 
     return (
-      <div className="mx-4 flex items-end gap-2">
+      <div
+        className="flex items-end gap-2"
+        style={{ marginLeft: "10%", marginRight: "10%" }}
+      >
         <div className="flex-1">
           <Textarea
             ref={textareaRef}

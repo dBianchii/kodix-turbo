@@ -13,11 +13,13 @@ import { useChatSessionManager } from "./useChatSessionManager";
 interface UseSessionModalsProps {
   onSessionSelect?: (sessionId: string | undefined) => void;
   selectedSessionId?: string;
+  selectedAgentId?: string | null;
 }
 
 export function useSessionModals({
   onSessionSelect,
   selectedSessionId,
+  selectedAgentId,
   onAgentChange,
   onModelChange,
 }: UseSessionModalsProps & {
@@ -69,10 +71,35 @@ export function useSessionModals({
 
   useEffect(() => {
     // Reset agent selection when model changes to avoid inconsistencies
-    if (selectedModel && selectedAgent !== "none") {
+    // ✅ Don't reset agent when editing a session - modal should preserve session data
+    if (selectedModel && selectedAgent !== "none" && !showEditSession) {
       setSelectedAgent("none");
     }
-  }, [selectedModel]);
+  }, [selectedModel, showEditSession]);
+
+  const handleEditSession = (session: ChatSessionType) => {
+    setEditingSession(session);
+    setSessionTitle(session.title);
+    setSelectedAgent(session.aiAgentId || "none");
+    setSelectedModel(session.aiModelId || "");
+    setSelectedFolderId(session.chatFolderId || "none");
+    setShowEditSession(true);
+  };
+
+  // ✅ Synchronize modal agent state with external agent state (only when external changes)
+  useEffect(() => {
+    // ✅ NEVER sync when modal is open for editing - modal state has priority
+    if (showEditSession) {
+      return;
+    }
+
+    if (selectedAgentId !== undefined) {
+      const modalAgentValue = selectedAgentId || "none";
+      if (selectedAgent !== modalAgentValue) {
+        setSelectedAgent(modalAgentValue);
+      }
+    }
+  }, [selectedAgentId, editingSession?.aiAgentId, showEditSession]); // ← Add showEditSession to prevent sync during editing
 
   // Mutations
   const updateSessionMutation = useMutation(
@@ -114,7 +141,19 @@ export function useSessionModals({
         setEditingSession(null);
       },
       onError: (error: TRPCClientErrorLike<AppRouter>) => {
-        toast.error(error.message);
+        // Show backend error message directly (already translated)
+        toast.error(error.message || "Failed to update session");
+
+        // ✅ UX Improvement: Revert agent selection to previous valid value
+        if (
+          editingSession &&
+          (error.message?.includes("Agent switching") ||
+            error.message?.includes("Troca de agente") ||
+            error.message?.includes("not allowed") ||
+            error.message?.includes("não é permitida"))
+        ) {
+          setSelectedAgent(editingSession.aiAgentId || "none");
+        }
       },
     }),
   );
@@ -167,34 +206,12 @@ export function useSessionModals({
     }
   };
 
-  const handleEditSession = (session: ChatSessionType) => {
-    setEditingSession(session);
-    setSessionTitle(session.title);
-    setSelectedAgent(session.aiAgentId || "none");
-    setSelectedModel(session.aiModelId || "");
-    setSelectedFolderId(session.chatFolderId || "none");
-    setShowEditSession(true);
-  };
-
   const handleUpdateSession = (models: { id: string }[]) => {
-    if (
-      editingSession &&
-      sessionTitle.trim() &&
-      selectedModel &&
-      models.length > 0
-    ) {
+    if (editingSession && sessionTitle.trim()) {
       // Detectar se houve troca de agente
       const agentChanged =
         selectedAgent !== (editingSession.aiAgentId || "none");
       const newAgentId = selectedAgent === "none" ? undefined : selectedAgent;
-
-      console.log(
-        `🔄 [SESSION_MODALS] Agent change detected: ${agentChanged}`,
-        {
-          oldAgent: editingSession.aiAgentId || "none",
-          newAgent: selectedAgent,
-        },
-      );
 
       // Preparar histórico de agentes se houve mudança
       let agentHistory = editingSession.agentHistory || [];
@@ -209,25 +226,27 @@ export function useSessionModals({
         };
 
         agentHistory = [...agentHistory, previousAgentEntry];
-
-        console.log(
-          `📝 [SESSION_MODALS] Adding to agent history:`,
-          previousAgentEntry,
-        );
       }
 
-      updateSessionMutation.mutate({
+      const baseMutationData = {
         id: editingSession.id,
         title: sessionTitle.trim(),
         chatFolderId:
           selectedFolderId === "none" ? undefined : selectedFolderId,
-        aiAgentId: newAgentId,
-        aiModelId: selectedModel,
-        // Atualizar activeAgentId se houve mudança
-        activeAgentId: agentChanged ? newAgentId : editingSession.activeAgentId,
-        // Atualizar histórico se houve mudança
-        agentHistory: agentChanged ? agentHistory : undefined,
-      });
+        aiModelId: selectedModel || undefined,
+      };
+
+      // ✅ Only send agent data when there's actually an agent change
+      const mutationData = agentChanged
+        ? {
+            ...baseMutationData,
+            aiAgentId: newAgentId, // undefined when "none" is selected
+            activeAgentId: newAgentId || undefined, // undefined when "none" is selected
+            agentHistory: agentHistory,
+          }
+        : baseMutationData;
+
+      updateSessionMutation.mutate(mutationData);
     }
   };
 

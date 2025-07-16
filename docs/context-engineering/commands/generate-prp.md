@@ -1,5 +1,5 @@
 # Generate PRP Command
-
+<!-- AI-CONTEXT-PRIORITY: always-include="false" summary-threshold="medium" -->
 When the user types `/generate-prp` followed by feature details, file path, or structured input:
 
 ## 🚨 **Mandatory Formatting Rules**
@@ -120,8 +120,8 @@ Review coding and implementation standards with **STRICT** boundary enforcement:
 
 ```
 - ESLint rules: @docs/eslint/kodix-eslint-coding-rules.md
-- Architecture boundaries: @docs/architecture/data-contracts-and-boundaries.md
-- Architecture standards: @docs/architecture/Architecture_Standards.md
+- Architecture boundaries: @docs/architecture/backend/data-contracts-and-boundaries.md
+- Architecture standards: @docs/architecture/standards/architecture-standards.md
 - Lessons learned: @docs/architecture/lessons-learned.md
 - Service layer patterns: @docs/architecture/service-layer-patterns.md
 - i18n requirements: No hardcoded strings
@@ -133,6 +133,7 @@ Review coding and implementation standards with **STRICT** boundary enforcement:
 **MANDATORY**: Ensure the plan follows strict ESLint rules:
 
 ```
+<!-- AI-PROGRESS: completed="true" verified="true" -->
 ✅ REQUIRED patterns:
 - useTRPC() pattern (NOT import { api })
 - Explicit typing (NO @ts-nocheck)
@@ -140,6 +141,7 @@ Review coding and implementation standards with **STRICT** boundary enforcement:
 - Validated env (NOT direct process.env)
 - Organized imports (type imports separated)
 
+<!-- AI-STATUS: deprecated -->
 ❌ FORBIDDEN patterns:
 - import { api } from "~/trpc/react"
 - @ts-nocheck anywhere
@@ -293,7 +295,7 @@ language: en
 - Consistent styling
 - Dark mode support
 
-## 🧪 Testing Requirements
+## 🧪 🧪 Testing Requirements
 
 ### Unit Tests
 
@@ -352,7 +354,7 @@ language: en
 
 - Architecture: @docs/architecture/
 - ESLint Rules: @docs/eslint/kodix-eslint-coding-rules.md
-- Data Boundaries: @docs/architecture/data-contracts-and-boundaries.md
+- Data Boundaries: @docs/architecture/backend/data-contracts-and-boundaries.md
 - Service Layer: @docs/architecture/service-layer-patterns.md
 - Testing: @docs/tests/README.md
 - Similar features: [List existing patterns]
@@ -364,6 +366,7 @@ language: en
 Before saving, perform final checks:
 
 ```
+<!-- AI-PROGRESS: completed="true" verified="true" -->
 ✅ MANDATORY CHECKS:
 - [ ] All folder paths in plan actually exist
 - [ ] No outdated instructions included
@@ -414,6 +417,7 @@ docs/
 After generating the PRP, provide a summary:
 
 ```
+<!-- AI-PROGRESS: completed="true" verified="true" -->
 ✅ PRP Generated: [Feature Name]
 
 📄 Location: docs/[path]/XXX-[feature-name].md

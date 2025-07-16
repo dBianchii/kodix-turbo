@@ -80,6 +80,7 @@ catalogs:
 
 catalog:
   "@ai-sdk/openai": ^1.3.21
+  "@ai-sdk/xai": ^1.2.1
   "@bacons/text-decoder": ^0.0.0
   "@casl/ability": ^6.7.3
   "@clack/prompts": ^0.7.0
@@ -159,6 +160,7 @@ catalog:
   eslint-plugin-import: ^2.31.0
   eslint-plugin-jsx-a11y: ^6.10.2
   eslint-plugin-react: ^7.37.2
+  eslint-plugin-react-compiler: ^0.0.0-experimental-d4dd8b5-20241001
   framer-motion: ^11.11.17
   motion: ^12.5.0
   geist: ^1.3.1

@@ -1,0 +1,1120 @@
+{
+  "generatedAt": "2025-07-16T13:15:37.307Z",
+  "provider": "OpenAI",
+  "totalModels": 29,
+  "models": [
+    {
+      "modelId": "gpt-4",
+      "name": "Gpt 4",
+      "displayName": "Gpt 4",
+      "modelFamily": "gpt-4",
+      "provider": "openai",
+      "version": "",
+      "maxTokens": 8192,
+      "contextWindow": 8192,
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text"
+      ],
+      "trainingDataCutoff": "2023-04",
+      "releaseDate": "",
+      "modelType": "text",
+      "inputFormat": [
+        "text"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ]
+    },
+    {
+      "modelId": "gpt-3.5-turbo",
+      "name": "Gpt 3.5 Turbo",
+      "displayName": "Gpt 3.5 Turbo",
+      "modelFamily": "gpt-3.5",
+      "provider": "openai",
+      "version": "",
+      "maxTokens": 16385,
+      "contextWindow": 16385,
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text"
+      ],
+      "trainingDataCutoff": "2021-09",
+      "releaseDate": "",
+      "modelType": "text",
+      "inputFormat": [
+        "text"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools"
+      ]
+    },
+    {
+      "modelId": "o4-mini-deep-research-2025-06-26",
+      "name": "O4 Mini Deep Research 2025 06 26",
+      "displayName": "O4 Mini Deep Research 2025 06 26",
+      "modelFamily": "",
+      "provider": "openai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text"
+      ],
+      "trainingDataCutoff": "",
+      "releaseDate": "",
+      "modelType": "reasoning",
+      "inputFormat": [
+        "text",
+        "code",
+        "math"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ]
+    },
+    {
+      "modelId": "o4-mini-deep-research",
+      "name": "O4 Mini Deep Research",
+      "displayName": "O4 Mini Deep Research",
+      "modelFamily": "",
+      "provider": "openai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text"
+      ],
+      "trainingDataCutoff": "",
+      "releaseDate": "",
+      "modelType": "reasoning",
+      "inputFormat": [
+        "text",
+        "code",
+        "math"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ]
+    },
+    {
+      "modelId": "gpt-3.5-turbo-instruct",
+      "name": "Gpt 3.5 Turbo Instruct",
+      "displayName": "Gpt 3.5 Turbo Instruct",
+      "modelFamily": "gpt-3.5",
+      "provider": "openai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text"
+      ],
+      "trainingDataCutoff": "2021-09",
+      "releaseDate": "",
+      "modelType": "text",
+      "inputFormat": [
+        "text"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": []
+    },
+    {
+      "modelId": "gpt-3.5-turbo-0125",
+      "name": "Gpt 3.5 Turbo 0125",
+      "displayName": "Gpt 3.5 Turbo 0125",
+      "modelFamily": "gpt-3.5",
+      "provider": "openai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text"
+      ],
+      "trainingDataCutoff": "2021-09",
+      "releaseDate": "2024-01-25",
+      "modelType": "text",
+      "inputFormat": [
+        "text"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools"
+      ]
+    },
+    {
+      "modelId": "gpt-4-turbo",
+      "name": "Gpt 4 Turbo",
+      "displayName": "Gpt 4 Turbo",
+      "modelFamily": "gpt-4",
+      "provider": "openai",
+      "version": "",
+      "maxTokens": 128000,
+      "contextWindow": 128000,
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text",
+        "vision"
+      ],
+      "trainingDataCutoff": "2023-04",
+      "releaseDate": "2024-04-09",
+      "modelType": "multimodal",
+      "inputFormat": [
+        "text",
+        "image",
+        "vision"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter",
+        "vision",
+        "image_analysis"
+      ]
+    },
+    {
+      "modelId": "gpt-4o",
+      "name": "Gpt 4o",
+      "displayName": "Gpt 4o",
+      "modelFamily": "gpt-4o",
+      "provider": "openai",
+      "version": "",
+      "maxTokens": 128000,
+      "contextWindow": 128000,
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text",
+        "vision"
+      ],
+      "trainingDataCutoff": "2023-10",
+      "releaseDate": "2024-05-13",
+      "modelType": "multimodal",
+      "inputFormat": [
+        "text",
+        "image",
+        "vision"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter",
+        "vision",
+        "image_analysis"
+      ]
+    },
+    {
+      "modelId": "gpt-4o-mini-2024-07-18",
+      "name": "Gpt 4o Mini 2024 07 18",
+      "displayName": "Gpt 4o Mini 2024 07 18",
+      "modelFamily": "gpt-4o",
+      "provider": "openai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text",
+        "vision"
+      ],
+      "trainingDataCutoff": "2023-10",
+      "releaseDate": "2024-07-18",
+      "modelType": "multimodal",
+      "inputFormat": [
+        "text",
+        "image",
+        "vision"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter",
+        "vision",
+        "image_analysis"
+      ]
+    },
+    {
+      "modelId": "gpt-4o-mini",
+      "name": "Gpt 4o Mini",
+      "displayName": "Gpt 4o Mini",
+      "modelFamily": "gpt-4o",
+      "provider": "openai",
+      "version": "",
+      "maxTokens": 128000,
+      "contextWindow": 128000,
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text",
+        "vision"
+      ],
+      "trainingDataCutoff": "2023-10",
+      "releaseDate": "2024-07-18",
+      "modelType": "multimodal",
+      "inputFormat": [
+        "text",
+        "image",
+        "vision"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter",
+        "vision",
+        "image_analysis"
+      ]
+    },
+    {
+      "modelId": "gpt-4o-2024-08-06",
+      "name": "Gpt 4o 2024 08 06",
+      "displayName": "Gpt 4o 2024 08 06",
+      "modelFamily": "gpt-4o",
+      "provider": "openai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text",
+        "vision"
+      ],
+      "trainingDataCutoff": "2024-04",
+      "releaseDate": "2024-08-06",
+      "modelType": "multimodal",
+      "inputFormat": [
+        "text",
+        "image",
+        "vision"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter",
+        "vision",
+        "image_analysis"
+      ]
+    },
+    {
+      "modelId": "chatgpt-4o-latest",
+      "name": "Chatgpt 4o Latest",
+      "displayName": "Chatgpt 4o Latest",
+      "modelFamily": "gpt-4o",
+      "provider": "openai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text",
+        "vision"
+      ],
+      "trainingDataCutoff": "2023-10",
+      "releaseDate": "2024-05-13",
+      "modelType": "multimodal",
+      "inputFormat": [
+        "text",
+        "image",
+        "vision"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter",
+        "vision",
+        "image_analysis"
+      ]
+    },
+    {
+      "modelId": "o1-preview",
+      "name": "O1 Preview",
+      "displayName": "O1 Preview",
+      "modelFamily": "o1",
+      "provider": "openai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text",
+        "reasoning"
+      ],
+      "trainingDataCutoff": "",
+      "releaseDate": "2024-09-12",
+      "modelType": "reasoning",
+      "inputFormat": [
+        "text",
+        "code",
+        "math"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ]
+    },
+    {
+      "modelId": "o1-mini",
+      "name": "O1 Mini",
+      "displayName": "O1 Mini",
+      "modelFamily": "o1",
+      "provider": "openai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text",
+        "reasoning"
+      ],
+      "trainingDataCutoff": "",
+      "releaseDate": "2024-09-12",
+      "modelType": "reasoning",
+      "inputFormat": [
+        "text",
+        "code",
+        "math"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ]
+    },
+    {
+      "modelId": "o1-2024-12-17",
+      "name": "O1 2024 12 17",
+      "displayName": "O1 2024 12 17",
+      "modelFamily": "o1",
+      "provider": "openai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text",
+        "reasoning"
+      ],
+      "trainingDataCutoff": "",
+      "releaseDate": "2024-12-17",
+      "modelType": "reasoning",
+      "inputFormat": [
+        "text",
+        "code",
+        "math"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ]
+    },
+    {
+      "modelId": "o1",
+      "name": "O1",
+      "displayName": "O1",
+      "modelFamily": "o1",
+      "provider": "openai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text",
+        "reasoning"
+      ],
+      "trainingDataCutoff": "",
+      "releaseDate": "",
+      "modelType": "reasoning",
+      "inputFormat": [
+        "text",
+        "code",
+        "math"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ]
+    },
+    {
+      "modelId": "o3-mini",
+      "name": "O3 Mini",
+      "displayName": "O3 Mini",
+      "modelFamily": "",
+      "provider": "openai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text"
+      ],
+      "trainingDataCutoff": "",
+      "releaseDate": "",
+      "modelType": "reasoning",
+      "inputFormat": [
+        "text",
+        "code",
+        "math"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ]
+    },
+    {
+      "modelId": "o3-mini-2025-01-31",
+      "name": "O3 Mini 2025 01 31",
+      "displayName": "O3 Mini 2025 01 31",
+      "modelFamily": "",
+      "provider": "openai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text"
+      ],
+      "trainingDataCutoff": "",
+      "releaseDate": "2025-01-31",
+      "modelType": "reasoning",
+      "inputFormat": [
+        "text",
+        "code",
+        "math"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ]
+    },
+    {
+      "modelId": "gpt-4o-2024-11-20",
+      "name": "Gpt 4o 2024 11 20",
+      "displayName": "Gpt 4o 2024 11 20",
+      "modelFamily": "gpt-4o",
+      "provider": "openai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text",
+        "vision"
+      ],
+      "trainingDataCutoff": "2023-10",
+      "releaseDate": "2024-11-20",
+      "modelType": "multimodal",
+      "inputFormat": [
+        "text",
+        "image",
+        "vision"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter",
+        "vision",
+        "image_analysis"
+      ]
+    },
+    {
+      "modelId": "o1-pro-2025-03-19",
+      "name": "O1 Pro 2025 03 19",
+      "displayName": "O1 Pro 2025 03 19",
+      "modelFamily": "o1",
+      "provider": "openai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text",
+        "reasoning"
+      ],
+      "trainingDataCutoff": "",
+      "releaseDate": "2025-03-19",
+      "modelType": "reasoning",
+      "inputFormat": [
+        "text",
+        "code",
+        "math"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ]
+    },
+    {
+      "modelId": "o1-pro",
+      "name": "O1 Pro",
+      "displayName": "O1 Pro",
+      "modelFamily": "o1",
+      "provider": "openai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text",
+        "reasoning"
+      ],
+      "trainingDataCutoff": "",
+      "releaseDate": "",
+      "modelType": "reasoning",
+      "inputFormat": [
+        "text",
+        "code",
+        "math"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ]
+    },
+    {
+      "modelId": "o4-mini-2025-04-16",
+      "name": "O4 Mini 2025 04 16",
+      "displayName": "O4 Mini 2025 04 16",
+      "modelFamily": "",
+      "provider": "openai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text"
+      ],
+      "trainingDataCutoff": "",
+      "releaseDate": "2025-04-16",
+      "modelType": "reasoning",
+      "inputFormat": [
+        "text",
+        "code",
+        "math"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ]
+    },
+    {
+      "modelId": "o4-mini",
+      "name": "O4 Mini",
+      "displayName": "O4 Mini",
+      "modelFamily": "",
+      "provider": "openai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text"
+      ],
+      "trainingDataCutoff": "",
+      "releaseDate": "",
+      "modelType": "reasoning",
+      "inputFormat": [
+        "text",
+        "code",
+        "math"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ]
+    },
+    {
+      "modelId": "gpt-4.1-2025-04-14",
+      "name": "Gpt 4.1 2025 04 14",
+      "displayName": "Gpt 4.1 2025 04 14",
+      "modelFamily": "gpt-4",
+      "provider": "openai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text"
+      ],
+      "trainingDataCutoff": "2023-04",
+      "releaseDate": "2025-04-14",
+      "modelType": "text",
+      "inputFormat": [
+        "text"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ]
+    },
+    {
+      "modelId": "gpt-4.1",
+      "name": "Gpt 4.1",
+      "displayName": "Gpt 4.1",
+      "modelFamily": "gpt-4",
+      "provider": "openai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text"
+      ],
+      "trainingDataCutoff": "2023-04",
+      "releaseDate": "2025-01-31",
+      "modelType": "text",
+      "inputFormat": [
+        "text"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ]
+    },
+    {
+      "modelId": "gpt-4.1-mini-2025-04-14",
+      "name": "Gpt 4.1 Mini 2025 04 14",
+      "displayName": "Gpt 4.1 Mini 2025 04 14",
+      "modelFamily": "gpt-4",
+      "provider": "openai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text"
+      ],
+      "trainingDataCutoff": "2023-04",
+      "releaseDate": "2025-04-14",
+      "modelType": "text",
+      "inputFormat": [
+        "text"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ]
+    },
+    {
+      "modelId": "gpt-4.1-mini",
+      "name": "Gpt 4.1 Mini",
+      "displayName": "Gpt 4.1 Mini",
+      "modelFamily": "gpt-4",
+      "provider": "openai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text"
+      ],
+      "trainingDataCutoff": "2023-04",
+      "releaseDate": "2025-01-31",
+      "modelType": "text",
+      "inputFormat": [
+        "text"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ]
+    },
+    {
+      "modelId": "gpt-4.1-nano-2025-04-14",
+      "name": "Gpt 4.1 Nano 2025 04 14",
+      "displayName": "Gpt 4.1 Nano 2025 04 14",
+      "modelFamily": "gpt-4",
+      "provider": "openai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text"
+      ],
+      "trainingDataCutoff": "2023-04",
+      "releaseDate": "2025-04-14",
+      "modelType": "text",
+      "inputFormat": [
+        "text"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ]
+    },
+    {
+      "modelId": "gpt-4.1-nano",
+      "name": "Gpt 4.1 Nano",
+      "displayName": "Gpt 4.1 Nano",
+      "modelFamily": "gpt-4",
+      "provider": "openai",
+      "version": "",
+      "status": "active",
+      "description": "",
+      "modalities": [
+        "text"
+      ],
+      "trainingDataCutoff": "2023-04",
+      "releaseDate": "2025-01-31",
+      "modelType": "text",
+      "inputFormat": [
+        "text"
+      ],
+      "outputFormat": [
+        "text",
+        "json",
+        "structured",
+        "streaming"
+      ],
+      "responseFormat": [
+        "text",
+        "json",
+        "json_object",
+        "structured_output"
+      ],
+      "toolsSupported": [
+        "function_calling",
+        "tools",
+        "code_interpreter"
+      ]
+    }
+  ]
+}

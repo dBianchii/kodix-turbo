@@ -1,53 +1,92 @@
+import { readFileSync } from "fs";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
 import { eq } from "drizzle-orm";
 
 import { db } from "../client";
 import { aiStudioRepository } from "../repositories";
 import { teams, users } from "../schema";
 
+interface SupportedProviderConfig {
+  name: string; // Database name (e.g., "OpenAI")
+  base_url: string; // API URL
+  sync_name: string; // Lowercase name used in synced-models.json (e.g., "openai")
+}
+
+interface SupportedProvidersData {
+  providers: SupportedProviderConfig[];
+}
+
+// Helper function to generate example tokens based on provider name
+function generateExampleToken(providerName: string): string {
+  const providerLower = providerName.toLowerCase();
+
+  switch (providerLower) {
+    case "openai":
+      return "sk-example-openai-token-replace-with-real";
+    case "anthropic":
+      return "sk-ant-example-anthropic-token-replace-with-real";
+    case "google":
+      return "AIzaSy-example-google-token-replace-with-real";
+    case "xai":
+      return "xai-example-token-replace-with-real";
+    default:
+      return `${providerLower}-example-token-replace-with-real`;
+  }
+}
+
 export async function seedAiStudio() {
   try {
-    console.log("🌱 Iniciando seed de AI Studio...");
+    console.log("🌱 Starting AI Studio seed...");
 
     // =============================
-    // 1. Criar providers de IA
+    // 1. Create AI providers
     // =============================
     console.log("Creating AI Providers...");
 
-    const providers = [
-      {
-        name: "OpenAI",
-        baseUrl: "https://api.openai.com/v1",
-      },
-      {
-        name: "Anthropic",
-        baseUrl: "https://api.anthropic.com/v1",
-      },
-      {
-        name: "Google",
-        baseUrl: "https://generativelanguage.googleapis.com/v1",
-      },
-      {
-        name: "Perplexity",
-        baseUrl: "https://api.perplexity.ai",
-      },
-      {
-        name: "DeepSeek",
-        baseUrl: "https://api.deepseek.com/v1",
-      },
-      {
-        name: "Ollama",
-        baseUrl: "http://localhost:11434/api",
-      },
-      {
-        name: "Groq",
-        baseUrl: "https://api.groq.com/openai/v1",
-      },
-    ];
+    // Load providers from supported-providers.json (single source of truth)
+    // Use a more robust path resolution approach
+    const workspaceRoot = process.cwd();
+    const supportedProvidersPath = join(
+      workspaceRoot,
+      "packages",
+      "api",
+      "src",
+      "internal",
+      "services",
+      "ai-sync-adapters",
+      "supported-providers.json",
+    );
+
+    let supportedProvidersData: SupportedProvidersData;
+    try {
+      const supportedProvidersContent = readFileSync(
+        supportedProvidersPath,
+        "utf-8",
+      );
+      supportedProvidersData = JSON.parse(supportedProvidersContent);
+    } catch (error) {
+      console.error("❌ Failed to read supported-providers.json:", error);
+      console.error("Path:", supportedProvidersPath);
+      console.error("Working directory:", process.cwd());
+      throw new Error("Cannot seed providers without supported-providers.json");
+    }
+
+    // Use provider data directly from supported-providers.json
+    const providers = supportedProvidersData.providers.map((provider) => ({
+      name: provider.name, // Already in proper database format
+      baseUrl: provider.base_url,
+    }));
+
+    console.log(
+      `📋 Loaded ${providers.length} providers from supported-providers.json:`,
+      providers.map((p) => p.name).join(", "),
+    );
 
     const createdProviders: any[] = [];
     for (const providerData of providers) {
       try {
-        // Verificar se o provider já existe
+        // Check if provider already exists
         const existingProvider =
           await aiStudioRepository.AiProviderRepository.findByName(
             providerData.name,
@@ -55,43 +94,46 @@ export async function seedAiStudio() {
 
         if (existingProvider) {
           createdProviders.push(existingProvider);
-          console.log(`✓ Provider "${providerData.name}" já existe`);
+          console.log(`✓ Provider "${providerData.name}" already exists`);
         } else {
           const provider =
             await aiStudioRepository.AiProviderRepository.create(providerData);
           if (provider) {
             createdProviders.push(provider);
-            console.log(`✅ Provider criado: ${provider.name}`);
+            console.log(`✅ Provider created: ${provider.name}`);
           }
         }
       } catch (error) {
-        console.error(`❌ Erro ao criar provider ${providerData.name}:`, error);
+        console.error(
+          `❌ Error creating provider ${providerData.name}:`,
+          error,
+        );
       }
     }
 
     // =============================
-    // 2. Criar modelos de IA
+    // 2. Create AI models
     // =============================
-    // O seed de modelos de IA foi removido.
-    // A partir de agora, os modelos serão populados exclusivamente
-    // através do processo de Model Sync na interface administrativa.
+    // AI models seed has been removed.
+    // From now on, models will be populated exclusively
+    // through the Model Sync process in the admin interface.
     console.log("Skipping AI Models seed...");
 
-    console.log("\n📊 Resumo do Seed:");
-    console.log(`   • ${createdProviders.length} providers processados`);
+    console.log("\n📊 Seed Summary:");
+    console.log(`   • ${createdProviders.length} providers processed`);
 
-    console.log("\n✅ Seed de AI Studio concluído com sucesso!");
+    console.log("\n✅ AI Studio seed completed successfully!");
   } catch (error) {
-    console.error("❌ Erro durante o seed de AI Studio:", error);
+    console.error("❌ Error during AI Studio seed:", error);
     throw error;
   }
 }
 
 export async function seedAiStudioWithTeam(teamId: string, userId?: string) {
   try {
-    console.log(`🌱 Iniciando seed de AI Studio para team ${teamId}...`);
+    console.log(`🌱 Starting AI Studio seed for team ${teamId}...`);
 
-    // Buscar providers existentes
+    // Find existing providers
     const providersResult =
       await aiStudioRepository.AiProviderRepository.findMany({
         limite: 100,
@@ -99,15 +141,13 @@ export async function seedAiStudioWithTeam(teamId: string, userId?: string) {
       });
 
     if (providersResult.length === 0) {
-      console.log(
-        "⚠️  Nenhum provider encontrado. Execute o seed geral primeiro.",
-      );
+      console.log("⚠️  No providers found. Run the general seed first.");
       return;
     }
 
-    console.log(`📋 Encontrados ${providersResult.length} providers`);
+    console.log(`📋 Found ${providersResult.length} providers`);
 
-    // Usar o primeiro usuário da team se não especificado
+    // Use the first user from the team if not specified
     let createdById = userId;
     if (!createdById) {
       const teamUsers = await db
@@ -119,30 +159,21 @@ export async function seedAiStudioWithTeam(teamId: string, userId?: string) {
       if (teamUsers.length > 0) {
         createdById = teamUsers[0]!.user.id;
       } else {
-        console.log("⚠️  Nenhum usuário encontrado para a team");
+        console.log("⚠️  No user found for the team");
         return;
       }
     }
 
     // =============================
-    // 1. Criar tokens de exemplo
+    // 1. Create example tokens
     // =============================
     console.log("Creating AI Provider Tokens...");
 
-    const tokenExamples = [
-      {
-        providerName: "OpenAI",
-        token: "sk-example-openai-token-replace-with-real",
-      },
-      {
-        providerName: "Anthropic",
-        token: "sk-ant-example-anthropic-token-replace-with-real",
-      },
-      {
-        providerName: "Google",
-        token: "AIzaSy-example-google-token-replace-with-real",
-      },
-    ];
+    // Generate example tokens dynamically based on available providers
+    const tokenExamples = providersResult.map((provider: any) => ({
+      providerName: provider.name,
+      token: generateExampleToken(provider.name),
+    }));
 
     let tokensCreated = 0;
     for (const tokenData of tokenExamples) {
@@ -151,7 +182,7 @@ export async function seedAiStudioWithTeam(teamId: string, userId?: string) {
       );
       if (provider) {
         try {
-          // Verificar se o token já existe
+          // Check if token already exists
           const existingToken =
             await aiStudioRepository.AiTeamProviderTokenRepository.findByTeamAndProvider(
               teamId,
@@ -165,54 +196,56 @@ export async function seedAiStudioWithTeam(teamId: string, userId?: string) {
               token: tokenData.token,
             });
             tokensCreated++;
-            console.log(`✅ Token criado para provider: ${provider.name}`);
+            console.log(`✅ Token created for provider: ${provider.name}`);
           } else {
-            console.log(`⚠️  Token já existe para provider: ${provider.name}`);
+            console.log(
+              `⚠️  Token already exists for provider: ${provider.name}`,
+            );
           }
         } catch (error) {
           const errorMessage =
-            error instanceof Error ? error.message : "Erro desconhecido";
+            error instanceof Error ? error.message : "Unknown error";
           console.log(
-            `⚠️  Erro ao criar token para ${provider.name}: ${errorMessage}`,
+            `⚠️  Error creating token for ${provider.name}: ${errorMessage}`,
           );
         }
       }
     }
 
     // =============================
-    // 3. Criar bibliotecas de IA exemplo
+    // 3. Create example AI libraries
     // =============================
     console.log("Creating AI Libraries...");
 
     const libraries = [
       {
-        name: "Biblioteca Técnica",
+        name: "Technical Library",
         files: {
           documents: [
             {
-              name: "guia-desenvolvimento.md",
+              name: "development-guide.md",
               type: "markdown",
               url: "https://example.com/docs/dev-guide.md",
-              description: "Guia de desenvolvimento da equipe",
+              description: "Team development guide",
             },
             {
               name: "api-reference.json",
               type: "json",
               url: "https://example.com/docs/api.json",
-              description: "Referência da API",
+              description: "API reference",
             },
           ],
         },
       },
       {
-        name: "Base de Conhecimento",
+        name: "Knowledge Base",
         files: {
           documents: [
             {
               name: "faq.md",
               type: "markdown",
               url: "https://example.com/faq.md",
-              description: "Perguntas frequentes",
+              description: "Frequently asked questions",
             },
           ],
         },
@@ -222,7 +255,7 @@ export async function seedAiStudioWithTeam(teamId: string, userId?: string) {
     let librariesCreated = 0;
     for (const libraryData of libraries) {
       try {
-        // Verificar se já existe biblioteca com este nome
+        // Check if library with this name already exists
         const existingLibraries =
           await aiStudioRepository.AiLibraryRepository.findByTeam({
             teamId,
@@ -237,25 +270,25 @@ export async function seedAiStudioWithTeam(teamId: string, userId?: string) {
             teamId: teamId,
           });
           librariesCreated++;
-          console.log(`✅ Biblioteca criada: ${libraryData.name}`);
+          console.log(`✅ Library created: ${libraryData.name}`);
         } else {
-          console.log(`⚠️  Biblioteca já existe: ${libraryData.name}`);
+          console.log(`⚠️  Library already exists: ${libraryData.name}`);
         }
       } catch (error) {
         const errorMessage =
-          error instanceof Error ? error.message : "Erro desconhecido";
+          error instanceof Error ? error.message : "Unknown error";
         console.log(
-          `⚠️  Erro ao criar biblioteca ${libraryData.name}: ${errorMessage}`,
+          `⚠️  Error creating library ${libraryData.name}: ${errorMessage}`,
         );
       }
     }
 
     // =============================
-    // 4. Criar agentes de IA exemplo
+    // 4. Create example AI agents
     // =============================
     console.log("Creating AI Agents...");
 
-    // Buscar uma biblioteca criada para associar
+    // Find a created library to associate
     const teamLibraries =
       await aiStudioRepository.AiLibraryRepository.findByTeam({
         teamId,
@@ -265,29 +298,29 @@ export async function seedAiStudioWithTeam(teamId: string, userId?: string) {
 
     const agents = [
       {
-        name: "Assistente de Desenvolvimento",
+        name: "Development Assistant",
         instructions:
-          "Você é um assistente especializado em desenvolvimento de software. Ajude com código, debugging, arquitetura e melhores práticas.",
+          "You are an assistant specialized in software development. Help with code, debugging, architecture and best practices.",
         libraryId: teamLibraries[0]?.id,
       },
       {
-        name: "Assistente de Documentação",
+        name: "Documentation Assistant",
         instructions:
-          "Você é especialista em criar e revisar documentação técnica. Ajude a escrever docs claras e bem estruturadas.",
+          "You are an expert in creating and reviewing technical documentation. Help write clear and well-structured docs.",
         libraryId: teamLibraries[0]?.id,
       },
       {
-        name: "Assistente Geral",
+        name: "General Assistant",
         instructions:
-          "Você é um assistente geral que pode ajudar com diversas tarefas do dia a dia da equipe.",
-        libraryId: undefined, // Sem biblioteca
+          "You are a general assistant that can help with various day-to-day team tasks.",
+        libraryId: undefined, // No library
       },
     ];
 
     let agentsCreated = 0;
     for (const agentData of agents) {
       try {
-        // Verificar se já existe agente com este nome
+        // Check if agent with this name already exists
         const existingAgents =
           await aiStudioRepository.AiAgentRepository.findByTeam({
             teamId,
@@ -303,40 +336,40 @@ export async function seedAiStudioWithTeam(teamId: string, userId?: string) {
             createdById: createdById,
           });
           agentsCreated++;
-          console.log(`✅ Agente criado: ${agentData.name}`);
+          console.log(`✅ Agent created: ${agentData.name}`);
         } else {
-          console.log(`⚠️  Agente já existe: ${agentData.name}`);
+          console.log(`⚠️  Agent already exists: ${agentData.name}`);
         }
       } catch (error) {
         const errorMessage =
-          error instanceof Error ? error.message : "Erro desconhecido";
+          error instanceof Error ? error.message : "Unknown error";
         console.log(
-          `⚠️  Erro ao criar agente ${agentData.name}: ${errorMessage}`,
+          `⚠️  Error creating agent ${agentData.name}: ${errorMessage}`,
         );
       }
     }
 
-    console.log(`📊 Resumo para team ${teamId}:`);
-    console.log(`   ✓ ${tokensCreated} tokens criados`);
-    console.log(`   ✓ ${librariesCreated} bibliotecas criadas`);
-    console.log(`   ✓ ${agentsCreated} agentes criados`);
+    console.log(`📊 Summary for team ${teamId}:`);
+    console.log(`   ✓ ${tokensCreated} tokens created`);
+    console.log(`   ✓ ${librariesCreated} libraries created`);
+    console.log(`   ✓ ${agentsCreated} agents created`);
 
-    console.log("✅ Seed de AI Studio para team concluído com sucesso!");
+    console.log("✅ AI Studio seed for team completed successfully!");
   } catch (error) {
-    console.error(`❌ Erro durante o seed de AI Studio para team:`, error);
+    console.error(`❌ Error during AI Studio seed for team:`, error);
     throw error;
   }
 }
 
-// Executar o seed quando o arquivo for rodado diretamente
+// Execute seed when file is run directly
 if (import.meta.url === `file://${process.argv[1]}`) {
   seedAiStudio()
     .then(() => {
-      console.log("✅ Seed concluído com sucesso!");
+      console.log("✅ Seed completed successfully!");
       process.exit(0);
     })
     .catch((error) => {
-      console.error("❌ Erro durante o seed:", error);
+      console.error("❌ Error during seed:", error);
       process.exit(1);
     });
 }

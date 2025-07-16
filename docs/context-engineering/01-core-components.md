@@ -1,4 +1,17 @@
-# 1. Core Components of the Context Ecosystem
+<!-- AI-METADATA:
+category: methodology
+complexity: intermediate
+updated: 2025-07-13
+claude-ready: true
+priority: high
+token-optimized: true
+audience: developers
+ai-context-weight: important
+-->
+
+# Core Components of the Context Ecosystem
+
+<!-- AI-CONTEXT-BOUNDARY: start -->
 
 The context provided to an LLM is not monolithic. It's a carefully assembled collection of different types of information. At Kodix, we categorize these into five core components, each serving a distinct purpose in guiding the agent's behavior and reasoning.
 
@@ -40,7 +53,7 @@ graph TD
 - **Purpose:** To ensure consistent behavior, enforce safety protocols, and align the agent's actions with high-level goals.
 - **Implementation at Kodix:**
   - **System Prompts:** The core prompt that sets the stage for the entire interaction (e.g., `You are a senior software engineer...`).
-  - **Rule Files:** `.md` files within the repo (like `@docs/rules/kodix-rules.md`) that are dynamically loaded into the context. This allows us to maintain and version control rules as part of the codebase.
+  - **Rule Files:** `.md` files within the repo (like `docs/rules-ai/README.md` and `CLAUDE.md`) that are dynamically loaded into the context. This allows us to maintain and version control rules as part of the codebase.
   - **Guardrails:** Hard-coded constraints that prevent the model from taking certain actions or generating specific types of content.
 
 ---
@@ -60,9 +73,9 @@ graph TD
 
 - **What it is:** The dynamic record of past interactions. This can be broken down into short-term (current session) and long-term (across sessions) memory.
 - **Purpose:** To provide continuity, learn from previous exchanges, and avoid repeating questions or mistakes.
-- **Implementation at Kodix:**
-  - **Short-Term (Session Memory):** The history of messages and tool calls within the current conversation thread. This is typically managed by the agent framework (e.g., LangGraph state).
-  - **Long-Term (Persistent Memory):** Key facts, summaries, or user preferences that are explicitly saved to a database and retrieved in subsequent sessions. This allows the agent to "remember" things about a user or project over time. We use a dedicated memory system for this.
+- **Current State at Kodix:**
+  - **Short-Term (Session Memory):** The history of messages and tool calls within the current conversation thread, managed by each AI assistant's native capabilities.
+  - **Long-Term (Persistent Memory):** Currently handled through documentation files and the PRP system. Structured database-backed memory is planned but not yet implemented.
 
 ---
 
@@ -73,11 +86,11 @@ graph TD
 - **Implementation at Kodix:**
   - **Codebase Indexing:** The entire Kodix monorepo is indexed, allowing the AI to perform semantic searches for relevant code, components, or documentation.
   - **Documentation (`/docs`):** All markdown files in the `docs/` directory serve as a primary knowledge source, especially for architecture, rules, and procedures.
-  - **Vector Databases:** For specialized knowledge, we may use vector stores (e.g., Pinecone, a local DB) to store and retrieve information efficiently.
+  - **Semantic Search:** AI assistants use their built-in search capabilities to find relevant information across the codebase and documentation.
 
 ---
 
-## e. Tools & APIs
+## 🔗 e. Tools & APIs
 
 - **What it is:** A set of functions or API endpoints that the AI can call to perform actions or retrieve information from the outside world. This is what transforms the LLM from a text generator into a true agent.
 - **Purpose:** To enable the AI to interact with other systems, fetch real-time data, and execute tasks on behalf of the user.
@@ -85,3 +98,10 @@ graph TD
   - **tRPC Endpoints:** The primary way for the AI to interact with the Kodix backend, allowing it to fetch data from the database or trigger server-side logic.
   - **File System Tools:** A suite of tools (`read_file`, `edit_file`, `list_dir`) that allow the AI to interact directly with the workspace file system.
   - **External APIs:** Functions that call third-party services (e.g., searching the web, checking a server status).
+
+<!-- AI-CONTEXT-BOUNDARY: end -->
+
+---
+
+**Last Updated**: 2025-07-13  
+**Next**: [Key Strategies for Context Management](./02-key-strategies.md)

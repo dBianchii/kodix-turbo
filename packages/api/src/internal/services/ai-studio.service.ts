@@ -1,8 +1,7 @@
-import { readFileSync } from "fs";
-import { join } from "path";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createOpenAI } from "@ai-sdk/openai";
+import { createXai } from "@ai-sdk/xai";
 import { streamText } from "ai";
 
 import type { KodixAppId } from "@kdx/shared";
@@ -17,59 +16,6 @@ import {
 
 // ChatService is imported but used in commented code for future reference
 import { EntityNotFoundError, ValidationError } from "./errors";
-
-// Use __dirname para Node.js environments
-const __dirname = new URL(".", import.meta.url).pathname;
-
-// Carregar templates de prompt do arquivo JSON
-const promptTemplatesPath = join(
-  __dirname,
-  "ai-sync-adapters/prompt-templates.json",
-);
-
-// Fallback to existing templates if the file doesn't exist
-const PROMPT_TEMPLATES = (() => {
-  try {
-    return JSON.parse(readFileSync(promptTemplatesPath, "utf-8")) as Record<
-      string,
-      string
-    >;
-  } catch (_error) {
-    console.warn(
-      "Could not load prompt-templates.json, using inline templates",
-    );
-    return {
-      "xml-tags-high":
-        '<system_reset>\n# ⚠️ Agent Switch Detected\n**Previous Instructions:** COMPLETELY IGNORE ALL PREVIOUS INSTRUCTIONS.\n**Attention:** You are no longer "{{previousAgentName}}".\n\n<new_identity>\n**Your New Identity:** {{agentName}}\n**Instructions:** YOU MUST FOLLOW ONLY THESE NEW INSTRUCTIONS:\n{{agentInstructions}}\n**IMPORTANT:** Respond as {{agentName}}, not as a generic assistant.\n</new_identity>\n\n</system_reset>',
-      "xml-tags-default":
-        '<system_reset>\n# ⚠️ Agent Switch Detected\n**Previous Instructions:** Please disregard previous instructions.\n**Attention:** You are no longer "{{previousAgentName}}".\n\n<new_identity>\n**Your New Identity:** {{agentName}}\n**Instructions:** YOU MUST FOLLOW ONLY THESE NEW INSTRUCTIONS:\n{{agentInstructions}}\n**IMPORTANT:** Respond as {{agentName}}, not as a generic assistant.\n</new_identity>\n\n</system_reset>',
-      simple:
-        '# ⚠️ Agent Change\n**Please ignore previous instructions.**\n**Attention:** You are no longer "{{previousAgentName}}".\n**Your new identity is:** {{agentName}}\n**FOLLOW ONLY THESE NEW INSTRUCTIONS:**\n{{agentInstructions}}\n**IMPORTANT:** Respond as {{agentName}}, not as a generic assistant.',
-    };
-  }
-})();
-
-// Interfaces para estratégias de prompt
-interface PromptStrategy {
-  type: string;
-  agentSwitchTemplate: string;
-  assertiveness: "low" | "medium" | "high";
-  contextualMemory: "low" | "medium" | "high";
-  specialHandling: string[];
-}
-
-interface PromptStrategyConfig {
-  modelId: string;
-  strategy: PromptStrategy;
-}
-
-// Template parameters interface - kept for future use
-interface _TemplateParams {
-  agentName: string;
-  agentInstructions: string;
-  previousAgentName?: string;
-  assertiveness: "low" | "medium" | "high";
-}
 
 // Platform Instructions (Level 1) <instructions>
 const PLATFORM_BASE_INSTRUCTIONS = {
@@ -116,7 +62,7 @@ export class AiStudioService {
    * Busca configurações de AI do usuário e time
    */
   private static async getAiConfig(teamId: string, userId: string) {
-    const [user, team, teamConfigResult, userConfigResult] = await Promise.all([
+    const results = await Promise.allSettled([
       db.query.users.findFirst({
         where: (users, { eq }) => eq(users.id, userId),
         columns: { name: true },
@@ -143,20 +89,29 @@ export class AiStudioService {
       }),
     ]);
 
+    const [userResult, teamResult, teamConfigResult, userConfigResult] =
+      results;
+    const user = userResult.status === "fulfilled" ? userResult.value : null;
+    const team = teamResult.status === "fulfilled" ? teamResult.value : null;
+    const teamConfigData =
+      teamConfigResult.status === "fulfilled" ? teamConfigResult.value : null;
+    const userConfigData =
+      userConfigResult.status === "fulfilled" ? userConfigResult.value : null;
+
     let teamConfig = null;
-    if (teamConfigResult?.config) {
+    if (teamConfigData?.config) {
       try {
-        teamConfig = aiStudioConfigSchema.parse(teamConfigResult.config);
+        teamConfig = aiStudioConfigSchema.parse(teamConfigData.config);
       } catch (_error) {
         console.error("Failed to parse AI Studio TEAM config:", _error);
       }
     }
 
     let userConfig = null;
-    if (userConfigResult?.config) {
+    if (userConfigData?.config) {
       try {
         userConfig = aiStudioUserAppTeamConfigSchema.parse(
-          userConfigResult.config,
+          userConfigData.config,
         );
       } catch (_error) {
         console.error("Failed to parse AI Studio USER config:", _error);
@@ -404,10 +359,6 @@ export class AiStudioService {
 
     let agentInstructions = "";
     let agentName = "";
-    let isAgentSwitch = false;
-    let previousAgentName = "";
-    let universalModelId = ""; // Usar este para a busca de estratégia
-    let providerName = "";
 
     // Se temos uma sessão, buscar informações do agente e detectar troca
     if (sessionId && includeAgentInstructions) {
@@ -415,20 +366,6 @@ export class AiStudioService {
         await chatRepository.ChatSessionRepository.findById(sessionId);
 
       if (session?.aiAgentId) {
-        // Obter o modelo completo para ter acesso ao universalModelId e ao provider
-        if (session.aiModelId) {
-          const model = await this.getModelById({
-            modelId: session.aiModelId,
-            teamId,
-            requestingApp: appId,
-          });
-
-          if (model) {
-            universalModelId = model.universalModelId; // A chave correta!
-            providerName = model.provider.name;
-          }
-        }
-
         const agent = await aiStudioRepository.AiAgentRepository.findById(
           session.aiAgentId,
         );
@@ -439,62 +376,6 @@ export class AiStudioService {
           console.log(
             `📋 [AI_STUDIO_SERVICE] Found agent: ${agentName} with instructions`,
           );
-
-          // Detectar se houve troca de agente
-          console.log(
-            `🔍 [AI_STUDIO_SERVICE] Checking agent switch - agentHistory:`,
-            session.agentHistory,
-            `activeAgentId: ${session.activeAgentId}, aiAgentId: ${session.aiAgentId}`,
-          );
-
-          // 🚨 TESTE: Forçar detecção de troca de agente se há agentHistory
-          if (
-            session.agentHistory &&
-            Array.isArray(session.agentHistory) &&
-            session.agentHistory.length > 0
-          ) {
-            // Se há histórico de agentes, houve troca
-            isAgentSwitch = true;
-
-            // Pegar o último agente do histórico
-            const lastAgentInHistory =
-              session.agentHistory[session.agentHistory.length - 1];
-            if (lastAgentInHistory) {
-              previousAgentName = lastAgentInHistory.agentName;
-            }
-
-            console.log(
-              `🔄 [AI_STUDIO_SERVICE] Agent switch detected from history: ${previousAgentName} -> ${agentName}`,
-            );
-          } else if (
-            session.activeAgentId &&
-            session.activeAgentId !== session.aiAgentId
-          ) {
-            // Alternativa: verificar se activeAgentId é diferente de aiAgentId
-            isAgentSwitch = true;
-
-            const previousAgent =
-              await aiStudioRepository.AiAgentRepository.findById(
-                session.activeAgentId,
-              );
-            if (previousAgent) {
-              previousAgentName = previousAgent.name ?? "";
-            }
-
-            console.log(
-              `🔄 [AI_STUDIO_SERVICE] Agent switch detected from activeAgentId: ${previousAgentName} -> ${agentName}`,
-            );
-          }
-        }
-      }
-
-      // Buscar modelo da sessão
-      if (session?.aiModelId) {
-        const model = await aiStudioRepository.AiModelRepository.findById(
-          session.aiModelId,
-        );
-        if (model) {
-          universalModelId = model.universalModelId; // Store modelId for strategy lookup
         }
       }
     }
@@ -528,36 +409,33 @@ export class AiStudioService {
       const platformContent = PLATFORM_BASE_INSTRUCTIONS.template
         .replace("{{userName}}", user.name ?? "User")
         .replace("{{teamName}}", team.name ?? "Team")
-        .replace(/{{userLanguage}}/g, "en-US"); // TODO: Obter idioma do usuário
+        .replace(/{{userLanguage}}/g, "pt-BR"); // TODO: Obter idioma do usuário
       baseInstructionsParts.push(platformContent);
     }
     const baseInstructions = baseInstructionsParts.join("\n\n---\n\n");
     // --- END OF BASE INSTRUCTIONS ---
 
-    // Se detectamos uma troca de agente, usar estratégia especial
-    if (isAgentSwitch && agentName && agentInstructions) {
+    // Build normal prompt with agent instructions
+    if (agentName && agentInstructions) {
       console.log(
-        `🚨 [AI_STUDIO_SERVICE] Using agent switch prompt strategy for ${universalModelId}`,
+        `📝 [AI_STUDIO_SERVICE] Building normal prompt with agent instructions`,
       );
 
-      const switchPrompt = this.buildAgentSwitchPrompt({
-        agentName,
-        agentInstructions,
-        baseInstructions, // Passa as instruções base
-        previousAgentName,
-        universalModelId, // Passando o ID correto
-        providerName,
-      });
+      // Nível 1 (Prioridade): Instruções do Agente
+      const fullInstructions = [
+        `## AGENT INSTRUCTIONS - YOU ARE: ${agentName}\n${agentInstructions}`,
+        baseInstructions,
+      ].join("\n\n---\n\n");
 
       console.log(
-        `🔄 [AI_STUDIO_SERVICE] Generated agent switch prompt (first 200 chars):`,
-        switchPrompt.substring(0, 200),
+        `📝 [AI_STUDIO_SERVICE] Generated prompt (first 200 chars):`,
+        fullInstructions.substring(0, 200),
       );
 
-      return switchPrompt;
+      return fullInstructions;
     }
 
-    // Fluxo normal - sem troca de agente
+    // Normal flow - build system prompt
     const finalParts: string[] = [];
 
     // Nível 1 (Prioridade Máxima): Instruções do Agente
@@ -582,168 +460,11 @@ export class AiStudioService {
     // A ordem no array já é da maior para a menor prioridade.
     const systemPrompt = finalParts.join("\n\n---\n\n");
 
-    console.log(
-      `✅ [AI_STUDIO_SERVICE] System prompt built (agent switch: ${isAgentSwitch})`,
-    );
+    console.log(`✅ [AI_STUDIO_SERVICE] System prompt built successfully`);
 
     return systemPrompt;
   }
-
-  /**
-   * Constrói prompt especializado para troca de agente
-   * Usa estratégias específicas por modelo carregadas de arquivos JSON
-   */
-  static buildAgentSwitchPrompt({
-    agentName,
-    agentInstructions,
-    baseInstructions,
-    previousAgentName,
-    universalModelId,
-    providerName,
-  }: {
-    agentName: string;
-    agentInstructions: string;
-    baseInstructions: string;
-    previousAgentName?: string;
-    universalModelId: string;
-    providerName: string;
-  }): string {
-    console.log(
-      `🔄 [AI_STUDIO_SERVICE] Building agent switch prompt for ${agentName} (model: ${universalModelId})`,
-    );
-
-    const strategy = this.getPromptStrategy(universalModelId, providerName);
-
-    console.log(
-      `📋 [AI_STUDIO_SERVICE] Using strategy: ${strategy.type} (template: ${strategy.agentSwitchTemplate})`,
-    );
-
-    const templateKey = strategy.agentSwitchTemplate;
-    let agentSwitchContent = PROMPT_TEMPLATES[templateKey];
-
-    if (agentSwitchContent) {
-      console.log(
-        `✅ [AI_STUDIO_DIAGNOSTIC] Successfully loaded template for key: '${templateKey}'`,
-      );
-
-      agentSwitchContent = agentSwitchContent
-        .replace(/{{agentName}}/g, agentName)
-        .replace(/{{agentInstructions}}/g, agentInstructions)
-        .replace(
-          /{{previousAgentName}}/g,
-          previousAgentName ?? "a previous agent",
-        );
-    } else {
-      // Fallback de segurança se o template não for encontrado
-      console.log(
-        `🔴 [AI_STUDIO_DIAGNOSTIC] WARNING: Template key '${templateKey}' not found. Applied 'simple' fallback.`,
-      );
-      agentSwitchContent = (PROMPT_TEMPLATES.simple ?? "")
-        .replace(/{{agentName}}/g, agentName)
-        .replace(/{{agentInstructions}}/g, agentInstructions)
-        .replace(
-          /{{previousAgentName}}/g,
-          previousAgentName ?? "a previous agent",
-        );
-    }
-
-    const finalPrompt = `${agentSwitchContent}\n${baseInstructions}`;
-
-    console.log(
-      `✅ [AI_STUDIO_DIAGNOSTIC] FINAL PROMPT BUILT: ${finalPrompt.substring(
-        0,
-        200,
-      )}...`,
-    );
-    return finalPrompt;
-  }
-
-  /**
-   * Carrega estratégia de prompt específica para o modelo
-   */
-  private static getPromptStrategy(
-    universalModelId: string,
-    providerName: string,
-  ): PromptStrategy {
-    const provider = providerName.toLowerCase();
-
-    console.log(
-      `🔵 [AI_STUDIO_DIAGNOSTIC] Attempting to load strategy for universalModelId: "${universalModelId}", provider: "${provider}"`,
-    );
-
-    try {
-      const strategyPath = join(
-        __dirname,
-        `ai-sync-adapters/${provider}-prompt-strategies.json`,
-      );
-
-      const strategies = JSON.parse(
-        readFileSync(strategyPath, "utf-8"),
-      ) as PromptStrategyConfig[];
-      const strategy = strategies.find(
-        (s) => s.modelId === universalModelId,
-      )?.strategy;
-
-      if (strategy) {
-        console.log(
-          `✅ [AI_STUDIO_DIAGNOSTIC] SUCCESS! Found and loaded strategy for "${universalModelId}":`,
-          JSON.stringify(strategy, null, 2),
-        );
-        return strategy;
-      }
-
-      // Fallback: se a busca pelo universalModelId falhar, logar e usar o fallback do provider
-      console.log(
-        `⚠️ [AI_STUDIO_DIAGNOSTIC] No specific strategy for ${universalModelId}, using provider fallback`,
-      );
-
-      if (provider.includes("anthropic")) {
-        return {
-          type: "claude-standard",
-          agentSwitchTemplate: "xml-tags",
-          assertiveness: "high",
-          contextualMemory: "low",
-          specialHandling: ["system-reset"],
-        };
-      } else if (provider.includes("openai")) {
-        return {
-          type: "gpt-standard",
-          agentSwitchTemplate: "hierarchical",
-          assertiveness: "medium",
-          contextualMemory: "high",
-          specialHandling: ["priority-system"],
-        };
-      } else if (provider.includes("google")) {
-        return {
-          type: "google-standard",
-          agentSwitchTemplate: "direct-simple",
-          assertiveness: "medium",
-          contextualMemory: "medium",
-          specialHandling: ["direct-instructions"],
-        };
-      }
-    } catch (_error) {
-      console.error(
-        `❌ [AI_STUDIO_DIAGNOSTIC] Error loading prompt strategy for provider ${provider}:`,
-        _error,
-      );
-    }
-
-    // Fallback final
-    return {
-      type: "standard",
-      agentSwitchTemplate: "simple",
-      assertiveness: "medium",
-      contextualMemory: "medium",
-      specialHandling: [],
-    };
-  }
-
-  /**
-   * Creates AI provider instances for Vercel AI SDK
-   * Centralizes provider creation logic
-   */
-  private static async createAIProvider(
+  public static async createAIProvider(
     model: any,
     token: string,
   ): Promise<{ provider: any; modelName: string }> {
@@ -775,6 +496,19 @@ export class AiStudioService {
         return {
           provider: createGoogleGenerativeAI({
             apiKey: token,
+          })(modelName),
+          modelName,
+        };
+
+      case "xai":
+        return {
+          provider: createXai({
+            apiKey: token,
+            baseURL: model.provider.baseUrl || undefined,
+            headers: {
+              Accept: "text/event-stream",
+              "Cache-Control": "no-cache",
+            },
           })(modelName),
           modelName,
         };
@@ -860,7 +594,7 @@ export class AiStudioService {
         messages: formattedMessages,
         temperature,
         maxTokens,
-        onFinish: async ({ text, usage, finishReason }) => {
+        onFinish: async ({ text, usage, finishReason }: any) => {
           // Build metadata
           const metadata = {
             requestedModel: modelName,
@@ -880,7 +614,7 @@ export class AiStudioService {
             });
           }
         },
-        onError: (error) => {
+        onError: (error: any) => {
           console.error("[AiStudioService] Stream error:", error);
           if (onError) {
             onError(error instanceof Error ? error : new Error(String(error)));
@@ -895,6 +629,10 @@ export class AiStudioService {
           Connection: "keep-alive",
           "Cache-Control": "no-cache, no-store, must-revalidate",
           "X-Accel-Buffering": "no",
+          "Content-Encoding": "none",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type, Authorization",
         },
       });
     } catch (error) {

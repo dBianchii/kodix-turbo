@@ -1,3 +1,16 @@
+<!-- AI-METADATA:
+<!-- AI-CONTEXT-PRIORITY: always-include="false" summary-threshold="medium" -->category: subapp
+complexity: basic
+updated: 2025-07-12
+claude-ready: true
+phase: 4
+priority: medium
+token-optimized: true
+audience: all
+ai-context-weight: important
+last-ai-review: 2025-07-12
+-->
+
 # Cupom - Documentação
 
 O **Cupom** é o sistema de gestão de cupons e promoções integrado ao Kodix, oferecendo funcionalidades para criação e gerenciamento de descontos.
@@ -49,9 +62,9 @@ apps/kdx/src/app/[locale]/(authed)/apps/cupom/
 
 Para desenvolvimento e implementação:
 
-- `docs/development-setup.md` - Configuração do ambiente
-- `docs/architecture/coding-standards.md` - Práticas de desenvolvimento
-- `docs/architecture/backend-guide.md` - Implementação backend
+- `docs/../../development/setup/../../development/setup/development-setup.md` - Configuração do ambiente
+- `docs/architecture/standards/../../development/standards/../../development/standards/coding-standards.md` - Práticas de desenvolvimento
+- `docs/architecture/backend/../../../architecture/backend/../../../architecture/backend/backend-guide.md` - Implementação backend
 
 ## 📖 Status da Documentação
 

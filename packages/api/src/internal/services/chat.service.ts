@@ -1,4 +1,20 @@
+import { TRPCError } from "@trpc/server";
+import { getTranslations } from "next-intl/server";
+
+import type { AgentHistoryEntry } from "@kdx/db/schema";
 import { aiStudioRepository, chatRepository } from "@kdx/db/repositories";
+
+import { getLocaleBasedOnCookie } from "../../utils/locales";
+import { AiStudioService } from "./ai-studio.service";
+
+// Agent Immutability Error
+export class AgentImmutabilityError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "AgentImmutabilityError";
+  }
+}
+
 
 export class ChatService {
   static async findSessionById(sessionId: string) {
@@ -19,7 +35,7 @@ export class ChatService {
     senderRole: "user" | "ai" | "system" | "human_operator";
     content: string;
     status: "ok" | "error" | "pending";
-    metadata?: any;
+    metadata?: unknown;
   }) {
     return chatRepository.ChatMessageRepository.create(params);
   }
@@ -27,7 +43,7 @@ export class ChatService {
   static async saveAssistantMessage(params: {
     chatSessionId: string;
     content: string;
-    metadata?: any;
+    metadata?: unknown;
   }) {
     return this.createMessage({
       ...params,
@@ -39,7 +55,7 @@ export class ChatService {
   static async createSystemMessage(params: {
     chatSessionId: string;
     content: string;
-    metadata?: any;
+    metadata?: unknown;
   }) {
     return this.createMessage({
       ...params,
@@ -70,88 +86,4 @@ export class ChatService {
     return chatRepository.ChatSessionRepository.update(sessionId, data);
   }
 
-  // Agent Switching Methods
-  static async switchAgent(params: {
-    sessionId: string;
-    agentId: string;
-    reason: "user_switch" | "auto_suggestion" | "system_default";
-    teamId: string;
-  }) {
-    const { sessionId, agentId, reason, teamId } = params;
-
-    // Validar sessão
-    const session = await this.findSessionById(sessionId);
-    if (!session || session.teamId !== teamId) {
-      throw new Error("Session not found or access denied");
-    }
-
-    // Buscar informações do agente
-    const agent = await aiStudioRepository.AiAgentRepository.findById(agentId);
-    if (!agent || agent.teamId !== teamId) {
-      throw new Error("Agent not found or access denied");
-    }
-
-    // Preparar entrada do histórico
-    const historyEntry = {
-      agentId: agentId,
-      agentName: agent.name,
-      switchedAt: new Date().toISOString(),
-      messageCount: 0, // Será calculado depois se necessário
-      reason: reason,
-    };
-
-    // Buscar histórico atual
-    const currentHistory = (session.agentHistory as any[]) || [];
-    const updatedHistory = [...currentHistory, historyEntry];
-
-    // Atualizar sessão - CORRIGIDO: atualizar ambos aiAgentId e activeAgentId
-    await chatRepository.ChatSessionRepository.update(sessionId, {
-      aiAgentId: agentId, // ✅ Campo principal usado pelo sistema de prompts
-      activeAgentId: agentId, // ✅ Campo de tracking para UI
-      agentHistory: updatedHistory,
-    });
-
-    return {
-      success: true,
-      agent: {
-        id: agent.id,
-        name: agent.name,
-        instructions: agent.instructions,
-      },
-    };
-  }
-
-  static async getAvailableAgents(sessionId: string, teamId: string) {
-    // Validar sessão
-    const session = await this.findSessionById(sessionId);
-    if (!session || session.teamId !== teamId) {
-      throw new Error("Session not found or access denied");
-    }
-
-    // Buscar agentes do time
-    const agents = await aiStudioRepository.AiAgentRepository.findByTeam({
-      teamId: teamId,
-      limite: 50,
-      offset: 0,
-    });
-
-    return agents.map((agent) => ({
-      id: agent.id,
-      name: agent.name,
-      isActive: agent.id === session.activeAgentId,
-      hasInstructions: !!agent.instructions,
-    }));
-  }
-
-  static async getAgentHistory(sessionId: string, teamId: string) {
-    const session = await this.findSessionById(sessionId);
-    if (!session || session.teamId !== teamId) {
-      throw new Error("Session not found or access denied");
-    }
-
-    return {
-      activeAgentId: session.activeAgentId,
-      history: (session.agentHistory as any[]) || [],
-    };
-  }
 }

@@ -4,9 +4,12 @@
 > **Last Updated**: January 2025
 > **Related Documents**:
 >
-> - [API Reference](./api-reference.md)
-> - [Model Sync Architecture](./model-sync-architecture.md)
-> - [Prompt Engineering Guide](./prompt-engineering-guide.md)
+> - [API Reference](./api-reference.md) - Complete tRPC endpoints reference
+> - [Agent Switching](./agent-switching/) - Complete agent switching system documentation
+> - [Context Engineering](./context-engineering.md) - Context assembly and prompt hierarchy
+> - [Conversation Context Management](./conversation-context-management.md) - Industry research & best practices
+> - [Model Sync Architecture](./model-sync-architecture.md) - Model synchronization system
+> - [Prompt Engineering Guide](./prompt-engineering-guide.md) - Model-specific prompt strategies
 
 ## 1. Overview and Principles
 
@@ -71,7 +74,7 @@ export class AiStudioService {
   // 🔒 Internal Methods
   private static async createAIProvider() {} // Provider instantiation
   private static async getAiConfig() {} // Configuration assembly
-  private static buildAgentSwitchPrompt() {} // Agent switching logic
+  private static buildAgentSwitchPrompt() {} // See agent-switching/ for details
 }
 ```
 
@@ -185,28 +188,13 @@ const systemPrompt = await AiStudioService.getSystemPrompt({
 });
 ```
 
-### Agent Switching with Hard Reset
+### Agent Switching
 
-**Advanced Context Management** for seamless agent transitions:
+> 🔁 This content has been moved to [agent-switching](./agent-switching/)
 
-```typescript
-// Detects agent switches and applies model-specific strategies
-if (isAgentSwitch) {
-  const switchPrompt = this.buildAgentSwitchPrompt({
-    agentName,
-    agentInstructions,
-    baseInstructions,
-    previousAgentName,
-    universalModelId, // Used for strategy selection
-    providerName,
-  });
+**Advanced Context Management** for seamless agent transitions. The system detects agent switches and applies model-specific "hard reset" strategies to overcome contextual inertia.
 
-  // Model-specific templates loaded from JSON configs
-  // - Claude: XML tags with constitutional approach
-  // - GPT: Hierarchical priority overrides
-  // - Gemini: Direct conversational commands
-}
-```
+> 📋 **Complete Implementation**: See [Agent Switching](./agent-switching/) for full technical details.
 
 ### Multi-Provider Support
 
@@ -382,6 +370,30 @@ console.error(`❌ [AiStudioService] ${operation} failed:`, error);
 console.log(`🚀 [VERCEL_AI_SDK] Using ${provider}:${modelName}`);
 console.log(`📊 [VERCEL_AI_SDK] Usage: ${usage.totalTokens} tokens`);
 ```
+
+## 12. Documentation Reference
+
+This section provides a clear overview of what each documentation file covers:
+
+| Document                                                                    | Canonical Source For                | Scope                                               |
+| --------------------------------------------------------------------------- | ----------------------------------- | --------------------------------------------------- |
+| **[README.md](./README.md)**                                                | Overall architecture & entry point  | High-level overview, core principles                |
+| **[API Reference](./api-reference.md)**                                     | tRPC endpoints                      | Complete API surface documentation                  |
+| **[Agent Switching](./agent-switching/)**                                   | Agent switching implementation      | Detection logic, prompt strategies, core algorithms |
+| **[Context Engineering](./context-engineering.md)**                         | Context assembly & prompt hierarchy | System prompt building, memory strategies           |
+| **[Conversation Context Management](./conversation-context-management.md)** | Industry research & best practices  | Production patterns, enhancement roadmap            |
+| **[Model Sync Architecture](./model-sync-architecture.md)**                 | Model synchronization system        | Provider sync, lifecycle management                 |
+| **[Prompt Engineering Guide](./prompt-engineering-guide.md)**               | Model-specific prompt strategies    | Templates, provider-specific approaches             |
+
+### Integration Points
+
+- **Chat Integration**: See [chat/backend/agent-integration.md](../../chat/backend/agent-integration.md)
+- **Frontend Components**: See chat frontend documentation
+- **API Development**: Follow patterns in [API Reference](./api-reference.md)
+
+### Agent Switching
+
+See complete documentation at [agent-switching/](./agent-switching/)
 
 ---
 

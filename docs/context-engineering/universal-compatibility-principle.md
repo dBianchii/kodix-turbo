@@ -1,20 +1,27 @@
 # Universal Context Engineering Principle
 
 <!-- AI-METADATA:
-category: standard
-stack: general
+category: standards
 complexity: intermediate
-dependencies: [documentation-patterns.md]
-version: 1.0
-last-updated: 2025-01-07
+updated: 2025-07-13
+claude-ready: true
+priority: critical
+token-optimized: true
+audience: developers
+ai-context-weight: critical
 -->
+
+<!-- AI-CONTEXT-BOUNDARY: start -->
 
 ## 🎯 Quick Summary
 
 The foundational principle that ensures Kodix documentation works seamlessly across all AI assistants by storing context in structured `.md` files rather than tool-specific configurations.
 
-## 📋 Overview
+## 🔍 📋 Overview
 
+<!-- AI-COMPRESS: strategy="summary" max-tokens="150" -->
+**Quick Summary**: Key points for rapid AI context understanding.
+<!-- /AI-COMPRESS -->
 The **Universal Context Engineering Principle** is the cornerstone of Kodix's documentation strategy. It establishes that all critical context, plans, and prompts must be stored in structured markdown files to ensure consistency, portability, and reproducibility across different AI development tools.
 
 ### Core Principle
@@ -80,9 +87,8 @@ docs/
 │   ├── cursor/               # Cursor-specific setup
 │   ├── claude-code/          # Claude Code specifics
 │   └── windsurf/             # Windsurf specifics
-└── rules/                    # Priority policies and standards
-    ├── PRIORITY-POLICIES.md  # Critical policies (must read first)
-    └── policies/             # Detailed policy documentation
+└── rules-ai/                 # AI assistant rules and standards
+    └── README.md             # Universal AI rules (loaded by CLAUDE.md)
 ```
 
 ### Content Distribution
@@ -93,7 +99,8 @@ docs/
 | **Architecture Decisions** | `/docs/architecture`         | Core knowledge needed by all assistants |
 | **Feature Specifications** | `/docs/subapps`              | Implementation guidance for any tool    |
 | **Context Engineering**    | `/docs/context-engineering`  | AI assistant best practices             |
-| **Tool Differences**       | `/docs/ai-assistants/[tool]` | Minimal tool-specific setup only        |
+| **Tool Differences**       | Tool-specific locations      | Minimal setup differences only          |
+| **Universal AI Rules**     | `/CLAUDE.md` and `/docs/rules-ai/` | Core rules loaded by all assistants |
 
 ## 🔧 Universal Documentation Patterns
 
@@ -115,15 +122,18 @@ dependencies: [list]
 
 One-line description for any AI tool
 
-## 📋 Overview
+## 🔍 📋 Overview
 
+<!-- AI-COMPRESS: strategy="summary" max-tokens="150" -->
+**Quick Summary**: Key points for rapid AI context understanding.
+<!-- /AI-COMPRESS -->
 Comprehensive context that any assistant can understand
 
 ## 🏗️ Implementation
 
 Tool-agnostic implementation guidance
 
-## 🧩 Examples
+## 📋 🧩 Examples
 
 Universal code examples
 
@@ -165,7 +175,7 @@ Each AI assistant folder contains **only** the minimal differences:
 ```markdown
 # docs/ai-assistants/cursor/setup.md
 
-## Cursor-Specific Setup
+## 🚀 Cursor-Specific Setup
 
 - .mdc rules configuration
 - Workspace settings
@@ -259,10 +269,18 @@ All core knowledge remains in /docs - this file only covers Cursor setup.
 ## 📚 References
 
 - [Documentation Patterns](./standards/documentation-patterns.md)
-- [Semantic Markers Guide](./standards/semantic-markers.md)
-- [Cursor Memory Prioritization](../ai-assistants/cursor/memory-prioritization.md)
+- <!-- AI-LINK: type="related" importance="medium" -->
+<!-- AI-CONTEXT-REF: importance="medium" type="guide" -->
+[Semantic Markers Guide](./standards/semantic-markers.md)
+<!-- /AI-CONTEXT-REF -->
+<!-- /AI-LINK -->
+- [Universal AI Commands](./commands/README.md)
 - [Context Engineering Best Practices](https://github.com/coleam00/context-engineering-intro)
 
-<!-- AI-RELATED: [documentation-patterns.md, semantic-markers.md] -->
-<!-- REQUIRED-BY: [all-ai-assistants] -->
-<!-- SEE-ALSO: [kodix-documentation-upgrade-plan.md] -->
+<!-- AI-CONTEXT-BOUNDARY: end -->
+
+---
+
+**Last Updated**: 2025-07-13  
+**Maintained By**: Context Engineering Team  
+**Next Review**: Quarterly

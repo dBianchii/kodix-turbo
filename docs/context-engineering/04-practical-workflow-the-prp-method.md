@@ -1,4 +1,17 @@
+<!-- AI-METADATA:
+category: methodology
+complexity: intermediate
+updated: 2025-07-13
+claude-ready: true
+priority: critical
+token-optimized: true
+audience: developers
+ai-context-weight: critical
+-->
+
 # 4. Practical Workflow: The PRP Method
+
+<!-- AI-CONTEXT-BOUNDARY: start -->
 
 While the previous documents cover the "what" and "why" of Context Engineering, this document outlines the "how"—a practical, repeatable workflow for tackling complex development tasks with an AI agent at Kodix. This method is heavily inspired by the [Context Engineering Intro repository](https://github.com/coleam00/context-engineering-intro) and formalizes a two-step process: **Plan, then Execute**.
 
@@ -81,3 +94,10 @@ This is the **Execution Phase**. With a detailed, context-rich plan in hand, the
   5.  **Complete:** Once all steps are implemented and all validation gates pass, the task is complete.
 
 By adopting this structured PRP workflow, we move from "vibe-based coding" to a predictable, engineered process that dramatically increases the success rate of complex AI-driven development.
+
+<!-- AI-CONTEXT-BOUNDARY: end -->
+
+---
+
+**Last Updated**: 2025-07-13  
+**Next**: [PRP System Guide](./prp/README.md)

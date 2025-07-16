@@ -18,19 +18,21 @@
  * - Padrão TRPC respeitado
  */
 
-// @ts-nocheck - Chat tRPC router has type definition issues that need to be resolved at the router level
 "use client";
 
-import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import type { TRPCClientErrorLike } from "@trpc/client";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
+import type { AppRouter } from "@kdx/api";
+import { Button } from "@kdx/ui/button";
 import { SidebarProvider, SidebarTrigger } from "@kdx/ui/sidebar";
 import { toast } from "@kdx/ui/toast";
 
 import type { LastMessageMetadata } from "~/trpc/shared";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
-import { useRouter } from "~/i18n/routing";
 import { useTRPC } from "~/trpc/react";
 import { useChatPreferredModel } from "../_hooks/useChatPreferredModel";
 import { useChatUserConfig } from "../_hooks/useChatUserConfig";
@@ -136,8 +138,8 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
 
   // ✅ Calcular uso de tokens (memoizado)
   const modelName = useMemo(() => {
-    return sessionQuery.data?.aiModel?.name || "";
-  }, [sessionQuery.data?.aiModel?.name]);
+    return sessionQuery.data?.aiModel?.displayName || "";
+  }, [sessionQuery.data?.aiModel?.displayName]);
 
   const messages = useMemo(() => {
     return messagesQuery.data?.messages || [];
@@ -149,7 +151,6 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
   const updateSessionMutation = useMutation(
     trpc.app.chat.updateSession.mutationOptions({
       onSuccess: (updatedSession) => {
-        toast.success(t("apps.chat.sessions.updated"));
         // ✅ Otimização: Invalidar apenas a sessão específica para performance
         void queryClient.invalidateQueries(
           trpc.app.chat.findSession.pathFilter({
@@ -295,6 +296,7 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
         {/* Sidebar - assume largura interna definida pelo componente */}
         <AppSidebar
           selectedSessionId={selectedSessionId}
+          selectedAgentId={selectedAgentId}
           onSessionSelect={handleSessionSelect}
           onAgentChange={setSelectedAgentId}
           onModelChange={setSelectedModelId}
@@ -359,6 +361,7 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
               }
               selectedAgentId={selectedAgentId}
               onStreamingFinished={handleStreamingFinished}
+              onModelChange={setSelectedModelId}
             />
           </div>
         </div>

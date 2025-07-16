@@ -96,6 +96,8 @@
     "Only admins can edit tasks that were done by others": "Only admins can edit tasks that were done by others",
     "Only admins can delete shifts created by others": "Only admins can delete shifts created by others",
     "This shift was not originally created by you ask your team manager to delete it": "This shift was not originally created by you, ask your team admin to delete it",
+    "Agent cannot be changed after initial assignment": "Agent cannot be changed after initial assignment",
+    "Session not found": "Session not found",
     "updated": "updated"
   }
 }

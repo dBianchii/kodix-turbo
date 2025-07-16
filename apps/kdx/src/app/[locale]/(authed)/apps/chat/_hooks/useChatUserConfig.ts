@@ -1,10 +1,12 @@
+import type { TRPCClientErrorLike } from "@trpc/client";
 import type { z } from "zod";
 import { useCallback, useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
 
+import type { AppRouter } from "@kdx/api";
 import type { chatUserAppTeamConfigSchema } from "@kdx/shared";
 import { chatAppId } from "@kdx/shared";
+import { toast } from "@kdx/ui/toast";
 
 import { useTRPC } from "~/trpc/react";
 
@@ -85,13 +87,12 @@ export function useChatUserConfig() {
   // ✅ OTIMIZAÇÃO: Memoizar mutation options para evitar re-criação
   const mutationOptions = useMemo(
     () => ({
-      onSuccess: (data: any) => {
+      onSuccess: (data: unknown) => {
         queryClient.invalidateQueries(
           trpc.app.getUserAppTeamConfig.pathFilter(),
         );
-        toast.success("Configurações pessoais salvas!");
       },
-      onError: (error: any) => {
+      onError: (error: TRPCClientErrorLike<AppRouter>) => {
         if (process.env.NODE_ENV === "development") {
           console.error(
             "❌ [useChatUserConfig] Error saving user config:",

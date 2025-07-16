@@ -6,22 +6,29 @@ import { chatAppId } from "@kdx/shared";
 import { AiStudioService } from "../../../../../../../packages/api/src/internal/services/ai-studio.service";
 import { ChatService } from "../../../../../../../packages/api/src/internal/services/chat.service";
 
+// Increase timeout for streaming responses
+export const maxDuration = 60; // 60 seconds for streaming
+
+interface Message {
+  id: string;
+  content: string;
+  senderRole: "user" | "ai" | "system";
+  createdAt: Date;
+}
+
 interface RequestBody {
   chatSessionId: string;
-  messages?: {
+  messages: {
     role: "user" | "assistant" | "system";
     content: string;
   }[];
-}
-
-interface Message {
-  senderRole: "user" | "ai";
-  content: string;
+  selectedModelId?: string;
+  useAgent?: boolean;
 }
 
 interface MessageData {
   content: string;
-  metadata: Record<string, unknown>;
+  metadata?: unknown;
 }
 
 export async function POST(request: NextRequest) {
@@ -109,8 +116,15 @@ export async function POST(request: NextRequest) {
       await ChatService.updateSession(session.id, { aiModelId: modelId });
     }
 
-    // Use centralized AiStudioService
-    return AiStudioService.streamChatResponse({
+    // Get model information to check if it's XAI
+    const model = await AiStudioService.getModelById({
+      modelId: session.aiModelId || modelId,
+      teamId,
+      requestingApp: chatAppId,
+    });
+
+    // Use centralized AiStudioService with enhanced streaming for XAI
+    const response = await AiStudioService.streamChatResponse({
       messages: formattedMessages,
       sessionId: session.id,
       userId,
@@ -126,6 +140,15 @@ export async function POST(request: NextRequest) {
         });
       },
     });
+
+    // Add XAI-specific headers for better streaming
+    if (model.provider.name.toLowerCase() === "xai") {
+      response.headers.set("X-Provider", "xai");
+      response.headers.set("X-Model", modelId);
+      response.headers.set("X-Streaming-Optimized", "true");
+    }
+
+    return response;
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Internal server error";

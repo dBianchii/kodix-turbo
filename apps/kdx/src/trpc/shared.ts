@@ -30,12 +30,6 @@ export interface EmptyThreadStateProps {
   selectedModelId?: string;
 }
 
-export interface ActiveChatWindowProps {
-  sessionId: string;
-  onNewSession?: (sessionId: string) => void;
-  onStreamingFinished?: () => void;
-}
-
 // Reexportar para consistência
 export type ChatSDKMessageType = Message;
 export type TRPCClientErrorType = TRPCClientError<AppRouter>;

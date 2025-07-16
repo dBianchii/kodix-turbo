@@ -2,17 +2,26 @@
 
 <!-- AI-METADATA:
 category: reference
-stack: general
 complexity: basic
-dependencies: []
+updated: 2025-07-13
+claude-ready: true
+priority: high
+token-optimized: true
+audience: developers
+ai-context-weight: important
 -->
+
+<!-- AI-CONTEXT-BOUNDARY: start -->
 
 ## 🎯 Quick Summary
 
 Universal command definitions that work across all AI assistants (Cursor, Claude Code, Windsurf, etc.) for the PRP workflow.
 
-## 📋 Overview
+## 🔍 📋 Overview
 
+<!-- AI-COMPRESS: strategy="summary" max-tokens="150" -->
+**Quick Summary**: Key points for rapid AI context understanding.
+<!-- /AI-COMPRESS -->
 This directory contains **universal command instructions** that any AI assistant can interpret and execute. These are not executable scripts, but rather detailed markdown instructions that AI assistants follow.
 
 ### Command Philosophy
@@ -169,6 +178,7 @@ Extract [information] from user's input. Accept formats:
 ## Step N: Provide Summary
 
 After completing [action], provide:
+<!-- AI-PROGRESS: completed="true" verified="true" -->
 ✅ [What was done]
 📄 [What was created]
 📊 [Metrics/Stats]
@@ -187,12 +197,17 @@ If [condition]:
 
 ## 🔗 Related Resources
 
-- [PRP System Guide](../prp/README.md)
-- [Universal AI Principles](../../ai-assistants/universal-principles.md)
-- [Context Engineering](../README.md)
+- <!-- AI-LINK: type="related" importance="medium" -->
+<!-- AI-CONTEXT-REF: importance="medium" type="guide" -->
+[PRP System Guide](../prp/README.md)
+<!-- /AI-CONTEXT-REF -->
+<!-- /AI-LINK -->
+- [Context Engineering Guide](../README.md)
 - [Project Rules](../../rules/)
 
-<!-- AI-RELATED: [../prp/README.md, ../../ai-assistants/universal-principles.md] -->
-<!-- DEPENDS-ON: [universal-principles] -->
-<!-- REQUIRED-BY: [prp-workflow] -->
-<!-- SEE-ALSO: [generate-prp.md, execute-prp.md] -->
+<!-- AI-CONTEXT-BOUNDARY: end -->
+
+---
+
+**Last Updated**: 2025-07-13  
+**Next**: [PRP System Guide](../prp/README.md)

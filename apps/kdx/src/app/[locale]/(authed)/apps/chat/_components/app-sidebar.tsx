@@ -70,6 +70,7 @@ import { useSessionModals } from "../_hooks/useSessionModals";
 
 interface AppSidebarProps {
   selectedSessionId?: string;
+  selectedAgentId?: string | null;
   onSessionSelect?: (sessionId: string | undefined) => void;
   onAgentChange?: (agentId: string | null) => void;
   onModelChange?: (modelId: string) => void;
@@ -77,6 +78,7 @@ interface AppSidebarProps {
 
 function AppSidebar({
   selectedSessionId,
+  selectedAgentId,
   onSessionSelect,
   onAgentChange,
   onModelChange,
@@ -219,6 +221,7 @@ function AppSidebar({
   } = useSessionModals({
     onSessionSelect,
     selectedSessionId,
+    selectedAgentId,
     onAgentChange,
     onModelChange,
   });
@@ -743,12 +746,10 @@ function AppSidebar({
               {t("apps.chat.actions.cancel")}
             </Button>
             <Button
-              onClick={() => handleUpdateSession(models)}
-              disabled={
-                !sessionTitle.trim() ||
-                !selectedModel ||
-                updateSessionMutation.isPending
-              }
+              onClick={() => {
+                handleUpdateSession(modelsQuery.data || []);
+              }}
+              disabled={!sessionTitle.trim() || updateSessionMutation.isPending}
             >
               {updateSessionMutation.isPending
                 ? t("apps.chat.actions.updating")

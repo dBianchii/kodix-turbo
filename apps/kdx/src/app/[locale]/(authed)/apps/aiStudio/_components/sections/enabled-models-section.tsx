@@ -67,13 +67,18 @@ function ErrorDialog({
   isOpen,
   onClose,
   error,
+  friendlyMessage,
   title = "Erro no Teste do Modelo",
 }: {
   isOpen: boolean;
   onClose: () => void;
   error: string | null;
+  friendlyMessage?: string;
   title?: string;
 }) {
+  const [showDetails, setShowDetails] = useState(false);
+  const t = useTranslations();
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl">
@@ -83,21 +88,58 @@ function ErrorDialog({
             {title}
           </DialogTitle>
           <DialogDescription>
-            Ocorreu um erro durante o teste do modelo. Veja os detalhes abaixo:
+            {t("apps.aiStudio.enabledModels.errors.testFailed")}
           </DialogDescription>
         </DialogHeader>
-        <div className="max-h-96 overflow-y-auto">
-          <Card>
-            <CardContent className="pt-6">
-              <pre className="rounded-md border bg-red-50 p-4 font-mono text-sm whitespace-pre-wrap text-red-600">
-                {error}
-              </pre>
-            </CardContent>
-          </Card>
+
+        <div className="space-y-4">
+          {/* Friendly Error Message */}
+          {friendlyMessage && (
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex items-start gap-3">
+                  <XCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-500" />
+                  <div>
+                    <p className="font-medium text-red-700">
+                      {friendlyMessage}
+                    </p>
+                    <p className="mt-1 text-sm text-red-600">
+                      {t("apps.aiStudio.enabledModels.errors.contactSupport")}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Technical Details (Collapsible) */}
+          <div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowDetails(!showDetails)}
+              className="w-full"
+            >
+              {showDetails ? "Hide" : "Show"} Technical Details
+            </Button>
+
+            {showDetails && (
+              <div className="mt-2 max-h-96 overflow-y-auto">
+                <Card>
+                  <CardContent className="pt-6">
+                    <pre className="rounded-md border bg-red-50 p-4 font-mono text-sm whitespace-pre-wrap text-red-600">
+                      {error}
+                    </pre>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+          </div>
         </div>
+
         <DialogFooter>
           <Button onClick={onClose} variant="outline">
-            Fechar
+            {t("Close")}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -351,6 +393,9 @@ export function EnabledModelsSection() {
   const [testingModelId, setTestingModelId] = useState<string | null>(null);
   const [isSettingDefault, setIsSettingDefault] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [friendlyErrorMessage, setFriendlyErrorMessage] = useState<
+    string | null
+  >(null);
   const [showErrorDialog, setShowErrorDialog] = useState(false);
 
   // ✅ CORRIGIDO: Usar padrão useTRPC
@@ -415,6 +460,17 @@ export function EnabledModelsSection() {
         setTestingModelId(variables.modelId);
       },
       onSuccess: (data, variables) => {
+        console.log("✅ [AI_STUDIO_TEST] Model test completed:", {
+          modelId: variables.modelId,
+          success: data.success,
+          ...(data.success &&
+            "latencyMs" in data && {
+              latency: data.latencyMs,
+              provider: data.providerName,
+              responsePreview: data.responseText?.substring(0, 100),
+            }),
+        });
+
         // Include modelId in the response for proper identification
         const responseWithModelId = {
           ...data,
@@ -425,25 +481,203 @@ export function EnabledModelsSection() {
         // Check if the test actually failed
         if (!data.success) {
           const errorMessage =
-            data.error || "Erro desconhecido ao testar modelo";
-          setError(
-            `Erro no teste do modelo:\n\n${errorMessage}\n\nStack trace:\n${data.error || "Não disponível"}`,
+            "error" in data ? data.error : "Unknown error while testing model";
+          console.error("❌ [AI_STUDIO_TEST] Test failed:", {
+            modelId: variables.modelId,
+            error: errorMessage,
+          });
+
+          // ✅ Extract friendly error message for server-side failures
+          let friendlyMessage = t(
+            "apps.aiStudio.enabledModels.errors.genericTestError",
           );
+
+          // Extract user-friendly error message from specific error types
+          if (errorMessage.includes("Token de API não configurado")) {
+            friendlyMessage = t(
+              "apps.aiStudio.enabledModels.errors.tokenRequired",
+            );
+          } else if (errorMessage.includes("Timeout")) {
+            friendlyMessage = t("apps.aiStudio.enabledModels.errors.timeout");
+          } else if (errorMessage.includes("API Error")) {
+            friendlyMessage = t(
+              "apps.aiStudio.enabledModels.errors.genericTestError",
+            );
+          } else if (errorMessage.includes("não encontrado")) {
+            friendlyMessage = t(
+              "apps.aiStudio.enabledModels.errors.modelNotFound",
+            );
+          } else if (errorMessage.includes("network")) {
+            friendlyMessage = t(
+              "apps.aiStudio.enabledModels.errors.networkError",
+            );
+          }
+
+          // ✅ Show friendly message in toast
+          toast.error(friendlyMessage);
+
+          // ✅ Store both friendly message and technical details
+          setFriendlyErrorMessage(friendlyMessage);
+          const debugDetails = `🔧 Server-side Error:\n${errorMessage}\n\n📋 Additional Info:\n${"error" in data ? data.error : "Not available"}`;
+          setError(debugDetails);
           setShowErrorDialog(true);
-          toast.error(errorMessage);
         } else {
-          toast.success("Teste do modelo realizado!");
+          // Type guard ensures we're accessing success response properties
+          if (data.success && "latencyMs" in data) {
+            toast.success(`Model test successful! (${data.latencyMs}ms)`);
+          }
         }
       },
       onError: (error: any) => {
         console.error("Error testing model:", error);
         const errorMessage =
-          error.message || "Erro desconhecido ao testar modelo";
-        setError(
-          `Erro no teste do modelo:\n\n${errorMessage}\n\nStack trace:\n${error?.stack || "Não disponível"}`,
+          error.message || "Unknown error while testing model";
+
+        // ✅ Extract user-friendly error message and debug info
+        let friendlyMessage = t(
+          "apps.aiStudio.enabledModels.errors.genericTestError",
         );
+        let debugInfo = null;
+
+        try {
+          // Check if error message contains JSON debug info
+          if (errorMessage.includes("Debug Info:")) {
+            const parts = errorMessage.split("Debug Info:");
+            if (parts.length > 1) {
+              debugInfo = JSON.parse(parts[1]);
+
+              // Generate user-friendly message based on error type
+              if (debugInfo.status === 404) {
+                friendlyMessage = t(
+                  "apps.aiStudio.enabledModels.errors.modelNotFoundInProvider",
+                  {
+                    model: debugInfo.model,
+                    provider: debugInfo.provider,
+                  },
+                );
+              } else if (debugInfo.status === 401) {
+                friendlyMessage = t(
+                  "apps.aiStudio.enabledModels.errors.apiKeyAuthenticationFailed",
+                  {
+                    provider: debugInfo.provider,
+                  },
+                );
+              } else if (debugInfo.status === 429) {
+                friendlyMessage = t(
+                  "apps.aiStudio.enabledModels.errors.rateLimitExceeded",
+                  {
+                    provider: debugInfo.provider,
+                  },
+                );
+              } else if (debugInfo.status === 400) {
+                friendlyMessage = t(
+                  "apps.aiStudio.enabledModels.errors.invalidRequest",
+                  {
+                    provider: debugInfo.provider,
+                  },
+                );
+              } else if (debugInfo.status >= 500) {
+                friendlyMessage = t(
+                  "apps.aiStudio.enabledModels.errors.serviceUnavailable",
+                  {
+                    provider: debugInfo.provider,
+                  },
+                );
+              }
+            }
+          }
+        } catch (parseError) {
+          console.warn("Failed to parse error debug info:", parseError);
+        }
+
+        // ✅ Fallback error pattern matching for errors without Debug Info
+        if (!debugInfo) {
+          if (
+            errorMessage.includes("API Key not found") ||
+            errorMessage.includes("API key") ||
+            errorMessage.includes("invalid API key") ||
+            errorMessage.includes("missing API key")
+          ) {
+            friendlyMessage = t(
+              "apps.aiStudio.enabledModels.errors.tokenRequired",
+            );
+          } else if (
+            errorMessage.includes("unauthorized") ||
+            errorMessage.includes("401") ||
+            errorMessage.includes("authentication")
+          ) {
+            friendlyMessage = t(
+              "apps.aiStudio.enabledModels.errors.tokenRequired",
+            );
+          } else if (
+            errorMessage.includes("not found") ||
+            errorMessage.includes("404") ||
+            errorMessage.includes("model not found")
+          ) {
+            friendlyMessage = t(
+              "apps.aiStudio.enabledModels.errors.modelNotFound",
+            );
+          } else if (
+            errorMessage.includes("rate limit") ||
+            errorMessage.includes("429") ||
+            errorMessage.includes("too many requests")
+          ) {
+            friendlyMessage = t(
+              "apps.aiStudio.enabledModels.errors.rateLimitExceeded",
+              {
+                provider: "provider",
+              },
+            );
+          } else if (
+            errorMessage.includes("timeout") ||
+            errorMessage.includes("timed out")
+          ) {
+            friendlyMessage = t("apps.aiStudio.enabledModels.errors.timeout");
+          } else if (
+            errorMessage.includes("network") ||
+            errorMessage.includes("connection") ||
+            errorMessage.includes("failed to fetch")
+          ) {
+            friendlyMessage = t(
+              "apps.aiStudio.enabledModels.errors.networkError",
+            );
+          }
+        }
+
+        // ✅ Show friendly message in toast
+        toast.error(friendlyMessage);
+
+        // ✅ Store both friendly message and technical details
+        setFriendlyErrorMessage(friendlyMessage);
+        let debugDetails = errorMessage;
+        if (debugInfo) {
+          debugDetails = `🔍 Diagnostic Information:\n`;
+          debugDetails += `• Provider: ${debugInfo.provider}\n`;
+          debugDetails += `• Model: ${debugInfo.model}\n`;
+          debugDetails += `• Endpoint: ${debugInfo.endpoint}\n`;
+          debugDetails += `• Status: ${debugInfo.status} (${debugInfo.statusText})\n`;
+          debugDetails += `• API Key: ${debugInfo.debugInfo?.hasToken ? "Configured" : "Missing"}\n`;
+          debugDetails += `• Base URL: ${debugInfo.debugInfo?.baseUrl}\n`;
+          debugDetails += `\n💡 Possible Solutions:\n`;
+
+          if (debugInfo.status === 404) {
+            debugDetails += `• Check if model name "${debugInfo.model}" exists in ${debugInfo.provider}\n`;
+            debugDetails += `• Verify the API endpoint URL is correct\n`;
+            debugDetails += `• Ensure your API key has access to this model\n`;
+          } else if (debugInfo.status === 401) {
+            debugDetails += `• Check if API key is valid and not expired\n`;
+            debugDetails += `• Verify the API key has proper permissions\n`;
+          } else if (debugInfo.status === 429) {
+            debugDetails += `• API rate limit exceeded, try again later\n`;
+            debugDetails += `• Consider upgrading your API plan\n`;
+          }
+
+          debugDetails += `\n🔧 Raw Error:\n${errorMessage}`;
+          debugDetails += `\n\n📋 Stack Trace:\n${error?.stack || "Not available"}`;
+        }
+
+        setError(debugDetails);
         setShowErrorDialog(true);
-        toast.error(errorMessage);
       },
       onSettled: () => {
         setTestingModelId(null);
@@ -467,7 +701,26 @@ export function EnabledModelsSection() {
       },
       onError: (error: any) => {
         console.error("Error setting default model:", error);
-        toast.error(error.message || "Erro ao definir modelo padrão");
+
+        // ✅ Extract friendly error message
+        let friendlyMessage = t(
+          "apps.aiStudio.enabledModels.errors.genericSetDefaultError",
+        );
+        const errorMessage = error.message || "Unknown error";
+
+        if (errorMessage.includes("not found")) {
+          friendlyMessage = t(
+            "apps.aiStudio.enabledModels.errors.modelNotFound",
+          );
+        } else if (errorMessage.includes("unauthorized")) {
+          friendlyMessage = t(
+            "apps.aiStudio.enabledModels.errors.permissionDenied",
+          );
+        } else if (errorMessage.includes("timeout")) {
+          friendlyMessage = t("apps.aiStudio.enabledModels.errors.timeout");
+        }
+
+        toast.error(friendlyMessage);
       },
       onSettled: () => {
         setIsSettingDefault(false);
@@ -502,6 +755,14 @@ export function EnabledModelsSection() {
 
   const handleTestModel = (model: any) => {
     setError(null);
+
+    console.log("🧪 [AI_STUDIO_TEST] Starting model test:", {
+      modelId: model.id,
+      modelName: model.displayName,
+      provider: model.provider?.name,
+      config: model.config,
+    });
+
     testModelMutation.mutate({
       modelId: model.id,
       testPrompt: "Hello! Are you working correctly?",
@@ -511,6 +772,7 @@ export function EnabledModelsSection() {
   const handleErrorDialogClose = () => {
     setShowErrorDialog(false);
     setError(null);
+    setFriendlyErrorMessage(null);
   };
 
   const handleDragEnd = async (event: DragEndEvent) => {
@@ -688,6 +950,7 @@ export function EnabledModelsSection() {
         isOpen={showErrorDialog}
         onClose={handleErrorDialogClose}
         error={error}
+        friendlyMessage={friendlyErrorMessage || undefined}
         title="Erro no Teste do Modelo"
       />
     </div>

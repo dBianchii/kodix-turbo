@@ -384,7 +384,18 @@
           "internalError": "Erro interno do servidor. Verifique os logs para mais detalhes.",
           "reorderError": "Erro ao reordenar modelos",
           "setDefaultError": "Erro ao definir modelo padrão",
-          "updateError": "Erro ao atualizar modelo"
+          "updateError": "Erro ao atualizar modelo",
+          "modelNotFoundInProvider": "Modelo \"{model}\" não encontrado em {provider}",
+          "apiKeyAuthenticationFailed": "Falha na autenticação da chave API para {provider}",
+          "rateLimitExceeded": "Limite de taxa excedido para {provider}",
+          "invalidRequest": "Requisição inválida para {provider}",
+          "serviceUnavailable": "Serviço {provider} temporariamente indisponível",
+          "networkError": "Erro de conexão de rede",
+          "timeout": "Timeout da requisição - tente novamente",
+          "permissionDenied": "Permissão negada",
+          "genericTestError": "Teste do modelo falhou",
+          "genericSetDefaultError": "Falha ao definir modelo padrão",
+          "contactSupport": "Se o problema persistir, entre em contato com o suporte com os detalhes técnicos abaixo."
         },
         "success": {
           "testSuccess": "Modelo testado com sucesso! Latência: {latency}ms. Resposta: {response}...",
@@ -825,5 +836,84 @@
   "No caregivers found": "Nenhum cuidador encontrado",
   "Add caregivers": "Adicionar cuidadores",
   "congratulations": "Parabéns",
-  "copied": "Copiado"
+  "copied": "Copiado",
+  "api": {
+    "errors": {
+      "server": {
+        "title": "Erro no Servidor",
+        "subtitle": "Algo deu errado do nosso lado",
+        "message": "Estamos enfrentando dificuldades técnicas. Nossa equipe foi notificada e está trabalhando para resolver o problema.",
+        "database": {
+          "title": "Erro de Conexão com o Banco de Dados",
+          "subtitle": "Não foi possível conectar ao banco de dados",
+          "message": "Estamos tendo problemas para conectar ao nosso banco de dados. Tente novamente em alguns momentos.",
+          "retry": "Tentar Novamente",
+          "status": "Verificar Status"
+        },
+        "serverCrash": {
+          "title": "Servidor Temporariamente Indisponível",
+          "subtitle": "O servidor não está respondendo",
+          "message": "Nossos servidores estão temporariamente indisponíveis. Estamos trabalhando para restaurar o serviço o mais rápido possível.",
+          "estimatedTime": "Tempo estimado de recuperação: 2-5 minutos"
+        },
+        "renderError": {
+          "title": "Erro ao Carregar Página",
+          "subtitle": "Algo deu errado ao carregar esta página",
+          "message": "Encontramos um erro ao carregar esta página. Isso geralmente se resolve automaticamente.",
+          "suggestion": "Por favor, tente atualizar a página ou voltar para a página anterior."
+        },
+        "networkError": {
+          "title": "Erro de Conexão",
+          "subtitle": "Não foi possível conectar ao servidor",
+          "message": "Verifique sua conexão com a internet e tente novamente."
+        },
+        "timeoutError": {
+          "title": "Tempo Limite da Requisição",
+          "subtitle": "A requisição demorou muito para ser concluída",
+          "message": "O servidor não respondeu a tempo. Tente novamente."
+        },
+        "maintenanceMode": {
+          "title": "Modo de Manutenção",
+          "subtitle": "Estamos realizando manutenção programada",
+          "message": "O sistema está temporariamente indisponível enquanto realizamos manutenção. Voltaremos em breve."
+        },
+        "actions": {
+          "retry": "Tentar Novamente",
+          "goBack": "Voltar",
+          "goHome": "Ir para o Início",
+          "refresh": "Atualizar Página",
+          "contact": "Contatar Suporte",
+          "checkStatus": "Verificar Status"
+        },
+        "tips": {
+          "title": "O que você pode fazer:",
+          "refresh": "Atualizar a página",
+          "wait": "Aguardar alguns minutos e tentar novamente",
+          "contact": "Contatar o suporte se o problema persistir",
+          "different": "Tentar um navegador ou dispositivo diferente"
+        }
+      },
+      "client": {
+        "title": "Algo deu errado",
+        "subtitle": "Ocorreu um erro inesperado",
+        "message": "Pedimos desculpas pelo inconveniente. Tente novamente.",
+        "chunkLoadError": {
+          "title": "Erro de Carregamento",
+          "subtitle": "Falha ao carregar recursos da aplicação",
+          "message": "Atualize a página para recarregar a aplicação."
+        },
+        "hydrationError": {
+          "title": "Erro de Sincronização da Aplicação",
+          "subtitle": "A aplicação precisa ser atualizada",
+          "message": "Atualize a página para restaurar o funcionamento normal."
+        }
+      },
+      "recovery": {
+        "title": "Recuperação de Erro",
+        "automatic": "Tentando recuperação automática...",
+        "manual": "Recuperação manual necessária",
+        "instructions": "Siga as instruções abaixo para continuar:"
+      }
+    }
+  }
 }

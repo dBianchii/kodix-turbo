@@ -5,7 +5,6 @@ import { chatRepository } from "@kdx/db/repositories";
 
 export async function POST(request: NextRequest) {
   try {
-    console.log("🔥 [API] CREATE SESSION ENDPOINT CALLED");
 
     // Verificar autenticação
     const session = await auth();
@@ -16,7 +15,6 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { title } = body;
 
-    console.log("🔍 [DEBUG] Request body:", { title });
 
     if (!title) {
       return Response.json({ error: "Title is required" }, { status: 400 });
@@ -34,7 +32,6 @@ export async function POST(request: NextRequest) {
       throw new Error("Failed to create session");
     }
 
-    console.log("✅ [API] Session created:", chatSession.id);
 
     return Response.json({
       id: chatSession.id,

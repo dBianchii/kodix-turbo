@@ -2,6 +2,7 @@
 
 > **Source**: Based on official provider documentation (Anthropic, OpenAI, Google) and internal testing.
 > **Status**: ✅ Active & Consolidated
+> **Related**: [Agent Switching Architecture](./agent-switching-architecture.md) | [Context Engineering](./context-engineering.md)
 
 ## 1. Index
 
@@ -169,10 +170,10 @@ Confirm your new identity in your next response.
 
 ---
 
-## 7. Solving Contextual Inertia (Agent Switching)
+## 7. Agent Switching and Contextual Inertia
 
-The primary challenge this system solves is **Contextual Inertia**, where a powerful LLM maintains the personality of a previous agent even after being given new instructions. Our model-specific "Hard Reset" strategies were developed to overcome this.
+> 🔁 This content has been moved to [agent-switching](./agent-switching/)
 
-- **Problem**: Models like Claude 3.5 and GPT-4o would ignore new agent instructions.
-- **Root Cause**: Advanced models have strong contextual memory and pattern inference, causing them to resist abrupt changes in identity.
-- **Solution**: The system detects an agent switch and applies the appropriate, forceful prompt structure (XML, Hierarchical, or Direct Command) to ensure the new identity is adopted immediately. This is configured via the `*-prompt-strategies.json` files.
+The primary challenge of **Contextual Inertia** occurs when powerful LLMs maintain the personality of a previous agent even after being given new instructions. Our model-specific "Hard Reset" strategies were developed to overcome this.
+
+> 📋 **Complete Implementation**: See [Agent Switching](./agent-switching/) for full technical details on solving contextual inertia.

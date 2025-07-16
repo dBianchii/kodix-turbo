@@ -26,7 +26,24 @@ export const createContext = cache(async () => {
   });
 });
 
-export const trpcCaller = createCaller(createContext);
+// Create a proxy that automatically handles async context resolution
+const createAsyncCallerProxy = () => {
+  return new Proxy({} as any, {
+    get(target, prop) {
+      return new Proxy({} as any, {
+        get(target, method) {
+          return async (...args: any[]) => {
+            const ctx = await createContext();
+            const caller = createCaller(ctx);
+            return (caller)[prop][method](...args);
+          };
+        }
+      });
+    }
+  });
+};
+
+export const trpcCaller = createAsyncCallerProxy();
 
 const getQueryClient = cache(createQueryClient);
 

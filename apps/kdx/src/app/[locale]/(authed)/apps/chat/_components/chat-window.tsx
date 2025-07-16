@@ -47,6 +47,7 @@ export function ChatWindow({
     <ActiveChatWindow
       sessionId={sessionId}
       onStreamingFinished={onStreamingFinished}
+      selectedModelId={selectedModelId}
     />
   );
 }

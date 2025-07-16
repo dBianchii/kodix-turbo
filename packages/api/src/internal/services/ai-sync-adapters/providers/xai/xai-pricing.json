@@ -1,0 +1,50 @@
+[
+  {
+    "modelId": "grok-4-0709",
+    "pricing": {
+      "input": "10.00",
+      "output": "30.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "grok-3",
+    "pricing": {
+      "input": "2.50",
+      "output": "10.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "grok-3-fast",
+    "pricing": {
+      "input": "1.00",
+      "output": "5.00",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "grok-3-mini",
+    "pricing": {
+      "input": "0.50",
+      "output": "2.50",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "grok-3-mini-fast",
+    "pricing": {
+      "input": "0.25",
+      "output": "1.25",
+      "unit": "per_million_tokens"
+    }
+  },
+  {
+    "modelId": "grok-2-1212",
+    "pricing": {
+      "input": "5.00",
+      "output": "15.00",
+      "unit": "per_million_tokens"
+    }
+  }
+]

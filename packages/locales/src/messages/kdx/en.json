@@ -366,7 +366,18 @@
           "internalError": "Internal server error. Check logs for more details.",
           "reorderError": "Error reordering models",
           "setDefaultError": "Error setting default model",
-          "updateError": "Error updating model"
+          "updateError": "Error updating model",
+          "modelNotFoundInProvider": "Model \"{model}\" not found in {provider}",
+          "apiKeyAuthenticationFailed": "API key authentication failed for {provider}",
+          "rateLimitExceeded": "Rate limit exceeded for {provider}",
+          "invalidRequest": "Invalid request to {provider}",
+          "serviceUnavailable": "{provider} service is temporarily unavailable",
+          "networkError": "Network connection error",
+          "timeout": "Request timeout - try again",
+          "permissionDenied": "Permission denied",
+          "genericTestError": "Model test failed",
+          "genericSetDefaultError": "Failed to set default model",
+          "contactSupport": "If the problem persists, please contact support with the technical details below."
         },
         "success": {
           "testSuccess": "Model tested successfully! Latency: {latency}ms. Response: {response}...",
@@ -718,7 +729,33 @@
   "Permissions": "Permissions",
   "Define the role of each user": "Define the role of each user",
   "Select your app to change its configurations": "Select the app to change settings:",
-  "trpc": {
+  "api": {
+    "appActivityLogs": {
+      "inserted at": "inserted at",
+      "from": "from",
+      "to": "to",
+      "doneAt": "done at",
+      "details": "details",
+      "doneByUserId": "done by",
+      "updated": "updated",
+      "null": "empty",
+      "created": "created"
+    },
+    "emails": {
+      "Join invitedByUsername on Kodix": "Join {invitedByUsername} on Kodix",
+      "Join teamName on Kodix": "Join <teamName>teamName</teamName> on {site}",
+      "Has invited you to the teamName team on Kodix": "Has invited you to the <teamName>teamName</teamName> team on {site}",
+      "Join the team": "Join the team",
+      "This invitation was intended for": "This invitation was intended for",
+      "This invite was sent from": "This invite was sent from",
+      "located in": "located in",
+      "If you were not expecting this invitation you can ignore this email": "If you were not expecting this invitation, you can ignore this email. If you are concerned about your account's safety, please reply to this email to get in touch with us.",
+      "Hello": "Hello",
+      "or copy and paste this URL into your browser:": "or copy and paste this URL into your browser:",
+      "no title": "(no title)",
+      "Reset your password": "Reset your password",
+      "Click the following link to reset your password": "Click the following link to reset your password"
+    },
     "No Team Found": "No Team Found",
     "Only the team owner can perform this action": "Only the team owner can perform this action",
     "appName is not installed": "{appName} is not installed",
@@ -748,7 +785,84 @@
     "Token not found": "Token not found",
     "User not found": "User not found",
     "Incorrect email or password": "Incorrect email or password",
-    "Email already registered": "Email already registered"
+    "Email already registered": "Email already registered",
+    "errors": {
+      "server": {
+        "title": "Server Error",
+        "subtitle": "Something went wrong on our end",
+        "message": "We're experiencing technical difficulties. Our team has been notified and is working to resolve the issue.",
+        "database": {
+          "title": "Database Connection Error",
+          "subtitle": "Unable to connect to the database",
+          "message": "We're having trouble connecting to our database. Please try again in a few moments.",
+          "retry": "Try Again",
+          "status": "Check Status"
+        },
+        "serverCrash": {
+          "title": "Server Temporarily Unavailable",
+          "subtitle": "The server is not responding",
+          "message": "Our servers are temporarily unavailable. We're working to restore service as quickly as possible.",
+          "estimatedTime": "Estimated recovery time: 2-5 minutes"
+        },
+        "renderError": {
+          "title": "Page Loading Error",
+          "subtitle": "Something went wrong while loading this page",
+          "message": "We encountered an error while loading this page. This usually resolves itself automatically.",
+          "suggestion": "Please try refreshing the page or going back to the previous page."
+        },
+        "networkError": {
+          "title": "Connection Error",
+          "subtitle": "Unable to connect to the server",
+          "message": "Please check your internet connection and try again."
+        },
+        "timeoutError": {
+          "title": "Request Timeout",
+          "subtitle": "The request took too long to complete",
+          "message": "The server didn't respond in time. Please try again."
+        },
+        "maintenanceMode": {
+          "title": "Maintenance Mode",
+          "subtitle": "We're performing scheduled maintenance",
+          "message": "The system is temporarily unavailable while we perform maintenance. We'll be back shortly."
+        },
+        "actions": {
+          "retry": "Try Again",
+          "goBack": "Go Back",
+          "goHome": "Go to Home",
+          "refresh": "Refresh Page",
+          "contact": "Contact Support",
+          "checkStatus": "Check Status"
+        },
+        "tips": {
+          "title": "What you can do:",
+          "refresh": "Refresh the page",
+          "wait": "Wait a few minutes and try again",
+          "contact": "Contact support if the problem persists",
+          "different": "Try a different browser or device"
+        }
+      },
+      "client": {
+        "title": "Something went wrong",
+        "subtitle": "An unexpected error occurred",
+        "message": "We're sorry for the inconvenience. Please try again.",
+        "chunkLoadError": {
+          "title": "Loading Error",
+          "subtitle": "Failed to load application resources",
+          "message": "Please refresh the page to reload the application."
+        },
+        "hydrationError": {
+          "title": "Application Sync Error",
+          "subtitle": "The application needs to be refreshed",
+          "message": "Please refresh the page to restore normal operation."
+        }
+      },
+      "recovery": {
+        "title": "Error Recovery",
+        "automatic": "Attempting automatic recovery...",
+        "manual": "Manual recovery required",
+        "instructions": "Please follow the instructions below to continue:"
+      }
+    }
   },
   "Calendar": "Calendar",
   "Agent": "Agent",

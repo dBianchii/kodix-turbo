@@ -75,10 +75,6 @@ export function AgentSelector({
   const updateSessionMutation = useMutation(
     trpc.app.chat.updateSession.mutationOptions({
       onSuccess: (updatedSession) => {
-        const newAgentName = safeAvailableAgents.find(
-          (a) => a.id === updatedSession.aiAgentId,
-        )?.name;
-        toast.success(`Agent changed to ${newAgentName || "No agent"}`);
         onAgentSelect?.(updatedSession.aiAgentId || null);
         setIsOpen(false);
 
@@ -94,6 +90,7 @@ export function AgentSelector({
         );
       },
       onError: (error) => {
+        // Show backend error message directly (already translated)
         toast.error(error.message || "Failed to update agent");
       },
     }),
