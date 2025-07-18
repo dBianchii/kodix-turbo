@@ -2,7 +2,7 @@
 
 import type { mysqlTable } from "drizzle-orm/mysql-core";
 
-import { nanoid, NANOID_SIZE, MODEL_ID_SIZE } from "../nanoid";
+import { MODEL_ID_SIZE, nanoid, NANOID_SIZE } from "../nanoid";
 import { teams } from "./teams";
 
 export const DEFAULTLENGTH = 255;
@@ -39,6 +39,7 @@ export const aiModelIdPrimaryKey = (t: THelper) =>
   t
     .varchar({ length: MODEL_ID_SIZE })
     .notNull()
+    .$default(() => nanoid())
     .primaryKey();
 
 export const typeEnum = (t: THelper) => t.mysqlEnum(["NORMAL", "CRITICAL"]);

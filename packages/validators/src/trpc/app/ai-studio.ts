@@ -30,7 +30,7 @@ export type FindAiProvidersInput = z.infer<typeof findAiProvidersSchema>;
 
 // AI Model schemas
 export const createAiModelSchema = z.object({
-  universalModelId: z.string().min(1, "Model ID é obrigatório"),
+  modelId: ZModelId,
   providerId: z.string(),
   config: z.any().optional(),
   enabled: z.boolean().default(true),
@@ -38,8 +38,7 @@ export const createAiModelSchema = z.object({
 export type CreateAiModelInput = z.infer<typeof createAiModelSchema>;
 
 export const updateAiModelSchema = z.object({
-  id: z.string(),
-  universalModelId: z.string().min(1, "Model ID é obrigatório").optional(),
+  modelId: ZModelId,
   providerId: z.string().optional(),
   config: z.any().optional(),
   enabled: z.boolean().optional(),
@@ -194,6 +193,13 @@ export type FindAiAgentsInput = z.infer<typeof findAiAgentsSchema>;
 export const idSchema = z.object({
   id: z.string(),
 });
+
+// Schema para Model ID
+export const modelIdSchema = z.object({
+  modelId: ZModelId,
+});
+export type ModelIdInput = z.infer<typeof modelIdSchema>;
+
 export type IdInput = z.infer<typeof idSchema>;
 
 // Novo schema para habilitar modelos globalmente por provedor

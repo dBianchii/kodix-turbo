@@ -622,8 +622,8 @@ function AppSidebar({
                 </SelectTrigger>
                 <SelectContent>
                   {models.map((model) => (
-                    <SelectItem key={model.id} value={model.id}>
-                      {model.universalModelId} ({model.provider.name})
+                    <SelectItem key={model.modelId} value={model.modelId}>
+                      {model.modelId} ({model.provider.name})
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -733,8 +733,8 @@ function AppSidebar({
                 </SelectTrigger>
                 <SelectContent>
                   {models.map((model) => (
-                    <SelectItem key={model.id} value={model.id}>
-                      {model.universalModelId} ({model.provider.name})
+                    <SelectItem key={model.modelId} value={model.modelId}>
+                      {model.modelId} ({model.provider.name})
                     </SelectItem>
                   ))}
                 </SelectContent>

@@ -43,7 +43,7 @@ async function getPreferredModelHelper(
         if (model) {
           return {
             source: "user_config",
-            modelId: model.id,
+            modelId: model.modelId,
             model,
             config: userConfig?.config,
           };
@@ -75,11 +75,11 @@ async function getPreferredModelHelper(
     if (defaultModelConfig.model) {
       console.log(
         "✅ [PREFERRED_MODEL] Modelo padrão do AI Studio encontrado:",
-        defaultModelConfig.model.universalModelId,
+        defaultModelConfig.model.modelId,
       );
       return {
         source: "ai_studio_default",
-        modelId: defaultModelConfig.model.id,
+        modelId: defaultModelConfig.model.modelId,
         model: defaultModelConfig.model,
         teamConfig: defaultModelConfig,
       };
@@ -105,11 +105,11 @@ async function getPreferredModelHelper(
     if (firstActiveModel) {
       console.log(
         "🔄 [PREFERRED_MODEL] Usando primeiro modelo ativo como fallback:",
-        firstActiveModel.universalModelId,
+        firstActiveModel.modelId,
       );
       return {
         source: "first_available",
-        modelId: firstActiveModel.id,
+        modelId: firstActiveModel.modelId,
         model: firstActiveModel,
         teamConfig: firstActiveModel.teamConfig,
       };
@@ -161,7 +161,7 @@ export async function autoCreateSessionWithMessageHandler({
           aiModelId = input.aiModelId;
           console.log(
             "✅ [AUTO_CREATE] Modelo explícito validado:",
-            preferredModel.universalModelId,
+            preferredModel.modelId,
           );
         } else {
           throw new Error("Modelo explícito inválido");

@@ -36,12 +36,12 @@ async function enableOpenAIModels() {
         await db
           .update(aiModel)
           .set({ enabled: true })
-          .where(eq(aiModel.id, model.id));
+          .where(eq(aiModel.modelId, model.modelId));
 
-        console.log(`✅ Habilitado: ${model.universalModelId}`);
+        console.log(`✅ Habilitado: ${model.modelId}`);
         enabledCount++;
       } else {
-        console.log(`✓ Já habilitado: ${model.universalModelId}`);
+        console.log(`✓ Já habilitado: ${model.modelId}`);
       }
     }
 

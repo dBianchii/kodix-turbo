@@ -150,14 +150,14 @@ export async function enviarMensagemHandler({
           temperature?: number;
         };
         const modelName =
-          modelConfig.modelId || modelConfig.version || model.universalModelId;
+          modelConfig.modelId || modelConfig.version || model.modelId;
         const maxTokens = modelConfig.maxTokens || 500;
         const temperature = modelConfig.temperature || 0.7;
 
         // Log temporário para debug
         console.log("[Backend] Usando modelo para API:", {
           sessionModelId: session.aiModelId,
-          databaseModelId: model.id,
+          databaseModelId: model.modelId,
           modelName,
           modelConfig,
           providerName: model.provider.name,

@@ -42,7 +42,7 @@ export async function getPreferredModelHelper(
         if (model) {
           return {
             source: "user_config",
-            modelId: model.id,
+            modelId: model.modelId,
             model,
             config: userConfig?.config,
           };
@@ -70,7 +70,7 @@ export async function getPreferredModelHelper(
     if (defaultModelConfig.model) {
       return {
         source: "ai_studio_default",
-        modelId: defaultModelConfig.model.id,
+        modelId: defaultModelConfig.model.modelId,
         model: defaultModelConfig.model,
         teamConfig: defaultModelConfig,
       };
@@ -96,7 +96,7 @@ export async function getPreferredModelHelper(
     if (firstActiveModel) {
       return {
         source: "first_available",
-        modelId: firstActiveModel.id,
+        modelId: firstActiveModel.modelId,
         model: firstActiveModel,
         teamConfig: firstActiveModel.teamConfig,
       };

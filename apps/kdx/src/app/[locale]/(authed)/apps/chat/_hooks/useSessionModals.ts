@@ -206,7 +206,7 @@ export function useSessionModals({
     }
   };
 
-  const handleUpdateSession = (models: { id: string }[]) => {
+  const handleUpdateSession = (models: { modelId: string }[]) => {
     if (editingSession && sessionTitle.trim()) {
       // Detectar se houve troca de agente
       const agentChanged =

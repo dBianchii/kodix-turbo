@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
       requestingApp: chatAppId,
     });
 
-    const modelId = session.aiModelId || availableModels[0]?.id;
+    const modelId = session.aiModelId || availableModels[0]?.modelId;
 
     if (!modelId) {
       return Response.json({ error: "No models available" }, { status: 500 });

@@ -41,8 +41,8 @@ export const aiProvider = mysqlTable(
 export const aiModel = mysqlTable(
   "ai_model",
   (t) => ({
-    id: aiModelIdPrimaryKey(t),
-    universalModelId: t.varchar("universal_model_id", { length: 60 }).notNull(),
+    modelId: aiModelIdPrimaryKey(t), // Renamed from 'id'
+    // universalModelId: REMOVED COMPLETELY
     providerId: t
       .varchar({ length: NANOID_SIZE })
       .notNull()
@@ -58,9 +58,7 @@ export const aiModel = mysqlTable(
   }),
   (table) => ({
     // displayNameIdx: index("ai_model_display_name_idx").on(table.displayName), // REMOVED: displayName deprecated
-    universalModelIdIdx: unique("ai_model_universal_model_id_idx").on(
-      table.universalModelId,
-    ),
+    // universalModelIdIdx: REMOVED - no longer needed
     providerIdx: index("ai_model_provider_idx").on(table.providerId),
     statusIdx: index("ai_model_status_idx").on(table.status),
     enabledIdx: index("ai_model_enabled_idx").on(table.enabled),
@@ -151,7 +149,7 @@ export const aiTeamModelConfig = mysqlTable(
     aiModelId: t
       .varchar({ length: MODEL_ID_SIZE })
       .notNull()
-      .references(() => aiModel.id, { onDelete: "cascade" }),
+      .references(() => aiModel.modelId, { onDelete: "cascade" }),
     enabled: t.boolean().default(false).notNull(),
     isDefault: t.boolean().default(false).notNull(),
     priority: t.int().default(0),
@@ -238,7 +236,7 @@ export const aiTeamModelConfigRelations = relations(
     }),
     model: one(aiModel, {
       fields: [aiTeamModelConfig.aiModelId],
-      references: [aiModel.id],
+      references: [aiModel.modelId],
     }),
   }),
 );

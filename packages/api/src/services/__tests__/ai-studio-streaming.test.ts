@@ -96,7 +96,7 @@ describe("AI Studio Streaming - Regression Tests", () => {
       });
 
       // Verify current behavior
-      expect(model.universalModelId).toBe("gpt-4");
+      expect(model.modelId).toBe("gpt-4");
       expect(model.provider.name).toBe("OpenAI");
       expect(token.token).toBe("sk-test-token");
     });

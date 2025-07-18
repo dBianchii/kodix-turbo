@@ -107,10 +107,9 @@ export class AiModelSyncService {
       // 4. Fetch existing models from the database for this provider
       const existingModels = await db
         .select({
-          id: aiModel.id,
+          modelId: aiModel.modelId,
           providerId: aiModel.providerId,
-          name: aiModel.universalModelId,
-          universalModelId: aiModel.universalModelId,
+          name: aiModel.modelId,
           enabled: aiModel.enabled,
           status: aiModel.status,
           config: aiModel.config,
@@ -211,10 +210,9 @@ export class AiModelSyncService {
     providerId: string,
     freshModels: NormalizedModel[],
     existingModels: {
-      id: string;
+      modelId: string;
       providerId: string;
       name: string;
-      universalModelId: string;
       enabled: boolean;
       status: "active" | "archived";
       config: unknown;
@@ -224,12 +222,12 @@ export class AiModelSyncService {
   ): ModelSyncDiff {
     const freshModelMap = new Map(freshModels.map((m) => [m.modelId, m]));
 
-    // Create a map using the universalModelId as the key (the actual unique identifier)
+    // Create a map using the modelId as the key (the actual unique identifier)
     const existingModelMap = new Map<string, (typeof existingModels)[0]>();
 
-    // Use universalModelId for mapping
+    // Use modelId for mapping
     for (const model of existingModels) {
-      existingModelMap.set(model.universalModelId, model);
+      existingModelMap.set(model.modelId, model);
     }
 
     const newModels: NormalizedModel[] = [];
@@ -295,10 +293,10 @@ export class AiModelSyncService {
         if (needsUpdate) {
           updatedModels.push({
             existing: {
-              modelId: existingModel.universalModelId,
+              modelId: existingModel.modelId,
               name: existingModel.name,
               status: existingModel.status,
-              databaseId: existingModel.id,
+              databaseId: existingModel.modelId,
             },
             updated: freshModel.originalData,
           });
@@ -310,7 +308,7 @@ export class AiModelSyncService {
     for (const [modelId, existingModel] of existingModelMap) {
       if (!freshModelMap.has(modelId) && existingModel.status === "active") {
         archivedModels.push({
-          modelId: existingModel.universalModelId,
+          modelId: existingModel.modelId,
           name: existingModel.name,
           status: "archived",
         });
@@ -379,7 +377,7 @@ export class AiModelSyncService {
       // Archive models from unsupported providers
       for (const provider of unsupportedProviders) {
         const modelsToArchive = await db
-          .select({ id: aiModel.id, universalModelId: aiModel.universalModelId })
+          .select({ modelId: aiModel.modelId })
           .from(aiModel)
           .where(
             and(
@@ -453,9 +451,8 @@ export class AiModelSyncService {
     for (const model of newModels) {
       try {
         await db.insert(aiModel).values({
-          id: model.modelId, // Use the same value as universalModelId for the primary key
+          modelId: model.modelId, // Use the modelId as the primary key
           providerId,
-          universalModelId: model.modelId,
           status: model.status || "active",
           enabled: model.status !== "archived",
           config: JSON.stringify(model), // Store as JSON string to preserve key order
@@ -480,7 +477,7 @@ export class AiModelSyncService {
             originalConfig: JSON.stringify(updated),
             updatedAt: new Date(),
           })
-          .where(eq(aiModel.id, existing.databaseId!));
+          .where(eq(aiModel.modelId, existing.databaseId!));
         result.modelsUpdated++;
         result.modelsProcessed++;
       } catch (error) {
@@ -500,7 +497,7 @@ export class AiModelSyncService {
           })
           .where(
             and(
-              eq(aiModel.universalModelId, model.modelId),
+              eq(aiModel.modelId, model.modelId),
               eq(aiModel.providerId, providerId),
             ),
           );

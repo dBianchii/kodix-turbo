@@ -31,7 +31,7 @@ export const chatFolder = mysqlTable(
       .references(() => users.id),
     name: t.varchar({ length: 100 }).notNull(),
     aiAgentId: t.varchar({ length: NANOID_SIZE }).references(() => aiAgent.id),
-    aiModelId: t.varchar({ length: MODEL_ID_SIZE }).references(() => aiModel.id),
+    aiModelId: t.varchar({ length: MODEL_ID_SIZE }).references(() => aiModel.modelId),
     createdAt: t.timestamp().defaultNow().notNull(),
     updatedAt: t.timestamp().onUpdateNow(),
   }),
@@ -62,7 +62,7 @@ export const chatSession = mysqlTable(
     aiModelId: t
       .varchar({ length: MODEL_ID_SIZE })
       .notNull()
-      .references(() => aiModel.id),
+      .references(() => aiModel.modelId),
     title: t.varchar({ length: DEFAULTLENGTH }).notNull(),
     createdAt: t.timestamp().defaultNow().notNull(),
     updatedAt: t.timestamp().onUpdateNow(),
@@ -122,7 +122,7 @@ export const chatFolderRelations = relations(chatFolder, ({ one, many }) => ({
   }),
   aiModel: one(aiModel, {
     fields: [chatFolder.aiModelId],
-    references: [aiModel.id],
+    references: [aiModel.modelId],
   }),
   sessions: many(chatSession),
 }));
@@ -146,7 +146,7 @@ export const chatSessionRelations = relations(chatSession, ({ one, many }) => ({
   }),
   aiModel: one(aiModel, {
     fields: [chatSession.aiModelId],
-    references: [aiModel.id],
+    references: [aiModel.modelId],
   }),
   messages: many(chatMessage),
 }));

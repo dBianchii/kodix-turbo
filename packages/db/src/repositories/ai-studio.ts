@@ -105,7 +105,7 @@ export const AiProviderRepository = {
       where: eq(aiProvider.id, id),
       with: {
         models: {
-          columns: { id: true, universalModelId: true, enabled: true },
+          columns: { modelId: true, enabled: true },
         },
         tokens: {
           columns: { id: true, teamId: true, createdAt: true },
@@ -120,7 +120,7 @@ export const AiProviderRepository = {
       where: eq(aiProvider.name, name),
       with: {
         models: {
-          columns: { id: true, universalModelId: true, enabled: true },
+          columns: { modelId: true, enabled: true },
         },
       },
     });
@@ -141,7 +141,7 @@ export const AiProviderRepository = {
       orderBy: [asc(aiProvider.name)],
       with: {
         models: {
-          columns: { id: true, universalModelId: true, enabled: true },
+          columns: { modelId: true, enabled: true },
         },
         tokens: {
           columns: { id: true, teamId: true, createdAt: true },
@@ -198,28 +198,22 @@ export const AiProviderRepository = {
 export const AiModelRepository = {
   // Criar novo modelo
   create: async (data: {
-    id?: string; // Optional - if not provided, will use universalModelId
-    universalModelId: string;
+    modelId: string;
     providerId: string;
     config?: any;
     enabled?: boolean;
     status?: "active" | "archived";
   }) => {
-    const modelData = {
-      ...data,
-      id: data.id || data.universalModelId, // Use provided id or fallback to universalModelId
-    };
-    
     await db
       .insert(aiModel)
-      .values(modelData);
-    return AiModelRepository.findById(modelData.id);
+      .values(data);
+    return AiModelRepository.findById(data.modelId);
   },
 
   // Buscar por ID
-  findById: async (id: string) => {
+  findById: async (modelId: string) => {
     return db.query.aiModel.findFirst({
-      where: eq(aiModel.id, id),
+      where: eq(aiModel.modelId, modelId),
       with: {
         provider: {
           columns: { id: true, name: true, baseUrl: true },
@@ -229,11 +223,10 @@ export const AiModelRepository = {
   },
 
   // Buscar por ID com config original preservado
-  findByIdWithOriginalConfig: async (id: string) => {
+  findByIdWithOriginalConfig: async (modelId: string) => {
     const result = await db
       .select({
-        id: aiModel.id,
-        universalModelId: aiModel.universalModelId,
+        modelId: aiModel.modelId,
         providerId: aiModel.providerId,
         status: aiModel.status,
         config: aiModel.config,
@@ -243,7 +236,7 @@ export const AiModelRepository = {
         updatedAt: aiModel.updatedAt,
       })
       .from(aiModel)
-      .where(eq(aiModel.id, id))
+      .where(eq(aiModel.modelId, modelId))
       .limit(1);
 
     return result[0] || null;
@@ -276,7 +269,7 @@ export const AiModelRepository = {
       where: condicoes.length > 0 ? and(...condicoes) : undefined,
       limit: limite,
       offset,
-      orderBy: [asc(aiModel.universalModelId)],
+      orderBy: [asc(aiModel.modelId)],
       with: {
         provider: {
           columns: { id: true, name: true, baseUrl: true },
@@ -310,8 +303,7 @@ export const AiModelRepository = {
 
     return db
       .select({
-        id: aiModel.id,
-        universalModelId: aiModel.universalModelId,
+        modelId: aiModel.modelId,
         providerId: aiModel.providerId,
         status: aiModel.status,
         config: aiModel.config,
@@ -324,7 +316,7 @@ export const AiModelRepository = {
       .where(condicoes.length > 0 ? and(...condicoes) : undefined)
       .limit(limite)
       .offset(offset)
-      .orderBy(asc(aiModel.universalModelId));
+      .orderBy(asc(aiModel.modelId));
   },
 
   // Buscar modelos por provider (nome)
@@ -347,12 +339,12 @@ export const AiModelRepository = {
   },
 
   // Atualizar modelo
-  update: async (id: string, data: Partial<typeof aiModel.$inferInsert>) => {
+  update: async (modelId: string, data: Partial<typeof aiModel.$inferInsert>) => {
     await db
       .update(aiModel)
       .set({ ...data, updatedAt: new Date() })
-      .where(eq(aiModel.id, id));
-    return AiModelRepository.findById(id);
+      .where(eq(aiModel.modelId, modelId));
+    return AiModelRepository.findById(modelId);
   },
 
   // Bulk archive models - High-performance operation using set-based SQL
@@ -366,20 +358,20 @@ export const AiModelRepository = {
         enabled: false,
         updatedAt: new Date(),
       })
-      .where(inArray(aiModel.id, modelIds));
+      .where(inArray(aiModel.modelId, modelIds));
 
     // Return the number of IDs that were processed
     return modelIds.length;
   },
 
   // Excluir modelo
-  delete: async (id: string) => {
+  delete: async (modelId: string) => {
     return db.transaction(async (tx) => {
       // Verificar se há chat sessions usando este modelo
       const [sessionsCount] = await tx
         .select({ count: count() })
         .from(chatSession)
-        .where(eq(chatSession.aiModelId, id));
+        .where(eq(chatSession.aiModelId, modelId));
 
       if ((sessionsCount?.count ?? 0) > 0) {
         throw new Error(
@@ -391,7 +383,7 @@ export const AiModelRepository = {
       const [foldersCount] = await tx
         .select({ count: count() })
         .from(chatFolder)
-        .where(eq(chatFolder.aiModelId, id));
+        .where(eq(chatFolder.aiModelId, modelId));
 
       if ((foldersCount?.count ?? 0) > 0) {
         throw new Error(
@@ -400,33 +392,20 @@ export const AiModelRepository = {
       }
 
       // Excluir modelo
-      await tx.delete(aiModel).where(eq(aiModel.id, id));
+      await tx.delete(aiModel).where(eq(aiModel.modelId, modelId));
     });
   },
 
-  // Buscar modelo por universalModelId
-  findByUniversalModelId: async (universalModelId: string) => {
-    return db.query.aiModel.findFirst({
-      where: eq(aiModel.universalModelId, universalModelId),
-      with: {
-        provider: {
-          columns: { id: true, name: true, baseUrl: true },
-        },
-      },
-    });
-  },
 
   // Upsert modelo (update if exists, create if not)
   upsert: async (data: {
-    universalModelId: string;
+    modelId: string;
     providerId: string;
     config?: any;
     enabled?: boolean;
     status?: "active" | "archived";
   }) => {
-    const existingModel = await AiModelRepository.findByUniversalModelId(
-      data.universalModelId,
-    );
+    const existingModel = await AiModelRepository.findById(data.modelId);
 
     if (existingModel) {
       // Update existing model
@@ -437,16 +416,12 @@ export const AiModelRepository = {
       await db
         .update(aiModel)
         .set(updateData)
-        .where(eq(aiModel.universalModelId, data.universalModelId));
-      return AiModelRepository.findById(existingModel.id);
+        .where(eq(aiModel.modelId, data.modelId));
+      return AiModelRepository.findById(data.modelId);
     } else {
       // Create new model
-      const modelData = {
-        ...data,
-        id: data.universalModelId, // Use universalModelId as the primary key
-      };
-      await db.insert(aiModel).values(modelData);
-      return AiModelRepository.findById(modelData.id);
+      await db.insert(aiModel).values(data);
+      return AiModelRepository.findById(data.modelId);
     }
   },
 };
@@ -886,7 +861,7 @@ export const AiTeamModelConfigRepository = {
           columns: { id: true, name: true },
         },
         model: {
-          columns: { id: true, universalModelId: true, enabled: true },
+          columns: { modelId: true, enabled: true },
           with: {
             provider: {
               columns: { id: true, name: true, baseUrl: true },
@@ -906,7 +881,7 @@ export const AiTeamModelConfigRepository = {
       ),
       with: {
         model: {
-          columns: { id: true, universalModelId: true, enabled: true },
+          columns: { modelId: true, enabled: true },
           with: {
             provider: {
               columns: { id: true, name: true, baseUrl: true },
@@ -941,7 +916,7 @@ export const AiTeamModelConfigRepository = {
       ],
       with: {
         model: {
-          columns: { id: true, universalModelId: true, enabled: true },
+          columns: { modelId: true, enabled: true },
           with: {
             provider: {
               columns: { id: true, name: true, baseUrl: true },
@@ -1223,7 +1198,7 @@ export const AiTeamModelConfigRepository = {
     );
 
     // Buscar configurações específicas do team para estes modelos
-    const modelIds = modelsWithTokens.map((model) => model.id);
+    const modelIds = modelsWithTokens.map((model) => model.modelId);
     let teamConfigs: any[] = [];
 
     if (modelIds.length > 0) {
@@ -1238,7 +1213,7 @@ export const AiTeamModelConfigRepository = {
     // Mapear modelos com suas configurações do team
     const availableModels = modelsWithTokens.map((model) => {
       const teamConfig = teamConfigs.find(
-        (config) => config.aiModelId === model.id,
+        (config) => config.aiModelId === model.modelId,
       );
       return {
         ...model,
@@ -1281,7 +1256,7 @@ export const AiTeamModelConfigRepository = {
       }
 
       // 3. Por último, ordenar por nome do modelo (ordem fixa independente do status)
-      return a.universalModelId.localeCompare(b.universalModelId);
+      return a.modelId.localeCompare(b.modelId);
     });
   },
 
@@ -1296,7 +1271,7 @@ export const AiTeamModelConfigRepository = {
       const availableModels =
         await AiTeamModelConfigRepository.findAvailableModelsByTeam(teamId);
 
-      const modelData = availableModels.find((m) => m.id === aiModelId);
+      const modelData = availableModels.find((m) => m.modelId === aiModelId);
 
       if (!modelData) {
         throw new Error(
@@ -1324,7 +1299,7 @@ export const AiTeamModelConfigRepository = {
       // 3. Preparar configurações para o teste
       const modelConfig = (modelData.config as any) || {};
       const modelName =
-        modelConfig.modelId || modelConfig.version || modelData.universalModelId;
+        modelConfig.modelId || modelConfig.version || modelData.modelId;
       const baseUrl = modelData.provider.baseUrl || "https://api.openai.com/v1";
 
       // 4. Fazer uma chamada de teste usando configuração específica por provider
@@ -1446,7 +1421,7 @@ export const AiTeamModelConfigRepository = {
           debugInfo: {
             baseUrl,
             providerName,
-            modelId: modelData.id,
+            modelId: modelData.modelId,
             hasToken: !!providerToken.token,
             tokenPrefix: providerToken.token.substring(0, 8) + "...",
           },

@@ -165,7 +165,7 @@ export class AiStudioService {
     }
 
     console.log(
-      `✅ [AiStudioService] Model found: ${model.universalModelId} for team: ${teamId}`,
+      `✅ [AiStudioService] Model found: ${model.modelId} for team: ${teamId}`,
     );
 
     return model;
@@ -198,7 +198,7 @@ export class AiStudioService {
     }
 
     console.log(
-      `✅ [AiStudioService] Default model found for team ${teamId}: ${defaultModel.model.universalModelId}`,
+      `✅ [AiStudioService] Default model found for team ${teamId}: ${defaultModel.model.modelId}`,
     );
 
     return defaultModel;
@@ -471,7 +471,7 @@ export class AiStudioService {
     const providerName = model.provider.name.toLowerCase();
     const modelConfig = model.config;
     const modelName =
-      modelConfig?.modelId || modelConfig?.version || model.universalModelId;
+      modelConfig?.modelId || modelConfig?.version || model.modelId;
 
     switch (providerName) {
       case "openai":

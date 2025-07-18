@@ -6,7 +6,7 @@ async function checkModels() {
     console.log("Models found:", models.length);
     models.forEach((m) => {
       console.log(
-        `- ${m.universalModelId} (Provider: ${m.provider?.name || "N/A"})`,
+        `- ${m.modelId} (Provider: ${m.provider?.name || "N/A"})`,
       );
     });
   } catch (error) {

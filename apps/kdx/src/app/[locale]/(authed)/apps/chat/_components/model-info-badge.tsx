@@ -94,7 +94,7 @@ export function ModelInfoBadge({
     };
     
     const configured =
-      sessionData.aiModel.universalModelId ??
+      sessionData.aiModel.modelId ??
       modelConfig?.modelId ??
       modelConfig?.version;
 
@@ -263,7 +263,7 @@ export function ModelInfoBadge({
                           sessionData,
                           lastMessageMetadata,
                           normalizedConfigured: normalizeModelName(
-                            sessionData.aiModel.universalModelId,
+                            sessionData.aiModel.modelId,
                           ),
                           normalizedActual: normalizeModelName(
                             lastMessageMetadata?.actualModelUsed,
@@ -284,7 +284,7 @@ export function ModelInfoBadge({
                       <div>hasResponse: {String(hasResponse)}</div>
                       <div>
                         normalizedConfigured: "
-                        {normalizeModelName(sessionData.aiModel.universalModelId)}"
+                        {normalizeModelName(sessionData.aiModel.modelId)}"
                       </div>
                       <div>
                         normalizedActual: "

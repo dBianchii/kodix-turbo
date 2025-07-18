@@ -112,7 +112,7 @@ function PriceBadge({ model }: PriceBadgeProps) {
         <div className="space-y-2">
           {/* Título */}
           <div className="text-sm font-medium text-slate-900">
-            {model.universalModelId}
+            {model.modelId}
           </div>
 
           {/* Descrição se disponível */}
@@ -217,8 +217,8 @@ export function ModelsSection() {
       }
 
       // Se os provedores são iguais, ordenar por nome do modelo
-      const nameA = (a.universalModelId || "").toLowerCase();
-      const nameB = (b.universalModelId || "").toLowerCase();
+      const nameA = (a.modelId || "").toLowerCase();
+      const nameB = (b.modelId || "").toLowerCase();
 
       return nameA.localeCompare(nameB);
     },
@@ -325,7 +325,7 @@ export function ModelsSection() {
     }
 
     createModelMutation.mutate({
-      universalModelId: data.name,
+      modelId: data.name,
       providerId: data.providerId,
       config: configJson,
       enabled: data.enabled,
@@ -346,8 +346,7 @@ export function ModelsSection() {
     }
 
     updateModelMutation.mutate({
-      id: modelToEdit.id,
-      universalModelId: data.name,
+      modelId: modelToEdit.modelId,
       providerId: data.providerId,
       config: configJson,
       enabled: data.enabled,
@@ -368,7 +367,7 @@ export function ModelsSection() {
   const handleEditClick = (model: Model) => {
     setModelToEdit(model);
     editForm.reset({
-      name: model.universalModelId,
+      name: model.modelId,
       providerId: model.providerId,
       config: model.config ? JSON.stringify(model.config, null, 2) : "",
       enabled: model.enabled,
@@ -383,7 +382,7 @@ export function ModelsSection() {
 
   const handleDeleteConfirm = () => {
     if (!modelToDelete) return;
-    deleteModelMutation.mutate({ id: modelToDelete.id });
+    deleteModelMutation.mutate({ modelId: modelToDelete.modelId });
   };
 
   const handleDeleteCancel = () => {
@@ -466,7 +465,7 @@ export function ModelsSection() {
               </TableHeader>
               <TableBody>
                 {systemModels.map((model: Model) => (
-                  <TableRow key={model.id}>
+                  <TableRow key={model.modelId}>
                     <TableCell className="capitalize">
                       {model.provider?.name || model.providerId || "N/A"}
                     </TableCell>
@@ -476,7 +475,7 @@ export function ModelsSection() {
                           model.status === "archived" ? "opacity-50" : ""
                         }
                       >
-                        {model.universalModelId}
+                        {model.modelId}
                       </span>
                     </TableCell>
                     <TableCell>
@@ -487,7 +486,7 @@ export function ModelsSection() {
                       <Switch
                         checked={model.enabled}
                         onCheckedChange={(checked) =>
-                          handleToggleGlobalModel(model.id, checked)
+                          handleToggleGlobalModel(model.modelId, checked)
                         }
                         disabled={model.status === "archived"}
                         aria-readonly
@@ -658,7 +657,7 @@ export function ModelsSection() {
           <DialogHeader>
             <DialogTitle>Editar Modelo de IA</DialogTitle>
             <DialogDescription>
-              Atualize as configurações do modelo "{modelToEdit?.universalModelId}".
+              Atualize as configurações do modelo "{modelToEdit?.modelId}".
             </DialogDescription>
           </DialogHeader>
 
@@ -786,7 +785,7 @@ export function ModelsSection() {
             <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
             <AlertDialogDescription>
               Tem certeza que deseja excluir o modelo "
-              {modelToDelete?.universalModelId}"? Esta ação não pode ser desfeita e
+              {modelToDelete?.modelId}"? Esta ação não pode ser desfeita e
               pode afetar tokens associados a este modelo.
             </AlertDialogDescription>
           </AlertDialogHeader>

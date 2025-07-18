@@ -27,8 +27,7 @@ interface ModelSelectorProps {
 }
 
 interface Model {
-  id: string;
-  universalModelId: string;
+  modelId: string;
   teamConfig: {
     enabled: boolean;
   } | null;
@@ -60,11 +59,11 @@ export function ModelSelector({
   const processedModels = useMemo(() => {
     return safeAvailableModels
       .filter((model) => model.teamConfig?.enabled === true)
-      .sort((a, b) => a.universalModelId.localeCompare(b.universalModelId));
+      .sort((a, b) => a.modelId.localeCompare(b.modelId));
   }, [safeAvailableModels]);
 
   const currentModel = useMemo(() => {
-    return safeAvailableModels.find((model) => model.id === selectedModelId);
+    return safeAvailableModels.find((model) => model.modelId === selectedModelId);
   }, [selectedModelId, safeAvailableModels]);
 
   const handleSelect = (modelId: string) => {
@@ -85,7 +84,7 @@ export function ModelSelector({
           disabled={disabled}
           className={cn("w-full justify-between", className)}
         >
-          {currentModel ? currentModel.universalModelId : "Select a model"}
+          {currentModel ? currentModel.modelId : "Select a model"}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -97,19 +96,19 @@ export function ModelSelector({
             <CommandGroup>
               {processedModels.map((model) => (
                 <CommandItem
-                  key={model.id}
-                  value={model.id}
-                  onSelect={() => handleSelect(model.id)}
+                  key={model.modelId}
+                  value={model.modelId}
+                  onSelect={() => handleSelect(model.modelId)}
                 >
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      currentModel?.id === model.id
+                      currentModel?.modelId === model.modelId
                         ? "opacity-100"
                         : "opacity-0",
                     )}
                   />
-                  {model.universalModelId}
+                  {model.modelId}
                 </CommandItem>
               ))}
             </CommandGroup>

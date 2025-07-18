@@ -74,13 +74,13 @@ export async function seedChatWithTeam(teamId: string, userId: string) {
         teamId: teamId,
         createdById: userId,
         aiAgentId: supportAgent?.id,
-        aiModelId: defaultModel?.id,
+        aiModelId: defaultModel?.modelId,
       },
       {
         name: "💻 Desenvolvimento",
         teamId: teamId,
         createdById: userId,
-        aiModelId: defaultModel?.id,
+        aiModelId: defaultModel?.modelId,
         // Sem agente específico - usuário escolhe
       },
       {
@@ -88,14 +88,14 @@ export async function seedChatWithTeam(teamId: string, userId: string) {
         teamId: teamId,
         createdById: userId,
         aiAgentId: documentAgent?.id,
-        aiModelId: defaultModel?.id,
+        aiModelId: defaultModel?.modelId,
       },
       {
         name: "💬 Chat Geral",
         teamId: teamId,
         createdById: userId,
         aiAgentId: generalAgent?.id,
-        aiModelId: defaultModel?.id,
+        aiModelId: defaultModel?.modelId,
       },
     ];
 
@@ -136,7 +136,7 @@ export async function seedChatWithTeam(teamId: string, userId: string) {
         title: "Como configurar a API do sistema?",
         teamId: teamId,
         userId: userId,
-        aiModelId: defaultModel?.id!,
+        aiModelId: defaultModel?.modelId!,
         chatFolderId: createdFolders.find((f) => f?.name.includes("Suporte"))
           ?.id,
         aiAgentId: supportAgent?.id,
@@ -145,7 +145,7 @@ export async function seedChatWithTeam(teamId: string, userId: string) {
         title: "Implementação de novas features",
         teamId: teamId,
         userId: userId,
-        aiModelId: defaultModel?.id!,
+        aiModelId: defaultModel?.modelId!,
         chatFolderId: createdFolders.find((f) =>
           f?.name.includes("Desenvolvimento"),
         )?.id,
@@ -155,7 +155,7 @@ export async function seedChatWithTeam(teamId: string, userId: string) {
         title: "Análise da documentação do projeto",
         teamId: teamId,
         userId: userId,
-        aiModelId: defaultModel?.id!,
+        aiModelId: defaultModel?.modelId!,
         chatFolderId: createdFolders.find((f) =>
           f?.name.includes("Documentação"),
         )?.id,
@@ -165,7 +165,7 @@ export async function seedChatWithTeam(teamId: string, userId: string) {
         title: "Brainstorming de ideias",
         teamId: teamId,
         userId: userId,
-        aiModelId: defaultModel?.id!,
+        aiModelId: defaultModel?.modelId!,
         chatFolderId: createdFolders.find((f) => f?.name.includes("Geral"))?.id,
         aiAgentId: generalAgent?.id,
       },
@@ -173,7 +173,7 @@ export async function seedChatWithTeam(teamId: string, userId: string) {
         title: "Teste de integração com IA",
         teamId: teamId,
         userId: userId,
-        aiModelId: availableModels[1]?.id || defaultModel?.id!, // Segundo modelo se disponível
+        aiModelId: availableModels[1]?.modelId || defaultModel?.modelId!, // Segundo modelo se disponível
         // Sem pasta específica
       },
     ];
@@ -453,7 +453,7 @@ Qual área você gostaria de explorar mais?`,
     console.log(`   - ${createdFolders.length} pastas disponíveis`);
     console.log(`   - ${createdSessions.length} sessões disponíveis`);
     console.log(`   - ${createdMessagesCount} mensagens criadas`);
-    console.log(`   - Usando modelo: ${defaultModel?.universalModelId || "Nenhum"}`);
+    console.log(`   - Usando modelo: ${defaultModel?.modelId || "Nenhum"}`);
     console.log(`   - Agentes disponíveis: ${availableAgents.length}`);
 
     return {

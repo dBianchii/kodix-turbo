@@ -121,7 +121,7 @@ export const aiProvidersRouter = {
 
         // Update all models from the provider
         const updatePromises = models.map((model) =>
-          aiStudioRepository.AiModelRepository.update(model.id, {
+          aiStudioRepository.AiModelRepository.update(model.modelId, {
             enabled: input.enabled,
           }),
         );

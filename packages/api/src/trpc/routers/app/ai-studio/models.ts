@@ -7,15 +7,12 @@ import {
   createAiModelSchema,
   findAiModelsSchema,
   updateAiModelSchema,
+  modelIdSchema,
 } from "@kdx/validators/trpc/app";
 
 import { aiStudioInstalledMiddleware } from "../../../middlewares";
 import { protectedProcedure } from "../../../procedures";
 
-// Simple ID schema
-const idSchema = z.object({
-  id: z.string(),
-});
 
 export const aiModelsRouter = {
   createAiModel: protectedProcedure
@@ -48,11 +45,11 @@ export const aiModelsRouter = {
     }),
 
   findAiModelById: protectedProcedure
-    .input(idSchema)
+    .input(modelIdSchema)
     .query(async ({ input }) => {
       try {
         const model = await aiStudioRepository.AiModelRepository.findById(
-          input.id,
+          input.modelId,
         );
         if (!model) {
           throw new TRPCError({
@@ -75,12 +72,12 @@ export const aiModelsRouter = {
   updateAiModel: protectedProcedure
     .input(updateAiModelSchema)
     .mutation(async ({ input }) => {
-      const { id, ...data } = input;
+      const { modelId, ...data } = input;
       try {
         // Rule: Prevent re-enabling an archived model
         if (data.enabled) {
           const existingModel =
-            await aiStudioRepository.AiModelRepository.findById(id);
+            await aiStudioRepository.AiModelRepository.findById(modelId);
           if (existingModel?.status === "archived") {
             throw new TRPCError({
               code: "BAD_REQUEST",
@@ -90,7 +87,7 @@ export const aiModelsRouter = {
         }
 
         const model = await aiStudioRepository.AiModelRepository.update(
-          id,
+          modelId,
           data,
         );
         return model;
@@ -106,10 +103,10 @@ export const aiModelsRouter = {
     }),
 
   deleteAiModel: protectedProcedure
-    .input(idSchema)
+    .input(modelIdSchema)
     .mutation(async ({ input }) => {
       try {
-        await aiStudioRepository.AiModelRepository.delete(input.id);
+        await aiStudioRepository.AiModelRepository.delete(input.modelId);
         return { success: true };
       } catch (error) {
         console.error("Error deleting AI model:", error);

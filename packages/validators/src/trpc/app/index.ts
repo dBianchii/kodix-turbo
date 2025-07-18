@@ -113,6 +113,7 @@ export {
   createAiModelSchema,
   updateAiModelSchema,
   findAiModelsSchema,
+  modelIdSchema,
 
   // AI Team Provider Token
   createAiTeamProviderTokenSchema,

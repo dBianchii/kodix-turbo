@@ -10,9 +10,8 @@ import { ChatService } from "../../../../internal/services/chat.service";
 
 // Tipos para o modelo
 interface ModelToUse {
-  id: string;
-  displayName?: string | null; // DEPRECATED: Use universalModelId
-  universalModelId: string;
+  modelId: string;
+  displayName?: string | null; // DEPRECATED: Use modelId
   providerId: string;
   provider?: { baseUrl?: string | null };
   config?: unknown;
@@ -68,7 +67,7 @@ export async function createEmptySessionHandler({
     const title = input.title || `Chat ${new Date().toLocaleDateString()}`;
     const session = await chatRepository.ChatSessionRepository.create({
       title,
-      aiModelId: modelToUse.id,
+      aiModelId: modelToUse.modelId,
       aiAgentId: input.aiAgentId || undefined,
       teamId,
       userId,
@@ -149,7 +148,7 @@ export async function createEmptySessionHandler({
             const modelName =
               modelConfig.modelId ||
               modelConfig.version ||
-              firstModel.universalModelId;
+              firstModel.modelId;
 
             const titlePrompt = [
               {
@@ -192,7 +191,7 @@ Título:`,
               url: apiUrl,
               modelName,
               displayName: firstModel.displayName,
-              universalModelId: firstModel.universalModelId,
+              modelId: firstModel.modelId,
               firstMessage: input.metadata?.firstMessage,
               tokenPresent: !!providerToken.token
             });

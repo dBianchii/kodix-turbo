@@ -175,7 +175,7 @@ function PriceBadge({ model }: PriceBadgeProps) {
         <div className="space-y-2">
           {/* Título */}
           <div className="text-sm font-medium text-slate-900">
-            {model.universalModelId}
+            {model.modelId}
           </div>
 
           {/* Descrição se disponível */}
@@ -251,7 +251,7 @@ function SortableTableRow({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: model.id });
+  } = useSortable({ id: model.modelId });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -282,7 +282,7 @@ function SortableTableRow({
           <div className="bg-primary/10 rounded p-1">
             <Brain className="h-3 w-3" />
           </div>
-          {model.universalModelId}
+          {model.modelId}
         </div>
       </TableCell>
       <TableCell className="capitalize">
@@ -299,14 +299,14 @@ function SortableTableRow({
             disabled={
               isToggling ||
               isReordering ||
-              (defaultModelId === model.id && model.teamConfig?.enabled)
+              (defaultModelId === model.modelId && model.teamConfig?.enabled)
             }
           />
           <span className="text-muted-foreground text-sm">
             {model.teamConfig?.enabled
               ? t("apps.aiStudio.enabledModels.enabled")
               : t("apps.aiStudio.enabledModels.disabled")}
-            {defaultModelId === model.id && model.teamConfig?.enabled && (
+            {defaultModelId === model.modelId && model.teamConfig?.enabled && (
               <span className="ml-1 text-xs text-amber-600">
                 {t("apps.aiStudio.enabledModels.status.default")}
               </span>
@@ -318,8 +318,8 @@ function SortableTableRow({
         <div className="flex min-h-[2rem] items-center">
           {model.teamConfig?.enabled && (
             <RadioGroupItem
-              value={model.id}
-              checked={defaultModelId === model.id}
+              value={model.modelId}
+              checked={defaultModelId === model.modelId}
               disabled={isSettingDefault || isReordering}
               className="cursor-pointer"
             />
@@ -346,7 +346,7 @@ function SortableTableRow({
                   ? t("apps.aiStudio.enabledModels.actions.testing")
                   : t("apps.aiStudio.enabledModels.actions.test")}
               </Button>
-              {testResults && testResults.aiModelId === model.id && (
+              {testResults && testResults.aiModelId === model.modelId && (
                 <div className="flex items-center space-x-1">
                   {testResults.success ? (
                     <div className="flex items-center space-x-1">
@@ -742,13 +742,13 @@ export function EnabledModelsSection() {
 
   const handleToggleModel = (model: any) => {
     // Check if trying to disable the default model
-    if (defaultModel?.aiModelId === model.id && model.teamConfig?.enabled) {
+    if (defaultModel?.aiModelId === model.modelId && model.teamConfig?.enabled) {
       toast.error(t("apps.aiStudio.enabledModels.errors.cannotDisableDefault"));
       return;
     }
 
     toggleModelMutation.mutate({
-      aiModelId: model.id,
+      aiModelId: model.modelId,
       enabled: !model.teamConfig?.enabled,
     });
   };
@@ -757,14 +757,14 @@ export function EnabledModelsSection() {
     setError(null);
 
     console.log("🧪 [AI_STUDIO_TEST] Starting model test:", {
-      modelId: model.id,
-      modelName: model.universalModelId,
+      modelId: model.modelId,
+      modelName: model.modelId,
       provider: model.provider?.name,
       config: model.config,
     });
 
     testModelMutation.mutate({
-      aiModelId: model.id,
+      aiModelId: model.modelId,
       testPrompt: "Hello! Are you working correctly?",
     });
   };
@@ -782,8 +782,8 @@ export function EnabledModelsSection() {
       return;
     }
 
-    const oldIndex = models.findIndex((model: any) => model.id === active.id);
-    const newIndex = models.findIndex((model: any) => model.id === over.id);
+    const oldIndex = models.findIndex((model: any) => model.modelId === active.id);
+    const newIndex = models.findIndex((model: any) => model.modelId === over.id);
 
     if (oldIndex === -1 || newIndex === -1) return;
 
@@ -796,10 +796,10 @@ export function EnabledModelsSection() {
     reorderedModels.splice(newIndex, 0, movedModel);
 
     // Extract only IDs in the new order to send to backend
-    const orderedModelIds = reorderedModels.map((model: any) => model.id);
+    const orderedModelIds = reorderedModels.map((model: any) => model.modelId);
 
     console.log(`Reordering models:`, {
-      movedModel: movedModel.universalModelId,
+      movedModel: movedModel.modelId,
       fromPosition: oldIndex,
       toPosition: newIndex,
       newOrder: orderedModelIds,
@@ -816,7 +816,7 @@ export function EnabledModelsSection() {
   };
 
   // Create array of IDs for SortableContext
-  const modelIds = models?.map((model: any) => model.id) || [];
+  const modelIds = models?.map((model: any) => model.modelId) || [];
 
   return (
     <div className="space-y-6">
@@ -923,14 +923,14 @@ export function EnabledModelsSection() {
                     <TableBody>
                       {models.map((model: any) => (
                         <SortableTableRow
-                          key={model.id}
+                          key={model.modelId}
                           model={model}
                           onToggle={handleToggleModel}
                           onTest={handleTestModel}
                           onSetDefault={handleSetDefault}
                           isToggling={toggleModelMutation.isPending}
                           isReordering={isReordering}
-                          isTestingModel={testingModelId === model.id}
+                          isTestingModel={testingModelId === model.modelId}
                           isSettingDefault={isSettingDefault}
                           testResults={testResponse}
                           defaultModelId={defaultModel?.aiModelId || null}

@@ -138,8 +138,8 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
 
   // ✅ Calcular uso de tokens (memoizado)
   const modelName = useMemo(() => {
-    return sessionQuery.data?.aiModel?.universalModelId || "";
-  }, [sessionQuery.data?.aiModel?.universalModelId]);
+    return sessionQuery.data?.aiModel?.modelId || "";
+  }, [sessionQuery.data?.aiModel?.modelId]);
 
   const messages = useMemo(() => {
     return messagesQuery.data?.messages || [];
