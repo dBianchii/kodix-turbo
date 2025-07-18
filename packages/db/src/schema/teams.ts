@@ -156,6 +156,7 @@ export const invitationsRelations = relations(invitations, ({ one }) => ({
   InvitedBy: one(users, {
     fields: [invitations.invitedById],
     references: [users.id],
+    relationName: "InvitedBy",
   }),
   Team: one(teams, {
     fields: [invitations.teamId],

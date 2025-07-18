@@ -72,7 +72,6 @@ describe("AiModelSyncService", () => {
         {
           modelId: "gpt-4o",
           name: "GPT-4o",
-          displayName: "GPT 4o",
           maxTokens: 128000,
           pricing: {
             input: "2.50",
@@ -102,7 +101,6 @@ describe("AiModelSyncService", () => {
         {
           modelId: "gpt-4o",
           name: "GPT-4o",
-          displayName: "GPT 4o",
           maxTokens: 128000,
           pricing: {
             input: "3.00", // Changed price
@@ -225,7 +223,6 @@ describe("AiModelSyncService", () => {
         {
           modelId: "gpt-4o",
           name: "GPT-4o",
-          displayName: "GPT 4o",
           maxTokens: 128000,
           pricing: {
             input: "2.50",
@@ -320,7 +317,6 @@ describe("AiModelSyncService", () => {
         {
           modelId: "gemini-2.5-pro",
           name: "Gemini 2.5 Pro",
-          displayName: "Gemini 2.5 Pro",
           maxTokens: 1000000,
           pricing: {
             input: "1.25",
@@ -348,7 +344,6 @@ describe("AiModelSyncService", () => {
         {
           modelId: "claude-3-5-sonnet-20240620",
           name: "Claude 3.5 Sonnet",
-          displayName: "Claude 3.5 Sonnet",
           maxTokens: 200000,
           pricing: {
             input: "3.00",

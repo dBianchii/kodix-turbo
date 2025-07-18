@@ -3,7 +3,7 @@ import { experimental_standaloneMiddleware, TRPCError } from "@trpc/server";
 
 import type { KodixAppId } from "@kdx/shared";
 import { getAppName } from "@kdx/locales/next-intl/server-hooks";
-import { chatAppId, getAppDependencies, kodixCareAppId } from "@kdx/shared";
+import { aiStudioAppId, chatAppId, getAppDependencies, kodixCareAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "./procedures";
 import { getInstalledHandler } from "./routers/app/getInstalled.handler";
@@ -73,6 +73,12 @@ const appInstalledMiddlewareFactory = (appId: KodixAppId) =>
 
 export const kodixCareInstalledMiddleware =
   appInstalledMiddlewareFactory(kodixCareAppId);
+
+/**
+ * Middleware to check if AI Studio is installed for the team.
+ */
+export const aiStudioInstalledMiddleware =
+  appInstalledMiddlewareFactory(aiStudioAppId);
 
 /**
  * Same middleware as what is returned by `appInstalledMiddlewareFactory` but does it dynamically based on appId input.

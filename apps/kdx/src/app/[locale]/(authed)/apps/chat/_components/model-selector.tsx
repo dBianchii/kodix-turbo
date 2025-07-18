@@ -28,7 +28,7 @@ interface ModelSelectorProps {
 
 interface Model {
   id: string;
-  displayName: string;
+  universalModelId: string;
   teamConfig: {
     enabled: boolean;
   } | null;
@@ -60,7 +60,7 @@ export function ModelSelector({
   const processedModels = useMemo(() => {
     return safeAvailableModels
       .filter((model) => model.teamConfig?.enabled === true)
-      .sort((a, b) => a.displayName.localeCompare(b.displayName));
+      .sort((a, b) => a.universalModelId.localeCompare(b.universalModelId));
   }, [safeAvailableModels]);
 
   const currentModel = useMemo(() => {
@@ -85,7 +85,7 @@ export function ModelSelector({
           disabled={disabled}
           className={cn("w-full justify-between", className)}
         >
-          {currentModel ? currentModel.displayName : "Select a model"}
+          {currentModel ? currentModel.universalModelId : "Select a model"}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -109,7 +109,7 @@ export function ModelSelector({
                         : "opacity-0",
                     )}
                   />
-                  {model.displayName}
+                  {model.universalModelId}
                 </CommandItem>
               ))}
             </CommandGroup>

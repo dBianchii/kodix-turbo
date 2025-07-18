@@ -105,7 +105,7 @@ export const AiProviderRepository = {
       where: eq(aiProvider.id, id),
       with: {
         models: {
-          columns: { id: true, displayName: true, enabled: true },
+          columns: { id: true, universalModelId: true, enabled: true },
         },
         tokens: {
           columns: { id: true, teamId: true, createdAt: true },
@@ -120,7 +120,7 @@ export const AiProviderRepository = {
       where: eq(aiProvider.name, name),
       with: {
         models: {
-          columns: { id: true, displayName: true, enabled: true },
+          columns: { id: true, universalModelId: true, enabled: true },
         },
       },
     });
@@ -141,7 +141,7 @@ export const AiProviderRepository = {
       orderBy: [asc(aiProvider.name)],
       with: {
         models: {
-          columns: { id: true, displayName: true, enabled: true },
+          columns: { id: true, universalModelId: true, enabled: true },
         },
         tokens: {
           columns: { id: true, teamId: true, createdAt: true },
@@ -198,22 +198,22 @@ export const AiProviderRepository = {
 export const AiModelRepository = {
   // Criar novo modelo
   create: async (data: {
-    displayName: string;
+    id?: string; // Optional - if not provided, will use universalModelId
     universalModelId: string;
     providerId: string;
     config?: any;
     enabled?: boolean;
     status?: "active" | "archived";
   }) => {
-    const now = new Date();
-    const [result] = await db
+    const modelData = {
+      ...data,
+      id: data.id || data.universalModelId, // Use provided id or fallback to universalModelId
+    };
+    
+    await db
       .insert(aiModel)
-      .values({
-        ...data,
-      })
-      .$returningId();
-    if (!result) throw new Error("Falha ao criar modelo");
-    return AiModelRepository.findById(result.id);
+      .values(modelData);
+    return AiModelRepository.findById(modelData.id);
   },
 
   // Buscar por ID
@@ -233,7 +233,6 @@ export const AiModelRepository = {
     const result = await db
       .select({
         id: aiModel.id,
-        displayName: aiModel.displayName,
         universalModelId: aiModel.universalModelId,
         providerId: aiModel.providerId,
         status: aiModel.status,
@@ -277,7 +276,7 @@ export const AiModelRepository = {
       where: condicoes.length > 0 ? and(...condicoes) : undefined,
       limit: limite,
       offset,
-      orderBy: [asc(aiModel.displayName)],
+      orderBy: [asc(aiModel.universalModelId)],
       with: {
         provider: {
           columns: { id: true, name: true, baseUrl: true },
@@ -312,7 +311,6 @@ export const AiModelRepository = {
     return db
       .select({
         id: aiModel.id,
-        displayName: aiModel.displayName,
         universalModelId: aiModel.universalModelId,
         providerId: aiModel.providerId,
         status: aiModel.status,
@@ -326,7 +324,7 @@ export const AiModelRepository = {
       .where(condicoes.length > 0 ? and(...condicoes) : undefined)
       .limit(limite)
       .offset(offset)
-      .orderBy(asc(aiModel.displayName));
+      .orderBy(asc(aiModel.universalModelId));
   },
 
   // Buscar modelos por provider (nome)
@@ -420,7 +418,6 @@ export const AiModelRepository = {
 
   // Upsert modelo (update if exists, create if not)
   upsert: async (data: {
-    displayName: string;
     universalModelId: string;
     providerId: string;
     config?: any;
@@ -444,9 +441,12 @@ export const AiModelRepository = {
       return AiModelRepository.findById(existingModel.id);
     } else {
       // Create new model
-      const [result] = await db.insert(aiModel).values(data).$returningId();
-      if (!result) throw new Error("Falha ao criar modelo");
-      return AiModelRepository.findById(result.id);
+      const modelData = {
+        ...data,
+        id: data.universalModelId, // Use universalModelId as the primary key
+      };
+      await db.insert(aiModel).values(modelData);
+      return AiModelRepository.findById(modelData.id);
     }
   },
 };
@@ -855,7 +855,7 @@ export const AiTeamModelConfigRepository = {
   // Criar configuração do modelo
   create: async (data: {
     teamId: string;
-    modelId: string;
+    aiModelId: string;
     enabled?: boolean;
     isDefault?: boolean;
     priority?: number;
@@ -886,7 +886,7 @@ export const AiTeamModelConfigRepository = {
           columns: { id: true, name: true },
         },
         model: {
-          columns: { id: true, displayName: true, enabled: true },
+          columns: { id: true, universalModelId: true, enabled: true },
           with: {
             provider: {
               columns: { id: true, name: true, baseUrl: true },
@@ -898,15 +898,15 @@ export const AiTeamModelConfigRepository = {
   },
 
   // Buscar configuração específica por team e modelo
-  findByTeamAndModel: async (teamId: string, modelId: string) => {
+  findByTeamAndModel: async (teamId: string, aiModelId: string) => {
     return db.query.aiTeamModelConfig.findFirst({
       where: and(
         eq(aiTeamModelConfig.teamId, teamId),
-        eq(aiTeamModelConfig.modelId, modelId),
+        eq(aiTeamModelConfig.aiModelId, aiModelId),
       ),
       with: {
         model: {
-          columns: { id: true, displayName: true, enabled: true },
+          columns: { id: true, universalModelId: true, enabled: true },
           with: {
             provider: {
               columns: { id: true, name: true, baseUrl: true },
@@ -941,7 +941,7 @@ export const AiTeamModelConfigRepository = {
       ],
       with: {
         model: {
-          columns: { id: true, displayName: true, enabled: true },
+          columns: { id: true, universalModelId: true, enabled: true },
           with: {
             provider: {
               columns: { id: true, name: true, baseUrl: true },
@@ -971,11 +971,11 @@ export const AiTeamModelConfigRepository = {
   },
 
   // Toggle model activation for a team
-  toggleModel: async (teamId: string, modelId: string, enabled: boolean) => {
+  toggleModel: async (teamId: string, aiModelId: string, enabled: boolean) => {
     // Check if configuration already exists
     const existing = await AiTeamModelConfigRepository.findByTeamAndModel(
       teamId,
-      modelId,
+      aiModelId,
     );
 
     if (existing) {
@@ -1033,7 +1033,7 @@ export const AiTeamModelConfigRepository = {
       // Create new configuration
       return AiTeamModelConfigRepository.create({
         teamId,
-        modelId,
+        aiModelId,
         enabled,
         isDefault: isFirstEnabled, // Mark as default if it's the first
       });
@@ -1041,11 +1041,11 @@ export const AiTeamModelConfigRepository = {
   },
 
   // Definir modelo padrão
-  setDefaultModel: async (teamId: string, modelId: string) => {
+  setDefaultModel: async (teamId: string, aiModelId: string) => {
     // Verificar se o modelo está habilitado para este team
     const modelConfig = await AiTeamModelConfigRepository.findByTeamAndModel(
       teamId,
-      modelId,
+      aiModelId,
     );
 
     if (!modelConfig?.enabled) {
@@ -1069,12 +1069,12 @@ export const AiTeamModelConfigRepository = {
         .where(
           and(
             eq(aiTeamModelConfig.teamId, teamId),
-            eq(aiTeamModelConfig.modelId, modelId),
+            eq(aiTeamModelConfig.aiModelId, aiModelId),
           ),
         );
     });
 
-    return AiTeamModelConfigRepository.findByTeamAndModel(teamId, modelId);
+    return AiTeamModelConfigRepository.findByTeamAndModel(teamId, aiModelId);
   },
 
   // Buscar modelo padrão do team
@@ -1097,10 +1097,10 @@ export const AiTeamModelConfigRepository = {
   },
 
   // Definir prioridade dos modelos
-  setPriority: async (teamId: string, modelId: string, priority: number) => {
+  setPriority: async (teamId: string, aiModelId: string, priority: number) => {
     const existing = await AiTeamModelConfigRepository.findByTeamAndModel(
       teamId,
-      modelId,
+      aiModelId,
     );
 
     if (existing) {
@@ -1108,7 +1108,7 @@ export const AiTeamModelConfigRepository = {
     } else {
       return AiTeamModelConfigRepository.create({
         teamId,
-        modelId,
+        aiModelId,
         enabled: false,
         priority,
       });
@@ -1119,12 +1119,12 @@ export const AiTeamModelConfigRepository = {
   reorderAllPriorities: async (teamId: string, orderedModelIds: string[]) => {
     return db.transaction(async (tx) => {
       // Para cada modelo na nova ordem, definir prioridade = índice
-      const updatePromises = orderedModelIds.map(async (modelId, index) => {
+      const updatePromises = orderedModelIds.map(async (aiModelId, index) => {
         // Verificar se já existe configuração para este modelo
         const existing = await tx.query.aiTeamModelConfig.findFirst({
           where: and(
             eq(aiTeamModelConfig.teamId, teamId),
-            eq(aiTeamModelConfig.modelId, modelId),
+            eq(aiTeamModelConfig.aiModelId, aiModelId),
           ),
         });
 
@@ -1138,7 +1138,7 @@ export const AiTeamModelConfigRepository = {
           // Criar nova configuração com prioridade
           await tx.insert(aiTeamModelConfig).values({
             teamId,
-            modelId,
+            aiModelId,
             enabled: false,
             priority: index,
           });
@@ -1170,13 +1170,13 @@ export const AiTeamModelConfigRepository = {
   },
 
   // Excluir por team e modelo
-  deleteByTeamAndModel: async (teamId: string, modelId: string) => {
+  deleteByTeamAndModel: async (teamId: string, aiModelId: string) => {
     await db
       .delete(aiTeamModelConfig)
       .where(
         and(
           eq(aiTeamModelConfig.teamId, teamId),
-          eq(aiTeamModelConfig.modelId, modelId),
+          eq(aiTeamModelConfig.aiModelId, aiModelId),
         ),
       );
   },
@@ -1230,7 +1230,7 @@ export const AiTeamModelConfigRepository = {
       teamConfigs = await db.query.aiTeamModelConfig.findMany({
         where: and(
           eq(aiTeamModelConfig.teamId, teamId),
-          inArray(aiTeamModelConfig.modelId, modelIds),
+          inArray(aiTeamModelConfig.aiModelId, modelIds),
         ),
       });
     }
@@ -1238,7 +1238,7 @@ export const AiTeamModelConfigRepository = {
     // Mapear modelos com suas configurações do team
     const availableModels = modelsWithTokens.map((model) => {
       const teamConfig = teamConfigs.find(
-        (config) => config.modelId === model.id,
+        (config) => config.aiModelId === model.id,
       );
       return {
         ...model,
@@ -1281,14 +1281,14 @@ export const AiTeamModelConfigRepository = {
       }
 
       // 3. Por último, ordenar por nome do modelo (ordem fixa independente do status)
-      return a.displayName.localeCompare(b.displayName);
+      return a.universalModelId.localeCompare(b.universalModelId);
     });
   },
 
   // Testar se um modelo está funcionando
   testModel: async (
     teamId: string,
-    modelId: string,
+    aiModelId: string,
     testPrompt = "Olá! Você está funcionando corretamente?",
   ) => {
     try {
@@ -1296,7 +1296,7 @@ export const AiTeamModelConfigRepository = {
       const availableModels =
         await AiTeamModelConfigRepository.findAvailableModelsByTeam(teamId);
 
-      const modelData = availableModels.find((m) => m.id === modelId);
+      const modelData = availableModels.find((m) => m.id === aiModelId);
 
       if (!modelData) {
         throw new Error(
@@ -1324,7 +1324,7 @@ export const AiTeamModelConfigRepository = {
       // 3. Preparar configurações para o teste
       const modelConfig = (modelData.config as any) || {};
       const modelName =
-        modelConfig.modelId || modelConfig.version || modelData.displayName;
+        modelConfig.modelId || modelConfig.version || modelData.universalModelId;
       const baseUrl = modelData.provider.baseUrl || "https://api.openai.com/v1";
 
       // 4. Fazer uma chamada de teste usando configuração específica por provider
@@ -1528,7 +1528,7 @@ export const AiTeamModelConfigRepository = {
       return successResult;
     } catch (error: any) {
       console.error(
-        `❌ [TEST_ERROR] Erro ao testar modelo ${modelId}:`,
+        `❌ [TEST_ERROR] Erro ao testar modelo ${aiModelId}:`,
         error.message,
       );
 
@@ -1536,12 +1536,12 @@ export const AiTeamModelConfigRepository = {
 
       // Handle timeout errors specifically
       if (error.name === "AbortError") {
-        errorMessage = `Timeout: O modelo ${modelId} não respondeu em 30 segundos. Isso pode indicar que o modelo está sobrecarregado ou há problemas de rede. Tente novamente em alguns minutos.`;
+        errorMessage = `Timeout: O modelo ${aiModelId} não respondeu em 30 segundos. Isso pode indicar que o modelo está sobrecarregado ou há problemas de rede. Tente novamente em alguns minutos.`;
       }
 
       const errorResult = {
         success: false,
-        modelId,
+        aiModelId,
         error: errorMessage,
         timestamp: new Date().toISOString(),
       };

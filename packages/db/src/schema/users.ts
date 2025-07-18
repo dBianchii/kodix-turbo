@@ -34,7 +34,9 @@ export const usersRelations = relations(users, ({ many, one }) => ({
     fields: [users.activeTeamId],
     references: [teams.id],
   }),
-  Invitations: many(invitations),
+  Invitations: many(invitations, {
+    relationName: "InvitedBy",
+  }),
   Notifications: many(notifications),
   Sessions: many(sessions),
   UsersToTeams: many(usersToTeams),

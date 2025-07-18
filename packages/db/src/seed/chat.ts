@@ -453,7 +453,7 @@ Qual área você gostaria de explorar mais?`,
     console.log(`   - ${createdFolders.length} pastas disponíveis`);
     console.log(`   - ${createdSessions.length} sessões disponíveis`);
     console.log(`   - ${createdMessagesCount} mensagens criadas`);
-    console.log(`   - Usando modelo: ${defaultModel?.displayName || "Nenhum"}`);
+    console.log(`   - Usando modelo: ${defaultModel?.universalModelId || "Nenhum"}`);
     console.log(`   - Agentes disponíveis: ${availableAgents.length}`);
 
     return {

@@ -112,7 +112,7 @@ function PriceBadge({ model }: PriceBadgeProps) {
         <div className="space-y-2">
           {/* Título */}
           <div className="text-sm font-medium text-slate-900">
-            {model.displayName}
+            {model.universalModelId}
           </div>
 
           {/* Descrição se disponível */}
@@ -217,8 +217,8 @@ export function ModelsSection() {
       }
 
       // Se os provedores são iguais, ordenar por nome do modelo
-      const nameA = (a.displayName || "").toLowerCase();
-      const nameB = (b.displayName || "").toLowerCase();
+      const nameA = (a.universalModelId || "").toLowerCase();
+      const nameB = (b.universalModelId || "").toLowerCase();
 
       return nameA.localeCompare(nameB);
     },
@@ -325,7 +325,7 @@ export function ModelsSection() {
     }
 
     createModelMutation.mutate({
-      displayName: data.name,
+      universalModelId: data.name,
       providerId: data.providerId,
       config: configJson,
       enabled: data.enabled,
@@ -347,7 +347,7 @@ export function ModelsSection() {
 
     updateModelMutation.mutate({
       id: modelToEdit.id,
-      displayName: data.name,
+      universalModelId: data.name,
       providerId: data.providerId,
       config: configJson,
       enabled: data.enabled,
@@ -368,7 +368,7 @@ export function ModelsSection() {
   const handleEditClick = (model: Model) => {
     setModelToEdit(model);
     editForm.reset({
-      name: model.displayName,
+      name: model.universalModelId,
       providerId: model.providerId,
       config: model.config ? JSON.stringify(model.config, null, 2) : "",
       enabled: model.enabled,
@@ -391,9 +391,9 @@ export function ModelsSection() {
     setModelToDelete(null);
   };
 
-  const handleToggleGlobalModel = (modelId: string, enabled: boolean) => {
+  const handleToggleGlobalModel = (aiModelId: string, enabled: boolean) => {
     toggleGlobalModelMutation.mutate({
-      modelId,
+      aiModelId,
       enabled,
     });
   };
@@ -476,7 +476,7 @@ export function ModelsSection() {
                           model.status === "archived" ? "opacity-50" : ""
                         }
                       >
-                        {model.displayName}
+                        {model.universalModelId}
                       </span>
                     </TableCell>
                     <TableCell>
@@ -658,7 +658,7 @@ export function ModelsSection() {
           <DialogHeader>
             <DialogTitle>Editar Modelo de IA</DialogTitle>
             <DialogDescription>
-              Atualize as configurações do modelo "{modelToEdit?.displayName}".
+              Atualize as configurações do modelo "{modelToEdit?.universalModelId}".
             </DialogDescription>
           </DialogHeader>
 
@@ -786,7 +786,7 @@ export function ModelsSection() {
             <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
             <AlertDialogDescription>
               Tem certeza que deseja excluir o modelo "
-              {modelToDelete?.displayName}"? Esta ação não pode ser desfeita e
+              {modelToDelete?.universalModelId}"? Esta ação não pode ser desfeita e
               pode afetar tokens associados a este modelo.
             </AlertDialogDescription>
           </AlertDialogHeader>

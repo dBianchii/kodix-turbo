@@ -10,7 +10,6 @@ import { aiModel, aiProvider } from "@kdx/db/schema";
 export interface NormalizedModel {
   modelId: string;
   name: string;
-  displayName?: string;
   maxTokens?: number;
   pricing?: {
     input: string;
@@ -110,7 +109,7 @@ export class AiModelSyncService {
         .select({
           id: aiModel.id,
           providerId: aiModel.providerId,
-          name: aiModel.displayName,
+          name: aiModel.universalModelId,
           universalModelId: aiModel.universalModelId,
           enabled: aiModel.enabled,
           status: aiModel.status,
@@ -177,7 +176,6 @@ export class AiModelSyncService {
         (model: any) => ({
           modelId: model.modelId,
           name: model.name,
-          displayName: model.displayName || model.name,
           maxTokens: model.maxTokens,
           pricing: model.pricing
             ? {
@@ -299,7 +297,6 @@ export class AiModelSyncService {
             existing: {
               modelId: existingModel.universalModelId,
               name: existingModel.name,
-              displayName: existingModel.name,
               status: existingModel.status,
               databaseId: existingModel.id,
             },
@@ -315,7 +312,6 @@ export class AiModelSyncService {
         archivedModels.push({
           modelId: existingModel.universalModelId,
           name: existingModel.name,
-          displayName: existingModel.name,
           status: "archived",
         });
       }
@@ -383,7 +379,7 @@ export class AiModelSyncService {
       // Archive models from unsupported providers
       for (const provider of unsupportedProviders) {
         const modelsToArchive = await db
-          .select({ id: aiModel.id, displayName: aiModel.displayName })
+          .select({ id: aiModel.id, universalModelId: aiModel.universalModelId })
           .from(aiModel)
           .where(
             and(
@@ -457,8 +453,8 @@ export class AiModelSyncService {
     for (const model of newModels) {
       try {
         await db.insert(aiModel).values({
+          id: model.modelId, // Use the same value as universalModelId for the primary key
           providerId,
-          displayName: model.displayName || model.name,
           universalModelId: model.modelId,
           status: model.status || "active",
           enabled: model.status !== "archived",
@@ -478,7 +474,6 @@ export class AiModelSyncService {
         await db
           .update(aiModel)
           .set({
-            displayName: updated.displayName || updated.name,
             status: updated.status || "active",
             enabled: updated.status !== "archived",
             config: JSON.stringify(updated), // Store as JSON string to preserve key order

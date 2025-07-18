@@ -38,10 +38,10 @@ async function enableOpenAIModels() {
           .set({ enabled: true })
           .where(eq(aiModel.id, model.id));
 
-        console.log(`✅ Habilitado: ${model.displayName}`);
+        console.log(`✅ Habilitado: ${model.universalModelId}`);
         enabledCount++;
       } else {
-        console.log(`✓ Já habilitado: ${model.displayName}`);
+        console.log(`✓ Já habilitado: ${model.universalModelId}`);
       }
     }
 

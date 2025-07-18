@@ -26,8 +26,7 @@ async function testAiProvider() {
     }
 
     const model = await aiStudioRepository.AiModelRepository.create({
-      displayName: "test-model",
-      universalModelId: "test-universal-id", // Adicionando o campo obrigatório
+      universalModelId: "test-universal-id",
       providerId: provider.id,
       config: { temperature: 0.7 },
       enabled: true,

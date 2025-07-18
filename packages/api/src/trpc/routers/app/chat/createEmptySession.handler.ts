@@ -11,7 +11,8 @@ import { ChatService } from "../../../../internal/services/chat.service";
 // Tipos para o modelo
 interface ModelToUse {
   id: string;
-  displayName: string;
+  displayName?: string | null; // DEPRECATED: Use universalModelId
+  universalModelId: string;
   providerId: string;
   provider?: { baseUrl?: string | null };
   config?: unknown;
@@ -45,11 +46,15 @@ export async function createEmptySessionHandler({
         });
       }
     } else {
+      console.log("🔍 [CREATE_EMPTY] Buscando modelos disponíveis...");
       const availableModels = await AiStudioService.getAvailableModels({
         teamId,
         requestingApp: chatAppId,
       });
+      console.log("🔍 [CREATE_EMPTY] Modelos encontrados:", availableModels?.length || 0);
+      
       if (!availableModels?.[0]) {
+        console.error("❌ [CREATE_EMPTY] Nenhum modelo disponível!");
         throw new TRPCError({
           code: "PRECONDITION_FAILED",
           message:
@@ -57,6 +62,7 @@ export async function createEmptySessionHandler({
         });
       }
       modelToUse = availableModels[0];
+      console.log("✅ [CREATE_EMPTY] Usando modelo:", modelToUse.displayName);
     }
 
     const title = input.title || `Chat ${new Date().toLocaleDateString()}`;
@@ -110,18 +116,27 @@ export async function createEmptySessionHandler({
       );
     }
 
+    console.log("🔍 [CREATE_EMPTY] Verificando geração de título:", {
+      generateTitle: input.generateTitle,
+      hasFirstMessage: !!input.metadata?.firstMessage,
+      sessionId: session.id
+    });
+
     if (input.generateTitle && input.metadata?.firstMessage) {
+      console.log("🎯 [CREATE_EMPTY] Iniciando geração de título...");
       setImmediate(async () => {
         try {
           const firstModel = modelToUse;
           if (!firstModel) return;
 
+          console.log("🔍 [CREATE_EMPTY] Buscando token do provider:", firstModel.providerId);
           const providerToken = await AiStudioService.getProviderToken({
             providerId: firstModel.providerId,
             teamId,
             requestingApp: chatAppId,
           });
 
+          console.log("🔍 [CREATE_EMPTY] Token encontrado:", !!providerToken.token);
           if (providerToken.token) {
             const baseUrl =
               firstModel.provider?.baseUrl || "https://api.openai.com/v1";
@@ -134,7 +149,7 @@ export async function createEmptySessionHandler({
             const modelName =
               modelConfig.modelId ||
               modelConfig.version ||
-              firstModel.displayName;
+              firstModel.universalModelId;
 
             const titlePrompt = [
               {
@@ -164,22 +179,45 @@ Título:`,
               },
             ];
 
+            const requestBody = {
+              model: modelName,
+              messages: titlePrompt,
+              max_tokens: 35,
+              temperature: 0.3,
+              top_p: 0.9,
+              frequency_penalty: 0.1,
+            };
+
+            console.log("🔍 [CREATE_EMPTY] Enviando request:", {
+              url: apiUrl,
+              modelName,
+              displayName: firstModel.displayName,
+              universalModelId: firstModel.universalModelId,
+              firstMessage: input.metadata?.firstMessage,
+              tokenPresent: !!providerToken.token
+            });
+
             const response = await fetch(apiUrl, {
               method: "POST",
               headers: {
                 Authorization: `Bearer ${providerToken.token}`,
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify({
-                model: modelName,
-                messages: titlePrompt,
-                max_tokens: 35,
-                temperature: 0.3,
-                top_p: 0.9,
-                frequency_penalty: 0.1,
-              }),
+              body: JSON.stringify(requestBody),
             });
 
+            console.log("🔍 [CREATE_EMPTY] Resposta da API:", response.status);
+            if (!response.ok) {
+              const errorText = await response.text();
+              console.error("❌ [CREATE_EMPTY] Erro detalhado da API:", {
+                status: response.status,
+                statusText: response.statusText,
+                error: errorText,
+                url: apiUrl,
+                modelName,
+                headers: response.headers
+              });
+            }
             if (response.ok) {
               const aiResponse = (await response.json()) as {
                 choices?: {
@@ -191,11 +229,17 @@ Título:`,
               const generatedTitle =
                 aiResponse.choices?.[0]?.message?.content?.trim();
 
+              console.log("🔍 [CREATE_EMPTY] Título gerado:", generatedTitle);
               if (generatedTitle && generatedTitle.length <= 50) {
                 await chatRepository.ChatSessionRepository.update(session.id, {
                   title: generatedTitle,
                 });
+                console.log("✅ [CREATE_EMPTY] Título salvo no banco!");
               } else {
+                console.log("❌ [CREATE_EMPTY] Título inválido:", {
+                  title: generatedTitle,
+                  length: generatedTitle?.length
+                });
                 console.warn(
                   "⚠️ [TITLE_GEN] Título inválido (muito longo ou vazio):",
                   {
@@ -205,11 +249,13 @@ Título:`,
                 );
               }
             } else {
-              console.error("❌ [TITLE_GEN] Erro na API:", {
+              console.error("❌ [CREATE_EMPTY] Erro na API:", {
                 status: response.status,
                 statusText: response.statusText,
               });
             }
+          } else {
+            console.error("❌ [CREATE_EMPTY] Token não disponível!");
           }
         } catch (error) {
           console.warn("⚠️ [CREATE_EMPTY] Erro ao gerar título:", error);

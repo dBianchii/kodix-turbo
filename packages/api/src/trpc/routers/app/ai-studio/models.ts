@@ -9,6 +9,7 @@ import {
   updateAiModelSchema,
 } from "@kdx/validators/trpc/app";
 
+import { aiStudioInstalledMiddleware } from "../../../middlewares";
 import { protectedProcedure } from "../../../procedures";
 
 // Simple ID schema
@@ -21,15 +22,13 @@ export const aiModelsRouter = {
     .input(createAiModelSchema)
     .mutation(async ({ input }) => {
       //TODO: check if user has permission to create a model
-      const model = await aiStudioRepository.AiModelRepository.create({
-        ...input,
-        universalModelId: input.displayName, // Using displayName as fallback temporarily
-      });
+      const model = await aiStudioRepository.AiModelRepository.create(input);
       return model;
     }),
 
   findModels: protectedProcedure
     .input(findAiModelsSchema)
+    .use(aiStudioInstalledMiddleware)
     .query(async ({ input }) => {
       try {
         const { limite, offset, status, ...filters } = input;

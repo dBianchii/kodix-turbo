@@ -17,7 +17,7 @@ async function verifySeedsApplied() {
 
     aiModels.forEach((model) => {
       console.log(
-        `     - ${model.displayName} (${model.provider}) - ${model.enabled ? "Ativo" : "Inativo"}`,
+        `     - ${model.universalModelId} (${model.provider}) - ${model.enabled ? "Ativo" : "Inativo"}`,
       );
     });
 

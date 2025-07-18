@@ -175,7 +175,7 @@ function PriceBadge({ model }: PriceBadgeProps) {
         <div className="space-y-2">
           {/* Título */}
           <div className="text-sm font-medium text-slate-900">
-            {model.displayName}
+            {model.universalModelId}
           </div>
 
           {/* Descrição se disponível */}
@@ -282,7 +282,7 @@ function SortableTableRow({
           <div className="bg-primary/10 rounded p-1">
             <Brain className="h-3 w-3" />
           </div>
-          {model.displayName}
+          {model.universalModelId}
         </div>
       </TableCell>
       <TableCell className="capitalize">
@@ -346,7 +346,7 @@ function SortableTableRow({
                   ? t("apps.aiStudio.enabledModels.actions.testing")
                   : t("apps.aiStudio.enabledModels.actions.test")}
               </Button>
-              {testResults && testResults.modelId === model.id && (
+              {testResults && testResults.aiModelId === model.id && (
                 <div className="flex items-center space-x-1">
                   {testResults.success ? (
                     <div className="flex items-center space-x-1">
@@ -450,18 +450,18 @@ export function EnabledModelsSection() {
 
   const testModelMutation = useMutation(
     trpc.app.aiStudio.testModel.mutationOptions({
-      onMutate: (variables: { modelId: string; testPrompt?: string }) => {
+      onMutate: (variables: { aiModelId: string; testPrompt?: string }) => {
         console.log(
           "Testing model:",
-          variables.modelId,
+          variables.aiModelId,
           "with prompt:",
           variables.testPrompt,
         );
-        setTestingModelId(variables.modelId);
+        setTestingModelId(variables.aiModelId);
       },
       onSuccess: (data, variables) => {
         console.log("✅ [AI_STUDIO_TEST] Model test completed:", {
-          modelId: variables.modelId,
+          aiModelId: variables.aiModelId,
           success: data.success,
           ...(data.success &&
             "latencyMs" in data && {
@@ -471,10 +471,10 @@ export function EnabledModelsSection() {
             }),
         });
 
-        // Include modelId in the response for proper identification
+        // Include aiModelId in the response for proper identification
         const responseWithModelId = {
           ...data,
-          modelId: variables.modelId,
+          aiModelId: variables.aiModelId,
         };
         setTestResponse(responseWithModelId);
 
@@ -483,7 +483,7 @@ export function EnabledModelsSection() {
           const errorMessage =
             "error" in data ? data.error : "Unknown error while testing model";
           console.error("❌ [AI_STUDIO_TEST] Test failed:", {
-            modelId: variables.modelId,
+            aiModelId: variables.aiModelId,
             error: errorMessage,
           });
 
@@ -742,13 +742,13 @@ export function EnabledModelsSection() {
 
   const handleToggleModel = (model: any) => {
     // Check if trying to disable the default model
-    if (defaultModel?.modelId === model.id && model.teamConfig?.enabled) {
+    if (defaultModel?.aiModelId === model.id && model.teamConfig?.enabled) {
       toast.error(t("apps.aiStudio.enabledModels.errors.cannotDisableDefault"));
       return;
     }
 
     toggleModelMutation.mutate({
-      modelId: model.id,
+      aiModelId: model.id,
       enabled: !model.teamConfig?.enabled,
     });
   };
@@ -758,13 +758,13 @@ export function EnabledModelsSection() {
 
     console.log("🧪 [AI_STUDIO_TEST] Starting model test:", {
       modelId: model.id,
-      modelName: model.displayName,
+      modelName: model.universalModelId,
       provider: model.provider?.name,
       config: model.config,
     });
 
     testModelMutation.mutate({
-      modelId: model.id,
+      aiModelId: model.id,
       testPrompt: "Hello! Are you working correctly?",
     });
   };
@@ -799,7 +799,7 @@ export function EnabledModelsSection() {
     const orderedModelIds = reorderedModels.map((model: any) => model.id);
 
     console.log(`Reordering models:`, {
-      movedModel: movedModel.displayName,
+      movedModel: movedModel.universalModelId,
       fromPosition: oldIndex,
       toPosition: newIndex,
       newOrder: orderedModelIds,
@@ -811,8 +811,8 @@ export function EnabledModelsSection() {
     });
   };
 
-  const handleSetDefault = (modelId: string) => {
-    setDefaultModelMutation.mutate({ modelId });
+  const handleSetDefault = (aiModelId: string) => {
+    setDefaultModelMutation.mutate({ aiModelId });
   };
 
   // Create array of IDs for SortableContext
@@ -833,7 +833,7 @@ export function EnabledModelsSection() {
       </div>
 
       {/* Default model alert - só aparece quando há um modelo padrão */}
-      {defaultModel?.modelId && (
+      {defaultModel?.aiModelId && (
         <Alert>
           <Info className="h-4 w-4" />
           <AlertDescription>
@@ -889,7 +889,7 @@ export function EnabledModelsSection() {
               onDragEnd={handleDragEnd}
             >
               <RadioGroup
-                value={defaultModel?.modelId || ""}
+                value={defaultModel?.aiModelId || ""}
                 onValueChange={handleSetDefault}
               >
                 <Table>
@@ -933,7 +933,7 @@ export function EnabledModelsSection() {
                           isTestingModel={testingModelId === model.id}
                           isSettingDefault={isSettingDefault}
                           testResults={testResponse}
-                          defaultModelId={defaultModel?.modelId || null}
+                          defaultModelId={defaultModel?.aiModelId || null}
                         />
                       ))}
                     </TableBody>

@@ -138,8 +138,8 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
 
   // ✅ Calcular uso de tokens (memoizado)
   const modelName = useMemo(() => {
-    return sessionQuery.data?.aiModel?.displayName || "";
-  }, [sessionQuery.data?.aiModel?.displayName]);
+    return sessionQuery.data?.aiModel?.universalModelId || "";
+  }, [sessionQuery.data?.aiModel?.universalModelId]);
 
   const messages = useMemo(() => {
     return messagesQuery.data?.messages || [];
@@ -153,9 +153,7 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
       onSuccess: (updatedSession) => {
         // ✅ Otimização: Invalidar apenas a sessão específica para performance
         void queryClient.invalidateQueries(
-          trpc.app.chat.findSession.pathFilter({
-            sessionId: updatedSession.id,
-          }),
+          trpc.app.chat.findSession.pathFilter(),
         );
 
         // Invalidação da lista para refletir mudanças (ex: nome do agente)
@@ -310,7 +308,7 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
               {/* ✅ ETAPA 4.1: Renderizar SidebarTrigger apenas no cliente */}
               {isClient && <SidebarTrigger className="md:hidden" />}
               <ModelSelector
-                selectedModelId={selectedModelId}
+                selectedModelId={selectedModelId ?? null}
                 onModelSelect={handleModelSelect}
                 disabled={
                   selectedSessionId
@@ -319,7 +317,7 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
                 }
               />
               <AgentSelector
-                sessionId={selectedSessionId}
+                sessionId={selectedSessionId ?? undefined}
                 selectedAgentId={selectedAgentId}
                 onAgentSelect={handleAgentSelect}
                 disabled={updateSessionMutation.isPending}
@@ -352,7 +350,7 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
           <div className="min-h-0 flex-1 overflow-hidden">
             <ChatWindow
               key={chatKey}
-              sessionId={selectedSessionId}
+              sessionId={selectedSessionId ?? undefined}
               onNewSession={handleSessionSelect}
               selectedModelId={
                 selectedModelId ??
@@ -361,7 +359,6 @@ export function UnifiedChatPage({ sessionId, locale }: UnifiedChatPageProps) {
               }
               selectedAgentId={selectedAgentId}
               onStreamingFinished={handleStreamingFinished}
-              onModelChange={setSelectedModelId}
             />
           </div>
         </div>

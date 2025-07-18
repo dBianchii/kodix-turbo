@@ -21,6 +21,7 @@ import {
   setDefaultModelSchema,
   setModelPrioritySchema,
   teamModelIdSchema,
+  testModelSchema,
   toggleModelSchema,
   // AI Agent
   updateAiAgentSchema,
@@ -241,7 +242,7 @@ export const aiStudioRouter = {
       try {
         return await aiStudioRepository.AiTeamModelConfigRepository.toggleModel(
           ctx.auth.user.activeTeamId,
-          input.modelId,
+          input.aiModelId,
           input.enabled,
         );
       } catch (error: any) {
@@ -259,7 +260,7 @@ export const aiStudioRouter = {
       try {
         return await aiStudioRepository.AiTeamModelConfigRepository.setPriority(
           ctx.auth.user.activeTeamId,
-          input.modelId,
+          input.aiModelId,
           input.priority,
         );
       } catch (error: any) {
@@ -289,20 +290,12 @@ export const aiStudioRouter = {
     }),
 
   testModel: protectedProcedure
-    .input(
-      z.object({
-        modelId: z.string(),
-        testPrompt: z
-          .string()
-          .min(1)
-          .default("Olá! Você está funcionando corretamente?"),
-      }),
-    )
+    .input(testModelSchema)
     .mutation(async ({ ctx, input }) => {
       try {
         return await aiStudioRepository.AiTeamModelConfigRepository.testModel(
           ctx.auth.user.activeTeamId,
-          input.modelId,
+          input.aiModelId,
           input.testPrompt,
         );
       } catch (error: any) {
@@ -320,7 +313,7 @@ export const aiStudioRouter = {
       try {
         return await aiStudioRepository.AiTeamModelConfigRepository.setDefaultModel(
           ctx.auth.user.activeTeamId,
-          input.modelId,
+          input.aiModelId,
         );
       } catch (error: any) {
         console.error("[AI_STUDIO_ROUTER] setDefaultModel:", error);

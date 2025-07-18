@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
 import { index, mysqlTable, text, timestamp } from "drizzle-orm/mysql-core";
 
-import { NANOID_SIZE } from "../../nanoid";
+import { NANOID_SIZE, MODEL_ID_SIZE } from "../../nanoid";
 import { teams } from "../teams";
 import { users } from "../users";
 import {
@@ -31,7 +31,7 @@ export const chatFolder = mysqlTable(
       .references(() => users.id),
     name: t.varchar({ length: 100 }).notNull(),
     aiAgentId: t.varchar({ length: NANOID_SIZE }).references(() => aiAgent.id),
-    aiModelId: t.varchar({ length: NANOID_SIZE }).references(() => aiModel.id),
+    aiModelId: t.varchar({ length: MODEL_ID_SIZE }).references(() => aiModel.id),
     createdAt: t.timestamp().defaultNow().notNull(),
     updatedAt: t.timestamp().onUpdateNow(),
   }),
@@ -60,7 +60,7 @@ export const chatSession = mysqlTable(
       .references(() => chatFolder.id),
     aiAgentId: t.varchar({ length: NANOID_SIZE }).references(() => aiAgent.id),
     aiModelId: t
-      .varchar({ length: NANOID_SIZE })
+      .varchar({ length: MODEL_ID_SIZE })
       .notNull()
       .references(() => aiModel.id),
     title: t.varchar({ length: DEFAULTLENGTH }).notNull(),

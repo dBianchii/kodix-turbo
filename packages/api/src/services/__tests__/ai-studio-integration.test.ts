@@ -75,7 +75,7 @@ describe("AI Studio Streaming - Integration Tests", () => {
         providerId: "openai-provider",
         provider: { name: "OpenAI", baseUrl: "https://api.openai.com/v1" },
         config: { modelId: "gpt-4" },
-        displayName: "GPT-4",
+        universalModelId: "gpt-4",
       };
 
       const mockToken = { token: "sk-test-token" };
@@ -206,7 +206,7 @@ describe("AI Studio Streaming - Integration Tests", () => {
         providerId: "anthropic-provider",
         provider: { name: "Anthropic", baseUrl: "https://api.anthropic.com" },
         config: { version: "claude-3-opus" },
-        displayName: "Claude 3 Opus",
+        universalModelId: "claude-3-opus-20240229",
       };
 
       const mockToken = { token: "sk-ant-token" };
@@ -259,7 +259,7 @@ describe("AI Studio Streaming - Integration Tests", () => {
         providerId: "google-provider",
         provider: { name: "Google" },
         config: {},
-        displayName: "Gemini Pro",
+        universalModelId: "gemini-pro",
       };
 
       const mockToken = { token: "google-api-key" };
@@ -310,7 +310,7 @@ describe("AI Studio Streaming - Integration Tests", () => {
         providerId: "openai-provider",
         provider: { name: "OpenAI" },
         config: { modelId: "gpt-4" },
-        displayName: "GPT-4",
+        universalModelId: "gpt-4",
       };
 
       const mockToken = { token: "sk-test-token" };
@@ -406,7 +406,7 @@ describe("AI Studio Streaming - Integration Tests", () => {
         providerId: "openai-provider",
         provider: { name: "OpenAI" },
         config: { modelId: "gpt-4" },
-        displayName: "GPT-4",
+        universalModelId: "gpt-4",
       };
 
       const mockToken = { token: "sk-test-token" };

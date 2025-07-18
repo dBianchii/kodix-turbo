@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ZModelId } from "../..";
 
 // AI Provider schemas
 export const createAiProviderSchema = z.object({
@@ -29,7 +30,7 @@ export type FindAiProvidersInput = z.infer<typeof findAiProvidersSchema>;
 
 // AI Model schemas
 export const createAiModelSchema = z.object({
-  displayName: z.string().min(1, "Nome é obrigatório"),
+  universalModelId: z.string().min(1, "Model ID é obrigatório"),
   providerId: z.string(),
   config: z.any().optional(),
   enabled: z.boolean().default(true),
@@ -38,7 +39,7 @@ export type CreateAiModelInput = z.infer<typeof createAiModelSchema>;
 
 export const updateAiModelSchema = z.object({
   id: z.string(),
-  displayName: z.string().min(1, "Nome é obrigatório").optional(),
+  universalModelId: z.string().min(1, "Model ID é obrigatório").optional(),
   providerId: z.string().optional(),
   config: z.any().optional(),
   enabled: z.boolean().optional(),
@@ -87,7 +88,7 @@ export type RemoveTokenByProviderInput = z.infer<
 
 // AI Team Model Config schemas
 export const createAiTeamModelConfigSchema = z.object({
-  modelId: z.string(),
+  aiModelId: ZModelId,
   enabled: z.boolean().default(false),
   isDefault: z.boolean().default(false),
   priority: z.number().default(0),
@@ -109,18 +110,18 @@ export type UpdateAiTeamModelConfigInput = z.infer<
 >;
 
 export const toggleModelSchema = z.object({
-  modelId: z.string(),
+  aiModelId: ZModelId,
   enabled: z.boolean(),
 });
 export type ToggleModelInput = z.infer<typeof toggleModelSchema>;
 
 export const setDefaultModelSchema = z.object({
-  modelId: z.string(),
+  aiModelId: ZModelId,
 });
 export type SetDefaultModelInput = z.infer<typeof setDefaultModelSchema>;
 
 export const setModelPrioritySchema = z.object({
-  modelId: z.string(),
+  aiModelId: ZModelId,
   priority: z.number().min(0).max(999),
 });
 export type SetModelPriorityInput = z.infer<typeof setModelPrioritySchema>;
@@ -143,7 +144,7 @@ export type FindTeamModelConfigInput = z.infer<
 
 export const teamModelIdSchema = z.object({
   teamId: z.string(),
-  modelId: z.string(),
+  aiModelId: ZModelId,
 });
 export type TeamModelIdInput = z.infer<typeof teamModelIdSchema>;
 
@@ -203,13 +204,13 @@ export const enableProviderModelsSchema = z.object({
 
 // Schema para habilitar/desabilitar modelo global individual
 export const toggleGlobalModelSchema = z.object({
-  modelId: z.string(),
+  aiModelId: ZModelId,
   enabled: z.boolean(),
 });
 
 // Schema para testar modelo
 export const testModelSchema = z.object({
-  modelId: z.string(),
+  aiModelId: ZModelId,
   testPrompt: z
     .string()
     .min(1)

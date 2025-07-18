@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 
-import type { NormalizedModelAdapterOut } from "../types";
+import type { NormalizedModelAdapterOut } from "../../types";
 
 export interface OpenAIModel {
   id: string;

@@ -13,6 +13,7 @@ import {
 
 // Provider validation is now handled by the sync service reading from supported-providers.json
 import { AiModelSyncService } from "../../../../internal/services/ai-model-sync.service";
+import { aiStudioInstalledMiddleware } from "../../../middlewares";
 import { protectedProcedure } from "../../../procedures";
 
 // Simple ID schema
@@ -40,6 +41,7 @@ export const aiProvidersRouter = {
 
   findAiProviders: protectedProcedure
     .input(findAiProvidersSchema)
+    .use(aiStudioInstalledMiddleware)
     .query(async ({ input }) => {
       try {
         const { limite, offset, ...filters } = input;
@@ -145,7 +147,7 @@ export const aiProvidersRouter = {
     .mutation(async ({ input }) => {
       try {
         const model = await aiStudioRepository.AiModelRepository.update(
-          input.modelId,
+          input.aiModelId,
           { enabled: input.enabled },
         );
 

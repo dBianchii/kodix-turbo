@@ -109,7 +109,7 @@ export function useThreadChat(
           },
         });
 
-        // 2. Gerar título se for primeira mensagem do usuário
+        // 2. Gerar título se for primeira mensagem do usuário e título ainda for padrão
         const userMessages = activeThread.messages.filter(
           (msg) => msg.role === "user",
         );
@@ -120,6 +120,7 @@ export function useThreadChat(
             message.role === "user"
               ? message
               : activeThread.messages.find((msg) => msg.role === "user");
+          
           if (firstUserMessage) {
             await generateThreadTitle(activeThreadId, firstUserMessage.content);
             options?.onTitleGenerated?.(activeThread.title ?? "");

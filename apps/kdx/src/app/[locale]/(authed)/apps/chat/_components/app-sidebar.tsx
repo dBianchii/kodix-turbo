@@ -623,7 +623,7 @@ function AppSidebar({
                 <SelectContent>
                   {models.map((model) => (
                     <SelectItem key={model.id} value={model.id}>
-                      {model.displayName} ({model.provider.name})
+                      {model.universalModelId} ({model.provider.name})
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -734,7 +734,7 @@ function AppSidebar({
                 <SelectContent>
                   {models.map((model) => (
                     <SelectItem key={model.id} value={model.id}>
-                      {model.displayName} ({model.provider.name})
+                      {model.universalModelId} ({model.provider.name})
                     </SelectItem>
                   ))}
                 </SelectContent>

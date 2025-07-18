@@ -11,13 +11,15 @@ import {
   varchar,
 } from "drizzle-orm/mysql-core";
 
-import { NANOID_SIZE } from "../../nanoid";
+import { NANOID_SIZE, MODEL_ID_SIZE } from "../../nanoid";
 import { teams } from "../teams";
 import { users } from "../users";
 import {
   DEFAULTLENGTH,
+  modelIdPrimaryKey,
   nanoidPrimaryKey,
   teamIdReferenceCascadeDelete,
+  aiModelIdPrimaryKey,
 } from "../utils";
 
 // AI Provider - Provedores de IA (OpenAI, Anthropic, etc.)
@@ -39,8 +41,7 @@ export const aiProvider = mysqlTable(
 export const aiModel = mysqlTable(
   "ai_model",
   (t) => ({
-    id: nanoidPrimaryKey(t),
-    displayName: t.varchar({ length: 100 }).notNull(),
+    id: aiModelIdPrimaryKey(t),
     universalModelId: t.varchar("universal_model_id", { length: 60 }).notNull(),
     providerId: t
       .varchar({ length: NANOID_SIZE })
@@ -56,7 +57,7 @@ export const aiModel = mysqlTable(
     updatedAt: t.timestamp().onUpdateNow(),
   }),
   (table) => ({
-    displayNameIdx: index("ai_model_display_name_idx").on(table.displayName),
+    // displayNameIdx: index("ai_model_display_name_idx").on(table.displayName), // REMOVED: displayName deprecated
     universalModelIdIdx: unique("ai_model_universal_model_id_idx").on(
       table.universalModelId,
     ),
@@ -147,8 +148,8 @@ export const aiTeamModelConfig = mysqlTable(
   (t) => ({
     id: nanoidPrimaryKey(t),
     teamId: teamIdReferenceCascadeDelete(t),
-    modelId: t
-      .varchar({ length: NANOID_SIZE })
+    aiModelId: t
+      .varchar({ length: MODEL_ID_SIZE })
       .notNull()
       .references(() => aiModel.id, { onDelete: "cascade" }),
     enabled: t.boolean().default(false).notNull(),
@@ -160,7 +161,7 @@ export const aiTeamModelConfig = mysqlTable(
   }),
   (table) => ({
     teamIdx: index("ai_team_model_config_team_idx").on(table.teamId),
-    modelIdx: index("ai_team_model_config_model_idx").on(table.modelId),
+    aiModelIdx: index("ai_team_model_config_ai_model_idx").on(table.aiModelId),
     enabledIdx: index("ai_team_model_config_enabled_idx").on(table.enabled),
     isDefaultIdx: index("ai_team_model_config_is_default_idx").on(
       table.isDefault,
@@ -172,7 +173,7 @@ export const aiTeamModelConfig = mysqlTable(
     // Constraint única para evitar duplicatas team/model
     uniqueTeamModel: unique("ai_team_model_config_team_model_unique").on(
       table.teamId,
-      table.modelId,
+      table.aiModelId,
     ),
   }),
 );
@@ -236,7 +237,7 @@ export const aiTeamModelConfigRelations = relations(
       references: [teams.id],
     }),
     model: one(aiModel, {
-      fields: [aiTeamModelConfig.modelId],
+      fields: [aiTeamModelConfig.aiModelId],
       references: [aiModel.id],
     }),
   }),

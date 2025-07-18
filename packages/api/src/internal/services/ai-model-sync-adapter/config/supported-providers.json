@@ -2,7 +2,7 @@
   "providers": [
     {
       "name": "OpenAI",
-      "base_url": "https://api.openai.com",
+      "base_url": "https://api.openai.com/v1",
       "sync_name": "openai"
     },
     {
@@ -12,7 +12,7 @@
     },
     {
       "name": "Anthropic",
-      "base_url": "https://api.anthropic.com",
+      "base_url": "https://api.anthropic.com/v1",
       "sync_name": "anthropic"
     },
     {

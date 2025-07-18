@@ -41,6 +41,7 @@ const normalizeModelName = (modelName: string | undefined): string => {
     /-\d+b.*$/g,
     /-fine-tuned.*$/g,
     /-ft-.*$/g,
+    /\s+\d+\s+(mini|mini-?pro|pro|ultra)$/gi, // Remove version numbers and size indicators from display names
   ];
 
   const [firstPattern, ...remainingPatterns] = patternsToRemove;
@@ -51,6 +52,9 @@ const normalizeModelName = (modelName: string | undefined): string => {
   if (firstPattern?.test(normalized)) {
     normalized = "gpt-4o";
   }
+
+  // Convert spaces to hyphens for all model names (generic normalization)
+  normalized = normalized.replace(/\s+/g, "-");
 
   // General pattern replacements
   for (const pattern of remainingPatterns) {
@@ -82,12 +86,17 @@ export function ModelInfoBadge({
     isWaitingValidation,
     status,
   } = useMemo(() => {
+    // Parse config to get the actual model configuration
+    const modelConfig = sessionData.aiModel.config as { 
+      modelId?: string; 
+      version?: string; 
+      displayName?: string; 
+    };
+    
     const configured =
-      (sessionData.aiModel.config as { modelId?: string; version?: string })
-        ?.modelId ??
-      (sessionData.aiModel.config as { modelId?: string; version?: string })
-        ?.version ??
-      sessionData.aiModel.displayName;
+      sessionData.aiModel.universalModelId ??
+      modelConfig?.modelId ??
+      modelConfig?.version;
 
     const actual = lastMessageMetadata?.actualModelUsed;
     const hasResp = !!actual;
@@ -254,7 +263,7 @@ export function ModelInfoBadge({
                           sessionData,
                           lastMessageMetadata,
                           normalizedConfigured: normalizeModelName(
-                            sessionData.aiModel.displayName,
+                            sessionData.aiModel.universalModelId,
                           ),
                           normalizedActual: normalizeModelName(
                             lastMessageMetadata?.actualModelUsed,
@@ -275,7 +284,7 @@ export function ModelInfoBadge({
                       <div>hasResponse: {String(hasResponse)}</div>
                       <div>
                         normalizedConfigured: "
-                        {normalizeModelName(sessionData.aiModel.displayName)}"
+                        {normalizeModelName(sessionData.aiModel.universalModelId)}"
                       </div>
                       <div>
                         normalizedActual: "

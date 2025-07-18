@@ -150,7 +150,7 @@ export async function enviarMensagemHandler({
           temperature?: number;
         };
         const modelName =
-          modelConfig.modelId || modelConfig.version || model.displayName;
+          modelConfig.modelId || modelConfig.version || model.universalModelId;
         const maxTokens = modelConfig.maxTokens || 500;
         const temperature = modelConfig.temperature || 0.7;
 

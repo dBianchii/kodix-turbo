@@ -1,4 +1,4 @@
-import type { NormalizedModelAdapterOut } from "../types";
+import type { NormalizedModelAdapterOut } from "../../types";
 
 export interface GoogleModel {
   name: string;

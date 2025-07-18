@@ -56,19 +56,6 @@ export const ActiveChatWindow = memo(function ActiveChatWindow({
   const t = useTranslations("apps.chat");
   const trpc = useTRPC();
 
-  // Early return if no model is selected
-  if (!modelId) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <div className="text-center">
-          <p className="text-muted-foreground">
-            Please select a model to start chatting
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   // ✅ SUB-ETAPA 2.4: Thread context integrado
   const threadContext = useThreadContext();
   const { switchToThread, activeThreadId } = threadContext;
@@ -255,7 +242,7 @@ export const ActiveChatWindow = memo(function ActiveChatWindow({
   // ✅ THREAD-FIRST: Sincronização otimizada das mensagens
   // ✅ CORREÇÃO: Condições de guarda para prevenir loop infinito na sincronização
   const [lastDbMessagesLength, setLastDbMessagesLength] = useState(0);
-  const [lastDbMessagesHash, setLastDbMessagesHash] = useState<string>("");
+  const [lastDbMessagesHash, setLastDbMessagesHash] = useState<string>(""); 
 
   // ✅ CORREÇÃO: Remover processamento de mensagens pendentes que estava causando loop infinito
   // O sistema já está funcionando corretamente - a mensagem é enviada via append no useChat
@@ -324,8 +311,27 @@ export const ActiveChatWindow = memo(function ActiveChatWindow({
       `pending-message-${sessionId}`,
     );
 
+    console.log("🔍 [PENDING_MESSAGE] useEffect executado:", {
+      sessionId,
+      hasPendingMessage: !!pendingMessage,
+      pendingMessage: pendingMessage?.substring(0, 50),
+      modelId,
+      isLoadingSession,
+      isLoadingChat,
+      messagesLength: messages.length,
+      timestamp: new Date().toISOString()
+    });
+
     // Enviar mensagem pendente se disponível e chat não estiver carregando
     if (pendingMessage && !isLoadingSession && !isLoadingChat) {
+      console.log("✅ [PENDING_MESSAGE] Enviando mensagem pendente:", {
+        sessionId,
+        pendingMessage,
+        modelId,
+        isLoadingSession,
+        isLoadingChat
+      });
+
       void append({
         id: `pending-${Date.now()}`,
         content: pendingMessage,
@@ -334,8 +340,17 @@ export const ActiveChatWindow = memo(function ActiveChatWindow({
 
       // Limpar mensagem do sessionStorage
       sessionStorage.removeItem(`pending-message-${sessionId}`);
+    } else if (pendingMessage) {
+      console.log("⚠️ [PENDING_MESSAGE] Mensagem pendente encontrada mas não enviada:", {
+        sessionId,
+        pendingMessage,
+        modelId,
+        isLoadingSession,
+        isLoadingChat,
+        reason: isLoadingSession ? "loading session" : isLoadingChat ? "loading chat" : "unknown"
+      });
     }
-  }, [sessionId, isLoadingSession, isLoadingChat, append, isClient]);
+  }, [sessionId, isLoadingSession, isLoadingChat, append, isClient, messages.length]);
 
   // Scroll para o final
   useEffect(() => {
@@ -349,6 +364,19 @@ export const ActiveChatWindow = memo(function ActiveChatWindow({
       inputRef.current?.focus();
     }
   }, [isLoadingChat]);
+
+  // Early return if no model is selected - AFTER all hooks
+  if (!modelId) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <div className="text-center">
+          <p className="text-muted-foreground">
+            Please select a model to start chatting
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   // Renderização condicional
   if (isLoadingSession) {

@@ -87,7 +87,7 @@ export async function generateSessionTitleHandler({
       const modelName =
         modelConfig.modelId ||
         modelConfig.version ||
-        preferredModel.displayName;
+        preferredModel.universalModelId;
 
       // Prompt para gerar título
       const titlePrompt = [

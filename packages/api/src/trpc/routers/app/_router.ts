@@ -45,7 +45,7 @@ export const appRouter = t.router({
     .query(getConfigHandler),
   getUserAppTeamConfig: protectedProcedure
     .input(ZGetUserAppTeamConfigInputSchema)
-    .use(appInstalledMiddleware)
+    // .use(appInstalledMiddleware) // Removido temporariamente para debug
     .query(getUserAppTeamConfigHandler),
   getInstalled: protectedProcedure.query(getInstalledHandler),
   installApp: isTeamOwnerProcedure
@@ -60,10 +60,10 @@ export const appRouter = t.router({
     .mutation(uninstallAppHandler),
   saveUserAppTeamConfig: protectedProcedure
     .input(ZSaveUserAppTeamConfigInputSchema)
-    .use(appInstalledMiddleware)
+    // .use(appInstalledMiddleware) // Removido temporariamente para debug
     .mutation(saveUserAppTeamConfigHandler),
   getAppActivityLogs: protectedProcedure
     .input(ZGetAppActivityLogsInputSchema)
-    .use(appInstalledMiddleware)
+    // .use(appInstalledMiddleware) // Removido temporariamente para debug
     .query(getAppActivityLogsHandler),
 });
