@@ -22,20 +22,8 @@ import {
   aiModelIdPrimaryKey,
 } from "../utils";
 
-// AI Provider - Provedores de IA (OpenAI, Anthropic, etc.)
-export const aiProvider = mysqlTable(
-  "ai_provider",
-  (t) => ({
-    providerId: nanoidPrimaryKey(t), // Renamed from 'id'
-    name: t.varchar({ length: 100 }).notNull(),
-    baseUrl: t.text(),
-    // createdAt: REMOVED COMPLETELY
-  }),
-  (table) => ({
-    nameIdx: index("ai_provider_name_idx").on(table.name),
-    // createdAtIdx: REMOVED - no longer needed
-  }),
-);
+// AI Provider table has been removed - providers are now managed via JSON configuration
+// See: packages/api/src/internal/services/ai-model-sync-adapter/config/supported-providers.json
 
 // AI Model - Modelos de IA disponíveis no sistema
 export const aiModel = mysqlTable(
@@ -45,8 +33,7 @@ export const aiModel = mysqlTable(
     // universalModelId: REMOVED COMPLETELY
     providerId: t
       .varchar({ length: NANOID_SIZE })
-      .notNull(),
-      // .references(() => aiProvider.id), // FK removed
+      .notNull(), // No FK constraint - references JSON configuration
     status: mysqlEnum("status", ["active", "archived"])
       .default("active")
       .notNull(),
@@ -119,8 +106,7 @@ export const aiTeamProviderToken = mysqlTable(
     teamId: teamIdReferenceCascadeDelete(t),
     providerId: t
       .varchar({ length: NANOID_SIZE })
-      .notNull(),
-      // .references(() => aiProvider.id), // FK removed
+      .notNull(), // No FK constraint - references JSON configuration
     token: t.text().notNull(),
     createdAt: t.timestamp().defaultNow().notNull(),
     updatedAt: t.timestamp().onUpdateNow(),
@@ -177,16 +163,10 @@ export const aiTeamModelConfig = mysqlTable(
 );
 
 // Relacionamentos para AI Studio
-export const aiProviderRelations = relations(aiProvider, ({ many }) => ({
-  models: many(aiModel),
-  tokens: many(aiTeamProviderToken),
-}));
+// aiProviderRelations removed - providers managed via JSON
 
-export const aiModelRelations = relations(aiModel, ({ one, many }) => ({
-  provider: one(aiProvider, {
-    fields: [aiModel.providerId],
-    references: [aiProvider.providerId], // Updated reference
-  }),
+export const aiModelRelations = relations(aiModel, ({ many }) => ({
+  // provider relation removed - use ProviderConfigService to get provider data
   teamConfigs: many(aiTeamModelConfig),
 }));
 
@@ -220,10 +200,7 @@ export const aiTeamProviderTokenRelations = relations(
       fields: [aiTeamProviderToken.teamId],
       references: [teams.id],
     }),
-    provider: one(aiProvider, {
-      fields: [aiTeamProviderToken.providerId],
-      references: [aiProvider.providerId], // Updated reference
-    }),
+    // provider relation removed - use ProviderConfigService to get provider data
   }),
 );
 

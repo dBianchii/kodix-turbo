@@ -1,17 +1,12 @@
-// Tipos para AI Provider
+// Tipos para AI Provider - Now read-only, managed via JSON configuration
 export interface AiProvider {
-  providerId: string; // Renamed from 'id'
+  providerId: string;
   name: string;
-  baseUrl?: string;
-  // createdAt: REMOVED COMPLETELY
-  models?: AiModel[];
-  tokens?: AiProviderToken[];
+  baseUrl: string;
+  // Note: models and tokens are fetched separately when needed
 }
 
-export interface AiProviderFormData {
-  name: string;
-  baseUrl?: string;
-}
+// AiProviderFormData removed - providers are no longer editable via UI
 
 // Tipos para AI Model (atualizado)
 export interface AiModel {
@@ -84,4 +79,11 @@ export interface Paginacao {
 export interface ListaResponse<T> {
   data: T[];
   paginacao: Paginacao;
+}
+
+// Provider configuration from JSON
+export interface ProviderConfig {
+  providerId: string;
+  name: string;
+  baseUrl: string;
 }

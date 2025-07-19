@@ -1,25 +1,8 @@
 import { z } from "zod";
 import { ZModelId } from "../..";
 
-// AI Provider schemas
-export const createAiProviderSchema = z.object({
-  name: z.string().min(1, "Nome é obrigatório"),
-  baseUrl: z.string().url("URL base deve ser válida").optional(),
-  apiKeyTemplate: z.string().optional(),
-  config: z.any().optional(),
-  enabled: z.boolean().default(true),
-});
-export type CreateAiProviderInput = z.infer<typeof createAiProviderSchema>;
-
-export const updateAiProviderSchema = z.object({
-  providerId: z.string(),
-  name: z.string().min(1, "Nome é obrigatório").optional(),
-  baseUrl: z.string().url("URL base deve ser válida").optional(),
-  apiKeyTemplate: z.string().optional(),
-  config: z.any().optional(),
-  enabled: z.boolean().optional(),
-});
-export type UpdateAiProviderInput = z.infer<typeof updateAiProviderSchema>;
+// AI Provider schemas - CRUD operations removed, providers are now managed via JSON configuration
+// Only read operations are supported
 
 export const findAiProvidersSchema = z.object({
   enabled: z.boolean().optional(),

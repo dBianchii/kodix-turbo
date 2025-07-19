@@ -10,23 +10,16 @@ import { count, eq } from "drizzle-orm";
 
 config({ path: ".env" });
 
-import { db } from "../src/client";
-import { aiModel, aiProvider, aiTeamProviderToken } from "../src/schema";
+import { db } from "../../src/client";
+import { aiModel, aiTeamProviderToken } from "../../src/schema";
 
 async function quickStatus() {
   console.log("🔍 Quick Database Status Check (Studio-safe)\n");
   
   try {
-    // 1. Check providers
-    const providers = await db.select().from(aiProvider);
-    console.log(`📊 Providers: ${providers.length}`);
-    if (providers.length > 0) {
-      console.table(providers.map(p => ({
-        providerId: p.providerId,
-        name: p.name,
-        baseUrl: p.baseUrl || 'Default'
-      })));
-    }
+    // 1. Check providers (now managed via JSON config)
+    console.log(`📊 Providers: Now managed via JSON configuration file`);
+    console.log(`   Configuration path: packages/api/src/internal/services/ai-model-sync-adapter/config/supported-providers.json`);
 
     // 2. Check models
     const [totalModels] = await db.select({ count: count() }).from(aiModel);
@@ -39,7 +32,7 @@ async function quickStatus() {
     console.log(`\n📊 Team Tokens: ${tokens.length}`);
     
     if (tokens.length > 0) {
-      const tokensByProvider = tokens.reduce((acc, token) => {
+      const tokensByProvider = tokens.reduce((acc: any, token: any) => {
         acc[token.providerId] = (acc[token.providerId] || 0) + 1;
         return acc;
       }, {} as Record<string, number>);
@@ -53,20 +46,19 @@ async function quickStatus() {
     // 4. Check for potential issues
     console.log("\n🔍 Potential Issues:");
     
-    // Check for orphaned models
-    const modelsWithProviders = await db.query.aiModel.findMany({
-      with: { provider: true }
-    });
-    const orphanedModels = modelsWithProviders.filter(m => !m.provider);
+    // Check for orphaned models (providers are now managed via JSON config)
+    const models = await db.select().from(aiModel);
+    const validProviderIds = ["openai", "anthropic", "google", "xai"];
+    const orphanedModels = models.filter((m: any) => !validProviderIds.includes(m.providerId));
     
     if (orphanedModels.length > 0) {
       console.log(`⚠️  ${orphanedModels.length} models with invalid provider references`);
     }
     
     // Check for models without tokens
-    const providerIdsWithTokens = [...new Set(tokens.map(t => t.providerId))];
-    const modelsWithoutTokens = modelsWithProviders.filter(m => 
-      m.provider && !providerIdsWithTokens.includes(m.providerId)
+    const providerIdsWithTokens = [...new Set(tokens.map((t: any) => t.providerId))];
+    const modelsWithoutTokens = models.filter((m: any) => 
+      validProviderIds.includes(m.providerId) && !providerIdsWithTokens.includes(m.providerId)
     );
     
     if (modelsWithoutTokens.length > 0) {

@@ -7,6 +7,7 @@ import { chatAppId } from "@kdx/shared";
 import type { TProtectedProcedureContext } from "../../../procedures";
 import { AiStudioService } from "../../../../internal/services/ai-studio.service";
 import { ChatService } from "../../../../internal/services/chat.service";
+import { ProviderConfigService } from "../../../../internal/services/provider-config.service";
 
 export async function enviarMensagemHandler({
   input,
@@ -132,14 +133,20 @@ export async function enviarMensagemHandler({
           requestingApp: chatAppId,
         });
 
+        // Get provider config
+        const providerConfig = ProviderConfigService.getProviderById(model.providerId);
+        if (!providerConfig) {
+          throw new Error(`Provider ${model.providerId} not found`);
+        }
+
         if (!providerToken.token) {
           throw new Error(
-            `Token não configurado para o provider ${model.provider.name || "provider"}`,
+            `Token não configurado para o provider ${providerConfig.name || "provider"}`,
           );
         }
 
         // Configurar API baseada no provider
-        const baseUrl = model.provider.baseUrl || "https://api.openai.com/v1";
+        const baseUrl = providerConfig.baseUrl || "https://api.openai.com/v1";
         const apiUrl = `${baseUrl}/chat/completions`;
 
         // Usar configurações do modelo
@@ -160,7 +167,7 @@ export async function enviarMensagemHandler({
           databaseModelId: model.modelId,
           modelName,
           modelConfig,
-          providerName: model.provider.name,
+          providerName: providerConfig.name,
         });
 
         if (!modelName) {
@@ -185,7 +192,7 @@ export async function enviarMensagemHandler({
         if (!response.ok) {
           const errorText = await response.text();
           throw new Error(
-            `Erro na API do ${model.provider.name || "provider"}: ${response.status} - ${errorText}`,
+            `Erro na API do ${providerConfig.name || "provider"}: ${response.status} - ${errorText}`,
           );
         }
 
@@ -202,7 +209,7 @@ export async function enviarMensagemHandler({
           requestedModel: modelName,
           actualModelUsed: actualModelUsed,
           providerId: model.providerId,
-          providerName: model.provider.name,
+          providerName: providerConfig.name,
           usage: aiResponse.usage || null,
           timestamp: new Date().toISOString(),
         };

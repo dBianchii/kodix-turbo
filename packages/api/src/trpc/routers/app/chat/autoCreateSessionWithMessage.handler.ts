@@ -7,6 +7,7 @@ import { chatAppId } from "@kdx/shared";
 import type { TProtectedProcedureContext } from "../../../procedures";
 import { AiStudioService } from "../../../../internal/services/ai-studio.service";
 import { ChatService } from "../../../../internal/services/chat.service";
+import { ProviderConfigService } from "../../../../internal/services/provider-config.service";
 
 // Helper para buscar modelo preferido seguindo hierarquia usando Service Layer
 async function getPreferredModelHelper(
@@ -210,10 +211,15 @@ export async function autoCreateSessionWithMessageHandler({
           requestingApp: chatAppId,
         });
 
+        // Get provider config
+        const providerConfig = ProviderConfigService.getProviderById(preferredModel.providerId);
+        if (!providerConfig) {
+          throw new Error(`Provider ${preferredModel.providerId} not found`);
+        }
+
         if (providerToken.token) {
           // Configurar API baseada no provider
-          const baseUrl =
-            preferredModel.provider?.baseUrl || "https://api.openai.com/v1";
+          const baseUrl = providerConfig.baseUrl || "https://api.openai.com/v1";
           const apiUrl = `${baseUrl}/chat/completions`;
 
           // Usar configurações do modelo

@@ -40,76 +40,11 @@ export async function seedAiStudio() {
     console.log("🌱 Starting AI Studio seed...");
 
     // =============================
-    // 1. Create AI providers
+    // AI Providers are now managed via JSON configuration
     // =============================
-    console.log("Creating AI Providers...");
-
-    // Load providers from supported-providers.json (single source of truth)
-    // Use a more robust path resolution approach
-    const workspaceRoot = process.cwd();
-    const supportedProvidersPath = join(
-      workspaceRoot,
-      "packages",
-      "api",
-      "src",
-      "internal",
-      "services",
-      "ai-sync-adapters",
-      "supported-providers.json",
-    );
-
-    let supportedProvidersData: SupportedProvidersData;
-    try {
-      const supportedProvidersContent = readFileSync(
-        supportedProvidersPath,
-        "utf-8",
-      );
-      supportedProvidersData = JSON.parse(supportedProvidersContent);
-    } catch (error) {
-      console.error("❌ Failed to read supported-providers.json:", error);
-      console.error("Path:", supportedProvidersPath);
-      console.error("Working directory:", process.cwd());
-      throw new Error("Cannot seed providers without supported-providers.json");
-    }
-
-    // Use provider data directly from supported-providers.json
-    const providers = supportedProvidersData.providers.map((provider) => ({
-      name: provider.name, // Already in proper database format
-      baseUrl: provider.base_url,
-    }));
-
-    console.log(
-      `📋 Loaded ${providers.length} providers from supported-providers.json:`,
-      providers.map((p) => p.name).join(", "),
-    );
-
-    const createdProviders: any[] = [];
-    for (const providerData of providers) {
-      try {
-        // Check if provider already exists
-        const existingProvider =
-          await aiStudioRepository.AiProviderRepository.findByName(
-            providerData.name,
-          );
-
-        if (existingProvider) {
-          createdProviders.push(existingProvider);
-          console.log(`✓ Provider "${providerData.name}" already exists`);
-        } else {
-          const provider =
-            await aiStudioRepository.AiProviderRepository.create(providerData);
-          if (provider) {
-            createdProviders.push(provider);
-            console.log(`✅ Provider created: ${provider.name}`);
-          }
-        }
-      } catch (error) {
-        console.error(
-          `❌ Error creating provider ${providerData.name}:`,
-          error,
-        );
-      }
-    }
+    console.log("⚠️  NOTICE: AI Providers are now managed via JSON configuration");
+    console.log("   Providers are loaded from supported-providers.json");
+    console.log("   No database seeding needed for providers");
 
     // =============================
     // 2. Create AI models
@@ -120,7 +55,7 @@ export async function seedAiStudio() {
     console.log("Skipping AI Models seed...");
 
     console.log("\n📊 Seed Summary:");
-    console.log(`   • ${createdProviders.length} providers processed`);
+    console.log("   • AI Studio seed simplified - providers managed via JSON");
 
     console.log("\n✅ AI Studio seed completed successfully!");
   } catch (error) {
@@ -133,19 +68,38 @@ export async function seedAiStudioWithTeam(teamId: string, userId?: string) {
   try {
     console.log(`🌱 Starting AI Studio seed for team ${teamId}...`);
 
-    // Find existing providers
-    const providersResult =
-      await aiStudioRepository.AiProviderRepository.findMany({
-        limite: 100,
-        offset: 0,
-      });
+    // Load providers from JSON configuration
+    console.log("📋 Loading providers from JSON configuration...");
+    
+    // Load providers from supported-providers.json
+    const workspaceRoot = process.cwd();
+    const supportedProvidersPath = join(
+      workspaceRoot,
+      "packages",
+      "api",
+      "src",
+      "internal",
+      "services",
+      "ai-model-sync-adapter",
+      "config",
+      "supported-providers.json",
+    );
 
-    if (providersResult.length === 0) {
-      console.log("⚠️  No providers found. Run the general seed first.");
+    let supportedProvidersData: { providers: Array<{ providerId: string; name: string; baseUrl: string }> };
+    try {
+      const supportedProvidersContent = readFileSync(
+        supportedProvidersPath,
+        "utf-8",
+      );
+      supportedProvidersData = JSON.parse(supportedProvidersContent);
+    } catch (error) {
+      console.error("❌ Failed to read supported-providers.json:", error);
+      console.log("⚠️  No providers configuration found. Cannot create tokens.");
       return;
     }
 
-    console.log(`📋 Found ${providersResult.length} providers`);
+    const providersResult = supportedProvidersData.providers;
+    console.log(`📋 Found ${providersResult.length} providers from JSON configuration`);
 
     // Use the first user from the team if not specified
     let createdById = userId;
@@ -170,7 +124,7 @@ export async function seedAiStudioWithTeam(teamId: string, userId?: string) {
     console.log("Creating AI Provider Tokens...");
 
     // Generate example tokens dynamically based on available providers
-    const tokenExamples = providersResult.map((provider: any) => ({
+    const tokenExamples = providersResult.map((provider) => ({
       providerName: provider.name,
       token: generateExampleToken(provider.name),
     }));
@@ -178,7 +132,7 @@ export async function seedAiStudioWithTeam(teamId: string, userId?: string) {
     let tokensCreated = 0;
     for (const tokenData of tokenExamples) {
       const provider = providersResult.find(
-        (p: any) => p.name === tokenData.providerName,
+        (p) => p.name === tokenData.providerName,
       );
       if (provider) {
         try {

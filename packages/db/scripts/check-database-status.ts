@@ -12,23 +12,15 @@ import { count, eq } from "drizzle-orm";
 config({ path: "../../.env" });
 
 import { db } from "../src/client";
-import { aiModel, aiProvider } from "../src/schema";
+import { aiModel } from "../src/schema";
 
 async function checkDatabaseStatus() {
   console.log("🔍 Checking database status (Studio-safe)...\n");
   
   try {
-    // Check providers
-    console.log("📊 AI Providers:");
-    const providers = await db
-      .select({
-        providerId: aiProvider.providerId,
-        name: aiProvider.name,
-        baseUrl: aiProvider.baseUrl,
-      })
-      .from(aiProvider);
-    
-    console.table(providers);
+    // Check providers (now managed via JSON config)
+    console.log("📊 AI Providers: Now managed via JSON configuration");
+    console.log("   File: packages/api/src/internal/services/ai-model-sync-adapter/config/supported-providers.json");
 
     // Check model count per provider
     console.log("\n📈 Model count per provider:");
@@ -66,7 +58,7 @@ async function checkDatabaseStatus() {
         .from(aiModel)
         .where(eq(aiModel.providerId, oldId));
       
-      if (modelsWithOldId[0]?.count > 0) {
+      if (modelsWithOldId[0]?.count && modelsWithOldId[0].count > 0) {
         console.log(`⚠️  Found ${modelsWithOldId[0].count} models still using old ID: ${oldId}`);
       }
     }

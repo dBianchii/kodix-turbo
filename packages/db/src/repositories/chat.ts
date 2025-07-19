@@ -33,11 +33,6 @@ export const ChatFolderRepository = {
         },
         aiModel: {
           columns: { modelId: true, providerId: true },
-          with: {
-            provider: {
-              columns: { providerId: true, name: true },
-            },
-          },
         },
         sessions: {
           columns: { id: true, title: true, createdAt: true },
@@ -95,11 +90,6 @@ export const ChatFolderRepository = {
         },
         aiModel: {
           columns: { modelId: true, providerId: true },
-          with: {
-            provider: {
-              columns: { providerId: true, name: true },
-            },
-          },
         },
         sessions: {
           columns: { id: true, title: true, createdAt: true },
@@ -187,11 +177,6 @@ export const ChatSessionRepository = {
             providerId: true,
             config: true,
           },
-          with: {
-            provider: {
-              columns: { providerId: true, name: true },
-            },
-          },
         },
         messages: {
           orderBy: [asc(chatMessage.createdAt)],
@@ -256,11 +241,6 @@ export const ChatSessionRepository = {
         },
         aiModel: {
           columns: { modelId: true, providerId: true },
-          with: {
-            provider: {
-              columns: { providerId: true, name: true },
-            },
-          },
         },
         messages: {
           columns: {
