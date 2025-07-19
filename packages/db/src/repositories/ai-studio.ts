@@ -13,6 +13,7 @@ import { chatFolder, chatSession } from "../schema/apps/chat";
 import { teams } from "../schema/teams";
 import { users } from "../schema/users";
 import { decryptToken, encryptToken } from "../utils";
+import { jsonProviderService } from "../services/json-provider.service";
 
 // Interface para tipar a resposta da API de chat completions
 interface ChatCompletionResponse {
@@ -86,44 +87,50 @@ function validateGoogleModelName(modelName: string): {
 }
 
 export const AiProviderRepository = {
-  // Criar novo provider
+  // Criar novo provider - NOT SUPPORTED with JSON backend
   create: async (data: { name: string; baseUrl?: string }) => {
-    // Validar se provider já existe
-    const existingProvider = await AiProviderRepository.findByName(data.name);
-    if (existingProvider) {
-      throw new Error(`Provider com nome "${data.name}" já existe`);
-    }
-
-    const [result] = await db.insert(aiProvider).values(data).$returningId();
-    if (!result) throw new Error("Falha ao criar provider");
-    return AiProviderRepository.findById(result.providerId);
+    throw new Error("Creating providers is not supported. Providers are managed via supported-providers.json");
   },
 
   // Buscar por ID
   findById: async (providerId: string) => {
-    return db.query.aiProvider.findFirst({
-      where: eq(aiProvider.providerId, providerId),
-      with: {
-        models: {
-          columns: { modelId: true, enabled: true },
-        },
-        tokens: {
-          columns: { id: true, teamId: true },
-        },
-      },
+    const provider = await jsonProviderService.findById(providerId);
+    if (!provider) return null;
+    
+    // Fetch related models from database
+    const models = await db.query.aiModel.findMany({
+      where: eq(aiModel.providerId, providerId),
+      columns: { modelId: true, enabled: true },
     });
+    
+    // Fetch related tokens from database
+    const tokens = await db.query.aiTeamProviderToken.findMany({
+      where: eq(aiTeamProviderToken.providerId, providerId),
+      columns: { id: true, teamId: true },
+    });
+    
+    return {
+      ...provider,
+      models,
+      tokens,
+    };
   },
 
   // Buscar por nome
   findByName: async (name: string) => {
-    return db.query.aiProvider.findFirst({
-      where: eq(aiProvider.name, name),
-      with: {
-        models: {
-          columns: { modelId: true, enabled: true },
-        },
-      },
+    const provider = await jsonProviderService.findByName(name);
+    if (!provider) return null;
+    
+    // Fetch related models from database
+    const models = await db.query.aiModel.findMany({
+      where: eq(aiModel.providerId, provider.providerId),
+      columns: { modelId: true, enabled: true },
     });
+    
+    return {
+      ...provider,
+      models,
+    };
   },
 
   // Listar providers
@@ -133,65 +140,45 @@ export const AiProviderRepository = {
       offset?: number;
     } = {},
   ) => {
-    const { limite = 50, offset = 0 } = params;
-
-    return db.query.aiProvider.findMany({
-      limit: limite,
-      offset,
-      orderBy: [asc(aiProvider.name)],
-      with: {
-        models: {
+    const providers = await jsonProviderService.findMany(params);
+    
+    // For each provider, fetch related data from database
+    const providersWithRelations = await Promise.all(
+      providers.map(async (provider) => {
+        const models = await db.query.aiModel.findMany({
+          where: eq(aiModel.providerId, provider.providerId),
           columns: { modelId: true, enabled: true },
-        },
-        tokens: {
+        });
+        
+        const tokens = await db.query.aiTeamProviderToken.findMany({
+          where: eq(aiTeamProviderToken.providerId, provider.providerId),
           columns: { id: true, teamId: true },
-        },
-      },
-    });
+        });
+        
+        return {
+          ...provider,
+          models,
+          tokens,
+        };
+      })
+    );
+    
+    return providersWithRelations;
   },
 
-  // Atualizar provider
+  // Atualizar provider - NOT SUPPORTED with JSON backend
   update: async (providerId: string, data: Partial<typeof aiProvider.$inferInsert>) => {
-    await db.update(aiProvider).set(data).where(eq(aiProvider.providerId, providerId));
-    return AiProviderRepository.findById(providerId);
+    throw new Error("Updating providers is not supported. Providers are managed via supported-providers.json");
   },
 
-  // Excluir provider com validações
+  // Excluir provider - NOT SUPPORTED with JSON backend
   delete: async (providerId: string) => {
-    return db.transaction(async (tx) => {
-      // Verificar se há modelos usando este provider
-      const [modelsCount] = await tx
-        .select({ count: count() })
-        .from(aiModel)
-        .where(eq(aiModel.providerId, providerId));
-
-      if ((modelsCount?.count ?? 0) > 0) {
-        throw new Error(
-          `Não é possível excluir provider: ${modelsCount?.count ?? 0} modelos dependem dele`,
-        );
-      }
-
-      // Verificar se há tokens para este provider
-      const [tokensCount] = await tx
-        .select({ count: count() })
-        .from(aiTeamProviderToken)
-        .where(eq(aiTeamProviderToken.providerId, providerId));
-
-      if ((tokensCount?.count ?? 0) > 0) {
-        throw new Error(
-          `Não é possível excluir provider: ${tokensCount?.count ?? 0} tokens dependem dele`,
-        );
-      }
-
-      // Excluir provider
-      await tx.delete(aiProvider).where(eq(aiProvider.providerId, providerId));
-    });
+    throw new Error("Deleting providers is not supported. Providers are managed via supported-providers.json");
   },
 
   // Adicionar método count
   count: async () => {
-    const [result] = await db.select({ count: count() }).from(aiProvider);
-    return result?.count ?? 0;
+    return jsonProviderService.count();
   },
 };
 

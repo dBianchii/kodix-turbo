@@ -52,6 +52,7 @@ export function AgentSelector({
       {
         staleTime: 5 * 60 * 1000,
         refetchOnWindowFocus: false,
+        // ✅ User is authenticated in (authed) route group
       },
     ),
   );

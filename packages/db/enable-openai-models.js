@@ -1,16 +1,15 @@
 import { eq } from "drizzle-orm";
 
 import { db } from "./src/client.js";
-import { aiModel, aiProvider } from "./src/schema/apps/ai-studio.js";
+import { aiModel } from "./src/schema/apps/ai-studio.js";
+import { jsonProviderService } from "./src/services/json-provider.service.js";
 
 async function enableOpenAIModels() {
   try {
     console.log("🔧 Habilitando modelos OpenAI...\n");
 
     // 1. Buscar o provider OpenAI
-    const openaiProvider = await db.query.aiProvider.findFirst({
-      where: eq(aiProvider.name, "OpenAI"),
-    });
+    const openaiProvider = await jsonProviderService.findByName("OpenAI");
 
     if (!openaiProvider) {
       console.log(

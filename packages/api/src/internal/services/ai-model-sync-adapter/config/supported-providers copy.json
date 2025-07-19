@@ -1,0 +1,24 @@
+{
+  "providers": [
+    {
+      "providerId": "openai",
+      "name": "OpenAI",
+      "baseUrl": "https://api.openai.com/v1"
+    },
+    {
+      "providerId": "google",
+      "name": "Google",
+      "baseUrl": "https://generativelanguage.googleapis.com"
+    },
+    {
+      "providerId": "anthropic",
+      "name": "Anthropic",
+      "baseUrl": "https://api.anthropic.com/v1"
+    },
+    {
+      "providerId": "xai",
+      "name": "XAI",
+      "baseUrl": "https://api.x.ai/v1"
+    }
+  ]
+}

@@ -1,19 +1,47 @@
 "use client";
 
-import { AgentsSection } from "./sections/agents-section";
-import { EnabledModelsSection } from "./sections/enabled-models-section";
-import { LibrariesSection } from "./sections/libraries-section";
-import { ModelsSection } from "./sections/models-section";
-import { ProvidersSection } from "./sections/providers-section";
-import { TeamInstructionsSection } from "./sections/team-instructions-section";
-import { TokensSection } from "./sections/tokens-section";
-import { UserInstructionsSection } from "./sections/user-instructions-section";
+import { lazy, Suspense } from "react";
+
+// ✅ Lazy load sections to prevent unnecessary API calls
+const TeamInstructionsSection = lazy(() => 
+  import("./sections/team-instructions-section").then(m => ({ default: m.TeamInstructionsSection }))
+);
+const UserInstructionsSection = lazy(() => 
+  import("./sections/user-instructions-section").then(m => ({ default: m.UserInstructionsSection }))
+);
+const AgentsSection = lazy(() => 
+  import("./sections/agents-section").then(m => ({ default: m.AgentsSection }))
+);
+const LibrariesSection = lazy(() => 
+  import("./sections/libraries-section").then(m => ({ default: m.LibrariesSection }))
+);
+const ModelsSection = lazy(() => 
+  import("./sections/models-section").then(m => ({ default: m.ModelsSection }))
+);
+const ProvidersSection = lazy(() => 
+  import("./sections/providers-section").then(m => ({ default: m.ProvidersSection }))
+);
+const TokensSection = lazy(() => 
+  import("./sections/tokens-section").then(m => ({ default: m.TokensSection }))
+);
+const EnabledModelsSection = lazy(() => 
+  import("./sections/enabled-models-section").then(m => ({ default: m.EnabledModelsSection }))
+);
 
 interface AiStudioContentProps {
   activeSection: string;
 }
 
+function LoadingSpinner() {
+  return (
+    <div className="flex items-center justify-center py-8">
+      <div className="text-muted-foreground text-sm">Carregando...</div>
+    </div>
+  );
+}
+
 export function AiStudioContent({ activeSection }: AiStudioContentProps) {
+  // ✅ Lazy load only the active section to prevent unnecessary API calls
   const renderSection = () => {
     switch (activeSection) {
       case "team-instructions":
@@ -37,5 +65,9 @@ export function AiStudioContent({ activeSection }: AiStudioContentProps) {
     }
   };
 
-  return <div className="h-full">{renderSection()}</div>;
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      {renderSection()}
+    </Suspense>
+  );
 }

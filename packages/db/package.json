@@ -31,6 +31,10 @@
     "./utils": {
       "types": "./dist/utils.d.ts",
       "default": "./src/utils.ts"
+    },
+    "./services/json-provider.service": {
+      "types": "./dist/services/json-provider.service.d.ts",
+      "default": "./src/services/json-provider.service.ts"
     }
   },
   "scripts": {

@@ -40,6 +40,8 @@ export const aiAgentsRouter = {
   findAiAgents: protectedProcedure
     .input(findAiAgentsSchema)
     .query(async ({ input, ctx }) => {
+      console.log("🔍 [AI_STUDIO_AGENTS] findAiAgents called");
+      console.log("Call stack:", new Error().stack);
       try {
         const { limite, offset } = input;
 

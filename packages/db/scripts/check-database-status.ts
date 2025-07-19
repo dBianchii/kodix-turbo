@@ -66,7 +66,7 @@ async function checkDatabaseStatus() {
         .from(aiModel)
         .where(eq(aiModel.providerId, oldId));
       
-      if (modelsWithOldId[0]?.count > 0) {
+      if (modelsWithOldId[0]?.count && modelsWithOldId[0].count > 0) {
         console.log(`⚠️  Found ${modelsWithOldId[0].count} models still using old ID: ${oldId}`);
       }
     }

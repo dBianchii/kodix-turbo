@@ -1,0 +1,13 @@
+
+> kodix-turbo@ db:studio /Users/mahadevadas/Documents/Kodix/kodix-turbo
+> turbo run studio --filter=@kdx/db "--port" "4983" "--host" "0.0.0.0"
+
+ ERROR  unexpected argument '--port' found
+
+  tip: to pass '--port' as a value, use '-- --port'
+
+Usage: turbo run <--cache-dir <CACHE_DIR>|--concurrency <CONCURRENCY>|--continue[=<CONTINUE>]|--single-package|--framework-inference [<BOOL>]|--global-deps <GLOBAL_DEPS>|--env-mode [<ENV_MODE>]|--filter <FILTER>|--affected|--output-logs <OUTPUT_LOGS>|--log-order <LOG_ORDER>|--only|--pkg-inference-root <PKG_INFERENCE_ROOT>|--log-prefix <LOG_PREFIX>|TASKS|PASS_THROUGH_ARGS> <--filter <FILTER>|--affected>
+
+For more information, try '--help'.
+
+ ELIFECYCLE  Command failed with exit code 1.

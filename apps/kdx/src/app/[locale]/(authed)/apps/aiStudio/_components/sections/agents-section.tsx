@@ -107,7 +107,6 @@ export function AgentsSection() {
   const [agentToDelete, setAgentToDelete] = useState<any>(null);
   const [agentToEdit, setAgentToEdit] = useState<any>(null);
 
-  // ✅ CORRIGIDO: Usar padrão useTRPC
   const agentsQuery = useQuery(
     trpc.app.aiStudio.findAiAgents.queryOptions({
       limite: 50,

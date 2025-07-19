@@ -90,6 +90,8 @@ export const aiStudioRouter = {
       }),
     )
     .query(async ({ input, ctx }) => {
+      console.log("🔍 [AI_STUDIO_ROUTER] findAiLibraries called");
+      console.log("Call stack:", new Error().stack);
       try {
         const { limite, offset } = input;
 

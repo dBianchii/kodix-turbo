@@ -96,7 +96,6 @@ export function LibrariesSection() {
   const [libraryToDelete, setLibraryToDelete] = useState<any>(null);
   const [libraryToEdit, setLibraryToEdit] = useState<any>(null);
 
-  // ✅ CORRIGIDO: Usar padrão useTRPC
   const librariesQuery = useQuery(
     trpc.app.aiStudio.findAiLibraries.queryOptions({
       limite: 50,

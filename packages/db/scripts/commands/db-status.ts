@@ -10,8 +10,8 @@ import { count, eq } from "drizzle-orm";
 
 config({ path: ".env" });
 
-import { db } from "../src/client";
-import { aiModel, aiProvider, aiTeamProviderToken } from "../src/schema";
+import { db } from "../../src/client";
+import { aiModel, aiProvider, aiTeamProviderToken } from "../../src/schema";
 
 async function quickStatus() {
   console.log("🔍 Quick Database Status Check (Studio-safe)\n");
@@ -21,7 +21,7 @@ async function quickStatus() {
     const providers = await db.select().from(aiProvider);
     console.log(`📊 Providers: ${providers.length}`);
     if (providers.length > 0) {
-      console.table(providers.map(p => ({
+      console.table(providers.map((p: { providerId: string; name: string; baseUrl?: string | null }) => ({
         providerId: p.providerId,
         name: p.name,
         baseUrl: p.baseUrl || 'Default'
@@ -39,7 +39,7 @@ async function quickStatus() {
     console.log(`\n📊 Team Tokens: ${tokens.length}`);
     
     if (tokens.length > 0) {
-      const tokensByProvider = tokens.reduce((acc, token) => {
+      const tokensByProvider = tokens.reduce((acc: Record<string, number>, token: { providerId: string }) => {
         acc[token.providerId] = (acc[token.providerId] || 0) + 1;
         return acc;
       }, {} as Record<string, number>);
@@ -57,15 +57,15 @@ async function quickStatus() {
     const modelsWithProviders = await db.query.aiModel.findMany({
       with: { provider: true }
     });
-    const orphanedModels = modelsWithProviders.filter(m => !m.provider);
+    const orphanedModels = modelsWithProviders.filter((m: { provider: any }) => !m.provider);
     
     if (orphanedModels.length > 0) {
       console.log(`⚠️  ${orphanedModels.length} models with invalid provider references`);
     }
     
     // Check for models without tokens
-    const providerIdsWithTokens = [...new Set(tokens.map(t => t.providerId))];
-    const modelsWithoutTokens = modelsWithProviders.filter(m => 
+    const providerIdsWithTokens = [...new Set(tokens.map((t: { providerId: string }) => t.providerId))];
+    const modelsWithoutTokens = modelsWithProviders.filter((m: { provider: any; providerId: string }) => 
       m.provider && !providerIdsWithTokens.includes(m.providerId)
     );
     

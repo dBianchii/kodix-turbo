@@ -10,8 +10,8 @@ import { eq, inArray, not } from "drizzle-orm";
 
 config({ path: ".env" });
 
-import { db } from "../src/client";
-import { aiModel, aiProvider, aiTeamProviderToken } from "../src/schema";
+import { db } from "../../src/client";
+import { aiModel, aiProvider, aiTeamProviderToken } from "../../src/schema";
 
 async function autoFix() {
   console.log("🔧 Automatic Database Fix (Studio-safe)\n");
@@ -54,7 +54,7 @@ async function autoFix() {
     console.log("\n2️⃣ Checking for orphaned models...");
     
     const validProviders = await db.select({ providerId: aiProvider.providerId }).from(aiProvider);
-    const validProviderIds = validProviders.map(p => p.providerId);
+    const validProviderIds = validProviders.map((p: { providerId: string }) => p.providerId);
     
     if (validProviderIds.length > 0) {
       const orphanedModels = await db
@@ -84,7 +84,7 @@ async function autoFix() {
     console.log("\n3️⃣ Checking models without provider tokens...");
     
     const tokensWithProviders = await db.select().from(aiTeamProviderToken);
-    const providerIdsWithTokens = [...new Set(tokensWithProviders.map(t => t.providerId))];
+    const providerIdsWithTokens = [...new Set(tokensWithProviders.map((t: { providerId: string }) => t.providerId))];
     
     if (providerIdsWithTokens.length > 0) {
       const modelsWithoutTokens = await db

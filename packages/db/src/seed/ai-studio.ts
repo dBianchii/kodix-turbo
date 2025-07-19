@@ -100,7 +100,7 @@ export async function seedAiStudio() {
             await aiStudioRepository.AiProviderRepository.create(providerData);
           if (provider) {
             createdProviders.push(provider);
-            console.log(`✅ Provider created: ${provider.name}`);
+            console.log(`✅ Provider created: ${(provider as any).name}`);
           }
         }
       } catch (error) {

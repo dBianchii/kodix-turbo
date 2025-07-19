@@ -27,7 +27,7 @@ async function testAiProvider() {
 
     const model = await aiStudioRepository.AiModelRepository.create({
       modelId: "test-model-id",
-      providerId: provider.providerId,
+      providerId: (provider as any).providerId,
       config: { temperature: 0.7 },
       enabled: true,
     });
@@ -44,7 +44,7 @@ async function testAiProvider() {
       const token =
         await aiStudioRepository.AiTeamProviderTokenRepository.create({
           teamId: teams[0]!.id,
-          providerId: provider.providerId,
+          providerId: (provider as any).providerId,
           token: "test-token-12345",
         });
 

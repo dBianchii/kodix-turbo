@@ -155,6 +155,7 @@ function AppSidebar({
         staleTime: 5 * 60 * 1000,
         gcTime: 10 * 60 * 1000,
         refetchOnWindowFocus: false,
+        // ✅ User is authenticated in (authed) route group
       },
     ),
   );
@@ -164,6 +165,7 @@ function AppSidebar({
       staleTime: 5 * 60 * 1000,
       gcTime: 10 * 60 * 1000,
       refetchOnWindowFocus: false,
+      enabled: false, // ✅ Disable until user is authenticated
     }),
   );
 

@@ -5,6 +5,7 @@ import { fileURLToPath } from "url";
 import { and, eq } from "@kdx/db";
 import { db } from "@kdx/db/client";
 import { aiModel, aiProvider } from "@kdx/db/schema";
+import { jsonProviderService } from "@kdx/db/services/json-provider.service";
 
 
 export interface NormalizedModel {
@@ -84,22 +85,18 @@ export class AiModelSyncService {
         );
       }
 
-      // 2. Find the actual provider ID from the database
+      // 2. Find the actual provider ID from the JSON service
       const dbProviderName = providerConfig.name;
 
-      const provider = await db
-        .select({ providerId: aiProvider.providerId })
-        .from(aiProvider)
-        .where(eq(aiProvider.name, dbProviderName))
-        .limit(1);
+      const provider = await jsonProviderService.findByName(dbProviderName);
 
-      if (!provider.length || !provider[0]) {
+      if (!provider) {
         throw new Error(
-          `Provider '${providerId}' not found in database. Please create the provider first.`,
+          `Provider '${providerId}' not found in configuration. Please check supported-providers.json.`,
         );
       }
 
-      const actualProviderId = provider[0].providerId;
+      const actualProviderId = provider.providerId;
 
       // 3. Load models from synced-models.json (pre-approved Kodix data)
       const freshModels = await this.fetchFreshModels(providerId);
@@ -347,10 +344,8 @@ export class AiModelSyncService {
         `[AiModelSyncService] Supported providers: ${supportedProviderNames.join(", ")}`,
       );
 
-      // Find all providers in database
-      const allProviders = await db
-        .select({ providerId: aiProvider.providerId, name: aiProvider.name })
-        .from(aiProvider);
+      // Find all providers from JSON service
+      const allProviders = await jsonProviderService.getAllProviders();
 
       // Find providers that are not in the supported list
       const unsupportedProviders = allProviders.filter(
