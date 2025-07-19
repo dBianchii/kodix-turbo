@@ -37,7 +37,7 @@ export interface ModelSyncDiff {
 interface SupportedProviderConfig {
   name: string; // Database name (e.g., "OpenAI")
   base_url: string; // API URL
-  sync_name: string; // Lowercase name used in synced-models.json (e.g., "openai")
+  providerId: string; // Provider identifier used in database (e.g., "openai")
 }
 
 interface SupportedProvidersData {
@@ -63,10 +63,10 @@ export class AiModelSyncService {
     return JSON.parse(readFileSync(supportedProvidersPath, "utf-8"));
   }
 
-  private findProviderBySync(syncName: string): SupportedProviderConfig | null {
+  private findProviderBySync(providerId: string): SupportedProviderConfig | null {
     const supportedProviders = this.getSupportedProviders();
     return (
-      supportedProviders.providers.find((p) => p.sync_name === syncName) || null
+      supportedProviders.providers.find((p) => p.providerId === providerId) || null
     );
   }
 
@@ -77,7 +77,7 @@ export class AiModelSyncService {
       if (!providerConfig) {
         const supportedProviders = this.getSupportedProviders();
         const supportedSyncNames = supportedProviders.providers.map(
-          (p) => p.sync_name,
+          (p) => p.providerId,
         );
         throw new Error(
           `Unsupported provider: ${providerId}. Supported providers: ${supportedSyncNames.join(", ")}`,
@@ -88,7 +88,7 @@ export class AiModelSyncService {
       const dbProviderName = providerConfig.name;
 
       const provider = await db
-        .select({ id: aiProvider.id })
+        .select({ providerId: aiProvider.providerId })
         .from(aiProvider)
         .where(eq(aiProvider.name, dbProviderName))
         .limit(1);
@@ -99,7 +99,7 @@ export class AiModelSyncService {
         );
       }
 
-      const actualProviderId = provider[0].id;
+      const actualProviderId = provider[0].providerId;
 
       // 3. Load models from synced-models.json (pre-approved Kodix data)
       const freshModels = await this.fetchFreshModels(providerId);
@@ -349,7 +349,7 @@ export class AiModelSyncService {
 
       // Find all providers in database
       const allProviders = await db
-        .select({ id: aiProvider.id, name: aiProvider.name })
+        .select({ providerId: aiProvider.providerId, name: aiProvider.name })
         .from(aiProvider);
 
       // Find providers that are not in the supported list
@@ -381,7 +381,7 @@ export class AiModelSyncService {
           .from(aiModel)
           .where(
             and(
-              eq(aiModel.providerId, provider.id),
+              eq(aiModel.providerId, provider.providerId),
               eq(aiModel.status, "active"),
             ),
           );
@@ -392,7 +392,7 @@ export class AiModelSyncService {
             .set({ status: "archived", updatedAt: new Date() })
             .where(
               and(
-                eq(aiModel.providerId, provider.id),
+                eq(aiModel.providerId, provider.providerId),
                 eq(aiModel.status, "active"),
               ),
             );

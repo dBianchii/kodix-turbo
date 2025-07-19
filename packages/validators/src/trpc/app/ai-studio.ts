@@ -12,7 +12,7 @@ export const createAiProviderSchema = z.object({
 export type CreateAiProviderInput = z.infer<typeof createAiProviderSchema>;
 
 export const updateAiProviderSchema = z.object({
-  id: z.string(),
+  providerId: z.string(),
   name: z.string().min(1, "Nome é obrigatório").optional(),
   baseUrl: z.string().url("URL base deve ser válida").optional(),
   apiKeyTemplate: z.string().optional(),

@@ -573,7 +573,7 @@ export function ModelsSection() {
                       </FormControl>
                       <SelectContent>
                         {providers.map((option) => (
-                          <SelectItem key={option.id} value={option.id}>
+                          <SelectItem key={option.providerId} value={option.providerId}>
                             {option.name}
                           </SelectItem>
                         ))}
@@ -700,7 +700,7 @@ export function ModelsSection() {
                       </FormControl>
                       <SelectContent>
                         {providers.map((option) => (
-                          <SelectItem key={option.id} value={option.id}>
+                          <SelectItem key={option.providerId} value={option.providerId}>
                             {option.name}
                           </SelectItem>
                         ))}

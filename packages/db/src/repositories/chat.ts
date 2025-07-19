@@ -35,7 +35,7 @@ export const ChatFolderRepository = {
           columns: { modelId: true, providerId: true },
           with: {
             provider: {
-              columns: { id: true, name: true },
+              columns: { providerId: true, name: true },
             },
           },
         },
@@ -97,7 +97,7 @@ export const ChatFolderRepository = {
           columns: { modelId: true, providerId: true },
           with: {
             provider: {
-              columns: { id: true, name: true },
+              columns: { providerId: true, name: true },
             },
           },
         },
@@ -189,7 +189,7 @@ export const ChatSessionRepository = {
           },
           with: {
             provider: {
-              columns: { id: true, name: true },
+              columns: { providerId: true, name: true },
             },
           },
         },
@@ -258,7 +258,7 @@ export const ChatSessionRepository = {
           columns: { modelId: true, providerId: true },
           with: {
             provider: {
-              columns: { id: true, name: true },
+              columns: { providerId: true, name: true },
             },
           },
         },

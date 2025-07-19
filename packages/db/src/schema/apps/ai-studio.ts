@@ -26,14 +26,14 @@ import {
 export const aiProvider = mysqlTable(
   "ai_provider",
   (t) => ({
-    id: nanoidPrimaryKey(t),
+    providerId: nanoidPrimaryKey(t), // Renamed from 'id'
     name: t.varchar({ length: 100 }).notNull(),
     baseUrl: t.text(),
-    createdAt: t.timestamp().defaultNow().notNull(),
+    // createdAt: REMOVED COMPLETELY
   }),
   (table) => ({
     nameIdx: index("ai_provider_name_idx").on(table.name),
-    createdAtIdx: index("ai_provider_created_at_idx").on(table.createdAt),
+    // createdAtIdx: REMOVED - no longer needed
   }),
 );
 
@@ -45,8 +45,8 @@ export const aiModel = mysqlTable(
     // universalModelId: REMOVED COMPLETELY
     providerId: t
       .varchar({ length: NANOID_SIZE })
-      .notNull()
-      .references(() => aiProvider.id),
+      .notNull(),
+      // .references(() => aiProvider.id), // FK removed
     status: mysqlEnum("status", ["active", "archived"])
       .default("active")
       .notNull(),
@@ -119,8 +119,8 @@ export const aiTeamProviderToken = mysqlTable(
     teamId: teamIdReferenceCascadeDelete(t),
     providerId: t
       .varchar({ length: NANOID_SIZE })
-      .notNull()
-      .references(() => aiProvider.id),
+      .notNull(),
+      // .references(() => aiProvider.id), // FK removed
     token: t.text().notNull(),
     createdAt: t.timestamp().defaultNow().notNull(),
     updatedAt: t.timestamp().onUpdateNow(),
@@ -148,8 +148,8 @@ export const aiTeamModelConfig = mysqlTable(
     teamId: teamIdReferenceCascadeDelete(t),
     aiModelId: t
       .varchar({ length: MODEL_ID_SIZE })
-      .notNull()
-      .references(() => aiModel.modelId, { onDelete: "cascade" }),
+      .notNull(),
+      // .references(() => aiModel.modelId, { onDelete: "cascade" }), // FK removed
     enabled: t.boolean().default(false).notNull(),
     isDefault: t.boolean().default(false).notNull(),
     priority: t.int().default(0),
@@ -185,7 +185,7 @@ export const aiProviderRelations = relations(aiProvider, ({ many }) => ({
 export const aiModelRelations = relations(aiModel, ({ one, many }) => ({
   provider: one(aiProvider, {
     fields: [aiModel.providerId],
-    references: [aiProvider.id],
+    references: [aiProvider.providerId], // Updated reference
   }),
   teamConfigs: many(aiTeamModelConfig),
 }));
@@ -222,7 +222,7 @@ export const aiTeamProviderTokenRelations = relations(
     }),
     provider: one(aiProvider, {
       fields: [aiTeamProviderToken.providerId],
-      references: [aiProvider.id],
+      references: [aiProvider.providerId], // Updated reference
     }),
   }),
 );

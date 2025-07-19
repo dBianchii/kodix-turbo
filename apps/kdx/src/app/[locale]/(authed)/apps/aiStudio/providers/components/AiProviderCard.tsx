@@ -54,7 +54,7 @@ export function AiProviderCard({
 }: AiProviderCardProps) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const { deletar, isDeleting } = useAiProviderForm();
-  const { hasToken } = useProviderHasToken(provider.id);
+  const { hasToken } = useProviderHasToken(provider.providerId);
 
   const handleDelete = () => {
     deletar(provider);
@@ -79,13 +79,7 @@ export function AiProviderCard({
                 <Badge variant={hasToken ? "default" : "secondary"}>
                   {hasToken ? "Configurado" : "Sem Token"}
                 </Badge>
-                <span className="text-muted-foreground flex items-center gap-1 text-xs">
-                  <Calendar className="h-3 w-3" />
-                  {formatDistanceToNow(new Date(provider.createdAt), {
-                    addSuffix: true,
-                    locale: ptBR,
-                  })}
-                </span>
+                {/* createdAt field removed - no longer displaying creation date */}
               </div>
             </div>
 
@@ -100,16 +94,16 @@ export function AiProviderCard({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => onVisualizar?.(provider.id)}>
+                <DropdownMenuItem onClick={() => onVisualizar?.(provider.providerId)}>
                   <Eye className="mr-2 h-4 w-4" />
                   Visualizar
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onEditar?.(provider.id)}>
+                <DropdownMenuItem onClick={() => onEditar?.(provider.providerId)}>
                   <Edit className="mr-2 h-4 w-4" />
                   Editar
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => onGerenciarToken?.(provider.id)}
+                  onClick={() => onGerenciarToken?.(provider.providerId)}
                 >
                   <Key className="mr-2 h-4 w-4" />
                   Gerenciar Token
@@ -172,7 +166,7 @@ export function AiProviderCard({
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() => onGerenciarToken?.(provider.id)}
+                onClick={() => onGerenciarToken?.(provider.providerId)}
               >
                 <Key className="mr-1 h-3 w-3" />
                 Token
@@ -180,7 +174,7 @@ export function AiProviderCard({
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() => onVisualizar?.(provider.id)}
+                onClick={() => onVisualizar?.(provider.providerId)}
               >
                 Ver detalhes
               </Button>

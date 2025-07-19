@@ -12,10 +12,10 @@ Synchronizes AI models from multiple providers (OpenAI, Google, Anthropic, xAI) 
 # Edit: config/supported-providers.json
 {
   "providers": [
-    {"name": "OpenAI", "base_url": "https://api.openai.com", "sync_name": "openai"},
-    {"name": "Google", "base_url": "https://generativelanguage.googleapis.com", "sync_name": "google"},
-    {"name": "Anthropic", "base_url": "https://api.anthropic.com", "sync_name": "anthropic"},
-    {"name": "XAI", "base_url": "https://api.x.ai/v1", "sync_name": "xai"}
+    {"name": "OpenAI", "baseUrl": "https://api.openai.com", "providerId": "openai"},
+    {"name": "Google", "baseUrl": "https://generativelanguage.googleapis.com", "providerId": "google"},
+    {"name": "Anthropic", "baseUrl": "https://api.anthropic.com", "providerId": "anthropic"},
+    {"name": "XAI", "baseUrl": "https://api.x.ai/v1", "providerId": "xai"}
   ]
 }
 ```
@@ -171,13 +171,13 @@ ai-model-sync-adapter/
   "providers": [
     {
       "name": "OpenAI",
-      "base_url": "https://api.openai.com",
-      "sync_name": "openai"
+      "baseUrl": "https://api.openai.com",
+      "providerId": "openai"
     },
     {
       "name": "Google", 
-      "base_url": "https://generativelanguage.googleapis.com",
-      "sync_name": "google"
+      "baseUrl": "https://generativelanguage.googleapis.com",
+      "providerId": "google"
     }
   ]
 }

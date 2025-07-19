@@ -207,9 +207,9 @@ export function ProvidersSection() {
   };
 
   const handleEditSubmit = (data: EditProviderFormData) => {
-    if (providerToEdit?.id) {
+    if (providerToEdit?.providerId) {
       updateProviderMutation.mutate({
-        id: providerToEdit.id,
+        providerId: providerToEdit.providerId,
         name: data.name,
         baseUrl: data.baseUrl,
       });
@@ -240,9 +240,9 @@ export function ProvidersSection() {
   };
 
   const handleDeleteConfirm = () => {
-    if (providerToDelete?.id) {
+    if (providerToDelete?.providerId) {
       deleteProviderMutation.mutate({
-        id: providerToDelete.id,
+        providerId: providerToDelete.providerId,
       });
     }
   };
@@ -331,13 +331,12 @@ export function ProvidersSection() {
                   <TableHead>URL Base</TableHead>
                   <TableHead>Modelos</TableHead>
                   <TableHead>Tokens</TableHead>
-                  <TableHead>Criado em</TableHead>
                   <TableHead className="w-[70px]">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {providers.map((provider: any) => (
-                  <TableRow key={provider.id}>
+                  <TableRow key={provider.providerId}>
                     <TableCell className="font-medium">
                       <div className="flex items-center gap-2">
                         <div className="bg-primary/10 rounded p-1">
@@ -382,9 +381,6 @@ export function ProvidersSection() {
                           Sem token
                         </Badge>
                       )}
-                    </TableCell>
-                    <TableCell>
-                      {new Date(provider.createdAt).toLocaleDateString("pt-BR")}
                     </TableCell>
                     <TableCell>
                       <DropdownMenu>

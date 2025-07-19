@@ -20,11 +20,11 @@ async function enableOpenAIModels() {
       return;
     }
 
-    console.log(`✅ Provider OpenAI encontrado: ${openaiProvider.id}`);
+    console.log(`✅ Provider OpenAI encontrado: ${openaiProvider.providerId}`);
 
     // 2. Buscar modelos OpenAI desabilitados
     const openaiModels = await db.query.aiModel.findMany({
-      where: eq(aiModel.providerId, openaiProvider.id),
+      where: eq(aiModel.providerId, openaiProvider.providerId),
     });
 
     console.log(`📋 Modelos OpenAI encontrados: ${openaiModels.length}`);

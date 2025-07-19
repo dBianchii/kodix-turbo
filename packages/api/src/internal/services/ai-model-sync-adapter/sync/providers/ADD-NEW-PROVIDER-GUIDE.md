@@ -598,11 +598,11 @@ private async fetch[ProviderName]Models(): Promise<NormalizedModelAdapterOut[]> 
   "providers": [
     {
       "name": "openai",
-      "base_url": "https://api.openai.com"
+      "baseUrl": "https://api.openai.com"
     },
     {
       "name": "[provider-name]", 
-      "base_url": "[PROVIDER_BASE_URL]"
+      "baseUrl": "[PROVIDER_BASE_URL]"
     }
   ]
 }
@@ -646,8 +646,8 @@ Add provider to examples:
 ```json
 {
   "providers": [
-    {"name": "openai", "base_url": "https://api.openai.com"},
-    {"name": "[provider-name]", "base_url": "[PROVIDER_BASE_URL]"}
+    {"name": "openai", "baseUrl": "https://api.openai.com"},
+    {"name": "[provider-name]", "baseUrl": "[PROVIDER_BASE_URL]"}
   ]
 }
 ```

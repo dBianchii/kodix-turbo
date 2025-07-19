@@ -405,7 +405,7 @@ export function TokensSection() {
                       </FormControl>
                       <SelectContent>
                         {providers.map((provider: any) => (
-                          <SelectItem key={provider.id} value={provider.id}>
+                          <SelectItem key={provider.providerId} value={provider.providerId}>
                             {provider.name}
                           </SelectItem>
                         ))}

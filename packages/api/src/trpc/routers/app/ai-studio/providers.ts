@@ -16,9 +16,9 @@ import { AiModelSyncService } from "../../../../internal/services/ai-model-sync.
 import { aiStudioInstalledMiddleware } from "../../../middlewares";
 import { protectedProcedure } from "../../../procedures";
 
-// Simple ID schema
-const idSchema = z.object({
-  id: z.string(),
+// Simple providerId schema
+const providerIdSchema = z.object({
+  providerId: z.string(),
 });
 
 export const aiProvidersRouter = {
@@ -60,10 +60,10 @@ export const aiProvidersRouter = {
     }),
 
   findAiProviderById: protectedProcedure
-    .input(idSchema)
+    .input(providerIdSchema)
     .query(async ({ input }) => {
       try {
-        return await aiStudioRepository.AiProviderRepository.findById(input.id);
+        return await aiStudioRepository.AiProviderRepository.findById(input.providerId);
       } catch (error) {
         console.error("[AI_PROVIDERS_ROUTER] findAiProviderById:", error);
         throw new TRPCError({
@@ -76,10 +76,10 @@ export const aiProvidersRouter = {
   updateAiProvider: protectedProcedure
     .input(updateAiProviderSchema)
     .mutation(async ({ input }) => {
-      const { id, ...data } = input;
+      const { providerId, ...data } = input;
       try {
         const provider = await aiStudioRepository.AiProviderRepository.update(
-          id,
+          providerId,
           data,
         );
         return provider;
@@ -94,10 +94,10 @@ export const aiProvidersRouter = {
     }),
 
   deleteAiProvider: protectedProcedure
-    .input(idSchema)
+    .input(providerIdSchema)
     .mutation(async ({ input }) => {
       try {
-        await aiStudioRepository.AiProviderRepository.delete(input.id);
+        await aiStudioRepository.AiProviderRepository.delete(input.providerId);
         return { success: true };
       } catch (error) {
         console.error("Error deleting AI provider:", error);

@@ -96,19 +96,19 @@ export const AiProviderRepository = {
 
     const [result] = await db.insert(aiProvider).values(data).$returningId();
     if (!result) throw new Error("Falha ao criar provider");
-    return AiProviderRepository.findById(result.id);
+    return AiProviderRepository.findById(result.providerId);
   },
 
   // Buscar por ID
-  findById: async (id: string) => {
+  findById: async (providerId: string) => {
     return db.query.aiProvider.findFirst({
-      where: eq(aiProvider.id, id),
+      where: eq(aiProvider.providerId, providerId),
       with: {
         models: {
           columns: { modelId: true, enabled: true },
         },
         tokens: {
-          columns: { id: true, teamId: true, createdAt: true },
+          columns: { id: true, teamId: true },
         },
       },
     });
@@ -144,26 +144,26 @@ export const AiProviderRepository = {
           columns: { modelId: true, enabled: true },
         },
         tokens: {
-          columns: { id: true, teamId: true, createdAt: true },
+          columns: { id: true, teamId: true },
         },
       },
     });
   },
 
   // Atualizar provider
-  update: async (id: string, data: Partial<typeof aiProvider.$inferInsert>) => {
-    await db.update(aiProvider).set(data).where(eq(aiProvider.id, id));
-    return AiProviderRepository.findById(id);
+  update: async (providerId: string, data: Partial<typeof aiProvider.$inferInsert>) => {
+    await db.update(aiProvider).set(data).where(eq(aiProvider.providerId, providerId));
+    return AiProviderRepository.findById(providerId);
   },
 
   // Excluir provider com validações
-  delete: async (id: string) => {
+  delete: async (providerId: string) => {
     return db.transaction(async (tx) => {
       // Verificar se há modelos usando este provider
       const [modelsCount] = await tx
         .select({ count: count() })
         .from(aiModel)
-        .where(eq(aiModel.providerId, id));
+        .where(eq(aiModel.providerId, providerId));
 
       if ((modelsCount?.count ?? 0) > 0) {
         throw new Error(
@@ -175,7 +175,7 @@ export const AiProviderRepository = {
       const [tokensCount] = await tx
         .select({ count: count() })
         .from(aiTeamProviderToken)
-        .where(eq(aiTeamProviderToken.providerId, id));
+        .where(eq(aiTeamProviderToken.providerId, providerId));
 
       if ((tokensCount?.count ?? 0) > 0) {
         throw new Error(
@@ -184,7 +184,7 @@ export const AiProviderRepository = {
       }
 
       // Excluir provider
-      await tx.delete(aiProvider).where(eq(aiProvider.id, id));
+      await tx.delete(aiProvider).where(eq(aiProvider.providerId, providerId));
     });
   },
 
@@ -216,7 +216,7 @@ export const AiModelRepository = {
       where: eq(aiModel.modelId, modelId),
       with: {
         provider: {
-          columns: { id: true, name: true, baseUrl: true },
+          columns: { providerId: true, name: true, baseUrl: true },
         },
       },
     });
@@ -272,7 +272,7 @@ export const AiModelRepository = {
       orderBy: [asc(aiModel.modelId)],
       with: {
         provider: {
-          columns: { id: true, name: true, baseUrl: true },
+          columns: { providerId: true, name: true, baseUrl: true },
         },
       },
     });
@@ -325,14 +325,14 @@ export const AiModelRepository = {
       where: eq(
         aiModel.providerId,
         db
-          .select({ id: aiProvider.id })
+          .select({ providerId: aiProvider.providerId })
           .from(aiProvider)
           .where(eq(aiProvider.name, providerName))
           .limit(1),
       ),
       with: {
         provider: {
-          columns: { id: true, name: true, baseUrl: true },
+          columns: { providerId: true, name: true, baseUrl: true },
         },
       },
     });
@@ -728,7 +728,7 @@ export const AiTeamProviderTokenRepository = {
           columns: { id: true, name: true },
         },
         provider: {
-          columns: { id: true, name: true, baseUrl: true },
+          columns: { providerId: true, name: true, baseUrl: true },
         },
       },
     });
@@ -751,7 +751,7 @@ export const AiTeamProviderTokenRepository = {
       ),
       with: {
         provider: {
-          columns: { id: true, name: true, baseUrl: true },
+          columns: { providerId: true, name: true, baseUrl: true },
         },
       },
     });
@@ -773,7 +773,7 @@ export const AiTeamProviderTokenRepository = {
     }
     return AiTeamProviderTokenRepository.findByTeamAndProvider(
       teamId,
-      provider.id,
+      provider.providerId,
     );
   },
 
@@ -783,7 +783,7 @@ export const AiTeamProviderTokenRepository = {
       where: eq(aiTeamProviderToken.teamId, teamId),
       with: {
         provider: {
-          columns: { id: true, name: true, baseUrl: true },
+          columns: { providerId: true, name: true, baseUrl: true },
         },
       },
       orderBy: [asc(aiTeamProviderToken.createdAt)],
@@ -864,7 +864,7 @@ export const AiTeamModelConfigRepository = {
           columns: { modelId: true, enabled: true },
           with: {
             provider: {
-              columns: { id: true, name: true, baseUrl: true },
+              columns: { providerId: true, name: true, baseUrl: true },
             },
           },
         },
@@ -884,7 +884,7 @@ export const AiTeamModelConfigRepository = {
           columns: { modelId: true, enabled: true },
           with: {
             provider: {
-              columns: { id: true, name: true, baseUrl: true },
+              columns: { providerId: true, name: true, baseUrl: true },
             },
           },
         },
@@ -919,7 +919,7 @@ export const AiTeamModelConfigRepository = {
           columns: { modelId: true, enabled: true },
           with: {
             provider: {
-              columns: { id: true, name: true, baseUrl: true },
+              columns: { providerId: true, name: true, baseUrl: true },
             },
           },
         },
@@ -1187,7 +1187,7 @@ export const AiTeamModelConfigRepository = {
       where: eq(aiModel.enabled, true),
       with: {
         provider: {
-          columns: { id: true, name: true, baseUrl: true },
+          columns: { providerId: true, name: true, baseUrl: true },
         },
       },
     });

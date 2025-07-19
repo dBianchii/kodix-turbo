@@ -1,24 +1,24 @@
 {
   "providers": [
     {
+      "providerId": "openai",
       "name": "OpenAI",
-      "base_url": "https://api.openai.com/v1",
-      "sync_name": "openai"
+      "baseUrl": "https://api.openai.com/v1"
     },
     {
+      "providerId": "google",
       "name": "Google",
-      "base_url": "https://generativelanguage.googleapis.com",
-      "sync_name": "google"
+      "baseUrl": "https://generativelanguage.googleapis.com"
     },
     {
+      "providerId": "anthropic",
       "name": "Anthropic",
-      "base_url": "https://api.anthropic.com/v1",
-      "sync_name": "anthropic"
+      "baseUrl": "https://api.anthropic.com/v1"
     },
     {
+      "providerId": "xai",
       "name": "XAI",
-      "base_url": "https://api.x.ai/v1",
-      "sync_name": "xai"
+      "baseUrl": "https://api.x.ai/v1"
     }
   ]
 }

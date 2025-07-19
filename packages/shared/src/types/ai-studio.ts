@@ -1,9 +1,9 @@
 // Tipos para AI Provider
 export interface AiProvider {
-  id: string;
+  providerId: string; // Renamed from 'id'
   name: string;
   baseUrl?: string;
-  createdAt: Date;
+  // createdAt: REMOVED COMPLETELY
   models?: AiModel[];
   tokens?: AiProviderToken[];
 }

@@ -87,7 +87,7 @@ export interface ProviderModelsSummaryOutput {
 
 interface SupportedProvider {
   name: string;
-  base_url: string;
+  baseUrl: string;
 }
 
 interface SupportedProvidersConfig {

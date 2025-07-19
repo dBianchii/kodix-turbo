@@ -8,10 +8,10 @@ import { z } from "zod";
 
 // Tipos temporários - serão substituídos pelos tipos reais quando resolver imports
 interface AiProvider {
-  id: string;
+  providerId: string; // Renamed from 'id'
   name: string;
   baseUrl?: string;
-  createdAt: Date;
+  // createdAt: REMOVED COMPLETELY
   models?: AiModel[];
   tokens?: any[];
 }
@@ -133,15 +133,15 @@ export function useAiProviderForm(
 
     // Mock response
     onSuccess?.({
-      id: id || `provider-${Date.now()}`,
+      providerId: id || `provider-${Date.now()}`, // Renamed from 'id'
       name: data.name,
       baseUrl: data.baseUrl,
-      createdAt: new Date(),
+      // createdAt: REMOVED COMPLETELY
     });
   };
 
   const deletar = (provider: AiProvider) => {
-    console.log("Deleting provider:", provider.id);
+    console.log("Deleting provider:", provider.providerId);
     toast({
       title: "Provider excluído",
       description: "O provider foi removido com sucesso.",

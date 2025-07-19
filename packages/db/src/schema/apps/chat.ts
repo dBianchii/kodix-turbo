@@ -31,7 +31,8 @@ export const chatFolder = mysqlTable(
       .references(() => users.id),
     name: t.varchar({ length: 100 }).notNull(),
     aiAgentId: t.varchar({ length: NANOID_SIZE }).references(() => aiAgent.id),
-    aiModelId: t.varchar({ length: MODEL_ID_SIZE }).references(() => aiModel.modelId),
+    aiModelId: t.varchar({ length: MODEL_ID_SIZE }),
+    // .references(() => aiModel.modelId), // FK removed
     createdAt: t.timestamp().defaultNow().notNull(),
     updatedAt: t.timestamp().onUpdateNow(),
   }),
@@ -61,8 +62,8 @@ export const chatSession = mysqlTable(
     aiAgentId: t.varchar({ length: NANOID_SIZE }).references(() => aiAgent.id),
     aiModelId: t
       .varchar({ length: MODEL_ID_SIZE })
-      .notNull()
-      .references(() => aiModel.modelId),
+      .notNull(),
+      // .references(() => aiModel.modelId), // FK removed
     title: t.varchar({ length: DEFAULTLENGTH }).notNull(),
     createdAt: t.timestamp().defaultNow().notNull(),
     updatedAt: t.timestamp().onUpdateNow(),

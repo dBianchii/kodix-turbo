@@ -186,13 +186,13 @@ export async function seedAiStudioWithTeam(teamId: string, userId?: string) {
           const existingToken =
             await aiStudioRepository.AiTeamProviderTokenRepository.findByTeamAndProvider(
               teamId,
-              provider.id,
+              provider.providerId,
             );
 
           if (!existingToken) {
             await aiStudioRepository.AiTeamProviderTokenRepository.create({
               teamId,
-              providerId: provider.id,
+              providerId: provider.providerId,
               token: tokenData.token,
             });
             tokensCreated++;
