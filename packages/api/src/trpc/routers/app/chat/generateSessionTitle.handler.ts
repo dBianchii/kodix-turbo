@@ -5,6 +5,7 @@ import { chatAppId } from "@kdx/shared";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 import { AiStudioService } from "../../../../internal/services/ai-studio.service";
+import { ProviderConfigService } from "../../../../internal/services/provider-config.service";
 
 export async function generateSessionTitleHandler({
   input,
@@ -71,13 +72,18 @@ export async function generateSessionTitleHandler({
         requestingApp: chatAppId,
       });
 
+      // Get provider config
+      const providerConfig = ProviderConfigService.getProviderById(preferredModel.providerId);
+      if (!providerConfig) {
+        throw new Error(`Provider ${preferredModel.providerId} not found`);
+      }
+
       if (!providerToken.token) {
         throw new Error("Token do provider não disponível");
       }
 
       // Configurar API
-      const baseUrl =
-        preferredModel.provider?.baseUrl || "https://api.openai.com/v1";
+      const baseUrl = providerConfig.baseUrl || "https://api.openai.com/v1";
       const apiUrl = `${baseUrl}/chat/completions`;
 
       const modelConfig = (preferredModel.config || {}) as {

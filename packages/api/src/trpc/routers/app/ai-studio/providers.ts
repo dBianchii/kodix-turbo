@@ -4,15 +4,14 @@ import { z } from "zod/v4";
 
 import { aiStudioRepository } from "@kdx/db/repositories";
 import {
-  createAiProviderSchema,
   enableProviderModelsSchema,
   findAiProvidersSchema,
   toggleGlobalModelSchema,
-  updateAiProviderSchema,
 } from "@kdx/validators/trpc/app";
 
 // Provider validation is now handled by the sync service reading from supported-providers.json
 import { AiModelSyncService } from "../../../../internal/services/ai-model-sync.service";
+import { ProviderConfigService } from "../../../../internal/services/provider-config.service";
 import { aiStudioInstalledMiddleware } from "../../../middlewares";
 import { protectedProcedure } from "../../../procedures";
 
@@ -22,34 +21,29 @@ const providerIdSchema = z.object({
 });
 
 export const aiProvidersRouter = {
-  createAiProvider: protectedProcedure
-    .input(createAiProviderSchema)
-    .mutation(async ({ input }) => {
-      try {
-        const provider =
-          await aiStudioRepository.AiProviderRepository.create(input);
-        return provider;
-      } catch (error) {
-        console.error("Error creating AI provider:", error);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to create AI provider",
-          cause: error,
-        });
-      }
-    }),
-
   findAiProviders: protectedProcedure
     .input(findAiProvidersSchema)
     .use(aiStudioInstalledMiddleware)
     .query(async ({ input }) => {
       try {
-        const { limite, offset, ...filters } = input;
-        return await aiStudioRepository.AiProviderRepository.findMany({
-          limite,
-          offset,
-          ...filters,
-        });
+        const { limite, offset } = input;
+        
+        // Get providers from configuration file instead of database
+        const allProviders = ProviderConfigService.getProviders();
+        
+        // Apply pagination
+        const startIndex = offset || 0;
+        const endIndex = startIndex + (limite || 50);
+        const providers = allProviders.slice(startIndex, endIndex);
+        
+        // Transform to match expected response format
+        const transformedProviders = providers.map(provider => ({
+          ...provider,
+          models: [], // Models will be fetched separately if needed
+          tokens: [], // Tokens will be fetched separately if needed
+        }));
+        
+        return transformedProviders;
       } catch (error) {
         console.error("[AI_PROVIDERS_ROUTER] findAiProviders:", error);
         throw new TRPCError({
@@ -63,48 +57,31 @@ export const aiProvidersRouter = {
     .input(providerIdSchema)
     .query(async ({ input }) => {
       try {
-        return await aiStudioRepository.AiProviderRepository.findById(input.providerId);
+        const provider = ProviderConfigService.getProviderById(input.providerId);
+        
+        if (!provider) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: `Provider with ID ${input.providerId} not found`,
+          });
+        }
+        
+        // Transform to match expected response format
+        return {
+          ...provider,
+          models: [], // Models will be fetched separately if needed
+          tokens: [], // Tokens will be fetched separately if needed
+        };
       } catch (error) {
         console.error("[AI_PROVIDERS_ROUTER] findAiProviderById:", error);
+        
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+        
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to fetch provider",
-        });
-      }
-    }),
-
-  updateAiProvider: protectedProcedure
-    .input(updateAiProviderSchema)
-    .mutation(async ({ input }) => {
-      const { providerId, ...data } = input;
-      try {
-        const provider = await aiStudioRepository.AiProviderRepository.update(
-          providerId,
-          data,
-        );
-        return provider;
-      } catch (error) {
-        console.error("Error updating AI provider:", error);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to update AI provider",
-          cause: error,
-        });
-      }
-    }),
-
-  deleteAiProvider: protectedProcedure
-    .input(providerIdSchema)
-    .mutation(async ({ input }) => {
-      try {
-        await aiStudioRepository.AiProviderRepository.delete(input.providerId);
-        return { success: true };
-      } catch (error) {
-        console.error("Error deleting AI provider:", error);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to delete AI provider",
-          cause: error,
         });
       }
     }),

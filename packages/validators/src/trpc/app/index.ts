@@ -104,9 +104,7 @@ export type TGetAppActivityLogsInputSchema = z.infer<
 
 // Export AI Studio validators
 export {
-  // AI Provider
-  createAiProviderSchema,
-  updateAiProviderSchema,
+  // AI Provider (read-only, CRUD operations removed)
   findAiProvidersSchema,
 
   // AI Model

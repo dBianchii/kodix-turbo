@@ -7,6 +7,7 @@ import { chatAppId } from "@kdx/shared";
 import type { TProtectedProcedureContext } from "../../../procedures";
 import { AiStudioService } from "../../../../internal/services/ai-studio.service";
 import { ChatService } from "../../../../internal/services/chat.service";
+import { ProviderConfigService } from "../../../../internal/services/provider-config.service";
 
 // Tipos para o modelo
 interface ModelToUse {
@@ -135,10 +136,15 @@ export async function createEmptySessionHandler({
             requestingApp: chatAppId,
           });
 
+          // Get provider config
+          const providerConfig = ProviderConfigService.getProviderById(firstModel.providerId);
+          if (!providerConfig) {
+            throw new Error(`Provider ${firstModel.providerId} not found`);
+          }
+
           console.log("🔍 [CREATE_EMPTY] Token encontrado:", !!providerToken.token);
           if (providerToken.token) {
-            const baseUrl =
-              firstModel.provider?.baseUrl || "https://api.openai.com/v1";
+            const baseUrl = providerConfig.baseUrl || "https://api.openai.com/v1";
             const apiUrl = `${baseUrl}/chat/completions`;
 
             const modelConfig = (firstModel.config || {}) as {

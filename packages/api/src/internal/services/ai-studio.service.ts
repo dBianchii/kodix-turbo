@@ -16,6 +16,7 @@ import {
 
 // ChatService is imported but used in commented code for future reference
 import { EntityNotFoundError, ValidationError } from "./errors";
+import { ProviderConfigService } from "./provider-config.service";
 
 // Platform Instructions (Level 1) <instructions>
 const PLATFORM_BASE_INSTRUCTIONS = {
@@ -468,7 +469,12 @@ export class AiStudioService {
     model: any,
     token: string,
   ): Promise<{ provider: any; modelName: string }> {
-    const providerName = model.provider.name.toLowerCase();
+    // Get provider config from ProviderConfigService
+    const providerConfig = ProviderConfigService.getProviderById(model.providerId);
+    if (!providerConfig) {
+      throw new Error(`Provider ${model.providerId} not found`);
+    }
+    const providerName = providerConfig.name.toLowerCase();
     const modelConfig = model.config;
     const modelName =
       modelConfig?.modelId || modelConfig?.version || model.modelId;
@@ -478,7 +484,7 @@ export class AiStudioService {
         return {
           provider: createOpenAI({
             apiKey: token,
-            baseURL: model.provider.baseUrl || undefined,
+            baseURL: providerConfig.baseUrl || undefined,
           })(modelName),
           modelName,
         };
@@ -487,7 +493,7 @@ export class AiStudioService {
         return {
           provider: createAnthropic({
             apiKey: token,
-            baseURL: model.provider.baseUrl || undefined,
+            baseURL: providerConfig.baseUrl || undefined,
           })(modelName),
           modelName,
         };
@@ -504,7 +510,7 @@ export class AiStudioService {
         return {
           provider: createXai({
             apiKey: token,
-            baseURL: model.provider.baseUrl || undefined,
+            baseURL: providerConfig.baseUrl || undefined,
             headers: {
               Accept: "text/event-stream",
               "Cache-Control": "no-cache",
@@ -514,7 +520,7 @@ export class AiStudioService {
         };
 
       default:
-        throw new Error(`Provider ${model.provider.name} not supported`);
+        throw new Error(`Provider ${providerConfig.name} not supported`);
     }
   }
 
@@ -563,32 +569,38 @@ export class AiStudioService {
         model = availableModels[0]!;
       }
 
-      // 2. Get provider token
+      // 2. Get provider config
+      const providerConfig = ProviderConfigService.getProviderById(model.providerId);
+      if (!providerConfig) {
+        throw new Error(`Provider ${model.providerId} not found`);
+      }
+
+      // 3. Get provider token
       const providerToken = await this.getProviderToken({
         providerId: model.providerId,
         teamId,
         requestingApp: chatAppId,
       });
 
-      // 3. Create provider instance
+      // 4. Create provider instance
       const { provider: vercelModel, modelName } = await this.createAIProvider(
         model,
         providerToken.token,
       );
 
-      // 4. Get system prompt (includes agent instructions if applicable)
+      // 5. Get system prompt (includes agent instructions if applicable)
       const systemPrompt = await this.getSystemPrompt({
         teamId,
         userId,
         sessionId,
       });
 
-      // 5. Format messages with system prompt
+      // 6. Format messages with system prompt
       const formattedMessages = systemPrompt
         ? [{ role: "system" as const, content: systemPrompt }, ...messages]
         : messages;
 
-      // 6. Execute streaming with Vercel AI SDK
+      // 7. Execute streaming with Vercel AI SDK
       const result = streamText({
         model: vercelModel,
         messages: formattedMessages,
@@ -600,7 +612,7 @@ export class AiStudioService {
             requestedModel: modelName,
             actualModelUsed: modelName,
             providerId: model.providerId,
-            providerName: model.provider.name,
+            providerName: providerConfig.name,
             usage: usage || null,
             finishReason: finishReason || "stop",
             timestamp: new Date().toISOString(),

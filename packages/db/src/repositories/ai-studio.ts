@@ -5,7 +5,6 @@ import {
   aiAgent,
   aiLibrary,
   aiModel,
-  aiProvider,
   aiTeamModelConfig,
   aiTeamProviderToken,
 } from "../schema/apps/ai-studio";
@@ -86,101 +85,8 @@ function validateGoogleModelName(modelName: string): {
   return { isValid };
 }
 
-export const AiProviderRepository = {
-  // Criar novo provider - NOT SUPPORTED with JSON backend
-  create: async (data: { name: string; baseUrl?: string }) => {
-    throw new Error("Creating providers is not supported. Providers are managed via supported-providers.json");
-  },
-
-  // Buscar por ID
-  findById: async (providerId: string) => {
-    const provider = await jsonProviderService.findById(providerId);
-    if (!provider) return null;
-    
-    // Fetch related models from database
-    const models = await db.query.aiModel.findMany({
-      where: eq(aiModel.providerId, providerId),
-      columns: { modelId: true, enabled: true },
-    });
-    
-    // Fetch related tokens from database
-    const tokens = await db.query.aiTeamProviderToken.findMany({
-      where: eq(aiTeamProviderToken.providerId, providerId),
-      columns: { id: true, teamId: true },
-    });
-    
-    return {
-      ...provider,
-      models,
-      tokens,
-    };
-  },
-
-  // Buscar por nome
-  findByName: async (name: string) => {
-    const provider = await jsonProviderService.findByName(name);
-    if (!provider) return null;
-    
-    // Fetch related models from database
-    const models = await db.query.aiModel.findMany({
-      where: eq(aiModel.providerId, provider.providerId),
-      columns: { modelId: true, enabled: true },
-    });
-    
-    return {
-      ...provider,
-      models,
-    };
-  },
-
-  // Listar providers
-  findMany: async (
-    params: {
-      limite?: number;
-      offset?: number;
-    } = {},
-  ) => {
-    const providers = await jsonProviderService.findMany(params);
-    
-    // For each provider, fetch related data from database
-    const providersWithRelations = await Promise.all(
-      providers.map(async (provider) => {
-        const models = await db.query.aiModel.findMany({
-          where: eq(aiModel.providerId, provider.providerId),
-          columns: { modelId: true, enabled: true },
-        });
-        
-        const tokens = await db.query.aiTeamProviderToken.findMany({
-          where: eq(aiTeamProviderToken.providerId, provider.providerId),
-          columns: { id: true, teamId: true },
-        });
-        
-        return {
-          ...provider,
-          models,
-          tokens,
-        };
-      })
-    );
-    
-    return providersWithRelations;
-  },
-
-  // Atualizar provider - NOT SUPPORTED with JSON backend
-  update: async (providerId: string, data: Partial<typeof aiProvider.$inferInsert>) => {
-    throw new Error("Updating providers is not supported. Providers are managed via supported-providers.json");
-  },
-
-  // Excluir provider - NOT SUPPORTED with JSON backend
-  delete: async (providerId: string) => {
-    throw new Error("Deleting providers is not supported. Providers are managed via supported-providers.json");
-  },
-
-  // Adicionar método count
-  count: async () => {
-    return jsonProviderService.count();
-  },
-};
+// AiProviderRepository has been removed - providers are now managed via JSON configuration
+// Use ProviderConfigService from @kdx/api for provider operations
 
 export const AiModelRepository = {
   // Criar novo modelo
@@ -201,11 +107,7 @@ export const AiModelRepository = {
   findById: async (modelId: string) => {
     return db.query.aiModel.findFirst({
       where: eq(aiModel.modelId, modelId),
-      with: {
-        provider: {
-          columns: { providerId: true, name: true, baseUrl: true },
-        },
-      },
+      // Note: provider information should be fetched separately using ProviderConfigService
     });
   },
 
@@ -257,11 +159,7 @@ export const AiModelRepository = {
       limit: limite,
       offset,
       orderBy: [asc(aiModel.modelId)],
-      with: {
-        provider: {
-          columns: { providerId: true, name: true, baseUrl: true },
-        },
-      },
+      // Note: provider information should be fetched separately using ProviderConfigService
     });
   },
 
@@ -306,23 +204,10 @@ export const AiModelRepository = {
       .orderBy(asc(aiModel.modelId));
   },
 
-  // Buscar modelos por provider (nome)
+  // Buscar modelos por provider (nome) - DEPRECATED
+  // Use ProviderConfigService.getProviderByName() and then filter models by providerId
   findByProviderName: async (providerName: string) => {
-    return db.query.aiModel.findMany({
-      where: eq(
-        aiModel.providerId,
-        db
-          .select({ providerId: aiProvider.providerId })
-          .from(aiProvider)
-          .where(eq(aiProvider.name, providerName))
-          .limit(1),
-      ),
-      with: {
-        provider: {
-          columns: { providerId: true, name: true, baseUrl: true },
-        },
-      },
-    });
+    throw new Error("findByProviderName is deprecated. Use ProviderConfigService.getProviderByName() and filter models by providerId instead.");
   },
 
   // Atualizar modelo
@@ -714,9 +599,7 @@ export const AiTeamProviderTokenRepository = {
         team: {
           columns: { id: true, name: true },
         },
-        provider: {
-          columns: { providerId: true, name: true, baseUrl: true },
-        },
+        // Note: provider information should be fetched separately using ProviderConfigService
       },
     });
 
@@ -736,11 +619,7 @@ export const AiTeamProviderTokenRepository = {
         eq(aiTeamProviderToken.teamId, teamId),
         eq(aiTeamProviderToken.providerId, providerId),
       ),
-      with: {
-        provider: {
-          columns: { providerId: true, name: true, baseUrl: true },
-        },
-      },
+      // Note: provider information should be fetched separately using ProviderConfigService
     });
 
     if (!result) return null;
@@ -752,27 +631,17 @@ export const AiTeamProviderTokenRepository = {
     };
   },
 
-  // Buscar token por team e provider name
+  // Buscar token por team e provider name - DEPRECATED
+  // Use ProviderConfigService.getProviderByName() and then call findByTeamAndProvider()
   findByTeamAndProviderName: async (teamId: string, providerName: string) => {
-    const provider = await AiProviderRepository.findByName(providerName);
-    if (!provider) {
-      return null;
-    }
-    return AiTeamProviderTokenRepository.findByTeamAndProvider(
-      teamId,
-      provider.providerId,
-    );
+    throw new Error("findByTeamAndProviderName is deprecated. Use ProviderConfigService.getProviderByName() and then call findByTeamAndProvider() instead.");
   },
 
   // Listar tokens por team
   findByTeam: async (teamId: string) => {
     const results = await db.query.aiTeamProviderToken.findMany({
       where: eq(aiTeamProviderToken.teamId, teamId),
-      with: {
-        provider: {
-          columns: { providerId: true, name: true, baseUrl: true },
-        },
-      },
+      // Note: provider information should be fetched separately using ProviderConfigService
       orderBy: [asc(aiTeamProviderToken.createdAt)],
     });
 
@@ -848,12 +717,8 @@ export const AiTeamModelConfigRepository = {
           columns: { id: true, name: true },
         },
         model: {
-          columns: { modelId: true, enabled: true },
-          with: {
-            provider: {
-              columns: { providerId: true, name: true, baseUrl: true },
-            },
-          },
+          columns: { modelId: true, enabled: true, providerId: true },
+          // Note: provider information should be fetched separately using ProviderConfigService
         },
       },
     });
@@ -868,12 +733,8 @@ export const AiTeamModelConfigRepository = {
       ),
       with: {
         model: {
-          columns: { modelId: true, enabled: true },
-          with: {
-            provider: {
-              columns: { providerId: true, name: true, baseUrl: true },
-            },
-          },
+          columns: { modelId: true, enabled: true, providerId: true },
+          // Note: provider information should be fetched separately using ProviderConfigService
         },
       },
     });
@@ -903,12 +764,8 @@ export const AiTeamModelConfigRepository = {
       ],
       with: {
         model: {
-          columns: { modelId: true, enabled: true },
-          with: {
-            provider: {
-              columns: { providerId: true, name: true, baseUrl: true },
-            },
-          },
+          columns: { modelId: true, enabled: true, providerId: true },
+          // Note: provider information should be fetched separately using ProviderConfigService
         },
       },
     });
@@ -924,9 +781,8 @@ export const AiTeamModelConfigRepository = {
       orderBy: [asc(aiTeamModelConfig.priority)],
       with: {
         model: {
-          with: {
-            provider: true,
-          },
+          columns: { modelId: true, enabled: true, providerId: true },
+          // Note: provider information should be fetched separately using ProviderConfigService
         },
       },
     });
@@ -1049,9 +905,8 @@ export const AiTeamModelConfigRepository = {
       ),
       with: {
         model: {
-          with: {
-            provider: true,
-          },
+          columns: { modelId: true, enabled: true, providerId: true },
+          // Note: provider information should be fetched separately using ProviderConfigService
         },
       },
     });
@@ -1172,11 +1027,7 @@ export const AiTeamModelConfigRepository = {
     // Buscar todos os modelos ativos globalmente primeiro
     const allEnabledModels = await db.query.aiModel.findMany({
       where: eq(aiModel.enabled, true),
-      with: {
-        provider: {
-          columns: { providerId: true, name: true, baseUrl: true },
-        },
-      },
+      // Note: provider information should be fetched separately using ProviderConfigService
     });
 
     // Filtrar apenas modelos dos provedores que o team tem token
@@ -1208,11 +1059,11 @@ export const AiTeamModelConfigRepository = {
       };
     });
 
-    // Ordenar por provedor (alfabeticamente), depois por prioridade, mantendo ordem fixa
+    // Ordenar por providerId (alfabeticamente), depois por prioridade, mantendo ordem fixa
     return availableModels.sort((a, b) => {
-      // 1. Primeiro ordenar por provedor (ordem alfabética)
-      const providerComparison = (a.provider.name || "").localeCompare(
-        b.provider.name || "",
+      // 1. Primeiro ordenar por provedor (ordem alfabética por providerId)
+      const providerComparison = (a.providerId || "").localeCompare(
+        b.providerId || "",
       );
       if (providerComparison !== 0) {
         return providerComparison;
@@ -1247,268 +1098,13 @@ export const AiTeamModelConfigRepository = {
     });
   },
 
-  // Testar se um modelo está funcionando
+  // testModel method has been moved to AiStudioService - DEPRECATED
+  // This method contained business logic that should be in the service layer
   testModel: async (
     teamId: string,
     aiModelId: string,
     testPrompt = "Olá! Você está funcionando corretamente?",
   ) => {
-    try {
-      // 1. Verificar se o modelo está disponível para o team
-      const availableModels =
-        await AiTeamModelConfigRepository.findAvailableModelsByTeam(teamId);
-
-      const modelData = availableModels.find((m) => m.modelId === aiModelId);
-
-      if (!modelData) {
-        throw new Error(
-          `Modelo não encontrado ou não disponível para este time. Verifique se o token do provedor está configurado.`,
-        );
-      }
-
-      if (!modelData.provider) {
-        throw new Error("Dados do provedor não foram carregados");
-      }
-
-      // 2. Buscar token do provedor
-      const providerToken =
-        await AiTeamProviderTokenRepository.findByTeamAndProvider(
-          teamId,
-          modelData.providerId,
-        );
-
-      if (!providerToken?.token) {
-        throw new Error(
-          `❌ Token de API não configurado para o provedor ${modelData.provider.name}. Configure o token na seção "Tokens de Acesso" antes de testar o modelo.`,
-        );
-      }
-
-      // 3. Preparar configurações para o teste
-      const modelConfig = (modelData.config as any) || {};
-      const modelName =
-        modelConfig.modelId || modelConfig.version || modelData.modelId;
-      const baseUrl = modelData.provider.baseUrl || "https://api.openai.com/v1";
-
-      // 4. Fazer uma chamada de teste usando configuração específica por provider
-      const startTime = Date.now();
-      const providerName = modelData.provider.name.toLowerCase();
-
-      // Configure request based on provider
-      let requestUrl = `${baseUrl}/chat/completions`;
-      let requestHeaders: Record<string, string> = {
-        "Content-Type": "application/json",
-      };
-      let requestBody: any = {
-        model: modelName,
-        messages: [
-          {
-            role: "user",
-            content: testPrompt,
-          },
-        ],
-        max_tokens: 50,
-        temperature: 0.7,
-      };
-
-      // Provider-specific configurations
-      if (providerName === "google") {
-        // Validate Google model name and provide suggestions
-        const validation = validateGoogleModelName(modelName);
-        if (!validation.isValid) {
-          console.warn(
-            `⚠️ [TEST] Google model name validation failed: ${modelName}`,
-          );
-          if (validation.suggestion) {
-            console.warn(`💡 [TEST] Suggestion: ${validation.suggestion}`);
-          }
-        }
-
-        requestUrl = `${baseUrl}/models/${modelName}:generateContent`;
-        requestHeaders = {
-          "Content-Type": "application/json",
-          "x-goog-api-key": providerToken.token,
-        };
-        requestBody = {
-          contents: [
-            {
-              parts: [
-                {
-                  text: testPrompt,
-                },
-              ],
-            },
-          ],
-          generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 1000,
-          },
-        };
-      } else if (providerName === "anthropic") {
-        requestUrl = `${baseUrl}/messages`;
-        requestHeaders = {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${providerToken.token}`,
-          "anthropic-version": "2023-06-01",
-        };
-        requestBody = {
-          model: modelName,
-          max_tokens: 50,
-          messages: [
-            {
-              role: "user",
-              content: testPrompt,
-            },
-          ],
-        };
-      } else if (providerName === "xai") {
-        requestUrl = `${baseUrl}/chat/completions`;
-        requestHeaders = {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${providerToken.token}`,
-        };
-        // XAI uses standard OpenAI format
-      } else {
-        // Default to OpenAI format
-        requestHeaders = {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${providerToken.token}`,
-        };
-      }
-
-      // Create AbortController for timeout
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
-
-      const testResponse = await fetch(requestUrl, {
-        method: "POST",
-        headers: requestHeaders,
-        body: JSON.stringify(requestBody),
-        signal: controller.signal,
-      });
-
-      clearTimeout(timeoutId);
-
-      const endTime = Date.now();
-      const latencyMs = endTime - startTime;
-
-      if (!testResponse.ok) {
-        const errorText = await testResponse.text();
-        console.error(
-          `❌ [TEST] API Error: ${testResponse.status} - ${errorText}`,
-        );
-
-        // Create detailed error message
-        const errorDetails = {
-          provider: modelData.provider.name,
-          model: modelName,
-          status: testResponse.status,
-          statusText: testResponse.statusText,
-          endpoint: requestUrl,
-          error: errorText,
-          debugInfo: {
-            baseUrl,
-            providerName,
-            modelId: modelData.modelId,
-            hasToken: !!providerToken.token,
-            tokenPrefix: providerToken.token.substring(0, 8) + "...",
-          },
-        };
-
-        throw new Error(
-          `API Error [${testResponse.status}]: ${errorText}\n\nDebug Info:\n${JSON.stringify(errorDetails, null, 2)}`,
-        );
-      }
-
-      const testResult = (await testResponse.json()) as any;
-
-      let responseText = "";
-      let usage = null;
-
-      // Parse response based on provider
-      if (providerName === "google") {
-        // Google Gemini format
-        if (testResult.candidates && testResult.candidates.length > 0) {
-          const candidate = testResult.candidates[0];
-
-          if (candidate.content?.parts && candidate.content.parts.length > 0) {
-            responseText =
-              candidate.content.parts[0].text || "No response text";
-          } else {
-          }
-        } else {
-        }
-
-        if (testResult.usageMetadata) {
-          usage = {
-            promptTokens: testResult.usageMetadata.promptTokenCount || 0,
-            completionTokens:
-              testResult.usageMetadata.candidatesTokenCount || 0,
-            totalTokens: testResult.usageMetadata.totalTokenCount || 0,
-          };
-        }
-      } else if (providerName === "anthropic") {
-        // Anthropic format
-        if (testResult.content && testResult.content.length > 0) {
-          responseText = testResult.content[0].text || "No response text";
-        }
-
-        if (testResult.usage) {
-          usage = {
-            promptTokens: testResult.usage.input_tokens || 0,
-            completionTokens: testResult.usage.output_tokens || 0,
-            totalTokens:
-              (testResult.usage.input_tokens || 0) +
-              (testResult.usage.output_tokens || 0),
-          };
-        }
-      } else {
-        // OpenAI/XAI format
-        if (!testResult.choices || testResult.choices.length === 0) {
-          throw new Error("API response doesn't contain valid choices");
-        }
-
-        responseText =
-          testResult.choices[0]?.message?.content || "No response text";
-        usage = testResult.usage;
-      }
-
-      if (!responseText) {
-        throw new Error("Unable to extract response text from API response");
-      }
-
-      const successResult = {
-        success: true,
-        modelName,
-        providerName: modelData.provider.name,
-        responseText,
-        usage,
-        latencyMs,
-        testPrompt,
-        timestamp: new Date().toISOString(),
-      };
-
-      return successResult;
-    } catch (error: any) {
-      console.error(
-        `❌ [TEST_ERROR] Erro ao testar modelo ${aiModelId}:`,
-        error.message,
-      );
-
-      let errorMessage = error.message;
-
-      // Handle timeout errors specifically
-      if (error.name === "AbortError") {
-        errorMessage = `Timeout: O modelo ${aiModelId} não respondeu em 30 segundos. Isso pode indicar que o modelo está sobrecarregado ou há problemas de rede. Tente novamente em alguns minutos.`;
-      }
-
-      const errorResult = {
-        success: false,
-        aiModelId,
-        error: errorMessage,
-        timestamp: new Date().toISOString(),
-      };
-
-      return errorResult;
-    }
+    throw new Error("testModel is deprecated. Use AiStudioService.testModel() instead.");
   },
 };
