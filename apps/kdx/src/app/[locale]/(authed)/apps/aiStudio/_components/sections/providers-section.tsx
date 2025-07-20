@@ -1,6 +1,14 @@
 "use client";
 
-import { AlertTriangle, Info, RefreshCw } from "lucide-react";
+import { useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  AlertTriangle,
+  CheckCircle,
+  Info,
+  RefreshCw,
+  XCircle,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Alert, AlertDescription } from "@kdx/ui/alert";
@@ -12,27 +20,119 @@ import {
   CardHeader,
   CardTitle,
 } from "@kdx/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@kdx/ui/table";
 
 import { useTRPC } from "~/trpc/react";
-import { AiProviderCard } from "../../providers/components/AiProviderCard";
 
 export function ProvidersSection() {
-  const t = useTranslations("aiStudio.providers");
+  const t = useTranslations("apps.aiStudio.providers");
   const trpc = useTRPC();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isUpdatingModels, setIsUpdatingModels] = useState(false);
 
   // Query providers (now read-only from JSON config)
-  const {
-    data: providers = [],
-    isLoading,
-    isError,
-    refetch,
-  } = trpc.app.aiStudio.findAiProviders.useQuery({
-    limite: 50,
-    offset: 0,
-  });
+  const providersQuery = useQuery(
+    trpc.app.aiStudio.findAiProviders.queryOptions({
+      limite: 50,
+      offset: 0,
+    }),
+  );
+
+  const providers = providersQuery.data ?? [];
+  const isLoading = providersQuery.isLoading || isRefreshing;
+  const isError = providersQuery.isError;
 
   // Query team tokens to show which providers have tokens configured
-  const { data: teamTokens = [] } = trpc.app.aiStudio.findTeamTokens.useQuery();
+  const teamTokensQuery = useQuery(
+    trpc.app.aiStudio.findAiTeamProviderTokens.queryOptions(),
+  );
+  const teamTokens = teamTokensQuery.data ?? [];
+
+  // Mutation for syncing models from providers
+  const syncModelsMutation = useMutation(
+    trpc.app.aiStudio.syncModels.mutationOptions({
+      onSuccess: (data, variables) => {
+        console.log(
+          `✅ Successfully synced models for ${variables.providerId}:`,
+          data,
+        );
+      },
+      onError: (error, variables) => {
+        console.error(
+          `❌ Failed to sync models for ${variables.providerId}:`,
+          error,
+        );
+      },
+    }),
+  );
+
+  // Enhanced refetch function that updates both queries with visual feedback
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    console.log("🔄 Refreshing providers and tokens...");
+    try {
+      // Add minimum delay to ensure user sees the loading state
+      const [refreshResult] = await Promise.all([
+        Promise.all([providersQuery.refetch(), teamTokensQuery.refetch()]),
+        new Promise((resolve) => setTimeout(resolve, 800)), // Minimum 800ms for visual feedback
+      ]);
+      console.log("✅ Refresh completed successfully");
+    } catch (error) {
+      console.error("❌ Error refreshing data:", error);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
+  // Function to update models from all providers
+  const handleUpdateModels = async () => {
+    setIsUpdatingModels(true);
+    console.log("🔄 Updating models from all providers...");
+    try {
+      // Sync models for each provider that has tokens configured
+      const providersWithTokens = providers.filter((provider: any) =>
+        getProviderHasToken(provider.providerId),
+      );
+
+      console.log(
+        `🔄 Syncing models for ${providersWithTokens.length} providers with tokens...`,
+      );
+
+      // Sync models for each provider sequentially
+      for (const provider of providersWithTokens) {
+        console.log(
+          `🔄 Syncing models for ${provider.name} (${provider.providerId})...`,
+        );
+        try {
+          await syncModelsMutation.mutateAsync({
+            providerId: provider.providerId,
+          });
+          console.log(`✅ Successfully synced models for ${provider.name}`);
+        } catch (error) {
+          console.error(
+            `❌ Failed to sync models for ${provider.name}:`,
+            error,
+          );
+        }
+      }
+
+      console.log("✅ Models sync completed for all providers");
+
+      // Refresh the data after updating models
+      await Promise.all([providersQuery.refetch(), teamTokensQuery.refetch()]);
+    } catch (error) {
+      console.error("❌ Error updating models:", error);
+    } finally {
+      setIsUpdatingModels(false);
+    }
+  };
 
   const handleManageToken = (providerId: string) => {
     // Navigate to token management or open token modal
@@ -46,9 +146,7 @@ export function ProvidersSection() {
           <div className="flex items-center justify-between">
             <div>
               <CardTitle>{t("title")}</CardTitle>
-              <CardDescription>
-                {t("description")}
-              </CardDescription>
+              <CardDescription>{t("description")}</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -71,13 +169,17 @@ export function ProvidersSection() {
         <CardContent>
           <Alert variant="destructive">
             <AlertTriangle className="h-4 w-4" />
-            <AlertDescription>
-              {t("failedToLoad")}
-            </AlertDescription>
+            <AlertDescription>{t("failedToLoad")}</AlertDescription>
           </Alert>
-          <Button onClick={() => refetch()} className="mt-4">
-            <RefreshCw className="mr-2 h-4 w-4" />
-            {t("retry")}
+          <Button
+            onClick={handleRefresh}
+            className="mt-4"
+            disabled={isRefreshing}
+          >
+            <RefreshCw
+              className={`mr-2 h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`}
+            />
+            {isRefreshing ? "Tentando novamente..." : t("retry")}
           </Button>
         </CardContent>
       </Card>
@@ -96,14 +198,32 @@ export function ProvidersSection() {
           <div className="flex items-center justify-between">
             <div>
               <CardTitle>{t("title")}</CardTitle>
-              <CardDescription>
-                {t("description")}
-              </CardDescription>
+              <CardDescription>{t("description")}</CardDescription>
             </div>
-            <Button onClick={() => refetch()} variant="outline">
-              <RefreshCw className="mr-2 h-4 w-4" />
-              {t("refresh")}
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                onClick={handleRefresh}
+                variant="outline"
+                disabled={isRefreshing}
+              >
+                <RefreshCw
+                  className={`mr-2 h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`}
+                />
+                {isRefreshing ? "Atualizando..." : t("refresh")}
+              </Button>
+              <Button
+                onClick={handleUpdateModels}
+                variant="default"
+                disabled={isUpdatingModels}
+              >
+                <RefreshCw
+                  className={`mr-2 h-4 w-4 ${isUpdatingModels ? "animate-spin" : ""}`}
+                />
+                {isUpdatingModels
+                  ? "Atualizando Modelos..."
+                  : "Atualizar Modelos"}
+              </Button>
+            </div>
           </div>
         </CardHeader>
         <CardContent>
@@ -115,17 +235,20 @@ export function ProvidersSection() {
           </Alert>
 
           {providers.length === 0 ? (
-            <div className="text-center py-8">
-              <div className="mx-auto w-12 h-12 bg-muted rounded-full flex items-center justify-center mb-4">
-                <AlertTriangle className="h-6 w-6 text-muted-foreground" />
+            <div className="py-8 text-center">
+              <div className="bg-muted mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
+                <AlertTriangle className="text-muted-foreground h-6 w-6" />
               </div>
-              <h3 className="text-lg font-medium mb-2">{t("noProvidersFound")}</h3>
+              <h3 className="mb-2 text-lg font-medium">
+                {t("noProvidersFound")}
+              </h3>
               <p className="text-muted-foreground mb-4">
                 {t("noProvidersFoundDesc")}
               </p>
-              <div className="rounded-md bg-muted p-4 text-left">
-                <p className="text-sm text-muted-foreground">
-                  <strong>{t("configFile")}</strong><br />
+              <div className="bg-muted rounded-md p-4 text-left">
+                <p className="text-muted-foreground text-sm">
+                  <strong>{t("configFile")}</strong>
+                  <br />
                   <code className="text-xs">
                     packages/api/src/internal/services/ai-model-sync-adapter/config/supported-providers.json
                   </code>
@@ -133,36 +256,68 @@ export function ProvidersSection() {
               </div>
             </div>
           ) : (
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {providers.map((provider: any) => (
-                <AiProviderCard
-                  key={provider.providerId}
-                  provider={provider}
-                  hasToken={getProviderHasToken(provider.providerId)}
-                  onManageToken={handleManageToken}
-                />
-              ))}
-            </div>
-          )}
-
-          {providers.length > 0 && (
-            <div className="mt-6 p-4 rounded-md bg-muted/50">
-              <div className="flex items-start gap-3">
-                <Info className="h-5 w-5 text-muted-foreground mt-0.5" />
-                <div className="text-sm text-muted-foreground">
-                  <p className="font-medium mb-1">{t("providerManagement")}</p>
-                  <p>
-                    {t("providerManagementDesc")}
-                  </p>
-                  <p className="mt-2">
-                    <strong>{t("fileLocation")}</strong><br />
-                    <code className="text-xs">
-                      packages/api/src/internal/services/ai-model-sync-adapter/config/supported-providers.json
-                    </code>
-                  </p>
-                </div>
-              </div>
-            </div>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Provedor</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Ações</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {providers.map((provider: any) => (
+                  <TableRow key={provider.providerId}>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <div className="bg-primary/10 flex h-8 w-8 items-center justify-center rounded-full">
+                          <span className="text-primary text-xs font-medium">
+                            {provider.name.charAt(0).toUpperCase()}
+                          </span>
+                        </div>
+                        <div>
+                          <div className="font-medium">{provider.name}</div>
+                          <div className="text-muted-foreground text-sm">
+                            {provider.providerId}
+                          </div>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      {getProviderHasToken(provider.providerId) ? (
+                        <div className="flex items-center gap-2">
+                          <CheckCircle className="h-4 w-4 text-green-500" />
+                          <span className="text-sm text-green-700">
+                            Token Configured
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <XCircle className="h-4 w-4 text-gray-400" />
+                          <span className="text-muted-foreground text-sm">
+                            No Token
+                          </span>
+                        </div>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <span className="text-muted-foreground text-xs">
+                          Read-only
+                        </span>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleManageToken(provider.providerId)}
+                          className="text-xs"
+                        >
+                          Manage Token
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           )}
         </CardContent>
       </Card>
