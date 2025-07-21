@@ -809,6 +809,9 @@ importers:
       '@kdx/auth':
         specifier: workspace:*
         version: link:../../packages/auth
+      '@kdx/biome-config':
+        specifier: workspace:*
+        version: link:../../tooling/biome
       '@kdx/dayjs':
         specifier: workspace:*
         version: link:../../packages/dayjs
@@ -1691,6 +1694,8 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 5.8.2
+
+  tooling/biome: {}
 
   tooling/eslint:
     dependencies:

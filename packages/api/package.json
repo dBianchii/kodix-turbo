@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@casl/ability": "catalog:",
+    "@kdx/biome-config": "workspace:*",
     "@kdx/auth": "workspace:*",
     "@kdx/dayjs": "workspace:*",
     "@kdx/db": "workspace:*",

@@ -16,6 +16,7 @@
     "@formkit/auto-animate": "catalog:",
     "@kdx/api": "workspace:*",
     "@kdx/auth": "workspace:*",
+    "@kdx/biome-config": "workspace:*",
     "@kdx/dayjs": "workspace:*",
     "@kdx/env": "workspace:*",
     "@kdx/locales": "workspace:*",

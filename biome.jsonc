@@ -28,17 +28,7 @@
           "level": "on",
           "options": {
             "paths": {
-              "zod": "Please import from 'zod/v4' instead",
-              "next/link": "Please import from `~/i18n/routing` instead.",
-              "next/navigation": {
-                "importNames": [
-                  "redirect",
-                  "permanentRedirect",
-                  "useRouter",
-                  "usePathname"
-                ],
-                "message": "Please import from `~/i18n/routing` instead."
-              }
+              "zod": "Please import from 'zod/v4' instead"
             }
           }
         }
