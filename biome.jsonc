@@ -2,6 +2,10 @@
   "$schema": "node_modules/@biomejs/biome/configuration_schema.json",
   "extends": ["ultracite"],
   "root": true,
+  "formatter": {
+    "indentStyle": "space",
+    "indentWidth": 2
+  },
   "json": {
     "parser": {
       "allowComments": true
@@ -45,18 +49,33 @@
           "level": "on",
           "options": {
             "groups": [
+              {
+                "type": true,
+                "source": [
+                  "react",
+                  "react/**",
+                  "react-native",
+                  "react-native/**"
+                ]
+              },
+              { "type": true, "source": ["next", "next/**"] },
+              { "type": true, "source": ["expo", "expo/**"] },
+              {
+                "type": true,
+                "source": ["**", "!@kdx/**", "!~/**", "!../**", "!./**"]
+              },
               ["react", "react/**", "react-native", "react-native/**"],
               ["next", "next/**"],
               ["expo", "expo/**"],
-
               ["**", "!@kdx/**", "!~/**", "!../**", "!./**"],
-
               ":BLANK_LINE:",
-
-              ["@kdx/**", "~/**"],
-
+              { "type": true, "source": ["@kdx/**"] },
+              ["@kdx/**"],
               ":BLANK_LINE:",
-
+              { "type": true, "source": ["~/**"] },
+              ["~/**"],
+              ":BLANK_LINE:",
+              { "type": true, "source": ["../**", "./**"] },
               ["../**", "./**"]
             ]
           }
