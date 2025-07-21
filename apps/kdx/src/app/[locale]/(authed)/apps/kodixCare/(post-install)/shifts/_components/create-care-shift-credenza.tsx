@@ -298,9 +298,9 @@ function SelectCaregiver({
           }
         />
       </SelectTrigger>
-      <SelectContent className="[&_*[role=option]]:ps-2 [&_*[role=option]]:pe-8 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:end-2">
+      <SelectContent className="[&_*[role=option]>span]:start-auto [&_*[role=option]>span]:end-2 [&_*[role=option]]:ps-2 [&_*[role=option]]:pe-8">
         {getAllCaregiversQuery.data?.length === 0 ? (
-          <div className="text-muted-foreground text-md flex flex-col items-center justify-center gap-2 p-2">
+          <div className="flex flex-col items-center justify-center gap-2 p-2 text-md text-muted-foreground">
             {t("No caregivers found")}
             {activeTeamQuery.data?.ownerId === user.id ? (
               <Link

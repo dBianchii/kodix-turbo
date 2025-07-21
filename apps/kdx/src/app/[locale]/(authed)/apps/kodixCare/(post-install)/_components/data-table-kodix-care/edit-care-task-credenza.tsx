@@ -144,10 +144,10 @@ export function EditCareTaskCredenza({
                     handleCloseOrOpen(false);
                   })}
                 >
-                  <div className="text-foreground/80 mt-6 flex flex-col gap-2 rounded-md border p-4">
+                  <div className="mt-6 flex flex-col gap-2 rounded-md border p-4 text-foreground/80">
                     <div className="flex gap-2">
                       <div className="flex flex-row items-center gap-2">
-                        <span className="text-sm font-semibold">
+                        <span className="font-semibold text-sm">
                           {task.title ?? null}
                         </span>
                         {task.type === "CRITICAL" && (
@@ -165,11 +165,11 @@ export function EditCareTaskCredenza({
                         {t("Logs")}
                       </Button>
                     </div>
-                    <span className="line-clamp-3 text-xs font-semibold">
+                    <span className="line-clamp-3 font-semibold text-xs">
                       {task.description ?? null}
                     </span>
-                    <span className="flex items-center text-xs font-semibold">
-                      <LuCalendar className="text-muted-foreground mr-2 size-3" />
+                    <span className="flex items-center font-semibold text-xs">
+                      <LuCalendar className="mr-2 size-3 text-muted-foreground" />
                       {format.dateTime(task.date, "shortWithHours")}
                     </span>
                   </div>

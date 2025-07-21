@@ -72,7 +72,7 @@ const TimePickerInput = ({
       setDate(setDateByType(tempDate, newValue, picker));
     }
     if (e.key >= "0" && e.key <= "9") {
-      const newValue = flag ? calculatedValue.slice(1, 2) + e.key : "0" + e.key;
+      const newValue = flag ? calculatedValue.slice(1, 2) + e.key : `0${e.key}`;
       if (flag) onRightFocus?.();
       setFlag((prev) => !prev);
       const tempDate = new Date(date);

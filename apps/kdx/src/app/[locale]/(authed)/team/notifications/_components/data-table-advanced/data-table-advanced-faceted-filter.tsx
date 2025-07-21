@@ -35,7 +35,7 @@ export function DataTableAdvancedFacetedFilter<TData, TValue>({
   const t = useTranslations();
   return (
     <Command className="p-1">
-      <div className="border-input flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-sm shadow-xs [&_[cmdk-input-wrapper]]:border-0 [&_[cmdk-input-wrapper]]:px-0">
+      <div className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs [&_[cmdk-input-wrapper]]:border-0 [&_[cmdk-input-wrapper]]:px-0">
         <CommandInput
           placeholder={title}
           className="h-full border-0 pl-0 ring-0"
@@ -75,7 +75,7 @@ export function DataTableAdvancedFacetedFilter<TData, TValue>({
               >
                 <div
                   className={cn(
-                    "border-primary mr-2 flex size-4 items-center justify-center rounded-sm border",
+                    "mr-2 flex size-4 items-center justify-center rounded-sm border border-primary",
                     isSelected
                       ? "bg-primary text-primary-foreground"
                       : "opacity-50 [&_svg]:invisible",
@@ -85,7 +85,7 @@ export function DataTableAdvancedFacetedFilter<TData, TValue>({
                 </div>
                 {option.icon && (
                   <option.icon
-                    className="text-muted-foreground mr-2 size-4"
+                    className="mr-2 size-4 text-muted-foreground"
                     aria-hidden="true"
                   />
                 )}

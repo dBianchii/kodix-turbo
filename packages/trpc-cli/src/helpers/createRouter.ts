@@ -1,5 +1,5 @@
-import { existsSync } from "fs";
-import fs from "fs/promises";
+import { existsSync } from "node:fs";
+import fs from "node:fs/promises";
 
 import { trpcCliConfig } from "../../config";
 import { logger } from "../utils/logger";
@@ -119,11 +119,10 @@ export const ${newRouterName}Router = {
 
     await addImportStatement(routerFilePath, {
       importName: procedure,
-      importPath:
-        chosenRouterPath
-          .split("/")
-          .map(() => "..")
-          .join("/") + "/../procedures",
+      importPath: `${chosenRouterPath
+        .split("/")
+        .map(() => "..")
+        .join("/")}/../procedures`,
     });
   }
 };

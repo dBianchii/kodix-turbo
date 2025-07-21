@@ -128,7 +128,7 @@ export function CreateTaskDialogButton() {
                     <AvatarWrapper
                       className="mr-2 size-4"
                       src={user.image}
-                      alt={user.name + " avatar"}
+                      alt={`${user.name} avatar`}
                       fallback={<HiUserCircle />}
                     />
                     {user.name}
@@ -159,7 +159,7 @@ export function CreateTaskDialogButton() {
                       onClick={() => {
                         setDueDate(undefined);
                       }}
-                      className="hover:bg-primary/90 hover:text-background ml-2 rounded-full transition-colors"
+                      className="ml-2 rounded-full transition-colors hover:bg-primary/90 hover:text-background"
                     >
                       <LuX className="size-4" />
                     </span>

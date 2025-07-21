@@ -85,7 +85,7 @@ export function RecurrencePicker({
   const [draftFrequency, setDraftFrequency] = useState(frequency);
   const [draftUntil, setDraftUntil] = useState(until);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [draftCount, setDraftCount] = useState(count);
+  const [_draftCount, setDraftCount] = useState(count);
   const [draftWeekdays, setDraftWeekdays] = useState(weekdays);
 
   const discardDraft = useCallback(() => {

@@ -71,7 +71,7 @@ export async function HeroBento() {
               <div className="flex flex-row items-center gap-2">
                 <div className="flex flex-row">
                   {f.icon}
-                  <figcaption className="ml-2 text-sm font-medium dark:text-white">
+                  <figcaption className="ml-2 font-medium text-sm dark:text-white">
                     {f.name}
                   </figcaption>
                 </div>
@@ -92,7 +92,7 @@ export async function HeroBento() {
       cta: "Learn more",
       className: "col-span-3 lg:col-span-2",
       background: (
-        <Command className="absolute top-10 right-10 w-[70%] origin-top translate-x-0 border transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_40%,#000_100%)] group-hover:-translate-x-10">
+        <Command className="group-hover:-translate-x-10 absolute top-10 right-10 w-[70%] origin-top translate-x-0 border transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_40%,#000_100%)]">
           <CommandInput placeholder="Type a command or search..." />
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>

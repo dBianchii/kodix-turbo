@@ -16,7 +16,7 @@ export default function PostHogPageView_DO_NOT_IMPORT_DIRECTLY() {
 
     let url = window.origin + pathname;
     if (searchParams.toString()) {
-      url = url + `?${searchParams.toString()}`;
+      url = `${url}?${searchParams.toString()}`;
     }
     posthog.capture("$pageview", {
       $current_url: url,

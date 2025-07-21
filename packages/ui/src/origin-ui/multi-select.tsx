@@ -40,7 +40,7 @@ interface MultipleSelectorProps {
   /**
    * Only work with `onSearch` prop. Trigger search when `onFocus`.
    * For example, when user click on the input, it will trigger the search to get initial options.
-   **/
+   */
   triggerSearchOnFocus?: boolean;
   /** async search */
   onSearch?: (value: string) => Promise<Option[]>;
@@ -48,7 +48,7 @@ interface MultipleSelectorProps {
    * sync search. This search will not showing loadingIndicator.
    * The rest props are the same as async search.
    * i.e.: creatable, groupBy, delay.
-   **/
+   */
   onSearchSync?: (value: string) => Option[];
   onChange?: (options: Option[]) => void;
   /** Limit the maximum number of selected options. */
@@ -220,11 +220,11 @@ const MultipleSelector = ({
           input.value === "" &&
           selected.length > 0
         ) {
-          const lastSelectOption = selected[selected.length - 1];
+          const lastSelectOption = selected.at(-1);
           // If last item is fixed, we should not remove it.
           if (!lastSelectOption?.fixed) {
             //@ts-expect-error I copied over from origin-ui.
-            handleUnselect(selected[selected.length - 1]);
+            handleUnselect(selected.at(-1));
           }
         }
         // This is not a default behavior of the <input /> field
@@ -236,6 +236,7 @@ const MultipleSelector = ({
     [handleUnselect, selected]
   );
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <biome migration>
   useEffect(() => {
     if (open) {
       document.addEventListener("mousedown", handleClickOutside);
@@ -257,6 +258,7 @@ const MultipleSelector = ({
     }
   }, [value]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <biome migration>
   useEffect(() => {
     /** If `onSearch` is provided, do not trigger options updated. */
     if (!arrayOptions || onSearch) {
@@ -291,7 +293,7 @@ const MultipleSelector = ({
 
     void exec();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearchTerm, groupBy, open, triggerSearchOnFocus]);
+  }, [debouncedSearchTerm, groupBy, open, triggerSearchOnFocus, onSearchSync]);
 
   useEffect(() => {
     /** async search */
@@ -317,7 +319,7 @@ const MultipleSelector = ({
 
     void exec();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearchTerm, groupBy, open, triggerSearchOnFocus]);
+  }, [debouncedSearchTerm, groupBy, open, triggerSearchOnFocus, onSearch]);
 
   const CreatableItem = () => {
     if (!creatable) return;
@@ -541,7 +543,7 @@ const MultipleSelector = ({
               }}
             >
               {isLoading ? (
-                <>{loadingIndicator}</>
+                loadingIndicator
               ) : (
                 <>
                   {EmptyItem()}
@@ -555,38 +557,36 @@ const MultipleSelector = ({
                       heading={key}
                       key={key}
                     >
-                      <>
-                        {dropdowns.map((option) => {
-                          return (
-                            <CommandItem
-                              className={cn(
-                                "cursor-pointer",
-                                option.disable &&
-                                  "pointer-events-none cursor-not-allowed opacity-50"
-                              )}
-                              disabled={option.disable}
-                              key={option.value}
-                              onMouseDown={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                              }}
-                              onSelect={() => {
-                                if (selected.length >= maxSelected) {
-                                  onMaxSelected?.(selected.length);
-                                  return;
-                                }
-                                setInputValue("");
-                                const newOptions = [...selected, option];
-                                setSelected(newOptions);
-                                onChange?.(newOptions);
-                              }}
-                              value={option.value}
-                            >
-                              {option.label}
-                            </CommandItem>
-                          );
-                        })}
-                      </>
+                      {dropdowns.map((option) => {
+                        return (
+                          <CommandItem
+                            className={cn(
+                              "cursor-pointer",
+                              option.disable &&
+                                "pointer-events-none cursor-not-allowed opacity-50"
+                            )}
+                            disabled={option.disable}
+                            key={option.value}
+                            onMouseDown={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                            }}
+                            onSelect={() => {
+                              if (selected.length >= maxSelected) {
+                                onMaxSelected?.(selected.length);
+                                return;
+                              }
+                              setInputValue("");
+                              const newOptions = [...selected, option];
+                              setSelected(newOptions);
+                              onChange?.(newOptions);
+                            }}
+                            value={option.value}
+                          >
+                            {option.label}
+                          </CommandItem>
+                        );
+                      })}
                     </CommandGroup>
                   ))}
                 </>

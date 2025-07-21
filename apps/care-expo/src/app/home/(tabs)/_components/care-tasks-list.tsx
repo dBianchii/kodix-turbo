@@ -182,14 +182,12 @@ export function CareTasksLists() {
         setOpen={setCreateCareTaskSheetOpen}
       />
       {currentlyEditingCareTask && (
-        <>
-          <EditCareTaskSheet
-            task={currentlyEditingCareTask}
-            mutation={editCareTaskMutation}
-            open={editCareTaskSheetOpen}
-            setOpen={setEditCareTaskSheetOpen}
-          />
-        </>
+        <EditCareTaskSheet
+          task={currentlyEditingCareTask}
+          mutation={editCareTaskMutation}
+          open={editCareTaskSheetOpen}
+          setOpen={setEditCareTaskSheetOpen}
+        />
       )}
       <SheetModal
         dismissOnSnapToBottom={false}

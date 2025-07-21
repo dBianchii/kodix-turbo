@@ -41,10 +41,10 @@ export default async function HomePage({
           <div className="container mx-auto flex flex-col">
             <div className="mt-10 grid grid-cols-1">
               <div className="flex flex-col items-center gap-6 pb-8 text-center">
-                <h1 className="bg-linear-to-br from-black from-30% to-black/60 bg-clip-text py-6 text-5xl leading-none font-semibold tracking-tighter text-balance text-transparent sm:text-6xl md:text-7xl lg:text-7xl dark:from-white dark:to-white">
+                <h1 className="text-balance bg-linear-to-br from-30% from-black to-black/60 bg-clip-text py-6 font-semibold text-5xl text-transparent leading-none tracking-tighter sm:text-6xl md:text-7xl lg:text-7xl dark:from-white dark:to-white">
                   {t("home.title")}
                 </h1>
-                <p className="text-muted-foreground max-w-[64rem] text-xl text-balance md:text-xl">
+                <p className="max-w-[64rem] text-balance text-muted-foreground text-xl md:text-xl">
                   {t("home.description")}
                 </p>
                 <div className="flex flex-col gap-4 lg:flex-row">
@@ -56,7 +56,7 @@ export default async function HomePage({
                         size: "lg",
                       }),
                       "gap-2 whitespace-pre md:flex",
-                      "group relative w-full gap-1 overflow-hidden rounded-full text-sm font-semibold tracking-tighter",
+                      "group relative w-full gap-1 overflow-hidden rounded-full font-semibold text-sm tracking-tighter",
                     )}
                   >
                     {t("Browse apps")}
@@ -70,7 +70,7 @@ export default async function HomePage({
                         variant: "ghost",
                       }),
                       "gap-2 whitespace-pre md:flex",
-                      "group relative w-full gap-1 overflow-hidden rounded-full text-sm font-semibold tracking-tighter",
+                      "group relative w-full gap-1 overflow-hidden rounded-full font-semibold text-sm tracking-tighter",
                     )}
                   >
                     {t("Get started")}

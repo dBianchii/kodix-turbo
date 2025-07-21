@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noConsole: <on purpose> */
 import chalk from "chalk";
 
 export const logger = {

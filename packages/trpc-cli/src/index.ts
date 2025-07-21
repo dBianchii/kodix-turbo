@@ -34,7 +34,7 @@ main().catch((err) => {
     logger.error(
       "An unknown error has occurred. Please open an issue on github with the below:"
     );
-    console.log(err);
+    logger.error(err);
   }
   process.exit(1);
 });

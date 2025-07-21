@@ -289,7 +289,7 @@ export function MultiFilterRow<TData>({
         value={filterVariety}
         onValueChange={(value) => setFilterVariety(value)}
       >
-        <SelectTrigger className="hover:bg-muted/50 h-8 w-full truncate px-2 py-0.5">
+        <SelectTrigger className="h-8 w-full truncate px-2 py-0.5 hover:bg-muted/50">
           <SelectValue placeholder={filterVarieties[0]} />
         </SelectTrigger>
         <SelectContent>

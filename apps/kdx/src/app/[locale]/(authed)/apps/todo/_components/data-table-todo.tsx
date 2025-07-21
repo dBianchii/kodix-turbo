@@ -49,7 +49,7 @@ type Status = typeof todos.$inferInsert.status;
 
 declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface TableMeta<TData extends RowData> {
+  interface TableMeta<_TData extends RowData> {
     team: team | undefined;
   }
 }
@@ -118,7 +118,7 @@ export function DataTableTodo({
               setPriority(newData.priority as Priority);
               return { prevData };
             },
-            onError(err, newTodo, ctx) {
+            onError(err, _newTodo, ctx) {
               if (!ctx?.prevData) return;
 
               trpcErrorToastDefault(err);
@@ -175,7 +175,7 @@ export function DataTableTodo({
               setStatus(newData.status);
               return { prevData };
             },
-            onError(err, newTodo, ctx) {
+            onError(err, _newTodo, ctx) {
               if (!ctx?.prevData) return;
 
               trpcErrorToastDefault(err);
@@ -230,7 +230,7 @@ export function DataTableTodo({
               setDueDate(newData.dueDate ?? undefined);
               return { prevData };
             },
-            onError(err, newTodo, ctx) {
+            onError(err, _newTodo, ctx) {
               trpcErrorToastDefault(err);
               // If the mutation fails, use the context-value from onMutate
               setDueDate(ctx?.prevData ?? undefined);
@@ -277,7 +277,7 @@ export function DataTableTodo({
               setAssignedToUserId(newData.assignedToUserId ?? "");
               return { prevData };
             },
-            onError(err, newTodo, ctx) {
+            onError(err, _newTodo, ctx) {
               if (!ctx?.prevData) return;
 
               trpcErrorToastDefault(err);

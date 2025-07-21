@@ -3,7 +3,7 @@
 const { getDefaultConfig } = require("expo/metro-config");
 const { FileStore } = require("metro-cache");
 
-const path = require("path");
+const path = require("node:path");
 
 const config = withTurborepoManagedCache(
   withMonorepoPaths(getDefaultConfig(__dirname)),

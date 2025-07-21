@@ -25,7 +25,7 @@ export default async function SignInPage(props: {
 
   return (
     <section className="mx-auto flex flex-1 flex-col items-center justify-center px-6 py-8 lg:py-0">
-      <Link href="/" className="my-4 text-4xl font-extrabold">
+      <Link href="/" className="my-4 font-extrabold text-4xl">
         Kodix
       </Link>
       <Card className="w-[275px] sm:w-[400px]">
@@ -43,7 +43,7 @@ export default async function SignInPage(props: {
                   <span className="w-full border-t" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background text-muted-foreground px-2">
+                  <span className="bg-background px-2 text-muted-foreground">
                     {t("Or continue with")}
                   </span>
                 </div>
@@ -58,7 +58,7 @@ export default async function SignInPage(props: {
           </div>
         </CardContent>
       </Card>
-      <Link href={signUpHref} className="mt-8 text-sm font-medium">
+      <Link href={signUpHref} className="mt-8 font-medium text-sm">
         {t("Dont have an account")}
       </Link>
     </section>

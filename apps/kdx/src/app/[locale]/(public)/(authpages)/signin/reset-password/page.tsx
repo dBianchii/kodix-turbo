@@ -58,7 +58,7 @@ export default function ForgotPasswordPage(props: {
 
   return (
     <section className="mx-auto flex flex-1 flex-col items-center justify-center px-6 py-8 lg:py-0">
-      <Link href="/" className="my-4 text-4xl font-extrabold">
+      <Link href="/" className="my-4 font-extrabold text-4xl">
         Kodix
       </Link>
       <Card className="w-[275px] sm:w-[400px]">

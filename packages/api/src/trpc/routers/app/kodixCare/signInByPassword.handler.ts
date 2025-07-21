@@ -50,7 +50,7 @@ export const signInByPasswordHandler = async ({
     await userRepository.moveUserToTeam(db, {
       userId,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      newTeamId: _teams[0]!.id,
+      newTeamId: _teams[0]?.id,
     });
   }
 

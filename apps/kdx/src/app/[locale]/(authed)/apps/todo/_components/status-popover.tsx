@@ -118,7 +118,7 @@ export function StatusIcon({
   switch (status) {
     case "TODO":
       return (
-        <LuCircleCheck className={cn("text-foreground size-4", className)} />
+        <LuCircleCheck className={cn("size-4 text-foreground", className)} />
       );
     case "INPROGRESS":
       return (

@@ -31,7 +31,7 @@ export function getValidNumber(
 ) {
   let numericValue = Number.parseInt(value, 10);
 
-  if (!isNaN(numericValue)) {
+  if (!Number.isNaN(numericValue)) {
     if (loop) {
       if (numericValue > max) numericValue = min;
       if (numericValue < min) numericValue = max;
@@ -71,7 +71,7 @@ export function getValidArrowNumber(
   { min, max, step }: GetValidArrowNumberConfig
 ) {
   let numericValue = Number.parseInt(value, 10);
-  if (!isNaN(numericValue)) {
+  if (!Number.isNaN(numericValue)) {
     numericValue += step;
     return getValidNumber(String(numericValue), { min, max, loop: true });
   }

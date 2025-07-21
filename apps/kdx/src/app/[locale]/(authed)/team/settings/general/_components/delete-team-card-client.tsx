@@ -21,7 +21,7 @@ export function DeleteTeamCardClient({ user }: { user: User }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <Card className="border-destructive w-full text-left">
+    <Card className="w-full border-destructive text-left">
       <CardHeader>
         <CardTitle>{t("Delete team")}</CardTitle>
         <CardDescription>
@@ -33,7 +33,7 @@ export function DeleteTeamCardClient({ user }: { user: User }) {
           <div className="flex flex-col space-y-1.5"></div>
         </div>
       </CardContent>
-      <CardFooter className="border-destructive bg-destructive/40 flex justify-end border-t px-6 py-4">
+      <CardFooter className="flex justify-end border-destructive border-t bg-destructive/40 px-6 py-4">
         {/* <CardDescription>
               {t("Please use 32 characters at maximum")}
             </CardDescription> */}

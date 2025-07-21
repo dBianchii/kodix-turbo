@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import fs from "fs/promises";
+import fs from "node:fs/promises";
 
 export async function addImportStatement(
   filePath: string,
@@ -12,7 +12,7 @@ export async function addImportStatement(
   const importRegex = new RegExp(`import\\s+{([^}]*)} from\\s+"${importPath}"`);
   const match = fileContent.match(importRegex);
   if (match) {
-    let importContent = match[1]!.trim();
+    let importContent = match[1]?.trim();
     if (!importContent.includes(importName)) {
       //remove trailing comma if it exists
       if (importContent.endsWith(","))

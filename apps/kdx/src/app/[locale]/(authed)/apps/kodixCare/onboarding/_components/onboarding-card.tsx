@@ -89,7 +89,7 @@ export default function OnboardingCard() {
               {t("apps.kodixCare.onboarding.goToKodixCare")}
               {!isExecuting && (
                 <LuArrowRight
-                  className="ms-2 -me-1 opacity-60 transition-transform group-hover:translate-x-0.5"
+                  className="-me-1 ms-2 opacity-60 transition-transform group-hover:translate-x-0.5"
                   size={16}
                   strokeWidth={2}
                   aria-hidden="true"

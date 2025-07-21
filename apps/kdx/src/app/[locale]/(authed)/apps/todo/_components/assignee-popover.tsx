@@ -40,14 +40,14 @@ export function AssigneePopover({
           <div>
             <AvatarWrapper
               className="h-6 w-6"
-              alt={user.name ? user.name + " avatar" : ""}
+              alt={user.name ? `${user.name} avatar` : ""}
               src={user.image ?? undefined}
               fallback={user.name}
             />
           </div>
         ) : (
           <div>
-            <HiUserCircle className="text-foreground/70 h-6 w-6" />
+            <HiUserCircle className="h-6 w-6 text-foreground/70" />
           </div>
         )}
       </PopoverTrigger>

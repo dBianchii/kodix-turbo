@@ -23,7 +23,7 @@ export const kodixCarePermissionsFactory = ({
 }: {
   t: IsomorficT;
 }): Record<KodixCareRole, PermissionsByRole> => ({
-  ADMIN(user, { can }) {
+  ADMIN(_user, { can }) {
     can("Create", "CareTask");
     can("Delete", "CareTask");
 

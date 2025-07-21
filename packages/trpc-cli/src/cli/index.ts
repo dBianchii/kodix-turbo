@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
+import fs from "node:fs/promises";
+import path from "node:path";
 import vm from "node:vm";
 import * as p from "@clack/prompts";
 import chalk from "chalk";
-import fs from "fs/promises";
-import path from "path";
 import z from "zod/v4";
 
 import { trpcCliConfig } from "../../config";
@@ -124,7 +124,7 @@ export const runCli = async () => {
                 value: "",
               },
             ],
-            initialValue: routers[0]!.value,
+            initialValue: routers[0]?.value,
           });
         }
       },
