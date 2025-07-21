@@ -2,6 +2,9 @@
   "$schema": "node_modules/@biomejs/biome/configuration_schema.json",
   "extends": ["ultracite"],
   "root": true,
+  "files": {
+    "includes": ["**", "!**/rbc-styles.css", "!.vscode/kodix.code-snippets"]
+  },
   "formatter": {
     "indentStyle": "space",
     "indentWidth": 2
