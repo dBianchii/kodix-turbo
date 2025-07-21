@@ -82,11 +82,11 @@ export function NotificationsDateRangePicker({
 
   const [from, to] = useMemo(() => {
     let fromDay: Date | undefined = searchParams.get("from")
-      ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      ? // biome-ignore lint/style/noNonNullAssertion: <biome migration>
         new Date(searchParams.get("from")!)
       : undefined;
     let toDay: Date | undefined = searchParams.get("to")
-      ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      ? // biome-ignore lint/style/noNonNullAssertion: <biome migration>
         new Date(searchParams.get("to")!)
       : undefined;
 

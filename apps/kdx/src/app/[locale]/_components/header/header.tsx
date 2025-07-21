@@ -54,6 +54,7 @@ async function LogoWithAppSwitcher() {
             strokeWidth="1.5"
             viewBox="0 0 24 24"
           >
+            <title>slash Icon</title>
             <path d="M16.88 3.549L7.12 20.451"></path>
           </svg>
           <AppSwitcherClient appsPromise={trpcCaller.app.getInstalled()} />

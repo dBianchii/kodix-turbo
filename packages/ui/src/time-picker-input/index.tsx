@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 "use client";
 
 //?Modified version of https://tie.openstatus.dev/
@@ -58,6 +57,7 @@ const TimePickerInput = ({
     [date, picker]
   );
 
+  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: <biome migration>
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Tab") return;
     e.preventDefault();

@@ -1,22 +1,25 @@
 /**
  * regular expression to check for valid hour format (01-23)
  */
+const hourRegex = /^(0[0-9]|1[0-9]|2[0-3])$/;
 export function isValidHour(value: string) {
-  return /^(0[0-9]|1[0-9]|2[0-3])$/.test(value);
+  return hourRegex.test(value);
 }
 
 /**
  * regular expression to check for valid 12 hour format (01-12)
  */
+const twelveHourRegex = /^(0[1-9]|1[0-2])$/;
 export function isValid12Hour(value: string) {
-  return /^(0[1-9]|1[0-2])$/.test(value);
+  return twelveHourRegex.test(value);
 }
 
 /**
  * regular expression to check for valid minute format (00-59)
  */
+const minuteOrSecondRegex = /^[0-5][0-9]$/;
 export function isValidMinuteOrSecond(value: string) {
-  return /^[0-5][0-9]$/.test(value);
+  return minuteOrSecondRegex.test(value);
 }
 
 interface GetValidNumberConfig {
@@ -25,6 +28,7 @@ interface GetValidNumberConfig {
   loop?: boolean;
 }
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: <biome migration>
 export function getValidNumber(
   value: string,
   { max, min = 0, loop = false }: GetValidNumberConfig

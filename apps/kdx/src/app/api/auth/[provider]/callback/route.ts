@@ -46,7 +46,7 @@ export async function GET(
       });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    // biome-ignore lint/style/noNonNullAssertion: <biome migration>
     const userId = await currentProvider.handleCallback(code, codeVerifier!);
 
     await createDbSessionAndCookie({ userId });

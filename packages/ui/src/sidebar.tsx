@@ -86,6 +86,7 @@ const SidebarProvider = ({
   const [_open, _setOpen] = useState(defaultOpen);
   const open = openProp ?? _open;
   const setOpen = useCallback(
+    // biome-ignore lint/nursery/noShadow: <biome migration>
     (value: boolean | ((value: boolean) => boolean)) => {
       const openState = typeof value === "function" ? value(open) : value;
       if (setOpenProp) {
@@ -95,7 +96,7 @@ const SidebarProvider = ({
       }
 
       // This sets the cookie to keep the sidebar state.
-      // eslint-disable-next-line react-compiler/react-compiler
+      // biome-ignore lint/suspicious/noDocumentCookie: <biome migration>
       document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
     },
     [setOpenProp, open]
@@ -103,7 +104,9 @@ const SidebarProvider = ({
 
   // Helper to toggle the sidebar.
   const toggleSidebar = useCallback(() => {
-    return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open);
+    return isMobile
+      ? setOpenMobile((isOpenMobile) => !isOpenMobile)
+      : setOpen((isOpen) => !isOpen);
   }, [isMobile, setOpen]);
 
   // Adds a keyboard shortcut to toggle the sidebar.

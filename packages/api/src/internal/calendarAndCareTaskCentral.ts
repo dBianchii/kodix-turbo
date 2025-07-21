@@ -161,7 +161,7 @@ export const getCareTaskCompositeId = (compound: {
   eventMasterId: string | null;
   selectedTimeStamp: Date;
 }) => {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  // biome-ignore lint/style/noNonNullAssertion: <fix me>
   if (!compound.eventMasterId) return compound.id!;
   return getCalendarTaskCompositeId({
     eventMasterId: compound.eventMasterId,

@@ -62,21 +62,28 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         async transform(content, answers) {
           if ("deps" in answers && typeof answers.deps === "string") {
             const pkg = JSON.parse(content) as PackageJson;
-            for (const dep of answers.deps.split(" ").filter(Boolean)) {
-              const version = await fetch(
-                `https://registry.npmjs.org/-/package/${dep}/dist-tags`
-              )
+            const deps = answers.deps.split(" ").filter(Boolean);
+
+            // Fetch all versions in parallel
+            const versionPromises = deps.map((dep) =>
+              fetch(`https://registry.npmjs.org/-/package/${dep}/dist-tags`)
                 .then((res) => res.json())
-                .then((json) => json.latest);
-              if (!pkg.dependencies) pkg.dependencies = {};
+                .then((json) => ({ dep, version: json.latest }))
+            );
+
+            const results = await Promise.all(versionPromises);
+
+            if (!pkg.dependencies) pkg.dependencies = {};
+            for (const { dep, version } of results) {
               pkg.dependencies[dep] = `^${version}`;
             }
+
             return JSON.stringify(pkg, null, 2);
           }
           return content;
         },
       },
-      async (answers) => {
+      (answers) => {
         /**
          * Install deps and format everything
          */

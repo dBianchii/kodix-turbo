@@ -107,6 +107,7 @@ export async function getAppActivityLogs({
         message: `${t("api.appActivityLogs.created")} ${JSON.stringify(
           diffs.reduce(
             (acc, diff) => ({
+              // biome-ignore lint/performance/noAccumulatingSpread: <biome migration>
               ...acc,
               [diff.path.join(".")]: diff.rhs,
             }),

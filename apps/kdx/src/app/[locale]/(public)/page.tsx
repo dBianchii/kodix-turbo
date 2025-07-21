@@ -6,6 +6,8 @@ import { cn } from "@kdx/ui";
 import { buttonVariants } from "@kdx/ui/button";
 import { RadialGradient } from "@kdx/ui/magic-ui/radial-gradient";
 
+import { Link } from "~/i18n/routing";
+
 import { Footer } from "../_components/footer";
 import { StaticHeader } from "../_components/header/static-header";
 import { HeroBento } from "../_components/hero-bento";
@@ -48,8 +50,8 @@ export default async function HomePage({
                   {t("home.description")}
                 </p>
                 <div className="flex flex-col gap-4 lg:flex-row">
-                  <a
-                    href="#"
+                  <Link
+                    href="/apps"
                     className={cn(
                       buttonVariants({
                         variant: "default",
@@ -61,9 +63,9 @@ export default async function HomePage({
                   >
                     {t("Browse apps")}
                     <LuChevronRight className="ml-1 size-4 transition-all duration-300 ease-out group-hover:translate-x-1" />
-                  </a>
-                  <a
-                    href="#"
+                  </Link>
+                  <Link
+                    href="/signin"
                     className={cn(
                       buttonVariants({
                         size: "lg",
@@ -75,7 +77,7 @@ export default async function HomePage({
                   >
                     {t("Get started")}
                     <LuChevronRight className="ml-1 size-4 transition-all duration-300 ease-out group-hover:translate-x-1" />
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>

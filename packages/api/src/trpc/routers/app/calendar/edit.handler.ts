@@ -286,9 +286,9 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
 
         const newStartDate = input.from
           ? dayjs(oldRule.options.dtstart)
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              // biome-ignore lint/style/noNonNullAssertion: <biome migration>
               .hour(Number(input.from.split(":")[0]!))
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              // biome-ignore lint/style/noNonNullAssertion: <biome migration>
               .minute(Number(input.from.split(":")[1]!))
               .toDate()
           : oldRule.options.dtstart;

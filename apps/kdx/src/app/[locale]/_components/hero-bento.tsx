@@ -58,9 +58,9 @@ export async function HeroBento() {
           pauseOnHover
           className="absolute top-10 [--duration:20s] [mask-image:linear-gradient(to_top,transparent_40%,#000_100%)]"
         >
-          {apps.map((f, idx) => (
+          {apps.map((f) => (
             <figure
-              key={idx}
+              key={`${f.name}-hero-bento`}
               className={cn(
                 "relative w-36 cursor-pointer overflow-hidden rounded-xl border p-4",
                 "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]",
@@ -137,8 +137,8 @@ export async function HeroBento() {
 
   return (
     <BentoGrid>
-      {features.map((feature, idx) => (
-        <BentoCard key={idx} {...feature} />
+      {features.map((feature) => (
+        <BentoCard key={`${feature.name}-hero-bento`} {...feature} />
       ))}
     </BentoGrid>
   );

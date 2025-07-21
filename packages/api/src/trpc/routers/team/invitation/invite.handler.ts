@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { TRPCError } from "@trpc/server";
 
 import type { invitations } from "@kdx/db/schema";
@@ -90,6 +89,7 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
     await teamRepository.createManyInvitations(
       db,
       successes.map((success) => {
+        // biome-ignore lint/style/noNonNullAssertion: <will never be undefined>
         return _invitations.find((x) => x.id === success.value.id)!;
       }),
     );

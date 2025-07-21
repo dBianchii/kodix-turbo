@@ -46,7 +46,7 @@ export function DataTableAdvancedToolbar<TData>({
     return options
       .filter((option) => searchParams.has(option.value as string))
       .map((option) => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        // biome-ignore lint/style/noNonNullAssertion: <biome migration>
         const value = searchParams.get(String(option.value))!;
         const [filterValue, filterOperator] =
           // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -145,6 +145,7 @@ export function DataTableAdvancedToolbar<TData>({
             setSelectedOptions={setSelectedOptions}
             onSelect={onFilterComboboxItemSelect}
           >
+            {/** biome-ignore lint/a11y/useSemanticElements: <biome migration> */}
             <Button
               variant="outline"
               size="sm"

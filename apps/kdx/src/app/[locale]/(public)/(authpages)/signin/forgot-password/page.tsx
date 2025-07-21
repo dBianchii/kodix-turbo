@@ -1,7 +1,5 @@
 "use client";
 
-// eslint-disable-next-line no-restricted-imports
-import Link from "next/link";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
@@ -26,7 +24,7 @@ import { Input } from "@kdx/ui/input";
 import { ZSendResetPasswordEmailInputSchema } from "@kdx/validators/trpc/user";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
-// import { Link } from "~/i18n/routing";
+import { Link } from "~/i18n/routing";
 import { useTRPC } from "~/trpc/react";
 
 export default function ForgotPasswordPage() {

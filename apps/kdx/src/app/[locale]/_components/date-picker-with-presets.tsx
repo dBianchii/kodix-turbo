@@ -73,6 +73,8 @@ export function DatePickerWithPresets({
                 })
               : t("Pick a date")}
             {date && (
+              // biome-ignore lint/a11y/noStaticElementInteractions: <biome migration>
+              // biome-ignore lint/a11y/useKeyWithClickEvents: <biome migration>
               <span
                 onClick={() => {
                   setDate(undefined);

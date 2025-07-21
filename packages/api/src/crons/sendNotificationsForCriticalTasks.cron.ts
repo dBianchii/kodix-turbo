@@ -72,6 +72,7 @@ export const sendNotificationsForCriticalTasks = verifiedQstashCron(
           (x) => x.teamId === ct.teamId,
         );
         if (!team) throw new Error("Shouldn't happen");
+        // biome-ignore lint/suspicious/noAssignInExpressions: <biome migration>
         const userIds = (usersWithConfigsThatNeedToBeNotifiedGroupedByTeamId[
           team.teamId
         ] ??= []).map((cfg) => cfg.userId);

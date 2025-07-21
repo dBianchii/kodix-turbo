@@ -155,6 +155,8 @@ export function CreateTaskDialogButton() {
                     ? format.dateTime(dueDate, "extensive")
                     : t("Pick a date")}
                   {dueDate && (
+                    // biome-ignore lint/a11y/noStaticElementInteractions: <biome migration>
+                    // biome-ignore lint/a11y/useKeyWithClickEvents: <biome migration>
                     <span
                       onClick={() => {
                         setDueDate(undefined);

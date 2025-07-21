@@ -224,6 +224,8 @@ export function EditCareShiftCredenza({
             className="space-y-6"
           >
             <CredenzaBody>
+              {/** biome-ignore lint/a11y/noStaticElementInteractions: <biome migration> */}
+              {/** biome-ignore lint/a11y/useKeyWithClickEvents: <biome migration> */}
               <div
                 onClick={() => {
                   if (!isLocked) return;

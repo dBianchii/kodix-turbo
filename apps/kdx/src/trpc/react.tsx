@@ -26,6 +26,7 @@ const getQueryClient = () => {
     return createQueryClient();
   } else {
     // Browser: use singleton pattern to keep the same query client
+    // biome-ignore lint/suspicious/noAssignInExpressions: <copied from ct3turbo>
     return (clientQueryClientSingleton ??= createQueryClient());
   }
 };

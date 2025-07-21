@@ -43,8 +43,8 @@ export function Navigation({
             <LuArrowLeft className="mr-2 size-4" /> {goBackItem.title}
           </NavigationItem>
         ) : (
-          items.map((item, i) => (
-            <NavigationItem key={i} href={item.href}>
+          items.map((item) => (
+            <NavigationItem key={`${item.href}-nav-item`} href={item.href}>
               {item.title}
             </NavigationItem>
           ))

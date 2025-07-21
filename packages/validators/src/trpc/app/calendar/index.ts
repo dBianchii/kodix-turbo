@@ -48,6 +48,7 @@ export const ZCreateInputSchema = z
   });
 export type TCreateInputSchema = z.infer<typeof ZCreateInputSchema>;
 
+const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
 //* I cannot send count with single
 //* I cannot send interval with single
 //* I cannot send until with single
@@ -93,7 +94,7 @@ export const ZEditInputSchema = z
         from: z
           .string()
           .refine(
-            (value) => /^([01]\d|2[0-3]):([0-5]\d)$/.test(value),
+            (value) => timeRegex.test(value),
             "Invalid time format. Should be HH:MM"
           )
           .optional(),

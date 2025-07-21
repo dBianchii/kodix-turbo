@@ -59,7 +59,9 @@ export function getColumns() {
       header: function Header({ column }) {
         const t = useTranslations();
         return (
-          <DataTableColumnHeader column={column} children={t("Subject")} />
+          <DataTableColumnHeader column={column}>
+            {t("Subject")}
+          </DataTableColumnHeader>
         );
       },
       cell: ({ row }) => <div className="w-20">{row.original.subject}</div>,
@@ -70,7 +72,9 @@ export function getColumns() {
       header: function Header({ column }) {
         const t = useTranslations();
         return (
-          <DataTableColumnHeader column={column} children={t("Channel")} />
+          <DataTableColumnHeader column={column}>
+            {t("Channel")}
+          </DataTableColumnHeader>
         );
       },
       cell: ({ row }) => {
@@ -88,7 +92,9 @@ export function getColumns() {
       header: function Header({ column }) {
         const t = useTranslations();
         return (
-          <DataTableColumnHeader column={column} children={t("Sent at")} />
+          <DataTableColumnHeader column={column}>
+            {t("Sent at")}
+          </DataTableColumnHeader>
         );
       },
       cell: function Cell({ cell }) {
@@ -99,7 +105,11 @@ export function getColumns() {
     columnHelper.accessor("teamId", {
       header: function Header({ column }) {
         const t = useTranslations();
-        return <DataTableColumnHeader column={column} children={t("Team")} />;
+        return (
+          <DataTableColumnHeader column={column}>
+            {t("Team")}
+          </DataTableColumnHeader>
+        );
       },
       cell: function Cell({ row }) {
         return <div className="w-20">{row.original.teamName}</div>;

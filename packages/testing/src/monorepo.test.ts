@@ -32,28 +32,30 @@ const getFilesToCheck = () => {
   const packageNameMap: Record<string, string> = {};
   const filesToCheck: { packageJson: string; tsconfig: string }[] = [];
 
-  getPNPMWorkspaceFile(repositoryRoot).packages.forEach((workspacePath) => {
-    globSync(workspacePath, {
+  for (const workspacePath of getPNPMWorkspaceFile(repositoryRoot).packages) {
+    const folders = globSync(workspacePath, {
       cwd: repositoryRoot,
-    })
-      .filter((folder) => !folder.includes("node_modules"))
-      .forEach((folder) => {
-        const folderPath = path.join(repositoryRoot, folder);
-        const packageJsonPath = path.join(folderPath, "package.json");
-        const tsconfigPath = path.join(folderPath, "tsconfig.json");
-        if (!(existsSync(packageJsonPath) && existsSync(tsconfigPath))) {
-          return;
-        }
+    }).filter((folder) => !folder.includes("node_modules"));
 
-        const packageName = require(packageJsonPath).name;
-        expect(packageName.length).toBeGreaterThan(0);
-        packageNameMap[packageName] = packageJsonPath;
-        filesToCheck.push({
-          packageJson: packageJsonPath,
-          tsconfig: tsconfigPath,
-        });
+    for (const folder of folders) {
+      const folderPath = path.join(repositoryRoot, folder);
+      const packageJsonPath = path.join(folderPath, "package.json");
+      const tsconfigPath = path.join(folderPath, "tsconfig.json");
+      if (!(existsSync(packageJsonPath) && existsSync(tsconfigPath))) {
+        continue;
+      }
+
+      const packageName = require(packageJsonPath).name;
+      if (!packageName || packageName.length === 0) {
+        throw new Error(`Package at ${packageJsonPath} has no name`);
+      }
+      packageNameMap[packageName] = packageJsonPath;
+      filesToCheck.push({
+        packageJson: packageJsonPath,
+        tsconfig: tsconfigPath,
       });
-  });
+    }
+  }
 
   return { filesToCheck, packageNameMap };
 };
@@ -75,25 +77,27 @@ it("There are no unused dependencies", () => {
   // Track all dependencies found in package.json files
   const usedPackages = new Set<string>();
 
-  filesToCheck
+  const allPackagePaths = filesToCheck
     // Add the root package.json
     .concat({
       packageJson: path.resolve(repositoryRoot, "package.json"),
       tsconfig: "",
-    })
-    .forEach((packagePaths) => {
-      const packageJson: PackageJson = require(packagePaths.packageJson);
-
-      Object.entries(packageJson.dependencies ?? {})
-        .concat(Object.entries(packageJson.devDependencies ?? {}))
-        .concat(Object.entries(packageJson.peerDependencies ?? {}))
-        .forEach(([depName, version]) => {
-          // Skip workspace dependencies
-          if (!version.startsWith("workspace:")) {
-            usedPackages.add(depName);
-          }
-        });
     });
+
+  for (const packagePaths of allPackagePaths) {
+    const packageJson: PackageJson = require(packagePaths.packageJson);
+
+    const allDependencies = Object.entries(packageJson.dependencies ?? {})
+      .concat(Object.entries(packageJson.devDependencies ?? {}))
+      .concat(Object.entries(packageJson.peerDependencies ?? {}));
+
+    for (const [depName, version] of allDependencies) {
+      // Skip workspace dependencies
+      if (!version.startsWith("workspace:")) {
+        usedPackages.add(depName);
+      }
+    }
+  }
 
   // Parse the PNPM workspace file
   const { catalog: defaultCatalog, catalogs } =
@@ -103,16 +107,16 @@ it("There are no unused dependencies", () => {
   const allCatalogPackages = new Set<string>();
 
   // Add default catalog packages
-  Object.keys(defaultCatalog).forEach((packageName) => {
+  for (const packageName of Object.keys(defaultCatalog)) {
     allCatalogPackages.add(packageName);
-  });
+  }
 
   // Add named catalog packages
-  Object.values(catalogs).forEach((catalogPackages) => {
-    Object.keys(catalogPackages).forEach((packageName) => {
+  for (const catalogPackages of Object.values(catalogs)) {
+    for (const packageName of Object.keys(catalogPackages)) {
       allCatalogPackages.add(packageName);
-    });
-  });
+    }
+  }
 
   // Find catalog packages that aren't used anywhere
   const unusedCatalogPackages = Array.from(allCatalogPackages).filter(

@@ -47,7 +47,7 @@ export function AppSwitcherClient({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="ghost" role="combobox" className="justify-start">
+        <Button variant="ghost" className="justify-start">
           <CurrentAppIcon hrefPrefix={hrefPrefix} iconSize={iconSize} />
           <span className="ml-2">
             <CurrentAppName hrefPrefix={hrefPrefix} />

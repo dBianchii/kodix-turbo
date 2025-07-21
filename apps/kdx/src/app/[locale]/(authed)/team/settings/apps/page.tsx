@@ -25,8 +25,8 @@ export default async function SettingsAppsPage() {
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Suspense
-          fallback={Array.from({ length: 3 }).map((_, i) => (
-            <KodixAppSkeleton key={i} />
+          fallback={["kdxskel-1", "kdxskel-2", "kdxskel-3"].map((skel) => (
+            <KodixAppSkeleton key={skel} />
           ))}
         >
           <Apps />
