@@ -1,10 +1,9 @@
-export type { AuthResponse, Providers, User, Session } from "./config";
-
+export type { AuthResponse, Providers, Session, User } from "./config";
 export {
   argon2Config,
-  validateUserEmailAndPassword,
+  auth,
   deleteSessionTokenCookie,
   invalidateSession,
-  auth,
   providers,
+  validateUserEmailAndPassword,
 } from "./config";

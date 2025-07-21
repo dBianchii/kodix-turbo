@@ -1,5 +1,5 @@
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme, XStack } from "tamagui";
 
 import { AvatarWrapper } from "~/components/avatar-wrapper";

@@ -15,7 +15,8 @@ import { getToken } from "./session-store";
  * A set of typesafe hooks for consuming your API.
  */
 export const api = createTRPCReact<AppRouter>();
-export { type RouterInputs, type RouterOutputs } from "@kdx/api";
+
+export type { RouterInputs, RouterOutputs } from "@kdx/api";
 
 /**
  * A wrapper for your app that provides the TRPC context.

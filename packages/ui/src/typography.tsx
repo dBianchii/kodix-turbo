@@ -1,15 +1,14 @@
 "use client";
 
 import type { ComponentProps } from "react";
-
 import { cn } from ".";
 
 export function H1({ children, className }: ComponentProps<"h1">) {
   return (
     <h1
       className={cn(
-        "scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl",
-        className,
+        "scroll-m-20 font-extrabold text-4xl tracking-tight lg:text-5xl",
+        className
       )}
     >
       {children}
@@ -21,8 +20,8 @@ export function H2({ children, className }: ComponentProps<"h2">) {
   return (
     <h2
       className={cn(
-        "scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0",
-        className,
+        "scroll-m-20 border-b pb-2 font-semibold text-3xl tracking-tight transition-colors first:mt-0",
+        className
       )}
     >
       {children}
@@ -34,8 +33,8 @@ export function H3({ children, className }: ComponentProps<"h3">) {
   return (
     <h3
       className={cn(
-        "scroll-m-20 text-2xl font-semibold tracking-tight",
-        className,
+        "scroll-m-20 font-semibold text-2xl tracking-tight",
+        className
       )}
     >
       {children}
@@ -47,8 +46,8 @@ export function H4({ children, className }: ComponentProps<"h4">) {
   return (
     <h4
       className={cn(
-        "scroll-m-20 text-xl font-semibold tracking-tight",
-        className,
+        "scroll-m-20 font-semibold text-xl tracking-tight",
+        className
       )}
     >
       {children}
@@ -58,7 +57,7 @@ export function H4({ children, className }: ComponentProps<"h4">) {
 
 export function P({ children, className }: ComponentProps<"p">) {
   return (
-    <p className={cn("leading-7 not-first:mt-6", className)}>{children}</p>
+    <p className={cn("not-first:mt-6 leading-7", className)}>{children}</p>
   );
 }
 
@@ -89,13 +88,13 @@ export function Lead({ children, className }: ComponentProps<"p">) {
 
 export function Large({ children, className }: ComponentProps<"div">) {
   return (
-    <div className={cn("text-lg font-semibold", className)}>{children}</div>
+    <div className={cn("font-semibold text-lg", className)}>{children}</div>
   );
 }
 
 export function Small({ children, className }: ComponentProps<"small">) {
   return (
-    <small className={cn("text-sm leading-none font-medium", className)}>
+    <small className={cn("font-medium text-sm leading-none", className)}>
       {children}
     </small>
   );

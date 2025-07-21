@@ -1,7 +1,7 @@
 import { TouchableOpacity } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Stack, useRouter } from "expo-router";
 import { ArrowRight, LogOut, X } from "@tamagui/lucide-icons";
+import { Stack, useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 import {
   H4,
   ListItem,

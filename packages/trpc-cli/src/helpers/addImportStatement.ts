@@ -3,7 +3,7 @@ import fs from "fs/promises";
 
 export async function addImportStatement(
   filePath: string,
-  { importPath, importName }: { importPath: string; importName: string },
+  { importPath, importName }: { importPath: string; importName: string }
 ) {
   let fileContent = await fs.readFile(filePath, "utf-8");
 
@@ -11,9 +11,7 @@ export async function addImportStatement(
 
   const importRegex = new RegExp(`import\\s+{([^}]*)} from\\s+"${importPath}"`);
   const match = fileContent.match(importRegex);
-  if (!match) {
-    fileContent = importStatement + fileContent;
-  } else {
+  if (match) {
     let importContent = match[1]!.trim();
     if (!importContent.includes(importName)) {
       //remove trailing comma if it exists
@@ -23,9 +21,11 @@ export async function addImportStatement(
       const modifiedImportContent = `${importContent}, ${importName}`;
       fileContent = fileContent.replace(
         importRegex,
-        `import { ${modifiedImportContent} } from "${importPath}"`,
+        `import { ${modifiedImportContent} } from "${importPath}"`
       );
     }
+  } else {
+    fileContent = importStatement + fileContent;
   }
 
   await fs.writeFile(filePath, fileContent, "utf-8");

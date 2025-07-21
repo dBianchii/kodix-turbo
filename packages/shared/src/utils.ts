@@ -19,11 +19,11 @@ export const getBaseUrl = () => {
  * @description Extracts successes and errors from promise.allSettled in a typesafe maner
  */
 export const getSuccessesAndErrors = <T>(
-  results: PromiseSettledResult<T>[],
+  results: PromiseSettledResult<T>[]
 ) => {
   const errors = results.filter((x) => x.status === "rejected");
   const successes = results.filter(
-    (x): x is PromiseFulfilledResult<T> => x.status === "fulfilled",
+    (x): x is PromiseFulfilledResult<T> => x.status === "fulfilled"
   );
 
   return { successes, errors };
@@ -33,7 +33,7 @@ export const getSuccessesAndErrors = <T>(
  * @description A typesafe Object.entries
  */
 export const typedObjectEntries = <T extends object>(
-  obj: T,
+  obj: T
 ): [keyof T, T[keyof T]][] => Object.entries(obj) as [keyof T, T[keyof T]][];
 
 /**

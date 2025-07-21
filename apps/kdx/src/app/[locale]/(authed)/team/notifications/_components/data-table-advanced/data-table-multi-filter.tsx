@@ -1,7 +1,8 @@
 // eslint-disable-next-line react-compiler/react-compiler
 /* eslint-disable react-hooks/exhaustive-deps */
-import type { Table } from "@tanstack/react-table";
+
 import type { Dispatch, SetStateAction } from "react";
+import type { Table } from "@tanstack/react-table";
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -30,8 +31,9 @@ import {
 } from "@kdx/ui/select";
 import { Separator } from "@kdx/ui/separator";
 
-import type { DataTableFilterOption } from "./types";
 import { usePathname, useRouter } from "~/i18n/routing";
+
+import type { DataTableFilterOption } from "./types";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 
 interface DataTableMultiFilterProps<TData> {

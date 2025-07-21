@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from ".";
+
 import {
   Dialog,
   DialogClose,
@@ -54,7 +55,7 @@ const CredenzaContent = (props: React.ComponentProps<typeof DialogContent>) => {
 };
 
 const CredenzaDescription = (
-  props: React.ComponentProps<typeof DialogDescription>,
+  props: React.ComponentProps<typeof DialogDescription>
 ) => {
   const isDesktop = useMediaQuery(desktop);
   const CredenzaDescription = isDesktop ? DialogDescription : DrawerDescription;

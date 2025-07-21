@@ -23,6 +23,7 @@ import { DeleteTeamConfirmationDialog } from "~/app/[locale]/(authed)/team/setti
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { useRouter } from "~/i18n/routing";
 import { useTRPC } from "~/trpc/react";
+
 import { switchTeamAction } from "./actions";
 
 export default function EditUserTeamsTableClient({

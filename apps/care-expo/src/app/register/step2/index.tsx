@@ -1,6 +1,6 @@
 import { Keyboard } from "react-native";
-import { router, useLocalSearchParams } from "expo-router";
 import { ArrowLeft } from "@tamagui/lucide-icons";
+import { router, useLocalSearchParams } from "expo-router";
 import { Button, H3, Input, Paragraph, Spinner, View, YStack } from "tamagui";
 
 import { ZSignupWithPasswordInputSchema } from "@kdx/validators/trpc/user";

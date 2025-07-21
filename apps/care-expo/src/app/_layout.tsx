@@ -6,15 +6,15 @@ import "@bacons/text-decoder/install";
 
 import type { FontSource } from "expo-font";
 import { useEffect } from "react";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useFonts } from "expo-font";
 import {
   Toast,
   ToastProvider,
   ToastViewport,
   useToastState,
 } from "@tamagui/toast";
+import { useFonts } from "expo-font";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { PortalProvider, Spinner, TamaguiProvider } from "tamagui";
 import tamaguiConfig from "tamagui.config";
 import { IntlProvider } from "use-intl";

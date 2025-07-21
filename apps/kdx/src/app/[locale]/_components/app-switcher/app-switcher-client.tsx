@@ -24,6 +24,7 @@ import {
   getAppUrl,
 } from "~/helpers/miscelaneous";
 import { Link, usePathname, useRouter } from "~/i18n/routing";
+
 import { IconKodixApp } from "../app/kodix-icon";
 
 export function AppSwitcherClient({

@@ -7,6 +7,7 @@ import { H1 } from "@kdx/ui/typography";
 import { IconKodixApp } from "~/app/[locale]/_components/app/kodix-icon";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
+
 import { CreateEventDialogButton } from "./_components/create-event-dialog";
 import { DataTable } from "./_components/data-table-calendar";
 

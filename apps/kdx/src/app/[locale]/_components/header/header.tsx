@@ -7,6 +7,7 @@ import { buttonVariants } from "@kdx/ui/button";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { Link } from "~/i18n/routing";
 import { trpcCaller } from "~/trpc/server";
+
 import { AppSwitcherClient } from "../app-switcher/app-switcher-client";
 import { I18nPicker } from "./i18n-picker";
 import { Logo } from "./logo";

@@ -5,6 +5,7 @@ import { kodixCareAppId } from "@kdx/shared";
 
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
 import { trpcCaller } from "~/trpc/server";
+
 import { KodixCareUserSettingsForm } from "./_components/kodix-care-user-settings-form";
 
 export default async function KodixCareSettingsPage() {

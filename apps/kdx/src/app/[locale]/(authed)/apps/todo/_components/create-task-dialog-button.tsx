@@ -22,12 +22,13 @@ import { Input } from "@kdx/ui/input";
 import { PopoverTrigger } from "@kdx/ui/popover";
 import { Textarea } from "@kdx/ui/textarea";
 
-import type { Priority } from "./priority-popover";
 import {
   DatePickerIcon,
   DatePickerWithPresets,
 } from "~/app/[locale]/_components/date-picker-with-presets";
 import { useTRPC } from "~/trpc/react";
+
+import type { Priority } from "./priority-popover";
 import { AssigneePopover } from "./assignee-popover";
 import {
   PriorityIcon,

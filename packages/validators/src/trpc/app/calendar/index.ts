@@ -23,7 +23,7 @@ export const ZCancelInputSchema = z
         ]),
         date: z.date().transform(adjustDateToMinute),
       }),
-    ]),
+    ])
   );
 export type TCancelInputSchema = z.infer<typeof ZCancelInputSchema>;
 
@@ -94,7 +94,7 @@ export const ZEditInputSchema = z
           .string()
           .refine(
             (value) => /^([01]\d|2[0-3]):([0-5]\d)$/.test(value),
-            "Invalid time format. Should be HH:MM",
+            "Invalid time format. Should be HH:MM"
           )
           .optional(),
       }),
@@ -103,7 +103,7 @@ export const ZEditInputSchema = z
 
         from: z.date().transform(adjustDateToMinute).optional(),
       }),
-    ]),
+    ])
   );
 export type TEditInputSchema = z.infer<typeof ZEditInputSchema>;
 

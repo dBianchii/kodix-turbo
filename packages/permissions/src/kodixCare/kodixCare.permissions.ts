@@ -15,7 +15,7 @@ export type KodixCareMongoAbility = MongoAbility<KodixCareAbilities>;
 type KodixCareRole = AppRole<typeof kodixCareAppId>;
 type PermissionsByRole = (
   user: User,
-  builder: AbilityBuilder<KodixCareMongoAbility>,
+  builder: AbilityBuilder<KodixCareMongoAbility>
 ) => void;
 
 export const kodixCarePermissionsFactory = ({
@@ -52,8 +52,8 @@ export const kodixCarePermissionsFactory = ({
       },
     }).because(
       t(
-        "api.This shift was not originally created by you ask your team manager to delete it",
-      ),
+        "api.This shift was not originally created by you ask your team manager to delete it"
+      )
     );
 
     can("Edit", "CareShift", {

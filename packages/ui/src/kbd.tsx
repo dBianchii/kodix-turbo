@@ -1,10 +1,9 @@
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-
 import { cn } from ".";
 
 const kbdVariants = cva(
-  "rounded-sm border px-1.5 py-px font-mono text-[0.7rem] font-normal shadow-2xs select-none disabled:opacity-50",
+  "select-none rounded-sm border px-1.5 py-px font-mono font-normal text-[0.7rem] shadow-2xs disabled:opacity-50",
   {
     variants: {
       variant: {
@@ -15,7 +14,7 @@ const kbdVariants = cva(
     defaultVariants: {
       variant: "default",
     },
-  },
+  }
 );
 
 export interface KbdProps
@@ -40,7 +39,7 @@ const Kbd = ({
   return (
     <kbd className={cn(kbdVariants({ variant, className }))} {...props}>
       {abbrTitle ? (
-        <abbr title={abbrTitle} className="no-underline">
+        <abbr className="no-underline" title={abbrTitle}>
           {children}
         </abbr>
       ) : (

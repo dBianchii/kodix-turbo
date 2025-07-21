@@ -1,9 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { Alert, FlatList, Keyboard, TouchableOpacity } from "react-native";
-import Swipeable from "react-native-gesture-handler/Swipeable";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Audio } from "expo-av";
-import * as Haptics from "expo-haptics";
 import {
   AlertCircle,
   ArrowRightLeft,
@@ -15,6 +11,10 @@ import {
   Trash2,
 } from "@tamagui/lucide-icons";
 import { useToastController } from "@tamagui/toast";
+import { Audio } from "expo-av";
+import * as Haptics from "expo-haptics";
+import Swipeable from "react-native-gesture-handler/Swipeable";
+import { SafeAreaView } from "react-native-safe-area-context";
 import {
   Button,
   Checkbox,
@@ -39,7 +39,6 @@ import {
   ZEditCareTaskInputSchema,
 } from "@kdx/validators/trpc/app/kodixCare/careTask";
 
-import type { CareTask } from "../../../../../../../packages/db/src/repositories/app/kodixCare/careTaskRepository";
 import type { RouterOutputs } from "~/utils/api";
 import { DateTimePicker } from "~/components/date-time-picker";
 import {
@@ -54,6 +53,8 @@ import {
 import { defaultPadding } from "~/components/safe-area-view";
 import { SheetModal } from "~/components/sheet-modal";
 import { api } from "~/utils/api";
+
+import type { CareTask } from "../../../../../../../packages/db/src/repositories/app/kodixCare/careTaskRepository";
 
 type CareTaskOrCalendarTask =
   RouterOutputs["app"]["kodixCare"]["careTask"]["getCareTasks"][number];

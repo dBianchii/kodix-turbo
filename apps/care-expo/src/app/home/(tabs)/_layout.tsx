@@ -1,10 +1,11 @@
 import type { BottomTabBarButtonProps } from "@react-navigation/bottom-tabs/src/types";
 import { Pressable } from "react-native";
+import { Bell, Home } from "@tamagui/lucide-icons";
 import * as Haptics from "expo-haptics";
 import { Tabs, useRouter } from "expo-router";
-import { Bell, Home } from "@tamagui/lucide-icons";
 
 import { useAuth } from "~/utils/auth";
+
 import { Header } from "../_components/header";
 
 function TabBarButton(props: BottomTabBarButtonProps) {

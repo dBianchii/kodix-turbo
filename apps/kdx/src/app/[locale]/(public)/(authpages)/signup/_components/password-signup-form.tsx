@@ -17,6 +17,7 @@ import { Input } from "@kdx/ui/input";
 import { ZSignupWithPasswordInputSchema } from "@kdx/validators/trpc/user";
 
 import { defaultSafeActionToastError } from "~/helpers/safe-action/default-action-error-toast";
+
 import { signupAction } from "./actions";
 
 export function PasswordSignupForm({ invite }: { invite?: string }) {

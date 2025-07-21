@@ -10,6 +10,7 @@ import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { getAppUrl } from "~/helpers/miscelaneous";
 import { Link, redirect } from "~/i18n/routing";
 import { trpcCaller } from "~/trpc/server";
+
 import { CustomKodixIcon } from "../../_components/app/custom-kodix-icon";
 
 interface CustomApp {

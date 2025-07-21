@@ -19,7 +19,7 @@ export interface CreateFilesParams {
 }
 
 export const createFiles = async (params: CreateFilesParams) => {
-  const spinner = ora(`Creating your endpoint...\n`).start();
+  const spinner = ora("Creating your endpoint...\n").start();
 
   const routerFolderFilePath = `${ROUTERS_FOLDER_PATH}/${params.chosenRouterPath}`;
   const routerFilePath = `${routerFolderFilePath}/${trpcCliConfig.routerFileName}`;
@@ -53,12 +53,12 @@ export const createFiles = async (params: CreateFilesParams) => {
         validatorPath,
         validator: params.validator,
         endpointName: params.endpointName,
-      }),
+      })
     );
 
   await Promise.allSettled(promises);
 
-  spinner.succeed(`Endpoint created!\n`);
+  spinner.succeed("Endpoint created!\n");
 
   const prettierSpinner = ora("Running Prettier...\n").start();
 
@@ -74,13 +74,13 @@ export const createFiles = async (params: CreateFilesParams) => {
 
   logger.success("Links to your new/modified files:");
   logger.success(
-    `Router: ${chalk.blue(`${params.chosenRouterPath}/${trpcCliConfig.routerFileName}`)}`,
+    `Router: ${chalk.blue(`${params.chosenRouterPath}/${trpcCliConfig.routerFileName}`)}`
   );
   logger.success(
-    `Handler: ${chalk.blue(`${params.chosenRouterPath}/${params.endpointName}.handler.ts`)}`,
+    `Handler: ${chalk.blue(`${params.chosenRouterPath}/${params.endpointName}.handler.ts`)}`
   );
   if (params.validator)
     logger.success(
-      `Validator: ${chalk.blue(`trpc/${params.chosenRouterPath}/index.ts`)}`,
+      `Validator: ${chalk.blue(`trpc/${params.chosenRouterPath}/index.ts`)}`
     );
 };

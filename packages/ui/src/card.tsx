@@ -3,8 +3,8 @@ import { cn } from ".";
 const Card = ({ className, ...props }: React.ComponentProps<"div">) => (
   <div
     className={cn(
-      "bg-card text-card-foreground rounded-xl border shadow-xs",
-      className,
+      "rounded-xl border bg-card text-card-foreground shadow-xs",
+      className
     )}
     {...props}
   />
@@ -19,7 +19,7 @@ const CardHeader = ({
 
 const CardTitle = ({ className, ...props }: React.ComponentProps<"h3">) => (
   <h3
-    className={cn("leading-none font-semibold tracking-tight", className)}
+    className={cn("font-semibold leading-none tracking-tight", className)}
     {...props}
   />
 );

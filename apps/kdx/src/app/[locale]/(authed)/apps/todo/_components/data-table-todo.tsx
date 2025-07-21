@@ -27,10 +27,11 @@ import { DataTablePagination } from "@kdx/ui/data-table/data-table-pagination";
 import { Input } from "@kdx/ui/input";
 import { Table, TableBody, TableCell, TableRow } from "@kdx/ui/table";
 
-import type { Priority } from "./priority-popover";
 import { DatePickerWithPresets } from "~/app/[locale]/_components/date-picker-with-presets";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { useTRPC } from "~/trpc/react";
+
+import type { Priority } from "./priority-popover";
 import { AssigneePopover } from "./assignee-popover";
 import { CreateTaskDialogButton } from "./create-task-dialog-button";
 import {

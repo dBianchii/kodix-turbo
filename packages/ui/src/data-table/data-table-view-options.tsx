@@ -27,9 +27,9 @@ export function DataTableViewOptions<TData>({
       <DropdownMenuTrigger asChild>
         <Button
           aria-label={t("Toggle columns")}
-          variant="outline"
-          size="sm"
           className="ml-auto hidden h-8 lg:flex"
+          size="sm"
+          variant="outline"
         >
           <Settings2 className="mr-2 size-4" />
           {t("View")}
@@ -42,14 +42,14 @@ export function DataTableViewOptions<TData>({
           .getAllColumns()
           .filter(
             (column) =>
-              typeof column.accessorFn !== "undefined" && column.getCanHide(),
+              typeof column.accessorFn !== "undefined" && column.getCanHide()
           )
           .map((column) => {
             return (
               <DropdownMenuCheckboxItem
-                key={column.id}
-                className="capitalize"
                 checked={column.getIsVisible()}
+                className="capitalize"
+                key={column.id}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
               >
                 <span className="truncate">{column.id}</span>

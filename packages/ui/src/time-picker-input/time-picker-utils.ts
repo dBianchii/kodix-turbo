@@ -27,17 +27,17 @@ interface GetValidNumberConfig {
 
 export function getValidNumber(
   value: string,
-  { max, min = 0, loop = false }: GetValidNumberConfig,
+  { max, min = 0, loop = false }: GetValidNumberConfig
 ) {
-  let numericValue = parseInt(value, 10);
+  let numericValue = Number.parseInt(value, 10);
 
   if (!isNaN(numericValue)) {
-    if (!loop) {
-      if (numericValue > max) numericValue = max;
-      if (numericValue < min) numericValue = min;
-    } else {
+    if (loop) {
       if (numericValue > max) numericValue = min;
       if (numericValue < min) numericValue = max;
+    } else {
+      if (numericValue > max) numericValue = max;
+      if (numericValue < min) numericValue = min;
     }
     return numericValue.toString().padStart(2, "0");
   }
@@ -68,9 +68,9 @@ interface GetValidArrowNumberConfig {
 
 export function getValidArrowNumber(
   value: string,
-  { min, max, step }: GetValidArrowNumberConfig,
+  { min, max, step }: GetValidArrowNumberConfig
 ) {
-  let numericValue = parseInt(value, 10);
+  let numericValue = Number.parseInt(value, 10);
   if (!isNaN(numericValue)) {
     numericValue += step;
     return getValidNumber(String(numericValue), { min, max, loop: true });
@@ -88,19 +88,19 @@ export function getValidArrowMinuteOrSecond(value: string, step: number) {
 
 export function setMinutes(date: Date, value: string) {
   const minutes = getValidMinuteOrSecond(value);
-  date.setMinutes(parseInt(minutes, 10));
+  date.setMinutes(Number.parseInt(minutes, 10));
   return date;
 }
 
 export function setSeconds(date: Date, value: string) {
   const seconds = getValidMinuteOrSecond(value);
-  date.setSeconds(parseInt(seconds, 10));
+  date.setSeconds(Number.parseInt(seconds, 10));
   return date;
 }
 
 export function setHours(date: Date, value: string) {
   const hours = getValidHour(value);
-  date.setHours(parseInt(hours, 10));
+  date.setHours(Number.parseInt(hours, 10));
   return date;
 }
 
@@ -135,7 +135,7 @@ export function getDateByType(date: Date, type: TimePickerType) {
 export function getArrowByType(
   value: string,
   step: number,
-  type: TimePickerType,
+  type: TimePickerType
 ) {
   switch (type) {
     case "minutes":

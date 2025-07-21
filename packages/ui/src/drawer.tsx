@@ -1,8 +1,8 @@
 "use client";
 
 import { Drawer as DrawerPrimitive } from "vaul";
-
 import { cn } from ".";
+
 import { useOverlayLifecycle_only_ui } from "./stores/use-overlay-store";
 
 const Drawer = ({
@@ -43,12 +43,12 @@ const DrawerContent = ({
     <DrawerOverlay />
     <DrawerPrimitive.Content
       className={cn(
-        "bg-background fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border px-3",
-        className,
+        "fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background px-3",
+        className
       )}
       {...props}
     >
-      <div className="bg-muted mx-auto mt-4 h-2 w-[100px] rounded-full" />
+      <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted" />
       {children}
     </DrawerPrimitive.Content>
   </DrawerPortal>
@@ -74,8 +74,8 @@ const DrawerTitle = ({
 }: React.ComponentProps<typeof DrawerPrimitive.Title>) => (
   <DrawerPrimitive.Title
     className={cn(
-      "text-lg leading-none font-semibold tracking-tight",
-      className,
+      "font-semibold text-lg leading-none tracking-tight",
+      className
     )}
     {...props}
   />

@@ -8,9 +8,9 @@ import type {
   zCareShiftCreate,
   zCareShiftUpdate,
 } from "../../_zodSchemas/careShiftSchemas";
-import { teamRepository } from "../..";
 import { db as _db } from "../../../client";
 import { careShifts } from "../../../schema";
+import { teamRepository } from "../..";
 
 export async function updateCareShift(
   { id, input }: Update<typeof zCareShiftUpdate>,

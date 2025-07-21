@@ -3,8 +3,8 @@
 import type { PopoverContentProps } from "@radix-ui/react-popover";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
-
 import { cn } from ".";
+
 import { Button } from "./button";
 import { Calendar } from "./calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
@@ -36,12 +36,12 @@ export function DateTimePicker({
     <Popover onOpenChange={onOpenChange}>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
           className={cn(
             "w-[280px] justify-start text-left font-normal",
-            !date && "text-muted-foreground",
+            !date && "text-muted-foreground"
           )}
           size={size}
+          variant="outline"
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
           {date ? (
@@ -54,14 +54,15 @@ export function DateTimePicker({
       <PopoverContent className="w-auto p-0" side={side}>
         <div className="border-border border-t p-3">
           <TimePicker
-            setDate={setDate}
             date={date}
             disabledDate={disabledDate}
+            setDate={setDate}
           />
         </div>
         <Calendar
+          disabled={disabledDate}
+          initialFocus
           mode="single"
-          selected={date}
           onSelect={(newDate) => {
             if (newDate && date) {
               //only change day information and not time
@@ -69,15 +70,14 @@ export function DateTimePicker({
               date.setFullYear(
                 newDate.getFullYear(),
                 newDate.getMonth(),
-                newDate.getDate(),
+                newDate.getDate()
               );
               setDate(new Date(date));
               return;
             }
             setDate(newDate);
           }}
-          initialFocus
-          disabled={disabledDate}
+          selected={date}
         />
       </PopoverContent>
     </Popover>

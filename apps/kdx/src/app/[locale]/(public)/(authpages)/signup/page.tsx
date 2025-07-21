@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { Link } from "~/i18n/routing";
+
 import { ProviderButtons } from "../_components/provider-buttons";
 import { RedirectIfLoggedIn } from "../signin/_components/redirect-if-logged-in";
 import { PasswordSignupForm } from "./_components/password-signup-form";

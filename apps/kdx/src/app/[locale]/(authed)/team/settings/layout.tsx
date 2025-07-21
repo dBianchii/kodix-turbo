@@ -7,6 +7,7 @@ import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { Navigation } from "~/app/[locale]/_components/navigation";
 import { redirect } from "~/i18n/routing";
 import { trpcCaller } from "~/trpc/server";
+
 import { ShouldRender } from "./general/_components/client-should-render";
 
 export default async function SettingsLayout({

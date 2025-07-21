@@ -20,6 +20,7 @@ import { ThemeProvider, ThemeToggle } from "@kdx/ui/theme";
 import { Toaster } from "@kdx/ui/toast";
 
 import { routing } from "~/i18n/routing";
+
 import { CCNextIntlClientProvider } from "./_components/cc-next-intl-client-provider";
 import PostHogPageView from "./_components/posthog-page-view";
 import { CSPostHogProvider } from "./_components/posthog-provider";

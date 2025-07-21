@@ -73,7 +73,7 @@ export async function protectedFetch<T>({
 async function validatePermissions(permissions: PermissionsChecks) {
   if (Array.isArray(permissions)) {
     await iteratePermissionResults(
-      permissions.map((permission) => permission()).flat(),
+      permissions.flatMap((permission) => permission()),
     );
   } else {
     await iteratePermissionResults(permissions());

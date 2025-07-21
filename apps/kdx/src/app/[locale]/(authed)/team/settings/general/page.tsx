@@ -5,6 +5,7 @@ import { auth } from "@kdx/auth";
 
 import { redirect } from "~/i18n/routing";
 import { trpcCaller } from "~/trpc/server";
+
 import { DeleteTeamCardClient } from "./_components/delete-team-card-client";
 import { EditTeamNameCardClient } from "./_components/edit-team-name-card-client";
 import SettingsEditCardSkeleton from "./_components/edit-team-name-card-skeleton";

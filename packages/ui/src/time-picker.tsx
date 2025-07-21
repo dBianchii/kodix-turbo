@@ -32,43 +32,43 @@ export function TimePicker({
   return (
     <div className="flex items-end gap-2">
       <div className="grid gap-1 text-center">
-        <Label htmlFor="hours" className="text-xs">
+        <Label className="text-xs" htmlFor="hours">
           Hours
         </Label>
         <TimePickerInput
-          picker="hours"
           date={date}
-          setDate={setDateBasedOnDisabledDate}
-          ref={hourRef}
           onRightFocus={() => minuteRef.current?.focus()}
+          picker="hours"
+          ref={hourRef}
+          setDate={setDateBasedOnDisabledDate}
         />
       </div>
       {(granularity === "seconds" || granularity === "minutes") && (
         <>
           <div className="grid gap-1 text-center">
-            <Label htmlFor="minutes" className="text-xs">
+            <Label className="text-xs" htmlFor="minutes">
               Minutes
             </Label>
             <TimePickerInput
-              picker="minutes"
               date={date}
-              setDate={setDateBasedOnDisabledDate}
-              ref={minuteRef}
               onLeftFocus={() => hourRef.current?.focus()}
               onRightFocus={() => secondRef.current?.focus()}
+              picker="minutes"
+              ref={minuteRef}
+              setDate={setDateBasedOnDisabledDate}
             />
           </div>
           {granularity === "seconds" && (
             <div className="grid gap-1 text-center">
-              <Label htmlFor="seconds" className="text-xs">
+              <Label className="text-xs" htmlFor="seconds">
                 Seconds
               </Label>
               <TimePickerInput
-                picker="seconds"
                 date={date}
-                setDate={setDateBasedOnDisabledDate}
-                ref={secondRef}
                 onLeftFocus={() => minuteRef.current?.focus()}
+                picker="seconds"
+                ref={secondRef}
+                setDate={setDateBasedOnDisabledDate}
               />
             </div>
           )}

@@ -1,7 +1,7 @@
-import type { ExpoPushMessage, ExpoPushTicket } from "expo-server-sdk";
 import type { JSX } from "react";
-import Expo from "expo-server-sdk";
+import type { ExpoPushMessage, ExpoPushTicket } from "expo-server-sdk";
 import { render } from "@react-email/render";
+import Expo from "expo-server-sdk";
 
 import type { notifications } from "@kdx/db/schema";
 import { notificationRepository, userRepository } from "@kdx/db/repositories";

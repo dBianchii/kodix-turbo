@@ -19,8 +19,9 @@ import {
   SelectValue,
 } from "@kdx/ui/select";
 
-import type { DataTableFilterOption } from "./types";
 import { usePathname, useRouter } from "~/i18n/routing";
+
+import type { DataTableFilterOption } from "./types";
 import { DataTableAdvancedFacetedFilter } from "./data-table-advanced-faceted-filter";
 
 interface DataTableFilterItemProps<TData> {

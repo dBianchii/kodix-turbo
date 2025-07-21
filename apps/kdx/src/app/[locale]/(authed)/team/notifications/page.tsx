@@ -10,6 +10,7 @@ import { CustomKodixIcon } from "~/app/[locale]/_components/app/custom-kodix-ico
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { redirect } from "~/i18n/routing";
 import { trpcCaller } from "~/trpc/server";
+
 import { DataTableNotifications } from "./_components/data-table-notifications";
 import { NotificationsDateRangePicker } from "./_components/notifications-date-range-picker";
 

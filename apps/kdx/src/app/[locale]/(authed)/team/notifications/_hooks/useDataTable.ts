@@ -24,8 +24,9 @@ import z from "zod/v4";
 
 import { useDebounce } from "@kdx/ui/hooks/use-debounce";
 
-import type { DataTableFilterField } from "../_components/data-table-advanced/types";
 import { usePathname, useRouter } from "~/i18n/routing";
+
+import type { DataTableFilterField } from "../_components/data-table-advanced/types";
 
 interface UseDataTableProps<TData, TValue> {
   /**

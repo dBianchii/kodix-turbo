@@ -2,6 +2,7 @@ import type { SQL } from "drizzle-orm";
 import type { z } from "zod/v4";
 import { and, eq, gt, gte, inArray, lte, or } from "drizzle-orm";
 
+import type { Drizzle } from "../../../client";
 import type { UpdateWithTeamId } from "../../_types";
 import type { zEventCancellationCreate } from "../../_zodSchemas/eventCancellationSchemas";
 import type {
@@ -12,7 +13,6 @@ import type {
   zEventMasterCreate,
   zEventMasterUpdate,
 } from "../../_zodSchemas/eventMasterSchemas";
-import type { Drizzle } from "../../../client";
 import { db } from "../../../client";
 import {
   eventCancellations,
@@ -280,7 +280,8 @@ export async function updateEventExceptionsByMasterIdWithNewDateHigherOrEqualTha
     );
 }
 
-export async function deleteEventExceptionsHigherThanDate( //TODO: Revise this!! Why do we send both eventExceptionId and date?
+export async function deleteEventExceptionsHigherThanDate(
+  //TODO: Revise this!! Why do we send both eventExceptionId and date?
   db: Drizzle,
   {
     teamId,

@@ -1,6 +1,7 @@
 import { kodixCareAppId } from "@kdx/shared";
 
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
+
 import DataTableKodixCare from "./_components/data-table-kodix-care";
 
 export default async function KodixCarePage() {

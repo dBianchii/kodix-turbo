@@ -43,7 +43,7 @@ export const restrictEnvAccess = tseslint.config(
         { paths: restrictEnvAccessRestrictedImports },
       ],
     },
-  },
+  }
 );
 
 export const enforceDrizzleWhere = tseslint.config({
@@ -118,5 +118,5 @@ export default tseslint.config(
   {
     linterOptions: { reportUnusedDisableDirectives: true },
     languageOptions: { parserOptions: { project: true } },
-  },
+  }
 );

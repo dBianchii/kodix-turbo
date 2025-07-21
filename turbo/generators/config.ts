@@ -1,5 +1,5 @@
-import { execSync } from "node:child_process";
 import type { PlopTypes } from "@turbo/gen";
+import { execSync } from "node:child_process";
 
 interface PackageJson {
   name: string;
@@ -27,10 +27,12 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
     ],
     actions: [
       (answers) => {
-        if ("name" in answers && typeof answers.name === "string") {
-          if (answers.name.startsWith("@kdx/")) {
-            answers.name = answers.name.replace("@kdx/", "");
-          }
+        if (
+          "name" in answers &&
+          typeof answers.name === "string" &&
+          answers.name.startsWith("@kdx/")
+        ) {
+          answers.name = answers.name.replace("@kdx/", "");
         }
         return "Config sanitized";
       },
@@ -62,7 +64,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
             const pkg = JSON.parse(content) as PackageJson;
             for (const dep of answers.deps.split(" ").filter(Boolean)) {
               const version = await fetch(
-                `https://registry.npmjs.org/-/package/${dep}/dist-tags`,
+                `https://registry.npmjs.org/-/package/${dep}/dist-tags`
               )
                 .then((res) => res.json())
                 .then((json) => json.latest);
@@ -84,7 +86,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
           // });
           execSync("pnpm i", { stdio: "inherit" });
           execSync(
-            `pnpm prettier --write packages/${answers.name}/** --list-different`,
+            `pnpm prettier --write packages/${answers.name}/** --list-different`
           );
           return "Package scaffolded";
         }

@@ -14,6 +14,7 @@ import { Input } from "@kdx/ui/input";
 import { Label } from "@kdx/ui/label";
 
 import { trpcCaller } from "~/trpc/server";
+
 import { SubmitButton } from "./submit-button";
 
 export async function EditAccountNameCard({ name }: { name?: string | null }) {

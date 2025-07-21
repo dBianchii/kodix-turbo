@@ -1,7 +1,7 @@
 import { FlatList, RefreshControl } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Link, useRouter } from "expo-router";
 import { Cog } from "@tamagui/lucide-icons";
+import { Link, useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { H3, ListItem, Spinner, useTheme, View, XStack, YGroup } from "tamagui";
 
 import { defaultPadding, RootSafeAreaView } from "~/components/safe-area-view";

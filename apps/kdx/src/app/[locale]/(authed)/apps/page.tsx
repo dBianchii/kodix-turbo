@@ -6,6 +6,7 @@ import { H1, Lead } from "@kdx/ui/typography";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { trpcCaller } from "~/trpc/server";
+
 import { AppCardSkeleton } from "../../_components/app/kodix-app";
 import { KodixApps } from "./_components/kodix-apps";
 

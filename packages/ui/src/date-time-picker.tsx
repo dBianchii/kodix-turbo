@@ -48,8 +48,8 @@ import {
 import { useFormatter, useLocale, useTranslations } from "next-intl";
 import { DayPicker, TZDate } from "react-day-picker";
 import { enUS, ptBR } from "react-day-picker/locale";
-
 import { cn } from ".";
+
 import { Button, buttonVariants } from "./button";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { ScrollArea } from "./scroll-area";
@@ -169,7 +169,7 @@ export function DateTimePicker({
   >(false);
   const initDate = useMemo(
     () => new TZDate(value ?? new Date(), timezone),
-    [value, timezone],
+    [value, timezone]
   );
 
   const [month, setMonth] = useState<Date>(initDate);
@@ -180,11 +180,11 @@ export function DateTimePicker({
   }, [month]);
   const minDate = useMemo(
     () => (min ? new TZDate(min, timezone) : undefined),
-    [min, timezone],
+    [min, timezone]
   );
   const maxDate = useMemo(
     () => (max ? new TZDate(max, timezone) : undefined),
-    [max, timezone],
+    [max, timezone]
   );
 
   const onDayChanged = useCallback(
@@ -202,11 +202,11 @@ export function DateTimePicker({
         d.getDate(),
         date.getHours(),
         date.getMinutes(),
-        date.getSeconds(),
+        date.getSeconds()
       );
       setDate(newDate);
     },
-    [date, setDate],
+    [date, setDate]
   );
   const onSubmit = useCallback(() => {
     onChange(new Date(date));
@@ -222,7 +222,7 @@ export function DateTimePicker({
         setMonthYearPicker(false);
       }
     },
-    [setMonth, setMonthYearPicker],
+    [setMonth, setMonthYearPicker]
   );
   const onNextMonth = useCallback(() => {
     setMonth(addMonths(month, 1));
@@ -240,7 +240,7 @@ export function DateTimePicker({
   }, [open, initDate]);
 
   const displayValue = useMemo(() => {
-    if (!open && !value) return value;
+    if (!(open || value)) return value;
     return open ? date : initDate;
   }, [date, value, open]);
 
@@ -256,7 +256,7 @@ export function DateTimePicker({
   };
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover onOpenChange={setOpen} open={open}>
       <PopoverTrigger asChild>
         {renderTrigger ? (
           renderTrigger({
@@ -269,16 +269,16 @@ export function DateTimePicker({
           })
         ) : (
           <div
+            className={cn(
+              "flex h-9 w-full cursor-pointer items-center rounded-md border border-input ps-3 pe-1 font-normal text-sm shadow-2xs",
+              !displayValue && "text-muted-foreground",
+              !(clearable && value) && "pe-3",
+              disabled && "cursor-not-allowed opacity-50",
+              classNames?.trigger
+            )}
             onClick={(e) => {
               if (disabled) e.preventDefault();
             }}
-            className={cn(
-              "border-input flex h-9 w-full cursor-pointer items-center rounded-md border ps-3 pe-1 text-sm font-normal shadow-2xs",
-              !displayValue && "text-muted-foreground",
-              (!clearable || !value) && "pe-3",
-              disabled && "cursor-not-allowed opacity-50",
-              classNames?.trigger,
-            )}
             tabIndex={0}
           >
             <div className="flex grow items-center">
@@ -287,18 +287,18 @@ export function DateTimePicker({
             </div>
             {clearable && value && (
               <Button
-                disabled={disabled}
-                variant="ghost"
-                size="sm"
-                role="button"
                 aria-label="Clear date"
                 className="ms-1 size-6 p-1"
+                disabled={disabled}
                 onClick={(e) => {
                   e.stopPropagation();
                   e.preventDefault();
                   onChange(undefined);
                   setOpen(false);
                 }}
+                role="button"
+                size="sm"
+                variant="ghost"
               >
                 <XCircle className="size-4" />
               </Button>
@@ -308,12 +308,12 @@ export function DateTimePicker({
       </PopoverTrigger>
       <PopoverContent className="w-auto p-2">
         <div className="flex items-center justify-between">
-          <div className="text-md ms-2 flex cursor-pointer items-center font-bold">
+          <div className="ms-2 flex cursor-pointer items-center font-bold text-md">
             <div>
               <span
                 onClick={() =>
                   setMonthYearPicker(
-                    monthYearPicker === "month" ? false : "month",
+                    monthYearPicker === "month" ? false : "month"
                   )
                 }
               >
@@ -325,7 +325,7 @@ export function DateTimePicker({
                 className="ms-1"
                 onClick={() =>
                   setMonthYearPicker(
-                    monthYearPicker === "year" ? false : "year",
+                    monthYearPicker === "year" ? false : "year"
                   )
                 }
               >
@@ -335,11 +335,11 @@ export function DateTimePicker({
               </span>
             </div>
             <Button
-              variant="ghost"
-              size="icon"
               onClick={() =>
                 setMonthYearPicker(monthYearPicker ? false : "year")
               }
+              size="icon"
+              variant="ghost"
             >
               {monthYearPicker ? <ChevronUpIcon /> : <ChevronDownIcon />}
             </Button>
@@ -347,30 +347,16 @@ export function DateTimePicker({
           <div
             className={cn("flex space-x-2", monthYearPicker ? "hidden" : "")}
           >
-            <Button variant="ghost" size="icon" onClick={onPrevMonth}>
+            <Button onClick={onPrevMonth} size="icon" variant="ghost">
               <ChevronLeftIcon />
             </Button>
-            <Button variant="ghost" size="icon" onClick={onNextMonth}>
+            <Button onClick={onNextMonth} size="icon" variant="ghost">
               <ChevronRightIcon />
             </Button>
           </div>
         </div>
         <div className="relative overflow-hidden">
           <DayPicker
-            locale={nextIntlLocaleToDayPickerLocale[locale] as never}
-            timeZone={timezone}
-            mode="single"
-            selected={date}
-            onSelect={(d) => d && onDayChanged(d)}
-            month={month}
-            endMonth={endMonth}
-            disabled={
-              [
-                max ? { after: max } : null,
-                min ? { before: min } : null,
-              ].filter(Boolean) as Matcher[]
-            }
-            onMonthChange={setMonth}
             classNames={{
               dropdowns: "flex w-full gap-2",
               months: "flex w-full h-fit",
@@ -386,7 +372,7 @@ export function DateTimePicker({
               day: "h-9 w-9 text-center text-sm p-0 relative flex items-center justify-center [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20 rounded-1",
               day_button: cn(
                 buttonVariants({ variant: "ghost" }),
-                "size-9 rounded-md p-0 font-normal aria-selected:opacity-100",
+                "size-9 rounded-md p-0 font-normal aria-selected:opacity-100"
               ),
               range_end: "day-range-end",
               selected:
@@ -399,36 +385,50 @@ export function DateTimePicker({
                 "aria-selected:bg-accent aria-selected:text-accent-foreground",
               hidden: "invisible",
             }}
+            disabled={
+              [
+                max ? { after: max } : null,
+                min ? { before: min } : null,
+              ].filter(Boolean) as Matcher[]
+            }
+            endMonth={endMonth}
+            locale={nextIntlLocaleToDayPickerLocale[locale] as never}
+            mode="single"
+            month={month}
+            onMonthChange={setMonth}
+            onSelect={(d) => d && onDayChanged(d)}
+            selected={date}
             showOutsideDays={true}
+            timeZone={timezone}
             {...props}
           />
           <div
             className={cn(
               "absolute top-0 right-0 bottom-0 left-0",
-              monthYearPicker ? "bg-popover" : "hidden",
+              monthYearPicker ? "bg-popover" : "hidden"
             )}
-          ></div>
+          />
           <MonthYearPicker
-            value={month}
-            mode={monthYearPicker as never}
-            onChange={onMonthYearChanged}
-            minDate={minDate}
-            maxDate={maxDate}
             className={cn(
               "absolute top-0 right-0 bottom-0 left-0",
-              monthYearPicker ? "" : "hidden",
+              monthYearPicker ? "" : "hidden"
             )}
+            maxDate={maxDate}
+            minDate={minDate}
+            mode={monthYearPicker as never}
+            onChange={onMonthYearChanged}
+            value={month}
           />
         </div>
         <div className="flex flex-col gap-2">
           {!hideTime && (
             <TimePicker
-              timePicker={timePicker}
-              value={date}
-              onChange={setDate}
-              use12HourFormat={use12HourFormat}
-              min={minDate}
               max={maxDate}
+              min={minDate}
+              onChange={setDate}
+              timePicker={timePicker}
+              use12HourFormat={use12HourFormat}
+              value={date}
             />
           )}
           <div className="flex flex-row-reverse items-center justify-between">
@@ -507,7 +507,7 @@ function MonthYearPicker({
       }
       onChange(newDate, "year");
     },
-    [onChange, value, minDate, maxDate],
+    [onChange, value, minDate, maxDate]
   );
 
   useEffect(() => {
@@ -526,10 +526,10 @@ function MonthYearPicker({
                 ref={year.value === getYear(value) ? yearRef : undefined}
               >
                 <Button
-                  disabled={year.disabled}
-                  variant={getYear(value) === year.value ? "default" : "ghost"}
                   className="rounded-full"
+                  disabled={year.disabled}
                   onClick={() => onYearChange(year)}
+                  variant={getYear(value) === year.value ? "default" : "ghost"}
                 >
                   {year.label}
                 </Button>
@@ -541,14 +541,14 @@ function MonthYearPicker({
           <div className="grid grid-cols-3 gap-4">
             {months.map((month) => (
               <Button
-                key={month.value}
-                size="lg"
-                disabled={month.disabled}
-                variant={getMonth(value) === month.value ? "default" : "ghost"}
                 className="rounded-full"
+                disabled={month.disabled}
+                key={month.value}
                 onClick={() =>
                   onChange(setMonthFns(value, month.value), "month")
                 }
+                size="lg"
+                variant={getMonth(value) === month.value ? "default" : "ghost"}
               >
                 {month.label}
               </Button>
@@ -588,13 +588,13 @@ function TimePicker({
       use12HourFormat
         ? "yyyy-MM-dd hh:mm:ss.SSS a xxxx"
         : "yyyy-MM-dd HH:mm:ss.SSS xxxx",
-    [use12HourFormat],
+    [use12HourFormat]
   );
   const [ampm, setAmpm] = useState(
-    datefnsFormat(value, "a") === "AM" ? AM_VALUE : PM_VALUE,
+    datefnsFormat(value, "a") === "AM" ? AM_VALUE : PM_VALUE
   );
   const [hour, setHour] = useState(
-    use12HourFormat ? +datefnsFormat(value, "hh") : value.getHours(),
+    use12HourFormat ? +datefnsFormat(value, "hh") : value.getHours()
   );
   const [minute, setMinute] = useState(value.getMinutes());
   const [second, setSecond] = useState(value.getSeconds());
@@ -609,7 +609,7 @@ function TimePicker({
         minute,
         second,
         ampm,
-      }),
+      })
     );
   }, [hour, minute, second, ampm, formatStr, use12HourFormat]);
 
@@ -636,7 +636,7 @@ function TimePicker({
           disabled,
         };
       }),
-    [value, min, max, use12HourFormat, ampm],
+    [value, min, max, use12HourFormat, ampm]
   );
   const minutes: TimeOption[] = useMemo(() => {
     const anchorDate = setHours(value, _hourIn24h);
@@ -657,7 +657,7 @@ function TimePicker({
   const seconds: TimeOption[] = useMemo(() => {
     const anchorDate = setMilliseconds(
       setMinutes(setHours(value, _hourIn24h), minute),
-      0,
+      0
     );
     const _min = min ? setMilliseconds(min, 0) : undefined;
     const _max = max ? setMilliseconds(max, 0) : undefined;
@@ -740,7 +740,7 @@ function TimePicker({
       }
       setHour(v.value);
     },
-    [setHour, use12HourFormat, value, formatStr, minute, second, ampm],
+    [setHour, use12HourFormat, value, formatStr, minute, second, ampm]
   );
 
   const onMinuteChange = useCallback(
@@ -775,7 +775,7 @@ function TimePicker({
       }
       setMinute(v.value);
     },
-    [setMinute, use12HourFormat, value, formatStr, hour, second, ampm],
+    [setMinute, use12HourFormat, value, formatStr, hour, second, ampm]
   );
 
   const onAmpmChange = useCallback(
@@ -816,28 +816,18 @@ function TimePicker({
       }
       setAmpm(v.value);
     },
-    [
-      setAmpm,
-      use12HourFormat,
-      value,
-      formatStr,
-      hour,
-      minute,
-      second,
-      min,
-      max,
-    ],
+    [setAmpm, use12HourFormat, value, formatStr, hour, minute, second, min, max]
   );
   const format = useFormatter();
 
   return (
-    <Popover open={open} onOpenChange={setOpen} modal>
+    <Popover modal onOpenChange={setOpen} open={open}>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
-          role="combobox"
           aria-expanded={open}
           className="justify-between"
+          role="combobox"
+          variant="outline"
         >
           <Clock className="mr-2 size-4" />
           {format.dateTime(value, "shortWithHours")}
@@ -856,11 +846,11 @@ function TimePicker({
                       ref={v.value === hour ? hourRef : undefined}
                     >
                       <TimeItem
-                        option={v}
-                        selected={v.value === hour}
-                        onSelect={onHourChange}
                         className="h-8"
                         disabled={v.disabled}
+                        onSelect={onHourChange}
+                        option={v}
+                        selected={v.value === hour}
                       />
                     </div>
                   ))}
@@ -876,11 +866,11 @@ function TimePicker({
                       ref={v.value === minute ? minuteRef : undefined}
                     >
                       <TimeItem
-                        option={v}
-                        selected={v.value === minute}
-                        onSelect={onMinuteChange}
                         className="h-8"
                         disabled={v.disabled}
+                        onSelect={onMinuteChange}
+                        option={v}
+                        selected={v.value === minute}
                       />
                     </div>
                   ))}
@@ -896,11 +886,11 @@ function TimePicker({
                       ref={v.value === second ? secondRef : undefined}
                     >
                       <TimeItem
-                        option={v}
-                        selected={v.value === second}
-                        onSelect={(v) => setSecond(v.value)}
                         className="h-8"
                         disabled={v.disabled}
+                        onSelect={(v) => setSecond(v.value)}
+                        option={v}
+                        selected={v.value === second}
                       />
                     </div>
                   ))}
@@ -912,12 +902,12 @@ function TimePicker({
                 <div className="flex grow flex-col items-stretch overflow-y-auto pe-2">
                   {ampmOptions.map((v) => (
                     <TimeItem
-                      key={v.value}
-                      option={v}
-                      selected={v.value === ampm}
-                      onSelect={onAmpmChange}
                       className="h-8"
                       disabled={v.disabled}
+                      key={v.value}
+                      onSelect={onAmpmChange}
+                      option={v}
+                      selected={v.value === ampm}
                     />
                   ))}
                 </div>
@@ -945,10 +935,10 @@ const TimeItem = ({
 }) => {
   return (
     <Button
-      variant="ghost"
       className={cn("flex justify-center px-1 ps-1 pe-2", className)}
-      onClick={() => onSelect(option)}
       disabled={disabled}
+      onClick={() => onSelect(option)}
+      variant="ghost"
     >
       <div className="w-4">
         {selected && <CheckIcon className="my-auto size-4" />}
