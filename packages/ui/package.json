@@ -71,14 +71,12 @@
     "zustand": "catalog:"
   },
   "devDependencies": {
-    "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/shared": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
     "cobe": "catalog:",
-    "eslint": "catalog:",
     "prettier": "catalog:",
     "react": "catalog:react",
     "react-spring": "catalog:",

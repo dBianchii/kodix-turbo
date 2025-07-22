@@ -20,8 +20,8 @@
   },
   "dependencies": {
     "@casl/ability": "catalog:",
-    "@kdx/biome-config": "workspace:*",
     "@kdx/auth": "workspace:*",
+    "@kdx/biome-config": "workspace:*",
     "@kdx/dayjs": "workspace:*",
     "@kdx/db": "workspace:*",
     "@kdx/env": "workspace:*",
@@ -48,7 +48,6 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tailwind-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
@@ -58,7 +57,6 @@
     "@types/object.groupby": "catalog:",
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
-    "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"
   },

@@ -23,12 +23,10 @@
     "react-email": "catalog:"
   },
   "devDependencies": {
-    "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
     "@types/node": "catalog:",
     "@types/react": "catalog:react",
-    "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"
   },

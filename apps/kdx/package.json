@@ -56,7 +56,6 @@
   },
   "devDependencies": {
     "@kdx/db": "workspace:*",
-    "@kdx/eslint-config": "workspace:*",
     "@kdx/prettier-config": "workspace:*",
     "@kdx/tailwind-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
@@ -66,7 +65,6 @@
     "@types/react-big-calendar": "catalog:react-big-calendar",
     "@types/react-dom": "catalog:react",
     "dotenv-cli": "catalog:",
-    "eslint": "catalog:",
     "jiti": "catalog:",
     "prettier": "catalog:",
     "tailwindcss": "catalog:tailwindcss",
