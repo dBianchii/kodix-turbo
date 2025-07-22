@@ -39,10 +39,15 @@ packages
   └─ trpc-cli
       └─ CLI tool to automatically create new endpoints in @kdx/api with the correct boilerplate
 tooling
+  ├─ github
+  |   └─ GitHub Actions workflows
+  ├─ biome
+  |   └─ shared Biome configuration
   ├─ tailwind
-  |   └─ shared tailwind configuration
+  |   └─ shared Tailwind configuration
   └─ typescript
      └─ shared tsconfig you can extend from
+
 turbo/generators
       └─ Automatically create new @kdx packages with the correct boilerplate
 ```
