@@ -1,6 +1,3 @@
-// eslint-disable-next-line react-compiler/react-compiler
-/* eslint-disable react-hooks/exhaustive-deps */
-
 import type { Dispatch, SetStateAction } from "react";
 import type { Table } from "@tanstack/react-table";
 import { useCallback, useEffect, useState } from "react";
@@ -71,7 +68,6 @@ export function DataTableMultiFilter<TData>({
         <div className="space-y-2 p-4">
           {options.map((option, i) => (
             <MultiFilterRow
-              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
               key={option.id ?? i}
               i={i}
               option={option}
@@ -349,7 +345,7 @@ export function MultiFilterRow<TData>({
                   id: crypto.randomUUID(),
                   label: selectedOption.label,
                   value: selectedOption.value,
-                  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
                   options: selectedOption.options ?? [],
                   isMulti: true,
                 },

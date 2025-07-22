@@ -1,10 +1,9 @@
-// eslint-disable-next-line react-compiler/react-compiler
 /** biome-ignore-all lint/complexity/noExcessiveCognitiveComplexity: <biome migration> */
 /** biome-ignore-all lint/nursery/noNoninteractiveElementInteractions: <biome migration> */
 /** biome-ignore-all lint/a11y/useKeyWithClickEvents: <biome migration> */
 /** biome-ignore-all lint/a11y/noStaticElementInteractions: <biome migration> */
 /** biome-ignore-all lint/correctness/useExhaustiveDependencies: <biome migration> */
-/* eslint-disable react-hooks/exhaustive-deps */
+
 /**
  * Shadcn Datetime Picker with support for timezone, date and time selection, minimum and maximum date limits, and 12-hour format...
  * Check out the live demo at https://shadcn-datetime-picker-pro.vercel.app/

@@ -84,7 +84,7 @@ export function EditEventDialog({
         : undefined,
       count: RRule.fromString(calendarTask.rule).options.count ?? undefined,
       date: calendarTask.date,
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
       weekdays: RRule.fromString(calendarTask.rule).options.byweekday?.map(
         (w) => new Weekday(w),
       ),
@@ -134,7 +134,6 @@ export function EditEventDialog({
     single: !(
       count !== defaultCalendarTask.count ||
       interval !== defaultCalendarTask.interval ||
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       (until && !until.isSame(defaultCalendarTask.until)) ||
       frequency !== defaultCalendarTask.frequency ||
       weekdays !== defaultCalendarTask.weekdays

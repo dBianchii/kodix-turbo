@@ -85,7 +85,6 @@ export function RecurrencePicker({
   const [draftFrequency, setDraftFrequency] = useState(frequency);
   const [draftUntil, setDraftUntil] = useState(until);
 
-  // eslint-disable-next-line react/hook-use-state
   const [_draftCount, setDraftCount] = useState(count);
   const [draftWeekdays, setDraftWeekdays] = useState(weekdays);
 

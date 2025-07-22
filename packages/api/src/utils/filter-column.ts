@@ -11,7 +11,6 @@ export function filterColumn({
   value: string;
   isSelectable?: boolean;
 }) {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const [filterValue, filterOperator] = (value.split("~").filter(Boolean) ??
     []) as [
     string,
@@ -25,11 +24,9 @@ export function filterColumn({
       case "like":
         return like(column, `%${filterValue}%`);
       case "eq":
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         return inArray(column, filterValue.split(".").filter(Boolean) ?? []);
       case "notEq":
         return not(
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           inArray(column, filterValue.split(".").filter(Boolean) ?? []),
         );
       case "isNull":
@@ -37,7 +34,6 @@ export function filterColumn({
       case "isNotNull":
         return isNotNull(column);
       default:
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         return inArray(column, filterValue.split(".") ?? []);
     }
   }

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/consistent-type-imports */
 // Use type safe message keys with `next-intl`
 import type { formats } from "@kdx/locales";
 

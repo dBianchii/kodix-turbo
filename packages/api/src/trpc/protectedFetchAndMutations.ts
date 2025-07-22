@@ -5,7 +5,6 @@ async function iteratePermissionResults(
 ) {
   let errors: TRPCError[] = [];
   if (Array.isArray(results)) {
-    // eslint-disable-next-line no-restricted-syntax
     const awaitedResults = await Promise.all(results);
     errors = awaitedResults.filter((result) => result !== undefined);
   } else {

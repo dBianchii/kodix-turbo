@@ -49,7 +49,6 @@ export function DataTableAdvancedToolbar<TData>({
         // biome-ignore lint/style/noNonNullAssertion: <biome migration>
         const value = searchParams.get(String(option.value))!;
         const [filterValue, filterOperator] =
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           value.split("~").filter(Boolean) ?? [];
 
         return {

@@ -54,7 +54,7 @@ export default function SignIn() {
   //         headers: { Authorization: `Bearer ${token}` },
   //       },
   //     );
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
   //     const user = await response.json();
   //     //store user information  in Asyncstorage
   //     await AsyncStorage.setItem("user", JSON.stringify(user));
@@ -75,12 +75,12 @@ export default function SignIn() {
 
   //     if (userJSON) {
   //       // If user information is found in AsyncStorage, parse it and set it in the state
-  //       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+
   //       setUserInfo(JSON.parse(userJSON));
   //     } else if (response?.type === "success") {
   //       // If no user information is found and the response type is "success" (assuming response is defined),
   //       // call getUserInfo with the access token from the response
-  //       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
   //       void getUserInfo(response.authentication!.accessToken);
   //     }
   //   } catch (error) {

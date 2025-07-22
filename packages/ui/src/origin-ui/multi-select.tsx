@@ -1,4 +1,3 @@
-/* eslint-disable react-compiler/react-compiler */
 "use client";
 
 import type {
@@ -265,7 +264,7 @@ const MultipleSelector = ({
     if (!arrayOptions || onSearch) {
       return;
     }
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
     const newOption = transToGroupOption(arrayOptions || [], groupBy);
     if (JSON.stringify(newOption) !== JSON.stringify(options)) {
       setOptions(newOption);
@@ -293,7 +292,6 @@ const MultipleSelector = ({
     };
 
     void exec();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearchTerm, groupBy, open, triggerSearchOnFocus, onSearchSync]);
 
   useEffect(() => {
@@ -319,7 +317,6 @@ const MultipleSelector = ({
     };
 
     void exec();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearchTerm, groupBy, open, triggerSearchOnFocus, onSearch]);
 
   const CreatableItem = useCallback(() => {

@@ -1,8 +1,3 @@
-// /* eslint-disable @typescript-eslint/no-unsafe-call */
-// /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-// /* eslint-disable @typescript-eslint/no-explicit-any */
-// /* eslint-disable @typescript-eslint/no-non-null-assertion */
-
 // import type { DBQueryConfig, SQLWrapper } from "drizzle-orm";
 // import { and, eq } from "drizzle-orm";
 
@@ -176,7 +171,7 @@
 //                   }
 
 //                   return { ...acc, [key]: value };
-//                   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+
 //                 }, config.with as any),
 //               };
 //             }

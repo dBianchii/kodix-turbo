@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
 import { useEffect, useRef, useState } from "react";
 import { Platform } from "react-native";
 import { useToastController } from "@tamagui/toast";
@@ -36,7 +35,6 @@ async function registerForPushNotificationsAsync() {
     );
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   const projectId = Constants.expoConfig?.extra?.eas?.projectId as
     | string
     | undefined;
@@ -52,14 +50,12 @@ async function registerForPushNotificationsAsync() {
     console.log(pushTokenString);
     return pushTokenString;
   } catch (e: unknown) {
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     throw new Error(`${e}`);
   }
 }
 
 export const usePushNotifications = () => {
   Notifications.setNotificationHandler({
-    // eslint-disable-next-line @typescript-eslint/require-await
     handleNotification: async () => ({
       shouldShowAlert: true,
       shouldPlaySound: false,

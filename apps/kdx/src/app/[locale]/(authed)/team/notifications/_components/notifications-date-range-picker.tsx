@@ -123,9 +123,6 @@ export function NotificationsDateRangePicker({
     router.push(`${pathname}?${newSearchParams.toString()}`, {
       scroll: false,
     });
-
-    // eslint-disable-next-line react-compiler/react-compiler
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date?.from, date?.to]);
   const formatT = useFormatter();
   return (

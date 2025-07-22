@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
-
 import { SplashScreen, Stack, useRouter, useSegments } from "expo-router";
 
 import "@bacons/text-decoder/install";

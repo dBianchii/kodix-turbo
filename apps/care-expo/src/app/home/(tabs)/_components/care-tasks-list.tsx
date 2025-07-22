@@ -98,7 +98,6 @@ export function CareTasksLists() {
         );
         if (!previousTask?.doneAt && editedCareTask.doneAt) {
           const { sound } = await Audio.Sound.createAsync(
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-require-imports
             require("../../../../../assets/taskDone.mp3"),
           );
           void sound.playAsync();
@@ -480,7 +479,6 @@ function CareTaskOrCalendarTaskItem(props: {
               }
             }}
             style={{
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               backgroundColor: theme.red5Dark.val,
               height: "100%",
               width: 62,

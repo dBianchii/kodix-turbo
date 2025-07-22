@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-
 import { getRequestConfig } from "next-intl/server";
 
 import { formats } from "@kdx/locales";

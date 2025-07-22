@@ -1,11 +1,5 @@
-// eslint-disable-next-line react-compiler/react-compiler
 /** biome-ignore-all lint/suspicious/noExplicitAny: <file was copied from magic-ui> */
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
+
 "use client";
 
 import type { COBEOptions } from "cobe";

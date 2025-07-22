@@ -1,5 +1,3 @@
-// eslint-disable-next-line react-compiler/react-compiler
-/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import type {
@@ -193,7 +191,7 @@ export function useDataTable<TData, TValue>({
     useState<ColumnFiltersState>(initialColumnFilters);
 
   // Handle server-side pagination
-  // eslint-disable-next-line react/hook-use-state
+
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: page - 1,
     pageSize: perPage,
@@ -314,7 +312,7 @@ export function useDataTable<TData, TValue>({
   const table = useReactTable({
     data,
     columns,
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
     pageCount: pageCount ?? -1,
     state: {
       pagination,

@@ -106,11 +106,11 @@ export function DataTableFilterCombobox<TData>({
                     ...selectedOptions,
                     {
                       id: crypto.randomUUID(),
-                      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
                       label: selectedOption.label ?? "",
-                      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
                       value: selectedOption.value ?? "",
-                      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
                       options: selectedOption.options ?? [],
                       isMulti: true,
                     },
