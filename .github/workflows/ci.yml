@@ -24,6 +24,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./tooling/github/setup
+        with:
+          skip-turbo: true
+
       - name: Setup Biome
         uses: biomejs/setup-biome@v2
         with:
