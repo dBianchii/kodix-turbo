@@ -20,7 +20,7 @@ env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
 
 jobs:
-  lint:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,7 +28,7 @@ jobs:
         uses: biomejs/setup-biome@v2
         with:
           version: latest
-      - name: Lint
+      - name: Run Biome
         run: biome ci .
 
   typecheck:
