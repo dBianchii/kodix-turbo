@@ -29,6 +29,7 @@ jobs:
         uses: ./tooling/github/setup
         with:
           skip-turbo: true
+          skip-node: true
 
       - name: Setup Biome
         uses: biomejs/setup-biome@v2
