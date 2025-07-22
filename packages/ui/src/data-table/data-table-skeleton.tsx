@@ -92,12 +92,20 @@ export function DataTableSkeleton(props: DataTableSkeletonProps) {
         <div className="flex flex-1 items-center space-x-2">
           {searchableColumnCount > 0
             ? Array.from({ length: searchableColumnCount }).map((_, i) => (
-                <Skeleton className="h-7 w-40 lg:w-60" key={i} />
+                <Skeleton
+                  className="h-7 w-40 lg:w-60"
+                  // biome-ignore lint/suspicious/noArrayIndexKey: <The key is unique with the prefix>
+                  key={`searchable-${i}`}
+                />
               ))
             : null}
           {filterableColumnCount > 0
             ? Array.from({ length: filterableColumnCount }).map((_, i) => (
-                <Skeleton className="h-7 w-[4.5rem] border-dashed" key={i} />
+                <Skeleton
+                  className="h-7 w-[4.5rem] border-dashed"
+                  // biome-ignore lint/suspicious/noArrayIndexKey: <The key is unique with the prefix>
+                  key={`filterable-${i}`}
+                />
               ))
             : null}
         </div>
@@ -109,13 +117,18 @@ export function DataTableSkeleton(props: DataTableSkeletonProps) {
         <Table>
           <TableHeader>
             {Array.from({ length: 1 }).map((_, i) => (
-              <TableRow className="hover:bg-transparent" key={i}>
-                {Array.from({ length: columnCount }).map((_, j) => (
+              <TableRow
+                className="hover:bg-transparent"
+                // biome-ignore lint/suspicious/noArrayIndexKey: <The key is unique with the prefix>
+                key={`header-${i}`}
+              >
+                {Array.from({ length: columnCount }).map((__, columnIndex) => (
                   <TableHead
-                    key={j}
+                    // biome-ignore lint/suspicious/noArrayIndexKey: <The key is unique with the prefix>
+                    key={`header-cell-${columnIndex}`}
                     style={{
-                      width: cellWidths[j],
-                      minWidth: shrinkZero ? cellWidths[j] : "auto",
+                      width: cellWidths[columnIndex],
+                      minWidth: shrinkZero ? cellWidths[columnIndex] : "auto",
                     }}
                   >
                     <Skeleton className="h-6 w-full" />
@@ -126,13 +139,18 @@ export function DataTableSkeleton(props: DataTableSkeletonProps) {
           </TableHeader>
           <TableBody>
             {Array.from({ length: rowCount }).map((_, i) => (
-              <TableRow className="hover:bg-transparent" key={i}>
-                {Array.from({ length: columnCount }).map((_, j) => (
+              <TableRow
+                className="hover:bg-transparent"
+                // biome-ignore lint/suspicious/noArrayIndexKey: <The key is unique with the prefix>
+                key={`row-${i}`}
+              >
+                {Array.from({ length: columnCount }).map((__, columnIndex) => (
                   <TableCell
-                    key={j}
+                    // biome-ignore lint/suspicious/noArrayIndexKey: <The key is unique with the prefix>
+                    key={`cell-${columnIndex}`}
                     style={{
-                      width: cellWidths[j],
-                      minWidth: shrinkZero ? cellWidths[j] : "auto",
+                      width: cellWidths[columnIndex],
+                      minWidth: shrinkZero ? cellWidths[columnIndex] : "auto",
                     }}
                   >
                     <Skeleton className="h-6 w-full" />

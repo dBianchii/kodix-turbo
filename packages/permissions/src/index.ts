@@ -5,18 +5,18 @@ import type { ServerSideT } from "@kdx/locales";
 import type { AppRole, KodixAppId } from "@kdx/shared";
 import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
 
-import type { KodixCareMongoAbility } from "./kodixCare/kodixCare.permissions";
+import type { KodixCareMongoAbility } from "./kodixCare/kodix-care-permissions";
 import type { Team } from "./models/team";
 import type { User } from "./models/user";
 import type { TeamAbility } from "./team/team.permissions";
-import { kodixCarePermissionsFactory } from "./kodixCare/kodixCare.permissions";
+import { kodixCarePermissionsFactory } from "./kodixCare/kodix-care-permissions";
 import { teamPermissionsFactory } from "./team/team.permissions";
 
 const appIdToPermissionsFactory = {
   [kodixCareAppId]: kodixCarePermissionsFactory,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  // biome-ignore lint/suspicious/noEmptyBlockStatements: <biome migration>
   [todoAppId]: ({ t: _ }: { t: ServerSideT }) => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  // biome-ignore lint/suspicious/noEmptyBlockStatements: <biome migration>
   [calendarAppId]: ({ t: _ }: { t: ServerSideT }) => {},
 };
 
@@ -37,9 +37,9 @@ export function defineAbilityForUserAndApp<T extends KodixAppId>({
 
   const appPermissions = appIdToPermissionsFactory[appId]({ t });
   if (appPermissions)
-    roles.forEach((role) => {
+    for (const role of roles) {
       appPermissions[role](user, appBuilder);
-    });
+    }
 
   const appAbility = appBuilder.build({
     detectSubjectType(subject) {
@@ -80,4 +80,5 @@ export function defineAbilityForUserAndTeam({
   return teamAbility;
 }
 
-export type { KodixCareMongoAbility, TeamAbility };
+export type { KodixCareMongoAbility } from "./kodixCare/kodix-care-permissions";
+export type { TeamAbility } from "./team/team.permissions";

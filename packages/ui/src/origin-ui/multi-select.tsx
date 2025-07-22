@@ -100,13 +100,14 @@ function transToGroupOption(options: Option[], groupBy?: string) {
   }
 
   const groupOption: GroupOption = {};
-  options.forEach((option) => {
+  for (const option of options) {
     const key = (option[groupBy] as string) || "";
     if (!groupOption[key]) {
       groupOption[key] = [];
     }
     groupOption[key].push(option);
-  });
+  }
+
   return groupOption;
 }
 
@@ -321,7 +322,7 @@ const MultipleSelector = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearchTerm, groupBy, open, triggerSearchOnFocus, onSearch]);
 
-  const CreatableItem = () => {
+  const CreatableItem = useCallback(() => {
     if (!creatable) return;
     if (
       isOptionsExist(options, [{ value: inputValue, label: inputValue }]) ||
@@ -337,13 +338,13 @@ const MultipleSelector = ({
           e.preventDefault();
           e.stopPropagation();
         }}
-        onSelect={(value: string) => {
+        onSelect={(v: string) => {
           if (selected.length >= maxSelected) {
             onMaxSelected?.(selected.length);
             return;
           }
           setInputValue("");
-          const newOptions = [...selected, { value, label: value }];
+          const newOptions = [...selected, { value: v, label: v }];
           setSelected(newOptions);
           onChange?.(newOptions);
         }}
@@ -364,7 +365,18 @@ const MultipleSelector = ({
     }
 
     return;
-  };
+  }, [
+    options,
+    selected,
+    onSearch,
+    creatable,
+    debouncedSearchTerm,
+    inputValue,
+    isLoading,
+    maxSelected,
+    onChange,
+    onMaxSelected,
+  ]);
 
   const EmptyItem = useCallback(() => {
     if (!emptyIndicator) return;
@@ -393,6 +405,7 @@ const MultipleSelector = ({
     }
 
     if (creatable) {
+      // biome-ignore lint/nursery/noShadow: <biome migration>
       return (value: string, search: string) => {
         return value.toLowerCase().includes(search.toLowerCase()) ? 1 : -1;
       };
@@ -416,6 +429,9 @@ const MultipleSelector = ({
       }} // When onSearch is provided, we don&lsquo;t want to filter the options. You can still override it.
       shouldFilter={commandProps?.shouldFilter ?? !onSearch}
     >
+      {/** biome-ignore lint/a11y/noStaticElementInteractions: <biome migration> */}
+      {/** biome-ignore lint/nursery/noNoninteractiveElementInteractions: <biome migration> */}
+      {/** biome-ignore lint/a11y/useKeyWithClickEvents: <biome migration> */}
       <div
         className={cn(
           "relative min-h-[38px] rounded-md border border-input text-sm outline-none transition-[color,box-shadow] focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/50 has-disabled:pointer-events-none has-disabled:cursor-not-allowed has-aria-invalid:border-destructive has-disabled:opacity-50 has-aria-invalid:ring-destructive/20 dark:has-aria-invalid:ring-destructive/40",
@@ -457,6 +473,7 @@ const MultipleSelector = ({
                     e.preventDefault();
                     e.stopPropagation();
                   }}
+                  type="button"
                 >
                   <XIcon aria-hidden="true" size={14} />
                 </button>
@@ -489,9 +506,9 @@ const MultipleSelector = ({
               }
               inputProps?.onFocus?.(event);
             }}
-            onValueChange={(value) => {
-              setInputValue(value);
-              inputProps?.onValueChange?.(value);
+            onValueChange={(v) => {
+              setInputValue(v);
+              inputProps?.onValueChange?.(v);
             }}
             placeholder={
               hidePlaceholderWhenSelected && selected.length !== 0

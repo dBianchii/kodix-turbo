@@ -4,7 +4,7 @@ import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
 import { ChevronDown } from "lucide-react";
 
 import { cn } from "../.";
-import { navigationMenuTriggerStyle } from "./navigationMenuTriggerStyle";
+import { navigationMenuTriggerStyle } from "./navigation-menu-trigger-style";
 
 const NavigationMenu = //? This is a div
   ({

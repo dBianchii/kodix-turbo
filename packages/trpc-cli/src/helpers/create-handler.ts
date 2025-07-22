@@ -1,6 +1,6 @@
 import fs from "node:fs";
 
-import { toPascalCase } from "../utils/toPascalCase";
+import { toPascalCase } from "../utils/to-pascal-case";
 
 export const createHandler = async ({
   handlerPath,

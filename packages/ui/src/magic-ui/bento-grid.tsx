@@ -35,8 +35,8 @@ const BentoCard = ({
   name: string;
   className: string;
   background: ReactNode;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Icon: any;
+
+  Icon: React.ElementType;
   description: string;
   href: string;
   cta: string;

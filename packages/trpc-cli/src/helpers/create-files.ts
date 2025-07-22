@@ -4,10 +4,10 @@ import ora from "ora";
 import { trpcCliConfig } from "../../config";
 import { ROUTERS_FOLDER_PATH, VALIDATORS_FOLDER_PATH } from "../cli";
 import { logger } from "../utils/logger";
-import { createHandler } from "./createHandler";
-import { createRouter } from "./createRouter";
-import { createValidator } from "./createValidator";
-import { runPrettier } from "./runPrettier";
+import { createHandler } from "./create-handler";
+import { createRouter } from "./create-router";
+import { createValidator } from "./create-validator";
+import { runPrettier } from "./run-prettier";
 
 export interface CreateFilesParams {
   chosenRouterPath: string;

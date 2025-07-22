@@ -3,8 +3,8 @@ import fs from "node:fs/promises";
 
 import { trpcCliConfig } from "../../config";
 import { logger } from "../utils/logger";
-import { toPascalCase } from "../utils/toPascalCase";
-import { addImportStatement } from "./addImportStatement";
+import { toPascalCase } from "../utils/to-pascal-case";
+import { addImportStatement } from "./add-import-statement";
 
 export const createRouter = async ({
   routerFolderFilePath,
@@ -71,7 +71,9 @@ export const ${newRouterName}Router = {
   await addNewEntryToTrpcRouterRecord(routerFilePath, newEntry);
 
   async function addNewEntryToTrpcRouterRecord(
+    // biome-ignore lint/nursery/noShadow: <biome migration>
     routerFilePath: string,
+    // biome-ignore lint/nursery/noShadow: <biome migration>
     newEntry: string,
     begginningOfRecord = false
   ) {

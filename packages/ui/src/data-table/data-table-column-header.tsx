@@ -37,7 +37,8 @@ export function DataTableColumnHeader<TData, TValue>({
             aria-label={
               column.getIsSorted() === "desc"
                 ? t("Sorted descending Click to sort ascending")
-                : column.getIsSorted() === "asc"
+                : // biome-ignore lint/style/noNestedTernary: <biome migration>
+                  column.getIsSorted() === "asc"
                   ? t("Sorted ascending Click to sort descending")
                   : t("Not sorted Click to sort ascending")
             }
@@ -48,7 +49,8 @@ export function DataTableColumnHeader<TData, TValue>({
             <div className="flex flex-row">{children}</div>
             {column.getCanSort() && column.getIsSorted() === "desc" ? (
               <ChevronDown aria-hidden="true" className="ml-2 size-4" />
-            ) : column.getIsSorted() === "asc" ? (
+            ) : // biome-ignore lint/style/noNestedTernary: <biome migration>
+            column.getIsSorted() === "asc" ? (
               <ChevronUp aria-hidden="true" className="ml-2 size-4" />
             ) : (
               <ChevronsUpDown aria-hidden="true" className="ml-2 size-4" />

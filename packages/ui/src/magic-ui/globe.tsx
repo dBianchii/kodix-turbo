@@ -1,4 +1,5 @@
 // eslint-disable-next-line react-compiler/react-compiler
+/** biome-ignore-all lint/suspicious/noExplicitAny: <file was copied from magic-ui> */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-floating-promises */
@@ -17,7 +18,7 @@ import { cn } from "../.";
 const GLOBE_CONFIG: COBEOptions = {
   width: 800,
   height: 800,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  // biome-ignore lint/suspicious/noEmptyBlockStatements: <biome migration>
   onRender: () => {},
   devicePixelRatio: 2,
   phi: 0,
@@ -67,6 +68,7 @@ export default function Globe({
 
   const updatePointerInteraction = (value: any) => {
     pointerInteracting.current = value;
+    // biome-ignore lint/style/noNonNullAssertion: <biome migration>
     canvasRef.current!.style.cursor = value ? "grabbing" : "grab";
   };
 
@@ -85,7 +87,7 @@ export default function Globe({
       state.width = width * 2;
       state.height = width * 2;
     },
-    [pointerInteracting, phi, r]
+    [phi, r, width]
   );
 
   const onResize = () => {
@@ -94,10 +96,12 @@ export default function Globe({
     }
   };
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <biome migration>
   useEffect(() => {
     window.addEventListener("resize", onResize);
     onResize();
 
+    // biome-ignore lint/style/noNonNullAssertion: <biome migration>
     const globe = createGlobe(canvasRef.current!, {
       ...config,
       width: width * 2,
@@ -105,7 +109,10 @@ export default function Globe({
       onRender,
     });
 
-    setTimeout(() => (canvasRef.current!.style.opacity = "1"));
+    setTimeout(() => {
+      // biome-ignore lint/style/noNonNullAssertion: <biome migration>
+      canvasRef.current!.style.opacity = "1";
+    });
     return () => globe.destroy();
   }, []);
 

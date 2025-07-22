@@ -1,6 +1,6 @@
-import { toPascalCase } from "../utils/toPascalCase";
-import { addExportStatement } from "./addExportStatement";
-import { addImportStatement } from "./addImportStatement";
+import { toPascalCase } from "../utils/to-pascal-case";
+import { addExportStatement } from "./add-export-statement";
+import { addImportStatement } from "./add-import-statement";
 
 export const createValidator = async ({
   validatorPath,

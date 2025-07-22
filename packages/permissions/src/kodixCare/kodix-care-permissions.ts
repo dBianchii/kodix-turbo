@@ -5,7 +5,7 @@ import type { AppRole, kodixCareAppId } from "@kdx/shared";
 
 import type { Create, Delete, Edit } from "../actions";
 import type { User } from "../models/user";
-import type { CareShift, CareTask } from "./kodixCare.subjects";
+import type { CareShift, CareTask } from "./kodix-care-subjects";
 
 type KodixCareAbilities =
   | [Delete | Create, CareTask]

@@ -1,4 +1,9 @@
 // eslint-disable-next-line react-compiler/react-compiler
+/** biome-ignore-all lint/complexity/noExcessiveCognitiveComplexity: <biome migration> */
+/** biome-ignore-all lint/nursery/noNoninteractiveElementInteractions: <biome migration> */
+/** biome-ignore-all lint/a11y/useKeyWithClickEvents: <biome migration> */
+/** biome-ignore-all lint/a11y/noStaticElementInteractions: <biome migration> */
+/** biome-ignore-all lint/correctness/useExhaustiveDependencies: <biome migration> */
 /* eslint-disable react-hooks/exhaustive-deps */
 /**
  * Shadcn Datetime Picker with support for timezone, date and time selection, minimum and maximum date limits, and 12-hour format...
@@ -279,6 +284,7 @@ export function DateTimePicker({
             onClick={(e) => {
               if (disabled) e.preventDefault();
             }}
+            // biome-ignore lint/a11y/noNoninteractiveTabindex: <biome migration>
             tabIndex={0}
           >
             <div className="flex grow items-center">
@@ -296,8 +302,8 @@ export function DateTimePicker({
                   onChange(undefined);
                   setOpen(false);
                 }}
-                role="button"
                 size="sm"
+                type="button"
                 variant="ghost"
               >
                 <XCircle className="size-4" />
@@ -466,26 +472,26 @@ function MonthYearPicker({
   const format = useFormatter();
   const yearRef = useRef<HTMLDivElement>(null);
   const years = useMemo(() => {
-    const years: TimeOption[] = [];
+    const _years: TimeOption[] = [];
     for (let i = 1912; i < 2100; i++) {
       let disabled = false;
       const startY = startOfYear(setYear(value, i));
       const endY = endOfYear(setYear(value, i));
       if (minDate && endY < minDate) disabled = true;
       if (maxDate && startY > maxDate) disabled = true;
-      years.push({ value: i, label: i.toString(), disabled });
+      _years.push({ value: i, label: i.toString(), disabled });
     }
-    return years;
+    return _years;
   }, [value]);
   const months = useMemo(() => {
-    const months: TimeOption[] = [];
+    const _months: TimeOption[] = [];
     for (let i = 0; i < 12; i++) {
       let disabled = false;
       const startM = startOfMonth(setMonthFns(value, i));
       const endM = endOfMonth(setMonthFns(value, i));
       if (minDate && endM < minDate) disabled = true;
       if (maxDate && startM > maxDate) disabled = true;
-      months.push({
+      _months.push({
         value: i,
         label: format.dateTime(new Date(0, i), {
           month: "short",
@@ -493,7 +499,7 @@ function MonthYearPicker({
         disabled,
       });
     }
-    return months;
+    return _months;
   }, [value]);
 
   const onYearChange = useCallback(
@@ -622,7 +628,7 @@ function TimePicker({
 
   const hours: TimeOption[] = useMemo(
     () =>
-      Array.from({ length: use12HourFormat ? 12 : 24 }, (_, i) => {
+      Array.from({ length: use12HourFormat ? 12 : 24 }, (__, i) => {
         let disabled = false;
         const hourValue = use12HourFormat ? (i === 0 ? 12 : i) : i;
         const hDate = setHours(value, use12HourFormat ? i + ampm * 12 : i);
@@ -826,7 +832,6 @@ function TimePicker({
         <Button
           aria-expanded={open}
           className="justify-between"
-          role="combobox"
           variant="outline"
         >
           <Clock className="mr-2 size-4" />
@@ -888,7 +893,7 @@ function TimePicker({
                       <TimeItem
                         className="h-8"
                         disabled={v.disabled}
-                        onSelect={(v) => setSecond(v.value)}
+                        onSelect={(option) => setSecond(option.value)}
                         option={v}
                         selected={v.value === second}
                       />
@@ -980,6 +985,7 @@ function buildTime(options: BuildTimeOptions) {
       dateStr.slice(19);
     dateStr =
       dateStr.slice(0, 24) +
+      // biome-ignore lint/suspicious/noDoubleEquals: <biome migration>
       (ampm == AM_VALUE ? "AM" : "PM") +
       dateStr.slice(26);
     date = parse(dateStr, formatStr, value);

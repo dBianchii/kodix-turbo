@@ -1,6 +1,6 @@
-import type { CreateFilesParams } from "./helpers/createFiles";
+import type { CreateFilesParams } from "./helpers/create-files";
 import { runCli } from "./cli";
-import { createFiles } from "./helpers/createFiles";
+import { createFiles } from "./helpers/create-files";
 import { logger } from "./utils/logger";
 
 const main = async () => {

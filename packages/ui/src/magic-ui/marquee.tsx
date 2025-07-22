@@ -7,7 +7,7 @@ interface MarqueeProps {
   children?: React.ReactNode;
   vertical?: boolean;
   repeat?: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: <biome migration>
   [key: string]: any;
 }
 
@@ -40,7 +40,8 @@ export default function Marquee({
             "group-hover:[animation-play-state:paused]": pauseOnHover,
             "[animation-direction:reverse]": reverse,
           })}
-          key={i}
+          // biome-ignore lint/suspicious/noArrayIndexKey: <biome migration>
+          key={`marquee-${i}`}
         >
           {children}
         </div>
