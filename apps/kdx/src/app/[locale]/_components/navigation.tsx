@@ -10,10 +10,9 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from "@kdx/ui/navigation-menu/index";
+import { navigationMenuTriggerStyle } from "@kdx/ui/navigation-menu/navigation-menu-trigger-style";
 
 import { Link, usePathname } from "~/i18n/routing";
-
-import { navigationMenuTriggerStyle } from "../../../../../../packages/ui/dist/src/navigation-menu/navigation-menu-trigger-style";
 
 export function Navigation({
   goBackItem,
