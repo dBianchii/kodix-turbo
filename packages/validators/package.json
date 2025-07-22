@@ -74,11 +74,9 @@
     "@kdx/dayjs": "workspace:*",
     "@kdx/db": "workspace:*",
     "@kdx/locales": "workspace:*",
-    "@kdx/prettier-config": "workspace:*",
     "@kdx/shared": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
     "rrule": "catalog:",
     "typescript": "catalog:"
-  },
-  "prettier": "@kdx/prettier-config"
+  }
 }

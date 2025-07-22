@@ -16,9 +16,7 @@
     "tailwindcss-animate": "catalog:"
   },
   "devDependencies": {
-    "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
     "typescript": "catalog:"
-  },
-  "prettier": "@kdx/prettier-config"
+  }
 }

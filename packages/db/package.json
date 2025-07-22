@@ -54,16 +54,13 @@
   },
   "devDependencies": {
     "@kdx/biome-config": "workspace:*",
-    "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
     "@types/node": "catalog:",
     "dotenv-cli": "catalog:",
     "drizzle-kit": "catalog:",
     "drizzle-seed": "catalog:",
     "ora": "catalog:",
-    "prettier": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:"
-  },
-  "prettier": "@kdx/prettier-config"
+  }
 }

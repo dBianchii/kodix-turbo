@@ -87,9 +87,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
           //   stdio: "inherit",
           // });
           execSync("pnpm i", { stdio: "inherit" });
-          execSync(
-            `pnpm prettier --write packages/${answers.name}/** --list-different`
-          );
+          execSync(`pnpm biome check --write packages/${answers.name}/**`);
           return "Package scaffolded";
         }
         return "Package not scaffolded";

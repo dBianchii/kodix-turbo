@@ -11,9 +11,7 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "devDependencies": {
-    "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "prettier": "catalog:",
     "typescript": "catalog:"
   },
   "dependencies": {

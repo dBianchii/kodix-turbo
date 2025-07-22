@@ -48,7 +48,6 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@kdx/prettier-config": "workspace:*",
     "@kdx/tailwind-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
     "@types/deep-diff": "catalog:",
@@ -57,8 +56,6 @@
     "@types/object.groupby": "catalog:",
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
-    "prettier": "catalog:",
     "typescript": "catalog:"
-  },
-  "prettier": "@kdx/prettier-config"
+  }
 }

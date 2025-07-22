@@ -7,6 +7,5 @@
   },
   "scripts": {
     "clean": "git clean -xdf .cache .turbo node_modules"
-  },
-  "prettier": "@kdx/prettier-config"
+  }
 }

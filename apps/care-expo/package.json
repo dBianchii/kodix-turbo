@@ -78,15 +78,12 @@
     "@babel/preset-env": "catalog:babel",
     "@babel/runtime": "catalog:babel",
     "@kdx/api": "workspace:*",
-    "@kdx/prettier-config": "workspace:*",
     "@kdx/tailwind-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
     "@types/babel__core": "catalog:",
     "@types/react": "catalog:react",
     "metro": "catalog:",
-    "prettier": "catalog:",
     "tailwindcss": "catalog:tailwindcss",
     "typescript": "catalog:"
-  },
-  "prettier": "@kdx/prettier-config"
+  }
 }

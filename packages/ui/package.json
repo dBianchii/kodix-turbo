@@ -71,16 +71,13 @@
     "zustand": "catalog:"
   },
   "devDependencies": {
-    "@kdx/prettier-config": "workspace:*",
     "@kdx/shared": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
     "cobe": "catalog:",
-    "prettier": "catalog:",
     "react": "catalog:react",
     "react-spring": "catalog:",
     "typescript": "catalog:"
-  },
-  "prettier": "@kdx/prettier-config"
+  }
 }

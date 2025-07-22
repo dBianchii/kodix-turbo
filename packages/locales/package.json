@@ -20,12 +20,9 @@
     "use-intl": "catalog:"
   },
   "devDependencies": {
-    "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
     "@types/react": "catalog:react",
-    "prettier": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:"
-  },
-  "prettier": "@kdx/prettier-config"
+  }
 }

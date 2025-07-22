@@ -27,9 +27,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",
-    "@kdx/prettier-config": "workspace:*",
     "@turbo/gen": "catalog:turbo",
-    "prettier": "catalog:",
     "turbo": "catalog:turbo",
     "typescript": "catalog:",
     "ultracite": "catalog:",

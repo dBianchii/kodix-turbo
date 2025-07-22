@@ -16,9 +16,7 @@
     "@kdx/auth": "workspace:*",
     "@kdx/db": "workspace:*",
     "@kdx/locales": "workspace:*",
-    "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "prettier": "catalog:",
     "typescript": "catalog:"
   },
   "dependencies": {
