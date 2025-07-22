@@ -32,7 +32,7 @@
     "prettier": "catalog:",
     "turbo": "catalog:turbo",
     "typescript": "catalog:",
-    "ultracite": "5.0.29",
+    "ultracite": "catalog:",
     "vitest": "catalog:"
   },
   "pnpm": {

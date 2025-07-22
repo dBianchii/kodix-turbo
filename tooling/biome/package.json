@@ -6,8 +6,7 @@
     "./restrictEnvAccess": "./restrictEnvAccess.json"
   },
   "scripts": {
-    "clean": "git clean -xdf .cache .turbo node_modules",
-    "typecheck": "tsc --noEmit"
+    "clean": "git clean -xdf .cache .turbo node_modules"
   },
   "prettier": "@kdx/prettier-config"
 }

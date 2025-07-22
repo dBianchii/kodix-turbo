@@ -48,8 +48,8 @@ type team = RouterOutputs["team"]["getActiveTeam"];
 type Status = typeof todos.$inferInsert.status;
 
 declare module "@tanstack/react-table" {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface TableMeta<_TData extends RowData> {
+  // biome-ignore lint/correctness/noUnusedVariables: <idk>
+  interface TableMeta<TData extends RowData> {
     team: team | undefined;
   }
 }

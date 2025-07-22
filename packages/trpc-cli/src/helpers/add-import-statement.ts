@@ -13,6 +13,8 @@ export async function addImportStatement(
   const match = fileContent.match(importRegex);
   if (match) {
     let importContent = match[1]?.trim();
+    if (!importContent) return;
+
     if (!importContent.includes(importName)) {
       //remove trailing comma if it exists
       if (importContent.endsWith(","))

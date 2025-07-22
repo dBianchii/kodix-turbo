@@ -49,8 +49,8 @@ export const signInByPasswordHandler = async ({
     //If none of the KodixCare teams are the active team, we need to switch the active team
     await userRepository.moveUserToTeam(db, {
       userId,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      newTeamId: _teams[0]?.id,
+      // biome-ignore lint/style/noNonNullAssertion: <idk>
+      newTeamId: _teams[0]!.id,
     });
   }
 

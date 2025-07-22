@@ -367,6 +367,9 @@ catalogs:
     typescript:
       specifier: ^5.5.4
       version: 5.8.2
+    ultracite:
+      specifier: ^5.0.29
+      version: 5.0.29
     use-intl:
       specifier: ^3.20.0
       version: 3.26.5
@@ -530,7 +533,7 @@ importers:
         specifier: 'catalog:'
         version: 5.8.2
       ultracite:
-        specifier: 5.0.29
+        specifier: 'catalog:'
         version: 5.0.29(@types/node@22.15.0)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.39.0)(yaml@2.7.0)
       vitest:
         specifier: 'catalog:'
