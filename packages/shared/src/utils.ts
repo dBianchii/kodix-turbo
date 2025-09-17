@@ -4,7 +4,11 @@ import z from "zod/v4";
  * @description Base URL for the current environment.
  */
 export const getBaseUrl = () => {
+  // biome-ignore lint/nursery/noTsIgnore: <If we added DOM to this package, we would need to add it to all packages>
+  //@ts-ignore-error - window is not defined in the server
   if (typeof window !== "undefined") {
+    // biome-ignore lint/nursery/noTsIgnore: <If we added DOM to this package, we would need to add it to all packages>
+    //@ts-ignore-error
     return window.location.origin;
   }
   if (process.env.VERCEL_URL) {
