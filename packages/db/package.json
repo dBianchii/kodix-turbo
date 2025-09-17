@@ -14,8 +14,6 @@
   "scripts": {
     "build": "tsc",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint",
     "push": "pnpm wait-for-db && pnpm with-env drizzle-kit push",
     "studio": "pnpm wait-for-db && pnpm with-env drizzle-kit studio",
     "seed": "pnpm wait-for-db && pnpm with-env tsx ./scripts/seed.ts",
