@@ -84,7 +84,7 @@ export function NotificationsPopoverClient({
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <MdNotificationsActive className="size-4 text-orange-500" />
-            <h4 className="leading-none font-medium">
+            <h4 className="font-medium leading-none">
               {t("New notifications")}
             </h4>
           </div>
@@ -96,11 +96,11 @@ export function NotificationsPopoverClient({
               <li key={invitation.id} className="flex flex-col gap-2">
                 <div>
                   <p className="text-muted-foreground text-sm">
-                    <span className="text-foreground font-bold">
+                    <span className="font-bold text-foreground">
                       {invitation.InvitedBy.name}
                     </span>{" "}
                     {t("invited you to")}{" "}
-                    <span className="text-foreground font-bold">
+                    <span className="font-bold text-foreground">
                       {invitation.Team.name}
                     </span>
                   </p>

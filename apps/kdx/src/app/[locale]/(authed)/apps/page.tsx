@@ -6,6 +6,7 @@ import { H1, Lead } from "@kdx/ui/typography";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { trpcCaller } from "~/trpc/server";
+
 import { AppCardSkeleton } from "../../_components/app/kodix-app";
 import { KodixApps } from "./_components/kodix-apps";
 
@@ -23,8 +24,8 @@ export default async function AppsPage() {
       <br />
       <div className="grid-col-1 grid grid-cols-1 gap-3 md:grid-cols-3">
         <Suspense
-          fallback={Array.from({ length: 2 }).map((_, index) => (
-            <AppCardSkeleton key={index} />
+          fallback={["one-app-skeleton", "two-app-skeleton"].map((item) => (
+            <AppCardSkeleton key={item} />
           ))}
         >
           <Wait />

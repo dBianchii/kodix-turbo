@@ -19,8 +19,9 @@ import {
   SelectValue,
 } from "@kdx/ui/select";
 
-import type { DataTableFilterOption } from "./types";
 import { usePathname, useRouter } from "~/i18n/routing";
+
+import type { DataTableFilterOption } from "./types";
 import { DataTableAdvancedFacetedFilter } from "./data-table-advanced-faceted-filter";
 
 interface DataTableFilterItemProps<TData> {
@@ -109,9 +110,6 @@ export function DataTableFilterItem<TData>({
       });
       router.push(`${pathname}?${newSearchParams}`);
     }
-
-    // eslint-disable-next-line react-compiler/react-compiler
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedOption, debounceValue, selectedOperator]);
 
   return (
@@ -158,7 +156,7 @@ export function DataTableFilterItem<TData>({
                 setSelectedOperator(operators.find((c) => c.value === value))
               }
             >
-              <SelectTrigger className="hover:bg-muted/50 h-auto w-fit truncate border-none px-2 py-0.5 text-xs">
+              <SelectTrigger className="h-auto w-fit truncate border-none px-2 py-0.5 text-xs hover:bg-muted/50">
                 <SelectValue placeholder={selectedOperator?.label} />
               </SelectTrigger>
               <SelectContent>
@@ -180,7 +178,7 @@ export function DataTableFilterItem<TData>({
             aria-label={t("Remove filter")}
             variant="ghost"
             size="icon"
-            className="text-muted-foreground size-7"
+            className="size-7 text-muted-foreground"
             onClick={() => {
               setSelectedOptions((prev) =>
                 prev.filter((item) => item.value !== selectedOption.value),

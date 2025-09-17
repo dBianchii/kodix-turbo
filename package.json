@@ -14,10 +14,9 @@
     "db:seed": "turbo @kdx/db-dev#dev @kdx/db#seed",
     "dev:kdx": "turbo watch dev studio -F @kdx/kdx... @kdx/db-dev#dev",
     "dev:email": "turbo dev -F @kdx/react-email...",
-    "format": "turbo run format --continue -- --cache --cache-location .cache/.prettiercache",
-    "format:fix": "turbo run format --continue -- --write --cache --cache-location .cache/.prettiercache",
-    "lint": "turbo run lint --continue -- --cache --cache-location .cache/.eslintcache",
-    "lint:fix": "turbo run lint --continue -- --fix --cache --cache-location .cache/.eslintcache",
+    "check": "biome check .",
+    "check:unsafe": "biome check --write --unsafe .",
+    "check:write": "biome check --write .",
     "lint:ws": "pnpm dlx sherif@latest",
     "postinstall": "pnpm lint:ws",
     "typecheck": "turbo run typecheck",
@@ -27,14 +26,13 @@
     "vercel-link": "vercel switch kodix && vercel link --repo --yes && pnpm -r pull-vercel"
   },
   "devDependencies": {
-    "@kdx/prettier-config": "workspace:*",
+    "@biomejs/biome": "catalog:",
     "@turbo/gen": "catalog:turbo",
-    "prettier": "catalog:",
     "turbo": "catalog:turbo",
     "typescript": "catalog:",
+    "ultracite": "catalog:",
     "vitest": "catalog:"
   },
-  "prettier": "@kdx/prettier-config",
   "pnpm": {
     "overrides": {
       "react": "catalog:react",

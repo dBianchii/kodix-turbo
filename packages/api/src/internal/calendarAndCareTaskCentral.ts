@@ -46,7 +46,6 @@ export async function getCalendarTasks({
     teamIds,
   };
   const [_eventMasters, _eventExceptions, _eventCancelations] =
-    // eslint-disable-next-line no-restricted-syntax
     await Promise.all([
       calendarRepository.findEventMastersFromTo({
         ...calendarRepositoryInput,
@@ -161,7 +160,7 @@ export const getCareTaskCompositeId = (compound: {
   eventMasterId: string | null;
   selectedTimeStamp: Date;
 }) => {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  // biome-ignore lint/style/noNonNullAssertion: <fix me>
   if (!compound.eventMasterId) return compound.id!;
   return getCalendarTaskCompositeId({
     eventMasterId: compound.eventMasterId,
@@ -184,7 +183,6 @@ export async function getCareTasks({
 }) {
   if (!teamIds.length) throw new Error("teamIds must have at least one item");
 
-  // eslint-disable-next-line no-restricted-syntax
   const [calendarTasks, careTasks, teamConfigs] = await Promise.all([
     getCalendarTasks({
       teamIds,

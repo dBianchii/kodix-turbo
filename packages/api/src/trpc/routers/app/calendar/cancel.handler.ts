@@ -20,7 +20,7 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
         const toDeleteException =
           await calendarRepository.findEventExceptionById(
             tx,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            // biome-ignore lint/style/noNonNullAssertion: <already checked>
             input.eventExceptionId!,
           );
         if (!toDeleteException) {
@@ -32,7 +32,7 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
 
         await calendarRepository.deleteEventExceptionById(
           tx,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          // biome-ignore lint/style/noNonNullAssertion: <already checked>
           input.eventExceptionId!,
         );
 

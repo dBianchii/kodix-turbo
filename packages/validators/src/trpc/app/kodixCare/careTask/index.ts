@@ -44,7 +44,7 @@ export const ZCreateCareTaskInputSchema = (t: IsomorficT) =>
         message: t("validators.Date cannot be in the past"),
       })
       .transform(
-        (date) => dayjs(date).second(0).millisecond(0).toDate(), // Ensure seconds and milliseconds are 0
+        (date) => dayjs(date).second(0).millisecond(0).toDate() // Ensure seconds and milliseconds are 0
       ),
     title: z.string(),
     description: z.string().optional(),

@@ -64,8 +64,6 @@
     "build": "tsc",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "dev": "tsc",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
@@ -75,15 +73,10 @@
   "devDependencies": {
     "@kdx/dayjs": "workspace:*",
     "@kdx/db": "workspace:*",
-    "@kdx/eslint-config": "workspace:*",
     "@kdx/locales": "workspace:*",
-    "@kdx/prettier-config": "workspace:*",
     "@kdx/shared": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "eslint": "catalog:",
-    "prettier": "catalog:",
     "rrule": "catalog:",
     "typescript": "catalog:"
-  },
-  "prettier": "@kdx/prettier-config"
+  }
 }

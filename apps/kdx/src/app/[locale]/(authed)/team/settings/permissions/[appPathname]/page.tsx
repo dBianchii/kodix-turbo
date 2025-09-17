@@ -8,6 +8,7 @@ import type { AppPathnames } from "~/helpers/miscelaneous";
 import { appIdToPathname, appPathnameToAppId } from "~/helpers/miscelaneous";
 import { redirect } from "~/i18n/routing";
 import { trpcCaller } from "~/trpc/server";
+
 import { DataTableUserAppRoles } from "./_components/data-table-user-app-roles";
 
 export default async function RolesForAppPage(props: {
@@ -28,7 +29,7 @@ export default async function RolesForAppPage(props: {
     <div className="mt-8 space-y-8 md:mt-0">
       <div className="flex flex-col gap-8">
         <div className="flex flex-col gap-2">
-          <h1 className="text-muted-foreground font-semibold">
+          <h1 className="font-semibold text-muted-foreground">
             {t("Edit name roles", { name: getAppName(t, appId) })}
           </h1>
           <DataTableUserAppRoles

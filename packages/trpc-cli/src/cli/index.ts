@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-import fs from "fs/promises";
+import fs from "node:fs/promises";
+import path from "node:path";
 import vm from "node:vm";
-import path from "path";
 import * as p from "@clack/prompts";
 import chalk from "chalk";
 import z from "zod/v4";
@@ -11,15 +10,15 @@ import { logger } from "../utils/logger";
 
 export const ROUTERS_FOLDER_PATH = path.resolve(
   process.cwd(),
-  trpcCliConfig.paths.routersFolderPath,
+  trpcCliConfig.paths.routersFolderPath
 );
 export const PROCEDURESFILEPATH = path.resolve(
   process.cwd(),
-  trpcCliConfig.paths.proceduresFilePath,
+  trpcCliConfig.paths.proceduresFilePath
 );
 export const VALIDATORS_FOLDER_PATH = path.resolve(
   process.cwd(),
-  trpcCliConfig.paths.validatorsFolderPath,
+  trpcCliConfig.paths.validatorsFolderPath
 );
 const ZSafeName = z
   .string()
@@ -43,6 +42,7 @@ export const runCli = async () => {
     for (const entry of entries) {
       if (entry.isDirectory()) {
         const subDir = path.join(dir, entry.name);
+        // biome-ignore lint/nursery/noAwaitInLoop: <biome migration>
         const subEntries = await fs.readdir(subDir, {
           withFileTypes: true,
         });
@@ -50,7 +50,7 @@ export const runCli = async () => {
         const containsRouterFile = subEntries.some(
           (subEntry) =>
             subEntry.isFile() &&
-            subEntry.name.endsWith(trpcCliConfig.routerFileName),
+            subEntry.name.endsWith(trpcCliConfig.routerFileName)
         );
 
         if (containsRouterFile) {
@@ -72,10 +72,10 @@ export const runCli = async () => {
   await findRouterFolders(ROUTERS_FOLDER_PATH);
   return await p.group(
     {
-      chosenRouterPath: async () => {
+      chosenRouterPath: () => {
         if (!routers[0])
           return logger.error(
-            `No ${trpcCliConfig.routerFileName} files found inside ${chalk.yellow(ROUTERS_FOLDER_PATH)}. Make sure you provided the correct path to your routers folder.`,
+            `No ${trpcCliConfig.routerFileName} files found inside ${chalk.yellow(ROUTERS_FOLDER_PATH)}. Make sure you provided the correct path to your routers folder.`
           );
 
         return p.select({
@@ -123,7 +123,7 @@ export const runCli = async () => {
                 value: "",
               },
             ],
-            initialValue: routers[0]!.value,
+            initialValue: routers[0]?.value,
           });
         }
       },
@@ -146,8 +146,8 @@ export const runCli = async () => {
         } catch {
           logger.error(
             `No procedures file found at ${chalk.yellow(
-              PROCEDURESFILEPATH,
-            )}. Make sure you provided the correct path to your procedures file.`,
+              PROCEDURESFILEPATH
+            )}. Make sure you provided the correct path to your procedures file.`
           );
           process.exit(1);
         }
@@ -156,7 +156,7 @@ export const runCli = async () => {
         const proceduresExport = proceduresFile.match(/export const (\w+)/g); //? Assume that all procedures are exported as const
         if (!proceduresExport?.length) {
           logger.error(
-            `We found your file at ${chalk.yellow(PROCEDURESFILEPATH)}, but no procedures were found in it. Please add a procedure to the this file before continuing`,
+            `We found your file at ${chalk.yellow(PROCEDURESFILEPATH)}, but no procedures were found in it. Please add a procedure to the this file before continuing`
           );
           process.exit(1);
         }
@@ -165,6 +165,7 @@ export const runCli = async () => {
           message: "Which procedure?",
           initialValue: "protected",
           options: proceduresExport.map((procedure) => {
+            // biome-ignore lint/style/noNonNullAssertion: <biome migration>
             const name = procedure.split(" ")[2]!;
             return {
               value: name,
@@ -221,6 +222,6 @@ export const runCli = async () => {
         logger.info("Bye! 👋");
         process.exit(0);
       },
-    },
+    }
   );
 };

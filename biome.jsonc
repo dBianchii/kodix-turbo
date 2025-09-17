@@ -1,0 +1,98 @@
+{
+  "$schema": "node_modules/@biomejs/biome/configuration_schema.json",
+  "extends": ["ultracite"],
+  "root": true,
+  "files": {
+    "includes": ["**", "!**/rbc-styles.css", "!.vscode/kodix.code-snippets"]
+  },
+  "formatter": {
+    "indentStyle": "space",
+    "indentWidth": 2
+  },
+  "json": {
+    "parser": {
+      "allowComments": true
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double"
+    }
+  },
+  "linter": {
+    "rules": {
+      "performance": {
+        "noNamespaceImport": "off" //TODO: enable
+      },
+      "nursery": {
+        "noUnknownAtRule": "off", //TODO: enable
+        "useSortedClasses": {
+          "level": "on",
+          "options": {
+            "functions": ["clsx", "cva", "cn"]
+          }
+        }
+      },
+      "style": {
+        "useBlockStatements": "off",
+        "noRestrictedImports": {
+          "level": "on",
+          "options": {
+            "paths": {
+              "zod": "Please import from 'zod/v4' instead"
+            }
+          }
+        }
+      },
+      "complexity": {
+        "noVoid": "off"
+      }
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": [
+              {
+                "type": true,
+                "source": [
+                  "react",
+                  "react/**",
+                  "react-native",
+                  "react-native/**"
+                ]
+              },
+              { "type": true, "source": ["next", "next/**"] },
+              { "type": true, "source": ["expo", "expo/**"] },
+              {
+                "type": true,
+                "source": ["**", "!@kdx/**", "!~/**", "!../**", "!./**"]
+              },
+              ["react", "react/**", "react-native", "react-native/**"],
+              ["next", "next/**"],
+              ["expo", "expo/**"],
+              ["**", "!@kdx/**", "!~/**", "!../**", "!./**"],
+              ":BLANK_LINE:",
+              { "type": true, "source": ["@kdx/**"] },
+              ["@kdx/**"],
+              ":BLANK_LINE:",
+              { "type": true, "source": ["~/**"] },
+              ["~/**"],
+              ":BLANK_LINE:",
+              { "type": true, "source": ["../**", "./**"] },
+              ["../**", "./**"]
+            ]
+          }
+        }
+      }
+    }
+  },
+  "vcs": {
+    "enabled": true,
+    "useIgnoreFile": true,
+    "clientKind": "git"
+  }
+}

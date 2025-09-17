@@ -71,7 +71,7 @@ export function DataTable<TData>({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext(),
+                            header.getContext()
                           )}
                     </TableHead>
                   );
@@ -83,15 +83,15 @@ export function DataTable<TData>({
             {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
-                  onClick={onClickRow}
-                  key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  key={row.id}
+                  onClick={onClickRow}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}
@@ -100,8 +100,8 @@ export function DataTable<TData>({
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={table.getAllColumns().length}
                   className="h-24 text-center"
+                  colSpan={table.getAllColumns().length}
                 >
                   {noResultsMessage}
                 </TableCell>

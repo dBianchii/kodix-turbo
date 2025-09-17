@@ -4,6 +4,7 @@ import { auth } from "@kdx/auth";
 import { Table, TableBody, TableCell, TableRow } from "@kdx/ui/table";
 
 import { trpcCaller } from "~/trpc/server";
+
 import { CustomRow } from "./custom-row";
 
 export async function EditUserTeamsTable() {

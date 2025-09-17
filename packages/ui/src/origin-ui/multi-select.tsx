@@ -1,4 +1,3 @@
-/* eslint-disable react-compiler/react-compiler */
 "use client";
 
 import type {
@@ -40,7 +39,7 @@ interface MultipleSelectorProps {
   /**
    * Only work with `onSearch` prop. Trigger search when `onFocus`.
    * For example, when user click on the input, it will trigger the search to get initial options.
-   **/
+   */
   triggerSearchOnFocus?: boolean;
   /** async search */
   onSearch?: (value: string) => Promise<Option[]>;
@@ -48,7 +47,7 @@ interface MultipleSelectorProps {
    * sync search. This search will not showing loadingIndicator.
    * The rest props are the same as async search.
    * i.e.: creatable, groupBy, delay.
-   **/
+   */
   onSearchSync?: (value: string) => Option[];
   onChange?: (options: Option[]) => void;
   /** Limit the maximum number of selected options. */
@@ -100,13 +99,14 @@ function transToGroupOption(options: Option[], groupBy?: string) {
   }
 
   const groupOption: GroupOption = {};
-  options.forEach((option) => {
+  for (const option of options) {
     const key = (option[groupBy] as string) || "";
     if (!groupOption[key]) {
       groupOption[key] = [];
     }
     groupOption[key].push(option);
-  });
+  }
+
   return groupOption;
 }
 
@@ -115,7 +115,7 @@ function removePickedOption(groupOption: GroupOption, picked: Option[]) {
 
   for (const [key, value] of Object.entries(cloneOption)) {
     cloneOption[key] = value.filter(
-      (val) => !picked.find((p) => p.value === val.value),
+      (val) => !picked.find((p) => p.value === val.value)
     );
   }
   return cloneOption;
@@ -185,7 +185,7 @@ const MultipleSelector = ({
 
   const [selected, setSelected] = useState<Option[]>(value ?? []);
   const [options, setOptions] = useState<GroupOption>(
-    transToGroupOption(arrayDefaultOptions, groupBy),
+    transToGroupOption(arrayDefaultOptions, groupBy)
   );
   const [inputValue, setInputValue] = useState("");
   const debouncedSearchTerm = useDebounce(inputValue, delay ?? 500);
@@ -208,21 +208,23 @@ const MultipleSelector = ({
       setSelected(newOptions);
       onChange?.(newOptions);
     },
-    [onChange, selected],
+    [onChange, selected]
   );
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
       const input = inputRef.current;
       if (input) {
-        if (e.key === "Delete" || e.key === "Backspace") {
-          if (input.value === "" && selected.length > 0) {
-            const lastSelectOption = selected[selected.length - 1];
-            // If last item is fixed, we should not remove it.
-            if (!lastSelectOption?.fixed) {
-              //@ts-expect-error I copied over from origin-ui.
-              handleUnselect(selected[selected.length - 1]);
-            }
+        if (
+          (e.key === "Delete" || e.key === "Backspace") &&
+          input.value === "" &&
+          selected.length > 0
+        ) {
+          const lastSelectOption = selected.at(-1);
+          // If last item is fixed, we should not remove it.
+          if (!lastSelectOption?.fixed) {
+            //@ts-expect-error I copied over from origin-ui.
+            handleUnselect(selected.at(-1));
           }
         }
         // This is not a default behavior of the <input /> field
@@ -231,9 +233,10 @@ const MultipleSelector = ({
         }
       }
     },
-    [handleUnselect, selected],
+    [handleUnselect, selected]
   );
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <biome migration>
   useEffect(() => {
     if (open) {
       document.addEventListener("mousedown", handleClickOutside);
@@ -255,12 +258,13 @@ const MultipleSelector = ({
     }
   }, [value]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <biome migration>
   useEffect(() => {
     /** If `onSearch` is provided, do not trigger options updated. */
     if (!arrayOptions || onSearch) {
       return;
     }
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
     const newOption = transToGroupOption(arrayOptions || [], groupBy);
     if (JSON.stringify(newOption) !== JSON.stringify(options)) {
       setOptions(newOption);
@@ -276,7 +280,7 @@ const MultipleSelector = ({
     };
 
     const exec = () => {
-      if (!onSearchSync || !open) return;
+      if (!(onSearchSync && open)) return;
 
       if (triggerSearchOnFocus) {
         doSearchSync();
@@ -288,8 +292,7 @@ const MultipleSelector = ({
     };
 
     void exec();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearchTerm, groupBy, open, triggerSearchOnFocus]);
+  }, [debouncedSearchTerm, groupBy, open, triggerSearchOnFocus, onSearchSync]);
 
   useEffect(() => {
     /** async search */
@@ -302,7 +305,7 @@ const MultipleSelector = ({
     };
 
     const exec = async () => {
-      if (!onSearch || !open) return;
+      if (!(onSearch && open)) return;
 
       if (triggerSearchOnFocus) {
         await doSearch();
@@ -314,36 +317,35 @@ const MultipleSelector = ({
     };
 
     void exec();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearchTerm, groupBy, open, triggerSearchOnFocus]);
+  }, [debouncedSearchTerm, groupBy, open, triggerSearchOnFocus, onSearch]);
 
-  const CreatableItem = () => {
-    if (!creatable) return undefined;
+  const CreatableItem = useCallback(() => {
+    if (!creatable) return;
     if (
       isOptionsExist(options, [{ value: inputValue, label: inputValue }]) ||
       selected.find((s) => s.value === inputValue)
     ) {
-      return undefined;
+      return;
     }
 
     const Item = (
       <CommandItem
-        value={inputValue}
         className="cursor-pointer"
         onMouseDown={(e) => {
           e.preventDefault();
           e.stopPropagation();
         }}
-        onSelect={(value: string) => {
+        onSelect={(v: string) => {
           if (selected.length >= maxSelected) {
             onMaxSelected?.(selected.length);
             return;
           }
           setInputValue("");
-          const newOptions = [...selected, { value, label: value }];
+          const newOptions = [...selected, { value: v, label: v }];
           setSelected(newOptions);
           onChange?.(newOptions);
         }}
+        value={inputValue}
       >
         {`Create "${inputValue}"`}
       </CommandItem>
@@ -359,16 +361,27 @@ const MultipleSelector = ({
       return Item;
     }
 
-    return undefined;
-  };
+    return;
+  }, [
+    options,
+    selected,
+    onSearch,
+    creatable,
+    debouncedSearchTerm,
+    inputValue,
+    isLoading,
+    maxSelected,
+    onChange,
+    onMaxSelected,
+  ]);
 
   const EmptyItem = useCallback(() => {
-    if (!emptyIndicator) return undefined;
+    if (!emptyIndicator) return;
 
     // For async search that showing emptyIndicator
     if (onSearch && !creatable && Object.keys(options).length === 0) {
       return (
-        <CommandItem value="-" disabled>
+        <CommandItem disabled value="-">
           {emptyIndicator}
         </CommandItem>
       );
@@ -379,7 +392,7 @@ const MultipleSelector = ({
 
   const selectables = useMemo<GroupOption>(
     () => removePickedOption(options, selected),
-    [options, selected],
+    [options, selected]
   );
 
   /** Avoid Creatable Selector freezing or lagging when paste a long string. */
@@ -389,38 +402,42 @@ const MultipleSelector = ({
     }
 
     if (creatable) {
+      // biome-ignore lint/nursery/noShadow: <biome migration>
       return (value: string, search: string) => {
         return value.toLowerCase().includes(search.toLowerCase()) ? 1 : -1;
       };
     }
     // Using default filter in `cmdk`. We don&lsquo;t have to provide it.
-    return undefined;
+    return;
   }, [creatable, commandProps?.filter]);
 
   return (
     <Command
       ref={dropdownRef}
       {...commandProps}
+      className={cn(
+        "h-auto overflow-visible bg-transparent",
+        commandProps?.className
+      )}
+      filter={commandFilter()}
       onKeyDown={(e) => {
         handleKeyDown(e);
         commandProps?.onKeyDown?.(e);
-      }}
-      className={cn(
-        "h-auto overflow-visible bg-transparent",
-        commandProps?.className,
-      )}
-      shouldFilter={commandProps?.shouldFilter ?? !onSearch} // When onSearch is provided, we don&lsquo;t want to filter the options. You can still override it.
-      filter={commandFilter()}
+      }} // When onSearch is provided, we don&lsquo;t want to filter the options. You can still override it.
+      shouldFilter={commandProps?.shouldFilter ?? !onSearch}
     >
+      {/** biome-ignore lint/a11y/noStaticElementInteractions: <biome migration> */}
+      {/** biome-ignore lint/nursery/noNoninteractiveElementInteractions: <biome migration> */}
+      {/** biome-ignore lint/a11y/useKeyWithClickEvents: <biome migration> */}
       <div
         className={cn(
-          "border-input focus-within:border-ring focus-within:ring-ring/50 has-aria-invalid:ring-destructive/20 dark:has-aria-invalid:ring-destructive/40 has-aria-invalid:border-destructive relative min-h-[38px] rounded-md border text-sm transition-[color,box-shadow] outline-none focus-within:ring-[3px] has-disabled:pointer-events-none has-disabled:cursor-not-allowed has-disabled:opacity-50",
+          "relative min-h-[38px] rounded-md border border-input text-sm outline-none transition-[color,box-shadow] focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/50 has-disabled:pointer-events-none has-disabled:cursor-not-allowed has-aria-invalid:border-destructive has-disabled:opacity-50 has-aria-invalid:ring-destructive/20 dark:has-aria-invalid:ring-destructive/40",
           {
             "p-1": selected.length !== 0,
             "cursor-text": !disabled && selected.length !== 0,
           },
           !hideClearAllButton && "pe-9",
-          className,
+          className
         )}
         onClick={() => {
           if (disabled) return;
@@ -431,17 +448,19 @@ const MultipleSelector = ({
           {selected.map((option) => {
             return (
               <div
-                key={option.value}
                 className={cn(
-                  "animate-fadeIn bg-background text-secondary-foreground hover:bg-background relative inline-flex h-7 cursor-default items-center rounded-md border ps-2 pe-7 pl-2 text-xs font-medium transition-all disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 data-fixed:pe-2",
-                  badgeClassName,
+                  "relative inline-flex h-7 animate-fadeIn cursor-default items-center rounded-md border bg-background ps-2 pe-7 pl-2 font-medium text-secondary-foreground text-xs transition-all hover:bg-background disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 data-fixed:pe-2",
+                  badgeClassName
                 )}
-                data-fixed={option.fixed}
                 data-disabled={disabled ?? undefined}
+                data-fixed={option.fixed}
+                key={option.value}
               >
                 {option.label}
                 <button
-                  className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute -inset-y-px -end-px flex size-7 items-center justify-center rounded-e-md border border-transparent p-0 outline-hidden transition-[color,box-shadow] outline-none focus-visible:ring-[3px]"
+                  aria-label="Remove"
+                  className="-inset-y-px -end-px absolute flex size-7 items-center justify-center rounded-e-md border border-transparent p-0 text-muted-foreground/80 outline-none outline-hidden transition-[color,box-shadow] hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                  onClick={() => handleUnselect(option)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       handleUnselect(option);
@@ -451,10 +470,9 @@ const MultipleSelector = ({
                     e.preventDefault();
                     e.stopPropagation();
                   }}
-                  onClick={() => handleUnselect(option)}
-                  aria-label="Remove"
+                  type="button"
                 >
-                  <XIcon size={14} aria-hidden="true" />
+                  <XIcon aria-hidden="true" size={14} />
                 </button>
               </div>
             );
@@ -462,13 +480,16 @@ const MultipleSelector = ({
           {/* Avoid having the "Search" Icon */}
           <CommandPrimitive.Input
             {...inputProps}
-            ref={inputRef}
-            value={inputValue}
+            className={cn(
+              "flex-1 bg-transparent outline-hidden placeholder:text-muted-foreground/70 disabled:cursor-not-allowed",
+              {
+                "w-full": hidePlaceholderWhenSelected,
+                "px-3 py-2": selected.length === 0,
+                "ml-1": selected.length !== 0,
+              },
+              inputProps?.className
+            )}
             disabled={disabled}
-            onValueChange={(value) => {
-              setInputValue(value);
-              inputProps?.onValueChange?.(value);
-            }}
             onBlur={(event) => {
               if (!onScrollbar) {
                 setOpen(false);
@@ -482,109 +503,104 @@ const MultipleSelector = ({
               }
               inputProps?.onFocus?.(event);
             }}
+            onValueChange={(v) => {
+              setInputValue(v);
+              inputProps?.onValueChange?.(v);
+            }}
             placeholder={
               hidePlaceholderWhenSelected && selected.length !== 0
                 ? ""
                 : placeholder
             }
-            className={cn(
-              "placeholder:text-muted-foreground/70 flex-1 bg-transparent outline-hidden disabled:cursor-not-allowed",
-              {
-                "w-full": hidePlaceholderWhenSelected,
-                "px-3 py-2": selected.length === 0,
-                "ml-1": selected.length !== 0,
-              },
-              inputProps?.className,
-            )}
+            ref={inputRef}
+            value={inputValue}
           />
           <button
-            type="button"
+            aria-label="Clear all"
+            className={cn(
+              "absolute end-0 top-0 flex size-9 items-center justify-center rounded-md border border-transparent text-muted-foreground/80 outline-none transition-[color,box-shadow] hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
+              (hideClearAllButton ||
+                (disabled ?? selected.length < 1) ||
+                selected.filter((s) => s.fixed).length === selected.length) &&
+                "hidden"
+            )}
             onClick={() => {
               setSelected(selected.filter((s) => s.fixed));
               onChange?.(selected.filter((s) => s.fixed));
             }}
-            className={cn(
-              "text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute end-0 top-0 flex size-9 items-center justify-center rounded-md border border-transparent transition-[color,box-shadow] outline-none focus-visible:ring-[3px]",
-              (hideClearAllButton ||
-                (disabled ?? selected.length < 1) ||
-                selected.filter((s) => s.fixed).length === selected.length) &&
-                "hidden",
-            )}
-            aria-label="Clear all"
+            type="button"
           >
-            <XIcon size={16} aria-hidden="true" />
+            <XIcon aria-hidden="true" size={16} />
           </button>
         </div>
       </div>
       <div className="relative">
         <div
           className={cn(
-            "border-input absolute top-2 z-10 w-full overflow-hidden rounded-md border",
-            "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
-            !open && "hidden",
+            "absolute top-2 z-10 w-full overflow-hidden rounded-md border border-input",
+            "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:animate-out data-[state=open]:animate-in",
+            !open && "hidden"
           )}
           data-state={open ? "open" : "closed"}
         >
           {open && (
             <CommandList
               className="bg-popover text-popover-foreground shadow-lg outline-hidden"
-              onMouseLeave={() => {
-                setOnScrollbar(false);
-              }}
               onMouseEnter={() => {
                 setOnScrollbar(true);
+              }}
+              onMouseLeave={() => {
+                setOnScrollbar(false);
               }}
               onMouseUp={() => {
                 inputRef.current?.focus();
               }}
             >
               {isLoading ? (
-                <>{loadingIndicator}</>
+                loadingIndicator
               ) : (
                 <>
                   {EmptyItem()}
                   {CreatableItem()}
                   {!selectFirstItem && (
-                    <CommandItem value="-" className="hidden" />
+                    <CommandItem className="hidden" value="-" />
                   )}
                   {Object.entries(selectables).map(([key, dropdowns]) => (
                     <CommandGroup
-                      key={key}
-                      heading={key}
                       className="h-full overflow-auto"
+                      heading={key}
+                      key={key}
                     >
-                      <>
-                        {dropdowns.map((option) => {
-                          return (
-                            <CommandItem
-                              key={option.value}
-                              value={option.value}
-                              disabled={option.disable}
-                              onMouseDown={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                              }}
-                              onSelect={() => {
-                                if (selected.length >= maxSelected) {
-                                  onMaxSelected?.(selected.length);
-                                  return;
-                                }
-                                setInputValue("");
-                                const newOptions = [...selected, option];
-                                setSelected(newOptions);
-                                onChange?.(newOptions);
-                              }}
-                              className={cn(
-                                "cursor-pointer",
-                                option.disable &&
-                                  "pointer-events-none cursor-not-allowed opacity-50",
-                              )}
-                            >
-                              {option.label}
-                            </CommandItem>
-                          );
-                        })}
-                      </>
+                      {dropdowns.map((option) => {
+                        return (
+                          <CommandItem
+                            className={cn(
+                              "cursor-pointer",
+                              option.disable &&
+                                "pointer-events-none cursor-not-allowed opacity-50"
+                            )}
+                            disabled={option.disable}
+                            key={option.value}
+                            onMouseDown={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                            }}
+                            onSelect={() => {
+                              if (selected.length >= maxSelected) {
+                                onMaxSelected?.(selected.length);
+                                return;
+                              }
+                              setInputValue("");
+                              const newOptions = [...selected, option];
+                              setSelected(newOptions);
+                              onChange?.(newOptions);
+                            }}
+                            value={option.value}
+                          >
+                            {option.label}
+                          </CommandItem>
+                        );
+                      })}
                     </CommandGroup>
                   ))}
                 </>

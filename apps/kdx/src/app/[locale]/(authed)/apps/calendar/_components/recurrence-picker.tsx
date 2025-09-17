@@ -84,8 +84,8 @@ export function RecurrencePicker({
   const [draftInterval, setDraftInterval] = useState(interval);
   const [draftFrequency, setDraftFrequency] = useState(frequency);
   const [draftUntil, setDraftUntil] = useState(until);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [draftCount, setDraftCount] = useState(count);
+
+  const [_draftCount, setDraftCount] = useState(count);
   const [draftWeekdays, setDraftWeekdays] = useState(weekdays);
 
   const discardDraft = useCallback(() => {
@@ -153,9 +153,9 @@ export function RecurrencePicker({
                   />
                   {t("Doesnt repeat")}
                 </CommandItem>
-                {freqs.map((freq, i) => (
+                {freqs.map((freq) => (
                   <CommandItem
-                    key={i}
+                    key={`${freq}-freq`}
                     onSelect={() => {
                       setInterval(1);
                       setFrequency(freq);
@@ -233,9 +233,9 @@ export function RecurrencePicker({
                   <Command className="w-fit">
                     <CommandList>
                       <CommandGroup>
-                        {freqs.map((freq, i) => (
+                        {freqs.map((freq) => (
                           <CommandItem
-                            key={i}
+                            key={`${freq}-freq-popover`}
                             onSelect={() => {
                               if (freq !== Frequency.WEEKLY) {
                                 setDraftWeekdays(undefined);
@@ -305,6 +305,8 @@ export function RecurrencePicker({
                   defaultValue={draftUntil === undefined ? "1" : "0"}
                 >
                   <div className="mt-4">{t("Ends")}</div>
+                  {/** biome-ignore lint/a11y/noStaticElementInteractions: <biome migration> */}
+                  {/** biome-ignore lint/a11y/useKeyWithClickEvents: <biome migration> */}
                   <div
                     className="flex items-center"
                     onClick={() => setDraftUntil(undefined)}

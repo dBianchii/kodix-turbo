@@ -9,8 +9,6 @@
     "dev:ios": "expo start --ios",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "generate-themes": "tamagui generate-themes ./tamagui-config/theme-builder.ts ./themes.ts"
   },
@@ -80,17 +78,12 @@
     "@babel/preset-env": "catalog:babel",
     "@babel/runtime": "catalog:babel",
     "@kdx/api": "workspace:*",
-    "@kdx/eslint-config": "workspace:*",
-    "@kdx/prettier-config": "workspace:*",
     "@kdx/tailwind-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
     "@types/babel__core": "catalog:",
     "@types/react": "catalog:react",
-    "eslint": "catalog:",
     "metro": "catalog:",
-    "prettier": "catalog:",
     "tailwindcss": "catalog:tailwindcss",
     "typescript": "catalog:"
-  },
-  "prettier": "@kdx/prettier-config"
+  }
 }

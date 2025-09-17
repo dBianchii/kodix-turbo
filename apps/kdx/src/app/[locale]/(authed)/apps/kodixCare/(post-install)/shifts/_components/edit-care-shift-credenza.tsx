@@ -57,6 +57,7 @@ import { ZEditCareShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { useTRPC } from "~/trpc/react";
+
 import { useMyRoles } from "./create-care-shift-credenza";
 import { useCareShiftsData, useEditCareShift, useShiftOverlap } from "./hooks";
 import { WarnOverlappingShifts } from "./warn-overlapping-shifts";
@@ -223,6 +224,8 @@ export function EditCareShiftCredenza({
             className="space-y-6"
           >
             <CredenzaBody>
+              {/** biome-ignore lint/a11y/noStaticElementInteractions: <biome migration> */}
+              {/** biome-ignore lint/a11y/useKeyWithClickEvents: <biome migration> */}
               <div
                 onClick={() => {
                   if (!isLocked) return;
@@ -532,7 +535,7 @@ function Lock({
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader className="flex flex-row items-center gap-2">
-          <LuLock className="text-muted-foreground mt-2 size-5" />
+          <LuLock className="mt-2 size-5 text-muted-foreground" />
           <AlertDialogTitle>{t("Unlock shift")}</AlertDialogTitle>
         </AlertDialogHeader>
         <AlertDialogDescription>

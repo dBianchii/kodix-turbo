@@ -1,16 +1,29 @@
 name: "Setup and install"
 description: "Common setup steps for Actions"
 
+inputs:
+  skip-turbo:
+    description: "Skip installing turbo globally"
+    required: false
+    default: "false"
+  skip-node:
+    description: "Skip installing node"
+    required: false
+    default: "false"
+
 runs:
   using: composite
   steps:
     - uses: pnpm/action-setup@v4
-    - uses: actions/setup-node@v4
+    
+    - if: ${{ inputs.skip-node != 'true' }}
+      uses: actions/setup-node@v4
       with:
         node-version-file: ".nvmrc"
         cache: "pnpm"
 
     - shell: bash
+      if: ${{ inputs.skip-turbo != 'true' }}
       run: pnpm add -g turbo
 
     - shell: bash

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 "use client";
 
 //?Modified version of https://tie.openstatus.dev/
@@ -55,9 +54,10 @@ const TimePickerInput = ({
 
   const calculatedValue = useMemo(
     () => getDateByType(date, picker),
-    [date, picker],
+    [date, picker]
   );
 
+  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: <biome migration>
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Tab") return;
     e.preventDefault();
@@ -72,9 +72,7 @@ const TimePickerInput = ({
       setDate(setDateByType(tempDate, newValue, picker));
     }
     if (e.key >= "0" && e.key <= "9") {
-      const newValue = !flag
-        ? "0" + e.key
-        : calculatedValue.slice(1, 2) + e.key;
+      const newValue = flag ? calculatedValue.slice(1, 2) + e.key : `0${e.key}`;
       if (flag) onRightFocus?.();
       setFlag((prev) => !prev);
       const tempDate = new Date(date);
@@ -84,23 +82,23 @@ const TimePickerInput = ({
 
   return (
     <Input
-      id={id || picker}
-      name={name || picker}
       className={cn(
-        "focus:bg-accent focus:text-accent-foreground w-[48px] text-center font-mono text-base tabular-nums caret-transparent [&::-webkit-inner-spin-button]:appearance-none",
-        className,
+        "w-[48px] text-center font-mono text-base tabular-nums caret-transparent focus:bg-accent focus:text-accent-foreground [&::-webkit-inner-spin-button]:appearance-none",
+        className
       )}
-      value={value || calculatedValue}
+      id={id || picker}
+      inputMode="decimal"
+      name={name || picker}
       onChange={(e) => {
         e.preventDefault();
         onChange?.(e);
       }}
-      type={type}
-      inputMode="decimal"
       onKeyDown={(e) => {
         onKeyDown?.(e);
         handleKeyDown(e);
       }}
+      type={type}
+      value={value || calculatedValue}
       {...props}
     />
   );

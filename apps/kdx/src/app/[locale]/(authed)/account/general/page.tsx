@@ -4,6 +4,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { auth } from "@kdx/auth";
 
 import { redirect } from "~/i18n/routing";
+
 import SettingsEditCardSkeleton from "../../team/settings/general/_components/edit-team-name-card-skeleton";
 import { AddTeamDialogButton } from "./_components/add-team-dialog-button/add-team-dialog-button";
 import { DeleteAccountCard } from "./_components/delete-account-card";
@@ -24,7 +25,7 @@ export default async function GeneralAccountSettings() {
       </Suspense>
       <div className="flex flex-col gap-4">
         <div className="flex flex-row">
-          <h3 className="text-2xl leading-none font-semibold tracking-tight">
+          <h3 className="font-semibold text-2xl leading-none tracking-tight">
             {t("Teams")}
           </h3>
           <AddTeamDialogButton className="ml-auto max-w-fit" />

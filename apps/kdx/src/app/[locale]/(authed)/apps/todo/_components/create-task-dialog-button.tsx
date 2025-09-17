@@ -22,12 +22,13 @@ import { Input } from "@kdx/ui/input";
 import { PopoverTrigger } from "@kdx/ui/popover";
 import { Textarea } from "@kdx/ui/textarea";
 
-import type { Priority } from "./priority-popover";
 import {
   DatePickerIcon,
   DatePickerWithPresets,
 } from "~/app/[locale]/_components/date-picker-with-presets";
 import { useTRPC } from "~/trpc/react";
+
+import type { Priority } from "./priority-popover";
 import { AssigneePopover } from "./assignee-popover";
 import {
   PriorityIcon,
@@ -127,7 +128,7 @@ export function CreateTaskDialogButton() {
                     <AvatarWrapper
                       className="mr-2 size-4"
                       src={user.image}
-                      alt={user.name + " avatar"}
+                      alt={`${user.name} avatar`}
                       fallback={<HiUserCircle />}
                     />
                     {user.name}
@@ -154,11 +155,13 @@ export function CreateTaskDialogButton() {
                     ? format.dateTime(dueDate, "extensive")
                     : t("Pick a date")}
                   {dueDate && (
+                    // biome-ignore lint/a11y/noStaticElementInteractions: <biome migration>
+                    // biome-ignore lint/a11y/useKeyWithClickEvents: <biome migration>
                     <span
                       onClick={() => {
                         setDueDate(undefined);
                       }}
-                      className="hover:bg-primary/90 hover:text-background ml-2 rounded-full transition-colors"
+                      className="ml-2 rounded-full transition-colors hover:bg-primary/90 hover:text-background"
                     >
                       <LuX className="size-4" />
                     </span>

@@ -216,7 +216,7 @@ export default function ShiftsBigCalendar({
           events={calendarEvents}
           components={{
             // @ts-expect-error react big calendar typesafety sucks
-            // eslint-disable-next-line react/no-unused-prop-types
+
             event: ({ event }: { event: ShiftEvent }) => (
               <div className="flex items-center gap-2 pl-3">
                 {event.finishedByUserId && <LuLock />}

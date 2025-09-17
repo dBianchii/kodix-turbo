@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Keyboard, TouchableOpacity } from "react-native";
-import { Link, Stack, useRouter } from "expo-router";
 import { ChevronLeft, ChevronRight } from "@tamagui/lucide-icons";
+import { Link, Stack, useRouter } from "expo-router";
 import {
   Button,
   H3,

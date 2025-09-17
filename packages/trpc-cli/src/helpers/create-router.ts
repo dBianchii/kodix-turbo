@@ -1,10 +1,10 @@
-import { existsSync } from "fs";
-import fs from "fs/promises";
+import { existsSync } from "node:fs";
+import fs from "node:fs/promises";
 
 import { trpcCliConfig } from "../../config";
 import { logger } from "../utils/logger";
-import { toPascalCase } from "../utils/toPascalCase";
-import { addImportStatement } from "./addImportStatement";
+import { toPascalCase } from "../utils/to-pascal-case";
+import { addImportStatement } from "./add-import-statement";
 
 export const createRouter = async ({
   routerFolderFilePath,
@@ -53,14 +53,14 @@ export const ${newRouterName}Router = {
     await addNewEntryToTrpcRouterRecord(
       routerFileToUpdate,
       `  ${chosenRouterPath.split("/").at(-1)}: ${newRouterName}Router,`,
-      true,
+      true
     );
 
     await addImportStatement(routerFileToUpdate, {
       importName: `${newRouterName}Router`,
       importPath: `./${newRouterName}/${trpcCliConfig.routerFileName.replace(
         ".ts",
-        "",
+        ""
       )}`,
     });
 
@@ -71,9 +71,11 @@ export const ${newRouterName}Router = {
   await addNewEntryToTrpcRouterRecord(routerFilePath, newEntry);
 
   async function addNewEntryToTrpcRouterRecord(
+    // biome-ignore lint/nursery/noShadow: <biome migration>
     routerFilePath: string,
+    // biome-ignore lint/nursery/noShadow: <biome migration>
     newEntry: string,
-    begginningOfRecord = false,
+    begginningOfRecord = false
   ) {
     try {
       let fileContent = await fs.readFile(routerFilePath, "utf-8");
@@ -82,7 +84,7 @@ export const ${newRouterName}Router = {
 
       const routerRegex = new RegExp(
         `export\\s+const\\s+${routerName}Router\\s*=\\s*{([^}]*)}`,
-        "s",
+        "s"
       );
       const match = fileContent.match(routerRegex);
       if (!match) {
@@ -119,11 +121,10 @@ export const ${newRouterName}Router = {
 
     await addImportStatement(routerFilePath, {
       importName: procedure,
-      importPath:
-        chosenRouterPath
-          .split("/")
-          .map(() => "..")
-          .join("/") + "/../procedures",
+      importPath: `${chosenRouterPath
+        .split("/")
+        .map(() => "..")
+        .join("/")}/../procedures`,
     });
   }
 };

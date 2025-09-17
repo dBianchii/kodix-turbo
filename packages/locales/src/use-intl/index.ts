@@ -1,6 +1,6 @@
 export {
-  IntlProvider,
-  useTranslations,
-  useFormatter,
   type DateTimeFormatOptions,
+  IntlProvider,
+  useFormatter,
+  useTranslations,
 } from "use-intl";

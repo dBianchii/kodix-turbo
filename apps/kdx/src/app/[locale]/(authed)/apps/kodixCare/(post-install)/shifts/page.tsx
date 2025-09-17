@@ -5,6 +5,7 @@ import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
 
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
 import { HydrateClient, prefetch, trpc, trpcCaller } from "~/trpc/server";
+
 import ShiftsBigCalendar from "./_components/cc-shifts-big-calendar";
 
 export default async function ShiftsPage() {

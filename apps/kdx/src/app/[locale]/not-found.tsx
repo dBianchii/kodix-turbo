@@ -9,12 +9,12 @@ export default function NotFound() {
     <div className="flex min-h-screen flex-col items-center justify-center p-4">
       <div className="container mx-auto flex max-w-3xl flex-col items-center space-y-8 text-center">
         <div className="h-64 w-full md:h-80">
-          <span className="text-muted-foreground/40 text-9xl font-bold underline">
+          <span className="font-bold text-9xl text-muted-foreground/40 underline">
             404
           </span>
         </div>
 
-        <h1 className="text-4xl font-bold tracking-tighter md:text-6xl">
+        <h1 className="font-bold text-4xl tracking-tighter md:text-6xl">
           Página não encontrada
         </h1>
 

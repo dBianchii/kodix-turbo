@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@kdx/ui/tabs";
 
 import { redirect } from "~/i18n/routing";
 import { HydrateClient, prefetch, trpc } from "~/trpc/server";
+
 import { InviteDataTable } from "./_components/edit-team-members/invites/data-table-invite";
 import { DataTableMembers } from "./_components/edit-team-members/members/data-table-members";
 import TeamInviteCard from "./_components/invite/team-invite-card";
@@ -29,7 +30,7 @@ export default async function SettingsMembersPage() {
   return (
     <div className="mt-8 space-y-6 md:mt-0">
       <div>
-        <h2 className="text-center text-2xl font-bold md:text-left">
+        <h2 className="text-center font-bold text-2xl md:text-left">
           {t("Members")}
         </h2>
         <p className="text-muted-foreground text-sm">

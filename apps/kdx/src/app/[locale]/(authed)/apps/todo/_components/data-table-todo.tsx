@@ -1,4 +1,3 @@
-/* eslint-disable react-compiler/react-compiler */
 "use client";
 
 import type { ColumnFiltersState, RowData } from "@tanstack/react-table";
@@ -27,10 +26,11 @@ import { DataTablePagination } from "@kdx/ui/data-table/data-table-pagination";
 import { Input } from "@kdx/ui/input";
 import { Table, TableBody, TableCell, TableRow } from "@kdx/ui/table";
 
-import type { Priority } from "./priority-popover";
 import { DatePickerWithPresets } from "~/app/[locale]/_components/date-picker-with-presets";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { useTRPC } from "~/trpc/react";
+
+import type { Priority } from "./priority-popover";
 import { AssigneePopover } from "./assignee-popover";
 import { CreateTaskDialogButton } from "./create-task-dialog-button";
 import {
@@ -47,7 +47,7 @@ type team = RouterOutputs["team"]["getActiveTeam"];
 type Status = typeof todos.$inferInsert.status;
 
 declare module "@tanstack/react-table" {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // biome-ignore lint/correctness/noUnusedVariables: <idk>
   interface TableMeta<TData extends RowData> {
     team: team | undefined;
   }
@@ -117,7 +117,7 @@ export function DataTableTodo({
               setPriority(newData.priority as Priority);
               return { prevData };
             },
-            onError(err, newTodo, ctx) {
+            onError(err, _newTodo, ctx) {
               if (!ctx?.prevData) return;
 
               trpcErrorToastDefault(err);
@@ -174,7 +174,7 @@ export function DataTableTodo({
               setStatus(newData.status);
               return { prevData };
             },
-            onError(err, newTodo, ctx) {
+            onError(err, _newTodo, ctx) {
               if (!ctx?.prevData) return;
 
               trpcErrorToastDefault(err);
@@ -229,7 +229,7 @@ export function DataTableTodo({
               setDueDate(newData.dueDate ?? undefined);
               return { prevData };
             },
-            onError(err, newTodo, ctx) {
+            onError(err, _newTodo, ctx) {
               trpcErrorToastDefault(err);
               // If the mutation fails, use the context-value from onMutate
               setDueDate(ctx?.prevData ?? undefined);
@@ -276,7 +276,7 @@ export function DataTableTodo({
               setAssignedToUserId(newData.assignedToUserId ?? "");
               return { prevData };
             },
-            onError(err, newTodo, ctx) {
+            onError(err, _newTodo, ctx) {
               if (!ctx?.prevData) return;
 
               trpcErrorToastDefault(err);

@@ -11,7 +11,7 @@ export const AvatarWrapper = ({
 }: React.ComponentProps<typeof AvatarImage> & {
   fallback?: React.ReactNode;
 }) => (
-  <Avatar ref={ref} className={className}>
+  <Avatar className={className} ref={ref}>
     <AvatarImage src={src} {...props} />
     {fallback && (
       <AvatarFallback>

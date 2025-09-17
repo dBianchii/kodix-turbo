@@ -44,7 +44,7 @@ export default function ForgotPasswordPage() {
 
   return (
     <section className="mx-auto flex flex-1 flex-col items-center justify-center px-6 py-8 lg:py-0">
-      <Link href="/" className="my-4 text-4xl font-extrabold">
+      <Link className="my-4 font-extrabold text-4xl" href="/">
         Kodix
       </Link>
       <Card className="w-[275px] sm:w-[400px]">
@@ -73,10 +73,10 @@ export default function ForgotPasswordPage() {
             <CardContent>
               <Form {...form}>
                 <form
+                  className="space-y-6"
                   onSubmit={form.handleSubmit((values) => {
                     mutation.mutate(values);
                   })}
-                  className="space-y-6"
                 >
                   <FormField
                     control={form.control}
@@ -99,8 +99,8 @@ export default function ForgotPasswordPage() {
 
                   <Button
                     className="w-full"
-                    type="submit"
                     loading={mutation.isPending}
+                    type="submit"
                   >
                     {t("Send reset email")}
                   </Button>
@@ -110,7 +110,7 @@ export default function ForgotPasswordPage() {
           </>
         )}
       </Card>
-      <Link href={"/signin"} className="mt-8 text-sm font-medium">
+      <Link className="mt-8 font-medium text-sm" href={"/signin"}>
         {t("Go back to sign in page")}
       </Link>
     </section>

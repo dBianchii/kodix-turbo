@@ -34,6 +34,7 @@ import {
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { useTRPC } from "~/trpc/react";
+
 import { RecurrencePicker } from "./recurrence-picker";
 
 export function EditEventDialog({
@@ -83,7 +84,7 @@ export function EditEventDialog({
         : undefined,
       count: RRule.fromString(calendarTask.rule).options.count ?? undefined,
       date: calendarTask.date,
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
       weekdays: RRule.fromString(calendarTask.rule).options.byweekday?.map(
         (w) => new Weekday(w),
       ),
@@ -133,7 +134,6 @@ export function EditEventDialog({
     single: !(
       count !== defaultCalendarTask.count ||
       interval !== defaultCalendarTask.interval ||
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       (until && !until.isSame(defaultCalendarTask.until)) ||
       frequency !== defaultCalendarTask.frequency ||
       weekdays !== defaultCalendarTask.weekdays
@@ -257,7 +257,7 @@ export function EditEventDialog({
                 {t("Critical task")}
               </Label>
             </div>
-            <p className="text-muted-foreground text-[0.8rem]">
+            <p className="text-[0.8rem] text-muted-foreground">
               {t("Is this task considered critical or important")}
             </p>
           </div>

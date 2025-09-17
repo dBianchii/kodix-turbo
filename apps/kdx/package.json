@@ -6,8 +6,6 @@
     "build": "pnpm next build",
     "clean": "git clean -xdf .cache .next .turbo node_modules",
     "dev": "pnpm next dev --turbopack --port 3000",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint",
     "start": "pnpm next start --port 3000",
     "typecheck": "tsc --noEmit",
     "pull-vercel": "vercel env pull --yes"
@@ -16,6 +14,7 @@
     "@formkit/auto-animate": "catalog:",
     "@kdx/api": "workspace:*",
     "@kdx/auth": "workspace:*",
+    "@kdx/biome-config": "workspace:*",
     "@kdx/dayjs": "workspace:*",
     "@kdx/env": "workspace:*",
     "@kdx/locales": "workspace:*",
@@ -57,8 +56,6 @@
   },
   "devDependencies": {
     "@kdx/db": "workspace:*",
-    "@kdx/eslint-config": "workspace:*",
-    "@kdx/prettier-config": "workspace:*",
     "@kdx/tailwind-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
     "@tailwindcss/postcss": "catalog:tailwindcss",
@@ -67,11 +64,8 @@
     "@types/react-big-calendar": "catalog:react-big-calendar",
     "@types/react-dom": "catalog:react",
     "dotenv-cli": "catalog:",
-    "eslint": "catalog:",
     "jiti": "catalog:",
-    "prettier": "catalog:",
     "tailwindcss": "catalog:tailwindcss",
     "typescript": "catalog:"
-  },
-  "prettier": "@kdx/prettier-config"
+  }
 }

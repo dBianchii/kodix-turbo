@@ -1,12 +1,12 @@
 import { useEffect, useRef } from "react";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
+import { useCareTaskStore } from ".";
 
 import dayjs from "@kdx/dayjs";
 import { Button } from "@kdx/ui/button";
 import { useIsAnyOverlayMounted } from "@kdx/ui/stores/use-overlay-store";
 
 import { DatePicker } from "~/app/[locale]/_components/date-picker";
-import { useCareTaskStore } from ".";
 
 const useLeftAndRightKeyboardArrowClicks = () => {
   const shouldDisable = useIsAnyOverlayMounted();

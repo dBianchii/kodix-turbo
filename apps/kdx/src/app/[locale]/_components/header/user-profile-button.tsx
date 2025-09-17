@@ -37,7 +37,7 @@ export function UserProfileButton({ user }: { user: User }) {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm leading-none font-medium">{user.name}</p>
+            <p className="font-medium text-sm leading-none">{user.name}</p>
             <p className="text-muted-foreground text-xs leading-none">
               {user.email}
             </p>

@@ -171,7 +171,7 @@ export function KodixApp({
               <DropdownMenuContent>
                 <CredenzaTrigger asChild>
                   <DropdownMenuItem>
-                    <LuTrash className="text-destructive mr-2 size-4" />
+                    <LuTrash className="mr-2 size-4 text-destructive" />
                     <span>{t("Uninstall from team")}</span>
                   </DropdownMenuItem>
                 </CredenzaTrigger>
@@ -184,7 +184,7 @@ export function KodixApp({
                 <CredenzaDescription className="py-4">
                   {t("are-you-sure-you-would-like-to-uninstall")} {appName}{" "}
                   {t("From").toLowerCase()}
-                  {" " + user?.activeTeamName}
+                  {` ${user?.activeTeamName}`}
                   {t("questionmark")}
                 </CredenzaDescription>
               </CredenzaHeader>

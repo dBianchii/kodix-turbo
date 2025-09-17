@@ -35,7 +35,7 @@ export async function upsertMany<T, F, Data>(calls: {
   const toUpdate = input
     .filter((c) => existingMap[getInputId(c)])
     .map((c) => c);
-  // eslint-disable-next-line no-restricted-syntax
+
   const [created, updated] = await Promise.all([
     update(toUpdate),
     create(toCreate),

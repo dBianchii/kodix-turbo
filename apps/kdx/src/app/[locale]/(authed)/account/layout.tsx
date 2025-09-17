@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { Navigation } from "~/app/[locale]/_components/navigation";
+
 import { ShouldRender } from "../team/settings/general/_components/client-should-render";
 
 export default async function Layout({
@@ -21,7 +22,7 @@ export default async function Layout({
     <main className="flex-1 py-8">
       <MaxWidthWrapper>
         <div className="flex flex-col justify-center border-b pb-8">
-          <h1 className="text-4xl font-bold">
+          <h1 className="font-bold text-4xl">
             {t("account.Account settings")}
           </h1>
         </div>

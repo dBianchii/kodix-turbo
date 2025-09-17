@@ -73,11 +73,13 @@ export function DatePickerWithPresets({
                 })
               : t("Pick a date")}
             {date && (
+              // biome-ignore lint/a11y/noStaticElementInteractions: <biome migration>
+              // biome-ignore lint/a11y/useKeyWithClickEvents: <biome migration>
               <span
                 onClick={() => {
                   setDate(undefined);
                 }}
-                className="hover:bg-primary/90 hover:text-background ml-2 rounded-full transition-colors"
+                className="ml-2 rounded-full transition-colors hover:bg-primary/90 hover:text-background"
               >
                 <LuX className="size-4" />
               </span>
@@ -140,9 +142,9 @@ export function DatePickerIcon({
 }) {
   if (date === undefined)
     return (
-      <LuCalendar className={cn("text-foreground/70 size-4", className)} />
+      <LuCalendar className={cn("size-4 text-foreground/70", className)} />
     );
   if (new Date() > date)
     return <LuCalendar className={cn("size-4 text-red-500", className)} />;
-  return <LuCalendar className={cn("text-foreground size-4", className)} />;
+  return <LuCalendar className={cn("size-4 text-foreground", className)} />;
 }

@@ -20,8 +20,8 @@ export const getAppDescription = (appId: KodixAppId, t: IsomorficT) => {
 
 export const getAppRoleNames = (t: IsomorficT) => {
   const appRoleDefaultIdToName = {
-    ["ADMIN"]: t("Admin"),
-    ["CAREGIVER"]: t("Care Giver"),
+    ADMIN: t("Admin"),
+    CAREGIVER: t("Care Giver"),
   };
 
   return appRoleDefaultIdToName;

@@ -16,13 +16,12 @@
     "build": "tsc",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "dev": "tsc",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
     "@casl/ability": "catalog:",
     "@kdx/auth": "workspace:*",
+    "@kdx/biome-config": "workspace:*",
     "@kdx/dayjs": "workspace:*",
     "@kdx/db": "workspace:*",
     "@kdx/env": "workspace:*",
@@ -49,8 +48,6 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@kdx/eslint-config": "workspace:*",
-    "@kdx/prettier-config": "workspace:*",
     "@kdx/tailwind-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
     "@types/deep-diff": "catalog:",
@@ -59,9 +56,6 @@
     "@types/object.groupby": "catalog:",
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
-    "eslint": "catalog:",
-    "prettier": "catalog:",
     "typescript": "catalog:"
-  },
-  "prettier": "@kdx/prettier-config"
+  }
 }

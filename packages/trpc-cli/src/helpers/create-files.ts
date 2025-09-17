@@ -4,10 +4,10 @@ import ora from "ora";
 import { trpcCliConfig } from "../../config";
 import { ROUTERS_FOLDER_PATH, VALIDATORS_FOLDER_PATH } from "../cli";
 import { logger } from "../utils/logger";
-import { createHandler } from "./createHandler";
-import { createRouter } from "./createRouter";
-import { createValidator } from "./createValidator";
-import { runPrettier } from "./runPrettier";
+import { createHandler } from "./create-handler";
+import { createRouter } from "./create-router";
+import { createValidator } from "./create-validator";
+import { runBiome } from "./run-biome";
 
 export interface CreateFilesParams {
   chosenRouterPath: string;
@@ -19,7 +19,7 @@ export interface CreateFilesParams {
 }
 
 export const createFiles = async (params: CreateFilesParams) => {
-  const spinner = ora(`Creating your endpoint...\n`).start();
+  const spinner = ora("Creating your endpoint...\n").start();
 
   const routerFolderFilePath = `${ROUTERS_FOLDER_PATH}/${params.chosenRouterPath}`;
   const routerFilePath = `${routerFolderFilePath}/${trpcCliConfig.routerFileName}`;
@@ -53,34 +53,34 @@ export const createFiles = async (params: CreateFilesParams) => {
         validatorPath,
         validator: params.validator,
         endpointName: params.endpointName,
-      }),
+      })
     );
 
   await Promise.allSettled(promises);
 
-  spinner.succeed(`Endpoint created!\n`);
+  spinner.succeed("Endpoint created!\n");
 
-  const prettierSpinner = ora("Running Prettier...\n").start();
+  const biomeSpinner = ora("Running Biome...\n").start();
 
   const oneLevelAboveRouter =
     routerFolderFilePath.split("/").slice(0, -1).join("/") +
     `/${trpcCliConfig.routerFileName}`;
-  const pathsToRunPrettier = [routerFilePath, handlerPath];
-  if (params.validator) pathsToRunPrettier.push(validatorPath);
-  if (params.newRouterName) pathsToRunPrettier.push(oneLevelAboveRouter);
-  await runPrettier(pathsToRunPrettier);
+  const pathsToRunBiome = [routerFilePath, handlerPath];
+  if (params.validator) pathsToRunBiome.push(validatorPath);
+  if (params.newRouterName) pathsToRunBiome.push(oneLevelAboveRouter);
+  await runBiome(pathsToRunBiome);
 
-  prettierSpinner.succeed("Prettier ran successfully!\n");
+  biomeSpinner.succeed("Biome ran successfully!\n");
 
   logger.success("Links to your new/modified files:");
   logger.success(
-    `Router: ${chalk.blue(`${params.chosenRouterPath}/${trpcCliConfig.routerFileName}`)}`,
+    `Router: ${chalk.blue(`${params.chosenRouterPath}/${trpcCliConfig.routerFileName}`)}`
   );
   logger.success(
-    `Handler: ${chalk.blue(`${params.chosenRouterPath}/${params.endpointName}.handler.ts`)}`,
+    `Handler: ${chalk.blue(`${params.chosenRouterPath}/${params.endpointName}.handler.ts`)}`
   );
   if (params.validator)
     logger.success(
-      `Validator: ${chalk.blue(`trpc/${params.chosenRouterPath}/index.ts`)}`,
+      `Validator: ${chalk.blue(`trpc/${params.chosenRouterPath}/index.ts`)}`
     );
 };

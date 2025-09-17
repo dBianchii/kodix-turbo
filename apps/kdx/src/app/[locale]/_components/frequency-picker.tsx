@@ -145,9 +145,9 @@ export function FrequencyPicker({
               }}
             >
               <CommandGroup>
-                {freqs.map((freq, i) => (
+                {freqs.map((freq) => (
                   <CommandItem
-                    key={i}
+                    key={`${freq}-freq-command-item`}
                     onSelect={() => {
                       setFrequency(freq);
                       setOpen(false);
@@ -182,7 +182,7 @@ export function FrequencyToTxt({
   lowercase?: boolean;
 }) {
   const t = useTranslations();
-  let text;
+  let text: string;
   switch (frequency) {
     case RRule.DAILY:
       text = t("Day", { count });

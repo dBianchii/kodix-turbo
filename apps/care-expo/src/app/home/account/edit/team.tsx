@@ -1,6 +1,6 @@
 import { FlatList, Pressable } from "react-native";
-import { router, Stack } from "expo-router";
 import { ArrowRight, ChevronLeft, RefreshCw } from "@tamagui/lucide-icons";
+import { router, Stack } from "expo-router";
 import {
   H4,
   SizableText,

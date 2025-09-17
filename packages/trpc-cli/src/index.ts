@@ -1,6 +1,6 @@
-import type { CreateFilesParams } from "./helpers/createFiles";
+import type { CreateFilesParams } from "./helpers/create-files";
 import { runCli } from "./cli";
-import { createFiles } from "./helpers/createFiles";
+import { createFiles } from "./helpers/create-files";
 import { logger } from "./utils/logger";
 
 const main = async () => {
@@ -32,9 +32,9 @@ main().catch((err) => {
     logger.error(err);
   } else {
     logger.error(
-      "An unknown error has occurred. Please open an issue on github with the below:",
+      "An unknown error has occurred. Please open an issue on github with the below:"
     );
-    console.log(err);
+    logger.error(err);
   }
   process.exit(1);
 });

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/consistent-type-imports */
 import type { formats } from "@kdx/locales";
 
 //? @kdx/react-email should only use "emails" namespace

@@ -18,8 +18,8 @@ const rolesSchema = z.object(
       acc[role] = z.boolean().optional();
       return acc;
     },
-    {} as Record<AppRole<KodixAppId>, z.ZodOptional<z.ZodBoolean>>,
-  ),
+    {} as Record<AppRole<KodixAppId>, z.ZodOptional<z.ZodBoolean>>
+  )
 );
 export const ZUpdateUserAssociationInputSchema = z.object({
   userId: ZNanoId, //User to update

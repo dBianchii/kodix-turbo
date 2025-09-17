@@ -20,6 +20,7 @@ import { ThemeProvider, ThemeToggle } from "@kdx/ui/theme";
 import { Toaster } from "@kdx/ui/toast";
 
 import { routing } from "~/i18n/routing";
+
 import { CCNextIntlClientProvider } from "./_components/cc-next-intl-client-provider";
 import PostHogPageView from "./_components/posthog-page-view";
 import { CSPostHogProvider } from "./_components/posthog-provider";
@@ -62,7 +63,7 @@ export default async function RootLayout(props: {
       <CSPostHogProvider>
         <body
           className={cn(
-            "bg-background text-foreground min-h-screen font-sans antialiased",
+            "min-h-screen bg-background font-sans text-foreground antialiased",
             GeistSans.variable,
             GeistMono.variable,
           )}

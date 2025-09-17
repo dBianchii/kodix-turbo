@@ -9,9 +9,8 @@ import type {
 } from "@kdx/shared";
 import { appIdToAppTeamConfigSchema, todoAppId } from "@kdx/shared";
 
-import type { appIdToUserAppTeamConfigSchemaUpdate } from "../_zodSchemas/userAppTeamConfigs";
 import type { Drizzle } from "../../client";
-import { appIdToUserAppTeamConfigSchema } from "../_zodSchemas/userAppTeamConfigs";
+import type { appIdToUserAppTeamConfigSchemaUpdate } from "../_zodSchemas/userAppTeamConfigs";
 import { db as _db } from "../../client";
 import {
   appActivityLogs,
@@ -23,6 +22,7 @@ import {
   userTeamAppRoles,
 } from "../../schema";
 import { appIdToSchemas } from "../../utils";
+import { appIdToUserAppTeamConfigSchema } from "../_zodSchemas/userAppTeamConfigs";
 
 export async function findInstalledAppsByTeamId(
   teamId: string | undefined,

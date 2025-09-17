@@ -10,6 +10,7 @@ import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { getAppUrl } from "~/helpers/miscelaneous";
 import { Link, redirect } from "~/i18n/routing";
 import { trpcCaller } from "~/trpc/server";
+
 import { CustomKodixIcon } from "../../_components/app/custom-kodix-icon";
 
 interface CustomApp {
@@ -52,7 +53,7 @@ export default async function TeamPage() {
   return (
     <MaxWidthWrapper className="flex flex-col">
       <div className="flex">
-        <span className="bg-linear-to-r from-purple-400 to-pink-600 bg-clip-text text-xl font-bold">
+        <span className="bg-linear-to-r from-purple-400 to-pink-600 bg-clip-text font-bold text-xl">
           {user.activeTeamName}
         </span>
       </div>
@@ -65,8 +66,6 @@ export default async function TeamPage() {
 }
 
 function AppsSectionSkeleton({ customApps }: { customApps: CustomApp[] }) {
-  const numberOfSkeletonApps = 3;
-
   return (
     <div className="flex flex-row items-center space-x-10">
       {customApps.map((app) => (
@@ -82,10 +81,10 @@ function AppsSectionSkeleton({ customApps }: { customApps: CustomApp[] }) {
           />
         </Link>
       ))}
-      {Array.from({ length: numberOfSkeletonApps }).map((_, i) => (
+      {["app-skel-1", "app-skel-2", "app-skel-3"].map((skel) => (
         <Skeleton
-          className="bg-primary/5 mb-2 h-[80px] w-[80px] rounded-xl"
-          key={i}
+          className="mb-2 h-[80px] w-[80px] rounded-xl bg-primary/5"
+          key={skel}
         />
       ))}
     </div>

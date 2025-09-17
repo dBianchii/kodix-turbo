@@ -48,9 +48,9 @@ export function DataTableNotificationsFloatingBar({
   return (
     <div className="fixed inset-x-0 bottom-4 z-50 mx-auto w-fit px-4">
       <div className="w-full overflow-x-auto">
-        <div className="bg-card mx-auto flex w-fit items-center gap-2 rounded-md border p-2 shadow-2xl">
+        <div className="mx-auto flex w-fit items-center gap-2 rounded-md border bg-card p-2 shadow-2xl">
           <div className="flex h-7 items-center rounded-md border border-dashed pr-1 pl-2.5">
-            <span className="text-xs whitespace-nowrap">
+            <span className="whitespace-nowrap text-xs">
               {rows.length} {t("selected")}
             </span>
             <Separator orientation="vertical" className="mr-1 ml-2" />
@@ -66,7 +66,7 @@ export function DataTableNotificationsFloatingBar({
                     <LuX className="size-3.5 shrink-0" aria-hidden="true" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent className="bg-accent text-foreground flex items-center border px-2 py-1 font-semibold dark:bg-zinc-900">
+                <TooltipContent className="flex items-center border bg-accent px-2 py-1 font-semibold text-foreground dark:bg-zinc-900">
                   <p className="mr-2">{t("Clear selection")}</p>
                   <Kbd abbrTitle="Escape" variant="outline">
                     Esc
@@ -106,7 +106,7 @@ export function DataTableNotificationsFloatingBar({
                     )}
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent className="bg-accent text-foreground border font-semibold dark:bg-zinc-900">
+                <TooltipContent className="border bg-accent font-semibold text-foreground dark:bg-zinc-900">
                   <p>{t("Export notifications")}</p>
                 </TooltipContent>
               </Tooltip>
@@ -147,7 +147,7 @@ export function DataTableNotificationsFloatingBar({
                     )}
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent className="bg-accent text-foreground border font-semibold dark:bg-zinc-900">
+                <TooltipContent className="border bg-accent font-semibold text-foreground dark:bg-zinc-900">
                   <p>{t("Delete notifications")}</p>
                 </TooltipContent>
               </Tooltip>

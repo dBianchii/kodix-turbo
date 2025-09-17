@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { Link } from "~/i18n/routing";
+
 import { ProviderButtons } from "../_components/provider-buttons";
 import { RedirectIfLoggedIn } from "../signin/_components/redirect-if-logged-in";
 import { PasswordSignupForm } from "./_components/password-signup-form";
@@ -16,9 +17,9 @@ export default async function SignUpPage(props: {
   return (
     <div className="container my-auto flex max-w-2xl">
       <RedirectIfLoggedIn />
-      <div className="bg-card flex w-full flex-col rounded-xl md:border">
+      <div className="flex w-full flex-col rounded-xl bg-card md:border">
         <div className="space-y-6 p-4 py-16 md:p-12">
-          <h1 className="text-3xl font-bold">
+          <h1 className="font-bold text-3xl">
             {t("Create your Kodix account")}
           </h1>
           <p className="text-muted-foreground">
@@ -31,7 +32,7 @@ export default async function SignUpPage(props: {
                 <span className="w-full border-t" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background text-muted-foreground px-2">
+                <span className="bg-background px-2 text-muted-foreground">
                   {t("Or continue with")}
                 </span>
               </div>
@@ -42,7 +43,7 @@ export default async function SignUpPage(props: {
                 invite={searchParams?.invite}
               />
             </div>
-            <div className="text-muted-foreground text-center text-sm">
+            <div className="text-center text-muted-foreground text-sm">
               {t("Already have an account")}{" "}
               <Link href="/signin" className="text-white underline">
                 {t("Sign in")}

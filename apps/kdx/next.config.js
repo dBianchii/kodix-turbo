@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-restricted-imports
-import { env } from "process";
+import { env } from "node:process";
 import { createJiti } from "jiti";
 import createNextIntlPlugin from "next-intl/plugin";
 

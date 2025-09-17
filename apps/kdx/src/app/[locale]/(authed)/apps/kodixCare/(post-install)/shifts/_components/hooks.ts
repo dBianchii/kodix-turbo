@@ -79,9 +79,9 @@ export const useShiftOverlap = ({
   const query = useQuery(
     trpc.app.kodixCare.findOverlappingShifts.queryOptions(
       {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        // biome-ignore lint/style/noNonNullAssertion: <biome migration>
         start: startAt!,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        // biome-ignore lint/style/noNonNullAssertion: <biome migration>
         end: endAt!,
       },
       {

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/consistent-type-imports */
 import type { formats } from "@kdx/locales";
 
 //? @kdx/kdx should only use "kdx" json

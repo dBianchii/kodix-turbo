@@ -1,5 +1,3 @@
-/* eslint-disable react/hook-use-state */
-
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink, loggerLink } from "@trpc/client";
@@ -15,7 +13,8 @@ import { getToken } from "./session-store";
  * A set of typesafe hooks for consuming your API.
  */
 export const api = createTRPCReact<AppRouter>();
-export { type RouterInputs, type RouterOutputs } from "@kdx/api";
+
+export type { RouterInputs, RouterOutputs } from "@kdx/api";
 
 /**
  * A wrapper for your app that provides the TRPC context.

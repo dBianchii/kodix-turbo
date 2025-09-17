@@ -48,12 +48,7 @@ export function DataTableFilterCombobox<TData>({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         {children ?? (
-          <Button
-            variant="outline"
-            size="sm"
-            role="combobox"
-            className="capitalize"
-          >
+          <Button variant="outline" size="sm" className="capitalize">
             <LuChevronsUpDown
               className="mr-2 size-4 shrink-0"
               aria-hidden="true"
@@ -111,11 +106,11 @@ export function DataTableFilterCombobox<TData>({
                     ...selectedOptions,
                     {
                       id: crypto.randomUUID(),
-                      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
                       label: selectedOption.label ?? "",
-                      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
                       value: selectedOption.value ?? "",
-                      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
                       options: selectedOption.options ?? [],
                       isMulti: true,
                     },

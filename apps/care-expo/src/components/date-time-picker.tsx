@@ -1,9 +1,8 @@
 import type { XStackProps } from "tamagui";
 import { useEffect, useState } from "react";
 import { Pressable } from "react-native";
-import DateTimePickerModal from "react-native-modal-datetime-picker"; // https://github.com/mmazzarolo/react-native-modal-datetime-picker
-
 import { Calendar, Clock } from "@tamagui/lucide-icons";
+import DateTimePickerModal from "react-native-modal-datetime-picker"; // https://github.com/mmazzarolo/react-native-modal-datetime-picker
 import { Input, XStack } from "tamagui";
 
 export function DateTimePicker({

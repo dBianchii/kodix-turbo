@@ -1,6 +1,7 @@
 import { auth } from "@kdx/auth";
 
 import { trpcCaller } from "~/trpc/server";
+
 import EditUserTeamsTableClient from "./edit-user-teams-table-client";
 
 export async function EditUserTeamsTable() {

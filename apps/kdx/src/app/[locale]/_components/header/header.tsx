@@ -7,6 +7,7 @@ import { buttonVariants } from "@kdx/ui/button";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { Link } from "~/i18n/routing";
 import { trpcCaller } from "~/trpc/server";
+
 import { AppSwitcherClient } from "../app-switcher/app-switcher-client";
 import { I18nPicker } from "./i18n-picker";
 import { Logo } from "./logo";
@@ -53,6 +54,7 @@ async function LogoWithAppSwitcher() {
             strokeWidth="1.5"
             viewBox="0 0 24 24"
           >
+            <title>slash Icon</title>
             <path d="M16.88 3.549L7.12 20.451"></path>
           </svg>
           <AppSwitcherClient appsPromise={trpcCaller.app.getInstalled()} />

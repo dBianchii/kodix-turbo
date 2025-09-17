@@ -1,7 +1,6 @@
 "use client";
 
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
-
 import { cn } from ".";
 
 const Avatar = ({
@@ -11,7 +10,7 @@ const Avatar = ({
   <AvatarPrimitive.Root
     className={cn(
       "relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full",
-      className,
+      className
     )}
     {...props}
   />
@@ -33,8 +32,8 @@ const AvatarFallback = ({
 }: React.ComponentProps<typeof AvatarPrimitive.Fallback>) => (
   <AvatarPrimitive.Fallback
     className={cn(
-      "bg-muted flex h-full w-full items-center justify-center rounded-full",
-      className,
+      "flex h-full w-full items-center justify-center rounded-full bg-muted",
+      className
     )}
     {...props}
   />

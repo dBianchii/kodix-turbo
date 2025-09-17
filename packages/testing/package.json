@@ -4,21 +4,14 @@
   "type": "module",
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
     "test": "vitest run",
     "test:watch": "vitest --watch"
   },
   "devDependencies": {
-    "@kdx/eslint-config": "workspace:*",
-    "@kdx/prettier-config": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
-    "eslint": "catalog:",
-    "prettier": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:",
     "yaml": "catalog:"
-  },
-  "prettier": "@kdx/prettier-config"
+  }
 }

@@ -24,6 +24,7 @@ import {
   getAppUrl,
 } from "~/helpers/miscelaneous";
 import { Link, usePathname, useRouter } from "~/i18n/routing";
+
 import { IconKodixApp } from "../app/kodix-icon";
 
 export function AppSwitcherClient({
@@ -46,7 +47,7 @@ export function AppSwitcherClient({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="ghost" role="combobox" className="justify-start">
+        <Button variant="ghost" className="justify-start">
           <CurrentAppIcon hrefPrefix={hrefPrefix} iconSize={iconSize} />
           <span className="ml-2">
             <CurrentAppName hrefPrefix={hrefPrefix} />

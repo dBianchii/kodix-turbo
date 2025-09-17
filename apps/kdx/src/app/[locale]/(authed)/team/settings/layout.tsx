@@ -7,6 +7,7 @@ import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { Navigation } from "~/app/[locale]/_components/navigation";
 import { redirect } from "~/i18n/routing";
 import { trpcCaller } from "~/trpc/server";
+
 import { ShouldRender } from "./general/_components/client-should-render";
 
 export default async function SettingsLayout({
@@ -43,10 +44,10 @@ export default async function SettingsLayout({
   return (
     <MaxWidthWrapper>
       <div className="flex flex-col justify-center border-b pb-4">
-        <h1 className="text-lg font-bold">{t("Team Settings")}</h1>
+        <h1 className="font-bold text-lg">{t("Team Settings")}</h1>
         <div className="flex items-center">
           <LuChevronRight />
-          <p className="text-muted-foreground text-base">
+          <p className="text-base text-muted-foreground">
             {user.activeTeamName}
           </p>
         </div>

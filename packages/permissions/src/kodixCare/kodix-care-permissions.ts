@@ -5,7 +5,7 @@ import type { AppRole, kodixCareAppId } from "@kdx/shared";
 
 import type { Create, Delete, Edit } from "../actions";
 import type { User } from "../models/user";
-import type { CareShift, CareTask } from "./kodixCare.subjects";
+import type { CareShift, CareTask } from "./kodix-care-subjects";
 
 type KodixCareAbilities =
   | [Delete | Create, CareTask]
@@ -15,7 +15,7 @@ export type KodixCareMongoAbility = MongoAbility<KodixCareAbilities>;
 type KodixCareRole = AppRole<typeof kodixCareAppId>;
 type PermissionsByRole = (
   user: User,
-  builder: AbilityBuilder<KodixCareMongoAbility>,
+  builder: AbilityBuilder<KodixCareMongoAbility>
 ) => void;
 
 export const kodixCarePermissionsFactory = ({
@@ -23,7 +23,7 @@ export const kodixCarePermissionsFactory = ({
 }: {
   t: IsomorficT;
 }): Record<KodixCareRole, PermissionsByRole> => ({
-  ADMIN(user, { can }) {
+  ADMIN(_user, { can }) {
     can("Create", "CareTask");
     can("Delete", "CareTask");
 
@@ -52,8 +52,8 @@ export const kodixCarePermissionsFactory = ({
       },
     }).because(
       t(
-        "api.This shift was not originally created by you ask your team manager to delete it",
-      ),
+        "api.This shift was not originally created by you ask your team manager to delete it"
+      )
     );
 
     can("Edit", "CareShift", {

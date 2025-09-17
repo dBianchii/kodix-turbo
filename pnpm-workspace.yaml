@@ -7,11 +7,9 @@ catalogs:
   turbo:
     turbo: ^2.4.2
     "@turbo/gen": ^2.4.2
-    eslint-plugin-turbo: ^2.4.2
 
   next:
     next: ^15.3.0
-    "@next/eslint-plugin-next": ^15.3.0
 
   trpc:
     "@trpc/client": ^11.0.0
@@ -28,7 +26,6 @@ catalogs:
     react-dom: ^19.1.0
     "@types/react": ^19.1.0
     "@types/react-dom": ^19.1.0
-    eslint-plugin-react-hooks: ^5.0.0
 
   babel:
     "@babel/core": ^7.26.0
@@ -70,12 +67,11 @@ catalogs:
 
 catalog:
   "@bacons/text-decoder": ^0.0.0
+  "@biomejs/biome": ^2.1.2
   "@casl/ability": ^6.7.3
   "@clack/prompts": ^0.7.0
-  "@eslint/compat": ^1.2.3
   "@formkit/auto-animate": ^0.8.2
   "@hookform/resolvers": ^5.1.1
-  "@ianvs/prettier-plugin-sort-imports": ^4.4.0
   "@motify/components": ^0.18.0
   "@node-rs/argon2": ^1.8.3
   "@oslojs/crypto": ^1.0.1
@@ -120,7 +116,6 @@ catalog:
   "@types/ms": ^0.7.34
   "@types/node": 22.15.0
   "@types/object.groupby": ^1.0.4
-  "@typescript-eslint/eslint-plugin": ^8.35.1
   "@upstash/qstash": ^2.7.12
   "@upstash/redis": ^1.31.6
   "@vercel/analytics": ^1.2.2
@@ -142,12 +137,6 @@ catalog:
   drizzle-seed: ^0.3.1
   drizzle-zod: ^0.8.2
   embla-carousel-react: 8.0.0-rc22
-  eslint: ^9.15.0
-  eslint-plugin-drizzle: ^0.2.3
-  eslint-plugin-import: ^2.31.0
-  eslint-plugin-jsx-a11y: ^6.10.2
-  eslint-plugin-react: ^7.37.2
-  eslint-plugin-react-compiler: beta
   framer-motion: ^11.11.17
   motion: ^12.5.0
   geist: ^1.3.1
@@ -165,8 +154,6 @@ catalog:
   postcss: ^8.4.49
   posthog-js: ^1.149.0
   posthog-node: ^4.3.1
-  prettier: ^3.3.2
-  prettier-plugin-tailwindcss: ^0.6.9
   react-day-picker: ^9.4.4
   react-email: 3.0.7
   react-hook-form: ^7.60.0
@@ -194,8 +181,8 @@ catalog:
   tsup: ^8.0.2
   tsx: 4.7.3
   typescript: ^5.5.4
-  typescript-eslint: ^8.15.0
   use-intl: ^3.20.0
+  ultracite: ^5.0.29
   vaul: ^1.0.0
   vitest: ^3.0.6
   yaml: 2.7.0

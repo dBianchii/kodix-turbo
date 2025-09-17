@@ -1,8 +1,8 @@
 import type { Column } from "@tanstack/react-table";
 import { ChevronDown, ChevronsUpDown, ChevronUp, EyeOff } from "lucide-react";
 import { useTranslations } from "next-intl";
-
 import { cn } from "..";
+
 import { Button } from "../button";
 import {
   DropdownMenu,
@@ -25,7 +25,7 @@ export function DataTableColumnHeader<TData, TValue>({
 }: DataTableColumnHeaderProps<TData, TValue>) {
   const t = useTranslations();
 
-  if (!column.getCanSort() && !column.getCanHide()) {
+  if (!(column.getCanSort() || column.getCanHide())) {
     return <div className={cn(className)}>{children}</div>;
   }
 
@@ -37,21 +37,23 @@ export function DataTableColumnHeader<TData, TValue>({
             aria-label={
               column.getIsSorted() === "desc"
                 ? t("Sorted descending Click to sort ascending")
-                : column.getIsSorted() === "asc"
+                : // biome-ignore lint/style/noNestedTernary: <biome migration>
+                  column.getIsSorted() === "asc"
                   ? t("Sorted ascending Click to sort descending")
                   : t("Not sorted Click to sort ascending")
             }
-            variant="ghost"
+            className="-ml-3 h-8 data-[state=open]:bg-accent"
             size="sm"
-            className="data-[state=open]:bg-accent -ml-3 h-8"
+            variant="ghost"
           >
             <div className="flex flex-row">{children}</div>
             {column.getCanSort() && column.getIsSorted() === "desc" ? (
-              <ChevronDown className="ml-2 size-4" aria-hidden="true" />
-            ) : column.getIsSorted() === "asc" ? (
-              <ChevronUp className="ml-2 size-4" aria-hidden="true" />
+              <ChevronDown aria-hidden="true" className="ml-2 size-4" />
+            ) : // biome-ignore lint/style/noNestedTernary: <biome migration>
+            column.getIsSorted() === "asc" ? (
+              <ChevronUp aria-hidden="true" className="ml-2 size-4" />
             ) : (
-              <ChevronsUpDown className="ml-2 size-4" aria-hidden="true" />
+              <ChevronsUpDown aria-hidden="true" className="ml-2 size-4" />
             )}
           </Button>
         </DropdownMenuTrigger>
@@ -63,8 +65,8 @@ export function DataTableColumnHeader<TData, TValue>({
                 onClick={() => column.toggleSorting(false)}
               >
                 <ChevronUp
-                  className="text-muted-foreground/70 mr-2 size-3.5"
                   aria-hidden="true"
+                  className="mr-2 size-3.5 text-muted-foreground/70"
                 />
                 {t("Asc")}
               </DropdownMenuItem>
@@ -73,8 +75,8 @@ export function DataTableColumnHeader<TData, TValue>({
                 onClick={() => column.toggleSorting(true)}
               >
                 <ChevronDown
-                  className="text-muted-foreground/70 mr-2 size-3.5"
                   aria-hidden="true"
+                  className="mr-2 size-3.5 text-muted-foreground/70"
                 />
                 {t("Desc")}
               </DropdownMenuItem>
@@ -89,8 +91,8 @@ export function DataTableColumnHeader<TData, TValue>({
               onClick={() => column.toggleVisibility(false)}
             >
               <EyeOff
-                className="text-muted-foreground/70 mr-2 size-3.5"
                 aria-hidden="true"
+                className="mr-2 size-3.5 text-muted-foreground/70"
               />
               {t("Hide")}
             </DropdownMenuItem>

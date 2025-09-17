@@ -5,6 +5,7 @@ import { kodixCareAppId } from "@kdx/shared";
 
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
 import { trpcCaller } from "~/trpc/server";
+
 import { KodixCareUserSettingsForm } from "./_components/kodix-care-user-settings-form";
 
 export default async function KodixCareSettingsPage() {
@@ -16,7 +17,7 @@ export default async function KodixCareSettingsPage() {
 
   return (
     <main className="pt-6 md:p-6">
-      <h2 className="mb-4 text-lg font-medium">{t("Settings")}</h2>
+      <h2 className="mb-4 font-medium text-lg">{t("Settings")}</h2>
       {/* <Tabs defaultValue="account" className="w-[400px]">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="account">Account</TabsTrigger>

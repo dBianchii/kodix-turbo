@@ -105,7 +105,7 @@ export function DeleteTeamConfirmationDialog({
                     "All data related to your team will be permanently lost and cannot be recovered",
                   )}
                 </AlertDialogDescription>
-                <div className="bg-destructive/40 flex gap-2 rounded-md p-3 text-sm text-red-400">
+                <div className="flex gap-2 rounded-md bg-destructive/40 p-3 text-red-400 text-sm">
                   <span className="font-bold">{t("Warning")}:</span>
                   <span>
                     {t("This action is not reversible please be certain")}

@@ -14,9 +14,9 @@ export const createCronJobCtx = async () => ({
 export type TCronJobContext = Awaited<ReturnType<typeof createCronJobCtx>>;
 
 const receiver = new Receiver({
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  // biome-ignore lint/style/noNonNullAssertion: <it's not undefined in production>
   currentSigningKey: env.QSTASH_CURRENT_SIGNING_KEY!,
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  // biome-ignore lint/style/noNonNullAssertion: <it's not undefined in production>
   nextSigningKey: env.QSTASH_NEXT_SIGNING_KEY!,
 });
 

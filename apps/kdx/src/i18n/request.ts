@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-
 import { getRequestConfig } from "next-intl/server";
 
 import { formats } from "@kdx/locales";
@@ -12,7 +9,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
 
   // Validate that the incoming `locale` parameter is valid
   // Ensure that a valid locale is used
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: <fix me>
   if (!locale || !routing.locales.includes(locale as any)) {
     locale = routing.defaultLocale;
   }

@@ -1,7 +1,5 @@
-// eslint-disable-next-line react-compiler/react-compiler
-/* eslint-disable react-hooks/exhaustive-deps */
-import type { Table } from "@tanstack/react-table";
 import type { Dispatch, SetStateAction } from "react";
+import type { Table } from "@tanstack/react-table";
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -30,8 +28,9 @@ import {
 } from "@kdx/ui/select";
 import { Separator } from "@kdx/ui/separator";
 
-import type { DataTableFilterOption } from "./types";
 import { usePathname, useRouter } from "~/i18n/routing";
+
+import type { DataTableFilterOption } from "./types";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 
 interface DataTableMultiFilterProps<TData> {
@@ -69,7 +68,6 @@ export function DataTableMultiFilter<TData>({
         <div className="space-y-2 p-4">
           {options.map((option, i) => (
             <MultiFilterRow
-              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
               key={option.id ?? i}
               i={i}
               option={option}
@@ -287,7 +285,7 @@ export function MultiFilterRow<TData>({
         value={filterVariety}
         onValueChange={(value) => setFilterVariety(value)}
       >
-        <SelectTrigger className="hover:bg-muted/50 h-8 w-full truncate px-2 py-0.5">
+        <SelectTrigger className="h-8 w-full truncate px-2 py-0.5 hover:bg-muted/50">
           <SelectValue placeholder={filterVarieties[0]} />
         </SelectTrigger>
         <SelectContent>
@@ -347,7 +345,7 @@ export function MultiFilterRow<TData>({
                   id: crypto.randomUUID(),
                   label: selectedOption.label,
                   value: selectedOption.value,
-                  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
                   options: selectedOption.options ?? [],
                   isMulti: true,
                 },

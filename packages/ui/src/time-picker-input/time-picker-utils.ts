@@ -1,22 +1,25 @@
 /**
  * regular expression to check for valid hour format (01-23)
  */
+const hourRegex = /^(0[0-9]|1[0-9]|2[0-3])$/;
 export function isValidHour(value: string) {
-  return /^(0[0-9]|1[0-9]|2[0-3])$/.test(value);
+  return hourRegex.test(value);
 }
 
 /**
  * regular expression to check for valid 12 hour format (01-12)
  */
+const twelveHourRegex = /^(0[1-9]|1[0-2])$/;
 export function isValid12Hour(value: string) {
-  return /^(0[1-9]|1[0-2])$/.test(value);
+  return twelveHourRegex.test(value);
 }
 
 /**
  * regular expression to check for valid minute format (00-59)
  */
+const minuteOrSecondRegex = /^[0-5][0-9]$/;
 export function isValidMinuteOrSecond(value: string) {
-  return /^[0-5][0-9]$/.test(value);
+  return minuteOrSecondRegex.test(value);
 }
 
 interface GetValidNumberConfig {
@@ -25,19 +28,20 @@ interface GetValidNumberConfig {
   loop?: boolean;
 }
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: <biome migration>
 export function getValidNumber(
   value: string,
-  { max, min = 0, loop = false }: GetValidNumberConfig,
+  { max, min = 0, loop = false }: GetValidNumberConfig
 ) {
-  let numericValue = parseInt(value, 10);
+  let numericValue = Number.parseInt(value, 10);
 
-  if (!isNaN(numericValue)) {
-    if (!loop) {
-      if (numericValue > max) numericValue = max;
-      if (numericValue < min) numericValue = min;
-    } else {
+  if (!Number.isNaN(numericValue)) {
+    if (loop) {
       if (numericValue > max) numericValue = min;
       if (numericValue < min) numericValue = max;
+    } else {
+      if (numericValue > max) numericValue = max;
+      if (numericValue < min) numericValue = min;
     }
     return numericValue.toString().padStart(2, "0");
   }
@@ -68,10 +72,10 @@ interface GetValidArrowNumberConfig {
 
 export function getValidArrowNumber(
   value: string,
-  { min, max, step }: GetValidArrowNumberConfig,
+  { min, max, step }: GetValidArrowNumberConfig
 ) {
-  let numericValue = parseInt(value, 10);
-  if (!isNaN(numericValue)) {
+  let numericValue = Number.parseInt(value, 10);
+  if (!Number.isNaN(numericValue)) {
     numericValue += step;
     return getValidNumber(String(numericValue), { min, max, loop: true });
   }
@@ -88,19 +92,19 @@ export function getValidArrowMinuteOrSecond(value: string, step: number) {
 
 export function setMinutes(date: Date, value: string) {
   const minutes = getValidMinuteOrSecond(value);
-  date.setMinutes(parseInt(minutes, 10));
+  date.setMinutes(Number.parseInt(minutes, 10));
   return date;
 }
 
 export function setSeconds(date: Date, value: string) {
   const seconds = getValidMinuteOrSecond(value);
-  date.setSeconds(parseInt(seconds, 10));
+  date.setSeconds(Number.parseInt(seconds, 10));
   return date;
 }
 
 export function setHours(date: Date, value: string) {
   const hours = getValidHour(value);
-  date.setHours(parseInt(hours, 10));
+  date.setHours(Number.parseInt(hours, 10));
   return date;
 }
 
@@ -135,7 +139,7 @@ export function getDateByType(date: Date, type: TimePickerType) {
 export function getArrowByType(
   value: string,
   step: number,
-  type: TimePickerType,
+  type: TimePickerType
 ) {
   switch (type) {
     case "minutes":

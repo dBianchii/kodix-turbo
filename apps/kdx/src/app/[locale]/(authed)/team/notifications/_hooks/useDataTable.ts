@@ -1,5 +1,3 @@
-// eslint-disable-next-line react-compiler/react-compiler
-/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import type {
@@ -24,8 +22,9 @@ import z from "zod/v4";
 
 import { useDebounce } from "@kdx/ui/hooks/use-debounce";
 
-import type { DataTableFilterField } from "../_components/data-table-advanced/types";
 import { usePathname, useRouter } from "~/i18n/routing";
+
+import type { DataTableFilterField } from "../_components/data-table-advanced/types";
 
 interface UseDataTableProps<TData, TValue> {
   /**
@@ -192,7 +191,7 @@ export function useDataTable<TData, TValue>({
     useState<ColumnFiltersState>(initialColumnFilters);
 
   // Handle server-side pagination
-  // eslint-disable-next-line react/hook-use-state
+
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: page - 1,
     pageSize: perPage,
@@ -313,7 +312,7 @@ export function useDataTable<TData, TValue>({
   const table = useReactTable({
     data,
     columns,
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
     pageCount: pageCount ?? -1,
     state: {
       pagination,

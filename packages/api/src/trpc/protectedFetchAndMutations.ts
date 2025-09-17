@@ -5,12 +5,11 @@ async function iteratePermissionResults(
 ) {
   let errors: TRPCError[] = [];
   if (Array.isArray(results)) {
-    // eslint-disable-next-line no-restricted-syntax
     const awaitedResults = await Promise.all(results);
-    errors = awaitedResults.filter((result) => result != undefined);
+    errors = awaitedResults.filter((result) => result !== undefined);
   } else {
     const awaitedResult = await results;
-    if (awaitedResult != undefined) {
+    if (awaitedResult !== undefined) {
       errors = [awaitedResult];
     }
   }
@@ -49,7 +48,9 @@ async function findOrThrowNotFound<T>(
   return data;
 }
 
-type PermissionCheckResult = Promise<TRPCError | void> | (TRPCError | void);
+type PermissionCheckResult =
+  | Promise<TRPCError | undefined>
+  | (TRPCError | undefined);
 
 type PermissionsChecksWithData<T> =
   | ((data: T) => PermissionCheckResult | PermissionCheckResult[])[]
@@ -73,7 +74,7 @@ export async function protectedFetch<T>({
 async function validatePermissions(permissions: PermissionsChecks) {
   if (Array.isArray(permissions)) {
     await iteratePermissionResults(
-      permissions.map((permission) => permission()).flat(),
+      permissions.flatMap((permission) => permission()),
     );
   } else {
     await iteratePermissionResults(permissions());

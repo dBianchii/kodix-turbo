@@ -6,6 +6,7 @@ import { kodixCareAppId } from "@kdx/shared";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { redirect } from "~/i18n/routing";
 import { trpcCaller } from "~/trpc/server";
+
 import OnboardingCard from "./_components/onboarding-card";
 
 export default async function KodixCareOnboardingPage() {

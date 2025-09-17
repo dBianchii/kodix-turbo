@@ -1,0 +1,11 @@
+{
+  "name": "@kdx/biome-config",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./restrictEnvAccess": "./restrictEnvAccess.json"
+  },
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo node_modules"
+  }
+}

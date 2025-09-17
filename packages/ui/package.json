@@ -25,8 +25,6 @@
     "build": "tsc",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "dev": "tsc",
-    "lint": "eslint",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
@@ -73,18 +71,13 @@
     "zustand": "catalog:"
   },
   "devDependencies": {
-    "@kdx/eslint-config": "workspace:*",
-    "@kdx/prettier-config": "workspace:*",
     "@kdx/shared": "workspace:*",
     "@kdx/tsconfig": "workspace:*",
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
     "cobe": "catalog:",
-    "eslint": "catalog:",
-    "prettier": "catalog:",
     "react": "catalog:react",
     "react-spring": "catalog:",
     "typescript": "catalog:"
-  },
-  "prettier": "@kdx/prettier-config"
+  }
 }

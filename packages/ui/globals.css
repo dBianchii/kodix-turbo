@@ -86,7 +86,6 @@
 
   --accent: hsl(263 71% 19%);
   --accent-foreground: hsl(300 9% 98%);
-  --accent-foreground: hsl(300 9% 98%);
 
   --destructive: oklch(0.396 0.141 25.723);
   --destructive-foreground: oklch(0.637 0.237 25.331);

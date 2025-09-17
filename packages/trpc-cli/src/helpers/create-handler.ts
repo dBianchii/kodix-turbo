@@ -1,6 +1,6 @@
-import fs from "fs";
+import fs from "node:fs";
 
-import { toPascalCase } from "../utils/toPascalCase";
+import { toPascalCase } from "../utils/to-pascal-case";
 
 export const createHandler = async ({
   handlerPath,
@@ -21,12 +21,10 @@ export const createHandler = async ({
   const TEndpointInputSchema = `T${UpperCasedEndpointName}InputSchema`;
 
   const contents = `${validator ? `import type { ${TEndpointInputSchema} } from "@kdx/validators/trpc/${chosenRouterPath}";` : ""}
-import type { ${TUpperCasedProcedureNameContext} } from "${
-    chosenRouterPath
-      .split("/")
-      .map(() => "..")
-      .join("/") + "/../procedures"
-  }";
+import type { ${TUpperCasedProcedureNameContext} } from "${`${chosenRouterPath
+    .split("/")
+    .map(() => "..")
+    .join("/")}/../procedures`}";
 
 interface ${UpperCasedEndpointName}Options {
   ctx: ${TUpperCasedProcedureNameContext};

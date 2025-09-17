@@ -24,35 +24,35 @@ interface RadialProps {
    * The color to transition from
    * @default #00000000
    * @type string
-   * */
+   */
   from?: string;
 
   /**
    * The color to transition to
    * @default #290A5C
    * @type string
-   * */
+   */
   to?: string;
 
   /**
    * The size of the gradient in pixels
    * @default 300
    * @type number
-   * */
+   */
   size?: number;
 
   /**
    * The origin of the gradient
    * @default center
    * @type string
-   * */
+   */
   origin?: Origin;
 
   /**
    * The class name to apply to the gradient
    * @default ""
    * @type string
-   * */
+   */
   className?: string;
 }
 

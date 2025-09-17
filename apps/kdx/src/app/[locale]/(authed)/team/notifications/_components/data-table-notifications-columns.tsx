@@ -16,6 +16,7 @@ import {
 } from "@kdx/ui/dropdown-menu";
 
 import { Link } from "~/i18n/routing";
+
 import { DeleteNotificationsDialog } from "./delete-notifications-dialog";
 
 const columnHelper =
@@ -58,7 +59,9 @@ export function getColumns() {
       header: function Header({ column }) {
         const t = useTranslations();
         return (
-          <DataTableColumnHeader column={column} children={t("Subject")} />
+          <DataTableColumnHeader column={column}>
+            {t("Subject")}
+          </DataTableColumnHeader>
         );
       },
       cell: ({ row }) => <div className="w-20">{row.original.subject}</div>,
@@ -69,7 +72,9 @@ export function getColumns() {
       header: function Header({ column }) {
         const t = useTranslations();
         return (
-          <DataTableColumnHeader column={column} children={t("Channel")} />
+          <DataTableColumnHeader column={column}>
+            {t("Channel")}
+          </DataTableColumnHeader>
         );
       },
       cell: ({ row }) => {
@@ -87,7 +92,9 @@ export function getColumns() {
       header: function Header({ column }) {
         const t = useTranslations();
         return (
-          <DataTableColumnHeader column={column} children={t("Sent at")} />
+          <DataTableColumnHeader column={column}>
+            {t("Sent at")}
+          </DataTableColumnHeader>
         );
       },
       cell: function Cell({ cell }) {
@@ -98,7 +105,11 @@ export function getColumns() {
     columnHelper.accessor("teamId", {
       header: function Header({ column }) {
         const t = useTranslations();
-        return <DataTableColumnHeader column={column} children={t("Team")} />;
+        return (
+          <DataTableColumnHeader column={column}>
+            {t("Team")}
+          </DataTableColumnHeader>
+        );
       },
       cell: function Cell({ row }) {
         return <div className="w-20">{row.original.teamName}</div>;
@@ -128,7 +139,7 @@ export function getColumns() {
                 <Button
                   aria-label="Open menu"
                   variant="ghost"
-                  className="data-[state=open]:bg-muted flex size-8 p-0"
+                  className="flex size-8 p-0 data-[state=open]:bg-muted"
                 >
                   <RxDotsHorizontal className="size-4" aria-hidden="true" />
                 </Button>

@@ -16,7 +16,7 @@ export default async function SettingsAppsPage() {
   return (
     <div className="mt-8 space-y-6 md:mt-0">
       <div>
-        <h2 className="text-center text-2xl font-bold md:text-left">
+        <h2 className="text-center font-bold text-2xl md:text-left">
           {t("Apps")}
         </h2>
         <p className="text-muted-foreground text-sm">
@@ -25,8 +25,8 @@ export default async function SettingsAppsPage() {
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Suspense
-          fallback={Array.from({ length: 3 }).map((_, i) => (
-            <KodixAppSkeleton key={i} />
+          fallback={["kdxskel-1", "kdxskel-2", "kdxskel-3"].map((skel) => (
+            <KodixAppSkeleton key={skel} />
           ))}
         >
           <Apps />
@@ -44,13 +44,13 @@ async function Apps() {
   if (!apps.length)
     return (
       <Link href={"/apps"}>
-        <div className="group outline-muted-foreground/50 flex h-64 flex-col rounded-xl outline-2 outline-dashed">
+        <div className="group flex h-64 flex-col rounded-xl outline-dashed outline-2 outline-muted-foreground/50">
           <div className="mx-auto my-auto flex flex-col items-center justify-center">
             <LuCirclePlus
-              className="text-muted-foreground/80 group-hover:text-muted-foreground transition-all group-hover:translate-y-[-4px]"
+              className="text-muted-foreground/80 transition-all group-hover:translate-y-[-4px] group-hover:text-muted-foreground"
               size={32}
             />
-            <p className="text-muted-foreground/80 font-medium">
+            <p className="font-medium text-muted-foreground/80">
               {t("Add more apps")}
             </p>
           </div>

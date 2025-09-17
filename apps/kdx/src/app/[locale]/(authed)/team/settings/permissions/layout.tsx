@@ -28,7 +28,7 @@ export default async function RolesLayout({
   return (
     <div className="mt-8 space-y-6 md:mt-0">
       <div>
-        <h2 className="text-center text-2xl font-bold md:text-left">
+        <h2 className="text-center font-bold text-2xl md:text-left">
           {t("Permissions")}
         </h2>
         <p className="text-muted-foreground text-sm">

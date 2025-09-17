@@ -53,6 +53,7 @@ import {
 
 import { DatePicker } from "~/app/[locale]/_components/date-picker";
 import { useTRPC } from "~/trpc/react";
+
 import { CancelationDialog } from "./cancel-event-dialog";
 import { EditEventDialog } from "./edit-event-dialog";
 
@@ -146,7 +147,7 @@ const useTable = ({
                     {t("apps.calendar.Edit event")}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setOpenCancelDialog(true)}>
-                    <LuTrash className="text-destructive mr-2 size-4" />
+                    <LuTrash className="mr-2 size-4 text-destructive" />
                     {t("apps.calendar.Delete event")}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -358,7 +359,7 @@ export function DataTable() {
                           setOpenCancelDialog(true);
                         }}
                       >
-                        <LuTrash className="text-destructive mr-2 size-4" />
+                        <LuTrash className="mr-2 size-4 text-destructive" />
                         {t("Delete event")}
                       </ContextMenuItem>
                     </ContextMenuContent>
