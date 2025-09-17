@@ -4,7 +4,7 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./useI18nZodErrors": "./src/utils/useI18nZodErrors.ts",
+    "./use-i18n-zod-errors": "./src/utils/use-i18n-zod-errors.ts",
     "./zod-namespaces": "./src/utils/zod-namespaces.ts",
     "./trpc/app": "./src/trpc/app/index.ts",
     "./trpc/app/calendar": "./src/trpc/app/calendar/index.ts",

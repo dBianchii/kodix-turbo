@@ -13,7 +13,6 @@
   },
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "dev": "tsc",
     "push": "pnpm wait-for-db && MYSQL_URL='mysql://root:password@localhost:3306/kodix' pnpm drizzle-kit push",
     "studio": "pnpm wait-for-db && MYSQL_URL='mysql://root:password@localhost:3306/kodix' pnpm drizzle-kit studio",
     "seed": "pnpm wait-for-db && MYSQL_URL='mysql://root:password@localhost:3306/kodix' pnpm tsx ./scripts/seed.ts",
