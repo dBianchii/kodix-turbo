@@ -180,7 +180,7 @@ catalog:
   tamagui: ^1.110.5
   tsup: ^8.0.2
   tsx: 4.7.3
-  typescript: ^5.5.4
+  typescript: ^5.9.2
   use-intl: ^3.20.0
   ultracite: ^5.0.29
   vaul: ^1.0.0
