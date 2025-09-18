@@ -47,7 +47,7 @@ jobs:
         uses: ./tooling/github/setup
 
       - name: Typecheck
-        run: pnpm typecheck
+        run: turbo typecheck
 
   test:
     runs-on: ubuntu-latest
@@ -58,7 +58,7 @@ jobs:
         uses: ./tooling/github/setup
 
       - name: Test
-        run: pnpm test
+        run: turbo test
 # upload-drift:
 #   runs-on: ubuntu-latest
 #   steps:

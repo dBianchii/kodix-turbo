@@ -94,7 +94,7 @@ pnpm db:seed
 
 ```bash
 # Clean all temporary files in all packages
-pnpm clean:workspaces
+turbo clean
 
 # Lint and auto-fix linting errors in all packages
 pnpm lint:fix

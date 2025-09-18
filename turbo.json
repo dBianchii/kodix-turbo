@@ -5,8 +5,26 @@
     "topo": {
       "dependsOn": ["^topo"]
     },
+    "//#package-deps": {
+      "inputs": [
+        "!**/.next/**",
+        "!**/dist/**",
+        "!**/out/**",
+        "!**/node_modules/**",
+        "!**/.vercel/**",
+        "!**/.esbuild/**",
+        ".nvmrc",
+        "**/package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml"
+      ],
+      "outputLogs": "new-only",
+      "outputs": [
+        "pnpm-lock.yaml"
+      ]
+    },
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["//#package-deps", "^build"],
       "outputs": [".cache/tsbuildinfo.json", "dist/**"],
       "env": [
         "MYSQL_URL",
@@ -30,11 +48,11 @@
       "persistent": false
     },
     "typecheck": {
-      "dependsOn": ["^topo", "^build"],
+      "dependsOn": ["//#package-deps","^topo", "^build"],
       "outputs": [".cache/tsbuildinfo.json"]
     },
     "test": {
-      "dependsOn": ["^topo"]
+      "dependsOn": ["//#package-deps", "^topo"]
     },
     "test:watch": {
       "cache": false,
