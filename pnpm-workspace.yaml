@@ -5,8 +5,8 @@ packages:
 
 catalogs:
   turbo:
-    turbo: ^2.4.2
-    "@turbo/gen": ^2.4.2
+    turbo: ^2.5.6
+    "@turbo/gen": ^2.5.6
 
   next:
     next: ^15.3.0
