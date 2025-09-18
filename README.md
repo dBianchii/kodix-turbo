@@ -96,11 +96,14 @@ pnpm db:seed
 # Clean all temporary files in all packages
 turbo clean
 
-# Lint and auto-fix linting errors in all packages
-pnpm lint:fix
+# Run Biome checks on all packages
+pnpm check
 
-# Format and auto-fix formatting errors in all packages
-pnpm format:fix
+# Run Biome checks and write all packages
+pnpm check:write
+
+# Run Biome checks and write all packages (unsafe)
+pnpm check:unsafe
 
 #Typecheck all packages
 pnpm typecheck
@@ -115,7 +118,10 @@ pnpm db:studio
 pnpm db:push
 
 # Generate a new tRPC endpoint using the trpc-cli tool
-pnpm trpc:new
+pnpm start:trpc-cli
+
+# Start the trpc-cli tool in development mode
+pnpm dev:trpc-cli
 
 # Add new shadcn-ui components to the ui package
 pnpm ui:add

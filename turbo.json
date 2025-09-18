@@ -12,16 +12,13 @@
         "!**/out/**",
         "!**/node_modules/**",
         "!**/.vercel/**",
-        "!**/.esbuild/**",
         ".nvmrc",
         "**/package.json",
         "pnpm-lock.yaml",
         "pnpm-workspace.yaml"
       ],
       "outputLogs": "new-only",
-      "outputs": [
-        "pnpm-lock.yaml"
-      ]
+      "outputs": ["pnpm-lock.yaml"]
     },
     "build": {
       "dependsOn": ["//#package-deps", "^build"],
@@ -48,7 +45,7 @@
       "persistent": false
     },
     "typecheck": {
-      "dependsOn": ["//#package-deps","^topo", "^build"],
+      "dependsOn": ["//#package-deps", "^topo", "^build"],
       "outputs": [".cache/tsbuildinfo.json"]
     },
     "test": {
@@ -59,9 +56,6 @@
       "persistent": true
     },
     "clean": {
-      "cache": false
-    },
-    "//#clean": {
       "cache": false
     },
     "push": {
