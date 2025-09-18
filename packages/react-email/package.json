@@ -13,7 +13,7 @@
     "export": "email export --dir='src'",
     "dev:email": "pnpx react-email dev --dir='src' --port=3003",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@kdx/locales": "workspace:*",

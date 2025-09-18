@@ -11,15 +11,17 @@ declare module "next/navigation" {
 
 // Use type safe message keys with `next-intl`
 
-//? @kdx/kdx should only use "kdx" json
+//? @kdx/kdx needs access to "kdx", "api", and "validators" namespaces since it imports validators
 type KdxMessages =
   typeof import("../../../packages/locales/src/messages/kdx/en.json");
 type ApiMessages =
-  typeof import("../../../packages/locales/src/messages/api/en.json"); //?This is just added so the typescript stops screaming at the top of its lungs.
+  typeof import("../../../packages/locales/src/messages/api/en.json");
+type ValidatorsMessages =
+  typeof import("../../../packages/locales/src/messages/validators/en.json");
 
 type Formats = typeof formats;
 
 declare global {
-  type IntlMessages = KdxMessages & ApiMessages;
+  type IntlMessages = KdxMessages & ApiMessages & ValidatorsMessages;
   type IntlFormats = Formats;
 }

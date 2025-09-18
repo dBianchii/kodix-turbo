@@ -2,30 +2,19 @@
   "name": "@kdx/ui",
   "private": true,
   "type": "module",
-  "main": "src/index.ts",
   "exports": {
-    ".": {
-      "types": "./dist/src/index.d.ts",
-      "default": "./src/index.ts"
-    },
-    "./*": {
-      "types": "./dist/src/*.d.ts",
-      "default": [
-        "./src/*.tsx",
-        "./src/*.ts"
-      ]
-    },
+    ".": "./src/index.ts",
+    "./*": [
+      "./src/*.tsx",
+      "./src/*.ts"
+    ],
     "./globals.css": "./globals.css",
-    "./data-table/export": {
-      "types": "./dist/src/data-table/export.d.ts",
-      "default": "./src/data-table/export.ts"
-    }
+    "./data-table/export": "./src/data-table/export.ts"
   },
   "scripts": {
     "build": "tsc",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "dev": "tsc",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@hookform/resolvers": "catalog:",

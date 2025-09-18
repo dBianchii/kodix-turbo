@@ -7,7 +7,7 @@
     "dev": "tsup --watch",
     "start": "if [ ! -d dist ]; then pnpm run build; fi && node dist/index.js",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@clack/prompts": "catalog:",
