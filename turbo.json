@@ -48,6 +48,15 @@
       "dependsOn": ["//#package-deps", "^topo", "^build"],
       "outputs": [".cache/tsbuildinfo.json"]
     },
+    "//#check": {
+      "cache": false
+    },
+    "//#check:write": {
+      "cache": false
+    },
+    "//#check:unsafe": {
+      "cache": false
+    },
     "test": {
       "dependsOn": ["//#package-deps", "^topo"]
     },

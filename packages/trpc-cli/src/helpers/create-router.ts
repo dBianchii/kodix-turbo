@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import fs from "node:fs/promises";
 
-import { trpcCliConfig } from "../../config";
+import { trpcCliConfig } from "../config";
 import { logger } from "../utils/logger";
 import { toPascalCase } from "../utils/to-pascal-case";
 import { addImportStatement } from "./add-import-statement";
