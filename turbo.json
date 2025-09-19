@@ -39,6 +39,10 @@
         "GOOGLE_SERVICES_JSON"
       ]
     },
+    "start": {
+      "cache": false,
+      "persistent": false
+    },
     "dev": {
       "dependsOn": ["^dev"],
       "cache": false,
