@@ -25,7 +25,6 @@
         "noNamespaceImport": "off" //TODO: enable
       },
       "nursery": {
-        "noUnknownAtRule": "off", //TODO: enable
         "useSortedClasses": {
           "level": "on",
           "options": {

@@ -13,7 +13,7 @@ type Origin =
   | "bottom left"
   | "bottom right";
 
-interface RadialProps {
+type RadialProps = {
   /**
    * The type of radial gradient
    * @default circle
@@ -54,7 +54,7 @@ interface RadialProps {
    * @type string
    */
   className?: string;
-}
+};
 
 export const RadialGradient = ({
   type = "circle",

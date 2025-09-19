@@ -181,7 +181,7 @@ catalog:
   tsx: 4.7.3
   typescript: ^5.9.2
   use-intl: ^3.20.0
-  ultracite: ^5.0.29
+  ultracite: ^5.3.9
   vaul: ^1.0.0
   vitest: ^3.0.6
   yaml: 2.7.0

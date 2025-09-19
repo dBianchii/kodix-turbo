@@ -98,7 +98,7 @@ export function DatePickerWithPresets({
           <PopoverContent className="w-[350px] p-0" side="bottom">
             <Command
               onValueChange={(value) =>
-                setDate(addDays(new Date(), parseInt(value)))
+                setDate(addDays(new Date(), parseInt(value, 10)))
               }
             >
               <CommandInput placeholder="Choose day..." />
@@ -108,7 +108,9 @@ export function DatePickerWithPresets({
                     <CommandItem
                       key={command.value}
                       onSelect={() => {
-                        setDate(addDays(new Date(), parseInt(command.value)));
+                        setDate(
+                          addDays(new Date(), parseInt(command.value, 10)),
+                        );
                         setOpen(false);
                       }}
                     >

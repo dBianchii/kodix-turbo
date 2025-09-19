@@ -211,7 +211,7 @@ export function RecurrencePicker({
                 min={1}
                 aria-valuemin={1}
                 value={draftInterval}
-                onChange={(e) => setDraftInterval(parseInt(e.target.value))}
+                onChange={(e) => setDraftInterval(parseInt(e.target.value, 10))}
                 placeholder="1"
                 className="w-16"
               />

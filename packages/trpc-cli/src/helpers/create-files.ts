@@ -9,14 +9,14 @@ import { createRouter } from "./create-router";
 import { createValidator } from "./create-validator";
 import { runBiome } from "./run-biome";
 
-export interface CreateFilesParams {
+export type CreateFilesParams = {
   chosenRouterPath: string;
   endpointName: string;
   validator: string;
   queryOrMutation: string;
   procedure: string;
   newRouterName?: string;
-}
+};
 
 export const createFiles = async (params: CreateFilesParams) => {
   const spinner = ora("Creating your endpoint...\n").start();
