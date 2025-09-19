@@ -94,16 +94,19 @@ pnpm db:seed
 
 ```bash
 # Clean all temporary files in all packages
-pnpm clean:workspaces
+turbo clean
 
-# Lint and auto-fix linting errors in all packages
-pnpm lint:fix
+# Run Biome checks on all packages
+pnpm check
 
-# Format and auto-fix formatting errors in all packages
-pnpm format:fix
+# Run Biome checks and write all packages
+pnpm check:write
 
-#Typecheck all packages
-pnpm typecheck
+# Run Biome checks and write all packages (unsafe)
+pnpm check:unsafe
+
+#tsc all packages
+pnpm tsc
 
 # Start the main kdx app
 pnpm dev:kdx
@@ -115,7 +118,10 @@ pnpm db:studio
 pnpm db:push
 
 # Generate a new tRPC endpoint using the trpc-cli tool
-pnpm trpc:new
+pnpm start:trpc-cli
+
+# Start the trpc-cli tool in development mode
+pnpm dev:trpc-cli
 
 # Add new shadcn-ui components to the ui package
 pnpm ui:add

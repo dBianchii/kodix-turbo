@@ -1,5 +1,5 @@
 {
   "extends": "@kdx/tsconfig/base.json",
-  "include": ["*.ts", "src", "tsup.config.ts", "config.ts"],
+  "include": ["*.ts", "src", "config.ts"],
   "exclude": ["node_modules"]
 }

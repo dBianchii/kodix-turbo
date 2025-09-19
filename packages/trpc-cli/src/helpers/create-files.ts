@@ -1,8 +1,8 @@
 import chalk from "chalk";
 import ora from "ora";
 
-import { trpcCliConfig } from "../../config";
 import { ROUTERS_FOLDER_PATH, VALIDATORS_FOLDER_PATH } from "../cli";
+import { trpcCliConfig } from "../config";
 import { logger } from "../utils/logger";
 import { createHandler } from "./create-handler";
 import { createRouter } from "./create-router";

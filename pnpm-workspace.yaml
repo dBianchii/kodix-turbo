@@ -178,7 +178,6 @@ catalog:
   tailwind-merge: ^3.0.2
   tailwindcss-animate: ^1.0.7
   tamagui: ^1.110.5
-  tsup: ^8.0.2
   tsx: 4.7.3
   typescript: ^5.9.2
   use-intl: ^3.20.0

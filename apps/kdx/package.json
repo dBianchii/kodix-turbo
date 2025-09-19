@@ -7,7 +7,7 @@
     "clean": "git clean -xdf .cache .next .turbo node_modules",
     "dev": "pnpm next dev --turbopack --port 3000",
     "start": "pnpm next start --port 3000",
-    "typecheck": "tsc --noEmit",
+    "tsc": "tsc --noEmit",
     "pull-vercel": "vercel env pull --yes"
   },
   "dependencies": {

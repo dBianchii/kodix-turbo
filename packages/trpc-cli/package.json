@@ -3,11 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
-    "start": "if [ ! -d dist ]; then pnpm run build; fi && node dist/index.js",
-    "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "typecheck": "tsc --noEmit"
+    "start": "bun src/index.ts",
+    "dev": "bun --watch src/index.ts",
+    "clean": "git clean -xdf .cache .turbo node_modules",
+    "tsc": "tsc --noEmit"
   },
   "dependencies": {
     "@clack/prompts": "catalog:",
@@ -18,7 +17,6 @@
   "devDependencies": {
     "@kdx/tsconfig": "workspace:*",
     "@types/node": "catalog:",
-    "tsup": "catalog:",
     "typescript": "catalog:"
   }
 }
