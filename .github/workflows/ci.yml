@@ -38,7 +38,7 @@ jobs:
       - name: Run Biome
         run: biome ci .
 
-  typecheck:
+  tsc:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -46,8 +46,8 @@ jobs:
       - name: Setup
         uses: ./tooling/github/setup
 
-      - name: Typecheck
-        run: turbo typecheck
+      - name: tsc
+        run: turbo tsc
 
   test:
     runs-on: ubuntu-latest

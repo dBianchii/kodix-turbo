@@ -5,7 +5,7 @@ import * as p from "@clack/prompts";
 import chalk from "chalk";
 import z from "zod/v4";
 
-import { trpcCliConfig } from "../../config";
+import { trpcCliConfig } from "../config";
 import { logger } from "../utils/logger";
 
 export const ROUTERS_FOLDER_PATH = path.resolve(

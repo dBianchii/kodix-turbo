@@ -33,7 +33,7 @@ const config = {
     "@kdx/locales",
   ],
 
-  /** We already do linting and typechecking as separate tasks in CI */
+  /** We already do linting and tscing as separate tasks in CI */
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
 };

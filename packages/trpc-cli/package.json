@@ -6,7 +6,7 @@
     "start": "bun src/index.ts",
     "dev": "bun --watch src/index.ts",
     "clean": "git clean -xdf .cache .turbo node_modules",
-    "typecheck": "tsc --noEmit"
+    "tsc": "tsc --noEmit"
   },
   "dependencies": {
     "@clack/prompts": "catalog:",

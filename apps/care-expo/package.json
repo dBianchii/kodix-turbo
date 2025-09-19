@@ -9,7 +9,7 @@
     "dev:ios": "expo start --ios",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "typecheck": "tsc --noEmit",
+    "tsc": "tsc --noEmit",
     "generate-themes": "tamagui generate-themes ./tamagui-config/theme-builder.ts ./themes.ts"
   },
   "dependencies": {

@@ -44,8 +44,8 @@
       "cache": false,
       "persistent": false
     },
-    "typecheck": {
-      "dependsOn": ["//#package-deps", "^topo", "^build"],
+    "tsc": {
+      "dependsOn": ["//#package-deps", "^topo"],
       "outputs": [".cache/tsbuildinfo.json"]
     },
     "//#check": {

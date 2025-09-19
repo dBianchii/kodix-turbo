@@ -105,8 +105,8 @@ pnpm check:write
 # Run Biome checks and write all packages (unsafe)
 pnpm check:unsafe
 
-#Typecheck all packages
-pnpm typecheck
+#tsc all packages
+pnpm tsc
 
 # Start the main kdx app
 pnpm dev:kdx
