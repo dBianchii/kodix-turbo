@@ -78,7 +78,6 @@
     "@babel/preset-env": "catalog:babel",
     "@babel/runtime": "catalog:babel",
     "@kdx/api": "workspace:*",
-    "@kodix/tailwind-config": "workspace:*",
     "@kodix/tsconfig": "workspace:*",
     "@types/babel__core": "catalog:",
     "@types/react": "catalog:react",

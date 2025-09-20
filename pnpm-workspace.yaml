@@ -2,32 +2,40 @@ packages:
   - apps/**/*
   - packages/**/*
   - tooling/*
+  
 catalogs:
   turbo:
     turbo: ^2.5.6
     '@turbo/gen': ^2.5.6
+
   next:
     next: ^15.5.3
+
   trpc:
     '@trpc/client': ^11.0.0
     '@trpc/tanstack-react-query': ^11.0.0
     '@trpc/react-query': ^11.0.0
     '@trpc/server': ^11.0.0
+
   tailwindcss:
     tailwindcss: ^4.0.12
     '@tailwindcss/postcss': ^4.0.12
+
   react:
     react: ^19.1.0
     react-dom: ^19.1.0
     '@types/react': ^19.1.0
     '@types/react-dom': ^19.1.0
+
   babel:
     '@babel/core': ^7.26.0
     '@babel/preset-env': ^7.26.0
     '@babel/runtime': ^7.26.0
+    
   react-big-calendar:
     react-big-calendar: ^1.18.0
     '@types/react-big-calendar': ^1.16.1
+
   expo:
     '@expo/metro-config': ^0.18.11
     expo-blur: ^13.0.2
@@ -46,14 +54,17 @@ catalogs:
     expo-secure-store: ^13.0.2
     expo-server-sdk: ^3.11.0
     expo-status-bar: ~1.12.1
+
   formatjs:
     '@formatjs/intl-getcanonicallocales': ^2.3.0
     '@formatjs/intl-locale': ^4.0.0
     '@formatjs/intl-pluralrules': ^5.2.14
     '@formatjs/intl-relativetimeformat': ^11.2.14
+
   tanstack-query:
     '@tanstack/react-query': ^5.66.5
     '@tanstack/react-query-devtools': ^5.32.0
+
 catalog:
   '@bacons/text-decoder': ^0.0.0
   '@biomejs/biome': ^2.2.4
@@ -140,7 +151,6 @@ catalog:
   next-themes: ^0.3.0
   object.groupby: ^1.0.3
   ora: ^8.0.1
-  postcss: ^8.4.49
   posthog-js: ^1.149.0
   posthog-node: ^4.3.1
   react-day-picker: ^9.4.4
@@ -165,7 +175,7 @@ catalog:
   sonner: ^1.7.0
   superjson: 2.2.1
   tailwind-merge: ^3.0.2
-  tailwindcss-animate: ^1.0.7
+  tw-animate-css: ^1.3.8
   tamagui: ^1.110.5
   tsx: 4.7.3
   typescript: ^5.9.2

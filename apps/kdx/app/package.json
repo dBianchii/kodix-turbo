@@ -50,13 +50,11 @@
     "rrule": "catalog:",
     "server-only": "catalog:",
     "superjson": "catalog:",
-    "tailwindcss-animate": "catalog:",
     "zod": "catalog:",
     "zustand": "catalog:"
   },
   "devDependencies": {
     "@kdx/db": "workspace:*",
-    "@kodix/tailwind-config": "workspace:*",
     "@kodix/tsconfig": "workspace:*",
     "@tailwindcss/postcss": "catalog:tailwindcss",
     "@types/node": "catalog:",
