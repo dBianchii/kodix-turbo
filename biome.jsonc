@@ -45,6 +45,9 @@
       },
       "complexity": {
         "noVoid": "off"
+      },
+      "suspicious": {
+        "noUnknownAtRules": "off"
       }
     }
   },

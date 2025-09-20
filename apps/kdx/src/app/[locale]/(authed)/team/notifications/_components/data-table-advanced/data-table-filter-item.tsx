@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { LuTrash } from "react-icons/lu";
 
-import { dataTableConfig } from "@kdx/shared";
+import { dataTableConfig } from "@kdx/shared/data-table-config";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import { useDebounce } from "@kdx/ui/hooks/use-debounce";

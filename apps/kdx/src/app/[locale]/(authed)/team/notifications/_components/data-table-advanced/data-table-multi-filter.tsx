@@ -6,8 +6,8 @@ import { useTranslations } from "next-intl";
 import { LuAlignCenter, LuCopy, LuTrash } from "react-icons/lu";
 import { RxDotsHorizontal } from "react-icons/rx";
 
-import type { DataTableConfig } from "@kdx/shared";
-import { dataTableConfig } from "@kdx/shared";
+import type { DataTableConfig } from "@kdx/shared/data-table-config";
+import { dataTableConfig } from "@kdx/shared/data-table-config";
 import { Button } from "@kdx/ui/button";
 import {
   DropdownMenu,

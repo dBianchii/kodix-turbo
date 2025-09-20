@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
 
-import { kodixCareAppId } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared/db";
 
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
 import { trpcCaller } from "~/trpc/server";

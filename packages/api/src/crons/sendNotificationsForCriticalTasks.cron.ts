@@ -4,7 +4,8 @@ import groupBy from "object.groupby";
 import dayjs from "@kdx/dayjs";
 import { appRepository, teamRepository } from "@kdx/db/repositories";
 import WarnDelayedCriticalTasks from "@kdx/react-email/warn-delayed-critical-tasks";
-import { getSuccessesAndErrors, kodixCareAppId } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared/db";
+import { getSuccessesAndErrors } from "@kdx/shared/utils";
 
 import {
   getCareTaskCompositeId,

@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 
 import type { TDeleteCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
 import { careTaskRepository } from "@kdx/db/repositories";
-import { kodixCareAppId } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared/db";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
 

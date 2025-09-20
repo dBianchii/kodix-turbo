@@ -1,5 +1,5 @@
 import type { Column, ColumnBaseConfig, ColumnDataType } from "@kdx/db";
-import type { DataTableConfig } from "@kdx/shared";
+import type { DataTableConfig } from "@kdx/shared/data-table-config";
 import { eq, inArray, isNotNull, isNull, like, not, notLike } from "@kdx/db";
 
 export function filterColumn({

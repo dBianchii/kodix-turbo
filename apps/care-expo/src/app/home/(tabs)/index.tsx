@@ -1,7 +1,7 @@
 import { useRouter } from "expo-router";
 import { H3, Spinner, Text, View } from "tamagui";
 
-import { kodixCareAppId } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared/db";
 
 import { defaultPadding, RootSafeAreaView } from "~/components/safe-area-view";
 import { api } from "~/utils/api";

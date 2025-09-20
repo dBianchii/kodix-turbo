@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { LuCog, LuHouse, LuListChecks, LuPanelLeft } from "react-icons/lu";
 
-import { kodixCareAppId } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared/db";
 import { Button } from "@kdx/ui/button";
 import {
   Sidebar,

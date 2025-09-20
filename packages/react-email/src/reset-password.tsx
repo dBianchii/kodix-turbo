@@ -12,7 +12,7 @@ import {
 } from "@react-email/components";
 
 import type { IsomorficT } from "@kdx/locales";
-import { getBaseUrl } from "@kdx/shared";
+import { getBaseUrl } from "@kdx/shared/utils";
 
 import type { TMock } from "./utils";
 import { tMock } from "./utils";

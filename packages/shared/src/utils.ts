@@ -6,9 +6,11 @@ const DEFAULT_PORT = 3000;
  * @description Base URL for the current environment.
  */
 export const getBaseUrl = () => {
-  //@ts-expect-error - window is not defined in the server
+  // biome-ignore lint/suspicious/noTsIgnore: <This is to avoid having to make all other packages need dom>
+  //@ts-ignore-error
   if (typeof window !== "undefined") {
-    //@ts-expect-error
+    // biome-ignore lint/suspicious/noTsIgnore: <This is to avoid having to make all other packages need dom>
+    //@ts-ignore-error
     return window.location.origin;
   }
   if (process.env.VERCEL_URL) {

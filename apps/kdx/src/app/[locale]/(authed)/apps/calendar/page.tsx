@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
-import { calendarAppId } from "@kdx/shared";
+import { calendarAppId } from "@kdx/shared/db";
 import { Separator } from "@kdx/ui/separator";
 import { H1 } from "@kdx/ui/typography";
 

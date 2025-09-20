@@ -11,10 +11,11 @@ import {
 import { useTranslations } from "next-intl";
 
 import type { RouterOutputs } from "@kdx/api";
-import type { AppRole, KodixAppId } from "@kdx/shared";
+import type { AppRole, KodixAppId } from "@kdx/shared/db";
 import type { FixedColumnsType } from "@kdx/ui/data-table/data-table";
 import { getAppRoleNames } from "@kdx/locales/next-intl/hooks";
-import { allRoles, typedObjectEntries } from "@kdx/shared";
+import { allRoles } from "@kdx/shared/db";
+import { typedObjectEntries } from "@kdx/shared/utils";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import MultipleSelector from "@kdx/ui/origin-ui/multi-select";
 import {

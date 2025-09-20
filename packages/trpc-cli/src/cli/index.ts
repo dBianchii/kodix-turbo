@@ -42,7 +42,6 @@ export const runCli = async () => {
     for (const entry of entries) {
       if (entry.isDirectory()) {
         const subDir = path.join(dir, entry.name);
-        // biome-ignore lint/nursery/noAwaitInLoop: <biome migration>
         const subEntries = await fs.readdir(subDir, {
           withFileTypes: true,
         });

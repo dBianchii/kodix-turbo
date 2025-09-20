@@ -1,6 +1,6 @@
 "use client";
 
-import { getBaseUrl } from "@kdx/shared";
+import { getBaseUrl } from "@kdx/shared/utils";
 import { Button } from "@kdx/ui/button";
 
 export const ClientUrl = () => {

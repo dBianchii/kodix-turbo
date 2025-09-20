@@ -6,7 +6,7 @@ import type { careShifts } from "@kdx/db/schema";
 import type { TEditCareShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 import { db } from "@kdx/db/client";
 import { kodixCareRepository } from "@kdx/db/repositories";
-import { kodixCareAppId } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared/db";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
 import { logActivity } from "../../../../services/appActivityLogs.service";

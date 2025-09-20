@@ -1,4 +1,5 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: <file was copied from magic-ui> */
+/** biome-ignore-all lint/style/noMagicNumbers: <file was copied from magic-ui> */
 
 "use client";
 

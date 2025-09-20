@@ -1,7 +1,7 @@
 import type { z } from "zod/v4";
 import { and, eq, gt, gte, lt, lte } from "drizzle-orm";
 
-import { kodixCareAppId } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared/db";
 
 import type { Update } from "../../_types";
 import type {

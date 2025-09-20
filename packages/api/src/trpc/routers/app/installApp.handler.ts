@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import type { TInstallAppInputSchema } from "@kdx/validators/trpc/app";
 import { appRepository } from "@kdx/db/repositories";
-import { todoAppId } from "@kdx/shared";
+import { todoAppId } from "@kdx/shared/db";
 
 import type { TIsTeamOwnerProcedureContext } from "../../procedures";
 

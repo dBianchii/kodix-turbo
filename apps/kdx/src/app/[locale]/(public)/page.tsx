@@ -1,7 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { LuChevronRight } from "react-icons/lu";
 
-import { getBaseUrl } from "@kdx/shared";
+import { getBaseUrl } from "@kdx/shared/utils";
 import { cn } from "@kdx/ui";
 import { buttonVariants } from "@kdx/ui/button";
 import { RadialGradient } from "@kdx/ui/magic-ui/radial-gradient";

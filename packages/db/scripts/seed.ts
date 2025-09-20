@@ -1,14 +1,14 @@
 import { reset } from "drizzle-seed";
 import ora from "ora";
 
+import { KDX_PRODUCTION_URL } from "@kdx/shared/constants";
 import {
   calendarAppId,
-  KDX_PRODUCTION_URL,
   kdxPartnerId,
   kodixCareAppId,
   todoAppId,
-  typedObjectKeys,
-} from "@kdx/shared";
+} from "@kdx/shared/db";
+import { typedObjectKeys } from "@kdx/shared/utils";
 
 import { buildConflictUpdateColumns } from "../src";
 import { db } from "../src/client";

@@ -1,8 +1,8 @@
 import { experimental_standaloneMiddleware, TRPCError } from "@trpc/server";
 
-import type { KodixAppId } from "@kdx/shared";
+import type { KodixAppId } from "@kdx/shared/db";
 import { getAppName } from "@kdx/locales/next-intl/server-hooks";
-import { kodixCareAppId } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared/db";
 
 import type { TProtectedProcedureContext } from "./procedures";
 import { getInstalledHandler } from "./routers/app/getInstalled.handler";

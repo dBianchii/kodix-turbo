@@ -144,7 +144,6 @@ export function DataTableAdvancedToolbar<TData>({
             setSelectedOptions={setSelectedOptions}
             onSelect={onFilterComboboxItemSelect}
           >
-            {/** biome-ignore lint/a11y/useSemanticElements: <biome migration> */}
             <Button
               variant="outline"
               size="sm"

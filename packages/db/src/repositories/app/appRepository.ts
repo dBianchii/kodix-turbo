@@ -6,8 +6,8 @@ import type {
   AppIdsWithUserAppTeamConfig,
   KodixAppId,
   kodixCareAppId,
-} from "@kdx/shared";
-import { appIdToAppTeamConfigSchema, todoAppId } from "@kdx/shared";
+} from "@kdx/shared/db";
+import { appIdToAppTeamConfigSchema, todoAppId } from "@kdx/shared/db";
 
 import type { Drizzle } from "../../client";
 import type { appIdToUserAppTeamConfigSchemaUpdate } from "../_zodSchemas/userAppTeamConfigs";

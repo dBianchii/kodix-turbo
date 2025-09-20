@@ -1,7 +1,7 @@
 import type { AbilityBuilder, MongoAbility } from "@casl/ability";
 
 import type { IsomorficT } from "@kdx/locales";
-import type { AppRole, kodixCareAppId } from "@kdx/shared";
+import type { AppRole, kodixCareAppId } from "@kdx/shared/db";
 
 import type { Create, Delete, Edit } from "../actions";
 import type { User } from "../models/user";

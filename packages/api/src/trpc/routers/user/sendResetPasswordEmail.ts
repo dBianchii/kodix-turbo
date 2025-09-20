@@ -4,7 +4,7 @@ import type { TSendResetPasswordEmailInputSchema } from "@kdx/validators/trpc/us
 import { nanoid } from "@kdx/db/nanoid";
 import { authRepository } from "@kdx/db/repositories";
 import ResetPassword from "@kdx/react-email/reset-password";
-import { KODIX_NOTIFICATION_FROM_EMAIL } from "@kdx/shared";
+import { KODIX_NOTIFICATION_FROM_EMAIL } from "@kdx/shared/constants";
 
 import type { TPublicProcedureContext } from "../../procedures";
 import { findUserByEmail } from "../../../../../db/src/repositories/userRepository";

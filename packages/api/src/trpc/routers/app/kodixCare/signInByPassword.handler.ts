@@ -7,7 +7,7 @@ import { and, eq } from "@kdx/db";
 import { db } from "@kdx/db/client";
 import { userRepository } from "@kdx/db/repositories";
 import { appsToTeams, teams, usersToTeams } from "@kdx/db/schema";
-import { kodixCareAppId } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared/db";
 
 import type { TPublicProcedureContext } from "../../../procedures";
 

@@ -12,7 +12,7 @@ import {
   YStack,
 } from "tamagui";
 
-import { getErrorMessage } from "@kdx/shared";
+import { getErrorMessage } from "@kdx/shared/utils";
 import { ZSignInByPasswordInputSchema } from "@kdx/validators/trpc/user";
 
 import {

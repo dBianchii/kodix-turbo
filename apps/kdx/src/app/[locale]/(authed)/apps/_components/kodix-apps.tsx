@@ -4,7 +4,7 @@ import { use } from "react";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { auth } from "@kdx/auth";
-import type { KodixAppId } from "@kdx/shared";
+import type { KodixAppId } from "@kdx/shared/db";
 
 import { KodixApp } from "~/app/[locale]/_components/app/kodix-app";
 

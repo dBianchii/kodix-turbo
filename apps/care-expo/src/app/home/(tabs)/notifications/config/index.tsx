@@ -13,7 +13,8 @@ import {
   YGroup,
 } from "tamagui";
 
-import { getErrorMessage, kodixCareAppId } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared/db";
+import { getErrorMessage } from "@kdx/shared/utils";
 
 import { defaultPadding } from "~/components/safe-area-view";
 import { api } from "~/utils/api";

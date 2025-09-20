@@ -4,7 +4,7 @@ import { diff } from "deep-diff";
 
 import type { TCreateCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
 import { careTaskRepository } from "@kdx/db/repositories";
-import { kodixCareAppId } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared/db";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
 import { logActivity } from "../../../../../services/appActivityLogs.service";

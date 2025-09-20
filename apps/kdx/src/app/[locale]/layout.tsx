@@ -15,7 +15,7 @@ import { notFound } from "next/navigation";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
 
-import { getBaseUrl } from "@kdx/shared";
+import { getBaseUrl } from "@kdx/shared/utils";
 import { cn } from "@kdx/ui";
 import { ThemeToggle } from "@kdx/ui/theme";
 import { Toaster } from "@kdx/ui/toast";

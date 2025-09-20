@@ -5,10 +5,8 @@ import Expo from "expo-server-sdk";
 
 import type { notifications } from "@kdx/db/schema";
 import { notificationRepository, userRepository } from "@kdx/db/repositories";
-import {
-  getSuccessesAndErrors,
-  KODIX_NOTIFICATION_FROM_EMAIL,
-} from "@kdx/shared";
+import { KODIX_NOTIFICATION_FROM_EMAIL } from "@kdx/shared/constants";
+import { getSuccessesAndErrors } from "@kdx/shared/utils";
 
 import { resend } from "../sdks/email";
 import { expo } from "../utils/expo";

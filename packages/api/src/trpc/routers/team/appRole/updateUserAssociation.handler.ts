@@ -3,7 +3,7 @@ import { ForbiddenError } from "@casl/ability";
 import type { TUpdateUserAssociationInputSchema } from "@kdx/validators/trpc/team/appRole";
 import { db } from "@kdx/db/client";
 import { teamRepository } from "@kdx/db/repositories";
-import { typedObjectEntries } from "@kdx/shared";
+import { typedObjectEntries } from "@kdx/shared/utils";
 
 import type { TIsTeamOwnerProcedureContext } from "../../../procedures";
 

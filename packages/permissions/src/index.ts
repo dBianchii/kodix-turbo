@@ -2,8 +2,8 @@ import type { CreateAbility } from "@casl/ability";
 import { AbilityBuilder, createMongoAbility } from "@casl/ability";
 
 import type { ServerSideT } from "@kdx/locales";
-import type { AppRole, KodixAppId } from "@kdx/shared";
-import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
+import type { AppRole, KodixAppId } from "@kdx/shared/db";
+import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared/db";
 
 import type { KodixCareMongoAbility } from "./kodixCare/kodix-care-permissions";
 import type { Team } from "./models/team";

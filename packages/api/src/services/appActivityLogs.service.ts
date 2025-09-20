@@ -3,7 +3,7 @@ import z from "zod/v4";
 
 import type { appActivityLogs } from "@kdx/db/schema";
 import type { ServerSideT } from "@kdx/locales";
-import type { KodixAppId } from "@kdx/shared";
+import type { KodixAppId } from "@kdx/shared/db";
 import dayjs from "@kdx/dayjs";
 import { db as _db } from "@kdx/db/client";
 import { appRepository } from "@kdx/db/repositories";

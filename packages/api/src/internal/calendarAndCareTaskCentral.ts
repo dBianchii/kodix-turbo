@@ -7,7 +7,7 @@ import {
   calendarRepository,
   careTaskRepository,
 } from "@kdx/db/repositories";
-import { kodixCareAppId } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared/db";
 
 export interface CalendarTask {
   title: string | undefined;

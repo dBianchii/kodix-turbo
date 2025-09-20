@@ -1,5 +1,5 @@
-import type { KodixAppId } from "@kdx/shared";
-import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
+import type { KodixAppId } from "@kdx/shared/db";
+import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared/db";
 
 import type { ClientSideT, IsomorficT } from "../..";
 import { appIdToName } from "./internal";

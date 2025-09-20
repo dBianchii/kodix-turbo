@@ -3,7 +3,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
-import { getErrorMessage } from "@kdx/shared";
+import { getErrorMessage } from "@kdx/shared/utils";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import {

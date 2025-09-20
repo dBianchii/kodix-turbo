@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { LuArrowRight, LuLoaderCircle, LuPlus } from "react-icons/lu";
 
 import type { User } from "@kdx/auth";
-import { kodixCareAppId } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared/db";
 import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 import { Button } from "@kdx/ui/button";
 import {
