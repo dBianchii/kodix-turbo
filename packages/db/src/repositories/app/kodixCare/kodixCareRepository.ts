@@ -1,4 +1,4 @@
-import type { z } from "zod/v4";
+import type { z } from "zod";
 import { and, eq, gt, gte, lt, lte } from "drizzle-orm";
 
 import { kodixCareAppId } from "@kdx/shared/db";

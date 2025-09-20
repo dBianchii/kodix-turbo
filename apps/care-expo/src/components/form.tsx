@@ -8,7 +8,7 @@ import type {
   UseFormProps,
 } from "react-hook-form";
 import type { LabelProps, ParagraphProps, TextProps, ViewProps } from "tamagui";
-import type { ZodType } from "zod/v4";
+import type { ZodType } from "zod";
 import { createContext, forwardRef, useContext, useId } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Slot } from "@radix-ui/react-slot";

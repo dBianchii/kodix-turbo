@@ -33,15 +33,7 @@
         }
       },
       "style": {
-        "useBlockStatements": "off",
-        "noRestrictedImports": {
-          "level": "on",
-          "options": {
-            "paths": {
-              "zod": "Please import from 'zod/v4' instead"
-            }
-          }
-        }
+        "useBlockStatements": "off"
       },
       "complexity": {
         "noVoid": "off"

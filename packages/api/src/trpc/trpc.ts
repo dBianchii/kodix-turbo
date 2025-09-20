@@ -9,7 +9,7 @@
 import { initTRPC } from "@trpc/server";
 import { getFormatter, getTranslations } from "next-intl/server";
 import SuperJSON from "superjson";
-import { ZodError } from "zod/v4";
+import { ZodError } from "zod";
 
 import type { AuthResponse } from "../../../auth/src/config";
 import { initializeServices } from "../services";

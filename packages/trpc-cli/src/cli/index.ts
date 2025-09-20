@@ -3,7 +3,7 @@ import path from "node:path";
 import vm from "node:vm";
 import * as p from "@clack/prompts";
 import chalk from "chalk";
-import z from "zod/v4";
+import z from "zod";
 
 import { trpcCliConfig } from "../config";
 import { logger } from "../utils/logger";

@@ -1,5 +1,5 @@
 import type { SQL } from "drizzle-orm";
-import type { z } from "zod/v4";
+import type { z } from "zod";
 import { and, eq, gt, gte, inArray, lte, or } from "drizzle-orm";
 
 import type { Drizzle } from "../../../client";

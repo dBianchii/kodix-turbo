@@ -1,4 +1,4 @@
-import type { z } from "zod/v4";
+import type { z } from "zod";
 import { and, eq, inArray } from "drizzle-orm";
 
 import type { zNotificationCreateMany } from "./_zodSchemas/notificationSchemas";
