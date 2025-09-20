@@ -1,5 +1,5 @@
 {
-  "extends": "@kdx/tsconfig/base.json",
+  "extends": "@kodix/tsconfig/base.json",
   "include": ["."],
   "exclude": ["node_modules"]
 }

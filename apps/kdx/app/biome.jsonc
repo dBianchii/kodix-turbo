@@ -1,0 +1,31 @@
+{
+  "$schema": "../../node_modules/@biomejs/biome/configuration_schema.json",
+  "extends": [
+    "../../../../biome.jsonc",
+    "@kodix/biome-config/restrictEnvAccess"
+  ],
+  "linter": {
+    "rules": {
+      "style": {
+        "noRestrictedImports": {
+          "level": "on",
+          "options": {
+            "paths": {
+              "next/link": "Please import from `~/i18n/routing` instead.",
+              "next/navigation": {
+                "importNames": [
+                  "redirect",
+                  "permanentRedirect",
+                  "useRouter",
+                  "usePathname"
+                ],
+                "message": "Please import from `~/i18n/routing` instead."
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "root": false
+}

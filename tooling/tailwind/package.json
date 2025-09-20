@@ -1,5 +1,5 @@
 {
-  "name": "@kdx/tailwind-config",
+  "name": "@kodix/tailwind-config",
   "private": true,
   "type": "module",
   "exports": {
@@ -16,7 +16,7 @@
     "tailwindcss-animate": "catalog:"
   },
   "devDependencies": {
-    "@kdx/tsconfig": "workspace:*",
+    "@kodix/tsconfig": "workspace:*",
     "typescript": "catalog:"
   }
 }

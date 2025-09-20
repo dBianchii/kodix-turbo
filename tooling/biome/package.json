@@ -1,5 +1,5 @@
 {
-  "name": "@kdx/biome-config",
+  "name": "@kodix/biome-config",
   "private": true,
   "type": "module",
   "exports": {

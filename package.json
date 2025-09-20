@@ -7,7 +7,7 @@
   },
   "packageManager": "pnpm@9.14.2",
   "scripts": {
-    "dev:kdx": "turbo watch dev studio -F @kdx/kdx... @kdx/db-dev#dev",
+    "dev:kdx": "turbo watch dev studio -F @kdx/app... @kdx/db-dev#dev",
     "dev:email": "turbo dev -F @kdx/react-email...",
     "db:push": "turbo @kdx/db-dev#dev @kdx/db#push",
     "db:seed": "turbo @kdx/db-dev#dev @kdx/db#seed",

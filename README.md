@@ -33,7 +33,7 @@ packages
   ├- react-email
   |   └─ react-email (npm package) project to store email templates and easily visualize them
   ├- locales
-  |   └─ Shared locale files for i18n configuration (right now, only for the context of @kdx/kdx)
+  |   └─ Shared locale files for i18n configuration (right now, only for the context of @kdx/app)
   ├- dayjs
   |   └─ Extended dayjs configuration (mainly for centralizing plugins)
   └─ trpc-cli

@@ -1,0 +1,22 @@
+{
+  "name": "@kdx/trpc-cli",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "bun src/index.ts",
+    "dev": "bun --watch src/index.ts",
+    "clean": "git clean -xdf .cache .turbo node_modules",
+    "tsc": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@clack/prompts": "catalog:",
+    "chalk": "catalog:",
+    "ora": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@kodix/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

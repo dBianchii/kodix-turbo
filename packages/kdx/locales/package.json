@@ -1,0 +1,28 @@
+{
+  "name": "@kdx/locales",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./next-intl/hooks": "./src/next-intl/hooks/index.ts",
+    "./next-intl/server-hooks": "./src/next-intl/hooks/server-hooks.ts",
+    "./use-intl": "./src/use-intl/index.ts",
+    "./messages/care-expo": "./src/messages/_exports/care-expo.ts"
+  },
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "tsc": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@kodix/shared": "workspace:*",
+    "next-intl": "catalog:",
+    "react": "catalog:react",
+    "use-intl": "catalog:"
+  },
+  "devDependencies": {
+    "@kodix/tsconfig": "workspace:*",
+    "@types/react": "catalog:react",
+    "tsx": "catalog:",
+    "typescript": "catalog:"
+  }
+}
