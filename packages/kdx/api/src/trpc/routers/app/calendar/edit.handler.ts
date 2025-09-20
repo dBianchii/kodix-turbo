@@ -270,7 +270,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
           !!input.from ||
           !!input.weekdays;
 
-        if (!shouldUpdateRule) return;
+        if (!shouldUpdateRule) return undefined;
 
         const foundEventMasterForPreviousRule = await findEventMasterById(tx, {
           id: input.eventMasterId,
