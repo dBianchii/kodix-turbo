@@ -322,7 +322,7 @@ export default function DataTableKodixCare({ user }: { user: User }) {
   });
 
   const currentlyEditingCareTask = useMemo(() => {
-    if (!query.data?.length) return;
+    if (!query.data?.length) return undefined;
     return query.data.find((x) => x.id === currentlyEditing) as CareTask;
   }, [currentlyEditing, query.data]);
 
