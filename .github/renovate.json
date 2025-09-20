@@ -1,15 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended",
-    ":dependencyDashboardApproval"
-  ],
+  "extends": ["config:recommended", ":dependencyDashboardApproval"],
   "packageRules": [
     {
       "enabled": false,
-      "matchPackageNames": [
-        "/^@kdx//"
-      ]
+      "matchPackageNames": ["/^@kdx//"]
     }
   ],
   "updateInternalDeps": true,
