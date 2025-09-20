@@ -1,9 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-import { useAction } from "next-safe-action/hooks";
-
-import { Button } from "@kdx/ui/button";
+import { Button } from "@kodix/ui/button";
 import {
   Form,
   FormControl,
@@ -12,8 +9,11 @@ import {
   FormLabel,
   FormMessage,
   useForm,
-} from "@kdx/ui/form";
-import { Input } from "@kdx/ui/input";
+} from "@kodix/ui/form";
+import { Input } from "@kodix/ui/input";
+import { useTranslations } from "next-intl";
+import { useAction } from "next-safe-action/hooks";
+
 import { ZSignupWithPasswordInputSchema } from "@kdx/validators/trpc/user";
 
 import { defaultSafeActionToastError } from "~/helpers/safe-action/default-action-error-toast";

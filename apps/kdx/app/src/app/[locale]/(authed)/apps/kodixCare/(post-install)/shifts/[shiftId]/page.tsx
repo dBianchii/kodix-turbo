@@ -1,6 +1,5 @@
 import { kodixCareAppId } from "@kodix/shared/db";
-
-import { H1 } from "@kdx/ui/typography";
+import { H1 } from "@kodix/ui/typography";
 
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
 

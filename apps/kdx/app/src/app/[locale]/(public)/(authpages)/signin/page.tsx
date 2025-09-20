@@ -1,7 +1,7 @@
+import { Card, CardContent, CardHeader, CardTitle } from "@kodix/ui/card";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
-import { Card, CardContent, CardHeader, CardTitle } from "@kdx/ui/card";
 
 import { Link, redirect } from "~/i18n/routing";
 

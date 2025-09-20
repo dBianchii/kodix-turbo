@@ -1,15 +1,14 @@
 import { useState } from "react";
-import { HiUserCircle } from "react-icons/hi";
-
-import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
+import { AvatarWrapper } from "@kodix/ui/avatar-wrapper";
 import {
   Command,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
-} from "@kdx/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
+} from "@kodix/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@kodix/ui/popover";
+import { HiUserCircle } from "react-icons/hi";
 
 export function AssigneePopover({
   assignedToUserId,

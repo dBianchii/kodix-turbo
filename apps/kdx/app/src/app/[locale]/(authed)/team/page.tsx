@@ -1,9 +1,9 @@
 import { Suspense } from "react";
+import { Separator } from "@kodix/ui/separator";
+import { Skeleton } from "@kodix/ui/skeleton";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
-import { Separator } from "@kdx/ui/separator";
-import { Skeleton } from "@kdx/ui/skeleton";
 
 import { IconKodixApp } from "~/app/[locale]/_components/app/kodix-icon";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";

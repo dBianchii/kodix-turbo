@@ -26,7 +26,7 @@ const config = {
     "@kdx/api",
     "@kdx/auth",
     "@kdx/db",
-    "@kdx/ui",
+    "@kodix/ui",
     "@kdx/validators",
     "@kodix/dayjs",
     "@kodix/shared",

@@ -1,7 +1,4 @@
 import { revalidatePath } from "next/cache";
-import { getTranslations } from "next-intl/server";
-
-import { auth } from "@kdx/auth";
 import {
   Card,
   CardContent,
@@ -9,9 +6,12 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@kdx/ui/card";
-import { Input } from "@kdx/ui/input";
-import { Label } from "@kdx/ui/label";
+} from "@kodix/ui/card";
+import { Input } from "@kodix/ui/input";
+import { Label } from "@kodix/ui/label";
+import { getTranslations } from "next-intl/server";
+
+import { auth } from "@kdx/auth";
 
 import { trpcCaller } from "~/trpc/server";
 

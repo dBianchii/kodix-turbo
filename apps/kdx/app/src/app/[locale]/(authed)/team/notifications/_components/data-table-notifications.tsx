@@ -1,13 +1,13 @@
 "use client";
 
+import type { FixedColumnsType } from "@kodix/ui/data-table/data-table";
 import { use, useMemo } from "react";
+import { DataTable } from "@kodix/ui/data-table/data-table";
 import { useTranslations } from "next-intl";
 import { MdEmail } from "react-icons/md";
 
 import type { RouterOutputs } from "@kdx/api";
-import type { FixedColumnsType } from "@kdx/ui/data-table/data-table";
 import { notifications } from "@kdx/db/schema";
-import { DataTable } from "@kdx/ui/data-table/data-table";
 
 import type { DataTableFilterField } from "./data-table-advanced/types";
 import { useDataTable } from "../_hooks/useDataTable";

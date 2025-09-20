@@ -10,7 +10,7 @@
     "cssVariables": true
   },
   "aliases": {
-    "utils": "@kdx/ui",
+    "utils": "@kodix/ui",
     "components": "src/",
     "ui": "src/"
   }

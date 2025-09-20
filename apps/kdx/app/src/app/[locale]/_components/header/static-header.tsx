@@ -1,8 +1,7 @@
 "use client";
 
+import { buttonVariants } from "@kodix/ui/button";
 import { useTranslations } from "next-intl";
-
-import { buttonVariants } from "@kdx/ui/button";
 
 import { Link } from "~/i18n/routing";
 

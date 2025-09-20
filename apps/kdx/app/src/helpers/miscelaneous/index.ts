@@ -2,9 +2,9 @@ import type { KodixAppId } from "@kodix/shared/db";
 import type { TRPCClientErrorLike } from "@trpc/client";
 import { calendarAppId, kodixCareAppId, todoAppId } from "@kodix/shared/db";
 import { getErrorMessage } from "@kodix/shared/utils";
+import { toast } from "@kodix/ui/toast";
 
 import type { AppRouter } from "@kdx/api";
-import { toast } from "@kdx/ui/toast";
 
 /**
  * @param error: TRPCClientError

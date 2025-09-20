@@ -1,9 +1,8 @@
 import { useEffect, useRef } from "react";
 import dayjs from "@kodix/dayjs";
+import { Button } from "@kodix/ui/button";
+import { useIsAnyOverlayMounted } from "@kodix/ui/stores/use-overlay-store";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
-
-import { Button } from "@kdx/ui/button";
-import { useIsAnyOverlayMounted } from "@kdx/ui/stores/use-overlay-store";
 
 import { DatePicker } from "~/app/[locale]/_components/date-picker";
 

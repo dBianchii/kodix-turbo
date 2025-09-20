@@ -1,8 +1,8 @@
 import { Suspense } from "react";
+import { H1, Lead } from "@kodix/ui/typography";
 import { getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
-import { H1, Lead } from "@kdx/ui/typography";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { trpcCaller } from "~/trpc/server";

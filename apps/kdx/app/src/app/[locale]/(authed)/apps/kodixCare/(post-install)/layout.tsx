@@ -1,4 +1,4 @@
-import { SidebarProvider } from "@kdx/ui/sidebar";
+import { SidebarProvider } from "@kodix/ui/sidebar";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 

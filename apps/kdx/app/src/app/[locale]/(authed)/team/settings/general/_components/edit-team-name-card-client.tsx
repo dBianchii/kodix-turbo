@@ -1,18 +1,15 @@
 "use client";
 
 import { getErrorMessage } from "@kodix/shared/utils";
-import { useMutation } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
-
-import { cn } from "@kdx/ui";
-import { Button } from "@kdx/ui/button";
+import { cn } from "@kodix/ui";
+import { Button } from "@kodix/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@kdx/ui/card";
+} from "@kodix/ui/card";
 import {
   Form,
   FormControl,
@@ -20,9 +17,12 @@ import {
   FormItem,
   FormMessage,
   useForm,
-} from "@kdx/ui/form";
-import { Input } from "@kdx/ui/input";
-import { toast } from "@kdx/ui/toast";
+} from "@kodix/ui/form";
+import { Input } from "@kodix/ui/input";
+import { toast } from "@kodix/ui/toast";
+import { useMutation } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
+
 import { ZUpdateInputSchema } from "@kdx/validators/trpc/team";
 
 import { useRouter } from "~/i18n/routing";

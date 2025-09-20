@@ -1,9 +1,9 @@
 import { Suspense } from "react";
+import { DataTableSkeleton } from "@kodix/ui/data-table/data-table-skeleton";
+import { H1, Lead } from "@kodix/ui/typography";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
-import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
-import { H1, Lead } from "@kdx/ui/typography";
 import { ZGetNotificationsInputSchema } from "@kdx/validators/trpc/user";
 
 import { CustomKodixIcon } from "~/app/[locale]/_components/app/custom-kodix-icon";

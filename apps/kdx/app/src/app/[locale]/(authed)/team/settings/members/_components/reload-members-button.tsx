@@ -1,11 +1,10 @@
 "use client";
 
 import { useTransition } from "react";
+import { cn } from "@kodix/ui";
+import { Button } from "@kodix/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import { LuRefreshCw } from "react-icons/lu";
-
-import { cn } from "@kdx/ui";
-import { Button } from "@kdx/ui/button";
 
 import { useTRPC } from "~/trpc/react";
 

@@ -538,9 +538,6 @@ importers:
       '@kdx/locales':
         specifier: workspace:*
         version: link:../../../packages/kdx/locales
-      '@kdx/ui':
-        specifier: workspace:*
-        version: link:../../../packages/kodix/ui
       '@kdx/validators':
         specifier: workspace:*
         version: link:../../../packages/kdx/validators
@@ -553,6 +550,9 @@ importers:
       '@kodix/shared':
         specifier: workspace:*
         version: link:../../../packages/kodix/shared
+      '@kodix/ui':
+        specifier: workspace:*
+        version: link:../../../packages/kodix/ui
       '@node-rs/argon2':
         specifier: 'catalog:'
         version: 1.8.3
@@ -710,9 +710,6 @@ importers:
       '@kdx/locales':
         specifier: workspace:*
         version: link:../../../packages/kdx/locales
-      '@kdx/ui':
-        specifier: workspace:*
-        version: link:../../../packages/kodix/ui
       '@kdx/validators':
         specifier: workspace:*
         version: link:../../../packages/kdx/validators
@@ -722,6 +719,9 @@ importers:
       '@kodix/shared':
         specifier: workspace:*
         version: link:../../../packages/kodix/shared
+      '@kodix/ui':
+        specifier: workspace:*
+        version: link:../../../packages/kodix/ui
       '@motify/components':
         specifier: 'catalog:'
         version: 0.18.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)

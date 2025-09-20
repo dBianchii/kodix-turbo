@@ -1,8 +1,5 @@
 import type { Column } from "@tanstack/react-table";
-import { useTranslations } from "next-intl";
-import { LuCheck } from "react-icons/lu";
-
-import { cn } from "@kdx/ui";
+import { cn } from "@kodix/ui";
 import {
   Command,
   CommandEmpty,
@@ -11,7 +8,9 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-} from "@kdx/ui/command";
+} from "@kodix/ui/command";
+import { useTranslations } from "next-intl";
+import { LuCheck } from "react-icons/lu";
 
 import type { DataTableFilterOption, Option } from "./types";
 

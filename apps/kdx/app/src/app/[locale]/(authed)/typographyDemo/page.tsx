@@ -1,4 +1,4 @@
-import { Blockquote, H1, H2, H3, P, UL } from "@kdx/ui/typography";
+import { Blockquote, H1, H2, H3, P, UL } from "@kodix/ui/typography";
 
 import MaxWidthWrapper from "../../_components/max-width-wrapper";
 

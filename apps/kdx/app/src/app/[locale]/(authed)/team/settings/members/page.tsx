@@ -1,10 +1,10 @@
 import { Suspense } from "react";
+import { DataTableSkeleton } from "@kodix/ui/data-table/data-table-skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@kodix/ui/tabs";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
 import { teamRepository } from "@kdx/db/repositories";
-import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@kdx/ui/tabs";
 
 import { redirect } from "~/i18n/routing";
 import { HydrateClient, prefetch, trpc } from "~/trpc/server";

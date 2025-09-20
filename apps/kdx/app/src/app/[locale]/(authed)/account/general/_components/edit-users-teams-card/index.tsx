@@ -1,7 +1,7 @@
+import { Table, TableBody, TableCell, TableRow } from "@kodix/ui/table";
 import { getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
-import { Table, TableBody, TableCell, TableRow } from "@kdx/ui/table";
 
 import { trpcCaller } from "~/trpc/server";
 

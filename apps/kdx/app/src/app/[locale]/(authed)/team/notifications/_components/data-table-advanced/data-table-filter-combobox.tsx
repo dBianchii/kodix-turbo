@@ -1,13 +1,5 @@
 import { useState } from "react";
-import { useTranslations } from "next-intl";
-import {
-  LuChevronDown,
-  LuChevronsUpDown,
-  LuPlus,
-  LuType,
-} from "react-icons/lu";
-
-import { Button } from "@kdx/ui/button";
+import { Button } from "@kodix/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -16,8 +8,15 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-} from "@kdx/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
+} from "@kodix/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@kodix/ui/popover";
+import { useTranslations } from "next-intl";
+import {
+  LuChevronDown,
+  LuChevronsUpDown,
+  LuPlus,
+  LuType,
+} from "react-icons/lu";
 
 import type { DataTableFilterOption } from "./types";
 

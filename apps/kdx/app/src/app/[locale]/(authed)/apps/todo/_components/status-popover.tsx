@@ -1,4 +1,14 @@
 import { useState } from "react";
+import { cn } from "@kodix/ui";
+import { Button } from "@kodix/ui/button";
+import {
+  Command,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@kodix/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@kodix/ui/popover";
 import {
   LuCheck,
   LuCircleCheck,
@@ -8,16 +18,6 @@ import {
 import { RxRadiobutton } from "react-icons/rx";
 
 import type { todos } from "@kdx/db/schema";
-import { cn } from "@kdx/ui";
-import { Button } from "@kdx/ui/button";
-import {
-  Command,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@kdx/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
 
 type Status = typeof todos.$inferInsert.status;
 /**

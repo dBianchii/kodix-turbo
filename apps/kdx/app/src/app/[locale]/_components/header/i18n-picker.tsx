@@ -1,16 +1,16 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-import { PiTranslate } from "react-icons/pi";
-
-import type { Locales } from "@kdx/locales";
-import { Button } from "@kdx/ui/button";
+import { Button } from "@kodix/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@kdx/ui/dropdown-menu";
+} from "@kodix/ui/dropdown-menu";
+import { useTranslations } from "next-intl";
+import { PiTranslate } from "react-icons/pi";
+
+import type { Locales } from "@kdx/locales";
 
 import { usePathname, useRouter } from "~/i18n/routing";
 

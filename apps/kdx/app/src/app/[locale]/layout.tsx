@@ -9,16 +9,15 @@ import { env } from "@kdx/env";
 import { TailwindIndicator } from "~/app/[locale]/_components/tailwind-indicator";
 import { TRPCReactProvider } from "~/trpc/react";
 
-import "@kdx/ui/globals.css";
+import "@kodix/ui/globals.css";
 
 import { notFound } from "next/navigation";
 import { getBaseUrl } from "@kodix/shared/utils";
+import { cn } from "@kodix/ui";
+import { ThemeToggle } from "@kodix/ui/theme";
+import { Toaster } from "@kodix/ui/toast";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
-
-import { cn } from "@kdx/ui";
-import { ThemeToggle } from "@kdx/ui/theme";
-import { Toaster } from "@kdx/ui/toast";
 
 import { routing } from "~/i18n/routing";
 

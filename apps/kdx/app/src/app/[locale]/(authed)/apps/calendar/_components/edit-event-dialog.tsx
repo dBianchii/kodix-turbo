@@ -2,16 +2,9 @@ import type { Dayjs } from "@kodix/dayjs";
 import type { Frequency } from "rrule";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import dayjs from "@kodix/dayjs";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
-import { LuCircleAlert } from "react-icons/lu";
-import { RRule, Weekday } from "rrule";
-
-import type { RouterInputs, RouterOutputs } from "@kdx/api";
-import type { eventMasters } from "@kdx/db/schema";
-import { cn } from "@kdx/ui";
-import { Button } from "@kdx/ui/button";
-import { Checkbox } from "@kdx/ui/checkbox";
+import { cn } from "@kodix/ui";
+import { Button } from "@kodix/ui/button";
+import { Checkbox } from "@kodix/ui/checkbox";
 import {
   Credenza,
   CredenzaBody,
@@ -19,18 +12,25 @@ import {
   CredenzaFooter,
   CredenzaHeader,
   CredenzaTitle,
-} from "@kdx/ui/credenza";
-import { DateTimePicker } from "@kdx/ui/date-time-picker";
-import { Input } from "@kdx/ui/input";
-import { Label } from "@kdx/ui/label";
-import { RadioGroup, RadioGroupItem } from "@kdx/ui/radio-group";
-import { Textarea } from "@kdx/ui/textarea";
+} from "@kodix/ui/credenza";
+import { DateTimePicker } from "@kodix/ui/date-time-picker";
+import { Input } from "@kodix/ui/input";
+import { Label } from "@kodix/ui/label";
+import { RadioGroup, RadioGroupItem } from "@kodix/ui/radio-group";
+import { Textarea } from "@kodix/ui/textarea";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@kdx/ui/tooltip";
+} from "@kodix/ui/tooltip";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
+import { LuCircleAlert } from "react-icons/lu";
+import { RRule, Weekday } from "rrule";
+
+import type { RouterInputs, RouterOutputs } from "@kdx/api";
+import type { eventMasters } from "@kdx/db/schema";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { useTRPC } from "~/trpc/react";

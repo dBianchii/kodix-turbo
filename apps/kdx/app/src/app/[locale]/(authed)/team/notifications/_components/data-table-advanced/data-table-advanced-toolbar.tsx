@@ -3,12 +3,11 @@
 import type { Table } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { cn } from "@kodix/ui";
+import { Button } from "@kodix/ui/button";
+import { DataTableViewOptions } from "@kodix/ui/data-table/data-table-view-options";
 import { useTranslations } from "next-intl";
 import { LuChevronsUpDown, LuPlus } from "react-icons/lu";
-
-import { cn } from "@kdx/ui";
-import { Button } from "@kdx/ui/button";
-import { DataTableViewOptions } from "@kdx/ui/data-table/data-table-view-options";
 
 import type { DataTableFilterField, DataTableFilterOption } from "./types";
 import { DataTableFilterCombobox } from "./data-table-filter-combobox";

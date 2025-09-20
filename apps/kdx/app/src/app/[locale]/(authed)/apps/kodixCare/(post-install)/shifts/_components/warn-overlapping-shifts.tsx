@@ -1,9 +1,5 @@
-import { useFormatter, useTranslations } from "next-intl";
-import { LuLoaderCircle } from "react-icons/lu";
-
-import type { RouterOutputs } from "@kdx/api";
-import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
-import { Button } from "@kdx/ui/button";
+import { AvatarWrapper } from "@kodix/ui/avatar-wrapper";
+import { Button } from "@kodix/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -11,7 +7,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@kdx/ui/dialog";
+} from "@kodix/ui/dialog";
+import { useFormatter, useTranslations } from "next-intl";
+import { LuLoaderCircle } from "react-icons/lu";
+
+import type { RouterOutputs } from "@kdx/api";
 
 export function WarnOverlappingShifts({
   overlaps,

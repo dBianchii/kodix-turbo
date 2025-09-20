@@ -1,8 +1,4 @@
 import { getErrorMessage } from "@kodix/shared/utils";
-import { useMutation } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
-import z from "zod";
-
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -11,8 +7,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@kdx/ui/alert-dialog";
-import { Button } from "@kdx/ui/button";
+} from "@kodix/ui/alert-dialog";
+import { Button } from "@kodix/ui/button";
 import {
   Form,
   FormControl,
@@ -21,9 +17,13 @@ import {
   FormLabel,
   FormMessage,
   useForm,
-} from "@kdx/ui/form";
-import { Input } from "@kdx/ui/input";
-import { toast } from "@kdx/ui/toast";
+} from "@kodix/ui/form";
+import { Input } from "@kodix/ui/input";
+import { toast } from "@kodix/ui/toast";
+import { useMutation } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
+import z from "zod";
+
 import { ZDeleteTeamInputSchema } from "@kdx/validators/trpc/team";
 
 import { useRouter } from "~/i18n/routing";

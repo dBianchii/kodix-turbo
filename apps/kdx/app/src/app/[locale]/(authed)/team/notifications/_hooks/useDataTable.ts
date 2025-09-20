@@ -9,6 +9,7 @@ import type {
 } from "@tanstack/react-table";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { useDebounce } from "@kodix/ui/hooks/use-debounce";
 import {
   getCoreRowModel,
   getFacetedRowModel,
@@ -19,8 +20,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import z from "zod";
-
-import { useDebounce } from "@kdx/ui/hooks/use-debounce";
 
 import { usePathname, useRouter } from "~/i18n/routing";
 

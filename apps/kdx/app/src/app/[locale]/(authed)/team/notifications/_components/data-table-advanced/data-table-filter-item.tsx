@@ -2,14 +2,11 @@ import type { Table } from "@tanstack/react-table";
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { dataTableConfig } from "@kodix/shared/data-table-config";
-import { useTranslations } from "next-intl";
-import { LuTrash } from "react-icons/lu";
-
-import { cn } from "@kdx/ui";
-import { Button } from "@kdx/ui/button";
-import { useDebounce } from "@kdx/ui/hooks/use-debounce";
-import { Input } from "@kdx/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
+import { cn } from "@kodix/ui";
+import { Button } from "@kodix/ui/button";
+import { useDebounce } from "@kodix/ui/hooks/use-debounce";
+import { Input } from "@kodix/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@kodix/ui/popover";
 import {
   Select,
   SelectContent,
@@ -17,7 +14,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@kdx/ui/select";
+} from "@kodix/ui/select";
+import { useTranslations } from "next-intl";
+import { LuTrash } from "react-icons/lu";
 
 import { usePathname, useRouter } from "~/i18n/routing";
 

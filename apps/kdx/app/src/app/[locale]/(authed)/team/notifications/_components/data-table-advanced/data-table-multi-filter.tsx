@@ -4,20 +4,16 @@ import type { Table } from "@tanstack/react-table";
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { dataTableConfig } from "@kodix/shared/data-table-config";
-import { useTranslations } from "next-intl";
-import { LuAlignCenter, LuCopy, LuTrash } from "react-icons/lu";
-import { RxDotsHorizontal } from "react-icons/rx";
-
-import { Button } from "@kdx/ui/button";
+import { Button } from "@kodix/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@kdx/ui/dropdown-menu";
-import { useDebounce } from "@kdx/ui/hooks/use-debounce";
-import { Input } from "@kdx/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
+} from "@kodix/ui/dropdown-menu";
+import { useDebounce } from "@kodix/ui/hooks/use-debounce";
+import { Input } from "@kodix/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@kodix/ui/popover";
 import {
   Select,
   SelectContent,
@@ -25,8 +21,11 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@kdx/ui/select";
-import { Separator } from "@kdx/ui/separator";
+} from "@kodix/ui/select";
+import { Separator } from "@kodix/ui/separator";
+import { useTranslations } from "next-intl";
+import { LuAlignCenter, LuCopy, LuTrash } from "react-icons/lu";
+import { RxDotsHorizontal } from "react-icons/rx";
 
 import { usePathname, useRouter } from "~/i18n/routing";
 

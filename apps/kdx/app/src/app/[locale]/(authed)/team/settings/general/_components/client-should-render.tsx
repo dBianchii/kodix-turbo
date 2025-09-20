@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@kdx/ui";
+import { cn } from "@kodix/ui";
 
 import { usePathname } from "~/i18n/routing";
 

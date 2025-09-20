@@ -1,20 +1,20 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
-import { MdNotificationsActive } from "react-icons/md";
-
-import type { RouterOutputs } from "@kdx/api";
-import { Button } from "@kdx/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
-import { Separator } from "@kdx/ui/separator";
-import { toast } from "@kdx/ui/toast";
+import { Button } from "@kodix/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@kodix/ui/popover";
+import { Separator } from "@kodix/ui/separator";
+import { toast } from "@kodix/ui/toast";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@kdx/ui/tooltip";
+} from "@kodix/ui/tooltip";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
+import { MdNotificationsActive } from "react-icons/md";
+
+import type { RouterOutputs } from "@kdx/api";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { useRouter } from "~/i18n/routing";

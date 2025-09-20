@@ -1,9 +1,8 @@
 "use client";
 
+import { LampContainer } from "@kodix/ui/aceternity/lamp";
 import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
-
-import { LampContainer } from "@kdx/ui/aceternity/lamp";
 
 export function HeroLamp() {
   const t = useTranslations();

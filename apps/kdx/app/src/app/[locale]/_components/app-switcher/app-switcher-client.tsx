@@ -1,21 +1,21 @@
 "use client";
 
 import { use, useState } from "react";
-import { useTranslations } from "next-intl";
-import { IoApps } from "react-icons/io5";
-import { LuChevronsUpDown, LuCirclePlus } from "react-icons/lu";
-
-import type { RouterOutputs } from "@kdx/api";
-import { getAppName } from "@kdx/locales/next-intl/hooks";
-import { Button } from "@kdx/ui/button";
+import { Button } from "@kodix/ui/button";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-} from "@kdx/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
+} from "@kodix/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@kodix/ui/popover";
+import { useTranslations } from "next-intl";
+import { IoApps } from "react-icons/io5";
+import { LuChevronsUpDown, LuCirclePlus } from "react-icons/lu";
+
+import type { RouterOutputs } from "@kdx/api";
+import { getAppName } from "@kdx/locales/next-intl/hooks";
 
 import type { AppPathnames } from "~/helpers/miscelaneous";
 import {
