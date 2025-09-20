@@ -1,6 +1,7 @@
 "use client";
 
 import type { Row } from "@tanstack/react-table";
+import { getErrorMessage } from "@kodix/shared/utils";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { LuTrash } from "react-icons/lu";
@@ -19,7 +20,6 @@ import {
 } from "@kdx/ui/credenza";
 import { toast } from "@kdx/ui/toast";
 
-import { getErrorMessage } from "../../../../../../../../../../packages/kodix/shared/src/utils";
 import { deleteNotificationsAction } from "../_actions/deleteNotificationsAction";
 
 interface DeleteTasksDialogProps extends React.ComponentProps<typeof Credenza> {

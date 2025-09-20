@@ -1,3 +1,4 @@
+import { getBaseUrl } from "@kodix/shared/utils";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { LuChevronRight } from "react-icons/lu";
 
@@ -7,7 +8,6 @@ import { RadialGradient } from "@kdx/ui/magic-ui/radial-gradient";
 
 import { Link } from "~/i18n/routing";
 
-import { getBaseUrl } from "../../../../../../../packages/kodix/shared/src/utils";
 import { Footer } from "../_components/footer";
 import { StaticHeader } from "../_components/header/static-header";
 import { HeroBento } from "../_components/hero-bento";

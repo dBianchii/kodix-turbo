@@ -3,6 +3,7 @@
 import type { AppRole, KodixAppId } from "@kodix/shared/db";
 import { use, useMemo } from "react";
 import { allRoles } from "@kodix/shared/db";
+import { typedObjectEntries } from "@kodix/shared/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createColumnHelper,
@@ -27,8 +28,6 @@ import {
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { useTRPC } from "~/trpc/react";
-
-import { typedObjectEntries } from "../../../../../../../../../../../../packages/kodix/shared/src/utils";
 
 const columnHelper =
   createColumnHelper<

@@ -1,7 +1,9 @@
 import type { Dispatch, SetStateAction } from "react";
+import type { DataTableConfig } from "@kodix/shared/data-table-config";
 import type { Table } from "@tanstack/react-table";
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { dataTableConfig } from "@kodix/shared/data-table-config";
 import { useTranslations } from "next-intl";
 import { LuAlignCenter, LuCopy, LuTrash } from "react-icons/lu";
 import { RxDotsHorizontal } from "react-icons/rx";
@@ -28,9 +30,7 @@ import { Separator } from "@kdx/ui/separator";
 
 import { usePathname, useRouter } from "~/i18n/routing";
 
-import type { DataTableConfig } from "../../../../../../../../../../../packages/kodix/shared/src/data-table-config";
 import type { DataTableFilterOption } from "./types";
-import { dataTableConfig } from "../../../../../../../../../../../packages/kodix/shared/src/data-table-config";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 
 interface DataTableMultiFilterProps<TData> {

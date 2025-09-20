@@ -1,5 +1,6 @@
 "use client";
 
+import { getErrorMessage } from "@kodix/shared/utils";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import z from "zod";
@@ -37,8 +38,6 @@ import { toast } from "@kdx/ui/toast";
 
 import { useRouter } from "~/i18n/routing";
 import { useTRPC } from "~/trpc/react";
-
-import { getErrorMessage } from "../../../../../../../../../../packages/kodix/shared/src/utils";
 
 export function DeleteAccountCard() {
   const trpc = useTRPC();

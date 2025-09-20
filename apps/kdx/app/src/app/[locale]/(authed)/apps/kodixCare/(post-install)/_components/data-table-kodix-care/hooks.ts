@@ -1,3 +1,4 @@
+import { getErrorMessage } from "@kodix/shared/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
@@ -5,8 +6,6 @@ import type { TEditCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCar
 import { toast } from "@kdx/ui/toast";
 
 import { useTRPC } from "~/trpc/react";
-
-import { getErrorMessage } from "../../../../../../../../../../../../packages/kodix/shared/src/utils";
 
 export const useSaveCareTaskMutation = () => {
   const trpc = useTRPC();

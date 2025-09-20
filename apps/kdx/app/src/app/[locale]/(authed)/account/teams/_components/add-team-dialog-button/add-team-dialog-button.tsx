@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useState } from "react";
+import { getErrorMessage } from "@kodix/shared/utils";
 import { useTranslations } from "next-intl";
 import { useAction } from "next-safe-action/hooks";
 import { LuCirclePlus } from "react-icons/lu";
@@ -24,7 +25,6 @@ import { toast } from "@kdx/ui/toast";
 
 import { useRouter } from "~/i18n/routing";
 
-import { getErrorMessage } from "../../../../../../../../../../../packages/kodix/shared/src/utils";
 import { createTeamAction } from "./actions";
 
 export function AddTeamDialogButton({

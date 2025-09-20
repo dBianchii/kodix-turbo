@@ -1,11 +1,10 @@
+import { getBaseUrl } from "@kodix/shared/utils";
 import { FcGoogle } from "react-icons/fc";
 import { RxDiscordLogo } from "react-icons/rx";
 
 import { env } from "@kdx/env";
 import { cn } from "@kdx/ui";
 import { buttonVariants } from "@kdx/ui/button";
-
-import { getBaseUrl } from "../../../../../../../../../packages/kodix/shared/src/utils";
 
 const providers = [
   {

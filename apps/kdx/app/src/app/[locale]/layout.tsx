@@ -12,6 +12,7 @@ import { TRPCReactProvider } from "~/trpc/react";
 import "@kdx/ui/globals.css";
 
 import { notFound } from "next/navigation";
+import { getBaseUrl } from "@kodix/shared/utils";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
 
@@ -21,7 +22,6 @@ import { Toaster } from "@kdx/ui/toast";
 
 import { routing } from "~/i18n/routing";
 
-import { getBaseUrl } from "../../../../../../packages/kodix/shared/src/utils";
 import { CCNextIntlClientProvider } from "./_components/cc-next-intl-client-provider";
 import PostHogPageView from "./_components/posthog-page-view";
 import { CSPostHogProvider } from "./_components/posthog-provider";

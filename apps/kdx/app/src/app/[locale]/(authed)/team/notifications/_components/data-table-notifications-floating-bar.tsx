@@ -1,5 +1,6 @@
 import type { Table } from "@tanstack/react-table";
 import { useEffect, useState, useTransition } from "react";
+import { getErrorMessage } from "@kodix/shared/utils";
 import { useTranslations } from "next-intl";
 import { LuDownload, LuRotateCw, LuTrash, LuX } from "react-icons/lu";
 
@@ -16,7 +17,6 @@ import {
   TooltipTrigger,
 } from "@kdx/ui/tooltip";
 
-import { getErrorMessage } from "../../../../../../../../../../packages/kodix/shared/src/utils";
 import { deleteNotificationsAction } from "../_actions/deleteNotificationsAction";
 
 interface DataTableNotificationsFloatingBarProps {

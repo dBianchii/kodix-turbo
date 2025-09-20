@@ -1,8 +1,8 @@
 "use client";
 
-import { Button } from "@kdx/ui/button";
+import { getBaseUrl } from "@kodix/shared/utils";
 
-import { getBaseUrl } from "../../../../../../packages/kodix/shared/src/utils";
+import { Button } from "@kdx/ui/button";
 
 export const ClientUrl = () => {
   const handleTick = () => {

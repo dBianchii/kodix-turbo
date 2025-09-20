@@ -1,9 +1,9 @@
+import { getBaseUrl } from "@kodix/shared/utils";
 import { Google } from "arctic";
 
 import { authRepository } from "@kdx/db/repositories";
 import { env } from "@kdx/env";
 
-import { getBaseUrl } from "../../../../kodix/shared/src/utils";
 import createOrGetExistingUserForUnlinkedProviderAccount from "./utils/createOrGetExistingUserForUnlinkedProviderAccount";
 
 interface GoogleUser {

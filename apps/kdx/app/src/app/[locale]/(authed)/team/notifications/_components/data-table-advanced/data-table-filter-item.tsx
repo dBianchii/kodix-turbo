@@ -1,6 +1,7 @@
 import type { Table } from "@tanstack/react-table";
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { dataTableConfig } from "@kodix/shared/data-table-config";
 import { useTranslations } from "next-intl";
 import { LuTrash } from "react-icons/lu";
 
@@ -21,7 +22,6 @@ import {
 import { usePathname, useRouter } from "~/i18n/routing";
 
 import type { DataTableFilterOption } from "./types";
-import { dataTableConfig } from "../../../../../../../../../../../packages/kodix/shared/src/data-table-config";
 import { DataTableAdvancedFacetedFilter } from "./data-table-advanced-faceted-filter";
 
 interface DataTableFilterItemProps<TData> {
