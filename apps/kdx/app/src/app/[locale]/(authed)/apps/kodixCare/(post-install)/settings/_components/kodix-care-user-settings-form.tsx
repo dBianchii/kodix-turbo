@@ -2,13 +2,8 @@
 
 import { use } from "react";
 import { kodixCareAppId } from "@kodix/shared/db";
-import { useTranslations } from "next-intl";
-import { useAction } from "next-safe-action/hooks";
-import { LuCircleAlert } from "react-icons/lu";
-
-import type { RouterOutputs } from "@kdx/api";
-import { cn } from "@kdx/ui";
-import { Button } from "@kdx/ui/button";
+import { cn } from "@kodix/ui";
+import { Button } from "@kodix/ui/button";
 import {
   Form,
   FormControl,
@@ -17,9 +12,14 @@ import {
   FormItem,
   FormLabel,
   useForm,
-} from "@kdx/ui/form";
-import { Switch } from "@kdx/ui/switch";
-import { toast } from "@kdx/ui/toast";
+} from "@kodix/ui/form";
+import { Switch } from "@kodix/ui/switch";
+import { toast } from "@kodix/ui/toast";
+import { useTranslations } from "next-intl";
+import { useAction } from "next-safe-action/hooks";
+import { LuCircleAlert } from "react-icons/lu";
+
+import type { RouterOutputs } from "@kdx/api";
 import { ZSaveUserAppTeamConfigInputSchema } from "@kdx/validators/trpc/app";
 
 import { saveUserAppTeamConfig } from "./actions";

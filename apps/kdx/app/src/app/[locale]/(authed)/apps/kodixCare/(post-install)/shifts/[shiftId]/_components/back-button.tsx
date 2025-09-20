@@ -1,8 +1,7 @@
 "use client";
 
+import { Button } from "@kodix/ui/button";
 import { LuArrowLeft } from "react-icons/lu";
-
-import { Button } from "@kdx/ui/button";
 
 import { useRouter } from "~/i18n/routing";
 

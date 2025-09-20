@@ -1,10 +1,7 @@
 "use client";
 
 import { kodixCareAppId } from "@kodix/shared/db";
-import { useTranslations } from "next-intl";
-import { LuCog, LuHouse, LuListChecks, LuPanelLeft } from "react-icons/lu";
-
-import { Button } from "@kdx/ui/button";
+import { Button } from "@kodix/ui/button";
 import {
   Sidebar,
   SidebarContent,
@@ -14,7 +11,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@kdx/ui/sidebar";
+} from "@kodix/ui/sidebar";
+import { useTranslations } from "next-intl";
+import { LuCog, LuHouse, LuListChecks, LuPanelLeft } from "react-icons/lu";
 
 import { IconKodixApp } from "~/app/[locale]/_components/app/kodix-icon";
 import { Link, usePathname } from "~/i18n/routing";

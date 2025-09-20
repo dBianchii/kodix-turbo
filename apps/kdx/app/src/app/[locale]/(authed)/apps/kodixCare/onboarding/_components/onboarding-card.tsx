@@ -1,11 +1,7 @@
 "use client";
 
 import { kodixCareConfigSchema } from "@kodix/shared/db";
-import { useTranslations } from "next-intl";
-import { useAction } from "next-safe-action/hooks";
-import { LuArrowRight, LuLoaderCircle } from "react-icons/lu";
-
-import { Button } from "@kdx/ui/button";
+import { Button } from "@kodix/ui/button";
 import {
   Card,
   CardContent,
@@ -13,7 +9,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@kdx/ui/card";
+} from "@kodix/ui/card";
 import {
   Form,
   FormControl,
@@ -23,8 +19,11 @@ import {
   FormLabel,
   FormMessage,
   useForm,
-} from "@kdx/ui/form";
-import { Input } from "@kdx/ui/input";
+} from "@kodix/ui/form";
+import { Input } from "@kodix/ui/input";
+import { useTranslations } from "next-intl";
+import { useAction } from "next-safe-action/hooks";
+import { LuArrowRight, LuLoaderCircle } from "react-icons/lu";
 
 import { defaultSafeActionToastError } from "~/helpers/safe-action/default-action-error-toast";
 

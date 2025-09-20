@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import { kodixCareAppId } from "@kodix/shared/db";
-
-import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
+import { DataTableSkeleton } from "@kodix/ui/data-table/data-table-skeleton";
 
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
 import { HydrateClient, prefetch, trpc, trpcCaller } from "~/trpc/server";

@@ -4,8 +4,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@kdx/ui/card";
-import { Skeleton } from "@kdx/ui/skeleton";
+} from "@kodix/ui/card";
+import { Skeleton } from "@kodix/ui/skeleton";
 
 export default function SettingsEditCardSkeleton() {
   return (

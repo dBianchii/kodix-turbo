@@ -1,4 +1,14 @@
 import { useState } from "react";
+import { cn } from "@kodix/ui";
+import { Button } from "@kodix/ui/button";
+import {
+  Command,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@kodix/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@kodix/ui/popover";
 import { useTranslations } from "next-intl";
 import {
   LuSignal,
@@ -6,17 +16,6 @@ import {
   LuSignalLow,
   LuSignalMedium,
 } from "react-icons/lu";
-
-import { cn } from "@kdx/ui";
-import { Button } from "@kdx/ui/button";
-import {
-  Command,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@kdx/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
 
 /**
  * @description You can optionally input a button to overwrite the default button trigger.

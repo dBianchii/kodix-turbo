@@ -1,8 +1,7 @@
 "use client";
 
+import { Button } from "@kodix/ui/button";
 import { useFormStatus } from "react-dom";
-
-import { Button } from "@kdx/ui/button";
 
 export function SubmitButton({ children }: { children: React.ReactNode }) {
   const formStatus = useFormStatus();

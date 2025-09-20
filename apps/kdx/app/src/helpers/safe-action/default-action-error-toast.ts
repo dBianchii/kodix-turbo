@@ -1,4 +1,4 @@
-import { toast } from "@kdx/ui/toast";
+import { toast } from "@kodix/ui/toast";
 
 /**
  * Used with onError in useAction to display a toast error message

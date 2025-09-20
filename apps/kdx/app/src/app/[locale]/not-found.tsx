@@ -1,6 +1,5 @@
+import { buttonVariants } from "@kodix/ui/button";
 import { LuArrowLeft } from "react-icons/lu";
-
-import { buttonVariants } from "@kdx/ui/button";
 
 import { Link } from "~/i18n/routing";
 

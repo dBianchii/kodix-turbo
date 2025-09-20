@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@kdx/ui/button";
+import { Button } from "@kodix/ui/button";
 
 export default function GlobalError({ reset }: { reset: () => void }) {
   return (

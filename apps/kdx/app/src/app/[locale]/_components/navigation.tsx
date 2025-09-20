@@ -1,16 +1,15 @@
 "use client";
 
-import { LuArrowLeft } from "react-icons/lu";
-
-import { cn } from "@kdx/ui";
-import { useMediaQuery } from "@kdx/ui/hooks/use-media-query";
+import { cn } from "@kodix/ui";
+import { useMediaQuery } from "@kodix/ui/hooks/use-media-query";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-} from "@kdx/ui/navigation-menu/index";
-import { navigationMenuTriggerStyle } from "@kdx/ui/navigation-menu/navigation-menu-trigger-style";
+} from "@kodix/ui/navigation-menu/index";
+import { navigationMenuTriggerStyle } from "@kodix/ui/navigation-menu/navigation-menu-trigger-style";
+import { LuArrowLeft } from "react-icons/lu";
 
 import { Link, usePathname } from "~/i18n/routing";
 

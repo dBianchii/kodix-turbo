@@ -1,5 +1,5 @@
-import { Card, CardContent, CardFooter, CardHeader } from "@kdx/ui/card";
-import { Skeleton } from "@kdx/ui/skeleton";
+import { Card, CardContent, CardFooter, CardHeader } from "@kodix/ui/card";
+import { Skeleton } from "@kodix/ui/skeleton";
 
 export function KodixAppSkeleton() {
   return (

@@ -1,8 +1,7 @@
 import { todoAppId } from "@kodix/shared/db";
+import { Separator } from "@kodix/ui/separator";
+import { H1 } from "@kodix/ui/typography";
 import { getTranslations } from "next-intl/server";
-
-import { Separator } from "@kdx/ui/separator";
-import { H1 } from "@kdx/ui/typography";
 
 import { IconKodixApp } from "~/app/[locale]/_components/app/kodix-icon";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";

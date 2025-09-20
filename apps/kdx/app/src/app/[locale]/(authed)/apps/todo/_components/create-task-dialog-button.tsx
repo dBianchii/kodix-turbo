@@ -1,14 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useFormatter, useTranslations } from "next-intl";
-import { HiUserCircle } from "react-icons/hi";
-import { LuPlus, LuX } from "react-icons/lu";
-
-import type { todos } from "@kdx/db/schema";
-import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
-import { Button } from "@kdx/ui/button";
+import { AvatarWrapper } from "@kodix/ui/avatar-wrapper";
+import { Button } from "@kodix/ui/button";
 import {
   Credenza,
   CredenzaBody,
@@ -17,10 +11,16 @@ import {
   CredenzaHeader,
   CredenzaTitle,
   CredenzaTrigger,
-} from "@kdx/ui/credenza";
-import { Input } from "@kdx/ui/input";
-import { PopoverTrigger } from "@kdx/ui/popover";
-import { Textarea } from "@kdx/ui/textarea";
+} from "@kodix/ui/credenza";
+import { Input } from "@kodix/ui/input";
+import { PopoverTrigger } from "@kodix/ui/popover";
+import { Textarea } from "@kodix/ui/textarea";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useFormatter, useTranslations } from "next-intl";
+import { HiUserCircle } from "react-icons/hi";
+import { LuPlus, LuX } from "react-icons/lu";
+
+import type { todos } from "@kdx/db/schema";
 
 import {
   DatePickerIcon,

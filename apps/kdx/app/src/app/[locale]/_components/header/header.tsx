@@ -1,8 +1,8 @@
 import { Suspense } from "react";
+import { buttonVariants } from "@kodix/ui/button";
 import { getTranslations } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
-import { buttonVariants } from "@kdx/ui/button";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { Link } from "~/i18n/routing";

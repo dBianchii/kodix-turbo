@@ -1,10 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
-
-import type { User } from "@kdx/auth";
-import { Button } from "@kdx/ui/button";
+import { Button } from "@kodix/ui/button";
 import {
   Card,
   CardContent,
@@ -12,7 +9,10 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@kdx/ui/card";
+} from "@kodix/ui/card";
+import { useTranslations } from "next-intl";
+
+import type { User } from "@kdx/auth";
 
 import { DeleteTeamConfirmationDialog } from "./delete-team-confirmation-dialog";
 

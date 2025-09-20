@@ -2,12 +2,7 @@
 
 import type { Row } from "@tanstack/react-table";
 import { getErrorMessage } from "@kodix/shared/utils";
-import { useMutation } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
-import { LuTrash } from "react-icons/lu";
-
-import type { RouterOutputs } from "@kdx/api";
-import { Button } from "@kdx/ui/button";
+import { Button } from "@kodix/ui/button";
 import {
   Credenza,
   CredenzaClose,
@@ -17,8 +12,13 @@ import {
   CredenzaHeader,
   CredenzaTitle,
   CredenzaTrigger,
-} from "@kdx/ui/credenza";
-import { toast } from "@kdx/ui/toast";
+} from "@kodix/ui/credenza";
+import { toast } from "@kodix/ui/toast";
+import { useMutation } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
+import { LuTrash } from "react-icons/lu";
+
+import type { RouterOutputs } from "@kdx/api";
 
 import { deleteNotificationsAction } from "../_actions/deleteNotificationsAction";
 

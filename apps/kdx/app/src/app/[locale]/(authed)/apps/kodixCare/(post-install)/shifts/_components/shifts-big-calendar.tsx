@@ -4,6 +4,7 @@ import type { EventPropGetter, View } from "react-big-calendar";
 import type { EventInteractionArgs } from "react-big-calendar/lib/addons/dragAndDrop";
 import { use, useCallback, useMemo, useState } from "react";
 import dayjs from "@kodix/dayjs";
+import { AvatarWrapper } from "@kodix/ui/avatar-wrapper";
 import { useTranslations } from "next-intl";
 import { Calendar, dayjsLocalizer } from "react-big-calendar";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
@@ -11,16 +12,15 @@ import { LuLock } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
-import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
 
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "./rbc-styles.css";
 
+import { useDebounce } from "@kodix/ui/hooks/use-debounce";
+import { toast } from "@kodix/ui/toast";
 import { useLocale } from "next-intl";
 
 import type { Locales } from "@kdx/locales";
-import { useDebounce } from "@kdx/ui/hooks/use-debounce";
-import { toast } from "@kdx/ui/toast";
 
 import { CreateShiftCredenzaButton } from "./create-care-shift-credenza";
 import { EditCareShiftCredenza } from "./edit-care-shift-credenza";

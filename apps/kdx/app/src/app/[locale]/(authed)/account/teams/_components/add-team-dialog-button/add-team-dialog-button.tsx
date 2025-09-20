@@ -3,12 +3,8 @@
 import type { ReactNode } from "react";
 import { useState } from "react";
 import { getErrorMessage } from "@kodix/shared/utils";
-import { useTranslations } from "next-intl";
-import { useAction } from "next-safe-action/hooks";
-import { LuCirclePlus } from "react-icons/lu";
-
-import { cn } from "@kdx/ui";
-import { Button } from "@kdx/ui/button";
+import { cn } from "@kodix/ui";
+import { Button } from "@kodix/ui/button";
 import {
   Credenza,
   CredenzaBody,
@@ -18,10 +14,13 @@ import {
   CredenzaHeader,
   CredenzaTitle,
   CredenzaTrigger,
-} from "@kdx/ui/credenza";
-import { Input } from "@kdx/ui/input";
-import { Label } from "@kdx/ui/label";
-import { toast } from "@kdx/ui/toast";
+} from "@kodix/ui/credenza";
+import { Input } from "@kodix/ui/input";
+import { Label } from "@kodix/ui/label";
+import { toast } from "@kodix/ui/toast";
+import { useTranslations } from "next-intl";
+import { useAction } from "next-safe-action/hooks";
+import { LuCirclePlus } from "react-icons/lu";
 
 import { useRouter } from "~/i18n/routing";
 

@@ -2,35 +2,34 @@
 
 import type { Frequency } from "rrule";
 import { useState } from "react";
-import { useTranslations } from "next-intl";
-import { RRule } from "rrule";
-
-import { Button } from "@kdx/ui/button";
+import { Button } from "@kodix/ui/button";
 import {
   Command,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
-} from "@kdx/ui/command";
+} from "@kodix/ui/command";
 import {
   Credenza,
   CredenzaContent,
   CredenzaDescription,
   CredenzaHeader,
   CredenzaTitle,
-} from "@kdx/ui/credenza";
-import { Input } from "@kdx/ui/input";
-import { Label } from "@kdx/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
-import { RadioGroup, RadioGroupItem } from "@kdx/ui/radio-group";
+} from "@kodix/ui/credenza";
+import { Input } from "@kodix/ui/input";
+import { Label } from "@kodix/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@kodix/ui/popover";
+import { RadioGroup, RadioGroupItem } from "@kodix/ui/radio-group";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@kdx/ui/select";
+} from "@kodix/ui/select";
+import { useTranslations } from "next-intl";
+import { RRule } from "rrule";
 
 import { DatePicker } from "./date-picker";
 

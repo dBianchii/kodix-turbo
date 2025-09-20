@@ -1,18 +1,15 @@
 "use client";
 
 import { use } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
-
-import { cn } from "@kdx/ui";
-import { Button, buttonVariants } from "@kdx/ui/button";
+import { cn } from "@kodix/ui";
+import { Button, buttonVariants } from "@kodix/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@kdx/ui/card";
+} from "@kodix/ui/card";
 import {
   Form,
   FormControl,
@@ -21,8 +18,11 @@ import {
   FormLabel,
   FormMessage,
   useForm,
-} from "@kdx/ui/form";
-import { Input } from "@kdx/ui/input";
+} from "@kodix/ui/form";
+import { Input } from "@kodix/ui/input";
+import { useMutation } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
+
 import { ZChangePasswordInputSchema } from "@kdx/validators/trpc/user";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";

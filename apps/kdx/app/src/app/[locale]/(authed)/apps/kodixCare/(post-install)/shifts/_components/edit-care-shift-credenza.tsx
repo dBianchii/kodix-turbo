@@ -1,11 +1,5 @@
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
-import { LuLoaderCircle, LuLock, LuLockOpen, LuTrash } from "react-icons/lu";
-
-import type { RouterOutputs } from "@kdx/api";
-import type { User } from "@kdx/auth";
-import { cn } from "@kdx/ui";
+import { cn } from "@kodix/ui";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,9 +9,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@kdx/ui/alert-dialog";
-import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
-import { Button } from "@kdx/ui/button";
+} from "@kodix/ui/alert-dialog";
+import { AvatarWrapper } from "@kodix/ui/avatar-wrapper";
+import { Button } from "@kodix/ui/button";
 import {
   Credenza,
   CredenzaBody,
@@ -26,15 +20,15 @@ import {
   CredenzaFooter,
   CredenzaHeader,
   CredenzaTitle,
-} from "@kdx/ui/credenza";
-import { DateTimePicker } from "@kdx/ui/date-time-picker";
+} from "@kodix/ui/credenza";
+import { DateTimePicker } from "@kodix/ui/date-time-picker";
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@kdx/ui/dialog";
+} from "@kodix/ui/dialog";
 import {
   Form,
   FormControl,
@@ -43,16 +37,22 @@ import {
   FormLabel,
   FormMessage,
   useForm,
-} from "@kdx/ui/form";
+} from "@kodix/ui/form";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@kdx/ui/select";
-import { Textarea } from "@kdx/ui/textarea";
-import { toast } from "@kdx/ui/toast";
+} from "@kodix/ui/select";
+import { Textarea } from "@kodix/ui/textarea";
+import { toast } from "@kodix/ui/toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
+import { LuLoaderCircle, LuLock, LuLockOpen, LuTrash } from "react-icons/lu";
+
+import type { RouterOutputs } from "@kdx/api";
+import type { User } from "@kdx/auth";
 import { ZEditCareShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";

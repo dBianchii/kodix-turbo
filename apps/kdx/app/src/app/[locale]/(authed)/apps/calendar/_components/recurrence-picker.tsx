@@ -3,30 +3,29 @@ import type { Weekday } from "rrule";
 import { useCallback, useEffect, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import dayjs from "@kodix/dayjs";
-import { useTranslations } from "next-intl";
-import { LuCheck } from "react-icons/lu";
-import { Frequency, RRule } from "rrule";
-
-import { cn } from "@kdx/ui";
+import { cn } from "@kodix/ui";
 import {
   AlertDialog,
   AlertDialogContent,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@kdx/ui/alert-dialog";
-import { Button } from "@kdx/ui/button";
+} from "@kodix/ui/alert-dialog";
+import { Button } from "@kodix/ui/button";
 import {
   Command,
   CommandGroup,
   CommandItem,
   CommandList,
-} from "@kdx/ui/command";
-import { Input } from "@kdx/ui/input";
-import { Label } from "@kdx/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@kdx/ui/popover";
-import { RadioGroup, RadioGroupItem } from "@kdx/ui/radio-group";
-import { Toggle } from "@kdx/ui/toggle";
+} from "@kodix/ui/command";
+import { Input } from "@kodix/ui/input";
+import { Label } from "@kodix/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@kodix/ui/popover";
+import { RadioGroup, RadioGroupItem } from "@kodix/ui/radio-group";
+import { Toggle } from "@kodix/ui/toggle";
+import { useTranslations } from "next-intl";
+import { LuCheck } from "react-icons/lu";
+import { Frequency, RRule } from "rrule";
 
 import { DatePicker } from "~/app/[locale]/_components/date-picker";
 import { FrequencyToTxt } from "~/app/[locale]/_components/frequency-picker";

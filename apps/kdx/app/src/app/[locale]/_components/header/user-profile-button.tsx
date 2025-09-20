@@ -1,12 +1,7 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-import { LuCog, LuLogOut, LuUser, LuUsers } from "react-icons/lu";
-import { MdOutlineSwapHorizontalCircle } from "react-icons/md";
-
-import type { User } from "@kdx/auth";
-import { AvatarWrapper } from "@kdx/ui/avatar-wrapper";
-import { Button } from "@kdx/ui/button";
+import { AvatarWrapper } from "@kodix/ui/avatar-wrapper";
+import { Button } from "@kodix/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,7 +10,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@kdx/ui/dropdown-menu";
+} from "@kodix/ui/dropdown-menu";
+import { useTranslations } from "next-intl";
+import { LuCog, LuLogOut, LuUser, LuUsers } from "react-icons/lu";
+import { MdOutlineSwapHorizontalCircle } from "react-icons/md";
+
+import type { User } from "@kdx/auth";
 
 import { signOutAction } from "~/helpers/actions";
 import { Link } from "~/i18n/routing";

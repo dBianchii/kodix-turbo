@@ -2,21 +2,15 @@
 
 import { useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
-import { LuMail } from "react-icons/lu";
-import { RxMinusCircled, RxPlusCircled } from "react-icons/rx";
-
-import type { User } from "@kdx/auth";
-import { cn } from "@kdx/ui";
-import { Button } from "@kdx/ui/button";
+import { cn } from "@kodix/ui";
+import { Button } from "@kodix/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
-} from "@kdx/ui/card";
+} from "@kodix/ui/card";
 import {
   Credenza,
   CredenzaBody,
@@ -25,11 +19,17 @@ import {
   CredenzaFooter,
   CredenzaHeader,
   CredenzaTitle,
-} from "@kdx/ui/credenza";
-import { Input } from "@kdx/ui/input";
-import { Label } from "@kdx/ui/label";
-import { Separator } from "@kdx/ui/separator";
-import { toast } from "@kdx/ui/toast";
+} from "@kodix/ui/credenza";
+import { Input } from "@kodix/ui/input";
+import { Label } from "@kodix/ui/label";
+import { Separator } from "@kodix/ui/separator";
+import { toast } from "@kodix/ui/toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
+import { LuMail } from "react-icons/lu";
+import { RxMinusCircled, RxPlusCircled } from "react-icons/rx";
+
+import type { User } from "@kdx/auth";
 import { ZInviteInputSchema } from "@kdx/validators/trpc/team/invitation";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";

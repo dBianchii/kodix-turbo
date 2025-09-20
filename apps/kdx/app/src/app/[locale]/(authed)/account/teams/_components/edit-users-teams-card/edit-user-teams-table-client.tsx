@@ -1,6 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import { cn } from "@kodix/ui";
+import { Button } from "@kodix/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@kodix/ui/dropdown-menu";
+import { Table, TableBody, TableCell, TableRow } from "@kodix/ui/table";
+import { toast } from "@kodix/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { LuChevronLeft } from "react-icons/lu";
@@ -8,16 +18,6 @@ import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
-import { cn } from "@kdx/ui";
-import { Button } from "@kdx/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@kdx/ui/dropdown-menu";
-import { Table, TableBody, TableCell, TableRow } from "@kdx/ui/table";
-import { toast } from "@kdx/ui/toast";
 
 import { DeleteTeamConfirmationDialog } from "~/app/[locale]/(authed)/team/settings/general/_components/delete-team-confirmation-dialog";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";

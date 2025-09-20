@@ -4,16 +4,9 @@ import type { KodixAppId } from "@kodix/shared/db";
 import { useState } from "react";
 import Image from "next/image";
 import { kodixCareAppId, todoAppId } from "@kodix/shared/db";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
-import { LuTrash } from "react-icons/lu";
-import { RxDotsHorizontal } from "react-icons/rx";
-
-import type { User } from "@kdx/auth";
-import { getAppDescription, getAppName } from "@kdx/locales/next-intl/hooks";
-import { cn } from "@kdx/ui";
-import { Badge } from "@kdx/ui/badge";
-import { Button, buttonVariants } from "@kdx/ui/button";
+import { cn } from "@kodix/ui";
+import { Badge } from "@kodix/ui/badge";
+import { Button, buttonVariants } from "@kodix/ui/button";
 import {
   Card,
   CardContent,
@@ -21,7 +14,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@kdx/ui/card";
+} from "@kodix/ui/card";
 import {
   Credenza,
   CredenzaContent,
@@ -30,15 +23,22 @@ import {
   CredenzaHeader,
   CredenzaTitle,
   CredenzaTrigger,
-} from "@kdx/ui/credenza";
+} from "@kodix/ui/credenza";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@kdx/ui/dropdown-menu";
-import { Skeleton } from "@kdx/ui/skeleton";
-import { toast } from "@kdx/ui/toast";
+} from "@kodix/ui/dropdown-menu";
+import { Skeleton } from "@kodix/ui/skeleton";
+import { toast } from "@kodix/ui/toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
+import { LuTrash } from "react-icons/lu";
+import { RxDotsHorizontal } from "react-icons/rx";
+
+import type { User } from "@kdx/auth";
+import { getAppDescription, getAppName } from "@kdx/locales/next-intl/hooks";
 
 import {
   getAppIconUrl,

@@ -1,8 +1,5 @@
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
-
-import { Button } from "@kdx/ui/button";
+import { Button } from "@kodix/ui/button";
 import {
   Credenza,
   CredenzaBody,
@@ -10,9 +7,11 @@ import {
   CredenzaFooter,
   CredenzaHeader,
   CredenzaTitle,
-} from "@kdx/ui/credenza";
-import { Label } from "@kdx/ui/label";
-import { RadioGroup, RadioGroupItem } from "@kdx/ui/radio-group";
+} from "@kodix/ui/credenza";
+import { Label } from "@kodix/ui/label";
+import { RadioGroup, RadioGroupItem } from "@kodix/ui/radio-group";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { useTRPC } from "~/trpc/react";

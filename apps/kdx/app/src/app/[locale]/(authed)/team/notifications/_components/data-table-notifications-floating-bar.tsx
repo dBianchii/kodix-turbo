@@ -1,21 +1,21 @@
 import type { Table } from "@tanstack/react-table";
 import { useEffect, useState, useTransition } from "react";
 import { getErrorMessage } from "@kodix/shared/utils";
-import { useTranslations } from "next-intl";
-import { LuDownload, LuRotateCw, LuTrash, LuX } from "react-icons/lu";
-
-import type { RouterOutputs } from "@kdx/api";
-import { Button } from "@kdx/ui/button";
-import { exportTableToCSV } from "@kdx/ui/data-table/export";
-import { Kbd } from "@kdx/ui/kbd";
-import { Separator } from "@kdx/ui/separator";
-import { toast } from "@kdx/ui/toast";
+import { Button } from "@kodix/ui/button";
+import { exportTableToCSV } from "@kodix/ui/data-table/export";
+import { Kbd } from "@kodix/ui/kbd";
+import { Separator } from "@kodix/ui/separator";
+import { toast } from "@kodix/ui/toast";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@kdx/ui/tooltip";
+} from "@kodix/ui/tooltip";
+import { useTranslations } from "next-intl";
+import { LuDownload, LuRotateCw, LuTrash, LuX } from "react-icons/lu";
+
+import type { RouterOutputs } from "@kdx/api";
 
 import { deleteNotificationsAction } from "../_actions/deleteNotificationsAction";
 
