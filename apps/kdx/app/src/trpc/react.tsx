@@ -2,6 +2,7 @@
 
 import type { QueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { getBaseUrl } from "@kodix/shared/utils";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
@@ -15,7 +16,6 @@ import SuperJSON from "superjson";
 import type { AppRouter } from "@kdx/api";
 import { env } from "@kdx/env";
 
-import { getBaseUrl } from "@kodix/shared/utils";
 import { createQueryClient } from "./query-client";
 
 let clientQueryClientSingleton: QueryClient | undefined;

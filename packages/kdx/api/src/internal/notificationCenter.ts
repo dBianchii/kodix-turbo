@@ -1,13 +1,13 @@
 import type { JSX } from "react";
 import type { ExpoPushMessage, ExpoPushTicket } from "expo-server-sdk";
 import { KODIX_NOTIFICATION_FROM_EMAIL } from "@kodix/shared/constants";
+import { getSuccessesAndErrors } from "@kodix/shared/utils";
 import { render } from "@react-email/render";
 import Expo from "expo-server-sdk";
 
 import type { notifications } from "@kdx/db/schema";
 import { notificationRepository, userRepository } from "@kdx/db/repositories";
 
-import { getSuccessesAndErrors } from "@kodix/shared/utils";
 import { resend } from "../sdks/email";
 import { expo } from "../utils/expo";
 
