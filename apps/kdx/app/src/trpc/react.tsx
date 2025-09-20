@@ -15,7 +15,7 @@ import SuperJSON from "superjson";
 import type { AppRouter } from "@kdx/api";
 import { env } from "@kdx/env";
 
-import { getBaseUrl } from "../../../../../packages/kodix/shared/src/utils";
+import { getBaseUrl } from "@kodix/shared/utils";
 import { createQueryClient } from "./query-client";
 
 let clientQueryClientSingleton: QueryClient | undefined;
