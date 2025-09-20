@@ -185,5 +185,5 @@ catalog:
   vaul: ^1.0.0
   vitest: ^3.0.6
   yaml: 2.7.0
-  zod: ^3.25.74
+  zod: ^4.0.0
   zustand: ^5.0.0
