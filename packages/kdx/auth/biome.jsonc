@@ -1,8 +1,5 @@
 {
-  "$schema": "../../node_modules/@biomejs/biome/configuration_schema.json",
-  "extends": [
-    "../../../../biome.jsonc",
-    "@kodix/biome-config/restrictEnvAccess"
-  ],
+  "$schema": "../../../node_modules/@biomejs/biome/configuration_schema.json",
+  "extends": ["../../../biome.jsonc", "@kodix/biome-config/restrictEnvAccess"],
   "root": false
 }
