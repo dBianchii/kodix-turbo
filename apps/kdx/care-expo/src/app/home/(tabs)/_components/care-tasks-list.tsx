@@ -151,7 +151,7 @@ export function CareTasksLists() {
   const [currentlyEditing, setCurrentlyEditing] =
     useState<CareTaskOrCalendarTask["id"]>(null);
   const currentlyEditingCareTask = useMemo(() => {
-    if (!careTasksQuery.data?.length) return;
+    if (!careTasksQuery.data?.length) return undefined;
     return careTasksQuery.data.find(
       (x) => x.id === currentlyEditing,
     ) as CareTask;
