@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import z from "zod/v4";
 
-import { getErrorMessage } from "@kdx/shared";
+import { getErrorMessage } from "@kdx/shared/utils";
 import {
   AlertDialog,
   AlertDialogCancel,

@@ -16,7 +16,7 @@ import { DataTablePagination } from "./data-table-pagination";
 
 /**https://github.com/shadcn-ui/ui/issues/346#issuecomment-1908758526 */
 export type FixedColumnsType<T> = ColumnDef<T, unknown>[]; //? Using this while it is not fixed
-interface DataTableProps<TData> {
+type DataTableProps<TData> = {
   /**
    * The table instance returned from useDataTable hook with pagination, sorting, filtering, etc.
    * @type TanstackTable<TData>
@@ -42,7 +42,7 @@ interface DataTableProps<TData> {
    * Whether to show pagination or not.
    */
   showPagination?: boolean;
-}
+};
 
 export function DataTable<TData>({
   table,

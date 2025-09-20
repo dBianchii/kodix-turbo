@@ -6,11 +6,8 @@ import { db } from "@kdx/db/client";
 import { nanoid } from "@kdx/db/nanoid";
 import { teamRepository } from "@kdx/db/repositories";
 import TeamInvite from "@kdx/react-email/team-invite";
-import {
-  getBaseUrl,
-  getSuccessesAndErrors,
-  KODIX_NOTIFICATION_FROM_EMAIL,
-} from "@kdx/shared";
+import { KODIX_NOTIFICATION_FROM_EMAIL } from "@kdx/shared/constants";
+import { getBaseUrl, getSuccessesAndErrors } from "@kdx/shared/utils";
 
 import type { TIsTeamOwnerProcedureContext } from "../../../procedures";
 import { resend } from "../../../../sdks/email";

@@ -3,7 +3,7 @@ import type {
   TableConfig,
 } from "drizzle-orm/mysql-core";
 
-import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
+import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared/db";
 
 import * as calendar from "./schema/apps/calendar";
 import * as kodixCare from "./schema/apps/kodixCare";

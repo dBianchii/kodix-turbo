@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { getLocale } from "next-intl/server";
 
-import { kodixCareAppId, kodixCareConfigSchema } from "@kdx/shared";
+import { kodixCareAppId, kodixCareConfigSchema } from "@kdx/shared/db";
 
 import { action } from "~/helpers/safe-action/safe-action";
 import { redirect } from "~/i18n/routing";

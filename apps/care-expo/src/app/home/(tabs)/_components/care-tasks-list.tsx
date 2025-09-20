@@ -33,7 +33,7 @@ import {
 import { useFormatter, useTranslations } from "use-intl";
 
 import dayjs from "@kdx/dayjs";
-import { getErrorMessage } from "@kdx/shared";
+import { getErrorMessage } from "@kdx/shared/utils";
 import {
   ZCreateCareTaskInputSchema,
   ZEditCareTaskInputSchema,

@@ -1,7 +1,7 @@
 import type { z } from "zod/v4";
 import { and, eq, inArray, not } from "drizzle-orm";
 
-import type { AppRole } from "@kdx/shared";
+import type { AppRole } from "@kdx/shared/db";
 
 import type { Drizzle, DrizzleTransaction } from "../client";
 import type { Update } from "./_types";

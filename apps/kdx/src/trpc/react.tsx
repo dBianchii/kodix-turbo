@@ -14,7 +14,7 @@ import SuperJSON from "superjson";
 
 import type { AppRouter } from "@kdx/api";
 import { env } from "@kdx/env";
-import { getBaseUrl } from "@kdx/shared";
+import { getBaseUrl } from "@kdx/shared/utils";
 
 import { createQueryClient } from "./query-client";
 

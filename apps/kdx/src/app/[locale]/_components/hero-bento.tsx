@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { LuBox, LuCalendar, LuGlobe, LuTextCursorInput } from "react-icons/lu";
 
 import { getAppName } from "@kdx/locales/next-intl/server-hooks";
-import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared";
+import { calendarAppId, kodixCareAppId, todoAppId } from "@kdx/shared/db";
 import { cn } from "@kdx/ui";
 import { Calendar } from "@kdx/ui/calendar";
 import {

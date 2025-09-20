@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 export function useMediaQuery({ query }: { query: "md" | "lg" }) {
   let widthText = "";
 
+  // biome-ignore lint/nursery/noUnnecessaryConditions: <biome is tripping here>
   switch (query) {
     case "md":
       widthText = "(min-width: 768px)";

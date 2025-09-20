@@ -13,7 +13,7 @@ import {
 } from "react-icons/lu";
 
 import type { User } from "@kdx/auth";
-import { kodixCareAppId } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared/db";
 import { cn } from "@kdx/ui";
 import { Alert, AlertDescription, AlertTitle } from "@kdx/ui/alert";
 import { Button } from "@kdx/ui/button";

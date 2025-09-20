@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import type { TUnlockMoreTasksInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
 import { db } from "@kdx/db/client";
-import { kodixCareAppId } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared/db";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
 import { getConfigHandler } from "../../getConfig.handler";

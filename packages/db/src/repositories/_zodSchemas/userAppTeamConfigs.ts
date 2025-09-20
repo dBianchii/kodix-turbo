@@ -1,6 +1,6 @@
 import z from "zod/v4";
 
-import { kodixCareAppId } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared/db";
 
 const kodixCareUserAppTeamConfigSchema = z.object({
   sendNotificationsForDelayedTasks: z.boolean().optional(),

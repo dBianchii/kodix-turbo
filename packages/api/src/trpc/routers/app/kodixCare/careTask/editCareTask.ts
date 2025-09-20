@@ -6,7 +6,7 @@ import type { careTasks } from "@kdx/db/schema";
 import type { TEditCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
 import { db } from "@kdx/db/client";
 import { careTaskRepository } from "@kdx/db/repositories";
-import { kodixCareAppId } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared/db";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
 import { logActivity } from "../../../../../services/appActivityLogs.service";

@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { LuDownload, LuRotateCw, LuTrash, LuX } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
-import { getErrorMessage } from "@kdx/shared";
+import { getErrorMessage } from "@kdx/shared/utils";
 import { Button } from "@kdx/ui/button";
 import { exportTableToCSV } from "@kdx/ui/data-table/export";
 import { Kbd } from "@kdx/ui/kbd";

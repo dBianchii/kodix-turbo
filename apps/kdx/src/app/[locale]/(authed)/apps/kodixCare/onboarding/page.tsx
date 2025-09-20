@@ -1,7 +1,7 @@
 import { getLocale } from "next-intl/server";
 
 import { auth } from "@kdx/auth";
-import { kodixCareAppId } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared/db";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { redirect } from "~/i18n/routing";

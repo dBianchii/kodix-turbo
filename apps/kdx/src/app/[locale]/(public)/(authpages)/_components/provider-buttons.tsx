@@ -2,7 +2,7 @@ import { FcGoogle } from "react-icons/fc";
 import { RxDiscordLogo } from "react-icons/rx";
 
 import { env } from "@kdx/env";
-import { getBaseUrl } from "@kdx/shared";
+import { getBaseUrl } from "@kdx/shared/utils";
 import { cn } from "@kdx/ui";
 import { buttonVariants } from "@kdx/ui/button";
 

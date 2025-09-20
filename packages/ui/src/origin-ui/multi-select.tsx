@@ -13,7 +13,7 @@ import { cn } from "../.";
 import { Command, CommandGroup, CommandItem, CommandList } from "../command";
 import { useDebounce } from "../hooks/use-debounce";
 
-export interface Option {
+export type Option = {
   value: string;
   label: string;
   disable?: boolean;
@@ -21,10 +21,10 @@ export interface Option {
   fixed?: boolean;
   /** Group the options by providing key. */
   [key: string]: string | boolean | undefined;
-}
+};
 type GroupOption = Record<string, Option[]>;
 
-interface MultipleSelectorProps {
+type MultipleSelectorProps = {
   value?: Option[];
   defaultOptions?: Option[];
   /** manually controlled options */
@@ -79,14 +79,14 @@ interface MultipleSelectorProps {
   >;
   /** hide the clear all button. */
   hideClearAllButton?: boolean;
-}
+};
 
-export interface MultipleSelectorRef {
+export type MultipleSelectorRef = {
   selectedValue: Option[];
   input: HTMLInputElement;
   focus: () => void;
   reset: () => void;
-}
+};
 
 function transToGroupOption(options: Option[], groupBy?: string) {
   if (options.length === 0) {
@@ -152,6 +152,8 @@ const CommandEmpty = ({
 
 CommandEmpty.displayName = "CommandEmpty";
 
+const DEFAULT_DEBOUNCE_DELAY = 500;
+
 const MultipleSelector = ({
   value,
   onChange,
@@ -188,7 +190,10 @@ const MultipleSelector = ({
     transToGroupOption(arrayDefaultOptions, groupBy)
   );
   const [inputValue, setInputValue] = useState("");
-  const debouncedSearchTerm = useDebounce(inputValue, delay ?? 500);
+  const debouncedSearchTerm = useDebounce(
+    inputValue,
+    delay ?? DEFAULT_DEBOUNCE_DELAY
+  );
 
   const handleClickOutside = (event: MouseEvent | TouchEvent) => {
     if (
@@ -426,9 +431,9 @@ const MultipleSelector = ({
       }} // When onSearch is provided, we don&lsquo;t want to filter the options. You can still override it.
       shouldFilter={commandProps?.shouldFilter ?? !onSearch}
     >
-      {/** biome-ignore lint/a11y/noStaticElementInteractions: <biome migration> */}
-      {/** biome-ignore lint/nursery/noNoninteractiveElementInteractions: <biome migration> */}
       {/** biome-ignore lint/a11y/useKeyWithClickEvents: <biome migration> */}
+      {/** biome-ignore lint/a11y/noNoninteractiveElementInteractions: <biome migration> */}
+      {/** biome-ignore lint/a11y/noStaticElementInteractions: <biome migration> */}
       <div
         className={cn(
           "relative min-h-[38px] rounded-md border border-input text-sm outline-none transition-[color,box-shadow] focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/50 has-disabled:pointer-events-none has-disabled:cursor-not-allowed has-aria-invalid:border-destructive has-disabled:opacity-50 has-aria-invalid:ring-destructive/20 dark:has-aria-invalid:ring-destructive/40",

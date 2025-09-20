@@ -13,10 +13,11 @@ import "@kdx/ui/globals.css";
 
 import { notFound } from "next/navigation";
 import { getMessages, setRequestLocale } from "next-intl/server";
+import { ThemeProvider } from "next-themes";
 
-import { getBaseUrl } from "@kdx/shared";
+import { getBaseUrl } from "@kdx/shared/utils";
 import { cn } from "@kdx/ui";
-import { ThemeProvider, ThemeToggle } from "@kdx/ui/theme";
+import { ThemeToggle } from "@kdx/ui/theme";
 import { Toaster } from "@kdx/ui/toast";
 
 import { routing } from "~/i18n/routing";

@@ -1,14 +1,14 @@
 import z from "zod/v4";
 
 import type { appActivityLogs } from "@kdx/db/schema";
-import type { KodixAppId } from "@kdx/shared";
+import type { KodixAppId } from "@kdx/shared/db";
 import {
   calendarAppId,
   kodixCareAppId,
   kodixCareConfigSchema,
   kodixCareUserAppTeamConfigSchema,
   todoAppId,
-} from "@kdx/shared";
+} from "@kdx/shared/db";
 
 import { ZNanoId } from "../..";
 

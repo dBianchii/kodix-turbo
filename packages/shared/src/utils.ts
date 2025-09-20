@@ -1,13 +1,15 @@
 import z from "zod/v4";
 
+const DEFAULT_PORT = 3000;
+
 /**
  * @description Base URL for the current environment.
  */
 export const getBaseUrl = () => {
-  // biome-ignore lint/nursery/noTsIgnore: <If we added DOM to this package, we would need to add it to all packages>
-  //@ts-ignore-error - window is not defined in the server
+  // biome-ignore lint/suspicious/noTsIgnore: <This is to avoid having to make all other packages need dom>
+  //@ts-ignore-error
   if (typeof window !== "undefined") {
-    // biome-ignore lint/nursery/noTsIgnore: <If we added DOM to this package, we would need to add it to all packages>
+    // biome-ignore lint/suspicious/noTsIgnore: <This is to avoid having to make all other packages need dom>
     //@ts-ignore-error
     return window.location.origin;
   }
@@ -16,7 +18,7 @@ export const getBaseUrl = () => {
       return `https://${process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}`;
     return `https://${process.env.VERCEL_URL}`;
   }
-  return `http://localhost:${process.env.PORT ?? 3000}`;
+  return `http://localhost:${process.env.PORT ?? DEFAULT_PORT}`;
 };
 
 /**

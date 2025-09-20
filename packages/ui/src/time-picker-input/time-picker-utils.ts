@@ -22,11 +22,11 @@ export function isValidMinuteOrSecond(value: string) {
   return minuteOrSecondRegex.test(value);
 }
 
-interface GetValidNumberConfig {
+type GetValidNumberConfig = {
   max: number;
   min?: number;
   loop?: boolean;
-}
+};
 
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: <biome migration>
 export function getValidNumber(
@@ -64,11 +64,11 @@ export function getValidMinuteOrSecond(value: string) {
   return getValidNumber(value, { max: 59 });
 }
 
-interface GetValidArrowNumberConfig {
+type GetValidArrowNumberConfig = {
   min: number;
   max: number;
   step: number;
-}
+};
 
 export function getValidArrowNumber(
   value: string,
@@ -111,6 +111,7 @@ export function setHours(date: Date, value: string) {
 export type TimePickerType = "minutes" | "seconds" | "hours"; // | "12hours";
 
 export function setDateByType(date: Date, value: string, type: TimePickerType) {
+  // biome-ignore lint/nursery/noUnnecessaryConditions: <Biome is tripping ball here>
   switch (type) {
     case "minutes":
       return setMinutes(date, value);
@@ -124,6 +125,7 @@ export function setDateByType(date: Date, value: string, type: TimePickerType) {
 }
 
 export function getDateByType(date: Date, type: TimePickerType) {
+  // biome-ignore lint/nursery/noUnnecessaryConditions: <Biome is tripping ball here>
   switch (type) {
     case "minutes":
       return getValidMinuteOrSecond(String(date.getMinutes()));
@@ -141,6 +143,7 @@ export function getArrowByType(
   step: number,
   type: TimePickerType
 ) {
+  // biome-ignore lint/nursery/noUnnecessaryConditions: <Biome is tripping ball here>
   switch (type) {
     case "minutes":
       return getValidArrowMinuteOrSecond(value, step);

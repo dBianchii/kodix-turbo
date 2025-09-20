@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { useAction } from "next-safe-action/hooks";
 import { LuArrowRight, LuLoaderCircle } from "react-icons/lu";
 
-import { kodixCareConfigSchema } from "@kdx/shared";
+import { kodixCareConfigSchema } from "@kdx/shared/db";
 import { Button } from "@kdx/ui/button";
 import {
   Card,

@@ -1,4 +1,4 @@
-import { kodixCareAppId } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared/db";
 import { H1 } from "@kdx/ui/typography";
 
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";

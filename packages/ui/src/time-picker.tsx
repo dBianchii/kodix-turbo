@@ -7,12 +7,12 @@ import type { TimePickerType } from "./time-picker-input/time-picker-utils";
 import { Label } from "./label";
 import { TimePickerInput } from "./time-picker-input";
 
-interface TimePickerDemoProps {
+type TimePickerDemoProps = {
   date: Date | undefined;
   setDate: (date: Date | undefined) => void;
   granularity?: TimePickerType;
   disabledDate?: (date: Date) => boolean;
-}
+};
 
 export function TimePicker({
   date,

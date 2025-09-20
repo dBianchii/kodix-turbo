@@ -18,14 +18,17 @@ import {
   SelectValue,
 } from "../select";
 
-interface DataTablePaginationProps<TData> {
+type DataTablePaginationProps<TData> = {
   table: Table<TData>;
   pageSizeOptions?: number[];
-}
+};
+
+// biome-ignore lint/style/noMagicNumbers: <not magic>
+const DEFAULT_PAGE_SIZE_OPTIONS = [10, 20, 30, 40, 50];
 
 export function DataTablePagination<TData>({
   table,
-  pageSizeOptions = [10, 20, 30, 40, 50],
+  pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS,
 }: DataTablePaginationProps<TData>) {
   const t = useTranslations();
   return (

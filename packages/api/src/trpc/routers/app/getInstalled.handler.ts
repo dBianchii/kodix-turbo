@@ -1,4 +1,4 @@
-import type { KodixAppId } from "@kdx/shared";
+import type { KodixAppId } from "@kdx/shared/db";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 import { getAllHandler } from "./getAll.handler";

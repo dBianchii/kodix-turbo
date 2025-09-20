@@ -1,7 +1,7 @@
 import type { Drizzle } from "@kdx/db/client";
 import dayjs from "@kdx/dayjs";
 import { appRepository, careTaskRepository } from "@kdx/db/repositories";
-import { kodixCareAppId } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared/db";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
 import { getAllHandler } from "../../calendar/getAll.handler";

@@ -6,7 +6,7 @@ import { useAction } from "next-safe-action/hooks";
 import { LuCircleAlert } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
-import { kodixCareAppId } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared/db";
 import { cn } from "@kdx/ui";
 import { Button } from "@kdx/ui/button";
 import {

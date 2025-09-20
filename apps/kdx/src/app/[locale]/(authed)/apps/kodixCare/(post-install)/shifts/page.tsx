@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import { kodixCareAppId } from "@kdx/shared";
+import { kodixCareAppId } from "@kdx/shared/db";
 import { DataTableSkeleton } from "@kdx/ui/data-table/data-table-skeleton";
 
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";

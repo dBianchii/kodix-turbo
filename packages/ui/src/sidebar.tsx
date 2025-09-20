@@ -36,13 +36,14 @@ import {
 } from "./tooltip";
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state";
+// biome-ignore lint/style/noMagicNumbers: <not magic>
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 const SIDEBAR_WIDTH = "16rem";
 const SIDEBAR_WIDTH_MOBILE = "18rem";
 const SIDEBAR_WIDTH_ICON = "3rem";
 const SIDEBAR_KEYBOARD_SHORTCUT = "b";
 
-interface SidebarContext {
+type SidebarContext = {
   state: "expanded" | "collapsed";
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -50,7 +51,7 @@ interface SidebarContext {
   setOpenMobile: (open: boolean) => void;
   isMobile: boolean;
   toggleSidebar: () => void;
-}
+};
 
 const SidebarContext = createContext<SidebarContext | null>(null);
 
@@ -598,6 +599,7 @@ const SidebarMenuSkeleton = ({
 }) => {
   // Random width between 50 to 90%.
   const width = useMemo(() => {
+    // biome-ignore lint/style/noMagicNumbers: <not magic>
     return `${Math.floor(Math.random() * 40) + 50}%`;
   }, []);
 

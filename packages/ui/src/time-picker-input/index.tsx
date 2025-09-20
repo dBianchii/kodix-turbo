@@ -21,6 +21,7 @@ export interface TimePickerInputProps extends ComponentProps<"input"> {
   onLeftFocus?: () => void;
 }
 
+const TIME_PICKER_INPUT_DELAY = 2000;
 const TimePickerInput = ({
   className,
   type = "number",
@@ -46,7 +47,7 @@ const TimePickerInput = ({
     if (flag) {
       const timer = setTimeout(() => {
         setFlag(false);
-      }, 2000);
+      }, TIME_PICKER_INPUT_DELAY);
 
       return () => clearTimeout(timer);
     }

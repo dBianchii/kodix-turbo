@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { LuTrash } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
-import { getErrorMessage } from "@kdx/shared";
+import { getErrorMessage } from "@kdx/shared/utils";
 import { Button } from "@kdx/ui/button";
 import {
   Credenza,

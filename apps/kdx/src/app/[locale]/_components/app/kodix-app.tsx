@@ -8,9 +8,9 @@ import { LuTrash } from "react-icons/lu";
 import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { User } from "@kdx/auth";
-import type { KodixAppId } from "@kdx/shared";
+import type { KodixAppId } from "@kdx/shared/db";
 import { getAppDescription, getAppName } from "@kdx/locales/next-intl/hooks";
-import { kodixCareAppId, todoAppId } from "@kdx/shared";
+import { kodixCareAppId, todoAppId } from "@kdx/shared/db";
 import { cn } from "@kdx/ui";
 import { Badge } from "@kdx/ui/badge";
 import { Button, buttonVariants } from "@kdx/ui/button";

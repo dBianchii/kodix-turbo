@@ -1,7 +1,7 @@
 import type { User } from "@kdx/auth";
 import type { ServerSideT } from "@kdx/locales";
 import type { KodixCareMongoAbility } from "@kdx/permissions";
-import type { KodixAppId } from "@kdx/shared";
+import type { KodixAppId } from "@kdx/shared/db";
 import { teamRepository } from "@kdx/db/repositories";
 import {
   defineAbilityForUserAndApp,

@@ -2,7 +2,7 @@ import { Google } from "arctic";
 
 import { authRepository } from "@kdx/db/repositories";
 import { env } from "@kdx/env";
-import { getBaseUrl } from "@kdx/shared";
+import { getBaseUrl } from "@kdx/shared/utils";
 
 import createOrGetExistingUserForUnlinkedProviderAccount from "./utils/createOrGetExistingUserForUnlinkedProviderAccount";
 
