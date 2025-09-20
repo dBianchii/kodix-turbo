@@ -7,7 +7,7 @@ import Expo from "expo-server-sdk";
 import type { notifications } from "@kdx/db/schema";
 import { notificationRepository, userRepository } from "@kdx/db/repositories";
 
-import { getSuccessesAndErrors } from "../../../../kodix/shared/src/utils";
+import { getSuccessesAndErrors } from "@kodix/shared/utils";
 import { resend } from "../sdks/email";
 import { expo } from "../utils/expo";
 
