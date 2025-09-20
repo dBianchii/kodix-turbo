@@ -11,45 +11,54 @@ Kodix's main monorepo. It uses [Turborepo](https://turborepo.org) and contains:
 .vscode
   └─ Recommended extensions and settings for VSCode users
 apps
-  ├─ care-expo
-  |   ├─ React Native using React 19
-  |   ├─ Navigation using Expo Router
-  |   └─ Typesafe API calls using tRPC
-  └─ kdx
-      └─ Main Next.js 15 app where tRPC endpoint is served from the @kdx/api package
+  ├─ kdx/
+  |   ├─ app/
+  |   |   └─ Main Next.js 15 app (@kdx/app) where tRPC endpoint is served from @kdx/api
+  |   └─ care-expo/
+  |       ├─ React Native using React 19
+  |       ├─ Navigation using Expo Router
+  |       └─ Typesafe API calls using tRPC
 packages
-  ├─ api
-  |   └─ tRPC v11 router definition
-  ├─ auth
-  |   └─ Authentication using database sessions and oslo (lucia-auth).
-  ├─ db
-  |   └─ Typesafe db calls using Drizzle and MySQL
-  ├─ ui
-  |   └─ Start of a UI package for the webapp using shadcn-ui
-  ├- shared
-  |   └─ Reusable code snippets and general lightweight code sharing
-  ├- validators
-  |   └─ Shared zod validation schemas (mainly for tRPC's api to be used in both frontend and backend)
-  ├- react-email
-  |   └─ react-email (npm package) project to store email templates and easily visualize them
-  ├- locales
-  |   └─ Shared locale files for i18n configuration (right now, only for the context of @kdx/app)
-  ├- dayjs
-  |   └─ Extended dayjs configuration (mainly for centralizing plugins)
-  └─ trpc-cli
-      └─ CLI tool to automatically create new endpoints in @kdx/api with the correct boilerplate
+  ├─ kdx/ (kdx-scoped packages)
+  |   ├─ api/
+  |   |   └─ tRPC v11 router definition
+  |   ├─ auth/
+  |   |   └─ Authentication using database sessions and oslo (lucia-auth)
+  |   ├─ db/
+  |   |   └─ Typesafe db calls using Drizzle and MySQL
+  |   ├─ env/
+  |   |   └─ Environment variable validation
+  |   ├─ locales/
+  |   |   └─ Locale files for i18n configuration (scoped to @kdx/app)
+  |   ├─ permissions/
+  |   |   └─ Permission management and CASL integration
+  |   ├─ react-email/
+  |   |   └─ Email templates using react-email
+  |   ├─ trpc-cli/
+  |   |   └─ CLI tool to automatically create new tRPC endpoints with boilerplate
+  |   └─ validators/
+  |       └─ Shared zod validation schemas for tRPC
+  └─ kodix/ (Global packages)
+      ├─ dayjs/
+      |   └─ Extended dayjs configuration with centralized plugins
+      ├─ shared/
+      |   └─ Reusable code snippets and general lightweight utilities
+      ├─ testing/
+      |   └─ Testing utilities and configurations
+      └─ ui/
+          └─ Global UI components using shadcn-ui
 tooling
-  ├─ github
+  ├─ biome/
+  |   └─ Shared Biome configuration
+  ├─ github/
   |   └─ GitHub Actions workflows
-  ├─ biome
-  |   └─ shared Biome configuration
-  ├─ tailwind
-  |   └─ shared Tailwind configuration
-  └─ typescript
-     └─ shared tsconfig you can extend from
+  ├─ tailwind/
+  |   └─ Shared Tailwind configuration
+  └─ typescript/
+      └─ Shared tsconfig you can extend from
 
 turbo/generators
-      └─ Automatically create new @kdx packages with the correct boilerplate
+      └─ Automatically create new packages with the correct boilerplate
 ```
 
 ## Quick Start
@@ -123,10 +132,10 @@ pnpm start:trpc-cli
 # Start the trpc-cli tool in development mode
 pnpm dev:trpc-cli
 
-# Add new shadcn-ui components to the ui package
+# Add new shadcn-ui components to the global ui package
 pnpm ui:add
 
-# Create a new @kdx package
+# Create a new package (global or kdx-scoped)
 pnpm turbo gen init
 ```
 
