@@ -9,7 +9,7 @@ import { env } from "@kdx/env";
 import { TailwindIndicator } from "~/app/[locale]/_components/tailwind-indicator";
 import { TRPCReactProvider } from "~/trpc/react";
 
-import "@kodix/ui/globals.css";
+import "~/styles/globals.css";
 
 import { notFound } from "next/navigation";
 import { getBaseUrl } from "@kodix/shared/utils";

@@ -50,7 +50,6 @@
     "rrule": "catalog:",
     "server-only": "catalog:",
     "superjson": "catalog:",
-    "tailwindcss-animate": "catalog:",
     "zod": "catalog:",
     "zustand": "catalog:"
   },

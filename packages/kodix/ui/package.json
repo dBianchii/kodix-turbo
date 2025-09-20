@@ -8,7 +8,8 @@
       "./src/*.tsx",
       "./src/*.ts"
     ],
-    "./globals.css": "./globals.css",
+    "./globals.css": "./src/styles/globals.css",
+    "./themes/*.css": "./src/styles/themes/*",
     "./data-table/export": "./src/data-table/export.ts"
   },
   "scripts": {
@@ -53,7 +54,7 @@
     "react-resizable-panels": "catalog:",
     "sonner": "catalog:",
     "tailwind-merge": "catalog:",
-    "tailwindcss-animate": "catalog:",
+    "tw-animate-css": "catalog:",
     "vaul": "catalog:",
     "zod": "catalog:",
     "zustand": "catalog:"
