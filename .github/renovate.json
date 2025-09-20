@@ -1,16 +1,19 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:base", ":dependencyDashboardApproval"],
+  "extends": ["config:recommended", ":dependencyDashboardApproval"],
   "packageRules": [
     {
-      "matchPackagePatterns": ["^@kdx/"],
-      "enabled": false
+      "enabled": false,
+      "matchPackageNames": ["/^@kdx//"]
     }
   ],
   "updateInternalDeps": true,
   "rangeStrategy": "replace",
   "automerge": false,
   "npm": {
-    "fileMatch": ["(^|/)package\\.json$", "(^|/)package\\.json\\.hbs$"]
+    "managerFilePatterns": [
+      "/(^|/)package\\.json$/",
+      "/(^|/)package\\.json\\.hbs$/"
+    ]
   }
 }
