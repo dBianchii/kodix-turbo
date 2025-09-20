@@ -1,0 +1,23 @@
+{
+  "name": "@kdx/permissions",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "tsc": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@kdx/auth": "workspace:*",
+    "@kdx/db": "workspace:*",
+    "@kdx/locales": "workspace:*",
+    "@kodix/tsconfig": "workspace:*",
+    "typescript": "catalog:"
+  },
+  "dependencies": {
+    "@casl/ability": "catalog:",
+    "@kodix/shared": "workspace:*"
+  }
+}

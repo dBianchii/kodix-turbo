@@ -1,5 +1,5 @@
 {
-  "name": "@kdx/tsconfig",
+  "name": "@kodix/tsconfig",
   "private": true,
   "files": [
     "*.json"
