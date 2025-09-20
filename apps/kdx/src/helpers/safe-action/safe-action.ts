@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { createSafeActionClient } from "next-safe-action";
-import { ZodError } from "zod/v4";
+import { ZodError } from "zod";
 
 import { auth } from "@kdx/auth";
 

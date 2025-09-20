@@ -1138,7 +1138,7 @@ importers:
         specifier: ^0.13.8
         version: 0.13.8(typescript@5.9.2)(zod@4.1.9)
       zod:
-        specifier: ^4.0.0
+        specifier: 'catalog:'
         version: 4.1.9
     devDependencies:
       '@kdx/tsconfig':

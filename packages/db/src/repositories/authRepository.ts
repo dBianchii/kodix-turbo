@@ -1,4 +1,4 @@
-import type { z } from "zod/v4";
+import type { z } from "zod";
 import { eq, lte, or } from "drizzle-orm";
 
 import type { Drizzle, DrizzleTransaction } from "../client";

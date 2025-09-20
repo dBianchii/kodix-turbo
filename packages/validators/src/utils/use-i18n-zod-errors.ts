@@ -1,8 +1,7 @@
-import type { ZodErrorMap } from "zod/v4";
+import type { ZodErrorMap } from "zod";
 import { useLocale } from "next-intl";
-import z from "zod/v4";
-import en from "zod/v4/locales/en.js";
-import pt from "zod/v4/locales/pt.js";
+import z from "zod";
+import { en, pt } from "zod/locales";
 
 import type { Locales } from "@kdx/locales";
 
@@ -12,7 +11,7 @@ const localeToZod: Record<
     localeError: ZodErrorMap;
   }
 > = {
-  en,
+  en: en,
   "pt-BR": pt,
 };
 

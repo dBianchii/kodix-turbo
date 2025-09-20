@@ -1,5 +1,5 @@
 import { Frequency } from "rrule";
-import z from "zod/v4";
+import z from "zod";
 
 import type { eventMasters } from "@kdx/db/schema";
 import dayjs from "@kdx/dayjs";

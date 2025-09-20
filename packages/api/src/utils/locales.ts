@@ -1,4 +1,4 @@
-import type { ZodType, z } from "zod/v4";
+import type { ZodType, z } from "zod";
 import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
 
