@@ -1,11 +1,11 @@
 import { ForbiddenError } from "@casl/ability";
+import { typedObjectEntries } from "@kodix/shared/utils";
 
 import type { TUpdateUserAssociationInputSchema } from "@kdx/validators/trpc/team/appRole";
 import { db } from "@kdx/db/client";
 import { teamRepository } from "@kdx/db/repositories";
 
 import type { TIsTeamOwnerProcedureContext } from "../../../procedures";
-import { typedObjectEntries } from "../../../../../../../kodix/shared/src/utils";
 
 interface UpdateUserAssociationOptions {
   ctx: TIsTeamOwnerProcedureContext;

@@ -1,4 +1,5 @@
 import { KODIX_NOTIFICATION_FROM_EMAIL } from "@kodix/shared/constants";
+import { getBaseUrl, getSuccessesAndErrors } from "@kodix/shared/utils";
 import { TRPCError } from "@trpc/server";
 
 import type { invitations } from "@kdx/db/schema";
@@ -9,10 +10,6 @@ import { teamRepository } from "@kdx/db/repositories";
 import TeamInvite from "@kdx/react-email/team-invite";
 
 import type { TIsTeamOwnerProcedureContext } from "../../../procedures";
-import {
-  getBaseUrl,
-  getSuccessesAndErrors,
-} from "../../../../../../../kodix/shared/src/utils";
 import { resend } from "../../../../sdks/email";
 
 interface InviteOptions {

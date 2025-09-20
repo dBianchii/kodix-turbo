@@ -1,7 +1,7 @@
+import type { DataTableConfig } from "@kodix/shared/data-table-config";
+
 import type { Column, ColumnBaseConfig, ColumnDataType } from "@kdx/db";
 import { eq, inArray, isNotNull, isNull, like, not, notLike } from "@kdx/db";
-
-import type { DataTableConfig } from "../../../../kodix/shared/src/data-table-config";
 
 export function filterColumn({
   column,

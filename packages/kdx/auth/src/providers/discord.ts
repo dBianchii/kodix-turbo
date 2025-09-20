@@ -1,11 +1,11 @@
 import type { APIUser as DiscordUser } from "discord-api-types/v10";
+import { getBaseUrl } from "@kodix/shared/utils";
 import { Discord } from "arctic";
 import { OAuth2Scopes } from "discord-api-types/v10";
 
 import { authRepository } from "@kdx/db/repositories";
 import { env } from "@kdx/env";
 
-import { getBaseUrl } from "../../../../kodix/shared/src/utils";
 import createOrGetExistingUserForUnlinkedProviderAccount from "./utils/createOrGetExistingUserForUnlinkedProviderAccount";
 
 const discord = new Discord(

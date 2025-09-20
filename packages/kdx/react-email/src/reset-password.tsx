@@ -1,3 +1,4 @@
+import { getBaseUrl } from "@kodix/shared/utils";
 import {
   Body,
   Container,
@@ -14,7 +15,6 @@ import {
 import type { IsomorficT } from "@kdx/locales";
 
 import type { TMock } from "./utils";
-import { getBaseUrl } from "../../../kodix/shared/src/utils";
 import { tMock } from "./utils";
 
 export default function ResetPassword({

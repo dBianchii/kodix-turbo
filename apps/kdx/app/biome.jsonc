@@ -1,6 +1,9 @@
 {
   "$schema": "../../../node_modules/@biomejs/biome/configuration_schema.json",
-  "extends": ["../../../biome.jsonc", "@kodix/biome-config/restrictEnvAccess"],
+  "extends": [
+    "../../../../biome.jsonc",
+    "@kodix/biome-config/restrictEnvAccess"
+  ],
   "linter": {
     "rules": {
       "style": {
