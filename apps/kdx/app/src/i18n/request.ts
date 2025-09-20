@@ -20,17 +20,17 @@ export default getRequestConfig(async ({ requestLocale }) => {
     messages: {
       ...(
         await import(
-          `../../../../packages/locales/src/messages/kdx/${locale}.json`
+          `../../../../../packages/kdx/locales/src/messages/kdx/${locale}.json`
         )
       ).default,
       ...(
         await import(
-          `../../../../packages/locales/src/messages/api/${locale}.json`
+          `../../../../../packages/kdx/locales/src/messages/api/${locale}.json`
         )
       ).default,
       ...(
         await import(
-          `../../../../packages/locales/src/messages/validators/${locale}.json`
+          `../../../../../packages/kdx/locales/src/messages/validators/${locale}.json`
         )
       ).default,
     },
