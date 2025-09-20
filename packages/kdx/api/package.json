@@ -40,7 +40,6 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@kodix/tailwind-config": "workspace:*",
     "@kodix/tsconfig": "workspace:*",
     "@types/deep-diff": "catalog:",
     "@types/ms": "catalog:",
