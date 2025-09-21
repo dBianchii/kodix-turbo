@@ -1,0 +1,32 @@
+{
+  "name": "@kodix/trpc",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./react/trpc-react-provider": "./src/react/trpc-react-provider.tsx",
+    "./react/query-client": "./src/react/query-client.ts",
+    "./react/server": "./src/react/server.tsx",
+    "./server": "./src/server/index.ts"
+  },
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "tsc": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@kodix/shared": "workspace:*",
+    "@tanstack/react-query": "catalog:tanstack-query",
+    "@tanstack/react-query-devtools": "catalog:tanstack-query",
+    "@trpc/client": "catalog:trpc",
+    "@trpc/server": "catalog:trpc",
+    "@trpc/tanstack-react-query": "catalog:trpc",
+    "react": "catalog:react",
+    "server-only": "catalog:",
+    "superjson": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@kodix/tsconfig": "workspace:*",
+    "@types/react": "catalog:react",
+    "next": "catalog:next"
+  }
+}

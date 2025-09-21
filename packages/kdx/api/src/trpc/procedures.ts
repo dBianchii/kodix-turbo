@@ -1,22 +1,42 @@
 import type { inferProcedureBuilderResolverOptions } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
+import { getFormatter, getTranslations } from "next-intl/server";
 
+import { auth } from "@kdx/auth";
 import { teamRepository } from "@kdx/db/repositories";
 
-import { timingMiddleware } from "./middlewares";
-import { t } from "./trpc";
+import { initializeServices } from "../services";
+import { getLocaleBasedOnCookie } from "../utils/locales";
+import { commonProcedures } from "./trpc";
 
 //? This file should ONLY EXPORT procedures and their context types. Do not export anything else from this file because they are read by @kdx/trpc-cli
 //? Also, please export them as constants inline, exactly like the others <3
 
-/**
- * Public (unauthed) procedure
- *
- * This is the base piece you use to build new queries and mutations on your
- * tRPC API. It does not guarantee that a user querying is authorized, but you
- * can still access user session data if they are logged in
- */
-export const publicProcedure = t.procedure.use(timingMiddleware); // t.procedure.use(timingMiddleware);
+const { baseProcedure } = commonProcedures;
+
+export const publicProcedure = baseProcedure.use(async ({ ctx, next }) => {
+  const authToken = ctx.headers.get("Authorization") ?? null;
+
+  const authResponse = await auth();
+
+  const source = ctx.headers.get("x-trpc-source") ?? "unknown";
+  console.log(">>> tRPC Request from", source, "by", authResponse?.user);
+  const locale = await getLocaleBasedOnCookie();
+  const t = await getTranslations({ locale });
+  const format = await getFormatter({ locale });
+  const services = initializeServices({ t });
+
+  return next({
+    ctx: {
+      ...ctx,
+      format,
+      services,
+      t,
+      auth: authResponse,
+      token: authToken,
+    },
+  });
+});
 export type TPublicProcedureContext = inferProcedureBuilderResolverOptions<
   typeof publicProcedure
 >["ctx"];
