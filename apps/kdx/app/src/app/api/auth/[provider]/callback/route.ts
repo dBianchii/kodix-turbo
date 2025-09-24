@@ -2,8 +2,8 @@ import type { NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import { OAuth2RequestError } from "arctic";
 
-import type { Providers } from "@kdx/auth";
-import { createDbSessionAndCookie, providers } from "@kdx/auth";
+import type { AuthProviders } from "@kdx/auth";
+import { authProviders, createDbSessionAndCookie } from "@kdx/auth";
 
 export async function GET(
   request: NextRequest,
@@ -12,7 +12,7 @@ export async function GET(
   },
 ) {
   const params = await props.params;
-  if (!Object.keys(providers).includes(params.provider)) {
+  if (!Object.keys(authProviders).includes(params.provider)) {
     console.error("Invalid oauth provider", params.provider);
     return new Response(null, {
       status: 400,
@@ -36,7 +36,7 @@ export async function GET(
   }
 
   try {
-    const currentProvider = providers[params.provider as Providers];
+    const currentProvider = authProviders[params.provider as AuthProviders];
     const codeVerifier = (await cookies()).get("code_verifier")?.value;
     if (currentProvider.name === "Google" && !codeVerifier) {
       console.error("Missing code verifier");

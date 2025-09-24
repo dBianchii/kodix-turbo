@@ -1,9 +1,15 @@
-import * as discordProvider from "./discord";
-import * as googleProvider from "./google";
+import { discordProvider } from "./discord";
+import { googleProvider } from "./google";
 
-export const providers = {
-  discord: discordProvider,
+export type Provider = {
+  name: string;
+  getAuthorizationUrl: (state: string, codeVerifier: string) => Promise<URL>;
+  handleCallback: (code: string, codeVerifier: string) => Promise<string>;
+};
+
+export const authProviders = {
   google: googleProvider,
-} as const;
+  discord: discordProvider,
+} as const satisfies Record<string, Provider>;
 
-export type Providers = keyof typeof providers;
+export type AuthProviders = keyof typeof authProviders;

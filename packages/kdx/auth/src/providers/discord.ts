@@ -1,4 +1,5 @@
 import type { APIUser as DiscordUser } from "discord-api-types/v10";
+import type { Provider } from ".";
 import { getBaseUrl } from "@kodix/shared/utils";
 import { Discord } from "arctic";
 import { OAuth2Scopes } from "discord-api-types/v10";
@@ -11,18 +12,18 @@ import findOrCreateUserForUnlinkedProviderAccount from "./utils/findOrCreateUser
 const discord = new Discord(
   env.AUTH_DISCORD_ID ?? "", //Discord is not used in production, so... no need to worry about this
   env.AUTH_DISCORD_SECRET ?? "",
-  `${getBaseUrl()}/api/auth/discord/callback`,
+  `${getBaseUrl()}/api/auth/discord/callback`
 );
 
-export const name = "Discord";
+const name = "Discord";
 
-export const getAuthorizationUrl = async (state: string) => {
+const getAuthorizationUrl = async (state: string) => {
   return await discord.createAuthorizationURL(state, {
     scopes: [OAuth2Scopes.Identify, OAuth2Scopes.Email],
   });
 };
 
-export const handleCallback = async (code: string) => {
+const handleCallback = async (code: string) => {
   if (env.NODE_ENV === "production") {
     throw new Error(`Login with ${name} is not enabled in production`);
   }
@@ -52,4 +53,10 @@ export const handleCallback = async (code: string) => {
   });
 
   return userId;
+};
+
+export const discordProvider: Provider = {
+  name,
+  getAuthorizationUrl,
+  handleCallback,
 };

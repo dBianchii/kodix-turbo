@@ -1,3 +1,4 @@
+import type { Provider } from ".";
 import { getBaseUrl } from "@kodix/shared/utils";
 import { Google } from "arctic";
 
@@ -22,18 +23,15 @@ const google = new Google(
   `${getBaseUrl()}/api/auth/google/callback`
 );
 
-export const name = "Google";
+const name = "Google";
 
-export const getAuthorizationUrl = async (
-  state: string,
-  codeVerifier: string
-) => {
+const getAuthorizationUrl = async (state: string, codeVerifier: string) => {
   return await google.createAuthorizationURL(state, codeVerifier, {
     scopes: ["profile", "email"],
   });
 };
 
-export const handleCallback = async (code: string, codeVerifier: string) => {
+const handleCallback = async (code: string, codeVerifier: string) => {
   const tokens = await google.validateAuthorizationCode(code, codeVerifier);
 
   const response = await fetch(
@@ -62,4 +60,10 @@ export const handleCallback = async (code: string, codeVerifier: string) => {
   });
 
   return userId;
+};
+
+export const googleProvider: Provider = {
+  name,
+  handleCallback,
+  getAuthorizationUrl,
 };
