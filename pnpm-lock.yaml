@@ -1266,6 +1266,49 @@ importers:
         specifier: 'catalog:'
         version: 5.9.2
 
+  packages/kodix/auth:
+    dependencies:
+      '@node-rs/argon2':
+        specifier: 'catalog:'
+        version: 1.8.3
+      '@oslojs/crypto':
+        specifier: 'catalog:'
+        version: 1.0.1
+      '@oslojs/encoding':
+        specifier: 'catalog:'
+        version: 1.1.0
+      arctic:
+        specifier: 'catalog:'
+        version: 1.9.2
+      discord-api-types:
+        specifier: 'catalog:'
+        version: 0.37.120
+      es-toolkit:
+        specifier: ^1.39.10
+        version: 1.39.10
+      next:
+        specifier: catalog:next
+        version: 15.5.3(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      react:
+        specifier: ^19.1.0
+        version: 19.1.1
+      zod:
+        specifier: 'catalog:'
+        version: 4.1.9
+    devDependencies:
+      '@kodix/biome-config':
+        specifier: workspace:*
+        version: link:../../../tooling/biome
+      '@kodix/tsconfig':
+        specifier: workspace:*
+        version: link:../../../tooling/typescript
+      '@types/react':
+        specifier: catalog:react
+        version: 19.1.13
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.2
+
   packages/kodix/dayjs:
     dependencies:
       dayjs:
@@ -7276,6 +7319,9 @@ packages:
   es-to-primitive@1.3.0:
     resolution: {integrity: sha512-w+5mJ3GuFL+NjVtJlvydShqE1eN3h3PbI7/5LAsYJP/2qtuMXjfL2LpHSRqo4b4eSF5K/DH1JXKUAHSB2UW50g==}
     engines: {node: '>= 0.4'}
+
+  es-toolkit@1.39.10:
+    resolution: {integrity: sha512-E0iGnTtbDhkeczB0T+mxmoVlT4YNweEKBLq7oaU4p11mecdsZpNWOglI4895Vh4usbQ+LsJiuLuI2L0Vdmfm2w==}
 
   esbuild-register@3.6.0:
     resolution: {integrity: sha512-H2/S7Pm8a9CL1uhp9OvjwrBh5Pvx0H8qVOxNu8Wed9Y7qv56MPtq+GGM8RJpq6glYJn9Wspr8uw7l55uyinNeg==}
@@ -18163,6 +18209,8 @@ snapshots:
       is-callable: 1.2.7
       is-date-object: 1.1.0
       is-symbol: 1.1.1
+
+  es-toolkit@1.39.10: {}
 
   esbuild-register@3.6.0(esbuild@0.19.12):
     dependencies:

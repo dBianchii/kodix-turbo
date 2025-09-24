@@ -6,7 +6,7 @@ import { OAuth2Scopes } from "discord-api-types/v10";
 import { authRepository } from "@kdx/db/repositories";
 import { env } from "@kdx/env";
 
-import createOrGetExistingUserForUnlinkedProviderAccount from "./utils/createOrGetExistingUserForUnlinkedProviderAccount";
+import findOrCreateUserForUnlinkedProviderAccount from "./utils/findOrCreateUserForUnlinkedProviderAccount";
 
 const discord = new Discord(
   env.AUTH_DISCORD_ID ?? "", //Discord is not used in production, so... no need to worry about this
@@ -43,7 +43,7 @@ export const handleCallback = async (code: string) => {
 
   if (existingAccount) return existingAccount.userId;
 
-  const userId = await createOrGetExistingUserForUnlinkedProviderAccount({
+  const userId = await findOrCreateUserForUnlinkedProviderAccount({
     name: discordUser.username,
     email: discordUser.email ?? "",
     image: `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png`,

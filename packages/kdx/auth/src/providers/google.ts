@@ -4,9 +4,9 @@ import { Google } from "arctic";
 import { authRepository } from "@kdx/db/repositories";
 import { env } from "@kdx/env";
 
-import createOrGetExistingUserForUnlinkedProviderAccount from "./utils/createOrGetExistingUserForUnlinkedProviderAccount";
+import findOrCreateUserForUnlinkedProviderAccount from "./utils/findOrCreateUserForUnlinkedProviderAccount";
 
-interface GoogleUser {
+type GoogleUser = {
   id: string;
   email: string;
   given_name: string;
@@ -14,19 +14,19 @@ interface GoogleUser {
   name: string;
   picture: string;
   verified_email: boolean;
-}
+};
 
 const google = new Google(
   env.AUTH_GOOGLE_CLIENT_ID,
   env.AUTH_GOOGLE_CLIENT_SECRET,
-  `${getBaseUrl()}/api/auth/google/callback`,
+  `${getBaseUrl()}/api/auth/google/callback`
 );
 
 export const name = "Google";
 
 export const getAuthorizationUrl = async (
   state: string,
-  codeVerifier: string,
+  codeVerifier: string
 ) => {
   return await google.createAuthorizationURL(state, codeVerifier, {
     scopes: ["profile", "email"],
@@ -42,7 +42,7 @@ export const handleCallback = async (code: string, codeVerifier: string) => {
       headers: {
         Authorization: `Bearer ${tokens.accessToken}`,
       },
-    },
+    }
   );
   const googleUser = (await response.json()) as GoogleUser;
 
@@ -53,7 +53,7 @@ export const handleCallback = async (code: string, codeVerifier: string) => {
 
   if (existingAccount) return existingAccount.userId;
 
-  const userId = await createOrGetExistingUserForUnlinkedProviderAccount({
+  const userId = await findOrCreateUserForUnlinkedProviderAccount({
     name: googleUser.name,
     email: googleUser.email,
     image: googleUser.picture,

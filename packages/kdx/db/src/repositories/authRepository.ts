@@ -23,26 +23,11 @@ export async function createSession(session: z.infer<typeof zSessionCreate>) {
   await db.insert(sessions).values(session);
 }
 
-export async function findUserTeamBySessionId({
-  sessionId,
-}: {
-  sessionId: string;
-}) {
-  const [result] = await db
-    .select({ user: users, session: sessions, team: teams })
-    .from(sessions)
-    .innerJoin(users, eq(sessions.userId, users.id))
-    .innerJoin(teams, eq(teams.id, users.activeTeamId))
-    .where(eq(sessions.id, sessionId));
-
-  return result;
-}
-
 export async function deleteSession(sessionId: string) {
   await db.delete(sessions).where(eq(sessions.id, sessionId));
 }
 
-export async function updateSession({
+export async function updateSessionById({
   id,
   input,
 }: Update<typeof zSessionUpdate>) {

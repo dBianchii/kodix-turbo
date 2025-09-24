@@ -3,8 +3,7 @@ import { cookies } from "next/headers";
 import { OAuth2RequestError } from "arctic";
 
 import type { Providers } from "@kdx/auth";
-import { providers } from "@kdx/auth";
-import { createDbSessionAndCookie } from "@kdx/auth/utils";
+import { createDbSessionAndCookie, providers } from "@kdx/auth";
 
 export async function GET(
   request: NextRequest,

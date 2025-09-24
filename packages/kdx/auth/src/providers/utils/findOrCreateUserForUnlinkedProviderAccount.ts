@@ -6,7 +6,7 @@ import { authRepository, userRepository } from "@kdx/db/repositories";
 
 import { createUser } from "../../utils";
 
-export default async function createOrGetExistingUserForUnlinkedProviderAccount({
+export default async function findOrCreateUserForUnlinkedProviderAccount({
   name,
   email,
   image,

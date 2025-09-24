@@ -1,8 +1,7 @@
-import { hash } from "@node-rs/argon2";
 import { TRPCError } from "@trpc/server";
 
 import type { TChangePasswordInputSchema } from "@kdx/validators/trpc/user";
-import { argon2Config } from "@kdx/auth";
+import { generatePasswordHash } from "@kdx/auth";
 import { db } from "@kdx/db/client";
 import { authRepository, userRepository } from "@kdx/db/repositories";
 
@@ -36,7 +35,7 @@ export const changePasswordHandler = async ({
     });
   }
 
-  const hashed = await hash(input.password, argon2Config);
+  const hashed = await generatePasswordHash(input.password);
   await db.transaction(async (tx) => {
     await authRepository.deleteTokenAndDeleteExpiredTokens(tx, input.token);
     await userRepository.updateUser(tx, {

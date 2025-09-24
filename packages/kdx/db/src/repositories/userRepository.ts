@@ -9,13 +9,7 @@ import { users, usersToTeams } from "../schema";
 
 export async function findUserByEmail(email: string) {
   return db.query.users.findFirst({
-    columns: {
-      passwordHash: true, //! Bad: Exposing passwordHash sometimes when not needed
-      activeTeamId: true,
-      id: true,
-      image: true,
-    },
-    where: (users, { and, eq }) => and(eq(users.email, email)),
+    where: eq(users.email, email),
   });
 }
 
