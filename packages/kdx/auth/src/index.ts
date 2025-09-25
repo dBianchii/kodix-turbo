@@ -14,11 +14,14 @@ export {
   generatePasswordHash,
 } from "@kodix/auth/core";
 
-export type { AuthProviders } from "./providers";
+export type {
+  AuthProvider,
+  KdxAuthProvider as KdxAuthProviders,
+} from "./providers";
 export type { KdxAuthResponse, Session, User } from "./types";
 export {
   createDbSessionAndCookie,
   invalidateSession,
   validateUserEmailAndPassword,
 } from "./config";
-export { authProviders } from "./providers";
+export { kdxAuthProviders } from "./providers";

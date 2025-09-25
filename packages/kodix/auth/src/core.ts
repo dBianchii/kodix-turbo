@@ -43,5 +43,7 @@ export function generateSessionToken() {
 export const generatePasswordHash = (password: string) =>
   hash(password, argon2Config);
 
-export const verifyPasswordHash = (password: string, passwordHash: string) =>
-  verify(password, passwordHash, argon2Config);
+export const verifyPasswordAgainstHash = (
+  passwordHash: string,
+  password: string
+) => verify(passwordHash, password, argon2Config);

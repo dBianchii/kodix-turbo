@@ -1,15 +1,63 @@
-import { discordProvider } from "./discord";
-import { googleProvider } from "./google";
+import type { ProviderConfig } from "@kodix/auth/providers";
+import { cookies } from "next/headers";
+import { authProviders } from "@kodix/auth/providers";
 
-export type Provider = {
-  name: string;
-  getAuthorizationUrl: (state: string, codeVerifier: string) => Promise<URL>;
-  handleCallback: (code: string, codeVerifier: string) => Promise<string>;
+import { db } from "@kdx/db/client";
+import { nanoid } from "@kdx/db/nanoid";
+import { authRepository, userRepository } from "@kdx/db/repositories";
+
+import { createUser } from "../utils";
+
+export type { AuthProvider } from "@kodix/auth/providers";
+
+const providerConfig: ProviderConfig = {
+  repositories: {
+    findAccountByProviderUserId: authRepository.findAccountByProviderUserId,
+    findUserByEmail: userRepository.findUserByEmail,
+    createUserWithProvider: async ({
+      //TODO: it would seem that this function can be reused and moved to @kodix/auth
+      name,
+      email,
+      image,
+      providerUserId,
+      providerId,
+    }) => {
+      let userId = nanoid();
+      const existingUser = await userRepository.findUserByEmail(email);
+
+      await db.transaction(async (tx) => {
+        if (existingUser) {
+          userId = existingUser.id;
+        } else {
+          const inviteFromCookie = (await cookies()).get("invite")?.value;
+          await createUser({
+            tx,
+            name,
+            email,
+            image: image ?? "",
+            teamId: nanoid(),
+            userId,
+            invite: inviteFromCookie,
+          });
+          if (inviteFromCookie) {
+            (await cookies()).delete("invite");
+          }
+        }
+
+        await authRepository.createAccount(tx, {
+          providerId,
+          providerUserId,
+          userId,
+        });
+      });
+
+      return userId;
+    },
+  },
 };
 
-export const authProviders = {
-  google: googleProvider,
-  discord: discordProvider,
-} as const satisfies Record<string, Provider>;
-
-export type AuthProviders = keyof typeof authProviders;
+export const kdxAuthProviders = {
+  google: authProviders.google(providerConfig),
+  discord: authProviders.discord(providerConfig),
+};
+export type KdxAuthProvider = keyof typeof kdxAuthProviders;

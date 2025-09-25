@@ -10,7 +10,7 @@ import {
   generateSessionToken,
   SESSION_COOKIE_NAME,
   setSessionTokenCookie,
-  verifyPasswordHash,
+  verifyPasswordAgainstHash,
 } from "./core";
 
 const SESSION_DURATION = 1000 * 60 * 60 * 24 * 30; // 30 days
@@ -158,9 +158,9 @@ export const getAuthManager = <
       throw new AuthError("Invalid credentials", "INVALID_CREDENTIALS");
     }
 
-    const isPasswordValid = await verifyPasswordHash(
-      password,
-      existingUser.passwordHash
+    const isPasswordValid = await verifyPasswordAgainstHash(
+      existingUser.passwordHash,
+      password
     );
 
     if (!isPasswordValid) {

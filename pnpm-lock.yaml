@@ -1015,6 +1015,9 @@ importers:
       '@kdx/react-email':
         specifier: workspace:*
         version: link:../react-email
+      '@kodix/auth':
+        specifier: workspace:*
+        version: link:../../kodix/auth
       '@kodix/shared':
         specifier: workspace:*
         version: link:../../kodix/shared
@@ -1027,6 +1030,9 @@ importers:
       '@oslojs/encoding':
         specifier: 'catalog:'
         version: 1.1.0
+      arctic:
+        specifier: 'catalog:'
+        version: 1.9.2
       discord-api-types:
         specifier: 'catalog:'
         version: 0.37.120
@@ -1268,6 +1274,9 @@ importers:
 
   packages/kodix/auth:
     dependencies:
+      '@kodix/shared':
+        specifier: workspace:*
+        version: link:../shared
       '@node-rs/argon2':
         specifier: 'catalog:'
         version: 1.8.3

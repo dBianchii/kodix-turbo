@@ -4,7 +4,7 @@
   "type": "module",
   "exports": {
     "./core": "./src/core.ts",
-    "./providers": "./src/providers.ts",
+    "./providers": "./src/providers/index.ts",
     "./types": "./src/types.ts",
     "./auth-manager": "./src/auth-manager.ts"
   },
@@ -13,6 +13,7 @@
     "tsc": "tsc --noEmit"
   },
   "dependencies": {
+    "@kodix/shared": "workspace:*",
     "@node-rs/argon2": "catalog:",
     "@oslojs/crypto": "catalog:",
     "@oslojs/encoding": "catalog:",
