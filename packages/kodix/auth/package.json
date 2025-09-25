@@ -19,7 +19,7 @@
     "@oslojs/encoding": "catalog:",
     "arctic": "catalog:",
     "discord-api-types": "catalog:",
-    "es-toolkit": "^1.39.10",
+    "es-toolkit": "catalog:",
     "next": "catalog:next",
     "react": "catalog:react",
     "zod": "catalog:"

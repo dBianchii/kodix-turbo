@@ -16,11 +16,8 @@ const { baseProcedure } = commonProcedures;
 
 export const publicProcedure = baseProcedure.use(async ({ ctx, next }) => {
   const authToken = ctx.headers.get("Authorization") ?? null;
-
   const authResponse = await auth();
 
-  const source = ctx.headers.get("x-trpc-source") ?? "unknown";
-  console.log(">>> tRPC Request from", source, "by", authResponse?.user);
   const locale = await getLocaleBasedOnCookie();
   const t = await getTranslations({ locale });
   const format = await getFormatter({ locale });

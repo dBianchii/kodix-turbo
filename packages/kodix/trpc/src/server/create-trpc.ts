@@ -46,9 +46,17 @@ export const createTRPC = <
    * by simulating network latency that would occur in production but not in local
    * development.
    */
-  const timingMiddleware = t.middleware(async ({ next }) => {
+  const timingMiddleware = t.middleware(async ({ next, ctx, path }) => {
     if (t._config.isDev) {
       // Artificial delay in dev
+      // biome-ignore lint/suspicious/noConsole: <Log server-side calls when developing>
+      console.log(
+        ">>> tRPC Request from",
+        ctx.headers.get("x-trpc-source"),
+        "for",
+        path
+      );
+
       const waitMs =
         Math.floor(Math.random() * DEV_DELAY_MS) + DEV_DELAY_MIN_MS;
       await new Promise((resolve) => {
