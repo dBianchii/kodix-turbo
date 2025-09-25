@@ -22,6 +22,7 @@
     "@kodix/biome-config": "workspace:*",
     "@kodix/dayjs": "workspace:*",
     "@kodix/shared": "workspace:*",
+    "@kodix/trpc": "workspace:*",
     "@node-rs/argon2": "catalog:",
     "@react-email/render": "catalog:",
     "@trpc/server": "catalog:trpc",

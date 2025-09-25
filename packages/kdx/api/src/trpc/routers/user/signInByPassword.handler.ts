@@ -1,6 +1,8 @@
 import type { TSignInByPasswordInputSchema } from "@kdx/validators/trpc/user";
-import { validateUserEmailAndPassword } from "@kdx/auth";
-import { createDbSessionAndCookie } from "@kdx/auth/utils";
+import {
+  createDbSessionAndCookie,
+  validateUserEmailAndPassword,
+} from "@kdx/auth";
 
 import type { TPublicProcedureContext } from "../../procedures";
 

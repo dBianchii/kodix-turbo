@@ -1,29 +1,27 @@
 {
-  "name": "@kdx/auth",
+  "name": "@kodix/auth",
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
-    "./utils": "./src/utils.ts"
+    "./core": "./src/core.ts",
+    "./providers": "./src/providers/index.ts",
+    "./types": "./src/types.ts",
+    "./auth-manager": "./src/auth-manager.ts"
   },
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "tsc": "tsc --noEmit"
   },
   "dependencies": {
-    "@kdx/db": "workspace:*",
-    "@kdx/env": "workspace:*",
-    "@kdx/react-email": "workspace:*",
-    "@kodix/auth": "workspace:*",
     "@kodix/shared": "workspace:*",
     "@node-rs/argon2": "catalog:",
     "@oslojs/crypto": "catalog:",
     "@oslojs/encoding": "catalog:",
     "arctic": "catalog:",
     "discord-api-types": "catalog:",
+    "es-toolkit": "catalog:",
     "next": "catalog:next",
     "react": "catalog:react",
-    "react-dom": "catalog:react",
     "zod": "catalog:"
   },
   "devDependencies": {

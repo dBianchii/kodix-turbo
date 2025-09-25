@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { TailwindIndicator } from "@kodix/ui/common/tailwind-indicator";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GeistMono } from "geist/font/mono";
@@ -6,8 +7,7 @@ import { GeistSans } from "geist/font/sans";
 
 import { env } from "@kdx/env";
 
-import { TailwindIndicator } from "~/app/[locale]/_components/tailwind-indicator";
-import { TRPCReactProvider } from "~/trpc/react";
+import { KdxTRPCReactProvider } from "~/trpc/react";
 
 import "~/styles/globals.css";
 
@@ -35,11 +35,6 @@ export const metadata: Metadata = {
     url: getBaseUrl(),
     siteName: "Kodix",
   },
-  twitter: {
-    card: "summary_large_image",
-    site: "@dbianchii",
-    creator: "@dbianchii",
-  },
 };
 
 export const viewport: Viewport = {
@@ -62,11 +57,7 @@ export default async function RootLayout(props: {
     <html lang={(await props.params).locale} suppressHydrationWarning>
       <CSPostHogProvider>
         <body
-          className={cn(
-            "min-h-screen bg-background font-sans text-foreground antialiased",
-            GeistSans.variable,
-            GeistMono.variable,
-          )}
+          className={cn("font-sans", GeistSans.variable, GeistMono.variable)}
         >
           <SpeedInsights />
           <Analytics />
@@ -79,7 +70,7 @@ export default async function RootLayout(props: {
             />
             <CCNextIntlClientProvider locale={locale} messages={messages}>
               <PostHogPageView />
-              <TRPCReactProvider>
+              <KdxTRPCReactProvider>
                 <div className="flex min-h-screen flex-col">
                   {props.children}
                 </div>
@@ -90,7 +81,7 @@ export default async function RootLayout(props: {
                     <TailwindIndicator />
                   </div>
                 )}
-              </TRPCReactProvider>
+              </KdxTRPCReactProvider>
             </CCNextIntlClientProvider>
           </ThemeProvider>
         </body>

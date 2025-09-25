@@ -3,8 +3,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { generateCodeVerifier, generateState } from "arctic";
 
-import type { Providers } from "@kdx/auth";
-import { providers } from "@kdx/auth";
+import { type KdxAuthProviders, kdxAuthProviders } from "@kdx/auth";
 import { env } from "@kdx/env";
 
 const providersWithCodeVerifier = ["Google"];
@@ -16,7 +15,7 @@ export async function GET(
   },
 ) {
   const params = await props.params;
-  if (!Object.keys(providers).includes(params.provider)) {
+  if (!Object.keys(kdxAuthProviders).includes(params.provider)) {
     console.error("Invalid oauth provider", params.provider);
     return new NextResponse(null, {
       status: 400,
@@ -24,7 +23,7 @@ export async function GET(
   }
 
   const state = generateState();
-  const currentProvider = providers[params.provider as Providers];
+  const currentProvider = kdxAuthProviders[params.provider as KdxAuthProviders];
 
   const codeVerifier = generateCodeVerifier(); //? Not needed for all providers.
   const url = await currentProvider.getAuthorizationUrl(state, codeVerifier);

@@ -2,8 +2,10 @@ import { kodixCareAppId } from "@kodix/shared/db";
 import { TRPCError } from "@trpc/server";
 
 import type { TSignInByPasswordInputSchema } from "@kdx/validators/trpc/app/kodixCare";
-import { validateUserEmailAndPassword } from "@kdx/auth";
-import { createDbSessionAndCookie } from "@kdx/auth/utils";
+import {
+  createDbSessionAndCookie,
+  validateUserEmailAndPassword,
+} from "@kdx/auth";
 import { and, eq } from "@kdx/db";
 import { db } from "@kdx/db/client";
 import { userRepository } from "@kdx/db/repositories";

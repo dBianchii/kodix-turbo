@@ -1,9 +1,10 @@
 import { Suspense } from "react";
 import { kodixCareAppId } from "@kodix/shared/db";
+import { HydrateClient, prefetch } from "@kodix/trpc/react/server";
 import { DataTableSkeleton } from "@kodix/ui/data-table/data-table-skeleton";
 
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
-import { HydrateClient, prefetch, trpc, trpcCaller } from "~/trpc/server";
+import { trpc, trpcCaller } from "~/trpc/server";
 
 import ShiftsBigCalendar from "./_components/cc-shifts-big-calendar";
 

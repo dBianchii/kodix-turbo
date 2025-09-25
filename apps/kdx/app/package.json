@@ -20,6 +20,7 @@
     "@kodix/biome-config": "workspace:*",
     "@kodix/dayjs": "workspace:*",
     "@kodix/shared": "workspace:*",
+    "@kodix/trpc": "workspace:*",
     "@kodix/ui": "workspace:*",
     "@node-rs/argon2": "catalog:",
     "@tanstack/react-query": "catalog:tanstack-query",

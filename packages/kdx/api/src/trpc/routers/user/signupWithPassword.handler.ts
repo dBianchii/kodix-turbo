@@ -1,9 +1,8 @@
-import { hash } from "@node-rs/argon2";
 import { TRPCError } from "@trpc/server";
 
 import type { TSignupWithPasswordInputSchema } from "@kdx/validators/trpc/user";
-import { argon2Config } from "@kdx/auth";
-import { createDbSessionAndCookie, createUser } from "@kdx/auth/utils";
+import { createDbSessionAndCookie, generatePasswordHash } from "@kdx/auth";
+import { createUser } from "@kdx/auth/utils";
 import { db } from "@kdx/db/client";
 import { nanoid } from "@kdx/db/nanoid";
 import { userRepository } from "@kdx/db/repositories";
@@ -29,7 +28,7 @@ export const signupWithPasswordHandler = async ({
     });
   }
 
-  const passwordHash = await hash(input.password, argon2Config);
+  const passwordHash = await generatePasswordHash(input.password);
   const userId = nanoid();
 
   await db.transaction(async (tx) => {

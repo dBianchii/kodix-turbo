@@ -4,12 +4,6 @@
 import type { Drizzle, DrizzleTransaction } from "@kdx/db/client";
 import { teamRepository, userRepository } from "@kdx/db/repositories";
 
-import {
-  createSession,
-  generateSessionToken,
-  setSessionTokenCookie,
-} from "./config";
-
 export async function createUser({
   invite,
   name,
@@ -31,11 +25,11 @@ export async function createUser({
 }) {
   await userRepository.createUser(tx, {
     id: userId,
-    name: name,
+    name,
     activeTeamId: teamId,
-    email: email,
-    image: image,
-    passwordHash: passwordHash,
+    email,
+    image,
+    passwordHash,
   });
   if (invite) {
     await acceptInvite({ invite, userId, email, db: tx });
@@ -43,7 +37,7 @@ export async function createUser({
     await teamRepository.createTeamAndAssociateUser(tx, userId, {
       id: teamId,
       ownerId: userId,
-      name: `Personal Team`,
+      name: "Personal Team",
     });
   }
 }
@@ -72,12 +66,4 @@ export async function acceptInvite({
   });
 
   await teamRepository.deleteInvitationById(db, invite);
-}
-
-export async function createDbSessionAndCookie({ userId }: { userId: string }) {
-  const token = generateSessionToken();
-  const session = await createSession(token, userId);
-  await setSessionTokenCookie(token, session.expiresAt);
-
-  return session.id;
 }

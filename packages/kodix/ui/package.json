@@ -8,6 +8,10 @@
       "./src/*.tsx",
       "./src/*.ts"
     ],
+    "./common/*": [
+      "./src/common/*.tsx",
+      "./src/common/*.ts"
+    ],
     "./globals.css": "./src/styles/globals.css",
     "./themes/*.css": "./src/styles/themes/*",
     "./data-table/export": "./src/data-table/export.ts"
