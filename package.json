@@ -3,9 +3,9 @@
   "private": true,
   "engines": {
     "node": "22.15.0",
-    "pnpm": "^9.14.2"
+    "pnpm": "^10.0.0"
   },
-  "packageManager": "pnpm@9.14.2",
+  "packageManager": "pnpm@10.17.1",
   "scripts": {
     "dev:kdx": "turbo watch dev studio -F @kdx/app... @kdx/db-dev#dev",
     "dev:email": "turbo dev -F @kdx/react-email...",
