@@ -2,8 +2,7 @@
   "name": "kodix-turbo",
   "private": true,
   "engines": {
-    "node": "22.15.0",
-    "pnpm": "^10.0.0"
+    "node": "22.15.0"
   },
   "packageManager": "pnpm@10.17.1",
   "scripts": {
