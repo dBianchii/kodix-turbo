@@ -2,10 +2,9 @@
   "name": "kodix-turbo",
   "private": true,
   "engines": {
-    "node": "22.15.0",
-    "pnpm": "^9.14.2"
+    "node": "22.15.0"
   },
-  "packageManager": "pnpm@9.14.2",
+  "packageManager": "pnpm@10.17.1",
   "scripts": {
     "dev:kdx": "turbo watch dev studio -F @kdx/app... @kdx/db-dev#dev",
     "dev:email": "turbo dev -F @kdx/react-email...",
@@ -14,12 +13,10 @@
     "check": "biome check .",
     "check:write": "biome check --write .",
     "check:unsafe": "biome check --write --unsafe .",
-    "lint:ws": "pnpm dlx sherif@latest",
     "start:trpc-cli": "pnpm -F trpc-cli start",
     "dev:trpc-cli": "pnpm -F trpc-cli dev",
     "vercel-link": "vercel switch kodix && vercel link --repo --yes && pnpm -r pull-vercel",
-    "package-deps": "pnpm install",
-    "postinstall": "pnpm lint:ws"
+    "package-deps": "pnpm install"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",

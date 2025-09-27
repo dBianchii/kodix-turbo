@@ -83,9 +83,6 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
          * Install deps and format everything
          */
         if ("name" in answers && typeof answers.name === "string") {
-          // execSync("pnpm dlx sherif@latest --fix", {
-          //   stdio: "inherit",
-          // });
           execSync("pnpm i", { stdio: "inherit" });
           execSync(`pnpm biome check --write packages/${answers.name}/**`);
           return "Package scaffolded";
