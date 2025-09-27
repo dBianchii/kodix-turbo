@@ -15,7 +15,6 @@ const Toaster = ({ ...props }: ToasterProps) => {
       className="toaster group"
       closeButton
       duration={7000}
-      pauseWhenPageIsHidden
       position={isMobile ? "top-center" : "bottom-right"}
       richColors
       theme={theme as ToasterProps["theme"]}
