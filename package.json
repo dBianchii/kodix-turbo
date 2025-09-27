@@ -13,12 +13,10 @@
     "check": "biome check .",
     "check:write": "biome check --write .",
     "check:unsafe": "biome check --write --unsafe .",
-    "lint:ws": "pnpm dlx sherif@latest",
     "start:trpc-cli": "pnpm -F trpc-cli start",
     "dev:trpc-cli": "pnpm -F trpc-cli dev",
     "vercel-link": "vercel switch kodix && vercel link --repo --yes && pnpm -r pull-vercel",
-    "package-deps": "pnpm install",
-    "postinstall": "pnpm lint:ws"
+    "package-deps": "pnpm install"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",
