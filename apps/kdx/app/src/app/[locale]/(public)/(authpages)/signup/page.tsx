@@ -1,3 +1,4 @@
+import type { Locale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { Link } from "~/i18n/routing";
@@ -11,7 +12,8 @@ export default async function SignUpPage(props: {
   params: Promise<{ locale: string }>;
 }) {
   const locale = (await props.params).locale;
-  setRequestLocale(locale);
+  setRequestLocale(locale as Locale);
+
   const searchParams = await props.searchParams;
   const t = await getTranslations();
   return (

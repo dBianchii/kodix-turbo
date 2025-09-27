@@ -16,8 +16,11 @@ import { getBaseUrl } from "@kodix/shared/utils";
 import { cn } from "@kodix/ui";
 import { ThemeToggle } from "@kodix/ui/theme";
 import { Toaster } from "@kodix/ui/toast";
+import { hasLocale } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
+
+import { formats } from "@kdx/locales";
 
 import { routing } from "~/i18n/routing";
 
@@ -48,9 +51,9 @@ export default async function RootLayout(props: {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await props.params;
-  if (!routing.locales.includes(locale as never)) return notFound();
-  setRequestLocale(locale);
+  const { locale: requestedLocale } = await props.params;
+  if (!hasLocale(routing.locales, requestedLocale)) return notFound();
+  setRequestLocale(requestedLocale);
 
   const messages = await getMessages();
   return (
@@ -68,7 +71,11 @@ export default async function RootLayout(props: {
               pauseWhenPageIsHidden
               richColors
             />
-            <CCNextIntlClientProvider locale={locale} messages={messages}>
+            <CCNextIntlClientProvider
+              locale={requestedLocale}
+              messages={messages}
+              formats={formats}
+            >
               <PostHogPageView />
               <KdxTRPCReactProvider>
                 <div className="flex min-h-screen flex-col">

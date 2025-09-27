@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
+import { hasLocale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 
 import { routing } from "~/i18n/routing";
@@ -16,8 +17,8 @@ export default async function StaticLocaleLayout({
   params: Promise<{ locale: string }>;
 }) {
   const locale = (await params).locale;
-  if (!routing.locales.includes(locale as never)) return notFound();
-
+  if (!hasLocale(routing.locales, locale)) return notFound();
   setRequestLocale(locale);
+
   return children;
 }

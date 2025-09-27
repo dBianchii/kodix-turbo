@@ -1,3 +1,4 @@
+import { hasLocale } from "next-intl";
 import { getRequestConfig } from "next-intl/server";
 
 import { formats } from "@kdx/locales";
@@ -5,14 +6,13 @@ import { formats } from "@kdx/locales";
 import { routing } from "./routing";
 
 export default getRequestConfig(async ({ requestLocale }) => {
-  let locale = await requestLocale;
+  const requested = await requestLocale;
 
   // Validate that the incoming `locale` parameter is valid
   // Ensure that a valid locale is used
-  // biome-ignore lint/suspicious/noExplicitAny: <fix me>
-  if (!locale || !routing.locales.includes(locale as any)) {
-    locale = routing.defaultLocale;
-  }
+  const locale = hasLocale(routing.locales, requested)
+    ? requested
+    : routing.defaultLocale;
 
   return {
     locale,

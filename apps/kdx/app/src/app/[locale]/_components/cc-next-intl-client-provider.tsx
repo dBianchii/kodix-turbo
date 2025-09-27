@@ -1,19 +1,20 @@
 "use client";
 
-import type { AbstractIntlMessages } from "next-intl";
+import type { AbstractIntlMessages, Formats, Locale } from "next-intl";
 import { NextIntlClientProvider } from "next-intl";
 
-import { formats } from "@kdx/locales";
 import { useI18nZodErrors } from "@kdx/validators/use-i18n-zod-errors";
 
 export function CCNextIntlClientProvider({
   children,
   messages,
   locale,
+  formats,
 }: {
-  locale: string;
+  locale: Locale;
   children: React.ReactNode;
   messages?: AbstractIntlMessages | undefined;
+  formats?: Formats;
 }) {
   return (
     <NextIntlClientProvider
