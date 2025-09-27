@@ -1,3 +1,4 @@
+import type { Locale } from "next-intl";
 import { getBaseUrl } from "@kodix/shared/utils";
 import { cn } from "@kodix/ui";
 import { buttonVariants } from "@kodix/ui/button";
@@ -21,7 +22,7 @@ export default async function HomePage({
   params: Promise<{ locale: string }>;
 }) {
   const locale = (await params).locale;
-  setRequestLocale(locale);
+  setRequestLocale(locale as Locale);
 
   const t = await getTranslations();
 

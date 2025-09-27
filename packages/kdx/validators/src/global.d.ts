@@ -1,14 +1,12 @@
-// Use type safe message keys with `next-intl`
-import type { formats } from "@kdx/locales";
-
-//? @kdx/validators should only use "validators" namespaces
+import type { formats, Locale } from "@kdx/locales";
 
 type ValidatorsMessages =
   typeof import("../../locales/src/messages/validators/en.json");
 
-type Formats = typeof formats;
-
-declare global {
-  type IntlMessages = ValidatorsMessages;
-  type IntlFormats = Formats;
+declare module "next-intl" {
+  interface AppConfig {
+    Messages: ValidatorsMessages;
+    Formats: typeof formats;
+    Locale: Locale;
+  }
 }

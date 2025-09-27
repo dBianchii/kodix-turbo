@@ -20,8 +20,6 @@ import { useDebounce } from "@kodix/ui/hooks/use-debounce";
 import { toast } from "@kodix/ui/toast";
 import { useLocale } from "next-intl";
 
-import type { Locales } from "@kdx/locales";
-
 import { CreateShiftCredenzaButton } from "./create-care-shift-credenza";
 import { EditCareShiftCredenza } from "./edit-care-shift-credenza";
 import { useCareShiftsData, useEditCareShift } from "./hooks";
@@ -71,7 +69,7 @@ export default function ShiftsBigCalendar({
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   const t = useTranslations();
-  const locale = useLocale() as Locales;
+  const locale = useLocale();
 
   const query = useCareShiftsData();
   const { mutate } = useEditCareShift();

@@ -1,5 +1,6 @@
 "use client";
 
+import type { Locale } from "next-intl";
 import { Button } from "@kodix/ui/button";
 import {
   DropdownMenu,
@@ -10,15 +11,13 @@ import {
 import { useTranslations } from "next-intl";
 import { PiTranslate } from "react-icons/pi";
 
-import type { Locales } from "@kdx/locales";
-
 import { usePathname, useRouter } from "~/i18n/routing";
 
 export function I18nPicker() {
   const t = useTranslations();
   const pathname = usePathname();
   const router = useRouter();
-  const handleLocaleChange = (locale: Locales) => {
+  const handleLocaleChange = (locale: Locale) => {
     router.replace(pathname, { locale: locale });
     router.refresh();
   };

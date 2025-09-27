@@ -1,10 +1,12 @@
-import type { formats } from "@kdx/locales";
+import type { formats, Locale } from "@kdx/locales";
 
-//? @kdx/permissions should only use "api" namespace
 type ApiMessages = typeof import("../../locales/src/messages/api/en.json");
-type Formats = typeof formats;
 
-declare global {
-  type IntlMessages = ApiMessages;
-  type IntlFormats = Formats;
+declare module "next-intl" {
+  // biome-ignore lint/nursery/useConsistentTypeDefinitions: <We need declaration merging>
+  interface AppConfig {
+    Messages: ApiMessages;
+    Formats: typeof formats;
+    Locale: Locale;
+  }
 }

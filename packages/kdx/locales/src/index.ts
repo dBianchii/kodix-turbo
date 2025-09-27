@@ -3,8 +3,10 @@ import type { getTranslations } from "next-intl/server";
 import type { Formats } from "use-intl";
 
 export const locales = ["pt-BR", "en"] as const;
-export type Locales = (typeof locales)[number];
+export type Locale = (typeof locales)[number];
 export const defaultLocale = "pt-BR";
+
+import type { Messages } from "next-intl";
 
 export const formats = {
   dateTime: {
@@ -46,10 +48,7 @@ export const formats = {
   },
 } satisfies Formats;
 
-type AllowedMessageKeys = NamespaceKeys<
-  IntlMessages,
-  NestedKeyOf<IntlMessages>
->;
+type AllowedMessageKeys = NamespaceKeys<Messages, NestedKeyOf<Messages>>;
 
 type TranslationKeys = AllowedMessageKeys;
 export type ServerSideT<S extends TranslationKeys = never> = Awaited<
