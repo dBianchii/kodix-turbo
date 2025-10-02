@@ -9,7 +9,6 @@ import {
 } from "@kdx/db/repositories";
 
 import type { TIsTeamOwnerProcedureContext } from "../../procedures";
-import { findTeamById } from "../../../../../db/src/repositories/teamRepository";
 
 interface DeleteTeamOptions {
   ctx: TIsTeamOwnerProcedureContext;
@@ -17,7 +16,7 @@ interface DeleteTeamOptions {
 }
 
 export const deleteTeamHandler = async ({ ctx, input }: DeleteTeamOptions) => {
-  const team = await findTeamById(input.teamId);
+  const team = await teamRepository.findTeamById(input.teamId);
 
   if (!team)
     throw new TRPCError({

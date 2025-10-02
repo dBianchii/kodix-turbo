@@ -20,23 +20,17 @@
   "dependencies": {
     "@kodix/dayjs": "workspace:*",
     "@kodix/shared": "workspace:*",
-    "@neondatabase/serverless": "^1.0.1",
+    "@neondatabase/serverless": "catalog:",
     "@t3-oss/env-core": "catalog:",
     "drizzle-orm": "catalog:",
-    "nanoid": "catalog:",
-    "ws": "^8.18.3",
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@kodix/biome-config": "workspace:*",
     "@kodix/tsconfig": "workspace:*",
     "@types/node": "catalog:",
-    "@types/ws": "^8.18.1",
-    "dotenv-cli": "catalog:",
     "drizzle-kit": "catalog:",
     "drizzle-seed": "catalog:",
     "ora": "catalog:",
-    "postgres": "^3.4.7",
     "tsx": "catalog:",
     "typescript": "catalog:"
   }

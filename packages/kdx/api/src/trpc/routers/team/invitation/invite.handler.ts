@@ -1,11 +1,10 @@
 import { KODIX_NOTIFICATION_FROM_EMAIL } from "@kodix/shared/constants";
-import { getBaseUrl, getSuccessesAndErrors } from "@kodix/shared/utils";
+import { getBaseUrl, getSuccessesAndErrors, nanoid } from "@kodix/shared/utils";
 import { TRPCError } from "@trpc/server";
 
 import type { invitations } from "@kdx/db/schema";
 import type { TInviteInputSchema } from "@kdx/validators/trpc/team/invitation";
 import { db } from "@kdx/db/client";
-import { nanoid } from "@kdx/db/nanoid";
 import { teamRepository } from "@kdx/db/repositories";
 import TeamInvite from "@kdx/react-email/team-invite";
 

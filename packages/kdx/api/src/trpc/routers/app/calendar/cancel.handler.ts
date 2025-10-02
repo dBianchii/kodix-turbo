@@ -6,7 +6,6 @@ import { db } from "@kdx/db/client";
 import { calendarRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
-import { deleteEventMasterById } from "../../../../../../db/src/repositories/app/calendar/calendarRepository";
 
 interface CancelOptions {
   ctx: TProtectedProcedureContext;
@@ -90,7 +89,7 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
     });
     return;
   } else {
-    await deleteEventMasterById(db, input.eventMasterId);
+    await calendarRepository.deleteEventMasterById(db, input.eventMasterId);
 
     return;
   }
