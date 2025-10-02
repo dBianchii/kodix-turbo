@@ -38,14 +38,6 @@ export type TPublicProcedureContext = inferProcedureBuilderResolverOptions<
   typeof publicProcedure
 >["ctx"];
 
-/**
- * Protected (authenticated) procedure
- *
- * If you want a query or mutation to ONLY be accessible to logged in users, use this. It verifies
- * the session is valid and guarantees `ctx.auth.user` is not null.
- *
- * @see https://trpc.io/docs/procedures
- */
 export const protectedProcedure = publicProcedure.use(({ ctx, next }) => {
   if (!ctx.auth.user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });

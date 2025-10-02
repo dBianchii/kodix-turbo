@@ -1,4 +1,4 @@
-name: kodix-db
+name: kdx-db
 services:
   mysql:
     image: mysql:8.2

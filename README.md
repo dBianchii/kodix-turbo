@@ -132,9 +132,6 @@ pnpm start:trpc-cli
 # Start the trpc-cli tool in development mode
 pnpm dev:trpc-cli
 
-# Add new shadcn-ui components to the global ui package
-pnpm ui:add
-
 # Create a new package (global or kdx-scoped)
 pnpm turbo gen init
 ```

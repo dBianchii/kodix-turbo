@@ -4,7 +4,7 @@ import { httpBatchLink, loggerLink } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
 import superjson from "superjson";
 
-import type { AppRouter } from "@kdx/api";
+import type { KdxTRPCRouter } from "@kdx/api";
 
 import { getBaseKdxUrl } from "./base-url";
 import { getToken } from "./session-store";
@@ -12,7 +12,7 @@ import { getToken } from "./session-store";
 /**
  * A set of typesafe hooks for consuming your API.
  */
-export const api = createTRPCReact<AppRouter>();
+export const api = createTRPCReact<KdxTRPCRouter>();
 
 export type { RouterInputs, RouterOutputs } from "@kdx/api";
 

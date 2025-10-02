@@ -1,33 +1,14 @@
 import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 
-import type { AppRouter } from "./trpc/root";
-import { appRouter } from "./trpc/root";
+import type { KdxTRPCRouter } from "./trpc/root";
+import { kdxTRPCRouter } from "./trpc/root";
 import { createCallerFactory, createTRPCContext } from "./trpc/trpc";
 
-/**
- * Create a server-side caller for the tRPC API
- * @example
- * const trpc = createCaller(createContext);
- * const res = await trpc.post.all();
- *       ^? Post[]
- */
-const createCaller = createCallerFactory(appRouter);
+const createCaller = createCallerFactory(kdxTRPCRouter);
 
-/**
- * Inference helpers for input types
- * @example
- * type PostByIdInput = RouterInputs['post']['byId']
- *      ^? { id: number }
- **/
-type RouterInputs = inferRouterInputs<AppRouter>;
+type RouterInputs = inferRouterInputs<KdxTRPCRouter>;
 
-/**
- * Inference helpers for output types
- * @example
- * type AllPostsOutput = RouterOutputs['post']['all']
- *      ^? Post[]
- **/
-type RouterOutputs = inferRouterOutputs<AppRouter>;
+type RouterOutputs = inferRouterOutputs<KdxTRPCRouter>;
 
-export { createTRPCContext, appRouter, createCaller };
-export type { AppRouter, RouterInputs, RouterOutputs };
+export { createTRPCContext, kdxTRPCRouter, createCaller };
+export type { KdxTRPCRouter, RouterInputs, RouterOutputs };

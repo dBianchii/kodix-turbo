@@ -1,8 +1,8 @@
+import { NANOID_SIZE } from "@kodix/shared/utils";
 import { relations } from "drizzle-orm";
 import { index, mysqlTable } from "drizzle-orm/mysql-core";
 import { createInsertSchema } from "drizzle-zod";
 
-import { NANOID_SIZE } from "../../nanoid";
 import { teams } from "../teams";
 import { users } from "../users";
 import {
@@ -29,11 +29,7 @@ export const eventMasters = mysqlTable(
       .notNull()
       .references(() => users.id),
   }),
-  (table) => {
-    return {
-      teamIdIdx: index("teamId_idx").on(table.teamId),
-    };
-  },
+  (table) => [index("teamId_idx").on(table.teamId)],
 );
 export const eventMastersRelations = relations(
   eventMasters,
@@ -94,11 +90,7 @@ export const eventExceptions = mysqlTable(
       .references(() => eventMasters.id, { onDelete: "cascade" }),
     type: typeEnum(t),
   }),
-  (table) => {
-    return {
-      eventMasterIdIdx: index("eventMasterId_idx").on(table.eventMasterId),
-    };
-  },
+  (table) => [index("eventMasterId_idx").on(table.eventMasterId)],
 );
 export const eventExceptionsRelations = relations(
   eventExceptions,

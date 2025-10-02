@@ -1,7 +1,6 @@
 {
   "$schema": "node_modules/@biomejs/biome/configuration_schema.json",
   "extends": ["ultracite"],
-  "root": true,
   "files": {
     "includes": ["**", "!**/rbc-styles.css", "!.vscode/kodix.code-snippets"]
   },
@@ -25,6 +24,12 @@
         "noNamespaceImport": "off" //TODO: enable
       },
       "nursery": {
+        "useConsistentTypeDefinitions": {
+          "level": "on",
+          "options": {
+            "style": "interface"
+          }
+        },
         "useSortedClasses": {
           "level": "on",
           "options": {

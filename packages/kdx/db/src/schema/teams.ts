@@ -1,9 +1,9 @@
 import type { AppRole } from "@kodix/shared/db";
+import { NANOID_SIZE } from "@kodix/shared/utils";
 import { relations } from "drizzle-orm";
 import { index, mysqlTable, unique } from "drizzle-orm/mysql-core";
 import { createInsertSchema } from "drizzle-zod";
 
-import { NANOID_SIZE } from "../nanoid";
 import { apps, appsToTeams, appTeamConfigs } from "./apps";
 import { eventMasters } from "./apps/calendar";
 import { careShifts, careTasks } from "./apps/kodixCare";
@@ -27,11 +27,7 @@ export const teams = mysqlTable(
       .notNull()
       .references(() => users.id, { onUpdate: "cascade" }),
   }),
-  (table) => {
-    return {
-      ownerIdIdx: index("ownerId_idx").on(table.ownerId),
-    };
-  },
+  (table) => [index("ownerId_idx").on(table.ownerId)],
 );
 export const teamsRelations = relations(teams, ({ many, one }) => ({
   Owner: one(users, {
@@ -59,16 +55,11 @@ export const usersToTeams = mysqlTable(
       .references(() => users.id, { onDelete: "cascade" }),
     teamId: teamIdReferenceCascadeDelete(t),
   }),
-  (table) => {
-    return {
-      userIdIdx: index("userId_idx").on(table.userId),
-      teamIdIdx: index("teamId_idx").on(table.teamId),
-      unique_userId_teamId: unique("unique_userId_teamId").on(
-        table.userId,
-        table.teamId,
-      ),
-    };
-  },
+  (table) => [
+    index("userId_idx").on(table.userId),
+    index("teamId_idx").on(table.teamId),
+    unique("unique_userId_teamId").on(table.userId, table.teamId),
+  ],
 );
 export const usersToTeamsRelations = relations(usersToTeams, ({ one }) => ({
   User: one(users, {
@@ -99,17 +90,18 @@ export const userTeamAppRoles = mysqlTable(
       .$type<AppRole>()
       .notNull(),
   }),
-  (table) => {
-    return {
-      userIdIdx: index("userId_idx").on(table.userId),
-      teamIdIdx: index("teamId_idx").on(table.teamId),
-      appIdIdx: index("appId_idx").on(table.appId),
+  (table) => [
+    index("userId_idx").on(table.userId),
+    index("teamId_idx").on(table.teamId),
+    index("appId_idx").on(table.appId),
 
-      unique_userId_teamId_appId_role: unique(
-        "unique_userId_teamId_appId_role",
-      ).on(table.userId, table.teamId, table.appId, table.role),
-    };
-  },
+    unique("unique_userId_teamId_appId_role").on(
+      table.userId,
+      table.teamId,
+      table.appId,
+      table.role,
+    ),
+  ],
 );
 export const userTeamAppRolesRelations = relations(
   userTeamAppRoles,
@@ -143,12 +135,10 @@ export const invitations = mysqlTable(
       .notNull()
       .references(() => users.id),
   }),
-  (table) => {
-    return {
-      invitedByIdIdx: index("invitedById_idx").on(table.invitedById),
-      teamIdIdx: index("teamId_idx").on(table.teamId),
-    };
-  },
+  (table) => [
+    index("invitedById_idx").on(table.invitedById),
+    index("teamId_idx").on(table.teamId),
+  ],
 );
 export const invitationsRelations = relations(invitations, ({ one }) => ({
   InvitedBy: one(users, {

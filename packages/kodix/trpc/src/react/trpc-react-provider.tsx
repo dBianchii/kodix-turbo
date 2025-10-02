@@ -47,14 +47,14 @@ export function getTRPCClient<TRouter extends AnyRouter>(
           (op.direction === "down" && op.result instanceof Error),
       }),
       httpBatchStreamLink({
-        transformer:
-          SuperJSON as TRouter["_def"]["_config"]["$types"]["transformer"],
-        url: `${getBaseUrl()}/api/trpc`,
         headers() {
           const headers = new Headers();
           headers.set("x-trpc-source", apiSource);
           return headers;
         },
+        transformer:
+          SuperJSON as TRouter["_def"]["_config"]["$types"]["transformer"],
+        url: `${getBaseUrl()}/api/trpc`,
       }),
     ],
   });

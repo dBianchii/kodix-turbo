@@ -1,4 +1,5 @@
 import type { VariantProps } from "class-variance-authority";
+import { cloneElement, isValidElement } from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
 import { Loader2 } from "lucide-react";
@@ -55,22 +56,51 @@ const Button = ({
   ...props
 }: ButtonProps) => {
   const Comp = asChild ? Slot : "button";
+  const classes = cn(buttonVariants({ variant, size, className }));
+
+  // In asChild mode, Slot requires exactly one React element child.
+  // Inject the loader into the child element to keep a single top-level child.
+  let content: React.ReactNode | undefined;
+  if (asChild) {
+    if (isValidElement(children) && loading) {
+      content = cloneElement(children, undefined, [
+        <Loader2
+          aria-hidden="true"
+          className="-ms-1 me-2 animate-spin"
+          key="loader"
+          size={16}
+          strokeWidth={2}
+        />,
+        // @ts-expect-error children may be undefined depending on the child type
+        children.props?.children,
+      ]);
+    } else {
+      content = children;
+    }
+  }
+
   return (
     <Comp
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={classes}
       disabled={loading || disabled}
       ref={ref}
       {...props}
     >
-      {loading && (
-        <Loader2
-          aria-hidden="true"
-          className="-ms-1 me-2 animate-spin"
-          size={16}
-          strokeWidth={2}
-        />
+      {asChild ? (
+        content
+      ) : (
+        <>
+          {loading && (
+            <Loader2
+              aria-hidden="true"
+              className="-ms-1 me-2 animate-spin"
+              size={16}
+              strokeWidth={2}
+            />
+          )}
+          {children}
+        </>
       )}
-      {children}
     </Comp>
   );
 };

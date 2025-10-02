@@ -23,14 +23,10 @@ export const todos = mysqlTable(
       .references(() => users.id),
     teamId: teamIdReferenceCascadeDelete(t),
   }),
-  (table) => {
-    return {
-      assignedToUserIdIdx: index("assignedToUserId_idx").on(
-        table.assignedToUserId,
-      ),
-      teamIdIdx: index("teamId_idx").on(table.teamId),
-    };
-  },
+  (table) => [
+    index("assignedToUserId_idx").on(table.assignedToUserId),
+    index("teamId_idx").on(table.teamId),
+  ],
 );
 export const todosRelations = relations(todos, ({ one }) => ({
   AssignedToUser: one(users, {

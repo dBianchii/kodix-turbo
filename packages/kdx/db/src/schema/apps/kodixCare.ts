@@ -1,8 +1,8 @@
+import { NANOID_SIZE } from "@kodix/shared/utils";
 import { relations } from "drizzle-orm";
 import { index, mysqlTable } from "drizzle-orm/mysql-core";
 import { createInsertSchema } from "drizzle-zod";
 
-import { NANOID_SIZE } from "../../nanoid";
 import { teams } from "../teams";
 import { users } from "../users";
 import {
@@ -36,12 +36,10 @@ export const careShifts = mysqlTable(
       { onDelete: "restrict" }, //Restrict because we have to keep logs somehow
     ),
   }),
-  (table) => {
-    return {
-      caregiverIdIdx: index("caregiverId_idx").on(table.caregiverId),
-      teamIdIdx: index("teamId_idx").on(table.teamId),
-    };
-  },
+  (table) => [
+    index("caregiverId_idx").on(table.caregiverId),
+    index("teamId_idx").on(table.teamId),
+  ],
 );
 export const careShiftsRelations = relations(careShifts, ({ one }) => ({
   Caregiver: one(users, {
@@ -81,13 +79,11 @@ export const careTasks = mysqlTable(
       .references(() => users.id),
     createdFromCalendar: t.boolean().notNull(),
   }),
-  (table) => {
-    return {
-      doneByUserIdIdx: index("doneByUserId_idx").on(table.doneByUserId),
-      eventMasterIdIdx: index("eventMasterId_Idx").on(table.eventMasterId),
-      teamIdIdx: index("teamId_idx").on(table.teamId),
-    };
-  },
+  (table) => [
+    index("doneByUserId_idx").on(table.doneByUserId),
+    index("eventMasterId_Idx").on(table.eventMasterId),
+    index("teamId_idx").on(table.teamId),
+  ],
 );
 export const careTasksRelations = relations(careTasks, ({ one }) => ({
   DoneByUser: one(users, {

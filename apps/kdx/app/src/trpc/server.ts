@@ -3,8 +3,8 @@ import { headers } from "next/headers";
 import { getQueryClient } from "@kodix/trpc/react/server";
 import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
 
-import type { AppRouter } from "@kdx/api";
-import { appRouter, createCaller, createTRPCContext } from "@kdx/api";
+import type { KdxTRPCRouter } from "@kdx/api";
+import { createCaller, createTRPCContext, kdxTRPCRouter } from "@kdx/api";
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
@@ -21,8 +21,8 @@ const createContext = cache(async () => {
 
 export const trpcCaller = createCaller(createContext);
 
-export const trpc = createTRPCOptionsProxy<AppRouter>({
-  router: appRouter,
+export const trpc = createTRPCOptionsProxy<KdxTRPCRouter>({
+  router: kdxTRPCRouter,
   ctx: createContext,
   queryClient: getQueryClient,
 });

@@ -11,8 +11,8 @@ export function CSPostHogProvider({ children }: { children: React.ReactNode }) {
     if (env.NODE_ENV === "development") return;
     posthog.init(env.NEXT_PUBLIC_POSTHOG_KEY, {
       api_host: env.NEXT_PUBLIC_POSTHOG_HOST,
-      person_profiles: "identified_only",
       capture_pageview: false, // Disable automatic pageview capture, as we capture manually
+      person_profiles: "identified_only",
     });
   }, []);
 
