@@ -32,10 +32,10 @@ import { useTranslations } from "next-intl";
 import { LuCircleAlert, LuPlus } from "react-icons/lu";
 import { RRule, Weekday } from "rrule";
 
+import { useTRPC } from "@kdx/api/trpc/react/client";
 import { ZCreateInputSchema } from "@kdx/validators/trpc/app/calendar";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
-import { useTRPC } from "~/trpc/react";
 
 import { RecurrencePicker } from "./recurrence-picker";
 

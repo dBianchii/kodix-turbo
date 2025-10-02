@@ -37,9 +37,9 @@ import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
+import { useTRPC } from "@kdx/api/trpc/react/client";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
-import { useTRPC } from "~/trpc/react";
 
 const columnHelper =
   createColumnHelper<RouterOutputs["team"]["getAllUsers"][number]>();

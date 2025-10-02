@@ -3,13 +3,13 @@ import { DataTableSkeleton } from "@kodix/ui/data-table/data-table-skeleton";
 import { H1, Lead } from "@kodix/ui/typography";
 import { getLocale, getTranslations } from "next-intl/server";
 
+import { trpcCaller } from "@kdx/api/trpc/react/server";
 import { auth } from "@kdx/auth";
 import { ZGetNotificationsInputSchema } from "@kdx/validators/trpc/user";
 
 import { CustomKodixIcon } from "~/app/[locale]/_components/app/custom-kodix-icon";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { redirect } from "~/i18n/routing";
-import { trpcCaller } from "~/trpc/server";
 
 import { DataTableNotifications } from "./_components/data-table-notifications";
 import { NotificationsDateRangePicker } from "./_components/notifications-date-range-picker";

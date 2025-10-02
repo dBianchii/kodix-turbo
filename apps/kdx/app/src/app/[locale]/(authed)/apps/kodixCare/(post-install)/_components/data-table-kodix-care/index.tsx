@@ -96,11 +96,11 @@ import { create } from "zustand";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
+import { useTRPC } from "@kdx/api/trpc/react/client";
 import { ZCreateCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { Link } from "~/i18n/routing";
-import { useTRPC } from "~/trpc/react";
 
 import { DateTimeSelectorWithLeftAndRightArrows } from "./date-time-selector-with-left-and-right-buttons";
 import { EditCareTaskCredenza } from "./edit-care-task-credenza";

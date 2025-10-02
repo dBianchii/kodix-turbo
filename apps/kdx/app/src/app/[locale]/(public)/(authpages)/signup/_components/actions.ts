@@ -2,11 +2,11 @@
 
 import { getLocale } from "next-intl/server";
 
+import { trpcCaller } from "@kdx/api/trpc/react/server";
 import { ZSignupWithPasswordInputSchema } from "@kdx/validators/trpc/user";
 
 import { action } from "~/helpers/safe-action/safe-action";
 import { redirect } from "~/i18n/routing";
-import { trpcCaller } from "~/trpc/server";
 
 export const signupAction = action
   .inputSchema(ZSignupWithPasswordInputSchema)

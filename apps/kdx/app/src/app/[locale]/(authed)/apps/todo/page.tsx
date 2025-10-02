@@ -3,10 +3,11 @@ import { Separator } from "@kodix/ui/separator";
 import { H1 } from "@kodix/ui/typography";
 import { getTranslations } from "next-intl/server";
 
+import { trpcCaller } from "@kdx/api/trpc/react/server";
+
 import { IconKodixApp } from "~/app/[locale]/_components/app/kodix-icon";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
-import { trpcCaller } from "~/trpc/server";
 
 import { CreateTaskDialogButton } from "./_components/create-task-dialog-button";
 import { DataTableTodo } from "./_components/data-table-todo";

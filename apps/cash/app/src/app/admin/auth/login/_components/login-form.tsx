@@ -12,23 +12,16 @@ import {
   useForm,
 } from "@kodix/ui/form";
 import { Input } from "@kodix/ui/input";
-import { z } from "zod";
 
-import { loginAction } from "../actions";
-
-const loginSchema = z.object({
-  email: z.email("Please enter a valid email"),
-  password: z.string().min(1, "Password is required"),
-});
-
-type LoginFormData = z.infer<typeof loginSchema>;
+import { loginAction } from "./login.action";
+import { type LoginFormData, ZLoginSchema } from "./login.schema";
 
 export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const form = useForm({
-    schema: loginSchema,
+    schema: ZLoginSchema,
     defaultValues: {
       email: "",
       password: "",
@@ -39,12 +32,8 @@ export function LoginForm() {
     setIsLoading(true);
     setError(null);
 
-    const formData = new FormData();
-    formData.append("email", data.email);
-    formData.append("password", data.password);
-
     try {
-      await loginAction(formData);
+      await loginAction(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {

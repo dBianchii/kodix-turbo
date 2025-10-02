@@ -21,12 +21,12 @@ import { HiUserCircle } from "react-icons/hi";
 import { LuPlus, LuX } from "react-icons/lu";
 
 import type { todos } from "@kdx/db/schema";
+import { useTRPC } from "@kdx/api/trpc/react/client";
 
 import {
   DatePickerIcon,
   DatePickerWithPresets,
 } from "~/app/[locale]/_components/date-picker-with-presets";
-import { useTRPC } from "~/trpc/react";
 
 import type { Priority } from "./priority-popover";
 import { AssigneePopover } from "./assignee-popover";

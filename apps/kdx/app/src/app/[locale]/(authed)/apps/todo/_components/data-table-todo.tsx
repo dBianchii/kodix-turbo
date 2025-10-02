@@ -25,10 +25,10 @@ import {
 
 import type { RouterOutputs } from "@kdx/api";
 import type { todos } from "@kdx/db/schema";
+import { useTRPC } from "@kdx/api/trpc/react/client";
 
 import { DatePickerWithPresets } from "~/app/[locale]/_components/date-picker-with-presets";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
-import { useTRPC } from "~/trpc/react";
 
 import type { Priority } from "./priority-popover";
 import { AssigneePopover } from "./assignee-popover";

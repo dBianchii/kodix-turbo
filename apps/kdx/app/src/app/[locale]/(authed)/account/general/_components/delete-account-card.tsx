@@ -35,8 +35,9 @@ import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import z from "zod";
 
+import { useTRPC } from "@kdx/api/trpc/react/client";
+
 import { useRouter } from "~/i18n/routing";
-import { useTRPC } from "~/trpc/react";
 
 export function DeleteAccountCard() {
   const trpc = useTRPC();

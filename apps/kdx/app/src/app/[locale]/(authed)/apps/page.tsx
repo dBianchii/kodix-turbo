@@ -2,10 +2,10 @@ import { Suspense } from "react";
 import { H1, Lead } from "@kodix/ui/typography";
 import { getTranslations } from "next-intl/server";
 
+import { trpcCaller } from "@kdx/api/trpc/react/server";
 import { auth } from "@kdx/auth";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
-import { trpcCaller } from "~/trpc/server";
 
 import { AppCardSkeleton } from "../../_components/app/kodix-app";
 import { KodixApps } from "./_components/kodix-apps";

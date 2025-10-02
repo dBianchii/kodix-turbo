@@ -7,10 +7,9 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { type Locale, type Messages, NextIntlClientProvider } from "next-intl";
 import { ThemeProvider } from "next-themes";
 
+import { KdxTRPCReactProvider } from "@kdx/api/trpc/react/client";
 import { formats } from "@kdx/locales";
 import { useI18nZodErrors } from "@kdx/validators/use-i18n-zod-errors";
-
-import { KdxTRPCReactProvider } from "~/trpc/react";
 
 import PostHogPageView from "./_components/posthog-page-view";
 

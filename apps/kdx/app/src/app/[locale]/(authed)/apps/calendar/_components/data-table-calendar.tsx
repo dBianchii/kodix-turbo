@@ -50,9 +50,9 @@ import {
 import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
+import { useTRPC } from "@kdx/api/trpc/react/client";
 
 import { DatePicker } from "~/app/[locale]/_components/date-picker";
-import { useTRPC } from "~/trpc/react";
 
 import { CancelationDialog } from "./cancel-event-dialog";
 import { EditEventDialog } from "./edit-event-dialog";

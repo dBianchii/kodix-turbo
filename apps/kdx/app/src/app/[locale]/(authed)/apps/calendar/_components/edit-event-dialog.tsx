@@ -31,9 +31,9 @@ import { RRule, Weekday } from "rrule";
 
 import type { RouterInputs, RouterOutputs } from "@kdx/api";
 import type { eventMasters } from "@kdx/db/schema";
+import { useTRPC } from "@kdx/api/trpc/react/client";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
-import { useTRPC } from "~/trpc/react";
 
 import { RecurrencePicker } from "./recurrence-picker";
 

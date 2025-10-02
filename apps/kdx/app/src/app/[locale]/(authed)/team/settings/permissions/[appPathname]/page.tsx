@@ -1,13 +1,13 @@
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 
+import { trpcCaller } from "@kdx/api/trpc/react/server";
 import { auth } from "@kdx/auth";
 import { getAppName } from "@kdx/locales/next-intl/server-hooks";
 
 import type { AppPathnames } from "~/helpers/miscelaneous";
 import { appIdToPathname, appPathnameToAppId } from "~/helpers/miscelaneous";
 import { redirect } from "~/i18n/routing";
-import { trpcCaller } from "~/trpc/server";
 
 import { DataTableUserAppRoles } from "./_components/data-table-user-app-roles";
 

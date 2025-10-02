@@ -526,6 +526,9 @@ importers:
 
   apps/cash/app:
     dependencies:
+      '@cash/api':
+        specifier: workspace:*
+        version: link:../../../packages/cash/api
       '@cash/auth':
         specifier: workspace:*
         version: link:../../../packages/cash/auth
@@ -997,6 +1000,9 @@ importers:
       '@kodix/trpc':
         specifier: workspace:*
         version: link:../../kodix/trpc
+      server-only:
+        specifier: 'catalog:'
+        version: 0.0.1
       zod:
         specifier: 'catalog:'
         version: 4.1.9

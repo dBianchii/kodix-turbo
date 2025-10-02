@@ -2,11 +2,11 @@ import { Suspense } from "react";
 import { buttonVariants } from "@kodix/ui/button";
 import { getTranslations } from "next-intl/server";
 
+import { trpcCaller } from "@kdx/api/trpc/react/server";
 import { auth } from "@kdx/auth";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { Link } from "~/i18n/routing";
-import { trpcCaller } from "~/trpc/server";
 
 import { AppSwitcherClient } from "../app-switcher/app-switcher-client";
 import { I18nPicker } from "./i18n-picker";

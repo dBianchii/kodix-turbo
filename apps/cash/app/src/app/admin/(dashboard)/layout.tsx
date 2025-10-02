@@ -57,7 +57,7 @@ export default async function DashboardLayout({ children }: PropsWithChildren) {
           </SidebarGroup>
         </SidebarContent>
         <SidebarFooter>
-          <NavUser user={user ?? {}} />
+          <NavUser user={user} />
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>

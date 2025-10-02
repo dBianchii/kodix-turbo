@@ -18,11 +18,11 @@ import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
+import { useTRPC } from "@kdx/api/trpc/react/client";
 
 import { DeleteTeamConfirmationDialog } from "~/app/[locale]/(authed)/team/settings/general/_components/delete-team-confirmation-dialog";
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { useRouter } from "~/i18n/routing";
-import { useTRPC } from "~/trpc/react";
 
 import { switchTeamAction } from "./actions";
 

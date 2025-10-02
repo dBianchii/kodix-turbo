@@ -1,11 +1,11 @@
 import { kodixCareAppId } from "@kodix/shared/db";
 import { getLocale } from "next-intl/server";
 
+import { trpcCaller } from "@kdx/api/trpc/react/server";
 import { auth } from "@kdx/auth";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { redirect } from "~/i18n/routing";
-import { trpcCaller } from "~/trpc/server";
 
 import OnboardingCard from "./_components/onboarding-card";
 

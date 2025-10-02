@@ -3,13 +3,11 @@ import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 
 import type { CashTRPCRouter } from "./trpc/root";
 import { cashTRPCRouter } from "./trpc/root";
-import { createCallerFactory, createTRPCContext } from "./trpc/trpc";
+import { createTRPCContext } from "./trpc/trpc";
 
-const createCaller = createCallerFactory(cashTRPCRouter);
+export type RouterInputs = inferRouterInputs<CashTRPCRouter>;
 
-type RouterInputs = inferRouterInputs<CashTRPCRouter>;
+export type RouterOutputs = inferRouterOutputs<CashTRPCRouter>;
 
-type RouterOutputs = inferRouterOutputs<CashTRPCRouter>;
-
-export { createTRPCContext, cashTRPCRouter, createCaller };
-export type { CashTRPCRouter, RouterInputs, RouterOutputs };
+export { cashTRPCRouter, createTRPCContext };
+export type { CashTRPCRouter };

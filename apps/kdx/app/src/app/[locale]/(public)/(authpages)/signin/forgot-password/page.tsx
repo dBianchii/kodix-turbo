@@ -21,11 +21,11 @@ import { Input } from "@kodix/ui/input";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
+import { useTRPC } from "@kdx/api/trpc/react/client";
 import { ZSendResetPasswordEmailInputSchema } from "@kdx/validators/trpc/user";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { Link } from "~/i18n/routing";
-import { useTRPC } from "~/trpc/react";
 
 export default function ForgotPasswordPage() {
   const trpc = useTRPC();

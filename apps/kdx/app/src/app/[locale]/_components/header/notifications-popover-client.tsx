@@ -15,10 +15,10 @@ import { useTranslations } from "next-intl";
 import { MdNotificationsActive } from "react-icons/md";
 
 import type { RouterOutputs } from "@kdx/api";
+import { useTRPC } from "@kdx/api/trpc/react/client";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { useRouter } from "~/i18n/routing";
-import { useTRPC } from "~/trpc/react";
 
 export function NotificationsPopoverClient({
   initialNotifications,

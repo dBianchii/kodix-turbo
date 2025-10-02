@@ -4,11 +4,11 @@ import { DataTableSkeleton } from "@kodix/ui/data-table/data-table-skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@kodix/ui/tabs";
 import { getLocale, getTranslations } from "next-intl/server";
 
+import { trpc } from "@kdx/api/trpc/react/server";
 import { auth } from "@kdx/auth";
 import { teamRepository } from "@kdx/db/repositories";
 
 import { redirect } from "~/i18n/routing";
-import { trpc } from "~/trpc/server";
 
 import { InviteDataTable } from "./_components/edit-team-members/invites/data-table-invite";
 import { DataTableMembers } from "./_components/edit-team-members/members/data-table-members";
