@@ -65,7 +65,7 @@ export type CalendarProps = Omit<
 const AM_VALUE = 0;
 const PM_VALUE = 1;
 
-export type DateTimePickerProps = {
+export interface DateTimePickerProps {
   /**
    * The modality of the popover. When set to true, interaction with outside elements will be disabled and only popover content will be visible to screen readers.
    * If you want to use the datetime picker inside a dialog, you should set this to true.
@@ -134,16 +134,16 @@ export type DateTimePickerProps = {
    * Custom render function for the trigger.
    */
   renderTrigger?: (props: DateTimeRenderTriggerProps) => React.ReactNode;
-};
+}
 
-export type DateTimeRenderTriggerProps = {
+export interface DateTimeRenderTriggerProps {
   value: Date | undefined;
   open: boolean;
   timezone?: string;
   disabled?: boolean;
   use12HourFormat?: boolean;
   setOpen: (open: boolean) => void;
-};
+}
 
 export function DateTimePicker({
   value,
@@ -569,11 +569,11 @@ function MonthYearPicker({
   );
 }
 
-type TimeOption = {
+interface TimeOption {
   value: number;
   label: string;
   disabled: boolean;
-};
+}
 
 function TimePicker({
   value,
@@ -966,7 +966,7 @@ const TimeItem = ({
   );
 };
 
-type BuildTimeOptions = {
+interface BuildTimeOptions {
   use12HourFormat?: boolean;
   value: Date;
   formatStr: string;
@@ -974,7 +974,7 @@ type BuildTimeOptions = {
   minute: number;
   second: number;
   ampm: number;
-};
+}
 
 function buildTime(options: BuildTimeOptions) {
   const { use12HourFormat, value, formatStr, hour, minute, second, ampm } =

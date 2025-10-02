@@ -3,13 +3,13 @@ import path from "node:path";
 import { expect, it, test } from "vitest";
 import yaml from "yaml";
 
-type PackageJson = {
+interface PackageJson {
   name: string;
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
   peerDependencies?: Record<string, string>;
   engines?: Record<string, string>;
-};
+}
 
 const repositoryRoot = path.join(__dirname, "../../../../");
 

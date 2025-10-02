@@ -32,7 +32,7 @@ export async function loginAction(formData: FormData) {
     await createDbSessionAndCookie({ userId: user.id });
 
     redirect("/admin");
-  } catch (error) {
+  } catch (_error) {
     throw new Error("Login failed");
   }
 }

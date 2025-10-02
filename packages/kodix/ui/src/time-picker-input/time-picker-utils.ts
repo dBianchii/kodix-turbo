@@ -22,11 +22,11 @@ export function isValidMinuteOrSecond(value: string) {
   return minuteOrSecondRegex.test(value);
 }
 
-type GetValidNumberConfig = {
+interface GetValidNumberConfig {
   max: number;
   min?: number;
   loop?: boolean;
-};
+}
 
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: <biome migration>
 export function getValidNumber(
@@ -64,11 +64,11 @@ export function getValidMinuteOrSecond(value: string) {
   return getValidNumber(value, { max: 59 });
 }
 
-type GetValidArrowNumberConfig = {
+interface GetValidArrowNumberConfig {
   min: number;
   max: number;
   step: number;
-};
+}
 
 export function getValidArrowNumber(
   value: string,
