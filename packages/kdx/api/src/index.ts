@@ -9,5 +9,6 @@ export type RouterInputs = inferRouterInputs<KdxTRPCRouter>;
 
 export type RouterOutputs = inferRouterOutputs<KdxTRPCRouter>;
 
+export { nextTRPCHandler } from "@kodix/trpc/server";
 export { kdxTRPCRouter, createTRPCContext };
 export type { KdxTRPCRouter };

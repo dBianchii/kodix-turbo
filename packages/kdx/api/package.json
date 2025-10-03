@@ -4,6 +4,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./trpc/react/client": "./src/trpc/react/client.tsx",
+    "./trpc/react/server": "./src/trpc/react/server.tsx",
     "./crons/*": "./src/crons/*.ts"
   },
   "scripts": {

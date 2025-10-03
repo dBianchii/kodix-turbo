@@ -1,7 +1,8 @@
 {
   "extends": "@kodix/tsconfig/base.json",
   "compilerOptions": {
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "lib": ["ES2022", "dom", "dom.iterable"]
   },
   "include": ["src"],
   "exclude": ["node_modules"]

@@ -1,7 +1,6 @@
 import type { NextRequest } from "next/server";
-import { nextTRPCHandler } from "@kodix/trpc/server";
 
-import { createTRPCContext, kdxTRPCRouter } from "@kdx/api";
+import { createTRPCContext, kdxTRPCRouter, nextTRPCHandler } from "@kdx/api";
 
 import { OPTIONS, setCorsHeaders } from "../../_enableCors";
 

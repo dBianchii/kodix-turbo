@@ -15,14 +15,12 @@ export default {
   serverExternalPackages: ["@node-rs/argon2"],
   /** Enables hot reloading for local packages without a build step */
   transpilePackages: [
-    "@kdx/api",
-    "@kdx/auth",
-    "@kdx/db",
+    "@cash/api",
+    "@cash/auth",
+    "@cash/db",
     "@kodix/ui",
-    "@kdx/validators",
     "@kodix/dayjs",
     "@kodix/shared",
-    "@kdx/locales",
   ],
 
   typedRoutes: true,

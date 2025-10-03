@@ -1,6 +1,5 @@
 import type { NextRequest } from "next/server";
-import { cashTRPCRouter, createTRPCContext } from "@cash/api";
-import { nextTRPCHandler } from "@kodix/trpc/server";
+import { cashTRPCRouter, createTRPCContext, nextTRPCHandler } from "@cash/api";
 
 const handler = async (req: NextRequest) => {
   const response = await nextTRPCHandler(req, {
