@@ -18,6 +18,7 @@ export default withNextIntl({
         : undefined,
   },
   serverExternalPackages: ["@node-rs/argon2"],
+  typedRoutes: true,
 
   /** Enables hot reloading for local packages without a build step */
   transpilePackages: [

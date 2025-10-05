@@ -47,8 +47,12 @@
       "cache": false,
       "persistent": false
     },
+    "typegen": {
+      "dependsOn": ["//#package-deps"],
+      "outputs": ["next-env.d.ts", ".next/types/**"]
+    },
     "tsc": {
-      "dependsOn": ["//#package-deps", "^topo"],
+      "dependsOn": ["//#package-deps", "^topo", "typegen"],
       "outputs": [".cache/tsbuildinfo.json"]
     },
     "//#check": {
