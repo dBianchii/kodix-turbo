@@ -3,19 +3,20 @@ import { drizzle } from "drizzle-orm/neon-serverless";
 
 import * as schema from "./schema";
 
-const connectionString = process.env.DATABASE_URL;
-if (!connectionString) {
+if (!process.env.DATABASE_URL) {
   throw new Error("Missing DATABASE_URL");
 }
+const url = new URL(process.env.DATABASE_URL);
+const connectionString = url.toString();
 
-if (process.env.NODE_ENV === "production") {
-  neonConfig.webSocketConstructor = WebSocket;
-  neonConfig.poolQueryViaFetch = true;
-} else {
+if (url.hostname === "localhost") {
   neonConfig.wsProxy = (host) => `${host}:5433/v1`;
   neonConfig.useSecureWebSocket = false;
   neonConfig.pipelineTLS = false;
   neonConfig.pipelineConnect = false;
+} else {
+  neonConfig.webSocketConstructor = WebSocket;
+  neonConfig.poolQueryViaFetch = true;
 }
 
 const pool = new Pool({ connectionString });
