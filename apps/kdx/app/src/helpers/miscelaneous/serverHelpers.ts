@@ -1,10 +1,10 @@
 import type { KodixAppId } from "@kodix/shared/db";
 import { getLocaleBasedOnCookie } from "node_modules/@kdx/api/src/utils/locales";
 
+import { trpcCaller } from "@kdx/api/trpc/react/server";
 import { auth } from "@kdx/auth";
 
 import { redirect } from "~/i18n/routing";
-import { trpcCaller } from "~/trpc/server";
 
 /**
  * @description Checks if user is logged in and has this app on current team. If not, redirects to /apps

@@ -10,14 +10,14 @@ import { Calendar } from "./calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { TimePicker } from "./time-picker";
 
-type DateTimePickerProps = {
+interface DateTimePickerProps {
   date: Date | undefined;
   setDate: (date: Date | undefined) => void;
   onOpenChange?: (open: boolean) => void;
   size?: "sm" | "default";
   disabledDate?: (date: Date) => boolean;
   side?: PopoverContentProps["side"];
-};
+}
 
 /**
  * @deprecated This component is deprecated. Please use date-n-time instead

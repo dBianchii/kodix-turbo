@@ -3,8 +3,9 @@ import { kodixCareAppId } from "@kodix/shared/db";
 import { HydrateClient, prefetch } from "@kodix/trpc/react/server";
 import { DataTableSkeleton } from "@kodix/ui/data-table/data-table-skeleton";
 
+import { trpc, trpcCaller } from "@kdx/api/trpc/react/server";
+
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
-import { trpc, trpcCaller } from "~/trpc/server";
 
 import ShiftsBigCalendar from "./_components/cc-shifts-big-calendar";
 

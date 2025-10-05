@@ -33,7 +33,7 @@ class AuthError extends Error {
 const hashSessionToken = (token: string) =>
   encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
 
-type AuthRepository<TUser extends BaseUser, TSession extends BaseSession> = {
+interface AuthRepository<TUser extends BaseUser, TSession extends BaseSession> {
   createSession: (session: TSession) => Promise<void>;
   findSessionById: (
     sessionId: string
@@ -44,7 +44,7 @@ type AuthRepository<TUser extends BaseUser, TSession extends BaseSession> = {
     input: Pick<TSession, "expiresAt">;
   }) => Promise<void>;
   findUserByEmail: (email: string) => Promise<TUser | undefined>;
-};
+}
 
 export const getAuthManager = <
   TUser extends BaseUser,

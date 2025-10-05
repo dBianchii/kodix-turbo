@@ -2,8 +2,9 @@ import { Suspense } from "react";
 import { kodixCareAppId } from "@kodix/shared/db";
 import { getTranslations } from "next-intl/server";
 
+import { trpcCaller } from "@kdx/api/trpc/react/server";
+
 import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
-import { trpcCaller } from "~/trpc/server";
 
 import { KodixCareUserSettingsForm } from "./_components/kodix-care-user-settings-form";
 

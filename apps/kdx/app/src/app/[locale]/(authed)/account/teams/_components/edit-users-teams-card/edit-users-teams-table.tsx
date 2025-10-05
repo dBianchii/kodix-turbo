@@ -1,6 +1,5 @@
+import { trpcCaller } from "@kdx/api/trpc/react/server";
 import { auth } from "@kdx/auth";
-
-import { trpcCaller } from "~/trpc/server";
 
 import EditUserTeamsTableClient from "./edit-user-teams-table-client";
 

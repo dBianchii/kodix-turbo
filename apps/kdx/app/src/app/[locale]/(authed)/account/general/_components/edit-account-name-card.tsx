@@ -11,9 +11,8 @@ import { Input } from "@kodix/ui/input";
 import { Label } from "@kodix/ui/label";
 import { getTranslations } from "next-intl/server";
 
+import { trpcCaller } from "@kdx/api/trpc/react/server";
 import { auth } from "@kdx/auth";
-
-import { trpcCaller } from "~/trpc/server";
 
 import { SubmitButton } from "./submit-button";
 

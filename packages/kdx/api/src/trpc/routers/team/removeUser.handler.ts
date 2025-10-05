@@ -1,8 +1,8 @@
 import { ForbiddenError } from "@casl/ability";
+import { nanoid } from "@kodix/shared/utils";
 
 import type { TRemoveUserSchema } from "@kdx/validators/trpc/team";
 import { db } from "@kdx/db/client";
-import { nanoid } from "@kdx/db/nanoid";
 import { teamRepository, userRepository } from "@kdx/db/repositories";
 
 import type { TIsTeamOwnerProcedureContext } from "../../procedures";

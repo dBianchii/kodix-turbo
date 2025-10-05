@@ -1,6 +1,7 @@
+import { nanoid } from "@kodix/shared/utils";
+
 import type { TCreateInputSchema } from "@kdx/validators/trpc/team";
 import { db } from "@kdx/db/client";
-import { nanoid } from "@kdx/db/nanoid";
 import { teamRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../procedures";

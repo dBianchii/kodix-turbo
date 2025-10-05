@@ -6,10 +6,10 @@ type CreateContextFn<TRouter extends AnyRouter> = (opts: {
   headers: Headers;
 }) => TRouter["_def"]["_config"]["$types"]["ctx"];
 
-export type NextTRPCHandlerOptions<TRouter extends AnyRouter> = {
+export interface NextTRPCHandlerOptions<TRouter extends AnyRouter> {
   router: TRouter;
   createContext: CreateContextFn<TRouter>;
-};
+}
 
 export function nextTRPCHandler<TRouter extends AnyRouter>(
   req: NextRequest,

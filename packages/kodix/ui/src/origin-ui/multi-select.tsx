@@ -13,7 +13,7 @@ import { cn } from "..";
 import { Command, CommandGroup, CommandItem, CommandList } from "../command";
 import { useDebounce } from "../hooks/use-debounce";
 
-export type Option = {
+export interface Option {
   value: string;
   label: string;
   disable?: boolean;
@@ -21,10 +21,10 @@ export type Option = {
   fixed?: boolean;
   /** Group the options by providing key. */
   [key: string]: string | boolean | undefined;
-};
+}
 type GroupOption = Record<string, Option[]>;
 
-type MultipleSelectorProps = {
+interface MultipleSelectorProps {
   value?: Option[];
   defaultOptions?: Option[];
   /** manually controlled options */
@@ -79,14 +79,14 @@ type MultipleSelectorProps = {
   >;
   /** hide the clear all button. */
   hideClearAllButton?: boolean;
-};
+}
 
-export type MultipleSelectorRef = {
+export interface MultipleSelectorRef {
   selectedValue: Option[];
   input: HTMLInputElement;
   focus: () => void;
   reset: () => void;
-};
+}
 
 function transToGroupOption(options: Option[], groupBy?: string) {
   if (options.length === 0) {

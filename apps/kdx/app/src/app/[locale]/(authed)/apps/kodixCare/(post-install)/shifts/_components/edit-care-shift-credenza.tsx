@@ -53,10 +53,10 @@ import { LuLoaderCircle, LuLock, LuLockOpen, LuTrash } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
 import type { User } from "@kdx/auth";
+import { useTRPC } from "@kdx/api/trpc/react/client";
 import { ZEditCareShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
-import { useTRPC } from "~/trpc/react";
 
 import { useMyRoles } from "./create-care-shift-credenza";
 import { useCareShiftsData, useEditCareShift, useShiftOverlap } from "./hooks";

@@ -1,10 +1,10 @@
+import { nanoid } from "@kodix/shared/utils";
 import { TRPCError } from "@trpc/server";
 
 import type { TSignupWithPasswordInputSchema } from "@kdx/validators/trpc/user";
 import { createDbSessionAndCookie, generatePasswordHash } from "@kdx/auth";
 import { createUser } from "@kdx/auth/utils";
 import { db } from "@kdx/db/client";
-import { nanoid } from "@kdx/db/nanoid";
 import { userRepository } from "@kdx/db/repositories";
 
 import type { TPublicProcedureContext } from "../../procedures";

@@ -1,6 +1,6 @@
 import { cn } from "..";
 
-type MarqueeProps = {
+interface MarqueeProps {
   className?: string;
   reverse?: boolean;
   pauseOnHover?: boolean;
@@ -9,7 +9,7 @@ type MarqueeProps = {
   repeat?: number;
   // biome-ignore lint/suspicious/noExplicitAny: <biome migration>
   [key: string]: any;
-};
+}
 
 export default function Marquee({
   className,

@@ -173,8 +173,8 @@ export const runCli = async () => {
           }),
         });
       },
-      validator: () => {
-        return p.text({
+      validator: () =>
+        p.text({
           message: "Please define your zod schema (leave empty for no input)",
           placeholder: "z.object({ name: z.string() })",
           validate: (input) => {
@@ -195,8 +195,7 @@ export const runCli = async () => {
               }
             }
           },
-        });
-      },
+        }),
       queryOrMutation: () => {
         return p.select({
           message: "Will it be a query or a mutation?",

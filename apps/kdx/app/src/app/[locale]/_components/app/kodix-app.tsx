@@ -38,6 +38,7 @@ import { LuTrash } from "react-icons/lu";
 import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { User } from "@kdx/auth";
+import { useTRPC } from "@kdx/api/trpc/react/client";
 import { getAppDescription, getAppName } from "@kdx/locales/next-intl/hooks";
 
 import {
@@ -46,7 +47,6 @@ import {
   trpcErrorToastDefault,
 } from "~/helpers/miscelaneous";
 import { Link, useRouter } from "~/i18n/routing";
-import { useTRPC } from "~/trpc/react";
 
 export function KodixApp({
   id,

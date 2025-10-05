@@ -1,0 +1,27 @@
+{
+  "name": "@cash/api",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./trpc/react/client": "./src/trpc/react/client.tsx",
+    "./trpc/react/server": "./src/trpc/react/server.tsx"
+  },
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "tsc": "tsc --noEmit"
+  },
+  "dependencies": {
+    "server-only": "catalog:",
+    "@cash/auth": "workspace:*",
+    "zod": "catalog:",
+    "@kodix/trpc": "workspace:*"
+  },
+  "devDependencies": {
+    "@kodix/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:react",
+    "@types/react-dom": "catalog:react",
+    "typescript": "catalog:"
+  }
+}

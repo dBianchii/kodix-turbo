@@ -3,13 +3,13 @@ import { Separator } from "@kodix/ui/separator";
 import { Skeleton } from "@kodix/ui/skeleton";
 import { getLocale, getTranslations } from "next-intl/server";
 
+import { trpcCaller } from "@kdx/api/trpc/react/server";
 import { auth } from "@kdx/auth";
 
 import { IconKodixApp } from "~/app/[locale]/_components/app/kodix-icon";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { getAppUrl } from "~/helpers/miscelaneous";
 import { Link, redirect } from "~/i18n/routing";
-import { trpcCaller } from "~/trpc/server";
 
 import { CustomKodixIcon } from "../../_components/app/custom-kodix-icon";
 

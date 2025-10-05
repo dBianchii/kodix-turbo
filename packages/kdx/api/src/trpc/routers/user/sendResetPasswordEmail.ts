@@ -1,13 +1,12 @@
 import { KODIX_NOTIFICATION_FROM_EMAIL } from "@kodix/shared/constants";
+import { nanoid } from "@kodix/shared/utils";
 import { TRPCError } from "@trpc/server";
 
 import type { TSendResetPasswordEmailInputSchema } from "@kdx/validators/trpc/user";
-import { nanoid } from "@kdx/db/nanoid";
-import { authRepository } from "@kdx/db/repositories";
+import { authRepository, userRepository } from "@kdx/db/repositories";
 import ResetPassword from "@kdx/react-email/reset-password";
 
 import type { TPublicProcedureContext } from "../../procedures";
-import { findUserByEmail } from "../../../../../db/src/repositories/userRepository";
 import { resend } from "../../../sdks/email";
 
 interface SendResetPasswordEmailOptions {
@@ -19,7 +18,7 @@ export const sendResetPasswordEmailHandler = async ({
   ctx,
   input,
 }: SendResetPasswordEmailOptions) => {
-  const user = await findUserByEmail(input.email);
+  const user = await userRepository.findUserByEmail(input.email);
 
   if (!user) {
     throw new TRPCError({

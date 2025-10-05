@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
 import { getLocale } from "next-intl/server";
 
+import { trpcCaller } from "@kdx/api/trpc/react/server";
 import { auth } from "@kdx/auth";
 import { teamRepository, userRepository } from "@kdx/db/repositories";
 
 import { redirect } from "~/i18n/routing";
-import { trpcCaller } from "~/trpc/server";
 
 export default async function InvitePage(props: {
   params: Promise<{ id: string }>;

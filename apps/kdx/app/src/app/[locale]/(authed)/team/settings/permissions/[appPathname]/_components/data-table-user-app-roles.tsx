@@ -24,10 +24,10 @@ import {
 import { useTranslations } from "next-intl";
 
 import type { RouterOutputs } from "@kdx/api";
+import { useTRPC } from "@kdx/api/trpc/react/client";
 import { getAppRoleNames } from "@kdx/locales/next-intl/hooks";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
-import { useTRPC } from "~/trpc/react";
 
 const columnHelper =
   createColumnHelper<

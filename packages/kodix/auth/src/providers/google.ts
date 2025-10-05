@@ -2,7 +2,7 @@ import type { AuthProvider, ProviderConfig } from ".";
 import { getBaseUrl } from "@kodix/shared/utils";
 import { Google } from "arctic";
 
-type GoogleUser = {
+interface GoogleUser {
   id: string;
   email: string;
   given_name: string;
@@ -10,7 +10,7 @@ type GoogleUser = {
   name: string;
   picture: string;
   verified_email: boolean;
-};
+}
 
 export const createGoogleProvider = (config: ProviderConfig): AuthProvider => {
   const google = new Google(

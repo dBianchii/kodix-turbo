@@ -1,0 +1,8 @@
+{
+  "name": "@cash/db-dev",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "trap 'docker compose stop' EXIT; docker compose up --build"
+  }
+}

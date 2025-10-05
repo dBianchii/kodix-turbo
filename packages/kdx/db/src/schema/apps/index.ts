@@ -1,8 +1,8 @@
+import { NANOID_SIZE } from "@kodix/shared/utils";
 import { relations } from "drizzle-orm";
 import { index, mysqlTable, unique } from "drizzle-orm/mysql-core";
 import { createInsertSchema } from "drizzle-zod";
 
-import { NANOID_SIZE } from "../../nanoid";
 import { teams, userTeamAppRoles } from "../teams";
 import { users } from "../users";
 import {
@@ -33,11 +33,7 @@ export const apps = mysqlTable(
       .notNull()
       .references(() => devPartners.id),
   }),
-  (table) => {
-    return {
-      devPartnerIdIdx: index("devPartnerId_idx").on(table.devPartnerId),
-    };
-  },
+  (table) => [index("devPartnerId_idx").on(table.devPartnerId)],
 );
 export const appRelations = relations(apps, ({ many, one }) => ({
   AppsToTeams: many(appsToTeams),
@@ -59,16 +55,11 @@ export const appsToTeams = mysqlTable(
       .references(() => apps.id, { onDelete: "cascade" }),
     teamId: teamIdReferenceCascadeDelete(t),
   }),
-  (table) => {
-    return {
-      appId: index("appId_idx").on(table.appId),
-      teamId: index("teamId_idx").on(table.teamId),
-      unique_appId_teamId: unique("unique_appId_teamId").on(
-        table.appId,
-        table.teamId,
-      ),
-    };
-  },
+  (table) => [
+    index("appId_idx").on(table.appId),
+    index("teamId_idx").on(table.teamId),
+    unique("unique_appId_teamId").on(table.appId, table.teamId),
+  ],
 );
 export const appsToTeamsRelations = relations(appsToTeams, ({ one }) => ({
   App: one(apps, {
@@ -92,17 +83,12 @@ export const appTeamConfigs = mysqlTable(
       .references(() => apps.id, { onDelete: "cascade" }),
     teamId: teamIdReferenceCascadeDelete(t),
   }),
-  (table) => {
-    return {
-      appIdIdx: index("appId_idx").on(table.appId),
-      teamIdIdx: index("teamId_idx").on(table.teamId),
+  (table) => [
+    index("appId_idx").on(table.appId),
+    index("teamId_idx").on(table.teamId),
 
-      unique_appId_teamId: unique("unique_appId_teamId").on(
-        table.appId,
-        table.teamId,
-      ),
-    };
-  },
+    unique("unique_appId_teamId").on(table.appId, table.teamId),
+  ],
 );
 export const appTeamConfigsRelations = relations(appTeamConfigs, ({ one }) => ({
   App: one(apps, {
@@ -131,19 +117,17 @@ export const userAppTeamConfigs = mysqlTable(
       .references(() => apps.id, { onDelete: "cascade" }),
     teamId: teamIdReferenceCascadeDelete(t),
   }),
-  (table) => {
-    return {
-      userIdIdx: index("userId_idx").on(table.userId),
-      appIdIdx: index("appId_idx").on(table.appId),
-      teamIdIdx: index("teamId_idx").on(table.teamId),
+  (table) => [
+    index("userId_idx").on(table.userId),
+    index("appId_idx").on(table.appId),
+    index("teamId_idx").on(table.teamId),
 
-      unique_userId_appId_teamId: unique("unique_userId_appId_teamId").on(
-        table.userId,
-        table.appId,
-        table.teamId,
-      ),
-    };
-  },
+    unique("unique_userId_appId_teamId").on(
+      table.userId,
+      table.appId,
+      table.teamId,
+    ),
+  ],
 );
 export const userAppTeamConfigsRelations = relations(
   userAppTeamConfigs,
@@ -183,15 +167,13 @@ export const appActivityLogs = mysqlTable(
     diff: t.json().notNull(),
     type: t.mysqlEnum(["create", "update", "delete"]).notNull(),
   }),
-  (table) => {
-    return {
-      teamIdIdx: index("teamId_idx").on(table.teamId),
-      appIdIdx: index("appId_idx").on(table.appId),
-      userIdIdx: index("userId_idx").on(table.userId),
-      tableNameIdx: index("tableName_idx").on(table.tableName),
-      rowIdIdx: index("rowId_idx").on(table.rowId),
-    };
-  },
+  (table) => [
+    index("teamId_idx").on(table.teamId),
+    index("appId_idx").on(table.appId),
+    index("userId_idx").on(table.userId),
+    index("tableName_idx").on(table.tableName),
+    index("rowId_idx").on(table.rowId),
+  ],
 );
 export const appActivityLogsRelations = relations(
   appActivityLogs,

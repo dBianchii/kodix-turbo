@@ -2,10 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 
+import { trpcCaller } from "@kdx/api/trpc/react/server";
 import { ZCreateInputSchema } from "@kdx/validators/trpc/team";
 
 import { action } from "~/helpers/safe-action/safe-action";
-import { trpcCaller } from "~/trpc/server";
 
 export const createTeamAction = action
   .inputSchema(ZCreateInputSchema)

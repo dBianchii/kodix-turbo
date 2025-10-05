@@ -1,13 +1,13 @@
 import { createDiscordProvider } from "./discord";
 import { createGoogleProvider } from "./google";
 
-export type AuthProvider = {
+export interface AuthProvider {
   name: string;
   getAuthorizationUrl: (state: string, codeVerifier: string) => Promise<URL>;
   handleCallback: (code: string, codeVerifier: string) => Promise<string>;
-};
+}
 
-export type ProviderConfig = {
+export interface ProviderConfig {
   repositories: {
     findAccountByProviderUserId: (params: {
       providerId: "google" | "discord";
@@ -22,7 +22,7 @@ export type ProviderConfig = {
       providerId: "google" | "discord";
     }) => Promise<string>;
   };
-};
+}
 
 export const authProviders = {
   discord: createDiscordProvider,

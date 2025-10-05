@@ -2,6 +2,14 @@ import z from "zod";
 
 const DEFAULT_PORT = 3000;
 
+import { customAlphabet } from "nanoid";
+
+export const NANOID_SIZE = 12;
+export const nanoid = customAlphabet(
+  "1234567890abcdefghijklmnopqrstuvwxyz",
+  NANOID_SIZE
+);
+
 /**
  * @description Base URL for the current environment.
  */

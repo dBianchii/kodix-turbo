@@ -3,8 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import type { TDeleteNotificationsInputSchema } from "@kdx/validators/trpc/user";
-
-import { trpcCaller } from "~/trpc/server";
+import { trpcCaller } from "@kdx/api/trpc/react/server";
 
 export const deleteNotificationsAction = async (
   input: TDeleteNotificationsInputSchema,

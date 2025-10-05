@@ -23,10 +23,10 @@ import { toast } from "@kodix/ui/toast";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
+import { useTRPC } from "@kdx/api/trpc/react/client";
 import { ZUpdateInputSchema } from "@kdx/validators/trpc/team";
 
 import { useRouter } from "~/i18n/routing";
-import { useTRPC } from "~/trpc/react";
 
 export function EditTeamNameCardClient({
   teamId,

@@ -1,33 +1,14 @@
+/** biome-ignore-all lint/style/noExportedImports: Should I remove this rule? */
 import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 
-import type { AppRouter } from "./trpc/root";
-import { appRouter } from "./trpc/root";
-import { createCallerFactory, createTRPCContext } from "./trpc/trpc";
+import type { KdxTRPCRouter } from "./trpc/root";
+import { kdxTRPCRouter } from "./trpc/root";
+import { createTRPCContext } from "./trpc/trpc";
 
-/**
- * Create a server-side caller for the tRPC API
- * @example
- * const trpc = createCaller(createContext);
- * const res = await trpc.post.all();
- *       ^? Post[]
- */
-const createCaller = createCallerFactory(appRouter);
+export type RouterInputs = inferRouterInputs<KdxTRPCRouter>;
 
-/**
- * Inference helpers for input types
- * @example
- * type PostByIdInput = RouterInputs['post']['byId']
- *      ^? { id: number }
- **/
-type RouterInputs = inferRouterInputs<AppRouter>;
+export type RouterOutputs = inferRouterOutputs<KdxTRPCRouter>;
 
-/**
- * Inference helpers for output types
- * @example
- * type AllPostsOutput = RouterOutputs['post']['all']
- *      ^? Post[]
- **/
-type RouterOutputs = inferRouterOutputs<AppRouter>;
-
-export { createTRPCContext, appRouter, createCaller };
-export type { AppRouter, RouterInputs, RouterOutputs };
+export { nextTRPCHandler } from "@kodix/trpc/server";
+export { kdxTRPCRouter, createTRPCContext };
+export type { KdxTRPCRouter };

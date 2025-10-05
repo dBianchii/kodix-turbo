@@ -1,14 +1,13 @@
 import dayjs from "@kodix/dayjs";
+import { nanoid } from "@kodix/shared/utils";
 import { TRPCError } from "@trpc/server";
 import { RRule, rrulestr } from "rrule";
 
 import type { TEditInputSchema } from "@kdx/validators/trpc/app/calendar";
 import { db } from "@kdx/db/client";
-import { nanoid } from "@kdx/db/nanoid";
 import { calendarRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
-import { findEventMasterById } from "../../../../../../db/src/repositories/app/calendar/calendarRepository";
 
 interface EditOptions {
   ctx: TProtectedProcedureContext;
@@ -272,10 +271,11 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
 
         if (!shouldUpdateRule) return undefined;
 
-        const foundEventMasterForPreviousRule = await findEventMasterById(tx, {
-          id: input.eventMasterId,
-          teamId: ctx.auth.user.activeTeamId,
-        });
+        const foundEventMasterForPreviousRule =
+          await calendarRepository.findEventMasterById(tx, {
+            id: input.eventMasterId,
+            teamId: ctx.auth.user.activeTeamId,
+          });
 
         if (!foundEventMasterForPreviousRule)
           throw new TRPCError({

@@ -36,9 +36,9 @@ import { useTranslations } from "next-intl";
 import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
+import { useTRPC } from "@kdx/api/trpc/react/client";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
-import { useTRPC } from "~/trpc/react";
 
 const columnHelper =
   createColumnHelper<RouterOutputs["team"]["invitation"]["getAll"][number]>();

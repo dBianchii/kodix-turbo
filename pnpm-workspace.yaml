@@ -66,6 +66,7 @@ catalogs:
     '@tanstack/react-query-devtools': ^5.32.0
 
 catalog:
+  '@neondatabase/serverless': ^1.0.1
   '@bacons/text-decoder': ^0.0.0
   '@biomejs/biome': ^2.2.4
   '@casl/ability': ^6.7.3

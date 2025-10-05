@@ -6,7 +6,7 @@ import { Button } from "@kodix/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import { LuRefreshCw } from "react-icons/lu";
 
-import { useTRPC } from "~/trpc/react";
+import { useTRPC } from "@kdx/api/trpc/react/client";
 
 export function ReloadMembersButton() {
   const trpc = useTRPC();

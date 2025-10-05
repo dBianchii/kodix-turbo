@@ -13,8 +13,9 @@ import { RadioGroup, RadioGroupItem } from "@kodix/ui/radio-group";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
+import { useTRPC } from "@kdx/api/trpc/react/client";
+
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
-import { useTRPC } from "~/trpc/react";
 
 export function CancelationDialog({
   eventMasterId,

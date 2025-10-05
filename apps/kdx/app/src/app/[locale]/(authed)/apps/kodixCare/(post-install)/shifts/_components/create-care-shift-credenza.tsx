@@ -33,11 +33,11 @@ import { useTranslations } from "next-intl";
 import { LuArrowRight, LuLoaderCircle, LuPlus } from "react-icons/lu";
 
 import type { User } from "@kdx/auth";
+import { useTRPC } from "@kdx/api/trpc/react/client";
 import { ZCreateCareShiftInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
 import { Link } from "~/i18n/routing";
-import { useTRPC } from "~/trpc/react";
 
 import { useShiftOverlap } from "./hooks";
 import { WarnOverlappingShifts } from "./warn-overlapping-shifts";

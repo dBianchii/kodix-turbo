@@ -1,15 +1,4 @@
 {
-  "name": "@kdx/app",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "build": "pnpm next build",
-    "clean": "git clean -xdf .cache .next .turbo node_modules",
-    "dev": "pnpm next dev --turbopack --port 3000",
-    "start": "pnpm next start --port 3000",
-    "tsc": "tsc --noEmit",
-    "pull-vercel": "vercel env pull --yes"
-  },
   "dependencies": {
     "@formkit/auto-animate": "catalog:",
     "@kdx/api": "workspace:*",
@@ -24,7 +13,6 @@
     "@kodix/ui": "workspace:*",
     "@node-rs/argon2": "catalog:",
     "@tanstack/react-query": "catalog:tanstack-query",
-    "@tanstack/react-query-devtools": "catalog:tanstack-query",
     "@tanstack/react-table": "catalog:",
     "@trpc/client": "catalog:trpc",
     "@trpc/server": "catalog:trpc",
@@ -66,5 +54,17 @@
     "jiti": "catalog:",
     "tailwindcss": "catalog:tailwindcss",
     "typescript": "catalog:"
-  }
+  },
+  "name": "@kdx/app",
+  "private": true,
+  "scripts": {
+    "build": "pnpm next build --turbopack",
+    "clean": "git clean -xdf .cache .next next-env.d.ts .turbo node_modules",
+    "dev": "pnpm next dev --turbopack --port 3000",
+    "start": "pnpm next start --port 3000",
+    "tsc": "tsc --noEmit",
+    "typegen": "pnpm next typegen",
+    "pull-vercel": "vercel env pull --yes"
+  },
+  "type": "module"
 }

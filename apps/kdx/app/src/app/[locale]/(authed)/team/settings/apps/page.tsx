@@ -2,12 +2,12 @@ import { Suspense } from "react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { LuCirclePlus } from "react-icons/lu";
 
+import { trpcCaller } from "@kdx/api/trpc/react/server";
 import { auth } from "@kdx/auth";
 
 import { KodixApp } from "~/app/[locale]/_components/app/kodix-app";
 import { KodixAppSkeleton } from "~/app/[locale]/_components/app/kodix-app-skeleton";
 import { Link, redirect } from "~/i18n/routing";
-import { trpcCaller } from "~/trpc/server";
 
 export default async function SettingsAppsPage() {
   const { user } = await auth();

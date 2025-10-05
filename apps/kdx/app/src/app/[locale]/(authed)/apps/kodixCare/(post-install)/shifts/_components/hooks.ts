@@ -2,8 +2,9 @@ import { useMemo } from "react";
 import dayjs from "@kodix/dayjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+import { useTRPC } from "@kdx/api/trpc/react/client";
+
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
-import { useTRPC } from "~/trpc/react";
 
 export const useCareShiftsData = () => {
   const trpc = useTRPC();

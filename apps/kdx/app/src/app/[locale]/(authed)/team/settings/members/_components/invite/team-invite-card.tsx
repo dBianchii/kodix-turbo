@@ -30,10 +30,10 @@ import { LuMail } from "react-icons/lu";
 import { RxMinusCircled, RxPlusCircled } from "react-icons/rx";
 
 import type { User } from "@kdx/auth";
+import { useTRPC } from "@kdx/api/trpc/react/client";
 import { ZInviteInputSchema } from "@kdx/validators/trpc/team/invitation";
 
 import { trpcErrorToastDefault } from "~/helpers/miscelaneous";
-import { useTRPC } from "~/trpc/react";
 
 export default function TeamInviteCardClient({
   user,

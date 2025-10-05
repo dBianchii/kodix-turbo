@@ -43,9 +43,8 @@ import {
 } from "react-icons/lu";
 
 import type { User } from "@kdx/auth";
+import { useTRPC } from "@kdx/api/trpc/react/client";
 import { ZEditCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
-
-import { useTRPC } from "~/trpc/react";
 
 import type { useSaveCareTaskMutation } from "./hooks";
 

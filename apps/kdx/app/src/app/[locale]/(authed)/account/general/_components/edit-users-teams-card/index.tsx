@@ -1,9 +1,8 @@
 import { Table, TableBody, TableCell, TableRow } from "@kodix/ui/table";
 import { getTranslations } from "next-intl/server";
 
+import { trpcCaller } from "@kdx/api/trpc/react/server";
 import { auth } from "@kdx/auth";
-
-import { trpcCaller } from "~/trpc/server";
 
 import { CustomRow } from "./custom-row";
 

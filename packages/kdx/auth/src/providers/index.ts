@@ -1,9 +1,9 @@
 import type { ProviderConfig } from "@kodix/auth/providers";
 import { cookies } from "next/headers";
 import { authProviders } from "@kodix/auth/providers";
+import { nanoid } from "@kodix/shared/utils";
 
 import { db } from "@kdx/db/client";
-import { nanoid } from "@kdx/db/nanoid";
 import { authRepository, userRepository } from "@kdx/db/repositories";
 
 import { createUser } from "../utils";

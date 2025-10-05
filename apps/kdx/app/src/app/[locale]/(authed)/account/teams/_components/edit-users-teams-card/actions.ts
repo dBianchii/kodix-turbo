@@ -4,9 +4,10 @@ import { revalidatePath } from "next/cache";
 import { getLocale } from "next-intl/server";
 import z from "zod";
 
+import { trpcCaller } from "@kdx/api/trpc/react/server";
+
 import { action } from "~/helpers/safe-action/safe-action";
 import { redirect } from "~/i18n/routing";
-import { trpcCaller } from "~/trpc/server";
 
 export const switchTeamAction = action
   .inputSchema(

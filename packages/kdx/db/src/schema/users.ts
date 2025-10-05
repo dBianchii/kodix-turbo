@@ -1,8 +1,8 @@
+import { NANOID_SIZE, nanoid } from "@kodix/shared/utils";
 import { relations } from "drizzle-orm";
 import { index, mysqlTable, primaryKey } from "drizzle-orm/mysql-core";
 import { createInsertSchema } from "drizzle-zod";
 
-import { NANOID_SIZE, nanoid } from "../nanoid";
 import { userAppTeamConfigs } from "./apps";
 import { todos } from "./apps/todos";
 import { invitations, teams, usersToTeams, userTeamAppRoles } from "./teams";
@@ -23,11 +23,7 @@ export const users = mysqlTable(
     activeTeamId: t.varchar({ length: DEFAULTLENGTH }).notNull(),
     kodixAdmin: t.boolean().default(false).notNull(),
   }),
-  (table) => {
-    return {
-      activeTeamIdIdx: index("activeTeamId_idx").on(table.activeTeamId),
-    };
-  },
+  (table) => [index("activeTeamId_idx").on(table.activeTeamId)],
 );
 export const usersRelations = relations(users, ({ many, one }) => ({
   ActiveTeam: one(teams, {
@@ -59,12 +55,12 @@ export const accounts = mysqlTable(
       .notNull()
       .references(() => users.id), //TODO: referential action?
   }),
-  (account) => ({
-    compoundKey: primaryKey({
+  (account) => [
+    primaryKey({
       columns: [account.providerId, account.providerUserId],
     }),
-    userIdIdx: index("userId_idx").on(account.userId),
-  }),
+    index("userId_idx").on(account.userId),
+  ],
 );
 export const accountsRelations = relations(accounts, ({ one }) => ({
   Users: one(users, { fields: [accounts.userId], references: [users.id] }),
@@ -105,11 +101,7 @@ export const expoTokens = mysqlTable(
       .references(() => users.id, { onUpdate: "cascade", onDelete: "cascade" }),
     token: t.varchar({ length: DEFAULTLENGTH }).unique().notNull(),
   }),
-  (table) => {
-    return {
-      userIdIdx: index("userId_idx").on(table.userId),
-    };
-  },
+  (table) => [index("userId_idx").on(table.userId)],
 );
 export const expoTokensRelations = relations(expoTokens, ({ one }) => ({
   User: one(users, {
@@ -132,12 +124,10 @@ export const notifications = mysqlTable(
     message: t.text().notNull(),
     channel: t.mysqlEnum(["EMAIL", "PUSH_NOTIFICATIONS"]).notNull(),
   }),
-  (table) => {
-    return {
-      sentToUserIdIdx: index("sentToUserId_idx").on(table.sentToUserId),
-      teamIdIdx: index("teamId_idx").on(table.teamId),
-    };
-  },
+  (table) => [
+    index("sentToUserId_idx").on(table.sentToUserId),
+    index("teamId_idx").on(table.teamId),
+  ],
 );
 export const notificationsRelations = relations(notifications, ({ one }) => ({
   User: one(users, {
@@ -166,12 +156,10 @@ export const resetPasswordTokens = mysqlTable(
       .$default(() => nanoid()),
     tokenExpiresAt: t.timestamp().notNull(),
   }),
-  (table) => {
-    return {
-      tokenIdx: index("token_idx").on(table.token),
-      userIdIdx: index("userId_idx").on(table.userId),
-    };
-  },
+  (table) => [
+    index("token_idx").on(table.token),
+    index("userId_idx").on(table.userId),
+  ],
 );
 export const resetPasswordTokensRelations = relations(
   resetPasswordTokens,

@@ -1,12 +1,12 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { LuChevronRight } from "react-icons/lu";
 
+import { trpcCaller } from "@kdx/api/trpc/react/server";
 import { auth } from "@kdx/auth";
 
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
 import { Navigation } from "~/app/[locale]/_components/navigation";
 import { redirect } from "~/i18n/routing";
-import { trpcCaller } from "~/trpc/server";
 
 import { ShouldRender } from "./general/_components/client-should-render";
 

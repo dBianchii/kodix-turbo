@@ -1,0 +1,33 @@
+{
+  "name": "@cash/auth",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./utils": "./src/utils.ts"
+  },
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "tsc": "tsc --noEmit",
+    "create-user": "DATABASE_URL=postgresql://postgres:local@localhost:5432/postgres tsx scripts/create-user.ts"
+  },
+  "dependencies": {
+    "@cash/db": "workspace:*",
+    "drizzle-orm": "catalog:",
+    "@kodix/auth": "workspace:*",
+    "@kodix/shared": "workspace:*",
+    "@node-rs/argon2": "catalog:",
+    "next": "catalog:next",
+    "react": "catalog:react",
+    "react-dom": "catalog:react",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@clack/prompts": "catalog:",
+    "@kodix/biome-config": "workspace:*",
+    "@kodix/tsconfig": "workspace:*",
+    "@types/react": "catalog:react",
+    "chalk": "catalog:",
+    "typescript": "catalog:"
+  }
+}

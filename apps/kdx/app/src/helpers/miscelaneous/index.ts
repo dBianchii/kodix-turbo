@@ -4,14 +4,14 @@ import { calendarAppId, kodixCareAppId, todoAppId } from "@kodix/shared/db";
 import { getErrorMessage } from "@kodix/shared/utils";
 import { toast } from "@kodix/ui/toast";
 
-import type { AppRouter } from "@kdx/api";
+import type { KdxTRPCRouter } from "@kdx/api";
 
 /**
  * @param error: TRPCClientError
  * @description This is the default toast error handler for trpc errors.
  */
 export const trpcErrorToastDefault = (
-  error: TRPCClientErrorLike<AppRouter>,
+  error: TRPCClientErrorLike<KdxTRPCRouter>,
 ) => {
   // const zodContentErrors = error.data?.zodError?.fieldErrors.content;
   // const zodFormErrors = error.data?.zodError?.formErrors;
