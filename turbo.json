@@ -5,23 +5,8 @@
     "topo": {
       "dependsOn": ["^topo"]
     },
-    "//#package-deps": {
-      "inputs": [
-        "!**/.next/**",
-        "!**/dist/**",
-        "!**/out/**",
-        "!**/node_modules/**",
-        "!**/.vercel/**",
-        ".nvmrc",
-        "**/package.json",
-        "pnpm-lock.yaml",
-        "pnpm-workspace.yaml"
-      ],
-      "outputLogs": "new-only",
-      "outputs": ["pnpm-lock.yaml"]
-    },
     "build": {
-      "dependsOn": ["//#package-deps", "^build"],
+      "dependsOn": ["^build"],
       "outputs": [".cache/tsbuildinfo.json", "dist/**"],
       "env": [
         "MYSQL_URL",
@@ -48,11 +33,10 @@
       "persistent": false
     },
     "typegen": {
-      "dependsOn": ["//#package-deps"],
       "outputs": ["next-env.d.ts", ".next/types/**"]
     },
     "tsc": {
-      "dependsOn": ["//#package-deps", "^topo", "typegen"],
+      "dependsOn": ["^topo", "typegen"],
       "outputs": [".cache/tsbuildinfo.json"]
     },
     "//#check": {
@@ -65,7 +49,7 @@
       "cache": false
     },
     "test": {
-      "dependsOn": ["//#package-deps", "^topo"]
+      "dependsOn": ["^topo"]
     },
     "test:watch": {
       "cache": false,

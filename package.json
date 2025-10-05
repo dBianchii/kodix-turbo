@@ -18,8 +18,7 @@
     "check:unsafe": "biome check --write --unsafe .",
     "start:trpc-cli": "pnpm -F trpc-cli start",
     "dev:trpc-cli": "pnpm -F trpc-cli dev",
-    "vercel-link": "vercel switch kodix && vercel link --repo --yes && pnpm -r pull-vercel",
-    "package-deps": "pnpm install"
+    "vercel-link": "vercel switch kodix && vercel link --repo --yes && pnpm -r pull-vercel"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",
