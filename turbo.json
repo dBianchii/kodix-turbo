@@ -9,6 +9,7 @@
       "dependsOn": ["^build"],
       "outputs": [".cache/tsbuildinfo.json", "dist/**"],
       "env": [
+        "DATABASE_URL",
         "MYSQL_URL",
         "AUTH_GOOGLE_CLIENT_ID",
         "AUTH_GOOGLE_CLIENT_SECRET",
