@@ -34,12 +34,12 @@ export default function RegisterStep2() {
     },
   });
   const form = useForm({
-    schema: ZSignupWithPasswordInputSchema.omit({
-      invite: true,
-    }),
     defaultValues: {
       email,
     },
+    schema: ZSignupWithPasswordInputSchema.omit({
+      invite: true,
+    }),
   });
 
   return (
@@ -129,9 +129,9 @@ export default function RegisterStep2() {
                   Keyboard.dismiss();
                   mutation.mutate({
                     email: values.email,
-                    password: values.password,
-                    name: values.name,
                     invite: inviteId,
+                    name: values.name,
+                    password: values.password,
                   });
                 })}
               >

@@ -45,9 +45,9 @@ export function SheetModal({
       dismissOnSnapToBottom
       animation="medium"
       animationConfig={{
-        type: "spring",
         damping: 10,
         mass: 0.3,
+        type: "spring",
       }}
       modal
       native

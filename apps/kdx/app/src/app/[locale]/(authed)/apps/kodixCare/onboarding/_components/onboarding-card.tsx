@@ -31,10 +31,10 @@ import { finishKodixCareOnboardingAction } from "../actions/onboardingActions";
 
 export default function OnboardingCard() {
   const form = useForm({
-    schema: kodixCareConfigSchema,
     defaultValues: {
       patientName: "",
     },
+    schema: kodixCareConfigSchema,
   });
 
   const t = useTranslations();

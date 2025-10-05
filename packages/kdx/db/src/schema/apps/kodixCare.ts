@@ -16,25 +16,25 @@ import { eventMasters } from "./calendar";
 export const careShifts = mysqlTable(
   "careShift",
   (t) => ({
-    id: nanoidPrimaryKey(t),
     caregiverId: t
       .varchar({ length: NANOID_SIZE })
       .notNull()
       .references(() => users.id),
-    teamId: teamIdReferenceCascadeDelete(t),
-    startAt: t.timestamp().notNull(),
-    endAt: t.timestamp().notNull(),
     checkIn: t.timestamp(),
     checkOut: t.timestamp(),
-    notes: t.varchar({ length: DEFAULTLENGTH }),
     createdById: t
       .varchar({ length: NANOID_SIZE })
       .notNull()
       .references(() => users.id),
+    endAt: t.timestamp().notNull(),
     finishedByUserId: t.varchar({ length: NANOID_SIZE }).references(
       () => users.id,
       { onDelete: "restrict" }, //Restrict because we have to keep logs somehow
     ),
+    id: nanoidPrimaryKey(t),
+    notes: t.varchar({ length: DEFAULTLENGTH }),
+    startAt: t.timestamp().notNull(),
+    teamId: teamIdReferenceCascadeDelete(t),
   }),
   (table) => [
     index("caregiverId_idx").on(table.caregiverId),
@@ -56,28 +56,28 @@ export const careShiftSchema = createInsertSchema(careShifts);
 export const careTasks = mysqlTable(
   "careTask",
   (t) => ({
-    id: nanoidPrimaryKey(t),
-    date: t.timestamp().notNull(),
-    doneAt: t.timestamp(),
-    doneByUserId: t.varchar({ length: NANOID_SIZE }).references(
-      () => users.id,
-      { onDelete: "restrict" }, //Restrict because we have to keep logs somehow
-    ),
-    teamId: teamIdReferenceCascadeDelete(t),
-    eventMasterId: t.varchar({
-      length: NANOID_SIZE,
-    }),
-    //.references(() => eventMasters.id), //TODO: should we have foreignKey????????????????????????????????????????????????????????????????
-    title: t.varchar({ length: DEFAULTLENGTH }),
-    description: t.varchar({ length: DEFAULTLENGTH }),
-    details: t.varchar({ length: DEFAULTLENGTH }),
-    updatedAt: t.timestamp().onUpdateNow(),
-    type: typeEnum(t).notNull().default("NORMAL"),
     createdBy: t
       .varchar({ length: NANOID_SIZE })
       .notNull()
       .references(() => users.id),
     createdFromCalendar: t.boolean().notNull(),
+    date: t.timestamp().notNull(),
+    description: t.varchar({ length: DEFAULTLENGTH }),
+    details: t.varchar({ length: DEFAULTLENGTH }),
+    doneAt: t.timestamp(),
+    doneByUserId: t.varchar({ length: NANOID_SIZE }).references(
+      () => users.id,
+      { onDelete: "restrict" }, //Restrict because we have to keep logs somehow
+    ),
+    eventMasterId: t.varchar({
+      length: NANOID_SIZE,
+    }),
+    id: nanoidPrimaryKey(t),
+    teamId: teamIdReferenceCascadeDelete(t),
+    //.references(() => eventMasters.id), //TODO: should we have foreignKey????????????????????????????????????????????????????????????????
+    title: t.varchar({ length: DEFAULTLENGTH }),
+    type: typeEnum(t).notNull().default("NORMAL"),
+    updatedAt: t.timestamp().onUpdateNow(),
   }),
   (table) => [
     index("doneByUserId_idx").on(table.doneByUserId),
@@ -90,13 +90,13 @@ export const careTasksRelations = relations(careTasks, ({ one }) => ({
     fields: [careTasks.doneByUserId],
     references: [users.id],
   }),
-  Team: one(teams, {
-    fields: [careTasks.teamId],
-    references: [teams.id],
-  }),
   EventMaster: one(eventMasters, {
     fields: [careTasks.eventMasterId],
     references: [eventMasters.id],
+  }),
+  Team: one(teams, {
+    fields: [careTasks.teamId],
+    references: [teams.id],
   }),
 }));
 export const careTaskSchema = createInsertSchema(careTasks);

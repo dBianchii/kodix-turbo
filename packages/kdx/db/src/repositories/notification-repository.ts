@@ -55,15 +55,15 @@ export async function getUserNotificationById({
     .where(eq(usersToTeams.userId, userId));
 
   return await db.query.notifications.findFirst({
+    columns: {
+      message: true,
+      subject: true,
+    },
     where: (notifications, { eq, and, inArray }) =>
       and(
         eq(notifications.id, notificationId),
         eq(notifications.sentToUserId, userId), //? Only show notifications for the logged in user
         inArray(notifications.teamId, allTeamIdsForUserQuery), //? Ensure user is part of the team this notification was sent to
       ),
-    columns: {
-      message: true,
-      subject: true,
-    },
   });
 }

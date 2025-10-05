@@ -41,8 +41,8 @@ export async function getCalendarTasks({
   if (!teamIds.length) throw new Error("teamIds must have at least one item");
 
   const calendarRepositoryInput = {
-    dateStart,
     dateEnd,
+    dateStart,
     teamIds,
   };
   const [_eventMasters, _eventExceptions, _eventCancelations] =
@@ -64,34 +64,34 @@ export async function getCalendarTasks({
 
     for (const date of allDates)
       calendarTasks.push({
-        eventMasterId: eventMaster.id,
-        eventExceptionId: undefined,
-        title: eventMaster.title ?? undefined,
-        description: eventMaster.description ?? undefined,
-        date,
-        rule: eventMaster.rule,
-        type: eventMaster.type,
-        teamId: eventMaster.teamId,
         createdBy: eventMaster.createdBy,
+        date,
+        description: eventMaster.description ?? undefined,
+        eventExceptionId: undefined,
+        eventMasterId: eventMaster.id,
+        rule: eventMaster.rule,
+        teamId: eventMaster.teamId,
+        title: eventMaster.title ?? undefined,
+        type: eventMaster.type,
       });
   }
 
   for (const eventException of _eventExceptions)
     calendarTasks.push({
-      eventMasterId: eventException.eventMasterId,
-      eventExceptionId: eventException.id,
-      title:
-        eventException.title ?? eventException.eventMasterTitle ?? undefined,
+      createdBy: eventException.eventMasterCreatedBy,
+      date: eventException.newDate,
       description:
         eventException.description ??
         eventException.eventMasterDescription ??
         undefined,
-      type: eventException.type ?? eventException.eventMasterType,
-      date: eventException.newDate,
+      eventExceptionId: eventException.id,
+      eventMasterId: eventException.eventMasterId,
       originaDate: eventException.originalDate,
       rule: eventException.rule,
       teamId: eventException.eventMasterTeamId,
-      createdBy: eventException.eventMasterCreatedBy,
+      title:
+        eventException.title ?? eventException.eventMasterTitle ?? undefined,
+      type: eventException.type ?? eventException.eventMasterType,
     });
 
   //we have exceptions and recurrences from masters in calendarTasks. Some master recurrences must be deleted.
@@ -185,17 +185,17 @@ export async function getCareTasks({
 
   const [calendarTasks, careTasks, teamConfigs] = await Promise.all([
     getCalendarTasks({
-      teamIds,
-      onlyCritical,
-      dateStart,
       dateEnd,
+      dateStart,
+      onlyCritical,
+      teamIds,
     }),
     careTaskRepository.findCareTasksFromTo({
-      dateStart,
       dateEnd,
-      teamIds,
+      dateStart,
       onlyCritical,
       onlyNotDone,
+      teamIds,
     }),
     appRepository.findAppTeamConfigs({
       appId: kodixCareAppId,
@@ -218,17 +218,17 @@ export async function getCareTasks({
           return dayjs(ct.date).isAfter(clonedCareTasksUntil);
         })
         .map((x) => ({
-          id: null,
+          date: x.date,
+          description: x.description ?? null,
+          details: null,
+          doneAt: null,
+          doneByUserId: null,
           eventMasterId: x.eventMasterId,
+          id: null,
           teamId: x.teamId,
           title: x.title ?? null,
-          description: x.description ?? null,
-          date: x.date,
           type: x.type,
-          doneAt: null,
           updatedAt: null,
-          doneByUserId: null,
-          details: null,
         })),
     );
   }

@@ -21,9 +21,9 @@ const rolesSchema = z.object(
   ),
 );
 export const ZUpdateUserAssociationInputSchema = z.object({
-  userId: ZNanoId, //User to update
   appId: z.custom<KodixAppId>(), //Which app teamAppRoleIds belong to.
   roles: rolesSchema,
+  userId: ZNanoId, //User to update
 });
 export type TUpdateUserAssociationInputSchema = z.infer<
   typeof ZUpdateUserAssociationInputSchema

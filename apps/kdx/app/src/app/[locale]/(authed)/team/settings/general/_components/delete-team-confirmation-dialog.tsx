@@ -45,17 +45,17 @@ export function DeleteTeamConfirmationDialog({
   const deleteMyTeamString = t("delete my team");
 
   const form = useForm({
+    defaultValues: {
+      teamId,
+      teamNameConfirmation: "",
+      verification: "",
+    },
     schema: ZDeleteTeamInputSchema.extend({
       teamNameConfirmation: z.literal(teamName, {
         message: t("Team name does not match"),
       }),
       verification: z.literal(deleteMyTeamString),
     }),
-    defaultValues: {
-      teamId,
-      teamNameConfirmation: "",
-      verification: "",
-    },
   });
 
   const router = useRouter();
@@ -82,13 +82,13 @@ export function DeleteTeamConfirmationDialog({
             onSubmit={form.handleSubmit((values) => {
               toast.promise(
                 mutation.mutateAsync({
-                  teamNameConfirmation: values.teamNameConfirmation,
                   teamId,
+                  teamNameConfirmation: values.teamNameConfirmation,
                 }),
                 {
+                  error: (err) => getErrorMessage(err),
                   loading: t("Deleting team"),
                   success: t("Team deleted successfully"),
-                  error: (err) => getErrorMessage(err),
                 },
               );
             })}

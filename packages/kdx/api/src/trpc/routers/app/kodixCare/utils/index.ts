@@ -22,32 +22,32 @@ export async function cloneCalendarTasksToCareTasks({
   const calendarTasks = await getAllHandler({
     ctx,
     input: {
-      dateStart: start,
       dateEnd: end,
+      dateStart: start,
     },
   });
 
   if (calendarTasks.length > 0)
     await careTaskRepository.createManyCareTasks(
       calendarTasks.map((calendarTask) => ({
-        teamId: ctx.auth.user.activeTeamId,
-        title: calendarTask.title,
-        description: calendarTask.description,
-        date: calendarTask.date,
-        eventMasterId: calendarTask.eventMasterId,
-        doneByUserId: null,
-        type: calendarTask.type,
         createdBy: calendarTask.createdBy,
         createdFromCalendar: true,
+        date: calendarTask.date,
+        description: calendarTask.description,
+        doneByUserId: null,
+        eventMasterId: calendarTask.eventMasterId,
+        teamId: ctx.auth.user.activeTeamId,
+        title: calendarTask.title,
+        type: calendarTask.type,
       })),
       tx,
     );
 
   await appRepository.upsertAppTeamConfig({
-    teamId: ctx.auth.user.activeTeamId,
     appId: kodixCareAppId,
     config: {
       clonedCareTasksUntil: end,
     },
+    teamId: ctx.auth.user.activeTeamId,
   });
 }

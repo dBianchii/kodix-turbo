@@ -32,11 +32,11 @@ export function KodixCareUserSettingsForm({
   const t = useTranslations();
 
   const form = useForm({
-    schema: ZSaveUserAppTeamConfigInputSchema,
     defaultValues: {
       appId: kodixCareAppId,
       config: use(config),
     },
+    schema: ZSaveUserAppTeamConfigInputSchema,
   });
 
   const { execute, isExecuting } = useAction(saveUserAppTeamConfig, {

@@ -80,6 +80,11 @@ export async function findOverlappingShifts(
   const endCondition = inclusive ? lte : lt;
 
   return db.query.careShifts.findMany({
+    columns: {
+      endAt: true,
+      id: true,
+      startAt: true,
+    },
     where: (careShifts, { and }) =>
       and(
         eq(careShifts.teamId, teamId),
@@ -94,11 +99,6 @@ export async function findOverlappingShifts(
           name: true,
         },
       },
-    },
-    columns: {
-      id: true,
-      startAt: true,
-      endAt: true,
     },
   });
 }

@@ -16,10 +16,8 @@ export function nextTRPCHandler<TRouter extends AnyRouter>(
   { router, createContext }: NextTRPCHandlerOptions<TRouter>
 ) {
   return fetchRequestHandler({
-    endpoint: "/api/trpc",
-    req,
-    router,
     createContext: () => createContext({ headers: req.headers }),
+    endpoint: "/api/trpc",
     onError:
       process.env.NODE_ENV === "development"
         ? ({ path, error }) => {
@@ -27,5 +25,7 @@ export function nextTRPCHandler<TRouter extends AnyRouter>(
             console.error(`❌ tRPC failed on ${path ?? "<no-path>"}:`, error);
           }
         : undefined,
+    req,
+    router,
   });
 }

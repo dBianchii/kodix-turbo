@@ -13,20 +13,20 @@ interface CreateOptions {
 
 export const createHandler = async ({ ctx, input }: CreateOptions) => {
   await calendarRepository.createEventMaster(db, {
-    title: input.title,
-    description: input.description,
-    rule: new RRule({
-      dtstart: input.from,
-      until: input.until,
-      freq: input.frequency,
-      interval: input.interval,
-      count: input.count,
-      byweekday: input.weekdays,
-    }).toString(),
     createdBy: ctx.auth.user.id,
-    teamId: ctx.auth.user.activeTeamId,
     dateStart: input.from,
     dateUntil: input.until,
+    description: input.description,
+    rule: new RRule({
+      byweekday: input.weekdays,
+      count: input.count,
+      dtstart: input.from,
+      freq: input.frequency,
+      interval: input.interval,
+      until: input.until,
+    }).toString(),
+    teamId: ctx.auth.user.activeTeamId,
+    title: input.title,
     type: input.type,
   });
 };

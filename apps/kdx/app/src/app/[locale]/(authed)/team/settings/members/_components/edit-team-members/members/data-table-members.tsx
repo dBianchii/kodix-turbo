@@ -62,18 +62,17 @@ export function DataTableMembers({
   const t = useTranslations();
   const { mutate } = useMutation(
     trpc.team.removeUser.mutationOptions({
+      onError: (e) => trpcErrorToastDefault(e),
       onSuccess: () => {
         toast.success(t("User removed from team"));
         void queryClient.invalidateQueries(trpc.team.getAllUsers.pathFilter());
       },
-      onError: (e) => trpcErrorToastDefault(e),
     }),
   );
 
   const columns = useMemo(
     () => [
       columnHelper.accessor("name", {
-        header: () => <div className="ml-2">User</div>,
         cell: (info) => (
           <div className="ml-2 flex flex-row gap-4">
             <div className="flex flex-col">
@@ -91,12 +90,12 @@ export function DataTableMembers({
             </div>
           </div>
         ),
-        enableSorting: false,
         enableHiding: false,
         enableResizing: true,
+        enableSorting: false,
+        header: () => <div className="ml-2">User</div>,
       }),
       columnHelper.display({
-        id: "actions",
         cell: function Cell(info) {
           if (info.row.original.id === user.id) return null;
 
@@ -144,18 +143,19 @@ export function DataTableMembers({
             </div>
           );
         },
+        id: "actions",
       }),
     ],
     [canEditPage, mutate, t, user.id],
   );
 
   const table = useReactTable({
-    data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
+    data,
     defaultColumn: {
       size: 1,
     },
+    getCoreRowModel: getCoreRowModel(),
   });
 
   return (

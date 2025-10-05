@@ -124,29 +124,28 @@ export const useCareTaskStore = create<{
   setCurrentlyEditing: (id: string | undefined) => void;
   onDateChange: (date: Date) => void;
 }>((set) => ({
+  currentlyEditing: undefined,
+
+  editDetailsOpen: false,
   input: {
-    dateStart: dayjs().startOf("day").toDate(),
     dateEnd: dayjs().endOf("day").toDate(),
+    dateStart: dayjs().startOf("day").toDate(),
   },
   onDateChange: (date) =>
     set(() => ({
-      input: {
-        dateStart: dayjs(date).startOf("day").toDate(),
-        dateEnd: dayjs(date).endOf("day").toDate(),
-      },
       editDetailsOpen: false,
+      input: {
+        dateEnd: dayjs(date).endOf("day").toDate(),
+        dateStart: dayjs(date).startOf("day").toDate(),
+      },
       unlockMoreTasksCredenzaWithDateOpen: false,
     })),
-
-  editDetailsOpen: false,
+  setCurrentlyEditing: (id) => set(() => ({ currentlyEditing: id })),
   setEditDetailsOpen: (open) => set(() => ({ editDetailsOpen: open })),
-
-  unlockMoreTasksCredenzaWithDateOpen: false,
   setUnlockMoreTasksCredenzaOpenWithDate: (dateOrFalse) =>
     set(() => ({ unlockMoreTasksCredenzaWithDateOpen: dateOrFalse })),
 
-  currentlyEditing: undefined,
-  setCurrentlyEditing: (id) => set(() => ({ currentlyEditing: id })),
+  unlockMoreTasksCredenzaWithDateOpen: false,
 }));
 
 export default function DataTableKodixCare({ user }: { user: User }) {
@@ -174,11 +173,6 @@ export default function DataTableKodixCare({ user }: { user: User }) {
   const columns = useMemo(
     () => [
       columnHelper.accessor("title", {
-        header: ({ column }) => (
-          <DataTableColumnHeader className="ml-8" column={column}>
-            {t("Title")}
-          </DataTableColumnHeader>
-        ),
         cell: (ctx) => {
           return (
             <div className="flex flex-row items-center">
@@ -193,8 +187,8 @@ export default function DataTableKodixCare({ user }: { user: User }) {
                       setCurrentlyEditing(ctx.row.original.id);
 
                       saveCareTaskMutation.mutate({
-                        id: ctx.row.original.id,
                         doneAt: ctx.row.original.doneAt ? null : new Date(),
+                        id: ctx.row.original.id,
                       });
                     }}
                   />
@@ -206,27 +200,24 @@ export default function DataTableKodixCare({ user }: { user: User }) {
             </div>
           );
         },
+        header: ({ column }) => (
+          <DataTableColumnHeader className="ml-8" column={column}>
+            {t("Title")}
+          </DataTableColumnHeader>
+        ),
       }),
       columnHelper.accessor("date", {
+        cell: (ctx) => (
+          <div>{format.dateTime(ctx.row.original.date, "shortWithHours")}</div>
+        ),
         header: ({ column }) => (
           <DataTableColumnHeader column={column}>
             <LuCalendar className="mr-2 size-4" />
             {t("Date")}
           </DataTableColumnHeader>
         ),
-        cell: (ctx) => (
-          <div>{format.dateTime(ctx.row.original.date, "shortWithHours")}</div>
-        ),
       }),
       columnHelper.accessor("doneAt", {
-        header: ({ column }) => {
-          return (
-            <DataTableColumnHeader column={column}>
-              <LuCheck className="mr-2 size-4 text-green-400" />
-              {t("Done at")}
-            </DataTableColumnHeader>
-          );
-        },
         cell: (ctx) => {
           if (!ctx.row.original.id) return null;
           if (!ctx.row.original.doneAt) return null;
@@ -236,23 +227,25 @@ export default function DataTableKodixCare({ user }: { user: User }) {
             </div>
           );
         },
+        header: ({ column }) => {
+          return (
+            <DataTableColumnHeader column={column}>
+              <LuCheck className="mr-2 size-4 text-green-400" />
+              {t("Done at")}
+            </DataTableColumnHeader>
+          );
+        },
       }),
       columnHelper.accessor("details", {
+        cell: (ctx) => <div>{ctx.row.original.details}</div>,
         header: ({ column }) => (
           <DataTableColumnHeader column={column}>
             <LuText className="mr-2 size-4 text-orange-400" />
             {t("Details")}
           </DataTableColumnHeader>
         ),
-        cell: (ctx) => <div>{ctx.row.original.details}</div>,
       }),
       columnHelper.accessor("type", {
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column}>
-            <LuCircleAlert className="mr-2 size-4 text-orange-400" />
-            {t("Critical")}
-          </DataTableColumnHeader>
-        ),
         cell: (ctx) => (
           <div className="flex max-w-sm items-center justify-center">
             {ctx.getValue() === "CRITICAL" ? (
@@ -260,10 +253,14 @@ export default function DataTableKodixCare({ user }: { user: User }) {
             ) : null}
           </div>
         ),
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column}>
+            <LuCircleAlert className="mr-2 size-4 text-orange-400" />
+            {t("Critical")}
+          </DataTableColumnHeader>
+        ),
       }),
       columnHelper.display({
-        id: "edit",
-        header: () => null,
         cell: (ctx) => {
           if (!isCareTask(ctx.row.original.id)) return null;
 
@@ -300,6 +297,8 @@ export default function DataTableKodixCare({ user }: { user: User }) {
             </div>
           );
         },
+        header: () => null,
+        id: "edit",
       }),
     ],
     [format, saveCareTaskMutation, setCurrentlyEditing, t],
@@ -309,15 +308,15 @@ export default function DataTableKodixCare({ user }: { user: User }) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
   const table = useReactTable({
-    data,
     columns,
+    data,
     getCoreRowModel: getCoreRowModel(),
-    onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
+    onSortingChange: setSorting,
     state: {
-      sorting,
       columnVisibility,
+      sorting,
     },
   });
 
@@ -502,14 +501,14 @@ function SyncTasksFromCalendarCredenzaButton() {
   const queryClient = useQueryClient();
   const syncCareTasksFromCalendarMutation = useMutation(
     trpc.app.kodixCare.careTask.syncCareTasksFromCalendar.mutationOptions({
-      onSuccess: () => {
-        void queryClient.invalidateQueries(trpc.app.kodixCare.pathFilter());
-      },
       onError: trpcErrorToastDefault,
       onSettled: () => {
         void queryClient.invalidateQueries(
           trpc.app.kodixCare.careTask.getCareTasks.pathFilter(),
         );
+      },
+      onSuccess: () => {
+        void queryClient.invalidateQueries(trpc.app.kodixCare.pathFilter());
       },
     }),
   );
@@ -571,12 +570,12 @@ function AddCareTaskCredenzaButton() {
   const t = useTranslations();
 
   const form = useForm({
-    schema: ZCreateCareTaskInputSchema(t),
     defaultValues: {
-      type: "NORMAL",
-      title: "",
       description: "",
+      title: "",
+      type: "NORMAL",
     },
+    schema: ZCreateCareTaskInputSchema(t),
   });
   const mutation = useMutation(
     trpc.app.kodixCare.careTask.createCareTask.mutationOptions({

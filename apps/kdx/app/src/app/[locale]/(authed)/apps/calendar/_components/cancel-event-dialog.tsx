@@ -38,6 +38,9 @@ export function CancelationDialog({
   const queryClient = useQueryClient();
   const mutation = useMutation(
     trpc.app.calendar.cancel.mutationOptions({
+      onError: (err) => {
+        trpcErrorToastDefault(err);
+      },
       onSuccess: () => {
         void queryClient.invalidateQueries(
           trpc.app.calendar.getAll.pathFilter(),
@@ -46,9 +49,6 @@ export function CancelationDialog({
           trpc.app.kodixCare.careTask.getCareTasks.pathFilter(),
         );
         setOpen(false);
-      },
-      onError: (err) => {
-        trpcErrorToastDefault(err);
       },
     }),
   );
@@ -123,10 +123,10 @@ export function CancelationDialog({
                 });
               else
                 mutation.mutate({
+                  date,
                   eventExceptionId: eventExceptionId,
                   eventMasterId: eventMasterId,
                   exclusionDefinition: radioValue,
-                  date,
                 });
             }}
           >

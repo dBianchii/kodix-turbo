@@ -131,8 +131,8 @@ export function useDataTable<TData, TValue>({
   // Memoize computation of searchableColumns and filterableColumns
   const { searchableColumns, filterableColumns } = useMemo(() => {
     return {
-      searchableColumns: filterFields.filter((field) => !field.options),
       filterableColumns: filterFields.filter((field) => field.options),
+      searchableColumns: filterFields.filter((field) => !field.options),
     };
   }, [filterFields]);
 
@@ -219,8 +219,8 @@ export function useDataTable<TData, TValue>({
   // Handle server-side sorting
   const [sorting, setSorting] = useState<SortingState>([
     {
-      id: column ?? "",
       desc: order === "desc",
+      id: column ?? "",
     },
   ]);
 
@@ -309,32 +309,32 @@ export function useDataTable<TData, TValue>({
   ]);
 
   const table = useReactTable({
-    data,
     columns,
-
-    pageCount: pageCount ?? -1,
-    state: {
-      pagination,
-      sorting,
-      columnVisibility,
-      rowSelection,
-      columnFilters,
-    },
+    data,
     enableRowSelection: true,
-    onRowSelectionChange: setRowSelection,
-    onPaginationChange: setPagination,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
+    manualFiltering: true,
     manualPagination: true,
     manualSorting: true,
-    manualFiltering: true,
+    onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
+    onPaginationChange: setPagination,
+    onRowSelectionChange: setRowSelection,
+    onSortingChange: setSorting,
+
+    pageCount: pageCount ?? -1,
+    state: {
+      columnFilters,
+      columnVisibility,
+      pagination,
+      rowSelection,
+      sorting,
+    },
   });
 
   return { table };

@@ -105,13 +105,13 @@ export function DataTableFilterCombobox<TData>({
                     ...selectedOptions,
                     {
                       id: crypto.randomUUID(),
+                      isMulti: true,
 
                       label: selectedOption.label ?? "",
 
-                      value: selectedOption.value ?? "",
-
                       options: selectedOption.options ?? [],
-                      isMulti: true,
+
+                      value: selectedOption.value ?? "",
                     },
                   ]);
                   onSelect();

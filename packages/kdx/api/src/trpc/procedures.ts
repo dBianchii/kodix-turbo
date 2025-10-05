@@ -26,10 +26,10 @@ export const publicProcedure = baseProcedure.use(async ({ ctx, next }) => {
   return next({
     ctx: {
       ...ctx,
+      auth: authResponse,
       format,
       services,
       t,
-      auth: authResponse,
       token: authToken,
     },
   });
@@ -60,14 +60,14 @@ export const isTeamOwnerProcedure = protectedProcedure.use(
 
     if (!team)
       throw new TRPCError({
-        message: ctx.t("api.No Team Found"),
         code: "NOT_FOUND",
+        message: ctx.t("api.No Team Found"),
       });
 
     if (team.ownerId !== ctx.auth.user.id)
       throw new TRPCError({
-        message: ctx.t("api.Only the team owner can perform this action"),
         code: "FORBIDDEN",
+        message: ctx.t("api.Only the team owner can perform this action"),
       });
 
     return next({

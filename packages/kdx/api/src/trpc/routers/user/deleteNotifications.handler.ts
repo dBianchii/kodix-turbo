@@ -13,7 +13,7 @@ export const deleteNotificationsHandler = async ({
   input,
 }: DeleteNotificationsOptions) => {
   await notificationRepository.deleteUserNotificationsWithinTeams({
-    userId: ctx.auth.user.id,
     teamIds: input.ids,
+    userId: ctx.auth.user.id,
   });
 };

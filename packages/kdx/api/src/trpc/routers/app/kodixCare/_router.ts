@@ -28,24 +28,24 @@ export const kodixCareRouter = {
   checkEmailForRegister: publicProcedure
     .input(ZCheckEmailForRegisterInputSchema)
     .query(checkEmailForRegisterHandler),
-  signInByPassword: publicProcedure
-    .input(ZSignInByPasswordInputSchema)
-    .mutation(signInByPasswordHandler),
-  getAllCareShifts: protectedProcedure.query(getAllCareShiftsHandler),
   createCareShift: protectedProcedure
     .use(kodixCareInstalledMiddleware)
     .input(T(ZCreateCareShiftInputSchema))
     .mutation(createCareShiftHandler),
-  getAllCaregivers: protectedProcedure
-    .use(kodixCareInstalledMiddleware)
-    .query(getAllCaregiversHandler),
-  findOverlappingShifts: protectedProcedure
-    .input(ZFindOverlappingShiftsInputSchema)
-    .query(findOverlappingShiftsHandler),
-  editCareShift: protectedProcedure
-    .input(T(ZEditCareShiftInputSchema))
-    .mutation(editCareShiftHandler),
   deleteCareShift: protectedProcedure
     .input(ZDeleteCareShiftInputSchema)
     .mutation(deleteCareShiftHandler),
+  editCareShift: protectedProcedure
+    .input(T(ZEditCareShiftInputSchema))
+    .mutation(editCareShiftHandler),
+  findOverlappingShifts: protectedProcedure
+    .input(ZFindOverlappingShiftsInputSchema)
+    .query(findOverlappingShiftsHandler),
+  getAllCaregivers: protectedProcedure
+    .use(kodixCareInstalledMiddleware)
+    .query(getAllCaregiversHandler),
+  getAllCareShifts: protectedProcedure.query(getAllCareShiftsHandler),
+  signInByPassword: publicProcedure
+    .input(ZSignInByPasswordInputSchema)
+    .mutation(signInByPasswordHandler),
 } satisfies TRPCRouterRecord;

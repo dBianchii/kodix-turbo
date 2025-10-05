@@ -129,8 +129,8 @@ function CustomRow({
 
               if (team.id !== user.activeTeamId)
                 void switchTeamAction({
-                  teamId: team.id,
                   redirect: "/team/settings",
+                  teamId: team.id,
                 });
               else void router.push(`/team/settings`);
             }}
@@ -165,12 +165,12 @@ function LeaveOrDeleteTeamDropdown({
   const router = useRouter();
   const leaveTeamMutation = useMutation(
     trpc.team.leaveTeam.mutationOptions({
+      onError: (e) => trpcErrorToastDefault(e),
       onSuccess: () => {
         toast.success(t("account.You have left the team"));
         void queryClient.invalidateQueries(trpc.team.getAllUsers.pathFilter());
         router.refresh();
       },
-      onError: (e) => trpcErrorToastDefault(e),
     }),
   );
   const [open, setOpen] = useState(false);

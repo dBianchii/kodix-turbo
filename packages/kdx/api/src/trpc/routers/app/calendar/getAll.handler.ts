@@ -13,8 +13,8 @@ export const getAllHandler = async ({
   input,
 }: GetAllCalendarTasksOptions) => {
   const calendarTasks = await getCalendarTasks({
-    dateStart: input.dateStart,
     dateEnd: input.dateEnd,
+    dateStart: input.dateStart,
     teamIds: [ctx.auth.user.activeTeamId],
   });
   return calendarTasks;

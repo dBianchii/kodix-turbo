@@ -15,11 +15,11 @@ export async function findUserByEmail(email: string) {
 
 export async function findUserById(id: string) {
   return await db.query.users.findFirst({
-    where: (users, { eq }) => eq(users.id, id),
     columns: {
-      name: true,
       email: true,
+      name: true,
     },
+    where: (users, { eq }) => eq(users.id, id),
     with: {
       ExpoTokens: {
         columns: {
@@ -32,10 +32,10 @@ export async function findUserById(id: string) {
 
 export async function findManyUsersByIds(ids: string[]) {
   return await db.query.users.findMany({
-    where: (users, { inArray }) => inArray(users.id, ids),
     columns: {
       name: true,
     },
+    where: (users, { inArray }) => inArray(users.id, ids),
   });
 }
 
@@ -71,9 +71,9 @@ export async function moveUserToTeamAndAssociateToTeam(
     teamId: string;
   },
 ) {
-  await moveUserToTeam(db, { userId, newTeamId: teamId });
+  await moveUserToTeam(db, { newTeamId: teamId, userId });
   await db.insert(usersToTeams).values({
-    userId: userId,
     teamId: teamId,
+    userId: userId,
   });
 }

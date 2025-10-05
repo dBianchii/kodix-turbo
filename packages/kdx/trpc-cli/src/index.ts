@@ -10,9 +10,9 @@ const main = async () => {
   const params: CreateFilesParams = {
     chosenRouterPath: userInput.chosenRouterPath,
     endpointName: userInput.endpointName,
-    validator: userInput.validator,
-    queryOrMutation: userInput.queryOrMutation,
     procedure: userInput.procedure,
+    queryOrMutation: userInput.queryOrMutation,
+    validator: userInput.validator,
   };
   if (userInput.chosenRouterPath === "newRouter") {
     if (params.validator)

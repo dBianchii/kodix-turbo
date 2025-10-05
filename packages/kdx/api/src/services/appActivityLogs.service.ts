@@ -92,9 +92,9 @@ export async function getAppActivityLogs({
   const logs = await appRepository.findManyAppActivityLogs({
     appId,
     page,
-    tableNames,
-    rowId,
     pageSize,
+    rowId,
+    tableNames,
     teamId,
   });
 

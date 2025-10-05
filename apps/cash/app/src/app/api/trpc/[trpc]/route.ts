@@ -3,8 +3,8 @@ import { cashTRPCRouter, createTRPCContext, nextTRPCHandler } from "@cash/api";
 
 const handler = async (req: NextRequest) => {
   const response = await nextTRPCHandler(req, {
-    router: cashTRPCRouter,
     createContext: ({ headers }) => createTRPCContext({ headers }),
+    router: cashTRPCRouter,
   });
 
   return response;

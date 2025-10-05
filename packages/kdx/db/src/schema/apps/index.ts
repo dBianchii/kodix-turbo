@@ -12,10 +12,10 @@ import {
 } from "../utils";
 
 export const devPartners = mysqlTable("devPartner", (t) => ({
+  createdAt: t.timestamp().defaultNow().notNull(),
   id: nanoidPrimaryKey(t),
   name: t.varchar({ length: DEFAULTLENGTH }).notNull(),
   partnerUrl: t.varchar({ length: DEFAULTLENGTH }),
-  createdAt: t.timestamp().defaultNow().notNull(),
   updatedAt: t.timestamp().onUpdateNow(),
 }));
 export const devPartnersRelations = relations(devPartners, ({ many }) => ({
@@ -25,23 +25,23 @@ export const devPartnersRelations = relations(devPartners, ({ many }) => ({
 export const apps = mysqlTable(
   "app",
   (t) => ({
-    id: nanoidPrimaryKey(t),
     createdAt: t.timestamp().defaultNow().notNull(),
-    updatedAt: t.timestamp().onUpdateNow(),
     devPartnerId: t
       .varchar({ length: NANOID_SIZE })
       .notNull()
       .references(() => devPartners.id),
+    id: nanoidPrimaryKey(t),
+    updatedAt: t.timestamp().onUpdateNow(),
   }),
   (table) => [index("devPartnerId_idx").on(table.devPartnerId)],
 );
 export const appRelations = relations(apps, ({ many, one }) => ({
   AppsToTeams: many(appsToTeams),
+  AppTeamConfigs: many(appTeamConfigs),
   DevPartners: one(devPartners, {
     fields: [apps.devPartnerId],
     references: [devPartners.id],
   }),
-  AppTeamConfigs: many(appTeamConfigs),
   UserTeamAppRoles: many(userTeamAppRoles),
 }));
 export const appSchema = createInsertSchema(apps);
@@ -75,12 +75,12 @@ export const appsToTeamsRelations = relations(appsToTeams, ({ one }) => ({
 export const appTeamConfigs = mysqlTable(
   "appTeamConfig",
   (t) => ({
-    id: nanoidPrimaryKey(t),
-    config: t.json().notNull(),
     appId: t
       .varchar({ length: NANOID_SIZE })
       .notNull()
       .references(() => apps.id, { onDelete: "cascade" }),
+    config: t.json().notNull(),
+    id: nanoidPrimaryKey(t),
     teamId: teamIdReferenceCascadeDelete(t),
   }),
   (table) => [
@@ -105,17 +105,17 @@ export const appTeamConfigSchema = createInsertSchema(appTeamConfigs);
 export const userAppTeamConfigs = mysqlTable(
   "userAppTeamConfig",
   (t) => ({
-    id: nanoidPrimaryKey(t),
-    config: t.json().notNull(),
-    userId: t
-      .varchar({ length: NANOID_SIZE })
-      .notNull()
-      .references(() => users.id),
     appId: t
       .varchar({ length: NANOID_SIZE })
       .notNull()
       .references(() => apps.id, { onDelete: "cascade" }),
+    config: t.json().notNull(),
+    id: nanoidPrimaryKey(t),
     teamId: teamIdReferenceCascadeDelete(t),
+    userId: t
+      .varchar({ length: NANOID_SIZE })
+      .notNull()
+      .references(() => users.id),
   }),
   (table) => [
     index("userId_idx").on(table.userId),
@@ -132,10 +132,6 @@ export const userAppTeamConfigs = mysqlTable(
 export const userAppTeamConfigsRelations = relations(
   userAppTeamConfigs,
   ({ one }) => ({
-    User: one(users, {
-      fields: [userAppTeamConfigs.userId],
-      references: [users.id],
-    }),
     App: one(apps, {
       fields: [userAppTeamConfigs.appId],
       references: [apps.id],
@@ -144,6 +140,10 @@ export const userAppTeamConfigsRelations = relations(
       fields: [userAppTeamConfigs.teamId],
       references: [teams.id],
     }),
+    User: one(users, {
+      fields: [userAppTeamConfigs.userId],
+      references: [users.id],
+    }),
   }),
 );
 export const userAppTeamConfigSchema = createInsertSchema(userAppTeamConfigs);
@@ -151,21 +151,21 @@ export const userAppTeamConfigSchema = createInsertSchema(userAppTeamConfigs);
 export const appActivityLogs = mysqlTable(
   "appActivityLog",
   (t) => ({
-    id: nanoidPrimaryKey(t),
-    teamId: teamIdReferenceCascadeDelete(t),
     appId: t
       .varchar({ length: NANOID_SIZE })
       .notNull()
       .references(() => apps.id, { onDelete: "cascade" }),
+    diff: t.json().notNull(),
+    id: nanoidPrimaryKey(t),
+    loggedAt: t.timestamp().defaultNow().notNull(),
+    rowId: t.varchar({ length: NANOID_SIZE }).notNull(),
+    tableName: t.mysqlEnum(["careShift", "careTask"]).notNull(),
+    teamId: teamIdReferenceCascadeDelete(t),
+    type: t.mysqlEnum(["create", "update", "delete"]).notNull(),
     userId: t
       .varchar({ length: NANOID_SIZE })
       .notNull()
       .references(() => users.id),
-    tableName: t.mysqlEnum(["careShift", "careTask"]).notNull(),
-    rowId: t.varchar({ length: NANOID_SIZE }).notNull(),
-    loggedAt: t.timestamp().defaultNow().notNull(),
-    diff: t.json().notNull(),
-    type: t.mysqlEnum(["create", "update", "delete"]).notNull(),
   }),
   (table) => [
     index("teamId_idx").on(table.teamId),
@@ -178,10 +178,6 @@ export const appActivityLogs = mysqlTable(
 export const appActivityLogsRelations = relations(
   appActivityLogs,
   ({ one }) => ({
-    User: one(users, {
-      fields: [appActivityLogs.userId],
-      references: [users.id],
-    }),
     App: one(apps, {
       fields: [appActivityLogs.appId],
       references: [apps.id],
@@ -189,6 +185,10 @@ export const appActivityLogsRelations = relations(
     Team: one(teams, {
       fields: [appActivityLogs.teamId],
       references: [teams.id],
+    }),
+    User: one(users, {
+      fields: [appActivityLogs.userId],
+      references: [users.id],
     }),
   }),
 );

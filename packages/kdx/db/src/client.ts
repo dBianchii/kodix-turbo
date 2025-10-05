@@ -27,16 +27,16 @@ export const dbURl = new URL(process.env.MYSQL_URL);
 const conn =
   globalForDb.conn ??
   createPool({
-    host: dbURl.host.split(":")[0],
-    user: dbURl.username,
     database: dbURl.pathname.slice(1),
+    host: dbURl.host.split(":")[0],
     password: dbURl.password,
     port: Number(dbURl.port),
+    user: dbURl.username,
   });
 if (process.env.NODE_ENV !== "production") globalForDb.conn = conn;
 
 // TODO: Remove typecasting once https://github.com/drizzle-team/drizzle-orm/issues/3282 is resolved
-export const db = drizzle(conn, { schema, mode: "default" }) as MySql2Database<
+export const db = drizzle(conn, { mode: "default", schema }) as MySql2Database<
   typeof schema
 >;
 

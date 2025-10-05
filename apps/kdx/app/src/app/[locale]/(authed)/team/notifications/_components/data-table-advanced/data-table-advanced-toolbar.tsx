@@ -35,8 +35,8 @@ export function DataTableAdvancedToolbar<TData>({
       return {
         id: crypto.randomUUID(),
         label: field.label,
-        value: field.value,
         options: field.options ?? [],
+        value: field.value,
       };
     });
   }, [filterFields]);
@@ -52,8 +52,8 @@ export function DataTableAdvancedToolbar<TData>({
 
         return {
           ...option,
-          filterValues: filterValue?.split(".") ?? [],
           filterOperator,
+          filterValues: filterValue?.split(".") ?? [],
         };
       });
   }, [options, searchParams]);

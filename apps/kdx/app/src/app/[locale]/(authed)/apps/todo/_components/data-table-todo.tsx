@@ -73,14 +73,6 @@ export function DataTableTodo({
 
   const columns = [
     columnHelper.display({
-      id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={table.getIsAllPageRowsSelected()}
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      ),
       cell: ({ row }) => (
         <Checkbox
           checked={row.getIsSelected()}
@@ -88,8 +80,16 @@ export function DataTableTodo({
           aria-label="Select row"
         />
       ),
-      enableSorting: false,
       enableHiding: false,
+      enableSorting: false,
+      header: ({ table }) => (
+        <Checkbox
+          checked={table.getIsAllPageRowsSelected()}
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      id: "select",
     }),
     columnHelper.accessor("priority", {
       cell: function Cell(info) {
@@ -102,6 +102,7 @@ export function DataTableTodo({
 
         const queryClient = useQueryClient();
         const { mutate: updateTodo } = useMutation(
+          // biome-ignore assist/source/useSortedKeys: Known TS limitation in tanstack
           trpc.app.todo.update.mutationOptions({
             async onMutate(newData) {
               if (!newData.priority) return;
@@ -159,6 +160,7 @@ export function DataTableTodo({
         const queryClient = useQueryClient();
 
         const { mutate: updateTodo } = useMutation(
+          // biome-ignore assist/source/useSortedKeys: Known TS limitation in tanstack
           trpc.app.todo.update.mutationOptions({
             async onMutate(newData) {
               if (!newData.status) return;
@@ -216,6 +218,7 @@ export function DataTableTodo({
         const queryClient = useQueryClient();
 
         const { mutate: updateTodo } = useMutation(
+          // biome-ignore assist/source/useSortedKeys: Known TS limitation in tanstack
           trpc.app.todo.update.mutationOptions({
             async onMutate(newData) {
               // Cancel outgoing fetches (so they don't overwrite our optimistic update)
@@ -238,7 +241,7 @@ export function DataTableTodo({
         );
 
         function handleDueDateChange(newDueDate: Date | undefined | null) {
-          updateTodo({ id: info.row.original.id, dueDate: newDueDate });
+          updateTodo({ dueDate: newDueDate, id: info.row.original.id });
         }
 
         return (
@@ -276,13 +279,6 @@ export function DataTableTodo({
               setAssignedToUserId(newData.assignedToUserId ?? "");
               return { prevData };
             },
-            onError(err, _newTodo, ctx) {
-              if (!ctx?.prevData) return;
-
-              trpcErrorToastDefault(err);
-              // If the mutation fails, use the context-value from onMutate
-              setAssignedToUserId(ctx.prevData);
-            },
           }),
         );
 
@@ -290,8 +286,8 @@ export function DataTableTodo({
           newAssignedToUserId: string | null,
         ) {
           updateTodo({
-            id: info.row.original.id,
             assignedToUserId: newAssignedToUserId,
+            id: info.row.original.id,
           });
         }
 
@@ -308,12 +304,12 @@ export function DataTableTodo({
     }),
   ];
   const table = useReactTable({
-    data: todosQuery.data,
     columns,
+    data: todosQuery.data,
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
     state: {
       columnFilters,
     },

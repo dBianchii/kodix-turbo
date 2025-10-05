@@ -18,10 +18,10 @@ export const teamPermissionsFactory =
     if (team.ownerId === user.id) {
       can("Delete", "UserTeamAppRole");
       cannot("Delete", "UserTeamAppRole", {
+        role: { $eq: "ADMIN" },
         userId: {
           $eq: user.id,
         },
-        role: { $eq: "ADMIN" },
       }).because(
         t("api.You cannot remove yourself from the Administrator role")
       );

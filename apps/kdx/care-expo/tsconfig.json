@@ -1,14 +1,14 @@
 {
-  "extends": ["@kodix/tsconfig/base.json"],
   "compilerOptions": {
     "baseUrl": ".",
+    "checkJs": false,
+    "jsx": "react-native",
+    "moduleSuffixes": [".ios", ".android", ".native", ""],
     "paths": {
       "~/*": ["./src/*"]
-    },
-    "jsx": "react-native",
-    "checkJs": false,
-    "moduleSuffixes": [".ios", ".android", ".native", ""]
+    }
   },
-  "include": ["src", "*.ts", "*.js", "tamagui-config/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "extends": ["@kodix/tsconfig/base.json"],
+  "include": ["src", "*.ts", "*.js", "tamagui-config/*.ts"]
 }

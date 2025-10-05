@@ -127,8 +127,8 @@ export function DataTableSkeleton(props: DataTableSkeletonProps) {
                     // biome-ignore lint/suspicious/noArrayIndexKey: <The key is unique with the prefix>
                     key={`header-cell-${columnIndex}`}
                     style={{
-                      width: cellWidths[columnIndex],
                       minWidth: shrinkZero ? cellWidths[columnIndex] : "auto",
+                      width: cellWidths[columnIndex],
                     }}
                   >
                     <Skeleton className="h-6 w-full" />
@@ -149,8 +149,8 @@ export function DataTableSkeleton(props: DataTableSkeletonProps) {
                     // biome-ignore lint/suspicious/noArrayIndexKey: <The key is unique with the prefix>
                     key={`cell-${columnIndex}`}
                     style={{
-                      width: cellWidths[columnIndex],
                       minWidth: shrinkZero ? cellWidths[columnIndex] : "auto",
+                      width: cellWidths[columnIndex],
                     }}
                   >
                     <Skeleton className="h-6 w-full" />

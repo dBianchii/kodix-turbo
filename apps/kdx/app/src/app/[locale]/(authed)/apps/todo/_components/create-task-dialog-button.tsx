@@ -43,12 +43,12 @@ export function CreateTaskDialogButton() {
   const trpc = useTRPC();
   function handleCreateTask() {
     createTask({
-      title,
+      assignedToUserId,
       description,
-      status,
       dueDate,
       priority,
-      assignedToUserId,
+      status,
+      title,
     });
     setOpen(false);
   }
@@ -71,7 +71,7 @@ export function CreateTaskDialogButton() {
 
   // const { data: team } = api.team.getActiveTeam.useQuery();
   const team = {
-    Users: [{ id: "THIS_WAS_REMOVED_LOL", name: "asdas", image: "asd" }],
+    Users: [{ id: "THIS_WAS_REMOVED_LOL", image: "asd", name: "asdas" }],
   };
 
   const [open, setOpen] = useState(false);

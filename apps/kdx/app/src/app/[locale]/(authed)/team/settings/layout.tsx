@@ -36,8 +36,8 @@ export default async function SettingsLayout({
     },
     {
       href: "/team/settings/permissions",
-      title: t("Permissions"),
       shown: user.id === team.ownerId,
+      title: t("Permissions"),
     },
   ];
 
@@ -56,8 +56,8 @@ export default async function SettingsLayout({
         <Navigation
           items={navItems}
           goBackItem={{
-            title: t("Settings"),
             href: `/team/settings`,
+            title: t("Settings"),
           }}
         />
         <ShouldRender endsWith="/settings">{children}</ShouldRender>

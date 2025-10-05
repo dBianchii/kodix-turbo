@@ -33,21 +33,21 @@ export const signupWithPasswordHandler = async ({
 
   await db.transaction(async (tx) => {
     await createUser({
-      name: input.name,
-      teamId: nanoid(),
-      userId: userId,
       email: input.email,
       invite: input.invite,
+      name: input.name,
       passwordHash: passwordHash,
+      teamId: nanoid(),
       tx,
+      userId: userId,
     });
   });
 
   const sessionId = createDbSessionAndCookie({ userId });
   captureProductAnalytic({
     event: "signup",
-    userId,
     properties: { email: input.email },
+    userId,
   });
 
   return sessionId;

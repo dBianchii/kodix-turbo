@@ -37,15 +37,15 @@ export default function ForgotPasswordPage(props: {
   const t = useTranslations();
 
   const form = useForm({
+    defaultValues: {
+      token: searchParams.token,
+    },
     schema: ZChangePasswordInputSchema.extend({
       passwordConfirmation: ZChangePasswordInputSchema.shape.password,
     }).refine((data) => data.password === data.passwordConfirmation, {
       message: "Passwords don't match",
       path: ["passwordConfirmation"],
     }),
-    defaultValues: {
-      token: searchParams.token,
-    },
   });
 
   const mutation = useMutation(

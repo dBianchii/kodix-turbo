@@ -48,9 +48,9 @@ export function CreateEventDialogButton() {
     useState(false);
 
   const form = useForm({
-    schema: ZCreateInputSchema,
     defaultValues: {
-      title: "",
+      count: 1,
+      frequency: RRule.DAILY,
       from: dayjs(new Date())
         .startOf("hour")
         .hour(
@@ -60,10 +60,10 @@ export function CreateEventDialogButton() {
         )
         .minute(dayjs.utc().minute() < 30 ? 30 : 0)
         .toDate(),
-      frequency: RRule.DAILY,
       interval: 1,
-      count: 1,
+      title: "",
     },
+    schema: ZCreateInputSchema,
   });
 
   form.watch();
@@ -73,6 +73,7 @@ export function CreateEventDialogButton() {
 
   const mutation = useMutation(
     trpc.app.calendar.create.mutationOptions({
+      onError: trpcErrorToastDefault,
       onSuccess: () => {
         void queryClient.invalidateQueries(
           trpc.app.calendar.getAll.pathFilter(),
@@ -83,7 +84,6 @@ export function CreateEventDialogButton() {
         form.reset();
         setOpen(false);
       },
-      onError: trpcErrorToastDefault,
     }),
   );
 

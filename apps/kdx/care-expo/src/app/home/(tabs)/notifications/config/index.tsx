@@ -42,11 +42,11 @@ export default function Config() {
       <Stack.Screen
         options={{
           headerShown: true,
-          headerTitle: "",
-          headerTintColor: theme.color.val,
           headerStyle: {
             backgroundColor: theme.background.val,
           },
+          headerTintColor: theme.color.val,
+          headerTitle: "",
         }}
       />
 
@@ -70,11 +70,11 @@ function NotificationSettingsForm({
   const mutation = api.app.saveUserAppTeamConfig.useMutation({
     onError: (err) => {
       toast.show("Um erro ocorreu", {
-        message: getErrorMessage(err),
-        variant: "error",
         customData: {
           variant: "error",
         },
+        message: getErrorMessage(err),
+        variant: "error",
       });
     },
   });

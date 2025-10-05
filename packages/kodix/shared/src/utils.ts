@@ -40,7 +40,7 @@ export const getSuccessesAndErrors = <T>(
     (x): x is PromiseFulfilledResult<T> => x.status === "fulfilled"
   );
 
-  return { successes, errors };
+  return { errors, successes };
 };
 
 /**

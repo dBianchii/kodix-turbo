@@ -65,10 +65,10 @@ export const RadialGradient = ({
   className,
 }: RadialProps) => {
   const styles: CSSProperties = {
-    position: "absolute",
-    pointerEvents: "none",
-    inset: 0,
     backgroundImage: `radial-gradient(${type} ${size}px at ${origin}, ${from}, ${to})`,
+    inset: 0,
+    pointerEvents: "none",
+    position: "absolute",
   };
 
   return <div className={className} style={styles} />;

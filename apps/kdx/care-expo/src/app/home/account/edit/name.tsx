@@ -24,10 +24,10 @@ export default function EditNamePage() {
 
   const t = useTranslations();
   const form = useForm({
-    schema: ZChangeNameInputSchema(t),
     defaultValues: {
       name: user?.name ?? undefined,
     },
+    schema: ZChangeNameInputSchema(t),
   });
 
   const router = useRouter();
@@ -50,14 +50,6 @@ export default function EditNamePage() {
     <>
       <Stack.Screen
         options={{
-          headerTitleStyle: {
-            color: theme.color.val,
-          },
-          title: "Editar nome",
-          headerStyle: {
-            backgroundColor: theme.background.val,
-          },
-          headerShown: true,
           headerLeft: () => (
             <Pressable
               onPress={() => {
@@ -88,6 +80,14 @@ export default function EditNamePage() {
               </Pressable>
             );
           },
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: theme.background.val,
+          },
+          headerTitleStyle: {
+            color: theme.color.val,
+          },
+          title: "Editar nome",
         }}
       />
       <View bg={"$background"} f={1}>

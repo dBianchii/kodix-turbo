@@ -68,8 +68,8 @@ const BentoCard = ({
     >
       <a
         className={buttonVariants({
-          variant: "ghost",
           size: "sm",
+          variant: "ghost",
         })}
         href={href}
       >

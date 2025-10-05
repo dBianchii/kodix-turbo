@@ -254,8 +254,8 @@ export function DateTimePicker({
   const locale = useLocale();
 
   const nextIntlLocaleToDayPickerLocale: Record<string, unknown> = {
-    "pt-BR": ptBR,
     "en-US": enUS,
+    "pt-BR": ptBR,
   };
 
   return (
@@ -263,12 +263,12 @@ export function DateTimePicker({
       <PopoverTrigger asChild>
         {renderTrigger ? (
           renderTrigger({
-            value: displayValue,
-            open,
-            timezone,
             disabled,
-            use12HourFormat,
+            open,
             setOpen,
+            timezone,
+            use12HourFormat,
+            value: displayValue,
           })
         ) : (
           // biome-ignore lint/a11y/noNoninteractiveElementInteractions: <not my code not my problem>
@@ -365,32 +365,32 @@ export function DateTimePicker({
         <div className="relative overflow-hidden">
           <DayPicker
             classNames={{
-              dropdowns: "flex w-full gap-2",
-              months: "flex w-full h-fit",
-              month: "flex flex-col w-full",
-              month_caption: "hidden",
-              button_previous: "hidden",
               button_next: "hidden",
-              month_grid: "w-full border-collapse",
-              weekdays: "flex justify-between mt-2",
-              weekday:
-                "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
-              week: "flex w-full justify-between mt-2",
+              button_previous: "hidden",
               day: "h-9 w-9 text-center text-sm p-0 relative flex items-center justify-center [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20 rounded-1",
               day_button: cn(
                 buttonVariants({ variant: "ghost" }),
                 "size-9 rounded-md p-0 font-normal aria-selected:opacity-100"
               ),
+              disabled: "text-muted-foreground opacity-50",
+              dropdowns: "flex w-full gap-2",
+              hidden: "invisible",
+              month: "flex flex-col w-full",
+              month_caption: "hidden",
+              month_grid: "w-full border-collapse",
+              months: "flex w-full h-fit",
+              outside:
+                "day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
               range_end: "day-range-end",
+              range_middle:
+                "aria-selected:bg-accent aria-selected:text-accent-foreground",
               selected:
                 "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground rounded-l-md rounded-r-md",
               today: "bg-accent text-accent-foreground",
-              outside:
-                "day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
-              disabled: "text-muted-foreground opacity-50",
-              range_middle:
-                "aria-selected:bg-accent aria-selected:text-accent-foreground",
-              hidden: "invisible",
+              week: "flex w-full justify-between mt-2",
+              weekday:
+                "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
+              weekdays: "flex justify-between mt-2",
             }}
             disabled={
               [
@@ -481,7 +481,7 @@ function MonthYearPicker({
       const endY = endOfYear(setYear(value, i));
       if (minDate && endY < minDate) disabled = true;
       if (maxDate && startY > maxDate) disabled = true;
-      _years.push({ value: i, label: i.toString(), disabled });
+      _years.push({ disabled, label: i.toString(), value: i });
     }
     return _years;
   }, [value]);
@@ -495,11 +495,11 @@ function MonthYearPicker({
       if (minDate && endM < minDate) disabled = true;
       if (maxDate && startM > maxDate) disabled = true;
       _months.push({
-        value: i,
+        disabled,
         label: format.dateTime(new Date(0, i), {
           month: "short",
         }),
-        disabled,
+        value: i,
       });
     }
     return _months;
@@ -611,13 +611,13 @@ function TimePicker({
   useEffect(() => {
     onChange(
       buildTime({
-        use12HourFormat,
-        value,
+        ampm,
         formatStr,
         hour,
         minute,
         second,
-        ampm,
+        use12HourFormat,
+        value,
       })
     );
   }, [hour, minute, second, ampm, formatStr, use12HourFormat]);
@@ -644,9 +644,9 @@ function TimePicker({
         if (min && hEnd < min) disabled = true;
         if (max && hStart > max) disabled = true;
         return {
-          value: hourValue,
-          label: hourValue.toString().padStart(2, "0"),
           disabled,
+          label: hourValue.toString().padStart(2, "0"),
+          value: hourValue,
         };
       }),
     [value, min, max, use12HourFormat, ampm]
@@ -661,9 +661,9 @@ function TimePicker({
       if (min && mEnd < min) disabled = true;
       if (max && mStart > max) disabled = true;
       return {
-        value: i,
-        label: i.toString().padStart(2, "0"),
         disabled,
+        label: i.toString().padStart(2, "0"),
+        value: i,
       };
     });
   }, [value, min, max, _hourIn24h]);
@@ -680,9 +680,9 @@ function TimePicker({
       if (_min && sDate < _min) disabled = true;
       if (_max && sDate > _max) disabled = true;
       return {
-        value: i,
-        label: i.toString().padStart(2, "0"),
         disabled,
+        label: i.toString().padStart(2, "0"),
+        value: i,
       };
     });
   }, [value, minute, min, max, _hourIn24h]);
@@ -690,8 +690,8 @@ function TimePicker({
     const startD = startOfDay(value);
     const endD = endOfDay(value);
     return [
-      { value: AM_VALUE, label: "AM" },
-      { value: PM_VALUE, label: "PM" },
+      { label: "AM", value: AM_VALUE },
+      { label: "PM", value: PM_VALUE },
     ].map((v) => {
       let disabled = false;
       // biome-ignore lint/style/noMagicNumbers: <not my code not my problem>
@@ -725,13 +725,13 @@ function TimePicker({
     (v: TimeOption) => {
       if (min) {
         const newTime = buildTime({
-          use12HourFormat,
-          value,
+          ampm,
           formatStr,
           hour: v.value,
           minute,
           second,
-          ampm,
+          use12HourFormat,
+          value,
         });
         if (newTime < min) {
           setMinute(min.getMinutes());
@@ -740,13 +740,13 @@ function TimePicker({
       }
       if (max) {
         const newTime = buildTime({
-          use12HourFormat,
-          value,
+          ampm,
           formatStr,
           hour: v.value,
           minute,
           second,
-          ampm,
+          use12HourFormat,
+          value,
         });
         if (newTime > max) {
           setMinute(max.getMinutes());
@@ -762,13 +762,13 @@ function TimePicker({
     (v: TimeOption) => {
       if (min) {
         const newTime = buildTime({
-          use12HourFormat,
-          value,
+          ampm,
           formatStr,
           hour: v.value,
           minute,
           second,
-          ampm,
+          use12HourFormat,
+          value,
         });
         if (newTime < min) {
           setSecond(min.getSeconds());
@@ -776,13 +776,13 @@ function TimePicker({
       }
       if (max) {
         const newTime = buildTime({
-          use12HourFormat,
-          value,
+          ampm,
           formatStr,
           hour: v.value,
           minute,
           second,
-          ampm,
+          use12HourFormat,
+          value,
         });
         if (newTime > max) {
           setSecond(newTime.getSeconds());
@@ -797,13 +797,13 @@ function TimePicker({
     (v: TimeOption) => {
       if (min) {
         const newTime = buildTime({
-          use12HourFormat,
-          value,
+          ampm: v.value,
           formatStr,
           hour,
           minute,
           second,
-          ampm: v.value,
+          use12HourFormat,
+          value,
         });
         if (newTime < min) {
           // biome-ignore lint/style/noMagicNumbers: <not my code not my problem>
@@ -816,13 +816,13 @@ function TimePicker({
       }
       if (max) {
         const newTime = buildTime({
-          use12HourFormat,
-          value,
+          ampm: v.value,
           formatStr,
           hour,
           minute,
           second,
-          ampm: v.value,
+          use12HourFormat,
+          value,
         });
         if (newTime > max) {
           // biome-ignore lint/style/noMagicNumbers: <not my code not my problem>

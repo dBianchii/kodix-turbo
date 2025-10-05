@@ -11,10 +11,10 @@ import { getStorageExpoToken, saveStorageExpoToken } from "./expoToken-store";
 async function registerForPushNotificationsAsync() {
   if (Platform.OS === "android") {
     await Notifications.setNotificationChannelAsync("default", {
-      name: "default",
       importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
       lightColor: "#FF231F7C",
+      name: "default",
+      vibrationPattern: [0, 250, 250, 250],
     });
   }
 
@@ -57,9 +57,9 @@ async function registerForPushNotificationsAsync() {
 export const usePushNotifications = () => {
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
-      shouldShowAlert: true,
       shouldPlaySound: false,
       shouldSetBadge: false,
+      shouldShowAlert: true,
     }),
   });
   const [expoPushToken, setExpoPushToken] = useState<string | undefined>();

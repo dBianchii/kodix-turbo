@@ -77,17 +77,17 @@ export function getValidArrowNumber(
   let numericValue = Number.parseInt(value, 10);
   if (!Number.isNaN(numericValue)) {
     numericValue += step;
-    return getValidNumber(String(numericValue), { min, max, loop: true });
+    return getValidNumber(String(numericValue), { loop: true, max, min });
   }
   return "00";
 }
 
 export function getValidArrowHour(value: string, step: number) {
-  return getValidArrowNumber(value, { min: 0, max: 23, step });
+  return getValidArrowNumber(value, { max: 23, min: 0, step });
 }
 
 export function getValidArrowMinuteOrSecond(value: string, step: number) {
-  return getValidArrowNumber(value, { min: 0, max: 59, step });
+  return getValidArrowNumber(value, { max: 59, min: 0, step });
 }
 
 export function setMinutes(date: Date, value: string) {

@@ -24,16 +24,16 @@ const _devPartners: (typeof devPartners.$inferInsert)[] = [
 
 export const _apps: (typeof apps.$inferInsert)[] = [
   {
+    devPartnerId: kdxPartnerId,
     id: todoAppId, //As const so it can be used as a type
-    devPartnerId: kdxPartnerId,
   },
   {
+    devPartnerId: kdxPartnerId,
     id: calendarAppId,
-    devPartnerId: kdxPartnerId,
   },
   {
-    id: kodixCareAppId,
     devPartnerId: kdxPartnerId,
+    id: kodixCareAppId,
   },
 ];
 

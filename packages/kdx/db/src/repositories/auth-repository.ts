@@ -70,12 +70,12 @@ export async function deleteKodixAccountAndUserDataByUserId(userId: string) {
 
 export async function findResetPasswordTokenByToken(token: string) {
   return await db.query.resetPasswordTokens.findFirst({
+    columns: {
+      tokenExpiresAt: true,
+      userId: true,
+    },
     where: (resetPasswordTokens, { eq }) =>
       eq(resetPasswordTokens.token, token),
-    columns: {
-      userId: true,
-      tokenExpiresAt: true,
-    },
   });
 }
 

@@ -13,10 +13,10 @@ export const findOverlappingShiftsHandler = async ({
   input,
 }: FindOverlappingShiftsOptions) => {
   const overlaps = await kodixCareRepository.findOverlappingShifts({
-    teamId: ctx.auth.user.activeTeamId,
-    start: input.start,
     end: input.end,
     inclusive: input.inclusive,
+    start: input.start,
+    teamId: ctx.auth.user.activeTeamId,
   });
   return overlaps;
 };

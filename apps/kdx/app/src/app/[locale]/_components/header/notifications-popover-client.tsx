@@ -36,6 +36,9 @@ export function NotificationsPopoverClient({
   const queryClient = useQueryClient();
   const acceptMutation = useMutation(
     trpc.team.invitation.accept.mutationOptions({
+      onError: (error) => {
+        trpcErrorToastDefault(error);
+      },
       onSuccess: () => {
         toast.success(t("header.Invitation accepted"));
         void queryClient.invalidateQueries(
@@ -43,22 +46,19 @@ export function NotificationsPopoverClient({
         );
         router.refresh();
       },
-      onError: (error) => {
-        trpcErrorToastDefault(error);
-      },
     }),
   );
   const declineMutation = useMutation(
     trpc.team.invitation.decline.mutationOptions({
+      onError: (error) => {
+        trpcErrorToastDefault(error);
+      },
       onSuccess: () => {
         toast.success(t("Invitation declined"));
         void queryClient.invalidateQueries(
           trpc.user.getInvitations.pathFilter(),
         );
         router.refresh();
-      },
-      onError: (error) => {
-        trpcErrorToastDefault(error);
       },
     }),
   );

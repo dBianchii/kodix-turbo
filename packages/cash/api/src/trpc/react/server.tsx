@@ -30,9 +30,9 @@ const createContext = cache(async () => {
 export const trpcCaller = createCaller(createContext);
 
 export const trpc = createTRPCOptionsProxy<CashTRPCRouter>({
-  router: cashTRPCRouter,
   ctx: createContext,
   queryClient: getQueryClient,
+  router: cashTRPCRouter,
 });
 
 export {

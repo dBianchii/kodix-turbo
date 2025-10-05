@@ -31,9 +31,9 @@ const createContext = cache(async () => {
 export const trpcCaller = createCaller(createContext);
 
 export const trpc = createTRPCOptionsProxy<KdxTRPCRouter>({
-  router: kdxTRPCRouter,
   ctx: createContext,
   queryClient: getQueryClient,
+  router: kdxTRPCRouter,
 });
 
 export {

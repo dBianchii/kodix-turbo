@@ -58,6 +58,7 @@ export function DataTableUserAppRoles({
   );
 
   const { mutate: updateUserAssociation } = useMutation(
+    // biome-ignore assist/source/useSortedKeys: Known TS limitation in tanstack
     trpc.team.appRole.updateUserAssociation.mutationOptions({
       async onMutate(newValues) {
         // Cancel any outgoing refetches
@@ -98,11 +99,6 @@ export function DataTableUserAppRoles({
         // Return a context object with the snapshotted value
         return { previousUsers };
       },
-      onSuccess() {
-        void queryClient.invalidateQueries(
-          trpc.team.appRole.getUsersWithRoles.pathFilter(),
-        );
-      },
       onError(err, _, context) {
         // If the mutation fails,
         // use the context returned from onMutate to roll back
@@ -118,6 +114,11 @@ export function DataTableUserAppRoles({
           trpc.team.appRole.getUsersWithRoles.pathFilter(),
         );
       },
+      onSuccess() {
+        void queryClient.invalidateQueries(
+          trpc.team.appRole.getUsersWithRoles.pathFilter(),
+        );
+      },
     }),
   );
 
@@ -125,7 +126,6 @@ export function DataTableUserAppRoles({
     () =>
       [
         columnHelper.accessor("name", {
-          header: () => <div className="pl-2">{t("User")}</div>,
           cell: (info) => (
             <div className="flex w-60 flex-row gap-3 pl-2">
               <div className="flex flex-col">
@@ -143,9 +143,9 @@ export function DataTableUserAppRoles({
               </div>
             </div>
           ),
+          header: () => <div className="pl-2">{t("User")}</div>,
         }),
         columnHelper.accessor("UserTeamAppRoles", {
-          header: t("Roles"),
           cell(info) {
             const selected = info
               .getValue()
@@ -196,9 +196,9 @@ export function DataTableUserAppRoles({
                     {} as Record<AppRole, boolean>,
                   );
                   updateUserAssociation({
-                    userId: info.cell.row.original.id,
-                    roles: updatedRoles,
                     appId,
+                    roles: updatedRoles,
+                    userId: info.cell.row.original.id,
                   });
                 }}
                 options={options}
@@ -209,6 +209,7 @@ export function DataTableUserAppRoles({
               />
             );
           },
+          header: t("Roles"),
         }),
       ] as FixedColumnsType<
         RouterOutputs["team"]["appRole"]["getUsersWithRoles"][number]
@@ -217,8 +218,8 @@ export function DataTableUserAppRoles({
   );
 
   const table = useReactTable({
-    data,
     columns,
+    data,
     getCoreRowModel: getCoreRowModel(),
   });
 

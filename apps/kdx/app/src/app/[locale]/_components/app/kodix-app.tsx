@@ -64,19 +64,22 @@ export function KodixApp({
   const t = useTranslations();
   const installAppMutation = useMutation(
     trpc.app.installApp.mutationOptions({
+      onError: (err) => {
+        trpcErrorToastDefault(err);
+      },
       onSuccess: () => {
         void queryClient.invalidateQueries(trpc.app.getAll.pathFilter());
         void queryClient.invalidateQueries(trpc.app.getInstalled.pathFilter());
         router.refresh();
         toast.success(`${t("App")} ${appName} ${t("installed").toLowerCase()}`);
       },
-      onError: (err) => {
-        trpcErrorToastDefault(err);
-      },
     }),
   );
   const uninstallAppMutation = useMutation(
     trpc.app.uninstallApp.mutationOptions({
+      onError: (err) => {
+        trpcErrorToastDefault(err);
+      },
       onSuccess: () => {
         setOpen(false);
         void queryClient.invalidateQueries(trpc.app.getAll.pathFilter());
@@ -84,9 +87,6 @@ export function KodixApp({
         toast.success(
           `${t("App")} ${appName} ${t("uninstalled").toLowerCase()}`,
         );
-      },
-      onError: (err) => {
-        trpcErrorToastDefault(err);
       },
     }),
   );

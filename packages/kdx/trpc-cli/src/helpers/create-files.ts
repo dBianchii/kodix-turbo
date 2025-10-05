@@ -29,30 +29,30 @@ export const createFiles = async (params: CreateFilesParams) => {
 
   const promises = [
     createRouter({
-      routerFolderFilePath,
-      routerFilePath,
       chosenRouterPath: params.chosenRouterPath,
       endpointName: params.endpointName,
-      validator: params.validator,
+      newRouterName: params.newRouterName,
       procedure: params.procedure,
       queryOrMutation: params.queryOrMutation,
-      newRouterName: params.newRouterName,
+      routerFilePath,
+      routerFolderFilePath,
+      validator: params.validator,
     }),
     createHandler({
-      handlerPath,
       chosenRouterPath: params.chosenRouterPath,
       endpointName: params.endpointName,
-      validator: params.validator,
+      handlerPath,
       procedure: params.procedure,
+      validator: params.validator,
     }),
   ];
 
   if (params.validator)
     promises.push(
       createValidator({
-        validatorPath,
-        validator: params.validator,
         endpointName: params.endpointName,
+        validator: params.validator,
+        validatorPath,
       })
     );
 

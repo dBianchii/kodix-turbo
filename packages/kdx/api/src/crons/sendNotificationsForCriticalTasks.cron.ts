@@ -39,11 +39,11 @@ export const sendNotificationsForCriticalTasks = verifiedQstashCron(
 
     const criticalNotDoneLateCareTasks = (
       await getCareTasks({
-        dateStart: start,
         dateEnd: end,
-        teamIds: allTeamIdsWithKodixCareInstalled.map((x) => x.teamId),
+        dateStart: start,
         onlyCritical: true,
         onlyNotDone: true,
+        teamIds: allTeamIdsWithKodixCareInstalled.map((x) => x.teamId),
       })
     ).filter((x) => isLate(x.date)); //? We only want to notify about tasks that are late
 
@@ -80,14 +80,14 @@ export const sendNotificationsForCriticalTasks = verifiedQstashCron(
 
         //? This object should represent the care task with the team and the users that need to be notified.
         return {
-          id: ct.id,
-          eventMasterId: ct.eventMasterId,
           date: ct.date,
-          title: ct.title,
+          eventMasterId: ct.eventMasterId,
+          id: ct.id,
           Team: {
             teamId: team.teamId,
             userIds,
           },
+          title: ct.title,
         };
       });
 
@@ -129,30 +129,30 @@ export const sendNotificationsForCriticalTasks = verifiedQstashCron(
       for (const userId of careTask.Team.userIds) {
         promises.push(
           sendNotifications({
-            teamId: careTask.Team.teamId,
             channels: [
               {
-                type: "PUSH_NOTIFICATIONS",
-                title: "Critical task is late",
                 body: `The task "${careTask.title}" is late`,
+                title: "Critical task is late",
+                type: "PUSH_NOTIFICATIONS",
               },
             ],
+            teamId: careTask.Team.teamId,
             userId,
           }),
         );
         promises.push(
           sendNotifications({
-            teamId: careTask.Team.teamId,
             channels: [
               {
-                type: "EMAIL",
                 react: WarnDelayedCriticalTasks({
-                  taskTitle: careTask.title,
                   t: ctx.t,
+                  taskTitle: careTask.title,
                 }),
                 subject: "Critical task is late",
+                type: "EMAIL",
               },
             ],
+            teamId: careTask.Team.teamId,
             userId,
           }),
         );
@@ -163,14 +163,14 @@ export const sendNotificationsForCriticalTasks = verifiedQstashCron(
         });
         promises.push(
           setUpstashCache("careTasksUsersNotifs", {
-            variableKeys: {
-              userId,
-              careTaskCompositeId,
-            },
             value: {
-              userId,
               careTaskCompositeId,
               date: careTask.date.toISOString(),
+              userId,
+            },
+            variableKeys: {
+              careTaskCompositeId,
+              userId,
             },
           }),
         );

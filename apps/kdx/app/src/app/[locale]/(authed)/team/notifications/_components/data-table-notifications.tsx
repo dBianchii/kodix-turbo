@@ -40,38 +40,38 @@ export function DataTableNotifications({
   >[] = [
     {
       label: t("Subject"),
-      value: "subject",
       placeholder: t("Filter subjects"),
+      value: "subject",
     },
     {
       label: t("Channel"),
-      value: "channel",
       options: notifications.channel.enumValues.map((channel) => ({
+        icon: MdEmail,
         label: channel[0]?.toUpperCase() + channel.slice(1),
         value: channel,
-        icon: MdEmail,
         withCount: true,
       })),
+      value: "channel",
     },
     {
       label: t("Team"),
-      value: "teamId",
       options: teams.map((team) => ({
         label: team.name,
         value: team.id,
         withCount: true,
       })),
+      value: "teamId",
     },
   ];
 
   const { table } = useDataTable({
-    data,
     columns,
-    pageCount,
-    // optional props
-    filterFields,
+    data,
     defaultPerPage: 10,
     defaultSort: "sentAt.desc",
+    // optional props
+    filterFields,
+    pageCount,
   });
 
   return (

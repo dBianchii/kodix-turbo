@@ -49,9 +49,9 @@ export function PasswordSignupForm({ invite }: { invite?: string }) {
         onSubmit={form.handleSubmit((values) => {
           execute({
             email: values.email,
-            password: values.password,
-            name: values.name,
             invite: invite,
+            name: values.name,
+            password: values.password,
           });
         })}
       >

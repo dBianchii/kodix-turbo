@@ -15,13 +15,13 @@ import {
 export const users = mysqlTable(
   "user",
   (t) => ({
+    activeTeamId: t.varchar({ length: DEFAULTLENGTH }).notNull(),
+    email: t.varchar({ length: DEFAULTLENGTH }).notNull().unique(),
     id: nanoidPrimaryKey(t),
+    image: t.varchar({ length: DEFAULTLENGTH }),
+    kodixAdmin: t.boolean().default(false).notNull(),
     name: t.varchar({ length: DEFAULTLENGTH }).notNull(),
     passwordHash: t.varchar({ length: 255 }),
-    email: t.varchar({ length: DEFAULTLENGTH }).notNull().unique(),
-    image: t.varchar({ length: DEFAULTLENGTH }),
-    activeTeamId: t.varchar({ length: DEFAULTLENGTH }).notNull(),
-    kodixAdmin: t.boolean().default(false).notNull(),
   }),
   (table) => [index("activeTeamId_idx").on(table.activeTeamId)],
 );
@@ -30,14 +30,14 @@ export const usersRelations = relations(users, ({ many, one }) => ({
     fields: [users.activeTeamId],
     references: [teams.id],
   }),
+  ExpoTokens: many(expoTokens),
   Invitations: many(invitations),
   Notifications: many(notifications),
   Sessions: many(sessions),
-  UsersToTeams: many(usersToTeams),
   Todos: many(todos),
-  UserTeamAppRoles: many(userTeamAppRoles),
-  ExpoTokens: many(expoTokens),
   UserAppTeamConfigs: many(userAppTeamConfigs),
+  UsersToTeams: many(usersToTeams),
+  UserTeamAppRoles: many(userTeamAppRoles),
 }));
 export const userSchema = createInsertSchema(users);
 
@@ -68,20 +68,20 @@ export const accountsRelations = relations(accounts, ({ one }) => ({
 export const accountSchema = createInsertSchema(accounts);
 
 export const sessions = mysqlTable("session", (t) => ({
+  expiresAt: t.datetime().notNull(),
   id: t
     .varchar({
       length: DEFAULTLENGTH,
     })
     .primaryKey(),
+  ipAddress: t.varchar({ length: 45 }).notNull(),
+  userAgent: t.text(),
   userId: t
     .varchar({
       length: DEFAULTLENGTH,
     })
     .notNull()
-    .references(() => users.id, { onUpdate: "cascade", onDelete: "cascade" }),
-  expiresAt: t.datetime().notNull(),
-  ipAddress: t.varchar({ length: 45 }).notNull(),
-  userAgent: t.text(),
+    .references(() => users.id, { onDelete: "cascade", onUpdate: "cascade" }),
 }));
 export const sessionsRelations = relations(sessions, ({ one }) => ({
   User: one(users, {
@@ -95,11 +95,11 @@ export const expoTokens = mysqlTable(
   "expoToken",
   (t) => ({
     id: nanoidPrimaryKey(t),
+    token: t.varchar({ length: DEFAULTLENGTH }).unique().notNull(),
     userId: t
       .varchar({ length: DEFAULTLENGTH })
       .notNull()
-      .references(() => users.id, { onUpdate: "cascade", onDelete: "cascade" }),
-    token: t.varchar({ length: DEFAULTLENGTH }).unique().notNull(),
+      .references(() => users.id, { onDelete: "cascade", onUpdate: "cascade" }),
   }),
   (table) => [index("userId_idx").on(table.userId)],
 );
@@ -113,16 +113,16 @@ export const expoTokensRelations = relations(expoTokens, ({ one }) => ({
 export const notifications = mysqlTable(
   "notification",
   (t) => ({
+    channel: t.mysqlEnum(["EMAIL", "PUSH_NOTIFICATIONS"]).notNull(),
     id: nanoidPrimaryKey(t),
+    message: t.text().notNull(),
+    sentAt: t.timestamp().defaultNow().notNull(),
     sentToUserId: t
       .varchar({ length: NANOID_SIZE })
       .notNull()
-      .references(() => users.id, { onUpdate: "cascade", onDelete: "cascade" }),
-    teamId: teamIdReferenceCascadeDelete(t),
+      .references(() => users.id, { onDelete: "cascade", onUpdate: "cascade" }),
     subject: t.varchar({ length: 100 }), //?For email only!
-    sentAt: t.timestamp().defaultNow().notNull(),
-    message: t.text().notNull(),
-    channel: t.mysqlEnum(["EMAIL", "PUSH_NOTIFICATIONS"]).notNull(),
+    teamId: teamIdReferenceCascadeDelete(t),
   }),
   (table) => [
     index("sentToUserId_idx").on(table.sentToUserId),
@@ -130,13 +130,13 @@ export const notifications = mysqlTable(
   ],
 );
 export const notificationsRelations = relations(notifications, ({ one }) => ({
-  User: one(users, {
-    fields: [notifications.sentToUserId],
-    references: [users.id],
-  }),
   Team: one(teams, {
     fields: [notifications.teamId],
     references: [teams.id],
+  }),
+  User: one(users, {
+    fields: [notifications.sentToUserId],
+    references: [users.id],
   }),
 }));
 export const notificationSchema = createInsertSchema(notifications);
@@ -145,16 +145,16 @@ export const resetPasswordTokens = mysqlTable(
   "resetToken",
   (t) => ({
     id: nanoidPrimaryKey(t),
-    userId: t
-      .varchar({ length: DEFAULTLENGTH })
-      .unique()
-      .notNull()
-      .references(() => users.id, { onUpdate: "cascade", onDelete: "cascade" }),
     token: t
       .varchar({ length: NANOID_SIZE })
       .notNull()
       .$default(() => nanoid()),
     tokenExpiresAt: t.timestamp().notNull(),
+    userId: t
+      .varchar({ length: DEFAULTLENGTH })
+      .unique()
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade", onUpdate: "cascade" }),
   }),
   (table) => [
     index("token_idx").on(table.token),

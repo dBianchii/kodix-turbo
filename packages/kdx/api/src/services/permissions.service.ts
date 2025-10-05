@@ -18,16 +18,16 @@ export const permissionsServiceFactory = ({ t }: { t: ServerSideT }) => {
     appId: T;
   }): Promise<KodixCareMongoAbility> {
     const roles = await teamRepository.findUserRolesByTeamIdAndAppId({
-      teamId: user.activeTeamId,
       appId,
+      teamId: user.activeTeamId,
       userId: user.id,
     });
 
     return defineAbilityForUserAndApp({
       appId,
       roles,
-      user,
       t,
+      user,
     });
   }
 
@@ -43,7 +43,7 @@ export const permissionsServiceFactory = ({ t }: { t: ServerSideT }) => {
       throw new Error("Team not found");
     }
 
-    const ability = defineAbilityForUserAndTeam({ team, user, t });
+    const ability = defineAbilityForUserAndTeam({ t, team, user });
 
     return ability;
   }

@@ -16,22 +16,22 @@ export const dataTableConfig = {
     { label: "Is empty", value: "isNull" as const },
     { label: "Is not empty", value: "isNotNull" as const },
   ],
+  logicalOperators: [
+    {
+      description: "All conditions must be met",
+      label: "And",
+      value: "and" as const,
+    },
+    {
+      description: "At least one condition must be met",
+      label: "Or",
+      value: "or" as const,
+    },
+  ],
   selectableOperators: [
     { label: "Is", value: "eq" as const },
     { label: "Is not", value: "notEq" as const },
     { label: "Is empty", value: "isNull" as const },
     { label: "Is not empty", value: "isNotNull" as const },
-  ],
-  logicalOperators: [
-    {
-      label: "And",
-      value: "and" as const,
-      description: "All conditions must be met",
-    },
-    {
-      label: "Or",
-      value: "or" as const,
-      description: "At least one condition must be met",
-    },
   ],
 };

@@ -87,25 +87,21 @@ export function EditCareShiftCredenza({
 
   const mutation = useEditCareShift();
   const form = useForm({
-    schema: ZEditCareShiftInputSchema(t),
     defaultValues: {
-      finishedByUserId: careShift.finishedByUserId,
-      id: careShift.id,
-      startAt: careShift.startAt,
-      endAt: careShift.endAt,
       careGiverId: careShift.caregiverId,
       checkIn: careShift.checkIn,
       checkOut: careShift.checkOut,
+      endAt: careShift.endAt,
+      finishedByUserId: careShift.finishedByUserId,
+      id: careShift.id,
       notes: careShift.notes ?? undefined,
+      startAt: careShift.startAt,
     },
+    schema: ZEditCareShiftInputSchema(t),
   });
   const queryClient = useQueryClient();
   const deleteCareShiftMutation = useMutation(
     trpc.app.kodixCare.deleteCareShift.mutationOptions({
-      onSuccess: () => {
-        setCareShift(null);
-        toast.success(t("Shift deleted"));
-      },
       onError: (err) => trpcErrorToastDefault(err),
       onSettled: () => {
         void queryClient.invalidateQueries(
@@ -115,14 +111,18 @@ export function EditCareShiftCredenza({
           trpc.app.kodixCare.findOverlappingShifts.pathFilter(),
         );
       },
+      onSuccess: () => {
+        setCareShift(null);
+        toast.success(t("Shift deleted"));
+      },
     }),
   );
 
   const { startAt, endAt } = form.watch();
   const { isChecking, overlappingShifts } = useShiftOverlap({
-    startAt,
     endAt,
     excludeId: careShift.id,
+    startAt,
   });
 
   const handleClose = () => {
@@ -546,8 +546,8 @@ function Lock({
           <AlertDialogAction
             onClick={async () => {
               await mutation.mutateAsync({
-                id: idCareShift,
                 finishedByUserId: null,
+                id: idCareShift,
               });
             }}
           >

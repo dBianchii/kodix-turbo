@@ -23,11 +23,11 @@ import { ZSigninActionSchema } from "./schema";
 export function PasswordSignInForm({ callbackUrl }: { callbackUrl?: string }) {
   const t = useTranslations();
   const form = useForm({
-    schema: ZSigninActionSchema,
     defaultValues: {
       email: "",
       password: "",
     },
+    schema: ZSigninActionSchema,
   });
   const { execute, isExecuting } = useAction(signInAction, {
     onError: (res) => {
@@ -40,9 +40,9 @@ export function PasswordSignInForm({ callbackUrl }: { callbackUrl?: string }) {
       <form
         onSubmit={form.handleSubmit((values) => {
           execute({
+            callbackUrl,
             email: values.email,
             password: values.password,
-            callbackUrl,
           });
         })}
         className="space-y-4"

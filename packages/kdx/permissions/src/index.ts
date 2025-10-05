@@ -66,7 +66,7 @@ export function defineAbilityForUserAndTeam({
     createMongoAbility as CreateAbility<TeamAbility>
   );
 
-  teamPermissionsFactory({ team, user, t })(teamBuilder);
+  teamPermissionsFactory({ t, team, user })(teamBuilder);
 
   const teamAbility = teamBuilder.build({
     detectSubjectType(subject) {

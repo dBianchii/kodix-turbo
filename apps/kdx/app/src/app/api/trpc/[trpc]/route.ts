@@ -6,8 +6,8 @@ import { OPTIONS, setCorsHeaders } from "../../_enableCors";
 
 const handler = async (req: NextRequest) => {
   const response = await nextTRPCHandler(req, {
-    router: kdxTRPCRouter,
     createContext: ({ headers }) => createTRPCContext({ headers }),
+    router: kdxTRPCRouter,
   });
 
   setCorsHeaders(response);

@@ -2,42 +2,30 @@ import type { ConfigContext, ExpoConfig } from "expo/config";
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: "Kodix Care",
-  slug: "care-expo",
-  scheme: "care-expo",
-  version: "0.1.0",
-  orientation: "portrait",
-  icon: "./assets/kodixCare.png",
-  userInterfaceStyle: "automatic",
-  splash: {
-    image: "./assets/kodixCare.png",
-    resizeMode: "contain",
-    backgroundColor: "#020817",
-  },
-  updates: {
-    fallbackToCacheTimeout: 0,
-  },
-  assetBundlePatterns: ["**/*"],
-  ios: {
-    bundleIdentifier: "com.kodix.kodixCare",
-    supportsTablet: true,
-  },
   android: {
-    package: "com.kodix.kodixCare",
     adaptiveIcon: {
-      foregroundImage: "./assets/icon.png",
       backgroundColor: "#020817",
+      foregroundImage: "./assets/icon.png",
     },
     googleServicesFile: process.env.GOOGLE_SERVICES_JSON,
+    package: "com.kodix.kodixCare",
+  },
+  assetBundlePatterns: ["**/*"],
+  experiments: {
+    tsconfigPaths: true,
   },
   extra: {
     eas: {
       projectId: "d2701343-40d2-4b76-b504-34b546414b36",
     },
   },
-  experiments: {
-    tsconfigPaths: true,
+  icon: "./assets/kodixCare.png",
+  ios: {
+    bundleIdentifier: "com.kodix.kodixCare",
+    supportsTablet: true,
   },
+  name: "Kodix Care",
+  orientation: "portrait",
   plugins: [
     "expo-secure-store",
     "expo-router",
@@ -51,4 +39,16 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     "expo-font",
     "expo-localization",
   ],
+  scheme: "care-expo",
+  slug: "care-expo",
+  splash: {
+    backgroundColor: "#020817",
+    image: "./assets/kodixCare.png",
+    resizeMode: "contain",
+  },
+  updates: {
+    fallbackToCacheTimeout: 0,
+  },
+  userInterfaceStyle: "automatic",
+  version: "0.1.0",
 });

@@ -1,9 +1,9 @@
 {
-  "extends": "@kodix/tsconfig/base.json",
   "compilerOptions": {
-    "lib": ["ES2022", "dom", "dom.iterable"],
-    "jsx": "preserve",
     "baseUrl": ".",
+    "jsx": "preserve",
+    "lib": ["ES2022", "dom", "dom.iterable"],
+    "module": "esnext",
     "paths": {
       "~/*": ["./src/*"]
     },
@@ -12,9 +12,9 @@
         "name": "next"
       }
     ],
-    "module": "esnext",
     "strictNullChecks": true
   },
-  "include": [".", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "extends": "@kodix/tsconfig/base.json",
+  "include": [".", ".next/types/**/*.ts"]
 }

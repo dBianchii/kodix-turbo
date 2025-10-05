@@ -40,8 +40,8 @@ export const editCareShiftHandler = async ({
       });
 
   const permissions = await services.permissions.getUserPermissionsForApp({
-    user: ctx.auth.user,
     appId: kodixCareAppId,
+    user: ctx.auth.user,
   });
   ForbiddenError.from(permissions).throwUnlessCan("Edit", {
     __typename: "CareShift",
@@ -50,27 +50,27 @@ export const editCareShiftHandler = async ({
 
   if (input.startAt && input.endAt) {
     const overlappingShifts = await kodixCareRepository.findOverlappingShifts({
-      teamId: ctx.auth.user.activeTeamId,
-      start: input.startAt,
       end: input.endAt,
+      start: input.startAt,
+      teamId: ctx.auth.user.activeTeamId,
     });
 
     assertNoOverlappingShiftsForThisCaregiver(ctx.t, {
+      caregiverId: input.careGiverId ?? oldShift.caregiverId,
       overlappingShifts: overlappingShifts.filter(
         (shift) => shift.id !== input.id,
       ),
-      caregiverId: input.careGiverId ?? oldShift.caregiverId,
     });
   }
 
   const updateData: Partial<typeof careShifts.$inferInsert> = {
-    startAt: input.startAt,
-    endAt: input.endAt,
     caregiverId: input.careGiverId,
     checkIn: input.checkIn,
     checkOut: input.checkOut,
-    notes: input.notes,
+    endAt: input.endAt,
     finishedByUserId: input.finishedByUserId,
+    notes: input.notes,
+    startAt: input.startAt,
   };
 
   await db.transaction(async (tx) => {
@@ -98,12 +98,12 @@ export const editCareShiftHandler = async ({
     if (changes?.length)
       await logActivity({
         appId: kodixCareAppId,
-        userId: ctx.auth.user.id,
-        teamId: ctx.auth.user.activeTeamId,
-        type: "update",
+        diff: changes,
         rowId: input.id,
         tableName: "careShift",
-        diff: changes,
+        teamId: ctx.auth.user.activeTeamId,
+        type: "update",
+        userId: ctx.auth.user.id,
       });
   });
 };

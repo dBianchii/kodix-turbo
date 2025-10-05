@@ -8,13 +8,13 @@ import { ZSignInByPasswordInputSchema as default_ZSignInByPasswordInputSchema } 
 
 export const ZDoCheckoutForShiftInputSchema = (t: IsomorficT) =>
   z.object({
-    notes: z.string().optional(),
     date: z
       .date()
       .max(new Date(), {
         message: t("validators.Checkout time cannot be in the future"),
       })
       .transform(adjustDateToMinute),
+    notes: z.string().optional(),
   });
 export type TDoCheckoutForShiftInputSchema = z.infer<
   ReturnType<typeof ZDoCheckoutForShiftInputSchema>
@@ -37,8 +37,8 @@ export const ZCreateCareShiftInputSchema = (t: IsomorficT) =>
   z
     .object({
       careGiverId: ZNanoId,
-      startAt: z.date().transform(adjustDateToMinute),
       endAt: z.date().transform(adjustDateToMinute),
+      startAt: z.date().transform(adjustDateToMinute),
     })
     .refine((data) => !dayjs(data.startAt).isAfter(data.endAt), {
       message: t("validators.Start time cannot be after end time"),
@@ -49,9 +49,9 @@ export type TCreateCareShiftInputSchema = z.infer<
 >;
 
 export const ZFindOverlappingShiftsInputSchema = z.object({
-  start: z.date().transform(adjustDateToMinute),
   end: z.date().transform(adjustDateToMinute),
   inclusive: z.boolean().default(false).optional(),
+  start: z.date().transform(adjustDateToMinute),
 });
 export type TFindOverlappingShiftsInputSchema = z.infer<
   typeof ZFindOverlappingShiftsInputSchema
@@ -60,14 +60,14 @@ export type TFindOverlappingShiftsInputSchema = z.infer<
 export const ZEditCareShiftInputSchema = (t: IsomorficT) =>
   z
     .object({
-      id: ZNanoId,
       careGiverId: ZNanoId.optional(),
-      startAt: z.date().transform(adjustDateToMinute).optional(),
-      endAt: z.date().transform(adjustDateToMinute).optional(),
-      notes: z.string().optional(),
       checkIn: z.date().transform(adjustDateToMinute).nullable().optional(),
       checkOut: z.date().transform(adjustDateToMinute).nullable().optional(),
+      endAt: z.date().transform(adjustDateToMinute).optional(),
       finishedByUserId: ZNanoId.nullable().optional(),
+      id: ZNanoId,
+      notes: z.string().optional(),
+      startAt: z.date().transform(adjustDateToMinute).optional(),
     })
     .refine(
       (data) => {

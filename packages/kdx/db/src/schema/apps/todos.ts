@@ -12,16 +12,16 @@ import {
 export const todos = mysqlTable(
   "todo",
   (t) => ({
-    id: nanoidPrimaryKey(t),
-    title: t.varchar({ length: DEFAULTLENGTH }).notNull(),
-    description: t.varchar({ length: DEFAULTLENGTH }),
-    dueDate: t.timestamp(),
-    priority: t.smallint(),
-    status: t.mysqlEnum(["TODO", "INPROGRESS", "INREVIEW", "DONE", "CANCELED"]),
     assignedToUserId: t
       .varchar({ length: DEFAULTLENGTH })
       .references(() => users.id),
+    description: t.varchar({ length: DEFAULTLENGTH }),
+    dueDate: t.timestamp(),
+    id: nanoidPrimaryKey(t),
+    priority: t.smallint(),
+    status: t.mysqlEnum(["TODO", "INPROGRESS", "INREVIEW", "DONE", "CANCELED"]),
     teamId: teamIdReferenceCascadeDelete(t),
+    title: t.varchar({ length: DEFAULTLENGTH }).notNull(),
   }),
   (table) => [
     index("assignedToUserId_idx").on(table.assignedToUserId),

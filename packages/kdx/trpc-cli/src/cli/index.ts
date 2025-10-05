@@ -71,38 +71,6 @@ export const runCli = async () => {
   await findRouterFolders(ROUTERS_FOLDER_PATH);
   return await p.group(
     {
-      chosenRouterPath: () => {
-        if (!routers[0])
-          return logger.error(
-            `No ${trpcCliConfig.routerFileName} files found inside ${chalk.yellow(ROUTERS_FOLDER_PATH)}. Make sure you provided the correct path to your routers folder.`
-          );
-
-        return p.select({
-          message: "Which router should your new endpoint be added to?",
-          options: [
-            ...routers,
-            {
-              label: "(create new)",
-              value: "newRouter",
-            },
-          ],
-          initialValue: routers[0].value,
-        });
-      },
-
-      newRouterName: ({ results }) => {
-        if (results.chosenRouterPath === "newRouter")
-          return p.text({
-            message: "What will be the name of your new router?",
-            placeholder: "world",
-            defaultValue: "world",
-            initialValue: "world",
-            validate: (input) => {
-              const result = ZSafeName.safeParse(input);
-              if (!result.success) return result.error.message;
-            },
-          });
-      },
       appendNewRouter: ({ results }) => {
         if (
           results.chosenRouterPath === "newRouter" &&
@@ -110,6 +78,7 @@ export const runCli = async () => {
         ) {
           const chalkedName = chalk.green(results.newRouterName).toString();
           return p.select({
+            initialValue: routers[0]?.value,
             message:
               "And which router path should your new router be added to?",
             options: [
@@ -122,15 +91,32 @@ export const runCli = async () => {
                 value: "",
               },
             ],
-            initialValue: routers[0]?.value,
           });
         }
       },
+      chosenRouterPath: () => {
+        if (!routers[0])
+          return logger.error(
+            `No ${trpcCliConfig.routerFileName} files found inside ${chalk.yellow(ROUTERS_FOLDER_PATH)}. Make sure you provided the correct path to your routers folder.`
+          );
+
+        return p.select({
+          initialValue: routers[0].value,
+          message: "Which router should your new endpoint be added to?",
+          options: [
+            ...routers,
+            {
+              label: "(create new)",
+              value: "newRouter",
+            },
+          ],
+        });
+      },
       endpointName: () => {
         return p.text({
+          defaultValue: "makeItBetter",
           message: "What will be the name of your new endpoint?",
           placeholder: "makeItBetter",
-          defaultValue: "makeItBetter",
           validate: (input) => {
             if (input.length > 0) {
               const result = ZSafeName.safeParse(input);
@@ -138,6 +124,20 @@ export const runCli = async () => {
             }
           },
         });
+      },
+
+      newRouterName: ({ results }) => {
+        if (results.chosenRouterPath === "newRouter")
+          return p.text({
+            defaultValue: "world",
+            initialValue: "world",
+            message: "What will be the name of your new router?",
+            placeholder: "world",
+            validate: (input) => {
+              const result = ZSafeName.safeParse(input);
+              if (!result.success) return result.error.message;
+            },
+          });
       },
       procedure: async () => {
         try {
@@ -161,16 +161,34 @@ export const runCli = async () => {
         }
 
         return p.select({
-          message: "Which procedure?",
           initialValue: "protected",
+          message: "Which procedure?",
           options: proceduresExport.map((procedure) => {
             // biome-ignore lint/style/noNonNullAssertion: <biome migration>
             const name = procedure.split(" ")[2]!;
             return {
-              value: name,
               label: name,
+              value: name,
             };
           }),
+        });
+      },
+      queryOrMutation: () => {
+        return p.select({
+          initialValue: "query",
+          message: "Will it be a query or a mutation?",
+          options: [
+            {
+              hint: "For fetching data",
+              label: "query",
+              value: "query",
+            },
+            {
+              hint: "For mutating data",
+              label: "mutation",
+              value: "mutation",
+            },
+          ],
         });
       },
       validator: () =>
@@ -180,7 +198,7 @@ export const runCli = async () => {
           validate: (input) => {
             if (input) {
               try {
-                const sandbox = { z, result: null };
+                const sandbox = { result: null, z };
                 const context = vm.createContext(sandbox);
 
                 // Execute the input in the sandbox environment
@@ -196,24 +214,6 @@ export const runCli = async () => {
             }
           },
         }),
-      queryOrMutation: () => {
-        return p.select({
-          message: "Will it be a query or a mutation?",
-          initialValue: "query",
-          options: [
-            {
-              value: "query",
-              label: "query",
-              hint: "For fetching data",
-            },
-            {
-              value: "mutation",
-              label: "mutation",
-              hint: "For mutating data",
-            },
-          ],
-        });
-      },
     },
     {
       onCancel() {

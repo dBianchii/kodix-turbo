@@ -42,19 +42,19 @@ export const createDiscordProvider = (config: ProviderConfig): AuthProvider => {
     if (existingAccount) return existingAccount.userId;
 
     const userId = await config.repositories.createUserWithProvider({
-      name: discordUser.username,
       email: discordUser.email ?? "",
       image: `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png`,
-      providerUserId: discordUser.id,
+      name: discordUser.username,
       providerId: "discord",
+      providerUserId: discordUser.id,
     });
 
     return userId;
   };
 
   return {
-    name,
     getAuthorizationUrl,
     handleCallback,
+    name,
   };
 };

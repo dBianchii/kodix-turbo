@@ -54,9 +54,6 @@ export function InviteDataTable({ canEditPage }: { canEditPage: boolean }) {
   const queryClient = useQueryClient();
   const { mutate } = useMutation(
     trpc.team.invitation.delete.mutationOptions({
-      onSuccess: () => {
-        toast.success(t("Invite deleted"));
-      },
       onError: (e) => {
         trpcErrorToastDefault(e);
       },
@@ -65,12 +62,14 @@ export function InviteDataTable({ canEditPage }: { canEditPage: boolean }) {
           trpc.team.invitation.getAll.pathFilter(),
         );
       },
+      onSuccess: () => {
+        toast.success(t("Invite deleted"));
+      },
     }),
   );
 
   const columns = [
     columnHelper.accessor("inviteEmail", {
-      header: () => <div className="ml-2">User</div>,
       cell: (info) => (
         <div className="ml-2 flex flex-row gap-4">
           <div className="flex flex-col">
@@ -81,12 +80,12 @@ export function InviteDataTable({ canEditPage }: { canEditPage: boolean }) {
           </div>
         </div>
       ),
-      enableSorting: false,
       enableHiding: false,
       enableResizing: true,
+      enableSorting: false,
+      header: () => <div className="ml-2">User</div>,
     }),
     columnHelper.accessor("inviteId", {
-      header: () => null,
       cell: (info) => {
         return (
           <div className="flex justify-end">
@@ -132,6 +131,7 @@ export function InviteDataTable({ canEditPage }: { canEditPage: boolean }) {
           </div>
         );
       },
+      header: () => null,
     }),
   ];
 
@@ -141,8 +141,8 @@ export function InviteDataTable({ canEditPage }: { canEditPage: boolean }) {
   );
 
   const table = useReactTable({
-    data: data,
     columns: columns,
+    data: data,
     getCoreRowModel: getCoreRowModel(),
   });
 

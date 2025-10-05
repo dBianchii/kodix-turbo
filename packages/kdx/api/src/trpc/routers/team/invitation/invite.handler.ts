@@ -18,14 +18,14 @@ interface InviteOptions {
 
 export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
   const team = await teamRepository.findTeamWithUsersAndInvitations({
-    teamId: input.teamId,
     email: input.to,
+    teamId: input.teamId,
   });
 
   if (!team)
     throw new TRPCError({
-      message: ctx.t("api.No Team Found"),
       code: "NOT_FOUND",
+      message: ctx.t("api.No Team Found"),
     });
 
   const inTeamEmail = input.to.find((email) =>
@@ -33,27 +33,27 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
   );
   if (inTeamEmail)
     throw new TRPCError({
+      code: "CONFLICT",
       message: ctx.t("api.User USER is already a member of this team", {
         user: inTeamEmail,
       }),
-      code: "CONFLICT",
     });
 
   if (team.Invitations[0])
     throw new TRPCError({
+      code: "CONFLICT",
       message: ctx.t("api.Invitation already sent to EMAIL", {
         email: team.Invitations[0].email,
       }),
-      code: "CONFLICT",
     });
 
   const _invitations = input.to.map(
     (email) =>
       ({
-        id: nanoid(),
-        teamId: team.id,
         email,
+        id: nanoid(),
         invitedById: ctx.auth.user.id,
+        teamId: team.id,
       }) satisfies typeof invitations.$inferInsert,
   );
 
@@ -61,19 +61,19 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
     _invitations.map(async (invite) => {
       await resend.emails.send({
         from: KODIX_NOTIFICATION_FROM_EMAIL,
-        to: invite.email,
+        react: TeamInvite({
+          invitedByEmail: ctx.auth.user.email,
+          invitedByUsername: ctx.auth.user.name,
+          inviteFromIp: ctx.auth.session.ipAddress,
+          inviteLink: `${getBaseUrl()}/team/invite/${invite.id}`,
+          t: ctx.t,
+          teamName: team.name,
+          username: invite.email,
+        }),
         subject: ctx.t("api.You have been invited to join a team on URL", {
           url: getBaseUrl(),
         }),
-        react: TeamInvite({
-          inviteFromIp: ctx.auth.session.ipAddress,
-          username: invite.email,
-          invitedByEmail: ctx.auth.user.email,
-          invitedByUsername: ctx.auth.user.name,
-          inviteLink: `${getBaseUrl()}/team/invite/${invite.id}`,
-          teamName: team.name,
-          t: ctx.t,
-        }),
+        to: invite.email,
       });
       return invite;
     }),
@@ -94,7 +94,7 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
     (invite) => !successes.find((x) => x.value.id === invite.id),
   );
   return {
-    successes: successes.map((s) => s.value.email),
     failures: failedInvites.map((f) => f.email),
+    successes: successes.map((s) => s.value.email),
   };
 };

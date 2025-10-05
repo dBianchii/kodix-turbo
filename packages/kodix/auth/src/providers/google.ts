@@ -49,19 +49,19 @@ export const createGoogleProvider = (config: ProviderConfig): AuthProvider => {
     if (existingAccount) return existingAccount.userId;
 
     const userId = await config.repositories.createUserWithProvider({
-      name: googleUser.name,
       email: googleUser.email,
       image: googleUser.picture,
-      providerUserId: googleUser.id,
+      name: googleUser.name,
       providerId: "google",
+      providerUserId: googleUser.id,
     });
 
     return userId;
   };
 
   return {
-    name,
-    handleCallback,
     getAuthorizationUrl,
+    handleCallback,
+    name,
   };
 };

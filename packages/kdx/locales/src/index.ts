@@ -10,21 +10,17 @@ import type { Messages } from "next-intl";
 
 export const formats = {
   dateTime: {
-    short: {
+    extensive: {
       day: "2-digit",
-      month: "2-digit",
-      year: "2-digit",
+      hour: "numeric",
+      minute: "numeric",
+      month: "long",
+      year: "numeric",
     },
-    shortWithHours: {
+    full: {
       day: "2-digit",
-      month: "2-digit",
-      year: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    },
-    medium: {
-      day: "2-digit",
-      month: "short",
+      month: "long",
+      weekday: "long",
       year: "numeric",
     },
     long: {
@@ -32,18 +28,22 @@ export const formats = {
       month: "long",
       year: "numeric",
     },
-    full: {
+    medium: {
       day: "2-digit",
-      month: "long",
+      month: "short",
       year: "numeric",
-      weekday: "long",
     },
-    extensive: {
+    short: {
       day: "2-digit",
-      month: "long",
-      year: "numeric",
-      hour: "numeric",
-      minute: "numeric",
+      month: "2-digit",
+      year: "2-digit",
+    },
+    shortWithHours: {
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      month: "2-digit",
+      year: "2-digit",
     },
   },
 } satisfies Formats;

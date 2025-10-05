@@ -23,8 +23,8 @@ export function DataTableNotificationsToolbarActions({
         size="sm"
         onClick={() =>
           exportTableToCSV(table, {
-            filename: "tasks",
             excludeColumns: ["select", "actions"],
+            filename: "tasks",
           })
         }
       >

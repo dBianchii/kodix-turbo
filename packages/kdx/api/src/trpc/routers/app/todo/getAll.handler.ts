@@ -13,8 +13,8 @@ export const getAllHandler = async ({ ctx }: GetAllOptions) => {
       AssignedToUser: {
         columns: {
           id: true,
-          name: true,
           image: true,
+          name: true,
         },
       },
     },

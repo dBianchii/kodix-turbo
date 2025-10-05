@@ -57,12 +57,6 @@ export default function Register() {
       <YStack bg={"$background"} flex={1} px={"$4"}>
         <Stack.Screen
           options={{
-            headerStyle: {
-              backgroundColor: theme.background.val,
-            },
-            title: "",
-            headerShown: true,
-            headerShadowVisible: false,
             headerLeft: () => (
               <TouchableOpacity
                 onPress={() => {
@@ -72,6 +66,12 @@ export default function Register() {
                 <ChevronLeft size={"$2"} />
               </TouchableOpacity>
             ),
+            headerShadowVisible: false,
+            headerShown: true,
+            headerStyle: {
+              backgroundColor: theme.background.val,
+            },
+            title: "",
           }}
         />
         <YStack>

@@ -83,7 +83,7 @@ const useCreateShiftForm = ({
   }, [open, form, shouldAutoSelectMyself, userId]);
 
   const { startAt, endAt } = form.watch();
-  return { form, startAt, endAt };
+  return { endAt, form, startAt };
 };
 
 export function CreateShiftCredenzaButton({
@@ -105,9 +105,6 @@ export function CreateShiftCredenzaButton({
 
   const mutation = useMutation(
     trpc.app.kodixCare.createCareShift.mutationOptions({
-      onSuccess: () => {
-        setOpen(false);
-      },
       onError: trpcErrorToastDefault,
       onSettled: () => {
         void queryClient.invalidateQueries(
@@ -117,14 +114,17 @@ export function CreateShiftCredenzaButton({
           trpc.app.kodixCare.findOverlappingShifts.pathFilter(),
         );
       },
+      onSuccess: () => {
+        setOpen(false);
+      },
     }),
   );
 
   const { form, startAt, endAt } = useCreateShiftForm({
-    userId: user.id,
     open,
+    userId: user.id,
   });
-  const { overlappingShifts, isChecking } = useShiftOverlap({ startAt, endAt });
+  const { overlappingShifts, isChecking } = useShiftOverlap({ endAt, startAt });
 
   return (
     <Credenza

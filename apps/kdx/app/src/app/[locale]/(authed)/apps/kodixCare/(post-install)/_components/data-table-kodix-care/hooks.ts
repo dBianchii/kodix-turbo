@@ -28,9 +28,9 @@ export const useSaveCareTaskMutation = () => {
   const mutateAsync = (values: TEditCareTaskInputSchema) =>
     toast
       .promise(saveCareTaskMutation.mutateAsync(values), {
+        error: getErrorMessage,
         loading: t("Updating"),
         success: t("Updated"),
-        error: getErrorMessage,
       })
       .unwrap();
 

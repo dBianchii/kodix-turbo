@@ -11,9 +11,9 @@ interface AcceptOptions {
 
 export const acceptHandler = async ({ ctx, input }: AcceptOptions) => {
   await acceptInvite({
+    db: db,
+    email: ctx.auth.user.email,
     invite: input.invitationId,
     userId: ctx.auth.user.id,
-    email: ctx.auth.user.email,
-    db: db,
   });
 };

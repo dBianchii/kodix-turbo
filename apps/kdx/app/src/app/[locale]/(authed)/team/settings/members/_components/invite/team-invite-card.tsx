@@ -53,6 +53,12 @@ export default function TeamInviteCardClient({
 
   const mutation = useMutation(
     trpc.team.invitation.invite.mutationOptions({
+      onError: (e) => trpcErrorToastDefault(e),
+      onSettled: () => {
+        void queryClient.invalidateQueries(
+          trpc.team.invitation.getAll.pathFilter(),
+        );
+      },
       onSuccess: ({ successes, failures }) => {
         if (successes.length > 0) {
           toast.success(
@@ -75,12 +81,6 @@ export default function TeamInviteCardClient({
         setTimeout(() => {
           closeDialog();
         }, 2000);
-      },
-      onError: (e) => trpcErrorToastDefault(e),
-      onSettled: () => {
-        void queryClient.invalidateQueries(
-          trpc.team.invitation.getAll.pathFilter(),
-        );
       },
     }),
   );

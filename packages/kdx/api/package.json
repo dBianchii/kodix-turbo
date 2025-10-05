@@ -1,17 +1,4 @@
 {
-  "name": "@kdx/api",
-  "private": true,
-  "type": "module",
-  "exports": {
-    ".": "./src/index.ts",
-    "./trpc/react/client": "./src/trpc/react/client.tsx",
-    "./trpc/react/server": "./src/trpc/react/server.tsx",
-    "./crons/*": "./src/crons/*.ts"
-  },
-  "scripts": {
-    "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "tsc": "tsc --noEmit"
-  },
   "dependencies": {
     "@casl/ability": "catalog:",
     "@kdx/auth": "workspace:*",
@@ -51,5 +38,18 @@
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
     "typescript": "catalog:"
-  }
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./crons/*": "./src/crons/*.ts",
+    "./trpc/react/client": "./src/trpc/react/client.tsx",
+    "./trpc/react/server": "./src/trpc/react/server.tsx"
+  },
+  "name": "@kdx/api",
+  "private": true,
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "tsc": "tsc --noEmit"
+  },
+  "type": "module"
 }

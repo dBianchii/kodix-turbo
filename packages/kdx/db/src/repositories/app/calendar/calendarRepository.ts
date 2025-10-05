@@ -58,20 +58,20 @@ export async function findEventExceptionsFromTo({
 }) {
   return db
     .select({
-      id: eventExceptions.id,
-      eventMasterId: eventExceptions.eventMasterId,
-      originalDate: eventExceptions.originalDate,
-      newDate: eventExceptions.newDate,
-      title: eventExceptions.title,
       description: eventExceptions.description,
-      type: eventExceptions.type,
-      rule: eventMasters.rule,
-      eventMasterTitle: eventMasters.title,
+      eventMasterCreatedBy: eventMasters.createdBy,
       eventMasterDescription: eventMasters.description,
-      eventMasterType: eventMasters.type,
+      eventMasterId: eventExceptions.eventMasterId,
       eventMasterRule: eventMasters.rule,
       eventMasterTeamId: eventMasters.teamId,
-      eventMasterCreatedBy: eventMasters.createdBy,
+      eventMasterTitle: eventMasters.title,
+      eventMasterType: eventMasters.type,
+      id: eventExceptions.id,
+      newDate: eventExceptions.newDate,
+      originalDate: eventExceptions.originalDate,
+      rule: eventMasters.rule,
+      title: eventExceptions.title,
+      type: eventExceptions.type,
     })
     .from(eventExceptions)
     .where((eventExceptions) =>
@@ -106,8 +106,8 @@ export async function findEventCancellationsFromTo({
 }) {
   return db
     .select({
-      originalDate: eventCancellations.originalDate,
       eventMasterId: eventMasters.id,
+      originalDate: eventCancellations.originalDate,
     })
     .from(eventCancellations)
     .where((eventCancellations) =>
@@ -127,11 +127,11 @@ export async function findEventCancellationsFromTo({
 
 export async function findEventExceptionById(db: Drizzle, id: string) {
   return db.query.eventExceptions.findFirst({
-    where: (eventExceptions, { eq }) => eq(eventExceptions.id, id),
     columns: {
       eventMasterId: true,
       originalDate: true,
     },
+    where: (eventExceptions, { eq }) => eq(eventExceptions.id, id),
   });
 }
 
@@ -317,13 +317,13 @@ export async function findEventMasterById(
   { id, teamId }: { id: string; teamId: string },
 ) {
   return db.query.eventMasters.findFirst({
-    where: and(eq(eventMasters.teamId, teamId), eq(eventMasters.id, id)),
     columns: {
-      id: true,
-      title: true,
-      description: true,
-      rule: true,
       dateStart: true,
+      description: true,
+      id: true,
+      rule: true,
+      title: true,
     },
+    where: and(eq(eventMasters.teamId, teamId), eq(eventMasters.id, id)),
   });
 }

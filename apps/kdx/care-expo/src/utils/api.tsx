@@ -26,14 +26,12 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
     api.createClient({
       links: [
         loggerLink({
+          colorMode: "ansi",
           enabled: (opts) =>
             process.env.NODE_ENV === "development" ||
             (opts.direction === "down" && opts.result instanceof Error),
-          colorMode: "ansi",
         }),
         httpBatchLink({
-          transformer: superjson,
-          url: `${getBaseKdxUrl()}/api/trpc`,
           headers() {
             const headers = new Map<string, string>();
             headers.set("x-trpc-source", "expo-react");
@@ -43,6 +41,8 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
 
             return Object.fromEntries(headers);
           },
+          transformer: superjson,
+          url: `${getBaseKdxUrl()}/api/trpc`,
         }),
       ],
     }),

@@ -15,8 +15,8 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
   if (input.appId === todoAppId)
     //TODO: stinky
     throw new TRPCError({
-      message: "DISABLED",
       code: "BAD_REQUEST",
+      message: "DISABLED",
     });
 
   const installed = await appRepository.findInstalledApp({
@@ -26,13 +26,13 @@ export const installAppHandler = async ({ ctx, input }: InstallAppOptions) => {
 
   if (installed)
     throw new TRPCError({
-      message: ctx.t("api.App already installed"),
       code: "BAD_REQUEST",
+      message: ctx.t("api.App already installed"),
     });
 
   await appRepository.installAppForTeam({
     appId: input.appId,
-    userId: ctx.auth.user.id,
     teamId: ctx.auth.user.activeTeamId,
+    userId: ctx.auth.user.id,
   });
 };

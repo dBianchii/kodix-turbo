@@ -16,10 +16,10 @@ export const createHandler = async ({ ctx, input }: CreateOptions) => {
   await db.transaction((tx) =>
     teamRepository.createTeamAndAssociateUser(tx, ctx.auth.user.id, {
       id: teamId,
-      ownerId: ctx.auth.user.id,
       name: input.teamName,
+      ownerId: ctx.auth.user.id,
     }),
   );
 
-  return { name: input.teamName, id: teamId };
+  return { id: teamId, name: input.teamName };
 };

@@ -32,8 +32,8 @@ export default function TabLayout() {
       screenOptions={{
         tabBarActiveTintColor: "$color",
         tabBarStyle: {
-          borderTopColor: "rgba(34,36,40,1)",
           backgroundColor: "rgba(34,36,40,1)",
+          borderTopColor: "rgba(34,36,40,1)",
         },
       }}
     >
@@ -41,18 +41,18 @@ export default function TabLayout() {
         name="index"
         options={{
           header: () => <Header />,
-          tabBarLabel: () => null,
           tabBarButton: TabBarButton,
           tabBarIcon: ({ color }) => <Home color={color} />,
+          tabBarLabel: () => null,
         }}
       />
       <Tabs.Screen
         name="notifications"
         options={{
           headerShown: false,
-          tabBarLabel: () => null,
           tabBarButton: TabBarButton,
           tabBarIcon: ({ color }) => <Bell color={color} />,
+          tabBarLabel: () => null,
         }}
       />
     </Tabs>

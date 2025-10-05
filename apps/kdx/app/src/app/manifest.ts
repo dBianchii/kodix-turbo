@@ -2,19 +2,19 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Kodix",
-    short_name: "Kodix",
-    description: "Software on demand",
-    start_url: "/",
-    display: "standalone",
     background_color: "#ffffff",
-    theme_color: "#000000",
+    description: "Software on demand",
+    display: "standalone",
     icons: [
       {
-        src: "/favicon.ico",
         sizes: "128x128",
+        src: "/favicon.ico",
         type: "image/png",
       },
     ],
+    name: "Kodix",
+    short_name: "Kodix",
+    start_url: "/",
+    theme_color: "#000000",
   };
 }

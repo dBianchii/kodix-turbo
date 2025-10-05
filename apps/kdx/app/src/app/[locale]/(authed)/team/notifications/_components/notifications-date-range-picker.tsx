@@ -142,21 +142,21 @@ export function NotificationsDateRangePicker({
               date.to ? (
                 <>
                   {formatT.dateTime(date.from, {
-                    month: "short",
                     day: "numeric",
+                    month: "short",
                     year: "numeric",
                   })}{" "}
                   -{" "}
                   {formatT.dateTime(date.to, {
-                    month: "short",
                     day: "numeric",
+                    month: "short",
                     year: "numeric",
                   })}
                 </>
               ) : (
                 formatT.dateTime(date.from, {
-                  month: "short",
                   day: "numeric",
+                  month: "short",
                   year: "numeric",
                 })
               )

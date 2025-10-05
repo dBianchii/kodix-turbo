@@ -37,14 +37,6 @@ export default function EditTeamPage() {
     <>
       <Stack.Screen
         options={{
-          headerTitleStyle: {
-            color: theme.color.val,
-          },
-          title: "Alterar time",
-          headerStyle: {
-            backgroundColor: theme.background.val,
-          },
-          headerShown: true,
           headerLeft: () => (
             <Pressable
               onPress={() => {
@@ -54,6 +46,14 @@ export default function EditTeamPage() {
               <ChevronLeft size={"$2"} />
             </Pressable>
           ),
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: theme.background.val,
+          },
+          headerTitleStyle: {
+            color: theme.color.val,
+          },
+          title: "Alterar time",
         }}
       />
 

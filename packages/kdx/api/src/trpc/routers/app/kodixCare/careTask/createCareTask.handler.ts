@@ -20,16 +20,16 @@ export const createCareTaskHandler = async ({
 }: CreateCareTaskOptions) => {
   const { services } = ctx;
   const ability = await services.permissions.getUserPermissionsForApp({
-    user: ctx.auth.user,
     appId: kodixCareAppId,
+    user: ctx.auth.user,
   });
   ForbiddenError.from(ability).throwUnlessCan("Create", "CareTask");
 
   const [created] = await careTaskRepository.createCareTask({
     ...input,
-    teamId: ctx.auth.user.activeTeamId,
     createdBy: ctx.auth.user.id,
     createdFromCalendar: false,
+    teamId: ctx.auth.user.activeTeamId,
   });
 
   if (!created) {
@@ -46,11 +46,11 @@ export const createCareTaskHandler = async ({
 
   await logActivity({
     appId: kodixCareAppId,
-    teamId: ctx.auth.user.activeTeamId,
-    tableName: "careTask",
-    rowId: created.id,
     diff: diff({}, careTaskInserted),
-    userId: ctx.auth.user.id,
+    rowId: created.id,
+    tableName: "careTask",
+    teamId: ctx.auth.user.activeTeamId,
     type: "create",
+    userId: ctx.auth.user.id,
   });
 };

@@ -66,9 +66,9 @@ export function DatePickerWithPresets({
             <DatePickerIcon date={date} className="mr-2" />
             {date
               ? format.dateTime(date, {
-                  year: "numeric",
-                  month: "short",
                   day: "numeric",
+                  month: "short",
+                  year: "numeric",
                 })
               : t("Pick a date")}
             {date && (

@@ -51,7 +51,7 @@ const useSelectEvent = ({
     [careShiftsData, selectedEventId],
   );
   const delayed = useDebounce(selectedEvent, 125); //Hack. There was a bug that caused this to be fired if edit is open
-  return { selectedEvent, setSelectedEventId, delayed };
+  return { delayed, selectedEvent, setSelectedEventId };
 };
 
 export default function ShiftsBigCalendar({
@@ -104,9 +104,9 @@ export default function ShiftsBigCalendar({
         old.endAt.getTime() !== dayjs(args.end).toDate().getTime()
       )
         mutate({
+          endAt: dayjs(args.end).toDate(),
           id: args.event.id,
           startAt: dayjs(args.start).toDate(),
-          endAt: dayjs(args.end).toDate(),
         });
 
       return args;
@@ -120,11 +120,11 @@ export default function ShiftsBigCalendar({
         (shift) =>
           ({
             ...shift,
+            end: dayjs(shift.endAt).toDate(),
             id: shift.id,
-            title: shift.Caregiver.name,
             image: shift.Caregiver.image,
             start: dayjs(shift.startAt).toDate(),
-            end: dayjs(shift.endAt).toDate(),
+            title: shift.Caregiver.name,
           }) as ShiftEvent,
       ) ?? [],
     [query.data],
@@ -191,18 +191,18 @@ export default function ShiftsBigCalendar({
             }) as EventPropGetter<ShiftEvent>
           }
           messages={{
-            allDay: "Dia Inteiro",
-            previous: "<",
-            next: ">",
-            today: "Hoje",
-            month: "Mês",
-            week: "Semana",
-            day: "Dia",
             agenda: "Agenda",
+            allDay: "Dia Inteiro",
             date: "Data",
-            time: "Hora",
+            day: "Dia",
             event: "Evento",
+            month: "Mês",
+            next: ">",
+            previous: "<",
             showMore: (total: number) => `+ (${total}) Eventos`,
+            time: "Hora",
+            today: "Hoje",
+            week: "Semana",
           }}
           scrollToTime={new Date()} // Scroll to current time
           culture={locale}
@@ -234,8 +234,8 @@ export default function ShiftsBigCalendar({
           onSelectSlot={(date) => {
             if (delayed) return; //! Hack. There was a bug that caused this to be fired if edit is open
             setOpen({
-              preselectedStart: date.start,
               preselectedEnd: date.end,
+              preselectedStart: date.start,
             });
           }}
           draggableAccessor={() => true}

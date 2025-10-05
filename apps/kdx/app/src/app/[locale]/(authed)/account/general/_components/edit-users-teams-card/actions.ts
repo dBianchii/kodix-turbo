@@ -12,8 +12,8 @@ import { redirect } from "~/i18n/routing";
 export const switchTeamAction = action
   .inputSchema(
     z.object({
-      teamId: z.string(),
       redirect: z.string().optional(),
+      teamId: z.string(),
     }),
   )
   .action(async ({ parsedInput }) => {

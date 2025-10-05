@@ -75,19 +75,19 @@ export function EditCareTaskCredenza({
 
   const defaultValues = useMemo(
     () => ({
-      id: task.id,
       details: task.details,
       doneAt: task.doneAt,
+      id: task.id,
     }),
     [task],
   );
   const form = useForm({
+    defaultValues,
     schema: ZEditCareTaskInputSchema(t).pick({
-      id: true,
       details: true,
       doneAt: true,
+      id: true,
     }),
-    defaultValues,
   });
 
   const handleCloseOrOpen = (open: boolean) => {
@@ -136,9 +136,9 @@ export function EditCareTaskCredenza({
                 <form
                   onSubmit={form.handleSubmit(async (values) => {
                     await mutation.mutateAsync({
-                      id: values.id,
                       details: values.details,
                       doneAt: values.doneAt,
+                      id: values.id,
                     });
                     handleCloseOrOpen(false);
                   })}
@@ -251,8 +251,8 @@ function AlertNoShiftsOrNotYours({
   const trpc = useTRPC();
   const overlappingShiftsQuery = useQuery(
     trpc.app.kodixCare.findOverlappingShifts.queryOptions({
-      start: task.date,
       end: task.date,
+      start: task.date,
     }),
   );
 
@@ -291,8 +291,8 @@ function LogsView({ careTaskId }: { careTaskId: string }) {
   const getAppActivityLogsQuery = useQuery(
     trpc.app.getAppActivityLogs.queryOptions({
       appId: kodixCareAppId,
-      tableNames: ["careTask"],
       rowId: careTaskId,
+      tableNames: ["careTask"],
     }),
   );
   const t = useTranslations();

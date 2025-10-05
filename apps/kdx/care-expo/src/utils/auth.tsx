@@ -7,7 +7,7 @@ import { usePushNotifications } from "./usePushNotifications";
 
 export const useAuth = () => {
   const { data, isLoading, isError } = api.auth.getSession.useQuery();
-  return { session: data?.session, user: data?.user, isLoading, isError };
+  return { isError, isLoading, session: data?.session, user: data?.user };
 };
 
 export const useSignIn = () => {
@@ -15,13 +15,13 @@ export const useSignIn = () => {
   const router = useRouter();
 
   const mutation = api.app.kodixCare.signInByPassword.useMutation({
+    onSettled: () => utils.invalidate(),
     onSuccess: async (sessionToken) => {
       setToken(sessionToken);
 
       await utils.invalidate();
       router.dismissAll();
     },
-    onSettled: () => utils.invalidate(),
   });
 
   return mutation;
@@ -32,13 +32,13 @@ export const useSignOut = () => {
   const router = useRouter();
 
   const mutation = api.auth.signOut.useMutation({
+    onSettled: () => utils.invalidate(),
     onSuccess: async () => {
       await deleteToken();
       await deleteStorageExpoToken();
       await utils.invalidate();
       router.replace("/");
     },
-    onSettled: () => utils.invalidate(),
   });
 
   const { expoPushToken } = usePushNotifications();

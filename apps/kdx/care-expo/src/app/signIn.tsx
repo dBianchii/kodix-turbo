@@ -106,12 +106,6 @@ export default function SignIn() {
     <YStack bg={"$background"} flex={1} alignItems="center" px={"$3"}>
       <Stack.Screen
         options={{
-          headerStyle: {
-            backgroundColor: theme.background.val,
-          },
-          title: "",
-          headerShown: true,
-          headerShadowVisible: false,
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => {
@@ -121,6 +115,12 @@ export default function SignIn() {
               <ChevronLeft size={"$2"} />
             </TouchableOpacity>
           ),
+          headerShadowVisible: false,
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: theme.background.val,
+          },
+          title: "",
         }}
       />
       <View mt={"$2"}>

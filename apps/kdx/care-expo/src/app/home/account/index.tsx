@@ -29,18 +29,18 @@ export default function ProfilePage() {
 
   const items = [
     {
-      text: "Nome",
-      textRight: user.name,
       onPress: () => {
         router.push("/home/account/edit/name");
       },
+      text: "Nome",
+      textRight: user.name,
     },
     {
-      text: "Time",
-      textRight: user.activeTeamName,
       onPress: () => {
         router.push("/home/account/edit/team");
       },
+      text: "Time",
+      textRight: user.activeTeamName,
     },
   ];
 

@@ -13,14 +13,14 @@ interface DeclineOptions {
 
 export const declineHandler = async ({ ctx, input }: DeclineOptions) => {
   const invitation = await teamRepository.findInvitationByIdAndEmail({
-    id: input.invitationId,
     email: ctx.auth.user.email,
+    id: input.invitationId,
   });
 
   if (!invitation) {
     throw new TRPCError({
-      message: ctx.t("api.No Invitation Found"),
       code: "NOT_FOUND",
+      message: ctx.t("api.No Invitation Found"),
     });
   }
 

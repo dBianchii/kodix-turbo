@@ -84,8 +84,8 @@ const useCalendarData = () => {
   const [selectedDay, setSelectedDay] = useState(new Date());
   const inputForQuery = useMemo(
     () => ({
-      dateStart: dayjs(selectedDay).startOf("day").toDate(),
       dateEnd: dayjs(selectedDay).endOf("day").toDate(),
+      dateStart: dayjs(selectedDay).startOf("day").toDate(),
     }),
     [selectedDay],
   );
@@ -96,9 +96,9 @@ const useCalendarData = () => {
   );
 
   return {
+    getAllQuery,
     selectedDay,
     setSelectedDay,
-    getAllQuery,
   };
 };
 
@@ -120,7 +120,6 @@ const useTable = ({
   const columns = useMemo(
     () => [
       columnHelper.accessor("eventMasterId", {
-        header: () => <></>,
         cell(info) {
           return (
             <div className="space-x-4">
@@ -155,18 +154,20 @@ const useTable = ({
             </div>
           );
         },
-        enableSorting: false,
         enableHiding: false,
+        enableSorting: false,
+        header: () => <></>,
       }),
       columnHelper.accessor("title", {
+        cell: (info) => <div className="font-bold">{info.getValue()}</div>,
         header: ({ column }) => (
           <DataTableColumnHeader column={column}>
             {t("Title")}
           </DataTableColumnHeader>
         ),
-        cell: (info) => <div className="font-bold">{info.getValue()}</div>,
       }),
       columnHelper.accessor("description", {
+        cell: (info) => <div className="text-sm">{info.getValue()}</div>,
         header: ({ column }) => {
           return (
             <DataTableColumnHeader column={column}>
@@ -175,28 +176,21 @@ const useTable = ({
             </DataTableColumnHeader>
           );
         },
-        cell: (info) => <div className="text-sm">{info.getValue()}</div>,
       }),
       columnHelper.accessor("date", {
+        cell: (info) => (
+          <div className="text-sm">
+            {format.dateTime(info.getValue(), "extensive")}
+          </div>
+        ),
         header: ({ column }) => (
           <DataTableColumnHeader column={column}>
             <LuCalendar className="mr-2 size-4" />
             {t("Date")}
           </DataTableColumnHeader>
         ),
-        cell: (info) => (
-          <div className="text-sm">
-            {format.dateTime(info.getValue(), "extensive")}
-          </div>
-        ),
       }),
       columnHelper.accessor("type", {
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column}>
-            <LuCircleAlert className="mr-2 size-4 text-orange-400" />
-            {t("Critical")}
-          </DataTableColumnHeader>
-        ),
         cell: (ctx) => (
           <div>
             {ctx.getValue() === "CRITICAL" ? (
@@ -204,24 +198,30 @@ const useTable = ({
             ) : null}
           </div>
         ),
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column}>
+            <LuCircleAlert className="mr-2 size-4 text-orange-400" />
+            {t("Critical")}
+          </DataTableColumnHeader>
+        ),
       }),
     ],
     [format, setCalendarTask, setOpenCancelDialog, setOpenEditDialog, t],
   );
 
   const table = useReactTable({
-    data,
     columns,
+    data,
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
     state: {
       columnFilters,
     },
   });
 
-  return { table, columnLength: columns.length };
+  return { columnLength: columns.length, table };
 };
 
 export function DataTable() {
@@ -240,8 +240,8 @@ export function DataTable() {
   const { table, columnLength } = useTable({
     data,
     setCalendarTask,
-    setOpenEditDialog,
     setOpenCancelDialog,
+    setOpenEditDialog,
   });
 
   return (

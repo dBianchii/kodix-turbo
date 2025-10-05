@@ -21,11 +21,11 @@ export function LoginForm() {
   const [error, setError] = useState<string | null>(null);
 
   const form = useForm({
-    schema: ZLoginSchema,
     defaultValues: {
       email: "",
       password: "",
     },
+    schema: ZLoginSchema,
   });
 
   const onSubmit = async (data: LoginFormData) => {
