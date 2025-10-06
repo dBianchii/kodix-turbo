@@ -103,7 +103,7 @@ export default function SignIn() {
   const theme = useTheme();
 
   return (
-    <YStack bg={"$background"} flex={1} alignItems="center" px={"$3"}>
+    <YStack alignItems="center" bg={"$background"} flex={1} px={"$3"}>
       <Stack.Screen
         options={{
           headerLeft: () => (
@@ -138,8 +138,8 @@ export default function SignIn() {
                   <Input
                     {...field}
                     keyboardType="email-address"
-                    placeholder="name@email.com"
                     onChangeText={field.onChange}
+                    placeholder="name@email.com"
                     value={field.value}
                   />
                 </FormControl>
@@ -159,8 +159,8 @@ export default function SignIn() {
                 <FormControl>
                   <Input
                     {...field}
-                    secureTextEntry
                     onChangeText={field.onChange}
+                    secureTextEntry
                     value={field.value}
                   />
                 </FormControl>

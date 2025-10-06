@@ -27,14 +27,14 @@ export default function Tab() {
     // getCurrentShiftQuery.isLoading
   )
     return (
-      <RootSafeAreaView f={1} jc={"center"} ai={"center"}>
+      <RootSafeAreaView ai={"center"} f={1} jc={"center"}>
         <Spinner />
       </RootSafeAreaView>
     );
 
   if (myRolesQuery.error) {
     return (
-      <RootSafeAreaView f={1} jc={"center"} ai={"center"}>
+      <RootSafeAreaView ai={"center"} f={1} jc={"center"}>
         <Text>Something went wrong</Text>
       </RootSafeAreaView>
     );
@@ -44,10 +44,10 @@ export default function Tab() {
     <View
       backgroundColor={"$background"}
       f={1}
-      px={defaultPadding}
       jc={"center"}
+      px={defaultPadding}
     >
-      <H3 textAlign="center" color={"$color11"}>
+      <H3 color={"$color11"} textAlign="center">
         Você não é um administrador ou cuidador. Não é possível visualizar esta
         página sem essas permissões ainda
       </H3>

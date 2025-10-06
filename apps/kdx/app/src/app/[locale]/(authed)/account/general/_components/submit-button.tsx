@@ -7,7 +7,7 @@ export function SubmitButton({ children }: { children: React.ReactNode }) {
   const formStatus = useFormStatus();
 
   return (
-    <Button type="submit" loading={formStatus.pending}>
+    <Button loading={formStatus.pending} type="submit">
       {children}
     </Button>
   );

@@ -32,7 +32,7 @@ export default function Config() {
 
   if (!getUserAppTeamConfigQuery.data)
     return (
-      <View backgroundColor={"$background"} f={1} jc="center" ai="center">
+      <View ai="center" backgroundColor={"$background"} f={1} jc="center">
         <Spinner />
       </View>
     );
@@ -105,24 +105,24 @@ function NotificationSettingsForm({
               size={"$2"}
             />
           }
-          title={"Tarefas críticas"}
-          onPress={handleSave}
-          subTitle={
-            <SizableText size={"$2"} color={"$gray11Dark"} lineHeight={"$1"}>
-              Receber notificações de tarefas críticas que estão atrasadas.
-            </SizableText>
-          }
           iconAfter={
             <View>
               <Switch
-                defaultChecked={initialSendNotificationsForDelayedTasks}
                 checked={sendNotificationsForDelayedTasks}
+                defaultChecked={initialSendNotificationsForDelayedTasks}
                 onCheckedChange={handleSave}
               >
                 <Switch.Thumb animation="quicker" />
               </Switch>
             </View>
           }
+          onPress={handleSave}
+          subTitle={
+            <SizableText color={"$gray11Dark"} lineHeight={"$1"} size={"$2"}>
+              Receber notificações de tarefas críticas que estão atrasadas.
+            </SizableText>
+          }
+          title={"Tarefas críticas"}
         />
       </YGroup.Item>
     </YGroup>

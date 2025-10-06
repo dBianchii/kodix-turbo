@@ -54,11 +54,11 @@ export default async function SettingsLayout({
       </div>
       <div className="mt-8 flex flex-col md:flex-row md:space-x-6">
         <Navigation
-          items={navItems}
           goBackItem={{
             href: `/team/settings`,
             title: t("Settings"),
           }}
+          items={navItems}
         />
         <ShouldRender endsWith="/settings">{children}</ShouldRender>
       </div>

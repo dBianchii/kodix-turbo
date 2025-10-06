@@ -25,10 +25,10 @@ export function IconKodixApp({
   return (
     <div className="flex flex-col items-center">
       <Image
-        src={appIconUrl}
-        height={size}
-        width={size}
         alt={`${appName} icon`}
+        height={size}
+        src={appIconUrl}
+        width={size}
       />
       {renderText && (
         <p className="line-clamp-1 text-muted-foreground text-sm">{appName}</p>

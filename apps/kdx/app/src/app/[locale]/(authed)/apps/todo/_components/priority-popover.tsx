@@ -33,17 +33,17 @@ export function PriorityPopover({
 
   const prioritiesArr: Priority[] = [0, 1, 2, 3];
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover onOpenChange={setOpen} open={open}>
       <PopoverTrigger>
         {children ?? (
-          <Button variant="ghost" size="sm">
-            <PriorityIcon priority={priority} className="mr-2" />
+          <Button size="sm" variant="ghost">
+            <PriorityIcon className="mr-2" priority={priority} />
             {PriorityToTxt(priority)}
             <span className="sr-only">Open priority popover</span>
           </Button>
         )}
       </PopoverTrigger>
-      <PopoverContent className="w-300 p-0" side="bottom" align={"start"}>
+      <PopoverContent align={"start"} className="w-300 p-0" side="bottom">
         <Command>
           <CommandInput placeholder="Change priority..." />
           <CommandList
@@ -60,7 +60,7 @@ export function PriorityPopover({
                     setOpen(false);
                   }}
                 >
-                  <PriorityIcon priority={num} className="mr-2" />
+                  <PriorityIcon className="mr-2" priority={num} />
                   {PriorityToTxt(num)}
                 </CommandItem>
               ))}

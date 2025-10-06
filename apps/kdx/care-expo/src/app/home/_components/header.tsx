@@ -17,8 +17,8 @@ export function Header() {
   return (
     <SafeAreaView style={{ backgroundColor: theme.background.val }}>
       <XStack jc={"flex-end"} mx={defaultPadding} my={"$3"}>
-        <Link href={"/home/account"} asChild>
-          <AvatarWrapper src={user.image} fallback={user.name} />
+        <Link asChild href={"/home/account"}>
+          <AvatarWrapper fallback={user.name} src={user.image} />
         </Link>
       </XStack>
     </SafeAreaView>

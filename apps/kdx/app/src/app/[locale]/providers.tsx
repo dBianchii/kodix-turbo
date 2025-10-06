@@ -27,9 +27,9 @@ export function Providers({ children, locale, messages }: ProvidersProps) {
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <Toaster />
         <NextIntlClientProvider
+          formats={formats}
           locale={locale}
           messages={messages}
-          formats={formats}
           timeZone="America/Sao_Paulo" //?Fix me!
         >
           <I18nZodMessages />

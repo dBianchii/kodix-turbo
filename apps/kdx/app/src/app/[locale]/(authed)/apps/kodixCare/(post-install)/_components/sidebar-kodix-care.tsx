@@ -24,10 +24,10 @@ export function SideBarToggle() {
   return (
     <div className="flex items-center border-b p-2 md:hidden">
       <Button
-        variant="outline"
-        size="icon"
         className="shrink-0"
         onClick={toggleSidebar}
+        size="icon"
+        variant="outline"
       >
         <LuPanelLeft className="h-5 w-5" />
         <span className="sr-only">Toggle sidebar menu</span>
@@ -48,8 +48,8 @@ export function KodixCareSideBar() {
 
   return (
     <Sidebar
-      collapsible={isMobile ? "offcanvas" : "none"}
       className="hidden min-h-[calc(100dvh-55px)] border-r bg-background md:flex"
+      collapsible={isMobile ? "offcanvas" : "none"}
     >
       <SidebarContent>
         <SidebarGroup>

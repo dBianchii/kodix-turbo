@@ -78,8 +78,8 @@ export function DataTableMembers({
             <div className="flex flex-col">
               <AvatarWrapper
                 className="h-8 w-8"
-                src={info.cell.row.original.image ?? ""}
                 fallback={info.getValue()}
+                src={info.cell.row.original.image ?? ""}
               />
             </div>
             <div className="flex flex-col items-start">
@@ -104,7 +104,7 @@ export function DataTableMembers({
               <TooltipProvider>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="h-8 w-8 p-0">
+                    <Button className="h-8 w-8 p-0" variant="ghost">
                       <span className="sr-only">{t("Open menu")}</span>
                       <RxDotsHorizontal className="size-4" />
                     </Button>
@@ -114,8 +114,8 @@ export function DataTableMembers({
                       <TooltipTrigger asChild>
                         <div>
                           <DropdownMenuItem
-                            disabled={!canEditPage}
                             className="text-destructive"
+                            disabled={!canEditPage}
                             onSelect={() => {
                               mutate({
                                 userId: info.row.original.id,
@@ -127,10 +127,10 @@ export function DataTableMembers({
                         </div>
                       </TooltipTrigger>
                       <TooltipContent
-                        side="left"
                         className={cn("bg-background", {
                           hidden: canEditPage, // Only show tooltip if the user can't edit page
                         })}
+                        side="left"
                       >
                         <p>
                           {t("Only the owner of the team can remove members")}
@@ -183,8 +183,8 @@ export function DataTableMembers({
           {table.getRowModel().rows.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
-                key={row.id}
                 data-state={row.getIsSelected() && "selected"}
+                key={row.id}
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
@@ -195,7 +195,7 @@ export function DataTableMembers({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
+              <TableCell className="h-24 text-center" colSpan={columns.length}>
                 {t("No members found")}
               </TableCell>
             </TableRow>

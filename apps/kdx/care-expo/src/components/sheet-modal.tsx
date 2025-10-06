@@ -35,22 +35,22 @@ export function SheetModal({
 
   return (
     <Sheet
-      unmountChildrenWhenHidden
-      forceRemoveScrollEnabled={open}
-      open={open}
-      onOpenChange={setOpen}
-      snapPoints={[85]}
-      snapPointsMode={"percent"}
-      zIndex={100_000}
-      dismissOnSnapToBottom
       animation="medium"
       animationConfig={{
         damping: 10,
         mass: 0.3,
         type: "spring",
       }}
+      dismissOnSnapToBottom
+      forceRemoveScrollEnabled={open}
       modal
       native
+      onOpenChange={setOpen}
+      open={open}
+      snapPoints={[85]}
+      snapPointsMode={"percent"}
+      unmountChildrenWhenHidden
+      zIndex={100_000}
       {...sheetProps} // Pass additional props to Sheet
     >
       {withHandle && <Sheet.Handle backgroundColor={"$blue5Dark"} />}

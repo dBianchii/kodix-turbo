@@ -28,11 +28,11 @@ export default async function Layout({
         </div>
         <div className="mt-8 flex flex-col md:flex-row md:space-x-6">
           <Navigation
-            items={navItems}
             goBackItem={{
               href: "/account",
               title: t("account.Account settings"),
             }}
+            items={navItems}
           />
           <ShouldRender endsWith="/account">{children}</ShouldRender>
         </div>

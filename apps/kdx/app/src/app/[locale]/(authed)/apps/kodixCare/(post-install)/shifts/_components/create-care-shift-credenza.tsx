@@ -128,11 +128,11 @@ export function CreateShiftCredenzaButton({
 
   return (
     <Credenza
-      open={!!open}
       onOpenChange={(open) => {
         form.reset();
         setOpen(open);
       }}
+      open={!!open}
     >
       <CredenzaTrigger asChild>
         <Button size={"sm"}>
@@ -144,11 +144,11 @@ export function CreateShiftCredenzaButton({
         {overlappingShifts ? (
           <WarnOverlappingShifts
             isSubmitting={mutation.isPending}
-            overlaps={overlappingShifts}
             onClickConfirm={form.handleSubmit((values) => {
               mutation.mutate(values);
             })}
             open={showOverlapWarning}
+            overlaps={overlappingShifts}
             setOpen={setShowOverlapWarning}
           />
         ) : null}
@@ -193,10 +193,10 @@ export function CreateShiftCredenzaButton({
                       <FormControl>
                         <div className="flex flex-row gap-2">
                           <DateTimePicker
-                            value={field.value}
                             onChange={(newDate) =>
                               field.onChange(newDate ?? new Date())
                             }
+                            value={field.value}
                           />
                         </div>
                       </FormControl>
@@ -214,10 +214,10 @@ export function CreateShiftCredenzaButton({
                       <FormControl>
                         <div className="flex flex-row gap-2">
                           <DateTimePicker
-                            value={field.value}
                             onChange={(newDate) =>
                               field.onChange(newDate ?? new Date())
                             }
+                            value={field.value}
                           />
                         </div>
                       </FormControl>
@@ -235,10 +235,10 @@ export function CreateShiftCredenzaButton({
                     <div className="flex flex-row gap-2">
                       <FormControl>
                         <SelectCaregiver
-                          user={user}
                           disabled={isChecking || mutation.isPending}
-                          value={field.value}
                           onValueChange={(value) => field.onChange(value)}
+                          user={user}
+                          value={field.value}
                         />
                       </FormControl>
                     </div>
@@ -290,7 +290,7 @@ function SelectCaregiver({
   );
 
   return (
-    <Select disabled={disabled} value={value} onValueChange={onValueChange}>
+    <Select disabled={disabled} onValueChange={onValueChange} value={value}>
       <SelectTrigger className="h-auto ps-2 [&>span]:flex [&>span]:items-center [&>span]:gap-2 [&>span_img]:shrink-0">
         <SelectValue
           placeholder={
@@ -304,8 +304,8 @@ function SelectCaregiver({
             {t("No caregivers found")}
             {activeTeamQuery.data?.ownerId === user.id ? (
               <Link
-                href="/team/settings/permissions/kodixCare"
                 className="text-primary text-sm hover:underline"
+                href="/team/settings/permissions/kodixCare"
               >
                 {t("Add caregivers")}
               </Link>
@@ -316,12 +316,12 @@ function SelectCaregiver({
             <SelectItem key={user.id} value={user.id}>
               <span className="flex items-center gap-2">
                 <AvatarWrapper
+                  alt={user.name}
                   className="size-10 rounded-full"
                   fallback={user.name}
-                  src={user.image ?? ""}
-                  alt={user.name}
-                  width={40}
                   height={40}
+                  src={user.image ?? ""}
+                  width={40}
                 />
                 <span>
                   <span className="block font-medium">{user.name}</span>

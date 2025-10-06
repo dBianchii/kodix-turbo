@@ -81,9 +81,9 @@ export function CreateTaskDialogButton() {
   const format = useFormatter();
 
   return (
-    <Credenza open={open} onOpenChange={setOpen}>
+    <Credenza onOpenChange={setOpen} open={open}>
       <CredenzaTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button size="sm" variant="outline">
           <LuPlus className="mr-2 size-4" />
           {t("Create task")}
         </Button>
@@ -95,21 +95,21 @@ export function CreateTaskDialogButton() {
         <CredenzaBody>
           <Input
             className="my-2 border-none"
-            type="text"
-            placeholder="Event title..."
             onChange={(e) => setTitle(e.target.value)}
+            placeholder="Event title..."
+            type="text"
           />
           <Textarea
             className="my-2 border-none"
-            placeholder="Add description..."
             onChange={(e) => setDescription(e.target.value)}
+            placeholder="Add description..."
           />
           <div className="flex flex-row gap-1">
             <StatusPopover setStatus={setStatus} status={status} />
             <PriorityPopover priority={priority} setPriority={setPriority}>
               <PopoverTrigger asChild>
-                <Button variant="outline" size="sm">
-                  <PriorityIcon priority={priority} className={"mr-2"} />
+                <Button size="sm" variant="outline">
+                  <PriorityIcon className={"mr-2"} priority={priority} />
                   {PriorityToTxt(priority)}
                   <span className="sr-only">Open priority popover</span>
                 </Button>
@@ -120,16 +120,16 @@ export function CreateTaskDialogButton() {
               setAssignedToUserId={setAssignedToUserId}
               users={team.Users}
             >
-              <Button variant="outline" size="sm">
+              <Button size="sm" variant="outline">
                 <span className="sr-only">Open assign user popover</span>
 
                 {user ? (
                   <>
                     <AvatarWrapper
-                      className="mr-2 size-4"
-                      src={user.image}
                       alt={`${user.name} avatar`}
+                      className="mr-2 size-4"
                       fallback={<HiUserCircle />}
+                      src={user.image}
                     />
                     {user.name}
                   </>
@@ -144,13 +144,13 @@ export function CreateTaskDialogButton() {
             <DatePickerWithPresets date={dueDate} setDate={setDueDate}>
               <PopoverTrigger asChild>
                 <Button
-                  variant={"outline"}
                   className={
                     !dueDate ? "text-muted-foreground" : "text-foreground"
                   }
                   size="sm"
+                  variant={"outline"}
                 >
-                  <DatePickerIcon date={dueDate} className="mr-2 size-4" />
+                  <DatePickerIcon className="mr-2 size-4" date={dueDate} />
                   {dueDate
                     ? format.dateTime(dueDate, "extensive")
                     : t("Pick a date")}
@@ -158,10 +158,10 @@ export function CreateTaskDialogButton() {
                     // biome-ignore lint/a11y/noStaticElementInteractions: <biome migration>
                     // biome-ignore lint/a11y/useKeyWithClickEvents: <biome migration>
                     <span
+                      className="ml-2 rounded-full transition-colors hover:bg-primary/90 hover:text-background"
                       onClick={() => {
                         setDueDate(undefined);
                       }}
-                      className="ml-2 rounded-full transition-colors hover:bg-primary/90 hover:text-background"
                     >
                       <LuX className="size-4" />
                     </span>
@@ -172,7 +172,7 @@ export function CreateTaskDialogButton() {
           </div>
         </CredenzaBody>
         <CredenzaFooter>
-          <Button type="submit" size="sm" onClick={handleCreateTask}>
+          <Button onClick={handleCreateTask} size="sm" type="submit">
             {t("Create task")}
           </Button>
         </CredenzaFooter>

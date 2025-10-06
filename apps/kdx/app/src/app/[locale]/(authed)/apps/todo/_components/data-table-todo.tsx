@@ -75,18 +75,18 @@ export function DataTableTodo({
     columnHelper.display({
       cell: ({ row }) => (
         <Checkbox
+          aria-label="Select row"
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
         />
       ),
       enableHiding: false,
       enableSorting: false,
       header: ({ table }) => (
         <Checkbox
+          aria-label="Select all"
           checked={table.getIsAllPageRowsSelected()}
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
         />
       ),
       id: "select",
@@ -138,8 +138,8 @@ export function DataTableTodo({
               priority={priority}
               setPriority={handlePriorityChange}
             >
-              <Button variant="ghost" size="sm">
-                <PriorityIcon priority={priority} className="mr-2" />
+              <Button size="sm" variant="ghost">
+                <PriorityIcon className="mr-2" priority={priority} />
                 {PriorityToTxt(priority)}
                 <span className="sr-only">Open priority popover</span>
               </Button>
@@ -194,8 +194,8 @@ export function DataTableTodo({
 
         return (
           <StatusPopover setStatus={handleStatusChange} status={status}>
-            <Button variant="ghost" size="sm">
-              <StatusIcon status={status} className={"mr-2"} />
+            <Button size="sm" variant="ghost">
+              <StatusIcon className={"mr-2"} status={status} />
               {statusTxt}
               <span className="sr-only">Open status popover</span>
             </Button>
@@ -319,12 +319,12 @@ export function DataTableTodo({
     <div>
       <div className="flex items-center py-4">
         <Input
-          placeholder="Search by title..."
-          value={table.getColumn("title")?.getFilterValue() as string}
+          className="max-w-sm"
           onChange={(event) =>
             table.getColumn("title")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          placeholder="Search by title..."
+          value={table.getColumn("title")?.getFilterValue() as string}
         />
       </div>
       <div className="rounded-md border">
@@ -360,8 +360,8 @@ export function DataTableTodo({
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
                   className="h-24 text-center"
+                  colSpan={columns.length}
                 >
                   You have no tasks. Yet. Create one
                   <CreateTaskDialogButton />

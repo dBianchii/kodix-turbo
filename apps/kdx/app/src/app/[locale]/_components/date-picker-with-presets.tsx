@@ -59,11 +59,11 @@ export function DatePickerWithPresets({
   const [open, setOpen] = useState(false);
   const format = useFormatter();
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover onOpenChange={setOpen} open={open}>
       <PopoverTrigger>
         {children ?? (
-          <Button variant="ghost" size="sm">
-            <DatePickerIcon date={date} className="mr-2" />
+          <Button size="sm" variant="ghost">
+            <DatePickerIcon className="mr-2" date={date} />
             {date
               ? format.dateTime(date, {
                   day: "numeric",
@@ -75,10 +75,10 @@ export function DatePickerWithPresets({
               // biome-ignore lint/a11y/noStaticElementInteractions: <biome migration>
               // biome-ignore lint/a11y/useKeyWithClickEvents: <biome migration>
               <span
+                className="ml-2 rounded-full transition-colors hover:bg-primary/90 hover:text-background"
                 onClick={() => {
                   setDate(undefined);
                 }}
-                className="ml-2 rounded-full transition-colors hover:bg-primary/90 hover:text-background"
               >
                 <LuX className="size-4" />
               </span>
@@ -86,10 +86,10 @@ export function DatePickerWithPresets({
           </Button>
         )}
       </PopoverTrigger>
-      <PopoverContent className="flex flex-col space-y-2 p-2" align="start">
+      <PopoverContent align="start" className="flex flex-col space-y-2 p-2">
         <Popover>
           <PopoverTrigger>
-            <Button variant="outline" className="w-full justify-between">
+            <Button className="w-full justify-between" variant="outline">
               {t("Select")}...
               <LuChevronDown className="ml-2 size-4 shrink-0 opacity-50" />
             </Button>
@@ -123,10 +123,10 @@ export function DatePickerWithPresets({
         </Popover>
         <div className="rounded-md border">
           <Calendar
-            mode="single"
-            selected={date}
-            onSelect={setDate}
             initialFocus
+            mode="single"
+            onSelect={setDate}
+            selected={date}
           />
         </div>
       </PopoverContent>

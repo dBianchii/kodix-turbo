@@ -9,10 +9,10 @@ export function BackButton() {
   const router = useRouter();
   return (
     <Button
-      variant="outline"
-      size="icon"
       className="shrink-0"
       onClick={() => router.back()}
+      size="icon"
+      variant="outline"
     >
       <LuArrowLeft className="size-4" />
       <span className="sr-only">Back</span>

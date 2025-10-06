@@ -76,13 +76,13 @@ export function DataTableNotifications({
 
   return (
     <div>
-      <DataTableAdvancedToolbar table={table} filterFields={filterFields}>
+      <DataTableAdvancedToolbar filterFields={filterFields} table={table}>
         {/* <TasksTableToolbarActions table={table} /> */}
         <DataTableNotificationsToolbarActions table={table} />
       </DataTableAdvancedToolbar>
       <DataTable
-        table={table}
         floatingBar={<DataTableNotificationsFloatingBar table={table} />}
+        table={table}
       />
     </div>
   );

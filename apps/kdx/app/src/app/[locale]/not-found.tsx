@@ -23,7 +23,7 @@ export default function NotFound() {
         </p>
 
         <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-          <Link href="/" className={buttonVariants({ variant: "secondary" })}>
+          <Link className={buttonVariants({ variant: "secondary" })} href="/">
             <LuArrowLeft className="mr-2 size-4" />
             Voltar ao início
           </Link>

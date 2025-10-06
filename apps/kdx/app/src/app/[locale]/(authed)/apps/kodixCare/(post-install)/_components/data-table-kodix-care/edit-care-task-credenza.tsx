@@ -101,21 +101,21 @@ export function EditCareTaskCredenza({
   const format = useFormatter();
 
   return (
-    <Dialog open={open} onOpenChange={handleCloseOrOpen}>
+    <Dialog onOpenChange={handleCloseOrOpen} open={open}>
       <DialogContent>
         <DialogHeader>
-          <div ref={parent2} className="flex flex-row items-center">
+          <div className="flex flex-row items-center" ref={parent2}>
             {!isLogView ? (
               <DialogTitle>{t("apps.kodixCare.Edit task")}</DialogTitle>
             ) : (
               <>
                 <Button
-                  size={"sm"}
-                  variant={"ghost"}
                   className="mr-2"
                   onClick={() => {
                     setIsLogView(false);
                   }}
+                  size={"sm"}
+                  variant={"ghost"}
                 >
                   <LuArrowLeft className="size-3" />
                 </Button>
@@ -126,10 +126,10 @@ export function EditCareTaskCredenza({
         </DialogHeader>
         <div className={cn(isLogView && "overflow-auto")}>
           <div
-            ref={parent}
             className={cn(
               "h-[600px] grow transition-all duration-300 ease-in-out",
             )}
+            ref={parent}
           >
             {!isLogView ? (
               <Form {...form}>
@@ -155,10 +155,10 @@ export function EditCareTaskCredenza({
                       </div>
                       <Button
                         className="ml-auto"
-                        variant={"outline"}
+                        onClick={() => setIsLogView(true)}
                         size={"sm"}
                         type="button"
-                        onClick={() => setIsLogView(true)}
+                        variant={"outline"}
                       >
                         <LuScrollText className="mr-2 size-3" />
                         {t("Logs")}
@@ -182,11 +182,11 @@ export function EditCareTaskCredenza({
                           <FormControl>
                             <div className="flex flex-row gap-2">
                               <DateTimePicker
-                                value={field.value ?? undefined}
+                                clearable
                                 onChange={(newDate) =>
                                   field.onChange(newDate ?? null)
                                 }
-                                clearable
+                                value={field.value ?? undefined}
                               />
                             </div>
                           </FormControl>
@@ -202,8 +202,8 @@ export function EditCareTaskCredenza({
                           <FormLabel>{t("Details")}</FormLabel>
                           <FormControl>
                             <Textarea
-                              placeholder={`${t("apps.kodixCare.Any information")}...`}
                               className="w-full"
+                              placeholder={`${t("apps.kodixCare.Any information")}...`}
                               rows={6}
                               {...field}
                               onChange={(e) => {
@@ -222,8 +222,8 @@ export function EditCareTaskCredenza({
                   </div>
                   <DialogFooter className="mt-6 justify-end">
                     <Button
-                      loading={mutation.isPending}
                       disabled={!form.formState.isDirty}
+                      loading={mutation.isPending}
                       type="submit"
                     >
                       {t("Save")}
@@ -326,7 +326,7 @@ function LogsView({ careTaskId }: { careTaskId: string }) {
           ))
         ) : (
           <TableRow>
-            <TableCell colSpan={3} className="h-24 text-center">
+            <TableCell className="h-24 text-center" colSpan={3}>
               {t("No results")}.
             </TableCell>
           </TableRow>

@@ -69,7 +69,7 @@ function MainLayout() {
   return (
     <>
       {isLoading ? (
-        <RootSafeAreaView f={1} jc={"center"} ai={"center"}>
+        <RootSafeAreaView ai={"center"} f={1} jc={"center"}>
           <Spinner />
         </RootSafeAreaView>
       ) : (
@@ -88,8 +88,8 @@ export default function RootLayout() {
   return (
     <TRPCProvider>
       <IntlProvider
-        messages={messages[locale]}
         locale={locale}
+        messages={messages[locale]}
         timeZone="America/Sao_Paulo"
       >
         <GestureHandlerRootView style={{ flex: 1 }}>
@@ -116,15 +116,15 @@ function DefaultToast() {
   if (!currentToast || currentToast.isHandledNatively) return null;
   return (
     <Toast
-      theme={currentToast.customData?.variant === "error" ? "red" : null}
-      key={currentToast.id}
+      animation={"quick"}
       duration={currentToast.duration}
       enterStyle={{ opacity: 0, scale: 0, y: -25 }}
       exitStyle={{ opacity: 0, scale: 0, y: -25 }}
-      y={0}
+      key={currentToast.id}
       scale={1}
+      theme={currentToast.customData?.variant === "error" ? "red" : null}
       viewportName={currentToast.viewportName}
-      animation={"quick"}
+      y={0}
     >
       <Toast.Title textAlign="center">{currentToast.title}</Toast.Title>
       {!!currentToast.message && (
@@ -141,9 +141,9 @@ function SafeToastViewport() {
   return (
     <ToastViewport
       flexDirection="column-reverse"
-      top={top}
       left={left}
       right={right}
+      top={top}
     />
   );
 }

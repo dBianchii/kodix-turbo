@@ -15,7 +15,7 @@ function NotificationsHeader() {
       style={{ backgroundColor: theme.background.val, paddingVertical: 5 }}
     >
       <XStack jc={"flex-end"} mx={defaultPadding} my={"$3"}>
-        <Link href={"/home/notifications/config"} asChild>
+        <Link asChild href={"/home/notifications/config"}>
           <Cog color={"$gray11Dark"} size={"$2"} />
         </Link>
       </XStack>
@@ -48,7 +48,7 @@ export default function NotificationsTab() {
     return (
       <>
         <NotificationsHeader />
-        <RootSafeAreaView jc="center" f={1} ai="center">
+        <RootSafeAreaView ai="center" f={1} jc="center">
           <Spinner />
         </RootSafeAreaView>
       </>
@@ -59,7 +59,7 @@ export default function NotificationsTab() {
       <NotificationsHeader />
       <View backgroundColor={"$background"} f={1}>
         {!notifications?.data.length ? (
-          <View jc="center" f={1} ai="center">
+          <View ai="center" f={1} jc="center">
             <H3 color={"$color11"} textAlign="center">
               Nenhuma notificação no momento...
             </H3>
@@ -67,14 +67,14 @@ export default function NotificationsTab() {
         ) : (
           <YGroup alignSelf="center" bordered w={"100%"}>
             <FlatList
-              keyExtractor={(item, idx) => item.id + idx}
               data={notifications.data}
+              keyExtractor={(item, idx) => item.id + idx}
               refreshControl={
                 <RefreshControl
-                  refreshing={isRefetching}
                   onRefresh={() => {
                     void utils.user.getNotifications.invalidate();
                   }}
+                  refreshing={isRefetching}
                 />
               }
               renderItem={({ item }) => (

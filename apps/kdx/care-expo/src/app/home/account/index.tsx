@@ -53,7 +53,7 @@ export default function ProfilePage() {
         }}
       />
       <SafeAreaView>
-        <XStack jc={"space-between"} gap={"$4"}>
+        <XStack gap={"$4"} jc={"space-between"}>
           <View alignSelf="center">
             <TouchableOpacity onPress={() => router.back()}>
               <X ml={"$3"} />
@@ -61,21 +61,21 @@ export default function ProfilePage() {
           </View>
           <XStack gap={"$4"}>
             <H4 alignSelf="center">{user.name}</H4>
-            <AvatarWrapper src={user.image} fallback={user.name} />
+            <AvatarWrapper fallback={user.name} src={user.image} />
           </XStack>
         </XStack>
-        <YGroup width={"100%"} alignSelf="center" my={"$7"}>
+        <YGroup alignSelf="center" my={"$7"} width={"100%"}>
           {items.map((item) => (
             <MenuListItem
-              key={item.text}
               iconAfter={ArrowRight}
+              key={item.text}
               onPress={item.onPress}
             >
-              <XStack jc={"space-between"} f={1}>
-                <SizableText fontWeight={"$7"} fontFamily={"$silkscreen"}>
+              <XStack f={1} jc={"space-between"}>
+                <SizableText fontFamily={"$silkscreen"} fontWeight={"$7"}>
                   {item.text}
                 </SizableText>
-                <SizableText size={"$4"} color={"$color10"}>
+                <SizableText color={"$color10"} size={"$4"}>
                   {item.textRight}
                 </SizableText>
               </XStack>
@@ -84,27 +84,27 @@ export default function ProfilePage() {
         </YGroup>
 
         <YGroup
-          theme={"dark_red"}
           alignSelf="center"
-          size="$4"
           bordered
+          my={"$7"}
           separator={
             <XStack>
               <Separator />
               <Separator />
             </XStack>
           }
-          my={"$7"}
+          size="$4"
+          theme={"dark_red"}
         >
           <ListItem
-            hoverTheme
-            pressTheme
-            onPress={() => signOutMutation.mutate()}
-            icon={LogOut}
-            py={"$5"}
-            fontSize={"$5"}
-            scaleIcon={1.5}
             fontFamily={"$silkscreen"}
+            fontSize={"$5"}
+            hoverTheme
+            icon={LogOut}
+            onPress={() => signOutMutation.mutate()}
+            pressTheme
+            py={"$5"}
+            scaleIcon={1.5}
           >
             Sair
           </ListItem>

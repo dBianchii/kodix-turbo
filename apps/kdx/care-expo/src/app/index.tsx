@@ -6,7 +6,7 @@ import { RootSafeAreaView } from "~/components/safe-area-view";
 
 export default function Index() {
   return (
-    <RootSafeAreaView f={1} jc={"center"} ai={"center"}>
+    <RootSafeAreaView ai={"center"} f={1} jc={"center"}>
       <H1 alignSelf="center">Kodix Care</H1>
       <MobileAuth mt={"$6"} />
     </RootSafeAreaView>
@@ -18,17 +18,17 @@ function MobileAuth(props: ViewProps) {
 
   return (
     <View gap="$4" {...props}>
-      <Link href="/register" asChild>
-        <Button w={"$20"} themeInverse>
+      <Link asChild href="/register">
+        <Button themeInverse w={"$20"}>
           Novo cadastro
         </Button>
       </Link>
       <Button
-        w={"$20"}
-        theme="active"
         onPress={() => {
           router.push("/signIn");
         }}
+        theme="active"
+        w={"$20"}
       >
         Entrar
       </Button>

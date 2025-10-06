@@ -27,18 +27,18 @@ export async function HeroBento() {
         "The ultimate solution for managing your home clinic or your home care",
       ),
       icon: (
-        <IconKodixApp appId={kodixCareAppId} size={20} renderText={false} />
+        <IconKodixApp appId={kodixCareAppId} renderText={false} size={20} />
       ),
       name: getAppName(t, kodixCareAppId),
     },
     {
       body: t("The unified calendar system that integrates with all your apps"),
-      icon: <IconKodixApp appId={calendarAppId} size={20} renderText={false} />,
+      icon: <IconKodixApp appId={calendarAppId} renderText={false} size={20} />,
       name: getAppName(t, calendarAppId),
     },
     {
       body: t("A simple todo app that integrates with all your apps"),
-      icon: <IconKodixApp appId={todoAppId} size={20} renderText={false} />,
+      icon: <IconKodixApp appId={todoAppId} renderText={false} size={20} />,
       name: getAppName(t, todoAppId),
     },
   ];
@@ -47,18 +47,18 @@ export async function HeroBento() {
     {
       background: (
         <Marquee
-          pauseOnHover
           className="absolute top-10 [--duration:20s] [mask-image:linear-gradient(to_top,transparent_40%,#000_100%)]"
+          pauseOnHover
         >
           {apps.map((f) => (
             <figure
-              key={`${f.name}-hero-bento`}
               className={cn(
                 "relative w-36 cursor-pointer overflow-hidden rounded-xl border p-4",
                 "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]",
                 "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]",
                 "transform-gpu blur-[1px] transition-all duration-300 ease-out hover:blur-none",
               )}
+              key={`${f.name}-hero-bento`}
             >
               <div className="flex flex-row items-center gap-2">
                 <div className="flex flex-row">
@@ -121,9 +121,9 @@ export async function HeroBento() {
     {
       background: (
         <Calendar
+          className="absolute top-10 right-0 origin-top rounded-md border transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_40%,#000_100%)] group-hover:scale-105"
           mode="single"
           selected={new Date(2022, 4, 11, 0, 0, 0)}
-          className="absolute top-10 right-0 origin-top rounded-md border transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_40%,#000_100%)] group-hover:scale-105"
         />
       ),
       className: "col-span-3 lg:col-span-1",

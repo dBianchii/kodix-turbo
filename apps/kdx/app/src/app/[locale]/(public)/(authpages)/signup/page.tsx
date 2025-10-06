@@ -47,7 +47,7 @@ export default async function SignUpPage(props: {
             </div>
             <div className="text-center text-muted-foreground text-sm">
               {t("Already have an account")}{" "}
-              <Link href="/signin" className="text-white underline">
+              <Link className="text-white underline" href="/signin">
                 {t("Sign in")}
               </Link>
             </div>

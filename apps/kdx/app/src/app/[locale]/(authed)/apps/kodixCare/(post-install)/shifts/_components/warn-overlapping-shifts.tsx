@@ -30,7 +30,7 @@ export function WarnOverlappingShifts({
   const t = useTranslations();
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog onOpenChange={setOpen} open={open}>
       <DialogContent>
         <DialogHeader className="mt-6">
           <DialogTitle>
@@ -40,11 +40,11 @@ export function WarnOverlappingShifts({
         {overlaps.length && (
           <ul className="my-4 list-disc rounded-md border p-4 pl-5">
             {overlaps.map((overlap) => (
-              <li key={overlap.id} className="mb-2 flex items-center gap-2">
+              <li className="mb-2 flex items-center gap-2" key={overlap.id}>
                 <AvatarWrapper
                   className="size-6"
-                  src={overlap.Caregiver.image ?? ""}
                   fallback={overlap.Caregiver.name}
+                  src={overlap.Caregiver.image ?? ""}
                 />
                 {overlap.Caregiver.name}:
                 <span className="text-muted-foreground">
@@ -59,9 +59,9 @@ export function WarnOverlappingShifts({
         </DialogDescription>
         <DialogFooter className="gap-3 sm:justify-between">
           <Button
-            variant={"outline"}
             disabled={isSubmitting}
             onClick={() => setOpen(false)}
+            variant={"outline"}
           >
             {t("Cancel")}
           </Button>

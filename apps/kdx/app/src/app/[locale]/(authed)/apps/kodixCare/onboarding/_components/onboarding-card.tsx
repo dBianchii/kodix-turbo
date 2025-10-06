@@ -45,12 +45,12 @@ export default function OnboardingCard() {
   return (
     <Form {...form}>
       <form
+        className="space-y-8"
         onSubmit={form.handleSubmit((values) => {
           execute({
             patientName: values.patientName,
           });
         })}
-        className="space-y-8"
       >
         <Card className="max-w-xl">
           <CardHeader>
@@ -84,14 +84,14 @@ export default function OnboardingCard() {
             </div>
           </CardContent>
           <CardFooter className="flex justify-end">
-            <Button type="submit" disabled={isExecuting} className="group">
+            <Button className="group" disabled={isExecuting} type="submit">
               {t("apps.kodixCare.onboarding.goToKodixCare")}
               {!isExecuting && (
                 <LuArrowRight
+                  aria-hidden="true"
                   className="-me-1 ms-2 opacity-60 transition-transform group-hover:translate-x-0.5"
                   size={16}
                   strokeWidth={2}
-                  aria-hidden="true"
                 />
               )}
               {isExecuting && (

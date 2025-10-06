@@ -32,10 +32,10 @@ export function getColumns() {
 
         return (
           <Checkbox
-            checked={row.getIsSelected()}
-            onCheckedChange={(value) => row.toggleSelected(!!value)}
             aria-label={t("Select row")}
+            checked={row.getIsSelected()}
             className="translate-y-0.5"
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
           />
         );
       },
@@ -44,13 +44,13 @@ export function getColumns() {
       header: function Header({ table }) {
         const t = useTranslations();
         <Checkbox
+          aria-label={t("Select all")}
           checked={
             table.getIsAllPageRowsSelected() ||
             (table.getIsSomePageRowsSelected() && "indeterminate")
           }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label={t("Select all")}
           className="translate-y-0.5"
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         />;
       },
       id: "select",
@@ -128,19 +128,19 @@ export function getColumns() {
             /> */}
 
             <DeleteNotificationsDialog
-              open={showDeleteTaskDialog}
-              onOpenChange={setShowDeleteTaskDialog}
               notifications={[row]}
+              onOpenChange={setShowDeleteTaskDialog}
+              open={showDeleteTaskDialog}
               showTrigger={false}
             />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   aria-label="Open menu"
-                  variant="ghost"
                   className="flex size-8 p-0 data-[state=open]:bg-muted"
+                  variant="ghost"
                 >
-                  <RxDotsHorizontal className="size-4" aria-hidden="true" />
+                  <RxDotsHorizontal aria-hidden="true" className="size-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-40">
@@ -153,8 +153,8 @@ export function getColumns() {
                   </DropdownMenuItem>
                 </Link>
                 <DropdownMenuItem
-                  onSelect={() => setShowDeleteTaskDialog(true)}
                   className="text-destructive"
+                  onSelect={() => setShowDeleteTaskDialog(true)}
                 >
                   {t("Delete")}
                 </DropdownMenuItem>

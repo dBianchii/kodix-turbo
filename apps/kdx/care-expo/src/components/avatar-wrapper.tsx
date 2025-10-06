@@ -13,7 +13,7 @@ export function AvatarWrapper({
     <Avatar circular size={"$5"} {...props} bordered>
       {src && <Avatar.Image src={src} />}
       {fallback && (
-        <Avatar.Fallback ai="center" jc="center" backgroundColor="$color2">
+        <Avatar.Fallback ai="center" backgroundColor="$color2" jc="center">
           <Text color={"$gray12Dark"}>
             {typeof fallback === "string"
               ? fallback

@@ -19,16 +19,16 @@ export function DataTableNotificationsToolbarActions({
   return (
     <div className="flex items-center gap-2">
       <Button
-        variant="outline"
-        size="sm"
         onClick={() =>
           exportTableToCSV(table, {
             excludeColumns: ["select", "actions"],
             filename: "tasks",
           })
         }
+        size="sm"
+        variant="outline"
       >
-        <LuDownload className="mr-2 size-4" aria-hidden="true" />
+        <LuDownload aria-hidden="true" className="mr-2 size-4" />
         {t("Export")}
       </Button>
       {/**

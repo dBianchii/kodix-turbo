@@ -84,18 +84,19 @@ export function DataTableAdvancedToolbar<TData>({
         {(options.length > 0 && selectedOptions.length > 0) ||
         openFilterBuilder ? (
           <Button
-            variant="outline"
-            size="sm"
             onClick={() => setOpenFilterBuilder(!openFilterBuilder)}
+            size="sm"
+            variant="outline"
           >
             <LuChevronsUpDown
-              className="mr-2 size-4 shrink-0"
               aria-hidden="true"
+              className="mr-2 size-4 shrink-0"
             />
             {t("Filter")}
           </Button>
         ) : (
           <DataTableFilterCombobox
+            onSelect={onFilterComboboxItemSelect}
             options={options.filter(
               (option) =>
                 !selectedOptions.some(
@@ -104,7 +105,6 @@ export function DataTableAdvancedToolbar<TData>({
             )}
             selectedOptions={selectedOptions}
             setSelectedOptions={setSelectedOptions}
-            onSelect={onFilterComboboxItemSelect}
           />
         )}
         <DataTableViewOptions table={table} />
@@ -119,38 +119,38 @@ export function DataTableAdvancedToolbar<TData>({
           .filter((option) => !option.isMulti)
           .map((selectedOption) => (
             <DataTableFilterItem
+              defaultOpen={openCombobox}
               key={String(selectedOption.value)}
-              table={table}
               selectedOption={selectedOption}
               selectedOptions={selectedOptions}
               setSelectedOptions={setSelectedOptions}
-              defaultOpen={openCombobox}
+              table={table}
             />
           ))}
         {selectedOptions.some((option) => option.isMulti) ? (
           <DataTableMultiFilter
-            table={table}
             allOptions={options}
+            defaultOpen={openCombobox}
             options={selectedOptions.filter((option) => option.isMulti)}
             setSelectedOptions={setSelectedOptions}
-            defaultOpen={openCombobox}
+            table={table}
           />
         ) : null}
         {options.length > 0 && options.length > selectedOptions.length ? (
           <DataTableFilterCombobox
+            onSelect={onFilterComboboxItemSelect}
             options={options}
             selectedOptions={selectedOptions}
             setSelectedOptions={setSelectedOptions}
-            onSelect={onFilterComboboxItemSelect}
           >
             <Button
-              variant="outline"
-              size="sm"
-              role="combobox"
               className="h-7 rounded-full"
               onClick={() => setOpenCombobox(true)}
+              role="combobox"
+              size="sm"
+              variant="outline"
             >
-              <LuPlus className="mr-2 size-4 opacity-50" aria-hidden="true" />
+              <LuPlus aria-hidden="true" className="mr-2 size-4 opacity-50" />
               {t("Add filter")}
             </Button>
           </DataTableFilterCombobox>

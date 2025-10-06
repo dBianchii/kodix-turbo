@@ -104,8 +104,8 @@ const FormLabel = forwardRef<typeof Label, LabelProps>(({ ...props }, ref) => {
 
   return (
     <Label
-      ref={ref}
       htmlFor={formItemId}
+      ref={ref}
       {...props}
       color={error ? "red" : props.color}
     />
@@ -122,14 +122,14 @@ const FormControl = forwardRef<
 
   return (
     <Slot
-      ref={ref}
-      id={formItemId}
       aria-describedby={
         !error
           ? `${formDescriptionId}`
           : `${formDescriptionId} ${formMessageId}`
       }
       aria-invalid={!!error}
+      id={formItemId}
+      ref={ref}
       {...props}
     />
   );
@@ -142,11 +142,11 @@ const FormDescription = forwardRef<typeof Paragraph, ParagraphProps>(
 
     return (
       <Paragraph
-        ref={ref}
         id={formDescriptionId}
+        ref={ref}
         {...props}
-        size="$1"
         color={"gray"}
+        size="$1"
       />
     );
   },
@@ -163,7 +163,7 @@ const FormMessage = forwardRef<typeof Text, TextProps>(
     }
 
     return (
-      <Text ref={ref} id={formMessageId} {...props} color="red" fontSize={"$1"}>
+      <Text id={formMessageId} ref={ref} {...props} color="red" fontSize={"$1"}>
         {body}
       </Text>
     );

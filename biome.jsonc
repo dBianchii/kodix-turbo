@@ -86,7 +86,9 @@
             ]
           }
         },
-        "useSortedKeys": "on"
+        "useSortedKeys": "on",
+        "useSortedAttributes": "on",
+        "useSortedProperties": "on"
       }
     }
   },

@@ -6,13 +6,13 @@ export function MenuListItem({ children, ...props }: ListItemProps) {
     <YGroup.Item>
       <ListItem
         bg={"$color3"}
-        hoverTheme
-        pressTheme
-        icon={props.icon}
-        fontSize={"$5"}
-        iconAfter={props.iconAfter}
-        py={"$4"}
         bordered
+        fontSize={"$5"}
+        hoverTheme
+        icon={props.icon}
+        iconAfter={props.iconAfter}
+        pressTheme
+        py={"$4"}
         {...props}
       >
         {children}

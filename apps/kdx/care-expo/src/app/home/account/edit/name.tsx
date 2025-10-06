@@ -70,10 +70,10 @@ export default function EditNamePage() {
                 })}
               >
                 <SizableText
-                  size={"$4"}
-                  fontFamily={"$mono"}
-                  textAlign="center"
                   color={"$color11"}
+                  fontFamily={"$mono"}
+                  size={"$4"}
+                  textAlign="center"
                 >
                   Salvar
                 </SizableText>
@@ -102,8 +102,8 @@ export default function EditNamePage() {
                   <FormControl>
                     <Input
                       {...field}
-                      placeholder="Nome"
                       onChangeText={field.onChange}
+                      placeholder="Nome"
                     />
                   </FormControl>
 

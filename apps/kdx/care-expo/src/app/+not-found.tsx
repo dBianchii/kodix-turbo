@@ -9,9 +9,9 @@ export default function NotFoundScreen() {
   return (
     <RootSafeAreaView>
       <Stack.Screen options={{ title: "Oops!" }} />
-      <YStack backgroundColor={"$background"} jc={"center"} ai={"center"}>
+      <YStack ai={"center"} backgroundColor={"$background"} jc={"center"}>
         <Text>This screen doesn't exist.</Text>
-        <Link href={user ? "/home" : "/"} asChild>
+        <Link asChild href={user ? "/home" : "/"}>
           <Button>Go to home screen!</Button>
         </Link>
       </YStack>
