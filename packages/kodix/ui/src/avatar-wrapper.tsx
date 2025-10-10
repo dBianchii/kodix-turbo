@@ -14,7 +14,7 @@ export const AvatarWrapper = ({
   <Avatar className={className} ref={ref}>
     <AvatarImage src={src} {...props} />
     {fallback && (
-      <AvatarFallback>
+      <AvatarFallback className={className}>
         {typeof fallback === "string"
           ? fallback
               .split(" ")
