@@ -1,13 +1,12 @@
 "use client";
 
 import type { User } from "@cash/auth";
-import { Avatar, AvatarFallback, AvatarImage } from "@kodix/ui/avatar";
+import { AvatarWrapper } from "@kodix/ui/avatar-wrapper";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@kodix/ui/dropdown-menu";
 import {
@@ -16,9 +15,19 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@kodix/ui/sidebar";
-import { LogOut } from "lucide-react";
+import { ChevronsUpDown, LogOut } from "lucide-react";
 
-import { signOutAction } from "./actions";
+import { signOutAction } from "~/app/_components/actions";
+
+const UserAvatar = ({ user }: { user: User }) => {
+  return (
+    <AvatarWrapper
+      className="size-8 rounded-lg"
+      fallback={user.name}
+      src={user.image ?? ""}
+    />
+  );
+};
 
 export function NavUser({ user }: { user: User }) {
   const { isMobile } = useSidebar();
@@ -32,46 +41,35 @@ export function NavUser({ user }: { user: User }) {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               size="lg"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage alt={user.name} src={user.image ?? ""} />
-                <AvatarFallback className="rounded-lg">
-                  {user.name.charAt(0).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
+              <UserAvatar user={user} />
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{user.name}</span>
                 <span className="truncate text-xs">{user.email}</span>
               </div>
+              <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
             side={isMobile ? "bottom" : "right"}
             sideOffset={4}
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage alt={user.name} src={user.image ?? ""} />
-                  <AvatarFallback className="rounded-lg">
-                    {user.name.charAt(0).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
+                <UserAvatar user={user} />
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{user.name}</span>
                   <span className="truncate text-xs">{user.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={async () => {
-                await signOutAction();
-              }}
+              className="flex gap-4"
+              onClick={() => void signOutAction()}
             >
-              <LogOut />
-              Sair
+              <LogOut className="size-4" />
+              Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
