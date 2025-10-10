@@ -19,7 +19,7 @@ export default async function DashboardLayout({ children }: PropsWithChildren) {
 
   return (
     <SidebarProvider
-      defaultOpen={(await cookies()).get("sidebar:state")?.value !== "false"}
+      defaultOpen={(await cookies()).get("sidebar_state")?.value !== "false"}
     >
       <CashSidebar user={user} />
       <SidebarInset>
