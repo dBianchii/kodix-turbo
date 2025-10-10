@@ -25,8 +25,8 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
 
   let otherTeam =
     await teamRepository.findAnyOtherTeamAssociatedWithUserThatIsNotTeamId({
-      userId: input.userId,
       teamId: ctx.auth.user.activeTeamId,
+      userId: input.userId,
     });
 
   await db.transaction(async (tx) => {
@@ -36,16 +36,16 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
       const newTeamId = nanoid();
       await teamRepository.createTeamAndAssociateUser(tx, ctx.auth.user.id, {
         id: newTeamId,
-        ownerId: input.userId,
         name: "Personal Team",
+        ownerId: input.userId,
       });
 
       otherTeam = { id: newTeamId };
     }
 
     await userRepository.moveUserToTeam(tx, {
-      userId: input.userId,
       newTeamId: otherTeam.id,
+      userId: input.userId,
     });
 
     //Remove the user from the team

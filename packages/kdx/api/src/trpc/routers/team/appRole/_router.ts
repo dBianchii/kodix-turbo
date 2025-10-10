@@ -13,6 +13,9 @@ import { getUsersWithRolesHandler } from "./getUsersWithRoles.handler";
 import { updateUserAssociationHandler } from "./updateUserAssociation.handler";
 
 export const appRoleRouter = {
+  getMyRoles: protectedProcedure
+    .input(ZGetMyRolesInputSchema)
+    .query(getMyRolesHandler),
   /**Gets all users in team, with added role information for app */
   getUsersWithRoles: isTeamOwnerProcedure
     .input(ZGetUsersWithRolesInputSchema)
@@ -22,7 +25,4 @@ export const appRoleRouter = {
     .input(ZUpdateUserAssociationInputSchema)
     .use(appInstalledMiddleware)
     .mutation(updateUserAssociationHandler),
-  getMyRoles: protectedProcedure
-    .input(ZGetMyRolesInputSchema)
-    .query(getMyRolesHandler),
 } satisfies TRPCRouterRecord;

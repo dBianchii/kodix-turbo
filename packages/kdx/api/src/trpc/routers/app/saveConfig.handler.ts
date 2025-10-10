@@ -11,7 +11,7 @@ interface SaveConfigOptions {
 export const saveConfigHandler = async ({ ctx, input }: SaveConfigOptions) => {
   await appRepository.upsertAppTeamConfig({
     appId: input.appId,
-    teamId: ctx.auth.user.activeTeamId,
     config: input.config,
+    teamId: ctx.auth.user.activeTeamId,
   });
 };

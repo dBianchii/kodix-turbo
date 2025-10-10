@@ -15,10 +15,10 @@ export function CustomKodixIcon({
   return (
     <div className="flex flex-col items-center">
       <Image
-        src={props.iconPath}
-        height={size}
-        width={size}
         alt={`${props.appName} icon`}
+        height={size}
+        src={props.iconPath}
+        width={size}
       />
       {renderText && (
         <p className="line-clamp-1 text-muted-foreground text-sm">

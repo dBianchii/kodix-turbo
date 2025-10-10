@@ -24,7 +24,7 @@ export function I18nPicker() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant={"outline"} className="size-8 p-1">
+        <Button className="size-8 p-1" variant={"outline"}>
           <PiTranslate className="size-5" />
         </Button>
       </DropdownMenuTrigger>

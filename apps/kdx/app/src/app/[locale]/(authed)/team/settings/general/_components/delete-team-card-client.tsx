@@ -38,12 +38,12 @@ export function DeleteTeamCardClient({ user }: { user: User }) {
               {t("Please use 32 characters at maximum")}
             </CardDescription> */}
         <DeleteTeamConfirmationDialog
-          teamId={user.activeTeamId}
-          teamName={user.activeTeamName}
           open={open}
           setOpen={setOpen}
+          teamId={user.activeTeamId}
+          teamName={user.activeTeamName}
         />
-        <Button variant={"destructive"} onClick={() => setOpen(true)}>
+        <Button onClick={() => setOpen(true)} variant={"destructive"}>
           {t("Delete team")}
         </Button>
       </CardFooter>

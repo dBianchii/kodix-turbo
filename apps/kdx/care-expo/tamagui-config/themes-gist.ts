@@ -22,16 +22,6 @@ import {
 import { createThemeBuilder } from "@tamagui/theme-builder";
 
 const colorTokens = {
-  light: {
-    blue,
-    gray,
-    green,
-    orange,
-    pink,
-    purple,
-    red,
-    yellow,
-  },
   dark: {
     blue: blueDark,
     gray: grayDark,
@@ -41,6 +31,16 @@ const colorTokens = {
     purple: purpleDark,
     red: redDark,
     yellow: yellowDark,
+  },
+  light: {
+    blue,
+    gray,
+    green,
+    orange,
+    pink,
+    purple,
+    red,
+    yellow,
   },
 };
 
@@ -72,26 +72,7 @@ const lightColors = {
 };
 
 const color = {
-  white0: "rgba(255,255,255,0)",
-  white075: "rgba(255,255,255,0.75)",
-  white05: "rgba(255,255,255,0.5)",
-  white025: "rgba(255,255,255,0.25)",
   black0: "rgba(10,10,10,0)",
-  black075: "rgba(10,10,10,0.75)",
-  black05: "rgba(10,10,10,0.5)",
-  black025: "rgba(10,10,10,0.25)",
-  white1: "#fff",
-  white2: "#f8f8f8",
-  white3: "hsl(0, 0%, 96.3%)",
-  white4: "hsl(0, 0%, 94.1%)",
-  white5: "hsl(0, 0%, 92.0%)",
-  white6: "hsl(0, 0%, 90.0%)",
-  white7: "hsl(0, 0%, 88.5%)",
-  white8: "hsl(0, 0%, 81.0%)",
-  white9: "hsl(0, 0%, 56.1%)",
-  white10: "hsl(0, 0%, 50.3%)",
-  white11: "hsl(0, 0%, 42.5%)",
-  white12: "hsl(0, 0%, 9.0%)",
   black1: "#050505",
   black2: "#151515",
   black3: "#191919",
@@ -101,9 +82,28 @@ const color = {
   black7: "#424242",
   black8: "#494949",
   black9: "#545454",
+  black05: "rgba(10,10,10,0.5)",
   black10: "#626262",
   black11: "#a5a5a5",
   black12: "#fff",
+  black025: "rgba(10,10,10,0.25)",
+  black075: "rgba(10,10,10,0.75)",
+  white0: "rgba(255,255,255,0)",
+  white1: "#fff",
+  white2: "#f8f8f8",
+  white3: "hsl(0, 0%, 96.3%)",
+  white4: "hsl(0, 0%, 94.1%)",
+  white5: "hsl(0, 0%, 92.0%)",
+  white6: "hsl(0, 0%, 90.0%)",
+  white7: "hsl(0, 0%, 88.5%)",
+  white8: "hsl(0, 0%, 81.0%)",
+  white9: "hsl(0, 0%, 56.1%)",
+  white05: "rgba(255,255,255,0.5)",
+  white10: "hsl(0, 0%, 50.3%)",
+  white11: "hsl(0, 0%, 42.5%)",
+  white12: "hsl(0, 0%, 9.0%)",
+  white025: "rgba(255,255,255,0.25)",
+  white075: "rgba(255,255,255,0.75)",
   ...postfixObjKeys(lightColors, "Light"),
   ...postfixObjKeys(darkColors, "Dark"),
 };
@@ -198,8 +198,8 @@ export const palettes = (() => {
   };
 
   return {
-    light: lightPalette,
     dark: darkPalette,
+    light: lightPalette,
     ...colorPalettes,
   };
 })();
@@ -210,10 +210,24 @@ export const templates = (() => {
   // templates use the palette and specify index
   // negative goes backwards from end so -1 is the last item
   const base = {
+    // the background, color, etc keys here work like generics - they make it so you
+    // can publish components for others to use without mandating a specific color scale
+    // the @tamagui/button Button component looks for `$background`, so you set the
+    // dark_red_Button theme to have a stronger background than the dark_red theme.
+    background: transparencies + 1,
     background0: 0,
-    background025: 1,
     background05: 2,
+    background025: 1,
     background075: 3,
+    backgroundFocus: transparencies + 1,
+    backgroundHover: transparencies + 2,
+    backgroundPress: transparencies + 3,
+    borderColor: transparencies + 4,
+    borderColorFocus: transparencies + 2,
+    borderColorHover: transparencies + 5,
+    borderColorPress: transparencies + 4,
+    color: -transparencies - 1,
+    color0: -0,
     color1: transparencies + 1,
     color2: transparencies + 2,
     color3: transparencies + 3,
@@ -223,155 +237,141 @@ export const templates = (() => {
     color7: transparencies + 7,
     color8: transparencies + 8,
     color9: transparencies + 9,
+    color05: -2,
     color10: transparencies + 10,
     color11: transparencies + 11,
     color12: transparencies + 12,
-    color0: -0,
     color025: -1,
-    color05: -2,
     color075: -3,
-    // the background, color, etc keys here work like generics - they make it so you
-    // can publish components for others to use without mandating a specific color scale
-    // the @tamagui/button Button component looks for `$background`, so you set the
-    // dark_red_Button theme to have a stronger background than the dark_red theme.
-    background: transparencies + 1,
-    backgroundHover: transparencies + 2,
-    backgroundPress: transparencies + 3,
-    backgroundFocus: transparencies + 1,
-    borderColor: transparencies + 4,
-    borderColorHover: transparencies + 5,
-    borderColorFocus: transparencies + 2,
-    borderColorPress: transparencies + 4,
-    color: -transparencies - 1,
+    colorFocus: -transparencies - 2,
     colorHover: -transparencies - 2,
     colorPress: -transparencies - 1,
-    colorFocus: -transparencies - 2,
     colorTransparent: -0,
-    placeholderColor: -transparencies - 4,
     outlineColor: -1,
+    placeholderColor: -transparencies - 4,
   };
 
   const surface1 = {
     background: base.background + 1,
+    backgroundFocus: base.backgroundFocus + 1,
     backgroundHover: base.backgroundHover + 1,
     backgroundPress: base.backgroundPress + 1,
-    backgroundFocus: base.backgroundFocus + 1,
     borderColor: base.borderColor + 1,
-    borderColorHover: base.borderColorHover + 1,
     borderColorFocus: base.borderColorFocus + 1,
+    borderColorHover: base.borderColorHover + 1,
     borderColorPress: base.borderColorPress + 1,
   };
 
   const surface2 = {
     background: base.background + 2,
+    backgroundFocus: base.backgroundFocus + 2,
     backgroundHover: base.backgroundHover + 2,
     backgroundPress: base.backgroundPress + 2,
-    backgroundFocus: base.backgroundFocus + 2,
     borderColor: base.borderColor + 2,
-    borderColorHover: base.borderColorHover + 2,
     borderColorFocus: base.borderColorFocus + 2,
+    borderColorHover: base.borderColorHover + 2,
     borderColorPress: base.borderColorPress + 2,
   };
 
   const surface3 = {
     background: base.background + 3,
+    backgroundFocus: base.backgroundFocus + 3,
     backgroundHover: base.backgroundHover + 3,
     backgroundPress: base.backgroundPress + 3,
-    backgroundFocus: base.backgroundFocus + 3,
     borderColor: base.borderColor + 3,
-    borderColorHover: base.borderColorHover + 3,
     borderColorFocus: base.borderColorFocus + 3,
+    borderColorHover: base.borderColorHover + 3,
     borderColorPress: base.borderColorPress + 3,
   };
 
   const surfaceActive = {
     background: base.background + 5,
+    backgroundFocus: base.backgroundFocus + 5,
     backgroundHover: base.background + 5,
     backgroundPress: base.backgroundPress + 5,
-    backgroundFocus: base.backgroundFocus + 5,
     borderColor: base.borderColor + 5,
-    borderColorHover: base.borderColor + 5,
     borderColorFocus: base.borderColorFocus + 5,
+    borderColorHover: base.borderColor + 5,
     borderColorPress: base.borderColorPress + 5,
   };
 
   const inverseSurface1 = {
-    color: surface1.background,
-    colorHover: surface1.backgroundHover,
-    colorPress: surface1.backgroundPress,
-    colorFocus: surface1.backgroundFocus,
     background: base.color,
+    backgroundFocus: base.colorFocus,
     backgroundHover: base.colorHover,
     backgroundPress: base.colorPress,
-    backgroundFocus: base.colorFocus,
     borderColor: base.color - 2,
-    borderColorHover: base.color - 3,
     borderColorFocus: base.color - 4,
+    borderColorHover: base.color - 3,
     borderColorPress: base.color - 5,
+    color: surface1.background,
+    colorFocus: surface1.backgroundFocus,
+    colorHover: surface1.backgroundHover,
+    colorPress: surface1.backgroundPress,
   };
 
   const inverseActive = {
     ...inverseSurface1,
     background: base.color - 2,
+    backgroundFocus: base.colorFocus - 2,
     backgroundHover: base.colorHover - 2,
     backgroundPress: base.colorPress - 2,
-    backgroundFocus: base.colorFocus - 2,
     borderColor: base.color - 2 - 2,
-    borderColorHover: base.color - 3 - 2,
     borderColorFocus: base.color - 4 - 2,
+    borderColorHover: base.color - 3 - 2,
     borderColorPress: base.color - 5 - 2,
   };
 
   const alt1 = {
     color: base.color - 1,
+    colorFocus: base.colorFocus - 1,
     colorHover: base.colorHover - 1,
     colorPress: base.colorPress - 1,
-    colorFocus: base.colorFocus - 1,
   };
 
   const alt2 = {
     color: base.color - 2,
+    colorFocus: base.colorFocus - 2,
     colorHover: base.colorHover - 2,
     colorPress: base.colorPress - 2,
-    colorFocus: base.colorFocus - 2,
   };
 
   return {
-    base,
     alt1,
     alt2,
+    base,
+    inverseActive,
+    inverseSurface1,
     surface1,
     surface2,
     surface3,
-    inverseSurface1,
-    inverseActive,
     surfaceActive,
   };
 })();
 
 const shadows = {
-  light: {
-    shadowColor: lightShadowColorStrong,
-    shadowColorHover: lightShadowColorStrong,
-    shadowColorPress: lightShadowColor,
-    shadowColorFocus: lightShadowColor,
-  },
   dark: {
     shadowColor: darkShadowColorStrong,
+    shadowColorFocus: darkShadowColor,
     shadowColorHover: darkShadowColorStrong,
     shadowColorPress: darkShadowColor,
-    shadowColorFocus: darkShadowColor,
+  },
+  light: {
+    shadowColor: lightShadowColorStrong,
+    shadowColorFocus: lightShadowColor,
+    shadowColorHover: lightShadowColorStrong,
+    shadowColorPress: lightShadowColor,
   },
 };
 
 const nonInherited = {
-  light: {
-    ...lightColors,
-    ...shadows.light,
-  },
   dark: {
     ...darkColors,
     ...shadows.dark,
+  },
+  light: {
+    ...lightColors,
+    ...shadows.light,
   },
 };
 
@@ -440,98 +440,98 @@ const themeBuilder = createThemeBuilder()
   .addPalettes(palettes)
   .addTemplates(templates)
   .addThemes({
-    light: {
-      template: "base",
-      palette: "light",
-      nonInheritedValues: nonInherited.light,
-    },
     dark: {
-      template: "base",
-      palette: "dark",
       nonInheritedValues: nonInherited.dark,
+      palette: "dark",
+      template: "base",
+    },
+    light: {
+      nonInheritedValues: nonInherited.light,
+      palette: "light",
+      template: "base",
     },
   })
   .addChildThemes({
-    orange: {
-      palette: "orange",
-      template: "base",
-    },
-    yellow: {
-      palette: "yellow",
-      template: "base",
-    },
-    green: {
-      palette: "green",
-      template: "base",
-    },
     blue: {
       palette: "blue",
-      template: "base",
-    },
-    purple: {
-      palette: "purple",
-      template: "base",
-    },
-    pink: {
-      palette: "pink",
-      template: "base",
-    },
-    red: {
-      palette: "red",
       template: "base",
     },
     gray: {
       palette: "gray",
       template: "base",
     },
+    green: {
+      palette: "green",
+      template: "base",
+    },
+    orange: {
+      palette: "orange",
+      template: "base",
+    },
+    pink: {
+      palette: "pink",
+      template: "base",
+    },
+    purple: {
+      palette: "purple",
+      template: "base",
+    },
+    red: {
+      palette: "red",
+      template: "base",
+    },
+    yellow: {
+      palette: "yellow",
+      template: "base",
+    },
   })
   .addChildThemes({
+    active: {
+      template: "surface3",
+    },
     alt1: {
       template: "alt1",
     },
     alt2: {
       template: "alt2",
     },
-    active: {
-      template: "surface3",
-    },
   })
   .addChildThemes(
     {
-      ListItem: {
-        template: "surface1",
-      },
-      SelectTrigger: surface1,
-      Card: surface1,
       Button: surface3,
+      Card: surface1,
       Checkbox: surface2,
-      Switch: surface2,
-      SwitchThumb: inverseSurface1,
-      TooltipContent: surface2,
+      DialogOverlay: overlayThemeDefinitions,
       DrawerFrame: {
         template: "surface1",
       },
+      Input: surface1,
+      ListItem: {
+        template: "surface1",
+      },
+      ModalOverlay: overlayThemeDefinitions,
       Progress: {
         template: "surface1",
       },
+      ProgressIndicator: inverseSurface1,
       RadioGroupItem: surface2,
-      TooltipArrow: {
+      SelectTrigger: surface1,
+      SheetOverlay: overlayThemeDefinitions,
+      SliderThumb: inverseSurface1,
+      SliderTrack: {
         template: "surface1",
       },
       SliderTrackActive: {
         template: "surface3",
       },
-      SliderTrack: {
+      Switch: surface2,
+      SwitchThumb: inverseSurface1,
+      TextArea: surface1,
+      Tooltip: inverseSurface1,
+      TooltipArrow: {
         template: "surface1",
       },
-      SliderThumb: inverseSurface1,
-      Tooltip: inverseSurface1,
-      ProgressIndicator: inverseSurface1,
-      SheetOverlay: overlayThemeDefinitions,
-      DialogOverlay: overlayThemeDefinitions,
-      ModalOverlay: overlayThemeDefinitions,
-      Input: surface1,
-      TextArea: surface1,
+      TooltipContent: surface2,
     },
     {
       avoidNestingWithin: ["alt1", "alt2"],

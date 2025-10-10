@@ -13,13 +13,13 @@ export const getAppActivityLogsHandler = async ({
   input,
 }: GetAppActivityLogsOptions) => {
   return await getAppActivityLogs({
-    t: ctx.t,
-    format: ctx.format,
     appId: input.appId,
+    format: ctx.format,
     page: input.page,
-    rowId: input.rowId,
-    tableNames: input.tableNames,
     pageSize: input.perPage,
+    rowId: input.rowId,
+    t: ctx.t,
+    tableNames: input.tableNames,
     teamId: ctx.auth.user.activeTeamId,
   });
 };

@@ -36,9 +36,9 @@ export function DataTableAdvancedFacetedFilter<TData, TValue>({
     <Command className="p-1">
       <div className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs [&_[cmdk-input-wrapper]]:border-0 [&_[cmdk-input-wrapper]]:px-0">
         <CommandInput
-          placeholder={title}
-          className="h-full border-0 pl-0 ring-0"
           autoFocus
+          className="h-full border-0 pl-0 ring-0"
+          placeholder={title}
         />
       </div>
       <CommandList>
@@ -80,12 +80,12 @@ export function DataTableAdvancedFacetedFilter<TData, TValue>({
                       : "opacity-50 [&_svg]:invisible",
                   )}
                 >
-                  <LuCheck className="size-4" aria-hidden="true" />
+                  <LuCheck aria-hidden="true" className="size-4" />
                 </div>
                 {option.icon && (
                   <option.icon
-                    className="mr-2 size-4 text-muted-foreground"
                     aria-hidden="true"
+                    className="mr-2 size-4 text-muted-foreground"
                   />
                 )}
                 <span>{option.label}</span>
@@ -104,6 +104,7 @@ export function DataTableAdvancedFacetedFilter<TData, TValue>({
             <CommandSeparator />
             <CommandGroup>
               <CommandItem
+                className="justify-center text-center"
                 onSelect={() => {
                   column?.setFilterValue(undefined);
                   setSelectedOptions((prev) =>
@@ -117,7 +118,6 @@ export function DataTableAdvancedFacetedFilter<TData, TValue>({
                     ),
                   );
                 }}
-                className="justify-center text-center"
               >
                 {t("Clear filters")}
               </CommandItem>

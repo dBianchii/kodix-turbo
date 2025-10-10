@@ -43,8 +43,8 @@ export const deleteTeamHandler = async ({ ctx, input }: DeleteTeamOptions) => {
 
   const otherTeam =
     await teamRepository.findAnyOtherTeamAssociatedWithUserThatIsNotTeamId({
-      userId: ctx.auth.user.id,
       teamId: input.teamId,
+      userId: ctx.auth.user.id,
     });
 
   if (!otherTeam) {
@@ -59,8 +59,8 @@ export const deleteTeamHandler = async ({ ctx, input }: DeleteTeamOptions) => {
   await db.transaction(async (tx) => {
     //Move the user to the other team
     await userRepository.moveUserToTeam(tx, {
-      userId: ctx.auth.user.id,
       newTeamId: otherTeam.id,
+      userId: ctx.auth.user.id,
     });
 
     //Remove the team

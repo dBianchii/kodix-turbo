@@ -68,11 +68,11 @@ export const editCareTaskHandler = async ({
         {
           appId: kodixCareAppId,
           diff,
+          rowId: input.id,
           tableName: "careTask",
           teamId: ctx.auth.user.activeTeamId,
           type: "update",
           userId: ctx.auth.user.id,
-          rowId: input.id,
         },
         tx,
       );

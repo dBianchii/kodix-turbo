@@ -44,19 +44,19 @@ export function DataTableFilterCombobox<TData>({
   >(options[0] ?? ({} as DataTableFilterOption<TData>));
   const t = useTranslations();
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover onOpenChange={setOpen} open={open}>
       <PopoverTrigger asChild>
         {children ?? (
-          <Button variant="outline" size="sm" className="capitalize">
+          <Button className="capitalize" size="sm" variant="outline">
             <LuChevronsUpDown
-              className="mr-2 size-4 shrink-0"
               aria-hidden="true"
+              className="mr-2 size-4 shrink-0"
             />
             {t("Filter")}
           </Button>
         )}
       </PopoverTrigger>
-      <PopoverContent className="w-[12.5rem] p-0" align="end">
+      <PopoverContent align="end" className="w-[12.5rem] p-0">
         <Command>
           <CommandInput placeholder={t("Filter by")} />
           <CommandList>
@@ -71,9 +71,8 @@ export function DataTableFilterCombobox<TData>({
                 )
                 .map((option) => (
                   <CommandItem
-                    key={String(option.value)}
                     className="capitalize"
-                    value={String(option.value)}
+                    key={String(option.value)}
                     onSelect={(currentValue) => {
                       setValue(currentValue === value ? "" : currentValue);
                       setOpen(false);
@@ -83,14 +82,15 @@ export function DataTableFilterCombobox<TData>({
                       });
                       onSelect();
                     }}
+                    value={String(option.value)}
                   >
                     {option.options.length > 0 ? (
                       <LuChevronDown
-                        className="mr-2 size-4"
                         aria-hidden="true"
+                        className="mr-2 size-4"
                       />
                     ) : (
-                      <LuType className="mr-2 size-4" aria-hidden="true" />
+                      <LuType aria-hidden="true" className="mr-2 size-4" />
                     )}
                     {option.label}
                   </CommandItem>
@@ -105,19 +105,19 @@ export function DataTableFilterCombobox<TData>({
                     ...selectedOptions,
                     {
                       id: crypto.randomUUID(),
+                      isMulti: true,
 
                       label: selectedOption.label ?? "",
 
-                      value: selectedOption.value ?? "",
-
                       options: selectedOption.options ?? [],
-                      isMulti: true,
+
+                      value: selectedOption.value ?? "",
                     },
                   ]);
                   onSelect();
                 }}
               >
-                <LuPlus className="mr-2 size-4" aria-hidden="true" />
+                <LuPlus aria-hidden="true" className="mr-2 size-4" />
                 {t("Advanced filter")}
               </CommandItem>
             </CommandGroup>

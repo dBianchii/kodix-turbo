@@ -53,6 +53,12 @@ export default function TeamInviteCardClient({
 
   const mutation = useMutation(
     trpc.team.invitation.invite.mutationOptions({
+      onError: (e) => trpcErrorToastDefault(e),
+      onSettled: () => {
+        void queryClient.invalidateQueries(
+          trpc.team.invitation.getAll.pathFilter(),
+        );
+      },
       onSuccess: ({ successes, failures }) => {
         if (successes.length > 0) {
           toast.success(
@@ -75,12 +81,6 @@ export default function TeamInviteCardClient({
         setTimeout(() => {
           closeDialog();
         }, 2000);
-      },
-      onError: (e) => trpcErrorToastDefault(e),
-      onSettled: () => {
-        void queryClient.invalidateQueries(
-          trpc.team.invitation.getAll.pathFilter(),
-        );
       },
     }),
   );
@@ -160,17 +160,15 @@ export default function TeamInviteCardClient({
           <Separator className="mb-6" />
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="email-0" className="mb-1 text-muted-foreground">
+              <Label className="mb-1 text-muted-foreground" htmlFor="email-0">
                 {t("Email address")}
               </Label>
-              <div ref={parent} className="space-y-2">
+              <div className="space-y-2" ref={parent}>
                 {emails.map((email, index) => (
-                  <div key={email.key} className="flex flex-row space-x-1">
+                  <div className="flex flex-row space-x-1" key={email.key}>
                     <Input
-                      id={`email-${index}`}
-                      type="email"
                       disabled={!canEditPage}
-                      value={email.value}
+                      id={`email-${index}`}
                       onChange={(e) => {
                         const newEmails = [...emails];
                         newEmails[index] = {
@@ -180,21 +178,23 @@ export default function TeamInviteCardClient({
                         setEmails(newEmails);
                       }}
                       placeholder={"layla@example.com"}
+                      type="email"
+                      value={email.value}
                     />
                     <Button
-                      type="button"
-                      variant={"outline"}
-                      size={"sm"}
-                      disabled={emails.length === 1}
                       className={cn(
                         "items-center justify-center",
                         emails.length === 1 && "hidden",
                       )}
+                      disabled={emails.length === 1}
                       onClick={() => {
                         const newEmails = [...emails];
                         newEmails.splice(index, 1);
                         setEmails(newEmails);
                       }}
+                      size={"sm"}
+                      type="button"
+                      variant={"outline"}
                     >
                       <RxMinusCircled className="size-4" />
                     </Button>
@@ -205,16 +205,16 @@ export default function TeamInviteCardClient({
           </div>
           <div className="mt-2">
             <Button
-              disabled={!emails.some((x) => x.value.length) || !canEditPage}
-              type="button"
-              variant={"secondary"}
-              size={"sm"}
               className="h-8 p-2 text-xs"
+              disabled={!emails.some((x) => x.value.length) || !canEditPage}
               onClick={() => {
                 const newEmails = [...emails];
                 newEmails.push({ key: Math.random(), value: "" });
                 setEmails(newEmails);
               }}
+              size={"sm"}
+              type="button"
+              variant={"secondary"}
             >
               <RxPlusCircled className="mr-2 size-4" />
               {t("Add more")}
@@ -226,7 +226,6 @@ export default function TeamInviteCardClient({
             {t("Only the owner of the team can invite new members")}
           </CardDescription>
           <Button
-            type="button"
             disabled={!emails.some((x) => x.value.length) || !canEditPage}
             onClick={() => {
               if (
@@ -235,6 +234,7 @@ export default function TeamInviteCardClient({
               )
                 setOpen(true);
             }}
+            type="button"
           >
             {t("Invite")}
           </Button>

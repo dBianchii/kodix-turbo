@@ -23,14 +23,14 @@ export function StaticHeader() {
 
             <div className="mr-5 space-x-2">
               <Link
-                href="/signin"
                 className={buttonVariants({ variant: "ghost" })}
+                href="/signin"
               >
                 {t("header.Log in")}
               </Link>
               <Link
-                href="/signup"
                 className={buttonVariants({ variant: "default" })}
+                href="/signup"
               >
                 {t("header.Sign up")}
               </Link>

@@ -9,7 +9,7 @@ export async function Footer() {
     <footer className="bg-foreground/5">
       <MaxWidthWrapper>
         <div className="flex h-24 flex-col items-center justify-center md:flex-row">
-          <Link href="/" className="font-medium underline underline-offset-4">
+          <Link className="font-medium underline underline-offset-4" href="/">
             Kodix © 2023 {t("No rights reserved")}
           </Link>
         </div>

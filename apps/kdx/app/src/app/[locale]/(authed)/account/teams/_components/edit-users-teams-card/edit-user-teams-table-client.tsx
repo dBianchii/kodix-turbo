@@ -46,13 +46,13 @@ export default function EditUserTeamsTableClient({
         <TableBody>
           {sortedTeams.length ? (
             sortedTeams.map((team) => (
-              <CustomRow team={team} user={user} key={team.id} />
+              <CustomRow key={team.id} team={team} user={user} />
             ))
           ) : (
             <TableRow>
               <TableCell
-                colSpan={sortedTeams.length}
                 className="h-24 text-center"
+                colSpan={sortedTeams.length}
               >
                 {t("No results")}.
               </TableCell>
@@ -79,13 +79,13 @@ function CustomRow({
 
   return (
     <TableRow
+      className="cursor-pointer"
       key={team.id}
       onClick={async () => {
         await switchTeamAction({
           teamId: team.id,
         });
       }}
-      className="cursor-pointer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -129,20 +129,20 @@ function CustomRow({
 
               if (team.id !== user.activeTeamId)
                 void switchTeamAction({
-                  teamId: team.id,
                   redirect: "/team/settings",
+                  teamId: team.id,
                 });
               else void router.push(`/team/settings`);
             }}
           >
-            <Button variant="outline" type="submit" loading={manageLoading}>
+            <Button loading={manageLoading} type="submit" variant="outline">
               {t("Manage")}
             </Button>
           </form>
           <LeaveOrDeleteTeamDropdown
+            isOwner={isOwner}
             teamId={team.id}
             teamName={team.name}
-            isOwner={isOwner}
           />
         </div>
       </TableCell>
@@ -165,12 +165,12 @@ function LeaveOrDeleteTeamDropdown({
   const router = useRouter();
   const leaveTeamMutation = useMutation(
     trpc.team.leaveTeam.mutationOptions({
+      onError: (e) => trpcErrorToastDefault(e),
       onSuccess: () => {
         toast.success(t("account.You have left the team"));
         void queryClient.invalidateQueries(trpc.team.getAllUsers.pathFilter());
         router.refresh();
       },
-      onError: (e) => trpcErrorToastDefault(e),
     }),
   );
   const [open, setOpen] = useState(false);
@@ -178,8 +178,6 @@ function LeaveOrDeleteTeamDropdown({
   return (
     <>
       <DeleteTeamConfirmationDialog
-        teamId={teamId}
-        teamName={teamName}
         open={open}
         setOpen={(open) => {
           setOpen(open);
@@ -189,10 +187,12 @@ function LeaveOrDeleteTeamDropdown({
             if (body) body.style.pointerEvents = "auto";
           }, 200);
         }}
+        teamId={teamId}
+        teamName={teamName}
       />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
+          <Button className="h-8 w-8 p-0" variant="ghost">
             <span className="sr-only">{t("Open menu")}</span>
             <RxDotsHorizontal className="size-4" />
           </Button>

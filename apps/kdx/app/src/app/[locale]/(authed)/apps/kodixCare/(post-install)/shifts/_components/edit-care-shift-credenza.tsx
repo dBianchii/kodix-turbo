@@ -87,25 +87,21 @@ export function EditCareShiftCredenza({
 
   const mutation = useEditCareShift();
   const form = useForm({
-    schema: ZEditCareShiftInputSchema(t),
     defaultValues: {
-      finishedByUserId: careShift.finishedByUserId,
-      id: careShift.id,
-      startAt: careShift.startAt,
-      endAt: careShift.endAt,
       careGiverId: careShift.caregiverId,
       checkIn: careShift.checkIn,
       checkOut: careShift.checkOut,
+      endAt: careShift.endAt,
+      finishedByUserId: careShift.finishedByUserId,
+      id: careShift.id,
       notes: careShift.notes ?? undefined,
+      startAt: careShift.startAt,
     },
+    schema: ZEditCareShiftInputSchema(t),
   });
   const queryClient = useQueryClient();
   const deleteCareShiftMutation = useMutation(
     trpc.app.kodixCare.deleteCareShift.mutationOptions({
-      onSuccess: () => {
-        setCareShift(null);
-        toast.success(t("Shift deleted"));
-      },
       onError: (err) => trpcErrorToastDefault(err),
       onSettled: () => {
         void queryClient.invalidateQueries(
@@ -115,14 +111,18 @@ export function EditCareShiftCredenza({
           trpc.app.kodixCare.findOverlappingShifts.pathFilter(),
         );
       },
+      onSuccess: () => {
+        setCareShift(null);
+        toast.success(t("Shift deleted"));
+      },
     }),
   );
 
   const { startAt, endAt } = form.watch();
   const { isChecking, overlappingShifts } = useShiftOverlap({
-    startAt,
     endAt,
     excludeId: careShift.id,
+    startAt,
   });
 
   const handleClose = () => {
@@ -146,22 +146,21 @@ export function EditCareShiftCredenza({
   const isLocked = !!careShift.finishedByUserId;
 
   return (
-    <Credenza open={!!careShift} onOpenChange={handleClose}>
+    <Credenza onOpenChange={handleClose} open={!!careShift}>
       <CredenzaContent className="max-w-[750px]">
         <ConfirmFinishShiftAlert
+          isSubmitting={mutation.isPending}
           onConfirm={({ finish }) => {
             form.setValue("finishedByUserId", finish ? user.id : null);
 
             void form.handleSubmit(handleSendData)();
           }}
-          isSubmitting={mutation.isPending}
           open={confirmFinishShiftAlertOpen}
           setOpen={setConfirmFinishShiftAlertOpen}
         />
         {overlappingShifts ? (
           <WarnOverlappingShifts
             isSubmitting={mutation.isPending}
-            overlaps={overlappingShifts}
             onClickConfirm={() => {
               const { checkIn, checkOut } = form.getValues();
               if (!!checkIn && !!checkOut) {
@@ -172,12 +171,13 @@ export function EditCareShiftCredenza({
               void form.handleSubmit(handleSendData)();
             }}
             open={warnOverlappingShiftsOpen}
+            overlaps={overlappingShifts}
             setOpen={setWarnOverlappingShiftsOpen}
           />
         ) : null}
         <CredenzaHeader className="flex flex-row items-center">
           <div className="mr-2 flex h-full flex-col">
-            <Lock isLocked={isLocked} idCareShift={careShift.id} />
+            <Lock idCareShift={careShift.id} isLocked={isLocked} />
           </div>
           <div className="flex flex-col">
             <CredenzaTitle>{t("apps.kodixCare.Edit shift")}</CredenzaTitle>
@@ -189,6 +189,7 @@ export function EditCareShiftCredenza({
 
         <Form {...form}>
           <form
+            className="space-y-6"
             onSubmit={form.handleSubmit(async (values) => {
               if (!overlappingShifts) return;
               if (values.startAt && values.endAt) {
@@ -221,7 +222,6 @@ export function EditCareShiftCredenza({
               }
               await handleSendData(values);
             })}
-            className="space-y-6"
           >
             <CredenzaBody>
               {/** biome-ignore lint/a11y/noStaticElementInteractions: <biome migration> */}
@@ -249,10 +249,10 @@ export function EditCareShiftCredenza({
                               <div className="flex flex-row gap-2">
                                 <DateTimePicker
                                   disabled={isLocked || !canEdit}
-                                  value={field.value}
                                   onChange={(newDate) =>
                                     field.onChange(newDate ?? new Date())
                                   }
+                                  value={field.value}
                                 />
                               </div>
                             </FormControl>
@@ -269,12 +269,12 @@ export function EditCareShiftCredenza({
                             <FormControl>
                               <div className="flex flex-row gap-2">
                                 <DateTimePicker
+                                  clearable
                                   disabled={isLocked || !canEdit}
-                                  value={field.value ?? undefined}
                                   onChange={(newDate) =>
                                     field.onChange(newDate ?? null)
                                   }
-                                  clearable
+                                  value={field.value ?? undefined}
                                 />
                               </div>
                             </FormControl>
@@ -295,10 +295,10 @@ export function EditCareShiftCredenza({
                               <div className="flex flex-row gap-2">
                                 <DateTimePicker
                                   disabled={isLocked || !canEdit}
-                                  value={field.value}
                                   onChange={(newDate) =>
                                     field.onChange(newDate ?? new Date())
                                   }
+                                  value={field.value}
                                 />
                               </div>
                             </FormControl>
@@ -315,12 +315,12 @@ export function EditCareShiftCredenza({
                             <FormControl>
                               <div className="flex flex-row gap-2">
                                 <DateTimePicker
-                                  disabled={isLocked || !canEdit}
                                   clearable
-                                  value={field.value ?? undefined}
+                                  disabled={isLocked || !canEdit}
                                   onChange={(newDate) =>
                                     field.onChange(newDate ?? null)
                                   }
+                                  value={field.value ?? undefined}
                                 />
                               </div>
                             </FormControl>
@@ -339,16 +339,16 @@ export function EditCareShiftCredenza({
                         <FormItem>
                           <FormLabel>{t("Caregiver")}</FormLabel>
                           <Select
-                            onValueChange={field.onChange}
                             defaultValue={field.value}
+                            onValueChange={field.onChange}
                             value={field.value}
                           >
                             <FormControl>
                               <SelectTrigger
+                                className="h-auto ps-2 [&>span]:flex [&>span]:items-center [&>span]:gap-2 [&>span_img]:shrink-0"
                                 disabled={
                                   !canEditCareGiver || !canEdit || isLocked
                                 }
-                                className="h-auto ps-2 [&>span]:flex [&>span]:items-center [&>span]:gap-2 [&>span_img]:shrink-0"
                               >
                                 <SelectValue
                                   placeholder={t("Select a caregiver")}
@@ -358,18 +358,18 @@ export function EditCareShiftCredenza({
                             <SelectContent>
                               {careGivers.map((user) => (
                                 <SelectItem
+                                  className="p-2"
                                   key={user.id}
                                   value={user.id}
-                                  className="p-2"
                                 >
                                   <div className="flex items-center gap-2">
                                     <AvatarWrapper
-                                      className="size-10 rounded-full"
-                                      src={user.image ?? ""}
                                       alt={user.name}
+                                      className="size-10 rounded-full"
                                       fallback={user.name}
-                                      width={40}
                                       height={40}
+                                      src={user.image ?? ""}
+                                      width={40}
                                     />
                                     <span className="font-medium">
                                       {user.name}
@@ -416,14 +416,14 @@ export function EditCareShiftCredenza({
             >
               {!isLocked && (
                 <Button
-                  type="button"
-                  variant={"destructive"}
                   disabled={!canEdit || deleteCareShiftMutation.isPending}
                   onClick={() => {
                     deleteCareShiftMutation.mutate({
                       id: careShift.id,
                     });
                   }}
+                  type="button"
+                  variant={"destructive"}
                 >
                   {deleteCareShiftMutation.isPending ? (
                     <>
@@ -440,10 +440,10 @@ export function EditCareShiftCredenza({
               )}
 
               <Button
-                type="submit"
                 disabled={
                   mutation.isPending || isChecking || isLocked || !canEdit
                 }
+                type="submit"
               >
                 {isChecking || mutation.isPending ? (
                   <>
@@ -476,7 +476,7 @@ function ConfirmFinishShiftAlert({
   const t = useTranslations();
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog onOpenChange={setOpen} open={open}>
       <DialogContent className="gap-4">
         <DialogHeader>
           <DialogTitle>
@@ -486,9 +486,9 @@ function ConfirmFinishShiftAlert({
 
         <DialogFooter className="gap-3 sm:justify-between">
           <Button
-            variant={"secondary"}
-            onClick={() => onConfirm({ finish: false })}
             disabled={isSubmitting}
+            onClick={() => onConfirm({ finish: false })}
+            variant={"secondary"}
           >
             {t("No")}
           </Button>
@@ -523,8 +523,8 @@ function Lock({
         <Button
           aria-label="Toggle locked"
           disabled={!isLocked}
-          variant={!isLocked ? "ghost" : "secondary"}
           type="button"
+          variant={!isLocked ? "ghost" : "secondary"}
         >
           {query.isFetching || mutation.isPending ? (
             <LuLoaderCircle className="size-5 animate-spin" />
@@ -546,8 +546,8 @@ function Lock({
           <AlertDialogAction
             onClick={async () => {
               await mutation.mutateAsync({
-                id: idCareShift,
                 finishedByUserId: null,
+                id: idCareShift,
               });
             }}
           >

@@ -66,8 +66,8 @@ export const TeamInvite = ({
             </Section>
             <Heading className="mx-0 my-[30px] p-0 text-center font-normal text-[24px] text-black">
               {t.rich("api.emails.Join teamName on Kodix", {
-                teamName: () => <strong>{teamName}</strong>,
                 site: "Kodix",
+                teamName: () => <strong>{teamName}</strong>,
               })}
             </Heading>
             <Text className="text-[14px] text-black leading-[24px]">
@@ -85,8 +85,8 @@ export const TeamInvite = ({
               {t.rich(
                 "api.emails.Has invited you to the teamName team on Kodix",
                 {
-                  teamName: () => <strong>{teamName}</strong>,
                   site: "Kodix",
+                  teamName: () => <strong>{teamName}</strong>,
                 }
               )}
             </Text>

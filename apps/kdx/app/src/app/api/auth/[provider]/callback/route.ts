@@ -58,10 +58,10 @@ export async function GET(
     if (callbackUrl) (await cookies()).delete("callbackUrl");
 
     return new Response(null, {
-      status: 302,
       headers: {
         Location: callbackUrl ?? "/team",
       },
+      status: 302,
     });
   } catch (e) {
     // the specific error message depends on the provider

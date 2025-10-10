@@ -9,14 +9,14 @@ export function HeroLamp() {
   return (
     <LampContainer className="mt-0">
       <motion.h1
+        className="bg-linear-to-br from-slate-200 to-slate-500 bg-clip-text py-4 text-center font-medium text-4xl text-transparent tracking-tight md:text-7xl"
         initial={{ opacity: 0.5, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
         transition={{
           delay: 0.3,
           duration: 0.8,
           ease: "easeInOut",
         }}
-        className="bg-linear-to-br from-slate-200 to-slate-500 bg-clip-text py-4 text-center font-medium text-4xl text-transparent tracking-tight md:text-7xl"
+        whileInView={{ opacity: 1, y: 0 }}
       >
         {t("The last stop")} <br />{" "}
         <span className="font-normal">{t("for your companys growth")}</span>

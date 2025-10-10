@@ -58,9 +58,9 @@ export async function sendNotifications({
       const sendEmailPromise = (async () => {
         const toSendObj = {
           from: KODIX_NOTIFICATION_FROM_EMAIL,
-          to: user.email,
-          subject: channel.subject,
           react: channel.react,
+          subject: channel.subject,
+          to: user.email,
         };
         const resendResult = await resend.emails.send(toSendObj);
 
@@ -85,19 +85,19 @@ export async function sendNotifications({
         }
 
         toSendPushNotifications.push({
+          body: channel.body,
+          sound: "default",
           title: channel.title,
           to: token,
-          sound: "default",
-          body: channel.body,
         });
         sentMessages.push({
-          expoToken: token,
-          sentAt: new Date(),
-          subject: channel.title,
-          message: channel.body,
-          sentToUserId: userId,
-          teamId,
           channel: "PUSH_NOTIFICATIONS",
+          expoToken: token,
+          message: channel.body,
+          sentAt: new Date(),
+          sentToUserId: userId,
+          subject: channel.title,
+          teamId,
         });
       }
 
@@ -119,12 +119,12 @@ export async function sendNotifications({
   for (const emailSuccess of emailSuccesses) {
     if (emailSuccess.value.resendResult.data?.id) {
       sentMessages.push({
-        sentAt: new Date(),
-        subject: emailSuccess.value.toSendObj.subject,
-        message: render(emailSuccess.value.toSendObj.react),
-        sentToUserId: userId,
-        teamId,
         channel: "EMAIL",
+        message: render(emailSuccess.value.toSendObj.react),
+        sentAt: new Date(),
+        sentToUserId: userId,
+        subject: emailSuccess.value.toSendObj.subject,
+        teamId,
       });
     }
   }

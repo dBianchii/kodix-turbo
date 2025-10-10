@@ -35,8 +35,8 @@ export default async function NotificationsPage(props: {
       <div className="flex items-center space-x-4">
         <CustomKodixIcon
           appName={t("Notifications")}
-          renderText={false}
           iconPath={"/appIcons/notifications.png"}
+          renderText={false}
         />
         <H1>{t("Notifications")}</H1>
       </div>
@@ -44,24 +44,24 @@ export default async function NotificationsPage(props: {
       <br />
 
       <NotificationsDateRangePicker
-        triggerSize="sm"
-        triggerClassName="ml-auto w-fit min-w-56"
         align="end"
+        triggerClassName="ml-auto w-fit min-w-56"
+        triggerSize="sm"
       />
       <Suspense
         fallback={
           <DataTableSkeleton
-            columnCount={5}
-            searchableColumnCount={1}
-            filterableColumnCount={2}
             cellWidths={["10rem", "40rem", "12rem", "12rem", "8rem"]}
+            columnCount={5}
+            filterableColumnCount={2}
+            searchableColumnCount={1}
             shrinkZero
           />
         }
       >
         <DataTableNotifications
-          notificationsPromise={notificationsPromise}
           allTeamsPromise={allTeamsPromise}
+          notificationsPromise={notificationsPromise}
         />
       </Suspense>
     </MaxWidthWrapper>

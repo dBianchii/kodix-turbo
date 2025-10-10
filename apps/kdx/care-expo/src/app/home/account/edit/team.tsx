@@ -37,14 +37,6 @@ export default function EditTeamPage() {
     <>
       <Stack.Screen
         options={{
-          headerTitleStyle: {
-            color: theme.color.val,
-          },
-          title: "Alterar time",
-          headerStyle: {
-            backgroundColor: theme.background.val,
-          },
-          headerShown: true,
           headerLeft: () => (
             <Pressable
               onPress={() => {
@@ -54,6 +46,14 @@ export default function EditTeamPage() {
               <ChevronLeft size={"$2"} />
             </Pressable>
           ),
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: theme.background.val,
+          },
+          headerTitleStyle: {
+            color: theme.color.val,
+          },
+          title: "Alterar time",
         }}
       />
 
@@ -64,22 +64,22 @@ export default function EditTeamPage() {
           ) : (
             <YStack>
               <H4>Time atual</H4>
-              <YGroup width={"100%"} alignSelf="center">
+              <YGroup alignSelf="center" width={"100%"}>
                 {data
                   ?.filter((x) => x.id === user.activeTeamId)
                   .map((team) => (
                     <MenuListItem
-                      pressTheme={false}
-                      opacity={0.5}
-                      key={team.id}
                       iconAfter={<ArrowRight opacity={0} />}
+                      key={team.id}
+                      opacity={0.5}
+                      pressTheme={false}
                       py={"$3"}
                     >
-                      <XStack jc={"space-between"} f={1} ai="center">
+                      <XStack ai="center" f={1} jc={"space-between"}>
                         <AvatarWrapper fallback={team.name} size={"$3"} />
                         <SizableText
-                          fontWeight={"$7"}
                           fontFamily={"$silkscreen"}
+                          fontWeight={"$7"}
                         >
                           {team.name}
                         </SizableText>
@@ -94,17 +94,17 @@ export default function EditTeamPage() {
                   {mutation.isPending ? (
                     <ElasticSpinnerView>
                       <RefreshCw
-                        size={"$1"}
-                        color={"$color10"}
                         animatePresence
+                        color={"$color10"}
+                        size={"$1"}
                       />
                     </ElasticSpinnerView>
                   ) : null}
                 </XStack>
-                <YGroup width={"100%"} alignSelf="center">
+                <YGroup alignSelf="center" width={"100%"}>
                   <FlatList
-                    scrollEnabled={(data?.length ?? 0) >= 6}
                     data={data?.filter((x) => x.id !== user.activeTeamId)}
+                    keyExtractor={(item) => item.id}
                     renderItem={({ item: team }) => (
                       <MenuListItem
                         iconAfter={ArrowRight}
@@ -115,18 +115,18 @@ export default function EditTeamPage() {
                         }}
                         py={"$3"}
                       >
-                        <XStack jc={"space-between"} f={1} ai="center">
+                        <XStack ai="center" f={1} jc={"space-between"}>
                           <AvatarWrapper fallback={team.name} size={"$3"} />
                           <SizableText
-                            fontWeight={"$7"}
                             fontFamily={"$silkscreen"}
+                            fontWeight={"$7"}
                           >
                             {team.name}
                           </SizableText>
                         </XStack>
                       </MenuListItem>
                     )}
-                    keyExtractor={(item) => item.id}
+                    scrollEnabled={(data?.length ?? 0) >= 6}
                   />
                 </YGroup>
               </View>

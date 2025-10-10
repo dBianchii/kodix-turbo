@@ -60,8 +60,8 @@ type CareTaskOrCalendarTask =
 
 export function CareTasksLists() {
   const input = {
-    dateStart: dayjs().startOf("day").toDate(),
     dateEnd: dayjs().endOf("day").toDate(),
+    dateStart: dayjs().startOf("day").toDate(),
   };
   const utils = api.useUtils();
 
@@ -70,22 +70,23 @@ export function CareTasksLists() {
   // const currentShift = api.app.kodixCare.getCurrentShift.useQuery();
   const syncCareTasksFromCalendarMutation =
     api.app.kodixCare.careTask.syncCareTasksFromCalendar.useMutation({
-      onSettled: () => {
-        void utils.app.kodixCare.invalidate();
-      },
       onError: (err) => {
         toast.show("Um erro ocorreu", {
-          message: getErrorMessage(err),
-          variant: "error",
           customData: {
             variant: "error",
           },
+          message: getErrorMessage(err),
+          variant: "error",
         });
+      },
+      onSettled: () => {
+        void utils.app.kodixCare.invalidate();
       },
     });
 
   const toast = useToastController();
   const editCareTaskMutation =
+    // biome-ignore assist/source/useSortedKeys: Known TS limitation in tanstack
     api.app.kodixCare.careTask.editCareTask.useMutation({
       onMutate: async (editedCareTask) => {
         // Snapshot the previous value
@@ -123,6 +124,10 @@ export function CareTasksLists() {
         // Return a context object with the snapshotted value
         return { previousCareTasks };
       },
+      // Always refetch after error or success:
+      onSettled: () => {
+        void utils.app.kodixCare.invalidate();
+      },
       // If the mutation fails,
       // use the context returned from onMutate to roll back
       onError: (err, __, context) => {
@@ -131,16 +136,12 @@ export function CareTasksLists() {
           context?.previousCareTasks,
         );
         toast.show("Um erro ocorreu", {
-          message: getErrorMessage(err),
-          variant: "error",
           customData: {
             variant: "error",
           },
+          message: getErrorMessage(err),
+          variant: "error",
         });
-      },
-      // Always refetch after error or success:
-      onSettled: () => {
-        void utils.app.kodixCare.invalidate();
       },
     });
 
@@ -194,12 +195,12 @@ export function CareTasksLists() {
         open
         position={position}
         sheetFrameProps={{
-          px: "0",
           ai: "center",
-          borderColor: "$color6",
           backgroundColor: "$color3",
-          borderWidth: 1,
           borderBottomWidth: 0,
+          borderColor: "$color6",
+          borderWidth: 1,
+          px: "0",
         }}
         snapPoints={[100, 65]}
         withHandle={false}
@@ -227,9 +228,9 @@ export function CareTasksLists() {
                         text: "Cancelar",
                       },
                       {
-                        text: "Ok",
                         onPress: () =>
                           syncCareTasksFromCalendarMutation.mutate(),
+                        text: "Ok",
                       },
                     ],
                   );
@@ -268,29 +269,29 @@ function CreateCareTaskSheet({
 }) {
   const t = useTranslations();
   const form = useForm({
-    schema: ZCreateCareTaskInputSchema(t),
     defaultValues: {
       type: "NORMAL",
     },
+    schema: ZCreateCareTaskInputSchema(t),
   });
   const utils = api.useUtils();
   const toast = useToastController();
   const createCareTaskMutation =
     api.app.kodixCare.careTask.createCareTask.useMutation({
-      onSuccess: () => {
-        setOpen(false);
-      },
       onError: (err) => {
         toast.show("Um erro ocorreu", {
-          message: getErrorMessage(err),
-          variant: "error",
           customData: {
             variant: "error",
           },
+          message: getErrorMessage(err),
+          variant: "error",
         });
       },
       onSettled: () => {
         void utils.app.kodixCare.invalidate();
+      },
+      onSuccess: () => {
+        setOpen(false);
       },
     });
 
@@ -446,17 +447,17 @@ function CareTaskOrCalendarTaskItem(props: {
   const toast = useToastController();
   const deleteCareTaskMutation =
     api.app.kodixCare.careTask.deleteCareTask.useMutation({
-      onSettled: () => {
-        void utils.app.kodixCare.careTask.invalidate();
-      },
       onError: (err) => {
         toast.show("Um erro ocorreu", {
-          message: getErrorMessage(err),
-          variant: "error",
           customData: {
             variant: "error",
           },
+          message: getErrorMessage(err),
+          variant: "error",
         });
+      },
+      onSettled: () => {
+        void utils.app.kodixCare.careTask.invalidate();
       },
     });
 
@@ -478,11 +479,11 @@ function CareTaskOrCalendarTaskItem(props: {
               }
             }}
             style={{
+              alignItems: "center",
               backgroundColor: theme.red5Dark.val,
               height: "100%",
-              width: 62,
               justifyContent: "center",
-              alignItems: "center",
+              width: 62,
             }}
           >
             <Trash2 size={"$2"} />
@@ -518,8 +519,8 @@ function CareTaskOrCalendarTaskItem(props: {
                 props.setCurrentlyEditing(props.task.id);
 
                 props.mutation.mutate({
-                  id: props.task.id,
                   doneAt: props.task.doneAt ? null : new Date(),
+                  id: props.task.id,
                 });
               }}
               size={"$7"}
@@ -583,24 +584,24 @@ function EditCareTaskSheet(props: {
 
   const defaultValues = useMemo(
     () => ({
-      id: props.task.id,
       details: props.task.details,
       doneAt: props.task.doneAt,
+      id: props.task.id,
     }),
     [props.task],
   );
   const t = useTranslations();
   const form = useForm({
-    schema: ZEditCareTaskInputSchema(t).pick({
-      id: true,
-      details: true,
-      doneAt: true,
-    }),
     defaultValues: {
-      id: props.task.id,
       details: props.task.details,
       doneAt: props.task.doneAt,
+      id: props.task.id,
     },
+    schema: ZEditCareTaskInputSchema(t).pick({
+      details: true,
+      doneAt: true,
+      id: true,
+    }),
   });
 
   useEffect(() => {
@@ -642,9 +643,9 @@ function EditCareTaskSheet(props: {
             <Text color="$gray11Dark">
               {format.dateTime(props.task.date, {
                 day: "2-digit",
-                month: "short",
                 hour: "numeric",
                 minute: "numeric",
+                month: "short",
               })}
             </Text>
           </XStack>

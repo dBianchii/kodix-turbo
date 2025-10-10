@@ -12,7 +12,7 @@ export async function switchActiveTeamForUser({
   teamId: string;
 }) {
   await userRepository.moveUserToTeam(db, {
-    userId,
     newTeamId: teamId,
+    userId,
   });
 }

@@ -30,17 +30,17 @@ export function AssigneePopover({
   const user = users.find((x) => x.id === assignedToUserId);
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover onOpenChange={setOpen} open={open}>
       <PopoverTrigger asChild>
         {children ? (
           children
         ) : user ? (
           <div>
             <AvatarWrapper
-              className="h-6 w-6"
               alt={user.name ? `${user.name} avatar` : ""}
-              src={user.image ?? undefined}
+              className="h-6 w-6"
               fallback={user.name}
+              src={user.image ?? undefined}
             />
           </div>
         ) : (
@@ -49,7 +49,7 @@ export function AssigneePopover({
           </div>
         )}
       </PopoverTrigger>
-      <PopoverContent className="w-300 p-0" side="bottom" align={"start"}>
+      <PopoverContent align={"start"} className="w-300 p-0" side="bottom">
         <Command>
           <CommandInput placeholder="Assign to user..." />
           <CommandList
@@ -77,10 +77,10 @@ export function AssigneePopover({
                   value={user.id}
                 >
                   <AvatarWrapper
-                    className="mr-2 size-4"
-                    src={user.image ?? ""}
                     alt={user.image ?? "" + " avatar"}
+                    className="mr-2 size-4"
                     fallback={<HiUserCircle className="mr-2 size-4" />}
+                    src={user.image ?? ""}
                   />
                   {user.name}
                 </CommandItem>

@@ -43,7 +43,7 @@ export function Navigation({
           </NavigationItem>
         ) : (
           items.map((item) => (
-            <NavigationItem key={`${item.href}-nav-item`} href={item.href}>
+            <NavigationItem href={item.href} key={`${item.href}-nav-item`}>
               {item.title}
             </NavigationItem>
           ))
@@ -65,8 +65,8 @@ function NavigationItem({
   return (
     <NavigationMenuItem>
       <NavigationMenuLink
-        asChild
         active={pathname === href}
+        asChild
         className={cn(
           navigationMenuTriggerStyle(),
           "justify-start text-center font-bold md:w-60",

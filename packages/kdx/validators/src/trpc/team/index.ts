@@ -39,7 +39,7 @@ export const ZLeaveTeamInputSchema = z.object({ teamId: ZNanoId });
 export type TLeaveTeamInputSchema = z.infer<typeof ZLeaveTeamInputSchema>;
 
 export const ZDeleteTeamInputSchema = z.object({
-  teamNameConfirmation: z.string(),
   teamId: ZNanoId,
+  teamNameConfirmation: z.string(),
 });
 export type TDeleteTeamInputSchema = z.infer<typeof ZDeleteTeamInputSchema>;

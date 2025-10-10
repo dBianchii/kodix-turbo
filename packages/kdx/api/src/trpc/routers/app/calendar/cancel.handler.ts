@@ -53,9 +53,9 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
     await db.transaction(async (tx) => {
       if (input.eventExceptionId) {
         await calendarRepository.deleteEventExceptionsHigherThanDate(tx, {
-          teamId: ctx.auth.user.activeTeamId,
           date: input.date,
           eventExceptionId: input.eventExceptionId,
+          teamId: ctx.auth.user.activeTeamId,
         });
       }
 
@@ -80,11 +80,11 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
 
       return await calendarRepository.updateEventMasterById(tx, {
         id: input.eventMasterId,
-        teamId: ctx.auth.user.activeTeamId,
         input: {
           dateUntil: penultimateOccurence,
           rule: new RRule(options).toString(),
         },
+        teamId: ctx.auth.user.activeTeamId,
       });
     });
     return;

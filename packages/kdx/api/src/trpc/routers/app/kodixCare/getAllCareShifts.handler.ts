@@ -12,8 +12,8 @@ export const getAllCareShiftsHandler = async ({
   ctx,
 }: GetAllCareShiftsOptions) => {
   const shifts = await db.query.careShifts.findMany({
-    where: eq(careShifts.teamId, ctx.auth.user.activeTeamId),
     orderBy: [asc(careShifts.checkIn)],
+    where: eq(careShifts.teamId, ctx.auth.user.activeTeamId),
     with: {
       Caregiver: {
         columns: {

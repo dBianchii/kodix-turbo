@@ -60,11 +60,11 @@ export const getAuthManager = <
     const heads = await headers();
 
     const sessionData = {
-      id: sessionId,
-      userId,
       expiresAt: getSessionExpireTime(),
+      id: sessionId,
       ipAddress: heads.get("X-Forwarded-For") ?? DEFAULT_IP_ADDRESS,
       userAgent: heads.get("user-agent"),
+      userId,
     };
 
     const session = sessionData as TSession;
@@ -90,7 +90,7 @@ export const getAuthManager = <
     const response = await authRepository.findSessionById(sessionId);
 
     if (!response.session) {
-      return { user: null, session: null };
+      return { session: null, user: null };
     }
 
     const now = Date.now();
@@ -99,7 +99,7 @@ export const getAuthManager = <
     const isExpired = now >= expiresAt;
     if (isExpired) {
       await authRepository.deleteSession(response.session.id);
-      return { user: null, session: null };
+      return { session: null, user: null };
     }
 
     const timeLeft = expiresAt - now;
@@ -124,12 +124,12 @@ export const getAuthManager = <
   async function auth(): Promise<AuthResponse<TUser, TSession>> {
     const token = (await cookies()).get(SESSION_COOKIE_NAME)?.value;
 
-    if (!token) return { user: null, session: null };
+    if (!token) return { session: null, user: null };
 
     const response = await validateSessionToken(token);
 
     if (!(response.session && response.user)) {
-      return { user: null, session: null };
+      return { session: null, user: null };
     }
 
     return {
@@ -171,9 +171,9 @@ export const getAuthManager = <
   }
 
   return {
+    auth,
     createDbSessionAndCookie,
     invalidateSession,
-    auth,
     validateUserEmailAndPassword,
   };
 };

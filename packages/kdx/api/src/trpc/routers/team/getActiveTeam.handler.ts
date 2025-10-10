@@ -20,8 +20,8 @@ const prepared = db.query.teams
           User: {
             columns: {
               id: true,
-              name: true,
               image: true,
+              name: true,
             },
           },
         },
@@ -38,8 +38,8 @@ export const getActiveTeamHandler = async ({ ctx }: GetActiveTeamOptions) => {
 
   if (!team) {
     throw new TRPCError({
-      message: ctx.t("api.No Team Found"),
       code: "NOT_FOUND",
+      message: ctx.t("api.No Team Found"),
     });
   }
 

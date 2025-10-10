@@ -52,6 +52,7 @@ const dateFromISO8601 = z.preprocess(
  * @description Schema for validating kodix care config
  */
 export const kodixCareConfigSchema = z.object({
+  clonedCareTasksUntil: dateFromISO8601.optional(),
   patientName: z
     .string()
     .min(2)
@@ -60,7 +61,6 @@ export const kodixCareConfigSchema = z.object({
     .regex(/^[^\d]+$/, {
       message: "Numbers are not allowed in the patient name",
     }),
-  clonedCareTasksUntil: dateFromISO8601.optional(),
 });
 
 export const kodixCareUserAppTeamConfigSchema = z.object({

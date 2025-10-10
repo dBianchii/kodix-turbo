@@ -34,8 +34,8 @@ export const deleteCareTaskHandler = async ({
   });
   ForbiddenError.from(ability).throwUnlessCan("Delete", {
     __typename: "CareTask",
-    createdFromCalendar: careTask.createdFromCalendar,
     createdBy: careTask.createdBy,
+    createdFromCalendar: careTask.createdFromCalendar,
   });
 
   await careTaskRepository.deleteCareTaskById({

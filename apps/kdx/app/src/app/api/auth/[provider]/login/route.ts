@@ -29,40 +29,40 @@ export async function GET(
   const url = await currentProvider.getAuthorizationUrl(state, codeVerifier);
 
   (await cookies()).set(`oauth_state`, state, {
-    path: "/",
-    secure: env.NODE_ENV === "production",
     httpOnly: true,
     maxAge: 60 * 10,
+    path: "/",
     sameSite: "lax",
+    secure: env.NODE_ENV === "production",
   });
 
   if (providersWithCodeVerifier.includes(currentProvider.name))
     (await cookies()).set("code_verifier", codeVerifier, {
-      path: "/",
-      secure: env.NODE_ENV === "production",
       httpOnly: true,
       maxAge: 60 * 10,
+      path: "/",
       sameSite: "lax",
+      secure: env.NODE_ENV === "production",
     });
 
   const invite = request.nextUrl.searchParams.get("invite");
   if (invite)
     (await cookies()).set("invite", invite, {
-      path: "/",
-      secure: env.NODE_ENV === "production",
       httpOnly: true,
       maxAge: 60 * 10,
+      path: "/",
       sameSite: "lax",
+      secure: env.NODE_ENV === "production",
     });
 
   const callbackUrl = request.nextUrl.searchParams.get("callbackUrl");
   if (callbackUrl)
     (await cookies()).set("callbackUrl", callbackUrl, {
-      path: "/",
-      secure: env.NODE_ENV === "production",
       httpOnly: true,
       maxAge: 60 * 10,
+      path: "/",
       sameSite: "lax",
+      secure: env.NODE_ENV === "production",
     });
 
   return NextResponse.redirect(url);

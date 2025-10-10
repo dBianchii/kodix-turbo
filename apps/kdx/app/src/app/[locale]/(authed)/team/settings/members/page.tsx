@@ -39,7 +39,7 @@ export default async function SettingsMembersPage() {
         </p>
       </div>
       <HydrateClient>
-        <TeamInviteCard user={user} canEditPage={canEditPage} />
+        <TeamInviteCard canEditPage={canEditPage} user={user} />
         <Tabs defaultValue="members">
           <div className="flex flex-row gap-2">
             <TabsList className="">
@@ -52,16 +52,16 @@ export default async function SettingsMembersPage() {
             <Suspense
               fallback={
                 <DataTableSkeleton
+                  cellWidths={["auto", "5rem"]}
                   columnCount={2}
                   rowCount={3}
-                  withPagination={false}
                   showViewOptions={false}
-                  cellWidths={["auto", "5rem"]}
                   shrinkZero
+                  withPagination={false}
                 />
               }
             >
-              <DataTableMembers user={user} canEditPage={canEditPage} />
+              <DataTableMembers canEditPage={canEditPage} user={user} />
             </Suspense>
           </TabsContent>
           <TabsContent value="invites">

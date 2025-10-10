@@ -41,10 +41,10 @@ export function LeaveTeamCardClient({
   const t = useTranslations();
 
   const form = useForm({
-    schema: ZLeaveTeamInputSchema,
     defaultValues: {
       teamId,
     },
+    schema: ZLeaveTeamInputSchema,
   });
 
   const router = useRouter();
@@ -95,9 +95,9 @@ export function LeaveTeamCardClient({
                       teamId,
                     }),
                     {
+                      error: (err) => getErrorMessage(err),
                       loading: t("Leaving team"),
                       success: t("Successfully left the team"),
-                      error: (err) => getErrorMessage(err),
                     },
                   );
                 })}

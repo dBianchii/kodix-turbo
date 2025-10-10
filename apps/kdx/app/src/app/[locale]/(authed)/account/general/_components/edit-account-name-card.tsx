@@ -45,11 +45,11 @@ export async function EditAccountNameCard({ name }: { name?: string | null }) {
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="name">{t("Name")}</Label>
               <Input
-                required
-                id="name"
-                name="name"
-                maxLength={32}
                 defaultValue={name ?? ""}
+                id="name"
+                maxLength={32}
+                name="name"
+                required
               />
             </div>
           </div>

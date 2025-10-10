@@ -11,7 +11,7 @@ export const getAllHandler = async ({ ctx }: GetAllOptions) => {
     ctx.auth.user.activeTeamId,
   );
   return invitations.map((invite) => ({
-    inviteId: invite.id,
     inviteEmail: invite.email,
+    inviteId: invite.id,
   }));
 };

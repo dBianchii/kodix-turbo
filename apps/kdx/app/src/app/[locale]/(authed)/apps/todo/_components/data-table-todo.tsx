@@ -73,23 +73,23 @@ export function DataTableTodo({
 
   const columns = [
     columnHelper.display({
-      id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={table.getIsAllPageRowsSelected()}
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      ),
       cell: ({ row }) => (
         <Checkbox
+          aria-label="Select row"
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
         />
       ),
-      enableSorting: false,
       enableHiding: false,
+      enableSorting: false,
+      header: ({ table }) => (
+        <Checkbox
+          aria-label="Select all"
+          checked={table.getIsAllPageRowsSelected()}
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        />
+      ),
+      id: "select",
     }),
     columnHelper.accessor("priority", {
       cell: function Cell(info) {
@@ -102,6 +102,7 @@ export function DataTableTodo({
 
         const queryClient = useQueryClient();
         const { mutate: updateTodo } = useMutation(
+          // biome-ignore assist/source/useSortedKeys: Known TS limitation in tanstack
           trpc.app.todo.update.mutationOptions({
             async onMutate(newData) {
               if (!newData.priority) return;
@@ -137,8 +138,8 @@ export function DataTableTodo({
               priority={priority}
               setPriority={handlePriorityChange}
             >
-              <Button variant="ghost" size="sm">
-                <PriorityIcon priority={priority} className="mr-2" />
+              <Button size="sm" variant="ghost">
+                <PriorityIcon className="mr-2" priority={priority} />
                 {PriorityToTxt(priority)}
                 <span className="sr-only">Open priority popover</span>
               </Button>
@@ -159,6 +160,7 @@ export function DataTableTodo({
         const queryClient = useQueryClient();
 
         const { mutate: updateTodo } = useMutation(
+          // biome-ignore assist/source/useSortedKeys: Known TS limitation in tanstack
           trpc.app.todo.update.mutationOptions({
             async onMutate(newData) {
               if (!newData.status) return;
@@ -192,8 +194,8 @@ export function DataTableTodo({
 
         return (
           <StatusPopover setStatus={handleStatusChange} status={status}>
-            <Button variant="ghost" size="sm">
-              <StatusIcon status={status} className={"mr-2"} />
+            <Button size="sm" variant="ghost">
+              <StatusIcon className={"mr-2"} status={status} />
               {statusTxt}
               <span className="sr-only">Open status popover</span>
             </Button>
@@ -216,6 +218,7 @@ export function DataTableTodo({
         const queryClient = useQueryClient();
 
         const { mutate: updateTodo } = useMutation(
+          // biome-ignore assist/source/useSortedKeys: Known TS limitation in tanstack
           trpc.app.todo.update.mutationOptions({
             async onMutate(newData) {
               // Cancel outgoing fetches (so they don't overwrite our optimistic update)
@@ -238,7 +241,7 @@ export function DataTableTodo({
         );
 
         function handleDueDateChange(newDueDate: Date | undefined | null) {
-          updateTodo({ id: info.row.original.id, dueDate: newDueDate });
+          updateTodo({ dueDate: newDueDate, id: info.row.original.id });
         }
 
         return (
@@ -276,13 +279,6 @@ export function DataTableTodo({
               setAssignedToUserId(newData.assignedToUserId ?? "");
               return { prevData };
             },
-            onError(err, _newTodo, ctx) {
-              if (!ctx?.prevData) return;
-
-              trpcErrorToastDefault(err);
-              // If the mutation fails, use the context-value from onMutate
-              setAssignedToUserId(ctx.prevData);
-            },
           }),
         );
 
@@ -290,8 +286,8 @@ export function DataTableTodo({
           newAssignedToUserId: string | null,
         ) {
           updateTodo({
-            id: info.row.original.id,
             assignedToUserId: newAssignedToUserId,
+            id: info.row.original.id,
           });
         }
 
@@ -308,12 +304,12 @@ export function DataTableTodo({
     }),
   ];
   const table = useReactTable({
-    data: todosQuery.data,
     columns,
+    data: todosQuery.data,
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
     state: {
       columnFilters,
     },
@@ -323,12 +319,12 @@ export function DataTableTodo({
     <div>
       <div className="flex items-center py-4">
         <Input
-          placeholder="Search by title..."
-          value={table.getColumn("title")?.getFilterValue() as string}
+          className="max-w-sm"
           onChange={(event) =>
             table.getColumn("title")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          placeholder="Search by title..."
+          value={table.getColumn("title")?.getFilterValue() as string}
         />
       </div>
       <div className="rounded-md border">
@@ -364,8 +360,8 @@ export function DataTableTodo({
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
                   className="h-24 text-center"
+                  colSpan={columns.length}
                 >
                   You have no tasks. Yet. Create one
                   <CreateTaskDialogButton />

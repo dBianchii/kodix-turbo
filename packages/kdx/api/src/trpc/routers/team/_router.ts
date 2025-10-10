@@ -24,21 +24,21 @@ import { updateHandler } from "./update.handler";
 //
 export const teamRouter = {
   appRole: appRoleRouter,
-  invitation: invitationRouter,
   create: protectedProcedure.input(ZCreateInputSchema).mutation(createHandler),
+  deleteTeam: isTeamOwnerProcedure
+    .input(ZDeleteTeamInputSchema)
+    .mutation(deleteTeamHandler),
   getActiveTeam: protectedProcedure.query(getActiveTeamHandler),
   getAll: protectedProcedure.query(getAllHandler),
   getAllUsers: protectedProcedure.query(getAllUsersHandler),
+  invitation: invitationRouter,
+  leaveTeam: protectedProcedure
+    .input(ZLeaveTeamInputSchema)
+    .mutation(leaveTeamHandler),
   removeUser: isTeamOwnerProcedure
     .input(ZRemoveUserSchema)
     .mutation(removeUserHandler),
   update: isTeamOwnerProcedure
     .input(T(ZUpdateInputSchema))
     .mutation(updateHandler),
-  leaveTeam: protectedProcedure
-    .input(ZLeaveTeamInputSchema)
-    .mutation(leaveTeamHandler),
-  deleteTeam: isTeamOwnerProcedure
-    .input(ZDeleteTeamInputSchema)
-    .mutation(deleteTeamHandler),
 } satisfies TRPCRouterRecord;

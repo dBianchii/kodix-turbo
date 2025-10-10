@@ -342,11 +342,11 @@ export function MultiFilterRow<TData>({
                 ...prev,
                 {
                   id: crypto.randomUUID(),
+                  isMulti: true,
                   label: selectedOption.label,
-                  value: selectedOption.value,
 
                   options: selectedOption.options ?? [],
-                  isMulti: true,
+                  value: selectedOption.value,
                 },
               ]);
             }}

@@ -19,18 +19,6 @@ import { syncCareTasksFromCalendarHandler } from "./syncCareTasksFromCalendar.ha
 import { unlockMoreTasksHandler } from "./unlockMoreTasks.handler";
 
 export const careTaskRouter = {
-  getCareTasks: protectedProcedure
-    .input(ZGetCareTasksInputSchema)
-    .use(kodixCareInstalledMiddleware)
-    .query(getCareTasksHandler),
-  editCareTask: protectedProcedure
-    .use(kodixCareInstalledMiddleware)
-    .input(T(ZEditCareTaskInputSchema))
-    .mutation(editCareTaskHandler),
-  unlockMoreTasks: protectedProcedure
-    .use(kodixCareInstalledMiddleware)
-    .input(ZUnlockMoreTasksInputSchema)
-    .mutation(unlockMoreTasksHandler),
   createCareTask: protectedProcedure
     .use(kodixCareInstalledMiddleware)
     .input(T(ZCreateCareTaskInputSchema))
@@ -38,7 +26,19 @@ export const careTaskRouter = {
   deleteCareTask: protectedProcedure
     .input(ZDeleteCareTaskInputSchema)
     .mutation(deleteCareTaskHandler),
+  editCareTask: protectedProcedure
+    .use(kodixCareInstalledMiddleware)
+    .input(T(ZEditCareTaskInputSchema))
+    .mutation(editCareTaskHandler),
+  getCareTasks: protectedProcedure
+    .input(ZGetCareTasksInputSchema)
+    .use(kodixCareInstalledMiddleware)
+    .query(getCareTasksHandler),
   syncCareTasksFromCalendar: protectedProcedure
     .use(kodixCareInstalledMiddleware)
     .mutation(syncCareTasksFromCalendarHandler),
+  unlockMoreTasks: protectedProcedure
+    .use(kodixCareInstalledMiddleware)
+    .input(ZUnlockMoreTasksInputSchema)
+    .mutation(unlockMoreTasksHandler),
 } satisfies TRPCRouterRecord;

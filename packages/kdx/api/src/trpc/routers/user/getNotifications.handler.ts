@@ -46,8 +46,8 @@ export const getNotificationsHandler = async ({
     input.channel
       ? filterColumn({
           column: notifications.channel,
-          value: input.channel,
           isSelectable: true,
+          value: input.channel,
         })
       : undefined,
     // Filter notifications by time range
@@ -61,8 +61,8 @@ export const getNotificationsHandler = async ({
     input.teamId
       ? filterColumn({
           column: notifications.teamId,
-          value: input.teamId,
           isSelectable: true,
+          value: input.teamId,
         })
       : undefined,
   ];
@@ -83,13 +83,13 @@ export const getNotificationsHandler = async ({
   const result = await db.transaction(async (tx) => {
     const data = await tx
       .select({
-        id: notifications.id,
         channel: notifications.channel,
-        subject: notifications.subject,
+        id: notifications.id,
         message: notifications.message,
         sentAt: notifications.sentAt,
-        teamName: teams.name,
+        subject: notifications.subject,
         teamId: teams.id,
+        teamName: teams.name,
       })
       .from(notifications)
       .limit(input.perPage)

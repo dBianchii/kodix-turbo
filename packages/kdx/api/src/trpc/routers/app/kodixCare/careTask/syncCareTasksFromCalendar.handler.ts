@@ -16,18 +16,18 @@ export const syncCareTasksFromCalendarHandler = async ({
   await db.transaction(async (tx) => {
     await careTaskRepository.deleteManyCareTasksThatCameFromCalendarWithDateHigherOrEqualThan(
       {
-        teamId: ctx.auth.user.activeTeamId,
         date: syncFromDate,
+        teamId: ctx.auth.user.activeTeamId,
       },
       tx,
     );
 
     await cloneCalendarTasksToCareTasks({
-      tx,
-      start: syncFromDate,
       ctx: {
         ...ctx,
       },
+      start: syncFromDate,
+      tx,
     });
   });
 };

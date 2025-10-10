@@ -33,10 +33,10 @@ export default async function RolesForAppPage(props: {
             {t("Edit name roles", { name: getAppName(t, appId) })}
           </h1>
           <DataTableUserAppRoles
+            appId={appId}
             initialUsersPromise={trpcCaller.team.appRole.getUsersWithRoles({
               appId,
             })}
-            appId={appId}
           />
         </div>
       </div>

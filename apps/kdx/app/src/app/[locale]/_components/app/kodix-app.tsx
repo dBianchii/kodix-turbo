@@ -64,19 +64,22 @@ export function KodixApp({
   const t = useTranslations();
   const installAppMutation = useMutation(
     trpc.app.installApp.mutationOptions({
+      onError: (err) => {
+        trpcErrorToastDefault(err);
+      },
       onSuccess: () => {
         void queryClient.invalidateQueries(trpc.app.getAll.pathFilter());
         void queryClient.invalidateQueries(trpc.app.getInstalled.pathFilter());
         router.refresh();
         toast.success(`${t("App")} ${appName} ${t("installed").toLowerCase()}`);
       },
-      onError: (err) => {
-        trpcErrorToastDefault(err);
-      },
     }),
   );
   const uninstallAppMutation = useMutation(
     trpc.app.uninstallApp.mutationOptions({
+      onError: (err) => {
+        trpcErrorToastDefault(err);
+      },
       onSuccess: () => {
         setOpen(false);
         void queryClient.invalidateQueries(trpc.app.getAll.pathFilter());
@@ -84,9 +87,6 @@ export function KodixApp({
         toast.success(
           `${t("App")} ${appName} ${t("uninstalled").toLowerCase()}`,
         );
-      },
-      onError: (err) => {
-        trpcErrorToastDefault(err);
       },
     }),
   );
@@ -105,13 +105,13 @@ export function KodixApp({
       <CardHeader className="pb-1">
         <div className="mb-4 flex justify-between">
           <Image
-            src={appIconUrl}
-            height={50}
-            width={50}
             alt={`${appName} logo`}
+            height={50}
+            src={appIconUrl}
+            width={50}
           />
           {installed ? (
-            <Badge variant={"green"} className="h-5">
+            <Badge className="h-5" variant={"green"}>
               {t("Installed")}
             </Badge>
           ) : null}
@@ -126,14 +126,15 @@ export function KodixApp({
       <CardFooter className="flex justify-between border-t px-6 py-4">
         {user && installed && (
           <Link
-            href={appurl}
             className={cn(buttonVariants({ variant: "default" }))}
+            href={appurl}
           >
             {t("Open")}
           </Link>
         )}
         {user && !installed && (
           <Button
+            className={cn("disabled")}
             loading={installAppMutation.isPending}
             onClick={() => {
               if (appShouldGoToOnboarding) {
@@ -143,15 +144,14 @@ export function KodixApp({
               void installAppMutation.mutate({ appId: id });
             }}
             variant={"secondary"}
-            className={cn("disabled")}
           >
             {t("Install")}
           </Button>
         )}
         {!user && (
           <Link
-            href="/signin"
             className={cn(buttonVariants({ variant: "default" }))}
+            href="/signin"
           >
             {t("Install")}
           </Link>
@@ -160,10 +160,10 @@ export function KodixApp({
             <Trash2 className="text-destructive size-4" />
           </Button> */}
         {installed && (
-          <Credenza open={open} onOpenChange={setOpen}>
+          <Credenza onOpenChange={setOpen} open={open}>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="ml-auto">
+                <Button className="ml-auto" size="sm" variant="ghost">
                   <RxDotsHorizontal className="size-4" />
                   <span className="sr-only">{t("open-dialog")}</span>
                 </Button>
@@ -190,9 +190,9 @@ export function KodixApp({
               </CredenzaHeader>
               <CredenzaFooter className="gap-3 sm:justify-between">
                 <Button
-                  variant="outline"
-                  onClick={() => setOpen(false)}
                   disabled={uninstallAppMutation.isPending}
+                  onClick={() => setOpen(false)}
+                  variant="outline"
                 >
                   {t("Cancel")}
                 </Button>

@@ -79,13 +79,13 @@ export function DeleteNotificationsDialog({
                     ids: notifications.map((n) => n.original.id),
                   }),
                   {
+                    error: (err) => getErrorMessage(err),
                     loading: t("Deleting"),
                     success: () => {
                       onSuccess?.();
                       props.onOpenChange?.(false);
                       return t("Notifications deleted");
                     },
-                    error: (err) => getErrorMessage(err),
                   },
                 );
               }}

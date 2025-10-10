@@ -14,27 +14,6 @@ export const {
   invalidateSession,
 } = getAuthManager<User, Session>({
   ...authRepository,
-  findUserByEmail: async (email: string): Promise<User | undefined> => {
-    const user = await db.query.users.findFirst({
-      where: eq(users.email, email),
-      with: {
-        ActiveTeam: {
-          columns: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-    });
-
-    if (!user) return;
-
-    return {
-      ...user,
-      activeTeamName: user.ActiveTeam.name,
-      activeTeamId: user.ActiveTeam.id,
-    };
-  },
   findSessionById: async (sessionId): Promise<KdxAuthResponse> => {
     const session = await db.query.sessions.findFirst({
       where: eq(sessions.id, sessionId),
@@ -52,7 +31,7 @@ export const {
       },
     });
 
-    if (!session) return { user: null, session: null };
+    if (!session) return { session: null, user: null };
 
     const {
       User: { ActiveTeam, ...rest },
@@ -62,9 +41,30 @@ export const {
       session,
       user: {
         ...rest,
-        activeTeamName: ActiveTeam.name,
         activeTeamId: ActiveTeam.id,
+        activeTeamName: ActiveTeam.name,
       },
+    };
+  },
+  findUserByEmail: async (email: string): Promise<User | undefined> => {
+    const user = await db.query.users.findFirst({
+      where: eq(users.email, email),
+      with: {
+        ActiveTeam: {
+          columns: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    if (!user) return;
+
+    return {
+      ...user,
+      activeTeamId: user.ActiveTeam.id,
+      activeTeamName: user.ActiveTeam.name,
     };
   },
 });

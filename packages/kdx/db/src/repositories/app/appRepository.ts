@@ -89,21 +89,21 @@ export async function findAppTeamConfigs(
   db = _db,
 ) {
   const teamConfigs = await db.query.appTeamConfigs.findMany({
+    columns: {
+      config: true,
+      teamId: true,
+    },
     where: (appteamConfig, { eq, and, inArray }) =>
       and(
         eq(appteamConfig.appId, appId),
         inArray(appteamConfig.teamId, teamIds),
       ),
-    columns: {
-      config: true,
-      teamId: true,
-    },
   });
 
   const schema = appIdToAppTeamConfigSchema[appId];
   const parsedTeamConfigs = teamConfigs.map((teamConfig) => ({
-    teamId: teamConfig.teamId,
     config: schema.parse(teamConfig.config),
+    teamId: teamConfig.teamId,
   }));
 
   return parsedTeamConfigs;
@@ -126,11 +126,11 @@ export async function upsertAppTeamConfig(
   db = _db,
 ) {
   const existingConfig = await db.query.appTeamConfigs.findFirst({
-    where: (appteamConfig, { eq, and }) =>
-      and(eq(appteamConfig.appId, appId), eq(appteamConfig.teamId, teamId)),
     columns: {
       config: true,
     },
+    where: (appteamConfig, { eq, and }) =>
+      and(eq(appteamConfig.appId, appId), eq(appteamConfig.teamId, teamId)),
   });
 
   const configSchema = appIdToAppTeamConfigSchema[appId];
@@ -151,9 +151,9 @@ export async function upsertAppTeamConfig(
   //new record. We need to validate the whole config without partial()
   const parsedInput = configSchema.parse(config);
   await db.insert(appTeamConfigs).values({
+    appId: appId,
     config: parsedInput,
     teamId: teamId,
-    appId: appId,
   });
 }
 
@@ -170,25 +170,25 @@ export async function findUserAppTeamConfigs(
   db = _db,
 ) {
   const result = await db.query.userAppTeamConfigs.findMany({
+    columns: {
+      config: true,
+      teamId: true,
+      userId: true,
+    },
     where: (userAppTeamConfigs, { eq, and }) =>
       and(
         eq(userAppTeamConfigs.appId, appId),
         inArray(userAppTeamConfigs.teamId, teamIds),
         inArray(userAppTeamConfigs.userId, userIds),
       ),
-    columns: {
-      userId: true,
-      teamId: true,
-      config: true,
-    },
   });
 
   const schema = appIdToUserAppTeamConfigSchema[appId].optional(); //? Optional because the config may not exist yet
 
   const userAppTeamConfigs = result.map((x) => ({
+    config: schema.parse(x.config),
     teamId: x.teamId,
     userId: x.userId,
-    config: schema.parse(x.config),
   }));
 
   return userAppTeamConfigs;
@@ -211,15 +211,15 @@ export async function upsertUserAppTeamConfigs(
   db = _db,
 ) {
   const existingConfig = await db.query.userAppTeamConfigs.findFirst({
+    columns: {
+      config: true,
+    },
     where: (userAppTeamConfigs, { eq, and }) =>
       and(
         eq(userAppTeamConfigs.appId, appId),
         eq(userAppTeamConfigs.teamId, teamId),
         eq(userAppTeamConfigs.userId, userId),
       ),
-    columns: {
-      config: true,
-    },
   });
 
   const configSchema = appIdToUserAppTeamConfigSchema[appId];
@@ -245,9 +245,9 @@ export async function upsertUserAppTeamConfigs(
   const parsedInput = configSchema.parse(input);
 
   await db.insert(userAppTeamConfigs).values({
+    appId: appId,
     config: parsedInput,
     teamId: teamId,
-    appId: appId,
     userId: userId,
   });
 }
@@ -273,8 +273,8 @@ export async function installAppForTeam(
     //? Make the user an admin for the app
     await tx.insert(userTeamAppRoles).values({
       appId: appId,
-      teamId: teamId,
       role: "ADMIN",
+      teamId: teamId,
       userId: userId,
     });
   });
@@ -308,9 +308,9 @@ export async function uninstallAppForTeam(
     );
 
   await removeAppData({
-    tx: db,
     appId: appId,
     teamId: teamId,
+    tx: db,
   });
 }
 
@@ -334,6 +334,9 @@ export async function findManyAppActivityLogs(
 ) {
   const offset = (page - 1) * pageSize;
   return db.query.appActivityLogs.findMany({
+    limit: pageSize,
+    offset: offset,
+    orderBy: [asc(appActivityLogs.loggedAt)],
     where: (appActivityLogs, { eq, inArray }) =>
       and(
         eq(appActivityLogs.appId, appId),
@@ -342,9 +345,6 @@ export async function findManyAppActivityLogs(
         rowId ? eq(appActivityLogs.rowId, rowId) : undefined,
         tableNames ? inArray(appActivityLogs.tableName, tableNames) : undefined,
       ),
-    orderBy: [asc(appActivityLogs.loggedAt)],
-    limit: pageSize,
-    offset: offset,
     with: {
       User: {
         columns: {

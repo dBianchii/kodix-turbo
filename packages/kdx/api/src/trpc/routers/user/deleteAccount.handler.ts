@@ -10,8 +10,8 @@ interface DeleteAccountOptions {
 
 export const deleteAccountHandler = async ({ ctx }: DeleteAccountOptions) => {
   await protectedMutation({
-    permissions: () => assertCanUserDeleteAccount(ctx),
     operation: () =>
       authRepository.deleteKodixAccountAndUserDataByUserId(ctx.auth.user.id),
+    permissions: () => assertCanUserDeleteAccount(ctx),
   });
 };

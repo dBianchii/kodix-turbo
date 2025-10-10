@@ -54,9 +54,6 @@ export function InviteDataTable({ canEditPage }: { canEditPage: boolean }) {
   const queryClient = useQueryClient();
   const { mutate } = useMutation(
     trpc.team.invitation.delete.mutationOptions({
-      onSuccess: () => {
-        toast.success(t("Invite deleted"));
-      },
       onError: (e) => {
         trpcErrorToastDefault(e);
       },
@@ -65,12 +62,14 @@ export function InviteDataTable({ canEditPage }: { canEditPage: boolean }) {
           trpc.team.invitation.getAll.pathFilter(),
         );
       },
+      onSuccess: () => {
+        toast.success(t("Invite deleted"));
+      },
     }),
   );
 
   const columns = [
     columnHelper.accessor("inviteEmail", {
-      header: () => <div className="ml-2">User</div>,
       cell: (info) => (
         <div className="ml-2 flex flex-row gap-4">
           <div className="flex flex-col">
@@ -81,19 +80,19 @@ export function InviteDataTable({ canEditPage }: { canEditPage: boolean }) {
           </div>
         </div>
       ),
-      enableSorting: false,
       enableHiding: false,
       enableResizing: true,
+      enableSorting: false,
+      header: () => <div className="ml-2">User</div>,
     }),
     columnHelper.accessor("inviteId", {
-      header: () => null,
       cell: (info) => {
         return (
           <div className="flex justify-end">
             <TooltipProvider>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="h-8 w-8 p-0">
+                  <Button className="h-8 w-8 p-0" variant="ghost">
                     <span className="sr-only">{t("Open menu")}</span>
                     <RxDotsHorizontal className="size-4" />
                   </Button>
@@ -103,8 +102,8 @@ export function InviteDataTable({ canEditPage }: { canEditPage: boolean }) {
                     <TooltipTrigger asChild>
                       <div>
                         <DropdownMenuItem
-                          disabled={!canEditPage}
                           className="text-destructive"
+                          disabled={!canEditPage}
                           onSelect={() => {
                             mutate({
                               invitationId: info.row.original.inviteId,
@@ -116,10 +115,10 @@ export function InviteDataTable({ canEditPage }: { canEditPage: boolean }) {
                       </div>
                     </TooltipTrigger>
                     <TooltipContent
-                      side="left"
                       className={cn("bg-background", {
                         hidden: canEditPage, // Only show tooltip if the user can't edit page
                       })}
+                      side="left"
                     >
                       <p>
                         {t("Only the owner of the team can remove invites")}
@@ -132,6 +131,7 @@ export function InviteDataTable({ canEditPage }: { canEditPage: boolean }) {
           </div>
         );
       },
+      header: () => null,
     }),
   ];
 
@@ -141,8 +141,8 @@ export function InviteDataTable({ canEditPage }: { canEditPage: boolean }) {
   );
 
   const table = useReactTable({
-    data: data,
     columns: columns,
+    data: data,
     getCoreRowModel: getCoreRowModel(),
   });
 
@@ -171,8 +171,8 @@ export function InviteDataTable({ canEditPage }: { canEditPage: boolean }) {
           {table.getRowModel().rows.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
-                key={row.id}
                 data-state={row.getIsSelected() && "selected"}
+                key={row.id}
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
@@ -183,7 +183,7 @@ export function InviteDataTable({ canEditPage }: { canEditPage: boolean }) {
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
+              <TableCell className="h-24 text-center" colSpan={columns.length}>
                 {t("No invitations right now")}
               </TableCell>
             </TableRow>

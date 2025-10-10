@@ -42,6 +42,19 @@ export async function findCareTasksFromTo(
   db = _db,
 ) {
   const careTasks: CareTask[] = await db.query.careTasks.findMany({
+    columns: {
+      date: true,
+      description: true,
+      details: true,
+      doneAt: true,
+      doneByUserId: true,
+      eventMasterId: true,
+      id: true,
+      teamId: true,
+      title: true,
+      type: true,
+      updatedAt: true,
+    },
     where: (careTask, { gte, lte, and }) =>
       and(
         inArray(careTask.teamId, teamIds),
@@ -50,19 +63,6 @@ export async function findCareTasksFromTo(
         gte(careTask.date, dateStart),
         lte(careTask.date, dateEnd),
       ),
-    columns: {
-      doneAt: true,
-      id: true,
-      title: true,
-      description: true,
-      date: true,
-      updatedAt: true,
-      doneByUserId: true,
-      details: true,
-      type: true,
-      teamId: true,
-      eventMasterId: true,
-    },
   });
 
   return careTasks;

@@ -92,9 +92,9 @@ export function DeleteAccountCard() {
                 className="flex flex-col gap-4"
                 onSubmit={form.handleSubmit(() => {
                   toast.promise(mutation.mutateAsync(), {
+                    error: (err) => getErrorMessage(err),
                     loading: t("Deleting account"),
                     success: t("Account deleted successfully"),
-                    error: (err) => getErrorMessage(err),
                   });
                 })}
               >

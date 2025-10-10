@@ -12,8 +12,6 @@ export type { AuthProvider } from "@kodix/auth/providers";
 
 const providerConfig: ProviderConfig = {
   repositories: {
-    findAccountByProviderUserId: authRepository.findAccountByProviderUserId,
-    findUserByEmail: userRepository.findUserByEmail,
     createUserWithProvider: async ({
       //TODO: it would seem that this function can be reused and moved to @kodix/auth
       name,
@@ -31,13 +29,13 @@ const providerConfig: ProviderConfig = {
         } else {
           const inviteFromCookie = (await cookies()).get("invite")?.value;
           await createUser({
-            tx,
-            name,
             email,
             image: image ?? "",
-            teamId: nanoid(),
-            userId,
             invite: inviteFromCookie,
+            name,
+            teamId: nanoid(),
+            tx,
+            userId,
           });
           if (inviteFromCookie) {
             (await cookies()).delete("invite");
@@ -53,11 +51,13 @@ const providerConfig: ProviderConfig = {
 
       return userId;
     },
+    findAccountByProviderUserId: authRepository.findAccountByProviderUserId,
+    findUserByEmail: userRepository.findUserByEmail,
   },
 };
 
 export const kdxAuthProviders = {
-  google: authProviders.google(providerConfig),
   discord: authProviders.discord(providerConfig),
+  google: authProviders.google(providerConfig),
 };
 export type KdxAuthProvider = keyof typeof kdxAuthProviders;

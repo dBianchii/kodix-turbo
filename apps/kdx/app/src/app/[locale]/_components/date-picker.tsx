@@ -30,7 +30,6 @@ export function DatePicker({
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant={"outline"}
           className={cn(
             "justify-start text-left font-normal",
             !date && "text-muted-foreground",
@@ -38,6 +37,7 @@ export function DatePicker({
           )}
           disabled={disabledPopover}
           size={size}
+          variant={"outline"}
         >
           <LuCalendar className="mr-2 size-4" />
           {date ? (
@@ -53,12 +53,12 @@ export function DatePicker({
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
         <Calendar
-          mode="single"
-          selected={date}
-          onSelect={setDate}
           disabled={disabledDate}
-          onDayClick={onDayClick}
           initialFocus
+          mode="single"
+          onDayClick={onDayClick}
+          onSelect={setDate}
+          selected={date}
         />
       </PopoverContent>
     </Popover>

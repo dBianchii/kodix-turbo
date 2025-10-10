@@ -13,9 +13,9 @@ export const saveUserAppTeamConfigHandler = async ({
   input,
 }: SaveUserAppTeamConfigOptions) => {
   await appRepository.upsertUserAppTeamConfigs({
-    userId: ctx.auth.user.id,
     appId: input.appId,
-    teamId: ctx.auth.user.activeTeamId,
     input: input.config,
+    teamId: ctx.auth.user.activeTeamId,
+    userId: ctx.auth.user.id,
   });
 };

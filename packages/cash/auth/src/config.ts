@@ -13,6 +13,21 @@ export const {
   invalidateSession,
 } = getAuthManager<User, Session>({
   ...authRepository,
+  findSessionById: async (sessionId): Promise<CashAuthResponse> => {
+    const session = await db.query.sessions.findFirst({
+      where: eq(sessions.id, sessionId),
+      with: {
+        User: true,
+      },
+    });
+
+    if (!session) return { session: null, user: null };
+
+    return {
+      session,
+      user: session.User,
+    };
+  },
   findUserByEmail: async (email: string): Promise<User | undefined> => {
     const user = await db.query.users.findFirst({
       where: eq(users.email, email),
@@ -22,21 +37,6 @@ export const {
 
     return {
       ...user,
-    };
-  },
-  findSessionById: async (sessionId): Promise<CashAuthResponse> => {
-    const session = await db.query.sessions.findFirst({
-      where: eq(sessions.id, sessionId),
-      with: {
-        User: true,
-      },
-    });
-
-    if (!session) return { user: null, session: null };
-
-    return {
-      session,
-      user: session.User,
     };
   },
 });

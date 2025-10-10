@@ -85,7 +85,10 @@
               ["../**", "./**"]
             ]
           }
-        }
+        },
+        "useSortedKeys": "on",
+        "useSortedAttributes": "on",
+        "useSortedProperties": "on"
       }
     }
   },

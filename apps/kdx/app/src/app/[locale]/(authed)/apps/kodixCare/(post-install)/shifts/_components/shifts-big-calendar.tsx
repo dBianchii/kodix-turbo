@@ -51,7 +51,7 @@ const useSelectEvent = ({
     [careShiftsData, selectedEventId],
   );
   const delayed = useDebounce(selectedEvent, 125); //Hack. There was a bug that caused this to be fired if edit is open
-  return { selectedEvent, setSelectedEventId, delayed };
+  return { delayed, selectedEvent, setSelectedEventId };
 };
 
 export default function ShiftsBigCalendar({
@@ -104,9 +104,9 @@ export default function ShiftsBigCalendar({
         old.endAt.getTime() !== dayjs(args.end).toDate().getTime()
       )
         mutate({
+          endAt: dayjs(args.end).toDate(),
           id: args.event.id,
           startAt: dayjs(args.start).toDate(),
-          endAt: dayjs(args.end).toDate(),
         });
 
       return args;
@@ -120,11 +120,11 @@ export default function ShiftsBigCalendar({
         (shift) =>
           ({
             ...shift,
+            end: dayjs(shift.endAt).toDate(),
             id: shift.id,
-            title: shift.Caregiver.name,
             image: shift.Caregiver.image,
             start: dayjs(shift.startAt).toDate(),
-            end: dayjs(shift.endAt).toDate(),
+            title: shift.Caregiver.name,
           }) as ShiftEvent,
       ) ?? [],
     [query.data],
@@ -146,6 +146,24 @@ export default function ShiftsBigCalendar({
       <div className="mt-4">
         {/* @ts-expect-error react big calendar typesafety sucks */}
         <DnDCalendar
+          components={{
+            event: ({ event }: { event: ShiftEvent }) => (
+              <div className="flex items-center gap-2 pl-3">
+                {event.finishedByUserId && <LuLock />}
+                <AvatarWrapper
+                  className="pointer-events-none size-5"
+                  fallback={event.Caregiver.name}
+                  src={event.image ?? ""}
+                />
+                <span className="text-primary-foreground text-sm">
+                  {event.title}
+                </span>
+              </div>
+            ),
+          }}
+          culture={locale}
+          date={selectedDate} // Scroll to current time
+          draggableAccessor={() => true}
           eventPropGetter={
             ((event) => {
               if (view === "agenda") return {}; // No need to colorize in agenda view
@@ -190,58 +208,40 @@ export default function ShiftsBigCalendar({
               };
             }) as EventPropGetter<ShiftEvent>
           }
-          messages={{
-            allDay: "Dia Inteiro",
-            previous: "<",
-            next: ">",
-            today: "Hoje",
-            month: "Mês",
-            week: "Semana",
-            day: "Dia",
-            agenda: "Agenda",
-            date: "Data",
-            time: "Hora",
-            event: "Evento",
-            showMore: (total: number) => `+ (${total}) Eventos`,
-          }}
-          scrollToTime={new Date()} // Scroll to current time
-          culture={locale}
-          localizer={localizer}
-          style={{ height: 630, width: "100%" }}
-          view={view}
-          views={["month", "week", "day", "agenda"]}
-          onView={setView}
           events={calendarEvents}
-          components={{
-            event: ({ event }: { event: ShiftEvent }) => (
-              <div className="flex items-center gap-2 pl-3">
-                {event.finishedByUserId && <LuLock />}
-                <AvatarWrapper
-                  className="pointer-events-none size-5"
-                  src={event.image ?? ""}
-                  fallback={event.Caregiver.name}
-                />
-                <span className="text-primary-foreground text-sm">
-                  {event.title}
-                </span>
-              </div>
-            ),
+          localizer={localizer}
+          messages={{
+            agenda: "Agenda",
+            allDay: "Dia Inteiro",
+            date: "Data",
+            day: "Dia",
+            event: "Evento",
+            month: "Mês",
+            next: ">",
+            previous: "<",
+            showMore: (total: number) => `+ (${total}) Eventos`,
+            time: "Hora",
+            today: "Hoje",
+            week: "Semana",
           }}
-          date={selectedDate}
-          onNavigate={setSelectedDate}
           onEventDrop={handleEventChange}
           onEventResize={handleEventChange}
+          onNavigate={setSelectedDate}
+          onSelectEvent={(event: ShiftEvent) => setSelectedEventId(event.id)}
           onSelectSlot={(date) => {
             if (delayed) return; //! Hack. There was a bug that caused this to be fired if edit is open
             setOpen({
-              preselectedStart: date.start,
               preselectedEnd: date.end,
+              preselectedStart: date.start,
             });
           }}
-          draggableAccessor={() => true}
-          onSelectEvent={(event: ShiftEvent) => setSelectedEventId(event.id)}
-          selectable
+          onView={setView}
           resizable
+          scrollToTime={new Date()}
+          selectable
+          style={{ height: 630, width: "100%" }}
+          view={view}
+          views={["month", "week", "day", "agenda"]}
         />
       </div>
     </>

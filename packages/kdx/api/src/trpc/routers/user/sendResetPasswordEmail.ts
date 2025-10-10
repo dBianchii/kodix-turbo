@@ -32,15 +32,15 @@ export const sendResetPasswordEmailHandler = async ({
 
   const token = nanoid();
   await authRepository.createResetPasswordToken({
-    userId: user.id,
     token,
     tokenExpiresAt,
+    userId: user.id,
   });
 
   await resend.emails.send({
     from: KODIX_NOTIFICATION_FROM_EMAIL,
-    to: input.email,
+    react: ResetPassword({ t: ctx.t, token }),
     subject: ctx.t("api.Kodix - Reset your password"),
-    react: ResetPassword({ token, t: ctx.t }),
+    to: input.email,
   });
 };

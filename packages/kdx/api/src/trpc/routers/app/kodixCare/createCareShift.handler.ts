@@ -33,8 +33,8 @@ export const createCareShiftHandler = async ({
   });
 
   const overlappingShifts = await kodixCareRepository.findOverlappingShifts({
-    start: input.startAt,
     end: input.endAt,
+    start: input.startAt,
     teamId: ctx.auth.user.activeTeamId,
   });
   assertNoOverlappingShiftsForThisCaregiver(ctx.t, {
@@ -44,8 +44,8 @@ export const createCareShiftHandler = async ({
 
   await db.transaction(async (tx) => {
     const shift = {
-      createdById: ctx.auth.user.id,
       caregiverId: input.careGiverId,
+      createdById: ctx.auth.user.id,
       endAt: input.endAt,
       startAt: input.startAt,
       teamId: ctx.auth.user.activeTeamId,
@@ -60,12 +60,12 @@ export const createCareShiftHandler = async ({
 
     await logActivity({
       appId: kodixCareAppId,
-      teamId: ctx.auth.user.activeTeamId,
-      userId: ctx.auth.user.id,
-      tableName: "careShift",
-      rowId: result.id,
-      type: "create",
       diff: diff({}, shift),
+      rowId: result.id,
+      tableName: "careShift",
+      teamId: ctx.auth.user.activeTeamId,
+      type: "create",
+      userId: ctx.auth.user.id,
     });
   });
 };

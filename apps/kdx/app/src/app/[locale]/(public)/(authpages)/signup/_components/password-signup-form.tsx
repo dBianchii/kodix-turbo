@@ -49,9 +49,9 @@ export function PasswordSignupForm({ invite }: { invite?: string }) {
         onSubmit={form.handleSubmit((values) => {
           execute({
             email: values.email,
-            password: values.password,
-            name: values.name,
             invite: invite,
+            name: values.name,
+            password: values.password,
           });
         })}
       >
@@ -75,7 +75,7 @@ export function PasswordSignupForm({ invite }: { invite?: string }) {
             <FormItem>
               <FormLabel>{t("Your email")}</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="name@email.com" {...field} />
+                <Input placeholder="name@email.com" type="email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -88,7 +88,7 @@ export function PasswordSignupForm({ invite }: { invite?: string }) {
             <FormItem>
               <FormLabel>{t("Password")}</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="*******" {...field} />
+                <Input placeholder="*******" type="password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

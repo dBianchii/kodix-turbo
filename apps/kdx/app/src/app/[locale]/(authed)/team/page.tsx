@@ -70,9 +70,9 @@ function AppsSectionSkeleton({ customApps }: { customApps: CustomApp[] }) {
     <div className="flex flex-row items-center space-x-10">
       {customApps.map((app) => (
         <Link
-          key={app.appName}
-          href={app.appUrl}
           className="transition-transform duration-300 ease-out hover:scale-105"
+          href={app.appUrl}
+          key={app.appName}
         >
           <CustomKodixIcon
             appName={app.appName}
@@ -98,9 +98,9 @@ async function AppsSection({ customApps }: { customApps: CustomApp[] }) {
     <div className="grid grid-cols-4 items-center gap-4 md:grid-cols-6 lg:grid-cols-11">
       {customApps.map((app) => (
         <Link
-          key={app.appUrl}
-          href={app.appUrl}
           className="transition-transform duration-300 ease-out hover:scale-105"
+          href={app.appUrl}
+          key={app.appUrl}
         >
           <CustomKodixIcon
             appName={app.appName}
@@ -111,9 +111,9 @@ async function AppsSection({ customApps }: { customApps: CustomApp[] }) {
       ))}
       {apps.map((app) => (
         <Link
-          key={app.id}
-          href={getAppUrl(app.id)}
           className="transition-transform duration-300 ease-out hover:scale-105"
+          href={getAppUrl(app.id)}
+          key={app.id}
         >
           <IconKodixApp appId={app.id} />
         </Link>

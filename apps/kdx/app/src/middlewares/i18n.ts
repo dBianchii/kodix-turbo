@@ -6,9 +6,9 @@ import { defaultLocale, locales } from "@kdx/locales";
 import type { CustomMiddleware } from "~/middlewares/chain-middleware";
 
 const I18nMiddleware = createMiddleware({
-  locales: locales,
   defaultLocale: defaultLocale,
   localePrefix: "as-needed",
+  locales: locales,
 });
 
 export function withI18n(middleware: CustomMiddleware) {

@@ -16,6 +16,7 @@ export const useEditCareShift = () => {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
   const mutation = useMutation(
+    // biome-ignore assist/source/useSortedKeys: Known TS limitation in tanstack
     trpc.app.kodixCare.editCareShift.mutationOptions({
       onMutate: async (newShift) => {
         await queryClient.cancelQueries(
@@ -31,12 +32,12 @@ export const useEditCareShift = () => {
               shift.id === newShift.id
                 ? {
                     ...shift,
-                    startAt: newShift.startAt
-                      ? new Date(newShift.startAt)
-                      : shift.startAt,
                     endAt: newShift.endAt
                       ? new Date(newShift.endAt)
                       : shift.endAt,
+                    startAt: newShift.startAt
+                      ? new Date(newShift.startAt)
+                      : shift.startAt,
                   }
                 : shift,
             ),
@@ -80,9 +81,9 @@ export const useShiftOverlap = ({
     trpc.app.kodixCare.findOverlappingShifts.queryOptions(
       {
         // biome-ignore lint/style/noNonNullAssertion: <biome migration>
-        start: startAt!,
-        // biome-ignore lint/style/noNonNullAssertion: <biome migration>
         end: endAt!,
+        // biome-ignore lint/style/noNonNullAssertion: <biome migration>
+        start: startAt!,
       },
       {
         enabled: Boolean(
@@ -98,7 +99,7 @@ export const useShiftOverlap = ({
   );
 
   return {
-    overlappingShifts,
     isChecking: query.isFetching,
+    overlappingShifts,
   };
 };

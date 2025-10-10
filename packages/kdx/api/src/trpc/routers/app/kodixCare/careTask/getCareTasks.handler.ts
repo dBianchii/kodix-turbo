@@ -13,8 +13,8 @@ export const getCareTasksHandler = async ({
   input,
 }: GetCareTasksOptions) => {
   const careTasks = await getCareTasks({
-    dateStart: input.dateStart,
     dateEnd: input.dateEnd,
+    dateStart: input.dateStart,
     teamIds: [ctx.auth.user.activeTeamId],
   });
 

@@ -7,30 +7,30 @@ export const SESSION_COOKIE_NAME = "session";
 
 export const setSessionTokenCookie = async (token: string, expiresAt: Date) => {
   (await cookies()).set(SESSION_COOKIE_NAME, token, {
+    expires: expiresAt,
     httpOnly: true,
+    path: "/",
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
-    expires: expiresAt,
-    path: "/",
   });
 };
 
 export const deleteSessionTokenCookie = async () => {
   (await cookies()).set(SESSION_COOKIE_NAME, "", {
     httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
     maxAge: 0,
     path: "/",
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
   });
 };
 
 const argon2Config: Options = {
   // recommended minimum parameters
   memoryCost: 19_456,
-  timeCost: 2,
   outputLen: 32,
   parallelism: 1,
+  timeCost: 2,
 };
 
 export function generateSessionToken() {

@@ -5,9 +5,8 @@ if (!process.env.MYSQL_URL) {
 }
 
 export default {
-  schema: "./src/schema/**",
-  out: "./drizzle",
-  dialect: "mysql",
-
   dbCredentials: { url: process.env.MYSQL_URL },
+  dialect: "mysql",
+  out: "./drizzle",
+  schema: "./src/schema/**",
 } satisfies Config;

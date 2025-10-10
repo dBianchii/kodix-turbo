@@ -57,12 +57,6 @@ export default function Register() {
       <YStack bg={"$background"} flex={1} px={"$4"}>
         <Stack.Screen
           options={{
-            headerStyle: {
-              backgroundColor: theme.background.val,
-            },
-            title: "",
-            headerShown: true,
-            headerShadowVisible: false,
             headerLeft: () => (
               <TouchableOpacity
                 onPress={() => {
@@ -72,6 +66,12 @@ export default function Register() {
                 <ChevronLeft size={"$2"} />
               </TouchableOpacity>
             ),
+            headerShadowVisible: false,
+            headerShown: true,
+            headerStyle: {
+              backgroundColor: theme.background.val,
+            },
+            title: "",
           }}
         />
         <YStack>
@@ -92,8 +92,8 @@ export default function Register() {
                   <FormControl>
                     <Input
                       {...field}
-                      placeholder="name@email.com"
                       onChangeText={field.onChange}
+                      placeholder="name@email.com"
                     />
                   </FormControl>
                   <FormDescription>
@@ -124,7 +124,7 @@ export default function Register() {
             ) : null}
           </Form>
         </YStack>
-        <View mt={"$6"} ai={"center"}>
+        <View ai={"center"} mt={"$6"}>
           {!query.data && query.isError && (
             <Text color="red">
               Ocorreu um erro ao verificar o email. Tente novamente.
@@ -141,7 +141,7 @@ export default function Register() {
               <Text color="red" mb={"$3"}>
                 Email já cadastrado. Faça login para continuar.
               </Text>
-              <Link href="/signIn" asChild replace>
+              <Link asChild href="/signIn" replace>
                 <Button variant="outlined">
                   Entrar <ChevronRight />
                 </Button>

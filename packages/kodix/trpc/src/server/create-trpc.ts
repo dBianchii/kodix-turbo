@@ -26,7 +26,6 @@ export const createTRPC = <
     .context<typeof createTRPCContext>()
     .meta<Meta>()
     .create({
-      transformer: SuperJSON,
       errorFormatter({ shape, error }) {
         return {
           ...shape,
@@ -39,6 +38,7 @@ export const createTRPC = <
           },
         };
       },
+      transformer: SuperJSON,
     });
 
   /**
@@ -72,12 +72,11 @@ export const createTRPC = <
   const baseProcedure = t.procedure.use(timingMiddleware);
 
   return {
-    router: t.router,
-    createCallerFactory: t.createCallerFactory,
-    createTRPCContext,
-
     commonProcedures: {
       baseProcedure,
     },
+    createCallerFactory: t.createCallerFactory,
+    createTRPCContext,
+    router: t.router,
   };
 };

@@ -112,10 +112,10 @@ export function RecurrencePicker({
     setOpen(openOrClose);
   }
   const ruleForText = new RRule({
-    freq: frequency,
-    until: until ? until.toDate() : undefined,
-    interval,
     byweekday: weekdays,
+    freq: frequency,
+    interval,
+    until: until ? until.toDate() : undefined,
   });
 
   const [parent] = useAutoAnimate();

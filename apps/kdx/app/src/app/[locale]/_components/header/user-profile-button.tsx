@@ -26,15 +26,15 @@ export function UserProfileButton({ user }: { user: User }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+        <Button className="relative h-8 w-8 rounded-full" variant="ghost">
           <AvatarWrapper
             className="h-8 w-8"
-            src={user.image ?? ""}
             fallback={user.name}
+            src={user.image ?? ""}
           />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount>
+      <DropdownMenuContent align="end" className="w-56" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="font-medium text-sm leading-none">{user.name}</p>
@@ -52,7 +52,7 @@ export function UserProfileButton({ user }: { user: User }) {
           </DropdownMenuItem>
           <DropdownMenuSeparator className="mb-2" />
           <DropdownMenuItem asChild>
-            <Link href="/team" className="flex border border-gray-600">
+            <Link className="flex border border-gray-600" href="/team">
               <LuUsers className="size-4" />
               <p className="ml-2 font-bold">{user.activeTeamName}</p>
             </Link>

@@ -53,6 +53,7 @@ export function EditEventDialog({
   const [editDefinitionOpen, setEditDefinitionOpen] = useState(false);
   const mutation = useMutation(
     trpc.app.calendar.edit.mutationOptions({
+      onError: (e) => trpcErrorToastDefault(e),
       onSuccess: () => {
         setOpen(false);
         setEditDefinitionOpen(false);
@@ -64,31 +65,30 @@ export function EditEventDialog({
           trpc.app.kodixCare.careTask.getCareTasks.pathFilter(),
         );
       },
-      onError: (e) => trpcErrorToastDefault(e),
     }),
   );
 
   const defaultCalendarTask = useMemo(() => {
     return {
-      eventMasterId: calendarTask.eventMasterId,
-      eventExceptionId: calendarTask.eventExceptionId,
       calendarTask,
-      title: calendarTask.title,
+      count: RRule.fromString(calendarTask.rule).options.count ?? undefined,
+      date: calendarTask.date,
       description: calendarTask.description ?? "",
-      from: dayjs(calendarTask.date),
-      time: dayjs(calendarTask.date).format("HH:mm"),
+      eventExceptionId: calendarTask.eventExceptionId,
+      eventMasterId: calendarTask.eventMasterId,
       frequency: RRule.fromString(calendarTask.rule).options.freq,
+      from: dayjs(calendarTask.date),
       interval: RRule.fromString(calendarTask.rule).options.interval,
+      time: dayjs(calendarTask.date).format("HH:mm"),
+      title: calendarTask.title,
+      type: calendarTask.type,
       until: RRule.fromString(calendarTask.rule).options.until
         ? dayjs(RRule.fromString(calendarTask.rule).options.until)
         : undefined,
-      count: RRule.fromString(calendarTask.rule).options.count ?? undefined,
-      date: calendarTask.date,
 
       weekdays: RRule.fromString(calendarTask.rule).options.byweekday?.map(
         (w) => new Weekday(w),
       ),
-      type: calendarTask.type,
     };
   }, [calendarTask]);
 
@@ -131,6 +131,10 @@ export function EditEventDialog({
   }, [defaultCalendarTask, setStateToDefault]);
 
   const allowedEditDefinitions = {
+    all: !(
+      from.format("YYYY-MM-DD") !==
+      defaultCalendarTask.from.format("YYYY-MM-DD")
+    ),
     single: !(
       count !== defaultCalendarTask.count ||
       interval !== defaultCalendarTask.interval ||
@@ -139,10 +143,6 @@ export function EditEventDialog({
       weekdays !== defaultCalendarTask.weekdays
     ),
     thisAndFuture: true,
-    all: !(
-      from.format("YYYY-MM-DD") !==
-      defaultCalendarTask.from.format("YYYY-MM-DD")
-    ),
   };
 
   const isFormChanged =
@@ -160,10 +160,10 @@ export function EditEventDialog({
     definition: "single" | "thisAndFuture" | "all",
   ) {
     const input: RouterInputs["app"]["calendar"]["edit"] = {
+      editDefinition: definition,
       eventExceptionId: defaultCalendarTask.eventExceptionId,
       eventMasterId: defaultCalendarTask.eventMasterId,
       selectedTimestamp: defaultCalendarTask.date,
-      editDefinition: definition,
     };
 
     if (title !== defaultCalendarTask.title) input.title = title;

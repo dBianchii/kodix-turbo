@@ -15,6 +15,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
     : routing.defaultLocale;
 
   return {
+    formats: formats,
     locale,
     //! We should only load messages that are hosted by kdx. No need to load more messages than necessary.
     messages: {
@@ -34,6 +35,5 @@ export default getRequestConfig(async ({ requestLocale }) => {
         )
       ).default,
     },
-    formats: formats,
   };
 });

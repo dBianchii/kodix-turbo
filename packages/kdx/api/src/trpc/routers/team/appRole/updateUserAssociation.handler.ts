@@ -43,9 +43,9 @@ export const updateUserAssociationHandler = async ({
       await teamRepository.removeUserAssociationsFromTeamAppRolesByTeamIdAndAppIdAndRoles(
         {
           appId: input.appId,
+          roles: toRemoveRoles.map(([role]) => role),
           teamId: ctx.auth.user.activeTeamId,
           userId: input.userId,
-          roles: toRemoveRoles.map(([role]) => role),
         },
         tx,
       );
@@ -54,10 +54,10 @@ export const updateUserAssociationHandler = async ({
       // If there are any teamAppRoleIds to connect, insert them after deletion
       await teamRepository.associateManyAppRolesToUsers(
         toAddRoles.map(([role]) => ({
-          userId: input.userId,
+          appId: input.appId,
           role,
           teamId: ctx.auth.user.activeTeamId,
-          appId: input.appId,
+          userId: input.userId,
         })),
         tx,
       );

@@ -16,16 +16,16 @@ export type TChangeNameInputSchema = z.infer<
 >;
 
 export const ZGetNotificationsInputSchema = z.object({
-  teamId: z.string().optional(),
+  channel: z.custom<typeof notifications.$inferInsert.channel>().optional(),
 
   from: z.string().optional(),
-  to: z.string().optional(),
-  page: z.coerce.number().default(1),
-  channel: z.custom<typeof notifications.$inferInsert.channel>().optional(),
   operator: z.enum(["and", "or"]).optional(),
-  subject: z.string().optional(),
+  page: z.coerce.number().default(1),
   perPage: z.coerce.number().default(10),
   sort: z.string().optional(),
+  subject: z.string().optional(),
+  teamId: z.string().optional(),
+  to: z.string().optional(),
 });
 export type TGetNotificationsInputSchema = z.infer<
   typeof ZGetNotificationsInputSchema
@@ -54,10 +54,10 @@ export type TSignInByPasswordInputSchema = z.infer<
 >;
 
 export const ZSignupWithPasswordInputSchema = z.object({
-  name: z.string().min(3).max(31),
   email: z.email(),
-  password: z.string().min(6).max(255),
   invite: z.string().optional(),
+  name: z.string().min(3).max(31),
+  password: z.string().min(6).max(255),
 });
 export type TSignupWithPasswordInputSchema = z.infer<
   typeof ZSignupWithPasswordInputSchema
@@ -71,8 +71,8 @@ export type TSendResetPasswordEmailInputSchema = z.infer<
 >;
 
 export const ZChangePasswordInputSchema = z.object({
-  token: z.string(),
   password: z.string().min(3).max(255),
+  token: z.string(),
 });
 export type TChangePasswordInputSchema = z.infer<
   typeof ZChangePasswordInputSchema

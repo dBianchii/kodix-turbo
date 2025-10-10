@@ -14,12 +14,12 @@ export const updateHandler = async ({ ctx, input }: UpdateOptions) => {
   await db
     .update(todos)
     .set({
-      title: input.title,
       assignedToUserId: input.assignedToUserId,
       description: input.description,
       dueDate: input.dueDate,
       priority: input.priority,
       status: input.status,
+      title: input.title,
     })
     .where(
       and(eq(todos.id, input.id), eq(todos.teamId, ctx.auth.user.activeTeamId)),

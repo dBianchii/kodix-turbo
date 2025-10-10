@@ -44,8 +44,8 @@ export default async function RolesLayout({
           </p>
           <AppSwitcherClient
             appsPromise={trpcCaller.app.getInstalled()}
-            hrefPrefix="/team/settings/permissions/"
             hideAddMoreApps
+            hrefPrefix="/team/settings/permissions/"
             iconSize={28}
           />
         </div>

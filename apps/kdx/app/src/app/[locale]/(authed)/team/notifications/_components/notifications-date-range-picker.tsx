@@ -129,34 +129,34 @@ export function NotificationsDateRangePicker({
       <Popover>
         <PopoverTrigger asChild>
           <Button
-            variant={triggerVariant}
-            size={triggerSize}
             className={cn(
               "w-full justify-start truncate text-left font-normal",
               !date && "text-muted-foreground",
               triggerClassName,
             )}
+            size={triggerSize}
+            variant={triggerVariant}
           >
             <LuCalendar className="mr-2 size-4" />
             {date?.from ? (
               date.to ? (
                 <>
                   {formatT.dateTime(date.from, {
-                    month: "short",
                     day: "numeric",
+                    month: "short",
                     year: "numeric",
                   })}{" "}
                   -{" "}
                   {formatT.dateTime(date.to, {
-                    month: "short",
                     day: "numeric",
+                    month: "short",
                     year: "numeric",
                   })}
                 </>
               ) : (
                 formatT.dateTime(date.from, {
-                  month: "short",
                   day: "numeric",
+                  month: "short",
                   year: "numeric",
                 })
               )
@@ -167,12 +167,12 @@ export function NotificationsDateRangePicker({
         </PopoverTrigger>
         <PopoverContent className={cn("w-auto p-0", className)} {...props}>
           <Calendar
+            defaultMonth={date?.from}
             initialFocus
             mode="range"
-            defaultMonth={date?.from}
-            selected={date}
-            onSelect={setDate}
             numberOfMonths={2}
+            onSelect={setDate}
+            selected={date}
           />
         </PopoverContent>
       </Popover>

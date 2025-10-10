@@ -7,14 +7,14 @@ import type { IsomorficT } from "@kdx/locales";
 import { adjustDateToMinute, ZNanoId } from "../../../..";
 
 export const ZGetCareTasksInputSchema = z.object({
-  dateStart: z.date().transform(adjustDateToMinute),
   dateEnd: z.date().transform(adjustDateToMinute),
+  dateStart: z.date().transform(adjustDateToMinute),
 });
 export type TGetCareTasksInputSchema = z.infer<typeof ZGetCareTasksInputSchema>;
 
 export const ZEditCareTaskInputSchema = (t: IsomorficT) =>
   z.object({
-    id: ZNanoId,
+    details: z.string().nullable().optional(),
     doneAt: z
       .date()
       .max(new Date(), {
@@ -23,7 +23,7 @@ export const ZEditCareTaskInputSchema = (t: IsomorficT) =>
       .transform(adjustDateToMinute)
       .nullable()
       .optional(),
-    details: z.string().nullable().optional(),
+    id: ZNanoId,
   });
 export type TEditCareTaskInputSchema = z.infer<
   ReturnType<typeof ZEditCareTaskInputSchema>
@@ -46,8 +46,8 @@ export const ZCreateCareTaskInputSchema = (t: IsomorficT) =>
       .transform(
         (date) => dayjs(date).second(0).millisecond(0).toDate(), // Ensure seconds and milliseconds are 0
       ),
-    title: z.string(),
     description: z.string().optional(),
+    title: z.string(),
     type: z.custom<typeof careTasks.$inferInsert.type>(),
   });
 export type TCreateCareTaskInputSchema = z.infer<

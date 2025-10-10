@@ -27,35 +27,38 @@ const columnHelper =
 export function getColumns() {
   return [
     columnHelper.display({
-      id: "select",
-      header: function Header({ table }) {
-        const t = useTranslations();
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label={t("Select all")}
-          className="translate-y-0.5"
-        />;
-      },
       cell: function Cell({ row }) {
         const t = useTranslations();
 
         return (
           <Checkbox
-            checked={row.getIsSelected()}
-            onCheckedChange={(value) => row.toggleSelected(!!value)}
             aria-label={t("Select row")}
+            checked={row.getIsSelected()}
             className="translate-y-0.5"
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
           />
         );
       },
-      enableSorting: false,
       enableHiding: false,
+      enableSorting: false,
+      header: function Header({ table }) {
+        const t = useTranslations();
+        <Checkbox
+          aria-label={t("Select all")}
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          className="translate-y-0.5"
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        />;
+      },
+      id: "select",
     }),
     columnHelper.accessor("subject", {
+      cell: ({ row }) => <div className="w-20">{row.original.subject}</div>,
+      enableHiding: false,
+      enableSorting: false,
       header: function Header({ column }) {
         const t = useTranslations();
         return (
@@ -64,19 +67,8 @@ export function getColumns() {
           </DataTableColumnHeader>
         );
       },
-      cell: ({ row }) => <div className="w-20">{row.original.subject}</div>,
-      enableSorting: false,
-      enableHiding: false,
     }),
     columnHelper.accessor("channel", {
-      header: function Header({ column }) {
-        const t = useTranslations();
-        return (
-          <DataTableColumnHeader column={column}>
-            {t("Channel")}
-          </DataTableColumnHeader>
-        );
-      },
       cell: ({ row }) => {
         return (
           <div className="flex items-center">
@@ -87,8 +79,20 @@ export function getColumns() {
       filterFn: (row, id, value) => {
         return Array.isArray(value) && value.includes(row.getValue(id));
       },
+      header: function Header({ column }) {
+        const t = useTranslations();
+        return (
+          <DataTableColumnHeader column={column}>
+            {t("Channel")}
+          </DataTableColumnHeader>
+        );
+      },
     }),
     columnHelper.accessor("sentAt", {
+      cell: function Cell({ cell }) {
+        const format = useFormatter();
+        return format.dateTime(cell.row.original.sentAt, "extensive");
+      },
       header: function Header({ column }) {
         const t = useTranslations();
         return (
@@ -97,12 +101,11 @@ export function getColumns() {
           </DataTableColumnHeader>
         );
       },
-      cell: function Cell({ cell }) {
-        const format = useFormatter();
-        return format.dateTime(cell.row.original.sentAt, "extensive");
-      },
     }),
     columnHelper.accessor("teamId", {
+      cell: function Cell({ row }) {
+        return <div className="w-20">{row.original.teamName}</div>;
+      },
       header: function Header({ column }) {
         const t = useTranslations();
         return (
@@ -111,12 +114,8 @@ export function getColumns() {
           </DataTableColumnHeader>
         );
       },
-      cell: function Cell({ row }) {
-        return <div className="w-20">{row.original.teamName}</div>;
-      },
     }),
     columnHelper.display({
-      id: "actions",
       cell: function Cell({ row }) {
         const [showDeleteTaskDialog, setShowDeleteTaskDialog] = useState(false);
         const t = useTranslations();
@@ -129,19 +128,19 @@ export function getColumns() {
             /> */}
 
             <DeleteNotificationsDialog
-              open={showDeleteTaskDialog}
-              onOpenChange={setShowDeleteTaskDialog}
               notifications={[row]}
+              onOpenChange={setShowDeleteTaskDialog}
+              open={showDeleteTaskDialog}
               showTrigger={false}
             />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   aria-label="Open menu"
-                  variant="ghost"
                   className="flex size-8 p-0 data-[state=open]:bg-muted"
+                  variant="ghost"
                 >
-                  <RxDotsHorizontal className="size-4" aria-hidden="true" />
+                  <RxDotsHorizontal aria-hidden="true" className="size-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-40">
@@ -154,8 +153,8 @@ export function getColumns() {
                   </DropdownMenuItem>
                 </Link>
                 <DropdownMenuItem
-                  onSelect={() => setShowDeleteTaskDialog(true)}
                   className="text-destructive"
+                  onSelect={() => setShowDeleteTaskDialog(true)}
                 >
                   {t("Delete")}
                 </DropdownMenuItem>
@@ -164,6 +163,7 @@ export function getColumns() {
           </>
         );
       },
+      id: "actions",
     }),
   ];
 }

@@ -46,9 +46,9 @@ export const unlockMoreTasksHandler = async ({
     });
 
   await cloneCalendarTasksToCareTasks({
-    tx: db,
-    start: clonedCareTasksUntil,
-    end: input.selectedTimestamp,
     ctx,
+    end: input.selectedTimestamp,
+    start: clonedCareTasksUntil,
+    tx: db,
   });
 };

@@ -53,26 +53,26 @@ export function DateTimePicker({
           {type === "date" && <Calendar color={"$gray11Dark"} />}
           {type === "time" && <Clock color={"$gray11Dark"} />}
         </XStack>
-        <Input pointerEvents="none" editable={false} minWidth={"$10"}>
+        <Input editable={false} minWidth={"$10"} pointerEvents="none">
           {type === "date" && selectedDate?.toLocaleDateString()}
           {type === "time" && selectedDate?.toLocaleTimeString()}
         </Input>
       </XStack>
 
       <DateTimePickerModal
-        minimumDate={minimumDate}
+        accentColor={accentColor}
+        buttonTextColorIOS={buttonTextColorIOS}
         cancelTextIOS={cancelText}
         confirmTextIOS={confirmText}
         date={selectedDate}
         isVisible={show}
-        mode={type}
         // display="inline"
-        accentColor={accentColor}
-        textColor={textColor}
-        buttonTextColorIOS={buttonTextColorIOS}
+        minimumDate={minimumDate}
+        mode={type}
+        onCancel={hideDatePicker}
         onChange={onChange}
         onConfirm={handleConfirm}
-        onCancel={hideDatePicker}
+        textColor={textColor}
       />
     </Pressable>
   );

@@ -36,17 +36,17 @@ export function StatusPopover({
   const statusTxt = StatusToText(status);
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover onOpenChange={setOpen} open={open}>
       <PopoverTrigger asChild>
         {children ?? (
-          <Button variant="outline" size="sm">
-            <StatusIcon status={status} className={"mr-2"} />
+          <Button size="sm" variant="outline">
+            <StatusIcon className={"mr-2"} status={status} />
             {statusTxt}
             <span className="sr-only">Open status popover</span>
           </Button>
         )}
       </PopoverTrigger>
-      <PopoverContent className="w-300 p-0" side="bottom" align={"start"}>
+      <PopoverContent align={"start"} className="w-300 p-0" side="bottom">
         <Command>
           <CommandInput placeholder="Change status..." />
           <CommandList
@@ -61,7 +61,7 @@ export function StatusPopover({
                   setOpen(false);
                 }}
               >
-                <StatusIcon status={"TODO"} className="mr-2" />
+                <StatusIcon className="mr-2" status={"TODO"} />
                 Todo
               </CommandItem>
               <CommandItem
@@ -70,7 +70,7 @@ export function StatusPopover({
                   setOpen(false);
                 }}
               >
-                <StatusIcon status={"INPROGRESS"} className="mr-2" />
+                <StatusIcon className="mr-2" status={"INPROGRESS"} />
                 In progress
               </CommandItem>
               <CommandItem
@@ -79,7 +79,7 @@ export function StatusPopover({
                   setOpen(false);
                 }}
               >
-                <StatusIcon status={"INREVIEW"} className="mr-2" />
+                <StatusIcon className="mr-2" status={"INREVIEW"} />
                 In review
               </CommandItem>
               <CommandItem
@@ -88,7 +88,7 @@ export function StatusPopover({
                   setOpen(false);
                 }}
               >
-                <StatusIcon status={"DONE"} className="mr-2" />
+                <StatusIcon className="mr-2" status={"DONE"} />
                 Done
               </CommandItem>
               <CommandItem
@@ -97,7 +97,7 @@ export function StatusPopover({
                   setOpen(false);
                 }}
               >
-                <StatusIcon status={"CANCELED"} className="mr-2" />
+                <StatusIcon className="mr-2" status={"CANCELED"} />
                 Canceled
               </CommandItem>
             </CommandGroup>

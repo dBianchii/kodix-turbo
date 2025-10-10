@@ -53,8 +53,8 @@ export default async function HomePage({
                   <Link
                     className={cn(
                       buttonVariants({
-                        variant: "default",
                         size: "lg",
+                        variant: "default",
                       }),
                       "gap-2 whitespace-pre md:flex",
                       "group relative w-full gap-1 overflow-hidden rounded-full font-semibold text-sm tracking-tighter",

@@ -21,7 +21,7 @@ export default async function ShiftsPage() {
     <main className="pt-4 md:p-4">
       <HydrateClient>
         <Suspense fallback={<DataTableSkeleton columnCount={4} rowCount={5} />}>
-          <ShiftsBigCalendar user={user} careGivers={careGiversPromise} />
+          <ShiftsBigCalendar careGivers={careGiversPromise} user={user} />
         </Suspense>
       </HydrateClient>
     </main>

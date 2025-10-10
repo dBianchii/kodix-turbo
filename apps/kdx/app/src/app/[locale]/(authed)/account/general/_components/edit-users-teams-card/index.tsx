@@ -26,13 +26,13 @@ export async function EditUserTeamsTable() {
         <TableBody>
           {sortedTeams.length ? (
             sortedTeams.map((team) => (
-              <CustomRow team={team} user={user} key={team.id} />
+              <CustomRow key={team.id} team={team} user={user} />
             ))
           ) : (
             <TableRow>
               <TableCell
-                colSpan={sortedTeams.length}
                 className="h-24 text-center"
+                colSpan={sortedTeams.length}
               >
                 {t("No results")}.
               </TableCell>

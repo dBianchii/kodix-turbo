@@ -36,6 +36,9 @@ export function NotificationsPopoverClient({
   const queryClient = useQueryClient();
   const acceptMutation = useMutation(
     trpc.team.invitation.accept.mutationOptions({
+      onError: (error) => {
+        trpcErrorToastDefault(error);
+      },
       onSuccess: () => {
         toast.success(t("header.Invitation accepted"));
         void queryClient.invalidateQueries(
@@ -43,22 +46,19 @@ export function NotificationsPopoverClient({
         );
         router.refresh();
       },
-      onError: (error) => {
-        trpcErrorToastDefault(error);
-      },
     }),
   );
   const declineMutation = useMutation(
     trpc.team.invitation.decline.mutationOptions({
+      onError: (error) => {
+        trpcErrorToastDefault(error);
+      },
       onSuccess: () => {
         toast.success(t("Invitation declined"));
         void queryClient.invalidateQueries(
           trpc.user.getInvitations.pathFilter(),
         );
         router.refresh();
-      },
-      onError: (error) => {
-        trpcErrorToastDefault(error);
       },
     }),
   );
@@ -71,7 +71,7 @@ export function NotificationsPopoverClient({
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button size="icon" variant="ghost">
                 <MdNotificationsActive className="size-4 text-orange-500" />
                 <span className="sr-only">{t("notifications")}</span>
               </Button>
@@ -93,7 +93,7 @@ export function NotificationsPopoverClient({
         <div className="pt-4">
           <ul className="space-y-2">
             {query.data.map((invitation) => (
-              <li key={invitation.id} className="flex flex-col gap-2">
+              <li className="flex flex-col gap-2" key={invitation.id}>
                 <div>
                   <p className="text-muted-foreground text-sm">
                     <span className="font-bold text-foreground">
@@ -107,14 +107,14 @@ export function NotificationsPopoverClient({
                 </div>
                 <div className="flex space-x-2 self-end">
                   <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                      declineMutation.mutate({ invitationId: invitation.id });
-                    }}
                     loading={
                       declineMutation.isPending || acceptMutation.isPending
                     }
+                    onClick={() => {
+                      declineMutation.mutate({ invitationId: invitation.id });
+                    }}
+                    size="sm"
+                    variant="ghost"
                   >
                     {t("Decline")}
                   </Button>
@@ -122,10 +122,10 @@ export function NotificationsPopoverClient({
                     loading={
                       declineMutation.isPending || acceptMutation.isPending
                     }
-                    size="sm"
                     onClick={() => {
                       acceptMutation.mutate({ invitationId: invitation.id });
                     }}
+                    size="sm"
                   >
                     {t("accept")}
                   </Button>

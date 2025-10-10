@@ -32,11 +32,11 @@ export function KodixCareUserSettingsForm({
   const t = useTranslations();
 
   const form = useForm({
-    schema: ZSaveUserAppTeamConfigInputSchema,
     defaultValues: {
       appId: kodixCareAppId,
       config: use(config),
     },
+    schema: ZSaveUserAppTeamConfigInputSchema,
   });
 
   const { execute, isExecuting } = useAction(saveUserAppTeamConfig, {
@@ -48,10 +48,10 @@ export function KodixCareUserSettingsForm({
   return (
     <Form {...form}>
       <form
+        className="w-full space-y-6"
         onSubmit={form.handleSubmit((values) => {
           execute(values);
         })}
-        className="w-full space-y-6"
       >
         <FormField
           control={form.control}
@@ -78,9 +78,9 @@ export function KodixCareUserSettingsForm({
               </div>
               <FormControl>
                 <Switch
+                  checked={field.value}
                   className="mx-4"
                   onCheckedChange={field.onChange}
-                  checked={field.value}
                 />
               </FormControl>
             </FormItem>

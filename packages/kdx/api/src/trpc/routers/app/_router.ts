@@ -31,33 +31,33 @@ import { uninstallAppHandler } from "./uninstallApp.handler";
 
 export const appRouter = {
   calendar: calendarRouter,
-  kodixCare: kodixCareRouter,
-  todo: todoRouter,
   getAll: publicProcedure.query(getAllHandler),
-  getConfig: protectedProcedure
-    .input(ZGetConfigInput)
-    .use(appInstalledMiddleware)
-    .query(getConfigHandler),
-  getUserAppTeamConfig: protectedProcedure
-    .input(ZGetUserAppTeamConfigInputSchema)
-    .use(appInstalledMiddleware)
-    .query(getUserAppTeamConfigHandler),
-  getInstalled: protectedProcedure.query(getInstalledHandler),
-  installApp: isTeamOwnerProcedure
-    .input(ZInstallAppInputSchema)
-    .mutation(installAppHandler),
-  saveConfig: protectedProcedure
-    .input(ZSaveConfigInput)
-    .mutation(saveConfigHandler),
-  uninstallApp: isTeamOwnerProcedure
-    .input(ZUninstallAppInputSchema)
-    .mutation(uninstallAppHandler),
-  saveUserAppTeamConfig: protectedProcedure
-    .input(ZSaveUserAppTeamConfigInputSchema)
-    .use(appInstalledMiddleware)
-    .mutation(saveUserAppTeamConfigHandler),
   getAppActivityLogs: protectedProcedure
     .input(ZGetAppActivityLogsInputSchema)
     .use(appInstalledMiddleware)
     .query(getAppActivityLogsHandler),
+  getConfig: protectedProcedure
+    .input(ZGetConfigInput)
+    .use(appInstalledMiddleware)
+    .query(getConfigHandler),
+  getInstalled: protectedProcedure.query(getInstalledHandler),
+  getUserAppTeamConfig: protectedProcedure
+    .input(ZGetUserAppTeamConfigInputSchema)
+    .use(appInstalledMiddleware)
+    .query(getUserAppTeamConfigHandler),
+  installApp: isTeamOwnerProcedure
+    .input(ZInstallAppInputSchema)
+    .mutation(installAppHandler),
+  kodixCare: kodixCareRouter,
+  saveConfig: protectedProcedure
+    .input(ZSaveConfigInput)
+    .mutation(saveConfigHandler),
+  saveUserAppTeamConfig: protectedProcedure
+    .input(ZSaveUserAppTeamConfigInputSchema)
+    .use(appInstalledMiddleware)
+    .mutation(saveUserAppTeamConfigHandler),
+  todo: todoRouter,
+  uninstallApp: isTeamOwnerProcedure
+    .input(ZUninstallAppInputSchema)
+    .mutation(uninstallAppHandler),
 } satisfies TRPCRouterRecord;

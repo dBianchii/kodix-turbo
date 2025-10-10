@@ -38,6 +38,9 @@ export function CancelationDialog({
   const queryClient = useQueryClient();
   const mutation = useMutation(
     trpc.app.calendar.cancel.mutationOptions({
+      onError: (err) => {
+        trpcErrorToastDefault(err);
+      },
       onSuccess: () => {
         void queryClient.invalidateQueries(
           trpc.app.calendar.getAll.pathFilter(),
@@ -47,15 +50,12 @@ export function CancelationDialog({
         );
         setOpen(false);
       },
-      onError: (err) => {
-        trpcErrorToastDefault(err);
-      },
     }),
   );
   const t = useTranslations();
 
   return (
-    <Credenza open={open} onOpenChange={setOpen}>
+    <Credenza onOpenChange={setOpen} open={open}>
       <CredenzaContent>
         <CredenzaHeader>
           <CredenzaTitle>
@@ -66,38 +66,38 @@ export function CancelationDialog({
           <RadioGroup className="flex flex-col space-y-2" defaultValue="single">
             <div className="flex">
               <RadioGroupItem
+                className=""
                 id="single"
-                value={"single"}
                 onClick={() => {
                   setRadioValue("single");
                 }}
-                className=""
+                value={"single"}
               />
-              <Label htmlFor="single" className="ml-2">
+              <Label className="ml-2" htmlFor="single">
                 {t("apps.calendar.This event")}
               </Label>
             </div>
             <div className="flex">
               <RadioGroupItem
                 id="thisAndFuture"
-                value={"thisAndFuture"}
                 onClick={() => {
                   setRadioValue("thisAndFuture");
                 }}
+                value={"thisAndFuture"}
               />
-              <Label htmlFor="thisAndFuture" className="ml-2">
+              <Label className="ml-2" htmlFor="thisAndFuture">
                 {t("apps.calendar.This and future events")}
               </Label>
             </div>
             <div className="flex">
               <RadioGroupItem
                 id="all"
-                value={"all"}
                 onClick={() => {
                   setRadioValue("all");
                 }}
+                value={"all"}
               />
-              <Label htmlFor="all" className="ml-2">
+              <Label className="ml-2" htmlFor="all">
                 {t("apps.calendar.All events")}
               </Label>
             </div>
@@ -105,10 +105,10 @@ export function CancelationDialog({
         </CredenzaBody>
         <CredenzaFooter className="bg-background">
           <Button
-            variant={"outline"}
             onClick={() => {
               setOpen(false);
             }}
+            variant={"outline"}
           >
             {t("Cancel")}
           </Button>
@@ -123,10 +123,10 @@ export function CancelationDialog({
                 });
               else
                 mutation.mutate({
+                  date,
                   eventExceptionId: eventExceptionId,
                   eventMasterId: eventMasterId,
                   exclusionDefinition: radioValue,
-                  date,
                 });
             }}
           >

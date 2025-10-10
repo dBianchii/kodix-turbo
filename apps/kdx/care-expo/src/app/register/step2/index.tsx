@@ -34,28 +34,28 @@ export default function RegisterStep2() {
     },
   });
   const form = useForm({
-    schema: ZSignupWithPasswordInputSchema.omit({
-      invite: true,
-    }),
     defaultValues: {
       email,
     },
+    schema: ZSignupWithPasswordInputSchema.omit({
+      invite: true,
+    }),
   });
 
   return (
     <RootSafeAreaView>
       <Button
+        icon={<ArrowLeft />}
         onPress={() => {
           router.back();
         }}
-        unstyled
         scaleIcon={2}
-        icon={<ArrowLeft />}
+        unstyled
       />
       <YStack>
         <YStack>
           <H3 alignSelf="center">Encontramos seu convite</H3>
-          <Paragraph mt={"$3"} alignSelf="center">
+          <Paragraph alignSelf="center" mt={"$3"}>
             Agora, precisamos de algumas informações
           </Paragraph>
         </YStack>
@@ -71,8 +71,8 @@ export default function RegisterStep2() {
                     <FormControl>
                       <Input
                         {...field}
-                        placeholder="Joana da Silva"
                         onChangeText={field.onChange}
+                        placeholder="Joana da Silva"
                         value={field.value}
                       />
                     </FormControl>
@@ -94,8 +94,8 @@ export default function RegisterStep2() {
                         disabled
                         opacity={0.5}
                         {...field}
-                        placeholder="name@email.com"
                         onChangeText={field.onChange}
+                        placeholder="name@email.com"
                       />
                     </FormControl>
 
@@ -112,8 +112,8 @@ export default function RegisterStep2() {
                     <FormControl>
                       <Input
                         {...field}
-                        secureTextEntry
                         onChangeText={field.onChange}
+                        secureTextEntry
                         value={field.value}
                       />
                     </FormControl>
@@ -129,9 +129,9 @@ export default function RegisterStep2() {
                   Keyboard.dismiss();
                   mutation.mutate({
                     email: values.email,
-                    password: values.password,
-                    name: values.name,
                     invite: inviteId,
+                    name: values.name,
+                    password: values.password,
                   });
                 })}
               >

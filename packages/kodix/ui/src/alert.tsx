@@ -5,6 +5,9 @@ import { cn } from ".";
 const alertVariants = cva(
   "relative w-full rounded-lg border px-4 py-3 text-sm [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:top-4 [&>svg]:left-4 [&>svg]:text-foreground [&>svg~*]:pl-7",
   {
+    defaultVariants: {
+      variant: "default",
+    },
     variants: {
       variant: {
         default: "bg-background text-foreground",
@@ -13,9 +16,6 @@ const alertVariants = cva(
         warning:
           "border-orange-500/50 bg-orange-100 text-orange-400 dark:border-orange-500 dark:bg-orange-950/50 [&>svg]:text-orange-400", //TODO: make orange css variables lol
       },
-    },
-    defaultVariants: {
-      variant: "default",
     },
   }
 );

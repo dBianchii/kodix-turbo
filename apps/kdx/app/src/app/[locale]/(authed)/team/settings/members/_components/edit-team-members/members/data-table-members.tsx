@@ -62,25 +62,24 @@ export function DataTableMembers({
   const t = useTranslations();
   const { mutate } = useMutation(
     trpc.team.removeUser.mutationOptions({
+      onError: (e) => trpcErrorToastDefault(e),
       onSuccess: () => {
         toast.success(t("User removed from team"));
         void queryClient.invalidateQueries(trpc.team.getAllUsers.pathFilter());
       },
-      onError: (e) => trpcErrorToastDefault(e),
     }),
   );
 
   const columns = useMemo(
     () => [
       columnHelper.accessor("name", {
-        header: () => <div className="ml-2">User</div>,
         cell: (info) => (
           <div className="ml-2 flex flex-row gap-4">
             <div className="flex flex-col">
               <AvatarWrapper
                 className="h-8 w-8"
-                src={info.cell.row.original.image ?? ""}
                 fallback={info.getValue()}
+                src={info.cell.row.original.image ?? ""}
               />
             </div>
             <div className="flex flex-col items-start">
@@ -91,12 +90,12 @@ export function DataTableMembers({
             </div>
           </div>
         ),
-        enableSorting: false,
         enableHiding: false,
         enableResizing: true,
+        enableSorting: false,
+        header: () => <div className="ml-2">User</div>,
       }),
       columnHelper.display({
-        id: "actions",
         cell: function Cell(info) {
           if (info.row.original.id === user.id) return null;
 
@@ -105,7 +104,7 @@ export function DataTableMembers({
               <TooltipProvider>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="h-8 w-8 p-0">
+                    <Button className="h-8 w-8 p-0" variant="ghost">
                       <span className="sr-only">{t("Open menu")}</span>
                       <RxDotsHorizontal className="size-4" />
                     </Button>
@@ -115,8 +114,8 @@ export function DataTableMembers({
                       <TooltipTrigger asChild>
                         <div>
                           <DropdownMenuItem
-                            disabled={!canEditPage}
                             className="text-destructive"
+                            disabled={!canEditPage}
                             onSelect={() => {
                               mutate({
                                 userId: info.row.original.id,
@@ -128,10 +127,10 @@ export function DataTableMembers({
                         </div>
                       </TooltipTrigger>
                       <TooltipContent
-                        side="left"
                         className={cn("bg-background", {
                           hidden: canEditPage, // Only show tooltip if the user can't edit page
                         })}
+                        side="left"
                       >
                         <p>
                           {t("Only the owner of the team can remove members")}
@@ -144,18 +143,19 @@ export function DataTableMembers({
             </div>
           );
         },
+        id: "actions",
       }),
     ],
     [canEditPage, mutate, t, user.id],
   );
 
   const table = useReactTable({
-    data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
+    data,
     defaultColumn: {
       size: 1,
     },
+    getCoreRowModel: getCoreRowModel(),
   });
 
   return (
@@ -183,8 +183,8 @@ export function DataTableMembers({
           {table.getRowModel().rows.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
-                key={row.id}
                 data-state={row.getIsSelected() && "selected"}
+                key={row.id}
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
@@ -195,7 +195,7 @@ export function DataTableMembers({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
+              <TableCell className="h-24 text-center" colSpan={columns.length}>
                 {t("No members found")}
               </TableCell>
             </TableRow>

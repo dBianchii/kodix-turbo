@@ -45,9 +45,9 @@ export function AppSwitcherClient({
   const apps = use(appsPromise);
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover onOpenChange={setOpen} open={open}>
       <PopoverTrigger asChild>
-        <Button variant="ghost" className="justify-start">
+        <Button className="justify-start" variant="ghost">
           <CurrentAppIcon hrefPrefix={hrefPrefix} iconSize={iconSize} />
           <span className="ml-2">
             <CurrentAppName hrefPrefix={hrefPrefix} />
@@ -58,8 +58,8 @@ export function AppSwitcherClient({
       <PopoverContent className="w-[200px] p-0">
         <Command>
           <CommandInput
-            placeholder={`${t("header.Search app")}...`}
             className="h-9"
+            placeholder={`${t("header.Search app")}...`}
           />
           <CommandEmpty>{t("No apps found")}</CommandEmpty>
           <CommandGroup>
@@ -119,11 +119,11 @@ function CurrentAppIcon({
 
     const currentAppId = appPathnameToAppId[currentAppPathname as AppPathnames];
     return (
-      <IconKodixApp appId={currentAppId} size={iconSize} renderText={false} />
+      <IconKodixApp appId={currentAppId} renderText={false} size={iconSize} />
     );
   }
 
-  return <IoApps size={iconSize} className="text-muted-foreground" />;
+  return <IoApps className="text-muted-foreground" size={iconSize} />;
 }
 
 function CurrentAppName({ hrefPrefix = "/apps/" }: { hrefPrefix?: string }) {

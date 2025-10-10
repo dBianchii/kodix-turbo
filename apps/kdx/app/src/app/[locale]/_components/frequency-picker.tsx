@@ -58,16 +58,16 @@ export function FrequencyPicker({
   const t = useTranslations();
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover onOpenChange={setOpen} open={open}>
       <PopoverTrigger>
         {children ?? (
-          <Button variant="outline" size="sm">
+          <Button size="sm" variant="outline">
             <FrequencyToTxt frequency={frequency} />
           </Button>
         )}
       </PopoverTrigger>
-      <PopoverContent className="w-300 p-0" side="bottom" align={"start"}>
-        <Credenza open={dialogOpen} onOpenChange={setDialogOpen}>
+      <PopoverContent align={"start"} className="w-300 p-0" side="bottom">
+        <Credenza onOpenChange={setDialogOpen} open={dialogOpen}>
           <CredenzaContent>
             <CredenzaHeader>
               <CredenzaTitle>
@@ -76,7 +76,7 @@ export function FrequencyPicker({
               <CredenzaDescription>
                 <div className="mt-4 flex flex-row gap-4">
                   <span className="font-medium">{t("Repeat every")}:</span>
-                  <Input type="number" placeholder="1" className="w-16" />
+                  <Input className="w-16" placeholder="1" type="number" />
                   <Select defaultValue="DAILY">
                     <SelectTrigger className="w-[180px]">
                       <SelectValue
@@ -100,33 +100,33 @@ export function FrequencyPicker({
                       <span className="mt-4 font-medium">{t("Ends")}:</span>
                       <div className="flex items-center">
                         <RadioGroupItem
-                          value="1"
                           id="r1"
                           onClick={() => {
                             setNeverEnds(true);
                           }}
+                          value="1"
                         />
-                        <Label htmlFor="r1" className="ml-2">
+                        <Label className="ml-2" htmlFor="r1">
                           {t("Never")}
                         </Label>
                       </div>
                       <div className="flex items-center">
                         <RadioGroupItem
-                          value="0"
                           id="r2"
                           onClick={() => {
                             setNeverEnds(false);
                           }}
+                          value="0"
                         />
-                        <Label htmlFor="r2" className="ml-2">
+                        <Label className="ml-2" htmlFor="r2">
                           {t("At")}
                         </Label>
                         <div className="ml-8">
                           <DatePicker
                             date={untilDate}
-                            setDate={setUntilDate}
                             disabledDate={(date) => date < new Date()}
                             disabledPopover={neverEnds}
+                            setDate={setUntilDate}
                           />
                         </div>
                       </div>

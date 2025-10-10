@@ -16,6 +16,7 @@ async function createUserInteractive() {
   while (!userCreated) {
     try {
       const userDetails = await p.group(
+        // biome-ignore assist/source/useSortedKeys: Keep correct order of events for CLI
         {
           email: () =>
             p.text({
@@ -24,7 +25,7 @@ async function createUserInteractive() {
               validate: (value) => {
                 if (!value) return "Email is required";
 
-                const emailValidation = z.string().email().safeParse(value);
+                const emailValidation = z.email().safeParse(value);
                 if (!emailValidation.success) {
                   return "Please enter a valid email address";
                 }
@@ -75,8 +76,8 @@ async function createUserInteractive() {
 
           confirm: ({ results }) =>
             p.confirm({
-              message: `Create user with email ${chalk.cyan(results.email)}?`,
               initialValue: true,
+              message: `Create user with email ${chalk.cyan(results.email)}?`,
             }),
         },
         {
@@ -99,8 +100,8 @@ async function createUserInteractive() {
       const userId = nanoid();
 
       await userRepository.createUser({
-        id: userId,
         email: userDetails.email,
+        id: userId,
         name: userDetails.name,
         passwordHash,
       });

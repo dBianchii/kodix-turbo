@@ -37,15 +37,15 @@ export default function ForgotPasswordPage(props: {
   const t = useTranslations();
 
   const form = useForm({
+    defaultValues: {
+      token: searchParams.token,
+    },
     schema: ZChangePasswordInputSchema.extend({
       passwordConfirmation: ZChangePasswordInputSchema.shape.password,
     }).refine((data) => data.password === data.passwordConfirmation, {
       message: "Passwords don't match",
       path: ["passwordConfirmation"],
     }),
-    defaultValues: {
-      token: searchParams.token,
-    },
   });
 
   const mutation = useMutation(
@@ -58,7 +58,7 @@ export default function ForgotPasswordPage(props: {
 
   return (
     <section className="mx-auto flex flex-1 flex-col items-center justify-center px-6 py-8 lg:py-0">
-      <Link href="/" className="my-4 font-extrabold text-4xl">
+      <Link className="my-4 font-extrabold text-4xl" href="/">
         Kodix
       </Link>
       <Card className="w-[275px] sm:w-[400px]">
@@ -74,7 +74,7 @@ export default function ForgotPasswordPage(props: {
                 {t("Your password has been successfully updated")}
               </CardDescription>
 
-              <Link href="/signin" className={cn(buttonVariants())}>
+              <Link className={cn(buttonVariants())} href="/signin">
                 {t("Sign in with new password")}
               </Link>
             </CardContent>
@@ -89,10 +89,10 @@ export default function ForgotPasswordPage(props: {
             <CardContent>
               <Form {...form}>
                 <form
+                  className="space-y-6"
                   onSubmit={form.handleSubmit((values) => {
                     mutation.mutate(values);
                   })}
-                  className="space-y-6"
                 >
                   <FormField
                     control={form.control}
@@ -133,8 +133,8 @@ export default function ForgotPasswordPage(props: {
 
                   <Button
                     className="w-full"
-                    type="submit"
                     loading={mutation.isPending}
+                    type="submit"
                   >
                     {t("Change password")}
                   </Button>

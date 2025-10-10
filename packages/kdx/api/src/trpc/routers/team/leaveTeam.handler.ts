@@ -45,8 +45,8 @@ export const leaveTeamHandler = async ({ ctx, input }: LeaveTeamOptions) => {
 
   await db.transaction(async (tx) => {
     await userRepository.moveUserToTeam(tx, {
-      userId: ctx.auth.user.id,
       newTeamId: otherTeam.id,
+      userId: ctx.auth.user.id,
     });
 
     //Remove the user from the team

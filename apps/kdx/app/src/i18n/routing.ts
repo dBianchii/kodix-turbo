@@ -4,8 +4,8 @@ import { defineRouting } from "next-intl/routing";
 import { defaultLocale, locales } from "@kdx/locales";
 
 export const routing = defineRouting({
-  locales,
   defaultLocale,
+  locales,
 });
 
 // Lightweight wrappers around Next.js' navigation APIs

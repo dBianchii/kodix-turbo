@@ -41,11 +41,11 @@ export function EditTeamNameCardClient({
   const t = useTranslations();
 
   const form = useForm({
-    schema: ZUpdateInputSchema(t),
     defaultValues: {
       teamId,
       teamName,
     },
+    schema: ZUpdateInputSchema(t),
   });
 
   const router = useRouter();
@@ -63,9 +63,9 @@ export function EditTeamNameCardClient({
         <form
           onSubmit={form.handleSubmit((data) =>
             toast.promise(mutation.mutateAsync(data), {
+              error: getErrorMessage,
               loading: `${t("Saving")}...`,
               success: t("Team name saved successfully"),
-              error: getErrorMessage,
             }),
           )}
         >

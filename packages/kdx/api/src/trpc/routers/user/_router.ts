@@ -26,33 +26,32 @@ import { signupWithPasswordHandler } from "./signupWithPassword.handler";
 import { switchActiveTeamHandler } from "./switchActiveTeam.handler";
 
 export const userRouter = {
-  notifications: notificationsRouter,
-
   changeName: protectedProcedure
     .input(T(ZChangeNameInputSchema))
     .mutation(changeNameHandler),
+  changePassword: publicProcedure
+    .input(ZChangePasswordInputSchema)
+    .mutation(changePasswordHandler),
+  deleteAccount: protectedProcedure.mutation(deleteAccountHandler),
+  deleteNotifications: protectedProcedure
+    .input(ZDeleteNotificationsInputSchema)
+    .mutation(deleteNotificationsHandler),
+  getInvitations: protectedProcedure.query(getInvitationsHandler),
   /** Gets all notifications for the selected teamId and also all their pending invitations */
   getNotifications: protectedProcedure
     .input(ZGetNotificationsInputSchema)
     .query(getNotificationsHandler),
-  switchActiveTeam: protectedProcedure
-    .input(ZSwitchActiveTeamInputSchema)
-    .mutation(switchActiveTeamHandler),
-  getInvitations: protectedProcedure.query(getInvitationsHandler),
-  deleteNotifications: protectedProcedure
-    .input(ZDeleteNotificationsInputSchema)
-    .mutation(deleteNotificationsHandler),
+  notifications: notificationsRouter,
+  sendResetPasswordEmail: publicProcedure
+    .input(ZSendResetPasswordEmailInputSchema)
+    .mutation(sendResetPasswordEmailHandler),
   signInByPassword: publicProcedure
     .input(ZSignInByPasswordInputSchema)
     .mutation(signInByPasswordHandler),
   signupWithPassword: publicProcedure
     .input(ZSignupWithPasswordInputSchema)
     .mutation(signupWithPasswordHandler),
-  sendResetPasswordEmail: publicProcedure
-    .input(ZSendResetPasswordEmailInputSchema)
-    .mutation(sendResetPasswordEmailHandler),
-  changePassword: publicProcedure
-    .input(ZChangePasswordInputSchema)
-    .mutation(changePasswordHandler),
-  deleteAccount: protectedProcedure.mutation(deleteAccountHandler),
+  switchActiveTeam: protectedProcedure
+    .input(ZSwitchActiveTeamInputSchema)
+    .mutation(switchActiveTeamHandler),
 } satisfies TRPCRouterRecord;

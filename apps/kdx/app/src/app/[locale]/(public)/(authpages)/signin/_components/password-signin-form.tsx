@@ -23,11 +23,11 @@ import { ZSigninActionSchema } from "./schema";
 export function PasswordSignInForm({ callbackUrl }: { callbackUrl?: string }) {
   const t = useTranslations();
   const form = useForm({
-    schema: ZSigninActionSchema,
     defaultValues: {
       email: "",
       password: "",
     },
+    schema: ZSigninActionSchema,
   });
   const { execute, isExecuting } = useAction(signInAction, {
     onError: (res) => {
@@ -38,14 +38,14 @@ export function PasswordSignInForm({ callbackUrl }: { callbackUrl?: string }) {
   return (
     <Form {...form}>
       <form
+        className="space-y-4"
         onSubmit={form.handleSubmit((values) => {
           execute({
+            callbackUrl,
             email: values.email,
             password: values.password,
-            callbackUrl,
           });
         })}
-        className="space-y-4"
       >
         <FormField
           control={form.control}
@@ -54,7 +54,7 @@ export function PasswordSignInForm({ callbackUrl }: { callbackUrl?: string }) {
             <FormItem>
               <FormLabel>{t("Your email")}</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="name@email.com" {...field} />
+                <Input placeholder="name@email.com" type="email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -68,23 +68,23 @@ export function PasswordSignInForm({ callbackUrl }: { callbackUrl?: string }) {
               <div className="flex justify-between">
                 <FormLabel>{t("Your password")}</FormLabel>
                 <Link
-                  href="/signin/forgot-password"
                   className="text-primary text-sm"
+                  href="/signin/forgot-password"
                 >
                   {t("Forgot password")}
                 </Link>
               </div>
               <FormControl>
-                <Input type="password" placeholder="*******" {...field} />
+                <Input placeholder="*******" type="password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         <Button
-          variant="default"
-          loading={form.formState.isSubmitting || isExecuting}
           className="mt-4 w-full"
+          loading={form.formState.isSubmitting || isExecuting}
+          variant="default"
         >
           {t("Sign in")}
         </Button>

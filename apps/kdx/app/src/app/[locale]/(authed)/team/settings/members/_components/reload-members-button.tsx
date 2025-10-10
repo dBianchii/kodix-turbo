@@ -15,8 +15,6 @@ export function ReloadMembersButton() {
 
   return (
     <Button
-      size="icon"
-      variant={"ghost"}
       onClick={() => {
         startTransition(async () => {
           await Promise.allSettled([
@@ -27,6 +25,8 @@ export function ReloadMembersButton() {
           ]);
         });
       }}
+      size="icon"
+      variant={"ghost"}
     >
       <LuRefreshCw
         className={cn({
