@@ -34,7 +34,7 @@ export const verifiedQstashCron =
     const ctx = await createCronJobCtx();
 
     //? Allow running cron jobs locally, for development purposes
-    if (env.NODE_ENV !== "production") return handler({ ctx, req });
+    if (env.NODE_ENV === "development") return handler({ ctx, req });
 
     const qStashSignature = (await headers()).get("Upstash-Signature");
     if (!qStashSignature)
