@@ -5,7 +5,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./trpc/react/client": "./src/trpc/react/client.tsx",
-    "./trpc/react/server": "./src/trpc/react/server.tsx"
+    "./trpc/react/server": "./src/trpc/react/server.tsx",
+    "./crons/*": "./src/crons/*.ts"
   },
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",
@@ -15,6 +16,7 @@
     "server-only": "catalog:",
     "@cash/auth": "workspace:*",
     "@cash/db": "workspace:*",
+    "@kodix/dayjs": "workspace:*",
     "zod": "catalog:",
     "@kodix/trpc": "workspace:*"
   },

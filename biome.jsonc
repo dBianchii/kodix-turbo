@@ -38,7 +38,8 @@
         }
       },
       "style": {
-        "useBlockStatements": "off"
+        "useBlockStatements": "off",
+        "noMagicNumbers": "off"
       },
       "complexity": {
         "noVoid": "off"

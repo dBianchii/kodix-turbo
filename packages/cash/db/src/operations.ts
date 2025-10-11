@@ -37,8 +37,8 @@ export async function upsertMany<T, F, Data>(calls: {
     .map((c) => c);
 
   const [created, updated] = await Promise.all([
-    update(toUpdate),
-    create(toCreate),
+    toCreate.length > 0 ? create(toCreate) : Promise.resolve([]),
+    toUpdate.length > 0 ? update(toUpdate) : Promise.resolve([]),
   ]);
   return [...created, ...updated];
 }

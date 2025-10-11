@@ -22,64 +22,19 @@ export const ZRefreshTokenResponseSchema = z.object({
 });
 
 export const ZCAListSalesResponseSchema = z.object({
-  itens: z
-    .array(
-      z.object({
-        cliente: z
-          .object({
-            cep: z.string().nullish(),
-            cidade: z.string().nullish(),
-            email: z.string().nullish(),
-            endereco: z.string().nullish(),
-            estado: z.string().nullish(),
-            id: z.string().nullish(),
-            nome: z.string().nullish(),
-            pais: z.string().nullish(),
-            telefone: z.string().nullish(),
-          })
-          .optional(),
-        condicao_pagamento: z.boolean().optional(),
-        criado_em: z.any().optional(),
-        data: z.string().optional(),
-        id: z.string().optional(),
-        id_legado: z.number().optional(),
-        itens: z.string().optional(),
-        numero: z.number().optional(),
-        situacao: z
-          .object({
-            descricao: z.string().optional(),
-            nome: z.string().optional(),
-          })
-          .optional(),
-        status_email: z
-          .object({
-            enviado_em: z.string().optional(),
-            status: z.string().optional(),
-          })
-          .optional(),
-        tipo: z.string().optional(),
-        total: z.number().optional(),
-        versao: z.number().optional(),
-      })
-    )
-    .optional(),
-  quantidades: z
-    .object({
-      aprovado: z.number().optional(),
-      cancelado: z.number().optional(),
-      esperando_aprovacao: z.number().optional(),
-      total: z.number().optional(),
+  itens: z.array(
+    z.object({
+      cliente: z.object({
+        email: z.string().nullable().describe("Email do cliente"),
+        id: z.string().describe("ID do cliente"),
+        nome: z.string().describe("Nome do cliente"),
+      }),
+      criado_em: z.string().describe("Data de criação da venda"),
+      id: z.string().describe("ID da venda"),
+      numero: z.number().describe("Número da venda"),
+      total: z.number().describe("Total da venda"),
     })
-    .optional(),
-  totais: z
-    .object({
-      aprovado: z.number().optional(),
-      cancelado: z.number().optional(),
-      esperando_aprovacao: z.number().optional(),
-      total: z.number().optional(),
-    })
-    .optional(),
-  total_itens: z.number().optional(),
+  ),
 });
 
 export type ZCAListSalesResponse = z.infer<typeof ZCAListSalesResponseSchema>;

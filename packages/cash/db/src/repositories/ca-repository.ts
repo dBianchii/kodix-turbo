@@ -1,7 +1,8 @@
 import { desc, eq } from "drizzle-orm";
 
 import { db as _db, type Drizzle } from "../client";
-import { caTokens } from "../schema";
+import { upsertMany } from "../operations";
+import { caSales, caTokens } from "../schema";
 
 export async function getCAToken(db = _db) {
   const token = await db.query.caTokens.findFirst({
@@ -32,4 +33,38 @@ export async function updateCAToken(
     .where(eq(caTokens.id, id))
     .returning();
   return updatedToken;
+}
+
+export function upsertCASales(
+  sales: (typeof caSales.$inferInsert)[],
+  db: Drizzle = _db
+) {
+  return upsertMany({
+    create: (salesToCreate) =>
+      db.insert(caSales).values(salesToCreate).returning(),
+    find: () => db.query.caSales.findMany(),
+    getFetchedDataId: (sale) => sale.caId,
+    getInputId: (sale) => sale.caId,
+    input: sales,
+    update: async (salesToUpdate) => {
+      const results = await Promise.all(
+        salesToUpdate.map(async (sale) => {
+          const [updated] = await db
+            .update(caSales)
+            .set({
+              clienteEmail: sale.clienteEmail,
+              clienteId: sale.clienteId,
+              clienteNome: sale.clienteNome,
+              criadoEm: sale.criadoEm,
+              numero: sale.numero,
+              total: sale.total,
+            })
+            .where(eq(caSales.caId, sale.caId))
+            .returning();
+          return updated;
+        })
+      );
+      return results.filter(Boolean);
+    },
+  });
 }
