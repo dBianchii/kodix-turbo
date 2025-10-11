@@ -27,15 +27,15 @@ export const ZCAListSalesResponseSchema = z.object({
       z.object({
         cliente: z
           .object({
-            cep: z.string().optional(),
-            cidade: z.string().optional(),
-            email: z.string().optional(),
-            endereco: z.string().optional(),
-            estado: z.string().optional(),
-            id: z.string().optional(),
-            nome: z.string().optional(),
-            pais: z.string().optional(),
-            telefone: z.string().optional(),
+            cep: z.string().nullish(),
+            cidade: z.string().nullish(),
+            email: z.string().nullish(),
+            endereco: z.string().nullish(),
+            estado: z.string().nullish(),
+            id: z.string().nullish(),
+            nome: z.string().nullish(),
+            pais: z.string().nullish(),
+            telefone: z.string().nullish(),
           })
           .optional(),
         condicao_pagamento: z.boolean().optional(),
