@@ -1,7 +1,8 @@
+import { caRouter } from "./routers/ca/_router";
 import { router } from "./trpc";
 
 export const cashTRPCRouter = router({
-  /*empty*/
+  ca: caRouter,
 });
 
 export type CashTRPCRouter = typeof cashTRPCRouter;

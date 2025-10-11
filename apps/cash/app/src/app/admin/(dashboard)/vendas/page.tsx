@@ -3,11 +3,17 @@ import { auth } from "@cash/auth";
 
 import PageWrapper from "~/app/_components/page-wrapper";
 
-export default async function AdminDashboardPage() {
+import { VendasViewer } from "./_components/vendas-viewer";
+
+export default async function AdminVendasPage() {
   const session = await auth();
   if (!session.user) {
     redirect("/admin/auth/login");
   }
 
-  return <PageWrapper>Ola!</PageWrapper>;
+  return (
+    <PageWrapper>
+      <VendasViewer />
+    </PageWrapper>
+  );
 }

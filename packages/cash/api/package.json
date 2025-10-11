@@ -14,6 +14,7 @@
   "dependencies": {
     "server-only": "catalog:",
     "@cash/auth": "workspace:*",
+    "@cash/db": "workspace:*",
     "zod": "catalog:",
     "@kodix/trpc": "workspace:*"
   },
