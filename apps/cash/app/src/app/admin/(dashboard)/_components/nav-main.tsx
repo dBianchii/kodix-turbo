@@ -1,5 +1,6 @@
 "use client";
 
+import type { Route } from "next";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -9,15 +10,19 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@kodix/ui/sidebar";
-import { Home } from "lucide-react";
+import { Receipt } from "lucide-react";
 
 export function NavMain() {
   const pathname = usePathname();
-  const projects = [
+  const projects: {
+    icon: React.ElementType;
+    name: string;
+    url: Route;
+  }[] = [
     {
-      icon: Home,
-      name: "Home",
-      url: "/admin",
+      icon: Receipt,
+      name: "Buscar Vendas",
+      url: "/admin/vendas",
     },
   ] as const;
 
