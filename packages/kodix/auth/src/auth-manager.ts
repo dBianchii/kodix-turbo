@@ -1,5 +1,3 @@
-/** biome-ignore-all lint/style/noMagicNumbers: <easy to understand> */
-
 import { cookies, headers } from "next/headers";
 import { sha256 } from "@oslojs/crypto/sha2";
 import { encodeHexLowerCase } from "@oslojs/encoding";

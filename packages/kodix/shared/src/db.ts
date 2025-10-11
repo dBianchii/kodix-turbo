@@ -56,7 +56,6 @@ export const kodixCareConfigSchema = z.object({
   patientName: z
     .string()
     .min(2)
-    // biome-ignore lint/style/noMagicNumbers: <easy to understand>
     .max(50)
     .regex(/^[^\d]+$/, {
       message: "Numbers are not allowed in the patient name",

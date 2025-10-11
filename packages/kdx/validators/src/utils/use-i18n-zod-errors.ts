@@ -9,7 +9,7 @@ const localeToZod: Record<
     localeError: ZodErrorMap;
   }
 > = {
-  en: en,
+  en,
   "pt-BR": pt,
 };
 

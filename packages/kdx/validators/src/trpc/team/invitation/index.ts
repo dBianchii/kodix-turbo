@@ -25,7 +25,7 @@ export const ZInviteInputSchema = z.object({
     .or(
       z.email().array().min(1, {
         message: "At least one email is required in the 'to' field",
-      }),
+      })
     )
     .transform((value) => {
       if (Array.isArray(value)) return value;
