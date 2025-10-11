@@ -2,15 +2,9 @@ import { caRepository } from "@cash/db/repositories";
 import dayjs from "@kodix/dayjs";
 
 import { listSales } from "../services/conta-azul.service";
+import { verifiedQstashCron } from "./_utils";
 
-export async function upsertCaSalesCron(request: Request) {
-  const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return new Response("Unauthorized", {
-      status: 401,
-    });
-  }
-
+export const upsertCaSalesCron = verifiedQstashCron(async () => {
   const yesterday = dayjs().subtract(1, "day").format("YYYY-MM-DD");
   const today = dayjs().format("YYYY-MM-DD");
 
@@ -38,4 +32,4 @@ export async function upsertCaSalesCron(request: Request) {
   );
 
   return new Response("Hello from Vercel!");
-}
+});
