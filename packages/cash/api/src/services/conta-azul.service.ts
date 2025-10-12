@@ -217,13 +217,22 @@ export interface ListContaAzulPersonsParams {
 export const ZCAListPersonsResponseSchema = z.object({
   items: z.array(
     z.object({
-      documento: z.string().describe("Documento da pessoa (CPF/CNPJ)"),
-      email: z.string().describe("Email da pessoa"),
+      documento: z
+        .string()
+        .transform((val) => (val === "" ? null : val)) // Some clients have an empty string for the document
+        .describe("Documento da pessoa (CPF/CNPJ)"),
+      email: z
+        .string()
+        .transform((val) => (val === "" ? null : val)) // Some clients have an empty string for the email
+        .describe("Email da pessoa"),
       id: z.string().describe("ID da pessoa"),
       nome: z
         .string()
         .describe("Nome da pessoa (física, jurídica ou estrangeira)"),
-      telefone: z.string().describe("Telefone da pessoa"),
+      telefone: z
+        .string()
+        .transform((val) => (val === "" ? null : val))
+        .describe("Telefone da pessoa"),
       tipo_pessoa: clientsSchema.shape.type,
     })
   ),

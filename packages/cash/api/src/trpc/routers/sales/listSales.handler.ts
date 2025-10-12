@@ -1,7 +1,7 @@
 import type z from "zod";
 import { db } from "@cash/db/client";
 import { clients, sales } from "@cash/db/schema";
-import { and, asc, count, desc, eq, gte, like, lte } from "drizzle-orm";
+import { and, asc, count, desc, eq, gte, ilike, lte } from "drizzle-orm";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 import type { ZListSalesInputSchema } from "../../schemas/sales";
@@ -25,7 +25,7 @@ export const listSalesHandler = async ({ input }: ListSalesOptions) => {
   // Build filter conditions
   const filterExpressions = [
     // Filter by client name if provided
-    input.clientName ? like(clients.name, `%${input.clientName}%`) : undefined,
+    input.clientName ? ilike(clients.name, `%${input.clientName}%`) : undefined,
     // Filter by date range if provided
     input.dateFrom
       ? gte(sales.caCreatedAt, new Date(input.dateFrom))
