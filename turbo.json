@@ -22,7 +22,9 @@
         "PORT",
         "QSTASH_CURRENT_SIGNING_KEY",
         "QSTASH_NEXT_SIGNING_KEY",
-        "GOOGLE_SERVICES_JSON"
+        "GOOGLE_SERVICES_JSON",
+        "CA_CLIENT_ID",
+        "CA_CLIENT_SECRET"
       ]
     },
     "start": {

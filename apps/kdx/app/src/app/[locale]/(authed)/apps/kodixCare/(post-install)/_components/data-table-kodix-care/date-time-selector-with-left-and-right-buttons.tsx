@@ -1,10 +1,9 @@
 import { useEffect, useRef } from "react";
 import dayjs from "@kodix/dayjs";
 import { Button } from "@kodix/ui/button";
+import { DatePicker } from "@kodix/ui/common/date-picker";
 import { useIsAnyOverlayMounted } from "@kodix/ui/stores/use-overlay-store";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
-
-import { DatePicker } from "~/app/[locale]/_components/date-picker";
 
 import { useCareTaskStore } from "../data-table-kodix-care";
 

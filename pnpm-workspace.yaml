@@ -2,71 +2,8 @@ packages:
   - apps/*/*
   - packages/*/*
   - tooling/*
-  
-catalogs:
-  turbo:
-    turbo: ^2.5.6
-    '@turbo/gen': ^2.5.6
-
-  next:
-    next: ^15.5.3
-
-  trpc:
-    '@trpc/client': ^11.0.0
-    '@trpc/tanstack-react-query': ^11.0.0
-    '@trpc/react-query': ^11.0.0
-    '@trpc/server': ^11.0.0
-
-  tailwindcss:
-    tailwindcss: ^4.0.12
-    '@tailwindcss/postcss': ^4.0.12
-
-  react:
-    react: ^19.1.0
-    react-dom: ^19.1.0
-    '@types/react': ^19.1.0
-    '@types/react-dom': ^19.1.0
-
-  babel:
-    '@babel/core': ^7.26.0
-    '@babel/preset-env': ^7.26.0
-    '@babel/runtime': ^7.26.0
-    
-  react-big-calendar:
-    react-big-calendar: ^1.18.0
-    '@types/react-big-calendar': ^1.16.1
-
-  expo:
-    '@expo/metro-config': ^0.18.11
-    expo-blur: ^13.0.2
-    expo-notifications: ~0.28.17
-    expo-splash-screen: ~0.27.7
-    expo: ~51.0.39
-    expo-av: ~14.0.7
-    expo-constants: ~16.0.2
-    expo-dev-client: ~4.0.29
-    expo-device: ~6.0.2
-    expo-font: ~12.0.10
-    expo-haptics: ~13.0.1
-    expo-linking: ~6.3.1
-    expo-localization: ~15.0.3
-    expo-router: ~3.5.24
-    expo-secure-store: ^13.0.2
-    expo-server-sdk: ^3.11.0
-    expo-status-bar: ~1.12.1
-
-  formatjs:
-    '@formatjs/intl-getcanonicallocales': ^2.3.0
-    '@formatjs/intl-locale': ^4.0.0
-    '@formatjs/intl-pluralrules': ^5.2.14
-    '@formatjs/intl-relativetimeformat': ^11.2.14
-
-  tanstack-query:
-    '@tanstack/react-query': ^5.66.5
-    '@tanstack/react-query-devtools': ^5.32.0
 
 catalog:
-  '@neondatabase/serverless': ^1.0.1
   '@bacons/text-decoder': ^0.0.0
   '@biomejs/biome': ^2.2.5
   '@casl/ability': ^6.7.3
@@ -74,6 +11,7 @@ catalog:
   '@formkit/auto-animate': ^0.8.2
   '@hookform/resolvers': ^5.1.1
   '@motify/components': ^0.18.0
+  '@neondatabase/serverless': ^1.0.1
   '@node-rs/argon2': ^1.8.3
   '@oslojs/crypto': ^1.0.1
   '@oslojs/encoding': ^1.1.0
@@ -138,13 +76,13 @@ catalog:
   drizzle-seed: ^0.3.1
   drizzle-zod: ^0.8.2
   embla-carousel-react: 8.0.0-rc22
-  es-toolkit: ^1.39.10
+  es-toolkit: 1.39.10
   framer-motion: ^11.11.17
-  motion: ^12.5.0
   geist: ^1.3.1
   jiti: ^2.4.2
   lucide-react: ^0.479.0
   metro: ^0.80.12
+  motion: ^12.5.0
   ms: ^2.1.3
   mysql2: ^3.9.2
   nanoid: ^5.0.7
@@ -177,14 +115,67 @@ catalog:
   sonner: ^2.0.0
   superjson: 2.2.1
   tailwind-merge: ^3.0.2
-  tw-animate-css: ^1.3.8
   tamagui: ^1.110.5
   tsx: 4.7.3
+  tw-animate-css: ^1.3.8
   typescript: ^5.9.2
-  use-intl: ^4.0.0
   ultracite: ^5.3.9
+  use-intl: ^4.0.0
   vaul: ^1.0.0
   vitest: ^3.0.6
   yaml: 2.7.0
   zod: ^4.0.0
   zustand: ^5.0.0
+
+catalogs:
+  babel:
+    '@babel/core': ^7.26.0
+    '@babel/preset-env': ^7.26.0
+    '@babel/runtime': ^7.26.0
+  expo:
+    '@expo/metro-config': ^0.18.11
+    expo: ~51.0.39
+    expo-av: ~14.0.7
+    expo-blur: ^13.0.2
+    expo-constants: ~16.0.2
+    expo-dev-client: ~4.0.29
+    expo-device: ~6.0.2
+    expo-font: ~12.0.10
+    expo-haptics: ~13.0.1
+    expo-linking: ~6.3.1
+    expo-localization: ~15.0.3
+    expo-notifications: ~0.28.17
+    expo-router: ~3.5.24
+    expo-secure-store: ^13.0.2
+    expo-server-sdk: ^3.11.0
+    expo-splash-screen: ~0.27.7
+    expo-status-bar: ~1.12.1
+  formatjs:
+    '@formatjs/intl-getcanonicallocales': ^2.3.0
+    '@formatjs/intl-locale': ^4.0.0
+    '@formatjs/intl-pluralrules': ^5.2.14
+    '@formatjs/intl-relativetimeformat': ^11.2.14
+  next:
+    next: ^15.5.3
+  react:
+    '@types/react': ^19.1.0
+    '@types/react-dom': ^19.1.0
+    react: ^19.1.0
+    react-dom: ^19.1.0
+  react-big-calendar:
+    '@types/react-big-calendar': ^1.16.1
+    react-big-calendar: ^1.18.0
+  tailwindcss:
+    '@tailwindcss/postcss': ^4.0.12
+    tailwindcss: ^4.0.12
+  tanstack-query:
+    '@tanstack/react-query': ^5.66.5
+    '@tanstack/react-query-devtools': ^5.32.0
+  trpc:
+    '@trpc/client': ^11.0.0
+    '@trpc/react-query': ^11.0.0
+    '@trpc/server': ^11.0.0
+    '@trpc/tanstack-react-query': ^11.0.0
+  turbo:
+    '@turbo/gen': ^2.5.6
+    turbo: ^2.5.6

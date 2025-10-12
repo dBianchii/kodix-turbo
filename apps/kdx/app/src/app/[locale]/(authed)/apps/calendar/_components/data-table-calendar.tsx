@@ -4,6 +4,7 @@ import type { ColumnFiltersState } from "@tanstack/react-table";
 import { useEffect, useMemo, useRef, useState } from "react";
 import dayjs from "@kodix/dayjs";
 import { Button } from "@kodix/ui/button";
+import { DatePicker } from "@kodix/ui/common/date-picker";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -51,8 +52,6 @@ import { RxDotsHorizontal } from "react-icons/rx";
 
 import type { RouterOutputs } from "@kdx/api";
 import { useTRPC } from "@kdx/api/trpc/react/client";
-
-import { DatePicker } from "~/app/[locale]/_components/date-picker";
 
 import { CancelationDialog } from "./cancel-event-dialog";
 import { EditEventDialog } from "./edit-event-dialog";

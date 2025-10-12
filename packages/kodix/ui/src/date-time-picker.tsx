@@ -474,7 +474,6 @@ function MonthYearPicker({
   const yearRef = useRef<HTMLDivElement>(null);
   const years = useMemo(() => {
     const _years: TimeOption[] = [];
-    // biome-ignore lint/style/noMagicNumbers: <not my code not my problem>
     for (let i = 1912; i < 2100; i++) {
       let disabled = false;
       const startY = startOfYear(setYear(value, i));
@@ -487,7 +486,6 @@ function MonthYearPicker({
   }, [value]);
   const months = useMemo(() => {
     const _months: TimeOption[] = [];
-    // biome-ignore lint/style/noMagicNumbers: <not my code not my problem>
     for (let i = 0; i < 12; i++) {
       let disabled = false;
       const startM = startOfMonth(setMonthFns(value, i));
@@ -626,18 +624,14 @@ function TimePicker({
     // if (use12HourFormat) {
     //   return (hour % 12) + ampm * 12;
     // }
-    // biome-ignore lint/style/noMagicNumbers: <not my code not my problem>
     return use12HourFormat ? (hour % 12) + ampm * 12 : hour;
   }, [value, use12HourFormat, ampm]);
 
   const hours: TimeOption[] = useMemo(
     () =>
-      // biome-ignore lint/style/noMagicNumbers: <not my code not my problem>
       Array.from({ length: use12HourFormat ? 12 : 24 }, (__, i) => {
         let disabled = false;
-        // biome-ignore lint/style/noMagicNumbers: <not my code not my problem>
         const hourValue = use12HourFormat ? (i === 0 ? 12 : i) : i;
-        // biome-ignore lint/style/noMagicNumbers: <not my code not my problem>
         const hDate = setHours(value, use12HourFormat ? i + ampm * 12 : i);
         const hStart = startOfHour(hDate);
         const hEnd = endOfHour(hDate);
@@ -694,9 +688,7 @@ function TimePicker({
       { label: "PM", value: PM_VALUE },
     ].map((v) => {
       let disabled = false;
-      // biome-ignore lint/style/noMagicNumbers: <not my code not my problem>
       const start = addHours(startD, v.value * 12);
-      // biome-ignore lint/style/noMagicNumbers: <not my code not my problem>
       const end = subHours(endD, (1 - v.value) * 12);
       if (min && end < min) disabled = true;
       if (max && start > max) disabled = true;
@@ -806,9 +798,7 @@ function TimePicker({
           value,
         });
         if (newTime < min) {
-          // biome-ignore lint/style/noMagicNumbers: <not my code not my problem>
           const minH = min.getHours() % 12;
-          // biome-ignore lint/style/noMagicNumbers: <not my code not my problem>
           setHour(minH === 0 ? 12 : minH);
           setMinute(min.getMinutes());
           setSecond(min.getSeconds());
@@ -825,9 +815,7 @@ function TimePicker({
           value,
         });
         if (newTime > max) {
-          // biome-ignore lint/style/noMagicNumbers: <not my code not my problem>
           const maxH = max.getHours() % 12;
-          // biome-ignore lint/style/noMagicNumbers: <not my code not my problem>
           setHour(maxH === 0 ? 12 : maxH);
           setMinute(max.getMinutes());
           setSecond(max.getSeconds());
@@ -985,28 +973,21 @@ function buildTime(options: BuildTimeOptions) {
     // yyyy-MM-dd hh:mm:ss.SSS a zzzz
     // 2024-10-14 01:20:07.524 AM GMT+00:00
     let dateStr =
-      // biome-ignore lint/style/noMagicNumbers: <not my code not my problem>
       dateStrRaw.slice(0, 11) +
       hour.toString().padStart(2, "0") +
-      // biome-ignore lint/style/noMagicNumbers: <not my code not my problem>
       dateStrRaw.slice(13);
     dateStr =
-      // biome-ignore lint/style/noMagicNumbers: <not my code not my problem>
       dateStr.slice(0, 14) +
       minute.toString().padStart(2, "0") +
-      // biome-ignore lint/style/noMagicNumbers: <not my code not my problem>
       dateStr.slice(16);
     dateStr =
-      // biome-ignore lint/style/noMagicNumbers: <not my code not my problem>
       dateStr.slice(0, 17) +
       second.toString().padStart(2, "0") +
-      // biome-ignore lint/style/noMagicNumbers: <not my code not my problem>
       dateStr.slice(19);
     dateStr =
       dateStr.slice(0, 24) +
       // biome-ignore lint/suspicious/noDoubleEquals: <biome migration>
       (ampm == AM_VALUE ? "AM" : "PM") +
-      // biome-ignore lint/style/noMagicNumbers: <not my code not my problem>
       dateStr.slice(26);
     date = parse(dateStr, formatStr, value);
   } else {

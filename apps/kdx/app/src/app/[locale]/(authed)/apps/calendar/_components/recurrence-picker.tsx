@@ -18,6 +18,7 @@ import {
   CommandItem,
   CommandList,
 } from "@kodix/ui/command";
+import { DatePicker } from "@kodix/ui/common/date-picker";
 import { Input } from "@kodix/ui/input";
 import { Label } from "@kodix/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@kodix/ui/popover";
@@ -27,7 +28,6 @@ import { useTranslations } from "next-intl";
 import { LuCheck } from "react-icons/lu";
 import { Frequency, RRule } from "rrule";
 
-import { DatePicker } from "~/app/[locale]/_components/date-picker";
 import { FrequencyToTxt } from "~/app/[locale]/_components/frequency-picker";
 
 /**

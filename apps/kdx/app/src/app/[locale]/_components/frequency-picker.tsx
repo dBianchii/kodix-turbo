@@ -10,6 +10,7 @@ import {
   CommandItem,
   CommandList,
 } from "@kodix/ui/command";
+import { DatePicker } from "@kodix/ui/common/date-picker";
 import {
   Credenza,
   CredenzaContent,
@@ -30,8 +31,6 @@ import {
 } from "@kodix/ui/select";
 import { useTranslations } from "next-intl";
 import { RRule } from "rrule";
-
-import { DatePicker } from "./date-picker";
 
 export function FrequencyPicker({
   frequency,

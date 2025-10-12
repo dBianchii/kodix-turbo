@@ -1,23 +1,14 @@
 import { headers } from "next/headers";
 import { Receiver } from "@upstash/qstash";
-import { getTranslations } from "next-intl/server";
 
-import { db } from "@kdx/db/client";
-import { env } from "@kdx/env";
-
-import { getLocaleBasedOnCookie } from "../utils/locales";
-
-export const createCronJobCtx = async () => ({
-  db,
-  t: await getTranslations({ locale: await getLocaleBasedOnCookie() }),
-});
+export const createCronJobCtx = async () => ({});
 export type TCronJobContext = Awaited<ReturnType<typeof createCronJobCtx>>;
 
 const receiver = new Receiver({
   // biome-ignore lint/style/noNonNullAssertion: <it's not undefined in production>
-  currentSigningKey: env.QSTASH_CURRENT_SIGNING_KEY!,
+  currentSigningKey: process.env.QSTASH_CURRENT_SIGNING_KEY!,
   // biome-ignore lint/style/noNonNullAssertion: <it's not undefined in production>
-  nextSigningKey: env.QSTASH_NEXT_SIGNING_KEY!,
+  nextSigningKey: process.env.QSTASH_NEXT_SIGNING_KEY!,
 });
 
 export const verifiedQstashCron =
@@ -28,13 +19,13 @@ export const verifiedQstashCron =
     }: {
       req: Request;
       ctx: TCronJobContext;
-    }) => Promise<Response>,
+    }) => Promise<Response>
   ) =>
   async (req: Request) => {
     const ctx = await createCronJobCtx();
 
-    //? Allow running cron jobs locally, for development purposes
-    if (env.NODE_ENV === "development") return handler({ ctx, req });
+    // Allow running cron jobs locally, for development purposes
+    if (process.env.NODE_ENV === "development") return handler({ ctx, req });
 
     const qStashSignature = (await headers()).get("Upstash-Signature");
     if (!qStashSignature)

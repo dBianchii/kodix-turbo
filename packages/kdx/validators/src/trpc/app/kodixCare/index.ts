@@ -79,7 +79,7 @@ export const ZEditCareShiftInputSchema = (t: IsomorficT) =>
       {
         message: t("validators.Start time cannot be after end time"),
         path: ["startAt"],
-      },
+      }
     )
     .refine(
       (data) => {
@@ -91,7 +91,7 @@ export const ZEditCareShiftInputSchema = (t: IsomorficT) =>
       {
         message: t("validators.Start time cannot be after end time"),
         path: ["checkIn"],
-      },
+      }
     );
 export type TEditCareShiftInputSchema = z.infer<
   ReturnType<typeof ZEditCareShiftInputSchema>
