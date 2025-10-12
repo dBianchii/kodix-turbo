@@ -5,7 +5,8 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "next-intl": ["src/shims/next-intl.ts"]
     },
     "plugins": [
       {

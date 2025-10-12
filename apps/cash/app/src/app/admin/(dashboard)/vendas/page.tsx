@@ -3,7 +3,7 @@ import { auth } from "@cash/auth";
 
 import PageWrapper from "~/app/_components/page-wrapper";
 
-import { VendasViewer } from "./_components/vendas-viewer";
+import { SalesTable } from "./_components/sales-table";
 
 export default async function AdminVendasPage() {
   const session = await auth();
@@ -13,7 +13,7 @@ export default async function AdminVendasPage() {
 
   return (
     <PageWrapper>
-      <VendasViewer />
+      <SalesTable />
     </PageWrapper>
   );
 }
