@@ -4,13 +4,13 @@ import z from "zod";
 import { protectedProcedure } from "../../../procedures";
 import { listSalesHandler } from "./listSales.handler";
 
-const ZListSalesInputSchema = z.object({
+export const ZListSalesInputSchema = z.object({
   campoOrdenadoAscendente: z.enum(["NUMERO", "CLIENTE", "DATA"]).optional(),
   campoOrdenadoDescendente: z.enum(["NUMERO", "CLIENTE", "DATA"]).optional(),
+  data_fim: z.string().optional(),
+  data_inicio: z.string().optional(),
   dataCriacaoAte: z.string().optional(),
   dataCriacaoDe: z.string().optional(),
-  dataFim: z.string().optional(),
-  dataInicio: z.string().optional(),
   idsCategorias: z.array(z.string()).optional(),
   idsClientes: z.array(z.string()).optional(),
   idsLegadoCategorias: z.array(z.string()).optional(),
@@ -22,10 +22,10 @@ const ZListSalesInputSchema = z.object({
   idsVendedores: z.array(z.string()).optional(),
   numeros: z.array(z.string()).optional(),
   origens: z.array(z.string()).optional(),
-  pagina: z.number().optional(),
+  pagina: z.number(),
   pendente: z.boolean().optional(),
   situacoes: z.array(z.string()).optional(),
-  tamanhoPagina: z.number().optional(),
+  tamanho_pagina: z.number(),
   termoBusca: z.string().optional(),
   tipos: z.array(z.string()).optional(),
   totais: z.string().optional(),

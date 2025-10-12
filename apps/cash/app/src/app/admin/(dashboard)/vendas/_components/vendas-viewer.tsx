@@ -46,15 +46,13 @@ export function VendasViewer() {
           campoOrdenado === "asc" ? tipoOrdenacao : undefined,
         campoOrdenadoDescendente:
           campoOrdenado === "desc" ? tipoOrdenacao : undefined,
+        data_fim: dataFim || undefined,
+        data_inicio: dataInicio || undefined,
         dataCriacaoAte: dataCriacaoAte || undefined,
         dataCriacaoDe: dataCriacaoDe || undefined,
-        dataFim: dataFim || undefined,
-        dataInicio: dataInicio || undefined,
-        pagina: pagina ? Number.parseInt(pagina, 10) : undefined,
+        pagina: pagina ? Number.parseInt(pagina, 10) : 1,
         pendente: getPendenteValue(pendente),
-        tamanhoPagina: tamanhoPagina
-          ? Number.parseInt(tamanhoPagina, 10)
-          : undefined,
+        tamanho_pagina: tamanhoPagina ? Number.parseInt(tamanhoPagina, 10) : 10,
         termoBusca: termoBusca || undefined,
         totais: totais === "ALL" ? undefined : totais,
       },

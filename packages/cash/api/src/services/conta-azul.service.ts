@@ -1,4 +1,5 @@
 import { caRepository } from "@cash/db/repositories";
+import { clientsSchema } from "@cash/db/schema";
 import { z } from "zod";
 
 const FIVE_MINUTES_IN_MS = 300_000; // 5 minutes in milliseconds
@@ -20,24 +21,6 @@ export const ZRefreshTokenResponseSchema = z.object({
   refresh_token: z.string(),
   token_type: z.string(),
 });
-
-export const ZCAListSalesResponseSchema = z.object({
-  itens: z.array(
-    z.object({
-      cliente: z.object({
-        email: z.string().nullable().describe("Email do cliente"),
-        id: z.string().describe("ID do cliente"),
-        nome: z.string().describe("Nome do cliente"),
-      }),
-      criado_em: z.string().describe("Data de criação da venda"),
-      id: z.string().describe("ID da venda"),
-      numero: z.number().describe("Número da venda"),
-      total: z.number().describe("Total da venda"),
-    })
-  ),
-});
-
-export type ZCAListSalesResponse = z.infer<typeof ZCAListSalesResponseSchema>;
 
 async function refreshAccessToken() {
   const existingToken = await caRepository.getCAToken();
@@ -153,92 +136,66 @@ async function makeContaAzulRequest<TSchema extends z.ZodType>(
 
   const rawData = await response.json();
 
-  if (schema) {
-    const parseResult = schema.safeParse(rawData);
+  const parseResult = schema.safeParse(rawData);
 
-    if (!parseResult.success) {
-      throw new Error(`Invalid response format: ${parseResult.error.message}`);
-    }
+  if (!parseResult.success) {
+    const errorDetails = parseResult.error.issues.map((issue) => {
+      // Get the actual value that failed
+      const path = issue.path.join(".");
+      const actualValue = issue.path.reduce((obj, key) => obj?.[key], rawData);
 
-    return parseResult.data;
+      return {
+        expected: issue.message,
+        path,
+        received: actualValue,
+        receivedType: typeof actualValue,
+      };
+    });
+    throw new Error(
+      `Invalid response format:\n${JSON.stringify(errorDetails, null, 2)}`
+    );
   }
 
-  const data = rawData as z.infer<TSchema>;
-  return data;
+  return parseResult.data;
 }
 
-export interface ListSalesParams {
-  pagina?: number;
-  tamanhoPagina?: number;
-  campoOrdenadoAscendente?: "NUMERO" | "CLIENTE" | "DATA";
-  campoOrdenadoDescendente?: "NUMERO" | "CLIENTE" | "DATA";
-  termoBusca?: string;
-  dataInicio?: string;
-  dataFim?: string;
-  dataCriacaoDe?: string;
-  dataCriacaoAte?: string;
-  idsVendedores?: string[];
-  idsClientes?: string[];
-  idsNaturezaOperacao?: string[];
-  situacoes?: string[];
-  tipos?: string[];
-  origens?: string[];
-  numeros?: string[];
-  idsCategorias?: string[];
-  idsProdutos?: string[];
-  pendente?: boolean;
-  totais?: string;
-  idsLegadoDonos?: string[];
-  idsLegadoClientes?: string[];
-  idsLegadoProdutos?: string[];
-  idsLegadoCategorias?: string[];
+export interface ListContaAzulSalesParams {
+  pagina: number;
+  tamanho_pagina: number;
+  data_inicio?: string;
+  data_fim?: string;
 }
 
-const listSalesParamsToCAParams: Record<keyof ListSalesParams, string> = {
-  campoOrdenadoAscendente: "campo_ordenado_ascendente",
-  campoOrdenadoDescendente: "campo_ordenado_descendente",
-  dataCriacaoAte: "data_criacao_ate",
-  dataCriacaoDe: "data_criacao_de",
-  dataFim: "data_fim",
-  dataInicio: "data_inicio",
-  idsCategorias: "ids_categorias",
-  idsClientes: "ids_clientes",
-  idsLegadoCategorias: "ids_legado_categorias",
-  idsLegadoClientes: "ids_legado_clientes",
-  idsLegadoDonos: "ids_legado_donos",
-  idsLegadoProdutos: "ids_legado_produtos",
-  idsNaturezaOperacao: "ids_natureza_operacao",
-  idsProdutos: "ids_produtos",
-  idsVendedores: "ids_vendedores",
-  numeros: "numeros",
-  origens: "origens",
-  pagina: "pagina",
-  pendente: "pendente",
-  situacoes: "situacoes",
-  tamanhoPagina: "tamanho_pagina",
-  termoBusca: "termo_busca",
-  tipos: "tipos",
-  totais: "totais",
-} as const;
+export const ZCAListSalesResponseSchema = z.looseObject({
+  itens: z.array(
+    z.object({
+      cliente: z.object({
+        email: z.string().nullable().describe("Email do cliente"),
+        id: z.string().describe("ID do cliente"),
+        nome: z.string().describe("Nome do cliente"),
+      }),
+      criado_em: z.string().describe("Data de criação da venda"),
+      id: z.string().describe("ID da venda"),
+      numero: z.number().describe("Número da venda"),
+      total: z.number().describe("Total da venda"),
+    })
+  ),
+  total_itens: z.number().describe("Total de itens encontrados"),
+});
 
 /** @see https://developers.contaazul.com/docs/sales-apis-openapi/v1/searchvendas */
-export function listSales(params: ListSalesParams) {
+export function listContaAzulSales(params: ListContaAzulSalesParams) {
   const searchParams = new URLSearchParams();
 
-  for (const [camelKey, value] of Object.entries(params)) {
+  for (const [key, value] of Object.entries(params)) {
     if (value === undefined) continue;
-
-    const snakeKey =
-      listSalesParamsToCAParams[
-        camelKey as keyof typeof listSalesParamsToCAParams
-      ];
 
     if (Array.isArray(value)) {
       for (const item of value) {
-        searchParams.append(snakeKey, item);
+        searchParams.append(key, item);
       }
     } else {
-      searchParams.set(snakeKey, value.toString());
+      searchParams.set(key, value.toString());
     }
   }
 
@@ -247,6 +204,51 @@ export function listSales(params: ListSalesParams) {
   }`;
 
   return makeContaAzulRequest(url, ZCAListSalesResponseSchema, {
+    method: "GET",
+  });
+}
+
+export interface ListContaAzulPersonsParams {
+  ids: string[];
+  tamanho_pagina: number;
+  pagina: number;
+}
+
+export const ZCAListPersonsResponseSchema = z.object({
+  items: z.array(
+    z.object({
+      documento: z.string().describe("Documento da pessoa (CPF/CNPJ)"),
+      email: z.string().describe("Email da pessoa"),
+      id: z.string().describe("ID da pessoa"),
+      nome: z
+        .string()
+        .describe("Nome da pessoa (física, jurídica ou estrangeira)"),
+      telefone: z.string().describe("Telefone da pessoa"),
+      tipo_pessoa: clientsSchema.shape.type,
+    })
+  ),
+  totalItems: z.number().describe("Total de itens encontrados"),
+});
+
+/** @see https://developers.contaazul.com/docs/person-apis-openapi/v1/listarpessoas */
+export function listContaAzulPersons(params: ListContaAzulPersonsParams) {
+  const searchParams = new URLSearchParams();
+
+  for (const [key, value] of Object.entries(params)) {
+    if (value === undefined) continue;
+
+    if (Array.isArray(value)) {
+      for (const item of value) {
+        searchParams.append(key, item);
+      }
+    } else {
+      searchParams.set(key, value.toString());
+    }
+  }
+
+  const url = `https://api-v2.contaazul.com/v1/pessoas?${searchParams ?? ""}`;
+
+  return makeContaAzulRequest(url, ZCAListPersonsResponseSchema, {
     method: "GET",
   });
 }

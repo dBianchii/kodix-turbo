@@ -1,8 +1,8 @@
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
+import { buildConflictUpdateAllColumns } from "..";
 
 import { db as _db, type Drizzle } from "../client";
-import { upsertMany } from "../operations";
-import { caSales, caTokens } from "../schema";
+import { caTokens, clients, sales } from "../schema";
 
 export async function getCAToken(db = _db) {
   const token = await db.query.caTokens.findFirst({
@@ -35,36 +35,38 @@ export async function updateCAToken(
   return updatedToken;
 }
 
-export function upsertCASales(
-  sales: (typeof caSales.$inferInsert)[],
+export function upsertClientsByCaId(
+  input: (typeof clients.$inferInsert)[],
   db: Drizzle = _db
 ) {
-  return upsertMany({
-    create: (salesToCreate) =>
-      db.insert(caSales).values(salesToCreate).returning(),
-    find: () => db.query.caSales.findMany(),
-    getFetchedDataId: (sale) => sale.caId,
-    getInputId: (sale) => sale.caId,
-    input: sales,
-    update: async (salesToUpdate) => {
-      const results = await Promise.all(
-        salesToUpdate.map(async (sale) => {
-          const [updated] = await db
-            .update(caSales)
-            .set({
-              clienteEmail: sale.clienteEmail,
-              clienteId: sale.clienteId,
-              clienteNome: sale.clienteNome,
-              criadoEm: sale.criadoEm,
-              numero: sale.numero,
-              total: sale.total,
-            })
-            .where(eq(caSales.caId, sale.caId))
-            .returning();
-          return updated;
-        })
-      );
-      return results.filter(Boolean);
-    },
-  });
+  return db
+    .insert(clients)
+    .values(input)
+    .onConflictDoUpdate({
+      set: buildConflictUpdateAllColumns(clients, ["id"]),
+      target: clients.caId,
+    })
+    .returning({
+      caId: clients.caId,
+      id: clients.id,
+      inserted: sql<boolean>`xmax = 0`, // true if inserted, false if updated
+    });
+}
+
+export function upsertSalesByCaId(
+  input: (typeof sales.$inferInsert)[],
+  db: Drizzle = _db
+) {
+  return db
+    .insert(sales)
+    .values(input)
+    .onConflictDoUpdate({
+      set: buildConflictUpdateAllColumns(sales, ["id"]),
+      target: sales.caId,
+    })
+    .returning({
+      caId: sales.caId,
+      id: sales.id,
+      inserted: sql<boolean>`xmax = 0`, // true if inserted, false if updated
+    });
 }

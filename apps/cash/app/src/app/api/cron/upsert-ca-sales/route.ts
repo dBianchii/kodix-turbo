@@ -1,3 +1,3 @@
-import { upsertCaSalesCron } from "@cash/api/crons/upsert-ca-sales.cron";
+import { upsertCASalesCron } from "@cash/api/crons/upsert-ca-sales.cron";
 
-export const POST = upsertCaSalesCron;
+export const POST = upsertCASalesCron;
