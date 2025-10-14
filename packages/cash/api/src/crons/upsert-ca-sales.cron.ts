@@ -39,8 +39,8 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
   } while (allSales.length < totalItens);
 
   if (!allSales.length) {
-    return new Response("No recent sales found - skipping", {
-      status: 304,
+    return new Response("No recent sales found. Skipping", {
+      status: 202,
     });
   }
 
