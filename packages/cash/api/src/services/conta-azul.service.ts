@@ -274,3 +274,36 @@ export function listContaAzulPersons(params: ListContaAzulPersonsParams) {
     method: "GET",
   });
 }
+
+export interface CreateContaAzulPersonParams {
+  cpf?: string;
+  email?: string;
+  nome: string;
+  perfis: Array<{
+    tipo_perfil: "Cliente" | "Fornecedor" | "Transportadora";
+  }>;
+  telefone_comercial?: string;
+  tipo_pessoa: "Física" | "Jurídica" | "Estrangeira";
+}
+
+export const ZCACreatePersonResponseSchema = z.object({
+  documento: z.string().describe("Documento da pessoa (CPF/CNPJ)"),
+  id: z.string().describe("ID da pessoa criada"),
+  nome: z.string().describe("Nome da pessoa"),
+  tipo_pessoa: z.string().describe("Tipo de pessoa"),
+});
+
+/** @see https://developers.contaazul.com/open-api-docs/open-api-person/v1/criarpessoa */
+export function createContaAzulPerson(params: CreateContaAzulPersonParams) {
+  return makeContaAzulRequest(
+    "https://api-v2.contaazul.com/v1/pessoas",
+    ZCACreatePersonResponseSchema,
+    {
+      body: JSON.stringify(params),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    }
+  );
+}
