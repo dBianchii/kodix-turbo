@@ -27,11 +27,19 @@ export const clientTypeEnum = pgEnum("clientType", [
 ]);
 
 export const clients = pgTable("client", (t) => ({
+  bairro: t.text(),
   caId: t.text().notNull().unique(),
-  document: t.text(), // CPF/CNPJ
+  cep: t.text(),
+  cidade: t.text(),
+  complemento: t.text(),
+  document: t.text(),
   email: t.text(),
+  estado: t.text(),
   id: nanoidPrimaryKey(t),
+  logradouro: t.text(),
   name: t.text().notNull(),
+  numero: t.text(),
+  pais: t.text(),
   phone: t.text(),
   type: clientTypeEnum().notNull(),
 }));

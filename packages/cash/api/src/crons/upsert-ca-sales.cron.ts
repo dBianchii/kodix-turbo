@@ -55,6 +55,7 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
 
   do {
     const { items, totalItems } = await listContaAzulPersons({
+      com_endereco: true,
       ids: uniqueClientIds,
       pagina: currentClientPage,
       tamanho_pagina: pageSize,
@@ -72,10 +73,18 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
     allClients.map(
       (caClient) =>
         ({
+          bairro: caClient.endereco?.bairro,
           caId: caClient.id,
+          cep: caClient.endereco?.cep,
+          cidade: caClient.endereco?.cidade,
+          complemento: caClient.endereco?.complemento,
           document: caClient.documento,
           email: caClient.email,
+          estado: caClient.endereco?.estado,
+          logradouro: caClient.endereco?.logradouro,
           name: caClient.nome,
+          numero: caClient.endereco?.numero,
+          pais: caClient.endereco?.pais,
           phone: caClient.telefone,
           type: caClient.tipo_pessoa,
         }) satisfies typeof clients.$inferInsert

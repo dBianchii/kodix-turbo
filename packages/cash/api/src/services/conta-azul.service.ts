@@ -212,6 +212,7 @@ export interface ListContaAzulPersonsParams {
   ids: string[];
   tamanho_pagina: number;
   pagina: number;
+  com_endereco: true;
 }
 
 export const ZCAListPersonsResponseSchema = z.object({
@@ -225,6 +226,18 @@ export const ZCAListPersonsResponseSchema = z.object({
         .string()
         .transform((val) => (val === "" ? null : val)) // Some clients have an empty string for the email
         .describe("Email da pessoa"),
+      endereco: z
+        .object({
+          bairro: z.string(),
+          cep: z.string(),
+          cidade: z.string(),
+          complemento: z.string(),
+          estado: z.string(),
+          logradouro: z.string(),
+          numero: z.string(),
+          pais: z.string(),
+        })
+        .optional(),
       id: z.string().describe("ID da pessoa"),
       nome: z
         .string()
