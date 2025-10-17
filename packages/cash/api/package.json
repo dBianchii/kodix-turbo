@@ -10,7 +10,8 @@
   },
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "tsc": "tsc --noEmit"
+    "tsc": "tsc --noEmit",
+    "seed-sales": "dotenv -e ../../../apps/cash/app/.env.local -- tsx scripts/seed-sales.ts"
   },
   "dependencies": {
     "server-only": "catalog:",
@@ -25,6 +26,9 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
+    "dotenv": "catalog:",
+    "ora": "catalog:",
+    "tsx": "catalog:",
     "typescript": "catalog:"
   }
 }

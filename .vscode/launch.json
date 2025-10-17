@@ -5,8 +5,20 @@
       "name": "kdx",
       "type": "node-terminal",
       "request": "launch",
-      "command": "pnpm dev",
-      "cwd": "${workspaceFolder}/apps/kdx",
+      "command": "pnpm dev:kdx",
+      "cwd": "${workspaceFolder}",
+      "sourceMaps": true,
+      "skipFiles": ["<node_internals>/**"],
+      "sourceMapPathOverrides": {
+        "/turbopack/[project]/*": "${webRoot}/*" //https://github.com/vercel/next.js/issues/62008
+      }
+    },
+    {
+      "name": "cash",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pnpm dev:cash",
+      "cwd": "${workspaceFolder}",
       "sourceMaps": true,
       "skipFiles": ["<node_internals>/**"],
       "sourceMapPathOverrides": {
