@@ -1028,12 +1028,6 @@ importers:
       '@types/react-dom':
         specifier: catalog:react
         version: 19.1.9(@types/react@19.1.14)
-      ora:
-        specifier: 'catalog:'
-        version: 8.2.0
-      tsx:
-        specifier: 'catalog:'
-        version: 4.7.3
       typescript:
         specifier: 'catalog:'
         version: 5.9.2
