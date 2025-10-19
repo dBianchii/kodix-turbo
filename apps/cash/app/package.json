@@ -22,6 +22,7 @@
     "@trpc/client": "catalog:trpc",
     "@trpc/server": "catalog:trpc",
     "@trpc/tanstack-react-query": "catalog:trpc",
+    "cep-promise": "catalog:",
     "es-toolkit": "catalog:",
     "geist": "catalog:",
     "next": "catalog:next",

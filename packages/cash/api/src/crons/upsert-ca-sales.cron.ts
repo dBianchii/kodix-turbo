@@ -85,7 +85,7 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
           name: caClient.nome,
           numero: caClient.endereco?.numero,
           pais: caClient.endereco?.pais,
-          phone: caClient.telefone,
+          phone: caClient.telefone ? `+55${caClient.telefone}` : undefined,
           type: caClient.tipo_pessoa,
         }) satisfies typeof clients.$inferInsert
     )
@@ -101,7 +101,7 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
       const createdAtUtc = dayjs
         .tz(sale.criado_em, "America/Sao_Paulo")
         .utc()
-        .toDate();
+        .toISOString();
 
       return {
         caCreatedAt: createdAtUtc,
