@@ -11,6 +11,14 @@ import { verifiedQstashCron } from "./_utils";
 
 const LOOKBACK_DAYS = 2;
 
+function normalizePhoneNumber(phone: string | null) {
+  if (!phone) return;
+  if (phone.startsWith("+")) {
+    return phone;
+  }
+  return `+55${phone}`;
+}
+
 export const upsertCASalesCron = verifiedQstashCron(async () => {
   const now = dayjs().tz("America/Sao_Paulo");
 
@@ -85,7 +93,7 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
           name: caClient.nome,
           numero: caClient.endereco?.numero,
           pais: caClient.endereco?.pais,
-          phone: caClient.telefone ? `+55${caClient.telefone}` : undefined,
+          phone: normalizePhoneNumber(caClient.telefone),
           type: caClient.tipo_pessoa,
         }) satisfies typeof clients.$inferInsert
     )

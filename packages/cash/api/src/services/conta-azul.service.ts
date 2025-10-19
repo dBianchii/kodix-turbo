@@ -72,13 +72,13 @@ async function refreshAccessToken() {
   if (existingToken) {
     await caRepository.updateCAToken(existingToken.id, {
       accessToken: data.access_token,
-      expiresAt,
+      expiresAt: expiresAt.toISOString(),
       refreshToken: data.refresh_token,
     });
   } else {
     await caRepository.createCAToken({
       accessToken: data.access_token,
-      expiresAt,
+      expiresAt: expiresAt.toISOString(),
       refreshToken: data.refresh_token,
     });
   }
