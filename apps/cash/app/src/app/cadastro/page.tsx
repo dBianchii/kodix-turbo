@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { useTRPC } from "@cash/api/trpc/react/client";
 import { ZRegisterInterestInputSchema } from "@cash/api/trpc/schemas/client";
+import { Alert, AlertDescription, AlertTitle } from "@kodix/ui/alert";
 import { Button } from "@kodix/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@kodix/ui/card";
 import { PhoneInput } from "@kodix/ui/common/phone-input";
@@ -25,6 +26,7 @@ import {
 import { Spinner } from "@kodix/ui/spinner";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import cep from "cep-promise";
+import { AlertCircle } from "lucide-react";
 
 import DespertarLogo from "./_assets/despertar-logo.png";
 
@@ -112,15 +114,20 @@ export default function CadastroPage() {
         <Card className="w-full max-w-md text-center">
           <CardHeader>
             <CardTitle className="text-2xl text-green-500">
-              Cadastro realizado!
+              Obrigado por se registrar no programa de cashback!
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="mb-6 text-muted-foreground">
-              Obrigado pelo seu interesse.
+          <CardContent className="space-y-4">
+            <p className="text-muted-foreground">
+              Obrigado por se registrar no programa de cashback!
+            </p>
+            <p className="text-muted-foreground text-sm">
+              Seus dados foram salvos e você começará a acumular cashback em
+              suas próximas compras. Em breve, você receberá mais informações no
+              email cadastrado.
             </p>
             <Button
-              className="w-full"
+              className="mt-6 w-full"
               onClick={() => {
                 registerMutation.reset();
                 form.reset();
@@ -153,7 +160,11 @@ export default function CadastroPage() {
             <form
               className="space-y-4"
               onSubmit={form.handleSubmit(async (data) => {
-                await registerMutation.mutateAsync(data);
+                try {
+                  await registerMutation.mutateAsync(data);
+                } catch {
+                  /* Error is already captured by mutation state */
+                }
               })}
             >
               <FormField
@@ -225,7 +236,7 @@ export default function CadastroPage() {
                         countries={["BR"]}
                         defaultCountry="BR"
                         inputMode="tel"
-                        placeholder="(11) 99999-9999"
+                        placeholder="(16) 99999-9999"
                         type="tel"
                       />
                     </FormControl>
@@ -280,6 +291,7 @@ export default function CadastroPage() {
                     <FormControl>
                       <Input
                         autoComplete="street-address"
+                        disabled={cepQuery.isFetching}
                         placeholder="Rua, Avenida, etc."
                         type="text"
                         {...field}
@@ -346,7 +358,12 @@ export default function CadastroPage() {
                     <FormItem>
                       <FormLabel>Bairro</FormLabel>
                       <FormControl>
-                        <Input placeholder="Centro" type="text" {...field} />
+                        <Input
+                          disabled={cepQuery.isFetching}
+                          placeholder="Centro"
+                          type="text"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -361,6 +378,7 @@ export default function CadastroPage() {
                       <FormControl>
                         <Input
                           autoComplete="address-level2"
+                          disabled={cepQuery.isFetching}
                           placeholder="São Paulo"
                           type="text"
                           {...field}
@@ -379,6 +397,7 @@ export default function CadastroPage() {
                       <FormControl>
                         <Input
                           autoComplete="address-level1"
+                          disabled={cepQuery.isFetching}
                           maxLength={2}
                           placeholder="SP"
                           type="text"
@@ -390,6 +409,16 @@ export default function CadastroPage() {
                   )}
                 />
               </div>
+              {registerMutation.error && (
+                <Alert variant="destructive">
+                  <AlertCircle />
+                  <AlertTitle>Erro ao realizar cadastro</AlertTitle>
+                  <AlertDescription>
+                    {registerMutation.error.message ||
+                      "Ocorreu um erro ao processar seu cadastro. Por favor, tente novamente."}
+                  </AlertDescription>
+                </Alert>
+              )}
 
               <Button
                 className="mt-6 w-full"
