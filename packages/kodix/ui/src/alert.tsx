@@ -13,6 +13,8 @@ const alertVariants = cva(
         default: "bg-card text-card-foreground",
         destructive:
           "bg-card text-destructive *:data-[slot=alert-description]:text-destructive/90 [&>svg]:text-current",
+        warning:
+          "border-orange-500/50 bg-orange-100 text-orange-400 dark:border-orange-500 dark:bg-orange-950/50 [&>svg]:text-orange-400", //TODO: make orange css variables lol
       },
     },
   }

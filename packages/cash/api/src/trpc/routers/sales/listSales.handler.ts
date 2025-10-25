@@ -28,9 +28,11 @@ export const listSalesHandler = async ({ input }: ListSalesOptions) => {
     input.clientName ? ilike(clients.name, `%${input.clientName}%`) : undefined,
     // Filter by date range if provided
     input.dateFrom
-      ? gte(sales.caCreatedAt, new Date(input.dateFrom))
+      ? gte(sales.caCreatedAt, new Date(input.dateFrom).toISOString())
       : undefined,
-    input.dateTo ? lte(sales.caCreatedAt, new Date(input.dateTo)) : undefined,
+    input.dateTo
+      ? lte(sales.caCreatedAt, new Date(input.dateTo).toISOString())
+      : undefined,
   ].filter(Boolean);
 
   const where =

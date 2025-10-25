@@ -1,5 +1,6 @@
 "use client";
 
+import type { RouterOutputs } from "@cash/api";
 import { useMemo, useState } from "react";
 import { useTRPC } from "@cash/api/trpc/react/client";
 import { Badge } from "@kodix/ui/badge";
@@ -27,19 +28,8 @@ import {
 } from "@tanstack/react-table";
 import { Loader2, X } from "lucide-react";
 
-interface Sale {
-  id: string;
-  caId: string;
-  caNumero: string;
-  total: number;
-  caCreatedAt: Date;
-  clientId: string;
-  clientName: string;
-  clientEmail: string | null;
-  clientType: "Estrangeira" | "Física" | "Jurídica";
-}
-
-const columnHelper = createColumnHelper<Sale>();
+const columnHelper =
+  createColumnHelper<RouterOutputs["sales"]["list"]["data"][number]>();
 
 export function SalesTable() {
   const [pagination, setPagination] = useState({
