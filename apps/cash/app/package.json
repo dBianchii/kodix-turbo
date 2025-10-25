@@ -27,6 +27,8 @@
     "geist": "catalog:",
     "next": "catalog:next",
     "next-themes": "catalog:",
+    "posthog-js": "catalog:",
+    "posthog-node": "catalog:",
     "react": "catalog:react",
     "react-day-picker": "catalog:",
     "react-dom": "catalog:react",

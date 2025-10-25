@@ -12,7 +12,23 @@ export default {
           }
         : undefined,
   },
+
+  // biome-ignore lint/suspicious/useAwait: Just next.js stuff
+  async rewrites() {
+    return [
+      {
+        destination: "https://us-assets.i.posthog.com/static/:path*",
+        source: "/ingest/static/:path*",
+      },
+      {
+        destination: "https://us.i.posthog.com/:path*",
+        source: "/ingest/:path*",
+      },
+    ];
+  },
   serverExternalPackages: ["@node-rs/argon2"],
+  /** This is required to support PostHog trailing slash API requests */
+  skipTrailingSlashRedirect: true,
   /** Enables hot reloading for local packages without a build step */
   transpilePackages: [
     "@cash/api",
