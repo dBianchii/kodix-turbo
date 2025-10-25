@@ -29,6 +29,7 @@ export async function registerHandler({ input }: RegisterHandlerInput) {
     });
   }
 
+  const registeredFromFormAt = new Date().toISOString();
   const newAddress:
     | NonNullable<CreateContaAzulPersonParams["enderecos"]>[number]
     | undefined = input.withAddress
@@ -49,7 +50,7 @@ export async function registerHandler({ input }: RegisterHandlerInput) {
     email: input.email,
     enderecos: newAddress ? [newAddress] : undefined,
     nome: input.name,
-    observacao: "Cadastro KCash",
+    observacao: `Cadastro do KCash em ${registeredFromFormAt}`,
     perfis: [
       {
         tipo_perfil: "Cliente",
