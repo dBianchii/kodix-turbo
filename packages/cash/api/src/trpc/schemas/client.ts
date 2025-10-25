@@ -25,6 +25,7 @@ export const ZRegisterInputSchema = z.object({
     (phone) => phone?.startsWith("+55"),
     "Telefone deve ser com o código do país (+55)"
   ).optional(),
+  withAddress: z.boolean(),
 });
 export type TRegisterInputSchema = z.infer<typeof ZRegisterInputSchema>;
 

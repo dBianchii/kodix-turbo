@@ -17,7 +17,8 @@ interface RegisterHandlerInput {
 
 export async function registerHandler({ input }: RegisterHandlerInput) {
   // Remove +55 country code from phone (ContaAzul expects DDXXXXXXXXX format)
-  const phoneWithoutCountryCode = input.phone.replace(/^\+55/, "");
+  const phoneWithoutCountryCode = input.phone?.replace(/^\+55/, "");
+
   let caId: string;
 
   const existingClient = await caRepository.findClientByCpf(input.cpf);
@@ -28,22 +29,25 @@ export async function registerHandler({ input }: RegisterHandlerInput) {
     });
   }
 
-  const newAddress: NonNullable<
-    CreateContaAzulPersonParams["enderecos"]
-  >[number] = {
-    bairro: input.bairro,
-    cep: input.cep,
-    cidade: input.cidade,
-    complemento: input.complemento,
-    estado: input.estado,
-    logradouro: input.logradouro,
-    numero: input.numero,
-    pais: "Brasil",
-  };
+  const newAddress:
+    | NonNullable<CreateContaAzulPersonParams["enderecos"]>[number]
+    | undefined = input.withAddress
+    ? {
+        bairro: input.bairro,
+        cep: input.cep,
+        cidade: input.cidade,
+        complemento: input.complemento,
+        estado: input.estado,
+        logradouro: input.logradouro,
+        numero: input.numero,
+        pais: "Brasil",
+      }
+    : undefined;
+
   const payload: CreateContaAzulPersonParams = {
     cpf: input.cpf,
     email: input.email,
-    enderecos: [newAddress],
+    enderecos: newAddress ? [newAddress] : undefined,
     nome: input.name,
     observacao: "Cadastro KCash",
     perfis: [
@@ -67,9 +71,13 @@ export async function registerHandler({ input }: RegisterHandlerInput) {
 
       await updateContaAzulPerson({
         ...payload,
-        enderecos: address
-          .filter((a) => a.cep !== input.cep)
-          .concat([newAddress]),
+        ...(newAddress
+          ? {
+              enderecos: address
+                .filter((a) => a.cep !== newAddress.cep)
+                .concat([newAddress]),
+            }
+          : {}),
         id: existingPerson.id,
       });
       caId = existingPerson.id;
@@ -85,10 +93,18 @@ export async function registerHandler({ input }: RegisterHandlerInput) {
   }
   await caRepository.upsertClientsByCaId([
     {
+      bairro: newAddress?.bairro,
       caId,
+      cep: newAddress?.cep,
+      cidade: newAddress?.cidade,
+      complemento: newAddress?.complemento,
       document: input.cpf,
       email: input.email,
+      estado: newAddress?.estado,
+      logradouro: newAddress?.logradouro,
       name: input.name,
+      numero: newAddress?.numero,
+      pais: newAddress?.pais,
       phone: input.phone,
       registeredFromFormAt: new Date().toISOString(),
       type: "Física",

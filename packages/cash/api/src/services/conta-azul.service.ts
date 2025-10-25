@@ -234,14 +234,14 @@ export const ZCAListPersonsResponseSchema = z.object({
         .describe("Email da pessoa"),
       endereco: z
         .object({
-          bairro: z.string(),
-          cep: z.string(),
-          cidade: z.string(),
+          bairro: z.string().optional(),
+          cep: z.string().optional(),
+          cidade: z.string().optional(),
           complemento: z.string().optional(),
-          estado: z.string(),
-          logradouro: z.string(),
-          numero: z.string(),
-          pais: z.string(),
+          estado: z.string().optional(),
+          logradouro: z.string().optional(),
+          numero: z.string().optional(),
+          pais: z.string().optional(),
         })
         .optional(),
       id: z.string().describe("ID da pessoa"),
@@ -274,7 +274,7 @@ export function listContaAzulPersons(params: ListContaAzulPersonsParams) {
     }
   }
 
-  const url = `https://api-v2.contaazul.com/v1/pessoas?${searchParams ?? ""}`;
+  const url = `https://api-v2.contaazul.com/v1/pessoas?${searchParams}`;
 
   return makeContaAzulRequest(url, ZCAListPersonsResponseSchema, {
     method: "GET",
@@ -291,15 +291,15 @@ export interface CreateContaAzulPersonParams {
     tipo_perfil: "Cliente" | "Fornecedor" | "Transportadora";
   }>;
   tipo_pessoa: "Física" | "Jurídica" | "Estrangeira";
-  enderecos: Array<{
-    bairro: string;
-    cep: string;
-    cidade: string;
+  enderecos?: Array<{
+    bairro?: string;
+    cep?: string;
+    cidade?: string;
     complemento?: string;
-    estado: string;
-    logradouro: string;
-    numero: string;
-    pais: string;
+    estado?: string;
+    logradouro?: string;
+    numero?: string;
+    pais?: string;
   }>;
 }
 
@@ -364,14 +364,14 @@ export interface UpdateContaAzulPersonParams {
   }>;
   tipo_pessoa?: "Física" | "Jurídica" | "Estrangeira";
   enderecos?: Array<{
-    bairro: string;
-    cep: string;
-    cidade: string;
+    bairro?: string;
+    cep?: string;
+    cidade?: string;
     complemento?: string;
-    estado: string;
-    logradouro: string;
-    numero: string;
-    pais: string;
+    estado?: string;
+    logradouro?: string;
+    numero?: string;
+    pais?: string;
   }>;
 }
 
@@ -404,7 +404,11 @@ const ZCAGetPersonResponseSchema = z.object({
         bairro: z.string().describe("Bairro do endereço"),
         cep: z.string().describe("CEP do endereço"),
         cidade: z.string().describe("Cidade do endereço"),
-        complemento: z.string().optional().describe("Complemento do endereço"),
+        complemento: z
+          .string()
+          .optional()
+          .transform((val) => (val === "" || val === "-" ? null : val))
+          .describe("Complemento do endereço"),
         estado: z.string().describe("Estado do endereço"),
         id: z.string().describe("ID do endereço"),
         logradouro: z.string().describe("Logradouro do endereço"),

@@ -31,6 +31,7 @@ import cep from "cep-promise";
 import { AlertCircle, Check } from "lucide-react";
 
 import DespertarLogo from "./_assets/despertar-logo.png";
+import { CadastroSuccess } from "./_components/cadastro-success";
 import { CpfAlreadyRegisteredAlert } from "./_components/cpf-already-registered-alert";
 
 const NON_DIGIT_REGEX = /\D/g;
@@ -48,6 +49,16 @@ const formatCpf = (value: string) => {
     .replace(SECOND_GROUP_REGEX, "$1.$2")
     .replace(THIRD_GROUP_REGEX, "$1-$2")
     .replace(EXCESS_DIGITS_REGEX, "$1");
+};
+
+const addressValues = {
+  bairro: undefined,
+  cep: undefined,
+  cidade: undefined,
+  complemento: undefined,
+  estado: undefined,
+  logradouro: undefined,
+  numero: undefined,
 };
 
 export default function CadastroPage() {
@@ -69,19 +80,13 @@ export default function CadastroPage() {
 
   const form = useForm({
     defaultValues: {
-      bairro: "",
-      cep: "",
-      cidade: "",
-      complemento: "",
+      ...addressValues,
       cpf: "",
       email: "",
-      estado: "",
-      logradouro: "",
       name: "",
-      numero: "",
       phone: "",
     },
-    schema: ZRegisterInputSchema,
+    schema: ZRegisterInputSchema.omit({ withAddress: true }),
   });
 
   const cpfValue = form.watch("cpf")?.replace(NON_DIGIT_REGEX, "");
@@ -130,33 +135,13 @@ export default function CadastroPage() {
 
   if (registerMutation.isSuccess) {
     return (
-      <main className="flex min-h-screen items-center justify-center px-4">
-        <Card className="w-full max-w-md text-center">
-          <CardHeader>
-            <CardTitle className="text-2xl text-green-500">
-              Obrigado por se registrar no programa de cashback!
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-muted-foreground text-sm">
-              Seus dados foram salvos e você começará a acumular cashback em
-              suas próximas compras. Em breve, você receberá mais informações no
-              email cadastrado.
-            </p>
-            <Button
-              className="mt-6 w-full"
-              onClick={() => {
-                registerMutation.reset();
-                form.reset();
-                setAddAddress(false);
-              }}
-              variant="default"
-            >
-              Fazer outro cadastro
-            </Button>
-          </CardContent>
-        </Card>
-      </main>
+      <CadastroSuccess
+        onReset={() => {
+          registerMutation.reset();
+          form.reset();
+          setAddAddress(false);
+        }}
+      />
     );
   }
 
@@ -179,7 +164,10 @@ export default function CadastroPage() {
               className="space-y-4"
               onSubmit={form.handleSubmit(async (data) => {
                 try {
-                  await registerMutation.mutateAsync(data);
+                  await registerMutation.mutateAsync({
+                    ...data,
+                    withAddress: addAddress,
+                  });
                 } catch {
                   /* Error is already captured by mutation state */
                 }
@@ -243,7 +231,6 @@ export default function CadastroPage() {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="email"
@@ -289,16 +276,16 @@ export default function CadastroPage() {
                   disabled={isCpfAlreadyRegistered}
                   id="addAddress"
                   onCheckedChange={(checked) => {
-                    if (!checked) {
-                      form.setValue("cep", undefined);
-                      form.setValue("logradouro", undefined);
-                      form.setValue("numero", undefined);
-                      form.setValue("complemento", undefined);
-                      form.setValue("bairro", undefined);
-                      form.setValue("cidade", undefined);
-                      form.setValue("estado", undefined);
+                    const toSetValue = checked ? "" : undefined;
+
+                    for (const key of Object.keys(addressValues)) {
+                      form.setValue(
+                        key as keyof typeof addressValues,
+                        toSetValue
+                      );
                     }
-                    setAddAddress(checked === true);
+
+                    setAddAddress(checked);
                   }}
                 />
                 <Label className="text-center" htmlFor="addAddress">

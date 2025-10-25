@@ -10,16 +10,14 @@ export function CpfAlreadyRegisteredAlert({
   email,
   phone,
 }: CpfAlreadyRegisteredAlertProps) {
-  const hasEmail = !!email;
-  const hasPhone = !!phone;
-  const hasBoth = hasEmail && hasPhone;
+  const hasBoth = email && phone;
 
   let missingInfoMessage = "";
   if (!hasBoth) {
-    if (!(hasEmail || hasPhone)) {
+    if (!(email || phone)) {
       missingInfoMessage =
         "No entanto, seu cadastro está sem e-mail e telefone. Peça ao atendente do caixa para adicionar essas informações no sistema.";
-    } else if (hasEmail) {
+    } else if (email) {
       missingInfoMessage =
         "No entanto, seu cadastro está sem telefone. Peça ao atendente do caixa para adicionar essa informação no sistema.";
     } else {
@@ -35,12 +33,12 @@ export function CpfAlreadyRegisteredAlert({
       <AlertDescription>
         O seu CPF já está cadastrado no nosso sistema. Você não precisa se
         cadastrar novamente. 🙏
-        {missingInfoMessage && (
+        {missingInfoMessage.length ? (
           <>
             <br />
             {missingInfoMessage}
           </>
-        )}
+        ) : null}
       </AlertDescription>
     </Alert>
   );
