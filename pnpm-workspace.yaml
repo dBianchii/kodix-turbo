@@ -15,14 +15,11 @@ catalog:
   '@node-rs/argon2': ^1.8.3
   '@oslojs/crypto': ^1.0.1
   '@oslojs/encoding': ^1.1.0
-  'cep-promise': ^4.4.1
   '@radix-ui/react-alert-dialog': ^1.1.13
   '@radix-ui/react-avatar': ^1.1.9
   '@radix-ui/react-checkbox': ^1.3.1
   '@radix-ui/react-context-menu': ^2.2.14
   '@radix-ui/react-dialog': ^1.1.13
-  'libphonenumber-js': ^1.12.24
-  'react-phone-number-input': ^3.4.12
   '@radix-ui/react-dropdown-menu': ^2.1.14
   '@radix-ui/react-label': ^2.1.6
   '@radix-ui/react-navigation-menu': ^1.2.12
@@ -64,6 +61,7 @@ catalog:
   '@vercel/speed-insights': ^1.0.10
   arctic: ^1.9.1
   burnt: ^0.12.2
+  cep-promise: ^4.4.1
   chalk: ^5.3.0
   class-variance-authority: ^0.7.0
   clsx: ^2.1.1
@@ -83,6 +81,7 @@ catalog:
   framer-motion: ^11.11.17
   geist: ^1.3.1
   jiti: ^2.4.2
+  libphonenumber-js: ^1.12.24
   lucide-react: ^0.479.0
   metro: ^0.80.12
   motion: ^12.5.0
@@ -94,8 +93,8 @@ catalog:
   next-themes: ^0.4.0
   object.groupby: ^1.0.3
   ora: ^8.0.1
-  posthog-js: ^1.149.0
-  posthog-node: ^4.3.1
+  posthog-js: 1.268.6
+  posthog-node: 4.18.0
   react-day-picker: ^9.4.4
   react-email: 3.0.7
   react-hook-form: ^7.60.0
@@ -110,6 +109,7 @@ catalog:
   react-native-safe-area-context: ~4.10.5
   react-native-screens: ~3.34.1
   react-native-svg: ^15.6.0
+  react-phone-number-input: ^3.4.12
   react-resizable-panels: ^2.0.14
   react-spring: ^9.7.3
   resend: ^4.0.1
