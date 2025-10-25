@@ -2,6 +2,9 @@ import { caRepository } from "@cash/db/repositories";
 import { clientsSchema } from "@cash/db/schema";
 import { z } from "zod";
 
+const emptyToNull = (val: string | undefined) =>
+  val === "" || val === "-" ? null : val;
+
 const FIVE_MINUTES_IN_MS = 300_000; // 5 minutes in milliseconds
 const ONE_SECOND_IN_MS = 1000;
 
@@ -226,11 +229,11 @@ export const ZCAListPersonsResponseSchema = z.object({
     z.object({
       documento: z
         .string()
-        .transform((val) => (val === "" ? null : val)) // Some clients have an empty string for the document
+        .transform(emptyToNull) // Some clients have an empty string for the document
         .describe("Documento da pessoa (CPF/CNPJ)"),
       email: z
         .string()
-        .transform((val) => (val === "" ? null : val)) // Some clients have an empty string for the email
+        .transform(emptyToNull) // Some clients have an empty string for the email
         .describe("Email da pessoa"),
       endereco: z
         .object({
@@ -250,7 +253,7 @@ export const ZCAListPersonsResponseSchema = z.object({
         .describe("Nome da pessoa (física, jurídica ou estrangeira)"),
       telefone: z
         .string()
-        .transform((val) => (val === "" ? null : val))
+        .transform(emptyToNull)
         .describe("Telefone da pessoa"),
       tipo_pessoa: clientsSchema.shape.type,
     })
@@ -392,12 +395,9 @@ export function updateContaAzulPerson(params: UpdateContaAzulPersonParams) {
 const ZCAGetPersonResponseSchema = z.object({
   documento: z
     .string()
-    .transform((val) => (val === "" ? null : val))
+    .transform(emptyToNull)
     .describe("Documento da pessoa (CPF/CNPJ)"),
-  email: z
-    .string()
-    .transform((val) => (val === "" ? null : val))
-    .describe("Email da pessoa"),
+  email: z.string().transform(emptyToNull).describe("Email da pessoa"),
   enderecos: z
     .array(
       z.object({
@@ -407,7 +407,7 @@ const ZCAGetPersonResponseSchema = z.object({
         complemento: z
           .string()
           .optional()
-          .transform((val) => (val === "" || val === "-" ? null : val))
+          .transform(emptyToNull)
           .describe("Complemento do endereço"),
         estado: z.string().describe("Estado do endereço"),
         id: z.string().describe("ID do endereço"),

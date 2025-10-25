@@ -11,7 +11,11 @@ import { verifiedQstashCron } from "./_utils";
 
 const LOOKBACK_DAYS = 2;
 
-function normalizePhoneNumber(phone: string | null) {
+function normalizePhoneNumber(
+  phone: Awaited<
+    ReturnType<typeof listContaAzulPersons>
+  >["items"][number]["telefone"]
+) {
   if (!phone) return;
   if (phone.startsWith("+")) {
     return phone;
