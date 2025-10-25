@@ -16,6 +16,7 @@
     "@cash/auth": "workspace:*",
     "@kodix/shared": "workspace:*",
     "@kodix/ui": "workspace:*",
+    "@posthog/nextjs-config": "catalog:",
     "@tanstack/react-query": "catalog:tanstack-query",
     "@tanstack/react-query-devtools": "catalog:tanstack-query",
     "@tanstack/react-table": "catalog:",
