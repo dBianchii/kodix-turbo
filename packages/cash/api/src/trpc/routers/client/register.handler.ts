@@ -2,7 +2,7 @@ import { caRepository } from "@cash/db/repositories";
 import { TRPCError } from "@trpc/server";
 
 import type { TPublicProcedureContext } from "../../procedures";
-import type { TRegisterInterestInputSchema } from "../../schemas/client";
+import type { TRegisterInputSchema } from "../../schemas/client";
 import {
   type CreateContaAzulPersonParams,
   createContaAzulPerson,
@@ -10,17 +10,23 @@ import {
   updateContaAzulPerson,
 } from "../../../services/conta-azul.service";
 
-interface RegisterInterestHandlerInput {
+interface RegisterHandlerInput {
   ctx: TPublicProcedureContext;
-  input: TRegisterInterestInputSchema;
+  input: TRegisterInputSchema;
 }
 
-export async function registerInterestHandler({
-  input,
-}: RegisterInterestHandlerInput) {
+export async function registerHandler({ input }: RegisterHandlerInput) {
   // Remove +55 country code from phone (ContaAzul expects DDXXXXXXXXX format)
   const phoneWithoutCountryCode = input.phone.replace(/^\+55/, "");
   let caId: string;
+
+  const existingClient = await caRepository.findClientByCpf(input.cpf);
+  if (existingClient) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "CPF já cadastrado",
+    });
+  }
 
   const newAddress: NonNullable<
     CreateContaAzulPersonParams["enderecos"]
@@ -82,9 +88,9 @@ export async function registerInterestHandler({
       caId,
       document: input.cpf,
       email: input.email,
-      interestRegisteredAt: new Date().toISOString(),
       name: input.name,
       phone: input.phone,
+      registeredFromFormAt: new Date().toISOString(),
       type: "Física",
     },
   ]);

@@ -42,6 +42,8 @@ export function getTRPCClient<TRouter extends AnyRouter>(
   return createTRPCClient<TRouter>({
     links: [
       loggerLink({
+        // biome-ignore lint/suspicious/noConsole: Just setting the console.log. not really calling it.
+        console: { ...console, error: console.log },
         enabled: (op) =>
           process.env.NODE_ENV === "development" ||
           (op.direction === "down" && op.result instanceof Error),

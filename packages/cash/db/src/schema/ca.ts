@@ -50,16 +50,16 @@ export const clients = pgTable("client", (t) => ({
   email: t.text(),
   estado: t.text(),
   id: nanoidPrimaryKey(t),
-  interestRegisteredAt: t.timestamp({
-    mode: "string",
-    precision: 3,
-    withTimezone: true,
-  }),
   logradouro: t.text(),
   name: t.text().notNull(),
   numero: t.text(),
   pais: t.text(),
   phone: t.text(),
+  registeredFromFormAt: t.timestamp({
+    mode: "string",
+    precision: 3,
+    withTimezone: true,
+  }),
   type: clientTypeEnum().notNull(),
 }));
 export const clientsRelations = relations(clients, ({ many }) => ({

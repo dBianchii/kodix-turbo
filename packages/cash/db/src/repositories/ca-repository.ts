@@ -35,6 +35,16 @@ export async function updateCAToken(
   return updatedToken;
 }
 
+export function findClientByCpf(cpf: string, db: Drizzle = _db) {
+  return db.query.clients.findFirst({
+    columns: {
+      email: true,
+      phone: true,
+    },
+    where: eq(clients.document, cpf),
+  });
+}
+
 export function upsertClientsByCaId(
   input: (typeof clients.$inferInsert)[],
   db: Drizzle = _db
