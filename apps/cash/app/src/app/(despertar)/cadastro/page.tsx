@@ -35,20 +35,23 @@ import { CadastroSuccess } from "./_components/cadastro-success";
 import { CpfAlreadyRegisteredAlert } from "./_components/cpf-already-registered-alert";
 
 const NON_DIGIT_REGEX = /\D/g;
-const FIRST_GROUP_REGEX = /(\d{3})(\d)/;
-const SECOND_GROUP_REGEX = /(\d{3})(\d)/;
-const THIRD_GROUP_REGEX = /(\d{3})(\d{1,2})/;
-const EXCESS_DIGITS_REGEX = /(-\d{2})\d+?$/;
+const CPF_FIRST_GROUP_REGEX = /(\d{3})(\d)/;
+const CPF_SECOND_GROUP_REGEX = /(\d{3})(\d)/;
+const CPF_THIRD_GROUP_REGEX = /(\d{3})(\d{1,2})/;
+const CPF_EXCESS_DIGITS_REGEX = /(-\d{2})\d+?$/;
 const CEP_FORMAT_REGEX = /(\d{5})(\d)/;
+
+const CPF_LENGTH = 11;
+const CEP_LENGTH = 8;
 
 const formatCpf = (value: string) => {
   const cleanedValue = value.replace(NON_DIGIT_REGEX, "");
 
   return cleanedValue
-    .replace(FIRST_GROUP_REGEX, "$1.$2")
-    .replace(SECOND_GROUP_REGEX, "$1.$2")
-    .replace(THIRD_GROUP_REGEX, "$1-$2")
-    .replace(EXCESS_DIGITS_REGEX, "$1");
+    .replace(CPF_FIRST_GROUP_REGEX, "$1.$2")
+    .replace(CPF_SECOND_GROUP_REGEX, "$1.$2")
+    .replace(CPF_THIRD_GROUP_REGEX, "$1-$2")
+    .replace(CPF_EXCESS_DIGITS_REGEX, "$1");
 };
 
 const addressValues = {
@@ -94,7 +97,7 @@ export default function CadastroPage() {
     trpc.client.getByCpf.queryOptions(
       { cpf: cpfValue },
       {
-        enabled: cpfValue?.length === 11,
+        enabled: cpfValue?.length === CPF_LENGTH,
         retry: false,
       }
     )
@@ -103,7 +106,7 @@ export default function CadastroPage() {
 
   const validCepValue = form.watch("cep")?.replace(NON_DIGIT_REGEX, "");
   const cepQuery = useQuery({
-    enabled: addAddress && validCepValue?.length === 8,
+    enabled: addAddress && validCepValue?.length === CEP_LENGTH,
     queryFn: () =>
       cep(validCepValue ?? "", {
         providers: ["brasilapi", "viacep", "widenet"],
@@ -120,9 +123,11 @@ export default function CadastroPage() {
       form.setValue("cidade", cepQuery.data.city);
       form.setValue("estado", cepQuery.data.state);
 
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         numeroInputRef.current?.focus();
       }, 100);
+
+      return () => clearTimeout(timeoutId);
     }
 
     if (cepQuery.error) {
@@ -371,7 +376,7 @@ export default function CadastroPage() {
                               inputMode="numeric"
                               onChange={(e) => {
                                 const onlyNumbers = e.target.value.replace(
-                                  /\D/g,
+                                  NON_DIGIT_REGEX,
                                   ""
                                 );
                                 field.onChange(onlyNumbers);
