@@ -1,7 +1,7 @@
 import { desc, eq, sql } from "drizzle-orm";
 import { buildConflictUpdateAllColumns } from "..";
 
-import { db as _db, type Drizzle } from "../client";
+import { db as _db, type Drizzle, type DrizzleTransaction } from "../client";
 import { caTokens, clients, sales } from "../schema";
 
 export async function getCAToken(db = _db) {
@@ -47,7 +47,7 @@ export function findClientByCpf(cpf: string, db: Drizzle = _db) {
 
 export function upsertClientsByCaId(
   input: (typeof clients.$inferInsert)[],
-  db: Drizzle = _db
+  db: Drizzle | DrizzleTransaction = _db
 ) {
   return db
     .insert(clients)
@@ -65,7 +65,7 @@ export function upsertClientsByCaId(
 
 export function upsertSalesByCaId(
   input: (typeof sales.$inferInsert)[],
-  db: Drizzle = _db
+  db: Drizzle | DrizzleTransaction = _db
 ) {
   return db
     .insert(sales)
@@ -76,6 +76,7 @@ export function upsertSalesByCaId(
     })
     .returning({
       caId: sales.caId,
+      clientId: sales.clientId,
       id: sales.id,
       inserted: sql<boolean>`xmax = 0`, // true if inserted, false if updated
     });

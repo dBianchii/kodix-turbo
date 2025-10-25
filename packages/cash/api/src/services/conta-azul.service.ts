@@ -435,3 +435,58 @@ export function getContaAzulPerson(id: string) {
     method: "GET",
   });
 }
+
+interface ListSaleItemsBySaleIdParams {
+  id_venda: string;
+  pagina: number;
+  tamanho_pagina: number;
+}
+
+export const ZCAListSaleItemsResponseSchema = z.object({
+  itens: z.array(
+    z.object({
+      id: z.string(),
+      id_item: z.string(),
+      quantidade: z.number(),
+      valor: z.number(),
+    })
+  ),
+  itens_totais: z.number(),
+});
+
+/** @see https://developers.contaazul.com/docs/sales-apis-openapi/v1/retornarositensdeumavenda */
+export function listSaleItemsBySaleId(params: ListSaleItemsBySaleIdParams) {
+  const { id_venda, ...queryParams } = params;
+  const searchParams = new URLSearchParams();
+
+  for (const [key, value] of Object.entries(queryParams)) {
+    if (value === undefined) continue;
+    searchParams.set(key, value.toString());
+  }
+
+  const queryString = searchParams.toString();
+  const url = `https://api-v2.contaazul.com/v1/venda/${id_venda}/itens${
+    queryString ? `?${queryString}` : ""
+  }`;
+
+  return makeContaAzulRequest(url, ZCAListSaleItemsResponseSchema, {
+    method: "GET",
+  });
+}
+
+export const ZCAGetProductResponseSchema = z.object({
+  estoque: z.object({
+    valor_venda: z.number(),
+  }),
+  id: z.string(),
+  nome: z.string(),
+});
+
+/** @see https://developers.contaazul.com/docs/product-apis-openapi/v1/retornarprodutoporid */
+export function getProductById(id: string) {
+  const url = `https://api-v2.contaazul.com/v1/produtos/${id}`;
+
+  return makeContaAzulRequest(url, ZCAGetProductResponseSchema, {
+    method: "GET",
+  });
+}
