@@ -37,19 +37,6 @@ function toReais(amount: number) {
 const FULL_CASHBACK_PERCENT = 5; // 5%
 const DISCOUNTED_CASHBACK_PERCENT = 1; // 1%
 
-function getCashbackAmountInCents(
-  soldPriceCents: number,
-  originalPriceCents: number
-): number {
-  const isAlreadyDiscounted = soldPriceCents < originalPriceCents;
-  const cashbackPercent = isAlreadyDiscounted
-    ? DISCOUNTED_CASHBACK_PERCENT
-    : FULL_CASHBACK_PERCENT;
-
-  // Calcula em centavos e arredonda
-  return Math.round((soldPriceCents * cashbackPercent) / 100);
-}
-
 export const upsertCASalesCron = verifiedQstashCron(async () => {
   const now = dayjs().tz("America/Sao_Paulo");
 
@@ -182,21 +169,24 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
         return null;
       }
 
-      // Converte para centavos antes de multiplicar
       const soldPriceCents = toCents(caSaleItem.valor);
       const originalPriceCents = toCents(product.valor_venda);
 
+      const isUnitDiscounted = soldPriceCents < originalPriceCents;
+      const cashbackPercent = isUnitDiscounted
+        ? DISCOUNTED_CASHBACK_PERCENT
+        : FULL_CASHBACK_PERCENT;
+
       const totalSoldPriceForItemCents = soldPriceCents * caSaleItem.quantidade;
-      const totalOriginalPriceForItemCents =
-        originalPriceCents * caSaleItem.quantidade;
+
+      const cashbackAmountCents = Math.round(
+        (totalSoldPriceForItemCents * cashbackPercent) / 100
+      );
 
       return {
         caProductId: product.caProductId,
         caSaleId: caSaleItem.caSaleId,
-        cashbackAmountCents: getCashbackAmountInCents(
-          totalSoldPriceForItemCents,
-          totalOriginalPriceForItemCents
-        ),
+        cashbackAmountCents,
       };
     })
     .filter(
