@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useTRPC } from "@cash/api/trpc/react/client";
 import { ZRegisterInputSchema } from "@cash/api/trpc/schemas/client";
+import { ZCpfSchema } from "@kodix/shared/schemas";
 import { Alert, AlertDescription, AlertTitle } from "@kodix/ui/alert";
 import { Button } from "@kodix/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@kodix/ui/card";
@@ -28,7 +29,7 @@ import { Spinner } from "@kodix/ui/spinner";
 import { Switch } from "@kodix/ui/switch";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import cep from "cep-promise";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Check } from "lucide-react";
 
 import DespertarLogo from "./_assets/despertar-logo.png";
 import { CadastroSuccess } from "./_components/cadastro-success";
@@ -93,11 +94,13 @@ export default function CadastroPage() {
   });
 
   const cpfValue = form.watch("cpf")?.replace(NON_DIGIT_REGEX, "");
+
+  const isValidCpf = ZCpfSchema.safeParse(cpfValue).success;
   const cpfQuery = useQuery(
     trpc.client.getByCpf.queryOptions(
       { cpf: cpfValue },
       {
-        enabled: cpfValue?.length === CPF_LENGTH,
+        enabled: isValidCpf,
         retry: false,
       }
     )
@@ -190,11 +193,30 @@ export default function CadastroPage() {
                           {...field}
                           inputMode="numeric"
                           onChange={(e) => {
-                            field.onChange(formatCpf(e.target.value));
+                            const formattedValue = formatCpf(e.target.value);
+                            field.onChange(formattedValue);
+
+                            const justNumbers = formattedValue.replace(
+                              NON_DIGIT_REGEX,
+                              ""
+                            );
+                            if (justNumbers.length === CPF_LENGTH) {
+                              form.trigger("cpf"); // Trigger validation immediately
+                            }
                           }}
                           placeholder="000.000.000-00"
                           type="text"
                         />
+                        {!cpfQuery.isPending && (
+                          <InputGroupAddon
+                            align="inline-end"
+                            className="cursor-default"
+                          >
+                            {cpfQuery.data ? null : (
+                              <Check className="text-green-500" />
+                            )}
+                          </InputGroupAddon>
+                        )}
                       </InputGroup>
                     </FormControl>
                     <FormMessage />
