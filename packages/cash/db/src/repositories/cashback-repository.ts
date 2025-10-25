@@ -13,7 +13,7 @@ export function upsertCashbacksByCaId(
     .values(input)
     .onConflictDoUpdate({
       set: buildConflictUpdateAllColumns(cashbacks, ["id"]),
-      target: cashbacks.caProductId,
+      target: [cashbacks.saleId, cashbacks.caProductId],
     })
     .returning({
       id: cashbacks.id,

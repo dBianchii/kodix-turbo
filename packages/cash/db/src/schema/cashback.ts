@@ -1,4 +1,4 @@
-import { pgTable, unique } from "drizzle-orm/pg-core";
+import { index, pgTable, unique } from "drizzle-orm/pg-core";
 
 import { clients, sales } from "./ca";
 import { nanoidPrimaryKey } from "./utils";
@@ -26,5 +26,8 @@ export const cashbacks = pgTable(
       .notNull()
       .references(() => sales.id),
   }),
-  (table) => [unique().on(table.caProductId)]
+  (table) => [
+    unique().on(table.saleId, table.caProductId),
+    index().on(table.clientId, table.createdAt),
+  ]
 );

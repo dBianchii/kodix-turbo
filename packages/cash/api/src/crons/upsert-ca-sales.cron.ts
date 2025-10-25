@@ -14,11 +14,11 @@ import { verifiedQstashCron } from "./_utils";
 
 const LOOKBACK_DAYS = 1;
 
-function normalizePhoneNumber(
-  phone: Awaited<
-    ReturnType<typeof listContaAzulPersons>
-  >["items"][number]["telefone"]
-) {
+type CAPersonPhone = Awaited<
+  ReturnType<typeof listContaAzulPersons>
+>["items"][number]["telefone"];
+
+function normalizePhoneNumber(phone: CAPersonPhone) {
   if (!phone) return;
   if (phone.startsWith("+")) {
     return phone;
@@ -86,28 +86,73 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
   const allCASaleItems = (
     await Promise.all(
       allCASales.map(async (caSale) => {
-        const { itens } = await listSaleItemsBySaleId({
-          id_venda: caSale.id,
-          pagina: 1,
-          tamanho_pagina: 100,
-        });
-        return itens.map((item) => ({
-          ...item,
-          caSaleId: caSale.id,
-        }));
+        try {
+          // Fetch all pages of sale items
+          const saleItems: Awaited<
+            ReturnType<typeof listSaleItemsBySaleId>
+          >["itens"] = [];
+          let currentItemPage = 1;
+          let totalSaleItems = 0;
+
+          do {
+            const { itens, itens_totais } = await listSaleItemsBySaleId({
+              id_venda: caSale.id,
+              pagina: currentItemPage,
+              tamanho_pagina: 100,
+            });
+
+            if (itens?.length) {
+              saleItems.push(...itens);
+            }
+
+            totalSaleItems = itens_totais;
+            currentItemPage++;
+          } while (saleItems.length < totalSaleItems);
+
+          return saleItems.map((item) => ({
+            ...item,
+            caSaleId: caSale.id,
+          }));
+        } catch (error) {
+          // biome-ignore lint/suspicious/noConsole: Logging for observability
+          console.error(`Failed to fetch items for sale ${caSale.id}:`, error);
+          return [];
+        }
       })
     )
   ).flat();
 
   const uniqueProductIds = uniqBy(allCASaleItems, (item) => item.id_item);
-  const products = await Promise.all(
-    uniqueProductIds.map((item) => getProductById(item.id_item))
-  ).then((p) =>
-    p.map(({ estoque, id }) => ({
-      caProductId: id,
-      valor_venda: estoque.valor_venda,
-    }))
-  );
+  const products = (
+    await Promise.all(
+      uniqueProductIds.map(async (item) => {
+        try {
+          const product = await getProductById(item.id_item);
+
+          // Validate product price
+          if (
+            product.estoque.valor_venda <= 0 ||
+            !Number.isFinite(product.estoque.valor_venda)
+          ) {
+            // biome-ignore lint/suspicious/noConsole: Logging for observability
+            console.warn(
+              `Product ${item.id_item} has invalid price: ${product.estoque.valor_venda}, skipping`
+            );
+            return null;
+          }
+
+          return {
+            caProductId: product.id,
+            valor_venda: product.estoque.valor_venda,
+          };
+        } catch (error) {
+          // biome-ignore lint/suspicious/noConsole: Logging for observability
+          console.error(`Failed to fetch product ${item.id_item}:`, error);
+          return null;
+        }
+      })
+    )
+  ).filter((p): p is NonNullable<typeof p> => p !== null);
 
   //Get cashback amount for each sold product
   const cashbackAmounts = allCASaleItems
@@ -115,7 +160,27 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
       const product = products.find(
         (p) => p.caProductId === caSaleItem.id_item
       );
-      if (!product) throw new Error("Product not found!");
+      if (!product) {
+        // biome-ignore lint/suspicious/noConsole: Logging for observability
+        console.warn(
+          `Product ${caSaleItem.id_item} not found for sale item, skipping cashback calculation`
+        );
+        return null;
+      }
+
+      // Validate sale item values
+      if (
+        caSaleItem.valor <= 0 ||
+        !Number.isFinite(caSaleItem.valor) ||
+        caSaleItem.quantidade <= 0 ||
+        !Number.isFinite(caSaleItem.quantidade)
+      ) {
+        // biome-ignore lint/suspicious/noConsole: Logging for observability
+        console.warn(
+          `Sale item has invalid values (valor: ${caSaleItem.valor}, quantidade: ${caSaleItem.quantidade}), skipping cashback`
+        );
+        return null;
+      }
 
       // Converte para centavos antes de multiplicar
       const soldPriceCents = toCents(caSaleItem.valor);
@@ -134,7 +199,10 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
         ),
       };
     })
-    .filter((item) => item.cashbackAmountCents > 0); // Remove items with no cashback
+    .filter(
+      (item): item is NonNullable<typeof item> =>
+        item !== null && item.cashbackAmountCents > 0
+    ); // Remove items with no cashback or missing products
 
   const uniqueClientIds = uniqBy(allCASales, (item) => item.cliente.id).map(
     (item) => item.cliente.id
