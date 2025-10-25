@@ -11,6 +11,14 @@ import { verifiedQstashCron } from "./_utils";
 
 const LOOKBACK_DAYS = 2;
 
+function normalizePhoneNumber(phone: string | null) {
+  if (!phone) return;
+  if (phone.startsWith("+")) {
+    return phone;
+  }
+  return `+55${phone}`;
+}
+
 export const upsertCASalesCron = verifiedQstashCron(async () => {
   const now = dayjs().tz("America/Sao_Paulo");
 
@@ -39,8 +47,8 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
   } while (allSales.length < totalItens);
 
   if (!allSales.length) {
-    return new Response("No recent sales found - skipping", {
-      status: 304,
+    return new Response("No recent sales found. Skipping", {
+      status: 202,
     });
   }
 
@@ -85,7 +93,7 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
           name: caClient.nome,
           numero: caClient.endereco?.numero,
           pais: caClient.endereco?.pais,
-          phone: caClient.telefone,
+          phone: normalizePhoneNumber(caClient.telefone),
           type: caClient.tipo_pessoa,
         }) satisfies typeof clients.$inferInsert
     )
@@ -101,7 +109,7 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
       const createdAtUtc = dayjs
         .tz(sale.criado_em, "America/Sao_Paulo")
         .utc()
-        .toDate();
+        .toISOString();
 
       return {
         caCreatedAt: createdAtUtc,

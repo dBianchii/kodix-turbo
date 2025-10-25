@@ -55,6 +55,7 @@
     "react": "catalog:react",
     "react-day-picker": "catalog:",
     "react-hook-form": "catalog:",
+    "react-phone-number-input": "catalog:",
     "react-resizable-panels": "catalog:",
     "sonner": "catalog:",
     "tailwind-merge": "catalog:",

@@ -10,6 +10,7 @@
     "tsc": "tsc --noEmit"
   },
   "dependencies": {
+    "libphonenumber-js": "catalog:",
     "@kodix/dayjs": "workspace:*",
     "zod": "catalog:"
   },

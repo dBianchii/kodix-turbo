@@ -15,7 +15,7 @@ if (!process.env.CA_CLIENT_SECRET) {
   throw new Error("Missing CA_CLIENT_SECRET");
 }
 
-export const ZRefreshTokenResponseSchema = z.object({
+const ZRefreshTokenResponseSchema = z.object({
   access_token: z.string(),
   expires_in: z.number(),
   refresh_token: z.string(),
@@ -72,13 +72,13 @@ async function refreshAccessToken() {
   if (existingToken) {
     await caRepository.updateCAToken(existingToken.id, {
       accessToken: data.access_token,
-      expiresAt,
+      expiresAt: expiresAt.toISOString(),
       refreshToken: data.refresh_token,
     });
   } else {
     await caRepository.createCAToken({
       accessToken: data.access_token,
-      expiresAt,
+      expiresAt: expiresAt.toISOString(),
       refreshToken: data.refresh_token,
     });
   }
@@ -129,9 +129,14 @@ async function makeContaAzulRequest<TSchema extends z.ZodType>(
   }
 
   if (!response.ok) {
+    const errorBody = await response.text();
     throw new Error(
-      `Failed to make request to ${url}. Status: ${response.status}`
+      `Failed to make request to ${url}. Status: ${response.status}. Body: ${errorBody}`
     );
+  }
+
+  if (response.status === 204) {
+    return undefined as z.infer<TSchema>;
   }
 
   const rawData = await response.json();
@@ -159,7 +164,7 @@ async function makeContaAzulRequest<TSchema extends z.ZodType>(
   return parseResult.data;
 }
 
-export interface ListContaAzulSalesParams {
+interface ListContaAzulSalesParams {
   pagina: number;
   tamanho_pagina: number;
   data_inicio?: string;
@@ -208,11 +213,12 @@ export function listContaAzulSales(params: ListContaAzulSalesParams) {
   });
 }
 
-export interface ListContaAzulPersonsParams {
-  ids: string[];
-  tamanho_pagina: number;
+interface ListContaAzulPersonsParams {
+  ids?: string[];
+  tamanho_pagina: 10 | 20 | 50 | 100 | 200 | 500 | 1000;
   pagina: number;
-  com_endereco: true;
+  com_endereco?: true;
+  busca?: string;
 }
 
 export const ZCAListPersonsResponseSchema = z.object({
@@ -228,14 +234,14 @@ export const ZCAListPersonsResponseSchema = z.object({
         .describe("Email da pessoa"),
       endereco: z
         .object({
-          bairro: z.string(),
-          cep: z.string(),
-          cidade: z.string(),
-          complemento: z.string(),
-          estado: z.string(),
-          logradouro: z.string(),
-          numero: z.string(),
-          pais: z.string(),
+          bairro: z.string().optional(),
+          cep: z.string().optional(),
+          cidade: z.string().optional(),
+          complemento: z.string().optional(),
+          estado: z.string().optional(),
+          logradouro: z.string().optional(),
+          numero: z.string().optional(),
+          pais: z.string().optional(),
         })
         .optional(),
       id: z.string().describe("ID da pessoa"),
@@ -268,9 +274,164 @@ export function listContaAzulPersons(params: ListContaAzulPersonsParams) {
     }
   }
 
-  const url = `https://api-v2.contaazul.com/v1/pessoas?${searchParams ?? ""}`;
+  const url = `https://api-v2.contaazul.com/v1/pessoas?${searchParams}`;
 
   return makeContaAzulRequest(url, ZCAListPersonsResponseSchema, {
+    method: "GET",
+  });
+}
+
+export interface CreateContaAzulPersonParams {
+  cpf?: string;
+  email?: string;
+  nome: string;
+  observacao?: string;
+  telefone_celular?: string;
+  perfis: Array<{
+    tipo_perfil: "Cliente" | "Fornecedor" | "Transportadora";
+  }>;
+  tipo_pessoa: "Física" | "Jurídica" | "Estrangeira";
+  enderecos?: Array<{
+    bairro?: string;
+    cep?: string;
+    cidade?: string;
+    complemento?: string;
+    estado?: string;
+    logradouro?: string;
+    numero?: string;
+    pais?: string;
+  }>;
+}
+
+const ZCACreatePersonResponseSchema = z.object({
+  cpf: z.string().optional().describe("CPF da pessoa física"),
+  email: z.string().optional().describe("Email da pessoa"),
+  enderecos: z
+    .array(
+      z.object({
+        bairro: z.string().optional().describe("Bairro do endereço"),
+        cep: z.string().optional().describe("CEP do endereço"),
+        cidade: z.string().optional().describe("Cidade do endereço"),
+        complemento: z.string().optional().describe("Complemento do endereço"),
+        estado: z.string().optional().describe("Estado do endereço"),
+        id: z.string().optional().describe("ID do endereço"),
+        id_cidade: z.number().optional().describe("ID da cidade"),
+        logradouro: z.string().optional().describe("Logradouro do endereço"),
+        numero: z.string().optional().describe("Número do endereço"),
+        pais: z.string().optional().describe("País do endereço"),
+      })
+    )
+    .optional()
+    .describe("Lista de endereços"),
+  estrangeiro: z
+    .boolean()
+    .optional()
+    .describe("Indica se a pessoa é estrangeira"),
+  id: z.string().describe("ID da pessoa criada"),
+  nome: z.string().describe("Nome da pessoa"),
+  observacao: z.string().optional().describe("Observações sobre a pessoa"),
+  origem: z.string().optional().describe("Origem da criação da pessoa"),
+  telefone_celular: z.string().optional().describe("Telefone celular"),
+  tipo_pessoa: z
+    .string()
+    .describe("Tipo de pessoa: Física, Jurídica ou Estrangeira"),
+});
+
+/** @see https://developers.contaazul.com/open-api-docs/open-api-person/v1/criarpessoa */
+export function createContaAzulPerson(params: CreateContaAzulPersonParams) {
+  return makeContaAzulRequest(
+    "https://api-v2.contaazul.com/v1/pessoas",
+    ZCACreatePersonResponseSchema,
+    {
+      body: JSON.stringify(params),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    }
+  );
+}
+
+export interface UpdateContaAzulPersonParams {
+  id: string;
+  cpf?: string;
+  email?: string;
+  nome?: string;
+  observacao?: string;
+  telefone_celular?: string;
+  perfis?: Array<{
+    tipo_perfil: "Cliente" | "Fornecedor" | "Transportadora";
+  }>;
+  tipo_pessoa?: "Física" | "Jurídica" | "Estrangeira";
+  enderecos?: Array<{
+    bairro?: string;
+    cep?: string;
+    cidade?: string;
+    complemento?: string;
+    estado?: string;
+    logradouro?: string;
+    numero?: string;
+    pais?: string;
+  }>;
+}
+
+/** @see https://developers.contaazul.com/open-api-docs/open-api-person/v1/atualizarpessoaparcialmenteporid */
+export function updateContaAzulPerson(params: UpdateContaAzulPersonParams) {
+  const { id, ...body } = params;
+  const url = `https://api-v2.contaazul.com/v1/pessoas/${id}`;
+
+  return makeContaAzulRequest(url, z.undefined(), {
+    body: JSON.stringify(body),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "PATCH",
+  });
+}
+
+const ZCAGetPersonResponseSchema = z.object({
+  documento: z
+    .string()
+    .transform((val) => (val === "" ? null : val))
+    .describe("Documento da pessoa (CPF/CNPJ)"),
+  email: z
+    .string()
+    .transform((val) => (val === "" ? null : val))
+    .describe("Email da pessoa"),
+  enderecos: z
+    .array(
+      z.object({
+        bairro: z.string().describe("Bairro do endereço"),
+        cep: z.string().describe("CEP do endereço"),
+        cidade: z.string().describe("Cidade do endereço"),
+        complemento: z
+          .string()
+          .optional()
+          .transform((val) => (val === "" || val === "-" ? null : val))
+          .describe("Complemento do endereço"),
+        estado: z.string().describe("Estado do endereço"),
+        id: z.string().describe("ID do endereço"),
+        logradouro: z.string().describe("Logradouro do endereço"),
+        numero: z.string().describe("Número do endereço"),
+        pais: z.string().describe("País do endereço"),
+      })
+    )
+    .optional()
+    .describe("Lista de endereços"),
+  id: z.string().describe("ID da pessoa"),
+  nome: z.string().describe("Nome da pessoa"),
+  telefone_celular: z
+    .string()
+    .transform((val) => (val === "" ? null : val))
+    .describe("Telefone celular da pessoa"),
+  tipo_pessoa: clientsSchema.shape.type.describe("Tipo de pessoa"),
+});
+
+/** @see https://developers.contaazul.com/open-api-docs/open-api-person/v1/retornarapessoaporid */
+export function getContaAzulPerson(id: string) {
+  const url = `https://api-v2.contaazul.com/v1/pessoas/${id}`;
+
+  return makeContaAzulRequest(url, ZCAGetPersonResponseSchema, {
     method: "GET",
   });
 }
