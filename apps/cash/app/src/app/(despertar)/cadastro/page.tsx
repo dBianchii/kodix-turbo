@@ -28,7 +28,7 @@ import { Spinner } from "@kodix/ui/spinner";
 import { Switch } from "@kodix/ui/switch";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import cep from "cep-promise";
-import { AlertCircle, Check } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 
 import DespertarLogo from "./_assets/despertar-logo.png";
 import { CadastroSuccess } from "./_components/cadastro-success";
@@ -195,16 +195,6 @@ export default function CadastroPage() {
                           placeholder="000.000.000-00"
                           type="text"
                         />
-                        {!cpfQuery.isPending && (
-                          <InputGroupAddon
-                            align="inline-end"
-                            className="cursor-default"
-                          >
-                            {cpfQuery.data ? null : (
-                              <Check className="text-green-500" />
-                            )}
-                          </InputGroupAddon>
-                        )}
                       </InputGroup>
                     </FormControl>
                     <FormMessage />
