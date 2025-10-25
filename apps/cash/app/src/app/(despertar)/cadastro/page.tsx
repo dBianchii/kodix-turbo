@@ -154,13 +154,13 @@ export default function CadastroPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-2 md:p-4">
+    <main className="flex flex-col items-center p-4 px-2">
       <Image
         alt="Logo do Despertar"
-        className="m-4 mx-auto"
-        height={125}
+        className="mx-auto mb-3"
+        height={100}
         src={DespertarLogo}
-        width={125}
+        width={100}
       />
       <Card className="w-full max-w-md">
         <CardHeader>
@@ -287,7 +287,7 @@ export default function CadastroPage() {
                   </FormItem>
                 )}
               />
-              <div className="flex flex-row items-center gap-2 py-1 text-center">
+              <div className="flex flex-row items-center gap-2 text-center">
                 <Switch
                   checked={addAddress}
                   disabled={isCpfAlreadyRegistered}
@@ -504,7 +504,7 @@ export default function CadastroPage() {
               )}
 
               <Button
-                className="mt-6 w-full"
+                className="mt-4 w-full"
                 disabled={isCpfAlreadyRegistered}
                 loading={registerMutation.isPending}
                 type="submit"
