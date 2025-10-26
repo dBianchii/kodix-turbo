@@ -10,7 +10,13 @@ export const onRequestError: Instrumentation.onRequestError = async (
   err,
   request
 ) => {
+  console.log("onRequestError called!");
   if (process.env.NEXT_RUNTIME !== "nodejs") {
+    return;
+  }
+
+  if (process.env.NODE_ENV === "development") {
+    //Skip in development
     return;
   }
 
