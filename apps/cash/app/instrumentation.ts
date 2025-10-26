@@ -9,11 +9,8 @@ const POSTHOG_COOKIE_REGEX = /ph_phc_.*?_posthog=([^;]+)/;
 export const onRequestError: Instrumentation.onRequestError = async (
   error,
   errorRequest,
-  errorContext
+  _errorContext
 ) => {
-  console.log("onRequestError called!");
-  console.log("Error context:", errorContext);
-
   if (process.env.NEXT_RUNTIME !== "nodejs") {
     return;
   }
@@ -45,8 +42,6 @@ export const onRequestError: Instrumentation.onRequestError = async (
       }
     }
   }
-
-  console.log("capturing exception in instrumentation!!", error, distinctId);
 
   posthog.captureException(error, distinctId || undefined);
   await posthog.shutdown();

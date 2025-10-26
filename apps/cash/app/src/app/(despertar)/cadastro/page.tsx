@@ -30,13 +30,10 @@ import { Switch } from "@kodix/ui/switch";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import cep from "cep-promise";
 import { AlertCircle, Check } from "lucide-react";
-import posthog from "posthog-js";
 
 import DespertarLogo from "./_assets/despertar-logo.png";
 import { CadastroSuccess } from "./_components/cadastro-success";
 import { CpfAlreadyRegisteredAlert } from "./_components/cpf-already-registered-alert";
-import { testError } from "./_components/test-error";
-import { testPosthog } from "./_components/test-posthog";
 
 const NON_DIGIT_REGEX = /\D/g;
 const CPF_FIRST_GROUP_REGEX = /(\d{3})(\d)/;
@@ -170,18 +167,6 @@ export default function CadastroPage() {
           <CardTitle>Participe do programa de cashback</CardTitle>
         </CardHeader>
         <CardContent>
-          <Button
-            onClick={() =>
-              posthog.captureException(
-                new Error("Teste posthog com captureException no client!")
-              )
-            }
-          >
-            Teste
-          </Button>
-
-          <Button onClick={async () => await testPosthog()}>call server</Button>
-          <Button onClick={async () => await testError()}>call error</Button>
           <Form {...form}>
             <form
               className="space-y-4"
