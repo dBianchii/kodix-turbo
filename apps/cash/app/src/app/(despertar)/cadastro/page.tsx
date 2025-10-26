@@ -170,7 +170,15 @@ export default function CadastroPage() {
           <CardTitle>Participe do programa de cashback</CardTitle>
         </CardHeader>
         <CardContent>
-          <Button onClick={() => posthog.capture("teste")}>Teste</Button>
+          <Button
+            onClick={() =>
+              posthog.captureException(
+                new Error("Teste posthog com captureException no client!")
+              )
+            }
+          >
+            Teste
+          </Button>
 
           <Button onClick={async () => await testPosthog()}>call server</Button>
           <Button onClick={async () => await testError()}>call error</Button>
