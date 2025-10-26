@@ -5,7 +5,7 @@ import { CashTRPCReactProvider } from "@cash/api/trpc/react/client";
 import { Toaster } from "@kodix/ui/toast";
 import { ThemeProvider } from "next-themes";
 import posthog from "posthog-js";
-import { PostHogProvider as PHProvider } from "posthog-js/react";
+import { PostHogProvider } from "posthog-js/react";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
@@ -22,13 +22,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <PHProvider client={posthog}>
+    <PostHogProvider client={posthog}>
       <CashTRPCReactProvider>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <Toaster />
           {children}
         </ThemeProvider>
       </CashTRPCReactProvider>
-    </PHProvider>
+    </PostHogProvider>
   );
 }

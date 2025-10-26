@@ -23,6 +23,7 @@
     "@trpc/client": "catalog:trpc",
     "@trpc/server": "catalog:trpc",
     "@trpc/tanstack-react-query": "catalog:trpc",
+    "@kodix/posthog": "workspace:*",
     "cep-promise": "catalog:",
     "es-toolkit": "catalog:",
     "geist": "catalog:",

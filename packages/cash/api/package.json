@@ -18,6 +18,7 @@
     "@cash/auth": "workspace:*",
     "@cash/db": "workspace:*",
     "@kodix/dayjs": "workspace:*",
+    "@kodix/posthog": "workspace:*",
     "@kodix/shared": "workspace:*",
     "zod": "catalog:",
     "@kodix/trpc": "workspace:*"

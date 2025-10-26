@@ -15,29 +15,29 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         if (
           "name" in answers &&
           typeof answers.name === "string" &&
-          answers.name.startsWith("@kdx/")
+          answers.name.startsWith("@kodix/")
         ) {
-          answers.name = answers.name.replace("@kdx/", "");
+          answers.name = answers.name.replace("@kodix/", "");
         }
         return "Config sanitized";
       },
       {
-        path: "packages/{{ name }}/package.json",
+        path: "packages/kodix/{{ name }}/package.json",
         templateFile: "templates/package.json.hbs",
         type: "add",
       },
       {
-        path: "packages/{{ name }}/tsconfig.json",
+        path: "packages/kodix/{{ name }}/tsconfig.json",
         templateFile: "templates/tsconfig.json.hbs",
         type: "add",
       },
       {
-        path: "packages/{{ name }}/src/index.ts",
+        path: "packages/kodix/{{ name }}/src/index.ts",
         template: "export const name = '{{ name }}';",
         type: "add",
       },
       {
-        path: "packages/{{ name }}/package.json",
+        path: "packages/kodix/{{ name }}/package.json",
         async transform(content, answers) {
           if ("deps" in answers && typeof answers.deps === "string") {
             const pkg = JSON.parse(content) as PackageJson;
@@ -69,7 +69,9 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
          */
         if ("name" in answers && typeof answers.name === "string") {
           execSync("pnpm i", { stdio: "inherit" });
-          execSync(`pnpm biome check --write packages/${answers.name}/**`);
+          execSync(
+            `pnpm biome check --write packages/kodix/${answers.name}/**`
+          );
           return "Package scaffolded";
         }
         return "Package not scaffolded";
@@ -79,7 +81,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
     prompts: [
       {
         message:
-          "What is the name of the package? (You can skip the `@kdx/` prefix)",
+          "What is the name of the package? (You can skip the `@kodix/` prefix)",
         name: "name",
         type: "input",
       },

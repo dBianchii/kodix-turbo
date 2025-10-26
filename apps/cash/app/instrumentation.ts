@@ -20,7 +20,7 @@ export const onRequestError: Instrumentation.onRequestError = async (
     return;
   }
 
-  const { getPostHogServer } = await import("~/lib/posthog-server");
+  const { getPostHogServer } = await import("@kodix/posthog");
   const posthog = getPostHogServer();
   let distinctId: string | null = null;
   if (errorRequest.headers.cookie) {

@@ -1,17 +1,20 @@
 {
-  "name": "@kodix/{{ name }}",
+  "name": "@kodix/posthog",
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/posthog-node.ts"
   },
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "dev": "tsc",
     "tsc": "tsc --noEmit"
   },
+  "dependencies": {
+    "posthog-node": "catalog:"
+  },
   "devDependencies": {
     "@kodix/tsconfig": "workspace:*",
     "typescript": "catalog:"
-  },
+  }
 }
