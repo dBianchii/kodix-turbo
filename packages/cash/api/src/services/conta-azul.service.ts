@@ -15,6 +15,7 @@ const HTTP_STATUS_TOO_MANY_REQUESTS = 429;
 // API allows 20 requests per second, we stay conservative with 15 to avoid spikes
 const RATE_LIMIT_MAX_REQUESTS = 15;
 const RATE_LIMIT_TIME_WINDOW_MS = 1000; // 1 second
+const RATE_LIMITER_BUFFER_MS = 10; // Small buffer to avoid edge cases
 
 // Retry configuration
 const MAX_RETRIES = 3;
@@ -106,6 +107,21 @@ async function refreshAndGetToken() {
 }
 
 /**
+ * Custom error for rate limiting
+ */
+class RateLimitError extends Error {
+  readonly url: string;
+  readonly statusCode: number;
+
+  constructor(message: string, url: string, statusCode: number) {
+    super(message);
+    this.name = "RateLimitError";
+    this.url = url;
+    this.statusCode = statusCode;
+  }
+}
+
+/**
  * Simple rate limiter to avoid exceeding Conta Azul API limits
  * Tracks requests in a time window and adds delays when necessary
  */
@@ -130,7 +146,8 @@ class RateLimiter {
     if (this.requestTimestamps.length >= this.maxRequests) {
       const oldestTimestamp = this.requestTimestamps[0];
       if (oldestTimestamp) {
-        const waitTime = this.timeWindowMs - (now - oldestTimestamp) + 10; // +10ms buffer
+        const waitTime =
+          this.timeWindowMs - (now - oldestTimestamp) + RATE_LIMITER_BUFFER_MS;
         if (waitTime > 0) {
           await new Promise((resolve) => setTimeout(resolve, waitTime));
         }
@@ -165,6 +182,27 @@ function sleep(ms: number): Promise<void> {
  */
 function calculateRetryDelay(retryCount: number): number {
   return Math.min(INITIAL_RETRY_DELAY_MS * 2 ** retryCount, MAX_RETRY_DELAY_MS);
+}
+
+/**
+ * Handle rate limit with retry logic
+ */
+async function handleRateLimitRetry(
+  url: string,
+  retryCount: number
+): Promise<void> {
+  if (retryCount >= MAX_RETRIES) {
+    throw new RateLimitError(
+      `Rate limit exceeded after ${MAX_RETRIES} retries`,
+      url,
+      HTTP_STATUS_TOO_MANY_REQUESTS
+    );
+  }
+
+  const delay = calculateRetryDelay(retryCount);
+  // biome-ignore lint/suspicious/noConsole: Logging for observability
+  console.warn(`Rate limited on ${url}. Retrying in ${delay}ms`);
+  await sleep(delay);
 }
 
 /**
@@ -256,16 +294,7 @@ async function makeContaAzulRequest<TSchema extends z.ZodType>(
 
       // Handle rate limiting
       if (response.status === HTTP_STATUS_TOO_MANY_REQUESTS) {
-        if (retryCount >= MAX_RETRIES) {
-          const errorBody = await response.text();
-          throw new Error(
-            `Rate limit exceeded after ${MAX_RETRIES} retries. URL: ${url}. Body: ${errorBody}`
-          );
-        }
-        const delay = calculateRetryDelay(retryCount);
-        // biome-ignore lint/suspicious/noConsole: Logging for observability
-        console.warn(`Rate limited on ${url}. Retrying in ${delay}ms`);
-        await sleep(delay);
+        await handleRateLimitRetry(url, retryCount);
         retryCount++;
         continue;
       }
@@ -280,15 +309,7 @@ async function makeContaAzulRequest<TSchema extends z.ZodType>(
       return await processResponse(response, schema);
     } catch (error) {
       // Retry on rate limit errors
-      if (
-        error instanceof Error &&
-        error.message.includes("Status: 429") &&
-        retryCount < MAX_RETRIES
-      ) {
-        const delay = calculateRetryDelay(retryCount);
-        // biome-ignore lint/suspicious/noConsole: Logging for observability
-        console.warn(`Rate limit error on ${url}. Retrying in ${delay}ms`);
-        await sleep(delay);
+      if (error instanceof RateLimitError && retryCount < MAX_RETRIES) {
         retryCount++;
         continue;
       }
@@ -296,7 +317,11 @@ async function makeContaAzulRequest<TSchema extends z.ZodType>(
     }
   }
 
-  throw new Error(`Request failed after ${MAX_RETRIES} retries`);
+  throw new RateLimitError(
+    `Request failed after ${MAX_RETRIES} retries`,
+    url,
+    HTTP_STATUS_TOO_MANY_REQUESTS
+  );
 }
 
 interface ListContaAzulSalesParams {
