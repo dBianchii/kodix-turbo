@@ -160,7 +160,7 @@ catalogs:
     '@formatjs/intl-pluralrules': ^5.2.14
     '@formatjs/intl-relativetimeformat': ^11.2.14
   next:
-    next: ^15.5.3
+    next: 16.0.0
   react:
     '@types/react': ^19.1.0
     '@types/react-dom': ^19.1.0
