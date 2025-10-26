@@ -2,6 +2,9 @@
 
 import PostHogClient from "~/lib/posthog";
 
-export function testPosthog() {
-  PostHogClient().capture({ distinctId: "123", event: "teste-posthog-node" });
+export async function testPosthog() {
+  await PostHogClient().capture({
+    distinctId: "123",
+    event: "teste-posthog-node",
+  });
 }

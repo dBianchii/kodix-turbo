@@ -1,5 +1,5 @@
 "use server";
 
-export function testError() {
+export async function testError() {
   throw new Error("teste error server");
 }
