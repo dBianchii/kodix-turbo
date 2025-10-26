@@ -12,7 +12,6 @@ import { getMessages, setRequestLocale } from "next-intl/server";
 
 import { routing } from "~/i18n/routing";
 
-import { CSPostHogProvider } from "./_components/posthog-provider";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
@@ -45,15 +44,11 @@ export default async function RootLayout(props: {
   const messages = await getMessages();
   return (
     <html lang={(await props.params).locale} suppressHydrationWarning>
-      <CSPostHogProvider>
-        <body
-          className={cn("font-sans", GeistSans.variable, GeistMono.variable)}
-        >
-          <Providers locale={requestedLocale} messages={messages}>
-            <div className="flex min-h-screen flex-col">{props.children}</div>
-          </Providers>
-        </body>
-      </CSPostHogProvider>
+      <body className={cn("font-sans", GeistSans.variable, GeistMono.variable)}>
+        <Providers locale={requestedLocale} messages={messages}>
+          <div className="flex min-h-screen flex-col">{props.children}</div>
+        </Providers>
+      </body>
     </html>
   );
 }
