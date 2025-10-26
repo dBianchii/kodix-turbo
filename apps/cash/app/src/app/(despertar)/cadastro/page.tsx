@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useRef, useState } from "react";
 import Image from "next/image";
 import { useTRPC } from "@cash/api/trpc/react/client";
 import { ZRegisterInputSchema } from "@cash/api/trpc/schemas/client";
@@ -118,19 +118,20 @@ export default function CadastroPage() {
     retry: false,
   });
 
+  const setAddressValues = useEffectEvent(() => {
+    if (!cepQuery.data) return;
+    form.clearErrors("cep");
+    form.setValue("logradouro", cepQuery.data.street);
+    form.setValue("bairro", cepQuery.data.neighborhood);
+    form.setValue("cidade", cepQuery.data.city);
+    form.setValue("estado", cepQuery.data.state);
+
+    numeroInputRef.current?.focus();
+  });
+
   useEffect(() => {
     if (cepQuery.data) {
-      form.clearErrors("cep");
-      form.setValue("logradouro", cepQuery.data.street);
-      form.setValue("bairro", cepQuery.data.neighborhood);
-      form.setValue("cidade", cepQuery.data.city);
-      form.setValue("estado", cepQuery.data.state);
-
-      const timeoutId = setTimeout(() => {
-        numeroInputRef.current?.focus();
-      }, 100);
-
-      return () => clearTimeout(timeoutId);
+      setAddressValues();
     }
 
     if (cepQuery.error) {
@@ -139,7 +140,7 @@ export default function CadastroPage() {
         type: "manual",
       });
     }
-  }, [cepQuery.data, cepQuery.error, form]);
+  }, [cepQuery.error, form]);
 
   if (registerMutation.isSuccess) {
     return (

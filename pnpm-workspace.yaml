@@ -5,7 +5,7 @@ packages:
 
 catalog:
   '@bacons/text-decoder': ^0.0.0
-  '@biomejs/biome': ^2.2.5
+  '@biomejs/biome': ^2.3.0
   '@casl/ability': ^6.7.3
   '@clack/prompts': ^0.7.0
   '@formkit/auto-animate': ^0.8.2
@@ -162,10 +162,10 @@ catalogs:
   next:
     next: 16.0.0
   react:
-    '@types/react': ^19.1.0
-    '@types/react-dom': ^19.1.0
-    react: ^19.1.0
-    react-dom: ^19.1.0
+    '@types/react': ^19.2.0
+    '@types/react-dom': ^19.2.0
+    react: ^19.2.0
+    react-dom: ^19.2.0
   react-big-calendar:
     '@types/react-big-calendar': ^1.16.1
     react-big-calendar: ^1.18.0
