@@ -1,9 +1,9 @@
 "use server";
 
-import PostHogClient from "~/lib/posthog";
+import { getPostHogServer } from "~/lib/posthog-server";
 
 export async function testPosthog() {
-  await PostHogClient().capture({
+  await getPostHogServer().capture({
     distinctId: "123",
     event: "teste-posthog-node",
   });
