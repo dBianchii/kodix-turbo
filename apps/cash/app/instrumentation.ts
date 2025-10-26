@@ -1,6 +1,6 @@
 import type { Instrumentation } from "next";
 
-export function register() {
+export async function register() {
   // No-op for initialization
 }
 
@@ -18,7 +18,7 @@ export const onRequestError: Instrumentation.onRequestError = async (
     return;
   }
 
-  if (process.env.NODE_ENV === "development") {
+  if (process.env.VERCEL_ENV === "development") {
     //Skip in development
     return;
   }
@@ -48,6 +48,6 @@ export const onRequestError: Instrumentation.onRequestError = async (
 
   console.log("capturing exception in instrumentation!!", error, distinctId);
 
-  await posthog.captureException(error, distinctId || undefined);
+  posthog.captureException(error, distinctId || undefined);
   await posthog.shutdown();
 };
