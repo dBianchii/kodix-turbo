@@ -12,6 +12,7 @@ interface ListSalesOptions {
 }
 
 export const listSalesHandler = async ({ input }: ListSalesOptions) => {
+  throw new Error("teste error server on listSalesHandler");
   const offset = (input.page - 1) * input.perPage;
 
   const [column, order] = (input.sort?.split(".").filter(Boolean) ?? [
