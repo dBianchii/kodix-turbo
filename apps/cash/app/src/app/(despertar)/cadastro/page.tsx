@@ -30,6 +30,7 @@ import { Switch } from "@kodix/ui/switch";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import cep from "cep-promise";
 import { AlertCircle, Check } from "lucide-react";
+import posthog from "posthog-js";
 
 import DespertarLogo from "./_assets/despertar-logo.png";
 import { CadastroSuccess } from "./_components/cadastro-success";
@@ -167,6 +168,7 @@ export default function CadastroPage() {
           <CardTitle>Participe do programa de cashback</CardTitle>
         </CardHeader>
         <CardContent>
+          <Button onClick={() => posthog.capture("teste")}>Teste</Button>
           <Form {...form}>
             <form
               className="space-y-4"

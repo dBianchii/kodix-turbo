@@ -9,14 +9,16 @@ import { PostHogProvider as PHProvider } from "posthog-js/react";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    // biome-ignore lint/style/noNonNullAssertion: Fix me
-    posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
-      api_host: "/ingest",
-      capture_exceptions: true,
-      debug: process.env.NODE_ENV === "development",
-      defaults: "2025-05-24",
-      ui_host: "https://us.posthog.com",
-    });
+    if (process.env.NODE_ENV === "production") {
+      // biome-ignore lint/style/noNonNullAssertion: Fix me
+      posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
+        api_host: "/ingest",
+        capture_exceptions: true,
+        debug: true,
+        defaults: "2025-05-24",
+        ui_host: "https://us.posthog.com",
+      });
+    }
   }, []);
 
   return (
