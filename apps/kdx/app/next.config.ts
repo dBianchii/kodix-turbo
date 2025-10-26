@@ -7,8 +7,6 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin();
 
 export default withNextIntl({
-  /** We already do linting and tscing as separate tasks in CI */
-  eslint: { ignoreDuringBuilds: true },
   experimental: {
     serverActions:
       env.NODE_ENV === "development"
