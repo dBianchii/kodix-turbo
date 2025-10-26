@@ -7,10 +7,13 @@ import type { Instrumentation } from "next";
 const POSTHOG_COOKIE_REGEX = /ph_phc_.*?_posthog=([^;]+)/;
 
 export const onRequestError: Instrumentation.onRequestError = async (
-  err,
-  request
+  error,
+  errorRequest,
+  errorContext
 ) => {
   console.log("onRequestError called!");
+  console.log("Error context:", errorContext);
+
   if (process.env.NEXT_RUNTIME !== "nodejs") {
     return;
   }
@@ -23,11 +26,11 @@ export const onRequestError: Instrumentation.onRequestError = async (
   const { getPostHogServer } = await import("~/lib/posthog-server");
   const posthog = getPostHogServer();
   let distinctId: string | null = null;
-  if (request.headers.cookie) {
+  if (errorRequest.headers.cookie) {
     // Normalize multiple cookie arrays to string
-    const cookieString = Array.isArray(request.headers.cookie)
-      ? request.headers.cookie.join("; ")
-      : request.headers.cookie;
+    const cookieString = Array.isArray(errorRequest.headers.cookie)
+      ? errorRequest.headers.cookie.join("; ")
+      : errorRequest.headers.cookie;
 
     const postHogCookieMatch = cookieString.match(POSTHOG_COOKIE_REGEX);
 
@@ -43,9 +46,8 @@ export const onRequestError: Instrumentation.onRequestError = async (
     }
   }
 
-  console.log("capturing exception in instrumentation!!", err, distinctId);
-  console.log("capturing exception in instrumentation!!", err, distinctId);
+  console.log("capturing exception in instrumentation!!", error, distinctId);
 
-  await posthog.captureException(err, distinctId || undefined);
+  await posthog.captureException(error, distinctId || undefined);
   await posthog.shutdown();
 };
