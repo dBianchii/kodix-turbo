@@ -1,8 +1,8 @@
+import type { Instrumentation } from "next";
+
 export function register() {
   // No-op for initialization
 }
-
-import type { Instrumentation } from "next";
 
 const POSTHOG_COOKIE_REGEX = /ph_phc_.*?_posthog=([^;]+)/;
 

@@ -3,7 +3,10 @@
 import { getPostHogServer } from "~/lib/posthog-server";
 
 export async function testPosthog() {
-  await getPostHogServer().captureException(
-    new Error("Teste posthog com captureException no server!")
+  const posthog = getPostHogServer();
+  posthog.captureException(
+    new Error("Teste posthog com captureException no server!"),
+    "123"
   );
+  await posthog.shutdown();
 }
