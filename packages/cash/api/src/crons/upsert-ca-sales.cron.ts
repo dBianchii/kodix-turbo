@@ -68,7 +68,13 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
       currentPage++;
     } while (allCASales.length < totalItens);
   } catch (error) {
-    posthog.captureException(error);
+    posthog.captureException(error, undefined, {
+      context: "listContaAzulSales",
+      currentPage,
+      today,
+      totalItens,
+      yesterday,
+    });
     throw error;
   }
 
@@ -109,7 +115,10 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
             caSaleId: caSale.id,
           }));
         } catch (error) {
-          posthog.captureException(error);
+          posthog.captureException(error, undefined, {
+            caSaleId: caSale.id,
+            context: "listSaleItemsBySaleId",
+          });
           return [];
         }
       })
@@ -140,7 +149,10 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
             valor_venda: product.estoque.valor_venda,
           };
         } catch (error) {
-          posthog.captureException(error);
+          posthog.captureException(error, undefined, {
+            context: "getProductById",
+            productId: item.id_item,
+          });
           return null;
         }
       })
@@ -226,7 +238,12 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
       currentClientPage++;
     } while (allCAClients.length < totalClients);
   } catch (error) {
-    posthog.captureException(error);
+    posthog.captureException(error, undefined, {
+      context: "listContaAzulPersons",
+      currentClientPage,
+      totalClients,
+      uniqueClientIds,
+    });
     throw error;
   }
   const { upsertedClients, upsertedSales, upsertedCashbacks } =
