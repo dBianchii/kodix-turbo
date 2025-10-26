@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 import { env } from "node:process";
+import { withPostHogConfig } from "@posthog/nextjs-config";
 
-export default {
+const nextConfig = {
   /** We already do linting and tscing as separate tasks in CI */
   eslint: { ignoreDuringBuilds: true },
   experimental: {
@@ -42,3 +43,16 @@ export default {
   typedRoutes: true,
   typescript: { ignoreBuildErrors: true },
 } satisfies NextConfig;
+
+export default withPostHogConfig(nextConfig, {
+  // biome-ignore lint/style/noNonNullAssertion: fix me
+  envId: process.env.POSTHOG_ENV_ID!, // Your environment ID (project ID)
+  // biome-ignore lint/style/noNonNullAssertion: Fix me
+  host: process.env.NEXT_PUBLIC_POSTHOG_HOST!,
+  // biome-ignore lint/style/noNonNullAssertion: Fix me
+  personalApiKey: process.env.POSTHOG_API_KEY!, // Your personal API key from PostHog settings
+  sourcemaps: {
+    deleteAfterUpload: true, // Optional: Delete sourcemaps after upload, defaults to true
+    project: "cash", // Optional: Project name, defaults to git repository name
+  },
+});

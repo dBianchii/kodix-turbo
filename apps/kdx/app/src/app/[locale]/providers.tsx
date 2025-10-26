@@ -11,8 +11,6 @@ import { KdxTRPCReactProvider } from "@kdx/api/trpc/react/client";
 import { formats } from "@kdx/locales";
 import { useI18nZodErrors } from "@kdx/validators/use-i18n-zod-errors";
 
-import PostHogPageView from "./_components/posthog-page-view";
-
 interface ProvidersProps {
   children: React.ReactNode;
   locale: Locale;
@@ -33,7 +31,6 @@ export function Providers({ children, locale, messages }: ProvidersProps) {
           timeZone="America/Sao_Paulo" //?Fix me!
         >
           <I18nZodMessages />
-          <PostHogPageView />
           <KdxTRPCReactProvider>
             {children}
             <DevDesignHelper />
