@@ -1,5 +1,7 @@
 "use server";
 
-export async function testPosthog() {
-  throw new Error("teste server");
+import PostHogClient from "~/lib/posthog";
+
+export function testPosthog() {
+  PostHogClient().capture({ distinctId: "123", event: "teste-posthog-node" });
 }

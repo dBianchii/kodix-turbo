@@ -35,6 +35,7 @@ import posthog from "posthog-js";
 import DespertarLogo from "./_assets/despertar-logo.png";
 import { CadastroSuccess } from "./_components/cadastro-success";
 import { CpfAlreadyRegisteredAlert } from "./_components/cpf-already-registered-alert";
+import { testError } from "./_components/test-error";
 import { testPosthog } from "./_components/test-posthog";
 
 const NON_DIGIT_REGEX = /\D/g;
@@ -172,6 +173,7 @@ export default function CadastroPage() {
           <Button onClick={() => posthog.capture("teste")}>Teste</Button>
 
           <Button onClick={async () => await testPosthog()}>call server</Button>
+          <Button onClick={async () => await testError()}>call error</Button>
           <Form {...form}>
             <form
               className="space-y-4"
