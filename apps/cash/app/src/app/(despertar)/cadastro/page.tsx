@@ -79,7 +79,7 @@ export default function CadastroPage() {
         queryClient.invalidateQueries(trpc.client.getByCpf.pathFilter());
         setAddAddress(false);
       },
-    })
+    }),
   );
 
   const form = useForm({
@@ -102,8 +102,8 @@ export default function CadastroPage() {
       {
         enabled: isValidCpf,
         retry: false,
-      }
-    )
+      },
+    ),
   );
   const isCpfAlreadyRegistered = !!cpfQuery.data;
 
@@ -118,20 +118,23 @@ export default function CadastroPage() {
     retry: false,
   });
 
-  const setAddressValues = useEffectEvent(() => {
-    if (!cepQuery.data) return;
-    form.clearErrors("cep");
-    form.setValue("logradouro", cepQuery.data.street);
-    form.setValue("bairro", cepQuery.data.neighborhood);
-    form.setValue("cidade", cepQuery.data.city);
-    form.setValue("estado", cepQuery.data.state);
-
+  const focusInput = useEffectEvent(() => {
     numeroInputRef.current?.focus();
   });
 
   useEffect(() => {
     if (cepQuery.data) {
-      setAddressValues();
+      form.clearErrors("cep");
+      form.setValue("logradouro", cepQuery.data.street);
+      form.setValue("bairro", cepQuery.data.neighborhood);
+      form.setValue("cidade", cepQuery.data.city);
+      form.setValue("estado", cepQuery.data.state);
+
+      const timeoutId = setTimeout(() => {
+        focusInput();
+      }, 100);
+
+      return () => clearTimeout(timeoutId);
     }
 
     if (cepQuery.error) {
@@ -140,7 +143,7 @@ export default function CadastroPage() {
         type: "manual",
       });
     }
-  }, [cepQuery.error, form]);
+  }, [cepQuery.data, cepQuery.error, form]);
 
   if (registerMutation.isSuccess) {
     return (
@@ -199,7 +202,7 @@ export default function CadastroPage() {
 
                             const justNumbers = formattedValue.replace(
                               NON_DIGIT_REGEX,
-                              ""
+                              "",
                             );
                             if (justNumbers.length === CPF_LENGTH) {
                               form.trigger("cpf"); // Trigger validation immediately
@@ -299,7 +302,7 @@ export default function CadastroPage() {
                     for (const key of Object.keys(addressValues)) {
                       form.setValue(
                         key as keyof typeof addressValues,
-                        toSetValue
+                        toSetValue,
                       );
                     }
 
@@ -332,7 +335,7 @@ export default function CadastroPage() {
                               onChange={(e) => {
                                 const cleanedValue = e.target.value.replace(
                                   NON_DIGIT_REGEX,
-                                  ""
+                                  "",
                                 );
                                 const formatted = cleanedValue
                                   .replace(CEP_FORMAT_REGEX, "$1-$2")
@@ -390,7 +393,7 @@ export default function CadastroPage() {
                               onChange={(e) => {
                                 const onlyNumbers = e.target.value.replace(
                                   NON_DIGIT_REGEX,
-                                  ""
+                                  "",
                                 );
                                 field.onChange(onlyNumbers);
                               }}
