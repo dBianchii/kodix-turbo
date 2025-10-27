@@ -32,8 +32,9 @@ jobs:
 
       - name: Setup Biome
         uses: biomejs/setup-biome@v2
+
       - name: Run Biome
-        run: biome check . #TODO: See if we can use biome ci . instead.
+        run: biome ci .
 
   tsc:
     runs-on: ubuntu-latest

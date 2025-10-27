@@ -20,7 +20,7 @@ catalogs:
       specifier: ^0.0.0
       version: 0.0.0
     '@biomejs/biome':
-      specifier: ^2.3.0
+      specifier: ^2.2.5
       version: 2.3.0
     '@casl/ability':
       specifier: ^6.7.3
