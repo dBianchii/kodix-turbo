@@ -10,10 +10,13 @@ import {
   listContaAzulPersons,
   listContaAzulSales,
   listSaleItemsBySaleId,
+  processBatch,
 } from "../services/conta-azul.service";
 import { verifiedQstashCron } from "./_utils";
 
 const LOOKBACK_DAYS = 1;
+// Process products in batches to respect API rate limits
+const PRODUCT_BATCH_CONCURRENCY = 10;
 
 type CAPersonPhone = Awaited<
   ReturnType<typeof listContaAzulPersons>
@@ -127,8 +130,9 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
 
   const uniqueProductIds = uniqBy(allCASaleItems, (item) => item.id_item);
   const products = (
-    await Promise.all(
-      uniqueProductIds.map(async (item) => {
+    await processBatch(
+      uniqueProductIds,
+      async (item) => {
         try {
           const product = await getProductById(item.id_item);
 
@@ -155,7 +159,8 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
           });
           return null;
         }
-      })
+      },
+      PRODUCT_BATCH_CONCURRENCY
     )
   ).filter((p): p is NonNullable<typeof p> => p !== null);
 

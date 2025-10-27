@@ -9,6 +9,18 @@ const FIVE_MINUTES_IN_MS = 300_000; // 5 minutes in milliseconds
 const ONE_SECOND_IN_MS = 1000;
 
 const HTTP_STATUS_UNAUTHORIZED = 401;
+const HTTP_STATUS_TOO_MANY_REQUESTS = 429;
+
+// Rate limiting configuration for Conta Azul API
+// API allows 20 requests per second, we stay conservative with 15 to avoid spikes
+const RATE_LIMIT_MAX_REQUESTS = 15;
+const RATE_LIMIT_TIME_WINDOW_MS = 1000; // 1 second
+const RATE_LIMITER_BUFFER_MS = 10; // Small buffer to avoid edge cases
+
+// Retry configuration
+const MAX_RETRIES = 3;
+const INITIAL_RETRY_DELAY_MS = 1000; // 1 second
+const MAX_RETRY_DELAY_MS = 10_000; // 10 seconds
 
 if (!process.env.CA_CLIENT_ID) {
   throw new Error("Missing CA_CLIENT_ID");
@@ -94,11 +106,112 @@ async function refreshAndGetToken() {
   return await caRepository.getCAToken();
 }
 
-async function makeContaAzulRequest<TSchema extends z.ZodType>(
+/**
+ * Custom error for rate limiting
+ */
+class RateLimitError extends Error {
+  readonly url: string;
+  readonly statusCode: number;
+
+  constructor(message: string, url: string, statusCode: number) {
+    super(message);
+    this.name = "RateLimitError";
+    this.url = url;
+    this.statusCode = statusCode;
+  }
+}
+
+/**
+ * Simple rate limiter to avoid exceeding Conta Azul API limits
+ * Tracks requests in a time window and adds delays when necessary
+ */
+class RateLimiter {
+  private requestTimestamps: number[] = [];
+  private readonly maxRequests: number;
+  private readonly timeWindowMs: number;
+
+  constructor(maxRequests: number, timeWindowMs: number) {
+    this.maxRequests = maxRequests;
+    this.timeWindowMs = timeWindowMs;
+  }
+
+  async acquire(): Promise<void> {
+    const now = Date.now();
+    // Remove timestamps outside the current time window
+    this.requestTimestamps = this.requestTimestamps.filter(
+      (timestamp) => now - timestamp < this.timeWindowMs
+    );
+
+    // If we've hit the limit, wait until the oldest request falls outside the window
+    if (this.requestTimestamps.length >= this.maxRequests) {
+      const oldestTimestamp = this.requestTimestamps[0];
+      if (oldestTimestamp) {
+        const waitTime =
+          this.timeWindowMs - (now - oldestTimestamp) + RATE_LIMITER_BUFFER_MS;
+        if (waitTime > 0) {
+          await new Promise((resolve) => setTimeout(resolve, waitTime));
+        }
+        // Clean up again after waiting
+        const newNow = Date.now();
+        this.requestTimestamps = this.requestTimestamps.filter(
+          (timestamp) => newNow - timestamp < this.timeWindowMs
+        );
+      }
+    }
+
+    // Record this request
+    this.requestTimestamps.push(Date.now());
+  }
+}
+
+// Global rate limiter instance for all Conta Azul API requests
+const rateLimiter = new RateLimiter(
+  RATE_LIMIT_MAX_REQUESTS,
+  RATE_LIMIT_TIME_WINDOW_MS
+);
+
+/**
+ * Sleep for a specified number of milliseconds
+ */
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * Calculate retry delay with exponential backoff
+ */
+function calculateRetryDelay(retryCount: number): number {
+  return Math.min(INITIAL_RETRY_DELAY_MS * 2 ** retryCount, MAX_RETRY_DELAY_MS);
+}
+
+/**
+ * Handle rate limit with retry logic
+ */
+async function handleRateLimitRetry(
   url: string,
-  schema: TSchema,
-  options: RequestInit = {}
-): Promise<z.infer<TSchema>> {
+  retryCount: number
+): Promise<void> {
+  if (retryCount >= MAX_RETRIES) {
+    throw new RateLimitError(
+      `Rate limit exceeded after ${MAX_RETRIES} retries`,
+      url,
+      HTTP_STATUS_TOO_MANY_REQUESTS
+    );
+  }
+
+  const delay = calculateRetryDelay(retryCount);
+  // biome-ignore lint/suspicious/noConsole: Logging for observability
+  console.warn(`Rate limited on ${url}. Retrying in ${delay}ms`);
+  await sleep(delay);
+}
+
+/**
+ * Make an authenticated fetch request with token refresh if needed
+ */
+async function fetchWithAuth(
+  url: string,
+  options: RequestInit
+): Promise<Response> {
   let token = await caRepository.getCAToken();
 
   const now = new Date();
@@ -131,27 +244,27 @@ async function makeContaAzulRequest<TSchema extends z.ZodType>(
     });
   }
 
-  if (!response.ok) {
-    const errorBody = await response.text();
-    throw new Error(
-      `Failed to make request to ${url}. Status: ${response.status}. Body: ${errorBody}`
-    );
-  }
+  return response;
+}
 
+/**
+ * Process successful response
+ */
+async function processResponse<TSchema extends z.ZodType>(
+  response: Response,
+  schema: TSchema
+): Promise<z.infer<TSchema>> {
   if (response.status === 204) {
     return undefined as z.infer<TSchema>;
   }
 
   const rawData = await response.json();
-
   const parseResult = schema.safeParse(rawData);
 
   if (!parseResult.success) {
     const errorDetails = parseResult.error.issues.map((issue) => {
-      // Get the actual value that failed
       const path = issue.path.join(".");
       const actualValue = issue.path.reduce((obj, key) => obj?.[key], rawData);
-
       return {
         expected: issue.message,
         path,
@@ -165,6 +278,50 @@ async function makeContaAzulRequest<TSchema extends z.ZodType>(
   }
 
   return parseResult.data;
+}
+
+async function makeContaAzulRequest<TSchema extends z.ZodType>(
+  url: string,
+  schema: TSchema,
+  options: RequestInit = {}
+): Promise<z.infer<TSchema>> {
+  let retryCount = 0;
+
+  while (retryCount <= MAX_RETRIES) {
+    try {
+      await rateLimiter.acquire();
+      const response = await fetchWithAuth(url, options);
+
+      // Handle rate limiting
+      if (response.status === HTTP_STATUS_TOO_MANY_REQUESTS) {
+        await handleRateLimitRetry(url, retryCount);
+        retryCount++;
+        continue;
+      }
+
+      if (!response.ok) {
+        const errorBody = await response.text();
+        throw new Error(
+          `Failed to make request to ${url}. Status: ${response.status}. Body: ${errorBody}`
+        );
+      }
+
+      return await processResponse(response, schema);
+    } catch (error) {
+      // Retry on rate limit errors
+      if (error instanceof RateLimitError && retryCount < MAX_RETRIES) {
+        retryCount++;
+        continue;
+      }
+      throw error;
+    }
+  }
+
+  throw new RateLimitError(
+    `Request failed after ${MAX_RETRIES} retries`,
+    url,
+    HTTP_STATUS_TOO_MANY_REQUESTS
+  );
 }
 
 interface ListContaAzulSalesParams {
@@ -489,4 +646,29 @@ export function getProductById(id: string) {
   return makeContaAzulRequest(url, ZCAGetProductResponseSchema, {
     method: "GET",
   });
+}
+
+/**
+ * Process items in batches with controlled concurrency
+ * This helps prevent overwhelming the API with too many simultaneous requests
+ *
+ * @param items - Array of items to process
+ * @param processor - Async function to process each item
+ * @param concurrency - Maximum number of items to process simultaneously
+ * @returns Promise that resolves with array of results
+ */
+export async function processBatch<T, R>(
+  items: T[],
+  processor: (item: T) => Promise<R>,
+  concurrency: number
+): Promise<R[]> {
+  const results: R[] = [];
+
+  for (let i = 0; i < items.length; i += concurrency) {
+    const batch = items.slice(i, i + concurrency);
+    const batchResults = await Promise.all(batch.map(processor));
+    results.push(...batchResults);
+  }
+
+  return results;
 }
