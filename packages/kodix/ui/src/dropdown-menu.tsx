@@ -161,14 +161,12 @@ const DropdownMenuSeparator = ({
 const DropdownMenuShortcut = ({
   className,
   ...props
-}: React.ComponentProps<"span">) => {
-  return (
-    <span
-      className={cn("ml-auto text-xs tracking-widest opacity-60", className)}
-      {...props}
-    />
-  );
-};
+}: React.ComponentProps<"span">) => (
+  <span
+    className={cn("ml-auto text-xs tracking-widest opacity-60", className)}
+    {...props}
+  />
+);
 
 export {
   DropdownMenu,

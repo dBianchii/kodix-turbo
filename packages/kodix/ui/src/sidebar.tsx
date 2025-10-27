@@ -102,11 +102,13 @@ function SidebarProvider({
   );
 
   // Helper to toggle the sidebar.
-  const toggleSidebar = useCallback(() => {
-    return isMobile
-      ? setOpenMobile((isOpenMobile) => !isOpenMobile)
-      : setOpen((isOpen) => !isOpen);
-  }, [isMobile, setOpen]);
+  const toggleSidebar = useCallback(
+    () =>
+      isMobile
+        ? setOpenMobile((isOpenMobile) => !isOpenMobile)
+        : setOpen((isOpen) => !isOpen),
+    [isMobile, setOpen]
+  );
 
   // Adds a keyboard shortcut to toggle the sidebar.
   useEffect(() => {
@@ -613,9 +615,10 @@ function SidebarMenuSkeleton({
   showIcon?: boolean;
 }) {
   // Random width between 50 to 90%.
-  const width = React.useMemo(() => {
-    return `${Math.floor(Math.random() * 40) + 50}%`;
-  }, []);
+  const width = React.useMemo(
+    () => `${Math.floor(Math.random() * 40) + 50}%`,
+    []
+  );
 
   return (
     <div

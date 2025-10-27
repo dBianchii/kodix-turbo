@@ -21,11 +21,10 @@ export const createGoogleProvider = (config: ProviderConfig): AuthProvider => {
 
   const name = "Google";
 
-  const getAuthorizationUrl = async (state: string, codeVerifier: string) => {
-    return await google.createAuthorizationURL(state, codeVerifier, {
+  const getAuthorizationUrl = async (state: string, codeVerifier: string) =>
+    await google.createAuthorizationURL(state, codeVerifier, {
       scopes: ["profile", "email"],
     });
-  };
 
   const handleCallback = async (code: string, codeVerifier: string) => {
     const tokens = await google.validateAuthorizationCode(code, codeVerifier);

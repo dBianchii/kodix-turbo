@@ -1,8 +1,8 @@
 {
   "$schema": "node_modules/@biomejs/biome/configuration_schema.json",
-  "extends": ["ultracite"],
+  "extends": ["ultracite/core", "ultracite/next"],
   "files": {
-    "includes": ["**", "!**/rbc-styles.css", "!.vscode/kodix.code-snippets"]
+    "includes": ["**", "!!**/rbc-styles.css", "!!.vscode/kodix.code-snippets"]
   },
   "formatter": {
     "indentStyle": "space",
@@ -24,12 +24,6 @@
         "noNamespaceImport": "off" //TODO: enable
       },
       "nursery": {
-        "useConsistentTypeDefinitions": {
-          "level": "on",
-          "options": {
-            "style": "interface"
-          }
-        },
         "useSortedClasses": {
           "level": "on",
           "options": {
@@ -39,7 +33,13 @@
       },
       "style": {
         "useBlockStatements": "off",
-        "noMagicNumbers": "off"
+        "noMagicNumbers": "off",
+        "useConsistentTypeDefinitions": {
+          "level": "on",
+          "options": {
+            "style": "interface"
+          }
+        }
       },
       "complexity": {
         "noVoid": "off"

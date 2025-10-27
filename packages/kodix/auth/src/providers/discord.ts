@@ -13,11 +13,10 @@ export const createDiscordProvider = (config: ProviderConfig): AuthProvider => {
 
   const name = "Discord";
 
-  const getAuthorizationUrl = async (state: string) => {
-    return await discord.createAuthorizationURL(state, {
+  const getAuthorizationUrl = async (state: string) =>
+    await discord.createAuthorizationURL(state, {
       scopes: [OAuth2Scopes.Identify, OAuth2Scopes.Email],
     });
-  };
 
   const handleCallback = async (code: string, _codeVerifier: string) => {
     if (process.env.NODE_ENV === "production") {

@@ -178,9 +178,7 @@ export function DateTimePicker({
   const [month, setMonth] = useState<Date>(initDate);
   const [date, setDate] = useState<Date>(initDate);
 
-  const endMonth = useMemo(() => {
-    return setYear(month, getYear(month) + 1);
-  }, [month]);
+  const endMonth = useMemo(() => setYear(month, getYear(month) + 1), [month]);
   const minDate = useMemo(
     () => (min ? new TZDate(min, timezone) : undefined),
     [min, timezone]
@@ -938,21 +936,19 @@ const TimeItem = ({
   onSelect: (option: TimeOption) => void;
   className?: string;
   disabled?: boolean;
-}) => {
-  return (
-    <Button
-      className={cn("flex justify-center px-1 ps-1 pe-2", className)}
-      disabled={disabled}
-      onClick={() => onSelect(option)}
-      variant="ghost"
-    >
-      <div className="w-4">
-        {selected && <CheckIcon className="my-auto size-4" />}
-      </div>
-      <span className="ms-2">{option.label}</span>
-    </Button>
-  );
-};
+}) => (
+  <Button
+    className={cn("flex justify-center px-1 ps-1 pe-2", className)}
+    disabled={disabled}
+    onClick={() => onSelect(option)}
+    variant="ghost"
+  >
+    <div className="w-4">
+      {selected && <CheckIcon className="my-auto size-4" />}
+    </div>
+    <span className="ms-2">{option.label}</span>
+  </Button>
+);
 
 interface BuildTimeOptions {
   use12HourFormat?: boolean;

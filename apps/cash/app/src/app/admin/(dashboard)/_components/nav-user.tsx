@@ -19,15 +19,13 @@ import { ChevronsUpDown, LogOut } from "lucide-react";
 
 import { signOutAction } from "~/app/_components/actions";
 
-const UserAvatar = ({ user }: { user: User }) => {
-  return (
-    <AvatarWrapper
-      className="size-8 rounded-lg"
-      fallback={user.name}
-      src={user.image ?? ""}
-    />
-  );
-};
+const UserAvatar = ({ user }: { user: User }) => (
+  <AvatarWrapper
+    className="size-8 rounded-lg"
+    fallback={user.name}
+    src={user.image ?? ""}
+  />
+);
 
 export function NavUser({ user }: { user: User }) {
   const { isMobile } = useSidebar();

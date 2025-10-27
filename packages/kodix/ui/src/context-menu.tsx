@@ -156,17 +156,15 @@ const ContextMenuSeparator = ({
 const ContextMenuShortcut = ({
   className,
   ...props
-}: React.ComponentProps<"span">) => {
-  return (
-    <span
-      className={cn(
-        "ml-auto text-muted-foreground text-xs tracking-widest",
-        className
-      )}
-      {...props}
-    />
-  );
-};
+}: React.ComponentProps<"span">) => (
+  <span
+    className={cn(
+      "ml-auto text-muted-foreground text-xs tracking-widest",
+      className
+    )}
+    {...props}
+  />
+);
 
 export {
   ContextMenu,

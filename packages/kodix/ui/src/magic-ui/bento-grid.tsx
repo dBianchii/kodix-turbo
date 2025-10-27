@@ -10,18 +10,13 @@ const BentoGrid = ({
 }: {
   children: ReactNode;
   className?: string;
-}) => {
-  return (
-    <div
-      className={cn(
-        "grid w-full auto-rows-[22rem] grid-cols-3 gap-4",
-        className
-      )}
-    >
-      {children}
-    </div>
-  );
-};
+}) => (
+  <div
+    className={cn("grid w-full auto-rows-[22rem] grid-cols-3 gap-4", className)}
+  >
+    {children}
+  </div>
+);
 
 const BentoCard = ({
   name,

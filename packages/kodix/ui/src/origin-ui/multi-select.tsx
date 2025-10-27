@@ -408,9 +408,8 @@ const MultipleSelector = ({
 
     if (creatable) {
       // biome-ignore lint/nursery/noShadow: <biome migration>
-      return (value: string, search: string) => {
-        return value.toLowerCase().includes(search.toLowerCase()) ? 1 : -1;
-      };
+      return (value: string, search: string) =>
+        value.toLowerCase().includes(search.toLowerCase()) ? 1 : -1;
     }
     // Using default filter in `cmdk`. We don&lsquo;t have to provide it.
     return;
@@ -450,38 +449,36 @@ const MultipleSelector = ({
         }}
       >
         <div className="flex flex-wrap gap-1">
-          {selected.map((option) => {
-            return (
-              <div
-                className={cn(
-                  "relative inline-flex h-7 animate-fadeIn cursor-default items-center rounded-md border bg-background ps-2 pe-7 pl-2 font-medium text-secondary-foreground text-xs transition-all hover:bg-background disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 data-fixed:pe-2",
-                  badgeClassName
-                )}
-                data-disabled={disabled ?? undefined}
-                data-fixed={option.fixed}
-                key={option.value}
+          {selected.map((option) => (
+            <div
+              className={cn(
+                "relative inline-flex h-7 animate-fadeIn cursor-default items-center rounded-md border bg-background ps-2 pe-7 pl-2 font-medium text-secondary-foreground text-xs transition-all hover:bg-background disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 data-fixed:pe-2",
+                badgeClassName
+              )}
+              data-disabled={disabled ?? undefined}
+              data-fixed={option.fixed}
+              key={option.value}
+            >
+              {option.label}
+              <button
+                aria-label="Remove"
+                className="-inset-y-px -end-px absolute flex size-7 items-center justify-center rounded-e-md border border-transparent p-0 text-muted-foreground/80 outline-none outline-hidden transition-[color,box-shadow] hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                onClick={() => handleUnselect(option)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleUnselect(option);
+                  }
+                }}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+                type="button"
               >
-                {option.label}
-                <button
-                  aria-label="Remove"
-                  className="-inset-y-px -end-px absolute flex size-7 items-center justify-center rounded-e-md border border-transparent p-0 text-muted-foreground/80 outline-none outline-hidden transition-[color,box-shadow] hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                  onClick={() => handleUnselect(option)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      handleUnselect(option);
-                    }
-                  }}
-                  onMouseDown={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                  }}
-                  type="button"
-                >
-                  <XIcon aria-hidden="true" size={14} />
-                </button>
-              </div>
-            );
-          })}
+                <XIcon aria-hidden="true" size={14} />
+              </button>
+            </div>
+          ))}
           {/* Avoid having the "Search" Icon */}
           <CommandPrimitive.Input
             {...inputProps}
@@ -576,36 +573,34 @@ const MultipleSelector = ({
                       heading={key}
                       key={key}
                     >
-                      {dropdowns.map((option) => {
-                        return (
-                          <CommandItem
-                            className={cn(
-                              "cursor-pointer",
-                              option.disable &&
-                                "pointer-events-none cursor-not-allowed opacity-50"
-                            )}
-                            disabled={option.disable}
-                            key={option.value}
-                            onMouseDown={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                            }}
-                            onSelect={() => {
-                              if (selected.length >= maxSelected) {
-                                onMaxSelected?.(selected.length);
-                                return;
-                              }
-                              setInputValue("");
-                              const newOptions = [...selected, option];
-                              setSelected(newOptions);
-                              onChange?.(newOptions);
-                            }}
-                            value={option.value}
-                          >
-                            {option.label}
-                          </CommandItem>
-                        );
-                      })}
+                      {dropdowns.map((option) => (
+                        <CommandItem
+                          className={cn(
+                            "cursor-pointer",
+                            option.disable &&
+                              "pointer-events-none cursor-not-allowed opacity-50"
+                          )}
+                          disabled={option.disable}
+                          key={option.value}
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                          }}
+                          onSelect={() => {
+                            if (selected.length >= maxSelected) {
+                              onMaxSelected?.(selected.length);
+                              return;
+                            }
+                            setInputValue("");
+                            const newOptions = [...selected, option];
+                            setSelected(newOptions);
+                            onChange?.(newOptions);
+                          }}
+                          value={option.value}
+                        >
+                          {option.label}
+                        </CommandItem>
+                      ))}
                     </CommandGroup>
                   ))}
                 </>

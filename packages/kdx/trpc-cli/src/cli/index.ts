@@ -112,8 +112,8 @@ export const runCli = async () => {
           ],
         });
       },
-      endpointName: () => {
-        return p.text({
+      endpointName: () =>
+        p.text({
           defaultValue: "makeItBetter",
           message: "What will be the name of your new endpoint?",
           placeholder: "makeItBetter",
@@ -123,8 +123,7 @@ export const runCli = async () => {
               if (!result.success) return result.error.message;
             }
           },
-        });
-      },
+        }),
 
       newRouterName: ({ results }) => {
         if (results.chosenRouterPath === "newRouter")
@@ -173,8 +172,8 @@ export const runCli = async () => {
           }),
         });
       },
-      queryOrMutation: () => {
-        return p.select({
+      queryOrMutation: () =>
+        p.select({
           initialValue: "query",
           message: "Will it be a query or a mutation?",
           options: [
@@ -189,8 +188,7 @@ export const runCli = async () => {
               value: "mutation",
             },
           ],
-        });
-      },
+        }),
       validator: () =>
         p.text({
           message: "Please define your zod schema (leave empty for no input)",
