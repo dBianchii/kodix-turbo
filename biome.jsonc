@@ -24,6 +24,12 @@
         "noNamespaceImport": "off" //TODO: enable
       },
       "nursery": {
+        "useConsistentTypeDefinitions": {
+          "level": "on",
+          "options": {
+            "style": "interface"
+          }
+        },
         "useSortedClasses": {
           "level": "on",
           "options": {
@@ -33,13 +39,7 @@
       },
       "style": {
         "useBlockStatements": "off",
-        "noMagicNumbers": "off",
-        "useConsistentTypeDefinitions": {
-          "level": "on",
-          "options": {
-            "style": "interface"
-          }
-        }
+        "noMagicNumbers": "off"
       },
       "complexity": {
         "noVoid": "off"

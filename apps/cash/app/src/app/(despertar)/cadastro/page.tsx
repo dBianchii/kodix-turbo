@@ -79,7 +79,7 @@ export default function CadastroPage() {
         queryClient.invalidateQueries(trpc.client.getByCpf.pathFilter());
         setAddAddress(false);
       },
-    }),
+    })
   );
 
   const form = useForm({
@@ -102,8 +102,8 @@ export default function CadastroPage() {
       {
         enabled: isValidCpf,
         retry: false,
-      },
-    ),
+      }
+    )
   );
   const isCpfAlreadyRegistered = !!cpfQuery.data;
 
@@ -122,6 +122,7 @@ export default function CadastroPage() {
     numeroInputRef.current?.focus();
   });
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Biome doesn't understand the new hook
   useEffect(() => {
     if (cepQuery.data) {
       form.clearErrors("cep");
@@ -202,7 +203,7 @@ export default function CadastroPage() {
 
                             const justNumbers = formattedValue.replace(
                               NON_DIGIT_REGEX,
-                              "",
+                              ""
                             );
                             if (justNumbers.length === CPF_LENGTH) {
                               form.trigger("cpf"); // Trigger validation immediately
@@ -302,7 +303,7 @@ export default function CadastroPage() {
                     for (const key of Object.keys(addressValues)) {
                       form.setValue(
                         key as keyof typeof addressValues,
-                        toSetValue,
+                        toSetValue
                       );
                     }
 
@@ -335,7 +336,7 @@ export default function CadastroPage() {
                               onChange={(e) => {
                                 const cleanedValue = e.target.value.replace(
                                   NON_DIGIT_REGEX,
-                                  "",
+                                  ""
                                 );
                                 const formatted = cleanedValue
                                   .replace(CEP_FORMAT_REGEX, "$1-$2")
@@ -393,7 +394,7 @@ export default function CadastroPage() {
                               onChange={(e) => {
                                 const onlyNumbers = e.target.value.replace(
                                   NON_DIGIT_REGEX,
-                                  "",
+                                  ""
                                 );
                                 field.onChange(onlyNumbers);
                               }}
