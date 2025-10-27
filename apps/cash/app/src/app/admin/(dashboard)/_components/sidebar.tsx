@@ -1,4 +1,6 @@
-import type { User } from "@cash/auth";
+import { Suspense } from "react";
+import { redirect } from "next/navigation";
+import { auth } from "@cash/auth";
 import {
   Sidebar,
   SidebarContent,
@@ -11,7 +13,15 @@ import {
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 
-export default function CashSidebar({ user }: { user: User }) {
+async function NavUserWrapper() {
+  const { user } = await auth();
+  if (!user) {
+    redirect("/admin/auth/login");
+  }
+  return <NavUser user={user} />;
+}
+
+export default function CashSidebar() {
   return (
     <Sidebar collapsible="icon" variant="inset">
       <SidebarHeader>
@@ -32,7 +42,9 @@ export default function CashSidebar({ user }: { user: User }) {
         <NavMain />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <NavUserWrapper />
+        </Suspense>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

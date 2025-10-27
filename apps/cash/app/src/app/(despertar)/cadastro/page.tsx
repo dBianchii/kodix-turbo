@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useRef, useState } from "react";
 import Image from "next/image";
 import { useTRPC } from "@cash/api/trpc/react/client";
 import { ZRegisterInputSchema } from "@cash/api/trpc/schemas/client";
@@ -118,6 +118,11 @@ export default function CadastroPage() {
     retry: false,
   });
 
+  const focusInput = useEffectEvent(() => {
+    numeroInputRef.current?.focus();
+  });
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Biome doesn't understand the new hook
   useEffect(() => {
     if (cepQuery.data) {
       form.clearErrors("cep");
@@ -127,7 +132,7 @@ export default function CadastroPage() {
       form.setValue("estado", cepQuery.data.state);
 
       const timeoutId = setTimeout(() => {
-        numeroInputRef.current?.focus();
+        focusInput();
       }, 100);
 
       return () => clearTimeout(timeoutId);

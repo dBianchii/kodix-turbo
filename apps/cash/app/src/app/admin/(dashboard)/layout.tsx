@@ -1,7 +1,5 @@
-import type { PropsWithChildren } from "react";
+import { type PropsWithChildren, Suspense } from "react";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { auth } from "@cash/auth";
 import { Separator } from "@kodix/ui/separator";
 import {
   SidebarInset,
@@ -11,17 +9,28 @@ import {
 
 import CashSidebar from "./_components/sidebar";
 
-export default async function DashboardLayout({ children }: PropsWithChildren) {
-  const { user } = await auth();
-  if (!user) {
-    redirect("/admin/auth/login");
-  }
-
+async function SidebarProviderAsync({ children }: PropsWithChildren) {
   return (
     <SidebarProvider
       defaultOpen={(await cookies()).get("sidebar_state")?.value !== "false"}
     >
-      <CashSidebar user={user} />
+      {children}
+    </SidebarProvider>
+  );
+}
+
+function SidebarProviderWrapper({ children }: PropsWithChildren) {
+  return (
+    <Suspense fallback={<SidebarProvider>{children}</SidebarProvider>}>
+      <SidebarProviderAsync>{children}</SidebarProviderAsync>
+    </Suspense>
+  );
+}
+
+export default function DashboardLayout({ children }: PropsWithChildren) {
+  return (
+    <SidebarProviderWrapper>
+      <CashSidebar />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
@@ -34,6 +43,6 @@ export default async function DashboardLayout({ children }: PropsWithChildren) {
         </header>
         {children}
       </SidebarInset>
-    </SidebarProvider>
+    </SidebarProviderWrapper>
   );
 }

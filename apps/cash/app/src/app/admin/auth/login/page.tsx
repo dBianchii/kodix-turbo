@@ -1,10 +1,13 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { auth } from "@cash/auth";
 import { Card, CardContent, CardHeader, CardTitle } from "@kodix/ui/card";
 
+import { LoadingPage } from "~/app/_components/page-wrapper";
+
 import { LoginForm } from "./_components/login-form";
 
-export default async function AdminLoginPage() {
+async function PageContent() {
   const { user } = await auth();
   if (user) {
     redirect("/admin");
@@ -24,5 +27,13 @@ export default async function AdminLoginPage() {
         </CardContent>
       </Card>
     </section>
+  );
+}
+
+export default function AdminLoginPage() {
+  return (
+    <Suspense fallback={<LoadingPage />}>
+      <PageContent />
+    </Suspense>
   );
 }

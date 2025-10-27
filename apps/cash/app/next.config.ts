@@ -3,8 +3,7 @@ import { env } from "node:process";
 import { withPostHogConfig } from "@posthog/nextjs-config";
 
 const nextConfig = {
-  /** We already do linting and tscing as separate tasks in CI */
-  eslint: { ignoreDuringBuilds: true },
+  cacheComponents: true,
   experimental: {
     serverActions:
       env.NODE_ENV === "development"
