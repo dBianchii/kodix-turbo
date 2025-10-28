@@ -6,7 +6,7 @@ import { env } from "@kdx/env";
 import type { CustomMiddleware } from "./chain-middleware";
 
 export function withAuth(middleware: CustomMiddleware) {
-  return async (request: NextRequest, event: NextFetchEvent) => {
+  return (request: NextRequest, event: NextFetchEvent) => {
     if (request.method === "GET") {
       const response = NextResponse.next();
       const token = request.cookies.get("session")?.value ?? null;

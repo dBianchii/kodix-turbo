@@ -132,6 +132,8 @@ export function StatusIcon({
       return <LuCheck className={cn("size-4 text-green-400", className)} />;
     case "CANCELED":
       return <LuCircleOff className={cn("size-4 text-red-400", className)} />;
+    default:
+      return null;
   }
 }
 
@@ -147,5 +149,7 @@ export function StatusToText(status: Status) {
       return "Done";
     case "CANCELED":
       return "Canceled";
+    default:
+      return null;
   }
 }

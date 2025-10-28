@@ -8,6 +8,5 @@ interface GetAllCaregiversOptions {
 
 export const getAllCaregiversHandler = async ({
   ctx,
-}: GetAllCaregiversOptions) => {
-  return await kodixCareRepository.getAllCareGivers(ctx.auth.user.activeTeamId);
-};
+}: GetAllCaregiversOptions) =>
+  await kodixCareRepository.getAllCareGivers(ctx.auth.user.activeTeamId);

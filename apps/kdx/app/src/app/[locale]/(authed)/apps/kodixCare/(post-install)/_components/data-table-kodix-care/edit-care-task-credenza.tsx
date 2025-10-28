@@ -1,4 +1,4 @@
-import type { CareTask } from "node_modules/@kdx/api/src/internal/calendarAndCareTaskCentral";
+import type { CareTask } from "node_modules/@kdx/api/src/internal/calendar-and-care-task-central";
 import { useMemo, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { kodixCareAppId } from "@kodix/shared/db";
@@ -90,10 +90,10 @@ export function EditCareTaskCredenza({
     }),
   });
 
-  const handleCloseOrOpen = (open: boolean) => {
-    setOpen(open);
+  const handleCloseOrOpen = (_open: boolean) => {
+    setOpen(_open);
     setIsLogView(false);
-    if (!open) {
+    if (!_open) {
       form.reset(defaultValues);
     }
   };
@@ -105,9 +105,7 @@ export function EditCareTaskCredenza({
       <DialogContent>
         <DialogHeader>
           <div className="flex flex-row items-center" ref={parent2}>
-            {!isLogView ? (
-              <DialogTitle>{t("apps.kodixCare.Edit task")}</DialogTitle>
-            ) : (
+            {isLogView ? (
               <>
                 <Button
                   className="mr-2"
@@ -121,6 +119,8 @@ export function EditCareTaskCredenza({
                 </Button>
                 <DialogTitle>{t("Logs")}</DialogTitle>
               </>
+            ) : (
+              <DialogTitle>{t("apps.kodixCare.Edit task")}</DialogTitle>
             )}
           </div>
         </DialogHeader>
@@ -131,7 +131,9 @@ export function EditCareTaskCredenza({
             )}
             ref={parent}
           >
-            {!isLogView ? (
+            {isLogView ? (
+              <LogsView careTaskId={task.id} />
+            ) : (
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(async (values) => {
@@ -231,8 +233,6 @@ export function EditCareTaskCredenza({
                   </DialogFooter>
                 </form>
               </Form>
-            ) : (
-              <LogsView careTaskId={task.id} />
             )}
           </div>
         </div>
@@ -267,15 +267,18 @@ function AlertNoShiftsOrNotYours({
   )
     return null;
 
-  const text = !atLeastOneShiftExists
-    ? t(
-        "There is no shift associated with this task Its recommended that you create a shift for this task",
-      )
-    : !isAtLeastOneOfTheOverlappingShiftsMine
-      ? t(
-          "This task is not associated with any of your shifts You can still edit it but its recommended that you create a shift for it",
-        )
-      : "";
+  let text = "";
+  if (atLeastOneShiftExists) {
+    if (!isAtLeastOneOfTheOverlappingShiftsMine) {
+      text = t(
+        "This task is not associated with any of your shifts You can still edit it but its recommended that you create a shift for it",
+      );
+    }
+  } else {
+    text = t(
+      "There is no shift associated with this task Its recommended that you create a shift for this task",
+    );
+  }
 
   return (
     <Alert variant="warning">

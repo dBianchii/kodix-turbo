@@ -23,15 +23,15 @@ export default async function SettingsLayout({
 
   const navItems = [
     {
-      href: `/team/settings/general`,
+      href: "/team/settings/general",
       title: t("General"),
     },
     {
-      href: `/team/settings/apps`,
+      href: "/team/settings/apps",
       title: t("Apps"),
     },
     {
-      href: `/team/settings/members`,
+      href: "/team/settings/members",
       title: t("Members"),
     },
     {
@@ -55,7 +55,7 @@ export default async function SettingsLayout({
       <div className="mt-8 flex flex-col md:flex-row md:space-x-6">
         <Navigation
           goBackItem={{
-            href: `/team/settings`,
+            href: "/team/settings",
             title: t("Settings"),
           }}
           items={navItems}

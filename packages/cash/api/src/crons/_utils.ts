@@ -19,7 +19,7 @@ export const verifiedQstashCron =
     }: {
       req: Request;
       ctx: TCronJobContext;
-    }) => Promise<Response>
+    }) => Promise<Response>,
   ) =>
   async (req: Request) => {
     const ctx = await createCronJobCtx();

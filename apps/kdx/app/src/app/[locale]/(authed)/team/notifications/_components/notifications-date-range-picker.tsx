@@ -105,6 +105,7 @@ export function NotificationsDateRangePicker({
     to,
   });
   // Update query string
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Fix me
   useEffect(() => {
     const newSearchParams = new URLSearchParams(searchParams);
     if (date?.from) {

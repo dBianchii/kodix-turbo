@@ -10,15 +10,15 @@ import { logger } from "../utils/logger";
 
 export const ROUTERS_FOLDER_PATH = path.resolve(
   process.cwd(),
-  trpcCliConfig.paths.routersFolderPath
+  trpcCliConfig.paths.routersFolderPath,
 );
 export const PROCEDURESFILEPATH = path.resolve(
   process.cwd(),
-  trpcCliConfig.paths.proceduresFilePath
+  trpcCliConfig.paths.proceduresFilePath,
 );
 export const VALIDATORS_FOLDER_PATH = path.resolve(
   process.cwd(),
-  trpcCliConfig.paths.validatorsFolderPath
+  trpcCliConfig.paths.validatorsFolderPath,
 );
 const ZSafeName = z
   .string()
@@ -49,7 +49,7 @@ export const runCli = async () => {
         const containsRouterFile = subEntries.some(
           (subEntry) =>
             subEntry.isFile() &&
-            subEntry.name.endsWith(trpcCliConfig.routerFileName)
+            subEntry.name.endsWith(trpcCliConfig.routerFileName),
         );
 
         if (containsRouterFile) {
@@ -97,7 +97,7 @@ export const runCli = async () => {
       chosenRouterPath: () => {
         if (!routers[0])
           return logger.error(
-            `No ${trpcCliConfig.routerFileName} files found inside ${chalk.yellow(ROUTERS_FOLDER_PATH)}. Make sure you provided the correct path to your routers folder.`
+            `No ${trpcCliConfig.routerFileName} files found inside ${chalk.yellow(ROUTERS_FOLDER_PATH)}. Make sure you provided the correct path to your routers folder.`,
           );
 
         return p.select({
@@ -112,8 +112,8 @@ export const runCli = async () => {
           ],
         });
       },
-      endpointName: () => {
-        return p.text({
+      endpointName: () =>
+        p.text({
           defaultValue: "makeItBetter",
           message: "What will be the name of your new endpoint?",
           placeholder: "makeItBetter",
@@ -123,8 +123,7 @@ export const runCli = async () => {
               if (!result.success) return result.error.message;
             }
           },
-        });
-      },
+        }),
 
       newRouterName: ({ results }) => {
         if (results.chosenRouterPath === "newRouter")
@@ -145,8 +144,8 @@ export const runCli = async () => {
         } catch {
           logger.error(
             `No procedures file found at ${chalk.yellow(
-              PROCEDURESFILEPATH
-            )}. Make sure you provided the correct path to your procedures file.`
+              PROCEDURESFILEPATH,
+            )}. Make sure you provided the correct path to your procedures file.`,
           );
           process.exit(1);
         }
@@ -155,7 +154,7 @@ export const runCli = async () => {
         const proceduresExport = proceduresFile.match(/export const (\w+)/g); //? Assume that all procedures are exported as const
         if (!proceduresExport?.length) {
           logger.error(
-            `We found your file at ${chalk.yellow(PROCEDURESFILEPATH)}, but no procedures were found in it. Please add a procedure to the this file before continuing`
+            `We found your file at ${chalk.yellow(PROCEDURESFILEPATH)}, but no procedures were found in it. Please add a procedure to the this file before continuing`,
           );
           process.exit(1);
         }
@@ -173,8 +172,8 @@ export const runCli = async () => {
           }),
         });
       },
-      queryOrMutation: () => {
-        return p.select({
+      queryOrMutation: () =>
+        p.select({
           initialValue: "query",
           message: "Will it be a query or a mutation?",
           options: [
@@ -189,8 +188,7 @@ export const runCli = async () => {
               value: "mutation",
             },
           ],
-        });
-      },
+        }),
       validator: () =>
         p.text({
           message: "Please define your zod schema (leave empty for no input)",
@@ -220,6 +218,6 @@ export const runCli = async () => {
         logger.info("Bye! 👋");
         process.exit(0);
       },
-    }
+    },
   );
 };

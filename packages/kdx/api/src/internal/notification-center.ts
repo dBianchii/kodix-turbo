@@ -25,6 +25,7 @@ interface PushNotificationsChannel {
 
 type Channel = EmailChannel | PushNotificationsChannel;
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: Need to refactor this
 export async function sendNotifications({
   userId,
   teamId,
@@ -78,6 +79,7 @@ export async function sendNotifications({
       const toSendPushNotifications: ExpoPushMessage[] = [];
       for (const { token } of user.ExpoTokens) {
         if (!Expo.isExpoPushToken(token)) {
+          // biome-ignore lint/suspicious/noConsole: For some observability
           console.error(
             `Push token ${token as string} is not a valid Expo push token`,
           );
@@ -158,6 +160,7 @@ export async function sendNotifications({
         continue;
       }
 
+      // biome-ignore lint/suspicious/noConsole: For some observability
       console.error(
         `There was an unhandled error sending a push notification: ${ticket.message}`,
       );

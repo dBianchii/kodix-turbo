@@ -9,7 +9,7 @@ import { db } from "@kdx/db/client";
 import { kodixCareRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
-import { logActivity } from "../../../../services/appActivityLogs.service";
+import { logActivity } from "../../../../services/app-activity-logs.service";
 import { assertNoOverlappingShiftsForThisCaregiver } from "./_kodixCare.permissions";
 
 interface EditCareShiftOptions {
@@ -32,12 +32,11 @@ export const editCareShiftHandler = async ({
       message: ctx.t("api.Shift not found"),
     });
 
-  if (oldShift.finishedByUserId)
-    if (input.finishedByUserId !== null)
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: ctx.t("api.Cannot edit finished shifts"),
-      });
+  if (oldShift.finishedByUserId && input.finishedByUserId !== null)
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: ctx.t("api.Cannot edit finished shifts"),
+    });
 
   const permissions = await services.permissions.getUserPermissionsForApp({
     appId: kodixCareAppId,

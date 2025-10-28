@@ -38,6 +38,13 @@ export const listSalesHandler = async ({ input }: ListSalesOptions) => {
   const where =
     filterExpressions.length > 0 ? and(...filterExpressions) : undefined;
 
+  const getOrderBy = () => {
+    if (column && column in sales) {
+      return order === "asc" ? asc(sales[column]) : desc(sales[column]);
+    }
+    return desc(sales.caCreatedAt);
+  };
+
   const result = await db.transaction(async (tx) => {
     const data = await tx
       .select({
@@ -56,13 +63,7 @@ export const listSalesHandler = async ({ input }: ListSalesOptions) => {
       .where(where)
       .limit(input.perPage)
       .offset(offset)
-      .orderBy(
-        column && column in sales
-          ? order === "asc"
-            ? asc(sales[column])
-            : desc(sales[column])
-          : desc(sales.caCreatedAt),
-      );
+      .orderBy(getOrderBy());
 
     const total = await tx
       .select({

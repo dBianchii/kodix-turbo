@@ -31,7 +31,7 @@ interface GetValidNumberConfig {
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: <biome migration>
 export function getValidNumber(
   value: string,
-  { max, min = 0, loop = false }: GetValidNumberConfig
+  { max, min = 0, loop = false }: GetValidNumberConfig,
 ) {
   let numericValue = Number.parseInt(value, 10);
 
@@ -72,7 +72,7 @@ interface GetValidArrowNumberConfig {
 
 export function getValidArrowNumber(
   value: string,
-  { min, max, step }: GetValidArrowNumberConfig
+  { min, max, step }: GetValidArrowNumberConfig,
 ) {
   let numericValue = Number.parseInt(value, 10);
   if (!Number.isNaN(numericValue)) {
@@ -111,7 +111,6 @@ export function setHours(date: Date, value: string) {
 export type TimePickerType = "minutes" | "seconds" | "hours"; // | "12hours";
 
 export function setDateByType(date: Date, value: string, type: TimePickerType) {
-  // biome-ignore lint/nursery/noUnnecessaryConditions: <Biome is tripping ball here>
   switch (type) {
     case "minutes":
       return setMinutes(date, value);
@@ -125,7 +124,6 @@ export function setDateByType(date: Date, value: string, type: TimePickerType) {
 }
 
 export function getDateByType(date: Date, type: TimePickerType) {
-  // biome-ignore lint/nursery/noUnnecessaryConditions: <Biome is tripping ball here>
   switch (type) {
     case "minutes":
       return getValidMinuteOrSecond(String(date.getMinutes()));
@@ -141,9 +139,8 @@ export function getDateByType(date: Date, type: TimePickerType) {
 export function getArrowByType(
   value: string,
   step: number,
-  type: TimePickerType
+  type: TimePickerType,
 ) {
-  // biome-ignore lint/nursery/noUnnecessaryConditions: <Biome is tripping ball here>
   switch (type) {
     case "minutes":
       return getValidArrowMinuteOrSecond(value, step);

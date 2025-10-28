@@ -29,7 +29,7 @@ export default function Marquee({
           "flex-col": vertical,
           "flex-row": !vertical,
         },
-        className
+        className,
       )}
     >
       {new Array(repeat).fill(0).map((_, i) => (

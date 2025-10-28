@@ -25,7 +25,7 @@ export function exportTableToCSV<TData>(
      * @default false
      */
     onlySelected?: boolean;
-  } = {}
+  } = {},
 ): void {
   const {
     filename = "table",
@@ -54,7 +54,7 @@ export function exportTableToCSV<TData>(
             ? `"${cellValue.replace(/"/g, '""')}"`
             : cellValue;
         })
-        .join(",")
+        .join(","),
     ),
   ].join("\n");
 

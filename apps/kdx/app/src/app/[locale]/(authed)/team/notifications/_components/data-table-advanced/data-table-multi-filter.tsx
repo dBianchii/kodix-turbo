@@ -155,11 +155,11 @@ export function MultiFilterRow<TData>({
     (params: Record<string, string | number | null>) => {
       const newSearchParams = new URLSearchParams(searchParams.toString());
 
-      for (const [key, value] of Object.entries(params)) {
-        if (value === null) {
+      for (const [key, v] of Object.entries(params)) {
+        if (v === null) {
           newSearchParams.delete(key);
         } else {
-          newSearchParams.set(key, String(value));
+          newSearchParams.set(key, String(v));
         }
       }
 
@@ -169,6 +169,7 @@ export function MultiFilterRow<TData>({
   );
 
   // Update query string
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Fix me
   useEffect(() => {
     if (debounceValue.length > 0) {
       router.push(
@@ -196,6 +197,7 @@ export function MultiFilterRow<TData>({
   }, [debounceValue, filterVariety, selectedOption?.value]);
 
   // Update operator query string
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Fix me
   useEffect(() => {
     if (operator?.value) {
       router.push(
@@ -215,11 +217,12 @@ export function MultiFilterRow<TData>({
     <div className="flex items-center space-x-2">
       {i === 0 ? (
         <div>Where</div>
+        // biome-ignore lint/style/noNestedTernary: Fix me
       ) : i === 1 ? (
         <Select
-          onValueChange={(value) =>
+          onValueChange={(v) =>
             setOperator(
-              dataTableConfig.logicalOperators.find((o) => o.value === value),
+              dataTableConfig.logicalOperators.find((o) => o.value === v),
             )
           }
           value={operator?.value}
@@ -229,13 +232,9 @@ export function MultiFilterRow<TData>({
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              {dataTableConfig.logicalOperators.map((operator) => (
-                <SelectItem
-                  className="text-xs"
-                  key={operator.value}
-                  value={operator.value}
-                >
-                  {operator.label}
+              {dataTableConfig.logicalOperators.map((o) => (
+                <SelectItem className="text-xs" key={o.value} value={o.value}>
+                  {o.label}
                 </SelectItem>
               ))}
             </SelectGroup>
@@ -245,16 +244,14 @@ export function MultiFilterRow<TData>({
         <div key={operator?.value}>{operator?.label}</div>
       )}
       <Select
-        onValueChange={(value) => {
-          setSelectedOption(
-            allOptions.find((option) => option.value === value),
-          );
+        onValueChange={(v) => {
+          setSelectedOption(allOptions.find((o) => o.value === v));
           setSelectedOptions((prev) =>
             prev.map((item) => {
               if (item.id === option.id) {
                 return {
                   ...item,
-                  value: value as keyof TData,
+                  value: v as keyof TData,
                 };
               }
               return item;
@@ -268,22 +265,19 @@ export function MultiFilterRow<TData>({
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            {allOptions.map((option) => (
+            {allOptions.map((o) => (
               <SelectItem
                 className="text-xs capitalize"
-                key={String(option.value)}
-                value={String(option.value)}
+                key={String(o.value)}
+                value={String(o.value)}
               >
-                {option.label}
+                {o.label}
               </SelectItem>
             ))}
           </SelectGroup>
         </SelectContent>
       </Select>
-      <Select
-        onValueChange={(value) => setFilterVariety(value)}
-        value={filterVariety}
-      >
+      <Select onValueChange={(v) => setFilterVariety(v)} value={filterVariety}>
         <SelectTrigger className="h-8 w-full truncate px-2 py-0.5 hover:bg-muted/50">
           <SelectValue placeholder={filterVarieties[0]} />
         </SelectTrigger>

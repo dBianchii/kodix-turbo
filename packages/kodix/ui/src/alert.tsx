@@ -17,7 +17,7 @@ const alertVariants = cva(
           "border-orange-500/50 bg-orange-100 text-orange-400 dark:border-orange-500 dark:bg-orange-950/50 [&>svg]:text-orange-400", //TODO: make orange css variables lol
       },
     },
-  }
+  },
 );
 
 function Alert({
@@ -40,7 +40,7 @@ function AlertTitle({ className, ...props }: React.ComponentProps<"div">) {
     <div
       className={cn(
         "col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight",
-        className
+        className,
       )}
       data-slot="alert-title"
       {...props}
@@ -56,7 +56,7 @@ function AlertDescription({
     <div
       className={cn(
         "col-start-2 grid justify-items-start gap-1 text-muted-foreground text-sm [&_p]:leading-relaxed",
-        className
+        className,
       )}
       data-slot="alert-description"
       {...props}

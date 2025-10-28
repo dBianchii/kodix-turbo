@@ -1,7 +1,7 @@
 import type { TGetAllInputSchema } from "@kdx/validators/trpc/app/calendar";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
-import { getCalendarTasks } from "../../../../internal/calendarAndCareTaskCentral";
+import { getCalendarTasks } from "../../../../internal/calendar-and-care-task-central";
 
 interface GetAllCalendarTasksOptions {
   ctx: TProtectedProcedureContext;

@@ -30,16 +30,16 @@ export function DataTableAdvancedToolbar<TData>({
   const t = useTranslations();
   const searchParams = useSearchParams();
 
-  const options = useMemo<DataTableFilterOption<TData>[]>(() => {
-    return filterFields.map((field) => {
-      return {
+  const options = useMemo<DataTableFilterOption<TData>[]>(
+    () =>
+      filterFields.map((field) => ({
         id: crypto.randomUUID(),
         label: field.label,
         options: field.options ?? [],
         value: field.value,
-      };
-    });
-  }, [filterFields]);
+      })),
+    [filterFields],
+  );
 
   const initialSelectedOptions = useMemo(() => {
     return options
@@ -62,7 +62,7 @@ export function DataTableAdvancedToolbar<TData>({
     DataTableFilterOption<TData>[]
   >(initialSelectedOptions);
   const [openFilterBuilder, setOpenFilterBuilder] = useState(
-    initialSelectedOptions.length > 0 || false,
+    initialSelectedOptions.length > 0,
   );
   const [openCombobox, setOpenCombobox] = useState(false);
 

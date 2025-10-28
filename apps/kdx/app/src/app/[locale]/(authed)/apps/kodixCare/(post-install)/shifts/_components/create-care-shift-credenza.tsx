@@ -128,9 +128,9 @@ export function CreateShiftCredenzaButton({
 
   return (
     <Credenza
-      onOpenChange={(open) => {
+      onOpenChange={(isOpen) => {
         form.reset();
-        setOpen(open);
+        setOpen(isOpen);
       }}
       open={!!open}
     >
@@ -312,19 +312,19 @@ function SelectCaregiver({
             ) : null}
           </div>
         ) : (
-          getAllCaregiversQuery.data?.map((user) => (
-            <SelectItem key={user.id} value={user.id}>
+          getAllCaregiversQuery.data?.map((u) => (
+            <SelectItem key={u.id} value={u.id}>
               <span className="flex items-center gap-2">
                 <AvatarWrapper
-                  alt={user.name}
+                  alt={u.name}
                   className="size-10 rounded-full"
-                  fallback={user.name}
+                  fallback={u.name}
                   height={40}
-                  src={user.image ?? ""}
+                  src={u.image ?? ""}
                   width={40}
                 />
                 <span>
-                  <span className="block font-medium">{user.name}</span>
+                  <span className="block font-medium">{u.name}</span>
                 </span>
               </span>
             </SelectItem>

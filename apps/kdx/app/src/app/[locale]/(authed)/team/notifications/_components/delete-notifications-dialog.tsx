@@ -20,7 +20,7 @@ import { LuTrash } from "react-icons/lu";
 
 import type { RouterOutputs } from "@kdx/api";
 
-import { deleteNotificationsAction } from "../_actions/deleteNotificationsAction";
+import { deleteNotificationsAction } from "../_actions/delete-notifications.action";
 
 interface DeleteTasksDialogProps extends React.ComponentProps<typeof Credenza> {
   notifications: Row<

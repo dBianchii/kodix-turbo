@@ -16,6 +16,7 @@ export async function GET(
 ) {
   const params = await props.params;
   if (!Object.keys(kdxAuthProviders).includes(params.provider)) {
+    // biome-ignore lint/suspicious/noConsole: For some observability
     console.error("Invalid oauth provider", params.provider);
     return new NextResponse(null, {
       status: 400,
@@ -28,7 +29,7 @@ export async function GET(
   const codeVerifier = generateCodeVerifier(); //? Not needed for all providers.
   const url = await currentProvider.getAuthorizationUrl(state, codeVerifier);
 
-  (await cookies()).set(`oauth_state`, state, {
+  (await cookies()).set("oauth_state", state, {
     httpOnly: true,
     maxAge: 60 * 10,
     path: "/",

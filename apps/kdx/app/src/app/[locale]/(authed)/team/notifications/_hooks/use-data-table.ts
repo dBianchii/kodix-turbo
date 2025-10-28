@@ -129,12 +129,13 @@ export function useDataTable<TData, TValue>({
   const [column, order] = sort?.split(".") ?? [];
 
   // Memoize computation of searchableColumns and filterableColumns
-  const { searchableColumns, filterableColumns } = useMemo(() => {
-    return {
+  const { searchableColumns, filterableColumns } = useMemo(
+    () => ({
       filterableColumns: filterFields.filter((field) => field.options),
       searchableColumns: filterFields.filter((field) => !field.options),
-    };
-  }, [filterFields]);
+    }),
+    [filterFields],
+  );
 
   // Create query string
   const createQueryString = useCallback(
@@ -155,33 +156,35 @@ export function useDataTable<TData, TValue>({
   );
 
   // Initial column filters
-  const initialColumnFilters: ColumnFiltersState = useMemo(() => {
-    return Array.from(searchParams.entries()).reduce<ColumnFiltersState>(
-      (filters, [key, value]) => {
-        const filterableColumn = filterableColumns.find(
-          (column) => column.value === key,
-        );
-        const searchableColumn = searchableColumns.find(
-          (column) => column.value === key,
-        );
+  const initialColumnFilters: ColumnFiltersState = useMemo(
+    () =>
+      Array.from(searchParams.entries()).reduce<ColumnFiltersState>(
+        (filters, [key, value]) => {
+          const filterableColumn = filterableColumns.find(
+            (c) => c.value === key,
+          );
+          const searchableColumn = searchableColumns.find(
+            (c) => c.value === key,
+          );
 
-        if (filterableColumn) {
-          filters.push({
-            id: key,
-            value: value.split("."),
-          });
-        } else if (searchableColumn) {
-          filters.push({
-            id: key,
-            value: [value],
-          });
-        }
+          if (filterableColumn) {
+            filters.push({
+              id: key,
+              value: value.split("."),
+            });
+          } else if (searchableColumn) {
+            filters.push({
+              id: key,
+              value: [value],
+            });
+          }
 
-        return filters;
-      },
-      [],
-    );
-  }, [filterableColumns, searchableColumns, searchParams]);
+          return filters;
+        },
+        [],
+      ),
+    [filterableColumns, searchableColumns, searchParams],
+  );
 
   // Table states
   const [rowSelection, setRowSelection] = useState({});
@@ -204,6 +207,7 @@ export function useDataTable<TData, TValue>({
     [pageIndex, pageSize],
   );
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Fix me
   useEffect(() => {
     router.push(
       `${pathname}?${createQueryString({
@@ -224,6 +228,7 @@ export function useDataTable<TData, TValue>({
     },
   ]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Fix me
   useEffect(() => {
     router.push(
       `${pathname}?${createQueryString({
@@ -239,20 +244,22 @@ export function useDataTable<TData, TValue>({
   const debouncedSearchableColumnFilters = JSON.parse(
     useDebounce(
       JSON.stringify(
-        columnFilters.filter((filter) => {
-          return searchableColumns.find((column) => column.value === filter.id);
-        }),
+        columnFilters.filter((filter) =>
+          searchableColumns.find((c) => c.value === filter.id),
+        ),
       ),
       500,
     ),
   ) as ColumnFiltersState;
 
-  const filterableColumnFilters = columnFilters.filter((filter) => {
-    return filterableColumns.find((column) => column.value === filter.id);
-  });
+  const filterableColumnFilters = columnFilters.filter((filter) =>
+    filterableColumns.find((c) => c.value === filter.id),
+  );
 
   const [mounted, setMounted] = useState(false);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Fix me
+  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: Fix me
   useEffect(() => {
     // Opt out when advanced filter is enabled, because it contains additional params
     if (enableAdvancedFilter) return;
@@ -269,30 +276,36 @@ export function useDataTable<TData, TValue>({
     };
 
     // Handle debounced searchable column filters
-    for (const column of debouncedSearchableColumnFilters) {
-      if (typeof column.value === "string") {
+    for (const columnFilterValue of debouncedSearchableColumnFilters) {
+      if (typeof columnFilterValue.value === "string") {
         Object.assign(newParamsObject, {
-          [column.id]: typeof column.value === "string" ? column.value : null,
+          [columnFilterValue.id]:
+            typeof columnFilterValue.value === "string"
+              ? columnFilterValue.value
+              : null,
         });
       }
     }
 
     // Handle filterable column filters
-    for (const column of filterableColumnFilters) {
-      if (typeof column.value === "object" && Array.isArray(column.value)) {
-        Object.assign(newParamsObject, { [column.id]: column.value.join(".") });
+    for (const columnFilterValue of filterableColumnFilters) {
+      if (
+        typeof columnFilterValue.value === "object" &&
+        Array.isArray(columnFilterValue.value)
+      ) {
+        Object.assign(newParamsObject, {
+          [columnFilterValue.id]: columnFilterValue.value.join("."),
+        });
       }
     }
 
     // Remove deleted values
     for (const key of searchParams.keys()) {
       if (
-        (searchableColumns.find((column) => column.value === key) &&
-          !debouncedSearchableColumnFilters.find(
-            (column) => column.id === key,
-          )) ||
-        (filterableColumns.find((column) => column.value === key) &&
-          !filterableColumnFilters.find((column) => column.id === key))
+        (searchableColumns.find((c) => c.value === key) &&
+          !debouncedSearchableColumnFilters.find((c) => c.id === key)) ||
+        (filterableColumns.find((c) => c.value === key) &&
+          !filterableColumnFilters.find((c) => c.id === key))
       ) {
         Object.assign(newParamsObject, { [key]: null });
       }

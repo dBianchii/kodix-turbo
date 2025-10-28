@@ -9,7 +9,7 @@ import { appIdToAppTeamConfigSchema, todoAppId } from "@kodix/shared/db";
 import { and, asc, eq, inArray, sql } from "drizzle-orm";
 
 import type { Drizzle } from "../../client";
-import type { appIdToUserAppTeamConfigSchemaUpdate } from "../_zodSchemas/userAppTeamConfigs";
+import type { appIdToUserAppTeamConfigSchemaUpdate } from "../_zodSchemas/user-app-team-config-schemas";
 import { db as _db } from "../../client";
 import {
   appActivityLogs,
@@ -21,7 +21,7 @@ import {
   userTeamAppRoles,
 } from "../../schema";
 import { appIdToSchemas } from "../../utils";
-import { appIdToUserAppTeamConfigSchema } from "../_zodSchemas/userAppTeamConfigs";
+import { appIdToUserAppTeamConfigSchema } from "../_zodSchemas/user-app-team-config-schemas";
 
 export async function findInstalledAppsByTeamId(
   teamId: string | undefined,
@@ -52,7 +52,7 @@ export async function findInstalledAppsByTeamId(
   return _apps.filter((app) => app.id !== todoAppId); //TODO: stinky
 }
 
-export async function createAppActivityLog(
+export function createAppActivityLog(
   input: InferInsertModel<typeof appActivityLogs>,
   db = _db,
 ) {
@@ -93,11 +93,10 @@ export async function findAppTeamConfigs(
       config: true,
       teamId: true,
     },
-    where: (appteamConfig, { eq, and, inArray }) =>
-      and(
-        eq(appteamConfig.appId, appId),
-        inArray(appteamConfig.teamId, teamIds),
-      ),
+    where: and(
+      eq(appTeamConfigs.appId, appId),
+      inArray(appTeamConfigs.teamId, teamIds),
+    ),
   });
 
   const schema = appIdToAppTeamConfigSchema[appId];
@@ -129,8 +128,10 @@ export async function upsertAppTeamConfig(
     columns: {
       config: true,
     },
-    where: (appteamConfig, { eq, and }) =>
-      and(eq(appteamConfig.appId, appId), eq(appteamConfig.teamId, teamId)),
+    where: and(
+      eq(appTeamConfigs.appId, appId),
+      eq(appTeamConfigs.teamId, teamId),
+    ),
   });
 
   const configSchema = appIdToAppTeamConfigSchema[appId];
@@ -151,9 +152,9 @@ export async function upsertAppTeamConfig(
   //new record. We need to validate the whole config without partial()
   const parsedInput = configSchema.parse(config);
   await db.insert(appTeamConfigs).values({
-    appId: appId,
+    appId,
     config: parsedInput,
-    teamId: teamId,
+    teamId,
   });
 }
 
@@ -175,23 +176,20 @@ export async function findUserAppTeamConfigs(
       teamId: true,
       userId: true,
     },
-    where: (userAppTeamConfigs, { eq, and }) =>
-      and(
-        eq(userAppTeamConfigs.appId, appId),
-        inArray(userAppTeamConfigs.teamId, teamIds),
-        inArray(userAppTeamConfigs.userId, userIds),
-      ),
+    where: and(
+      eq(userAppTeamConfigs.appId, appId),
+      inArray(userAppTeamConfigs.teamId, teamIds),
+      inArray(userAppTeamConfigs.userId, userIds),
+    ),
   });
 
   const schema = appIdToUserAppTeamConfigSchema[appId].optional(); //? Optional because the config may not exist yet
 
-  const userAppTeamConfigs = result.map((x) => ({
+  return result.map((x) => ({
     config: schema.parse(x.config),
     teamId: x.teamId,
     userId: x.userId,
   }));
-
-  return userAppTeamConfigs;
 }
 
 export async function upsertUserAppTeamConfigs(
@@ -214,12 +212,11 @@ export async function upsertUserAppTeamConfigs(
     columns: {
       config: true,
     },
-    where: (userAppTeamConfigs, { eq, and }) =>
-      and(
-        eq(userAppTeamConfigs.appId, appId),
-        eq(userAppTeamConfigs.teamId, teamId),
-        eq(userAppTeamConfigs.userId, userId),
-      ),
+    where: and(
+      eq(userAppTeamConfigs.appId, appId),
+      eq(userAppTeamConfigs.teamId, teamId),
+      eq(userAppTeamConfigs.userId, userId),
+    ),
   });
 
   const configSchema = appIdToUserAppTeamConfigSchema[appId];
@@ -245,10 +242,10 @@ export async function upsertUserAppTeamConfigs(
   const parsedInput = configSchema.parse(input);
 
   await db.insert(userAppTeamConfigs).values({
-    appId: appId,
+    appId,
     config: parsedInput,
-    teamId: teamId,
-    userId: userId,
+    teamId,
+    userId,
   });
 }
 
@@ -266,16 +263,16 @@ export async function installAppForTeam(
 ) {
   await db.transaction(async (tx) => {
     await tx.insert(appsToTeams).values({
-      appId: appId,
-      teamId: teamId,
+      appId,
+      teamId,
     });
 
     //? Make the user an admin for the app
     await tx.insert(userTeamAppRoles).values({
-      appId: appId,
+      appId,
       role: "ADMIN",
-      teamId: teamId,
-      userId: userId,
+      teamId,
+      userId,
     });
   });
 }
@@ -308,13 +305,13 @@ export async function uninstallAppForTeam(
     );
 
   await removeAppData({
-    appId: appId,
-    teamId: teamId,
+    appId,
+    teamId,
     tx: db,
   });
 }
 
-export async function findManyAppActivityLogs(
+export function findManyAppActivityLogs(
   {
     tableNames,
     rowId,
@@ -335,16 +332,15 @@ export async function findManyAppActivityLogs(
   const offset = (page - 1) * pageSize;
   return db.query.appActivityLogs.findMany({
     limit: pageSize,
-    offset: offset,
+    offset,
     orderBy: [asc(appActivityLogs.loggedAt)],
-    where: (appActivityLogs, { eq, inArray }) =>
-      and(
-        eq(appActivityLogs.appId, appId),
-        eq(appActivityLogs.teamId, teamId),
+    where: and(
+      eq(appActivityLogs.appId, appId),
+      eq(appActivityLogs.teamId, teamId),
 
-        rowId ? eq(appActivityLogs.rowId, rowId) : undefined,
-        tableNames ? inArray(appActivityLogs.tableName, tableNames) : undefined,
-      ),
+      rowId ? eq(appActivityLogs.rowId, rowId) : undefined,
+      tableNames ? inArray(appActivityLogs.tableName, tableNames) : undefined,
+    ),
     with: {
       User: {
         columns: {

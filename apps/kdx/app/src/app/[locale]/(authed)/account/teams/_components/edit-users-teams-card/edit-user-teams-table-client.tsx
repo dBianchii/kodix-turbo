@@ -132,7 +132,7 @@ function CustomRow({
                   redirect: "/team/settings",
                   teamId: team.id,
                 });
-              else void router.push(`/team/settings`);
+              else void router.push("/team/settings");
             }}
           >
             <Button loading={manageLoading} type="submit" variant="outline">
@@ -179,8 +179,8 @@ function LeaveOrDeleteTeamDropdown({
     <>
       <DeleteTeamConfirmationDialog
         open={open}
-        setOpen={(open) => {
-          setOpen(open);
+        setOpen={(_open) => {
+          setOpen(_open);
           setTimeout(() => {
             //A hack to fix page becoming unresponsive: https://github.com/shadcn-ui/ui/issues/1912#issuecomment-2295203962
             const body = document.querySelector("body");

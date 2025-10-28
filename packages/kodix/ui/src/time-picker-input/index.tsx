@@ -55,7 +55,7 @@ const TimePickerInput = ({
 
   const calculatedValue = useMemo(
     () => getDateByType(date, picker),
-    [date, picker]
+    [date, picker],
   );
 
   // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: <biome migration>
@@ -85,7 +85,7 @@ const TimePickerInput = ({
     <Input
       className={cn(
         "w-[48px] text-center font-mono text-base tabular-nums caret-transparent focus:bg-accent focus:text-accent-foreground [&::-webkit-inner-spin-button]:appearance-none",
-        className
+        className,
       )}
       id={id || picker}
       inputMode="decimal"

@@ -1,5 +1,5 @@
 import type { z } from "zod";
-import { and, eq, gte, inArray, isNull } from "drizzle-orm";
+import { and, eq, gte, inArray, isNull, lte } from "drizzle-orm";
 
 import type { Drizzle } from "../../../client";
 import type { Update } from "../../_types";
@@ -7,7 +7,7 @@ import type {
   zCareTaskCreate,
   zCareTaskCreateMany,
   zCareTaskUpdate,
-} from "../../_zodSchemas/careTaskSchemas";
+} from "../../_zodSchemas/care-task-schemas";
 import { db as _db } from "../../../client";
 import { careTasks } from "../../../schema";
 
@@ -25,7 +25,7 @@ export interface CareTask {
   eventMasterId: string | null;
 }
 
-export async function findCareTasksFromTo(
+export function findCareTasksFromTo(
   {
     dateStart,
     dateEnd,
@@ -41,7 +41,7 @@ export async function findCareTasksFromTo(
   },
   db = _db,
 ) {
-  const careTasks: CareTask[] = await db.query.careTasks.findMany({
+  return db.query.careTasks.findMany({
     columns: {
       date: true,
       description: true,
@@ -55,20 +55,17 @@ export async function findCareTasksFromTo(
       type: true,
       updatedAt: true,
     },
-    where: (careTask, { gte, lte, and }) =>
-      and(
-        inArray(careTask.teamId, teamIds),
-        onlyCritical ? eq(careTask.type, "CRITICAL") : undefined,
-        onlyNotDone ? isNull(careTask.doneAt) : undefined,
-        gte(careTask.date, dateStart),
-        lte(careTask.date, dateEnd),
-      ),
+    where: and(
+      inArray(careTasks.teamId, teamIds),
+      onlyCritical ? eq(careTasks.type, "CRITICAL") : undefined,
+      onlyNotDone ? isNull(careTasks.doneAt) : undefined,
+      gte(careTasks.date, dateStart),
+      lte(careTasks.date, dateEnd),
+    ),
   });
-
-  return careTasks;
 }
 
-export async function findCareTaskById(
+export function findCareTaskById(
   {
     id,
     teamId,
@@ -79,12 +76,11 @@ export async function findCareTaskById(
   db = _db,
 ) {
   return db.query.careTasks.findFirst({
-    where: (careTask, { eq }) =>
-      and(eq(careTask.id, id), eq(careTask.teamId, teamId)),
+    where: and(eq(careTasks.id, id), eq(careTasks.teamId, teamId)),
   });
 }
 
-export async function deleteCareTaskById(
+export function deleteCareTaskById(
   {
     id,
     teamId,
@@ -94,7 +90,7 @@ export async function deleteCareTaskById(
   },
   db = _db,
 ) {
-  await db
+  return db
     .delete(careTasks)
     .where(and(eq(careTasks.id, id), eq(careTasks.teamId, teamId)));
 }
@@ -132,7 +128,7 @@ export async function updateCareTask(
   await db.update(careTasks).set(input).where(eq(careTasks.id, id));
 }
 
-export async function createCareTask(
+export function createCareTask(
   careTask: z.infer<typeof zCareTaskCreate>,
   db = _db,
 ) {

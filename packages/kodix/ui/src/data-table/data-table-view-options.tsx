@@ -42,20 +42,18 @@ export function DataTableViewOptions<TData>({
           .getAllColumns()
           .filter(
             (column) =>
-              typeof column.accessorFn !== "undefined" && column.getCanHide()
+              typeof column.accessorFn !== "undefined" && column.getCanHide(),
           )
-          .map((column) => {
-            return (
-              <DropdownMenuCheckboxItem
-                checked={column.getIsVisible()}
-                className="capitalize"
-                key={column.id}
-                onCheckedChange={(value) => column.toggleVisibility(!!value)}
-              >
-                <span className="truncate">{column.id}</span>
-              </DropdownMenuCheckboxItem>
-            );
-          })}
+          .map((column) => (
+            <DropdownMenuCheckboxItem
+              checked={column.getIsVisible()}
+              className="capitalize"
+              key={column.id}
+              onCheckedChange={(value) => column.toggleVisibility(!!value)}
+            >
+              <span className="truncate">{column.id}</span>
+            </DropdownMenuCheckboxItem>
+          ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -8,7 +8,7 @@ import { db } from "@kdx/db/client";
 import { userRepository } from "@kdx/db/repositories";
 
 import type { TPublicProcedureContext } from "../../procedures";
-import { captureProductAnalytic } from "../../../services/productAnalytics.service";
+import { posthog } from "../../../sdks/posthog";
 
 interface SignupWithPasswordOptions {
   ctx: TPublicProcedureContext;
@@ -36,19 +36,21 @@ export const signupWithPasswordHandler = async ({
       email: input.email,
       invite: input.invite,
       name: input.name,
-      passwordHash: passwordHash,
+      passwordHash,
       teamId: nanoid(),
       tx,
-      userId: userId,
+      userId,
     });
   });
 
   const sessionId = createDbSessionAndCookie({ userId });
-  captureProductAnalytic({
+
+  posthog.capture({
+    distinctId: userId,
     event: "signup",
     properties: { email: input.email },
-    userId,
   });
+  await posthog.shutdown();
 
   return sessionId;
 };

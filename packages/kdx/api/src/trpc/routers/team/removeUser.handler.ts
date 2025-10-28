@@ -49,10 +49,13 @@ export const removeUserHandler = async ({ ctx, input }: RemoveUserOptions) => {
     });
 
     //Remove the user from the team
-    await teamRepository.removeUserFromTeam(tx, {
-      teamId: ctx.auth.user.activeTeamId,
-      userId: input.userId,
-    });
+    await teamRepository.removeUserFromTeam(
+      {
+        teamId: ctx.auth.user.activeTeamId,
+        userId: input.userId,
+      },
+      tx,
+    );
 
     //Remove the user association from the team's apps
     await teamRepository.removeUserAssociationsFromUserTeamAppRolesByTeamId(

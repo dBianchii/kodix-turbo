@@ -65,9 +65,7 @@ export function DataTableFilterCombobox<TData>({
               {options
                 .filter(
                   (option) =>
-                    !selectedOptions.some(
-                      (selectedOption) => selectedOption.value === option.value,
-                    ),
+                    !selectedOptions.some((sO) => sO.value === option.value),
                 )
                 .map((option) => (
                   <CommandItem
@@ -77,9 +75,7 @@ export function DataTableFilterCombobox<TData>({
                       setValue(currentValue === value ? "" : currentValue);
                       setOpen(false);
                       setSelectedOption(option);
-                      setSelectedOptions((prev) => {
-                        return [...prev, { ...option }];
-                      });
+                      setSelectedOptions((prev) => [...prev, { ...option }]);
                       onSelect();
                     }}
                     value={String(option.value)}

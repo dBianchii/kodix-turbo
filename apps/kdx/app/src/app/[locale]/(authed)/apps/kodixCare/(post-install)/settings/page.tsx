@@ -4,7 +4,7 @@ import { getTranslations } from "next-intl/server";
 
 import { trpcCaller } from "@kdx/api/trpc/react/server";
 
-import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
+import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/server-helpers";
 
 import { KodixCareUserSettingsForm } from "./_components/kodix-care-user-settings-form";
 

@@ -6,7 +6,7 @@ import { cashbacks } from "../schema/cashback";
 
 export function upsertCashbacksByCaId(
   input: (typeof cashbacks.$inferInsert)[],
-  db: Drizzle | DrizzleTransaction = _db
+  db: Drizzle | DrizzleTransaction = _db,
 ) {
   return db
     .insert(cashbacks)

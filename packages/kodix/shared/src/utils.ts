@@ -7,7 +7,7 @@ import { customAlphabet } from "nanoid";
 export const NANOID_SIZE = 12;
 export const nanoid = customAlphabet(
   "1234567890abcdefghijklmnopqrstuvwxyz",
-  NANOID_SIZE
+  NANOID_SIZE,
 );
 
 /**
@@ -33,11 +33,11 @@ export const getBaseUrl = () => {
  * @description Extracts successes and errors from promise.allSettled in a typesafe maner
  */
 export const getSuccessesAndErrors = <T>(
-  results: PromiseSettledResult<T>[]
+  results: PromiseSettledResult<T>[],
 ) => {
   const errors = results.filter((x) => x.status === "rejected");
   const successes = results.filter(
-    (x): x is PromiseFulfilledResult<T> => x.status === "fulfilled"
+    (x): x is PromiseFulfilledResult<T> => x.status === "fulfilled",
   );
 
   return { errors, successes };
@@ -47,7 +47,7 @@ export const getSuccessesAndErrors = <T>(
  * @description A typesafe Object.entries
  */
 export const typedObjectEntries = <T extends object>(
-  obj: T
+  obj: T,
 ): [keyof T, T[keyof T]][] => Object.entries(obj) as [keyof T, T[keyof T]][];
 
 /**
@@ -63,9 +63,7 @@ export function getErrorMessage(err: unknown) {
   const unknownError = "Something went wrong, please try again later.";
 
   if (err instanceof z.ZodError) {
-    const errors = err.issues.map((issue) => {
-      return issue.message;
-    });
+    const errors = err.issues.map((issue) => issue.message);
     return errors.join("\n");
   }
   if (err instanceof Error) return err.message;

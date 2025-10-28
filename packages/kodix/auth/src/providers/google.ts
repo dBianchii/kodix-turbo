@@ -16,16 +16,15 @@ export const createGoogleProvider = (config: ProviderConfig): AuthProvider => {
   const google = new Google(
     process.env.AUTH_GOOGLE_CLIENT_ID ?? "",
     process.env.AUTH_GOOGLE_CLIENT_SECRET ?? "",
-    `${getBaseUrl()}/api/auth/google/callback`
+    `${getBaseUrl()}/api/auth/google/callback`,
   );
 
   const name = "Google";
 
-  const getAuthorizationUrl = async (state: string, codeVerifier: string) => {
-    return await google.createAuthorizationURL(state, codeVerifier, {
+  const getAuthorizationUrl = async (state: string, codeVerifier: string) =>
+    await google.createAuthorizationURL(state, codeVerifier, {
       scopes: ["profile", "email"],
     });
-  };
 
   const handleCallback = async (code: string, codeVerifier: string) => {
     const tokens = await google.validateAuthorizationCode(code, codeVerifier);
@@ -36,7 +35,7 @@ export const createGoogleProvider = (config: ProviderConfig): AuthProvider => {
         headers: {
           Authorization: `Bearer ${tokens.accessToken}`,
         },
-      }
+      },
     );
     const googleUser = (await response.json()) as GoogleUser;
 

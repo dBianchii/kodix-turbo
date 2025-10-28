@@ -8,7 +8,7 @@ import { db } from "@kdx/db/client";
 import { kodixCareRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../../procedures";
-import { logActivity } from "../../../../services/appActivityLogs.service";
+import { logActivity } from "../../../../services/app-activity-logs.service";
 import { assertNoOverlappingShiftsForThisCaregiver } from "./_kodixCare.permissions";
 
 interface CreateCareShiftOptions {
@@ -39,7 +39,7 @@ export const createCareShiftHandler = async ({
   });
   assertNoOverlappingShiftsForThisCaregiver(ctx.t, {
     caregiverId: input.careGiverId,
-    overlappingShifts: overlappingShifts,
+    overlappingShifts,
   });
 
   await db.transaction(async (tx) => {

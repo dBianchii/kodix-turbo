@@ -65,6 +65,6 @@ export const deleteTeamHandler = async ({ ctx, input }: DeleteTeamOptions) => {
 
     //Remove the team
     await careTaskRepository.deleteAllCareTasksForTeam(tx, input.teamId);
-    await teamRepository.deleteTeam(tx, input.teamId); //! Should delete many other tables based on referential actions
+    await teamRepository.deleteTeam(input.teamId, tx); //! Should delete many other tables based on referential actions
   });
 };

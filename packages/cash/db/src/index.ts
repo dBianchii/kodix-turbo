@@ -12,7 +12,7 @@ export const buildConflictUpdateColumns = <
   Q extends keyof T["_"]["columns"],
 >(
   table: T,
-  columns: Q[]
+  columns: Q[],
 ) => {
   const cls = getTableColumns(table);
 
@@ -23,13 +23,13 @@ export const buildConflictUpdateColumns = <
 
       return acc;
     },
-    {} as Record<Q, SQL>
+    {} as Record<Q, SQL>,
   );
 };
 
 export const buildConflictUpdateAllColumns = <T extends PgTable | SQLiteTable>(
   table: T,
-  exclude: (keyof T["_"]["columns"])[] = []
+  exclude: (keyof T["_"]["columns"])[] = [],
 ) => {
   const cls = getTableColumns(table);
   const excludeSet = new Set(exclude);
@@ -42,7 +42,7 @@ export const buildConflictUpdateAllColumns = <T extends PgTable | SQLiteTable>(
       }
       return acc;
     },
-    {} as Record<string, SQL>
+    {} as Record<string, SQL>,
   );
 };
 

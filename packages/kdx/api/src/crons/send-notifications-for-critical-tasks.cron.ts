@@ -10,8 +10,8 @@ import WarnDelayedCriticalTasks from "@kdx/react-email/warn-delayed-critical-tas
 import {
   getCareTaskCompositeId,
   getCareTasks,
-} from "../internal/calendarAndCareTaskCentral";
-import { sendNotifications } from "../internal/notificationCenter";
+} from "../internal/calendar-and-care-task-central";
+import { sendNotifications } from "../internal/notification-center";
 import { getUpstashCache, setUpstashCache } from "../sdks/upstash";
 import { verifiedQstashCron } from "./_utils";
 
@@ -23,8 +23,6 @@ const isLate = (date: Date) =>
 
 export const sendNotificationsForCriticalTasks = verifiedQstashCron(
   async ({ ctx }) => {
-    console.time("sendNotificationsForCriticalTasks");
-
     const allTeamIdsWithKodixCareInstalled =
       await teamRepository.findAllTeamsWithAppInstalled(kodixCareAppId);
 
@@ -48,7 +46,7 @@ export const sendNotificationsForCriticalTasks = verifiedQstashCron(
     ).filter((x) => isLate(x.date)); //? We only want to notify about tasks that are late
 
     const usersWithinTheTeams = allTeamIdsWithKodixCareInstalled.flatMap((x) =>
-      x.Team.UsersToTeams.flatMap((x) => x.userId),
+      x.Team.UsersToTeams.flatMap((y) => y.userId),
     );
 
     const teamsWithCriticalNotDoneLateCareTasks =
@@ -178,8 +176,6 @@ export const sendNotificationsForCriticalTasks = verifiedQstashCron(
     }
 
     await Promise.allSettled(promises);
-
-    console.timeEnd("sendNotificationsForCriticalTasks");
 
     return Response.json({ success: true });
   },

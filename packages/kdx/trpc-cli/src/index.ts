@@ -32,7 +32,7 @@ main().catch((err) => {
     logger.error(err);
   } else {
     logger.error(
-      "An unknown error has occurred. Please open an issue on github with the below:"
+      "An unknown error has occurred. Please open an issue on github with the below:",
     );
     logger.error(err);
   }

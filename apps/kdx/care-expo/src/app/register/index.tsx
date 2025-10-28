@@ -104,7 +104,7 @@ export default function Register() {
               )}
             />
 
-            {!query.data ? (
+            {query.data ? null : (
               <Button
                 mt={"$6"}
                 onPress={form.handleSubmit(async (values) => {
@@ -121,7 +121,7 @@ export default function Register() {
               >
                 {query.isFetching ? <Spinner /> : "Continuar"}
               </Button>
-            ) : null}
+            )}
           </Form>
         </YStack>
         <View ai={"center"} mt={"$6"}>

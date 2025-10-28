@@ -36,11 +36,10 @@ export type AppPathnames =
 
 const reverseRecord = <T extends PropertyKey, U extends PropertyKey>(
   input: Record<T, U>,
-) => {
-  return Object.fromEntries(
+) =>
+  Object.fromEntries(
     Object.entries(input).map(([key, value]) => [value, key]),
   ) as Record<U, T>;
-};
 /**
  * @description Does exactly the opposite of appIdToPathname
  * @see appIdToPathname

@@ -75,20 +75,21 @@ export function DataTableFilterItem<TData>({
     (params: Record<string, string | number | null>) => {
       const newSearchParams = new URLSearchParams(searchParams.toString());
 
-      for (const [key, value] of Object.entries(params)) {
+      for (const [key, v] of Object.entries(params)) {
         if (value === null) {
           newSearchParams.delete(key);
         } else {
-          newSearchParams.set(key, String(value));
+          newSearchParams.set(key, String(v));
         }
       }
 
       return newSearchParams.toString();
     },
-    [searchParams],
+    [searchParams, value],
   );
 
   // Update query string
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Fix me
   useEffect(() => {
     if (selectedOption.options.length > 0) {
       // key=value1.value2.value3~operator
@@ -150,8 +151,8 @@ export function DataTableFilterItem<TData>({
               {selectedOption.label}
             </div>
             <Select
-              onValueChange={(value) =>
-                setSelectedOperator(operators.find((c) => c.value === value))
+              onValueChange={(v) =>
+                setSelectedOperator(operators.find((c) => c.value === v))
               }
               value={selectedOperator?.value}
             >

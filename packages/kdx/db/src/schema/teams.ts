@@ -6,7 +6,7 @@ import { createInsertSchema } from "drizzle-zod";
 
 import { apps, appsToTeams, appTeamConfigs } from "./apps";
 import { eventMasters } from "./apps/calendar";
-import { careShifts, careTasks } from "./apps/kodixCare";
+import { careShifts, careTasks } from "./apps/kodix-care";
 import { todos } from "./apps/todos";
 import { users } from "./users";
 import {

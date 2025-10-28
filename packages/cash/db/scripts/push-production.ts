@@ -13,7 +13,7 @@ const ENV_FILE_PATH = resolve(APP_ROOT, ".env.production");
 const deleteEnvFile = () => execCommand(`rm -f ${ENV_FILE_PATH}`);
 async function main() {
   await execCommand(
-    `vercel env pull .env.production --environment=production --cwd=${APP_ROOT}`
+    `vercel env pull .env.production --environment=production --cwd=${APP_ROOT}`,
   );
   const productionEnv = await fs.readFile(ENV_FILE_PATH, "utf8");
 

@@ -10,7 +10,7 @@ import type { RouterOutputs } from "@kdx/api";
 import { notifications } from "@kdx/db/schema";
 
 import type { DataTableFilterField } from "./data-table-advanced/types";
-import { useDataTable } from "../_hooks/useDataTable";
+import { useDataTable } from "../_hooks/use-data-table";
 import { DataTableAdvancedToolbar } from "./data-table-advanced/data-table-advanced-toolbar";
 import { getColumns } from "./data-table-notifications-columns";
 import { DataTableNotificationsFloatingBar } from "./data-table-notifications-floating-bar";

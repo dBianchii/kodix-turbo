@@ -87,7 +87,7 @@ export const TeamInvite = ({
                 {
                   site: "Kodix",
                   teamName: () => <strong>{teamName}</strong>,
-                }
+                },
               )}
             </Text>
             {/* <Section>
@@ -141,7 +141,7 @@ export const TeamInvite = ({
               {/* {t("api.emails.located in")}{" "}
               <span className="text-black">{inviteFromLocation}</span>.{" "} */}
               {t(
-                "api.emails.If you were not expecting this invitation you can ignore this email"
+                "api.emails.If you were not expecting this invitation you can ignore this email",
               )}
             </Text>
           </Container>

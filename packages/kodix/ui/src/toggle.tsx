@@ -24,7 +24,7 @@ const toggleVariants = cva(
           "border border-input bg-transparent shadow-2xs hover:bg-accent hover:text-accent-foreground",
       },
     },
-  }
+  },
 );
 
 const Toggle = ({

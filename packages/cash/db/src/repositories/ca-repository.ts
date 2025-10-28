@@ -16,7 +16,7 @@ export async function getCAToken(db = _db) {
 
 export async function createCAToken(
   token: typeof caTokens.$inferInsert,
-  db: Drizzle = _db
+  db: Drizzle = _db,
 ) {
   const [newToken] = await db.insert(caTokens).values(token).returning();
   return newToken;
@@ -25,7 +25,7 @@ export async function createCAToken(
 export async function updateCAToken(
   id: string,
   data: Partial<typeof caTokens.$inferInsert>,
-  db: Drizzle = _db
+  db: Drizzle = _db,
 ) {
   const [updatedToken] = await db
     .update(caTokens)
@@ -47,7 +47,7 @@ export function findClientByCpf(cpf: string, db: Drizzle = _db) {
 
 export function upsertClientsByCaId(
   input: (typeof clients.$inferInsert)[],
-  db: Drizzle | DrizzleTransaction = _db
+  db: Drizzle | DrizzleTransaction = _db,
 ) {
   return db
     .insert(clients)
@@ -65,7 +65,7 @@ export function upsertClientsByCaId(
 
 export function upsertSalesByCaId(
   input: (typeof sales.$inferInsert)[],
-  db: Drizzle | DrizzleTransaction = _db
+  db: Drizzle | DrizzleTransaction = _db,
 ) {
   return db
     .insert(sales)

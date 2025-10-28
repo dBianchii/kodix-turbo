@@ -9,7 +9,7 @@ import { db } from "@kdx/db/client";
 import { careTaskRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
-import { logActivity } from "../../../../../services/appActivityLogs.service";
+import { logActivity } from "../../../../../services/app-activity-logs.service";
 
 interface EditCareTaskOptions {
   ctx: TProtectedProcedureContext;

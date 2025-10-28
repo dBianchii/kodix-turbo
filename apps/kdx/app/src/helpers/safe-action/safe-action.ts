@@ -11,9 +11,8 @@ export const action = createSafeActionClient({
 
     //? If the error came from within tRPC and not from the outer action, we can check if it's a ZodError and use the first issue's message.
     //? Note that if it's a generic trpc error and not a ZodError, we'll just use the original error message. (should work)
-    if (error instanceof TRPCError)
-      if (error.cause instanceof ZodError)
-        message = error.cause.issues[0]?.message ?? message;
+    if (error instanceof TRPCError && error.cause instanceof ZodError)
+      message = error.cause.issues[0]?.message ?? message;
 
     return message;
   },

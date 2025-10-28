@@ -55,7 +55,7 @@ const CredenzaContent = (props: React.ComponentProps<typeof DialogContent>) => {
 };
 
 const CredenzaDescription = (
-  props: React.ComponentProps<typeof DialogDescription>
+  props: React.ComponentProps<typeof DialogDescription>,
 ) => {
   const isDesktop = useMediaQuery(desktop);
   const Component = isDesktop ? DialogDescription : DrawerDescription;
@@ -80,9 +80,9 @@ const CredenzaTitle = (props: React.ComponentProps<typeof DialogTitle>) => {
 const CredenzaBody = ({
   className,
   ...props
-}: React.HTMLAttributes<HTMLDivElement>) => {
-  return <div className={cn("px-4 md:px-0", className)} {...props} />;
-};
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn("px-4 md:px-0", className)} {...props} />
+);
 
 const CredenzaFooter = (props: React.ComponentProps<typeof DialogFooter>) => {
   const isDesktop = useMediaQuery(desktop);

@@ -29,5 +29,5 @@ export const cashbacks = pgTable(
   (table) => [
     unique().on(table.saleId, table.caProductId),
     index().on(table.clientId, table.createdAt),
-  ]
+  ],
 );

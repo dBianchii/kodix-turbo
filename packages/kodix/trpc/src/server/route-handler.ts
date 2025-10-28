@@ -13,7 +13,7 @@ export interface NextTRPCHandlerOptions<TRouter extends AnyRouter> {
 
 export function nextTRPCHandler<TRouter extends AnyRouter>(
   req: NextRequest,
-  { router, createContext }: NextTRPCHandlerOptions<TRouter>
+  { router, createContext }: NextTRPCHandlerOptions<TRouter>,
 ) {
   return fetchRequestHandler({
     createContext: () => createContext({ headers: req.headers }),

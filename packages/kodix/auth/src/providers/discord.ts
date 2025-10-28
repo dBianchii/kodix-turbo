@@ -8,16 +8,15 @@ export const createDiscordProvider = (config: ProviderConfig): AuthProvider => {
   const discord = new Discord(
     process.env.AUTH_DISCORD_ID ?? "",
     process.env.AUTH_DISCORD_SECRET ?? "",
-    `${getBaseUrl()}/api/auth/discord/callback`
+    `${getBaseUrl()}/api/auth/discord/callback`,
   );
 
   const name = "Discord";
 
-  const getAuthorizationUrl = async (state: string) => {
-    return await discord.createAuthorizationURL(state, {
+  const getAuthorizationUrl = async (state: string) =>
+    await discord.createAuthorizationURL(state, {
       scopes: [OAuth2Scopes.Identify, OAuth2Scopes.Email],
     });
-  };
 
   const handleCallback = async (code: string, _codeVerifier: string) => {
     if (process.env.NODE_ENV === "production") {

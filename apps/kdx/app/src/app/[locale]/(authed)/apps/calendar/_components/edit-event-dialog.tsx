@@ -1,6 +1,12 @@
 import type { Dayjs } from "@kodix/dayjs";
 import type { Frequency } from "rrule";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useEffectEvent,
+  useMemo,
+  useState,
+} from "react";
 import dayjs from "@kodix/dayjs";
 import { cn } from "@kodix/ui";
 import { Button } from "@kodix/ui/button";
@@ -68,8 +74,8 @@ export function EditEventDialog({
     }),
   );
 
-  const defaultCalendarTask = useMemo(() => {
-    return {
+  const defaultCalendarTask = useMemo(
+    () => ({
       calendarTask,
       count: RRule.fromString(calendarTask.rule).options.count ?? undefined,
       date: calendarTask.date,
@@ -89,8 +95,9 @@ export function EditEventDialog({
       weekdays: RRule.fromString(calendarTask.rule).options.byweekday?.map(
         (w) => new Weekday(w),
       ),
-    };
-  }, [calendarTask]);
+    }),
+    [calendarTask],
+  );
 
   const [title, setTitle] = useState(calendarTask.title);
   const [description, setDescription] = useState(calendarTask.description);
@@ -126,9 +133,14 @@ export function EditEventDialog({
     setType(defaultCalendarTask.type);
   }, [defaultCalendarTask]);
 
-  useEffect(() => {
+  const doSetStateToDefault = useEffectEvent(() => {
     setStateToDefault();
-  }, [defaultCalendarTask, setStateToDefault]);
+  });
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Fix me
+  useEffect(() => {
+    doSetStateToDefault();
+  }, [defaultCalendarTask]);
 
   const allowedEditDefinitions = {
     all: !(
@@ -156,6 +168,7 @@ export function EditEventDialog({
     weekdays !== defaultCalendarTask.weekdays ||
     type !== defaultCalendarTask.type;
 
+  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: Fix me
   function handleSubmitFormData(
     definition: "single" | "thisAndFuture" | "all",
   ) {

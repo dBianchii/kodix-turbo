@@ -1,7 +1,7 @@
 import type { z } from "zod";
 import { and, eq, inArray } from "drizzle-orm";
 
-import type { zNotificationCreateMany } from "./_zodSchemas/notificationSchemas";
+import type { zNotificationCreateMany } from "./_zodSchemas/notification-schemas";
 import { db } from "../client";
 import { expoTokens, notifications, usersToTeams } from "../schema";
 
@@ -59,11 +59,10 @@ export async function getUserNotificationById({
       message: true,
       subject: true,
     },
-    where: (notifications, { eq, and, inArray }) =>
-      and(
-        eq(notifications.id, notificationId),
-        eq(notifications.sentToUserId, userId), //? Only show notifications for the logged in user
-        inArray(notifications.teamId, allTeamIdsForUserQuery), //? Ensure user is part of the team this notification was sent to
-      ),
+    where: and(
+      eq(notifications.id, notificationId),
+      eq(notifications.sentToUserId, userId), //? Only show notifications for the logged in user
+      inArray(notifications.teamId, allTeamIdsForUserQuery), //? Ensure user is part of the team this notification was sent to
+    ),
   });
 }

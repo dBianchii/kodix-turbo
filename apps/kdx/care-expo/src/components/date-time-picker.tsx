@@ -40,9 +40,9 @@ export function DateTimePicker({
     setShow(false);
   };
 
-  const handleConfirm = (date: Date) => {
-    setSelectedDate(date);
-    onConfirm?.(date);
+  const handleConfirm = (d: Date) => {
+    setSelectedDate(d);
+    onConfirm?.(d);
     hideDatePicker();
   };
 

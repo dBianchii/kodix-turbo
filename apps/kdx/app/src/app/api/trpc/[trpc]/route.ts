@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 
 import { createTRPCContext, kdxTRPCRouter, nextTRPCHandler } from "@kdx/api";
 
-import { OPTIONS, setCorsHeaders } from "../../_enableCors";
+import { setCorsHeaders } from "../../enable-cors";
 
 const handler = async (req: NextRequest) => {
   const response = await nextTRPCHandler(req, {
@@ -14,4 +14,7 @@ const handler = async (req: NextRequest) => {
   return response;
 };
 
-export { handler as GET, OPTIONS, handler as POST };
+export { handler as GET, handler as POST };
+
+// biome-ignore lint/performance/noBarrelFile: Need to export OPTIONS here
+export { OPTIONS } from "../../enable-cors";

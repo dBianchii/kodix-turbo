@@ -1,25 +1,25 @@
 import type { z } from "zod";
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 
 import type { Drizzle } from "../client";
 import type { Update } from "./_types";
-import type { zUserCreate, zUserUpdate } from "./_zodSchemas/userSchemas";
-import { db } from "../client";
+import type { zUserCreate, zUserUpdate } from "./_zodSchemas/user-schemas";
+import { db as _db } from "../client";
 import { users, usersToTeams } from "../schema";
 
-export async function findUserByEmail(email: string) {
+export function findUserByEmail(email: string, db = _db) {
   return db.query.users.findFirst({
     where: eq(users.email, email),
   });
 }
 
-export async function findUserById(id: string) {
+export async function findUserById(id: string, db = _db) {
   return await db.query.users.findFirst({
     columns: {
       email: true,
       name: true,
     },
-    where: (users, { eq }) => eq(users.id, id),
+    where: eq(users.id, id),
     with: {
       ExpoTokens: {
         columns: {
@@ -30,19 +30,16 @@ export async function findUserById(id: string) {
   });
 }
 
-export async function findManyUsersByIds(ids: string[]) {
-  return await db.query.users.findMany({
+export function findManyUsersByIds(ids: string[], db = _db) {
+  return db.query.users.findMany({
     columns: {
       name: true,
     },
-    where: (users, { inArray }) => inArray(users.id, ids),
+    where: inArray(users.id, ids),
   });
 }
 
-export async function createUser(
-  db: Drizzle,
-  user: z.infer<typeof zUserCreate>,
-) {
+export async function createUser(user: z.infer<typeof zUserCreate>, db = _db) {
   await db.insert(users).values(user);
 }
 
@@ -73,7 +70,7 @@ export async function moveUserToTeamAndAssociateToTeam(
 ) {
   await moveUserToTeam(db, { newTeamId: teamId, userId });
   await db.insert(usersToTeams).values({
-    teamId: teamId,
-    userId: userId,
+    teamId,
+    userId,
   });
 }

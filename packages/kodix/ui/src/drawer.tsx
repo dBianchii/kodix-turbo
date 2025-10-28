@@ -44,7 +44,7 @@ const DrawerContent = ({
     <DrawerPrimitive.Content
       className={cn(
         "fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background px-3",
-        className
+        className,
       )}
       {...props}
     >
@@ -75,7 +75,7 @@ const DrawerTitle = ({
   <DrawerPrimitive.Title
     className={cn(
       "font-semibold text-lg leading-none tracking-tight",
-      className
+      className,
     )}
     {...props}
   />

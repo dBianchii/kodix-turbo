@@ -6,18 +6,18 @@ import type { Update } from "../../_types";
 import type {
   zCareShiftCreate,
   zCareShiftUpdate,
-} from "../../_zodSchemas/careShiftSchemas";
+} from "../../_zodSchemas/care-shift-schemas";
 import { db as _db } from "../../../client";
 import { careShifts } from "../../../schema";
 import { teamRepository } from "../..";
 
-export async function updateCareShift(
+export function updateCareShift(
   { id, input }: Update<typeof zCareShiftUpdate>,
   db = _db,
 ) {
   return db.update(careShifts).set(input).where(eq(careShifts.id, id));
 }
-export async function getCareShiftById(
+export function getCareShiftById(
   {
     id,
     teamId,
@@ -32,14 +32,14 @@ export async function getCareShiftById(
   });
 }
 
-export async function createCareShift(
+export function createCareShift(
   careShift: z.infer<typeof zCareShiftCreate>,
   db = _db,
 ) {
   return db.insert(careShifts).values(careShift).$returningId();
 }
 
-export async function deleteCareShiftById(
+export function deleteCareShiftById(
   { id, teamId }: { id: string; teamId: string },
   db = _db,
 ) {
@@ -62,7 +62,7 @@ export async function getAllCareGivers(teamId: string, db = _db) {
   );
 }
 
-export async function findOverlappingShifts(
+export function findOverlappingShifts(
   {
     teamId,
     start,
@@ -85,12 +85,11 @@ export async function findOverlappingShifts(
       id: true,
       startAt: true,
     },
-    where: (careShifts, { and }) =>
-      and(
-        eq(careShifts.teamId, teamId),
-        startCondition(careShifts.endAt, start),
-        endCondition(careShifts.startAt, end),
-      ),
+    where: and(
+      eq(careShifts.teamId, teamId),
+      startCondition(careShifts.endAt, start),
+      endCondition(careShifts.startAt, end),
+    ),
     with: {
       Caregiver: {
         columns: {

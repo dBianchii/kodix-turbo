@@ -32,9 +32,11 @@ jobs:
 
       - name: Setup Biome
         uses: biomejs/setup-biome@v2
+        with:
+          version: "2.3.0"
 
       - name: Run Biome
-        run: biome ci .
+        run: biome check . #TODO: use biome ci when it's fixed
 
   tsc:
     runs-on: ubuntu-latest

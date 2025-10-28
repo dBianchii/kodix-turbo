@@ -42,11 +42,14 @@ const providerConfig: ProviderConfig = {
           }
         }
 
-        await authRepository.createAccount(tx, {
-          providerId,
-          providerUserId,
-          userId,
-        });
+        await authRepository.createAccount(
+          {
+            providerId,
+            providerUserId,
+            userId,
+          },
+          tx,
+        );
       });
 
       return userId;

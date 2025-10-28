@@ -172,22 +172,20 @@ export function DateTimePicker({
   >(false);
   const initDate = useMemo(
     () => new TZDate(value ?? new Date(), timezone),
-    [value, timezone]
+    [value, timezone],
   );
 
   const [month, setMonth] = useState<Date>(initDate);
   const [date, setDate] = useState<Date>(initDate);
 
-  const endMonth = useMemo(() => {
-    return setYear(month, getYear(month) + 1);
-  }, [month]);
+  const endMonth = useMemo(() => setYear(month, getYear(month) + 1), [month]);
   const minDate = useMemo(
     () => (min ? new TZDate(min, timezone) : undefined),
-    [min, timezone]
+    [min, timezone],
   );
   const maxDate = useMemo(
     () => (max ? new TZDate(max, timezone) : undefined),
-    [max, timezone]
+    [max, timezone],
   );
 
   const onDayChanged = useCallback(
@@ -205,11 +203,11 @@ export function DateTimePicker({
         d.getDate(),
         date.getHours(),
         date.getMinutes(),
-        date.getSeconds()
+        date.getSeconds(),
       );
       setDate(newDate);
     },
-    [date, setDate]
+    [date, setDate],
   );
   const onSubmit = useCallback(() => {
     onChange(new Date(date));
@@ -225,7 +223,7 @@ export function DateTimePicker({
         setMonthYearPicker(false);
       }
     },
-    [setMonth, setMonthYearPicker]
+    [setMonth, setMonthYearPicker],
   );
   const onNextMonth = useCallback(() => {
     setMonth(addMonths(month, 1));
@@ -278,7 +276,7 @@ export function DateTimePicker({
               !displayValue && "text-muted-foreground",
               !(clearable && value) && "pe-3",
               disabled && "cursor-not-allowed opacity-50",
-              classNames?.trigger
+              classNames?.trigger,
             )}
             onClick={(e) => {
               if (disabled) e.preventDefault();
@@ -319,7 +317,7 @@ export function DateTimePicker({
               <span
                 onClick={() =>
                   setMonthYearPicker(
-                    monthYearPicker === "month" ? false : "month"
+                    monthYearPicker === "month" ? false : "month",
                   )
                 }
               >
@@ -332,7 +330,7 @@ export function DateTimePicker({
                 className="ms-1"
                 onClick={() =>
                   setMonthYearPicker(
-                    monthYearPicker === "year" ? false : "year"
+                    monthYearPicker === "year" ? false : "year",
                   )
                 }
               >
@@ -370,7 +368,7 @@ export function DateTimePicker({
               day: "h-9 w-9 text-center text-sm p-0 relative flex items-center justify-center [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20 rounded-1",
               day_button: cn(
                 buttonVariants({ variant: "ghost" }),
-                "size-9 rounded-md p-0 font-normal aria-selected:opacity-100"
+                "size-9 rounded-md p-0 font-normal aria-selected:opacity-100",
               ),
               disabled: "text-muted-foreground opacity-50",
               dropdowns: "flex w-full gap-2",
@@ -412,13 +410,13 @@ export function DateTimePicker({
           <div
             className={cn(
               "absolute top-0 right-0 bottom-0 left-0",
-              monthYearPicker ? "bg-popover" : "hidden"
+              monthYearPicker ? "bg-popover" : "hidden",
             )}
           />
           <MonthYearPicker
             className={cn(
               "absolute top-0 right-0 bottom-0 left-0",
-              monthYearPicker ? "" : "hidden"
+              monthYearPicker ? "" : "hidden",
             )}
             maxDate={maxDate}
             minDate={minDate}
@@ -514,7 +512,7 @@ function MonthYearPicker({
       }
       onChange(newDate, "year");
     },
-    [onChange, value, minDate, maxDate]
+    [onChange, value, minDate, maxDate],
   );
 
   useEffect(() => {
@@ -595,13 +593,13 @@ function TimePicker({
       use12HourFormat
         ? "yyyy-MM-dd hh:mm:ss.SSS a xxxx"
         : "yyyy-MM-dd HH:mm:ss.SSS xxxx",
-    [use12HourFormat]
+    [use12HourFormat],
   );
   const [ampm, setAmpm] = useState(
-    datefnsFormat(value, "a") === "AM" ? AM_VALUE : PM_VALUE
+    datefnsFormat(value, "a") === "AM" ? AM_VALUE : PM_VALUE,
   );
   const [hour, setHour] = useState(
-    use12HourFormat ? +datefnsFormat(value, "hh") : value.getHours()
+    use12HourFormat ? +datefnsFormat(value, "hh") : value.getHours(),
   );
   const [minute, setMinute] = useState(value.getMinutes());
   const [second, setSecond] = useState(value.getSeconds());
@@ -616,7 +614,7 @@ function TimePicker({
         second,
         use12HourFormat,
         value,
-      })
+      }),
     );
   }, [hour, minute, second, ampm, formatStr, use12HourFormat]);
 
@@ -643,7 +641,7 @@ function TimePicker({
           value: hourValue,
         };
       }),
-    [value, min, max, use12HourFormat, ampm]
+    [value, min, max, use12HourFormat, ampm],
   );
   const minutes: TimeOption[] = useMemo(() => {
     const anchorDate = setHours(value, _hourIn24h);
@@ -664,7 +662,7 @@ function TimePicker({
   const seconds: TimeOption[] = useMemo(() => {
     const anchorDate = setMilliseconds(
       setMinutes(setHours(value, _hourIn24h), minute),
-      0
+      0,
     );
     const _min = min ? setMilliseconds(min, 0) : undefined;
     const _max = max ? setMilliseconds(max, 0) : undefined;
@@ -747,7 +745,7 @@ function TimePicker({
       }
       setHour(v.value);
     },
-    [setHour, use12HourFormat, value, formatStr, minute, second, ampm]
+    [setHour, use12HourFormat, value, formatStr, minute, second, ampm],
   );
 
   const onMinuteChange = useCallback(
@@ -782,7 +780,7 @@ function TimePicker({
       }
       setMinute(v.value);
     },
-    [setMinute, use12HourFormat, value, formatStr, hour, second, ampm]
+    [setMinute, use12HourFormat, value, formatStr, hour, second, ampm],
   );
 
   const onAmpmChange = useCallback(
@@ -823,7 +821,17 @@ function TimePicker({
       }
       setAmpm(v.value);
     },
-    [setAmpm, use12HourFormat, value, formatStr, hour, minute, second, min, max]
+    [
+      setAmpm,
+      use12HourFormat,
+      value,
+      formatStr,
+      hour,
+      minute,
+      second,
+      min,
+      max,
+    ],
   );
   const format = useFormatter();
 
@@ -938,21 +946,19 @@ const TimeItem = ({
   onSelect: (option: TimeOption) => void;
   className?: string;
   disabled?: boolean;
-}) => {
-  return (
-    <Button
-      className={cn("flex justify-center px-1 ps-1 pe-2", className)}
-      disabled={disabled}
-      onClick={() => onSelect(option)}
-      variant="ghost"
-    >
-      <div className="w-4">
-        {selected && <CheckIcon className="my-auto size-4" />}
-      </div>
-      <span className="ms-2">{option.label}</span>
-    </Button>
-  );
-};
+}) => (
+  <Button
+    className={cn("flex justify-center px-1 ps-1 pe-2", className)}
+    disabled={disabled}
+    onClick={() => onSelect(option)}
+    variant="ghost"
+  >
+    <div className="w-4">
+      {selected && <CheckIcon className="my-auto size-4" />}
+    </div>
+    <span className="ms-2">{option.label}</span>
+  </Button>
+);
 
 interface BuildTimeOptions {
   use12HourFormat?: boolean;

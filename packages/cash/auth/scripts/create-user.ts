@@ -35,7 +35,7 @@ async function createUserInteractive() {
           checkExisting: async ({ results }) => {
             if (results.email) {
               const existingUser = await userRepository.findUserByEmail(
-                results.email
+                results.email,
               );
               if (existingUser) {
                 throw new Error("User with this email already exists");
@@ -85,7 +85,7 @@ async function createUserInteractive() {
             p.cancel("Operation cancelled");
             process.exit(0);
           },
-        }
+        },
       );
 
       if (!userDetails.confirm) {
@@ -110,7 +110,7 @@ async function createUserInteractive() {
 
       p.note(
         `${chalk.cyan("ID:")} ${userId}\n${chalk.cyan("Email:")} ${userDetails.email}\n${chalk.cyan("Name:")} ${userDetails.name}`,
-        "User Details"
+        "User Details",
       );
 
       p.outro(chalk.green("✅ User has been created and can now log in!"));
@@ -121,12 +121,12 @@ async function createUserInteractive() {
         error.message === "User with this email already exists"
       ) {
         p.log.error(
-          "❌ User with this email already exists. Please try with a different email."
+          "❌ User with this email already exists. Please try with a different email.",
         );
         console.log(); // Add some spacing
       } else {
         p.cancel(
-          `❌ Failed to create user: ${error instanceof Error ? error.message : "Unknown error"}`
+          `❌ Failed to create user: ${error instanceof Error ? error.message : "Unknown error"}`,
         );
         process.exit(1);
       }

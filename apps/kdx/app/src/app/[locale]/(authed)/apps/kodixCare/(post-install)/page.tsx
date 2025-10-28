@@ -1,6 +1,6 @@
 import { kodixCareAppId } from "@kodix/shared/db";
 
-import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
+import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/server-helpers";
 
 import DataTableKodixCare from "./_components/data-table-kodix-care";
 

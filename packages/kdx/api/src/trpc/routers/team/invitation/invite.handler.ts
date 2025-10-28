@@ -83,11 +83,11 @@ export const inviteHandler = async ({ ctx, input }: InviteOptions) => {
 
   if (successes.length)
     await teamRepository.createManyInvitations(
-      db,
       successes.map((success) => {
         // biome-ignore lint/style/noNonNullAssertion: <will never be undefined>
         return _invitations.find((x) => x.id === success.value.id)!;
       }),
+      db,
     );
 
   const failedInvites = _invitations.filter(

@@ -8,7 +8,7 @@ async function main() {
   // biome-ignore lint/style/noNonNullAssertion: fix me?
   if (new URL(process.env.DATABASE_URL!).hostname !== "localhost") {
     throw new Error(
-      "Uncomment this line to reset the database in a live environment. Proceed with caution."
+      "Uncomment this line to reset the database in a live environment. Proceed with caution.",
     );
   }
 
@@ -18,7 +18,7 @@ async function main() {
     await db.execute(sql`CREATE SCHEMA public`);
   } catch (error: unknown) {
     dbResetSpinner.fail(
-      `Failed to reset database: ${(error as Error).message}`
+      `Failed to reset database: ${(error as Error).message}`,
     );
     throw error;
   }

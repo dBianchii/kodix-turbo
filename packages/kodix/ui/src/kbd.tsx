@@ -14,7 +14,7 @@ const kbdVariants = cva(
         outline: "bg-background text-foreground",
       },
     },
-  }
+  },
 );
 
 export interface KbdProps
@@ -35,18 +35,16 @@ const Kbd = ({
   className,
   variant,
   ...props
-}: KbdProps) => {
-  return (
-    <kbd className={cn(kbdVariants({ className, variant }))} {...props}>
-      {abbrTitle ? (
-        <abbr className="no-underline" title={abbrTitle}>
-          {children}
-        </abbr>
-      ) : (
-        children
-      )}
-    </kbd>
-  );
-};
+}: KbdProps) => (
+  <kbd className={cn(kbdVariants({ className, variant }))} {...props}>
+    {abbrTitle ? (
+      <abbr className="no-underline" title={abbrTitle}>
+        {children}
+      </abbr>
+    ) : (
+      children
+    )}
+  </kbd>
+);
 
 export { Kbd };

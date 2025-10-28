@@ -96,7 +96,7 @@ export function DataTableMembers({
         header: () => <div className="ml-2">User</div>,
       }),
       columnHelper.display({
-        cell: function Cell(info) {
+        cell(info) {
           if (info.row.original.id === user.id) return null;
 
           return (
@@ -164,18 +164,16 @@ export function DataTableMembers({
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                  </TableHead>
-                );
-              })}
+              {headerGroup.headers.map((header) => (
+                <TableHead key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                </TableHead>
+              ))}
             </TableRow>
           ))}
         </TableHeader>

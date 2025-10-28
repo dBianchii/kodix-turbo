@@ -110,7 +110,7 @@ const color = {
 
 export const palettes = (() => {
   const transparent = (hsl: string, opacity = 0) =>
-    hsl.replace(`%)`, `%, ${opacity})`).replace(`hsl(`, `hsla(`);
+    hsl.replace("%)", `%, ${opacity})`).replace("hsl(", "hsla(");
 
   const getColorPalette = (colors: object): string[] => {
     const colorPalette = Object.values(colors);
